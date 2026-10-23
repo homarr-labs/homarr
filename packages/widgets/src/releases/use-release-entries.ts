@@ -5,36 +5,20 @@ import { readLocalStorageValue, useLocalStorage } from "@mantine/hooks";
 import { getQueryKey } from "@trpc/react-query";
 
 import { clientApi } from "@homarr/api/client";
-import { createId, isDateWithin, splitToChunksWithNItems } from "@homarr/common";
+import { createId, splitToChunksWithNItems } from "@homarr/common";
 import type { ReleaseProviderKind } from "@homarr/definitions";
 import { getReleaseProviderIconUrl, getReleaseProviderName } from "@homarr/definitions";
 
 import { isInitialWidgetQueryPending } from "../common/query-state";
 import type { WidgetComponentProps } from "../definition";
 import { useWidgetRuntimeQueries } from "../runtime-hooks";
+import { getEntryKind } from "./display";
 import { getRowIntegrationVersions } from "./integration-version";
 import { getReleasesQueryStaleTimeMs } from "./query-options";
-import type { ReleaseEntry, ReleaseEntryErrorCode, ReleaseEntryStatus } from "./release-entry";
+import type { ReleaseEntry, ReleaseEntryErrorCode } from "./release-entry";
 import type { ReleasesRepository } from "./releases-repository";
 
-type ReleasesOptions = WidgetComponentProps<"releases">["options"];
-
 const viewedVersionsKey = "releases-viewed-versions";
-
-const isWithin = (date: Date, relativeDate: string) => {
-  if (relativeDate === "never") return false;
-  try {
-    return isDateWithin(date, relativeDate);
-  } catch {
-    return false;
-  }
-};
-
-const getStatus = (publishedAt: Date, options: ReleasesOptions): ReleaseEntryStatus => {
-  if (isWithin(publishedAt, options.newReleaseWithin)) return "new";
-  if (options.staleReleaseWithin !== "never" && !isWithin(publishedAt, options.staleReleaseWithin)) return "stale";
-  return "current";
-};
 
 const readViewedVersions = () =>
   readLocalStorageValue<Record<string, string>>({ key: viewedVersionsKey, defaultValue: {} });
@@ -106,13 +90,10 @@ export const useReleaseEntries = ({
   const serviceVersionsQuery = clientApi.widget.releases.getServiceVersions.useQuery(serviceVersionsInput, {
     enabled: linkedIntegrationIds.length > 0,
   });
-  const runtimeQueries = useMemo(
-    () =>
-      linkedIntegrationIds.length > 0
-        ? [getQueryKey(clientApi.widget.releases.getServiceVersions, serviceVersionsInput, "query")]
-        : [],
-    [linkedIntegrationIds.length, serviceVersionsInput],
-  );
+  const runtimeQueries = useMemo(() => {
+    if (linkedIntegrationIds.length === 0) return [];
+    return [getQueryKey(clientApi.widget.releases.getServiceVersions, serviceVersionsInput, "query")];
+  }, [linkedIntegrationIds.length, serviceVersionsInput]);
   useWidgetRuntimeQueries(widgetRuntimeRef, runtimeQueries);
 
   const isInitialLoading = queries.some(isInitialWidgetQueryPending);
@@ -138,7 +119,7 @@ export const useReleaseEntries = ({
         integrations: [],
       };
 
-      const errorEntry = (code: ReleaseEntryErrorCode): ReleaseEntry => ({ ...base, status: "error", error: { code } });
+      const errorEntry = (code: ReleaseEntryErrorCode): ReleaseEntry => ({ ...base, kind: "error", error: { code } });
 
       if (!repository.provider) return errorEntry("noProviderSelected");
       const result = resultById.get(repository.id);
@@ -146,10 +127,17 @@ export const useReleaseEntries = ({
       if (!result.success) return errorEntry(result.error.code);
 
       const { data } = result;
+      const isViewed = viewedVersions[repository.id] === data.latestRelease;
+      const integrations = getRowIntegrationVersions(
+        repository.integrationIds,
+        integrationIds,
+        serviceVersions,
+        data.latestRelease,
+      );
       return {
         ...base,
-        status: getStatus(data.latestReleaseAt, options),
-        isViewed: viewedVersions[repository.id] === data.latestRelease,
+        kind: getEntryKind({ publishedAt: data.latestReleaseAt, isViewed, integrations }, options),
+        isViewed,
         version: data.latestRelease,
         resolvedFromTag: data.resolvedFromTag,
         publishedAt: data.latestReleaseAt,
@@ -163,12 +151,7 @@ export const useReleaseEntries = ({
         starsCount: data.starsCount,
         forksCount: data.forksCount,
         openIssues: data.openIssues,
-        integrations: getRowIntegrationVersions(
-          repository.integrationIds,
-          integrationIds,
-          serviceVersions,
-          data.latestRelease,
-        ),
+        integrations,
       };
     });
   }, [integrationIds, options, repositories, results, serviceVersions, viewedVersions]);

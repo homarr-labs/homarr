@@ -1,7 +1,7 @@
-import type { ReleaseEntry, ReleaseEntryErrorCode } from "./release-entry";
-import type { ReleaseSectionKey } from "./release-options";
+import { isDateWithin } from "@homarr/common";
 
-export type EntryKind = "unseen" | "seen" | "stale" | "error";
+import type { EntryKind, ReleaseEntry, ReleaseEntryErrorCode } from "./release-entry";
+import type { ReleaseSectionKey } from "./release-options";
 
 export interface IssueGroup {
   key: string;
@@ -15,60 +15,74 @@ export interface ChangelogDigest {
   changes: number;
 }
 
-export interface GroupedEntries {
-  unseen: ReleaseEntry[];
-  upToDate: ReleaseEntry[];
-  quiet: ReleaseEntry[];
+export interface SectionEntries {
+  entries: ReleaseEntry[];
   issues: IssueGroup[];
 }
 
-export const sectionKindByKey: Record<ReleaseSectionKey, EntryKind> = {
-  new: "unseen",
-  attention: "error",
-  upToDate: "seen",
-  quiet: "stale",
+export interface ReleaseWindows {
+  newReleaseWithin: string;
+  staleReleaseWithin: string;
+}
+
+export const sectionByKind: Record<EntryKind, ReleaseSectionKey> = {
+  new: "new",
+  outdated: "attention",
+  error: "attention",
+  upToDate: "upToDate",
+  quiet: "quiet",
 };
 
-export const getEntryKind = (entry: ReleaseEntry): EntryKind => {
-  if (entry.status === "error") return "error";
-  if (entry.status === "new" && !entry.isViewed) return "unseen";
-  if (entry.status === "stale") return "stale";
-  return "seen";
-};
+const isWithin = (date: Date, relativeDate: string) => relativeDate !== "never" && isDateWithin(date, relativeDate);
 
-export const getSectionKey = (kind: EntryKind): ReleaseSectionKey =>
-  (Object.keys(sectionKindByKey) as ReleaseSectionKey[]).find((key) => sectionKindByKey[key] === kind) ?? "upToDate";
+export const hasOutdatedIntegration = (entry: Pick<ReleaseEntry, "integrations">) =>
+  entry.integrations.some((integration) => integration.isUpToDate === false);
+
+export const getEntryKind = (
+  release: Pick<ReleaseEntry, "isViewed" | "integrations"> & { publishedAt: Date },
+  windows: ReleaseWindows,
+): Exclude<EntryKind, "error"> => {
+  if (!release.isViewed && isWithin(release.publishedAt, windows.newReleaseWithin)) return "new";
+  if (hasOutdatedIntegration(release)) return "outdated";
+  if (windows.staleReleaseWithin !== "never" && !isWithin(release.publishedAt, windows.staleReleaseWithin)) {
+    return "quiet";
+  }
+  return "upToDate";
+};
 
 const byRecency = (left: ReleaseEntry, right: ReleaseEntry) =>
   (right.publishedAt?.getTime() ?? 0) - (left.publishedAt?.getTime() ?? 0);
 
-export const groupEntries = (entries: ReleaseEntry[]): GroupedEntries => {
-  const unseen: ReleaseEntry[] = [];
-  const upToDate: ReleaseEntry[] = [];
-  const quiet: ReleaseEntry[] = [];
+const groupIssues = (entries: ReleaseEntry[]) => {
   const issues = new Map<string, IssueGroup>();
-
   for (const entry of entries) {
-    const kind = getEntryKind(entry);
-    if (kind === "unseen") unseen.push(entry);
-    else if (kind === "seen") upToDate.push(entry);
-    else if (kind === "stale") quiet.push(entry);
-    else {
-      const code = entry.error?.code ?? "unexpected";
-      const key = `${entry.provider?.kind ?? "none"}:${code}`;
-      const group = issues.get(key) ?? { key, code, providerName: entry.provider?.name, entries: [] };
-      group.entries.push(entry);
-      issues.set(key, group);
-    }
+    if (entry.kind !== "error") continue;
+    const key = `${entry.provider?.kind ?? "none"}:${entry.error.code}`;
+    const group = issues.get(key) ?? { key, code: entry.error.code, providerName: entry.provider?.name, entries: [] };
+    group.entries.push(entry);
+    issues.set(key, group);
   }
+  return [...issues.values()];
+};
+
+export const groupEntries = (
+  entries: ReleaseEntry[],
+  visibleSections: readonly ReleaseSectionKey[],
+): Record<ReleaseSectionKey, SectionEntries> => {
+  const visible = entries.filter((entry) => visibleSections.includes(sectionByKind[entry.kind]));
+  const rowsIn = (section: ReleaseSectionKey) =>
+    visible.filter((entry) => entry.kind !== "error" && sectionByKind[entry.kind] === section).toSorted(byRecency);
 
   return {
-    unseen: unseen.toSorted(byRecency),
-    upToDate: upToDate.toSorted(byRecency),
-    quiet: quiet.toSorted(byRecency),
-    issues: [...issues.values()],
+    new: { entries: rowsIn("new"), issues: [] },
+    attention: { entries: rowsIn("attention"), issues: groupIssues(visible) },
+    upToDate: { entries: rowsIn("upToDate"), issues: [] },
+    quiet: { entries: rowsIn("quiet"), issues: [] },
   };
 };
+
+export const countIssueEntries = (issues: IssueGroup[]) =>
+  issues.reduce((total, group) => total + group.entries.length, 0);
 
 export const getLatestEntry = (entries: ReleaseEntry[]) =>
   entries.filter((entry) => entry.publishedAt).toSorted(byRecency)[0];

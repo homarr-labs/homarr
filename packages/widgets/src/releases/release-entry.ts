@@ -2,7 +2,7 @@ import type { ReleaseProviderKind } from "@homarr/definitions";
 
 import type { ReleasesRepositoryIntegration } from "./releases-repository";
 
-export type ReleaseEntryStatus = "new" | "current" | "stale" | "error";
+export type EntryKind = "new" | "outdated" | "error" | "upToDate" | "quiet";
 
 export type ReleaseEntryErrorCode =
   | "invalidIdentifier"
@@ -14,7 +14,7 @@ export type ReleaseEntryErrorCode =
   | "noProviderSelected"
   | "noProviderResponse";
 
-export interface ReleaseEntry {
+interface ReleaseEntryBase {
   id: string;
   name: string;
   identifier: string;
@@ -24,7 +24,6 @@ export interface ReleaseEntry {
     name: string;
     iconUrl: string;
   };
-  status: ReleaseEntryStatus;
   isViewed: boolean;
   version?: string;
   resolvedFromTag?: string;
@@ -40,5 +39,7 @@ export interface ReleaseEntry {
   forksCount?: number;
   openIssues?: number;
   integrations: ReleasesRepositoryIntegration[];
-  error?: { code: ReleaseEntryErrorCode };
 }
+
+export type ReleaseEntry = ReleaseEntryBase &
+  ({ kind: "error"; error: { code: ReleaseEntryErrorCode } } | { kind: Exclude<EntryKind, "error"> });

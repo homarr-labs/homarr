@@ -17,10 +17,10 @@ export const { definition, componentLoader } = createWidgetDefinition("releases"
   supportsAdvancedFocus: true,
   icon: IconRocket,
   queryKeys: [[["widget", "releases", "getLatest"]], [["widget", "releases", "getServiceVersions"]]],
-  queryMatcher: (query, scope) =>
-    query.path.at(-1) === "getServiceVersions"
-      ? matchesWidgetRuntimeQuery(query, scope)
-      : widgetQueryInputMatches(query.input, { itemId: scope.itemId }),
+  queryMatcher: (query, scope) => {
+    if (query.path.at(-1) === "getServiceVersions") return matchesWidgetRuntimeQuery(query, scope);
+    return widgetQueryInputMatches(query.input, { itemId: scope.itemId });
+  },
   refetchInterval: null,
   ...getWidgetIntegrationConfig("releases"),
   createOptions() {

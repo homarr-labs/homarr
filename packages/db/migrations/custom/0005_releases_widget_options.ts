@@ -1,4 +1,4 @@
-import SuperJSON from "superjson";
+import { parse, stringify } from "superjson";
 
 import { eq } from "../..";
 import type { Database } from "../..";
@@ -37,22 +37,20 @@ const toClosestPreset = (value: unknown, presets: string[], fallback: string) =>
   const hours = toHours(value);
   if (hours === null) return fallback;
 
-  return presets.reduce((closest, preset) => {
-    const distance = Math.abs(Math.log((toHours(preset) ?? 1) / hours));
-    const closestDistance = Math.abs(Math.log((toHours(closest) ?? 1) / hours));
-    return distance < closestDistance ? preset : closest;
-  });
+  const distance = (preset: string) => Math.abs(Math.log((toHours(preset) ?? 1) / hours));
+  return presets.toSorted((left, right) => distance(left) - distance(right))[0] ?? fallback;
 };
 
-/**
- * The reworked releases widget replaces the free-text durations with presets and the visibility switches with
- * sections. "Show only highlighted" hid repositories without a new or stale release, which is the Up to date section.
- */
+const toSections = (showOnlyHighlighted: unknown) => {
+  if (showOnlyHighlighted === false) return allSections;
+  return allSections.filter((section) => section !== "upToDate");
+};
+
 export async function migrateReleasesWidgetOptionsAsync(db: Database) {
   const releaseItems = await db.query.items.findMany({ where: eq(items.kind, "releases") });
 
   const itemsToUpdate = releaseItems
-    .map((item) => ({ id: item.id, options: SuperJSON.parse<LegacyReleasesOptions>(item.options) }))
+    .map((item) => ({ id: item.id, options: parse<LegacyReleasesOptions>(item.options) }))
     .filter(({ options }) => legacyOptionKeys.some((key) => key in options));
 
   console.log(`Migrating releases widget options count=${itemsToUpdate.length}`);
@@ -61,7 +59,7 @@ export async function migrateReleasesWidgetOptionsAsync(db: Database) {
     itemsToUpdate.map(async (item) => {
       const {
         showOnlyHighlighted,
-        showDetails: _showDetails,
+        showDetails,
         showOnlyIcon: _showOnlyIcon,
         topReleases: _topReleases,
         ...options
@@ -69,12 +67,12 @@ export async function migrateReleasesWidgetOptionsAsync(db: Database) {
       await db
         .update(items)
         .set({
-          options: SuperJSON.stringify({
+          options: stringify({
             ...options,
+            ...("showDetails" in item.options && { showChangelogPreview: showDetails !== false }),
             newReleaseWithin: toClosestPreset(options.newReleaseWithin, newReleaseWithinPresets, "1w"),
             staleReleaseWithin: toClosestPreset(options.staleReleaseWithin, staleReleaseWithinPresets, "6M"),
-            sections:
-              showOnlyHighlighted === false ? allSections : allSections.filter((section) => section !== "upToDate"),
+            sections: toSections(showOnlyHighlighted),
           }),
         })
         .where(eq(items.id, item.id));

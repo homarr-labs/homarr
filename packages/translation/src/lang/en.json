@@ -4881,6 +4881,8 @@
         "newShort": "new",
         "tracked": "of {count} tracked",
         "caughtUp": "All caught up",
+        "outdated": "{count, plural, one {running an older version} other {running older versions}}",
+        "outdatedShort": "outdated",
         "failing": "could not be checked",
         "failingShort": "failing",
         "latest": "Latest: {name} {version}, {time}",
@@ -4893,7 +4895,7 @@
         },
         "attention": {
           "label": "Needs attention",
-          "description": "Repositories that could not be checked"
+          "description": "Integrations running an older version and repositories that could not be checked"
         },
         "upToDate": {
           "label": "Up to date",
@@ -4905,10 +4907,11 @@
         }
       },
       "status": {
-        "unseen": "new, not viewed",
-        "seen": "up to date",
-        "stale": "quiet",
-        "error": "could not be checked"
+        "new": "new, not viewed",
+        "outdated": "running an older version",
+        "error": "could not be checked",
+        "upToDate": "up to date",
+        "quiet": "quiet"
       },
       "tag": {
         "new": "New",

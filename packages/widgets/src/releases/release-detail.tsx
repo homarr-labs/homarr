@@ -15,13 +15,14 @@ import { useFormatter } from "next-intl";
 import ReactMarkdown from "react-markdown";
 import type { Components } from "react-markdown";
 
+import { useRequiredBoard } from "@homarr/boards/context";
 import { getIconUrl } from "@homarr/definitions";
 import { useI18n } from "@homarr/translation/client";
 import { MaskedOrNormalImage, zoomCompensatedSize } from "@homarr/ui";
 
 import { getSafeApplicationUrl, SAFE_NEW_TAB_REL } from "../common/application-url";
 import classes from "./component.module.css";
-import { getEntryKind } from "./display";
+import { hasOutdatedIntegration } from "./display";
 import type { IssueGroup } from "./display";
 import { truncateVersion } from "./integration-version";
 import type { ReleaseEntry } from "./release-entry";
@@ -49,11 +50,9 @@ const integrationStatusColors = {
 
 const getIntegrationStatus = (isUpToDate: boolean | undefined): keyof typeof integrationStatusColors => {
   if (isUpToDate === undefined) return "unknownStatus";
-  return isUpToDate ? "upToDate" : "updateAvailable";
+  if (isUpToDate) return "upToDate";
+  return "updateAvailable";
 };
-
-export const hasOutdatedIntegration = (entry: ReleaseEntry) =>
-  entry.integrations.some((integration) => integration.isUpToDate === false);
 
 const useImageFailed = (url: string | undefined) => {
   const [failedUrl, setFailedUrl] = useState<string | null>(null);
@@ -71,10 +70,10 @@ const useImageFailed = (url: string | undefined) => {
 interface EntryIconProps {
   entry: ReleaseEntry;
   size: number;
-  hasColor: boolean;
 }
 
-export const EntryIcon = ({ entry, size, hasColor }: EntryIconProps) => {
+export const EntryIcon = ({ entry, size }: EntryIconProps) => {
+  const board = useRequiredBoard();
   const iconUrl = entry.iconUrl ?? entry.provider?.iconUrl;
   const failed = useImageFailed(iconUrl);
   const sizeStyle = zoomCompensatedSize(size);
@@ -92,22 +91,26 @@ export const EntryIcon = ({ entry, size, hasColor }: EntryIconProps) => {
   }
 
   return (
-    <MaskedOrNormalImage imageUrl={iconUrl} hasColor={hasColor} alt="" className={classes.icon} style={sizeStyle} />
+    <MaskedOrNormalImage
+      imageUrl={iconUrl}
+      hasColor={board.iconColor !== null}
+      alt=""
+      className={classes.icon}
+      style={sizeStyle}
+    />
   );
 };
 
 interface ReleaseDetailProps {
   entry: ReleaseEntry;
   now: Date | null;
-  hasColor: boolean;
   layout: DetailLayout;
   onMarkViewed: (entry: ReleaseEntry) => void;
 }
 
-export const ReleaseDetail = ({ entry, now, hasColor, layout, onMarkViewed }: ReleaseDetailProps) => {
+export const ReleaseDetail = ({ entry, now, layout, onMarkViewed }: ReleaseDetailProps) => {
   const t = useI18n("widget.releases");
   const formatter = useFormatter();
-  const kind = getEntryKind(entry);
   const releaseHref = getSafeApplicationUrl(entry.releaseUrl);
   const projectHref = getSafeApplicationUrl(entry.projectUrl);
   const hasStats = entry.starsCount !== undefined || entry.forksCount !== undefined || entry.openIssues !== undefined;
@@ -116,12 +119,12 @@ export const ReleaseDetail = ({ entry, now, hasColor, layout, onMarkViewed }: Re
     <div className={`releases-detail ${classes.detail}`} data-layout={layout}>
       {layout === "pane" && (
         <div className={classes.detailHead}>
-          <EntryIcon entry={entry} size={38} hasColor={hasColor} />
+          <EntryIcon entry={entry} size={38} />
           <div className={classes.detailTitle}>
             <div className={classes.detailName}>{entry.name}</div>
             <div className={classes.detailId}>
               {entry.identifier}
-              {entry.provider ? ` · ${entry.provider.name}` : ""}
+              {entry.provider && ` · ${entry.provider.name}`}
             </div>
           </div>
         </div>
@@ -132,19 +135,16 @@ export const ReleaseDetail = ({ entry, now, hasColor, layout, onMarkViewed }: Re
         {entry.version && (
           <CopyButton value={entry.version}>
             {({ copied, copy }) => (
-              <Tooltip label={copied ? t("copied") : t("copyVersion")} withArrow>
+              <Tooltip label={(copied && t("copied")) || t("copyVersion")} withArrow>
                 <ActionIcon size="xs" variant="subtle" color="gray" onClick={copy} aria-label={t("copyVersion")}>
-                  {copied ? (
-                    <IconCheck style={zoomCompensatedSize(12)} />
-                  ) : (
-                    <IconCopy style={zoomCompensatedSize(12)} />
-                  )}
+                  {copied && <IconCheck style={zoomCompensatedSize(12)} />}
+                  {!copied && <IconCopy style={zoomCompensatedSize(12)} />}
                 </ActionIcon>
               </Tooltip>
             )}
           </CopyButton>
         )}
-        {kind === "unseen" && (
+        {entry.kind === "new" && (
           <span className={classes.tag} data-tone="new">
             {t("tag.new")}
           </span>
@@ -160,7 +160,7 @@ export const ReleaseDetail = ({ entry, now, hasColor, layout, onMarkViewed }: Re
             {t("tag.resolvedFrom", { tag: entry.resolvedFromTag })}
           </span>
         )}
-        {kind === "stale" && <span className={classes.tag}>{t("tag.quiet")}</span>}
+        {entry.kind === "quiet" && <span className={classes.tag}>{t("tag.quiet")}</span>}
         {entry.isArchived && (
           <span className={classes.tag} data-tone="warn">
             <IconArchive style={zoomCompensatedSize(10)} /> {t("tag.archived")}
@@ -173,7 +173,7 @@ export const ReleaseDetail = ({ entry, now, hasColor, layout, onMarkViewed }: Re
         <div className={classes.when}>
           {t("published", {
             time: [
-              now ? formatter.relativeTime(entry.publishedAt, now) : null,
+              now && formatter.relativeTime(entry.publishedAt, now),
               formatter.dateTime(entry.publishedAt, { dateStyle: "medium", timeStyle: "short" }),
             ]
               .filter(Boolean)
@@ -212,13 +212,14 @@ export const ReleaseDetail = ({ entry, now, hasColor, layout, onMarkViewed }: Re
       )}
 
       <div className={classes.label}>{t("whatChanged")}</div>
-      {entry.releaseNotes ? (
+      {entry.releaseNotes && (
         <div className={classes.notes}>
           <ReactMarkdown skipHtml components={markdownComponents}>
             {entry.releaseNotes}
           </ReactMarkdown>
         </div>
-      ) : (
+      )}
+      {!entry.releaseNotes && (
         <div className={classes.noNotes}>{t("noNotes", { provider: entry.provider?.name ?? "" })}</div>
       )}
 
@@ -243,7 +244,7 @@ export const ReleaseDetail = ({ entry, now, hasColor, layout, onMarkViewed }: Re
       )}
 
       <div className={classes.buttons}>
-        {kind === "unseen" && (
+        {entry.kind === "new" && (
           <Button
             size="compact-sm"
             leftSection={<IconCheck style={zoomCompensatedSize(14)} />}
@@ -252,7 +253,7 @@ export const ReleaseDetail = ({ entry, now, hasColor, layout, onMarkViewed }: Re
             {t("markViewed")}
           </Button>
         )}
-        {entry.status === "new" && entry.isViewed && (
+        {entry.isViewed && (
           <span className={classes.viewedNote}>
             <IconCheck style={zoomCompensatedSize(13)} /> {t("viewed")}
           </span>
@@ -290,11 +291,10 @@ export const ReleaseDetail = ({ entry, now, hasColor, layout, onMarkViewed }: Re
 
 interface IssueDetailProps {
   group: IssueGroup;
-  hasColor: boolean;
   layout: DetailLayout;
 }
 
-export const IssueDetail = ({ group, hasColor, layout }: IssueDetailProps) => {
+export const IssueDetail = ({ group, layout }: IssueDetailProps) => {
   const t = useI18n("widget.releases");
 
   return (
@@ -316,11 +316,11 @@ export const IssueDetail = ({ group, hasColor, layout }: IssueDetailProps) => {
       <ul className={classes.members}>
         {group.entries.map((entry) => (
           <li key={entry.id} className={classes.member}>
-            <EntryIcon entry={entry} size={16} hasColor={hasColor} />
+            <EntryIcon entry={entry} size={16} />
             <span className={classes.memberName}>{entry.name}</span>
             <span className={classes.memberId}>
               {entry.identifier}
-              {entry.provider ? ` · ${entry.provider.name}` : ""}
+              {entry.provider && ` · ${entry.provider.name}`}
             </span>
           </li>
         ))}
