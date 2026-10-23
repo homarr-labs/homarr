@@ -7112,9 +7112,7 @@
             },
             "enabled": {
               "label": "Enable Assistant",
-              "description": "Turn off to hide the Assistant for all users. Saved provider settings are kept for later.",
-              "on": "On",
-              "off": "Off"
+              "description": "Turn off to hide the Assistant for all users. Saved provider settings are kept for later."
             },
             "save": "Save assistant",
             "notification": {

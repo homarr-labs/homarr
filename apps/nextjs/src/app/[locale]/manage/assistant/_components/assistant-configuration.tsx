@@ -397,20 +397,17 @@ export const AssistantConfiguration = ({ refreshAfterSave = true }: AssistantCon
     <>
       <Stack className={classes.configuration} gap="md">
         <Paper className={classes.enableRow} withBorder p="md" radius="md">
-          <Group justify="space-between" align="center">
-            <Switch
-              className={classes.enableSwitch}
-              checked={enabled}
-              onChange={(event) => updateAvailability.mutate({ enabled: event.currentTarget.checked })}
-              disabled={pending}
-              label={t("enabled.label")}
-              description={t("enabled.description")}
-              labelPosition="left"
-              onLabel={t("enabled.on")}
-              offLabel={t("enabled.off")}
-              size="lg"
-            />
-          </Group>
+          <Switch
+            w="100%"
+            styles={{ body: { alignItems: "center", justifyContent: "space-between" } }}
+            checked={enabled}
+            onChange={(event) => updateAvailability.mutate({ enabled: event.currentTarget.checked })}
+            disabled={pending}
+            label={t("enabled.label")}
+            description={t("enabled.description")}
+            labelPosition="left"
+            size="lg"
+          />
         </Paper>
 
         <Paper className={classes.summary} withBorder p="md" radius="md" pos="relative">
