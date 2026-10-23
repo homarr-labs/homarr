@@ -88,6 +88,8 @@ export const getGithubReleaseAsync: ReleaseProvider = async ({ baseUrl, identifi
   if (releases.length === 0) throw noReleasesFoundError(identifier);
 
   const release = selectNewestRelease(releases.flatMap(toReleases), versionPattern);
-  const details = await loadOptionalDetailsAsync(() => getProjectDetailsAsync(api, repository));
+  const details = await loadOptionalDetailsAsync({ baseUrl, identifier, token }, () =>
+    getProjectDetailsAsync(api, repository),
+  );
   return { ...details, ...release };
 };

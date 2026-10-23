@@ -1,7 +1,14 @@
 import { beforeEach, describe, expect, test, vi } from "vitest";
 
 import type { ProviderReply } from "./provider-server";
-import { expectFailure, expectRelease, isRequest, mockedFetch, serveProvider } from "./provider-server";
+import {
+  expectFailure,
+  expectRelease,
+  isRequest,
+  mockedFetch,
+  resetProviderState,
+  serveProvider,
+} from "./provider-server";
 
 vi.mock("@homarr/core/infrastructure/http", () => ({ fetchWithTrustedCertificatesAsync: vi.fn() }));
 vi.mock("@homarr/core/infrastructure/logs", () => ({ createLogger: () => ({ warn: vi.fn() }) }));
@@ -24,7 +31,7 @@ const tagsOf = (...tags: ReturnType<typeof quayTag>[]) => Object.fromEntries(tag
 
 describe("Quay releases", () => {
   beforeEach(() => {
-    mockedFetch.mockReset();
+    resetProviderState();
   });
 
   test("resolves latest to the version tag with the same manifest digest", async () => {

@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, test, vi } from "vitest";
 
 import type { ProviderReply } from "./provider-server";
-import { expectFailure, expectRelease, mockedFetch, serveProvider } from "./provider-server";
+import { expectFailure, expectRelease, resetProviderState, serveProvider } from "./provider-server";
 
 vi.mock("@homarr/core/infrastructure/http", () => ({ fetchWithTrustedCertificatesAsync: vi.fn() }));
 vi.mock("@homarr/core/infrastructure/logs", () => ({ createLogger: () => ({ warn: vi.fn() }) }));
@@ -43,7 +43,7 @@ const serveLinuxServer = (images: ProviderReply, githubReleases: ProviderReply =
 
 describe("LinuxServer.io releases", () => {
   beforeEach(() => {
-    mockedFetch.mockReset();
+    resetProviderState();
   });
 
   test("uses the registry's latest version without fetching GitHub", async () => {

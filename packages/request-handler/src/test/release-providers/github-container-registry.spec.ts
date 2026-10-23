@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, test, vi } from "vitest";
 
 import { image, serveOciRegistry } from "./oci-registry-server";
-import { expectFailure, expectRelease, mockedFetch } from "./provider-server";
+import { expectFailure, expectRelease, mockedFetch, resetProviderState } from "./provider-server";
 
 vi.mock("@homarr/core/infrastructure/http", () => ({ fetchWithTrustedCertificatesAsync: vi.fn() }));
 vi.mock("@homarr/core/infrastructure/logs", () => ({ createLogger: () => ({ warn: vi.fn() }) }));
@@ -19,7 +19,7 @@ const created = (day: number) => new Date(Date.UTC(2026, 9, day)).toISOString();
 
 describe("GitHub Container Registry releases", () => {
   beforeEach(() => {
-    mockedFetch.mockReset();
+    resetProviderState();
   });
 
   describe("floating tags", () => {

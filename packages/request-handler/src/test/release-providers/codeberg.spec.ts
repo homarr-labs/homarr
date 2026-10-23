@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, test, vi } from "vitest";
 
 import type { ProviderReply } from "./provider-server";
-import { expectFailure, expectRelease, mockedFetch, serveProvider } from "./provider-server";
+import { expectFailure, expectRelease, resetProviderState, serveProvider } from "./provider-server";
 
 vi.mock("@homarr/core/infrastructure/http", () => ({ fetchWithTrustedCertificatesAsync: vi.fn() }));
 vi.mock("@homarr/core/infrastructure/logs", () => ({ createLogger: () => ({ warn: vi.fn() }) }));
@@ -47,7 +47,7 @@ const serveCodeberg = (
 
 describe("Codeberg releases", () => {
   beforeEach(() => {
-    mockedFetch.mockReset();
+    resetProviderState();
   });
 
   test("returns the newest release with its web URL and repository details", async () => {

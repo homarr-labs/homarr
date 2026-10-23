@@ -66,6 +66,8 @@ export const getGitlabReleaseAsync: ReleaseProvider = async ({ baseUrl, identifi
     releases.flatMap((candidate) => toReleases(candidate, now)),
     versionPattern,
   );
-  const details = await loadOptionalDetailsAsync(() => getProjectDetailsAsync(projectUrl, headers));
+  const details = await loadOptionalDetailsAsync({ baseUrl, identifier, token }, () =>
+    getProjectDetailsAsync(projectUrl, headers),
+  );
   return { ...details, ...release };
 };

@@ -2,14 +2,14 @@ import { beforeEach, describe, expect, test, vi } from "vitest";
 
 import { releaseProviderKinds } from "@homarr/definitions";
 
-import { expectFailure, mockedFetch, serveProvider } from "./provider-server";
+import { expectFailure, mockedFetch, resetProviderState, serveProvider } from "./provider-server";
 
 vi.mock("@homarr/core/infrastructure/http", () => ({ fetchWithTrustedCertificatesAsync: vi.fn() }));
 vi.mock("@homarr/core/infrastructure/logs", () => ({ createLogger: () => ({ warn: vi.fn() }) }));
 
 describe("release lookup", () => {
   beforeEach(() => {
-    mockedFetch.mockReset();
+    resetProviderState();
   });
 
   test.each(releaseProviderKinds)("rejects an invalid version pattern for %s before any request", async (provider) => {

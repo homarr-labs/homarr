@@ -5,11 +5,13 @@ import { ResponseError } from "@homarr/common/server";
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 
-import type { ProjectDetails } from "./types";
+import { createRequestHandler } from "../lib/request-handler";
+import type { ProjectDetails, ReleaseLookup } from "./types";
 
 const logger = createLogger({ module: "releaseProviders" });
 
 const PROVIDER_TIMEOUT_MS = 10_000;
+const PROJECT_DETAILS_TTL_MS = 24 * 60 * 60 * 1000;
 
 export interface ProviderRequestInit {
   method?: "GET" | "HEAD";
@@ -44,9 +46,28 @@ export const tokenHeaders = (
   return toHeaders(token);
 };
 
-export const loadOptionalDetailsAsync = async (loadAsync: () => Promise<ProjectDetails>): Promise<ProjectDetails> => {
+interface ProjectDetailsRequest extends Record<string, unknown> {
+  cacheKey: string;
+  loadAsync: () => Promise<ProjectDetails>;
+}
+
+const projectDetailsRequestHandler = createRequestHandler<ProjectDetails, ProjectDetailsRequest>({
+  requestAsync: ({ loadAsync }) => loadAsync(),
+  getCacheKey: ({ cacheKey }) => cacheKey,
+  cacheTtlMs: PROJECT_DETAILS_TTL_MS,
+  requestTimeoutMs: PROVIDER_TIMEOUT_MS,
+});
+
+export const invalidateProjectDetailsCache = () => projectDetailsRequestHandler.invalidateCache();
+
+export const loadOptionalDetailsAsync = async (
+  { baseUrl, identifier, token }: Pick<ReleaseLookup, "baseUrl" | "identifier" | "token">,
+  loadAsync: () => Promise<ProjectDetails>,
+): Promise<ProjectDetails> => {
   try {
-    return await loadAsync();
+    const cacheKey = JSON.stringify([baseUrl, identifier, token]);
+    const { data } = await projectDetailsRequestHandler.handler({ cacheKey, loadAsync }).getDataAsync();
+    return data;
   } catch (error) {
     logger.warn("Project details unavailable", { error: extractErrorMessage(error) });
     return {};

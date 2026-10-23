@@ -4,6 +4,7 @@ import { Headers, Response } from "undici";
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 
 import { getLatestMatchingReleaseAsync } from "../../release-providers";
+import { invalidateProjectDetailsCache } from "../../release-providers/http";
 import type { ReleasesRepositoryRequest } from "../../release-providers";
 
 export interface ProviderRequest {
@@ -33,6 +34,11 @@ const readUrl = (input: RequestInput) => {
 };
 
 export const mockedFetch = vi.mocked(fetchWithTrustedCertificatesAsync);
+
+export const resetProviderState = () => {
+  mockedFetch.mockReset();
+  invalidateProjectDetailsCache();
+};
 
 export const serveProvider = (handle: (request: ProviderRequest) => ProviderReply | undefined) => {
   const requests: ProviderRequest[] = [];

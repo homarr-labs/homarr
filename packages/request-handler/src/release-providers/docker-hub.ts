@@ -80,6 +80,6 @@ export const getDockerHubReleaseAsync: ReleaseProvider = async (lookup) => {
   const headers = tokenHeaders(lookup.token, (token) => ({ Authorization: `Bearer ${token}` }));
 
   const release = selectRegistryRelease(await listTagsAsync(repositoryUrl, headers, lookup.versionPattern), lookup);
-  const details = await loadOptionalDetailsAsync(() => getProjectDetailsAsync(repositoryUrl, headers));
+  const details = await loadOptionalDetailsAsync(lookup, () => getProjectDetailsAsync(repositoryUrl, headers));
   return { ...details, ...release };
 };

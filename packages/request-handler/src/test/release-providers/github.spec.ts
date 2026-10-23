@@ -1,7 +1,7 @@
-import { beforeEach, describe, expect, test, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 
 import type { ProviderReply, ProviderRequest } from "./provider-server";
-import { expectFailure, expectRelease, mockedFetch, serveProvider } from "./provider-server";
+import { expectFailure, expectRelease, mockedFetch, resetProviderState, serveProvider } from "./provider-server";
 
 vi.mock("@homarr/core/infrastructure/http", () => ({ fetchWithTrustedCertificatesAsync: vi.fn() }));
 vi.mock("@homarr/core/infrastructure/logs", () => ({ createLogger: () => ({ warn: vi.fn() }) }));
@@ -70,6 +70,11 @@ const releasePages = (requests: ProviderRequest[]) =>
     .filter((request) => request.url.pathname.endsWith("/releases"))
     .map((request) => Number(request.url.searchParams.get("page") ?? 1));
 
+const detailRequests = (requests: ProviderRequest[]) =>
+  requests.filter((request) => request.url.pathname === "/repos/owner/repo").length;
+
+const hourMs = 3_600_000;
+
 const numberedReleases = (count: number) =>
   Array.from({ length: count }, (_, index) => release(`v${count - index}`, index + 100));
 
@@ -77,7 +82,11 @@ const capMessage = "Only the first 1000 results are available";
 
 describe("GitHub releases", () => {
   beforeEach(() => {
-    mockedFetch.mockReset();
+    resetProviderState();
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
   });
 
   test("returns the newest published release with repository details from one page", async () => {
@@ -142,6 +151,46 @@ describe("GitHub releases", () => {
 
     expect(result.latestRelease).toBe("v1.0.0");
     expect(result.projectUrl).toBeUndefined();
+  });
+
+  test("reuses repository details for a day while checking releases on every lookup", async () => {
+    vi.useFakeTimers({ toFake: ["Date"] });
+    const start = Date.now();
+    const requests = serveGithub({ releases: [release("v1.0.0", 1)] });
+
+    await expectRelease({ provider: "github", identifier: "owner/repo" });
+    vi.setSystemTime(start + 23 * hourMs);
+    const cached = await expectRelease({ provider: "github", identifier: "owner/repo" });
+    vi.setSystemTime(start + 25 * hourMs);
+    await expectRelease({ provider: "github", identifier: "owner/repo" });
+
+    expect(cached.starsCount).toBe(42);
+    expect(releasePages(requests)).toEqual([1, 1, 1]);
+    expect(detailRequests(requests)).toBe(2);
+  });
+
+  test("retries repository details on the next lookup after they failed", async () => {
+    const github: FakeGithub = {
+      releases: [release("v1.0.0", 1)],
+      repositoryReply: { status: 500, body: { message: "boom" } },
+    };
+    serveGithub(github);
+
+    const failed = await expectRelease({ provider: "github", identifier: "owner/repo" });
+    github.repositoryReply = undefined;
+    const recovered = await expectRelease({ provider: "github", identifier: "owner/repo" });
+
+    expect(failed.starsCount).toBeUndefined();
+    expect(recovered.starsCount).toBe(42);
+  });
+
+  test("does not share repository details between tokens", async () => {
+    const requests = serveGithub({ releases: [release("v1.0.0", 1)] });
+
+    await expectRelease({ provider: "github", identifier: "owner/repo", token: "ghp_first" });
+    await expectRelease({ provider: "github", identifier: "owner/repo", token: "ghp_second" });
+
+    expect(detailRequests(requests)).toBe(2);
   });
 
   test("uses a GitHub Enterprise API URL", async () => {

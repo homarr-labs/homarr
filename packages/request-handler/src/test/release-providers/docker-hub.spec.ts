@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, test, vi } from "vitest";
 
 import type { ProviderReply } from "./provider-server";
-import { expectFailure, expectRelease, mockedFetch, serveProvider } from "./provider-server";
+import { expectFailure, expectRelease, resetProviderState, serveProvider } from "./provider-server";
 
 vi.mock("@homarr/core/infrastructure/http", () => ({ fetchWithTrustedCertificatesAsync: vi.fn() }));
 vi.mock("@homarr/core/infrastructure/logs", () => ({ createLogger: () => ({ warn: vi.fn() }) }));
@@ -48,7 +48,7 @@ const requestedPages = (requests: ReturnType<typeof serveHub>) =>
 
 describe("Docker Hub releases", () => {
   beforeEach(() => {
-    mockedFetch.mockReset();
+    resetProviderState();
   });
 
   describe("floating tags", () => {

@@ -63,6 +63,8 @@ export const getCodebergReleaseAsync: ReleaseProvider = async ({ baseUrl, identi
   if (releases.length === 0) throw noReleasesFoundError(identifier);
 
   const release = selectNewestRelease(releases.map(toRelease), versionPattern);
-  const details = await loadOptionalDetailsAsync(() => getProjectDetailsAsync(repositoryUrl, headers));
+  const details = await loadOptionalDetailsAsync({ baseUrl, identifier, token }, () =>
+    getProjectDetailsAsync(repositoryUrl, headers),
+  );
   return { ...details, ...release };
 };
