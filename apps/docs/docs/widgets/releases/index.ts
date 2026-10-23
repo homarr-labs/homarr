@@ -9,6 +9,12 @@ export const releasesWidget: WidgetDefinition = {
   configuration: {
     items: [
       {
+        name: "Layout",
+        description: "Compact shows every repository on a single line.",
+        values: { type: "select", options: ["Comfortable", "Compact"] },
+        defaultValue: "Comfortable",
+      },
+      {
         name: "Summary",
         description:
           "What to show above the list. The status bar adds one segment per repository that jumps to it when clicked.",

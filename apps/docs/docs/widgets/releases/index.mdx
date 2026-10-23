@@ -39,6 +39,8 @@ import readerCard from "./img/reader.png";
 GitHub, Docker Hub, GitLab, NPM, Codeberg, GitHub Container Registry, Quay, and LinuxServer.io are configured per repository in the widget.
 Adding or removing a provider token refreshes active release results.
 
+Each repository is checked at most once an hour, so a new release can take up to an hour to appear.
+
 GitHub allows 60 requests per hour without a token, shared by every repository on the server. If GitHub repositories show "Rate limited by GitHub", add a GitHub token in the widget settings.
 
 For container images tracked by a floating tag such as `latest`, the widget shows the version tag that points to the same image.
