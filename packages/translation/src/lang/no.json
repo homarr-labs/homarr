@@ -3228,6 +3228,10 @@
         },
         "viewMode": {
           "label": "Visning"
+        },
+        "hideHeader": {
+          "label": "",
+          "description": ""
         }
       },
       "advanced": {
@@ -3245,15 +3249,11 @@
         "agenda": "Dagsorden"
       },
       "controls": {
-        "view": "Kalender visning",
         "today": "I dag",
         "previous": "Forrige periode",
         "next": "Neste periode",
         "noEvents": "Ingen hendelser i denne perioden",
         "more": "{count} mer",
-        "moreLabel": "Vis {count} flere hendelser",
-        "eventDetails": "Event detaljer",
-        "close": "Lukk hendelsesdetaljer",
         "timeSlot": "Tidslengde",
         "weekday": "Ukedag"
       }
@@ -5054,6 +5054,14 @@
     "uptimeKuma": {
       "description": "Overvåke oppetid statistikk fra statussiden i Kuma",
       "option": {
+        "statusPageSlug": {
+          "label": "Statusside slug",
+          "description": ""
+        },
+        "summaryOnly": {
+          "label": "",
+          "description": ""
+        },
         "showSummary": {
           "label": "",
           "description": ""

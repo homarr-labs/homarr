@@ -3228,6 +3228,10 @@
         },
         "viewMode": {
           "label": "Widok"
+        },
+        "hideHeader": {
+          "label": "",
+          "description": ""
         }
       },
       "advanced": {
@@ -3245,15 +3249,11 @@
         "agenda": "Harmonogram"
       },
       "controls": {
-        "view": "Widok kalendarza",
         "today": "Dzisiaj",
         "previous": "Poprzedni okres",
         "next": "Następny okres",
         "noEvents": "Brak wydarzeń w tym okresie",
         "more": "",
-        "moreLabel": "",
-        "eventDetails": "Szczegóły wydarzenia",
-        "close": "Zamknij szczegóły wydarzenia",
         "timeSlot": "Przedział czasowy",
         "weekday": "Dzień tygodnia"
       }
@@ -5054,6 +5054,14 @@
     "uptimeKuma": {
       "description": "Monitoruj statystyki czasu pracy ze strony statusu Uptime Kuma",
       "option": {
+        "statusPageSlug": {
+          "label": "Slug strony statusu",
+          "description": ""
+        },
+        "summaryOnly": {
+          "label": "",
+          "description": ""
+        },
         "showSummary": {
           "label": "",
           "description": ""

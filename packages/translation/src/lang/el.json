@@ -3228,6 +3228,10 @@
         },
         "viewMode": {
           "label": "Προβολή"
+        },
+        "hideHeader": {
+          "label": "",
+          "description": ""
         }
       },
       "advanced": {
@@ -3245,15 +3249,11 @@
         "agenda": "Ατζέντα"
       },
       "controls": {
-        "view": "Προβολή ημερολογίου",
         "today": "Σήμερα",
         "previous": "Προηγούμενη περίοδος",
         "next": "Επόμενη περίοδος",
         "noEvents": "Δεν υπάρχουν συμβάντα σε αυτήν την περίοδο",
         "more": "",
-        "moreLabel": "",
-        "eventDetails": "Λεπτομέρειες εκδήλωσης",
-        "close": "Κλείσιμο λεπτομερειών συμβάντος",
         "timeSlot": "Χρονική υποδοχή",
         "weekday": "Καθημερινή"
       }
@@ -5054,6 +5054,14 @@
     "uptimeKuma": {
       "description": "Παρακολούθηση στατιστικών διαθεσιμότητας από τη σελίδα κατάστασης Uptime Kuma",
       "option": {
+        "statusPageSlug": {
+          "label": "",
+          "description": ""
+        },
+        "summaryOnly": {
+          "label": "",
+          "description": ""
+        },
         "showSummary": {
           "label": "",
           "description": ""

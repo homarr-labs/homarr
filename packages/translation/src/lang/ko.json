@@ -3228,6 +3228,10 @@
         },
         "viewMode": {
           "label": "보기 방식"
+        },
+        "hideHeader": {
+          "label": "",
+          "description": ""
         }
       },
       "advanced": {
@@ -3245,15 +3249,11 @@
         "agenda": "일정 목록"
       },
       "controls": {
-        "view": "캘린더 보기 방식",
         "today": "오늘",
         "previous": "이전 기간",
         "next": "다음 기간",
         "noEvents": "이 기간에 일정이 없습니다",
         "more": "{count}개 더",
-        "moreLabel": "{count}개 일정 더 보기",
-        "eventDetails": "일정 상세 정보",
-        "close": "일정 상세 정보 닫기",
         "timeSlot": "시간 칸",
         "weekday": "요일"
       }
@@ -5054,6 +5054,14 @@
     "uptimeKuma": {
       "description": "Uptime Kuma 상태 페이지에서 업타임 통계를 모니터링합니다",
       "option": {
+        "statusPageSlug": {
+          "label": "",
+          "description": ""
+        },
+        "summaryOnly": {
+          "label": "",
+          "description": ""
+        },
         "showSummary": {
           "label": "",
           "description": ""
