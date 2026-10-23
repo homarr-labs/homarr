@@ -4,7 +4,6 @@ import type { Redis, RedisOptions } from "ioredis";
 import { StateClient } from "./state";
 import type { StateMessageCallback, StateTransaction } from "./state";
 
-const require = createRequire(import.meta.url);
 const RELEASE_OWNED =
   "if redis.call('get', KEYS[1]) == ARGV[1] then return redis.call('del', KEYS[1]) else return 0 end";
 const RENEW_OWNED =
@@ -53,7 +52,11 @@ export class RedisStateClient extends StateClient {
   private readonly readiness = new Map<string, Promise<void>>();
   constructor(readonly options: RedisOptions) {
     super();
-    const { Redis: Driver } = require("ioredis") as { Redis: typeof Redis };
+    // Node's bundled migration and CLI entrypoints are CommonJS; the server is ESM.
+    let moduleFilename = import.meta.url;
+    if (typeof __filename === "string") moduleFilename = __filename;
+    const requireRedis = createRequire(moduleFilename);
+    const { Redis: Driver } = requireRedis("ioredis") as { Redis: typeof Redis };
     this.redis = new Driver(options);
     for (const event of ["ready", "end", "error"]) {
       this.redis.on(event, (...arguments_) => {

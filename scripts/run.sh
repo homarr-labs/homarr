@@ -52,7 +52,7 @@ if [ "$DB_MIGRATIONS_DISABLED" = "true" ]; then
   echo "DB migrations are disabled, skipping"
 else
     echo "Running DB migrations"
-    DISABLE_REDIS_LOGS=true node ./db/migrations/$DB_DIALECT/migrate.cjs ./db/migrations/$DB_DIALECT &
+    DISABLE_REDIS_LOGS=true NODE_PATH="/app/apps/backend/node_modules${NODE_PATH:+:$NODE_PATH}" node ./db/migrations/$DB_DIALECT/migrate.cjs ./db/migrations/$DB_DIALECT &
     MIGRATION_PID=$!
     wait "$MIGRATION_PID"
     MIGRATION_EXIT_CODE=$?

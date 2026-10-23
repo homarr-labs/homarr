@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, createElement, useContext, useEffect, useRef } from "react";
+import { createContext, createElement, useContext, useEffect, useMemo, useRef } from "react";
 import type { PropsWithChildren } from "react";
 import {
   skipToken,
@@ -317,8 +317,13 @@ export const clientApi = Object.assign(hooks([]) as Hooks<NativeRouterClient>, {
   },
   useUtils(): Utils<NativeRouterClient> & BranchUtils & { client: NativeApiClient } {
     const client = useScopedFetchApi();
-    return utils([], useQueryClient(), getNativeClient(client), client) as Utils<NativeRouterClient> &
-      BranchUtils & { client: NativeApiClient };
+    const queryClient = useQueryClient();
+    return useMemo(
+      () =>
+        utils([], queryClient, getNativeClient(client), client) as Utils<NativeRouterClient> &
+          BranchUtils & { client: NativeApiClient },
+      [client, queryClient],
+    );
   },
   useQueries<T extends readonly QuerySpec<unknown>[]>(
     build: (builder: QueryBuilder<NativeRouterClient>) => T,

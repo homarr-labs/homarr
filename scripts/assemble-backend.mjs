@@ -176,6 +176,27 @@ const copyPackage = (name, sourceParent, destinationParent, optional = false) =>
       }
       // Optional SSH acceleration is disabled by Homarr's Bun-specific patch.
       if (name === "ssh2" && parts.includes("build")) return false;
+      if (worker) {
+        // Keep both Linux architectures and libc variants so the assembled
+        // directory can still be copied into either supported worker image.
+        if (name === "bcrypt") {
+          if (parts[0] === "src") return false;
+          if (parts[0] === "prebuilds" && parts.length > 1 && !["linux-x64", "linux-arm64"].includes(parts[1])) {
+            return false;
+          }
+        }
+        // Retain DOMPurify's normal CJS/ESM/browser entrypoints and jsdom's
+        // complete adjacent-file layout; only omit source and instrumentation.
+        if (name === "dompurify" && (parts[0] === "src" || parts.join("/") === "dist/purify.cov.cjs.js")) {
+          return false;
+        }
+        if (name === "undici" && parts[0] === "docs") return false;
+        // grpc-js executes build/src and loads its separate proto directory.
+        if (name === "@grpc/grpc-js" && parts[0] === "src") return false;
+        if (name === "ssh2" && parts.slice(0, 3).join("/") === "lib/protocol/crypto" && parts[3] === "src") {
+          return false;
+        }
+      }
       if (extname(path) === ".map" || /\.d\.[cm]?ts$/.test(path)) return false;
       if (basename(path) === "binding.gyp") return false;
       return true;
@@ -183,13 +204,19 @@ const copyPackage = (name, sourceParent, destinationParent, optional = false) =>
   });
 
   const manifest = JSON.parse(readFileSync(join(source, "package.json"), "utf8"));
+  // These headers only compile native addons. bcrypt loads its shipped
+  // prebuilds through node-gyp-build, and Bun disables SSH's optional addon.
+  const isWorkerBuildDependency = (dependency) =>
+    worker && ((name === "bcrypt" && dependency === "node-addon-api") || (name === "ssh2" && dependency === "nan"));
   for (const dependency of Object.keys(manifest.dependencies ?? {})) {
     // These optional Node accelerators are never loaded by the Bun worker.
     if (dependency.startsWith("@types/") || dependency === "cpu-features" || dependency === "better-sqlite3") continue;
+    if (isWorkerBuildDependency(dependency)) continue;
     copyPackage(dependency, source, destination, dependency in (manifest.optionalDependencies ?? {}));
   }
   for (const dependency of Object.keys(manifest.optionalDependencies ?? {})) {
     if (dependency.startsWith("@types/") || dependency === "cpu-features" || dependency === "better-sqlite3") continue;
+    if (isWorkerBuildDependency(dependency)) continue;
     copyPackage(dependency, source, destination, true);
   }
   for (const dependency of Object.keys(manifest.peerDependencies ?? {})) {
@@ -198,6 +225,7 @@ const copyPackage = (name, sourceParent, destinationParent, optional = false) =>
     if (manifest.peerDependenciesMeta?.[dependency]?.optional === true) {
       continue;
     }
+    if (isWorkerBuildDependency(dependency)) continue;
     copyPackage(dependency, source, destination);
   }
 };
@@ -207,6 +235,10 @@ for (const name of externals) {
     copyPackage(name, repository, output);
   }
 }
+
+// Redis is loaded with createRequire only when selected, which esbuild cannot
+// discover. Keep the client closure for classic backends and optional worker Redis.
+copyPackage("ioredis", repository, output);
 
 mkdirSync(join(output, "assets"), { recursive: true });
 cpSync(join(repository, "node_modules/sql.js/dist/sql-wasm.wasm"), join(output, "assets/sql-wasm.wasm"));
