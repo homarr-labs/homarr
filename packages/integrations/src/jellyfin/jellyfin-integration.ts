@@ -276,7 +276,11 @@ export class JellyfinIntegration extends Integration implements IMediaServerInte
     for (const item of result.data) {
       if (item.Type !== "Episode" || !item.SeriesId) continue;
       const latestAddedAt = latestEpisodeDates.get(item.SeriesId);
-      if (latestAddedAt !== undefined && Date.parse(item.DateCreated ?? "") < latestAddedAt - recentAdditionWindowMs)
+      const addedAt = Date.parse(item.DateCreated ?? "");
+      if (
+        latestAddedAt !== undefined &&
+        (!Number.isFinite(addedAt) || addedAt < latestAddedAt - recentAdditionWindowMs)
+      )
         continue;
       recentEpisodeCounts.set(item.SeriesId, (recentEpisodeCounts.get(item.SeriesId) ?? 0) + 1);
     }
@@ -297,10 +301,11 @@ export class JellyfinIntegration extends Integration implements IMediaServerInte
       // Single additions use the newest episode; failed batch lookups keep the original episodes.
       if (!parent) {
         const latestAddedAt = latestEpisodeDates.get(item.SeriesId);
+        const addedAt = Date.parse(item.DateCreated ?? "");
         if (
           recentEpisodeCounts.get(item.SeriesId) === 1 &&
           latestAddedAt !== undefined &&
-          Date.parse(item.DateCreated ?? "") < latestAddedAt
+          (!Number.isFinite(addedAt) || addedAt < latestAddedAt)
         )
           return [];
         return [item];
