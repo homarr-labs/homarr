@@ -1,9 +1,12 @@
 ---
 name: homarr-triage
-description: Triage Homarr GitHub issues and pull requests, refresh reporter follow-ups, prioritize investigations, and operate the triage Project. Use for queue updates and approved issue work, including contributor PRs.
+description: Maintainer-only. Triage Homarr GitHub issues and pull requests, refresh reporter follow-ups, prioritize investigations, and operate the triage Project. Use only when a Homarr maintainer explicitly invokes it; never for fixing an issue or opening a contribution PR.
+disable-model-invocation: true
 ---
 
 # Homarr Triage
+
+This skill is for Homarr maintainers operating the triage queue. If you are fixing an issue or opening a PR as a contributor, stop: follow "AI-assisted pull requests" in `AGENTS.md` and do not use this skill's disclaimer.
 
 Work in `homarr-labs/homarr`. Treat an issue and its implementation PR as one investigation, while retaining their separate testing and review states.
 
