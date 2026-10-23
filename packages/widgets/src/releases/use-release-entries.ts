@@ -146,6 +146,7 @@ export const useReleaseEntries = ({
         releaseNotes: data.releaseDescription,
         projectUrl: data.projectUrl,
         projectDescription: data.projectDescription,
+        createdAt: data.createdAt,
         isArchived: data.isArchived,
         isFork: data.isFork,
         starsCount: data.starsCount,

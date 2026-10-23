@@ -4758,6 +4758,14 @@
       "name": "Releases",
       "description": "Tracks the latest releases of repositories and container images, and shows their changelogs.",
       "option": {
+        "layout": {
+          "label": "Layout",
+          "description": "Compact shows every repository on a single line.",
+          "option": {
+            "comfortable": "Comfortable",
+            "compact": "Compact"
+          }
+        },
         "summary": {
           "label": "Summary",
           "description": "What to show above the list. The status bar adds one segment per repository that jumps to it when clicked.",
@@ -4969,6 +4977,7 @@
       "starsCount": "Stars",
       "forksCount": "Forks",
       "openIssues": "{count, plural, one {# open issue} other {# open issues}}",
+    "created": "Created {time}",
       "releasePage": "Release",
       "projectPage": "Project",
       "runningVersions": "Running Versions",

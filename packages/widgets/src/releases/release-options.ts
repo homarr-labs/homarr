@@ -1,3 +1,6 @@
+export const releaseLayouts = ["comfortable", "compact"] as const;
+export type ReleaseLayout = (typeof releaseLayouts)[number];
+
 export const releaseSummaryModes = ["detailed", "count", "hidden"] as const;
 export type ReleaseSummaryMode = (typeof releaseSummaryModes)[number];
 

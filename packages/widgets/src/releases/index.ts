@@ -8,6 +8,7 @@ import { createWidgetDefinition, matchesWidgetRuntimeQuery, widgetQueryInputMatc
 import { optionsBuilder } from "../options";
 import {
   newReleaseWithinOptions,
+  releaseLayouts,
   releaseSectionKeys,
   releaseSummaryModes,
   staleReleaseWithinOptions,
@@ -25,6 +26,14 @@ export const { definition, componentLoader } = createWidgetDefinition("releases"
   ...getWidgetIntegrationConfig("releases"),
   createOptions() {
     return optionsBuilder.from((factory) => ({
+      layout: factory.select({
+        defaultValue: "comfortable",
+        withDescription: true,
+        options: releaseLayouts.map((value) => ({
+          value,
+          label: (t) => t(`widget.releases.option.layout.option.${value}`),
+        })),
+      }),
       summary: factory.select({
         defaultValue: "count",
         withDescription: true,

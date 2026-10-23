@@ -159,6 +159,18 @@ describe("releases widget options migration", () => {
     expect(options.showChangelogPreview).toBe(expected);
   });
 
+  test.each([
+    [{ showDetails: false }, "compact"],
+    [{ showOnlyIcon: true }, "compact"],
+    [{ showDetails: false, showOnlyIcon: true }, "compact"],
+    [{}, undefined],
+    [{ showDetails: "no", showOnlyIcon: "yes" }, undefined],
+  ])("maps the legacy display options %j to the layout %j", async (legacy, expected) => {
+    const options = await migrateOptionsAsync({ ...legacyDefaults, ...legacy });
+
+    expect(options.layout).toBe(expected);
+  });
+
   test("leaves show changelog preview to its default when show details is missing", async () => {
     const { showDetails: _showDetails, ...legacy } = legacyDefaults;
 
@@ -234,6 +246,7 @@ describe("releases widget options migration", () => {
       staleReleaseWithin: "6M",
       sections: ["new", "attention", "upToDate", "quiet"],
       showChangelogPreview: false,
+      layout: "compact",
     });
   });
 

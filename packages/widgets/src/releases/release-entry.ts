@@ -33,6 +33,7 @@ interface ReleaseEntryBase {
   releaseNotes?: string;
   projectUrl?: string;
   projectDescription?: string;
+  createdAt?: Date;
   isArchived?: boolean;
   isFork?: boolean;
   starsCount?: number;

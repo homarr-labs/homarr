@@ -57,19 +57,14 @@ export async function migrateReleasesWidgetOptionsAsync(db: Database) {
 
   await Promise.all(
     itemsToUpdate.map(async (item) => {
-      const {
-        showOnlyHighlighted,
-        showDetails,
-        showOnlyIcon: _showOnlyIcon,
-        topReleases: _topReleases,
-        ...options
-      } = item.options;
+      const { showOnlyHighlighted, showDetails, showOnlyIcon, topReleases: _topReleases, ...options } = item.options;
       await db
         .update(items)
         .set({
           options: stringify({
             ...options,
             ...("showDetails" in item.options && { showChangelogPreview: showDetails !== false }),
+            ...((showDetails === false || showOnlyIcon === true) && { layout: "compact" }),
             newReleaseWithin: toClosestPreset(options.newReleaseWithin, newReleaseWithinPresets, "1w"),
             staleReleaseWithin: toClosestPreset(options.staleReleaseWithin, staleReleaseWithinPresets, "6M"),
             sections: toSections(showOnlyHighlighted),

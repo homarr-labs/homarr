@@ -24,20 +24,13 @@ import { WidgetQueryLoadingState } from "../common/query-state-indicator";
 import { useWidgetNow } from "../common/use-widget-now";
 import type { WidgetComponentProps } from "../definition";
 import classes from "./component.module.css";
-import {
-  countIssueEntries,
-  getLatestEntry,
-  groupEntries,
-  hasOutdatedIntegration,
-  sectionByKind,
-  summarizeChangelog,
-} from "./display";
+import { countIssueEntries, getLatestEntry, groupEntries, sectionByKind, summarizeChangelog } from "./display";
 import type { ChangelogDigest, IssueGroup, SectionEntries } from "./display";
 import { getFailedServiceVersionIntegrations } from "./integration-version";
 import { EntryIcon, IssueDetail, ReleaseDetail } from "./release-detail";
 import type { ReleaseEntry } from "./release-entry";
 import { releaseSectionKeys } from "./release-options";
-import type { ReleaseSectionKey, ReleaseSummaryMode } from "./release-options";
+import type { ReleaseLayout, ReleaseSectionKey, ReleaseSummaryMode } from "./release-options";
 import { useReleaseEntries } from "./use-release-entries";
 
 type RowVariant = "rich" | "mini" | "dense";
@@ -46,7 +39,8 @@ type MarkAllPlacement = "header" | "section";
 
 const rowIconSizes: Record<RowVariant, number> = { rich: 30, mini: 22, dense: 18 };
 const outdatedIconSizes: Record<RowVariant, number> = { rich: 14, mini: 14, dense: 12 };
-const markViewedSizes: Record<RowVariant, MantineSize> = { rich: "md", mini: "sm", dense: "md" };
+const issueIconSizes: Record<RowVariant, number> = { rich: 16, mini: 16, dense: 12 };
+const markViewedSizes: Record<RowVariant, MantineSize> = { rich: "md", mini: "sm", dense: "sm" };
 const caughtUpIconSizes: Record<Density, number> = { micro: 20, regular: 24 };
 const markAllSizes: Record<MarkAllPlacement, { button: MantineSize; icon: number }> = {
   header: { button: "lg", icon: 18 },
@@ -65,8 +59,8 @@ const getDensity = (width: number, height: number): Density => {
   return "regular";
 };
 
-const getRowVariant = (section: ReleaseSectionKey, density: Density): RowVariant => {
-  if (section === "upToDate" || section === "quiet") return "dense";
+const getRowVariant = (section: ReleaseSectionKey, density: Density, layout: ReleaseLayout): RowVariant => {
+  if (layout === "compact" || section === "upToDate" || section === "quiet") return "dense";
   if (density === "micro") return "mini";
   return "rich";
 };
@@ -93,9 +87,9 @@ const getInboxDisplay = (
   displayScale: WidgetComponentProps<"releases">["displayScale"],
 ) => {
   if (displayMode === "advanced") {
-    return { scale: 1, summary: "detailed" as const, sections: releaseSectionKeys };
+    return { scale: 1, layout: "comfortable" as const, summary: "detailed" as const, sections: releaseSectionKeys };
   }
-  return { scale: displayScale ?? 1, summary: options.summary, sections: options.sections };
+  return { scale: displayScale ?? 1, layout: options.layout, summary: options.summary, sections: options.sections };
 };
 
 export default function ReleasesWidget({
@@ -123,7 +117,7 @@ export default function ReleasesWidget({
   if (isInitialLoading) return <WidgetQueryLoadingState />;
   if (entries.length === 0) return <WidgetEmptyState />;
 
-  const { scale, summary, sections } = getInboxDisplay(options, displayMode, displayScale);
+  const { scale, layout, summary, sections } = getInboxDisplay(options, displayMode, displayScale);
 
   return (
     <ReleasesInbox
@@ -135,6 +129,7 @@ export default function ReleasesWidget({
       width={width * scale}
       height={height * scale}
       isEditMode={isEditMode}
+      layout={layout}
       summary={summary}
       sections={sections}
       collapsedSections={options.collapsedSections}
@@ -152,6 +147,7 @@ interface ReleasesInboxProps {
   width: number;
   height: number;
   isEditMode: boolean;
+  layout: ReleaseLayout;
   summary: ReleaseSummaryMode;
   sections: readonly ReleaseSectionKey[];
   collapsedSections: ReleaseSectionKey[];
@@ -167,6 +163,7 @@ const ReleasesInbox = ({
   width,
   height,
   isEditMode,
+  layout,
   summary,
   sections,
   collapsedSections,
@@ -330,6 +327,7 @@ const ReleasesInbox = ({
       ref={rootRef}
       className={`releases ${classes.root}`}
       data-density={density}
+      data-layout={layout}
       data-edit={isEditMode || undefined}
       style={{ ["--releases-pane-radius" as string]: `var(--mantine-radius-${board.itemRadius})` }}
     >
@@ -410,7 +408,7 @@ const ReleasesInbox = ({
             const section = grouped[key];
             const count = section.entries.length + countIssueEntries(section.issues);
             if (count === 0) return null;
-            const variant = getRowVariant(key, density);
+            const variant = getRowVariant(key, density, layout);
             return (
               <Section
                 key={key}
@@ -527,8 +525,14 @@ const EntryRow = ({
   const t = useI18n("widget.releases");
   const formatter = useFormatter();
   const age = (entry.publishedAt && now && formatter.relativeTime(entry.publishedAt, { now, style: "narrow" })) || "";
-  const outdatedIcon = hasOutdatedIntegration(entry) && (
-    <Tooltip label={t("updateAvailable")} withArrow>
+  const outdatedIntegrations = entry.integrations.filter((integration) => integration.isUpToDate === false);
+  const outdatedIcon = outdatedIntegrations.length > 0 && (
+    <Tooltip
+      label={outdatedIntegrations.map((integration) => (
+        <div key={integration.id}>{`${integration.name}: ${integration.version} → ${entry.version ?? ""}`}</div>
+      ))}
+      withArrow
+    >
       <span className={classes.outdated} aria-label={t("updateAvailable")}>
         <IconRefreshAlert style={zoomCompensatedSize(outdatedIconSizes[variant])} />
       </span>
@@ -617,6 +621,9 @@ interface IssueRowProps {
 
 const IssueRow = ({ group, variant, isSelected, isExpanded, onSelect, children }: IssueRowProps) => {
   const t = useI18n("widget.releases");
+  const title = t(`issue.${group.code}.title`, { provider: group.providerName ?? "" });
+  const names = group.entries.map((entry) => entry.name).join(", ");
+  const countBadge = group.entries.length > 1 && <span className={classes.countBadge}>{group.entries.length}</span>;
 
   return (
     <div
@@ -633,17 +640,23 @@ const IssueRow = ({ group, variant, isSelected, isExpanded, onSelect, children }
           aria-expanded={isExpanded}
         >
           <span className={classes.issueIcon}>
-            <IconAlertTriangle style={zoomCompensatedSize(16)} />
+            <IconAlertTriangle style={zoomCompensatedSize(issueIconSizes[variant])} />
           </span>
-          <span className={classes.text}>
+          {variant === "dense" && (
             <span className={classes.top}>
-              <span className={classes.name}>
-                {t(`issue.${group.code}.title`, { provider: group.providerName ?? "" })}
-              </span>
-              {group.entries.length > 1 && <span className={classes.countBadge}>{group.entries.length}</span>}
+              <span className={classes.name}>{names}</span>
+              <span className={classes.denseVersion}>{title}</span>
             </span>
-            <span className={classes.snippet}>{group.entries.map((entry) => entry.name).join(", ")}</span>
-          </span>
+          )}
+          {variant !== "dense" && (
+            <span className={classes.text}>
+              <span className={classes.top}>
+                <span className={classes.name}>{title}</span>
+                {countBadge}
+              </span>
+              <span className={classes.snippet}>{names}</span>
+            </span>
+          )}
         </UnstyledButton>
       </div>
       {isExpanded && <div className={classes.expand}>{children}</div>}

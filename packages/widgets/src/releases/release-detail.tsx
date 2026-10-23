@@ -113,7 +113,9 @@ export const ReleaseDetail = ({ entry, now, layout, onMarkViewed }: ReleaseDetai
   const formatter = useFormatter();
   const releaseHref = getSafeApplicationUrl(entry.releaseUrl);
   const projectHref = getSafeApplicationUrl(entry.projectUrl);
-  const hasStats = entry.starsCount !== undefined || entry.forksCount !== undefined || entry.openIssues !== undefined;
+  const hasStats = [entry.starsCount, entry.forksCount, entry.openIssues, entry.createdAt].some(
+    (value) => value !== undefined,
+  );
 
   return (
     <div className={`releases-detail ${classes.detail}`} data-layout={layout}>
@@ -239,6 +241,9 @@ export const ReleaseDetail = ({ entry, now, layout, onMarkViewed }: ReleaseDetai
           )}
           {entry.openIssues !== undefined && (
             <span className={classes.stat}>{t("openIssues", { count: entry.openIssues })}</span>
+          )}
+          {entry.createdAt && now && (
+            <span className={classes.stat}>{t("created", { time: formatter.relativeTime(entry.createdAt, now) })}</span>
           )}
         </div>
       )}
