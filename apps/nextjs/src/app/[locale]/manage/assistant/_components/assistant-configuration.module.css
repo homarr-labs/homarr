@@ -98,6 +98,15 @@
   flex: 1;
 }
 
+.enableSwitch {
+  width: 100%;
+}
+
+.enableSwitch :global(.mantine-Switch-body) {
+  align-items: center;
+  justify-content: space-between;
+}
+
 .flowActions {
   display: flex;
   justify-content: flex-end;

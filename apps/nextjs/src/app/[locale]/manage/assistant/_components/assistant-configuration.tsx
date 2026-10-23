@@ -29,7 +29,6 @@ import {
   IconAlertTriangle,
   IconBrandGithub,
   IconCheck,
-  IconCircleCheck,
   IconDatabaseSearch,
   IconKey,
   IconPlus,
@@ -172,11 +171,20 @@ export const AssistantConfiguration = ({ refreshAfterSave = true }: AssistantCon
     );
     setModelDiscoveryPath(configuration?.modelDiscoveryPath ?? "");
     setModelId(configuration?.modelId ?? "");
-    setEnabled(configuration?.enabled ?? false);
     setWebSearchEnabled(configuration?.webSearchEnabled ?? false);
     setApiKey("");
     setCredentialFlow("idle");
-  }, [configuration]);
+  }, [
+    configuration?.provider,
+    configuration?.baseUrl,
+    configuration?.modelDiscoveryPath,
+    configuration?.modelId,
+    configuration?.webSearchEnabled,
+  ]);
+
+  useEffect(() => {
+    setEnabled(configuration?.enabled ?? false);
+  }, [configuration?.enabled]);
 
   const normalizedBaseUrl = baseUrl.trim().replace(/\/$/, "");
   const normalizedModelDiscoveryPath = modelDiscoveryPath.trim() || null;
@@ -194,7 +202,10 @@ export const AssistantConfiguration = ({ refreshAfterSave = true }: AssistantCon
     refetch: discoverModels,
   } = clientApi.assistant.discoverModels.useQuery(undefined, {
     enabled:
-      configuration?.connectionConfigured === true && configuration.modelDiscoveryPath !== null && !connectionChanged,
+      enabled &&
+      configuration?.connectionConfigured === true &&
+      configuration.modelDiscoveryPath !== null &&
+      !connectionChanged,
     staleTime: 5 * 60_000,
     retry: false,
   });
@@ -254,6 +265,9 @@ export const AssistantConfiguration = ({ refreshAfterSave = true }: AssistantCon
       setCredentialFlow("idle");
       setHeaders([]);
       setClearHeaders(false);
+      // Disabled discovery queries keep their previous models when invalidated.
+      await utils.assistant.discoverModels.cancel();
+      utils.assistant.discoverModels.setData(undefined, []);
       await Promise.all([
         utils.assistant.getAdminConfiguration.invalidate(),
         utils.assistant.discoverModels.invalidate(),
@@ -269,16 +283,20 @@ export const AssistantConfiguration = ({ refreshAfterSave = true }: AssistantCon
     onError: (error) => showErrorNotification({ title: t("notification.error.title"), message: error.message }),
   });
 
+  const refreshAssistantConfiguration = async () => {
+    await Promise.all([
+      utils.assistant.getAdminConfiguration.invalidate(),
+      utils.assistant.getAvailability.invalidate(),
+      utils.assistant.getRuntimeOptions.invalidate(),
+    ]);
+    if (refreshAfterSave) {
+      router.refresh();
+    }
+  };
+
   const saveConfiguration = clientApi.assistant.updateConfiguration.useMutation({
     onSuccess: async () => {
-      await Promise.all([
-        utils.assistant.getAdminConfiguration.invalidate(),
-        utils.assistant.getAvailability.invalidate(),
-        utils.assistant.getRuntimeOptions.invalidate(),
-      ]);
-      if (refreshAfterSave) {
-        router.refresh();
-      }
+      await refreshAssistantConfiguration();
       showSuccessNotification({
         title: t("notification.saved.title"),
         message: t("notification.saved.message"),
@@ -287,7 +305,16 @@ export const AssistantConfiguration = ({ refreshAfterSave = true }: AssistantCon
     onError: (error) => showErrorNotification({ title: t("notification.error.title"), message: error.message }),
   });
 
-  const pending = updateConnection.isPending || saveConfiguration.isPending;
+  const updateAvailability = clientApi.assistant.updateConfiguration.useMutation({
+    onMutate: (input) => setEnabled(input.enabled),
+    onSuccess: refreshAssistantConfiguration,
+    onError: (error) => {
+      setEnabled(configuration?.enabled ?? false);
+      showErrorNotification({ title: t("notification.error.title"), message: error.message });
+    },
+  });
+
+  const pending = updateConnection.isPending || saveConfiguration.isPending || updateAvailability.isPending;
 
   const resetCredentialFlow = () => {
     setApiKey("");
@@ -299,7 +326,6 @@ export const AssistantConfiguration = ({ refreshAfterSave = true }: AssistantCon
     setHeaders([]);
     setClearHeaders(false);
     setModelId("");
-    setEnabled(false);
     setWebSearchEnabled(false);
   };
 
@@ -323,7 +349,6 @@ export const AssistantConfiguration = ({ refreshAfterSave = true }: AssistantCon
   const changeModelDiscoveryPath = (value: string) => {
     if (value !== modelDiscoveryPath) {
       setModelId("");
-      setEnabled(false);
     }
     setModelDiscoveryPath(value);
   };
@@ -371,6 +396,23 @@ export const AssistantConfiguration = ({ refreshAfterSave = true }: AssistantCon
   return (
     <>
       <Stack className={classes.configuration} gap="md">
+        <Paper className={classes.enableRow} withBorder p="md" radius="md">
+          <Group justify="space-between" align="center">
+            <Switch
+              className={classes.enableSwitch}
+              checked={enabled}
+              onChange={(event) => updateAvailability.mutate({ enabled: event.currentTarget.checked })}
+              disabled={pending}
+              label={t("enabled.label")}
+              description={t("enabled.description")}
+              labelPosition="left"
+              onLabel={t("enabled.on")}
+              offLabel={t("enabled.off")}
+              size="lg"
+            />
+          </Group>
+        </Paper>
+
         <Paper className={classes.summary} withBorder p="md" radius="md" pos="relative">
           <LoadingOverlay visible={pending} />
           <Group justify="space-between" align="center">
@@ -664,12 +706,11 @@ export const AssistantConfiguration = ({ refreshAfterSave = true }: AssistantCon
           actions={
             <Group justify="flex-end">
               <Button
-                leftSection={<IconCircleCheck size={16} />}
                 onClick={saveAssistantConfiguration}
-                disabled={!canSaveConfiguration}
+                disabled={!canSaveConfiguration || pending}
                 loading={saveConfiguration.isPending}
               >
-                {t("save")}
+                {t("model.save")}
               </Button>
             </Group>
           }
@@ -789,24 +830,6 @@ export const AssistantConfiguration = ({ refreshAfterSave = true }: AssistantCon
               </Group>
             </Stack>
           )}
-
-          <Group className={classes.enableRow} justify="space-between" align="center" wrap="nowrap">
-            <Box>
-              <Text size="sm" fw={600}>
-                {t("enabled.label")}
-              </Text>
-              <Text size="sm" c="dimmed">
-                {t("enabled.description")}
-              </Text>
-            </Box>
-            <Switch
-              checked={enabled}
-              onChange={(event) => setEnabled(event.currentTarget.checked)}
-              disabled={!canSaveConfiguration}
-              aria-label={t("enabled.label")}
-              size="md"
-            />
-          </Group>
         </ConfigurationSection>
       </Stack>
     </>
