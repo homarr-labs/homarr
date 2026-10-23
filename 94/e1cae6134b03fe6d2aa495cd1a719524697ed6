@@ -1,0 +1,14 @@
+packages/widgets/src/calendar/component.module.css
+  h_d6e478ca18e517 60,63-64,82-96
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "94e1cae6134b03fe6d2aa495cd1a719524697ed6",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
