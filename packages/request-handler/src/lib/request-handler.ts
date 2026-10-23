@@ -29,6 +29,11 @@ const MAX_CACHE_SIZE = 1000;
 const MAX_INFLIGHT_REQUESTS = 100;
 const MAX_UPSTREAM_SETTLEMENT_GRACE_MS = 60_000;
 const DEFAULT_TTL_MS = 10_000;
+
+const resolveTtlMs = <TData>(ttl: number | ((data: TData) => number), data: TData) => {
+  if (typeof ttl === "function") return ttl(data);
+  return ttl;
+};
 const DEFAULT_STALE_IF_ERROR_TTL_MS = 5 * 60_000;
 const DEFAULT_REQUEST_TIMEOUT_MS = 60_000;
 const SHARED_REFRESH_POLL_MS = 100;
@@ -332,7 +337,7 @@ export const createRequestHandler = <TData, TInput extends Record<string, unknow
             upstreamSettledAsync = request.settledAsync;
             const data = await request.resultAsync;
             const completedAt = Date.now();
-            const entryTtlMs = typeof ttl === "function" ? ttl(data) : ttl;
+            const entryTtlMs = resolveTtlMs(ttl, data);
             const staleIfErrorTtlMs = options.fallbackToStaleOnError
               ? Math.max(0, options.staleIfErrorTtlMs ?? DEFAULT_STALE_IF_ERROR_TTL_MS)
               : 0;

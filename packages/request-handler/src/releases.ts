@@ -1,10 +1,17 @@
 import { withHttpRequestSignalAsync } from "@homarr/core/infrastructure/http";
 
-import type { ReleaseError, ReleaseResponse, ReleasesRepositoryRequest } from "./release-providers";
+import type { ReleaseErrorCode, ReleaseResponse, ReleasesRepositoryRequest } from "./release-providers";
 import { getLatestMatchingReleaseAsync } from "./release-providers";
 import { createRequestHandler } from "./lib/request-handler";
 
-const transientErrorCodes: ReleaseError["code"][] = ["rateLimited", "unexpected"];
+const RESULT_TTL_MS = 60 * 60 * 1000;
+const TRANSIENT_ERROR_TTL_MS = 5 * 60 * 1000;
+const transientErrorCodes: ReleaseErrorCode[] = ["rateLimited", "unexpected"];
+
+const getReleaseCacheTtlMs = (response: ReleaseResponse) => {
+  if (!response.success && transientErrorCodes.includes(response.error.code)) return TRANSIENT_ERROR_TTL_MS;
+  return RESULT_TTL_MS;
+};
 
 export const releasesRequestHandler = createRequestHandler<ReleaseResponse, ReleasesRepositoryRequest>({
   async requestAsync(input, signal) {
@@ -12,6 +19,5 @@ export const releasesRequestHandler = createRequestHandler<ReleaseResponse, Rele
   },
   requestTimeoutMs: 10_000,
   getCacheKey: ({ id: _id, ...input }) => JSON.stringify(input),
-  cacheTtlMs: (response) =>
-    !response.success && transientErrorCodes.includes(response.error.code) ? 5 * 60 * 1000 : 60 * 60 * 1000,
+  cacheTtlMs: getReleaseCacheTtlMs,
 });
