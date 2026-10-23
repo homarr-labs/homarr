@@ -1,0 +1,21 @@
+apps/docs/docs/widgets/releases/index.mdx
+  s_b33778671a3872::t_1e3cf721e4cfd8 42-43
+apps/docs/docs/widgets/releases/index.ts
+  s_b33778671a3872::t_c29370f98d1b2a 11-16
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "324c2873eb183d98852815f2e4a16d269ca83e2d",
+  "prompts": {},
+  "sessions": {
+    "s_b33778671a3872": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "4836a7b0-29a0-4329-9cac-5cfb8625bd5c",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
