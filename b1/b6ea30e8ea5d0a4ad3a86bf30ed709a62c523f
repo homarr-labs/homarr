@@ -1,0 +1,31 @@
+packages/request-handler/src/release-providers/github-container-registry.ts
+  s_b33778671a3872::t_4f89096372d42f 2,124
+packages/request-handler/src/release-providers/identifier.ts
+  s_b33778671a3872::t_d4048eb84710d0 8-9,11,16-20
+packages/widgets/src/releases/display.ts
+  s_9b7e99bd3ab786::t_f4db86258d06f8 36-45
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "b1b6ea30e8ea5d0a4ad3a86bf30ed709a62c523f",
+  "prompts": {},
+  "sessions": {
+    "s_9b7e99bd3ab786": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "65e5f33a-f2db-4674-8074-dcea9cc8135f",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_b33778671a3872": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "4836a7b0-29a0-4329-9cac-5cfb8625bd5c",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
