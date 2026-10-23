@@ -3228,6 +3228,10 @@
         },
         "viewMode": {
           "label": "Zobrazit"
+        },
+        "hideHeader": {
+          "label": "",
+          "description": ""
         }
       },
       "advanced": {
@@ -3245,15 +3249,11 @@
         "agenda": "Pořad jednání"
       },
       "controls": {
-        "view": "Zobrazení kalendáře",
         "today": "Dnes",
         "previous": "Předchozí období",
         "next": "Další období",
         "noEvents": "Žádné události v tomto období",
         "more": "{count} další",
-        "moreLabel": "Zobrazit další {count} události",
-        "eventDetails": "Detaily události",
-        "close": "Zavřít detaily události",
         "timeSlot": "Časový úsek",
         "weekday": "Den v týdnu"
       }
@@ -5054,6 +5054,14 @@
     "uptimeKuma": {
       "description": "Sledujte statistiky dostupnosti ze své stránky se stavem Uptime Kuma",
       "option": {
+        "statusPageSlug": {
+          "label": "",
+          "description": ""
+        },
+        "summaryOnly": {
+          "label": "",
+          "description": ""
+        },
         "showSummary": {
           "label": "",
           "description": ""

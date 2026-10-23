@@ -152,7 +152,7 @@
         "columns": "Стовпці дошки",
         "columnsDescription": "Колонки визначають горизонтальну сітку, яка використовується для розмірів та позиціонування. 12 - це достатньо для більшості людей.",
         "columnCount": "{count, plural, one {# стовпець} other {# стовпчиків}}",
-        "leftSidebar": "",
+        "leftSidebar": "Лівий сайдбар",
         "rightSidebar": "Права бічна панель",
         "previewLabel": "Попередній перегляд першого макету дошки"
       },
@@ -171,7 +171,7 @@
           "description": "Переглядайте Користувальницькі Віджети спільноти, огляньте потрібні можливості, встановіть їх та публікуйте власну роботу без копіювання коду між серверами.",
           "available": "Доступно",
           "checking": "Перевірка…",
-          "unavailable": "",
+          "unavailable": "Недоступно",
           "discoverTitle": "Відкрийте для себе",
           "discoverDescription": "Знайти віджети побудовані для справжніх робочих процесів самозапуску.",
           "installTitle": "Перегляд та встановлення",
@@ -203,7 +203,7 @@
         "columns": "Стовпці дошки",
         "columnsValue": "{count, plural, one {# стовпець} other {# стовпчиків}}",
         "sidebars": "Бічні панелі",
-        "sidebarsValue": "",
+        "sidebarsValue": "{count, plural, =0 {None} one {# sidebar} few {# sidebars} many {# sidebars} other {# sidebars}}",
         "layouts": "Адаптивні макети",
         "layoutsValue": "Мобільний + Базовий",
         "integrations": "Інтеграції",
@@ -917,7 +917,7 @@
       "action": {
         "components": "Компоненти",
         "format": "Форматувати",
-        "insertStarter": "",
+        "insertStarter": "Вставити таблицю",
         "redo": "Повторити дію",
         "copied": "Скопійовано",
         "schema": "Схема"
@@ -935,14 +935,14 @@
         "errors": "{count, number} помилки",
         "warnings": "{count, number} попередження",
         "ready": "Проблеми не знайдено",
-        "position": "",
+        "position": "Ln {line, number}, Col {column, number}",
         "characters": "{count, number} символи",
-        "charactersWithLimit": ""
+        "charactersWithLimit": "{count, number} / {limit, number}"
       },
       "diagnostics": {
         "title": "Діагностика шаблону",
         "line": "Рядок {line, number}",
-        "ast": "",
+        "ast": "{value}",
         "bindingTypeConflict": "Вхідний \"{value}є спільним контролем з несумісними типами значень.",
         "runtimeBindingTypeConflict": "Вхідний \"{value}\" прив'язаний як {firstType} і {secondType}.",
         "dynamicRequestId": "Потрібен текстовий запит. Ідентифікатори динамічного запиту не приймаються.",
@@ -966,7 +966,7 @@
         "sources": "Джерела API",
         "requests": "Запити",
         "options": "Опції",
-        "jsx": "",
+        "jsx": "JSX",
         "preview": "Попередній перегляд"
       },
       "status": {
@@ -997,7 +997,7 @@
       "builder": {
         "advancedManifest": "Розширений сирий маніфест",
         "advancedJson": "Розширений JSON маніфесту",
-        "manifestFilename": "",
+        "manifestFilename": "widget.json",
         "request": "Запит {count, number}",
         "requestId": "Номер запиту",
         "type": "Тип клієнта",
@@ -1068,7 +1068,7 @@
       },
       "sources": {
         "title": "Джерела API і облікові дані",
-        "newName": "",
+        "newName": "API {count, number}",
         "duplicateSourceId": "Ідентифікатори джерел API повинні бути унікальними.",
         "credentialRemoved": "Облікові дані видалені",
         "credentialRemovedDescription": "Збережене значення видалено.",
@@ -3228,6 +3228,10 @@
         },
         "viewMode": {
           "label": "Вигляд"
+        },
+        "hideHeader": {
+          "label": "",
+          "description": ""
         }
       },
       "advanced": {
@@ -3245,15 +3249,11 @@
         "agenda": "Порядок денний"
       },
       "controls": {
-        "view": "Подання календаря",
         "today": "Сьогодні",
         "previous": "Попередній період",
         "next": "Наступний період",
         "noEvents": "Немає подій у цьому періоді",
         "more": "{count} більше",
-        "moreLabel": "",
-        "eventDetails": "Подробиці події",
-        "close": "Закрити деталі події",
         "timeSlot": "Гніздо часу",
         "weekday": "Будній день"
       }
@@ -5054,6 +5054,14 @@
     "uptimeKuma": {
       "description": "Відстежуйте статистику безвідмовної роботи на сторінці стану Uptime Kuma",
       "option": {
+        "statusPageSlug": {
+          "label": "Слаг сторінки статусу",
+          "description": ""
+        },
+        "summaryOnly": {
+          "label": "",
+          "description": ""
+        },
         "showSummary": {
           "label": "",
           "description": ""

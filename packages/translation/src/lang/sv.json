@@ -3228,6 +3228,10 @@
         },
         "viewMode": {
           "label": "Visa"
+        },
+        "hideHeader": {
+          "label": "",
+          "description": ""
         }
       },
       "advanced": {
@@ -3245,15 +3249,11 @@
         "agenda": "Föredragningslista"
       },
       "controls": {
-        "view": "Kalender vy",
         "today": "Idag",
         "previous": "Föregående period",
         "next": "Nästa period",
         "noEvents": "Inga händelser i denna period",
         "more": "{count} mer",
-        "moreLabel": "Visa {count} fler händelser",
-        "eventDetails": "Händelse detaljer",
-        "close": "Stäng händelsedetaljer",
         "timeSlot": "Tidsgräns",
         "weekday": "Veckodag"
       }
@@ -5054,6 +5054,14 @@
     "uptimeKuma": {
       "description": "Övervaka drifttidsstatistik från din Uptime Kuma-statussida",
       "option": {
+        "statusPageSlug": {
+          "label": "",
+          "description": ""
+        },
+        "summaryOnly": {
+          "label": "",
+          "description": ""
+        },
         "showSummary": {
           "label": "",
           "description": ""
