@@ -1,4 +1,11 @@
 ## What's Changed
+* fix(deps): patch Next.js security vulnerabilities by @ajnart in https://github.com/homarr-labs/homarr/pull/7280
+* chore(release): automatic release v2.8.1 by @github-actions[bot] in https://github.com/homarr-labs/homarr/pull/7281
+
+
+**Full Changelog**: https://github.com/homarr-labs/homarr/compare/v2.8.0...v2.8.1
+
+## What's Changed
 * feat(ci): sync triage replies with GitHub Projects by @ajnart in https://github.com/homarr-labs/homarr/pull/7249
 * chore: update bug report template by @homarr-releases[bot] in https://github.com/homarr-labs/homarr/pull/7251
 * i18n(cn): complete the Simplified Chinese catalog (266 missing keys) by @ApplesBear-X in https://github.com/homarr-labs/homarr/pull/7252
