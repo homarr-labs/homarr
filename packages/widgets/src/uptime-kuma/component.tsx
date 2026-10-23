@@ -94,7 +94,10 @@ function UptimeKumaContent({
 }: UptimeKumaContentProps) {
   const t = useI18n("widget.uptimeKuma");
   const now = useWidgetNow("minute");
-  const statusPagesQuery = clientApi.widget.uptimeKuma.getStatusPages.useQuery({ integrationIds });
+  const statusPagesQuery = clientApi.widget.uptimeKuma.getStatusPages.useQuery({
+    integrationIds,
+    statusPageSlug: options.statusPageSlug,
+  });
   const results = getUsableWidgetQueryData(statusPagesQuery);
 
   if (!results) return <WidgetQueryLoadingState />;
@@ -104,7 +107,7 @@ function UptimeKumaContent({
   );
   const uiScale = isAdvanced ? 1 : calculateBoardUiScale(displayScale);
   const size = { width: width / uiScale, height: height / uiScale };
-  const layout = getUptimeKumaLayout(size.width, size.height, isAdvanced);
+  const layout = getUptimeKumaLayout(size.width, size.height, isAdvanced, options.summaryOnly);
   const summary = summarizeUptimeKumaMonitors(getAllMonitors(pages));
   const notices = isAdvanced || options.showIncidents ? getNotices(pages, t("notice.untitled")) : [];
   const errorIndicator = <IntegrationErrorIndicator results={results} />;
@@ -195,12 +198,12 @@ interface TileLayoutProps {
 
 const TileLayout = ({ summary, notices, size, showUptime }: TileLayoutProps) => {
   const t = useI18n("widget.uptimeKuma");
-  const showAverageUptime = showUptime && summary.averageUptime24h !== null;
+  const showAverageUptime = showUptime && summary.averageUptime24h !== null && size.width >= 100 && size.height >= 100;
   const textHeight = 26 + (showAverageUptime ? 18 : 0);
-  const ringSize = clamp(Math.min(size.width - 16, size.height - 20 - textHeight), 48, 160);
+  const ringSize = clamp(Math.min(size.width - 16, size.height - 20 - textHeight), 24, 160);
 
   return (
-    <div className={classes.tile}>
+    <div className={classes.tile} data-compact={size.width < 100 || undefined}>
       {notices.length > 0 && (
         <div className={classes.tileNotice}>
           <NoticeIndicator notices={notices} />
@@ -242,7 +245,10 @@ const StripLayout = ({ pages, summary, notices, size, options }: StripLayoutProp
   const breakdownHeight = breakdown.rows * stripLineHeight;
   const showBreakdown = stripChromeHeight + breakdownHeight <= size.height;
   const usedHeight = stripChromeHeight + (showBreakdown ? breakdownHeight : 0);
-  const chipMonitors = sortMonitors(getAllMonitors(pages).filter(needsAttention), options.sortBy);
+  const chipMonitors = sortMonitors(
+    getAllMonitors(pages).filter((monitor) => !options.summaryOnly && needsAttention(monitor)),
+    options.sortBy,
+  );
   const chipRows = chipMonitors.length > 0 ? clamp(Math.floor((size.height - usedHeight) / chipRowHeight), 0, 3) : 0;
   const uptime = options.showUptime ? getAverageUptimeText(summary) : null;
   const uptimeLine = usedHeight + chipRows * chipRowHeight + stripLineHeight <= size.height ? uptime : null;

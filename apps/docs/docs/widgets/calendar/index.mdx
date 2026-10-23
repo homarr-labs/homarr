@@ -25,9 +25,7 @@ import { icalIntegration } from "@site/docs/integrations/ical";
 The Calendar widget combines events and upcoming media releases. Healthy integrations remain visible when another
 source fails.
 
-View choices are remembered per widget in this browser, including on read-only boards. They do not change the
-configured default or other users' views. Set the shared default in the widget configuration.
-Advanced view starts in Agenda and remembers its own browser-local selection. Timed events without an end time
+Advanced view always shows the Agenda. Timed events without an end time
 occupy a 30-minute slot in Day and Week; their details keep the original event time.
 
 ### Supported integrations
@@ -51,16 +49,15 @@ occupy a 30-minute slot in Day and Week; their details keep the original event t
 
 | View                        | Preview                                                                                                                                           |
 | --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Compact month (default)** | <img src="/img/widgets/calendar/current-view.png" width={800} height={560} alt="Default compact month with colored event indicators" />           |
-| Month                       | <img src="/img/widgets/calendar/month-view.png" width={400} height={280} alt="Month grid with event times, titles, and overflow counts" />        |
-| Week                        | <img src="/img/widgets/calendar/week-view.png" width={400} height={280} alt="Week time grid with visible all-day events" />                       |
-| Day                         | <img src="/img/widgets/calendar/day-view.png" width={400} height={280} alt="Day time grid with visible all-day and overlapping events" />         |
-| Agenda                      | <img src="/img/widgets/calendar/advanced-view.png" width={400} height={280} alt="Agenda with grouped events, source labels, and event details" /> |
+| **Compact month (default)** | <img src="/img/widgets/calendar/current-view.png" width={800} height={592} alt="Default compact month with colored event indicators" />           |
+| Month                       | <img src="/img/widgets/calendar/month-view.png" width={400} height={296} alt="Month grid with event times and titles" />                          |
+| Week                        | <img src="/img/widgets/calendar/week-view.png" width={400} height={296} alt="Week time grid with an all-day row" />                               |
+| Day                         | <img src="/img/widgets/calendar/day-view.png" width={400} height={296} alt="Day time grid with an all-day row" />                                 |
+| Agenda                      | <img src="/img/widgets/calendar/advanced-view.png" width={400} height={296} alt="Agenda with grouped events, source labels, and event details" /> |
 
 ### Interactions
 
-- Hover or select a marked date to inspect its events.
-- Month overflow counts open the complete list of events for that date.
+- Hover a date or event to inspect its details.
 
 <WidgetInteractionGuide />
 
