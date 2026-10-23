@@ -1,0 +1,33 @@
+.agents/skills/homarr-triage/SKILL.md
+  s_79391f7be06a4c::t_9cc9f4173f2429 3-4,9-10
+.agents/skills/homarr-triage/agents/openai.yaml
+  s_79391f7be06a4c::t_be11991845cea6 3-6
+AGENTS.md
+  s_79391f7be06a4c::t_a11efcffbd0530 102-112,125
+.github/pull_request_template.md
+  s_9b7e99bd3ab786::t_ec635209874895 15-16
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "9b199639ce989a64e40f30d5f7673e84fef4b244",
+  "prompts": {},
+  "sessions": {
+    "s_79391f7be06a4c": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a167d0-b947-7b20-bf63-f825aff27676",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_9b7e99bd3ab786": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "65e5f33a-f2db-4674-8074-dcea9cc8135f",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
