@@ -41,8 +41,8 @@ const toClosestPreset = (value: unknown, presets: string[], fallback: string) =>
   return presets.toSorted((left, right) => distance(left) - distance(right))[0] ?? fallback;
 };
 
-const toSections = (showOnlyHighlighted: unknown) => {
-  if (showOnlyHighlighted === false) return allSections;
+const toSections = (showOnlyHighlighted: unknown, staleReleaseWithin: unknown) => {
+  if (showOnlyHighlighted === false || staleReleaseWithin === "") return allSections;
   return allSections.filter((section) => section !== "upToDate");
 };
 
@@ -67,7 +67,8 @@ export async function migrateReleasesWidgetOptionsAsync(db: Database) {
             ...((showDetails === false || showOnlyIcon === true) && { layout: "compact" }),
             newReleaseWithin: toClosestPreset(options.newReleaseWithin, newReleaseWithinPresets, "1w"),
             staleReleaseWithin: toClosestPreset(options.staleReleaseWithin, staleReleaseWithinPresets, "6M"),
-            sections: toSections(showOnlyHighlighted),
+            sections: toSections(showOnlyHighlighted, options.staleReleaseWithin),
+            collapsedSections: [],
           }),
         })
         .where(eq(items.id, item.id));

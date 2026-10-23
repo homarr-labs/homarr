@@ -123,6 +123,27 @@ describe("getEntryKind", () => {
   test.each([true, undefined])("is not outdated when the integration status is %s", (isUpToDate) => {
     expect(kindOf(daysAgo(10), { integrations: [integration(isUpToDate)] })).toBe("upToDate");
   });
+
+  test.each([
+    { newReleaseWithin: "3D", publishedAt: daysAgo(2), expected: "new" },
+    { newReleaseWithin: "12H", publishedAt: hoursAgo(13), expected: "upToDate" },
+    { newReleaseWithin: "2m", publishedAt: daysAgo(45), expected: "new" },
+    { newReleaseWithin: "1W", publishedAt: daysAgo(6), expected: "new" },
+  ])("reads the free-text new window $newReleaseWithin like the previous widget", (window) => {
+    const windows = { ...defaultWindows, newReleaseWithin: window.newReleaseWithin };
+    expect(kindOf(window.publishedAt, { windows })).toBe(window.expected);
+  });
+
+  test.each(["", "soon", "0d", "3x"])(
+    "never marks a release as new for the unusable new window %j",
+    (newReleaseWithin) => {
+      expect(kindOf(hoursAgo(1), { windows: { ...defaultWindows, newReleaseWithin } })).toBe("upToDate");
+    },
+  );
+
+  test("treats every release as quiet when the quiet window is empty, like the previous widget", () => {
+    expect(kindOf(daysAgo(10), { windows: { ...defaultWindows, staleReleaseWithin: "" } })).toBe("quiet");
+  });
 });
 
 describe("hasOutdatedIntegration", () => {

@@ -5,11 +5,17 @@ export interface OwnedName {
   name: string;
 }
 
+const splitIdentifier = (identifier: string) => identifier.split("/").filter((part) => part.length > 0);
+
 export const parseOwnedName = (identifier: string, format: string): OwnedName => {
-  const [owner, ...nameParts] = identifier.split("/").filter((part) => part.length > 0);
-  const name = nameParts.join("/");
+  const [owner, name] = splitIdentifier(identifier);
   if (!owner || !name) throw new ReleaseLookupError("invalidIdentifier", `Cannot parse "${identifier}" as ${format}`);
   return { owner, name };
+};
+
+export const parseOwnedPackageName = (identifier: string, format: string): OwnedName => {
+  const { owner } = parseOwnedName(identifier, format);
+  return { owner, name: splitIdentifier(identifier).slice(1).join("/") };
 };
 
 export const encodeOwnedName = ({ owner, name }: OwnedName) =>

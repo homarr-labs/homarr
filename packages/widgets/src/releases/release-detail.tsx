@@ -39,8 +39,14 @@ const markdownComponents: Components = {
       </a>
     );
   },
-  img: () => null,
+  img: ({ src, alt }) => {
+    const safeSrc = getSafeApplicationUrl(src);
+    if (!safeSrc) return null;
+    return <img src={safeSrc} alt={alt ?? ""} loading="lazy" referrerPolicy="no-referrer" />;
+  },
 };
+
+const describeSource = (entry: ReleaseEntry) => [entry.identifier, entry.provider?.name].filter(Boolean).join(" · ");
 
 const integrationStatusColors = {
   upToDate: "green",
@@ -124,13 +130,11 @@ export const ReleaseDetail = ({ entry, now, layout, onMarkViewed }: ReleaseDetai
           <EntryIcon entry={entry} size={38} />
           <div className={classes.detailTitle}>
             <div className={classes.detailName}>{entry.name}</div>
-            <div className={classes.detailId}>
-              {entry.identifier}
-              {entry.provider && ` · ${entry.provider.name}`}
-            </div>
+            <div className={classes.detailId}>{describeSource(entry)}</div>
           </div>
         </div>
       )}
+      {layout === "inline" && <div className={classes.detailId}>{describeSource(entry)}</div>}
 
       <div className={classes.facts}>
         {entry.version && <span className={classes.factVersion}>{entry.version}</span>}
@@ -323,10 +327,7 @@ export const IssueDetail = ({ group, layout }: IssueDetailProps) => {
           <li key={entry.id} className={classes.member}>
             <EntryIcon entry={entry} size={16} />
             <span className={classes.memberName}>{entry.name}</span>
-            <span className={classes.memberId}>
-              {entry.identifier}
-              {entry.provider && ` · ${entry.provider.name}`}
-            </span>
+            <span className={classes.memberId}>{describeSource(entry)}</span>
           </li>
         ))}
       </ul>

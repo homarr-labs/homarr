@@ -113,6 +113,14 @@ describe("Docker Hub releases", () => {
       expect(release).toMatchObject({ latestRelease: "v1.0.54-alpine", resolvedFromTag: "latest" });
     });
 
+    test("ignores path segments after the repository name", async () => {
+      serveHub({ namespace: "owner", name: "app", pages: [[tag("latest", 4)]] });
+
+      const release = await expectRelease({ provider: "dockerHub", identifier: "owner/app/tags" });
+
+      expect(release.latestRelease).toBe("latest");
+    });
+
     test("keeps latest when no tag shares its digest", async () => {
       serveHub({
         namespace: "owner",

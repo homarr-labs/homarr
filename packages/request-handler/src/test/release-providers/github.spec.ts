@@ -209,6 +209,14 @@ describe("GitHub releases", () => {
     expect(requests[0]?.headers.authorization).toBe("token ghp_secret");
   });
 
+  test("ignores path segments after the repository name", async () => {
+    serveGithub({ releases: [release("v1.0.0", 1)] });
+
+    const result = await expectRelease({ provider: "github", identifier: "owner/repo/releases" });
+
+    expect(result.latestRelease).toBe("v1.0.0");
+  });
+
   test("rejects an identifier without a repository name before any request", async () => {
     const error = await expectFailure({ provider: "github", identifier: "owner" });
 

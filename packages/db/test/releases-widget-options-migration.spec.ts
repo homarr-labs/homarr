@@ -141,6 +141,18 @@ describe("releases widget options migration", () => {
     expect(options.sections).toEqual(expected);
   });
 
+  test("keeps every section when the quiet window was empty, because every release was highlighted", async () => {
+    const options = await migrateOptionsAsync({ ...legacyDefaults, staleReleaseWithin: "" });
+
+    expect(options.sections).toEqual(["new", "attention", "upToDate", "quiet"]);
+  });
+
+  test("expands every section, because the previous widget never collapsed rows", async () => {
+    const options = await migrateOptionsAsync(legacyDefaults);
+
+    expect(options.collapsedSections).toEqual([]);
+  });
+
   test("hides the up to date section when show only highlighted is missing", async () => {
     const { showOnlyHighlighted: _showOnlyHighlighted, ...legacy } = legacyDefaults;
 
@@ -192,6 +204,7 @@ describe("releases widget options migration", () => {
       newReleaseWithin: "1w",
       staleReleaseWithin: "6M",
       sections: ["new", "attention", "quiet"],
+      collapsedSections: [],
       showChangelogPreview: true,
       repositories,
       hiddenDockerSuggestions: ["nginx"],
@@ -205,6 +218,7 @@ describe("releases widget options migration", () => {
       newReleaseWithin: "2w",
       staleReleaseWithin: "6M",
       sections: ["new", "attention", "quiet"],
+      collapsedSections: [],
     });
   });
 
@@ -245,6 +259,7 @@ describe("releases widget options migration", () => {
       newReleaseWithin: "1w",
       staleReleaseWithin: "6M",
       sections: ["new", "attention", "upToDate", "quiet"],
+      collapsedSections: [],
       showChangelogPreview: false,
       layout: "compact",
     });

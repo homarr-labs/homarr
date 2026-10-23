@@ -729,6 +729,12 @@
   color: var(--mantine-color-anchor);
 }
 
+.notes img {
+  max-width: 100%;
+  height: auto;
+  border-radius: rem(4px);
+}
+
 .noNotes {
   color: var(--releases-dim);
   font-size: rem(12.48px);

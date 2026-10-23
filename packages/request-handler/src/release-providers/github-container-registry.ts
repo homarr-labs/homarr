@@ -1,5 +1,5 @@
 import type { OwnedName } from "./identifier";
-import { parseGithubRepositoryUrl, parseOwnedName } from "./identifier";
+import { parseGithubRepositoryUrl, parseOwnedPackageName } from "./identifier";
 import type { OciImage } from "./oci-registry";
 import { OciRegistry } from "./oci-registry";
 import { pickHighestVersionTag } from "./registry-tags";
@@ -121,7 +121,7 @@ export const getGitHubContainerRegistryReleaseAsync: ReleaseProvider = async ({
   versionPattern,
   token,
 }) => {
-  const repository = parseOwnedName(identifier, "owner/package");
+  const repository = parseOwnedPackageName(identifier, "owner/package");
   const registry = await OciRegistry.connectAsync(baseUrl, `${repository.owner}/${repository.name}`, token);
   const resolved = await resolveImageAsync(registry, identifier, versionPattern);
   return { ...describeProject(repository, resolved.image.labels), ...toRelease(resolved) };

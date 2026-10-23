@@ -33,7 +33,16 @@ export const sectionByKind: Record<EntryKind, ReleaseSectionKey> = {
   quiet: "quiet",
 };
 
-const isWithin = (date: Date, relativeDate: string) => relativeDate !== "never" && isDateWithin(date, relativeDate);
+const normalizeRelativeDate = (relativeDate: string) => {
+  if (/^\d+m$/.test(relativeDate)) return relativeDate.toUpperCase();
+  if (/^\d+[HDWY]$/.test(relativeDate)) return relativeDate.toLowerCase();
+  return relativeDate;
+};
+
+const isWithin = (date: Date, relativeDate: string) => {
+  const normalized = normalizeRelativeDate(relativeDate);
+  return /^[1-9]\d*[hdwMy]$/.test(normalized) && isDateWithin(date, normalized);
+};
 
 export const hasOutdatedIntegration = (entry: Pick<ReleaseEntry, "integrations">) =>
   entry.integrations.some((integration) => integration.isUpToDate === false);
