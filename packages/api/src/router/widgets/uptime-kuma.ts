@@ -1,5 +1,8 @@
+import { z } from "zod/v4";
+
 import { uptimeKumaRequestHandler } from "@homarr/request-handler/uptime-kuma";
 import { mockWidgetData } from "@homarr/integrations";
+import { uptimeKumaStatusPageSlugSchema } from "@homarr/validation/uptime-kuma";
 
 import { createManyWidgetIntegrationMiddleware } from "../../middlewares/integration";
 import { settleIntegrationQueries, toPublicIntegrationError } from "../../settle-integrations";
@@ -8,7 +11,8 @@ import { createTRPCRouter, publicProcedure } from "../../trpc";
 export const uptimeKumaRouter = createTRPCRouter({
   getStatusPages: publicProcedure
     .concat(createManyWidgetIntegrationMiddleware("query", "uptimeKuma"))
-    .query(async ({ ctx }) => {
+    .input(z.object({ statusPageSlug: uptimeKumaStatusPageSlugSchema.optional() }))
+    .query(async ({ ctx, input }) => {
       return await settleIntegrationQueries(
         ctx.integrations,
         async (integration) => {
@@ -22,7 +26,10 @@ export const uptimeKumaRouter = createTRPCRouter({
               error: undefined,
             };
           }
-          const innerHandler = uptimeKumaRequestHandler.handler({ ...integration, kind: "uptimeKuma" }, {});
+          const innerHandler = uptimeKumaRequestHandler.handler(
+            { ...integration, kind: "uptimeKuma" },
+            { statusPageSlug: input.statusPageSlug },
+          );
           const { data, timestamp } = await innerHandler.getDataAsync();
 
           return {

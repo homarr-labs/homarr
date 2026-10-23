@@ -22,6 +22,10 @@ export const { definition, componentLoader } = createWidgetDefinition("calendar"
           label: (t) => t(`widget.calendar.view.${value}`),
         })),
       }),
+      hideHeader: factory.switch({
+        defaultValue: false,
+        withDescription: true,
+      }),
       releaseType: factory.multiSelect({
         defaultValue: ["inCinemas", "digitalRelease"],
         options: radarrReleaseTypes.map((value) => ({
