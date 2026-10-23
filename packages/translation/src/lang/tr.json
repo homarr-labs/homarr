@@ -3228,6 +3228,10 @@
         },
         "viewMode": {
           "label": "Görünüm"
+        },
+        "hideHeader": {
+          "label": "",
+          "description": ""
         }
       },
       "advanced": {
@@ -3245,15 +3249,11 @@
         "agenda": ""
       },
       "controls": {
-        "view": "",
         "today": "Bugün",
         "previous": "",
         "next": "",
         "noEvents": "",
         "more": "",
-        "moreLabel": "",
-        "eventDetails": "",
-        "close": "",
         "timeSlot": "",
         "weekday": ""
       }
@@ -5054,6 +5054,14 @@
     "uptimeKuma": {
       "description": "Uptime Kuma durum sayfanızdaki çalışma süresi istatistiklerini izleyin",
       "option": {
+        "statusPageSlug": {
+          "label": "Durum sayfası kısa adı",
+          "description": ""
+        },
+        "summaryOnly": {
+          "label": "",
+          "description": ""
+        },
         "showSummary": {
           "label": "",
           "description": ""

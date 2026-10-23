@@ -3228,6 +3228,10 @@
         },
         "viewMode": {
           "label": "Ver"
+        },
+        "hideHeader": {
+          "label": "",
+          "description": ""
         }
       },
       "advanced": {
@@ -3245,15 +3249,11 @@
         "agenda": "Orden del día"
       },
       "controls": {
-        "view": "Vista de calendario",
         "today": "Hoy",
         "previous": "Periodo anterior",
         "next": "Siguiente período",
         "noEvents": "No hay eventos en este período",
         "more": "",
-        "moreLabel": "",
-        "eventDetails": "Detalles del evento",
-        "close": "Cerrar detalles del evento",
         "timeSlot": "Intervalo de tiempo",
         "weekday": "Día semanal"
       }
@@ -5054,6 +5054,14 @@
     "uptimeKuma": {
       "description": "",
       "option": {
+        "statusPageSlug": {
+          "label": "Slug de página de estado",
+          "description": ""
+        },
+        "summaryOnly": {
+          "label": "",
+          "description": ""
+        },
         "showSummary": {
           "label": "",
           "description": ""

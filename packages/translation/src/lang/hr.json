@@ -3228,6 +3228,10 @@
         },
         "viewMode": {
           "label": ""
+        },
+        "hideHeader": {
+          "label": "",
+          "description": ""
         }
       },
       "advanced": {
@@ -3245,15 +3249,11 @@
         "agenda": ""
       },
       "controls": {
-        "view": "",
         "today": "",
         "previous": "",
         "next": "",
         "noEvents": "",
         "more": "",
-        "moreLabel": "",
-        "eventDetails": "",
-        "close": "",
         "timeSlot": "",
         "weekday": ""
       }
@@ -5054,6 +5054,14 @@
     "uptimeKuma": {
       "description": "Pratite statistiku dostupnosti sa svoje stranice statusa Uptime Kuma",
       "option": {
+        "statusPageSlug": {
+          "label": "",
+          "description": ""
+        },
+        "summaryOnly": {
+          "label": "",
+          "description": ""
+        },
         "showSummary": {
           "label": "",
           "description": ""

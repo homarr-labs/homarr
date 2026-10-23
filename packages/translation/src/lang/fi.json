@@ -3228,6 +3228,10 @@
         },
         "viewMode": {
           "label": "Näytä"
+        },
+        "hideHeader": {
+          "label": "",
+          "description": ""
         }
       },
       "advanced": {
@@ -3245,15 +3249,11 @@
         "agenda": "Esityslista"
       },
       "controls": {
-        "view": "Kalenterin näkymä",
         "today": "Tänään",
         "previous": "Edellinen jakso",
         "next": "Seuraava kausi",
         "noEvents": "Ei tapahtumia tänä aikana",
         "more": "{count} lisää",
-        "moreLabel": "Näytä {count} muuta tapahtumaa",
-        "eventDetails": "Tapahtuman tiedot",
-        "close": "Sulje tapahtuman tiedot",
         "timeSlot": "Ajan paikka",
         "weekday": "Arkipäivä"
       }
@@ -5054,6 +5054,14 @@
     "uptimeKuma": {
       "description": "Tarkkaile käytettävyystilastoja Uptime Kuma -tilasivultasi",
       "option": {
+        "statusPageSlug": {
+          "label": "",
+          "description": ""
+        },
+        "summaryOnly": {
+          "label": "",
+          "description": ""
+        },
         "showSummary": {
           "label": "",
           "description": ""

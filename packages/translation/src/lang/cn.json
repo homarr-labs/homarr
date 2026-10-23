@@ -3228,6 +3228,10 @@
         },
         "viewMode": {
           "label": "视图"
+        },
+        "hideHeader": {
+          "label": "",
+          "description": ""
         }
       },
       "advanced": {
@@ -3245,15 +3249,11 @@
         "agenda": "议程项目"
       },
       "controls": {
-        "view": "日历视图",
         "today": "今天",
         "previous": "上一期间",
         "next": "下一周期",
         "noEvents": "这段时间里没有事件",
         "more": "还有 {count} 个",
-        "moreLabel": "显示另外 {count} 个事件",
-        "eventDetails": "事件详情",
-        "close": "关闭事件详情",
         "timeSlot": "时间段",
         "weekday": "周日"
       }
@@ -5054,6 +5054,14 @@
     "uptimeKuma": {
       "description": "来自 Uptime Kuma 状态页面的运行时间监控统计",
       "option": {
+        "statusPageSlug": {
+          "label": "状态页标识",
+          "description": ""
+        },
+        "summaryOnly": {
+          "label": "",
+          "description": ""
+        },
         "showSummary": {
           "label": "显示摘要",
           "description": "整体状态、计数和平均值"

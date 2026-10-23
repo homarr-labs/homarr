@@ -3228,6 +3228,10 @@
         },
         "viewMode": {
           "label": "Вид"
+        },
+        "hideHeader": {
+          "label": "",
+          "description": ""
         }
       },
       "advanced": {
@@ -3245,15 +3249,11 @@
         "agenda": "Расписание"
       },
       "controls": {
-        "view": "Вид календаря",
         "today": "Сегодня",
         "previous": "Предыдущий период",
         "next": "Следующий период",
         "noEvents": "Нет событий за этот период",
         "more": "Ещё {count}",
-        "moreLabel": "Показать ещё событий: {count}",
-        "eventDetails": "Подробности события",
-        "close": "Закрыть подробности события",
         "timeSlot": "Временной интервал",
         "weekday": "День недели"
       }
@@ -5054,6 +5054,14 @@
     "uptimeKuma": {
       "description": "Текущий статус, проверки и доступность мониторов со страницы статуса Uptime Kuma",
       "option": {
+        "statusPageSlug": {
+          "label": "Slug страницы статуса",
+          "description": ""
+        },
+        "summaryOnly": {
+          "label": "",
+          "description": ""
+        },
         "showSummary": {
           "label": "Показывать сводку",
           "description": "Общий статус, количество и средние значения"

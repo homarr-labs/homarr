@@ -3228,6 +3228,10 @@
         },
         "viewMode": {
           "label": "Bekijken"
+        },
+        "hideHeader": {
+          "label": "",
+          "description": ""
         }
       },
       "advanced": {
@@ -3245,15 +3249,11 @@
         "agenda": ""
       },
       "controls": {
-        "view": "Kalender weergave",
         "today": "vandaag",
         "previous": "Vorige periode",
         "next": "Volgende periode",
         "noEvents": "Geen gebeurtenissen in deze periode",
         "more": "{count} meer",
-        "moreLabel": "Toon {count} meer evenementen",
-        "eventDetails": "Details evenement",
-        "close": "Sluit evenement details",
         "timeSlot": "Tijd slot",
         "weekday": "Weekdag"
       }
@@ -5054,6 +5054,14 @@
     "uptimeKuma": {
       "description": "Bewaak uptime-statistieken van je Uptime Kuma statuspagina",
       "option": {
+        "statusPageSlug": {
+          "label": "",
+          "description": ""
+        },
+        "summaryOnly": {
+          "label": "",
+          "description": ""
+        },
         "showSummary": {
           "label": "",
           "description": ""

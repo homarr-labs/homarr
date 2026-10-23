@@ -3228,6 +3228,10 @@
         },
         "viewMode": {
           "label": "Vis"
+        },
+        "hideHeader": {
+          "label": "",
+          "description": ""
         }
       },
       "advanced": {
@@ -3245,15 +3249,11 @@
         "agenda": "Dagsorden"
       },
       "controls": {
-        "view": "Kalender visning",
         "today": "Idag",
         "previous": "Tidligere periode",
         "next": "Næste periode",
         "noEvents": "Ingen begivenheder i denne periode",
         "more": "{count} mere",
-        "moreLabel": "Vis {count} flere begivenheder",
-        "eventDetails": "Begivenhed detaljer",
-        "close": "Luk begivenhedsdetaljer",
         "timeSlot": "Tidspunkt",
         "weekday": "Ugedag"
       }
@@ -5054,6 +5054,14 @@
     "uptimeKuma": {
       "description": "Overvåg oppetidsstatistik fra din Uptime Kuma-statusside",
       "option": {
+        "statusPageSlug": {
+          "label": "",
+          "description": ""
+        },
+        "summaryOnly": {
+          "label": "",
+          "description": ""
+        },
         "showSummary": {
           "label": "",
           "description": ""
