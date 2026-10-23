@@ -259,14 +259,28 @@ export class JellyfinIntegration extends Integration implements IMediaServerInte
       // Root-level grouping uses the first library's type and can omit items from other libraries.
       groupItems: false,
     });
-    // Match Jellyfin's latest-media grouping without losing mixed-library results.
-    // A single recent episode stays visible; batches use the series artwork and metadata.
-    const episodeCounts = new Map<string, number>();
+    // Jellyfin groups additions within 24 hours of the newest episode in each series.
+    // Older episodes in the latest-100 response must not turn a single addition into a batch.
+    const recentAdditionWindowMs = 24 * 60 * 60 * 1000;
+    const latestEpisodeDates = new Map<string, number>();
     for (const item of result.data) {
       if (item.Type !== "Episode" || !item.SeriesId) continue;
-      episodeCounts.set(item.SeriesId, (episodeCounts.get(item.SeriesId) ?? 0) + 1);
+      const addedAt = Date.parse(item.DateCreated ?? "");
+      if (!Number.isFinite(addedAt)) continue;
+      latestEpisodeDates.set(
+        item.SeriesId,
+        Math.max(latestEpisodeDates.get(item.SeriesId) ?? Number.NEGATIVE_INFINITY, addedAt),
+      );
     }
-    const seriesIds = [...episodeCounts].filter(([, count]) => count > 1).map(([id]) => id);
+    const recentEpisodeCounts = new Map<string, number>();
+    for (const item of result.data) {
+      if (item.Type !== "Episode" || !item.SeriesId) continue;
+      const latestAddedAt = latestEpisodeDates.get(item.SeriesId);
+      if (latestAddedAt !== undefined && Date.parse(item.DateCreated ?? "") < latestAddedAt - recentAdditionWindowMs)
+        continue;
+      recentEpisodeCounts.set(item.SeriesId, (recentEpisodeCounts.get(item.SeriesId) ?? 0) + 1);
+    }
+    const seriesIds = [...recentEpisodeCounts].filter(([, count]) => count > 1).map(([id]) => id);
     const seriesResults = await Promise.allSettled(
       seriesIds.map((itemId) => userLibraryApi.getItem({ userId, itemId })),
     );
@@ -280,8 +294,17 @@ export class JellyfinIntegration extends Integration implements IMediaServerInte
     const items = result.data.flatMap((item) => {
       if (item.Type !== "Episode" || !item.SeriesId) return [item];
       const parent = series.get(item.SeriesId);
-      // Keep playable episodes if the parent is missing or inaccessible.
-      if (!parent) return [item];
+      // Single additions use the newest episode; failed batch lookups keep the original episodes.
+      if (!parent) {
+        const latestAddedAt = latestEpisodeDates.get(item.SeriesId);
+        if (
+          recentEpisodeCounts.get(item.SeriesId) === 1 &&
+          latestAddedAt !== undefined &&
+          Date.parse(item.DateCreated ?? "") < latestAddedAt
+        )
+          return [];
+        return [item];
+      }
       if (displayedSeries.has(item.SeriesId)) return [];
       displayedSeries.add(item.SeriesId);
       return [parent];
