@@ -1,0 +1,47 @@
+packages/request-handler/src/release-providers/codeberg.ts
+  s_b33778671a3872::t_15aaced1a4a416 66-68
+packages/request-handler/src/release-providers/docker-hub.ts
+  s_b33778671a3872::t_30bcf70cefeab2 83
+packages/request-handler/src/release-providers/github.ts
+  s_b33778671a3872::t_98fa03727862ae 91-93
+packages/request-handler/src/release-providers/gitlab.ts
+  s_b33778671a3872::t_4455e03bb019e1 69-71
+packages/request-handler/src/release-providers/http.ts
+  s_b33778671a3872::t_6b1329eeddcacf 8-9,14,49-66,68-70
+packages/request-handler/src/test/release-providers/codeberg.spec.ts
+  s_b33778671a3872::t_f41d79ac050fb0 4,50
+packages/request-handler/src/test/release-providers/dispatcher.spec.ts
+  s_b33778671a3872::t_cfc10cc18d16de 5,12
+packages/request-handler/src/test/release-providers/docker-hub.spec.ts
+  s_b33778671a3872::t_93f5a71494058c 4,51
+packages/request-handler/src/test/release-providers/github-container-registry.spec.ts
+  s_b33778671a3872::t_5adece0aaccd8a 4,22
+packages/request-handler/src/test/release-providers/github.spec.ts
+  s_b33778671a3872::t_d41f512ce242bc 1,4,73-77,85-89,156-195
+packages/request-handler/src/test/release-providers/gitlab.spec.ts
+  s_b33778671a3872::t_5f83a88572b721 4,45
+packages/request-handler/src/test/release-providers/linuxserver.spec.ts
+  s_b33778671a3872::t_eadf9ad3b1961a 4,46
+packages/request-handler/src/test/release-providers/npm.spec.ts
+  s_b33778671a3872::t_a50848c2aed03b 4,36
+packages/request-handler/src/test/release-providers/provider-server.ts
+  s_b33778671a3872::t_74c3e7e14dec23 7,38-42
+packages/request-handler/src/test/release-providers/quay.spec.ts
+  s_b33778671a3872::t_69b78f58515ff4 4-11,34
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "c6e1ed76e1130b42b1347d1bbeaf12312f5e791c",
+  "prompts": {},
+  "sessions": {
+    "s_b33778671a3872": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "4836a7b0-29a0-4329-9cac-5cfb8625bd5c",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
