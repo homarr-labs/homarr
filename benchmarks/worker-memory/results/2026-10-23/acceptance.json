@@ -1,0 +1,163 @@
+{
+  "date": "2026-10-23",
+  "baseCommit": "6de2c6735910447724ac3418cdba217314a2f17d",
+  "platform": "linux/amd64",
+  "bunVersion": "1.4.2",
+  "worker": {
+    "imageId": "sha256:1dc48229e15292320e23178aa28e2b825e36cf61d2cef99ba6d79b59ea93caf7",
+    "imageBytes": 125604788,
+    "baselineImageId": "sha256:2e092ca4bd13e64dc391953fc51d52df0a4d77e286a45ba5000cbe685fea9390",
+    "baselineImageBytes": 128817562,
+    "packageSmoke": {
+      "bcryptHashCompare": true,
+      "svgSanitized": true,
+      "genuineUndici": true,
+      "localHttpStatus": 200,
+      "dockerClientLoads": true,
+      "sshFallbackLoads": true,
+      "postgresDriverLoads": true,
+      "optionalRedisPing": "PONG",
+      "grpcLoads": true,
+      "prebuildArchitectures": ["linux-arm64", "linux-x64"],
+      "buildOnlyModulesAbsent": true
+    },
+    "encryptedSmoke": {
+      "status": "passed",
+      "imageId": "sha256:1dc48229e15292320e23178aa28e2b825e36cf61d2cef99ba6d79b59ea93caf7",
+      "transport": "direct authenticated encrypted WebSocket on worker port 3004",
+      "claim": {
+        "phase": "claim",
+        "status": "passed",
+        "bootstrapStatus": 200,
+        "ownerAdmin": true,
+        "boardCount": 2,
+        "layoutCount": 2,
+        "nativeBoardRead": true,
+        "rawPrivateStatuses": [404, 404, 404, 404],
+        "claimed": true,
+        "claimRemoved": true,
+        "capturedFrameCount": 40,
+        "privatePayloadAbsentFromFrames": true
+      },
+      "afterWorkerRestart": {
+        "phase": "restart",
+        "status": "passed",
+        "bootstrapStatus": 200,
+        "ownerAdmin": true,
+        "boardCount": 2,
+        "layoutCount": 2,
+        "nativeBoardRead": true,
+        "rawPrivateStatuses": [404, 404, 404, 404],
+        "claimed": true,
+        "claimRemoved": true,
+        "capturedFrameCount": 30,
+        "privatePayloadAbsentFromFrames": true
+      },
+      "reclaimDeniedAfterRestart": true,
+      "nativeRpcWireFormat": "POST /rpc/<procedure> with JSON object containing json input; parameterless calls use empty JSON object",
+      "scope": "task-owned disposable worker and its private volume only"
+    },
+    "stateBackend": "memory",
+    "ramRemeasured": false
+  },
+  "classic": {
+    "saved-edit": {
+      "anonymousProtectedStatus": 401,
+      "boardNameMatches": true,
+      "itemCount": 6,
+      "legacyBoardMatches": true,
+      "legacyHttpStatus": 200,
+      "legacyItemCount": 6,
+      "legacyWebSocket": {
+        "authorized": true,
+        "errorCode": null
+      },
+      "nativeStatus": 200,
+      "protectedNativeStatus": 200,
+      "weatherRemoved": true,
+      "browserErrors": [],
+      "nodeCliExitCode": 0,
+      "fixtureUserListed": true,
+      "imageId": "sha256:063c335964b13075cf050f38d14543806259999908d1f3be8e951ee9394dcdbf",
+      "imageBytes": 510914228,
+      "phase": "saved-edit"
+    },
+    "restarted": {
+      "anonymousProtectedStatus": 401,
+      "boardNameMatches": true,
+      "itemCount": 6,
+      "legacyBoardMatches": true,
+      "legacyHttpStatus": 200,
+      "legacyItemCount": 6,
+      "legacyWebSocket": {
+        "authorized": true,
+        "errorCode": null
+      },
+      "nativeStatus": 200,
+      "protectedNativeStatus": 200,
+      "weatherRemoved": true,
+      "browserErrors": [],
+      "nodeCliExitCode": 0,
+      "fixtureUserListed": true,
+      "imageId": "sha256:063c335964b13075cf050f38d14543806259999908d1f3be8e951ee9394dcdbf",
+      "imageBytes": 510914228,
+      "phase": "restarted"
+    },
+    "returning-login": {
+      "anonymousProtectedStatus": 401,
+      "boardNameMatches": true,
+      "itemCount": 6,
+      "legacyBoardMatches": true,
+      "legacyHttpStatus": 200,
+      "legacyItemCount": 6,
+      "legacyWebSocket": {
+        "authorized": true,
+        "errorCode": null
+      },
+      "nativeStatus": 200,
+      "protectedNativeStatus": 200,
+      "weatherRemoved": true,
+      "browserErrors": [],
+      "nodeCliExitCode": 0,
+      "fixtureUserListed": true,
+      "imageId": "sha256:063c335964b13075cf050f38d14543806259999908d1f3be8e951ee9394dcdbf",
+      "imageBytes": 510914228,
+      "phase": "returning-login"
+    },
+    "logout": {
+      "protectedStatusAfterLogout": 401
+    },
+    "cleanup": {
+      "stopExitCode": 0,
+      "oomKilled": false,
+      "qaResourcesRemoved": true
+    }
+  },
+  "frontendRegression": {
+    "reproducedOnImage": "sha256:bd26a5bb22360a860a434210907f4e06d9a625af735489bc8434653bb71e8e47",
+    "visibleItemCountAfterRemoval": 6,
+    "savedPayloadItemCountBeforeFix": 7,
+    "persistedItemCountBeforeFix": 7,
+    "persistedItemCountAfterFix": 6,
+    "cause": "Unstable useUtils identity triggered BoardProvider cleanup invalidation after cache edits."
+  },
+  "sourceSha256": {
+    "scripts/assemble-backend.mjs": "924bf9775121bb7f66c1625a814c6a97aa3197fd3d5a05b6690c14443098921b",
+    "scripts/run.sh": "c5727e033b131865db9cd4d6a936fa5f10b0f8d167f4c034661b023c4d1cebe4",
+    "packages/core/src/infrastructure/redis/redis-client.ts": "72982fecd2e47d283618650d13181dd2d1e8c0225287b5963098b560f4e63d2b",
+    "packages/api/src/client.ts": "6f778f771c90b8bb22bf336b61bde8cb2c61a2ead0fa83b66896a86cee7a6a96"
+  },
+  "limits": {
+    "worker": {
+      "cpus": 2,
+      "memoryBytes": 536870912,
+      "pids": 128
+    },
+    "classic": {
+      "cpus": 2,
+      "memoryBytes": 2147483648,
+      "pids": 256
+    }
+  },
+  "scope": "Disposable localhost fixtures only. No production deployment, public publication, OAuth or arm64 execution. RAM samples remain dated 2026-10-21."
+}

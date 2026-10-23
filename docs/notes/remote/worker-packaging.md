@@ -1,6 +1,6 @@
 # Bun worker packaging
 
-Current app-local build and measured RAM: [21 October 2026 worker measurements](worker-memory-20261021.md). The dated samples below remain historical implementation evidence.
+Current packaging and classic validation: [23 October follow-up](worker-compatibility-20261023.md). RAM remains the dated [21 October measurement](worker-memory-20261021.md). Older samples below are historical implementation evidence.
 
 ## Current contract
 

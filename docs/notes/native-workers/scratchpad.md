@@ -120,3 +120,7 @@ Measured relay-only workload points use verified 2 CPU / 512 MiB budgets, separa
 ### Standalone worker memory — 21 October 2026
 
 The backend-app Dockerfile now defaults to the isolated worker. Current build, idle/use/warmed measurements and exact image identity are in `../remote/worker-memory-20261021.md`. A real dashboard check exposed an empty-public-address bug in relay-only startup; the worker now normalizes that setting before native API dispatch. The corrected image passed real encrypted dashboard/management use and was retained locally; task-only containers/data/authority were removed.
+
+### Small worker and classic compatibility — 23 October 2026
+
+Evidence and deployment boundaries: `../remote/worker-compatibility-20261023.md`. Worker-only pruning plus retained optional Redis produces a 119.79 MiB image (2.49% below the measured 122.85 MiB baseline); no new RAM claim. Fresh actual-image checks cover encrypted board access/restart and classic onboarding, local login, native/legacy HTTP/WebSocket, CLI and persisted edits. Fixed CJS Redis initialization/module resolution and a shared frontend utilities identity bug that overwrote unsaved board edits. Independent reviews passed; task-only QA authority/data were removed. Images remain local; demos, original checkpoint and production were preserved.
