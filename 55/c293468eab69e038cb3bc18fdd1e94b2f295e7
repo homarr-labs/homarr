@@ -1,0 +1,83 @@
+packages/request-handler/src/lib/request-handler.ts
+  s_79391f7be06a4c::t_9136f88fdcf28a 32-36,340
+packages/request-handler/src/release-providers/docker-hub.ts
+  s_79391f7be06a4c::t_0e369f4c8a480d 1-85
+packages/request-handler/src/release-providers/index.ts
+  s_79391f7be06a4c::t_24d8bae8cfbd9c 1-48
+packages/request-handler/src/release-providers/registry-tags.ts
+  s_79391f7be06a4c::t_6d3f58b279006d 1-71
+packages/request-handler/src/release-providers/versions.ts
+  s_79391f7be06a4c::t_6d5b4b4a3e5032 1-70
+packages/request-handler/src/releases.ts
+  s_79391f7be06a4c::t_426b0f49e326a7 3,7-14,22
+packages/request-handler/src/test/release-providers/codeberg.spec.ts
+  s_79391f7be06a4c::t_baad3bd58d1bc8 1-149
+packages/request-handler/src/test/release-providers/dispatcher.spec.ts
+  s_79391f7be06a4c::t_2ebbb814c4e82b 1-45
+packages/request-handler/src/test/release-providers/docker-hub.spec.ts
+  s_79391f7be06a4c::t_7c94cf27ccf566 1-301
+packages/request-handler/src/test/release-providers/github.spec.ts
+  s_79391f7be06a4c::t_fe0fc6c13c06ef 1-247
+packages/request-handler/src/test/release-providers/gitlab.spec.ts
+  s_79391f7be06a4c::t_a949a6e8fe422a 1-164
+packages/request-handler/src/test/release-providers/linuxserver.spec.ts
+  s_79391f7be06a4c::t_463f40746d52d8 3-19,21-23,25-34,36-42,44,49-50,52-54,57-65,67,70-71,73,75-76,79-80,83-93,96,102-107,111-112,114,117,120,123-124,126,129,132,135-136,138,140,143-146,148,150-154,156
+packages/request-handler/src/test/release-providers/npm.spec.ts
+  s_79391f7be06a4c::t_02faff7890ea83 1-115
+packages/request-handler/src/test/release-providers/oci-registry-server.ts
+  s_79391f7be06a4c::t_3c1a7e3ebe84b7 1-87
+packages/request-handler/src/test/release-providers/provider-server.ts
+  s_79391f7be06a4c::t_a73a871b28846c 1-70
+packages/request-handler/src/test/release-providers/quay.spec.ts
+  s_79391f7be06a4c::t_c9ef29cefc50dd 3-4,9-20,23,25,30-52,55-64,66-72,75-107
+packages/request-handler/src/release-providers/codeberg.ts
+  s_b33778671a3872::t_e69519c627d0ad 1-68
+packages/request-handler/src/release-providers/errors.ts
+  s_b33778671a3872::t_46e71d5c882ae3 1-43
+packages/request-handler/src/release-providers/github-container-registry.ts
+  s_b33778671a3872::t_767be9b6a43aaf 1-128
+packages/request-handler/src/release-providers/github.ts
+  s_b33778671a3872::t_8e45505c906165 1-93
+packages/request-handler/src/release-providers/gitlab.ts
+  s_b33778671a3872::t_3a20c8da6431c9 1-71
+packages/request-handler/src/release-providers/http.ts
+  s_b33778671a3872::t_461ec77d636507 1-54
+packages/request-handler/src/release-providers/identifier.ts
+  s_b33778671a3872::t_8fe9c4f3776cc7 1-24
+packages/request-handler/src/release-providers/linuxserver.ts
+  s_b33778671a3872::t_de2552ac092828 1-77
+packages/request-handler/src/release-providers/npm.ts
+  s_b33778671a3872::t_2677a7dae11dfe 1-44
+packages/request-handler/src/release-providers/oci-registry.ts
+  s_b33778671a3872::t_50b0aa62297d14 3-6,8,14-15,17-19,23,31,33-38,40-42,44-79,81,84-87,89,91-94,98-101,103,106-111,114-117,120-121,124-127,130
+packages/request-handler/src/release-providers/quay.ts
+  s_b33778671a3872::t_06759f86afc2b1 1-39
+packages/request-handler/src/release-providers/types.ts
+  s_b33778671a3872::t_fb83bbfc655288 1-56
+packages/request-handler/src/test/release-providers/github-container-registry.spec.ts
+  s_b33778671a3872::t_fcca05c8f87305 1-424
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "55c293468eab69e038cb3bc18fdd1e94b2f295e7",
+  "prompts": {},
+  "sessions": {
+    "s_79391f7be06a4c": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a167d0-b947-7b20-bf63-f825aff27676",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_b33778671a3872": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "4836a7b0-29a0-4329-9cac-5cfb8625bd5c",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
