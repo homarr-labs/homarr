@@ -1,0 +1,132 @@
+.github/workflows/ci.yml
+  h_d6e478ca18e517 392
+.github/workflows/deployment-docker-image.yml
+  h_d6e478ca18e517 186,258
+.github/workflows/on-pr-prebuilt-debian-validate.yml
+  h_d6e478ca18e517 24
+.github/workflows/workshop.yml
+  h_d6e478ca18e517 102,141,143,193,240,287
+apps/nextjs/package.json
+  h_d6e478ca18e517 65-68,110
+apps/nextjs/src/app/[locale]/boards/(content)/_header-actions.tsx
+  h_d6e478ca18e517 6,67-71,195-206,208-215,220-221,224-238
+apps/nextjs/src/app/[locale]/boards/[name]/settings/_background.tsx
+  h_d6e478ca18e517 13,18-20,39-43,78,96,98,102,104,111,161,166-170,172
+apps/nextjs/src/app/[locale]/manage/medias/_actions/copy-media.tsx
+  h_d6e478ca18e517 7,18
+apps/nextjs/src/app/[locale]/manage/medias/_actions/upload-media.tsx
+  h_d6e478ca18e517 9,18
+apps/nextjs/src/app/[locale]/manage/medias/page.tsx
+  h_d6e478ca18e517 27,158-177,200
+apps/nextjs/src/app/api/backup/import/route.ts
+  h_d6e478ca18e517 26,324-330
+apps/nextjs/src/app/api/image-proxy/[id]/route.ts
+  h_d6e478ca18e517 20-21
+apps/nextjs/src/app/api/user-medias/[id]/route.spec.ts
+  h_d6e478ca18e517 1-117
+apps/nextjs/src/app/api/user-medias/[id]/route.ts
+  h_d6e478ca18e517 51-96,99,101,112-113,116,121,124,134-151
+apps/nextjs/src/components/assistant/assistant-auto-approval.spec.ts
+  h_d6e478ca18e517 33,249-250,266-267,282-284,288-292
+apps/nextjs/src/components/assistant/assistant-auto-approval.tsx
+  h_d6e478ca18e517 39,54,68,92,94-104,106-111,114,124,158
+apps/nextjs/src/components/assistant/assistant-command-plugin.tsx
+  h_d6e478ca18e517 1-46
+apps/nextjs/src/components/assistant/assistant-composer-triggers.tsx
+  h_d6e478ca18e517 5,8,13-14,21,51-52,56-58,60-65,79-84,90,122,124-130,134,143-149,154,166,170-186,194-209
+apps/nextjs/src/components/assistant/assistant-composer.tsx
+  h_d6e478ca18e517 3-4,18,30-31,41-45,53,57,104-128,160-162,176-178,206
+apps/nextjs/src/components/assistant/assistant-directives.ts
+  h_d6e478ca18e517 1,3
+apps/nextjs/src/components/assistant/assistant-history-state.tsx
+  h_d6e478ca18e517 1-32
+apps/nextjs/src/components/assistant/assistant-history.tsx
+  h_d6e478ca18e517 5-16,231-267,333
+apps/nextjs/src/components/assistant/assistant-message-content.tsx
+  h_d6e478ca18e517 14,314
+apps/nextjs/src/components/assistant/assistant-panel-controls.tsx
+  h_d6e478ca18e517 4-5,7,15-18,132-153,156-158,161,163,165,170,184-187,190
+apps/nextjs/src/components/assistant/assistant-prompts.ts
+  h_d6e478ca18e517 1-28
+apps/nextjs/src/components/assistant/assistant-provider.tsx
+  h_d6e478ca18e517 77,90,92,94-99,134,143,423-447,463-464,467,469-471,481-484,487-497,501,504-514,518,520-525,536,552-566,616,799,808-809,877-880,900,907,910-911,940-945,950,953,993-994,1015,1076,1102-1106,1115,1130-1132,1143,1146,1148
+apps/nextjs/src/components/assistant/assistant-runtime-provider.tsx
+  h_d6e478ca18e517 6,21,23,141,143,349
+apps/nextjs/src/components/assistant/assistant-tool-rendering.tsx
+  h_d6e478ca18e517 24,262-270,275,341,355
+apps/nextjs/src/components/board/board-app-url-drop.tsx
+  h_d6e478ca18e517 25-29,137,146,154-155,180-187
+apps/nextjs/src/components/layout/background.tsx
+  h_d6e478ca18e517 3-4,9-33,38,45,60-61,64,68-70,74,77-80,84-85,87
+apps/nextjs/src/components/layout/header/user-client.tsx
+  h_d6e478ca18e517 5,53-59
+bun.lock
+  h_d6e478ca18e517 143-146,188,1083-1087,1089-1090,1273-1278,1310-1313,1405,1407,1456,1534,1536,1538,1540,1542,1544,1560-1562,1564,1566,1568,1570,1572,2046,2048,2050,2052,2054,2056,2058,2060,2062,2064,2066,2068,2070,2072,2074,2076,2078,2080,2082,2084,2086,2088,2090,2432,2436,2438,2440,2442,2444,2454,2462,2468,2470,2474,2476,2478,2482,2484,2494,2496,2498,2504,2506,2508,2512,2516,2518,2520,2522,2524,2532,2542,3296,3336,4234,4794,4952,5462,5474,5476-5478,5548-5673,5676-5813,5932,6194-6237,6368-6373,6394-6423,6426-6449,6806-6808,6814-6819
+package.json
+  h_d6e478ca18e517 12-17,49-52,144,146,195,355-360
+packages/api/src/router/app.ts
+  h_d6e478ca18e517 238
+packages/api/src/router/medias/media-router.ts
+  h_d6e478ca18e517 8-13,87-92,95,108
+packages/api/src/router/test/app.spec.ts
+  h_d6e478ca18e517 17,406,422,425,429,441,444
+packages/api/src/router/test/media.spec.ts
+  h_d6e478ca18e517 1-62
+packages/api/src/router/widgets/custom-api.ts
+  h_d6e478ca18e517 134,143,167-172,196,201
+packages/api/src/router/widgets/downloads.ts
+  h_d6e478ca18e517 55
+packages/custom-widgets/src/core/request-schema.ts
+  h_d6e478ca18e517 177-183
+packages/custom-widgets/src/server/request-dispatcher-lifecycle.ts
+  h_d6e478ca18e517 33
+packages/custom-widgets/src/server/request-executor.ts
+  h_d6e478ca18e517 16,48,50-51,62,258,262,264
+packages/custom-widgets/src/server/request-limits.ts
+  h_d6e478ca18e517 24,69,81,101,103-116,142,144-158
+packages/custom-widgets/src/server/request-types.ts
+  h_d6e478ca18e517 33
+packages/forms-collection/src/upload-media/upload-media.tsx
+  h_d6e478ca18e517 8,13,18-24,27-28,38-43,61
+packages/icons/package.json
+  h_d6e478ca18e517 16-17
+packages/icons/src/local-media-url.ts
+  h_d6e478ca18e517 1-2
+packages/icons/src/local.ts
+  h_d6e478ca18e517 1-2
+packages/icons/src/repositories/local.icon-repository.ts
+  h_d6e478ca18e517 4,7,18
+packages/image-proxy/src/index.ts
+  h_d6e478ca18e517 6,27,43,90,165-176,178,180
+packages/image-proxy/src/test/index.spec.ts
+  h_d6e478ca18e517 37,46-51,107,110,115-116,119,122,125,129-130,134,139,143-144
+packages/integrations/src/download-client/deluge/deluge-integration.ts
+  h_d6e478ca18e517 14-17,21,62-65,86-111,124,132-140
+packages/integrations/src/download-client/select-torrents.ts
+  h_d6e478ca18e517 1-50
+packages/integrations/src/download-client/transmission/transmission-integration.ts
+  h_d6e478ca18e517 13-16,19,31-34,46-71,85,93-101
+packages/translation/src/lang/en.json
+  h_d6e478ca18e517 6317-6318,6320-6321,6359,6363,6367,8797-8804,8826,8842,8924-8926,8941-8947,9125
+packages/validation/src/media.ts
+  h_d6e478ca18e517 6-43,48,61,66,72-83
+packages/widgets/src/bookmarks/bookmarks-widget.tsx
+  h_d6e478ca18e517 100-121,155-157,161,232,258,273,275,297-298,526-529
+packages/widgets/src/bookmarks/layout.ts
+  h_d6e478ca18e517 200,208,252-256,260-261,264
+tools/v2-showreel/bun.lock
+  h_d6e478ca18e517 16,24,26,28,30,32,34,36,38,40,42,44,46,48,50,52,54,56,58,60,62,64,66,68,70,72,74,92
+tools/v2-showreel/package.json
+  h_d6e478ca18e517 18
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "9119f107325a79075db19fd226c08cab77fce88c",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
