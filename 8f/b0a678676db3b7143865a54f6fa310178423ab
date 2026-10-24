@@ -1,0 +1,23 @@
+apps/docs/docs/management/api/index.mdx
+  s_74b673c970ef48::t_16fae3491c5084 32
+packages/api/src/router/icons.ts
+  s_74b673c970ef48::t_c3eb8956fe86e5 64
+packages/api/src/test/read-only-credentials.spec.ts
+  s_74b673c970ef48::t_d931895cd3c10d 10,79,86,102,108
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "8fb0a678676db3b7143865a54f6fa310178423ab",
+  "prompts": {},
+  "sessions": {
+    "s_74b673c970ef48": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "39637ef8-fe7e-468c-8334-b026f7a4531e",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
