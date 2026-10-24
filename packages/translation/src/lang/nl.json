@@ -799,6 +799,11 @@
       }
     },
     "field": {
+      "url": {
+        "helpLabel": "Voorbeelden van URL-indelingen",
+        "examples": "Voorbeelden van ondersteunde links",
+        "requiresHandler": "Aangepaste protocollen vereisen een gekoppelde toepassing op je apparaat."
+      },
       "description": {
         "label": "Beschrijving"
       },
@@ -2312,6 +2317,15 @@
       "option": {
         "appId": {
           "label": "App kiezen"
+        },
+        "openIn": {
+          "label": "App openen in",
+          "description": "Kies waar deze app wordt geopend. Je browserinstellingen kunnen het openen in een apart venster beïnvloeden.",
+          "option": {
+            "currentTab": "Huidig tabblad",
+            "newTab": "Nieuw tabblad",
+            "newWindow": "Nieuw venster"
+          }
         },
         "showTitle": {
           "label": "App naam weergeven"

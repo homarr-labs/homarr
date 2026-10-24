@@ -799,6 +799,11 @@
       }
     },
     "field": {
+      "url": {
+        "helpLabel": "Ví dụ về định dạng URL",
+        "examples": "Ví dụ về liên kết được hỗ trợ",
+        "requiresHandler": "Giao thức tùy chỉnh yêu cầu một ứng dụng được liên kết trên thiết bị của bạn."
+      },
       "description": {
         "label": "Mô tả"
       },
@@ -2312,6 +2317,15 @@
       "option": {
         "appId": {
           "label": "Chọn ứng dụng"
+        },
+        "openIn": {
+          "label": "Mở ứng dụng trong",
+          "description": "Chọn nơi mở ứng dụng này. Cài đặt trình duyệt có thể thay đổi việc mở trong cửa sổ riêng.",
+          "option": {
+            "currentTab": "Thẻ hiện tại",
+            "newTab": "Thẻ mới",
+            "newWindow": "Cửa sổ mới"
+          }
         },
         "showTitle": {
           "label": "Hiện tên ứng dụng"

@@ -799,6 +799,11 @@
       }
     },
     "field": {
+      "url": {
+        "helpLabel": "URL formatų pavyzdžiai",
+        "examples": "Palaikomų nuorodų pavyzdžiai",
+        "requiresHandler": "Pasirinktiniams protokolams reikia susietos programos jūsų įrenginyje."
+      },
       "description": {
         "label": "Aprašymas"
       },
@@ -2312,6 +2317,15 @@
       "option": {
         "appId": {
           "label": "Pasirinkite programėlę"
+        },
+        "openIn": {
+          "label": "Atverti programėlę",
+          "description": "Pasirinkite, kur atverti šią programėlę. Naršyklės nuostatos gali pakeisti atvėrimą atskirame lange.",
+          "option": {
+            "currentTab": "Dabartinėje kortelėje",
+            "newTab": "Naujoje kortelėje",
+            "newWindow": "Naujame lange"
+          }
         },
         "showTitle": {
           "label": "Rodyti programėlės pavadinimą"

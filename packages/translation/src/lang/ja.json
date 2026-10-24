@@ -799,6 +799,11 @@
       }
     },
     "field": {
+      "url": {
+        "helpLabel": "URL 形式の例",
+        "examples": "使用できるリンクの例",
+        "requiresHandler": "カスタムプロトコルを使用するには、端末に対応するアプリを関連付ける必要があります。"
+      },
       "description": {
         "label": "説明"
       },
@@ -2312,6 +2317,15 @@
       "option": {
         "appId": {
           "label": "アプリを選択"
+        },
+        "openIn": {
+          "label": "アプリを開く場所",
+          "description": "このアプリを開く場所を選択します。ブラウザーの設定によっては、別ウィンドウで開く指定が反映されない場合があります。",
+          "option": {
+            "currentTab": "現在のタブ",
+            "newTab": "新しいタブ",
+            "newWindow": "新しいウィンドウ"
+          }
         },
         "showTitle": {
           "label": "アプリ名を表示"

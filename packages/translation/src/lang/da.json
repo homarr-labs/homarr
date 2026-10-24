@@ -799,6 +799,11 @@
       }
     },
     "field": {
+      "url": {
+        "helpLabel": "Eksempler på URL-formater",
+        "examples": "Eksempler på understøttede links",
+        "requiresHandler": "Brugerdefinerede protokoller kræver en tilknyttet app på din enhed."
+      },
       "description": {
         "label": "Beskriveslse"
       },
@@ -2312,6 +2317,15 @@
       "option": {
         "appId": {
           "label": "Vælg app"
+        },
+        "openIn": {
+          "label": "Åbn app i",
+          "description": "Vælg, hvor denne app skal åbnes. Dine browserindstillinger kan tilsidesætte åbning i et separat vindue.",
+          "option": {
+            "currentTab": "Aktuel fane",
+            "newTab": "Ny fane",
+            "newWindow": "Nyt vindue"
+          }
         },
         "showTitle": {
           "label": "Vis app-navn"

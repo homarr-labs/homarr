@@ -799,6 +799,11 @@
       }
     },
     "field": {
+      "url": {
+        "helpLabel": "URL 格式範例",
+        "examples": "支援的連結範例",
+        "requiresHandler": "自訂通訊協定需要在您的裝置上關聯相應的應用程式。"
+      },
       "description": {
         "label": "描述"
       },
@@ -2312,6 +2317,15 @@
       "option": {
         "appId": {
           "label": "選擇應用程式"
+        },
+        "openIn": {
+          "label": "開啟應用程式的位置",
+          "description": "選擇此應用程式的開啟位置。瀏覽器設定可能會變更在獨立視窗中開啟的行為。",
+          "option": {
+            "currentTab": "目前分頁",
+            "newTab": "新分頁",
+            "newWindow": "新視窗"
+          }
         },
         "showTitle": {
           "label": "顯示應用程式名稱"

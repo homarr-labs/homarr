@@ -799,6 +799,11 @@
       }
     },
     "field": {
+      "url": {
+        "helpLabel": "Exemples de formats d’URL",
+        "examples": "Exemples de liens acceptés",
+        "requiresHandler": "Les protocoles personnalisés nécessitent une application associée sur votre appareil."
+      },
       "description": {
         "label": "Description"
       },
@@ -2312,6 +2317,15 @@
       "option": {
         "appId": {
           "label": "Choisir une application"
+        },
+        "openIn": {
+          "label": "Ouvrir l'application dans",
+          "description": "Choisissez où ouvrir cette application. Les réglages du navigateur peuvent modifier l'ouverture dans une fenêtre séparée.",
+          "option": {
+            "currentTab": "L'onglet actuel",
+            "newTab": "Un nouvel onglet",
+            "newWindow": "Une nouvelle fenêtre"
+          }
         },
         "showTitle": {
           "label": "Afficher le nom de l'application"
