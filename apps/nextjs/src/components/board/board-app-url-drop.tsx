@@ -22,6 +22,11 @@ const urlTypes = ["text/uri-list", "text/x-moz-url"];
 const isUrlDrag = (dataTransfer: DataTransfer | null) =>
   Boolean(dataTransfer?.types.some((type) => urlTypes.includes(type)));
 
+const isEditableTarget = (target: EventTarget | null) =>
+  target instanceof Element &&
+  target.closest("input, textarea, select, [contenteditable]:not([contenteditable='false']), [role='textbox']") !==
+    null;
+
 const getDroppedUrl = (dataTransfer: DataTransfer) => {
   const candidate = urlTypes
     .flatMap((type) => dataTransfer.getData(type).split(/\r?\n/))
@@ -129,7 +134,7 @@ export const BoardAppUrlDrop = () => {
     const handleDragEnter = (event: DragEvent) => {
       if (isInternalDrag || !isUrlDrag(event.dataTransfer)) return;
       enterCount++;
-      setIsDragging(true);
+      setIsDragging(!event.defaultPrevented && !isEditableTarget(event.target));
     };
     const handleDragLeave = (event: DragEvent) => {
       if (isInternalDrag || !isUrlDrag(event.dataTransfer)) return;
@@ -138,15 +143,16 @@ export const BoardAppUrlDrop = () => {
     };
     const handleDragOver = (event: DragEvent) => {
       if (isInternalDrag || !isUrlDrag(event.dataTransfer) || !event.dataTransfer) return;
+      if (event.defaultPrevented || isEditableTarget(event.target)) return;
       event.preventDefault();
       event.dataTransfer.dropEffect = "copy";
     };
     const handleDrop = (event: DragEvent) => {
       if (isInternalDrag || !isUrlDrag(event.dataTransfer) || !event.dataTransfer) return;
-      // Prevent the browser from navigating away and discarding unsaved board changes.
-      event.preventDefault();
       enterCount = 0;
       setIsDragging(false);
+      if (event.defaultPrevented || isEditableTarget(event.target)) return;
+      event.preventDefault();
       const url = getDroppedUrl(event.dataTransfer);
       if (url) void addAppFromUrlAsync(url);
     };
@@ -171,7 +177,14 @@ export const BoardAppUrlDrop = () => {
   if (!isDragging && !isResolving) return null;
 
   return (
-    <Overlay fixed center blur={2} backgroundOpacity={0.35} zIndex={300}>
+    <Overlay
+      fixed
+      center
+      blur={2}
+      backgroundOpacity={0.35}
+      zIndex={300}
+      style={{ pointerEvents: isResolving ? "auto" : "none" }}
+    >
       <Paper withBorder shadow="md" radius="md" p="lg">
         <Stack align="center" gap="xs">
           {isResolving ? (
