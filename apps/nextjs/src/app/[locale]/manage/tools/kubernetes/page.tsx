@@ -23,6 +23,7 @@ export default async function KubernetesPage({
   }
 
   const context = await getSelectedKubernetesContextAsync(searchParams);
+  if (!context) return <DynamicBreadcrumb />;
   const [cluster, resourceCounts] = await Promise.allSettled([
     api.kubernetes.cluster.getCluster({ contextId: context.contextId }),
     api.kubernetes.cluster.getClusterResourceCounts({ contextId: context.contextId }),

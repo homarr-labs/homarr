@@ -16,7 +16,7 @@ export const KubernetesContextSelector = ({
   initialContexts,
   initialContextId,
 }: {
-  initialContexts: RouterOutputs["kubernetes"]["contexts"]["getContexts"];
+  initialContexts?: RouterOutputs["kubernetes"]["contexts"]["getContexts"];
   initialContextId: string | null;
 }) => {
   const t = useI18n("kubernetes.context");
@@ -45,6 +45,10 @@ export const KubernetesContextSelector = ({
       document.cookie = `${kubernetesContextCookieName}=${encodeURIComponent(contextId)}; Path=/; Max-Age=31536000; SameSite=Lax`;
     }
   }, [contextId, storedContextId]);
+
+  useEffect(() => {
+    if (!initialContexts && data) router.refresh();
+  }, [data, initialContexts, router]);
 
   if (isError) {
     return (
