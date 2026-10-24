@@ -181,7 +181,7 @@ jobs:
   build-arm64:
     name: Build docker image for arm64
     needs: release
-    runs-on: ubuntu-24.04-arm
+    runs-on: ubuntu-26.04-arm
     timeout-minutes: 20
     outputs:
       digest: ${{ steps.build.outputs.digest }}
@@ -247,7 +247,7 @@ jobs:
   extract-asset-arm64:
     name: Extract arm64 asset from docker image
     needs: [release, build-arm64]
-    runs-on: ubuntu-24.04-arm
+    runs-on: ubuntu-26.04-arm
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@v7
