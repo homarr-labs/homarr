@@ -1,0 +1,52 @@
+scripts/benchmarks/custom-widgets/README.md
+  h_d6e478ca18e517 32,105
+scripts/benchmarks/custom-widgets/evidence/provenance.json
+  h_d6e478ca18e517 81-82,87-88,93-94,99-100,105-106,111-112,117-118,123-124,147-148,153-154,159-160,165-166,171-172,177-178,183-184,189-190,195-196
+scripts/benchmarks/custom-widgets/evidence/runtime/source-hashes.json
+  h_d6e478ca18e517 9
+scripts/benchmarks/custom-widgets/evidence/server/management-after-1.json
+  h_d6e478ca18e517 130-135,266-271,402-407
+scripts/benchmarks/custom-widgets/evidence/server/management-after-2.json
+  h_d6e478ca18e517 130-135,266-271,402-407
+scripts/benchmarks/custom-widgets/evidence/server/management-before-1.json
+  h_d6e478ca18e517 130-135,266-271,402-407
+scripts/benchmarks/custom-widgets/evidence/server/management-before-2.json
+  h_d6e478ca18e517 130-135,266-271,402-407
+scripts/benchmarks/custom-widgets/evidence/server/response-after-1.json
+  h_d6e478ca18e517 9-32,41-64
+scripts/benchmarks/custom-widgets/evidence/server/response-after-2.json
+  h_d6e478ca18e517 9-32,41-64
+scripts/benchmarks/custom-widgets/evidence/server/response-before-1.json
+  h_d6e478ca18e517 9-32,41-64
+scripts/benchmarks/custom-widgets/evidence/server/response-before-2.json
+  h_d6e478ca18e517 9-32,41-64
+scripts/benchmarks/custom-widgets/evidence/server/router-after-2.json
+  h_d6e478ca18e517 8-13,293-298,578-583,863-868
+scripts/benchmarks/custom-widgets/evidence/server/router-after-3.json
+  h_d6e478ca18e517 8-13,293-298,578-583,863-868
+scripts/benchmarks/custom-widgets/evidence/server/router-before-2.json
+  h_d6e478ca18e517 8-13,293-298,578-583,863-868
+scripts/benchmarks/custom-widgets/evidence/server/router-before-3.json
+  h_d6e478ca18e517 8-13,293-298,578-583,863-868
+scripts/benchmarks/custom-widgets/evidence/workbench/browser-after1.json
+  h_d6e478ca18e517 10-12
+scripts/benchmarks/custom-widgets/evidence/workbench/browser-after2.json
+  h_d6e478ca18e517 10-12
+scripts/benchmarks/custom-widgets/evidence/workbench/browser-before1.json
+  h_d6e478ca18e517 14-16
+scripts/benchmarks/custom-widgets/evidence/workbench/browser-before2.json
+  h_d6e478ca18e517 14-16
+scripts/benchmarks/custom-widgets/import-evidence.mjs
+  h_d6e478ca18e517 2,94-102
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "ad2658ac69be0cda5e697b36ef01e16e552618ba",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
