@@ -1,6 +1,6 @@
 import { Buffer } from "node:buffer";
 import { brotliDecompressSync, gunzipSync, inflateSync } from "node:zlib";
-import type { Response } from "undici";
+import type { Headers, Response } from "undici";
 import { CustomWidgetDomainError } from "./errors";
 
 export const MAX_RESPONSE_BODY_BYTES = 1024 * 1024;
@@ -14,9 +14,13 @@ export function assertJsonBudget(value: unknown): void {
       throw new CustomWidgetDomainError({ code: "PAYLOAD_TOO_LARGE", message: "Response JSON is too large" });
     if (depth > MAX_RESPONSE_JSON_DEPTH)
       throw new CustomWidgetDomainError({ code: "PAYLOAD_TOO_LARGE", message: "Response JSON is too deeply nested" });
-    if (Array.isArray(current)) current.forEach((entry) => visit(entry, depth + 1));
-    else if (current !== null && typeof current === "object")
-      Object.values(current).forEach((entry) => visit(entry, depth + 1));
+    if (Array.isArray(current)) {
+      for (const entry of current) visit(entry, depth + 1);
+    } else if (current !== null && typeof current === "object") {
+      for (const key in current) {
+        if (Object.hasOwn(current, key)) visit((current as Record<string, unknown>)[key], depth + 1);
+      }
+    }
   };
   visit(value, 0);
 }
@@ -48,7 +52,7 @@ async function readLimitedBody(response: Response): Promise<string> {
 }
 
 /** Bound every decoding stage as well as the on-wire response body. */
-export function decodeResponseBody(body: ArrayBuffer, contentEncoding: string | null): ArrayBuffer | Buffer {
+export function decodeResponseBody(body: ArrayBuffer | Buffer, contentEncoding: string | null): ArrayBuffer | Buffer {
   if (!contentEncoding || body.byteLength === 0) return body;
   const encodings = contentEncoding
     .toLowerCase()
@@ -86,8 +90,20 @@ export function decodeResponseBody(body: ArrayBuffer, contentEncoding: string | 
 
 export async function parseResponseBody(response: Response, textFallback = false): Promise<unknown> {
   const text = await readLimitedBody(response);
+  return parseResponseText(text, response.headers.get("content-type"), textFallback);
+}
+
+export function parseBufferedResponseBody(body: ArrayBuffer | Buffer, headers: Headers, textFallback = false): unknown {
+  const length = Number(headers.get("content-length"));
+  if (body.byteLength > MAX_RESPONSE_BODY_BYTES || (Number.isFinite(length) && length > MAX_RESPONSE_BODY_BYTES))
+    throw tooLarge();
+  const text = new TextDecoder("utf-8", { fatal: true }).decode(body);
+  return parseResponseText(text, headers.get("content-type"), textFallback);
+}
+
+function parseResponseText(text: string, responseContentType: string | null, textFallback: boolean): unknown {
   if (!text) return null;
-  const contentType = response.headers.get("content-type")?.toLowerCase() ?? "";
+  const contentType = responseContentType?.toLowerCase() ?? "";
   try {
     if (contentType.includes("ndjson")) {
       const json = text
@@ -137,7 +153,9 @@ export function redactResponseSecrets(data: unknown, secrets: Array<{ kind: stri
   }
   const embeddedValues = [...embedded].toSorted((a, b) => b.length - a.length);
   const redactEmbedded = (value: string) => {
-    for (const secret of embeddedValues) value = value.replaceAll(secret, "[REDACTED]");
+    for (const secret of embeddedValues) {
+      if (value.length >= secret.length) value = value.replaceAll(secret, "[REDACTED]");
+    }
     return value;
   };
   const visit = (value: unknown): unknown => {
@@ -149,7 +167,20 @@ export function redactResponseSecrets(data: unknown, secrets: Array<{ kind: stri
       return "[REDACTED]";
     if (Array.isArray(value)) return value.map(visit);
     if (value !== null && typeof value === "object") {
-      return Object.fromEntries(Object.entries(value).map(([key, child]) => [redactEmbedded(key), visit(child)]));
+      const redacted: Record<string, unknown> = {};
+      for (const key of Object.keys(value)) {
+        const redactedKey = redactEmbedded(key);
+        const child = visit((value as Record<string, unknown>)[key]);
+        if (redactedKey === "__proto__") {
+          Object.defineProperty(redacted, redactedKey, {
+            value: child,
+            enumerable: true,
+            configurable: true,
+            writable: true,
+          });
+        } else redacted[redactedKey] = child;
+      }
+      return redacted;
     }
     return value;
   };

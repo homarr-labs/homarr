@@ -2,6 +2,7 @@ import { isSafeCallable } from "./safe-bindings";
 import { isInterpreterCallback, normalizedSliceIndex, numericArgument, SafeJsxError } from "./interpreter-foundation";
 import type { InterpreterCallback } from "./interpreter-foundation";
 import type { InterpreterMethodContext } from "./interpreter-method-context";
+import { formatSafeNumber } from "./number-format";
 import { callStringMethod } from "./string-methods";
 
 export function callCollectionMethod(
@@ -190,7 +191,7 @@ export function callCollectionMethod(
       return { handled: true, value: receiver.toPrecision(precision) };
     }
     if (method === "toLocaleString") {
-      return { handled: true, value: context.budget.string(receiver.toLocaleString()) };
+      return { handled: true, value: context.budget.string(formatSafeNumber(receiver, args)) };
     }
   }
 
