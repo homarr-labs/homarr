@@ -1,0 +1,19 @@
+apps/nextjs/src/app/api/assistant/chat/route.ts
+  s_07e7e4a7b377c9::t_faaa9389896f22 212,1000-1008
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "2bcfc034cab76c49631142e5b4642073c8162e6a",
+  "prompts": {},
+  "sessions": {
+    "s_07e7e4a7b377c9": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "e6b0691c-9e21-4fe8-b9ff-aa6a5881134f",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
