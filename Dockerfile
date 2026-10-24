@@ -1,4 +1,4 @@
-# syntax=docker/dockerfile:1.25
+# syntax=docker/dockerfile:1.28
 
 FROM oven/bun:1.4.3-alpine AS bun-tool
 
