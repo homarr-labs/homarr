@@ -1,0 +1,64 @@
+apps/nextjs/src/components/assistant/assistant-history.tsx
+  s_f00f57bad8010f::t_a80d36375ac75b 5-16,231-267,333
+packages/translation/src/lang/en.json
+  s_f00f57bad8010f::t_d4b7f511801e33 8797-8804,9120
+apps/nextjs/src/components/assistant/assistant-tool-rendering.tsx
+  s_f00f57bad8010f::t_6e1a0f404223e2 24,262-270,275,341,355
+apps/nextjs/src/components/assistant/assistant-message-content.tsx
+  s_f00f57bad8010f::t_d608c2c1e013a9 14,314
+apps/nextjs/src/components/assistant/assistant-panel-controls.tsx
+  s_f00f57bad8010f::t_509fff4d3ee4d8 4-5,25-26,143,192,197,239
+apps/nextjs/package.json
+  s_97f4f5a6019006::t_04ab5e520536e1 65-68,110
+apps/nextjs/src/components/assistant/assistant-directives.ts
+  s_f00f57bad8010f::t_2ffe6d0950cec9 1,3
+apps/nextjs/src/components/assistant/assistant-provider.tsx
+  s_f00f57bad8010f::t_517e3b248ec52e 89,91,93-98,133,142,422-445,461-462,465,467-469,485-495,499,502-512,516,518-521
+  s_f00f57bad8010f::t_70c8f2fe4f0629 522-523
+  s_f00f57bad8010f::t_0032713922778e 549-560
+package.json
+  s_f00f57bad8010f::t_4289bd340beb07 12-17,49-52,143,145,192,353-359,365
+bun.lock
+  s_c00268c499f6a5::t_bca0a14f429d56 143-146,188,1080-1084,1086-1088,1104,1216-1221,1253-1256,1348,1350,1398,1476,1478,1480,1482,1484,1486,1502,1504,1506,1508,1510,1512,1514-1516,1988,1990,1992,1994,1996,1998,2000,2002,2004,2006,2008,2010,2012,2014,2016,2018,2020,2022,2024,2026,2028,2030,2032,2374,2378,2380,2382,2384,2386,2396,2404,2410,2412,2416,2418,2420,2424,2426,2436,2438,2440,2446,2448,2450,2454,2458,2460,2462,2464,2466,2474,2484,3238,3276,3278,4172,4732,4890,5400,5414,5416,5488-5613,5616-5753,5868,6132-6175,6328-6357,6360-6383,6804-6806,6812-6817
+apps/nextjs/src/components/assistant/assistant-auto-approval.tsx
+  s_f00f57bad8010f::t_405c3aa1b37045 39,90,94-101,156
+apps/nextjs/src/components/assistant/assistant-composer-triggers.tsx
+  s_f00f57bad8010f::t_99927f8b5bb45c 5,50,56,70,145,154-155,160,172,176-177,181-183,191-192,194-195
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "68c388c46bb257b24646afdb478059f7a7097089",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  },
+  "sessions": {
+    "s_97f4f5a6019006": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "1496672b-3ad6-48ec-90f1-1467101f32d5",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_c00268c499f6a5": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "9f6247bc-2225-4f7a-9f37-4c57fb0f25b2",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_f00f57bad8010f": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "5fa687cd-8458-4b9d-9d99-c0a7555a81bd",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
