@@ -41,6 +41,7 @@ type RequestHopResult =
   | { kind: "redirect"; location: string | null; statusCode: number };
 
 async function performRequest(input: CustomWidgetHttpRequest): Promise<CustomWidgetHttpResponse> {
+  await input.beforeRequest?.();
   const controller = new AbortController();
   const timeout = setTimeout(
     () => controller.abort(),
