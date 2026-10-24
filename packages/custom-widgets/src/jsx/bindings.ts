@@ -7,79 +7,53 @@ export const CUSTOM_JSX_DATA_LIMITS = Object.freeze({
   stringLength: 200_000,
 });
 
-interface SanitizeTask {
-  value: unknown;
-  depth: number;
-  assign(value: unknown): void;
-}
-
 function sanitizeData(value: unknown): unknown {
-  let result: unknown;
   let nodes = 0;
   const seen = new WeakSet<object>();
-  const tasks: SanitizeTask[] = [{ value, depth: 0, assign: (sanitized) => (result = sanitized) }];
-
-  while (tasks.length > 0) {
-    const task = tasks.pop();
-    if (!task) break;
+  const sanitize = (current: unknown, depth: number): unknown => {
     if (++nodes > CUSTOM_JSX_DATA_LIMITS.nodes) {
       throw new SafeJsxBudgetError(`Response data exceeded the node limit (${CUSTOM_JSX_DATA_LIMITS.nodes})`);
     }
-    if (task.depth > CUSTOM_JSX_DATA_LIMITS.depth) {
+    if (depth > CUSTOM_JSX_DATA_LIMITS.depth) {
       throw new SafeJsxBudgetError(`Response data exceeded the depth limit (${CUSTOM_JSX_DATA_LIMITS.depth})`);
     }
-    if (typeof task.value === "string" && task.value.length > CUSTOM_JSX_DATA_LIMITS.stringLength) {
+    if (typeof current === "string" && current.length > CUSTOM_JSX_DATA_LIMITS.stringLength) {
       throw new SafeJsxBudgetError(
         `Response data exceeded the string length limit (${CUSTOM_JSX_DATA_LIMITS.stringLength})`,
       );
     }
-    if (task.value === null || typeof task.value !== "object") {
-      task.assign(task.value);
-      continue;
-    }
-    if (seen.has(task.value)) throw new SafeJsxError("Response data must not contain circular or repeated objects");
-    seen.add(task.value);
+    if (current === null || typeof current !== "object") return current;
+    if (seen.has(current)) throw new SafeJsxError("Response data must not contain circular or repeated objects");
+    seen.add(current);
 
-    if (Array.isArray(task.value)) {
-      if (task.value.length > CUSTOM_JSX_DATA_LIMITS.nodes - nodes) {
+    if (Array.isArray(current)) {
+      if (current.length > CUSTOM_JSX_DATA_LIMITS.nodes - nodes) {
         throw new SafeJsxBudgetError(`Response data exceeded the node limit (${CUSTOM_JSX_DATA_LIMITS.nodes})`);
       }
-      const safe = Array.from<unknown>({ length: task.value.length });
-      task.assign(safe);
-      for (let index = task.value.length - 1; index >= 0; index -= 1) {
-        if (!Object.hasOwn(task.value, index)) continue;
-        tasks.push({
-          value: task.value[index],
-          depth: task.depth + 1,
-          assign: (sanitized) => (safe[index] = sanitized),
-        });
+      const safe = Array.from<unknown>({ length: current.length });
+      for (let index = 0; index < current.length; index += 1) {
+        if (Object.hasOwn(current, index)) safe[index] = sanitize(current[index], depth + 1);
       }
-      continue;
+      return safe;
     }
 
-    const entries = Object.entries(task.value);
-    if (entries.length > CUSTOM_JSX_DATA_LIMITS.nodes - nodes) {
+    const keys = Object.keys(current);
+    if (keys.length > CUSTOM_JSX_DATA_LIMITS.nodes - nodes) {
       throw new SafeJsxBudgetError(`Response data exceeded the node limit (${CUSTOM_JSX_DATA_LIMITS.nodes})`);
     }
     const safe: Record<string, unknown> = Object.create(null);
-    task.assign(safe);
-    for (let index = entries.length - 1; index >= 0; index -= 1) {
-      const [key, child] = entries[index] as [string, unknown];
+    for (const key of keys) {
       if (["constructor", "__proto__", "prototype"].includes(key)) continue;
       if (key.length > CUSTOM_JSX_DATA_LIMITS.stringLength) {
         throw new SafeJsxBudgetError(
           `Response data exceeded the string length limit (${CUSTOM_JSX_DATA_LIMITS.stringLength})`,
         );
       }
-      tasks.push({
-        value: child,
-        depth: task.depth + 1,
-        assign: (sanitized) => (safe[key] = sanitized),
-      });
+      safe[key] = sanitize((current as Record<string, unknown>)[key], depth + 1);
     }
-  }
-
-  return result;
+    return safe;
+  };
+  return sanitize(value, 0);
 }
 
 const safeMath = Object.freeze(
