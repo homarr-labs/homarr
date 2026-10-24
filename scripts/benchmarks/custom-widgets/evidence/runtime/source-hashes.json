@@ -1,0 +1,9 @@
+{
+  "packages/custom-widgets/src/jsx/bindings.ts": "7e4e9e8113af9b99baf5aec09e293668077528655dc72276fb85938055dd274e",
+  "packages/custom-widgets/src/jsx/runtime-components.tsx": "14ffa7d06e27e9c4259efed248eea6691d718ccd591d674e927f256444d757a4",
+  "packages/custom-widgets/src/runtime/context.tsx": "87e9eb8d4468965b8d108367d81685089fd1d327df52bb86d86a7681ab33cc79",
+  "packages/custom-widgets/src/runtime/custom-jsx-renderer.tsx": "9c1f25adb38d643ed09d5c5f931278f01f31a87bec24744c11b670de5b5bd85c",
+  "packages/widgets/src/custom-api/custom-jsx-display.tsx": "c985a9e26b7d8bee85931229ac457fd8bb5d6023e6df6cea905653ce76a4e1e5",
+  "packages/widgets/src/custom-api/jsx-icon-adapter.tsx": "b521cf9ee48ba18a435590ac29895c34ec190e91f09a3792dd2fbed65a476e4b",
+  "packages/widgets/src/custom-api/widget-definition-context.tsx": "3ed587ba05aaee35e0972141567f98eec764b314bbc6479568a208674bb9f929"
+}

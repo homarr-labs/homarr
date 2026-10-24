@@ -1,0 +1,1244 @@
+{
+  "results": [
+    {
+      "name": "direct-20-cold",
+      "p50": 11.556959000000006,
+      "p95": 13.498375000000124,
+      "samples": [
+        12.248166000000083,
+        12.485541999999896,
+        11.576375000000098,
+        12.51649999999995,
+        11.556959000000006,
+        11.912000000000035,
+        12.975542000000132,
+        11.490917000000081,
+        13.498375000000124,
+        12.399875000000065,
+        11.582666999999901,
+        10.221667000000025,
+        10.080582999999933,
+        11.04145799999992,
+        12.59174999999982,
+        11.644125000000031,
+        11.885791000000154,
+        14.827624999999898,
+        11.476666999999907,
+        11.060041000000183,
+        11.53716600000007,
+        10.644166000000041,
+        11.365583000000015,
+        11.01929199999995,
+        11.310834000000114,
+        10.988207999999986,
+        12.280708000000004,
+        10.8131249999999,
+        10.504708000000164,
+        9.765500000000202
+      ],
+      "operations": [
+        {
+          "reads": 3,
+          "decrypts": 1,
+          "hashes": 182,
+          "dispatchers": 20,
+          "upstreamRequests": 20,
+          "sockets": 20,
+          "resultBytes": 4149
+        },
+        {
+          "reads": 3,
+          "decrypts": 1,
+          "hashes": 182,
+          "dispatchers": 20,
+          "upstreamRequests": 20,
+          "sockets": 20,
+          "resultBytes": 4149
+        },
+        {
+          "reads": 3,
+          "decrypts": 1,
+          "hashes": 182,
+          "dispatchers": 20,
+          "upstreamRequests": 20,
+          "sockets": 20,
+          "resultBytes": 4149
+        },
+        {
+          "reads": 3,
+          "decrypts": 1,
+          "hashes": 182,
+          "dispatchers": 20,
+          "upstreamRequests": 20,
+          "sockets": 20,
+          "resultBytes": 4149
+        },
+        {
+          "reads": 3,
+          "decrypts": 1,
+          "hashes": 182,
+          "dispatchers": 20,
+          "upstreamRequests": 20,
+          "sockets": 20,
+          "resultBytes": 4149
+        },
+        {
+          "reads": 3,
+          "decrypts": 1,
+          "hashes": 182,
+          "dispatchers": 20,
+          "upstreamRequests": 20,
+          "sockets": 20,
+          "resultBytes": 4149
+        },
+        {
+          "reads": 3,
+          "decrypts": 1,
+          "hashes": 182,
+          "dispatchers": 20,
+          "upstreamRequests": 20,
+          "sockets": 20,
+          "resultBytes": 4149
+        },
+        {
+          "reads": 3,
+          "decrypts": 1,
+          "hashes": 182,
+          "dispatchers": 20,
+          "upstreamRequests": 20,
+          "sockets": 20,
+          "resultBytes": 4149
+        },
+        {
+          "reads": 3,
+          "decrypts": 1,
+          "hashes": 182,
+          "dispatchers": 20,
+          "upstreamRequests": 20,
+          "sockets": 20,
+          "resultBytes": 4149
+        },
+        {
+          "reads": 3,
+          "decrypts": 1,
+          "hashes": 182,
+          "dispatchers": 20,
+          "upstreamRequests": 20,
+          "sockets": 20,
+          "resultBytes": 4149
+        },
+        {
+          "reads": 3,
+          "decrypts": 1,
+          "hashes": 182,
+          "dispatchers": 20,
+          "upstreamRequests": 20,
+          "sockets": 20,
+          "resultBytes": 4149
+        },
+        {
+          "reads": 3,
+          "decrypts": 1,
+          "hashes": 182,
+          "dispatchers": 20,
+          "upstreamRequests": 20,
+          "sockets": 20,
+          "resultBytes": 4149
+        },
+        {
+          "reads": 3,
+          "decrypts": 1,
+          "hashes": 182,
+          "dispatchers": 20,
+          "upstreamRequests": 20,
+          "sockets": 20,
+          "resultBytes": 4149
+        },
+        {
+          "reads": 3,
+          "decrypts": 1,
+          "hashes": 182,
+          "dispatchers": 20,
+          "upstreamRequests": 20,
+          "sockets": 20,
+          "resultBytes": 4149
+        },
+        {
+          "reads": 3,
+          "decrypts": 1,
+          "hashes": 182,
+          "dispatchers": 20,
+          "upstreamRequests": 20,
+          "sockets": 20,
+          "resultBytes": 4149
+        },
+        {
+          "reads": 3,
+          "decrypts": 1,
+          "hashes": 182,
+          "dispatchers": 20,
+          "upstreamRequests": 20,
+          "sockets": 20,
+          "resultBytes": 4149
+        },
+        {
+          "reads": 3,
+          "decrypts": 1,
+          "hashes": 182,
+          "dispatchers": 20,
+          "upstreamRequests": 20,
+          "sockets": 20,
+          "resultBytes": 4149
+        },
+        {
+          "reads": 3,
+          "decrypts": 1,
+          "hashes": 182,
+          "dispatchers": 20,
+          "upstreamRequests": 20,
+          "sockets": 20,
+          "resultBytes": 4149
+        },
+        {
+          "reads": 3,
+          "decrypts": 1,
+          "hashes": 182,
+          "dispatchers": 20,
+          "upstreamRequests": 20,
+          "sockets": 20,
+          "resultBytes": 4149
+        },
+        {
+          "reads": 3,
+          "decrypts": 1,
+          "hashes": 182,
+          "dispatchers": 20,
+          "upstreamRequests": 20,
+          "sockets": 20,
+          "resultBytes": 4149
+        },
+        {
+          "reads": 3,
+          "decrypts": 1,
+          "hashes": 182,
+          "dispatchers": 20,
+          "upstreamRequests": 20,
+          "sockets": 20,
+          "resultBytes": 4154
+        },
+        {
+          "reads": 3,
+          "decrypts": 1,
+          "hashes": 182,
+          "dispatchers": 20,
+          "upstreamRequests": 20,
+          "sockets": 20,
+          "resultBytes": 4154
+        },
+        {
+          "reads": 3,
+          "decrypts": 1,
+          "hashes": 182,
+          "dispatchers": 20,
+          "upstreamRequests": 20,
+          "sockets": 20,
+          "resultBytes": 4154
+        },
+        {
+          "reads": 3,
+          "decrypts": 1,
+          "hashes": 182,
+          "dispatchers": 20,
+          "upstreamRequests": 20,
+          "sockets": 20,
+          "resultBytes": 4154
+        },
+        {
+          "reads": 3,
+          "decrypts": 1,
+          "hashes": 182,
+          "dispatchers": 20,
+          "upstreamRequests": 20,
+          "sockets": 20,
+          "resultBytes": 4154
+        },
+        {
+          "reads": 3,
+          "decrypts": 1,
+          "hashes": 182,
+          "dispatchers": 20,
+          "upstreamRequests": 20,
+          "sockets": 20,
+          "resultBytes": 4154
+        },
+        {
+          "reads": 3,
+          "decrypts": 1,
+          "hashes": 182,
+          "dispatchers": 20,
+          "upstreamRequests": 20,
+          "sockets": 20,
+          "resultBytes": 4154
+        },
+        {
+          "reads": 3,
+          "decrypts": 1,
+          "hashes": 182,
+          "dispatchers": 20,
+          "upstreamRequests": 20,
+          "sockets": 20,
+          "resultBytes": 4154
+        },
+        {
+          "reads": 3,
+          "decrypts": 1,
+          "hashes": 182,
+          "dispatchers": 20,
+          "upstreamRequests": 20,
+          "sockets": 20,
+          "resultBytes": 4154
+        },
+        {
+          "reads": 3,
+          "decrypts": 1,
+          "hashes": 182,
+          "dispatchers": 20,
+          "upstreamRequests": 20,
+          "sockets": 20,
+          "resultBytes": 4154
+        }
+      ]
+    },
+    {
+      "name": "direct-20-warm",
+      "p50": 0.6532919999999649,
+      "p95": 0.7290000000000418,
+      "samples": [
+        0.7019999999999982,
+        0.6824579999999969,
+        0.8037090000000262,
+        0.6967499999998381,
+        0.6274999999998272,
+        0.6662919999998849,
+        0.6487919999999576,
+        0.6557499999998981,
+        0.6365419999999631,
+        0.6523340000001099,
+        0.66012499999988,
+        0.6532919999999649,
+        0.6489169999999831,
+        0.638915999999881,
+        0.7290000000000418,
+        0.6904580000000351,
+        0.6603339999999207,
+        0.663291000000072,
+        0.5961660000000393,
+        0.6198749999998654,
+        0.5995000000000346,
+        0.5830829999999878,
+        0.6132090000000971,
+        0.609166999999843,
+        0.5922500000001492,
+        0.6573329999998805,
+        0.6582089999999425,
+        0.5895419999999376,
+        0.6202910000001793,
+        0.6723329999999805
+      ],
+      "operations": [
+        {
+          "reads": 3,
+          "decrypts": 1,
+          "hashes": 102,
+          "dispatchers": 0,
+          "upstreamRequests": 0,
+          "sockets": 0,
+          "resultBytes": 4149
+        },
+        {
+          "reads": 3,
+          "decrypts": 1,
+          "hashes": 102,
+          "dispatchers": 0,
+          "upstreamRequests": 0,
+          "sockets": 0,
+          "resultBytes": 4149
+        },
+        {
+          "reads": 3,
+          "decrypts": 1,
+          "hashes": 102,
+          "dispatchers": 0,
+          "upstreamRequests": 0,
+          "sockets": 0,
+          "resultBytes": 4149
+        },
+        {
+          "reads": 3,
+          "decrypts": 1,
+          "hashes": 102,
+          "dispatchers": 0,
+          "upstreamRequests": 0,
+          "sockets": 0,
+          "resultBytes": 4149
+        },
+        {
+          "reads": 3,
+          "decrypts": 1,
+          "hashes": 102,
+          "dispatchers": 0,
+          "upstreamRequests": 0,
+          "sockets": 0,
+          "resultBytes": 4149
+        },
+        {
+          "reads": 3,
+          "decrypts": 1,
+          "hashes": 102,
+          "dispatchers": 0,
+          "upstreamRequests": 0,
+          "sockets": 0,
+          "resultBytes": 4149
+        },
+        {
+          "reads": 3,
+          "decrypts": 1,
+          "hashes": 102,
+          "dispatchers": 0,
+          "upstreamRequests": 0,
+          "sockets": 0,
+          "resultBytes": 4149
+        },
+        {
+          "reads": 3,
+          "decrypts": 1,
+          "hashes": 102,
+          "dispatchers": 0,
+          "upstreamRequests": 0,
+          "sockets": 0,
+          "resultBytes": 4149
+        },
+        {
+          "reads": 3,
+          "decrypts": 1,
+          "hashes": 102,
+          "dispatchers": 0,
+          "upstreamRequests": 0,
+          "sockets": 0,
+          "resultBytes": 4149
+        },
+        {
+          "reads": 3,
+          "decrypts": 1,
+          "hashes": 102,
+          "dispatchers": 0,
+          "upstreamRequests": 0,
+          "sockets": 0,
+          "resultBytes": 4149
+        },
+        {
+          "reads": 3,
+          "decrypts": 1,
+          "hashes": 102,
+          "dispatchers": 0,
+          "upstreamRequests": 0,
+          "sockets": 0,
+          "resultBytes": 4149
+        },
+        {
+          "reads": 3,
+          "decrypts": 1,
+          "hashes": 102,
+          "dispatchers": 0,
+          "upstreamRequests": 0,
+          "sockets": 0,
+          "resultBytes": 4149
+        },
+        {
+          "reads": 3,
+          "decrypts": 1,
+          "hashes": 102,
+          "dispatchers": 0,
+          "upstreamRequests": 0,
+          "sockets": 0,
+          "resultBytes": 4149
+        },
+        {
+          "reads": 3,
+          "decrypts": 1,
+          "hashes": 102,
+          "dispatchers": 0,
+          "upstreamRequests": 0,
+          "sockets": 0,
+          "resultBytes": 4149
+        },
+        {
+          "reads": 3,
+          "decrypts": 1,
+          "hashes": 102,
+          "dispatchers": 0,
+          "upstreamRequests": 0,
+          "sockets": 0,
+          "resultBytes": 4149
+        },
+        {
+          "reads": 3,
+          "decrypts": 1,
+          "hashes": 102,
+          "dispatchers": 0,
+          "upstreamRequests": 0,
+          "sockets": 0,
+          "resultBytes": 4149
+        },
+        {
+          "reads": 3,
+          "decrypts": 1,
+          "hashes": 102,
+          "dispatchers": 0,
+          "upstreamRequests": 0,
+          "sockets": 0,
+          "resultBytes": 4149
+        },
+        {
+          "reads": 3,
+          "decrypts": 1,
+          "hashes": 102,
+          "dispatchers": 0,
+          "upstreamRequests": 0,
+          "sockets": 0,
+          "resultBytes": 4149
+        },
+        {
+          "reads": 3,
+          "decrypts": 1,
+          "hashes": 102,
+          "dispatchers": 0,
+          "upstreamRequests": 0,
+          "sockets": 0,
+          "resultBytes": 4149
+        },
+        {
+          "reads": 3,
+          "decrypts": 1,
+          "hashes": 102,
+          "dispatchers": 0,
+          "upstreamRequests": 0,
+          "sockets": 0,
+          "resultBytes": 4149
+        },
+        {
+          "reads": 3,
+          "decrypts": 1,
+          "hashes": 102,
+          "dispatchers": 0,
+          "upstreamRequests": 0,
+          "sockets": 0,
+          "resultBytes": 4149
+        },
+        {
+          "reads": 3,
+          "decrypts": 1,
+          "hashes": 102,
+          "dispatchers": 0,
+          "upstreamRequests": 0,
+          "sockets": 0,
+          "resultBytes": 4149
+        },
+        {
+          "reads": 3,
+          "decrypts": 1,
+          "hashes": 102,
+          "dispatchers": 0,
+          "upstreamRequests": 0,
+          "sockets": 0,
+          "resultBytes": 4149
+        },
+        {
+          "reads": 3,
+          "decrypts": 1,
+          "hashes": 102,
+          "dispatchers": 0,
+          "upstreamRequests": 0,
+          "sockets": 0,
+          "resultBytes": 4149
+        },
+        {
+          "reads": 3,
+          "decrypts": 1,
+          "hashes": 102,
+          "dispatchers": 0,
+          "upstreamRequests": 0,
+          "sockets": 0,
+          "resultBytes": 4149
+        },
+        {
+          "reads": 3,
+          "decrypts": 1,
+          "hashes": 102,
+          "dispatchers": 0,
+          "upstreamRequests": 0,
+          "sockets": 0,
+          "resultBytes": 4149
+        },
+        {
+          "reads": 3,
+          "decrypts": 1,
+          "hashes": 102,
+          "dispatchers": 0,
+          "upstreamRequests": 0,
+          "sockets": 0,
+          "resultBytes": 4149
+        },
+        {
+          "reads": 3,
+          "decrypts": 1,
+          "hashes": 102,
+          "dispatchers": 0,
+          "upstreamRequests": 0,
+          "sockets": 0,
+          "resultBytes": 4149
+        },
+        {
+          "reads": 3,
+          "decrypts": 1,
+          "hashes": 102,
+          "dispatchers": 0,
+          "upstreamRequests": 0,
+          "sockets": 0,
+          "resultBytes": 4149
+        },
+        {
+          "reads": 3,
+          "decrypts": 1,
+          "hashes": 102,
+          "dispatchers": 0,
+          "upstreamRequests": 0,
+          "sockets": 0,
+          "resultBytes": 4149
+        }
+      ]
+    },
+    {
+      "name": "integration-20-cold",
+      "p50": 13.562958999999864,
+      "p95": 15.459542000000056,
+      "samples": [
+        13.868542000000161,
+        14.861917000000176,
+        13.652041000000281,
+        12.876666000000114,
+        13.562958999999864,
+        15.459542000000056,
+        14.499207999999726,
+        13.47570799999994,
+        13.992999999999938,
+        14.205124999999953,
+        13.577166999999918,
+        13.34375,
+        13.104207999999744,
+        15.686249999999745,
+        13.7512499999998,
+        13.542832999999973,
+        13.33224999999993,
+        13.45962499999996,
+        13.546540999999706,
+        13.45641599999999,
+        15.24029100000007,
+        13.456000000000131,
+        14.05095799999981,
+        14.586166999999932,
+        13.548415999999634,
+        13.330583000000388,
+        13.433290999999826,
+        14.860791999999947,
+        13.374667000000045,
+        13.034583000000111
+      ],
+      "operations": [
+        {
+          "reads": 4,
+          "decrypts": 1,
+          "hashes": 183,
+          "dispatchers": 20,
+          "upstreamRequests": 20,
+          "sockets": 20,
+          "resultBytes": 4284
+        },
+        {
+          "reads": 4,
+          "decrypts": 1,
+          "hashes": 183,
+          "dispatchers": 20,
+          "upstreamRequests": 20,
+          "sockets": 20,
+          "resultBytes": 4284
+        },
+        {
+          "reads": 4,
+          "decrypts": 1,
+          "hashes": 183,
+          "dispatchers": 20,
+          "upstreamRequests": 20,
+          "sockets": 20,
+          "resultBytes": 4284
+        },
+        {
+          "reads": 4,
+          "decrypts": 1,
+          "hashes": 183,
+          "dispatchers": 20,
+          "upstreamRequests": 20,
+          "sockets": 20,
+          "resultBytes": 4284
+        },
+        {
+          "reads": 4,
+          "decrypts": 1,
+          "hashes": 183,
+          "dispatchers": 20,
+          "upstreamRequests": 20,
+          "sockets": 20,
+          "resultBytes": 4284
+        },
+        {
+          "reads": 4,
+          "decrypts": 1,
+          "hashes": 183,
+          "dispatchers": 20,
+          "upstreamRequests": 20,
+          "sockets": 20,
+          "resultBytes": 4284
+        },
+        {
+          "reads": 4,
+          "decrypts": 1,
+          "hashes": 183,
+          "dispatchers": 20,
+          "upstreamRequests": 20,
+          "sockets": 20,
+          "resultBytes": 4284
+        },
+        {
+          "reads": 4,
+          "decrypts": 1,
+          "hashes": 183,
+          "dispatchers": 20,
+          "upstreamRequests": 20,
+          "sockets": 20,
+          "resultBytes": 4284
+        },
+        {
+          "reads": 4,
+          "decrypts": 1,
+          "hashes": 183,
+          "dispatchers": 20,
+          "upstreamRequests": 20,
+          "sockets": 20,
+          "resultBytes": 4284
+        },
+        {
+          "reads": 4,
+          "decrypts": 1,
+          "hashes": 183,
+          "dispatchers": 20,
+          "upstreamRequests": 20,
+          "sockets": 20,
+          "resultBytes": 4284
+        },
+        {
+          "reads": 4,
+          "decrypts": 1,
+          "hashes": 183,
+          "dispatchers": 20,
+          "upstreamRequests": 20,
+          "sockets": 20,
+          "resultBytes": 4284
+        },
+        {
+          "reads": 4,
+          "decrypts": 1,
+          "hashes": 183,
+          "dispatchers": 20,
+          "upstreamRequests": 20,
+          "sockets": 20,
+          "resultBytes": 4284
+        },
+        {
+          "reads": 4,
+          "decrypts": 1,
+          "hashes": 183,
+          "dispatchers": 20,
+          "upstreamRequests": 20,
+          "sockets": 20,
+          "resultBytes": 4284
+        },
+        {
+          "reads": 4,
+          "decrypts": 1,
+          "hashes": 183,
+          "dispatchers": 20,
+          "upstreamRequests": 20,
+          "sockets": 20,
+          "resultBytes": 4284
+        },
+        {
+          "reads": 4,
+          "decrypts": 1,
+          "hashes": 183,
+          "dispatchers": 20,
+          "upstreamRequests": 20,
+          "sockets": 20,
+          "resultBytes": 4284
+        },
+        {
+          "reads": 4,
+          "decrypts": 1,
+          "hashes": 183,
+          "dispatchers": 20,
+          "upstreamRequests": 20,
+          "sockets": 20,
+          "resultBytes": 4284
+        },
+        {
+          "reads": 4,
+          "decrypts": 1,
+          "hashes": 183,
+          "dispatchers": 20,
+          "upstreamRequests": 20,
+          "sockets": 20,
+          "resultBytes": 4284
+        },
+        {
+          "reads": 4,
+          "decrypts": 1,
+          "hashes": 183,
+          "dispatchers": 20,
+          "upstreamRequests": 20,
+          "sockets": 20,
+          "resultBytes": 4284
+        },
+        {
+          "reads": 4,
+          "decrypts": 1,
+          "hashes": 183,
+          "dispatchers": 20,
+          "upstreamRequests": 20,
+          "sockets": 20,
+          "resultBytes": 4284
+        },
+        {
+          "reads": 4,
+          "decrypts": 1,
+          "hashes": 183,
+          "dispatchers": 20,
+          "upstreamRequests": 20,
+          "sockets": 20,
+          "resultBytes": 4284
+        },
+        {
+          "reads": 4,
+          "decrypts": 1,
+          "hashes": 183,
+          "dispatchers": 20,
+          "upstreamRequests": 20,
+          "sockets": 20,
+          "resultBytes": 4284
+        },
+        {
+          "reads": 4,
+          "decrypts": 1,
+          "hashes": 183,
+          "dispatchers": 20,
+          "upstreamRequests": 20,
+          "sockets": 20,
+          "resultBytes": 4284
+        },
+        {
+          "reads": 4,
+          "decrypts": 1,
+          "hashes": 183,
+          "dispatchers": 20,
+          "upstreamRequests": 20,
+          "sockets": 20,
+          "resultBytes": 4284
+        },
+        {
+          "reads": 4,
+          "decrypts": 1,
+          "hashes": 183,
+          "dispatchers": 20,
+          "upstreamRequests": 20,
+          "sockets": 20,
+          "resultBytes": 4284
+        },
+        {
+          "reads": 4,
+          "decrypts": 1,
+          "hashes": 183,
+          "dispatchers": 20,
+          "upstreamRequests": 20,
+          "sockets": 20,
+          "resultBytes": 4284
+        },
+        {
+          "reads": 4,
+          "decrypts": 1,
+          "hashes": 183,
+          "dispatchers": 20,
+          "upstreamRequests": 20,
+          "sockets": 20,
+          "resultBytes": 4284
+        },
+        {
+          "reads": 4,
+          "decrypts": 1,
+          "hashes": 183,
+          "dispatchers": 20,
+          "upstreamRequests": 20,
+          "sockets": 20,
+          "resultBytes": 4284
+        },
+        {
+          "reads": 4,
+          "decrypts": 1,
+          "hashes": 183,
+          "dispatchers": 20,
+          "upstreamRequests": 20,
+          "sockets": 20,
+          "resultBytes": 4284
+        },
+        {
+          "reads": 4,
+          "decrypts": 1,
+          "hashes": 183,
+          "dispatchers": 20,
+          "upstreamRequests": 20,
+          "sockets": 20,
+          "resultBytes": 4284
+        },
+        {
+          "reads": 4,
+          "decrypts": 1,
+          "hashes": 183,
+          "dispatchers": 20,
+          "upstreamRequests": 20,
+          "sockets": 20,
+          "resultBytes": 4284
+        }
+      ]
+    },
+    {
+      "name": "integration-20-warm",
+      "p50": 0.782416000000012,
+      "p95": 0.8752920000001723,
+      "samples": [
+        0.7937909999996009,
+        0.7729169999997794,
+        0.7720419999996011,
+        0.8024579999996604,
+        0.8241670000002159,
+        0.8409160000001066,
+        0.8320420000000013,
+        0.8752920000001723,
+        0.8958750000001601,
+        0.7925829999999223,
+        0.8264580000000024,
+        0.7577080000000933,
+        0.7544160000002194,
+        0.7652920000000449,
+        0.7754999999997381,
+        0.7472080000002279,
+        0.8237499999995634,
+        0.8317090000000462,
+        0.8517500000002656,
+        0.7660829999999805,
+        0.7779170000003433,
+        0.7602919999999358,
+        0.764458999999988,
+        0.782416000000012,
+        0.7594589999998789,
+        0.7637919999997393,
+        0.8102920000001177,
+        0.7747920000001614,
+        0.8228330000001733,
+        0.78125
+      ],
+      "operations": [
+        {
+          "reads": 4,
+          "decrypts": 1,
+          "hashes": 103,
+          "dispatchers": 0,
+          "upstreamRequests": 0,
+          "sockets": 0,
+          "resultBytes": 4284
+        },
+        {
+          "reads": 4,
+          "decrypts": 1,
+          "hashes": 103,
+          "dispatchers": 0,
+          "upstreamRequests": 0,
+          "sockets": 0,
+          "resultBytes": 4284
+        },
+        {
+          "reads": 4,
+          "decrypts": 1,
+          "hashes": 103,
+          "dispatchers": 0,
+          "upstreamRequests": 0,
+          "sockets": 0,
+          "resultBytes": 4284
+        },
+        {
+          "reads": 4,
+          "decrypts": 1,
+          "hashes": 103,
+          "dispatchers": 0,
+          "upstreamRequests": 0,
+          "sockets": 0,
+          "resultBytes": 4284
+        },
+        {
+          "reads": 4,
+          "decrypts": 1,
+          "hashes": 103,
+          "dispatchers": 0,
+          "upstreamRequests": 0,
+          "sockets": 0,
+          "resultBytes": 4284
+        },
+        {
+          "reads": 4,
+          "decrypts": 1,
+          "hashes": 103,
+          "dispatchers": 0,
+          "upstreamRequests": 0,
+          "sockets": 0,
+          "resultBytes": 4284
+        },
+        {
+          "reads": 4,
+          "decrypts": 1,
+          "hashes": 103,
+          "dispatchers": 0,
+          "upstreamRequests": 0,
+          "sockets": 0,
+          "resultBytes": 4284
+        },
+        {
+          "reads": 4,
+          "decrypts": 1,
+          "hashes": 103,
+          "dispatchers": 0,
+          "upstreamRequests": 0,
+          "sockets": 0,
+          "resultBytes": 4284
+        },
+        {
+          "reads": 4,
+          "decrypts": 1,
+          "hashes": 103,
+          "dispatchers": 0,
+          "upstreamRequests": 0,
+          "sockets": 0,
+          "resultBytes": 4284
+        },
+        {
+          "reads": 4,
+          "decrypts": 1,
+          "hashes": 103,
+          "dispatchers": 0,
+          "upstreamRequests": 0,
+          "sockets": 0,
+          "resultBytes": 4284
+        },
+        {
+          "reads": 4,
+          "decrypts": 1,
+          "hashes": 103,
+          "dispatchers": 0,
+          "upstreamRequests": 0,
+          "sockets": 0,
+          "resultBytes": 4284
+        },
+        {
+          "reads": 4,
+          "decrypts": 1,
+          "hashes": 103,
+          "dispatchers": 0,
+          "upstreamRequests": 0,
+          "sockets": 0,
+          "resultBytes": 4284
+        },
+        {
+          "reads": 4,
+          "decrypts": 1,
+          "hashes": 103,
+          "dispatchers": 0,
+          "upstreamRequests": 0,
+          "sockets": 0,
+          "resultBytes": 4284
+        },
+        {
+          "reads": 4,
+          "decrypts": 1,
+          "hashes": 103,
+          "dispatchers": 0,
+          "upstreamRequests": 0,
+          "sockets": 0,
+          "resultBytes": 4284
+        },
+        {
+          "reads": 4,
+          "decrypts": 1,
+          "hashes": 103,
+          "dispatchers": 0,
+          "upstreamRequests": 0,
+          "sockets": 0,
+          "resultBytes": 4284
+        },
+        {
+          "reads": 4,
+          "decrypts": 1,
+          "hashes": 103,
+          "dispatchers": 0,
+          "upstreamRequests": 0,
+          "sockets": 0,
+          "resultBytes": 4284
+        },
+        {
+          "reads": 4,
+          "decrypts": 1,
+          "hashes": 103,
+          "dispatchers": 0,
+          "upstreamRequests": 0,
+          "sockets": 0,
+          "resultBytes": 4284
+        },
+        {
+          "reads": 4,
+          "decrypts": 1,
+          "hashes": 103,
+          "dispatchers": 0,
+          "upstreamRequests": 0,
+          "sockets": 0,
+          "resultBytes": 4284
+        },
+        {
+          "reads": 4,
+          "decrypts": 1,
+          "hashes": 103,
+          "dispatchers": 0,
+          "upstreamRequests": 0,
+          "sockets": 0,
+          "resultBytes": 4284
+        },
+        {
+          "reads": 4,
+          "decrypts": 1,
+          "hashes": 103,
+          "dispatchers": 0,
+          "upstreamRequests": 0,
+          "sockets": 0,
+          "resultBytes": 4284
+        },
+        {
+          "reads": 4,
+          "decrypts": 1,
+          "hashes": 103,
+          "dispatchers": 0,
+          "upstreamRequests": 0,
+          "sockets": 0,
+          "resultBytes": 4284
+        },
+        {
+          "reads": 4,
+          "decrypts": 1,
+          "hashes": 103,
+          "dispatchers": 0,
+          "upstreamRequests": 0,
+          "sockets": 0,
+          "resultBytes": 4284
+        },
+        {
+          "reads": 4,
+          "decrypts": 1,
+          "hashes": 103,
+          "dispatchers": 0,
+          "upstreamRequests": 0,
+          "sockets": 0,
+          "resultBytes": 4284
+        },
+        {
+          "reads": 4,
+          "decrypts": 1,
+          "hashes": 103,
+          "dispatchers": 0,
+          "upstreamRequests": 0,
+          "sockets": 0,
+          "resultBytes": 4284
+        },
+        {
+          "reads": 4,
+          "decrypts": 1,
+          "hashes": 103,
+          "dispatchers": 0,
+          "upstreamRequests": 0,
+          "sockets": 0,
+          "resultBytes": 4284
+        },
+        {
+          "reads": 4,
+          "decrypts": 1,
+          "hashes": 103,
+          "dispatchers": 0,
+          "upstreamRequests": 0,
+          "sockets": 0,
+          "resultBytes": 4284
+        },
+        {
+          "reads": 4,
+          "decrypts": 1,
+          "hashes": 103,
+          "dispatchers": 0,
+          "upstreamRequests": 0,
+          "sockets": 0,
+          "resultBytes": 4284
+        },
+        {
+          "reads": 4,
+          "decrypts": 1,
+          "hashes": 103,
+          "dispatchers": 0,
+          "upstreamRequests": 0,
+          "sockets": 0,
+          "resultBytes": 4284
+        },
+        {
+          "reads": 4,
+          "decrypts": 1,
+          "hashes": 103,
+          "dispatchers": 0,
+          "upstreamRequests": 0,
+          "sockets": 0,
+          "resultBytes": 4284
+        },
+        {
+          "reads": 4,
+          "decrypts": 1,
+          "hashes": 103,
+          "dispatchers": 0,
+          "upstreamRequests": 0,
+          "sockets": 0,
+          "resultBytes": 4284
+        }
+      ]
+    }
+  ],
+  "checks": {
+    "warmRevocation": true,
+    "crossUserDenial": true
+  }
+}
