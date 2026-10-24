@@ -1,0 +1,31 @@
+packages/custom-widgets/src/jsx/bindings.ts
+  s_cb7da52b92f941::t_897c90cee63f93 13,17,20,25-27,29-30,33-35,37,40-41,45,52,54-56
+packages/custom-widgets/src/jsx/runtime-components.tsx
+  s_cb7da52b92f941::t_2c42635936d493 2,59-61,63
+packages/custom-widgets/src/runtime/context.tsx
+  s_cb7da52b92f941::t_084dc232cd93bd 4,12-22,24-51
+packages/custom-widgets/src/runtime/custom-jsx-renderer.tsx
+  s_cb7da52b92f941::t_eaeb8f6a47cb6a 2,64,75,214
+packages/widgets/src/custom-api/custom-jsx-display.tsx
+  s_cb7da52b92f941::t_3ef30723bfc2dd 15,20-21,39-46,54-55,57-58,62-63,65,67,69-73,75-78,80,82-86,94,96-97,99,101-102,111
+packages/widgets/src/custom-api/jsx-icon-adapter.tsx
+  s_cb7da52b92f941::t_8dea9c599f36d1 1-2,12,47
+packages/widgets/src/custom-api/widget-definition-context.tsx
+  s_cb7da52b92f941::t_222ff503449505 4,39,44-62,75,88-91,93-105,108-121,123-207,209-213,223
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "40bad20da5f683b7b302b486a20d90cfd30915d0",
+  "prompts": {},
+  "sessions": {
+    "s_cb7da52b92f941": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "0dd48e49-fedb-4f47-bd23-f5fcef6c850a",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
