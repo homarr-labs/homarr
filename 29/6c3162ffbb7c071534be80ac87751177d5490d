@@ -1,0 +1,27 @@
+apps/nextjs/src/app/[locale]/manage/medias/_actions/copy-media.tsx
+  s_b33778671a3872::t_da75158946e672 18
+apps/nextjs/src/app/[locale]/manage/medias/page.tsx
+  s_b33778671a3872::t_d08638d2b03ef4 160,200
+apps/nextjs/src/app/api/user-medias/[id]/route.ts
+  s_b33778671a3872::t_c5214ef6173d83 53,65,71-96,99,112,121,124,134-137,140,147,151
+packages/api/src/router/medias/media-router.ts
+  s_b33778671a3872::t_59fcfcde5fdfe8 89
+packages/icons/src/local-media-url.ts
+  s_b33778671a3872::t_b1a81a9614944c 2
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "296c3162ffbb7c071534be80ac87751177d5490d",
+  "prompts": {},
+  "sessions": {
+    "s_b33778671a3872": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "4836a7b0-29a0-4329-9cac-5cfb8625bd5c",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
