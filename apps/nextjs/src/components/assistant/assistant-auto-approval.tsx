@@ -105,10 +105,10 @@ export const AssistantAutoApprovalProvider = ({
         clearRetryTimer(toolCallId);
         retryTimersRef.current.set(toolCallId, window.setTimeout(retry, AUTO_APPROVAL_RETRY_TIMEOUT_MS));
       };
+      awaitAcknowledgement();
       try {
         const result = confirm();
-        if (result === undefined) awaitAcknowledgement();
-        else void Promise.resolve(result).then(awaitAcknowledgement, retry);
+        if (result !== undefined) void Promise.resolve(result).then(awaitAcknowledgement, retry);
         return true;
       } catch {
         retry();
