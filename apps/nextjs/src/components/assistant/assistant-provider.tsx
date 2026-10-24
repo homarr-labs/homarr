@@ -86,9 +86,16 @@ const assistantDocumentAttachmentTypes = [
   "text/xml",
 ];
 
-const fileToDataUrlAsync = (file: File) =>
+const fileToDataUrlAsync = (file: File, signal?: AbortSignal) =>
   new Promise<string>((resolve, reject) => {
+    signal?.throwIfAborted();
     const reader = new FileReader();
+    const abort = () => {
+      reader.abort();
+      reject(signal?.reason as Error);
+    };
+    signal?.addEventListener("abort", abort, { once: true });
+    reader.addEventListener("loadend", () => signal?.removeEventListener("abort", abort), { once: true });
     reader.addEventListener("load", () => resolve(String(reader.result)), { once: true });
     reader.addEventListener("error", () => reject(new Error("The attachment could not be read.")), { once: true });
     reader.readAsDataURL(file);
@@ -123,7 +130,7 @@ const createAssistantAttachmentAdapter = (allowImages: boolean): AttachmentAdapt
         status: { type: "requires-action", reason: "composer-send" },
       };
     },
-    async send(attachment) {
+    async send(attachment, options) {
       return {
         ...attachment,
         status: { type: "complete" },
@@ -132,7 +139,7 @@ const createAssistantAttachmentAdapter = (allowImages: boolean): AttachmentAdapt
             type: "file",
             filename: attachment.name,
             mimeType: attachment.contentType ?? "application/octet-stream",
-            data: await fileToDataUrlAsync(attachment.file),
+            data: await fileToDataUrlAsync(attachment.file, options?.signal),
           },
         ],
       };
@@ -412,7 +419,30 @@ const threadAdapter: RemoteThreadListAdapter = {
   },
 };
 
-const createHistoryAdapter = (threadId: string | undefined): ThreadHistoryAdapter => ({
+interface AssistantHistoryThread {
+  getState: () => { remoteId: string | undefined };
+  initialize: () => Promise<{ remoteId: string }>;
+}
+
+type AssistantHistoryFailure = "load" | "save";
+
+const reportHistoryFailure = async <T,>(
+  failure: AssistantHistoryFailure,
+  onFailure: (failure: AssistantHistoryFailure) => void,
+  operation: () => Promise<T>,
+) => {
+  try {
+    return await operation();
+  } catch (error) {
+    onFailure(failure);
+    throw error;
+  }
+};
+
+const createHistoryAdapter = (
+  getThread: () => AssistantHistoryThread,
+  onFailure: (failure: AssistantHistoryFailure) => void,
+): ThreadHistoryAdapter => ({
   async load() {
     return { messages: [] };
   },
@@ -428,10 +458,15 @@ const createHistoryAdapter = (threadId: string | undefined): ThreadHistoryAdapte
       throw new Error(`Unsupported assistant message format: ${formatAdapter.format}`);
     }
     const storageFormat = formatAdapter.format;
+    const erasedFormatAdapter = formatAdapter as MessageFormatAdapter<unknown, TStorageFormat>;
+    const getExistingThreadId = () => getThread().getState().remoteId;
     return {
       async load() {
+        const threadId = getExistingThreadId();
         if (!threadId) return { messages: [] };
-        const { messages } = await fetchApi.assistant.getThread.query({ threadId });
+        const { messages } = await reportHistoryFailure("load", onFailure, () =>
+          fetchApi.assistant.getThread.query({ threadId }),
+        );
         return {
           messages: messages
             .filter((message) => message.format === formatAdapter.format)
@@ -447,40 +482,45 @@ const createHistoryAdapter = (threadId: string | undefined): ThreadHistoryAdapte
         };
       },
       async append(item) {
-        if (!threadId) return;
-        await fetchApi.assistant.appendMessage.mutate({
-          threadId,
-          id: (formatAdapter as MessageFormatAdapter<unknown, TStorageFormat>).getId(item.message),
-          parentId: item.parentId,
-          format: storageFormat,
-          content: (formatAdapter as MessageFormatAdapter<unknown, TStorageFormat>).encode(
-            item as { parentId: string | null; message: unknown },
-          ),
+        await reportHistoryFailure("save", onFailure, async () => {
+          // The first user message is persisted when its run starts, before the new thread has a
+          // remote id. Initializing here creates the thread instead of dropping that message.
+          const { remoteId: threadId } = await getThread().initialize();
+          await fetchApi.assistant.appendMessage.mutate({
+            threadId,
+            id: erasedFormatAdapter.getId(item.message),
+            parentId: item.parentId,
+            format: storageFormat,
+            content: erasedFormatAdapter.encode(item as { parentId: string | null; message: unknown }),
+          });
         });
       },
       async update(item, localMessageId) {
+        const threadId = getExistingThreadId();
         if (!threadId) return;
-        const erasedFormatAdapter = formatAdapter as MessageFormatAdapter<unknown, TStorageFormat>;
         const id = erasedFormatAdapter.getId(item.message);
-        await fetchApi.assistant.appendMessage.mutate({
-          threadId,
-          id,
-          parentId: item.parentId,
-          format: storageFormat,
-          content: erasedFormatAdapter.encode(item as { parentId: string | null; message: unknown }),
+        await reportHistoryFailure("save", onFailure, async () => {
+          await fetchApi.assistant.appendMessage.mutate({
+            threadId,
+            id,
+            parentId: item.parentId,
+            format: storageFormat,
+            content: erasedFormatAdapter.encode(item as { parentId: string | null; message: unknown }),
+          });
+          if (localMessageId !== id) {
+            await fetchApi.assistant.deleteMessages.mutate({ threadId, ids: [localMessageId] });
+          }
         });
-        if (localMessageId !== id) {
-          await fetchApi.assistant.deleteMessages.mutate({ threadId, ids: [localMessageId] });
-        }
       },
       async delete(items) {
+        const threadId = getExistingThreadId();
         if (!threadId || items.length === 0) return;
-        await fetchApi.assistant.deleteMessages.mutate({
-          threadId,
-          ids: items.map((item) =>
-            (formatAdapter as MessageFormatAdapter<unknown, TStorageFormat>).getId(item.message),
-          ),
-        });
+        await reportHistoryFailure("save", onFailure, () =>
+          fetchApi.assistant.deleteMessages.mutate({
+            threadId,
+            ids: items.map((item) => erasedFormatAdapter.getId(item.message)),
+          }),
+        );
       },
     };
   },
@@ -506,7 +546,18 @@ const AssistantThreadRuntime = () => {
       }),
     [getRequestBody, getRequestHeaders],
   );
-  const history = useMemo(() => createHistoryAdapter(threadId), [threadId]);
+  const history = useMemo(
+    () =>
+      createHistoryAdapter(
+        () => aui.threadListItem(),
+        (failure) =>
+          showErrorNotification({
+            title: t("historyError.title"),
+            message: t(`historyError.${failure}Messages`),
+          }),
+      ),
+    [aui, t],
+  );
   const selectedModel = preferences.models.find((model) => model.id === preferences.modelId);
   const attachments = useMemo(
     () =>

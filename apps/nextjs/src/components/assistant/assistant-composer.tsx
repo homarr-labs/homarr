@@ -1,6 +1,5 @@
 "use client";
 
-import { useLayoutEffect, useRef } from "react";
 import { ComposerPrimitive, ThreadPrimitive, useAuiState } from "@assistant-ui/react";
 import { LexicalComposerInput } from "@assistant-ui/react-lexical";
 import { ActionIcon, Box, Button, Group, Stack, Text, ThemeIcon, Tooltip } from "@mantine/core";
@@ -46,7 +45,6 @@ export const Composer = (props: ComposerProps) => {
   let sendLabel = t("send");
   if (providerUnavailable) sendLabel = t("providerQuota.unavailableDescription");
   if (hasPendingAction) sendLabel = t("pendingAction.sendBlocked");
-  const composerInputRef = useRef<HTMLDivElement>(null);
   const composerLabel = t("composerPlaceholder");
   const actionSize = props.compact ? "sm" : "lg";
   const sendSize = props.compact ? "md" : "lg";
@@ -91,18 +89,9 @@ export const Composer = (props: ComposerProps) => {
     </ComposerPrimitive.Send>
   );
 
-  useLayoutEffect(() => {
-    const editor = composerInputRef.current?.querySelector<HTMLElement>(".aui-lexical-input");
-    if (!editor) return;
-    editor.setAttribute("aria-label", composerLabel);
-    return () => {
-      if (editor.getAttribute("aria-label") === composerLabel) editor.removeAttribute("aria-label");
-    };
-  }, [composerLabel]);
-
   return (
     <Box className={classes.composerWrap}>
-      <ComposerPrimitive.Unstable_TriggerPopoverRoot>
+      <ComposerPrimitive.TriggerPopoverRoot>
         <ComposerPrimitive.AttachmentDropzone className={classes.composerDropzone}>
           <ComposerPrimitive.Root
             className={classes.composer}
@@ -127,7 +116,6 @@ export const Composer = (props: ComposerProps) => {
             <Box className={classes.composerMain}>
               {props.compact ? (
                 <LexicalComposerInput
-                  ref={composerInputRef}
                   className={`${classes.composerInput} ${classes.composerWidgetInput}`}
                   data-assistant-composer-input
                   placeholder={composerLabel}
@@ -142,7 +130,6 @@ export const Composer = (props: ComposerProps) => {
                     {attachmentAction}
                   </Group>
                   <LexicalComposerInput
-                    ref={composerInputRef}
                     className={classes.composerInput}
                     data-assistant-composer-input
                     placeholder={composerLabel}
@@ -178,7 +165,7 @@ export const Composer = (props: ComposerProps) => {
             </Box>
           </ComposerPrimitive.Root>
         </ComposerPrimitive.AttachmentDropzone>
-      </ComposerPrimitive.Unstable_TriggerPopoverRoot>
+      </ComposerPrimitive.TriggerPopoverRoot>
     </Box>
   );
 };

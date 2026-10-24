@@ -8794,6 +8794,14 @@
     "conversationActions": "Conversation actions",
     "searchConversations": "Search conversations",
     "noMatchingConversations": "No matching conversations",
+    "historyError": {
+      "title": "Conversation history",
+      "load": "Conversations could not be loaded.",
+      "loadMessages": "This conversation's messages could not be loaded. Reopen it to try again.",
+      "saveMessages": "Recent messages could not be saved and may be missing after a reload.",
+      "switch": "This conversation could not be opened.",
+      "retry": "Retry"
+    },
     "moreActions": "More response actions",
     "renameConversation": {
       "action": "Rename",
@@ -9109,6 +9117,7 @@
     "approvalDescription": "Review this change before it runs.",
     "approveAndRun": "Approve and run",
     "deny": "Deny",
+    "approvalError": "Your response could not be recorded. Try again.",
     "autoApproval": {
       "label": "Automatic approvals",
       "composerLabel": "Approve for me",

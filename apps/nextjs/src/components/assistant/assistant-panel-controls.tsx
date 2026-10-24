@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { ThreadPrimitive } from "@assistant-ui/react";
+import type { AssistantState } from "@assistant-ui/react";
+import { AuiIf, ThreadPrimitive } from "@assistant-ui/react";
 import { ActionIcon, Box, Button, Popover, Stack, Text, ThemeIcon, Tooltip } from "@mantine/core";
 import {
   IconActivityHeartbeat,
@@ -20,6 +21,8 @@ import { useI18n } from "@homarr/translation/client";
 import classes from "./assistant-panel.module.css";
 import { useAssistantAutoApproval } from "./assistant-auto-approval";
 import type { AssistantConversationControls } from "./assistant-conversation-controls";
+
+const threadIsEmpty = (state: AssistantState) => state.thread.isEmpty;
 
 const compactSuggestionVars = () => ({
   root: {
@@ -137,7 +140,7 @@ export const EmptyThread = ({ compact = false }: { compact?: boolean }) => {
   const t = useI18n("assistant");
   if (compact) {
     return (
-      <ThreadPrimitive.Empty>
+      <AuiIf condition={threadIsEmpty}>
         <Box className={classes.empty} data-compact>
           <Box className={classes.suggestions}>
             <ThreadPrimitive.Suggestion prompt={t("suggestions.health.prompt")} send clearComposer asChild>
@@ -186,12 +189,12 @@ export const EmptyThread = ({ compact = false }: { compact?: boolean }) => {
             </ThreadPrimitive.Suggestion>
           </Box>
         </Box>
-      </ThreadPrimitive.Empty>
+      </AuiIf>
     );
   }
 
   return (
-    <ThreadPrimitive.Empty>
+    <AuiIf condition={threadIsEmpty}>
       <Box className={classes.empty}>
         <Stack align="center" gap="lg" maw={560} w="100%">
           <Stack align="center" gap="xs" maw={430} ta="center">
@@ -233,6 +236,6 @@ export const EmptyThread = ({ compact = false }: { compact?: boolean }) => {
           </Box>
         </Stack>
       </Box>
-    </ThreadPrimitive.Empty>
+    </AuiIf>
   );
 };
