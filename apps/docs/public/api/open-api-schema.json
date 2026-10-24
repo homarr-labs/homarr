@@ -109,36 +109,24 @@
                             "type": "string"
                           },
                           "description": {
-                            "anyOf": [
-                              {
-                                "type": "string"
-                              },
-                              {
-                                "type": "null"
-                              }
+                            "type": [
+                              "string",
+                              "null"
                             ]
                           },
                           "iconUrl": {
                             "type": "string"
                           },
                           "href": {
-                            "anyOf": [
-                              {
-                                "type": "string"
-                              },
-                              {
-                                "type": "null"
-                              }
+                            "type": [
+                              "string",
+                              "null"
                             ]
                           },
                           "pingUrl": {
-                            "anyOf": [
-                              {
-                                "type": "string"
-                              },
-                              {
-                                "type": "null"
-                              }
+                            "type": [
+                              "string",
+                              "null"
                             ]
                           }
                         },
@@ -249,36 +237,24 @@
                         "type": "string"
                       },
                       "description": {
-                        "anyOf": [
-                          {
-                            "type": "string"
-                          },
-                          {
-                            "type": "null"
-                          }
+                        "type": [
+                          "string",
+                          "null"
                         ]
                       },
                       "iconUrl": {
                         "type": "string"
                       },
                       "href": {
-                        "anyOf": [
-                          {
-                            "type": "string"
-                          },
-                          {
-                            "type": "null"
-                          }
+                        "type": [
+                          "string",
+                          "null"
                         ]
                       },
                       "pingUrl": {
-                        "anyOf": [
-                          {
-                            "type": "string"
-                          },
-                          {
-                            "type": "null"
-                          }
+                        "type": [
+                          "string",
+                          "null"
                         ]
                       }
                     },
@@ -369,13 +345,9 @@
                     "minLength": 1
                   },
                   "href": {
-                    "anyOf": [
-                      {
-                        "type": "string"
-                      },
-                      {
-                        "type": "null"
-                      }
+                    "type": [
+                      "string",
+                      "null"
                     ]
                   },
                   "pingUrl": {
@@ -415,73 +387,49 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "allOf": [
-                    {
-                      "type": "object",
-                      "properties": {
-                        "appId": {
-                          "type": "string"
-                        }
-                      },
-                      "required": [
-                        "appId"
-                      ],
-                      "additionalProperties": false
+                  "type": "object",
+                  "properties": {
+                    "appId": {
+                      "type": "string"
                     },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "id": {
-                          "type": "string"
-                        },
-                        "name": {
-                          "type": "string"
-                        },
-                        "description": {
-                          "anyOf": [
-                            {
-                              "type": "string"
-                            },
-                            {
-                              "type": "null"
-                            }
-                          ]
-                        },
-                        "iconUrl": {
-                          "type": "string"
-                        },
-                        "href": {
-                          "anyOf": [
-                            {
-                              "type": "string"
-                            },
-                            {
-                              "type": "null"
-                            }
-                          ]
-                        },
-                        "pingUrl": {
-                          "anyOf": [
-                            {
-                              "type": "string"
-                            },
-                            {
-                              "type": "null"
-                            }
-                          ]
-                        }
-                      },
-                      "required": [
-                        "id",
-                        "name",
-                        "description",
-                        "iconUrl",
-                        "href",
-                        "pingUrl"
-                      ],
-                      "additionalProperties": false
+                    "id": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "description": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "iconUrl": {
+                      "type": "string"
+                    },
+                    "href": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "pingUrl": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
                     }
-                  ]
+                  },
+                  "required": [
+                    "appId",
+                    "id",
+                    "name",
+                    "description",
+                    "iconUrl",
+                    "href",
+                    "pingUrl"
+                  ],
+                  "additionalProperties": false
                 }
               }
             }
@@ -579,36 +527,24 @@
                         "type": "string"
                       },
                       "description": {
-                        "anyOf": [
-                          {
-                            "type": "string"
-                          },
-                          {
-                            "type": "null"
-                          }
+                        "type": [
+                          "string",
+                          "null"
                         ]
                       },
                       "iconUrl": {
                         "type": "string"
                       },
                       "href": {
-                        "anyOf": [
-                          {
-                            "type": "string"
-                          },
-                          {
-                            "type": "null"
-                          }
+                        "type": [
+                          "string",
+                          "null"
                         ]
                       },
                       "pingUrl": {
-                        "anyOf": [
-                          {
-                            "type": "string"
-                          },
-                          {
-                            "type": "null"
-                          }
+                        "type": [
+                          "string",
+                          "null"
                         ]
                       }
                     },
@@ -712,33 +648,21 @@
                         "type": "string"
                       },
                       "href": {
-                        "anyOf": [
-                          {
-                            "type": "string"
-                          },
-                          {
-                            "type": "null"
-                          }
+                        "type": [
+                          "string",
+                          "null"
                         ]
                       },
                       "pingUrl": {
-                        "anyOf": [
-                          {
-                            "type": "string"
-                          },
-                          {
-                            "type": "null"
-                          }
+                        "type": [
+                          "string",
+                          "null"
                         ]
                       },
                       "description": {
-                        "anyOf": [
-                          {
-                            "type": "string"
-                          },
-                          {
-                            "type": "null"
-                          }
+                        "type": [
+                          "string",
+                          "null"
                         ]
                       }
                     },
@@ -828,36 +752,24 @@
                       "type": "string"
                     },
                     "description": {
-                      "anyOf": [
-                        {
-                          "type": "string"
-                        },
-                        {
-                          "type": "null"
-                        }
+                      "type": [
+                        "string",
+                        "null"
                       ]
                     },
                     "iconUrl": {
                       "type": "string"
                     },
                     "href": {
-                      "anyOf": [
-                        {
-                          "type": "string"
-                        },
-                        {
-                          "type": "null"
-                        }
+                      "type": [
+                        "string",
+                        "null"
                       ]
                     },
                     "pingUrl": {
-                      "anyOf": [
-                        {
-                          "type": "string"
-                        },
-                        {
-                          "type": "null"
-                        }
+                      "type": [
+                        "string",
+                        "null"
                       ]
                     }
                   },
@@ -976,13 +888,9 @@
                     "minLength": 1
                   },
                   "href": {
-                    "anyOf": [
-                      {
-                        "type": "string"
-                      },
-                      {
-                        "type": "null"
-                      }
+                    "type": [
+                      "string",
+                      "null"
                     ]
                   },
                   "pingUrl": {
@@ -1192,13 +1100,9 @@
                         "type": "string"
                       },
                       "logoImageUrl": {
-                        "anyOf": [
-                          {
-                            "type": "string"
-                          },
-                          {
-                            "type": "null"
-                          }
+                        "type": [
+                          "string",
+                          "null"
                         ]
                       },
                       "isPublic": {
@@ -1213,23 +1117,15 @@
                                 "type": "string"
                               },
                               "name": {
-                                "anyOf": [
-                                  {
-                                    "type": "string"
-                                  },
-                                  {
-                                    "type": "null"
-                                  }
+                                "type": [
+                                  "string",
+                                  "null"
                                 ]
                               },
                               "image": {
-                                "anyOf": [
-                                  {
-                                    "type": "string"
-                                  },
-                                  {
-                                    "type": "null"
-                                  }
+                                "type": [
+                                  "string",
+                                  "null"
                                 ]
                               }
                             },
@@ -2063,53 +1959,33 @@
                   "type": "object",
                   "properties": {
                     "pageTitle": {
-                      "anyOf": [
-                        {
-                          "type": "string"
-                        },
-                        {
-                          "type": "null"
-                        }
+                      "type": [
+                        "string",
+                        "null"
                       ]
                     },
                     "metaTitle": {
-                      "anyOf": [
-                        {
-                          "type": "string"
-                        },
-                        {
-                          "type": "null"
-                        }
+                      "type": [
+                        "string",
+                        "null"
                       ]
                     },
                     "logoImageUrl": {
-                      "anyOf": [
-                        {
-                          "type": "string"
-                        },
-                        {
-                          "type": "null"
-                        }
+                      "type": [
+                        "string",
+                        "null"
                       ]
                     },
                     "faviconImageUrl": {
-                      "anyOf": [
-                        {
-                          "type": "string"
-                        },
-                        {
-                          "type": "null"
-                        }
+                      "type": [
+                        "string",
+                        "null"
                       ]
                     },
                     "backgroundImageUrl": {
-                      "anyOf": [
-                        {
-                          "type": "string"
-                        },
-                        {
-                          "type": "null"
-                        }
+                      "type": [
+                        "string",
+                        "null"
                       ]
                     },
                     "backgroundImageAttachment": {
@@ -2153,13 +2029,9 @@
                       "maxLength": 16384
                     },
                     "iconColor": {
-                      "anyOf": [
-                        {
-                          "type": "string"
-                        },
-                        {
-                          "type": "null"
-                        }
+                      "type": [
+                        "string",
+                        "null"
                       ]
                     },
                     "itemRadius": {
@@ -2302,53 +2174,33 @@
                 "type": "object",
                 "properties": {
                   "pageTitle": {
-                    "anyOf": [
-                      {
-                        "type": "string"
-                      },
-                      {
-                        "type": "null"
-                      }
+                    "type": [
+                      "string",
+                      "null"
                     ]
                   },
                   "metaTitle": {
-                    "anyOf": [
-                      {
-                        "type": "string"
-                      },
-                      {
-                        "type": "null"
-                      }
+                    "type": [
+                      "string",
+                      "null"
                     ]
                   },
                   "logoImageUrl": {
-                    "anyOf": [
-                      {
-                        "type": "string"
-                      },
-                      {
-                        "type": "null"
-                      }
+                    "type": [
+                      "string",
+                      "null"
                     ]
                   },
                   "faviconImageUrl": {
-                    "anyOf": [
-                      {
-                        "type": "string"
-                      },
-                      {
-                        "type": "null"
-                      }
+                    "type": [
+                      "string",
+                      "null"
                     ]
                   },
                   "backgroundImageUrl": {
-                    "anyOf": [
-                      {
-                        "type": "string"
-                      },
-                      {
-                        "type": "null"
-                      }
+                    "type": [
+                      "string",
+                      "null"
                     ]
                   },
                   "backgroundImageAttachment": {
@@ -3083,184 +2935,173 @@
                   "items": {
                     "type": "array",
                     "items": {
-                      "allOf": [
-                        {
-                          "type": "object",
-                          "properties": {
-                            "kind": {
-                              "type": "string",
-                              "enum": [
-                                "stats",
-                                "clock",
-                                "weather",
-                                "airQuality",
-                                "countdown",
-                                "timer",
-                                "app",
-                                "iframe",
-                                "video",
-                                "notebook",
-                                "anchorNote",
-                                "dnsHoleSummary",
-                                "dnsHoleControls",
-                                "smartHome-entityState",
-                                "smartHome-executeAutomation",
-                                "stockPrice",
-                                "mediaServer",
-                                "calendar",
-                                "downloads",
-                                "mediaRequests-requestList",
-                                "mediaRequests-requestStats",
-                                "mediaTranscoding",
-                                "mediaMissing",
-                                "minecraftServerStatus",
-                                "networkControllerSummary",
-                                "networkControllerStatus",
-                                "rssFeed",
-                                "bookmarks",
-                                "indexerManager",
-                                "healthMonitoring",
-                                "releases",
-                                "mediaReleases",
-                                "dockerContainers",
-                                "firewall",
-                                "notifications",
-                                "systemResources",
-                                "coolify",
-                                "systemDisks",
-                                "timetable",
-                                "immich-serverStats",
-                                "immich-albumCarousel",
-                                "paperlessNgx",
-                                "thingport-libraryStats",
-                                "thingport-models",
-                                "thingport-featuredModel",
-                                "thingport-activityHeatmap",
-                                "patchmon",
-                                "bazarr",
-                                "tracearr",
-                                "speedtestTracker",
-                                "uptimeKuma",
-                                "audioStats",
-                                "umami",
-                                "vpn",
-                                "archiveTeamWarrior",
-                                "ups",
-                                "beszelSystemTable",
-                                "beszelSystemGrid",
-                                "beszelAlerts",
-                                "beszelSystemStats",
-                                "traefik",
-                                "customApi",
-                                "assistant",
-                                "wud",
-                                "llamacpp",
-                                "wazuh"
-                              ]
-                            },
-                            "options": {
-                              "type": "object",
-                              "propertyNames": {
-                                "type": "string"
-                              },
-                              "additionalProperties": {}
-                            }
-                          },
-                          "required": [
-                            "kind",
-                            "options"
+                      "type": "object",
+                      "properties": {
+                        "kind": {
+                          "type": "string",
+                          "enum": [
+                            "stats",
+                            "clock",
+                            "weather",
+                            "airQuality",
+                            "countdown",
+                            "timer",
+                            "app",
+                            "iframe",
+                            "video",
+                            "notebook",
+                            "anchorNote",
+                            "dnsHoleSummary",
+                            "dnsHoleControls",
+                            "smartHome-entityState",
+                            "smartHome-executeAutomation",
+                            "stockPrice",
+                            "mediaServer",
+                            "calendar",
+                            "downloads",
+                            "mediaRequests-requestList",
+                            "mediaRequests-requestStats",
+                            "mediaTranscoding",
+                            "mediaMissing",
+                            "minecraftServerStatus",
+                            "networkControllerSummary",
+                            "networkControllerStatus",
+                            "rssFeed",
+                            "bookmarks",
+                            "indexerManager",
+                            "healthMonitoring",
+                            "releases",
+                            "mediaReleases",
+                            "dockerContainers",
+                            "firewall",
+                            "notifications",
+                            "systemResources",
+                            "coolify",
+                            "systemDisks",
+                            "timetable",
+                            "immich-serverStats",
+                            "immich-albumCarousel",
+                            "paperlessNgx",
+                            "thingport-libraryStats",
+                            "thingport-models",
+                            "thingport-featuredModel",
+                            "thingport-activityHeatmap",
+                            "patchmon",
+                            "bazarr",
+                            "tracearr",
+                            "speedtestTracker",
+                            "uptimeKuma",
+                            "audioStats",
+                            "umami",
+                            "vpn",
+                            "archiveTeamWarrior",
+                            "ups",
+                            "beszelSystemTable",
+                            "beszelSystemGrid",
+                            "beszelAlerts",
+                            "beszelSystemStats",
+                            "traefik",
+                            "customApi",
+                            "assistant",
+                            "wud",
+                            "llamacpp",
+                            "wazuh"
                           ]
                         },
-                        {
+                        "options": {
                           "type": "object",
-                          "properties": {
-                            "id": {
-                              "type": "string"
-                            },
-                            "layouts": {
-                              "type": "array",
-                              "items": {
-                                "type": "object",
-                                "properties": {
-                                  "layoutId": {
-                                    "type": "string"
-                                  },
-                                  "yOffset": {
-                                    "type": "integer",
-                                    "minimum": 0,
-                                    "maximum": 32767
-                                  },
-                                  "xOffset": {
-                                    "type": "integer",
-                                    "minimum": 0,
-                                    "maximum": 32767
-                                  },
-                                  "width": {
-                                    "type": "integer",
-                                    "minimum": 1,
-                                    "maximum": 32767
-                                  },
-                                  "height": {
-                                    "type": "integer",
-                                    "minimum": 1,
-                                    "maximum": 32767
-                                  },
-                                  "sectionId": {
-                                    "type": "string"
-                                  }
-                                },
-                                "required": [
-                                  "layoutId",
-                                  "yOffset",
-                                  "xOffset",
-                                  "width",
-                                  "height",
-                                  "sectionId"
-                                ]
+                          "propertyNames": {
+                            "type": "string"
+                          },
+                          "additionalProperties": {}
+                        },
+                        "id": {
+                          "type": "string"
+                        },
+                        "layouts": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "layoutId": {
+                                "type": "string"
+                              },
+                              "yOffset": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 32767
+                              },
+                              "xOffset": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 32767
+                              },
+                              "width": {
+                                "type": "integer",
+                                "minimum": 1,
+                                "maximum": 32767
+                              },
+                              "height": {
+                                "type": "integer",
+                                "minimum": 1,
+                                "maximum": 32767
+                              },
+                              "sectionId": {
+                                "type": "string"
                               }
                             },
-                            "integrationIds": {
+                            "required": [
+                              "layoutId",
+                              "yOffset",
+                              "xOffset",
+                              "width",
+                              "height",
+                              "sectionId"
+                            ]
+                          }
+                        },
+                        "integrationIds": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "advancedOptions": {
+                          "type": "object",
+                          "properties": {
+                            "title": {
+                              "default": null,
+                              "anyOf": [
+                                {
+                                  "type": "string",
+                                  "maxLength": 64
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ]
+                            },
+                            "customCssClasses": {
+                              "default": [],
                               "type": "array",
                               "items": {
                                 "type": "string"
                               }
                             },
-                            "advancedOptions": {
-                              "type": "object",
-                              "properties": {
-                                "title": {
-                                  "default": null,
-                                  "anyOf": [
-                                    {
-                                      "type": "string",
-                                      "maxLength": 64
-                                    },
-                                    {
-                                      "type": "null"
-                                    }
-                                  ]
-                                },
-                                "customCssClasses": {
-                                  "default": [],
-                                  "type": "array",
-                                  "items": {
-                                    "type": "string"
-                                  }
-                                },
-                                "borderColor": {
-                                  "default": "",
-                                  "type": "string"
-                                }
-                              }
+                            "borderColor": {
+                              "default": "",
+                              "type": "string"
                             }
-                          },
-                          "required": [
-                            "id",
-                            "layouts",
-                            "integrationIds",
-                            "advancedOptions"
-                          ]
+                          }
                         }
+                      },
+                      "required": [
+                        "kind",
+                        "options",
+                        "id",
+                        "layouts",
+                        "integrationIds",
+                        "advancedOptions"
                       ]
                     }
                   }
@@ -3818,13 +3659,9 @@
                         "type": "object",
                         "properties": {
                           "name": {
-                            "anyOf": [
-                              {
-                                "type": "string"
-                              },
-                              {
-                                "type": "null"
-                              }
+                            "type": [
+                              "string",
+                              "null"
                             ]
                           },
                           "id": {
@@ -3904,7 +3741,7 @@
                   "expirationDate": {
                     "type": "string",
                     "format": "date-time",
-                    "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+                    "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
                   }
                 },
                 "required": [
@@ -4090,23 +3927,15 @@
                   "type": "object",
                   "properties": {
                     "homeBoardId": {
-                      "anyOf": [
-                        {
-                          "type": "string"
-                        },
-                        {
-                          "type": "null"
-                        }
+                      "type": [
+                        "string",
+                        "null"
                       ]
                     },
                     "mobileHomeBoardId": {
-                      "anyOf": [
-                        {
-                          "type": "string"
-                        },
-                        {
-                          "type": "null"
-                        }
+                      "type": [
+                        "string",
+                        "null"
                       ]
                     },
                     "enableStatusByDefault": {
@@ -4180,23 +4009,15 @@
                 "type": "object",
                 "properties": {
                   "homeBoardId": {
-                    "anyOf": [
-                      {
-                        "type": "string"
-                      },
-                      {
-                        "type": "null"
-                      }
+                    "type": [
+                      "string",
+                      "null"
                     ]
                   },
                   "mobileHomeBoardId": {
-                    "anyOf": [
-                      {
-                        "type": "string"
-                      },
-                      {
-                        "type": "null"
-                      }
+                    "type": [
+                      "string",
+                      "null"
                     ]
                   },
                   "enableStatusByDefault": {
@@ -4219,23 +4040,15 @@
                   "type": "object",
                   "properties": {
                     "homeBoardId": {
-                      "anyOf": [
-                        {
-                          "type": "string"
-                        },
-                        {
-                          "type": "null"
-                        }
+                      "type": [
+                        "string",
+                        "null"
                       ]
                     },
                     "mobileHomeBoardId": {
-                      "anyOf": [
-                        {
-                          "type": "string"
-                        },
-                        {
-                          "type": "null"
-                        }
+                      "type": [
+                        "string",
+                        "null"
                       ]
                     },
                     "enableStatusByDefault": {
@@ -4451,43 +4264,27 @@
                         "type": "string"
                       },
                       "name": {
-                        "anyOf": [
-                          {
-                            "type": "string"
-                          },
-                          {
-                            "type": "null"
-                          }
+                        "type": [
+                          "string",
+                          "null"
                         ]
                       },
                       "email": {
-                        "anyOf": [
-                          {
-                            "type": "string"
-                          },
-                          {
-                            "type": "null"
-                          }
+                        "type": [
+                          "string",
+                          "null"
                         ]
                       },
                       "emailVerified": {
-                        "anyOf": [
-                          {
-                            "type": "string"
-                          },
-                          {
-                            "type": "null"
-                          }
+                        "type": [
+                          "string",
+                          "null"
                         ]
                       },
                       "image": {
-                        "anyOf": [
-                          {
-                            "type": "string"
-                          },
-                          {
-                            "type": "null"
-                          }
+                        "type": [
+                          "string",
+                          "null"
                         ]
                       }
                     },
@@ -4688,33 +4485,21 @@
                         "type": "string"
                       },
                       "name": {
-                        "anyOf": [
-                          {
-                            "type": "string"
-                          },
-                          {
-                            "type": "null"
-                          }
+                        "type": [
+                          "string",
+                          "null"
                         ]
                       },
                       "image": {
-                        "anyOf": [
-                          {
-                            "type": "string"
-                          },
-                          {
-                            "type": "null"
-                          }
+                        "type": [
+                          "string",
+                          "null"
                         ]
                       },
                       "email": {
-                        "anyOf": [
-                          {
-                            "type": "string"
-                          },
-                          {
-                            "type": "null"
-                          }
+                        "type": [
+                          "string",
+                          "null"
                         ]
                       }
                     },
@@ -4835,33 +4620,21 @@
                         "type": "string"
                       },
                       "name": {
-                        "anyOf": [
-                          {
-                            "type": "string"
-                          },
-                          {
-                            "type": "null"
-                          }
+                        "type": [
+                          "string",
+                          "null"
                         ]
                       },
                       "image": {
-                        "anyOf": [
-                          {
-                            "type": "string"
-                          },
-                          {
-                            "type": "null"
-                          }
+                        "type": [
+                          "string",
+                          "null"
                         ]
                       },
                       "email": {
-                        "anyOf": [
-                          {
-                            "type": "string"
-                          },
-                          {
-                            "type": "null"
-                          }
+                        "type": [
+                          "string",
+                          "null"
                         ]
                       }
                     },
@@ -5064,23 +4837,15 @@
                     "type": "boolean"
                   },
                   "homeBoardId": {
-                    "anyOf": [
-                      {
-                        "type": "string"
-                      },
-                      {
-                        "type": "null"
-                      }
+                    "type": [
+                      "string",
+                      "null"
                     ]
                   },
                   "mobileHomeBoardId": {
-                    "anyOf": [
-                      {
-                        "type": "string"
-                      },
-                      {
-                        "type": "null"
-                      }
+                    "type": [
+                      "string",
+                      "null"
                     ]
                   },
                   "defaultSearchEngineId": {
@@ -5419,66 +5184,42 @@
                       "type": "string"
                     },
                     "name": {
-                      "anyOf": [
-                        {
-                          "type": "string"
-                        },
-                        {
-                          "type": "null"
-                        }
+                      "type": [
+                        "string",
+                        "null"
                       ]
                     },
                     "email": {
-                      "anyOf": [
-                        {
-                          "type": "string"
-                        },
-                        {
-                          "type": "null"
-                        }
+                      "type": [
+                        "string",
+                        "null"
                       ]
                     },
                     "emailVerified": {
-                      "anyOf": [
-                        {
-                          "type": "string"
-                        },
-                        {
-                          "type": "null"
-                        }
+                      "type": [
+                        "string",
+                        "null"
                       ]
                     },
                     "image": {
-                      "anyOf": [
-                        {
-                          "type": "string"
-                        },
-                        {
-                          "type": "null"
-                        }
+                      "type": [
+                        "string",
+                        "null"
                       ]
                     },
                     "provider": {
                       "type": "string"
                     },
                     "homeBoardId": {
-                      "anyOf": [
-                        {
-                          "type": "string"
-                        },
-                        {
-                          "type": "null"
-                        }
+                      "type": [
+                        "string",
+                        "null"
                       ]
                     },
                     "mobileHomeBoardId": {
-                      "anyOf": [
-                        {
-                          "type": "string"
-                        },
-                        {
-                          "type": "null"
-                        }
+                      "type": [
+                        "string",
+                        "null"
                       ]
                     },
                     "colorScheme": {
@@ -5506,13 +5247,9 @@
                       "type": "string"
                     },
                     "defaultSearchEngineId": {
-                      "anyOf": [
-                        {
-                          "type": "string"
-                        },
-                        {
-                          "type": "null"
-                        }
+                      "type": [
+                        "string",
+                        "null"
                       ]
                     },
                     "openSearchInNewTab": {
@@ -5946,23 +5683,15 @@
                 "type": "object",
                 "properties": {
                   "homeBoardId": {
-                    "anyOf": [
-                      {
-                        "type": "string"
-                      },
-                      {
-                        "type": "null"
-                      }
+                    "type": [
+                      "string",
+                      "null"
                     ]
                   },
                   "mobileHomeBoardId": {
-                    "anyOf": [
-                      {
-                        "type": "string"
-                      },
-                      {
-                        "type": "null"
-                      }
+                    "type": [
+                      "string",
+                      "null"
                     ]
                   },
                   "userId": {
@@ -8164,23 +7893,15 @@
             "type": "boolean"
           },
           "homeBoardId": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
+            "type": [
+              "string",
+              "null"
             ]
           },
           "mobileHomeBoardId": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
+            "type": [
+              "string",
+              "null"
             ]
           },
           "defaultSearchEngineId": {
