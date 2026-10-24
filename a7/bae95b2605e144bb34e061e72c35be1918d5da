@@ -1,0 +1,21 @@
+apps/docs/package.json
+  s_e8c3b16f087943::t_ae16a27e29d45c 23
+bun.lock
+  s_e8c3b16f087943::t_83af748b39be77 42,1605,1607,5317,5493-5494,5603-5604,5773-5774,5933-5934,5949-5950,5991-5992,6251-6254
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "a7bae95b2605e144bb34e061e72c35be1918d5da",
+  "prompts": {},
+  "sessions": {
+    "s_e8c3b16f087943": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "5bad9576-ba72-4dbc-a1a1-0fc4be09f9a2",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
