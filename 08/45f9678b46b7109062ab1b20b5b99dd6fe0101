@@ -1,0 +1,117 @@
+.github/actions/extract-build-artifact/action.yaml
+  s_97f4f5a6019006::t_8717f536d3a1c2 32-34,36,38,41-42,44-45,48-49,51-53,56-58,60-63,67-69,75-78,84-87
+.github/actions/prebuilt-debian/action.yaml
+  s_97f4f5a6019006::t_6bd6f900531747 15,19,33-34
+.github/renovate.json5
+  s_9b7e99bd3ab786::t_e8ab49449e6fe0 3-9,25-31
+.github/workflows/autofix.yml
+  s_97f4f5a6019006::t_e22e81720b980c 21
+.github/workflows/bot-auto-merge-reconcile.yml
+  s_9b7e99bd3ab786::t_cf5568afd8dee0 17,26,32
+.github/workflows/bot-pr-automerge.yml
+  s_9b7e99bd3ab786::t_c168b54ab17d75 25,34-35
+.github/workflows/ci.yml
+  s_9b7e99bd3ab786::t_cac1076e212809 71,120,178,234,247-248,250,256,260,296,320,343,351,359,364,395,403,411,416,454,462,466,512,561
+.github/workflows/conventions-semantic-pull-requests.yml
+  s_97f4f5a6019006::t_d0d65c566eaf4c 18
+.github/workflows/crowdin-schedule-download.yml
+  s_9b7e99bd3ab786::t_c8af3e257d8c08 9,18-20,24,33,56,58
+.github/workflows/crowdin-upload.yml
+  s_9b7e99bd3ab786::t_36e13dcdc6a73f 21-23,26
+.github/workflows/database.yml
+  s_97f4f5a6019006::t_31e698c1459951 23,63
+.github/workflows/deployment-beta-release.yml
+  s_9b7e99bd3ab786::t_ed80466584e369 13,19-21,27,31,34,37,47-48,57-59,64,69,77,79,82,91,106,113,120
+.github/workflows/deployment-docker-image.yml
+  s_9b7e99bd3ab786::t_869d81b78e486b 19,47,54,60,65,68,140-142,146,149,153,158,165,169,188-190,194,197,201,206,213,217,236-238,240,260-262,264,283-285,288-289,296,303,312-314,319-321,325-327,334,346,356,361
+.github/workflows/deployment-docs.yml
+  s_9b7e99bd3ab786::t_c9b17a00b72cf0 32-39,41-43,59,61,68-70,77
+.github/workflows/deployment-weekly-release.yml
+  s_9b7e99bd3ab786::t_a7e7546d459bbe 16,22-24,30,34,37,40,49-51,98,104,113,115,119,128,143,150,157
+.github/workflows/docs-update-contributors.yml
+  s_97f4f5a6019006::t_cbe82cbb9e8824 9,18-19,21,30-33,37
+.github/workflows/docs-update-openapi.yml
+  s_97f4f5a6019006::t_d7db649d631663 9,18-19,21,35
+.github/workflows/on-pr-prebuilt-debian-validate.yml
+  s_9b7e99bd3ab786::t_f330919848ea96 28-30
+.github/workflows/on-pr-renovate-validate.yml
+  s_9b7e99bd3ab786::t_f290fef7930b3a 19,22-25
+.github/workflows/on-release.yml
+  s_9b7e99bd3ab786::t_f28793e836539a 15,22,26,35,51,53
+.github/workflows/skip-renovate-stability-days.yml
+  s_97f4f5a6019006::t_0587c231ac8022 14-15,20,27
+.github/workflows/update-contributors.yml
+  s_9b7e99bd3ab786::t_4bbf957255d6a8 21,29,31-34,50,63,65
+.github/workflows/update-integration-list.yml
+  s_9b7e99bd3ab786::t_4099ea63c9516a 12,24,31-33,48,61,63
+.github/workflows/validate-docs.yml
+  s_97f4f5a6019006::t_18762b299768e4 44
+.github/workflows/workshop.yml
+  s_9b7e99bd3ab786::t_6867e9379d61dd 109,147,152,154-155,158,161,201,206,208-211,216,248,253,255-258,263,296-297,303,354
+.nvmrc
+  s_e8c3b16f087943::t_b42bf4aba6e04a 1
+Dockerfile
+  s_9b7e99bd3ab786::t_49a07556e8dd52 3,5,30,33,37-38,63
+apps/workshop/Dockerfile
+  s_9b7e99bd3ab786::t_f14ffb978b3289 5,16,18,71,76
+apps/workshop/docker-compose.yml
+  s_9b7e99bd3ab786::t_0b037963134fde 7
+bun.lock
+  s_9b7e99bd3ab786::t_e953378186f6e2 1055,1067-1070,1082,1085,1112-1117,1119-1128,1130-1134,1139-1141,1143-1146,1157-1158,1167,1170,1175-1180,1185,1193-1195,1203-1206,1208,1215-1217,1221-1224,1227-1229,1234,1237-1240,1243,1245-1246,1248-1252,1255-1258,1294,1312-1313,1324,1371,1378,1380-1381,1397,1416,1419,1428,1440,1445-1446,1459,1462,1467,1469,1492,1495,1497,1502,1905,1907,1909,1911,1913,1915,1917,1919,1921,1923,1925,1927,1929,1931,1933,1935,1937,1939,1941,1943,1945,1947,1949,1951,1953,1955,2149,2151,2157,2159,2161,2163,2165,2167,2169,2171,2173,2255,2543,2545,2547,2549,2551,2553,2555,2557,2559,2561,2563,2565,2567,2569,2571,3143,3145,3147,3149,3151,3153,3155,3157,3159,3499,3681-3682,3709,3845,3853,3863,3889,3963,4085,4351,4455,4499,4651,4689,4767,4921,4963,4977,4983,4987,4989,5023,5171,5175,5249,5335,5339,5435,5447,5449,5451,5723,5791,5861,5943,5947,5983,6021,6351-6352
+bunfig.toml
+  s_c00268c499f6a5::t_f2516f53121d21 4-5
+deployments/prebuilt-debian/Dockerfile
+  s_9b7e99bd3ab786::t_ebd219a2ca8edb 1-2
+deployments/prebuilt-debian/package.json
+  s_9b7e99bd3ab786::t_fdba309c3863ef 9,11
+mise.toml
+  s_9b7e99bd3ab786::t_5922cd238279a5 2-3
+package.json
+  s_9b7e99bd3ab786::t_e5bfc5554cc252 44,62-63,74,120,127,129-130,145,164,167,176,188,193-194,207,210,215,217,240,243,245,250,345-346,354-355,365-372,374-376,380,383-384,386-387,389,391,395-397,400,402-404,406-414,418,420,432
+tooling/github/setup/action.yml
+  s_e8c3b16f087943::t_8140e496bca761 21,23,25,27,42,45,47,54,63,74,83
+tools/mysql-to-sqlite/Dockerfile
+  s_e8c3b16f087943::t_c5b2498aec22aa 1,3,9
+tools/mysql-to-sqlite/package.json
+  s_e8c3b16f087943::t_20f521c71c72e1 14
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "0845f9678b46b7109062ab1b20b5b99dd6fe0101",
+  "prompts": {},
+  "sessions": {
+    "s_97f4f5a6019006": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "1496672b-3ad6-48ec-90f1-1467101f32d5",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_9b7e99bd3ab786": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "65e5f33a-f2db-4674-8074-dcea9cc8135f",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_c00268c499f6a5": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "9f6247bc-2225-4f7a-9f37-4c57fb0f25b2",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_e8c3b16f087943": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "5bad9576-ba72-4dbc-a1a1-0fc4be09f9a2",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
