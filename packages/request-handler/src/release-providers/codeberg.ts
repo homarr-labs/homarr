@@ -1,6 +1,7 @@
 import { z } from "zod/v4";
 
-import { fetchJsonAsync, loadOptionalDetailsAsync, providerUrl, tokenHeaders } from "./http";
+import { isNotFoundError } from "./errors";
+import { fetchJsonAsync, fetchProviderAsync, loadOptionalDetailsAsync, providerUrl, tokenHeaders } from "./http";
 import { encodeOwnedName, parseOwnedName } from "./identifier";
 import type { ProjectDetails, Release, ReleaseProvider } from "./types";
 import { noReleasesFoundError, selectNewestRelease } from "./versions";
@@ -54,12 +55,22 @@ const getProjectDetailsAsync = async (
   };
 };
 
+const listReleasesAsync = async (repositoryUrl: string, headers: Record<string, string>, identifier: string) => {
+  try {
+    return await fetchJsonAsync(`${repositoryUrl}/releases`, releasesSchema, { headers });
+  } catch (error) {
+    if (!isNotFoundError(error)) throw error;
+    await fetchProviderAsync(repositoryUrl, { headers });
+    throw noReleasesFoundError(identifier);
+  }
+};
+
 export const getCodebergReleaseAsync: ReleaseProvider = async ({ baseUrl, identifier, versionPattern, token }) => {
   const repositoryPath = encodeOwnedName(parseOwnedName(identifier, "owner/repository"));
   const repositoryUrl = providerUrl(baseUrl, `/api/v1/repos/${repositoryPath}`);
   const headers = tokenHeaders(token, (value) => ({ Authorization: `token ${value}` }));
 
-  const releases = await fetchJsonAsync(`${repositoryUrl}/releases`, releasesSchema, { headers });
+  const releases = await listReleasesAsync(repositoryUrl, headers, identifier);
   if (releases.length === 0) throw noReleasesFoundError(identifier);
 
   const release = selectNewestRelease(releases.map(toRelease), versionPattern);

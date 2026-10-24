@@ -20,7 +20,14 @@ const errorCodeByHttpStatus: Partial<Record<number, ReleaseErrorCode>> = {
   429: "rateLimited",
 };
 
+const accessDeniedStatuses = [401, 403];
+
 const getHttpErrorCode = (status: number): ReleaseErrorCode => errorCodeByHttpStatus[status] ?? "unexpected";
+
+const getResponseErrorCode = (status: number): ReleaseErrorCode => {
+  if (accessDeniedStatuses.includes(status)) return "notFound";
+  return getHttpErrorCode(status);
+};
 
 const isGithubRateLimit = (error: OctokitRequestError) =>
   error.status === 403 &&
@@ -37,7 +44,7 @@ export const toReleaseError = (error: unknown): ReleaseError => {
   if (error instanceof ReleaseLookupError) return { code: error.code, message: error.message };
   if (error instanceof OctokitRequestError) return { code: getGithubErrorCode(error), message: error.message };
   if (error instanceof ResponseError) {
-    return { code: getHttpErrorCode(error.statusCode), message: `${error.url} responded ${error.statusCode}` };
+    return { code: getResponseErrorCode(error.statusCode), message: `${error.url} responded ${error.statusCode}` };
   }
   return { code: "unexpected", message: extractErrorMessage(error) };
 };

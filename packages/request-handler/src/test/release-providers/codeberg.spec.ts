@@ -133,8 +133,16 @@ describe("Codeberg releases", () => {
     expect(error.code).toBe("noReleasesFound");
   });
 
-  test("reports notFound for an unknown repository", async () => {
+  test("reports noReleasesFound when the repository has releases turned off", async () => {
     serveCodeberg({ status: 404 });
+
+    const error = await expectFailure({ provider: "codeberg", identifier: "forgejo/forgejo" });
+
+    expect(error.code).toBe("noReleasesFound");
+  });
+
+  test("reports notFound for an unknown repository", async () => {
+    serveCodeberg({ status: 404 }, { status: 404 });
 
     const error = await expectFailure({ provider: "codeberg", identifier: "forgejo/forgejo" });
 
