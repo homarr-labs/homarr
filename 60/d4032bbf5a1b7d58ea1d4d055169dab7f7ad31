@@ -1,0 +1,34 @@
+apps/docs/package.json
+  h_d6e478ca18e517 33,56,58
+apps/workshop/go.mod
+  h_d6e478ca18e517 3
+bun.lock
+  h_d6e478ca18e517 52,75,77,674,1379,1504,2684,2686,2688,2690,2692,2694,2696,2698,2700,2702,2704,2706,2708,2710,2712,2766-2767,2800-2805,3232,3708,3992-3993,5072,5086,5542-5552,5558,5560,5562,5564,5566,5778-5783,6232-6233,6494-6495
+package.json
+  h_d6e478ca18e517 177
+packages/integrations/package.json
+  h_d6e478ca18e517 45
+packages/integrations/src/truenas/test/truenas-integration.spec.ts
+  h_d6e478ca18e517 141,159,176-178,186-194,257,275-404,541
+packages/integrations/src/truenas/truenas-integration.ts
+  h_d6e478ca18e517 4,18-19,60-62,64-85,88-89,336-340,346-358,408,416
+tools/homarr-dev/go.mod
+  h_d6e478ca18e517 3,6,8
+tools/homarr-dev/go.sum
+  h_d6e478ca18e517 3-4,11-12
+tools/v2-showreel/bun.lock
+  h_d6e478ca18e517 12,15,88,92,96,100
+tools/v2-showreel/package.json
+  h_d6e478ca18e517 14,17
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "60d4032bbf5a1b7d58ea1d4d055169dab7f7ad31",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
