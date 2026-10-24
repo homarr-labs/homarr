@@ -17,7 +17,9 @@ type StoredDefinition = InferSelectModel<typeof customWidgetDefinitions>;
 type StoredSecret = InferSelectModel<typeof customWidgetSecrets>;
 type LegacyDefinition = InferSelectModel<typeof legacyCustomWidgetDefinitions>;
 
-export function mapCustomWidgetListItem(definition: StoredDefinition & { secrets: readonly StoredSecret[] }) {
+export function mapCustomWidgetListItem(
+  definition: StoredDefinition & { secrets: readonly Pick<StoredSecret, "sourceId" | "kind">[] },
+) {
   const result = safeParseStoredCustomWidgetDefinition(definition);
   if (!result.success) {
     logger.warn("Skipped parsing invalid custom widget definition", {

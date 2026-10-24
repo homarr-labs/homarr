@@ -353,11 +353,19 @@ class Interpreter {
   }
 }
 
-export function renderSafeJsx({ template, components, bindings, budgets }: RenderSafeJsxOptions): SafeJsxRenderResult {
-  const limits: EvaluationBudgets = { ...DEFAULT_BUDGETS, ...budgets };
-  for (const [name, value] of Object.entries(limits)) {
-    if (!Number.isSafeInteger(value) || value <= 0) throw new SafeJsxError(`Invalid interpreter budget: ${name}`);
-  }
-  const root = parseCustomJsxTemplate(template);
-  return new Interpreter(components, new Environment(bindings), limits).render(root);
+export function createSafeJsxRenderer(template: string) {
+  let root: AstNode | undefined;
+  return ({ components, bindings, budgets }: Omit<RenderSafeJsxOptions, "template">): SafeJsxRenderResult => {
+    const limits: EvaluationBudgets = { ...DEFAULT_BUDGETS, ...budgets };
+    for (const [name, value] of Object.entries(limits)) {
+      if (!Number.isSafeInteger(value) || value <= 0) throw new SafeJsxError(`Invalid interpreter budget: ${name}`);
+    }
+    // Only syntax is reused. Bindings, warnings, callbacks, and budgets belong to each evaluation.
+    root ??= parseCustomJsxTemplate(template);
+    return new Interpreter(components, new Environment(bindings), limits).render(root);
+  };
+}
+
+export function renderSafeJsx({ template, ...options }: RenderSafeJsxOptions): SafeJsxRenderResult {
+  return createSafeJsxRenderer(template)(options);
 }
