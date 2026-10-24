@@ -170,6 +170,7 @@ test("administrators can create read-only keys without changing legacy creation 
   for (const [input, readOnly] of [
     [{ readOnly: true }, true],
     [{ readOnly: false }, false],
+    [{}, false],
     [undefined, false],
   ] as const) {
     const created = await caller.create(input);

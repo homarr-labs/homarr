@@ -67,7 +67,7 @@ export const apiKeysRouter = createTRPCRouter({
         description: "Create a new API key for the current user (admin only)",
       },
     })
-    .input(z.object({ readOnly: z.boolean().default(false) }).optional())
+    .input(z.object({ readOnly: z.boolean().optional() }).optional())
     .mutation(async ({ ctx, input }) => {
       const id = randomBytes(4).toString("hex");
       const token = generateSecureRandomToken(24);

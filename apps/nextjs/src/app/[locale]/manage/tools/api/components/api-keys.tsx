@@ -40,12 +40,6 @@ const ApiKeyCreatedByCell = ({ row }: ApiKeyCellProps) => (
   </Group>
 );
 
-const ApiKeyAccessCell = ({ row }: ApiKeyCellProps) => {
-  const t = useI18n("management.page.tool.api.tab.apiKey.access");
-  if (row.original.readOnly) return <Text size="sm">{t("readOnly")}</Text>;
-  return <Text size="sm">{t("readWrite")}</Text>;
-};
-
 const ApiKeyProvenanceCell = ({ row }: ApiKeyCellProps) => {
   const t = useI18n("management.page.tool.api.tab.apiKey.provenance");
   const key = row.original;
@@ -154,9 +148,12 @@ export const ApiKeysManagement = ({ apiKeys, onCreated }: ApiKeysManagementProps
         Cell: ApiKeyCreatedByCell,
       },
       {
-        accessorKey: "readOnly",
+        id: "readOnly",
+        accessorFn: ({ readOnly }) => {
+          if (readOnly) return t("access.readOnly");
+          return t("access.readWrite");
+        },
         header: t("access.label"),
-        Cell: ApiKeyAccessCell,
       },
       {
         id: "provenance",
