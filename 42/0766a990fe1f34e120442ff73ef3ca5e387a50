@@ -1,0 +1,37 @@
+.github/workflows/ci.yml
+  s_e8c3b16f087943::t_1d96b93909f4e1 471,517,566
+.github/workflows/crowdin-schedule-download.yml
+  s_e8c3b16f087943::t_debdaafdcc7c28 33
+.github/workflows/crowdin-upload.yml
+  s_e8c3b16f087943::t_0767bbfba0a4c3 26
+.github/workflows/docs-update-contributors.yml
+  s_e8c3b16f087943::t_b9f8c0a362afce 37
+.github/workflows/docs-update-openapi.yml
+  s_e8c3b16f087943::t_0e5c5f795394f9 35
+.github/workflows/triage-project.yml
+  s_e8c3b16f087943::t_29affadfa6fafc 51
+.github/workflows/workshop.yml
+  s_e8c3b16f087943::t_0b8d2a6403031f 152,206,253,303,354
+packages/integrations/src/truenas/test/truenas-integration.spec.ts
+  s_e8c3b16f087943::t_c23e9f7c73464e 141,159,176-178,186-194,257,275-404,541
+packages/integrations/src/truenas/truenas-integration.ts
+  s_e8c3b16f087943::t_e147a6d54b386f 4,18-19,60-62,64-85,88-89,336-340,346-358,408,416
+tooling/github/setup/action.yml
+  s_e8c3b16f087943::t_700c7a86faad12 21,42,54,63,74,83
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "420766a990fe1f34e120442ff73ef3ca5e387a50",
+  "prompts": {},
+  "sessions": {
+    "s_e8c3b16f087943": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "5bad9576-ba72-4dbc-a1a1-0fc4be09f9a2",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
