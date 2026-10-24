@@ -5,25 +5,28 @@ import { clientApi } from "@homarr/api/client";
 import type { MaybePromise } from "@homarr/common/types";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
-import { supportedMediaUploadFormats } from "@homarr/validation/media";
+import { mediaUploadMaxSize, supportedImageUploadFormats } from "@homarr/validation/media";
 
 interface UploadMediaProps {
   children: (props: { onClick: () => void; loading: boolean }) => JSX.Element;
   multiple?: boolean;
+  /** Content types the file picker offers; images unless a caller also takes videos. */
+  accept?: string[];
   onSettled?: () => MaybePromise<void>;
   onSuccess?: (media: { id: string; url: string }[]) => MaybePromise<void>;
 }
 
-export const UploadMedia = ({ children, onSettled, onSuccess, multiple = false }: UploadMediaProps) => {
+export const UploadMedia = ({
+  children,
+  onSettled,
+  onSuccess,
+  multiple = false,
+  accept = supportedImageUploadFormats,
+}: UploadMediaProps) => {
   const t = useI18n();
   const { mutateAsync, isPending } = clientApi.media.uploadMedia.useMutation({
-    async onSuccess(mediaIds) {
-      await onSuccess?.(
-        mediaIds.map((id) => ({
-          id,
-          url: `/api/user-medias/${id}`,
-        })),
-      );
+    async onSuccess(uploaded) {
+      await onSuccess?.(uploaded);
     },
     async onSettled() {
       await onSettled?.();
@@ -33,6 +36,13 @@ export const UploadMedia = ({ children, onSettled, onSuccess, multiple = false }
   const handleFileUploadAsync = async (files: File[] | File | null) => {
     if (!files || (Array.isArray(files) && files.length === 0)) return;
     const filesArray: File[] = Array.isArray(files) ? files : [files];
+    // Checked here too so a file the server would refuse isn't uploaded first.
+    if (filesArray.some((file) => file.size > mediaUploadMaxSize.bytes)) {
+      showErrorNotification({
+        message: t("common.zod.errors.custom.fileTooLarge", { maxSize: mediaUploadMaxSize.label }),
+      });
+      return;
+    }
     const formData = new FormData();
     filesArray.forEach((file) => formData.append("files", file));
     await mutateAsync(formData, {
@@ -50,7 +60,7 @@ export const UploadMedia = ({ children, onSettled, onSuccess, multiple = false }
   };
 
   return (
-    <FileButton onChange={handleFileUploadAsync} accept={supportedMediaUploadFormats.join(",")} multiple={multiple}>
+    <FileButton onChange={handleFileUploadAsync} accept={accept.join(",")} multiple={multiple}>
       {({ onClick }) => children({ onClick, loading: isPending })}
     </FileButton>
   );

@@ -3,7 +3,12 @@ import { zfd } from "zod-form-data";
 
 import { createCustomErrorParams } from "./form/i18n";
 
-export const supportedMediaUploadFormats = ["image/png", "image/jpeg", "image/webp", "image/gif", "image/svg+xml"];
+export const supportedImageUploadFormats = ["image/png", "image/jpeg", "image/webp", "image/gif", "image/svg+xml"];
+export const supportedVideoUploadFormats = ["video/mp4", "video/webm"];
+export const supportedMediaUploadFormats = [...supportedImageUploadFormats, ...supportedVideoUploadFormats];
+
+// Don't forget to update the limit in nginx.conf (client_max_body_size)
+export const mediaUploadMaxSize = { bytes: 1024 * 1024 * 32, label: "32 MiB" };
 
 export const mediaUploadSchema = zfd.formData({
   files: zfd.repeatable(
@@ -21,13 +26,12 @@ export const mediaUploadSchema = zfd.formData({
           return;
         }
 
-        if (context.value.size > 1024 * 1024 * 32) {
-          // Don't forget to update the limit in nginx.conf (client_max_body_size)
+        if (context.value.size > mediaUploadMaxSize.bytes) {
           context.issues.push({
             code: "custom",
             params: createCustomErrorParams({
               key: "fileTooLarge",
-              params: { maxSize: "32 MiB" },
+              params: { maxSize: mediaUploadMaxSize.label },
             }),
             input: context.value.size,
           });

@@ -4,6 +4,7 @@ import { ActionIcon, CopyButton, Tooltip } from "@mantine/core";
 import { IconCheck, IconCopy } from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";
+import { createLocalMediaUrl } from "@homarr/icons/local-media-url";
 import { useI18n } from "@homarr/translation/client";
 
 interface CopyMediaProps {
@@ -14,7 +15,8 @@ export const CopyMedia = ({ media }: CopyMediaProps) => {
   const t = useI18n("media");
   const label = t("action.copy.labelNamed", { name: media.name });
 
-  const url = typeof window !== "undefined" ? `${window.location.origin}/api/user-medias/${media.id}` : "";
+  const url =
+    typeof window !== "undefined" ? `${window.location.origin}${createLocalMediaUrl(media.id, media.contentType)}` : "";
 
   // Clipboard only works on localhost or secure connections (https)
   if (url.startsWith("http://") && !url.startsWith("http://localhost")) {

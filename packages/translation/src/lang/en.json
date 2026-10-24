@@ -6212,11 +6212,11 @@
         "label": "Favicon image URL"
       },
       "backgroundImageUrl": {
-        "label": "Background image URL",
-        "placeholder": "Start typing to search local images",
+        "label": "Background image or video URL",
+        "placeholder": "Start typing to search local images and videos",
         "group": {
-          "your": "Your images",
-          "other": "Other images"
+          "your": "Your media",
+          "other": "Other media"
         }
       },
       "backgroundImageAttachment": {
@@ -6254,15 +6254,15 @@
         }
       },
       "backgroundImageSize": {
-        "label": "Background image size",
+        "label": "Background size",
         "option": {
           "cover": {
             "label": "Cover",
-            "description": "Scales the image as small as possible to cover the entire window by cropping excessive space."
+            "description": "Scales the background as small as possible to cover the entire window by cropping excessive space."
           },
           "contain": {
             "label": "Contain",
-            "description": "Scales the image as large as possible within its container without cropping or stretching the image."
+            "description": "Scales the background as large as possible within its container without cropping or stretching it."
           }
         }
       },

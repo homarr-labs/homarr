@@ -5,7 +5,12 @@ import { createId } from "@homarr/common";
 import type { InferInsertModel } from "@homarr/db";
 import { and, desc, eq, like } from "@homarr/db";
 import { iconRepositories, icons, medias } from "@homarr/db/schema";
-import { createLocalImageUrl, LOCAL_ICON_REPOSITORY_SLUG, mapMediaToIcon } from "@homarr/icons/local";
+import {
+  createLocalImageUrl,
+  createLocalMediaUrl,
+  LOCAL_ICON_REPOSITORY_SLUG,
+  mapMediaToIcon,
+} from "@homarr/icons/local";
 import { byIdSchema, paginatedSchema } from "@homarr/validation/common";
 import { mediaUploadSchema } from "@homarr/validation/media";
 
@@ -79,11 +84,15 @@ export const mediaRouter = createTRPCRouter({
         where: eq(iconRepositories.slug, LOCAL_ICON_REPOSITORY_SLUG),
       });
 
-      const ids = files.map((file) => file.id);
-      if (!localIconRepository) return ids;
+      const uploaded = insertMedias.map((media) => ({
+        id: media.id,
+        url: createLocalMediaUrl(media.id, media.contentType),
+      }));
+      const images = insertMedias.filter((media) => media.contentType.startsWith("image/"));
+      if (!localIconRepository || images.length === 0) return uploaded;
 
       await ctx.db.insert(icons).values(
-        insertMedias.map((media) => {
+        images.map((media) => {
           const icon = mapMediaToIcon(media);
 
           return {
@@ -96,7 +105,7 @@ export const mediaRouter = createTRPCRouter({
         }),
       );
 
-      return ids;
+      return uploaded;
     }),
   deleteMedia: protectedProcedure.input(byIdSchema).mutation(async ({ ctx, input }) => {
     const dbMedia = await ctx.db.query.medias.findFirst({

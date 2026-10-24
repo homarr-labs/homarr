@@ -48,10 +48,35 @@ const hasMatchingValidator = (ifNoneMatch: string | null, etag: string) => {
   return false;
 };
 
+/**
+ * The byte range a single-range `Range: bytes=…` header asks for, `"unsatisfiable"` when it lies outside the
+ * content, or null when there is no usable range (absent, malformed, multiple ranges), so the whole body is sent.
+ */
+const parseRange = (header: string | null, size: number) => {
+  const match = header?.trim().match(/^bytes=(\d*)-(\d*)$/);
+  if (!match) return null;
+  const [, startText = "", endText = ""] = match;
+  if (startText === "" && endText === "") return null;
+
+  if (startText === "") {
+    // Suffix range: the last n bytes.
+    const length = Number(endText);
+    if (length === 0) return "unsatisfiable";
+    return { start: Math.max(0, size - length), end: size - 1 };
+  }
+
+  const start = Number(startText);
+  const end = endText === "" ? size - 1 : Math.min(Number(endText), size - 1);
+  if (start >= size || end < start) return "unsatisfiable";
+  return { start, end };
+};
+
 export async function GET(request: NextRequest, props: { params: Promise<{ id: string }> }) {
   const params = await props.params;
+  // Video URLs carry their extension so board backgrounds can tell them apart; the id is what precedes it.
+  const id = params.id.replace(/\.(mp4|webm)$/, "");
   const image = await db.query.medias.findFirst({
-    where: eq(medias.id, params.id),
+    where: eq(medias.id, id),
     columns: {
       content: true,
       contentType: true,
@@ -63,9 +88,10 @@ export async function GET(request: NextRequest, props: { params: Promise<{ id: s
   }
 
   let content = new Uint8Array(image.content);
+  const isSvg = image.contentType === "image/svg+xml" || image.contentType === "image/svg";
 
   // Sanitize SVG content to prevent XSS attacks
-  if (image.contentType === "image/svg+xml" || image.contentType === "image/svg") {
+  if (isSvg) {
     const svgText = new TextDecoder().decode(content);
     const sanitized = sanitize(svgText, {
       USE_PROFILES: { svg: true, svgFilters: true },
@@ -85,6 +111,22 @@ export async function GET(request: NextRequest, props: { params: Promise<{ id: s
   if (hasMatchingValidator(request.headers.get("if-none-match"), etag)) {
     headers.delete("Content-Length");
     return new NextResponse(null, { status: 304, headers });
+  }
+
+  // Browsers stream video in byte ranges (Safari won't play it otherwise). Sanitized SVGs are always sent whole.
+  if (!isSvg) {
+    headers.set("Accept-Ranges", "bytes");
+    const range = parseRange(request.headers.get("range"), content.length);
+    if (range === "unsatisfiable") {
+      headers.delete("Content-Length");
+      headers.set("Content-Range", `bytes */${content.length}`);
+      return new NextResponse(null, { status: 416, headers });
+    }
+    if (range) {
+      headers.set("Content-Range", `bytes ${range.start}-${range.end}/${content.length}`);
+      headers.set("Content-Length", (range.end - range.start + 1).toString());
+      return new NextResponse(content.subarray(range.start, range.end + 1), { status: 206, headers });
+    }
   }
 
   return new NextResponse(content, {
