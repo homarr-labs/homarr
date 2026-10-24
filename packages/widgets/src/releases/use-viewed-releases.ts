@@ -24,7 +24,7 @@ export const useViewedReleases = (itemId: string | undefined, repositories: { id
     },
   );
   const { mutate } = clientApi.userItemState.set.useMutation({
-    onMutate: async (input) => {
+    onSuccess: async (_data, input) => {
       await utils.userItemState.get.cancel({ itemId: input.itemId });
       utils.userItemState.get.setData({ itemId: input.itemId }, (previous) => ({
         ...previous,
