@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useHotkeys } from "@mantine/hooks";
@@ -10,6 +10,7 @@ import { IconDeviceFloppy, IconPencil, IconPencilOff, IconSettings, IconX } from
 import { clientApi } from "@homarr/api/client";
 import { useRequiredBoard } from "@homarr/boards/context";
 import { useEditMode } from "@homarr/boards/edit-mode";
+import { useUpdateBoard } from "@homarr/boards/updater";
 import { revalidatePathActionAsync } from "@homarr/common/client";
 import { env } from "@homarr/common/env";
 import { hotkeys } from "@homarr/definitions";
@@ -17,6 +18,7 @@ import { useConfirmModal } from "@homarr/modals";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
 import { useBoardPermissions } from "~/components/board/permissions/client";
+import { normalizeBoardLayoutBounds } from "~/components/board/layout/normalize-board-layout-bounds";
 import { loadGridEditorAsync, scheduleGridEditorWarmup } from "~/components/board/sections/grid/grid-editor-loader";
 import { HeaderButton } from "~/components/layout/header/button";
 import { TourTarget } from "~/components/layout/header/tour-target";
@@ -75,6 +77,7 @@ const EditModeMenu = ({ demoReadOnly }: { demoReadOnly: boolean }) => {
   const [editorLoadState, setEditorLoadState] = useState<"scheduled" | "loading" | "ready" | "error">("scheduled");
   const [isEnteringEditMode, setIsEnteringEditMode] = useState(false);
   const board = useRequiredBoard();
+  const { updateBoard } = useUpdateBoard();
   const utils = clientApi.useUtils();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -90,6 +93,10 @@ const EditModeMenu = ({ demoReadOnly }: { demoReadOnly: boolean }) => {
   const latestBoardRef = useRef(board);
 
   latestBoardRef.current = board;
+  useLayoutEffect(() => {
+    if (isEditMode) updateBoard(normalizeBoardLayoutBounds);
+  }, [isEditMode, updateBoard]);
+
   const { mutate: saveBoard, isPending } = clientApi.board.saveBoard.useMutation({
     onMutate(boardToSave) {
       boardToSave.items.forEach(({ id }) => notifications.hide(`board-item-created:${id}`));
@@ -105,10 +112,10 @@ const EditModeMenu = ({ demoReadOnly }: { demoReadOnly: boolean }) => {
       close();
       if (returnToLayoutSettings) router.push(`/boards/${board.name}/settings?tab=layout`);
     },
-    onError() {
+    onError(error) {
       showErrorNotification({
         title: tCommon("notification.update.error"),
-        message: t("notification.error.message"),
+        message: error.message || t("notification.error.message"),
       });
     },
   });
