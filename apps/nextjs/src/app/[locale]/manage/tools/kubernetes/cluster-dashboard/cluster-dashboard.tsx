@@ -1,10 +1,10 @@
 "use client";
 
-import { Alert, SimpleGrid, Skeleton, Stack, Title } from "@mantine/core";
+import { Alert, SimpleGrid, Stack, Title } from "@mantine/core";
 import { IconInfoCircle } from "@tabler/icons-react";
 
+import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
-import { createId } from "@homarr/common";
 import type { KubernetesLabelResourceType } from "@homarr/definitions";
 import { useI18n } from "@homarr/translation/client";
 
@@ -12,35 +12,34 @@ import KubernetesErrorPage from "~/app/[locale]/manage/tools/kubernetes/cluster-
 import { HeaderCard } from "~/app/[locale]/manage/tools/kubernetes/cluster-dashboard/header-card/header-card";
 import { ResourceGauge } from "~/app/[locale]/manage/tools/kubernetes/cluster-dashboard/resource-gauge/resource-gauge";
 import { ResourceTile } from "~/app/[locale]/manage/tools/kubernetes/cluster-dashboard/resource-tile/resource-tile";
-import { useSelectedKubernetesContextId } from "../kubernetes-context-selector";
+import { createKubernetesResourceQueryOptions } from "../kubernetes-query-options";
 
-export function ClusterDashboard() {
+interface ClusterDashboardProps {
+  contextId: string;
+  initialCluster: RouterOutputs["kubernetes"]["cluster"]["getCluster"] | null;
+  initialResourceCounts: RouterOutputs["kubernetes"]["cluster"]["getClusterResourceCounts"] | null;
+}
+
+export function ClusterDashboard({ contextId, initialCluster, initialResourceCounts }: ClusterDashboardProps) {
   const tCluster = useI18n("kubernetes.cluster");
-  const contextId = useSelectedKubernetesContextId();
 
-  const {
-    data: clusterData,
-    isLoading: isClusterLoading,
-    isError: isClusterError,
-  } = clientApi.kubernetes.cluster.getCluster.useQuery({ contextId: contextId ?? "" }, { enabled: Boolean(contextId) });
-
-  const {
-    data: resourceCountsData,
-    isLoading: isResourceCountsLoading,
-    isError: isResourceCountsError,
-  } = clientApi.kubernetes.cluster.getClusterResourceCounts.useQuery(
-    { contextId: contextId ?? "" },
-    { enabled: Boolean(contextId) },
+  const { data: clusterData, isError: isClusterError } = clientApi.kubernetes.cluster.getCluster.useQuery(
+    { contextId },
+    createKubernetesResourceQueryOptions(initialCluster ?? undefined),
   );
+
+  const { data: resourceCountsData, isError: isResourceCountsError } =
+    clientApi.kubernetes.cluster.getClusterResourceCounts.useQuery(
+      { contextId },
+      createKubernetesResourceQueryOptions(initialResourceCounts ?? undefined),
+    );
 
   return (
     <Stack bg="var(--mantine-color-body)">
       <Title>{tCluster("title")}</Title>
       <SimpleGrid cols={{ xs: 1, sm: 2, md: 3 }}>
-        {isClusterError ? (
-          Array.from({ length: 3 }).map(() => <KubernetesErrorPage key={createId()} />)
-        ) : isClusterLoading ? (
-          Array.from({ length: 3 }).map(() => <Skeleton key={createId()} height={65} />)
+        {isClusterError || !clusterData ? (
+          Array.from({ length: 3 }, (_, index) => <KubernetesErrorPage key={index} />)
         ) : (
           <>
             <HeaderCard headerType={"providers"} value={clusterData ? clusterData.providers : ""} />
@@ -59,31 +58,24 @@ export function ClusterDashboard() {
       )}
 
       <SimpleGrid cols={{ xs: 1, sm: 2, md: 3 }}>
-        {isClusterError
-          ? Array.from({ length: 3 }).map(() => <KubernetesErrorPage key={createId()} />)
-          : isClusterLoading
-            ? Array.from({ length: 3 }).map(() => <Skeleton key={createId()} height={200} />)
-            : clusterData?.capacity.map((capacity) => (
-                <ResourceGauge kubernetesCapacity={capacity} key={capacity.type} />
-              ))}
+        {isClusterError || !clusterData
+          ? Array.from({ length: 3 }, (_, index) => <KubernetesErrorPage key={index} />)
+          : clusterData.capacity.map((capacity) => <ResourceGauge kubernetesCapacity={capacity} key={capacity.type} />)}
       </SimpleGrid>
 
       <Title>{tCluster("resources.title")}</Title>
 
       <SimpleGrid cols={{ xs: 1, sm: 2, md: 3 }}>
-        {isResourceCountsError
-          ? Array.from({ length: 8 }).map(() => <KubernetesErrorPage key={createId()} />)
-          : isResourceCountsLoading
-            ? Array.from({ length: 8 }).map(() => <Skeleton key={createId()} height={100} />)
-            : contextId &&
-              resourceCountsData?.map((clusterResourceCount) => (
-                <ResourceTile
-                  count={clusterResourceCount.count}
-                  contextId={contextId}
-                  label={clusterResourceCount.label as KubernetesLabelResourceType}
-                  key={clusterResourceCount.label}
-                />
-              ))}
+        {isResourceCountsError || !resourceCountsData
+          ? Array.from({ length: 8 }, (_, index) => <KubernetesErrorPage key={index} />)
+          : resourceCountsData.map((clusterResourceCount) => (
+              <ResourceTile
+                count={clusterResourceCount.count}
+                contextId={contextId}
+                label={clusterResourceCount.label as KubernetesLabelResourceType}
+                key={clusterResourceCount.label}
+              />
+            ))}
       </SimpleGrid>
     </Stack>
   );

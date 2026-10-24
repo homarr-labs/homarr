@@ -3,8 +3,14 @@ import { setImmediate } from "node:timers/promises";
 
 import { createId, formatBytes } from "@homarr/common";
 import { env } from "@homarr/common/env";
-import { decryptSecret, encryptSecret, readBoundedResponseAsync } from "@homarr/common/server";
-import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
+import {
+  createKeyedFingerprint,
+  decryptSecret,
+  encryptSecret,
+  readBoundedResponseAsync,
+  verifyKeyedFingerprint,
+} from "@homarr/common/server";
+import { cancelBodyAsync, fetchGuardedAsync } from "@homarr/core/infrastructure/http";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import { ErrorWithMetadata } from "@homarr/core/infrastructure/logs/error";
 import { createGetSetChannel } from "@homarr/redis";
@@ -39,7 +45,20 @@ export class ImageProxy {
     return this.hmacKey;
   }
 
-  public async createImageAsync(url: string, headers?: Record<string, string>): Promise<string> {
+  public async createImageAsync(
+    url: string,
+    headers?: Record<string, string>,
+    options?: { persistent?: boolean },
+  ): Promise<string> {
+    if (options?.persistent) {
+      if (headers) throw new Error("Persistent image URLs cannot contain integration headers");
+      // App icons are saved in the database, unlike periodically refreshed integration
+      // images. A signed, encrypted source survives Redis expiry and server restarts.
+      const encryptedUrl = encryptSecret(url);
+      const signature = createKeyedFingerprint(`image-proxy:persistent:${encryptedUrl}`);
+      return this.createImageUrl(`persistent.${signature}.${encryptedUrl}`);
+    }
+
     const existingId = await this.getExistingIdAsync(url, headers);
     if (existingId) {
       logger.debug("Image already exists in the proxy", {
@@ -100,36 +119,45 @@ export class ImageProxy {
     );
     try {
       signal.throwIfAborted();
-      const response = await fetchWithTrustedCertificatesAsync(urlAndHeaders.url, {
-        headers: urlAndHeaders.headers ?? {},
-        signal,
-      });
+      // Page-declared icons are untrusted on every fetch, including redirects and DNS
+      // changes. Existing integration images retain loopback and HTTP proxy support
+      // only on their registered origin; redirects elsewhere lose credentials and trust.
+      return await fetchGuardedAsync(
+        new URL(urlAndHeaders.url),
+        {
+          headers: urlAndHeaders.headers ?? undefined,
+          trustedOrigin: urlAndHeaders.trustedOrigin,
+          timeout: IMAGE_PROXY_TIMEOUT_MS,
+          signal,
+        },
+        async (response) => {
+          if (!response.ok) {
+            await cancelBodyAsync(response);
+            logger.error(
+              new ErrorWithMetadata("Failed to fetch image", {
+                id,
+                url: this.redactUrl(urlAndHeaders.url),
+                headers: this.redactHeaders(urlAndHeaders.headers),
+                proxyUrl,
+                statusCode: response.status,
+              }),
+            );
+            return { error: "upstream-error", statusCode: response.status };
+          }
 
-      if (!response.ok) {
-        void response.body?.cancel().catch(() => undefined);
-        logger.error(
-          new ErrorWithMetadata("Failed to fetch image", {
+          const body = await readBoundedResponseAsync(response, IMAGE_PROXY_MAX_BYTES, "Image", signal);
+          const image = body?.buffer ?? new ArrayBuffer(0);
+          logger.debug("Forwarding image succeeded", {
             id,
             url: this.redactUrl(urlAndHeaders.url),
             headers: this.redactHeaders(urlAndHeaders.headers),
             proxyUrl,
-            statusCode: response.status,
-          }),
-        );
-        return { error: "upstream-error", statusCode: response.status };
-      }
+            size: formatBytes(image.byteLength),
+          });
 
-      const body = await readBoundedResponseAsync(response, IMAGE_PROXY_MAX_BYTES, "Image", signal);
-      const image = body?.buffer ?? new ArrayBuffer(0);
-      logger.debug("Forwarding image succeeded", {
-        id,
-        url: this.redactUrl(urlAndHeaders.url),
-        headers: this.redactHeaders(urlAndHeaders.headers),
-        proxyUrl,
-        size: formatBytes(image.byteLength),
-      });
-
-      return { image, contentType: response.headers.get("content-type") };
+          return { image, contentType: response.headers.get("content-type") };
+        },
+      );
     } catch (error) {
       logger.error(
         new ErrorWithMetadata(
@@ -155,6 +183,19 @@ export class ImageProxy {
   }
 
   private async getImageUrlAndHeadersAsync(id: string) {
+    if (id.startsWith("persistent.")) {
+      const parts = /^persistent\.([a-f0-9]{64})\.([a-f0-9]+)\.([a-f0-9]{32})$/.exec(id);
+      if (!parts) return null;
+      const [, signature = "", ciphertext = "", initializationVector = ""] = parts;
+      const encryptedUrl = `${ciphertext}.${initializationVector}` as const;
+      if (!verifyKeyedFingerprint(`image-proxy:persistent:${encryptedUrl}`, signature)) return null;
+      try {
+        return { url: decryptSecret(encryptedUrl), headers: null, trustedOrigin: undefined };
+      } catch {
+        return null;
+      }
+    }
+
     const urlHeaderChannel = createUrlByIdChannel(id);
     const urlHeader = await urlHeaderChannel.getAsync();
     if (!urlHeader) {
@@ -162,9 +203,11 @@ export class ImageProxy {
       return null;
     }
 
+    const url = decryptSecret(urlHeader.url);
     return {
-      url: decryptSecret(urlHeader.url),
+      url,
       headers: JSON.parse(decryptSecret(urlHeader.headers)) as Record<string, string> | null,
+      trustedOrigin: new URL(url).origin,
     };
   }
 
