@@ -468,6 +468,16 @@ export const integrationDefs = {
     apiKeySettingsPath: "/settings/general",
     features: { onboarding: { featuredOrder: 0 } },
   },
+  sportarr: {
+    httpAuth: { type: "adapter" },
+    name: "Sportarr",
+    secretKinds: [["apiKey"]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/sportarr.svg",
+    category: ["calendar", "mediaOrganizer"],
+    documentationSlug: "sportarr",
+    defaultPort: 1867,
+    apiKeySettingsPath: "/settings/general",
+  },
   radarr: {
     httpAuth: { type: "adapter" },
     name: "Radarr",
@@ -820,6 +830,17 @@ export const integrationDefs = {
     defaultPort: 8000,
     features: { docker: { aliases: ["paperless-ngx", "paperless"] } },
   },
+  thingport: {
+    httpAuth: { type: "bearer" },
+    name: "Thingport",
+    secretKinds: [["apiKey"]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/thingport.svg",
+    category: ["miscellaneous", "search"],
+    documentationSlug: "thingport",
+    defaultPort: 80,
+    apiKeySettingsPath: "/profile",
+    features: { docker: { aliases: ["thingport", "thingport-frontend"] } },
+  },
   patchmon: {
     httpAuth: { type: "basic", usernameKind: "patchmonApiKey", passwordKind: "patchmonApiSecret" },
     name: "PatchMon",
@@ -987,7 +1008,7 @@ export const integrationDefs = {
     // Used for deep links from the widgets into the Wazuh dashboard.
     optionalSecretKinds: ["wazuhDashboardUrl"],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/wazuh.svg",
-    category: ["security"],
+    category: ["security", "notifications"],
     documentationSlug: "wazuh",
     defaultPort: 55000,
     features: { docker: { aliases: ["wazuh", "wazuh-manager", "wazuh.manager"] } },

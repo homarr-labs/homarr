@@ -1,0 +1,63 @@
+name: "[Triage] Project sync"
+
+on:
+  issues:
+    types: [opened, labeled, unlabeled, closed, reopened]
+  issue_comment:
+    types: [created]
+  pull_request_target:
+    types: [opened, labeled, unlabeled, closed, reopened, synchronize]
+  workflow_dispatch:
+    inputs:
+      number:
+        description: "Issue/PR number; leave empty to sync up to 500 open triaged items"
+        type: string
+        required: false
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+
+concurrency:
+  group: triage-project-${{ github.event.issue.number || github.event.pull_request.number || inputs.number || 'backfill' }}
+  queue: max
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      TRIAGE_APP_CONFIGURED: ${{ vars.HOMARR_UPDATE_CONTRIBUTORS_CLIENT_ID != '' && secrets.HOMARR_UPDATE_CONTRIBUTORS_PRIVATE_KEY != '' }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: dev
+          persist-credentials: false
+      - name: Create Project App token
+        id: project-token
+        if: env.TRIAGE_APP_CONFIGURED == 'true' && vars.TRIAGE_PROJECT_NUMBER != ''
+        continue-on-error: true # Label handling must also work if Project authentication fails.
+        uses: actions/create-github-app-token@v3
+        with:
+          client-id: ${{ vars.HOMARR_UPDATE_CONTRIBUTORS_CLIENT_ID }}
+          private-key: ${{ secrets.HOMARR_UPDATE_CONTRIBUTORS_PRIVATE_KEY }}
+          owner: ${{ vars.TRIAGE_PROJECT_OWNER || 'homarr-labs' }}
+          repositories: ${{ github.event.repository.name }}
+          permission-organization-projects: write
+          permission-issues: read
+          permission-pull-requests: read
+      - uses: actions/github-script@v8
+        env:
+          TRIAGE_PROJECT_OWNER: ${{ vars.TRIAGE_PROJECT_OWNER }}
+          TRIAGE_PROJECT_NUMBER: ${{ vars.TRIAGE_PROJECT_NUMBER }}
+          TRIAGE_PROJECT_TOKEN: ${{ steps.project-token.outputs.token || secrets.TRIAGE_PROJECT_TOKEN }}
+          TRIAGE_APP_FAILED: ${{ steps.project-token.outcome == 'failure' }}
+        with:
+          script: |
+            const sync = require('./.github/scripts/triage-project.cjs');
+            await sync({ github, context, core });
+            if (process.env.TRIAGE_APP_FAILED === 'true' && !process.env.TRIAGE_PROJECT_TOKEN) {
+              core.setFailed('Project App authentication failed; reply label handling completed.');
+            }

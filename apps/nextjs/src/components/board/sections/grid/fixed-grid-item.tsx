@@ -155,8 +155,8 @@ export const FixedGridItem = ({
           direction: "se",
           deltaColumns: delta.x,
           deltaRows: delta.y,
-          minWidth,
-          minHeight,
+          minWidth: current.minW ?? minWidth,
+          minHeight: current.minH ?? minHeight,
         })
       : previewGridMove(transaction, {
           targetGridId: section.id,

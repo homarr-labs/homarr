@@ -6,7 +6,6 @@ export interface ImportReview {
   name: string;
   origins: string[];
   authTypes: string[];
-  networkScopes: string[];
   methods: string[];
   permissions: string[];
   hasActions: boolean;
@@ -167,9 +166,6 @@ export function getImportReview(value: unknown): ImportReview | null {
           source.type === "integration" ? "integration" : getCustomWidgetSourceAuthType(source),
         ),
       ),
-    ],
-    networkScopes: [
-      ...new Set(Object.values(widget.sources).flatMap((source) => (source.networkScope ? [source.networkScope] : []))),
     ],
     methods: [...new Set(Object.values(widget.requests).map((request) => request.method))],
     permissions: [...new Set(Object.values(widget.requests).map((request) => request.permission))],

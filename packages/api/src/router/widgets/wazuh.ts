@@ -88,7 +88,7 @@ const mockResult = <TData>(data: TData): WazuhResult<TData> => ({
 const integrationIdHint = "REQUIRED: integrationId (single Wazuh integration ID from integration_all).";
 const indexerHint = "Requires indexer credentials on the integration.";
 
-const wazuhProcedure = (widgetKind: WidgetKind & `wazuh${string}`, description: string) =>
+const wazuhProcedure = (widgetKind: WidgetKind & "wazuh", description: string) =>
   publicProcedure
     .meta({ mcp: { enabled: true, description: `${description} ${integrationIdHint}` } })
     .concat(createOneWidgetIntegrationMiddleware("query", widgetKind));
@@ -97,7 +97,7 @@ const timeRange = z.enum(wazuhTimeRanges);
 
 export const wazuhRouter = createTRPCRouter({
   getAgents: wazuhProcedure(
-    "wazuhAgents",
+    "wazuh",
     "Get Wazuh agent counts and the full agent list (status, IP, OS, version, last keepalive, groups).",
   ).query(async ({ ctx }) => {
     if (ctx.integration.kind === "mock") return mockResult(mockWidgetData.wazuhAgents);
@@ -106,7 +106,7 @@ export const wazuhRouter = createTRPCRouter({
       wazuhAgentsRequestHandler.handler(integration, {}).getDataAsync(),
     );
   }),
-  getAlerts: wazuhProcedure("wazuhAlerts", `Get recent Wazuh alerts at or above a rule level. ${indexerHint}`)
+  getAlerts: wazuhProcedure("wazuh", `Get recent Wazuh alerts at or above a rule level. ${indexerHint}`)
     .input(
       z.object({
         minLevel: z.number().int().min(0).max(16).default(7),
@@ -124,7 +124,7 @@ export const wazuhRouter = createTRPCRouter({
       );
     }),
   getSummary: wazuhProcedure(
-    "wazuhSummary",
+    "wazuh",
     "Get Wazuh alert counts by severity for a time range compared with the previous period, plus manager version and indexer health.",
   )
     .input(z.object({ range: timeRange.default("24h") }))
@@ -136,7 +136,7 @@ export const wazuhRouter = createTRPCRouter({
       );
     }),
   getTimeline: wazuhProcedure(
-    "wazuhTimeline",
+    "wazuh",
     `Get a histogram of Wazuh alerts over time split by severity (low, medium, high, critical). ${indexerHint}`,
   )
     .input(
@@ -154,7 +154,7 @@ export const wazuhRouter = createTRPCRouter({
       );
     }),
   getTopList: wazuhProcedure(
-    "wazuhTopList",
+    "wazuh",
     `Get the top Wazuh rules, agents, source IPs, MITRE ATT&CK tactics or techniques by alert count. ${indexerHint}`,
   )
     .input(
@@ -173,7 +173,7 @@ export const wazuhRouter = createTRPCRouter({
       );
     }),
   getVulnerabilities: wazuhProcedure(
-    "wazuhVulnerabilities",
+    "wazuh",
     `Get Wazuh vulnerability counts by severity, the top CVEs and the most vulnerable agents. ${indexerHint}`,
   )
     .input(
@@ -192,7 +192,7 @@ export const wazuhRouter = createTRPCRouter({
       );
     }),
   getFim: wazuhProcedure(
-    "wazuhFim",
+    "wazuh",
     `Get recent Wazuh file integrity monitoring (syscheck) events with counts per event type. ${indexerHint}`,
   )
     .input(
@@ -211,12 +211,12 @@ export const wazuhRouter = createTRPCRouter({
       );
     }),
   getAuthFailures: wazuhProcedure(
-    "wazuhAuthFailures",
+    "wazuh",
     `Get failed-login and brute-force alert counts per agent with hourly series and top source IPs. ${indexerHint}`,
   )
     .input(
       z.object({
-        hours: z.number().int().min(1).max(168).default(24),
+        hours: z.number().int().min(1).max(720).default(24),
         limit: z.number().int().min(1).max(25).default(6),
       }),
     )

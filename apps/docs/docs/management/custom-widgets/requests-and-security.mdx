@@ -2,7 +2,7 @@
 
 Most widgets use a single source named `default`; the manifest must contain it. Extra keyed sources are available for widgets
 that combine APIs. Source IDs are case-insensitively unique. Base URLs must use HTTP(S), contain no embedded credentials,
-query string, or fragment, and sources can be `public`, `private`, or `loopback`. Authentication is `none`, `bearer`,
+query string, or fragment. Authentication is `none`, `bearer`,
 `basic`, an API-key header, or an API-key query parameter. HTTP source credentials belong to the widget but remain outside its manifest.
 Source origins are fixed by the definition and source-setup flow; widget options and invocation parameters cannot redirect a
 request to a different origin.
@@ -68,7 +68,25 @@ also use structured `json` and `multiSelect` option values, for example `{ "enti
 
 ## Protection
 
-Every request uses Homarr's existing server executor: same-origin source enforcement, network scope, DNS and redirect validation, SSRF protection, board permissions, rate and request limits, body and response limits, timeouts, and encrypted credential injection. Static headers cannot override credentials, cookies, routing, proxy, forwarding, or hop-by-hop headers.
+### Request count and concurrency
+
+A definition can contain up to **64 named requests**, including load queries, manual queries, and actions. This is
+separate from the runtime limit of **four active requests per viewer/item** and **eight per definition**. For example,
+eight load queries fit in one definition; they do not need to run at the same time.
+For a single placed widget, the four-request viewer/item limit applies before the eight-request definition limit.
+Multiple placements of the same definition still share its definition limit.
+
+Since Homarr **v2.5.0**, load queries wait up to 60 seconds for concurrency capacity. Manual requests fail immediately
+when capacity is unavailable. The per-minute limits still apply; waiting for capacity does not bypass them.
+Callers without an attributable identity share a four-active-request and 60-query-per-minute budget across items and
+definitions.
+
+If a widget works in preview but fails on a board, check the running Homarr version and the failed request's diagnostics.
+Check the viewer's integration access as well as request limits; preview success does not establish board access.
+
+### Network and permission limits
+
+HTTP sources can reach any address accessible to the Homarr server. Every request uses Homarr's existing server executor: same-origin source enforcement, board permissions, rate and request limits, body and response limits, timeouts, and encrypted credential injection. Static headers cannot override credentials, cookies, routing, proxy, forwarding, or hop-by-hop headers.
 
 The executor caps request bodies at 10 KiB and response bodies at 1 MiB. Parsed JSON is limited to depth 32 and 50,000 nodes;
 each network hop has a ten-second timeout, unauthenticated queries follow at most three same-origin redirects, actions and authenticated queries do not follow redirects,

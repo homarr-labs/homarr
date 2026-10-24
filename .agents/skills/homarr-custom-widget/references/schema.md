@@ -13,7 +13,7 @@ interface HomarrCustomWidgetV2 {
 }
 ```
 
-Key `default` is the required source ID, not a source property. Fields: `name?`, `baseUrl`, `networkScope`, `auth?`; localhost/loopback URLs require `networkScope: "loopback"`; never widen explicit scope:
+Key `default` is the required source ID, not a source property. Fields: `name?`, `baseUrl`, `auth?`:
 
 ```json
 {
@@ -21,7 +21,6 @@ Key `default` is the required source ID, not a source property. Fields: `name?`,
     "default": {
       "name": "Service",
       "baseUrl": "http://service.local:5055/api/v1",
-      "networkScope": "private",
       "auth": { "type": "apiKeyHeader", "name": "X-Api-Key" }
     }
   },
@@ -46,7 +45,7 @@ Auth is `none`, `bearer`, `basic`, `apiKeyHeader`, or `apiKeyQuery`. Requests de
 
 JSON responses become their decoded value. Responses with `application/x-ndjson` become an array with one decoded object per non-empty line.
 
-Use real public API URLs and clear self-hosted placeholders. Homarr collects URL, scope, and credentials outside the manifest.
+Use real public API URLs and clear self-hosted placeholders. Homarr collects URL and credentials outside the manifest.
 
 Paths use `{option:name}`/`{param:name}`; query/body objects use `{"$option":"name"}`/`{"$param":"name"}`. `$param` is manual-only; `$option` may drive loads. Constants stay primitive.
 

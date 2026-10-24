@@ -1,10 +1,12 @@
 import { useId } from "react";
+import type { ReactNode } from "react";
 import {
   Badge,
   Box,
   Button,
   darken,
   Group,
+  HoverCard,
   Image,
   lighten,
   ScrollArea,
@@ -13,13 +15,13 @@ import {
   useMantineColorScheme,
 } from "@mantine/core";
 import { IconClock, IconPin } from "@tabler/icons-react";
-import dayjs from "dayjs";
 
 import { isNullOrWhitespace } from "@homarr/common";
 import type { CalendarEvent } from "@homarr/integrations/types";
 import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";
 
 import { groupEventsByDate } from "./calendar-events";
+import { isCalendarAllDayEvent } from "./calendar-schedule-events";
 import { getSafeApplicationUrl, SAFE_NEW_TAB_REL } from "../common/application-url";
 import { formatLocalizedTime } from "../common/locale";
 import classes from "./calendar-event-list.module.css";
@@ -27,6 +29,31 @@ import classes from "./calendar-event-list.module.css";
 export type CalendarEventWithSource = CalendarEvent & {
   source?: { integrationId: string; integrationName: string };
 };
+
+interface CalendarEventsHoverCardProps {
+  events: CalendarEvent[];
+  disabled: boolean;
+  children: ReactNode;
+}
+
+export const CalendarEventsHoverCard = ({ events, disabled, children }: CalendarEventsHoverCardProps) => (
+  <HoverCard
+    disabled={disabled || events.length === 0}
+    position="bottom"
+    withArrow
+    withinPortal
+    radius="lg"
+    shadow="sm"
+    transitionProps={{ transition: "pop" }}
+    openDelay={350}
+    closeDelay={400}
+  >
+    <HoverCard.Target>{children}</HoverCard.Target>
+    <HoverCard.Dropdown maw="calc(100vw - 24px)" w={512} ps={4} pe={4} pt={4} pb={0} style={{ overflow: "hidden" }}>
+      <CalendarEventList events={events} />
+    </HoverCard.Dropdown>
+  </HoverCard>
+);
 
 interface CalendarEventListProps {
   events: CalendarEventWithSource[];
@@ -151,7 +178,7 @@ const CalendarEventRows = ({
 
               <Group gap={3} wrap="nowrap" align={"center"} ml="auto">
                 <IconClock opacity={0.7} size={"1rem"} />
-                {isAllDay(event) ? (
+                {isCalendarAllDayEvent(event) ? (
                   <Text c={"dimmed"} size={"sm"}>
                     {t("duration.allDay")}
                   </Text>
@@ -229,13 +256,4 @@ const CalendarEventRows = ({
       ))}
     </>
   );
-};
-
-const isAllDay = (event: Pick<CalendarEvent, "startDate" | "endDate">) => {
-  if (!event.endDate) return false;
-
-  const start = dayjs(event.startDate);
-  const end = dayjs(event.endDate);
-
-  return start.startOf("day").isSame(start) && end.endOf("day").isSame(end);
 };

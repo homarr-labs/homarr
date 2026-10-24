@@ -439,7 +439,7 @@ export default function DownloadClientsWidget({
         let initialTotalUp: number | undefined;
         if (isTorrent) initialTotalUp = 0;
 
-        const { totalUp, totalDown } = clientData.items
+        const { totalUp, totalDown } = (clientData.ratioItems ?? clientData.items)
           .filter(({ category }) => {
             if (!applyRatioFilter) return true;
             return matchesCategoryFilter(category, options.categoryFilter, options.filterIsWhitelist);

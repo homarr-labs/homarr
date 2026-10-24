@@ -1564,6 +1564,7 @@
             "untrusted": "Sertifikāts nav uzticams.",
             "hostnameMismatch": "Sertifikāta resursdatora nosaukums neatbilst URL."
           },
+          "secondaryUrl": "",
           "alert": {
             "permission": {
               "title": "Nepietiek atļauju",
@@ -1909,6 +1910,7 @@
       "tryAgain": "Mēģiniet vēlreiz",
       "loading": "Notiek ielāde",
       "show": "Rādīt",
+      "showAll": "",
       "hide": "Paslēpt",
       "undo": "Atsaukt",
       "editNamed": "Rediģēt {name}",
@@ -1918,6 +1920,7 @@
       "copied": "Nokopēts",
       "refresh": "Atsvaidzināt"
     },
+    "hidden": "",
     "pagination": {
       "pageOf": "Lapa {page} no {totalPages}"
     },
@@ -1940,6 +1943,7 @@
       "clear": "Notīrīt attēlu",
       "uploadImage": "Augšupielādēt attēlu",
       "results": "Attēlu meklēšanas rezultāti",
+      "websiteIcon": "",
       "localImages": "Jūsu attēli",
       "svgIcons": "SVG ikonas",
       "otherImages": "Citi attēli",
@@ -3235,6 +3239,13 @@
         },
         "showUnmonitored": {
           "label": "Rādīt nepārraudzītos"
+        },
+        "viewMode": {
+          "label": ""
+        },
+        "hideHeader": {
+          "label": "",
+          "description": ""
         }
       },
       "advanced": {
@@ -3243,6 +3254,22 @@
         "eventCount": "{count, plural, zero {Nav neviena notikuma} one {# notikums} other {# notikumi}}",
         "loading": "Notiek kalendāra notikumu ielāde...",
         "noEvents": "Šajā mēnesī nav notikumu"
+      },
+      "view": {
+        "compact": "",
+        "month": "",
+        "week": "",
+        "day": "",
+        "agenda": ""
+      },
+      "controls": {
+        "today": "",
+        "previous": "",
+        "next": "",
+        "noEvents": "",
+        "more": "",
+        "timeSlot": "",
+        "weekday": ""
       }
     },
     "weather": {
@@ -3927,11 +3954,28 @@
         "paused": "Apturēts",
         "remaining": "Atlikušas {minutes} min",
         "seasonEpisode": "S{season} E{episode}",
+        "state": {
+          "playing": "",
+          "buffering": ""
+        },
+        "details": {
+          "device": "",
+          "location": "",
+          "sessionId": "",
+          "bitrate": "",
+          "audioHandling": "",
+          "direct": "",
+          "transcode": "",
+          "containerChanged": "",
+          "position": "",
+          "unknown": ""
+        },
         "metadata": {
           "title": "Statistika zinātkārajiem",
           "video": {
             "title": "Video",
-            "resolution": "Izšķirtspēja"
+            "resolution": "Izšķirtspēja",
+            "frameRate": ""
           },
           "audio": {
             "title": "Audio",
@@ -3952,6 +3996,109 @@
         "playing": "Atskaņo {count}",
         "transcoding": "Pārkodē {count}"
       }
+    },
+    "thingport-libraryStats": {
+      "name": "",
+      "description": "",
+      "title": "",
+      "option": {
+        "showModels": {
+          "label": ""
+        },
+        "showCollections": {
+          "label": ""
+        },
+        "showCategories": {
+          "label": ""
+        },
+        "showAuthors": {
+          "label": ""
+        }
+      },
+      "models": "",
+      "collections": "",
+      "categories": "",
+      "authors": ""
+    },
+    "thingport-featuredModel": {
+      "name": "",
+      "description": "",
+      "option": {
+        "autoRotate": {
+          "label": ""
+        },
+        "showDetails": {
+          "label": ""
+        }
+      },
+      "title": "",
+      "empty": "",
+      "hint": "",
+      "noPreview": "",
+      "views": "",
+      "prints": ""
+    },
+    "thingport-activityHeatmap": {
+      "name": "",
+      "description": "",
+      "title": "",
+      "option": {
+        "weekStart": {
+          "label": "Nedēļas pirmā diena",
+          "option": {
+            "sunday": "",
+            "monday": ""
+          }
+        },
+        "showTotal": {
+          "label": ""
+        },
+        "showLegend": {
+          "label": ""
+        }
+      },
+      "lastYear": "",
+      "totalLastYear": "",
+      "totalInYear": "",
+      "dayTotal": "",
+      "dayEmpty": "",
+      "kinds": {
+        "import": "",
+        "upload": "Kopā augšupielādēts",
+        "download": "Kopā lejupielādēts",
+        "slicer": "",
+        "delete": ""
+      },
+      "less": "",
+      "more": ""
+    },
+    "thingport-models": {
+      "name": "",
+      "description": "",
+      "title": "",
+      "option": {
+        "defaultTab": {
+          "label": ""
+        },
+        "itemCount": {
+          "label": ""
+        },
+        "showThumbnails": {
+          "label": ""
+        }
+      },
+      "tab": {
+        "recentlyAdded": "",
+        "topViewed": "",
+        "topPrinted": ""
+      },
+      "empty": {
+        "recentlyAdded": "",
+        "topViewed": "",
+        "topPrinted": ""
+      },
+      "views": "",
+      "prints": ""
     },
     "paperlessNgx": {
       "description": "Pārskats par jūsu Paperless-ngx dokumentu arhīvu",
@@ -4921,45 +5068,116 @@
     "uptimeKuma": {
       "description": "Pārraudzīt pieejamības statistiku no jūsu Uptime Kuma statusa lapas",
       "option": {
-        "showAverageUptime": {
-          "label": "Rādīt vidējo pieejamību",
-          "description": "Parādīt kombinēto 24 stundu vidējo pieejamības procentu"
+        "statusPageSlug": {
+          "label": "",
+          "description": ""
         },
-        "showUptimeRing": {
-          "label": "Rādīt pieejamības riņķi",
-          "description": "Parādīt progresa riņķi kopā ar vidējo pieejamības vērtību"
+        "summaryOnly": {
+          "label": "",
+          "description": ""
         },
-        "showTotalMonitors": {
-          "label": "Rādīt kopējo monitoru skaitu",
-          "description": "Parādīt konfigurēto monitoru kopējo skaitu"
+        "showSummary": {
+          "label": "",
+          "description": ""
         },
-        "showUpCount": {
-          "label": "Rādīt \"up\" skaitu",
-          "description": "Parādīt, cik monitoru pašlaik ir \"up\""
+        "showIncidents": {
+          "label": "",
+          "description": ""
         },
-        "showDownCount": {
-          "label": "Rādīt \"down\" skaitu",
-          "description": "Parādīt, cik monitoru pašlaik ir \"down\""
+        "groupByStatusPageGroup": {
+          "label": "",
+          "description": ""
         },
-        "showPausedCount": {
-          "label": "Rādīt apturēto skaitu",
-          "description": "Parādīt, cik monitoru pašlaik ir apturēti"
+        "showOnlyProblems": {
+          "label": "",
+          "description": ""
+        },
+        "sortBy": {
+          "label": "",
+          "option": {
+            "status": "",
+            "statusPage": "",
+            "name": "Darba vārds",
+            "uptime": ""
+          }
+        },
+        "showHeartbeatBar": {
+          "label": "",
+          "description": ""
+        },
+        "showUptime": {
+          "label": ""
+        },
+        "showResponseTime": {
+          "label": ""
+        },
+        "showCertificateExpiry": {
+          "label": "",
+          "description": ""
         }
-      },
-      "averageUptime": "Vidējā pieejamība (24 h)",
-      "stats": {
-        "totalMonitors": "Kopējais monitoru skaits",
-        "upCount": "Augšup",
-        "downCount": "Lejup",
-        "pausedCount": "Apturēts"
-      },
-      "error": {
-        "internalServerError": "Neizdevās iegūt pieejamības datus"
       },
       "status": {
         "up": "Augšupielādes ātrums",
         "down": "Lejupielādes Ātrums",
-        "paused": "Apstādināts"
+        "pending": "",
+        "maintenance": "",
+        "stale": "",
+        "unknown": ""
+      },
+      "overall": {
+        "operational": "",
+        "degraded": "",
+        "outage": "",
+        "maintenance": "",
+        "unknown": ""
+      },
+      "short": {
+        "operational": "",
+        "down": "",
+        "pending": "",
+        "maintenance": "",
+        "unknown": ""
+      },
+      "summary": {
+        "upRatio": "",
+        "upRatioShort": "",
+        "averageUptime": "",
+        "uptimeShort": "",
+        "statusCount": ""
+      },
+      "unit": {
+        "milliseconds": ""
+      },
+      "heartbeatBar": {
+        "label": ""
+      },
+      "detail": {
+        "checked": "",
+        "certificate": ""
+      },
+      "notice": {
+        "label": "",
+        "untitled": ""
+      },
+      "empty": {
+        "title": "",
+        "description": ""
+      },
+      "allClear": "",
+      "error": {
+        "internalServerError": "Neizdevās iegūt pieejamības datus"
+      },
+      "monitorType": {
+        "http": "",
+        "keyword": "",
+        "jsonQuery": "",
+        "port": "",
+        "ping": "",
+        "dns": "",
+        "docker": "",
+        "push": "",
+        "group": "",
+        "realBrowser": ""
       }
     },
     "traefik": {
@@ -5566,6 +5784,8 @@
       "allHidden": "Šajā skatā visas metrikas ir paslēptas. Izmantojiet “Pielāgot šo skatu”, lai tās atjaunotu."
     },
     "wazuh": {
+      "name": "",
+      "description": "",
       "target": {
         "api": "Wazuh servera API",
         "indexer": "Wazuh indeksētājs",
@@ -5585,6 +5805,14 @@
         "certificate": {
           "title": "{target} sertifikātam nevar uzticēties",
           "description": "Wazuh pēc noklusējuma izmanto pašparakstītu sertifikātu. Integrācijā palaidiet “Pārbaudīt savienojumu” un uzticieties sertifikātam vai sadaļā Iestatījumi → Sertifikāti pievienojiet savu CA."
+        },
+        "certificateHostname": {
+          "title": "",
+          "description": ""
+        },
+        "certificateExpired": {
+          "title": "",
+          "description": ""
         },
         "unreachable": {
           "title": "Nevar sasniegt {target}",
@@ -5609,7 +5837,9 @@
         "unknown": {
           "title": "Nevarēja ielādēt datus no {target}",
           "description": "Detalizētu informāciju skatiet Homarr žurnālos."
-        }
+        },
+        "viewSaveTitle": "",
+        "viewSaveMessage": ""
       },
       "range": {
         "1h": "1 h",
@@ -5617,268 +5847,234 @@
         "7d": "7 d",
         "30d": "30 d"
       },
-      "levelTooltip": "Noteikuma līmenis {level} ({severity})"
-    },
-    "wazuhAgents": {
-      "name": "Wazuh aģenti",
-      "description": "Kārtojams Wazuh aģentu saraksts ar statusu, operētājsistēmu, versiju un pēdējo uzturēšanas signālu",
+      "levelTooltip": "Noteikuma līmenis {level} ({severity})",
+      "summary": {
+        "title": "",
+        "alerts": "",
+        "none": "",
+        "trend": {
+          "new": "",
+          "tooltip": ""
+        },
+        "previous": "",
+        "maxLevel": "",
+        "health": "",
+        "manager": ""
+      },
+      "alerts": {
+        "title": "",
+        "empty": "",
+        "rule": "",
+        "openInDashboard": ""
+      },
+      "timeline": {
+        "title": "",
+        "total": "",
+        "interval": ""
+      },
+      "top": {
+        "title": {
+          "rules": "",
+          "agents": "",
+          "sourceIps": "",
+          "mitreTactics": "",
+          "mitreTechniques": ""
+        },
+        "empty": {
+          "rules": "",
+          "agents": "",
+          "sourceIps": "",
+          "mitreTactics": "",
+          "mitreTechniques": ""
+        },
+        "totalTooltip": "",
+        "private": "",
+        "public": "Publisks",
+        "agents": "",
+        "others": ""
+      },
+      "agents": {
+        "title": "",
+        "total": "",
+        "status": {
+          "active": "",
+          "disconnected": "",
+          "neverConnected": "",
+          "pending": ""
+        },
+        "statusLabel": {
+          "active": "",
+          "disconnected": "",
+          "never_connected": "",
+          "pending": "",
+          "unknown": "Nezināms"
+        },
+        "live": "",
+        "snapshot": "",
+        "snapshotHint": "",
+        "staleSnapshot": "",
+        "noDisconnected": "",
+        "empty": "",
+        "column": {
+          "status": "",
+          "name": "Darba vārds",
+          "ip": "",
+          "os": "",
+          "version": "",
+          "lastKeepAlive": "",
+          "groups": ""
+        },
+        "outdated": ""
+      },
+      "vulnerabilities": {
+        "title": "",
+        "topCves": "",
+        "score": "",
+        "agentsShort": "",
+        "topAgents": "",
+        "criticalHigh": "",
+        "totalTooltip": "",
+        "affected": "",
+        "empty": "",
+        "distribution": "",
+        "worst": ""
+      },
+      "fim": {
+        "title": "",
+        "event": {
+          "added": "Pievienošanas datums",
+          "modified": "",
+          "deleted": "",
+          "unknown": ""
+        },
+        "empty": "",
+        "user": "",
+        "registry": ""
+      },
+      "authFailures": {
+        "title": "",
+        "seriesTooltip": "",
+        "peak": "",
+        "empty": "",
+        "failed": "",
+        "failedHint": "",
+        "bruteForce": "",
+        "bruteForceHint": "",
+        "sourceIps": "",
+        "ipTooltip": "",
+        "bruteForceCount": ""
+      },
+      "view": {
+        "overview": "",
+        "alerts": "",
+        "timeline": "",
+        "top": "",
+        "agents": "",
+        "vulnerabilities": "",
+        "fim": "",
+        "authFailures": ""
+      },
       "option": {
-        "statusFilter": {
-          "label": "Rādīt aģentus"
+        "visibleViews": {
+          "label": "",
+          "description": ""
         },
-        "sortBy": {
-          "label": "Kārtot pēc"
-        },
-        "showVersion": {
-          "label": "Rādīt Wazuh versijas kolonnu"
-        },
-        "showGroups": {
-          "label": "Rādīt grupu kolonnu"
-        }
-      },
-      "title": "Aģenti",
-      "total": "{count} aģenti",
-      "status": {
-        "active": "Aktīvs",
-        "disconnected": "Atvienots",
-        "neverConnected": "Nekad nav bijis savienots",
-        "pending": "Gaida"
-      },
-      "statusLabel": {
-        "active": "Aktīvs",
-        "disconnected": "Atvienots",
-        "never_connected": "Nekad nav bijis savienots",
-        "pending": "Gaida",
-        "unknown": "Nezināms"
-      },
-      "live": "Tiešraidē",
-      "snapshot": "Momentuzņēmums ir {age} vecs",
-      "snapshotHint": "Dati nolasīti no Wazuh informācijas paneļa aģentu momentuzņēmuma (wazuh-monitoring), kas uzņemts plkst. {time}. Lai iegūtu datus reāllaikā, pievienojiet servera API akreditācijas datus.",
-      "staleSnapshot": "Aģentu momentuzņēmums no {time} ir novecojis. Pārbaudiet, vai darbojas Wazuh informācijas paneļa pārraudzības uzdevums, vai pievienojiet servera API akreditācijas datus.",
-      "noDisconnected": "Visi aģenti ir savienoti",
-      "empty": "Neviens aģents neatbilst šim filtram",
-      "column": {
-        "status": "Statuss",
-        "name": "Darba vārds",
-        "ip": "IP",
-        "os": "OS",
-        "version": "Versija",
-        "lastKeepAlive": "Uzturēt savienojumu",
-        "groups": "Grupas"
-      },
-      "outdated": "Vecāks par jaunāko aģenta versiju ({version})"
-    },
-    "wazuhAlerts": {
-      "name": "Wazuh brīdinājumu plūsma",
-      "description": "Jaunākie Wazuh brīdinājumi ar līmeni, MITRE ATT&CK paņēmieniem, aģentu un avota IP",
-      "option": {
-        "minLevel": {
-          "label": "Minimālais noteikuma līmenis",
-          "description": "Wazuh līmeņi: 0–6 zems, 7–11 vidējs, 12–14 augsts, 15+ kritisks"
-        },
-        "hours": {
-          "label": "Laika periods (stundas)"
-        },
-        "limit": {
-          "label": "Brīdinājumu skaits"
-        },
-        "showMitre": {
-          "label": "Rādīt MITRE ATT&CK paņēmienus"
-        },
-        "showAgent": {
-          "label": "Rādīt aģentu"
-        },
-        "showSourceIp": {
-          "label": "Rādīt avota IP"
-        },
-        "showRuleId": {
-          "label": "Rādīt noteikuma ID"
-        }
-      },
-      "title": "Brīdinājumi · līmenis {level}+ · {hours} st.",
-      "empty": "Šajā līmenī brīdinājumu nav. Viss mierīgi.",
-      "rule": "Noteikums {id}",
-      "openInDashboard": "Atvērt šo brīdinājumu Wazuh informācijas panelī"
-    },
-    "wazuhSummary": {
-      "name": "Wazuh brīdinājumu nopietnība",
-      "description": "Brīdinājumu nopietnības sadalījums ar tendenci salīdzinājumā ar iepriekšējo periodu",
-      "option": {
         "range": {
-          "label": "Laika diapazons"
+          "label": ""
         },
         "showTrend": {
-          "label": "Rādīt tendenci salīdzinājumā ar iepriekšējo periodu"
+          "label": ""
         },
         "showFooter": {
-          "label": "Rādīt kājeni"
-        }
-      },
-      "title": "Brīdinājumu nopietnība · {range}",
-      "alerts": "brīdinājumi",
-      "none": "Brīdinājumu nav",
-      "trend": {
-        "new": "jauni",
-        "tooltip": "Iepriekšējais periods: {previous}"
-      },
-      "previous": "Iepriekšējais {range}: {count}",
-      "maxLevel": "Maksimālais līmenis {level}",
-      "health": "Indeksētāja stāvoklis: {status}",
-      "manager": "Pārvaldnieks {version}"
-    },
-    "wazuhTimeline": {
-      "name": "Wazuh brīdinājumu laika skala",
-      "description": "Wazuh brīdinājumu laikā sakrauts grafiks pēc nopietnības",
-      "option": {
-        "range": {
-          "label": "Laika diapazons"
+          "label": ""
         },
         "interval": {
-          "label": "Intervāls"
+          "label": ""
         },
         "chartType": {
-          "label": "Diagrammas veids"
+          "label": ""
         },
         "yScale": {
-          "label": "Y ass mērogs",
-          "description": "Kvadrātsakne ļauj augsta un kritiska līmeņa brīdinājumiem būt redzamiem līdzās tūkstošiem zema līmeņa brīdinājumu"
+          "label": "",
+          "description": ""
         },
         "minLevel": {
-          "label": "Minimālais noteikuma līmenis"
+          "label": ""
         },
         "showLegend": {
-          "label": "Rādīt leģendu ar kopsummām"
-        }
-      },
-      "title": "Brīdinājumu laika skala · {range}",
-      "total": "{count} brīdinājumi",
-      "interval": "uz {interval}"
-    },
-    "wazuhTopList": {
-      "name": "Wazuh populārāko vienumu saraksts",
-      "description": "Biežākie noteikumi, aģenti, avota IP adreses vai MITRE ATT&CK taktikas un paņēmieni pēc brīdinājumu skaita",
-      "option": {
-        "kind": {
-          "label": "Rangs"
+          "label": ""
         },
-        "range": {
-          "label": "Laika diapazons"
+        "topKind": {
+          "label": ""
         },
-        "limit": {
-          "label": "Ierakstu skaits"
-        },
-        "minLevel": {
-          "label": "Minimālais noteikuma līmenis"
+        "topLimit": {
+          "label": ""
         },
         "showBars": {
-          "label": "Rādīt joslas"
-        }
-      },
-      "title": {
-        "rules": "Biežākie noteikumi · {range}",
-        "agents": "Biežākie aģenti · {range}",
-        "sourceIps": "Biežākās avota IP adreses · {range}",
-        "mitreTactics": "MITRE taktikas · {range}",
-        "mitreTechniques": "MITRE paņēmieni · {range}"
-      },
-      "empty": {
-        "rules": "Šajā periodā nav brīdinājumu",
-        "agents": "Šajā periodā nav brīdinājumu",
-        "sourceIps": "Šajā periodā nav brīdinājumu ar avota IP adresi",
-        "mitreTactics": "Šajā periodā nav brīdinājumu, kas saistīti ar MITRE ATT&CK",
-        "mitreTechniques": "Šajā periodā nav brīdinājumu, kas saistīti ar MITRE ATT&CK"
-      },
-      "totalTooltip": "{count} atbilstoši brīdinājumi",
-      "private": "LAN",
-      "public": "Publisks",
-      "agents": "Redzams {count} aģentiem",
-      "others": "{count} citu ierakstu brīdinājumi"
-    },
-    "wazuhVulnerabilities": {
-      "name": "Wazuh ievainojamības",
-      "description": "Ievainojamību skaits, biežākie CVE un visneaizsargātākie aģenti",
-      "option": {
+          "label": ""
+        },
+        "agentStatusFilter": {
+          "label": ""
+        },
+        "agentSortBy": {
+          "label": ""
+        },
+        "showVersion": {
+          "label": ""
+        },
+        "showGroups": {
+          "label": ""
+        },
         "cveOrder": {
-          "label": "Kārtot CVE pēc"
+          "label": ""
         },
         "minSeverity": {
-          "label": "CVE nopietnība"
+          "label": ""
         },
         "cveLimit": {
-          "label": "CVE skaits"
+          "label": ""
         },
         "agentLimit": {
-          "label": "Aģentu skaits"
+          "label": ""
         },
         "showAgents": {
-          "label": "Rādīt visneaizsargātākos aģentus"
-        }
-      },
-      "title": "Ievainojamības",
-      "topCves": "Biežākie CVE",
-      "score": "Vērtējums",
-      "agentsShort": "Aģenti",
-      "topAgents": "Visneaizsargātākie aģenti",
-      "criticalHigh": "Krit. / augsta",
-      "totalTooltip": "{count} atradnes {agents} aģentiem",
-      "affected": "{count} aģenti",
-      "empty": "Ievainojamības nav konstatētas",
-      "distribution": "Nopietnības sadalījums. {unscored} atradnes bez vērtējuma netiek rādītas.",
-      "worst": "Sliktākais: {id} ({score}) uz {agents} aģentiem"
-    },
-    "wazuhFim": {
-      "name": "Wazuh failu integritāte",
-      "description": "Nesenie failu integritātes uzraudzības (syscheck) notikumi",
-      "option": {
-        "range": {
-          "label": "Laika diapazons"
+          "label": ""
         },
-        "event": {
-          "label": "Notikumi"
+        "fimEvent": {
+          "label": ""
         },
-        "limit": {
-          "label": "Notikumu skaits"
+        "fimLimit": {
+          "label": ""
         },
         "includeRegistry": {
-          "label": "Iekļaut Windows reģistra notikumus"
-        }
-      },
-      "title": "Failu integritāte · {range}",
-      "event": {
-        "added": "Pievienošanas datums",
-        "modified": "Modificēts",
-        "deleted": "Dzēsts",
-        "unknown": "Mainīts"
-      },
-      "empty": "Šajā periodā nav failu integritātes notikumu",
-      "user": "pēc {user}",
-      "registry": "Reģistrs"
-    },
-    "wazuhAuthFailures": {
-      "name": "Wazuh autentifikācijas kļūmes",
-      "description": "Neveiksmīgas pieteikšanās un brutāla spēka uzbrukumu brīdinājumi katram aģentam ar stundu diagrammām",
-      "option": {
-        "hours": {
-          "label": "Laika logs (stundās)"
+          "label": ""
         },
-        "limit": {
-          "label": "Aģentu skaits"
+        "authLimit": {
+          "label": ""
         },
         "showSourceIps": {
-          "label": "Rādīt biežākās avota IP adreses"
+          "label": ""
+        },
+        "alertsMinLevel": {
+          "label": "",
+          "description": ""
+        },
+        "alertsLimit": {
+          "label": ""
+        },
+        "showMitre": {
+          "label": ""
+        },
+        "showAgent": {
+          "label": ""
+        },
+        "showSourceIp": {
+          "label": ""
+        },
+        "showRuleId": {
+          "label": ""
         }
-      },
-      "title": "Autentifikācijas kļūmes · {hours} h",
-      "seriesTooltip": "Visi aģenti pēdējo {hours} stundu laikā",
-      "peak": "Maksimums {count}/grupā",
-      "empty": "Šajā periodā nav neveiksmīgu pieteikšanos",
-      "failed": "Neveiksmīgas pieteikšanās",
-      "failedHint": "Atsevišķas autentifikācijas kļūmes (sshd, PAM, Windows pieteikšanās, nederīgi lietotāji)",
-      "bruteForce": "Brutāls spēks",
-      "bruteForceHint": "Saistītie brutāla spēka noteikumi (vairākas kļūmes īsā periodā, MITRE T1110)",
-      "sourceIps": "Avota IP adreses",
-      "ipTooltip": "{ip}: {count} kļūmes",
-      "bruteForceCount": "{count} brutāla spēka uzbrukumi"
+      }
     }
   },
   "widgetPreview": {

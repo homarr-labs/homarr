@@ -416,7 +416,6 @@ describe("integration_request with a mock integration server", () => {
         baseUrl,
         targetUrl: `${baseUrl}/slow`,
         method: "GET",
-        networkScope: "loopback",
         kind: "action",
         timeoutMs: 30,
         auth: { type: "apiKeyHeader", secrets: [{ kind: "apiKey", value: secret }] },

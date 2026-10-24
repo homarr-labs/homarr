@@ -8,9 +8,9 @@
     "test": "node --test test/*.test.mjs"
   },
   "dependencies": {
-    "mysql2": "3.23.1"
+    "mysql2": "3.24.6"
   },
   "engines": {
-    "node": ">=24.18.0 <25"
+    "node": ">=24.22.1 <25"
   }
 }

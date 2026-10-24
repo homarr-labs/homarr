@@ -2,7 +2,7 @@ import { parse, stringify } from "superjson";
 import { describe, expect, test } from "vitest";
 
 import type { Database } from "..";
-import { migrateAppWidgetOpenInAsync } from "../migrations/custom/0005_app_widget_open_in";
+import { migrateAppWidgetOpenInAsync } from "../migrations/custom/0006_app_widget_open_in";
 import { boards, items, users } from "../schema";
 import { createDb } from "./db-mock";
 

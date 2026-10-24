@@ -62,7 +62,7 @@
         "description": "Ställ in språket och utseendet alla ser först, sedan ge Homarr adressmönstret som används av dina tjänster.",
         "language": "Standard språk",
         "theme": "Förvalt tema",
-        "themeAuto": "System",
+        "themeAuto": "",
         "themeLight": "Ljus",
         "themeDark": "Mörk",
         "serverOriginHelp": "Homarr använder denna adress för att förfylla upptäckta tjänst-URL:er. Du kan fortfarande redigera varje tjänst individuellt.",
@@ -77,7 +77,7 @@
         "description": "Homarr kontroller funktioner på plats. En saknad Docker uttag eller Kubernetes sammanhang aldrig blockerar en manuell inställning.",
         "database": "Databas",
         "docker": "Docker och kompatibla uttag",
-        "kubernetes": "Kubernetes",
+        "kubernetes": "",
         "assistantWorkshop": "Assistent och verkstad",
         "found": "Hittade {integrations} integrationer och {apps} ytterligare appar",
         "retryKubernetes": "Kontrollera Kubernetes igen",
@@ -152,7 +152,7 @@
         "columns": "Kolumner för tavlor",
         "columnsDescription": "Kolumner definierar det horisontella nätet som används för storlek och position objekt. 12 är gott för de flesta.",
         "columnCount": "{count, plural, one {# kolumn} other {# kolumner}}",
-        "leftSidebar": "Left sidebar",
+        "leftSidebar": "",
         "rightSidebar": "Höger sidofält",
         "previewLabel": "Live förhandsgranskning av den första tavellayouten"
       },
@@ -171,7 +171,7 @@
           "description": "Bläddra bland användaranpassade widgets, inspektera deras begärda funktioner, installera dem och publicera ditt eget arbete utan att kopiera koden mellan servrarna.",
           "available": "Tillgänglig",
           "checking": "Kontrollerar…",
-          "unavailable": "Unavailable",
+          "unavailable": "",
           "discoverTitle": "Upptäck",
           "discoverDescription": "Hitta widgetar byggda för riktiga arbetsflöden.",
           "installTitle": "Granska och installera",
@@ -181,7 +181,7 @@
           "browse": "Bläddra i verkstad"
         },
         "mcpSetup": {
-          "title": "Homarr MCP",
+          "title": "",
           "description": "Anslut Claude, Codex eller en annan MCP-klient till Homarars skrivna verktyg. API-nycklar håller åtkomst explicit och avbrytbart.",
           "endpoint": "Effektiviserbar HTTP-slutpunkt",
           "keyTitle": "Kopiera denna nyckel nu",
@@ -203,7 +203,7 @@
         "columns": "Kolumner för tavlor",
         "columnsValue": "{count, plural, one {# kolumn} other {# kolumner}}",
         "sidebars": "Sidofält",
-        "sidebarsValue": "{count, plural, =0 {None} one {# sidebar} other {# sidebars}}",
+        "sidebarsValue": "",
         "layouts": "Responsiv layout",
         "layoutsValue": "Mobil + bas",
         "integrations": "Integrationer",
@@ -364,7 +364,7 @@
         "description": "Välj hur Homarr visar byte-storlekar och byte-hastigheter. Bit-priser använder alltid decimaler.",
         "options": {
           "binary": "Binär",
-          "decimal": "Decimal"
+          "decimal": ""
         }
       },
       "enableRightClickOnWidgets": {
@@ -856,7 +856,7 @@
       "unavailable": "Begäran inte tillgänglig",
       "saveError": "Det går inte att konfigurera API-källa",
       "source": "API källa: {name}",
-      "baseUrl": "Server URL",
+      "baseUrl": "",
       "networkScope": "Nätverksåtkomst",
       "save": "Spara API-konfiguration",
       "expires": "Denna engångsförfrågan löper ut på {time}."
@@ -922,10 +922,10 @@
       "action": {
         "components": "Komponenter",
         "format": "Formatera",
-        "insertStarter": "Insert starter",
+        "insertStarter": "",
         "redo": "Gör om",
         "copied": "Kopierad",
-        "schema": "Schema"
+        "schema": ""
       },
       "reference": {
         "minimal": "Minimalt exempel",
@@ -940,14 +940,14 @@
         "errors": "{count, number} fel",
         "warnings": "{count, number} varningar",
         "ready": "Inga problem hittades",
-        "position": "Ln {line, number}, Col {column, number}",
+        "position": "",
         "characters": "{count, number} tecken",
-        "charactersWithLimit": "{count, number} / {limit, number}"
+        "charactersWithLimit": ""
       },
       "diagnostics": {
         "title": "Mall diagnostik",
         "line": "Rad {line, number}",
-        "ast": "{value}",
+        "ast": "",
         "bindingTypeConflict": "Inmatningen \"{value}\" delas av kontroller med inkompatibla värdestyper.",
         "runtimeBindingTypeConflict": "Inmatningen \"{value}\" är bunden som både {firstType} och {secondType}.",
         "dynamicRequestId": "En bokstavlig begäran Id krävs. Dynamiska begäran ID accepteras inte.",
@@ -971,7 +971,7 @@
         "sources": "API källor",
         "requests": "Förfrågningar",
         "options": "Alternativ",
-        "jsx": "JSX",
+        "jsx": "",
         "preview": "Förhandsgranska"
       },
       "status": {
@@ -1002,7 +1002,7 @@
       "builder": {
         "advancedManifest": "Avancerat raw-manifest",
         "advancedJson": "Avancerat manifest JSON",
-        "manifestFilename": "widget.json",
+        "manifestFilename": "",
         "request": "Begär {count, number}",
         "requestId": "Begär ID",
         "type": "Nedladdningsklientens typ",
@@ -1021,7 +1021,7 @@
         "valueSource": "Värdekälla",
         "literal": "Bokstavlig",
         "widgetOption": "Widget alternativ",
-        "invocationParameter": "Invocation parameter",
+        "invocationParameter": "",
         "option": "Alternativ",
         "parameterName": "Parameternamn",
         "value": "Värde",
@@ -1073,7 +1073,7 @@
       },
       "sources": {
         "title": "API-källor och uppgifter",
-        "newName": "API {count, number}",
+        "newName": "",
         "duplicateSourceId": "API-källkod måste vara unik.",
         "credentialRemoved": "Uppgifter borttagen",
         "credentialRemovedDescription": "Det lagrade värdet har tagits bort.",
@@ -1097,7 +1097,7 @@
         "advanced": "Avancerat",
         "add": "Lägg till en annan API-källa",
         "sourceType": "Integration",
-        "manualSource": "HTTP API",
+        "manualSource": "",
         "existingIntegration": "Befintlig integration",
         "integrationType": "Integrationstyp",
         "selectIntegration": "Konfigurerad integration",
@@ -1168,10 +1168,10 @@
         "runAction": "Kör åtgärd",
         "deleteConfirmation": "Den här förhandsgranskningsåtgärden ändrar fjärrdata genom det konfigurerade API.",
         "simulated": "Åtgärd simulerad",
-        "httpStatus": "HTTP {status, number}",
+        "httpStatus": "",
         "tab": {
-          "widget": "Widget",
-          "data": "Data",
+          "widget": "",
+          "data": "",
           "options": "Alternativ",
           "state": "Jobbstatus",
           "actions": "Kontroller",
@@ -1179,11 +1179,11 @@
         },
         "size": {
           "compact": "Kompakt",
-          "standard": "Standard",
+          "standard": "",
           "wide": "Bred"
         },
         "fixture": {
-          "live": "Live",
+          "live": "",
           "loading": "Laddar",
           "empty": "Tom",
           "error": "Fel"
@@ -1288,7 +1288,7 @@
     "outdated": "Föråldrade",
     "outdatedWarning": "Författaren markerade denna inlämning som föråldrad. Granska den noggrant innan import.",
     "score": "Poäng: {count, number}",
-    "upvote": "Upvote",
+    "upvote": "",
     "downvote": "Nedröstning",
     "voteError": "Omröstningen kunde inte sparas.",
     "signIn": "Logga in med GitHub",
@@ -1301,7 +1301,7 @@
     "installReviewTitle": "Granska innan installation",
     "installError": "Denna widget kan inte installeras",
     "installErrorDescription": "Verkstadens inlämning är inte en giltig JSX v2-widget.",
-    "useCss": "Import CSS",
+    "useCss": "",
     "importCss": "Importera CSS från Workshop",
     "importCssConfirm": "Ersätt nuvarande anpassade CSS med \"{title}\"? Ingenting sparas tills du sparar foruminställningarna.",
     "screenshotAlt": "{title} skärmdump {count, number}",
@@ -1329,7 +1329,7 @@
     "reportCategory": {
       "outdated": "Föråldrat eller inte längre fungerar",
       "malicious": "Skadlig",
-      "spam": "Spam",
+      "spam": "",
       "copyright": "Upphovsrätt",
       "inappropriate": "Olämplig",
       "other": "Annat"
@@ -1515,10 +1515,10 @@
       "vpn": "VPN",
       "mediaLibrary": "Mediebibliotek",
       "uptimeMonitoring": "Uppetidsövervakning",
-      "beszel": "Beszel",
+      "beszel": "",
       "systemMonitoring": "Systemövervakning",
       "security": "Säkerhet",
-      "serviceVersion": "Version"
+      "serviceVersion": ""
     },
     "testConnection": {
       "action": {
@@ -1564,6 +1564,7 @@
             "untrusted": "Certifikatet är inte betrott.",
             "hostnameMismatch": "Certifikatets värdnamn matchar inte URL:en."
           },
+          "secondaryUrl": "",
           "alert": {
             "permission": {
               "title": "Otillräckliga behörigheter",
@@ -1828,7 +1829,7 @@
       "full": "Fullständig åtkomst till integrationer"
     },
     "llamacpp": {
-      "name": "llama.cpp",
+      "name": "",
       "description": "Övervaka en lokal llama.cpp llama-server: hälso-, modell- och generationsmått"
     }
   },
@@ -1909,6 +1910,7 @@
       "tryAgain": "Försök igen",
       "loading": "Laddar",
       "show": "Visa",
+      "showAll": "",
       "hide": "Dölj",
       "undo": "Ångra",
       "editNamed": "Redigera {name}",
@@ -1918,6 +1920,7 @@
       "copied": "Kopierad",
       "refresh": "Uppdatera"
     },
+    "hidden": "",
     "pagination": {
       "pageOf": "Sida {page} av {totalPages}"
     },
@@ -1940,6 +1943,7 @@
       "clear": "Rensa bild",
       "uploadImage": "Ladda upp bild",
       "results": "Sökresultat för bild",
+      "websiteIcon": "",
       "localImages": "Dina bilder",
       "svgIcons": "SVG ikoner",
       "otherImages": "Andra bilder",
@@ -2004,7 +2008,7 @@
         "updateAvailable": "{countUpdates} uppdateringar tillgängliga: {tag}",
         "assistant": "Assistent",
         "assistantThinking": "Tänker",
-        "modifier": "Mod"
+        "modifier": ""
       }
     },
     "dangerZone": "Kritiska inställningar",
@@ -2073,7 +2077,7 @@
       "integrations": "Integrationer",
       "invites": "Inbjudningar",
       "logs": "Loggning",
-      "media": "Media",
+      "media": "",
       "searchEngines": "Sökmotorer",
       "tasks": "Uppgifter",
       "users": "Användare"
@@ -2174,7 +2178,7 @@
         "noConnectionRequired": "Ingen anslutning krävs"
       },
       "customWidget": "Anpassad widget",
-      "standalone": "Standalone",
+      "standalone": "",
       "missingIntegration": {
         "title": "Anslut en tjänst först",
         "noPermission": "Denna widget behöver en kompatibel serviceanslutning. Be en administratör att ansluta en, försök sedan igen."
@@ -2218,8 +2222,8 @@
       "title": "Flytta/ändra storlek på objekt",
       "entryLabel": "{name}, kolumn {column}, rad {row}",
       "target": {
-        "numbered": "{name}, destination {index}",
-        "located": "{name}, {location}, destination {index}"
+        "numbered": "",
+        "located": ""
       },
       "keyboard": {
         "instructions": "Tryck Enter eller mellanslag för att starta tangentbordsredigering. Använd piltangenterna för att flytta, Shift plus piltangenterna för att ändra storlek och fly för att stanna.",
@@ -2233,11 +2237,11 @@
         },
         "width": {
           "label": "Bredd",
-          "shortLabel": "W"
+          "shortLabel": ""
         },
         "height": {
           "label": "Höjd",
-          "shortLabel": "H"
+          "shortLabel": ""
         },
         "xOffset": {
           "label": "X-förskjutning"
@@ -2451,7 +2455,7 @@
         "remove": "Ta bort {name} kategori",
         "rename": "Kategori namn för {name}",
         "assign": "Kategori för {name}",
-        "ungrouped": "Ungrouped"
+        "ungrouped": ""
       }
     },
     "archiveTeamWarrior": {
@@ -2467,7 +2471,7 @@
       "projectId": "Projekt: {id}",
       "sessionReceived": "Sessionen mottagen: {value}",
       "sessionSent": "Session skickad: {value}",
-      "sessionId": "Session: {id}",
+      "sessionId": "",
       "startedAt": "Startade {date}",
       "emptyItems": "Inga aktiva eller senaste jobb i denna ögonblicksbild",
       "metric": {
@@ -2631,25 +2635,25 @@
         "unsupportedPrimaryTitle": "Primär tidszon är inte tillgänglig",
         "unsupportedPrimary": "{timeZone} stöds inte i denna webbläsare. Visar UTC som en tydligt markerad reservation.",
         "unsupportedTimeZone": "Tidszonen stöds inte: {timeZone}",
-        "accessibleTime": "{city}: {time}, {date}, {timeZone}",
+        "accessibleTime": "",
         "advancedLabel": "Avancerad världsklocka",
         "cities": "Världsklockor",
-        "cityCount": "{count} timezones",
+        "cityCount": "",
         "timeBarLabel": "Tidsfristen dygnet runt för {city}",
         "dayProgress": "{percent}% förflutit · {hours}h {minutes}m kvar",
-        "phaseLegend": "Time-of-day legend",
+        "phaseLegend": "",
         "tick": {
-          "midnight": "00",
-          "morning": "06",
-          "noon": "12",
-          "evening": "18",
-          "end": "24"
+          "midnight": "",
+          "morning": "",
+          "noon": "",
+          "evening": "",
+          "end": ""
         },
         "phaseRange": {
-          "night": "00–05 · 21–24",
-          "dawn": "05–08",
-          "day": "08–18",
-          "dusk": "18–21"
+          "night": "",
+          "dawn": "",
+          "day": "",
+          "dusk": ""
         },
         "phase": {
           "night": "Natt",
@@ -2667,11 +2671,11 @@
           "label": "Plats för luftkvalitet"
         },
         "aqiStandard": {
-          "label": "AQI standard",
+          "label": "",
           "options": {
             "auto": "Automatisk för språk",
             "european": "Europeisk AQI",
-            "us": "US AQI"
+            "us": ""
           }
         },
         "showUv": {
@@ -2708,28 +2712,28 @@
           "unknown": "Ingen läsning"
         }
       },
-      "dominantPollutant": "Dominant pollutant",
-      "aqiLabel": "AQI",
+      "dominantPollutant": "",
+      "aqiLabel": "",
       "strongestPollen": "Högsta pollen",
       "unit": {
         "concentration": "{value} μg/m3",
         "pollen": "{value} korn/m3"
       },
       "pollutant": {
-        "pm2_5": "PM2.5",
-        "pm10": "PM10",
+        "pm2_5": "",
+        "pm10": "",
         "ozone": "Ozon",
         "nitrogenDioxide": "Kvävedioxid",
-        "sulphurDioxide": "Sulphur dioxide",
+        "sulphurDioxide": "",
         "carbonMonoxide": "Kolmonoxid"
       },
       "pollen": {
-        "alder": "Alder",
+        "alder": "",
         "birch": "Björk",
         "grass": "Gräs",
         "mugwort": "Muggorm",
         "olive": "Oliv",
-        "ragweed": "Ragweed"
+        "ragweed": ""
       },
       "compact": {
         "sixHourTrend": "AQI trend för de kommande sex timmarna"
@@ -2740,9 +2744,9 @@
         "pollutants": "Förorenande koncentrationer",
         "pollen": "Pollen koncentrationer",
         "sevenDayForecast": "7-dagars maximal prognos",
-        "aqiValue": "AQI {value}",
-        "uvValue": "UV {value}",
-        "uvShort": "UV {value}",
+        "aqiValue": "",
+        "uvValue": "",
+        "uvShort": "",
         "noForecast": "Inga prognosdata tillgängliga"
       }
     },
@@ -2793,7 +2797,7 @@
       "invalid": {
         "title": "Vissa händelser kan inte visas",
         "description": "{count, plural, one {En händelse har ett ogiltigt datum eller ej stödd tidszon.} other {# händelser har ett ogiltigt datum eller ej stödd tidszon.}}",
-        "value": "Unavailable"
+        "value": ""
       },
       "alert": {
         "notifications": "Webbläsarens aviseringar",
@@ -2802,14 +2806,14 @@
       }
     },
     "timer": {
-      "name": "Timer / Pomodoro",
+      "name": "",
       "description": "Kör en enkel timer eller en konfigurerbar Pomodoro sekvens.",
       "option": {
         "mode": {
           "label": "Läge",
           "options": {
-            "timer": "Timer",
-            "pomodoro": "Pomodoro"
+            "timer": "",
+            "pomodoro": ""
           }
         },
         "timerMinutes": {
@@ -2835,7 +2839,7 @@
         }
       },
       "phase": {
-        "timer": "Timer",
+        "timer": "",
         "focus": "Fokus",
         "shortBreak": "Kort paus",
         "longBreak": "Lång paus"
@@ -2843,10 +2847,10 @@
       "action": {
         "start": "Starta",
         "pause": "Pausa",
-        "reset": "Reset"
+        "reset": ""
       },
       "attention": {
-        "timerComplete": "Timer complete",
+        "timerComplete": "",
         "phaseReady": "{phase} redo"
       },
       "progress": "Timer framsteg: {progress}%",
@@ -2854,11 +2858,11 @@
         "completedFocus": "{count, plural, =0 {Inga fokussessioner slutförda} one {# fokussessionen slutförd} other {# fokussessioner slutförda}}"
       },
       "alert": {
-        "title": "Timer complete",
+        "title": "",
         "completed": "{phase} slutförd."
       },
       "advanced": {
-        "sequence": "Pomodoro sequence",
+        "sequence": "",
         "focusSession": "Fokusera {session}",
         "settings": "Permanenta inställningar",
         "settingsHint": "Använd widget-snabbmenyn för att redigera dessa tavelinställningar.",
@@ -3080,7 +3084,7 @@
       "state": {
         "on": "På",
         "off": "Av",
-        "unavailable": "Unavailable",
+        "unavailable": "",
         "unknown": "Okänt"
       },
       "advanced": {
@@ -3235,6 +3239,13 @@
         },
         "showUnmonitored": {
           "label": "Visa även det som ej monitoreras"
+        },
+        "viewMode": {
+          "label": "Visa"
+        },
+        "hideHeader": {
+          "label": "",
+          "description": ""
         }
       },
       "advanced": {
@@ -3243,6 +3254,22 @@
         "eventCount": "{count, plural, one {# händelse} other {# händelser}}",
         "loading": "Laddar kalenderhändelser...",
         "noEvents": "Inga händelser i denna månad"
+      },
+      "view": {
+        "compact": "Kompakt månad",
+        "month": "Månad",
+        "week": "Vecka",
+        "day": "Dag",
+        "agenda": "Föredragningslista"
+      },
+      "controls": {
+        "today": "Idag",
+        "previous": "Föregående period",
+        "next": "Nästa period",
+        "noEvents": "Inga händelser i denna period",
+        "more": "{count} mer",
+        "timeSlot": "Tidsgräns",
+        "weekday": "Veckodag"
       }
     },
     "weather": {
@@ -3322,11 +3349,11 @@
         "currentHumidity": "Aktuell luftfuktighet",
         "wind": "Vind / byar ({unit})",
         "currentWind": "Aktuell vind / byar",
-        "windValue": "{speed} / {gusts} {unit}",
+        "windValue": "",
         "windDetail": "Max vind / byar: {speed} / {gusts} {unit}",
         "nextHourPrecipitation": "Nederbörd nästa timme",
         "precipitationChance": "Nederbördschans",
-        "precipitationValue": "{probability}% · {amount} mm",
+        "precipitationValue": "",
         "precipitationDetail": "Nederbörd: {probability}% · {amount} mm",
         "todayUv": "Dagens max UV-index",
         "uvIndex": "Max UV-index: {value}",
@@ -3339,7 +3366,7 @@
           "humidity": "Genomsnittlig fuktighet",
           "wind": "Max vind / byar",
           "uv": "Max UV-index",
-          "daylight": "Daylight"
+          "daylight": ""
         },
         "sun": "Soluppgång / solnedgång",
         "noForecast": "Inga prognosdata tillgängliga"
@@ -3396,7 +3423,7 @@
           "label": "Standardflik"
         },
         "tabOrder": {
-          "label": "Tab order",
+          "label": "",
           "systemFirst": "System sedan kluster",
           "clusterFirst": "Kluster sedan System"
         },
@@ -3548,13 +3575,13 @@
       },
       "server": {
         "buildServer": "Bygg",
-        "resourceCounts": "{applications, plural, one {# app} other {# apps}} / {services, plural, one {# service} other {# services}}",
+        "resourceCounts": "",
         "reachability": "Nöjbarhet",
         "usability": "Användbarhet"
       },
       "source": {
         "url": "Källa: {url}",
-        "unavailable": "{source}: unavailable"
+        "unavailable": ""
       },
       "instances": {
         "title": "Instanser"
@@ -3572,8 +3599,8 @@
         "starting": "Startar",
         "restarting": "Startar om",
         "unknown": "Okänt",
-        "online": "Online",
-        "offline": "Offline",
+        "online": "",
+        "offline": "",
         "reachable": "Oåtkomlig",
         "unreachable": "Onåbar",
         "usable": "Användbar",
@@ -3587,8 +3614,8 @@
       "status": {
         "running": "Körs",
         "notRunning": "Kör inte",
-        "unavailable": "Unavailable",
-        "vpn": "VPN: {status}"
+        "unavailable": "",
+        "vpn": ""
       }
     },
     "ups": {
@@ -3828,7 +3855,7 @@
         "label": "Plats för väder"
       },
       "layout": {
-        "label": "Layout",
+        "label": "",
         "option": {
           "horizontal": "Horisontell",
           "vertical": "Vertikal",
@@ -3926,12 +3953,29 @@
         "transcoding": "Omkodning",
         "paused": "Pausad",
         "remaining": "{minutes} min kvar",
-        "seasonEpisode": "S{season} E{episode}",
+        "seasonEpisode": "",
+        "state": {
+          "playing": "",
+          "buffering": ""
+        },
+        "details": {
+          "device": "",
+          "location": "",
+          "sessionId": "",
+          "bitrate": "",
+          "audioHandling": "",
+          "direct": "",
+          "transcode": "",
+          "containerChanged": "",
+          "position": "",
+          "unknown": ""
+        },
         "metadata": {
           "title": "Nördstatistik",
           "video": {
             "title": "Video",
-            "resolution": "Upplösning"
+            "resolution": "Upplösning",
+            "frameRate": ""
           },
           "audio": {
             "title": "Ljud",
@@ -3952,6 +3996,109 @@
         "playing": "{count} spelar",
         "transcoding": "{count} omkodning"
       }
+    },
+    "thingport-libraryStats": {
+      "name": "",
+      "description": "",
+      "title": "",
+      "option": {
+        "showModels": {
+          "label": ""
+        },
+        "showCollections": {
+          "label": ""
+        },
+        "showCategories": {
+          "label": ""
+        },
+        "showAuthors": {
+          "label": ""
+        }
+      },
+      "models": "",
+      "collections": "",
+      "categories": "Kategorier",
+      "authors": ""
+    },
+    "thingport-featuredModel": {
+      "name": "",
+      "description": "",
+      "option": {
+        "autoRotate": {
+          "label": ""
+        },
+        "showDetails": {
+          "label": ""
+        }
+      },
+      "title": "",
+      "empty": "",
+      "hint": "",
+      "noPreview": "",
+      "views": "",
+      "prints": ""
+    },
+    "thingport-activityHeatmap": {
+      "name": "",
+      "description": "",
+      "title": "",
+      "option": {
+        "weekStart": {
+          "label": "Första dag på veckan",
+          "option": {
+            "sunday": "",
+            "monday": ""
+          }
+        },
+        "showTotal": {
+          "label": ""
+        },
+        "showLegend": {
+          "label": ""
+        }
+      },
+      "lastYear": "",
+      "totalLastYear": "",
+      "totalInYear": "",
+      "dayTotal": "",
+      "dayEmpty": "",
+      "kinds": {
+        "import": "",
+        "upload": "Totalt uppladdat",
+        "download": "Totalt nedladdat",
+        "slicer": "",
+        "delete": "Borttagen"
+      },
+      "less": "",
+      "more": ""
+    },
+    "thingport-models": {
+      "name": "",
+      "description": "",
+      "title": "",
+      "option": {
+        "defaultTab": {
+          "label": ""
+        },
+        "itemCount": {
+          "label": ""
+        },
+        "showThumbnails": {
+          "label": ""
+        }
+      },
+      "tab": {
+        "recentlyAdded": "",
+        "topViewed": "",
+        "topPrinted": ""
+      },
+      "empty": {
+        "recentlyAdded": "",
+        "topViewed": "",
+        "topPrinted": ""
+      },
+      "views": "",
+      "prints": ""
     },
     "paperlessNgx": {
       "description": "Översikt över ditt Paperless-ngx-dokumentarkiv",
@@ -4237,7 +4384,7 @@
       "actions": {
         "previousPhoto": "Föregående foto",
         "nextPhoto": "Nästa foto",
-        "pauseSlideshow": "Pause slideshow",
+        "pauseSlideshow": "",
         "resumeSlideshow": "Återuppta bildspel",
         "toggleSlideshow": "Pausa eller återuppta bildspel",
         "photo": "Foto {number}"
@@ -4755,7 +4902,7 @@
         "updated": "Uppdaterad",
         "metric": {
           "latency": "Latens",
-          "ping": "Ping",
+          "ping": "",
           "uptime": "Drifttid",
           "users": "Användare",
           "guests": "Gäster"
@@ -4764,12 +4911,12 @@
       "card": {
         "vpn": {
           "countConnected": "{count, plural, one {# ansluten} other {# ansluten}}",
-          "label": "VPN"
+          "label": ""
         },
-        "wan": "WAN",
+        "wan": "",
         "web": "Webb",
-        "wifi": "Wi-Fi",
-        "lan": "LAN"
+        "wifi": "",
+        "lan": ""
       },
       "error": {
         "unknownContentOption": "Okänt innehållsalternativ för widgeten med nätverkskontrollersammanfattning: "
@@ -4849,9 +4996,9 @@
         "noInterfaces": "Inget nätverksgränssnitt data ännu"
       },
       "versionUnknown": "Okänd version",
-      "metricAccessible": "{metric}: {value}%, {status}",
+      "metricAccessible": "",
       "status": {
-        "normal": "Normal",
+        "normal": "",
         "warning": "Varning",
         "critical": "Kritisk"
       }
@@ -4869,8 +5016,8 @@
           "option": {
             "auto": "Automatisk",
             "plain": "Oformaterad text",
-            "markdown": "Markdown",
-            "html": "HTML"
+            "markdown": "",
+            "html": ""
           }
         }
       },
@@ -4921,45 +5068,116 @@
     "uptimeKuma": {
       "description": "Övervaka drifttidsstatistik från din Uptime Kuma-statussida",
       "option": {
-        "showAverageUptime": {
-          "label": "Visa genomsnittlig drifttid",
-          "description": "Visa den sammanlagda genomsnittliga drifttiden i procent under 24 timmar"
+        "statusPageSlug": {
+          "label": "",
+          "description": ""
         },
-        "showUptimeRing": {
-          "label": "Visa drifttidsring",
-          "description": "Visa en förloppsring bredvid värdet för genomsnittlig drifttid"
+        "summaryOnly": {
+          "label": "",
+          "description": ""
         },
-        "showTotalMonitors": {
-          "label": "Visa totalt antal monitorer",
-          "description": "Visa det totala antalet konfigurerade monitorer"
+        "showSummary": {
+          "label": "",
+          "description": ""
         },
-        "showUpCount": {
-          "label": "Visa antal aktiva",
-          "description": "Visa hur många monitorer som för närvarande är aktiva"
+        "showIncidents": {
+          "label": "",
+          "description": ""
         },
-        "showDownCount": {
-          "label": "Visa antal inaktiva",
-          "description": "Visa hur många monitorer som för närvarande är inaktiva"
+        "groupByStatusPageGroup": {
+          "label": "",
+          "description": ""
         },
-        "showPausedCount": {
-          "label": "Visa antal pausade",
-          "description": "Visa hur många monitorer som för närvarande är pausade"
+        "showOnlyProblems": {
+          "label": "",
+          "description": ""
+        },
+        "sortBy": {
+          "label": "",
+          "option": {
+            "status": "",
+            "statusPage": "",
+            "name": "Jobbnamn",
+            "uptime": ""
+          }
+        },
+        "showHeartbeatBar": {
+          "label": "",
+          "description": ""
+        },
+        "showUptime": {
+          "label": ""
+        },
+        "showResponseTime": {
+          "label": ""
+        },
+        "showCertificateExpiry": {
+          "label": "",
+          "description": ""
         }
-      },
-      "averageUptime": "Genomsnittlig drifttid (24 h)",
-      "stats": {
-        "totalMonitors": "Totalt antal monitorer",
-        "upCount": "Upp",
-        "downCount": "Ner",
-        "pausedCount": "Pausad"
-      },
-      "error": {
-        "internalServerError": "Det gick inte att hämta drifttidsdata"
       },
       "status": {
         "up": "Totalt upp",
         "down": "Nedladdningshastighet ",
-        "paused": "Pausad"
+        "pending": "Väntande",
+        "maintenance": "",
+        "stale": "",
+        "unknown": ""
+      },
+      "overall": {
+        "operational": "",
+        "degraded": "",
+        "outage": "",
+        "maintenance": "",
+        "unknown": ""
+      },
+      "short": {
+        "operational": "",
+        "down": "",
+        "pending": "",
+        "maintenance": "",
+        "unknown": ""
+      },
+      "summary": {
+        "upRatio": "",
+        "upRatioShort": "",
+        "averageUptime": "",
+        "uptimeShort": "",
+        "statusCount": ""
+      },
+      "unit": {
+        "milliseconds": ""
+      },
+      "heartbeatBar": {
+        "label": ""
+      },
+      "detail": {
+        "checked": "",
+        "certificate": ""
+      },
+      "notice": {
+        "label": "",
+        "untitled": ""
+      },
+      "empty": {
+        "title": "",
+        "description": ""
+      },
+      "allClear": "",
+      "error": {
+        "internalServerError": "Det gick inte att hämta drifttidsdata"
+      },
+      "monitorType": {
+        "http": "",
+        "keyword": "",
+        "jsonQuery": "",
+        "port": "",
+        "ping": "",
+        "dns": "",
+        "docker": "",
+        "push": "",
+        "group": "Grupp",
+        "realBrowser": ""
       }
     },
     "traefik": {
@@ -4994,9 +5212,9 @@
         "internalServerError": "Det gick inte att hämta Traefik-data"
       },
       "resourceType": {
-        "router": "Router",
+        "router": "",
         "service": "Tjänst",
-        "middleware": "Middleware"
+        "middleware": ""
       },
       "resourceStatus": {
         "enabled": "Aktiverad",
@@ -5090,7 +5308,7 @@
         "network": "NÄT",
         "up": "UPP",
         "down": "NER",
-        "memoryTooltip": "{used} / {available} ({percent}%)"
+        "memoryTooltip": ""
       }
     },
     "systemDisks": {
@@ -5120,7 +5338,7 @@
       },
       "status": {
         "unhealthy": "Ohälsosam",
-        "smart": "SMART",
+        "smart": "",
         "free": "{percentage}% gratis"
       }
     },
@@ -5337,12 +5555,12 @@
         }
       },
       "period": {
-        "live": "Live",
+        "live": "",
         "oneHour": "1 tim",
         "twelveHours": "12 tim",
         "oneDay": "24t",
-        "oneWeek": "1w",
-        "thirtyDays": "30d"
+        "oneWeek": "",
+        "thirtyDays": ""
       }
     },
     "assistant": {
@@ -5410,26 +5628,26 @@
         }
       },
       "metric": {
-        "system": "System",
+        "system": "",
         "source": "Integration",
-        "hostname": "Hostname",
+        "hostname": "",
         "cpuModel": "CPU modell",
-        "cores": "Cores",
+        "cores": "",
         "memoryTotal": "Totalt minne",
         "memory": "Minne",
         "disk": "Diskett",
         "loadAvg": "Ladda genomsnittet",
         "net": "Netto",
-        "temp": "Temp",
+        "temp": "",
         "battery": "Fladdermus",
         "uptime": "Drifttid",
         "agent": "Agentkommando"
       }
     },
     "llamacpp": {
-      "name": "llama.cpp",
+      "name": "",
       "description": "Visa hälsa, laddad modell och generationshastighet av din lokala llama.cpp server.",
-      "title": "llama.cpp",
+      "title": "",
       "status": {
         "unhealthy": "Ohälsosamt ({status})"
       },
@@ -5457,10 +5675,10 @@
         "unreachable": "llama-servern kan inte nås"
       },
       "unit": {
-        "speed": "{value} t/s",
-        "parameters": "{value}B",
-        "none": "—",
-        "speedShort": "t/s"
+        "speed": "",
+        "parameters": "",
+        "none": "",
+        "speedShort": ""
       },
       "option": {
         "showTitle": {
@@ -5508,23 +5726,23 @@
       "refresh": "Uppdatera statistik",
       "empty": "Öppna widgetinställningar, välj integrationer och lägg sedan till mätvärden.",
       "editorHelp": "Lägg till mätvärden från de integrationer som valts för denna widget. Ändringar sparas med din instrumentpanel.",
-      "source": "Integration",
+      "source": "",
       "metric": "Metrisk",
       "noMetrics": "Ingen statistik tillgänglig för denna integration",
       "add": "Lägg till metrisk",
       "label": "Anpassad etikett",
-      "hidden": "Hidden",
+      "hidden": "",
       "compact": "Kompakta nummer",
       "moveUp": "Flytta uppåt",
       "moveDown": "Flytta nedåt",
       "remove": "Ta bort metriska",
       "loading": "Laddar…",
-      "unavailable": "Unavailable",
+      "unavailable": "",
       "refreshFailed": "Uppdatering misslyckades — visar sparade data",
       "stale": "Sparad data — uppdatera för att uppdatera",
       "table": {
         "value": "Värde",
-        "status": "Status"
+        "status": ""
       },
       "option": {
         "table": {
@@ -5566,10 +5784,12 @@
       "allHidden": "Alla mätvärden är dolda i den här vyn. Använd Anpassa denna vy för att återställa dem."
     },
     "wazuh": {
+      "name": "",
+      "description": "",
       "target": {
-        "api": "Wazuh server API",
+        "api": "",
         "indexer": "Wazuh indexerare",
-        "wazuh": "Wazuh"
+        "wazuh": ""
       },
       "severity": {
         "low": "Låg",
@@ -5584,7 +5804,15 @@
         },
         "certificate": {
           "title": "{target} certifikatet är inte betrott",
-          "description": "Wazuh använder ett självsignerat certifikat som standard. Kör \"Testanslutning\" på integreringen och lita på certifikatet, eller lägg till ditt CA-certifikat under Inställningar → Certifikat."
+          "description": ""
+        },
+        "certificateHostname": {
+          "title": "",
+          "description": ""
+        },
+        "certificateExpired": {
+          "title": "",
+          "description": ""
         },
         "unreachable": {
           "title": "Kan inte nå {target}",
@@ -5609,101 +5837,148 @@
         "unknown": {
           "title": "Kunde inte ladda data från {target}",
           "description": "Kontrollera Homarr loggar för detaljer."
-        }
+        },
+        "viewSaveTitle": "",
+        "viewSaveMessage": ""
       },
       "range": {
         "1h": "1 tim",
         "24h": "24t",
-        "7d": "7d",
-        "30d": "30d"
+        "7d": "",
+        "30d": ""
       },
-      "levelTooltip": "Regelnivå {level} ({severity})"
-    },
-    "wazuhAgents": {
-      "name": "Wazuh agenter",
-      "description": "Sorterbar lista över Wazuh agenter med status, OS, version och senaste förvaring",
+      "levelTooltip": "Regelnivå {level} ({severity})",
+      "summary": {
+        "title": "Varningens svårighetsgrad · {range}",
+        "alerts": "varningar",
+        "none": "Inga varningar",
+        "trend": {
+          "new": "ny",
+          "tooltip": "Föregående period: {previous}"
+        },
+        "previous": "Föregående {range}: {count}",
+        "maxLevel": "Max nivå {level}",
+        "health": "Indexerare hälsa: {status}",
+        "manager": "Chef {version}"
+      },
+      "alerts": {
+        "title": "Varningar · nivå {level}+ · {hours}h",
+        "empty": "Inga varningar på denna nivå. Allt tyst.",
+        "rule": "Regel {id}",
+        "openInDashboard": "Öppna denna varning i Wazuh-instrumentpanelen"
+      },
+      "timeline": {
+        "title": "Varningar tidslinje · {range}",
+        "total": "{count} varningar",
+        "interval": ""
+      },
+      "top": {
+        "title": {
+          "rules": "Topp regler · {range}",
+          "agents": "Bästa agenter · {range}",
+          "sourceIps": "Topp källkods-IP-adresser · {range}",
+          "mitreTactics": "MITRE taktik · {range}",
+          "mitreTechniques": ""
+        },
+        "empty": {
+          "rules": "Inga varningar i denna period",
+          "agents": "Inga varningar i denna period",
+          "sourceIps": "Inga varningar med en källa IP i denna period",
+          "mitreTactics": "Inga varningar mappade till MITRE ATT&CK i denna period",
+          "mitreTechniques": "Inga varningar mappade till MITRE ATT&CK i denna period"
+        },
+        "totalTooltip": "{count} matchande varningar",
+        "private": "",
+        "public": "Allmän",
+        "agents": "Sett på {count} agenter",
+        "others": "{count} fler varningar i andra poster"
+      },
+      "agents": {
+        "title": "Agenter",
+        "total": "{count} agenter",
+        "status": {
+          "active": "Aktiv",
+          "disconnected": "Frånkopplad",
+          "neverConnected": "Aldrig ansluten",
+          "pending": "Väntande"
+        },
+        "statusLabel": {
+          "active": "Aktiv",
+          "disconnected": "Frånkopplad",
+          "never_connected": "Aldrig ansluten",
+          "pending": "Väntande",
+          "unknown": "Okänt"
+        },
+        "live": "",
+        "snapshot": "Ögonblicksbild {age} gammal",
+        "snapshotHint": "Läs från Wazuh-instrumentpanelens agent ögonblicksbild (wazuh-monitoring) tagen på {time}. Lägg till API-uppgifter för live data.",
+        "staleSnapshot": "Agenten ögonblicksbild från {time} är föråldrad. Kontrollera att övervakningsjobbet för Wazuh körs eller lägg till API-uppgifter för servern.",
+        "noDisconnected": "Alla agenter är anslutna",
+        "empty": "Inga agenter matchar detta filter",
+        "column": {
+          "status": "",
+          "name": "Jobbnamn",
+          "ip": "",
+          "os": "",
+          "version": "",
+          "lastKeepAlive": "Håller liv",
+          "groups": "Grupper"
+        },
+        "outdated": "Äldre än den nyaste agentversionen ({version})"
+      },
+      "vulnerabilities": {
+        "title": "Sårbarhet",
+        "topCves": "Topp CVE:er",
+        "score": "Poäng",
+        "agentsShort": "Agenter",
+        "topAgents": "Mest sårbara agenter",
+        "criticalHigh": "Korn / Hög",
+        "totalTooltip": "{count} resultat på {agents} agenter",
+        "affected": "{count} agenter",
+        "empty": "Inga sårbarheter upptäckta",
+        "distribution": "Allvarlighetsfördelning. {unscored} resultat utan poäng visas inte.",
+        "worst": "Värst: {id} ({score}) på {agents} agenter"
+      },
+      "fim": {
+        "title": "Filintegritet · {range}",
+        "event": {
+          "added": "Datum har adderats",
+          "modified": "Ändrad",
+          "deleted": "Borttagen",
+          "unknown": "Ändrad"
+        },
+        "empty": "Inga filintegritetshändelser under denna period",
+        "user": "av {user}",
+        "registry": "Registret"
+      },
+      "authFailures": {
+        "title": "Auto-fel · {hours}h",
+        "seriesTooltip": "Alla agenter under senaste {hours}h",
+        "peak": "Topplista {count}/hink",
+        "empty": "Inga misslyckade inloggningar under denna period",
+        "failed": "Misslyckade inloggningar",
+        "failedHint": "Enda autentiseringsfel (sshd, PAM, Windows-inloggning, ogiltiga användare)",
+        "bruteForce": "",
+        "bruteForceHint": "Korrelerade brute-force regler (flera fel på kort tid, MITRE T1110)",
+        "sourceIps": "Källans IPs",
+        "ipTooltip": "{ip}: {count} fel",
+        "bruteForceCount": ""
+      },
+      "view": {
+        "overview": "",
+        "alerts": "",
+        "timeline": "",
+        "top": "",
+        "agents": "Agenter",
+        "vulnerabilities": "Sårbarhet",
+        "fim": "",
+        "authFailures": ""
+      },
       "option": {
-        "statusFilter": {
-          "label": "Visa agenter"
+        "visibleViews": {
+          "label": "",
+          "description": ""
         },
-        "sortBy": {
-          "label": "Sortera efter"
-        },
-        "showVersion": {
-          "label": "Visa Wazuh versionskolumn"
-        },
-        "showGroups": {
-          "label": "Visa gruppkolumn"
-        }
-      },
-      "title": "Agenter",
-      "total": "{count} agenter",
-      "status": {
-        "active": "Aktiv",
-        "disconnected": "Frånkopplad",
-        "neverConnected": "Aldrig ansluten",
-        "pending": "Väntande"
-      },
-      "statusLabel": {
-        "active": "Aktiv",
-        "disconnected": "Frånkopplad",
-        "never_connected": "Aldrig ansluten",
-        "pending": "Väntande",
-        "unknown": "Okänt"
-      },
-      "live": "Live",
-      "snapshot": "Ögonblicksbild {age} gammal",
-      "snapshotHint": "Läs från Wazuh-instrumentpanelens agent ögonblicksbild (wazuh-monitoring) tagen på {time}. Lägg till API-uppgifter för live data.",
-      "staleSnapshot": "Agenten ögonblicksbild från {time} är föråldrad. Kontrollera att övervakningsjobbet för Wazuh körs eller lägg till API-uppgifter för servern.",
-      "noDisconnected": "Alla agenter är anslutna",
-      "empty": "Inga agenter matchar detta filter",
-      "column": {
-        "status": "Status",
-        "name": "Jobbnamn",
-        "ip": "IP",
-        "os": "OS",
-        "version": "Version",
-        "lastKeepAlive": "Håller liv",
-        "groups": "Grupper"
-      },
-      "outdated": "Äldre än den nyaste agentversionen ({version})"
-    },
-    "wazuhAlerts": {
-      "name": "Wazuh varningar feed",
-      "description": "Nya Wazuh varningar med nivå, MITRE ATT&CK tekniker, agent och källa IP",
-      "option": {
-        "minLevel": {
-          "label": "Minsta regelnivå",
-          "description": "Wazuh nivåer: 0-6 låg, 7-11 medium, 12-14 hög, 15+ kritisk"
-        },
-        "hours": {
-          "label": "Tidsfönster (timmar)"
-        },
-        "limit": {
-          "label": "Antal varningar"
-        },
-        "showMitre": {
-          "label": "Show MITRE ATT&CK techniques"
-        },
-        "showAgent": {
-          "label": "Visa agent"
-        },
-        "showSourceIp": {
-          "label": "Visa käll-IP"
-        },
-        "showRuleId": {
-          "label": "Visa regel-ID"
-        }
-      },
-      "title": "Varningar · nivå {level}+ · {hours}h",
-      "empty": "Inga varningar på denna nivå. Allt tyst.",
-      "rule": "Regel {id}",
-      "openInDashboard": "Öppna denna varning i Wazuh-instrumentpanelen"
-    },
-    "wazuhSummary": {
-      "name": "Wazuh varningens svårighetsgrad",
-      "description": "Uppvärmning av svårighetsgrad med en trend mot föregående period",
-      "option": {
         "range": {
           "label": "Tidsintervall"
         },
@@ -5712,26 +5987,6 @@
         },
         "showFooter": {
           "label": "Visa sidfot"
-        }
-      },
-      "title": "Varningens svårighetsgrad · {range}",
-      "alerts": "varningar",
-      "none": "Inga varningar",
-      "trend": {
-        "new": "ny",
-        "tooltip": "Föregående period: {previous}"
-      },
-      "previous": "Föregående {range}: {count}",
-      "maxLevel": "Max nivå {level}",
-      "health": "Indexerare hälsa: {status}",
-      "manager": "Chef {version}"
-    },
-    "wazuhTimeline": {
-      "name": "Wazuh alerts timeline",
-      "description": "Staplat diagram över Wazuh varningar över tiden genom svårighetsgrad",
-      "option": {
-        "range": {
-          "label": "Tidsintervall"
         },
         "interval": {
           "label": "Intervall"
@@ -5744,60 +5999,32 @@
           "description": "Kvadratrot håller höga och kritiska varningar synliga bredvid tusentals låga"
         },
         "minLevel": {
-          "label": "Minsta regelnivå"
+          "label": ""
         },
         "showLegend": {
           "label": "Visa legend med summor"
-        }
-      },
-      "title": "Varningar tidslinje · {range}",
-      "total": "{count} varningar",
-      "interval": "per {interval}"
-    },
-    "wazuhTopList": {
-      "name": "Wazuh topplista",
-      "description": "Topp regler, agenter, källa IPs eller MITRE ATT&CK taktik och tekniker genom varning räkna",
-      "option": {
-        "kind": {
+        },
+        "topKind": {
           "label": "Rankning"
         },
-        "range": {
-          "label": "Tidsintervall"
-        },
-        "limit": {
-          "label": "Antal poster"
-        },
-        "minLevel": {
-          "label": "Minsta regelnivå"
+        "topLimit": {
+          "label": ""
         },
         "showBars": {
           "label": "Visa staplar"
-        }
-      },
-      "title": {
-        "rules": "Topp regler · {range}",
-        "agents": "Bästa agenter · {range}",
-        "sourceIps": "Topp källkods-IP-adresser · {range}",
-        "mitreTactics": "MITRE taktik · {range}",
-        "mitreTechniques": "MITRE techniques · {range}"
-      },
-      "empty": {
-        "rules": "Inga varningar i denna period",
-        "agents": "Inga varningar i denna period",
-        "sourceIps": "Inga varningar med en källa IP i denna period",
-        "mitreTactics": "Inga varningar mappade till MITRE ATT&CK i denna period",
-        "mitreTechniques": "Inga varningar mappade till MITRE ATT&CK i denna period"
-      },
-      "totalTooltip": "{count} matchande varningar",
-      "private": "LAN",
-      "public": "Allmän",
-      "agents": "Sett på {count} agenter",
-      "others": "{count} fler varningar i andra poster"
-    },
-    "wazuhVulnerabilities": {
-      "name": "Wazuh sårbarheter",
-      "description": "Sårbarhet räknas, topp CVEs och de mest sårbara agenterna",
-      "option": {
+        },
+        "agentStatusFilter": {
+          "label": "Visa agenter"
+        },
+        "agentSortBy": {
+          "label": "Sortera efter"
+        },
+        "showVersion": {
+          "label": ""
+        },
+        "showGroups": {
+          "label": ""
+        },
         "cveOrder": {
           "label": "Rank CVEs av"
         },
@@ -5812,73 +6039,42 @@
         },
         "showAgents": {
           "label": "Visa mest sårbara agenter"
-        }
-      },
-      "title": "Sårbarhet",
-      "topCves": "Topp CVE:er",
-      "score": "Poäng",
-      "agentsShort": "Agenter",
-      "topAgents": "Mest sårbara agenter",
-      "criticalHigh": "Korn / Hög",
-      "totalTooltip": "{count} resultat på {agents} agenter",
-      "affected": "{count} agenter",
-      "empty": "Inga sårbarheter upptäckta",
-      "distribution": "Allvarlighetsfördelning. {unscored} resultat utan poäng visas inte.",
-      "worst": "Värst: {id} ({score}) på {agents} agenter"
-    },
-    "wazuhFim": {
-      "name": "Wazuh filintegritet",
-      "description": "Senaste filintegritetskontroll (syscheck) händelser",
-      "option": {
-        "range": {
-          "label": "Tidsintervall"
         },
-        "event": {
+        "fimEvent": {
           "label": "Händelser"
         },
-        "limit": {
-          "label": "Antal händelser"
+        "fimLimit": {
+          "label": ""
         },
         "includeRegistry": {
           "label": "Inkludera händelser i Windows-registret"
-        }
-      },
-      "title": "Filintegritet · {range}",
-      "event": {
-        "added": "Datum har adderats",
-        "modified": "Ändrad",
-        "deleted": "Borttagen",
-        "unknown": "Ändrad"
-      },
-      "empty": "Inga filintegritetshändelser under denna period",
-      "user": "av {user}",
-      "registry": "Registret"
-    },
-    "wazuhAuthFailures": {
-      "name": "Wazuh autentiseringsfel",
-      "description": "Misslyckade inloggningar och brute-force varningar per agent med timvis sparklines",
-      "option": {
-        "hours": {
-          "label": "Tidsfönster (timmar)"
         },
-        "limit": {
-          "label": "Antal agenter"
+        "authLimit": {
+          "label": ""
         },
         "showSourceIps": {
           "label": "Visa topp-källans IP-adresser"
+        },
+        "alertsMinLevel": {
+          "label": "",
+          "description": "Wazuh nivåer: 0-6 låg, 7-11 medium, 12-14 hög, 15+ kritisk"
+        },
+        "alertsLimit": {
+          "label": ""
+        },
+        "showMitre": {
+          "label": ""
+        },
+        "showAgent": {
+          "label": "Visa agent"
+        },
+        "showSourceIp": {
+          "label": "Visa käll-IP"
+        },
+        "showRuleId": {
+          "label": "Visa regel-ID"
         }
-      },
-      "title": "Auto-fel · {hours}h",
-      "seriesTooltip": "Alla agenter under senaste {hours}h",
-      "peak": "Topplista {count}/hink",
-      "empty": "Inga misslyckade inloggningar under denna period",
-      "failed": "Misslyckade inloggningar",
-      "failedHint": "Enda autentiseringsfel (sshd, PAM, Windows-inloggning, ogiltiga användare)",
-      "bruteForce": "Brute force",
-      "bruteForceHint": "Korrelerade brute-force regler (flera fel på kort tid, MITRE T1110)",
-      "sourceIps": "Källans IPs",
-      "ipTooltip": "{ip}: {count} fel",
-      "bruteForceCount": "{count} brute force"
+      }
     }
   },
   "widgetPreview": {
@@ -5935,7 +6131,7 @@
         "preview": "Förhandsgranskning av {name} med {count} objekt",
         "currentHidden": "Nuvarande forum: {name}",
         "keyboard": {
-          "navigate": "Navigate",
+          "navigate": "",
           "open": "Öppna",
           "instructions": "Skriv för att filtrera tavlor. Använd piltangenterna för att flytta igenom resultaten och Enter för att öppna en tavla."
         },
@@ -6158,12 +6354,12 @@
             "columns": "kolumner",
             "empty": "Denna layout är tom",
             "dynamicSection": "Dynamisk sektion",
-            "editorWidthLabel": "{layoutName} · {width}px"
+            "editorWidthLabel": ""
           },
           "reset": {
             "action": "Återställ från bas",
             "confirm": {
-              "title": "Reset {layoutName}?",
+              "title": "",
               "message": "Detta ersätter varje sparad position och storlek i denna layout med en ny layout genererad från Basen. Detta kan inte ångras."
             }
           },
@@ -6292,9 +6488,9 @@
         "label": "Fasta sidofält",
         "description": "Reservera upp till tre dashboard kolumner på vardera sidan. Den återstående duken reflekteras automatiskt.",
         "left": {
-          "label": "Left sidebar",
+          "label": "",
           "description": "Håll detta område synligt medan instrumentbrädan rullar.",
-          "thumbLabel": "Left sidebar width"
+          "thumbLabel": ""
         },
         "right": {
           "label": "Höger sidofält",
@@ -6706,7 +6902,7 @@
             "groups": {
               "identity": "Identitet",
               "appearance": "Utseende",
-              "customCss": "Custom CSS",
+              "customCss": "",
               "authentication": "Autentisering"
             },
             "identity": {
@@ -6720,7 +6916,7 @@
             },
             "logo": {
               "label": "Applikationens logotyp",
-              "placeholder": "/logo/logo.png"
+              "placeholder": ""
             },
             "favicon": {
               "label": "Webbläsar-ikon (favicon)",
@@ -6738,7 +6934,7 @@
             },
             "signInBackground": {
               "label": "Autentisering bakgrund",
-              "placeholder": "https://example.com/background.jpg"
+              "placeholder": ""
             },
             "signInOverlay": {
               "label": "Bakgrundsöverlagring"
@@ -6766,7 +6962,7 @@
             "summary": {
               "title": "Nuvarande varumärke",
               "cornerStyle": "Hörnstil",
-              "palette": "Palette",
+              "palette": "",
               "backgroundConfigured": "Anpassad bakgrund · {overlay}% överlagring",
               "backgroundDefault": "Standard bakgrund",
               "greetingConfigured": "Anpassad hälsning",
@@ -7072,7 +7268,7 @@
                 }
               },
               "provenance": {
-                "oauth": "OAuth",
+                "oauth": "",
                 "unattributed": "Manuell eller äldre API-nyckel",
                 "unnamedClient": "Klientnamnet är inte inspelat",
                 "clientNameHint": "Klientnamn är självrapporterade och är inte verifierade.",
@@ -7317,11 +7513,11 @@
       "health": {
         "layer": {
           "docker": "Docker",
-          "integrationConfiguration": "Integration",
+          "integrationConfiguration": "",
           "authentication": "Autentisering",
           "apiRequest": "API",
-          "appRepresentation": "App",
-          "widgetConfiguration": "Widget",
+          "appRepresentation": "",
+          "widgetConfiguration": "",
           "widgetQuery": "Widget fråga"
         },
         "status": {
@@ -7501,8 +7697,8 @@
       },
       "status": {
         "available": "Tillgänglig",
-        "degraded": "Metrics unavailable",
-        "unavailable": "Unavailable"
+        "degraded": "",
+        "unavailable": ""
       },
       "unavailable": "Denna Kubernetes kontext kan inte nås. Välj en annan kontext eller verifiera dess uppgifter och slutpunkt.",
       "metricsUnavailable": "Denna kontext är nåbar, men Metrics Server är inte tillgänglig. Inventering förblir tillgänglig utan levande CPU och minnesanvändning."
@@ -7534,7 +7730,7 @@
     },
     "nodes": {
       "field": {
-        "metricsUnavailable": "Unavailable",
+        "metricsUnavailable": "",
         "kubernetesVersion": {
           "label": "Kubernetes-version"
         }
@@ -7639,7 +7835,7 @@
         "label": "Jobbstatus"
       },
       "status": {
-        "label": "Status"
+        "label": ""
       },
       "type": {
         "label": "Nedladdningsklientens typ"
@@ -7772,7 +7968,7 @@
         "placeholder": "Sök med en extern sökmotor"
       },
       "media": {
-        "label": "Media",
+        "label": "",
         "placeholder": "Sök efter en film eller serie",
         "fallback": "Sök media efter \"{query}\""
       },
@@ -7786,7 +7982,7 @@
       "modeAriaLabel": "{mode} läge",
       "resultsAriaLabel": "{mode} resultat",
       "footer": {
-        "navigate": "Navigate",
+        "navigate": "",
         "open": "Öppna",
         "close": "Stäng"
       }
@@ -8235,7 +8431,7 @@
           "interactive": "Interaktiv, använder en integration",
           "type": {
             "generic": "URL mall",
-            "fromIntegration": "Integration"
+            "fromIntegration": ""
           }
         },
         "create": {
@@ -8554,7 +8750,7 @@
       "reasoning": {
         "auto": "Automatiskt",
         "none": "Av",
-        "minimal": "Minimal",
+        "minimal": "",
         "low": "Låg",
         "medium": "Mellan",
         "high": "Hög"
@@ -8630,7 +8826,7 @@
       "tools": "Tillgängliga verktyg"
     },
     "markdown": {
-      "diagram": "Diagram",
+      "diagram": "",
       "renderingDiagram": "Renderar diagram…",
       "diagramUnavailable": "Detta diagram kunde inte renderas."
     },
@@ -8643,13 +8839,13 @@
       "designWidget": "Förbered en en-prompt anpassad widget"
     },
     "usage": {
-      "tokens": "tokens",
+      "tokens": "",
       "contextWindow": "Kontext fönster",
       "requestDetails": "Begär detaljer",
       "used": "Senaste steg",
       "remaining": "Återstående",
       "capacity": "Kapacitet",
-      "input": "Input",
+      "input": "",
       "output": "Utdata",
       "cached": "Cachad inmatning",
       "cacheWrite": "Skriva cacher",
@@ -8683,9 +8879,9 @@
       "notReported": "Ej rapporterad",
       "agentSteps": "Agentkommando",
       "step": "Steg {number}",
-      "generation": "Generation"
+      "generation": ""
     },
-    "toolInput": "Input",
+    "toolInput": "",
     "toolOutput": "Utdata",
     "toolActivity": {
       "iconSearch": "Letar efter ”{query}” ikoner",
@@ -8778,16 +8974,16 @@
       "automaticContinue": "Godkännande av föreslagna ändringar automatiskt",
       "resetAll": "Återställ alla ändringar",
       "tabs": {
-        "css": "Custom CSS",
+        "css": "",
         "appearance": "Utseende",
         "background": "Bakgrund",
         "general": "Generellt"
       },
       "cssDescription": "Redigera hela stilmallen. Befintliga regler hålls om de inte tas bort här.",
       "cssCharacters": "{count} av 16384 tecken",
-      "copyCss": "Copy CSS",
+      "copyCss": "",
       "copied": "Kopierad",
-      "restoreCss": "Restore current CSS",
+      "restoreCss": "",
       "remoteCssTitle": "Denna CSS laddar en fjärrresurs",
       "remoteCssDescription": "Importerade stilmallar och fjärr-URL:er kontaktar en annan server när forumet laddas. Granska dem innan du fortsätter."
     },
@@ -8811,7 +9007,7 @@
       "errorDescription": "Modellen gav inte en komplett widget konfiguration. Ingen widget har lagts till."
     },
     "approvalRequired": "Godkännande krävs",
-    "complete": "Complete",
+    "complete": "",
     "denied": "Nekad",
     "failed": "Misslyckades",
     "working": "Arbetar",

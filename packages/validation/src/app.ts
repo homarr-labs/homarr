@@ -2,9 +2,6 @@ import { z } from "zod/v4";
 
 export const appHrefSchema = z
   .string()
-  .trim()
-  .refine((val) => !/^javascript:/i.test(val), "JavaScript URIs are not permitted")
-  .or(z.literal(""))
   .transform((value) => (value.length === 0 ? null : value))
   .nullable();
 

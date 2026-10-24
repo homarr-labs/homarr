@@ -1,4 +1,92 @@
 ## What's Changed
+* docs(agents): require browser before/after evidence for AI PRs and restrict triage skill to maintainers by @ajnart in https://github.com/homarr-labs/homarr/pull/7283
+* fix(tdarr): refresh media transcoding data automatically by @Riccardo-Vecchi in https://github.com/homarr-labs/homarr/pull/7278
+* fix(calendar): restore compact calendar font sizing by @ajnart in https://github.com/homarr-labs/homarr/pull/7284
+* chore(lang): updated translations from crowdin by @homarr-crowdin[bot] in https://github.com/homarr-labs/homarr/pull/7279
+* chore(release): automatic release v2.8.2 by @github-actions[bot] in https://github.com/homarr-labs/homarr/pull/7288
+
+
+**Full Changelog**: https://github.com/homarr-labs/homarr/compare/v2.8.1...v2.8.2
+
+## What's Changed
+* fix(deps): patch Next.js security vulnerabilities by @ajnart in https://github.com/homarr-labs/homarr/pull/7280
+* chore(release): automatic release v2.8.1 by @github-actions[bot] in https://github.com/homarr-labs/homarr/pull/7281
+
+
+**Full Changelog**: https://github.com/homarr-labs/homarr/compare/v2.8.0...v2.8.1
+
+## What's Changed
+* feat(ci): sync triage replies with GitHub Projects by @ajnart in https://github.com/homarr-labs/homarr/pull/7249
+* chore: update bug report template by @homarr-releases[bot] in https://github.com/homarr-labs/homarr/pull/7251
+* i18n(cn): complete the Simplified Chinese catalog (266 missing keys) by @ApplesBear-X in https://github.com/homarr-labs/homarr/pull/7252
+* fix: remove custom widget network filtering by @ajnart in https://github.com/homarr-labs/homarr/pull/7120
+* chore(deps): update node.js to v24.22.1 [security] by @RedwindA in https://github.com/homarr-labs/homarr/pull/7267
+* chore(deps): update oven/bun docker tag to v1.4.3 by @homarr-renovate[bot] in https://github.com/homarr-labs/homarr/pull/7269
+* chore(deps): update dependency bun to v1.4.3 by @homarr-renovate[bot] in https://github.com/homarr-labs/homarr/pull/7268
+* chore(lang): updated translations from crowdin by @homarr-crowdin[bot] in https://github.com/homarr-labs/homarr/pull/7259
+* fix(coolify): use linked app URL for widget links by @darbyjack in https://github.com/homarr-labs/homarr/pull/7261
+* feat(jellyfin): show series name on episode release tiles by @darbyjack in https://github.com/homarr-labs/homarr/pull/7260
+* feat(uptime-kuma): add summary-only mode and per-widget status pages by @ajnart in https://github.com/homarr-labs/homarr/pull/7264
+* docs(agents): add Homarr triage skill by @ajnart in https://github.com/homarr-labs/homarr/pull/7263
+* fix(calendar): make view a widget option only and use hover for details by @ajnart in https://github.com/homarr-labs/homarr/pull/7266
+* chore(release): automatic release v2.8.0 by @github-actions[bot] in https://github.com/homarr-labs/homarr/pull/7276
+
+## New Contributors
+* @ApplesBear-X made their first contribution in https://github.com/homarr-labs/homarr/pull/7252
+* @RedwindA made their first contribution in https://github.com/homarr-labs/homarr/pull/7267
+
+**Full Changelog**: https://github.com/homarr-labs/homarr/compare/v2.7.0...v2.8.0
+
+## What's Changed
+* chore(lang): updated translations from crowdin by @homarr-crowdin[bot] in https://github.com/homarr-labs/homarr/pull/7204
+* docs: clarify request limits, Kuma API checks, and JSX icons by @ajnart in https://github.com/homarr-labs/homarr/pull/7205
+* docs(helm): update chart installation page by @homarr-charts-docs-sync[bot] in https://github.com/homarr-labs/homarr/pull/7203
+* chore: update bug report template by @homarr-releases[bot] in https://github.com/homarr-labs/homarr/pull/7173
+* chore: update contributors by @homarr-update-contributors[bot] in https://github.com/homarr-labs/homarr/pull/7208
+* chore(lang): updated translations from crowdin by @homarr-crowdin[bot] in https://github.com/homarr-labs/homarr/pull/7212
+* feat(calendar): add saved calendar view switching by @ajnart in https://github.com/homarr-labs/homarr/pull/7125
+* fix: restore DNS behavior from 2.0.0 by @ajnart in https://github.com/homarr-labs/homarr/pull/7207
+* fix(auth): support anonymous LDAP service binds by @ajnart in https://github.com/homarr-labs/homarr/pull/7175
+* fix(downloads): select qBittorrent jobs before display limit by @ajnart in https://github.com/homarr-labs/homarr/pull/7107
+* fix(media-server): let page scrolling pass through the streams widget by @Bergasha in https://github.com/homarr-labs/homarr/pull/7227
+* docs(env): document ENABLE_DOCKER and ENABLE_KUBERNETES by @pcbeingused333 in https://github.com/homarr-labs/homarr/pull/7221
+* fix(ui): preserve profile theme selection by @ajnart in https://github.com/homarr-labs/homarr/pull/7218
+* fix(docker): retain configured columns and compact table widths by @ajnart in https://github.com/homarr-labs/homarr/pull/7101
+* docs(env): clarify Docker demo exception by @ajnart in https://github.com/homarr-labs/homarr/pull/7230
+* ci: pin the third-party actions, branch-scope the image caches and drop the checkout token where nothing pushes by @Totara-thib in https://github.com/homarr-labs/homarr/pull/7072
+* feat(integrations): add sportarr by @Sportarr in https://github.com/homarr-labs/homarr/pull/6518
+* chore: update integrations list readme by @homarr-update-contributors[bot] in https://github.com/homarr-labs/homarr/pull/7234
+* chore(lang): updated translations from crowdin by @homarr-crowdin[bot] in https://github.com/homarr-labs/homarr/pull/7222
+* fix(board): preserve collapsed container order by @ajnart in https://github.com/homarr-labs/homarr/pull/7200
+* fix(board): clip collapsed container overflow by @ajnart in https://github.com/homarr-labs/homarr/pull/7232
+* fix(apps): remove app URL validation by @ajnart in https://github.com/homarr-labs/homarr/pull/7238
+* fix(synology): submit login parameters in form body by @ajnart in https://github.com/homarr-labs/homarr/pull/7229
+* fix(releases): avoid long provider loading delays by @ajnart in https://github.com/homarr-labs/homarr/pull/7193
+* fix(beszel): align usage color thresholds with upstream by @ajnart in https://github.com/homarr-labs/homarr/pull/7244
+* feat(auth): log client IP on failed logins by @TameTheGame in https://github.com/homarr-labs/homarr/pull/7242
+* feat(media-server): redesign the session details popup by @Bergasha in https://github.com/homarr-labs/homarr/pull/7228
+* fix(integrations): make Emby RunTimeTicks optional for media releases by @pcbeingused333 in https://github.com/homarr-labs/homarr/pull/7220
+* fix(widgets): keep docker rows visible on wide cards by @ZikriBen in https://github.com/homarr-labs/homarr/pull/7168
+* feat(app-form): suggest the icon of the app website in the image picker by @junkerderprovinz in https://github.com/homarr-labs/homarr/pull/6562
+* chore(lang): updated translations from crowdin by @homarr-crowdin[bot] in https://github.com/homarr-labs/homarr/pull/7246
+* fix(security): harden session payload, integration grants, integration test, releases and RSS by @ajnart in https://github.com/homarr-labs/homarr/pull/7243
+* feat(uptime-kuma): rework integration and widget around status page heartbeats by @ajnart in https://github.com/homarr-labs/homarr/pull/7213
+* feat(integrations): add Thingport integration and widgets by @TautvydasDerzinskas in https://github.com/homarr-labs/homarr/pull/7223
+* feat(releases): hide Docker suggestions per item by @ajnart in https://github.com/homarr-labs/homarr/pull/7239
+* chore: update integrations list readme by @homarr-update-contributors[bot] in https://github.com/homarr-labs/homarr/pull/7248
+* fix(wazuh): consolidate views and indexer certificate handling by @Nerdy-Technician in https://github.com/homarr-labs/homarr/pull/7211
+* chore(release): automatic release v2.7.0 by @github-actions[bot] in https://github.com/homarr-labs/homarr/pull/7250
+
+## New Contributors
+* @pcbeingused333 made their first contribution in https://github.com/homarr-labs/homarr/pull/7221
+* @Totara-thib made their first contribution in https://github.com/homarr-labs/homarr/pull/7072
+* @Sportarr made their first contribution in https://github.com/homarr-labs/homarr/pull/6518
+* @TameTheGame made their first contribution in https://github.com/homarr-labs/homarr/pull/7242
+* @TautvydasDerzinskas made their first contribution in https://github.com/homarr-labs/homarr/pull/7223
+
+**Full Changelog**: https://github.com/homarr-labs/homarr/compare/v2.6.0...v2.7.0
+
+## What's Changed
 * chore: update bug report template by @homarr-releases[bot] in https://github.com/homarr-labs/homarr/pull/7169
 * feat(releases): show running versions from linked integrations by @hasier in https://github.com/homarr-labs/homarr/pull/7149
 * ci: don't fail integration list workflow when readme is unchanged by @ajnart in https://github.com/homarr-labs/homarr/pull/7171
