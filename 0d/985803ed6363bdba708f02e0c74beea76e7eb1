@@ -1,0 +1,24 @@
+apps/nextjs/src/app/[locale]/boards/(content)/_header-actions.tsx
+  h_d6e478ca18e517 3,13,21,80,96-99,115,118
+apps/nextjs/src/app/api/mcp/_handler.ts
+  h_d6e478ca18e517 24,216
+apps/nextjs/src/components/board/layout/normalize-board-layout-bounds.ts
+  h_d6e478ca18e517 1-61
+packages/api/src/router/board.ts
+  h_d6e478ca18e517 71-72,146-150,1719,1724,1733,2395-2400,2465-2466
+packages/validation/src/board-layout-bounds-error.ts
+  h_d6e478ca18e517 1
+packages/validation/src/board-layout-bounds.ts
+  h_d6e478ca18e517 1-82
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "0d985803ed6363bdba708f02e0c74beea76e7eb1",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
