@@ -1,0 +1,90 @@
+scripts/benchmarks/custom-widgets/.gitignore
+  h_d6e478ca18e517 1
+scripts/benchmarks/custom-widgets/README.md
+  h_d6e478ca18e517 1-107
+scripts/benchmarks/custom-widgets/check-syntax.mjs
+  h_d6e478ca18e517 1-20
+scripts/benchmarks/custom-widgets/evidence/provenance.json
+  h_d6e478ca18e517 1-199
+scripts/benchmarks/custom-widgets/evidence/runtime/after-1.jsonl
+  h_d6e478ca18e517 1
+scripts/benchmarks/custom-widgets/evidence/runtime/after-2.jsonl
+  h_d6e478ca18e517 1
+scripts/benchmarks/custom-widgets/evidence/runtime/after-counts.jsonl
+  h_d6e478ca18e517 1
+scripts/benchmarks/custom-widgets/evidence/runtime/before-1.jsonl
+  h_d6e478ca18e517 1
+scripts/benchmarks/custom-widgets/evidence/runtime/before-2.jsonl
+  h_d6e478ca18e517 1
+scripts/benchmarks/custom-widgets/evidence/runtime/before-counts.jsonl
+  h_d6e478ca18e517 1
+scripts/benchmarks/custom-widgets/evidence/runtime/source-hashes.json
+  h_d6e478ca18e517 1-9
+scripts/benchmarks/custom-widgets/evidence/server/management-after-1.json
+  h_d6e478ca18e517 1-484
+scripts/benchmarks/custom-widgets/evidence/server/management-after-2.json
+  h_d6e478ca18e517 1-484
+scripts/benchmarks/custom-widgets/evidence/server/management-before-1.json
+  h_d6e478ca18e517 1-484
+scripts/benchmarks/custom-widgets/evidence/server/management-before-2.json
+  h_d6e478ca18e517 1-484
+scripts/benchmarks/custom-widgets/evidence/server/response-after-1.json
+  h_d6e478ca18e517 1-266
+scripts/benchmarks/custom-widgets/evidence/server/response-after-2.json
+  h_d6e478ca18e517 1-266
+scripts/benchmarks/custom-widgets/evidence/server/response-before-1.json
+  h_d6e478ca18e517 1-266
+scripts/benchmarks/custom-widgets/evidence/server/response-before-2.json
+  h_d6e478ca18e517 1-266
+scripts/benchmarks/custom-widgets/evidence/server/router-after-2.json
+  h_d6e478ca18e517 1-1244
+scripts/benchmarks/custom-widgets/evidence/server/router-after-3.json
+  h_d6e478ca18e517 1-1244
+scripts/benchmarks/custom-widgets/evidence/server/router-before-2.json
+  h_d6e478ca18e517 1-1244
+scripts/benchmarks/custom-widgets/evidence/server/router-before-3.json
+  h_d6e478ca18e517 1-1244
+scripts/benchmarks/custom-widgets/evidence/workbench/browser-after1.json
+  h_d6e478ca18e517 1-32
+scripts/benchmarks/custom-widgets/evidence/workbench/browser-after2.json
+  h_d6e478ca18e517 1-32
+scripts/benchmarks/custom-widgets/evidence/workbench/browser-before1.json
+  h_d6e478ca18e517 1-36
+scripts/benchmarks/custom-widgets/evidence/workbench/browser-before2.json
+  h_d6e478ca18e517 1-36
+scripts/benchmarks/custom-widgets/import-evidence.mjs
+  h_d6e478ca18e517 1-114
+scripts/benchmarks/custom-widgets/run-server.mjs
+  h_d6e478ca18e517 1-24
+scripts/benchmarks/custom-widgets/runtime/fixture.tsx
+  h_d6e478ca18e517 1-439
+scripts/benchmarks/custom-widgets/runtime/run.mjs
+  h_d6e478ca18e517 1-132
+scripts/benchmarks/custom-widgets/server/management.mts
+  h_d6e478ca18e517 1-105
+scripts/benchmarks/custom-widgets/server/response.mts
+  h_d6e478ca18e517 1-84
+scripts/benchmarks/custom-widgets/server/router.mts
+  h_d6e478ca18e517 1-234
+scripts/benchmarks/custom-widgets/summarize.mjs
+  h_d6e478ca18e517 1-93
+scripts/benchmarks/custom-widgets/workbench/browser-entry.tsx
+  h_d6e478ca18e517 1-258
+scripts/benchmarks/custom-widgets/workbench/build-browser.mjs
+  h_d6e478ca18e517 1-105
+scripts/benchmarks/custom-widgets/workbench/run-browser.mjs
+  h_d6e478ca18e517 1-39
+scripts/benchmarks/custom-widgets/workbench/serve.mjs
+  h_d6e478ca18e517 1-27
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "e0734afa75f9dc9ac3052afd6880e9679b7b1d35",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
