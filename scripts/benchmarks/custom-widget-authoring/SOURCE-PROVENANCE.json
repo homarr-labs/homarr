@@ -1,0 +1,36 @@
+{
+  "algorithm": "SHA-256",
+  "sourceKind": "unmodified scratch simulator files before packaging",
+  "sourceDirectory": "homarr-custom-widget-workspace/sim",
+  "intendedDirectory": "scripts/benchmarks/custom-widget-authoring",
+  "originals": [
+    {
+      "file": "sim.mts",
+      "sha256": "c389286c47eee7dd6158d1904d87a5213e9ccccd274e1efe66cb2375e27fb92f"
+    },
+    {
+      "file": "grade-sim.mts",
+      "sha256": "beaa29131a49ecba7ce4ae612995158ab9d2db28146b16d95e4ca1a75a36ebee"
+    },
+    {
+      "file": "render.mts",
+      "sha256": "c041db5815e4c4f713bd9cc9a241d673c5c1616d7d1f0c2c2e1a66128f364c12"
+    },
+    {
+      "file": "tool.sh",
+      "sha256": "fef7cb5ee06bdd1e499100db3873357cb8f3450a9541761cf1a674f32132f62d"
+    },
+    {
+      "file": "EXECUTOR.md",
+      "sha256": "1d03ed7fc7463d12ae042a0cbc8509d0d6c9811d05462a443ee4c2cb98acc68c"
+    }
+  ],
+  "adaptations": [
+    "ROOT defaults to the repository working directory or explicit environment variable.",
+    "tool.sh resolves its own location, reads ROOT as JSON from run metadata and loads existing tsx and its package tsconfig through mise without requiring a repository working directory.",
+    "render.mts removes three unused scratch imports and adds the existing optional request source field to its local TypeScript shape; rendering behavior is unchanged.",
+    "Grading retains the original runner's experimental-import-meta-resolve flag for root-relative ESM dependency resolution.",
+    "Executor instructions clarify CLI roleplay scope and retain active-tool-only, fixture-failure and persistence rules.",
+    "README documents actual imports, outputs and measurement exclusions; no trial results are included."
+  ]
+}

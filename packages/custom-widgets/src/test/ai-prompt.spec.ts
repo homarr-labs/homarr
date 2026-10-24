@@ -11,10 +11,11 @@ import {
 } from "../core/ai-prompt";
 
 describe("AI prompt", () => {
-  it("uses shipped service examples before researching a matching contract", () => {
-    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("dispatcharr-channels");
-    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("frigate-live-streams");
-    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("load that example once");
+  it("advertises only examples that ship with Homarr", () => {
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("weather-outlook");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("pokedex");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).not.toContain("dispatcharr-channels");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).not.toContain("frigate-live-streams");
   });
 
   it("is self-contained, request-first, and compact", () => {
@@ -119,11 +120,11 @@ describe("AI prompt", () => {
   });
 
   it("makes the connected MCP workflow lazy, batch-capable, and evidence-driven", () => {
-    expect(CUSTOM_WIDGET_ASSISTANT_POLICY.length).toBeLessThan(8_000);
-    expect(CUSTOM_WIDGET_MCP_AUTHORING_PROMPT.length).toBeLessThan(8_500);
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY.length).toBeLessThan(10_500);
+    expect(CUSTOM_WIDGET_MCP_AUTHORING_PROMPT.length).toBeLessThan(11_000);
     expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("do not call customWidget_getSkill");
     expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("Make lifecycle/mutation calls one per step");
-    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("Load required references and uncertain components");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("Resolve uncertain components");
     expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("at most eight needed component documents");
     expect(CUSTOM_WIDGET_TOOL_STAGING_INSTRUCTION).toContain("staged by the authoring lifecycle");
     expect(CUSTOM_WIDGET_TOOL_STAGING_INSTRUCTION).toContain("task-needed");
@@ -163,7 +164,7 @@ describe("AI prompt", () => {
     expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("Render every explicitly required response field once");
     expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("templateLines");
     expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("Send a coherent complete definition directly");
-    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("Sources never contain headers");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("Sources never contain a top-level headers field");
     expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("Never switch to a probe service");
     expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("Never persist a header probe");
     expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("finish unplaced without asking again");
