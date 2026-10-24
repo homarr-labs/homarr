@@ -1,0 +1,38 @@
+apps/nextjs/src/app/[locale]/manage/assistant/_components/assistant-configuration.tsx
+  h_d6e478ca18e517 159-160
+apps/nextjs/src/app/[locale]/manage/layout.tsx
+  h_d6e478ca18e517 167
+apps/nextjs/src/app/[locale]/manage/search-engines/_form.tsx
+  h_d6e478ca18e517 9,33-35,89
+apps/nextjs/src/app/[locale]/manage/tools/kubernetes/kubernetes-context-selector.tsx
+  h_d6e478ca18e517 3,12-14,17,20,28,31,42-47,67
+apps/nextjs/src/app/[locale]/manage/tools/kubernetes/kubernetes-context.constants.ts
+  h_d6e478ca18e517 1
+apps/nextjs/src/app/[locale]/manage/tools/kubernetes/kubernetes-context.ts
+  h_d6e478ca18e517 2,6-7,15,17,20
+apps/nextjs/src/app/[locale]/manage/tools/kubernetes/kubernetes-query-options.ts
+  h_d6e478ca18e517 14-15
+apps/nextjs/src/app/[locale]/manage/tools/kubernetes/layout.tsx
+  h_d6e478ca18e517 2,10,17,21-24
+apps/nextjs/src/app/[locale]/manage/users/[userId]/general/_components/_oauth-connections.tsx
+  h_d6e478ca18e517 20,34,70-71
+apps/nextjs/src/app/[locale]/manage/users/[userId]/general/_components/_reset-tours.tsx
+  h_d6e478ca18e517 12,35-43
+apps/nextjs/src/app/[locale]/manage/users/[userId]/general/page.tsx
+  h_d6e478ca18e517 7,20-21,61-72,97,99
+apps/nextjs/src/components/layout/navigation-link.tsx
+  h_d6e478ca18e517 56,92
+apps/nextjs/src/components/layout/navigation.tsx
+  h_d6e478ca18e517 74
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "176bb8ab1361f3227b3a4d9f9eb2dad6970d6313",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
