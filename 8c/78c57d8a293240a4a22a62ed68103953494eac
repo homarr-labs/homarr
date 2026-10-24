@@ -1,0 +1,16 @@
+packages/widgets/src/bookmarks/bookmarks-widget.tsx
+  h_d6e478ca18e517 100-107,141-142,147
+packages/widgets/src/bookmarks/layout.ts
+  h_d6e478ca18e517 200,208,252-256,260-261,264
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "8c78c57d8a293240a4a22a62ed68103953494eac",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
