@@ -35,7 +35,7 @@ import { useReleaseEntries } from "./use-release-entries";
 
 type RowVariant = "rich" | "mini" | "dense";
 type Density = "micro" | "regular";
-type MarkAllPlacement = "header" | "section";
+type MarkAllPlacement = "header" | "compactHeader" | "section";
 
 const rowIconSizes: Record<RowVariant, number> = { rich: 30, mini: 22, dense: 18 };
 const outdatedIconSizes: Record<RowVariant, number> = { rich: 14, mini: 14, dense: 12 };
@@ -44,7 +44,17 @@ const markViewedSizes: Record<RowVariant, MantineSize> = { rich: "md", mini: "sm
 const caughtUpIconSizes: Record<Density, number> = { micro: 20, regular: 24 };
 const markAllSizes: Record<MarkAllPlacement, { button: MantineSize; icon: number }> = {
   header: { button: "lg", icon: 18 },
+  compactHeader: { button: "md", icon: 16 },
   section: { button: "sm", icon: 14 },
+};
+const headerMarkAllPlacements: Record<ReleaseLayout, MarkAllPlacement> = {
+  comfortable: "header",
+  compact: "compactHeader",
+};
+
+const getCaughtUpIconSize = (density: Density, layout: ReleaseLayout) => {
+  if (layout === "compact") return 16;
+  return caughtUpIconSizes[density];
 };
 
 const getIssueKey = (group: IssueGroup) => `group:${group.key}`;
@@ -328,6 +338,7 @@ const ReleasesInbox = ({
       className={`releases ${classes.root}`}
       data-density={density}
       data-layout={layout}
+      data-narrow={width < 260 || undefined}
       data-edit={isEditMode || undefined}
       style={{ ["--releases-pane-radius" as string]: `var(--mantine-radius-${board.itemRadius})` }}
     >
@@ -347,7 +358,7 @@ const ReleasesInbox = ({
             )}
             {!headline && (
               <div className={classes.caughtUp}>
-                <IconCircleCheck style={zoomCompensatedSize(caughtUpIconSizes[density])} stroke={1.75} />
+                <IconCircleCheck style={zoomCompensatedSize(getCaughtUpIconSize(density, layout))} stroke={1.75} />
                 <span>{t("summary.caughtUp")}</span>
               </div>
             )}
@@ -391,7 +402,9 @@ const ReleasesInbox = ({
                 </UnstyledButton>
               </Tooltip>
             )}
-            {newEntries.length > 0 && <MarkAllButton placement="header" onClick={handleMarkAllViewed} />}
+            {newEntries.length > 0 && (
+              <MarkAllButton placement={headerMarkAllPlacements[layout]} onClick={handleMarkAllViewed} />
+            )}
           </div>
         </header>
       )}
