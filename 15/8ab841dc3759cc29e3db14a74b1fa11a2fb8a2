@@ -1,0 +1,21 @@
+.agents/skills/homarr-custom-widget/SKILL.md
+  s_cb7da52b92f941::t_b0d1ec7e9d824b 32-33
+packages/custom-widgets/src/core/authoring-resources.ts
+  s_cb7da52b92f941::t_0541cfa41ad047 256-257
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "158ab841dc3759cc29e3db14a74b1fa11a2fb8a2",
+  "prompts": {},
+  "sessions": {
+    "s_cb7da52b92f941": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "0dd48e49-fedb-4f47-bd23-f5fcef6c850a",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

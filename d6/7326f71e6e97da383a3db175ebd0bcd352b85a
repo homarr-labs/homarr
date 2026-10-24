@@ -1,0 +1,23 @@
+packages/custom-widgets/src/workbench/code-editor.tsx
+  s_cb7da52b92f941::t_464a0a0838c7f7 6,36,140-143,165,243,275
+packages/custom-widgets/src/workbench/code-language.ts
+  s_cb7da52b92f941::t_cd421b40866dd2 48-51,56-65,68,71
+packages/custom-widgets/src/workbench/preview-response-panel.tsx
+  s_cb7da52b92f941::t_9f3800352dde8d 1,7-8,52-55,133
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "d67326f71e6e97da383a3db175ebd0bcd352b85a",
+  "prompts": {},
+  "sessions": {
+    "s_cb7da52b92f941": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "0dd48e49-fedb-4f47-bd23-f5fcef6c850a",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
