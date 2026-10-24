@@ -1,0 +1,34 @@
+apps/nextjs/src/app/[locale]/manage/tools/kubernetes/configmaps/page.tsx
+  h_d6e478ca18e517 25
+apps/nextjs/src/app/[locale]/manage/tools/kubernetes/ingresses/page.tsx
+  h_d6e478ca18e517 25
+apps/nextjs/src/app/[locale]/manage/tools/kubernetes/kubernetes-context-selector.tsx
+  h_d6e478ca18e517 19,49-52
+apps/nextjs/src/app/[locale]/manage/tools/kubernetes/kubernetes-context.ts
+  h_d6e478ca18e517 5,9-18,26
+apps/nextjs/src/app/[locale]/manage/tools/kubernetes/namespaces/page.tsx
+  h_d6e478ca18e517 25
+apps/nextjs/src/app/[locale]/manage/tools/kubernetes/nodes/page.tsx
+  h_d6e478ca18e517 21
+apps/nextjs/src/app/[locale]/manage/tools/kubernetes/page.tsx
+  h_d6e478ca18e517 26
+apps/nextjs/src/app/[locale]/manage/tools/kubernetes/pods/page.tsx
+  h_d6e478ca18e517 21
+apps/nextjs/src/app/[locale]/manage/tools/kubernetes/secrets/page.tsx
+  h_d6e478ca18e517 21
+apps/nextjs/src/app/[locale]/manage/tools/kubernetes/services/page.tsx
+  h_d6e478ca18e517 21
+apps/nextjs/src/app/[locale]/manage/tools/kubernetes/volumes/page.tsx
+  h_d6e478ca18e517 21
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "377172036b3cd8c039caca07a63641e68a84bcbb",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
