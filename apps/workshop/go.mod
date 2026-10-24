@@ -1,6 +1,6 @@
 module github.com/homarr-labs/homarr/apps/workshop
 
-go 1.27
+go 1.27.3
 
 require (
 	github.com/pocketbase/dbx v1.12.0
