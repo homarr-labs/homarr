@@ -1,8 +1,8 @@
-# syntax=docker/dockerfile:1.25
+# syntax=docker/dockerfile:1.28
 
-ARG POCKETBASE_IMAGE=ghcr.io/muchobien/pocketbase:0.39.9@sha256:c0667fe6c5197ff226ff642120ab1ad870c3f2f27300940a61e5a7fa082b6816
+ARG POCKETBASE_IMAGE=ghcr.io/muchobien/pocketbase:0.40.6@sha256:9a0be68a80ca1348ba8d15f217b3f983be4c094b3c571a09b3ebdeb357259338
 
-FROM golang:1.26.10-alpine@sha256:27f2d3b83cfc5803c8078f8e730af0f7c431bf067afaec8f60a36fb763187cba AS pocketbase-builder
+FROM golang:1.27.3-alpine@sha256:b8c9b82affbbb82a020bbcf998dad2ba9516944ac7e883524642a481a9505e9c AS pocketbase-builder
 WORKDIR /src
 COPY apps/workshop/go.mod apps/workshop/go.sum ./
 RUN --mount=type=cache,id=workshop-go-mod,target=/go/pkg/mod go mod download

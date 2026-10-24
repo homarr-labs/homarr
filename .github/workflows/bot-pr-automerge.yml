@@ -33,7 +33,15 @@ jobs:
           GITHUB_TOKEN: ${{ steps.obtainToken.outputs.token }}
           GH_REPO: ${{ github.repository }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
+          ACTOR_ID: ${{ github.actor_id }}
         run: |
+          if [ "$ACTOR_ID" = "158783068" ] && ! gh pr view "$PR_NUMBER" --json body --jq .body | grep -qF '**Automerge**: Enabled'; then
+            echo "Renovate automerge is disabled for PR #$PR_NUMBER; leaving it for manual review"
+            if [ "$(gh pr view "$PR_NUMBER" --json autoMergeRequest --jq '.autoMergeRequest != null')" = "true" ]; then
+              gh pr merge "$PR_NUMBER" --disable-auto
+            fi
+            exit 0
+          fi
           if [ "$(gh pr view "$PR_NUMBER" --json reviewDecision --jq .reviewDecision)" != "APPROVED" ]; then
             gh pr review "$PR_NUMBER" --approve --body "Automatically approved by Homarr bot policy"
           fi

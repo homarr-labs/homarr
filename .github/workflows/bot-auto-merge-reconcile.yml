@@ -30,9 +30,16 @@ jobs:
           # 210161987: homarr-update-contributors[bot]
           # 175441: homarr-releases[bot]
           gh pr list --repo "$GH_REPO" --base dev --state open --limit 100 \
-            --json number,author,reviewDecision,mergeStateStatus,autoMergeRequest \
-            --jq '.[] | select(.author.login as $login | ["app/homarr-renovate", "app/homarr-crowdin", "app/homarr-update-contributors", "app/homarr-releases"] | index($login)) | select(.reviewDecision == "APPROVED") | select(.mergeStateStatus == "CLEAN") | select(.autoMergeRequest == null) | .number' \
+            --json number,author,body,reviewDecision,mergeStateStatus,autoMergeRequest \
+            --jq '.[] | select(.author.login as $login | ["app/homarr-renovate", "app/homarr-crowdin", "app/homarr-update-contributors", "app/homarr-releases"] | index($login)) | select(.author.login != "app/homarr-renovate" or (.body | contains("**Automerge**: Enabled"))) | select(.reviewDecision == "APPROVED") | select(.mergeStateStatus == "CLEAN") | select(.autoMergeRequest == null) | .number' \
           | while read -r pr; do
               echo "Re-enabling auto-merge on PR #$pr"
               gh pr merge "$pr" --auto --squash
+            done
+          gh pr list --repo "$GH_REPO" --base dev --state open --author app/homarr-renovate --limit 100 \
+            --json number,body,autoMergeRequest \
+            --jq '.[] | select(.body | contains("**Automerge**: Enabled") | not) | select(.autoMergeRequest != null) | .number' \
+          | while read -r pr; do
+              echo "Disabling auto-merge on manual-review Renovate PR #$pr"
+              gh pr merge "$pr" --disable-auto
             done
