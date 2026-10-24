@@ -1,20 +1,27 @@
 .root {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: 4px;
   overflow: hidden;
-  container-type: inline-size;
+  container-type: size;
+}
+.floatingError {
+  display: none;
+  position: absolute;
+  top: 4px;
+  inset-inline-end: 4px;
+  z-index: 1;
 }
 .header {
   display: flex;
   align-items: center;
-  flex-wrap: wrap;
   gap: 4px;
   flex-shrink: 0;
 }
 .navigation {
   flex: 1;
-  min-width: 120px;
+  min-width: 0;
 }
 .dateLabel {
   flex: 1;
@@ -29,6 +36,91 @@
   min-height: 0;
   min-width: 0;
   overflow: hidden;
+  --calendar-header-rows: 1;
+  --calendar-weekday-rows: 1;
+  --calendar-cell: min(
+    100cqw / 7,
+    100cqh / (var(--calendar-weeks) + var(--calendar-header-rows) + var(--calendar-weekday-rows))
+  );
+}
+.root[data-hide-header] .header {
+  display: none;
+}
+.root[data-hide-header] .floatingError {
+  display: block;
+}
+.root[data-hide-header] .body {
+  --calendar-header-rows: 0;
+}
+.root .weekdaysRow {
+  height: calc(var(--calendar-cell) * 0.6);
+}
+.root .weekday {
+  padding: 0;
+  font-size: var(--mantine-font-size-sm);
+}
+.compactDay {
+  --calendar-max-font: var(--mantine-font-size-xs);
+  --calendar-font: clamp(8px, calc(var(--calendar-cell) * 0.6), var(--calendar-max-font));
+  --indicator-size: clamp(3px, calc(var(--calendar-font) * 0.28), 10px);
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--mantine-radius-sm);
+  cursor: pointer;
+}
+.compactDay[data-disabled] {
+  cursor: default;
+}
+.compactDayNumber {
+  font-size: var(--calendar-font);
+  line-height: 1;
+}
+@container (min-width: 250px) and (min-height: 250px) {
+  .compactDay {
+    --calendar-max-font: var(--mantine-font-size-sm);
+  }
+}
+@container (min-width: 450px) and (min-height: 450px) {
+  .compactDay {
+    --calendar-max-font: var(--mantine-font-size-md);
+  }
+}
+@container (min-width: 700px) and (min-height: 700px) {
+  .compactDay {
+    --calendar-max-font: var(--mantine-font-size-lg);
+  }
+}
+.indicators {
+  position: absolute;
+  top: calc(50% + var(--calendar-font) * 0.48);
+  inset-inline: 12.5%;
+  display: flex;
+  justify-content: center;
+  gap: calc(var(--indicator-size) * 0.4);
+  overflow: hidden;
+}
+.indicator {
+  flex-shrink: 0;
+  width: var(--indicator-size);
+  height: var(--indicator-size);
+  border-radius: 999px;
+}
+@container (max-height: 220px) {
+  .header,
+  .weekdaysRow {
+    display: none;
+  }
+  .floatingError {
+    display: block;
+  }
+  .body {
+    --calendar-header-rows: 0;
+    --calendar-weekday-rows: 0;
+  }
 }
 .calendar div[data-month-level] {
   width: 100%;
@@ -77,16 +169,35 @@
   margin-top: auto;
 }
 .detailedDay[data-compact] {
-  flex-direction: row;
+  position: relative;
   align-items: center;
   justify-content: center;
-  gap: 2px;
 }
 .detailedDay[data-compact] .dayNumber,
 .detailedDay[data-compact] .moreEvents {
   font-size: 10px;
   line-height: 12px;
   margin: 0;
+}
+.detailedDay[data-compact] .moreEvents {
+  position: absolute;
+  top: 1px;
+  inset-inline-end: 2px;
+  font-size: 8px;
+  line-height: 10px;
+}
+.root .week {
+  --week-view-min-slot-width: 0px;
+  --week-view-slots-label-width: 3.5rem;
+  --week-view-week-day-height: 2.5rem;
+}
+.scheduleEvent {
+  display: block;
+  font-size: 10px;
+  line-height: 1.2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .dayAllDay,
 .weekAllDay,
@@ -99,14 +210,12 @@
 .weekAllDay {
   top: var(--week-view-week-day-height);
 }
-@container (max-width: 340px) {
-  .navigation {
-    flex-basis: 100%;
-  }
-}
-
 @container (max-width: 350px) {
   .eventTime {
     display: none;
+  }
+  .root .week {
+    --week-view-slots-label-width: 2rem;
+    --week-view-week-day-height: 2rem;
   }
 }

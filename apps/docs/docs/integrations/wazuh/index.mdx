@@ -11,7 +11,7 @@ import { wazuhIntegration } from ".";
 
 <IntegrationHeader integration={wazuhIntegration} categories={["Security"]} />
 
-The Wazuh integration powers the **Wazuh agents**, **Wazuh alerts** and **Wazuh security summary** widgets.
+The Wazuh integration powers the [Wazuh widget](/docs/widgets/wazuh), shows high and critical alerts in the [Notifications widget](/docs/widgets/notifications) and provides agent and alert counts to the [Stats widget](/docs/widgets/stats).
 
 Wazuh stores data in two places, and each uses its own users:
 
@@ -26,7 +26,7 @@ Alerts and severity counts need the indexer. Without server API credentials, age
 
 Pick the credential option that matches what you can reach:
 
-| Option                              | URL field                              | Widgets                     |
+| Option                              | URL field                              | Wazuh widget tabs           |
 | ----------------------------------- | -------------------------------------- | --------------------------- |
 | Username & Password                 | Server API, e.g. `https://wazuh:55000` | Agents, manager version     |
 | Username & Password & Indexer …     | Server API, indexer URL as a secret    | All                         |
@@ -49,5 +49,7 @@ Pick the credential option that matches what you can reach:
 
 ### Notes
 
-- Wazuh ships with self-signed certificates. The server API certificate can be trusted from the test connection dialog. The indexer certificate is signed by the Wazuh root CA (`/etc/wazuh-indexer/certs/root-ca.pem`), which has to be uploaded under **Settings → Certificates**.
+- Wazuh ships with self-signed certificates, and the server API and the indexer each present their own. **Test connection** checks both endpoints and shows the certificate of whichever one fails, so the server API and the indexer certificate can both be handled from the same dialog: trust a self-signed certificate directly, or, when the certificate is signed by the Wazuh root CA, upload that CA (`/etc/wazuh-indexer/certs/root-ca.pem`) from the dialog. Run Test connection again afterwards to check the other endpoint. You can also upload the root CA up front under **Management → Tools → Certificates**.
+- If the certificate is not issued for the host in the URL, Test connection offers to trust that hostname. Otherwise use a hostname or IP address listed in the certificate, or reissue the certificate with the name you use.
+- An expired or not yet valid certificate cannot be trusted. Renew it and check that the clocks on the Homarr and Wazuh hosts are correct.
 - A default all-in-one install binds the indexer to `127.0.0.1`. Set `network.host` in `/etc/wazuh-indexer/opensearch.yml` if Homarr runs on another host.

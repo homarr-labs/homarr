@@ -1559,6 +1559,7 @@
             "untrusted": "Certifikat nije pouzdan.",
             "hostnameMismatch": "Naziv hosta certifikata ne podudara se s URL-om."
           },
+          "secondaryUrl": "",
           "alert": {
             "permission": {
               "title": "Nema dovoljno dozvola",
@@ -1904,6 +1905,7 @@
       "tryAgain": "Pokušaj ponovno",
       "loading": "Učitavanje",
       "show": "Prikaži",
+      "showAll": "",
       "hide": "Sakrij",
       "undo": "Poništi",
       "editNamed": "Uredi {name}",
@@ -1913,6 +1915,7 @@
       "copied": "Kopirano",
       "refresh": "Osvježi"
     },
+    "hidden": "",
     "pagination": {
       "pageOf": "Stranica {page} od {totalPages}"
     },
@@ -1935,6 +1938,7 @@
       "clear": "Očisti sliku",
       "uploadImage": "Prenesi sliku",
       "results": "Rezultati pretraživanja slika",
+      "websiteIcon": "",
       "localImages": "Vaše slike",
       "svgIcons": "SVG ikone",
       "otherImages": "Ostale slike",
@@ -3224,6 +3228,10 @@
         },
         "viewMode": {
           "label": ""
+        },
+        "hideHeader": {
+          "label": "",
+          "description": ""
         }
       },
       "advanced": {
@@ -3241,15 +3249,11 @@
         "agenda": ""
       },
       "controls": {
-        "view": "",
         "today": "",
         "previous": "",
         "next": "",
         "noEvents": "",
         "more": "",
-        "moreLabel": "",
-        "eventDetails": "",
-        "close": "",
         "timeSlot": "",
         "weekday": ""
       }
@@ -3936,11 +3940,28 @@
         "paused": "Pauzirano",
         "remaining": "Preostalo je {minutes} min",
         "seasonEpisode": "S{season} E{episode}",
+        "state": {
+          "playing": "",
+          "buffering": ""
+        },
+        "details": {
+          "device": "",
+          "location": "",
+          "sessionId": "",
+          "bitrate": "",
+          "audioHandling": "",
+          "direct": "",
+          "transcode": "",
+          "containerChanged": "",
+          "position": "",
+          "unknown": ""
+        },
         "metadata": {
           "title": "Statistike za znalce",
           "video": {
             "title": "Video",
-            "resolution": "Razlučivost"
+            "resolution": "Razlučivost",
+            "frameRate": ""
           },
           "audio": {
             "title": "Zvuk",
@@ -3961,6 +3982,109 @@
         "playing": "{count} se reproducira",
         "transcoding": "{count} se transkodira"
       }
+    },
+    "thingport-libraryStats": {
+      "name": "",
+      "description": "",
+      "title": "",
+      "option": {
+        "showModels": {
+          "label": ""
+        },
+        "showCollections": {
+          "label": ""
+        },
+        "showCategories": {
+          "label": ""
+        },
+        "showAuthors": {
+          "label": ""
+        }
+      },
+      "models": "",
+      "collections": "",
+      "categories": "",
+      "authors": ""
+    },
+    "thingport-featuredModel": {
+      "name": "",
+      "description": "",
+      "option": {
+        "autoRotate": {
+          "label": ""
+        },
+        "showDetails": {
+          "label": ""
+        }
+      },
+      "title": "",
+      "empty": "",
+      "hint": "",
+      "noPreview": "",
+      "views": "",
+      "prints": ""
+    },
+    "thingport-activityHeatmap": {
+      "name": "",
+      "description": "",
+      "title": "",
+      "option": {
+        "weekStart": {
+          "label": "Prvi dan u tjednu",
+          "option": {
+            "sunday": "",
+            "monday": ""
+          }
+        },
+        "showTotal": {
+          "label": ""
+        },
+        "showLegend": {
+          "label": ""
+        }
+      },
+      "lastYear": "",
+      "totalLastYear": "",
+      "totalInYear": "",
+      "dayTotal": "",
+      "dayEmpty": "",
+      "kinds": {
+        "import": "",
+        "upload": "Ukupno učitano",
+        "download": "Ukupno preuzeto",
+        "slicer": "",
+        "delete": ""
+      },
+      "less": "",
+      "more": ""
+    },
+    "thingport-models": {
+      "name": "",
+      "description": "",
+      "title": "",
+      "option": {
+        "defaultTab": {
+          "label": ""
+        },
+        "itemCount": {
+          "label": ""
+        },
+        "showThumbnails": {
+          "label": ""
+        }
+      },
+      "tab": {
+        "recentlyAdded": "",
+        "topViewed": "",
+        "topPrinted": ""
+      },
+      "empty": {
+        "recentlyAdded": "",
+        "topViewed": "",
+        "topPrinted": ""
+      },
+      "views": "",
+      "prints": ""
     },
     "paperlessNgx": {
       "description": "Pregled vaše arhive dokumenata Paperless-ngx",
@@ -4930,45 +5054,116 @@
     "uptimeKuma": {
       "description": "Pratite statistiku dostupnosti sa svoje stranice statusa Uptime Kuma",
       "option": {
-        "showAverageUptime": {
-          "label": "Prikaži prosječnu dostupnost",
-          "description": "Prikaži kombinirani postotak prosječne dostupnosti u 24 sata"
+        "statusPageSlug": {
+          "label": "",
+          "description": ""
         },
-        "showUptimeRing": {
-          "label": "Prikaži prsten dostupnosti",
-          "description": "Prikaži prsten napretka uz vrijednost prosječne dostupnosti"
+        "summaryOnly": {
+          "label": "",
+          "description": ""
         },
-        "showTotalMonitors": {
-          "label": "Prikaži ukupno nadziranih usluga",
-          "description": "Prikaži ukupan broj konfiguriranih nadziranih usluga"
+        "showSummary": {
+          "label": "",
+          "description": ""
         },
-        "showUpCount": {
-          "label": "Prikaži broj dostupnih",
-          "description": "Prikaži koliko je nadziranih usluga trenutačno dostupno"
+        "showIncidents": {
+          "label": "",
+          "description": ""
         },
-        "showDownCount": {
-          "label": "Prikaži broj nedostupnih",
-          "description": "Prikaži koliko je nadziranih usluga trenutačno nedostupno"
+        "groupByStatusPageGroup": {
+          "label": "",
+          "description": ""
         },
-        "showPausedCount": {
-          "label": "Prikaži broj pauziranih",
-          "description": "Prikaži koliko je nadziranih usluga trenutačno pauzirano"
+        "showOnlyProblems": {
+          "label": "",
+          "description": ""
+        },
+        "sortBy": {
+          "label": "",
+          "option": {
+            "status": "",
+            "statusPage": "",
+            "name": "Naziv posla",
+            "uptime": ""
+          }
+        },
+        "showHeartbeatBar": {
+          "label": "",
+          "description": ""
+        },
+        "showUptime": {
+          "label": ""
+        },
+        "showResponseTime": {
+          "label": ""
+        },
+        "showCertificateExpiry": {
+          "label": "",
+          "description": ""
         }
-      },
-      "averageUptime": "Prosječna dostupnost (24 h)",
-      "stats": {
-        "totalMonitors": "Ukupno nadziranih usluga",
-        "upCount": "Dostupno",
-        "downCount": "Nedostupno",
-        "pausedCount": "Pauzirano"
-      },
-      "error": {
-        "internalServerError": "Neuspješno dohvaćanje podataka o dostupnosti"
       },
       "status": {
         "up": "Ukupno poslano",
         "down": "Brzina preuzimanja",
-        "paused": "Pauzirano"
+        "pending": "",
+        "maintenance": "",
+        "stale": "",
+        "unknown": ""
+      },
+      "overall": {
+        "operational": "",
+        "degraded": "",
+        "outage": "",
+        "maintenance": "",
+        "unknown": ""
+      },
+      "short": {
+        "operational": "",
+        "down": "",
+        "pending": "",
+        "maintenance": "",
+        "unknown": ""
+      },
+      "summary": {
+        "upRatio": "",
+        "upRatioShort": "",
+        "averageUptime": "",
+        "uptimeShort": "",
+        "statusCount": ""
+      },
+      "unit": {
+        "milliseconds": ""
+      },
+      "heartbeatBar": {
+        "label": ""
+      },
+      "detail": {
+        "checked": "",
+        "certificate": ""
+      },
+      "notice": {
+        "label": "",
+        "untitled": ""
+      },
+      "empty": {
+        "title": "",
+        "description": ""
+      },
+      "allClear": "",
+      "error": {
+        "internalServerError": "Neuspješno dohvaćanje podataka o dostupnosti"
+      },
+      "monitorType": {
+        "http": "",
+        "keyword": "",
+        "jsonQuery": "",
+        "port": "",
+        "ping": "",
+        "dns": "",
+        "docker": "",
+        "push": "",
+        "group": "",
+        "realBrowser": ""
       }
     },
     "traefik": {
@@ -5575,6 +5770,8 @@
       "allHidden": "Sve su metrike skrivene u ovom prikazu. Upotrijebite opciju Prilagodi ovaj prikaz da biste ih vratili."
     },
     "wazuh": {
+      "name": "",
+      "description": "",
       "target": {
         "api": "Wazuh poslužiteljski API",
         "indexer": "Wazuh indeksator",
@@ -5594,6 +5791,14 @@
         "certificate": {
           "title": "Certifikat za {target} nije pouzdan",
           "description": "Wazuh prema zadanim postavkama koristi samopotpisani certifikat. Pokrenite „Testiraj vezu” na integraciji i vjerujte certifikatu ili dodajte svoj CA u Postavke → Certifikati."
+        },
+        "certificateHostname": {
+          "title": "",
+          "description": ""
+        },
+        "certificateExpired": {
+          "title": "",
+          "description": ""
         },
         "unreachable": {
           "title": "Nije moguće dosegnuti {target}",
@@ -5618,7 +5823,9 @@
         "unknown": {
           "title": "Nije moguće učitati podatke iz {target}",
           "description": "Za pojedinosti provjerite Homarr zapisnike."
-        }
+        },
+        "viewSaveTitle": "",
+        "viewSaveMessage": ""
       },
       "range": {
         "1h": "1 h",
@@ -5626,268 +5833,234 @@
         "7d": "7 dana",
         "30d": "30 dana"
       },
-      "levelTooltip": "Razina pravila {level} ({severity})"
-    },
-    "wazuhAgents": {
-      "name": "Wazuh agenti",
-      "description": "Sortirajući popis Wazuh agenata sa statusom, operacijskim sustavom, verzijom i vremenom posljednjeg održavanja veze",
+      "levelTooltip": "Razina pravila {level} ({severity})",
+      "summary": {
+        "title": "",
+        "alerts": "",
+        "none": "",
+        "trend": {
+          "new": "",
+          "tooltip": ""
+        },
+        "previous": "",
+        "maxLevel": "",
+        "health": "",
+        "manager": ""
+      },
+      "alerts": {
+        "title": "",
+        "empty": "",
+        "rule": "",
+        "openInDashboard": ""
+      },
+      "timeline": {
+        "title": "",
+        "total": "",
+        "interval": ""
+      },
+      "top": {
+        "title": {
+          "rules": "",
+          "agents": "",
+          "sourceIps": "",
+          "mitreTactics": "",
+          "mitreTechniques": ""
+        },
+        "empty": {
+          "rules": "",
+          "agents": "",
+          "sourceIps": "",
+          "mitreTactics": "",
+          "mitreTechniques": ""
+        },
+        "totalTooltip": "",
+        "private": "",
+        "public": "Javno",
+        "agents": "",
+        "others": ""
+      },
+      "agents": {
+        "title": "",
+        "total": "",
+        "status": {
+          "active": "",
+          "disconnected": "",
+          "neverConnected": "",
+          "pending": ""
+        },
+        "statusLabel": {
+          "active": "",
+          "disconnected": "",
+          "never_connected": "",
+          "pending": "",
+          "unknown": "Nepoznato"
+        },
+        "live": "",
+        "snapshot": "",
+        "snapshotHint": "",
+        "staleSnapshot": "",
+        "noDisconnected": "",
+        "empty": "",
+        "column": {
+          "status": "",
+          "name": "Naziv posla",
+          "ip": "",
+          "os": "",
+          "version": "",
+          "lastKeepAlive": "",
+          "groups": ""
+        },
+        "outdated": ""
+      },
+      "vulnerabilities": {
+        "title": "",
+        "topCves": "",
+        "score": "",
+        "agentsShort": "",
+        "topAgents": "",
+        "criticalHigh": "",
+        "totalTooltip": "",
+        "affected": "",
+        "empty": "",
+        "distribution": "",
+        "worst": ""
+      },
+      "fim": {
+        "title": "",
+        "event": {
+          "added": "Datum dodavanja",
+          "modified": "",
+          "deleted": "",
+          "unknown": ""
+        },
+        "empty": "",
+        "user": "",
+        "registry": ""
+      },
+      "authFailures": {
+        "title": "",
+        "seriesTooltip": "",
+        "peak": "",
+        "empty": "",
+        "failed": "",
+        "failedHint": "",
+        "bruteForce": "",
+        "bruteForceHint": "",
+        "sourceIps": "",
+        "ipTooltip": "",
+        "bruteForceCount": ""
+      },
+      "view": {
+        "overview": "",
+        "alerts": "",
+        "timeline": "",
+        "top": "",
+        "agents": "",
+        "vulnerabilities": "",
+        "fim": "",
+        "authFailures": ""
+      },
       "option": {
-        "statusFilter": {
-          "label": "Prikaži agente"
+        "visibleViews": {
+          "label": "",
+          "description": ""
         },
-        "sortBy": {
-          "label": "Sortiraj prema"
-        },
-        "showVersion": {
-          "label": "Prikaži stupac verzije Wazuha"
-        },
-        "showGroups": {
-          "label": "Prikaži stupac grupa"
-        }
-      },
-      "title": "Agenti",
-      "total": "{count} agenata",
-      "status": {
-        "active": "Aktivno",
-        "disconnected": "Odspojeno",
-        "neverConnected": "Nikad povezano",
-        "pending": "Na čekanju"
-      },
-      "statusLabel": {
-        "active": "Aktivno",
-        "disconnected": "Odspojeno",
-        "never_connected": "Nikad povezano",
-        "pending": "Na čekanju",
-        "unknown": "Nepoznato"
-      },
-      "live": "Uživo",
-      "snapshot": "Snimka je stara {age}",
-      "snapshotHint": "Pročitano iz snimke agenata nadzorne ploče Wazuh (wazuh-monitoring), snimljene u {time}. Dodajte vjerodajnice API-ja poslužitelja za podatke uživo.",
-      "staleSnapshot": "Snimka agenata iz {time} zastarjela je. Provjerite radi li posao nadzora nadzorne ploče Wazuh ili dodajte vjerodajnice API-ja poslužitelja.",
-      "noDisconnected": "Svi su agenti povezani",
-      "empty": "Nijedan agent ne odgovara ovom filtru",
-      "column": {
-        "status": "Stanje",
-        "name": "Naziv posla",
-        "ip": "IP",
-        "os": "OS",
-        "version": "Verzija",
-        "lastKeepAlive": "Održavanje veze",
-        "groups": "Grupe"
-      },
-      "outdated": "Starije od najnovije verzije agenta ({version})"
-    },
-    "wazuhAlerts": {
-      "name": "Izvor Wazuhovih upozorenja",
-      "description": "Nedavna Wazuhova upozorenja s razinom, tehnikama MITRE ATT&CK, agentom i izvornom IP adresom",
-      "option": {
-        "minLevel": {
-          "label": "Minimalna razina pravila",
-          "description": "Razine Wazuha: 0–6 niska, 7–11 srednja, 12–14 visoka, 15+ kritična"
-        },
-        "hours": {
-          "label": "Vremenski prozor (sati)"
-        },
-        "limit": {
-          "label": "Broj upozorenja"
-        },
-        "showMitre": {
-          "label": "Prikaži tehnike MITRE ATT&CK"
-        },
-        "showAgent": {
-          "label": "Prikaži agenta"
-        },
-        "showSourceIp": {
-          "label": "Prikaži izvornu IP adresu"
-        },
-        "showRuleId": {
-          "label": "Prikaži ID pravila"
-        }
-      },
-      "title": "Upozorenja · razina {level}+ · {hours} h",
-      "empty": "Nema upozorenja na ovoj razini. Sve je mirno.",
-      "rule": "Pravilo {id}",
-      "openInDashboard": "Otvori ovo upozorenje na Wazuhovoj nadzornoj ploči"
-    },
-    "wazuhSummary": {
-      "name": "Ozbiljnost Wazuhovih upozorenja",
-      "description": "Pregled ozbiljnosti upozorenja s trendom u odnosu na prethodno razdoblje",
-      "option": {
         "range": {
-          "label": "Vremenski raspon"
+          "label": ""
         },
         "showTrend": {
-          "label": "Prikaži trend u odnosu na prethodno razdoblje"
+          "label": ""
         },
         "showFooter": {
-          "label": "Prikaži podnožje"
-        }
-      },
-      "title": "Ozbiljnost upozorenja · {range}",
-      "alerts": "upozorenja",
-      "none": "Nema upozorenja",
-      "trend": {
-        "new": "novo",
-        "tooltip": "Prethodno razdoblje: {previous}"
-      },
-      "previous": "Prethodno {range}: {count}",
-      "maxLevel": "Maks. razina {level}",
-      "health": "Stanje indeksatora: {status}",
-      "manager": "Upravitelj {version}"
-    },
-    "wazuhTimeline": {
-      "name": "Vremenska crta Wazuhovih upozorenja",
-      "description": "Složeni grafikon Wazuhovih upozorenja tijekom vremena prema ozbiljnosti",
-      "option": {
-        "range": {
-          "label": "Vremenski raspon"
+          "label": ""
         },
         "interval": {
-          "label": "Interval"
+          "label": ""
         },
         "chartType": {
-          "label": "Vrsta grafikona"
+          "label": ""
         },
         "yScale": {
-          "label": "Mjerilo osi Y",
-          "description": "Kvadratni korijen održava visoka i kritična upozorenja vidljivima uz tisuće niskih"
+          "label": "",
+          "description": ""
         },
         "minLevel": {
-          "label": "Minimalna razina pravila"
+          "label": ""
         },
         "showLegend": {
-          "label": "Prikaži legendu s ukupnim vrijednostima"
-        }
-      },
-      "title": "Vremenska crta upozorenja · {range}",
-      "total": "{count} upozorenja",
-      "interval": "po {interval}"
-    },
-    "wazuhTopList": {
-      "name": "Wazuhov popis najčešćih",
-      "description": "Najčešća pravila, agenti, izvorne IP adrese ili MITRE ATT&CK taktike i tehnike prema broju upozorenja",
-      "option": {
-        "kind": {
-          "label": "Rang"
+          "label": ""
         },
-        "range": {
-          "label": "Vremenski raspon"
+        "topKind": {
+          "label": ""
         },
-        "limit": {
-          "label": "Broj unosa"
-        },
-        "minLevel": {
-          "label": "Minimalna razina pravila"
+        "topLimit": {
+          "label": ""
         },
         "showBars": {
-          "label": "Prikaži trake"
-        }
-      },
-      "title": {
-        "rules": "Najčešća pravila · {range}",
-        "agents": "Najčešći agenti · {range}",
-        "sourceIps": "Najčešće izvorne IP adrese · {range}",
-        "mitreTactics": "MITRE taktike · {range}",
-        "mitreTechniques": "MITRE tehnike · {range}"
-      },
-      "empty": {
-        "rules": "Nema upozorenja u ovom razdoblju",
-        "agents": "Nema upozorenja u ovom razdoblju",
-        "sourceIps": "Nema upozorenja s izvornom IP adresom u ovom razdoblju",
-        "mitreTactics": "Nema upozorenja mapiranih na MITRE ATT&CK u ovom razdoblju",
-        "mitreTechniques": "Nema upozorenja mapiranih na MITRE ATT&CK u ovom razdoblju"
-      },
-      "totalTooltip": "{count} podudarajućih upozorenja",
-      "private": "LAN",
-      "public": "Javno",
-      "agents": "Viđeno na {count} agenata",
-      "others": "Još {count} upozorenja u drugim unosima"
-    },
-    "wazuhVulnerabilities": {
-      "name": "Wazuh ranjivosti",
-      "description": "Broj ranjivosti, najčešći CVE-ovi i najranjiviji agenti",
-      "option": {
+          "label": ""
+        },
+        "agentStatusFilter": {
+          "label": ""
+        },
+        "agentSortBy": {
+          "label": ""
+        },
+        "showVersion": {
+          "label": ""
+        },
+        "showGroups": {
+          "label": ""
+        },
         "cveOrder": {
-          "label": "Rangiraj CVE-ove prema"
+          "label": ""
         },
         "minSeverity": {
-          "label": "Ozbiljnost CVE-a"
+          "label": ""
         },
         "cveLimit": {
-          "label": "Broj CVE-ova"
+          "label": ""
         },
         "agentLimit": {
-          "label": "Broj agenata"
+          "label": ""
         },
         "showAgents": {
-          "label": "Prikaži najranjivije agente"
-        }
-      },
-      "title": "Ranjivosti",
-      "topCves": "Najčešći CVE-ovi",
-      "score": "Bodovi",
-      "agentsShort": "Agenti",
-      "topAgents": "Najranjiviji agenti",
-      "criticalHigh": "Kritično / Visoko",
-      "totalTooltip": "{count} nalaza na {agents} agenata",
-      "affected": "{count} agenata",
-      "empty": "Nisu otkrivene ranjivosti",
-      "distribution": "Raspodjela ozbiljnosti. {unscored} nalaza bez bodova nije prikazano.",
-      "worst": "Najgore: {id} ({score}) na {agents} agenata"
-    },
-    "wazuhFim": {
-      "name": "Wazuh cjelovitost datoteka",
-      "description": "Nedavni događaji nadzora cjelovitosti datoteka (syscheck)",
-      "option": {
-        "range": {
-          "label": "Vremenski raspon"
+          "label": ""
         },
-        "event": {
-          "label": "Događaji"
+        "fimEvent": {
+          "label": ""
         },
-        "limit": {
-          "label": "Broj događaja"
+        "fimLimit": {
+          "label": ""
         },
         "includeRegistry": {
-          "label": "Uključi događaje registra sustava Windows"
-        }
-      },
-      "title": "Cjelovitost datoteka · {range}",
-      "event": {
-        "added": "Datum dodavanja",
-        "modified": "Izmijenjeno",
-        "deleted": "Izbrisano",
-        "unknown": "Promijenjeno"
-      },
-      "empty": "Nema događaja cjelovitosti datoteka u ovom razdoblju",
-      "user": "od korisnika {user}",
-      "registry": "Registar"
-    },
-    "wazuhAuthFailures": {
-      "name": "Neuspjele Wazuh provjere autentičnosti",
-      "description": "Neuspjele prijave i upozorenja na pokušaje grubom silom po agentu s grafikonima po satima",
-      "option": {
-        "hours": {
-          "label": "Vremenski prozor (sati)"
+          "label": ""
         },
-        "limit": {
-          "label": "Broj agenata"
+        "authLimit": {
+          "label": ""
         },
         "showSourceIps": {
-          "label": "Prikaži najčešće izvorne IP adrese"
+          "label": ""
+        },
+        "alertsMinLevel": {
+          "label": "",
+          "description": ""
+        },
+        "alertsLimit": {
+          "label": ""
+        },
+        "showMitre": {
+          "label": ""
+        },
+        "showAgent": {
+          "label": ""
+        },
+        "showSourceIp": {
+          "label": ""
+        },
+        "showRuleId": {
+          "label": ""
         }
-      },
-      "title": "Neuspjele provjere autentičnosti · {hours} h",
-      "seriesTooltip": "Svi agenti tijekom posljednjih {hours} h",
-      "peak": "Vrh: {count}/skupini",
-      "empty": "Nema neuspjelih prijava u ovom razdoblju",
-      "failed": "Neuspjele prijave",
-      "failedHint": "Pojedinačne neuspjele provjere autentičnosti (sshd, PAM, prijava u sustav Windows, nevažeći korisnici)",
-      "bruteForce": "Gruba sila",
-      "bruteForceHint": "Korelirana pravila grube sile (više neuspjeha u kratkom razdoblju, MITRE T1110)",
-      "sourceIps": "Izvorne IP adrese",
-      "ipTooltip": "{ip}: {count} neuspjeha",
-      "bruteForceCount": "{count} napada grubom silom"
+      }
     }
   },
   "widgetPreview": {

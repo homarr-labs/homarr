@@ -1559,6 +1559,7 @@
             "untrusted": "Certifikát nie je dôveryhodný.",
             "hostnameMismatch": "Názov hostiteľa certifikátu sa nezhoduje s adresou URL."
           },
+          "secondaryUrl": "",
           "alert": {
             "permission": {
               "title": "Nedostatočné oprávnenia",
@@ -1904,6 +1905,7 @@
       "tryAgain": "Skúste znova",
       "loading": "Nahrávam",
       "show": "Zobraziť",
+      "showAll": "",
       "hide": "Skryť",
       "undo": "Späť",
       "editNamed": "Upraviť {name}",
@@ -1913,6 +1915,7 @@
       "copied": "Skopírované",
       "refresh": "Obnoviť"
     },
+    "hidden": "",
     "pagination": {
       "pageOf": "Strana {page} z {totalPages}"
     },
@@ -1935,6 +1938,7 @@
       "clear": "Odstrániť obrázok",
       "uploadImage": "Nahrať obrázok",
       "results": "Výsledky vyhľadávania obrázkov",
+      "websiteIcon": "",
       "localImages": "Vaše obrázky",
       "svgIcons": "SVG ikony",
       "otherImages": "Ostatné obrázky",
@@ -3224,6 +3228,10 @@
         },
         "viewMode": {
           "label": ""
+        },
+        "hideHeader": {
+          "label": "",
+          "description": ""
         }
       },
       "advanced": {
@@ -3241,15 +3249,11 @@
         "agenda": ""
       },
       "controls": {
-        "view": "",
         "today": "",
         "previous": "",
         "next": "",
         "noEvents": "",
         "more": "",
-        "moreLabel": "",
-        "eventDetails": "",
-        "close": "",
         "timeSlot": "",
         "weekday": ""
       }
@@ -3936,11 +3940,28 @@
         "paused": "",
         "remaining": "",
         "seasonEpisode": "S{season} E{episode}",
+        "state": {
+          "playing": "",
+          "buffering": ""
+        },
+        "details": {
+          "device": "",
+          "location": "",
+          "sessionId": "",
+          "bitrate": "",
+          "audioHandling": "",
+          "direct": "",
+          "transcode": "",
+          "containerChanged": "",
+          "position": "",
+          "unknown": ""
+        },
         "metadata": {
           "title": "",
           "video": {
             "title": "",
-            "resolution": ""
+            "resolution": "",
+            "frameRate": ""
           },
           "audio": {
             "title": "",
@@ -3961,6 +3982,109 @@
         "playing": "{count} sa prehráva",
         "transcoding": "{count} sa prekóduje"
       }
+    },
+    "thingport-libraryStats": {
+      "name": "",
+      "description": "",
+      "title": "",
+      "option": {
+        "showModels": {
+          "label": ""
+        },
+        "showCollections": {
+          "label": ""
+        },
+        "showCategories": {
+          "label": ""
+        },
+        "showAuthors": {
+          "label": ""
+        }
+      },
+      "models": "",
+      "collections": "",
+      "categories": "",
+      "authors": ""
+    },
+    "thingport-featuredModel": {
+      "name": "",
+      "description": "",
+      "option": {
+        "autoRotate": {
+          "label": ""
+        },
+        "showDetails": {
+          "label": ""
+        }
+      },
+      "title": "",
+      "empty": "",
+      "hint": "",
+      "noPreview": "",
+      "views": "",
+      "prints": ""
+    },
+    "thingport-activityHeatmap": {
+      "name": "",
+      "description": "",
+      "title": "",
+      "option": {
+        "weekStart": {
+          "label": "Prvý deň v týždni",
+          "option": {
+            "sunday": "",
+            "monday": ""
+          }
+        },
+        "showTotal": {
+          "label": ""
+        },
+        "showLegend": {
+          "label": ""
+        }
+      },
+      "lastYear": "",
+      "totalLastYear": "",
+      "totalInYear": "",
+      "dayTotal": "",
+      "dayEmpty": "",
+      "kinds": {
+        "import": "",
+        "upload": "Celkovo nahrané",
+        "download": "Celkovo stiahnuté",
+        "slicer": "",
+        "delete": ""
+      },
+      "less": "",
+      "more": ""
+    },
+    "thingport-models": {
+      "name": "",
+      "description": "",
+      "title": "",
+      "option": {
+        "defaultTab": {
+          "label": "Predvolená karta"
+        },
+        "itemCount": {
+          "label": ""
+        },
+        "showThumbnails": {
+          "label": ""
+        }
+      },
+      "tab": {
+        "recentlyAdded": "",
+        "topViewed": "",
+        "topPrinted": ""
+      },
+      "empty": {
+        "recentlyAdded": "",
+        "topViewed": "",
+        "topPrinted": ""
+      },
+      "views": "",
+      "prints": ""
     },
     "paperlessNgx": {
       "description": "Prehľad vášho archívu dokumentov Paperless-ngx",
@@ -4930,45 +5054,116 @@
     "uptimeKuma": {
       "description": "Monitorovať štatistiky dostupnosti z vašej stavovej stránky Uptime Kuma",
       "option": {
-        "showAverageUptime": {
-          "label": "Zobraziť priemernú dostupnosť",
-          "description": "Zobraziť kombinované percento priemernej dostupnosti za 24 hodín"
+        "statusPageSlug": {
+          "label": "",
+          "description": ""
         },
-        "showUptimeRing": {
-          "label": "Zobraziť krúžok dostupnosti",
-          "description": "Zobraziť kruhový ukazovateľ vedľa hodnoty priemernej dostupnosti"
+        "summaryOnly": {
+          "label": "",
+          "description": ""
         },
-        "showTotalMonitors": {
-          "label": "Zobraziť celkový počet monitorov",
-          "description": "Zobraziť celkový počet nakonfigurovaných monitorov"
+        "showSummary": {
+          "label": "",
+          "description": ""
         },
-        "showUpCount": {
-          "label": "Zobraziť počet dostupných",
-          "description": "Zobraziť, koľko monitorov je momentálne dostupných"
+        "showIncidents": {
+          "label": "",
+          "description": ""
         },
-        "showDownCount": {
-          "label": "Zobraziť počet nedostupných",
-          "description": "Zobraziť, koľko monitorov je momentálne nedostupných"
+        "groupByStatusPageGroup": {
+          "label": "",
+          "description": ""
         },
-        "showPausedCount": {
-          "label": "Zobraziť počet pozastavených",
-          "description": "Zobraziť, koľko monitorov je momentálne pozastavených"
+        "showOnlyProblems": {
+          "label": "",
+          "description": ""
+        },
+        "sortBy": {
+          "label": "",
+          "option": {
+            "status": "",
+            "statusPage": "",
+            "name": "Názov úlohy",
+            "uptime": ""
+          }
+        },
+        "showHeartbeatBar": {
+          "label": "",
+          "description": ""
+        },
+        "showUptime": {
+          "label": ""
+        },
+        "showResponseTime": {
+          "label": ""
+        },
+        "showCertificateExpiry": {
+          "label": "",
+          "description": ""
         }
-      },
-      "averageUptime": "Priemerná dostupnosť (24h)",
-      "stats": {
-        "totalMonitors": "Celkový počet monitorov",
-        "upCount": "Dostupné",
-        "downCount": "Nedostupné",
-        "pausedCount": "Pozastavené"
-      },
-      "error": {
-        "internalServerError": "Nepodarilo sa načítať údaje o dostupnosti"
       },
       "status": {
         "up": "Celkom hore",
         "down": "Rýchlosť sťahovania",
-        "paused": "Pozastavené"
+        "pending": "Čakajúce",
+        "maintenance": "",
+        "stale": "",
+        "unknown": ""
+      },
+      "overall": {
+        "operational": "",
+        "degraded": "",
+        "outage": "",
+        "maintenance": "",
+        "unknown": ""
+      },
+      "short": {
+        "operational": "",
+        "down": "",
+        "pending": "",
+        "maintenance": "",
+        "unknown": ""
+      },
+      "summary": {
+        "upRatio": "",
+        "upRatioShort": "",
+        "averageUptime": "",
+        "uptimeShort": "",
+        "statusCount": ""
+      },
+      "unit": {
+        "milliseconds": ""
+      },
+      "heartbeatBar": {
+        "label": ""
+      },
+      "detail": {
+        "checked": "",
+        "certificate": ""
+      },
+      "notice": {
+        "label": "",
+        "untitled": ""
+      },
+      "empty": {
+        "title": "",
+        "description": ""
+      },
+      "allClear": "",
+      "error": {
+        "internalServerError": "Nepodarilo sa načítať údaje o dostupnosti"
+      },
+      "monitorType": {
+        "http": "",
+        "keyword": "",
+        "jsonQuery": "",
+        "port": "",
+        "ping": "",
+        "dns": "",
+        "docker": "",
+        "push": "",
+        "group": "Skupiny",
+        "realBrowser": ""
       }
     },
     "traefik": {
@@ -5575,6 +5770,8 @@
       "allHidden": "V tomto zobrazení sú skryté všetky metriky. Obnovte ich pomocou možnosti Prispôsobiť toto zobrazenie."
     },
     "wazuh": {
+      "name": "",
+      "description": "",
       "target": {
         "api": "API servera Wazuh",
         "indexer": "Indexovač Wazuh",
@@ -5594,6 +5791,14 @@
         "certificate": {
           "title": "Certifikát {target} nie je dôveryhodný",
           "description": "Wazuh predvolene používa certifikát s vlastným podpisom. Spustite na integrácii „Test pripojenia“ a dôverujte certifikátu alebo pridajte svoju CA v časti Nastavenia → Certifikáty."
+        },
+        "certificateHostname": {
+          "title": "",
+          "description": ""
+        },
+        "certificateExpired": {
+          "title": "",
+          "description": ""
         },
         "unreachable": {
           "title": "{target} nie je dostupný",
@@ -5618,7 +5823,9 @@
         "unknown": {
           "title": "Údaje z {target} sa nepodarilo načítať",
           "description": "Podrobnosti nájdete v protokoloch Homarru."
-        }
+        },
+        "viewSaveTitle": "",
+        "viewSaveMessage": ""
       },
       "range": {
         "1h": "1 h",
@@ -5626,268 +5833,234 @@
         "7d": "7 dní",
         "30d": "30 dní"
       },
-      "levelTooltip": "Úroveň pravidla {level} ({severity})"
-    },
-    "wazuhAgents": {
-      "name": "Agenti Wazuh",
-      "description": "Zoraditeľný zoznam agentov Wazuh so stavom, operačným systémom, verziou a posledným signálom keepalive",
+      "levelTooltip": "Úroveň pravidla {level} ({severity})",
+      "summary": {
+        "title": "",
+        "alerts": "",
+        "none": "",
+        "trend": {
+          "new": "nový",
+          "tooltip": ""
+        },
+        "previous": "",
+        "maxLevel": "",
+        "health": "",
+        "manager": ""
+      },
+      "alerts": {
+        "title": "",
+        "empty": "",
+        "rule": "",
+        "openInDashboard": ""
+      },
+      "timeline": {
+        "title": "",
+        "total": "",
+        "interval": ""
+      },
+      "top": {
+        "title": {
+          "rules": "",
+          "agents": "",
+          "sourceIps": "",
+          "mitreTactics": "",
+          "mitreTechniques": ""
+        },
+        "empty": {
+          "rules": "",
+          "agents": "",
+          "sourceIps": "",
+          "mitreTactics": "",
+          "mitreTechniques": ""
+        },
+        "totalTooltip": "",
+        "private": "",
+        "public": "Verejné",
+        "agents": "",
+        "others": ""
+      },
+      "agents": {
+        "title": "",
+        "total": "",
+        "status": {
+          "active": "Aktívny",
+          "disconnected": "Odpojené",
+          "neverConnected": "",
+          "pending": "Čakajúce"
+        },
+        "statusLabel": {
+          "active": "Aktívny",
+          "disconnected": "Odpojené",
+          "never_connected": "",
+          "pending": "Čakajúce",
+          "unknown": "Neznámy"
+        },
+        "live": "",
+        "snapshot": "",
+        "snapshotHint": "",
+        "staleSnapshot": "",
+        "noDisconnected": "",
+        "empty": "",
+        "column": {
+          "status": "Stav",
+          "name": "Názov úlohy",
+          "ip": "",
+          "os": "OS",
+          "version": "Verzia",
+          "lastKeepAlive": "",
+          "groups": "Skupiny"
+        },
+        "outdated": ""
+      },
+      "vulnerabilities": {
+        "title": "",
+        "topCves": "",
+        "score": "",
+        "agentsShort": "",
+        "topAgents": "",
+        "criticalHigh": "",
+        "totalTooltip": "",
+        "affected": "",
+        "empty": "",
+        "distribution": "",
+        "worst": ""
+      },
+      "fim": {
+        "title": "",
+        "event": {
+          "added": "Dátum pridania",
+          "modified": "",
+          "deleted": "",
+          "unknown": ""
+        },
+        "empty": "",
+        "user": "",
+        "registry": ""
+      },
+      "authFailures": {
+        "title": "",
+        "seriesTooltip": "",
+        "peak": "",
+        "empty": "",
+        "failed": "",
+        "failedHint": "",
+        "bruteForce": "",
+        "bruteForceHint": "",
+        "sourceIps": "",
+        "ipTooltip": "",
+        "bruteForceCount": ""
+      },
+      "view": {
+        "overview": "",
+        "alerts": "",
+        "timeline": "",
+        "top": "",
+        "agents": "",
+        "vulnerabilities": "",
+        "fim": "",
+        "authFailures": ""
+      },
       "option": {
-        "statusFilter": {
-          "label": "Zobraziť agentov"
+        "visibleViews": {
+          "label": "",
+          "description": ""
         },
-        "sortBy": {
-          "label": "Zoradiť podľa"
-        },
-        "showVersion": {
-          "label": "Zobraziť stĺpec verzie Wazuh"
-        },
-        "showGroups": {
-          "label": "Zobraziť stĺpec skupín"
-        }
-      },
-      "title": "Agenti",
-      "total": "{count} agentov",
-      "status": {
-        "active": "Aktívny",
-        "disconnected": "Odpojené",
-        "neverConnected": "Nikdy nepripojené",
-        "pending": "Čakajúce"
-      },
-      "statusLabel": {
-        "active": "Aktívny",
-        "disconnected": "Odpojené",
-        "never_connected": "Nikdy nepripojené",
-        "pending": "Čakajúce",
-        "unknown": "Neznámy"
-      },
-      "live": "Naživo",
-      "snapshot": "Snímka stará {age}",
-      "snapshotHint": "Načítané zo snímky agentov nástenky Wazuh (wazuh-monitoring) vytvorenej o {time}. Ak chcete živé údaje, pridajte poverenia API servera.",
-      "staleSnapshot": "Snímka agentov z {time} je zastaraná. Skontrolujte, či je spustená úloha monitorovania nástenky Wazuh, alebo pridajte poverenia API servera.",
-      "noDisconnected": "Všetci agenti sú pripojení",
-      "empty": "Tomuto filtru nevyhovujú žiadni agenti",
-      "column": {
-        "status": "Stav",
-        "name": "Názov úlohy",
-        "ip": "IP",
-        "os": "OS",
-        "version": "Verzia",
-        "lastKeepAlive": "Keepalive",
-        "groups": "Skupiny"
-      },
-      "outdated": "Staršia než najnovšia verzia agenta ({version})"
-    },
-    "wazuhAlerts": {
-      "name": "Kanál upozornení Wazuh",
-      "description": "Nedávne upozornenia Wazuh s úrovňou, technikami MITRE ATT&CK, agentom a zdrojovou IP adresou",
-      "option": {
-        "minLevel": {
-          "label": "Minimálna úroveň pravidla",
-          "description": "Úrovne Wazuh: 0 – 6 nízka, 7 – 11 stredná, 12 – 14 vysoká, 15+ kritická"
-        },
-        "hours": {
-          "label": "Časové okno (hodiny)"
-        },
-        "limit": {
-          "label": "Počet upozornení"
-        },
-        "showMitre": {
-          "label": "Zobraziť techniky MITRE ATT&CK"
-        },
-        "showAgent": {
-          "label": "Zobraziť agenta"
-        },
-        "showSourceIp": {
-          "label": "Zobraziť zdrojovú IP"
-        },
-        "showRuleId": {
-          "label": "Zobraziť ID pravidla"
-        }
-      },
-      "title": "Upozornenia · úroveň {level}+ · {hours} h",
-      "empty": "Na tejto úrovni nie sú žiadne upozornenia. Všetko je pokojné.",
-      "rule": "Pravidlo {id}",
-      "openInDashboard": "Otvoriť toto upozornenie na nástenke Wazuh"
-    },
-    "wazuhSummary": {
-      "name": "Závažnosť upozornení Wazuh",
-      "description": "Rozdelenie závažnosti upozornení s trendom v porovnaní s predchádzajúcim obdobím",
-      "option": {
         "range": {
-          "label": "Časový rozsah"
+          "label": ""
         },
         "showTrend": {
-          "label": "Zobraziť trend v porovnaní s predchádzajúcim obdobím"
+          "label": ""
         },
         "showFooter": {
-          "label": "Zobraziť pätu"
-        }
-      },
-      "title": "Závažnosť upozornení · {range}",
-      "alerts": "upozornení",
-      "none": "Žiadne upozornenia",
-      "trend": {
-        "new": "nový",
-        "tooltip": "Predchádzajúce obdobie: {previous}"
-      },
-      "previous": "Predchádzajúce {range}: {count}",
-      "maxLevel": "Max. úroveň {level}",
-      "health": "Stav indexovača: {status}",
-      "manager": "Správca {version}"
-    },
-    "wazuhTimeline": {
-      "name": "Časová os upozornení Wazuh",
-      "description": "Skladaný graf upozornení Wazuh v čase podľa závažnosti",
-      "option": {
-        "range": {
-          "label": "Časový rozsah"
+          "label": ""
         },
         "interval": {
-          "label": "Časový interval"
+          "label": ""
         },
         "chartType": {
-          "label": "Typ grafu"
+          "label": ""
         },
         "yScale": {
-          "label": "Mierka osi Y",
-          "description": "Odmocninová mierka udržiava vysoké a kritické upozornenia viditeľné vedľa tisícov nízkych"
+          "label": "",
+          "description": ""
         },
         "minLevel": {
-          "label": "Minimálna úroveň pravidla"
+          "label": ""
         },
         "showLegend": {
-          "label": "Zobraziť legendu so súčtami"
-        }
-      },
-      "title": "Časová os upozornení · {range}",
-      "total": "{count} upozornení",
-      "interval": "za {interval}"
-    },
-    "wazuhTopList": {
-      "name": "Najčastejšie položky Wazuh",
-      "description": "Najčastejšie pravidlá, agenti, zdrojové IP adresy alebo taktiky a techniky MITRE ATT&CK podľa počtu upozornení",
-      "option": {
-        "kind": {
-          "label": "Poradie"
+          "label": ""
         },
-        "range": {
-          "label": "Časový rozsah"
+        "topKind": {
+          "label": ""
         },
-        "limit": {
-          "label": "Počet položiek"
-        },
-        "minLevel": {
-          "label": "Minimálna úroveň pravidla"
+        "topLimit": {
+          "label": ""
         },
         "showBars": {
-          "label": "Zobraziť stĺpce"
-        }
-      },
-      "title": {
-        "rules": "Najčastejšie pravidlá · {range}",
-        "agents": "Najčastejší agenti · {range}",
-        "sourceIps": "Najčastejšie zdrojové IP adresy · {range}",
-        "mitreTactics": "Taktiky MITRE · {range}",
-        "mitreTechniques": "Techniky MITRE · {range}"
-      },
-      "empty": {
-        "rules": "V tomto období neboli zaznamenané žiadne upozornenia",
-        "agents": "V tomto období neboli zaznamenané žiadne upozornenia",
-        "sourceIps": "V tomto období neboli zaznamenané žiadne upozornenia so zdrojovou IP adresou",
-        "mitreTactics": "V tomto období neboli zaznamenané žiadne upozornenia priradené k MITRE ATT&CK",
-        "mitreTechniques": "V tomto období neboli zaznamenané žiadne upozornenia priradené k MITRE ATT&CK"
-      },
-      "totalTooltip": "{count} zodpovedajúcich upozornení",
-      "private": "Lokálna sieť",
-      "public": "Verejné",
-      "agents": "Zaznamenané na {count} agentoch",
-      "others": "{count} ďalších upozornení v ostatných položkách"
-    },
-    "wazuhVulnerabilities": {
-      "name": "Zraniteľnosti Wazuh",
-      "description": "Počty zraniteľností, najčastejšie CVE a najzraniteľnejší agenti",
-      "option": {
+          "label": ""
+        },
+        "agentStatusFilter": {
+          "label": ""
+        },
+        "agentSortBy": {
+          "label": ""
+        },
+        "showVersion": {
+          "label": ""
+        },
+        "showGroups": {
+          "label": ""
+        },
         "cveOrder": {
-          "label": "Zoradiť CVE podľa"
+          "label": ""
         },
         "minSeverity": {
-          "label": "Závažnosť CVE"
+          "label": ""
         },
         "cveLimit": {
-          "label": "Počet CVE"
+          "label": ""
         },
         "agentLimit": {
-          "label": "Počet agentov"
+          "label": ""
         },
         "showAgents": {
-          "label": "Zobraziť najzraniteľnejších agentov"
-        }
-      },
-      "title": "Zraniteľnosti",
-      "topCves": "Najčastejšie CVE",
-      "score": "Skóre",
-      "agentsShort": "Agenti",
-      "topAgents": "Najzraniteľnejší agenti",
-      "criticalHigh": "Kritické / vysoké",
-      "totalTooltip": "{count} nálezov na {agents} agentoch",
-      "affected": "{count} agentov",
-      "empty": "Neboli zistené žiadne zraniteľnosti",
-      "distribution": "Rozdelenie podľa závažnosti. {unscored} nálezov bez skóre sa nezobrazuje.",
-      "worst": "Najhoršie: {id} ({score}) na {agents} agentoch"
-    },
-    "wazuhFim": {
-      "name": "Integrita súborov Wazuh",
-      "description": "Nedávne udalosti monitorovania integrity súborov (syscheck)",
-      "option": {
-        "range": {
-          "label": "Časový rozsah"
+          "label": ""
         },
-        "event": {
-          "label": "Udalosti"
+        "fimEvent": {
+          "label": ""
         },
-        "limit": {
-          "label": "Počet udalostí"
+        "fimLimit": {
+          "label": ""
         },
         "includeRegistry": {
-          "label": "Zahrnúť udalosti registra Windows"
-        }
-      },
-      "title": "Integrita súborov · {range}",
-      "event": {
-        "added": "Dátum pridania",
-        "modified": "Upravené",
-        "deleted": "Odstránené",
-        "unknown": "Zmenené"
-      },
-      "empty": "V tomto období neboli zaznamenané žiadne udalosti integrity súborov",
-      "user": "používateľom {user}",
-      "registry": "Register"
-    },
-    "wazuhAuthFailures": {
-      "name": "Zlyhania overenia Wazuh",
-      "description": "Neúspešné prihlásenia a upozornenia na útoky hrubou silou podľa agenta s hodinovými grafmi",
-      "option": {
-        "hours": {
-          "label": "Časové okno (hodiny)"
+          "label": ""
         },
-        "limit": {
-          "label": "Počet agentov"
+        "authLimit": {
+          "label": ""
         },
         "showSourceIps": {
-          "label": "Zobraziť najčastejšie zdrojové IP adresy"
+          "label": ""
+        },
+        "alertsMinLevel": {
+          "label": "",
+          "description": ""
+        },
+        "alertsLimit": {
+          "label": ""
+        },
+        "showMitre": {
+          "label": ""
+        },
+        "showAgent": {
+          "label": ""
+        },
+        "showSourceIp": {
+          "label": ""
+        },
+        "showRuleId": {
+          "label": ""
         }
-      },
-      "title": "Zlyhania overenia · {hours} h",
-      "seriesTooltip": "Všetci agenti za posledných {hours} h",
-      "peak": "Maximum {count}/interval",
-      "empty": "V tomto období neboli zaznamenané žiadne neúspešné prihlásenia",
-      "failed": "Neúspešné prihlásenia",
-      "failedHint": "Jednotlivé zlyhania overenia (sshd, PAM, prihlásenie do Windows, neplatní používatelia)",
-      "bruteForce": "Útok hrubou silou",
-      "bruteForceHint": "Korelované pravidlá útokov hrubou silou (viacero zlyhaní v krátkom období, MITRE T1110)",
-      "sourceIps": "Zdrojové IP adresy",
-      "ipTooltip": "{ip}: {count} zlyhaní",
-      "bruteForceCount": "{count} útokov hrubou silou"
+      }
     }
   },
   "widgetPreview": {

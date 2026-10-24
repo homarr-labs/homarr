@@ -1,0 +1,69 @@
+---
+title: "Thingport"
+description: "Self-hosted library for organizing and previewing your 3D printing models."
+hide_title: true
+---
+
+import { IntegrationHeader } from "@site/src/components/integrations/header";
+import { IntegrationCapabilites } from "@site/src/components/integrations/widgets";
+import { AddingIntegration } from "@site/src/components/integrations/adding";
+import { IntegrationSecrets } from "@site/src/components/integrations/secrets";
+import { IconSearch } from "@tabler/icons-react";
+import { thingportIntegration } from ".";
+import { thingportLibraryStatsWidget } from "@site/docs/widgets/thingport-library-stats";
+import { thingportModelsWidget } from "@site/docs/widgets/thingport-models";
+import { thingportFeaturedModelWidget } from "@site/docs/widgets/thingport-featured-model";
+import { thingportActivityHeatmapWidget } from "@site/docs/widgets/thingport-activity-heatmap";
+
+<IntegrationHeader integration={thingportIntegration} categories={["Miscellaneous"]} />
+
+Thingport provides library totals, lists of your recently added, most viewed and most printed models, a featured model of the day and your activity history. Use the URL of the Thingport web interface, not the backend container.
+
+### Widgets & Capabilities
+
+<IntegrationCapabilites
+  items={[
+    { widget: thingportLibraryStatsWidget },
+    { widget: thingportModelsWidget },
+    { widget: thingportFeaturedModelWidget },
+    { widget: thingportActivityHeatmapWidget },
+    {
+      capability: {
+        icon: IconSearch,
+        name: "Search",
+        description: "Search models, collections and tags through the integration API.",
+        path: "../../management/search-engines/#from-integration",
+      },
+    },
+  ]}
+/>
+
+### Adding the integration
+
+<AddingIntegration />
+
+import addIntegration from "./img/add-integration.png";
+
+<img src={addIntegration.src} alt="New Thingport integration form with name, URL and API key" width={640} />
+
+### Secrets
+
+<IntegrationSecrets
+  secrets={[
+    {
+      credentials: ["apiKey"],
+      steps: [
+        "Open your Thingport instance",
+        "Go to your profile",
+        "Generate an API token",
+        "Copy the token, it is shown only once",
+      ],
+    },
+  ]}
+/>
+
+### Integration search
+
+The integration search API supports models, collections and tags. Thingport can be selected as an integration search engine, but Spotlight currently does not display its results.
+
+The API token is read-only and shows the library of the user who created it. The [Statistics widget](/docs/widgets/stats) can also combine Thingport totals with other sources.

@@ -2,6 +2,8 @@ import { TRPCError } from "@trpc/server";
 import { observable } from "@trpc/server/observable";
 import { z } from "zod/v4";
 
+import { createKeyedFingerprint } from "@homarr/common/server";
+import { getReleaseSourceFromDockerImage } from "@homarr/definitions";
 import type { ContainerState, DockerContainerTarget, Port } from "@homarr/docker";
 import { DockerSingleton } from "@homarr/docker";
 import {
@@ -84,7 +86,16 @@ export const dockerRouter = createTRPCRouter({
       const { data, timestamp } = result;
 
       return {
-        containers: data.containers satisfies DockerContainer[],
+        containers: data.containers.map((container): DockerContainer => {
+          const source = getReleaseSourceFromDockerImage(container.image);
+          let releaseSourceToken: string | undefined;
+          if (source) {
+            releaseSourceToken = createKeyedFingerprint(
+              JSON.stringify(["releases-docker-suggestion-v1", source.provider, source.identifier]),
+            );
+          }
+          return { ...container, releaseSourceToken };
+        }),
         endpoints: data.endpoints,
         timestamp,
       };
@@ -292,6 +303,7 @@ const assertDockerEndpointCapability = (
 };
 
 interface DockerContainer {
+  releaseSourceToken?: string;
   endpointId: string;
   endpointName: string;
   resourceId: string;

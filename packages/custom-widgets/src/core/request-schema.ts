@@ -10,9 +10,6 @@ import {
 } from "./request-header-policy";
 import { getCustomWidgetHttpUrlIssue } from "./url-policy";
 
-export const customJsxNetworkScopes = ["public", "private", "loopback"] as const;
-export type CustomJsxNetworkScope = (typeof customJsxNetworkScopes)[number];
-
 export const customWidgetIdentifierSchema = z
   .string()
   .min(1)
@@ -97,7 +94,8 @@ export const customWidgetHttpSourceSchema = z.strictObject({
     })
     .url()
     .max(2048),
-  networkScope: z.enum(customJsxNetworkScopes),
+  // Retain legacy metadata so existing definitions and Workshop exports stay compatible.
+  networkScope: z.unknown().optional(),
   auth: authSchema.default("none"),
 });
 export const customWidgetIntegrationSourceSchema = z.strictObject({

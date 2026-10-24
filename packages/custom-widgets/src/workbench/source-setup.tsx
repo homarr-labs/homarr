@@ -1,11 +1,10 @@
 import type { ReactNode } from "react";
-import { Alert, Badge, Checkbox, Group, PasswordInput, Select, Stack, Text, TextInput } from "@mantine/core";
+import { Alert, Badge, Checkbox, Group, PasswordInput, Stack, Text, TextInput } from "@mantine/core";
 import { IconCheck, IconKey, IconServer, IconX } from "@tabler/icons-react";
 
 import type {
   CustomWidgetSecretKind,
   CustomWidgetLegacySecretKind,
-  CustomJsxNetworkScope,
   CustomWidgetSourceSetup,
   CustomWidgetSourceUrlIssue,
 } from "../core";
@@ -13,7 +12,6 @@ import { getCustomWidgetSourceSetupIssue, isCustomWidgetHeaderSecretKind } from 
 
 export interface CustomWidgetSourceSetupValue {
   baseUrl: string;
-  networkScope: CustomJsxNetworkScope;
   integrationId?: string;
   urlConfirmed: boolean;
   secrets: Partial<Record<CustomWidgetSecretKind, string>>;
@@ -24,7 +22,6 @@ export interface CustomWidgetSourceSetupMessages {
   description: string;
   suggestedUrl: string;
   baseUrl: string;
-  networkScope: string;
   authentication: string;
   confirmUrl: string;
   ready: string;
@@ -53,7 +50,6 @@ export function createCustomWidgetSourceSetupValues(
       {
         baseUrl: setup.baseUrl,
         integrationId: setup.integrationId,
-        networkScope: setup.networkScope,
         urlConfirmed: !setup.requiresUrlConfirmation,
         secrets: {} as Partial<Record<CustomWidgetSecretKind, string>>,
       } satisfies CustomWidgetSourceSetupValue,
@@ -157,19 +153,6 @@ export function CustomWidgetSourceSetupPanel({
               }
             />
             <Group grow align="start">
-              <Select
-                label={messages.networkScope}
-                data={["public", "private", "loopback"]}
-                value={value.networkScope}
-                allowDeselect={false}
-                onChange={(networkScope) =>
-                  networkScope &&
-                  onChange(setup.sourceId, {
-                    ...value,
-                    networkScope: networkScope as CustomJsxNetworkScope,
-                  })
-                }
-              />
               <TextInput label={messages.authentication} value={setup.authType} readOnly />
             </Group>
             {setup.requiresUrlConfirmation && value.baseUrl === setup.suggestedBaseUrl && (

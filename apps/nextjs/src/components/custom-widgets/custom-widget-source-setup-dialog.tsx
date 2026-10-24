@@ -43,7 +43,6 @@ export function CustomWidgetSourceSetupDialog({ definitionId, opened, onClose }:
     description: t("sourceSetupDialog.description"),
     suggestedUrl: t("importReview.sourceSetup.suggestedUrl"),
     baseUrl: t("workbench.sources.baseUrl"),
-    networkScope: t("workbench.sources.networkScope"),
     authentication: t("workbench.sources.authentication"),
     confirmUrl: t("importReview.sourceSetup.confirmUrl"),
     ready: t("importReview.sourceSetup.ready"),
@@ -77,7 +76,6 @@ export function CustomWidgetSourceSetupDialog({ definitionId, opened, onClose }:
           definitionId,
           sourceId: setup.sourceId,
           baseUrl: value.baseUrl,
-          networkScope: value.networkScope,
           secrets,
         });
       }

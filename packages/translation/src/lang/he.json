@@ -1559,6 +1559,7 @@
             "untrusted": "התעודה אינה מהימנה.",
             "hostnameMismatch": "שם המארח של האישור אינו תואם לכתובת ה-URL."
           },
+          "secondaryUrl": "",
           "alert": {
             "permission": {
               "title": "אין מספיק הרשאות",
@@ -1904,6 +1905,7 @@
       "tryAgain": "נא לנסות שוב",
       "loading": "טוען",
       "show": "",
+      "showAll": "",
       "hide": "",
       "undo": "ביטול",
       "editNamed": "עריכת {name}",
@@ -1913,6 +1915,7 @@
       "copied": "הועתק",
       "refresh": "רענן"
     },
+    "hidden": "מוסתר",
     "pagination": {
       "pageOf": "עמוד {page} מתוך {totalPages}"
     },
@@ -1935,6 +1938,7 @@
       "clear": "נקה תמונה",
       "uploadImage": "העלה תמונה",
       "results": "תוצאות חיפוש תמונות",
+      "websiteIcon": "",
       "localImages": "התמונות שלך",
       "svgIcons": "סמלי SVG",
       "otherImages": "תמונות אחרות",
@@ -3224,6 +3228,10 @@
         },
         "viewMode": {
           "label": ""
+        },
+        "hideHeader": {
+          "label": "",
+          "description": ""
         }
       },
       "advanced": {
@@ -3241,15 +3249,11 @@
         "agenda": ""
       },
       "controls": {
-        "view": "",
         "today": "",
         "previous": "",
         "next": "",
         "noEvents": "",
         "more": "",
-        "moreLabel": "",
-        "eventDetails": "",
-        "close": "",
         "timeSlot": "",
         "weekday": ""
       }
@@ -3936,11 +3940,28 @@
         "paused": "",
         "remaining": "",
         "seasonEpisode": "עונה {season} פרק {episode}",
+        "state": {
+          "playing": "",
+          "buffering": ""
+        },
+        "details": {
+          "device": "",
+          "location": "",
+          "sessionId": "",
+          "bitrate": "",
+          "audioHandling": "",
+          "direct": "",
+          "transcode": "",
+          "containerChanged": "",
+          "position": "",
+          "unknown": ""
+        },
         "metadata": {
           "title": "סטטיסטיקות לחנונים",
           "video": {
             "title": "וידאו",
-            "resolution": "רזולוציה"
+            "resolution": "רזולוציה",
+            "frameRate": ""
           },
           "audio": {
             "title": "אודיו",
@@ -3961,6 +3982,109 @@
         "playing": "{count} פועל",
         "transcoding": "{count} בהמרת קידוד"
       }
+    },
+    "thingport-libraryStats": {
+      "name": "",
+      "description": "",
+      "title": "",
+      "option": {
+        "showModels": {
+          "label": ""
+        },
+        "showCollections": {
+          "label": ""
+        },
+        "showCategories": {
+          "label": ""
+        },
+        "showAuthors": {
+          "label": ""
+        }
+      },
+      "models": "",
+      "collections": "",
+      "categories": "",
+      "authors": ""
+    },
+    "thingport-featuredModel": {
+      "name": "",
+      "description": "",
+      "option": {
+        "autoRotate": {
+          "label": ""
+        },
+        "showDetails": {
+          "label": ""
+        }
+      },
+      "title": "",
+      "empty": "",
+      "hint": "",
+      "noPreview": "",
+      "views": "",
+      "prints": ""
+    },
+    "thingport-activityHeatmap": {
+      "name": "",
+      "description": "",
+      "title": "",
+      "option": {
+        "weekStart": {
+          "label": "היום הראשון בשבוע",
+          "option": {
+            "sunday": "",
+            "monday": ""
+          }
+        },
+        "showTotal": {
+          "label": ""
+        },
+        "showLegend": {
+          "label": ""
+        }
+      },
+      "lastYear": "",
+      "totalLastYear": "",
+      "totalInYear": "",
+      "dayTotal": "",
+      "dayEmpty": "",
+      "kinds": {
+        "import": "",
+        "upload": "העלאה כוללת",
+        "download": "הורדה כוללת",
+        "slicer": "",
+        "delete": "נמחק"
+      },
+      "less": "",
+      "more": ""
+    },
+    "thingport-models": {
+      "name": "",
+      "description": "",
+      "title": "",
+      "option": {
+        "defaultTab": {
+          "label": "כרטיסיית ברירת מחדל"
+        },
+        "itemCount": {
+          "label": ""
+        },
+        "showThumbnails": {
+          "label": ""
+        }
+      },
+      "tab": {
+        "recentlyAdded": "",
+        "topViewed": "",
+        "topPrinted": ""
+      },
+      "empty": {
+        "recentlyAdded": "",
+        "topViewed": "",
+        "topPrinted": ""
+      },
+      "views": "",
+      "prints": ""
     },
     "paperlessNgx": {
       "description": "",
@@ -4930,45 +5054,116 @@
     "uptimeKuma": {
       "description": "",
       "option": {
-        "showAverageUptime": {
+        "statusPageSlug": {
           "label": "",
           "description": ""
         },
-        "showUptimeRing": {
+        "summaryOnly": {
           "label": "",
           "description": ""
         },
-        "showTotalMonitors": {
+        "showSummary": {
           "label": "",
           "description": ""
         },
-        "showUpCount": {
+        "showIncidents": {
           "label": "",
           "description": ""
         },
-        "showDownCount": {
+        "groupByStatusPageGroup": {
           "label": "",
           "description": ""
         },
-        "showPausedCount": {
+        "showOnlyProblems": {
+          "label": "",
+          "description": ""
+        },
+        "sortBy": {
+          "label": "",
+          "option": {
+            "status": "",
+            "statusPage": "",
+            "name": "שם המשימה",
+            "uptime": ""
+          }
+        },
+        "showHeartbeatBar": {
+          "label": "",
+          "description": ""
+        },
+        "showUptime": {
+          "label": ""
+        },
+        "showResponseTime": {
+          "label": ""
+        },
+        "showCertificateExpiry": {
           "label": "",
           "description": ""
         }
       },
-      "averageUptime": "",
-      "stats": {
-        "totalMonitors": "",
-        "upCount": "",
-        "downCount": "",
-        "pausedCount": ""
-      },
-      "error": {
-        "internalServerError": ""
-      },
       "status": {
         "up": "סך הכל העלאה",
         "down": "מהירות הורדה",
-        "paused": "מושהה"
+        "pending": "ממתין",
+        "maintenance": "",
+        "stale": "",
+        "unknown": ""
+      },
+      "overall": {
+        "operational": "",
+        "degraded": "",
+        "outage": "",
+        "maintenance": "",
+        "unknown": ""
+      },
+      "short": {
+        "operational": "",
+        "down": "",
+        "pending": "",
+        "maintenance": "",
+        "unknown": ""
+      },
+      "summary": {
+        "upRatio": "",
+        "upRatioShort": "",
+        "averageUptime": "",
+        "uptimeShort": "",
+        "statusCount": ""
+      },
+      "unit": {
+        "milliseconds": ""
+      },
+      "heartbeatBar": {
+        "label": ""
+      },
+      "detail": {
+        "checked": "",
+        "certificate": ""
+      },
+      "notice": {
+        "label": "",
+        "untitled": ""
+      },
+      "empty": {
+        "title": "",
+        "description": ""
+      },
+      "allClear": "",
+      "error": {
+        "internalServerError": ""
+      },
+      "monitorType": {
+        "http": "",
+        "keyword": "",
+        "jsonQuery": "",
+        "port": "",
+        "ping": "",
+        "dns": "",
+        "docker": "",
+        "push": "",
+        "group": "קבוצה",
+        "realBrowser": ""
       }
     },
     "traefik": {
@@ -5575,6 +5770,8 @@
       "allHidden": "כל המדדים מוסתרים בתצוגה זו. השתמש בהתאמה אישית של תצוגה זו כדי לשחזר אותם."
     },
     "wazuh": {
+      "name": "",
+      "description": "",
       "target": {
         "api": "API של שרת Wazuh",
         "indexer": "אינדקסר Wazuh",
@@ -5594,6 +5791,14 @@
         "certificate": {
           "title": "האישור של {target} אינו מהימן",
           "description": "Wazuh משתמש כברירת מחדל באישור בחתימה עצמית. הפעל את \"בדוק חיבור\" באינטגרציה ואשר את האישור, או הוסף את ה-CA שלך תחת הגדרות → אישורים."
+        },
+        "certificateHostname": {
+          "title": "",
+          "description": ""
+        },
+        "certificateExpired": {
+          "title": "",
+          "description": ""
         },
         "unreachable": {
           "title": "לא ניתן להגיע אל {target}",
@@ -5618,7 +5823,9 @@
         "unknown": {
           "title": "לא ניתן לטעון נתונים מ-{target}",
           "description": "בדוק את יומני Homarr לקבלת פרטים."
-        }
+        },
+        "viewSaveTitle": "",
+        "viewSaveMessage": ""
       },
       "range": {
         "1h": "שעה אחת",
@@ -5626,268 +5833,234 @@
         "7d": "7 ימים",
         "30d": "30 ימים"
       },
-      "levelTooltip": "רמת כלל {level} ({severity})"
-    },
-    "wazuhAgents": {
-      "name": "סוכני Wazuh",
-      "description": "רשימה ניתנת למיון של סוכני Wazuh עם מצב, מערכת הפעלה, גרסה וחיבור אחרון",
+      "levelTooltip": "רמת כלל {level} ({severity})",
+      "summary": {
+        "title": "",
+        "alerts": "",
+        "none": "",
+        "trend": {
+          "new": "חדש",
+          "tooltip": ""
+        },
+        "previous": "",
+        "maxLevel": "",
+        "health": "",
+        "manager": ""
+      },
+      "alerts": {
+        "title": "",
+        "empty": "",
+        "rule": "",
+        "openInDashboard": ""
+      },
+      "timeline": {
+        "title": "",
+        "total": "",
+        "interval": ""
+      },
+      "top": {
+        "title": {
+          "rules": "",
+          "agents": "",
+          "sourceIps": "",
+          "mitreTactics": "",
+          "mitreTechniques": ""
+        },
+        "empty": {
+          "rules": "",
+          "agents": "",
+          "sourceIps": "",
+          "mitreTactics": "",
+          "mitreTechniques": ""
+        },
+        "totalTooltip": "",
+        "private": "",
+        "public": "ציבורי",
+        "agents": "",
+        "others": ""
+      },
+      "agents": {
+        "title": "",
+        "total": "",
+        "status": {
+          "active": "פעיל",
+          "disconnected": "מנותק",
+          "neverConnected": "",
+          "pending": "ממתין"
+        },
+        "statusLabel": {
+          "active": "פעיל",
+          "disconnected": "מנותק",
+          "never_connected": "",
+          "pending": "ממתין",
+          "unknown": "לא ידוע"
+        },
+        "live": "",
+        "snapshot": "",
+        "snapshotHint": "",
+        "staleSnapshot": "",
+        "noDisconnected": "",
+        "empty": "",
+        "column": {
+          "status": "מצב",
+          "name": "שם המשימה",
+          "ip": "",
+          "os": "מערכת הפעלה",
+          "version": "גרסה",
+          "lastKeepAlive": "",
+          "groups": "קבוצות"
+        },
+        "outdated": ""
+      },
+      "vulnerabilities": {
+        "title": "",
+        "topCves": "",
+        "score": "",
+        "agentsShort": "",
+        "topAgents": "",
+        "criticalHigh": "",
+        "totalTooltip": "",
+        "affected": "",
+        "empty": "",
+        "distribution": "",
+        "worst": ""
+      },
+      "fim": {
+        "title": "",
+        "event": {
+          "added": "נוסף בתאריך",
+          "modified": "",
+          "deleted": "נמחק",
+          "unknown": ""
+        },
+        "empty": "",
+        "user": "",
+        "registry": ""
+      },
+      "authFailures": {
+        "title": "",
+        "seriesTooltip": "",
+        "peak": "",
+        "empty": "",
+        "failed": "",
+        "failedHint": "",
+        "bruteForce": "",
+        "bruteForceHint": "",
+        "sourceIps": "",
+        "ipTooltip": "",
+        "bruteForceCount": ""
+      },
+      "view": {
+        "overview": "",
+        "alerts": "",
+        "timeline": "",
+        "top": "",
+        "agents": "",
+        "vulnerabilities": "",
+        "fim": "",
+        "authFailures": ""
+      },
       "option": {
-        "statusFilter": {
-          "label": "הצג סוכנים"
+        "visibleViews": {
+          "label": "",
+          "description": ""
         },
-        "sortBy": {
-          "label": "מיין לפי"
-        },
-        "showVersion": {
-          "label": "הצג עמודת גרסת Wazuh"
-        },
-        "showGroups": {
-          "label": "הצג עמודת קבוצות"
-        }
-      },
-      "title": "סוכנים",
-      "total": "{count} סוכנים",
-      "status": {
-        "active": "פעיל",
-        "disconnected": "מנותק",
-        "neverConnected": "מעולם לא התחבר",
-        "pending": "ממתין"
-      },
-      "statusLabel": {
-        "active": "פעיל",
-        "disconnected": "מנותק",
-        "never_connected": "מעולם לא התחבר",
-        "pending": "ממתין",
-        "unknown": "לא ידוע"
-      },
-      "live": "חי",
-      "snapshot": "תמונת מצב בת {age}",
-      "snapshotHint": "נקרא מתמונת מצב של סוכני לוח המחוונים של Wazuh (wazuh-monitoring) שנוצרה ב-{time}. הוסף פרטי API של השרת לקבלת נתונים חיים.",
-      "staleSnapshot": "תמונת המצב של הסוכן מ-{time} אינה עדכנית. בדוק שמשימת ניטור לוח המחוונים של Wazuh פועלת, או הוסף פרטי API של השרת.",
-      "noDisconnected": "כל הסוכנים מחוברים",
-      "empty": "אין סוכנים התואמים למסנן זה",
-      "column": {
-        "status": "מצב",
-        "name": "שם המשימה",
-        "ip": "כתובת IP",
-        "os": "מערכת הפעלה",
-        "version": "גרסה",
-        "lastKeepAlive": "חיבור פעיל",
-        "groups": "קבוצות"
-      },
-      "outdated": "ישן יותר מגרסת הסוכן החדשה ביותר ({version})"
-    },
-    "wazuhAlerts": {
-      "name": "הזנת התראות Wazuh",
-      "description": "התראות Wazuh אחרונות עם רמה, טכניקות MITRE ATT&CK, סוכן וכתובת IP מקורית",
-      "option": {
-        "minLevel": {
-          "label": "רמת כלל מינימלית",
-          "description": "רמות Wazuh: 0–6 נמוכה, 7–11 בינונית, 12–14 גבוהה, 15+ קריטית"
-        },
-        "hours": {
-          "label": "חלון זמן (שעות)"
-        },
-        "limit": {
-          "label": "מספר התראות"
-        },
-        "showMitre": {
-          "label": "הצג טכניקות MITRE ATT&CK"
-        },
-        "showAgent": {
-          "label": "הצג סוכן"
-        },
-        "showSourceIp": {
-          "label": "הצג כתובת IP מקורית"
-        },
-        "showRuleId": {
-          "label": "הצג מזהה כלל"
-        }
-      },
-      "title": "התראות · רמה {level}+ · {hours} שעות",
-      "empty": "אין התראות ברמה זו. הכול שקט.",
-      "rule": "כלל {id}",
-      "openInDashboard": "פתח התראה זו בלוח המחוונים של Wazuh"
-    },
-    "wazuhSummary": {
-      "name": "חומרת התראות Wazuh",
-      "description": "פירוט חומרת התראות עם מגמה לעומת התקופה הקודמת",
-      "option": {
         "range": {
-          "label": "טווח זמן"
+          "label": ""
         },
         "showTrend": {
-          "label": "הצג מגמה לעומת התקופה הקודמת"
+          "label": ""
         },
         "showFooter": {
-          "label": "הצג כותרת תחתונה"
-        }
-      },
-      "title": "חומרת התראות · {range}",
-      "alerts": "התראות",
-      "none": "אין התראות",
-      "trend": {
-        "new": "חדש",
-        "tooltip": "תקופה קודמת: {previous}"
-      },
-      "previous": "{range} קודמים: {count}",
-      "maxLevel": "רמה מרבית {level}",
-      "health": "תקינות האינדקסר: {status}",
-      "manager": "מנהל {version}"
-    },
-    "wazuhTimeline": {
-      "name": "ציר זמן של התראות Wazuh",
-      "description": "תרשים מוערם של התראות Wazuh לאורך זמן לפי חומרה",
-      "option": {
-        "range": {
-          "label": "טווח זמן"
+          "label": ""
         },
         "interval": {
-          "label": "מרווח"
+          "label": ""
         },
         "chartType": {
-          "label": "סוג תרשים"
+          "label": ""
         },
         "yScale": {
-          "label": "קנה מידה של ציר Y",
-          "description": "שורש ריבועי משאיר התראות גבוהות וקריטיות גלויות לצד אלפי התראות נמוכות"
+          "label": "",
+          "description": ""
         },
         "minLevel": {
-          "label": "רמת כלל מינימלית"
+          "label": ""
         },
         "showLegend": {
-          "label": "הצג מקרא עם סיכומים"
-        }
-      },
-      "title": "ציר זמן של התראות · {range}",
-      "total": "{count} התראות",
-      "interval": "לכל {interval}"
-    },
-    "wazuhTopList": {
-      "name": "רשימה מובילה של Wazuh",
-      "description": "כללים, סוכנים, כתובות IP מקוריות או טקטיקות וטכניקות MITRE ATT&CK מובילים לפי מספר התראות",
-      "option": {
-        "kind": {
-          "label": "דירוג"
+          "label": ""
         },
-        "range": {
-          "label": "טווח זמן"
+        "topKind": {
+          "label": ""
         },
-        "limit": {
-          "label": "מספר רשומות"
-        },
-        "minLevel": {
-          "label": "רמת כלל מינימלית"
+        "topLimit": {
+          "label": ""
         },
         "showBars": {
-          "label": "הצג עמודות"
-        }
-      },
-      "title": {
-        "rules": "כללים מובילים · {range}",
-        "agents": "סוכנים מובילים · {range}",
-        "sourceIps": "כתובות IP מקוריות מובילות · {range}",
-        "mitreTactics": "טקטיקות MITRE · {range}",
-        "mitreTechniques": "טכניקות MITRE · {range}"
-      },
-      "empty": {
-        "rules": "אין התראות בתקופה זו",
-        "agents": "אין התראות בתקופה זו",
-        "sourceIps": "אין התראות עם כתובת IP מקורית בתקופה זו",
-        "mitreTactics": "אין התראות שמופו ל-MITRE ATT&CK בתקופה זו",
-        "mitreTechniques": "אין התראות שמופו ל-MITRE ATT&CK בתקופה זו"
-      },
-      "totalTooltip": "{count} התראות תואמות",
-      "private": "רשת LAN",
-      "public": "ציבורי",
-      "agents": "נראה אצל {count} סוכנים",
-      "others": "עוד {count} התראות ברשומות אחרות"
-    },
-    "wazuhVulnerabilities": {
-      "name": "נקודות תורפה ב-Wazuh",
-      "description": "ספירות נקודות תורפה, CVE מובילים והסוכנים הפגיעים ביותר",
-      "option": {
+          "label": ""
+        },
+        "agentStatusFilter": {
+          "label": ""
+        },
+        "agentSortBy": {
+          "label": ""
+        },
+        "showVersion": {
+          "label": ""
+        },
+        "showGroups": {
+          "label": ""
+        },
         "cveOrder": {
-          "label": "דרג CVE לפי"
+          "label": ""
         },
         "minSeverity": {
-          "label": "חומרת CVE"
+          "label": ""
         },
         "cveLimit": {
-          "label": "מספר CVE"
+          "label": ""
         },
         "agentLimit": {
-          "label": "מספר סוכנים"
+          "label": ""
         },
         "showAgents": {
-          "label": "הצג את הסוכנים הפגיעים ביותר"
-        }
-      },
-      "title": "נקודות תורפה",
-      "topCves": "CVE מובילים",
-      "score": "ציון",
-      "agentsShort": "סוכנים",
-      "topAgents": "הסוכנים הפגיעים ביותר",
-      "criticalHigh": "קריטי / גבוה",
-      "totalTooltip": "{count} ממצאים אצל {agents} סוכנים",
-      "affected": "{count} סוכנים",
-      "empty": "לא זוהו נקודות תורפה",
-      "distribution": "התפלגות חומרה. {unscored} ממצאים ללא ציון אינם מוצגים.",
-      "worst": "החמור ביותר: {id} ({score}) אצל {agents} סוכנים"
-    },
-    "wazuhFim": {
-      "name": "שלמות קבצים ב-Wazuh",
-      "description": "אירועי ניטור שלמות קבצים אחרונים (syscheck)",
-      "option": {
-        "range": {
-          "label": "טווח זמן"
+          "label": ""
         },
-        "event": {
-          "label": "אירועים"
+        "fimEvent": {
+          "label": ""
         },
-        "limit": {
-          "label": "מספר אירועים"
+        "fimLimit": {
+          "label": ""
         },
         "includeRegistry": {
-          "label": "כלול אירועי רישום Windows"
-        }
-      },
-      "title": "שלמות קבצים · {range}",
-      "event": {
-        "added": "נוסף בתאריך",
-        "modified": "שונה",
-        "deleted": "נמחק",
-        "unknown": "השתנה"
-      },
-      "empty": "אין אירועי שלמות קבצים בתקופה זו",
-      "user": "על ידי {user}",
-      "registry": "רישום"
-    },
-    "wazuhAuthFailures": {
-      "name": "כשלי אימות ב-Wazuh",
-      "description": "כניסות כושלות והתראות של מתקפות כוח גס לכל סוכן, עם תרשימי מגמה לפי שעה",
-      "option": {
-        "hours": {
-          "label": "חלון זמן (שעות)"
+          "label": ""
         },
-        "limit": {
-          "label": "מספר סוכנים"
+        "authLimit": {
+          "label": ""
         },
         "showSourceIps": {
-          "label": "הצג כתובות IP מקוריות מובילות"
+          "label": ""
+        },
+        "alertsMinLevel": {
+          "label": "",
+          "description": ""
+        },
+        "alertsLimit": {
+          "label": ""
+        },
+        "showMitre": {
+          "label": ""
+        },
+        "showAgent": {
+          "label": ""
+        },
+        "showSourceIp": {
+          "label": ""
+        },
+        "showRuleId": {
+          "label": ""
         }
-      },
-      "title": "כשלי אימות · {hours} שעות",
-      "seriesTooltip": "כל הסוכנים במהלך {hours} השעות האחרונות",
-      "peak": "שיא {count}/מקטע",
-      "empty": "אין כניסות כושלות בתקופה זו",
-      "failed": "כניסות כושלות",
-      "failedHint": "כשלי אימות יחידים (sshd, PAM, כניסת Windows, משתמשים לא חוקיים)",
-      "bruteForce": "כוח גס",
-      "bruteForceHint": "כללי כוח גס מתואמים (מספר כשלים בפרק זמן קצר, MITRE T1110)",
-      "sourceIps": "כתובות IP מקוריות",
-      "ipTooltip": "{ip}: {count} כשלים",
-      "bruteForceCount": "{count} מתקפות כוח גס"
+      }
     }
   },
   "widgetPreview": {

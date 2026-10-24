@@ -371,15 +371,7 @@
                   "href": {
                     "anyOf": [
                       {
-                        "anyOf": [
-                          {
-                            "type": "string"
-                          },
-                          {
-                            "type": "string",
-                            "const": ""
-                          }
-                        ]
+                        "type": "string"
                       },
                       {
                         "type": "null"
@@ -986,15 +978,7 @@
                   "href": {
                     "anyOf": [
                       {
-                        "anyOf": [
-                          {
-                            "type": "string"
-                          },
-                          {
-                            "type": "string",
-                            "const": ""
-                          }
-                        ]
+                        "type": "string"
                       },
                       {
                         "type": "null"
@@ -3148,6 +3132,10 @@
                                 "immich-serverStats",
                                 "immich-albumCarousel",
                                 "paperlessNgx",
+                                "thingport-libraryStats",
+                                "thingport-models",
+                                "thingport-featuredModel",
+                                "thingport-activityHeatmap",
                                 "patchmon",
                                 "bazarr",
                                 "tracearr",
@@ -3167,14 +3155,7 @@
                                 "assistant",
                                 "wud",
                                 "llamacpp",
-                                "wazuhAgents",
-                                "wazuhAlerts",
-                                "wazuhSummary",
-                                "wazuhTimeline",
-                                "wazuhTopList",
-                                "wazuhVulnerabilities",
-                                "wazuhFim",
-                                "wazuhAuthFailures"
+                                "wazuh"
                               ]
                             },
                             "options": {
@@ -3423,6 +3404,10 @@
                       "immich-serverStats",
                       "immich-albumCarousel",
                       "paperlessNgx",
+                      "thingport-libraryStats",
+                      "thingport-models",
+                      "thingport-featuredModel",
+                      "thingport-activityHeatmap",
                       "patchmon",
                       "bazarr",
                       "tracearr",
@@ -3442,14 +3427,7 @@
                       "assistant",
                       "wud",
                       "llamacpp",
-                      "wazuhAgents",
-                      "wazuhAlerts",
-                      "wazuhSummary",
-                      "wazuhTimeline",
-                      "wazuhTopList",
-                      "wazuhVulnerabilities",
-                      "wazuhFim",
-                      "wazuhAuthFailures"
+                      "wazuh"
                     ]
                   },
                   "options": {
@@ -7495,6 +7473,7 @@
                       "coolify",
                       "immich",
                       "paperlessNgx",
+                      "thingport",
                       "patchmon",
                       "tracearr",
                       "speedtestTracker",
@@ -7671,6 +7650,7 @@
                             "coolify",
                             "immich",
                             "paperlessNgx",
+                            "thingport",
                             "patchmon",
                             "tracearr",
                             "speedtestTracker",

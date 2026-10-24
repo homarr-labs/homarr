@@ -120,7 +120,6 @@ export function CustomWidgetSourcesEditor({
             {
               name: t("newName", { count: sources.length + 1 }),
               baseUrl: "https://example.com",
-              networkScope: sources.length === 0 ? "public" : "private",
               auth: "none",
             },
           ],

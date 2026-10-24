@@ -1559,6 +1559,7 @@
             "untrusted": "Sertifikatas nepatikimas.",
             "hostnameMismatch": "Sertifikato pagrindinio kompiuterio vardas neatitinka URL."
           },
+          "secondaryUrl": "",
           "alert": {
             "permission": {
               "title": "Nepakanka teisių",
@@ -1904,6 +1905,7 @@
       "tryAgain": "Bandyti dar kartą",
       "loading": "Įkeliama",
       "show": "Rodyti",
+      "showAll": "",
       "hide": "Slėpti",
       "undo": "Anuliuoti",
       "editNamed": "Redaguoti „{name}“",
@@ -1913,6 +1915,7 @@
       "copied": "Nukopijuota",
       "refresh": "Atnaujinti"
     },
+    "hidden": "",
     "pagination": {
       "pageOf": "{page} puslapis iš {totalPages}"
     },
@@ -1935,6 +1938,7 @@
       "clear": "Pašalinti paveikslėlį",
       "uploadImage": "Įkelti paveikslėlį",
       "results": "Vaizdų paieškos rezultatai",
+      "websiteIcon": "",
       "localImages": "Jūsų vaizdai",
       "svgIcons": "SVG piktogramos",
       "otherImages": "Kiti vaizdai",
@@ -3224,6 +3228,10 @@
         },
         "viewMode": {
           "label": ""
+        },
+        "hideHeader": {
+          "label": "",
+          "description": ""
         }
       },
       "advanced": {
@@ -3241,15 +3249,11 @@
         "agenda": ""
       },
       "controls": {
-        "view": "",
         "today": "",
         "previous": "",
         "next": "",
         "noEvents": "",
         "more": "",
-        "moreLabel": "",
-        "eventDetails": "",
-        "close": "",
         "timeSlot": "",
         "weekday": ""
       }
@@ -3936,11 +3940,28 @@
         "paused": "Pristabdyta",
         "remaining": "Liko {minutes} min",
         "seasonEpisode": "S{season} E{episode}",
+        "state": {
+          "playing": "",
+          "buffering": ""
+        },
+        "details": {
+          "device": "",
+          "location": "",
+          "sessionId": "",
+          "bitrate": "",
+          "audioHandling": "",
+          "direct": "",
+          "transcode": "",
+          "containerChanged": "",
+          "position": "",
+          "unknown": ""
+        },
         "metadata": {
           "title": "Išsami statistika",
           "video": {
             "title": "Vaizdas",
-            "resolution": "Raiška"
+            "resolution": "Raiška",
+            "frameRate": ""
           },
           "audio": {
             "title": "Garsas",
@@ -3961,6 +3982,109 @@
         "playing": "Leidžiama: {count}",
         "transcoding": "Perkoduojama: {count}"
       }
+    },
+    "thingport-libraryStats": {
+      "name": "",
+      "description": "",
+      "title": "",
+      "option": {
+        "showModels": {
+          "label": ""
+        },
+        "showCollections": {
+          "label": ""
+        },
+        "showCategories": {
+          "label": ""
+        },
+        "showAuthors": {
+          "label": ""
+        }
+      },
+      "models": "",
+      "collections": "",
+      "categories": "",
+      "authors": ""
+    },
+    "thingport-featuredModel": {
+      "name": "",
+      "description": "",
+      "option": {
+        "autoRotate": {
+          "label": ""
+        },
+        "showDetails": {
+          "label": ""
+        }
+      },
+      "title": "",
+      "empty": "",
+      "hint": "",
+      "noPreview": "",
+      "views": "",
+      "prints": ""
+    },
+    "thingport-activityHeatmap": {
+      "name": "",
+      "description": "",
+      "title": "",
+      "option": {
+        "weekStart": {
+          "label": "",
+          "option": {
+            "sunday": "",
+            "monday": ""
+          }
+        },
+        "showTotal": {
+          "label": ""
+        },
+        "showLegend": {
+          "label": ""
+        }
+      },
+      "lastYear": "",
+      "totalLastYear": "",
+      "totalInYear": "",
+      "dayTotal": "",
+      "dayEmpty": "",
+      "kinds": {
+        "import": "",
+        "upload": "Viso įkelta",
+        "download": "Viso atsisiųsta",
+        "slicer": "",
+        "delete": ""
+      },
+      "less": "",
+      "more": ""
+    },
+    "thingport-models": {
+      "name": "",
+      "description": "",
+      "title": "",
+      "option": {
+        "defaultTab": {
+          "label": ""
+        },
+        "itemCount": {
+          "label": ""
+        },
+        "showThumbnails": {
+          "label": ""
+        }
+      },
+      "tab": {
+        "recentlyAdded": "",
+        "topViewed": "",
+        "topPrinted": ""
+      },
+      "empty": {
+        "recentlyAdded": "",
+        "topViewed": "",
+        "topPrinted": ""
+      },
+      "views": "",
+      "prints": ""
     },
     "paperlessNgx": {
       "description": "Jūsų Paperless-ngx dokumentų archyvo apžvalga",
@@ -4930,45 +5054,116 @@
     "uptimeKuma": {
       "description": "Stebėkite veikimo statistiką iš savo Uptime Kuma būsenos puslapio",
       "option": {
-        "showAverageUptime": {
-          "label": "Rodyti vidutinį veikimo laiką",
-          "description": "Rodyti bendrą 24 valandų vidutinį veikimo procentą"
+        "statusPageSlug": {
+          "label": "",
+          "description": ""
         },
-        "showUptimeRing": {
-          "label": "Rodyti veikimo žiedą",
-          "description": "Rodyti progreso žiedą kartu su vidutine veikimo reikšme"
+        "summaryOnly": {
+          "label": "",
+          "description": ""
         },
-        "showTotalMonitors": {
-          "label": "Rodyti bendrą monitorių skaičių",
-          "description": "Rodyti bendrą sukonfigūruotų monitorių skaičių"
+        "showSummary": {
+          "label": "",
+          "description": ""
         },
-        "showUpCount": {
-          "label": "Rodyti veikiančių skaičių",
-          "description": "Rodyti, kiek monitorių šiuo metu veikia"
+        "showIncidents": {
+          "label": "",
+          "description": ""
         },
-        "showDownCount": {
-          "label": "Rodyti neveikiančių skaičių",
-          "description": "Rodyti, kiek monitorių šiuo metu neveikia"
+        "groupByStatusPageGroup": {
+          "label": "",
+          "description": ""
         },
-        "showPausedCount": {
-          "label": "Rodyti pristabdytų skaičių",
-          "description": "Rodyti, kiek monitorių šiuo metu pristabdyta"
+        "showOnlyProblems": {
+          "label": "",
+          "description": ""
+        },
+        "sortBy": {
+          "label": "",
+          "option": {
+            "status": "",
+            "statusPage": "",
+            "name": "Užduoties pavadinimas",
+            "uptime": ""
+          }
+        },
+        "showHeartbeatBar": {
+          "label": "",
+          "description": ""
+        },
+        "showUptime": {
+          "label": ""
+        },
+        "showResponseTime": {
+          "label": ""
+        },
+        "showCertificateExpiry": {
+          "label": "",
+          "description": ""
         }
-      },
-      "averageUptime": "Vidutinis veikimo laikas (24 val.)",
-      "stats": {
-        "totalMonitors": "Iš viso monitorių",
-        "upCount": "Veikia",
-        "downCount": "Neveikia",
-        "pausedCount": "Pristabdyti"
-      },
-      "error": {
-        "internalServerError": "Nepavyko gauti veikimo duomenų"
       },
       "status": {
         "up": "Viso įkelta",
         "down": "Atsisiuntimo greitis",
-        "paused": "Pristabdyta"
+        "pending": "",
+        "maintenance": "",
+        "stale": "",
+        "unknown": ""
+      },
+      "overall": {
+        "operational": "",
+        "degraded": "",
+        "outage": "",
+        "maintenance": "",
+        "unknown": ""
+      },
+      "short": {
+        "operational": "",
+        "down": "",
+        "pending": "",
+        "maintenance": "",
+        "unknown": ""
+      },
+      "summary": {
+        "upRatio": "",
+        "upRatioShort": "",
+        "averageUptime": "",
+        "uptimeShort": "",
+        "statusCount": ""
+      },
+      "unit": {
+        "milliseconds": ""
+      },
+      "heartbeatBar": {
+        "label": ""
+      },
+      "detail": {
+        "checked": "",
+        "certificate": ""
+      },
+      "notice": {
+        "label": "",
+        "untitled": ""
+      },
+      "empty": {
+        "title": "",
+        "description": ""
+      },
+      "allClear": "",
+      "error": {
+        "internalServerError": "Nepavyko gauti veikimo duomenų"
+      },
+      "monitorType": {
+        "http": "",
+        "keyword": "",
+        "jsonQuery": "",
+        "port": "",
+        "ping": "",
+        "dns": "",
+        "docker": "",
+        "push": "",
+        "group": "",
+        "realBrowser": ""
       }
     },
     "traefik": {
@@ -5575,6 +5770,8 @@
       "allHidden": "Šiame rodinyje visi metrikos duomenys paslėpti. Norėdami juos atkurti, pasirinkite „Tinkinti šį rodinį“."
     },
     "wazuh": {
+      "name": "",
+      "description": "",
       "target": {
         "api": "Wazuh serverio API",
         "indexer": "Wazuh indeksatorius",
@@ -5594,6 +5791,14 @@
         "certificate": {
           "title": "{target} sertifikatas nepatikimas",
           "description": "Pagal numatytuosius nustatymus Wazuh naudoja savarankiškai pasirašytą sertifikatą. Integracijoje paleiskite „Tikrinti ryšį“ ir patvirtinkite sertifikatą arba skiltyje „Nustatymai → Sertifikatai“ pridėkite savo CA."
+        },
+        "certificateHostname": {
+          "title": "",
+          "description": ""
+        },
+        "certificateExpired": {
+          "title": "",
+          "description": ""
         },
         "unreachable": {
           "title": "Nepavyksta pasiekti {target}",
@@ -5618,7 +5823,9 @@
         "unknown": {
           "title": "Nepavyko įkelti duomenų iš {target}",
           "description": "Išsamesnės informacijos ieškokite Homarr žurnaluose."
-        }
+        },
+        "viewSaveTitle": "",
+        "viewSaveMessage": ""
       },
       "range": {
         "1h": "1 val",
@@ -5626,268 +5833,234 @@
         "7d": "7 d",
         "30d": "30 d"
       },
-      "levelTooltip": "Taisyklės lygis {level} ({severity})"
-    },
-    "wazuhAgents": {
-      "name": "Wazuh agentai",
-      "description": "Rikiuojamas Wazuh agentų sąrašas su būsena, OS, versija ir paskutiniu ryšiu",
+      "levelTooltip": "Taisyklės lygis {level} ({severity})",
+      "summary": {
+        "title": "",
+        "alerts": "",
+        "none": "",
+        "trend": {
+          "new": "",
+          "tooltip": ""
+        },
+        "previous": "",
+        "maxLevel": "",
+        "health": "",
+        "manager": ""
+      },
+      "alerts": {
+        "title": "",
+        "empty": "",
+        "rule": "",
+        "openInDashboard": ""
+      },
+      "timeline": {
+        "title": "",
+        "total": "",
+        "interval": ""
+      },
+      "top": {
+        "title": {
+          "rules": "",
+          "agents": "",
+          "sourceIps": "",
+          "mitreTactics": "",
+          "mitreTechniques": ""
+        },
+        "empty": {
+          "rules": "",
+          "agents": "",
+          "sourceIps": "",
+          "mitreTactics": "",
+          "mitreTechniques": ""
+        },
+        "totalTooltip": "",
+        "private": "",
+        "public": "Vieša",
+        "agents": "",
+        "others": ""
+      },
+      "agents": {
+        "title": "",
+        "total": "",
+        "status": {
+          "active": "",
+          "disconnected": "",
+          "neverConnected": "",
+          "pending": ""
+        },
+        "statusLabel": {
+          "active": "",
+          "disconnected": "",
+          "never_connected": "",
+          "pending": "",
+          "unknown": "Nežinoma"
+        },
+        "live": "",
+        "snapshot": "",
+        "snapshotHint": "",
+        "staleSnapshot": "",
+        "noDisconnected": "",
+        "empty": "",
+        "column": {
+          "status": "",
+          "name": "Užduoties pavadinimas",
+          "ip": "",
+          "os": "",
+          "version": "",
+          "lastKeepAlive": "",
+          "groups": ""
+        },
+        "outdated": ""
+      },
+      "vulnerabilities": {
+        "title": "",
+        "topCves": "",
+        "score": "",
+        "agentsShort": "",
+        "topAgents": "",
+        "criticalHigh": "",
+        "totalTooltip": "",
+        "affected": "",
+        "empty": "",
+        "distribution": "",
+        "worst": ""
+      },
+      "fim": {
+        "title": "",
+        "event": {
+          "added": "Pridėjimo data",
+          "modified": "",
+          "deleted": "",
+          "unknown": ""
+        },
+        "empty": "",
+        "user": "",
+        "registry": ""
+      },
+      "authFailures": {
+        "title": "",
+        "seriesTooltip": "",
+        "peak": "",
+        "empty": "",
+        "failed": "",
+        "failedHint": "",
+        "bruteForce": "",
+        "bruteForceHint": "",
+        "sourceIps": "",
+        "ipTooltip": "",
+        "bruteForceCount": ""
+      },
+      "view": {
+        "overview": "",
+        "alerts": "",
+        "timeline": "",
+        "top": "",
+        "agents": "",
+        "vulnerabilities": "",
+        "fim": "",
+        "authFailures": ""
+      },
       "option": {
-        "statusFilter": {
-          "label": "Rodyti agentus"
+        "visibleViews": {
+          "label": "",
+          "description": ""
         },
-        "sortBy": {
-          "label": "Rikiuoti pagal"
-        },
-        "showVersion": {
-          "label": "Rodyti Wazuh versijos stulpelį"
-        },
-        "showGroups": {
-          "label": "Rodyti grupių stulpelį"
-        }
-      },
-      "title": "Agentai",
-      "total": "{count} agentai",
-      "status": {
-        "active": "Aktyvus",
-        "disconnected": "Atsijungęs",
-        "neverConnected": "Niekada neprisijungęs",
-        "pending": "Laukiama"
-      },
-      "statusLabel": {
-        "active": "Aktyvus",
-        "disconnected": "Atsijungęs",
-        "never_connected": "Niekada neprisijungęs",
-        "pending": "Laukiama",
-        "unknown": "Nežinoma"
-      },
-      "live": "Tiesiogiai",
-      "snapshot": "Momentinė kopija, sena {age}",
-      "snapshotHint": "Nuskaitoma iš Wazuh valdymo skydo agentų momentinės kopijos („wazuh-monitoring“), sukurtos {time}. Norėdami gauti tiesioginius duomenis, pridėkite serverio API kredencialus.",
-      "staleSnapshot": "Agentų momentinė kopija iš {time} yra pasenusi. Patikrinkite, ar veikia Wazuh valdymo skydo stebėjimo užduotis, arba pridėkite serverio API kredencialus.",
-      "noDisconnected": "Visi agentai prisijungę",
-      "empty": "Šio filtro neatitinka nė vienas agentas",
-      "column": {
-        "status": "Būsena",
-        "name": "Užduoties pavadinimas",
-        "ip": "IP",
-        "os": "OS",
-        "version": "Versija",
-        "lastKeepAlive": "Ryšys",
-        "groups": "Grupės"
-      },
-      "outdated": "Senesnė nei naujausia agento versija ({version})"
-    },
-    "wazuhAlerts": {
-      "name": "Wazuh įspėjimų sklaidos kanalas",
-      "description": "Naujausi Wazuh įspėjimai su lygiu, MITRE ATT&CK metodais, agentu ir šaltinio IP",
-      "option": {
-        "minLevel": {
-          "label": "Mažiausias taisyklės lygis",
-          "description": "Wazuh lygiai: 0–6 – žemas, 7–11 – vidutinis, 12–14 – aukštas, 15+ – kritinis"
-        },
-        "hours": {
-          "label": "Laiko intervalas (valandomis)"
-        },
-        "limit": {
-          "label": "Įspėjimų skaičius"
-        },
-        "showMitre": {
-          "label": "Rodyti MITRE ATT&CK metodus"
-        },
-        "showAgent": {
-          "label": "Rodyti agentą"
-        },
-        "showSourceIp": {
-          "label": "Rodyti šaltinio IP"
-        },
-        "showRuleId": {
-          "label": "Rodyti taisyklės ID"
-        }
-      },
-      "title": "Įspėjimai · lygis {level}+ · {hours} val",
-      "empty": "Šiame lygyje įspėjimų nėra. Viskas ramu.",
-      "rule": "Taisyklė {id}",
-      "openInDashboard": "Atidaryti šį įspėjimą Wazuh valdymo skydelyje"
-    },
-    "wazuhSummary": {
-      "name": "Wazuh įspėjimo svarba",
-      "description": "Įspėjimų svarbos suskirstymas su tendencija, palyginta su ankstesniu laikotarpiu",
-      "option": {
         "range": {
-          "label": "Laikotarpis"
+          "label": ""
         },
         "showTrend": {
-          "label": "Rodyti tendenciją, palygintą su ankstesniu laikotarpiu"
+          "label": ""
         },
         "showFooter": {
-          "label": "Rodyti poraštę"
-        }
-      },
-      "title": "Įspėjimų svarba · {range}",
-      "alerts": "įspėjimai",
-      "none": "Įspėjimų nėra",
-      "trend": {
-        "new": "nauji",
-        "tooltip": "Ankstesnis laikotarpis: {previous}"
-      },
-      "previous": "Ankstesni {range}: {count}",
-      "maxLevel": "Didžiausias lygis {level}",
-      "health": "Indeksatoriaus būklė: {status}",
-      "manager": "Tvarkytuvė {version}"
-    },
-    "wazuhTimeline": {
-      "name": "Wazuh įspėjimų laiko juosta",
-      "description": "Sluoksninė Wazuh įspėjimų diagrama pagal svarbą laikui bėgant",
-      "option": {
-        "range": {
-          "label": "Laikotarpis"
+          "label": ""
         },
         "interval": {
-          "label": "Intervalas"
+          "label": ""
         },
         "chartType": {
-          "label": "Diagramos tipas"
+          "label": ""
         },
         "yScale": {
-          "label": "Y ašies mastelis",
-          "description": "Kvadratinė šaknis leidžia matyti aukšto ir kritinio lygio įspėjimus šalia tūkstančių žemo lygio įspėjimų"
+          "label": "",
+          "description": ""
         },
         "minLevel": {
-          "label": "Mažiausias taisyklės lygis"
+          "label": ""
         },
         "showLegend": {
-          "label": "Rodyti legendą su bendromis reikšmėmis"
-        }
-      },
-      "title": "Įspėjimų laiko juosta · {range}",
-      "total": "{count} įspėjimai",
-      "interval": "kas {interval}"
-    },
-    "wazuhTopList": {
-      "name": "Populiariausių Wazuh sąrašas",
-      "description": "Populiariausios taisyklės, agentai, šaltinio IP adresai arba MITRE ATT&CK taktikos ir metodai pagal įspėjimų skaičių",
-      "option": {
-        "kind": {
-          "label": "Reitinguoti"
+          "label": ""
         },
-        "range": {
-          "label": "Laikotarpis"
+        "topKind": {
+          "label": ""
         },
-        "limit": {
-          "label": "Įrašų skaičius"
-        },
-        "minLevel": {
-          "label": "Minimalus taisyklės lygis"
+        "topLimit": {
+          "label": ""
         },
         "showBars": {
-          "label": "Rodyti juostas"
-        }
-      },
-      "title": {
-        "rules": "Populiariausios taisyklės · {range}",
-        "agents": "Populiariausi agentai · {range}",
-        "sourceIps": "Populiariausi šaltinio IP adresai · {range}",
-        "mitreTactics": "MITRE taktikos · {range}",
-        "mitreTechniques": "MITRE metodai · {range}"
-      },
-      "empty": {
-        "rules": "Šiuo laikotarpiu įspėjimų nėra",
-        "agents": "Šiuo laikotarpiu įspėjimų nėra",
-        "sourceIps": "Šiuo laikotarpiu nėra įspėjimų su šaltinio IP adresu",
-        "mitreTactics": "Šiuo laikotarpiu nėra įspėjimų, susietų su MITRE ATT&CK",
-        "mitreTechniques": "Šiuo laikotarpiu nėra įspėjimų, susietų su MITRE ATT&CK"
-      },
-      "totalTooltip": "Atitinkančių įspėjimų: {count}",
-      "private": "LAN",
-      "public": "Vieša",
-      "agents": "Aptikta {count} agentuose",
-      "others": "Dar {count} įspėjimų kituose įrašuose"
-    },
-    "wazuhVulnerabilities": {
-      "name": "Wazuh pažeidžiamumai",
-      "description": "Pažeidžiamumų skaičius, populiariausi CVE ir pažeidžiamiausi agentai",
-      "option": {
+          "label": ""
+        },
+        "agentStatusFilter": {
+          "label": ""
+        },
+        "agentSortBy": {
+          "label": ""
+        },
+        "showVersion": {
+          "label": ""
+        },
+        "showGroups": {
+          "label": ""
+        },
         "cveOrder": {
-          "label": "Reitinguoti CVE pagal"
+          "label": ""
         },
         "minSeverity": {
-          "label": "CVE pavojingumą"
+          "label": ""
         },
         "cveLimit": {
-          "label": "CVE skaičius"
+          "label": ""
         },
         "agentLimit": {
-          "label": "Agentų skaičius"
+          "label": ""
         },
         "showAgents": {
-          "label": "Rodyti pažeidžiamiausius agentus"
-        }
-      },
-      "title": "Pažeidžiamumai",
-      "topCves": "Populiariausi CVE",
-      "score": "Balas",
-      "agentsShort": "Agentai",
-      "topAgents": "Pažeidžiamiausi agentai",
-      "criticalHigh": "Kritiniai / aukšti",
-      "totalTooltip": "Radinių: {count}, agentų: {agents}",
-      "affected": "{count} agentų",
-      "empty": "Pažeidžiamumų neaptikta",
-      "distribution": "Pavojingumo pasiskirstymas. Nerodomi {unscored} radiniai be balo.",
-      "worst": "Blogiausias: {id} ({score}), agentų: {agents}"
-    },
-    "wazuhFim": {
-      "name": "Wazuh failų vientisumas",
-      "description": "Naujausi failų vientisumo stebėjimo („syscheck“) įvykiai",
-      "option": {
-        "range": {
-          "label": "Laikotarpis"
+          "label": ""
         },
-        "event": {
-          "label": "Įvykiai"
+        "fimEvent": {
+          "label": ""
         },
-        "limit": {
-          "label": "Įvykių skaičius"
+        "fimLimit": {
+          "label": ""
         },
         "includeRegistry": {
-          "label": "Įtraukti „Windows“ registro įvykius"
-        }
-      },
-      "title": "Failų vientisumas · {range}",
-      "event": {
-        "added": "Pridėjimo data",
-        "modified": "Pakeistas",
-        "deleted": "Ištrintas",
-        "unknown": "Pakeistas"
-      },
-      "empty": "Šiuo laikotarpiu failų vientisumo įvykių nėra",
-      "user": "naudotojas: {user}",
-      "registry": "Registras"
-    },
-    "wazuhAuthFailures": {
-      "name": "Wazuh autentifikavimo klaidos",
-      "description": "Nesėkmingi prisijungimai ir grubios jėgos atakų įspėjimai pagal agentą su valandinėmis diagramomis",
-      "option": {
-        "hours": {
-          "label": "Laikotarpis (val.)"
+          "label": ""
         },
-        "limit": {
-          "label": "Agentų skaičius"
+        "authLimit": {
+          "label": ""
         },
         "showSourceIps": {
-          "label": "Rodyti populiariausius šaltinio IP adresus"
+          "label": ""
+        },
+        "alertsMinLevel": {
+          "label": "",
+          "description": ""
+        },
+        "alertsLimit": {
+          "label": ""
+        },
+        "showMitre": {
+          "label": ""
+        },
+        "showAgent": {
+          "label": ""
+        },
+        "showSourceIp": {
+          "label": ""
+        },
+        "showRuleId": {
+          "label": ""
         }
-      },
-      "title": "Autentifikavimo klaidos · {hours} val.",
-      "seriesTooltip": "Visi agentai per pastarąsias {hours} val.",
-      "peak": "Pikas: {count} / intervalą",
-      "empty": "Šiuo laikotarpiu nesėkmingų prisijungimų nėra",
-      "failed": "Nesėkmingi prisijungimai",
-      "failedHint": "Pavienės autentifikavimo klaidos (sshd, PAM, „Windows“ prisijungimas, negaliojantys naudotojai)",
-      "bruteForce": "Grubios jėgos ataka",
-      "bruteForceHint": "Susietos grubios jėgos atakų taisyklės (daug nesėkmingų bandymų per trumpą laiką, MITRE T1110)",
-      "sourceIps": "Šaltinio IP adresai",
-      "ipTooltip": "{ip}: {count} klaidų",
-      "bruteForceCount": "Grubios jėgos atakų: {count}"
+      }
     }
   },
   "widgetPreview": {

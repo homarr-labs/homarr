@@ -1,10 +1,12 @@
 import { useId } from "react";
+import type { ReactNode } from "react";
 import {
   Badge,
   Box,
   Button,
   darken,
   Group,
+  HoverCard,
   Image,
   lighten,
   ScrollArea,
@@ -27,6 +29,31 @@ import classes from "./calendar-event-list.module.css";
 export type CalendarEventWithSource = CalendarEvent & {
   source?: { integrationId: string; integrationName: string };
 };
+
+interface CalendarEventsHoverCardProps {
+  events: CalendarEvent[];
+  disabled: boolean;
+  children: ReactNode;
+}
+
+export const CalendarEventsHoverCard = ({ events, disabled, children }: CalendarEventsHoverCardProps) => (
+  <HoverCard
+    disabled={disabled || events.length === 0}
+    position="bottom"
+    withArrow
+    withinPortal
+    radius="lg"
+    shadow="sm"
+    transitionProps={{ transition: "pop" }}
+    openDelay={350}
+    closeDelay={400}
+  >
+    <HoverCard.Target>{children}</HoverCard.Target>
+    <HoverCard.Dropdown maw="calc(100vw - 24px)" w={512} ps={4} pe={4} pt={4} pb={0} style={{ overflow: "hidden" }}>
+      <CalendarEventList events={events} />
+    </HoverCard.Dropdown>
+  </HoverCard>
+);
 
 interface CalendarEventListProps {
   events: CalendarEventWithSource[];

@@ -152,7 +152,7 @@
         "columns": "Kolumny tablicy",
         "columnsDescription": "Kolumny definiują siatkę poziomą używaną do rozmiaru i pozycji pozycji. 12 jest dla większości ludzi.",
         "columnCount": "{count, plural, one {# kolumna} other {# kolumny}}",
-        "leftSidebar": "Left sidebar",
+        "leftSidebar": "",
         "rightSidebar": "Prawy pasek boczny",
         "previewLabel": "Podgląd na żywo pierwszego układu tablicy"
       },
@@ -171,7 +171,7 @@
           "description": "Przeglądaj niestandardowe widżety, sprawdź wymagane możliwości, zainstaluj je i opublikuj własną pracę bez kopiowania kodu pomiędzy serwerami.",
           "available": "Dostępne",
           "checking": "Sprawdzanie…",
-          "unavailable": "Unavailable",
+          "unavailable": "",
           "discoverTitle": "Odkryj",
           "discoverDescription": "Znajdź widżety zbudowane dla prawdziwych własnych procesów pracy.",
           "installTitle": "Przejrzyj i zainstaluj",
@@ -181,7 +181,7 @@
           "browse": "Przeglądaj warsztaty"
         },
         "mcpSetup": {
-          "title": "Homarr MCP",
+          "title": "",
           "description": "Połącz Claude, Codex, lub inny klient MCP z narzędziami Homarra. Klucze API zachowują dostęp jawny i odwołalny.",
           "endpoint": "Streamowalny punkt końcowy HTTP",
           "keyTitle": "Skopiuj ten klucz teraz",
@@ -203,7 +203,7 @@
         "columns": "Kolumny tablicy",
         "columnsValue": "{count, plural, one {# kolumna} other {# kolumny}}",
         "sidebars": "Paski boczne",
-        "sidebarsValue": "{count, plural, =0 {None} one {# sidebar} other {# sidebars}}",
+        "sidebarsValue": "",
         "layouts": "Responsywne układy",
         "layoutsValue": "Telefon komórkowy + baza",
         "integrations": "Integracje",
@@ -917,7 +917,7 @@
       "action": {
         "components": "Składniki",
         "format": "Formatowanie",
-        "insertStarter": "Insert starter",
+        "insertStarter": "",
         "redo": "Ponów",
         "copied": "Skopiowano",
         "schema": "Schemat"
@@ -935,14 +935,14 @@
         "errors": "{count, number} błędy",
         "warnings": "{count, number} ostrzeżenia",
         "ready": "Nie znaleziono problemów",
-        "position": "Ln {line, number}, Col {column, number}",
+        "position": "",
         "characters": "{count, number} znaki",
-        "charactersWithLimit": "{count, number} / {limit, number}"
+        "charactersWithLimit": ""
       },
       "diagnostics": {
         "title": "Diagnostyka szablonów",
         "line": "Wiersz {line, number}",
-        "ast": "{value}",
+        "ast": "",
         "bindingTypeConflict": "Wejście \"{value}\" jest współdzielone przez urządzenia sterujące niekompatybilnymi typami wartości.",
         "runtimeBindingTypeConflict": "Dane wejściowe \"{value}\" są powiązane zarówno {firstType} , jak i {secondType}.",
         "dynamicRequestId": "Wymagane jest dosłowne ID żądania. Dynamiczne ID żądania nie są akceptowane.",
@@ -966,7 +966,7 @@
         "sources": "Źródła API",
         "requests": "Zapytania",
         "options": "Opcje",
-        "jsx": "JSX",
+        "jsx": "",
         "preview": "Podgląd"
       },
       "status": {
@@ -997,7 +997,7 @@
       "builder": {
         "advancedManifest": "Zaawansowany manifest surowy",
         "advancedJson": "Zaawansowany manifest JSON",
-        "manifestFilename": "widget.json",
+        "manifestFilename": "",
         "request": "Żądaj {count, number}",
         "requestId": "Żądanie ID",
         "type": "Typ",
@@ -1068,7 +1068,7 @@
       },
       "sources": {
         "title": "Źródła i dane logowania API",
-        "newName": "API {count, number}",
+        "newName": "",
         "duplicateSourceId": "Identyfikatory źródła API muszą być unikalne.",
         "credentialRemoved": "Usunięto poświadczenia",
         "credentialRemovedDescription": "Zapisana wartość została usunięta.",
@@ -1092,7 +1092,7 @@
         "advanced": "Zaawansowane",
         "add": "Dodaj kolejne źródło API",
         "sourceType": "Integracja",
-        "manualSource": "HTTP API",
+        "manualSource": "",
         "existingIntegration": "Istniejąca integracja",
         "integrationType": "Typ integracji",
         "selectIntegration": "Konfigurowana integracja",
@@ -1163,7 +1163,7 @@
         "runAction": "Uruchom akcję",
         "deleteConfirmation": "To działanie podglądu zmienia zdalne dane za pomocą skonfigurowanego API.",
         "simulated": "Akcja symulowana",
-        "httpStatus": "HTTP {status, number}",
+        "httpStatus": "",
         "tab": {
           "widget": "Widżet",
           "data": "Dane",
@@ -1283,7 +1283,7 @@
     "outdated": "Nieaktualny",
     "outdatedWarning": "Autor oznaczył to zgłoszenie jako przestarzałe. Przejrzyj je uważnie przed importowaniem.",
     "score": "Wynik: {count, number}",
-    "upvote": "Upvote",
+    "upvote": "",
     "downvote": "Głosuj na dół",
     "voteError": "Nie można zapisać głosu.",
     "signIn": "Zaloguj się przez GitHub",
@@ -1296,7 +1296,7 @@
     "installReviewTitle": "Przejrzyj przed instalacją",
     "installError": "Ten widżet nie może być zainstalowany",
     "installErrorDescription": "Zgłoszenie warsztatu nie jest poprawnym widgetem niestandardowym JSX v2.",
-    "useCss": "Import CSS",
+    "useCss": "",
     "importCss": "Importuj CSS z Warsztatu",
     "importCssConfirm": "Zastąpić bieżący niestandardowy CSS \"{title}\"? Nic nie zostanie zapisane dopóki nie zapiszesz ustawień forum.",
     "screenshotAlt": "{title} zrzut ekranu {count, number}",
@@ -1324,7 +1324,7 @@
     "reportCategory": {
       "outdated": "Przestarzałe lub już niepracujące",
       "malicious": "Złośliwy",
-      "spam": "Spam",
+      "spam": "",
       "copyright": "Prawa autorskie",
       "inappropriate": "Niewłaściwe",
       "other": "Inne"
@@ -1510,7 +1510,7 @@
       "vpn": "VPN",
       "mediaLibrary": "Biblioteka Multimediów",
       "uptimeMonitoring": "Monitorowanie Czasu Pracy",
-      "beszel": "Beszel",
+      "beszel": "",
       "systemMonitoring": "Monitorowanie systemu",
       "security": "Bezpieczeństwo",
       "serviceVersion": "Wersja"
@@ -1559,6 +1559,7 @@
             "untrusted": "Certyfikat nie jest zaufany",
             "hostnameMismatch": "Nazwa hosta certyfikatu nie jest zgodna z adresem URL"
           },
+          "secondaryUrl": "",
           "alert": {
             "permission": {
               "title": "Brak wymaganych uprawnień",
@@ -1823,7 +1824,7 @@
       "full": "Pełny dostęp do integracji"
     },
     "llamacpp": {
-      "name": "llama.cpp",
+      "name": "",
       "description": "Monitoruj lokalny serwer llama.cpp: zdrowie, model i wskaźniki generowania"
     }
   },
@@ -1904,6 +1905,7 @@
       "tryAgain": "Spróbuj ponownie",
       "loading": "Ładowanie",
       "show": "Pokaż",
+      "showAll": "",
       "hide": "Ukryj",
       "undo": "Cofnij",
       "editNamed": "Edytuj {name}",
@@ -1913,6 +1915,7 @@
       "copied": "Skopiowano",
       "refresh": "Odśwież"
     },
+    "hidden": "Ukryty",
     "pagination": {
       "pageOf": "Strona {page} z {totalPages}"
     },
@@ -1935,6 +1938,7 @@
       "clear": "Wyczyść obraz",
       "uploadImage": "Prześlij obraz",
       "results": "Wyniki wyszukiwania obrazów",
+      "websiteIcon": "",
       "localImages": "Twoje obrazy",
       "svgIcons": "Ikony SVG",
       "otherImages": "Inne obrazy",
@@ -1999,7 +2003,7 @@
         "updateAvailable": "Dostępne aktualizacje {countUpdates} : {tag}",
         "assistant": "Asystent",
         "assistantThinking": "Myślenie",
-        "modifier": "Mod"
+        "modifier": ""
       }
     },
     "dangerZone": "Strefa zagrożenia",
@@ -2232,7 +2236,7 @@
         },
         "height": {
           "label": "Wysokość",
-          "shortLabel": "H"
+          "shortLabel": ""
         },
         "xOffset": {
           "label": "Przesunięcie X"
@@ -2437,7 +2441,7 @@
         "remove": "Usuń kategorię {name}",
         "rename": "Nazwa kategorii dla {name}",
         "assign": "Kategoria dla {name}",
-        "ungrouped": "Ungrouped"
+        "ungrouped": ""
       }
     },
     "archiveTeamWarrior": {
@@ -2617,25 +2621,25 @@
         "unsupportedPrimaryTitle": "Podstawowa strefa czasowa jest niedostępna",
         "unsupportedPrimary": "{timeZone} nie jest obsługiwany w tej przeglądarce. Wyświetlanie UTC jako wyraźnie zaznaczonego spadku.",
         "unsupportedTimeZone": "Nieobsługiwana strefa czasowa: {timeZone}",
-        "accessibleTime": "{city}: {time}, {date}, {timeZone}",
+        "accessibleTime": "",
         "advancedLabel": "Zaawansowany zegar świata",
         "cities": "Zegary światowe",
-        "cityCount": "{count} timezones",
+        "cityCount": "",
         "timeBarLabel": "24-godzinny czas dnia dla {city}",
         "dayProgress": "{percent}% upłynęło · {hours}h {minutes}m pozostało",
         "phaseLegend": "Legenda z godziny dnia",
         "tick": {
-          "midnight": "00",
-          "morning": "06",
-          "noon": "12",
-          "evening": "18",
-          "end": "24"
+          "midnight": "",
+          "morning": "",
+          "noon": "",
+          "evening": "",
+          "end": ""
         },
         "phaseRange": {
-          "night": "00–05 · 21–24",
-          "dawn": "05–08",
-          "day": "08–18",
-          "dusk": "18–21"
+          "night": "",
+          "dawn": "",
+          "day": "",
+          "dusk": ""
         },
         "phase": {
           "night": "Noc",
@@ -2694,8 +2698,8 @@
           "unknown": "Brak czytania"
         }
       },
-      "dominantPollutant": "Dominant pollutant",
-      "aqiLabel": "AQI",
+      "dominantPollutant": "",
+      "aqiLabel": "",
       "strongestPollen": "Najwyższy pyłek",
       "unit": {
         "concentration": "{value} μg/m3",
@@ -2703,14 +2707,14 @@
       },
       "pollutant": {
         "pm2_5": "PM2,5",
-        "pm10": "PM10",
+        "pm10": "",
         "ozone": "Ozon",
         "nitrogenDioxide": "Dwutlenek azotu",
-        "sulphurDioxide": "Sulphur dioxide",
+        "sulphurDioxide": "",
         "carbonMonoxide": "Tlenek węgla"
       },
       "pollen": {
-        "alder": "Alder",
+        "alder": "",
         "birch": "Brzozowy",
         "grass": "Trawa",
         "mugwort": "Bakłażan",
@@ -2726,9 +2730,9 @@
         "pollutants": "Stężenia zanieczyszczeń",
         "pollen": "Stężenie pyłu",
         "sevenDayForecast": "Maksymalna prognoza na 7 dni",
-        "aqiValue": "AQI {value}",
-        "uvValue": "UV {value}",
-        "uvShort": "UV {value}",
+        "aqiValue": "",
+        "uvValue": "",
+        "uvShort": "",
         "noForecast": "Brak dostępnych danych prognoz"
       }
     },
@@ -2779,7 +2783,7 @@
       "invalid": {
         "title": "Niektóre wydarzenia nie mogą być wyświetlane",
         "description": "{count, plural, one {Jedno zdarzenie ma nieprawidłową datę lub nieobsługiwaną strefę czasową.} other {# zdarzenia mają nieprawidłową datę lub nieobsługiwaną strefę czasową.}}",
-        "value": "Unavailable"
+        "value": ""
       },
       "alert": {
         "notifications": "Powiadomienia przeglądarki",
@@ -2788,14 +2792,14 @@
       }
     },
     "timer": {
-      "name": "Timer / Pomodoro",
+      "name": "",
       "description": "Uruchamia prosty zegar lub konfigurowalną sekwencję Pomodoro.",
       "option": {
         "mode": {
           "label": "Tryb",
           "options": {
-            "timer": "Timer",
-            "pomodoro": "Pomodoro"
+            "timer": "",
+            "pomodoro": ""
           }
         },
         "timerMinutes": {
@@ -2821,7 +2825,7 @@
         }
       },
       "phase": {
-        "timer": "Timer",
+        "timer": "",
         "focus": "Skupienie się",
         "shortBreak": "Krótka przerwa",
         "longBreak": "Długa przerwa"
@@ -2829,10 +2833,10 @@
       "action": {
         "start": "Uruchom",
         "pause": "Wstrzymaj",
-        "reset": "Reset"
+        "reset": ""
       },
       "attention": {
-        "timerComplete": "Timer complete",
+        "timerComplete": "",
         "phaseReady": "{phase} gotowy"
       },
       "progress": "Postęp timera: {progress}%",
@@ -2840,11 +2844,11 @@
         "completedFocus": "{count, plural, =0 {Nie ukończono żadnych sesji skupienia} one {# sesja ogniskowa zakończona} other {# sesje ogniskowe zakończono}}"
       },
       "alert": {
-        "title": "Timer complete",
+        "title": "",
         "completed": "Ukończono {phase}."
       },
       "advanced": {
-        "sequence": "Pomodoro sequence",
+        "sequence": "",
         "focusSession": "Skupienie {session}",
         "settings": "Stałe ustawienia",
         "settingsHint": "Użyj menu kontekstowego widżetu do edycji tych ustawień.",
@@ -3066,7 +3070,7 @@
       "state": {
         "on": "Włączone",
         "off": "Wyłączony",
-        "unavailable": "Unavailable",
+        "unavailable": "",
         "unknown": "Nieznany"
       },
       "advanced": {
@@ -3224,6 +3228,10 @@
         },
         "viewMode": {
           "label": "Widok"
+        },
+        "hideHeader": {
+          "label": "",
+          "description": ""
         }
       },
       "advanced": {
@@ -3241,15 +3249,11 @@
         "agenda": "Harmonogram"
       },
       "controls": {
-        "view": "Widok kalendarza",
         "today": "Dzisiaj",
         "previous": "Poprzedni okres",
         "next": "Następny okres",
         "noEvents": "Brak wydarzeń w tym okresie",
         "more": "",
-        "moreLabel": "",
-        "eventDetails": "Szczegóły wydarzenia",
-        "close": "Zamknij szczegóły wydarzenia",
         "timeSlot": "Przedział czasowy",
         "weekday": "Dzień tygodnia"
       }
@@ -3331,11 +3335,11 @@
         "currentHumidity": "Obecna wilgotność",
         "wind": "Wiatr / Pusty ({unit})",
         "currentWind": "Bieżący wiatr / podpórki",
-        "windValue": "{speed} / {gusts} {unit}",
+        "windValue": "",
         "windDetail": "Maksymalny wiatr / bandy: {speed} / {gusts} {unit}",
         "nextHourPrecipitation": "Opady w następnej godzinie",
         "precipitationChance": "Szansa na opady",
-        "precipitationValue": "{probability}% · {amount} mm",
+        "precipitationValue": "",
         "precipitationDetail": "Wytrącanie: {probability}% · {amount} mm",
         "todayUv": "Dzisiejszy maksymalny indeks UV",
         "uvIndex": "Maksymalny indeks UV: {value}",
@@ -3348,7 +3352,7 @@
           "humidity": "Średnia wilgotność",
           "wind": "Maksymalny wiatr / podpórki",
           "uv": "Maksymalny indeks UV",
-          "daylight": "Daylight"
+          "daylight": ""
         },
         "sun": "Wschód / Zachód słońca",
         "noForecast": "Brak dostępnych danych prognoz"
@@ -3405,7 +3409,7 @@
           "label": "Domyślna karta"
         },
         "tabOrder": {
-          "label": "Tab order",
+          "label": "",
           "systemFirst": "System a następnie klaster",
           "clusterFirst": "Klaster a system"
         },
@@ -3563,7 +3567,7 @@
       },
       "source": {
         "url": "Źródło: {url}",
-        "unavailable": "{source}: unavailable"
+        "unavailable": ""
       },
       "instances": {
         "title": "Instancje"
@@ -3596,8 +3600,8 @@
       "status": {
         "running": "Uruchomione",
         "notRunning": "Nieuruchomiony",
-        "unavailable": "Unavailable",
-        "vpn": "VPN: {status}"
+        "unavailable": "",
+        "vpn": ""
       }
     },
     "ups": {
@@ -3935,12 +3939,29 @@
         "transcoding": "Transkodowanie",
         "paused": "Zatrzymane",
         "remaining": "{minutes} min pozostało",
-        "seasonEpisode": "S{season} E{episode}",
+        "seasonEpisode": "",
+        "state": {
+          "playing": "",
+          "buffering": ""
+        },
+        "details": {
+          "device": "Urządzenie",
+          "location": "",
+          "sessionId": "",
+          "bitrate": "",
+          "audioHandling": "",
+          "direct": "Bezpośrednio",
+          "transcode": "",
+          "containerChanged": "",
+          "position": "",
+          "unknown": ""
+        },
         "metadata": {
           "title": "Statystyki dla nerdów",
           "video": {
             "title": "Wideo",
-            "resolution": "Rozdzielczość"
+            "resolution": "Rozdzielczość",
+            "frameRate": ""
           },
           "audio": {
             "title": "Dźwięk",
@@ -3961,6 +3982,109 @@
         "playing": "{count} gra",
         "transcoding": "{count} transkodowanie"
       }
+    },
+    "thingport-libraryStats": {
+      "name": "",
+      "description": "",
+      "title": "",
+      "option": {
+        "showModels": {
+          "label": ""
+        },
+        "showCollections": {
+          "label": ""
+        },
+        "showCategories": {
+          "label": ""
+        },
+        "showAuthors": {
+          "label": ""
+        }
+      },
+      "models": "",
+      "collections": "",
+      "categories": "Kategorie",
+      "authors": ""
+    },
+    "thingport-featuredModel": {
+      "name": "",
+      "description": "",
+      "option": {
+        "autoRotate": {
+          "label": ""
+        },
+        "showDetails": {
+          "label": ""
+        }
+      },
+      "title": "",
+      "empty": "",
+      "hint": "",
+      "noPreview": "",
+      "views": "",
+      "prints": ""
+    },
+    "thingport-activityHeatmap": {
+      "name": "",
+      "description": "",
+      "title": "",
+      "option": {
+        "weekStart": {
+          "label": "Pierwszy dzień tygodnia",
+          "option": {
+            "sunday": "",
+            "monday": ""
+          }
+        },
+        "showTotal": {
+          "label": ""
+        },
+        "showLegend": {
+          "label": ""
+        }
+      },
+      "lastYear": "",
+      "totalLastYear": "",
+      "totalInYear": "",
+      "dayTotal": "",
+      "dayEmpty": "",
+      "kinds": {
+        "import": "",
+        "upload": "Łącznie wysłano",
+        "download": "Łącznie pobrano",
+        "slicer": "",
+        "delete": "Usunięty"
+      },
+      "less": "",
+      "more": ""
+    },
+    "thingport-models": {
+      "name": "",
+      "description": "",
+      "title": "",
+      "option": {
+        "defaultTab": {
+          "label": "Domyślna karta"
+        },
+        "itemCount": {
+          "label": ""
+        },
+        "showThumbnails": {
+          "label": ""
+        }
+      },
+      "tab": {
+        "recentlyAdded": "",
+        "topViewed": "",
+        "topPrinted": ""
+      },
+      "empty": {
+        "recentlyAdded": "",
+        "topViewed": "",
+        "topPrinted": ""
+      },
+      "views": "",
+      "prints": ""
     },
     "paperlessNgx": {
       "description": "Przegląd Twojego archiwum dokumentów Paperless-ngx",
@@ -4246,7 +4370,7 @@
       "actions": {
         "previousPhoto": "Poprzednie zdjęcie",
         "nextPhoto": "Następne zdjęcie",
-        "pauseSlideshow": "Pause slideshow",
+        "pauseSlideshow": "",
         "resumeSlideshow": "Wznów pokaz slajdów",
         "toggleSlideshow": "Wstrzymaj lub wznawiaj pokaz slajdów",
         "photo": "Zdjęcie {number}"
@@ -4775,10 +4899,10 @@
           "countConnected": "{count, plural, one {# połączono} other {# połączono}}",
           "label": "VPN"
         },
-        "wan": "WAN",
-        "web": "Web",
+        "wan": "",
+        "web": "",
         "wifi": "Wi-Fi",
-        "lan": "LAN"
+        "lan": ""
       },
       "error": {
         "unknownContentOption": "Nieznana opcja zawartości dla widżetu podsumowania kontrolera sieci: "
@@ -4858,7 +4982,7 @@
         "noInterfaces": "Brak danych interfejsu sieciowego"
       },
       "versionUnknown": "Nieznana wersja",
-      "metricAccessible": "{metric}: {value}%, {status}",
+      "metricAccessible": "",
       "status": {
         "normal": "Normalny",
         "warning": "Ostrzeżenie",
@@ -4878,8 +5002,8 @@
           "option": {
             "auto": "Automatyczne",
             "plain": "Zwykły tekst",
-            "markdown": "Markdown",
-            "html": "HTML"
+            "markdown": "",
+            "html": ""
           }
         }
       },
@@ -4930,45 +5054,116 @@
     "uptimeKuma": {
       "description": "Monitoruj statystyki czasu pracy ze strony statusu Uptime Kuma",
       "option": {
-        "showAverageUptime": {
-          "label": "Pokaż średni czas pracy",
-          "description": "Wyświetlaj łączny średni 24-godzinny procent czasu pracy"
+        "statusPageSlug": {
+          "label": "Slug strony statusu",
+          "description": ""
         },
-        "showUptimeRing": {
-          "label": "Pokaż pierścień czasu pracy",
-          "description": "Wyświetlaj pierścień postępu obok średniej wartości czasu pracy"
+        "summaryOnly": {
+          "label": "",
+          "description": ""
         },
-        "showTotalMonitors": {
-          "label": "Pokaż wszystkie monitory",
-          "description": "Pokaż ilośc wszystkich z konfigurowanych monitorów"
+        "showSummary": {
+          "label": "",
+          "description": ""
         },
-        "showUpCount": {
-          "label": "Pokaż ilość włączonych",
-          "description": "Pokaż ile monitorów obecnie jest włączonych"
+        "showIncidents": {
+          "label": "",
+          "description": ""
         },
-        "showDownCount": {
-          "label": "Pokaż ilość wyłączonych",
-          "description": "Pokaż ile monitorów obecnie jest wyłączonych"
+        "groupByStatusPageGroup": {
+          "label": "",
+          "description": ""
         },
-        "showPausedCount": {
-          "label": "Pokaż ilośc zatrzymanych",
-          "description": "Pokaż ile monitorów obecnie jest zatrzymane"
+        "showOnlyProblems": {
+          "label": "",
+          "description": ""
+        },
+        "sortBy": {
+          "label": "",
+          "option": {
+            "status": "",
+            "statusPage": "",
+            "name": "Nazwa zlecenia",
+            "uptime": ""
+          }
+        },
+        "showHeartbeatBar": {
+          "label": "",
+          "description": ""
+        },
+        "showUptime": {
+          "label": ""
+        },
+        "showResponseTime": {
+          "label": ""
+        },
+        "showCertificateExpiry": {
+          "label": "",
+          "description": ""
         }
-      },
-      "averageUptime": "Średni czas pracy (24 godz.)",
-      "stats": {
-        "totalMonitors": "Całkowita liczba monitorów",
-        "upCount": "Włączone",
-        "downCount": "Wyłączone",
-        "pausedCount": "Zatrzymane"
-      },
-      "error": {
-        "internalServerError": "Nie udało się pobrać danych czasu pracy"
       },
       "status": {
         "up": "Prędkość wysyłania",
         "down": "Prędkość pobierania",
-        "paused": "Zatrzymane"
+        "pending": "Oczekujące",
+        "maintenance": "",
+        "stale": "",
+        "unknown": ""
+      },
+      "overall": {
+        "operational": "",
+        "degraded": "",
+        "outage": "",
+        "maintenance": "",
+        "unknown": ""
+      },
+      "short": {
+        "operational": "",
+        "down": "",
+        "pending": "{count} oczekujące",
+        "maintenance": "",
+        "unknown": ""
+      },
+      "summary": {
+        "upRatio": "",
+        "upRatioShort": "",
+        "averageUptime": "",
+        "uptimeShort": "",
+        "statusCount": ""
+      },
+      "unit": {
+        "milliseconds": ""
+      },
+      "heartbeatBar": {
+        "label": ""
+      },
+      "detail": {
+        "checked": "",
+        "certificate": ""
+      },
+      "notice": {
+        "label": "",
+        "untitled": "Bez tytułu"
+      },
+      "empty": {
+        "title": "",
+        "description": ""
+      },
+      "allClear": "",
+      "error": {
+        "internalServerError": "Nie udało się pobrać danych czasu pracy"
+      },
+      "monitorType": {
+        "http": "",
+        "keyword": "",
+        "jsonQuery": "",
+        "port": "",
+        "ping": "Ping",
+        "dns": "DNS",
+        "docker": "",
+        "push": "",
+        "group": "Grupa",
+        "realBrowser": ""
       }
     },
     "traefik": {
@@ -5099,7 +5294,7 @@
         "network": "Sieć",
         "up": "Aktywny",
         "down": "Nieaktywny",
-        "memoryTooltip": "{used} / {available} ({percent}%)"
+        "memoryTooltip": ""
       }
     },
     "systemDisks": {
@@ -5129,7 +5324,7 @@
       },
       "status": {
         "unhealthy": "Zły",
-        "smart": "SMART",
+        "smart": "",
         "free": "{percentage}% wolnego miejsca"
       }
     },
@@ -5347,11 +5542,11 @@
       },
       "period": {
         "live": "Żywe",
-        "oneHour": "1h",
-        "twelveHours": "12h",
-        "oneDay": "24h",
+        "oneHour": "",
+        "twelveHours": "",
+        "oneDay": "",
         "oneWeek": "1 tydzień",
-        "thirtyDays": "30d"
+        "thirtyDays": ""
       }
     },
     "assistant": {
@@ -5436,9 +5631,9 @@
       }
     },
     "llamacpp": {
-      "name": "llama.cpp",
+      "name": "",
       "description": "Pokaż zdrowie, załadowany model i prędkość generowania lokalnego serwera llama.cpp.",
-      "title": "llama.cpp",
+      "title": "",
       "status": {
         "unhealthy": "Niezdrowe ({status})"
       },
@@ -5466,10 +5661,10 @@
         "unreachable": "serwer llama-jest nieosiągalny"
       },
       "unit": {
-        "speed": "{value} t/s",
-        "parameters": "{value}B",
-        "none": "—",
-        "speedShort": "t/s"
+        "speed": "",
+        "parameters": "",
+        "none": "",
+        "speedShort": ""
       },
       "option": {
         "showTitle": {
@@ -5528,7 +5723,7 @@
       "moveDown": "Przenieś w dół",
       "remove": "Usuń metrykę",
       "loading": "Ładowanie…",
-      "unavailable": "Unavailable",
+      "unavailable": "",
       "refreshFailed": "Odświeżanie nie powiodło się — pokazuje zapisane dane",
       "stale": "Zapisane dane — odśwież aby zaktualizować",
       "table": {
@@ -5575,10 +5770,12 @@
       "allHidden": "Wszystkie metryki są ukryte w tym widoku. Użyj Dostosuj ten widok, aby je przywrócić."
     },
     "wazuh": {
+      "name": "",
+      "description": "",
       "target": {
         "api": "API serwera Wazuh",
         "indexer": "Indeks Wazuh",
-        "wazuh": "Wazuh"
+        "wazuh": ""
       },
       "severity": {
         "low": "Niski",
@@ -5593,7 +5790,15 @@
         },
         "certificate": {
           "title": "Certyfikat {target} nie jest zaufany",
-          "description": "Wazuh używa domyślnie podpisanego certyfikatu. Uruchom \"Testuj połączenie\" na integracji i zaufaj certyfikatowi lub dodaj swój CA w Ustawienia → Certyfikaty."
+          "description": ""
+        },
+        "certificateHostname": {
+          "title": "",
+          "description": ""
+        },
+        "certificateExpired": {
+          "title": "",
+          "description": ""
         },
         "unreachable": {
           "title": "Nie można osiągnąć {target}",
@@ -5618,101 +5823,148 @@
         "unknown": {
           "title": "Nie można załadować danych z {target}",
           "description": "Sprawdź logi Homarr po więcej informacji."
-        }
+        },
+        "viewSaveTitle": "",
+        "viewSaveMessage": ""
       },
       "range": {
-        "1h": "1h",
-        "24h": "24h",
-        "7d": "7d",
-        "30d": "30d"
+        "1h": "",
+        "24h": "",
+        "7d": "",
+        "30d": ""
       },
-      "levelTooltip": "Poziom reguły {level} ({severity})"
-    },
-    "wazuhAgents": {
-      "name": "Środki przeciwmgielne",
-      "description": "Sortowalna lista agentów Wazuh ze statusem, OS, wersją i ostatnią wersją",
+      "levelTooltip": "Poziom reguły {level} ({severity})",
+      "summary": {
+        "title": "Alarm dotkliwości · {range}",
+        "alerts": "ostrzeżenia",
+        "none": "Brak alertów",
+        "trend": {
+          "new": "nowa",
+          "tooltip": "Poprzedni okres: {previous}"
+        },
+        "previous": "Poprzedni {range}: {count}",
+        "maxLevel": "Maksymalny poziom {level}",
+        "health": "Indekser zdrowia: {status}",
+        "manager": "Menedżer {version}"
+      },
+      "alerts": {
+        "title": "Alerty · poziom {level}+ · {hours}h",
+        "empty": "Brak alertów na tym poziomie. Wszystko cicho.",
+        "rule": "Reguła {id}",
+        "openInDashboard": "Otwórz ten alarm w panelu Wazuh"
+      },
+      "timeline": {
+        "title": "",
+        "total": "Alerty {count}",
+        "interval": "za {interval}"
+      },
+      "top": {
+        "title": {
+          "rules": "Najlepsze reguły · {range}",
+          "agents": "Najlepsi agenci · {range}",
+          "sourceIps": "Najlepsze źródłowe adresy IP · {range}",
+          "mitreTactics": "Taktyka MITRE · {range}",
+          "mitreTechniques": ""
+        },
+        "empty": {
+          "rules": "Brak alertów w tym okresie",
+          "agents": "Brak alertów w tym okresie",
+          "sourceIps": "Brak alertów o źródłowym IP w tym okresie",
+          "mitreTactics": "Brak alertów mapowanych na MITRE ATT&CK w tym okresie",
+          "mitreTechniques": "Brak alertów mapowanych na MITRE ATT&CK w tym okresie"
+        },
+        "totalTooltip": "{count} pasujące alerty",
+        "private": "",
+        "public": "Publiczna",
+        "agents": "Widziane na agentach {count}",
+        "others": "{count} więcej alertów w innych wpisach"
+      },
+      "agents": {
+        "title": "Agenci",
+        "total": "Agenci {count}",
+        "status": {
+          "active": "Aktywny",
+          "disconnected": "Rozłączono",
+          "neverConnected": "Nigdy nie podłączony",
+          "pending": "Oczekujące"
+        },
+        "statusLabel": {
+          "active": "Aktywny",
+          "disconnected": "Rozłączono",
+          "never_connected": "Nigdy nie podłączony",
+          "pending": "Oczekujące",
+          "unknown": "Nieznany"
+        },
+        "live": "Żywe",
+        "snapshot": "Zrzut stanu {age} stary",
+        "snapshotHint": "Przeczytaj z pulpitu nawigacyjnego Wazuh (monitorowanie wazuh) pobranego w {time}. Dodaj dane logowania do serwera dla danych na żywo.",
+        "staleSnapshot": "Snapshot agenta z {time} jest przestarzały. Sprawdź, czy zadanie monitorowania panelu Wazuh jest uruchomione, lub dodaj dane API serwera.",
+        "noDisconnected": "Wszyscy agenci są połączeni",
+        "empty": "Żaden agent nie pasuje do tego filtru",
+        "column": {
+          "status": "Status",
+          "name": "Nazwa zlecenia",
+          "ip": "",
+          "os": "System operacyjny",
+          "version": "Wersja",
+          "lastKeepAlive": "Cykloalkanowe, cykloalkeny i cykloterpeny",
+          "groups": "Grupy"
+        },
+        "outdated": "Starsza niż najnowsza wersja konsultanta ({version})"
+      },
+      "vulnerabilities": {
+        "title": "podatności na zagrożenia",
+        "topCves": "Najlepsze CVE",
+        "score": "Wynik",
+        "agentsShort": "Agenci",
+        "topAgents": "Najbardziej wrażliwi agenci",
+        "criticalHigh": "Krytyka / Wysoka",
+        "totalTooltip": "{count} odkrycia agentów {agents}",
+        "affected": "Agenci {count}",
+        "empty": "Nie wykryto podatności",
+        "distribution": "Rozkład dotkliwości. Wyniki {unscored} bez wyniku nie są wyświetlane.",
+        "worst": "Najgorsze: {id} ({score}) na agentów {agents}"
+      },
+      "fim": {
+        "title": "Integralność pliku · {range}",
+        "event": {
+          "added": "Data dodania",
+          "modified": "Zmodyfikowane",
+          "deleted": "Usunięty",
+          "unknown": "Zmieniono"
+        },
+        "empty": "Brak zdarzeń integralności plików w tym okresie",
+        "user": "przez {user}",
+        "registry": "Rejestr"
+      },
+      "authFailures": {
+        "title": "Niepowodzenie uwierzytelniania · {hours}h",
+        "seriesTooltip": "Wszyscy agenci w ciągu ostatnich {hours}h",
+        "peak": "Szczyt {count}/wiadro",
+        "empty": "Brak nieudanych logowań w tym okresie",
+        "failed": "Nieudane logowanie",
+        "failedHint": "Pojedyncze błędy uwierzytelniania (sshd, PAM, Windows logon, nieprawidłowy użytkownik)",
+        "bruteForce": "Siła szczotkowa",
+        "bruteForceHint": "Skojarzone zasady brute-force (wielokrotne awarie w krótkim okresie, MITRE T1110)",
+        "sourceIps": "Źródłowe adresy IP",
+        "ipTooltip": "{ip}: {count} porażki",
+        "bruteForceCount": "Siła {count}"
+      },
+      "view": {
+        "overview": "",
+        "alerts": "",
+        "timeline": "",
+        "top": "",
+        "agents": "Agenci",
+        "vulnerabilities": "podatności na zagrożenia",
+        "fim": "",
+        "authFailures": ""
+      },
       "option": {
-        "statusFilter": {
-          "label": "Pokaż agentów"
+        "visibleViews": {
+          "label": "",
+          "description": ""
         },
-        "sortBy": {
-          "label": "Sortuj według"
-        },
-        "showVersion": {
-          "label": "Pokaż kolumnę wersji Wazuh"
-        },
-        "showGroups": {
-          "label": "Pokaż kolumnę grup"
-        }
-      },
-      "title": "Agenci",
-      "total": "Agenci {count}",
-      "status": {
-        "active": "Aktywny",
-        "disconnected": "Rozłączono",
-        "neverConnected": "Nigdy nie podłączony",
-        "pending": "Oczekujące"
-      },
-      "statusLabel": {
-        "active": "Aktywny",
-        "disconnected": "Rozłączono",
-        "never_connected": "Nigdy nie podłączony",
-        "pending": "Oczekujące",
-        "unknown": "Nieznany"
-      },
-      "live": "Żywe",
-      "snapshot": "Zrzut stanu {age} stary",
-      "snapshotHint": "Przeczytaj z pulpitu nawigacyjnego Wazuh (monitorowanie wazuh) pobranego w {time}. Dodaj dane logowania do serwera dla danych na żywo.",
-      "staleSnapshot": "Snapshot agenta z {time} jest przestarzały. Sprawdź, czy zadanie monitorowania panelu Wazuh jest uruchomione, lub dodaj dane API serwera.",
-      "noDisconnected": "Wszyscy agenci są połączeni",
-      "empty": "Żaden agent nie pasuje do tego filtru",
-      "column": {
-        "status": "Status",
-        "name": "Nazwa zlecenia",
-        "ip": "IP",
-        "os": "System operacyjny",
-        "version": "Wersja",
-        "lastKeepAlive": "Cykloalkanowe, cykloalkeny i cykloterpeny",
-        "groups": "Grupy"
-      },
-      "outdated": "Starsza niż najnowsza wersja konsultanta ({version})"
-    },
-    "wazuhAlerts": {
-      "name": "Kanał alarmowy Wazuh",
-      "description": "Ostatnie powiadomienia Wazuh z poziomem, MITRE technikami ATT&CK, agentem i źródłowym IP",
-      "option": {
-        "minLevel": {
-          "label": "Minimalny poziom reguły",
-          "description": "Poziomy wahań: 0-6 niskie, 7-11 średnie, 12-14 wysokie, 15+ krytyczne"
-        },
-        "hours": {
-          "label": "Okno czasu (godziny)"
-        },
-        "limit": {
-          "label": "Liczba wpisów"
-        },
-        "showMitre": {
-          "label": "Show MITRE ATT&CK techniques"
-        },
-        "showAgent": {
-          "label": "Pokaż agenta"
-        },
-        "showSourceIp": {
-          "label": "Pokaż źródłowy adres IP"
-        },
-        "showRuleId": {
-          "label": "Pokaż ID reguły"
-        }
-      },
-      "title": "Alerty · poziom {level}+ · {hours}h",
-      "empty": "Brak alertów na tym poziomie. Wszystko cicho.",
-      "rule": "Reguła {id}",
-      "openInDashboard": "Otwórz ten alarm w panelu Wazuh"
-    },
-    "wazuhSummary": {
-      "name": "Natężenie alarmu Wazuh",
-      "description": "Podział według stopnia zagrożenia z tendencją w stosunku do poprzedniego okresu",
-      "option": {
         "range": {
           "label": "Zakres czasowy"
         },
@@ -5721,26 +5973,6 @@
         },
         "showFooter": {
           "label": "Pokaż stopkę"
-        }
-      },
-      "title": "Alarm dotkliwości · {range}",
-      "alerts": "ostrzeżenia",
-      "none": "Brak alertów",
-      "trend": {
-        "new": "nowa",
-        "tooltip": "Poprzedni okres: {previous}"
-      },
-      "previous": "Poprzedni {range}: {count}",
-      "maxLevel": "Maksymalny poziom {level}",
-      "health": "Indekser zdrowia: {status}",
-      "manager": "Menedżer {version}"
-    },
-    "wazuhTimeline": {
-      "name": "Wazuh alerts timeline",
-      "description": "Złożony wykres powiadomień Wazuh w czasie według dotkliwości",
-      "option": {
-        "range": {
-          "label": "Zakres czasowy"
         },
         "interval": {
           "label": "Interwał"
@@ -5753,60 +5985,32 @@
           "description": "Korzeń kwadratu utrzymuje wysokie i krytyczne alarmy widoczne obok tysięcy nisko"
         },
         "minLevel": {
-          "label": "Minimalny poziom reguły"
+          "label": ""
         },
         "showLegend": {
           "label": "Pokaż legendę z sumami"
-        }
-      },
-      "title": "Alerts timeline · {range}",
-      "total": "Alerty {count}",
-      "interval": "za {interval}"
-    },
-    "wazuhTopList": {
-      "name": "Lista Wazuh",
-      "description": "Najlepsze zasady, przedstawiciele, źródłowe adresy IP lub MITRE taktyki i techniki ATT&CK według liczby ostrzeżeń",
-      "option": {
-        "kind": {
+        },
+        "topKind": {
           "label": "Ranga"
         },
-        "range": {
-          "label": "Zakres czasowy"
-        },
-        "limit": {
-          "label": "Liczba wpisów"
-        },
-        "minLevel": {
-          "label": "Minimalny poziom reguły"
+        "topLimit": {
+          "label": ""
         },
         "showBars": {
           "label": "Pokaż paski"
-        }
-      },
-      "title": {
-        "rules": "Najlepsze reguły · {range}",
-        "agents": "Najlepsi agenci · {range}",
-        "sourceIps": "Najlepsze źródłowe adresy IP · {range}",
-        "mitreTactics": "Taktyka MITRE · {range}",
-        "mitreTechniques": "MITRE techniques · {range}"
-      },
-      "empty": {
-        "rules": "Brak alertów w tym okresie",
-        "agents": "Brak alertów w tym okresie",
-        "sourceIps": "Brak alertów o źródłowym IP w tym okresie",
-        "mitreTactics": "Brak alertów mapowanych na MITRE ATT&CK w tym okresie",
-        "mitreTechniques": "Brak alertów mapowanych na MITRE ATT&CK w tym okresie"
-      },
-      "totalTooltip": "{count} pasujące alerty",
-      "private": "LAN",
-      "public": "Publiczna",
-      "agents": "Widziane na agentach {count}",
-      "others": "{count} więcej alertów w innych wpisach"
-    },
-    "wazuhVulnerabilities": {
-      "name": "Wazu podatności",
-      "description": "Liczba podatności na zagrożenia, najwyższe życiorysy i najbardziej wrażliwe podmioty",
-      "option": {
+        },
+        "agentStatusFilter": {
+          "label": "Pokaż agentów"
+        },
+        "agentSortBy": {
+          "label": "Sortuj według"
+        },
+        "showVersion": {
+          "label": ""
+        },
+        "showGroups": {
+          "label": ""
+        },
         "cveOrder": {
           "label": "Ranking CVE wg"
         },
@@ -5821,73 +6025,42 @@
         },
         "showAgents": {
           "label": "Pokaż najbardziej wrażliwych agentów"
-        }
-      },
-      "title": "podatności na zagrożenia",
-      "topCves": "Najlepsze CVE",
-      "score": "Wynik",
-      "agentsShort": "Agenci",
-      "topAgents": "Najbardziej wrażliwi agenci",
-      "criticalHigh": "Krytyka / Wysoka",
-      "totalTooltip": "{count} odkrycia agentów {agents}",
-      "affected": "Agenci {count}",
-      "empty": "Nie wykryto podatności",
-      "distribution": "Rozkład dotkliwości. Wyniki {unscored} bez wyniku nie są wyświetlane.",
-      "worst": "Najgorsze: {id} ({score}) na agentów {agents}"
-    },
-    "wazuhFim": {
-      "name": "Integralność pliku Wazuh",
-      "description": "Ostatnie zdarzenia monitorowania integralności plików (syscheck)",
-      "option": {
-        "range": {
-          "label": "Zakres czasowy"
         },
-        "event": {
+        "fimEvent": {
           "label": "Zdarzenia"
         },
-        "limit": {
-          "label": "Liczba zdarzeń"
+        "fimLimit": {
+          "label": ""
         },
         "includeRegistry": {
           "label": "Dołącz zdarzenia rejestru Windows"
-        }
-      },
-      "title": "Integralność pliku · {range}",
-      "event": {
-        "added": "Data dodania",
-        "modified": "Zmodyfikowane",
-        "deleted": "Usunięty",
-        "unknown": "Zmieniono"
-      },
-      "empty": "Brak zdarzeń integralności plików w tym okresie",
-      "user": "przez {user}",
-      "registry": "Rejestr"
-    },
-    "wazuhAuthFailures": {
-      "name": "Błąd uwierzytelniania Wazuh",
-      "description": "Nieudane logowanie i alarmy brute-force na agenta z godzinowymi liniami sparkline",
-      "option": {
-        "hours": {
-          "label": "Okno czasu (godziny)"
         },
-        "limit": {
-          "label": "Liczba agentów"
+        "authLimit": {
+          "label": ""
         },
         "showSourceIps": {
           "label": "Pokaż najlepsze źródłowe adresy IP"
+        },
+        "alertsMinLevel": {
+          "label": "",
+          "description": "Poziomy wahań: 0-6 niskie, 7-11 średnie, 12-14 wysokie, 15+ krytyczne"
+        },
+        "alertsLimit": {
+          "label": ""
+        },
+        "showMitre": {
+          "label": ""
+        },
+        "showAgent": {
+          "label": "Pokaż agenta"
+        },
+        "showSourceIp": {
+          "label": "Pokaż źródłowy adres IP"
+        },
+        "showRuleId": {
+          "label": "Pokaż ID reguły"
         }
-      },
-      "title": "Niepowodzenie uwierzytelniania · {hours}h",
-      "seriesTooltip": "Wszyscy agenci w ciągu ostatnich {hours}h",
-      "peak": "Szczyt {count}/wiadro",
-      "empty": "Brak nieudanych logowań w tym okresie",
-      "failed": "Nieudane logowanie",
-      "failedHint": "Pojedyncze błędy uwierzytelniania (sshd, PAM, Windows logon, nieprawidłowy użytkownik)",
-      "bruteForce": "Siła szczotkowa",
-      "bruteForceHint": "Skojarzone zasady brute-force (wielokrotne awarie w krótkim okresie, MITRE T1110)",
-      "sourceIps": "Źródłowe adresy IP",
-      "ipTooltip": "{ip}: {count} porażki",
-      "bruteForceCount": "Siła {count}"
+      }
     }
   },
   "widgetPreview": {
@@ -5944,7 +6117,7 @@
         "preview": "Podgląd {name} z artykułami {count}",
         "currentHidden": "Bieżący dział: {name}",
         "keyboard": {
-          "navigate": "Navigate",
+          "navigate": "",
           "open": "Otwórz",
           "instructions": "Wpisz aby filtrować płyty. Użyj klawiszy strzałek, aby przenieść wyniki i Wejdź, aby otworzyć płytę."
         },
@@ -6167,12 +6340,12 @@
             "columns": "kolumny",
             "empty": "Ten układ jest pusty",
             "dynamicSection": "Sekcja dynamiczna",
-            "editorWidthLabel": "{layoutName} · {width}px"
+            "editorWidthLabel": ""
           },
           "reset": {
             "action": "Resetuj z bazy",
             "confirm": {
-              "title": "Reset {layoutName}?",
+              "title": "",
               "message": "To zastępuje każdą zapisaną pozycję i rozmiar w tym układzie nowym układem wygenerowanym z Bazy. Tego nie można cofnąć."
             }
           },
@@ -6301,9 +6474,9 @@
         "label": "Stałe paski boczne",
         "description": "Zarezerwuj do trzech kolumn tablicy rozdzielczej po obu stronach. Pozostałe płótno automatycznie powraca.",
         "left": {
-          "label": "Left sidebar",
+          "label": "",
           "description": "Pozostaw ten obszar widoczny podczas przewijania tablicy rozdzielczej.",
-          "thumbLabel": "Left sidebar width"
+          "thumbLabel": ""
         },
         "right": {
           "label": "Prawy pasek boczny",
@@ -6473,7 +6646,7 @@
                 }
               },
               "items": {
-                "logo": "Logo",
+                "logo": "",
                 "search": "Szukaj",
                 "home": "Tablica główna",
                 "boardSwitcher": "Tablice",
@@ -6715,7 +6888,7 @@
             "groups": {
               "identity": "Tożsamość",
               "appearance": "Wygląd",
-              "customCss": "Custom CSS",
+              "customCss": "",
               "authentication": "Authentication"
             },
             "identity": {
@@ -6729,7 +6902,7 @@
             },
             "logo": {
               "label": "Logo aplikacji",
-              "placeholder": "/logo/logo.png"
+              "placeholder": ""
             },
             "favicon": {
               "label": "Ikona przeglądarki (favicon)",
@@ -6775,7 +6948,7 @@
             "summary": {
               "title": "Bieżąca marka",
               "cornerStyle": "Styl narożnika",
-              "palette": "Palette",
+              "palette": "",
               "backgroundConfigured": "Własne tło · {overlay}% nakładka",
               "backgroundDefault": "Domyślne tło",
               "greetingConfigured": "Własne powitanie",
@@ -6783,7 +6956,7 @@
               "boardColorLocked": "Kolor tablicy zablokowany",
               "boardColorFlexible": "Kolor tablicy dozwolony",
               "appName": "Nazwa zlecenia",
-              "logo": "Logo",
+              "logo": "",
               "greeting": "Powitanie",
               "on": "Włączone",
               "off": "Wyłączony"
@@ -7081,7 +7254,7 @@
                 }
               },
               "provenance": {
-                "oauth": "OAuth",
+                "oauth": "",
                 "unattributed": "Ręczny lub starszy klucz API",
                 "unnamedClient": "Nazwa klienta nie została zapisana",
                 "clientNameHint": "Nazwy klientów są raportowane samodzielnie i nie są weryfikowane.",
@@ -7510,8 +7683,8 @@
       },
       "status": {
         "available": "Dostępne",
-        "degraded": "Metrics unavailable",
-        "unavailable": "Unavailable"
+        "degraded": "",
+        "unavailable": ""
       },
       "unavailable": "Ten kontekst Kubernetes nie może zostać osiągnięty. Wybierz inny kontekst lub zweryfikuj jego poświadczenia i punkt końcowy.",
       "metricsUnavailable": "Ten kontekst jest osiągalny, ale Serwer Metrics jest niedostępny. Ekwipunek pozostaje dostępny bez użycia CPU i pamięci."
@@ -7543,7 +7716,7 @@
     },
     "nodes": {
       "field": {
-        "metricsUnavailable": "Unavailable",
+        "metricsUnavailable": "",
         "kubernetesVersion": {
           "label": "Wersja Kubernetes"
         }
@@ -7777,7 +7950,7 @@
         "placeholder": "Zapytaj Asystenta"
       },
       "external": {
-        "label": "Web",
+        "label": "",
         "placeholder": "Szukaj z zewnętrzną wyszukiwarką"
       },
       "media": {
@@ -7795,7 +7968,7 @@
       "modeAriaLabel": "Tryb {mode}",
       "resultsAriaLabel": "Wyniki {mode}",
       "footer": {
-        "navigate": "Navigate",
+        "navigate": "",
         "open": "Otwórz",
         "close": "Zamknij"
       }
@@ -8678,7 +8851,7 @@
       "generationTime": "Czas generowania",
       "moderationLatency": "Moderacja",
       "providerThroughput": "Przepustowość dostawcy",
-      "fallbacks": "Fallbacks",
+      "fallbacks": "",
       "fallbackLatency": "Opóźnienie zwrotne",
       "cacheDiscount": "Rabat pamięci podręcznej",
       "normalizedTokens": "OpenRouter znormalizowane wejście / wyjście",
@@ -8787,16 +8960,16 @@
       "automaticContinue": "Akceptowanie proponowanych zmian w dziale automatycznie",
       "resetAll": "Resetuj wszystkie zmiany",
       "tabs": {
-        "css": "Custom CSS",
+        "css": "",
         "appearance": "Wygląd",
         "background": "Tło",
         "general": "Ogólne"
       },
       "cssDescription": "Edytuj kompletny arkusz stylów. Istniejące zasady są zachowane, chyba że zostaną usunięte tutaj.",
       "cssCharacters": "{count} z 16384 znakami",
-      "copyCss": "Copy CSS",
+      "copyCss": "",
       "copied": "Skopiowano",
-      "restoreCss": "Restore current CSS",
+      "restoreCss": "",
       "remoteCssTitle": "Ten CSS ładuje zdalny zasób",
       "remoteCssDescription": "Zaimportowane arkusze stylów i zdalne adresy URL kontaktują się z innym serwerem, gdy płytka się ładuje. Przejrzyj je przed kontynuowaniem."
     },
@@ -8820,7 +8993,7 @@
       "errorDescription": "Model nie dostarczył pełnej konfiguracji widżetu. Nie dodano widżetu."
     },
     "approvalRequired": "Wymagane zatwierdzenie",
-    "complete": "Complete",
+    "complete": "",
     "denied": "Odmowa",
     "failed": "Niepowodzenie",
     "working": "Praca",

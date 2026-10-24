@@ -6,12 +6,13 @@ import type { Session } from "@homarr/auth";
 import { env } from "@homarr/common/env";
 import type { Database } from "@homarr/db";
 import { eq } from "@homarr/db";
-import { items, users } from "@homarr/db/schema";
+import { boards, items, users } from "@homarr/db/schema";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import { rssFeedsRequestHandler } from "@homarr/request-handler/rss-feeds";
 
 import type { WidgetComponentProps } from "../../../../widgets/src";
 import { createTRPCRouter, publicProcedure } from "../../trpc";
+import { isActionAllowedAsync } from "../board/board-access";
 
 const logger = createLogger({ module: "rssFeed" });
 
@@ -37,7 +38,7 @@ export const rssFeedRouter = createTRPCRouter({
 
     const urls = (await canAccessAllFeedsAsync(ctx.db, ctx.session))
       ? input.urls
-      : await restrictUrlsAsync(ctx.db, input.urls);
+      : await restrictUrlsAsync(ctx, input.urls);
 
     const settled = await Promise.allSettled(
       urls.map(async (url) => {
@@ -133,13 +134,31 @@ export async function canAccessAllFeedsAsync(db: Database, session: Session | nu
   return false;
 }
 
-export async function restrictUrlsAsync(db: Database, urls: string[]) {
-  const rssFeedItems = await db.query.items.findMany({
+export async function restrictUrlsAsync(ctx: { db: Database; session: Session | null }, urls: string[]) {
+  const requestedUrls = new Set(urls);
+  const rssFeedItems = await ctx.db.query.items.findMany({
+    columns: { boardId: true, options: true },
     where: eq(items.kind, "rssFeed"),
   });
 
-  const configuredUrls = new Set(
-    rssFeedItems.flatMap((item) => SuperJSON.parse<WidgetComponentProps<"rssFeed">["options"]>(item.options).feedUrls),
+  const urlsByBoard = new Map<string, Set<string>>();
+  for (const item of rssFeedItems) {
+    const matchingUrls = SuperJSON.parse<WidgetComponentProps<"rssFeed">["options"]>(item.options).feedUrls.filter(
+      (url) => requestedUrls.has(url),
+    );
+    if (matchingUrls.length === 0) continue;
+
+    const boardUrls = urlsByBoard.get(item.boardId) ?? new Set<string>();
+    for (const url of matchingUrls) boardUrls.add(url);
+    urlsByBoard.set(item.boardId, boardUrls);
+  }
+
+  const allowedUrls = new Set<string>();
+  await Promise.all(
+    [...urlsByBoard].map(async ([boardId, boardUrls]) => {
+      if (!(await isActionAllowedAsync(ctx, eq(boards.id, boardId), "view"))) return;
+      for (const url of boardUrls) allowedUrls.add(url);
+    }),
   );
-  return urls.filter((url) => configuredUrls.has(url));
+  return urls.filter((url) => allowedUrls.has(url));
 }
