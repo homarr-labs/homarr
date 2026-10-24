@@ -325,16 +325,10 @@ describe("TrueNasIntegration", () => {
     },
     { legend: ["time", "available"], data: [[1000, 0]], used: 16_000_000_000 },
     { legend: ["time", "available"], data: [[1000, 17_000_000_000]], used: 0 },
-    { legend: ["time", "available"], data: [[1000, -1]], used: 16_000_000_000 },
     {
       legend: ["time", "free", "used", "cached", "buffers"],
       data: [[1000, 0, 20_000, 0, 0]],
       used: 16_000_000_000,
-    },
-    {
-      legend: ["time", "free", "used", "cached", "buffers"],
-      data: [[1000, 0, -1, 0, 0]],
-      used: 0,
     },
   ])("uses the latest named memory columns and bounds usage: $legend $used", async ({ legend, data, used }) => {
     ws.setResponder(reportingResponder("memory", legend, data));
@@ -352,6 +346,8 @@ describe("TrueNasIntegration", () => {
     { legend: ["time", "available"], data: [[1000]] },
     { legend: ["time", "available", "available"], data: [[1000, 123, 456]] },
     { legend: ["time", "available"], data: [[1000, Number.NaN]] },
+    { legend: ["time", "available"], data: [[1000, -1]] },
+    { legend: ["time", "free", "used", "cached", "buffers"], data: [[1000, 0, -1, 0, 0]] },
   ])("reports an integration error instead of inventing memory usage: $legend $data", async ({ legend, data }) => {
     ws.setResponder(reportingResponder("memory", legend, data));
 

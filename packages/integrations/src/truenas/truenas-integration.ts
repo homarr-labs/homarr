@@ -57,6 +57,9 @@ export class TrueNasIntegration extends Integration implements ISystemHealthMoni
     const cpuData = this.extractLatestReportingData(reporting, "cpu");
     const cpuTempData = this.extractLatestReportingData(reporting, "cputemp");
     const memoryData = this.extractLatestReportingData(reporting, "memory");
+    if (Object.values(memoryData).some((value) => value < 0)) {
+      throw new ParseError("TrueNAS returned negative memory reporting values");
+    }
 
     const upload = this.extractNetworkTrafficData(netdata, "sent");
     const download = this.extractNetworkTrafficData(netdata, "received");
