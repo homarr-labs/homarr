@@ -370,12 +370,11 @@ export class PlexIntegration extends Integration implements IMediaServerIntegrat
           producer: item.studio,
           rating: item.rating?.toFixed(1),
           tags: item.Genre?.map((genre) => genre.tag) ?? [],
-          href: super
-            .url(
-              // Url with children on the end results in infinite loading screen, see https://github.com/homarr-labs/homarr/issues/4078
-              `/web/index.html#!/server/${machineIdentifier}/details?key=${encodeURIComponent(item.key.replace("/children", ""))}`,
-            )
-            .toString(),
+          href: new URL(
+            // Url with children on the end results in infinite loading screen, see https://github.com/homarr-labs/homarr/issues/4078
+            `/web/index.html#!/server/${machineIdentifier}/details?key=${encodeURIComponent(item.key.replace("/children", ""))}`,
+            super.externalUrl("/"),
+          ).toString(),
           length: item.duration ? Math.round(item.duration / 1000) : undefined,
         };
       });

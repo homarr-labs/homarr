@@ -92,11 +92,6 @@ export const secretKinds = {
     description: "Password of the Wazuh indexer user",
     icon: IconPassword,
   },
-  wazuhDashboardUrl: {
-    name: "Dashboard URL",
-    description: "Optional. Public URL of the Wazuh dashboard, used for deep links from the widgets",
-    icon: IconLink,
-  },
 };
 
 type SecretKind = keyof typeof secretKinds;
