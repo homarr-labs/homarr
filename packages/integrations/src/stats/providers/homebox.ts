@@ -58,6 +58,11 @@ export const homeboxStatsProvider = {
 } satisfies StatsProvider;
 
 async function getHttpAuthenticationAsync(context: StatsFetchContext) {
+  if (context.hasSecret("apiKey")) {
+    const apiKey = context.secret("apiKey");
+    return { headers: { Authorization: `Bearer ${apiKey}` }, redactValues: [apiKey] };
+  }
+
   try {
     const loginResponse = await context.requestAsync("/api/v1/users/login", {
       method: "POST",
