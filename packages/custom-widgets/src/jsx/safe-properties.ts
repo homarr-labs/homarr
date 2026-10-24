@@ -126,6 +126,7 @@ function sanitizeObject(
 
 function sanitizeSerializableData(value: unknown): unknown {
   if (typeof value === "function" || isInterpreterCallback(value)) return undefined;
+  if (isValidElement(value)) return value;
   if (Array.isArray(value)) return value.map(sanitizeSerializableData);
   if (value !== null && typeof value === "object") {
     const safe: Record<string, unknown> = Object.create(null);
