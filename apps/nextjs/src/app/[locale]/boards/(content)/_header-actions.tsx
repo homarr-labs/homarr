@@ -113,9 +113,11 @@ const EditModeMenu = ({ demoReadOnly }: { demoReadOnly: boolean }) => {
       if (returnToLayoutSettings) router.push(`/boards/${board.name}/settings?tab=layout`);
     },
     onError(error) {
+      let message = t("notification.error.message");
+      if (error.data?.isBoardLayoutBoundsError) message = error.message;
       showErrorNotification({
         title: tCommon("notification.update.error"),
-        message: error.message || t("notification.error.message"),
+        message,
       });
     },
   });
