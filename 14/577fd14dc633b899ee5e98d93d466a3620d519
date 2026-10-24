@@ -1,0 +1,38 @@
+packages/api/src/root.ts
+  h_d6e478ca18e517 8
+packages/api/src/router/user-item-state.ts
+  h_d6e478ca18e517 1-55
+packages/db/migrations/postgresql/0019_sturdy_power_pack.sql
+  h_d6e478ca18e517 1-10
+packages/db/migrations/postgresql/meta/0019_snapshot.json
+  h_d6e478ca18e517 1-2775
+packages/db/migrations/postgresql/meta/_journal.json
+  h_d6e478ca18e517 137-143
+packages/db/migrations/sqlite/0050_typical_madelyne_pryor.sql
+  h_d6e478ca18e517 1-9
+packages/db/migrations/sqlite/meta/0050_snapshot.json
+  h_d6e478ca18e517 1-2812
+packages/db/migrations/sqlite/meta/_journal.json
+  h_d6e478ca18e517 354-360
+packages/db/schema/index.ts
+  h_d6e478ca18e517 45
+packages/db/schema/postgresql.ts
+  h_d6e478ca18e517 447-463
+packages/db/schema/sqlite.ts
+  h_d6e478ca18e517 432-448
+packages/widgets/src/releases/component.tsx
+  h_d6e478ca18e517 55,108,249,251
+packages/widgets/src/releases/use-viewed-releases.ts
+  h_d6e478ca18e517 1-88
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "14577fd14dc633b899ee5e98d93d466a3620d519",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
