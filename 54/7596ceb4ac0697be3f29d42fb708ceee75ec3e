@@ -1,0 +1,29 @@
+packages/request-handler/src/release-providers/docker-hub.ts
+  s_b33778671a3872::t_c1db631dd06b54 7,11,47-51,57
+packages/request-handler/src/release-providers/github-container-registry.ts
+  s_b33778671a3872::t_bdcf95fe20d47c 30,32-37,39,54-60,65-80
+packages/request-handler/src/release-providers/oci-registry.ts
+  s_b33778671a3872::t_7c6805c8b44f2f 56-57,76-80
+packages/request-handler/src/release-providers/registry-tags.ts
+  s_b33778671a3872::t_9400cb14cd2b2c 8,54-66,69-72
+packages/request-handler/src/test/release-providers/docker-hub.spec.ts
+  s_b33778671a3872::t_b0255b6fa1fb94 137,142-195,197,263-267
+packages/request-handler/src/test/release-providers/github-container-registry.spec.ts
+  s_b33778671a3872::t_8ff602abb3e5ea 144-175,188-214,466-467
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "547596ceb4ac0697be3f29d42fb708ceee75ec3e",
+  "prompts": {},
+  "sessions": {
+    "s_b33778671a3872": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "4836a7b0-29a0-4329-9cac-5cfb8625bd5c",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
