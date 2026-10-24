@@ -9,6 +9,7 @@ import { createSavePermissionsSchema } from "./permissions";
 const externalUrlSchema = z
   .string()
   .trim()
+  .max(2048)
   .transform((value) => value || null)
   .nullish();
 
