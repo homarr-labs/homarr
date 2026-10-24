@@ -1,0 +1,19 @@
+packages/custom-widgets/src/test/authoring-resources.spec.ts
+  s_9b7e99bd3ab786::t_c972a82739e9fa 25
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "c3f36d38fd2854e1a5df17bc365c7d9a29af923b",
+  "prompts": {},
+  "sessions": {
+    "s_9b7e99bd3ab786": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "65e5f33a-f2db-4674-8074-dcea9cc8135f",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
