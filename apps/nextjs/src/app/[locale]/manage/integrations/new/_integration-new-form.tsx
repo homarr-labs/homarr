@@ -62,6 +62,7 @@ const formSchema = integrationCreateSchema.omit({ kind: true, app: true, externa
   z.object({
     externalUrl: z.string(),
     hasApp: z.boolean(),
+    appMode: z.enum(["new", "existing"]),
     appId: z.string().nullable(),
     optionalSecrets: z.array(z.object({ kind: z.string(), value: z.string() })),
   }),
@@ -75,12 +76,10 @@ export const NewIntegrationForm = ({ kind, initialUrl, initialName, onSuccess, o
   const hasUrlSecret = secretKinds.some((kinds) => kinds.includes("url"));
   const { data: session } = useSession();
   const canCreateApps = session?.user.permissions.includes("app-create") ?? false;
-  const validationSchema = canCreateApps
-    ? formSchema
-    : formSchema.superRefine((values, context) => {
-        if (!values.hasApp || values.appId !== null) return;
-        context.addIssue({ code: "custom", message: tCommon("zod.errors.required"), path: ["appId"] });
-      });
+  const validationSchema = formSchema.superRefine((values, context) => {
+    if (!values.hasApp || values.appMode === "new" || values.appId !== null) return;
+    context.addIssue({ code: "custom", message: tCommon("zod.errors.required"), path: ["appId"] });
+  });
   let url = initialUrl ?? getIntegrationDefaultUrl(kind) ?? "";
   if (hasUrlSecret) {
     url = "http://localhost";
@@ -96,6 +95,7 @@ export const NewIntegrationForm = ({ kind, initialUrl, initialName, onSuccess, o
       })),
       attemptSearchEngineCreation: true,
       hasApp: canCreateApps,
+      appMode: canCreateApps ? "new" : "existing",
       appId: null,
       optionalSecrets: optionalSecretKinds.map((optionalKind) => ({ kind: optionalKind, value: "" })),
     },
@@ -111,7 +111,7 @@ export const NewIntegrationForm = ({ kind, initialUrl, initialName, onSuccess, o
   const [error, setError] = useState<null | AnyMappedTestConnectionError>(null);
   const errorRef = useRef<HTMLElement>(null);
 
-  const handleSubmitAsync = async ({ appId, hasApp, optionalSecrets, ...formValues }: FormType) => {
+  const handleSubmitAsync = async ({ appId, appMode: _appMode, hasApp, optionalSecrets, ...formValues }: FormType) => {
     // Optional secrets are only stored when a value was entered.
     const values = {
       ...formValues,
@@ -267,8 +267,6 @@ type FormType = z.infer<typeof formSchema>;
 
 const AppForm = ({ form, canCreateApps }: { form: UseFormReturnType<FormType>; canCreateApps: boolean }) => {
   const tIntegration = useI18n("integration");
-  const [appMode, setAppMode] = useState("new");
-
   return (
     <>
       <Checkbox
@@ -286,15 +284,15 @@ const AppForm = ({ form, canCreateApps }: { form: UseFormReturnType<FormType>; c
                   value,
                   label: tIntegration(`page.create.app.option.${value}.title` as never),
                 }))}
-                value={appMode}
+                value={form.values.appMode}
                 onChange={(value) => {
-                  setAppMode(value);
+                  form.setFieldValue("appMode", value);
                   form.setFieldValue("appId", null);
                 }}
               />
             )}
 
-            {(appMode === "existing" || !canCreateApps) && <IntegrationAppSelect {...form.getInputProps("appId")} />}
+            {form.values.appMode === "existing" && <IntegrationAppSelect {...form.getInputProps("appId")} />}
           </Stack>
         </Fieldset>
       </Collapse>
