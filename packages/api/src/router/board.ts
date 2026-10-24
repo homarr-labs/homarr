@@ -69,6 +69,8 @@ import {
   boardSummarySchema,
   updateBoardItemLayoutSchema,
 } from "@homarr/validation/board";
+import { getBoardLayoutBoundsIssue, getBoardPlacementBoundsIssue } from "@homarr/validation/board-layout-bounds";
+import { BoardLayoutBoundsError } from "@homarr/validation/board-layout-bounds-error";
 import { byIdSchema } from "@homarr/validation/common";
 import { zodUnionFromArray } from "@homarr/validation/enums";
 import type { BoardItemAdvancedOptions } from "@homarr/validation/shared";
@@ -141,6 +143,11 @@ const doBoardItemPlacementsOverlap = (left: BoardItemPlacementRectangle, right: 
   left.yOffset + left.height > right.yOffset &&
   left.xOffset < right.xOffset + right.width &&
   left.xOffset + left.width > right.xOffset;
+
+const throwIfBoardLayoutBoundsInvalid = (issue: string | null) => {
+  if (!issue) return;
+  throw new TRPCError({ code: "BAD_REQUEST", message: issue, cause: new BoardLayoutBoundsError(issue) });
+};
 
 interface WidgetConfiguration {
   id: string;
@@ -1710,12 +1717,12 @@ export const boardRouter = createTRPCRouter({
         protect: true,
         summary: "Save dashboard content",
         description:
-          "Save the editor's complete sections and items arrays, including widget options and placements. Omitted items and sections are removed. Requires modify access; Custom Widget placement changes require admin access.",
+          "Save the editor's complete sections and items arrays, including widget options and placements. Omitted items and sections are removed. Placements must fit their parent section's columns in each layout. Requires modify access; Custom Widget placement changes require admin access.",
       },
       mcp: {
         enabled: true,
         description:
-          "Save complete dashboard sections and items, including widget options and placements. Omitted entries are removed. Read current content with board_getBoardByName first. Requires modify access; Custom Widget placement changes require admin access.",
+          "Save complete dashboard sections and items, including widget options and placements. Omitted entries are removed. Placements must fit their parent section's columns in each layout. Read current content with board_getBoardByName first. Requires modify access; Custom Widget placement changes require admin access.",
       },
     })
     .input(boardSaveSchema)
@@ -1724,6 +1731,7 @@ export const boardRouter = createTRPCRouter({
       await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.id), "modify");
 
       const dbBoard = await getFullBoardWithWhereAsync(ctx.db, eq(boards.id, input.id), ctx.session.user.id);
+      throwIfBoardLayoutBoundsInvalid(getBoardLayoutBoundsIssue({ ...input, layouts: dbBoard.layouts }));
       await validateWidgetConfigurationsAsync(ctx, input.items, dbBoard.items);
       throwIfCustomWidgetPlacementChangeForbidden({
         isAdmin: ctx.session.user.permissions.includes("admin"),
@@ -2388,6 +2396,12 @@ export const boardRouter = createTRPCRouter({
           };
         });
 
+        for (const placement of layoutRows) {
+          throwIfBoardLayoutBoundsInvalid(
+            getBoardPlacementBoundsIssue(board, placement, placement.sectionId, `Item "${itemId}"`),
+          );
+        }
+
         await ctx.db.insert(items).values({
           id: itemId,
           boardId: input.boardId,
@@ -2452,18 +2466,8 @@ export const boardRouter = createTRPCRouter({
           throw new TRPCError({ code: "NOT_FOUND", message: "Item section not found on this board" });
         }
 
-        let columnCount: number;
-        if (section.kind === "empty") {
-          columnCount = getBoardLaneColumnCount(layout, getRootSectionLane(section.xOffset));
-        } else {
-          const sectionLayout = section.layouts.find((candidate) => candidate.layoutId === layout.id);
-          if (!sectionLayout) {
-            throw new TRPCError({ code: "BAD_REQUEST", message: "Item section has no layout at this breakpoint" });
-          }
-          columnCount = sectionLayout.width;
-        }
-
-        if (input.xOffset + input.width > columnCount || input.yOffset + input.height > 32767) {
+        throwIfBoardLayoutBoundsInvalid(getBoardPlacementBoundsIssue(board, input, section.id, `Item "${item.id}"`));
+        if (input.yOffset + input.height > 32767) {
           throw new TRPCError({ code: "BAD_REQUEST", message: "Item layout exceeds its section bounds" });
         }
 
