@@ -43,3 +43,10 @@ jobs:
               echo "Re-enabling auto-merge on PR #$pr"
               gh pr merge "$pr" --auto --squash
             done
+          gh pr list --repo "${{ github.repository }}" --base dev --state open --author app/homarr-renovate --limit 100 \
+            --json number,body,autoMergeRequest \
+            --jq '.[] | select(.body | contains("**Automerge**: Enabled") | not) | select(.autoMergeRequest != null) | .number' \
+          | while read -r pr; do
+              echo "Disabling auto-merge on manual-review Renovate PR #$pr"
+              gh pr merge "$pr" --disable-auto
+            done
