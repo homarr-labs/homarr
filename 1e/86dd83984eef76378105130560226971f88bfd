@@ -1,0 +1,21 @@
+packages/integrations/src/truenas/test/truenas-integration.spec.ts
+  s_9b7e99bd3ab786::t_03b3a7d8b330e1 141,159,176-178,186-194,257,275-408,545
+packages/integrations/src/truenas/truenas-integration.ts
+  s_9b7e99bd3ab786::t_8c2fbda7cadfb7 4,18-19,61-82,85-86,333-337,343-355,405,413
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "1e86dd83984eef76378105130560226971f88bfd",
+  "prompts": {},
+  "sessions": {
+    "s_9b7e99bd3ab786": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "65e5f33a-f2db-4674-8074-dcea9cc8135f",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
