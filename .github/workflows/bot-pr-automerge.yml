@@ -41,6 +41,10 @@ jobs:
           GITHUB_TOKEN: ${{ steps.obtainToken.outputs.token }}
         run: |
           PR_NUMBER="${{ github.event.pull_request.number }}"
+          if [ "${{ github.actor_id }}" = "158783068" ] && ! gh pr view "$PR_NUMBER" --json body --jq .body | grep -qF '**Automerge**: Enabled'; then
+            echo "Renovate automerge is disabled for PR #$PR_NUMBER; leaving it for manual review"
+            exit 0
+          fi
           if [ "$(gh pr view "$PR_NUMBER" --json reviewDecision --jq .reviewDecision)" != "APPROVED" ]; then
             gh pr review "$PR_NUMBER" --approve --body "Automatically approved by Homarr bot policy"
           fi
