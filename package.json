@@ -356,7 +356,7 @@
     "@assistant-ui/ai-sdk>ai": "7.0.143",
     "@assistant-ui/ai-sdk>assistant-stream": "0.3.52",
     "@assistant-ui/core": "0.3.29",
-    "@assistant-ui/store": "0.3.21",
+    "@assistant-ui/store": "0.3.22",
     "@assistant-ui/tap": "0.9.23",
     "@babel/helpers@<7.26.10": ">=7.29.7",
     "@babel/runtime@<7.26.10": ">=7.29.7",
