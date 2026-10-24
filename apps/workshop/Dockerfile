@@ -2,7 +2,7 @@
 
 ARG POCKETBASE_IMAGE=ghcr.io/muchobien/pocketbase:0.40.6@sha256:9a0be68a80ca1348ba8d15f217b3f983be4c094b3c571a09b3ebdeb357259338
 
-FROM golang:1.25.7-alpine AS pocketbase-builder
+FROM golang:1.27.3-alpine AS pocketbase-builder
 WORKDIR /src
 COPY apps/workshop/go.mod apps/workshop/go.sum ./
 RUN --mount=type=cache,id=workshop-go-mod,target=/go/pkg/mod go mod download
