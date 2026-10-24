@@ -1,0 +1,27 @@
+apps/docs/docs/integrations/coolify/index.mdx
+  s_74b673c970ef48::t_d30d94abcea80d 28
+apps/docs/docs/integrations/wazuh/index.mdx
+  s_74b673c970ef48::t_e6828d168f7229 23-24
+packages/db/migrations/postgresql/0019_add_integration_external_url.sql
+  s_74b673c970ef48::t_d5ce28fa234fca 1-2
+packages/db/migrations/sqlite/0050_add_integration_external_url.sql
+  s_74b673c970ef48::t_a171b0b50d6608 1-2
+packages/translation/src/lang/en.json
+  s_74b673c970ef48::t_22646b7b33d9fb 1467
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "7d98326cbb1c09a71c558642d1275a95301720e2",
+  "prompts": {},
+  "sessions": {
+    "s_74b673c970ef48": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "39637ef8-fe7e-468c-8334-b026f7a4531e",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
