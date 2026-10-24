@@ -1,0 +1,29 @@
+apps/docs/package.json
+  s_e8c3b16f087943::t_3cab9b176b25ca 33,56,58
+bun.lock
+  s_e8c3b16f087943::t_4d1e6b4d6b043e 52,75,77,1561,2741,2743,2745,2747,2749,2751,2753,2755,2757,2759,2761,2763,2765,2767,2769,3759,5123,5137,5585-5596
+tools/homarr-dev/go.mod
+  s_e8c3b16f087943::t_027faf0b49d180 3,6,8
+tools/homarr-dev/go.sum
+  s_e8c3b16f087943::t_4c1549da58c014 1-2,5-6
+tools/v2-showreel/bun.lock
+  s_e8c3b16f087943::t_d2188015e09a9a 12,15,88,96,100
+tools/v2-showreel/package.json
+  s_e8c3b16f087943::t_e0fe472249848b 14,17
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "5d616d2f904188ee7b71991d99737eb1252a710f",
+  "prompts": {},
+  "sessions": {
+    "s_e8c3b16f087943": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "5bad9576-ba72-4dbc-a1a1-0fc4be09f9a2",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
