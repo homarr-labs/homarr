@@ -29,7 +29,7 @@ Milliseconds are median / p95. Runtime pools two runs; other ranges are the two 
 
 ## Provenance
 
-`evidence/provenance.json` lists original report/harness filenames and SHA-256s, original raw-result SHA-256s, selected-file SHA-256s and exact field/record selection rules. Timing samples and operation counters are unchanged. Unused result records and machine-local `root` paths were removed. `evidence/runtime/source-hashes.json` is the original historical AFTER hash map for the seven changed runtime files.
+`evidence/provenance.json` lists original report/harness filenames and SHA-256s, original raw-result SHA-256s, selected-file SHA-256s and exact field/record selection rules. Timing samples and operation counters are unchanged. Unused result records and machine-local `root` paths were removed; packaged JSON whitespace follows the repository formatter. `evidence/runtime/source-hashes.json` contains the original historical AFTER hash map for the seven changed runtime files.
 
 Full historical AFTER hashes were **not** recorded for all transitive server/workbench inputs. Re-running on a current PR head is a fresh comparable measurement, not an exact replay of that historical source snapshot. Small host timing differences are not proof of a regression or speedup; deterministic counts/bytes are stronger evidence. This directory preserves only the headline evidence above, not every audit finding or rejected experiment.
 
@@ -102,6 +102,6 @@ bun x oxfmt --check "$BENCH"/*.mjs "$BENCH"/runtime/*.{mjs,tsx} "$BENCH"/server/
 node node_modules/typescript/bin/tsc --noEmit --incremental false --pretty false -p packages/custom-widgets/tsconfig.json
 ```
 
-Archived JSON/JSONL is deliberately not reformatted: its byte hashes are evidence. The original transpile-only harness fixtures are not part of a package TypeScript project; syntax is checked without running a benchmark. No new unit tests are added.
+Packaged JSON is formatted before its archive hash is recorded; original input hashes remain separate in the provenance. The original transpile-only harness fixtures are not part of a package TypeScript project; syntax is checked without running a benchmark. No new unit tests are added.
 
 Packaging validation passed syntax (13 scripts/fixtures), source formatting, 23 evidence hashes, management-output parity, runtime build-only and browser fixture bundle smoke checks, and the focused package typecheck (exit 0). Generated smoke bundles were removed. Lint exits 0 with 46 original style warnings (instrumentation names, scoping, sorting and CSS imports). No timed benchmarks or unit tests were rerun while packaging.

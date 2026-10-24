@@ -78,50 +78,50 @@
     {
       "path": "server/router-before-2.json",
       "originalSha256": "6a037d1186f9b880e8b974e8efb7fb74e3ee46fd313f22067e71aa37c7c1252b",
-      "packagedSha256": "9be07cfe22d4909c668b2a5e39bd3f605d56279211400013df2e38e8163ae561",
-      "selection": "Original 20-query direct/integration cold/warm result objects and checks; machine-local root removed"
+      "packagedSha256": "a3589c929afb6fe1d503dd1ddb58a5754d94781a93b982cab1c4cc29e8593d26",
+      "selection": "Original 20-query direct/integration cold/warm result objects and checks; machine-local root removed; JSON whitespace normalized with the repository formatter"
     },
     {
       "path": "server/router-before-3.json",
       "originalSha256": "d2e004e6cc9034f3693de7f6f24c7b485d746806ae791807a3e0fb9ba708ee0e",
-      "packagedSha256": "2cfb9077134289703752fa548b7bf324457a74a9454c9db82f85ce506928e24e",
-      "selection": "Original 20-query direct/integration cold/warm result objects and checks; machine-local root removed"
+      "packagedSha256": "3e75e52dd82b92bfb4480480a373958c9c08a14bb55c8c2c5efc5a64f43710db",
+      "selection": "Original 20-query direct/integration cold/warm result objects and checks; machine-local root removed; JSON whitespace normalized with the repository formatter"
     },
     {
       "path": "server/response-before-1.json",
       "originalSha256": "fbc0960151cf547365ec679d611ac8e6c64df847a4414d75cb870cfc9b52f3c7",
-      "packagedSha256": "332c4a8c196d233a581a768c342dc9fa3ba05e2c289b0f1ab883470f994167c0",
-      "selection": "Original redaction result objects and checks; machine-local root removed"
+      "packagedSha256": "573da21b09aa95a389d9b8ede3ac63166d35ce9c29cf527977389e5a9e278349",
+      "selection": "Original redaction result objects and checks; machine-local root removed; JSON whitespace normalized with the repository formatter"
     },
     {
       "path": "server/management-before-1.json",
       "originalSha256": "b790a14260f79eccb9d8611b687e2a91fa61ce12698526cb685961a60f5a6e34",
-      "packagedSha256": "a5e73de6f723291463f72f323952855053b83072dd962d365b79632e4fb63514",
-      "selection": "All original management result objects, samples, counts and public-output digests; machine-local root removed"
+      "packagedSha256": "c6772d14913df69af323f4df7ff267ec8496b61d983bf6312d2dd0fe595e0d9d",
+      "selection": "All original management result objects, samples, counts and public-output digests; machine-local root removed; JSON whitespace normalized with the repository formatter"
     },
     {
       "path": "workbench/browser-before1.json",
       "originalSha256": "8648eb72039e2e45ef7f20f3dbd4dae2f0541c74629347cadf46190ddf34ba7a",
-      "packagedSha256": "d3e547da818a88b2cea49523f6945246d452238927207574bc740cffb5d7120c",
-      "selection": "Original responseInitial and response objects from the 200-field browser fixture; samples and counters unchanged"
+      "packagedSha256": "e32f5d75387b6f294db699417062dd54a9f8689fef5c58c083213eb2fe9c4420",
+      "selection": "Original responseInitial and response objects from the 200-field browser fixture; samples and counters unchanged; JSON whitespace normalized with the repository formatter"
     },
     {
       "path": "server/response-before-2.json",
       "originalSha256": "55c8489077798092f81067bdd5bac67c6d2371041af13d95120eae2948864972",
-      "packagedSha256": "6096ce16c0c17604201feeb998cbba653b84c5c06813e3578775d62ac733a4db",
-      "selection": "Original redaction result objects and checks; machine-local root removed"
+      "packagedSha256": "907db8039c865ada21cd9a1651e8235607dc1770534bd47595743be441c14932",
+      "selection": "Original redaction result objects and checks; machine-local root removed; JSON whitespace normalized with the repository formatter"
     },
     {
       "path": "server/management-before-2.json",
       "originalSha256": "636521f1b92fc5c249b841cf64216604dea29ffd7208e04019e006ea1aa36574",
-      "packagedSha256": "7ce3fecd1ed80ee4921a8521a9cafd4397bd09dbfdb25250fa0cb3b91ae78469",
-      "selection": "All original management result objects, samples, counts and public-output digests; machine-local root removed"
+      "packagedSha256": "5d680f3a757d967cac76f313d4a8ce504a09361d4da9ac75cab699ce2e18cceb",
+      "selection": "All original management result objects, samples, counts and public-output digests; machine-local root removed; JSON whitespace normalized with the repository formatter"
     },
     {
       "path": "workbench/browser-before2.json",
       "originalSha256": "3884d1ebaabbfe39da015cee87e0496ad5fa30e8b5b89f7c6b3a769cc2cd4378",
-      "packagedSha256": "bc5ae3249474facb3ac27e049461f705103734ec08c105b238a59cb1850d0d44",
-      "selection": "Original responseInitial and response objects from the 200-field browser fixture; samples and counters unchanged"
+      "packagedSha256": "63677cdfbdc768ba6a37258eb51841533b1cabaa528e2870d903f446656fe4f2",
+      "selection": "Original responseInitial and response objects from the 200-field browser fixture; samples and counters unchanged; JSON whitespace normalized with the repository formatter"
     },
     {
       "path": "runtime/after-1.jsonl",
@@ -144,56 +144,56 @@
     {
       "path": "server/router-after-2.json",
       "originalSha256": "d40539a22e0547f166cb31a227a55877fcc4483bc6ce82d7e11689bb04b79e60",
-      "packagedSha256": "73fe96eb5a580635b8553dfdac0fd2876c6a373d252150856331e18363045e44",
-      "selection": "Original 20-query direct/integration cold/warm result objects and checks; machine-local root removed"
+      "packagedSha256": "f36bdee2283bd4ae606327f548e67b09503f1cb03dd6b887bd206d0c5135521c",
+      "selection": "Original 20-query direct/integration cold/warm result objects and checks; machine-local root removed; JSON whitespace normalized with the repository formatter"
     },
     {
       "path": "server/router-after-3.json",
       "originalSha256": "a9a14e8c03b39c1911e9c727c18d278c85d7d44afd69dff0c666e7a98c9ec771",
-      "packagedSha256": "ee15eb8e407fb86650ca14cf21b268ca759f73ccc18b9f3cd6e5e7a7cbbe86d0",
-      "selection": "Original 20-query direct/integration cold/warm result objects and checks; machine-local root removed"
+      "packagedSha256": "aa7eb2cfc853a36842aeca727d17639eb06a3f9ccdb65c058f6cd9216bbbb3fc",
+      "selection": "Original 20-query direct/integration cold/warm result objects and checks; machine-local root removed; JSON whitespace normalized with the repository formatter"
     },
     {
       "path": "server/response-after-1.json",
       "originalSha256": "6a4e14645731dd38feab96ad21f9b5302919562c68c800ed108c0f455036bebe",
-      "packagedSha256": "a8f97a9d347c13067e1328163b2793b5f0e31667692dd38659b1d4134975f7bb",
-      "selection": "Original redaction result objects and checks; machine-local root removed"
+      "packagedSha256": "988e288e2b8229e687615f56f3050cc5daf14c203040a80ac055cab5f04e04cd",
+      "selection": "Original redaction result objects and checks; machine-local root removed; JSON whitespace normalized with the repository formatter"
     },
     {
       "path": "server/management-after-1.json",
       "originalSha256": "bc8750d504d2aba8c17dd9b8d4804edc8e48f61d207b561bd26822c7386ca9e1",
-      "packagedSha256": "d836aa932e303c7a51fee2d895dd51d3ca8c5bfa69ace95e709c8d9bcfcde9f6",
-      "selection": "All original management result objects, samples, counts and public-output digests; machine-local root removed"
+      "packagedSha256": "8aef90bbeba2e2eaacf90643cec45284c526faa3ec6f7e97d64b42f1f2e286a6",
+      "selection": "All original management result objects, samples, counts and public-output digests; machine-local root removed; JSON whitespace normalized with the repository formatter"
     },
     {
       "path": "workbench/browser-after1.json",
       "originalSha256": "cdd0d433a2ada6e7832282249d6d76c0000152d4b8c1cfec225f43b2529a256d",
-      "packagedSha256": "fc1fdb56992c67336d334d698690df654b73e440ffa16c44f34b4af320b8a0ce",
-      "selection": "Original responseInitial and response objects from the 200-field browser fixture; samples and counters unchanged"
+      "packagedSha256": "df9833b51ca6aa4fcac1ef25bd17fcd19eed2efac499c763baefa2fd47a06d13",
+      "selection": "Original responseInitial and response objects from the 200-field browser fixture; samples and counters unchanged; JSON whitespace normalized with the repository formatter"
     },
     {
       "path": "server/response-after-2.json",
       "originalSha256": "a5c3b715ae76fecb655a04259b5e6079d68b9cd4eed61866f83edf596d50dfa5",
-      "packagedSha256": "df8d314238e386b524b2d546f53989aff89e270412dd7d7ac462118cb24546ce",
-      "selection": "Original redaction result objects and checks; machine-local root removed"
+      "packagedSha256": "1c80a412be902a8d5dcdea0f4d0f6f406a632ebc766014040c30f0011f9f4c2f",
+      "selection": "Original redaction result objects and checks; machine-local root removed; JSON whitespace normalized with the repository formatter"
     },
     {
       "path": "server/management-after-2.json",
       "originalSha256": "15cd7dbc24e65f51a2306aa3f1864986de418580e933263f111423559b92b493",
-      "packagedSha256": "a1a60d2cd4d6679a6fdabf7956794d230cab6772eb46c2c4bcad9a3fe439599a",
-      "selection": "All original management result objects, samples, counts and public-output digests; machine-local root removed"
+      "packagedSha256": "779bfe00479ff9be7187ebae9f503c74d9b87d71db3f600d605ac6ac26de7d35",
+      "selection": "All original management result objects, samples, counts and public-output digests; machine-local root removed; JSON whitespace normalized with the repository formatter"
     },
     {
       "path": "workbench/browser-after2.json",
       "originalSha256": "2668c8976fcafcdba0c035eb774d726380a4e7da1d490c794707fa6df7ad4a47",
-      "packagedSha256": "36783e94a069e5bf07f745ffe7a37470b7a967a28171f7611d0d2020432e9c7d",
-      "selection": "Original responseInitial and response objects from the 200-field browser fixture; samples and counters unchanged"
+      "packagedSha256": "314ece709f540f3fbade5cec8f7f7cf1db2e85881d4bfd8d1efb78e85200aa3e",
+      "selection": "Original responseInitial and response objects from the 200-field browser fixture; samples and counters unchanged; JSON whitespace normalized with the repository formatter"
     },
     {
       "path": "runtime/source-hashes.json",
       "originalSha256": "674c89d96233ff421e3d3bc447196f0ddaa9b0ace116dd97b7126f22ec602e48",
-      "packagedSha256": "674c89d96233ff421e3d3bc447196f0ddaa9b0ace116dd97b7126f22ec602e48",
-      "selection": "Original historical AFTER runtime source SHA-256 map"
+      "packagedSha256": "694723f5edaab6149ae66553787e3dee462b4ca159c665c2e9390cf08d7e158f",
+      "selection": "Original historical AFTER runtime source SHA-256 map; JSON whitespace normalized with the repository formatter"
     }
   ]
 }

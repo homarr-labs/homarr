@@ -1,4 +1,5 @@
 import { createHash } from "node:crypto";
+import { execFileSync } from "node:child_process";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { join, resolve } from "node:path";
 
@@ -90,6 +91,15 @@ for (const label of ["before", "after"]) {
   }
 }
 await preserve("runtime/source-hashes.json", (text) => text, "Original historical AFTER runtime source SHA-256 map");
+const jsonInputs = inputs.filter((input) => input.path.endsWith(".json"));
+execFileSync("bun", ["x", "oxfmt", ...jsonInputs.map((input) => join(destination, input.path))], {
+  cwd: resolve(import.meta.dirname, "../../.."),
+  stdio: "inherit",
+});
+for (const input of jsonInputs) {
+  input.packagedSha256 = digest(await readFile(join(destination, input.path)));
+  input.selection += "; JSON whitespace normalized with the repository formatter";
+}
 await writeFile(
   join(destination, "provenance.json"),
   `${JSON.stringify(
