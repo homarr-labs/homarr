@@ -1,0 +1,22 @@
+apps/nextjs/src/app/api/assistant/chat/route.ts
+  h_d6e478ca18e517 212-217
+packages/custom-widgets/scripts/ai-assistant-evaluation.ts
+  h_d6e478ca18e517 39,198
+packages/custom-widgets/scripts/ai-evaluation.ts
+  h_d6e478ca18e517 263-271,382-384,426-427
+packages/custom-widgets/src/core/ai-prompt.ts
+  h_d6e478ca18e517 177-187,213,236-249,259-261,263
+packages/custom-widgets/src/test/ai-prompt.spec.ts
+  h_d6e478ca18e517 123-124,127,167
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "88a5505c75bc74cc3868c0fcb4b9693641ecb343",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
