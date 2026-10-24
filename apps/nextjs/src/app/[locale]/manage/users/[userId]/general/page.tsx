@@ -51,9 +51,13 @@ export default async function EditUserPage(props: Props) {
     notFound();
   }
 
-  const boards = await api.board.getManageOverview({ fullPreview: false, userId: user.id });
-  const searchEngines = await api.searchEngine.getSelectable();
   const isSelf = session?.user.id === user.id;
+  const [boards, searchEngines, connections, tourStatus] = await Promise.all([
+    api.board.getManageOverview({ fullPreview: false, userId: user.id }),
+    api.searchEngine.getSelectable(),
+    isSelf ? api.apiKeys.getOwnOAuth() : undefined,
+    isSelf ? api.user.getTourStatus() : undefined,
+  ]);
   const isCredentialsUser = user.provider === "credentials";
 
   return (
@@ -77,12 +81,12 @@ export default async function EditUserPage(props: Props) {
         profileAvatar={<UserProfileAvatarForm user={user} />}
       />
 
-      {isSelf && <OAuthConnections key={user.id} />}
+      {isSelf && connections && <OAuthConnections key={user.id} initialConnections={connections} />}
 
-      {session?.user.id === user.id && (
+      {isSelf && tourStatus && (
         <Stack mb="lg">
           <Title order={2}>{tGeneral("item.onboardingTours.title")}</Title>
-          <ResetTours />
+          <ResetTours initialTourStatus={tourStatus} />
         </Stack>
       )}
 

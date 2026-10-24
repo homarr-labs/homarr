@@ -53,6 +53,7 @@ const NavLinkHref = (props: NavigationLinkHref) => {
       label={props.label}
       leftSection={props.icon}
       href={props.href}
+      prefetch
       active={isActive}
       onClick={() => setNavigationCollapsed(true)}
     />

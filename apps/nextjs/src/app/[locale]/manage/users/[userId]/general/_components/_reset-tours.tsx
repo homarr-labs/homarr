@@ -4,15 +4,16 @@ import { useRouter } from "next/navigation";
 import { Badge, Button, Group, Stack, Text } from "@mantine/core";
 import { IconRefresh } from "@tabler/icons-react";
 
+import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { showSuccessNotification } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
 
-export const ResetTours = () => {
+export const ResetTours = ({ initialTourStatus }: { initialTourStatus: RouterOutputs["user"]["getTourStatus"] }) => {
   const t = useI18n("management.page.user.setting.general.item.onboardingTours");
   const router = useRouter();
   const utils = clientApi.useUtils();
-  const { data: tourStatus } = clientApi.user.getTourStatus.useQuery();
+  const { data: tourStatus } = clientApi.user.getTourStatus.useQuery(undefined, { initialData: initialTourStatus });
   const { mutate: resetTours, isPending } = clientApi.user.resetTours.useMutation({
     onSuccess() {
       showSuccessNotification({

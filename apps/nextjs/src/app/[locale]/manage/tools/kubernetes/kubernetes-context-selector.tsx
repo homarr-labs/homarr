@@ -6,16 +6,22 @@ import { Alert, Badge, Button, Group, Select, Stack, Text } from "@mantine/core"
 import { useLocalStorage } from "@mantine/hooks";
 import { IconAlertTriangle } from "@tabler/icons-react";
 
+import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { useI18n } from "@homarr/translation/client";
 
-export const KubernetesContextSelector = () => {
+export const KubernetesContextSelector = ({
+  initialContexts,
+}: {
+  initialContexts: RouterOutputs["kubernetes"]["contexts"]["getContexts"];
+}) => {
   const t = useI18n("kubernetes.context");
   const tCommon = useI18n("common");
   const pathname = usePathname();
   const router = useRouter();
   const searchParams = useSearchParams();
   const { data, isError, refetch } = clientApi.kubernetes.contexts.getContexts.useQuery(undefined, {
+    initialData: initialContexts,
     refetchInterval: 30_000,
     refetchOnMount: "always",
     refetchOnReconnect: true,
@@ -91,21 +97,6 @@ export const KubernetesContextSelector = () => {
         </Alert>
       )}
     </>
-  );
-};
-
-export const useSelectedKubernetesContextId = () => {
-  const searchParams = useSearchParams();
-  const { data } = clientApi.kubernetes.contexts.getContexts.useQuery(undefined, {
-    refetchInterval: 30_000,
-    refetchOnReconnect: true,
-    refetchOnWindowFocus: true,
-  });
-  const requested = searchParams.get("context");
-  if (data?.contexts.some(({ contextId }) => contextId === requested)) return requested;
-  return (
-    data?.contexts.find(({ contextId }) => contextId === data.defaultContextId)?.contextId ??
-    data?.contexts[0]?.contextId
   );
 };
 

@@ -41,6 +41,7 @@ import {
   IconWorld,
 } from "@tabler/icons-react";
 
+import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import {
   assistantProviderCanUseOpenRouterServerTools,
@@ -140,27 +141,33 @@ const ConfigurationSkeleton = ({ label }: { label: string }) => (
 );
 
 interface AssistantConfigurationProps {
+  initialConfiguration?: RouterOutputs["assistant"]["getAdminConfiguration"];
   // Onboarding defers the root provider refresh until completion to preserve setup drafts.
   refreshAfterSave?: boolean;
 }
 
-export const AssistantConfiguration = ({ refreshAfterSave = true }: AssistantConfigurationProps) => {
+export const AssistantConfiguration = ({
+  initialConfiguration,
+  refreshAfterSave = true,
+}: AssistantConfigurationProps) => {
   const t = useI18n("management.page.settings.section.assistant");
   const tCommon = useI18n("common");
   const router = useRouter();
   const utils = clientApi.useUtils();
-  const { data: configuration, isLoading } = clientApi.assistant.getAdminConfiguration.useQuery();
-  const [provider, setProvider] = useState<AssistantProvider>("homarr");
-  const [baseUrl, setBaseUrl] = useState<string>(assistantProviderPresets.homarr.baseUrl);
-  const [modelDiscoveryPath, setModelDiscoveryPath] = useState<string>("/models");
+  const { data: configuration, isLoading } = clientApi.assistant.getAdminConfiguration.useQuery(undefined, {
+    initialData: initialConfiguration,
+  });
+  const [provider, setProvider] = useState<AssistantProvider>(configuration?.provider ?? "homarr");
+  const [baseUrl, setBaseUrl] = useState(configuration?.baseUrl ?? assistantProviderPresets.homarr.baseUrl);
+  const [modelDiscoveryPath, setModelDiscoveryPath] = useState(configuration?.modelDiscoveryPath ?? "/models");
   const [apiKey, setApiKey] = useState("");
   const [credentialFlow, setCredentialFlow] = useState<CredentialFlow>("idle");
   const [headers, setHeaders] = useState<HeaderEntry[]>([]);
   const [clearHeaders, setClearHeaders] = useState(false);
   const [nextHeaderId, setNextHeaderId] = useState(1);
-  const [modelId, setModelId] = useState("");
-  const [enabled, setEnabled] = useState(false);
-  const [webSearchEnabled, setWebSearchEnabled] = useState(false);
+  const [modelId, setModelId] = useState(configuration?.modelId ?? "");
+  const [enabled, setEnabled] = useState(configuration?.enabled ?? false);
+  const [webSearchEnabled, setWebSearchEnabled] = useState(configuration?.webSearchEnabled ?? false);
 
   useEffect(() => {
     const configuredProvider = configuration?.provider ?? "homarr";

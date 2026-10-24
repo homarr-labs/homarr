@@ -1,14 +1,22 @@
-import { Suspense } from "react";
+import { notFound } from "next/navigation";
 import { Stack } from "@mantine/core";
 
-import { KubernetesContextSelector } from "./kubernetes-context-selector";
+import { auth } from "@homarr/auth/next";
+import { env } from "@homarr/docker/env";
 
-export default function KubernetesLayout({ children }: { children: React.ReactNode }) {
+import { KubernetesContextSelector } from "./kubernetes-context-selector";
+import { getKubernetesContextsAsync } from "./kubernetes-context";
+
+export default async function KubernetesLayout({ children }: { children: React.ReactNode }) {
+  const session = await auth();
+  if (!(session?.user.permissions.includes("admin") && env.ENABLE_KUBERNETES)) {
+    notFound();
+  }
+  const contexts = await getKubernetesContextsAsync();
+
   return (
     <Stack>
-      <Suspense fallback={null}>
-        <KubernetesContextSelector />
-      </Suspense>
+      <KubernetesContextSelector initialContexts={contexts} />
       {children}
     </Stack>
   );
