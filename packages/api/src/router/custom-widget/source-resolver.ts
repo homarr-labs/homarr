@@ -87,9 +87,7 @@ export function createCustomWidgetSourceResolver(ctx: IntegrationHttpContext) {
             else auth.headerName = source.auth.name;
           }
         }
-        let redactSecrets: CustomWidgetHttpRequest["redactSecrets"];
-        if (auth?.type === "headers") redactSecrets = auth.secrets;
-        return { baseUrl: source.baseUrl, auth, redactSecrets, cacheVersion: "" };
+        return { baseUrl: source.baseUrl, auth, redactSecrets: auth?.secrets, cacheVersion: "" };
       }
       const integration = await resolveIntegration(source);
       const key = `${integration.id}:${request.auth}`;
