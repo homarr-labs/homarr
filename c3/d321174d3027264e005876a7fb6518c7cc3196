@@ -1,0 +1,43 @@
+apps/docs/package.json
+  s_e8c3b16f087943::t_7ca043febe27bb 33,56,58
+apps/workshop/go.mod
+  s_e8c3b16f087943::t_ed526692369af1 3
+bun.lock
+  s_9b7e99bd3ab786::t_e50872de3eb580 52,75,77,679,1388,2696,2698,2700,2702,2704,2706,2708,2710,2712,2714,2716,2718,2720,2722,2724,2778-2779,2812-2817,3244,3720,4004-4005,5084,5098,5816-5826,5832,5834,5836,5838,5840,6052-6057,6600-6601,6870-6871
+package.json
+  s_e8c3b16f087943::t_f64e15a739ed12 181
+packages/integrations/package.json
+  s_e8c3b16f087943::t_afc869052684e6 45
+tools/homarr-dev/go.mod
+  s_e8c3b16f087943::t_4b505ca5320b17 3,6,8
+tools/homarr-dev/go.sum
+  s_e8c3b16f087943::t_fb475a6cef88d3 3-4,11-12
+tools/v2-showreel/bun.lock
+  s_e8c3b16f087943::t_9c7d6f7c6292e0 12,15,88,96,100
+tools/v2-showreel/package.json
+  s_e8c3b16f087943::t_07ea55719ec41f 14,17
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "c3d321174d3027264e005876a7fb6518c7cc3196",
+  "prompts": {},
+  "sessions": {
+    "s_9b7e99bd3ab786": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "65e5f33a-f2db-4674-8074-dcea9cc8135f",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_e8c3b16f087943": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "5bad9576-ba72-4dbc-a1a1-0fc4be09f9a2",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
