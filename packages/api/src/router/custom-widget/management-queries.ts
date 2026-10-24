@@ -38,6 +38,15 @@ export const managementQueryProcedures = {
           with: { secrets: { columns: { sourceId: true, kind: true } } },
         }),
         ctx.db.query.legacyCustomWidgetDefinitions.findMany({
+          columns: {
+            id: true,
+            name: true,
+            description: true,
+            iconUrl: true,
+            url: true,
+            authType: true,
+            updatedAt: true,
+          },
           orderBy: (table, { asc }) => asc(table.name),
         }),
       ]);
@@ -115,6 +124,7 @@ export const managementQueryProcedures = {
       if (!input.currentId || available.some(({ id }) => id === input.currentId)) return available;
       const legacy = await ctx.db.query.legacyCustomWidgetDefinitions.findFirst({
         where: eq(legacyCustomWidgetDefinitions.id, input.currentId),
+        columns: { id: true, name: true, description: true, iconUrl: true, updatedAt: true },
       });
       if (!legacy) return available;
       return [...available, mapLegacyAvailableCustomWidget(legacy)];

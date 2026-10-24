@@ -1,5 +1,4 @@
 import { createHash, randomUUID } from "node:crypto";
-import { setTimeout as wait } from "node:timers/promises";
 
 import { CustomWidgetDomainError } from "./errors";
 
@@ -38,6 +37,8 @@ export interface RequestLimiterOptions {
 export class CustomWidgetRequestLimiter {
   private readonly rateBuckets = new Map<string, number[]>();
   private readonly concurrency = new Map<string, number>();
+  private readonly capacityWaiters = new Map<() => void, readonly string[]>();
+  private capacityVersion = 0;
 
   public constructor(private readonly options: RequestLimiterOptions = {}) {}
 
@@ -114,20 +115,26 @@ export class CustomWidgetRequestLimiter {
       this.acquireLocalRate(definitionRateKey, DEFINITION_CATEGORY_LIMITS[category], now, load);
     }
     if (phase === "rate") return async () => undefined;
-    return this.waitForCapacity(() => {
-      if (!this.acquireLocalConcurrency(userKey, CUSTOM_WIDGET_USER_ITEM_CONCURRENCY_LIMIT)) return undefined;
-      if (!this.acquireLocalConcurrency(definitionKey, CUSTOM_WIDGET_DEFINITION_CONCURRENCY_LIMIT)) {
-        this.releaseLocalConcurrency(userKey);
-        return undefined;
-      }
-      let released = false;
-      return async () => {
-        if (released) return;
-        released = true;
-        this.releaseLocalConcurrency(userKey);
-        this.releaseLocalConcurrency(definitionKey);
-      };
-    }, load);
+    return this.waitForCapacity(
+      () => {
+        if (!this.acquireLocalConcurrency(userKey, CUSTOM_WIDGET_USER_ITEM_CONCURRENCY_LIMIT)) return undefined;
+        if (!this.acquireLocalConcurrency(definitionKey, CUSTOM_WIDGET_DEFINITION_CONCURRENCY_LIMIT)) {
+          this.releaseLocalConcurrency(userKey);
+          return undefined;
+        }
+        let released = false;
+        return async () => {
+          if (released) return;
+          released = true;
+          this.releaseLocalConcurrency(userKey);
+          this.releaseLocalConcurrency(definitionKey);
+          this.notifyCapacity(userKey, definitionKey);
+        };
+      },
+      load,
+      [userKey, definitionKey],
+      true,
+    );
   }
 
   private async acquireStored(
@@ -157,7 +164,10 @@ export class CustomWidgetRequestLimiter {
       assertLoadActive(load);
       return async () => undefined;
     }
-    return this.waitForCapacity(() => this.acquireStoredConcurrency(userKey, definitionKey, store), load);
+    return this.waitForCapacity(() => this.acquireStoredConcurrency(userKey, definitionKey, store), load, [
+      userKey,
+      definitionKey,
+    ]);
   }
 
   private async acquireStoredConcurrency(userKey: string, definitionKey: string, store: RequestLimitStore) {
@@ -193,17 +203,21 @@ export class CustomWidgetRequestLimiter {
       if (released) return;
       released = true;
       await Promise.all([store.releaseConcurrency(userKey, ownerId), store.releaseConcurrency(definitionKey, ownerId)]);
+      this.notifyCapacity(userKey, definitionKey);
     };
   }
 
   private async waitForCapacity(
     acquire: () => (() => Promise<void>) | undefined | Promise<(() => Promise<void>) | undefined>,
     load: RequestLimitInput["load"],
+    keys: readonly string[],
+    local = false,
   ): Promise<() => Promise<void>> {
     const deadline = performance.now() + WINDOW_MS;
     for (;;) {
       assertLoadActive(load);
       if (load && performance.now() >= deadline) throwLimit(1_000, LOAD_CAPACITY_MESSAGE);
+      const capacityVersion = this.capacityVersion;
       const release = await acquire();
       if (release) {
         if (load?.signal?.aborted) {
@@ -220,12 +234,52 @@ export class CustomWidgetRequestLimiter {
       const remaining = deadline - performance.now();
       if (remaining <= 0) throwLimit(1_000, LOAD_CAPACITY_MESSAGE);
       try {
-        await wait(Math.min(100, remaining), undefined, { signal: load.signal });
+        await this.waitForCapacityChange(
+          local ? remaining : Math.min(100, remaining),
+          load.signal,
+          capacityVersion,
+          keys,
+        );
       } catch (error) {
         assertLoadActive(load);
         throw error;
       }
     }
+  }
+
+  private notifyCapacity(userKey: string, definitionKey: string) {
+    this.capacityVersion += 1;
+    for (const [notify, keys] of this.capacityWaiters) {
+      if (keys.includes(userKey) || keys.includes(definitionKey)) notify();
+    }
+  }
+
+  private waitForCapacityChange(
+    remaining: number,
+    signal: AbortSignal | undefined,
+    capacityVersion: number,
+    keys: readonly string[],
+  ) {
+    if (this.capacityVersion !== capacityVersion) return Promise.resolve();
+    return new Promise<void>((resolve, reject) => {
+      const cleanup = () => {
+        clearTimeout(timeout);
+        this.capacityWaiters.delete(notify);
+        signal?.removeEventListener("abort", abort);
+      };
+      const notify = () => {
+        cleanup();
+        resolve();
+      };
+      const abort = () => {
+        cleanup();
+        reject(signal?.reason);
+      };
+      const timeout = setTimeout(notify, remaining);
+      this.capacityWaiters.set(notify, keys);
+      signal?.addEventListener("abort", abort, { once: true });
+      if (signal?.aborted) abort();
+    });
   }
 
   private acquireLocalRate(

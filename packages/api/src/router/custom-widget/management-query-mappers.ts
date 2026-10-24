@@ -72,7 +72,9 @@ export function mapCustomWidgetListItem(
   };
 }
 
-export function mapLegacyCustomWidgetListItem(definition: LegacyDefinition) {
+export function mapLegacyCustomWidgetListItem(
+  definition: Pick<LegacyDefinition, "id" | "name" | "description" | "iconUrl" | "url" | "authType" | "updatedAt">,
+) {
   return {
     id: definition.id,
     managementPath: "/manage/custom-widgets",
@@ -137,7 +139,9 @@ export function mapAvailableCustomWidget(definition: StoredDefinition) {
   ];
 }
 
-export function mapLegacyAvailableCustomWidget(definition: LegacyDefinition) {
+export function mapLegacyAvailableCustomWidget(
+  definition: Pick<LegacyDefinition, "id" | "name" | "description" | "iconUrl" | "updatedAt">,
+) {
   return {
     id: definition.id,
     name: definition.name,

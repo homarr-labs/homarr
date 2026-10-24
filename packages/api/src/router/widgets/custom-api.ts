@@ -109,6 +109,17 @@ async function resolvePlacedDefinitionAsync(ctx: RouterContext, itemId: string) 
   }
   const cacheVersion = getCustomWidgetCacheVersion(stored);
   const sourceResolver = createCustomWidgetSourceResolver(ctx);
+  const sourceSecrets = new Map<string, Array<{ kind: string; value: string }>>();
+  const getSourceSecrets = (sourceId: string) => {
+    let secrets = sourceSecrets.get(sourceId);
+    if (!secrets) {
+      secrets = stored.secrets
+        .filter((secret) => secret.sourceId === sourceId)
+        .map((secret) => ({ kind: secret.kind, value: decryptSecret(secret.encryptedValue) }));
+      sourceSecrets.set(sourceId, secrets);
+    }
+    return secrets;
+  };
   const permissions = new Map<BoardPermission, Promise<void>>([["view", Promise.resolve()]]);
   const authorizeRequest = (permission: BoardPermission) => {
     let authorized = permissions.get(permission);
@@ -118,7 +129,17 @@ async function resolvePlacedDefinitionAsync(ctx: RouterContext, itemId: string) 
     }
     return authorized;
   };
-  return { item, stored, definition, itemOptions, configuration, cacheVersion, sourceResolver, authorizeRequest };
+  return {
+    item,
+    stored,
+    definition,
+    itemOptions,
+    configuration,
+    cacheVersion,
+    sourceResolver,
+    getSourceSecrets,
+    authorizeRequest,
+  };
 }
 
 const findRequest = (resolved: ResolvedDefinition, requestId: string, kind: "query" | "action") => {
@@ -187,9 +208,7 @@ const executeRequest = async (
     category,
     async () => {
       const connection = await resolved.sourceResolver.resolveSource(source, request, () =>
-        resolved.stored.secrets
-          .filter((secret) => secret.sourceId === source.id)
-          .map((secret) => ({ kind: secret.kind, value: decryptSecret(secret.encryptedValue) })),
+        resolved.getSourceSecrets(source.id),
       );
       if (load?.signal?.aborted)
         throw new TRPCError({ code: "BAD_REQUEST", message: "Custom widget load was cancelled" });
