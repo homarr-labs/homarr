@@ -1,0 +1,14 @@
+packages/widgets/src/releases/use-viewed-releases.ts
+  h_d6e478ca18e517 27
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "ca7ab91f54acc2cff3627b7bf836a4f30943160d",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
