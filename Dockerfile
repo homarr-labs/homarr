@@ -1,6 +1,6 @@
-# syntax=docker/dockerfile:1.25
+# syntax=docker/dockerfile:1.28
 
-FROM oven/bun:1.4.3-alpine AS bun-tool
+FROM oven/bun:1.4.4-alpine AS bun-tool
 
 FROM node:24.22.1-alpine AS base
 
@@ -30,7 +30,7 @@ RUN --mount=type=secret,id=TURBO_API,env=TURBO_API \
     TURBO_PLATFORM="${TARGETPLATFORM:-linux/amd64}/musl/node-24.22.1" \
     bun run turbo run build --filter=@homarr/nextjs... --filter=@homarr/cli
 
-FROM alpine:3.24.2 AS runner
+FROM alpine:3.24.3 AS runner
 WORKDIR /app
 COPY --from=base /usr/local/bin/node /usr/local/bin/node
 # envsubst, privilege drop and AUTH_SECRET generation are used by the entrypoint.
