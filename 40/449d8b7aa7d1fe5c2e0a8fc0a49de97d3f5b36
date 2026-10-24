@@ -1,0 +1,19 @@
+packages/api/src/router/custom-widget/source-resolver.ts
+  s_cb7da52b92f941::t_230f637674cd6a 82
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "40449d8b7aa7d1fe5c2e0a8fc0a49de97d3f5b36",
+  "prompts": {},
+  "sessions": {
+    "s_cb7da52b92f941": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "0dd48e49-fedb-4f47-bd23-f5fcef6c850a",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
