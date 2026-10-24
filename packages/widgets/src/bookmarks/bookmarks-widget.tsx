@@ -97,6 +97,14 @@ export default function BookmarksWidget({
     titleHeight = 36 + (options.titleSize - 11) * 1.2;
   }
   const contentHeight = Math.max(0, responsiveHeight - titleHeight);
+  const isTight = responsiveHeight < 120;
+  let contentPadding = 12;
+  if (isTight) contentPadding = 6;
+  let layoutHeight = contentHeight;
+  if (options.layout === "column") {
+    layoutHeight = Math.max(0, responsiveHeight - contentPadding * 2 - 2);
+    if (showTitle) layoutHeight = Math.max(0, layoutHeight - options.titleSize * 1.2 - contentPadding);
+  }
   let layoutWidth = responsiveWidth;
   if (options.layout === "gridHorizontal") layoutWidth = width;
 
@@ -130,12 +138,13 @@ export default function BookmarksWidget({
       getBookmarkDisplayPlan({
         advanced,
         gap: bookmarkSpacingPixels[options.spacing],
-        height: contentHeight,
+        height: layoutHeight,
+        hideHostname: options.hideHostname,
         itemCount: data.length,
         layout: options.layout,
         width: layoutWidth,
       }),
-    [advanced, contentHeight, data.length, layoutWidth, options.layout, options.spacing],
+    [advanced, data.length, layoutHeight, layoutWidth, options.hideHostname, options.layout, options.spacing],
   );
 
   const cardDisplay = getBookmarkCardDisplay({
@@ -192,7 +201,6 @@ export default function BookmarksWidget({
 
   if (appIds.length > 0 && isInitialWidgetQueryPending(appsQuery)) return <WidgetQueryLoadingState />;
 
-  const isTight = responsiveHeight < 120;
   let compactStyle: CSSProperties | undefined;
   if (!advanced && Number.isFinite(displayScale) && displayScale > 1) {
     // Low-column boards zoom the canvas above 100%. Keep bookmark controls at their intended physical size.
