@@ -45,7 +45,7 @@
     "next": "catalog:",
     "next-themes": "catalog:",
     "pocketbase": "catalog:",
-    "postcss": "^8.5.16",
+    "postcss": "^8.5.31",
     "posthog-js": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
