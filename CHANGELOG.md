@@ -1,4 +1,70 @@
 ## What's Changed
+* chore(lang): updated translations from crowdin by @homarr-crowdin[bot] in https://github.com/homarr-labs/homarr/pull/7289
+* fix(board): preserve square tiles inside categories by @ajnart in https://github.com/homarr-labs/homarr/pull/7265
+* chore: update bug report template by @homarr-releases[bot] in https://github.com/homarr-labs/homarr/pull/7277
+* feat(board): add apps by dropping a URL onto the board in edit mode by @mawcs in https://github.com/homarr-labs/homarr/pull/7210
+* feat(releases): fix registry and rate-limit errors and rebuild the widget by @ajnart in https://github.com/homarr-labs/homarr/pull/7270
+* chore(renovate): re-enable automatic dependency update PRs by @ajnart in https://github.com/homarr-labs/homarr/pull/7303
+* docs(agents): scope the triage disclaimer ban to contributors by @ajnart in https://github.com/homarr-labs/homarr/pull/7304
+* perf(manage): prefetch navigation and align primary actions by @ajnart in https://github.com/homarr-labs/homarr/pull/7301
+* ci(bots): only auto-merge Renovate PRs it marks for automerge by @ajnart in https://github.com/homarr-labs/homarr/pull/7342
+* chore(deps): update ghcr.io/muchobien/pocketbase docker tag to v0.40.6 by @homarr-renovate[bot] in https://github.com/homarr-labs/homarr/pull/7322
+* chore(deps): update alpine docker tag to v3.24.3 by @homarr-renovate[bot] in https://github.com/homarr-labs/homarr/pull/7306
+* fix(deps): update module charm.land/bubbletea/v2 to v2.1.0 by @homarr-renovate[bot] in https://github.com/homarr-labs/homarr/pull/7332
+* chore(deps): update golang docker tag to v1.27.3 by @homarr-renovate[bot] in https://github.com/homarr-labs/homarr/pull/7324
+* fix(deps): update dependency @tabler/icons to ^3.49.0 by @homarr-renovate[bot] in https://github.com/homarr-labs/homarr/pull/7326
+* chore(deps): update docker/dockerfile docker tag to v1.28 by @homarr-renovate[bot] in https://github.com/homarr-labs/homarr/pull/7320
+* chore(deps): update dependency @assistant-ui/tap to v0.9.23 by @homarr-renovate[bot] in https://github.com/homarr-labs/homarr/pull/7309
+* chore(deps): update dependency playwright-core to ^1.64.1 by @homarr-renovate[bot] in https://github.com/homarr-labs/homarr/pull/7318
+* fix(deps): update module github.com/pocketbase/pocketbase to v0.40.5 by @homarr-renovate[bot] in https://github.com/homarr-labs/homarr/pull/7333
+* chore(deps): update docker/login-action action to v4.7.0 by @homarr-renovate[bot] in https://github.com/homarr-labs/homarr/pull/7321
+* fix(deps): update dependency postcss to ^8.5.31 by @homarr-renovate[bot] in https://github.com/homarr-labs/homarr/pull/7313
+* fix(deps): update dependency mysql2 to v3.24.6 by @homarr-renovate[bot] in https://github.com/homarr-labs/homarr/pull/7327
+* chore(deps): update oven/bun docker tag to v1.4.4 by @homarr-renovate[bot] in https://github.com/homarr-labs/homarr/pull/7312
+* chore(deps): update dependency assistant-cloud to v0.2.7 by @homarr-renovate[bot] in https://github.com/homarr-labs/homarr/pull/7316
+* chore(deps): update dependency typescript-compiler-api to v6.0.3 by @homarr-renovate[bot] in https://github.com/homarr-labs/homarr/pull/7311
+* fix(deps): update dependency tailwind-merge to ^3.7.0 by @homarr-renovate[bot] in https://github.com/homarr-labs/homarr/pull/7329
+* chore(deps): update dependency react-is to ^19.3.1 by @homarr-renovate[bot] in https://github.com/homarr-labs/homarr/pull/7319
+* chore(deps): update dependency @assistant-ui/store to v0.3.21 by @homarr-renovate[bot] in https://github.com/homarr-labs/homarr/pull/7308
+* fix(integrations): declare http-cookie-agent dependency to unbreak dev image build by @ajnart in https://github.com/homarr-labs/homarr/pull/7345
+* chore(deps): update go module directive to v1.27.3 by @homarr-renovate[bot] in https://github.com/homarr-labs/homarr/pull/7323
+* fix(deps): update module charm.land/lipgloss/v2 to v2.0.6 by @homarr-renovate[bot] in https://github.com/homarr-labs/homarr/pull/7314
+* fix(deps): update dependency three to ^0.186.1 by @homarr-renovate[bot] in https://github.com/homarr-labs/homarr/pull/7330
+* fix(deps): update tailwindcss monorepo to ^4.3.3 by @homarr-renovate[bot] in https://github.com/homarr-labs/homarr/pull/7315
+* fix(deps): update module charm.land/bubbles/v2 to v2.2.1 by @homarr-renovate[bot] in https://github.com/homarr-labs/homarr/pull/7331
+* fix(deps): update dependency swiper to ^14.3.0 by @homarr-renovate[bot] in https://github.com/homarr-labs/homarr/pull/7328
+* fix(truenas): normalize legacy memory and reporting columns by @ajnart in https://github.com/homarr-labs/homarr/pull/7298
+* chore(deps): update actions/cache action to v6 by @homarr-renovate[bot] in https://github.com/homarr-labs/homarr/pull/7334
+* chore(deps): update actions/github-script action to v9 by @homarr-renovate[bot] in https://github.com/homarr-labs/homarr/pull/7335
+* chore(deps): update actions/setup-node action to v7 by @homarr-renovate[bot] in https://github.com/homarr-labs/homarr/pull/7336
+* chore(deps): update crowdin/github-action action to v3 by @homarr-renovate[bot] in https://github.com/homarr-labs/homarr/pull/7337
+* chore(deps): update endbug/add-and-commit action to v11 by @homarr-renovate[bot] in https://github.com/homarr-labs/homarr/pull/7340
+* chore(deps): update dependency bun to v1.4.4 by @homarr-renovate[bot] in https://github.com/homarr-labs/homarr/pull/7310
+* fix(deps): update dependency @base-ui/react to ^1.9.0 by @homarr-renovate[bot] in https://github.com/homarr-labs/homarr/pull/7325
+* fix(bookmarks): show vertical hostnames when rows fit by @ajnart in https://github.com/homarr-labs/homarr/pull/7291
+* fix(downloads): filter Transmission and Deluge before limiting by @ajnart in https://github.com/homarr-labs/homarr/pull/7292
+* fix(header): add consistent account and board action feedback by @ajnart in https://github.com/homarr-labs/homarr/pull/7293
+* fix(board): isolate dropped icons and preserve editable drops by @ajnart in https://github.com/homarr-labs/homarr/pull/7300
+* fix(custom-widgets): exclude cache hits from query budgets by @ajnart in https://github.com/homarr-labs/homarr/pull/7305
+* feat(media): support mp4 and webm board backgrounds by @AmalkrishnaAS in https://github.com/homarr-labs/homarr/pull/7299
+* chore(deps): update dependency esbuild to ^0.28.2 by @homarr-renovate[bot] in https://github.com/homarr-labs/homarr/pull/7317
+* chore(deps): update dependency ubuntu to v26 by @homarr-renovate[bot] in https://github.com/homarr-labs/homarr/pull/7339
+* feat(assistant): modernize assistant-ui and preserve conversation state by @ajnart in https://github.com/homarr-labs/homarr/pull/7346
+* feat(custom-widgets): support multiple encrypted headers by @ajnart in https://github.com/homarr-labs/homarr/pull/7241
+* feat(app): add opening modes and URL format help by @DooSys in https://github.com/homarr-labs/homarr/pull/7196
+* fix(custom-widgets): use trusted certificates for HTTP sources by @ajnart in https://github.com/homarr-labs/homarr/pull/7349
+* fix(boards): validate item layout bounds and repair invalid layouts in the editor by @ajnart in https://github.com/homarr-labs/homarr/pull/7351
+* feat(releases): sync viewed versions across devices by @ajnart in https://github.com/homarr-labs/homarr/pull/7295
+* chore(release): automatic release v2.9.0 by @github-actions[bot] in https://github.com/homarr-labs/homarr/pull/7356
+
+## New Contributors
+* @mawcs made their first contribution in https://github.com/homarr-labs/homarr/pull/7210
+* @AmalkrishnaAS made their first contribution in https://github.com/homarr-labs/homarr/pull/7299
+* @DooSys made their first contribution in https://github.com/homarr-labs/homarr/pull/7196
+
+**Full Changelog**: https://github.com/homarr-labs/homarr/compare/v2.8.2...v2.9.0
+
+## What's Changed
 * docs(agents): require browser before/after evidence for AI PRs and restrict triage skill to maintainers by @ajnart in https://github.com/homarr-labs/homarr/pull/7283
 * fix(tdarr): refresh media transcoding data automatically by @Riccardo-Vecchi in https://github.com/homarr-labs/homarr/pull/7278
 * fix(calendar): restore compact calendar font sizing by @ajnart in https://github.com/homarr-labs/homarr/pull/7284
