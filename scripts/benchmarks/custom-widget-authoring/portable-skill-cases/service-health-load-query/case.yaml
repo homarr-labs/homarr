@@ -1,0 +1,12 @@
+schema_version: "1.1"
+name: service-health-load-query
+expected_outcome: |
+  An importable Homarr Custom JSX v2 definition built from the verified contract:
+  - The answer contains exactly one fenced json code block holding the widget definition
+  - The definition passes Homarr's Custom Widget v2 import schema, including JSX template validation
+  - sources.default is an HTTP source at https://status.example.test with none auth
+  - Defines the request: query GET /v1/health
+  - The template uses every requested capability: checkedAt, latencyMs, openIncidents, services, RefreshButton
+  - The template renders with the sample load responses without a runtime error and shows "Photos", "DNS", "Media"
+  - The template renders loading and failed request states without a runtime error
+  - Because Homarr tools were unavailable, the answer adds an 'Unverified:' line naming the missing preview/persistence evidence

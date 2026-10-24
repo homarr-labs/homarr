@@ -1,0 +1,12 @@
+schema_version: "1.1"
+name: karakeep-saved-integration
+expected_outcome: |
+  An importable Homarr Custom JSX v2 definition built from the verified contract:
+  - The answer contains exactly one fenced json code block holding the widget definition
+  - The definition passes Homarr's Custom Widget v2 import schema, including JSX template validation
+  - sources.default is a saved karakeep integration source bound to fixture-karakeep
+  - Defines the request: load query GET /api/v1/bookmarks, query {"archived":"false","sortOrder":"desc","limit":"8","includeContent":"false"}
+  - The template uses every requested capability: RefreshButton, .bookmarks, nextCursor, favourited, content, summary, note, tags, assetType
+  - The template renders with the sample load responses without a runtime error and shows "A useful article", "reading"
+  - The template renders loading and failed request states without a runtime error
+  - Because Homarr tools were unavailable, the answer adds an 'Unverified:' line naming the missing preview/persistence evidence
