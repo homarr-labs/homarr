@@ -1,0 +1,292 @@
+.github/renovate.json5
+  h_d6e478ca18e517 3
+.github/workflows/bot-auto-merge-reconcile.yml
+  h_d6e478ca18e517 40-41,46-52
+.github/workflows/bot-pr-automerge.yml
+  h_d6e478ca18e517 44-50
+.github/workflows/ci.yml
+  h_d6e478ca18e517 354,406,457
+.github/workflows/deployment-docker-image.yml
+  h_d6e478ca18e517 156,201,287
+.github/workflows/workshop.yml
+  h_d6e478ca18e517 209,255,294
+AGENTS.md
+  h_d6e478ca18e517 111
+Dockerfile
+  h_d6e478ca18e517 1,3,33
+apps/docs/docs/widgets/releases/index.mdx
+  h_d6e478ca18e517 3,23-24,29-30,33-34,42-47
+apps/docs/docs/widgets/releases/index.ts
+  h_d6e478ca18e517 7,12-15,18-22,25-28,31-34,37-40,43-52
+apps/docs/package.json
+  h_d6e478ca18e517 33,48,56-58
+apps/nextjs/src/app/[locale]/boards/(content)/_client.tsx
+  h_d6e478ca18e517 14,100
+apps/nextjs/src/app/[locale]/boards/_providers.tsx
+  h_d6e478ca18e517 32-41
+apps/nextjs/src/app/[locale]/manage/assistant/_components/assistant-configuration.tsx
+  h_d6e478ca18e517 44,144,149-152,157-164,170-172
+apps/nextjs/src/app/[locale]/manage/assistant/page.tsx
+  h_d6e478ca18e517 4,26,32
+apps/nextjs/src/app/[locale]/manage/boards/_components/boards-page-content.tsx
+  h_d6e478ca18e517 3,6,12-20,51-71
+apps/nextjs/src/app/[locale]/manage/boards/page.tsx
+  h_d6e478ca18e517 12,18,21,53
+apps/nextjs/src/app/[locale]/manage/custom-widgets/publish/[id]/_workshop-publish-form.tsx
+  h_d6e478ca18e517 20,37-42,54
+apps/nextjs/src/app/[locale]/manage/custom-widgets/publish/[id]/page.tsx
+  h_d6e478ca18e517 18-21,23
+apps/nextjs/src/app/[locale]/manage/integrations/new/_integration-new-form-wrapper.tsx
+  h_d6e478ca18e517 5,11,17-22,30
+apps/nextjs/src/app/[locale]/manage/integrations/new/_integration-new-form.tsx
+  h_d6e478ca18e517 52,71-78,248,271-279,329,377,381-382
+apps/nextjs/src/app/[locale]/manage/integrations/new/page.tsx
+  h_d6e478ca18e517 5,51,62-67
+apps/nextjs/src/app/[locale]/manage/layout.tsx
+  h_d6e478ca18e517 167
+apps/nextjs/src/app/[locale]/manage/search-engines/_form.tsx
+  h_d6e478ca18e517 8,21,30,33-35,89
+apps/nextjs/src/app/[locale]/manage/search-engines/edit/[id]/_search-engine-edit-form.tsx
+  h_d6e478ca18e517 18,22,59
+apps/nextjs/src/app/[locale]/manage/search-engines/edit/[id]/page.tsx
+  h_d6e478ca18e517 24-27,35
+apps/nextjs/src/app/[locale]/manage/search-engines/new/_search-engine-new-form.tsx
+  h_d6e478ca18e517 7,17-21,53
+apps/nextjs/src/app/[locale]/manage/search-engines/new/page.tsx
+  h_d6e478ca18e517 4,20,27
+apps/nextjs/src/app/[locale]/manage/tools/certificates/_components/add-certificate.tsx
+  h_d6e478ca18e517 3-4,9,11,14,19-33,45
+apps/nextjs/src/app/[locale]/manage/tools/certificates/page.tsx
+  h_d6e478ca18e517 3,15,60,115
+apps/nextjs/src/app/[locale]/manage/tools/kubernetes/cluster-dashboard/cluster-dashboard.tsx
+  h_d6e478ca18e517 3,6,15,17-21,23-24,26-28,31-36,41-42,61-63,69-78
+apps/nextjs/src/app/[locale]/manage/tools/kubernetes/configmaps/page.tsx
+  h_d6e478ca18e517 25
+apps/nextjs/src/app/[locale]/manage/tools/kubernetes/ingresses/page.tsx
+  h_d6e478ca18e517 25
+apps/nextjs/src/app/[locale]/manage/tools/kubernetes/kubernetes-context-selector.tsx
+  h_d6e478ca18e517 3,8,12-21,28,31,42-51,71
+apps/nextjs/src/app/[locale]/manage/tools/kubernetes/kubernetes-context.constants.ts
+  h_d6e478ca18e517 1
+apps/nextjs/src/app/[locale]/manage/tools/kubernetes/kubernetes-context.ts
+  h_d6e478ca18e517 1-3,5-18,25-26,28,31
+apps/nextjs/src/app/[locale]/manage/tools/kubernetes/kubernetes-query-options.ts
+  h_d6e478ca18e517 14-15
+apps/nextjs/src/app/[locale]/manage/tools/kubernetes/layout.tsx
+  h_d6e478ca18e517 1-2,5-7,9-17,21-24
+apps/nextjs/src/app/[locale]/manage/tools/kubernetes/namespaces/page.tsx
+  h_d6e478ca18e517 25
+apps/nextjs/src/app/[locale]/manage/tools/kubernetes/nodes/page.tsx
+  h_d6e478ca18e517 21
+apps/nextjs/src/app/[locale]/manage/tools/kubernetes/page.tsx
+  h_d6e478ca18e517 3,5,10-11,13-19,25-37,41-45
+apps/nextjs/src/app/[locale]/manage/tools/kubernetes/pods/page.tsx
+  h_d6e478ca18e517 21
+apps/nextjs/src/app/[locale]/manage/tools/kubernetes/secrets/page.tsx
+  h_d6e478ca18e517 21
+apps/nextjs/src/app/[locale]/manage/tools/kubernetes/services/page.tsx
+  h_d6e478ca18e517 21
+apps/nextjs/src/app/[locale]/manage/tools/kubernetes/volumes/page.tsx
+  h_d6e478ca18e517 21
+apps/nextjs/src/app/[locale]/manage/users/[userId]/general/_components/_oauth-connections.tsx
+  h_d6e478ca18e517 4,7,17-21,28,33-34,70,90,97,102
+apps/nextjs/src/app/[locale]/manage/users/[userId]/general/_components/_reset-tours.tsx
+  h_d6e478ca18e517 7,12,16,35-43
+apps/nextjs/src/app/[locale]/manage/users/[userId]/general/page.tsx
+  h_d6e478ca18e517 7,20-21,58-73,97,99,102
+apps/nextjs/src/app/[locale]/manage/users/groups/[id]/members/page.tsx
+  h_d6e478ca18e517 2,17,57-69
+apps/nextjs/src/app/[locale]/manage/users/groups/[id]/settings/_group-home-boards.tsx
+  h_d6e478ca18e517 5,15,21
+apps/nextjs/src/app/[locale]/manage/users/groups/[id]/settings/page.tsx
+  h_d6e478ca18e517 25-28,42-47
+apps/nextjs/src/app/[locale]/manage/users/groups/_client.tsx
+  h_d6e478ca18e517 3,6,12,17,21,64-71,84,92
+apps/nextjs/src/app/[locale]/manage/users/groups/page.tsx
+  h_d6e478ca18e517 28-48
+apps/nextjs/src/app/[locale]/manage/users/invites/_components/invite-list.tsx
+  h_d6e478ca18e517 5,18-19,26,30,110,117
+apps/nextjs/src/app/[locale]/manage/users/invites/page.tsx
+  h_d6e478ca18e517 23
+apps/nextjs/src/app/api/image-proxy/[id]/route.ts
+  h_d6e478ca18e517 23-26
+apps/nextjs/src/components/board/board-app-url-drop.spec.tsx
+  h_d6e478ca18e517 1-163
+apps/nextjs/src/components/board/board-app-url-drop.tsx
+  h_d6e478ca18e517 1-189
+apps/nextjs/src/components/board/items/actions/create-item.ts
+  h_d6e478ca18e517 70-82
+apps/nextjs/src/components/board/items/actions/test/create-item.spec.ts
+  h_d6e478ca18e517 5,271-286
+apps/nextjs/src/components/layout/navigation-link.tsx
+  h_d6e478ca18e517 56,92
+apps/nextjs/src/components/layout/navigation.tsx
+  h_d6e478ca18e517 74
+apps/nextjs/src/components/manage/manage-page-layout.tsx
+  h_d6e478ca18e517 35,43-49
+apps/workshop/Dockerfile
+  h_d6e478ca18e517 1,3,5,16
+apps/workshop/go.mod
+  h_d6e478ca18e517 3,7,13,16,18,21,25,28-30,36-43,45-46
+apps/workshop/go.sum
+  h_d6e478ca18e517 13-14,21-22,27-28,37-38,54-55,68-69,72-73,76-77,86-87,107-108,112-113,119-120,123-124,127-128,132-133,138-139,162-163,168-169,176-177
+bun.lock
+  h_d6e478ca18e517 52,67,75-77,305,526,674,1084,1100,1176,1379,1504,1506,2684,2686,2688,2690,2692,2694,2696,2698,2700,2702,2704,2706,2708,2710,2712,3232,3274,3708,4442,4634,4752,4980,5072,5084,5086,5196,5542-5555,5592-5593,5598-5601,5612-5613,5672-5673,5780-5783,5814-5815,5840-5841,5866-5875,5918-5919,5950-5951,5980-5981,6064-6067,6074-6075,6084-6087,6268-6271,6282-6301,6360-6363,6426-6429
+deployments/prebuilt-debian/Dockerfile
+  h_d6e478ca18e517 1
+package.json
+  h_d6e478ca18e517 177,355,361,387
+packages/api/package.json
+  h_d6e478ca18e517 46
+packages/api/src/router/app.ts
+  h_d6e478ca18e517 6,11-12,16,227-250
+packages/api/src/router/test/app.spec.ts
+  h_d6e478ca18e517 9,17-32,401-471
+packages/api/src/router/widgets/releases.ts
+  h_d6e478ca18e517 9-10,22-26,154
+packages/boards/src/context.spec.tsx
+  h_d6e478ca18e517 1-89
+packages/boards/src/context.tsx
+  h_d6e478ca18e517 10,74,83-85,100-107
+packages/core/package.json
+  h_d6e478ca18e517 29-30
+packages/core/src/infrastructure/http/guarded-fetch.ts
+  h_d6e478ca18e517 5,17-19,167-170,202,206,220-224
+packages/core/src/infrastructure/http/index.ts
+  h_d6e478ca18e517 9
+packages/core/src/test/infrastructure/http/guarded-fetch.spec.ts
+  h_d6e478ca18e517 7-11,14,251-257,261-265
+packages/custom-widgets/package.json
+  h_d6e478ca18e517 74
+packages/db/migrations/custom/0005_releases_widget_options.ts
+  h_d6e478ca18e517 1-79
+packages/db/migrations/custom/index.ts
+  h_d6e478ca18e517 7,15
+packages/db/test/releases-widget-options-migration.spec.ts
+  h_d6e478ca18e517 1-278
+packages/forms-collection/src/icon-picker/icon-picker.spec.ts
+  h_d6e478ca18e517 326-340
+packages/icons/src/favicon-fetcher.ts
+  h_d6e478ca18e517 2,46-58,60,65,71,73,75,80,174-196
+packages/icons/src/test/favicon-fetcher.spec.ts
+  h_d6e478ca18e517 6-9,11,14,133,136,140,142-143,171,175,177
+packages/image-proxy/src/index.ts
+  h_d6e478ca18e517 6-13,48-61,122-150,155-156,158-160,186-198,206,208,210
+packages/image-proxy/src/test/index.spec.ts
+  h_d6e478ca18e517 1-178
+packages/integrations/package.json
+  h_d6e478ca18e517 45
+packages/integrations/src/truenas/test/truenas-integration.spec.ts
+  h_d6e478ca18e517 141,159,176-178,186-194,257,275-404,541
+packages/integrations/src/truenas/truenas-integration.ts
+  h_d6e478ca18e517 4,18-19,60-62,64-85,88-89,336-340,346-358,408,416
+packages/request-handler/src/lib/request-handler.ts
+  h_d6e478ca18e517 4,32-36,263,267-269,340,347-348,350
+packages/request-handler/src/release-providers/codeberg.ts
+  h_d6e478ca18e517 1-81
+packages/request-handler/src/release-providers/docker-hub.ts
+  h_d6e478ca18e517 1-91
+packages/request-handler/src/release-providers/errors.ts
+  h_d6e478ca18e517 1,3-4,6,8-14,18-21,23-50
+packages/request-handler/src/release-providers/github-container-registry.ts
+  h_d6e478ca18e517 1-149
+packages/request-handler/src/release-providers/github.ts
+  h_d6e478ca18e517 1-95
+packages/request-handler/src/release-providers/gitlab.ts
+  h_d6e478ca18e517 1-73
+packages/request-handler/src/release-providers/http.ts
+  h_d6e478ca18e517 1-75
+packages/request-handler/src/release-providers/identifier.ts
+  h_d6e478ca18e517 1-30
+packages/request-handler/src/release-providers/index.ts
+  h_d6e478ca18e517 1-48
+packages/request-handler/src/release-providers/linuxserver.ts
+  h_d6e478ca18e517 1-77
+packages/request-handler/src/release-providers/npm.ts
+  h_d6e478ca18e517 1-44
+packages/request-handler/src/release-providers/oci-registry.ts
+  h_d6e478ca18e517 1-137
+packages/request-handler/src/release-providers/quay.ts
+  h_d6e478ca18e517 1-39
+packages/request-handler/src/release-providers/registry-tags.ts
+  h_d6e478ca18e517 1-87
+packages/request-handler/src/release-providers/types.ts
+  h_d6e478ca18e517 12,23,26,32,34-40,42-45,47,49-54,56
+packages/request-handler/src/release-providers/versions.ts
+  h_d6e478ca18e517 1-70
+packages/request-handler/src/releases.ts
+  h_d6e478ca18e517 3,7-26,29-33,36-39
+packages/request-handler/src/test/release-providers/codeberg.spec.ts
+  h_d6e478ca18e517 1-157
+packages/request-handler/src/test/release-providers/dispatcher.spec.ts
+  h_d6e478ca18e517 3,5,10-13,15-19,22-23,25-26,29-36,38-39,41,43
+packages/request-handler/src/test/release-providers/docker-hub.spec.ts
+  h_d6e478ca18e517 1-368
+packages/request-handler/src/test/release-providers/github-container-registry.spec.ts
+  h_d6e478ca18e517 1-484
+packages/request-handler/src/test/release-providers/github.spec.ts
+  h_d6e478ca18e517 1-304
+packages/request-handler/src/test/release-providers/gitlab.spec.ts
+  h_d6e478ca18e517 1-164
+packages/request-handler/src/test/release-providers/linuxserver.spec.ts
+  h_d6e478ca18e517 3-19,21-23,25-34,36-41,44-46,49-50,52-54,57-65,67,70-71,73,75-76,79-80,83-93,96,102-107,111-112,114,117,120,123-124,126,129,132,135-136,138,140,143-146,148,150-154,156
+packages/request-handler/src/test/release-providers/npm.spec.ts
+  h_d6e478ca18e517 1-115
+packages/request-handler/src/test/release-providers/oci-registry-server.ts
+  h_d6e478ca18e517 1-87
+packages/request-handler/src/test/release-providers/provider-server.ts
+  h_d6e478ca18e517 1-76
+packages/request-handler/src/test/release-providers/quay.spec.ts
+  h_d6e478ca18e517 1-116
+packages/request-handler/src/test/releases.spec.ts
+  h_d6e478ca18e517 1-121
+packages/translation/src/lang/en.json
+  h_d6e478ca18e517 4759,4761-4767,4769-4776,4778-4780,4782-4797,4799-4809,4811-4813,4887-4976,4979-4982,4986,6180-6191
+packages/widgets/src/releases/component.module.css
+  h_d6e478ca18e517 1-877
+packages/widgets/src/releases/component.tsx
+  h_d6e478ca18e517 3-6,8,10-12,15,19,21,24,26-52,55-102,110-111,113,118-125,127-128,130,132-147,149,151-165,167-204,206-279,281-316,319-333,336-415,418-424,426-433,436-438,441-452,454,456-458,461,463,466-472,474-481,483-484,486-509,513-523,526-537,540-553,556-567,569-618,620-622,626-632,635-639,642-676
+packages/widgets/src/releases/display.spec.ts
+  h_d6e478ca18e517 1-166,168-179,181-279,282-295,297-358,360
+packages/widgets/src/releases/display.ts
+  h_d6e478ca18e517 1-20,23-25,28-72,74-99,101-121
+packages/widgets/src/releases/index.ts
+  h_d6e478ca18e517 9-15,21-24,29-30,32-35,37-38,40-43,45-46,48-51,53-59,61-75,77-78
+packages/widgets/src/releases/release-detail.tsx
+  h_d6e478ca18e517 1-336
+packages/widgets/src/releases/release-entry.ts
+  h_d6e478ca18e517 1-46
+packages/widgets/src/releases/release-options.ts
+  h_d6e478ca18e517 1-11
+packages/widgets/src/releases/use-release-entries.ts
+  h_d6e478ca18e517 1-170
+tools/brand-art/bun.lock
+  h_d6e478ca18e517 13,24
+tools/brand-art/package.json
+  h_d6e478ca18e517 14
+tools/homarr-dev/go.mod
+  h_d6e478ca18e517 3,6-8,10,17,24-25,29-31
+tools/homarr-dev/go.sum
+  h_d6e478ca18e517 3-4,7-8,11-12,23-24,27-28,46-47,50-51,63-64,70-71,74-75
+tools/mysql-to-sqlite/Dockerfile
+  h_d6e478ca18e517 1
+tools/mysql-to-sqlite/bun.lock
+  h_d6e478ca18e517 8,27
+tools/mysql-to-sqlite/package.json
+  h_d6e478ca18e517 11
+tools/v2-showreel/bun.lock
+  h_d6e478ca18e517 11-12,15,17,82,88,96,98,100
+tools/v2-showreel/package.json
+  h_d6e478ca18e517 13-14,17,19
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "c3646f294f142789d7112fef6d8cce3984b57abc",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
