@@ -42,6 +42,7 @@
     "@homarr/validation": "workspace:^0.1.0",
     "@immich/sdk": "catalog:",
     "@jellyfin/sdk": "catalog:",
+    "http-cookie-agent": "catalog:",
     "ical.js": "catalog:",
     "maria2": "catalog:",
     "octokit": "catalog:",
