@@ -1,0 +1,22 @@
+apps/nextjs/src/app/api/mcp/[transport]/route.spec.ts
+  h_d6e478ca18e517 61,70,79,88,97
+apps/nextjs/src/app/api/mcp/_handler.ts
+  h_d6e478ca18e517 8,89
+packages/api/src/mcp-tools.ts
+  h_d6e478ca18e517 18
+packages/api/src/router/widgets/custom-api.ts
+  h_d6e478ca18e517 40,217-237,239-253,255-291,293-310,312-326
+packages/api/src/router/widgets/rssFeed.ts
+  h_d6e478ca18e517 34,37-38,40-42,44-53,55-61,64-70,72-86
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "a96b12e186d6daccace893c40175cec20a99f32b",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
