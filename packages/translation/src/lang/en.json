@@ -1464,7 +1464,7 @@
       },
       "externalUrl": {
         "label": "External URL",
-        "description": "Address your browser opens from widget links. Leave empty to use the integration URL."
+        "description": "Address your browser opens from widget links. Leave empty to use the linked app's URL or the integration URL."
       },
       "apiKeySettings": {
         "label": "Get API key"

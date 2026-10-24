@@ -1,1 +1,2 @@
-ALTER TABLE `integration` ADD `external_url` text;
+ALTER TABLE `integration` ADD `external_url` text;--> statement-breakpoint
+DELETE FROM `integrationSecret` WHERE `kind` = 'wazuhDashboardUrl';
