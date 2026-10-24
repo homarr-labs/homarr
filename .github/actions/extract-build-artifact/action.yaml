@@ -29,42 +29,60 @@ runs:
         architecture: ${{ inputs.architecture }}
     - name: Start docker container for ${{ inputs.architecture }}
       id: extraction-container
+      env:
+        ARCHITECTURE: ${{ inputs.architecture }}
+        DIGEST: ${{ inputs.digest }}
       run: |
-        docker run --name homarr-extraction-${{ inputs.architecture }} \
+        docker run --name "homarr-extraction-${ARCHITECTURE}" \
           -e "SECRET_ENCRYPTION_KEY=0000000000000000000000000000000000000000000000000000000000000000" \
-          --detach --rm ${{ inputs.digest }}
+          --detach --rm "${DIGEST}"
       shell: bash
     - name: Prepare extraction
+      env:
+        ARCHITECTURE: ${{ inputs.architecture }}
       run: |
-        docker exec homarr-extraction-${{ inputs.architecture }} cp /etc/nginx/templates/nginx.conf /app && \
-        mkdir -p ${{ runner.temp }}/extraction/${{ inputs.architecture }}
+        docker exec "homarr-extraction-${ARCHITECTURE}" cp /etc/nginx/templates/nginx.conf /app && \
+        mkdir -p "${RUNNER_TEMP}/extraction/${ARCHITECTURE}"
       shell: bash
     - name: Extract source from ${{ inputs.architecture }} container (alpine)
+      env:
+        ARCHITECTURE: ${{ inputs.architecture }}
       run: |
-        docker exec homarr-extraction-${{ inputs.architecture }} tar -czf extraction-alpine.tar.gz -C /app . && \
-        docker cp homarr-extraction-${{ inputs.architecture }}:/app/extraction-alpine.tar.gz ${{ runner.temp }}/extraction/${{ inputs.architecture }}/build-alpine-${{ inputs.architecture }}.tar.gz && \
-        docker exec homarr-extraction-${{ inputs.architecture }} rm /app/extraction-alpine.tar.gz
+        docker exec "homarr-extraction-${ARCHITECTURE}" tar -czf extraction-alpine.tar.gz -C /app . && \
+        docker cp "homarr-extraction-${ARCHITECTURE}:/app/extraction-alpine.tar.gz" "${RUNNER_TEMP}/extraction/${ARCHITECTURE}/build-alpine-${ARCHITECTURE}.tar.gz" && \
+        docker exec "homarr-extraction-${ARCHITECTURE}" rm /app/extraction-alpine.tar.gz
       shell: bash
     - name: Extract source from ${{ inputs.architecture }} container (debian)
+      env:
+        ARCHITECTURE: ${{ inputs.architecture }}
+        PREBUILT_PATH: ${{ steps.prebuilt-debian.outputs.path }}
       run: |
-        docker cp ${{ steps.prebuilt-debian.outputs.path }}/better_sqlite3.node homarr-extraction-${{ inputs.architecture }}:/app/build/better_sqlite3.node && \
-        docker cp ${{ steps.prebuilt-debian.outputs.path }}/better_sqlite3.node homarr-extraction-${{ inputs.architecture }}:/app/node_modules/better-sqlite3/build/Release/better_sqlite3.node && \
-        docker exec homarr-extraction-${{ inputs.architecture }} tar -czf extraction-debian.tar.gz -C /app . && \
-        docker cp homarr-extraction-${{ inputs.architecture }}:/app/extraction-debian.tar.gz ${{ runner.temp }}/extraction/${{ inputs.architecture }}/build-debian-${{ inputs.architecture }}.tar.gz
+        docker cp "${PREBUILT_PATH}/better_sqlite3.node" "homarr-extraction-${ARCHITECTURE}:/app/build/better_sqlite3.node" && \
+        docker cp "${PREBUILT_PATH}/better_sqlite3.node" "homarr-extraction-${ARCHITECTURE}:/app/node_modules/better-sqlite3/build/Release/better_sqlite3.node" && \
+        docker exec "homarr-extraction-${ARCHITECTURE}" tar -czf extraction-debian.tar.gz -C /app . && \
+        docker cp "homarr-extraction-${ARCHITECTURE}:/app/extraction-debian.tar.gz" "${RUNNER_TEMP}/extraction/${ARCHITECTURE}/build-debian-${ARCHITECTURE}.tar.gz"
       shell: bash
     - name: Stop ${{ inputs.architecture }} container
       if: always() && steps.extraction-container.outcome == 'success'
-      run: docker container remove --force --volumes homarr-extraction-${{ inputs.architecture }}
+      env:
+        ARCHITECTURE: ${{ inputs.architecture }}
+      run: docker container remove --force --volumes "homarr-extraction-${ARCHITECTURE}"
       shell: bash
     - name: Add build archive to release (alpine)
       if: inputs.upload == 'true'
       env:
         GH_TOKEN: ${{ inputs.token }}
-      run: gh release upload --repo ${{ inputs.repository }} ${{ inputs.release-tag }} ${{ runner.temp }}/extraction/${{ inputs.architecture }}/build-alpine-${{ inputs.architecture }}.tar.gz --clobber
+        ARCHITECTURE: ${{ inputs.architecture }}
+        REPOSITORY: ${{ inputs.repository }}
+        RELEASE_TAG: ${{ inputs.release-tag }}
+      run: gh release upload --repo "${REPOSITORY}" "${RELEASE_TAG}" "${RUNNER_TEMP}/extraction/${ARCHITECTURE}/build-alpine-${ARCHITECTURE}.tar.gz" --clobber
       shell: bash
     - name: Add build archive to release (debian)
       if: inputs.upload == 'true'
       env:
         GH_TOKEN: ${{ inputs.token }}
-      run: gh release upload --repo ${{ inputs.repository }} ${{ inputs.release-tag }} ${{ runner.temp }}/extraction/${{ inputs.architecture }}/build-debian-${{ inputs.architecture }}.tar.gz --clobber
+        ARCHITECTURE: ${{ inputs.architecture }}
+        REPOSITORY: ${{ inputs.repository }}
+        RELEASE_TAG: ${{ inputs.release-tag }}
+      run: gh release upload --repo "${REPOSITORY}" "${RELEASE_TAG}" "${RUNNER_TEMP}/extraction/${ARCHITECTURE}/build-debian-${ARCHITECTURE}.tar.gz" --clobber
       shell: bash
