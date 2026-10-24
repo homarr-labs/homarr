@@ -53,7 +53,7 @@
     "serve": "catalog:",
     "shiki": "catalog:",
     "sonner": "catalog:",
-    "swiper": "^14.0.5",
+    "swiper": "^14.3.0",
     "tailwind-merge": "^3.7.0",
     "tailwindcss": "^4.3.2",
     "three": "catalog:"
