@@ -1,0 +1,25 @@
+apps/nextjs/src/app/api/image-proxy/[id]/route.ts
+  s_b33778671a3872::t_7b679d9fbcc8ef 20-21
+packages/api/src/router/app.ts
+  s_b33778671a3872::t_b85701222baa35 238
+packages/api/src/router/test/app.spec.ts
+  s_b33778671a3872::t_227a732249e070 17,406,422,425,429,441,444
+packages/image-proxy/src/index.ts
+  s_b33778671a3872::t_2a96a8e433983d 6,27,43,90,165-176,178,180
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "5e81f1c07b9700a9699f7810762c3729eeec38c6",
+  "prompts": {},
+  "sessions": {
+    "s_b33778671a3872": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "4836a7b0-29a0-4329-9cac-5cfb8625bd5c",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
