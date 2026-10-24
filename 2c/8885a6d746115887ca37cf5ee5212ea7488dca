@@ -1,0 +1,31 @@
+bun.lock
+  s_e8c3b16f087943::t_61c24d9ef059c5 674,1436,3281,4043-4044,5791-5796,6211-6212,6391-6392
+package.json
+  s_b21f25fab40c58::t_810efb628528ac 112,145,179,257
+packages/integrations/package.json
+  s_b21f25fab40c58::t_976da772c023df 45
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "2c8885a6d746115887ca37cf5ee5212ea7488dca",
+  "prompts": {},
+  "sessions": {
+    "s_b21f25fab40c58": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "2327a52b-dfee-4b6a-9ed5-8c2829f26e0b",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_e8c3b16f087943": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "5bad9576-ba72-4dbc-a1a1-0fc4be09f9a2",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
