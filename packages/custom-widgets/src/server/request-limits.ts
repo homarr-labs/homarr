@@ -153,7 +153,10 @@ export class CustomWidgetRequestLimiter {
       if (definitionRate.count > DEFINITION_CATEGORY_LIMITS[category])
         throwLimit(definitionRate.retryAfterMs, load ? LOAD_RATE_MESSAGE : undefined);
     }
-    if (phase === "rate") return async () => undefined;
+    if (phase === "rate") {
+      assertLoadActive(load);
+      return async () => undefined;
+    }
     return this.waitForCapacity(() => this.acquireStoredConcurrency(userKey, definitionKey, store), load);
   }
 
