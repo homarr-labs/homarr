@@ -2,7 +2,7 @@
 
 import type { ReactNode } from "react";
 import { useEffect, useState } from "react";
-import { UnstyledButton, useMantineColorScheme } from "@mantine/core";
+import { ActionIcon, Tooltip, useMantineColorScheme } from "@mantine/core";
 import { useHotkeys } from "@mantine/hooks";
 
 import { clientApi } from "@homarr/api/client";
@@ -50,11 +50,13 @@ export const UserButtonClient = ({ avatar, isAdmin, isDockerEnabled, boardSwitch
 
   return (
     <UserAvatarMenu availableUpdates={visibleUpdates} isDockerEnabled={isDockerEnabled} boardSwitcher={boardSwitcher}>
-      <UnstyledButton aria-label={t("open")}>
-        <UpdateIndicator availableUpdates={visibleUpdates} disabled={!isCurrentSessionAdmin}>
-          {avatar}
-        </UpdateIndicator>
-      </UnstyledButton>
+      <Tooltip label={t("open")} events={{ hover: true, focus: true, touch: false }}>
+        <ActionIcon aria-label={t("open")} variant="subtle" color="gray" size={44} radius="xl">
+          <UpdateIndicator availableUpdates={visibleUpdates} disabled={!isCurrentSessionAdmin}>
+            {avatar}
+          </UpdateIndicator>
+        </ActionIcon>
+      </Tooltip>
     </UserAvatarMenu>
   );
 };
