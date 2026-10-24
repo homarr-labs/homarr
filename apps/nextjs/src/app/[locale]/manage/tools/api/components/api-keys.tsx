@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useMemo, useState } from "react";
-import { Alert, Button, Group, Stack, Text, Title } from "@mantine/core";
+import { Alert, Button, Checkbox, Group, Stack, Text, Title } from "@mantine/core";
 import { IconTrash } from "@tabler/icons-react";
 import type { MRT_ColumnDef, MRT_Row, MRT_TableInstance } from "mantine-react-table";
 import { MantineReactTable, useMantineReactTable } from "mantine-react-table";
@@ -39,6 +39,12 @@ const ApiKeyCreatedByCell = ({ row }: ApiKeyCellProps) => (
     <Text>{row.original.user.name}</Text>
   </Group>
 );
+
+const ApiKeyAccessCell = ({ row }: ApiKeyCellProps) => {
+  const t = useI18n("management.page.tool.api.tab.apiKey.access");
+  if (row.original.readOnly) return <Text size="sm">{t("readOnly")}</Text>;
+  return <Text size="sm">{t("readWrite")}</Text>;
+};
 
 const ApiKeyProvenanceCell = ({ row }: ApiKeyCellProps) => {
   const t = useI18n("management.page.tool.api.tab.apiKey.provenance");
@@ -91,6 +97,7 @@ export const ApiKeysManagement = ({ apiKeys, onCreated }: ApiKeysManagementProps
   const t = useI18n("management.page.tool.api.tab.apiKey");
   const utils = clientApi.useUtils();
   const [newApiKey, setNewApiKey] = useState<string | null>(null);
+  const [readOnly, setReadOnly] = useState(true);
   const [feedback, setFeedback] = useState<"createError" | "deleteError" | "deleteSuccess" | "refreshError" | null>(
     null,
   );
@@ -147,6 +154,11 @@ export const ApiKeysManagement = ({ apiKeys, onCreated }: ApiKeysManagementProps
         Cell: ApiKeyCreatedByCell,
       },
       {
+        accessorKey: "readOnly",
+        header: t("access.label"),
+        Cell: ApiKeyAccessCell,
+      },
+      {
         id: "provenance",
         accessorFn: (key) =>
           key.oauthClientId === null
@@ -181,15 +193,18 @@ export const ApiKeysManagement = ({ apiKeys, onCreated }: ApiKeysManagementProps
       </Stack>
     ),
     renderTopToolbarCustomActions: () => (
-      <Button
-        onClick={() => {
-          mutateCreate();
-        }}
-        loading={isPendingCreate}
-        disabled={newApiKey !== null}
-      >
-        {t("button.createApiToken")}
-      </Button>
+      <Group gap="md" p="xs">
+        <Checkbox
+          label={t("access.readOnly")}
+          description={t("access.description")}
+          checked={readOnly}
+          onChange={(event) => setReadOnly(event.currentTarget.checked)}
+          disabled={isPendingCreate || newApiKey !== null}
+        />
+        <Button onClick={() => mutateCreate({ readOnly })} loading={isPendingCreate} disabled={newApiKey !== null}>
+          {t("button.createApiToken")}
+        </Button>
+      </Group>
     ),
     enableDensityToggle: false,
     state: {

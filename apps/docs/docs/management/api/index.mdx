@@ -26,6 +26,13 @@ Omit `userId` for yourself; another user requires admin permission. Older prefer
 
 API keys are shown once as `<id>.<token>`. Send one in the `ApiKey` header; it acts as its creator and does not expire.
 tRPC accepts the same header. Same-origin browser requests can use the Homarr session cookie.
+An explicitly supplied invalid API key is rejected, never replaced by a browser session. API keys are not supported over WebSockets.
+
+Read-only keys apply the same restriction to REST, tRPC and MCP: mutations, service actions, arbitrary integration requests
+(including GET/HEAD), RSS/release fetching, timetable station searches, integration connection checks and Custom Widget API execution are denied. Ordinary authorized reads
+remain available, including administrative reads; read-only does not hide sensitive data the owner can already read.
+Existing keys remain writable. New keys created in the UI default to read-only; omitting `readOnly` from `apiKeys.create`
+retains the legacy writable default.
 
 Cross-origin browser requests require `ApiKey`; they do not use session cookies. Reverse proxies must forward `OPTIONS`
 and preserve CORS headers. An HTTPS API reference cannot call an HTTP-only instance because browsers block mixed content.

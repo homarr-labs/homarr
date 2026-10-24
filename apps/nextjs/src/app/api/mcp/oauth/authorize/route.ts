@@ -55,7 +55,10 @@ export async function POST(request: Request) {
         request,
       );
     const params = await parameterBody(request);
-    if (!params.ok || Object.keys(params.value).some((key) => !["pending", "consentToken", "decision"].includes(key)))
+    if (
+      !params.ok ||
+      Object.keys(params.value).some((key) => !["pending", "consentToken", "decision", "accessMode"].includes(key))
+    )
       return finishAuthorization(
         consentDecisionError(request, "invalid_request", "Invalid or duplicate decision parameters"),
         request,
@@ -66,6 +69,7 @@ export async function POST(request: Request) {
       { pendingId, browserBinding: browserBinding(request, pendingId), session },
       params.value.consentToken ?? "",
       params.value.decision ?? "",
+      params.value.accessMode,
     );
     const response = result.ok
       ? new Response(null, { status: 303, headers: { Location: result.redirectUri } })

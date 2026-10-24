@@ -4,13 +4,14 @@ import { randomBytes } from "crypto";
 
 import { hashPasswordAsync } from "@homarr/auth";
 import { generateSecureRandomToken } from "@homarr/common/server";
-import { and, db, eq, isNotNull } from "@homarr/db";
+import { and, eq, isNotNull } from "@homarr/db";
 import { apiKeys } from "@homarr/db/schema";
 
 import { createTRPCRouter, permissionRequiredProcedure, protectedProcedure } from "../trpc";
 
 const oauthKeyColumns = {
   id: true,
+  readOnly: true,
   oauthClientId: true,
   oauthClientName: true,
   oauthRedirectUri: true,
@@ -66,14 +67,16 @@ export const apiKeysRouter = createTRPCRouter({
         description: "Create a new API key for the current user (admin only)",
       },
     })
-    .mutation(async ({ ctx }) => {
+    .input(z.object({ readOnly: z.boolean().default(false) }).optional())
+    .mutation(async ({ ctx, input }) => {
       const id = randomBytes(4).toString("hex");
       const token = generateSecureRandomToken(24);
       const hashedToken = await hashPasswordAsync(token);
-      await db.insert(apiKeys).values({
+      await ctx.db.insert(apiKeys).values({
         id,
         apiKey: hashedToken,
         userId: ctx.session.user.id,
+        readOnly: input?.readOnly ?? false,
       });
       return {
         apiKey: `${id}.${token}`,
