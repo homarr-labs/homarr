@@ -297,7 +297,7 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Verify source before publication
-        uses: actions/github-script@v8
+        uses: actions/github-script@v9
         env:
           EXPECTED_SHA: ${{ needs.validate.outputs.sha }}
           EXPECTED_PR_HEAD: ${{ github.event.pull_request.head.sha }}
@@ -348,7 +348,7 @@ jobs:
 
       - name: Comment with preview image
         if: github.event_name == 'pull_request' && !env.ACT
-        uses: actions/github-script@v8
+        uses: actions/github-script@v9
         with:
           script: |
             const marker = "<!-- workshop-preview-image -->";

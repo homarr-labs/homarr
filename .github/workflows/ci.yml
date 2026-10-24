@@ -466,7 +466,7 @@ jobs:
 
       - name: Verify PR head before publication
         if: github.event_name == 'pull_request'
-        uses: actions/github-script@v8
+        uses: actions/github-script@v9
         env:
           EXPECTED_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
         with:
@@ -512,7 +512,7 @@ jobs:
 
       - name: Comment with preview image
         if: github.event_name == 'pull_request' && !env.ACT
-        uses: actions/github-script@v8
+        uses: actions/github-script@v9
         with:
           script: |
             const marker = "<!-- homarr-preview-image -->";
@@ -561,7 +561,7 @@ jobs:
 
       - name: Delete GHCR package version
         if: "!env.ACT"
-        uses: actions/github-script@v8
+        uses: actions/github-script@v9
         with:
           script: |
             const packageName = "homarr-test";

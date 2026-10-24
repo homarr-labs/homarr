@@ -48,7 +48,7 @@ jobs:
           permission-organization-projects: write
           permission-issues: read
           permission-pull-requests: read
-      - uses: actions/github-script@v8
+      - uses: actions/github-script@v9
         env:
           TRIAGE_PROJECT_OWNER: ${{ vars.TRIAGE_PROJECT_OWNER }}
           TRIAGE_PROJECT_NUMBER: ${{ vars.TRIAGE_PROJECT_NUMBER }}
