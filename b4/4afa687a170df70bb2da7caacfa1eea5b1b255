@@ -1,0 +1,21 @@
+apps/docs/public/api/open-api-schema.json
+  s_9b7e99bd3ab786::t_2b1417ec2d9237 3742-3752
+packages/api/src/router/invite.ts
+  s_9b7e99bd3ab786::t_a4ce5f3c9c0e48 62
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "b44afa687a170df70bb2da7caacfa1eea5b1b255",
+  "prompts": {},
+  "sessions": {
+    "s_9b7e99bd3ab786": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "65e5f33a-f2db-4674-8074-dcea9cc8135f",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
