@@ -50,36 +50,61 @@ export const BoardAppUrlDrop = () => {
   // Counts drops still in flight, so the overlay only hides once all of them are done
   // instead of whichever drop happens to resolve first.
   const pendingDropCountRef = useRef(0);
+  const dropQueueRef = useRef(Promise.resolve());
+  const editSessionRef = useRef<symbol | null>(null);
   const { createItem } = useItemActions();
   const utils = clientApi.useUtils();
   const { mutateAsync: detectMetadataAsync } = clientApi.app.detectMetadata.useMutation();
   const { mutateAsync: createAppAsync } = clientApi.app.create.useMutation();
   const t = useI18n();
+  const isEnabled = isEditMode && canCreateApp;
+
+  useEffect(() => {
+    editSessionRef.current = isEnabled ? Symbol() : null;
+    return () => {
+      editSessionRef.current = null;
+    };
+  }, [board.name, isEnabled]);
 
   const addAppFromUrlAsync = useCallback(
     async (url: string) => {
-      // Checked before creating the app record server side: placement can fail when the
-      // board is full, and this feature only has permission to create apps, not the
-      // app-full-all needed to delete the now-unplaced record afterward.
-      if (!hasRoomForItem(board, "app")) {
-        showErrorNotification({
-          title: t("common.notification.create.error"),
-          message: t("board.urlDrop.notification.full.message"),
-        });
-        return;
-      }
-
+      const editSession = editSessionRef.current;
+      if (editSession === null) return;
       pendingDropCountRef.current++;
       setIsResolving(true);
-      try {
+
+      // Serialize placement so two drops cannot both pass a capacity check for the
+      // same last position. Always inspect the current cache, not the render snapshot.
+      const pendingDrop = dropQueueRef.current.then(async () => {
+        if (editSessionRef.current !== editSession) return;
+        const checkCapacity = () => {
+          const currentBoard = utils.board.getBoardByName.getData({ name: board.name });
+          if (currentBoard && hasRoomForItem(currentBoard, "app")) return true;
+          showErrorNotification({
+            title: t("common.notification.create.error"),
+            message: t("board.urlDrop.notification.full.message"),
+          });
+          return false;
+        };
+
+        if (!checkCapacity()) return;
         const metadata = await detectMetadataAsync({ href: url });
+        if (editSessionRef.current !== editSession || !checkCapacity()) return;
         const app = await createAppAsync({ ...metadata, href: url, description: null, pingUrl: "" });
-        createItem({ kind: "app", options: { appId: app.id } });
         void utils.app.invalidate();
+        // Saving, cancelling or navigating must not place a late result on another
+        // board or in a newer edit session.
+        if (editSessionRef.current !== editSession) return;
+        createItem({ kind: "app", options: { appId: app.id } });
         showSuccessNotification({
           title: t("common.notification.create.success"),
           message: t("board.urlDrop.notification.success.message", { name: app.name }),
         });
+      });
+      dropQueueRef.current = pendingDrop.catch(() => undefined);
+
+      try {
+        await pendingDrop;
       } catch {
         showErrorNotification({
           title: t("common.notification.create.error"),
@@ -90,10 +115,8 @@ export const BoardAppUrlDrop = () => {
         if (pendingDropCountRef.current === 0) setIsResolving(false);
       }
     },
-    [board, createAppAsync, createItem, detectMetadataAsync, t, utils],
+    [board.name, createAppAsync, createItem, detectMetadataAsync, t, utils],
   );
-
-  const isEnabled = isEditMode && canCreateApp;
 
   useEffect(() => {
     if (!isEnabled) return;

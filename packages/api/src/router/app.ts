@@ -238,7 +238,9 @@ export const appRouter = createTRPCRouter({
       // icon's own site can still block the direct link (mixed content, or a
       // Cross-Origin-Resource-Policy header) even though the server fetched it fine.
       const iconUrl = metadata.iconUrl
-        ? await new ImageProxy().createImageAsync(metadata.iconUrl).catch(() => metadata.iconUrl)
+        ? await new ImageProxy()
+            .createImageAsync(metadata.iconUrl, undefined, { persistent: true })
+            .catch(() => metadata.iconUrl)
         : null;
 
       return {

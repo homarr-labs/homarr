@@ -8,7 +8,7 @@ import {
   fetchWithTrustedCertificatesAsync,
 } from "@homarr/core/infrastructure/http/request";
 
-import { fetchFaviconUrlAsync } from "../favicon-fetcher";
+import { fetchFaviconUrlAsync, fetchWebsiteMetadataAsync } from "../favicon-fetcher";
 
 vi.mock("node:dns/promises", () => ({ lookup: vi.fn() }));
 vi.mock("@homarr/core/infrastructure/http/request", () => ({
@@ -130,16 +130,17 @@ describe("fetchFaviconUrlAsync", () => {
     vi.useRealTimers();
   });
 
-  test("prefers the apple touch icon and resolves it to an absolute url", async () => {
+  test("normalizes the title and prefers the absolute apple touch icon in the same request", async () => {
     mockResponses({
       [websiteUrl]: createPage(
-        '<link rel="icon" href="/favicon-16.png" sizes="16x16"><link rel="apple-touch-icon" href="touch.png">',
+        '<title>  My\n App &amp; &#x1f680; &#33; </title><link rel="icon" href="/favicon-16.png" sizes="16x16"><link rel="apple-touch-icon" href="touch.png">',
       ),
     });
 
-    const result = await fetchFaviconUrlAsync("https://app.example.com");
+    const result = await fetchWebsiteMetadataAsync("https://app.example.com");
 
-    expect(result).toBe("https://app.example.com/touch.png");
+    expect(result).toEqual({ title: "My App & 🚀 !", iconUrl: "https://app.example.com/touch.png" });
+    expect(mockedFetch).toHaveBeenCalledTimes(1);
   });
 
   test("prefers the icon with the largest declared size", async () => {
@@ -167,13 +168,13 @@ describe("fetchFaviconUrlAsync", () => {
 
   test("falls back to the well known favicon when the page declares no icon", async () => {
     mockResponses({
-      "https://app.example.com/dashboard": createPage(""),
+      "https://app.example.com/dashboard": createPage("<title> \n </title>"),
       [faviconUrl]: createResponse({ contentType: "image/x-icon", body: "binary" }),
     });
 
-    const result = await fetchFaviconUrlAsync("https://app.example.com/dashboard");
+    const result = await fetchWebsiteMetadataAsync("https://app.example.com/dashboard");
 
-    expect(result).toBe(faviconUrl);
+    expect(result).toEqual({ title: null, iconUrl: faviconUrl });
   });
 
   test("falls back to the well known favicon of the origin that answered the request", async () => {

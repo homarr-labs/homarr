@@ -68,14 +68,13 @@ export const createItemCallback =
   };
 
 /**
- * Whether createItemCallback would find room for an item of this kind without throwing,
+ * Whether createItemCallback would actually place an item of this kind,
  * so a caller that needs the result of a step before placement (for example persisting a
  * record server side, which it cannot easily undo) can check first instead of after.
  */
 export const hasRoomForItem = (board: Board, kind: WidgetKind, size?: { width: number; height: number }): boolean => {
   try {
-    createItemCallback({ kind, size })(board);
-    return true;
+    return createItemCallback({ kind, size })(board) !== board;
   } catch {
     return false;
   }

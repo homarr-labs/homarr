@@ -97,22 +97,29 @@ describe("ImageProxy.forwardImageAsync", () => {
     mockedCreateAgent.mockClear();
   });
 
-  test("forwards an image from an allowed address", async () => {
+  test("forwards a persistent image after its Redis registration is lost", async () => {
     const imageProxy = new ImageProxy();
     mockResponses({ "http://192.168.1.10/icon.png": createResponse(200, { contentType: "image/png", body: "img" }) });
-    const proxyUrl = await imageProxy.createImageAsync("http://192.168.1.10/icon.png");
+    const proxyUrl = await imageProxy.createImageAsync("http://192.168.1.10/icon.png", undefined, { persistent: true });
     const id = proxyUrl.split("/").pop() as string;
+    mocks.store.clear();
 
-    const result = await imageProxy.forwardImageAsync(id);
+    const result = await new ImageProxy().forwardImageAsync(id);
 
     expect(result).toMatchObject({ contentType: "image/png" });
     expect("image" in result && new TextDecoder().decode(result.image)).toBe("img");
+    expect(proxyUrl).not.toContain("192.168.1.10");
+    const tamperedId = `${id.slice(0, -1)}${id.endsWith("0") ? "1" : "0"}`;
+    await expect(imageProxy.forwardImageAsync(tamperedId)).resolves.toEqual({ error: "not-found" });
+    expect(mockedFetch).toHaveBeenCalledTimes(1);
   });
 
   test("refuses to forward an image whose registered url resolves to a blocked address", async () => {
     const imageProxy = new ImageProxy();
     mockDns({ "metadata.internal": ["169.254.169.254"] });
-    const proxyUrl = await imageProxy.createImageAsync("http://metadata.internal/latest/meta-data/");
+    const proxyUrl = await imageProxy.createImageAsync("http://metadata.internal/latest/meta-data/", undefined, {
+      persistent: true,
+    });
     const id = proxyUrl.split("/").pop() as string;
 
     const result = await imageProxy.forwardImageAsync(id);
@@ -126,7 +133,7 @@ describe("ImageProxy.forwardImageAsync", () => {
     mockResponses({
       "http://192.168.1.10/icon.png": createResponse(302, { location: "http://169.254.169.254/latest/meta-data/" }),
     });
-    const proxyUrl = await imageProxy.createImageAsync("http://192.168.1.10/icon.png");
+    const proxyUrl = await imageProxy.createImageAsync("http://192.168.1.10/icon.png", undefined, { persistent: true });
     const id = proxyUrl.split("/").pop() as string;
 
     const result = await imageProxy.forwardImageAsync(id);
@@ -152,6 +159,14 @@ describe("ImageProxy.forwardImageAsync", () => {
       expect.anything(),
       expect.objectContaining({ headers: { "X-Plex-Token": "secret" } }),
     );
+
+    mockResponses({
+      "http://127.0.0.1:32400/photo": createResponse(200, { contentType: "image/jpeg", body: "poster" }),
+    });
+    const loopbackUrl = await imageProxy.createImageAsync("http://127.0.0.1:32400/photo", { "X-Plex-Token": "secret" });
+    await expect(imageProxy.forwardImageAsync(loopbackUrl.split("/").pop() as string)).resolves.toMatchObject({
+      contentType: "image/jpeg",
+    });
   });
 
   test("reports not-found for an unregistered id", async () => {

@@ -50,7 +50,10 @@ let createResolvers: ((app: { id: string; name: string }) => void)[] = [];
 
 vi.mock("@homarr/api/client", () => ({
   clientApi: {
-    useUtils: () => ({ app: { invalidate: mocks.invalidateApp } }),
+    useUtils: () => ({
+      app: { invalidate: mocks.invalidateApp },
+      board: { getBoardByName: { getData: () => ({ name: "board" }) } },
+    }),
     app: {
       detectMetadata: { useMutation: () => ({ mutateAsync: mocks.detectMetadataAsync }) },
       create: {
@@ -132,11 +135,12 @@ describe("BoardAppUrlDrop", () => {
 
     await dropUrl("https://second.example.com");
     expect(container.textContent).toContain("board.urlDrop.resolving");
-    expect(createResolvers).toHaveLength(2);
+    expect(createResolvers).toHaveLength(1);
 
     // The first drop finishes while the second is still in flight: the overlay must stay.
     await act(async () => createResolvers[0]?.({ id: "1", name: "First" }));
     expect(container.textContent).toContain("board.urlDrop.resolving");
+    expect(createResolvers).toHaveLength(2);
 
     // Only once the second (last remaining) drop finishes should the overlay disappear.
     await act(async () => createResolvers[1]?.({ id: "2", name: "Second" }));

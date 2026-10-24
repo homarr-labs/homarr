@@ -274,11 +274,13 @@ describe("item actions create-item", () => {
     vi.spyOn(emptyPositionModule, "getFirstEmptyPosition").mockReturnValue({ xOffset: 0, yOffset: 0 });
 
     expect(hasRoomForItem(board, "app")).toBe(true);
+    expect(hasRoomForItem({ ...board, sections: [] }, "app")).toBe(false);
+    expect(hasRoomForItem({ ...board, layouts: [] }, "app")).toBe(false);
   });
 
   test("hasRoomForItem reports false instead of throwing when the board is full", () => {
     const board = new BoardMockBuilder().addEmptySection({ id: "canvas" }).build();
-    vi.spyOn(emptyPositionModule, "getFirstEmptyPosition").mockReturnValue(null);
+    vi.spyOn(emptyPositionModule, "getFirstEmptyPosition").mockReturnValue(undefined);
 
     expect(hasRoomForItem(board, "app")).toBe(false);
   });

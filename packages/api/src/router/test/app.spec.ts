@@ -6,6 +6,7 @@ import { createId } from "@homarr/common";
 import { apps } from "@homarr/db/schema";
 import { createDb } from "@homarr/db/test";
 import type { GroupPermissionKey } from "@homarr/definitions";
+import type * as IconsModule from "@homarr/icons";
 
 import { appRouter } from "../app";
 import * as appAccessControl from "../app/app-access-control";
@@ -20,7 +21,7 @@ const { fetchWebsiteMetadataAsyncMock, createImageAsyncMock } = vi.hoisted(() =>
 
 // getIconForName keeps its real implementation, so only the network-dependent part is mocked
 vi.mock("@homarr/icons", async (importOriginal) => ({
-  ...(await importOriginal<typeof import("@homarr/icons")>()),
+  ...(await importOriginal<typeof IconsModule>()),
   fetchWebsiteMetadataAsync: fetchWebsiteMetadataAsyncMock,
 }));
 vi.mock("@homarr/image-proxy", () => ({
@@ -426,7 +427,9 @@ describe("detectMetadata", () => {
 
     // Assert
     expect(result).toEqual({ name: "Example App", iconUrl: "/api/image-proxy/abc123" });
-    expect(createImageAsyncMock).toHaveBeenCalledWith("https://app.example.com/favicon.ico");
+    expect(createImageAsyncMock).toHaveBeenCalledWith("https://app.example.com/favicon.ico", undefined, {
+      persistent: true,
+    });
   });
 
   test("falls back to the site's own icon url when registering it with the proxy fails", async () => {
@@ -435,7 +438,7 @@ describe("detectMetadata", () => {
       title: "Example App",
       iconUrl: "https://app.example.com/favicon.ico",
     });
-    createImageAsyncMock.mockRejectedValueOnce(new Error("redis unavailable"));
+    createImageAsyncMock.mockRejectedValueOnce(new Error("proxy unavailable"));
     const caller = appRouter.createCaller({
       db: createDb(),
       deviceType: undefined,

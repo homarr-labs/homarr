@@ -3,7 +3,13 @@ import { setImmediate } from "node:timers/promises";
 
 import { createId, formatBytes } from "@homarr/common";
 import { env } from "@homarr/common/env";
-import { decryptSecret, encryptSecret, readBoundedResponseAsync } from "@homarr/common/server";
+import {
+  createKeyedFingerprint,
+  decryptSecret,
+  encryptSecret,
+  readBoundedResponseAsync,
+  verifyKeyedFingerprint,
+} from "@homarr/common/server";
 import { cancelBodyAsync, fetchGuardedAsync } from "@homarr/core/infrastructure/http";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import { ErrorWithMetadata } from "@homarr/core/infrastructure/logs/error";
@@ -39,7 +45,20 @@ export class ImageProxy {
     return this.hmacKey;
   }
 
-  public async createImageAsync(url: string, headers?: Record<string, string>): Promise<string> {
+  public async createImageAsync(
+    url: string,
+    headers?: Record<string, string>,
+    options?: { persistent?: boolean },
+  ): Promise<string> {
+    if (options?.persistent) {
+      if (headers) throw new Error("Persistent image URLs cannot contain integration headers");
+      // App icons are saved in the database, unlike periodically refreshed integration
+      // images. A signed, encrypted source survives Redis expiry and server restarts.
+      const encryptedUrl = encryptSecret(url);
+      const signature = createKeyedFingerprint(`image-proxy:persistent:${encryptedUrl}`);
+      return this.createImageUrl(`persistent.${signature}.${encryptedUrl}`);
+    }
+
     const existingId = await this.getExistingIdAsync(url, headers);
     if (existingId) {
       logger.debug("Image already exists in the proxy", {
@@ -100,15 +119,17 @@ export class ImageProxy {
     );
     try {
       signal.throwIfAborted();
-      // The stored url was accepted at registration time, but its address can change by the
-      // time it is actually fetched here (DNS rebinding) or point somewhere unsafe that was
-      // never checked at all, such as a page-declared icon url. fetchGuardedAsync re-resolves
-      // and re-checks the address of every hop, including redirects, immediately before
-      // connecting, while still allowing the private network addresses self hosted
-      // integrations intentionally proxy through here.
+      // Page-declared icons are untrusted on every fetch, including redirects and DNS
+      // changes. Existing integration images retain loopback and HTTP proxy support
+      // only on their registered origin; redirects elsewhere lose credentials and trust.
       return await fetchGuardedAsync(
         new URL(urlAndHeaders.url),
-        { headers: urlAndHeaders.headers ?? {}, timeout: IMAGE_PROXY_TIMEOUT_MS, signal },
+        {
+          headers: urlAndHeaders.headers ?? undefined,
+          trustedOrigin: urlAndHeaders.trustedOrigin,
+          timeout: IMAGE_PROXY_TIMEOUT_MS,
+          signal,
+        },
         async (response) => {
           if (!response.ok) {
             await cancelBodyAsync(response);
@@ -162,6 +183,19 @@ export class ImageProxy {
   }
 
   private async getImageUrlAndHeadersAsync(id: string) {
+    if (id.startsWith("persistent.")) {
+      const parts = /^persistent\.([a-f0-9]{64})\.([a-f0-9]+)\.([a-f0-9]{32})$/.exec(id);
+      if (!parts) return null;
+      const [, signature = "", ciphertext = "", initializationVector = ""] = parts;
+      const encryptedUrl = `${ciphertext}.${initializationVector}` as const;
+      if (!verifyKeyedFingerprint(`image-proxy:persistent:${encryptedUrl}`, signature)) return null;
+      try {
+        return { url: decryptSecret(encryptedUrl), headers: null, trustedOrigin: undefined };
+      } catch {
+        return null;
+      }
+    }
+
     const urlHeaderChannel = createUrlByIdChannel(id);
     const urlHeader = await urlHeaderChannel.getAsync();
     if (!urlHeader) {
@@ -169,9 +203,11 @@ export class ImageProxy {
       return null;
     }
 
+    const url = decryptSecret(urlHeader.url);
     return {
-      url: decryptSecret(urlHeader.url),
+      url,
       headers: JSON.parse(decryptSecret(urlHeader.headers)) as Record<string, string> | null,
+      trustedOrigin: new URL(url).origin,
     };
   }
 
