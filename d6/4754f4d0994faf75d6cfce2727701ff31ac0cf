@@ -1,0 +1,55 @@
+apps/nextjs/src/app/[locale]/manage/assistant/_components/assistant-configuration.tsx
+  s_b33778671a3872::t_b077145a758fb4 44,144,149-152,157-162,168-170
+apps/nextjs/src/app/[locale]/manage/assistant/page.tsx
+  s_b33778671a3872::t_ff4c83f0c4153a 4,26,32
+apps/nextjs/src/app/[locale]/manage/custom-widgets/publish/[id]/_workshop-publish-form.tsx
+  s_b33778671a3872::t_b30ba8fd9c9288 20,37-42,54
+apps/nextjs/src/app/[locale]/manage/custom-widgets/publish/[id]/page.tsx
+  s_b33778671a3872::t_a81aa670de38e4 18-21,23
+apps/nextjs/src/app/[locale]/manage/integrations/new/_integration-new-form-wrapper.tsx
+  s_b33778671a3872::t_53096846965938 5,11,17-22,30
+apps/nextjs/src/app/[locale]/manage/integrations/new/_integration-new-form.tsx
+  s_b33778671a3872::t_8bb7b54c404775 52,71-78,248,271-279,329,377,381-382
+apps/nextjs/src/app/[locale]/manage/integrations/new/page.tsx
+  s_b33778671a3872::t_ae8b42c1c47ce2 5,51,62-67
+apps/nextjs/src/app/[locale]/manage/search-engines/_form.tsx
+  s_b33778671a3872::t_a5ffa90840bdd8 8,20,29,85
+apps/nextjs/src/app/[locale]/manage/search-engines/edit/[id]/_search-engine-edit-form.tsx
+  s_b33778671a3872::t_d748646309108a 18,22,59
+apps/nextjs/src/app/[locale]/manage/search-engines/edit/[id]/page.tsx
+  s_b33778671a3872::t_636c4ce7eb56ce 24-27,35
+apps/nextjs/src/app/[locale]/manage/search-engines/new/_search-engine-new-form.tsx
+  s_b33778671a3872::t_d9df7dae8d46f5 7,17-21,53
+apps/nextjs/src/app/[locale]/manage/search-engines/new/page.tsx
+  s_b33778671a3872::t_2bf34012bc5383 4,20,27
+apps/nextjs/src/app/[locale]/manage/tools/kubernetes/kubernetes-context.ts
+  s_b33778671a3872::t_91d065eb368175 1-2,5-6,12
+apps/nextjs/src/app/[locale]/manage/tools/kubernetes/layout.tsx
+  s_b33778671a3872::t_ffdf18cc6176e0 1,4-6,8-15,19
+apps/nextjs/src/app/[locale]/manage/users/[userId]/general/_components/_oauth-connections.tsx
+  s_b33778671a3872::t_c18791f442fc38 4,7,17-21,28,33-34,88,95,100
+apps/nextjs/src/app/[locale]/manage/users/[userId]/general/_components/_reset-tours.tsx
+  s_b33778671a3872::t_dfc067061909ff 7,12,16
+apps/nextjs/src/app/[locale]/manage/users/[userId]/general/page.tsx
+  s_b33778671a3872::t_023047ef16b73c 55-60,84,86,89
+apps/nextjs/src/app/[locale]/manage/users/groups/[id]/settings/_group-home-boards.tsx
+  s_b33778671a3872::t_bed7efc9177f65 5,15,21
+apps/nextjs/src/app/[locale]/manage/users/groups/[id]/settings/page.tsx
+  s_b33778671a3872::t_0ee1214bea5004 25-28,42-47
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "d64754f4d0994faf75d6cfce2727701ff31ac0cf",
+  "prompts": {},
+  "sessions": {
+    "s_b33778671a3872": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "4836a7b0-29a0-4329-9cac-5cfb8625bd5c",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
