@@ -345,7 +345,7 @@
   },
   "overrides": {
     "@ai-sdk/provider-utils>undici": "8.10.2",
-    "@assistant-ui/core": "0.3.7",
+    "@assistant-ui/core": "0.3.29",
     "@assistant-ui/react-ai-sdk>@ai-sdk/mcp": "2.0.27",
     "@assistant-ui/react-ai-sdk>@ai-sdk/react": "4.0.59",
     "@assistant-ui/react-ai-sdk>ai": "7.0.56",
