@@ -79,9 +79,7 @@ export async function resolveCustomWidgetSource(
         else auth.headerName = source.auth.name;
       }
     }
-    let redactSecrets: CustomWidgetHttpRequest["redactSecrets"];
-    if (auth?.type === "headers") redactSecrets = auth.secrets;
-    return { baseUrl: source.baseUrl, auth, redactSecrets, cacheVersion: "" };
+    return { baseUrl: source.baseUrl, auth, redactSecrets: auth?.secrets, cacheVersion: "" };
   }
   const integration = await resolveIntegration(ctx, source);
   return getIntegrationHttpConnection(integration, request.auth !== "none");
