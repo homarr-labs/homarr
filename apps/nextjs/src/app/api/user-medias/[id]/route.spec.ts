@@ -70,6 +70,30 @@ describe("GET /api/user-medias/[id]", () => {
     expect(response.status).toBe(200);
   });
 
+  test("sends the requested bytes when If-Range matches the current ETag", async () => {
+    const etag = (await requestAsync("abc.mp4")).headers.get("ETag") ?? "";
+
+    const response = await requestAsync("abc.mp4", { range: "bytes=2-5", "if-range": etag });
+
+    expect(response.status).toBe(206);
+  });
+
+  test("sends the whole file when If-Range no longer matches", async () => {
+    const response = await requestAsync("abc.mp4", { range: "bytes=2-5", "if-range": '"outdated"' });
+
+    expect(response.status).toBe(200);
+    expect(await response.text()).toBe("0123456789");
+  });
+
+  test("ignores ranges on an empty file", async () => {
+    routeMocks.findFirst.mockResolvedValue({ content: Buffer.alloc(0), contentType: "video/mp4" });
+
+    const response = await requestAsync("abc.mp4", { range: "bytes=-1" });
+
+    expect(response.status).toBe(200);
+    expect(response.headers.get("Content-Range")).toBeNull();
+  });
+
   test("still answers a matching ETag with 304", async () => {
     const first = await requestAsync("abc.mp4");
     const etag = first.headers.get("ETag") ?? "";

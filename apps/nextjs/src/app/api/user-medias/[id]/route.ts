@@ -53,6 +53,8 @@ const hasMatchingValidator = (ifNoneMatch: string | null, etag: string) => {
  * content, or null when there is no usable range (absent, malformed, multiple ranges), so the whole body is sent.
  */
 const parseRange = (header: string | null, size: number) => {
+  // An empty file has no bytes to range over; it is sent whole.
+  if (size === 0) return null;
   const match = header?.trim().match(/^bytes=(\d*)-(\d*)$/);
   if (!match) return null;
   const [, startText = "", endText = ""] = match;
@@ -116,7 +118,10 @@ export async function GET(request: NextRequest, props: { params: Promise<{ id: s
   // Browsers stream video in byte ranges (Safari won't play it otherwise). Sanitized SVGs are always sent whole.
   if (!isSvg) {
     headers.set("Accept-Ranges", "bytes");
-    const range = parseRange(request.headers.get("range"), content.length);
+    // If-Range: the range is only wanted if the client's copy is still current; otherwise send it all.
+    const ifRange = request.headers.get("if-range");
+    const range =
+      ifRange === null || ifRange.trim() === etag ? parseRange(request.headers.get("range"), content.length) : null;
     if (range === "unsatisfiable") {
       headers.delete("Content-Length");
       headers.set("Content-Range", `bytes */${content.length}`);
