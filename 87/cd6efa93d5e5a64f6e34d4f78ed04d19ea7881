@@ -1,0 +1,31 @@
+packages/request-handler/src/release-providers/codeberg.ts
+  s_e153e8e37de386::t_83d2e917b983e9 3-4,58-67,73
+packages/request-handler/src/release-providers/errors.ts
+  s_b33778671a3872::t_a5b16b3da3dadc 23-24,27-31,47
+packages/request-handler/src/test/release-providers/codeberg.spec.ts
+  s_b33778671a3872::t_32fe7e7347d4d8 136,141-148
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "87cd6efa93d5e5a64f6e34d4f78ed04d19ea7881",
+  "prompts": {},
+  "sessions": {
+    "s_b33778671a3872": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "4836a7b0-29a0-4329-9cac-5cfb8625bd5c",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_e153e8e37de386": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a16d81-d35c-7852-bea8-5c7ad2777a54",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
