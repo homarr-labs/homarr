@@ -1,0 +1,65 @@
+apps/docs/docs/integrations/coolify/index.mdx
+  s_74b673c970ef48::t_c9032334d6e2ee 28
+apps/nextjs/src/app/[locale]/manage/integrations/edit/[id]/_integration-edit-form.tsx
+  s_9b7e99bd3ab786::t_7267ca1979fd0b 20,46,48,90,219-225
+apps/nextjs/src/app/[locale]/manage/integrations/new/_integration-new-form.tsx
+  s_9b7e99bd3ab786::t_bf4e8d3e4034b4 3,40,61,63,92,114,164,191-197,270,275,289,291-292,297
+packages/api/src/middlewares/integration.ts
+  s_74b673c970ef48::t_c0c6352725da2f 112,204
+packages/api/src/router/integration/integration-router.ts
+  s_74b673c970ef48::t_46605e27987fc5 227,244,291,374,687
+packages/api/src/router/integration/integration-test-connection.ts
+  s_74b673c970ef48::t_653834d5c1bef7 11
+packages/api/src/router/onboard/onboard-router.ts
+  s_74b673c970ef48::t_399c2639237255 449
+packages/api/src/router/widgets/wazuh.ts
+  s_74b673c970ef48::t_c78823fda5bbe5 43,45
+packages/db/migrations/postgresql/0019_add_integration_external_url.sql
+  s_74b673c970ef48::t_ea32708c0938a0 1
+packages/db/migrations/postgresql/meta/0019_snapshot.json
+  s_74b673c970ef48::t_b2ac724d9ff5c4 1-2972
+packages/db/migrations/sqlite/0050_add_integration_external_url.sql
+  s_74b673c970ef48::t_b604374be96509 1
+packages/db/migrations/sqlite/meta/0050_snapshot.json
+  s_74b673c970ef48::t_8adba236dacbd0 1-3025
+packages/db/schema/postgresql.ts
+  s_74b673c970ef48::t_b7310c4b5150ad 216
+packages/db/schema/sqlite.ts
+  s_74b673c970ef48::t_e1de253fe512eb 202
+packages/forms-collection/src/index.tsx
+  s_9b7e99bd3ab786::t_db264351a36053 3
+packages/forms-collection/src/new-app/_url-label.tsx
+  s_9b7e99bd3ab786::t_43b7cc1f196dbb 1-48
+packages/integrations/src/plex/plex-integration.ts
+  s_74b673c970ef48::t_f4052cba3529c1 374
+packages/integrations/src/wazuh/test/wazuh-integration.spec.ts
+  s_74b673c970ef48::t_d5dae1db9ff175 67,74,251-258
+packages/translation/src/lang/en.json
+  s_9b7e99bd3ab786::t_90159a52452ce3 802-806,1413,1459,1465-1467
+packages/validation/src/integration.ts
+  s_74b673c970ef48::t_e9f5b308845cba 9-14,21,43
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "ae00fd6b7ea33b3ab46e5313d6a5599a84e68429",
+  "prompts": {},
+  "sessions": {
+    "s_74b673c970ef48": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "39637ef8-fe7e-468c-8334-b026f7a4531e",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_9b7e99bd3ab786": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "65e5f33a-f2db-4674-8074-dcea9cc8135f",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
