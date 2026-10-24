@@ -799,6 +799,11 @@
       }
     },
     "field": {
+      "url": {
+        "helpLabel": "Beispiele für URL-Formate",
+        "examples": "Beispiele für unterstützte Links",
+        "requiresHandler": "Benutzerdefinierte Protokolle erfordern eine zugeordnete Anwendung auf deinem Gerät."
+      },
       "description": {
         "label": "Beschreibung"
       },
@@ -2312,6 +2317,15 @@
       "option": {
         "appId": {
           "label": "App auswählen"
+        },
+        "openIn": {
+          "label": "App öffnen in",
+          "description": "Wähle, wo diese App geöffnet wird. Die Browsereinstellungen können das Öffnen in einem separaten Fenster beeinflussen.",
+          "option": {
+            "currentTab": "Aktuellem Tab",
+            "newTab": "Neuem Tab",
+            "newWindow": "Neuem Fenster"
+          }
         },
         "showTitle": {
           "label": "App Namen anzeigen"

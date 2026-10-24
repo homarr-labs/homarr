@@ -799,6 +799,11 @@
       }
     },
     "field": {
+      "url": {
+        "helpLabel": "Príklady formátov URL",
+        "examples": "Príklady podporovaných odkazov",
+        "requiresHandler": "Vlastné protokoly vyžadujú priradenú aplikáciu vo vašom zariadení."
+      },
       "description": {
         "label": "Popis"
       },
@@ -2312,6 +2317,15 @@
       "option": {
         "appId": {
           "label": "Vybrať aplikáciu"
+        },
+        "openIn": {
+          "label": "Otvoriť aplikáciu v",
+          "description": "Vyberte, kde sa má táto aplikácia otvoriť. Nastavenia prehliadača môžu zmeniť otváranie v samostatnom okne.",
+          "option": {
+            "currentTab": "Aktuálnej karte",
+            "newTab": "Novej karte",
+            "newWindow": "Novom okne"
+          }
         },
         "showTitle": {
           "label": "Zobraziť názov aplikácie"

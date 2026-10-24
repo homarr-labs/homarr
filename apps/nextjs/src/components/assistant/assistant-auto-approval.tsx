@@ -36,7 +36,7 @@ export const createAssistantAutoApprovalTracker = (maximumAttempts = Number.POSI
 interface AssistantAutoApprovalContextValue {
   enabled: boolean;
   setEnabled: (enabled: boolean) => void;
-  requestAction: (toolCallId: string, confirm: () => void) => boolean;
+  requestAction: (toolCallId: string, confirm: () => void | Promise<void>) => boolean;
   completeAction: (toolCallId: string) => void;
   retryRevision: number;
 }
@@ -51,6 +51,7 @@ export const AssistantAutoApprovalProvider = ({
   const [retryRevision, setRetryRevision] = useState(0);
   const trackerRef = useRef(createAssistantAutoApprovalTracker(AUTO_APPROVAL_MAX_ATTEMPTS));
   const retryTimersRef = useRef(new Map<string, number>());
+  const attemptsRef = useRef(new Map<string, object>());
   const previousConversationIdRef = useRef(conversationId);
   const conversationMatches = previousConversationIdRef.current === conversationId;
   const effectiveEnabled = conversationMatches && enabled;
@@ -64,6 +65,7 @@ export const AssistantAutoApprovalProvider = ({
   const clearAutomaticActions = useCallback(() => {
     for (const timer of retryTimersRef.current.values()) window.clearTimeout(timer);
     retryTimersRef.current.clear();
+    attemptsRef.current.clear();
     trackerRef.current.clear();
   }, []);
 
@@ -87,23 +89,29 @@ export const AssistantAutoApprovalProvider = ({
   useEffect(() => clearAutomaticActions, [clearAutomaticActions]);
 
   const requestAction = useCallback(
-    (toolCallId: string, confirm: () => void) => {
+    (toolCallId: string, confirm: () => void | Promise<void>) => {
       if (!effectiveEnabled || !trackerRef.current.claim(toolCallId)) return false;
-
-      try {
-        confirm();
+      const attempt = {};
+      attemptsRef.current.set(toolCallId, attempt);
+      const retry = () => {
+        if (attemptsRef.current.get(toolCallId) !== attempt) return;
         clearRetryTimer(toolCallId);
-        retryTimersRef.current.set(
-          toolCallId,
-          window.setTimeout(() => {
-            retryTimersRef.current.delete(toolCallId);
-            trackerRef.current.release(toolCallId);
-            setRetryRevision((revision) => revision + 1);
-          }, AUTO_APPROVAL_RETRY_TIMEOUT_MS),
-        );
+        attemptsRef.current.delete(toolCallId);
+        trackerRef.current.release(toolCallId);
+        setRetryRevision((revision) => revision + 1);
+      };
+      const awaitAcknowledgement = () => {
+        if (attemptsRef.current.get(toolCallId) !== attempt) return;
+        clearRetryTimer(toolCallId);
+        retryTimersRef.current.set(toolCallId, window.setTimeout(retry, AUTO_APPROVAL_RETRY_TIMEOUT_MS));
+      };
+      awaitAcknowledgement();
+      try {
+        const result = confirm();
+        if (result !== undefined) void Promise.resolve(result).then(awaitAcknowledgement, retry);
         return true;
       } catch {
-        trackerRef.current.release(toolCallId);
+        retry();
         return false;
       }
     },
@@ -113,6 +121,7 @@ export const AssistantAutoApprovalProvider = ({
   const completeAction = useCallback(
     (toolCallId: string) => {
       clearRetryTimer(toolCallId);
+      attemptsRef.current.delete(toolCallId);
       trackerRef.current.complete(toolCallId);
     },
     [clearRetryTimer],
@@ -146,7 +155,7 @@ export const useAssistantAutomaticAction = ({
   toolCallId: string;
   ready: boolean;
   completed: boolean;
-  confirm: () => void;
+  confirm: () => void | Promise<void>;
 }) => {
   const { completeAction, enabled, requestAction, retryRevision } = useAssistantAutoApproval();
   const [inProgress, setInProgress] = useState(false);

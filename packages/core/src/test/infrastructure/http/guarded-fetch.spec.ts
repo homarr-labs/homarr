@@ -4,12 +4,14 @@ import type { LookupAddress } from "node:dns";
 import type { LookupFunction } from "node:net";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 
-import { createCertificateAgentAsync, fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
-
-import { fetchGuardedAsync } from "../guarded-fetch";
+import { fetchGuardedAsync } from "@homarr/core/infrastructure/http";
+import {
+  createCertificateAgentAsync,
+  fetchWithTrustedCertificatesAsync,
+} from "@homarr/core/infrastructure/http/request";
 
 vi.mock("node:dns/promises", () => ({ lookup: vi.fn() }));
-vi.mock("@homarr/core/infrastructure/http", () => ({
+vi.mock("@homarr/core/infrastructure/http/request", () => ({
   createCertificateAgentAsync: vi.fn(),
   fetchWithTrustedCertificatesAsync: vi.fn(),
 }));
@@ -246,10 +248,21 @@ describe("fetchGuardedAsync", () => {
       "http://login.example.com/sign-in": createResponse(200),
     });
 
-    await expect(fetchStatusAsync("http://app.example.com/")).resolves.toEqual({
+    await expect(
+      fetchGuardedAsync(
+        new URL("http://app.example.com/"),
+        { timeout: 1_000, headers: { Authorization: "Bearer example", "X-Plex-Token": "example" } },
+        (response, finalUrl) => Promise.resolve({ status: response.status, url: finalUrl.href }),
+      ),
+    ).resolves.toEqual({
       status: 200,
       url: "http://login.example.com/sign-in",
     });
+    expect(mockedFetch.mock.calls[0]?.[1]?.headers).toEqual({
+      Authorization: "Bearer example",
+      "X-Plex-Token": "example",
+    });
+    expect(mockedFetch.mock.calls[1]?.[1]?.headers).toBeUndefined();
     expect(mockedLookup).toHaveBeenCalledWith("login.example.com", expect.anything());
     await expect(lookupThroughPinnedAsync(pinnedLookupOfRequest(1), "login.example.com")).resolves.toBe("192.168.1.40");
   });

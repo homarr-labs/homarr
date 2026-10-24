@@ -799,6 +799,11 @@
       }
     },
     "field": {
+      "url": {
+        "helpLabel": "Primeri oblik URL",
+        "examples": "Primeri podprtih povezav",
+        "requiresHandler": "Protokoli po meri zahtevajo povezano aplikacijo v vaši napravi."
+      },
       "description": {
         "label": "Opis"
       },
@@ -2312,6 +2317,15 @@
       "option": {
         "appId": {
           "label": "Izberi aplikacijo"
+        },
+        "openIn": {
+          "label": "Odpri aplikacijo v",
+          "description": "Izberite, kje naj se ta aplikacija odpre. Nastavitve brskalnika lahko spremenijo odpiranje v ločenem oknu.",
+          "option": {
+            "currentTab": "Trenutnem zavihku",
+            "newTab": "Novem zavihku",
+            "newWindow": "Novem oknu"
+          }
         },
         "showTitle": {
           "label": "Pokaži ime aplikacije"

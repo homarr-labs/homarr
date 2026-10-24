@@ -799,6 +799,11 @@
       }
     },
     "field": {
+      "url": {
+        "helpLabel": "Esimerkkejä URL-osoitteiden muodoista",
+        "examples": "Esimerkkejä tuetuista linkeistä",
+        "requiresHandler": "Mukautetut protokollat edellyttävät niihin liitettyä sovellusta laitteellasi."
+      },
       "description": {
         "label": "Kuvaus"
       },
@@ -2312,6 +2317,15 @@
       "option": {
         "appId": {
           "label": "Valitse sovellus"
+        },
+        "openIn": {
+          "label": "Avaa sovellus",
+          "description": "Valitse, missä tämä sovellus avautuu. Selaimen asetukset voivat ohittaa pyynnön avata erillinen ikkuna.",
+          "option": {
+            "currentTab": "Nykyisessä välilehdessä",
+            "newTab": "Uudessa välilehdessä",
+            "newWindow": "Uudessa ikkunassa"
+          }
         },
         "showTitle": {
           "label": "Näytä sovelluksen nimi"

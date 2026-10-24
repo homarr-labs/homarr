@@ -99,7 +99,7 @@ jobs:
     if: |
       (github.event_name != 'release' || !github.event.release.prerelease) &&
       (github.event_name != 'workflow_dispatch' || github.ref_name == 'main' || github.ref_name == 'dev')
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     timeout-minutes: 5
     outputs:
       sha: ${{ steps.image.outputs.sha }}
@@ -138,9 +138,9 @@ jobs:
       matrix:
         include:
           - arch: amd64
-            runner: ubuntu-24.04
+            runner: ubuntu-26.04
           - arch: arm64
-            runner: ubuntu-24.04-arm
+            runner: ubuntu-26.04-arm
     runs-on: ${{ matrix.runner }}
     timeout-minutes: 30
     steps:
@@ -149,7 +149,7 @@ jobs:
         with:
           persist-credentials: false
           ref: ${{ needs.validate.outputs.sha }}
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7
         with:
           node-version: 24.22.1
       - name: Set up Docker Buildx
@@ -189,7 +189,7 @@ jobs:
   publish-amd64:
     if: needs.validate.outputs.publish == 'true'
     needs: validate
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     timeout-minutes: 20
     permissions:
       contents: read
@@ -202,11 +202,11 @@ jobs:
         with:
           persist-credentials: false
           ref: ${{ needs.validate.outputs.sha }}
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7
         with:
           node-version: 24.22.1
       - uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4.4.1
-      - uses: docker/login-action@dbcb813823bdd20940b903addbd779551569679f # v4.6.0
+      - uses: docker/login-action@81c6f93d4bc991e510b342a00b419b3bb4efc5c6 # v4.7.0
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
@@ -235,7 +235,7 @@ jobs:
   publish-arm64:
     if: needs.validate.outputs.publish == 'true'
     needs: validate
-    runs-on: ubuntu-24.04-arm
+    runs-on: ubuntu-26.04-arm
     timeout-minutes: 20
     permissions:
       contents: read
@@ -248,11 +248,11 @@ jobs:
         with:
           persist-credentials: false
           ref: ${{ needs.validate.outputs.sha }}
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7
         with:
           node-version: 24.22.1
       - uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4.4.1
-      - uses: docker/login-action@dbcb813823bdd20940b903addbd779551569679f # v4.6.0
+      - uses: docker/login-action@81c6f93d4bc991e510b342a00b419b3bb4efc5c6 # v4.7.0
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
@@ -281,7 +281,7 @@ jobs:
   publish:
     if: needs.validate.outputs.publish == 'true'
     needs: [validate, publish-amd64, publish-arm64]
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     timeout-minutes: 5
     permissions:
       contents: read
@@ -291,13 +291,13 @@ jobs:
       WORKSHOP_IMAGE: ghcr.io/homarr-labs/workshop
     steps:
       - uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4.4.1
-      - uses: docker/login-action@dbcb813823bdd20940b903addbd779551569679f # v4.6.0
+      - uses: docker/login-action@81c6f93d4bc991e510b342a00b419b3bb4efc5c6 # v4.7.0
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Verify source before publication
-        uses: actions/github-script@v8
+        uses: actions/github-script@v9
         env:
           EXPECTED_SHA: ${{ needs.validate.outputs.sha }}
           EXPECTED_PR_HEAD: ${{ github.event.pull_request.head.sha }}
@@ -348,7 +348,7 @@ jobs:
 
       - name: Comment with preview image
         if: github.event_name == 'pull_request' && !env.ACT
-        uses: actions/github-script@v8
+        uses: actions/github-script@v9
         with:
           script: |
             const marker = "<!-- workshop-preview-image -->";
