@@ -1,0 +1,21 @@
+packages/integrations/src/plex/plex-integration.ts
+  s_74b673c970ef48::t_e2a4d44a6aaf44 373-377
+packages/validation/src/integration.ts
+  s_74b673c970ef48::t_51f1a0630b3a2d 12
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "18d0b05770e380a6e7f06ed6d421a5606c007d01",
+  "prompts": {},
+  "sessions": {
+    "s_74b673c970ef48": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "39637ef8-fe7e-468c-8334-b026f7a4531e",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
