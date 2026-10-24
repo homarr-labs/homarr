@@ -1,0 +1,61 @@
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-form-utils.ts
+  s_cb7da52b92f941::t_aca83890b324e5 125-126
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-preview-panel.tsx
+  s_cb7da52b92f941::t_69c5cb114195d6 54-61,194,274
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_use-custom-widget-form-analysis.ts
+  s_cb7da52b92f941::t_7042c09b8da244 94-98
+packages/api/src/router/custom-widget/management-queries.ts
+  s_cb7da52b92f941::t_e29f9283e8e5e4 38,63,84
+packages/api/src/router/custom-widget/management-query-mappers.ts
+  s_cb7da52b92f941::t_af615bdf5c3721 20-22
+packages/api/src/router/custom-widget/source-resolver.ts
+  s_cb7da52b92f941::t_3cbdd146356de6 15-16,22,24,26,34-56,59-98,103-105
+packages/api/src/router/integration/integration-http.ts
+  s_cb7da52b92f941::t_43dbd107c51f60 15,26-34,43,77
+packages/api/src/router/widgets/custom-api.ts
+  s_cb7da52b92f941::t_7ffc05618931ad 1,110-121,164,173,189,221,297,314,359-360
+packages/custom-widgets/src/core/authoring-catalog.ts
+  s_cb7da52b92f941::t_7c00a7d49005f9 3,7,43-58,63-68,70-74,108,110-121,178,186,189-190,193-195
+packages/custom-widgets/src/core/custom-jsx-schema.ts
+  s_cb7da52b92f941::t_be092e2ff7a3a0 21-24,197
+packages/custom-widgets/src/jsx/analyzer-language.ts
+  s_cb7da52b92f941::t_d9df9ab572eca1 62-63,66-68,71
+packages/custom-widgets/src/jsx/analyzer.ts
+  s_cb7da52b92f941::t_05964624730172 89-99
+packages/custom-widgets/src/jsx/bindings.ts
+  s_cb7da52b92f941::t_4d06765dbbff79 99-101,103-113,116-124,148-166,178
+packages/custom-widgets/src/jsx/interpreter.tsx
+  s_cb7da52b92f941::t_6d255b7bf1242a 356-370
+packages/custom-widgets/src/runtime/custom-jsx-renderer.tsx
+  s_cb7da52b92f941::t_87a5bf3cb55834 6,188-195,198-199,201,213
+packages/custom-widgets/src/server/request-executor.ts
+  s_cb7da52b92f941::t_9439a7fb505b74 3,17,125-128,130,132-134
+packages/custom-widgets/src/server/response.ts
+  s_cb7da52b92f941::t_b548c9e7beccf1 3,17-23,55,93-104,106
+packages/custom-widgets/src/workbench/code-editor.tsx
+  s_cb7da52b92f941::t_e7f9880e1b38be 104-107
+packages/custom-widgets/src/workbench/component-reference.tsx
+  s_cb7da52b92f941::t_0c7be30682cf45 18-40,56-102,105-119,121-126
+packages/custom-widgets/src/workbench/preview-response-panel.tsx
+  s_cb7da52b92f941::t_ce6ab1900f8143 46-49
+packages/integrations/src/base/creator.ts
+  s_cb7da52b92f941::t_db66aa708f0f75 2,6,411-421
+packages/widgets/src/custom-api/custom-jsx-display.tsx
+  s_cb7da52b92f941::t_438c7494d28e98 16,71-82,86-88
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "99d6e2545c6cbe0013be0e7e33945ce617edca4e",
+  "prompts": {},
+  "sessions": {
+    "s_cb7da52b92f941": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "0dd48e49-fedb-4f47-bd23-f5fcef6c850a",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
