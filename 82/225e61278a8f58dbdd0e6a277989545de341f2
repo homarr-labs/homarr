@@ -1,0 +1,21 @@
+.github/workflows/triage-project.yml
+  s_e8c3b16f087943::t_c19e93cc749426 34,42,51
+package.json
+  s_e8c3b16f087943::t_6f0635249da8bf 348,367-368,370-374,376,378,382,388-389,393,398,403,407-409,411,415
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "82225e61278a8f58dbdd0e6a277989545de341f2",
+  "prompts": {},
+  "sessions": {
+    "s_e8c3b16f087943": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "5bad9576-ba72-4dbc-a1a1-0fc4be09f9a2",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
