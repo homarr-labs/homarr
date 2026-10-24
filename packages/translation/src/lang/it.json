@@ -2629,17 +2629,17 @@
         "dayProgress": "{percent}% trascorso · {hours}h {minutes}m rimanenti",
         "phaseLegend": "Leggenda del giorno",
         "tick": {
-          "midnight": "",
-          "morning": "",
-          "noon": "",
-          "evening": "",
-          "end": ""
+          "midnight": "00",
+          "morning": "06",
+          "noon": "12",
+          "evening": "18",
+          "end": "24"
         },
         "phaseRange": {
-          "night": "",
-          "dawn": "",
-          "day": "",
-          "dusk": ""
+          "night": "00–05 · 21–24",
+          "dawn": "05–08",
+          "day": "08–18",
+          "dusk": "18–21"
         },
         "phase": {
           "night": "Notte",
