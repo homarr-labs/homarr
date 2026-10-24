@@ -1,0 +1,115 @@
+scripts/benchmarks/custom-widget-authoring/portable-skill-cases/agify-manual-lookup/case.yaml
+  s_cb7da52b92f941::t_f0ac448ca1be19 1-12
+scripts/benchmarks/custom-widget-authoring/portable-skill-cases/agify-manual-lookup/graders/01-single-json-block.md
+  s_cb7da52b92f941::t_dd58d688da5868 1-7
+scripts/benchmarks/custom-widget-authoring/portable-skill-cases/agify-manual-lookup/graders/02-schema-valid.md
+  s_cb7da52b92f941::t_344fd51ed33625 1-7
+scripts/benchmarks/custom-widget-authoring/portable-skill-cases/agify-manual-lookup/graders/03-source.md
+  s_cb7da52b92f941::t_6db1d3d97e4c21 1-7
+scripts/benchmarks/custom-widget-authoring/portable-skill-cases/agify-manual-lookup/graders/04-request-0.md
+  s_cb7da52b92f941::t_c5ab169ea8f2c1 1-7
+scripts/benchmarks/custom-widget-authoring/portable-skill-cases/agify-manual-lookup/graders/05-template-capabilities.md
+  s_cb7da52b92f941::t_3b60d187d586bf 1-7
+scripts/benchmarks/custom-widget-authoring/portable-skill-cases/agify-manual-lookup/graders/06-render-success.md
+  s_cb7da52b92f941::t_1d7f993172fb05 1-7
+scripts/benchmarks/custom-widget-authoring/portable-skill-cases/agify-manual-lookup/graders/07-render-states.md
+  s_cb7da52b92f941::t_fb98469afc27e2 1-7
+scripts/benchmarks/custom-widget-authoring/portable-skill-cases/agify-manual-lookup/graders/08-unverified-note.md
+  s_cb7da52b92f941::t_b246deae2f0aef 1-7
+scripts/benchmarks/custom-widget-authoring/portable-skill-cases/karakeep-saved-integration/case.yaml
+  s_cb7da52b92f941::t_b41b6864a02e72 1-12
+scripts/benchmarks/custom-widget-authoring/portable-skill-cases/karakeep-saved-integration/graders/01-single-json-block.md
+  s_cb7da52b92f941::t_07c94ac45413f0 1-7
+scripts/benchmarks/custom-widget-authoring/portable-skill-cases/karakeep-saved-integration/graders/02-schema-valid.md
+  s_cb7da52b92f941::t_436b7ea5c48e3b 1-7
+scripts/benchmarks/custom-widget-authoring/portable-skill-cases/karakeep-saved-integration/graders/03-source.md
+  s_cb7da52b92f941::t_3100759c767236 1-7
+scripts/benchmarks/custom-widget-authoring/portable-skill-cases/karakeep-saved-integration/graders/04-request-0.md
+  s_cb7da52b92f941::t_82ee00eb95fda8 1-7
+scripts/benchmarks/custom-widget-authoring/portable-skill-cases/karakeep-saved-integration/graders/05-template-capabilities.md
+  s_cb7da52b92f941::t_3069e311667ce1 1-7
+scripts/benchmarks/custom-widget-authoring/portable-skill-cases/karakeep-saved-integration/graders/06-render-success.md
+  s_cb7da52b92f941::t_c851d1b17da9d0 1-7
+scripts/benchmarks/custom-widget-authoring/portable-skill-cases/karakeep-saved-integration/graders/07-render-states.md
+  s_cb7da52b92f941::t_f275c3b8326a85 1-7
+scripts/benchmarks/custom-widget-authoring/portable-skill-cases/karakeep-saved-integration/graders/08-unverified-note.md
+  s_cb7da52b92f941::t_2e3c347f22fc52 1-7
+scripts/benchmarks/custom-widget-authoring/portable-skill-cases/pokedex-list-and-detail/case.yaml
+  s_cb7da52b92f941::t_1de79d39ee3280 1-13
+scripts/benchmarks/custom-widget-authoring/portable-skill-cases/pokedex-list-and-detail/graders/01-single-json-block.md
+  s_cb7da52b92f941::t_d340ca7eb9bcfb 1-7
+scripts/benchmarks/custom-widget-authoring/portable-skill-cases/pokedex-list-and-detail/graders/02-schema-valid.md
+  s_cb7da52b92f941::t_fcb90d96eda214 1-7
+scripts/benchmarks/custom-widget-authoring/portable-skill-cases/pokedex-list-and-detail/graders/03-source.md
+  s_cb7da52b92f941::t_8ecff781e79067 1-7
+scripts/benchmarks/custom-widget-authoring/portable-skill-cases/pokedex-list-and-detail/graders/04-request-0.md
+  s_cb7da52b92f941::t_3fdadf645ed431 1-7
+scripts/benchmarks/custom-widget-authoring/portable-skill-cases/pokedex-list-and-detail/graders/05-request-1.md
+  s_cb7da52b92f941::t_48ebdb79f00c3c 1-7
+scripts/benchmarks/custom-widget-authoring/portable-skill-cases/pokedex-list-and-detail/graders/06-template-capabilities.md
+  s_cb7da52b92f941::t_f76184c7f87b2f 1-7
+scripts/benchmarks/custom-widget-authoring/portable-skill-cases/pokedex-list-and-detail/graders/07-render-success.md
+  s_cb7da52b92f941::t_1a5d2c977c0e55 1-7
+scripts/benchmarks/custom-widget-authoring/portable-skill-cases/pokedex-list-and-detail/graders/08-render-states.md
+  s_cb7da52b92f941::t_3b8d2b3aebb37a 1-7
+scripts/benchmarks/custom-widget-authoring/portable-skill-cases/pokedex-list-and-detail/graders/09-unverified-note.md
+  s_cb7da52b92f941::t_3269001cac3893 1-7
+scripts/benchmarks/custom-widget-authoring/portable-skill-cases/seerr-request-actions/case.yaml
+  s_cb7da52b92f941::t_3cb50b6154b5f0 1-15
+scripts/benchmarks/custom-widget-authoring/portable-skill-cases/seerr-request-actions/graders/01-single-json-block.md
+  s_cb7da52b92f941::t_c1eaf3b5579c9b 1-7
+scripts/benchmarks/custom-widget-authoring/portable-skill-cases/seerr-request-actions/graders/02-schema-valid.md
+  s_cb7da52b92f941::t_45b6056131c096 1-7
+scripts/benchmarks/custom-widget-authoring/portable-skill-cases/seerr-request-actions/graders/03-source.md
+  s_cb7da52b92f941::t_54fafdc2667009 1-7
+scripts/benchmarks/custom-widget-authoring/portable-skill-cases/seerr-request-actions/graders/04-request-0.md
+  s_cb7da52b92f941::t_1a5acf68cdbd22 1-7
+scripts/benchmarks/custom-widget-authoring/portable-skill-cases/seerr-request-actions/graders/05-request-1.md
+  s_cb7da52b92f941::t_788589e0ceca20 1-7
+scripts/benchmarks/custom-widget-authoring/portable-skill-cases/seerr-request-actions/graders/06-request-2.md
+  s_cb7da52b92f941::t_9b967865753255 1-7
+scripts/benchmarks/custom-widget-authoring/portable-skill-cases/seerr-request-actions/graders/07-request-3.md
+  s_cb7da52b92f941::t_e34d8f4f752c28 1-7
+scripts/benchmarks/custom-widget-authoring/portable-skill-cases/seerr-request-actions/graders/08-template-capabilities.md
+  s_cb7da52b92f941::t_adf4abbcacfe30 1-7
+scripts/benchmarks/custom-widget-authoring/portable-skill-cases/seerr-request-actions/graders/09-render-success.md
+  s_cb7da52b92f941::t_8cf84c3e07d922 1-7
+scripts/benchmarks/custom-widget-authoring/portable-skill-cases/seerr-request-actions/graders/10-render-states.md
+  s_cb7da52b92f941::t_9e3d0695ddd6df 1-7
+scripts/benchmarks/custom-widget-authoring/portable-skill-cases/seerr-request-actions/graders/11-unverified-note.md
+  s_cb7da52b92f941::t_9e690b879477aa 1-7
+scripts/benchmarks/custom-widget-authoring/portable-skill-cases/service-health-load-query/case.yaml
+  s_cb7da52b92f941::t_821fe2576a4b83 1-12
+scripts/benchmarks/custom-widget-authoring/portable-skill-cases/service-health-load-query/graders/01-single-json-block.md
+  s_cb7da52b92f941::t_da585b206c53af 1-7
+scripts/benchmarks/custom-widget-authoring/portable-skill-cases/service-health-load-query/graders/02-schema-valid.md
+  s_cb7da52b92f941::t_53b529a836cb85 1-7
+scripts/benchmarks/custom-widget-authoring/portable-skill-cases/service-health-load-query/graders/03-source.md
+  s_cb7da52b92f941::t_6f8bccda9cb8fa 1-7
+scripts/benchmarks/custom-widget-authoring/portable-skill-cases/service-health-load-query/graders/04-request-0.md
+  s_cb7da52b92f941::t_b24aa3c2968f4e 1-7
+scripts/benchmarks/custom-widget-authoring/portable-skill-cases/service-health-load-query/graders/05-template-capabilities.md
+  s_cb7da52b92f941::t_8f45ef60bde4c3 1-7
+scripts/benchmarks/custom-widget-authoring/portable-skill-cases/service-health-load-query/graders/06-render-success.md
+  s_cb7da52b92f941::t_9d89e4ff1d6127 1-7
+scripts/benchmarks/custom-widget-authoring/portable-skill-cases/service-health-load-query/graders/07-render-states.md
+  s_cb7da52b92f941::t_bbca2f4dccc240 1-7
+scripts/benchmarks/custom-widget-authoring/portable-skill-cases/service-health-load-query/graders/08-unverified-note.md
+  s_cb7da52b92f941::t_ce7ecea454d377 1-7
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "e7f53309d826b9131d97a382f29a16f508bbb7de",
+  "prompts": {},
+  "sessions": {
+    "s_cb7da52b92f941": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "0dd48e49-fedb-4f47-bd23-f5fcef6c850a",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
