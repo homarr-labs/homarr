@@ -11,10 +11,11 @@ import {
 } from "../core/ai-prompt";
 
 describe("AI prompt", () => {
-  it("uses shipped service examples before researching a matching contract", () => {
-    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("dispatcharr-channels");
-    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("frigate-live-streams");
-    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("load that example once");
+  it("advertises only examples that ship with Homarr", () => {
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("weather-outlook");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("pokedex");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).not.toContain("dispatcharr-channels");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).not.toContain("frigate-live-streams");
   });
 
   it("is self-contained, request-first, and compact", () => {
