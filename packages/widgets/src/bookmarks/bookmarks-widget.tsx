@@ -101,9 +101,23 @@ export default function BookmarksWidget({
   let contentPadding = 12;
   if (isTight) contentPadding = 6;
   let layoutHeight = contentHeight;
-  if (options.layout === "column") {
+  let layoutItemCount = data.length;
+  if (!advanced && options.layout === "column") {
     layoutHeight = Math.max(0, responsiveHeight - contentPadding * 2 - 2);
     if (showTitle) layoutHeight = Math.max(0, layoutHeight - options.titleSize * 1.2 - contentPadding);
+    if (sections.length > 0) {
+      const expandedSections = sections.filter((section) => !collapsedGroups.includes(section.id));
+      layoutItemCount =
+        ungroupedItems.length + expandedSections.reduce((count, section) => count + section.items.length, 0);
+      layoutHeight -= sections.length * bookmarkGroupControlHeight + expandedSections.length * bookmarkGroupSpacing;
+      let visibleListCount = expandedSections.length;
+      if (ungroupedItems.length > 0) {
+        layoutHeight -= bookmarkUngroupedHeadingHeight + bookmarkGroupSpacing * 2;
+        visibleListCount += 1;
+      }
+      layoutHeight += Math.max(0, visibleListCount - 1) * Math.min(bookmarkSpacingPixels[options.spacing], 4);
+      layoutHeight = Math.max(0, layoutHeight);
+    }
   }
   let layoutWidth = responsiveWidth;
   if (options.layout === "gridHorizontal") layoutWidth = width;
@@ -140,11 +154,11 @@ export default function BookmarksWidget({
         gap: bookmarkSpacingPixels[options.spacing],
         height: layoutHeight,
         hideHostname: options.hideHostname,
-        itemCount: data.length,
+        itemCount: layoutItemCount,
         layout: options.layout,
         width: layoutWidth,
       }),
-    [advanced, data.length, layoutHeight, layoutWidth, options.hideHostname, options.layout, options.spacing],
+    [advanced, layoutHeight, layoutItemCount, layoutWidth, options.hideHostname, options.layout, options.spacing],
   );
 
   const cardDisplay = getBookmarkCardDisplay({
@@ -215,7 +229,7 @@ export default function BookmarksWidget({
   }
 
   return (
-    <Stack h="100%" mih={0} gap={isTight ? 6 : "sm"} p={isTight ? 6 : "sm"} style={compactStyle}>
+    <Stack h="100%" mih={0} gap={contentPadding} p={contentPadding} style={compactStyle}>
       {showTitle && (
         <Text fz={options.titleSize} fw={600} px={2} lh={1.2} lineClamp={1} style={{ flexShrink: 0 }}>
           {options.title}
@@ -241,7 +255,7 @@ export default function BookmarksWidget({
         >
           <Box miw="100%" h="100%" pb={2}>
             {sections.length > 0 ? (
-              <Stack gap={4}>
+              <Stack gap={bookmarkGroupSpacing}>
                 <Accordion
                   multiple
                   value={sections
@@ -256,9 +270,9 @@ export default function BookmarksWidget({
                   }}
                   transitionDuration={0}
                   styles={{
-                    control: { padding: rem(4), minHeight: rem(28) },
+                    control: { padding: rem(bookmarkGroupSpacing), minHeight: rem(bookmarkGroupControlHeight) },
                     label: { padding: 0, fontSize: "var(--mantine-font-size-xxs)", fontWeight: 600 },
-                    content: { padding: `0 0 ${rem(4)}` },
+                    content: { padding: `0 0 ${rem(bookmarkGroupSpacing)}` },
                     item: { border: 0 },
                     chevron: zoomCompensatedSize(14),
                   }}
@@ -280,8 +294,8 @@ export default function BookmarksWidget({
                   ))}
                 </Accordion>
                 {ungroupedItems.length > 0 && (
-                  <Stack gap={4}>
-                    <Text size="xxs" fw={600} px={4}>
+                  <Stack gap={bookmarkGroupSpacing}>
+                    <Text size="xxs" fw={600} px={bookmarkGroupSpacing} lh={rem(bookmarkUngroupedHeadingHeight)}>
                       {t("groups.ungrouped")}
                     </Text>
                     {renderItems(ungroupedItems)}
@@ -509,3 +523,7 @@ const bookmarkSpacingPixels = {
   lg: 20,
   xl: 32,
 } as const;
+
+const bookmarkGroupControlHeight = 28;
+const bookmarkGroupSpacing = 4;
+const bookmarkUngroupedHeadingHeight = 18;
