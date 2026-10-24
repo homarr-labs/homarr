@@ -29,6 +29,8 @@ export interface SafeJsxRenderResult {
   warnings: string[];
 }
 
+const SHORT_CIRCUITED_CHAIN = Symbol("shortCircuitedChain");
+
 class Interpreter {
   private readonly budget: Budget;
   private readonly warnings = new Set<string>();
@@ -101,8 +103,11 @@ class Interpreter {
         );
       case "TemplateLiteral":
         return this.evaluateTemplateLiteral(node, environment, depth + 1);
-      case "ChainExpression":
-        return this.evaluate(asNode(node.expression, "chain expression"), environment, depth + 1);
+      case "ChainExpression": {
+        const value = this.evaluate(asNode(node.expression, "chain expression"), environment, depth + 1);
+        if (value === SHORT_CIRCUITED_CHAIN) return undefined;
+        return value;
+      }
       case "AssignmentExpression":
       case "UpdateExpression":
       case "NewExpression":
@@ -267,6 +272,7 @@ class Interpreter {
 
   private evaluateMember(node: AstNode, environment: Environment, depth: number): unknown {
     const object = this.evaluate(asNode(node.object, "member object"), environment, depth + 1);
+    if (object === SHORT_CIRCUITED_CHAIN || (node.optional && object == null)) return SHORT_CIRCUITED_CHAIN;
     const property = this.memberProperty(node, environment, depth + 1);
     return ownProperty(object, property);
   }
@@ -283,19 +289,22 @@ class Interpreter {
           ? staticPropertyName(asNode(callee.property, "method property"))
           : normalizedProperty(asNode(callee.property, "method property").name)
         : null;
-    const args = argumentNodes.map((argument) => {
-      if (argument.type === "SpreadElement") throw new SafeJsxError("Spread call arguments are not supported");
-      if (argument.type === "ArrowFunctionExpression") {
-        if (!callbackMethod || !CUSTOM_JSX_CALLBACK_METHODS.has(callbackMethod)) {
-          throw new SafeJsxError("CALLBACK_VALUE_NOT_ALLOWED: Callback argument is not allowed for this call");
+    const evaluateArguments = () =>
+      argumentNodes.map((argument) => {
+        if (argument.type === "SpreadElement") throw new SafeJsxError("Spread call arguments are not supported");
+        if (argument.type === "ArrowFunctionExpression") {
+          if (!callbackMethod || !CUSTOM_JSX_CALLBACK_METHODS.has(callbackMethod)) {
+            throw new SafeJsxError("CALLBACK_VALUE_NOT_ALLOWED: Callback argument is not allowed for this call");
+          }
+          return this.createCallback(argument, environment);
         }
-        return this.createCallback(argument, environment);
-      }
-      return this.evaluate(argument, environment, depth + 1);
-    });
+        return this.evaluate(argument, environment, depth + 1);
+      });
 
     if (callee.type === "MemberExpression") {
       const receiver = this.evaluate(asNode(callee.object, "method receiver"), environment, depth + 1);
+      if (receiver === SHORT_CIRCUITED_CHAIN || (callee.optional && receiver == null)) return SHORT_CIRCUITED_CHAIN;
+      const args = evaluateArguments();
       const method = this.memberProperty(callee, environment, depth + 1);
       const collectionResult = this.callCollectionMethod(receiver, method, args, depth + 1);
       if (collectionResult.handled) return collectionResult.value;
@@ -304,6 +313,7 @@ class Interpreter {
       return this.accountHostResult(callable(...(args as never[])));
     }
 
+    const args = evaluateArguments();
     const callable = this.evaluate(callee, environment, depth + 1);
     if (!isSafeCallable(callable)) throw new SafeJsxError("Calling this value is not allowed");
     return this.accountHostResult(callable(...(args as never[])));
