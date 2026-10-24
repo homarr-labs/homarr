@@ -444,6 +444,23 @@ export const items = pgTable("item", {
   advancedOptions: text().default(emptySuperJSON).notNull(),
 });
 
+export const userItemStates = pgTable(
+  "user_item_state",
+  {
+    userId: varchar({ length: 64 })
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    itemId: varchar({ length: 64 })
+      .notNull()
+      .references(() => items.id, { onDelete: "cascade" }),
+    key: text().notNull(),
+    value: text().notNull(),
+  },
+  (table) => ({
+    compoundKey: primaryKey({ columns: [table.userId, table.itemId, table.key] }),
+  }),
+);
+
 export const apps = pgTable("app", {
   id: varchar({ length: 64 }).notNull().primaryKey(),
   name: text().notNull(),

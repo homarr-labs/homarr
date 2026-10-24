@@ -429,6 +429,23 @@ export const items = sqliteTable("item", {
   advancedOptions: text().default(emptySuperJSON).notNull(),
 });
 
+export const userItemStates = sqliteTable(
+  "user_item_state",
+  {
+    userId: text()
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    itemId: text()
+      .notNull()
+      .references(() => items.id, { onDelete: "cascade" }),
+    key: text().notNull(),
+    value: text().notNull(),
+  },
+  (table) => ({
+    compoundKey: primaryKey({ columns: [table.userId, table.itemId, table.key] }),
+  }),
+);
+
 export const apps = sqliteTable("app", {
   id: text().notNull().primaryKey(),
   name: text().notNull(),

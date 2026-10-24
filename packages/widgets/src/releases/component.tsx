@@ -15,7 +15,6 @@ import {
   Tooltip,
   UnstyledButton,
 } from "@mantine/core";
-import { useLocalStorage } from "@mantine/hooks";
 import {
   IconArchive,
   IconCheck,
@@ -53,6 +52,7 @@ import { selectReleaseRepositoriesForDisplay } from "./display";
 import { getFailedServiceVersionIntegrations, getRowIntegrationVersions, truncateVersion } from "./integration-version";
 import type { ReleasesRepository, ReleasesRepositoryResponse } from "./releases-repository";
 import { getReleasesQueryStaleTimeMs } from "./query-options";
+import { useViewedReleases } from "./use-viewed-releases";
 
 const integrationStatusColors = {
   upToDate: "green",
@@ -85,10 +85,6 @@ export default function ReleasesWidget({
   const board = useRequiredBoard();
   const [expandedRepositoryId, setExpandedRepositoryId] = useState<string | null>(null);
   const hasIconColor = useMemo(() => board.iconColor !== null, [board.iconColor]);
-  const [releasesViewedList, setReleasesViewedList] = useLocalStorage<Record<string, string>>({
-    key: "releases-viewed-versions",
-    defaultValue: {},
-  });
   const isAdvanced = displayMode === "advanced";
   const columns = isAdvanced ? Math.max(1, Math.floor(width / 420)) : 1;
 
@@ -109,6 +105,7 @@ export default function ReleasesWidget({
       })),
     [options.repositories],
   );
+  const { viewedVersions: releasesViewedList, markViewed } = useViewedReleases(itemId, normalizedRepositories);
 
   // Group repositories by provider
   const groupedRepositories = useMemo(() => {
@@ -249,10 +246,9 @@ export default function ReleasesWidget({
 
   const markReleaseViewed = useCallback(
     (repository: ReleasesRepositoryResponse) => {
-      repository.viewed = true;
-      setReleasesViewedList((prev) => ({ ...prev, [repository.id]: repository.latestRelease ?? "" }));
+      markViewed(repository.id, repository.latestRelease ?? "");
     },
-    [setReleasesViewedList],
+    [markViewed],
   );
 
   if (isInitialLoading) return <WidgetQueryLoadingState />;
