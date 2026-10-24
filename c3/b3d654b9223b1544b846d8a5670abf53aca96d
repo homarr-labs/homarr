@@ -1,0 +1,21 @@
+apps/nextjs/src/app/api/assistant/chat/custom-widget-authoring-context.ts
+  s_cb7da52b92f941::t_f0fa451c3db92c 584-586,588,591-593,614-621
+apps/nextjs/src/app/api/assistant/chat/route.ts
+  s_cb7da52b92f941::t_4a04512b95450f 114,117,564-569,1064-1065,1067-1069,1071,1077-1083,1106,1117,1125
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "c3b3d654b9223b1544b846d8a5670abf53aca96d",
+  "prompts": {},
+  "sessions": {
+    "s_cb7da52b92f941": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "0dd48e49-fedb-4f47-bd23-f5fcef6c850a",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
