@@ -1,0 +1,25 @@
+.agents/skills/homarr-custom-widget/SKILL.md
+  s_cb7da52b92f941::t_098adc2a2c322e 12-30,39-45
+.agents/skills/homarr-custom-widget/references/runtime.md
+  s_cb7da52b92f941::t_5259d176d66887 15,19-20,23,28,36,40
+.agents/skills/homarr-custom-widget/references/schema.md
+  s_cb7da52b92f941::t_316e16ddcf0a15 20-21,40-41,45,47,53,56-57
+packages/custom-widgets/src/core/authoring-resources.ts
+  s_cb7da52b92f941::t_7e8db85bd5544b 132-133,152-153,157,159,165,168-169,206,210,233-251,260-266
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "a34b001e72a0cb477359db9c217a98ae8ab695ef",
+  "prompts": {},
+  "sessions": {
+    "s_cb7da52b92f941": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "0dd48e49-fedb-4f47-bd23-f5fcef6c850a",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
