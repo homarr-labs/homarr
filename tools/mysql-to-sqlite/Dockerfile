@@ -1,4 +1,4 @@
-FROM oven/bun:1.4.3 AS bun-tool
+FROM oven/bun:1.4.4 AS bun-tool
 
 FROM node:24.22.1-bookworm-slim AS dependencies
 WORKDIR /converter
