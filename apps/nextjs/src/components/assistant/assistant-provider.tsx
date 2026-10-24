@@ -74,6 +74,7 @@ import {
 import { initialAssistantNotificationState, updateAssistantNotificationState } from "./assistant-notifications";
 import { AssistantViewRefreshProvider, useAssistantViewRefresh } from "./assistant-view-refresh";
 import { AssistantBoardWidget } from "./assistant-widget";
+import { AssistantHistoryContext, AssistantHistoryProvider, useAssistantHistoryState } from "./assistant-history-state";
 
 const ignoreUnsupportedArchiveAction = () => Promise.resolve();
 const assistantImageAttachmentTypes = ["image/gif", "image/jpeg", "image/png", "image/webp"];
@@ -442,6 +443,7 @@ const reportHistoryFailure = async <T,>(
 const createHistoryAdapter = (
   getThread: () => AssistantHistoryThread,
   onFailure: (failure: AssistantHistoryFailure) => void,
+  onLoaded: () => void,
 ): ThreadHistoryAdapter => ({
   async load() {
     return { messages: [] };
@@ -464,11 +466,9 @@ const createHistoryAdapter = (
       async load() {
         const threadId = getExistingThreadId();
         if (!threadId) return { messages: [] };
-        const { messages } = await reportHistoryFailure("load", onFailure, () =>
-          fetchApi.assistant.getThread.query({ threadId }),
-        );
-        return {
-          messages: messages
+        return reportHistoryFailure("load", onFailure, async () => {
+          const { messages } = await fetchApi.assistant.getThread.query({ threadId });
+          const decodedMessages = messages
             .filter((message) => message.format === formatAdapter.format)
             .map(
               (message) =>
@@ -478,8 +478,10 @@ const createHistoryAdapter = (
                   format: message.format,
                   content: message.content as TStorageFormat,
                 }) as { parentId: string | null; message: TMessage },
-            ),
-        };
+            );
+          onLoaded();
+          return { messages: decodedMessages };
+        });
       },
       async append(item) {
         await reportHistoryFailure("save", onFailure, async () => {
@@ -531,6 +533,7 @@ const AssistantThreadRuntime = () => {
   const aui = useAui();
   const localThreadId = useAuiState((state) => state.threadListItem.id);
   const threadId = useAuiState((state) => state.threadListItem.remoteId);
+  const { failedThreadIds, setLoadFailed } = useAssistantHistoryState();
   const preferences = useAssistantPreferences();
   const { getRequestBody, getRequestHeaders, refreshQuota } = preferences;
   const transport = useMemo(
@@ -550,13 +553,16 @@ const AssistantThreadRuntime = () => {
     () =>
       createHistoryAdapter(
         () => aui.threadListItem(),
-        (failure) =>
+        (failure) => {
+          if (failure === "load") setLoadFailed(localThreadId, true);
           showErrorNotification({
             title: t("historyError.title"),
             message: t(`historyError.${failure}Messages`),
-          }),
+          });
+        },
+        () => setLoadFailed(localThreadId, false),
       ),
-    [aui, t],
+    [aui, localThreadId, setLoadFailed, t],
   );
   const selectedModel = preferences.models.find((model) => model.id === preferences.modelId);
   const attachments = useMemo(
@@ -607,6 +613,7 @@ const AssistantThreadRuntime = () => {
   // thread list and history adapters and shares this chat instance with its custom transport.
   const runtime = useAISDKRuntime(chat, {
     ...assistantAiSdkRuntimeOptions,
+    isSendDisabled: failedThreadIds.has(localThreadId),
     adapters: {
       history,
       attachments,
@@ -789,7 +796,7 @@ const EnabledAssistantProvider = ({
   const [activityDismissed, setActivityDismissed] = useState(true);
   const [unreadCount, setUnreadCount] = useState(0);
   const [visibleWidgetIds, setVisibleWidgetIds] = useState<Set<string>>(() => new Set());
-  const [queuedPrompt, setQueuedPrompt] = useState<string | null>(null);
+  const [queuedPrompt, setQueuedPrompt] = useState<{ conversationId: string; text: string } | null>(null);
   const aui = useAui();
   const preferences = useAssistantPreferences();
   const { isRefreshing, refreshCurrentView } = useAssistantViewRefresh();
@@ -798,6 +805,8 @@ const EnabledAssistantProvider = ({
   const conversationId = useAuiState((state) => state.threadListItem.id);
   const isRunning = useAuiState((state) => state.thread.isRunning);
   const isLoading = useAuiState((state) => state.thread.isLoading);
+  const { failedThreadIds } = useAssistantHistoryState();
+  const historyLoadFailed = failedThreadIds.has(conversationId);
   const latestAssistantMessage = getLatestMessage(messages, "assistant");
   const latestUserMessage = getLatestMessage(messages, "user");
   const latestAssistantText = getMessageText(latestAssistantMessage);
@@ -865,6 +874,10 @@ const EnabledAssistantProvider = ({
     (prompt: string) => {
       const text = prompt.trim();
       if (text.length === 0) return false;
+      if (historyLoadFailed) {
+        showErrorNotification({ title: t("historyError.title"), message: t("historyError.loadMessages") });
+        return false;
+      }
       if (!active) return onRequestPrompt(text);
       if (providerUnavailable) {
         showWarningNotification({
@@ -884,18 +897,20 @@ const EnabledAssistantProvider = ({
       }
       setActivityDismissed(false);
       if (isLoading) {
-        setQueuedPrompt(text);
+        setQueuedPrompt({ conversationId, text });
         return true;
       }
       return sendPromptThroughRuntime(aui, text);
     },
     [
       active,
+      onRequestPrompt,
       assistantIsRunning,
       aui,
+      conversationId,
+      historyLoadFailed,
       isLoading,
       latestStatus?.type,
-      onRequestPrompt,
       preferences.providerUser,
       providerUnavailable,
       t,
@@ -922,15 +937,20 @@ const EnabledAssistantProvider = ({
   }, [assistantIsRunning]);
 
   useEffect(() => {
-    if (isLoading || isRunning || queuedPrompt === null) return;
+    if (queuedPrompt === null) return;
+    if (queuedPrompt.conversationId !== conversationId) {
+      setQueuedPrompt(null);
+      return;
+    }
+    if (isLoading || isRunning || historyLoadFailed) return;
     if (providerUnavailable) {
       setQueuedPrompt(null);
       return;
     }
-    const prompt = queuedPrompt;
+    const prompt = queuedPrompt.text;
     setQueuedPrompt(null);
     sendPromptThroughRuntime(aui, prompt);
-  }, [aui, isLoading, isRunning, providerUnavailable, queuedPrompt]);
+  }, [aui, conversationId, historyLoadFailed, isLoading, isRunning, providerUnavailable, queuedPrompt]);
 
   useEffect(() => {
     if (isLoading) return;
@@ -970,7 +990,8 @@ const EnabledAssistantProvider = ({
   }, [conversationId, isLoading, refreshCurrentView, successfulMutationIds, t]);
 
   const spotlightItem = useMemo(() => {
-    const canSend = !providerUnavailable && !assistantIsRunning && latestStatus?.type !== "requires-action";
+    const canSend =
+      !historyLoadFailed && !providerUnavailable && !assistantIsRunning && latestStatus?.type !== "requires-action";
     return {
       id: "homarr-assistant",
       name: t("spotlight"),
@@ -991,7 +1012,7 @@ const EnabledAssistantProvider = ({
           canSend,
         }),
     };
-  }, [assistantIsRunning, latestStatus?.type, providerUnavailable, sendPrompt, t]);
+  }, [assistantIsRunning, historyLoadFailed, latestStatus?.type, providerUnavailable, sendPrompt, t]);
   useRegisterSpotlightContextResults("homarr-assistant", [spotlightItem], [spotlightItem]);
 
   const activeWidgetId = visibleWidgetIds.values().next().value ?? null;
@@ -1052,7 +1073,7 @@ const EnabledAssistantProvider = ({
               unreadCount={unreadCount}
               latestAssistantText={latestAssistantText}
               latestAssistantPartType={latestAssistantPartType}
-              latestUserText={queuedPrompt ?? latestUserText}
+              latestUserText={queuedPrompt?.text ?? latestUserText}
               latestStatus={latestStatus}
               pendingAction={pendingAction}
               modelId={preferences.modelId}
@@ -1078,9 +1099,11 @@ const EnabledAssistantProvider = ({
 export const EnabledAssistantRoot = (props: EnabledAssistantRootProps) => (
   <AssistantPreferencesProvider active={props.active}>
     <AssistantViewRefreshProvider>
-      <AssistantRuntime>
-        <EnabledAssistantProvider {...props} />
-      </AssistantRuntime>
+      <AssistantHistoryProvider>
+        <AssistantRuntime>
+          <EnabledAssistantProvider {...props} />
+        </AssistantRuntime>
+      </AssistantHistoryProvider>
     </AssistantViewRefreshProvider>
   </AssistantPreferencesProvider>
 );
@@ -1089,6 +1112,7 @@ interface AssistantWidgetScopeValue {
   aui: ReturnType<typeof useAui>;
   preferences: ReturnType<typeof useAssistantPreferences>;
   approval: ReturnType<typeof useAssistantAutoApproval>;
+  history: ReturnType<typeof useAssistantHistoryState>;
 }
 
 const ScopedAssistantBoardWidget = ({
@@ -1103,7 +1127,9 @@ const ScopedAssistantBoardWidget = ({
     <AuiProvider extends={scope.aui} config={config}>
       <AssistantPreferencesContext.Provider value={scope.preferences}>
         <AssistantAutoApprovalContext.Provider value={scope.approval}>
-          <AssistantBoardWidget {...widget} />
+          <AssistantHistoryContext.Provider value={scope.history}>
+            <AssistantBoardWidget {...widget} />
+          </AssistantHistoryContext.Provider>
         </AssistantAutoApprovalContext.Provider>
       </AssistantPreferencesContext.Provider>
     </AuiProvider>
@@ -1114,11 +1140,12 @@ const AssistantWidgetScope = ({ onRender }: { onRender: (render: AssistantWidget
   const aui = useAui();
   const preferences = useAssistantPreferences();
   const approval = useAssistantAutoApproval();
+  const history = useAssistantHistoryState();
   const render = useCallback(
     (widget: WidgetComponentProps<"assistant">) => (
-      <ScopedAssistantBoardWidget scope={{ aui, preferences, approval }} widget={widget} />
+      <ScopedAssistantBoardWidget scope={{ aui, preferences, approval, history }} widget={widget} />
     ),
-    [approval, aui, preferences],
+    [approval, aui, preferences, history],
   );
   useEffect(() => onRender(render), [onRender, render]);
   return null;
