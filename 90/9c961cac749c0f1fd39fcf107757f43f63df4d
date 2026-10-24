@@ -1,0 +1,329 @@
+GLOSSARY.md
+  s_59ffa5bfdcd3ba::t_650c5b21f9ac21 1-18,20-22,24-26,28-114
+  h_d6e478ca18e517 23
+packages/db/schema/postgresql.ts
+  s_8b1d5a69f175a9::t_def9d4934892ae 60-63
+  h_d6e478ca18e517 88
+  s_9b7e99bd3ab786::t_64757286bc1685 59
+packages/db/schema/sqlite.ts
+  s_8b1d5a69f175a9::t_0cab05def9a461 42-45
+  s_9b7e99bd3ab786::t_4bc9545bde959b 41
+.github/workflows/validate-docs.yml
+  h_d6e478ca18e517 57-58
+apps/docs/package.json
+  h_d6e478ca18e517 16
+packages/api/src/router/widgets/custom-api.ts
+  h_d6e478ca18e517 21,47,133,138,141,158,165-192,198-213
+  s_9b7e99bd3ab786::t_73ec9e55920b81 216-240,242-256,258-293,295-312,314-331
+packages/custom-widgets/src/server/request-limits.ts
+  h_d6e478ca18e517 2,13-14,23,44-46,47-49,50-53,55-57,60-68,77,78,96,97,100-101,102-117,127,128,130-134,136,138-144,153,164-165,171,173-174,179-210,211-217,219,224,226,228,239-240,241-242,243-249,252
+vitest.config.mts
+  h_d6e478ca18e517 40
+packages/cron-jobs-core/src/group.ts
+  h_d6e478ca18e517 38-40,45-53,66-87,93,101,104,108,135,137
+  s_5749b2ccfeffb1::t_cc5987f5f6a3f1 92,103,133
+packages/api/src/router/serverSettings.ts
+  h_d6e478ca18e517 4,41-81,141,152-155
+packages/ui/src/components/language-combobox.tsx
+  h_d6e478ca18e517 40
+packages/ui/src/components/select-with-custom-items.tsx
+  h_d6e478ca18e517 93
+apps/workshop/README.md
+  h_d6e478ca18e517 69-79
+apps/workshop/pb_hooks/workshop.pb.js
+  h_d6e478ca18e517 82-83,94-100,102-108,110-115,118-126
+Dockerfile
+  h_d6e478ca18e517 51
+apps/docs/docs/advanced/environment-variables/index.mdx
+  h_d6e478ca18e517 32-38,40-45
+apps/docs/docs/advanced/proxy/index.mdx
+  h_d6e478ca18e517 29-51
+apps/nextjs/src/app/api/mcp/oauth/_rate-limit.ts
+  h_d6e478ca18e517 1-2,6,14-19,24,33-35,38-40,45-48,53-62,66
+apps/nextjs/src/app/api/mcp/oauth/flow.integration.spec.ts
+  h_d6e478ca18e517 15,68-69,239-241,1053,1058,1073
+apps/nextjs/src/app/api/mcp/oauth/token/route.ts
+  h_d6e478ca18e517 12-13,18,20
+nginx.conf
+  h_d6e478ca18e517 6,25-26
+packages/common/env.ts
+  h_d6e478ca18e517 27-30,36
+packages/common/src/request-identity.ts
+  h_d6e478ca18e517 1-44
+packages/common/src/server.ts
+  h_d6e478ca18e517 4
+scripts/run.sh
+  h_d6e478ca18e517 67-71,84-85
+scripts/trusted-proxies.mjs
+  h_d6e478ca18e517 1-24
+packages/auth/session.ts
+  h_d6e478ca18e517 44
+packages/api/src/router/user.ts
+  h_d6e478ca18e517 98-105,114-121,208,572
+packages/db/migrations/seed.ts
+  h_d6e478ca18e517 233,252,270-280,289-299,924-935
+apps/nextjs/src/components/access/user-access-form.tsx
+  h_d6e478ca18e517 113
+packages/custom-widgets/src/core/request-schema.ts
+  h_d6e478ca18e517 227-228,229,230
+packages/api/src/router/widgets/beszel.ts
+  h_d6e478ca18e517 5,153
+packages/definitions/package.json
+  h_d6e478ca18e517 16
+packages/definitions/src/beszel.ts
+  h_d6e478ca18e517 1-23
+packages/request-handler/src/beszel.ts
+  h_d6e478ca18e517 2-3,112,129,137
+packages/widgets/src/beszel-system-grid/component.tsx
+  h_d6e478ca18e517 23,178
+packages/widgets/src/beszel-system-grid/index.ts
+  h_d6e478ca18e517 6,19
+packages/widgets/src/beszel-system-stats/component.tsx
+  h_d6e478ca18e517 13,23,68,86,123-125,309,325
+packages/widgets/src/beszel-system-stats/index.ts
+  h_d6e478ca18e517 5,7,54-55
+packages/widgets/src/beszel-system-table/display.ts
+  h_d6e478ca18e517 1-2,4,6
+packages/widgets/src/beszel-system-table/index.ts
+  h_d6e478ca18e517 7,49
+packages/widgets/src/beszel/_shared/chart.tsx
+  h_d6e478ca18e517 10-11,19,252,328,340,367,395,454,466
+packages/widgets/src/beszel/_shared/options.ts
+  h_d6e478ca18e517 1-31
+packages/widgets/src/beszel/_shared/system-stats-modal.tsx
+  h_d6e478ca18e517 6-7,10,33,40-44,52
+packages/widgets/src/option-translation.ts
+  h_d6e478ca18e517 2,4
+packages/widgets/src/server-prefetch.ts
+  h_d6e478ca18e517 7,15,69-71,161
+docs/adr/0001-bounded-board-permission-writes.md
+  h_d6e478ca18e517 1-17
+packages/db/index.ts
+  h_d6e478ca18e517 13
+packages/db/write-plan.ts
+  h_d6e478ca18e517 1-32
+packages/db/migrations/postgresql/0018_align_user_search_default.sql
+  h_d6e478ca18e517 1
+packages/db/migrations/postgresql/meta/0018_snapshot.json
+  h_d6e478ca18e517 1-2714
+packages/db/migrations/postgresql/meta/_journal.json
+  h_d6e478ca18e517 130-136
+packages/cron-job-status/src/index.ts
+  h_d6e478ca18e517 1
+packages/integrations/src/dashdot/dashdot-integration.ts
+  h_d6e478ca18e517 5
+packages/integrations/src/dashdot/test/dashdot-integration.spec.ts
+  h_d6e478ca18e517 12,16
+packages/integrations/src/opnsense/opnsense-integration.ts
+  h_d6e478ca18e517 3
+packages/redis/src/index.ts
+  h_d6e478ca18e517 19
+packages/redis/src/lib/channel.ts
+  h_d6e478ca18e517 777
+apps/nextjs/src/app/api/image-proxy/[id]/route.ts
+  h_d6e478ca18e517 3,7,14
+packages/common/src/bounded-response.ts
+  h_d6e478ca18e517 7,12,16-26,28-45,47-51,53-59,61,63-69
+packages/image-proxy/src/index.ts
+  h_d6e478ca18e517 6,15-16,88,95-100,102-103,105,107-132,136,147-149
+apps/workshop/pb_hooks/workshop-utils.js
+  h_d6e478ca18e517 5-11,27-71,73-77,141
+  s_5749b2ccfeffb1::t_24cfeb70bf814c 12-13,16-26,72
+packages/custom-widgets/src/core/ai-prompt.ts
+  h_d6e478ca18e517 3,52,77,86
+packages/custom-widgets/src/core/authoring-resources.ts
+  h_d6e478ca18e517 2,117
+packages/definitions/src/widget-integration-map.ts
+  h_d6e478ca18e517 35-106,108-121,123-125,127
+packages/widgets/src/widget-integration-select.tsx
+  h_d6e478ca18e517 83-96
+packages/translation/src/lang/en.json
+  h_d6e478ca18e517 1929-1931,6609,6622,6632
+  s_9b7e99bd3ab786::t_e7c097df824466 279-280,285-293,7241-7246,7312,7322
+apps/nextjs/src/app/[locale]/manage/tools/docker/docker-table.tsx
+  h_d6e478ca18e517 352
+apps/nextjs/src/components/layout/header/burger.tsx
+  h_d6e478ca18e517 7-8,12,17-26
+packages/widgets/src/_inputs/widget-multiReleasesRepositories-input.tsx
+  h_d6e478ca18e517 254-259,411-420
+apps/nextjs/src/app/[locale]/manage/settings/_components/setting-switch.tsx
+  h_d6e478ca18e517 4,27-29,38-62
+apps/nextjs/src/app/[locale]/manage/users/[userId]/general/_components/header-composer.module.css
+  h_d6e478ca18e517 106-107,143,164-165,170-185
+apps/nextjs/src/app/[locale]/manage/users/[userId]/general/_components/header-composer.tsx
+  h_d6e478ca18e517 29,93-95,107,110,114-122,200-202,262,464,479,501,514-515,531-544
+apps/nextjs/src/app/[locale]/manage/_components/hero-banner.module.css
+  h_d6e478ca18e517 6-7,14-15
+apps/nextjs/src/app/[locale]/_client-providers/dayjs-loader.tsx
+  h_d6e478ca18e517 5,9,11
+packages/common/src/hooks.ts
+  h_d6e478ca18e517 3,9,12-13,16,18-19,21-23
+packages/translation/src/dayjs.ts
+  h_d6e478ca18e517 1,8-14,16-17,19-20,25,27-28
+docs/agents/issue-tracker.md
+  h_d6e478ca18e517 15
+docs/agents/triage-labels.md
+  h_d6e478ca18e517 28,33
+packages/api/src/router/custom-widget/preview-procedure-helpers.ts
+  h_d6e478ca18e517 3,5,59-62
+packages/custom-widgets/src/server/auth.ts
+  h_d6e478ca18e517 1,31-48,56,109
+packages/custom-widgets/src/server/index.ts
+  h_d6e478ca18e517 2
+.github/workflows/ci.yml
+  h_d6e478ca18e517 170,172,177-182,183-184,196,220
+packages/widgets/src/downloads/component.tsx
+  h_d6e478ca18e517 70,320-322
+packages/widgets/src/downloads/index.ts
+  h_d6e478ca18e517 4,10
+packages/widgets/src/downloads/query-input.ts
+  h_d6e478ca18e517 1-6,17-19
+packages/api/src/trpc.ts
+  h_d6e478ca18e517 16-17,48,67
+  s_74b673c970ef48::t_669a86b27f8b70 23-24,80,128-135,159,183
+apps/nextjs/src/app/api/mcp/_protocol.ts
+  h_d6e478ca18e517 48
+packages/api/src/mcp-tools.ts
+  h_d6e478ca18e517 2,15,26,70-72,143,145-146
+  s_9b7e99bd3ab786::t_acf43e49928519 7-9,19,142,144
+packages/api/src/router/app.ts
+  h_d6e478ca18e517 204,302
+packages/api/src/router/board.ts
+  h_d6e478ca18e517 681,760,1129,1582,2301
+packages/api/src/router/custom-widget/creation-procedures.ts
+  h_d6e478ca18e517 38,59,104
+packages/api/src/router/custom-widget/preview-action-procedures.ts
+  h_d6e478ca18e517 22
+packages/api/src/router/custom-widget/preview-base-procedures.ts
+  h_d6e478ca18e517 116,238
+packages/api/src/router/custom-widget/secret-procedures.ts
+  h_d6e478ca18e517 62-68,86,141
+packages/api/src/router/custom-widget/workshop-procedures.ts
+  h_d6e478ca18e517 146-148
+packages/api/src/router/docker/docker-router.ts
+  h_d6e478ca18e517 118,132,146,160
+packages/api/src/router/integration/integration-request.ts
+  h_d6e478ca18e517 137
+packages/api/src/router/integration/integration-router.ts
+  h_d6e478ca18e517 241,429-433,729
+packages/api/src/router/invite.ts
+  h_d6e478ca18e517 78,118-122
+apps/docs/public/api/open-api-schema.json
+  h_d6e478ca18e517 1239
+apps/nextjs/src/app/[locale]/manage/users/[userId]/general/_components/_oauth-connections.tsx
+  h_d6e478ca18e517 99-102
+docs/agents/domain.md
+  h_d6e478ca18e517 3-4,6-8,10-11
+apps/nextjs/src/app/[locale]/auth/mcp/layout.tsx
+  s_0559c70ca0becf::t_0bee788f72205c 3,24-28,30
+apps/nextjs/src/app/[locale]/auth/mcp/page.tsx
+  s_0559c70ca0becf::t_718dc6481a903b 63-86,90-93,97-125,127
+  s_9b7e99bd3ab786::t_55706fb3103342 3,135-144
+apps/nextjs/src/app/api/backup/shared.ts
+  s_8b1d5a69f175a9::t_11033b76078089 9
+apps/nextjs/src/app/[locale]/manage/tools/api/components/api-keys.tsx
+  s_9b7e99bd3ab786::t_0e21a0a6b78f81 4,43-48,100,156-160,196-207
+apps/nextjs/src/app/[locale]/manage/tools/api/components/oauth-connection-details.tsx
+  s_9b7e99bd3ab786::t_975be0ce06eb82 14,19
+apps/nextjs/src/app/api/[...trpc]/route.spec.ts
+  s_9b7e99bd3ab786::t_6e985acf658e47 34,52-60
+apps/nextjs/src/app/api/[...trpc]/route.ts
+  s_9b7e99bd3ab786::t_0fe94c5ea6bd96 37-39
+apps/nextjs/src/app/api/mcp/[transport]/route.spec.ts
+  s_9b7e99bd3ab786::t_ac3030d3eddd57 22,82-98,352-372
+apps/nextjs/src/app/api/mcp/_handler.ts
+  s_9b7e99bd3ab786::t_89d9a605d70fb2 8,86-90,237,255,320-325,328,330,348-349
+apps/nextjs/src/app/api/trpc/[trpc]/route.ts
+  s_9b7e99bd3ab786::t_87af3f0fc870db 41-45
+apps/websocket/src/main.ts
+  s_9b7e99bd3ab786::t_5e0e129d818cf1 2,41-43
+docs/research/read-only-api-keys-and-mcp.md
+  s_9b7e99bd3ab786::t_199f1068e5f308 1-101
+packages/api/src/credential-access.ts
+  s_9b7e99bd3ab786::t_c5a083624c99c2 1-6
+packages/api/src/mcp.ts
+  s_9b7e99bd3ab786::t_db184de64698b3 4
+packages/api/src/router/apiKeys.ts
+  s_9b7e99bd3ab786::t_bc8cb3eed4404b 7,14,70-71,75,79
+packages/api/src/router/custom-widget/management-queries.ts
+  s_9b7e99bd3ab786::t_1a5332df9064ea 126
+packages/api/src/router/custom-widget/preview-query-procedures.ts
+  s_9b7e99bd3ab786::t_907afeccddcdea 41
+packages/api/src/router/integration/integration-test-stored-connection.ts
+  s_9b7e99bd3ab786::t_31d1b179a95ffa 14
+packages/api/src/router/test/apiKeys.spec.ts
+  s_9b7e99bd3ab786::t_f9546501555ab9 26,138,147,163-181
+packages/api/src/router/widgets/rssFeed.ts
+  s_9b7e99bd3ab786::t_643638018d8a52 36-40,42-43,46-55,57-70,74-88
+packages/auth/api-key/get-api-key-session.ts
+  s_9b7e99bd3ab786::t_7bae054562bb0d 45-46,77-81
+packages/auth/api-key/test/get-api-key-session.spec.ts
+  s_74b673c970ef48::t_838803cbb7a5d5 27-34,117,134
+packages/auth/index.ts
+  s_9b7e99bd3ab786::t_5219bf5f601f94 12-15
+packages/db/migrations/postgresql/0019_add_api_key_read_only.sql
+  s_9b7e99bd3ab786::t_a440ef62c43401 1
+packages/db/migrations/sqlite/0050_add_api_key_read_only.sql
+  s_9b7e99bd3ab786::t_59174f480d0ec3 1
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "909c961cac749c0f1fd39fcf107757f43f63df4d",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  },
+  "sessions": {
+    "s_0559c70ca0becf": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a12b45-b93c-7681-8c02-21811f74ed20",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_5749b2ccfeffb1": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a12b45-5d31-7090-8035-0e501d3f763d",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_59ffa5bfdcd3ba": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a0fbb8-1651-7d42-8527-b8ebdc368014",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_74b673c970ef48": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "39637ef8-fe7e-468c-8334-b026f7a4531e",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_8b1d5a69f175a9": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a0ff0d-51af-74b0-a648-dd404bc11429",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_9b7e99bd3ab786": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "65e5f33a-f2db-4674-8074-dcea9cc8135f",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
