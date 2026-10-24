@@ -25,7 +25,6 @@ import {
   Slider,
   Stack,
   Switch,
-  Tabs,
   Text,
   TextInput,
   ThemeIcon,
@@ -1591,32 +1590,31 @@ const BoardPreview = ({
 const Extensions = (props: StudioSectionProps) => {
   const t = useI18n("init.studio.extend");
   return (
-    <Stack gap={0}>
+    <Stack gap="md">
       <Title id="studio-section-title" ref={props.headingRef} order={2} tabIndex={-1} mb="xs">
         {t("title")}
       </Title>
-      <Tabs defaultValue="workshop">
-        <Tabs.List grow aria-label={t("tabsLabel")}>
-          <Tabs.Tab value="workshop" leftSection={<IconSparkles size={16} />}>
-            {t("workshop")}
-          </Tabs.Tab>
-          <Tabs.Tab value="assistant" leftSection={<IconRobot size={16} />}>
-            {t("assistant")}
-          </Tabs.Tab>
-          <Tabs.Tab value="mcp" leftSection={<IconCode size={16} />}>
-            MCP
-          </Tabs.Tab>
-        </Tabs.List>
-        <Tabs.Panel value="workshop" pt="xs">
-          <WorkshopSetup environment={props.environment} runtimeCapabilities={props.runtimeCapabilities} />
-        </Tabs.Panel>
-        <Tabs.Panel value="assistant" pt="xs">
-          <AssistantSetup environment={props.environment} configuration={props.assistantConfiguration} />
-        </Tabs.Panel>
-        <Tabs.Panel value="mcp" pt="xs">
-          <McpSetup environment={props.environment} />
-        </Tabs.Panel>
-      </Tabs>
+      <Stack gap="sm">
+        <Group gap="xs">
+          <IconRobot size={20} aria-hidden />
+          <Title order={3}>{t("assistant")}</Title>
+        </Group>
+        <AssistantSetup environment={props.environment} configuration={props.assistantConfiguration} />
+      </Stack>
+      <Accordion variant="separated">
+        <Accordion.Item value="workshop">
+          <Accordion.Control icon={<IconSparkles size={18} />}>{t("workshop")}</Accordion.Control>
+          <Accordion.Panel>
+            <WorkshopSetup environment={props.environment} runtimeCapabilities={props.runtimeCapabilities} />
+          </Accordion.Panel>
+        </Accordion.Item>
+        <Accordion.Item value="mcp">
+          <Accordion.Control icon={<IconCode size={18} />}>MCP</Accordion.Control>
+          <Accordion.Panel>
+            <McpSetup environment={props.environment} />
+          </Accordion.Panel>
+        </Accordion.Item>
+      </Accordion>
     </Stack>
   );
 };
