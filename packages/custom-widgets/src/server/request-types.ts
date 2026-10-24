@@ -30,6 +30,7 @@ export interface CustomWidgetHttpRequest {
   textFallback?: boolean;
   cacheKey?: string;
   cacheTtlSeconds?: number;
+  beforeRequest?: () => Promise<void>;
   logError?: (event: {
     origin: string;
     method: CustomWidgetMethod | "HEAD" | "OPTIONS";

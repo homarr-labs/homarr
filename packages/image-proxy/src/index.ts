@@ -3,13 +3,7 @@ import { setImmediate } from "node:timers/promises";
 
 import { createId, formatBytes } from "@homarr/common";
 import { env } from "@homarr/common/env";
-import {
-  createKeyedFingerprint,
-  decryptSecret,
-  encryptSecret,
-  readBoundedResponseAsync,
-  verifyKeyedFingerprint,
-} from "@homarr/common/server";
+import { decryptSecret, encryptSecret, readBoundedResponseAsync, verifyKeyedFingerprint } from "@homarr/common/server";
 import { cancelBodyAsync, fetchGuardedAsync } from "@homarr/core/infrastructure/http";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import { ErrorWithMetadata } from "@homarr/core/infrastructure/logs/error";
@@ -30,6 +24,7 @@ const createUrlByIdChannel = (id: string) =>
 
 export type ForwardImageResult =
   | { image: ArrayBuffer; contentType: string | null }
+  | { redirectUrl: string }
   | { error: "not-found" }
   | { error: "upstream-error"; statusCode: number }
   | { error: "fetch-error" };
@@ -45,20 +40,7 @@ export class ImageProxy {
     return this.hmacKey;
   }
 
-  public async createImageAsync(
-    url: string,
-    headers?: Record<string, string>,
-    options?: { persistent?: boolean },
-  ): Promise<string> {
-    if (options?.persistent) {
-      if (headers) throw new Error("Persistent image URLs cannot contain integration headers");
-      // App icons are saved in the database, unlike periodically refreshed integration
-      // images. A signed, encrypted source survives Redis expiry and server restarts.
-      const encryptedUrl = encryptSecret(url);
-      const signature = createKeyedFingerprint(`image-proxy:persistent:${encryptedUrl}`);
-      return this.createImageUrl(`persistent.${signature}.${encryptedUrl}`);
-    }
-
+  public async createImageAsync(url: string, headers?: Record<string, string>): Promise<string> {
     const existingId = await this.getExistingIdAsync(url, headers);
     if (existingId) {
       logger.debug("Image already exists in the proxy", {
@@ -105,6 +87,7 @@ export class ImageProxy {
   }
 
   public async forwardImageAsync(id: string, requestSignal?: AbortSignal): Promise<ForwardImageResult> {
+    if (id.startsWith("persistent.")) return this.getPersistentImageRedirect(id);
     const urlAndHeaders = await this.getImageUrlAndHeadersAsync(id);
     if (!urlAndHeaders) {
       return { error: "not-found" };
@@ -119,9 +102,6 @@ export class ImageProxy {
     );
     try {
       signal.throwIfAborted();
-      // Page-declared icons are untrusted on every fetch, including redirects and DNS
-      // changes. Existing integration images retain loopback and HTTP proxy support
-      // only on their registered origin; redirects elsewhere lose credentials and trust.
       return await fetchGuardedAsync(
         new URL(urlAndHeaders.url),
         {
@@ -182,20 +162,22 @@ export class ImageProxy {
     return `/api/image-proxy/${id}`;
   }
 
-  private async getImageUrlAndHeadersAsync(id: string) {
-    if (id.startsWith("persistent.")) {
-      const parts = /^persistent\.([a-f0-9]{64})\.([a-f0-9]+)\.([a-f0-9]{32})$/.exec(id);
-      if (!parts) return null;
-      const [, signature = "", ciphertext = "", initializationVector = ""] = parts;
-      const encryptedUrl = `${ciphertext}.${initializationVector}` as const;
-      if (!verifyKeyedFingerprint(`image-proxy:persistent:${encryptedUrl}`, signature)) return null;
-      try {
-        return { url: decryptSecret(encryptedUrl), headers: null, trustedOrigin: undefined };
-      } catch {
-        return null;
-      }
+  private getPersistentImageRedirect(id: string): ForwardImageResult {
+    const parts = /^persistent\.([a-f0-9]{64})\.([a-f0-9]+)\.([a-f0-9]{32})$/.exec(id);
+    if (!parts) return { error: "not-found" };
+    const [, signature = "", ciphertext = "", initializationVector = ""] = parts;
+    const encryptedUrl = `${ciphertext}.${initializationVector}` as const;
+    if (!verifyKeyedFingerprint(`image-proxy:persistent:${encryptedUrl}`, signature)) return { error: "not-found" };
+    try {
+      const url = URL.parse(decryptSecret(encryptedUrl));
+      if (!url || (url.protocol !== "http:" && url.protocol !== "https:")) return { error: "not-found" };
+      return { redirectUrl: url.href };
+    } catch {
+      return { error: "not-found" };
     }
+  }
 
+  private async getImageUrlAndHeadersAsync(id: string) {
     const urlHeaderChannel = createUrlByIdChannel(id);
     const urlHeader = await urlHeaderChannel.getAsync();
     if (!urlHeader) {

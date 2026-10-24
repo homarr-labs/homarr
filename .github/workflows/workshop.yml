@@ -99,7 +99,7 @@ jobs:
     if: |
       (github.event_name != 'release' || !github.event.release.prerelease) &&
       (github.event_name != 'workflow_dispatch' || github.ref_name == 'main' || github.ref_name == 'dev')
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     timeout-minutes: 5
     outputs:
       sha: ${{ steps.image.outputs.sha }}
@@ -138,9 +138,9 @@ jobs:
       matrix:
         include:
           - arch: amd64
-            runner: ubuntu-24.04
+            runner: ubuntu-26.04
           - arch: arm64
-            runner: ubuntu-24.04-arm
+            runner: ubuntu-26.04-arm
     runs-on: ${{ matrix.runner }}
     timeout-minutes: 30
     steps:
@@ -190,7 +190,7 @@ jobs:
   publish-amd64:
     if: needs.validate.outputs.publish == 'true'
     needs: validate
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     timeout-minutes: 20
     permissions:
       contents: read
@@ -237,7 +237,7 @@ jobs:
   publish-arm64:
     if: needs.validate.outputs.publish == 'true'
     needs: validate
-    runs-on: ubuntu-24.04-arm
+    runs-on: ubuntu-26.04-arm
     timeout-minutes: 20
     permissions:
       contents: read
@@ -284,7 +284,7 @@ jobs:
   publish:
     if: needs.validate.outputs.publish == 'true'
     needs: [validate, publish-amd64, publish-arm64]
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     timeout-minutes: 5
     permissions:
       contents: read
