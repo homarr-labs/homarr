@@ -56,8 +56,13 @@ import {
   addItemToBoardSchema,
   boardByNameSchema,
   boardChangeVisibilitySchema,
+  boardContentSchema,
   boardCreateSchema,
   boardDuplicateSchema,
+  boardItemByIdSchema,
+  boardItemSchema,
+  boardLayoutFieldsSchema,
+  boardPermissionsSchema,
   boardRenameSchema,
   boardResetLayoutSchema,
   boardSaveLayoutsSchema,
@@ -66,7 +71,10 @@ import {
   boardSaveSchema,
   boardSettingsSchema,
   boardSummarySchema,
+  boardUpdateLayoutSchema,
+  responsiveBoardLayoutsSchema,
   updateBoardItemLayoutSchema,
+  updateBoardItemSchema,
 } from "@homarr/validation/board";
 import { byIdSchema } from "@homarr/validation/common";
 import { zodUnionFromArray } from "@homarr/validation/enums";
@@ -80,6 +88,7 @@ import {
   throwIfCustomWidgetBoardDuplicationForbidden,
   throwIfCustomWidgetPlacementChangeForbidden,
 } from "./board/custom-widget-placement-access";
+import { throwIfPermissionPrincipalsInvalidAsync } from "./permission-principals";
 import { validateTimetableOptionsChangeAsync } from "./widgets/timetable";
 
 interface BoardItemPlacementRectangle {
@@ -674,21 +683,27 @@ export const boardRouter = createTRPCRouter({
         protect: true,
         summary: "Create a board",
         description:
-          "Create a board with base and mobile layouts. Requires board-create permission. Returns the board ID, name, and base layout ID; sets the creator's home board if none is selected.",
+          "Create a board under a unique name with base and mobile layouts. Optional gutter column counts apply to the base layout. Requires board-create permission. Returns the board ID, name, base layout ID, and mobile layout ID; sets the creator's home board if none is selected.",
       },
       mcp: {
         enabled: true,
         effect: "additive",
         description:
-          "Create a new board with a name, column count (1-24), and isPublic flag. Returns { boardId, name, layoutId }. Requires board-create permission",
+          "Create a new board with a unique name, column count (1-24), isPublic flag, and optional leftGutterColumnCount/rightGutterColumnCount (0-3 each, Base layout only; together they must leave at least one column). Returns { boardId, name, layoutId, mobileLayoutId }, where layoutId is the Base layout. Requires board-create permission",
       },
     })
     .input(boardCreateSchema)
-    .output(z.object({ boardId: z.string(), name: z.string(), layoutId: z.string() }))
+    .output(z.object({ boardId: z.string(), name: z.string(), layoutId: z.string(), mobileLayoutId: z.string() }))
     .mutation(async ({ ctx, input }) => {
+      await noBoardWithSimilarNameAsync(ctx.db, input.name);
+
       const boardId = createId();
       const mobileLayoutId = createId();
       const baseLayoutId = createId();
+      const gutterColumnCounts = {
+        left: input.leftGutterColumnCount ?? 0,
+        right: input.rightGutterColumnCount ?? 0,
+      };
 
       const user = await ctx.db.query.users.findFirst({
         where: eq(users.id, ctx.session.user.id),
@@ -712,6 +727,16 @@ export const boardRouter = createTRPCRouter({
         yOffset: 0,
         boardId,
       });
+      for (const lane of ["left", "right"] as const) {
+        if (gutterColumnCounts[lane] === 0) continue;
+        createBoardCollection.sections.push({
+          id: createId(),
+          kind: "empty",
+          xOffset: rootSectionOffsets[lane],
+          yOffset: 0,
+          boardId,
+        });
+      }
       createBoardCollection.layouts.push(
         {
           id: mobileLayoutId,
@@ -727,8 +752,8 @@ export const boardRouter = createTRPCRouter({
           id: baseLayoutId,
           name: "Base",
           columnCount: input.columnCount,
-          leftGutterColumnCount: 0,
-          rightGutterColumnCount: 0,
+          leftGutterColumnCount: gutterColumnCounts.left,
+          rightGutterColumnCount: gutterColumnCounts.right,
           breakpoint: 768,
           role: "base",
           boardId,
@@ -741,7 +766,7 @@ export const boardRouter = createTRPCRouter({
         await ctx.db.update(users).set({ homeBoardId: boardId }).where(eq(users.id, ctx.session.user.id));
       }
 
-      return { boardId, name: input.name, layoutId: baseLayoutId };
+      return { boardId, name: input.name, layoutId: baseLayoutId, mobileLayoutId };
     }),
   duplicateBoard: permissionRequiredProcedure
     .requiresPermission("board-create")
@@ -753,17 +778,17 @@ export const boardRouter = createTRPCRouter({
         protect: true,
         summary: "Duplicate a board",
         description:
-          "Copy a board under a unique name and return its new ID. Requires board-create permission, view access to the source, and use access to its linked integrations. Widget configurations must be valid; boards containing Custom Widgets require admin permission.",
+          "Copy a board under a unique name and return the IDs of the copy and its base and mobile layouts. Requires board-create permission, view access to the source, and use access to its linked integrations. Widget configurations must be valid; boards containing Custom Widgets require admin permission.",
       },
       mcp: {
         enabled: true,
         effect: "additive",
         description:
-          "Duplicate an existing board into a new board. Requires board-create permission, view permission on the source board, and use permission for every linked integration. Every widget-integration configuration must be valid. REQUIRED: id (source board ID), name (unique name for the new board). Returns { boardId }",
+          "Duplicate an existing board into a new board. Requires board-create permission, view permission on the source board, and use permission for every linked integration. Every widget-integration configuration must be valid. REQUIRED: id (source board ID), name (unique name for the new board). Returns { boardId, baseLayoutId, mobileLayoutId }",
       },
     })
     .input(boardDuplicateSchema)
-    .output(z.object({ boardId: z.string() }))
+    .output(z.object({ boardId: z.string(), baseLayoutId: z.string(), mobileLayoutId: z.string() }))
     .mutation(async ({ ctx, input }) => {
       await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.id), "view");
       await noBoardWithSimilarNameAsync(ctx.db, input.name);
@@ -872,6 +897,11 @@ export const boardRouter = createTRPCRouter({
         boardId: newBoardId,
         resizeSource: null,
       }));
+      const baseLayout = layoutsToInsert.find((layout) => layout.role === "base");
+      const mobileLayout = layoutsToInsert.find((layout) => layout.role === "mobile");
+      if (!baseLayout || !mobileLayout) {
+        throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Board must have a Base and a Mobile layout" });
+      }
 
       const sectionMap = new Map<string, string>(boardSections.map((section) => [section.id, createId()]));
       const sectionsToInsert: InferInsertModel<typeof sections>[] = boardSections.map(
@@ -1049,7 +1079,7 @@ export const boardRouter = createTRPCRouter({
         },
       });
 
-      return { boardId: newBoardId };
+      return { boardId: newBoardId, baseLayoutId: baseLayout.id, mobileLayoutId: mobileLayout.id };
     }),
   renameBoard: protectedProcedure
     .meta({
@@ -1281,6 +1311,42 @@ export const boardRouter = createTRPCRouter({
         iconColor: board.iconColor ?? "",
       };
     }),
+  getBoardLayouts: protectedProcedure
+    .meta({
+      openapi: {
+        method: "GET",
+        path: "/api/boards/{id}/layouts",
+        tags: ["boards"],
+        protect: true,
+        summary: "Read dashboard layouts",
+        description:
+          "Read a board's Mobile, Base, and custom layouts ordered by breakpoint. Requires view access to the board.",
+      },
+    })
+    .input(z.object({ id: z.string() }))
+    .output(z.array(boardLayoutFieldsSchema))
+    .query(async ({ ctx, input }) => {
+      const boardWhere = eq(boards.id, input.id);
+      await throwIfActionForbiddenAsync(ctx, boardWhere, "view");
+
+      const boardLayouts = await ctx.db.query.layouts.findMany({
+        columns: {
+          id: true,
+          name: true,
+          columnCount: true,
+          leftGutterColumnCount: true,
+          rightGutterColumnCount: true,
+          breakpoint: true,
+          role: true,
+        },
+        where: eq(layouts.boardId, input.id),
+        orderBy: asc(layouts.breakpoint),
+      });
+      if (!boardLayoutsNeedRepair(boardLayouts)) return boardLayouts;
+
+      const board = await getFullBoardWithWhereAsync(ctx.db, boardWhere, ctx.session.user.id);
+      return board.layouts.map(({ resizeSource: _, ...layout }) => layout);
+    }),
   saveLayouts: protectedProcedure
     .meta({
       openapi: {
@@ -1307,265 +1373,67 @@ export const boardRouter = createTRPCRouter({
       );
       await ensureGutterRootSectionsAsync(ctx.db, input.id, requiredGutterRoots);
 
-      const board = await getFullBoardWithWhereAsync(ctx.db, eq(boards.id, input.id), ctx.session.user.id);
-      const existingLayoutsById = new Map(board.layouts.map((layout) => [layout.id, layout]));
-      const submittedLayoutIds = new Set(input.layouts.map(({ id }) => id));
-      const addedLayouts = input.layouts.filter(({ id }) => !existingLayoutsById.has(id));
-      const removedLayouts = board.layouts.filter(({ id }) => !submittedLayoutIds.has(id));
+      return await saveBoardLayoutsAsync(ctx.db, ctx.session.user.id, input.id, () => input.layouts);
+    }),
+  updateLayout: protectedProcedure
+    .meta({
+      openapi: {
+        method: "PATCH",
+        path: "/api/boards/{boardId}/layouts/{layoutId}",
+        tags: ["boards"],
+        protect: true,
+        summary: "Update one dashboard layout",
+        description:
+          "Change one layout's name, column count, gutter column counts, or breakpoint and keep the other layouts. Items are rearranged as when saving all layouts. Requires modify access. The Mobile layout keeps breakpoint 0 and has no gutters.",
+      },
+    })
+    .input(boardUpdateLayoutSchema)
+    .output(boardLayoutFieldsSchema)
+    .mutation(async ({ ctx, input }) => {
+      await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.boardId), "modify");
 
-      if (addedLayouts.some((layout) => layout.role !== "custom")) {
-        throw new TRPCError({ code: "BAD_REQUEST", message: "New layouts must use the custom role" });
-      }
-      if (removedLayouts.some((layout) => layout.role !== "custom")) {
-        throw new TRPCError({ code: "BAD_REQUEST", message: "Mobile and Base layouts cannot be removed" });
-      }
-      if (
-        input.layouts.some((layout) => {
-          const existingLayout = existingLayoutsById.get(layout.id);
-          return existingLayout && existingLayout.role !== layout.role;
-        })
-      ) {
-        throw new TRPCError({ code: "BAD_REQUEST", message: "Layout roles cannot be changed" });
-      }
-
-      const baseLayout = board.layouts.find((layout) => layout.role === "base");
-      if (!baseLayout) {
-        throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Board must have a Base layout" });
-      }
-
-      const layoutsToInsert: InferInsertModel<typeof layouts>[] = [];
-      const itemSectionLayoutsToInsert: InferInsertModel<typeof itemLayouts>[] = [];
-      const sectionLayoutsToInsert: InferInsertModel<typeof sectionLayouts>[] = [];
-      const savedLayoutIds = new Map<string, string>();
-      const requestedBaseLayout = input.layouts.find((layout) => layout.id === baseLayout.id);
-      const resizedBaseLayout =
-        requestedBaseLayout &&
-        (requestedBaseLayout.columnCount !== baseLayout.columnCount ||
-          requestedBaseLayout.leftGutterColumnCount !== baseLayout.leftGutterColumnCount ||
-          requestedBaseLayout.rightGutterColumnCount !== baseLayout.rightGutterColumnCount)
-          ? getUpdatedBoardLayout(board, {
-              previous: {
-                layoutId: baseLayout.id,
-                columnCount: baseLayout.columnCount,
-                leftGutterColumnCount: baseLayout.leftGutterColumnCount,
-                rightGutterColumnCount: baseLayout.rightGutterColumnCount,
-              },
-              current: {
-                layoutId: baseLayout.id,
-                columnCount: requestedBaseLayout.columnCount,
-                leftGutterColumnCount: requestedBaseLayout.leftGutterColumnCount,
-                rightGutterColumnCount: requestedBaseLayout.rightGutterColumnCount,
-              },
-            })
-          : null;
-      const baseSourceElements = resizedBaseLayout ? getElementsForProjectedLayout(resizedBaseLayout) : undefined;
-      const baseSourceGeometry = {
-        layoutId: baseLayout.id,
-        columnCount: requestedBaseLayout?.columnCount ?? baseLayout.columnCount,
-        leftGutterColumnCount: requestedBaseLayout?.leftGutterColumnCount ?? baseLayout.leftGutterColumnCount,
-        rightGutterColumnCount: requestedBaseLayout?.rightGutterColumnCount ?? baseLayout.rightGutterColumnCount,
+      const requestedGutterColumnCounts = {
+        left: input.leftGutterColumnCount ?? 0,
+        right: input.rightGutterColumnCount ?? 0,
       };
+      const requiredGutterRoots = (["left", "right"] as const).filter((lane) => requestedGutterColumnCounts[lane] > 0);
+      await ensureGutterRootSectionsAsync(ctx.db, input.boardId, requiredGutterRoots);
 
-      for (const addedLayout of addedLayouts) {
-        const layoutId = createId();
-        savedLayoutIds.set(addedLayout.id, layoutId);
-        layoutsToInsert.push({
-          id: layoutId,
-          name: addedLayout.name,
-          columnCount: addedLayout.columnCount,
-          leftGutterColumnCount: addedLayout.leftGutterColumnCount,
-          rightGutterColumnCount: addedLayout.rightGutterColumnCount,
-          breakpoint: addedLayout.breakpoint,
-          role: "custom",
-          boardId: board.id,
-        });
+      const savedLayouts = await saveBoardLayoutsAsync(ctx.db, ctx.session.user.id, input.boardId, (currentLayouts) => {
+        if (!currentLayouts.some((layout) => layout.id === input.layoutId)) {
+          throw new TRPCError({ code: "NOT_FOUND", message: "Layout not found" });
+        }
 
-        const projectedLayout = getUpdatedBoardLayout(board, {
-          previous: {
-            ...baseSourceGeometry,
-            elements: baseSourceElements,
-          },
-          current: {
-            layoutId,
-            columnCount: addedLayout.columnCount,
-            leftGutterColumnCount: addedLayout.leftGutterColumnCount,
-            rightGutterColumnCount: addedLayout.rightGutterColumnCount,
-          },
-        });
-        itemSectionLayoutsToInsert.push(...projectedLayout.itemSectionLayouts);
-        sectionLayoutsToInsert.push(...projectedLayout.sectionLayouts);
-      }
-
-      const itemSectionLayoutsToUpdate: InferInsertModel<typeof itemLayouts>[] = [];
-      const sectionLayoutsToUpdate: InferInsertModel<typeof sectionLayouts>[] = [];
-      const layoutsToUpdate = input.layouts.filter(({ id }) => existingLayoutsById.has(id));
-      const resizeSourcesToUpdate = new Map<string, string | null>();
-
-      for (const updatedLayout of layoutsToUpdate) {
-        const dbLayout = existingLayoutsById.get(updatedLayout.id);
-        if (
-          !dbLayout ||
-          (dbLayout.columnCount === updatedLayout.columnCount &&
-            dbLayout.leftGutterColumnCount === updatedLayout.leftGutterColumnCount &&
-            dbLayout.rightGutterColumnCount === updatedLayout.rightGutterColumnCount)
-        )
-          continue;
-
-        const projectedLayout =
-          updatedLayout.role === "base" && resizedBaseLayout
-            ? resizedBaseLayout
-            : getUpdatedBoardLayout(board, {
-                previous: {
-                  layoutId: dbLayout.id,
-                  columnCount: dbLayout.columnCount,
-                  leftGutterColumnCount: dbLayout.leftGutterColumnCount,
-                  rightGutterColumnCount: dbLayout.rightGutterColumnCount,
-                },
-                current: {
-                  layoutId: dbLayout.id,
-                  columnCount: updatedLayout.columnCount,
-                  leftGutterColumnCount: updatedLayout.leftGutterColumnCount,
-                  rightGutterColumnCount: updatedLayout.rightGutterColumnCount,
-                },
-              });
-        resizeSourcesToUpdate.set(updatedLayout.id, projectedLayout.resizeSource);
-        itemSectionLayoutsToUpdate.push(...projectedLayout.itemSectionLayouts);
-        sectionLayoutsToUpdate.push(...projectedLayout.sectionLayouts);
-      }
-
-      const removedLayoutIds = removedLayouts.map((layout) => layout.id);
-
-      await handleTransactionsAsync(ctx.db, {
-        async handleAsync(db, schema) {
-          await db.transaction(async (transaction) => {
-            if (layoutsToInsert.length > 0) await transaction.insert(schema.layouts).values(layoutsToInsert);
-            if (itemSectionLayoutsToInsert.length > 0) {
-              await transaction.insert(schema.itemLayouts).values(itemSectionLayoutsToInsert);
-            }
-            if (sectionLayoutsToInsert.length > 0) {
-              await transaction.insert(schema.sectionLayouts).values(sectionLayoutsToInsert);
-            }
-
-            for (const itemLayout of itemSectionLayoutsToUpdate) {
-              await transaction
-                .update(schema.itemLayouts)
-                .set({
-                  height: itemLayout.height,
-                  width: itemLayout.width,
-                  xOffset: itemLayout.xOffset,
-                  yOffset: itemLayout.yOffset,
-                  sectionId: itemLayout.sectionId,
-                })
-                .where(
-                  and(
-                    eq(schema.itemLayouts.itemId, itemLayout.itemId),
-                    eq(schema.itemLayouts.layoutId, itemLayout.layoutId),
-                  ),
-                );
-            }
-            for (const sectionLayout of sectionLayoutsToUpdate) {
-              await transaction
-                .update(schema.sectionLayouts)
-                .set({
-                  height: sectionLayout.height,
-                  width: sectionLayout.width,
-                  xOffset: sectionLayout.xOffset,
-                  yOffset: sectionLayout.yOffset,
-                  parentSectionId: sectionLayout.parentSectionId,
-                })
-                .where(
-                  and(
-                    eq(schema.sectionLayouts.sectionId, sectionLayout.sectionId),
-                    eq(schema.sectionLayouts.layoutId, sectionLayout.layoutId),
-                  ),
-                );
-            }
-            for (const layout of layoutsToUpdate) {
-              await transaction
-                .update(schema.layouts)
-                .set({
-                  ...getResizeSourceUpdate(resizeSourcesToUpdate, layout.id),
-                  name: layout.name,
-                  columnCount: layout.columnCount,
-                  leftGutterColumnCount: layout.leftGutterColumnCount,
-                  rightGutterColumnCount: layout.rightGutterColumnCount,
-                  breakpoint: layout.breakpoint,
-                })
-                .where(eq(schema.layouts.id, layout.id));
-            }
-            if (removedLayoutIds.length > 0) {
-              await transaction.delete(schema.layouts).where(inArray(schema.layouts.id, removedLayoutIds));
-            }
+        const parsedLayouts = responsiveBoardLayoutsSchema.safeParse(
+          currentLayouts.map((layout) =>
+            layout.id === input.layoutId
+              ? {
+                  ...layout,
+                  name: input.name ?? layout.name,
+                  columnCount: input.columnCount ?? layout.columnCount,
+                  leftGutterColumnCount: input.leftGutterColumnCount ?? layout.leftGutterColumnCount,
+                  rightGutterColumnCount: input.rightGutterColumnCount ?? layout.rightGutterColumnCount,
+                  breakpoint: input.breakpoint ?? layout.breakpoint,
+                }
+              : layout,
+          ),
+        );
+        if (!parsedLayouts.success) {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            cause: parsedLayouts.error,
+            message: parsedLayouts.error.message,
           });
-        },
-        handleSync(db) {
-          db.transaction((transaction) => {
-            if (layoutsToInsert.length > 0) transaction.insert(layouts).values(layoutsToInsert).run();
-            if (itemSectionLayoutsToInsert.length > 0) {
-              transaction.insert(itemLayouts).values(itemSectionLayoutsToInsert).run();
-            }
-            if (sectionLayoutsToInsert.length > 0) {
-              transaction.insert(sectionLayouts).values(sectionLayoutsToInsert).run();
-            }
+        }
 
-            for (const itemLayout of itemSectionLayoutsToUpdate) {
-              transaction
-                .update(itemLayouts)
-                .set({
-                  height: itemLayout.height,
-                  width: itemLayout.width,
-                  xOffset: itemLayout.xOffset,
-                  yOffset: itemLayout.yOffset,
-                  sectionId: itemLayout.sectionId,
-                })
-                .where(and(eq(itemLayouts.itemId, itemLayout.itemId), eq(itemLayouts.layoutId, itemLayout.layoutId)))
-                .run();
-            }
-            for (const sectionLayout of sectionLayoutsToUpdate) {
-              transaction
-                .update(sectionLayouts)
-                .set({
-                  height: sectionLayout.height,
-                  width: sectionLayout.width,
-                  xOffset: sectionLayout.xOffset,
-                  yOffset: sectionLayout.yOffset,
-                  parentSectionId: sectionLayout.parentSectionId,
-                })
-                .where(
-                  and(
-                    eq(sectionLayouts.sectionId, sectionLayout.sectionId),
-                    eq(sectionLayouts.layoutId, sectionLayout.layoutId),
-                  ),
-                )
-                .run();
-            }
-            for (const layout of layoutsToUpdate) {
-              transaction
-                .update(layouts)
-                .set({
-                  ...getResizeSourceUpdate(resizeSourcesToUpdate, layout.id),
-                  name: layout.name,
-                  columnCount: layout.columnCount,
-                  leftGutterColumnCount: layout.leftGutterColumnCount,
-                  rightGutterColumnCount: layout.rightGutterColumnCount,
-                  breakpoint: layout.breakpoint,
-                })
-                .where(eq(layouts.id, layout.id))
-                .run();
-            }
-            if (removedLayoutIds.length > 0)
-              transaction.delete(layouts).where(inArray(layouts.id, removedLayoutIds)).run();
-          });
-        },
+        return parsedLayouts.data;
       });
+      const savedLayout = savedLayouts.find((layout) => layout.id === input.layoutId);
+      if (!savedLayout) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Layout not found" });
+      }
 
-      return input.layouts
-        .map((layout) => ({
-          ...layout,
-          id: savedLayoutIds.get(layout.id) ?? layout.id,
-          role: existingLayoutsById.get(layout.id)?.role ?? "custom",
-        }))
-        .toSorted((layoutA, layoutB) => layoutA.breakpoint - layoutB.breakpoint);
+      return savedLayout;
     }),
   resetLayout: protectedProcedure
     .meta({
@@ -1699,6 +1567,37 @@ export const boardRouter = createTRPCRouter({
           disableStatus: input.disableStatus,
         })
         .where(eq(boards.id, input.id));
+    }),
+  getBoardContent: protectedProcedure
+    .meta({
+      openapi: {
+        method: "GET",
+        path: "/api/boards/{id}/content",
+        tags: ["boards"],
+        protect: true,
+        summary: "Read dashboard content",
+        description:
+          "Read a board's complete sections and items, including widget options and placements, in the shape accepted by PUT /api/boards/{id}/content. The board name and layouts are included to resolve layout IDs and are ignored when saving. Requires view access to the board.",
+      },
+    })
+    .input(z.object({ id: z.string() }))
+    .output(boardContentSchema)
+    .query(async ({ ctx, input }) => {
+      const boardWhere = eq(boards.id, input.id);
+      await throwIfActionForbiddenAsync(ctx, boardWhere, "view");
+
+      const board = await getFullBoardWithWhereAsync(ctx.db, boardWhere, ctx.session.user.id);
+      return {
+        id: board.id,
+        name: board.name,
+        layouts: board.layouts.map(({ resizeSource: _, ...layout }) => layout),
+        sections: board.sections.map((section) => {
+          if (section.kind !== "container") return section;
+          const { collapsed: _, ...containerSection } = section;
+          return containerSection;
+        }),
+        items: board.items,
+      };
     }),
   saveBoard: protectedProcedure
     .meta({
@@ -2133,158 +2032,212 @@ export const boardRouter = createTRPCRouter({
         },
       });
     }),
-  getBoardPermissions: protectedProcedure.input(byIdSchema).query(async ({ input, ctx }) => {
-    await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.id), "full");
-
-    const dbGroupPermissions = await ctx.db.query.groupPermissions.findMany({
-      where: inArray(
-        groupPermissions.permission,
-        getPermissionsWithParents(["board-view-all", "board-modify-all", "board-full-all"]),
-      ),
-      columns: {
-        groupId: false,
+  getBoardPermissions: protectedProcedure
+    .meta({
+      openapi: {
+        method: "GET",
+        path: "/api/boards/{id}/permissions",
+        tags: ["boards"],
+        protect: true,
+        summary: "Read board permissions",
+        description:
+          "Return the users and groups with explicit permissions on a board, and the groups that inherit access through global board permissions. Requires full access to the board.",
       },
-      with: {
-        group: {
-          columns: {
-            id: true,
-            name: true,
-          },
+    })
+    .input(byIdSchema)
+    .output(boardPermissionsSchema)
+    .query(async ({ input, ctx }) => {
+      await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.id), "full");
+
+      const dbGroupPermissions = await ctx.db.query.groupPermissions.findMany({
+        where: inArray(
+          groupPermissions.permission,
+          getPermissionsWithParents(["board-view-all", "board-modify-all", "board-full-all"]),
+        ),
+        columns: {
+          groupId: false,
         },
-      },
-    });
-
-    const userPermissions = await ctx.db.query.boardUserPermissions.findMany({
-      where: eq(boardUserPermissions.boardId, input.id),
-      with: {
-        user: {
-          columns: {
-            id: true,
-            name: true,
-            image: true,
-            email: true,
-          },
-        },
-      },
-    });
-
-    const dbGroupBoardPermission = await ctx.db.query.boardGroupPermissions.findMany({
-      where: eq(boardGroupPermissions.boardId, input.id),
-      with: {
-        group: {
-          columns: {
-            id: true,
-            name: true,
-          },
-        },
-      },
-    });
-
-    return {
-      inherited: dbGroupPermissions.toSorted((permissionA, permissionB) => {
-        return permissionA.group.name.localeCompare(permissionB.group.name);
-      }),
-      users: userPermissions
-        .map(({ user, permission }) => ({
-          user,
-          permission,
-        }))
-        .toSorted((permissionA, permissionB) => {
-          return (permissionA.user.name ?? "").localeCompare(permissionB.user.name ?? "");
-        }),
-      groups: dbGroupBoardPermission
-        .map(({ group, permission }) => ({
+        with: {
           group: {
-            id: group.id,
-            name: group.name,
+            columns: {
+              id: true,
+              name: true,
+            },
           },
-          permission,
-        }))
-        .toSorted((permissionA, permissionB) => {
+        },
+      });
+
+      const userPermissions = await ctx.db.query.boardUserPermissions.findMany({
+        where: eq(boardUserPermissions.boardId, input.id),
+        with: {
+          user: {
+            columns: {
+              id: true,
+              name: true,
+              image: true,
+              email: true,
+            },
+          },
+        },
+      });
+
+      const dbGroupBoardPermission = await ctx.db.query.boardGroupPermissions.findMany({
+        where: eq(boardGroupPermissions.boardId, input.id),
+        with: {
+          group: {
+            columns: {
+              id: true,
+              name: true,
+            },
+          },
+        },
+      });
+
+      return {
+        inherited: dbGroupPermissions.toSorted((permissionA, permissionB) => {
           return permissionA.group.name.localeCompare(permissionB.group.name);
         }),
-    };
-  }),
-  saveUserBoardPermissions: protectedProcedure.input(boardSavePermissionsSchema).mutation(async ({ input, ctx }) => {
-    await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.entityId), "full");
-
-    await handleTransactionsAsync(ctx.db, {
-      async handleAsync(db, schema) {
-        await db.transaction(async (transaction) => {
-          await transaction.delete(schema.boardUserPermissions).where(eq(boardUserPermissions.boardId, input.entityId));
-          if (input.permissions.length === 0) {
-            return;
-          }
-          await transaction.insert(schema.boardUserPermissions).values(
-            input.permissions.map((permission) => ({
-              userId: permission.principalId,
-              permission: permission.permission,
-              boardId: input.entityId,
-            })),
-          );
-        });
+        users: userPermissions
+          .map(({ user, permission }) => ({
+            user,
+            permission,
+          }))
+          .toSorted((permissionA, permissionB) => {
+            return (permissionA.user.name ?? "").localeCompare(permissionB.user.name ?? "");
+          }),
+        groups: dbGroupBoardPermission
+          .map(({ group, permission }) => ({
+            group: {
+              id: group.id,
+              name: group.name,
+            },
+            permission,
+          }))
+          .toSorted((permissionA, permissionB) => {
+            return permissionA.group.name.localeCompare(permissionB.group.name);
+          }),
+      };
+    }),
+  saveUserBoardPermissions: protectedProcedure
+    .meta({
+      openapi: {
+        method: "PUT",
+        path: "/api/boards/{entityId}/permissions/users",
+        tags: ["boards"],
+        protect: true,
+        summary: "Replace user board permissions",
+        description:
+          "Replace all explicit user permissions on a board. Omitted users lose their explicit permission; each user can be listed once. Requires full access to the board.",
       },
-      handleSync(db) {
-        db.transaction((transaction) => {
-          transaction.delete(boardUserPermissions).where(eq(boardUserPermissions.boardId, input.entityId)).run();
-          if (input.permissions.length === 0) {
-            return;
-          }
-          transaction
-            .insert(boardUserPermissions)
-            .values(
+    })
+    .input(boardSavePermissionsSchema)
+    .output(z.void())
+    .mutation(async ({ input, ctx }) => {
+      await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.entityId), "full");
+      await throwIfPermissionPrincipalsInvalidAsync(
+        ctx.db,
+        "user",
+        input.permissions.map(({ principalId }) => principalId),
+      );
+
+      await handleTransactionsAsync(ctx.db, {
+        async handleAsync(db, schema) {
+          await db.transaction(async (transaction) => {
+            await transaction
+              .delete(schema.boardUserPermissions)
+              .where(eq(boardUserPermissions.boardId, input.entityId));
+            if (input.permissions.length === 0) {
+              return;
+            }
+            await transaction.insert(schema.boardUserPermissions).values(
               input.permissions.map((permission) => ({
                 userId: permission.principalId,
                 permission: permission.permission,
                 boardId: input.entityId,
               })),
-            )
-            .run();
-        });
+            );
+          });
+        },
+        handleSync(db) {
+          db.transaction((transaction) => {
+            transaction.delete(boardUserPermissions).where(eq(boardUserPermissions.boardId, input.entityId)).run();
+            if (input.permissions.length === 0) {
+              return;
+            }
+            transaction
+              .insert(boardUserPermissions)
+              .values(
+                input.permissions.map((permission) => ({
+                  userId: permission.principalId,
+                  permission: permission.permission,
+                  boardId: input.entityId,
+                })),
+              )
+              .run();
+          });
+        },
+      });
+    }),
+  saveGroupBoardPermissions: protectedProcedure
+    .meta({
+      openapi: {
+        method: "PUT",
+        path: "/api/boards/{entityId}/permissions/groups",
+        tags: ["boards"],
+        protect: true,
+        summary: "Replace group board permissions",
+        description:
+          "Replace all explicit group permissions on a board. Omitted groups lose their explicit permission; each group can be listed once. Requires full access to the board.",
       },
-    });
-  }),
-  saveGroupBoardPermissions: protectedProcedure.input(boardSavePermissionsSchema).mutation(async ({ input, ctx }) => {
-    await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.entityId), "full");
+    })
+    .input(boardSavePermissionsSchema)
+    .output(z.void())
+    .mutation(async ({ input, ctx }) => {
+      await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.entityId), "full");
+      await throwIfPermissionPrincipalsInvalidAsync(
+        ctx.db,
+        "group",
+        input.permissions.map(({ principalId }) => principalId),
+      );
 
-    await handleTransactionsAsync(ctx.db, {
-      async handleAsync(db, schema) {
-        await db.transaction(async (transaction) => {
-          await transaction
-            .delete(schema.boardGroupPermissions)
-            .where(eq(boardGroupPermissions.boardId, input.entityId));
-          if (input.permissions.length === 0) {
-            return;
-          }
-          await transaction.insert(schema.boardGroupPermissions).values(
-            input.permissions.map((permission) => ({
-              groupId: permission.principalId,
-              permission: permission.permission,
-              boardId: input.entityId,
-            })),
-          );
-        });
-      },
-      handleSync(db) {
-        db.transaction((transaction) => {
-          transaction.delete(boardGroupPermissions).where(eq(boardGroupPermissions.boardId, input.entityId)).run();
-          if (input.permissions.length === 0) {
-            return;
-          }
-          transaction
-            .insert(boardGroupPermissions)
-            .values(
+      await handleTransactionsAsync(ctx.db, {
+        async handleAsync(db, schema) {
+          await db.transaction(async (transaction) => {
+            await transaction
+              .delete(schema.boardGroupPermissions)
+              .where(eq(boardGroupPermissions.boardId, input.entityId));
+            if (input.permissions.length === 0) {
+              return;
+            }
+            await transaction.insert(schema.boardGroupPermissions).values(
               input.permissions.map((permission) => ({
                 groupId: permission.principalId,
                 permission: permission.permission,
                 boardId: input.entityId,
               })),
-            )
-            .run();
-        });
-      },
-    });
-  }),
+            );
+          });
+        },
+        handleSync(db) {
+          db.transaction((transaction) => {
+            transaction.delete(boardGroupPermissions).where(eq(boardGroupPermissions.boardId, input.entityId)).run();
+            if (input.permissions.length === 0) {
+              return;
+            }
+            transaction
+              .insert(boardGroupPermissions)
+              .values(
+                input.permissions.map((permission) => ({
+                  groupId: permission.principalId,
+                  permission: permission.permission,
+                  boardId: input.entityId,
+                })),
+              )
+              .run();
+          });
+        },
+      });
+    }),
   addItem: protectedProcedure
     .meta({
       openapi: {
@@ -2497,6 +2450,151 @@ export const boardRouter = createTRPCRouter({
         return input;
       });
     }),
+  getItem: protectedProcedure
+    .meta({
+      openapi: {
+        method: "GET",
+        path: "/api/boards/{boardId}/items/{itemId}",
+        tags: ["boards"],
+        protect: true,
+        summary: "Read one board item",
+        description:
+          "Read one item's kind, widget options, advanced options, integration IDs, and placements in the shape used by the board content. Requires view access to the board.",
+      },
+    })
+    .input(boardItemByIdSchema)
+    .output(boardItemSchema)
+    .query(async ({ ctx, input }) => {
+      await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.boardId), "view");
+
+      return await getBoardItemAsync(ctx.db, input.boardId, input.itemId);
+    }),
+  updateItem: protectedProcedure
+    .meta({
+      openapi: {
+        method: "PATCH",
+        path: "/api/boards/{boardId}/items/{itemId}",
+        tags: ["boards"],
+        protect: true,
+        summary: "Update one board item",
+        description:
+          "Replace the supplied widget options, advanced options, or integration IDs of one item without replacing the board. Omitted fields remain unchanged; the kind and placements cannot be changed here. Requires modify access to the board and use access to newly linked integrations; changing Custom Widget options requires admin permission.",
+      },
+    })
+    .input(updateBoardItemSchema)
+    .output(boardItemSchema)
+    .mutation(async ({ ctx, input }) => {
+      await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.boardId), "modify");
+
+      const storedItem = await getBoardItemAsync(ctx.db, input.boardId, input.itemId);
+      const submittedItem: z.infer<typeof boardItemSchema> = {
+        ...storedItem,
+        options: input.options ?? storedItem.options,
+        advancedOptions: input.advancedOptions ?? storedItem.advancedOptions,
+        integrationIds: input.integrationIds ?? storedItem.integrationIds,
+      };
+
+      await validateWidgetConfigurationsAsync(ctx, [submittedItem], [storedItem]);
+      throwIfCustomWidgetPlacementChangeForbidden({
+        isAdmin: ctx.session.user.permissions.includes("admin"),
+        submittedItems: [submittedItem],
+        storedItems: [storedItem],
+      });
+      if (submittedItem.kind === "timetable" && input.options !== undefined) {
+        await validateTimetableOptionsChangeAsync(submittedItem.options, storedItem.options);
+      }
+
+      const addedIntegrationIds = submittedItem.integrationIds.filter(
+        (integrationId) => !storedItem.integrationIds.includes(integrationId),
+      );
+      const removedIntegrationIds = storedItem.integrationIds.filter(
+        (integrationId) => !submittedItem.integrationIds.includes(integrationId),
+      );
+      const itemUpdate = {
+        options: input.options === undefined ? undefined : superjson.stringify(submittedItem.options),
+        advancedOptions:
+          input.advancedOptions === undefined ? undefined : superjson.stringify(submittedItem.advancedOptions),
+      };
+      const shouldUpdateItem = input.options !== undefined || input.advancedOptions !== undefined;
+
+      await handleTransactionsAsync(ctx.db, {
+        async handleAsync(db, schema) {
+          await db.transaction(async (transaction) => {
+            if (shouldUpdateItem) {
+              await transaction.update(schema.items).set(itemUpdate).where(eq(schema.items.id, submittedItem.id));
+            }
+            if (removedIntegrationIds.length > 0) {
+              await transaction
+                .delete(schema.integrationItems)
+                .where(
+                  and(
+                    eq(schema.integrationItems.itemId, submittedItem.id),
+                    inArray(schema.integrationItems.integrationId, removedIntegrationIds),
+                  ),
+                );
+            }
+            if (addedIntegrationIds.length > 0) {
+              await transaction
+                .insert(schema.integrationItems)
+                .values(addedIntegrationIds.map((integrationId) => ({ itemId: submittedItem.id, integrationId })));
+            }
+          });
+        },
+        handleSync(db) {
+          db.transaction((transaction) => {
+            if (shouldUpdateItem) {
+              transaction.update(items).set(itemUpdate).where(eq(items.id, submittedItem.id)).run();
+            }
+            if (removedIntegrationIds.length > 0) {
+              transaction
+                .delete(integrationItems)
+                .where(
+                  and(
+                    eq(integrationItems.itemId, submittedItem.id),
+                    inArray(integrationItems.integrationId, removedIntegrationIds),
+                  ),
+                )
+                .run();
+            }
+            if (addedIntegrationIds.length > 0) {
+              transaction
+                .insert(integrationItems)
+                .values(addedIntegrationIds.map((integrationId) => ({ itemId: submittedItem.id, integrationId })))
+                .run();
+            }
+          });
+        },
+      });
+
+      return await getBoardItemAsync(ctx.db, input.boardId, input.itemId);
+    }),
+  deleteItem: protectedProcedure
+    .meta({
+      openapi: {
+        method: "DELETE",
+        path: "/api/boards/{boardId}/items/{itemId}",
+        tags: ["boards"],
+        protect: true,
+        summary: "Delete one board item",
+        description:
+          "Remove one item with its placements and integration links without replacing the board. Requires modify access to the board.",
+      },
+    })
+    .input(boardItemByIdSchema)
+    .output(z.void())
+    .mutation(async ({ ctx, input }) => {
+      await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.boardId), "modify");
+
+      const item = await ctx.db.query.items.findFirst({
+        columns: { id: true },
+        where: and(eq(items.id, input.itemId), eq(items.boardId, input.boardId)),
+      });
+      if (!item) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Item not found" });
+      }
+
+      await ctx.db.delete(items).where(eq(items.id, item.id));
+    }),
 });
 
 /**
@@ -2578,6 +2676,284 @@ const noBoardWithSimilarNameAsync = async (db: Database, name: string, ignoredId
       message: "Board with similar name already exists",
     });
   }
+};
+
+const saveBoardLayoutsAsync = async (
+  db: Database,
+  userId: string,
+  boardId: string,
+  getLayoutsToSave: (
+    currentLayouts: Awaited<ReturnType<typeof getFullBoardWithWhereAsync>>["layouts"],
+  ) => z.infer<typeof responsiveBoardLayoutsSchema>,
+) => {
+  const board = await getFullBoardWithWhereAsync(db, eq(boards.id, boardId), userId);
+  const layoutsToSave = getLayoutsToSave(board.layouts);
+  const existingLayoutsById = new Map(board.layouts.map((layout) => [layout.id, layout]));
+  const submittedLayoutIds = new Set(layoutsToSave.map(({ id }) => id));
+  const addedLayouts = layoutsToSave.filter(({ id }) => !existingLayoutsById.has(id));
+  const removedLayouts = board.layouts.filter(({ id }) => !submittedLayoutIds.has(id));
+
+  if (addedLayouts.some((layout) => layout.role !== "custom")) {
+    throw new TRPCError({ code: "BAD_REQUEST", message: "New layouts must use the custom role" });
+  }
+  if (removedLayouts.some((layout) => layout.role !== "custom")) {
+    throw new TRPCError({ code: "BAD_REQUEST", message: "Mobile and Base layouts cannot be removed" });
+  }
+  if (
+    layoutsToSave.some((layout) => {
+      const existingLayout = existingLayoutsById.get(layout.id);
+      return existingLayout && existingLayout.role !== layout.role;
+    })
+  ) {
+    throw new TRPCError({ code: "BAD_REQUEST", message: "Layout roles cannot be changed" });
+  }
+
+  const baseLayout = board.layouts.find((layout) => layout.role === "base");
+  if (!baseLayout) {
+    throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Board must have a Base layout" });
+  }
+
+  const layoutsToInsert: InferInsertModel<typeof layouts>[] = [];
+  const itemSectionLayoutsToInsert: InferInsertModel<typeof itemLayouts>[] = [];
+  const sectionLayoutsToInsert: InferInsertModel<typeof sectionLayouts>[] = [];
+  const savedLayoutIds = new Map<string, string>();
+  const requestedBaseLayout = layoutsToSave.find((layout) => layout.id === baseLayout.id);
+  const resizedBaseLayout =
+    requestedBaseLayout &&
+    (requestedBaseLayout.columnCount !== baseLayout.columnCount ||
+      requestedBaseLayout.leftGutterColumnCount !== baseLayout.leftGutterColumnCount ||
+      requestedBaseLayout.rightGutterColumnCount !== baseLayout.rightGutterColumnCount)
+      ? getUpdatedBoardLayout(board, {
+          previous: {
+            layoutId: baseLayout.id,
+            columnCount: baseLayout.columnCount,
+            leftGutterColumnCount: baseLayout.leftGutterColumnCount,
+            rightGutterColumnCount: baseLayout.rightGutterColumnCount,
+          },
+          current: {
+            layoutId: baseLayout.id,
+            columnCount: requestedBaseLayout.columnCount,
+            leftGutterColumnCount: requestedBaseLayout.leftGutterColumnCount,
+            rightGutterColumnCount: requestedBaseLayout.rightGutterColumnCount,
+          },
+        })
+      : null;
+  const baseSourceElements = resizedBaseLayout ? getElementsForProjectedLayout(resizedBaseLayout) : undefined;
+  const baseSourceGeometry = {
+    layoutId: baseLayout.id,
+    columnCount: requestedBaseLayout?.columnCount ?? baseLayout.columnCount,
+    leftGutterColumnCount: requestedBaseLayout?.leftGutterColumnCount ?? baseLayout.leftGutterColumnCount,
+    rightGutterColumnCount: requestedBaseLayout?.rightGutterColumnCount ?? baseLayout.rightGutterColumnCount,
+  };
+
+  for (const addedLayout of addedLayouts) {
+    const layoutId = createId();
+    savedLayoutIds.set(addedLayout.id, layoutId);
+    layoutsToInsert.push({
+      id: layoutId,
+      name: addedLayout.name,
+      columnCount: addedLayout.columnCount,
+      leftGutterColumnCount: addedLayout.leftGutterColumnCount,
+      rightGutterColumnCount: addedLayout.rightGutterColumnCount,
+      breakpoint: addedLayout.breakpoint,
+      role: "custom",
+      boardId: board.id,
+    });
+
+    const projectedLayout = getUpdatedBoardLayout(board, {
+      previous: {
+        ...baseSourceGeometry,
+        elements: baseSourceElements,
+      },
+      current: {
+        layoutId,
+        columnCount: addedLayout.columnCount,
+        leftGutterColumnCount: addedLayout.leftGutterColumnCount,
+        rightGutterColumnCount: addedLayout.rightGutterColumnCount,
+      },
+    });
+    itemSectionLayoutsToInsert.push(...projectedLayout.itemSectionLayouts);
+    sectionLayoutsToInsert.push(...projectedLayout.sectionLayouts);
+  }
+
+  const itemSectionLayoutsToUpdate: InferInsertModel<typeof itemLayouts>[] = [];
+  const sectionLayoutsToUpdate: InferInsertModel<typeof sectionLayouts>[] = [];
+  const layoutsToUpdate = layoutsToSave.flatMap((layout) => {
+    const dbLayout = existingLayoutsById.get(layout.id);
+    if (!dbLayout) return [];
+    const changed =
+      dbLayout.name !== layout.name ||
+      dbLayout.columnCount !== layout.columnCount ||
+      dbLayout.leftGutterColumnCount !== layout.leftGutterColumnCount ||
+      dbLayout.rightGutterColumnCount !== layout.rightGutterColumnCount ||
+      dbLayout.breakpoint !== layout.breakpoint;
+    if (!changed) return [];
+    return [{ layout, dbLayout }];
+  });
+  const resizeSourcesToUpdate = new Map<string, string | null>();
+
+  for (const { layout: updatedLayout, dbLayout } of layoutsToUpdate) {
+    if (
+      dbLayout.columnCount === updatedLayout.columnCount &&
+      dbLayout.leftGutterColumnCount === updatedLayout.leftGutterColumnCount &&
+      dbLayout.rightGutterColumnCount === updatedLayout.rightGutterColumnCount
+    )
+      continue;
+
+    const projectedLayout =
+      updatedLayout.role === "base" && resizedBaseLayout
+        ? resizedBaseLayout
+        : getUpdatedBoardLayout(board, {
+            previous: {
+              layoutId: dbLayout.id,
+              columnCount: dbLayout.columnCount,
+              leftGutterColumnCount: dbLayout.leftGutterColumnCount,
+              rightGutterColumnCount: dbLayout.rightGutterColumnCount,
+            },
+            current: {
+              layoutId: dbLayout.id,
+              columnCount: updatedLayout.columnCount,
+              leftGutterColumnCount: updatedLayout.leftGutterColumnCount,
+              rightGutterColumnCount: updatedLayout.rightGutterColumnCount,
+            },
+          });
+    resizeSourcesToUpdate.set(updatedLayout.id, projectedLayout.resizeSource);
+    itemSectionLayoutsToUpdate.push(...projectedLayout.itemSectionLayouts);
+    sectionLayoutsToUpdate.push(...projectedLayout.sectionLayouts);
+  }
+
+  const removedLayoutIds = removedLayouts.map((layout) => layout.id);
+
+  await handleTransactionsAsync(db, {
+    async handleAsync(database, schema) {
+      await database.transaction(async (transaction) => {
+        if (layoutsToInsert.length > 0) await transaction.insert(schema.layouts).values(layoutsToInsert);
+        if (itemSectionLayoutsToInsert.length > 0) {
+          await transaction.insert(schema.itemLayouts).values(itemSectionLayoutsToInsert);
+        }
+        if (sectionLayoutsToInsert.length > 0) {
+          await transaction.insert(schema.sectionLayouts).values(sectionLayoutsToInsert);
+        }
+
+        for (const itemLayout of itemSectionLayoutsToUpdate) {
+          await transaction
+            .update(schema.itemLayouts)
+            .set({
+              height: itemLayout.height,
+              width: itemLayout.width,
+              xOffset: itemLayout.xOffset,
+              yOffset: itemLayout.yOffset,
+              sectionId: itemLayout.sectionId,
+            })
+            .where(
+              and(
+                eq(schema.itemLayouts.itemId, itemLayout.itemId),
+                eq(schema.itemLayouts.layoutId, itemLayout.layoutId),
+              ),
+            );
+        }
+        for (const sectionLayout of sectionLayoutsToUpdate) {
+          await transaction
+            .update(schema.sectionLayouts)
+            .set({
+              height: sectionLayout.height,
+              width: sectionLayout.width,
+              xOffset: sectionLayout.xOffset,
+              yOffset: sectionLayout.yOffset,
+              parentSectionId: sectionLayout.parentSectionId,
+            })
+            .where(
+              and(
+                eq(schema.sectionLayouts.sectionId, sectionLayout.sectionId),
+                eq(schema.sectionLayouts.layoutId, sectionLayout.layoutId),
+              ),
+            );
+        }
+        for (const { layout } of layoutsToUpdate) {
+          await transaction
+            .update(schema.layouts)
+            .set({
+              ...getResizeSourceUpdate(resizeSourcesToUpdate, layout.id),
+              name: layout.name,
+              columnCount: layout.columnCount,
+              leftGutterColumnCount: layout.leftGutterColumnCount,
+              rightGutterColumnCount: layout.rightGutterColumnCount,
+              breakpoint: layout.breakpoint,
+            })
+            .where(eq(schema.layouts.id, layout.id));
+        }
+        if (removedLayoutIds.length > 0) {
+          await transaction.delete(schema.layouts).where(inArray(schema.layouts.id, removedLayoutIds));
+        }
+      });
+    },
+    handleSync(database) {
+      database.transaction((transaction) => {
+        if (layoutsToInsert.length > 0) transaction.insert(layouts).values(layoutsToInsert).run();
+        if (itemSectionLayoutsToInsert.length > 0) {
+          transaction.insert(itemLayouts).values(itemSectionLayoutsToInsert).run();
+        }
+        if (sectionLayoutsToInsert.length > 0) {
+          transaction.insert(sectionLayouts).values(sectionLayoutsToInsert).run();
+        }
+
+        for (const itemLayout of itemSectionLayoutsToUpdate) {
+          transaction
+            .update(itemLayouts)
+            .set({
+              height: itemLayout.height,
+              width: itemLayout.width,
+              xOffset: itemLayout.xOffset,
+              yOffset: itemLayout.yOffset,
+              sectionId: itemLayout.sectionId,
+            })
+            .where(and(eq(itemLayouts.itemId, itemLayout.itemId), eq(itemLayouts.layoutId, itemLayout.layoutId)))
+            .run();
+        }
+        for (const sectionLayout of sectionLayoutsToUpdate) {
+          transaction
+            .update(sectionLayouts)
+            .set({
+              height: sectionLayout.height,
+              width: sectionLayout.width,
+              xOffset: sectionLayout.xOffset,
+              yOffset: sectionLayout.yOffset,
+              parentSectionId: sectionLayout.parentSectionId,
+            })
+            .where(
+              and(
+                eq(sectionLayouts.sectionId, sectionLayout.sectionId),
+                eq(sectionLayouts.layoutId, sectionLayout.layoutId),
+              ),
+            )
+            .run();
+        }
+        for (const { layout } of layoutsToUpdate) {
+          transaction
+            .update(layouts)
+            .set({
+              ...getResizeSourceUpdate(resizeSourcesToUpdate, layout.id),
+              name: layout.name,
+              columnCount: layout.columnCount,
+              leftGutterColumnCount: layout.leftGutterColumnCount,
+              rightGutterColumnCount: layout.rightGutterColumnCount,
+              breakpoint: layout.breakpoint,
+            })
+            .where(eq(layouts.id, layout.id))
+            .run();
+        }
+        if (removedLayoutIds.length > 0) transaction.delete(layouts).where(inArray(layouts.id, removedLayoutIds)).run();
+      });
+    },
+  });
+
+  return layoutsToSave
+    .map((layout) => ({
+      ...layout,
+      id: savedLayoutIds.get(layout.id) ?? layout.id,
+      role: existingLayoutsById.get(layout.id)?.role ?? "custom",
+    }))
+    .toSorted((layoutA, layoutB) => layoutA.breakpoint - layoutB.breakpoint);
 };
 
 const getResizeSourceUpdate = (sources: ReadonlyMap<string, string | null>, layoutId: string) => {
@@ -3052,25 +3428,28 @@ const getFullBoardWithWhereAsync = async (
         collapsed: collapseStates.at(0)?.collapsed ?? false,
       }),
     ),
-    items: items
-      .map(({ integrations: itemIntegrations, ...item }) =>
-        parseItem({
-          ...item,
-          layouts: item.layouts.map((layout) => ({
-            xOffset: layout.xOffset,
-            yOffset: layout.yOffset,
-            width: layout.width,
-            height: layout.height,
-            layoutId: layout.layoutId,
-            sectionId: layout.sectionId,
-          })),
-          integrationIds: itemIntegrations.map((item) => item.integrationId),
-          advancedOptions: superjson.parse<BoardItemAdvancedOptions>(item.advancedOptions),
-          options: superjson.parse<Record<string, unknown>>(item.options),
-        }),
-      )
-      .filter((item): item is NonNullable<typeof item> => item !== null),
+    items: items.map(parseStoredItem).filter((item): item is NonNullable<typeof item> => item !== null),
   };
+};
+
+const getBoardItemAsync = async (db: Database, boardId: string, itemId: string) => {
+  const item = await db.query.items.findFirst({
+    where: and(eq(items.id, itemId), eq(items.boardId, boardId)),
+    with: {
+      integrations: {
+        columns: {
+          integrationId: true,
+        },
+      },
+      layouts: true,
+    },
+  });
+  const parsedItem = item ? parseStoredItem(item) : null;
+  if (!parsedItem) {
+    throw new TRPCError({ code: "NOT_FOUND", message: "Item not found" });
+  }
+
+  return parsedItem;
 };
 
 export const boardLayoutsNeedRepair = (
@@ -3106,6 +3485,28 @@ const parseItem = (item: unknown) => {
   }
   return result.data;
 };
+
+const parseStoredItem = ({
+  integrations: itemIntegrations,
+  ...item
+}: InferSelectModel<typeof items> & {
+  integrations: Pick<InferSelectModel<typeof integrationItems>, "integrationId">[];
+  layouts: InferSelectModel<typeof itemLayouts>[];
+}) =>
+  parseItem({
+    ...item,
+    layouts: item.layouts.map((layout) => ({
+      xOffset: layout.xOffset,
+      yOffset: layout.yOffset,
+      width: layout.width,
+      height: layout.height,
+      layoutId: layout.layoutId,
+      sectionId: layout.sectionId,
+    })),
+    integrationIds: itemIntegrations.map((item) => item.integrationId),
+    advancedOptions: superjson.parse<BoardItemAdvancedOptions>(item.advancedOptions),
+    options: superjson.parse<Record<string, unknown>>(item.options),
+  });
 
 const parseSection = (section: unknown) => {
   const result = sectionSchema.safeParse(section);

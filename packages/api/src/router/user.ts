@@ -6,12 +6,12 @@ import { isProviderEnabled } from "@homarr/auth/server";
 import { createId } from "@homarr/common";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import type { Database } from "@homarr/db";
-import { and, eq, handleTransactionsAsync, inArray, like } from "@homarr/db";
+import { and, eq, handleTransactionsAsync, inArray, like, notInArray } from "@homarr/db";
 import { getMaxGroupPositionAsync } from "@homarr/db/queries";
 import { groupMembers, groupPermissions, groups, invites, onboarding, users } from "@homarr/db/schema";
 import { selectUserSchema } from "@homarr/db/validationSchemas";
 import type { SupportedAuthProvider } from "@homarr/definitions";
-import { credentialsAdminGroup, supportedAuthProviders } from "@homarr/definitions";
+import { credentialsAdminGroup, everyoneGroup, supportedAuthProviders } from "@homarr/definitions";
 import { byIdSchema } from "@homarr/validation/common";
 import type { userBaseCreateSchema } from "@homarr/validation/user";
 import {
@@ -43,6 +43,11 @@ import {
   protectedProcedure,
   publicProcedure,
 } from "../trpc";
+import {
+  getUsersOrThrowAsync,
+  throwIfGroupMembersCannotBeManagedLocally,
+  throwIfUserMembershipsNotManagedLocally,
+} from "./group-membership";
 import { throwIfCredentialsDisabled } from "./invite/checks";
 import { getUserPreferencesAsync, updateUserPreferencesAsync } from "./user/preferences";
 
@@ -201,7 +206,7 @@ export const userRouter = createTRPCRouter({
         protect: true,
         summary: "Create a user",
         description:
-          "Create a credentials account and assign the supplied groups. Requires admin permission and credentials authentication to be enabled. The username must be unique and password confirmation must match.",
+          "Create a credentials account, assign the supplied groups, and return the new user's ID. Every group must exist; the user is not created otherwise. Requires admin permission and credentials authentication to be enabled. The username must be unique and password confirmation must match.",
       },
       mcp: {
         enabled: true,
@@ -211,16 +216,17 @@ export const userRouter = createTRPCRouter({
       },
     })
     .input(convertIntersectionToZodObject(userCreateSchema))
-    .output(z.void())
+    .output(z.object({ id: z.string() }))
     .mutation(async ({ ctx, input }) => {
       throwIfCredentialsDisabled();
       await checkUsernameAlreadyTakenAndThrowAsync(ctx.db, "credentials", input.username);
 
-      const userId = await createUserAsync(ctx.db, input);
+      const groupIds = [...new Set(input.groupIds)];
+      await getGroupsOrThrowAsync(ctx.db, groupIds);
 
-      if (input.groupIds.length >= 1) {
-        await ctx.db.insert(groupMembers).values(input.groupIds.map((groupId) => ({ groupId, userId })));
-      }
+      const userId = await createUserAsync(ctx.db, input, groupIds);
+
+      return { id: userId };
     }),
   setProfileImage: protectedProcedure
     .output(z.void())
@@ -288,6 +294,7 @@ export const userRouter = createTRPCRouter({
           email: true,
           emailVerified: true,
           image: true,
+          provider: true,
         }),
       ),
     )
@@ -299,7 +306,7 @@ export const userRouter = createTRPCRouter({
         protect: true,
         summary: "List all users",
         description:
-          "Return user IDs, names, email addresses, verification dates, and profile images. Requires admin permission.",
+          "Return user IDs, names, email addresses, verification dates, profile images, and authentication providers. Requires admin permission.",
       },
       mcp: { enabled: true, description: "List all users (admin only)" },
     })
@@ -311,6 +318,7 @@ export const userRouter = createTRPCRouter({
           email: true,
           emailVerified: true,
           image: true,
+          provider: true,
         },
       });
     }),
@@ -419,27 +427,35 @@ export const userRouter = createTRPCRouter({
   getById: protectedProcedure
     .input(z.object({ userId: z.string() }))
     .output(
-      selectUserSchema.pick({
-        id: true,
-        name: true,
-        email: true,
-        emailVerified: true,
-        image: true,
-        provider: true,
-        homeBoardId: true,
-        mobileHomeBoardId: true,
-        colorScheme: true,
-        byteUnitSystem: true,
-        firstDayOfWeek: true,
-        pingIconsEnabled: true,
-        enableRightClickOnWidgets: true,
-        headerPreferences: true,
-        defaultSearchEngineId: true,
-        openSearchInNewTab: true,
-        ddgBangs: true,
-        completedManageTour: true,
-        completedBoardTour: true,
-      }),
+      selectUserSchema
+        .pick({
+          id: true,
+          name: true,
+          email: true,
+          emailVerified: true,
+          image: true,
+          provider: true,
+          homeBoardId: true,
+          mobileHomeBoardId: true,
+          colorScheme: true,
+          byteUnitSystem: true,
+          firstDayOfWeek: true,
+          pingIconsEnabled: true,
+          enableRightClickOnWidgets: true,
+          headerPreferences: true,
+          defaultSearchEngineId: true,
+          openSearchInNewTab: true,
+          ddgBangs: true,
+          completedManageTour: true,
+          completedBoardTour: true,
+        })
+        .extend({
+          groupIds: z
+            .array(z.string())
+            .describe(
+              "IDs of the groups the user is a member of. Includes the everyone group once the user has signed in or was assigned to it on creation.",
+            ),
+        }),
     )
     .meta({
       openapi: {
@@ -449,7 +465,7 @@ export const userRouter = createTRPCRouter({
         protect: true,
         summary: "Get a user",
         description:
-          "Return a user's profile, authentication provider, and preferences. Users can read themselves; reading another user requires admin permission.",
+          "Return a user's profile, authentication provider, preferences, and group memberships. Users can read themselves; reading another user requires admin permission.",
       },
       mcp: { enabled: true, description: "Get user details by user ID. REQUIRED: userId (string)" },
     })
@@ -483,6 +499,13 @@ export const userRouter = createTRPCRouter({
           completedManageTour: true,
           completedBoardTour: true,
         },
+        with: {
+          groups: {
+            columns: {
+              groupId: true,
+            },
+          },
+        },
         where: eq(users.id, input.userId),
       });
 
@@ -493,7 +516,90 @@ export const userRouter = createTRPCRouter({
         });
       }
 
-      return user;
+      const { groups: memberships, ...userWithoutMemberships } = user;
+      return {
+        ...userWithoutMemberships,
+        groupIds: memberships.map((membership) => membership.groupId),
+      };
+    }),
+  setGroups: permissionRequiredProcedure
+    .requiresPermission("admin")
+    .input(z.object({ userId: z.string(), groupIds: z.array(z.string()) }))
+    .output(z.object({ groupIds: z.array(z.string()) }))
+    .meta({
+      openapi: {
+        method: "PUT",
+        path: "/api/users/{userId}/groups",
+        tags: ["users"],
+        protect: true,
+        summary: "Set a user's groups",
+        description:
+          "Replace the groups of a user and return the resulting group IDs. The everyone group membership is kept automatically. Fails when the user's groups are synchronized from an external provider. Requires admin permission.",
+      },
+    })
+    .mutation(async ({ ctx, input }) => {
+      throwIfGroupMembersCannotBeManagedLocally();
+      throwIfUserMembershipsNotManagedLocally(await getUsersOrThrowAsync(ctx.db, [input.userId]));
+
+      const dbGroups = await getGroupsOrThrowAsync(ctx.db, input.groupIds);
+
+      const groupMemberRows = dbGroups
+        .filter((group) => group.name !== everyoneGroup)
+        .map((group) => ({ groupId: group.id, userId: input.userId }));
+
+      await handleTransactionsAsync(ctx.db, {
+        async handleAsync(db, schema) {
+          await db.transaction(async (transaction) => {
+            await transaction
+              .delete(schema.groupMembers)
+              .where(
+                and(
+                  eq(schema.groupMembers.userId, input.userId),
+                  notInArray(
+                    schema.groupMembers.groupId,
+                    transaction
+                      .select({ id: schema.groups.id })
+                      .from(schema.groups)
+                      .where(eq(schema.groups.name, everyoneGroup)),
+                  ),
+                ),
+              );
+            if (groupMemberRows.length === 0) {
+              return;
+            }
+            await transaction.insert(schema.groupMembers).values(groupMemberRows);
+          });
+        },
+        handleSync(db) {
+          db.transaction((transaction) => {
+            transaction
+              .delete(groupMembers)
+              .where(
+                and(
+                  eq(groupMembers.userId, input.userId),
+                  notInArray(
+                    groupMembers.groupId,
+                    transaction.select({ id: groups.id }).from(groups).where(eq(groups.name, everyoneGroup)),
+                  ),
+                ),
+              )
+              .run();
+            if (groupMemberRows.length === 0) {
+              return;
+            }
+            transaction.insert(groupMembers).values(groupMemberRows).run();
+          });
+        },
+      });
+
+      const memberships = await ctx.db.query.groupMembers.findMany({
+        columns: {
+          groupId: true,
+        },
+        where: eq(groupMembers.userId, input.userId),
+      });
+
+      return { groupIds: memberships.map((membership) => membership.groupId) };
     }),
   editProfile: protectedProcedure
     .input(userEditProfileSchema)
@@ -506,7 +612,7 @@ export const userRouter = createTRPCRouter({
         protect: true,
         summary: "Update a user profile",
         description:
-          "Update a credentials account's username and email. Users can update themselves; updating another user requires admin permission. External-provider profiles cannot be edited, and username changes are disabled in demo mode.",
+          "Update a credentials account's username and email. Omitting the email keeps it; null or an empty string removes it. Users can update themselves; updating another user requires admin permission. External-provider profiles cannot be edited, and username changes are disabled in demo mode.",
       },
     })
     .mutation(async ({ input, ctx }) => {
@@ -546,13 +652,13 @@ export const userRouter = createTRPCRouter({
 
       await checkUsernameAlreadyTakenAndThrowAsync(ctx.db, "credentials", input.name, input.id);
 
-      const emailDirty = input.email && user.email !== input.email;
+      const emailChanged = input.email !== undefined && input.email !== user.email;
       await ctx.db
         .update(users)
         .set({
           name: input.name,
-          email: emailDirty === true ? input.email : undefined,
-          emailVerified: emailDirty === true ? null : undefined,
+          email: emailChanged ? input.email : undefined,
+          emailVerified: emailChanged ? null : undefined,
         })
         .where(eq(users.id, input.id));
     }),
@@ -906,17 +1012,65 @@ export const userRouter = createTRPCRouter({
   }),
 });
 
-const createUserAsync = async (db: Database, input: Omit<z.infer<typeof userBaseCreateSchema>, "groupIds">) => {
+const createUserAsync = async (
+  db: Database,
+  input: Omit<z.infer<typeof userBaseCreateSchema>, "groupIds">,
+  groupIds: string[],
+) => {
   const hashedPassword = await hashPasswordAsync(input.password);
 
   const userId = createId();
-  await db.insert(users).values({
+  const userRow = {
     id: userId,
     name: input.username,
     email: input.email,
     password: hashedPassword,
+  };
+  const groupMemberRows = groupIds.map((groupId) => ({ groupId, userId }));
+
+  await handleTransactionsAsync(db, {
+    async handleAsync(database, schema) {
+      await database.transaction(async (transaction) => {
+        await transaction.insert(schema.users).values(userRow);
+        if (groupMemberRows.length === 0) {
+          return;
+        }
+        await transaction.insert(schema.groupMembers).values(groupMemberRows);
+      });
+    },
+    handleSync(database) {
+      database.transaction((transaction) => {
+        transaction.insert(users).values(userRow).run();
+        if (groupMemberRows.length === 0) {
+          return;
+        }
+        transaction.insert(groupMembers).values(groupMemberRows).run();
+      });
+    },
   });
   return userId;
+};
+
+const getGroupsOrThrowAsync = async (db: Database, groupIds: string[]) => {
+  if (groupIds.length === 0) return [];
+
+  const dbGroups = await db.query.groups.findMany({
+    columns: {
+      id: true,
+      name: true,
+    },
+    where: inArray(groups.id, groupIds),
+  });
+
+  const dbGroupIds = new Set(dbGroups.map((group) => group.id));
+  if (groupIds.some((groupId) => !dbGroupIds.has(groupId))) {
+    throw new TRPCError({
+      code: "NOT_FOUND",
+      message: "Group not found",
+    });
+  }
+
+  return dbGroups;
 };
 
 const checkUsernameAlreadyTakenAndThrowAsync = async (

@@ -1,14 +1,18 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
+import type { TRPCError } from "@trpc/server";
 import { describe, expect, test, vi } from "vitest";
 
 import type { Session } from "@homarr/auth";
-import { createId } from "@homarr/common";
+import { createId, FlattenError } from "@homarr/common";
 import { encryptSecret } from "@homarr/common/server";
 import { apps, integrations, integrationSecrets, integrationUserPermissions, users } from "@homarr/db/schema";
 import { createDb } from "@homarr/db/test";
 import type { GroupPermissionKey } from "@homarr/definitions";
+import type * as RedisPackage from "@homarr/redis";
 
 import { integrationRouter } from "../../integration/integration-router";
+import { testConnectionAsync } from "../../integration/integration-test-connection";
+import type * as TestConnectionModule from "../../integration/integration-test-connection";
 import { expectToBeDefined } from "../helper";
 
 const defaultUserId = createId();
@@ -24,9 +28,27 @@ const defaultSessionWithPermissions = (permissions: GroupPermissionKey[] = []) =
 
 // Mock the auth module to return an empty session
 vi.mock("@homarr/auth", () => ({ auth: () => ({}) as Session }));
-vi.mock("../../integration/integration-test-connection", () => ({
-  testConnectionAsync: async () => await Promise.resolve({ success: true }),
+// Tests run without Redis, so the widget cache cannot be invalidated
+vi.mock("@homarr/redis", async (importOriginal) => ({
+  ...(await importOriginal<typeof RedisPackage>()),
+  invalidateIntegrationCacheAsync: vi.fn(),
 }));
+vi.mock("../../integration/integration-test-connection", async (importOriginal) => ({
+  ...(await importOriginal<typeof TestConnectionModule>()),
+  testConnectionAsync: vi.fn(async () => await Promise.resolve({ success: true })),
+}));
+
+const mockFailedConnectionTest = () =>
+  vi.mocked(testConnectionAsync).mockResolvedValueOnce({
+    success: false,
+    // Only the integrations package can create test connection errors
+    error: {
+      type: "authorization",
+      name: "TestConnectionError",
+      message: "Unable to connect to the integration",
+      data: { statusCode: 401, reason: "unauthorized" },
+    } as never,
+  });
 
 describe("all should return all integrations", () => {
   test("with integration full access should return all integrations", async () => {
@@ -472,7 +494,6 @@ describe("create should create a new integration", () => {
       kind: "jellyfin" as const,
       url: "http://jellyfin.local",
       secrets: [{ kind: "apiKey" as const, value: "1234567890" }],
-      attemptSearchEngineCreation: false,
     };
 
     const fakeNow = new Date("2023-07-01T00:00:00Z");
@@ -516,7 +537,6 @@ describe("create should create a new integration", () => {
       kind: "jellyseerr" as const,
       url: "http://jellyseerr.local",
       secrets: [{ kind: "apiKey" as const, value: "1234567890" }],
-      attemptSearchEngineCreation: true,
     };
 
     const fakeNow = new Date("2023-07-01T00:00:00Z");
@@ -555,7 +575,6 @@ describe("create should create a new integration", () => {
       kind: "jellyfin" as const,
       url: "http://jellyfin.local",
       secrets: [{ kind: "apiKey" as const, value: "1234567890" }],
-      attemptSearchEngineCreation: false,
       app: {
         name: "Jellyfin",
         description: null,
@@ -612,7 +631,6 @@ describe("create should create a new integration", () => {
       kind: "jellyfin" as const,
       url: "http://jellyfin.local",
       secrets: [{ kind: "apiKey" as const, value: "1234567890" }],
-      attemptSearchEngineCreation: false,
       app: {
         id: appId,
       },
@@ -639,6 +657,161 @@ describe("create should create a new integration", () => {
     expect(dbSecret!.updatedAt).toEqual(fakeNow);
   });
 
+  test("with a failed connection test should throw bad request with the test details and not create the integration", async () => {
+    // Arrange
+    const db = createDb();
+    const caller = integrationRouter.createCaller({
+      db,
+      deviceType: undefined,
+      session: defaultSessionWithPermissions(["integration-create"]),
+    });
+    mockFailedConnectionTest();
+
+    // Act
+    const failure = await caller
+      .create({
+        name: "Jellyfin",
+        kind: "jellyfin",
+        url: "http://jellyfin.local",
+        secrets: [{ kind: "apiKey", value: "1234567890" }],
+      })
+      .catch((error: unknown) => error);
+
+    // Assert
+    expect(failure).toMatchObject({ code: "BAD_REQUEST", message: "authorization" });
+    // The error formatter passes flattened causes to the integration forms
+    const { cause } = failure as TRPCError;
+    expect(cause).toBeInstanceOf(FlattenError);
+    expect((cause as FlattenError).flatten()).toMatchObject({ type: "authorization", data: { statusCode: 401 } });
+    expect(await db.query.integrations.findFirst()).toBeUndefined();
+  });
+
+  test("with a failed connection test should only return the failure category to REST callers", async () => {
+    // Arrange
+    const db = createDb();
+    const caller = integrationRouter.createCaller({
+      db,
+      deviceType: undefined,
+      session: defaultSessionWithPermissions(["integration-create"]),
+      isOpenApiRequest: true,
+    });
+    mockFailedConnectionTest();
+
+    // Act
+    const failure = await caller
+      .create({
+        name: "Jellyfin",
+        kind: "jellyfin",
+        url: "http://jellyfin.local",
+        secrets: [{ kind: "apiKey", value: "1234567890" }],
+      })
+      .catch((error: unknown) => error);
+
+    // Assert
+    expect(failure).toMatchObject({ code: "BAD_REQUEST", message: "authorization" });
+    expect((failure as TRPCError).cause).toBeUndefined();
+  });
+
+  test("with a secret kind listed twice should throw bad request and not create the integration", async () => {
+    // Arrange
+    const db = createDb();
+    const caller = integrationRouter.createCaller({
+      db,
+      deviceType: undefined,
+      session: defaultSessionWithPermissions(["integration-create"]),
+    });
+
+    // Act
+    const actAsync = async () =>
+      await caller.create({
+        name: "Jellyfin",
+        kind: "jellyfin",
+        url: "http://jellyfin.local",
+        secrets: [
+          { kind: "apiKey", value: "1234567890" },
+          { kind: "apiKey", value: "0987654321" },
+        ],
+        skipConnectionTest: true,
+      });
+
+    // Assert
+    await expect(actAsync()).rejects.toMatchObject({ code: "BAD_REQUEST" });
+    expect(await db.query.integrations.findFirst()).toBeUndefined();
+  });
+
+  test("with skipConnectionTest should create the integration without testing the connection", async () => {
+    // Arrange
+    const db = createDb();
+    const caller = integrationRouter.createCaller({
+      db,
+      deviceType: undefined,
+      session: defaultSessionWithPermissions(["integration-create"]),
+    });
+
+    // Act
+    const result = await caller.create({
+      name: "Jellyfin",
+      kind: "jellyfin",
+      url: "http://jellyfin.local",
+      secrets: [{ kind: "apiKey", value: "1234567890" }],
+      skipConnectionTest: true,
+    });
+
+    // Assert
+    expect(testConnectionAsync).not.toHaveBeenCalled();
+    const dbIntegration = await db.query.integrations.findFirst({ with: { secrets: true } });
+    expect(dbIntegration?.id).toBe(result.integration.id);
+    expect(dbIntegration?.secrets.map((secret) => secret.kind)).toEqual(["apiKey"]);
+  });
+
+  test("with skipConnectionTest should still require the secrets of the integration kind", async () => {
+    // Arrange
+    const db = createDb();
+    const caller = integrationRouter.createCaller({
+      db,
+      deviceType: undefined,
+      session: defaultSessionWithPermissions(["integration-create"]),
+    });
+
+    // Act
+    const actAsync = async () =>
+      await caller.create({
+        name: "Jellyfin",
+        kind: "jellyfin",
+        url: "http://jellyfin.local",
+        secrets: [],
+        skipConnectionTest: true,
+      });
+
+    // Assert
+    await expect(actAsync()).rejects.toMatchObject({ code: "BAD_REQUEST" });
+    expect(await db.query.integrations.findFirst()).toBeUndefined();
+  });
+
+  test("with an unknown linked app should throw app not found", async () => {
+    // Arrange
+    const db = createDb();
+    const caller = integrationRouter.createCaller({
+      db,
+      deviceType: undefined,
+      session: defaultSessionWithPermissions(["integration-create"]),
+    });
+
+    // Act
+    const actAsync = async () =>
+      await caller.create({
+        name: "Jellyfin",
+        kind: "jellyfin",
+        url: "http://jellyfin.local",
+        secrets: [{ kind: "apiKey", value: "1234567890" }],
+        app: { id: createId() },
+      });
+
+    // Assert
+    await expect(actAsync()).rejects.toMatchObject({ code: "NOT_FOUND", message: "App not found" });
+    expect(await db.query.integrations.findFirst()).toBeUndefined();
+  });
+
   test("without create integration access should throw permission error", async () => {
     // Arrange
     const db = createDb();
@@ -652,7 +825,6 @@ describe("create should create a new integration", () => {
       kind: "jellyfin" as const,
       url: "http://jellyfin.local",
       secrets: [{ kind: "apiKey" as const, value: "1234567890" }],
-      attemptSearchEngineCreation: false,
     };
 
     // Act
@@ -675,7 +847,6 @@ describe("create should create a new integration", () => {
       kind: "jellyfin" as const,
       url: "http://jellyfin.local",
       secrets: [{ kind: "apiKey" as const, value: "1234567890" }],
-      attemptSearchEngineCreation: false,
       app: {
         name: "Jellyfin",
         description: null,
@@ -777,6 +948,175 @@ describe("update should update an integration", () => {
     expect(apiKey.value).not.toEqual(input.secrets[2]!.value);
   });
 
+  test("with a failed connection test should throw bad request and keep the integration unchanged", async () => {
+    // Arrange
+    const db = createDb();
+    const caller = integrationRouter.createCaller({
+      db,
+      deviceType: undefined,
+      session: defaultSessionWithPermissions(["integration-full-all"]),
+    });
+    const integrationId = createId();
+    await db
+      .insert(integrations)
+      .values({ id: integrationId, name: "Sonarr", kind: "sonarr", url: "http://sonarr.local" });
+    mockFailedConnectionTest();
+
+    // Act
+    const actAsync = async () =>
+      await caller.update({
+        id: integrationId,
+        name: "Renamed Sonarr",
+        url: "http://sonarr.local",
+        secrets: [{ kind: "apiKey", value: "1234567890" }],
+        appId: null,
+      });
+
+    // Assert
+    await expect(actAsync()).rejects.toMatchObject({ code: "BAD_REQUEST", message: "authorization" });
+    const dbIntegration = await db.query.integrations.findFirst({ with: { secrets: true } });
+    expect(dbIntegration?.name).toBe("Sonarr");
+    expect(dbIntegration?.secrets).toEqual([]);
+  });
+
+  test("with skipConnectionTest should reject secrets that leave the integration incomplete", async () => {
+    // Arrange
+    const db = createDb();
+    const caller = integrationRouter.createCaller({
+      db,
+      deviceType: undefined,
+      session: defaultSessionWithPermissions(["integration-full-all"]),
+    });
+    const integrationId = createId();
+    await db
+      .insert(integrations)
+      .values({ id: integrationId, name: "Sonarr", kind: "sonarr", url: "http://sonarr.local" });
+    await db.insert(integrationSecrets).values({ kind: "apiKey", value: encryptSecret("1234567890"), integrationId });
+
+    // Act
+    const keepAsync = async () =>
+      await caller.update({
+        id: integrationId,
+        name: "Sonarr",
+        url: "http://sonarr.local",
+        secrets: [{ kind: "apiKey", value: null }],
+        appId: null,
+        skipConnectionTest: true,
+      });
+    const removeAsync = async () =>
+      await caller.update({
+        id: integrationId,
+        name: "Sonarr",
+        url: "http://sonarr.local",
+        secrets: [],
+        appId: null,
+        skipConnectionTest: true,
+      });
+
+    // Assert
+    await expect(keepAsync()).resolves.toBeUndefined();
+    await expect(removeAsync()).rejects.toMatchObject({ code: "BAD_REQUEST" });
+    expect(testConnectionAsync).not.toHaveBeenCalled();
+    const dbSecrets = await db.query.integrationSecrets.findMany();
+    expect(dbSecrets.map((secret) => secret.kind)).toEqual(["apiKey"]);
+  });
+
+  test("with a connection test should reject secrets that leave the integration incomplete", async () => {
+    // Arrange
+    const db = createDb();
+    const caller = integrationRouter.createCaller({
+      db,
+      deviceType: undefined,
+      session: defaultSessionWithPermissions(["integration-full-all"]),
+    });
+    const integrationId = createId();
+    await db
+      .insert(integrations)
+      .values({ id: integrationId, name: "Sonarr", kind: "sonarr", url: "http://sonarr.local" });
+    await db.insert(integrationSecrets).values({ kind: "apiKey", value: encryptSecret("1234567890"), integrationId });
+    const { testConnectionAsync: actualTestConnectionAsync } = await vi.importActual<typeof TestConnectionModule>(
+      "../../integration/integration-test-connection",
+    );
+    vi.mocked(testConnectionAsync).mockImplementationOnce(actualTestConnectionAsync);
+
+    // Act
+    const actAsync = async () =>
+      await caller.update({
+        id: integrationId,
+        name: "Sonarr",
+        url: "http://sonarr.local",
+        secrets: [],
+        appId: null,
+      });
+
+    // Assert
+    await expect(actAsync()).rejects.toMatchObject({
+      code: "BAD_REQUEST",
+      message: "No secret defined for this integration",
+    });
+    const dbSecrets = await db.query.integrationSecrets.findMany();
+    expect(dbSecrets.map((secret) => secret.kind)).toEqual(["apiKey"]);
+  });
+
+  test("with an empty secret value should throw bad request and keep the stored secret", async () => {
+    // Arrange
+    const db = createDb();
+    const caller = integrationRouter.createCaller({
+      db,
+      deviceType: undefined,
+      session: defaultSessionWithPermissions(["integration-full-all"]),
+    });
+    const integrationId = createId();
+    await db
+      .insert(integrations)
+      .values({ id: integrationId, name: "Sonarr", kind: "sonarr", url: "http://sonarr.local" });
+    const storedValue = encryptSecret("1234567890");
+    await db.insert(integrationSecrets).values({ kind: "apiKey", value: storedValue, integrationId });
+
+    // Act
+    const actAsync = async () =>
+      await caller.update({
+        id: integrationId,
+        name: "Sonarr",
+        url: "http://sonarr.local",
+        secrets: [{ kind: "apiKey", value: "" }],
+        appId: null,
+        skipConnectionTest: true,
+      });
+
+    // Assert
+    await expect(actAsync()).rejects.toMatchObject({ code: "BAD_REQUEST" });
+    expect((await db.query.integrationSecrets.findFirst())?.value).toBe(storedValue);
+  });
+
+  test("with a non http url should throw bad request", async () => {
+    // Arrange
+    const db = createDb();
+    const caller = integrationRouter.createCaller({
+      db,
+      deviceType: undefined,
+      session: defaultSessionWithPermissions(["integration-full-all"]),
+    });
+    const integrationId = createId();
+    await db
+      .insert(integrations)
+      .values({ id: integrationId, name: "Sonarr", kind: "sonarr", url: "http://sonarr.local" });
+
+    // Act
+    const actAsync = async () =>
+      await caller.update({
+        id: integrationId,
+        name: "Sonarr",
+        url: "javascript:alert(1)",
+        secrets: [],
+        appId: null,
+      });
+
+    // Assert
+    await expect(actAsync()).rejects.toMatchObject({ code: "BAD_REQUEST" });
+    expect((await db.query.integrations.findFirst())?.url).toBe("http://sonarr.local");
+  });
+
   test("with full access should throw an error if the integration does not exist", async () => {
     const db = createDb();
     const caller = integrationRouter.createCaller({
@@ -868,5 +1208,93 @@ describe("delete should delete an integration", () => {
 
     // Assert
     await expect(actAsync()).rejects.toThrow("Integration not found");
+  });
+});
+
+describe("saveUserIntegrationPermissions should save user integration permissions", () => {
+  test("should reject unknown users without replacing existing permissions", async () => {
+    // Arrange
+    const db = createDb();
+    const caller = integrationRouter.createCaller({
+      db,
+      deviceType: undefined,
+      session: defaultSessionWithPermissions(["integration-full-all"]),
+    });
+    const userId = createId();
+    await db.insert(users).values({ id: userId });
+    const integrationId = createId();
+    await db
+      .insert(integrations)
+      .values({ id: integrationId, name: "Sonarr", kind: "sonarr", url: "http://sonarr.local" });
+    await db.insert(integrationUserPermissions).values({ userId, integrationId, permission: "use" });
+
+    // Act
+    const actAsync = async () =>
+      await caller.saveUserIntegrationPermissions({
+        entityId: integrationId,
+        permissions: [{ principalId: createId(), permission: "full" }],
+      });
+
+    // Assert
+    await expect(actAsync()).rejects.toMatchObject({ code: "NOT_FOUND", message: "User not found" });
+    expect(await db.query.integrationUserPermissions.findMany()).toEqual([
+      { userId, integrationId, permission: "use" },
+    ]);
+  });
+
+  test("should reject a user listed more than once", async () => {
+    // Arrange
+    const db = createDb();
+    const caller = integrationRouter.createCaller({
+      db,
+      deviceType: undefined,
+      session: defaultSessionWithPermissions(["integration-full-all"]),
+    });
+    const userId = createId();
+    await db.insert(users).values({ id: userId });
+    const integrationId = createId();
+    await db
+      .insert(integrations)
+      .values({ id: integrationId, name: "Sonarr", kind: "sonarr", url: "http://sonarr.local" });
+
+    // Act
+    const actAsync = async () =>
+      await caller.saveUserIntegrationPermissions({
+        entityId: integrationId,
+        permissions: [
+          { principalId: userId, permission: "use" },
+          { principalId: userId, permission: "full" },
+        ],
+      });
+
+    // Assert
+    await expect(actAsync()).rejects.toMatchObject({ code: "BAD_REQUEST", message: "Principal IDs must be unique" });
+  });
+});
+
+describe("saveGroupIntegrationPermissions should save group integration permissions", () => {
+  test("should reject unknown groups", async () => {
+    // Arrange
+    const db = createDb();
+    const caller = integrationRouter.createCaller({
+      db,
+      deviceType: undefined,
+      session: defaultSessionWithPermissions(["integration-full-all"]),
+    });
+    const integrationId = createId();
+    await db
+      .insert(integrations)
+      .values({ id: integrationId, name: "Sonarr", kind: "sonarr", url: "http://sonarr.local" });
+
+    // Act
+    const actAsync = async () =>
+      await caller.saveGroupIntegrationPermissions({
+        entityId: integrationId,
+        permissions: [{ principalId: createId(), permission: "use" }],
+      });
+
+    // Assert
+    await expect(actAsync()).rejects.toMatchObject({ code: "NOT_FOUND", message: "Group not found" });
+    expect(await db.query.integrationGroupPermissions.findMany()).toEqual([]);
   });
 });

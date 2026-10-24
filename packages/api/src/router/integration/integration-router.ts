@@ -20,11 +20,13 @@ import {
 } from "@homarr/db/schema";
 import type {
   GroupPermissionKey,
+  IntegrationKind,
   IntegrationKindByCategory,
   IntegrationPermission,
   IntegrationSecretKind,
 } from "@homarr/definitions";
 import {
+  getAllSecretKindOptions,
   getIntegrationKindsByCategory,
   getPermissionsWithParents,
   integrationCategories,
@@ -39,19 +41,25 @@ import { mediaRequestListRequestHandler } from "@homarr/request-handler/media-re
 import { mediaRequestStatsRequestHandler } from "@homarr/request-handler/media-request-stats";
 import { byIdSchema } from "@homarr/validation/common";
 import {
+  integrationCreateResultSchema,
   integrationCreateSchema,
+  integrationDetailsSchema,
+  integrationKindDefinitionSchema,
+  integrationPermissionsSchema,
   integrationSavePermissionsSchema,
+  integrationSummarySchema,
   integrationUpdateSchema,
 } from "@homarr/validation/integration";
 import { mediaRequestOptionsSchema, mediaRequestRequestSchema } from "@homarr/validation/widgets/media-request";
 
 import { createOneIntegrationMiddleware } from "../../middlewares/integration";
 import { createTRPCRouter, permissionRequiredProcedure, protectedProcedure, publicProcedure } from "../../trpc";
+import { throwIfPermissionPrincipalsInvalidAsync } from "../permission-principals";
 import { throwIfActionForbiddenAsync } from "./integration-access";
 import { integrationRequestProcedure } from "./integration-request";
 import { MissingSecretError, testConnectionAsync } from "./integration-test-connection";
 import { integrationTestStoredConnectionProcedure } from "./integration-test-stored-connection";
-import { mapTestConnectionError } from "./map-test-connection-error";
+import { mapTestConnectionError, TestConnectionFailedError } from "./map-test-connection-error";
 
 // Calling `searchAsync` on a union of integration classes types the result as only one member's, so the union is
 // spelled out per kind: Overseerr's results keep their media type, Thingport's keep their own shape.
@@ -66,28 +74,48 @@ export const integrationRouter = createTRPCRouter({
   testConnection: integrationTestStoredConnectionProcedure,
   getKinds: publicProcedure
     .meta({
+      openapi: {
+        method: "GET",
+        path: "/api/integrations/kinds",
+        tags: ["integrations"],
+        protect: true,
+        summary: "List integration kinds",
+        description:
+          "Return every supported integration kind with its name, categories and secret kind options. An integration needs all secret kinds of one option in requiredSecrets; an empty option means no secrets are needed.",
+      },
       mcp: {
         enabled: true,
         description:
           "List integration kinds and required secret fields. Saved integrations can be used with integration_request and Custom Widget sources when permissions.hasFullAccess is true, except iCalendar feeds (iCal) and the TrueNAS WebSocket API, which are not generic HTTP APIs. qBittorrent generic HTTP requires an API key and qBittorrent 5.2.0 or newer. Reuse saved credentials instead of asking for secrets again.",
       },
     })
+    .output(z.array(integrationKindDefinitionSchema))
     .query(() => {
       return objectEntries(integrationDefs).map(([kind, def]) => ({
         kind,
         name: def.name,
-        category: def.category,
-        requiredSecrets: def.secretKinds,
+        category: [...def.category],
+        requiredSecrets: getAllSecretKindOptions(kind),
       }));
     }),
   all: protectedProcedure
     .meta({
+      openapi: {
+        method: "GET",
+        path: "/api/integrations",
+        tags: ["integrations"],
+        protect: true,
+        summary: "List accessible integrations",
+        description:
+          "Return the integrations the caller can use, with the caller's use, interact and full access flags. Secrets are not included.",
+      },
       mcp: {
         enabled: true,
         description:
           "List accessible configured integrations with id, name, kind, url, and permissions. Use id as integrationId. Native read tools require permissions.hasUseAccess; native action tools require permissions.hasInteractAccess. Custom Widget integration sources and arbitrary HTTP requests require permissions.hasFullAccess, including GET. False means the API key owner lacks that permission level; never bypass it.",
       },
     })
+    .output(z.array(integrationSummarySchema))
     .query(async ({ ctx }) => {
       return await getAccessibleIntegrationsAsync(ctx);
     }),
@@ -165,6 +193,15 @@ export const integrationRouter = createTRPCRouter({
   }),
   byId: protectedProcedure
     .meta({
+      openapi: {
+        method: "GET",
+        path: "/api/integrations/{id}",
+        tags: ["integrations"],
+        protect: true,
+        summary: "Get an integration",
+        description:
+          "Return an integration with its linked app and stored secret kinds. Secret values are only returned for public kinds such as usernames, all others are null; updatedAt shows when each secret was last saved. Requires full access to the integration.",
+      },
       mcp: {
         enabled: true,
         description:
@@ -172,6 +209,7 @@ export const integrationRouter = createTRPCRouter({
       },
     })
     .input(byIdSchema)
+    .output(integrationDetailsSchema)
     .query(async ({ ctx, input }) => {
       const integrationWhere = eq(integrations.id, input.id);
 
@@ -236,14 +274,24 @@ export const integrationRouter = createTRPCRouter({
   create: permissionRequiredProcedure
     .requiresPermission("integration-create")
     .meta({
+      openapi: {
+        method: "POST",
+        path: "/api/integrations",
+        tags: ["integrations"],
+        protect: true,
+        summary: "Create an integration",
+        description:
+          "Create an integration with its secrets and optionally link or create an app. Secrets must cover one secret kind option from GET /api/integrations/kinds. The connection is tested before saving unless skipConnectionTest is set; a failed test returns BAD_REQUEST with the failure category. Requires integration-create permission, and app-create permission for a new app.",
+      },
       mcp: {
         enabled: true,
         effect: "additive",
         description:
-          "Create a new integration (connection to an external service). REQUIRED fields: name, url (http/https), kind, secrets, attemptSearchEngineCreation. The 'secrets' field is REQUIRED and must be a non-empty array — call integration_getKinds first to see which secret kinds each integration type needs. Example for Radarr: secrets=[{kind:'apiKey', value:'your-radarr-api-key'}]. Example for Proxmox: secrets=[{kind:'tokenId', value:'...'}, {kind:'personalAccessToken', value:'...'}, {kind:'realm', value:'pam'}]. The connection is tested before saving — if secrets are wrong, an error is returned. Set attemptSearchEngineCreation to false unless explicitly requested. The 'app' field is optional — pass {id:'...'} to link to an existing app, or omit it. Returns integration details and appId, which is null when no app is linked or created.",
+          "Create a new integration (connection to an external service). REQUIRED fields: name, url (http/https), kind, secrets. The 'secrets' field is REQUIRED and must be a non-empty array — call integration_getKinds first to see which secret kinds each integration type needs. Example for Radarr: secrets=[{kind:'apiKey', value:'your-radarr-api-key'}]. Example for Proxmox: secrets=[{kind:'tokenId', value:'...'}, {kind:'personalAccessToken', value:'...'}, {kind:'realm', value:'pam'}]. The connection is tested before saving — if it fails, nothing is saved and an error is returned. Leave skipConnectionTest unset unless the user explicitly asks to save an unreachable integration. The 'app' field is optional — pass {id:'...'} to link to an existing app, or omit it. Returns integration details and appId, which is null when no app is linked or created.",
       },
     })
     .input(integrationCreateSchema)
+    .output(integrationCreateResultSchema)
     .mutation(async ({ ctx, input }) => {
       logger.info("Creating integration", {
         name: input.name,
@@ -258,26 +306,21 @@ export const integrationRouter = createTRPCRouter({
         });
       }
 
-      const result = await testConnectionAsync({
-        id: "new",
-        name: input.name,
-        url: input.url,
-        kind: input.kind,
-        secrets: input.secrets,
-      }).catch((error) => {
-        if (!(error instanceof MissingSecretError)) throw error;
+      await throwIfAppNotFoundAsync(ctx.db, input.app && "id" in input.app ? input.app.id : null);
 
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message: error.message,
+      if (input.skipConnectionTest) {
+        throwIfSecretsMissing(
+          input.kind,
+          input.secrets.map((secret) => secret.kind),
+        );
+      } else {
+        await throwIfConnectionTestFailedAsync(ctx, {
+          id: "new",
+          name: input.name,
+          url: input.url,
+          kind: input.kind,
+          secrets: input.secrets,
         });
-      });
-
-      if (!result.success) {
-        logger.error(result.error);
-        return {
-          error: mapTestConnectionError(result.error),
-        };
       }
 
       const appId = await createAppIfNecessaryAsync(ctx.db, input.app);
@@ -318,114 +361,144 @@ export const integrationRouter = createTRPCRouter({
         appId,
       };
     }),
-  update: protectedProcedure.input(integrationUpdateSchema).mutation(async ({ ctx, input }) => {
-    await throwIfActionForbiddenAsync(ctx, eq(integrations.id, input.id), "full");
-
-    logger.info("Updating integration", {
-      id: input.id,
-    });
-
-    const integration = await ctx.db.query.integrations.findFirst({
-      where: eq(integrations.id, input.id),
-      with: {
-        secrets: true,
+  update: protectedProcedure
+    .meta({
+      openapi: {
+        method: "PUT",
+        path: "/api/integrations/{id}",
+        tags: ["integrations"],
+        protect: true,
+        summary: "Update an integration",
+        description:
+          "Replace the name, URL, linked app and secrets of an integration. Each listed secret kind is kept: a value replaces it, null keeps the stored value (only when the URL is unchanged); unlisted kinds are deleted. The connection is tested before saving unless skipConnectionTest is set; a failed test returns BAD_REQUEST with the failure category. Requires full access to the integration.",
       },
-    });
+    })
+    .input(integrationUpdateSchema)
+    .output(z.void())
+    .mutation(async ({ ctx, input }) => {
+      await throwIfActionForbiddenAsync(ctx, eq(integrations.id, input.id), "full");
 
-    if (!integration) {
-      throw new TRPCError({
-        code: "NOT_FOUND",
-        message: "Integration not found",
-      });
-    }
-
-    const testResult = await testConnectionAsync(
-      {
+      logger.info("Updating integration", {
         id: input.id,
-        name: input.name,
-        url: input.url,
-        kind: integration.kind,
-        secrets: input.secrets,
-      },
-      isSameUrl(integration.url, input.url) ? integration.secrets : [],
-    ).catch((error) => {
-      if (!(error instanceof MissingSecretError)) throw error;
-
-      throw new TRPCError({
-        code: "BAD_REQUEST",
-        message: error.message,
       });
-    });
 
-    if (!testResult.success) {
-      logger.error(testResult.error);
-      return {
-        error: mapTestConnectionError(testResult.error),
-      };
-    }
+      const integration = await ctx.db.query.integrations.findFirst({
+        where: eq(integrations.id, input.id),
+        with: {
+          secrets: true,
+        },
+      });
 
-    await ctx.db
-      .update(integrations)
-      .set({
-        name: input.name,
-        url: input.url,
-        appId: input.appId,
-      })
-      .where(eq(integrations.id, input.id));
+      if (!integration) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Integration not found",
+        });
+      }
 
-    const changedSecrets = input.secrets.filter(
-      (secret): secret is { kind: IntegrationSecretKind; value: string } =>
-        secret.value !== null && // only update secrets that have a value
-        !integration.secrets.find(
-          // Checked above
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          (dbSecret) => dbSecret.kind === secret.kind && dbSecret.value === encryptSecret(secret.value!),
-        ),
-    );
+      await throwIfAppNotFoundAsync(ctx.db, input.appId);
 
-    if (changedSecrets.length > 0) {
-      for (const changedSecret of changedSecrets) {
-        const secretInput = {
-          integrationId: input.id,
-          value: changedSecret.value,
-          kind: changedSecret.kind,
-        };
-        if (!integration.secrets.some((secret) => secret.kind === changedSecret.kind)) {
-          await addSecretAsync(ctx.db, secretInput);
-        } else {
-          await updateSecretAsync(ctx.db, secretInput);
+      const reusableSecrets = isSameUrl(integration.url, input.url) ? integration.secrets : [];
+
+      if (input.skipConnectionTest) {
+        throwIfSecretsMissing(
+          integration.kind,
+          input.secrets
+            .filter(
+              (secret) => secret.value !== null || reusableSecrets.some((dbSecret) => dbSecret.kind === secret.kind),
+            )
+            .map((secret) => secret.kind),
+        );
+      } else {
+        await throwIfConnectionTestFailedAsync(
+          ctx,
+          {
+            id: input.id,
+            name: input.name,
+            url: input.url,
+            kind: integration.kind,
+            secrets: input.secrets,
+          },
+          reusableSecrets.filter((dbSecret) => input.secrets.some((secret) => secret.kind === dbSecret.kind)),
+        );
+      }
+
+      await ctx.db
+        .update(integrations)
+        .set({
+          name: input.name,
+          url: input.url,
+          appId: input.appId,
+        })
+        .where(eq(integrations.id, input.id));
+
+      const changedSecrets = input.secrets.filter(
+        (secret): secret is { kind: IntegrationSecretKind; value: string } => {
+          if (secret.value === null) return false;
+          const storedSecret = integration.secrets.find((dbSecret) => dbSecret.kind === secret.kind);
+          if (!storedSecret) return true;
+
+          try {
+            // Encryption uses a random IV, so ciphertext cannot identify an unchanged value.
+            return decryptSecret(storedSecret.value) !== secret.value;
+          } catch {
+            return true;
+          }
+        },
+      );
+
+      if (changedSecrets.length > 0) {
+        for (const changedSecret of changedSecrets) {
+          const secretInput = {
+            integrationId: input.id,
+            value: changedSecret.value,
+            kind: changedSecret.kind,
+          };
+          if (!integration.secrets.some((secret) => secret.kind === changedSecret.kind)) {
+            await addSecretAsync(ctx.db, secretInput);
+          } else {
+            await updateSecretAsync(ctx.db, secretInput);
+          }
         }
       }
-    }
 
-    const removedSecrets = integration.secrets.filter(
-      (dbSecret) => !input.secrets.some((secret) => dbSecret.kind === secret.kind),
-    );
-    if (removedSecrets.length >= 1) {
-      await ctx.db
-        .delete(integrationSecrets)
-        .where(
-          or(
-            ...removedSecrets.map((secret) =>
-              and(eq(integrationSecrets.integrationId, input.id), eq(integrationSecrets.kind, secret.kind)),
+      const removedSecrets = integration.secrets.filter(
+        (dbSecret) => !input.secrets.some((secret) => dbSecret.kind === secret.kind),
+      );
+      if (removedSecrets.length >= 1) {
+        await ctx.db
+          .delete(integrationSecrets)
+          .where(
+            or(
+              ...removedSecrets.map((secret) =>
+                and(eq(integrationSecrets.integrationId, input.id), eq(integrationSecrets.kind, secret.kind)),
+              ),
             ),
-          ),
-        );
-    }
+          );
+      }
 
-    logger.info("Updated integration", {
-      id: input.id,
-      name: input.name,
-      kind: integration.kind,
-      url: input.url,
-    });
+      logger.info("Updated integration", {
+        id: input.id,
+        name: input.name,
+        kind: integration.kind,
+        url: input.url,
+      });
 
-    // Invalidate all cached data for this integration so that widgets pick up the
-    // new configuration immediately instead of serving stale (or errored) data.
-    await invalidateIntegrationCacheAsync(input.id);
-  }),
+      // Invalidate all cached data for this integration so that widgets pick up the
+      // new configuration immediately instead of serving stale (or errored) data.
+      await invalidateIntegrationCacheAsync(input.id);
+    }),
   delete: protectedProcedure
     .meta({
+      openapi: {
+        method: "DELETE",
+        path: "/api/integrations/{id}",
+        tags: ["integrations"],
+        protect: true,
+        summary: "Delete an integration",
+        description:
+          "Delete an integration with its secrets and permissions. Widgets lose the integration. Requires full access to the integration.",
+      },
       mcp: {
         enabled: true,
         effect: "destructive",
@@ -433,6 +506,7 @@ export const integrationRouter = createTRPCRouter({
       },
     })
     .input(byIdSchema)
+    .output(z.void())
     .mutation(async ({ ctx, input }) => {
       await throwIfActionForbiddenAsync(ctx, eq(integrations.id, input.id), "full");
 
@@ -452,82 +526,113 @@ export const integrationRouter = createTRPCRouter({
       // Clean up any cached data left behind by the deleted integration.
       await invalidateIntegrationCacheAsync(input.id);
     }),
-  getIntegrationPermissions: protectedProcedure.input(byIdSchema).query(async ({ input, ctx }) => {
-    await throwIfActionForbiddenAsync(ctx, eq(integrations.id, input.id), "full");
-
-    const dbGroupPermissions = await ctx.db.query.groupPermissions.findMany({
-      where: inArray(
-        groupPermissions.permission,
-        getPermissionsWithParents(["integration-use-all", "integration-interact-all", "integration-full-all"]),
-      ),
-      columns: {
-        groupId: false,
+  getIntegrationPermissions: protectedProcedure
+    .meta({
+      openapi: {
+        method: "GET",
+        path: "/api/integrations/{id}/permissions",
+        tags: ["integrations"],
+        protect: true,
+        summary: "Read integration permissions",
+        description:
+          "Return the users and groups with explicit permissions on an integration, and the groups that inherit access through global integration permissions. Requires full access to the integration.",
       },
-      with: {
-        group: {
-          columns: {
-            id: true,
-            name: true,
-          },
+    })
+    .input(byIdSchema)
+    .output(integrationPermissionsSchema)
+    .query(async ({ input, ctx }) => {
+      await throwIfActionForbiddenAsync(ctx, eq(integrations.id, input.id), "full");
+
+      const dbGroupPermissions = await ctx.db.query.groupPermissions.findMany({
+        where: inArray(
+          groupPermissions.permission,
+          getPermissionsWithParents(["integration-use-all", "integration-interact-all", "integration-full-all"]),
+        ),
+        columns: {
+          groupId: false,
         },
-      },
-    });
-
-    const userPermissions = await ctx.db.query.integrationUserPermissions.findMany({
-      where: eq(integrationUserPermissions.integrationId, input.id),
-      with: {
-        user: {
-          columns: {
-            id: true,
-            name: true,
-            image: true,
-            email: true,
-          },
-        },
-      },
-    });
-
-    const dbGroupIntegrationPermission = await ctx.db.query.integrationGroupPermissions.findMany({
-      where: eq(integrationGroupPermissions.integrationId, input.id),
-      with: {
-        group: {
-          columns: {
-            id: true,
-            name: true,
-          },
-        },
-      },
-    });
-
-    return {
-      inherited: dbGroupPermissions.toSorted((permissionA, permissionB) => {
-        return permissionA.group.name.localeCompare(permissionB.group.name);
-      }),
-      users: userPermissions
-        .map(({ user, permission }) => ({
-          user,
-          permission,
-        }))
-        .toSorted((permissionA, permissionB) => {
-          return (permissionA.user.name ?? "").localeCompare(permissionB.user.name ?? "");
-        }),
-      groups: dbGroupIntegrationPermission
-        .map(({ group, permission }) => ({
+        with: {
           group: {
-            id: group.id,
-            name: group.name,
+            columns: {
+              id: true,
+              name: true,
+            },
           },
-          permission,
-        }))
-        .toSorted((permissionA, permissionB) => {
+        },
+      });
+
+      const userPermissions = await ctx.db.query.integrationUserPermissions.findMany({
+        where: eq(integrationUserPermissions.integrationId, input.id),
+        with: {
+          user: {
+            columns: {
+              id: true,
+              name: true,
+              image: true,
+              email: true,
+            },
+          },
+        },
+      });
+
+      const dbGroupIntegrationPermission = await ctx.db.query.integrationGroupPermissions.findMany({
+        where: eq(integrationGroupPermissions.integrationId, input.id),
+        with: {
+          group: {
+            columns: {
+              id: true,
+              name: true,
+            },
+          },
+        },
+      });
+
+      return {
+        inherited: dbGroupPermissions.toSorted((permissionA, permissionB) => {
           return permissionA.group.name.localeCompare(permissionB.group.name);
         }),
-    };
-  }),
+        users: userPermissions
+          .map(({ user, permission }) => ({
+            user,
+            permission,
+          }))
+          .toSorted((permissionA, permissionB) => {
+            return (permissionA.user.name ?? "").localeCompare(permissionB.user.name ?? "");
+          }),
+        groups: dbGroupIntegrationPermission
+          .map(({ group, permission }) => ({
+            group: {
+              id: group.id,
+              name: group.name,
+            },
+            permission,
+          }))
+          .toSorted((permissionA, permissionB) => {
+            return permissionA.group.name.localeCompare(permissionB.group.name);
+          }),
+      };
+    }),
   saveUserIntegrationPermissions: protectedProcedure
+    .meta({
+      openapi: {
+        method: "PUT",
+        path: "/api/integrations/{entityId}/permissions/users",
+        tags: ["integrations"],
+        protect: true,
+        summary: "Replace user integration permissions",
+        description:
+          "Replace all explicit user permissions on an integration. Omitted users lose their explicit permission; each user can be listed once. Requires full access to the integration.",
+      },
+    })
     .input(integrationSavePermissionsSchema)
+    .output(z.void())
     .mutation(async ({ input, ctx }) => {
       await throwIfActionForbiddenAsync(ctx, eq(integrations.id, input.entityId), "full");
+      await throwIfPermissionPrincipalsInvalidAsync(
+        ctx.db,
+        "user",
+        input.permissions.map(({ principalId }) => principalId),
+      );
 
       await handleTransactionsAsync(ctx.db, {
         async handleAsync(db, schema) {
@@ -571,9 +676,26 @@ export const integrationRouter = createTRPCRouter({
       });
     }),
   saveGroupIntegrationPermissions: protectedProcedure
+    .meta({
+      openapi: {
+        method: "PUT",
+        path: "/api/integrations/{entityId}/permissions/groups",
+        tags: ["integrations"],
+        protect: true,
+        summary: "Replace group integration permissions",
+        description:
+          "Replace all explicit group permissions on an integration. Omitted groups lose their explicit permission; each group can be listed once. Requires full access to the integration.",
+      },
+    })
     .input(integrationSavePermissionsSchema)
+    .output(z.void())
     .mutation(async ({ input, ctx }) => {
       await throwIfActionForbiddenAsync(ctx, eq(integrations.id, input.entityId), "full");
+      await throwIfPermissionPrincipalsInvalidAsync(
+        ctx.db,
+        "group",
+        input.permissions.map(({ principalId }) => principalId),
+      );
 
       await handleTransactionsAsync(ctx.db, {
         async handleAsync(db, schema) {
@@ -880,6 +1002,54 @@ const getAccessibleMediaRequestSearchIntegrationsAsync = async (
   }
 
   return integrationsWithAccess.filter(({ hasAccess }) => hasAccess).map(({ integration }) => integration);
+};
+
+const throwIfConnectionTestFailedAsync = async (
+  ctx: { isOpenApiRequest?: boolean },
+  ...parameters: Parameters<typeof testConnectionAsync>
+) => {
+  const result = await testConnectionAsync(...parameters).catch((error) => {
+    if (!(error instanceof MissingSecretError)) throw error;
+
+    throw new TRPCError({
+      code: "BAD_REQUEST",
+      message: error.message,
+    });
+  });
+
+  if (result.success) return;
+
+  logger.error(result.error);
+  const mappedError = mapTestConnectionError(result.error);
+  throw new TRPCError({
+    code: "BAD_REQUEST",
+    message: mappedError.type,
+    cause: ctx.isOpenApiRequest ? undefined : new TestConnectionFailedError(mappedError),
+  });
+};
+
+const throwIfSecretsMissing = (kind: IntegrationKind, secretKinds: IntegrationSecretKind[]) => {
+  const hasCompleteSecretKindOption = getAllSecretKindOptions(kind).some((secretKindOption) =>
+    secretKindOption.every((secretKind) => secretKinds.includes(secretKind)),
+  );
+  if (hasCompleteSecretKindOption) return;
+
+  throw new TRPCError({
+    code: "BAD_REQUEST",
+    message: "No secret defined for this integration",
+  });
+};
+
+const throwIfAppNotFoundAsync = async (db: Database, appId: string | null) => {
+  if (appId === null) return;
+
+  const app = await db.query.apps.findFirst({ columns: { id: true }, where: eq(apps.id, appId) });
+  if (app) return;
+
+  throw new TRPCError({
+    code: "NOT_FOUND",
+    message: "App not found",
+  });
 };
 
 interface UpdateSecretInput {

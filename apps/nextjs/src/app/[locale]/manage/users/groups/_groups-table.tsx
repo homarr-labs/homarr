@@ -52,7 +52,7 @@ export const GroupsTable = ({ groups, initialGroupIds, hasFilter }: GroupsTableP
   const tGroup = useI18n("group");
   const tCommon = useI18n("common");
   const [activeId, setActiveId] = useState<string | null>(null);
-  const [groupIds, setGroupIds] = useState(groups.map((group) => group.id));
+  const [groupIds, setGroupIds] = useState(initialGroupIds);
   const groupsById = useMemo(() => new Map(groups.map((group) => [group.id, group])), [groups]);
   const isDirty = useMemo(
     () => initialGroupIds.some((groupId, index) => groupIds[index] !== groupId),

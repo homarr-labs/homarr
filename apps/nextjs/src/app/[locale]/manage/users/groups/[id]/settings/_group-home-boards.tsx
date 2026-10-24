@@ -32,7 +32,7 @@ export const GroupHomeBoards = ({ homeBoardId, mobileHomeBoardId, groupId }: Gro
     await mutateAsync(
       {
         id: groupId,
-        settings: values,
+        ...values,
       },
       {
         onSuccess() {
