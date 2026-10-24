@@ -1,6 +1,6 @@
 module github.com/homarr-labs/homarr/tools/homarr-dev
 
-go 1.25.0
+go 1.26.10
 
 require (
 	charm.land/bubbles/v2 v2.1.1
