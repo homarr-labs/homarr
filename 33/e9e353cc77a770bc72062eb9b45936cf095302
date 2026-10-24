@@ -1,0 +1,14 @@
+packages/api/src/router/custom-widget/source-resolver.ts
+  h_d6e478ca18e517 90
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "33e9e353cc77a770bc72062eb9b45936cf095302",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
