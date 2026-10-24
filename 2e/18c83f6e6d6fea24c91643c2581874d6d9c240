@@ -1,0 +1,21 @@
+.github/workflows/on-pr-prebuilt-debian-validate.yml
+  s_e8c3b16f087943::t_12def3fcb1ed91 24
+.github/workflows/workshop.yml
+  s_e8c3b16f087943::t_9e445abf43a752 141,143
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "2e18c83f6e6d6fea24c91643c2581874d6d9c240",
+  "prompts": {},
+  "sessions": {
+    "s_e8c3b16f087943": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "5bad9576-ba72-4dbc-a1a1-0fc4be09f9a2",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
