@@ -1,0 +1,21 @@
+packages/validation/src/app.ts
+  s_b33778671a3872::t_5542afa40c219b 36-47
+packages/widgets/src/manifest.ts
+  s_b33778671a3872::t_b923f9f1b0d539 7,150-152
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "23a40b5c28649c526755f8f738f2167b11f2b865",
+  "prompts": {},
+  "sessions": {
+    "s_b33778671a3872": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "4836a7b0-29a0-4329-9cac-5cfb8625bd5c",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
