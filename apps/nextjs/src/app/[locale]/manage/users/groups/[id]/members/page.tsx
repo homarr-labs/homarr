@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { Alert, Anchor, Center, Group, Stack, Table, TableTbody, TableTd, TableTr, Text, Title } from "@mantine/core";
+import { Alert, Anchor, Center, Group, Stack, Table, TableTbody, TableTd, TableTr, Text } from "@mantine/core";
 import { IconExclamationCircle } from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";
@@ -14,6 +14,7 @@ import { everyoneGroup } from "@homarr/definitions";
 import { getI18n } from "@homarr/translation/server";
 import { Link, SearchInput, UserAvatar } from "@homarr/ui";
 
+import { ManagePageHeader } from "~/components/manage/manage-page-layout";
 import { ReservedGroupAlert } from "../_reserved-group-alert";
 import { AddGroupMember } from "./_add-group-member";
 import { RemoveGroupMember } from "./_remove-group-member";
@@ -53,7 +54,19 @@ export default async function GroupsDetailPage(props: GroupsDetailPageProps) {
 
   return (
     <Stack>
-      <Title>{tMembers("title")}</Title>
+      <ManagePageHeader
+        title={tMembers("title")}
+        primaryAction={
+          canManageMembers &&
+          !isReserved && (
+            <AddGroupMember
+              groupId={group.id}
+              presentUserIds={group.members.map((member) => member.id)}
+              allowedProviders={allowedProviders}
+            />
+          )
+        }
+      />
 
       {isReserved ? (
         <ReservedGroupAlert />
@@ -71,13 +84,6 @@ export default async function GroupsDetailPage(props: GroupsDetailPageProps) {
           ariaLabel={tMembers("search")}
           defaultValue={searchParams.search}
         />
-        {canManageMembers && !isReserved && (
-          <AddGroupMember
-            groupId={group.id}
-            presentUserIds={group.members.map((member) => member.id)}
-            allowedProviders={allowedProviders}
-          />
-        )}
       </Group>
       {filteredMembers.length === 0 && (
         <Center py="sm">
