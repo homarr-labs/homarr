@@ -1,0 +1,23 @@
+apps/workshop/go.mod
+  s_9b7e99bd3ab786::t_2a48a614653a0a 3,36-38,40-42
+apps/workshop/go.sum
+  s_9b7e99bd3ab786::t_2a757d5b0e4fca 87-88,90-93,95-96,99-100,102-103,106-107,109-110
+tools/homarr-dev/go.mod
+  s_9b7e99bd3ab786::t_a90404bfa9dd1a 3
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "3461b08ce6d159fb0913d402e9f02642d258aaf5",
+  "prompts": {},
+  "sessions": {
+    "s_9b7e99bd3ab786": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "65e5f33a-f2db-4674-8074-dcea9cc8135f",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
