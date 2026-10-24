@@ -52,6 +52,7 @@ import {
   widgetDefaultSizes,
   widgetKinds,
 } from "@homarr/definitions";
+import { normalizeAppWidgetOptions } from "@homarr/validation/app";
 import {
   addItemToBoardSchema,
   boardByNameSchema,
@@ -1731,6 +1732,7 @@ export const boardRouter = createTRPCRouter({
       });
 
       for (const item of input.items) {
+        if (item.kind === "app") item.options = normalizeAppWidgetOptions(item.options);
         if (item.kind !== "timetable") continue;
         const previousItem = dbBoard.items.find((dbItem) => dbItem.id === item.id);
         let previousOptions: Record<string, unknown> | undefined;
@@ -2307,6 +2309,8 @@ export const boardRouter = createTRPCRouter({
     .output(z.object({ itemId: z.string() }))
     .mutation(async ({ ctx, input }) => {
       await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.boardId), "modify");
+
+      if (input.kind === "app") input.options = normalizeAppWidgetOptions(input.options);
 
       await validateWidgetConfigurationsAsync(ctx, [
         { id: "", kind: input.kind, integrationIds: input.integrationIds },
