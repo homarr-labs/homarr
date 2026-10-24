@@ -13,7 +13,7 @@ import {
   resolveSameOriginTarget,
   validateCustomWidgetUrl,
 } from "./network-policy";
-import { closeDispatcher } from "./request-dispatcher-lifecycle";
+import { abortable, closeDispatcher } from "./request-dispatcher-lifecycle";
 import { decodeResponseBody, parseResponseBody, redactResponseSecrets } from "./response";
 
 export { assertSafeStaticHeaders, resolveSameOriginTarget, validateCustomWidgetUrl } from "./network-policy";
@@ -40,13 +40,15 @@ type RequestHopResult =
   | { kind: "redirect"; location: string | null; statusCode: number };
 
 async function performRequest(input: CustomWidgetHttpRequest): Promise<CustomWidgetHttpResponse> {
-  await input.beforeRequest?.();
   const controller = new AbortController();
   const timeout = setTimeout(
     () => controller.abort(),
     Math.min(input.timeoutMs ?? MAX_REQUEST_DURATION_MS, MAX_REQUEST_DURATION_MS),
   );
+  let preparingRequest = true;
   try {
+    if (input.beforeRequest) await abortable(input.beforeRequest(), controller.signal);
+    preparingRequest = false;
     assertRequest(input);
     return await performAuthenticatedRequest(input, controller.signal, performRequestWithinDeadline);
   } catch (error) {
@@ -57,7 +59,7 @@ async function performRequest(input: CustomWidgetHttpRequest): Promise<CustomWid
         reason: "timeout",
       });
     }
-    if (error instanceof CustomWidgetDomainError) throw error;
+    if (preparingRequest || error instanceof CustomWidgetDomainError) throw error;
     input.logError?.({
       origin: URL.canParse(input.baseUrl) ? new URL(input.baseUrl).origin : "invalid",
       method: input.method,
