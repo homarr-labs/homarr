@@ -5340,6 +5340,8 @@
         "loading": "Loading request...",
         "loadRequest": "Load request",
         "requestFailed": "The request failed.",
+        "refreshLimitReached": "Refresh limit reached",
+        "refreshRetryAfter": "Try again in {seconds, plural, one {# second} other {# seconds}}.",
         "retry": "Retry request",
         "actionCompleted": "Action completed successfully.",
         "actionSimulated": "Action simulated; no request was sent.",

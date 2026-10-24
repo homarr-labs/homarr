@@ -1,6 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
+import { useEffect, useState } from "react";
 import { Button, Center, Stack, Text } from "@mantine/core";
 import { IconAlertTriangle } from "@tabler/icons-react";
 
@@ -13,6 +14,7 @@ import { WidgetQueryLoadingState } from "../common/query-state-indicator";
 import type { WidgetComponentProps } from "../definition";
 import { useDemoReadOnly } from "../demo-read-only";
 import { isLegacyCustomWidgetMigrationError, isTerminalCustomWidgetDefinitionError } from "./migration-state";
+import { getCustomWidgetRetryAfterMs } from "./refresh-limit";
 
 const CustomJsxDisplay = dynamic(() => import("./custom-jsx-display"), { ssr: false });
 
@@ -34,10 +36,21 @@ export default function CustomApiWidget({
     { itemId: itemId ?? "" },
     {
       enabled: Boolean(itemId) && Boolean(definitionId),
-      refetchInterval: (currentQuery) =>
-        demoReadOnly || isTerminalCustomWidgetDefinitionError(currentQuery.state.error) ? false : intervalMs,
+      refetchInterval: (currentQuery) => {
+        if (demoReadOnly || isTerminalCustomWidgetDefinitionError(currentQuery.state.error)) return false;
+        const retryAfterMs = getCustomWidgetRetryAfterMs(currentQuery.state.error);
+        if (retryAfterMs !== null) {
+          return Math.max(1_000, currentQuery.state.errorUpdatedAt + retryAfterMs - Date.now());
+        }
+        return intervalMs;
+      },
+      refetchOnWindowFocus: (currentQuery) => getCustomWidgetRetryAfterMs(currentQuery.state.error) === null,
+      refetchOnReconnect: (currentQuery) => getCustomWidgetRetryAfterMs(currentQuery.state.error) === null,
       retry: (failureCount, error) =>
-        !demoReadOnly && !isTerminalCustomWidgetDefinitionError(error) && failureCount < 3,
+        !demoReadOnly &&
+        !isTerminalCustomWidgetDefinitionError(error) &&
+        getCustomWidgetRetryAfterMs(error) === null &&
+        failureCount < 3,
     },
   );
 
@@ -47,6 +60,10 @@ export default function CustomApiWidget({
   if (isEditMode && !itemId) return <Unavailable message={t("editModePending")} />;
   if (query.isLoading) return <WidgetQueryLoadingState />;
   if (query.error) {
+    const retryAfterMs = getCustomWidgetRetryAfterMs(query.error);
+    if (retryAfterMs !== null) {
+      return <RefreshLimitState retryAt={query.errorUpdatedAt + retryAfterMs} />;
+    }
     const errorCode = query.error.data?.code;
     const migrationRequired = isLegacyCustomWidgetMigrationError(query.error);
     if (isEditMode && errorCode === "NOT_FOUND") {
@@ -86,6 +103,19 @@ export default function CustomApiWidget({
     />
   );
 }
+
+function RefreshLimitState({ retryAt }: { retryAt: number }) {
+  const t = useI18n("widget.customApi.customJsx");
+  const [now, setNow] = useState(Date.now);
+  useEffect(() => {
+    const interval = setInterval(() => setNow(Date.now()), 1_000);
+    return () => clearInterval(interval);
+  }, []);
+  const seconds = Math.max(0, Math.ceil((retryAt - now) / 1_000));
+  if (seconds === 0) return <WidgetQueryLoadingState />;
+  return <Unavailable message={t("refreshLimitReached")} supplementaryMessage={t("refreshRetryAfter", { seconds })} />;
+}
+
 function Unavailable({
   message,
   danger = false,

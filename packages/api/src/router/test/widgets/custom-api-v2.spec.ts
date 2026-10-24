@@ -1,16 +1,19 @@
 import { stringify as stringifySuperJson } from "superjson";
+import { TRPCError } from "@trpc/server";
 import { beforeEach, describe, expect, test, vi } from "vitest";
 
 import type { Session } from "@homarr/auth";
-import { createId } from "@homarr/common";
+import { createId, FlattenError } from "@homarr/common";
 import { eq } from "@homarr/db";
 import { boardUserPermissions, boards, customWidgetDefinitions, items, users } from "@homarr/db/schema";
 import { createDb } from "@homarr/db/test";
 import type { HomarrCustomWidgetV2 } from "@homarr/custom-widgets/core";
+import type { RequestLimitInput } from "@homarr/custom-widgets/server";
 
 const mocks = vi.hoisted(() => ({
   executeRequest: vi.fn(async () => ({ ok: true, status: 200, statusText: "OK", data: { value: 42 } })),
   invalidateResponseCache: vi.fn(),
+  acquireRequestLimit: vi.fn(async (_input: RequestLimitInput) => async () => undefined),
 }));
 
 vi.mock("../../custom-widget/request-executor", () => ({
@@ -19,7 +22,7 @@ vi.mock("../../custom-widget/request-executor", () => ({
 }));
 
 vi.mock("../../custom-widget/request-limits", () => ({
-  acquireCustomWidgetRequestLimit: vi.fn(async () => async () => undefined),
+  acquireCustomWidgetRequestLimit: mocks.acquireRequestLimit,
 }));
 
 import { serializeCustomWidgetDefinition } from "../../custom-widget/stored-definition";
@@ -115,6 +118,7 @@ describe("Custom JSX v2 board router", () => {
   beforeEach(() => {
     mocks.executeRequest.mockClear();
     mocks.invalidateResponseCache.mockClear();
+    mocks.acquireRequestLimit.mockReset();
   });
 
   test("refreshes the server response cache for a placed widget", async () => {
@@ -144,6 +148,19 @@ describe("Custom JSX v2 board router", () => {
       code: "NOT_FOUND",
     });
     expect(mocks.executeRequest).toHaveBeenCalledTimes(2);
+  });
+
+  test("reports a load limit once for the widget and preserves its retry hint", async () => {
+    const { db, itemId } = await setup();
+    const caller = customApiRouter.createCaller({ db, deviceType: undefined, session: null });
+    class RequestLimitError extends FlattenError {}
+    const cause = new RequestLimitError("Request limit reached", { retryAfterMs: 42_000 });
+    mocks.acquireRequestLimit.mockRejectedValueOnce(
+      new TRPCError({ code: "TOO_MANY_REQUESTS", message: "Request limit reached", cause }),
+    );
+
+    await expect(caller.getData({ itemId })).rejects.toMatchObject({ code: "TOO_MANY_REQUESTS", cause });
+    expect(mocks.executeRequest).not.toHaveBeenCalled();
   });
 
   test("uses current defaults when an updated option no longer accepts the stored value", async () => {

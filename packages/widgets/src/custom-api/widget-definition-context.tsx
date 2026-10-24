@@ -1,6 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
+import { useEffect, useState } from "react";
 
 import { fetchApi, clientApi } from "@homarr/api/client";
 import type {
@@ -14,6 +15,8 @@ import { useConfirmModal } from "@homarr/modals";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
 import { useQueryClient } from "@tanstack/react-query";
+
+import { getCustomWidgetRetryAfterMs } from "./refresh-limit";
 
 interface WidgetDefinitionProviderProps {
   itemId?: string;
@@ -81,6 +84,13 @@ export function WidgetDefinitionProvider(props: WidgetDefinitionProviderProps) {
   const queryClient = useQueryClient();
   const { openConfirmModal } = useConfirmModal();
   const messages = useRuntimeMessages();
+  const t = useI18n("widget.customApi.customJsx");
+  const [refreshRetryAt, setRefreshRetryAt] = useState(0);
+  useEffect(() => {
+    if (refreshRetryAt === 0) return;
+    const timeout = setTimeout(() => setRefreshRetryAt(0), Math.max(0, refreshRetryAt - Date.now()));
+    return () => clearTimeout(timeout);
+  }, [refreshRetryAt]);
   const port: CustomWidgetRuntimePort = {
     query: async (input, signal) => {
       if (input.itemId) {
@@ -161,7 +171,23 @@ export function WidgetDefinitionProvider(props: WidgetDefinitionProviderProps) {
         return;
       }
       if (!itemId) return;
-      if (invalidateAll) await fetchApi.widget.customApi.refresh.mutate({ itemId });
+      if (invalidateAll) {
+        try {
+          await fetchApi.widget.customApi.refresh.mutate({ itemId });
+        } catch (error) {
+          const retryAfterMs = getCustomWidgetRetryAfterMs(error);
+          if (retryAfterMs !== null) {
+            setRefreshRetryAt(Date.now() + retryAfterMs);
+            showErrorNotification({
+              title: t("refreshLimitReached"),
+              message: t("refreshRetryAfter", { seconds: Math.ceil(retryAfterMs / 1_000) }),
+            });
+            return;
+          }
+          showErrorNotification({ title: messages.requestFailed, message: messages.requestFailed });
+          return;
+        }
+      }
       const tasks: Promise<unknown>[] = [
         queryClient.invalidateQueries({
           predicate: (query) => {
@@ -205,6 +231,7 @@ export function WidgetDefinitionProvider(props: WidgetDefinitionProviderProps) {
       previewSessionId={props.previewSessionId}
       previewLiveActions={props.previewLiveActions}
       queriesDisabled={props.queriesDisabled}
+      refreshDisabled={refreshRetryAt > 0}
       isEditMode={props.isEditMode ?? false}
       requestCapabilities={props.requestCapabilities ?? []}
       port={port}

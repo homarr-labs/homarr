@@ -3,7 +3,7 @@ import { TRPCError } from "@trpc/server";
 import { parse as parseSuperJson } from "superjson";
 import { z } from "zod/v4";
 
-import { isRecord } from "@homarr/common";
+import { FlattenError, isRecord } from "@homarr/common";
 import { decryptSecret } from "@homarr/common/server";
 import { eq } from "@homarr/db";
 import { boards, customWidgetDefinitions, items, legacyCustomWidgetDefinitions } from "@homarr/db/schema";
@@ -218,6 +218,8 @@ export const customApiRouter = createTRPCRouter({
     const loadRequests = Object.entries(resolved.definition.requests).filter(
       ([, request]) => request.kind === "query" && request.trigger === "load",
     );
+    let requestLimitError: TRPCError | undefined;
+    let retryAfterMs = 0;
     const entries = await Promise.all(
       loadRequests.map(async ([requestId, request]) => {
         try {
@@ -238,6 +240,13 @@ export const customApiRouter = createTRPCRouter({
             },
           ] as const;
         } catch (error) {
+          if (error instanceof TRPCError && error.code === "TOO_MANY_REQUESTS") {
+            const retryHint = error.cause instanceof FlattenError ? error.cause.flatten().retryAfterMs : undefined;
+            if (!requestLimitError || (typeof retryHint === "number" && retryHint > retryAfterMs)) {
+              requestLimitError = error;
+              if (typeof retryHint === "number") retryAfterMs = retryHint;
+            }
+          }
           return [
             requestId,
             {
@@ -256,6 +265,7 @@ export const customApiRouter = createTRPCRouter({
         }
       }),
     );
+    if (requestLimitError) throw requestLimitError;
     const integrationVersions = new Map<string, string>();
     for (const [, result] of entries) {
       if (!result.sourceCacheVersion) continue;
