@@ -7,6 +7,8 @@ import { boards, items, userItemStates } from "@homarr/db/schema";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 import { throwIfActionForbiddenAsync } from "./board/board-access";
 
+const maxUserItemStateKeys = 500;
+
 const itemStateProcedure = protectedProcedure
   .input(z.object({ itemId: z.string().min(1).max(64) }))
   .use(async ({ ctx, input, next }) => {
@@ -44,6 +46,25 @@ export const userItemStateRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
+      const userItemWhere = and(
+        eq(userItemStates.userId, ctx.session.user.id),
+        eq(userItemStates.itemId, input.itemId),
+      );
+      const existingState = await ctx.db.query.userItemStates.findFirst({
+        columns: { key: true },
+        where: and(userItemWhere, eq(userItemStates.key, input.key)),
+      });
+
+      if (!existingState) {
+        const stateCount = await ctx.db.$count(userItemStates, userItemWhere);
+        if (stateCount >= maxUserItemStateKeys) {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: `Each user can save at most ${maxUserItemStateKeys} state keys per item. Existing keys can still be updated.`,
+          });
+        }
+      }
+
       await ctx.db
         .insert(userItemStates)
         .values({ ...input, userId: ctx.session.user.id })
