@@ -10,7 +10,13 @@ import { useConfirmModal } from "@homarr/modals";
 import { showSuccessNotification } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
 
-import { filterSecretsForSourceAuthentication, isRecord, parseJson, parseSources } from "./_custom-widget-form-utils";
+import {
+  filterSecretsForSourceAuthentication,
+  isRecord,
+  isSimpleCustomWidgetQuerySetup,
+  parseJson,
+  parseSources,
+} from "./_custom-widget-form-utils";
 import type { CustomWidgetWorkbenchForm } from "./_custom-widget-form-utils";
 import { getDependentRequestIds, removeDependentRequests } from "./_custom-widget-source-dependencies";
 import { CustomWidgetSourceField } from "./_custom-widget-source-field";
@@ -18,9 +24,11 @@ import { CustomWidgetSourceField } from "./_custom-widget-source-field";
 export function CustomWidgetSourcesEditor({
   form,
   definitionId,
+  compact = false,
 }: {
   form: CustomWidgetWorkbenchForm;
   definitionId?: string;
+  compact?: boolean;
 }) {
   const t = useI18n("customWidget.workbench.sources");
   const w = useI18n("customWidget.workbench");
@@ -28,6 +36,7 @@ export function CustomWidgetSourcesEditor({
   const utils = clientApi.useUtils();
   const clearSecretMutation = clientApi.customWidget.secretClear.useMutation();
   const sources = parseSources(form.values.sources);
+  const compactSetup = compact && isSimpleCustomWidgetQuerySetup(form.values);
   const update = (index: number, changes: Partial<CustomWidgetSource> & { id?: string }) => {
     const previous = sources[index];
     if (changes.auth !== undefined && previous) {
@@ -187,6 +196,7 @@ export function CustomWidgetSourcesEditor({
         return (
           <CustomWidgetSourceField
             key={source.id}
+            compact={compactSetup}
             source={source}
             index={index}
             form={form}

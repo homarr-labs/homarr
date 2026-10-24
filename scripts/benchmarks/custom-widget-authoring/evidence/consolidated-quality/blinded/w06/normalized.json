@@ -1,0 +1,60 @@
+{
+  "id": "w06",
+  "run": "iter-5/bored-activity/cand/run-1",
+  "caseId": "bored-activity",
+  "promptSha256": "979b347f8f56ed8e5f2cdbc23cf5095261f3d9154dc4782037f3d62871a64d2d",
+  "widgetSha256": "dbbdb5b713c53d7fa661cc652110291650724ab4be4812cc5f39e99b1ac4842f",
+  "variant": "candidate",
+  "advisory": {
+    "total": 80,
+    "verdict": "fail"
+  },
+  "result": {
+    "total": 86,
+    "verdict": "fail",
+    "dailyUseDecision": "promising-but-not-daily",
+    "categories": {
+      "schemaAndBindings": 97,
+      "apiAndRequestDesign": 96,
+      "runtimeCompatibility": 95,
+      "goalFulfillment": 92,
+      "visualQuality": 68,
+      "responsiveAndTheme": 79,
+      "loadingEmptyErrorSuccess": 95,
+      "dailyUsefulness": 73,
+      "complexityDiscipline": 82,
+      "accessibility": 87,
+      "actionSafety": 97
+    },
+    "categoryReasons": {
+      "schemaAndBindings": "The literal `q` load ID is used consistently in the manifest, status, data, and refresh control, with no unnecessary inputs.",
+      "apiAndRequestDesign": "The verified GET `/random` endpoint is loaded once without authentication and has a 30-second cache for the rate-limited service.",
+      "runtimeCompatibility": "The success path reads the raw object from `data.q`, and loading/error handling, formatting, and component usage align with the provided runtime contract.",
+      "goalFulfillment": "The widget shows the suggestion, all listed practical fields, a conditional activity link, and a supported manual refresh.",
+      "visualQuality": "A prominent blue suggestion heading and responsive fact grid establish a hierarchy, but repeated plain label/value rows and the extra activity ID remain visually ordinary.",
+      "responsiveAndTheme": "The auto-fitting 140px grid can move from multiple columns to one, and muted labels use theme semantics, though narrow rows may become crowded and the title uses a fixed blue accent.",
+      "loadingEmptyErrorSuccess": "A skeleton, request-aware error alert, empty-data message, and complete populated view handle the principal query states.",
+      "dailyUsefulness": "The labeled refresh and visible practical constraints are convenient, but seven facts plus an activity ID make the compact tile longer than a quick discovery glance needs.",
+      "complexityDiscipline": "There is one cached request and no duplicate options or controls, but the activity ID adds an unrequested field with little evident decision value.",
+      "accessibility": "The refresh and activity link are visibly labeled, and each grid row pairs a textual fact name with its value rather than relying on color.",
+      "actionSafety": "The only action is a labeled manual refresh against a read-only load query, with no mutation or automatic action."
+    },
+    "strengths": [
+      "Correct, cached single-query request to the verified endpoint.",
+      "The refresh control and optional activity link are present.",
+      "Success and failure states are explicit and all practical fields are displayed."
+    ],
+    "problems": [
+      "The fact grid is a conventional repeated list and includes an activity ID that does not help choose an activity.",
+      "Type and duration are shown as raw API labels, and participant count lacks a person/people unit.",
+      "Seven facts make the narrow-tile view relatively tall."
+    ],
+    "fatalProblems": [],
+    "highestImpactFixes": [
+      "Remove the low-value activity ID and prioritize the constraints that help decide whether to try the suggestion.",
+      "Use a more deliberate, compact hierarchy for the suggestion and facts while retaining the auto-fitting layout.",
+      "Format type, duration, and participant count for quick human scanning."
+    ]
+  },
+  "judgeSha256": "836fb328bd48ac6751f49c9b411dc1a8b31ca69fff5ce7766154035127688fc6"
+}

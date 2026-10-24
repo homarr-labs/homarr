@@ -1,0 +1,778 @@
+{
+  "version": 1,
+  "description": "Pinned existing evidence only; no generation, rejudging, source edits or application interactions performed while archiving.",
+  "logicalSourceRoots": {
+    "quality": "cw-consolidated/quality",
+    "qualitySummary": "cw-consolidated/quality-summary",
+    "simulationRuns": "homarr-custom-widget-workspace/sim-runs",
+    "optionalParams": "cw-consolidated/optional-params"
+  },
+  "scoringAuthority": "packages/custom-widgets/scripts/ai-evaluation.ts#parseJudgeResult",
+  "parserSha256": "1ea1ab7918ba8195a0e99d14e33f52ec5268a6ff630ed92ed833da4928feb7c2",
+  "rubricSourceRevision": "1677c940c",
+  "judgeModel": "openai/gpt-6-luna#max",
+  "sourceFiles": [
+    {
+      "archivePath": "map.json",
+      "source": {
+        "root": "quality",
+        "path": "map.json"
+      },
+      "originalSha256": "d19dd7b51260bad009400f0256499bac0378f3bfc9ac45d062dec0dc0fb976aa",
+      "originalBytes": 4697,
+      "selection": "Entire file, byte-for-byte; no metadata removed."
+    },
+    {
+      "archivePath": "aggregate.json",
+      "source": {
+        "root": "qualitySummary",
+        "path": "aggregate.json"
+      },
+      "originalSha256": "7e22f96509143bf42b2b3ceded67598d57940e72dc8ffd7d84a0027955fde350",
+      "originalBytes": 20771,
+      "selection": "Entire file, byte-for-byte; no metadata removed."
+    },
+    {
+      "archivePath": "blinded/w01/prompt.md",
+      "source": {
+        "root": "quality",
+        "path": "w01/prompt.md"
+      },
+      "originalSha256": "e991da3c9c11e5963581be1756ec2b2ea143bbb37546e0545948cab562c51711",
+      "originalBytes": 15635,
+      "selection": "Entire file, byte-for-byte; no metadata removed."
+    },
+    {
+      "archivePath": "blinded/w01/widgets.json",
+      "source": {
+        "root": "simulationRuns",
+        "path": "iter-5/agify-name/cand/run-1/widgets.json"
+      },
+      "originalSha256": "519dafbafb42d501152ad6737c509656274ec74a7ea0d27cb5491bdcbb98b84d",
+      "originalBytes": 2994,
+      "selection": "Entire file, byte-for-byte; no metadata removed."
+    },
+    {
+      "archivePath": "blinded/w01/judge.json",
+      "source": {
+        "root": "quality",
+        "path": "w01/judge.json"
+      },
+      "originalSha256": "4bc7ad277b8ca2fbd93383eca8c1e2dcee0a4c5457452ca6df0f1bd641a9dbfa",
+      "originalBytes": 3563,
+      "selection": "Entire file, byte-for-byte; no metadata removed."
+    },
+    {
+      "archivePath": "blinded/w01/normalized.json",
+      "source": {
+        "root": "qualitySummary",
+        "path": "normalized/w01.json"
+      },
+      "originalSha256": "15411e5a7ea3679c0af9d059b41194766f4ad53efdcfa9bbb79f3b2c5d2e1070",
+      "originalBytes": 4100,
+      "selection": "Entire file, byte-for-byte; no metadata removed."
+    },
+    {
+      "archivePath": "blinded/w02/prompt.md",
+      "source": {
+        "root": "quality",
+        "path": "w02/prompt.md"
+      },
+      "originalSha256": "60021b7ae83690dc6af9531dc8457f7fc86e81f3019cafa8391a6b396d9450c5",
+      "originalBytes": 15883,
+      "selection": "Entire file, byte-for-byte; no metadata removed."
+    },
+    {
+      "archivePath": "blinded/w02/widgets.json",
+      "source": {
+        "root": "simulationRuns",
+        "path": "iter-1/agify-name/dev/run-1/widgets.json"
+      },
+      "originalSha256": "0514928f5960a32cc487a0ded9af483bf4e6b5c20db618ed0c508e72c042a2af",
+      "originalBytes": 3272,
+      "selection": "Entire file, byte-for-byte; no metadata removed."
+    },
+    {
+      "archivePath": "blinded/w02/judge.json",
+      "source": {
+        "root": "quality",
+        "path": "w02/judge.json"
+      },
+      "originalSha256": "4af5d86a54041965775329dcc92cd39ddaf4b4ebbe8fd3fd17a9def319c4a04b",
+      "originalBytes": 3489,
+      "selection": "Entire file, byte-for-byte; no metadata removed."
+    },
+    {
+      "archivePath": "blinded/w02/normalized.json",
+      "source": {
+        "root": "qualitySummary",
+        "path": "normalized/w02.json"
+      },
+      "originalSha256": "d2a619c83d007dda0cc61dcd2bbd220cdf305d66f3419faf9c02efa59e0c879f",
+      "originalBytes": 4024,
+      "selection": "Entire file, byte-for-byte; no metadata removed."
+    },
+    {
+      "archivePath": "blinded/w03/prompt.md",
+      "source": {
+        "root": "quality",
+        "path": "w03/prompt.md"
+      },
+      "originalSha256": "63a6267e88c33b6c635e61cb0b3ccdb0432d675c4252e1807896942632959147",
+      "originalBytes": 15589,
+      "selection": "Entire file, byte-for-byte; no metadata removed."
+    },
+    {
+      "archivePath": "blinded/w03/widgets.json",
+      "source": {
+        "root": "simulationRuns",
+        "path": "iter-5/agify-name/cand/run-2/widgets.json"
+      },
+      "originalSha256": "1271383cf9e0b99c82c6ecd0e5667cd59400106e598f5840e968f4e17b755fc9",
+      "originalBytes": 2950,
+      "selection": "Entire file, byte-for-byte; no metadata removed."
+    },
+    {
+      "archivePath": "blinded/w03/judge.json",
+      "source": {
+        "root": "quality",
+        "path": "w03/judge.json"
+      },
+      "originalSha256": "3c66310e43a59fa5dc34a08fd2432c33964eb042e1382ac1a55c7cb45aee7eba",
+      "originalBytes": 3352,
+      "selection": "Entire file, byte-for-byte; no metadata removed."
+    },
+    {
+      "archivePath": "blinded/w03/normalized.json",
+      "source": {
+        "root": "qualitySummary",
+        "path": "normalized/w03.json"
+      },
+      "originalSha256": "28b8d3a1aad3d984af9ea5404edbb4ebe941e5bbd18007ed43c04f9762a49e3e",
+      "originalBytes": 3887,
+      "selection": "Entire file, byte-for-byte; no metadata removed."
+    },
+    {
+      "archivePath": "blinded/w04/prompt.md",
+      "source": {
+        "root": "quality",
+        "path": "w04/prompt.md"
+      },
+      "originalSha256": "2c22600d57ee0d016365edd489ff81f5c0e9c88de80d8ce17e25eb8d95892b54",
+      "originalBytes": 14990,
+      "selection": "Entire file, byte-for-byte; no metadata removed."
+    },
+    {
+      "archivePath": "blinded/w04/widgets.json",
+      "source": {
+        "root": "simulationRuns",
+        "path": "iter-5/bored-activity/cand/run-2/widgets.json"
+      },
+      "originalSha256": "991f9b1807a6b175602e7ae996eedb03f89f4960e189ac23c93e7b938939dcaf",
+      "originalBytes": 3146,
+      "selection": "Entire file, byte-for-byte; no metadata removed."
+    },
+    {
+      "archivePath": "blinded/w04/judge.json",
+      "source": {
+        "root": "quality",
+        "path": "w04/judge.json"
+      },
+      "originalSha256": "e1000acff41a3f2a2ff0ea31f7d20999747fe0b0b477df809910fea99ad4d3de",
+      "originalBytes": 3096,
+      "selection": "Entire file, byte-for-byte; no metadata removed."
+    },
+    {
+      "archivePath": "blinded/w04/normalized.json",
+      "source": {
+        "root": "qualitySummary",
+        "path": "normalized/w04.json"
+      },
+      "originalSha256": "0104edcae2c6b286247650ef4f3b198bba1f7d7e449afcc21e45f60aec215e40",
+      "originalBytes": 3633,
+      "selection": "Entire file, byte-for-byte; no metadata removed."
+    },
+    {
+      "archivePath": "blinded/w05/prompt.md",
+      "source": {
+        "root": "quality",
+        "path": "w05/prompt.md"
+      },
+      "originalSha256": "f8eab8239a584116d6f20f38f5c611f66f0fb17b66f671a0e17c99b4c3c1cbf1",
+      "originalBytes": 14077,
+      "selection": "Entire file, byte-for-byte; no metadata removed."
+    },
+    {
+      "archivePath": "blinded/w05/widgets.json",
+      "source": {
+        "root": "simulationRuns",
+        "path": "iter-1/bored-activity/dev/run-1/widgets.json"
+      },
+      "originalSha256": "07cf74c3743530a0d54997958ccd8c876767803e17fd150a3bb2b68e9776888c",
+      "originalBytes": 2233,
+      "selection": "Entire file, byte-for-byte; no metadata removed."
+    },
+    {
+      "archivePath": "blinded/w05/judge.json",
+      "source": {
+        "root": "quality",
+        "path": "w05/judge.json"
+      },
+      "originalSha256": "5dadb419ca361a4d9c7f2478bf9e820e9ea3c9e0513494d786157250cef77058",
+      "originalBytes": 3430,
+      "selection": "Entire file, byte-for-byte; no metadata removed."
+    },
+    {
+      "archivePath": "blinded/w05/normalized.json",
+      "source": {
+        "root": "qualitySummary",
+        "path": "normalized/w05.json"
+      },
+      "originalSha256": "8f5a91c2ded7c1957ed75400323ac4dfb1fa7e534d06793bb0673d1d8e8b18dc",
+      "originalBytes": 3973,
+      "selection": "Entire file, byte-for-byte; no metadata removed."
+    },
+    {
+      "archivePath": "blinded/w06/prompt.md",
+      "source": {
+        "root": "quality",
+        "path": "w06/prompt.md"
+      },
+      "originalSha256": "979b347f8f56ed8e5f2cdbc23cf5095261f3d9154dc4782037f3d62871a64d2d",
+      "originalBytes": 14949,
+      "selection": "Entire file, byte-for-byte; no metadata removed."
+    },
+    {
+      "archivePath": "blinded/w06/widgets.json",
+      "source": {
+        "root": "simulationRuns",
+        "path": "iter-5/bored-activity/cand/run-1/widgets.json"
+      },
+      "originalSha256": "b2b45f4e5df4310a6f39c03b4e724001a1c2a7aa535b3653045f7bf319f46c16",
+      "originalBytes": 3107,
+      "selection": "Entire file, byte-for-byte; no metadata removed."
+    },
+    {
+      "archivePath": "blinded/w06/judge.json",
+      "source": {
+        "root": "quality",
+        "path": "w06/judge.json"
+      },
+      "originalSha256": "836fb328bd48ac6751f49c9b411dc1a8b31ca69fff5ce7766154035127688fc6",
+      "originalBytes": 3265,
+      "selection": "Entire file, byte-for-byte; no metadata removed."
+    },
+    {
+      "archivePath": "blinded/w06/normalized.json",
+      "source": {
+        "root": "qualitySummary",
+        "path": "normalized/w06.json"
+      },
+      "originalSha256": "f2c1f5e1b9709032a289767e37dd2ee1b78e6af7949bc6ed8b90cf82a5ddd163",
+      "originalBytes": 3806,
+      "selection": "Entire file, byte-for-byte; no metadata removed."
+    },
+    {
+      "archivePath": "blinded/w07/prompt.md",
+      "source": {
+        "root": "quality",
+        "path": "w07/prompt.md"
+      },
+      "originalSha256": "1576e7458b524024eb557be24beff01297ef2025b019ea9db57bc3f97b65ab01",
+      "originalBytes": 16120,
+      "selection": "Entire file, byte-for-byte; no metadata removed."
+    },
+    {
+      "archivePath": "blinded/w07/widgets.json",
+      "source": {
+        "root": "simulationRuns",
+        "path": "iter-5/coinmarketcap-keyless/cand/run-1/widgets.json"
+      },
+      "originalSha256": "44cafec8cbe6fd0a82ddf034e5d909b162e0d0fbc4756d069c50826cd96018f7",
+      "originalBytes": 3201,
+      "selection": "Entire file, byte-for-byte; no metadata removed."
+    },
+    {
+      "archivePath": "blinded/w07/judge.json",
+      "source": {
+        "root": "quality",
+        "path": "w07/judge.json"
+      },
+      "originalSha256": "f11982d2e1690c3669658abf211abda7222c0ce3cff95296b5e0f456dcb7a950",
+      "originalBytes": 3020,
+      "selection": "Entire file, byte-for-byte; no metadata removed."
+    },
+    {
+      "archivePath": "blinded/w07/normalized.json",
+      "source": {
+        "root": "qualitySummary",
+        "path": "normalized/w07.json"
+      },
+      "originalSha256": "73d57e09f192df05f9ab8340e7746fc111bca9bf538d1b811fb2a22ef5343773",
+      "originalBytes": 3571,
+      "selection": "Entire file, byte-for-byte; no metadata removed."
+    },
+    {
+      "archivePath": "blinded/w08/prompt.md",
+      "source": {
+        "root": "quality",
+        "path": "w08/prompt.md"
+      },
+      "originalSha256": "52684f2a716bb738240ff44371846c54f776482a7a1df76d8081a26b6d4a6f81",
+      "originalBytes": 16096,
+      "selection": "Entire file, byte-for-byte; no metadata removed."
+    },
+    {
+      "archivePath": "blinded/w08/widgets.json",
+      "source": {
+        "root": "simulationRuns",
+        "path": "iter-1/coinmarketcap-keyless/dev/run-1/widgets.json"
+      },
+      "originalSha256": "4a3bb0d5b32dc10f95faad598c5562e69f39affa8c82b280e898fdb88f03129a",
+      "originalBytes": 3175,
+      "selection": "Entire file, byte-for-byte; no metadata removed."
+    },
+    {
+      "archivePath": "blinded/w08/judge.json",
+      "source": {
+        "root": "quality",
+        "path": "w08/judge.json"
+      },
+      "originalSha256": "4189de35bf2f4356cb82f5fdf473714cdeea25577000ae6ff6eb1629458b70cf",
+      "originalBytes": 3301,
+      "selection": "Entire file, byte-for-byte; no metadata removed."
+    },
+    {
+      "archivePath": "blinded/w08/normalized.json",
+      "source": {
+        "root": "qualitySummary",
+        "path": "normalized/w08.json"
+      },
+      "originalSha256": "6165b1596da6cb1819ca8e9818a31cba830348e74686d8fde568c51cb530daf3",
+      "originalBytes": 3854,
+      "selection": "Entire file, byte-for-byte; no metadata removed."
+    },
+    {
+      "archivePath": "blinded/w09/prompt.md",
+      "source": {
+        "root": "quality",
+        "path": "w09/prompt.md"
+      },
+      "originalSha256": "95cc371539a14acb56ea37523a2c33ced571f84fb90a1f53baf29f632faaaed7",
+      "originalBytes": 16159,
+      "selection": "Entire file, byte-for-byte; no metadata removed."
+    },
+    {
+      "archivePath": "blinded/w09/widgets.json",
+      "source": {
+        "root": "simulationRuns",
+        "path": "iter-5/coinmarketcap-keyless/cand/run-2/widgets.json"
+      },
+      "originalSha256": "49ffd0428a3d6774a4887fc9c1adc49082f91751424f54edaec22d105b144322",
+      "originalBytes": 3240,
+      "selection": "Entire file, byte-for-byte; no metadata removed."
+    },
+    {
+      "archivePath": "blinded/w09/judge.json",
+      "source": {
+        "root": "quality",
+        "path": "w09/judge.json"
+      },
+      "originalSha256": "deae490042da2bed72d8cf72c5968c93b938d12a088fef35faf602b27cb48484",
+      "originalBytes": 3335,
+      "selection": "Entire file, byte-for-byte; no metadata removed."
+    },
+    {
+      "archivePath": "blinded/w09/normalized.json",
+      "source": {
+        "root": "qualitySummary",
+        "path": "normalized/w09.json"
+      },
+      "originalSha256": "02d7daa19c99f9d90044eda185e1738a61636cb28a493ebdc6b45842dfa4176d",
+      "originalBytes": 3894,
+      "selection": "Entire file, byte-for-byte; no metadata removed."
+    },
+    {
+      "archivePath": "blinded/w10/prompt.md",
+      "source": {
+        "root": "quality",
+        "path": "w10/prompt.md"
+      },
+      "originalSha256": "eb1e81548701dba8151ab7f338905bd7572df21cad426864187ccfceb67487e8",
+      "originalBytes": 14778,
+      "selection": "Entire file, byte-for-byte; no metadata removed."
+    },
+    {
+      "archivePath": "blinded/w10/widgets.json",
+      "source": {
+        "root": "simulationRuns",
+        "path": "iter-5/fake-service-health/cand/run-2/widgets.json"
+      },
+      "originalSha256": "fcfd1b0b2332a452ac5520a790b395eba5288b45a99ec3c57d8550e481592df4",
+      "originalBytes": 2900,
+      "selection": "Entire file, byte-for-byte; no metadata removed."
+    },
+    {
+      "archivePath": "blinded/w10/judge.json",
+      "source": {
+        "root": "quality",
+        "path": "w10/judge.json"
+      },
+      "originalSha256": "e94864a69de71c9bbe3732da83aa203b1fd01ce505e84bd598575b464290bc0f",
+      "originalBytes": 3161,
+      "selection": "Entire file, byte-for-byte; no metadata removed."
+    },
+    {
+      "archivePath": "blinded/w10/normalized.json",
+      "source": {
+        "root": "qualitySummary",
+        "path": "normalized/w10.json"
+      },
+      "originalSha256": "1f865c7cde10332c36d9037888c450f5817e84a5b7f7516c45237daef9ba5505",
+      "originalBytes": 3712,
+      "selection": "Entire file, byte-for-byte; no metadata removed."
+    },
+    {
+      "archivePath": "blinded/w11/prompt.md",
+      "source": {
+        "root": "quality",
+        "path": "w11/prompt.md"
+      },
+      "originalSha256": "18aabd70e73a3e5d0afee0f464ff175d3cd1a3d9a85e1c683892252a44e070a5",
+      "originalBytes": 14627,
+      "selection": "Entire file, byte-for-byte; no metadata removed."
+    },
+    {
+      "archivePath": "blinded/w11/widgets.json",
+      "source": {
+        "root": "simulationRuns",
+        "path": "iter-1/fake-service-health/dev/run-1/widgets.json"
+      },
+      "originalSha256": "5b0a24cf105fcf54ed8e3f7279a975b44df7e1a2709ae13f0597548421a75cc1",
+      "originalBytes": 2749,
+      "selection": "Entire file, byte-for-byte; no metadata removed."
+    },
+    {
+      "archivePath": "blinded/w11/judge.json",
+      "source": {
+        "root": "quality",
+        "path": "w11/judge.json"
+      },
+      "originalSha256": "89d30ea3a8805b3165a405ffcdca6b860bf2e204f8bb6843594d624c37fbc258",
+      "originalBytes": 3126,
+      "selection": "Entire file, byte-for-byte; no metadata removed."
+    },
+    {
+      "archivePath": "blinded/w11/normalized.json",
+      "source": {
+        "root": "qualitySummary",
+        "path": "normalized/w11.json"
+      },
+      "originalSha256": "008e68bf037877dc6021cb669efb9820899c3558377990f17a643f913c96af8e",
+      "originalBytes": 3675,
+      "selection": "Entire file, byte-for-byte; no metadata removed."
+    },
+    {
+      "archivePath": "blinded/w12/prompt.md",
+      "source": {
+        "root": "quality",
+        "path": "w12/prompt.md"
+      },
+      "originalSha256": "9520209b61ec68739da7ac102478a1856eaad6ab25224db5a8ccbf69de133b20",
+      "originalBytes": 14720,
+      "selection": "Entire file, byte-for-byte; no metadata removed."
+    },
+    {
+      "archivePath": "blinded/w12/widgets.json",
+      "source": {
+        "root": "simulationRuns",
+        "path": "iter-5/fake-service-health/cand/run-1/widgets.json"
+      },
+      "originalSha256": "cc568a892d8ce6b9de261d0c2d271ced7ea678e364eab79027f5f747bcca5476",
+      "originalBytes": 2842,
+      "selection": "Entire file, byte-for-byte; no metadata removed."
+    },
+    {
+      "archivePath": "blinded/w12/judge.json",
+      "source": {
+        "root": "quality",
+        "path": "w12/judge.json"
+      },
+      "originalSha256": "2443ca0317c1370d148dd6b06d5431fdc1d88d1ab73b6c40bd30d531203081e2",
+      "originalBytes": 3095,
+      "selection": "Entire file, byte-for-byte; no metadata removed."
+    },
+    {
+      "archivePath": "blinded/w12/normalized.json",
+      "source": {
+        "root": "qualitySummary",
+        "path": "normalized/w12.json"
+      },
+      "originalSha256": "760d172e88b6afe1f90fd28748b11962720dd444ef2aec6834a6aa33982d2448",
+      "originalBytes": 3646,
+      "selection": "Entire file, byte-for-byte; no metadata removed."
+    },
+    {
+      "archivePath": "blinded/w13/prompt.md",
+      "source": {
+        "root": "quality",
+        "path": "w13/prompt.md"
+      },
+      "originalSha256": "1ae083e51bc91842f3740620b0262d42de7544a5546c48ca46726e73a47f5010",
+      "originalBytes": 19079,
+      "selection": "Entire file, byte-for-byte; no metadata removed."
+    },
+    {
+      "archivePath": "blinded/w13/widgets.json",
+      "source": {
+        "root": "simulationRuns",
+        "path": "iter-5/pokedex/cand/run-1/widgets.json"
+      },
+      "originalSha256": "9ca5ef558f3385ca796154894c0a15b196dc16410f76cd8dad453479bd55f69f",
+      "originalBytes": 6226,
+      "selection": "Entire file, byte-for-byte; no metadata removed."
+    },
+    {
+      "archivePath": "blinded/w13/judge.json",
+      "source": {
+        "root": "quality",
+        "path": "w13/judge.json"
+      },
+      "originalSha256": "0899e159510b3a5e2e01bd517b79c8a2835169c5c10a6156ff734cfc0624b507",
+      "originalBytes": 3504,
+      "selection": "Entire file, byte-for-byte; no metadata removed."
+    },
+    {
+      "archivePath": "blinded/w13/normalized.json",
+      "source": {
+        "root": "qualitySummary",
+        "path": "normalized/w13.json"
+      },
+      "originalSha256": "4a37a62d42162b5a18799b6c3851f47c4cf0937e3e93b68833455118ba4e774b",
+      "originalBytes": 4031,
+      "selection": "Entire file, byte-for-byte; no metadata removed."
+    },
+    {
+      "archivePath": "blinded/w14/prompt.md",
+      "source": {
+        "root": "quality",
+        "path": "w14/prompt.md"
+      },
+      "originalSha256": "1728a2abb3ab8266a1a8659fd7927d7f13af0bf2f8d933120f0da5f1a9c06f81",
+      "originalBytes": 19882,
+      "selection": "Entire file, byte-for-byte; no metadata removed."
+    },
+    {
+      "archivePath": "blinded/w14/widgets.json",
+      "source": {
+        "root": "simulationRuns",
+        "path": "iter-1/pokedex/dev/run-1/widgets.json"
+      },
+      "originalSha256": "4b5b3ae87e07d973660ad3656a62af8a569baa4690e7d7a75454cc996440fba1",
+      "originalBytes": 7027,
+      "selection": "Entire file, byte-for-byte; no metadata removed."
+    },
+    {
+      "archivePath": "blinded/w14/judge.json",
+      "source": {
+        "root": "quality",
+        "path": "w14/judge.json"
+      },
+      "originalSha256": "2a12db4d4815c9fe241e3998638784cd24f8c528db3b371d851c1dded38b5bbe",
+      "originalBytes": 3688,
+      "selection": "Entire file, byte-for-byte; no metadata removed."
+    },
+    {
+      "archivePath": "blinded/w14/normalized.json",
+      "source": {
+        "root": "qualitySummary",
+        "path": "normalized/w14.json"
+      },
+      "originalSha256": "fe0670dfe04873847e62bdb3c598366c38cffa870b72c3e5d10771a7dc00d21b",
+      "originalBytes": 4221,
+      "selection": "Entire file, byte-for-byte; no metadata removed."
+    },
+    {
+      "archivePath": "blinded/w15/prompt.md",
+      "source": {
+        "root": "quality",
+        "path": "w15/prompt.md"
+      },
+      "originalSha256": "610d4cb2bb18783b8365f5c6882593f533f25fe6eb80344123aee656cf312f9a",
+      "originalBytes": 20082,
+      "selection": "Entire file, byte-for-byte; no metadata removed."
+    },
+    {
+      "archivePath": "blinded/w15/widgets.json",
+      "source": {
+        "root": "simulationRuns",
+        "path": "iter-5/pokedex/cand/run-2/widgets.json"
+      },
+      "originalSha256": "eff91c29f794e5011ba5ca766242010a3f8fc26c6a9a8198e60b2c8302989c1c",
+      "originalBytes": 7213,
+      "selection": "Entire file, byte-for-byte; no metadata removed."
+    },
+    {
+      "archivePath": "blinded/w15/judge.json",
+      "source": {
+        "root": "quality",
+        "path": "w15/judge.json"
+      },
+      "originalSha256": "f555417b68c1710f49bdae954a7c9dcea455f855aeab11afe307190415c24bc9",
+      "originalBytes": 3747,
+      "selection": "Entire file, byte-for-byte; no metadata removed."
+    },
+    {
+      "archivePath": "blinded/w15/normalized.json",
+      "source": {
+        "root": "qualitySummary",
+        "path": "normalized/w15.json"
+      },
+      "originalSha256": "c8c8eff8859b7db91685daf66711d1238adf305d202192f55e0413f66c11bc8e",
+      "originalBytes": 4276,
+      "selection": "Entire file, byte-for-byte; no metadata removed."
+    },
+    {
+      "archivePath": "optional-params/run-1/widgets.json",
+      "source": {
+        "root": "optionalParams",
+        "path": "run-1/widgets.json"
+      },
+      "originalSha256": "4c26935e8cec5f7de4c88cc0a58ebb39ac6cfe2701916541afa28d6d38b953d4",
+      "originalBytes": 4715,
+      "selection": "Entire file, byte-for-byte; no metadata removed."
+    },
+    {
+      "archivePath": "optional-params/run-1/grading.json",
+      "source": {
+        "root": "optionalParams",
+        "path": "run-1/grading.json"
+      },
+      "originalSha256": "1e7cbd7f8547df7efd5cacb739146d2fac767471890ba843b7eebb1f60fbc3de",
+      "originalBytes": 1124,
+      "selection": "Entire file, byte-for-byte; no metadata removed."
+    },
+    {
+      "archivePath": "optional-params/run-2/widgets.json",
+      "source": {
+        "root": "optionalParams",
+        "path": "run-2/widgets.json"
+      },
+      "originalSha256": "5fb50ec9b5faabf423c0232cf5f1b93c7fe3a78fbd8c5e948ed31186b5e8b747",
+      "originalBytes": 3649,
+      "selection": "Entire file, byte-for-byte; no metadata removed."
+    },
+    {
+      "archivePath": "optional-params/run-2/grading.json",
+      "source": {
+        "root": "optionalParams",
+        "path": "run-2/grading.json"
+      },
+      "originalSha256": "ec188ffdfaeb37995160abacf6763f5a0bace692db6bfe1d33aea898273da2a0",
+      "originalBytes": 1125,
+      "selection": "Entire file, byte-for-byte; no metadata removed."
+    },
+    {
+      "archivePath": "optional-params/interactions/request-summary.json",
+      "source": {
+        "root": "optionalParams",
+        "path": "interactions/request-summary.json"
+      },
+      "originalSha256": "163f3c508878e4a7da628e3075c59552635c7fdb5c30f533e43f12eb840d0f57",
+      "originalBytes": 1861,
+      "selection": "Entire file, byte-for-byte; no metadata removed."
+    },
+    {
+      "archivePath": "optional-params/interactions/definition-integrity.json",
+      "source": {
+        "root": "optionalParams",
+        "path": "interactions/definition-integrity.json"
+      },
+      "originalSha256": "caf07fc984e3cf3ba7e270d3d22409eac298500e014fd859be21ff78c17ed1da",
+      "originalBytes": 1775,
+      "selection": "Entire file, byte-for-byte; no metadata removed."
+    },
+    {
+      "archivePath": "optional-params/interactions/outcome.md",
+      "source": {
+        "root": "optionalParams",
+        "path": "interactions/RESULTS.md"
+      },
+      "originalSha256": "9825ce60ef10b9dcba3caa8ffad5337f5fc7b526343788e923ce8ee2ae262c92",
+      "originalBytes": 6000,
+      "selection": {
+        "sourceLinesInclusive": [
+          [
+            1,
+            16
+          ],
+          [
+            34,
+            34
+          ],
+          [
+            40,
+            42
+          ],
+          [
+            46,
+            46
+          ]
+        ],
+        "addedText": "Blank separators and the heading \"## Fixture scope\" only.",
+        "omitted": "Screenshot/local-file links, redundant evidence listing, machine-local setup and scratch-session identifiers, and cleanup metadata; both successful and unsuccessful outcomes retained."
+      }
+    }
+  ],
+  "additionalReadOnlyVerification": [
+    {
+      "source": {
+        "root": "optionalParams",
+        "path": "interactions/run-1-invalid-U.txt"
+      },
+      "originalSha256": "e4d40dab5f57bc99c679da033629c3ce67e047ec67d5fc76b39b1e33859fd3bf",
+      "selection": "Read-only verification of visible invalid-country feedback; full browser snapshot not packaged.",
+      "visibleText": "Use a two-letter country code, such as US.",
+      "absentText": "HTTP 422: Unprocessable Entity"
+    },
+    {
+      "source": {
+        "root": "optionalParams",
+        "path": "interactions/run-2-invalid-U-result.txt"
+      },
+      "originalSha256": "cb3ff469b37a1fa6d07f46750a943c5226f738f357a5adb66d42447c3fe1f39d",
+      "selection": "Read-only verification of visible invalid-country feedback; full browser snapshot not packaged.",
+      "visibleText": "HTTP 422: Unprocessable Entity",
+      "absentText": "Use a two-letter country code, such as US."
+    },
+    {
+      "source": {
+        "root": "optionalParams",
+        "path": "interactions/run-2-invalid-USA-result.txt"
+      },
+      "originalSha256": "0ea6522b43db801f9025ac051845840f4939af4c52b7055ce8490e2444d88169",
+      "selection": "Read-only verification of visible invalid-country feedback; full browser snapshot not packaged.",
+      "visibleText": "HTTP 422: Unprocessable Entity",
+      "absentText": "Use a two-letter country code, such as US."
+    }
+  ],
+  "authoredReports": [
+    {
+      "archivePath": "README.md",
+      "inputs": [
+        "map.json",
+        "aggregate.json",
+        "optional-params/interactions/request-summary.json",
+        "optional-params/interactions/definition-integrity.json",
+        "optional-params/interactions/outcome.md"
+      ]
+    }
+  ],
+  "exclusions": [
+    "Generated bundles and logs",
+    "Secrets or credential-bearing payloads",
+    "Screenshots and fabricated public evidence URLs",
+    "Active core-prompt/app/chart or rich-generation work",
+    "Unrelated historical benchmark archives"
+  ]
+}

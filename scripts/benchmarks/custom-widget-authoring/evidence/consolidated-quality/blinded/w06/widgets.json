@@ -1,0 +1,28 @@
+[
+  {
+    "$schema": "homarr-custom-widget-v2",
+    "name": "Activity Discovery",
+    "description": "A fresh activity idea with practical details and a link when available.",
+    "sources": {
+      "default": {
+        "name": "Bored API",
+        "baseUrl": "https://bored-api.appbrewery.com",
+        "auth": "none"
+      }
+    },
+    "requests": {
+      "q": {
+        "source": "default",
+        "kind": "query",
+        "method": "GET",
+        "path": "/random",
+        "trigger": "load",
+        "auth": "inherit",
+        "permission": "view",
+        "cacheSeconds": 30
+      }
+    },
+    "options": {},
+    "template": "<Stack gap=\"xs\">\n<Group justify=\"space-between\" wrap=\"nowrap\" gap=\"xs\"><Text fw={600} truncate>Activity discovery</Text><RefreshButton requestId=\"q\" label=\"Another idea\" /></Group>\n{status.q?.loading ? <Skeleton height={92} /> : status.q?.ok === false ? <Alert color=\"red\" title=\"Suggestion unavailable\">{status.q.statusText || status.q.error || \"Request failed\"}</Alert> : !data.q?.activity ? <Text size=\"sm\" c=\"dimmed\">No activity suggestion is available.</Text> : <Stack gap=\"xs\"><Text fz={24} fw={700} lh={1.15} c=\"blue\">{data.q.activity}</Text>{data.q.link ? <Anchor href={data.q.link} target=\"_blank\" rel=\"noreferrer\">Open activity</Anchor> : <Text size=\"sm\" c=\"dimmed\">No link available</Text>}<SimpleGrid minColWidth={140} autoFlow=\"auto-fit\" spacing=\"xs\"><Group justify=\"space-between\" wrap=\"nowrap\" gap=\"xs\"><Text size=\"sm\" c=\"dimmed\">Type</Text><Text size=\"sm\" truncate>{data.q.type ?? \"Unknown\"}</Text></Group><Group justify=\"space-between\" wrap=\"nowrap\" gap=\"xs\"><Text size=\"sm\" c=\"dimmed\">Availability</Text><Text size=\"sm\">{data.q.availability == null ? \"—\" : Math.round(data.q.availability * 100).toLocaleString(\"en-US\") + \"%\"}</Text></Group><Group justify=\"space-between\" wrap=\"nowrap\" gap=\"xs\"><Text size=\"sm\" c=\"dimmed\">Participants</Text><Text size=\"sm\">{data.q.participants?.toLocaleString(\"en-US\") ?? \"—\"}</Text></Group><Group justify=\"space-between\" wrap=\"nowrap\" gap=\"xs\"><Text size=\"sm\" c=\"dimmed\">Price score</Text><Text size=\"sm\">{data.q.price == null ? \"—\" : Math.round(data.q.price * 100).toLocaleString(\"en-US\") + \"%\"}</Text></Group><Group justify=\"space-between\" wrap=\"nowrap\" gap=\"xs\"><Text size=\"sm\" c=\"dimmed\">Accessibility</Text><Text size=\"sm\" truncate>{data.q.accessibility ?? \"Unknown\"}</Text></Group><Group justify=\"space-between\" wrap=\"nowrap\" gap=\"xs\"><Text size=\"sm\" c=\"dimmed\">Duration</Text><Text size=\"sm\">{data.q.duration ?? \"Unknown\"}</Text></Group><Group justify=\"space-between\" wrap=\"nowrap\" gap=\"xs\"><Text size=\"sm\" c=\"dimmed\">Kid friendly</Text><Text size=\"sm\">{data.q.kidFriendly === true ? \"Yes\" : data.q.kidFriendly === false ? \"No\" : \"Unknown\"}</Text></Group></SimpleGrid><Group justify=\"space-between\" wrap=\"nowrap\" gap=\"xs\"><Text size=\"sm\" c=\"dimmed\">Activity ID</Text><Text size=\"sm\">{data.q.key ?? \"—\"}</Text></Group></Stack>}</Stack>"
+  }
+]

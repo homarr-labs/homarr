@@ -1,0 +1,60 @@
+{
+  "id": "w11",
+  "run": "iter-1/fake-service-health/dev/run-1",
+  "caseId": "fake-service-health",
+  "promptSha256": "18aabd70e73a3e5d0afee0f464ff175d3cd1a3d9a85e1c683892252a44e070a5",
+  "widgetSha256": "ef0f4b5db5c67e5bd2d728c83882de68a1dc0a4220c8c51399b1cf5948ef324b",
+  "variant": "baseline",
+  "advisory": {
+    "total": 75,
+    "verdict": "fail"
+  },
+  "result": {
+    "total": 81,
+    "verdict": "fail",
+    "dailyUseDecision": "promising-but-not-daily",
+    "categories": {
+      "schemaAndBindings": 96,
+      "apiAndRequestDesign": 98,
+      "runtimeCompatibility": 92,
+      "goalFulfillment": 88,
+      "visualQuality": 67,
+      "responsiveAndTheme": 60,
+      "loadingEmptyErrorSuccess": 81,
+      "dailyUsefulness": 66,
+      "complexityDiscipline": 85,
+      "accessibility": 78,
+      "actionSafety": 100
+    },
+    "categoryReasons": {
+      "schemaAndBindings": "The manifest defines one literal load query and the template reads the corresponding data.health payload without unnecessary parameters.",
+      "apiAndRequestDesign": "The configured unauthenticated source and GET /v1/health match the verified contract and no unsupported endpoint is introduced.",
+      "runtimeCompatibility": "It uses the documented status and data roots, RefreshButton, safe UTC formatting, and supported map expressions.",
+      "goalFulfillment": "The summary card and service rows cover overall state, incidents, latency, last check, and the supplied service details.",
+      "visualQuality": "A bordered summary card separates the service list, but the three equal KPIs and repeated standard rows feel generic and the main health state lacks strong emphasis.",
+      "responsiveAndTheme": "SimpleGrid cols={3} fixes all summary values into three columns, making the timestamp and metrics poorly suited to narrow dashboard tiles.",
+      "loadingEmptyErrorSuccess": "Loading, error, missing payload, empty services, and populated data each have a visible branch, but the failure branch discards available status details.",
+      "dailyUsefulness": "The refresh control and useful data are present, but fixed KPI columns are likely to compromise repeated use in the explicitly requested narrow tiles.",
+      "complexityDiscipline": "A single request and one summary card keep the implementation straightforward, with no dead controls or extra actions.",
+      "accessibility": "The refresh control has a visible label and statuses are written in badges, though the small check-time text and cramped fixed grid weaken readability.",
+      "actionSafety": "Only the verified read-only query is configured; no mutation or unsupported action is exposed."
+    },
+    "strengths": [
+      "Matches the verified endpoint and authentication contract.",
+      "Includes all requested summary fields and service-level status and latency.",
+      "Has explicit loading, error, empty, and no-data feedback.",
+      "Uses a labeled refresh control and visible text in status badges."
+    ],
+    "problems": [
+      "The fixed three-column KPI grid is not responsive to narrow tiles and can compress the timestamp.",
+      "The overall state is presented as a badge inside a generic card rather than as the strongest visual signal.",
+      "The error branch gives only a generic message despite the available status text or error fields."
+    ],
+    "fatalProblems": [],
+    "highestImpactFixes": [
+      "Replace the fixed three-column KPI layout with a width-adaptive summary arrangement.",
+      "Promote the overall status and preserve error context in the visible failure state."
+    ]
+  },
+  "judgeSha256": "89d30ea3a8805b3165a405ffcdca6b860bf2e204f8bb6843594d624c37fbc258"
+}

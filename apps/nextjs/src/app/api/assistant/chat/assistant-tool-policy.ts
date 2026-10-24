@@ -26,7 +26,7 @@ Apply this reference only when the user's task calls for creating, editing, or i
 ${CUSTOM_WIDGET_TOOL_STAGING_INSTRUCTION}
 
 AUTHORING REFERENCE — ALREADY LOADED
-Use the schema, runtime, security rules and component contracts below directly. Do not retrieve Markdown references. Common component props and all registered names are supplied; only look up an uncommon component when its exact contract is missing. Draft the complete widget, then let preview validation report concrete errors rather than speculating about supported syntax.
+Use the schema, runtime, security rules and component contracts below directly. Do not retrieve Markdown references. Common component props and all registered names are supplied. For charts, fetch the exact registered chart contracts lazily through customWidget_findComponents/customWidget_getComponents before authoring props; never infer props from a name or embed the full catalog. Other missing component contracts use the same focused lookup. Draft the complete widget, then let preview validation report concrete errors rather than speculating about supported syntax.
 
 ${Object.values(CUSTOM_WIDGET_SKILL_REFERENCES).join("\n\n")}
 

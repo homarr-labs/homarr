@@ -1,0 +1,139 @@
+{
+  "node": {
+    "executable": "<node-24.22.1>",
+    "version": "v24.22.1",
+    "versions": {
+      "node": "24.22.1",
+      "acorn": "8.18.0",
+      "ada": "4.0.0",
+      "amaro": "1.1.11",
+      "ares": "1.34.9",
+      "brotli": "1.2.0",
+      "cldr": "48.0",
+      "icu": "78.3",
+      "llhttp": "9.4.3",
+      "merve": "1.2.2",
+      "modules": "137",
+      "napi": "10",
+      "nbytes": "0.1.4",
+      "ncrypto": "0.0.1",
+      "nghttp2": "1.70.0",
+      "nghttp3": "",
+      "ngtcp2": "",
+      "openssl": "3.5.9",
+      "simdjson": "4.6.11",
+      "simdutf": "6.4.0",
+      "sqlite": "3.53.4",
+      "tz": "2026e",
+      "undici": "7.30.1",
+      "unicode": "17.0",
+      "uv": "1.52.1",
+      "uvwasi": "0.0.23",
+      "v8": "13.6.233.17-node.58",
+      "zlib": "1.3.2.1-motley-285e94b",
+      "zstd": "1.5.7"
+    }
+  },
+  "dependencies": {
+    "before": [
+      {
+        "name": "tsx",
+        "version": "4.21.0",
+        "packagePath": "<baseline>/node_modules/tsx/package.json",
+        "packageSha256": "6e764b21991c21595441f82387c1451ccd10a3e7a3f0973cc5e3649a12dea7d2"
+      },
+      {
+        "name": "esbuild",
+        "version": "0.28.2",
+        "packagePath": "<baseline>/node_modules/esbuild/package.json",
+        "packageSha256": "9d0bc453f4e791553c4cc2298ba023b409241fd9801e494741666eb0f6051490"
+      },
+      {
+        "name": "undici",
+        "version": "7.29.1",
+        "packagePath": "<baseline>/node_modules/undici/package.json",
+        "packageSha256": "10e55f4adb6a43e72823ea235ff6a0c777db1ef68e3a1c810f0246e1b9332d8b"
+      },
+      {
+        "name": "better-sqlite3",
+        "version": "12.11.1",
+        "packagePath": "<baseline>/node_modules/better-sqlite3/package.json",
+        "packageSha256": "4665126292eff5dffe6c0ffabf98c4de18e479aa0b53edd775028eb567b3ecc1"
+      },
+      {
+        "name": "drizzle-orm",
+        "version": "0.45.2",
+        "packagePath": "<baseline>/node_modules/drizzle-orm/package.json",
+        "packageSha256": "9fd30ce718965c19178ac6936462b77017f1fffe56865124d0cfe55850de09ff"
+      },
+      {
+        "name": "superjson",
+        "version": "2.2.6",
+        "packagePath": "<baseline>/node_modules/superjson/package.json",
+        "packageSha256": "d05ee30464bfd26bbdecdaa628b9937925f23c8d205d7db662c8b779c4ef6971"
+      },
+      {
+        "name": "@trpc/server",
+        "version": "11.18.0",
+        "packagePath": "<baseline>/node_modules/@trpc/server/package.json",
+        "packageSha256": "e415a40af5e86050ede596144dd893e85d808a167d64e636ec451f7f78b04389"
+      },
+      {
+        "name": "typescript",
+        "version": "7.0.2",
+        "packagePath": "<baseline>/node_modules/typescript/package.json",
+        "packageSha256": "3722b30210616a13a3213ded11575ba6b2dbab10c32a5ef67afca8513e27017e"
+      }
+    ],
+    "after": [
+      {
+        "name": "tsx",
+        "version": "4.21.0",
+        "packagePath": "<candidate>/node_modules/tsx/package.json",
+        "packageSha256": "6e764b21991c21595441f82387c1451ccd10a3e7a3f0973cc5e3649a12dea7d2"
+      },
+      {
+        "name": "esbuild",
+        "version": "0.28.2",
+        "packagePath": "<candidate>/node_modules/esbuild/package.json",
+        "packageSha256": "9d0bc453f4e791553c4cc2298ba023b409241fd9801e494741666eb0f6051490"
+      },
+      {
+        "name": "undici",
+        "version": "7.29.1",
+        "packagePath": "<candidate>/node_modules/undici/package.json",
+        "packageSha256": "10e55f4adb6a43e72823ea235ff6a0c777db1ef68e3a1c810f0246e1b9332d8b"
+      },
+      {
+        "name": "better-sqlite3",
+        "version": "12.11.1",
+        "packagePath": "<candidate>/node_modules/better-sqlite3/package.json",
+        "packageSha256": "4665126292eff5dffe6c0ffabf98c4de18e479aa0b53edd775028eb567b3ecc1"
+      },
+      {
+        "name": "drizzle-orm",
+        "version": "0.45.2",
+        "packagePath": "<candidate>/node_modules/drizzle-orm/package.json",
+        "packageSha256": "9fd30ce718965c19178ac6936462b77017f1fffe56865124d0cfe55850de09ff"
+      },
+      {
+        "name": "superjson",
+        "version": "2.2.6",
+        "packagePath": "<candidate>/node_modules/superjson/package.json",
+        "packageSha256": "d05ee30464bfd26bbdecdaa628b9937925f23c8d205d7db662c8b779c4ef6971"
+      },
+      {
+        "name": "@trpc/server",
+        "version": "11.18.0",
+        "packagePath": "<candidate>/node_modules/@trpc/server/package.json",
+        "packageSha256": "e415a40af5e86050ede596144dd893e85d808a167d64e636ec451f7f78b04389"
+      },
+      {
+        "name": "typescript",
+        "version": "7.0.2",
+        "packagePath": "<candidate>/node_modules/typescript/package.json",
+        "packageSha256": "3722b30210616a13a3213ded11575ba6b2dbab10c32a5ef67afca8513e27017e"
+      }
+    ]
+  }
+}

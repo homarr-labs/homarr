@@ -1,0 +1,60 @@
+{
+  "id": "w08",
+  "run": "iter-1/coinmarketcap-keyless/dev/run-1",
+  "caseId": "coinmarketcap-keyless",
+  "promptSha256": "52684f2a716bb738240ff44371846c54f776482a7a1df76d8081a26b6d4a6f81",
+  "widgetSha256": "c5de524cffa4aaf91af7e37f2b5686a51ba85046123c48fc20c6d15da366f893",
+  "variant": "baseline",
+  "advisory": {
+    "total": 79,
+    "verdict": "fail"
+  },
+  "result": {
+    "total": 80,
+    "verdict": "fail",
+    "dailyUseDecision": "promising-but-not-daily",
+    "categories": {
+      "schemaAndBindings": 96,
+      "apiAndRequestDesign": 95,
+      "runtimeCompatibility": 83,
+      "goalFulfillment": 88,
+      "visualQuality": 65,
+      "responsiveAndTheme": 65,
+      "loadingEmptyErrorSuccess": 88,
+      "dailyUsefulness": 69,
+      "complexityDiscipline": 74,
+      "accessibility": 82,
+      "actionSafety": 100
+    },
+    "categoryReasons": {
+      "schemaAndBindings": "The quotes load request is read at data.quotes.data, which matches the documented response shape and has no unnecessary controls.",
+      "apiAndRequestDesign": "The keyless request uses the verified CoinMarketCap endpoint, exact IDs, USD conversion, and a load trigger; no unsupported route or auth requirement is introduced.",
+      "runtimeCompatibility": "The template uses documented data and status roots, RefreshButton, and ordinary numeric formatting, though repeated toFixed and hand-built magnitude expressions are less consistent than the documented locale formatter.",
+      "goalFulfillment": "Price, 24-hour change, market cap, volume, and refresh context are rendered for the three requested assets, with a global source timestamp.",
+      "visualQuality": "The title and quote values have a basic hierarchy, but the ungrouped price strings, plain repeated rows, and lack of row division make the presentation ordinary.",
+      "responsiveAndTheme": "The asset name can truncate and the short Cap/24h vol labels save width, but the quote and two-stat rows are all forced to nowrap with no narrow-layout alternative.",
+      "loadingEmptyErrorSuccess": "Loading, request error, empty result, and populated data each have explicit render branches.",
+      "dailyUsefulness": "The labeled refresh and core figures are convenient, but ungrouped prices, fixed single-line detail groups, and zero fallbacks for absent metrics weaken quick repeated scanning.",
+      "complexityDiscipline": "One load request keeps the data model lean, while duplicated trillion/billion formatting expressions and repeated metric markup add avoidable template complexity.",
+      "accessibility": "The market labels and percentage values are visible text and the refresh control has a text label, though missing percentage data can be presented as a colored zero.",
+      "actionSafety": "The only operation is a read-only quote request; no mutation or unsafe action is available."
+    },
+    "strengths": [
+      "The endpoint and asset ID filtering match the verified API contract.",
+      "The widget includes all requested market values and a refresh control.",
+      "Explicit loading, error, and empty states are present."
+    ],
+    "problems": [
+      "Price formatting omits thousands separators.",
+      "Absent percentage, market-cap, or volume values fall back to numeric zero rather than an unavailable marker.",
+      "The nowrap detail groups have no alternate narrow-tile layout."
+    ],
+    "fatalProblems": [],
+    "highestImpactFixes": [
+      "Use locale-based USD formatting and preserve missing values as unavailable instead of displaying zero.",
+      "Make the market-cap and volume row adapt for narrow tiles instead of forcing both groups onto one line.",
+      "Replace the repeated magnitude conditionals with the installed compact number formatter."
+    ]
+  },
+  "judgeSha256": "4189de35bf2f4356cb82f5fdf473714cdeea25577000ae6ff6eb1629458b70cf"
+}

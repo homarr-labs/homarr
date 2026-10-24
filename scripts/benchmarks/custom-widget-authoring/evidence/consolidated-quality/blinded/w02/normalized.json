@@ -1,0 +1,62 @@
+{
+  "id": "w02",
+  "run": "iter-1/agify-name/dev/run-1",
+  "caseId": "agify-name",
+  "promptSha256": "60021b7ae83690dc6af9531dc8457f7fc86e81f3019cafa8391a6b396d9450c5",
+  "widgetSha256": "ec03dca1f1931c4bbef6b46857a42e6f991d4aee293fb847145da7a56002245d",
+  "variant": "baseline",
+  "advisory": {
+    "total": 69,
+    "verdict": "fail"
+  },
+  "result": {
+    "total": 78,
+    "verdict": "fail",
+    "dailyUseDecision": "promising-but-not-daily",
+    "categories": {
+      "schemaAndBindings": 88,
+      "apiAndRequestDesign": 90,
+      "runtimeCompatibility": 88,
+      "goalFulfillment": 80,
+      "visualQuality": 64,
+      "responsiveAndTheme": 75,
+      "loadingEmptyErrorSuccess": 89,
+      "dailyUsefulness": 68,
+      "complexityDiscipline": 62,
+      "accessibility": 84,
+      "actionSafety": 96
+    },
+    "categoryReasons": {
+      "schemaAndBindings": "Both manual request definitions map the bound name and, for the country request, country to the corresponding query parameters; both inputs declare empty defaults.",
+      "apiAndRequestDesign": "The source uses the verified Agify origin and apikey authentication, and both GET / definitions use the documented name and optional country_id fields.",
+      "runtimeCompatibility": "Literal SubFetch IDs, matching params, manual triggers, and supported conditional result callbacks are used for both query paths.",
+      "goalFulfillment": "The widget covers name lookup, optional country scoping, estimate, evidence count, uncertainty, and initial/no-age states, but accepts arbitrary country text and only treats null age as no-result.",
+      "visualQuality": "The labels and estimate are readable, but the plain stacked form and repeated bordered result cards lack a distinct visual hierarchy or purposeful emphasis.",
+      "responsiveAndTheme": "The vertical Stack layout is likely to fit narrow tiles, but the bordered cards and unvaried text styling provide little responsive or theme-specific polish.",
+      "loadingEmptyErrorSuccess": "The initial prompt and null-age result are authored, while each SubFetch supplies its own loading, error, and retry UI.",
+      "dailyUsefulness": "A name can be entered and manually rerun, but the repeated form/result paths and lack of country validation make the experience feel cumbersome for reuse.",
+      "complexityDiscipline": "The manifest duplicates nearly identical request definitions and repeats the result-card markup across country and non-country branches.",
+      "accessibility": "The inputs have visible labels and the custom launcher declares an aria-label, and the estimate and caveat are conveyed as text.",
+      "actionSafety": "Both queries are explicitly manual and use source-level API-key authentication, with no automatic write or mutation behavior."
+    },
+    "strengths": [
+      "Both request variants use the correct endpoint, source authentication, and parameter names.",
+      "The name and country inputs are bound and have explicit defaults.",
+      "The result copy distinguishes an estimate from certainty and includes an evidence count.",
+      "Loading and error/retry states are provided by the manual SubFetch runtime."
+    ],
+    "problems": [
+      "Country input is uppercased but not checked for exactly two letters before it is sent.",
+      "Separate predict and predictCountry requests duplicate request and result-rendering logic.",
+      "The simple bordered cards and repeated copy make the widget visually generic.",
+      "The no-result branch is based on null age and does not explain whether the entered country value was accepted."
+    ],
+    "fatalProblems": [],
+    "highestImpactFixes": [
+      "Unify the two request paths and render one shared result layout.",
+      "Validate the optional country value as a two-letter code and give invalid input explicit feedback.",
+      "Strengthen the estimate/evidence hierarchy and reduce repeated card framing."
+    ]
+  },
+  "judgeSha256": "4af5d86a54041965775329dcc92cd39ddaf4b4ebbe8fd3fd17a9def319c4a04b"
+}

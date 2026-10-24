@@ -2,6 +2,8 @@ import { fetchApi } from "@homarr/api/client";
 import { isRecord } from "@homarr/common";
 import {
   customWidgetDefinitionSchema,
+  customWidgetRequestsSchema,
+  customWidgetSourcesSchema,
   getCustomWidgetDefaultOptions,
   getCustomWidgetRequiredSecretKinds,
   parseCustomWidgetAiResponse,
@@ -40,6 +42,27 @@ export function getChangedSecrets(values: Pick<CustomWidgetFormValues, "secrets"
     }));
 }
 
+export function isSimpleCustomWidgetQuerySetup(values: Pick<CustomWidgetFormValues, "sources" | "requests">) {
+  const sources = customWidgetSourcesSchema.safeParse(parseJson(values.sources));
+  const requests = customWidgetRequestsSchema.safeParse(parseJson(values.requests));
+  if (!sources.success || !requests.success) return false;
+  if (Object.keys(sources.data).length !== 1 || Object.keys(requests.data).length !== 1) return false;
+  const request = Object.values(requests.data)[0];
+  return (
+    request?.source === "default" &&
+    request.kind === "query" &&
+    request.method === "GET" &&
+    request.trigger === "load" &&
+    request.permission === "view" &&
+    request.auth === "inherit" &&
+    request.body === undefined &&
+    request.headers === undefined &&
+    request.confirmation === undefined &&
+    request.invalidates === undefined &&
+    request.cacheSeconds === undefined
+  );
+}
+
 export function filterSecretsForSourceAuthentication(
   secrets: CustomWidgetFormValues["secrets"],
   sourceId: string,
@@ -59,6 +82,7 @@ export function applyDefinition(form: CustomWidgetWorkbenchForm, widget: HomarrC
     requests: JSON.stringify(widget.requests, null, 2),
     options: JSON.stringify(widget.options, null, 2),
     template: widget.template,
+    secrets: form.getValues().secrets.filter((secret) => Object.hasOwn(widget.sources, secret.sourceId)),
   });
 }
 

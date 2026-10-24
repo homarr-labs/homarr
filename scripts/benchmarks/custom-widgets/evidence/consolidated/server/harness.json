@@ -1,0 +1,26 @@
+{
+  "rootHandling": "Unchanged candidate wrapper and fixtures; ROOT selects checkout; OUTPUT selects private raw directory",
+  "modifications": [],
+  "files": [
+    {
+      "path": "README.md",
+      "sha256": "b01374b8d42cc0cc48071bd139e06b3737237646a85b1eb084f8cefc495f8e9a"
+    },
+    {
+      "path": "run-server.mjs",
+      "sha256": "549d7a9756ba794fc86b0fb3f20348635e41f46df59a4e291279101620231030"
+    },
+    {
+      "path": "server/router.mts",
+      "sha256": "2d2930d3aa0fb422b474d66eaa5fd3d8740d04113455e1f59c73aed4889c5c7c"
+    },
+    {
+      "path": "server/management.mts",
+      "sha256": "24bdae1bef0380e10e2a23fc0a9e452ebd0fc6dbadca851882acd099f426c4c4"
+    },
+    {
+      "path": "server/response.mts",
+      "sha256": "d4ba33c2986820684f0fe383013957e980efcd0c4bfa9ac7309029da5c56350e"
+    }
+  ]
+}

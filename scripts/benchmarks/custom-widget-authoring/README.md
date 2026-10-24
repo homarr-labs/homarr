@@ -70,6 +70,14 @@ HTTP fixture, dark theme, 1920×1080 browser viewport and the workbench's 320/72
 connection URL was configured to the loopback fixture; generated JSX was not edited. Static grading alone
 does not establish visual quality; these screenshots are illustrative, not a substitute for the full rubric.
 
+## Pinned blinded rejudging (2026-10-25)
+
+[`evidence/consolidated-quality/`](evidence/consolidated-quality/README.md) preserves 15 pinned prompts, original
+widgets, untouched judges, parser-normalized results and provenance. Baseline 5 versus candidate 10 averages
+**77.8 → 85.0**, but **all 15 fail and none chooses daily use**; this is descriptive, not a controlled comparison.
+Both optional-country attempts are retained: run 1 passes; run 2 handles blank/US but shows generic HTTP 422 for
+invalid country, without an undefined/null-parameter error. Historical evidence above remains unchanged.
+
 ## Run
 
 From the Homarr repository root, one example (prepare `draft.json` containing the case-specific

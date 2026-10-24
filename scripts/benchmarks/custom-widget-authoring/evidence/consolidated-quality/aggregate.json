@@ -1,0 +1,750 @@
+{
+  "scoringAuthority": "packages/custom-widgets/scripts/ai-evaluation.ts#parseJudgeResult",
+  "parserSha256": "1ea1ab7918ba8195a0e99d14e33f52ec5268a6ff630ed92ed833da4928feb7c2",
+  "sourceRevision": "1677c940c",
+  "judgeModel": "openai/gpt-6-luna#max",
+  "method": "Same current rubric, blinded variant labels, all original five baseline outputs and all ten candidate-5 outputs; independent per-artifact ratings, one judge per case group.",
+  "mapSha256": "d19dd7b51260bad009400f0256499bac0378f3bfc9ac45d062dec0dc0fb976aa",
+  "integrity": {
+    "pinnedPromptHashesVerified": true,
+    "pinnedWidgetHashesVerified": true,
+    "originalJudgesPreserved": true,
+    "originalMapPreserved": true
+  },
+  "caveats": [
+    "One review per artifact, grouped by case; not independent judge-panel consensus.",
+    "Five baseline artifacts and ten candidate artifacts across five cases; descriptive comparison only.",
+    "Totals and verdicts below come from parseJudgeResult; advisory totals are retained only per artifact.",
+    "All 15 original advisory verdicts are fail."
+  ],
+  "overall": {
+    "all": {
+      "count": 15,
+      "ids": [
+        "w01",
+        "w02",
+        "w03",
+        "w04",
+        "w05",
+        "w06",
+        "w07",
+        "w08",
+        "w09",
+        "w10",
+        "w11",
+        "w12",
+        "w13",
+        "w14",
+        "w15"
+      ],
+      "meanWeightedTotal": 82.6,
+      "weightedRange": {
+        "min": 73,
+        "max": 88
+      },
+      "passes": 0,
+      "failures": 15,
+      "fatalProblemCount": 3,
+      "artifactsWithFatalProblems": [
+        "w05",
+        "w09",
+        "w14"
+      ],
+      "dailyUseDecisions": {
+        "would-use-daily": 0,
+        "promising-but-not-daily": 14,
+        "not-practical": 1
+      },
+      "meanCategories": {
+        "schemaAndBindings": 92.4,
+        "apiAndRequestDesign": 92.4,
+        "runtimeCompatibility": 90.27,
+        "goalFulfillment": 86.87,
+        "visualQuality": 69,
+        "responsiveAndTheme": 74.47,
+        "loadingEmptyErrorSuccess": 87.33,
+        "dailyUsefulness": 72.07,
+        "complexityDiscipline": 80.27,
+        "accessibility": 82.87,
+        "actionSafety": 98.53
+      }
+    },
+    "baseline": {
+      "count": 5,
+      "ids": [
+        "w02",
+        "w05",
+        "w08",
+        "w11",
+        "w14"
+      ],
+      "meanWeightedTotal": 77.8,
+      "weightedRange": {
+        "min": 73,
+        "max": 81
+      },
+      "passes": 0,
+      "failures": 5,
+      "fatalProblemCount": 2,
+      "artifactsWithFatalProblems": [
+        "w05",
+        "w14"
+      ],
+      "dailyUseDecisions": {
+        "would-use-daily": 0,
+        "promising-but-not-daily": 5,
+        "not-practical": 0
+      },
+      "meanCategories": {
+        "schemaAndBindings": 90.8,
+        "apiAndRequestDesign": 86,
+        "runtimeCompatibility": 88.4,
+        "goalFulfillment": 82.2,
+        "visualQuality": 63.4,
+        "responsiveAndTheme": 65.4,
+        "loadingEmptyErrorSuccess": 85.2,
+        "dailyUsefulness": 66.2,
+        "complexityDiscipline": 73.8,
+        "accessibility": 81.2,
+        "actionSafety": 98.4
+      }
+    },
+    "candidate": {
+      "count": 10,
+      "ids": [
+        "w01",
+        "w03",
+        "w04",
+        "w06",
+        "w07",
+        "w09",
+        "w10",
+        "w12",
+        "w13",
+        "w15"
+      ],
+      "meanWeightedTotal": 85,
+      "weightedRange": {
+        "min": 82,
+        "max": 88
+      },
+      "passes": 0,
+      "failures": 10,
+      "fatalProblemCount": 1,
+      "artifactsWithFatalProblems": [
+        "w09"
+      ],
+      "dailyUseDecisions": {
+        "would-use-daily": 0,
+        "promising-but-not-daily": 9,
+        "not-practical": 1
+      },
+      "meanCategories": {
+        "schemaAndBindings": 93.2,
+        "apiAndRequestDesign": 95.6,
+        "runtimeCompatibility": 91.2,
+        "goalFulfillment": 89.2,
+        "visualQuality": 71.8,
+        "responsiveAndTheme": 79,
+        "loadingEmptyErrorSuccess": 88.4,
+        "dailyUsefulness": 75,
+        "complexityDiscipline": 83.5,
+        "accessibility": 83.7,
+        "actionSafety": 98.6
+      }
+    },
+    "candidateMinusBaselineWeighted": 7.2,
+    "advisoryFailures": 15
+  },
+  "perCase": {
+    "agify-name": {
+      "baseline": {
+        "count": 1,
+        "ids": [
+          "w02"
+        ],
+        "meanWeightedTotal": 78,
+        "weightedRange": {
+          "min": 78,
+          "max": 78
+        },
+        "passes": 0,
+        "failures": 1,
+        "fatalProblemCount": 0,
+        "artifactsWithFatalProblems": [],
+        "dailyUseDecisions": {
+          "would-use-daily": 0,
+          "promising-but-not-daily": 1,
+          "not-practical": 0
+        },
+        "meanCategories": {
+          "schemaAndBindings": 88,
+          "apiAndRequestDesign": 90,
+          "runtimeCompatibility": 88,
+          "goalFulfillment": 80,
+          "visualQuality": 64,
+          "responsiveAndTheme": 75,
+          "loadingEmptyErrorSuccess": 89,
+          "dailyUsefulness": 68,
+          "complexityDiscipline": 62,
+          "accessibility": 84,
+          "actionSafety": 96
+        }
+      },
+      "candidate": {
+        "count": 2,
+        "ids": [
+          "w01",
+          "w03"
+        ],
+        "meanWeightedTotal": 83,
+        "weightedRange": {
+          "min": 82,
+          "max": 84
+        },
+        "passes": 0,
+        "failures": 2,
+        "fatalProblemCount": 0,
+        "artifactsWithFatalProblems": [],
+        "dailyUseDecisions": {
+          "would-use-daily": 0,
+          "promising-but-not-daily": 2,
+          "not-practical": 0
+        },
+        "meanCategories": {
+          "schemaAndBindings": 83,
+          "apiAndRequestDesign": 92,
+          "runtimeCompatibility": 82.5,
+          "goalFulfillment": 88.5,
+          "visualQuality": 71.5,
+          "responsiveAndTheme": 78,
+          "loadingEmptyErrorSuccess": 92,
+          "dailyUsefulness": 73.5,
+          "complexityDiscipline": 84,
+          "accessibility": 84,
+          "actionSafety": 96
+        }
+      },
+      "candidateMinusBaselineWeighted": 5
+    },
+    "bored-activity": {
+      "baseline": {
+        "count": 1,
+        "ids": [
+          "w05"
+        ],
+        "meanWeightedTotal": 77,
+        "weightedRange": {
+          "min": 77,
+          "max": 77
+        },
+        "passes": 0,
+        "failures": 1,
+        "fatalProblemCount": 1,
+        "artifactsWithFatalProblems": [
+          "w05"
+        ],
+        "dailyUseDecisions": {
+          "would-use-daily": 0,
+          "promising-but-not-daily": 1,
+          "not-practical": 0
+        },
+        "meanCategories": {
+          "schemaAndBindings": 96,
+          "apiAndRequestDesign": 54,
+          "runtimeCompatibility": 91,
+          "goalFulfillment": 83,
+          "visualQuality": 62,
+          "responsiveAndTheme": 69,
+          "loadingEmptyErrorSuccess": 84,
+          "dailyUsefulness": 66,
+          "complexityDiscipline": 94,
+          "accessibility": 83,
+          "actionSafety": 96
+        }
+      },
+      "candidate": {
+        "count": 2,
+        "ids": [
+          "w04",
+          "w06"
+        ],
+        "meanWeightedTotal": 87,
+        "weightedRange": {
+          "min": 86,
+          "max": 88
+        },
+        "passes": 0,
+        "failures": 2,
+        "fatalProblemCount": 0,
+        "artifactsWithFatalProblems": [],
+        "dailyUseDecisions": {
+          "would-use-daily": 0,
+          "promising-but-not-daily": 2,
+          "not-practical": 0
+        },
+        "meanCategories": {
+          "schemaAndBindings": 97,
+          "apiAndRequestDesign": 96.5,
+          "runtimeCompatibility": 95.5,
+          "goalFulfillment": 94,
+          "visualQuality": 69,
+          "responsiveAndTheme": 80.5,
+          "loadingEmptyErrorSuccess": 95,
+          "dailyUsefulness": 75.5,
+          "complexityDiscipline": 87.5,
+          "accessibility": 86.5,
+          "actionSafety": 97
+        }
+      },
+      "candidateMinusBaselineWeighted": 10
+    },
+    "coinmarketcap-keyless": {
+      "baseline": {
+        "count": 1,
+        "ids": [
+          "w08"
+        ],
+        "meanWeightedTotal": 80,
+        "weightedRange": {
+          "min": 80,
+          "max": 80
+        },
+        "passes": 0,
+        "failures": 1,
+        "fatalProblemCount": 0,
+        "artifactsWithFatalProblems": [],
+        "dailyUseDecisions": {
+          "would-use-daily": 0,
+          "promising-but-not-daily": 1,
+          "not-practical": 0
+        },
+        "meanCategories": {
+          "schemaAndBindings": 96,
+          "apiAndRequestDesign": 95,
+          "runtimeCompatibility": 83,
+          "goalFulfillment": 88,
+          "visualQuality": 65,
+          "responsiveAndTheme": 65,
+          "loadingEmptyErrorSuccess": 88,
+          "dailyUsefulness": 69,
+          "complexityDiscipline": 74,
+          "accessibility": 82,
+          "actionSafety": 100
+        }
+      },
+      "candidate": {
+        "count": 2,
+        "ids": [
+          "w07",
+          "w09"
+        ],
+        "meanWeightedTotal": 85,
+        "weightedRange": {
+          "min": 83,
+          "max": 87
+        },
+        "passes": 0,
+        "failures": 2,
+        "fatalProblemCount": 1,
+        "artifactsWithFatalProblems": [
+          "w09"
+        ],
+        "dailyUseDecisions": {
+          "would-use-daily": 0,
+          "promising-but-not-daily": 1,
+          "not-practical": 1
+        },
+        "meanCategories": {
+          "schemaAndBindings": 97.5,
+          "apiAndRequestDesign": 98,
+          "runtimeCompatibility": 91.5,
+          "goalFulfillment": 92,
+          "visualQuality": 70.5,
+          "responsiveAndTheme": 70.5,
+          "loadingEmptyErrorSuccess": 92,
+          "dailyUsefulness": 73,
+          "complexityDiscipline": 80,
+          "accessibility": 81,
+          "actionSafety": 100
+        }
+      },
+      "candidateMinusBaselineWeighted": 5
+    },
+    "fake-service-health": {
+      "baseline": {
+        "count": 1,
+        "ids": [
+          "w11"
+        ],
+        "meanWeightedTotal": 81,
+        "weightedRange": {
+          "min": 81,
+          "max": 81
+        },
+        "passes": 0,
+        "failures": 1,
+        "fatalProblemCount": 0,
+        "artifactsWithFatalProblems": [],
+        "dailyUseDecisions": {
+          "would-use-daily": 0,
+          "promising-but-not-daily": 1,
+          "not-practical": 0
+        },
+        "meanCategories": {
+          "schemaAndBindings": 96,
+          "apiAndRequestDesign": 98,
+          "runtimeCompatibility": 92,
+          "goalFulfillment": 88,
+          "visualQuality": 67,
+          "responsiveAndTheme": 60,
+          "loadingEmptyErrorSuccess": 81,
+          "dailyUsefulness": 66,
+          "complexityDiscipline": 85,
+          "accessibility": 78,
+          "actionSafety": 100
+        }
+      },
+      "candidate": {
+        "count": 2,
+        "ids": [
+          "w10",
+          "w12"
+        ],
+        "meanWeightedTotal": 86.5,
+        "weightedRange": {
+          "min": 86,
+          "max": 87
+        },
+        "passes": 0,
+        "failures": 2,
+        "fatalProblemCount": 0,
+        "artifactsWithFatalProblems": [],
+        "dailyUseDecisions": {
+          "would-use-daily": 0,
+          "promising-but-not-daily": 2,
+          "not-practical": 0
+        },
+        "meanCategories": {
+          "schemaAndBindings": 96,
+          "apiAndRequestDesign": 98,
+          "runtimeCompatibility": 92.5,
+          "goalFulfillment": 88.5,
+          "visualQuality": 72.5,
+          "responsiveAndTheme": 79.5,
+          "loadingEmptyErrorSuccess": 91,
+          "dailyUsefulness": 77,
+          "complexityDiscipline": 90,
+          "accessibility": 84,
+          "actionSafety": 100
+        }
+      },
+      "candidateMinusBaselineWeighted": 5.5
+    },
+    "pokedex": {
+      "baseline": {
+        "count": 1,
+        "ids": [
+          "w14"
+        ],
+        "meanWeightedTotal": 73,
+        "weightedRange": {
+          "min": 73,
+          "max": 73
+        },
+        "passes": 0,
+        "failures": 1,
+        "fatalProblemCount": 1,
+        "artifactsWithFatalProblems": [
+          "w14"
+        ],
+        "dailyUseDecisions": {
+          "would-use-daily": 0,
+          "promising-but-not-daily": 1,
+          "not-practical": 0
+        },
+        "meanCategories": {
+          "schemaAndBindings": 78,
+          "apiAndRequestDesign": 93,
+          "runtimeCompatibility": 88,
+          "goalFulfillment": 72,
+          "visualQuality": 59,
+          "responsiveAndTheme": 58,
+          "loadingEmptyErrorSuccess": 84,
+          "dailyUsefulness": 62,
+          "complexityDiscipline": 54,
+          "accessibility": 79,
+          "actionSafety": 100
+        }
+      },
+      "candidate": {
+        "count": 2,
+        "ids": [
+          "w13",
+          "w15"
+        ],
+        "meanWeightedTotal": 83.5,
+        "weightedRange": {
+          "min": 83,
+          "max": 84
+        },
+        "passes": 0,
+        "failures": 2,
+        "fatalProblemCount": 0,
+        "artifactsWithFatalProblems": [],
+        "dailyUseDecisions": {
+          "would-use-daily": 0,
+          "promising-but-not-daily": 2,
+          "not-practical": 0
+        },
+        "meanCategories": {
+          "schemaAndBindings": 92.5,
+          "apiAndRequestDesign": 93.5,
+          "runtimeCompatibility": 94,
+          "goalFulfillment": 83,
+          "visualQuality": 75.5,
+          "responsiveAndTheme": 86.5,
+          "loadingEmptyErrorSuccess": 72,
+          "dailyUsefulness": 76,
+          "complexityDiscipline": 76,
+          "accessibility": 83,
+          "actionSafety": 100
+        }
+      },
+      "candidateMinusBaselineWeighted": 10.5
+    }
+  },
+  "artifacts": [
+    {
+      "id": "w01",
+      "caseId": "agify-name",
+      "variant": "candidate",
+      "run": "iter-5/agify-name/cand/run-1",
+      "advisory": {
+        "total": 77,
+        "verdict": "fail"
+      },
+      "weightedTotal": 82,
+      "verdict": "fail",
+      "dailyUseDecision": "promising-but-not-daily",
+      "fatalProblems": [],
+      "judgeSha256": "4bc7ad277b8ca2fbd93383eca8c1e2dcee0a4c5457452ca6df0f1bd641a9dbfa"
+    },
+    {
+      "id": "w02",
+      "caseId": "agify-name",
+      "variant": "baseline",
+      "run": "iter-1/agify-name/dev/run-1",
+      "advisory": {
+        "total": 69,
+        "verdict": "fail"
+      },
+      "weightedTotal": 78,
+      "verdict": "fail",
+      "dailyUseDecision": "promising-but-not-daily",
+      "fatalProblems": [],
+      "judgeSha256": "4af5d86a54041965775329dcc92cd39ddaf4b4ebbe8fd3fd17a9def319c4a04b"
+    },
+    {
+      "id": "w03",
+      "caseId": "agify-name",
+      "variant": "candidate",
+      "run": "iter-5/agify-name/cand/run-2",
+      "advisory": {
+        "total": 79,
+        "verdict": "fail"
+      },
+      "weightedTotal": 84,
+      "verdict": "fail",
+      "dailyUseDecision": "promising-but-not-daily",
+      "fatalProblems": [],
+      "judgeSha256": "3c66310e43a59fa5dc34a08fd2432c33964eb042e1382ac1a55c7cb45aee7eba"
+    },
+    {
+      "id": "w04",
+      "caseId": "bored-activity",
+      "variant": "candidate",
+      "run": "iter-5/bored-activity/cand/run-2",
+      "advisory": {
+        "total": 82,
+        "verdict": "fail"
+      },
+      "weightedTotal": 88,
+      "verdict": "fail",
+      "dailyUseDecision": "promising-but-not-daily",
+      "fatalProblems": [],
+      "judgeSha256": "e1000acff41a3f2a2ff0ea31f7d20999747fe0b0b477df809910fea99ad4d3de"
+    },
+    {
+      "id": "w05",
+      "caseId": "bored-activity",
+      "variant": "baseline",
+      "run": "iter-1/bored-activity/dev/run-1",
+      "advisory": {
+        "total": 71,
+        "verdict": "fail"
+      },
+      "weightedTotal": 77,
+      "verdict": "fail",
+      "dailyUseDecision": "promising-but-not-daily",
+      "fatalProblems": [
+        "The manifest has no query-cache policy, missing the explicit rate-limit requirement to use a sensible cache."
+      ],
+      "judgeSha256": "5dadb419ca361a4d9c7f2478bf9e820e9ea3c9e0513494d786157250cef77058"
+    },
+    {
+      "id": "w06",
+      "caseId": "bored-activity",
+      "variant": "candidate",
+      "run": "iter-5/bored-activity/cand/run-1",
+      "advisory": {
+        "total": 80,
+        "verdict": "fail"
+      },
+      "weightedTotal": 86,
+      "verdict": "fail",
+      "dailyUseDecision": "promising-but-not-daily",
+      "fatalProblems": [],
+      "judgeSha256": "836fb328bd48ac6751f49c9b411dc1a8b31ca69fff5ce7766154035127688fc6"
+    },
+    {
+      "id": "w07",
+      "caseId": "coinmarketcap-keyless",
+      "variant": "candidate",
+      "run": "iter-5/coinmarketcap-keyless/cand/run-1",
+      "advisory": {
+        "total": 84,
+        "verdict": "fail"
+      },
+      "weightedTotal": 87,
+      "verdict": "fail",
+      "dailyUseDecision": "promising-but-not-daily",
+      "fatalProblems": [],
+      "judgeSha256": "f11982d2e1690c3669658abf211abda7222c0ce3cff95296b5e0f456dcb7a950"
+    },
+    {
+      "id": "w08",
+      "caseId": "coinmarketcap-keyless",
+      "variant": "baseline",
+      "run": "iter-1/coinmarketcap-keyless/dev/run-1",
+      "advisory": {
+        "total": 79,
+        "verdict": "fail"
+      },
+      "weightedTotal": 80,
+      "verdict": "fail",
+      "dailyUseDecision": "promising-but-not-daily",
+      "fatalProblems": [],
+      "judgeSha256": "4189de35bf2f4356cb82f5fdf473714cdeea25577000ae6ff6eb1629458b70cf"
+    },
+    {
+      "id": "w09",
+      "caseId": "coinmarketcap-keyless",
+      "variant": "candidate",
+      "run": "iter-5/coinmarketcap-keyless/cand/run-2",
+      "advisory": {
+        "total": 77,
+        "verdict": "fail"
+      },
+      "weightedTotal": 83,
+      "verdict": "fail",
+      "dailyUseDecision": "not-practical",
+      "fatalProblems": [
+        "The required excellent narrow-tile behavior is missing: full metric labels and values are forced into nested nowrap groups with no truncation or alternative layout."
+      ],
+      "judgeSha256": "deae490042da2bed72d8cf72c5968c93b938d12a088fef35faf602b27cb48484"
+    },
+    {
+      "id": "w10",
+      "caseId": "fake-service-health",
+      "variant": "candidate",
+      "run": "iter-5/fake-service-health/cand/run-2",
+      "advisory": {
+        "total": 82,
+        "verdict": "fail"
+      },
+      "weightedTotal": 86,
+      "verdict": "fail",
+      "dailyUseDecision": "promising-but-not-daily",
+      "fatalProblems": [],
+      "judgeSha256": "e94864a69de71c9bbe3732da83aa203b1fd01ce505e84bd598575b464290bc0f"
+    },
+    {
+      "id": "w11",
+      "caseId": "fake-service-health",
+      "variant": "baseline",
+      "run": "iter-1/fake-service-health/dev/run-1",
+      "advisory": {
+        "total": 75,
+        "verdict": "fail"
+      },
+      "weightedTotal": 81,
+      "verdict": "fail",
+      "dailyUseDecision": "promising-but-not-daily",
+      "fatalProblems": [],
+      "judgeSha256": "89d30ea3a8805b3165a405ffcdca6b860bf2e204f8bb6843594d624c37fbc258"
+    },
+    {
+      "id": "w12",
+      "caseId": "fake-service-health",
+      "variant": "candidate",
+      "run": "iter-5/fake-service-health/cand/run-1",
+      "advisory": {
+        "total": 81,
+        "verdict": "fail"
+      },
+      "weightedTotal": 87,
+      "verdict": "fail",
+      "dailyUseDecision": "promising-but-not-daily",
+      "fatalProblems": [],
+      "judgeSha256": "2443ca0317c1370d148dd6b06d5431fdc1d88d1ab73b6c40bd30d531203081e2"
+    },
+    {
+      "id": "w13",
+      "caseId": "pokedex",
+      "variant": "candidate",
+      "run": "iter-5/pokedex/cand/run-1",
+      "advisory": {
+        "total": 78,
+        "verdict": "fail"
+      },
+      "weightedTotal": 83,
+      "verdict": "fail",
+      "dailyUseDecision": "promising-but-not-daily",
+      "fatalProblems": [],
+      "judgeSha256": "0899e159510b3a5e2e01bd517b79c8a2835169c5c10a6156ff734cfc0624b507"
+    },
+    {
+      "id": "w14",
+      "caseId": "pokedex",
+      "variant": "baseline",
+      "run": "iter-1/pokedex/dev/run-1",
+      "advisory": {
+        "total": 66,
+        "verdict": "fail"
+      },
+      "weightedTotal": 73,
+      "verdict": "fail",
+      "dailyUseDecision": "promising-but-not-daily",
+      "fatalProblems": [
+        "The requested separate responsive list/detail result area is absent: the template places every main section in a single vertical Stack."
+      ],
+      "judgeSha256": "2a12db4d4815c9fe241e3998638784cd24f8c528db3b371d851c1dded38b5bbe"
+    },
+    {
+      "id": "w15",
+      "caseId": "pokedex",
+      "variant": "candidate",
+      "run": "iter-5/pokedex/cand/run-2",
+      "advisory": {
+        "total": 79,
+        "verdict": "fail"
+      },
+      "weightedTotal": 84,
+      "verdict": "fail",
+      "dailyUseDecision": "promising-but-not-daily",
+      "fatalProblems": [],
+      "judgeSha256": "f555417b68c1710f49bdae954a7c9dcea455f855aeab11afe307190415c24bc9"
+    }
+  ]
+}

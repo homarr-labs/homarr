@@ -1,0 +1,46 @@
+[
+  {
+    "run": 1,
+    "original_sha256": "4c26935e8cec5f7de4c88cc0a58ebb39ac6cfe2701916541afa28d6d38b953d4",
+    "template_sha256": "a7c563ffeb1b5204460312ed6ed4990589fbad30d1cf44129c7f5ec644fbc665",
+    "import_change": "Unwrapped widgets.json single-element array only; definition contents unchanged.",
+    "scratch_definition_id": "t9lr5ky9v87wk47xh5mv4qfz",
+    "original_sha256_after": "4c26935e8cec5f7de4c88cc0a58ebb39ac6cfe2701916541afa28d6d38b953d4",
+    "original_unchanged": true,
+    "stored_template_sha256": "a7c563ffeb1b5204460312ed6ed4990589fbad30d1cf44129c7f5ec644fbc665",
+    "stored_template_exact": true,
+    "stored_sources": {
+      "default": {
+        "name": "Agify",
+        "baseUrl": "http://127.0.0.1:3903",
+        "auth": {
+          "type": "apiKeyQuery",
+          "name": "apikey"
+        }
+      }
+    },
+    "nontransport_definition_exact": true
+  },
+  {
+    "run": 2,
+    "original_sha256": "5fb50ec9b5faabf423c0232cf5f1b93c7fe3a78fbd8c5e948ed31186b5e8b747",
+    "template_sha256": "e12fbc3a3f7131f9ee30e3fdbc7ad7f05b32fd31c936156592265687f66b4c0f",
+    "import_change": "Unwrapped widgets.json single-element array only; definition contents unchanged.",
+    "scratch_definition_id": "ztibh00azfn02c82s03z46qh",
+    "original_sha256_after": "5fb50ec9b5faabf423c0232cf5f1b93c7fe3a78fbd8c5e948ed31186b5e8b747",
+    "original_unchanged": true,
+    "stored_template_sha256": "e12fbc3a3f7131f9ee30e3fdbc7ad7f05b32fd31c936156592265687f66b4c0f",
+    "stored_template_exact": true,
+    "stored_sources": {
+      "default": {
+        "name": "Agify",
+        "baseUrl": "http://127.0.0.1:3903",
+        "auth": {
+          "type": "apiKeyQuery",
+          "name": "apikey"
+        }
+      }
+    },
+    "nontransport_definition_exact": true
+  }
+]

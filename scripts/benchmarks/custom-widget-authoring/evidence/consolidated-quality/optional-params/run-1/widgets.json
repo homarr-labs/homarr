@@ -1,0 +1,52 @@
+[
+  {
+    "$schema": "homarr-custom-widget-v2",
+    "name": "Agify Age Estimate",
+    "description": "A population-based age estimate from Agify, with the evidence count. Estimates are not certain.",
+    "sources": {
+      "default": {
+        "name": "Agify",
+        "baseUrl": "https://api.agify.io",
+        "auth": {
+          "type": "apiKeyQuery",
+          "name": "apikey"
+        }
+      }
+    },
+    "requests": {
+      "estimate": {
+        "source": "default",
+        "kind": "query",
+        "method": "GET",
+        "path": "/",
+        "trigger": "manual",
+        "query": {
+          "name": {
+            "$param": "name"
+          }
+        },
+        "auth": "inherit",
+        "permission": "view"
+      },
+      "estimateCountry": {
+        "source": "default",
+        "kind": "query",
+        "method": "GET",
+        "path": "/",
+        "trigger": "manual",
+        "query": {
+          "name": {
+            "$param": "name"
+          },
+          "country_id": {
+            "$param": "country"
+          }
+        },
+        "auth": "inherit",
+        "permission": "view"
+      }
+    },
+    "options": {},
+    "template": "<Stack gap='xs'>\n<Group justify='space-between' wrap='nowrap' gap='xs'><Text fw={600} truncate>Age estimate</Text><Badge color='gray'>Agify</Badge></Group>\n<Text size='xs' c='dimmed'>Population-based estimate, not a certainty.</Text>\n<TextInput bind='name' label='Full name' placeholder='e.g. Michael' defaultValue='' />\n<TextInput bind='country' label='Country code (optional)' placeholder='US' maxLength={2} defaultValue='' />\n{(inputs.name ?? '').trim().length === 0 ? <Text size='sm' c='dimmed'>Enter a full name to run an estimate.</Text> : null}\n{(inputs.country ?? '').trim().length > 0 && !/^[A-Za-z]{2}$/.test((inputs.country ?? '').trim()) ? <Alert color='orange' title='Check the country code'>Use a two-letter country code, such as US.</Alert> : null}\n{(inputs.name ?? '').trim().length > 0 && (inputs.country ?? '').trim().length === 0 ? <SubFetch requestId='estimate' trigger='manual' params={{ name: (inputs.name ?? '').trim() }} triggerContent={<Text fw={600} c='blue'>Run age estimate</Text>} triggerAriaLabel='Run age estimate'>{(result, meta) => meta.ok === false ? <Alert color='red' title='Estimate unavailable'>{meta.statusText || 'The request failed. Try again.'}</Alert> : <Stack gap='xs'><Group gap='xs' align='baseline' wrap='nowrap'><Text fz={28} fw={700} c={result.age === null ? 'gray' : 'blue'}>{result.age === null ? 'No estimate' : result.age}</Text>{result.age !== null ? <Text size='sm'>years estimated</Text> : null}</Group>{result.age === null ? <Text size='sm'>Agify did not return an age estimate for this name.</Text> : null}<Group justify='space-between' wrap='nowrap' gap='xs'><Text size='xs' c='dimmed'>Name</Text><Text size='sm' truncate>{result.name ?? 'Unknown'}</Text></Group><Group justify='space-between' wrap='nowrap' gap='xs'><Text size='xs' c='dimmed'>Evidence count</Text><Text size='sm' fw={600}>{result.count?.toLocaleString('en-US') ?? '—'}</Text></Group>{result.country_id ? <Group justify='space-between' wrap='nowrap' gap='xs'><Text size='xs' c='dimmed'>Country</Text><Text size='sm'>{result.country_id}</Text></Group> : null}</Stack>}</SubFetch> : null}\n{(inputs.name ?? '').trim().length > 0 && /^[A-Za-z]{2}$/.test((inputs.country ?? '').trim()) ? <SubFetch requestId='estimateCountry' trigger='manual' params={{ name: (inputs.name ?? '').trim(), country: (inputs.country ?? '').trim().toUpperCase() }} triggerContent={<Text fw={600} c='blue'>Run age estimate</Text>} triggerAriaLabel='Run age estimate'>{(result, meta) => meta.ok === false ? <Alert color='red' title='Estimate unavailable'>{meta.statusText || 'The request failed. Try again.'}</Alert> : <Stack gap='xs'><Group gap='xs' align='baseline' wrap='nowrap'><Text fz={28} fw={700} c={result.age === null ? 'gray' : 'blue'}>{result.age === null ? 'No estimate' : result.age}</Text>{result.age !== null ? <Text size='sm'>years estimated</Text> : null}</Group>{result.age === null ? <Text size='sm'>Agify did not return an age estimate for this name.</Text> : null}<Group justify='space-between' wrap='nowrap' gap='xs'><Text size='xs' c='dimmed'>Name</Text><Text size='sm' truncate>{result.name ?? 'Unknown'}</Text></Group><Group justify='space-between' wrap='nowrap' gap='xs'><Text size='xs' c='dimmed'>Evidence count</Text><Text size='sm' fw={600}>{result.count?.toLocaleString('en-US') ?? '—'}</Text></Group>{result.country_id ? <Group justify='space-between' wrap='nowrap' gap='xs'><Text size='xs' c='dimmed'>Country</Text><Text size='sm'>{result.country_id}</Text></Group> : null}</Stack>}</SubFetch> : null}\n</Stack>"
+  }
+]

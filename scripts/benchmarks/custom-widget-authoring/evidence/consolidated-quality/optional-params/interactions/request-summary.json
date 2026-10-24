@@ -1,0 +1,100 @@
+[
+  {
+    "run": 1,
+    "requestId": "estimate",
+    "params": {
+      "name": "Michael"
+    },
+    "transportStatus": 200,
+    "ok": true,
+    "upstreamStatus": 200,
+    "data": {
+      "name": "Michael",
+      "age": 42,
+      "count": 12345
+    },
+    "error": null
+  },
+  {
+    "run": 1,
+    "requestId": "estimateCountry",
+    "params": {
+      "name": "Michael",
+      "country": "US"
+    },
+    "transportStatus": 200,
+    "ok": true,
+    "upstreamStatus": 200,
+    "data": {
+      "name": "Michael",
+      "age": 39,
+      "count": 12345,
+      "country_id": "US"
+    },
+    "error": null
+  },
+  {
+    "run": 2,
+    "requestId": "predict",
+    "params": {
+      "name": "Michael"
+    },
+    "transportStatus": 200,
+    "ok": true,
+    "upstreamStatus": 200,
+    "data": {
+      "name": "Michael",
+      "age": 42,
+      "count": 12345
+    },
+    "error": null
+  },
+  {
+    "run": 2,
+    "requestId": "predictByCountry",
+    "params": {
+      "name": "Michael",
+      "country": "US"
+    },
+    "transportStatus": 200,
+    "ok": true,
+    "upstreamStatus": 200,
+    "data": {
+      "name": "Michael",
+      "age": 39,
+      "count": 12345,
+      "country_id": "US"
+    },
+    "error": null
+  },
+  {
+    "run": 2,
+    "requestId": "predictByCountry",
+    "params": {
+      "name": "Michael",
+      "country": "U"
+    },
+    "transportStatus": 200,
+    "ok": false,
+    "upstreamStatus": 422,
+    "data": {
+      "error": "Use a two-letter country code, such as US."
+    },
+    "error": "HTTP 422: Unprocessable Entity"
+  },
+  {
+    "run": 2,
+    "requestId": "predictByCountry",
+    "params": {
+      "name": "Michael",
+      "country": "USA"
+    },
+    "transportStatus": 200,
+    "ok": false,
+    "upstreamStatus": 422,
+    "data": {
+      "error": "Use a two-letter country code, such as US."
+    },
+    "error": "HTTP 422: Unprocessable Entity"
+  }
+]

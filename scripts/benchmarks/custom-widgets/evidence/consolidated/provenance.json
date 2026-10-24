@@ -1,0 +1,566 @@
+{
+  "baselineCommit": "c72a2e02b03c734b3a393914b5e99881e27e86d2",
+  "candidateCommit": "1677c940ca76ad8b7562d5faefd8f591aae88873",
+  "scope": "Latest retained PR7358 replay against dev at the recorded baseline, not a claim about subsequent dev/PR HEADs",
+  "pathTokens": {
+    "<baseline>": "Pinned baseline checkout",
+    "<candidate>": "Pinned candidate checkout",
+    "<output>": "Original private consolidated output directory",
+    "<node-24.22.1>": "Measured Node executable"
+  },
+  "sourceStability": {
+    "runtime": "14 complete scoped snapshots equal",
+    "server": "Initial plus 16 complete pre/post snapshots per checkout equal across router/response only",
+    "workbench": "Scoped source and all physical bundle-input maps equal start/end"
+  },
+  "excluded": "Management measurements excluded: ai-prompt.ts changed during management-after-1; no management timing, byte or output-parity claim is made for this replay. No quality snapshot: maintained separately under custom-widget-authoring. No bundles, databases, logs, credentials or personal paths packaged.",
+  "rawParity": "All selected original data objects deep-equal after formatting; runtime JSONL is byte-identical; numeric samples and counters are neither rounded nor recomputed",
+  "sources": [
+    {
+      "path": "runtime/source-hashes-start.json",
+      "originalSha256": "6335371aceb3192aa4f27942d950c40deeba1126ee81abef7ceb66d4bf5ecd83"
+    },
+    {
+      "path": "runtime/environment.json",
+      "originalSha256": "79eeb266b5deb5c3bf31c21a4981c3aae3cb7767e084364fd72b67db381dd7ed"
+    },
+    {
+      "path": "runtime/runs.json",
+      "originalSha256": "14eefd53195a5275c2471714184e6cd8bc4be6e978cd695bba27c2a818be67b0"
+    },
+    {
+      "path": "runtime/RESULTS.md",
+      "originalSha256": "5f723482e1e5942c0f98ea254b18cad3c5a64e24ae641a3905c34b31a730af9a"
+    },
+    {
+      "path": "runtime/summary.json",
+      "originalSha256": "fe6f7bad17c8c50ecd1cf31b089ab3cd567c47c9a041df749da0003ae879a128"
+    },
+    {
+      "path": "server/RESULTS.md",
+      "originalSha256": "d811ea169aa2aa58cde0f1eaafe6873c82e463900e84b6c568e72577a8d182f4"
+    },
+    {
+      "path": "server/summary.json",
+      "originalSha256": "ff4fc8e2712a9aef3b5d67d3eec646642ca063a55d0685f278e1df4c46213840"
+    },
+    {
+      "path": "workbench/RESULTS.md",
+      "originalSha256": "22f8570bcdcd59fb0c1615eecc3e32ccc8c4854c494888184dd9df406010a762"
+    },
+    {
+      "path": "workbench/summary.json",
+      "originalSha256": "c0d5ef25436df706599c708df6ccd9b61a45b309ffafb7bb204f3dd572805ee7"
+    },
+    {
+      "path": "runtime/artifact-sha256.json",
+      "originalSha256": "b87253348bdfcab081f27a6faee73afbef49a2ef05343fd7727218302484f7e2"
+    },
+    {
+      "path": "runtime/baseline-1.jsonl",
+      "originalSha256": "163829b40fc8ebf81864b4aa44c994f3548199e65d300218ff3c9ea7d0dc2b50"
+    },
+    {
+      "path": "runtime/source-hashes-baseline-1-start.json",
+      "originalSha256": "aabce633efdad9b4879f2e884bcf66a9096cb521aa4aa4c7fcb3bac76f340dd1"
+    },
+    {
+      "path": "runtime/source-hashes-baseline-1-end.json",
+      "originalSha256": "5de63609029aa5324db89b02facc3f365967614805108054d9a07889dcdc9575"
+    },
+    {
+      "path": "runtime/candidate-1.jsonl",
+      "originalSha256": "a0770eca8a86cb6b0b804a376446fdf75adde0192b16496e60d9e2d6c231cd24"
+    },
+    {
+      "path": "runtime/source-hashes-candidate-1-start.json",
+      "originalSha256": "20a8c4ae3cbdd2919675be7052035d9b2c47b43f37e36f6fea5fdfba41414ab4"
+    },
+    {
+      "path": "runtime/source-hashes-candidate-1-end.json",
+      "originalSha256": "92158960b351153cd1222d524418c19ada8d21bc82ad08f2cb200155fb439c07"
+    },
+    {
+      "path": "runtime/baseline-2.jsonl",
+      "originalSha256": "6ad76a9d037b62eaf4e650b0f81d217eff6f96cdc4b4fef7d2de003bdc786d0c"
+    },
+    {
+      "path": "runtime/source-hashes-baseline-2-start.json",
+      "originalSha256": "f31bae78418e9aaedc021285c2ff55cffc12b442050fd20e7c93b4f563308307"
+    },
+    {
+      "path": "runtime/source-hashes-baseline-2-end.json",
+      "originalSha256": "e65e715862cd2246c3175eee99ac5a7dfb84853230193972fd6e6cbe5b377edf"
+    },
+    {
+      "path": "runtime/candidate-2.jsonl",
+      "originalSha256": "2c84f8386a95d52fd44b5ebdb3cffa896201d55d149c909b175244b30f8b7a2f"
+    },
+    {
+      "path": "runtime/source-hashes-candidate-2-start.json",
+      "originalSha256": "7e8fadba2692c43af8b9de07d3b39e5e56902b6aa2d277261b09fe6563078224"
+    },
+    {
+      "path": "runtime/source-hashes-candidate-2-end.json",
+      "originalSha256": "15e07d894697e37a768d5c2beb21051d91cd61b132e9a3c9b0e2528654b57c87"
+    },
+    {
+      "path": "runtime/baseline-counts.jsonl",
+      "originalSha256": "17aff589be1ceac8397e71ed30828dc3748843bf4913b1adad8a31fc075e22ba"
+    },
+    {
+      "path": "runtime/source-hashes-baseline-counts-start.json",
+      "originalSha256": "3bdacb6caabf87405036c5dceb789482604360c426ff82a51d8870d57974cb50"
+    },
+    {
+      "path": "runtime/source-hashes-baseline-counts-end.json",
+      "originalSha256": "f403549a9cd0288953eda70436f77b1ca29604bbcf5f419842abe23716aa6769"
+    },
+    {
+      "path": "runtime/candidate-counts.jsonl",
+      "originalSha256": "f11ce304a9cdf192064a9ee6efe7abd9284dc6a8dad5444eb60d4baaad363edc"
+    },
+    {
+      "path": "runtime/source-hashes-candidate-counts-start.json",
+      "originalSha256": "dfccac25fc417a0aa93b68d44281f87dd755c3e9ed782b8bf43d503dd55482be"
+    },
+    {
+      "path": "runtime/source-hashes-candidate-counts-end.json",
+      "originalSha256": "43dc33aa7fe65de4bd5e0cff158047f083a35374647fa9014ff79770ce30c299"
+    },
+    {
+      "path": "runtime/source-hashes-end.json",
+      "originalSha256": "6e3434f5064f67feeb0da6bb11ba1bd1638e52aceb66591fb0264a981d4854d7"
+    },
+    {
+      "path": "runtime/runtime-inputs.json",
+      "originalSha256": "f6bc36ead53dbab5a5a517a2712c846324c08d9a61580b133ab720d8c91a13a7"
+    },
+    {
+      "path": "runtime/instrumentation-coverage.json",
+      "originalSha256": "7d10e62edf293dd10a1c2ffacefabc977a09312a127081e81b7a28e2caef2d5c"
+    },
+    {
+      "path": "server/invocations.json",
+      "originalSha256": "f5bd6e763043dcb297e1fb909b8f31a07557af74f90587c71983919e470cc9fc"
+    },
+    {
+      "path": "server/source-hashes/initial-before.json",
+      "originalSha256": "0e4831622b2e817f3dca7700ea6e6235713d985fc80f8c3c16f928e9ae24ee48"
+    },
+    {
+      "path": "server/source-hashes/router-before-1-pre-before.json",
+      "originalSha256": "2da9670068f452799965f68173aec5085924f34ca4e009f59ad9e5e66858d72c"
+    },
+    {
+      "path": "server/source-hashes/router-before-1-post-before.json",
+      "originalSha256": "628e927e3e67508093e59329e5401b25adc95666ed9899c3d29593f80588bdae"
+    },
+    {
+      "path": "server/source-hashes/router-after-1-pre-before.json",
+      "originalSha256": "c18b86c471890803db9582d2deb078c7c0fc08657de5e8d96a61ccb5f3aac772"
+    },
+    {
+      "path": "server/source-hashes/router-after-1-post-before.json",
+      "originalSha256": "7ad0ef32f81f3a37c02b27cc0293f066c7fc2ed0ad91704708545c1a235b4c9a"
+    },
+    {
+      "path": "server/source-hashes/router-before-2-pre-before.json",
+      "originalSha256": "54ad0fd82ba11c92571e36c643ebc2de33eb28a81c28ac14c0e7bf17e3952173"
+    },
+    {
+      "path": "server/source-hashes/router-before-2-post-before.json",
+      "originalSha256": "72155b0e837f0cceb48048d6f5e32fcd5377407eb4c5465bff7feb15c116abd5"
+    },
+    {
+      "path": "server/source-hashes/router-after-2-pre-before.json",
+      "originalSha256": "789c6668d56a703fe3ec5852f32ee6ec8a5d4b640940ff79c7442c702f97beb5"
+    },
+    {
+      "path": "server/source-hashes/router-after-2-post-before.json",
+      "originalSha256": "cf40039d8e44c5738d4019509e94ee6d7878aa7f8c19b44b31879fcf0fb0f951"
+    },
+    {
+      "path": "server/source-hashes/response-before-1-pre-before.json",
+      "originalSha256": "0de96f35a01d3a1fb160076fc3ff2c1c693b8ec10275661835187c62f0b13d54"
+    },
+    {
+      "path": "server/source-hashes/response-before-1-post-before.json",
+      "originalSha256": "afde006bb6292aa38e630eafa713d40b5977ad3a596d3333f8ac99dc1bee8d0c"
+    },
+    {
+      "path": "server/source-hashes/response-after-1-pre-before.json",
+      "originalSha256": "5ae4f9050648914f5f5e51369c4c79a8eb450a2a9c9f111be4cb80cf56a5645a"
+    },
+    {
+      "path": "server/source-hashes/response-after-1-post-before.json",
+      "originalSha256": "143212933350aa84fa23a04300804b17242852b013099374c95738f0ba89dfcf"
+    },
+    {
+      "path": "server/source-hashes/response-before-2-pre-before.json",
+      "originalSha256": "b2cf55607a6af8b68a4df3574b38d12cc0284ec2120e61c184ff390370f213d3"
+    },
+    {
+      "path": "server/source-hashes/response-before-2-post-before.json",
+      "originalSha256": "6fa55acc39dc1c168f3576f637f76c86a8a108f880444f8bac614e1d53a89249"
+    },
+    {
+      "path": "server/source-hashes/response-after-2-pre-before.json",
+      "originalSha256": "697eb571e702e9b83ee899dbb37248edc21e7d2ebe8e5940f563acea3233dbc4"
+    },
+    {
+      "path": "server/source-hashes/response-after-2-post-before.json",
+      "originalSha256": "cd7ab1b611cd7145e55394faa9ea365e9165feaaaa7532a283d1646eb0e5d122"
+    },
+    {
+      "path": "server/source-hashes/initial-after.json",
+      "originalSha256": "f0f7e07683c8ad507b36a264a0d8f432d59797eb46062c39577e4dfec81ea463"
+    },
+    {
+      "path": "server/source-hashes/router-before-1-pre-after.json",
+      "originalSha256": "7743717f74cd1758253a969e44709b04502c4b7ba3c8570ca2c936ab30f529be"
+    },
+    {
+      "path": "server/source-hashes/router-before-1-post-after.json",
+      "originalSha256": "90ddc117212f70ac86305680c75a339f4a5f3384aa429b21707532e9a683b5b3"
+    },
+    {
+      "path": "server/source-hashes/router-after-1-pre-after.json",
+      "originalSha256": "2603e54e281ffcb394198cca5ff143d5edf236d6a331a615865a7a09be47479e"
+    },
+    {
+      "path": "server/source-hashes/router-after-1-post-after.json",
+      "originalSha256": "d45d6b0fef37c20d9391f487b52d318db06cd9223716b5514f6bb7ae235dce48"
+    },
+    {
+      "path": "server/source-hashes/router-before-2-pre-after.json",
+      "originalSha256": "4cdead9a8148fcf4fb6604fe33a4194bf2ca62041bef48583725b611b36a6427"
+    },
+    {
+      "path": "server/source-hashes/router-before-2-post-after.json",
+      "originalSha256": "06cc2b414eae87f20d0de719a8a3d64f56e7486a3bd606f72ab6eff38f3ca68b"
+    },
+    {
+      "path": "server/source-hashes/router-after-2-pre-after.json",
+      "originalSha256": "b64406ab3be512d743a75c88b98fc9996eeaf3b6cac7c3b7c657531dcb0a78a7"
+    },
+    {
+      "path": "server/source-hashes/router-after-2-post-after.json",
+      "originalSha256": "69676707c512c377f026f43c0d4bde1ba9c7153adaef19d1b459949fb9000ec1"
+    },
+    {
+      "path": "server/source-hashes/response-before-1-pre-after.json",
+      "originalSha256": "1d59508042289160388eb7ead25a69c090fa908705a0a8cf939a7386ec47cd89"
+    },
+    {
+      "path": "server/source-hashes/response-before-1-post-after.json",
+      "originalSha256": "b65d360de0f3a8cb6150ab50832ce647d7b320b12cc01d16b2fdd35384d46d46"
+    },
+    {
+      "path": "server/source-hashes/response-after-1-pre-after.json",
+      "originalSha256": "bda5160f1e68cf7f2a8c5141707d8770f5ff310bb65c81fa2811103739af2391"
+    },
+    {
+      "path": "server/source-hashes/response-after-1-post-after.json",
+      "originalSha256": "60e532d3df7d8b2a4ba0a902f63086b69c4dc4a000c14b81a12452ba949fbce5"
+    },
+    {
+      "path": "server/source-hashes/response-before-2-pre-after.json",
+      "originalSha256": "821b59545db7fe02717bea456f0d0c083fdb6eaaa5db45b76459ef9e4e4f8f4d"
+    },
+    {
+      "path": "server/source-hashes/response-before-2-post-after.json",
+      "originalSha256": "18df80b4092a3f1623d98ce13f280e4b06090f48b998f1193d795bcb762f425c"
+    },
+    {
+      "path": "server/source-hashes/response-after-2-pre-after.json",
+      "originalSha256": "d66f05f28a39b9ece19219b0dd883b6f9ee3481a51e1f15b14acc4aceb7d6a41"
+    },
+    {
+      "path": "server/source-hashes/response-after-2-post-after.json",
+      "originalSha256": "b17be69b3ae5ffea004badeeca8860cb912d1a57ad84e812ef1f8f4689699489"
+    },
+    {
+      "path": "server/raw/router-before-1.json",
+      "originalSha256": "9f2c20b018b7522fea643cf020e4dcc7cac11ff327fcf4be384c887d6e7e6405"
+    },
+    {
+      "path": "server/raw/router-after-1.json",
+      "originalSha256": "f262b36b09e56a6731edbce00fae410daeebed638e6d402c56a0cd383a1ddb3b"
+    },
+    {
+      "path": "server/raw/router-before-2.json",
+      "originalSha256": "65f1a7ac6291796fbcd006a0c2dcc336c4cf62857e69bad0c841e0b028323e29"
+    },
+    {
+      "path": "server/raw/router-after-2.json",
+      "originalSha256": "2693710f2b834925d7781f164aa3c06550ccba0d3c6e6313be6c6980fb40c12e"
+    },
+    {
+      "path": "server/raw/response-before-1.json",
+      "originalSha256": "95543ad76f9b07d626cb149da230d7176163c7a3d4873491d6e23f0e39fda8f1"
+    },
+    {
+      "path": "server/raw/response-after-1.json",
+      "originalSha256": "3d5e4b0f1be2fb1fcf0d54a03018961ec7c0969fd8a53f6a33d6aee8a8f6c127"
+    },
+    {
+      "path": "server/raw/response-before-2.json",
+      "originalSha256": "f06b39daf3469ccae123f0846eefe502d4b2749f282e169b494e7a4af3769bd3"
+    },
+    {
+      "path": "server/raw/response-after-2.json",
+      "originalSha256": "ca6c3ad9eb57f6881325bf9dc053967dfe84fceae8f3336bdc0519a135e36bc9"
+    },
+    {
+      "path": "server/toolchain.json",
+      "originalSha256": "8a6c7def6c920224fad7261b1315aca148e8f39352de6bfa11966abca7439d6b"
+    },
+    {
+      "path": "server/harness-provenance.json",
+      "originalSha256": "df2f443628f7c72e0e99d89634650c781985c174b1fdda148471498ce3f0b36b"
+    },
+    {
+      "path": "server/original-harness/README.md",
+      "originalSha256": "b01374b8d42cc0cc48071bd139e06b3737237646a85b1eb084f8cefc495f8e9a"
+    },
+    {
+      "path": "server/original-harness/run-server.mjs",
+      "originalSha256": "549d7a9756ba794fc86b0fb3f20348635e41f46df59a4e291279101620231030"
+    },
+    {
+      "path": "server/original-harness/server/router.mts",
+      "originalSha256": "2d2930d3aa0fb422b474d66eaa5fd3d8740d04113455e1f59c73aed4889c5c7c"
+    },
+    {
+      "path": "server/original-harness/server/management.mts",
+      "originalSha256": "24bdae1bef0380e10e2a23fc0a9e452ebd0fc6dbadca851882acd099f426c4c4"
+    },
+    {
+      "path": "server/original-harness/server/response.mts",
+      "originalSha256": "d4ba33c2986820684f0fe383013957e980efcd0c4bfa9ac7309029da5c56350e"
+    },
+    {
+      "path": "workbench/evidence-sha256.json",
+      "originalSha256": "bd2fd294403a68dd85e7b90e97ba89721550c7e67a945f4e640fa55c1f64faf2"
+    },
+    {
+      "path": "workbench/browser-before1.json",
+      "originalSha256": "6f5bbe11699481781c7e516bbe348b795fa72b45cda0ef27cf04b8a5de493160"
+    },
+    {
+      "path": "workbench/browser-before2.json",
+      "originalSha256": "fc0f71995c09eb773421a8277d59a705eb0eb4dd786a49d440b0a569d0620085"
+    },
+    {
+      "path": "workbench/browser-after1.json",
+      "originalSha256": "52149013f4e638771187c607d8bc55059acee0d904c436cb924f408c53de1d4b"
+    },
+    {
+      "path": "workbench/browser-after2.json",
+      "originalSha256": "c2f3fc0f82090d1dde4877e7ca88c4f9af5e60a57c0e526236158168dc2e4590"
+    },
+    {
+      "path": "workbench/source-hashes-start.json",
+      "originalSha256": "a7d6a406f962443e92d11e0987d0d4093568efecada81d4a0127ec1f96c9414f"
+    },
+    {
+      "path": "workbench/source-hashes-end.json",
+      "originalSha256": "686a1ef4014e559cf807dca2cc0717150ff77a9af5ca5b79e2b450420364b2df"
+    },
+    {
+      "path": "workbench/bundled-module-hashes-start.json",
+      "originalSha256": "bbf1fb6b035d8ab0cf6b97a93b83f848f8601c6b6837f2fbb55fb54cc65dbdbd"
+    },
+    {
+      "path": "workbench/bundled-module-hashes-end.json",
+      "originalSha256": "9a0219f76259bd3b5126749c9c0591760a6f4b9f552dc3d7dbb18d0b73d72aad"
+    },
+    {
+      "path": "workbench/instrumentation-coverage.json",
+      "originalSha256": "c44181be0179b2555db0fcedc01c73221b2da1d694ed2ed36d9936cbef06dc72"
+    }
+  ],
+  "inputs": [
+    {
+      "path": "runtime/baseline-1.jsonl",
+      "selection": "All 32 original JSONL records, byte-for-byte; includes counts-run samples, excluded from timing summaries",
+      "sources": ["runtime/baseline-1.jsonl"],
+      "packagedSha256": "163829b40fc8ebf81864b4aa44c994f3548199e65d300218ff3c9ea7d0dc2b50"
+    },
+    {
+      "path": "runtime/candidate-1.jsonl",
+      "selection": "All 32 original JSONL records, byte-for-byte; includes counts-run samples, excluded from timing summaries",
+      "sources": ["runtime/candidate-1.jsonl"],
+      "packagedSha256": "a0770eca8a86cb6b0b804a376446fdf75adde0192b16496e60d9e2d6c231cd24"
+    },
+    {
+      "path": "runtime/baseline-2.jsonl",
+      "selection": "All 32 original JSONL records, byte-for-byte; includes counts-run samples, excluded from timing summaries",
+      "sources": ["runtime/baseline-2.jsonl"],
+      "packagedSha256": "6ad76a9d037b62eaf4e650b0f81d217eff6f96cdc4b4fef7d2de003bdc786d0c"
+    },
+    {
+      "path": "runtime/candidate-2.jsonl",
+      "selection": "All 32 original JSONL records, byte-for-byte; includes counts-run samples, excluded from timing summaries",
+      "sources": ["runtime/candidate-2.jsonl"],
+      "packagedSha256": "2c84f8386a95d52fd44b5ebdb3cffa896201d55d149c909b175244b30f8b7a2f"
+    },
+    {
+      "path": "runtime/baseline-counts.jsonl",
+      "selection": "All 32 original JSONL records, byte-for-byte; includes counts-run samples, excluded from timing summaries",
+      "sources": ["runtime/baseline-counts.jsonl"],
+      "packagedSha256": "17aff589be1ceac8397e71ed30828dc3748843bf4913b1adad8a31fc075e22ba"
+    },
+    {
+      "path": "runtime/candidate-counts.jsonl",
+      "selection": "All 32 original JSONL records, byte-for-byte; includes counts-run samples, excluded from timing summaries",
+      "sources": ["runtime/candidate-counts.jsonl"],
+      "packagedSha256": "f11ce304a9cdf192064a9ee6efe7abd9284dc6a8dad5444eb60d4baaad363edc"
+    },
+    {
+      "path": "runtime/source-hashes.json",
+      "selection": "Initial SHA-256 map selected to emitted repository inputs, benchmark files and root configuration; all 14 complete original maps compared equal",
+      "sources": ["runtime/source-hashes-start.json", "runtime/runtime-inputs.json"],
+      "packagedSha256": "406fc635ddf467e4030f0c7420364e0555be89fe6b7d7f862afe37930f6465de"
+    },
+    {
+      "path": "runtime/runs.json",
+      "selection": "All original run metadata; absolute executable/checkout/output prefixes replaced with documented tokens; sourceSnapshot references name original hashed inputs",
+      "sources": ["runtime/runs.json"],
+      "packagedSha256": "33002eb9914a8679f1441fd33e4c5311ebe4db7e26dffc3fb8297f60bc591efc"
+    },
+    {
+      "path": "runtime/environment.json",
+      "selection": "Named environment fields only; hostname and absolute executable/harness omitted; dependency paths tokenized",
+      "sources": ["runtime/environment.json"],
+      "packagedSha256": "f9ffe7d8c8341bdbb933269c7460b716437cbbeb3381d46efaf6e4a46a35436e"
+    },
+    {
+      "path": "runtime/instrumentation-coverage.json",
+      "selection": "All original insertion-point coverage; unmatched evaluationContexts retained",
+      "sources": ["runtime/instrumentation-coverage.json"],
+      "packagedSha256": "7d10e62edf293dd10a1c2ffacefabc977a09312a127081e81b7a28e2caef2d5c"
+    },
+    {
+      "path": "server/router-before-1.json",
+      "selection": "Original direct/integration 20-query cold/warm result objects and checks; samples and per-sample operations unchanged; root and other cases omitted",
+      "sources": ["server/raw/router-before-1.json"],
+      "packagedSha256": "34034cd60100a915bd413375c0a3f70027e1334c5467aea883ef49c1992a44b6"
+    },
+    {
+      "path": "server/router-after-1.json",
+      "selection": "Original direct/integration 20-query cold/warm result objects and checks; samples and per-sample operations unchanged; root and other cases omitted",
+      "sources": ["server/raw/router-after-1.json"],
+      "packagedSha256": "f877574a9a20e60be60d7f6fa5779cab8ec22f89d269ecc006623240d735f44b"
+    },
+    {
+      "path": "server/router-before-2.json",
+      "selection": "Original direct/integration 20-query cold/warm result objects and checks; samples and per-sample operations unchanged; root and other cases omitted",
+      "sources": ["server/raw/router-before-2.json"],
+      "packagedSha256": "494b73de9ce632355102bded91340d7f472c23b829074445ae790db291a9d680"
+    },
+    {
+      "path": "server/router-after-2.json",
+      "selection": "Original direct/integration 20-query cold/warm result objects and checks; samples and per-sample operations unchanged; root and other cases omitted",
+      "sources": ["server/raw/router-after-2.json"],
+      "packagedSha256": "447026b3074f52699e3fc0232bbf621aaeee8fd0efc645983ece31364de08f25"
+    },
+    {
+      "path": "server/response-before-1.json",
+      "selection": "Original redact-* result objects and checks; all exact samples preserved; root and non-redaction cases omitted",
+      "sources": ["server/raw/response-before-1.json"],
+      "packagedSha256": "5b087cfb374c18896fceacfbf61e990cf0143c3a5b1b6d1e8ed92ce458660569"
+    },
+    {
+      "path": "server/response-after-1.json",
+      "selection": "Original redact-* result objects and checks; all exact samples preserved; root and non-redaction cases omitted",
+      "sources": ["server/raw/response-after-1.json"],
+      "packagedSha256": "c182f280741d7d153fc2f419ab2b74a86541f387de48c56f7389288c4c2ea631"
+    },
+    {
+      "path": "server/response-before-2.json",
+      "selection": "Original redact-* result objects and checks; all exact samples preserved; root and non-redaction cases omitted",
+      "sources": ["server/raw/response-before-2.json"],
+      "packagedSha256": "354f311860a1a4ba5d16f09306410df234325bdd20624a304a7641f31527d4a1"
+    },
+    {
+      "path": "server/response-after-2.json",
+      "selection": "Original redact-* result objects and checks; all exact samples preserved; root and non-redaction cases omitted",
+      "sources": ["server/raw/response-after-2.json"],
+      "packagedSha256": "6043335c484f81564ecf5cc4bdc59c091ad9ad09e8966070b06b4f10a3873ba6"
+    },
+    {
+      "path": "server/source-hashes.json",
+      "selection": "Initial tracked-file metadata selected to custom-widgets, db, API custom-widget router, benchmark and root files; 32 complete pre/post maps compared to initial; management period excluded",
+      "sources": ["server/source-hashes/initial-before.json", "server/source-hashes/initial-after.json"],
+      "packagedSha256": "abde7573678894350e0165d9baef4ed4eca86a04fc56e8aab183faf88e703a10"
+    },
+    {
+      "path": "server/invocations.json",
+      "selection": "Only eight source-stable router/response invocations; all fields retained with absolute paths tokenized",
+      "sources": ["server/invocations.json"],
+      "packagedSha256": "e397ef0dff119262b2ea5519d133eb1e78eedfa815d59e20e93a95321c9a1e6c"
+    },
+    {
+      "path": "server/toolchain.json",
+      "selection": "Node and dependency metadata only; machine commands/logs omitted; absolute paths tokenized",
+      "sources": ["server/toolchain.json"],
+      "packagedSha256": "74af3aca3521edc8d82a29e48fbdb55b134829e9486d77f3435690459fe7ab7d"
+    },
+    {
+      "path": "server/harness.json",
+      "selection": "Original candidate harness hashes; sourceRoot omitted; management harness hash is provenance only, not evidence of a valid management run",
+      "sources": ["server/harness-provenance.json"],
+      "packagedSha256": "4c966cdddc27fb4d16e7867a65f3338ad9ff9f954ae1fefc3f3f5e5c47d7ac3a"
+    },
+    {
+      "path": "workbench/browser-before1.json",
+      "selection": "All original browser result fields, exact numeric samples, counts, form results and completion signature; JSON whitespace normalized",
+      "sources": ["workbench/browser-before1.json"],
+      "packagedSha256": "cdc22ed858d5c1f6e8f020c2de945af88954671db551d00da031b1e0bdaef385"
+    },
+    {
+      "path": "workbench/browser-before2.json",
+      "selection": "All original browser result fields, exact numeric samples, counts, form results and completion signature; JSON whitespace normalized",
+      "sources": ["workbench/browser-before2.json"],
+      "packagedSha256": "b29bc9d3b8bedb1991a875695d7144a96dc7b145bca6838dce7575b1dac5c142"
+    },
+    {
+      "path": "workbench/browser-after1.json",
+      "selection": "All original browser result fields, exact numeric samples, counts, form results and completion signature; JSON whitespace normalized",
+      "sources": ["workbench/browser-after1.json"],
+      "packagedSha256": "409e7c2691dc4245307cba61210228878ea3866cbac6fc5c382bbb4a46b35528"
+    },
+    {
+      "path": "workbench/browser-after2.json",
+      "selection": "All original browser result fields, exact numeric samples, counts, form results and completion signature; JSON whitespace normalized",
+      "sources": ["workbench/browser-after2.json"],
+      "packagedSha256": "d3828392c2186a3602a3bfd4abf7c8f4573d3bc3075207622dd20270e8d8b2c3"
+    },
+    {
+      "path": "workbench/source-hashes.json",
+      "selection": "All original scoped tracked source hashes; equal start/end maps stored once; absolute roots omitted",
+      "sources": ["workbench/source-hashes-start.json", "workbench/source-hashes-end.json"],
+      "packagedSha256": "60f521cffc8afaf1388168504f7f9faa05112f1fa8e48b640c5802063a5447cd"
+    },
+    {
+      "path": "workbench/bundled-source-hashes.json",
+      "selection": "Physical bundle inputs outside node_modules selected by relativeToRoot; original SHA-256 values unchanged; all 16013 module entries compared start/end; dependency module maps omitted for compactness",
+      "sources": ["workbench/bundled-module-hashes-start.json", "workbench/bundled-module-hashes-end.json"],
+      "packagedSha256": "29e253dd43ef70245d627bca448b4b067881385f5cf90a2c77a112a6805e3841"
+    },
+    {
+      "path": "workbench/instrumentation-coverage.json",
+      "selection": "All original insertion-point coverage",
+      "sources": ["workbench/instrumentation-coverage.json"],
+      "packagedSha256": "c44181be0179b2555db0fcedc01c73221b2da1d694ed2ed36d9936cbef06dc72"
+    },
+    {
+      "path": "workbench/method.json",
+      "selection": "Original measurement window, controls, source-stability checks and limitations; no cleanup PIDs or checkout paths",
+      "sources": ["workbench/summary.json"],
+      "packagedSha256": "0643d1311241b766c2aae7145f1f1f072c1520ff5233d56e5dfa4845a4383c31"
+    }
+  ]
+}

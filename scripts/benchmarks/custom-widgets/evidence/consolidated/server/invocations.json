@@ -1,0 +1,346 @@
+[
+  {
+    "key": "router-before-1",
+    "name": "router",
+    "run": 1,
+    "side": "before",
+    "root": "<baseline>",
+    "label": "before-1",
+    "args": ["<node-24.22.1>", "<candidate>/scripts/benchmarks/custom-widgets/run-server.mjs", "router"],
+    "environment": {
+      "ROOT": "<baseline>",
+      "LABEL": "before-1",
+      "OUTPUT": "<output>/server/raw",
+      "CI": "true"
+    },
+    "status": 0,
+    "signal": null,
+    "elapsedMs": 38148.033958,
+    "output": {
+      "path": "<output>/server/raw/router-before-1.json",
+      "sha256": "9f2c20b018b7522fea643cf020e4dcc7cac11ff327fcf4be384c887d6e7e6405"
+    },
+    "stdoutSha256": "143e768f3beb9dad857dd0804ccb49b22eb657192a73a6b42982b52dab746563",
+    "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "sourceStable": {
+      "before": {
+        "preHead": "c72a2e02b03c734b3a393914b5e99881e27e86d2",
+        "postHead": "c72a2e02b03c734b3a393914b5e99881e27e86d2",
+        "unchangedDuringRun": true,
+        "matchesInitial": true
+      },
+      "after": {
+        "preHead": "1677c940ca76ad8b7562d5faefd8f591aae88873",
+        "postHead": "1677c940ca76ad8b7562d5faefd8f591aae88873",
+        "unchangedDuringRun": true,
+        "matchesInitial": true
+      }
+    },
+    "host": {
+      "time": "2026-10-24T22:02:45.325Z",
+      "loadavg": [5.5048828125, 4.1796875, 3.732421875],
+      "freeMemory": 2118549504
+    }
+  },
+  {
+    "key": "router-after-1",
+    "name": "router",
+    "run": 1,
+    "side": "after",
+    "root": "<candidate>",
+    "label": "after-1",
+    "args": ["<node-24.22.1>", "<candidate>/scripts/benchmarks/custom-widgets/run-server.mjs", "router"],
+    "environment": {
+      "ROOT": "<candidate>",
+      "LABEL": "after-1",
+      "OUTPUT": "<output>/server/raw",
+      "CI": "true"
+    },
+    "status": 0,
+    "signal": null,
+    "elapsedMs": 3672.945749999999,
+    "output": {
+      "path": "<output>/server/raw/router-after-1.json",
+      "sha256": "f262b36b09e56a6731edbce00fae410daeebed638e6d402c56a0cd383a1ddb3b"
+    },
+    "stdoutSha256": "72fa056375236c22f138cd1b437ee3b368088562a82c38a704097872bf3225d9",
+    "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "sourceStable": {
+      "before": {
+        "preHead": "c72a2e02b03c734b3a393914b5e99881e27e86d2",
+        "postHead": "c72a2e02b03c734b3a393914b5e99881e27e86d2",
+        "unchangedDuringRun": true,
+        "matchesInitial": true
+      },
+      "after": {
+        "preHead": "1677c940ca76ad8b7562d5faefd8f591aae88873",
+        "postHead": "1677c940ca76ad8b7562d5faefd8f591aae88873",
+        "unchangedDuringRun": true,
+        "matchesInitial": true
+      }
+    },
+    "host": {
+      "time": "2026-10-24T22:02:49.441Z",
+      "loadavg": [5.06396484375, 4.10986328125, 3.71044921875],
+      "freeMemory": 2280275968
+    }
+  },
+  {
+    "key": "router-before-2",
+    "name": "router",
+    "run": 2,
+    "side": "before",
+    "root": "<baseline>",
+    "label": "before-2",
+    "args": ["<node-24.22.1>", "<candidate>/scripts/benchmarks/custom-widgets/run-server.mjs", "router"],
+    "environment": {
+      "ROOT": "<baseline>",
+      "LABEL": "before-2",
+      "OUTPUT": "<output>/server/raw",
+      "CI": "true"
+    },
+    "status": 0,
+    "signal": null,
+    "elapsedMs": 37663.84625,
+    "output": {
+      "path": "<output>/server/raw/router-before-2.json",
+      "sha256": "65f1a7ac6291796fbcd006a0c2dcc336c4cf62857e69bad0c841e0b028323e29"
+    },
+    "stdoutSha256": "1cc2a867bcf8a4d6f5ae54b2b15847cd3295ea3b92b0e2e3f7efc6bf6ad1311c",
+    "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "sourceStable": {
+      "before": {
+        "preHead": "c72a2e02b03c734b3a393914b5e99881e27e86d2",
+        "postHead": "c72a2e02b03c734b3a393914b5e99881e27e86d2",
+        "unchangedDuringRun": true,
+        "matchesInitial": true
+      },
+      "after": {
+        "preHead": "1677c940ca76ad8b7562d5faefd8f591aae88873",
+        "postHead": "1677c940ca76ad8b7562d5faefd8f591aae88873",
+        "unchangedDuringRun": true,
+        "matchesInitial": true
+      }
+    },
+    "host": {
+      "time": "2026-10-24T22:03:27.477Z",
+      "loadavg": [5.02392578125, 4.19482421875, 3.7568359375],
+      "freeMemory": 2542010368
+    }
+  },
+  {
+    "key": "router-after-2",
+    "name": "router",
+    "run": 2,
+    "side": "after",
+    "root": "<candidate>",
+    "label": "after-2",
+    "args": ["<node-24.22.1>", "<candidate>/scripts/benchmarks/custom-widgets/run-server.mjs", "router"],
+    "environment": {
+      "ROOT": "<candidate>",
+      "LABEL": "after-2",
+      "OUTPUT": "<output>/server/raw",
+      "CI": "true"
+    },
+    "status": 0,
+    "signal": null,
+    "elapsedMs": 3366.901667000013,
+    "output": {
+      "path": "<output>/server/raw/router-after-2.json",
+      "sha256": "2693710f2b834925d7781f164aa3c06550ccba0d3c6e6313be6c6980fb40c12e"
+    },
+    "stdoutSha256": "42635054c06c4fc16a17b5a44d6bee47717615daf327c8b4bd2a6ecdade43238",
+    "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "sourceStable": {
+      "before": {
+        "preHead": "c72a2e02b03c734b3a393914b5e99881e27e86d2",
+        "postHead": "c72a2e02b03c734b3a393914b5e99881e27e86d2",
+        "unchangedDuringRun": true,
+        "matchesInitial": true
+      },
+      "after": {
+        "preHead": "1677c940ca76ad8b7562d5faefd8f591aae88873",
+        "postHead": "1677c940ca76ad8b7562d5faefd8f591aae88873",
+        "unchangedDuringRun": true,
+        "matchesInitial": true
+      }
+    },
+    "host": {
+      "time": "2026-10-24T22:03:31.244Z",
+      "loadavg": [5.02392578125, 4.19482421875, 3.7568359375],
+      "freeMemory": 2576072704
+    }
+  },
+  {
+    "key": "response-before-1",
+    "name": "response",
+    "run": 1,
+    "side": "before",
+    "root": "<baseline>",
+    "label": "before-1",
+    "args": ["<node-24.22.1>", "<candidate>/scripts/benchmarks/custom-widgets/run-server.mjs", "response"],
+    "environment": {
+      "ROOT": "<baseline>",
+      "LABEL": "before-1",
+      "OUTPUT": "<output>/server/raw",
+      "CI": "true"
+    },
+    "status": 0,
+    "signal": null,
+    "elapsedMs": 9799.050833000001,
+    "output": {
+      "path": "<output>/server/raw/response-before-1.json",
+      "sha256": "95543ad76f9b07d626cb149da230d7176163c7a3d4873491d6e23f0e39fda8f1"
+    },
+    "stdoutSha256": "ab1b28f7eeb879ee47a2a07b7a23a0a1166c6d1a73166518997ded49d6614f8c",
+    "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "sourceStable": {
+      "before": {
+        "preHead": "c72a2e02b03c734b3a393914b5e99881e27e86d2",
+        "postHead": "c72a2e02b03c734b3a393914b5e99881e27e86d2",
+        "unchangedDuringRun": true,
+        "matchesInitial": true
+      },
+      "after": {
+        "preHead": "1677c940ca76ad8b7562d5faefd8f591aae88873",
+        "postHead": "1677c940ca76ad8b7562d5faefd8f591aae88873",
+        "unchangedDuringRun": true,
+        "matchesInitial": true
+      }
+    },
+    "host": {
+      "time": "2026-10-24T22:03:41.418Z",
+      "loadavg": [4.87255859375, 4.1884765625, 3.7587890625],
+      "freeMemory": 2950873088
+    }
+  },
+  {
+    "key": "response-after-1",
+    "name": "response",
+    "run": 1,
+    "side": "after",
+    "root": "<candidate>",
+    "label": "after-1",
+    "args": ["<node-24.22.1>", "<candidate>/scripts/benchmarks/custom-widgets/run-server.mjs", "response"],
+    "environment": {
+      "ROOT": "<candidate>",
+      "LABEL": "after-1",
+      "OUTPUT": "<output>/server/raw",
+      "CI": "true"
+    },
+    "status": 0,
+    "signal": null,
+    "elapsedMs": 4774.865625000006,
+    "output": {
+      "path": "<output>/server/raw/response-after-1.json",
+      "sha256": "3d5e4b0f1be2fb1fcf0d54a03018961ec7c0969fd8a53f6a33d6aee8a8f6c127"
+    },
+    "stdoutSha256": "89e238a2e66c6ddaa8fd4914a9754fdb3936057ee759c952dee30142bb751c59",
+    "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "sourceStable": {
+      "before": {
+        "preHead": "c72a2e02b03c734b3a393914b5e99881e27e86d2",
+        "postHead": "c72a2e02b03c734b3a393914b5e99881e27e86d2",
+        "unchangedDuringRun": true,
+        "matchesInitial": true
+      },
+      "after": {
+        "preHead": "1677c940ca76ad8b7562d5faefd8f591aae88873",
+        "postHead": "1677c940ca76ad8b7562d5faefd8f591aae88873",
+        "unchangedDuringRun": true,
+        "matchesInitial": true
+      }
+    },
+    "host": {
+      "time": "2026-10-24T22:03:46.614Z",
+      "loadavg": [4.56201171875, 4.13525390625, 3.7421875],
+      "freeMemory": 2919202816
+    }
+  },
+  {
+    "key": "response-before-2",
+    "name": "response",
+    "run": 2,
+    "side": "before",
+    "root": "<baseline>",
+    "label": "before-2",
+    "args": ["<node-24.22.1>", "<candidate>/scripts/benchmarks/custom-widgets/run-server.mjs", "response"],
+    "environment": {
+      "ROOT": "<baseline>",
+      "LABEL": "before-2",
+      "OUTPUT": "<output>/server/raw",
+      "CI": "true"
+    },
+    "status": 0,
+    "signal": null,
+    "elapsedMs": 9701.524959000002,
+    "output": {
+      "path": "<output>/server/raw/response-before-2.json",
+      "sha256": "f06b39daf3469ccae123f0846eefe502d4b2749f282e169b494e7a4af3769bd3"
+    },
+    "stdoutSha256": "b9f5e8fabb1739f359b8c4fc834da17e9f22fff883456c1cf878d8e17db4d2b0",
+    "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "sourceStable": {
+      "before": {
+        "preHead": "c72a2e02b03c734b3a393914b5e99881e27e86d2",
+        "postHead": "c72a2e02b03c734b3a393914b5e99881e27e86d2",
+        "unchangedDuringRun": true,
+        "matchesInitial": true
+      },
+      "after": {
+        "preHead": "1677c940ca76ad8b7562d5faefd8f591aae88873",
+        "postHead": "1677c940ca76ad8b7562d5faefd8f591aae88873",
+        "unchangedDuringRun": true,
+        "matchesInitial": true
+      }
+    },
+    "host": {
+      "time": "2026-10-24T22:03:56.691Z",
+      "loadavg": [4.09375, 4.04833984375, 3.7158203125],
+      "freeMemory": 2866397184
+    }
+  },
+  {
+    "key": "response-after-2",
+    "name": "response",
+    "run": 2,
+    "side": "after",
+    "root": "<candidate>",
+    "label": "after-2",
+    "args": ["<node-24.22.1>", "<candidate>/scripts/benchmarks/custom-widgets/run-server.mjs", "response"],
+    "environment": {
+      "ROOT": "<candidate>",
+      "LABEL": "after-2",
+      "OUTPUT": "<output>/server/raw",
+      "CI": "true"
+    },
+    "status": 0,
+    "signal": null,
+    "elapsedMs": 4671.384749999997,
+    "output": {
+      "path": "<output>/server/raw/response-after-2.json",
+      "sha256": "ca6c3ad9eb57f6881325bf9dc053967dfe84fceae8f3336bdc0519a135e36bc9"
+    },
+    "stdoutSha256": "cddc6f93b628bb43cdee9287f3dd88e1c40178302243631e62b1443fe87c5984",
+    "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "sourceStable": {
+      "before": {
+        "preHead": "c72a2e02b03c734b3a393914b5e99881e27e86d2",
+        "postHead": "c72a2e02b03c734b3a393914b5e99881e27e86d2",
+        "unchangedDuringRun": true,
+        "matchesInitial": true
+      },
+      "after": {
+        "preHead": "1677c940ca76ad8b7562d5faefd8f591aae88873",
+        "postHead": "1677c940ca76ad8b7562d5faefd8f591aae88873",
+        "unchangedDuringRun": true,
+        "matchesInitial": true
+      }
+    },
+    "host": {
+      "time": "2026-10-24T22:04:01.738Z",
+      "loadavg": [3.92578125, 4.01416015625, 3.70556640625],
+      "freeMemory": 2526216192
+    }
+  }
+]

@@ -1,0 +1,60 @@
+[
+  {
+    "$schema": "homarr-custom-widget-v2",
+    "name": "Pokédex",
+    "description": "Search Pokémon by name or browse a searchable list with stats and official artwork.",
+    "sources": {
+      "default": {
+        "baseUrl": "https://pokeapi.co",
+        "auth": "none"
+      }
+    },
+    "requests": {
+      "pokemonList": {
+        "source": "default",
+        "kind": "query",
+        "method": "GET",
+        "path": "/api/v2/pokemon",
+        "trigger": "load",
+        "query": {
+          "limit": {
+            "$option": "limit"
+          },
+          "offset": {
+            "$option": "offset"
+          }
+        },
+        "auth": "inherit",
+        "permission": "view"
+      },
+      "pokemonDetail": {
+        "source": "default",
+        "kind": "query",
+        "method": "GET",
+        "path": "/api/v2/pokemon/{param:name}",
+        "trigger": "manual",
+        "auth": "inherit",
+        "permission": "view"
+      }
+    },
+    "options": {
+      "limit": {
+        "label": "Loaded Pokémon",
+        "control": "number",
+        "default": 40,
+        "min": 10,
+        "max": 200,
+        "step": 10
+      },
+      "offset": {
+        "label": "List offset",
+        "control": "number",
+        "default": 0,
+        "min": 0,
+        "max": 1300,
+        "step": 20
+      }
+    },
+    "template": "<Stack gap=\"md\">\n  <Group justify=\"space-between\" align=\"center\" wrap=\"wrap\">\n    <Group gap=\"sm\" align=\"center\"><Icon name=\"star-filled\" /><Stack gap={0}><Text fw={700} size=\"lg\">Pokédex</Text><Text size=\"xs\" c=\"dimmed\">Explore Pokémon by name, type, and stats</Text></Stack></Group>\n    <Group gap=\"xs\"><Badge color=\"red\" variant=\"light\">{data.pokemonList?.count ?? 0} species</Badge><RefreshButton requestId=\"pokemonList\" label=\"Refresh list\" /></Group>\n  </Group>\n  <Stack gap=\"sm\">\n    <Group justify=\"space-between\" align=\"center\"><Text fw={600}>Browse loaded list</Text><Text size=\"xs\" c=\"dimmed\">{data.pokemonList?.results?.length ?? 0} loaded</Text></Group>\n    <Select bind=\"selectedName\" label=\"Search and choose a Pokémon\" placeholder=\"Type a name or select one\" searchable clearable nothingFoundMessage=\"No loaded Pokémon match\" data={(data.pokemonList?.results ?? []).map((pokemon) => pokemon.name)} />\n    <TextInput bind=\"directName\" label=\"Direct name lookup\" placeholder=\"Any Pokédex name, e.g. pikachu\" />\n  </Stack>\n  <Stack gap=\"sm\">\n    <Text fw={600}>Selected Pokémon</Text>\n    {inputs.selectedName ? <SubFetch requestId=\"pokemonDetail\" trigger=\"manual\" params={{name: inputs.selectedName}} loadingLabel=\"Loading selected Pokémon…\" errorMessage=\"Could not load this Pokémon. Try again.\" triggerAriaLabel=\"Load selected Pokémon details\" triggerContent={<Text c=\"red\" fw={600}>Open selected Pokémon</Text>}>\n      {(pokemon) => <Card withBorder radius=\"md\" p=\"md\"><Stack gap=\"sm\"><Group gap=\"sm\" align=\"center\">{pokemon.sprites?.other?.[\"official-artwork\"]?.front_default ? <Image src={pokemon.sprites.other[\"official-artwork\"].front_default} alt={pokemon.name} w={88} h={88} fit=\"contain\" /> : <Icon name=\"star-filled\" />}<Stack gap={0}><Text fw={700} tt=\"capitalize\">#{pokemon.id} {pokemon.name}</Text><Text size=\"sm\" c=\"dimmed\">Height {pokemon.height / 10} m · Weight {pokemon.weight / 10} kg</Text></Stack></Group><Group gap=\"xs\">{(pokemon.types ?? []).map((entry) => <Badge key={entry.slot} color=\"red\" variant=\"light\" tt=\"capitalize\">{entry.type.name}</Badge>)}</Group><Stack gap=\"xs\"><Text size=\"sm\" fw={600}>Abilities</Text><Group gap=\"xs\">{(pokemon.abilities ?? []).map((entry) => <Badge key={entry.ability.name} color=\"gray\" variant=\"outline\" tt=\"capitalize\">{entry.ability.name}{entry.is_hidden ? \" · hidden\" : \"\"}</Badge>)}</Group></Stack><Text size=\"sm\" fw={600}>Base stats</Text><Stack gap=\"xs\">{(pokemon.stats ?? []).map((entry) => <Stack key={entry.stat.name} gap={0}><Group justify=\"space-between\"><Text size=\"xs\" tt=\"capitalize\">{entry.stat.name}</Text><Text size=\"xs\">{entry.base_stat}</Text></Group><Progress value={Math.min((entry.base_stat / 255) * 100, 100)} color=\"red\" size=\"sm\" /></Stack>)}</Stack></Stack></Card>}\n    </SubFetch> : <Text size=\"sm\" c=\"dimmed\">Choose a Pokémon from the loaded list to see its details here.</Text>}\n  </Stack>\n  <Stack gap=\"sm\">\n    <Text fw={600}>Direct lookup result</Text>\n    {inputs.directName ? <SubFetch requestId=\"pokemonDetail\" trigger=\"manual\" params={{name: inputs.directName}} loadingLabel=\"Looking up Pokémon…\" errorMessage=\"No Pokémon found for that name. Check spelling and retry.\" triggerAriaLabel=\"Look up Pokémon by name\" triggerContent={<Text c=\"red\" fw={600}>Look up typed name</Text>}>\n      {(pokemon) => <Card withBorder radius=\"md\" p=\"md\"><Stack gap=\"sm\"><Group gap=\"sm\" align=\"center\">{pokemon.sprites?.other?.[\"official-artwork\"]?.front_default ? <Image src={pokemon.sprites.other[\"official-artwork\"].front_default} alt={pokemon.name} w={88} h={88} fit=\"contain\" /> : <Icon name=\"star-filled\" />}<Stack gap={0}><Text fw={700} tt=\"capitalize\">#{pokemon.id} {pokemon.name}</Text><Text size=\"sm\" c=\"dimmed\">Height {pokemon.height / 10} m · Weight {pokemon.weight / 10} kg</Text></Stack></Group><Group gap=\"xs\">{(pokemon.types ?? []).map((entry) => <Badge key={entry.slot} color=\"red\" variant=\"light\" tt=\"capitalize\">{entry.type.name}</Badge>)}</Group><Stack gap=\"xs\"><Text size=\"sm\" fw={600}>Abilities</Text><Group gap=\"xs\">{(pokemon.abilities ?? []).map((entry) => <Badge key={entry.ability.name} color=\"gray\" variant=\"outline\" tt=\"capitalize\">{entry.ability.name}{entry.is_hidden ? \" · hidden\" : \"\"}</Badge>)}</Group></Stack><Text size=\"sm\" fw={600}>Base stats</Text><Stack gap=\"xs\">{(pokemon.stats ?? []).map((entry) => <Stack key={entry.stat.name} gap={0}><Group justify=\"space-between\"><Text size=\"xs\" tt=\"capitalize\">{entry.stat.name}</Text><Text size=\"xs\">{entry.base_stat}</Text></Group><Progress value={Math.min((entry.base_stat / 255) * 100, 100)} color=\"red\" size=\"sm\" /></Stack>)}</Stack></Stack></Card>}\n    </SubFetch> : <Text size=\"sm\" c=\"dimmed\">Enter any Pokémon name above to begin a direct lookup.</Text>}\n  </Stack>\n  {status.pokemonList?.loading ? <Text size=\"sm\" c=\"dimmed\">Loading the Pokédex list…</Text> : null}\n  {status.pokemonList && !status.pokemonList.ok ? <Text size=\"sm\" c=\"red\">Could not load names ({status.pokemonList.statusText ?? status.pokemonList.status ?? \"request failed\"}). Refresh to retry.</Text> : null}\n  {data.pokemonList?.results && data.pokemonList.results.length === 0 ? <Text size=\"sm\" c=\"dimmed\">No Pokémon returned for this list range.</Text> : null}\n  {!data.pokemonList && !status.pokemonList?.loading && status.pokemonList?.ok !== false ? <Text size=\"sm\" c=\"dimmed\">Your Pokédex list will appear here once loaded.</Text> : null}\n</Stack>"
+  }
+]

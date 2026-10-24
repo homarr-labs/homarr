@@ -1,0 +1,49 @@
+{
+  "total": 77,
+  "verdict": "fail",
+  "dailyUseDecision": "promising-but-not-daily",
+  "categories": {
+    "schemaAndBindings": 83,
+    "apiAndRequestDesign": 92,
+    "runtimeCompatibility": 82,
+    "goalFulfillment": 87,
+    "visualQuality": 71,
+    "responsiveAndTheme": 78,
+    "loadingEmptyErrorSuccess": 92,
+    "dailyUsefulness": 73,
+    "complexityDiscipline": 78,
+    "accessibility": 84,
+    "actionSafety": 96
+  },
+  "categoryReasons": {
+    "schemaAndBindings": "The name and country bindings feed the matching manual request parameters, but neither bound TextInput declares a defaultValue.",
+    "apiAndRequestDesign": "The manifest uses the verified Agify origin, inherited apikey authentication, and GET / with name and country_id mapped to the matching parameters.",
+    "runtimeCompatibility": "The manual SubFetch and bounded country-code match fit the runtime, though its child callback includes an error branch that the runtime does not render.",
+    "goalFulfillment": "The widget supports a name lookup, optional valid two-letter country scope, estimate, evidence count, and population-level caveat, but silently drops malformed country input.",
+    "visualQuality": "The large blue age value and concise result hierarchy help scanning, while the overall form-and-text layout remains visually generic.",
+    "responsiveAndTheme": "Vertical stacks and a truncating title adapt reasonably, but the fixed 28px result and nowrap header provide little explicit narrow-tile protection.",
+    "loadingEmptyErrorSuccess": "The initial prompt and null-age or zero-count result are explicit, while SubFetch supplies loading, failure, and retry UI around the success callback.",
+    "dailyUsefulness": "A short form and one manual lookup keep interaction simple, but invalid country input silently becomes an unscoped query and the layout feels like a basic utility prototype.",
+    "complexityDiscipline": "One request and one result renderer keep the widget compact, but duplicate caveat copy and the unreachable child error branch add avoidable noise.",
+    "accessibility": "Both fields have visible labels and the custom trigger has an aria-label, with result status explained in text rather than color alone.",
+    "actionSafety": "Prediction runs only through the manual SubFetch and the API key is configured as source authentication rather than embedded in JSX."
+  },
+  "strengths": [
+    "Correct Agify endpoint, API-key query authentication, and response fields.",
+    "Manual lookup parameters match the bound name and optional country input.",
+    "The estimate, record count, and population-level uncertainty are visible.",
+    "SubFetch provides loading and error/retry behavior without custom fetch code."
+  ],
+  "problems": [
+    "Malformed country text is silently converted to no country filter, which can make an apparently scoped lookup run globally.",
+    "The child requestStatus.ok === false branch is unreachable because SubFetch calls the child only on success; its own error UI handles failures.",
+    "The bound text fields omit defaultValue declarations.",
+    "The result and explanatory copy are functional but visually ordinary, with limited narrow-tile tuning."
+  ],
+  "fatalProblems": [],
+  "highestImpactFixes": [
+    "Show or prevent invalid country codes instead of silently omitting the requested scope.",
+    "Remove the unreachable child error branch and rely on SubFetch's built-in error and retry state.",
+    "Add explicit defaults to both bound inputs and tighten the result layout for narrow tiles."
+  ]
+}

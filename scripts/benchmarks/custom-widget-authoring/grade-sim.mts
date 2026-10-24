@@ -2,6 +2,7 @@ import { existsSync } from "node:fs";
 import { readdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 
+import type { CustomWidgetJudgeResult } from "../../../packages/custom-widgets/scripts/ai-evaluation";
 import { renderWidget, runtimeError, textContent } from "./render.mts";
 
 const root = path.resolve(process.env.ROOT ?? process.cwd());
@@ -138,48 +139,16 @@ for (const runDirectory of await findRuns(iterationDirectory)) {
     });
   }
   const judgePath = path.join(runDirectory, "judge.json");
-  let judge: Record<string, unknown> | null = null;
+  let judge: CustomWidgetJudgeResult | null = null;
   if (existsSync(judgePath)) {
     try {
-      const raw = (await readFile(judgePath, "utf8")).trim().replace(/^```(?:json)?\s*|\s*```$/gu, "");
-      judge = JSON.parse(raw);
+      judge = evaluation.parseJudgeResult(await readFile(judgePath, "utf8"));
     } catch {
       judge = null;
     }
   }
-  let weighted: number | null = null;
-  let judgePass = false;
-  if (judge && judge.categories && typeof judge.categories === "object") {
-    const categories = judge.categories as Record<string, number>;
-    weighted = evaluation.getWeightedJudgeTotal ? evaluation.getWeightedJudgeTotal(categories) : null;
-    if (weighted === null) {
-      const weights: Record<string, number> = {
-        schemaAndBindings: 8,
-        apiAndRequestDesign: 10,
-        runtimeCompatibility: 8,
-        goalFulfillment: 15,
-        visualQuality: 15,
-        responsiveAndTheme: 8,
-        loadingEmptyErrorSuccess: 8,
-        dailyUsefulness: 12,
-        complexityDiscipline: 8,
-        accessibility: 4,
-        actionSafety: 4,
-      };
-      const totalWeight = Object.values(weights).reduce((sum, weight) => sum + weight, 0);
-      weighted = Math.round(
-        Object.entries(weights).reduce((sum, [key, weight]) => sum + (categories[key] ?? 0) * weight, 0) / totalWeight,
-      );
-    }
-    const fatal = Array.isArray(judge.fatalProblems) ? judge.fatalProblems.length : 0;
-    judgePass =
-      weighted >= 85 &&
-      Object.values(categories).every((score) => score >= 75) &&
-      (categories.goalFulfillment ?? 0) >= 85 &&
-      (categories.complexityDiscipline ?? 0) >= 80 &&
-      judge.dailyUseDecision === "would-use-daily" &&
-      fatal === 0;
-  }
+  const weighted = judge?.total ?? null;
+  const judgePass = judge?.verdict === "pass";
   const passed = expectations.filter((expectation) => expectation.passed).length;
   const grading = {
     expectations,

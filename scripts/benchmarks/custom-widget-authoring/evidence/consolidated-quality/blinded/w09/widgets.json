@@ -1,0 +1,32 @@
+[
+  {
+    "$schema": "homarr-custom-widget-v2",
+    "name": "Crypto Watchlist",
+    "description": "A compact Bitcoin, Ethereum, and Solana market snapshot with 24-hour performance and USD market stats.",
+    "sources": {
+      "default": {
+        "name": "CoinMarketCap public API",
+        "baseUrl": "https://pro-api.coinmarketcap.com",
+        "auth": "none"
+      }
+    },
+    "requests": {
+      "quotes": {
+        "source": "default",
+        "kind": "query",
+        "method": "GET",
+        "path": "/public-api/v3/cryptocurrency/quotes/latest",
+        "trigger": "load",
+        "query": {
+          "id": "1,1027,5426",
+          "convert": "USD"
+        },
+        "auth": "inherit",
+        "permission": "view",
+        "cacheSeconds": 60
+      }
+    },
+    "options": {},
+    "template": "<Stack gap=\"sm\"><Group justify=\"space-between\" wrap=\"nowrap\" gap=\"xs\"><Stack gap={0} style={{ minWidth: 0 }}><Text fw={700} truncate>Crypto watchlist</Text><Text size=\"xs\" c=\"dimmed\">24-hour market snapshot</Text></Stack><RefreshButton requestId=\"quotes\" /></Group>{status.quotes?.loading ? <Stack gap=\"sm\"><Skeleton height={52} /><Skeleton height={52} /><Skeleton height={52} /></Stack> : status.quotes?.ok === false ? <Alert color=\"red\" title=\"Market data unavailable\">{status.quotes.statusText || status.quotes.error || \"Request failed\"}</Alert> : (data.quotes?.data ?? []).length === 0 ? <Text size=\"sm\" c=\"dimmed\">No market data returned</Text> : <Stack gap=\"sm\">{(data.quotes?.data ?? []).map(asset => <Stack key={asset.id} gap={4}><Group justify=\"space-between\" wrap=\"nowrap\" gap=\"xs\"><Stack gap={0} style={{ minWidth: 0 }}><Text size=\"sm\" fw={600} truncate>{asset.name ?? \"Unknown asset\"}</Text><Text size=\"xs\" c=\"dimmed\">{asset.symbol ?? \"—\"}</Text></Stack><Stack gap={0} align=\"flex-end\"><Text fw={700} style={{ whiteSpace: \"nowrap\" }}>{asset.quote?.[0]?.price?.toLocaleString(\"en-US\", { style: \"currency\", currency: \"USD\", minimumFractionDigits: 2, maximumFractionDigits: 2 }) ?? \"—\"}</Text><Badge color={asset.quote?.[0]?.percent_change_24h > 0 ? \"green\" : asset.quote?.[0]?.percent_change_24h < 0 ? \"red\" : \"gray\"} variant=\"light\">{asset.quote?.[0]?.percent_change_24h?.toLocaleString(\"en-US\", { minimumFractionDigits: 2, maximumFractionDigits: 2, signDisplay: \"always\" }) ?? \"—\"}%</Badge></Stack></Group><Group justify=\"space-between\" wrap=\"nowrap\" gap=\"xs\"><Group gap={4} wrap=\"nowrap\"><Text size=\"xs\" c=\"dimmed\">Market cap</Text><Text size=\"xs\" fw={600}>{asset.quote?.[0]?.market_cap?.toLocaleString(\"en-US\", { style: \"currency\", currency: \"USD\", notation: \"compact\", maximumFractionDigits: 1 }) ?? \"—\"}</Text></Group><Group gap={4} wrap=\"nowrap\"><Text size=\"xs\" c=\"dimmed\">24h volume</Text><Text size=\"xs\" fw={600}>{asset.quote?.[0]?.volume_24h?.toLocaleString(\"en-US\", { style: \"currency\", currency: \"USD\", notation: \"compact\", maximumFractionDigits: 1 }) ?? \"—\"}</Text></Group></Group></Stack>)}</Stack>}{data.quotes?.data?.[0]?.last_updated ? <Text size=\"xs\" c=\"dimmed\">Updated {Date.toLocaleString(data.quotes.data[0].last_updated, \"en-US\", \"UTC\")} UTC</Text> : null}</Stack>"
+  }
+]
