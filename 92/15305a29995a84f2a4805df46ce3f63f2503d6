@@ -1,0 +1,19 @@
+packages/custom-widgets/src/server/response.ts
+  s_cb7da52b92f941::t_796298ff139070 156-158,170-183
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "9215305a29995a84f2a4805df46ce3f63f2503d6",
+  "prompts": {},
+  "sessions": {
+    "s_cb7da52b92f941": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "0dd48e49-fedb-4f47-bd23-f5fcef6c850a",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
