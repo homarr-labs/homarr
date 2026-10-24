@@ -156,6 +156,8 @@ export const AssistantConfiguration = ({
   const utils = clientApi.useUtils();
   const { data: configuration, isLoading } = clientApi.assistant.getAdminConfiguration.useQuery(undefined, {
     initialData: initialConfiguration,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
   });
   const [provider, setProvider] = useState<AssistantProvider>(configuration?.provider ?? "homarr");
   const [baseUrl, setBaseUrl] = useState(configuration?.baseUrl ?? assistantProviderPresets.homarr.baseUrl);

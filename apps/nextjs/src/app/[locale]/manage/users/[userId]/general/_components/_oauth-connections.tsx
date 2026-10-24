@@ -17,7 +17,7 @@ type RevokeFeedback = "success" | "error" | null;
 export const OAuthConnections = ({
   initialConnections,
 }: {
-  initialConnections: RouterOutputs["apiKeys"]["getOwnOAuth"];
+  initialConnections?: RouterOutputs["apiKeys"]["getOwnOAuth"];
 }) => {
   const t = useI18n("management.page.user.setting.general.item.oauthConnections");
   const tProvenance = useI18n("management.page.tool.api.tab.apiKey.provenance");
@@ -31,7 +31,7 @@ export const OAuthConnections = ({
     refetchOnMount: "always",
   });
   const connectionData = connections.isFetchedAfterMount ? connections.data : initialConnections;
-  const canShowConnections = !connections.isError;
+  const canShowConnections = connectionData !== undefined && !connections.isError;
   const revoke = clientApi.apiKeys.revokeOwnOAuth.useMutation({
     onMutate() {
       setFeedback(null);
@@ -66,6 +66,8 @@ export const OAuthConnections = ({
             {t(`${feedback}.description`)}
           </Alert>
         )}
+
+        {!canShowConnections && !connections.isError && <Text component="output">{t("loading")}</Text>}
 
         {connections.isError && (
           <Alert color="red" variant="light" icon={<IconExclamationCircle size={18} />} title={t("loadError.title")}>

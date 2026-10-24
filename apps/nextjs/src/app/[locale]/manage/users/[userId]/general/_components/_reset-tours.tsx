@@ -9,7 +9,7 @@ import { clientApi } from "@homarr/api/client";
 import { showSuccessNotification } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
 
-export const ResetTours = ({ initialTourStatus }: { initialTourStatus: RouterOutputs["user"]["getTourStatus"] }) => {
+export const ResetTours = ({ initialTourStatus }: { initialTourStatus?: RouterOutputs["user"]["getTourStatus"] }) => {
   const t = useI18n("management.page.user.setting.general.item.onboardingTours");
   const router = useRouter();
   const utils = clientApi.useUtils();
@@ -32,13 +32,15 @@ export const ResetTours = ({ initialTourStatus }: { initialTourStatus: RouterOut
 
   return (
     <Stack gap="xs">
-      <Group gap="xs">
-        {tours.map(({ key, completed }) => (
-          <Badge key={key} color={completed ? "green" : "gray"} variant="light">
-            {t(`name.${key}`)}: {completed ? t("status.completed") : t("status.notStarted")}
-          </Badge>
-        ))}
-      </Group>
+      {tourStatus && (
+        <Group gap="xs">
+          {tours.map(({ key, completed }) => (
+            <Badge key={key} color={completed ? "green" : "gray"} variant="light">
+              {t(`name.${key}`)}: {completed ? t("status.completed") : t("status.notStarted")}
+            </Badge>
+          ))}
+        </Group>
+      )}
       <Text size="sm" c="dimmed">
         {t("description")}
       </Text>

@@ -4,6 +4,7 @@ import { IconExclamationCircle } from "@tabler/icons-react";
 
 import { api } from "@homarr/api/server";
 import { auth } from "@homarr/auth/next";
+import { createLogger } from "@homarr/core/infrastructure/logs";
 import { getI18n } from "@homarr/translation/server";
 
 import { DangerZoneItem, DangerZoneRoot } from "~/components/manage/danger-zone";
@@ -15,6 +16,8 @@ import { UserGeneralSettingsForm } from "./_components/_general-settings-form";
 import { OAuthConnections } from "./_components/_oauth-connections";
 import { UserProfileAvatarForm } from "./_components/_profile-avatar-form";
 import { ResetTours } from "./_components/_reset-tours";
+
+const logger = createLogger({ module: "userGeneralSettings" });
 
 interface Props {
   params: Promise<{
@@ -55,8 +58,18 @@ export default async function EditUserPage(props: Props) {
   const [boards, searchEngines, connections, tourStatus] = await Promise.all([
     api.board.getManageOverview({ fullPreview: false, userId: user.id }),
     api.searchEngine.getSelectable(),
-    isSelf ? api.apiKeys.getOwnOAuth() : undefined,
-    isSelf ? api.user.getTourStatus() : undefined,
+    isSelf
+      ? api.apiKeys.getOwnOAuth().catch((error: unknown) => {
+          logger.error(new Error("Failed to load the user's OAuth connections", { cause: error }));
+          return undefined;
+        })
+      : undefined,
+    isSelf
+      ? api.user.getTourStatus().catch((error: unknown) => {
+          logger.error(new Error("Failed to load the user's onboarding tour status", { cause: error }));
+          return undefined;
+        })
+      : undefined,
   ]);
   const isCredentialsUser = user.provider === "credentials";
 
@@ -81,9 +94,9 @@ export default async function EditUserPage(props: Props) {
         profileAvatar={<UserProfileAvatarForm user={user} />}
       />
 
-      {isSelf && connections && <OAuthConnections key={user.id} initialConnections={connections} />}
+      {isSelf && <OAuthConnections key={user.id} initialConnections={connections} />}
 
-      {isSelf && tourStatus && (
+      {isSelf && (
         <Stack mb="lg">
           <Title order={2}>{tGeneral("item.onboardingTours.title")}</Title>
           <ResetTours initialTourStatus={tourStatus} />

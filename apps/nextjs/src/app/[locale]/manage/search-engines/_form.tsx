@@ -6,6 +6,7 @@ import { WidgetIntegrationSelect } from "@homarr/widgets/widget-integration-sele
 import type { z } from "zod/v4";
 
 import type { RouterOutputs } from "@homarr/api";
+import { clientApi } from "@homarr/api/client";
 import { searchEngineTypes } from "@homarr/definitions";
 import { useZodForm } from "@homarr/form";
 import { IconPicker } from "@homarr/forms-collection";
@@ -29,6 +30,9 @@ export const SearchEngineForm = (props: SearchEngineFormProps) => {
   const { integrations, submitButtonTranslation, handleSubmit, initialValues, isPending, disableShort } = props;
   const t = useI18n("search.engine");
   const tCommon = useI18n("common");
+  const { data: availableIntegrations } = clientApi.integration.allThatSupportSearch.useQuery(undefined, {
+    initialData: integrations,
+  });
 
   const form = useZodForm(searchEngineManageSchema, {
     initialValues: initialValues ?? {
@@ -82,7 +86,7 @@ export const SearchEngineForm = (props: SearchEngineFormProps) => {
           {form.values.type === "fromIntegration" && (
             <WidgetIntegrationSelect
               label="Integration"
-              data={integrations}
+              data={availableIntegrations}
               canSelectMultiple={false}
               onChange={(value) => form.setFieldValue("integrationId", value[0])}
               value={form.values.integrationId !== undefined ? [form.values.integrationId] : []}

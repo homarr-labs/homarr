@@ -1,19 +1,23 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Alert, Badge, Button, Group, Select, Stack, Text } from "@mantine/core";
-import { useLocalStorage } from "@mantine/hooks";
 import { IconAlertTriangle } from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { useI18n } from "@homarr/translation/client";
 
+import { kubernetesContextCookieName } from "./kubernetes-context.constants";
+import { createKubernetesResourceQueryOptions } from "./kubernetes-query-options";
+
 export const KubernetesContextSelector = ({
   initialContexts,
+  initialContextId,
 }: {
   initialContexts: RouterOutputs["kubernetes"]["contexts"]["getContexts"];
+  initialContextId: string | null;
 }) => {
   const t = useI18n("kubernetes.context");
   const tCommon = useI18n("common");
@@ -21,16 +25,10 @@ export const KubernetesContextSelector = ({
   const router = useRouter();
   const searchParams = useSearchParams();
   const { data, isError, refetch } = clientApi.kubernetes.contexts.getContexts.useQuery(undefined, {
-    initialData: initialContexts,
+    ...createKubernetesResourceQueryOptions(initialContexts),
     refetchInterval: 30_000,
-    refetchOnMount: "always",
-    refetchOnReconnect: true,
-    refetchOnWindowFocus: true,
   });
-  const [storedContextId, setStoredContextId] = useLocalStorage<string | null>({
-    key: "homarr-kubernetes-context",
-    defaultValue: null,
-  });
+  const [storedContextId, setStoredContextId] = useState(initialContextId);
   const requestedContextId = searchParams.get("context");
   const contextId =
     data?.contexts.find((context) => context.contextId === requestedContextId)?.contextId ??
@@ -41,11 +39,12 @@ export const KubernetesContextSelector = ({
   const context = data?.contexts.find((item) => item.contextId === contextId);
 
   useEffect(() => {
-    if (!contextId || requestedContextId === contextId) return;
-    const next = new URLSearchParams(searchParams);
-    next.set("context", contextId);
-    router.replace(`${pathname}?${next.toString()}`);
-  }, [contextId, pathname, requestedContextId, router, searchParams]);
+    if (!contextId) return;
+    if (contextId !== storedContextId) {
+      setStoredContextId(contextId);
+      document.cookie = `${kubernetesContextCookieName}=${encodeURIComponent(contextId)}; Path=/; Max-Age=31536000; SameSite=Lax`;
+    }
+  }, [contextId, storedContextId]);
 
   if (isError) {
     return (
@@ -65,6 +64,7 @@ export const KubernetesContextSelector = ({
   const selectContext = (value: string | null) => {
     if (!value) return;
     setStoredContextId(value);
+    document.cookie = `${kubernetesContextCookieName}=${encodeURIComponent(value)}; Path=/; Max-Age=31536000; SameSite=Lax`;
     const next = new URLSearchParams(searchParams);
     next.set("context", value);
     router.replace(`${pathname}?${next.toString()}`);
