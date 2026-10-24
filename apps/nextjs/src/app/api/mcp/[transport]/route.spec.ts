@@ -58,6 +58,7 @@ vi.mock("../_extract-tools", () => ({
       name: "board_getAllBoards",
       description: "List boards",
       type: "query",
+      annotations: { readOnlyHint: true },
       pathInRouter: ["board", "getAllBoards"],
       inputMode: "none",
       inputSchema: { type: "object", properties: {} },
@@ -66,6 +67,7 @@ vi.mock("../_extract-tools", () => ({
       name: "customWidget_list",
       description: "List Custom Widgets",
       type: "query",
+      annotations: { readOnlyHint: true },
       pathInRouter: ["customWidget", "list"],
       inputMode: "none",
       inputSchema: { type: "object", properties: {} },
@@ -74,7 +76,26 @@ vi.mock("../_extract-tools", () => ({
       name: "customWidget_workshopSearch",
       description: "Search Workshop",
       type: "query",
+      annotations: { readOnlyHint: true },
       pathInRouter: ["customWidget", "workshopSearch"],
+      inputMode: "none",
+      inputSchema: { type: "object", properties: {} },
+    },
+    {
+      name: "customWidget_delete",
+      description: "Delete a widget",
+      type: "mutation",
+      annotations: { readOnlyHint: false },
+      pathInRouter: ["customWidget", "delete"],
+      inputMode: "none",
+      inputSchema: { type: "object", properties: {} },
+    },
+    {
+      name: "customWidget_previewQuery",
+      description: "Execute an upstream query",
+      type: "query",
+      annotations: { readOnlyHint: false },
+      pathInRouter: ["customWidget", "previewQuery"],
       inputMode: "none",
       inputSchema: { type: "object", properties: {} },
     },
@@ -330,4 +351,25 @@ test("rejects unauthenticated tool calls before execution", async () => {
   const { response } = await callMcp("tools/call", { name: "board_getAllBoards", arguments: {} });
   expect(response.status).toBe(401);
   expect(mocks.toolProcedure).not.toHaveBeenCalled();
+});
+
+test("read-only MCP credentials hide writes and reject direct calls to unsafe tools", async () => {
+  mocks.authenticate.mockResolvedValue({
+    user: { id: "user-1", permissions: ["admin"] },
+    apiKey: { readOnly: true, oauthClientId: "client-1" },
+  });
+
+  const tools = await callMcp("tools/list");
+  expect(((tools.body.result?.tools ?? []) as Array<{ name: string }>).map(({ name }) => name)).toEqual([
+    "board_getAllBoards",
+    "customWidget_list",
+    "customWidget_workshopSearch",
+  ]);
+  for (const name of ["customWidget_delete", "customWidget_previewQuery"]) {
+    const call = await callMcp("tools/call", { name, arguments: {} });
+    expect(call.body.result?.isError ?? Boolean(call.body.error)).toBe(true);
+  }
+  const read = await callMcp("tools/call", { name: "board_getAllBoards", arguments: {} });
+  expect(read.body.error).toBeUndefined();
+  expect(read.body.result?.isError).not.toBe(true);
 });

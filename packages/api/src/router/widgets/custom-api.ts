@@ -37,6 +37,7 @@ const namedRequestInputSchema = itemInputSchema.extend({
   requestId: z.string().min(1).max(64),
   params: runtimeParamsSchema.default({}),
 });
+const upstreamProcedure = publicProcedure.meta({ readOnly: false });
 interface CustomWidgetItemOptions {
   definitionId: string;
   configuration: Record<string, unknown>;
@@ -213,7 +214,7 @@ export const customApiRouter = createTRPCRouter({
     }
   }),
 
-  getData: publicProcedure.input(itemInputSchema).query(async ({ ctx, input, signal }) => {
+  getData: upstreamProcedure.input(itemInputSchema).query(async ({ ctx, input, signal }) => {
     const resolved = await resolvePlacedDefinitionAsync(ctx, input.itemId);
     const loadRequests = Object.entries(resolved.definition.requests).filter(
       ([, request]) => request.kind === "query" && request.trigger === "load",
@@ -308,7 +309,7 @@ export const customApiRouter = createTRPCRouter({
     };
   }),
 
-  queryRequest: publicProcedure.input(namedRequestInputSchema).query(async ({ ctx, input }) => {
+  queryRequest: upstreamProcedure.input(namedRequestInputSchema).query(async ({ ctx, input }) => {
     const resolved = await resolvePlacedDefinitionAsync(ctx, input.itemId);
     const request = findRequest(resolved, input.requestId, "query");
     if (request.trigger !== "manual") {
