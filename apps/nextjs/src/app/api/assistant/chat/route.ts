@@ -209,7 +209,12 @@ const integrationResearchReplayToolNames = new Set([
   assistantIntegrationResearchToolName,
   "ask_user",
 ]);
-const customWidgetPhaseFrontendToolNames = new Set(["ask_user", "navigate_to_route", "refresh_current_view"]);
+const customWidgetPhaseFrontendToolNames = new Set([
+  "ask_user",
+  "configure_widget",
+  "navigate_to_route",
+  "refresh_current_view",
+]);
 
 const assistantInstructions = `You are Homarr Assistant, embedded in the user's self-hosted Homarr dashboard.
 
