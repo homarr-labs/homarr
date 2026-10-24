@@ -1,4 +1,5 @@
 "use client";
+import { definition } from ".";
 
 import "../widgets-common.css";
 import "./styles.css";
@@ -46,7 +47,7 @@ import { clientApi } from "@homarr/api/client";
 import { useIntegrationsWithInteractAccess, useSession } from "@homarr/auth/client";
 import { constructBoardPermissions } from "@homarr/auth/shared";
 import { useOptionalBoard } from "@homarr/boards/context";
-import { useIntegrationConnected } from "@homarr/common";
+import { useHydrationTime, useIntegrationConnected } from "@homarr/common";
 import { getIconUrl, getIntegrationKindsByCategory } from "@homarr/definitions";
 import type { ExtendedClientStatus, ExtendedDownloadClientItem } from "@homarr/integrations";
 import { showErrorNotification } from "@homarr/notifications";
@@ -67,7 +68,6 @@ import {
   getDownloadColumnAccessors,
   getDownloadsStatsDisplay,
 } from "./helpers";
-import { resolveDownloadsQueryInput } from "./query-input";
 
 dayjs.extend(relativeTime);
 
@@ -307,6 +307,7 @@ export default function DownloadClientsWidget({
   height,
   displayMode,
 }: WidgetComponentProps<"downloads">) {
+  const initialTime = useHydrationTime();
   const { formatByteRate, formatBytes, formatBytesPair } = useByteFormatter();
   const board = useOptionalBoard();
   const { data: session } = useSession();
@@ -318,7 +319,7 @@ export default function DownloadClientsWidget({
   );
 
   const downloadsQuery = clientApi.widget.downloads.getJobsAndStatuses.useQuery(
-    resolveDownloadsQueryInput(integrationIds, options),
+    definition.data.queries({ options, integrationIds }).main.input,
   );
   const currentItems = getUsableWidgetQueryData(downloadsQuery);
   const availableItems = useMemo(() => currentItems?.filter((item) => item.data !== null) ?? [], [currentItems]);
@@ -628,7 +629,7 @@ export default function DownloadClientsWidget({
         noWrap: true,
         render: (record) => {
           if (!record.added) return <Text size={size.fontSize}>—</Text>;
-          return <Text size={size.fontSize}>{dayjs(record.added).fromNow()}</Text>;
+          return <Text size={size.fontSize}>{dayjs(record.added).from(dayjs(initialTime))}</Text>;
         },
       },
       includeColumn("ratio") && {
@@ -695,9 +696,19 @@ export default function DownloadClientsWidget({
       },
     ];
     return cols.filter(Boolean) as DataTableColumn<ExtendedDownloadClientItem>[];
-  }, [columnContext, displayMode, formatByteRate, formatBytes, formatBytesPair, progressColumnWidth, size, t]);
+  }, [
+    columnContext,
+    displayMode,
+    formatByteRate,
+    formatBytes,
+    formatBytesPair,
+    progressColumnWidth,
+    size,
+    t,
+    initialTime,
+  ]);
 
-  const { effectiveColumns, storeKey } = usePersistedTableLayout({
+  const { effectiveColumns, storeKey, onColumnLayoutChange } = usePersistedTableLayout({
     columns,
     columnAccessors: DOWNLOAD_COLUMN_ACCESSORS,
     columnOrder: options.columnOrder,
@@ -789,6 +800,7 @@ export default function DownloadClientsWidget({
           records={sortedData}
           columns={effectiveColumns}
           storeColumnsKey={storeKey}
+          onColumnLayoutChange={onColumnLayoutChange}
           sortStatus={sortStatus}
           onSortStatusChange={setSortStatus}
           noRecordsText={t("errors.noItems")}

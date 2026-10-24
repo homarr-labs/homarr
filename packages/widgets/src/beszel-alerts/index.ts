@@ -5,6 +5,8 @@ import { getWidgetIntegrationConfig } from "@homarr/definitions";
 
 import { createWidgetDefinition, matchesWidgetRuntimeQuery, widgetQueryInputMatches } from "../definition";
 import { optionsBuilder } from "../options";
+import { widgetQuery } from "../data";
+import { getBeszelAlertsQueryInput } from "./display";
 
 export const { definition, componentLoader } = createWidgetDefinition("beszelAlerts", {
   icon: IconBell,
@@ -35,4 +37,14 @@ export const { definition, componentLoader } = createWidgetDefinition("beszelAle
       message: (t) => t("widget.beszel.error.internalServerError"),
     },
   },
-}).withDynamicImport(() => import("./component"));
+})
+  .withData({
+    mode: "queries",
+    queries: ({ integrationIds, options, displayMode }) => ({
+      main: widgetQuery(
+        "widget.beszel.getAlerts",
+        getBeszelAlertsQueryInput(integrationIds, options, displayMode === "advanced"),
+      ),
+    }),
+  })
+  .withDynamicImport(() => import("./component"));

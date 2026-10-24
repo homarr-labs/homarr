@@ -12,16 +12,11 @@ import { getUsableWidgetQueryData } from "../common/query-state";
 import { useWidgetRuntimeQueries } from "../runtime-hooks";
 import type { CalendarEventWithSource } from "./calendar-event-list";
 import { CalendarDisplay } from "./calendar-display";
+import { getCalendarQueryInput } from "./query-input";
 
 export default function CalendarWidget(props: WidgetComponentProps<"calendar">) {
   const [month, setMonth] = useState(() => new Date());
-  const runtimeInput = {
-    integrationIds: props.integrationIds,
-    month: month.getMonth() + 1,
-    year: month.getFullYear(),
-    releaseType: props.options.releaseType,
-    showUnmonitored: props.options.showUnmonitored,
-  };
+  const runtimeInput = getCalendarQueryInput(props.integrationIds, props.options, month);
   useWidgetRuntimeQueries(
     props.widgetRuntimeRef,
     props.integrationIds.length > 0
@@ -52,13 +47,7 @@ interface FetchCalendarProps extends WidgetComponentProps<"calendar"> {
 
 const FetchCalendar = ({ month, setMonth, ...props }: FetchCalendarProps) => {
   const { integrationIds, options } = props;
-  const input = {
-    integrationIds,
-    month: month.getMonth() + 1,
-    year: month.getFullYear(),
-    releaseType: options.releaseType,
-    showUnmonitored: options.showUnmonitored,
-  };
+  const input = getCalendarQueryInput(integrationIds, options, month);
   const calendarQuery = clientApi.widget.calendar.findAllEvents.useQuery(input);
   const data = getUsableWidgetQueryData(calendarQuery);
   const { isPending } = calendarQuery;

@@ -116,6 +116,7 @@
         "@homarr/common": "workspace:^0.1.0",
         "@homarr/core": "workspace:^0.1.0",
         "@homarr/cron-job-status": "workspace:^0.1.0",
+        "@homarr/cron-jobs": "workspace:^0.1.0",
         "@homarr/custom-widgets": "workspace:^0.1.0",
         "@homarr/db": "workspace:^0.1.0",
         "@homarr/definitions": "workspace:^0.1.0",
@@ -366,6 +367,7 @@
         "@homarr/api": "workspace:^0.1.0",
         "@homarr/common": "workspace:^0.1.0",
         "@homarr/definitions": "workspace:^0.1.0",
+        "@tanstack/react-query": "catalog:",
         "react": "catalog:",
         "react-dom": "catalog:",
       },
@@ -862,6 +864,7 @@
       "dependencies": {
         "@homarr/api": "workspace:^0.1.0",
         "@homarr/auth": "workspace:^0.1.0",
+        "@homarr/boards": "workspace:^0.1.0",
         "@homarr/common": "workspace:^0.1.0",
         "@homarr/definitions": "workspace:^0.1.0",
         "@homarr/integrations": "workspace:^0.1.0",
@@ -1006,6 +1009,7 @@
         "acorn-jsx": "catalog:",
         "clsx": "catalog:",
         "dayjs": "catalog:",
+        "isomorphic-dompurify": "catalog:",
         "lucide-react": "catalog:",
         "mantine-datatable": "catalog:",
         "mantine-react-table": "catalog:",
@@ -1063,8 +1067,9 @@
   ],
   "patchedDependencies": {
     "dns-caching@0.2.9": "patches/dns-caching.patch",
-    "@types/node-unifi@2.5.1": "patches/@types__node-unifi.patch",
+    "@mantine/hooks@9.6.0": "patches/@mantine__hooks@9.6.0.patch",
     "trpc-to-openapi@3.3.0": "patches/trpc-to-openapi.patch",
+    "@types/node-unifi@2.5.1": "patches/@types__node-unifi.patch",
     "mantine-datatable@9.3.1": "patches/mantine-datatable@9.3.1.patch",
   },
   "overrides": {

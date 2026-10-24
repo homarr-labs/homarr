@@ -4,6 +4,7 @@ import { getWidgetIntegrationConfig } from "@homarr/definitions";
 import { uptimeKumaStatusPageSlugSchema } from "@homarr/validation/uptime-kuma";
 
 import { createWidgetDefinition } from "../definition";
+import { widgetQuery } from "../data";
 import { optionsBuilder } from "../options";
 
 export const { definition, componentLoader } = createWidgetDefinition("uptimeKuma", {
@@ -43,4 +44,11 @@ export const { definition, componentLoader } = createWidgetDefinition("uptimeKum
       message: (t) => t("widget.uptimeKuma.error.internalServerError"),
     },
   },
-}).withDynamicImport(() => import("./component"));
+})
+  .withData({
+    mode: "queries",
+    queries: ({ options, integrationIds }) => ({
+      main: widgetQuery("widget.uptimeKuma.getStatusPages", { integrationIds, statusPageSlug: options.statusPageSlug }),
+    }),
+  })
+  .withDynamicImport(() => import("./component"));

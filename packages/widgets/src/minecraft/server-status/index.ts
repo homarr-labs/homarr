@@ -3,6 +3,7 @@ import { z } from "zod/v4";
 
 import { createWidgetDefinition, widgetQueryInputMatches } from "../../definition";
 import { optionsBuilder } from "../../options";
+import { widgetQuery } from "../../data";
 
 export const { componentLoader, definition } = createWidgetDefinition("minecraftServerStatus", {
   supportsAdvancedFocus: false,
@@ -22,4 +23,9 @@ export const { componentLoader, definition } = createWidgetDefinition("minecraft
       isBedrockServer: factory.switch({ defaultValue: false }),
     }));
   },
-}).withDynamicImport(() => import("./component"));
+})
+  .withData({
+    mode: "queries",
+    queries: ({ options }) => ({ main: widgetQuery("widget.minecraft.getServerStatus", options) }),
+  })
+  .withDynamicImport(() => import("./component"));

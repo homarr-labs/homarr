@@ -3,6 +3,7 @@ import { IconShieldLock } from "@tabler/icons-react";
 import { getWidgetIntegrationConfig } from "@homarr/definitions";
 
 import { createWidgetDefinition } from "../definition";
+import { widgetQuery } from "../data";
 import { optionsBuilder } from "../options";
 
 export const { componentLoader, definition } = createWidgetDefinition("vpn", {
@@ -13,4 +14,11 @@ export const { componentLoader, definition } = createWidgetDefinition("vpn", {
     return optionsBuilder.from(() => ({}));
   },
   ...getWidgetIntegrationConfig("vpn"),
-}).withDynamicImport(() => import("./component"));
+})
+  .withData({
+    mode: "queries",
+    queries: ({ integrationIds, options }) => ({
+      main: widgetQuery("widget.vpn.getSummaries", { ...options, integrationIds }),
+    }),
+  })
+  .withDynamicImport(() => import("./component"));

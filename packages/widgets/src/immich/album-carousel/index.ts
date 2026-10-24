@@ -7,6 +7,7 @@ import { useI18n } from "@homarr/translation/client";
 
 import { createWidgetDefinition, widgetQueryInputMatches } from "../../definition";
 import { optionsBuilder } from "../../options";
+import { widgetQuery } from "../../data";
 import { ALL_PHOTOS_ALBUM_ID } from "./constants";
 
 const createOptions = () =>
@@ -94,4 +95,21 @@ export const { definition, componentLoader } = createWidgetDefinition("immich-al
     ];
   },
   createOptions,
-}).withDynamicImport(() => import("./component"));
+})
+  .withData({
+    mode: "queries",
+    stream: true,
+    queries: ({ integrationIds, options }) => {
+      const integrationId = integrationIds[0] ?? "";
+      const albumId = options.albumId && options.albumId !== ALL_PHOTOS_ALBUM_ID ? options.albumId : undefined;
+      return {
+        main: widgetQuery("widget.immich.getAlbum", { integrationId, albumId }),
+        preview: widgetQuery(
+          "widget.immich.getAlbumPreview",
+          { integrationId, albumId: albumId ?? "", randomizePhotos: options.randomizePhotos },
+          { enabled: Boolean(albumId) },
+        ),
+      };
+    },
+  })
+  .withDynamicImport(() => import("./component"));

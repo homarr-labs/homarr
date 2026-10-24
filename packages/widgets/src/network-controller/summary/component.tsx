@@ -1,14 +1,12 @@
 "use client";
+import { definition } from ".";
 
 import type { CSSProperties } from "react";
 import { Box, Card, Center, Group, List, ScrollArea, SimpleGrid, Stack, Text, useMantineTheme } from "@mantine/core";
 import { IconCircleCheckFilled, IconCircleXFilled } from "@tabler/icons-react";
-import dayjs from "dayjs";
-import duration from "dayjs/plugin/duration";
-import objectSupport from "dayjs/plugin/objectSupport";
-import relativeTime from "dayjs/plugin/relativeTime";
 
 import { clientApi } from "@homarr/api/client";
+import { formatHumanizedDuration } from "@homarr/common";
 import type { ScopedTranslationFunction } from "@homarr/translation";
 import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";
 import { iconSizes } from "@homarr/ui";
@@ -20,20 +18,17 @@ import { getUsableWidgetQueryData } from "../../common/query-state";
 import type { NetworkControllerMatrixMetricKey, NetworkControllerMatrixSectionKey } from "./display";
 import { getNetworkControllerMatrix } from "./display";
 
-dayjs.extend(objectSupport);
-dayjs.extend(relativeTime);
-dayjs.extend(duration);
-
 export default function NetworkControllerSummaryWidget({
+  options,
   integrationIds,
   width,
   height,
   displayScale = 1,
   displayMode,
 }: WidgetComponentProps<"networkControllerSummary">) {
-  const summaryQuery = clientApi.widget.networkController.summary.useQuery({
-    integrationIds,
-  });
+  const summaryQuery = clientApi.widget.networkController.summary.useQuery(
+    definition.data.queries({ options, integrationIds }).main.input,
+  );
   const isAdvanced = displayMode === "advanced";
   let results = summaryQuery.data ?? [];
   if (isAdvanced) {
@@ -260,7 +255,7 @@ const getMatrixMetricLabel = (
 const formatMatrixMetric = (key: NetworkControllerMatrixMetricKey, value: number | null, unknown: string) => {
   if (value === null) return unknown;
   if (key === "latency" || key === "ping") return `${value}ms`;
-  if (key === "uptime") return dayjs.duration(value, "seconds").humanize();
+  if (key === "uptime") return formatHumanizedDuration(value * 1000);
   return String(value);
 };
 

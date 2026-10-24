@@ -18,10 +18,8 @@ import { NextIntlClientProvider } from "next-intl";
 
 import { env as authEnv } from "@homarr/auth/env";
 import { getRscServerSettingsAsync } from "@homarr/api/server-settings-server";
-import { getRscAssistantAvailabilityAsync } from "@homarr/api/assistant-availability-server";
-import { getRscUserSettingsAsync } from "@homarr/api/user-server";
 import { auth } from "@homarr/auth/next";
-import { createLogger } from "@homarr/core/infrastructure/logs";
+import { InitialRenderTimeProvider } from "@homarr/common";
 import { ModalProvider } from "@homarr/modals";
 import { Notifications } from "@homarr/notifications";
 import { SettingsProvider } from "@homarr/settings";
@@ -38,20 +36,21 @@ import { env } from "~/env";
 import { SearchEngineOptimization } from "~/components/layout/search-engine-optimization";
 import { ServiceWorkerRegistration } from "~/components/layout/service-worker-registration";
 import { ViewportHint } from "~/components/layout/viewport-hint";
+import { getCapturedViewIdAsync } from "~/board-preparation/captured-view";
 import { getCurrentColorSchemeAsync } from "~/theme/color-scheme";
 import { DayJsLoader } from "./_client-providers/dayjs-loader";
 import { JotaiProvider } from "./_client-providers/jotai";
 import { CustomMantineProvider } from "./_client-providers/mantine";
 import { AuthProvider } from "./_client-providers/session";
 import { TRPCReactProvider } from "./_client-providers/trpc";
+import { BoardReadyProvider } from "./boards/(content)/_ready-context";
 import { composeWrappers } from "./compose";
+import { loadRootLayoutDataAsync } from "./_root-layout-data";
 
 const fontSans = Inter({
   subsets: ["latin"],
   variable: "--font-sans",
 });
-
-const logger = createLogger({ module: "rootLayout" });
 
 export const generateMetadata = async (): Promise<Metadata> => {
   const [serverSettings, colorScheme, t] = await Promise.all([
@@ -103,33 +102,13 @@ export default async function Layout(props: {
     notFound();
   }
 
-  const sessionPromise = auth();
-  const serverSettingsPromise = getRscServerSettingsAsync();
-  const assistantAvailabilityPromise = sessionPromise.then(async (session) => {
-    if (!session) return "unauthenticated" as const;
-
-    try {
-      const enabled = await getRscAssistantAvailabilityAsync();
-      return enabled ? ("enabled" as const) : ("unconfigured" as const);
-    } catch {
-      return "error" as const;
-    }
-  });
-  const userPromise = sessionPromise.then((session) =>
-    session
-      ? getRscUserSettingsAsync(session.user.id).catch((error: unknown) => {
-          logger.error(new Error("Failed to load the authenticated user in the root layout", { cause: error }));
-          return null;
-        })
-      : null,
-  );
-  const [session, user, serverSettings, colorScheme, assistantAvailability] = await Promise.all([
-    sessionPromise,
-    userPromise,
-    serverSettingsPromise,
+  const [{ session, user, serverSettings, assistantAvailability }, colorScheme, capturedViewId] = await Promise.all([
+    loadRootLayoutDataAsync(auth()),
     getCurrentColorSchemeAsync(),
-    assistantAvailabilityPromise,
+    getCapturedViewIdAsync(),
   ]);
+  let initialRenderTime: number | undefined;
+  if (capturedViewId) initialRenderTime = Date.now();
   const direction = isLocaleRTL(locale) ? "rtl" : "ltr";
   const publicUrls = resolveHomarrUrlConfig({
     homarrWebsiteUrl: env.HOMARR_WEBSITE_URL,
@@ -168,6 +147,7 @@ export default async function Layout(props: {
     ),
     (innerProps) => <JotaiProvider {...innerProps} />,
     (innerProps) => <TRPCReactProvider demoReadOnly={env.DEMO_MODE && env.DEMO_READ_ONLY} {...innerProps} />,
+    (innerProps) => <BoardReadyProvider {...innerProps} />,
     (innerProps) => <DayJsLoader {...innerProps} />,
     (innerProps) => <NextIntlClientProvider {...innerProps} />,
     (innerProps) => (
@@ -204,11 +184,13 @@ export default async function Layout(props: {
       </head>
       <body className={[fontSans.className, fontSans.variable].join(" ")} suppressHydrationWarning>
         <ViewportHint />
-        <StackedProvider>
-          <Notifications pauseResetOnHover="notification" />
-          <ServiceWorkerRegistration />
-          {props.children}
-        </StackedProvider>
+        <InitialRenderTimeProvider initialTime={initialRenderTime}>
+          <StackedProvider>
+            <Notifications pauseResetOnHover="notification" />
+            <ServiceWorkerRegistration />
+            {props.children}
+          </StackedProvider>
+        </InitialRenderTimeProvider>
       </body>
     </html>
   );

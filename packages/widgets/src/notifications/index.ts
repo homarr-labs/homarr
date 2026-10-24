@@ -4,6 +4,7 @@ import { getWidgetIntegrationConfig } from "@homarr/definitions";
 
 import { createWidgetDefinition, widgetQueryInputMatches } from "../definition";
 import { optionsBuilder } from "../options";
+import { widgetQuery } from "../data";
 
 export const { componentLoader, definition } = createWidgetDefinition("notifications", {
   supportsAdvancedFocus: true,
@@ -27,4 +28,11 @@ export const { componentLoader, definition } = createWidgetDefinition("notificat
     }));
   },
   ...getWidgetIntegrationConfig("notifications"),
-}).withDynamicImport(() => import("./component"));
+})
+  .withData({
+    mode: "queries",
+    queries: ({ integrationIds, options }) => ({
+      main: widgetQuery("widget.notifications.getNotifications", { ...options, integrationIds }),
+    }),
+  })
+  .withDynamicImport(() => import("./component"));

@@ -9,37 +9,24 @@ import classes from "./component.module.css";
 
 import { useUmamiQueryOptions } from "./umami-utils";
 import { getUsableWidgetQueryData } from "../common/query-state";
+import type { RouterInputs } from "@homarr/api";
 
 interface UmamiTopListProps {
-  integrationIds: string[];
-  websiteId: string;
-  timeFrame: string;
-  limit: number;
+  input: RouterInputs["widget"]["umami"]["getTopPages"];
 }
 
-export function UmamiTopPagesContent({ integrationIds, websiteId, timeFrame, limit }: UmamiTopListProps) {
+export function UmamiTopPagesContent({ input }: UmamiTopListProps) {
   const t = useI18n("widget.umami");
   const umamiQueryOptions = useUmamiQueryOptions();
-  const data =
-    getUsableWidgetQueryData(
-      clientApi.widget.umami.getTopPages.useQuery(
-        { integrationId: integrationIds[0] ?? "", websiteId, timeFrame, limit },
-        umamiQueryOptions,
-      ),
-    ) ?? [];
+  const data = getUsableWidgetQueryData(clientApi.widget.umami.getTopPages.useQuery(input, umamiQueryOptions)) ?? [];
   return <UmamiTopList items={data} heading={t("option.viewMode.option.topPages")} emptyLabel={t("top.direct")} />;
 }
 
-export function UmamiTopReferrersContent({ integrationIds, websiteId, timeFrame, limit }: UmamiTopListProps) {
+export function UmamiTopReferrersContent({ input }: UmamiTopListProps) {
   const t = useI18n("widget.umami");
   const umamiQueryOptions = useUmamiQueryOptions();
   const data =
-    getUsableWidgetQueryData(
-      clientApi.widget.umami.getTopReferrers.useQuery(
-        { integrationId: integrationIds[0] ?? "", websiteId, timeFrame, limit },
-        umamiQueryOptions,
-      ),
-    ) ?? [];
+    getUsableWidgetQueryData(clientApi.widget.umami.getTopReferrers.useQuery(input, umamiQueryOptions)) ?? [];
   return <UmamiTopList items={data} heading={t("option.viewMode.option.topReferrers")} emptyLabel={t("top.direct")} />;
 }
 

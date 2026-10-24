@@ -1,4 +1,5 @@
 "use client";
+import { definition } from ".";
 
 import { Box, ScrollArea, SimpleGrid, Stack, Tabs } from "@mantine/core";
 import dayjs from "dayjs";
@@ -17,7 +18,7 @@ import { SystemHealthMonitoring } from "./system-health";
 dayjs.extend(duration);
 
 export default function HealthMonitoringWidget(props: WidgetComponentProps<"healthMonitoring">) {
-  const integrationsQuery = clientApi.integration.byIds.useQuery(props.integrationIds);
+  const integrationsQuery = clientApi.integration.byIds.useQuery(definition.data.queries(props).main.input);
   const t = useI18n("widget.healthMonitoring");
 
   // Wait for integrations to load, or cluster-only kinds like Proxmox get routed to the

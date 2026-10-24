@@ -1,4 +1,5 @@
 "use client";
+import { definition } from ".";
 
 import { Box, Group, ScrollArea, SimpleGrid, Stack, Text } from "@mantine/core";
 
@@ -54,7 +55,9 @@ interface TracearrContentProps {
 
 function TracearrContent({ integrationIds, options, width, displayMode }: TracearrContentProps) {
   const t = useI18n("widget.tracearr");
-  const dashboardQuery = clientApi.widget.tracearr.getDashboard.useQuery({ integrationIds });
+  const dashboardQuery = clientApi.widget.tracearr.getDashboard.useQuery(
+    definition.data.queries({ options, integrationIds }).main.input,
+  );
   const dashboardData = getUsableWidgetQueryData(dashboardQuery) ?? [];
   const successfulDashboards = dashboardData.flatMap((item) =>
     item.dashboard === null ? [] : [{ ...item, dashboard: item.dashboard }],

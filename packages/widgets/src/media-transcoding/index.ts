@@ -26,4 +26,6 @@ export const { componentLoader, definition } = createWidgetDefinition("mediaTran
       queuePageSize: factory.number({ defaultValue: 10, validate: z.number().min(1).max(30) }),
     }));
   },
-}).withDynamicImport(() => import("./component"));
+})
+  .withData({ mode: "browser", reason: "Queue pagination depends on the measured container height." })
+  .withDynamicImport(() => import("./component"));

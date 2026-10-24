@@ -1,4 +1,5 @@
 "use client";
+import { definition } from "..";
 
 import { Box, Center, Group, ScrollArea, Stack, Text, ThemeIcon, Tooltip } from "@mantine/core";
 import {
@@ -42,17 +43,10 @@ export function WazuhFimView({ integrationIds, options, width, height }: WazuhVi
   const t = useI18n("widget.wazuh.fim");
   const tShared = useI18n("widget.wazuh");
   const locale = useCurrentIntlLocale();
-  const integrationId = integrationIds[0] ?? "";
-  const query = clientApi.widget.wazuh.getFim.useQuery(
-    {
-      integrationId,
-      range: options.range,
-      event: options.fimEvent,
-      limit: options.fimLimit,
-      includeRegistry: options.includeRegistry,
-    },
-    { staleTime: 60_000, refetchInterval: 60_000 },
-  );
+  const query = clientApi.widget.wazuh.getFim.useQuery(definition.data.queries({ options, integrationIds }).fim.input, {
+    staleTime: 60_000,
+    refetchInterval: 60_000,
+  });
   const result = getUsableWidgetQueryData(query);
   const links = useWazuhLinks(result?.dashboardUrl);
   const compact = height < 170 || width < 260;

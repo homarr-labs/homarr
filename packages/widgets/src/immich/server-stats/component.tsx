@@ -1,4 +1,5 @@
 "use client";
+import { definition } from ".";
 
 import React from "react";
 import { Group, Progress, ScrollArea, SimpleGrid, Stack, Text } from "@mantine/core";
@@ -30,7 +31,7 @@ export default function ImmichServerStatsWidget({
   const t = useI18n("widget.immich-serverStats");
   const { formatBytes } = useByteFormatter();
   const locale = useCurrentIntlLocale();
-  const input = { integrationId: integrationIds[0] ?? "" };
+  const input = definition.data.queries({ options, integrationIds }).main.input;
   const albumsInput = { ...input, limit: MAX_ADVANCED_ALBUMS };
   const isAdvanced = displayMode === "advanced";
   const albumsEnabled = isAdvanced && integrationIds.length > 0;

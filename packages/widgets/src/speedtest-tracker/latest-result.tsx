@@ -3,6 +3,7 @@
 import { Group, SimpleGrid, Stack, Text } from "@mantine/core";
 import { IconArrowDown, IconArrowUp, IconCircleCheck, IconCircleX, IconWaveSine } from "@tabler/icons-react";
 
+import { useHydrationTime } from "@homarr/common";
 import type { SpeedtestTrackerResult } from "@homarr/integrations/types";
 import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";
 
@@ -21,11 +22,13 @@ export function LatestResultSection({
 }) {
   const t = useI18n("widget.speedtestTracker");
   const locale = useCurrentIntlLocale();
+  const initialTime = useHydrationTime();
   const timestamp = Intl.DateTimeFormat(locale, {
     month: "short",
     day: "numeric",
     hour: "2-digit",
     minute: "2-digit",
+    timeZone: initialTime !== undefined ? "UTC" : undefined,
   }).format(result.created_at);
   const metricCount = result.healthy !== null ? 4 : 3;
   const cols = width < 230 ? 2 : metricCount;

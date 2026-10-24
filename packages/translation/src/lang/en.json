@@ -7140,6 +7140,9 @@
             "disabled": "Disabled"
           },
           "job": {
+            "boardPreparation": {
+              "label": "Board preparation"
+            },
             "iconsUpdater": {
               "label": "Icons Updater"
             },

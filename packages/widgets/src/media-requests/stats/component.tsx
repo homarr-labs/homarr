@@ -1,4 +1,5 @@
 "use client";
+import { definition } from ".";
 
 import { ActionIcon, Avatar, Badge, Box, Card, Grid, Group, ScrollArea, Stack, Text, Tooltip } from "@mantine/core";
 import type { Icon } from "@tabler/icons-react";
@@ -36,6 +37,7 @@ const OVERSEERR_COLOR = "#ECB000";
 const JELLYSEERR_COLOR = "#6677CC";
 
 export default function MediaServerWidget({
+  options,
   integrationIds,
   isEditMode,
   width,
@@ -43,7 +45,9 @@ export default function MediaServerWidget({
 }: WidgetComponentProps<"mediaRequests-requestStats">) {
   const t = useI18n("widget.mediaRequests-requestStats");
   const tCommon = useI18n("common");
-  const requestStatsQuery = clientApi.widget.mediaRequests.getStats.useQuery({ integrationIds });
+  const requestStatsQuery = clientApi.widget.mediaRequests.getStats.useQuery(
+    definition.data.queries({ options, integrationIds }).main.input,
+  );
   const requestStats = getUsableWidgetQueryData(requestStatsQuery);
 
   const board = useRequiredBoard();

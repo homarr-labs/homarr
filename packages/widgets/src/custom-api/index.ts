@@ -19,4 +19,6 @@ export const { definition, componentLoader } = createWidgetDefinition("customApi
       }),
     }));
   },
-}).withDynamicImport(() => import("./component"));
+})
+  .withData({ mode: "browser", reason: "Custom JSX and its requests run in the browser runtime." })
+  .withDynamicImport(() => import("./component"));

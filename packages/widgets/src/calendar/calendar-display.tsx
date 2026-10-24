@@ -37,6 +37,8 @@ import type { CalendarView } from "./calendar-view";
 import classes from "./component.module.css";
 
 interface CalendarDisplayProps {
+  width: number;
+  height: number;
   events: CalendarEventWithSource[];
   failedIntegrations: { integrationId: string; integrationName: string; error: string }[];
   isPending: boolean;
@@ -51,6 +53,7 @@ interface CalendarDisplayProps {
 }
 
 export const CalendarDisplay = ({
+  width: initialWidth,
   events,
   failedIntegrations,
   isPending,
@@ -64,7 +67,8 @@ export const CalendarDisplay = ({
   firstDayOfWeek,
 }: CalendarDisplayProps) => {
   const t = useI18n("widget.calendar");
-  const { ref, width } = useElementSize();
+  const { ref, width: measuredWidth } = useElementSize();
+  const width = measuredWidth || initialWidth;
   const { ref: bodyRef, height: bodyHeight } = useElementSize();
   const filteredEvents = useMemo(
     () =>

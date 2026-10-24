@@ -1,7 +1,7 @@
-import { createHmac, hkdfSync, randomUUID } from "node:crypto";
+import { createHmac, hkdfSync } from "node:crypto";
 import { setImmediate } from "node:timers/promises";
 
-import { createId, formatBytes } from "@homarr/common";
+import { formatBytes } from "@homarr/common";
 import { env } from "@homarr/common/env";
 import { decryptSecret, encryptSecret, readBoundedResponseAsync } from "@homarr/common/server";
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
@@ -11,7 +11,7 @@ import { createGetSetChannel } from "@homarr/redis";
 
 const logger = createLogger({ module: "imageProxy" });
 
-export const IMAGE_PROXY_REDIS_TTL_SECONDS = 86400;
+export const IMAGE_PROXY_REDIS_TTL_SECONDS = 7 * 24 * 60 * 60;
 export const IMAGE_PROXY_MAX_BYTES = 32 * 1024 * 1024;
 export const IMAGE_PROXY_TIMEOUT_MS = 10_000;
 
@@ -40,19 +40,8 @@ export class ImageProxy {
   }
 
   public async createImageAsync(url: string, headers?: Record<string, string>): Promise<string> {
-    const existingId = await this.getExistingIdAsync(url, headers);
-    if (existingId) {
-      logger.debug("Image already exists in the proxy", {
-        id: existingId,
-        url: this.redactUrl(url),
-        headers: this.redactHeaders(headers ?? null),
-      });
-      return this.createImageUrl(existingId);
-    }
-
-    const id = createId();
-    await this.storeImageAsync(id, url, headers);
-
+    const headerValue = JSON.stringify(headers ?? null);
+    const id = await this.storeImageAsync(url, this.hashSecret(headerValue), encryptSecret(headerValue));
     return this.createImageUrl(id);
   }
 
@@ -66,16 +55,7 @@ export class ImageProxy {
     for (let index = 0; index < urls.length; index += 128) {
       const batch = await Promise.all(
         urls.slice(index, index + 128).map(async (url) => {
-          const urlHash = this.hashSecret(url);
-          const hashChannel = createHmacChannel(`${urlHash}.${headerHash}`);
-          const existingId = await hashChannel.getAsync();
-          if (existingId) return this.createImageUrl(existingId);
-          const id = randomUUID();
-          await createUrlByIdChannel(id).setAsync(
-            { url: encryptSecret(url), headers: encryptedHeaders },
-            { ttlSeconds: IMAGE_PROXY_REDIS_TTL_SECONDS },
-          );
-          await hashChannel.setAsync(id, { ttlSeconds: IMAGE_PROXY_REDIS_TTL_SECONDS });
+          const id = await this.storeImageAsync(url, headerHash, encryptedHeaders);
           return this.createImageUrl(id);
         }),
       );
@@ -168,24 +148,19 @@ export class ImageProxy {
     };
   }
 
-  private async getExistingIdAsync(url: string, headers: Record<string, string> | undefined): Promise<string | null> {
+  private async storeImageAsync(
+    url: string,
+    headerHash: string,
+    encryptedHeaders: `${string}.${string}`,
+  ): Promise<string> {
     const urlHash = this.hashSecret(url);
-    const headerHash = this.hashSecret(JSON.stringify(headers ?? null));
-
-    const channel = createHmacChannel(`${urlHash}.${headerHash}`);
-    return await channel.getAsync();
-  }
-
-  private async storeImageAsync(id: string, url: string, headers: Record<string, string> | undefined): Promise<void> {
-    const urlHash = this.hashSecret(url);
-    const headerHash = this.hashSecret(JSON.stringify(headers ?? null));
-
     const hashChannel = createHmacChannel(`${urlHash}.${headerHash}`);
+    const id = (await hashChannel.getAsync()) ?? this.hashSecret(`${urlHash}.${headerHash}`);
     const urlHeaderChannel = createUrlByIdChannel(id);
     await urlHeaderChannel.setAsync(
       {
         url: encryptSecret(url),
-        headers: encryptSecret(JSON.stringify(headers ?? null)),
+        headers: encryptedHeaders,
       },
       { ttlSeconds: IMAGE_PROXY_REDIS_TTL_SECONDS },
     );
@@ -194,8 +169,8 @@ export class ImageProxy {
     logger.debug("Stored image in the proxy", {
       id,
       url: this.redactUrl(url),
-      headers: this.redactHeaders(headers ?? null),
     });
+    return id;
   }
 
   private hashSecret(value: string): string {

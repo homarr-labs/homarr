@@ -1,4 +1,5 @@
 "use client";
+import { definition } from "..";
 
 import { Anchor, Box, Center, Group, ScrollArea, Stack, Text, Tooltip } from "@mantine/core";
 import { Sparkline } from "@mantine/charts";
@@ -24,10 +25,9 @@ const authQuery =
 export function WazuhAuthFailuresView({ integrationIds, options, width, height }: WazuhViewProps) {
   const t = useI18n("widget.wazuh.authFailures");
   const locale = useCurrentIntlLocale();
-  const integrationId = integrationIds[0] ?? "";
   const hours = getWazuhRangeHours(options.range);
   const query = clientApi.widget.wazuh.getAuthFailures.useQuery(
-    { integrationId, hours, limit: options.authLimit },
+    definition.data.queries({ options, integrationIds }).authFailures.input,
     { staleTime: 60_000, refetchInterval: 60_000 },
   );
   const result = getUsableWidgetQueryData(query);

@@ -1,4 +1,5 @@
 "use client";
+import { definition } from ".";
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Box, Center, Group, ScrollArea, SimpleGrid, Stack, Text } from "@mantine/core";
@@ -92,7 +93,9 @@ export default function SystemResources({
   height,
   displayMode,
 }: WidgetComponentProps<"systemResources">) {
-  const healthQuery = clientApi.widget.healthMonitoring.getSystemHealthStatus.useQuery({ integrationIds });
+  const healthQuery = clientApi.widget.healthMonitoring.getSystemHealthStatus.useQuery(
+    definition.data.queries({ options, integrationIds }).main.input,
+  );
   const results = getUsableWidgetQueryData(healthQuery) ?? [];
   const data = results.filter(
     (entry): entry is typeof entry & { healthInfo: NonNullable<typeof entry.healthInfo> } => entry.healthInfo !== null,

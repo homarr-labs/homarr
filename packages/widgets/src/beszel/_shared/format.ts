@@ -1,9 +1,4 @@
-import dayjs from "dayjs";
-import duration from "dayjs/plugin/duration";
-import relativeTime from "dayjs/plugin/relativeTime";
-
-dayjs.extend(duration);
-dayjs.extend(relativeTime);
+import { formatHumanizedDuration } from "@homarr/common";
 
 const compactByteLabel = (value: number, formatter: (value: number) => string): string => {
   if (!value || !Number.isFinite(value)) return "0";
@@ -54,7 +49,7 @@ export const createBeszelChartFormatters = (locale: string) => {
 
 export const getProgressTrackSize = (size: "xs" | "sm"): number => (size === "xs" ? 6 : 9);
 
-export const formatUptime = (seconds: number): string => dayjs.duration(seconds, "seconds").humanize();
+export const formatUptime = (seconds: number): string => formatHumanizedDuration(seconds * 1000);
 
 export const formatTemp = (celsius: number | null, fahrenheit: boolean): string => {
   if (celsius === null) return "—";

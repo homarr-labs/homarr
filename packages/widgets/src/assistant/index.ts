@@ -8,6 +8,8 @@ export const { definition, componentLoader } = createWidgetDefinition("assistant
   createOptions() {
     return optionsBuilder.from(() => ({}));
   },
-}).withDynamicImport(() => import("./component"));
+})
+  .withData({ mode: "browser", reason: "Chat depends on the active browser conversation." })
+  .withDynamicImport(() => import("./component"));
 
 export { AssistantWidgetRendererProvider } from "./context";

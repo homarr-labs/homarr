@@ -3,6 +3,7 @@ import { IconAd, IconServerOff } from "@tabler/icons-react";
 import { getWidgetIntegrationConfig } from "@homarr/definitions";
 
 import { createWidgetDefinition } from "../../definition";
+import { widgetQuery } from "../../data";
 import { optionsBuilder } from "../../options";
 
 export const widgetKind = "dnsHoleSummary";
@@ -37,4 +38,10 @@ export const { definition, componentLoader } = createWidgetDefinition(widgetKind
       message: (t) => t("widget.dnsHoleSummary.error.internalServerError"),
     },
   },
-}).withDynamicImport(() => import("./component"));
+})
+  .withData({
+    mode: "queries",
+    stream: true,
+    queries: ({ integrationIds }) => ({ main: widgetQuery("widget.dnsHole.summary", { integrationIds }) }),
+  })
+  .withDynamicImport(() => import("./component"));

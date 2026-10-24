@@ -1,15 +1,14 @@
 "use client";
+import { definition, getAppPingQuery } from ".";
 
 import type { PropsWithChildren } from "react";
-import { Fragment, Suspense } from "react";
+import { Fragment } from "react";
 import { Box, Flex, rem, Stack, Text, Tooltip, UnstyledButton } from "@mantine/core";
-import { IconMinus } from "@tabler/icons-react";
 import combineClasses from "clsx";
 
 import { clientApi } from "@homarr/api/client";
 import { useRequiredBoard } from "@homarr/boards/context";
 import { useSettings } from "@homarr/settings";
-import { useI18n } from "@homarr/translation/client";
 import { MaskedOrNormalImage } from "@homarr/ui";
 
 import { WidgetEmptyState } from "../common/empty-state";
@@ -18,7 +17,6 @@ import { getUsableWidgetQueryData, isInitialWidgetQueryPending } from "../common
 import { WidgetQueryLoadingState } from "../common/query-state-indicator";
 import type { WidgetComponentProps } from "../definition";
 import classes from "./app.module.css";
-import { PingDot } from "./ping/ping-dot";
 import { PingIndicator } from "./ping/ping-indicator";
 
 export default function AppWidget({
@@ -28,16 +26,20 @@ export default function AppWidget({
   width,
   displayScale = 1,
 }: WidgetComponentProps<"app">) {
-  const tCommon = useI18n("common");
   const settings = useSettings();
   const board = useRequiredBoard();
-  const appQuery = clientApi.app.byId.useQuery({ id: options.appId }, { enabled: Boolean(options.appId) });
+  const context = { options, integrationIds: [], board, settings };
+  const queries = definition.data.queries(context);
+  const appQuery = clientApi.app.byId.useQuery(queries.main.input, {
+    enabled: Boolean(options.appId),
+  });
   const app = getUsableWidgetQueryData(appQuery);
   const href = app?.href ?? undefined;
 
   if (!options.appId) return <WidgetEmptyState />;
   if (isInitialWidgetQueryPending(appQuery)) return <WidgetQueryLoadingState />;
   if (!app) return <WidgetEmptyState />;
+  const ping = getAppPingQuery(app, context);
 
   let layoutScale = displayScale;
   if (!Number.isFinite(layoutScale) || layoutScale <= 0) layoutScale = 1;
@@ -123,14 +125,7 @@ export default function AppWidget({
             />
           </Flex>
         </AppDescriptionTooltip>
-        {options.pingEnabled &&
-        !settings.forceDisableStatus &&
-        !board.disableStatus &&
-        Boolean(app.pingUrl ?? app.href) ? (
-          <Suspense fallback={<PingDot icon={IconMinus} color="gray" tooltip={`${tCommon("action.loading")}…`} />}>
-            <PingIndicator appId={app.id} />
-          </Suspense>
-        ) : null}
+        {ping.enabled && <PingIndicator input={ping.input} />}
       </AppLink>
     </Box>
   );

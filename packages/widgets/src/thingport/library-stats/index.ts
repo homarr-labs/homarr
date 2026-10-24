@@ -3,6 +3,7 @@ import { IconCube } from "@tabler/icons-react";
 import { getWidgetIntegrationConfig } from "@homarr/definitions";
 
 import { createWidgetDefinition, matchesWidgetRuntimeQuery } from "../../definition";
+import { widgetQuery } from "../../data";
 import { optionsBuilder } from "../../options";
 
 export const { definition, componentLoader } = createWidgetDefinition("thingport-libraryStats", {
@@ -22,4 +23,11 @@ export const { definition, componentLoader } = createWidgetDefinition("thingport
       openInNewTab: factory.switch({ defaultValue: true }),
     }));
   },
-}).withDynamicImport(() => import("./component"));
+})
+  .withData({
+    mode: "queries",
+    queries: ({ integrationIds }) => ({
+      main: widgetQuery("widget.thingport.getLibraryStats", { integrationId: integrationIds[0] ?? "" }),
+    }),
+  })
+  .withDynamicImport(() => import("./component"));
