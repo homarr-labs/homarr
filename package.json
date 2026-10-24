@@ -397,10 +397,10 @@
     "vite@>=5.0.0 <=5.4.18": ">=8.1.4"
   },
   "engines": {
-    "bun": ">=1.4.3",
+    "bun": ">=1.4.4",
     "node": ">=24.22.1"
   },
-  "packageManager": "bun@1.4.3",
+  "packageManager": "bun@1.4.4",
   "patchedDependencies": {
     "dns-caching@0.2.9": "patches/dns-caching.patch",
     "@types/node-unifi@2.5.1": "patches/@types__node-unifi.patch",
