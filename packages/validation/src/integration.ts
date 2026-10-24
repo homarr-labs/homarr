@@ -6,12 +6,19 @@ import { appManageSchema } from "./app";
 import { zodEnumFromArray } from "./enums";
 import { createSavePermissionsSchema } from "./permissions";
 
+const externalUrlSchema = z
+  .string()
+  .trim()
+  .transform((value) => value || null)
+  .nullish();
+
 export const integrationCreateSchema = z.object({
   name: z.string().nonempty().max(127),
   url: z
     .string()
     .url()
     .regex(/^https?:\/\//), // Only allow http and https for security reasons (javascript: is not allowed)
+  externalUrl: externalUrlSchema,
   kind: zodEnumFromArray(integrationKinds),
   secrets: z.array(
     z.object({
@@ -33,6 +40,7 @@ export const integrationUpdateSchema = z.object({
   id: z.string().nonempty(),
   name: z.string().nonempty().max(127),
   url: z.string().url(),
+  externalUrl: externalUrlSchema,
   secrets: z.array(
     z.object({
       kind: zodEnumFromArray(integrationSecretKinds),

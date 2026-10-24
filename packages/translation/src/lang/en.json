@@ -799,6 +799,11 @@
       }
     },
     "field": {
+      "url": {
+        "helpLabel": "URL format examples",
+        "examples": "Examples of accepted links",
+        "requiresHandler": "Custom protocols require an associated application on your device."
+      },
       "description": {
         "label": "Description"
       },
@@ -1405,11 +1410,7 @@
               "label": "Select existing app"
             },
             "new": {
-              "title": "New",
-              "url": {
-                "label": "App url",
-                "description": "The url the app will open when accessed from the dashboard"
-              }
+              "title": "New"
             }
           }
         }
@@ -1455,14 +1456,15 @@
       },
       "createApp": {
         "label": "Create app",
-        "description": "Create an app with the same name and icon as the integration. Leave the input field below empty to create the app with the integration URL."
+        "description": "Create an app with the same name and icon as the integration."
       },
       "linkApp": {
         "label": "Link an existing app",
         "description": "Connect this integration to an app you can already use."
       },
-      "appHref": {
-        "placeholder": "Custom app URL"
+      "externalUrl": {
+        "label": "External URL",
+        "description": "Address your browser opens from widget links. Leave empty to use the integration URL."
       },
       "apiKeySettings": {
         "label": "Get API key"
@@ -1811,10 +1813,6 @@
         "wazuhIndexerPassword": {
           "label": "Indexer password",
           "newLabel": "New indexer password"
-        },
-        "wazuhDashboardUrl": {
-          "label": "Dashboard URL (optional)",
-          "newLabel": "New dashboard URL"
         }
       }
     },

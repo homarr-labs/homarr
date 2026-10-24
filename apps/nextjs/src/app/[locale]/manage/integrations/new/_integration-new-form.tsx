@@ -1,6 +1,6 @@
 "use client";
 
-import { startTransition, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import {
   Alert,
   Anchor,
@@ -37,10 +37,10 @@ import {
 } from "@homarr/definitions";
 import type { GetInputPropsReturnType, UseFormReturnType } from "@homarr/form";
 import { useZodForm } from "@homarr/form";
+import { AppUrlLabel } from "@homarr/forms-collection";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
 import { Link } from "@homarr/ui";
-import { appHrefSchema } from "@homarr/validation/app";
 import { integrationCreateSchema } from "@homarr/validation/integration";
 
 import { IntegrationSecretInput } from "../_components/secrets/integration-secret-inputs";
@@ -58,10 +58,10 @@ interface NewIntegrationFormProps {
 
 export type CreatedIntegrationResult = Extract<RouterOutputs["integration"]["create"], { integration: unknown }>;
 
-const formSchema = integrationCreateSchema.omit({ kind: true, app: true }).and(
+const formSchema = integrationCreateSchema.omit({ kind: true, app: true, externalUrl: true }).and(
   z.object({
+    externalUrl: z.string(),
     hasApp: z.boolean(),
-    appHref: appHrefSchema,
     appId: z.string().nullable(),
     optionalSecrets: z.array(z.object({ kind: z.string(), value: z.string() })),
   }),
@@ -89,13 +89,13 @@ export const NewIntegrationForm = ({ kind, initialUrl, initialName, onSuccess, o
     initialValues: {
       name: initialName ?? getIntegrationName(kind),
       url,
+      externalUrl: "",
       secrets: secretKinds[0].map((kind) => ({
         kind,
         value: "",
       })),
       attemptSearchEngineCreation: true,
       hasApp: canCreateApps,
-      appHref: url,
       appId: null,
       optionalSecrets: optionalSecretKinds.map((optionalKind) => ({ kind: optionalKind, value: "" })),
     },
@@ -111,7 +111,7 @@ export const NewIntegrationForm = ({ kind, initialUrl, initialName, onSuccess, o
   const [error, setError] = useState<null | AnyMappedTestConnectionError>(null);
   const errorRef = useRef<HTMLElement>(null);
 
-  const handleSubmitAsync = async ({ appId, appHref, hasApp, optionalSecrets, ...formValues }: FormType) => {
+  const handleSubmitAsync = async ({ appId, hasApp, optionalSecrets, ...formValues }: FormType) => {
     // Optional secrets are only stored when a value was entered.
     const values = {
       ...formValues,
@@ -155,15 +155,13 @@ export const NewIntegrationForm = ({ kind, initialUrl, initialName, onSuccess, o
       });
     };
 
-    const hasCustomHref = appHref !== null && appHref.trim().length >= 1;
-
     const app = hasApp
       ? appId !== null
         ? { id: appId }
         : canCreateApps
           ? {
               name: values.name,
-              href: hasCustomHref ? appHref : url,
+              href: values.externalUrl.trim() || url,
               iconUrl: getIconUrl(kind),
               description: null,
               pingUrl: url,
@@ -189,6 +187,13 @@ export const NewIntegrationForm = ({ kind, initialUrl, initialName, onSuccess, o
         {hasUrlSecret ? null : (
           <TextInput withAsterisk label={invariantTechnicalLabels.url} {...form.getInputProps("url")} />
         )}
+
+        <TextInput
+          label={<AppUrlLabel label={tIntegration("field.externalUrl.label")} />}
+          aria-label={tIntegration("field.externalUrl.label")}
+          description={tIntegration("field.externalUrl.description")}
+          {...form.getInputProps("externalUrl")}
+        />
 
         <Fieldset legend={tIntegration("secrets.title")}>
           <Stack gap="sm">
@@ -262,19 +267,12 @@ type FormType = z.infer<typeof formSchema>;
 
 const AppForm = ({ form, canCreateApps }: { form: UseFormReturnType<FormType>; canCreateApps: boolean }) => {
   const tIntegration = useI18n("integration");
-  const checkboxInputProps = form.getInputProps("hasApp", { type: "checkbox" });
+  const [appMode, setAppMode] = useState("new");
 
   return (
     <>
       <Checkbox
-        {...checkboxInputProps}
-        onChange={(event) => {
-          startTransition(() => {
-            form.setFieldValue("appHref", event.currentTarget.checked ? form.values.url : null);
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-            checkboxInputProps.onChange(event);
-          });
-        }}
+        {...form.getInputProps("hasApp", { type: "checkbox" })}
         label={tIntegration(canCreateApps ? "field.createApp.label" : "field.linkApp.label")}
         description={tIntegration(canCreateApps ? "field.createApp.description" : "field.linkApp.description")}
       />
@@ -288,30 +286,15 @@ const AppForm = ({ form, canCreateApps }: { form: UseFormReturnType<FormType>; c
                   value,
                   label: tIntegration(`page.create.app.option.${value}.title` as never),
                 }))}
-                value={form.values.appHref === null ? "existing" : "new"}
+                value={appMode}
                 onChange={(value) => {
-                  if (value === "existing") {
-                    form.setFieldValue("appId", null);
-                    form.setFieldValue("appHref", null);
-                  } else {
-                    form.setFieldValue("appId", null);
-                    form.setFieldValue("appHref", form.values.url);
-                  }
+                  setAppMode(value);
+                  form.setFieldValue("appId", null);
                 }}
               />
             )}
 
-            {typeof form.values.appHref === "string" && canCreateApps ? (
-              <TextInput
-                placeholder={tIntegration("field.appHref.placeholder")}
-                withAsterisk
-                label={tIntegration("page.create.app.option.new.url.label")}
-                description={tIntegration("page.create.app.option.new.url.description")}
-                {...form.getInputProps("appHref")}
-              />
-            ) : (
-              <IntegrationAppSelect {...form.getInputProps("appId")} />
-            )}
+            {(appMode === "existing" || !canCreateApps) && <IntegrationAppSelect {...form.getInputProps("appId")} />}
           </Stack>
         </Fieldset>
       </Collapse>
