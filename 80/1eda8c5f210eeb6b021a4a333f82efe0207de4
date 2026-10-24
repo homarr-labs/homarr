@@ -1,0 +1,16 @@
+bun.lock
+  h_d6e478ca18e517 5450-5451,5552,5554,5556,5558,5560,5976-5977
+tooling/github/setup/action.yml
+  h_d6e478ca18e517 45,47
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "801eda8c5f210eeb6b021a4a333f82efe0207de4",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
