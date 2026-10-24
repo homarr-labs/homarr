@@ -351,7 +351,7 @@
     "@assistant-ui/react-ai-sdk>ai": "7.0.56",
     "@assistant-ui/react-ai-sdk>assistant-stream": "0.3.34",
     "@assistant-ui/store": "0.3.5",
-    "@assistant-ui/tap": "0.9.10",
+    "@assistant-ui/tap": "0.9.23",
     "@babel/helpers@<7.26.10": ">=7.29.7",
     "@babel/runtime@<7.26.10": ">=7.29.7",
     "@grpc/grpc-js@<1.12.7": "1.13.6",
