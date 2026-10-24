@@ -34,7 +34,6 @@ const RESPONSE_TOO_LARGE_ERROR_CODE = "UND_ERR_RES_EXCEEDED_MAX_SIZE";
 
 const cache = new Map<string, { expiresAt: number; response: CustomWidgetHttpResponse }>();
 const inFlight = new Map<string, Promise<CustomWidgetHttpResponse>>();
-let cacheEpoch = 0;
 
 type RequestHopResult =
   | { kind: "response"; response: CustomWidgetHttpResponse }
@@ -255,11 +254,10 @@ export async function executeCustomWidgetRequest(input: CustomWidgetHttpRequest)
   const pending = inFlight.get(key);
   if (pending) return pending;
   const cacheTtlSeconds = input.cacheTtlSeconds ?? 30;
-  const requestEpoch = cacheEpoch;
   let request: Promise<CustomWidgetHttpResponse>;
   request = performRequest(input)
     .then((response) => {
-      if (response.ok && cacheTtlSeconds > 0 && requestEpoch === cacheEpoch) {
+      if (response.ok && cacheTtlSeconds > 0 && inFlight.get(key) === request) {
         pruneCache();
         cache.set(key, { expiresAt: Date.now() + cacheTtlSeconds * 1000, response });
       }
@@ -274,7 +272,6 @@ export async function executeCustomWidgetRequest(input: CustomWidgetHttpRequest)
 
 export function invalidateCustomWidgetResponseCache(prefixes: readonly string[]): void {
   if (prefixes.length === 0) return;
-  cacheEpoch += 1;
   for (const key of cache.keys()) if (prefixes.some((prefix) => key.startsWith(prefix))) cache.delete(key);
   for (const key of inFlight.keys()) if (prefixes.some((prefix) => key.startsWith(prefix))) inFlight.delete(key);
 }
