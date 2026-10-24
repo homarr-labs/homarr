@@ -17,6 +17,7 @@ import {
 } from "@mantine/core";
 import { IconArrowLeft, IconBuildingStore, IconCheck, IconExternalLink, IconPhoto } from "@tabler/icons-react";
 
+import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { useByteFormatter } from "@homarr/settings";
 import { useI18n } from "@homarr/translation/client";
@@ -33,7 +34,12 @@ import { WorkshopAccountButton, useWorkshopSession } from "~/components/workshop
 
 const listHref = "/manage/custom-widgets";
 
-export function WorkshopPublishForm({ widget }: { widget: { id: string; name: string } }) {
+interface WorkshopPublishFormProps {
+  widget: { id: string; name: string };
+  initialDefinition: RouterOutputs["customWidget"]["export"];
+}
+
+export function WorkshopPublishForm({ widget, initialDefinition }: WorkshopPublishFormProps) {
   const t = useI18n("workshop");
   const tCommon = useI18n("common");
   const { formatBytes } = useByteFormatter();
@@ -45,7 +51,7 @@ export function WorkshopPublishForm({ widget }: { widget: { id: string; name: st
   const [publishedSubmissionId, setPublishedSubmissionId] = useState<string | null>(null);
 
   const createSubmission = useWorkshopCreateMutation(session.client);
-  const definition = clientApi.customWidget.export.useQuery({ id: widget.id });
+  const definition = clientApi.customWidget.export.useQuery({ id: widget.id }, { initialData: initialDefinition });
 
   const breadcrumb = <DynamicBreadcrumb dynamicMappings={new Map([[widget.id, widget.name]])} />;
 

@@ -15,10 +15,11 @@ import type { searchEngineManageSchema } from "@homarr/validation/search-engine"
 import { SearchEngineForm } from "../../_form";
 
 interface SearchEngineEditFormProps {
+  integrations: RouterOutputs["integration"]["allThatSupportSearch"];
   searchEngine: RouterOutputs["searchEngine"]["byId"];
 }
 
-export const SearchEngineEditForm = ({ searchEngine }: SearchEngineEditFormProps) => {
+export const SearchEngineEditForm = ({ searchEngine, integrations }: SearchEngineEditFormProps) => {
   const t = useI18n("search.engine.page.edit.notification");
   const tCommon = useI18n("common");
   const router = useRouter();
@@ -55,6 +56,7 @@ export const SearchEngineEditForm = ({ searchEngine }: SearchEngineEditFormProps
 
   return (
     <SearchEngineForm
+      integrations={integrations}
       submitButtonTranslation={submitButtonTranslation}
       initialValues={searchEngine}
       handleSubmit={handleSubmit}
