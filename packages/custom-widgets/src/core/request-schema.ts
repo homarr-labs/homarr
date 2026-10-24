@@ -174,7 +174,13 @@ export const customJsxRequestSchema = z
     headers: headersSchema.optional(),
     auth: z.enum(["inherit", "none"]).default("inherit"),
     permission: z.enum(["view", "modify", "full"]).optional(),
-    cacheSeconds: z.number().int().min(0).max(3600).optional(),
+    cacheSeconds: z
+      .number()
+      .int()
+      .min(0)
+      .max(3600)
+      .optional()
+      .describe("Query response cache lifetime in seconds. Defaults to 30; set 0 to disable caching."),
     confirmation: confirmationSchema.optional(),
     invalidates: z.array(customWidgetIdentifierSchema).max(32).optional(),
   })

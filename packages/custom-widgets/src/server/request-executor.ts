@@ -254,13 +254,14 @@ export async function executeCustomWidgetRequest(input: CustomWidgetHttpRequest)
   if (cached) cache.delete(key);
   const pending = inFlight.get(key);
   if (pending) return pending;
+  const cacheTtlSeconds = input.cacheTtlSeconds ?? 30;
   const requestEpoch = cacheEpoch;
   let request: Promise<CustomWidgetHttpResponse>;
   request = performRequest(input)
     .then((response) => {
-      if (response.ok && (input.cacheTtlSeconds ?? 0) > 0 && requestEpoch === cacheEpoch) {
+      if (response.ok && cacheTtlSeconds > 0 && requestEpoch === cacheEpoch) {
         pruneCache();
-        cache.set(key, { expiresAt: Date.now() + (input.cacheTtlSeconds ?? 0) * 1000, response });
+        cache.set(key, { expiresAt: Date.now() + cacheTtlSeconds * 1000, response });
       }
       return response;
     })
