@@ -134,12 +134,67 @@ describe("Docker Hub releases", () => {
       expect(release.resolvedFromTag).toBeUndefined();
     });
 
-    test("keeps latest when the registry returns no digests", async () => {
+    test("uses a version tag published with latest when the registry returns no digests", async () => {
       serveHub({ namespace: "owner", name: "app", pages: [[tag("latest", 4), tag("1.0.0", 4)]] });
 
       const release = await expectRelease({ provider: "dockerHub", identifier: "owner/app" });
 
+      expect(release).toMatchObject({ latestRelease: "1.0.0", latestReleaseAt: new Date(day(4)) });
+    });
+
+    test("keeps latest when every version tag is older and none shares its digest", async () => {
+      serveHub({
+        namespace: "owner",
+        name: "app",
+        pages: [[tag("latest", 9, "sha256:main"), tag("0.3.8", 2, "sha256:old")]],
+      });
+
+      const release = await expectRelease({ provider: "dockerHub", identifier: "owner/app" });
+
+      expect(release).toMatchObject({ latestRelease: "latest", latestReleaseAt: new Date(day(9)) });
+    });
+
+    test("uses the highest version tag when latest is an abandoned older image (wg-easy)", async () => {
+      serveHub({
+        namespace: "weejewel",
+        name: "wg-easy",
+        pages: [[tag("15.4.0", 14, "sha256:15.4.0"), tag("15", 14, "sha256:15.4.0"), tag("latest", 3, "sha256:7")]],
+      });
+
+      const release = await expectRelease({ provider: "dockerHub", identifier: "weejewel/wg-easy" });
+
+      expect(release).toMatchObject({ latestRelease: "15.4.0", latestReleaseAt: new Date(day(14)) });
+      expect(release.resolvedFromTag).toBeUndefined();
+    });
+
+    test("reads a second page when latest only shares its digest with variant tags (WordPress)", async () => {
+      const requests = serveHub({
+        namespace: "library",
+        name: "wordpress",
+        pages: [
+          [tag("latest", 20, "sha256:w"), tag("php8.3", 20, "sha256:w"), tag("php8.3-apache", 20, "sha256:w")],
+          [tag("7.1.3-php8.3", 19, "sha256:w"), tag("7.1.3", 19, "sha256:w"), tag("7.1", 19, "sha256:w")],
+          [tag("7.1.2", 2, "sha256:old")],
+        ],
+      });
+
+      const release = await expectRelease({ provider: "dockerHub", identifier: "wordpress" });
+
+      expect(release).toMatchObject({ latestRelease: "7.1.3", resolvedFromTag: "latest" });
+      expect(requestedPages(requests)).toEqual([1, 2]);
+    });
+
+    test("reads at most two pages to resolve latest", async () => {
+      const requests = serveHub({
+        namespace: "owner",
+        name: "app",
+        pages: [[tag("latest", 9, "sha256:l")], [tag("nightly", 8, "sha256:n")], [tag("1.0.0", 7, "sha256:l")]],
+      });
+
+      const release = await expectRelease({ provider: "dockerHub", identifier: "owner/app" });
+
       expect(release.latestRelease).toBe("latest");
+      expect(requestedPages(requests)).toEqual([1, 2]);
     });
 
     test("uses stable when latest is not published", async () => {
@@ -205,7 +260,11 @@ describe("Docker Hub releases", () => {
     });
 
     test("only reads the first tag page", async () => {
-      const requests = serveHub({ namespace: "owner", name: "app", pages: [[tag("1.0.0", 1)], [tag("2.0.0", 2)]] });
+      const requests = serveHub({
+        namespace: "owner",
+        name: "app",
+        pages: [[tag("1.0.0", 1)], [tag("latest", 2), tag("2.0.0", 2)]],
+      });
 
       const release = await expectRelease({ provider: "dockerHub", identifier: "owner/app" });
 

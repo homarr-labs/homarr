@@ -141,6 +141,38 @@ describe("GitHub Container Registry releases", () => {
       expect(release.latestReleaseAt).toEqual(new Date(created(9)));
     });
 
+    test("uses the highest version tag when the floating tag is an abandoned older image (authentik)", async () => {
+      const requests = serveOciRegistry({
+        repository: "goauthentik/server",
+        tags: {
+          "2026.8.4": image("sha256:2026.8.4", { created: created(14) }),
+          "2026.8.5": image("sha256:2026.8.5", { created: created(21) }),
+          "gh-next": image("sha256:next", { created: created(22) }),
+          stable: image("sha256:stable", { created: created(1) }),
+        },
+      });
+
+      const release = await expectRelease(lookupGhcr("goauthentik/server"));
+
+      expect(release).toMatchObject({ latestRelease: "2026.8.5", latestReleaseAt: new Date(created(21)) });
+      expect(release.resolvedFromTag).toBeUndefined();
+      expect(requests.filter((request) => request.url.pathname.endsWith("/tags/list"))).toHaveLength(1);
+    });
+
+    test("keeps the floating tag when the highest listed version tag is older (Open WebUI)", async () => {
+      serveOciRegistry({
+        repository: "open-webui/open-webui",
+        tags: {
+          "v0.3.8": image("sha256:old", { created: created(2) }),
+          latest: image("sha256:main", { created: created(16) }),
+        },
+      });
+
+      const release = await expectRelease(lookupGhcr("open-webui/open-webui"));
+
+      expect(release).toMatchObject({ latestRelease: "latest", latestReleaseAt: new Date(created(16)) });
+    });
+
     test.each([
       { label: "latest", reason: "equals the floating tag" },
       { label: "main", reason: "is not a version" },
@@ -151,6 +183,33 @@ describe("GitHub Container Registry releases", () => {
       const release = await expectRelease(lookupGhcr("owner/app"));
 
       expect(release).toMatchObject({ latestRelease: "1.2.3", resolvedFromTag: "latest" });
+    });
+
+    test.each(["2dba585f-ls60", "2026-07-14c-ls331"])(
+      "resolves the commit or date build %s from the label when its tag shares the digest (LinuxServer)",
+      async (label) => {
+        const current = image("sha256:current", { labels: { "org.opencontainers.image.version": label } });
+        serveOciRegistry({
+          repository: "linuxserver/chromium",
+          tags: { "1a2b3c4d-ls59": image("sha256:old"), [label]: current, latest: current },
+        });
+
+        const release = await expectRelease(lookupGhcr("linuxserver/chromium"));
+
+        expect(release).toMatchObject({ latestRelease: label, resolvedFromTag: "latest" });
+      },
+    );
+
+    test("prefers a version tag sharing the digest over a build label", async () => {
+      const current = image("sha256:current", { labels: { "org.opencontainers.image.version": "sha-1f2e3d4" } });
+      serveOciRegistry({
+        repository: "owner/app",
+        tags: { "sha-1f2e3d4": current, "2.4.1": current, latest: current },
+      });
+
+      const release = await expectRelease(lookupGhcr("owner/app"));
+
+      expect(release).toMatchObject({ latestRelease: "2.4.1", resolvedFromTag: "latest" });
     });
 
     test("reads single-platform manifests without an image index", async () => {
@@ -404,7 +463,8 @@ describe("GitHub Container Registry releases", () => {
       { status: 404, code: "notFound" },
       { status: 429, code: "rateLimited" },
       { status: 500, code: "unexpected" },
-      { status: 401, code: "unexpected" },
+      { status: 401, code: "notFound" },
+      { status: 403, code: "notFound" },
     ])("maps a $status token response to $code", async ({ status, code }) => {
       serveOciRegistry({ repository: "owner/app", tags: {}, tokenReply: { status, body: {} } });
 

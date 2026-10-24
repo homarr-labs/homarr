@@ -4,10 +4,11 @@ import { fetchJsonAsync, loadOptionalDetailsAsync, providerUrl, tokenHeaders } f
 import type { OwnedName } from "./identifier";
 import { parseOwnedName } from "./identifier";
 import type { RegistryTag } from "./registry-tags";
-import { selectRegistryRelease } from "./registry-tags";
+import { hasUnresolvedFloatingTag, selectRegistryRelease } from "./registry-tags";
 import type { ProjectDetails, ReleaseProvider } from "./types";
 
 const MAX_TAG_PAGES = 5;
+const MAX_FLOATING_TAG_PAGES = 2;
 
 const tagsSchema = z.object({
   next: z.string().nullish(),
@@ -43,12 +44,17 @@ const toRegistryTags = (tag: DockerHubTag): RegistryTag[] => {
   return [{ name: tag.name, date: new Date(tag.last_updated), digest: tag.digest ?? undefined }];
 };
 
+const needsMoreTags = (tags: RegistryTag[], page: number, versionPattern?: RegExp) => {
+  if (versionPattern) return !tags.some((tag) => versionPattern.test(tag.name));
+  return page < MAX_FLOATING_TAG_PAGES && hasUnresolvedFloatingTag(tags);
+};
+
 const listTagsAsync = async (repositoryUrl: string, headers: Record<string, string>, versionPattern?: RegExp) => {
   const tags: RegistryTag[] = [];
   for (let page = 1; page <= MAX_TAG_PAGES; page++) {
     const result = await fetchJsonAsync(`${repositoryUrl}/tags?page_size=100&page=${page}`, tagsSchema, { headers });
     tags.push(...result.results.flatMap(toRegistryTags));
-    if (!result.next || !versionPattern || tags.some((tag) => versionPattern.test(tag.name))) break;
+    if (!result.next || !needsMoreTags(tags, page, versionPattern)) break;
   }
   return tags;
 };

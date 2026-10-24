@@ -27,12 +27,16 @@ interface ResolvedImage {
   version?: string;
 }
 
-const isUsableLabelVersion = (labelVersion: string | undefined, tag: string): labelVersion is string =>
-  labelVersion !== undefined && labelVersion !== tag && isVersionLikeTag(labelVersion);
+const isBuildLabel = (label: string) => !isVersionLikeTag(label) && /\d/.test(label);
 
-const findLabelVersionAsync = async (registry: OciRegistry, image: OciImage, digest: string) => {
+const findLabelVersionAsync = async (
+  registry: OciRegistry,
+  image: OciImage,
+  digest: string,
+  isUsableLabel: (label: string) => boolean,
+) => {
   const labelVersion = image.labels[imageLabels.version];
-  if (!isUsableLabelVersion(labelVersion, image.tag)) return undefined;
+  if (labelVersion === undefined || labelVersion === image.tag || !isUsableLabel(labelVersion)) return undefined;
 
   const labelTags = [labelVersion, ...floatingTagNames.map((tag) => `${tag}-${labelVersion}`)];
   if (await registry.findTagWithDigestAsync(labelTags, digest)) return labelVersion;
@@ -47,15 +51,32 @@ const findVersionTagWithDigestAsync = async (registry: OciRegistry, digest: stri
   return await registry.findTagWithDigestAsync(versionTags, digest);
 };
 
-const resolveFloatingImageAsync = async (registry: OciRegistry, image: OciImage): Promise<ResolvedImage> => {
-  if (!image.digest) return { image };
-  const version =
-    (await findLabelVersionAsync(registry, image, image.digest)) ??
-    (await findVersionTagWithDigestAsync(registry, image.digest));
-  return { image, version };
+const findFloatingVersionAsync = async (registry: OciRegistry, image: OciImage) => {
+  if (!image.digest) return undefined;
+  return (
+    (await findLabelVersionAsync(registry, image, image.digest, isVersionLikeTag)) ??
+    (await findVersionTagWithDigestAsync(registry, image.digest)) ??
+    (await findLabelVersionAsync(registry, image, image.digest, isBuildLabel))
+  );
 };
 
 const toTagCandidates = (tags: string[]) => tags.toReversed().map((name) => ({ name }));
+
+const imageTime = (image: OciImage) => image.createdAt?.getTime() ?? 0;
+
+const findVersionImageNotOlderThanAsync = async (registry: OciRegistry, floatingImage: OciImage) => {
+  const tag = pickHighestVersionTag(toTagCandidates((await registry.listTagsAsync()).filter(isPlainVersionTag)));
+  if (!tag) return undefined;
+  const image = await registry.getImageAsync(tag.name);
+  if (imageTime(image) < imageTime(floatingImage)) return undefined;
+  return image;
+};
+
+const resolveFloatingImageAsync = async (registry: OciRegistry, image: OciImage): Promise<ResolvedImage> => {
+  const version = await findFloatingVersionAsync(registry, image);
+  if (version) return { image, version };
+  return { image: (await findVersionImageNotOlderThanAsync(registry, image)) ?? image };
+};
 
 const releaseTagTiers = [isPlainVersionTag, isVersionPrefixedTag, isVersionLikeTag];
 

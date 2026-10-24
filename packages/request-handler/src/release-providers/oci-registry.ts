@@ -53,6 +53,8 @@ const ignoreNotFound = (error: unknown) => {
 };
 
 export class OciRegistry {
+  private tags?: Promise<string[]>;
+
   private constructor(
     private readonly origin: string,
     private readonly repository: string,
@@ -71,6 +73,11 @@ export class OciRegistry {
   }
 
   async listTagsAsync() {
+    this.tags ??= this.fetchTagsAsync();
+    return await this.tags;
+  }
+
+  private async fetchTagsAsync() {
     const tags: string[] = [];
     let path: string | undefined = `tags/list?n=${TAG_PAGE_SIZE}`;
     for (let page = 0; path && page < MAX_TAG_PAGES; page++) {

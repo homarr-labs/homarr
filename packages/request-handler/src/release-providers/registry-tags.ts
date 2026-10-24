@@ -5,6 +5,7 @@ import {
   floatingTagNames,
   isPlainVersionTag,
   isVersionLikeTag,
+  isVersionPrefixedTag,
   noMatchingVersionError,
   noReleasesFoundError,
 } from "./versions";
@@ -50,10 +51,25 @@ const findDigestSibling = (floatingTag: RegistryTag, tags: RegistryTag[]) => {
   );
 };
 
+export const hasUnresolvedFloatingTag = (tags: RegistryTag[]) => {
+  const floatingTag = findFloatingTag(tags);
+  if (!floatingTag) return false;
+  const versionTag = findDigestSibling(floatingTag, tags);
+  return !versionTag || !isVersionPrefixedTag(versionTag.name);
+};
+
+const findVersionTagNotOlderThan = (floatingTag: RegistryTag, tags: RegistryTag[]) => {
+  const versionTag = pickHighestVersionTag(tags.filter((tag) => isPlainVersionTag(tag.name)));
+  if (!versionTag || tagTime(versionTag) < tagTime(floatingTag)) return undefined;
+  return versionTag;
+};
+
 const resolveFloatingTag = (floatingTag: RegistryTag, tags: RegistryTag[]): Release => {
   const versionTag = findDigestSibling(floatingTag, tags);
-  if (!versionTag) return releaseFromTag(floatingTag);
-  return { latestRelease: versionTag.name, latestReleaseAt: floatingTag.date, resolvedFromTag: floatingTag.name };
+  if (versionTag) {
+    return { latestRelease: versionTag.name, latestReleaseAt: floatingTag.date, resolvedFromTag: floatingTag.name };
+  }
+  return releaseFromTag(findVersionTagNotOlderThan(floatingTag, tags) ?? floatingTag);
 };
 
 export const selectRegistryRelease = (
