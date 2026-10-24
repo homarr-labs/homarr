@@ -105,11 +105,11 @@ const safeDate = Object.freeze(
       value === undefined ? Date.now() : new Date(value).getTime(),
     ),
     toISOString: createSafeCallable((value: string | number) => new Date(value).toISOString()),
-    toLocaleDateString: createSafeCallable((value: string | number, locale?: string) =>
-      new Date(value).toLocaleDateString(locale ?? "en-US"),
+    toLocaleDateString: createSafeCallable((value: string | number, locale?: string, timeZone?: string) =>
+      new Date(value).toLocaleDateString(locale ?? "en-US", timeZone ? { timeZone } : undefined),
     ),
-    toLocaleTimeString: createSafeCallable((value: string | number, locale?: string) =>
-      new Date(value).toLocaleTimeString(locale ?? "en-US"),
+    toLocaleTimeString: createSafeCallable((value: string | number, locale?: string, timeZone?: string) =>
+      new Date(value).toLocaleTimeString(locale ?? "en-US", timeZone ? { timeZone } : undefined),
     ),
     toLocaleString: createSafeCallable(formatLocaleDateTime),
     getTime: createSafeCallable((value: string | number) => new Date(value).getTime()),
