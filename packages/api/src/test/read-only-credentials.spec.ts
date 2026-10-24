@@ -7,6 +7,7 @@ import { createDb } from "@homarr/db/test";
 
 import { callMcpTool, extractMcpToolsFromProcedures } from "../mcp-tools";
 import { customWidgetRouter } from "../router/custom-widget/custom-widget-router";
+import { iconsRouter } from "../router/icons";
 import { integrationRouter } from "../router/integration/integration-router";
 import { customApiRouter } from "../router/widgets/custom-api";
 import { rssFeedRouter } from "../router/widgets/rssFeed";
@@ -75,13 +76,14 @@ test("read-only keys cannot execute arbitrary upstream requests, including Custo
     rssFeed: rssFeedRouter,
     releases: releasesRouter,
     timetable: timetableRouter,
+    icon: iconsRouter,
     integration: integrationRouter,
   });
   const caller = router.createCaller({
     db,
     deviceType: undefined,
     session: {
-      user: { id: "owner", permissions: ["admin"], colorScheme: "dark" },
+      user: { id: "owner", permissions: ["admin", "app-create"], colorScheme: "dark" },
       expires: "2099-01-01T00:00:00Z",
       apiKey: { readOnly: true, oauthClientId: null },
     },
@@ -97,12 +99,13 @@ test("read-only keys cannot execute arbitrary upstream requests, including Custo
     () => caller.rssFeed.getFeeds({ urls: [], maximumAmountPosts: 1 }),
     () => caller.releases.getLatest({ repositories: [] }),
     () => caller.timetable.searchStations({ baseUrl: "not-a-url", query: "" }),
+    () => caller.icon.detectFavicon({ href: "not-a-url" }),
   ]) {
     await expect(call()).rejects.toMatchObject({ code: "FORBIDDEN" });
   }
 
   const catalog = extractMcpToolsFromProcedures(router);
-  for (const name of ["customWidget_previewQuery", "integration_request"]) {
+  for (const name of ["customWidget_previewQuery", "integration_request", "icon_detectFavicon"]) {
     const tool = catalog.tools.find((candidate) => candidate.name === name);
     if (!tool) throw new Error(`Expected tool ${name}`);
     expect(tool.annotations?.readOnlyHint).toBe(false);
