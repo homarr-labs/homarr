@@ -37,6 +37,7 @@ const namedRequestInputSchema = itemInputSchema.extend({
   requestId: z.string().min(1).max(64),
   params: runtimeParamsSchema.default({}),
 });
+const upstreamProcedure = publicProcedure.meta({ readOnly: false });
 interface CustomWidgetItemOptions {
   definitionId: string;
   configuration: Record<string, unknown>;
@@ -213,122 +214,116 @@ export const customApiRouter = createTRPCRouter({
     }
   }),
 
-  getData: publicProcedure
-    .meta({ readOnly: false })
-    .input(itemInputSchema)
-    .query(async ({ ctx, input, signal }) => {
-      const resolved = await resolvePlacedDefinitionAsync(ctx, input.itemId);
-      const loadRequests = Object.entries(resolved.definition.requests).filter(
-        ([, request]) => request.kind === "query" && request.trigger === "load",
-      );
-      const entries = await Promise.all(
-        loadRequests.map(async ([requestId, request]) => {
-          try {
-            const response = await executeRequest(ctx, resolved, { id: requestId, ...request }, {}, { signal });
-            return [
-              requestId,
-              {
-                sourceId: request.source,
-                sourceCacheVersion: response.sourceCacheVersion,
-                data: response.data,
-                status: {
-                  loading: false,
-                  ok: response.ok,
-                  status: response.status,
-                  statusText: response.statusText,
-                  error: response.ok ? undefined : `HTTP ${response.status}: ${response.statusText}`,
-                },
+  getData: upstreamProcedure.input(itemInputSchema).query(async ({ ctx, input, signal }) => {
+    const resolved = await resolvePlacedDefinitionAsync(ctx, input.itemId);
+    const loadRequests = Object.entries(resolved.definition.requests).filter(
+      ([, request]) => request.kind === "query" && request.trigger === "load",
+    );
+    const entries = await Promise.all(
+      loadRequests.map(async ([requestId, request]) => {
+        try {
+          const response = await executeRequest(ctx, resolved, { id: requestId, ...request }, {}, { signal });
+          return [
+            requestId,
+            {
+              sourceId: request.source,
+              sourceCacheVersion: response.sourceCacheVersion,
+              data: response.data,
+              status: {
+                loading: false,
+                ok: response.ok,
+                status: response.status,
+                statusText: response.statusText,
+                error: response.ok ? undefined : `HTTP ${response.status}: ${response.statusText}`,
               },
-            ] as const;
-          } catch (error) {
-            return [
-              requestId,
-              {
-                sourceId: request.source,
-                sourceCacheVersion:
-                  resolved.definition.sources[request.source]?.type === "integration" ? "unavailable" : "",
-                data: null,
-                status: {
-                  loading: false,
-                  ok: false,
-                  status: 0,
-                  error: error instanceof Error ? error.message : "Request failed",
-                },
+            },
+          ] as const;
+        } catch (error) {
+          return [
+            requestId,
+            {
+              sourceId: request.source,
+              sourceCacheVersion:
+                resolved.definition.sources[request.source]?.type === "integration" ? "unavailable" : "",
+              data: null,
+              status: {
+                loading: false,
+                ok: false,
+                status: 0,
+                error: error instanceof Error ? error.message : "Request failed",
               },
-            ] as const;
-          }
-        }),
-      );
-      const integrationVersions = new Map<string, string>();
-      for (const [, result] of entries) {
-        if (!result.sourceCacheVersion) continue;
-        if (result.sourceCacheVersion === "unavailable" && integrationVersions.has(result.sourceId)) continue;
-        integrationVersions.set(result.sourceId, result.sourceCacheVersion);
-      }
-      const loadSourceIds = new Set(loadRequests.map(([, request]) => request.source));
-      const manualSourceIds = new Set<string>();
-      for (const request of Object.values(resolved.definition.requests)) {
-        if (request.kind !== "query" || request.trigger !== "manual" || loadSourceIds.has(request.source)) continue;
-        if (resolved.definition.sources[request.source]?.type !== "integration") continue;
-        manualSourceIds.add(request.source);
-      }
-      const manualIntegrationVersions = await Promise.all(
-        [...manualSourceIds].map(async (sourceId) => {
-          const source = resolved.definition.sources[sourceId];
-          if (source?.type !== "integration") return [sourceId, "unavailable"] as const;
-          try {
-            const version = await withRequestLimit(ctx, resolved, "metadata", () =>
-              getCustomWidgetIntegrationCacheVersion(ctx, source),
-            );
-            return [sourceId, version] as const;
-          } catch {
-            return [sourceId, "unavailable"] as const;
-          }
-        }),
-      );
-      for (const [sourceId, version] of manualIntegrationVersions) integrationVersions.set(sourceId, version);
-      const integrationCacheKey = [...integrationVersions]
-        .toSorted(([left], [right]) => left.localeCompare(right))
-        .map(([sourceId, version]) => `${sourceId}:${version}`)
-        .join(":");
+            },
+          ] as const;
+        }
+      }),
+    );
+    const integrationVersions = new Map<string, string>();
+    for (const [, result] of entries) {
+      if (!result.sourceCacheVersion) continue;
+      if (result.sourceCacheVersion === "unavailable" && integrationVersions.has(result.sourceId)) continue;
+      integrationVersions.set(result.sourceId, result.sourceCacheVersion);
+    }
+    const loadSourceIds = new Set(loadRequests.map(([, request]) => request.source));
+    const manualSourceIds = new Set<string>();
+    for (const request of Object.values(resolved.definition.requests)) {
+      if (request.kind !== "query" || request.trigger !== "manual" || loadSourceIds.has(request.source)) continue;
+      if (resolved.definition.sources[request.source]?.type !== "integration") continue;
+      manualSourceIds.add(request.source);
+    }
+    const manualIntegrationVersions = await Promise.all(
+      [...manualSourceIds].map(async (sourceId) => {
+        const source = resolved.definition.sources[sourceId];
+        if (source?.type !== "integration") return [sourceId, "unavailable"] as const;
+        try {
+          const version = await withRequestLimit(ctx, resolved, "metadata", () =>
+            getCustomWidgetIntegrationCacheVersion(ctx, source),
+          );
+          return [sourceId, version] as const;
+        } catch {
+          return [sourceId, "unavailable"] as const;
+        }
+      }),
+    );
+    for (const [sourceId, version] of manualIntegrationVersions) integrationVersions.set(sourceId, version);
+    const integrationCacheKey = [...integrationVersions]
+      .toSorted(([left], [right]) => left.localeCompare(right))
+      .map(([sourceId, version]) => `${sourceId}:${version}`)
+      .join(":");
 
-      return {
-        type: "customJsx" as const,
-        template: resolved.definition.template,
-        queryCacheKey: `${getCustomWidgetCacheVersion(resolved.stored)}:${hashRuntimeParams(resolved.configuration)}:${integrationCacheKey}`,
-        data: Object.fromEntries(entries.map(([id, result]) => [id, result.data])),
-        status: Object.fromEntries(entries.map(([id, result]) => [id, result.status])),
-        options: resolved.configuration,
-        requestCapabilities: Object.entries(resolved.definition.requests).map(([id, request]) => ({
-          id,
-          kind: request.kind,
-          method: request.method,
-          trigger: request.trigger,
-          minimumBoardPermission: request.permission,
-          confirmation: getCustomWidgetConfirmation(request),
-          invalidates: request.invalidates ?? [],
-        })),
-      };
-    }),
+    return {
+      type: "customJsx" as const,
+      template: resolved.definition.template,
+      queryCacheKey: `${getCustomWidgetCacheVersion(resolved.stored)}:${hashRuntimeParams(resolved.configuration)}:${integrationCacheKey}`,
+      data: Object.fromEntries(entries.map(([id, result]) => [id, result.data])),
+      status: Object.fromEntries(entries.map(([id, result]) => [id, result.status])),
+      options: resolved.configuration,
+      requestCapabilities: Object.entries(resolved.definition.requests).map(([id, request]) => ({
+        id,
+        kind: request.kind,
+        method: request.method,
+        trigger: request.trigger,
+        minimumBoardPermission: request.permission,
+        confirmation: getCustomWidgetConfirmation(request),
+        invalidates: request.invalidates ?? [],
+      })),
+    };
+  }),
 
-  queryRequest: publicProcedure
-    .meta({ readOnly: false })
-    .input(namedRequestInputSchema)
-    .query(async ({ ctx, input }) => {
-      const resolved = await resolvePlacedDefinitionAsync(ctx, input.itemId);
-      const request = findRequest(resolved, input.requestId, "query");
-      if (request.trigger !== "manual") {
-        throw new TRPCError({ code: "BAD_REQUEST", message: "Load queries cannot be invoked manually" });
-      }
-      const response = await executeRequest(ctx, resolved, request, input.params);
-      return {
-        ok: response.ok,
-        status: response.status,
-        statusText: response.statusText,
-        data: response.data,
-        error: response.ok ? undefined : `HTTP ${response.status}: ${response.statusText}`,
-      };
-    }),
+  queryRequest: upstreamProcedure.input(namedRequestInputSchema).query(async ({ ctx, input }) => {
+    const resolved = await resolvePlacedDefinitionAsync(ctx, input.itemId);
+    const request = findRequest(resolved, input.requestId, "query");
+    if (request.trigger !== "manual") {
+      throw new TRPCError({ code: "BAD_REQUEST", message: "Load queries cannot be invoked manually" });
+    }
+    const response = await executeRequest(ctx, resolved, request, input.params);
+    return {
+      ok: response.ok,
+      status: response.status,
+      statusText: response.statusText,
+      data: response.data,
+      error: response.ok ? undefined : `HTTP ${response.status}: ${response.statusText}`,
+    };
+  }),
 
   executeAction: protectedProcedure
     .input(namedRequestInputSchema.extend({ confirmed: z.boolean().optional() }))

@@ -1,7 +1,6 @@
 import { statsRouter } from "./router/widgets/stats";
 export { createTRPCContext } from "./trpc";
 export { callMcpTool, extractMcpToolsFromProcedures } from "./mcp-tools";
-export { isReadOnlyProcedure } from "./credential-access";
 export type { McpTool } from "./mcp-tools";
 
 import { createTRPCRouter } from "./trpc";

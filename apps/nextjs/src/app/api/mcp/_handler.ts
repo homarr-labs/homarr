@@ -5,7 +5,7 @@ import { ResourceTemplate } from "@modelcontextprotocol/server";
 import { z } from "zod/v4";
 
 import type { McpTool } from "@homarr/api/mcp";
-import { createTRPCContext, isReadOnlyProcedure, mcpRouter } from "@homarr/api/mcp";
+import { createTRPCContext, mcpRouter } from "@homarr/api/mcp";
 import { API_KEY_HEADER_NAME, getSessionFromApiKeyAsync } from "@homarr/auth/api-key";
 import { removeTrailingSlash } from "@homarr/common";
 import { ipAddressFromHeaders } from "@homarr/common/server";
@@ -86,7 +86,7 @@ function clearAuthFailures(ip: string | null) {
 const getVisibleTools = (tools: McpTool[], isAdmin: boolean, readOnly: boolean) => {
   return tools.filter((tool) => {
     if (!isAdmin && tool.name.startsWith("customWidget_")) return false;
-    return !readOnly || isReadOnlyProcedure(tool.type, tool);
+    return !readOnly || tool.annotations?.readOnlyHint === true;
   });
 };
 

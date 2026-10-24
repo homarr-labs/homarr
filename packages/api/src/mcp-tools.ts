@@ -5,7 +5,6 @@ import type { AnyProcedure, AnyRootTypes, Router, RouterRecord } from "@trpc/ser
 import { z } from "zod/v4";
 
 import { isReadOnlyProcedure } from "./credential-access";
-import type { CredentialAccessMeta } from "./credential-access";
 
 export interface McpMeta {
   mcp?: {
@@ -16,7 +15,7 @@ export interface McpMeta {
   };
 }
 
-export interface McpTool extends CredentialAccessMeta {
+export interface McpTool {
   name: string;
   description: string;
   type: "query" | "mutation";
@@ -139,7 +138,6 @@ export function extractMcpToolsFromProcedures<TRoot extends AnyRootTypes, TRecor
         name,
         description: metadata.description ?? "",
         type: definition.type,
-        readOnly: isReadOnlyProcedure(definition.type, definition.meta),
         annotations: {
           readOnlyHint: isReadOnlyProcedure(definition.type, definition.meta),
           destructiveHint: definition.type === "mutation" && metadata.effect !== "additive",

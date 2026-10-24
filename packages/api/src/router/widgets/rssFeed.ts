@@ -31,61 +31,59 @@ const feedsInput = z.object({
   maximumAmountPosts: z.number(),
   descriptionMaxLength: z.number().int().min(1).max(5000).default(250),
 });
+const readFeedsProcedure = publicProcedure.meta({ readOnly: false }).input(feedsInput);
 
 export const rssFeedRouter = createTRPCRouter({
-  getFeeds: publicProcedure
-    .meta({ readOnly: false })
-    .input(feedsInput)
-    .query(async ({ ctx, input }) => {
-      if (env.NO_EXTERNAL_CONNECTION) return { entries: [], failedFeedCount: 0 };
+  getFeeds: readFeedsProcedure.query(async ({ ctx, input }) => {
+    if (env.NO_EXTERNAL_CONNECTION) return { entries: [], failedFeedCount: 0 };
 
-      const urls = (await canAccessAllFeedsAsync(ctx.db, ctx.session))
-        ? input.urls
-        : await restrictUrlsAsync(ctx, input.urls);
+    const urls = (await canAccessAllFeedsAsync(ctx.db, ctx.session))
+      ? input.urls
+      : await restrictUrlsAsync(ctx, input.urls);
 
-      const settled = await Promise.allSettled(
-        urls.map(async (url) => {
-          const innerHandler = rssFeedsRequestHandler.handler({
-            url,
-            count: input.maximumAmountPosts,
-            descriptionMaxLength: input.descriptionMaxLength,
-          });
-          return await innerHandler.getDataAsync();
-        }),
-      );
+    const settled = await Promise.allSettled(
+      urls.map(async (url) => {
+        const innerHandler = rssFeedsRequestHandler.handler({
+          url,
+          count: input.maximumAmountPosts,
+          descriptionMaxLength: input.descriptionMaxLength,
+        });
+        return await innerHandler.getDataAsync();
+      }),
+    );
 
-      const failures = settled.filter((result) => result.status === "rejected");
-      settled.forEach((result, index) => {
-        if (result.status === "rejected") {
-          logger.warn("RSS feed fetch failed", {
-            ...safeFeedLogContext(urls[index] ?? "", index),
-            errorType: result.reason instanceof Error ? result.reason.name : typeof result.reason,
-            errorMessage: result.reason instanceof Error ? redactFeedFailureMessage(result.reason.message) : undefined,
-          });
-        }
-      });
-      if (settled.length > 0 && failures.length === settled.length) {
-        throw new TRPCError({
-          code: "BAD_GATEWAY",
-          message: "All RSS feed requests failed",
+    const failures = settled.filter((result) => result.status === "rejected");
+    settled.forEach((result, index) => {
+      if (result.status === "rejected") {
+        logger.warn("RSS feed fetch failed", {
+          ...safeFeedLogContext(urls[index] ?? "", index),
+          errorType: result.reason instanceof Error ? result.reason.name : typeof result.reason,
+          errorMessage: result.reason instanceof Error ? redactFeedFailureMessage(result.reason.message) : undefined,
         });
       }
+    });
+    if (settled.length > 0 && failures.length === settled.length) {
+      throw new TRPCError({
+        code: "BAD_GATEWAY",
+        message: "All RSS feed requests failed",
+      });
+    }
 
-      return {
-        entries: settled
-          .flatMap((result) => {
-            if (result.status === "fulfilled") return result.value.data.entries;
-            return [];
-          })
-          .toSorted((entryA, entryB) => {
-            return entryA.published && entryB.published
-              ? new Date(entryB.published).getTime() - new Date(entryA.published).getTime()
-              : 0;
-          })
-          .slice(0, input.maximumAmountPosts),
-        failedFeedCount: failures.length,
-      };
-    }),
+    return {
+      entries: settled
+        .flatMap((result) => {
+          if (result.status === "fulfilled") return result.value.data.entries;
+          return [];
+        })
+        .toSorted((entryA, entryB) => {
+          return entryA.published && entryB.published
+            ? new Date(entryB.published).getTime() - new Date(entryA.published).getTime()
+            : 0;
+        })
+        .slice(0, input.maximumAmountPosts),
+      failedFeedCount: failures.length,
+    };
+  }),
 });
 
 export async function canAccessAllFeedsAsync(db: Database, session: Session | null) {
