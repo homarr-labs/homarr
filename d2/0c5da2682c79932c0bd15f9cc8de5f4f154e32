@@ -1,0 +1,42 @@
+deployments/prebuilt-debian/Dockerfile
+  s_9b7e99bd3ab786::t_ebd219a2ca8edb 1-2
+apps/workshop/docker-compose.yml
+  s_9b7e99bd3ab786::t_0b037963134fde 7
+deployments/prebuilt-debian/package.json
+  s_9b7e99bd3ab786::t_fdba309c3863ef 11
+  s_e8c3b16f087943::t_91d261559506b2 8
+mise.toml
+  s_9b7e99bd3ab786::t_5922cd238279a5 3
+tools/mysql-to-sqlite/Dockerfile
+  s_e8c3b16f087943::t_c5b2498aec22aa 1,3,9
+apps/workshop/Dockerfile
+  s_9b7e99bd3ab786::t_f14ffb978b3289 5,16,18,76
+Dockerfile
+  s_9b7e99bd3ab786::t_49a07556e8dd52 3,5,33,37-38,63
+development/development.docker-compose.yml
+  s_9b7e99bd3ab786::t_c1c24695bf9ae0 12,14,17,35
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "d20c5da2682c79932c0bd15f9cc8de5f4f154e32",
+  "prompts": {},
+  "sessions": {
+    "s_9b7e99bd3ab786": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "65e5f33a-f2db-4674-8074-dcea9cc8135f",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_e8c3b16f087943": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "5bad9576-ba72-4dbc-a1a1-0fc4be09f9a2",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
