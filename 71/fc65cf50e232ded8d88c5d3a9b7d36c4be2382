@@ -1,0 +1,83 @@
+apps/nextjs/src/app/[locale]/auth/mcp/page.tsx
+  s_9b7e99bd3ab786::t_55706fb3103342 3,135-144
+apps/nextjs/src/app/[locale]/manage/tools/api/components/api-keys.tsx
+  s_9b7e99bd3ab786::t_0e21a0a6b78f81 4,43-48,100,156-160,196-207
+apps/nextjs/src/app/[locale]/manage/tools/api/components/oauth-connection-details.tsx
+  s_9b7e99bd3ab786::t_975be0ce06eb82 14,19
+apps/nextjs/src/app/api/[...trpc]/route.spec.ts
+  s_9b7e99bd3ab786::t_6e985acf658e47 34,52-60
+apps/nextjs/src/app/api/[...trpc]/route.ts
+  s_9b7e99bd3ab786::t_0fe94c5ea6bd96 37-39
+apps/nextjs/src/app/api/mcp/[transport]/route.spec.ts
+  s_9b7e99bd3ab786::t_ac3030d3eddd57 22,82-98,352-372
+apps/nextjs/src/app/api/mcp/_handler.ts
+  s_9b7e99bd3ab786::t_89d9a605d70fb2 8,86-90,237,255,320-325,328,330,348-349
+apps/nextjs/src/app/api/trpc/[trpc]/route.ts
+  s_9b7e99bd3ab786::t_87af3f0fc870db 41-45
+apps/websocket/src/main.ts
+  s_9b7e99bd3ab786::t_5e0e129d818cf1 2,41-43
+docs/research/read-only-api-keys-and-mcp.md
+  s_9b7e99bd3ab786::t_199f1068e5f308 1-101
+packages/api/src/credential-access.ts
+  s_9b7e99bd3ab786::t_c5a083624c99c2 1-6
+packages/api/src/mcp-tools.ts
+  s_9b7e99bd3ab786::t_acf43e49928519 7-9,19,142,144
+packages/api/src/mcp.ts
+  s_9b7e99bd3ab786::t_db184de64698b3 4
+packages/api/src/router/apiKeys.ts
+  s_9b7e99bd3ab786::t_bc8cb3eed4404b 7,14,70-71,75,79
+packages/api/src/router/custom-widget/management-queries.ts
+  s_9b7e99bd3ab786::t_1a5332df9064ea 126
+packages/api/src/router/custom-widget/preview-query-procedures.ts
+  s_9b7e99bd3ab786::t_907afeccddcdea 41
+packages/api/src/router/integration/integration-test-stored-connection.ts
+  s_9b7e99bd3ab786::t_31d1b179a95ffa 14
+packages/api/src/router/test/apiKeys.spec.ts
+  s_9b7e99bd3ab786::t_f9546501555ab9 26,138,147,163-181
+packages/api/src/router/widgets/custom-api.ts
+  s_9b7e99bd3ab786::t_73ec9e55920b81 216-240,242-256,258-293,295-312,314-331
+packages/api/src/router/widgets/rssFeed.ts
+  s_9b7e99bd3ab786::t_643638018d8a52 35-39,41-43,45-54,56-69,73-87
+packages/api/src/trpc.ts
+  s_74b673c970ef48::t_669a86b27f8b70 23-24,80,128-135,159,183
+packages/auth/api-key/get-api-key-session.ts
+  s_9b7e99bd3ab786::t_7bae054562bb0d 45-46,77-81
+packages/auth/api-key/test/get-api-key-session.spec.ts
+  s_74b673c970ef48::t_838803cbb7a5d5 27-34,117,134
+packages/auth/index.ts
+  s_9b7e99bd3ab786::t_5219bf5f601f94 12-15
+packages/db/migrations/postgresql/0019_add_api_key_read_only.sql
+  s_9b7e99bd3ab786::t_a440ef62c43401 1
+packages/db/migrations/sqlite/0050_add_api_key_read_only.sql
+  s_9b7e99bd3ab786::t_59174f480d0ec3 1
+packages/db/schema/postgresql.ts
+  s_9b7e99bd3ab786::t_64757286bc1685 59
+packages/db/schema/sqlite.ts
+  s_9b7e99bd3ab786::t_4bc9545bde959b 41
+packages/translation/src/lang/en.json
+  s_9b7e99bd3ab786::t_e7c097df824466 279-280,285-293,7037-7042,7108,7118
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "71fc65cf50e232ded8d88c5d3a9b7d36c4be2382",
+  "prompts": {},
+  "sessions": {
+    "s_74b673c970ef48": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "39637ef8-fe7e-468c-8334-b026f7a4531e",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_9b7e99bd3ab786": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "65e5f33a-f2db-4674-8074-dcea9cc8135f",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
