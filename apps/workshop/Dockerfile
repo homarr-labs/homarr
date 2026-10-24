@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1.25
 
-ARG POCKETBASE_IMAGE=ghcr.io/muchobien/pocketbase:0.39.9@sha256:c0667fe6c5197ff226ff642120ab1ad870c3f2f27300940a61e5a7fa082b6816
+ARG POCKETBASE_IMAGE=ghcr.io/muchobien/pocketbase:0.40.6@sha256:9a0be68a80ca1348ba8d15f217b3f983be4c094b3c571a09b3ebdeb357259338
 
 FROM golang:1.25.7-alpine AS pocketbase-builder
 WORKDIR /src
