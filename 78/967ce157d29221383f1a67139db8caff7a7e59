@@ -1,0 +1,19 @@
+packages/widgets/src/bookmarks/bookmarks-widget.tsx
+  s_e153e8e37de386::t_fbbf239815bb27 104-105,108-120,157,161,232,258,273,275,297-298,526-529
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "78967ce157d29221383f1a67139db8caff7a7e59",
+  "prompts": {},
+  "sessions": {
+    "s_e153e8e37de386": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a16d81-d35c-7852-bea8-5c7ad2777a54",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
