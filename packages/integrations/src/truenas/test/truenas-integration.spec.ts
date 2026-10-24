@@ -138,7 +138,7 @@ const happyResponder = (method: string) => {
           aggregations: emptyAggregations(),
           start: 0,
           end: 1,
-          legend: [],
+          legend: ["time", "cpu"],
           data: [[1000, 12]],
         },
         {
@@ -147,7 +147,6 @@ const happyResponder = (method: string) => {
           aggregations: emptyAggregations(),
           start: 0,
           end: 1,
-          // The "memory" graph reports available (free) memory: legend is ["time", "available"].
           legend: ["time", "available"],
           data: [[1000, 6_000_000_000]],
         },
@@ -157,7 +156,7 @@ const happyResponder = (method: string) => {
           aggregations: emptyAggregations(),
           start: 0,
           end: 1,
-          legend: [],
+          legend: ["time", "cpu0"],
           data: [[1000, 45]],
         },
       ];
@@ -174,13 +173,24 @@ const happyResponder = (method: string) => {
     case "interface.query":
       return [{ id: "eth0", name: "eth0" }];
     case "reporting.netdata_get_data":
-      return [{ name: "interface", identifier: "eth0", data: [[1000, 100, 200]] }];
+      return [
+        { name: "interface", identifier: "eth0", legend: ["time", "received", "sent"], data: [[1000, 100, 200]] },
+      ];
     default:
       return null;
   }
 };
 
 const emptyAggregations = () => ({ min: {}, mean: {}, max: {} });
+
+const reportingResponder = (identifier: string, legend: string[], data: number[][]) => (method: string) => {
+  const response = happyResponder(method);
+  if (method !== "reporting.get_data" || !Array.isArray(response)) return response;
+  return response.map((report) => {
+    if ("identifier" in report && report.identifier === identifier) return { ...report, legend, data };
+    return report;
+  });
+};
 
 // `pool.query` reports 500 allocated of a 1000 byte pool, leaving 500 free.
 const physicalFallbackFileSystem = [{ deviceName: "tank", available: "500", used: "500", percentage: 50 }];
@@ -244,7 +254,7 @@ describe("TrueNasIntegration", () => {
       availablePkgUpdates: 0,
       loadAverage: null,
       gpu: [],
-      network: { up: 20_000, down: 10_000 },
+      network: { up: 25_000, down: 12_500 },
       // `available` and `used` come from the root dataset, not the physical pool.
       fileSystem: [{ deviceName: "tank", available: "300", used: "200", percentage: 40 }],
       smart: [{ deviceName: "tank", healthy: true, overallStatus: "ONLINE", temperature: null }],
@@ -260,6 +270,140 @@ describe("TrueNasIntegration", () => {
     expect(result.fileSystem).toMatchObject(physicalFallbackFileSystem);
     // Dropping the pool would also hide its health status.
     expect(result.smart).toMatchObject([{ deviceName: "tank", healthy: true, overallStatus: "ONLINE" }]);
+  });
+
+  test.each([
+    {
+      version: "TrueNAS-SCALE-24.10.2.2",
+      physmem: 168_946_339_840,
+      legend: ["time", "free", "used", "cached", "buffers"],
+      data: [[1792834434, 54525.64, 65164.29, 41429.86, 0]],
+      used: 65164.29 * 1024 * 1024,
+    },
+    {
+      version: "25.10.7",
+      physmem: 541_011_288_064,
+      legend: ["time", "available"],
+      data: [[1792834431, 492_588_100_000]],
+      used: 541_011_288_064 - 492_588_100_000,
+    },
+  ])("normalizes the $version memory reporting format", async ({ version, physmem, legend, data, used }) => {
+    ws.setResponder((method) => {
+      if (method === "system.info") return { version, physmem, hostname: "nas", model: "Xeon", uptime_seconds: 3600 };
+      const response = happyResponder(method);
+      if (method === "reporting.get_data" && Array.isArray(response)) {
+        return response.map((report) => {
+          if ("name" in report && report.name === "memory") return { ...report, legend, data };
+          return report;
+        });
+      }
+      return response;
+    });
+
+    const result = await createIntegration(credentials).getSystemInfoAsync();
+
+    expect(result.memUsedInBytes).toBe(used);
+    expect(result.memAvailableInBytes).toBe(physmem - used);
+  });
+
+  test.each([
+    {
+      legend: ["cached", "used", "time", "buffers", "free"],
+      data: [
+        [4000, 1, 999, 0, 1000],
+        [4000, 6000, 1000, 0, 1000],
+      ],
+      used: 6000 * 1024 * 1024,
+    },
+    {
+      legend: ["available", "time"],
+      data: [
+        [1, 999],
+        [6_000_000_000, 1000],
+      ],
+      used: 10_000_000_000,
+    },
+    { legend: ["time", "available"], data: [[1000, 0]], used: 16_000_000_000 },
+    { legend: ["time", "available"], data: [[1000, 17_000_000_000]], used: 0 },
+    { legend: ["time", "available"], data: [[1000, -1]], used: 16_000_000_000 },
+    {
+      legend: ["time", "free", "used", "cached", "buffers"],
+      data: [[1000, 0, 20_000, 0, 0]],
+      used: 16_000_000_000,
+    },
+    {
+      legend: ["time", "free", "used", "cached", "buffers"],
+      data: [[1000, 0, -1, 0, 0]],
+      used: 0,
+    },
+  ])("uses the latest named memory columns and bounds usage: $legend $used", async ({ legend, data, used }) => {
+    ws.setResponder(reportingResponder("memory", legend, data));
+
+    const result = await createIntegration(credentials).getSystemInfoAsync();
+
+    expect(result.memUsedInBytes).toBe(used);
+    expect(result.memAvailableInBytes).toBe(16_000_000_000 - used);
+  });
+
+  test.each([
+    { legend: ["time", "other"], data: [[1000, 123]] },
+    { legend: ["time", "used"], data: [[1000, 123]] },
+    { legend: ["time", "available"], data: [] },
+    { legend: ["time", "available"], data: [[1000]] },
+    { legend: ["time", "available", "available"], data: [[1000, 123, 456]] },
+    { legend: ["time", "available"], data: [[1000, Number.NaN]] },
+  ])("reports an integration error instead of inventing memory usage: $legend $data", async ({ legend, data }) => {
+    ws.setResponder(reportingResponder("memory", legend, data));
+
+    await expect(createIntegration(credentials).getSystemInfoAsync()).rejects.toThrow(
+      "Failed to parse integration data",
+    );
+  });
+
+  test.each([
+    { legend: ["time", "system", "user", "idle", "softirq", "nice", "iowait"], data: [[1000, 4, 8, 87, 0, 0, 1]] },
+    { legend: ["cpu1", "cpu", "time", "cpu0"], data: [[100, 12, 1000, 0]] },
+  ])(
+    "reads CPU utilization without averaging timestamps, idle time or duplicate core totals: $legend",
+    async ({ legend, data }) => {
+      ws.setResponder(reportingResponder("cpu", legend, data));
+
+      const result = await createIntegration(credentials).getSystemInfoAsync();
+
+      expect(result.cpuUtilization).toBe(12);
+    },
+  );
+
+  test("excludes the named timestamp from CPU temperatures even when reordered", async () => {
+    ws.setResponder(reportingResponder("cputemp", ["cpu0", "time", "cpu1"], [[45, 1000, 46]]));
+
+    const result = await createIntegration(credentials).getSystemInfoAsync();
+
+    expect(result.cpuTemp).toBe(46);
+  });
+
+  test("sums the latest named network columns across interfaces in bytes per second", async () => {
+    ws.setResponder((method) => {
+      if (method === "reporting.netdata_get_data") {
+        return [
+          {
+            name: "interface",
+            identifier: "eth0",
+            legend: ["sent", "time", "received"],
+            data: [
+              [1, 999, 2],
+              [200, 1000, 100],
+            ],
+          },
+          { name: "interface", identifier: "eth1", legend: ["time", "received", "sent"], data: [[1000, 300, 400]] },
+        ];
+      }
+      return happyResponder(method);
+    });
+
+    const result = await createIntegration(credentials).getSystemInfoAsync();
+
+    expect(result.network).toEqual({ up: 75_000, down: 50_000 });
   });
 
   test("falls back to physical pool space when the root dataset reports no usable values", async () => {
@@ -398,7 +542,7 @@ describe("TrueNasIntegration", () => {
 
     await expect(resultPromise).resolves.toMatchObject({
       version: "TrueNAS-SCALE-24.10",
-      network: { up: 20_000, down: 10_000 },
+      network: { up: 25_000, down: 12_500 },
     });
   });
 

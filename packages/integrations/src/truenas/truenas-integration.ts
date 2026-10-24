@@ -1,6 +1,7 @@
 import dayjs from "dayjs";
 import z from "zod";
 
+import { ParseError } from "@homarr/common/server";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 
 import type { IntegrationTestingInput } from "../base/integration";
@@ -14,7 +15,8 @@ import { TrueNasClient } from "./truenas-client";
 
 const logger = createLogger({ module: "trueNasIntegration" });
 
-const NETWORK_MULTIPLIER = 100;
+const NETWORK_MULTIPLIER = 1000 / 8;
+const MEBIBYTE = 1024 * 1024;
 
 const ERROR_MESSAGE_LIMIT = 200;
 
@@ -56,17 +58,32 @@ export class TrueNasIntegration extends Integration implements ISystemHealthMoni
     const cpuTempData = this.extractLatestReportingData(reporting, "cputemp");
     const memoryData = this.extractLatestReportingData(reporting, "memory");
 
-    const upload = this.extractNetworkTrafficData(netdata, 2); // Index 2 is "sent"
-    const download = this.extractNetworkTrafficData(netdata, 1); // Index 1 is "received"
+    const upload = this.extractNetworkTrafficData(netdata, "sent");
+    const download = this.extractNetworkTrafficData(netdata, "received");
 
-    // The "memory" reporting graph reports available (free) memory, its legend is ["time", "available"].
-    // Used memory is therefore the physical total minus what is still available (clamped against timing skew).
-    const memAvailableInBytes = memoryData[1] ?? 0; // Index 0 is the UNIX timestamp, Index 1 is available bytes
-    const memUsedInBytes = Math.max(systemInformation.physmem - memAvailableInBytes, 0);
+    let memoryUsed: number;
+    if (memoryData.available !== undefined) {
+      memoryUsed = systemInformation.physmem - memoryData.available;
+    } else if (
+      memoryData.used !== undefined &&
+      ["free", "cached", "buffers"].every((column) => memoryData[column] !== undefined)
+    ) {
+      memoryUsed = memoryData.used * MEBIBYTE;
+    } else {
+      throw new ParseError("TrueNAS returned an unsupported memory reporting format");
+    }
+    const memUsedInBytes = Math.min(systemInformation.physmem, Math.max(memoryUsed, 0));
+    const memAvailableInBytes = systemInformation.physmem - memUsedInBytes;
+    const cpuUtilization =
+      cpuData.cpu ??
+      Object.entries(cpuData).reduce((total, [column, value]) => {
+        if (column === "idle" || column === "iowait") return total;
+        return total + value;
+      }, 0);
 
     return {
-      cpuUtilization: cpuData.reduce((acc, item) => acc + (item > 100 ? 0 : item), 0) / cpuData.length,
-      cpuTemp: Math.max(...cpuTempData.filter((_item, index) => index > 0)),
+      cpuUtilization: Math.min(100, Math.max(0, cpuUtilization)),
+      cpuTemp: Math.max(...Object.values(cpuTempData)),
       memAvailableInBytes,
       memUsedInBytes,
       fileSystem: datasets.map((dataset) => {
@@ -313,16 +330,29 @@ export class TrueNasIntegration extends Integration implements ISystemHealthMoni
     return result;
   }
 
-  private extractNetworkTrafficData = (data: z.infer<typeof reportingNetDataSchema>, index: 1 | 2) => {
-    return data.reduce((acc, current) => acc + (current.data.at(-1)?.at(index) ?? 0), 0);
+  private extractNetworkTrafficData = (data: z.infer<typeof reportingNetDataSchema>, column: "sent" | "received") => {
+    return data.reduce((total, report) => {
+      const value = report.data.at(-1)?.[report.legend.indexOf(column)] ?? 0;
+      return total + value;
+    }, 0);
   };
 
   private extractLatestReportingData(data: ReportingItem[], identifier: ReportingItem["identifier"]) {
     const item = data.find((reportingItem) => reportingItem.identifier === identifier);
-    // Reporting rows are [timestamp, ...values] in ascending time order, so the last row is the most recent reading.
     const latest = item?.data.at(-1);
-    if (!latest) throw new Error(`TrueNAS returned no "${identifier}" reporting data`);
-    return latest;
+    if (!item || !latest?.length) throw new ParseError(`TrueNAS returned no "${identifier}" reporting data`);
+    if (new Set(item.legend).size !== item.legend.length) {
+      throw new ParseError(`TrueNAS returned duplicate "${identifier}" reporting columns`);
+    }
+    const values: Record<string, number> = {};
+    for (const [index, column] of item.legend.entries()) {
+      if (column === "time") continue;
+      const value = latest[index];
+      if (value === undefined) throw new ParseError(`TrueNAS returned no "${identifier}.${column}" reporting value`);
+      values[column] = value;
+    }
+    if (Object.keys(values).length === 0) throw new ParseError(`TrueNAS returned no "${identifier}" reporting values`);
+    return values;
   }
 }
 
@@ -372,6 +402,7 @@ const reportingNetDataSchema = z.array(
   z.object({
     name: z.string(),
     identifier: z.string(),
+    legend: z.array(z.string()),
     data: z.array(z.array(z.number())),
   }),
 );
@@ -379,7 +410,7 @@ const reportingNetDataSchema = z.array(
 const systemInfoSchema = z.object({
   version: z.string(),
   hostname: z.string(),
-  physmem: z.number().min(0), // pysical memory
+  physmem: z.number().positive(),
   model: z.string(), // cpu model
   uptime_seconds: z.number().min(0),
 });
