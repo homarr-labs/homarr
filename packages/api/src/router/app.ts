@@ -3,14 +3,17 @@ import { z } from "zod/v4";
 
 import type { Session } from "@homarr/auth";
 import { createId } from "@homarr/common";
+import { env } from "@homarr/common/env";
 import type { Database, InferSelectModel } from "@homarr/db";
 import { asc, eq, inArray, like } from "@homarr/db";
 import { apps, integrations } from "@homarr/db/schema";
 import { selectAppSchema } from "@homarr/db/validationSchemas";
-import { getIconForName } from "@homarr/icons";
+import { fetchWebsiteMetadataAsync, getIconForName } from "@homarr/icons";
+import { ImageProxy } from "@homarr/image-proxy";
 import { invalidateIntegrationResponseCacheAsync } from "@homarr/redis";
 import { appCreateManySchema, appEditSchema, appManageSchema } from "@homarr/validation/app";
 import { byIdSchema, paginatedSchema } from "@homarr/validation/common";
+import { iconsDetectFaviconSchema } from "@homarr/validation/icons";
 
 import { convertIntersectionToZodObject } from "../schema-merger";
 import { createTRPCRouter, permissionRequiredProcedure, protectedProcedure, publicProcedure } from "../trpc";
@@ -220,6 +223,30 @@ export const appRouter = createTRPCRouter({
 
       // TODO: breaking change necessary for removing appId property
       return { appId: id, ...insertValues };
+    }),
+  // A mutation, so the website url travels in the request body and stays out of access logs.
+  detectMetadata: permissionRequiredProcedure
+    .requiresPermission("app-create")
+    .input(iconsDetectFaviconSchema)
+    .output(z.object({ name: z.string(), iconUrl: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const metadata = env.NO_EXTERNAL_CONNECTION
+        ? { title: null, iconUrl: null }
+        : await fetchWebsiteMetadataAsync(input.href);
+      const name = (metadata.title ?? new URL(input.href).hostname).slice(0, 64);
+      // Proxied so the browser always loads it from Homarr's own origin: the detected
+      // icon's own site can still block the direct link (mixed content, or a
+      // Cross-Origin-Resource-Policy header) even though the server fetched it fine.
+      const iconUrl = metadata.iconUrl
+        ? await new ImageProxy()
+            .createImageAsync(metadata.iconUrl, undefined, { persistent: true })
+            .catch(() => metadata.iconUrl)
+        : null;
+
+      return {
+        name,
+        iconUrl: iconUrl ?? getIconForName(ctx.db, name).sync()?.url ?? defaultIcon,
+      };
     }),
   createMany: permissionRequiredProcedure
     .requiresPermission("app-create")

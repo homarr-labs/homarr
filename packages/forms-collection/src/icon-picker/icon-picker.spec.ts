@@ -323,6 +323,21 @@ describe("IconPicker", () => {
     expect(onChange).toHaveBeenCalledWith("https://app.example.com/favicon.ico");
   });
 
+  test("offers the website icon suggestion alongside an app's existing remote icon", async () => {
+    faviconResult = { data: { url: "https://app.example.com/favicon.ico" } };
+    const input = await renderPicker(vi.fn(), {
+      value: directImageUrl,
+      faviconSourceUrl: "https://app.example.com",
+    });
+
+    await focusInput(input);
+
+    expect(detectFaviconQuery.mock.calls.at(-1)?.[1]).toMatchObject({ enabled: true });
+    expect(document.body.textContent).toContain("iconPicker.websiteIcon");
+    // The current icon is still previewed alongside the suggestion, not replaced by it.
+    expect(document.body.querySelector('[data-testid="direct-url-preview"]')).not.toBeNull();
+  });
+
   test("keeps the keyboard selection on the same image when the website icon arrives later", async () => {
     queryResult = { data: { icons: iconGroups, countIcons: 3 }, isLoading: false, isFetching: false, isError: false };
     const onChange = vi.fn();
