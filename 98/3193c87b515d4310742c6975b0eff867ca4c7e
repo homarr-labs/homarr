@@ -1,0 +1,22 @@
+apps/nextjs/src/app/api/assistant/chat/custom-widget-authoring-context.spec.ts
+  h_d6e478ca18e517 411-415,427-428,430
+apps/nextjs/src/app/api/assistant/chat/custom-widget-authoring-context.ts
+  h_d6e478ca18e517 584-586,588,591-593,614-621
+apps/nextjs/src/app/api/assistant/chat/route.ts
+  h_d6e478ca18e517 114,117,212,565-570,1000-1008,1072-1073,1075-1077,1079,1085-1091,1114,1125,1133
+packages/custom-widgets/src/core/ai-prompt.ts
+  h_d6e478ca18e517 154-159,175-176,180,202-210,293
+packages/custom-widgets/src/test/ai-prompt.spec.ts
+  h_d6e478ca18e517 14-18
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "983193c87b515d4310742c6975b0eff867ca4c7e",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
