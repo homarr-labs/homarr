@@ -8794,6 +8794,14 @@
     "conversationActions": "Conversation actions",
     "searchConversations": "Search conversations",
     "noMatchingConversations": "No matching conversations",
+    "historyError": {
+      "title": "Conversation history",
+      "load": "Conversations could not be loaded.",
+      "loadMessages": "This conversation's messages could not be loaded. Retry to restore them before sending.",
+      "saveMessages": "Recent messages could not be saved and may be missing after a reload.",
+      "switch": "This conversation could not be opened.",
+      "retry": "Retry"
+    },
     "moreActions": "More response actions",
     "renameConversation": {
       "action": "Rename",
@@ -8815,7 +8823,7 @@
     "suggestions": {
       "health": {
         "label": "Check service health",
-        "prompt": "Check my integrations and summarize anything that needs attention."
+        "prompt": "Check the health of the services and integrations I can access. Summarize any problems and suggest next steps."
       },
       "explore": {
         "label": "Explore my Homarr",
@@ -8831,7 +8839,7 @@
       },
       "designWidget": {
         "label": "Design a widget",
-        "prompt": "Create and install a Custom Widget for "
+        "prompt": "Help me design a Custom Widget. Ask what I want it to show and where to add it, then use my available integrations."
       }
     },
     "composerPlaceholder": "Ask Assistant…",
@@ -8913,6 +8921,9 @@
     },
     "mentions": {
       "menu": "Add Homarr context",
+      "back": "All categories",
+      "loading": "Loading available context…",
+      "empty": "No matching context found.",
       "context": "Context",
       "app": "Apps",
       "integration": "Integrations",
@@ -8927,11 +8938,13 @@
     },
     "commands": {
       "menu": "Assistant commands",
-      "health": "Prepare a service-health check",
-      "explore": "Prepare an overview of this Homarr instance",
-      "media": "Prepare a media search",
-      "style": "Prepare a board appearance or custom CSS change",
-      "designWidget": "Prepare a one-prompt Custom Widget build"
+      "hint": "Choose a starting point, or type / for commands and @ for context. Edit your prompt before sending.",
+      "empty": "No matching commands. Try /health, /explore, /media, /style or /design-widget.",
+      "health": "Find unhealthy services and suggested fixes",
+      "explore": "See your apps, boards and available actions",
+      "media": "Find a movie or series to request",
+      "style": "Improve a board's layout, appearance or CSS",
+      "designWidget": "Build a Custom Widget with your integrations"
     },
     "usage": {
       "tokens": "tokens",
@@ -9109,6 +9122,7 @@
     "approvalDescription": "Review this change before it runs.",
     "approveAndRun": "Approve and run",
     "deny": "Deny",
+    "approvalError": "Your response could not be recorded. Try again.",
     "autoApproval": {
       "label": "Automatic approvals",
       "composerLabel": "Approve for me",
