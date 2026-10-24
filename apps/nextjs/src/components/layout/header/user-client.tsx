@@ -50,13 +50,13 @@ export const UserButtonClient = ({ avatar, isAdmin, isDockerEnabled, boardSwitch
 
   return (
     <UserAvatarMenu availableUpdates={visibleUpdates} isDockerEnabled={isDockerEnabled} boardSwitcher={boardSwitcher}>
-      <Tooltip label={t("open")} events={{ hover: true, focus: true, touch: false }}>
-        <ActionIcon aria-label={t("open")} variant="subtle" color="gray" size={44} radius="xl">
-          <UpdateIndicator availableUpdates={visibleUpdates} disabled={!isCurrentSessionAdmin}>
+      <UpdateIndicator availableUpdates={visibleUpdates} disabled={!isCurrentSessionAdmin}>
+        <Tooltip label={t("open")} events={{ hover: true, focus: true, touch: false }}>
+          <ActionIcon aria-label={t("open")} variant="subtle" color="gray" size={44} radius="xl">
             {avatar}
-          </UpdateIndicator>
-        </ActionIcon>
-      </Tooltip>
+          </ActionIcon>
+        </Tooltip>
+      </UpdateIndicator>
     </UserAvatarMenu>
   );
 };
