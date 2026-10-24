@@ -12,7 +12,13 @@ import {
 } from "./policy";
 
 export function normalizedProperty(value: unknown): string {
-  if (typeof value !== "string" && typeof value !== "number") {
+  if (
+    typeof value !== "string" &&
+    typeof value !== "number" &&
+    typeof value !== "boolean" &&
+    value !== null &&
+    value !== undefined
+  ) {
     throw new SafeJsxError("Property names must be strings or numbers");
   }
   const property = String(value);
