@@ -31,6 +31,14 @@ export interface SafeJsxRenderResult {
 
 const SHORT_CIRCUITED_CHAIN = Symbol("shortCircuitedChain");
 
+function unavailableMethodMessage(receiver: unknown, method: string) {
+  if (receiver === undefined || receiver === null) {
+    return `Cannot call '${method}' on ${String(receiver)}; guard the value with ?. or a fallback such as ?? []`;
+  }
+  if (Array.isArray(receiver)) return `Calling method '${method}' on an array is not allowed`;
+  return `Calling method '${method}' on ${typeof receiver === "object" ? "an object" : `a ${typeof receiver}`} is not allowed`;
+}
+
 class Interpreter {
   private readonly budget: Budget;
   private readonly warnings = new Set<string>();
@@ -309,7 +317,7 @@ class Interpreter {
       const collectionResult = this.callCollectionMethod(receiver, method, args, depth + 1);
       if (collectionResult.handled) return collectionResult.value;
       const callable = ownProperty(receiver, method);
-      if (!isSafeCallable(callable)) throw new SafeJsxError(`Calling method '${method}' is not allowed`);
+      if (!isSafeCallable(callable)) throw new SafeJsxError(unavailableMethodMessage(receiver, method));
       return this.accountHostResult(callable(...(args as never[])));
     }
 
