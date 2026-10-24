@@ -22,7 +22,7 @@ jobs:
         if: "!env.ACT"
       - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
         with:
-          bun-version: 1.4.3
+          bun-version: 1.4.4
       - run: |
           bun x --package renovate \
               renovate-config-validator --strict .github/renovate.json5
