@@ -15,7 +15,6 @@ export class LocalIconRepository extends IconRepository {
     super("Local", LOCAL_ICON_REPOSITORY_SLUG, undefined, undefined, undefined, undefined);
   }
   protected async getAllIconsInternalAsync(): Promise<RepositoryIconGroup> {
-    // Uploaded videos (board backgrounds) are media too, but never icons.
     const medias = await db.query.medias.findMany({ where: (media) => like(media.contentType, "image/%") });
     return {
       success: true,

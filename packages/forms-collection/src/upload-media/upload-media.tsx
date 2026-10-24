@@ -10,7 +10,6 @@ import { mediaUploadMaxSize, supportedImageUploadFormats } from "@homarr/validat
 interface UploadMediaProps {
   children: (props: { onClick: () => void; loading: boolean }) => JSX.Element;
   multiple?: boolean;
-  /** Content types the file picker offers; images unless a caller also takes videos. */
   accept?: string[];
   onSettled?: () => MaybePromise<void>;
   onSuccess?: (media: { id: string; url: string }[]) => MaybePromise<void>;
@@ -36,7 +35,6 @@ export const UploadMedia = ({
   const handleFileUploadAsync = async (files: File[] | File | null) => {
     if (!files || (Array.isArray(files) && files.length === 0)) return;
     const filesArray: File[] = Array.isArray(files) ? files : [files];
-    // Checked here too so a file the server would refuse isn't uploaded first.
     if (filesArray.some((file) => file.size > mediaUploadMaxSize.bytes)) {
       showErrorNotification({
         message: t("common.zod.errors.custom.fileTooLarge", { maxSize: mediaUploadMaxSize.label }),

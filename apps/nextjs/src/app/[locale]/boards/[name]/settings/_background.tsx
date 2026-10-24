@@ -17,7 +17,7 @@ import type { SelectItemWithDescriptionBadge } from "@homarr/ui";
 import { SelectWithDescriptionBadge } from "@homarr/ui";
 import { supportedMediaUploadFormats } from "@homarr/validation/media";
 
-import { isVideo } from "~/components/layout/background";
+import { useIsVideo } from "~/components/layout/background";
 
 import type { FormValues } from "./_settings-form";
 
@@ -40,7 +40,7 @@ export const BackgroundSettingsContent = ({ form }: Props) => {
     medias.data?.items.filter(
       (media) => media.contentType.startsWith("image/") || media.contentType.startsWith("video/"),
     ) ?? [];
-  const backgroundMap = new Map(backgrounds.map((media) => [createLocalMediaUrl(media.id, media.contentType), media]));
+  const backgroundMap = new Map(backgrounds.map((media) => [createLocalMediaUrl(media.id), media]));
 
   const backgroundImageAttachmentData = useBackgroundOptionData(
     "backgroundImageAttachment",
@@ -95,13 +95,13 @@ export const BackgroundSettingsContent = ({ form }: Props) => {
                 group: tBoard("field.backgroundImageUrl.group.your"),
                 items: backgrounds
                   .filter((media) => media.creatorId === session?.user.id)
-                  .map((media) => createLocalMediaUrl(media.id, media.contentType)),
+                  .map((media) => createLocalMediaUrl(media.id)),
               },
               {
                 group: tBoard("field.backgroundImageUrl.group.other"),
                 items: backgrounds
                   .filter((media) => media.creatorId !== session?.user.id)
-                  .map((media) => createLocalMediaUrl(media.id, media.contentType)),
+                  .map((media) => createLocalMediaUrl(media.id)),
               },
             ]}
             {...form.getInputProps("backgroundImageUrl")}
@@ -158,16 +158,18 @@ interface ImagePreviewProps {
 }
 
 const ImagePreview = ({ src, w, h }: ImagePreviewProps) => {
+  const isVideo = useIsVideo(src);
   if (!["/", "http://", "https://"].some((prefix) => src.startsWith(prefix))) {
     return <IconPhotoOff size={w} />;
   }
 
-  if (isVideo(src)) {
+  if (isVideo === undefined) return <IconPhotoOff size={w} />;
+  if (isVideo) {
     return <video src={src} muted preload="metadata" style={{ width: w, height: h, objectFit: "contain" }} />;
   }
 
   // eslint-disable-next-line @next/next/no-img-element
-  return <img src={src} alt="preview image" style={{ width: w, height: h, objectFit: "contain" }} />;
+  return <img src={src} alt="Background preview" style={{ width: w, height: h, objectFit: "contain" }} />;
 };
 
 type BackgroundImageKey = "backgroundImageAttachment" | "backgroundImageSize" | "backgroundImageRepeat";

@@ -86,7 +86,7 @@ export const mediaRouter = createTRPCRouter({
 
       const uploaded = insertMedias.map((media) => ({
         id: media.id,
-        url: createLocalMediaUrl(media.id, media.contentType),
+        url: createLocalMediaUrl(media.id),
       }));
       const images = insertMedias.filter((media) => media.contentType.startsWith("image/"));
       if (!localIconRepository || images.length === 0) return uploaded;

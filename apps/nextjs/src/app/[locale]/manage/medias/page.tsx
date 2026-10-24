@@ -157,7 +157,7 @@ const Row = async ({ media, byteUnitSystem }: RowProps) => {
       <TableTd w={64}>
         {media.contentType.startsWith("video/") ? (
           <video
-            src={createLocalMediaUrl(media.id, media.contentType)}
+            src={createLocalMediaUrl(media.id)}
             aria-label={media.name}
             muted
             preload="metadata"
@@ -197,7 +197,7 @@ const Row = async ({ media, byteUnitSystem }: RowProps) => {
             <ActionIcon
               aria-label={tMedia("action.open.labelNamed", { name: media.name })}
               component="a"
-              href={createLocalMediaUrl(media.id, media.contentType)}
+              href={createLocalMediaUrl(media.id)}
               target="_blank"
               rel="noopener noreferrer"
               color="gray"

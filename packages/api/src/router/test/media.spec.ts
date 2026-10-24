@@ -30,14 +30,20 @@ const upload = (...files: File[]) => {
 };
 
 describe("uploadMedia", () => {
-  test("stores a video as media with a url that carries its extension, but not as an icon", async () => {
+  test("stores a video as media with a canonical url, but not as an icon", async () => {
     const { db, caller } = await setupAsync();
 
     const [uploaded] = await caller.uploadMedia(
-      upload(new File([new Uint8Array([0, 0, 0, 24])], "background.mp4", { type: "video/mp4" })),
+      upload(
+        new File(
+          [new Uint8Array([0, 0, 0, 16, 102, 116, 121, 112, 105, 115, 111, 109, 0, 0, 0, 0])],
+          "background.mp4",
+          { type: "video/mp4" },
+        ),
+      ),
     );
 
-    expect(uploaded?.url).toBe(`/api/user-medias/${uploaded?.id}.mp4`);
+    expect(uploaded?.url).toBe(`/api/user-medias/${uploaded?.id}`);
     expect(await db.select().from(medias)).toHaveLength(1);
     expect(await db.select().from(icons)).toHaveLength(0);
   });
@@ -46,7 +52,7 @@ describe("uploadMedia", () => {
     const { db, caller } = await setupAsync();
 
     const [uploaded] = await caller.uploadMedia(
-      upload(new File([new Uint8Array([137, 80, 78, 71])], "logo.png", { type: "image/png" })),
+      upload(new File([new Uint8Array([137, 80, 78, 71, 13, 10, 26, 10])], "logo.png", { type: "image/png" })),
     );
 
     expect(uploaded?.url).toBe(`/api/user-medias/${uploaded?.id}`);

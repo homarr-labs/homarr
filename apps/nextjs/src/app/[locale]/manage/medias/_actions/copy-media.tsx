@@ -15,8 +15,7 @@ export const CopyMedia = ({ media }: CopyMediaProps) => {
   const t = useI18n("media");
   const label = t("action.copy.labelNamed", { name: media.name });
 
-  const url =
-    typeof window !== "undefined" ? `${window.location.origin}${createLocalMediaUrl(media.id, media.contentType)}` : "";
+  const url = typeof window !== "undefined" ? `${window.location.origin}${createLocalMediaUrl(media.id)}` : "";
 
   // Clipboard only works on localhost or secure connections (https)
   if (url.startsWith("http://") && !url.startsWith("http://localhost")) {
