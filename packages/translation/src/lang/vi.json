@@ -799,6 +799,11 @@
       }
     },
     "field": {
+      "url": {
+        "helpLabel": "Ví dụ về định dạng URL",
+        "examples": "Ví dụ về liên kết được hỗ trợ",
+        "requiresHandler": "Giao thức tùy chỉnh yêu cầu một ứng dụng được liên kết trên thiết bị của bạn."
+      },
       "description": {
         "label": "Mô tả"
       },
@@ -1559,6 +1564,7 @@
             "untrusted": "Chứng chỉ không được tin cậy.",
             "hostnameMismatch": "Tên máy chủ của chứng chỉ không khớp với URL."
           },
+          "secondaryUrl": "",
           "alert": {
             "permission": {
               "title": "Không đủ quyền",
@@ -1904,6 +1910,7 @@
       "tryAgain": "Thử lại",
       "loading": "Đang tải",
       "show": "Hiện",
+      "showAll": "",
       "hide": "Ẩn",
       "undo": "Hoàn tác",
       "editNamed": "Chỉnh sửa {name}",
@@ -1913,6 +1920,7 @@
       "copied": "Đã sao chép",
       "refresh": "Làm mới"
     },
+    "hidden": "",
     "pagination": {
       "pageOf": "Trang {page} trên {totalPages}"
     },
@@ -1935,6 +1943,7 @@
       "clear": "Xóa hình ảnh",
       "uploadImage": "Tải lên hình ảnh",
       "results": "Kết quả tìm kiếm hình ảnh",
+      "websiteIcon": "",
       "localImages": "Hình ảnh của bạn",
       "svgIcons": "Biểu tượng SVG",
       "otherImages": "Hình ảnh khác",
@@ -2308,6 +2317,15 @@
       "option": {
         "appId": {
           "label": "Chọn ứng dụng"
+        },
+        "openIn": {
+          "label": "Mở ứng dụng trong",
+          "description": "Chọn nơi mở ứng dụng này. Cài đặt trình duyệt có thể thay đổi việc mở trong cửa sổ riêng.",
+          "option": {
+            "currentTab": "Thẻ hiện tại",
+            "newTab": "Thẻ mới",
+            "newWindow": "Cửa sổ mới"
+          }
         },
         "showTitle": {
           "label": "Hiện tên ứng dụng"
@@ -3221,6 +3239,13 @@
         },
         "showUnmonitored": {
           "label": "Hiển thị mục chưa giám sát"
+        },
+        "viewMode": {
+          "label": ""
+        },
+        "hideHeader": {
+          "label": "",
+          "description": ""
         }
       },
       "advanced": {
@@ -3229,6 +3254,22 @@
         "eventCount": "{count, plural, other {# sự kiện}}",
         "loading": "Đang tải sự kiện lịch...",
         "noEvents": "Không có sự kiện trong tháng này"
+      },
+      "view": {
+        "compact": "",
+        "month": "",
+        "week": "",
+        "day": "",
+        "agenda": ""
+      },
+      "controls": {
+        "today": "",
+        "previous": "",
+        "next": "",
+        "noEvents": "",
+        "more": "",
+        "timeSlot": "",
+        "weekday": ""
       }
     },
     "weather": {
@@ -3913,11 +3954,28 @@
         "paused": "Tạm dừng",
         "remaining": "Còn {minutes} phút",
         "seasonEpisode": "M{season} T{episode}",
+        "state": {
+          "playing": "",
+          "buffering": ""
+        },
+        "details": {
+          "device": "",
+          "location": "",
+          "sessionId": "",
+          "bitrate": "",
+          "audioHandling": "",
+          "direct": "",
+          "transcode": "",
+          "containerChanged": "",
+          "position": "",
+          "unknown": ""
+        },
         "metadata": {
           "title": "Thống kê chuyên sâu",
           "video": {
             "title": "Video",
-            "resolution": "Độ phân giải"
+            "resolution": "Độ phân giải",
+            "frameRate": ""
           },
           "audio": {
             "title": "Âm thanh",
@@ -3938,6 +3996,109 @@
         "playing": "{count} đang phát",
         "transcoding": "{count} đang chuyển mã"
       }
+    },
+    "thingport-libraryStats": {
+      "name": "",
+      "description": "",
+      "title": "",
+      "option": {
+        "showModels": {
+          "label": ""
+        },
+        "showCollections": {
+          "label": ""
+        },
+        "showCategories": {
+          "label": ""
+        },
+        "showAuthors": {
+          "label": ""
+        }
+      },
+      "models": "",
+      "collections": "",
+      "categories": "",
+      "authors": ""
+    },
+    "thingport-featuredModel": {
+      "name": "",
+      "description": "",
+      "option": {
+        "autoRotate": {
+          "label": ""
+        },
+        "showDetails": {
+          "label": ""
+        }
+      },
+      "title": "",
+      "empty": "",
+      "hint": "",
+      "noPreview": "",
+      "views": "",
+      "prints": ""
+    },
+    "thingport-activityHeatmap": {
+      "name": "",
+      "description": "",
+      "title": "",
+      "option": {
+        "weekStart": {
+          "label": "Ngày đầu tiên trong tuần",
+          "option": {
+            "sunday": "",
+            "monday": ""
+          }
+        },
+        "showTotal": {
+          "label": ""
+        },
+        "showLegend": {
+          "label": ""
+        }
+      },
+      "lastYear": "",
+      "totalLastYear": "",
+      "totalInYear": "",
+      "dayTotal": "",
+      "dayEmpty": "",
+      "kinds": {
+        "import": "",
+        "upload": "Tổng dung lượng đã tải lên",
+        "download": "Tổng dung lượng đã tải xuống",
+        "slicer": "",
+        "delete": ""
+      },
+      "less": "",
+      "more": ""
+    },
+    "thingport-models": {
+      "name": "",
+      "description": "",
+      "title": "",
+      "option": {
+        "defaultTab": {
+          "label": ""
+        },
+        "itemCount": {
+          "label": ""
+        },
+        "showThumbnails": {
+          "label": ""
+        }
+      },
+      "tab": {
+        "recentlyAdded": "",
+        "topViewed": "",
+        "topPrinted": ""
+      },
+      "empty": {
+        "recentlyAdded": "",
+        "topViewed": "",
+        "topPrinted": ""
+      },
+      "views": "",
+      "prints": ""
     },
     "paperlessNgx": {
       "description": "Tổng quan về kho lưu trữ tài liệu Paperless-ngx của bạn",
@@ -4611,27 +4772,59 @@
       "name": "Bản phát hành",
       "description": "Hiển thị danh sách phiên bản hiện tại của các kho lưu trữ được chỉ định bằng biểu thức chính quy phiên bản tương ứng.",
       "option": {
+        "layout": {
+          "label": "Bố cục",
+          "description": "",
+          "option": {
+            "comfortable": "",
+            "compact": ""
+          }
+        },
+        "summary": {
+          "label": "",
+          "description": "",
+          "option": {
+            "detailed": "",
+            "count": "",
+            "hidden": ""
+          }
+        },
+        "sections": {
+          "label": "",
+          "description": ""
+        },
+        "collapsedSections": {
+          "label": "",
+          "description": ""
+        },
         "newReleaseWithin": {
           "label": "Bản phát hành mới trong khoảng",
-          "description": "Ví dụ: 1w (1 tuần), 10M (10 tháng). Các đơn vị được chấp nhận: h (giờ), d (ngày), w (tuần), M (tháng), y (năm). Để trống nếu không muốn đánh dấu bản phát hành mới."
+          "description": "Ví dụ: 1w (1 tuần), 10M (10 tháng). Các đơn vị được chấp nhận: h (giờ), d (ngày), w (tuần), M (tháng), y (năm). Để trống nếu không muốn đánh dấu bản phát hành mới.",
+          "option": {
+            "never": "",
+            "1d": "",
+            "3d": "",
+            "1w": "",
+            "2w": "",
+            "1M": "",
+            "3M": ""
+          }
         },
         "staleReleaseWithin": {
           "label": "Bản phát hành cũ trong khoảng",
-          "description": "Ví dụ: 1w (1 tuần), 10M (10 tháng). Các đơn vị được chấp nhận: h (giờ), d (ngày), w (tuần), M (tháng), y (năm). Để trống nếu không muốn đánh dấu bản phát hành cũ."
+          "description": "Ví dụ: 1w (1 tuần), 10M (10 tháng). Các đơn vị được chấp nhận: h (giờ), d (ngày), w (tuần), M (tháng), y (năm). Để trống nếu không muốn đánh dấu bản phát hành cũ.",
+          "option": {
+            "never": "",
+            "1M": "",
+            "3M": "",
+            "6M": "",
+            "1y": "",
+            "2y": ""
+          }
         },
-        "showOnlyHighlighted": {
-          "label": "Chỉ hiển thị bản nổi bật",
-          "description": "Chỉ hiển thị các bản phát hành mới hoặc cũ. Như mô tả ở trên."
-        },
-        "showDetails": {
-          "label": "Hiển thị chi tiết"
-        },
-        "showOnlyIcon": {
-          "label": "Chỉ hiển thị biểu tượng"
-        },
-        "topReleases": {
-          "label": "Phát hành nổi bật",
-          "description": "Số bản phát hành mới nhất tối đa được hiển thị. Số 0 nghĩa là không giới hạn."
+        "showChangelogPreview": {
+          "label": "",
+          "description": ""
         },
         "repositories": {
           "label": "Kho lưu trữ",
@@ -4705,36 +4898,106 @@
           }
         }
       },
-      "not-found": "Không tìm thấy",
-      "pre-release": "Bản phát hành thử",
-      "archived": "Đã lưu trữ",
-      "forked": "Fork",
+      "summary": {
+        "newReleases": "",
+        "newShort": "",
+        "tracked": "",
+        "caughtUp": "",
+        "outdated": "",
+        "outdatedShort": "",
+        "failing": "",
+        "failingShort": "",
+        "latest": "",
+        "issues": ""
+      },
+      "section": {
+        "new": {
+          "label": "",
+          "description": ""
+        },
+        "attention": {
+          "label": "",
+          "description": ""
+        },
+        "upToDate": {
+          "label": "",
+          "description": ""
+        },
+        "quiet": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "status": {
+        "new": "",
+        "outdated": "",
+        "error": "",
+        "upToDate": "",
+        "quiet": ""
+      },
+      "tag": {
+        "new": "",
+        "preRelease": "",
+        "resolvedFrom": "",
+        "quiet": "",
+        "archived": "",
+        "fork": ""
+      },
+      "issue": {
+        "affected": "",
+        "rateLimited": {
+          "title": "",
+          "hint": ""
+        },
+        "notFound": {
+          "title": "",
+          "hint": ""
+        },
+        "noMatchingVersion": {
+          "title": "",
+          "hint": ""
+        },
+        "noReleasesFound": {
+          "title": "",
+          "hint": ""
+        },
+        "invalidIdentifier": {
+          "title": "",
+          "hint": ""
+        },
+        "noProviderSelected": {
+          "title": "",
+          "hint": ""
+        },
+        "noProviderResponse": {
+          "title": "",
+          "hint": ""
+        },
+        "unexpected": {
+          "title": "",
+          "hint": ""
+        }
+      },
+      "markViewed": "Đánh dấu đã xem",
+      "markAllViewed": "",
+      "markEntryViewed": "",
+      "viewed": "",
+      "copyVersion": "",
+      "copied": "",
+      "published": "",
+      "whatChanged": "",
+      "noNotes": "",
+      "changes": "",
       "starsCount": "Sao",
       "forksCount": "Fork",
-      "issuesCount": "Vấn đề đang mở",
-      "markViewed": "Đánh dấu đã xem",
-      "openProjectPage": "Mở trang dự án",
-      "openReleasePage": "Mở trang bản phát hành",
-      "releaseDescription": "Mô tả bản phát hành",
-      "projectDescription": "Mô tả dự án",
+      "openIssues": "",
+      "created": "Đã tạo",
+      "releasePage": "",
+      "projectPage": "",
       "runningVersions": "",
       "upToDate": "",
       "updateAvailable": "",
-      "unknownStatus": "Không rõ",
-      "created": "Đã tạo",
-      "error": {
-        "label": "Lỗi",
-        "messages": {
-          "invalidIdentifier": "Mã định danh không hợp lệ",
-          "noMatchingVersion": "Không tìm thấy phiên bản phù hợp",
-          "noReleasesFound": "Không có bản phát hành",
-          "noProviderSelected": "Chưa chọn nhà cung cấp",
-          "noProviderResponse": "Không có phản hồi từ nhà cung cấp",
-          "unexpected": "Lỗi nhà cung cấp không mong muốn"
-        }
-      },
-      "expandDetails": "Hiển thị chi tiết của {name}",
-      "collapseDetails": "Ẩn chi tiết của {name}"
+      "unknownStatus": "Không rõ"
     },
     "networkControllerSummary": {
       "advanced": {
@@ -4907,45 +5170,116 @@
     "uptimeKuma": {
       "description": "Theo dõi thống kê thời gian hoạt động từ trang trạng thái Uptime Kuma của bạn",
       "option": {
-        "showAverageUptime": {
-          "label": "Hiển thị thời gian hoạt động trung bình",
-          "description": "Hiển thị phần trăm thời gian hoạt động trung bình trong 24 giờ tổng hợp"
+        "statusPageSlug": {
+          "label": "",
+          "description": ""
         },
-        "showUptimeRing": {
-          "label": "Hiển thị vòng thời gian hoạt động",
-          "description": "Hiển thị vòng tiến độ bên cạnh giá trị thời gian hoạt động trung bình"
+        "summaryOnly": {
+          "label": "",
+          "description": ""
         },
-        "showTotalMonitors": {
-          "label": "Hiển thị tổng số trình giám sát",
-          "description": "Hiển thị tổng số trình giám sát đã cấu hình"
+        "showSummary": {
+          "label": "",
+          "description": ""
         },
-        "showUpCount": {
-          "label": "Hiển thị số lượng đang hoạt động",
-          "description": "Hiển thị số trình giám sát hiện đang hoạt động"
+        "showIncidents": {
+          "label": "",
+          "description": ""
         },
-        "showDownCount": {
-          "label": "Hiển thị số lượng ngừng hoạt động",
-          "description": "Hiển thị số trình giám sát hiện đang ngừng hoạt động"
+        "groupByStatusPageGroup": {
+          "label": "",
+          "description": ""
         },
-        "showPausedCount": {
-          "label": "Hiển thị số lượng tạm dừng",
-          "description": "Hiển thị số trình giám sát hiện đang tạm dừng"
+        "showOnlyProblems": {
+          "label": "",
+          "description": ""
+        },
+        "sortBy": {
+          "label": "",
+          "option": {
+            "status": "",
+            "statusPage": "",
+            "name": "Tên công việc",
+            "uptime": ""
+          }
+        },
+        "showHeartbeatBar": {
+          "label": "",
+          "description": ""
+        },
+        "showUptime": {
+          "label": ""
+        },
+        "showResponseTime": {
+          "label": ""
+        },
+        "showCertificateExpiry": {
+          "label": "",
+          "description": ""
         }
-      },
-      "averageUptime": "Thời gian hoạt động trung bình (24 giờ)",
-      "stats": {
-        "totalMonitors": "Tổng số trình giám sát",
-        "upCount": "Đang hoạt động",
-        "downCount": "Ngừng hoạt động",
-        "pausedCount": "Tạm dừng"
-      },
-      "error": {
-        "internalServerError": "Không thể tải dữ liệu thời gian hoạt động"
       },
       "status": {
         "up": "Tốc độ tải lên",
         "down": "Tốc độ tải",
-        "paused": "Tạm dừng"
+        "pending": "",
+        "maintenance": "",
+        "stale": "",
+        "unknown": ""
+      },
+      "overall": {
+        "operational": "",
+        "degraded": "",
+        "outage": "",
+        "maintenance": "",
+        "unknown": ""
+      },
+      "short": {
+        "operational": "",
+        "down": "",
+        "pending": "",
+        "maintenance": "",
+        "unknown": ""
+      },
+      "summary": {
+        "upRatio": "",
+        "upRatioShort": "",
+        "averageUptime": "",
+        "uptimeShort": "",
+        "statusCount": ""
+      },
+      "unit": {
+        "milliseconds": ""
+      },
+      "heartbeatBar": {
+        "label": ""
+      },
+      "detail": {
+        "checked": "",
+        "certificate": ""
+      },
+      "notice": {
+        "label": "",
+        "untitled": ""
+      },
+      "empty": {
+        "title": "",
+        "description": ""
+      },
+      "allClear": "",
+      "error": {
+        "internalServerError": "Không thể tải dữ liệu thời gian hoạt động"
+      },
+      "monitorType": {
+        "http": "",
+        "keyword": "",
+        "jsonQuery": "",
+        "port": "",
+        "ping": "",
+        "dns": "",
+        "docker": "",
+        "push": "",
+        "group": "Nhóm",
+        "realBrowser": ""
       }
     },
     "traefik": {
@@ -5552,6 +5886,8 @@
       "allHidden": "Tất cả số liệu đều bị ẩn trong chế độ xem này. Sử dụng Tùy chỉnh chế độ xem này để khôi phục."
     },
     "wazuh": {
+      "name": "",
+      "description": "",
       "target": {
         "api": "API máy chủ Wazuh",
         "indexer": "Trình lập chỉ mục Wazuh",
@@ -5571,6 +5907,14 @@
         "certificate": {
           "title": "Chứng chỉ của {target} không được tin cậy",
           "description": "Theo mặc định, Wazuh sử dụng chứng chỉ tự ký. Chạy \"Kiểm tra kết nối\" trên tích hợp và tin cậy chứng chỉ, hoặc thêm CA của bạn trong Cài đặt → Chứng chỉ."
+        },
+        "certificateHostname": {
+          "title": "",
+          "description": ""
+        },
+        "certificateExpired": {
+          "title": "",
+          "description": ""
         },
         "unreachable": {
           "title": "Không thể kết nối đến {target}",
@@ -5595,7 +5939,9 @@
         "unknown": {
           "title": "Không thể tải dữ liệu từ {target}",
           "description": "Kiểm tra nhật ký Homarr để biết chi tiết."
-        }
+        },
+        "viewSaveTitle": "",
+        "viewSaveMessage": ""
       },
       "range": {
         "1h": "1 giờ",
@@ -5603,268 +5949,234 @@
         "7d": "7 ngày",
         "30d": "30 ngày"
       },
-      "levelTooltip": "Cấp độ quy tắc {level} ({severity})"
-    },
-    "wazuhAgents": {
-      "name": "Agent Wazuh",
-      "description": "Danh sách agent Wazuh có thể sắp xếp, cùng trạng thái, hệ điều hành, phiên bản và lần duy trì kết nối gần nhất",
+      "levelTooltip": "Cấp độ quy tắc {level} ({severity})",
+      "summary": {
+        "title": "",
+        "alerts": "",
+        "none": "",
+        "trend": {
+          "new": "",
+          "tooltip": ""
+        },
+        "previous": "",
+        "maxLevel": "",
+        "health": "",
+        "manager": ""
+      },
+      "alerts": {
+        "title": "",
+        "empty": "",
+        "rule": "",
+        "openInDashboard": ""
+      },
+      "timeline": {
+        "title": "",
+        "total": "",
+        "interval": ""
+      },
+      "top": {
+        "title": {
+          "rules": "",
+          "agents": "",
+          "sourceIps": "",
+          "mitreTactics": "",
+          "mitreTechniques": ""
+        },
+        "empty": {
+          "rules": "",
+          "agents": "",
+          "sourceIps": "",
+          "mitreTactics": "",
+          "mitreTechniques": ""
+        },
+        "totalTooltip": "",
+        "private": "",
+        "public": "Công khai",
+        "agents": "",
+        "others": ""
+      },
+      "agents": {
+        "title": "",
+        "total": "",
+        "status": {
+          "active": "",
+          "disconnected": "",
+          "neverConnected": "",
+          "pending": ""
+        },
+        "statusLabel": {
+          "active": "",
+          "disconnected": "",
+          "never_connected": "",
+          "pending": "",
+          "unknown": "Không rõ"
+        },
+        "live": "",
+        "snapshot": "",
+        "snapshotHint": "",
+        "staleSnapshot": "",
+        "noDisconnected": "",
+        "empty": "",
+        "column": {
+          "status": "",
+          "name": "Tên công việc",
+          "ip": "",
+          "os": "",
+          "version": "",
+          "lastKeepAlive": "",
+          "groups": "Các nhóm"
+        },
+        "outdated": ""
+      },
+      "vulnerabilities": {
+        "title": "",
+        "topCves": "",
+        "score": "",
+        "agentsShort": "",
+        "topAgents": "",
+        "criticalHigh": "",
+        "totalTooltip": "",
+        "affected": "",
+        "empty": "",
+        "distribution": "",
+        "worst": ""
+      },
+      "fim": {
+        "title": "",
+        "event": {
+          "added": "Ngày thêm",
+          "modified": "",
+          "deleted": "",
+          "unknown": ""
+        },
+        "empty": "",
+        "user": "",
+        "registry": ""
+      },
+      "authFailures": {
+        "title": "",
+        "seriesTooltip": "",
+        "peak": "",
+        "empty": "",
+        "failed": "",
+        "failedHint": "",
+        "bruteForce": "",
+        "bruteForceHint": "",
+        "sourceIps": "",
+        "ipTooltip": "",
+        "bruteForceCount": ""
+      },
+      "view": {
+        "overview": "",
+        "alerts": "",
+        "timeline": "",
+        "top": "",
+        "agents": "",
+        "vulnerabilities": "",
+        "fim": "",
+        "authFailures": ""
+      },
       "option": {
-        "statusFilter": {
-          "label": "Hiển thị agent"
+        "visibleViews": {
+          "label": "",
+          "description": ""
         },
-        "sortBy": {
-          "label": "Sắp xếp theo"
-        },
-        "showVersion": {
-          "label": "Hiển thị cột phiên bản Wazuh"
-        },
-        "showGroups": {
-          "label": "Hiển thị cột nhóm"
-        }
-      },
-      "title": "Tác nhân",
-      "total": "{count} tác nhân",
-      "status": {
-        "active": "Đang hoạt động",
-        "disconnected": "Đã ngắt kết nối",
-        "neverConnected": "Chưa từng kết nối",
-        "pending": "Đang chờ"
-      },
-      "statusLabel": {
-        "active": "Đang hoạt động",
-        "disconnected": "Đã ngắt kết nối",
-        "never_connected": "Chưa từng kết nối",
-        "pending": "Đang chờ",
-        "unknown": "Không rõ"
-      },
-      "live": "Trực tiếp",
-      "snapshot": "Ảnh chụp {age} đã cũ",
-      "snapshotHint": "Đọc từ ảnh chụp tác nhân của bảng điều khiển Wazuh (wazuh-monitoring) được tạo lúc {time}. Thêm thông tin xác thực API máy chủ để nhận dữ liệu trực tiếp.",
-      "staleSnapshot": "Ảnh chụp tác nhân từ {time} đã lỗi thời. Kiểm tra xem tác vụ giám sát bảng điều khiển Wazuh có đang chạy không hoặc thêm thông tin xác thực API máy chủ.",
-      "noDisconnected": "Tất cả tác nhân đều đã kết nối",
-      "empty": "Không có tác nhân nào khớp với bộ lọc này",
-      "column": {
-        "status": "Trạng thái",
-        "name": "Tên công việc",
-        "ip": "Địa chỉ IP",
-        "os": "Hệ điều hành",
-        "version": "Phiên bản",
-        "lastKeepAlive": "Duy trì kết nối",
-        "groups": "Các nhóm"
-      },
-      "outdated": "Cũ hơn phiên bản tác nhân mới nhất ({version})"
-    },
-    "wazuhAlerts": {
-      "name": "Nguồn cấp cảnh báo Wazuh",
-      "description": "Các cảnh báo Wazuh gần đây cùng mức độ, kỹ thuật MITRE ATT&CK, tác nhân và IP nguồn",
-      "option": {
-        "minLevel": {
-          "label": "Mức quy tắc tối thiểu",
-          "description": "Mức Wazuh: 0–6 thấp, 7–11 trung bình, 12–14 cao, từ 15 nghiêm trọng"
-        },
-        "hours": {
-          "label": "Khoảng thời gian (giờ)"
-        },
-        "limit": {
-          "label": "Số lượng cảnh báo"
-        },
-        "showMitre": {
-          "label": "Hiển thị kỹ thuật MITRE ATT&CK"
-        },
-        "showAgent": {
-          "label": "Hiển thị tác nhân"
-        },
-        "showSourceIp": {
-          "label": "Hiển thị IP nguồn"
-        },
-        "showRuleId": {
-          "label": "Hiển thị ID quy tắc"
-        }
-      },
-      "title": "Cảnh báo · cấp độ {level}+ · {hours} giờ",
-      "empty": "Không có cảnh báo ở mức này. Mọi thứ đều yên ắng.",
-      "rule": "Quy tắc {id}",
-      "openInDashboard": "Mở cảnh báo này trong bảng điều khiển Wazuh"
-    },
-    "wazuhSummary": {
-      "name": "Mức độ nghiêm trọng của cảnh báo Wazuh",
-      "description": "Phân tích mức độ nghiêm trọng của cảnh báo cùng xu hướng so với kỳ trước",
-      "option": {
         "range": {
-          "label": "Khoảng thời gian"
+          "label": ""
         },
         "showTrend": {
-          "label": "Hiển thị xu hướng so với kỳ trước"
+          "label": ""
         },
         "showFooter": {
-          "label": "Hiển thị chân trang"
-        }
-      },
-      "title": "Mức độ nghiêm trọng của cảnh báo · {range}",
-      "alerts": "cảnh báo",
-      "none": "Không có cảnh báo",
-      "trend": {
-        "new": "mới",
-        "tooltip": "Kỳ trước: {previous}"
-      },
-      "previous": "{range} trước: {count}",
-      "maxLevel": "Cấp độ tối đa {level}",
-      "health": "Tình trạng Indexer: {status}",
-      "manager": "Trình quản lý {version}"
-    },
-    "wazuhTimeline": {
-      "name": "Dòng thời gian cảnh báo Wazuh",
-      "description": "Biểu đồ xếp chồng các cảnh báo Wazuh theo thời gian và mức độ nghiêm trọng",
-      "option": {
-        "range": {
-          "label": "Khoảng thời gian"
+          "label": ""
         },
         "interval": {
-          "label": "Khoảng thời gian"
+          "label": ""
         },
         "chartType": {
-          "label": "Loại biểu đồ"
+          "label": ""
         },
         "yScale": {
-          "label": "Tỷ lệ trục Y",
-          "description": "Căn bậc hai giúp các cảnh báo cao và nghiêm trọng vẫn hiển thị cạnh hàng nghìn cảnh báo thấp"
+          "label": "",
+          "description": ""
         },
         "minLevel": {
-          "label": "Mức quy tắc tối thiểu"
+          "label": ""
         },
         "showLegend": {
-          "label": "Hiển thị chú giải kèm tổng số"
-        }
-      },
-      "title": "Dòng thời gian cảnh báo · {range}",
-      "total": "{count} cảnh báo",
-      "interval": "mỗi {interval}"
-    },
-    "wazuhTopList": {
-      "name": "Danh sách Wazuh hàng đầu",
-      "description": "Các quy tắc, tác nhân, IP nguồn hoặc chiến thuật và kỹ thuật MITRE ATT&CK hàng đầu theo số lượng cảnh báo",
-      "option": {
-        "kind": {
-          "label": "Xếp hạng"
+          "label": ""
         },
-        "range": {
-          "label": "Khoảng thời gian"
+        "topKind": {
+          "label": ""
         },
-        "limit": {
-          "label": "Số mục"
-        },
-        "minLevel": {
-          "label": "Mức quy tắc tối thiểu"
+        "topLimit": {
+          "label": ""
         },
         "showBars": {
-          "label": "Hiển thị thanh"
-        }
-      },
-      "title": {
-        "rules": "Quy tắc hàng đầu · {range}",
-        "agents": "Tác nhân hàng đầu · {range}",
-        "sourceIps": "IP nguồn hàng đầu · {range}",
-        "mitreTactics": "Chiến thuật MITRE · {range}",
-        "mitreTechniques": "Kỹ thuật MITRE · {range}"
-      },
-      "empty": {
-        "rules": "Không có cảnh báo trong khoảng thời gian này",
-        "agents": "Không có cảnh báo trong khoảng thời gian này",
-        "sourceIps": "Không có cảnh báo nào có IP nguồn trong khoảng thời gian này",
-        "mitreTactics": "Không có cảnh báo nào được ánh xạ tới MITRE ATT&CK trong khoảng thời gian này",
-        "mitreTechniques": "Không có cảnh báo nào được ánh xạ tới MITRE ATT&CK trong khoảng thời gian này"
-      },
-      "totalTooltip": "{count} cảnh báo phù hợp",
-      "private": "Mạng LAN",
-      "public": "Công khai",
-      "agents": "Được ghi nhận trên {count} tác nhân",
-      "others": "Còn {count} cảnh báo trong các mục khác"
-    },
-    "wazuhVulnerabilities": {
-      "name": "Lỗ hổng Wazuh",
-      "description": "Số lượng lỗ hổng, CVE hàng đầu và các tác nhân dễ bị tấn công nhất",
-      "option": {
+          "label": ""
+        },
+        "agentStatusFilter": {
+          "label": ""
+        },
+        "agentSortBy": {
+          "label": ""
+        },
+        "showVersion": {
+          "label": ""
+        },
+        "showGroups": {
+          "label": ""
+        },
         "cveOrder": {
-          "label": "Xếp hạng CVE theo"
+          "label": ""
         },
         "minSeverity": {
-          "label": "Mức độ nghiêm trọng của CVE"
+          "label": ""
         },
         "cveLimit": {
-          "label": "Số CVE"
+          "label": ""
         },
         "agentLimit": {
-          "label": "Số tác nhân"
+          "label": ""
         },
         "showAgents": {
-          "label": "Hiển thị các tác nhân dễ bị tấn công nhất"
-        }
-      },
-      "title": "Lỗ hổng",
-      "topCves": "CVE hàng đầu",
-      "score": "Điểm số",
-      "agentsShort": "Tác nhân",
-      "topAgents": "Các tác nhân dễ bị tấn công nhất",
-      "criticalHigh": "Nghiêm trọng / Cao",
-      "totalTooltip": "{count} phát hiện trên {agents} tác nhân",
-      "affected": "{count} tác nhân",
-      "empty": "Không phát hiện lỗ hổng",
-      "distribution": "Phân bổ mức độ nghiêm trọng. Không hiển thị {unscored} phát hiện không có điểm số.",
-      "worst": "Tệ nhất: {id} ({score}) trên {agents} tác nhân"
-    },
-    "wazuhFim": {
-      "name": "Tính toàn vẹn tệp Wazuh",
-      "description": "Các sự kiện giám sát tính toàn vẹn tệp gần đây (syscheck)",
-      "option": {
-        "range": {
-          "label": "Khoảng thời gian"
+          "label": ""
         },
-        "event": {
-          "label": "Sự kiện"
+        "fimEvent": {
+          "label": ""
         },
-        "limit": {
-          "label": "Số sự kiện"
+        "fimLimit": {
+          "label": ""
         },
         "includeRegistry": {
-          "label": "Bao gồm sự kiện sổ đăng ký Windows"
-        }
-      },
-      "title": "Tính toàn vẹn tệp · {range}",
-      "event": {
-        "added": "Ngày thêm",
-        "modified": "Đã sửa đổi",
-        "deleted": "Đã xóa",
-        "unknown": "Đã thay đổi"
-      },
-      "empty": "Không có sự kiện toàn vẹn tệp trong khoảng thời gian này",
-      "user": "bởi {user}",
-      "registry": "Sổ đăng ký"
-    },
-    "wazuhAuthFailures": {
-      "name": "Lỗi xác thực Wazuh",
-      "description": "Đăng nhập thất bại và cảnh báo brute-force theo tác nhân, kèm biểu đồ theo giờ",
-      "option": {
-        "hours": {
-          "label": "Khoảng thời gian (giờ)"
+          "label": ""
         },
-        "limit": {
-          "label": "Số tác nhân"
+        "authLimit": {
+          "label": ""
         },
         "showSourceIps": {
-          "label": "Hiển thị IP nguồn hàng đầu"
+          "label": ""
+        },
+        "alertsMinLevel": {
+          "label": "",
+          "description": ""
+        },
+        "alertsLimit": {
+          "label": ""
+        },
+        "showMitre": {
+          "label": ""
+        },
+        "showAgent": {
+          "label": ""
+        },
+        "showSourceIp": {
+          "label": ""
+        },
+        "showRuleId": {
+          "label": ""
         }
-      },
-      "title": "Lỗi xác thực · {hours} giờ",
-      "seriesTooltip": "Tất cả tác nhân trong {hours} giờ qua",
-      "peak": "Đỉnh {count}/khoảng",
-      "empty": "Không có lần đăng nhập thất bại trong khoảng thời gian này",
-      "failed": "Đăng nhập thất bại",
-      "failedHint": "Các lỗi xác thực đơn lẻ (sshd, PAM, đăng nhập Windows, người dùng không hợp lệ)",
-      "bruteForce": "Brute-force",
-      "bruteForceHint": "Các quy tắc brute-force tương quan (nhiều lần thất bại trong thời gian ngắn, MITRE T1110)",
-      "sourceIps": "IP nguồn",
-      "ipTooltip": "{ip}: {count} lần thất bại",
-      "bruteForceCount": "{count} lần brute-force"
+      }
     }
   },
   "widgetPreview": {
@@ -5883,6 +6195,18 @@
       "addWidget": "Thêm tiện ích",
       "addApp": "Thêm ứng dụng",
       "connectService": "Kết nối dịch vụ"
+    },
+    "urlDrop": {
+      "hint": "",
+      "resolving": "",
+      "notification": {
+        "success": {
+          "message": ""
+        },
+        "full": {
+          "message": ""
+        }
+      }
     },
     "setupChecklist": {
       "title": "Làm cho bảng này hữu ích",
@@ -8489,6 +8813,14 @@
     "conversationActions": "Thao tác cuộc trò chuyện",
     "searchConversations": "Tìm kiếm cuộc trò chuyện",
     "noMatchingConversations": "Không có cuộc trò chuyện phù hợp",
+    "historyError": {
+      "title": "",
+      "load": "",
+      "loadMessages": "",
+      "saveMessages": "",
+      "switch": "",
+      "retry": ""
+    },
     "moreActions": "Thao tác phản hồi khác",
     "renameConversation": {
       "action": "Đổi tên",
@@ -8608,6 +8940,9 @@
     },
     "mentions": {
       "menu": "Thêm ngữ cảnh Homarr",
+      "back": "",
+      "loading": "",
+      "empty": "",
       "context": "Ngữ cảnh",
       "app": "Ứng dụng",
       "integration": "Tích hợp",
@@ -8622,6 +8957,8 @@
     },
     "commands": {
       "menu": "Lệnh Trợ lý",
+      "hint": "",
+      "empty": "",
       "health": "Chuẩn bị kiểm tra tình trạng dịch vụ",
       "explore": "Chuẩn bị tổng quan về phiên bản Homarr này",
       "media": "Chuẩn bị tìm kiếm phương tiện",
@@ -8804,6 +9141,7 @@
     "approvalDescription": "Xem xét thay đổi này trước khi chạy.",
     "approveAndRun": "Phê duyệt và chạy",
     "deny": "Từ chối",
+    "approvalError": "",
     "autoApproval": {
       "label": "Phê duyệt tự động",
       "composerLabel": "Phê duyệt thay tôi",

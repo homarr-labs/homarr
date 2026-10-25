@@ -1,6 +1,6 @@
 {
   $schema: "https://docs.renovatebot.com/renovate-schema.json",
-  extends: ["config:recommended", ":dependencyDashboardApproval"],
+  extends: ["config:recommended"],
   packageRules: [
     {
       matchPackageNames: ["@tabler/icons-react", "@tabler/icons-sprite"],

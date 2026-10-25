@@ -1,17 +1,17 @@
 {
   "init": {
     "studio": {
-      "navigationLabel": "Onboarding-Abschnitte",
+      "navigationLabel": "Onboarding Bereiche",
       "back": "Zurück",
       "buildBoard": "Brett bauen",
       "common": {
-        "unknownError": "Etwas ist schief gelaufen. Deine Wahl ist noch hier; versuche es erneut."
+        "unknownError": "Etwas ist schief gelaufen. Deine Auswahl ist noch hier; versuche es erneut."
       },
       "claim": {
         "checking": "Sicherstellen dieser Onboarding-Sitzung…",
         "checkingTitle": "Sichere Einrichtung vorbereiten",
-        "lockedTitle": "Setup ist in einem anderen Browser geöffnet",
-        "lockedDescription": "Fahren Sie dort fort oder warten Sie, bis die sichere erste Sitzung abläuft, bevor Sie es erneut versuchen.",
+        "lockedTitle": "Die Einrichtung ist bereits in einem anderen Browser geöffnet",
+        "lockedDescription": "Fahren Sie dort fort oder warten Sie darauf, dass die sichere erste Sitzung abläuft, bevor Sie es erneut versuchen.",
         "signInTitle": "Administratoranmeldung erforderlich",
         "signInDescription": "Ein Administrator existiert bereits. Melden Sie sich an, um das Setup fortzusetzen, ohne Zugangsdaten oder Zugang zum Service freizugeben.",
         "signIn": "Anmelden und fortsetzen",
@@ -152,7 +152,7 @@
         "columns": "Brettspalten",
         "columnsDescription": "Spalten definieren das horizontale Raster für die Größe und Positionierung von Elementen. 12 ist für die meisten Leute reichlich.",
         "columnCount": "{count, plural, one {# Spalte} other {# Spalten}}",
-        "leftSidebar": "Left sidebar",
+        "leftSidebar": "",
         "rightSidebar": "Sidebar rechts",
         "previewLabel": "Live-Vorschau des ersten Board-Layouts"
       },
@@ -167,11 +167,11 @@
           "loginAction": "Anmelden, um Assistent zu konfigurieren"
         },
         "workshopSetup": {
-          "title": "Homarr Workshop",
+          "title": "",
           "description": "Durchsuchen Sie Community-benutzerdefinierte Widgets, prüfen Sie die gewünschten Fähigkeiten, installieren Sie sie und veröffentlichen Sie Ihre eigene Arbeit, ohne Code zwischen den Servern zu kopieren.",
           "available": "Verfügbar",
           "checking": "Überprüfe…",
-          "unavailable": "Unavailable",
+          "unavailable": "",
           "discoverTitle": "Entdecken",
           "discoverDescription": "Finden Sie Widgets für echte selbstgehostete Workflows.",
           "installTitle": "Überprüfen und installieren",
@@ -181,7 +181,7 @@
           "browse": "Workshop durchsuchen"
         },
         "mcpSetup": {
-          "title": "Homarr MCP",
+          "title": "",
           "description": "Verbinden Sie Claude, Codex oder einen anderen MCP-Client mit Homarr's typisierten Tools. API-Schlüssel behalten den Zugriff explizit und widerrufbar.",
           "endpoint": "Streambarer HTTP-Endpunkt",
           "keyTitle": "Diesen Schlüssel jetzt kopieren",
@@ -203,7 +203,7 @@
         "columns": "Brettspalten",
         "columnsValue": "{count, plural, one {# Spalte} other {# Spalten}}",
         "sidebars": "Seitenleisten",
-        "sidebarsValue": "{count, plural, =0 {None} one {# sidebar} other {# sidebars}}",
+        "sidebarsValue": "",
         "layouts": "Reaktive Layouts",
         "layoutsValue": "Mobile + Basis",
         "integrations": "Integrationen",
@@ -799,6 +799,11 @@
       }
     },
     "field": {
+      "url": {
+        "helpLabel": "Beispiele für URL-Formate",
+        "examples": "Beispiele für unterstützte Links",
+        "requiresHandler": "Benutzerdefinierte Protokolle erfordern eine zugeordnete Anwendung auf deinem Gerät."
+      },
       "description": {
         "label": "Beschreibung"
       },
@@ -916,11 +921,11 @@
       },
       "action": {
         "components": "Komponenten",
-        "format": "Format",
-        "insertStarter": "Insert starter",
+        "format": "",
+        "insertStarter": "",
         "redo": "Wiederholen",
         "copied": "Kopiert",
-        "schema": "Schema"
+        "schema": ""
       },
       "reference": {
         "minimal": "Minimales Beispiel",
@@ -935,14 +940,14 @@
         "errors": "{count, number} Fehler",
         "warnings": "{count, number} Warnungen",
         "ready": "Keine Tickets gefunden",
-        "position": "Ln {line, number}, Col {column, number}",
+        "position": "",
         "characters": "{count, number} Zeichen",
-        "charactersWithLimit": "{count, number} / {limit, number}"
+        "charactersWithLimit": ""
       },
       "diagnostics": {
         "title": "Vorlagendiagnostik",
         "line": "Linie {line, number}",
-        "ast": "{value}",
+        "ast": "",
         "bindingTypeConflict": "Die Eingabe \"{value}\" wird von Steuerelementen mit inkompatiblen Werttypen geteilt.",
         "runtimeBindingTypeConflict": "Die Eingabe \"{value}\" ist als {firstType} und {secondType} gebunden.",
         "dynamicRequestId": "Eine wörtliche RequestId ist erforderlich. Dynamische Request-IDs werden nicht akzeptiert.",
@@ -966,7 +971,7 @@
         "sources": "API-Quellen",
         "requests": "Anfragen",
         "options": "Optionen",
-        "jsx": "JSX",
+        "jsx": "",
         "preview": "Vorschau"
       },
       "status": {
@@ -997,7 +1002,7 @@
       "builder": {
         "advancedManifest": "Erweitertes rohes Manifest",
         "advancedJson": "Erweitertes Manifest JSON",
-        "manifestFilename": "widget.json",
+        "manifestFilename": "",
         "request": "Anfrage {count, number}",
         "requestId": "Anfrage-ID",
         "type": "Download Client",
@@ -1014,10 +1019,10 @@
         "queryKey": "Abfrageschlüssel",
         "queryKeyInvalid": "Verwenden Sie eine eindeutige ID, die mit einem Buchstaben beginnt und nur Buchstaben, Zahlen - oder _ enthält.",
         "valueSource": "Wertequelle",
-        "literal": "Literal",
+        "literal": "",
         "widgetOption": "Widget Option",
         "invocationParameter": "Aufruf-Parameter",
-        "option": "Option",
+        "option": "",
         "parameterName": "Parametername",
         "value": "Wert",
         "removeQueryValue": "Abfragewert entfernen",
@@ -1068,7 +1073,7 @@
       },
       "sources": {
         "title": "API-Quellen und Zugangsdaten",
-        "newName": "API {count, number}",
+        "newName": "",
         "duplicateSourceId": "API-Quell-IDs müssen eindeutig sein.",
         "credentialRemoved": "Anmeldeinformationen entfernt",
         "credentialRemovedDescription": "Der gespeicherte Wert wurde gelöscht.",
@@ -1092,7 +1097,7 @@
         "advanced": "Erweitert",
         "add": "Weitere API-Quelle hinzufügen",
         "sourceType": "Integration",
-        "manualSource": "HTTP API",
+        "manualSource": "",
         "existingIntegration": "Vorhandene Integration",
         "integrationType": "Integrationstyp",
         "selectIntegration": "Konfigurierte Integration",
@@ -1163,9 +1168,9 @@
         "runAction": "Aktion ausführen",
         "deleteConfirmation": "Diese Vorschau-Aktion ändert entfernte Daten über die konfigurierte API.",
         "simulated": "Aktion simuliert",
-        "httpStatus": "HTTP {status, number}",
+        "httpStatus": "",
         "tab": {
-          "widget": "Widget",
+          "widget": "",
           "data": "Daten",
           "options": "Optionen",
           "state": "Jobstatus",
@@ -1174,11 +1179,11 @@
         },
         "size": {
           "compact": "Kompakt",
-          "standard": "Standard",
+          "standard": "",
           "wide": "Breit"
         },
         "fixture": {
-          "live": "Live",
+          "live": "",
           "loading": "Wird geladen",
           "empty": "Leer",
           "error": "Fehler"
@@ -1283,7 +1288,7 @@
     "outdated": "Veraltet",
     "outdatedWarning": "Der Autor markierte diese Einreichung als veraltet. Überprüfen Sie sie sorgfältig vor dem Importieren.",
     "score": "Punkte: {count, number}",
-    "upvote": "Upvote",
+    "upvote": "",
     "downvote": "Abstimmen",
     "voteError": "Die Abstimmung konnte nicht gespeichert werden.",
     "signIn": "Mit GitHub anmelden",
@@ -1296,7 +1301,7 @@
     "installReviewTitle": "Vor der Installation überprüfen",
     "installError": "Dieses Widget kann nicht installiert werden",
     "installErrorDescription": "Die Einreichung des Workshops ist kein gültiges benutzerdefiniertes JSX v2 Widget.",
-    "useCss": "Import CSS",
+    "useCss": "",
     "importCss": "CSS aus Workshop importieren",
     "importCssConfirm": "Ersetzen Sie das aktuelle CSS durch \"{title}\"? Nichts wird gespeichert, bis Sie die Board-Einstellungen speichern.",
     "screenshotAlt": "{title} Screenshot {count, number}",
@@ -1324,8 +1329,8 @@
     "reportCategory": {
       "outdated": "Veraltet oder funktioniert nicht mehr",
       "malicious": "Bösartig",
-      "spam": "Spam",
-      "copyright": "Copyright",
+      "spam": "",
+      "copyright": "",
       "inappropriate": "Unangemessen",
       "other": "Andere"
     },
@@ -1343,7 +1348,7 @@
       "signInHint": "Melden Sie sich an, um unter Ihrer Workshop-Identität zu veröffentlichen.",
       "titleField": "Titel",
       "descriptionField": "Beschreibung",
-      "screenshots": "Screenshots",
+      "screenshots": "",
       "screenshotsDescription": "Bis zu fünf PNG-, JPEG- oder WebP-Bilder",
       "screenshotsPlaceholder": "Screenshots auswählen",
       "invalidScreenshot": "Benutzen Sie PNG, JPEG oder WebP-Bilder, die nicht größer als {maxSize} sind.",
@@ -1510,7 +1515,7 @@
       "vpn": "VPN",
       "mediaLibrary": "Medienbibliothek",
       "uptimeMonitoring": "Überwachung der Betriebszeit",
-      "beszel": "Beszel",
+      "beszel": "",
       "systemMonitoring": "Systemüberwachung",
       "security": "Sicherheit",
       "serviceVersion": "Version"
@@ -1559,6 +1564,7 @@
             "untrusted": "Dem Zertifikat wird nicht vertraut.",
             "hostnameMismatch": "Der Hostname des Zertifikats entspricht nicht der URL."
           },
+          "secondaryUrl": "",
           "alert": {
             "permission": {
               "title": "Nicht genügend Berechtigungen",
@@ -1823,7 +1829,7 @@
       "full": "Voller Zugriff auf Integrationen"
     },
     "llamacpp": {
-      "name": "llama.cpp",
+      "name": "",
       "description": "Überwachung eines lokalen llama.cpp Lama-Servers: Gesundheit, Modell- und Generationsmetriken"
     }
   },
@@ -1904,6 +1910,7 @@
       "tryAgain": "Erneut versuchen",
       "loading": "Wird geladen",
       "show": "Anzeigen",
+      "showAll": "",
       "hide": "Ausblenden",
       "undo": "Rückgängig",
       "editNamed": "{name} bearbeiten",
@@ -1913,6 +1920,7 @@
       "copied": "Kopiert",
       "refresh": "Neu laden"
     },
+    "hidden": "Versteckt",
     "pagination": {
       "pageOf": "Seite {page} von {totalPages}"
     },
@@ -1935,6 +1943,7 @@
       "clear": "Bild löschen",
       "uploadImage": "Bild hochladen",
       "results": "Bildsuchergebnisse",
+      "websiteIcon": "",
       "localImages": "Ihre Bilder",
       "svgIcons": "SVG-Symbole",
       "otherImages": "Andere Bilder",
@@ -1999,7 +2008,7 @@
         "updateAvailable": "{countUpdates} Updates verfügbar: {tag}",
         "assistant": "Assistent",
         "assistantThinking": "Denken",
-        "modifier": "Mod"
+        "modifier": ""
       }
     },
     "dangerZone": "Gefahrenbereich",
@@ -2228,11 +2237,11 @@
         },
         "width": {
           "label": "Breite",
-          "shortLabel": "W"
+          "shortLabel": ""
         },
         "height": {
           "label": "Höhe",
-          "shortLabel": "H"
+          "shortLabel": ""
         },
         "xOffset": {
           "label": "X Versatz"
@@ -2309,6 +2318,15 @@
         "appId": {
           "label": "App auswählen"
         },
+        "openIn": {
+          "label": "App öffnen in",
+          "description": "Wähle, wo diese App geöffnet wird. Die Browsereinstellungen können das Öffnen in einem separaten Fenster beeinflussen.",
+          "option": {
+            "currentTab": "Aktuellem Tab",
+            "newTab": "Neuem Tab",
+            "newWindow": "Neuem Fenster"
+          }
+        },
         "showTitle": {
           "label": "App Namen anzeigen"
         },
@@ -2358,7 +2376,7 @@
               "label": "Gitter horizontal"
             },
             "icons": {
-              "label": "Icons"
+              "label": ""
             }
           }
         },
@@ -2437,7 +2455,7 @@
         "remove": "{name} Kategorie entfernen",
         "rename": "Kategoriename für {name}",
         "assign": "Kategorie für {name}",
-        "ungrouped": "Ungrouped"
+        "ungrouped": ""
       }
     },
     "archiveTeamWarrior": {
@@ -2617,25 +2635,25 @@
         "unsupportedPrimaryTitle": "Primäre Zeitzone ist nicht verfügbar",
         "unsupportedPrimary": "{timeZone} wird in diesem Browser nicht unterstützt. UTC wird als klar markierter Fallback angezeigt.",
         "unsupportedTimeZone": "Nicht unterstützte Zeitzone: {timeZone}",
-        "accessibleTime": "{city}: {time}, {date}, {timeZone}",
+        "accessibleTime": "",
         "advancedLabel": "Erweiterte Weltuhr",
         "cities": "Weltuhren",
-        "cityCount": "{count} timezones",
+        "cityCount": "",
         "timeBarLabel": "24-Stunden-Tageszeit für {city}",
         "dayProgress": "{percent}% abgelaufen · {hours}h {minutes}m verbleibend",
         "phaseLegend": "Tageslegende",
         "tick": {
-          "midnight": "00",
-          "morning": "06",
-          "noon": "12",
-          "evening": "18",
-          "end": "24"
+          "midnight": "",
+          "morning": "",
+          "noon": "",
+          "evening": "",
+          "end": ""
         },
         "phaseRange": {
-          "night": "00–05 · 21–24",
-          "dawn": "05–08",
-          "day": "08–18",
-          "dusk": "18–21"
+          "night": "",
+          "dawn": "",
+          "day": "",
+          "dusk": ""
         },
         "phase": {
           "night": "Nacht",
@@ -2657,7 +2675,7 @@
           "options": {
             "auto": "Automatisch für Gebietsschema",
             "european": "Europäischer AQI",
-            "us": "US AQI"
+            "us": ""
           }
         },
         "showUv": {
@@ -2694,8 +2712,8 @@
           "unknown": "Kein Lesen"
         }
       },
-      "dominantPollutant": "Dominant pollutant",
-      "aqiLabel": "AQI",
+      "dominantPollutant": "",
+      "aqiLabel": "",
       "strongestPollen": "Höchste Pollen",
       "unit": {
         "concentration": "{value} μg/m3",
@@ -2703,19 +2721,19 @@
       },
       "pollutant": {
         "pm2_5": "PM2,5",
-        "pm10": "PM10",
+        "pm10": "",
         "ozone": "Ozon",
         "nitrogenDioxide": "Stickstoffdioxid",
-        "sulphurDioxide": "Sulphur dioxide",
+        "sulphurDioxide": "",
         "carbonMonoxide": "Kohlenmonoxid"
       },
       "pollen": {
-        "alder": "Alder",
+        "alder": "",
         "birch": "Birke",
         "grass": "Gras",
         "mugwort": "Muscheln",
         "olive": "Olivenöl",
-        "ragweed": "Ragweed"
+        "ragweed": ""
       },
       "compact": {
         "sixHourTrend": "AQI Trend für die nächsten sechs Stunden"
@@ -2726,14 +2744,14 @@
         "pollutants": "Schadstoffkonzentrationen",
         "pollen": "Pollenkonzentrationen",
         "sevenDayForecast": "Maximale 7-Tage Vorhersage",
-        "aqiValue": "AQI {value}",
+        "aqiValue": "",
         "uvValue": "UV- {value}",
         "uvShort": "UV- {value}",
         "noForecast": "Keine Prognosedaten verfügbar"
       }
     },
     "countdown": {
-      "name": "Countdowns",
+      "name": "",
       "description": "Trackt anstehende Events und wiederkehrende Jubiläen.",
       "option": {
         "events": {
@@ -2779,7 +2797,7 @@
       "invalid": {
         "title": "Einige Ereignisse können nicht angezeigt werden",
         "description": "{count, plural, one {Ein Ereignis hat ein ungültiges Datum oder nicht unterstützte Zeitzone.} other {# Ereignisse haben ein ungültiges Datum oder eine nicht unterstützte Zeitzone.}}",
-        "value": "Unavailable"
+        "value": ""
       },
       "alert": {
         "notifications": "Browser-Benachrichtigungen",
@@ -2788,14 +2806,14 @@
       }
     },
     "timer": {
-      "name": "Timer / Pomodoro",
+      "name": "",
       "description": "Führt einen einfachen Timer oder eine konfigurierbare Pomodoro-Sequenz aus.",
       "option": {
         "mode": {
           "label": "Modus",
           "options": {
-            "timer": "Timer",
-            "pomodoro": "Pomodoro"
+            "timer": "",
+            "pomodoro": ""
           }
         },
         "timerMinutes": {
@@ -2821,18 +2839,18 @@
         }
       },
       "phase": {
-        "timer": "Timer",
+        "timer": "",
         "focus": "Fokus",
         "shortBreak": "Kurze Pause",
         "longBreak": "Lange Pause"
       },
       "action": {
         "start": "Starten",
-        "pause": "Pause",
-        "reset": "Reset"
+        "pause": "",
+        "reset": ""
       },
       "attention": {
-        "timerComplete": "Timer complete",
+        "timerComplete": "",
         "phaseReady": "{phase} bereit"
       },
       "progress": "Timer-Fortschritt: {progress}%",
@@ -2840,11 +2858,11 @@
         "completedFocus": "{count, plural, =0 {Keine Fokussitzungen abgeschlossen} one {# Fokussitzung abgeschlossen} other {# Fokussitzungen abgeschlossen}}"
       },
       "alert": {
-        "title": "Timer complete",
+        "title": "",
         "completed": "{phase} abgeschlossen."
       },
       "advanced": {
-        "sequence": "Pomodoro sequence",
+        "sequence": "",
         "focusSession": "{session} fokussieren",
         "settings": "Permanente Einstellungen",
         "settingsHint": "Verwenden Sie das Kontextmenü des Widgets, um diese Board-Einstellungen zu bearbeiten.",
@@ -3066,7 +3084,7 @@
       "state": {
         "on": "An",
         "off": "Aus",
-        "unavailable": "Unavailable",
+        "unavailable": "",
         "unknown": "Unbekannt"
       },
       "advanced": {
@@ -3221,6 +3239,13 @@
         },
         "showUnmonitored": {
           "label": "Nicht überwachte anzeigen"
+        },
+        "viewMode": {
+          "label": "Ansicht"
+        },
+        "hideHeader": {
+          "label": "",
+          "description": ""
         }
       },
       "advanced": {
@@ -3229,6 +3254,22 @@
         "eventCount": "{count, plural, one {# Ereignis} other {# Ereignisse}}",
         "loading": "Kalenderereignisse werden geladen...",
         "noEvents": "Keine Termine in diesem Monat"
+      },
+      "view": {
+        "compact": "Kompakter Monat",
+        "month": "Monat",
+        "week": "Woche",
+        "day": "Tag",
+        "agenda": "Arbeitsplan"
+      },
+      "controls": {
+        "today": "Heute",
+        "previous": "Vorheriger Zeitraum",
+        "next": "Nächster Zeitraum",
+        "noEvents": "Keine Termine in diesem Zeitraum",
+        "more": "{count} mehr",
+        "timeSlot": "Zeitfenster",
+        "weekday": "Wochentag"
       }
     },
     "weather": {
@@ -3308,11 +3349,11 @@
         "currentHumidity": "Aktuelle Luftfeuchtigkeit",
         "wind": "Wind / Bögen ({unit})",
         "currentWind": "Aktueller Wind / Bögen",
-        "windValue": "{speed} / {gusts} {unit}",
+        "windValue": "",
         "windDetail": "Max Wind / Gusts: {speed} / {gusts} {unit}",
         "nextHourPrecipitation": "Niederschlag nächste Stunde",
         "precipitationChance": "Niederschlag Chance",
-        "precipitationValue": "{probability}% · {amount} mm",
+        "precipitationValue": "",
         "precipitationDetail": "Niederschlag: {probability}% · {amount} mm",
         "todayUv": "Heutiger maximaler UV-Index",
         "uvIndex": "Maximaler UV-Index: {value}",
@@ -3325,7 +3366,7 @@
           "humidity": "Durchschnittliche Luftfeuchtigkeit",
           "wind": "Max Wind / Bögen",
           "uv": "Max UV-Index",
-          "daylight": "Daylight"
+          "daylight": ""
         },
         "sun": "Sonnenaufgang / Sonnenuntergang",
         "noForecast": "Keine Prognosedaten verfügbar"
@@ -3382,7 +3423,7 @@
           "label": "Standard Tab"
         },
         "tabOrder": {
-          "label": "Tab order",
+          "label": "",
           "systemFirst": "System dann Cluster",
           "clusterFirst": "Cluster dann System"
         },
@@ -3540,7 +3581,7 @@
       },
       "source": {
         "url": "Quelle: {url}",
-        "unavailable": "{source}: unavailable"
+        "unavailable": ""
       },
       "instances": {
         "title": "Instanzen"
@@ -3573,8 +3614,8 @@
       "status": {
         "running": "Wird ausgeführt",
         "notRunning": "Nicht ausgeführt",
-        "unavailable": "Unavailable",
-        "vpn": "VPN: {status}"
+        "unavailable": "",
+        "vpn": ""
       }
     },
     "ups": {
@@ -3608,7 +3649,7 @@
         "temperature": "Temperatur",
         "manufacturer": "Hersteller",
         "model": "Modell",
-        "serial": "Serial"
+        "serial": ""
       },
       "error": {
         "internalServerError": "Fehler beim Abrufen der UPS Daten"
@@ -3912,12 +3953,29 @@
         "transcoding": "Transkodierung",
         "paused": "Pausiert",
         "remaining": "{minutes} Min. verbleibend",
-        "seasonEpisode": "S{season} E{episode}",
+        "seasonEpisode": "",
+        "state": {
+          "playing": "",
+          "buffering": ""
+        },
+        "details": {
+          "device": "Gerät",
+          "location": "",
+          "sessionId": "",
+          "bitrate": "",
+          "audioHandling": "",
+          "direct": "Direkt",
+          "transcode": "",
+          "containerChanged": "",
+          "position": "",
+          "unknown": ""
+        },
         "metadata": {
           "title": "Statistiken für Nerds",
           "video": {
             "title": "Video",
-            "resolution": "Auflösung"
+            "resolution": "Auflösung",
+            "frameRate": ""
           },
           "audio": {
             "title": "Audio",
@@ -3938,6 +3996,109 @@
         "playing": "{count} spielen",
         "transcoding": "{count} Umkodierung"
       }
+    },
+    "thingport-libraryStats": {
+      "name": "",
+      "description": "",
+      "title": "",
+      "option": {
+        "showModels": {
+          "label": ""
+        },
+        "showCollections": {
+          "label": ""
+        },
+        "showCategories": {
+          "label": ""
+        },
+        "showAuthors": {
+          "label": ""
+        }
+      },
+      "models": "",
+      "collections": "",
+      "categories": "Kategorien",
+      "authors": ""
+    },
+    "thingport-featuredModel": {
+      "name": "",
+      "description": "",
+      "option": {
+        "autoRotate": {
+          "label": ""
+        },
+        "showDetails": {
+          "label": ""
+        }
+      },
+      "title": "",
+      "empty": "",
+      "hint": "",
+      "noPreview": "",
+      "views": "",
+      "prints": ""
+    },
+    "thingport-activityHeatmap": {
+      "name": "",
+      "description": "",
+      "title": "",
+      "option": {
+        "weekStart": {
+          "label": "Erster Tag der Woche",
+          "option": {
+            "sunday": "",
+            "monday": ""
+          }
+        },
+        "showTotal": {
+          "label": ""
+        },
+        "showLegend": {
+          "label": ""
+        }
+      },
+      "lastYear": "",
+      "totalLastYear": "",
+      "totalInYear": "",
+      "dayTotal": "",
+      "dayEmpty": "",
+      "kinds": {
+        "import": "",
+        "upload": "Insgesamt hochgeladen",
+        "download": "Insgesamt heruntergeladen",
+        "slicer": "",
+        "delete": "Gelöscht"
+      },
+      "less": "",
+      "more": ""
+    },
+    "thingport-models": {
+      "name": "",
+      "description": "",
+      "title": "",
+      "option": {
+        "defaultTab": {
+          "label": "Standard Tab"
+        },
+        "itemCount": {
+          "label": ""
+        },
+        "showThumbnails": {
+          "label": ""
+        }
+      },
+      "tab": {
+        "recentlyAdded": "",
+        "topViewed": "",
+        "topPrinted": ""
+      },
+      "empty": {
+        "recentlyAdded": "",
+        "topViewed": "",
+        "topPrinted": ""
+      },
+      "views": "",
+      "prints": ""
     },
     "paperlessNgx": {
       "description": "Übersicht des Paperless-ngx Dokumentenarchivs",
@@ -4042,7 +4203,7 @@
         "thresholdMode": {
           "option": {
             "absolute": "",
-            "percent": ""
+            "percent": "Prozent der gesamten Hosts"
           }
         },
         "hostsNeedingUpdatesThresholdMode": {
@@ -4223,7 +4384,7 @@
       "actions": {
         "previousPhoto": "Vorheriges Foto",
         "nextPhoto": "Nächstes Foto",
-        "pauseSlideshow": "Pause slideshow",
+        "pauseSlideshow": "",
         "resumeSlideshow": "Diashow fortsetzen",
         "toggleSlideshow": "Diashow pausieren oder fortsetzen",
         "photo": "Foto- {number}"
@@ -4611,27 +4772,59 @@
       "name": "Veröffentlichungen",
       "description": "Zeigt eine Liste der aktuellen Version der angegebenen Repositories mit der angegebenen Version regex an.",
       "option": {
+        "layout": {
+          "label": "Darstellung",
+          "description": "",
+          "option": {
+            "comfortable": "Bequemer",
+            "compact": "Kompakt"
+          }
+        },
+        "summary": {
+          "label": "",
+          "description": "",
+          "option": {
+            "detailed": "",
+            "count": "",
+            "hidden": "Versteckt"
+          }
+        },
+        "sections": {
+          "label": "",
+          "description": ""
+        },
+        "collapsedSections": {
+          "label": "",
+          "description": ""
+        },
         "newReleaseWithin": {
           "label": "Neue Version innerhalb",
-          "description": "Anwendungsbeispiel: 1w (1 Woche), 10M (10 Monate). Akzeptierte Einheiten h (Stunden), d (Tage), w (Wochen), M (Monate), y (Jahre). Leer lassen für keine Hervorhebung neuer Releases."
+          "description": "Anwendungsbeispiel: 1w (1 Woche), 10M (10 Monate). Akzeptierte Einheiten h (Stunden), d (Tage), w (Wochen), M (Monate), y (Jahre). Leer lassen für keine Hervorhebung neuer Releases.",
+          "option": {
+            "never": "",
+            "1d": "1 tage",
+            "3d": "3 tage",
+            "1w": "1 woche",
+            "2w": "",
+            "1M": "1 monat",
+            "3M": "3 monate"
+          }
         },
         "staleReleaseWithin": {
           "label": "Veraltete Version innerhalb",
-          "description": "Anwendungsbeispiel: 1w (1 Woche), 10M (10 Monate). Akzeptierte Einheiten h (Stunden), d (Tage), w (Wochen), M (Monate), y (Jahre). Leer lassen für keine Hervorhebung von veralteten Releases."
+          "description": "Anwendungsbeispiel: 1w (1 Woche), 10M (10 Monate). Akzeptierte Einheiten h (Stunden), d (Tage), w (Wochen), M (Monate), y (Jahre). Leer lassen für keine Hervorhebung von veralteten Releases.",
+          "option": {
+            "never": "",
+            "1M": "1 monat",
+            "3M": "3 monate",
+            "6M": "6 monate",
+            "1y": "1 jahr",
+            "2y": "2 jahre"
+          }
         },
-        "showOnlyHighlighted": {
-          "label": "Nur markierte anzeigen",
-          "description": "Nur neue oder veraltete Versionen anzeigen. Wie oben beschrieben."
-        },
-        "showDetails": {
-          "label": "Details anzeigen"
-        },
-        "showOnlyIcon": {
-          "label": "Nur Symbole anzeigen"
-        },
-        "topReleases": {
-          "label": "Top Releases",
-          "description": "Die maximale Anzahl der neuesten Versionen, die angezeigt werden sollen. Null bedeutet kein Limit."
+        "showChangelogPreview": {
+          "label": "",
+          "description": ""
         },
         "repositories": {
           "label": "Repositories",
@@ -4705,36 +4898,106 @@
           }
         }
       },
-      "not-found": "Nicht gefunden",
-      "pre-release": "Vorveröffentlichung",
-      "archived": "Archiviert",
-      "forked": "Forked",
+      "summary": {
+        "newReleases": "",
+        "newShort": "neu",
+        "tracked": "",
+        "caughtUp": "",
+        "outdated": "",
+        "outdatedShort": "veraltet",
+        "failing": "",
+        "failingShort": "",
+        "latest": "",
+        "issues": ""
+      },
+      "section": {
+        "new": {
+          "label": "Neu",
+          "description": ""
+        },
+        "attention": {
+          "label": "Benötigt Aufmerksamkeit",
+          "description": ""
+        },
+        "upToDate": {
+          "label": "Aktuell",
+          "description": ""
+        },
+        "quiet": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "status": {
+        "new": "",
+        "outdated": "",
+        "error": "",
+        "upToDate": "aktuell",
+        "quiet": ""
+      },
+      "tag": {
+        "new": "Neu",
+        "preRelease": "",
+        "resolvedFrom": "",
+        "quiet": "",
+        "archived": "Archiviert",
+        "fork": ""
+      },
+      "issue": {
+        "affected": "",
+        "rateLimited": {
+          "title": "",
+          "hint": ""
+        },
+        "notFound": {
+          "title": "",
+          "hint": ""
+        },
+        "noMatchingVersion": {
+          "title": "",
+          "hint": ""
+        },
+        "noReleasesFound": {
+          "title": "",
+          "hint": ""
+        },
+        "invalidIdentifier": {
+          "title": "Ungültige Kennung",
+          "hint": ""
+        },
+        "noProviderSelected": {
+          "title": "Kein Anbieter ausgewählt",
+          "hint": ""
+        },
+        "noProviderResponse": {
+          "title": "",
+          "hint": ""
+        },
+        "unexpected": {
+          "title": "",
+          "hint": ""
+        }
+      },
+      "markViewed": "Als gelesen markieren",
+      "markAllViewed": "",
+      "markEntryViewed": "",
+      "viewed": "",
+      "copyVersion": "",
+      "copied": "Kopiert",
+      "published": "",
+      "whatChanged": "",
+      "noNotes": "",
+      "changes": "",
       "starsCount": "Sterne",
       "forksCount": "Ableger",
-      "issuesCount": "Offene Tickets",
-      "markViewed": "Als gelesen markieren",
-      "openProjectPage": "Projektseite öffnen",
-      "openReleasePage": "Release Seite öffnen",
-      "releaseDescription": "Release Beschreibung",
-      "projectDescription": "Projektbeschreibung",
+      "openIssues": "",
+      "created": "Erstellt",
+      "releasePage": "",
+      "projectPage": "",
       "runningVersions": "Laufende Versionen",
       "upToDate": "Aktuell",
       "updateAvailable": "Update verfügbar",
-      "unknownStatus": "Unbekannt",
-      "created": "Erstellt",
-      "error": {
-        "label": "Fehler",
-        "messages": {
-          "invalidIdentifier": "Ungültige Kennung",
-          "noMatchingVersion": "Keine passende Version gefunden",
-          "noReleasesFound": "Keine Veröffentlichungen gefunden",
-          "noProviderSelected": "",
-          "noProviderResponse": "Keine Antwort vom Anbieter",
-          "unexpected": ""
-        }
-      },
-      "expandDetails": "Details für {name} anzeigen",
-      "collapseDetails": "Details für {name} ausblenden"
+      "unknownStatus": "Unbekannt"
     },
     "networkControllerSummary": {
       "advanced": {
@@ -4752,10 +5015,10 @@
           "countConnected": "{count, plural, one {# verbunden} other {# verbunden}}",
           "label": "VPN"
         },
-        "wan": "WAN",
-        "web": "Web",
+        "wan": "",
+        "web": "",
         "wifi": "WLAN",
-        "lan": "LAN"
+        "lan": ""
       },
       "error": {
         "unknownContentOption": "Unbekannte Inhaltsoption für das Widget der Netzwerk Controller Zusammenfassung: "
@@ -4835,9 +5098,9 @@
         "noInterfaces": "Noch keine Netzwerkschnittstellendaten"
       },
       "versionUnknown": "Unbekannte Version",
-      "metricAccessible": "{metric}: {value}%, {status}",
+      "metricAccessible": "",
       "status": {
-        "normal": "Normal",
+        "normal": "",
         "warning": "Warnung",
         "critical": "Kritisch"
       }
@@ -4855,8 +5118,8 @@
           "option": {
             "auto": "Automatisch",
             "plain": "Einfacher Text",
-            "markdown": "Markdown",
-            "html": "HTML"
+            "markdown": "",
+            "html": ""
           }
         }
       },
@@ -4907,45 +5170,116 @@
     "uptimeKuma": {
       "description": "Laufzeit Statistiken von der Uptime Kuma Statusseite überwachen",
       "option": {
-        "showAverageUptime": {
-          "label": "Durchschnittliche Laufzeit anzeigen",
-          "description": "Zeige den durchschnittlichen Prozentsatz der 24 Stunden Laufzeit an"
+        "statusPageSlug": {
+          "label": "Status Page Slug",
+          "description": ""
         },
-        "showUptimeRing": {
-          "label": "Uptime Ring anzeigen",
-          "description": "Einen Fortschrittsring neben dem durchschnittlichen Laufzeit Wert anzeigen"
+        "summaryOnly": {
+          "label": "",
+          "description": ""
         },
-        "showTotalMonitors": {
-          "label": "Alle Monitore anzeigen",
-          "description": "Zeigt die Gesamtzahl der konfigurierten Monitore an"
+        "showSummary": {
+          "label": "",
+          "description": ""
         },
-        "showUpCount": {
-          "label": "Aktive anzeigen",
-          "description": "Zeigt an, wie viele Monitore derzeit aktiv sind"
+        "showIncidents": {
+          "label": "",
+          "description": ""
         },
-        "showDownCount": {
-          "label": "Inaktive anzeigen",
-          "description": "Zeigt an, wie viele Monitore derzeit nicht verfügbar sind"
+        "groupByStatusPageGroup": {
+          "label": "",
+          "description": ""
         },
-        "showPausedCount": {
-          "label": "Pausierte anzeigen",
-          "description": "Zeigt an, wie viele Monitore derzeit pausiert sind"
+        "showOnlyProblems": {
+          "label": "",
+          "description": ""
+        },
+        "sortBy": {
+          "label": "",
+          "option": {
+            "status": "",
+            "statusPage": "",
+            "name": "Job Name",
+            "uptime": ""
+          }
+        },
+        "showHeartbeatBar": {
+          "label": "",
+          "description": ""
+        },
+        "showUptime": {
+          "label": ""
+        },
+        "showResponseTime": {
+          "label": ""
+        },
+        "showCertificateExpiry": {
+          "label": "",
+          "description": ""
         }
-      },
-      "averageUptime": "Durchschnittliche Laufzeit (24h)",
-      "stats": {
-        "totalMonitors": "Alle Monitore",
-        "upCount": "Aktiv",
-        "downCount": "Inaktiv",
-        "pausedCount": "Pausiert"
-      },
-      "error": {
-        "internalServerError": "Fehler beim Abrufen der Laufzeit Daten"
       },
       "status": {
         "up": "Upload gesamt",
         "down": "Download Geschwindigkeit",
-        "paused": "Pausiert"
+        "pending": "Ausstehend",
+        "maintenance": "",
+        "stale": "",
+        "unknown": ""
+      },
+      "overall": {
+        "operational": "",
+        "degraded": "",
+        "outage": "",
+        "maintenance": "",
+        "unknown": ""
+      },
+      "short": {
+        "operational": "",
+        "down": "",
+        "pending": "",
+        "maintenance": "",
+        "unknown": ""
+      },
+      "summary": {
+        "upRatio": "",
+        "upRatioShort": "",
+        "averageUptime": "",
+        "uptimeShort": "",
+        "statusCount": ""
+      },
+      "unit": {
+        "milliseconds": ""
+      },
+      "heartbeatBar": {
+        "label": ""
+      },
+      "detail": {
+        "checked": "",
+        "certificate": ""
+      },
+      "notice": {
+        "label": "",
+        "untitled": "Unbenannt"
+      },
+      "empty": {
+        "title": "",
+        "description": ""
+      },
+      "allClear": "",
+      "error": {
+        "internalServerError": "Fehler beim Abrufen der Laufzeit Daten"
+      },
+      "monitorType": {
+        "http": "",
+        "keyword": "",
+        "jsonQuery": "",
+        "port": "",
+        "ping": "Ping",
+        "dns": "DNS",
+        "docker": "",
+        "push": "",
+        "group": "Gruppe",
+        "realBrowser": ""
       }
     },
     "traefik": {
@@ -4980,9 +5314,9 @@
         "internalServerError": ""
       },
       "resourceType": {
-        "router": "Router",
-        "service": "Service",
-        "middleware": "Middleware"
+        "router": "",
+        "service": "",
+        "middleware": ""
       },
       "resourceStatus": {
         "enabled": "Aktiviert",
@@ -5076,7 +5410,7 @@
         "network": "Netzwerk",
         "up": "OBEN",
         "down": "UNTEN",
-        "memoryTooltip": "{used} / {available} ({percent}%)"
+        "memoryTooltip": ""
       }
     },
     "systemDisks": {
@@ -5106,7 +5440,7 @@
       },
       "status": {
         "unhealthy": "Fehlerhaft",
-        "smart": "SMART",
+        "smart": "",
         "free": "{percentage}% kostenlos"
       }
     },
@@ -5323,10 +5657,10 @@
         }
       },
       "period": {
-        "live": "Live",
-        "oneHour": "1h",
-        "twelveHours": "12h",
-        "oneDay": "24h",
+        "live": "",
+        "oneHour": "",
+        "twelveHours": "",
+        "oneDay": "",
         "oneWeek": "1W",
         "thirtyDays": "30T"
       }
@@ -5413,9 +5747,9 @@
       }
     },
     "llamacpp": {
-      "name": "llama.cpp",
+      "name": "",
       "description": "Zeigen Sie die gesunde, geladene Modell- und Generationsgeschwindigkeit Ihres lokalen Lama.cpp Servers an.",
-      "title": "llama.cpp",
+      "title": "",
       "status": {
         "unhealthy": "Ungesund ({status})"
       },
@@ -5443,10 +5777,10 @@
         "unreachable": "llama-Server ist nicht erreichbar"
       },
       "unit": {
-        "speed": "{value} t/s",
-        "parameters": "{value}B",
-        "none": "—",
-        "speedShort": "t/s"
+        "speed": "",
+        "parameters": "",
+        "none": "",
+        "speedShort": ""
       },
       "option": {
         "showTitle": {
@@ -5505,7 +5839,7 @@
       "moveDown": "Nach unten bewegen",
       "remove": "Metrik entfernen",
       "loading": "Lade…",
-      "unavailable": "Unavailable",
+      "unavailable": "",
       "refreshFailed": "Aktualisierung fehlgeschlagen — Anzeige der gespeicherten Daten",
       "stale": "Gespeicherte Daten — Aktualisieren zum Aktualisieren",
       "table": {
@@ -5552,10 +5886,12 @@
       "allHidden": "Alle Metriken sind in dieser Ansicht ausgeblendet. Benutzen Sie diese Ansicht anpassen, um sie wiederherzustellen."
     },
     "wazuh": {
+      "name": "",
+      "description": "",
       "target": {
         "api": "Wazuh Server API",
         "indexer": "Wazuh Indexer",
-        "wazuh": "Wazuh"
+        "wazuh": ""
       },
       "severity": {
         "low": "Niedrig",
@@ -5570,7 +5906,15 @@
         },
         "certificate": {
           "title": "{target} Zertifikat ist nicht vertrauenswürdig",
-          "description": "Wazuh verwendet standardmäßig ein selbstsigniertes Zertifikat. Führen Sie \"Testverbindung\" aus und vertrauen Sie dem Zertifikat oder fügen Sie Ihre CA unter Einstellungen → Zertifikate hinzu."
+          "description": ""
+        },
+        "certificateHostname": {
+          "title": "",
+          "description": ""
+        },
+        "certificateExpired": {
+          "title": "",
+          "description": ""
         },
         "unreachable": {
           "title": "Kann {target} nicht erreichen",
@@ -5595,101 +5939,148 @@
         "unknown": {
           "title": "Konnte Daten von {target} nicht laden",
           "description": "Überprüfen Sie die Homarr-Protokolle für Details."
-        }
+        },
+        "viewSaveTitle": "",
+        "viewSaveMessage": ""
       },
       "range": {
-        "1h": "1h",
-        "24h": "24h",
+        "1h": "",
+        "24h": "",
         "7d": "7T",
         "30d": "30T"
       },
-      "levelTooltip": "Regellevel {level} ({severity})"
-    },
-    "wazuhAgents": {
-      "name": "Wazuh Agenten",
-      "description": "Sortierbare Liste von Wazuh Agenten mit Status, Betriebssystem, Version und letzter Bewahrung",
+      "levelTooltip": "Regellevel {level} ({severity})",
+      "summary": {
+        "title": "Alarm-Schwere · {range}",
+        "alerts": "warnungen",
+        "none": "Keine Warnungen",
+        "trend": {
+          "new": "neu",
+          "tooltip": "Vorheriger Zeitraum: {previous}"
+        },
+        "previous": "Vorheriger {range}: {count}",
+        "maxLevel": "Max. Level {level}",
+        "health": "Index Gesundheit: {status}",
+        "manager": "Manager- {version}"
+      },
+      "alerts": {
+        "title": "Alarme · Level {level}+ · {hours}h",
+        "empty": "Keine Warnungen auf diesem Level. Alle ruhig.",
+        "rule": "Regel- {id}",
+        "openInDashboard": "Warnung im Wazuh Dashboard öffnen"
+      },
+      "timeline": {
+        "title": "Alarme Zeitleiste · {range}",
+        "total": "{count} Warnungen",
+        "interval": "pro {interval}"
+      },
+      "top": {
+        "title": {
+          "rules": "Top-Regeln · {range}",
+          "agents": "Top Agenten · {range}",
+          "sourceIps": "Top-Quell-IPs · {range}",
+          "mitreTactics": "MITRE-Taktik · {range}",
+          "mitreTechniques": ""
+        },
+        "empty": {
+          "rules": "Keine Warnungen in diesem Zeitraum",
+          "agents": "Keine Warnungen in diesem Zeitraum",
+          "sourceIps": "Keine Warnungen mit Quell-IP in diesem Zeitraum",
+          "mitreTactics": "Keine Warnungen für MITRE ATT&CK in diesem Zeitraum",
+          "mitreTechniques": "Keine Warnungen für MITRE ATT&CK in diesem Zeitraum"
+        },
+        "totalTooltip": "{count} passende Warnungen",
+        "private": "",
+        "public": "Öffentlich",
+        "agents": "Gesehen auf {count} Agenten",
+        "others": "{count} weitere Warnungen in anderen Einträgen"
+      },
+      "agents": {
+        "title": "Agenten",
+        "total": "{count} Agenten",
+        "status": {
+          "active": "Aktiv",
+          "disconnected": "Verbindung getrennt",
+          "neverConnected": "Nie verbunden",
+          "pending": "Ausstehend"
+        },
+        "statusLabel": {
+          "active": "Aktiv",
+          "disconnected": "Verbindung getrennt",
+          "never_connected": "Nie verbunden",
+          "pending": "Ausstehend",
+          "unknown": "Unbekannt"
+        },
+        "live": "",
+        "snapshot": "",
+        "snapshotHint": "Lesen Sie vom Wazuh Agent Snapshot (wazuh-monitoring), der bei {time}aufgenommen wurde. Fügen Sie Server-API-Zugangsdaten für Live-Daten hinzu.",
+        "staleSnapshot": "Der Agenten-Snapshot von {time} ist veraltet. Überprüfen Sie, ob der Wazuh Dashboard-Überwachungsauftrag ausgeführt wird, oder fügen Sie Server-API-Anmeldeinformationen hinzu.",
+        "noDisconnected": "Alle Agenten sind verbunden",
+        "empty": "Keine Agenten entsprechen diesem Filter",
+        "column": {
+          "status": "Status",
+          "name": "Job Name",
+          "ip": "",
+          "os": "OS",
+          "version": "Version",
+          "lastKeepAlive": "",
+          "groups": "Gruppen"
+        },
+        "outdated": "Ältere als die neueste Agent Version ({version})"
+      },
+      "vulnerabilities": {
+        "title": "Schwachstellen",
+        "topCves": "Top CVes",
+        "score": "Punktzahl",
+        "agentsShort": "Agenten",
+        "topAgents": "Schwächste Agenten",
+        "criticalHigh": "Krit / Hoch",
+        "totalTooltip": "{count} Ergebnisse auf {agents} Agenten",
+        "affected": "{count} Agenten",
+        "empty": "Keine Schwachstellen gefunden",
+        "distribution": "Schweregrad Verteilung. {unscored} Ergebnisse ohne Punktzahl werden nicht angezeigt.",
+        "worst": "Schlimm: {id} ({score}) auf {agents} Agenten"
+      },
+      "fim": {
+        "title": "Dateiintegrität · {range}",
+        "event": {
+          "added": "Hinzugefügt am",
+          "modified": "Geändert",
+          "deleted": "Gelöscht",
+          "unknown": "Geändert"
+        },
+        "empty": "Keine Integritäts-Ereignisse in diesem Zeitraum",
+        "user": "von {user}",
+        "registry": ""
+      },
+      "authFailures": {
+        "title": "Auth Fehler · {hours}h",
+        "seriesTooltip": "Alle Agenten über die letzte {hours}h",
+        "peak": "Maximaler {count}/bucket",
+        "empty": "Keine fehlgeschlagenen Anmeldungen in diesem Zeitraum",
+        "failed": "Fehlerhafte Anmeldungen",
+        "failedHint": "Einzelne Authentifizierungsfehler (sshd, PAM, Windows-Anmeldung, ungültige Benutzer)",
+        "bruteForce": "Brute-Kraft",
+        "bruteForceHint": "Korrelierte Brute-Force-Regeln (mehrere Fehler in einem kurzen Zeitraum, MITRE T1110)",
+        "sourceIps": "Quell-IPs",
+        "ipTooltip": "{ip}: {count} Fehler",
+        "bruteForceCount": "{count} brutale Kraft"
+      },
+      "view": {
+        "overview": "",
+        "alerts": "",
+        "timeline": "",
+        "top": "",
+        "agents": "Agenten",
+        "vulnerabilities": "Schwachstellen",
+        "fim": "",
+        "authFailures": ""
+      },
       "option": {
-        "statusFilter": {
-          "label": "Agenten anzeigen"
+        "visibleViews": {
+          "label": "",
+          "description": ""
         },
-        "sortBy": {
-          "label": "Sortieren nach"
-        },
-        "showVersion": {
-          "label": "Zeige Wazuh Version Spalte"
-        },
-        "showGroups": {
-          "label": "Gruppen-Spalte anzeigen"
-        }
-      },
-      "title": "Agenten",
-      "total": "{count} Agenten",
-      "status": {
-        "active": "Aktiv",
-        "disconnected": "Verbindung getrennt",
-        "neverConnected": "Nie verbunden",
-        "pending": "Ausstehend"
-      },
-      "statusLabel": {
-        "active": "Aktiv",
-        "disconnected": "Verbindung getrennt",
-        "never_connected": "Nie verbunden",
-        "pending": "Ausstehend",
-        "unknown": "Unbekannt"
-      },
-      "live": "Live",
-      "snapshot": "Snapshot {age} alt",
-      "snapshotHint": "Lesen Sie vom Wazuh Agent Snapshot (wazuh-monitoring), der bei {time}aufgenommen wurde. Fügen Sie Server-API-Zugangsdaten für Live-Daten hinzu.",
-      "staleSnapshot": "Der Agenten-Snapshot von {time} ist veraltet. Überprüfen Sie, ob der Wazuh Dashboard-Überwachungsauftrag ausgeführt wird, oder fügen Sie Server-API-Anmeldeinformationen hinzu.",
-      "noDisconnected": "Alle Agenten sind verbunden",
-      "empty": "Keine Agenten entsprechen diesem Filter",
-      "column": {
-        "status": "Status",
-        "name": "Job Name",
-        "ip": "IP",
-        "os": "OS",
-        "version": "Version",
-        "lastKeepAlive": "Keepalive",
-        "groups": "Gruppen"
-      },
-      "outdated": "Ältere als die neueste Agent Version ({version})"
-    },
-    "wazuhAlerts": {
-      "name": "Wazuh Alarme Feed",
-      "description": "Aktuelle Wazuh Warnungen mit Level, MITRE ATT&CK Techniken, Agent und Quell-IP",
-      "option": {
-        "minLevel": {
-          "label": "Minimale Regelstufe",
-          "description": "Wazuh Level: 0-6 niedrig, 7-11 Medium, 12-14 hoch, 15+ kritisch"
-        },
-        "hours": {
-          "label": "Zeitfenster (Stunden)"
-        },
-        "limit": {
-          "label": "Anzahl der Warnungen"
-        },
-        "showMitre": {
-          "label": "Show MITRE ATT&CK techniques"
-        },
-        "showAgent": {
-          "label": "Agenten anzeigen"
-        },
-        "showSourceIp": {
-          "label": "Quell-IP anzeigen"
-        },
-        "showRuleId": {
-          "label": "Regel-ID anzeigen"
-        }
-      },
-      "title": "Alarme · Level {level}+ · {hours}h",
-      "empty": "Keine Warnungen auf diesem Level. Alle ruhig.",
-      "rule": "Regel- {id}",
-      "openInDashboard": "Warnung im Wazuh Dashboard öffnen"
-    },
-    "wazuhSummary": {
-      "name": "Wazuh Alarm-Schwere",
-      "description": "Warnungs-Schweregrafik mit einem Trend zum vorherigen Zeitraum",
-      "option": {
         "range": {
           "label": "Zeitbereich"
         },
@@ -5698,26 +6089,6 @@
         },
         "showFooter": {
           "label": "Footer anzeigen"
-        }
-      },
-      "title": "Alarm-Schwere · {range}",
-      "alerts": "warnungen",
-      "none": "Keine Warnungen",
-      "trend": {
-        "new": "neu",
-        "tooltip": "Vorheriger Zeitraum: {previous}"
-      },
-      "previous": "Vorheriger {range}: {count}",
-      "maxLevel": "Max. Level {level}",
-      "health": "Index Gesundheit: {status}",
-      "manager": "Manager- {version}"
-    },
-    "wazuhTimeline": {
-      "name": "Wazuh alerts timeline",
-      "description": "Gestapelte Diagramm der Wazuh Warnungen mit der Zeit nach Schwere",
-      "option": {
-        "range": {
-          "label": "Zeitbereich"
         },
         "interval": {
           "label": "Intervall"
@@ -5730,60 +6101,32 @@
           "description": "Quadratwurzel hält hohe und kritische Warnungen neben Tausenden von niedrigen sichtbar"
         },
         "minLevel": {
-          "label": "Minimale Regelstufe"
+          "label": ""
         },
         "showLegend": {
           "label": "Legende mit Gesamtsummen anzeigen"
-        }
-      },
-      "title": "Alarme Zeitleiste · {range}",
-      "total": "{count} Warnungen",
-      "interval": "pro {interval}"
-    },
-    "wazuhTopList": {
-      "name": "Wazuh Top-Liste",
-      "description": "Top-Regeln, Agenten, Quell-IPs oder MITRE ATT&CK Taktik und Techniken nach Alarmzählung",
-      "option": {
-        "kind": {
+        },
+        "topKind": {
           "label": "Rang"
         },
-        "range": {
-          "label": "Zeitbereich"
-        },
-        "limit": {
-          "label": "Anzahl der Einträge"
-        },
-        "minLevel": {
-          "label": "Minimale Regelstufe"
+        "topLimit": {
+          "label": ""
         },
         "showBars": {
           "label": "Balken anzeigen"
-        }
-      },
-      "title": {
-        "rules": "Top-Regeln · {range}",
-        "agents": "Top Agenten · {range}",
-        "sourceIps": "Top-Quell-IPs · {range}",
-        "mitreTactics": "MITRE-Taktik · {range}",
-        "mitreTechniques": "MITRE techniques · {range}"
-      },
-      "empty": {
-        "rules": "Keine Warnungen in diesem Zeitraum",
-        "agents": "Keine Warnungen in diesem Zeitraum",
-        "sourceIps": "Keine Warnungen mit Quell-IP in diesem Zeitraum",
-        "mitreTactics": "Keine Warnungen für MITRE ATT&CK in diesem Zeitraum",
-        "mitreTechniques": "Keine Warnungen für MITRE ATT&CK in diesem Zeitraum"
-      },
-      "totalTooltip": "{count} passende Warnungen",
-      "private": "LAN",
-      "public": "Öffentlich",
-      "agents": "Gesehen auf {count} Agenten",
-      "others": "{count} weitere Warnungen in anderen Einträgen"
-    },
-    "wazuhVulnerabilities": {
-      "name": "Wazuh Schwachstellen",
-      "description": "Verwundbarkeit zählt, Top-CVEs und die verwundbarsten Agenten",
-      "option": {
+        },
+        "agentStatusFilter": {
+          "label": "Agenten anzeigen"
+        },
+        "agentSortBy": {
+          "label": "Sortieren nach"
+        },
+        "showVersion": {
+          "label": ""
+        },
+        "showGroups": {
+          "label": ""
+        },
         "cveOrder": {
           "label": "Rang Lebensläufe nach"
         },
@@ -5798,73 +6141,42 @@
         },
         "showAgents": {
           "label": "Zeige die verwundbarsten Agenten"
-        }
-      },
-      "title": "Schwachstellen",
-      "topCves": "Top CVes",
-      "score": "Punktzahl",
-      "agentsShort": "Agenten",
-      "topAgents": "Schwächste Agenten",
-      "criticalHigh": "Krit / Hoch",
-      "totalTooltip": "{count} Ergebnisse auf {agents} Agenten",
-      "affected": "{count} Agenten",
-      "empty": "Keine Schwachstellen gefunden",
-      "distribution": "Schweregrad Verteilung. {unscored} Ergebnisse ohne Punktzahl werden nicht angezeigt.",
-      "worst": "Schlimm: {id} ({score}) auf {agents} Agenten"
-    },
-    "wazuhFim": {
-      "name": "Wazuh Dateiintegrität",
-      "description": "Aktuelle Dateiintegritätsüberwachung (Syscheck) Ereignisse",
-      "option": {
-        "range": {
-          "label": "Zeitbereich"
         },
-        "event": {
+        "fimEvent": {
           "label": "Ereignisse"
         },
-        "limit": {
-          "label": "Anzahl der Ereignisse"
+        "fimLimit": {
+          "label": ""
         },
         "includeRegistry": {
           "label": "Windows Registry-Ereignisse einbeziehen"
-        }
-      },
-      "title": "Dateiintegrität · {range}",
-      "event": {
-        "added": "Hinzugefügt am",
-        "modified": "Geändert",
-        "deleted": "Gelöscht",
-        "unknown": "Geändert"
-      },
-      "empty": "Keine Integritäts-Ereignisse in diesem Zeitraum",
-      "user": "von {user}",
-      "registry": "Registry"
-    },
-    "wazuhAuthFailures": {
-      "name": "Wazuh Authentifizierungsfehler",
-      "description": "Fehlgeschlagene Logins und Brute-Force-Alarme pro Agent mit stündlichen Sparklines",
-      "option": {
-        "hours": {
-          "label": "Zeitfenster (Stunden)"
         },
-        "limit": {
-          "label": "Anzahl der Agenten"
+        "authLimit": {
+          "label": ""
         },
         "showSourceIps": {
           "label": "Top-Quell-IPs anzeigen"
+        },
+        "alertsMinLevel": {
+          "label": "",
+          "description": "Wazuh Level: 0-6 niedrig, 7-11 Medium, 12-14 hoch, 15+ kritisch"
+        },
+        "alertsLimit": {
+          "label": ""
+        },
+        "showMitre": {
+          "label": ""
+        },
+        "showAgent": {
+          "label": "Agenten anzeigen"
+        },
+        "showSourceIp": {
+          "label": "Quell-IP anzeigen"
+        },
+        "showRuleId": {
+          "label": "Regel-ID anzeigen"
         }
-      },
-      "title": "Auth Fehler · {hours}h",
-      "seriesTooltip": "Alle Agenten über die letzte {hours}h",
-      "peak": "Maximaler {count}/bucket",
-      "empty": "Keine fehlgeschlagenen Anmeldungen in diesem Zeitraum",
-      "failed": "Fehlerhafte Anmeldungen",
-      "failedHint": "Einzelne Authentifizierungsfehler (sshd, PAM, Windows-Anmeldung, ungültige Benutzer)",
-      "bruteForce": "Brute-Kraft",
-      "bruteForceHint": "Korrelierte Brute-Force-Regeln (mehrere Fehler in einem kurzen Zeitraum, MITRE T1110)",
-      "sourceIps": "Quell-IPs",
-      "ipTooltip": "{ip}: {count} Fehler",
-      "bruteForceCount": "{count} brutale Kraft"
+      }
     }
   },
   "widgetPreview": {
@@ -5883,6 +6195,18 @@
       "addWidget": "Widget hinzufügen",
       "addApp": "App hinzufügen",
       "connectService": "Verbinde Dienst"
+    },
+    "urlDrop": {
+      "hint": "",
+      "resolving": "",
+      "notification": {
+        "success": {
+          "message": ""
+        },
+        "full": {
+          "message": ""
+        }
+      }
     },
     "setupChecklist": {
       "title": "Dieses Board nützlich machen",
@@ -5921,7 +6245,7 @@
         "preview": "Vorschau von {name} mit {count} Elementen",
         "currentHidden": "Aktuelles Board: {name}",
         "keyboard": {
-          "navigate": "Navigate",
+          "navigate": "",
           "open": "Öffnen",
           "instructions": "Geben Sie ein, um die Boards zu filtern. Benutzen Sie die Pfeiltasten um die Ergebnisse zu bewegen und Enter um ein Board zu öffnen."
         },
@@ -6144,12 +6468,12 @@
             "columns": "spalten",
             "empty": "Dieses Layout ist leer",
             "dynamicSection": "Dynamischer Abschnitt",
-            "editorWidthLabel": "{layoutName} · {width}px"
+            "editorWidthLabel": ""
           },
           "reset": {
             "action": "Von Basis zurücksetzen",
             "confirm": {
-              "title": "Reset {layoutName}?",
+              "title": "",
               "message": "Dadurch wird jede gespeicherte Position und Größe in diesem Layout durch ein neues Layout aus Basis ersetzt. Dies kann nicht rückgängig gemacht werden."
             }
           },
@@ -6278,9 +6602,9 @@
         "label": "Feste Seitenleisten",
         "description": "Reservieren Sie auf beiden Seiten bis zu drei Armaturensäulen.",
         "left": {
-          "label": "Left sidebar",
+          "label": "",
           "description": "Diesen Bereich während der Dashboard-Scrollen sichtbar halten.",
-          "thumbLabel": "Left sidebar width"
+          "thumbLabel": ""
         },
         "right": {
           "label": "Sidebar rechts",
@@ -6410,7 +6734,7 @@
               "badge": "Persönlich",
               "description": "Ziehen Sie die Steuerelemente irgendwo in der Reihe. Linke, Mitte und Rechts bleiben fixiert, während die Steuerung um sie herum umschaltet.",
               "device": {
-                "desktop": "Desktop",
+                "desktop": "",
                 "mobile": "Mobil"
               },
               "zones": {
@@ -6450,7 +6774,7 @@
                 }
               },
               "items": {
-                "logo": "Logo",
+                "logo": "",
                 "search": "Suchen",
                 "home": "Home Board",
                 "boardSwitcher": "Boards",
@@ -6692,7 +7016,7 @@
             "groups": {
               "identity": "Identität",
               "appearance": "Aussehen",
-              "customCss": "Custom CSS",
+              "customCss": "",
               "authentication": "Authentifizierung"
             },
             "identity": {
@@ -6706,7 +7030,7 @@
             },
             "logo": {
               "label": "Anwendungslogo",
-              "placeholder": "/logo/logo.png"
+              "placeholder": ""
             },
             "favicon": {
               "label": "Browser-Symbol (favicon)",
@@ -6752,7 +7076,7 @@
             "summary": {
               "title": "Aktuelles Branding",
               "cornerStyle": "Eckenstil",
-              "palette": "Palette",
+              "palette": "",
               "backgroundConfigured": "Eigener Hintergrund · {overlay}% Overlay",
               "backgroundDefault": "Standard-Hintergrund",
               "greetingConfigured": "Eigener Gruß",
@@ -6760,7 +7084,7 @@
               "boardColorLocked": "Brettfarbe gesperrt",
               "boardColorFlexible": "Boardfarben erlaubt",
               "appName": "Job Name",
-              "logo": "Logo",
+              "logo": "",
               "greeting": "Gruß",
               "on": "An",
               "off": "Aus"
@@ -7212,7 +7536,7 @@
               "relogin": "Die Wiederherstellung der Datenbank hat deine aktuelle Sitzung ungültig gemacht. Homarr schickt dich zur Anmeldung, wenn der Server bereit ist."
             },
             "complete": {
-              "title": "Restore complete",
+              "title": "",
               "message": "Die Datenbank wurde wiederhergestellt. Ihre vorherige Sitzung war ungültig, melden Sie sich daher erneut an, um Ihr wiederhergestelltes Board zu sehen.",
               "button": "Jetzt anmelden"
             },
@@ -7307,7 +7631,7 @@
           "authentication": "Authentifizierung",
           "apiRequest": "API",
           "appRepresentation": "Anwendung",
-          "widgetConfiguration": "Widget",
+          "widgetConfiguration": "",
           "widgetQuery": "Widget Abfrage"
         },
         "status": {
@@ -7487,8 +7811,8 @@
       },
       "status": {
         "available": "Verfügbar",
-        "degraded": "Metrics unavailable",
-        "unavailable": "Unavailable"
+        "degraded": "",
+        "unavailable": ""
       },
       "unavailable": "Dieser Kubernetes Kontext kann nicht erreicht werden. Wählen Sie einen anderen Kontext oder überprüfen Sie seine Anmeldedaten und Endpunkte.",
       "metricsUnavailable": "Dieser Kontext ist erreichbar, aber Metrics Server ist nicht verfügbar. Inventar bleibt verfügbar ohne Live-CPU und Speicherauslastung."
@@ -7520,7 +7844,7 @@
     },
     "nodes": {
       "field": {
-        "metricsUnavailable": "Unavailable",
+        "metricsUnavailable": "",
         "kubernetesVersion": {
           "label": "Kubernetes Version"
         }
@@ -7754,7 +8078,7 @@
         "placeholder": "Assistent fragen"
       },
       "external": {
-        "label": "Web",
+        "label": "",
         "placeholder": "Mit einer externen Suchmaschine suchen"
       },
       "media": {
@@ -7772,7 +8096,7 @@
       "modeAriaLabel": "{mode} Modus",
       "resultsAriaLabel": "{mode} Ergebnisse",
       "footer": {
-        "navigate": "Navigate",
+        "navigate": "",
         "open": "Öffnen",
         "close": "Schließen"
       }
@@ -8463,7 +8787,7 @@
   },
   "metadata": {
     "description": "Ein selbst gehostetes Dashboard für den *arr-Stack und dein gesamtes Homelab. Integriert mit 50+ Diensten, Echtzeit-Widgets, keine Konfigurationsdateien.",
-    "dashboardTitle": "{appName} Dashboard"
+    "dashboardTitle": ""
   },
   "assistant": {
     "title": "Assistent",
@@ -8489,6 +8813,14 @@
     "conversationActions": "Konversationsaktionen",
     "searchConversations": "Unterhaltungen durchsuchen",
     "noMatchingConversations": "Keine passenden Unterhaltungen",
+    "historyError": {
+      "title": "",
+      "load": "",
+      "loadMessages": "",
+      "saveMessages": "",
+      "switch": "",
+      "retry": ""
+    },
     "moreActions": "Weitere Antwort-Aktionen",
     "renameConversation": {
       "action": "Umbenennen",
@@ -8540,7 +8872,7 @@
       "reasoning": {
         "auto": "Auto",
         "none": "Aus",
-        "minimal": "Minimal",
+        "minimal": "",
         "low": "Niedrig",
         "medium": "Mittel",
         "high": "Hoch"
@@ -8591,7 +8923,7 @@
     "previousResponse": "Vorherige Antwort",
     "nextResponse": "Nächste Antwort",
     "removeAttachment": "Anhang entfernen",
-    "downloadFile": "Download {name}",
+    "downloadFile": "",
     "attachedImage": "Angehängtes Bild",
     "externalImageBlocked": "Externes Bild für Privatsphäre gesperrt",
     "image": {
@@ -8608,6 +8940,9 @@
     },
     "mentions": {
       "menu": "Homarr Kontext hinzufügen",
+      "back": "",
+      "loading": "",
+      "empty": "",
       "context": "Kontext",
       "app": "Apps",
       "integration": "Integrationen",
@@ -8622,6 +8957,8 @@
     },
     "commands": {
       "menu": "Assistentenbefehle",
+      "hint": "",
+      "empty": "",
       "health": "Bereiten Sie einen Service-Gesundheitscheck vor",
       "explore": "Bereite eine Übersicht dieser Homarr-Instanz vor",
       "media": "Mediensuche vorbereiten",
@@ -8640,7 +8977,7 @@
       "cached": "Cache-Eingabe",
       "cacheWrite": "Cache-Schreiben",
       "reasoning": "Begründung",
-      "inputShort": "in",
+      "inputShort": "",
       "outputShort": "aus",
       "cachedShort": "zwischengespeichert",
       "reasoningShort": "argumentierung",
@@ -8653,13 +8990,13 @@
       "providerDetailsPending": "OpenRouter verarbeitet noch einige Generationsdetails. Erneut öffnen, um es erneut zu versuchen.",
       "providerLatency": "Anbieter-Latenz",
       "generationTime": "Erstellungszeit",
-      "moderationLatency": "Moderation",
+      "moderationLatency": "",
       "providerThroughput": "Provider-Durchsatz",
       "fallbacks": "Fallback",
       "fallbackLatency": "Fallback-Latenz",
       "cacheDiscount": "Cache-Rabatt",
       "normalizedTokens": "OpenRouter normalisierte Eingabe / Ausgabe",
-      "byok": "BYOK",
+      "byok": "",
       "cost": "Kosten",
       "reported": "Vom Anbieter gemeldet",
       "estimated": "Geschätzt von Modellpreisen",
@@ -8737,7 +9074,7 @@
       "optionKind": {
         "affirmative": "Bestätigen",
         "negative": "Ablehnen",
-        "alternative": "Option",
+        "alternative": "",
         "custom": "Eigene"
       }
     },
@@ -8764,16 +9101,16 @@
       "automaticContinue": "Die vorgeschlagenen Änderungen des Boards automatisch akzeptieren",
       "resetAll": "Alle Änderungen zurücksetzen",
       "tabs": {
-        "css": "Custom CSS",
+        "css": "",
         "appearance": "Aussehen",
         "background": "Hintergrund",
         "general": "Allgemein"
       },
       "cssDescription": "Bearbeite das komplette Stylesheet. Bestehende Regeln werden beibehalten, es sei denn, sie werden hier entfernt.",
       "cssCharacters": "{count} von 16384 Zeichen",
-      "copyCss": "Copy CSS",
+      "copyCss": "",
       "copied": "Kopiert",
-      "restoreCss": "Restore current CSS",
+      "restoreCss": "",
       "remoteCssTitle": "Dieses CSS lädt eine entfernte Ressource",
       "remoteCssDescription": "Importierte Stylesheets und Remote-URLs kontaktieren einen anderen Server, wenn das Board geladen wird. Überprüfen Sie diese, bevor Sie fortfahren."
     },
@@ -8797,13 +9134,14 @@
       "errorDescription": "Das Modell hat keine komplette Widget-Konfiguration bereitgestellt. Es wurde kein Widget hinzugefügt."
     },
     "approvalRequired": "Genehmigung erforderlich",
-    "complete": "Complete",
+    "complete": "",
     "denied": "Verweigert",
     "failed": "Fehlgeschlagen",
     "working": "Arbeiten",
     "approvalDescription": "Überprüfen Sie diese Änderung, bevor sie ausgeführt wird.",
     "approveAndRun": "Bestätigen und ausführen",
     "deny": "Leugnen",
+    "approvalError": "",
     "autoApproval": {
       "label": "Automatische Genehmigungen",
       "composerLabel": "Für mich freigeben",

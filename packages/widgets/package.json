@@ -104,6 +104,7 @@
     "mantine-datatable": "catalog:",
     "mantine-react-table": "catalog:",
     "next": "catalog:",
+    "next-intl": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
     "react-markdown": "catalog:",
@@ -112,11 +113,13 @@
     "rehype-raw": "catalog:",
     "rehype-sanitize": "catalog:",
     "remark-gfm": "catalog:",
+    "three": "catalog:",
     "video.js": "catalog:",
     "zod": "catalog:"
   },
   "devDependencies": {
     "@homarr/tsconfig": "workspace:^0.1.0",
+    "@types/three": "catalog:",
     "@types/video.js": "catalog:",
     "typescript": "catalog:"
   }

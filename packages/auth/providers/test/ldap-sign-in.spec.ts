@@ -4,6 +4,7 @@ import { afterEach, beforeEach, expect, test, vi } from "vitest";
 const userDn = "uid=alice,ou=people,dc=example,dc=com";
 const userPassword = "fixture-user-password";
 const directoryCredentials = new Map<string, string>();
+const request = new Request("http://localhost");
 
 beforeEach(() => {
   vi.resetModules();
@@ -62,7 +63,7 @@ test("signs in through anonymous directory lookup when environment validation is
   const { createLdapConfiguration } = await import("../credentials/credentials-provider");
   const provider = createLdapConfiguration(createDb());
 
-  const user = await provider.authorize({ name: "alice", password: userPassword });
+  const user = await provider.authorize({ name: "alice", password: userPassword }, request);
 
   expect(user).toMatchObject({ name: "alice", groups: ["homarr-users"] });
 });
@@ -76,7 +77,7 @@ test.each([undefined, ""])(
     const { createLdapConfiguration } = await import("../credentials/credentials-provider");
     const provider = createLdapConfiguration(createDb());
 
-    const user = await provider.authorize({ name: "alice", password: userPassword });
+    const user = await provider.authorize({ name: "alice", password: userPassword }, request);
 
     expect(user).toMatchObject({ name: "alice", groups: ["homarr-users"] });
   },
@@ -93,7 +94,7 @@ test("still signs in when directory searches require configured service credenti
   const { createLdapConfiguration } = await import("../credentials/credentials-provider");
   const provider = createLdapConfiguration(createDb());
 
-  const user = await provider.authorize({ name: "alice", password: userPassword });
+  const user = await provider.authorize({ name: "alice", password: userPassword }, request);
 
   expect(user).toMatchObject({ name: "alice", groups: ["homarr-users"] });
 });
@@ -103,7 +104,7 @@ test("rejects an incorrect user password after anonymous directory lookup", asyn
   const { createLdapConfiguration } = await import("../credentials/credentials-provider");
   const provider = createLdapConfiguration(createDb());
 
-  await expect(provider.authorize({ name: "alice", password: "incorrect" })).resolves.toBeNull();
+  await expect(provider.authorize({ name: "alice", password: "incorrect" }, request)).resolves.toBeNull();
 });
 
 test("rejects an empty user password when the directory allows anonymous lookup", async () => {
@@ -111,5 +112,5 @@ test("rejects an empty user password when the directory allows anonymous lookup"
   const { createLdapConfiguration } = await import("../credentials/credentials-provider");
   const provider = createLdapConfiguration(createDb());
 
-  await expect(provider.authorize({ name: "alice", password: "" })).rejects.toThrow();
+  await expect(provider.authorize({ name: "alice", password: "" }, request)).rejects.toThrow();
 });

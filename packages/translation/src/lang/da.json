@@ -75,7 +75,7 @@
       "discover": {
         "title": "Se hvad denne installation rent faktisk kan nå",
         "description": "Homarr kontrollerer kapaciteter på plads. En manglende Docker socket eller Kubernetes kontekst aldrig blokerer en manuel opsætning.",
-        "database": "Database",
+        "database": "",
         "docker": "Docker og kompatible stikdåser",
         "kubernetes": "Kubernetes",
         "assistantWorkshop": "Assistent og værksted",
@@ -112,7 +112,7 @@
         "empty": "Ingen integrationer valgt. Homarr vil stadig oprette en nyttig starttavle med generelle widgets.",
         "dockerSource": "Docker",
         "manualSource": "Manuelt",
-        "url": "Service URL",
+        "url": "",
         "noCredentials": "Ingen legitimationsoplysninger",
         "noCredentialsDescription": "Denne integration behøver ikke legitimationsoplysninger.",
         "credentialMethod": "Metode med legitimationsoplysninger",
@@ -152,7 +152,7 @@
         "columns": "Bræt kolonner",
         "columnsDescription": "Kolonner definerer det vandrette gitter, der bruges til at størrelsen og positionere elementer. 12 er masser for de fleste mennesker.",
         "columnCount": "{count, plural, one {# kolonne} other {# kolonner}}",
-        "leftSidebar": "Left sidebar",
+        "leftSidebar": "",
         "rightSidebar": "Højre sidepanel",
         "previewLabel": "Live forhåndsvisning af det første brætlayout"
       },
@@ -171,7 +171,7 @@
           "description": "Gennemse community Custom Widgets, inspicere deres ønskede kapaciteter, installere dem, og udgive dit eget arbejde uden at kopiere kode mellem servere.",
           "available": "Tilgængelig",
           "checking": "Kontrollerer…",
-          "unavailable": "Unavailable",
+          "unavailable": "",
           "discoverTitle": "Opdag",
           "discoverDescription": "Find widgets bygget til ægte selvhostede arbejdsgange.",
           "installTitle": "Gennemgå og installer",
@@ -181,7 +181,7 @@
           "browse": "Gennemse Værksted"
         },
         "mcpSetup": {
-          "title": "Homarr MCP",
+          "title": "",
           "description": "Tilslut Claude, Codex eller en anden MCP-klient til Homarr's indtastede værktøjer. API-nøgler holde adgang eksplicit og genkaldelig.",
           "endpoint": "Strømbart HTTP endepunkt",
           "keyTitle": "Kopier denne nøgle nu",
@@ -203,7 +203,7 @@
         "columns": "Bræt kolonner",
         "columnsValue": "{count, plural, one {# kolonne} other {# kolonner}}",
         "sidebars": "Sidebjælker",
-        "sidebarsValue": "{count, plural, =0 {None} one {# sidebar} other {# sidebars}}",
+        "sidebarsValue": "",
         "layouts": "Responsive layouts",
         "layoutsValue": "Mobil + Base",
         "integrations": "Integrationer",
@@ -216,7 +216,7 @@
         "themeLight": "Lys",
         "themeDark": "Mørk",
         "colors": "Bræt farver",
-        "radius": "Widget radius",
+        "radius": "",
         "automaticTitle": "Hvad Homarr vil skabe",
         "automaticDescription": "Kompatible widgets, ikoner, app-links, integrationsrelationer og lydhør placering kommer fra det delte Homarr katalog. Du kan redigere hvert resultat senere.",
         "dockerWarningTitle": "Nogle Docker-etiketter ændret under opsætning",
@@ -364,7 +364,7 @@
         "description": "Vælg, hvordan Homarr viser byte størrelser og byte satser. Bit satser bruger altid decimale enheder.",
         "options": {
           "binary": "Binær",
-          "decimal": "Decimal"
+          "decimal": ""
         }
       },
       "enableRightClickOnWidgets": {
@@ -618,7 +618,7 @@
           "label": "Forudindstillinger",
           "viewer": "Fremviser",
           "viewerDescription": "Læs: Se tavler og medier, brug apps og integrationer, der allerede findes.",
-          "editor": "Editor",
+          "editor": "",
           "editorDescription": "Dag-til-dag ledelse: oprette og redigere tavler, apps, integrationer og søgemaskiner.",
           "admin": "Admin",
           "adminDescription": "Ubegrænset adgang til alle funktioner og indstillinger, herunder brugerhåndtering.",
@@ -799,6 +799,11 @@
       }
     },
     "field": {
+      "url": {
+        "helpLabel": "Eksempler på URL-formater",
+        "examples": "Eksempler på understøttede links",
+        "requiresHandler": "Brugerdefinerede protokoller kræver en tilknyttet app på din enhed."
+      },
       "description": {
         "label": "Beskriveslse"
       },
@@ -851,7 +856,7 @@
       "unavailable": "Anmodning utilgængelig",
       "saveError": "Kan ikke konfigurere API-kilde",
       "source": "API-kilde: {name}",
-      "baseUrl": "Server URL",
+      "baseUrl": "",
       "networkScope": "Adgang til netværk",
       "save": "Gem API-konfiguration",
       "expires": "Denne engangsanmodning udløber hos {time}."
@@ -917,7 +922,7 @@
       "action": {
         "components": "Komponenter",
         "format": "Formatér",
-        "insertStarter": "Insert starter",
+        "insertStarter": "",
         "redo": "Gendan",
         "copied": "Kopieret",
         "schema": "Skema"
@@ -935,14 +940,14 @@
         "errors": "{count, number} fejl",
         "warnings": "{count, number} advarsler",
         "ready": "Ingen problemer fundet",
-        "position": "Ln {line, number}, Col {column, number}",
+        "position": "",
         "characters": "{count, number} tegn",
-        "charactersWithLimit": "{count, number} / {limit, number}"
+        "charactersWithLimit": ""
       },
       "diagnostics": {
         "title": "Skabelon diagnose",
         "line": "Linje {line, number}",
-        "ast": "{value}",
+        "ast": "",
         "bindingTypeConflict": "Input \"{value}\" deles af kontrolelementer med inkompatible værdityper.",
         "runtimeBindingTypeConflict": "Input \"{value}\" er bundet som både {firstType} og {secondType}.",
         "dynamicRequestId": "En bogstavelig anmodningId er påkrævet. Dynamiske forespørgsels-ID'er accepteres ikke.",
@@ -966,7 +971,7 @@
         "sources": "API kilder",
         "requests": "Forespørgsler",
         "options": "Indstillinger",
-        "jsx": "JSX",
+        "jsx": "",
         "preview": "Eksempelvisning"
       },
       "status": {
@@ -997,7 +1002,7 @@
       "builder": {
         "advancedManifest": "Avanceret rå manifest",
         "advancedJson": "Avanceret manifest JSON",
-        "manifestFilename": "widget.json",
+        "manifestFilename": "",
         "request": "Anmod Om {count, number}",
         "requestId": "Anmod Om ID",
         "type": "Type",
@@ -1016,7 +1021,7 @@
         "valueSource": "Værdi kilde",
         "literal": "Litteratur",
         "widgetOption": "Widget mulighed",
-        "invocationParameter": "Invocation parameter",
+        "invocationParameter": "",
         "option": "Valgmulighed",
         "parameterName": "Parameter navn",
         "value": "Værdi",
@@ -1068,14 +1073,14 @@
       },
       "sources": {
         "title": "API-kilder og legitimationsoplysninger",
-        "newName": "API {count, number}",
+        "newName": "",
         "duplicateSourceId": "API-kilde-id'er skal være unikke.",
         "credentialRemoved": "legitimationsoplysninger fjernet",
         "credentialRemovedDescription": "Den gemte værdi blev slettet.",
         "primary": "Primær API",
         "id": "Kilde ID",
         "name": "Navn",
-        "baseUrl": "Base URL",
+        "baseUrl": "",
         "baseUrlError": {
           "invalid": "Angiv en komplet URL.",
           "protocol": "Brug en HTTP eller HTTPS URL.",
@@ -1092,9 +1097,9 @@
         "advanced": "Avanceret",
         "add": "Tilføj en anden API-kilde",
         "sourceType": "Integration",
-        "manualSource": "HTTP API",
+        "manualSource": "",
         "existingIntegration": "Eksisterende integration",
-        "integrationType": "Integration type",
+        "integrationType": "",
         "selectIntegration": "Konfigureret integration",
         "noIntegrations": "Ingen matchende integrationer tilgængelige",
         "integrationUnavailable": "Den valgte integration er ikke længere tilgængelig. Vælg en anden integration.",
@@ -1165,8 +1170,8 @@
         "simulated": "Simuleret handling",
         "httpStatus": "Http {status, number}",
         "tab": {
-          "widget": "Widget",
-          "data": "Data",
+          "widget": "",
+          "data": "",
           "options": "Indstillinger",
           "state": "Job Status",
           "actions": "Styring",
@@ -1174,7 +1179,7 @@
         },
         "size": {
           "compact": "Kompakt",
-          "standard": "Standard",
+          "standard": "",
           "wide": "Bred"
         },
         "fixture": {
@@ -1267,7 +1272,7 @@
     "sort": "Sortér",
     "sortTop": "Bedst bedømte",
     "sortNewest": "Nyeste",
-    "listAriaLabel": "Workshop widgets",
+    "listAriaLabel": "",
     "listAriaLabelCss": "Workshop CSS temaer",
     "empty": "Ingen widgets matcher denne søgning.",
     "emptyDescription": "Fællesskabs widgets publiceret til Workshop-dukken op her.",
@@ -1282,9 +1287,9 @@
     "communityMember": "Medlemmer af Fællesskabet",
     "outdated": "Forældet",
     "outdatedWarning": "Forfatteren markerede denne indsendelse som forældet. Gennemgå den omhyggeligt, før du importerer.",
-    "score": "Score: {count, number}",
-    "upvote": "Upvote",
-    "downvote": "Downvote",
+    "score": "",
+    "upvote": "",
+    "downvote": "",
     "voteError": "Afstemningen kunne ikke gemmes.",
     "signIn": "Log ind med GitHub",
     "signInError": "GitHub log-in mislykkedes. Kontroller, at Workshop OAuth udbyder er konfigureret og at popups er tilladt.",
@@ -1296,7 +1301,7 @@
     "installReviewTitle": "Gennemgå før installation",
     "installError": "Denne widget kan ikke installeres",
     "installErrorDescription": "Workshop indsendelse er ikke en gyldig Custom JSX v2 widget.",
-    "useCss": "Import CSS",
+    "useCss": "",
     "importCss": "Importer CSS fra Workshop",
     "importCssConfirm": "Erstat den aktuelle brugerdefinerede CSS med \"{title}\"? Intet gemmes før du gemmer tavlens indstillinger.",
     "screenshotAlt": "{title} skærmbillede {count, number}",
@@ -1324,7 +1329,7 @@
     "reportCategory": {
       "outdated": "Forældet eller ikke længere virket",
       "malicious": "Ondsindede",
-      "spam": "Spam",
+      "spam": "",
       "copyright": "Ophavsret",
       "inappropriate": "Upassende",
       "other": "Andet"
@@ -1510,7 +1515,7 @@
       "vpn": "",
       "mediaLibrary": "Mediebibliotek",
       "uptimeMonitoring": "Oppetidsovervågning",
-      "beszel": "Beszel",
+      "beszel": "",
       "systemMonitoring": "System Overvågning",
       "security": "Sikkerhed",
       "serviceVersion": "Version"
@@ -1559,6 +1564,7 @@
             "untrusted": "Der er ikke tillid til certifikatet.",
             "hostnameMismatch": "Certifikatets værtsnavn matcher ikke URL'en."
           },
+          "secondaryUrl": "",
           "alert": {
             "permission": {
               "title": "Ikke tilstrækkelige tilladelser",
@@ -1823,7 +1829,7 @@
       "full": "Fuld integrationsadgang"
     },
     "llamacpp": {
-      "name": "llama.cpp",
+      "name": "",
       "description": "Overvåg en lokal llama.cpp llama-server: sundhed, model og generation målinger"
     }
   },
@@ -1904,6 +1910,7 @@
       "tryAgain": "Prøv igen",
       "loading": "Indlæser",
       "show": "Vis",
+      "showAll": "",
       "hide": "Skjul",
       "undo": "Fortryd",
       "editNamed": "Rediger {name}",
@@ -1913,6 +1920,7 @@
       "copied": "Kopieret",
       "refresh": "Opdater"
     },
+    "hidden": "Skjult",
     "pagination": {
       "pageOf": "Side {page} af {totalPages}"
     },
@@ -1935,6 +1943,7 @@
       "clear": "Ryd billede",
       "uploadImage": "Upload billede",
       "results": "Billede søgeresultater",
+      "websiteIcon": "",
       "localImages": "Dine billeder",
       "svgIcons": "SVG ikoner",
       "otherImages": "Andre billeder",
@@ -1999,7 +2008,7 @@
         "updateAvailable": "{countUpdates} opdateringer tilgængelige: {tag}",
         "assistant": "Assistent",
         "assistantThinking": "Tænker",
-        "modifier": "Mod"
+        "modifier": ""
       }
     },
     "dangerZone": "Farezone",
@@ -2089,7 +2098,7 @@
         "description": "Vis en handling, der åbner hver app i denne beholder i nye faner."
       },
       "scrollable": {
-        "label": "Scrollable",
+        "label": "",
         "description": "Hold denne beholder på sin indstillede størrelse og rul dens indhold i stedet for at vokse til at passe dem."
       }
     },
@@ -2169,7 +2178,7 @@
         "noConnectionRequired": "Ingen forbindelse påkrævet"
       },
       "customWidget": "Tilpasset widget",
-      "standalone": "Standalone",
+      "standalone": "",
       "missingIntegration": {
         "title": "Tilslut en tjeneste først",
         "noPermission": "Denne widget behøver en kompatibel serviceforbindelse. Bed en administrator om at forbinde en, og prøv igen."
@@ -2213,8 +2222,8 @@
       "title": "Flyt / ændre størrelse af element",
       "entryLabel": "{name}, kolonne {column}, række {row}",
       "target": {
-        "numbered": "{name}, destination {index}",
-        "located": "{name}, {location}, destination {index}"
+        "numbered": "",
+        "located": ""
       },
       "keyboard": {
         "instructions": "Tryk på Enter eller Mellemrum for at starte tastaturredigering. Brug piletasterne til at flytte, Skift plus piletasterne til at ændre størrelse, og Escape til at stoppe.",
@@ -2228,11 +2237,11 @@
         },
         "width": {
           "label": "Bredde",
-          "shortLabel": "W"
+          "shortLabel": ""
         },
         "height": {
           "label": "Højde",
-          "shortLabel": "H"
+          "shortLabel": ""
         },
         "xOffset": {
           "label": "X forskydning"
@@ -2308,6 +2317,15 @@
       "option": {
         "appId": {
           "label": "Vælg app"
+        },
+        "openIn": {
+          "label": "Åbn app i",
+          "description": "Vælg, hvor denne app skal åbnes. Dine browserindstillinger kan tilsidesætte åbning i et separat vindue.",
+          "option": {
+            "currentTab": "Aktuel fane",
+            "newTab": "Ny fane",
+            "newWindow": "Nyt vindue"
+          }
         },
         "showTitle": {
           "label": "Vis app-navn"
@@ -2437,7 +2455,7 @@
         "remove": "Fjern {name} kategori",
         "rename": "Kategorinavn for {name}",
         "assign": "Kategori for {name}",
-        "ungrouped": "Ungrouped"
+        "ungrouped": ""
       }
     },
     "archiveTeamWarrior": {
@@ -2449,11 +2467,11 @@
         }
       },
       "noProjectSelected": "Intet projekt valgt",
-      "runnerStatus": "Runner: {status}",
+      "runnerStatus": "",
       "projectId": "Projekt: {id}",
       "sessionReceived": "Modtaget: {value}",
       "sessionSent": "Session sendt: {value}",
-      "sessionId": "Session: {id}",
+      "sessionId": "",
       "startedAt": "Startet {date}",
       "emptyItems": "Ingen aktive eller seneste jobs i dette øjebliksbillede",
       "metric": {
@@ -2617,31 +2635,31 @@
         "unsupportedPrimaryTitle": "Primær tidszone er ikke tilgængelig",
         "unsupportedPrimary": "{timeZone} er ikke understøttet i denne browser. Viser UTC som en klart markeret fallback.",
         "unsupportedTimeZone": "Ikke understøttet tidszone: {timeZone}",
-        "accessibleTime": "{city}: {time}, {date}, {timeZone}",
+        "accessibleTime": "",
         "advancedLabel": "Avanceret verdensur",
         "cities": "Ure i verden",
-        "cityCount": "{count} timezones",
+        "cityCount": "",
         "timeBarLabel": "24-timers tids-til-dag position for {city}",
         "dayProgress": "{percent}% forløbet · {hours}h {minutes}m tilbage",
         "phaseLegend": "Tidspunkt for dagens forklaring",
         "tick": {
-          "midnight": "00",
-          "morning": "06",
-          "noon": "12",
-          "evening": "18",
-          "end": "24"
+          "midnight": "",
+          "morning": "",
+          "noon": "",
+          "evening": "",
+          "end": ""
         },
         "phaseRange": {
-          "night": "00–05 · 21–24",
-          "dawn": "05–08",
-          "day": "08–18",
-          "dusk": "18–21"
+          "night": "",
+          "dawn": "",
+          "day": "",
+          "dusk": ""
         },
         "phase": {
           "night": "Nat",
           "dawn": "Daggry",
           "day": "Dag",
-          "dusk": "Dusk"
+          "dusk": ""
         }
       }
     },
@@ -2653,11 +2671,11 @@
           "label": "Placering af luftkvalitet"
         },
         "aqiStandard": {
-          "label": "AQI standard",
+          "label": "",
           "options": {
             "auto": "Automatisk til landestandard",
             "european": "Europæisk AQI",
-            "us": "US AQI"
+            "us": ""
           }
         },
         "showUv": {
@@ -2694,26 +2712,26 @@
           "unknown": "Ingen læsning"
         }
       },
-      "dominantPollutant": "Dominant pollutant",
-      "aqiLabel": "AQI",
+      "dominantPollutant": "",
+      "aqiLabel": "",
       "strongestPollen": "Højeste pollen",
       "unit": {
         "concentration": "{value} μg/m3",
         "pollen": "{value} korn/m3"
       },
       "pollutant": {
-        "pm2_5": "PM2.5",
-        "pm10": "PM10",
+        "pm2_5": "",
+        "pm10": "",
         "ozone": "Ozon",
         "nitrogenDioxide": "Nitrogendioxid",
-        "sulphurDioxide": "Sulphur dioxide",
+        "sulphurDioxide": "",
         "carbonMonoxide": "Carbonmonoxid"
       },
       "pollen": {
-        "alder": "Alder",
+        "alder": "",
         "birch": "Birke",
         "grass": "Græs",
-        "mugwort": "Mugwort",
+        "mugwort": "",
         "olive": "Oliven",
         "ragweed": "Ragukrudt"
       },
@@ -2726,9 +2744,9 @@
         "pollutants": "Koncentrationer af forurenende stoffer",
         "pollen": "Koncentrationer af pollen",
         "sevenDayForecast": "Maksimal 7-dages prognose",
-        "aqiValue": "AQI {value}",
-        "uvValue": "UV {value}",
-        "uvShort": "UV {value}",
+        "aqiValue": "",
+        "uvValue": "",
+        "uvShort": "",
         "noForecast": "Ingen prognose tilgængelige data"
       }
     },
@@ -2779,7 +2797,7 @@
       "invalid": {
         "title": "Nogle begivenheder kan ikke vises",
         "description": "{count, plural, one {En begivenhed har en ugyldig dato eller uunderstøttet tidszone.} other {# begivenheder har en ugyldig dato eller uunderstøttet tidszone.}}",
-        "value": "Unavailable"
+        "value": ""
       },
       "alert": {
         "notifications": "Browser notifikationer",
@@ -2788,14 +2806,14 @@
       }
     },
     "timer": {
-      "name": "Timer / Pomodoro",
+      "name": "",
       "description": "Kører en simpel timer eller en konfigurerbar Pomodoro sekvens.",
       "option": {
         "mode": {
           "label": "Tilstand",
           "options": {
-            "timer": "Timer",
-            "pomodoro": "Pomodoro"
+            "timer": "",
+            "pomodoro": ""
           }
         },
         "timerMinutes": {
@@ -2821,30 +2839,30 @@
         }
       },
       "phase": {
-        "timer": "Timer",
+        "timer": "",
         "focus": "Fokus",
         "shortBreak": "Kort pause",
         "longBreak": "Lang pause"
       },
       "action": {
         "start": "Start",
-        "pause": "Pause",
-        "reset": "Reset"
+        "pause": "",
+        "reset": ""
       },
       "attention": {
-        "timerComplete": "Timer complete",
+        "timerComplete": "",
         "phaseReady": "{phase} klar"
       },
-      "progress": "Timer progress: {progress}%",
+      "progress": "",
       "compact": {
         "completedFocus": "{count, plural, =0 {Ingen fokussessioner fuldført} one {# fokussession fuldført} other {# fokussessioner fuldført}}"
       },
       "alert": {
-        "title": "Timer complete",
+        "title": "",
         "completed": "{phase} fuldført."
       },
       "advanced": {
-        "sequence": "Pomodoro sequence",
+        "sequence": "",
         "focusSession": "Fokus {session}",
         "settings": "Permanente indstillinger",
         "settingsHint": "Brug widget-kontekstmenuen til at redigere disse indstillinger for tavlen.",
@@ -2997,7 +3015,7 @@
       "createdAt": "Oprettet {date}",
       "permission": {
         "owner": "Ejer",
-        "editor": "Editor",
+        "editor": "",
         "viewer": "Fremviser"
       },
       "status": {
@@ -3066,7 +3084,7 @@
       "state": {
         "on": "Til",
         "off": "Fra",
-        "unavailable": "Unavailable",
+        "unavailable": "",
         "unknown": "Ukendt"
       },
       "advanced": {
@@ -3221,6 +3239,13 @@
         },
         "showUnmonitored": {
           "label": "Vis uovervåget"
+        },
+        "viewMode": {
+          "label": "Vis"
+        },
+        "hideHeader": {
+          "label": "",
+          "description": ""
         }
       },
       "advanced": {
@@ -3229,6 +3254,22 @@
         "eventCount": "{count, plural, one {# begivenhed} other {# begivenheder}}",
         "loading": "Indlæser kalenderbegivenheder...",
         "noEvents": "Ingen begivenheder i denne måned"
+      },
+      "view": {
+        "compact": "Kompakt måned",
+        "month": "Måned",
+        "week": "Uge",
+        "day": "Dag",
+        "agenda": "Dagsorden"
+      },
+      "controls": {
+        "today": "Idag",
+        "previous": "Tidligere periode",
+        "next": "Næste periode",
+        "noEvents": "Ingen begivenheder i denne periode",
+        "more": "{count} mere",
+        "timeSlot": "Tidspunkt",
+        "weekday": "Ugedag"
       }
     },
     "weather": {
@@ -3308,11 +3349,11 @@
         "currentHumidity": "Aktuel fugtighed",
         "wind": "Vind / vindstød ({unit})",
         "currentWind": "Nuværende vind / vindstød",
-        "windValue": "{speed} / {gusts} {unit}",
+        "windValue": "",
         "windDetail": "Maks. vind / vindstød: {speed} / {gusts} {unit}",
         "nextHourPrecipitation": "Nedbør næste time",
         "precipitationChance": "Nedbør chance",
-        "precipitationValue": "{probability}% · {amount} mm",
+        "precipitationValue": "",
         "precipitationDetail": "Nedbør: {probability}% · {amount} mm",
         "todayUv": "Dagens maks. UV-indeks",
         "uvIndex": "Maks. UV-indeks: {value}",
@@ -3325,7 +3366,7 @@
           "humidity": "Gennemsnitlig fugtighed",
           "wind": "Maks. vind / vindstød",
           "uv": "Maks. UV-indeks",
-          "daylight": "Daylight"
+          "daylight": ""
         },
         "sun": "Solopgang / solnedgang",
         "noForecast": "Ingen prognose tilgængelige data"
@@ -3382,7 +3423,7 @@
           "label": "Standard fane"
         },
         "tabOrder": {
-          "label": "Tab order",
+          "label": "",
           "systemFirst": "System derefter klynge",
           "clusterFirst": "Klynge derefter System"
         },
@@ -3535,12 +3576,12 @@
       "server": {
         "buildServer": "Byg",
         "resourceCounts": "{applications, plural, one {# app} other {# apps}} / {services, plural, one {# service} other {# tjenester}}",
-        "reachability": "Reachability",
+        "reachability": "",
         "usability": "Brugbarhed"
       },
       "source": {
         "url": "Kilde: {url}",
-        "unavailable": "{source}: unavailable"
+        "unavailable": ""
       },
       "instances": {
         "title": "Instanser"
@@ -3573,8 +3614,8 @@
       "status": {
         "running": "Kører",
         "notRunning": "Kører ikke",
-        "unavailable": "Unavailable",
-        "vpn": "VPN: {status}"
+        "unavailable": "",
+        "vpn": ""
       }
     },
     "ups": {
@@ -3607,7 +3648,7 @@
         "power": "Effekt",
         "temperature": "Temperatur",
         "manufacturer": "Producent",
-        "model": "Model",
+        "model": "",
         "serial": "Seriel"
       },
       "error": {
@@ -3912,12 +3953,29 @@
         "transcoding": "",
         "paused": "",
         "remaining": "",
-        "seasonEpisode": "S{season} E{episode}",
+        "seasonEpisode": "",
+        "state": {
+          "playing": "",
+          "buffering": ""
+        },
+        "details": {
+          "device": "Enhed",
+          "location": "",
+          "sessionId": "",
+          "bitrate": "",
+          "audioHandling": "",
+          "direct": "",
+          "transcode": "",
+          "containerChanged": "",
+          "position": "",
+          "unknown": ""
+        },
         "metadata": {
           "title": "Statistik for nørder",
           "video": {
             "title": "Video",
-            "resolution": "Opløsning"
+            "resolution": "Opløsning",
+            "frameRate": ""
           },
           "audio": {
             "title": "Lyd",
@@ -3938,6 +3996,109 @@
         "playing": "{count} spiller",
         "transcoding": "{count} omkodning"
       }
+    },
+    "thingport-libraryStats": {
+      "name": "",
+      "description": "",
+      "title": "",
+      "option": {
+        "showModels": {
+          "label": ""
+        },
+        "showCollections": {
+          "label": ""
+        },
+        "showCategories": {
+          "label": ""
+        },
+        "showAuthors": {
+          "label": ""
+        }
+      },
+      "models": "",
+      "collections": "",
+      "categories": "Kategorier",
+      "authors": ""
+    },
+    "thingport-featuredModel": {
+      "name": "",
+      "description": "",
+      "option": {
+        "autoRotate": {
+          "label": ""
+        },
+        "showDetails": {
+          "label": ""
+        }
+      },
+      "title": "",
+      "empty": "",
+      "hint": "",
+      "noPreview": "",
+      "views": "",
+      "prints": ""
+    },
+    "thingport-activityHeatmap": {
+      "name": "",
+      "description": "",
+      "title": "",
+      "option": {
+        "weekStart": {
+          "label": "Første ugedag",
+          "option": {
+            "sunday": "",
+            "monday": ""
+          }
+        },
+        "showTotal": {
+          "label": ""
+        },
+        "showLegend": {
+          "label": ""
+        }
+      },
+      "lastYear": "",
+      "totalLastYear": "",
+      "totalInYear": "",
+      "dayTotal": "",
+      "dayEmpty": "",
+      "kinds": {
+        "import": "",
+        "upload": "Total Uploadet",
+        "download": "Total downloadet",
+        "slicer": "",
+        "delete": "Slettet"
+      },
+      "less": "",
+      "more": ""
+    },
+    "thingport-models": {
+      "name": "",
+      "description": "",
+      "title": "",
+      "option": {
+        "defaultTab": {
+          "label": "Standard fane"
+        },
+        "itemCount": {
+          "label": ""
+        },
+        "showThumbnails": {
+          "label": ""
+        }
+      },
+      "tab": {
+        "recentlyAdded": "",
+        "topViewed": "",
+        "topPrinted": ""
+      },
+      "empty": {
+        "recentlyAdded": "",
+        "topViewed": "",
+        "topPrinted": ""
+      },
+      "views": "",
+      "prints": ""
     },
     "paperlessNgx": {
       "description": "Oversigt over dit Paperless-ngx dokumentarkiv",
@@ -4223,7 +4384,7 @@
       "actions": {
         "previousPhoto": "Forrige billede",
         "nextPhoto": "Næste billede",
-        "pauseSlideshow": "Pause slideshow",
+        "pauseSlideshow": "",
         "resumeSlideshow": "Genoptag diasshow",
         "toggleSlideshow": "Pause eller genoptag diasshow",
         "photo": "Foto {number}"
@@ -4611,27 +4772,59 @@
       "name": "Udgivelser",
       "description": "Viser en liste over den aktuelle version af de givne depoter med den givne version regex.",
       "option": {
+        "layout": {
+          "label": "Layout",
+          "description": "",
+          "option": {
+            "comfortable": "Behageligt",
+            "compact": "Kompakt"
+          }
+        },
+        "summary": {
+          "label": "",
+          "description": "",
+          "option": {
+            "detailed": "",
+            "count": "",
+            "hidden": "Skjult"
+          }
+        },
+        "sections": {
+          "label": "",
+          "description": ""
+        },
+        "collapsedSections": {
+          "label": "",
+          "description": ""
+        },
         "newReleaseWithin": {
           "label": "Ny Udgivelse Inden",
-          "description": "Anvendelseseksempel: 1w (1 uge), 10M (10 måneder). Accepterede enhedstyper h (timer), d (dage), w (uger), M (måneder), y (år). Lad være tom for ingen fremhævning af nye udgivelser."
+          "description": "Anvendelseseksempel: 1w (1 uge), 10M (10 måneder). Accepterede enhedstyper h (timer), d (dage), w (uger), M (måneder), y (år). Lad være tom for ingen fremhævning af nye udgivelser.",
+          "option": {
+            "never": "",
+            "1d": "1 dage",
+            "3d": "3 dage",
+            "1w": "1 uge",
+            "2w": "",
+            "1M": "1 måned",
+            "3M": "3 måneder"
+          }
         },
         "staleReleaseWithin": {
           "label": "Gamle Udgivelse Indenfor",
-          "description": "Anvendelseseksempel: 1w (1 uge), 10M (10 måneder). Accepterede enhedstyper h (timer), d (dage), w (uger), M (måneder), y (år). Lad være tom for ingen fremhævning af forældede udgivelser."
+          "description": "Anvendelseseksempel: 1w (1 uge), 10M (10 måneder). Accepterede enhedstyper h (timer), d (dage), w (uger), M (måneder), y (år). Lad være tom for ingen fremhævning af forældede udgivelser.",
+          "option": {
+            "never": "",
+            "1M": "1 måned",
+            "3M": "3 måneder",
+            "6M": "6 måneder",
+            "1y": "1 år",
+            "2y": "2 år"
+          }
         },
-        "showOnlyHighlighted": {
-          "label": "Vis Kun Fremhævede",
-          "description": "Vis kun nye eller forældede udgivelser. Som pr ovenfor."
-        },
-        "showDetails": {
-          "label": "Vis detaljer"
-        },
-        "showOnlyIcon": {
-          "label": "Vis kun ikon"
-        },
-        "topReleases": {
-          "label": "Top Udgivelser",
-          "description": "Det maksimale antal seneste udgivelser at vise. Nul betyder ingen grænse."
+        "showChangelogPreview": {
+          "label": "",
+          "description": ""
         },
         "repositories": {
           "label": "Repositories",
@@ -4705,36 +4898,106 @@
           }
         }
       },
-      "not-found": "Ikke fundet",
-      "pre-release": "Pre-Release",
-      "archived": "Arkiveret",
-      "forked": "Forked",
+      "summary": {
+        "newReleases": "",
+        "newShort": "ny",
+        "tracked": "",
+        "caughtUp": "",
+        "outdated": "",
+        "outdatedShort": "forældet",
+        "failing": "",
+        "failingShort": "",
+        "latest": "",
+        "issues": ""
+      },
+      "section": {
+        "new": {
+          "label": "Ny",
+          "description": ""
+        },
+        "attention": {
+          "label": "Behøver opmærksomhed",
+          "description": ""
+        },
+        "upToDate": {
+          "label": "Op til dato",
+          "description": ""
+        },
+        "quiet": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "status": {
+        "new": "",
+        "outdated": "",
+        "error": "",
+        "upToDate": "op til dato",
+        "quiet": ""
+      },
+      "tag": {
+        "new": "Ny",
+        "preRelease": "",
+        "resolvedFrom": "",
+        "quiet": "",
+        "archived": "Arkiveret",
+        "fork": ""
+      },
+      "issue": {
+        "affected": "",
+        "rateLimited": {
+          "title": "",
+          "hint": ""
+        },
+        "notFound": {
+          "title": "",
+          "hint": ""
+        },
+        "noMatchingVersion": {
+          "title": "",
+          "hint": ""
+        },
+        "noReleasesFound": {
+          "title": "",
+          "hint": ""
+        },
+        "invalidIdentifier": {
+          "title": "Ugyldig identifikator",
+          "hint": ""
+        },
+        "noProviderSelected": {
+          "title": "Ingen udbyder valgt",
+          "hint": ""
+        },
+        "noProviderResponse": {
+          "title": "",
+          "hint": ""
+        },
+        "unexpected": {
+          "title": "",
+          "hint": ""
+        }
+      },
+      "markViewed": "Marker som vist",
+      "markAllViewed": "",
+      "markEntryViewed": "",
+      "viewed": "",
+      "copyVersion": "",
+      "copied": "Kopieret",
+      "published": "",
+      "whatChanged": "",
+      "noNotes": "",
+      "changes": "",
       "starsCount": "Stjerner",
       "forksCount": "Forks",
-      "issuesCount": "Åbne Problemer",
-      "markViewed": "Marker som vist",
-      "openProjectPage": "Åbn Projektside",
-      "openReleasePage": "Åbn Udgivelsesside",
-      "releaseDescription": "Udgivelse Beskrivelse",
-      "projectDescription": "Projektbeskrivelse",
+      "openIssues": "",
+      "created": "Oprettet",
+      "releasePage": "",
+      "projectPage": "",
       "runningVersions": "Kørende Versioner",
       "upToDate": "Op til dato",
       "updateAvailable": "Opdatering tilgængelig",
-      "unknownStatus": "Ukendt",
-      "created": "Oprettet",
-      "error": {
-        "label": "Fejl",
-        "messages": {
-          "invalidIdentifier": "Ugyldig identifikator",
-          "noMatchingVersion": "Ingen matchende version fundet",
-          "noReleasesFound": "Ingen udgivelser fundet",
-          "noProviderSelected": "",
-          "noProviderResponse": "Intet svar fra udbyder",
-          "unexpected": ""
-        }
-      },
-      "expandDetails": "Vis detaljer for {name}",
-      "collapseDetails": "Skjul detaljer for {name}"
+      "unknownStatus": "Ukendt"
     },
     "networkControllerSummary": {
       "advanced": {
@@ -4750,12 +5013,12 @@
       "card": {
         "vpn": {
           "countConnected": "{count, plural, one {# forbundet} other {# forbundet}}",
-          "label": "VPN"
+          "label": ""
         },
-        "wan": "WAN",
-        "web": "Web",
+        "wan": "",
+        "web": "",
         "wifi": "WiFi",
-        "lan": "LAN"
+        "lan": ""
       },
       "error": {
         "unknownContentOption": "Ukendt indhold indstilling for netværkscontroller resumé widget: "
@@ -4835,9 +5098,9 @@
         "noInterfaces": "Ingen netværksgrænsefladedata endnu"
       },
       "versionUnknown": "Ukendt version",
-      "metricAccessible": "{metric}: {value}%, {status}",
+      "metricAccessible": "",
       "status": {
-        "normal": "Normal",
+        "normal": "",
         "warning": "Advarsel",
         "critical": "Kritisk"
       }
@@ -4855,8 +5118,8 @@
           "option": {
             "auto": "Automatisk",
             "plain": "Almindelig tekst",
-            "markdown": "Markdown",
-            "html": "HTML"
+            "markdown": "",
+            "html": ""
           }
         }
       },
@@ -4907,45 +5170,116 @@
     "uptimeKuma": {
       "description": "Overvåg oppetidsstatistik fra din Uptime Kuma-statusside",
       "option": {
-        "showAverageUptime": {
-          "label": "Vis gennemsnitlig oppetid",
-          "description": "Vis den kombinerede gennemsnitlige oppetidsprocent over 24 timer"
-        },
-        "showUptimeRing": {
-          "label": "Vis oppetidsring",
-          "description": ""
-        },
-        "showTotalMonitors": {
+        "statusPageSlug": {
           "label": "",
           "description": ""
         },
-        "showUpCount": {
+        "summaryOnly": {
           "label": "",
           "description": ""
         },
-        "showDownCount": {
+        "showSummary": {
           "label": "",
           "description": ""
         },
-        "showPausedCount": {
+        "showIncidents": {
+          "label": "",
+          "description": ""
+        },
+        "groupByStatusPageGroup": {
+          "label": "",
+          "description": ""
+        },
+        "showOnlyProblems": {
+          "label": "",
+          "description": ""
+        },
+        "sortBy": {
+          "label": "",
+          "option": {
+            "status": "",
+            "statusPage": "",
+            "name": "Jobnavn",
+            "uptime": ""
+          }
+        },
+        "showHeartbeatBar": {
+          "label": "",
+          "description": ""
+        },
+        "showUptime": {
+          "label": ""
+        },
+        "showResponseTime": {
+          "label": ""
+        },
+        "showCertificateExpiry": {
           "label": "",
           "description": ""
         }
       },
-      "averageUptime": "",
-      "stats": {
-        "totalMonitors": "",
-        "upCount": "",
-        "downCount": "",
-        "pausedCount": ""
-      },
-      "error": {
-        "internalServerError": ""
-      },
       "status": {
         "up": "Total op",
         "down": "Download hastighed",
-        "paused": "På pause"
+        "pending": "Afventende",
+        "maintenance": "",
+        "stale": "",
+        "unknown": ""
+      },
+      "overall": {
+        "operational": "",
+        "degraded": "",
+        "outage": "",
+        "maintenance": "",
+        "unknown": ""
+      },
+      "short": {
+        "operational": "",
+        "down": "",
+        "pending": "",
+        "maintenance": "",
+        "unknown": ""
+      },
+      "summary": {
+        "upRatio": "",
+        "upRatioShort": "",
+        "averageUptime": "",
+        "uptimeShort": "",
+        "statusCount": ""
+      },
+      "unit": {
+        "milliseconds": ""
+      },
+      "heartbeatBar": {
+        "label": ""
+      },
+      "detail": {
+        "checked": "",
+        "certificate": ""
+      },
+      "notice": {
+        "label": "",
+        "untitled": "Unavngivet"
+      },
+      "empty": {
+        "title": "",
+        "description": ""
+      },
+      "allClear": "",
+      "error": {
+        "internalServerError": ""
+      },
+      "monitorType": {
+        "http": "",
+        "keyword": "",
+        "jsonQuery": "",
+        "port": "",
+        "ping": "Ping",
+        "dns": "",
+        "docker": "",
+        "push": "",
+        "group": "Gruppe",
+        "realBrowser": ""
       }
     },
     "traefik": {
@@ -4980,9 +5314,9 @@
         "internalServerError": ""
       },
       "resourceType": {
-        "router": "Router",
+        "router": "",
         "service": "Tjeneste",
-        "middleware": "Middleware"
+        "middleware": ""
       },
       "resourceStatus": {
         "enabled": "Aktiveret",
@@ -5076,7 +5410,7 @@
         "network": "NET",
         "up": "OP",
         "down": "NED",
-        "memoryTooltip": "{used} / {available} ({percent}%)"
+        "memoryTooltip": ""
       }
     },
     "systemDisks": {
@@ -5106,7 +5440,7 @@
       },
       "status": {
         "unhealthy": "Usund",
-        "smart": "SMART",
+        "smart": "",
         "free": "{percentage}% fri"
       }
     },
@@ -5327,8 +5661,8 @@
         "oneHour": "1t",
         "twelveHours": "12t",
         "oneDay": "24t",
-        "oneWeek": "1w",
-        "thirtyDays": "30d"
+        "oneWeek": "",
+        "thirtyDays": ""
       }
     },
     "assistant": {
@@ -5359,7 +5693,7 @@
       },
       "options": {
         "statusFilter": {
-          "label": "Status filter"
+          "label": ""
         },
         "showCpu": {
           "label": "Vis CPU"
@@ -5399,23 +5733,23 @@
         "system": "System",
         "source": "Integration",
         "hostname": "Værtsnavn",
-        "cpuModel": "CPU model",
+        "cpuModel": "",
         "cores": "Kerner",
         "memoryTotal": "Hukommelse total",
         "memory": "Hukommelse",
-        "disk": "Disk",
+        "disk": "",
         "loadAvg": "Indlæs Gns.",
         "net": "Netto",
-        "temp": "Temp",
+        "temp": "",
         "battery": "Flagermus",
         "uptime": "Oppetid",
-        "agent": "Agent"
+        "agent": ""
       }
     },
     "llamacpp": {
-      "name": "llama.cpp",
+      "name": "",
       "description": "Vis sundhed, indlæst model og generationshastighed på din lokale llama.cpp server.",
-      "title": "llama.cpp",
+      "title": "",
       "status": {
         "unhealthy": "Usund ({status})"
       },
@@ -5430,7 +5764,7 @@
         "context": "Kontekst",
         "size": "Fil størrelse",
         "parameters": "Parametre",
-        "model": "Model",
+        "model": "",
         "quantization": "Kvantisering"
       },
       "stats": {
@@ -5443,10 +5777,10 @@
         "unreachable": "llama-server er ikke tilgængelig"
       },
       "unit": {
-        "speed": "{value} t/s",
-        "parameters": "{value}B",
-        "none": "—",
-        "speedShort": "t/s"
+        "speed": "",
+        "parameters": "",
+        "none": "",
+        "speedShort": ""
       },
       "option": {
         "showTitle": {
@@ -5505,7 +5839,7 @@
       "moveDown": "Flyt ned",
       "remove": "Fjern metrisk",
       "loading": "Indlæser…",
-      "unavailable": "Unavailable",
+      "unavailable": "",
       "refreshFailed": "Opdatering mislykkedes — viser gemte data",
       "stale": "Gemte data — opdater for at opdatere",
       "table": {
@@ -5552,10 +5886,12 @@
       "allHidden": "Alle målinger er skjult i denne visning. Brug Tilpas denne visning for at gendanne dem."
     },
     "wazuh": {
+      "name": "",
+      "description": "",
       "target": {
-        "api": "Wazuh server API",
+        "api": "",
         "indexer": "Wazuh indeksering",
-        "wazuh": "Wazuh"
+        "wazuh": ""
       },
       "severity": {
         "low": "Lav",
@@ -5570,7 +5906,15 @@
         },
         "certificate": {
           "title": "{target} certifikat er ikke betroet",
-          "description": "Wazuh bruger som standard et selvsigneret certifikat. Kør \"Test connection\" på integrationen og stol på certifikatet, eller tilføj din CA under Indstillinger → Certifikater."
+          "description": ""
+        },
+        "certificateHostname": {
+          "title": "",
+          "description": ""
+        },
+        "certificateExpired": {
+          "title": "",
+          "description": ""
         },
         "unreachable": {
           "title": "Kan ikke nå {target}",
@@ -5595,101 +5939,148 @@
         "unknown": {
           "title": "Kunne ikke indlæse data fra {target}",
           "description": "Tjek Homarr logfilerne for detaljer."
-        }
+        },
+        "viewSaveTitle": "",
+        "viewSaveMessage": ""
       },
       "range": {
         "1h": "1t",
         "24h": "24t",
-        "7d": "7d",
-        "30d": "30d"
+        "7d": "",
+        "30d": ""
       },
-      "levelTooltip": "Regel niveau {level} ({severity})"
-    },
-    "wazuhAgents": {
-      "name": "Wazuh agenser",
-      "description": "Sorterbar liste over Wazuh agenter med status, OS, version og last keepalive",
+      "levelTooltip": "Regel niveau {level} ({severity})",
+      "summary": {
+        "title": "Advarsel sværhedsgrad · {range}",
+        "alerts": "advarsler",
+        "none": "Ingen advarsler",
+        "trend": {
+          "new": "ny",
+          "tooltip": "Forrige periode: {previous}"
+        },
+        "previous": "Forrige {range}: {count}",
+        "maxLevel": "Maks niveau {level}",
+        "health": "Indekserings sundhed: {status}",
+        "manager": "Direktør {version}"
+      },
+      "alerts": {
+        "title": "Advarsler · niveau {level}+ · {hours}h",
+        "empty": "Ingen advarsler på dette niveau. Alt roligt.",
+        "rule": "Regel {id}",
+        "openInDashboard": "Åbn denne advarsel i Wazuh dashboard"
+      },
+      "timeline": {
+        "title": "Advarsler tidslinje · {range}",
+        "total": "{count} advarsler",
+        "interval": "pr. {interval}"
+      },
+      "top": {
+        "title": {
+          "rules": "Øverste regler · {range}",
+          "agents": "Top agenter · {range}",
+          "sourceIps": "Top kilde-IP'er · {range}",
+          "mitreTactics": "MITRE taktik · {range}",
+          "mitreTechniques": ""
+        },
+        "empty": {
+          "rules": "Ingen advarsler i denne periode",
+          "agents": "Ingen advarsler i denne periode",
+          "sourceIps": "Ingen indberetninger med kilde- IP i denne periode",
+          "mitreTactics": "Ingen indberetninger kortlagt til MITRE ATT&CK i denne periode",
+          "mitreTechniques": "Ingen indberetninger kortlagt til MITRE ATT&CK i denne periode"
+        },
+        "totalTooltip": "{count} matchende advarsler",
+        "private": "",
+        "public": "Offentlig",
+        "agents": "Set på {count} agenser",
+        "others": "{count} flere advarsler i andre poster"
+      },
+      "agents": {
+        "title": "Agenter",
+        "total": "{count} agenser",
+        "status": {
+          "active": "Aktiv",
+          "disconnected": "Afbrudt",
+          "neverConnected": "Aldrig tilsluttet",
+          "pending": "Afventende"
+        },
+        "statusLabel": {
+          "active": "Aktiv",
+          "disconnected": "Afbrudt",
+          "never_connected": "Aldrig tilsluttet",
+          "pending": "Afventende",
+          "unknown": "Ukendt"
+        },
+        "live": "Levende",
+        "snapshot": "Snapshot {age} gammel",
+        "snapshotHint": "Læs fra Wazuh dashboard agent snapshot (wazuh-monitoring) taget på {time}. Tilføj server API legitimationsoplysninger for live data.",
+        "staleSnapshot": "Agent snapshot fra {time} er forældet. Tjek at Wazuh dashboard overvågning job kører, eller tilføj server API legitimationsoplysninger.",
+        "noDisconnected": "Alle agenter er forbundet",
+        "empty": "Ingen agenter matcher dette filter",
+        "column": {
+          "status": "Status",
+          "name": "Jobnavn",
+          "ip": "",
+          "os": "OS",
+          "version": "Version",
+          "lastKeepAlive": "Holde",
+          "groups": "Grupper"
+        },
+        "outdated": "Ældre end den nyeste agent version ({version})"
+      },
+      "vulnerabilities": {
+        "title": "Sårbarheder",
+        "topCves": "Top CVE'er",
+        "score": "",
+        "agentsShort": "Agenter",
+        "topAgents": "Mest sårbare agenser",
+        "criticalHigh": "Crit / Høj",
+        "totalTooltip": "{count} fund på {agents} midler",
+        "affected": "{count} agenser",
+        "empty": "Ingen sårbarheder fundet",
+        "distribution": "Fordeling af sværhedsgrad. {unscored} resultater uden en score vises ikke.",
+        "worst": "Værst: {id} ({score}) på {agents} agenter"
+      },
+      "fim": {
+        "title": "Filintegritet · {range}",
+        "event": {
+          "added": "Dato tilføjet",
+          "modified": "Ændret",
+          "deleted": "Slettet",
+          "unknown": "Ændret"
+        },
+        "empty": "Ingen fil integritet begivenheder i denne periode",
+        "user": "af {user}",
+        "registry": "Registreringsdatabase"
+      },
+      "authFailures": {
+        "title": "Auth fejl · {hours}h",
+        "seriesTooltip": "Alle agenter over den sidste {hours}h",
+        "peak": "Peak {count}/spand",
+        "empty": "Ingen mislykkede logins i denne periode",
+        "failed": "Mislykkede logins",
+        "failedHint": "Enkelt godkendelsesfejl (sshd, PAM, Windows-logon, ugyldige brugere)",
+        "bruteForce": "Brute kraft",
+        "bruteForceHint": "Korrelerede brute-force regler (flere fejl i en kort periode, MITRE T1110)",
+        "sourceIps": "Kilde Ip'er",
+        "ipTooltip": "{ip}: {count} fejl",
+        "bruteForceCount": ""
+      },
+      "view": {
+        "overview": "",
+        "alerts": "",
+        "timeline": "",
+        "top": "",
+        "agents": "Agenter",
+        "vulnerabilities": "Sårbarheder",
+        "fim": "",
+        "authFailures": ""
+      },
       "option": {
-        "statusFilter": {
-          "label": "Vis agenter"
+        "visibleViews": {
+          "label": "",
+          "description": ""
         },
-        "sortBy": {
-          "label": "Sorter efter"
-        },
-        "showVersion": {
-          "label": "Vis Wazuh versionskolonne"
-        },
-        "showGroups": {
-          "label": "Vis gruppe kolonne"
-        }
-      },
-      "title": "Agenter",
-      "total": "{count} agenser",
-      "status": {
-        "active": "Aktiv",
-        "disconnected": "Afbrudt",
-        "neverConnected": "Aldrig tilsluttet",
-        "pending": "Afventende"
-      },
-      "statusLabel": {
-        "active": "Aktiv",
-        "disconnected": "Afbrudt",
-        "never_connected": "Aldrig tilsluttet",
-        "pending": "Afventende",
-        "unknown": "Ukendt"
-      },
-      "live": "Levende",
-      "snapshot": "Snapshot {age} gammel",
-      "snapshotHint": "Læs fra Wazuh dashboard agent snapshot (wazuh-monitoring) taget på {time}. Tilføj server API legitimationsoplysninger for live data.",
-      "staleSnapshot": "Agent snapshot fra {time} er forældet. Tjek at Wazuh dashboard overvågning job kører, eller tilføj server API legitimationsoplysninger.",
-      "noDisconnected": "Alle agenter er forbundet",
-      "empty": "Ingen agenter matcher dette filter",
-      "column": {
-        "status": "Status",
-        "name": "Jobnavn",
-        "ip": "IP",
-        "os": "OS",
-        "version": "Version",
-        "lastKeepAlive": "Holde",
-        "groups": "Grupper"
-      },
-      "outdated": "Ældre end den nyeste agent version ({version})"
-    },
-    "wazuhAlerts": {
-      "name": "Wazuh advarer feed",
-      "description": "Seneste Wazuh advarsler med niveau, MITRE ATT & CK teknikker, agent og kilde IP",
-      "option": {
-        "minLevel": {
-          "label": "Mindste regelniveau",
-          "description": "Wazuh niveauer: 0-6 lav, 7-11 medium, 12-14 høj, 15+ kritisk"
-        },
-        "hours": {
-          "label": "Tidsvindue (timer)"
-        },
-        "limit": {
-          "label": "Antal indberetninger"
-        },
-        "showMitre": {
-          "label": "Show MITRE ATT&CK techniques"
-        },
-        "showAgent": {
-          "label": "Vis agent"
-        },
-        "showSourceIp": {
-          "label": "Vis kilde- IP"
-        },
-        "showRuleId": {
-          "label": "Vis regel ID"
-        }
-      },
-      "title": "Advarsler · niveau {level}+ · {hours}h",
-      "empty": "Ingen advarsler på dette niveau. Alt roligt.",
-      "rule": "Regel {id}",
-      "openInDashboard": "Åbn denne advarsel i Wazuh dashboard"
-    },
-    "wazuhSummary": {
-      "name": "Wazuh advarselssværhedsgrad",
-      "description": "Advarsel sværhedsgrad opdeling med en tendens mod den foregående periode",
-      "option": {
         "range": {
           "label": "Tidsinterval"
         },
@@ -5698,29 +6089,9 @@
         },
         "showFooter": {
           "label": "Vis sidefod"
-        }
-      },
-      "title": "Advarsel sværhedsgrad · {range}",
-      "alerts": "advarsler",
-      "none": "Ingen advarsler",
-      "trend": {
-        "new": "ny",
-        "tooltip": "Forrige periode: {previous}"
-      },
-      "previous": "Forrige {range}: {count}",
-      "maxLevel": "Maks niveau {level}",
-      "health": "Indekserings sundhed: {status}",
-      "manager": "Direktør {version}"
-    },
-    "wazuhTimeline": {
-      "name": "Wazuh alerts timeline",
-      "description": "Stablet diagram over Wazuh advarsler over tid af sværhedsgrad",
-      "option": {
-        "range": {
-          "label": "Tidsinterval"
         },
         "interval": {
-          "label": "Interval"
+          "label": ""
         },
         "chartType": {
           "label": "Diagram type"
@@ -5730,60 +6101,32 @@
           "description": "Kvadratrod holder høje og kritiske alarmer synlige ved siden af tusindvis af lave alarmer"
         },
         "minLevel": {
-          "label": "Mindste regelniveau"
+          "label": ""
         },
         "showLegend": {
           "label": "Vis forklaring med totaler"
-        }
-      },
-      "title": "Advarsler tidslinje · {range}",
-      "total": "{count} advarsler",
-      "interval": "pr. {interval}"
-    },
-    "wazuhTopList": {
-      "name": "Topliste over Wazuh",
-      "description": "Top regler, agenter, kilde-IP'er eller MITRE ATT&CK taktik og teknikker ved tælling af alarm",
-      "option": {
-        "kind": {
+        },
+        "topKind": {
           "label": "Rang"
         },
-        "range": {
-          "label": "Tidsinterval"
-        },
-        "limit": {
-          "label": "Antal poster"
-        },
-        "minLevel": {
-          "label": "Mindste regelniveau"
+        "topLimit": {
+          "label": ""
         },
         "showBars": {
           "label": "Vis bjælker"
-        }
-      },
-      "title": {
-        "rules": "Øverste regler · {range}",
-        "agents": "Top agenter · {range}",
-        "sourceIps": "Top kilde-IP'er · {range}",
-        "mitreTactics": "MITRE taktik · {range}",
-        "mitreTechniques": "MITRE techniques · {range}"
-      },
-      "empty": {
-        "rules": "Ingen advarsler i denne periode",
-        "agents": "Ingen advarsler i denne periode",
-        "sourceIps": "Ingen indberetninger med kilde- IP i denne periode",
-        "mitreTactics": "Ingen indberetninger kortlagt til MITRE ATT&CK i denne periode",
-        "mitreTechniques": "Ingen indberetninger kortlagt til MITRE ATT&CK i denne periode"
-      },
-      "totalTooltip": "{count} matchende advarsler",
-      "private": "LAN",
-      "public": "Offentlig",
-      "agents": "Set på {count} agenser",
-      "others": "{count} flere advarsler i andre poster"
-    },
-    "wazuhVulnerabilities": {
-      "name": "Wazuh sårbarheder",
-      "description": "Sårbarhed tæller, top CVE'er og de mest sårbare agenter",
-      "option": {
+        },
+        "agentStatusFilter": {
+          "label": "Vis agenter"
+        },
+        "agentSortBy": {
+          "label": "Sorter efter"
+        },
+        "showVersion": {
+          "label": ""
+        },
+        "showGroups": {
+          "label": ""
+        },
         "cveOrder": {
           "label": "Rang CVE'er af"
         },
@@ -5798,73 +6141,42 @@
         },
         "showAgents": {
           "label": "Vis mest sårbare agenter"
-        }
-      },
-      "title": "Sårbarheder",
-      "topCves": "Top CVE'er",
-      "score": "Score",
-      "agentsShort": "Agenter",
-      "topAgents": "Mest sårbare agenser",
-      "criticalHigh": "Crit / Høj",
-      "totalTooltip": "{count} fund på {agents} midler",
-      "affected": "{count} agenser",
-      "empty": "Ingen sårbarheder fundet",
-      "distribution": "Fordeling af sværhedsgrad. {unscored} resultater uden en score vises ikke.",
-      "worst": "Værst: {id} ({score}) på {agents} agenter"
-    },
-    "wazuhFim": {
-      "name": "Wazuh fil integritet",
-      "description": "Nylige fil integritet overvågning (syscheck) begivenheder",
-      "option": {
-        "range": {
-          "label": "Tidsinterval"
         },
-        "event": {
+        "fimEvent": {
           "label": "Begivenheder"
         },
-        "limit": {
-          "label": "Antal hændelser"
+        "fimLimit": {
+          "label": ""
         },
         "includeRegistry": {
           "label": "Inkluder Windows registreringsdatabasen begivenheder"
-        }
-      },
-      "title": "Filintegritet · {range}",
-      "event": {
-        "added": "Dato tilføjet",
-        "modified": "Ændret",
-        "deleted": "Slettet",
-        "unknown": "Ændret"
-      },
-      "empty": "Ingen fil integritet begivenheder i denne periode",
-      "user": "af {user}",
-      "registry": "Registreringsdatabase"
-    },
-    "wazuhAuthFailures": {
-      "name": "Fejl i Wazuh autentificering",
-      "description": "Mislykkede logins og brute-force advarsler pr. agent med timesparkliner",
-      "option": {
-        "hours": {
-          "label": "Tidsvindue (timer)"
         },
-        "limit": {
-          "label": "Antal agenter"
+        "authLimit": {
+          "label": ""
         },
         "showSourceIps": {
           "label": "Vis top kilde-IP'er"
+        },
+        "alertsMinLevel": {
+          "label": "",
+          "description": "Wazuh niveauer: 0-6 lav, 7-11 medium, 12-14 høj, 15+ kritisk"
+        },
+        "alertsLimit": {
+          "label": ""
+        },
+        "showMitre": {
+          "label": ""
+        },
+        "showAgent": {
+          "label": "Vis agent"
+        },
+        "showSourceIp": {
+          "label": "Vis kilde- IP"
+        },
+        "showRuleId": {
+          "label": "Vis regel ID"
         }
-      },
-      "title": "Auth fejl · {hours}h",
-      "seriesTooltip": "Alle agenter over den sidste {hours}h",
-      "peak": "Peak {count}/spand",
-      "empty": "Ingen mislykkede logins i denne periode",
-      "failed": "Mislykkede logins",
-      "failedHint": "Enkelt godkendelsesfejl (sshd, PAM, Windows-logon, ugyldige brugere)",
-      "bruteForce": "Brute kraft",
-      "bruteForceHint": "Korrelerede brute-force regler (flere fejl i en kort periode, MITRE T1110)",
-      "sourceIps": "Kilde Ip'er",
-      "ipTooltip": "{ip}: {count} fejl",
-      "bruteForceCount": "{count} brute force"
+      }
     }
   },
   "widgetPreview": {
@@ -5883,6 +6195,18 @@
       "addWidget": "Tilføj widget",
       "addApp": "Tilføj app",
       "connectService": "Tilslut tjeneste"
+    },
+    "urlDrop": {
+      "hint": "",
+      "resolving": "",
+      "notification": {
+        "success": {
+          "message": ""
+        },
+        "full": {
+          "message": ""
+        }
+      }
     },
     "setupChecklist": {
       "title": "Gør denne tavle nyttig",
@@ -5921,7 +6245,7 @@
         "preview": "Forhåndsvisning af {name} med {count} elementer",
         "currentHidden": "Nuværende tavle: {name}",
         "keyboard": {
-          "navigate": "Navigate",
+          "navigate": "",
           "open": "Åbn",
           "instructions": "Skriv for at filtrere tavler. Brug piletasterne til at flytte gennem resultater og Enter for at åbne en tavle."
         },
@@ -6144,12 +6468,12 @@
             "columns": "kolonner",
             "empty": "Dette layout er tomt",
             "dynamicSection": "Dynamisk sektion",
-            "editorWidthLabel": "{layoutName} · {width}px"
+            "editorWidthLabel": ""
           },
           "reset": {
             "action": "Nulstil fra Base",
             "confirm": {
-              "title": "Reset {layoutName}?",
+              "title": "",
               "message": "Dette erstatter hver gemte position og størrelse i dette layout med et nyt layout genereret fra Base. Dette kan ikke fortrydes."
             }
           },
@@ -6278,9 +6602,9 @@
         "label": "Faste sidebjælker",
         "description": "Reserver op til tre dashboard kolonner på hver side. De resterende lærred reflows automatisk.",
         "left": {
-          "label": "Left sidebar",
+          "label": "",
           "description": "Hold dette område synligt mens instrumentbrættet ruller.",
-          "thumbLabel": "Left sidebar width"
+          "thumbLabel": ""
         },
         "right": {
           "label": "Højre sidepanel",
@@ -6450,7 +6774,7 @@
                 }
               },
               "items": {
-                "logo": "Logo",
+                "logo": "",
                 "search": "Søg",
                 "home": "Hjemme tavle",
                 "boardSwitcher": "Tavler",
@@ -6692,7 +7016,7 @@
             "groups": {
               "identity": "Identitet",
               "appearance": "Udseende",
-              "customCss": "Custom CSS",
+              "customCss": "",
               "authentication": "Autorisering"
             },
             "identity": {
@@ -6706,7 +7030,7 @@
             },
             "logo": {
               "label": "Applikations logo",
-              "placeholder": "/logo/logo.png"
+              "placeholder": ""
             },
             "favicon": {
               "label": "Browser-ikon (favicon)",
@@ -6724,7 +7048,7 @@
             },
             "signInBackground": {
               "label": "Baggrund for godkendelse",
-              "placeholder": "https://example.com/background.jpg"
+              "placeholder": ""
             },
             "signInOverlay": {
               "label": "Overlejring af baggrunden"
@@ -6752,7 +7076,7 @@
             "summary": {
               "title": "Nuværende branding",
               "cornerStyle": "Hjørne stil",
-              "palette": "Palette",
+              "palette": "",
               "backgroundConfigured": "Brugerdefineret baggrund · {overlay}% overlay",
               "backgroundDefault": "Standard baggrund",
               "greetingConfigured": "Tilpasset hilsen",
@@ -6760,7 +7084,7 @@
               "boardColorLocked": "Brætfarve låst",
               "boardColorFlexible": "Brætfarver tilladt",
               "appName": "Jobnavn",
-              "logo": "Logo",
+              "logo": "",
               "greeting": "Hilsen",
               "on": "Til",
               "off": "Fra"
@@ -6857,7 +7181,7 @@
               }
             },
             "baseUrl": {
-              "title": "API base URL",
+              "title": "",
               "description": "Medtag API-præfiksen, normalt /v1. I containere, localhost henviser til Homarr container."
             },
             "apiKey": {
@@ -6892,9 +7216,9 @@
               "keep": "Behold gemte overskrifter"
             },
             "model": {
-              "title": "Model",
+              "title": "",
               "description": "Vælg en opdaget model eller indtast et eksakt endpoint, model ID.",
-              "placeholder": "Model ID",
+              "placeholder": "",
               "refresh": "Opdater modeller",
               "chooseModel": "Vælg den model, der bruges til nye samtaler.",
               "discoveryPath": "Model opdagelse sti",
@@ -7058,12 +7382,12 @@
                 }
               },
               "provenance": {
-                "oauth": "OAuth",
+                "oauth": "",
                 "unattributed": "Manuel eller ældre API-nøgle",
                 "unnamedClient": "Klientnavn blev ikke registreret",
                 "clientNameHint": "Klientnavne er selvrapporterede og er ikke verificeret.",
                 "details": "Forbindelse detaljer",
-                "credentialId": "Credential ID",
+                "credentialId": "",
                 "clientId": "Klient ID",
                 "callbackHost": "Ring tilbage vært",
                 "callbackUrl": "Fuld callback URL",
@@ -7307,7 +7631,7 @@
           "authentication": "Autorisering",
           "apiRequest": "API",
           "appRepresentation": "App",
-          "widgetConfiguration": "Widget",
+          "widgetConfiguration": "",
           "widgetQuery": "Widget forespørgsel"
         },
         "status": {
@@ -7487,8 +7811,8 @@
       },
       "status": {
         "available": "Tilgængelig",
-        "degraded": "Metrics unavailable",
-        "unavailable": "Unavailable"
+        "degraded": "",
+        "unavailable": ""
       },
       "unavailable": "Denne Kubernetes-kontekst kan ikke nås. Vælg en anden kontekst eller bekræft dens legitimationsoplysninger og slutpunkt.",
       "metricsUnavailable": "Denne kontekst er tilgængelig, men Metrics Server er ikke tilgængelig. Inventar forbliver tilgængelig uden live CPU og hukommelsesforbrug."
@@ -7520,7 +7844,7 @@
     },
     "nodes": {
       "field": {
-        "metricsUnavailable": "Unavailable",
+        "metricsUnavailable": "",
         "kubernetesVersion": {
           "label": "Kubernetes version"
         }
@@ -7754,7 +8078,7 @@
         "placeholder": "Spørg Assistent"
       },
       "external": {
-        "label": "Web",
+        "label": "",
         "placeholder": "Søg med en ekstern søgemaskine"
       },
       "media": {
@@ -7772,7 +8096,7 @@
       "modeAriaLabel": "{mode} tilstand",
       "resultsAriaLabel": "{mode} resultater",
       "footer": {
-        "navigate": "Navigate",
+        "navigate": "",
         "open": "Åbn",
         "close": "Luk"
       }
@@ -8475,7 +8799,7 @@
     "spotlightPrompt": {
       "title": "Spørg Assistent",
       "description": "Skriv en prompt ovenfor. Indtast sender den i baggrunden.",
-      "send": "Send prompt",
+      "send": "",
       "empty": "Skriv en prompt ovenfor"
     },
     "unavailable": {
@@ -8489,6 +8813,14 @@
     "conversationActions": "Samtale handlinger",
     "searchConversations": "Søg i samtaler",
     "noMatchingConversations": "Ingen matchende samtaler",
+    "historyError": {
+      "title": "",
+      "load": "",
+      "loadMessages": "",
+      "saveMessages": "",
+      "switch": "",
+      "retry": ""
+    },
     "moreActions": "Flere svar handlinger",
     "renameConversation": {
       "action": "Omdøb",
@@ -8531,7 +8863,7 @@
     },
     "composerPlaceholder": "Spørg Assistent…",
     "runtime": {
-      "model": "Model",
+      "model": "",
       "searchModels": "Søg efter modeller",
       "noModels": "Ingen tilgængelige modeller",
       "otherModels": "Andre modeller",
@@ -8540,7 +8872,7 @@
       "reasoning": {
         "auto": "Automatisk",
         "none": "Fra",
-        "minimal": "Minimal",
+        "minimal": "",
         "low": "Lav",
         "medium": "Medium",
         "high": "Høj"
@@ -8548,7 +8880,7 @@
     },
     "providerQuota": {
       "title": "Homarr udbyder",
-      "communityWorkshop": "Community Workshop",
+      "communityWorkshop": "",
       "dailyAllowance": "Daglig anmodning godtgørelse",
       "remainingLabel": "{remaining} af {limit} Anmodninger om udbyder",
       "loading": "Indlæser Homarr provider allowance",
@@ -8591,7 +8923,7 @@
     "previousResponse": "Tidligere svar",
     "nextResponse": "Næste svar",
     "removeAttachment": "Fjern vedhæftet fil",
-    "downloadFile": "Download {name}",
+    "downloadFile": "",
     "attachedImage": "Vedhæftet billede",
     "externalImageBlocked": "Eksternt billede blokeret for privatlivets fred",
     "image": {
@@ -8608,6 +8940,9 @@
     },
     "mentions": {
       "menu": "Tilføj Homarr kontekst",
+      "back": "",
+      "loading": "",
+      "empty": "",
       "context": "Kontekst",
       "app": "Apps",
       "integration": "Integrationer",
@@ -8616,12 +8951,14 @@
       "tools": "Tilgængelige værktøjer"
     },
     "markdown": {
-      "diagram": "Diagram",
+      "diagram": "",
       "renderingDiagram": "Gengiver diagram…",
       "diagramUnavailable": "Dette diagram kunne ikke gengives."
     },
     "commands": {
       "menu": "Assistente kommandoer",
+      "hint": "",
+      "empty": "",
       "health": "Forbered en service sundhedstjek",
       "explore": "Forbered en oversigt over denne Homarr instans",
       "media": "Forbered en mediesøgning",
@@ -8629,14 +8966,14 @@
       "designWidget": "Forbered en one-prompt brugerdefineret widget build"
     },
     "usage": {
-      "tokens": "tokens",
+      "tokens": "",
       "contextWindow": "Sammenhængs vindue",
       "requestDetails": "Anmod om detaljer",
       "used": "Seneste trin",
       "remaining": "Resterende",
       "capacity": "Kapacitet",
-      "input": "Input",
-      "output": "Output",
+      "input": "",
+      "output": "",
       "cached": "Cachelagret input",
       "cacheWrite": "Cache skriv",
       "reasoning": "Begrundelse",
@@ -8653,13 +8990,13 @@
       "providerDetailsPending": "OpenRouter behandler stadig nogle generationsdetaljer. Genåbn for at prøve igen.",
       "providerLatency": "Udbyder ventetid",
       "generationTime": "Generation tid",
-      "moderationLatency": "Moderation",
+      "moderationLatency": "",
       "providerThroughput": "Udbyder gennemløb",
-      "fallbacks": "Fallbacks",
+      "fallbacks": "",
       "fallbackLatency": "Tilbagefald latenstid",
       "cacheDiscount": "Cache rabat",
       "normalizedTokens": "OpenRouter normaliseret input / output",
-      "byok": "BYOK",
+      "byok": "",
       "cost": "Omkostning",
       "reported": "Rapporteret af udbyder",
       "estimated": "Anslået fra modelpriser",
@@ -8669,10 +9006,10 @@
       "notReported": "Ikke rapporteret",
       "agentSteps": "Agentens trin",
       "step": "Trin {number}",
-      "generation": "Generation"
+      "generation": ""
     },
-    "toolInput": "Input",
-    "toolOutput": "Output",
+    "toolInput": "",
+    "toolOutput": "",
     "toolActivity": {
       "iconSearch": "Leder du efter “{query}” ikoner",
       "iconBrowse": "Tilgængelige ikoner"
@@ -8764,16 +9101,16 @@
       "automaticContinue": "Accept af de foreslåede bestyrelsesændringer automatisk",
       "resetAll": "Nulstil alle ændringer",
       "tabs": {
-        "css": "Custom CSS",
+        "css": "",
         "appearance": "Udseende",
         "background": "Baggrund",
         "general": "Generelt"
       },
       "cssDescription": "Redigér hele stilarket. Eksisterende regler beholdes med mindre de fjernes her.",
       "cssCharacters": "{count} af 16384 tegn",
-      "copyCss": "Copy CSS",
+      "copyCss": "",
       "copied": "Kopieret",
-      "restoreCss": "Restore current CSS",
+      "restoreCss": "",
       "remoteCssTitle": "Denne CSS indlæser en ekstern ressource",
       "remoteCssDescription": "Importerede stylesheets og eksterne URL'er kontakte en anden server, når tavlen indlæses. Gennemgå dem, før du fortsætter."
     },
@@ -8797,13 +9134,14 @@
       "errorDescription": "Modellen gav ikke en komplet widget konfiguration. Ingen widget blev tilføjet."
     },
     "approvalRequired": "Godkendelse kræves",
-    "complete": "Complete",
+    "complete": "",
     "denied": "Afvist",
     "failed": "Mislykket",
     "working": "Arbejder",
     "approvalDescription": "Gennemgå denne ændring før den kører.",
     "approveAndRun": "Godkend og køre",
     "deny": "Afvis",
+    "approvalError": "",
     "autoApproval": {
       "label": "Automatiske godkendelser",
       "composerLabel": "Godkend for mig",

@@ -4,7 +4,7 @@ services:
   assistant-upstream:
     profiles:
       - test
-    image: node:24.18.0-alpine
+    image: node:24.22.1-alpine
     command: ["node", "/mock/openrouter-mock.mjs"]
     environment:
       PORT: 18091

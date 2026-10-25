@@ -371,15 +371,7 @@
                   "href": {
                     "anyOf": [
                       {
-                        "anyOf": [
-                          {
-                            "type": "string"
-                          },
-                          {
-                            "type": "string",
-                            "const": ""
-                          }
-                        ]
+                        "type": "string"
                       },
                       {
                         "type": "null"
@@ -986,15 +978,7 @@
                   "href": {
                     "anyOf": [
                       {
-                        "anyOf": [
-                          {
-                            "type": "string"
-                          },
-                          {
-                            "type": "string",
-                            "const": ""
-                          }
-                        ]
+                        "type": "string"
                       },
                       {
                         "type": "null"
@@ -2817,7 +2801,7 @@
       "put": {
         "operationId": "boardRouter-saveBoard",
         "summary": "Save dashboard content",
-        "description": "Save the editor's complete sections and items arrays, including widget options and placements. Omitted items and sections are removed. Requires modify access; Custom Widget placement changes require admin access.",
+        "description": "Save the editor's complete sections and items arrays, including widget options and placements. Omitted items and sections are removed. Placements must fit their parent section's columns in each layout. Requires modify access; Custom Widget placement changes require admin access.",
         "tags": [
           "boards"
         ],
@@ -3148,6 +3132,10 @@
                                 "immich-serverStats",
                                 "immich-albumCarousel",
                                 "paperlessNgx",
+                                "thingport-libraryStats",
+                                "thingport-models",
+                                "thingport-featuredModel",
+                                "thingport-activityHeatmap",
                                 "patchmon",
                                 "bazarr",
                                 "tracearr",
@@ -3167,14 +3155,7 @@
                                 "assistant",
                                 "wud",
                                 "llamacpp",
-                                "wazuhAgents",
-                                "wazuhAlerts",
-                                "wazuhSummary",
-                                "wazuhTimeline",
-                                "wazuhTopList",
-                                "wazuhVulnerabilities",
-                                "wazuhFim",
-                                "wazuhAuthFailures"
+                                "wazuh"
                               ]
                             },
                             "options": {
@@ -3423,6 +3404,10 @@
                       "immich-serverStats",
                       "immich-albumCarousel",
                       "paperlessNgx",
+                      "thingport-libraryStats",
+                      "thingport-models",
+                      "thingport-featuredModel",
+                      "thingport-activityHeatmap",
                       "patchmon",
                       "bazarr",
                       "tracearr",
@@ -3442,14 +3427,7 @@
                       "assistant",
                       "wud",
                       "llamacpp",
-                      "wazuhAgents",
-                      "wazuhAlerts",
-                      "wazuhSummary",
-                      "wazuhTimeline",
-                      "wazuhTopList",
-                      "wazuhVulnerabilities",
-                      "wazuhFim",
-                      "wazuhAuthFailures"
+                      "wazuh"
                     ]
                   },
                   "options": {
@@ -7460,6 +7438,7 @@
                       "aria2",
                       "slskd",
                       "sonarr",
+                      "sportarr",
                       "radarr",
                       "lidarr",
                       "readarr",
@@ -7494,6 +7473,7 @@
                       "coolify",
                       "immich",
                       "paperlessNgx",
+                      "thingport",
                       "patchmon",
                       "tracearr",
                       "speedtestTracker",
@@ -7635,6 +7615,7 @@
                             "aria2",
                             "slskd",
                             "sonarr",
+                            "sportarr",
                             "radarr",
                             "lidarr",
                             "readarr",
@@ -7669,6 +7650,7 @@
                             "coolify",
                             "immich",
                             "paperlessNgx",
+                            "thingport",
                             "patchmon",
                             "tracearr",
                             "speedtestTracker",

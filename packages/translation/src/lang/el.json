@@ -77,7 +77,7 @@
         "description": "Το Homarr ελέγχει τις δυνατότητες στη θέση του. Μια υποδοχή Docker που λείπει ή Kubernetes πλαίσιο ποτέ δεν αποκλείει μια χειροκίνητη ρύθμιση.",
         "database": "Βάση Δεδομένων",
         "docker": "Docker και συμβατές πρίζες",
-        "kubernetes": "Kubernetes",
+        "kubernetes": "",
         "assistantWorkshop": "Βοηθός και Εργαστήρι",
         "found": "Βρέθηκαν {integrations} ενσωματώσεις και {apps} πρόσθετες εφαρμογές",
         "retryKubernetes": "Ελέγξτε ξανά Kubernetes",
@@ -94,7 +94,7 @@
           "checking": "Έλεγχος διαθεσιμότητας…",
           "available": "Διαθέσιμο",
           "partial": "Μερικώς διαθέσιμο",
-          "empty": "Reachable, no matching running services",
+          "empty": "",
           "disabled": "Απενεργοποιήθηκε από τη διαμόρφωση του διακομιστή",
           "unavailable": "Μη διαθέσιμο από αυτή τη διαδικασία Homarr"
         }
@@ -152,7 +152,7 @@
         "columns": "Στήλες σκαλιών",
         "columnsDescription": "Οι στήλες καθορίζουν το οριζόντιο πλέγμα που χρησιμοποιείται για το μέγεθος και τη θέση αντικειμένων. 12 είναι αφθονία για τους περισσότερους ανθρώπους.",
         "columnCount": "{count, plural, one {# στήλη} other {# στήλες}}",
-        "leftSidebar": "Left sidebar",
+        "leftSidebar": "",
         "rightSidebar": "Δεξιά πλευρική μπάρα",
         "previewLabel": "Ζωντανή προεπισκόπηση της πρώτης διάταξης του πίνακα"
       },
@@ -171,7 +171,7 @@
           "description": "Περιηγηθείτε στα Προσαρμοσμένα Widgets, επιθεωρήστε τις απαιτούμενες δυνατότητές τους, εγκαταστήστε τα και δημοσιεύστε τη δική σας εργασία χωρίς να αντιγράψετε κώδικα μεταξύ διακομιστών.",
           "available": "Διαθέσιμο",
           "checking": "Γίνεται έλεγχος…",
-          "unavailable": "Unavailable",
+          "unavailable": "",
           "discoverTitle": "Ανακαλύψτε",
           "discoverDescription": "Βρείτε widgets που χτίστηκαν για πραγματικές αυτο-φιλοξενούμενες ροές εργασίας.",
           "installTitle": "Επανεξέταση και εγκατάσταση",
@@ -181,7 +181,7 @@
           "browse": "Περιήγηση Στο Εργαστήριο"
         },
         "mcpSetup": {
-          "title": "Homarr MCP",
+          "title": "",
           "description": "Συνδέστε Claude, Codex, ή άλλο πελάτη MCP με τα πληκτρολογημένα εργαλεία του Homarar. Τα κλειδιά API διατηρούν την πρόσβαση ρητή και ανακλητή.",
           "endpoint": "Streamable τελικό σημείο HTTP",
           "keyTitle": "Αντιγραφή αυτού του κλειδιού τώρα",
@@ -203,7 +203,7 @@
         "columns": "Στήλες σκαλιών",
         "columnsValue": "{count, plural, one {# στήλη} other {# στήλες}}",
         "sidebars": "Πλαϊνές Μπάρες",
-        "sidebarsValue": "{count, plural, =0 {None} one {# sidebar} other {# sidebars}}",
+        "sidebarsValue": "",
         "layouts": "Ανταποκρινόμενες διατάξεις",
         "layoutsValue": "Κινητό + Βάση",
         "integrations": "Ενσωματώσεις",
@@ -799,6 +799,11 @@
       }
     },
     "field": {
+      "url": {
+        "helpLabel": "Παραδείγματα μορφών URL",
+        "examples": "Παραδείγματα αποδεκτών συνδέσμων",
+        "requiresHandler": "Τα προσαρμοσμένα πρωτόκολλα απαιτούν μια συσχετισμένη εφαρμογή στη συσκευή σας."
+      },
       "description": {
         "label": "Περιγραφή"
       },
@@ -917,7 +922,7 @@
       "action": {
         "components": "Συστατικά",
         "format": "Μορφή",
-        "insertStarter": "Insert starter",
+        "insertStarter": "",
         "redo": "Επανάληψη",
         "copied": "Αντιγράφηκε",
         "schema": "Σχήμα"
@@ -935,9 +940,9 @@
         "errors": "{count, number} σφάλματα",
         "warnings": "{count, number} προειδοποιήσεις",
         "ready": "Δεν βρέθηκαν προβλήματα",
-        "position": "Ln {line, number}, Col {column, number}",
+        "position": "",
         "characters": "{count, number} χαρακτήρες",
-        "charactersWithLimit": "{count, number} / {limit, number}"
+        "charactersWithLimit": ""
       },
       "diagnostics": {
         "title": "Πρότυπα διαγνωστικών",
@@ -966,7 +971,7 @@
         "sources": "API πηγές",
         "requests": "Αιτήματα",
         "options": "Επιλογές",
-        "jsx": "JSX",
+        "jsx": "",
         "preview": "Προεπισκόπηση"
       },
       "status": {
@@ -997,7 +1002,7 @@
       "builder": {
         "advancedManifest": "Προηγμένο αρχείο δηλώσεων",
         "advancedJson": "Προηγμένο manifest JSON",
-        "manifestFilename": "widget.json",
+        "manifestFilename": "",
         "request": "Αίτημα {count, number}",
         "requestId": "Αναγνωριστικό Αίτησης",
         "type": "Τύπος πελάτη λήψεων",
@@ -1014,7 +1019,7 @@
         "queryKey": "Κλειδί ερωτήματος",
         "queryKeyInvalid": "Χρησιμοποιήστε ένα μοναδικό αναγνωριστικό που ξεκινά με ένα γράμμα και περιέχει μόνο γράμματα, αριθμούς, - ή _.",
         "valueSource": "Πηγή τιμής",
-        "literal": "Literal",
+        "literal": "",
         "widgetOption": "Επιλογή widget",
         "invocationParameter": "Παράμετρος κλίσης",
         "option": "Επιλογή",
@@ -1068,7 +1073,7 @@
       },
       "sources": {
         "title": "Πηγές API και διαπιστευτήρια",
-        "newName": "API {count, number}",
+        "newName": "",
         "duplicateSourceId": "Τα αναγνωριστικά προέλευσης API πρέπει να είναι μοναδικά.",
         "credentialRemoved": "Το διαπιστευτήριο αφαιρέθηκε",
         "credentialRemovedDescription": "Η αποθηκευμένη τιμή διαγράφηκε.",
@@ -1092,7 +1097,7 @@
         "advanced": "Προχωρημένα",
         "add": "Προσθήκη άλλης πηγής API",
         "sourceType": "Ενσωμάτωση",
-        "manualSource": "HTTP API",
+        "manualSource": "",
         "existingIntegration": "Υπάρχουσα ενσωμάτωση",
         "integrationType": "Τύπος ενσωμάτωσης",
         "selectIntegration": "Διαμορφωμένη ενσωμάτωση",
@@ -1163,9 +1168,9 @@
         "runAction": "Ενέργεια εκτέλεσης",
         "deleteConfirmation": "Αυτή η ενέργεια προεπισκόπησης αλλάζει τα απομακρυσμένα δεδομένα μέσω του ρυθμισμένου API.",
         "simulated": "Προσομοίωση ενέργειας",
-        "httpStatus": "HTTP {status, number}",
+        "httpStatus": "",
         "tab": {
-          "widget": "Widget",
+          "widget": "",
           "data": "Δεδομένα",
           "options": "Επιλογές",
           "state": "Κατάσταση",
@@ -1283,7 +1288,7 @@
     "outdated": "Παρωχημένο",
     "outdatedWarning": "Ο συγγραφέας σηματοδότησε αυτή την υποβολή ως ξεπερασμένη. Αναθεωρήστε την προσεκτικά πριν από την εισαγωγή.",
     "score": "Βαθμολογία: {count, number}",
-    "upvote": "Upvote",
+    "upvote": "",
     "downvote": "Καταψήφισε",
     "voteError": "Δεν ήταν δυνατή η αποθήκευση της ψηφοφορίας.",
     "signIn": "Συνδεθείτε με το GitHub",
@@ -1296,7 +1301,7 @@
     "installReviewTitle": "Επανεξέταση πριν την εγκατάσταση",
     "installError": "Αυτό το widget δεν μπορεί να εγκατασταθεί",
     "installErrorDescription": "Η υποβολή του Workshop δεν είναι ένα έγκυρο Custom JSX v2 widget.",
-    "useCss": "Import CSS",
+    "useCss": "",
     "importCss": "Εισαγωγή CSS από το Workshop",
     "importCssConfirm": "Αντικαταστήστε το τρέχον προσαρμοσμένο CSS με το \"{title}\"? Τίποτα δεν αποθηκεύεται μέχρι να αποθηκεύσετε τις ρυθμίσεις του πίνακα.",
     "screenshotAlt": "{title} στιγμιότυπο οθόνης {count, number}",
@@ -1510,7 +1515,7 @@
       "vpn": "VPN",
       "mediaLibrary": "Βιβλιοθήκη Πολυμέσων",
       "uptimeMonitoring": "Παρακολούθηση Διαθεσιμότητας",
-      "beszel": "Beszel",
+      "beszel": "",
       "systemMonitoring": "Παρακολούθηση Συστήματος",
       "security": "Ασφάλεια",
       "serviceVersion": "Έκδοση"
@@ -1559,6 +1564,7 @@
             "untrusted": "Το πιστοποιητικό δεν είναι αξιόπιστο.",
             "hostnameMismatch": "Το όνομα κεντρικού υπολογιστή του πιστοποιητικού δεν αντιστοιχεί στη URL."
           },
+          "secondaryUrl": "",
           "alert": {
             "permission": {
               "title": "Δεν επαρκούν τα δικαιώματα",
@@ -1823,7 +1829,7 @@
       "full": "Πλήρης πρόσβαση στις ενσωματώσεις"
     },
     "llamacpp": {
-      "name": "llama.cpp",
+      "name": "",
       "description": "Παρακολουθήστε ένα τοπικό llama.cpp llama-server: Μετρήσεις υγείας, μοντέλου και γενιάς"
     }
   },
@@ -1904,6 +1910,7 @@
       "tryAgain": "Προσπαθήστε ξανά",
       "loading": "Φόρτωση",
       "show": "Εμφάνιση",
+      "showAll": "",
       "hide": "Απόκρυψη",
       "undo": "Αναίρεση",
       "editNamed": "Επεξεργασία του {name}",
@@ -1913,6 +1920,7 @@
       "copied": "Αντιγράφηκε",
       "refresh": "Ανανέωση"
     },
+    "hidden": "",
     "pagination": {
       "pageOf": "Σελίδα {page} του {totalPages}"
     },
@@ -1935,6 +1943,7 @@
       "clear": "Καθαρισμός εικόνας",
       "uploadImage": "Μεταφόρτωση εικόνας",
       "results": "Αποτελέσματα αναζήτησης εικόνας",
+      "websiteIcon": "",
       "localImages": "Οι εικόνες σας",
       "svgIcons": "Εικονίδια SVG",
       "otherImages": "Άλλες εικόνες",
@@ -1999,7 +2008,7 @@
         "updateAvailable": "Διαθέσιμες ενημερώσεις: {countUpdates}: {tag}",
         "assistant": "Βοηθός",
         "assistantThinking": "Σκέψη",
-        "modifier": "Mod"
+        "modifier": ""
       }
     },
     "dangerZone": "Επικίνδυνη Περιοχή",
@@ -2228,11 +2237,11 @@
         },
         "width": {
           "label": "Πλάτος",
-          "shortLabel": "W"
+          "shortLabel": ""
         },
         "height": {
           "label": "Ύψος",
-          "shortLabel": "H"
+          "shortLabel": ""
         },
         "xOffset": {
           "label": "Μετατόπιση X"
@@ -2308,6 +2317,15 @@
       "option": {
         "appId": {
           "label": "Επιλέξτε εφαρμογή"
+        },
+        "openIn": {
+          "label": "Άνοιγμα εφαρμογής σε",
+          "description": "Επιλέξτε πού ανοίγει αυτή η εφαρμογή. Οι ρυθμίσεις του προγράμματος περιήγησης ενδέχεται να αλλάξουν το άνοιγμα σε ξεχωριστό παράθυρο.",
+          "option": {
+            "currentTab": "Τρέχουσα καρτέλα",
+            "newTab": "Νέα καρτέλα",
+            "newWindow": "Νέο παράθυρο"
+          }
         },
         "showTitle": {
           "label": "Εμφάνιση ονόματος"
@@ -2437,7 +2455,7 @@
         "remove": "Αφαίρεση {name} κατηγορίας",
         "rename": "Όνομα κατηγορίας για {name}",
         "assign": "",
-        "ungrouped": "Ungrouped"
+        "ungrouped": ""
       }
     },
     "archiveTeamWarrior": {
@@ -2617,25 +2635,25 @@
         "unsupportedPrimaryTitle": "Η κύρια ζώνη ώρας δεν είναι διαθέσιμη",
         "unsupportedPrimary": "Το {timeZone} δεν υποστηρίζεται σε αυτό το πρόγραμμα περιήγησης. Εμφανίζεται η UTC ως σαφώς σημειωμένη εφεδρική.",
         "unsupportedTimeZone": "Μη υποστηριζόμενη ζώνη ώρας: {timeZone}",
-        "accessibleTime": "{city}: {time}, {date}, {timeZone}",
+        "accessibleTime": "",
         "advancedLabel": "Προηγμένο παγκόσμιο ρολόι",
         "cities": "Παγκόσμια ρολόγια",
-        "cityCount": "{count} timezones",
+        "cityCount": "",
         "timeBarLabel": "Θέση ώρας ημέρας 24 ωρών για {city}",
         "dayProgress": "Το {percent}% πέρασε · {hours}h {minutes}m απομένει",
         "phaseLegend": "Υπόμνημα ώρας ημέρας",
         "tick": {
-          "midnight": "00",
-          "morning": "06",
-          "noon": "12",
-          "evening": "18",
-          "end": "24"
+          "midnight": "",
+          "morning": "",
+          "noon": "",
+          "evening": "",
+          "end": ""
         },
         "phaseRange": {
-          "night": "00–05 · 21–24",
-          "dawn": "05–08",
-          "day": "08–18",
-          "dusk": "18–21"
+          "night": "",
+          "dawn": "",
+          "day": "",
+          "dusk": ""
         },
         "phase": {
           "night": "Νύχτα",
@@ -2657,7 +2675,7 @@
           "options": {
             "auto": "Αυτόματο για τοπική ρύθμιση",
             "european": "Ευρωπαϊκό AQI",
-            "us": "US AQI"
+            "us": ""
           }
         },
         "showUv": {
@@ -2694,8 +2712,8 @@
           "unknown": "Χωρίς ανάγνωση"
         }
       },
-      "dominantPollutant": "Dominant pollutant",
-      "aqiLabel": "AQI",
+      "dominantPollutant": "",
+      "aqiLabel": "",
       "strongestPollen": "Υψηλότερη γύρη",
       "unit": {
         "concentration": "{value} μg/m³",
@@ -2703,14 +2721,14 @@
       },
       "pollutant": {
         "pm2_5": "ΑΣ2.5",
-        "pm10": "PM10",
+        "pm10": "",
         "ozone": "Όζον",
         "nitrogenDioxide": "Διοξείδιο του αζώτου",
-        "sulphurDioxide": "Sulphur dioxide",
+        "sulphurDioxide": "",
         "carbonMonoxide": "Μονοξείδιο του άνθρακα"
       },
       "pollen": {
-        "alder": "Alder",
+        "alder": "",
         "birch": "Σημύδα",
         "grass": "Γρασίδι",
         "mugwort": "Μοσχοκάρυδο",
@@ -2779,7 +2797,7 @@
       "invalid": {
         "title": "Ορισμένα γεγονότα δεν μπορούν να εμφανιστούν",
         "description": "{count, plural, one {Ένα συμβάν έχει μη έγκυρη ημερομηνία ή μη υποστηριζόμενη ζώνη ώρας.} other {Τα συμβάντα # έχουν μη έγκυρη ημερομηνία ή μη υποστηριζόμενη ζώνη ώρας.}}",
-        "value": "Unavailable"
+        "value": ""
       },
       "alert": {
         "notifications": "Ειδοποιήσεις περιηγητή",
@@ -2788,14 +2806,14 @@
       }
     },
     "timer": {
-      "name": "Timer / Pomodoro",
+      "name": "",
       "description": "Εκτελεί ένα απλό χρονόμετρο ή μια διαμορφώσιμη ακολουθία Pomodoro.",
       "option": {
         "mode": {
           "label": "Λειτουργία",
           "options": {
             "timer": "Χρονόμετρο",
-            "pomodoro": "Pomodoro"
+            "pomodoro": ""
           }
         },
         "timerMinutes": {
@@ -2829,10 +2847,10 @@
       "action": {
         "start": "Έναρξη",
         "pause": "Παύση",
-        "reset": "Reset"
+        "reset": ""
       },
       "attention": {
-        "timerComplete": "Timer complete",
+        "timerComplete": "",
         "phaseReady": "Η φάση {phase} είναι έτοιμη"
       },
       "progress": "Πρόοδος χρονοδιακόπτη: {progress}%",
@@ -2840,11 +2858,11 @@
         "completedFocus": "{count, plural, =0 {Καμία συνεδρία εστίασης δεν ολοκληρώθηκε} one {# η συνεδρία εστίασης ολοκληρώθηκε} other {# Οι συνεδρίες εστίασης ολοκληρώθηκαν}}"
       },
       "alert": {
-        "title": "Timer complete",
+        "title": "",
         "completed": "Η φάση {phase} ολοκληρώθηκε."
       },
       "advanced": {
-        "sequence": "Pomodoro sequence",
+        "sequence": "",
         "focusSession": "Εστίαση στη συνεδρία {session}",
         "settings": "Μόνιμες ρυθμίσεις",
         "settingsHint": "Χρησιμοποιήστε το σχετικό μενού widget για να επεξεργαστείτε αυτές τις ρυθμίσεις του πίνακα.",
@@ -3066,7 +3084,7 @@
       "state": {
         "on": "Ενεργό",
         "off": "Ανενεργό",
-        "unavailable": "Unavailable",
+        "unavailable": "",
         "unknown": "Άγνωστο"
       },
       "advanced": {
@@ -3221,6 +3239,13 @@
         },
         "showUnmonitored": {
           "label": "Εμφάνιση μη επιτηρούμενων"
+        },
+        "viewMode": {
+          "label": "Προβολή"
+        },
+        "hideHeader": {
+          "label": "",
+          "description": ""
         }
       },
       "advanced": {
@@ -3229,6 +3254,22 @@
         "eventCount": "{count, plural, one {# εκδήλωση} other {# συμβάντα}}",
         "loading": "Φόρτωση γεγονότων ημερολογίου...",
         "noEvents": "Δεν υπάρχουν συμβάντα σε αυτό το μήνα"
+      },
+      "view": {
+        "compact": "Συμπαγής μήνας",
+        "month": "Μήνας",
+        "week": "Εβδομάδα",
+        "day": "Ημέρα",
+        "agenda": "Ατζέντα"
+      },
+      "controls": {
+        "today": "Σήμερα",
+        "previous": "Προηγούμενη περίοδος",
+        "next": "Επόμενη περίοδος",
+        "noEvents": "Δεν υπάρχουν συμβάντα σε αυτήν την περίοδο",
+        "more": "",
+        "timeSlot": "Χρονική υποδοχή",
+        "weekday": "Καθημερινή"
       }
     },
     "weather": {
@@ -3301,14 +3342,14 @@
         "feelsLike": "Αίσθηση θερμοκρασίας {temperature}",
         "feelsLikeLabel": "Αισθάνεται σαν",
         "feelsLikeRange": "Αισθάνεται όπως: {maximum} / {minimum}",
-        "highLow": "High {maximum} · low {minimum}",
+        "highLow": "",
         "observedAt": "Ενημερώθηκε στο {time}",
         "humidity": "Υγρασία",
         "averageHumidity": "Μέση υγρασία: {humidity}%",
         "currentHumidity": "Τρέχουσα υγρασία",
         "wind": "Άνεμος / ριπές ({unit})",
         "currentWind": "Τρέχων άνεμος / ριπές",
-        "windValue": "{speed} / {gusts} {unit}",
+        "windValue": "",
         "windDetail": "Μέγιστος άνεμος / ριπές: {speed} / {gusts} {unit}",
         "nextHourPrecipitation": "Κατακρήμνιση την επόμενη ώρα",
         "precipitationChance": "Πιθανότητα βροχόπτωσης",
@@ -3325,7 +3366,7 @@
           "humidity": "Μέση υγρασία",
           "wind": "Μέγιστος άνεμος / ριπές",
           "uv": "Μέγιστος δείκτης UV",
-          "daylight": "Daylight"
+          "daylight": ""
         },
         "sun": "Ανατολή ηλίου / ηλιοβασίλεμα",
         "noForecast": "Δεν υπάρχουν διαθέσιμα δεδομένα πρόγνωσης"
@@ -3382,7 +3423,7 @@
           "label": ""
         },
         "tabOrder": {
-          "label": "Tab order",
+          "label": "",
           "systemFirst": "Σύστημα, στη συνέχεια, Cluster",
           "clusterFirst": "Σύμπλεγμα στη συνέχεια Σύστημα"
         },
@@ -3540,7 +3581,7 @@
       },
       "source": {
         "url": "Πηγή: {url}",
-        "unavailable": "{source}: unavailable"
+        "unavailable": ""
       },
       "instances": {
         "title": "Παρουσίες"
@@ -3573,7 +3614,7 @@
       "status": {
         "running": "Εκτελείται",
         "notRunning": "Δεν εκτελείται",
-        "unavailable": "Unavailable",
+        "unavailable": "",
         "vpn": "VPN: {status}"
       }
     },
@@ -3912,12 +3953,29 @@
         "transcoding": "Μετακωδικοποίηση",
         "paused": "Σε παύση",
         "remaining": "Απομένουν {minutes} λεπτά",
-        "seasonEpisode": "S{season} E{episode}",
+        "seasonEpisode": "",
+        "state": {
+          "playing": "",
+          "buffering": ""
+        },
+        "details": {
+          "device": "",
+          "location": "",
+          "sessionId": "",
+          "bitrate": "",
+          "audioHandling": "",
+          "direct": "",
+          "transcode": "",
+          "containerChanged": "",
+          "position": "",
+          "unknown": ""
+        },
         "metadata": {
           "title": "Στατιστικά για περίεργους",
           "video": {
             "title": "Βίντεο",
-            "resolution": "Ανάλυση"
+            "resolution": "Ανάλυση",
+            "frameRate": ""
           },
           "audio": {
             "title": "Ήχος",
@@ -3936,8 +3994,111 @@
       "summary": {
         "sessions": "{count, plural, one {# συνεδρία} other {# συνεδρίες}}",
         "playing": "{count} σε αναπαραγωγή",
-        "transcoding": "{count} transcoding"
+        "transcoding": ""
       }
+    },
+    "thingport-libraryStats": {
+      "name": "",
+      "description": "",
+      "title": "",
+      "option": {
+        "showModels": {
+          "label": ""
+        },
+        "showCollections": {
+          "label": ""
+        },
+        "showCategories": {
+          "label": ""
+        },
+        "showAuthors": {
+          "label": ""
+        }
+      },
+      "models": "",
+      "collections": "",
+      "categories": "Κατηγορίες",
+      "authors": ""
+    },
+    "thingport-featuredModel": {
+      "name": "",
+      "description": "",
+      "option": {
+        "autoRotate": {
+          "label": ""
+        },
+        "showDetails": {
+          "label": ""
+        }
+      },
+      "title": "",
+      "empty": "",
+      "hint": "",
+      "noPreview": "",
+      "views": "",
+      "prints": ""
+    },
+    "thingport-activityHeatmap": {
+      "name": "",
+      "description": "",
+      "title": "",
+      "option": {
+        "weekStart": {
+          "label": "Πρώτη ημέρα της εβδομάδας",
+          "option": {
+            "sunday": "",
+            "monday": ""
+          }
+        },
+        "showTotal": {
+          "label": ""
+        },
+        "showLegend": {
+          "label": ""
+        }
+      },
+      "lastYear": "",
+      "totalLastYear": "",
+      "totalInYear": "",
+      "dayTotal": "",
+      "dayEmpty": "",
+      "kinds": {
+        "import": "",
+        "upload": "Συνολικά μεταφορτωμένα",
+        "download": "Συνολικά ληφθέντα",
+        "slicer": "",
+        "delete": "Διαγράφηκε"
+      },
+      "less": "",
+      "more": ""
+    },
+    "thingport-models": {
+      "name": "",
+      "description": "",
+      "title": "",
+      "option": {
+        "defaultTab": {
+          "label": ""
+        },
+        "itemCount": {
+          "label": ""
+        },
+        "showThumbnails": {
+          "label": ""
+        }
+      },
+      "tab": {
+        "recentlyAdded": "",
+        "topViewed": "",
+        "topPrinted": ""
+      },
+      "empty": {
+        "recentlyAdded": "",
+        "topViewed": "",
+        "topPrinted": ""
+      },
+      "views": "",
+      "prints": ""
     },
     "paperlessNgx": {
       "description": "Επισκόπηση του αρχείου εγγράφων σας στο Paperless-ngx",
@@ -4223,7 +4384,7 @@
       "actions": {
         "previousPhoto": "Προηγούμενη φωτογραφία",
         "nextPhoto": "Επόμενη φωτογραφία",
-        "pauseSlideshow": "Pause slideshow",
+        "pauseSlideshow": "",
         "resumeSlideshow": "Συνέχιση προβολής σλάιντ",
         "toggleSlideshow": "Παύση ή συνέχιση προβολής σλάιντ",
         "photo": "Φωτογραφία {number}"
@@ -4611,27 +4772,59 @@
       "name": "Εκδόσεις",
       "description": "Εμφανίζει μια λίστα με την τρέχουσα έκδοση των καθορισμένων αποθετηρίων, με την καθορισμένη κανονική έκφραση έκδοσης.",
       "option": {
+        "layout": {
+          "label": "Διάταξη",
+          "description": "",
+          "option": {
+            "comfortable": "Άνετο",
+            "compact": "Συμπαγής"
+          }
+        },
+        "summary": {
+          "label": "",
+          "description": "",
+          "option": {
+            "detailed": "",
+            "count": "",
+            "hidden": ""
+          }
+        },
+        "sections": {
+          "label": "",
+          "description": ""
+        },
+        "collapsedSections": {
+          "label": "",
+          "description": ""
+        },
         "newReleaseWithin": {
           "label": "Νέα έκδοση εντός",
-          "description": "Παράδειγμα χρήσης: 1w (1 εβδομάδα), 10M (10 μήνες). Αποδεκτές μονάδες: h (ώρες), d (ημέρες), w (εβδομάδες), M (μήνες), y (έτη). Αφήστε το κενό για να μην επισημαίνονται νέες εκδόσεις."
+          "description": "Παράδειγμα χρήσης: 1w (1 εβδομάδα), 10M (10 μήνες). Αποδεκτές μονάδες: h (ώρες), d (ημέρες), w (εβδομάδες), M (μήνες), y (έτη). Αφήστε το κενό για να μην επισημαίνονται νέες εκδόσεις.",
+          "option": {
+            "never": "",
+            "1d": "",
+            "3d": "",
+            "1w": "",
+            "2w": "",
+            "1M": "",
+            "3M": ""
+          }
         },
         "staleReleaseWithin": {
           "label": "Παρωχημένη έκδοση εντός",
-          "description": "Παράδειγμα χρήσης: 1w (1 εβδομάδα), 10M (10 μήνες). Αποδεκτές μονάδες: h (ώρες), d (ημέρες), w (εβδομάδες), M (μήνες), y (έτη). Αφήστε το κενό για να μην επισημαίνονται παρωχημένες εκδόσεις."
+          "description": "Παράδειγμα χρήσης: 1w (1 εβδομάδα), 10M (10 μήνες). Αποδεκτές μονάδες: h (ώρες), d (ημέρες), w (εβδομάδες), M (μήνες), y (έτη). Αφήστε το κενό για να μην επισημαίνονται παρωχημένες εκδόσεις.",
+          "option": {
+            "never": "",
+            "1M": "",
+            "3M": "",
+            "6M": "",
+            "1y": "",
+            "2y": ""
+          }
         },
-        "showOnlyHighlighted": {
-          "label": "Εμφάνιση μόνο επισημασμένων",
-          "description": "Εμφάνιση μόνο νέων ή παρωχημένων εκδόσεων, όπως παραπάνω."
-        },
-        "showDetails": {
-          "label": "Εμφάνιση λεπτομερειών"
-        },
-        "showOnlyIcon": {
-          "label": "Εμφάνιση μόνο εικονιδίου"
-        },
-        "topReleases": {
-          "label": "Κορυφαίες εκδόσεις",
-          "description": "Ο μέγιστος αριθμός πρόσφατων εκδόσεων προς εμφάνιση. Το μηδέν σημαίνει χωρίς όριο."
+        "showChangelogPreview": {
+          "label": "",
+          "description": ""
         },
         "repositories": {
           "label": "Αποθετήρια",
@@ -4705,36 +4898,106 @@
           }
         }
       },
-      "not-found": "Δεν βρέθηκε",
-      "pre-release": "Προέκδοση",
-      "archived": "Αρχειοθετημένο",
-      "forked": "",
+      "summary": {
+        "newReleases": "",
+        "newShort": "νέο",
+        "tracked": "",
+        "caughtUp": "",
+        "outdated": "",
+        "outdatedShort": "παρωχημένο",
+        "failing": "",
+        "failingShort": "",
+        "latest": "",
+        "issues": ""
+      },
+      "section": {
+        "new": {
+          "label": "Νέο",
+          "description": ""
+        },
+        "attention": {
+          "label": "Χρειάζεται προσοχή",
+          "description": ""
+        },
+        "upToDate": {
+          "label": "Μέχρι σήμερα",
+          "description": ""
+        },
+        "quiet": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "status": {
+        "new": "",
+        "outdated": "",
+        "error": "",
+        "upToDate": "μέχρι σήμερα",
+        "quiet": ""
+      },
+      "tag": {
+        "new": "Νέο",
+        "preRelease": "",
+        "resolvedFrom": "",
+        "quiet": "",
+        "archived": "Αρχειοθετημένο",
+        "fork": ""
+      },
+      "issue": {
+        "affected": "",
+        "rateLimited": {
+          "title": "",
+          "hint": ""
+        },
+        "notFound": {
+          "title": "",
+          "hint": ""
+        },
+        "noMatchingVersion": {
+          "title": "",
+          "hint": ""
+        },
+        "noReleasesFound": {
+          "title": "",
+          "hint": ""
+        },
+        "invalidIdentifier": {
+          "title": "",
+          "hint": ""
+        },
+        "noProviderSelected": {
+          "title": "",
+          "hint": ""
+        },
+        "noProviderResponse": {
+          "title": "",
+          "hint": ""
+        },
+        "unexpected": {
+          "title": "",
+          "hint": ""
+        }
+      },
+      "markViewed": "Σήμανση ως προβεβλημένου",
+      "markAllViewed": "",
+      "markEntryViewed": "",
+      "viewed": "",
+      "copyVersion": "",
+      "copied": "Αντιγράφηκε",
+      "published": "",
+      "whatChanged": "",
+      "noNotes": "",
+      "changes": "",
       "starsCount": "Αστέρια",
       "forksCount": "Forks",
-      "issuesCount": "Ανοιχτά ζητήματα",
-      "markViewed": "Σήμανση ως προβεβλημένου",
-      "openProjectPage": "Άνοιγμα σελίδας έργου",
-      "openReleasePage": "Άνοιγμα σελίδας έκδοσης",
-      "releaseDescription": "Περιγραφή έκδοσης",
-      "projectDescription": "Περιγραφή έργου",
+      "openIssues": "",
+      "created": "",
+      "releasePage": "",
+      "projectPage": "",
       "runningVersions": "Εκτελούμενες Εκδόσεις",
       "upToDate": "Μέχρι σήμερα",
       "updateAvailable": "Διαθέσιμη ενημέρωση",
-      "unknownStatus": "Άγνωστο",
-      "created": "",
-      "error": {
-        "label": "Σφάλμα",
-        "messages": {
-          "invalidIdentifier": "Μη έγκυρο αναγνωριστικό",
-          "noMatchingVersion": "Δεν βρέθηκε αντίστοιχη έκδοση",
-          "noReleasesFound": "Δεν βρέθηκαν εκδόσεις",
-          "noProviderSelected": "Δεν επιλέχθηκε πάροχος",
-          "noProviderResponse": "Δεν υπάρχει απόκριση από τον πάροχο",
-          "unexpected": "Απρόσμενο σφάλμα παρόχου"
-        }
-      },
-      "expandDetails": "Εμφάνιση λεπτομερειών για το {name}",
-      "collapseDetails": "Απόκρυψη λεπτομερειών για το {name}"
+      "unknownStatus": "Άγνωστο"
     },
     "networkControllerSummary": {
       "advanced": {
@@ -4750,12 +5013,12 @@
       "card": {
         "vpn": {
           "countConnected": "{count, plural, one {# συνδέθηκαν} other {# συνδέθηκαν}}",
-          "label": "VPN"
+          "label": ""
         },
-        "wan": "WAN",
+        "wan": "",
         "web": "Ιστός",
-        "wifi": "Wi-Fi",
-        "lan": "LAN"
+        "wifi": "",
+        "lan": ""
       },
       "error": {
         "unknownContentOption": "Άγνωστη επιλογή περιεχομένου για το γραφικό στοιχείο σύνοψης ελεγκτή δικτύου: "
@@ -4855,8 +5118,8 @@
           "option": {
             "auto": "Αυτόματο",
             "plain": "Απλό κείμενο",
-            "markdown": "Markdown",
-            "html": "HTML"
+            "markdown": "",
+            "html": ""
           }
         }
       },
@@ -4907,45 +5170,116 @@
     "uptimeKuma": {
       "description": "Παρακολούθηση στατιστικών διαθεσιμότητας από τη σελίδα κατάστασης Uptime Kuma",
       "option": {
-        "showAverageUptime": {
-          "label": "Εμφάνιση μέσης διαθεσιμότητας",
-          "description": "Εμφάνιση του συνδυασμένου ποσοστού μέσης διαθεσιμότητας 24 ωρών"
+        "statusPageSlug": {
+          "label": "",
+          "description": ""
         },
-        "showUptimeRing": {
-          "label": "Εμφάνιση δακτυλίου διαθεσιμότητας",
-          "description": "Εμφάνιση δακτυλίου προόδου παράλληλα με την τιμή μέσης διαθεσιμότητας"
+        "summaryOnly": {
+          "label": "",
+          "description": ""
         },
-        "showTotalMonitors": {
-          "label": "Εμφάνιση συνόλου παρακολούθων",
-          "description": "Εμφάνιση του συνολικού αριθμού των διαμορφωμένων παρακολούθων"
+        "showSummary": {
+          "label": "",
+          "description": ""
         },
-        "showUpCount": {
-          "label": "Εμφάνιση αριθμού σε λειτουργία",
-          "description": "Εμφάνιση πόσοι παρακολουθούνται είναι αυτήν τη στιγμή ενεργοί"
+        "showIncidents": {
+          "label": "",
+          "description": ""
         },
-        "showDownCount": {
-          "label": "Εμφάνιση αριθμού εκτός λειτουργίας",
-          "description": "Εμφάνιση πόσοι παρακολουθούνται είναι αυτήν τη στιγμή εκτός λειτουργίας"
+        "groupByStatusPageGroup": {
+          "label": "",
+          "description": ""
         },
-        "showPausedCount": {
-          "label": "Εμφάνιση αριθμού σε παύση",
-          "description": "Εμφάνιση πόσοι παρακολουθούνται είναι αυτήν τη στιγμή σε παύση"
+        "showOnlyProblems": {
+          "label": "",
+          "description": ""
+        },
+        "sortBy": {
+          "label": "",
+          "option": {
+            "status": "",
+            "statusPage": "",
+            "name": "Όνομα εργασίας",
+            "uptime": ""
+          }
+        },
+        "showHeartbeatBar": {
+          "label": "",
+          "description": ""
+        },
+        "showUptime": {
+          "label": ""
+        },
+        "showResponseTime": {
+          "label": ""
+        },
+        "showCertificateExpiry": {
+          "label": "",
+          "description": ""
         }
-      },
-      "averageUptime": "Μέση διαθεσιμότητα (24ωρο)",
-      "stats": {
-        "totalMonitors": "Σύνολο παρακολούθων",
-        "upCount": "Ενεργός",
-        "downCount": "Εκτός",
-        "pausedCount": "Σε παύση"
-      },
-      "error": {
-        "internalServerError": "Αποτυχία λήψης δεδομένων διαθεσιμότητας"
       },
       "status": {
         "up": "Σύνολο",
         "down": "Σύνολο λήψεων",
-        "paused": "Σε παύση"
+        "pending": "Εκκρεμεί",
+        "maintenance": "",
+        "stale": "",
+        "unknown": ""
+      },
+      "overall": {
+        "operational": "",
+        "degraded": "",
+        "outage": "",
+        "maintenance": "",
+        "unknown": ""
+      },
+      "short": {
+        "operational": "",
+        "down": "",
+        "pending": "",
+        "maintenance": "",
+        "unknown": ""
+      },
+      "summary": {
+        "upRatio": "",
+        "upRatioShort": "",
+        "averageUptime": "",
+        "uptimeShort": "",
+        "statusCount": ""
+      },
+      "unit": {
+        "milliseconds": ""
+      },
+      "heartbeatBar": {
+        "label": ""
+      },
+      "detail": {
+        "checked": "",
+        "certificate": ""
+      },
+      "notice": {
+        "label": "",
+        "untitled": ""
+      },
+      "empty": {
+        "title": "",
+        "description": ""
+      },
+      "allClear": "",
+      "error": {
+        "internalServerError": "Αποτυχία λήψης δεδομένων διαθεσιμότητας"
+      },
+      "monitorType": {
+        "http": "",
+        "keyword": "",
+        "jsonQuery": "",
+        "port": "",
+        "ping": "Κουδούνισμα",
+        "dns": "DNS",
+        "docker": "",
+        "push": "",
+        "group": "Ομάδα",
+        "realBrowser": ""
       }
     },
     "traefik": {
@@ -4980,7 +5314,7 @@
         "internalServerError": "Αποτυχία λήψης δεδομένων Traefik"
       },
       "resourceType": {
-        "router": "Router",
+        "router": "",
         "service": "Υπηρεσία",
         "middleware": "Μεσαία"
       },
@@ -5076,7 +5410,7 @@
         "network": "ΔΙΚΤΥΟ",
         "up": "UP",
         "down": "ΚΑΘΟΔΟΣ",
-        "memoryTooltip": "{used} / {available} ({percent}%)"
+        "memoryTooltip": ""
       }
     },
     "systemDisks": {
@@ -5398,7 +5732,7 @@
       "metric": {
         "system": "Σύστημα",
         "source": "Ενσωμάτωση",
-        "hostname": "Hostname",
+        "hostname": "",
         "cpuModel": "Μοντέλο CPU",
         "cores": "Πυρήνες",
         "memoryTotal": "Σύνολο μνήμης",
@@ -5413,9 +5747,9 @@
       }
     },
     "llamacpp": {
-      "name": "llama.cpp",
+      "name": "",
       "description": "Εμφάνιση της υγείας, φορτωμένο μοντέλο και ταχύτητα παραγωγής του τοπικού διακομιστή llama.cpp σας.",
-      "title": "llama.cpp",
+      "title": "",
       "status": {
         "unhealthy": "Μη υγιές ({status})"
       },
@@ -5445,7 +5779,7 @@
       "unit": {
         "speed": "{value} διακριτικά/s",
         "parameters": "{value} δισ.",
-        "none": "—",
+        "none": "",
         "speedShort": "t/δ"
       },
       "option": {
@@ -5499,13 +5833,13 @@
       "noMetrics": "Δεν υπάρχουν διαθέσιμα στατιστικά στοιχεία για αυτήν την ενσωμάτωση",
       "add": "Προσθήκη μετρικού",
       "label": "Προσαρμοσμένη ετικέτα",
-      "hidden": "Hidden",
+      "hidden": "",
       "compact": "Συμπαγείς αριθμοί",
       "moveUp": "Μετακίνηση επάνω",
       "moveDown": "Μετακίνηση κάτω",
       "remove": "Αφαίρεση μετρικού",
       "loading": "Φόρτωση…",
-      "unavailable": "Unavailable",
+      "unavailable": "",
       "refreshFailed": "Η ανανέωση απέτυχε — εμφάνιση αποθηκευμένων δεδομένων",
       "stale": "Αποθηκευμένα δεδομένα — Ανανέωση για ενημέρωση",
       "table": {
@@ -5552,10 +5886,12 @@
       "allHidden": "Όλες οι μετρήσεις είναι κρυμμένες σε αυτήν την προβολή. Χρησιμοποιήστε Προσαρμογή αυτής της προβολής για επαναφορά τους."
     },
     "wazuh": {
+      "name": "",
+      "description": "",
       "target": {
         "api": "API εξυπηρετητή Wazuh",
         "indexer": "Δείκτης Wazuh",
-        "wazuh": "Wazuh"
+        "wazuh": ""
       },
       "severity": {
         "low": "Χαμηλή",
@@ -5570,7 +5906,15 @@
         },
         "certificate": {
           "title": "Το πιστοποιητικό {target} δεν είναι έμπιστο",
-          "description": "Το Wazuh χρησιμοποιεί ένα αυτο-υπογεγραμμένο πιστοποιητικό από προεπιλογή. Εκτελέστε τη \"σύνδεση δοκιμών\" στην ενσωμάτωση και εμπιστευτείτε το πιστοποιητικό, ή προσθέστε την CA σας στις Ρυθμίσεις → Πιστοποιητικά."
+          "description": ""
+        },
+        "certificateHostname": {
+          "title": "",
+          "description": ""
+        },
+        "certificateExpired": {
+          "title": "",
+          "description": ""
         },
         "unreachable": {
           "title": "Αδυναμία σύνδεσης με το {target}",
@@ -5595,7 +5939,9 @@
         "unknown": {
           "title": "Αδυναμία φόρτωσης δεδομένων από το {target}",
           "description": "Ελέγξτε τα αρχεία καταγραφής Homarr για λεπτομέρειες."
-        }
+        },
+        "viewSaveTitle": "",
+        "viewSaveMessage": ""
       },
       "range": {
         "1h": "1η",
@@ -5603,93 +5949,138 @@
         "7d": "7δ",
         "30d": "30δ"
       },
-      "levelTooltip": "Rule level {level} ({severity})"
-    },
-    "wazuhAgents": {
-      "name": "Παράγοντες του Wazuh",
-      "description": "Ταξινόμηση λίστα των παραγόντων Wazuh με κατάσταση, λειτουργικό σύστημα και τελευταία φύλαξη",
+      "levelTooltip": "",
+      "summary": {
+        "title": "",
+        "alerts": "ειδοποιήσεις",
+        "none": "Δεν υπάρχουν ειδοποιήσεις",
+        "trend": {
+          "new": "νέο",
+          "tooltip": ""
+        },
+        "previous": "",
+        "maxLevel": "",
+        "health": "",
+        "manager": ""
+      },
+      "alerts": {
+        "title": "Ειδοποιήσεις · επίπεδο {level}+ · {hours}h",
+        "empty": "Δεν υπάρχουν ειδοποιήσεις σε αυτό το επίπεδο. Όλα ήσυχα.",
+        "rule": "",
+        "openInDashboard": "Άνοιγμα αυτής της ειδοποίησης στον πίνακα εργαλείων Wazuh"
+      },
+      "timeline": {
+        "title": "",
+        "total": "",
+        "interval": ""
+      },
+      "top": {
+        "title": {
+          "rules": "",
+          "agents": "",
+          "sourceIps": "",
+          "mitreTactics": "",
+          "mitreTechniques": ""
+        },
+        "empty": {
+          "rules": "Δεν υπάρχουν ειδοποιήσεις σε αυτήν την περίοδο",
+          "agents": "Δεν υπάρχουν ειδοποιήσεις σε αυτήν την περίοδο",
+          "sourceIps": "Δεν υπάρχουν ειδοποιήσεις με πηγαίο IP σε αυτή την περίοδο",
+          "mitreTactics": "Δεν έχουν αντιστοιχιστεί ειδοποιήσεις για το MITRE ATT&CK σε αυτή την περίοδο",
+          "mitreTechniques": "Δεν έχουν αντιστοιχιστεί ειδοποιήσεις για το MITRE ATT&CK σε αυτή την περίοδο"
+        },
+        "totalTooltip": "{count} αντίστοιχες ειδοποιήσεις",
+        "private": "",
+        "public": "Δημόσιο",
+        "agents": "",
+        "others": ""
+      },
+      "agents": {
+        "title": "Πράκτορες",
+        "total": "",
+        "status": {
+          "active": "Ενεργό",
+          "disconnected": "Αποσυνδέθηκε",
+          "neverConnected": "Ποτέ μη συνδεδεμένο",
+          "pending": "Εκκρεμεί"
+        },
+        "statusLabel": {
+          "active": "Ενεργό",
+          "disconnected": "Αποσυνδέθηκε",
+          "never_connected": "Ποτέ μη συνδεδεμένο",
+          "pending": "Εκκρεμεί",
+          "unknown": "Άγνωστο"
+        },
+        "live": "Ζωντανά",
+        "snapshot": "",
+        "snapshotHint": "Διαβάστε από το στιγμιότυπο πράκτορα του Wazuh (wazuh-monitoring) που λήφθηκε στο {time}. Προσθέστε τα διαπιστευτήρια API διακομιστή για ζωντανά δεδομένα.",
+        "staleSnapshot": "Το στιγμιότυπο του πράκτορα από το {time} είναι ξεπερασμένο. Ελέγξτε ότι η εργασία παρακολούθησης του ταμπλό Wazuh εκτελείται ή προσθέστε διαπιστευτήρια του διακομιστή API.",
+        "noDisconnected": "Όλοι οι πράκτορες είναι συνδεδεμένοι",
+        "empty": "Κανένας πράκτορας δεν ταιριάζει με αυτό το φίλτρο",
+        "column": {
+          "status": "Κατάσταση",
+          "name": "Όνομα εργασίας",
+          "ip": "",
+          "os": "",
+          "version": "Έκδοση",
+          "lastKeepAlive": "",
+          "groups": "Ομάδες"
+        },
+        "outdated": "Παλαιότερα από τη νεότερη έκδοση πράκτορα ({version})"
+      },
+      "vulnerabilities": {
+        "title": "Ευπάθειες",
+        "topCves": "Κορυφαία CVE",
+        "score": "Βαθμολογία",
+        "agentsShort": "Πράκτορες",
+        "topAgents": "Οι πιο ευάλωτοι παράγοντες",
+        "criticalHigh": "Crit / Υψηλή",
+        "totalTooltip": "",
+        "affected": "",
+        "empty": "Δεν εντοπίστηκαν τρωτά σημεία",
+        "distribution": "",
+        "worst": ""
+      },
+      "fim": {
+        "title": "",
+        "event": {
+          "added": "Ημερομηνία Προσθήκης",
+          "modified": "Τροποποιήθηκε",
+          "deleted": "Διαγράφηκε",
+          "unknown": "Άλλαξε"
+        },
+        "empty": "Δεν υπάρχουν συμβάντα ακεραιότητας αρχείων σε αυτήν την περίοδο",
+        "user": "",
+        "registry": "Μητρώο"
+      },
+      "authFailures": {
+        "title": "",
+        "seriesTooltip": "",
+        "peak": "",
+        "empty": "Δεν υπάρχουν αποτυχημένες συνδέσεις σε αυτήν την περίοδο",
+        "failed": "Αποτυχημένες συνδέσεις",
+        "failedHint": "Αποτυχία ενός ελέγχου ταυτότητας (shd, PAM, σύνδεση με Windows, μη έγκυροι χρήστες)",
+        "bruteForce": "",
+        "bruteForceHint": "Κανόνες συσχετιζόμενοι με ωμάρια (πολλαπλές αποτυχίες σε σύντομο χρονικό διάστημα, MITRE T1110)",
+        "sourceIps": "Πηγαία IP",
+        "ipTooltip": "",
+        "bruteForceCount": ""
+      },
+      "view": {
+        "overview": "",
+        "alerts": "",
+        "timeline": "",
+        "top": "",
+        "agents": "Πράκτορες",
+        "vulnerabilities": "Ευπάθειες",
+        "fim": "",
+        "authFailures": ""
+      },
       "option": {
-        "statusFilter": {
-          "label": "Εμφάνιση πράκτορων"
+        "visibleViews": {
+          "label": "",
+          "description": ""
         },
-        "sortBy": {
-          "label": "Ταξινόμηση κατά"
-        },
-        "showVersion": {
-          "label": "Εμφάνιση στήλης έκδοσης Wazuh"
-        },
-        "showGroups": {
-          "label": "Εμφάνιση στήλης ομάδων"
-        }
-      },
-      "title": "Πράκτορες",
-      "total": "{count} πράκτορες",
-      "status": {
-        "active": "Ενεργό",
-        "disconnected": "Αποσυνδέθηκε",
-        "neverConnected": "Ποτέ μη συνδεδεμένο",
-        "pending": "Εκκρεμεί"
-      },
-      "statusLabel": {
-        "active": "Ενεργό",
-        "disconnected": "Αποσυνδέθηκε",
-        "never_connected": "Ποτέ μη συνδεδεμένο",
-        "pending": "Εκκρεμεί",
-        "unknown": "Άγνωστο"
-      },
-      "live": "Ζωντανά",
-      "snapshot": "Το στιγμιότυπο είναι παλιό κατά {age}",
-      "snapshotHint": "Διαβάστε από το στιγμιότυπο πράκτορα του Wazuh (wazuh-monitoring) που λήφθηκε στο {time}. Προσθέστε τα διαπιστευτήρια API διακομιστή για ζωντανά δεδομένα.",
-      "staleSnapshot": "Το στιγμιότυπο του πράκτορα από το {time} είναι ξεπερασμένο. Ελέγξτε ότι η εργασία παρακολούθησης του ταμπλό Wazuh εκτελείται ή προσθέστε διαπιστευτήρια του διακομιστή API.",
-      "noDisconnected": "Όλοι οι πράκτορες είναι συνδεδεμένοι",
-      "empty": "Κανένας πράκτορας δεν ταιριάζει με αυτό το φίλτρο",
-      "column": {
-        "status": "Κατάσταση",
-        "name": "Όνομα εργασίας",
-        "ip": "IP",
-        "os": "OS",
-        "version": "Έκδοση",
-        "lastKeepAlive": "Keepalive",
-        "groups": "Ομάδες"
-      },
-      "outdated": "Παλαιότερα από τη νεότερη έκδοση πράκτορα ({version})"
-    },
-    "wazuhAlerts": {
-      "name": "Τροφοδοσία ειδοποιήσεων Wazuh",
-      "description": "Πρόσφατες ειδοποιήσεις Wazuh με το επίπεδο, MITRE ATT&CK τεχνικές, πράκτορας και πηγή IP",
-      "option": {
-        "minLevel": {
-          "label": "Ελάχιστο επίπεδο κανόνα",
-          "description": "Επίπεδα Wazuh: 0-6 χαμηλό, 7-11 μέσο, 12-14 υψηλό, 15+ κρίσιμο"
-        },
-        "hours": {
-          "label": "Παράθυρο ώρας (ώρες)"
-        },
-        "limit": {
-          "label": "Αριθμός καταχωρίσεων"
-        },
-        "showMitre": {
-          "label": "Show MITRE ATT&CK techniques"
-        },
-        "showAgent": {
-          "label": "Εμφάνιση πράκτορα"
-        },
-        "showSourceIp": {
-          "label": "Εμφάνιση πηγαίου IP"
-        },
-        "showRuleId": {
-          "label": "Εμφάνιση αναγνωριστικού κανόνα"
-        }
-      },
-      "title": "Ειδοποιήσεις · επίπεδο {level}+ · {hours}h",
-      "empty": "Δεν υπάρχουν ειδοποιήσεις σε αυτό το επίπεδο. Όλα ήσυχα.",
-      "rule": "Κανόνας {id}",
-      "openInDashboard": "Άνοιγμα αυτής της ειδοποίησης στον πίνακα εργαλείων Wazuh"
-    },
-    "wazuhSummary": {
-      "name": "Βαρύτητα συναγερμού Wazuh",
-      "description": "Κατανομή της σοβαρότητας με τάση έναντι της προηγούμενης περιόδου",
-      "option": {
         "range": {
           "label": "Χρονικό εύρος"
         },
@@ -5698,26 +6089,6 @@
         },
         "showFooter": {
           "label": "Εμφάνιση υποσέλιδου"
-        }
-      },
-      "title": "Σοβαρότητα ειδοποιήσεων · {range}",
-      "alerts": "ειδοποιήσεις",
-      "none": "Δεν υπάρχουν ειδοποιήσεις",
-      "trend": {
-        "new": "νέο",
-        "tooltip": "Προηγούμενη περίοδος: {previous}"
-      },
-      "previous": "Προηγούμενο {range}: {count}",
-      "maxLevel": "Μέγιστο επίπεδο {level}",
-      "health": "Κατάσταση indexer: {status}",
-      "manager": "Διαχειριστής {version}"
-    },
-    "wazuhTimeline": {
-      "name": "Wazuh alerts timeline",
-      "description": "Συσσωρευμένο γράφημα Wazuh ειδοποιεί με την πάροδο του χρόνου από τη σοβαρότητα",
-      "option": {
-        "range": {
-          "label": "Χρονικό εύρος"
         },
         "interval": {
           "label": "Διάστημα"
@@ -5730,60 +6101,32 @@
           "description": "Τετραγωνική ρίζα διατηρεί υψηλές και κρίσιμες ειδοποιήσεις ορατές δίπλα σε χιλιάδες χαμηλές"
         },
         "minLevel": {
-          "label": "Ελάχιστο επίπεδο κανόνα"
+          "label": ""
         },
         "showLegend": {
           "label": "Εμφάνιση υπομνήματος με σύνολα"
-        }
-      },
-      "title": "Χρονολόγιο ειδοποιήσεων · {range}",
-      "total": "{count} ειδοποιήσεις",
-      "interval": "ανά {interval}"
-    },
-    "wazuhTopList": {
-      "name": "Κορυφαία λίστα Wazuh",
-      "description": "Κορυφαίοι κανόνες, πράκτορες, IPs πηγής ή τακτικές και τεχνικές MITRE ATT&CK μέσω συναγερμού",
-      "option": {
-        "kind": {
+        },
+        "topKind": {
           "label": "Κατάταξη"
         },
-        "range": {
-          "label": "Χρονικό εύρος"
-        },
-        "limit": {
-          "label": "Αριθμός καταχωρήσεων"
-        },
-        "minLevel": {
-          "label": "Ελάχιστο επίπεδο κανόνα"
+        "topLimit": {
+          "label": ""
         },
         "showBars": {
           "label": "Εμφάνιση μπαρών"
-        }
-      },
-      "title": {
-        "rules": "Κορυφαίοι κανόνες · {range}",
-        "agents": "Κορυφαίοι πράκτορες · {range}",
-        "sourceIps": "Κορυφαίες IP πηγές · {range}",
-        "mitreTactics": "MITRE tactics · {range}",
-        "mitreTechniques": "MITRE techniques · {range}"
-      },
-      "empty": {
-        "rules": "Δεν υπάρχουν ειδοποιήσεις σε αυτήν την περίοδο",
-        "agents": "Δεν υπάρχουν ειδοποιήσεις σε αυτήν την περίοδο",
-        "sourceIps": "Δεν υπάρχουν ειδοποιήσεις με πηγαίο IP σε αυτή την περίοδο",
-        "mitreTactics": "Δεν έχουν αντιστοιχιστεί ειδοποιήσεις για το MITRE ATT&CK σε αυτή την περίοδο",
-        "mitreTechniques": "Δεν έχουν αντιστοιχιστεί ειδοποιήσεις για το MITRE ATT&CK σε αυτή την περίοδο"
-      },
-      "totalTooltip": "{count} αντίστοιχες ειδοποιήσεις",
-      "private": "LAN",
-      "public": "Δημόσιο",
-      "agents": "Εμφανίζεται σε {count} πράκτορες",
-      "others": "{count} ακόμη ειδοποιήσεις σε άλλες καταχωρίσεις"
-    },
-    "wazuhVulnerabilities": {
-      "name": "Αδυναμίες στο Wazuh",
-      "description": "Αριθμός ευπάθειας, κορυφαίοι CVE και οι πιο ευάλωτοι παράγοντες",
-      "option": {
+        },
+        "agentStatusFilter": {
+          "label": "Εμφάνιση πράκτορων"
+        },
+        "agentSortBy": {
+          "label": "Ταξινόμηση κατά"
+        },
+        "showVersion": {
+          "label": ""
+        },
+        "showGroups": {
+          "label": ""
+        },
         "cveOrder": {
           "label": "Κατάταξη CVE κατά"
         },
@@ -5798,73 +6141,42 @@
         },
         "showAgents": {
           "label": "Εμφάνιση πιο ευάλωτων παραγόντων"
-        }
-      },
-      "title": "Ευπάθειες",
-      "topCves": "Κορυφαία CVE",
-      "score": "Βαθμολογία",
-      "agentsShort": "Πράκτορες",
-      "topAgents": "Οι πιο ευάλωτοι παράγοντες",
-      "criticalHigh": "Crit / Υψηλή",
-      "totalTooltip": "{count} ευρήματα σε {agents} πράκτορες",
-      "affected": "{count} πράκτορες",
-      "empty": "Δεν εντοπίστηκαν τρωτά σημεία",
-      "distribution": "Κατανομή σοβαρότητας. Τα {unscored} ευρήματα χωρίς βαθμολογία δεν εμφανίζονται.",
-      "worst": "Χειρότερο: {id} ({score}) σε {agents} πράκτορες"
-    },
-    "wazuhFim": {
-      "name": "Ακεραιότητα αρχείου Wazuh",
-      "description": "Πρόσφατα συμβάντα παρακολούθησης ακεραιότητας του αρχείου (syscheck)",
-      "option": {
-        "range": {
-          "label": "Χρονικό εύρος"
         },
-        "event": {
+        "fimEvent": {
           "label": "Συμβάντα"
         },
-        "limit": {
-          "label": "Αριθμός συμβάντων"
+        "fimLimit": {
+          "label": ""
         },
         "includeRegistry": {
           "label": "Συμπερίληψη συμβάντων μητρώου των Windows"
-        }
-      },
-      "title": "Ακεραιότητα αρχείων · {range}",
-      "event": {
-        "added": "Ημερομηνία Προσθήκης",
-        "modified": "Τροποποιήθηκε",
-        "deleted": "Διαγράφηκε",
-        "unknown": "Άλλαξε"
-      },
-      "empty": "Δεν υπάρχουν συμβάντα ακεραιότητας αρχείων σε αυτήν την περίοδο",
-      "user": "από τον χρήστη {user}",
-      "registry": "Μητρώο"
-    },
-    "wazuhAuthFailures": {
-      "name": "Αποτυχίες ελέγχου ταυτότητας Wazuh",
-      "description": "Αποτυχία σύνδεσης και ειδοποιήσεις brute-force ανά πράκτορα με ωριαίες sparklines",
-      "option": {
-        "hours": {
-          "label": "Παράθυρο ώρας (ώρες)"
         },
-        "limit": {
-          "label": "Αριθμός πρακτόρων"
+        "authLimit": {
+          "label": ""
         },
         "showSourceIps": {
           "label": "Εμφάνιση IP κορυφαίας πηγής"
+        },
+        "alertsMinLevel": {
+          "label": "",
+          "description": "Επίπεδα Wazuh: 0-6 χαμηλό, 7-11 μέσο, 12-14 υψηλό, 15+ κρίσιμο"
+        },
+        "alertsLimit": {
+          "label": ""
+        },
+        "showMitre": {
+          "label": ""
+        },
+        "showAgent": {
+          "label": "Εμφάνιση πράκτορα"
+        },
+        "showSourceIp": {
+          "label": "Εμφάνιση πηγαίου IP"
+        },
+        "showRuleId": {
+          "label": "Εμφάνιση αναγνωριστικού κανόνα"
         }
-      },
-      "title": "Αποτυχίες ελέγχου ταυτότητας · {hours} ώρες",
-      "seriesTooltip": "Όλοι οι πράκτορες των τελευταίων {hours} ωρών",
-      "peak": "Μέγιστο {count}/ομάδα",
-      "empty": "Δεν υπάρχουν αποτυχημένες συνδέσεις σε αυτήν την περίοδο",
-      "failed": "Αποτυχημένες συνδέσεις",
-      "failedHint": "Αποτυχία ενός ελέγχου ταυτότητας (shd, PAM, σύνδεση με Windows, μη έγκυροι χρήστες)",
-      "bruteForce": "Brute force",
-      "bruteForceHint": "Κανόνες συσχετιζόμενοι με ωμάρια (πολλαπλές αποτυχίες σε σύντομο χρονικό διάστημα, MITRE T1110)",
-      "sourceIps": "Πηγαία IP",
-      "ipTooltip": "{ip}: {count} αποτυχίες",
-      "bruteForceCount": "{count} brute force"
+      }
     }
   },
   "widgetPreview": {
@@ -5883,6 +6195,18 @@
       "addWidget": "Προσθήκη widget",
       "addApp": "Προσθήκη εφαρμογής",
       "connectService": "Σύνδεση υπηρεσίας"
+    },
+    "urlDrop": {
+      "hint": "",
+      "resolving": "",
+      "notification": {
+        "success": {
+          "message": ""
+        },
+        "full": {
+          "message": ""
+        }
+      }
     },
     "setupChecklist": {
       "title": "Κάντε αυτόν τον πίνακα χρήσιμο",
@@ -5921,7 +6245,7 @@
         "preview": "Προεπισκόπηση του {name} με στοιχεία {count}",
         "currentHidden": "Τρέχων πίνακας: {name}",
         "keyboard": {
-          "navigate": "Navigate",
+          "navigate": "",
           "open": "Άνοιγμα",
           "instructions": "Πληκτρολογήστε για να φιλτράρετε τους πίνακες. Χρησιμοποιήστε τα πλήκτρα βέλους για να μετακινηθείτε μέσω των αποτελεσμάτων και Enter για να ανοίξετε έναν πίνακα."
         },
@@ -6144,12 +6468,12 @@
             "columns": "στήλες",
             "empty": "Αυτή η διάταξη είναι κενή",
             "dynamicSection": "Δυναμικό τμήμα",
-            "editorWidthLabel": "{layoutName} · {width}px"
+            "editorWidthLabel": ""
           },
           "reset": {
             "action": "Επαναφορά από τη βάση",
             "confirm": {
-              "title": "Reset {layoutName}?",
+              "title": "",
               "message": "Αυτό αντικαθιστά κάθε αποθηκευμένη θέση και μέγεθος σε αυτή τη διάταξη με μια νέα διάταξη που δημιουργείται από τη βάση. Αυτό δεν μπορεί να αναιρεθεί."
             }
           },
@@ -6278,9 +6602,9 @@
         "label": "Σταθερές πλαϊνές μπάρες",
         "description": "Κρατήστε έως και τρεις στήλες ταμπλό σε κάθε πλευρά. Ο εναπομείναντας καμβάς επανέρχεται αυτόματα.",
         "left": {
-          "label": "Left sidebar",
+          "label": "",
           "description": "Κρατήστε αυτήν την περιοχή ορατή κατά την κύλιση του ταμπλό.",
-          "thumbLabel": "Left sidebar width"
+          "thumbLabel": ""
         },
         "right": {
           "label": "Δεξιά πλευρική μπάρα",
@@ -6692,7 +7016,7 @@
             "groups": {
               "identity": "Ταυτότητα",
               "appearance": "Εμφάνιση",
-              "customCss": "Custom CSS",
+              "customCss": "",
               "authentication": "Ταυτοποίηση"
             },
             "identity": {
@@ -6706,7 +7030,7 @@
             },
             "logo": {
               "label": "Λογότυπο εφαρμογής",
-              "placeholder": "/logo/logo.png"
+              "placeholder": ""
             },
             "favicon": {
               "label": "Εικονίδιο περιηγητή (favicon)",
@@ -6724,7 +7048,7 @@
             },
             "signInBackground": {
               "label": "Φόντο ελέγχου ταυτότητας",
-              "placeholder": "https://example.com/background.jpg"
+              "placeholder": ""
             },
             "signInOverlay": {
               "label": "Επικάλυψη φόντου"
@@ -6752,7 +7076,7 @@
             "summary": {
               "title": "Τρέχουσα σήμανση",
               "cornerStyle": "Στυλ γωνίας",
-              "palette": "Palette",
+              "palette": "",
               "backgroundConfigured": "Προσαρμοσμένο φόντο · {overlay}% επικάλυψη",
               "backgroundDefault": "Προεπιλεγμένο φόντο",
               "greetingConfigured": "Προσαρμοσμένο χαιρετισμό",
@@ -7305,9 +7629,9 @@
           "docker": "Προσάρτηση",
           "integrationConfiguration": "Ενσωμάτωση",
           "authentication": "Ταυτοποίηση",
-          "apiRequest": "API",
+          "apiRequest": "",
           "appRepresentation": "Εφαρμογή",
-          "widgetConfiguration": "Widget",
+          "widgetConfiguration": "",
           "widgetQuery": "Ερώτημα widget"
         },
         "status": {
@@ -7487,8 +7811,8 @@
       },
       "status": {
         "available": "Διαθέσιμο",
-        "degraded": "Metrics unavailable",
-        "unavailable": "Unavailable"
+        "degraded": "",
+        "unavailable": ""
       },
       "unavailable": "Αυτό το πλαίσιο Kubernetes δεν μπορεί να επιτευχθεί. Επιλέξτε ένα άλλο περιβάλλον ή επιβεβαιώστε τα διαπιστευτήρια και το τελικό σημείο.",
       "metricsUnavailable": "Αυτό το πλαίσιο είναι προσβάσιμο, αλλά ο διακομιστής μετρικών δεν είναι διαθέσιμος. Η απογραφή παραμένει διαθέσιμη χωρίς ζωντανή χρήση CPU και μνήμης."
@@ -7520,7 +7844,7 @@
     },
     "nodes": {
       "field": {
-        "metricsUnavailable": "Unavailable",
+        "metricsUnavailable": "",
         "kubernetesVersion": {
           "label": "Έκδοση Kubernetes"
         }
@@ -7772,7 +8096,7 @@
       "modeAriaLabel": "Λειτουργία {mode}",
       "resultsAriaLabel": "Αποτελέσματα {mode}",
       "footer": {
-        "navigate": "Navigate",
+        "navigate": "",
         "open": "Άνοιγμα",
         "close": "Κλείσιμο"
       }
@@ -8489,6 +8813,14 @@
     "conversationActions": "Ενέργειες συνομιλίας",
     "searchConversations": "Αναζήτηση συνομιλιών",
     "noMatchingConversations": "Δεν υπάρχουν αντίστοιχες συνομιλίες",
+    "historyError": {
+      "title": "",
+      "load": "",
+      "loadMessages": "",
+      "saveMessages": "",
+      "switch": "",
+      "retry": ""
+    },
     "moreActions": "Περισσότερες ενέργειες απόκρισης",
     "renameConversation": {
       "action": "Μετονομασία",
@@ -8608,6 +8940,9 @@
     },
     "mentions": {
       "menu": "Προσθήκη περιβάλλοντος Homarr",
+      "back": "",
+      "loading": "",
+      "empty": "",
       "context": "Πλαίσιο",
       "app": "Εφαρμογές",
       "integration": "Ενσωματώσεις",
@@ -8622,6 +8957,8 @@
     },
     "commands": {
       "menu": "Βοηθητικές εντολές",
+      "hint": "",
+      "empty": "",
       "health": "Προετοιμάστε έναν έλεγχο υπηρεσιών-υγείας",
       "explore": "Προετοιμάστε μια επισκόπηση αυτής της παρουσίας του Homarr",
       "media": "Προετοιμάστε μια αναζήτηση πολυμέσων",
@@ -8635,14 +8972,14 @@
       "used": "Τελευταίο βήμα",
       "remaining": "Απομένουν",
       "capacity": "Χωρητικότητα",
-      "input": "Input",
+      "input": "",
       "output": "Έξοδος",
       "cached": "Προσωρινή αποθήκευση",
       "cacheWrite": "Εγγραφή κρύπτης",
       "reasoning": "Αιτιολόγηση",
       "inputShort": "σε",
       "outputShort": "έξω",
-      "cachedShort": "cached",
+      "cachedShort": "",
       "reasoningShort": "συλλογιστική",
       "firstOutput": "Πρώτη έξοδος",
       "homarrTiming": "Παρατηρήθηκε Homarr",
@@ -8659,7 +8996,7 @@
       "fallbackLatency": "Κατώφλι επιστροφής",
       "cacheDiscount": "Προσωρινή μνήμη έκπτωση",
       "normalizedTokens": "Κανονικοποιημένη είσοδος / έξοδος OpenRouter",
-      "byok": "BYOK",
+      "byok": "",
       "cost": "Κόστος",
       "reported": "Αναφέρθηκε από τον πάροχο",
       "estimated": "Εκτιμώμενος από την τιμολόγηση μοντέλου",
@@ -8671,7 +9008,7 @@
       "step": "Βήμα {number}",
       "generation": "Δημιουργία"
     },
-    "toolInput": "Input",
+    "toolInput": "",
     "toolOutput": "Έξοδος",
     "toolActivity": {
       "iconSearch": "Ψάχνετε για εικονίδια “{query}”",
@@ -8764,16 +9101,16 @@
       "automaticContinue": "Αποδοχή των προτεινόμενων αλλαγών στο διοικητικό συμβούλιο αυτόματα",
       "resetAll": "Επαναφορά όλων των αλλαγών",
       "tabs": {
-        "css": "Custom CSS",
+        "css": "",
         "appearance": "Εμφάνιση",
         "background": "Φόντο",
         "general": "Γενικά"
       },
       "cssDescription": "Επεξεργαστείτε το πλήρες φύλλο στυλ. Οι υπάρχοντες κανόνες διατηρούνται εκτός αν αφαιρεθούν εδώ.",
       "cssCharacters": "{count} από 16384 χαρακτήρες",
-      "copyCss": "Copy CSS",
+      "copyCss": "",
       "copied": "Αντιγράφηκε",
-      "restoreCss": "Restore current CSS",
+      "restoreCss": "",
       "remoteCssTitle": "Αυτό το CSS φορτώνει έναν απομακρυσμένο πόρο",
       "remoteCssDescription": "Τα εισαγόμενα stylesheets και απομακρυσμένες διευθύνσεις URL έρχονται σε επαφή με έναν άλλο διακομιστή όταν φορτώνει ο πίνακας. Ελέγξτε τα πριν συνεχίσετε."
     },
@@ -8797,13 +9134,14 @@
       "errorDescription": "Το μοντέλο δεν παρείχε μια ολοκληρωμένη διαμόρφωση widget. Δεν προστέθηκε widget."
     },
     "approvalRequired": "Απαιτείται έγκριση",
-    "complete": "Complete",
+    "complete": "",
     "denied": "Απορρίφθηκε",
     "failed": "Απέτυχε",
     "working": "Εργασία",
     "approvalDescription": "Επανεξέταση αυτής της αλλαγής πριν από την εκτέλεση.",
     "approveAndRun": "Έγκριση και εκτέλεση",
     "deny": "Άρνηση",
+    "approvalError": "",
     "autoApproval": {
       "label": "Αυτόματες εγκρίσεις",
       "composerLabel": "Έγκριση για μένα",

@@ -11,6 +11,7 @@ import { useI18n } from "@homarr/translation/client";
 import { FloatingTip } from "@homarr/ui";
 
 import { BoardAdvancedFocusProvider } from "~/components/board/advanced-focus/context";
+import { BoardAppUrlDrop } from "~/components/board/board-app-url-drop";
 import { BoardAppsSpotlightRegistrar } from "~/components/board/board-apps-spotlight-registrar";
 import { BoardEmptyState } from "~/components/board/board-empty-state";
 import { BoardSetupChecklist } from "~/components/board/board-setup-checklist";
@@ -97,6 +98,7 @@ export const ClientBoard = () => {
           <BoardBackgroundVideo />
           <BoardEmptyState />
           <BoardSetupChecklist />
+          <BoardAppUrlDrop />
           <BoardSectionCollapseProvider>
             <BoardSnapshotRegistrar />
             <BoardGridPortalHost>

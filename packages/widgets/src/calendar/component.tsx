@@ -1,25 +1,20 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { useMantineTheme } from "@mantine/core";
 import { getQueryKey } from "@trpc/react-query";
 
 import { clientApi } from "@homarr/api/client";
 import { useBoardReplay } from "@homarr/api/board-replay";
 import { useBoardSnapshotState } from "@homarr/api/board-snapshot";
 import { useQueryClient } from "@tanstack/react-query";
-import { useRequiredBoard } from "@homarr/boards/context";
 import { useSettings } from "@homarr/settings";
 import { useCurrentIntlLocale } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
 import { getUsableWidgetQueryData } from "../common/query-state";
-import { useLocalWidgetState } from "../common/use-local-widget-state";
 import { useWidgetRuntimeQueries } from "../runtime-hooks";
 import type { CalendarEventWithSource } from "./calendar-event-list";
 import { CalendarDisplay } from "./calendar-display";
-import type { CalendarView } from "./calendar-view";
-import { isCalendarView } from "./calendar-view";
 
 export default function CalendarWidget(props: WidgetComponentProps<"calendar">) {
   const queryClient = useQueryClient();
@@ -122,31 +117,18 @@ interface CalendarBaseProps extends WidgetComponentProps<"calendar"> {
   setMonth: (date: Date) => void;
 }
 
-const CalendarBase = ({ options, boardId, itemId, displayMode, ...props }: CalendarBaseProps) => {
+const CalendarBase = ({ options, displayMode, ...props }: CalendarBaseProps) => {
   const locale = useCurrentIntlLocale();
   const { firstDayOfWeek } = useSettings();
-  const board = useRequiredBoard();
-  const theme = useMantineTheme();
-  const defaultView = displayMode === "advanced" ? "agenda" : options.viewMode;
-  const [selectedView, setSelectedView] = useLocalWidgetState<CalendarView | null>({
-    key: boardId && itemId ? `homarr:calendar:${boardId}:${itemId}:view:${displayMode ?? "compact"}` : undefined,
-    version: 1,
-    defaultValue: null,
-    validate: (value): value is CalendarView | null => value === null || isCalendarView(value),
-  });
-  const setView = (view: CalendarView) => {
-    if (!props.isEditMode) setSelectedView(view);
-  };
 
   return (
     <CalendarDisplay
       {...props}
       releaseType={options.releaseType}
-      view={props.isEditMode ? defaultView : (selectedView ?? defaultView)}
-      setView={setView}
+      view={displayMode === "advanced" ? "agenda" : options.viewMode}
+      hideHeader={displayMode !== "advanced" && options.hideHeader}
       locale={locale}
       firstDayOfWeek={firstDayOfWeek}
-      radius={theme.radius[board.itemRadius]}
     />
   );
 };

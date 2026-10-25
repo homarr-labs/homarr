@@ -4,7 +4,12 @@ import type { WazuhDataSource } from "./wazuh-types";
 
 export type WazuhErrorReason =
   | "unauthorized"
+  /** The certificate chain is not trusted (self-signed or unknown CA). */
   | "certificate"
+  /** The certificate is trusted but not issued for the host in the URL. */
+  | "certificateHostname"
+  /** The certificate is expired or not valid yet. */
+  | "certificateExpired"
   | "unreachable"
   | "timeout"
   | "status"
@@ -47,7 +52,12 @@ export class WazuhRequestError extends Error {
 const reasonFromCode = (code: string): WazuhErrorReason | null => {
   const match = matchErrorCode(code);
   if (!match) return null;
-  if (match.type === "certificate") return "certificate";
+  if (match.type === "certificate") {
+    // Only an untrusted chain can be fixed by trusting a certificate or CA, so the other reasons are reported separately.
+    if (match.reason === "hostnameMismatch") return "certificateHostname";
+    if (match.reason === "expired" || match.reason === "notYetValid") return "certificateExpired";
+    return "certificate";
+  }
   if (match.type === "timeout") return "timeout";
   return "unreachable";
 };

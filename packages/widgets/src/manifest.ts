@@ -4,6 +4,7 @@ import { objectEntries } from "@homarr/common";
 import type { WidgetKind } from "@homarr/definitions";
 import { widgetKinds as declaredWidgetKinds } from "@homarr/definitions";
 import type { SettingsContextProps } from "@homarr/settings/creator";
+import { normalizeAppWidgetOptions } from "@homarr/validation/app";
 
 import type { WidgetComponentProps, WidgetDefinition } from "./definition";
 import type { WidgetOptionDefinition } from "./options";
@@ -146,6 +147,9 @@ export const reduceWidgetOptionsWithDefinition = (
   settings: Pick<SettingsContextProps, "enableStatusByDefault" | "forceDisableStatus">,
   currentValue: Record<string, unknown> = {},
 ) => {
+  if ("kind" in definition && definition.kind === "app") {
+    currentValue = normalizeAppWidgetOptions(currentValue);
+  }
   const options: Record<string, WidgetOptionDefinition> = definition.createOptions(settings);
   const result: Record<string, unknown> = {};
   for (const [key, value] of objectEntries(options)) {
