@@ -1,0 +1,1981 @@
+[
+  {
+    "origin": "original",
+    "key": "runtime-baseline-counts",
+    "classification": "excluded",
+    "reason": "Original wrapper omitted --expose-gc before the script; sanitize-memory is absent and the output has 31/32 records. Preserved, not used for runtime conclusions.",
+    "commandManifest": {
+      "path": "../results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/invocations/runtime-baseline-counts.command.json",
+      "originalSha256": "fdc6cf9322b7827c949f3b11a5a00b1a7edc9ea2fcdbca4c542f5493aa147e5a",
+      "bytes": 8858
+    },
+    "completionManifest": {
+      "path": "../results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/invocations/runtime-baseline-counts.completion.json",
+      "originalSha256": "e1986c1d5b8dd348522865b68d7f5c4240a48e486f4fde9f59f445acb6216735",
+      "bytes": 1212
+    },
+    "rawRoot": "<candidate>/../cw-dev",
+    "canonicalRoot": "<baseline>",
+    "cwd": "<baseline>",
+    "sourceRoots": [
+      {
+        "raw": "<candidate>/../cw-dev",
+        "canonical": "<baseline>"
+      }
+    ],
+    "command": [
+      "<node-24.22.1>",
+      "<original>/harness/runtime/run.mjs"
+    ],
+    "environmentOverrides": {
+      "ROOT": "<baseline>",
+      "LABEL": "runtime-baseline-counts",
+      "COUNTS": "1",
+      "OUTPUT": "<candidate>/../cw-consolidated/final-replay-2/results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/runtime/runtime-baseline-counts"
+    },
+    "effectiveWhitelistedEnvironment": null,
+    "environmentSelection": "Explicit overrides and recorded safe whitelist only; original inherited-environment fingerprints omitted entirely; null means no safe effective whitelist was recorded",
+    "nodeVersion": "v24.22.1",
+    "nodeSha256Before": "6f32069480ec14d52b6d7b1f3c7124cfbbc46203abf5ddf5c65b127435f3f329",
+    "nodeSha256After": "6f32069480ec14d52b6d7b1f3c7124cfbbc46203abf5ddf5c65b127435f3f329",
+    "harnessSha256": "2847c17e7661a347ace6577a6f781ff619cb707954c592f06c7aff49a0b5640b",
+    "invokeRunnerSha256": "5f0d4f92095428d19ecafd32a5d4eaab50ebd9e565d2060a039645967d68fa2f",
+    "startedAt": "2026-10-25T00:19:43.398Z",
+    "finishedAt": "2026-10-25T00:19:51.446Z",
+    "preflight": null,
+    "exitCode": 0,
+    "sourceStable": true,
+    "nodeStable": true,
+    "sourceSnapshots": [
+      "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/reused/prior-attempts/source-hashes/runtime-baseline-counts.before.json",
+      "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/reused/prior-attempts/source-hashes/runtime-baseline-counts.after.json"
+    ],
+    "logs": {
+      "stdout": {
+        "path": "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/reused/prior-attempts/invocations/runtime-baseline-counts.stdout.log",
+        "originalSha256": "4713a1f09e20e74b55774883ef596ae0457209380e95029f6fe156902d3d837c",
+        "bytes": 83652
+      },
+      "stderr": {
+        "path": "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/reused/prior-attempts/invocations/runtime-baseline-counts.stderr.log",
+        "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    }
+  },
+  {
+    "origin": "original",
+    "key": "runtime-baseline-pair1-timed",
+    "classification": "excluded",
+    "reason": "Original wrapper omitted --expose-gc before the script; sanitize-memory is absent and the output has 31/32 records. Preserved, not used for runtime conclusions.",
+    "commandManifest": {
+      "path": "../results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/invocations/runtime-baseline-pair1-timed.command.json",
+      "originalSha256": "d8e06c39fb86d856c1936e1254cc4e91166a1fad6dcef06078404be7cd3b8bd9",
+      "bytes": 8854
+    },
+    "completionManifest": {
+      "path": "../results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/invocations/runtime-baseline-pair1-timed.completion.json",
+      "originalSha256": "246011732b2d6efe9c10ffeae797a68b37f00c80457bb64600cd1fc4e0e3f7a0",
+      "bytes": 1237
+    },
+    "rawRoot": "<candidate>/../cw-dev",
+    "canonicalRoot": "<baseline>",
+    "cwd": "<baseline>",
+    "sourceRoots": [
+      {
+        "raw": "<candidate>/../cw-dev",
+        "canonical": "<baseline>"
+      }
+    ],
+    "command": [
+      "<node-24.22.1>",
+      "<original>/harness/runtime/run.mjs"
+    ],
+    "environmentOverrides": {
+      "ROOT": "<baseline>",
+      "LABEL": "runtime-baseline-pair1-timed",
+      "OUTPUT": "<candidate>/../cw-consolidated/final-replay-2/results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/runtime/runtime-baseline-pair1-timed"
+    },
+    "effectiveWhitelistedEnvironment": null,
+    "environmentSelection": "Explicit overrides and recorded safe whitelist only; original inherited-environment fingerprints omitted entirely; null means no safe effective whitelist was recorded",
+    "nodeVersion": "v24.22.1",
+    "nodeSha256Before": "6f32069480ec14d52b6d7b1f3c7124cfbbc46203abf5ddf5c65b127435f3f329",
+    "nodeSha256After": "6f32069480ec14d52b6d7b1f3c7124cfbbc46203abf5ddf5c65b127435f3f329",
+    "harnessSha256": "2847c17e7661a347ace6577a6f781ff619cb707954c592f06c7aff49a0b5640b",
+    "invokeRunnerSha256": "5f0d4f92095428d19ecafd32a5d4eaab50ebd9e565d2060a039645967d68fa2f",
+    "startedAt": "2026-10-25T00:18:59.488Z",
+    "finishedAt": "2026-10-25T00:19:10.188Z",
+    "preflight": null,
+    "exitCode": 0,
+    "sourceStable": true,
+    "nodeStable": true,
+    "sourceSnapshots": [
+      "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/reused/prior-attempts/source-hashes/runtime-baseline-pair1-timed.before.json",
+      "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/reused/prior-attempts/source-hashes/runtime-baseline-pair1-timed.after.json"
+    ],
+    "logs": {
+      "stdout": {
+        "path": "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/reused/prior-attempts/invocations/runtime-baseline-pair1-timed.stdout.log",
+        "originalSha256": "e30a2b5f66640c250edbcd8fbfe034992c756e13b87df5bde07dd27c61582372",
+        "bytes": 80573
+      },
+      "stderr": {
+        "path": "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/reused/prior-attempts/invocations/runtime-baseline-pair1-timed.stderr.log",
+        "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    }
+  },
+  {
+    "origin": "original",
+    "key": "runtime-baseline-pair2-timed",
+    "classification": "excluded",
+    "reason": "Original wrapper omitted --expose-gc before the script; sanitize-memory is absent and the output has 31/32 records. Preserved, not used for runtime conclusions.",
+    "commandManifest": {
+      "path": "../results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/invocations/runtime-baseline-pair2-timed.command.json",
+      "originalSha256": "0d891b19dc6cabcefe6f3b61871da806246557ba42c0eb724b031d8d14fa394c",
+      "bytes": 8854
+    },
+    "completionManifest": {
+      "path": "../results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/invocations/runtime-baseline-pair2-timed.completion.json",
+      "originalSha256": "f1e48edd78e7ae3fd9eac1d36058b9eec95bde1cc9bcb3eb9787c561aefa6afb",
+      "bytes": 1237
+    },
+    "rawRoot": "<candidate>/../cw-dev",
+    "canonicalRoot": "<baseline>",
+    "cwd": "<baseline>",
+    "sourceRoots": [
+      {
+        "raw": "<candidate>/../cw-dev",
+        "canonical": "<baseline>"
+      }
+    ],
+    "command": [
+      "<node-24.22.1>",
+      "<original>/harness/runtime/run.mjs"
+    ],
+    "environmentOverrides": {
+      "ROOT": "<baseline>",
+      "LABEL": "runtime-baseline-pair2-timed",
+      "OUTPUT": "<candidate>/../cw-consolidated/final-replay-2/results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/runtime/runtime-baseline-pair2-timed"
+    },
+    "effectiveWhitelistedEnvironment": null,
+    "environmentSelection": "Explicit overrides and recorded safe whitelist only; original inherited-environment fingerprints omitted entirely; null means no safe effective whitelist was recorded",
+    "nodeVersion": "v24.22.1",
+    "nodeSha256Before": "6f32069480ec14d52b6d7b1f3c7124cfbbc46203abf5ddf5c65b127435f3f329",
+    "nodeSha256After": "6f32069480ec14d52b6d7b1f3c7124cfbbc46203abf5ddf5c65b127435f3f329",
+    "harnessSha256": "2847c17e7661a347ace6577a6f781ff619cb707954c592f06c7aff49a0b5640b",
+    "invokeRunnerSha256": "5f0d4f92095428d19ecafd32a5d4eaab50ebd9e565d2060a039645967d68fa2f",
+    "startedAt": "2026-10-25T00:19:24.227Z",
+    "finishedAt": "2026-10-25T00:19:32.575Z",
+    "preflight": null,
+    "exitCode": 0,
+    "sourceStable": true,
+    "nodeStable": true,
+    "sourceSnapshots": [
+      "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/reused/prior-attempts/source-hashes/runtime-baseline-pair2-timed.before.json",
+      "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/reused/prior-attempts/source-hashes/runtime-baseline-pair2-timed.after.json"
+    ],
+    "logs": {
+      "stdout": {
+        "path": "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/reused/prior-attempts/invocations/runtime-baseline-pair2-timed.stdout.log",
+        "originalSha256": "e9b8f87410fb85d0601ece1054ce7e19c2b4950418719c6deed78ab4245dd451",
+        "bytes": 80703
+      },
+      "stderr": {
+        "path": "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/reused/prior-attempts/invocations/runtime-baseline-pair2-timed.stderr.log",
+        "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    }
+  },
+  {
+    "origin": "original",
+    "key": "runtime-candidate-counts",
+    "classification": "excluded",
+    "reason": "Original wrapper omitted --expose-gc before the script; sanitize-memory is absent and the output has 31/32 records. Preserved, not used for runtime conclusions.",
+    "commandManifest": {
+      "path": "../results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/invocations/runtime-candidate-counts.command.json",
+      "originalSha256": "71e2249b08f3f32200c1bcd6714781e0ee54867116120d904c7118e1dd63e2f3",
+      "bytes": 8841
+    },
+    "completionManifest": {
+      "path": "../results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/invocations/runtime-candidate-counts.completion.json",
+      "originalSha256": "c5053430e16648f717d8698229e6bb9ac304251699060288336bc04c83e600f2",
+      "bytes": 1217
+    },
+    "rawRoot": "<candidate>",
+    "canonicalRoot": "<candidate>",
+    "cwd": "<candidate>",
+    "sourceRoots": [
+      {
+        "raw": "<candidate>",
+        "canonical": "<candidate>"
+      }
+    ],
+    "command": [
+      "<node-24.22.1>",
+      "<original>/harness/runtime/run.mjs"
+    ],
+    "environmentOverrides": {
+      "ROOT": "<candidate>",
+      "LABEL": "runtime-candidate-counts",
+      "COUNTS": "1",
+      "OUTPUT": "<candidate>/../cw-consolidated/final-replay-2/results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/runtime/runtime-candidate-counts"
+    },
+    "effectiveWhitelistedEnvironment": null,
+    "environmentSelection": "Explicit overrides and recorded safe whitelist only; original inherited-environment fingerprints omitted entirely; null means no safe effective whitelist was recorded",
+    "nodeVersion": "v24.22.1",
+    "nodeSha256Before": "6f32069480ec14d52b6d7b1f3c7124cfbbc46203abf5ddf5c65b127435f3f329",
+    "nodeSha256After": "6f32069480ec14d52b6d7b1f3c7124cfbbc46203abf5ddf5c65b127435f3f329",
+    "harnessSha256": "2847c17e7661a347ace6577a6f781ff619cb707954c592f06c7aff49a0b5640b",
+    "invokeRunnerSha256": "5f0d4f92095428d19ecafd32a5d4eaab50ebd9e565d2060a039645967d68fa2f",
+    "startedAt": "2026-10-25T00:20:04.488Z",
+    "finishedAt": "2026-10-25T00:20:09.909Z",
+    "preflight": null,
+    "exitCode": 0,
+    "sourceStable": true,
+    "nodeStable": true,
+    "sourceSnapshots": [
+      "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/reused/prior-attempts/source-hashes/runtime-candidate-counts.before.json",
+      "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/reused/prior-attempts/source-hashes/runtime-candidate-counts.after.json"
+    ],
+    "logs": {
+      "stdout": {
+        "path": "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/reused/prior-attempts/invocations/runtime-candidate-counts.stdout.log",
+        "originalSha256": "8bf7ea0f29e19166dfca2c15b4aef37ab8c94f5b2b82e1f9c20f78e5d26b2f4e",
+        "bytes": 83022
+      },
+      "stderr": {
+        "path": "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/reused/prior-attempts/invocations/runtime-candidate-counts.stderr.log",
+        "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    }
+  },
+  {
+    "origin": "original",
+    "key": "runtime-candidate-pair1-timed",
+    "classification": "excluded",
+    "reason": "Original wrapper omitted --expose-gc before the script; sanitize-memory is absent and the output has 31/32 records. Preserved, not used for runtime conclusions.",
+    "commandManifest": {
+      "path": "../results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/invocations/runtime-candidate-pair1-timed.command.json",
+      "originalSha256": "457a0ae4858adeff2154ee5198043456dc28c2bab2f0a86d91137ac9e700034b",
+      "bytes": 8837
+    },
+    "completionManifest": {
+      "path": "../results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/invocations/runtime-candidate-pair1-timed.completion.json",
+      "originalSha256": "1ede4643a6871dafe1a4d951936643775a343b288bfac3c41d31e76eb9567a79",
+      "bytes": 1242
+    },
+    "rawRoot": "<candidate>",
+    "canonicalRoot": "<candidate>",
+    "cwd": "<candidate>",
+    "sourceRoots": [
+      {
+        "raw": "<candidate>",
+        "canonical": "<candidate>"
+      }
+    ],
+    "command": [
+      "<node-24.22.1>",
+      "<original>/harness/runtime/run.mjs"
+    ],
+    "environmentOverrides": {
+      "ROOT": "<candidate>",
+      "LABEL": "runtime-candidate-pair1-timed",
+      "OUTPUT": "<candidate>/../cw-consolidated/final-replay-2/results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/runtime/runtime-candidate-pair1-timed"
+    },
+    "effectiveWhitelistedEnvironment": null,
+    "environmentSelection": "Explicit overrides and recorded safe whitelist only; original inherited-environment fingerprints omitted entirely; null means no safe effective whitelist was recorded",
+    "nodeVersion": "v24.22.1",
+    "nodeSha256Before": "6f32069480ec14d52b6d7b1f3c7124cfbbc46203abf5ddf5c65b127435f3f329",
+    "nodeSha256After": "6f32069480ec14d52b6d7b1f3c7124cfbbc46203abf5ddf5c65b127435f3f329",
+    "harnessSha256": "2847c17e7661a347ace6577a6f781ff619cb707954c592f06c7aff49a0b5640b",
+    "invokeRunnerSha256": "5f0d4f92095428d19ecafd32a5d4eaab50ebd9e565d2060a039645967d68fa2f",
+    "startedAt": "2026-10-25T00:19:14.165Z",
+    "finishedAt": "2026-10-25T00:19:21.432Z",
+    "preflight": null,
+    "exitCode": 0,
+    "sourceStable": true,
+    "nodeStable": true,
+    "sourceSnapshots": [
+      "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/reused/prior-attempts/source-hashes/runtime-candidate-pair1-timed.before.json",
+      "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/reused/prior-attempts/source-hashes/runtime-candidate-pair1-timed.after.json"
+    ],
+    "logs": {
+      "stdout": {
+        "path": "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/reused/prior-attempts/invocations/runtime-candidate-pair1-timed.stdout.log",
+        "originalSha256": "b39aee17ba0d4ad44e98f338a932fad11596a7758a0fc533ce7830ef329a57fe",
+        "bytes": 81277
+      },
+      "stderr": {
+        "path": "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/reused/prior-attempts/invocations/runtime-candidate-pair1-timed.stderr.log",
+        "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    }
+  },
+  {
+    "origin": "original",
+    "key": "runtime-candidate-pair2-timed",
+    "classification": "excluded",
+    "reason": "Original wrapper omitted --expose-gc before the script; sanitize-memory is absent and the output has 31/32 records. Preserved, not used for runtime conclusions.",
+    "commandManifest": {
+      "path": "../results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/invocations/runtime-candidate-pair2-timed.command.json",
+      "originalSha256": "131d14ac5ab1aa682efbec8108de9348e7442d0a1913f19487b3f5f83cd682ab",
+      "bytes": 8837
+    },
+    "completionManifest": {
+      "path": "../results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/invocations/runtime-candidate-pair2-timed.completion.json",
+      "originalSha256": "7a40c97ed6d91a25fa5da100f0743f0615a7903c85c30d7a2d61f93865184cb6",
+      "bytes": 1242
+    },
+    "rawRoot": "<candidate>",
+    "canonicalRoot": "<candidate>",
+    "cwd": "<candidate>",
+    "sourceRoots": [
+      {
+        "raw": "<candidate>",
+        "canonical": "<candidate>"
+      }
+    ],
+    "command": [
+      "<node-24.22.1>",
+      "<original>/harness/runtime/run.mjs"
+    ],
+    "environmentOverrides": {
+      "ROOT": "<candidate>",
+      "LABEL": "runtime-candidate-pair2-timed",
+      "OUTPUT": "<candidate>/../cw-consolidated/final-replay-2/results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/runtime/runtime-candidate-pair2-timed"
+    },
+    "effectiveWhitelistedEnvironment": null,
+    "environmentSelection": "Explicit overrides and recorded safe whitelist only; original inherited-environment fingerprints omitted entirely; null means no safe effective whitelist was recorded",
+    "nodeVersion": "v24.22.1",
+    "nodeSha256Before": "6f32069480ec14d52b6d7b1f3c7124cfbbc46203abf5ddf5c65b127435f3f329",
+    "nodeSha256After": "6f32069480ec14d52b6d7b1f3c7124cfbbc46203abf5ddf5c65b127435f3f329",
+    "harnessSha256": "2847c17e7661a347ace6577a6f781ff619cb707954c592f06c7aff49a0b5640b",
+    "invokeRunnerSha256": "5f0d4f92095428d19ecafd32a5d4eaab50ebd9e565d2060a039645967d68fa2f",
+    "startedAt": "2026-10-25T00:19:34.881Z",
+    "finishedAt": "2026-10-25T00:19:40.462Z",
+    "preflight": null,
+    "exitCode": 0,
+    "sourceStable": true,
+    "nodeStable": true,
+    "sourceSnapshots": [
+      "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/reused/prior-attempts/source-hashes/runtime-candidate-pair2-timed.before.json",
+      "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/reused/prior-attempts/source-hashes/runtime-candidate-pair2-timed.after.json"
+    ],
+    "logs": {
+      "stdout": {
+        "path": "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/reused/prior-attempts/invocations/runtime-candidate-pair2-timed.stdout.log",
+        "originalSha256": "a5945984efa9422c27401bae0db00bf212724f45e86a8392060e0e97f1f65a45",
+        "bytes": 81152
+      },
+      "stderr": {
+        "path": "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/reused/prior-attempts/invocations/runtime-candidate-pair2-timed.stderr.log",
+        "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    }
+  },
+  {
+    "origin": "original",
+    "key": "server-management-baseline-pair1",
+    "classification": "reused-validated",
+    "reason": "Successful pinned fixture invocation with stable source/Node hashes; raw output and source maps copied byte-for-byte into recovery-1.",
+    "commandManifest": {
+      "path": "../results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/invocations/server-management-baseline-pair1.command.json",
+      "originalSha256": "f3b7756afac83fa9280927f17fef66fa9174ec10a73acc558776db912e61a6f9",
+      "bytes": 8882
+    },
+    "completionManifest": {
+      "path": "../results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/invocations/server-management-baseline-pair1.completion.json",
+      "originalSha256": "87381a65cfa292b42999ab1b2f74b706ea0f42bbcaf327635cbcf9d3b968e528",
+      "bytes": 1257
+    },
+    "rawRoot": "<candidate>/../cw-dev",
+    "canonicalRoot": "<baseline>",
+    "cwd": "<baseline>",
+    "sourceRoots": [
+      {
+        "raw": "<candidate>/../cw-dev",
+        "canonical": "<baseline>"
+      }
+    ],
+    "command": [
+      "<node-24.22.1>",
+      "<original>/harness/run-server.mjs",
+      "management"
+    ],
+    "environmentOverrides": {
+      "ROOT": "<baseline>",
+      "LABEL": "server-management-baseline-pair1",
+      "OUTPUT": "<candidate>/../cw-consolidated/final-replay-2/results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/server/server-management-baseline-pair1"
+    },
+    "effectiveWhitelistedEnvironment": null,
+    "environmentSelection": "Explicit overrides and recorded safe whitelist only; original inherited-environment fingerprints omitted entirely; null means no safe effective whitelist was recorded",
+    "nodeVersion": "v24.22.1",
+    "nodeSha256Before": "6f32069480ec14d52b6d7b1f3c7124cfbbc46203abf5ddf5c65b127435f3f329",
+    "nodeSha256After": "6f32069480ec14d52b6d7b1f3c7124cfbbc46203abf5ddf5c65b127435f3f329",
+    "harnessSha256": "549d7a9756ba794fc86b0fb3f20348635e41f46df59a4e291279101620231030",
+    "invokeRunnerSha256": "5f0d4f92095428d19ecafd32a5d4eaab50ebd9e565d2060a039645967d68fa2f",
+    "startedAt": "2026-10-25T00:23:03.235Z",
+    "finishedAt": "2026-10-25T00:23:11.540Z",
+    "preflight": null,
+    "exitCode": 0,
+    "sourceStable": true,
+    "nodeStable": true,
+    "sourceSnapshots": [
+      "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/reused/source-hashes/server-management-baseline-pair1.before.json",
+      "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/reused/source-hashes/server-management-baseline-pair1.after.json"
+    ],
+    "logs": {
+      "stdout": {
+        "path": "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/reused/invocations/server-management-baseline-pair1.stdout.log",
+        "originalSha256": "d92eff926e1d9f3aae550121c1c4e9844f60844f714683a0f09f8fecf389abed",
+        "bytes": 586
+      },
+      "stderr": {
+        "path": "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/reused/invocations/server-management-baseline-pair1.stderr.log",
+        "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    }
+  },
+  {
+    "origin": "original",
+    "key": "server-management-baseline-pair2",
+    "classification": "reused-validated",
+    "reason": "Successful pinned fixture invocation with stable source/Node hashes; raw output and source maps copied byte-for-byte into recovery-1.",
+    "commandManifest": {
+      "path": "../results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/invocations/server-management-baseline-pair2.command.json",
+      "originalSha256": "c4db5d4ddc8ecbd4cc0e251daac3ff342bb0e21d7a28ba0a69e0069685f84096",
+      "bytes": 8882
+    },
+    "completionManifest": {
+      "path": "../results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/invocations/server-management-baseline-pair2.completion.json",
+      "originalSha256": "21a5773b2673ebbba479f267082bfd09b4f688fba87bd8a47c87e6236f6a85d3",
+      "bytes": 1257
+    },
+    "rawRoot": "<candidate>/../cw-dev",
+    "canonicalRoot": "<baseline>",
+    "cwd": "<baseline>",
+    "sourceRoots": [
+      {
+        "raw": "<candidate>/../cw-dev",
+        "canonical": "<baseline>"
+      }
+    ],
+    "command": [
+      "<node-24.22.1>",
+      "<original>/harness/run-server.mjs",
+      "management"
+    ],
+    "environmentOverrides": {
+      "ROOT": "<baseline>",
+      "LABEL": "server-management-baseline-pair2",
+      "OUTPUT": "<candidate>/../cw-consolidated/final-replay-2/results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/server/server-management-baseline-pair2"
+    },
+    "effectiveWhitelistedEnvironment": null,
+    "environmentSelection": "Explicit overrides and recorded safe whitelist only; original inherited-environment fingerprints omitted entirely; null means no safe effective whitelist was recorded",
+    "nodeVersion": "v24.22.1",
+    "nodeSha256Before": "6f32069480ec14d52b6d7b1f3c7124cfbbc46203abf5ddf5c65b127435f3f329",
+    "nodeSha256After": "6f32069480ec14d52b6d7b1f3c7124cfbbc46203abf5ddf5c65b127435f3f329",
+    "harnessSha256": "549d7a9756ba794fc86b0fb3f20348635e41f46df59a4e291279101620231030",
+    "invokeRunnerSha256": "5f0d4f92095428d19ecafd32a5d4eaab50ebd9e565d2060a039645967d68fa2f",
+    "startedAt": "2026-10-25T00:23:18.901Z",
+    "finishedAt": "2026-10-25T00:23:24.325Z",
+    "preflight": null,
+    "exitCode": 0,
+    "sourceStable": true,
+    "nodeStable": true,
+    "sourceSnapshots": [
+      "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/reused/source-hashes/server-management-baseline-pair2.before.json",
+      "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/reused/source-hashes/server-management-baseline-pair2.after.json"
+    ],
+    "logs": {
+      "stdout": {
+        "path": "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/reused/invocations/server-management-baseline-pair2.stdout.log",
+        "originalSha256": "b4e87c1c1bdbf7d615ccd4c8a3a9ee54ad965d3ca918b391c6f174705e22c135",
+        "bytes": 575
+      },
+      "stderr": {
+        "path": "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/reused/invocations/server-management-baseline-pair2.stderr.log",
+        "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    }
+  },
+  {
+    "origin": "original",
+    "key": "server-management-candidate-pair1",
+    "classification": "reused-validated",
+    "reason": "Successful pinned fixture invocation with stable source/Node hashes; raw output and source maps copied byte-for-byte into recovery-1.",
+    "commandManifest": {
+      "path": "../results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/invocations/server-management-candidate-pair1.command.json",
+      "originalSha256": "65f6f9869649dde3fa5fedc69d34562a0a763e0104db6d5f516ff9f3bfb8178e",
+      "bytes": 8865
+    },
+    "completionManifest": {
+      "path": "../results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/invocations/server-management-candidate-pair1.completion.json",
+      "originalSha256": "38f8d4abfd519514804e3bf353325d3bc87656521ba662863cb34d0d6cc266a1",
+      "bytes": 1262
+    },
+    "rawRoot": "<candidate>",
+    "canonicalRoot": "<candidate>",
+    "cwd": "<candidate>",
+    "sourceRoots": [
+      {
+        "raw": "<candidate>",
+        "canonical": "<candidate>"
+      }
+    ],
+    "command": [
+      "<node-24.22.1>",
+      "<original>/harness/run-server.mjs",
+      "management"
+    ],
+    "environmentOverrides": {
+      "ROOT": "<candidate>",
+      "LABEL": "server-management-candidate-pair1",
+      "OUTPUT": "<candidate>/../cw-consolidated/final-replay-2/results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/server/server-management-candidate-pair1"
+    },
+    "effectiveWhitelistedEnvironment": null,
+    "environmentSelection": "Explicit overrides and recorded safe whitelist only; original inherited-environment fingerprints omitted entirely; null means no safe effective whitelist was recorded",
+    "nodeVersion": "v24.22.1",
+    "nodeSha256Before": "6f32069480ec14d52b6d7b1f3c7124cfbbc46203abf5ddf5c65b127435f3f329",
+    "nodeSha256After": "6f32069480ec14d52b6d7b1f3c7124cfbbc46203abf5ddf5c65b127435f3f329",
+    "harnessSha256": "549d7a9756ba794fc86b0fb3f20348635e41f46df59a4e291279101620231030",
+    "invokeRunnerSha256": "5f0d4f92095428d19ecafd32a5d4eaab50ebd9e565d2060a039645967d68fa2f",
+    "startedAt": "2026-10-25T00:23:11.682Z",
+    "finishedAt": "2026-10-25T00:23:18.767Z",
+    "preflight": null,
+    "exitCode": 0,
+    "sourceStable": true,
+    "nodeStable": true,
+    "sourceSnapshots": [
+      "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/reused/source-hashes/server-management-candidate-pair1.before.json",
+      "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/reused/source-hashes/server-management-candidate-pair1.after.json"
+    ],
+    "logs": {
+      "stdout": {
+        "path": "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/reused/invocations/server-management-candidate-pair1.stdout.log",
+        "originalSha256": "055f99d261f5578cad3634d91fb10f852522603fa5a315d24d0a5bb1258108b7",
+        "bytes": 581
+      },
+      "stderr": {
+        "path": "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/reused/invocations/server-management-candidate-pair1.stderr.log",
+        "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    }
+  },
+  {
+    "origin": "original",
+    "key": "server-management-candidate-pair2",
+    "classification": "reused-validated",
+    "reason": "Successful pinned fixture invocation with stable source/Node hashes; raw output and source maps copied byte-for-byte into recovery-1.",
+    "commandManifest": {
+      "path": "../results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/invocations/server-management-candidate-pair2.command.json",
+      "originalSha256": "ff702f0eb2d11dffd536a7e8a8b0237db920ccdc1f8fde9be31b846faa65e763",
+      "bytes": 8865
+    },
+    "completionManifest": {
+      "path": "../results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/invocations/server-management-candidate-pair2.completion.json",
+      "originalSha256": "eae57cf471a21ce994b68fc3f708bb9ec1d284034e41aebf36d25a1247ec5079",
+      "bytes": 1262
+    },
+    "rawRoot": "<candidate>",
+    "canonicalRoot": "<candidate>",
+    "cwd": "<candidate>",
+    "sourceRoots": [
+      {
+        "raw": "<candidate>",
+        "canonical": "<candidate>"
+      }
+    ],
+    "command": [
+      "<node-24.22.1>",
+      "<original>/harness/run-server.mjs",
+      "management"
+    ],
+    "environmentOverrides": {
+      "ROOT": "<candidate>",
+      "LABEL": "server-management-candidate-pair2",
+      "OUTPUT": "<candidate>/../cw-consolidated/final-replay-2/results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/server/server-management-candidate-pair2"
+    },
+    "effectiveWhitelistedEnvironment": null,
+    "environmentSelection": "Explicit overrides and recorded safe whitelist only; original inherited-environment fingerprints omitted entirely; null means no safe effective whitelist was recorded",
+    "nodeVersion": "v24.22.1",
+    "nodeSha256Before": "6f32069480ec14d52b6d7b1f3c7124cfbbc46203abf5ddf5c65b127435f3f329",
+    "nodeSha256After": "6f32069480ec14d52b6d7b1f3c7124cfbbc46203abf5ddf5c65b127435f3f329",
+    "harnessSha256": "549d7a9756ba794fc86b0fb3f20348635e41f46df59a4e291279101620231030",
+    "invokeRunnerSha256": "5f0d4f92095428d19ecafd32a5d4eaab50ebd9e565d2060a039645967d68fa2f",
+    "startedAt": "2026-10-25T00:23:24.455Z",
+    "finishedAt": "2026-10-25T00:23:29.185Z",
+    "preflight": null,
+    "exitCode": 0,
+    "sourceStable": true,
+    "nodeStable": true,
+    "sourceSnapshots": [
+      "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/reused/source-hashes/server-management-candidate-pair2.before.json",
+      "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/reused/source-hashes/server-management-candidate-pair2.after.json"
+    ],
+    "logs": {
+      "stdout": {
+        "path": "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/reused/invocations/server-management-candidate-pair2.stdout.log",
+        "originalSha256": "3a3b2521e6f005ab7e248d2c1c4218307712594425606629fced4caaaaadaca5",
+        "bytes": 579
+      },
+      "stderr": {
+        "path": "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/reused/invocations/server-management-candidate-pair2.stderr.log",
+        "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    }
+  },
+  {
+    "origin": "original",
+    "key": "server-response-baseline-pair1",
+    "classification": "reused-validated",
+    "reason": "Successful pinned fixture invocation with stable source/Node hashes; raw output and source maps copied byte-for-byte into recovery-1.",
+    "commandManifest": {
+      "path": "../results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/invocations/server-response-baseline-pair1.command.json",
+      "originalSha256": "3a4c9c3869e28ec05ab1cf023bc4032c45bbca329c5bf56d32473bd14518edb0",
+      "bytes": 8874
+    },
+    "completionManifest": {
+      "path": "../results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/invocations/server-response-baseline-pair1.completion.json",
+      "originalSha256": "12ac78d7ef7745feb3e007f35df2ac90569c894a57af47973652b1d56860a9be",
+      "bytes": 1247
+    },
+    "rawRoot": "<candidate>/../cw-dev",
+    "canonicalRoot": "<baseline>",
+    "cwd": "<baseline>",
+    "sourceRoots": [
+      {
+        "raw": "<candidate>/../cw-dev",
+        "canonical": "<baseline>"
+      }
+    ],
+    "command": [
+      "<node-24.22.1>",
+      "<original>/harness/run-server.mjs",
+      "response"
+    ],
+    "environmentOverrides": {
+      "ROOT": "<baseline>",
+      "LABEL": "server-response-baseline-pair1",
+      "OUTPUT": "<candidate>/../cw-consolidated/final-replay-2/results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/server/server-response-baseline-pair1"
+    },
+    "effectiveWhitelistedEnvironment": null,
+    "environmentSelection": "Explicit overrides and recorded safe whitelist only; original inherited-environment fingerprints omitted entirely; null means no safe effective whitelist was recorded",
+    "nodeVersion": "v24.22.1",
+    "nodeSha256Before": "6f32069480ec14d52b6d7b1f3c7124cfbbc46203abf5ddf5c65b127435f3f329",
+    "nodeSha256After": "6f32069480ec14d52b6d7b1f3c7124cfbbc46203abf5ddf5c65b127435f3f329",
+    "harnessSha256": "549d7a9756ba794fc86b0fb3f20348635e41f46df59a4e291279101620231030",
+    "invokeRunnerSha256": "5f0d4f92095428d19ecafd32a5d4eaab50ebd9e565d2060a039645967d68fa2f",
+    "startedAt": "2026-10-25T00:22:20.060Z",
+    "finishedAt": "2026-10-25T00:22:33.018Z",
+    "preflight": null,
+    "exitCode": 0,
+    "sourceStable": true,
+    "nodeStable": true,
+    "sourceSnapshots": [
+      "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/reused/source-hashes/server-response-baseline-pair1.before.json",
+      "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/reused/source-hashes/server-response-baseline-pair1.after.json"
+    ],
+    "logs": {
+      "stdout": {
+        "path": "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/reused/invocations/server-response-baseline-pair1.stdout.log",
+        "originalSha256": "da47d10e19672fc0c5b3a2f1a365d69e114a1101cdc21d8c93da76e5d9360d2e",
+        "bytes": 571
+      },
+      "stderr": {
+        "path": "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/reused/invocations/server-response-baseline-pair1.stderr.log",
+        "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    }
+  },
+  {
+    "origin": "original",
+    "key": "server-response-baseline-pair2",
+    "classification": "reused-validated",
+    "reason": "Successful pinned fixture invocation with stable source/Node hashes; raw output and source maps copied byte-for-byte into recovery-1.",
+    "commandManifest": {
+      "path": "../results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/invocations/server-response-baseline-pair2.command.json",
+      "originalSha256": "20a13f388c444086a3df4c476fc5311ab328fd920404c95cbcf491d7febb5dc7",
+      "bytes": 8874
+    },
+    "completionManifest": {
+      "path": "../results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/invocations/server-response-baseline-pair2.completion.json",
+      "originalSha256": "f0a4584d6c42bf82ade74777dac51d398ebc8b06793991e69ada9602b6949bee",
+      "bytes": 1247
+    },
+    "rawRoot": "<candidate>/../cw-dev",
+    "canonicalRoot": "<baseline>",
+    "cwd": "<baseline>",
+    "sourceRoots": [
+      {
+        "raw": "<candidate>/../cw-dev",
+        "canonical": "<baseline>"
+      }
+    ],
+    "command": [
+      "<node-24.22.1>",
+      "<original>/harness/run-server.mjs",
+      "response"
+    ],
+    "environmentOverrides": {
+      "ROOT": "<baseline>",
+      "LABEL": "server-response-baseline-pair2",
+      "OUTPUT": "<candidate>/../cw-consolidated/final-replay-2/results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/server/server-response-baseline-pair2"
+    },
+    "effectiveWhitelistedEnvironment": null,
+    "environmentSelection": "Explicit overrides and recorded safe whitelist only; original inherited-environment fingerprints omitted entirely; null means no safe effective whitelist was recorded",
+    "nodeVersion": "v24.22.1",
+    "nodeSha256Before": "6f32069480ec14d52b6d7b1f3c7124cfbbc46203abf5ddf5c65b127435f3f329",
+    "nodeSha256After": "6f32069480ec14d52b6d7b1f3c7124cfbbc46203abf5ddf5c65b127435f3f329",
+    "harnessSha256": "549d7a9756ba794fc86b0fb3f20348635e41f46df59a4e291279101620231030",
+    "invokeRunnerSha256": "5f0d4f92095428d19ecafd32a5d4eaab50ebd9e565d2060a039645967d68fa2f",
+    "startedAt": "2026-10-25T00:22:41.268Z",
+    "finishedAt": "2026-10-25T00:22:54.277Z",
+    "preflight": null,
+    "exitCode": 0,
+    "sourceStable": true,
+    "nodeStable": true,
+    "sourceSnapshots": [
+      "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/reused/source-hashes/server-response-baseline-pair2.before.json",
+      "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/reused/source-hashes/server-response-baseline-pair2.after.json"
+    ],
+    "logs": {
+      "stdout": {
+        "path": "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/reused/invocations/server-response-baseline-pair2.stdout.log",
+        "originalSha256": "c1775df8f6793bcf50deb5dbf438d99e1b1a87e90713167f5500585239f29d48",
+        "bytes": 580
+      },
+      "stderr": {
+        "path": "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/reused/invocations/server-response-baseline-pair2.stderr.log",
+        "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    }
+  },
+  {
+    "origin": "original",
+    "key": "server-response-candidate-pair1",
+    "classification": "reused-validated",
+    "reason": "Successful pinned fixture invocation with stable source/Node hashes; raw output and source maps copied byte-for-byte into recovery-1.",
+    "commandManifest": {
+      "path": "../results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/invocations/server-response-candidate-pair1.command.json",
+      "originalSha256": "39b8578aa8b3132f1ec9b1e63a45767ba06926501e1c0e18fe72642e4c542ee5",
+      "bytes": 8857
+    },
+    "completionManifest": {
+      "path": "../results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/invocations/server-response-candidate-pair1.completion.json",
+      "originalSha256": "92c44ac707baa1d679e02d9988655d0d63f1f51709b1a402cc37eb332b6591c1",
+      "bytes": 1252
+    },
+    "rawRoot": "<candidate>",
+    "canonicalRoot": "<candidate>",
+    "cwd": "<candidate>",
+    "sourceRoots": [
+      {
+        "raw": "<candidate>",
+        "canonical": "<candidate>"
+      }
+    ],
+    "command": [
+      "<node-24.22.1>",
+      "<original>/harness/run-server.mjs",
+      "response"
+    ],
+    "environmentOverrides": {
+      "ROOT": "<candidate>",
+      "LABEL": "server-response-candidate-pair1",
+      "OUTPUT": "<candidate>/../cw-consolidated/final-replay-2/results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/server/server-response-candidate-pair1"
+    },
+    "effectiveWhitelistedEnvironment": null,
+    "environmentSelection": "Explicit overrides and recorded safe whitelist only; original inherited-environment fingerprints omitted entirely; null means no safe effective whitelist was recorded",
+    "nodeVersion": "v24.22.1",
+    "nodeSha256Before": "6f32069480ec14d52b6d7b1f3c7124cfbbc46203abf5ddf5c65b127435f3f329",
+    "nodeSha256After": "6f32069480ec14d52b6d7b1f3c7124cfbbc46203abf5ddf5c65b127435f3f329",
+    "harnessSha256": "549d7a9756ba794fc86b0fb3f20348635e41f46df59a4e291279101620231030",
+    "invokeRunnerSha256": "5f0d4f92095428d19ecafd32a5d4eaab50ebd9e565d2060a039645967d68fa2f",
+    "startedAt": "2026-10-25T00:22:33.154Z",
+    "finishedAt": "2026-10-25T00:22:41.146Z",
+    "preflight": null,
+    "exitCode": 0,
+    "sourceStable": true,
+    "nodeStable": true,
+    "sourceSnapshots": [
+      "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/reused/source-hashes/server-response-candidate-pair1.before.json",
+      "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/reused/source-hashes/server-response-candidate-pair1.after.json"
+    ],
+    "logs": {
+      "stdout": {
+        "path": "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/reused/invocations/server-response-candidate-pair1.stdout.log",
+        "originalSha256": "e55a96ec1b218db2da704228df2f3ab3cffa49758cf3db0db13d547693c821ff",
+        "bytes": 590
+      },
+      "stderr": {
+        "path": "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/reused/invocations/server-response-candidate-pair1.stderr.log",
+        "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    }
+  },
+  {
+    "origin": "original",
+    "key": "server-response-candidate-pair2",
+    "classification": "reused-validated",
+    "reason": "Successful pinned fixture invocation with stable source/Node hashes; raw output and source maps copied byte-for-byte into recovery-1.",
+    "commandManifest": {
+      "path": "../results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/invocations/server-response-candidate-pair2.command.json",
+      "originalSha256": "b3646d367125d0f236842f57cf8afdd76e63db5821339e646ee7bd3537677f46",
+      "bytes": 8857
+    },
+    "completionManifest": {
+      "path": "../results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/invocations/server-response-candidate-pair2.completion.json",
+      "originalSha256": "23cc470fbcd01efa3c9c3296d0d2de752adc5c4c63bf761c303cf1efb5264079",
+      "bytes": 1252
+    },
+    "rawRoot": "<candidate>",
+    "canonicalRoot": "<candidate>",
+    "cwd": "<candidate>",
+    "sourceRoots": [
+      {
+        "raw": "<candidate>",
+        "canonical": "<candidate>"
+      }
+    ],
+    "command": [
+      "<node-24.22.1>",
+      "<original>/harness/run-server.mjs",
+      "response"
+    ],
+    "environmentOverrides": {
+      "ROOT": "<candidate>",
+      "LABEL": "server-response-candidate-pair2",
+      "OUTPUT": "<candidate>/../cw-consolidated/final-replay-2/results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/server/server-response-candidate-pair2"
+    },
+    "effectiveWhitelistedEnvironment": null,
+    "environmentSelection": "Explicit overrides and recorded safe whitelist only; original inherited-environment fingerprints omitted entirely; null means no safe effective whitelist was recorded",
+    "nodeVersion": "v24.22.1",
+    "nodeSha256Before": "6f32069480ec14d52b6d7b1f3c7124cfbbc46203abf5ddf5c65b127435f3f329",
+    "nodeSha256After": "6f32069480ec14d52b6d7b1f3c7124cfbbc46203abf5ddf5c65b127435f3f329",
+    "harnessSha256": "549d7a9756ba794fc86b0fb3f20348635e41f46df59a4e291279101620231030",
+    "invokeRunnerSha256": "5f0d4f92095428d19ecafd32a5d4eaab50ebd9e565d2060a039645967d68fa2f",
+    "startedAt": "2026-10-25T00:22:54.404Z",
+    "finishedAt": "2026-10-25T00:23:02.993Z",
+    "preflight": null,
+    "exitCode": 0,
+    "sourceStable": true,
+    "nodeStable": true,
+    "sourceSnapshots": [
+      "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/reused/source-hashes/server-response-candidate-pair2.before.json",
+      "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/reused/source-hashes/server-response-candidate-pair2.after.json"
+    ],
+    "logs": {
+      "stdout": {
+        "path": "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/reused/invocations/server-response-candidate-pair2.stdout.log",
+        "originalSha256": "07c944d7cc0931c6efa4954ff7c26c0fa8e2b7369c84bceb3008213d7912941e",
+        "bytes": 588
+      },
+      "stderr": {
+        "path": "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/reused/invocations/server-response-candidate-pair2.stderr.log",
+        "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    }
+  },
+  {
+    "origin": "original",
+    "key": "server-router-baseline-pair1",
+    "classification": "reused-validated",
+    "reason": "Successful pinned fixture invocation with stable source/Node hashes; raw output and source maps copied byte-for-byte into recovery-1.",
+    "commandManifest": {
+      "path": "../results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/invocations/server-router-baseline-pair1.command.json",
+      "originalSha256": "9024b71ab01ddfd87bf9fed9c75615c61c4b2cbea8b15d51df06efef0e9dd5b8",
+      "bytes": 8866
+    },
+    "completionManifest": {
+      "path": "../results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/invocations/server-router-baseline-pair1.completion.json",
+      "originalSha256": "98048a4afecc0b16c9f671c29d52af0bf51409ee2166da78df42736b7e2840a5",
+      "bytes": 1237
+    },
+    "rawRoot": "<candidate>/../cw-dev",
+    "canonicalRoot": "<baseline>",
+    "cwd": "<baseline>",
+    "sourceRoots": [
+      {
+        "raw": "<candidate>/../cw-dev",
+        "canonical": "<baseline>"
+      }
+    ],
+    "command": [
+      "<node-24.22.1>",
+      "<original>/harness/run-server.mjs",
+      "router"
+    ],
+    "environmentOverrides": {
+      "ROOT": "<baseline>",
+      "LABEL": "server-router-baseline-pair1",
+      "OUTPUT": "<candidate>/../cw-consolidated/final-replay-2/results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/server/server-router-baseline-pair1"
+    },
+    "effectiveWhitelistedEnvironment": null,
+    "environmentSelection": "Explicit overrides and recorded safe whitelist only; original inherited-environment fingerprints omitted entirely; null means no safe effective whitelist was recorded",
+    "nodeVersion": "v24.22.1",
+    "nodeSha256Before": "6f32069480ec14d52b6d7b1f3c7124cfbbc46203abf5ddf5c65b127435f3f329",
+    "nodeSha256After": "6f32069480ec14d52b6d7b1f3c7124cfbbc46203abf5ddf5c65b127435f3f329",
+    "harnessSha256": "549d7a9756ba794fc86b0fb3f20348635e41f46df59a4e291279101620231030",
+    "invokeRunnerSha256": "5f0d4f92095428d19ecafd32a5d4eaab50ebd9e565d2060a039645967d68fa2f",
+    "startedAt": "2026-10-25T00:20:33.399Z",
+    "finishedAt": "2026-10-25T00:21:16.045Z",
+    "preflight": null,
+    "exitCode": 0,
+    "sourceStable": true,
+    "nodeStable": true,
+    "sourceSnapshots": [
+      "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/reused/source-hashes/server-router-baseline-pair1.before.json",
+      "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/reused/source-hashes/server-router-baseline-pair1.after.json"
+    ],
+    "logs": {
+      "stdout": {
+        "path": "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/reused/invocations/server-router-baseline-pair1.stdout.log",
+        "originalSha256": "45d28009bf4e12169563d53a6e761ef3e6da22870b234dc813fa243bc835a8a0",
+        "bytes": 2961
+      },
+      "stderr": {
+        "path": "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/reused/invocations/server-router-baseline-pair1.stderr.log",
+        "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    }
+  },
+  {
+    "origin": "original",
+    "key": "server-router-baseline-pair2",
+    "classification": "reused-validated",
+    "reason": "Successful pinned fixture invocation with stable source/Node hashes; raw output and source maps copied byte-for-byte into recovery-1.",
+    "commandManifest": {
+      "path": "../results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/invocations/server-router-baseline-pair2.command.json",
+      "originalSha256": "acaf289664390ba50f60d8ebf21785978aa5f8797f8bf59540834a2c72e37378",
+      "bytes": 8866
+    },
+    "completionManifest": {
+      "path": "../results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/invocations/server-router-baseline-pair2.completion.json",
+      "originalSha256": "ae1d2006698a2dcabb1a6134dc428bbbdaad05222e5d0c7a371905f604b9af20",
+      "bytes": 1237
+    },
+    "rawRoot": "<candidate>/../cw-dev",
+    "canonicalRoot": "<baseline>",
+    "cwd": "<baseline>",
+    "sourceRoots": [
+      {
+        "raw": "<candidate>/../cw-dev",
+        "canonical": "<baseline>"
+      }
+    ],
+    "command": [
+      "<node-24.22.1>",
+      "<original>/harness/run-server.mjs",
+      "router"
+    ],
+    "environmentOverrides": {
+      "ROOT": "<baseline>",
+      "LABEL": "server-router-baseline-pair2",
+      "OUTPUT": "<candidate>/../cw-consolidated/final-replay-2/results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/server/server-router-baseline-pair2"
+    },
+    "effectiveWhitelistedEnvironment": null,
+    "environmentSelection": "Explicit overrides and recorded safe whitelist only; original inherited-environment fingerprints omitted entirely; null means no safe effective whitelist was recorded",
+    "nodeVersion": "v24.22.1",
+    "nodeSha256Before": "6f32069480ec14d52b6d7b1f3c7124cfbbc46203abf5ddf5c65b127435f3f329",
+    "nodeSha256After": "6f32069480ec14d52b6d7b1f3c7124cfbbc46203abf5ddf5c65b127435f3f329",
+    "harnessSha256": "549d7a9756ba794fc86b0fb3f20348635e41f46df59a4e291279101620231030",
+    "invokeRunnerSha256": "5f0d4f92095428d19ecafd32a5d4eaab50ebd9e565d2060a039645967d68fa2f",
+    "startedAt": "2026-10-25T00:21:31.796Z",
+    "finishedAt": "2026-10-25T00:22:13.008Z",
+    "preflight": null,
+    "exitCode": 0,
+    "sourceStable": true,
+    "nodeStable": true,
+    "sourceSnapshots": [
+      "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/reused/source-hashes/server-router-baseline-pair2.before.json",
+      "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/reused/source-hashes/server-router-baseline-pair2.after.json"
+    ],
+    "logs": {
+      "stdout": {
+        "path": "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/reused/invocations/server-router-baseline-pair2.stdout.log",
+        "originalSha256": "f3c84e97748575c22538431d8389d3f85c347e84a560732fbc2ec1683eb321c1",
+        "bytes": 2958
+      },
+      "stderr": {
+        "path": "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/reused/invocations/server-router-baseline-pair2.stderr.log",
+        "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    }
+  },
+  {
+    "origin": "original",
+    "key": "server-router-candidate-pair1",
+    "classification": "reused-validated",
+    "reason": "Successful pinned fixture invocation with stable source/Node hashes; raw output and source maps copied byte-for-byte into recovery-1.",
+    "commandManifest": {
+      "path": "../results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/invocations/server-router-candidate-pair1.command.json",
+      "originalSha256": "8a2a0cc3418a3f4a4b65e97934ae28a6834077b4ad4caf7b8096968ed59aff33",
+      "bytes": 8849
+    },
+    "completionManifest": {
+      "path": "../results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/invocations/server-router-candidate-pair1.completion.json",
+      "originalSha256": "ea3966cb8ea935a83d5cd580db1e92fe91e21c0d8b6d42eff2e7946cba10857c",
+      "bytes": 1242
+    },
+    "rawRoot": "<candidate>",
+    "canonicalRoot": "<candidate>",
+    "cwd": "<candidate>",
+    "sourceRoots": [
+      {
+        "raw": "<candidate>",
+        "canonical": "<candidate>"
+      }
+    ],
+    "command": [
+      "<node-24.22.1>",
+      "<original>/harness/run-server.mjs",
+      "router"
+    ],
+    "environmentOverrides": {
+      "ROOT": "<candidate>",
+      "LABEL": "server-router-candidate-pair1",
+      "OUTPUT": "<candidate>/../cw-consolidated/final-replay-2/results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/server/server-router-candidate-pair1"
+    },
+    "effectiveWhitelistedEnvironment": null,
+    "environmentSelection": "Explicit overrides and recorded safe whitelist only; original inherited-environment fingerprints omitted entirely; null means no safe effective whitelist was recorded",
+    "nodeVersion": "v24.22.1",
+    "nodeSha256Before": "6f32069480ec14d52b6d7b1f3c7124cfbbc46203abf5ddf5c65b127435f3f329",
+    "nodeSha256After": "6f32069480ec14d52b6d7b1f3c7124cfbbc46203abf5ddf5c65b127435f3f329",
+    "harnessSha256": "549d7a9756ba794fc86b0fb3f20348635e41f46df59a4e291279101620231030",
+    "invokeRunnerSha256": "5f0d4f92095428d19ecafd32a5d4eaab50ebd9e565d2060a039645967d68fa2f",
+    "startedAt": "2026-10-25T00:21:19.274Z",
+    "finishedAt": "2026-10-25T00:21:26.401Z",
+    "preflight": null,
+    "exitCode": 0,
+    "sourceStable": true,
+    "nodeStable": true,
+    "sourceSnapshots": [
+      "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/reused/source-hashes/server-router-candidate-pair1.before.json",
+      "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/reused/source-hashes/server-router-candidate-pair1.after.json"
+    ],
+    "logs": {
+      "stdout": {
+        "path": "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/reused/invocations/server-router-candidate-pair1.stdout.log",
+        "originalSha256": "46649652dd94499be3c2273b8a07699c4f324a691cbe4620872f20528bb6ee96",
+        "bytes": 2954
+      },
+      "stderr": {
+        "path": "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/reused/invocations/server-router-candidate-pair1.stderr.log",
+        "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    }
+  },
+  {
+    "origin": "original",
+    "key": "server-router-candidate-pair2",
+    "classification": "reused-validated",
+    "reason": "Successful pinned fixture invocation with stable source/Node hashes; raw output and source maps copied byte-for-byte into recovery-1.",
+    "commandManifest": {
+      "path": "../results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/invocations/server-router-candidate-pair2.command.json",
+      "originalSha256": "bc44b00e9a3abf9ae278000425f1b2133f8bd2875af2c96bef071edefbf1121d",
+      "bytes": 8849
+    },
+    "completionManifest": {
+      "path": "../results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/invocations/server-router-candidate-pair2.completion.json",
+      "originalSha256": "f0a95209b822178bb609795f185e68e1a21ed7f17be6c6540329d45338962acf",
+      "bytes": 1242
+    },
+    "rawRoot": "<candidate>",
+    "canonicalRoot": "<candidate>",
+    "cwd": "<candidate>",
+    "sourceRoots": [
+      {
+        "raw": "<candidate>",
+        "canonical": "<candidate>"
+      }
+    ],
+    "command": [
+      "<node-24.22.1>",
+      "<original>/harness/run-server.mjs",
+      "router"
+    ],
+    "environmentOverrides": {
+      "ROOT": "<candidate>",
+      "LABEL": "server-router-candidate-pair2",
+      "OUTPUT": "<candidate>/../cw-consolidated/final-replay-2/results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/server/server-router-candidate-pair2"
+    },
+    "effectiveWhitelistedEnvironment": null,
+    "environmentSelection": "Explicit overrides and recorded safe whitelist only; original inherited-environment fingerprints omitted entirely; null means no safe effective whitelist was recorded",
+    "nodeVersion": "v24.22.1",
+    "nodeSha256Before": "6f32069480ec14d52b6d7b1f3c7124cfbbc46203abf5ddf5c65b127435f3f329",
+    "nodeSha256After": "6f32069480ec14d52b6d7b1f3c7124cfbbc46203abf5ddf5c65b127435f3f329",
+    "harnessSha256": "549d7a9756ba794fc86b0fb3f20348635e41f46df59a4e291279101620231030",
+    "invokeRunnerSha256": "5f0d4f92095428d19ecafd32a5d4eaab50ebd9e565d2060a039645967d68fa2f",
+    "startedAt": "2026-10-25T00:22:13.179Z",
+    "finishedAt": "2026-10-25T00:22:19.943Z",
+    "preflight": null,
+    "exitCode": 0,
+    "sourceStable": true,
+    "nodeStable": true,
+    "sourceSnapshots": [
+      "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/reused/source-hashes/server-router-candidate-pair2.before.json",
+      "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/reused/source-hashes/server-router-candidate-pair2.after.json"
+    ],
+    "logs": {
+      "stdout": {
+        "path": "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/reused/invocations/server-router-candidate-pair2.stdout.log",
+        "originalSha256": "77b523a5a00dcf0b500252137c59f6b6707112b74ab748cb4ba73a9f8cedb847",
+        "bytes": 2954
+      },
+      "stderr": {
+        "path": "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/reused/invocations/server-router-candidate-pair2.stderr.log",
+        "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    }
+  },
+  {
+    "origin": "original",
+    "key": "workbench-browser-pairs",
+    "classification": "excluded-failed-attempt",
+    "reason": "Original private wrapper used invalid agent-browser viewport subcommand; it failed before page replay. Preserved, not reused.",
+    "commandManifest": {
+      "path": "../results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/invocations/workbench-browser-pairs.command.json",
+      "originalSha256": "047eafff9dd20abf4a9f4b52a9f546637e130f8a1fc3cd2a118f3396cc9037e0",
+      "bytes": 9095
+    },
+    "completionManifest": {
+      "path": "../results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/invocations/workbench-browser-pairs.completion.json",
+      "originalSha256": "a631034705e66eda42645be292fec3a2a6f5a04c817741cbf47c95c93ec5f743",
+      "bytes": 1212
+    },
+    "rawRoot": "<candidate>",
+    "canonicalRoot": "<candidate>",
+    "cwd": "<candidate>",
+    "sourceRoots": [
+      {
+        "raw": "<candidate>",
+        "canonical": "<candidate>"
+      },
+      {
+        "raw": "<baseline>",
+        "canonical": "<baseline>"
+      }
+    ],
+    "command": [
+      "<node-24.22.1>",
+      "<original>/harness/workbench/replay-browser.mjs"
+    ],
+    "environmentOverrides": {
+      "ROOT": "<candidate>",
+      "OUTPUT": "<candidate>/../cw-consolidated/final-replay-2/results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/workbench/browser-fixture",
+      "PORT": "3848",
+      "AGENT_BROWSER_SESSION": "cw-final-replay-2",
+      "AGENT_BROWSER_COLOR_SCHEME": "light"
+    },
+    "effectiveWhitelistedEnvironment": null,
+    "environmentSelection": "Explicit overrides and recorded safe whitelist only; original inherited-environment fingerprints omitted entirely; null means no safe effective whitelist was recorded",
+    "nodeVersion": "v24.22.1",
+    "nodeSha256Before": "6f32069480ec14d52b6d7b1f3c7124cfbbc46203abf5ddf5c65b127435f3f329",
+    "nodeSha256After": "6f32069480ec14d52b6d7b1f3c7124cfbbc46203abf5ddf5c65b127435f3f329",
+    "harnessSha256": "50c184b5214e25da97321c8eec39ed0f7c81d02db9a5200aa1a91795ed036ed6",
+    "invokeRunnerSha256": "5f0d4f92095428d19ecafd32a5d4eaab50ebd9e565d2060a039645967d68fa2f",
+    "startedAt": "2026-10-25T00:24:16.575Z",
+    "finishedAt": "2026-10-25T00:24:26.904Z",
+    "preflight": null,
+    "exitCode": 1,
+    "sourceStable": true,
+    "nodeStable": true,
+    "sourceSnapshots": [
+      "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/reused/prior-attempts/source-hashes/workbench-browser-pairs.before.json",
+      "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/reused/prior-attempts/source-hashes/workbench-browser-pairs.after.json"
+    ],
+    "logs": {
+      "stdout": {
+        "path": "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/reused/prior-attempts/invocations/workbench-browser-pairs.stdout.log",
+        "originalSha256": "7b6df3d55d43203cadbfcf966c168fb8c40fcd4653461c98f3b6c02abf9b5605",
+        "bytes": 19
+      },
+      "stderr": {
+        "path": "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/reused/prior-attempts/invocations/workbench-browser-pairs.stderr.log",
+        "originalSha256": "0c47d89b3fd1714ffbccf0fcfb56315afa2e53714f30eac3412d1f3f5edbd0cc",
+        "bytes": 704
+      }
+    }
+  },
+  {
+    "origin": "original",
+    "key": "workbench-build-baseline",
+    "classification": "reused-validated",
+    "reason": "Successful pinned fixture invocation with stable source/Node hashes; raw output and source maps copied byte-for-byte into recovery-1.",
+    "commandManifest": {
+      "path": "../results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/invocations/workbench-build-baseline.command.json",
+      "originalSha256": "052ad351bc9f439117fb248149290ab5a7de232360011063b174a155ac80fde8",
+      "bytes": 8829
+    },
+    "completionManifest": {
+      "path": "../results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/invocations/workbench-build-baseline.completion.json",
+      "originalSha256": "025c3283a213d662d13f41e5e81cc94fcd1d654b5e35f12fb5b362215aca3956",
+      "bytes": 1217
+    },
+    "rawRoot": "<candidate>/../cw-dev",
+    "canonicalRoot": "<baseline>",
+    "cwd": "<baseline>",
+    "sourceRoots": [
+      {
+        "raw": "<candidate>/../cw-dev",
+        "canonical": "<baseline>"
+      }
+    ],
+    "command": [
+      "<node-24.22.1>",
+      "<original>/harness/workbench/build-browser.mjs"
+    ],
+    "environmentOverrides": {
+      "ROOT": "<baseline>",
+      "LABEL": "before",
+      "OUTPUT": "<candidate>/../cw-consolidated/final-replay-2/results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/workbench/browser-fixture"
+    },
+    "effectiveWhitelistedEnvironment": null,
+    "environmentSelection": "Explicit overrides and recorded safe whitelist only; original inherited-environment fingerprints omitted entirely; null means no safe effective whitelist was recorded",
+    "nodeVersion": "v24.22.1",
+    "nodeSha256Before": "6f32069480ec14d52b6d7b1f3c7124cfbbc46203abf5ddf5c65b127435f3f329",
+    "nodeSha256After": "6f32069480ec14d52b6d7b1f3c7124cfbbc46203abf5ddf5c65b127435f3f329",
+    "harnessSha256": "928be39e6fcaeb0b80144d847c059c7990ab7a4df6be550c2b0cc93643f1a02a",
+    "invokeRunnerSha256": "5f0d4f92095428d19ecafd32a5d4eaab50ebd9e565d2060a039645967d68fa2f",
+    "startedAt": "2026-10-25T00:23:45.003Z",
+    "finishedAt": "2026-10-25T00:23:50.217Z",
+    "preflight": null,
+    "exitCode": 0,
+    "sourceStable": true,
+    "nodeStable": true,
+    "sourceSnapshots": [
+      "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/reused/source-hashes/workbench-build-baseline.before.json",
+      "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/reused/source-hashes/workbench-build-baseline.after.json"
+    ],
+    "logs": {
+      "stdout": {
+        "path": "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/reused/invocations/workbench-build-baseline.stdout.log",
+        "originalSha256": "7959fc091b3e28a6e98767183ec0a8a84adc9b5aeed2c35b00b31941dc17a895",
+        "bytes": 601
+      },
+      "stderr": {
+        "path": "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/reused/invocations/workbench-build-baseline.stderr.log",
+        "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    }
+  },
+  {
+    "origin": "original",
+    "key": "workbench-build-candidate",
+    "classification": "reused-validated",
+    "reason": "Successful pinned fixture invocation with stable source/Node hashes; raw output and source maps copied byte-for-byte into recovery-1.",
+    "commandManifest": {
+      "path": "../results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/invocations/workbench-build-candidate.command.json",
+      "originalSha256": "abcacccbc546415a26ee69d6b9f52e7eb9302896faec0a1ede695dbaa8d83212",
+      "bytes": 8809
+    },
+    "completionManifest": {
+      "path": "../results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/invocations/workbench-build-candidate.completion.json",
+      "originalSha256": "bc432ef51922e2ad8a0dad4308de63812339f7f7ba5378e1c4d2e741dc342627",
+      "bytes": 1222
+    },
+    "rawRoot": "<candidate>",
+    "canonicalRoot": "<candidate>",
+    "cwd": "<candidate>",
+    "sourceRoots": [
+      {
+        "raw": "<candidate>",
+        "canonical": "<candidate>"
+      }
+    ],
+    "command": [
+      "<node-24.22.1>",
+      "<original>/harness/workbench/build-browser.mjs"
+    ],
+    "environmentOverrides": {
+      "ROOT": "<candidate>",
+      "LABEL": "after",
+      "OUTPUT": "<candidate>/../cw-consolidated/final-replay-2/results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/workbench/browser-fixture"
+    },
+    "effectiveWhitelistedEnvironment": null,
+    "environmentSelection": "Explicit overrides and recorded safe whitelist only; original inherited-environment fingerprints omitted entirely; null means no safe effective whitelist was recorded",
+    "nodeVersion": "v24.22.1",
+    "nodeSha256Before": "6f32069480ec14d52b6d7b1f3c7124cfbbc46203abf5ddf5c65b127435f3f329",
+    "nodeSha256After": "6f32069480ec14d52b6d7b1f3c7124cfbbc46203abf5ddf5c65b127435f3f329",
+    "harnessSha256": "928be39e6fcaeb0b80144d847c059c7990ab7a4df6be550c2b0cc93643f1a02a",
+    "invokeRunnerSha256": "5f0d4f92095428d19ecafd32a5d4eaab50ebd9e565d2060a039645967d68fa2f",
+    "startedAt": "2026-10-25T00:23:52.280Z",
+    "finishedAt": "2026-10-25T00:23:58.227Z",
+    "preflight": null,
+    "exitCode": 0,
+    "sourceStable": true,
+    "nodeStable": true,
+    "sourceSnapshots": [
+      "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/reused/source-hashes/workbench-build-candidate.before.json",
+      "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/reused/source-hashes/workbench-build-candidate.after.json"
+    ],
+    "logs": {
+      "stdout": {
+        "path": "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/reused/invocations/workbench-build-candidate.stdout.log",
+        "originalSha256": "ee1fcd9679affecaedb5976a72f262a29ffcf3629070c3e8f1fc2469a6058289",
+        "bytes": 596
+      },
+      "stderr": {
+        "path": "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/reused/invocations/workbench-build-candidate.stderr.log",
+        "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    }
+  },
+  {
+    "origin": "recovery",
+    "key": "recovery-1-runtime-baseline-pair1-timed",
+    "classification": "excluded-preflight-failure",
+    "reason": "Probe encoded a newline incorrectly; benchmark was not launched",
+    "commandManifest": {
+      "path": "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/invocations/recovery-1-runtime-baseline-pair1-timed.command.json",
+      "originalSha256": "90ca63cc25e9a8d905f09d55bb5dfbee1bd0e250e0113fae28c7163f95592e2f",
+      "bytes": 2732
+    },
+    "completionManifest": {
+      "path": "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/invocations/recovery-1-runtime-baseline-pair1-timed.completion.json",
+      "originalSha256": "830e10c2a4fa869317c445a220fcbd55a501d5fca3a5dfc0789563de57bb54a0",
+      "bytes": 1722
+    },
+    "rawRoot": "<candidate>/../cw-dev",
+    "canonicalRoot": "<baseline>",
+    "cwd": "<baseline>",
+    "sourceRoots": [
+      {
+        "raw": "<candidate>/../cw-dev",
+        "canonical": "<baseline>"
+      }
+    ],
+    "command": [
+      "<node-24.22.1>",
+      "--expose-gc",
+      "<recovery>/results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/harness/runtime/run.mjs"
+    ],
+    "environmentOverrides": {
+      "ROOT": "<baseline>",
+      "LABEL": "recovery-1-runtime-baseline-pair1-timed",
+      "OUTPUT": "<candidate>/../cw-consolidated/final-replay-2/recovery-1/results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/runtime/recovery-1-runtime-baseline-pair1-timed"
+    },
+    "effectiveWhitelistedEnvironment": {
+      "ROOT": "<baseline>",
+      "LABEL": "recovery-1-runtime-baseline-pair1-timed",
+      "OUTPUT": "<candidate>/../cw-consolidated/final-replay-2/recovery-1/results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/runtime/recovery-1-runtime-baseline-pair1-timed"
+    },
+    "environmentSelection": "Explicit overrides and recorded safe whitelist only; original inherited-environment fingerprints omitted entirely; null means no safe effective whitelist was recorded",
+    "nodeVersion": "v24.22.1",
+    "nodeSha256Before": "6f32069480ec14d52b6d7b1f3c7124cfbbc46203abf5ddf5c65b127435f3f329",
+    "nodeSha256After": "6f32069480ec14d52b6d7b1f3c7124cfbbc46203abf5ddf5c65b127435f3f329",
+    "harnessSha256": "2847c17e7661a347ace6577a6f781ff619cb707954c592f06c7aff49a0b5640b",
+    "invokeRunnerSha256": "0e4444a37ddc657c600f53160cf6191e24b56cf1a74aac5fa0d943490c513f44",
+    "startedAt": "2026-10-25T00:31:46.590Z",
+    "finishedAt": "2026-10-25T00:31:52.708Z",
+    "preflight": {
+      "required": true,
+      "passed": false,
+      "command": [
+        "<node-24.22.1>",
+        "--expose-gc",
+        "-e",
+        "if (typeof global.gc !== \"function\") process.exit(91); process.stdout.write(\"global.gc:function\n\")"
+      ],
+      "exitCode": 1
+    },
+    "exitCode": 1,
+    "sourceStable": true,
+    "nodeStable": true,
+    "sourceSnapshots": [
+      "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/source-hashes/recovery-1-runtime-baseline-pair1-timed.before.json",
+      "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/source-hashes/recovery-1-runtime-baseline-pair1-timed.after.json"
+    ],
+    "logs": {
+      "stdout": {
+        "path": "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/invocations/recovery-1-runtime-baseline-pair1-timed.stdout.log",
+        "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      "stderr": {
+        "path": "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/invocations/recovery-1-runtime-baseline-pair1-timed.stderr.log",
+        "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    }
+  },
+  {
+    "origin": "recovery",
+    "key": "recovery-1-runtime-v2-baseline-pair1-timed",
+    "classification": "valid-recovery",
+    "reason": "Corrected source-stable invocation",
+    "commandManifest": {
+      "path": "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/invocations/recovery-1-runtime-v2-baseline-pair1-timed.command.json",
+      "originalSha256": "37ba5ce42228c545886f286cf34b509da5c73911921b665a0c2a022a7f3a40cf",
+      "bytes": 2772
+    },
+    "completionManifest": {
+      "path": "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/invocations/recovery-1-runtime-v2-baseline-pair1-timed.completion.json",
+      "originalSha256": "b7aecea2f6d84af2001e1591d701c5f183903bdf8e092914984a51341331051e",
+      "bytes": 1700
+    },
+    "rawRoot": "<candidate>/../cw-dev",
+    "canonicalRoot": "<baseline>",
+    "cwd": "<baseline>",
+    "sourceRoots": [
+      {
+        "raw": "<candidate>/../cw-dev",
+        "canonical": "<baseline>"
+      }
+    ],
+    "command": [
+      "<node-24.22.1>",
+      "--expose-gc",
+      "<recovery>/results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/harness/runtime/run.mjs"
+    ],
+    "environmentOverrides": {
+      "ROOT": "<baseline>",
+      "LABEL": "recovery-1-runtime-v2-baseline-pair1-timed",
+      "OUTPUT": "<candidate>/../cw-consolidated/final-replay-2/recovery-1/results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/runtime/recovery-1-runtime-v2-baseline-pair1-timed"
+    },
+    "effectiveWhitelistedEnvironment": {
+      "ROOT": "<baseline>",
+      "LABEL": "recovery-1-runtime-v2-baseline-pair1-timed",
+      "OUTPUT": "<candidate>/../cw-consolidated/final-replay-2/recovery-1/results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/runtime/recovery-1-runtime-v2-baseline-pair1-timed"
+    },
+    "environmentSelection": "Explicit overrides and recorded safe whitelist only; original inherited-environment fingerprints omitted entirely; null means no safe effective whitelist was recorded",
+    "nodeVersion": "v24.22.1",
+    "nodeSha256Before": "6f32069480ec14d52b6d7b1f3c7124cfbbc46203abf5ddf5c65b127435f3f329",
+    "nodeSha256After": "6f32069480ec14d52b6d7b1f3c7124cfbbc46203abf5ddf5c65b127435f3f329",
+    "harnessSha256": "2847c17e7661a347ace6577a6f781ff619cb707954c592f06c7aff49a0b5640b",
+    "invokeRunnerSha256": "c4c8f8223b132429646589de49bb74d46d4a9b98f87e0f24123442a8a0b80b74",
+    "startedAt": "2026-10-25T00:32:12.618Z",
+    "finishedAt": "2026-10-25T00:32:21.317Z",
+    "preflight": {
+      "required": true,
+      "passed": true,
+      "command": [
+        "<node-24.22.1>",
+        "--expose-gc",
+        "-e",
+        "if (typeof global.gc !== \"function\") process.exit(91); process.stdout.write(String(typeof global.gc))"
+      ],
+      "exitCode": 0,
+      "stdout": "function"
+    },
+    "exitCode": 0,
+    "sourceStable": true,
+    "nodeStable": true,
+    "sourceSnapshots": [
+      "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/source-hashes/recovery-1-runtime-v2-baseline-pair1-timed.before.json",
+      "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/source-hashes/recovery-1-runtime-v2-baseline-pair1-timed.after.json"
+    ],
+    "logs": {
+      "stdout": {
+        "path": "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/invocations/recovery-1-runtime-v2-baseline-pair1-timed.stdout.log",
+        "originalSha256": "75f658bd2e4e94433c598c11f83676899386b9ac4733c89f2e22e7a581d08e8d",
+        "bytes": 81343
+      },
+      "stderr": {
+        "path": "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/invocations/recovery-1-runtime-v2-baseline-pair1-timed.stderr.log",
+        "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    }
+  },
+  {
+    "origin": "recovery",
+    "key": "recovery-1-runtime-v2-candidate-pair1-timed",
+    "classification": "valid-recovery",
+    "reason": "Corrected source-stable invocation",
+    "commandManifest": {
+      "path": "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/invocations/recovery-1-runtime-v2-candidate-pair1-timed.command.json",
+      "originalSha256": "5ee02f85b7fa0580b9da45321c5186a5159239515992cfa56d74137fbe53240f",
+      "bytes": 2757
+    },
+    "completionManifest": {
+      "path": "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/invocations/recovery-1-runtime-v2-candidate-pair1-timed.completion.json",
+      "originalSha256": "77a0c345a4d277a84b054bba8e4c777829646c1653bd32f5e5d981390474243a",
+      "bytes": 1705
+    },
+    "rawRoot": "<candidate>",
+    "canonicalRoot": "<candidate>",
+    "cwd": "<candidate>",
+    "sourceRoots": [
+      {
+        "raw": "<candidate>",
+        "canonical": "<candidate>"
+      }
+    ],
+    "command": [
+      "<node-24.22.1>",
+      "--expose-gc",
+      "<recovery>/results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/harness/runtime/run.mjs"
+    ],
+    "environmentOverrides": {
+      "ROOT": "<candidate>",
+      "LABEL": "recovery-1-runtime-v2-candidate-pair1-timed",
+      "OUTPUT": "<candidate>/../cw-consolidated/final-replay-2/recovery-1/results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/runtime/recovery-1-runtime-v2-candidate-pair1-timed"
+    },
+    "effectiveWhitelistedEnvironment": {
+      "ROOT": "<candidate>",
+      "LABEL": "recovery-1-runtime-v2-candidate-pair1-timed",
+      "OUTPUT": "<candidate>/../cw-consolidated/final-replay-2/recovery-1/results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/runtime/recovery-1-runtime-v2-candidate-pair1-timed"
+    },
+    "environmentSelection": "Explicit overrides and recorded safe whitelist only; original inherited-environment fingerprints omitted entirely; null means no safe effective whitelist was recorded",
+    "nodeVersion": "v24.22.1",
+    "nodeSha256Before": "6f32069480ec14d52b6d7b1f3c7124cfbbc46203abf5ddf5c65b127435f3f329",
+    "nodeSha256After": "6f32069480ec14d52b6d7b1f3c7124cfbbc46203abf5ddf5c65b127435f3f329",
+    "harnessSha256": "2847c17e7661a347ace6577a6f781ff619cb707954c592f06c7aff49a0b5640b",
+    "invokeRunnerSha256": "c4c8f8223b132429646589de49bb74d46d4a9b98f87e0f24123442a8a0b80b74",
+    "startedAt": "2026-10-25T00:32:28.657Z",
+    "finishedAt": "2026-10-25T00:32:35.879Z",
+    "preflight": {
+      "required": true,
+      "passed": true,
+      "command": [
+        "<node-24.22.1>",
+        "--expose-gc",
+        "-e",
+        "if (typeof global.gc !== \"function\") process.exit(91); process.stdout.write(String(typeof global.gc))"
+      ],
+      "exitCode": 0,
+      "stdout": "function"
+    },
+    "exitCode": 0,
+    "sourceStable": true,
+    "nodeStable": true,
+    "sourceSnapshots": [
+      "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/source-hashes/recovery-1-runtime-v2-candidate-pair1-timed.before.json",
+      "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/source-hashes/recovery-1-runtime-v2-candidate-pair1-timed.after.json"
+    ],
+    "logs": {
+      "stdout": {
+        "path": "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/invocations/recovery-1-runtime-v2-candidate-pair1-timed.stdout.log",
+        "originalSha256": "16ec6674b5bab06eaf8b1e1e1ad998d19387e07f7d426dc2c8b5fabb41b57298",
+        "bytes": 81904
+      },
+      "stderr": {
+        "path": "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/invocations/recovery-1-runtime-v2-candidate-pair1-timed.stderr.log",
+        "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    }
+  },
+  {
+    "origin": "recovery",
+    "key": "recovery-1-runtime-v2-baseline-pair2-timed",
+    "classification": "valid-recovery",
+    "reason": "Corrected source-stable invocation",
+    "commandManifest": {
+      "path": "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/invocations/recovery-1-runtime-v2-baseline-pair2-timed.command.json",
+      "originalSha256": "d20032160a86c2806a1be028d01d54aad14980cebab8376a7d349892e9eb2fd2",
+      "bytes": 2772
+    },
+    "completionManifest": {
+      "path": "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/invocations/recovery-1-runtime-v2-baseline-pair2-timed.completion.json",
+      "originalSha256": "302cc601a31200b7c6da180488f9b503fcfeb32e04dea31746b4058d72b2730e",
+      "bytes": 1700
+    },
+    "rawRoot": "<candidate>/../cw-dev",
+    "canonicalRoot": "<baseline>",
+    "cwd": "<baseline>",
+    "sourceRoots": [
+      {
+        "raw": "<candidate>/../cw-dev",
+        "canonical": "<baseline>"
+      }
+    ],
+    "command": [
+      "<node-24.22.1>",
+      "--expose-gc",
+      "<recovery>/results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/harness/runtime/run.mjs"
+    ],
+    "environmentOverrides": {
+      "ROOT": "<baseline>",
+      "LABEL": "recovery-1-runtime-v2-baseline-pair2-timed",
+      "OUTPUT": "<candidate>/../cw-consolidated/final-replay-2/recovery-1/results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/runtime/recovery-1-runtime-v2-baseline-pair2-timed"
+    },
+    "effectiveWhitelistedEnvironment": {
+      "ROOT": "<baseline>",
+      "LABEL": "recovery-1-runtime-v2-baseline-pair2-timed",
+      "OUTPUT": "<candidate>/../cw-consolidated/final-replay-2/recovery-1/results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/runtime/recovery-1-runtime-v2-baseline-pair2-timed"
+    },
+    "environmentSelection": "Explicit overrides and recorded safe whitelist only; original inherited-environment fingerprints omitted entirely; null means no safe effective whitelist was recorded",
+    "nodeVersion": "v24.22.1",
+    "nodeSha256Before": "6f32069480ec14d52b6d7b1f3c7124cfbbc46203abf5ddf5c65b127435f3f329",
+    "nodeSha256After": "6f32069480ec14d52b6d7b1f3c7124cfbbc46203abf5ddf5c65b127435f3f329",
+    "harnessSha256": "2847c17e7661a347ace6577a6f781ff619cb707954c592f06c7aff49a0b5640b",
+    "invokeRunnerSha256": "c4c8f8223b132429646589de49bb74d46d4a9b98f87e0f24123442a8a0b80b74",
+    "startedAt": "2026-10-25T00:32:38.188Z",
+    "finishedAt": "2026-10-25T00:32:46.608Z",
+    "preflight": {
+      "required": true,
+      "passed": true,
+      "command": [
+        "<node-24.22.1>",
+        "--expose-gc",
+        "-e",
+        "if (typeof global.gc !== \"function\") process.exit(91); process.stdout.write(String(typeof global.gc))"
+      ],
+      "exitCode": 0,
+      "stdout": "function"
+    },
+    "exitCode": 0,
+    "sourceStable": true,
+    "nodeStable": true,
+    "sourceSnapshots": [
+      "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/source-hashes/recovery-1-runtime-v2-baseline-pair2-timed.before.json",
+      "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/source-hashes/recovery-1-runtime-v2-baseline-pair2-timed.after.json"
+    ],
+    "logs": {
+      "stdout": {
+        "path": "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/invocations/recovery-1-runtime-v2-baseline-pair2-timed.stdout.log",
+        "originalSha256": "9f9aa819f340160ebded704316b0f2279f83fef5fcd754fae488b197f69badd2",
+        "bytes": 81326
+      },
+      "stderr": {
+        "path": "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/invocations/recovery-1-runtime-v2-baseline-pair2-timed.stderr.log",
+        "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    }
+  },
+  {
+    "origin": "recovery",
+    "key": "recovery-1-runtime-v2-candidate-pair2-timed",
+    "classification": "valid-recovery",
+    "reason": "Corrected source-stable invocation",
+    "commandManifest": {
+      "path": "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/invocations/recovery-1-runtime-v2-candidate-pair2-timed.command.json",
+      "originalSha256": "c364597c35e1c96182b36835f0f3a90c3c4216457bb4f21817d8b5fdd2824bd5",
+      "bytes": 2757
+    },
+    "completionManifest": {
+      "path": "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/invocations/recovery-1-runtime-v2-candidate-pair2-timed.completion.json",
+      "originalSha256": "f3386178450a10e23d3d154e29a10a47d6cd5543da7d3d5a05a8a863ad554385",
+      "bytes": 1705
+    },
+    "rawRoot": "<candidate>",
+    "canonicalRoot": "<candidate>",
+    "cwd": "<candidate>",
+    "sourceRoots": [
+      {
+        "raw": "<candidate>",
+        "canonical": "<candidate>"
+      }
+    ],
+    "command": [
+      "<node-24.22.1>",
+      "--expose-gc",
+      "<recovery>/results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/harness/runtime/run.mjs"
+    ],
+    "environmentOverrides": {
+      "ROOT": "<candidate>",
+      "LABEL": "recovery-1-runtime-v2-candidate-pair2-timed",
+      "OUTPUT": "<candidate>/../cw-consolidated/final-replay-2/recovery-1/results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/runtime/recovery-1-runtime-v2-candidate-pair2-timed"
+    },
+    "effectiveWhitelistedEnvironment": {
+      "ROOT": "<candidate>",
+      "LABEL": "recovery-1-runtime-v2-candidate-pair2-timed",
+      "OUTPUT": "<candidate>/../cw-consolidated/final-replay-2/recovery-1/results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/runtime/recovery-1-runtime-v2-candidate-pair2-timed"
+    },
+    "environmentSelection": "Explicit overrides and recorded safe whitelist only; original inherited-environment fingerprints omitted entirely; null means no safe effective whitelist was recorded",
+    "nodeVersion": "v24.22.1",
+    "nodeSha256Before": "6f32069480ec14d52b6d7b1f3c7124cfbbc46203abf5ddf5c65b127435f3f329",
+    "nodeSha256After": "6f32069480ec14d52b6d7b1f3c7124cfbbc46203abf5ddf5c65b127435f3f329",
+    "harnessSha256": "2847c17e7661a347ace6577a6f781ff619cb707954c592f06c7aff49a0b5640b",
+    "invokeRunnerSha256": "c4c8f8223b132429646589de49bb74d46d4a9b98f87e0f24123442a8a0b80b74",
+    "startedAt": "2026-10-25T00:32:48.907Z",
+    "finishedAt": "2026-10-25T00:32:54.298Z",
+    "preflight": {
+      "required": true,
+      "passed": true,
+      "command": [
+        "<node-24.22.1>",
+        "--expose-gc",
+        "-e",
+        "if (typeof global.gc !== \"function\") process.exit(91); process.stdout.write(String(typeof global.gc))"
+      ],
+      "exitCode": 0,
+      "stdout": "function"
+    },
+    "exitCode": 0,
+    "sourceStable": true,
+    "nodeStable": true,
+    "sourceSnapshots": [
+      "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/source-hashes/recovery-1-runtime-v2-candidate-pair2-timed.before.json",
+      "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/source-hashes/recovery-1-runtime-v2-candidate-pair2-timed.after.json"
+    ],
+    "logs": {
+      "stdout": {
+        "path": "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/invocations/recovery-1-runtime-v2-candidate-pair2-timed.stdout.log",
+        "originalSha256": "7a3afd347e0759d093636d564bf8a55ec1138db55760294686a864a944d16d67",
+        "bytes": 81815
+      },
+      "stderr": {
+        "path": "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/invocations/recovery-1-runtime-v2-candidate-pair2-timed.stderr.log",
+        "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    }
+  },
+  {
+    "origin": "recovery",
+    "key": "recovery-1-runtime-v2-baseline-counts",
+    "classification": "valid-recovery",
+    "reason": "Corrected source-stable invocation",
+    "commandManifest": {
+      "path": "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/invocations/recovery-1-runtime-v2-baseline-counts.command.json",
+      "originalSha256": "f21c6e5a23d08304b60afa0ed8d99aeb3ee006a72a440c25f74c3719e7d90c44",
+      "bytes": 2785
+    },
+    "completionManifest": {
+      "path": "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/invocations/recovery-1-runtime-v2-baseline-counts.completion.json",
+      "originalSha256": "187a7ea1338fad57b7b9031952dbe6b47f63f80ac2a465e2e6b25c62311e0973",
+      "bytes": 1675
+    },
+    "rawRoot": "<candidate>/../cw-dev",
+    "canonicalRoot": "<baseline>",
+    "cwd": "<baseline>",
+    "sourceRoots": [
+      {
+        "raw": "<candidate>/../cw-dev",
+        "canonical": "<baseline>"
+      }
+    ],
+    "command": [
+      "<node-24.22.1>",
+      "--expose-gc",
+      "<recovery>/results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/harness/runtime/run.mjs"
+    ],
+    "environmentOverrides": {
+      "ROOT": "<baseline>",
+      "LABEL": "recovery-1-runtime-v2-baseline-counts",
+      "COUNTS": "1",
+      "OUTPUT": "<candidate>/../cw-consolidated/final-replay-2/recovery-1/results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/runtime/recovery-1-runtime-v2-baseline-counts"
+    },
+    "effectiveWhitelistedEnvironment": {
+      "ROOT": "<baseline>",
+      "LABEL": "recovery-1-runtime-v2-baseline-counts",
+      "OUTPUT": "<candidate>/../cw-consolidated/final-replay-2/recovery-1/results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/runtime/recovery-1-runtime-v2-baseline-counts",
+      "COUNTS": "1"
+    },
+    "environmentSelection": "Explicit overrides and recorded safe whitelist only; original inherited-environment fingerprints omitted entirely; null means no safe effective whitelist was recorded",
+    "nodeVersion": "v24.22.1",
+    "nodeSha256Before": "6f32069480ec14d52b6d7b1f3c7124cfbbc46203abf5ddf5c65b127435f3f329",
+    "nodeSha256After": "6f32069480ec14d52b6d7b1f3c7124cfbbc46203abf5ddf5c65b127435f3f329",
+    "harnessSha256": "2847c17e7661a347ace6577a6f781ff619cb707954c592f06c7aff49a0b5640b",
+    "invokeRunnerSha256": "c4c8f8223b132429646589de49bb74d46d4a9b98f87e0f24123442a8a0b80b74",
+    "startedAt": "2026-10-25T00:32:56.733Z",
+    "finishedAt": "2026-10-25T00:33:05.259Z",
+    "preflight": {
+      "required": true,
+      "passed": true,
+      "command": [
+        "<node-24.22.1>",
+        "--expose-gc",
+        "-e",
+        "if (typeof global.gc !== \"function\") process.exit(91); process.stdout.write(String(typeof global.gc))"
+      ],
+      "exitCode": 0,
+      "stdout": "function"
+    },
+    "exitCode": 0,
+    "sourceStable": true,
+    "nodeStable": true,
+    "sourceSnapshots": [
+      "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/source-hashes/recovery-1-runtime-v2-baseline-counts.before.json",
+      "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/source-hashes/recovery-1-runtime-v2-baseline-counts.after.json"
+    ],
+    "logs": {
+      "stdout": {
+        "path": "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/invocations/recovery-1-runtime-v2-baseline-counts.stdout.log",
+        "originalSha256": "f078b9e1cb413c37c6bc08b709c12326bc2e347dbb1c275b0eb3c4ff35c127fb",
+        "bytes": 84054
+      },
+      "stderr": {
+        "path": "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/invocations/recovery-1-runtime-v2-baseline-counts.stderr.log",
+        "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    }
+  },
+  {
+    "origin": "recovery",
+    "key": "recovery-1-runtime-v2-candidate-counts",
+    "classification": "valid-recovery",
+    "reason": "Corrected source-stable invocation",
+    "commandManifest": {
+      "path": "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/invocations/recovery-1-runtime-v2-candidate-counts.command.json",
+      "originalSha256": "bdf1ac967400e6096bb8754f209ff9612d3d5c501f3bd02051c2a2029178175c",
+      "bytes": 2770
+    },
+    "completionManifest": {
+      "path": "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/invocations/recovery-1-runtime-v2-candidate-counts.completion.json",
+      "originalSha256": "3424a764a575ae5df6258b04c76f34bd29d83c079c47d3e1742dcdeb594f1c7e",
+      "bytes": 1680
+    },
+    "rawRoot": "<candidate>",
+    "canonicalRoot": "<candidate>",
+    "cwd": "<candidate>",
+    "sourceRoots": [
+      {
+        "raw": "<candidate>",
+        "canonical": "<candidate>"
+      }
+    ],
+    "command": [
+      "<node-24.22.1>",
+      "--expose-gc",
+      "<recovery>/results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/harness/runtime/run.mjs"
+    ],
+    "environmentOverrides": {
+      "ROOT": "<candidate>",
+      "LABEL": "recovery-1-runtime-v2-candidate-counts",
+      "COUNTS": "1",
+      "OUTPUT": "<candidate>/../cw-consolidated/final-replay-2/recovery-1/results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/runtime/recovery-1-runtime-v2-candidate-counts"
+    },
+    "effectiveWhitelistedEnvironment": {
+      "ROOT": "<candidate>",
+      "LABEL": "recovery-1-runtime-v2-candidate-counts",
+      "OUTPUT": "<candidate>/../cw-consolidated/final-replay-2/recovery-1/results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/runtime/recovery-1-runtime-v2-candidate-counts",
+      "COUNTS": "1"
+    },
+    "environmentSelection": "Explicit overrides and recorded safe whitelist only; original inherited-environment fingerprints omitted entirely; null means no safe effective whitelist was recorded",
+    "nodeVersion": "v24.22.1",
+    "nodeSha256Before": "6f32069480ec14d52b6d7b1f3c7124cfbbc46203abf5ddf5c65b127435f3f329",
+    "nodeSha256After": "6f32069480ec14d52b6d7b1f3c7124cfbbc46203abf5ddf5c65b127435f3f329",
+    "harnessSha256": "2847c17e7661a347ace6577a6f781ff619cb707954c592f06c7aff49a0b5640b",
+    "invokeRunnerSha256": "c4c8f8223b132429646589de49bb74d46d4a9b98f87e0f24123442a8a0b80b74",
+    "startedAt": "2026-10-25T00:33:07.739Z",
+    "finishedAt": "2026-10-25T00:33:13.604Z",
+    "preflight": {
+      "required": true,
+      "passed": true,
+      "command": [
+        "<node-24.22.1>",
+        "--expose-gc",
+        "-e",
+        "if (typeof global.gc !== \"function\") process.exit(91); process.stdout.write(String(typeof global.gc))"
+      ],
+      "exitCode": 0,
+      "stdout": "function"
+    },
+    "exitCode": 0,
+    "sourceStable": true,
+    "nodeStable": true,
+    "sourceSnapshots": [
+      "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/source-hashes/recovery-1-runtime-v2-candidate-counts.before.json",
+      "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/source-hashes/recovery-1-runtime-v2-candidate-counts.after.json"
+    ],
+    "logs": {
+      "stdout": {
+        "path": "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/invocations/recovery-1-runtime-v2-candidate-counts.stdout.log",
+        "originalSha256": "f13984b1642fd6eec4f65f563be4e83605c195318c76f0e1136247239b38759f",
+        "bytes": 83578
+      },
+      "stderr": {
+        "path": "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/invocations/recovery-1-runtime-v2-candidate-counts.stderr.log",
+        "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    }
+  },
+  {
+    "origin": "recovery",
+    "key": "recovery-1-workbench-browser-pairs",
+    "classification": "valid-recovery",
+    "reason": "Corrected source-stable invocation",
+    "commandManifest": {
+      "path": "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/invocations/recovery-1-workbench-browser-pairs.command.json",
+      "originalSha256": "281618d71cb9ee34709a749b70cea5ddda8aca3f76d04a94208c53619e65cefa",
+      "bytes": 2725
+    },
+    "completionManifest": {
+      "path": "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/invocations/recovery-1-workbench-browser-pairs.completion.json",
+      "originalSha256": "66db2b7c2297c2cfd9e3bdac406e4f221dbd506df9bc4c2b457d4d687216b291",
+      "bytes": 1396
+    },
+    "rawRoot": "<candidate>",
+    "canonicalRoot": "<candidate>",
+    "cwd": "<candidate>",
+    "sourceRoots": [
+      {
+        "raw": "<candidate>",
+        "canonical": "<candidate>"
+      },
+      {
+        "raw": "<baseline>",
+        "canonical": "<baseline>"
+      }
+    ],
+    "command": [
+      "<node-24.22.1>",
+      "<recovery>/results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/harness/workbench/replay-browser-v2.mjs"
+    ],
+    "environmentOverrides": {
+      "ROOT": "<candidate>",
+      "OUTPUT": "<candidate>/../cw-consolidated/final-replay-2/recovery-1/results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/workbench/browser-captures-v2",
+      "FIXTURE_OUTPUT": "<candidate>/../cw-consolidated/final-replay-2/recovery-1/results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/workbench/fixture-assets",
+      "PORT": "3848",
+      "AGENT_BROWSER_SESSION": "cw-final-replay-2",
+      "AGENT_BROWSER_COLOR_SCHEME": "light"
+    },
+    "effectiveWhitelistedEnvironment": {
+      "ROOT": "<candidate>",
+      "OUTPUT": "<candidate>/../cw-consolidated/final-replay-2/recovery-1/results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/workbench/browser-captures-v2",
+      "PORT": "3848",
+      "AGENT_BROWSER_SESSION": "cw-final-replay-2",
+      "AGENT_BROWSER_COLOR_SCHEME": "light"
+    },
+    "environmentSelection": "Explicit overrides and recorded safe whitelist only; original inherited-environment fingerprints omitted entirely; null means no safe effective whitelist was recorded",
+    "nodeVersion": "v24.22.1",
+    "nodeSha256Before": "6f32069480ec14d52b6d7b1f3c7124cfbbc46203abf5ddf5c65b127435f3f329",
+    "nodeSha256After": "6f32069480ec14d52b6d7b1f3c7124cfbbc46203abf5ddf5c65b127435f3f329",
+    "harnessSha256": "c0909840a1ea3a964b850a3df586a0b2974557021a7a5afa1b4f9f5086da50a9",
+    "invokeRunnerSha256": "c4c8f8223b132429646589de49bb74d46d4a9b98f87e0f24123442a8a0b80b74",
+    "startedAt": "2026-10-25T00:33:47.764Z",
+    "finishedAt": "2026-10-25T00:34:32.431Z",
+    "preflight": {
+      "required": false,
+      "passed": true,
+      "command": null
+    },
+    "exitCode": 0,
+    "sourceStable": true,
+    "nodeStable": true,
+    "sourceSnapshots": [
+      "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/source-hashes/recovery-1-workbench-browser-pairs.before.json",
+      "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/source-hashes/recovery-1-workbench-browser-pairs.after.json"
+    ],
+    "logs": {
+      "stdout": {
+        "path": "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/invocations/recovery-1-workbench-browser-pairs.stdout.log",
+        "originalSha256": "cc568537af5ff7e4fde76d9a99bc5e6fb26772f6c344a6d1e32c1ec01cf30d37",
+        "bytes": 3181
+      },
+      "stderr": {
+        "path": "results-4ed24e5ac4ff1726e187d4ea3677e2f7979e3691/invocations/recovery-1-workbench-browser-pairs.stderr.log",
+        "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    }
+  }
+]

@@ -1,0 +1,13 @@
+{
+  "input": "<original>/invocations/runtime-baseline-counts.stdout.log",
+  "expectedRecords": 32,
+  "actualRecords": 31,
+  "checks": {
+    "expectedScenarioRecords": false,
+    "uniqueScenarioNames": true,
+    "canonicalRootSanitizerInstrumentation": true,
+    "canonicalRootRendererInstrumentation": true,
+    "canonicalRootDisplayInstrumentation": true
+  },
+  "validForCounterClaims": false
+}

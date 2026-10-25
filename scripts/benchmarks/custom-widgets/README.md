@@ -2,7 +2,34 @@
 
 These are **synthetic local fixtures, not production or full-Homarr end-to-end measurements**. No production/Langfuse data, real credentials, traces, generated bundles or validation logs are included. Fixture input data is generated in the checked-in harness files.
 
-## Latest retained replay: PR7358
+## Final pinned replay: `4ed24e5ac` against `c72a2e02b`
+
+Baseline **`c72a2e02b03c734b3a393914b5e99881e27e86d2`** versus clean product candidate **`4ed24e5ac4ff1726e187d4ea3677e2f7979e3691`**, measured October 25, 2026 with Node 24.22.1. This archive-only update changes no product source and does not relabel the measured candidate as its later archive commit. [Final report](evidence/final-4ed24e5ac/RESULTS.md), [computed statistics](evidence/final-4ed24e5ac/summary.json) and [selection/provenance](evidence/final-4ed24e5ac/provenance.json).
+
+All timings below are **pooled median / p95 milliseconds**, recomputed from the valid raw arrays using `sorted[floor(n * percentile)]`, not averaged run medians. Count-mode timings are retained but excluded from timing pooling.
+
+| Fixture                                   | Baseline → candidate, median / p95 ms   | Deterministic work                                                                                                 |
+| ----------------------------------------- | --------------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
+| Stable parent update, 20 widgets          | **75.221 / 112.158 → 0.312 / 0.325**    | Over 10 updates, renderer renders/evaluations/bindings **200 → 0** each; adapter displays **200 → 200**            |
+| Router, 20 integration queries, cold      | **428.857 / 445.495 → 13.973 / 15.767** | Per invocation, SELECTs **63 → 4**, decryptions **20 → 1**                                                         |
+| Router, 20 integration queries, warm      | **109.037 / 118.667 → 0.836 / 1.326**   | Same SELECT/decrypt counts; no upstream requests                                                                   |
+| Redaction, 4,000 records, no match        | **11.307 / 11.889 → 2.922 / 3.096**     | Same generated JSON fixture                                                                                        |
+| Redaction, 4,000 records, sparse match    | **11.214 / 11.858 → 2.972 / 4.319**     | Same generated JSON fixture                                                                                        |
+| Management list, 20 legacy definitions    | **2.311 / 4.093 → 0.284 / 0.361**       | Serialized SQLite driver-result bytes **2,641,534 → 1,654**; **2 → 2 SELECTs**; public digests match in both pairs |
+| Workbench edit, stable 200-field response | **10.900 / 12.400 → 2.000 / 6.800**     | Per replay, 25 edits render **25 → 0** response trees and **5,025 → 0** rows                                       |
+
+The final archive retains **all 32 runtime records in each of six byte-identical JSONLs**, all cases/samples/operations/checks in 12 server results, all three management operations and both public-digest pairs, and four byte-identical browser result files. Corrected counter gates require positive sanitizer/adapter-display instrumentation and the forcing `renderer-options-only` control (**40 → 20** renders); a zero stable-parent count is not the positive control. All other runtime scenarios and browser editor/form/completion observations remain available, not just these headlines.
+
+Six invalid original 31-record runtime runs, both original failed gates, the original browser command failure and the recovery preflight error remain under `rejected/`, explicitly excluded. Original reports and command hashes are referenced without overwriting the original 21-call evidence. All **58 complete pre/post source/dependency snapshots** compare equal per root; complete recorded maps are stored once per root, with original snapshot hashes, canonical digests and collector scope/missing entries disclosed. All **29 unique invocations** retain command/ROOT/cwd/pins, Node hashes and safe environment metadata. Inherited-environment fingerprint maps and secret-variable hashes are never copied; documented path-prefix tokens and original/packaged hashes make sanitization explicit. No generated bundles, sourcemaps or environment dumps are duplicated.
+
+```sh
+node scripts/benchmarks/custom-widgets/summarize-final.mjs
+EVIDENCE_SOURCE=/absolute/path/to/final-replay-2/recovery-1 node scripts/benchmarks/custom-widgets/import-final.mjs
+```
+
+Neither command executes a benchmark. The first verifies archive hashes, assertions, counts, parity, privacy checks and pooled statistics; with `EVIDENCE_SOURCE` it also verifies original inputs. The importer reproducibly regenerates the selection from the recovery directory and its unchanged original sibling. Driver-result bytes are not response transfer, database wire or heap bytes. These fixtures support no production-latency, INP, token or cost claims.
+
+## Historical PR7358 replay: `1677c940` (preserved)
 
 Baseline dev **`c72a2e02b03c734b3a393914b5e99881e27e86d2`** versus consolidated candidate **`1677c940ca76ad8b7562d5faefd8f591aae88873`**, measured October 24, 2026. These are recorded pins, not a claim about subsequent dev/PR heads. The candidate includes its credential-redaction fix. See [the consolidated report](evidence/consolidated/RESULTS.md) for methods, source-stability scope and caveats.
 
@@ -14,13 +41,13 @@ Baseline dev **`c72a2e02b03c734b3a393914b5e99881e27e86d2`** versus consolidated 
 | 4,000-record JSON redaction            | No-match run medians **11.098–11.116 → 2.841–2.870 ms**; sparse-match **11.130–11.136 → 2.833–2.850 ms**                                                      | `server/response-{before,after}-{1,2}.json`       |
 | Sample edit, stable 200-field response | Pooled median/p95 **10.30 / 11.70 → 1.40 / 1.50 ms**; 25 edits render **25 → 0** response trees and **5,025 → 0** rows                                        | `workbench/browser-{before,after}{1,2}.json`      |
 
-**No valid management replay is archived here:** `ai-prompt.ts` changed during the management measurements. Router/redaction had already completed source-stable. Management needs a separate source-stable rerun after prompt finalization; do not reuse its contaminated timing/byte/parity figures. Blind-authoring quality evidence is maintained separately under `scripts/benchmarks/custom-widget-authoring/`.
+**No valid management replay is archived for this historical `1677c940` pin:** `ai-prompt.ts` changed during those management measurements. Router/redaction had already completed source-stable. Do not reuse those contaminated timing/byte/parity figures; the final `4ed24e5ac` replay above provides source-stable management evidence. Blind-authoring quality evidence is maintained separately under `scripts/benchmarks/custom-widget-authoring/`.
 
 ```sh
 node scripts/benchmarks/custom-widgets/summarize-consolidated.mjs
 ```
 
-This verifies all 30 packaged data hashes and recomputes results from exact raw samples. Runtime includes every original scenario, not just the headline; counted-run timings remain archived but are excluded from timing summaries. Workbench preserves all original fields. Consolidated provenance records original input hashes, compact source-hash selection and path sanitization; `import-consolidated.mjs` regenerates it with `EVIDENCE_SOURCE` pointing to the original consolidated directory. Neither import nor summarize executes a benchmark.
+This verifies all 30 historical consolidated data hashes and recomputes results from exact raw samples. Runtime includes every original scenario, not just the headline; counted-run timings remain archived but are excluded from timing summaries. Workbench preserves all original fields. Consolidated provenance records original input hashes, compact source-hash selection and path sanitization; `import-consolidated.mjs` regenerates it with `EVIDENCE_SOURCE` pointing to the original consolidated directory. Neither import nor summarize executes a benchmark. Historical archives retained in `0a7067f4f` are unchanged; that archive commit is not a new measured candidate pin.
 
 ## Historical PR7354 evidence (preserved)
 
@@ -69,6 +96,7 @@ export OUTPUT="$BENCH/output"
 mkdir -p "$OUTPUT/runtime" "$OUTPUT/server" "$OUTPUT/workbench"
 node "$BENCH/summarize.mjs"
 node "$BENCH/summarize-consolidated.mjs"
+node "$BENCH/summarize-final.mjs"
 ```
 
 Use `mise exec -- node` instead of `node` if that is how Node 24.22.1 is selected locally. Run the original runtime workload alternately, keeping timed and instrumented samples separate:
@@ -97,7 +125,7 @@ for name in response management; do
 done
 ```
 
-The management commands are for a **new, source-stable** run only, not reproduction of the excluded measurement. For historical filenames, use the historical baseline above, runtime labels before/after rather than baseline/candidate, and router labels 2/3 rather than 1/2.
+The management commands are for a **new, source-stable** run, not reproduction of the excluded historical `1677c940` measurement; the final archive already retains valid `4ed24e5ac` management results. For historical filenames, use the historical baseline above, runtime labels before/after rather than baseline/candidate, and router labels 2/3 rather than 1/2.
 
 Browser fixture (light theme, identical generated data). Build both versions, start the loopback fixture server in a separate terminal, then run BEFORE → AFTER twice:
 
@@ -130,4 +158,4 @@ node node_modules/typescript/bin/tsc --noEmit --incremental false --pretty false
 
 Packaged JSON is formatted before its archive hash is recorded; original input hashes remain separate in the provenance. The original transpile-only harness fixtures are not part of a package TypeScript project; syntax is checked without running a benchmark. No new unit tests are added.
 
-For archive-only changes, use the two hash/statistics summarizers, syntax and focused formatting/lint checks above; no runtime/application source is changed. Consolidated import also verifies exact raw-object parity after formatting and original source-map stability before selection. Do not rerun timed benchmarks while source edits are pending; no new tests or dependencies are needed.
+For archive-only changes, use all three hash/statistics summarizers, syntax and focused formatting/lint checks above; no runtime/application source is changed. Evidence files intentionally bypass formatting to preserve recorded bytes. Imports verify raw-object parity and original source-map stability before selection. Do not rerun timed benchmarks while source edits are pending; no new tests or dependencies are needed.
