@@ -211,3 +211,14 @@ test("seeded-session checks cannot silently claim coverage for sign-in changes",
     ),
   );
 });
+
+test("an infrastructure error on either side blocks otherwise passing evidence", () => {
+  for (const side of ["before", "after"] as const) {
+    const value = report();
+    assert.ok(value.scenarios[0]);
+    value.scenarios[0][side].status = "error";
+    value.scenarios[0][side].error = "Fixture canvas selector was ambiguous";
+    assert.equal(getSanityDeterministicStatus(value), "blocked");
+    assert.throws(() => parseSanityReport(JSON.stringify(value)), /status disagrees/);
+  }
+});

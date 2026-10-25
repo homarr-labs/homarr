@@ -5,7 +5,7 @@ import { mkdtemp, mkdir, readFile, realpath, rm, writeFile } from "node:fs/promi
 import path from "node:path";
 import { tmpdir } from "node:os";
 import { chromium, expect } from "@playwright/test";
-import type { Browser, Page } from "@playwright/test";
+import type { Browser, Locator, Page } from "@playwright/test";
 import type { createHomarrContainer as CreateHomarrContainer } from "../../e2e/shared/create-homarr-container.ts";
 import { getSanityDeterministicStatus, parseSanityReport } from "../../packages/boards/src/sanity-report.ts";
 import type {
@@ -49,6 +49,15 @@ interface Target {
   fixture: ReturnType<typeof seedFixtures>;
   cookieName: string;
 }
+class BehaviorCheckFailure extends Error {
+  readonly check: SanityCheck;
+
+  constructor(check: SanityCheck) {
+    super(check.label);
+    this.check = check;
+  }
+}
+
 const argument = (flag: string) => {
   const index = process.argv.indexOf(flag);
   const value = process.argv[index + 1];
@@ -243,22 +252,23 @@ async function captureScenario(target: Target, scenario: (typeof scenarios)[numb
   const checks: SanityCheck[] = [];
   const result: SanityCapture = { status: "complete", checks, durationMs: 0 };
   const errors: string[] = [];
-  let reachedBoard = false;
   page.on("pageerror", (error) => errors.push(error.message));
   try {
     await page.goto(`${target.identity.url}/en/boards/${boardName}`, { waitUntil: "domcontentloaded" });
-    await waitForBoardHydration(page);
-    await expect(page.locator(`[data-grid-item-id='${boardName}-empty']`)).toBeVisible();
+    await waitForBoardHydration(page, boardName);
+    await expect(boardCanvas(page, boardName).locator(`[data-grid-item-id='${boardName}-empty']`)).toBeVisible();
     await page.evaluate(() => document.fonts.ready);
     // Fixture assets are local; Date is fixed while animation and browser timers keep running.
-    await expect(page.locator(`[data-grid-item-id='${boardName}-clock-0']`)).toContainText("12:00", { timeout: 15000 });
-    reachedBoard = true;
+    await expect(boardCanvas(page, boardName).locator(`[data-grid-item-id='${boardName}-clock-0']`)).toContainText(
+      "12:00",
+      { timeout: 15000 },
+    );
     let expectedPlacements = placements;
     if (scenario.viewport.width < 768) expectedPlacements = mobilePlacements;
     checks.push(...(await geometry(page, boardName, expectedPlacements)));
     if (scenario.edit) expectedPlacements = await editBoard(page, target, boardName, checks);
     else {
-      const scroll = page.locator(`[data-section-id='${boardName}-scrollable']`);
+      const scroll = boardCanvas(page, boardName).locator(`[data-section-id='${boardName}-scrollable']`);
       const scrollResult = await scroll.evaluate((element) => {
         const before = element.scrollTop;
         element.scrollTop = element.scrollHeight;
@@ -276,8 +286,7 @@ async function captureScenario(target: Target, scenario: (typeof scenarios)[numb
         element.scrollTop = 0;
       });
     }
-    addCheck(checks, "runtime-errors", "No uncaught browser errors", "[]", JSON.stringify(errors), errors.length === 0);
-    await waitForStableBoardGeometry(page);
+    await waitForStableBoardGeometry(page, boardName);
     const captureGeometry = await readGeometry(page, boardName);
     if (scenario.edit)
       checks.push(
@@ -285,70 +294,95 @@ async function captureScenario(target: Target, scenario: (typeof scenarios)[numb
       );
     result.image = `data:image/png;base64,${(await page.screenshot({ fullPage: true })).toString("base64")}`;
     const afterCaptureGeometry = await readGeometry(page, boardName);
+    const captureStable = JSON.stringify(captureGeometry) === JSON.stringify(afterCaptureGeometry);
     addCheck(
       checks,
       "capture-stability",
       "Screenshot preserves the measured final geometry",
       JSON.stringify(captureGeometry),
       JSON.stringify(afterCaptureGeometry),
-      JSON.stringify(captureGeometry) === JSON.stringify(afterCaptureGeometry),
+      captureStable,
     );
+    if (!captureStable) throw new Error("Board geometry changed during screenshot capture");
     if (config.captureSnapshots) result.snapshot = await snapshot(page);
   } catch (error) {
     const message = String(error).slice(0, 4000);
-    if (reachedBoard) {
-      addCheck(
-        checks,
-        "scenario-actions",
-        "Selected board interactions complete",
-        "All requested actions and persistence checks complete",
-        message,
-        false,
-      );
-    } else {
+    if (error instanceof BehaviorCheckFailure) checks.push(error.check);
+    else {
       result.status = "error";
       result.error = message;
     }
-    result.image = `data:image/png;base64,${(await page.screenshot({ fullPage: true }).catch(() => Buffer.alloc(0))).toString("base64")}`;
-    if (result.image.endsWith("base64,")) delete result.image;
+    if (!result.image) {
+      result.image = `data:image/png;base64,${(await page.screenshot({ fullPage: true }).catch(() => Buffer.alloc(0))).toString("base64")}`;
+      if (result.image.endsWith("base64,")) delete result.image;
+    }
   } finally {
+    const runtimeErrors = JSON.stringify(errors).slice(0, 4000);
+    addCheck(checks, "runtime-errors", "No uncaught browser errors", "[]", runtimeErrors, errors.length === 0);
+    if (errors.length > 0) {
+      result.status = "error";
+      result.error = `Uncaught browser errors: ${runtimeErrors}`.slice(0, 4000);
+    }
     result.durationMs = Math.round(performance.now() - started);
     await context.close();
   }
   return result;
 }
 
-async function waitForBoardHydration(page: Page) {
-  await page.locator('[data-testid="board-canvas"][data-board-hydrated="true"]').waitFor({ timeout: 30_000 });
+function boardCanvas(page: Page, boardName: string): Locator {
+  return page.locator(
+    `main[data-advanced-focus-background] [data-testid="board-canvas"][aria-label="${boardName}"]:visible`,
+  );
 }
 
-async function waitForStableBoardGeometry(page: Page) {
-  await page.evaluate(async () => {
+async function waitForBoardHydration(page: Page, boardName: string) {
+  const canvas = boardCanvas(page, boardName);
+  await expect(canvas).toHaveCount(1, { timeout: 30_000 });
+  await expect(canvas).toHaveAttribute("data-board-hydrated", "true", { timeout: 30_000 });
+  await expect(canvas.locator("[data-kind='clock'][data-grid-item-type='item'] time")).toHaveText(
+    Array(6).fill("12:00"),
+    { timeout: 15_000 },
+  );
+}
+
+async function waitForStableBoardGeometry(page: Page, boardName: string) {
+  const target = boardCanvas(page, boardName);
+  await expect(target).toHaveCount(1);
+  await target.evaluate(async (canvas) => {
     await document.fonts.ready;
     let previous = "";
-    let stableFrames = 0;
+    let quietSince = performance.now();
     const deadline = performance.now() + 5000;
     while (performance.now() < deadline) {
       await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
-      const canvas = document.querySelector<HTMLElement>('[data-testid="board-canvas"]');
-      const content = canvas?.querySelector<HTMLElement>("[data-board-canvas-content]");
-      if (!canvas || !content) throw new Error("Board canvas is missing");
+      const content = canvas.querySelector<HTMLElement>("[data-board-canvas-content]");
+      if (!canvas.isConnected || !content)
+        throw new Error("The intended board canvas was replaced during capture readiness");
       const outer = canvas.getBoundingClientRect();
       const inner = content.getBoundingClientRect();
       const current = JSON.stringify({
         outer: outer.toJSON(),
         inner: inner.toJSON(),
         scale: canvas.dataset.canvasScale,
-        entries: Array.from(canvas.querySelectorAll("[data-grid-item-id]"), (element) =>
-          element.getBoundingClientRect().toJSON(),
+        entries: Array.from(
+          canvas.querySelectorAll(
+            "[data-grid-item-id], [data-grid-item-content], .clock-widget-container, .clock-text-stack, .clock-time-text, time",
+          ),
+          (element) => {
+            const style = getComputedStyle(element);
+            return {
+              bounds: element.getBoundingClientRect().toJSON(),
+              text: element.textContent,
+              font: [style.fontFamily, style.fontSize, style.fontWeight, style.lineHeight, style.letterSpacing],
+            };
+          },
         ),
       });
       const fitted =
         outer.width > 0 && Math.abs(outer.width - inner.width) <= 1 && Math.abs(outer.height - inner.height) <= 1;
       if (fitted && document.fonts.status === "loaded" && current === previous) {
-        stableFrames++;
-        if (stableFrames >= 3) return;
-      } else stableFrames = 0;
+        if (performance.now() - quietSince >= 200) return;
+      } else quietSince = performance.now();
       previous = current;
     }
     throw new Error("Board geometry did not settle: canvas size observers are still pending");
@@ -356,12 +390,14 @@ async function waitForStableBoardGeometry(page: Page) {
 }
 
 async function geometry(page: Page, boardName: string, expected: typeof placements) {
-  await waitForStableBoardGeometry(page);
+  await waitForStableBoardGeometry(page, boardName);
   return checkGeometry(expected, await readGeometry(page, boardName));
 }
 
 async function readGeometry(page: Page, boardName: string) {
-  return await page.locator("[data-grid-item-id][data-grid-item-type='section']").evaluateAll(
+  const canvas = boardCanvas(page, boardName);
+  await expect(canvas).toHaveCount(1);
+  return canvas.locator("[data-grid-item-id][data-grid-item-type='section']").evaluateAll(
     (elements, prefix) =>
       elements.map((element) => {
         const parent = element.parentElement?.closest("[data-grid-section-id]");
@@ -382,12 +418,28 @@ async function readGeometry(page: Page, boardName: string) {
 
 async function editBoard(page: Page, target: Target, boardName: string, checks: SanityCheck[]) {
   await page.getByRole("button", { name: "Edit board", exact: true }).click();
-  const entry = page.locator(`[data-grid-item-id='${boardName}-editable']`);
+  const entry = boardCanvas(page, boardName).locator(`[data-grid-item-id='${boardName}-editable']`);
   await expect(entry).toHaveAttribute("data-editor-grid-entry", "true");
   await entry.focus();
   await page.keyboard.press("Enter");
+  await expect(entry).toHaveAttribute("data-keyboard-editing", "true");
+  await expect(entry).toBeFocused();
   await page.keyboard.press("Shift+ArrowUp");
-  await expect(entry).toHaveAttribute("data-grid-h", "1");
+  try {
+    await expect(entry).toHaveAttribute("data-grid-h", "1");
+  } catch (error) {
+    // A uniquely observed, unchanged height is the known 2x1 behavior regression.
+    // Missing/ambiguous elements and other runner errors must block either side.
+    const observed = await entry.getAttribute("data-grid-h");
+    if (observed === null || observed === "1") throw error;
+    throw new BehaviorCheckFailure({
+      id: "keyboard-resize",
+      label: "Keyboard resize permits a one-row container",
+      status: "failed",
+      expected: "1",
+      observed,
+    });
+  }
   await page.keyboard.press("ArrowRight");
   await expect(entry).toHaveAttribute("data-grid-x", "1");
   await page.keyboard.press("Escape");
@@ -398,7 +450,7 @@ async function editBoard(page: Page, target: Target, boardName: string, checks: 
     .poll(() => readPersistedPlacement(target.databasePath, boardName, "editable"))
     .toEqual(expectedPlacement);
   await page.reload({ waitUntil: "domcontentloaded" });
-  await waitForBoardHydration(page);
+  await waitForBoardHydration(page, boardName);
   await expect(entry).toHaveAttribute("data-grid-h", "1");
   await expect(entry).toHaveAttribute("data-grid-x", "1");
   addCheck(
@@ -416,12 +468,14 @@ async function editBoard(page: Page, target: Target, boardName: string, checks: 
   checks.push(
     ...(await geometry(page, boardName, editedPlacements)).map((check) => ({ ...check, id: `after-save:${check.id}` })),
   );
-  const collapse = page.locator(`[data-grid-item-id='${boardName}-collapsible'] button[aria-expanded]`);
+  const collapse = boardCanvas(page, boardName).locator(
+    `[data-grid-item-id='${boardName}-collapsible'] button[aria-expanded]`,
+  );
   await collapse.click();
   await expect(collapse).toHaveAttribute("aria-expanded", "false");
   await expect.poll(() => readPersistedCollapse(target.databasePath, boardName)).toBe(1);
   await page.reload({ waitUntil: "domcontentloaded" });
-  await waitForBoardHydration(page);
+  await waitForBoardHydration(page, boardName);
   await expect(collapse).toHaveAttribute("aria-expanded", "false");
   await collapse.click();
   await expect(collapse).toHaveAttribute("aria-expanded", "true");
