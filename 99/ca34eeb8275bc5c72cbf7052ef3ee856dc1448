@@ -1,0 +1,24 @@
+apps/nextjs/src/app/[locale]/_client-providers/trpc.tsx
+  h_d6e478ca18e517 207,212-233
+apps/nextjs/src/app/api/trpc/[trpc]/route.ts
+  h_d6e478ca18e517 47
+packages/widgets/src/_inputs/widget-custom-widget-configuration-input.tsx
+  h_d6e478ca18e517 254-258,261,263,266-281
+scripts/benchmarks/custom-widget-authoring/evidence/rich-grounded/README.md
+  h_d6e478ca18e517 18
+scripts/benchmarks/custom-widget-authoring/evidence/rich-grounded/app/request-journal-real-refetch.json
+  h_d6e478ca18e517 1-26
+scripts/benchmarks/custom-widget-authoring/evidence/rich-grounded/manifest.json
+  h_d6e478ca18e517 174-178
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "99ca34eeb8275bc5c72cbf7052ef3ee856dc1448",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
