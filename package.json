@@ -263,6 +263,7 @@
     }
   },
   "scripts": {
+    "prototype:sanity": "node scripts/prototypes/sanity-workbench.mjs",
     "build": "cross-env CI=true turbo run build",
     "benchmark:build:docker": "node --experimental-strip-types scripts/benchmarks/docker-build.mts",
     "benchmark:compare": "node --experimental-strip-types scripts/benchmarks/benchmark-compare.mts",

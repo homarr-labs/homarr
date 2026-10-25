@@ -1,0 +1,298 @@
+.root {
+  min-width: 0;
+  padding-bottom: 100px;
+}
+
+.prototypeNotice {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 8px 12px;
+  margin-bottom: 18px;
+  border: 1px dashed var(--mantine-color-yellow-6);
+  border-radius: var(--mantine-radius-sm);
+  color: var(--mantine-color-yellow-6);
+  font-size: 12px;
+}
+
+.prototypeNotice span {
+  color: var(--mantine-color-dimmed);
+}
+.compareWorkspace {
+  display: grid;
+  grid-template-columns: 230px minmax(0, 1fr);
+  gap: 20px;
+}
+.workspaceMain {
+  min-width: 0;
+}
+.scenarioSidebar {
+  overflow: hidden;
+  align-self: start;
+}
+.sidebarHeading {
+  padding: 14px;
+}
+.scenarioButton {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  text-align: left;
+  padding: 13px 12px;
+  background: transparent;
+  color: inherit;
+  border: 0;
+  border-top: 1px solid var(--mantine-color-default-border);
+  cursor: pointer;
+}
+.scenarioButton strong {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+}
+.scenarioButton small {
+  display: block;
+  font-size: 11px;
+  color: var(--mantine-color-dimmed);
+  margin-top: 4px;
+}
+.scenarioButton[data-active="true"],
+.filmstripItem[data-active="true"] {
+  background: var(--mantine-primary-color-light);
+  box-shadow: inset 3px 0 var(--mantine-primary-color-filled);
+}
+.scenarioButton:hover,
+.filmstripItem:hover {
+  background: var(--mantine-color-default-hover);
+}
+.capturePair {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 12px;
+}
+.capture {
+  margin: 0;
+  min-width: 0;
+  border: 1px solid var(--mantine-color-default-border);
+  border-radius: var(--mantine-radius-sm);
+  overflow: hidden;
+}
+.capture figcaption {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 9px 10px;
+  font-size: 11px;
+  font-weight: 500;
+  background: var(--mantine-color-default);
+}
+.capture figcaption span:last-child {
+  font-size: 10px;
+  color: var(--mantine-color-dimmed);
+  font-variant-numeric: tabular-nums;
+}
+.imageFrame {
+  position: relative;
+  background: #18181b;
+}
+.captureImage {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.differenceImage {
+  display: block;
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  mix-blend-mode: difference;
+}
+.measurements {
+  display: flex;
+  gap: 18px;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 12px 0;
+}
+.dimension {
+  font-family: var(--mantine-font-family-monospace);
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: -0.5px;
+}
+.dimension[data-failed="true"] {
+  color: var(--mantine-color-red-6);
+}
+.review {
+  border-left: 3px solid var(--mantine-color-teal-6);
+}
+.review[data-blocked="true"] {
+  border-left-color: var(--mantine-color-red-6);
+}
+.review > div > svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.steps {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 8px 0 0;
+}
+.step {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  background: transparent;
+  border: 0;
+  color: var(--mantine-color-dimmed);
+  font-size: 12px;
+  padding: 6px 9px;
+  border-radius: var(--mantine-radius-sm);
+  cursor: pointer;
+}
+.step span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 20px;
+  width: 20px;
+  font-size: 11px;
+  border: 1px solid var(--mantine-color-default-border);
+  border-radius: 50%;
+}
+.step[data-active="true"] {
+  color: var(--mantine-primary-color-light-color);
+  background: var(--mantine-primary-color-light);
+}
+.step[data-active="true"] span {
+  border-color: currentColor;
+}
+.tablePanel {
+  overflow: hidden;
+}
+.tablePanel tr[data-selected="true"] {
+  background: var(--mantine-primary-color-light);
+}
+.reviewWorkspace {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 300px;
+  gap: 20px;
+}
+.filmstrip {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 8px;
+}
+.filmstripItem {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  align-items: flex-start;
+  padding: 10px;
+  border: 1px solid var(--mantine-color-default-border);
+  border-radius: var(--mantine-radius-sm);
+  color: inherit;
+  background: var(--mantine-color-default);
+  text-align: left;
+  cursor: pointer;
+}
+.filmstripIndex {
+  color: var(--mantine-color-dimmed);
+  font-size: 11px;
+}
+.filmstripItem strong {
+  font-size: 11px;
+  font-weight: 500;
+  min-height: 30px;
+}
+.filmstripItem small {
+  font-size: 11px;
+  color: var(--mantine-color-dimmed);
+}
+.state {
+  margin-top: 20px;
+  color: var(--mantine-color-dimmed);
+  font-size: 12px;
+  border-top: 1px solid var(--mantine-color-default-border);
+  padding-top: 12px;
+}
+.state summary {
+  cursor: pointer;
+}
+.state pre {
+  padding: 12px;
+  background: var(--mantine-color-default);
+  border-radius: var(--mantine-radius-sm);
+  overflow: auto;
+}
+.switcher {
+  position: fixed;
+  z-index: 250;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  background: var(--mantine-color-body);
+  border: 1px solid var(--mantine-color-default-border);
+  box-shadow: 0 4px 24px #0003;
+  padding: 8px 12px;
+  border-radius: 40px;
+  white-space: nowrap;
+}
+.switcher > div {
+  text-align: center;
+  min-width: 130px;
+}
+
+@media (max-width: 1100px) {
+  .compareWorkspace {
+    grid-template-columns: 190px minmax(0, 1fr);
+    gap: 14px;
+  }
+  .scenarioButton {
+    flex-wrap: wrap;
+  }
+  .reviewWorkspace {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 700px) {
+  .compareWorkspace {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .scenarioSidebar {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .sidebarHeading {
+    grid-column: 1 / -1;
+  }
+  .capturePair {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .filmstrip {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .steps {
+    gap: 4px;
+  }
+  .step {
+    padding: 5px;
+    font-size: 11px;
+  }
+  .measurements {
+    gap: 12px;
+  }
+  .switcher {
+    bottom: 12px;
+  }
+}

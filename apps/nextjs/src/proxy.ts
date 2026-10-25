@@ -70,6 +70,14 @@ export async function proxy(request: NextRequest) {
   // We don't want to fallback to accept-language header so we clear it
   request.headers.set("accept-language", "");
 
+  // THROWAWAY: keep this isolated prototype route out of the dev locale rewrite loop.
+  if (
+    process.env.NODE_ENV === "development" &&
+    process.env.HOMARR_SANITY_PROTOTYPE === "true" &&
+    pathname === "/en/manage/tools/sanity-prototype"
+  )
+    return NextResponse.next();
+
   const next = createI18nMiddleware(defaultLocale);
   return next(request);
 }
