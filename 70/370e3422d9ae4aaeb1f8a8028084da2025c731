@@ -1,0 +1,116 @@
+scripts/benchmarks/custom-widgets/README.md
+  h_d6e478ca18e517 5-32,44,50,99,128,161
+scripts/benchmarks/custom-widgets/evidence/final-4ed24e5ac/RESULTS.md
+  h_d6e478ca18e517 1-32
+scripts/benchmarks/custom-widgets/evidence/final-4ed24e5ac/assertions.json
+  h_d6e478ca18e517 1-182
+scripts/benchmarks/custom-widgets/evidence/final-4ed24e5ac/build-artifacts.json
+  h_d6e478ca18e517 1-89
+scripts/benchmarks/custom-widgets/evidence/final-4ed24e5ac/harness.json
+  h_d6e478ca18e517 1-113
+scripts/benchmarks/custom-widgets/evidence/final-4ed24e5ac/harness/workbench/replay-browser-v2.mjs
+  h_d6e478ca18e517 1-90
+scripts/benchmarks/custom-widgets/evidence/final-4ed24e5ac/harness/workbench/replay-browser.mjs
+  h_d6e478ca18e517 1-53
+scripts/benchmarks/custom-widgets/evidence/final-4ed24e5ac/invocations.json
+  h_d6e478ca18e517 1-1981
+scripts/benchmarks/custom-widgets/evidence/final-4ed24e5ac/provenance.json
+  h_d6e478ca18e517 1-2533
+scripts/benchmarks/custom-widgets/evidence/final-4ed24e5ac/rejected/browser.stderr.txt
+  h_d6e478ca18e517 1-10
+scripts/benchmarks/custom-widgets/evidence/final-4ed24e5ac/rejected/browser.stdout.txt
+  h_d6e478ca18e517 1
+scripts/benchmarks/custom-widgets/evidence/final-4ed24e5ac/rejected/preflight.stderr.txt
+  h_d6e478ca18e517 1-12
+scripts/benchmarks/custom-widgets/evidence/final-4ed24e5ac/rejected/runtime-baseline-counts.jsonl
+  h_d6e478ca18e517 1-31
+scripts/benchmarks/custom-widgets/evidence/final-4ed24e5ac/rejected/runtime-baseline-pair1-timed.jsonl
+  h_d6e478ca18e517 1-31
+scripts/benchmarks/custom-widgets/evidence/final-4ed24e5ac/rejected/runtime-baseline-pair2-timed.jsonl
+  h_d6e478ca18e517 1-31
+scripts/benchmarks/custom-widgets/evidence/final-4ed24e5ac/rejected/runtime-candidate-counts.jsonl
+  h_d6e478ca18e517 1-31
+scripts/benchmarks/custom-widgets/evidence/final-4ed24e5ac/rejected/runtime-candidate-pair1-timed.jsonl
+  h_d6e478ca18e517 1-31
+scripts/benchmarks/custom-widgets/evidence/final-4ed24e5ac/rejected/runtime-candidate-pair2-timed.jsonl
+  h_d6e478ca18e517 1-31
+scripts/benchmarks/custom-widgets/evidence/final-4ed24e5ac/rejected/verification-baseline.json
+  h_d6e478ca18e517 1-13
+scripts/benchmarks/custom-widgets/evidence/final-4ed24e5ac/rejected/verification-candidate.json
+  h_d6e478ca18e517 1-13
+scripts/benchmarks/custom-widgets/evidence/final-4ed24e5ac/reports/original-incomplete.md
+  h_d6e478ca18e517 1-32
+scripts/benchmarks/custom-widgets/evidence/final-4ed24e5ac/reports/recovery.md
+  h_d6e478ca18e517 1-39
+scripts/benchmarks/custom-widgets/evidence/final-4ed24e5ac/runtime/recovery-1-runtime-v2-baseline-counts.jsonl
+  h_d6e478ca18e517 1-32
+scripts/benchmarks/custom-widgets/evidence/final-4ed24e5ac/runtime/recovery-1-runtime-v2-baseline-pair1-timed.jsonl
+  h_d6e478ca18e517 1-32
+scripts/benchmarks/custom-widgets/evidence/final-4ed24e5ac/runtime/recovery-1-runtime-v2-baseline-pair2-timed.jsonl
+  h_d6e478ca18e517 1-32
+scripts/benchmarks/custom-widgets/evidence/final-4ed24e5ac/runtime/recovery-1-runtime-v2-candidate-counts.jsonl
+  h_d6e478ca18e517 1-32
+scripts/benchmarks/custom-widgets/evidence/final-4ed24e5ac/runtime/recovery-1-runtime-v2-candidate-pair1-timed.jsonl
+  h_d6e478ca18e517 1-32
+scripts/benchmarks/custom-widgets/evidence/final-4ed24e5ac/runtime/recovery-1-runtime-v2-candidate-pair2-timed.jsonl
+  h_d6e478ca18e517 1-32
+scripts/benchmarks/custom-widgets/evidence/final-4ed24e5ac/runtime/verification-baseline.json
+  h_d6e478ca18e517 1-87
+scripts/benchmarks/custom-widgets/evidence/final-4ed24e5ac/runtime/verification-candidate.json
+  h_d6e478ca18e517 1-87
+scripts/benchmarks/custom-widgets/evidence/final-4ed24e5ac/server/server-management-baseline-pair1.json
+  h_d6e478ca18e517 1-485
+scripts/benchmarks/custom-widgets/evidence/final-4ed24e5ac/server/server-management-baseline-pair2.json
+  h_d6e478ca18e517 1-485
+scripts/benchmarks/custom-widgets/evidence/final-4ed24e5ac/server/server-management-candidate-pair1.json
+  h_d6e478ca18e517 1-485
+scripts/benchmarks/custom-widgets/evidence/final-4ed24e5ac/server/server-management-candidate-pair2.json
+  h_d6e478ca18e517 1-485
+scripts/benchmarks/custom-widgets/evidence/final-4ed24e5ac/server/server-response-baseline-pair1.json
+  h_d6e478ca18e517 1-1099
+scripts/benchmarks/custom-widgets/evidence/final-4ed24e5ac/server/server-response-baseline-pair2.json
+  h_d6e478ca18e517 1-1099
+scripts/benchmarks/custom-widgets/evidence/final-4ed24e5ac/server/server-response-candidate-pair1.json
+  h_d6e478ca18e517 1-1099
+scripts/benchmarks/custom-widgets/evidence/final-4ed24e5ac/server/server-response-candidate-pair2.json
+  h_d6e478ca18e517 1-1099
+scripts/benchmarks/custom-widgets/evidence/final-4ed24e5ac/server/server-router-baseline-pair1.json
+  h_d6e478ca18e517 1-4444
+scripts/benchmarks/custom-widgets/evidence/final-4ed24e5ac/server/server-router-baseline-pair2.json
+  h_d6e478ca18e517 1-4444
+scripts/benchmarks/custom-widgets/evidence/final-4ed24e5ac/server/server-router-candidate-pair1.json
+  h_d6e478ca18e517 1-4444
+scripts/benchmarks/custom-widgets/evidence/final-4ed24e5ac/server/server-router-candidate-pair2.json
+  h_d6e478ca18e517 1-4444
+scripts/benchmarks/custom-widgets/evidence/final-4ed24e5ac/sources/baseline.json
+  h_d6e478ca18e517 1-17511
+scripts/benchmarks/custom-widgets/evidence/final-4ed24e5ac/sources/candidate.json
+  h_d6e478ca18e517 1-18079
+scripts/benchmarks/custom-widgets/evidence/final-4ed24e5ac/sources/snapshots.json
+  h_d6e478ca18e517 1-598
+scripts/benchmarks/custom-widgets/evidence/final-4ed24e5ac/summary.json
+  h_d6e478ca18e517 1-2076
+scripts/benchmarks/custom-widgets/evidence/final-4ed24e5ac/workbench/browser-after1.json
+  h_d6e478ca18e517 1-413
+scripts/benchmarks/custom-widgets/evidence/final-4ed24e5ac/workbench/browser-after2.json
+  h_d6e478ca18e517 1-413
+scripts/benchmarks/custom-widgets/evidence/final-4ed24e5ac/workbench/browser-before1.json
+  h_d6e478ca18e517 1-430
+scripts/benchmarks/custom-widgets/evidence/final-4ed24e5ac/workbench/browser-before2.json
+  h_d6e478ca18e517 1-430
+scripts/benchmarks/custom-widgets/import-final.mjs
+  h_d6e478ca18e517 1-552
+scripts/benchmarks/custom-widgets/summarize-final.mjs
+  h_d6e478ca18e517 1-336
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "70370e3422d9ae4aaeb1f8a8028084da2025c731",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
