@@ -1,0 +1,162 @@
+.agents/skills/homarr-custom-widget/SKILL.md
+  h_d6e478ca18e517 8,10,12-15,19
+.agents/skills/homarr-custom-widget/references/runtime.md
+  h_d6e478ca18e517 3-4,34-35,43-44,51,53
+.agents/skills/homarr-custom-widget/references/schema.md
+  h_d6e478ca18e517 25-27,36
+.oxfmtrc.json
+  h_d6e478ca18e517 10
+apps/docs/src/components/workshop/DetailPage.tsx
+  h_d6e478ca18e517 30,72,563-565,623
+apps/docs/src/components/workshop/SubmitForm.tsx
+  h_d6e478ca18e517 3,17-18,42,91-101,109,176-177,179,183-187,191,278,448-449,467
+apps/docs/src/components/workshop/WorkshopApp.tsx
+  h_d6e478ca18e517 42,422,433
+apps/docs/src/components/workshop/WorkshopIntegrationBadges.tsx
+  h_d6e478ca18e517 1-18
+apps/docs/src/components/workshop/useWorkshop.ts
+  h_d6e478ca18e517 6-7,47
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-option-fields.tsx
+  h_d6e478ca18e517 7-12,41-42,45,48-54,59,62-65,68,80-81,91-101,129-142,144-165,190-220
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-source-field.tsx
+  h_d6e478ca18e517 88
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_use-custom-widget-form-actions.ts
+  h_d6e478ca18e517 169
+apps/nextjs/src/app/[locale]/manage/custom-widgets/edit/[id]/_share-nudge.tsx
+  h_d6e478ca18e517 1-33
+apps/nextjs/src/app/[locale]/manage/custom-widgets/edit/[id]/page.tsx
+  h_d6e478ca18e517 12,16,20,35
+apps/nextjs/src/app/[locale]/manage/custom-widgets/publish/[id]/_workshop-publish-form.tsx
+  h_d6e478ca18e517 22,27-31,37-41,56-57,64,69,73-79,90,143-149,195-196,203,208-215
+apps/nextjs/src/app/[locale]/manage/custom-widgets/workshop/[id]/_workshop-detail.tsx
+  h_d6e478ca18e517 24,38,107-108,179
+apps/nextjs/src/components/workshop/workshop-integration-badges.tsx
+  h_d6e478ca18e517 1-22
+apps/nextjs/src/components/workshop/workshop-submission-card.tsx
+  h_d6e478ca18e517 11-12,76
+apps/workshop/Dockerfile
+  h_d6e478ca18e517 54-56
+apps/workshop/README.md
+  h_d6e478ca18e517 104-106
+apps/workshop/generate-integration-kinds.mts
+  h_d6e478ca18e517 1-16
+apps/workshop/pb_hooks/http-integration-kinds.json
+  h_d6e478ca18e517 1-91
+apps/workshop/pb_hooks/workshop-utils.js
+  h_d6e478ca18e517 12-35,94-95,160
+apps/workshop/pb_hooks/workshop.pb.js
+  h_d6e478ca18e517 81-89
+apps/workshop/pb_migrations/1792886400_workshop_integration_kinds.js
+  h_d6e478ca18e517 1-42
+apps/workshop/test.sh
+  h_d6e478ca18e517 12
+apps/workshop/tests/workshop-migration.mjs
+  h_d6e478ca18e517 1-3,27-29,39,97-102,114,122-124,127,130-136,138,151,170,172
+packages/api/src/router/custom-widget/management-queries.ts
+  h_d6e478ca18e517 3,9-14,36-61,172,197,227,231,238-245
+packages/custom-widgets/src/core/ai-prompt.ts
+  h_d6e478ca18e517 30-32,46,48,56,99,109,119,121,133,164,176,189,195-196,201
+packages/custom-widgets/src/core/authoring-resources.ts
+  h_d6e478ca18e517 2-7,198-200,209,215-216,246-247,255-256,265,288,290,292-295,299
+packages/custom-widgets/src/core/options-schema.ts
+  h_d6e478ca18e517 86-89,101,103-104
+packages/custom-widgets/src/core/source-setup.ts
+  h_d6e478ca18e517 1-4,36-43
+packages/translation/src/lang/en.json
+  h_d6e478ca18e517 1334,1355-1360
+packages/widgets/src/_inputs/widget-custom-widget-configuration-input.tsx
+  h_d6e478ca18e517 8,26-30,78,89-94,100-105,114-158,192,195,197,199-203,208,210,212-213,222,250-253,259-260,262,264-269,271-282,284-286,289,292-295,299-300,302-303,307-308,310-314,397-405
+packages/workshop/src/backend.ts
+  h_d6e478ca18e517 90
+packages/workshop/src/schema.ts
+  h_d6e478ca18e517 2-6,103-119,151
+scripts/benchmarks/custom-widget-authoring/README.md
+  h_d6e478ca18e517 7,21-23,40-41,83-90,140-144
+scripts/benchmarks/custom-widget-authoring/evidence/rich-grounded/README.md
+  h_d6e478ca18e517 1-20
+scripts/benchmarks/custom-widget-authoring/evidence/rich-grounded/app/RESULTS.md
+  h_d6e478ca18e517 1-111
+scripts/benchmarks/custom-widget-authoring/evidence/rich-grounded/app/content-validation.json
+  h_d6e478ca18e517 1-29
+scripts/benchmarks/custom-widget-authoring/evidence/rich-grounded/app/hashes.json
+  h_d6e478ca18e517 1-11
+scripts/benchmarks/custom-widget-authoring/evidence/rich-grounded/app/persisted-definition.json
+  h_d6e478ca18e517 1-24
+scripts/benchmarks/custom-widget-authoring/evidence/rich-grounded/app/runtime-errors.json
+  h_d6e478ca18e517 1-16
+scripts/benchmarks/custom-widget-authoring/evidence/rich-grounded/baseline/prompt.md
+  h_d6e478ca18e517 1-128
+scripts/benchmarks/custom-widget-authoring/evidence/rich-grounded/baseline/provenance.json
+  h_d6e478ca18e517 1-9
+scripts/benchmarks/custom-widget-authoring/evidence/rich-grounded/baseline/reply.md
+  h_d6e478ca18e517 1
+scripts/benchmarks/custom-widget-authoring/evidence/rich-grounded/candidate-final/definition.json
+  h_d6e478ca18e517 1-24
+scripts/benchmarks/custom-widget-authoring/evidence/rich-grounded/candidate-final/prompt.md
+  h_d6e478ca18e517 1-104
+scripts/benchmarks/custom-widget-authoring/evidence/rich-grounded/candidate-final/provenance.json
+  h_d6e478ca18e517 1-9
+scripts/benchmarks/custom-widget-authoring/evidence/rich-grounded/candidate-final/render-states.json
+  h_d6e478ca18e517 1-18
+scripts/benchmarks/custom-widget-authoring/evidence/rich-grounded/candidate-final/reply.md
+  h_d6e478ca18e517 1-24
+scripts/benchmarks/custom-widget-authoring/evidence/rich-grounded/candidate-final/validation.json
+  h_d6e478ca18e517 1-13
+scripts/benchmarks/custom-widget-authoring/evidence/rich-grounded/candidate-repair-1/feedback.md
+  h_d6e478ca18e517 1-11
+scripts/benchmarks/custom-widget-authoring/evidence/rich-grounded/candidate-repair-1/provenance.json
+  h_d6e478ca18e517 1-18
+scripts/benchmarks/custom-widget-authoring/evidence/rich-grounded/candidate-repair-1/reply.md
+  h_d6e478ca18e517 1-24
+scripts/benchmarks/custom-widget-authoring/evidence/rich-grounded/candidate/attempt2-chart-contract-missing/prompt.md
+  h_d6e478ca18e517 1-111
+scripts/benchmarks/custom-widget-authoring/evidence/rich-grounded/candidate/attempt2-chart-contract-missing/provenance.json
+  h_d6e478ca18e517 1-9
+scripts/benchmarks/custom-widget-authoring/evidence/rich-grounded/candidate/attempt2-chart-contract-missing/reply.md
+  h_d6e478ca18e517 1
+scripts/benchmarks/custom-widget-authoring/evidence/rich-grounded/candidate/attempted-prompt1-provenance.json
+  h_d6e478ca18e517 1-9
+scripts/benchmarks/custom-widget-authoring/evidence/rich-grounded/candidate/attempted-prompt1.md
+  h_d6e478ca18e517 1-114
+scripts/benchmarks/custom-widget-authoring/evidence/rich-grounded/fixture.mjs
+  h_d6e478ca18e517 1-84
+scripts/benchmarks/custom-widget-authoring/evidence/rich-grounded/manifest.json
+  h_d6e478ca18e517 1-176
+scripts/benchmarks/custom-widget-authoring/evidence/rich-grounded/prepare.mts
+  h_d6e478ca18e517 1-31
+scripts/benchmarks/custom-widget-authoring/evidence/rich-grounded/repair-app/RESULTS.md
+  h_d6e478ca18e517 1-103
+scripts/benchmarks/custom-widget-authoring/evidence/rich-grounded/repair-app/console.json
+  h_d6e478ca18e517 1-557
+scripts/benchmarks/custom-widget-authoring/evidence/rich-grounded/repair-app/content-checks.json
+  h_d6e478ca18e517 1-44
+scripts/benchmarks/custom-widget-authoring/evidence/rich-grounded/repair-app/hashes.json
+  h_d6e478ca18e517 1-29
+scripts/benchmarks/custom-widget-authoring/evidence/rich-grounded/repair-app/persisted-definition.json
+  h_d6e478ca18e517 1-24
+scripts/benchmarks/custom-widget-authoring/evidence/rich-grounded/repair-app/refresh-check.json
+  h_d6e478ca18e517 1-12
+scripts/benchmarks/custom-widget-authoring/evidence/rich-grounded/repair-app/runtime-errors.json
+  h_d6e478ca18e517 1-16
+scripts/benchmarks/custom-widget-authoring/evidence/rich-grounded/repair-app/source-comparison.json
+  h_d6e478ca18e517 1-15
+scripts/benchmarks/custom-widget-authoring/evidence/rich-grounded/repair-app/validation.json
+  h_d6e478ca18e517 1-12
+scripts/benchmarks/custom-widget-authoring/evidence/rich-grounded/response.json
+  h_d6e478ca18e517 1-158
+scripts/benchmarks/custom-widget-authoring/render.mts
+  h_d6e478ca18e517 112
+scripts/benchmarks/custom-widgets/runtime/run.mjs
+  h_d6e478ca18e517 2,6-8
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "4ed24e5ac4ff1726e187d4ea3677e2f7979e3691",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
