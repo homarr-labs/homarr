@@ -4772,27 +4772,59 @@
       "name": "Релизы",
       "description": "Отображает список текущих версий указанных репозиториев с заданным регулярным выражением версии.",
       "option": {
+        "layout": {
+          "label": "Макет",
+          "description": "",
+          "option": {
+            "comfortable": "Удобно",
+            "compact": "Компактно"
+          }
+        },
+        "summary": {
+          "label": "",
+          "description": "",
+          "option": {
+            "detailed": "",
+            "count": "",
+            "hidden": "Скрыто"
+          }
+        },
+        "sections": {
+          "label": "",
+          "description": ""
+        },
+        "collapsedSections": {
+          "label": "",
+          "description": ""
+        },
         "newReleaseWithin": {
           "label": "Считать релиз новым в течение",
-          "description": "Пример: 1w (1 неделя), 10M (10 месяцев). Допустимые единицы: h (часы), d (дни), w (недели), M (месяцы), y (годы). Оставьте пустым, чтобы не выделять новые релизы."
+          "description": "Пример: 1w (1 неделя), 10M (10 месяцев). Допустимые единицы: h (часы), d (дни), w (недели), M (месяцы), y (годы). Оставьте пустым, чтобы не выделять новые релизы.",
+          "option": {
+            "never": "",
+            "1d": "1 дней",
+            "3d": "3 дней",
+            "1w": "1 неделя",
+            "2w": "",
+            "1M": "1 месяц",
+            "3M": "3 месяцев"
+          }
         },
         "staleReleaseWithin": {
           "label": "Считать релиз устаревшим через",
-          "description": "Пример: 1w (1 неделя), 10M (10 месяцев). Допустимые единицы: h (часы), d (дни), w (недели), M (месяцы), y (годы). Оставьте пустым, чтобы не выделять устаревшие релизы."
+          "description": "Пример: 1w (1 неделя), 10M (10 месяцев). Допустимые единицы: h (часы), d (дни), w (недели), M (месяцы), y (годы). Оставьте пустым, чтобы не выделять устаревшие релизы.",
+          "option": {
+            "never": "",
+            "1M": "1 месяц",
+            "3M": "3 месяцев",
+            "6M": "6 месяцев",
+            "1y": "1 год",
+            "2y": "2 лет"
+          }
         },
-        "showOnlyHighlighted": {
-          "label": "Показывать только выделенные",
-          "description": "Показывать только новые или устаревшие релизы в соответствии с настройками выше."
-        },
-        "showDetails": {
-          "label": "Показывать подробности"
-        },
-        "showOnlyIcon": {
-          "label": "Показывать только иконку"
-        },
-        "topReleases": {
-          "label": "Количество релизов",
-          "description": "Максимальное количество последних релизов для отображения. Ноль — без ограничений."
+        "showChangelogPreview": {
+          "label": "",
+          "description": ""
         },
         "repositories": {
           "label": "Репозитории",
@@ -4866,36 +4898,106 @@
           }
         }
       },
-      "not-found": "Не найдено",
-      "pre-release": "Предрелиз",
-      "archived": "В архиве",
-      "forked": "Форк",
+      "summary": {
+        "newReleases": "{count, plural, one {new release} other {new releases}}",
+        "newShort": "новые",
+        "tracked": "",
+        "caughtUp": "",
+        "outdated": "{count, plural, one {running an older version} other {running older versions}}",
+        "outdatedShort": "устарела",
+        "failing": "",
+        "failingShort": "",
+        "latest": "",
+        "issues": ""
+      },
+      "section": {
+        "new": {
+          "label": "Создание",
+          "description": ""
+        },
+        "attention": {
+          "label": "Требует внимания",
+          "description": ""
+        },
+        "upToDate": {
+          "label": "Актуально",
+          "description": ""
+        },
+        "quiet": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "status": {
+        "new": "",
+        "outdated": "",
+        "error": "",
+        "upToDate": "актуально",
+        "quiet": ""
+      },
+      "tag": {
+        "new": "Создание",
+        "preRelease": "",
+        "resolvedFrom": "",
+        "quiet": "",
+        "archived": "В архиве",
+        "fork": ""
+      },
+      "issue": {
+        "affected": "{count, plural, one {# repository affected} other {# repositories affected}}",
+        "rateLimited": {
+          "title": "",
+          "hint": ""
+        },
+        "notFound": {
+          "title": "",
+          "hint": ""
+        },
+        "noMatchingVersion": {
+          "title": "",
+          "hint": ""
+        },
+        "noReleasesFound": {
+          "title": "",
+          "hint": ""
+        },
+        "invalidIdentifier": {
+          "title": "Неверный идентификатор",
+          "hint": ""
+        },
+        "noProviderSelected": {
+          "title": "Провайдер не выбран",
+          "hint": ""
+        },
+        "noProviderResponse": {
+          "title": "",
+          "hint": ""
+        },
+        "unexpected": {
+          "title": "",
+          "hint": ""
+        }
+      },
+      "markViewed": "Отметить как просмотренное",
+      "markAllViewed": "",
+      "markEntryViewed": "",
+      "viewed": "",
+      "copyVersion": "",
+      "copied": "Скопировано",
+      "published": "",
+      "whatChanged": "",
+      "noNotes": "",
+      "changes": "{count, plural, one {# change} other {# changes}}",
       "starsCount": "Звёзды",
       "forksCount": "Форки",
-      "issuesCount": "Открытые issues",
-      "markViewed": "Отметить как просмотренное",
-      "openProjectPage": "Открыть страницу проекта",
-      "openReleasePage": "Открыть страницу релиза",
-      "releaseDescription": "Описание релиза",
-      "projectDescription": "Описание проекта",
+      "openIssues": "{count, plural, one {# open issue} other {# open issues}}",
+      "created": "Создано",
+      "releasePage": "",
+      "projectPage": "",
       "runningVersions": "Запущенные версии",
       "upToDate": "Актуально",
       "updateAvailable": "Доступно обновление",
-      "unknownStatus": "Неизвестно",
-      "created": "Создано",
-      "error": {
-        "label": "Ошибка",
-        "messages": {
-          "invalidIdentifier": "Неверный идентификатор",
-          "noMatchingVersion": "Подходящая версия не найдена",
-          "noReleasesFound": "Релизы не найдены",
-          "noProviderSelected": "Провайдер не выбран",
-          "noProviderResponse": "Нет ответа от провайдера",
-          "unexpected": "Неожиданная ошибка провайдера"
-        }
-      },
-      "expandDetails": "Показать подробности для {name}",
-      "collapseDetails": "Скрыть подробности для {name}"
+      "unknownStatus": "Неизвестно"
     },
     "networkControllerSummary": {
       "advanced": {
@@ -6093,6 +6195,18 @@
       "addWidget": "Добавить виджет",
       "addApp": "Добавить приложение",
       "connectService": "Подключить сервис"
+    },
+    "urlDrop": {
+      "hint": "",
+      "resolving": "",
+      "notification": {
+        "success": {
+          "message": ""
+        },
+        "full": {
+          "message": ""
+        }
+      }
     },
     "setupChecklist": {
       "title": "Сделайте эту панель полезной",
@@ -8699,6 +8813,14 @@
     "conversationActions": "Действия с чатом",
     "searchConversations": "Поиск по чатам",
     "noMatchingConversations": "Нет подходящих чатов",
+    "historyError": {
+      "title": "",
+      "load": "",
+      "loadMessages": "",
+      "saveMessages": "",
+      "switch": "",
+      "retry": ""
+    },
     "moreActions": "Другие действия с ответом",
     "renameConversation": {
       "action": "Переименовать",
@@ -8818,6 +8940,9 @@
     },
     "mentions": {
       "menu": "Добавить контекст Homarr",
+      "back": "",
+      "loading": "",
+      "empty": "",
       "context": "Контекст",
       "app": "Приложения",
       "integration": "Интеграции",
@@ -8832,6 +8957,8 @@
     },
     "commands": {
       "menu": "Команды Ассистента",
+      "hint": "",
+      "empty": "",
       "health": "Подготовить проверку состояния сервисов",
       "explore": "Подготовить обзор этого экземпляра Homarr",
       "media": "Подготовить поиск медиа",
@@ -9014,6 +9141,7 @@
     "approvalDescription": "Проверьте это изменение перед выполнением.",
     "approveAndRun": "Одобрить и выполнить",
     "deny": "Отклонить",
+    "approvalError": "",
     "autoApproval": {
       "label": "Автоматическое одобрение",
       "composerLabel": "Одобрять за меня",
