@@ -52,9 +52,9 @@ export const UserButtonClient = ({ avatar, isAdmin, isDockerEnabled, boardSwitch
 
   if (replay)
     return (
-      <UnstyledButton aria-label={t("open")} disabled>
+      <ActionIcon aria-label={t("open")} variant="subtle" color="gray" size={44} radius="xl" disabled>
         {avatar}
-      </UnstyledButton>
+      </ActionIcon>
     );
 
   return (
