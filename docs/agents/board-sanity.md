@@ -42,7 +42,7 @@ The two instances need separate migrated databases. `disposable: true` authorize
 
 ## CI and release evidence
 
-For a manual CI run, dispatch `ci.yml` with `--ref <candidate branch>`. Its optional `ref` input must resolve to the dispatched commit; publishing still requires that input. CI never checks out a different ref supplied inside a default-branch run.
+The sanity harness uses the triggering workflow commit; the tested images retain their separately verified source SHAs. For a manual CI run, dispatch `ci.yml` with `--ref <candidate branch>`. Its optional `ref` input must resolve to the dispatched commit; publishing still requires that input. CI never checks out a different ref supplied inside a default-branch run.
 
 The existing Fast gate remains the source-validation gate. CI records targeted coverage and runs browser scenarios when the existing amd64 preview is available. Fork/draft PRs without a preview have **pending browser evidence**, not passing assertions. Resolve missing exact-source images or run a local pair and obtain independent review before approval.
 

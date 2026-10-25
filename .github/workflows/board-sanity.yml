@@ -79,17 +79,11 @@ jobs:
               exit 1
               ;;
           esac
-      - name: Check out the PR harness
-        if: github.event_name == 'pull_request'
-        uses: actions/checkout@v7
-        with:
-          ref: ${{ github.event.pull_request.head.sha }}
-          fetch-depth: 0
-          persist-credentials: false
       - name: Check out the caller-scoped harness
-        if: github.event_name != 'pull_request'
         uses: actions/checkout@v7
         with:
+          # The harness follows the caller's cache scope. Target images retain
+          # their own verified source SHAs, including post-version release commits.
           ref: ${{ github.sha }}
           fetch-depth: 0
           persist-credentials: false
