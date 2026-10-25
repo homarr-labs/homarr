@@ -7,7 +7,7 @@ import { scenarios } from "./fixtures.mts";
 const all = scenarios.map((scenario) => scenario.id);
 const mappings = [
   {
-    match: /^(apps\/nextjs\/src\/(components\/board|app\/\[locale\]\/boards)|packages\/boards\/)/,
+    match: /^(apps\/nextjs\/src\/(components\/board|app\/\[locale\]\/(boards|debug\/board))|packages\/boards\/)/,
     reason: "Board rendering or editing",
     scenarios: all,
   },
@@ -22,7 +22,12 @@ const mappings = [
     reason: "Shared theme, translations, or provider dependency",
     scenarios: all,
   },
-  { match: /^packages\/auth\//, reason: "Seeded-session access and board authorization", scenarios: all },
+  {
+    match: /^packages\/auth\//,
+    reason: "Board access with seeded sessions; sign-in behavior requires a separate coverage decision",
+    scenarios: all,
+    requiresCoverageDecision: true,
+  },
   {
     match: /^packages\/widgets\/src\/(clock|widget|shared|registry|manifest)/,
     reason: "Representative fixture widget or shared widget runtime",
@@ -79,7 +84,7 @@ export function selectPaths(
   for (const path of [...changedPaths].toSorted()) {
     const matches = mappings.filter((mapping) => mapping.match.test(path));
     if (
-      matches.length === 0 &&
+      (matches.length === 0 || matches.some((mapping) => mapping.requiresCoverageDecision)) &&
       !noBrowserImpact.test(path) &&
       !coverageDecisions.some((decision) => decision.path === path)
     )

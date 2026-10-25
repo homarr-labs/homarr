@@ -159,3 +159,55 @@ test("stale coverage decisions cannot exempt later edits of the same file", () =
   decisions[0].blobSha = "deleted";
   assert.deepEqual(selectPaths([path], [], decisions, new Map([[path, "deleted"]])).unmappedPaths, []);
 });
+
+test("PR image provenance preserves the exact requested manifest rather than the config ID", async () => {
+  const { verifyImageSource } = await import("./provenance.mts");
+  const revision = "a".repeat(40);
+  const releaseDigest = `ghcr.io/homarr-labs/homarr@sha256:${"b".repeat(64)}`;
+  const previewDigest = `ghcr.io/homarr-labs/homarr-test@sha256:${"c".repeat(64)}`;
+  const inspectedImage = {
+    Id: `sha256:${"d".repeat(64)}`,
+    Architecture: "amd64",
+    Os: "linux",
+    RepoDigests: [releaseDigest, previewDigest],
+    Config: { Labels: { "org.opencontainers.image.revision": revision } },
+  };
+  assert.deepEqual(verifyImageSource(inspectedImage, revision, previewDigest), {
+    digest: `sha256:${"c".repeat(64)}`,
+    source: "oci-label",
+  });
+  assert.deepEqual(verifyImageSource(inspectedImage, revision, releaseDigest), {
+    digest: `sha256:${"b".repeat(64)}`,
+    source: "oci-label",
+  });
+  assert.throws(
+    () => verifyImageSource(inspectedImage, revision, `ghcr.io/homarr-labs/homarr-test@sha256:${"e".repeat(64)}`),
+    /Requested image digest does not match/,
+  );
+  assert.throws(
+    () =>
+      verifyImageSource({ ...inspectedImage, RepoDigests: [] }, revision, "ghcr.io/homarr-labs/homarr-test:pr-test"),
+    /exact inspected repository digest/,
+  );
+  assert.deepEqual(verifyImageSource({ ...inspectedImage, RepoDigests: [] }, revision, "homarr:local"), {
+    digest: inspectedImage.Id,
+    source: "oci-label",
+  });
+});
+
+test("the board debug workbench route selects its own board scenarios", () => {
+  const selection = selectPaths(["apps/nextjs/src/app/[locale]/debug/board/sanity/page.tsx"]);
+  assert.equal(selection.scenarios.length, 4);
+  assert.deepEqual(selection.unmappedPaths, []);
+});
+
+test("seeded-session checks cannot silently claim coverage for sign-in changes", () => {
+  const selection = selectPaths(["packages/auth/configuration.ts"]);
+  assert.equal(selection.scenarios.length, 4);
+  assert.deepEqual(selection.unmappedPaths, ["packages/auth/configuration.ts"]);
+  assert.ok(
+    selection.scenarios.every((scenario) =>
+      scenario.reasons.some((reason) => reason.includes("sign-in behavior requires a separate coverage decision")),
+    ),
+  );
+});

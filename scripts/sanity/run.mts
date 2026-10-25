@@ -149,7 +149,7 @@ async function startTarget(input: TargetConfig, sourceSha: string): Promise<Targ
     const inspected = JSON.parse(
       execFileSync("docker", ["image", "inspect", input.image], { encoding: "utf8" }),
     )[0] as InspectedImage;
-    const verified = verifyImageSource(inspected, sourceSha);
+    const verified = verifyImageSource(inspected, sourceSha, input.image);
     identity.imageDigest = verified.digest;
     identity.sourceVerification = verified.source;
     const directory = await mkdtemp(path.join(tmpdir(), "homarr-sanity-"));

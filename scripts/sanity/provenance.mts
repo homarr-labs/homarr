@@ -26,15 +26,33 @@ export function extractBuildKitRevision(provenance: unknown, platform: string): 
   return revision;
 }
 
-export function verifyImageSource(inspected: InspectedImage, expectedSource: string) {
+export function verifyImageSource(inspected: InspectedImage, expectedSource: string, requestedImage: string) {
   if (inspected.Os !== "linux" || inspected.Architecture !== "amd64")
     throw new Error("Initial image sanity environment requires linux/amd64");
-  const repositoryDigest = inspected.RepoDigests?.find((digest) =>
-    /^ghcr\.io\/homarr-labs\/homarr@sha256:[a-f0-9]{64}$/.test(digest),
+  let repositoryDigest: string | undefined;
+  const registryTarget = requestedImage.match(
+    /^(ghcr\.io\/homarr-labs\/homarr(?:-test)?)(?::[^@]+)?(?:@(sha256:[a-f0-9]{64}))?$/,
   );
+  if (registryTarget) {
+    const repository = registryTarget[1];
+    const requestedDigest = registryTarget[2];
+    if (requestedDigest) {
+      repositoryDigest = `${repository}@${requestedDigest}`;
+      if (!inspected.RepoDigests?.includes(repositoryDigest))
+        throw new Error("Requested image digest does not match the inspected image");
+    } else {
+      const candidates = inspected.RepoDigests?.filter((digest) => digest.startsWith(`${repository}@sha256:`)) ?? [];
+      if (candidates.length !== 1)
+        throw new Error("Registry image needs one exact inspected repository digest; supply an immutable digest");
+      repositoryDigest = candidates[0];
+    }
+  } else if (requestedImage.includes("/") || requestedImage.includes("@")) {
+    throw new Error("Unsupported registry image; use the Homarr release or PR image repository");
+  }
+  let digest = inspected.Id;
+  if (repositoryDigest) digest = repositoryDigest.slice(repositoryDigest.indexOf("@") + 1);
   const revision = inspected.Config?.Labels?.["org.opencontainers.image.revision"];
-  if (revision === expectedSource)
-    return { digest: repositoryDigest?.split("@")[1] ?? inspected.Id, source: "oci-label" as const };
+  if (revision === expectedSource) return { digest, source: "oci-label" as const };
   if (!repositoryDigest)
     throw new Error("Mismatched image label and no immutable repository digest for provenance verification");
   // Historical release labels predate the version commit. Read the build's source from
@@ -47,5 +65,5 @@ export function verifyImageSource(inspected: InspectedImage, expectedSource: str
   const actualSource = extractBuildKitRevision(JSON.parse(serialized), "linux/amd64");
   if (actualSource !== expectedSource)
     throw new Error(`Immutable image provenance revision ${actualSource} does not match ${expectedSource}`);
-  return { digest: repositoryDigest.split("@")[1] ?? inspected.Id, source: "buildkit-attestation" as const };
+  return { digest, source: "buildkit-attestation" as const };
 }
