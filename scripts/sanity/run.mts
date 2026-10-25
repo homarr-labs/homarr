@@ -225,6 +225,18 @@ async function captureScenario(target: Target, scenario: (typeof scenarios)[numb
     },
   ]);
   const page = await context.newPage();
+  await page.addInitScript(() => {
+    document.addEventListener(
+      "DOMContentLoaded",
+      () => {
+        const style = document.createElement("style");
+        style.textContent =
+          "*, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }";
+        document.head.append(style);
+      },
+      { once: true },
+    );
+  });
   page.setDefaultTimeout(15000);
   await page.clock.setFixedTime(fixtureTime);
   const boardName = target.fixture.boardName(scenario.id);
@@ -244,7 +256,7 @@ async function captureScenario(target: Target, scenario: (typeof scenarios)[numb
     let expectedPlacements = placements;
     if (scenario.viewport.width < 768) expectedPlacements = mobilePlacements;
     checks.push(...(await geometry(page, boardName, expectedPlacements)));
-    if (scenario.edit) await editBoard(page, target, boardName, checks);
+    if (scenario.edit) expectedPlacements = await editBoard(page, target, boardName, checks);
     else {
       const scroll = page.locator(`[data-section-id='${boardName}-scrollable']`);
       const scrollResult = await scroll.evaluate((element) => {
@@ -265,7 +277,22 @@ async function captureScenario(target: Target, scenario: (typeof scenarios)[numb
       });
     }
     addCheck(checks, "runtime-errors", "No uncaught browser errors", "[]", JSON.stringify(errors), errors.length === 0);
-    result.image = `data:image/png;base64,${(await page.screenshot({ fullPage: true, animations: "disabled" })).toString("base64")}`;
+    await waitForStableBoardGeometry(page);
+    const captureGeometry = await readGeometry(page, boardName);
+    if (scenario.edit)
+      checks.push(
+        ...checkGeometry(expectedPlacements, captureGeometry).map((check) => ({ ...check, id: `final:${check.id}` })),
+      );
+    result.image = `data:image/png;base64,${(await page.screenshot({ fullPage: true })).toString("base64")}`;
+    const afterCaptureGeometry = await readGeometry(page, boardName);
+    addCheck(
+      checks,
+      "capture-stability",
+      "Screenshot preserves the measured final geometry",
+      JSON.stringify(captureGeometry),
+      JSON.stringify(afterCaptureGeometry),
+      JSON.stringify(captureGeometry) === JSON.stringify(afterCaptureGeometry),
+    );
     if (config.captureSnapshots) result.snapshot = await snapshot(page);
   } catch (error) {
     const message = String(error).slice(0, 4000);
@@ -282,7 +309,7 @@ async function captureScenario(target: Target, scenario: (typeof scenarios)[numb
       result.status = "error";
       result.error = message;
     }
-    result.image = `data:image/png;base64,${(await page.screenshot({ fullPage: true, animations: "disabled" }).catch(() => Buffer.alloc(0))).toString("base64")}`;
+    result.image = `data:image/png;base64,${(await page.screenshot({ fullPage: true }).catch(() => Buffer.alloc(0))).toString("base64")}`;
     if (result.image.endsWith("base64,")) delete result.image;
   } finally {
     result.durationMs = Math.round(performance.now() - started);
@@ -295,8 +322,46 @@ async function waitForBoardHydration(page: Page) {
   await page.locator('[data-testid="board-canvas"][data-board-hydrated="true"]').waitFor({ timeout: 30_000 });
 }
 
+async function waitForStableBoardGeometry(page: Page) {
+  await page.evaluate(async () => {
+    await document.fonts.ready;
+    let previous = "";
+    let stableFrames = 0;
+    const deadline = performance.now() + 5000;
+    while (performance.now() < deadline) {
+      await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
+      const canvas = document.querySelector<HTMLElement>('[data-testid="board-canvas"]');
+      const content = canvas?.querySelector<HTMLElement>("[data-board-canvas-content]");
+      if (!canvas || !content) throw new Error("Board canvas is missing");
+      const outer = canvas.getBoundingClientRect();
+      const inner = content.getBoundingClientRect();
+      const current = JSON.stringify({
+        outer: outer.toJSON(),
+        inner: inner.toJSON(),
+        scale: canvas.dataset.canvasScale,
+        entries: Array.from(canvas.querySelectorAll("[data-grid-item-id]"), (element) =>
+          element.getBoundingClientRect().toJSON(),
+        ),
+      });
+      const fitted =
+        outer.width > 0 && Math.abs(outer.width - inner.width) <= 1 && Math.abs(outer.height - inner.height) <= 1;
+      if (fitted && document.fonts.status === "loaded" && current === previous) {
+        stableFrames++;
+        if (stableFrames >= 3) return;
+      } else stableFrames = 0;
+      previous = current;
+    }
+    throw new Error("Board geometry did not settle: canvas size observers are still pending");
+  });
+}
+
 async function geometry(page: Page, boardName: string, expected: typeof placements) {
-  const observed = await page.locator("[data-grid-item-id][data-grid-item-type='section']").evaluateAll(
+  await waitForStableBoardGeometry(page);
+  return checkGeometry(expected, await readGeometry(page, boardName));
+}
+
+async function readGeometry(page: Page, boardName: string) {
+  return await page.locator("[data-grid-item-id][data-grid-item-type='section']").evaluateAll(
     (elements, prefix) =>
       elements.map((element) => {
         const parent = element.parentElement?.closest("[data-grid-section-id]");
@@ -313,7 +378,6 @@ async function geometry(page: Page, boardName: string, expected: typeof placemen
       }),
     boardName,
   );
-  return checkGeometry(expected, observed);
 }
 
 async function editBoard(page: Page, target: Target, boardName: string, checks: SanityCheck[]) {
@@ -369,6 +433,7 @@ async function editBoard(page: Page, target: Target, boardName: string, checks: 
     "collapsed after reload; expanded after click",
     true,
   );
+  return editedPlacements;
 }
 
 async function snapshot(page: Page): Promise<string | undefined> {
