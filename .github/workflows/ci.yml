@@ -64,6 +64,9 @@ jobs:
       builds-app: ${{ steps.plan.outputs.builds-app }}
       typecheck-matrix: ${{ steps.plan.outputs.typecheck-matrix }}
       has-typechecks: ${{ steps.plan.outputs.has-typechecks }}
+      sanity-needed: ${{ steps.sanity.outputs.needed }}
+      sanity-base: ${{ steps.sanity.outputs.base }}
+      sanity-head: ${{ steps.sanity.outputs.head }}
     env:
       TURBO_SCM_BASE: ${{ github.event.pull_request.base.sha || github.event.merge_group.base_sha || github.event.before || 'HEAD~1' }}
       TURBO_SCM_HEAD: ${{ github.sha }}
@@ -105,6 +108,31 @@ jobs:
             "typecheck-matrix=\($matrix | tojson)",
             "has-typechecks=\($typechecks | length > 0)"
           ' "$RUNNER_TEMP/turbo-plan.json" >> "$GITHUB_OUTPUT"
+
+      - name: Select affected board scenarios
+        id: sanity
+        if: github.event_name == 'pull_request' || github.event_name == 'merge_group' || github.event_name == 'workflow_dispatch'
+        env:
+          SANITY_BASE: ${{ github.event.pull_request.base.sha || github.event.merge_group.base_sha || 'origin/dev' }}
+          SANITY_HEAD: ${{ github.event.pull_request.head.sha || 'HEAD' }}
+        run: |
+          mkdir -p sanity-artifacts
+          bun run sanity:select --base "$SANITY_BASE" --head "$SANITY_HEAD" \
+            --coverage-decisions scripts/sanity/coverage-decisions.json \
+            --output sanity-artifacts/selection.json
+          jq -r '"needed=\(.scenarios | length > 0)", "base=\(.baseSha)", "head=\(.headSha)"' \
+            sanity-artifacts/selection.json >> "$GITHUB_OUTPUT"
+          if [[ "$(jq '.scenarios | length' sanity-artifacts/selection.json)" -gt 0 ]]; then
+            echo 'Board scenarios selected. Browser evidence is pending until an exact-source preview is available; fork and draft PRs do not automatically build images.' >> "$GITHUB_STEP_SUMMARY"
+          fi
+      - name: Upload board coverage plan
+        if: always() && (github.event_name == 'pull_request' || github.event_name == 'merge_group' || github.event_name == 'workflow_dispatch')
+        uses: actions/upload-artifact@v7
+        with:
+          name: board-sanity-selection
+          path: sanity-artifacts/selection.json
+          if-no-files-found: error
+          retention-days: 30
 
   workspace-checks:
     name: Lint and build
@@ -393,6 +421,23 @@ jobs:
         run: |
           docker buildx imagetools create -t "${PREVIEW_IMAGE}:sha-${SOURCE_SHA}-amd64" \
             "${PREVIEW_IMAGE}@${DIGEST}"
+
+  board-sanity:
+    name: Board sanity
+    needs: [validation-plan, preview-amd64]
+    if: >-
+      !cancelled() && needs.validation-plan.result == 'success' &&
+      needs.validation-plan.outputs.sanity-needed == 'true' &&
+      needs.preview-amd64.result == 'success' && needs.preview-amd64.outputs.digest != ''
+    uses: ./.github/workflows/board-sanity.yml
+    permissions:
+      contents: read
+      packages: read
+    with:
+      mode: pr
+      base-ref: ${{ needs.validation-plan.outputs.sanity-base }}
+      head-ref: ${{ needs.validation-plan.outputs.sanity-head }}
+      candidate-image: ghcr.io/homarr-labs/homarr-test@${{ needs.preview-amd64.outputs.digest }}
 
   preview-arm64:
     name: Build arm64 preview image

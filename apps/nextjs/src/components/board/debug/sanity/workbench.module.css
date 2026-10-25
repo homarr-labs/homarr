@@ -1,0 +1,228 @@
+.root {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  max-width: 1800px;
+  margin: 0 auto;
+  padding: var(--mantine-spacing-lg);
+}
+
+.workspace {
+  display: grid;
+  grid-template-columns: 240px minmax(0, 1fr);
+  gap: var(--mantine-spacing-lg);
+  align-items: start;
+}
+
+.main,
+.sidebar {
+  min-width: 0;
+}
+
+.sidebar {
+  overflow: hidden;
+}
+
+.sidebarHeading {
+  padding: var(--mantine-spacing-md);
+}
+
+.scenarioButton {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--mantine-spacing-xs);
+  text-align: left;
+  padding: 14px 12px;
+  background: transparent;
+  color: inherit;
+  border: 0;
+  border-top: 1px solid var(--mantine-color-default-border);
+  cursor: pointer;
+}
+
+.scenarioButton strong,
+.scenarioButton small {
+  display: block;
+}
+
+.scenarioButton > span {
+  min-width: 0;
+}
+
+.scenarioButton > :last-child {
+  flex-shrink: 0;
+}
+
+.scenarioButton strong {
+  font-size: var(--mantine-font-size-xs);
+  font-weight: 600;
+}
+
+.scenarioButton small {
+  font-size: 11px;
+  color: var(--mantine-color-dimmed);
+  margin-top: 4px;
+}
+
+.scenarioButton:hover {
+  background: var(--mantine-color-default-hover);
+}
+
+.scenarioButton[aria-pressed="true"] {
+  background: var(--mantine-primary-color-light);
+  box-shadow: inset 3px 0 var(--mantine-primary-color-filled);
+}
+
+.scenarioButton:focus-visible {
+  outline: 2px solid var(--mantine-primary-color-filled);
+  outline-offset: -3px;
+}
+
+.reasonList,
+.pathList {
+  padding-left: var(--mantine-spacing-md);
+  margin-bottom: 0;
+  overflow-wrap: anywhere;
+  font-size: var(--mantine-font-size-xs);
+}
+
+.reasonList {
+  color: var(--mantine-color-dimmed);
+}
+
+.moreReasons {
+  margin-top: var(--mantine-spacing-sm);
+  font-size: var(--mantine-font-size-xs);
+}
+
+.moreReasons summary {
+  cursor: pointer;
+  color: var(--mantine-color-dimmed);
+}
+
+.reasonList li + li,
+.pathList li + li {
+  margin-top: 6px;
+}
+
+.capturePair {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: var(--mantine-spacing-sm);
+}
+
+.capture {
+  margin: 0;
+  min-width: 0;
+  border: 1px solid var(--mantine-color-default-border);
+  border-radius: var(--mantine-radius-sm);
+  overflow: hidden;
+}
+
+.capture figcaption {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 10px;
+  font-size: var(--mantine-font-size-xs);
+  font-weight: 500;
+  background: var(--mantine-color-default);
+}
+
+.capture figcaption span:last-child {
+  color: var(--mantine-color-dimmed);
+  font-variant-numeric: tabular-nums;
+}
+
+.captureImage {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.difference {
+  position: relative;
+  isolation: isolate;
+  background: #000;
+}
+
+.difference[data-ready="false"] {
+  visibility: hidden;
+}
+
+.differenceImage {
+  display: block;
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  mix-blend-mode: difference;
+}
+
+.checkTable th,
+.checkTable td {
+  vertical-align: top;
+  overflow-wrap: anywhere;
+}
+
+.checkTable th:first-child {
+  width: 30%;
+}
+
+.provenance {
+  display: grid;
+  grid-template-columns: minmax(80px, auto) minmax(0, 1fr);
+  gap: 6px 12px;
+  font-size: var(--mantine-font-size-xs);
+  margin: var(--mantine-spacing-xs) 0 0;
+}
+
+.provenance dt {
+  color: var(--mantine-color-dimmed);
+}
+
+.provenance dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.summary {
+  cursor: pointer;
+  font-weight: 600;
+  font-size: var(--mantine-font-size-sm);
+}
+
+.filename {
+  overflow-wrap: anywhere;
+}
+
+.frameViewport {
+  overflow: auto;
+  max-width: 100%;
+  max-height: 650px;
+  border: 1px solid var(--mantine-color-default-border);
+  border-radius: var(--mantine-radius-sm);
+}
+
+.frameViewport iframe {
+  display: block;
+  border: 0;
+}
+
+@media (max-width: 900px) {
+  .workspace {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .root {
+    padding: var(--mantine-spacing-sm);
+  }
+
+  .capturePair {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

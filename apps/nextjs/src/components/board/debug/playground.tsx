@@ -106,6 +106,9 @@ export const BoardDebugPlayground = () => {
           </Text>
         </div>
         <Group>
+          <Button component="a" href="/debug/board/sanity" variant="default">
+            Sanity workbench
+          </Button>
           <FileButton accept="application/json,.json" onChange={(file) => void upload(file)} resetRef={resetFileRef}>
             {(props) => (
               <Button {...props} leftSection={<IconUpload size={16} />}>

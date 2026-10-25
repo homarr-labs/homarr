@@ -1,0 +1,22 @@
+declare const classes: {
+  readonly root: string;
+  readonly workspace: string;
+  readonly main: string;
+  readonly sidebar: string;
+  readonly sidebarHeading: string;
+  readonly scenarioButton: string;
+  readonly reasonList: string;
+  readonly moreReasons: string;
+  readonly pathList: string;
+  readonly capturePair: string;
+  readonly capture: string;
+  readonly captureImage: string;
+  readonly difference: string;
+  readonly differenceImage: string;
+  readonly checkTable: string;
+  readonly provenance: string;
+  readonly summary: string;
+  readonly filename: string;
+  readonly frameViewport: string;
+};
+export default classes;

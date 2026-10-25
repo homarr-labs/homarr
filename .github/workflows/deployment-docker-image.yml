@@ -16,6 +16,7 @@ on:
         description: Send notifications when redeploying an existing release
 
 permissions:
+  actions: read # Required to retain the selected sanity evidence with releases
   contents: write # Required to update package.json version
   packages: write # Required for pushing to GHCR
 
@@ -140,17 +141,24 @@ jobs:
     timeout-minutes: 15
     outputs:
       digest: ${{ steps.build.outputs.digest }}
+      source-sha: ${{ steps.source.outputs.sha }}
     steps:
       - uses: actions/checkout@v7
         with:
           persist-credentials: false
           ref: ${{ needs.release.outputs.git_ref }}
 
+      - name: Record image source
+        id: source
+        run: echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+
       - name: Docker meta
         id: meta
         uses: docker/metadata-action@dc802804100637a589fabce1cb79ff13a1411302 # v6.2.0
         with:
           images: "${{ env.GHCR_REPO }}"
+          labels: |
+            org.opencontainers.image.revision=${{ steps.source.outputs.sha }}
 
       - name: Log in to the Container registry
         uses: docker/login-action@81c6f93d4bc991e510b342a00b419b3bb4efc5c6 # v4.7.0
@@ -178,6 +186,87 @@ jobs:
             TURBO_REMOTE_CACHE_SIGNATURE_KEY=${{ secrets.TURBO_REMOTE_CACHE_SIGNATURE_KEY }}
         env:
           SKIP_ENV_VALIDATION: true
+      - name: Index the existing amd64 image by source
+        env:
+          SOURCE_SHA: ${{ steps.source.outputs.sha }}
+          DIGEST: ${{ steps.build.outputs.digest }}
+        run: |
+          docker buildx imagetools create -t "${GHCR_REPO}:sha-${SOURCE_SHA}-amd64" \
+            "${GHCR_REPO}@${DIGEST}"
+
+  sanity-baseline:
+    name: Resolve last validated release
+    needs: release
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      source-sha: ${{ steps.baseline.outputs.source-sha }}
+      image: ${{ steps.baseline.outputs.image }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ needs.release.outputs.git_ref }}
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Resolve the cumulative comparison range
+        id: baseline
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          mkdir -p sanity-baseline
+          echo 'No verified release baseline was resolved.' > sanity-baseline/status.txt
+          valid_baseline() {
+            jq -e '.schemaVersion == 1 and (.sourceSha | test("^[a-f0-9]{40}$")) and
+              (.image | test("^ghcr.io/homarr-labs/homarr@sha256:[a-f0-9]{64}$"))' "$1" >/dev/null &&
+              git merge-base --is-ancestor "$(jq -r '.sourceSha' "$1")" HEAD &&
+              [[ "$(jq -r '.sourceSha' "$1")" != "$(git rev-parse HEAD)" ]]
+          }
+          gh api --paginate "repos/${GITHUB_REPOSITORY}/releases?per_page=100" > "$RUNNER_TEMP/sanity-releases.json"
+          while IFS= read -r asset_url; do
+            gh api -H 'Accept: application/octet-stream' "$asset_url" > "$RUNNER_TEMP/sanity-baseline.json"
+            if valid_baseline "$RUNNER_TEMP/sanity-baseline.json"; then
+              cp "$RUNNER_TEMP/sanity-baseline.json" sanity-baseline/baseline.json
+              break
+            fi
+          done < <(jq -sr --arg branch "$GITHUB_REF_NAME" '
+            add | sort_by(.published_at) | reverse | .[] |
+            select(.draft == false and (.prerelease == false or $branch == "beta" or $branch == "next")) |
+            .assets[] | select(.name == "board-sanity-baseline.json") | .url
+          ' "$RUNNER_TEMP/sanity-releases.json")
+          if [[ ! -f sanity-baseline/baseline.json ]] && [[ -f scripts/sanity/release-baseline.json ]]; then
+            if valid_baseline scripts/sanity/release-baseline.json; then
+              cp scripts/sanity/release-baseline.json sanity-baseline/baseline.json
+            fi
+          fi
+          if [[ ! -f sanity-baseline/baseline.json ]]; then
+            echo '::error::No validated ancestor release baseline. Supply the reviewed immutable bootstrap record in scripts/sanity/release-baseline.json; never replace it with the last push or a mutable image tag.'
+            exit 1
+          fi
+          jq -r '"source-sha=\(.sourceSha)", "image=\(.image)"' sanity-baseline/baseline.json >> "$GITHUB_OUTPUT"
+          echo 'Resolved a pinned ancestor release; selection covers its full diff to the candidate.' > sanity-baseline/status.txt
+      - name: Upload baseline resolution
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: board-sanity-release-baseline
+          path: sanity-baseline/
+          if-no-files-found: error
+          retention-days: 30
+
+  board-sanity:
+    name: Validate release board behavior
+    needs: [build-amd64, sanity-baseline]
+    uses: ./.github/workflows/board-sanity.yml
+    permissions:
+      contents: read
+      packages: read
+    with:
+      mode: release
+      base-ref: ${{ needs.sanity-baseline.outputs.source-sha }}
+      head-ref: ${{ needs.build-amd64.outputs.source-sha }}
+      base-image: ${{ needs.sanity-baseline.outputs.image }}
+      candidate-image: ghcr.io/${{ github.repository }}@${{ needs.build-amd64.outputs.digest }}
+
   build-arm64:
     name: Build docker image for arm64
     needs: release
@@ -185,17 +274,24 @@ jobs:
     timeout-minutes: 20
     outputs:
       digest: ${{ steps.build.outputs.digest }}
+      source-sha: ${{ steps.source.outputs.sha }}
     steps:
       - uses: actions/checkout@v7
         with:
           persist-credentials: false
           ref: ${{ needs.release.outputs.git_ref }}
 
+      - name: Record image source
+        id: source
+        run: echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+
       - name: Docker meta
         id: meta
         uses: docker/metadata-action@dc802804100637a589fabce1cb79ff13a1411302 # v6.2.0
         with:
           images: "${{ env.GHCR_REPO }}"
+          labels: |
+            org.opencontainers.image.revision=${{ steps.source.outputs.sha }}
 
       - name: Log in to the Container registry
         uses: docker/login-action@81c6f93d4bc991e510b342a00b419b3bb4efc5c6 # v4.7.0
@@ -266,7 +362,7 @@ jobs:
           repository: ${{ github.repository }}
   publish:
     name: Complete deployment and notify
-    needs: [release, build-amd64, build-arm64, extract-asset-amd64, extract-asset-arm64]
+    needs: [release, build-amd64, build-arm64, sanity-baseline, board-sanity, extract-asset-amd64, extract-asset-arm64]
     runs-on: ubuntu-latest
     timeout-minutes: 5
     env:
@@ -283,12 +379,46 @@ jobs:
           client-id: ${{ vars.RENOVATE_MERGE_CLIENT_ID }}
           permission-contents: write # required to publish the release
 
+      - name: Retain the exact release sanity evidence
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SOURCE_SHA: ${{ needs.build-amd64.outputs.source-sha }}
+          DIGEST: ${{ needs.build-amd64.outputs.digest }}
+          BASE_SHA: ${{ needs.sanity-baseline.outputs.source-sha }}
+          SCENARIO_COUNT: ${{ needs.board-sanity.outputs.scenario-count }}
+          SANITY_ARTIFACT: ${{ needs.board-sanity.outputs.artifact-name }}
+        run: |
+          gh run download "$GITHUB_RUN_ID" --repo "$GITHUB_REPOSITORY" \
+            --name "$SANITY_ARTIFACT" \
+            --dir "$RUNNER_TEMP/board-sanity"
+          test -f "$RUNNER_TEMP/board-sanity/selection.json"
+          if [[ "$SCENARIO_COUNT" -gt 0 ]]; then
+            test -f "$RUNNER_TEMP/board-sanity/report.json"
+          fi
+          jq -n --arg source "$SOURCE_SHA" --arg image "${GHCR_REPO}@${DIGEST}" \
+            --arg base "$BASE_SHA" --argjson count "$SCENARIO_COUNT" \
+            --arg run "${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}" \
+            '{schemaVersion: 1, sourceSha: $source, image: $image, selectionBaseSha: $base,
+              scenarioCount: $count, runUrl: $run, visualReview: "pending"}' \
+            > "$RUNNER_TEMP/board-sanity/board-sanity-baseline.json"
+
       - name: Log in to the Container registry
         uses: docker/login-action@81c6f93d4bc991e510b342a00b419b3bb4efc5c6 # v4.7.0
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Attach sanity evidence to the draft release
+        if: needs.release.outputs.skipped == 'false'
+        env:
+          GH_TOKEN: ${{ steps.obtainToken.outputs.token }}
+        run: |
+          evidence=("$RUNNER_TEMP/board-sanity/board-sanity-baseline.json" "$RUNNER_TEMP/board-sanity/selection.json")
+          if [[ -f "$RUNNER_TEMP/board-sanity/report.json" ]]; then
+            evidence+=("$RUNNER_TEMP/board-sanity/report.json")
+          fi
+          gh release upload --repo "$GITHUB_REPOSITORY" "$NEXT_VERSION" "${evidence[@]}" --clobber
 
       - name: Publish beta
         if: env.DEPLOY_BETA == 'true'
@@ -334,7 +464,17 @@ jobs:
   notify-failure:
     name: Notify deployment failure
     if: ${{ always() && (failure() || cancelled()) && (github.event_name != 'workflow_dispatch' || inputs['send-notifications']) }}
-    needs: [release, build-amd64, build-arm64, extract-asset-amd64, extract-asset-arm64, publish]
+    needs:
+      [
+        release,
+        build-amd64,
+        build-arm64,
+        sanity-baseline,
+        board-sanity,
+        extract-asset-amd64,
+        extract-asset-arm64,
+        publish,
+      ]
     runs-on: ubuntu-latest
     timeout-minutes: 2
     steps:
