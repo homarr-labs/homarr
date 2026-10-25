@@ -1,0 +1,16 @@
+packages/api/src/router/custom-widget/management-query-mappers.ts
+  h_d6e478ca18e517 7,135-137
+packages/widgets/src/_inputs/widget-custom-widget-configuration-input.tsx
+  h_d6e478ca18e517 39-40,96,108,123,129,150,171,177,183-191,259,265,275-281,290,337
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "e03e57c58ff5441a641520459788ff9957c2fd63",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
