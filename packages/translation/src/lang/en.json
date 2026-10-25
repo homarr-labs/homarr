@@ -4540,7 +4540,12 @@
       "contextMenu": {
         "copyName": "Copy name",
         "copyId": "Copy ID",
+        "setCategory": "Set Category",
         "clearFilters": "Clear filters"
+      },
+      "setCategory": {
+        "none": "No category",
+        "loadFailed": "Could not load categories. Please try again."
       },
       "footer": {
         "filter": "Filter downloads"

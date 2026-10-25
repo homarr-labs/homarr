@@ -6,7 +6,7 @@ import { downloadClientItemSchema } from "@homarr/integrations/downloads";
 import { createIntegrationAsync } from "@homarr/integrations/factory";
 import { downloadClientRequestHandler } from "@homarr/request-handler/downloads";
 
-import { createManyWidgetIntegrationMiddleware } from "../../middlewares/integration";
+import { createManyWidgetIntegrationMiddleware, createOneIntegrationMiddleware } from "../../middlewares/integration";
 import { PUBLIC_INTEGRATION_ERROR, settleIntegrationQueries } from "../../settle-integrations";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../../trpc";
 
@@ -177,6 +177,28 @@ export const downloadsRouter = createTRPCRouter({
           await integrationInstance.resumeItemAsync(input.item);
         }),
         ctx.integrations.map(({ id }) => id),
+      );
+    }),
+  getCategories: protectedProcedure
+    .concat(createOneIntegrationMiddleware("interact", "qBittorrent"))
+    .query(async ({ ctx }) => {
+      const integration = await createIntegrationAsync(ctx.integration);
+      return await integration.getCategoriesAsync();
+    }),
+  setCategory: protectedProcedure
+    .concat(createOneIntegrationMiddleware("interact", "qBittorrent"))
+    .input(
+      z.object({
+        // Accept exactly one torrent hash, never qBittorrent's "all" or hash-list syntax.
+        itemId: z.string().regex(/^(?:[a-fA-F0-9]{40}|[a-fA-F0-9]{64})$/),
+        category: z.string().max(1000),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const integration = await createIntegrationAsync(ctx.integration);
+      await runDownloadMutationsAsync(
+        [integration.setItemCategoryAsync(input.itemId, input.category)],
+        [ctx.integration.id],
       );
     }),
   deleteItem: protectedProcedure
