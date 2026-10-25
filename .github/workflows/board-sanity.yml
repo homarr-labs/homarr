@@ -48,11 +48,51 @@ jobs:
       CI: "true"
       NODE_ENV: development
     steps:
-      - uses: actions/checkout@v7
+      - name: Validate source context
+        env:
+          PULL_REQUEST_HEAD: ${{ github.event.pull_request.head.sha }}
+          PULL_REQUEST_BASE: ${{ github.event.pull_request.base.sha }}
+        shell: bash
+        run: |
+          if [[ ! "$BASE_REF" =~ ^[a-f0-9]{40}$ || ! "$HEAD_REF" =~ ^[a-f0-9]{40}$ ]]; then
+            echo '::error::Sanity targets must be full commit SHAs.' >&2
+            exit 1
+          fi
+          case "$SANITY_MODE:$GITHUB_EVENT_NAME" in
+            pr:pull_request)
+              if [[ "$HEAD_REF" != "$PULL_REQUEST_HEAD" || "$BASE_REF" != "$PULL_REQUEST_BASE" ]]; then
+                echo '::error::PR sanity targets must match the triggering pull request.' >&2
+                exit 1
+              fi
+              ;;
+            pr:workflow_dispatch|pr:merge_group|pr:push)
+              if [[ "$HEAD_REF" != "$GITHUB_SHA" ]]; then
+                echo '::error::Dispatch CI on the candidate branch; its target must match the dispatched commit.' >&2
+                exit 1
+              fi
+              ;;
+            release:push|release:workflow_dispatch)
+              # Semantic Release may create a version commit after the triggering SHA.
+              ;;
+            *)
+              echo '::error::Unsupported sanity mode or caller event.' >&2
+              exit 1
+              ;;
+          esac
+      - name: Check out the caller-scoped harness
+        uses: actions/checkout@v7
         with:
-          ref: ${{ inputs.head-ref }}
+          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
           fetch-depth: 0
           persist-credentials: false
+      - name: Fetch target history without executing it
+        shell: bash
+        run: |
+          for source_sha in "$BASE_REF" "$HEAD_REF"; do
+            if ! git cat-file -e "${source_sha}^{commit}"; then
+              git fetch --no-tags origin "$source_sha"
+            fi
+          done
       - name: Setup
         uses: ./tooling/github/setup
       - name: Select affected scenarios
@@ -83,7 +123,7 @@ jobs:
               done
             fi
             if [[ -z "$resolved" ]]; then
-              echo "::error::No existing amd64 image for ${source_sha}. Publish an exact-source preview or release candidate; this check never rebuilds a baseline."
+              echo "::error::No existing amd64 image for ${source_sha}. Publish an exact-source preview or release candidate; this check never rebuilds a baseline." >&2
               return 1
             fi
             if [[ "$resolved" == *@sha256:* ]]; then
@@ -113,6 +153,9 @@ jobs:
       - name: Install Chromium system dependencies
         if: steps.selection.outputs.count != '0' && steps.browser-cache.outputs.cache-hit == 'true'
         run: bun x playwright install-deps chromium
+      - name: Record the expected fixture and browser
+        if: steps.selection.outputs.count != '0'
+        run: bun scripts/sanity/expected-run.mts --output sanity-artifacts/expected-run.json
       - name: Run selected scenarios
         if: steps.selection.outputs.count != '0'
         shell: bash
@@ -135,7 +178,8 @@ jobs:
           node --import tsx --input-type=module <<'NODE'
           import { readFileSync } from "node:fs";
           import { parseSanityReport } from "./packages/boards/src/sanity-report.ts";
-          const report = parseSanityReport(readFileSync("sanity-artifacts/report.json", "utf8"));
+          const expectedRun = JSON.parse(readFileSync("sanity-artifacts/expected-run.json", "utf8"));
+          const report = parseSanityReport(readFileSync("sanity-artifacts/report.json", "utf8"), expectedRun);
           const selected = JSON.parse(readFileSync("sanity-artifacts/selection.json", "utf8"));
           const ids = (entries) => entries.map(({ id }) => id).sort().join("\n");
           if (report.deterministicStatus !== "passed" || report.mode !== process.env.SANITY_MODE ||
@@ -148,8 +192,14 @@ jobs:
           NODE
       - name: Describe review boundary
         if: success()
+        env:
+          SCENARIO_COUNT: ${{ steps.selection.outputs.count }}
         run: |
-          if [[ "${{ steps.selection.outputs.count }}" == 0 ]]; then
+          if [[ ! "$SCENARIO_COUNT" =~ ^(0|[1-9][0-9]*)$ ]]; then
+            echo '::error::Invalid selected scenario count.' >&2
+            exit 1
+          fi
+          if [[ "$SCENARIO_COUNT" == 0 ]]; then
             echo 'No board scenarios selected; all changed paths have an explicit coverage decision.' >> "$GITHUB_STEP_SUMMARY"
           else
             echo 'Selected deterministic board checks passed. Independent visual review remains pending; this job does not approve appearance changes.' >> "$GITHUB_STEP_SUMMARY"

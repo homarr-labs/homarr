@@ -16,6 +16,7 @@ import type {
 } from "../../packages/boards/src/sanity-report.ts";
 import { fixtureHash, fixtureId, fixtureTime, mobilePlacements, placements, scenarios } from "./fixtures.mts";
 import { checkGeometry } from "./geometry.mts";
+import { createSanityRunExpectation } from "./expected-run.mts";
 import { verifyImageSource } from "./provenance.mts";
 import type { InspectedImage } from "./provenance.mts";
 import { seedFixtures, readPersistedPlacement, readPersistedCollapse } from "./seed.mts";
@@ -93,6 +94,7 @@ try {
   if ((await realpath(base.databasePath)) === (await realpath(candidate.databasePath)))
     throw new Error("Before and after must use separate databases");
   browser = await chromium.launch();
+  const expectedRun = createSanityRunExpectation(browser);
   const startupMs = Math.round(performance.now() - startup);
   const checksStarted = performance.now();
   const results: SanityReport["scenarios"] = [];
@@ -128,7 +130,7 @@ try {
   };
   report.deterministicStatus = getSanityDeterministicStatus(report);
   const serialized = `${JSON.stringify(report, null, 2)}\n`;
-  parseSanityReport(serialized);
+  parseSanityReport(serialized, expectedRun);
   await mkdir(path.dirname(output), { recursive: true });
   await writeFile(output, serialized);
   console.log(

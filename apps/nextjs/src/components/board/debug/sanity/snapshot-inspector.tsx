@@ -15,27 +15,31 @@ export function SnapshotInspector({ text, label }: { text: string; label: string
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const frameRef = useRef<HTMLIFrameElement>(null);
+  const snapshotRef = useRef<BoardSnapshot | null>(null);
 
   useEffect(() => {
-    if (!loaded) return;
     const ready = (event: MessageEvent) => {
       if (event.origin !== window.location.origin || event.source !== frameRef.current?.contentWindow) return;
       if (event.data?.type !== "homarr-board-preview-ready") return;
+      const snapshot = snapshotRef.current;
+      if (!snapshot) return;
       frameRef.current?.contentWindow?.postMessage(
-        { type: "homarr-board-snapshot", text: JSON.stringify(loaded.snapshot) },
+        { type: "homarr-board-snapshot", text: JSON.stringify(snapshot) },
         window.location.origin,
       );
     };
     window.addEventListener("message", ready);
     return () => window.removeEventListener("message", ready);
-  }, [loaded]);
+  }, []);
 
   const inspect = async () => {
     setLoading(true);
     setError(null);
     try {
       const { parseBoardSnapshot } = await import("../snapshot");
-      setLoaded(await parseBoardSnapshot(text));
+      const result = await parseBoardSnapshot(text);
+      snapshotRef.current = result.snapshot;
+      setLoaded(result);
     } catch {
       setError("This capture does not contain a valid version 1 Homarr board snapshot.");
     } finally {
@@ -71,7 +75,14 @@ export function SnapshotInspector({ text, label }: { text: string; label: string
             />
           </div>
           <div className={classes.snapshotActions}>
-            <Button variant="subtle" size="xs" onClick={() => setLoaded(null)}>
+            <Button
+              variant="subtle"
+              size="xs"
+              onClick={() => {
+                snapshotRef.current = null;
+                setLoaded(null);
+              }}
+            >
               Close {label.toLowerCase()} snapshot
             </Button>
           </div>

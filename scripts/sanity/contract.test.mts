@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { getSanityDeterministicStatus, parseSanityReport } from "../../packages/boards/src/sanity-report.ts";
-import type { SanityReport } from "../../packages/boards/src/sanity-report.ts";
+import type { SanityReport, SanityRunExpectation } from "../../packages/boards/src/sanity-report.ts";
 import { checkGeometry } from "./geometry.mts";
 import { selectPaths } from "./select.mts";
 
@@ -221,4 +221,41 @@ test("an infrastructure error on either side blocks otherwise passing evidence",
     assert.equal(getSanityDeterministicStatus(value), "blocked");
     assert.throws(() => parseSanityReport(JSON.stringify(value)), /status disagrees/);
   }
+});
+
+const expectedRun: SanityRunExpectation = {
+  fixture: { id: "fixture", sha256: "c".repeat(64) },
+  browser: { name: "chromium", version: "1", platform: "linux" },
+};
+
+test("current-run acceptance requires the independently expected fixture and browser", () => {
+  assert.equal(parseSanityReport(JSON.stringify(report()), expectedRun).deterministicStatus, "passed");
+});
+
+test("an otherwise passing stale fixture remains inspectable but cannot satisfy the current run", () => {
+  for (const fixture of [
+    { id: "older-fixture", sha256: "c".repeat(64) },
+    { id: "fixture", sha256: "d".repeat(64) },
+  ]) {
+    const stale = report();
+    stale.fixture = fixture;
+    const serialized = JSON.stringify(stale);
+    assert.equal(parseSanityReport(serialized).deterministicStatus, "passed");
+    assert.throws(() => parseSanityReport(serialized, expectedRun), /fixture identity does not match/);
+  }
+});
+
+test("an otherwise passing report from another Chromium version cannot satisfy the current run", () => {
+  const stale = report();
+  stale.browser.version = "0.9";
+  const serialized = JSON.stringify(stale);
+  assert.equal(parseSanityReport(serialized).browser.version, "0.9");
+  assert.throws(() => parseSanityReport(serialized, expectedRun), /browser identity does not match/);
+});
+
+test("malformed supplied expectations cannot fall back to historical inspection", () => {
+  assert.throws(
+    () => parseSanityReport(JSON.stringify(report()), null as unknown as SanityRunExpectation),
+    /Invalid sanity report object/,
+  );
 });

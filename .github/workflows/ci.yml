@@ -28,7 +28,7 @@ on:
         required: false
         type: number
       ref:
-        description: Git ref to validate or publish
+        description: Optional ref matching the dispatched branch or tag (required for publish)
         required: false
         type: string
 
@@ -76,15 +76,29 @@ jobs:
         with:
           fetch-depth: 0
           persist-credentials: false
-          ref: ${{ github.event_name == 'workflow_dispatch' && inputs.ref || '' }}
+          ref: ${{ github.sha }}
       - name: Validate manual inputs
-        if: github.event_name == 'workflow_dispatch' && inputs.operation == 'publish'
+        if: github.event_name == 'workflow_dispatch'
         env:
           PR_NUMBER: ${{ inputs.pr_number }}
           BUILD_REF: ${{ inputs.ref }}
+          OPERATION: ${{ inputs.operation }}
+        shell: bash
         run: |
-          test -n "$PR_NUMBER" || { echo "pr_number is required for publish"; exit 1; }
-          test -n "$BUILD_REF" || { echo "ref is required for publish"; exit 1; }
+          if [[ "$OPERATION" == publish ]]; then
+            test -n "$PR_NUMBER" || { echo "pr_number is required for publish"; exit 1; }
+            test -n "$BUILD_REF" || { echo "ref is required for publish"; exit 1; }
+          fi
+          if [[ -n "$BUILD_REF" ]]; then
+            if ! resolved=$(git rev-parse --verify --end-of-options "${BUILD_REF}^{commit}" 2>/dev/null); then
+              branch_ref="${BUILD_REF#refs/heads/}"
+              resolved=$(git rev-parse --verify --end-of-options "refs/remotes/origin/${branch_ref}^{commit}")
+            fi
+            if [[ "$resolved" != "$GITHUB_SHA" ]]; then
+              echo '::error::The ref input must match the dispatched commit. Dispatch this workflow with --ref <candidate branch> instead of checking out another ref inside the run.' >&2
+              exit 1
+            fi
+          fi
       - name: Setup
         uses: ./tooling/github/setup
       - name: Plan validation
@@ -150,7 +164,7 @@ jobs:
         with:
           fetch-depth: 0
           persist-credentials: false
-          ref: ${{ github.event_name == 'workflow_dispatch' && inputs.ref || '' }}
+          ref: ${{ github.sha }}
       - name: Setup
         uses: ./tooling/github/setup
         with:
@@ -207,7 +221,7 @@ jobs:
         if: "!env.ACT"
         with:
           persist-credentials: false
-          ref: ${{ github.event_name == 'workflow_dispatch' && inputs.ref || '' }}
+          ref: ${{ github.sha }}
       - name: Setup
         uses: ./tooling/github/setup
         with:
@@ -263,7 +277,7 @@ jobs:
         if: "!env.ACT"
         with:
           persist-credentials: false
-          ref: ${{ github.event_name == 'workflow_dispatch' && inputs.ref || '' }}
+          ref: ${{ github.sha }}
 
       - name: Setup
         uses: ./tooling/github/setup
@@ -297,11 +311,9 @@ jobs:
             org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
             org.opencontainers.image.revision=${{ github.sha }}
             org.opencontainers.image.ref.name=pr-${{ github.event.pull_request.number || inputs.pr_number || 'none' }}
-          # Scoped to the ref actually checked out (the dispatch input when
-          # set), so a cache written for one ref never seeds the image built
-          # for another.
-          cache-from: type=gha,scope=homarr-e2e-${{ github.event_name == 'workflow_dispatch' && inputs.ref || github.ref_name }}
-          cache-to: type=gha,scope=homarr-e2e-${{ github.event_name == 'workflow_dispatch' && inputs.ref || github.ref_name }},mode=max
+          # Match the caller branch used for checkout and its cache scope.
+          cache-from: type=gha,scope=homarr-e2e-${{ github.ref_name }}
+          cache-to: type=gha,scope=homarr-e2e-${{ github.ref_name }},mode=max
           secrets: |
             TURBO_API=${{ secrets.TURBO_API }}
             TURBO_TEAM=${{ secrets.TURBO_TEAM }}
@@ -327,7 +339,7 @@ jobs:
           path: ~/.cache/ms-playwright
           # Ref-scoped for the same reason as the build cache above, this
           # job can push a preview image after the browsers run.
-          key: playwright-${{ runner.os }}-${{ github.event_name == 'workflow_dispatch' && inputs.ref || github.ref_name }}-${{ hashFiles('bun.lock') }}
+          key: playwright-${{ runner.os }}-${{ github.ref_name }}-${{ hashFiles('bun.lock') }}
 
       - name: Install Playwright Chromium
         if: steps.playwright-cache.outputs.cache-hit != 'true' || env.ACT
@@ -375,7 +387,7 @@ jobs:
         if: "!env.ACT"
         with:
           persist-credentials: false
-          ref: ${{ github.event.pull_request.head.sha || (github.event_name == 'workflow_dispatch' && inputs.ref) || github.sha }}
+          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
 
       - name: Record image source
         id: source
@@ -405,8 +417,8 @@ jobs:
             org.opencontainers.image.revision=${{ steps.source.outputs.sha }}
             org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
           outputs: type=image,"name=${{ env.PREVIEW_IMAGE }}",push-by-digest=true,name-canonical=true,push=true
-          cache-from: type=gha,scope=homarr-linux-amd64-${{ github.event_name == 'workflow_dispatch' && inputs.ref || github.ref_name }}
-          cache-to: type=gha,scope=homarr-linux-amd64-${{ github.event_name == 'workflow_dispatch' && inputs.ref || github.ref_name }},mode=max
+          cache-from: type=gha,scope=homarr-linux-amd64-${{ github.ref_name }}
+          cache-to: type=gha,scope=homarr-linux-amd64-${{ github.ref_name }},mode=max
           secrets: |
             TURBO_API=${{ secrets.TURBO_API }}
             TURBO_TEAM=${{ secrets.TURBO_TEAM }}
@@ -460,7 +472,7 @@ jobs:
         if: "!env.ACT"
         with:
           persist-credentials: false
-          ref: ${{ github.event.pull_request.head.sha || (github.event_name == 'workflow_dispatch' && inputs.ref) || github.sha }}
+          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
 
       - name: Record image source
         id: source
@@ -490,8 +502,8 @@ jobs:
             org.opencontainers.image.revision=${{ steps.source.outputs.sha }}
             org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
           outputs: type=image,"name=${{ env.PREVIEW_IMAGE }}",push-by-digest=true,name-canonical=true,push=true
-          cache-from: type=gha,scope=homarr-linux-arm64-${{ github.event_name == 'workflow_dispatch' && inputs.ref || github.ref_name }}
-          cache-to: type=gha,scope=homarr-linux-arm64-${{ github.event_name == 'workflow_dispatch' && inputs.ref || github.ref_name }},mode=max
+          cache-from: type=gha,scope=homarr-linux-arm64-${{ github.ref_name }}
+          cache-to: type=gha,scope=homarr-linux-arm64-${{ github.ref_name }},mode=max
           secrets: |
             TURBO_API=${{ secrets.TURBO_API }}
             TURBO_TEAM=${{ secrets.TURBO_TEAM }}

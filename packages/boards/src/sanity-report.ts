@@ -59,6 +59,12 @@ export interface SanityReport {
   timings: { startupMs: number; checksMs: number };
 }
 
+/** Trusted fixture and browser identity captured before running or accepting evidence. */
+export interface SanityRunExpectation {
+  fixture: SanityReport["fixture"];
+  browser: SanityReport["browser"];
+}
+
 export function getSanityDeterministicStatus(
   report: Pick<SanityReport, "selection" | "scenarios">,
 ): SanityReport["deterministicStatus"] {
@@ -80,8 +86,11 @@ export function getSanityDeterministicStatus(
   return "passed";
 }
 
-/** Treat reports as untrusted imports. No remote images or executable snapshot payloads. */
-export function parseSanityReport(text: string): SanityReport {
+/**
+ * Shape validation permits historical inspection. Acceptance also supplies the
+ * expected run identity, obtained independently from trusted fixtures and Chromium.
+ */
+export function parseSanityReport(text: string, expectedRun?: SanityRunExpectation): SanityReport {
   if (new TextEncoder().encode(text).byteLength > maxSanityReportBytes) throw new Error("Sanity report exceeds 30 MiB");
   const report: unknown = JSON.parse(text);
   object(report);
@@ -152,6 +161,19 @@ export function parseSanityReport(text: string): SanityReport {
     throw new Error("Report status disagrees with its evidence");
   if (typed.mode === "release" && (!typed.base.imageDigest || !typed.candidate.imageDigest))
     throw new Error("Release evidence needs both exact image digests");
+  if (expectedRun !== undefined) {
+    object(expectedRun);
+    object(expectedRun.fixture);
+    object(expectedRun.browser);
+    if (typed.fixture.id !== expectedRun.fixture.id || typed.fixture.sha256 !== expectedRun.fixture.sha256)
+      throw new Error("Sanity report fixture identity does not match the expected run");
+    if (
+      typed.browser.name !== expectedRun.browser.name ||
+      typed.browser.version !== expectedRun.browser.version ||
+      typed.browser.platform !== expectedRun.browser.platform
+    )
+      throw new Error("Sanity report browser identity does not match the expected run");
+  }
   return typed;
 }
 
