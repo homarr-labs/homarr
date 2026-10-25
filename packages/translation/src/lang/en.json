@@ -4541,11 +4541,17 @@
         "copyName": "Copy name",
         "copyId": "Copy ID",
         "setCategory": "Set Category",
+        "setLabels": "Set Labels",
         "clearFilters": "Clear filters"
       },
       "setCategory": {
         "none": "No category",
-        "loadFailed": "Could not load categories. Please try again."
+        "loadFailed": "Could not load categories. Please try again.",
+        "labels": "Labels",
+        "labelsDescription": "Select labels or type a new label and press Enter.",
+        "labelsLoadFailed": "Could not load labels. Please try again.",
+        "delugePluginRequired": "Enable the Label plugin in Deluge's Preferences → Plugins to change categories.",
+        "transmissionUnsupported": "Transmission 3.0 or later is required to change labels."
       },
       "footer": {
         "filter": "Filter downloads"

@@ -1073,6 +1073,9 @@ function RowContextMenu({ state, onClose, t }: { state: ContextMenuState; onClos
   const hasActions = !!item.actions;
   const [showDeleteConfirm, { open: openDelete }] = useDisclosure(false);
   const { openModal: openSetCategory } = useModalAction(SetDownloadCategoryModal);
+  const categoryActionLabel = t(
+    item.integration.kind === "transmission" ? "contextMenu.setLabels" : "contextMenu.setCategory",
+  );
 
   let PauseResumeIcon = IconPlayerPause;
   let pauseResumeInvoke = item.actions?.pause;
@@ -1147,20 +1150,24 @@ function RowContextMenu({ state, onClose, t }: { state: ContextMenuState; onClos
                   {pauseResumeLabel}
                 </Menu.Item>
 
-                {item.integration.kind === "qBittorrent" && (
+                {["qBittorrent", "deluge", "transmission"].includes(item.integration.kind) && (
                   <Menu.Item
                     leftSection={<IconTag size="var(--mantine-font-size-sm)" />}
                     onClick={() => {
                       onClose();
-                      openSetCategory({
-                        integrationId: item.integration.id,
-                        itemId: item.id,
-                        name: item.name,
-                        category: typeof item.category === "string" ? item.category : "",
-                      });
+                      openSetCategory(
+                        {
+                          integrationId: item.integration.id,
+                          itemId: item.id,
+                          name: item.name,
+                          category: item.category ?? "",
+                          multiple: item.integration.kind === "transmission",
+                        },
+                        { title: categoryActionLabel },
+                      );
                     }}
                   >
-                    {t("contextMenu.setCategory")}
+                    {categoryActionLabel}
                   </Menu.Item>
                 )}
 

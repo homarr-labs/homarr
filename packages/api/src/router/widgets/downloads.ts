@@ -46,6 +46,9 @@ const runDownloadMutationsAsync = async (mutations: Promise<void>[], integration
   if (failure) throw failure.reason;
 };
 
+// Accept exactly one torrent hash, never a client's "all" or hash-list syntax.
+const categoryItemIdSchema = z.string().regex(/^(?:[a-fA-F0-9]{40}|[a-fA-F0-9]{64})$/);
+
 export const downloadsRouter = createTRPCRouter({
   getJobsAndStatuses: publicProcedure
     .meta({
@@ -180,17 +183,16 @@ export const downloadsRouter = createTRPCRouter({
       );
     }),
   getCategories: protectedProcedure
-    .concat(createOneIntegrationMiddleware("interact", "qBittorrent"))
+    .concat(createOneIntegrationMiddleware("interact", "qBittorrent", "deluge", "transmission"))
     .query(async ({ ctx }) => {
       const integration = await createIntegrationAsync(ctx.integration);
       return await integration.getCategoriesAsync();
     }),
   setCategory: protectedProcedure
-    .concat(createOneIntegrationMiddleware("interact", "qBittorrent"))
+    .concat(createOneIntegrationMiddleware("interact", "qBittorrent", "deluge"))
     .input(
       z.object({
-        // Accept exactly one torrent hash, never qBittorrent's "all" or hash-list syntax.
-        itemId: z.string().regex(/^(?:[a-fA-F0-9]{40}|[a-fA-F0-9]{64})$/),
+        itemId: categoryItemIdSchema,
         category: z.string().max(1000),
       }),
     )
@@ -198,6 +200,16 @@ export const downloadsRouter = createTRPCRouter({
       const integration = await createIntegrationAsync(ctx.integration);
       await runDownloadMutationsAsync(
         [integration.setItemCategoryAsync(input.itemId, input.category)],
+        [ctx.integration.id],
+      );
+    }),
+  setLabels: protectedProcedure
+    .concat(createOneIntegrationMiddleware("interact", "transmission"))
+    .input(z.object({ itemId: categoryItemIdSchema, labels: z.array(z.string().min(1).max(1000)).max(100) }))
+    .mutation(async ({ ctx, input }) => {
+      const integration = await createIntegrationAsync(ctx.integration);
+      await runDownloadMutationsAsync(
+        [integration.setItemLabelsAsync(input.itemId, [...new Set(input.labels)])],
         [ctx.integration.id],
       );
     }),
