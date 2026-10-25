@@ -36,6 +36,8 @@ import { useI18n } from "@homarr/translation/client";
 import type { CommonWidgetInputProps } from "./common";
 import { useFormContext } from "./form";
 
+type OptionRequest = { id: string; configurationKeys?: string[] };
+
 export const WidgetCustomWidgetConfigurationInput = ({
   property,
 }: CommonWidgetInputProps<"customWidgetConfiguration">) => {
@@ -91,6 +93,7 @@ export const WidgetCustomWidgetConfigurationInput = ({
         path={`options.${property}`}
         configuration={effectiveConfiguration}
         definitionId={definitionId}
+        optionRequests={definition?.optionRequests}
       />
       {advanced.length > 0 && (
         <Accordion variant="contained">
@@ -102,6 +105,7 @@ export const WidgetCustomWidgetConfigurationInput = ({
                 path={`options.${property}`}
                 configuration={effectiveConfiguration}
                 definitionId={definitionId}
+                optionRequests={definition?.optionRequests}
               />
             </Accordion.Panel>
           </Accordion.Item>
@@ -116,11 +120,13 @@ function OptionSections({
   path,
   configuration,
   definitionId,
+  optionRequests,
 }: {
   entries: Array<[string, CustomWidgetOption]>;
   path: string;
   configuration: Record<string, unknown>;
   definitionId: string;
+  optionRequests?: OptionRequest[];
 }) {
   const groups = new Map<string, Array<[string, CustomWidgetOption]>>();
   for (const entry of entries) {
@@ -141,6 +147,7 @@ function OptionSections({
                 path={`${path}.${name}`}
                 configuration={configuration}
                 definitionId={definitionId}
+                optionRequests={optionRequests}
               />
             ))}
           </Stack>
@@ -161,17 +168,27 @@ function OptionField({
   path,
   configuration,
   definitionId,
+  optionRequests,
 }: {
   option: CustomWidgetOption;
   path: string;
   configuration: Record<string, unknown>;
   definitionId: string;
+  optionRequests?: OptionRequest[];
 }) {
   const form = useFormContext();
   const input = form.getInputProps(path, { type: option.control === "switch" ? "checkbox" : "input" });
   const common = { label: option.label, description: option.description };
   if (option.choicesFrom)
-    return <DynamicOptionField option={option} path={path} configuration={configuration} definitionId={definitionId} />;
+    return (
+      <DynamicOptionField
+        option={option}
+        path={path}
+        configuration={configuration}
+        definitionId={definitionId}
+        optionRequests={optionRequests}
+      />
+    );
   if (option.control === "switch") return <Switch {...common} {...input} />;
   if (["number", "duration"].includes(option.control))
     return <NumberInput {...common} min={option.min} max={option.max} step={option.step} {...input} />;
@@ -239,11 +256,13 @@ function DynamicOptionField({
   path,
   configuration,
   definitionId,
+  optionRequests,
 }: {
   option: CustomWidgetOption;
   path: string;
   configuration: Record<string, unknown>;
   definitionId: string;
+  optionRequests?: OptionRequest[];
 }) {
   const form = useFormContext();
   const board = useOptionalBoard();
@@ -253,6 +272,13 @@ function DynamicOptionField({
   const source = option.choicesFrom;
   const boardId = board?.id ?? "";
   const requestId = source?.request ?? "";
+  const configurationKeys = optionRequests?.find((request) => request.id === requestId)?.configurationKeys;
+  let requestConfiguration = configuration;
+  if (configurationKeys) {
+    requestConfiguration = Object.fromEntries(
+      configurationKeys.filter((key) => configuration[key] !== undefined).map((key) => [key, configuration[key]]),
+    );
+  }
   useEffect(() => {
     formRef.current = form;
   }, [form]);
@@ -261,7 +287,7 @@ function DynamicOptionField({
       boardId,
       definitionId,
       requestId,
-      configuration,
+      configuration: requestConfiguration,
     },
     {
       enabled: Boolean(board?.id && definitionId && source?.request),
@@ -308,7 +334,7 @@ function DynamicOptionField({
     description,
     data,
     searchable: true,
-    disabled: Boolean(error) || query.isPending,
+    disabled: Boolean(error) || query.isPending || query.isPlaceholderData,
     loading: query.isFetching,
     error: error ?? input.error,
     nothingFoundMessage: search("nothingFound"),

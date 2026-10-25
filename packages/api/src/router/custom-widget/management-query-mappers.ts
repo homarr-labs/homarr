@@ -4,6 +4,7 @@ import type { InferSelectModel } from "drizzle-orm";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import type { customWidgetDefinitions, customWidgetSecrets, legacyCustomWidgetDefinitions } from "@homarr/db/schema";
 import {
+  collectCustomWidgetRequestReferences,
   getCustomWidgetConfirmation,
   getCustomWidgetDefaultOptions,
   getCustomWidgetSecretRequirements,
@@ -131,7 +132,9 @@ export function mapAvailableCustomWidget(definition: StoredDefinition) {
         }),
       ),
       optionRequests: Object.entries(widget.requests).flatMap(([id, request]) =>
-        request.kind === "query" ? [{ id }] : [],
+        request.kind === "query"
+          ? [{ id, configurationKeys: [...collectCustomWidgetRequestReferences(request).options] }]
+          : [],
       ),
       updatedAt: definition.updatedAt,
       migrationRequired: false as const,
