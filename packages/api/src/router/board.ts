@@ -2495,6 +2495,9 @@ export const boardRouter = createTRPCRouter({
       await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.boardId), "modify");
 
       const storedItem = await getBoardItemAsync(ctx.db, input.boardId, input.itemId);
+      if (storedItem.kind === "app" && input.options !== undefined) {
+        input.options = normalizeAppWidgetOptions(input.options);
+      }
       const submittedItem: z.infer<typeof boardItemSchema> = {
         ...storedItem,
         options: input.options ?? storedItem.options,

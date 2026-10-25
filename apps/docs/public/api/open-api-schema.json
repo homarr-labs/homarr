@@ -3549,14 +3549,7 @@
                               "assistant",
                               "wud",
                               "llamacpp",
-                              "wazuhAgents",
-                              "wazuhAlerts",
-                              "wazuhSummary",
-                              "wazuhTimeline",
-                              "wazuhTopList",
-                              "wazuhVulnerabilities",
-                              "wazuhFim",
-                              "wazuhAuthFailures"
+                              "wazuh"
                             ]
                           },
                           "options": {
@@ -5255,14 +5248,7 @@
                         "assistant",
                         "wud",
                         "llamacpp",
-                        "wazuhAgents",
-                        "wazuhAlerts",
-                        "wazuhSummary",
-                        "wazuhTimeline",
-                        "wazuhTopList",
-                        "wazuhVulnerabilities",
-                        "wazuhFim",
-                        "wazuhAuthFailures"
+                        "wazuh"
                       ]
                     },
                     "options": {
@@ -5584,14 +5570,7 @@
                         "assistant",
                         "wud",
                         "llamacpp",
-                        "wazuhAgents",
-                        "wazuhAlerts",
-                        "wazuhSummary",
-                        "wazuhTimeline",
-                        "wazuhTopList",
-                        "wazuhVulnerabilities",
-                        "wazuhFim",
-                        "wazuhAuthFailures"
+                        "wazuh"
                       ]
                     },
                     "options": {

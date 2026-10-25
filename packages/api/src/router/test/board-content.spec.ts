@@ -220,6 +220,31 @@ describe("board content endpoints", () => {
     });
   });
 
+  test("updateItem stores legacy app tile options as openIn", async () => {
+    const { db, caller, boardId, rootSectionId } = await createBoardWithContentAsync();
+    const appItemId = createId();
+    await db.insert(items).values({ id: appItemId, kind: "app", options: stringify({ appId: "app-1" }), boardId });
+    const baseLayout = await db.query.layouts.findFirst({ where: (table, { eq }) => eq(table.role, "base") });
+    await db.insert(itemLayouts).values({
+      itemId: appItemId,
+      sectionId: rootSectionId,
+      layoutId: baseLayout?.id ?? "",
+      xOffset: 3,
+      yOffset: 0,
+      width: 1,
+      height: 1,
+    });
+
+    const updated = await caller.updateItem({
+      boardId,
+      itemId: appItemId,
+      options: { appId: "app-1", openInNewTab: false },
+    });
+
+    expect(updated.options).toEqual({ appId: "app-1", openIn: "currentTab" });
+    await expect(caller.getItem({ boardId, itemId: appItemId })).resolves.toEqual(updated);
+  });
+
   test("updateItem requires admin permission to change Custom Widget options", async () => {
     const { db, caller, boardId, rootSectionId } = await createBoardWithContentAsync();
     const customWidgetItemId = createId();
