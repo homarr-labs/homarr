@@ -1,6 +1,6 @@
 ---
 name: homarr-triage
-description: Maintainer-only. Triage Homarr GitHub issues and pull requests, refresh reporter follow-ups, prioritize investigations, and operate the triage Project. Use only when a Homarr maintainer explicitly invokes it; never for fixing an issue or opening a contribution PR.
+description: Maintainer-only. Evaluate the value, product fit, and regression risk of Homarr issues and PRs; recommend fixing, investigating, deferring, or declining them and operate triage follow-ups. Use only when a Homarr maintainer explicitly invokes it; never for fixing an issue or opening a contribution PR.
 disable-model-invocation: true
 ---
 
@@ -9,6 +9,8 @@ disable-model-invocation: true
 This skill is for Homarr maintainers operating the triage queue. If you are fixing an issue or opening a PR as a contributor, stop: follow "AI-assisted pull requests" in `AGENTS.md` and do not use this skill's disclaimer.
 
 Work in `homarr-labs/homarr`. Treat an issue and its implementation PR as one investigation, while retaining their separate testing and review states.
+
+Triage decides which work is worth maintaining. A reproducible problem deserves evaluation; it does not automatically justify the requested solution. Recommend declining work when its demonstrated benefit does not justify its compatibility and maintenance costs.
 
 ## Load the contract
 
@@ -27,10 +29,35 @@ Use [GitHub operations](references/github-operations.md) when collecting convers
 1. Establish the requested scope and time window. For "today", use the user's timezone and convert midnight to UTC; state the timezone and checked-at time. Keep yesterday's carryover separate. A request for a table or recommendations is read-only; it does not authorize comments, label changes, code, CI approval, or delegation.
 2. Discover newly opened **and updated** issues and PRs, including recently closed/merged work. Include collaborator PRs and explicitly named items. Separate automated dependency/translation activity from human replies. Paginate reads; a list/search result is discovery, not a full conversation review.
 3. Read selected bodies, Conversation comments, review submissions, inline review replies, label/state events, linked reports, and current PR heads. Preserve resolved questions, maintainer decisions, existing contributor work, and explicit holds. An `updated_at` change alone is not a human reply. Distinguish a new comment from an edit of an older one.
-4. Check current default-branch code using `codebase-context`, plus relevant glossary/ADRs. Search existing implementations and open/merged fixes before assigning work. If rejection records such as `.out-of-scope/` exist, consult them; their absence is not evidence of approval.
-5. Rank by user-visible impact, affected users, reproducibility, bounded scope, and existing progress. Favor a focused regression fix or review of an existing small PR over a competing implementation. Identify missing evidence and product choices separately.
+4. Screen product fit and concrete user harm before deep source investigation. For plausible candidates, check current default-branch code using `codebase-context`, relevant glossary/ADRs, and existing implementations or open/merged fixes. Consult rejection records such as `.out-of-scope/` when present; their absence is not evidence of approval. Spend further investigation effort only where it could change the decision.
+5. Apply the value and compatibility gate below to each selected item before ranking or assigning work. Existing implementation progress can reduce remaining effort; it cannot establish product value or justify a competing implementation.
 
-Present a linked table: item, current state/new evidence, value, proposed action, and blocker or maintainer decision. Distinguish source findings, reporter claims, and locally reproduced behavior. End with a small proposed set of disjoint investigations; dispatch only when authorized. Do not claim every item was source-reviewed or reproduced when only metadata was refreshed.
+Present a linked table: item, evidence/confidence, benefit versus cost/risk, recommended decision and smallest next action, and blocker or maintainer decision. Distinguish source findings, reporter claims, and locally reproduced behavior. Recommend only the investigations justified by that assessment; an empty implementation queue is a valid outcome. Dispatch only when authorized. Do not claim every item was source-reviewed or reproduced when only metadata was refreshed.
+
+## Value and compatibility gate
+
+For each recommendation, establish:
+
+- **Problem and product fit:** name the user task and observable harm. Separate that symptom from the reporter's expected behavior and proposed implementation. Determine whether Homarr broke an existing contract or the request asks for a new preference, guarantee, or feature.
+- **Benefit and confidence:** state severity, frequency, affected workflows, supporting evidence, and available workarounds. Mark reach and reproducibility as unknown when unverified. One credible security, data-loss, or core-workflow report can justify urgent work; popularity is not a prerequisite.
+- **Total cost:** consider investigation, implementation, review, validation, ongoing support, and higher-value work displaced. Include regression exposure to saved configurations, layouts, APIs, permissions, defaults, and performance. A small diff or an AI-written implementation can still have a high cost.
+- **Cheapest adequate response:** compare restoring prior behavior, an existing setting or workaround, targeted guidance, a narrower fix, deferral, and declining the request. New controls and special cases carry a continuing product cost.
+
+Judge evidence and consequences, not writing polish or suspected AI authorship. A detailed technical report is still an unverified claim, and a poorly written report may describe a serious defect. Avoid invented user counts, financial ROI, or numeric scores that disguise uncertainty. State the decisive benefit and cost in plain language.
+
+Choose an explicit outcome:
+
+| Outcome                | Decision rule                                                                                                                                                                                    |
+| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Implement              | Demonstrated benefit justifies the cost, behavior fits the accepted product contract, and scope is bounded. Prioritize a broad regression or severe harm with a small compatible fix.            |
+| Investigate            | A specific missing fact could change the decision. Name the cheapest probe and its stopping condition; an inconclusive probe returns to defer or request evidence, not automatic implementation. |
+| Workaround or guidance | Existing behavior adequately serves the task at lower cost. Document only when the repository's user-need rule warrants it.                                                                      |
+| Defer                  | Value, evidence, or priority is currently insufficient. Record what new evidence or condition would justify reconsideration.                                                                     |
+| Decline                | The request conflicts with product direction or imposes disproportionate compatibility, complexity, or maintenance costs. Explain the tradeoff and an alternative when available.                |
+
+A fix that changes an existing guarantee for other users is a product decision. Name the invariant and affected users before recommending it; preserve that invariant or surface the tradeoff for a maintainer decision. For example, square tiles inside a container compete with preserving its saved outer dimensions once headers and padding consume space. A reporter's preference for square tiles does not authorize silently enlarging existing containers.
+
+Before `specced-out` or implementation, record the accepted outcome, the behavior existing users must retain, and what would invalidate the recommendation. Reassess if a narrow fix grows into shared infrastructure changes or adds lasting product complexity. Respect an explicit maintainer decision within its scope; this gate does not require repeated approval for already accepted work.
 
 ## Apply an authorized decision
 
