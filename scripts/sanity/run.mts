@@ -161,7 +161,12 @@ async function startTarget(input: TargetConfig, sourceSha: string): Promise<Targ
     try {
       containerBuilder = createHomarrContainer({
         mounts: { "/appdata": directory },
-        environment: { AUTH_PROVIDERS: "credentials", ENABLE_BOARD_DEBUG: "true", TZ: "UTC" },
+        environment: {
+          AUTH_PROVIDERS: "credentials",
+          ENABLE_BOARD_DEBUG: "true",
+          TZ: "UTC",
+          ...getContainerOwnership(),
+        },
       });
     } finally {
       if (previousImage === undefined) delete process.env.HOMARR_E2E_IMAGE;
@@ -183,6 +188,20 @@ async function startTarget(input: TargetConfig, sourceSha: string): Promise<Targ
   databasePath = await realpath(databasePath);
   const fixture = seedFixtures(databasePath, `sanity-${runId.slice(0, 8)}`);
   return { identity, databasePath, fixture, cookieName: input.cookieName ?? "homarr.session-token" };
+}
+
+function getContainerOwnership() {
+  const securityOptions: unknown = JSON.parse(
+    execFileSync("docker", ["info", "--format", "{{json .SecurityOptions}}"], { encoding: "utf8" }),
+  );
+  if (!Array.isArray(securityOptions) || !securityOptions.every((option) => typeof option === "string")) {
+    throw new Error("Cannot determine Docker user namespace ownership");
+  }
+  // Rootless Docker maps container root to the host daemon owner. Ordinary Docker
+  // needs the host runner's UID/GID so the runner can seed and read the bind-mounted DB.
+  if (securityOptions.includes("name=rootless")) return { PUID: "0", PGID: "0" };
+  if (!process.getuid || !process.getgid) throw new Error("Cannot determine the sanity runner's UID/GID");
+  return { PUID: String(process.getuid()), PGID: String(process.getgid()) };
 }
 
 async function captureScenario(target: Target, scenario: (typeof scenarios)[number]): Promise<SanityCapture> {

@@ -115,6 +115,7 @@ jobs:
         run: bun x playwright install-deps chromium
       - name: Run selected scenarios
         if: steps.selection.outputs.count != '0'
+        shell: bash
         run: |
           node --input-type=module <<'NODE'
           import { readFileSync, writeFileSync } from "node:fs";
