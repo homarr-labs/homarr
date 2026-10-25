@@ -1,0 +1,11 @@
+{
+  "source": "Read-only CodeMirror editor state on newly created edit page",
+  "originalLength": 6380,
+  "persistedLength": 6380,
+  "originalSha256": "229ddb6a6d6ca0813a4136f2087b44f9af82ff90b12621999e2a97c0e20d2e1f",
+  "persistedSha256": "229ddb6a6d6ca0813a4136f2087b44f9af82ff90b12621999e2a97c0e20d2e1f",
+  "exactMatch": true,
+  "url": "http://localhost:3102/manage/custom-widgets/edit/o7ub3xslxcxjm4zmvcwohm34",
+  "rawReplySha256": "adca56c0427f1d725a8e46038e35da529fd789989786415dca825853c7449503",
+  "parsedDefinitionFileSha256": "981afd6ad0d741a0693e70e4430a87466b1a9ca2d9aeac74b3db349155a71e34"
+}

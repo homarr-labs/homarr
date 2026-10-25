@@ -166,7 +166,7 @@ export function useCustomWidgetFormActions(input: FormActionsInput) {
         input.form.resetDirty();
         input.documentStore.markSaved(values);
         await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
-        window.location.assign(result.managementPath);
+        window.location.assign(`${result.managementPath}?created=1`);
       } else if (input.definitionId) {
         await updateMutation.mutateAsync({
           id: input.definitionId,

@@ -87,6 +87,7 @@ export interface WorkshopSubmissionRecord extends WorkshopBaseRecord {
   description: string;
   widgetSchema: string;
   content: string;
+  integrationKinds?: unknown;
   revision: number;
   changelog: string;
   outdated: boolean;

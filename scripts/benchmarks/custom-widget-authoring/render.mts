@@ -107,7 +107,7 @@ export const textContent = (html: string) =>
   html
     .replaceAll(/<style[^>]*>[\s\S]*?<\/style>/gu, " ")
     .replaceAll(/<[^>]+>/gu, " ")
-    .replaceAll(/&amp;/gu, "&")
     .replaceAll(/&#x27;|&#39;/gu, "'")
     .replaceAll(/&quot;/gu, '"')
+    .replaceAll(/&amp;/gu, "&")
     .replaceAll(/\s+/gu, " ");

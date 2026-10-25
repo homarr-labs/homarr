@@ -5,6 +5,7 @@ import {
   Accordion,
   Alert,
   ColorInput,
+  Fieldset,
   MultiSelect,
   NumberInput,
   Select,
@@ -22,7 +23,11 @@ import { clientApi } from "@homarr/api/client";
 import { useOptionalBoard } from "@homarr/boards/context";
 import { isRecord } from "@homarr/common";
 import type { CustomWidgetOption } from "@homarr/custom-widgets/core";
-import { normalizeCustomWidgetOptions, validateCustomWidgetOptions } from "@homarr/custom-widgets/core";
+import {
+  isCustomWidgetChoiceValue,
+  normalizeCustomWidgetOptions,
+  validateCustomWidgetOptions,
+} from "@homarr/custom-widgets/core";
 import { CustomWidgetCodeEditor } from "@homarr/custom-widgets/workbench";
 import type { CustomWidgetEditorMessages } from "@homarr/custom-widgets/workbench";
 import { IconPicker } from "@homarr/forms-collection";
@@ -70,7 +75,7 @@ export const WidgetCustomWidgetConfigurationInput = ({
     else form.clearFieldError(path);
   }, [form, issues, property]);
 
-  if (!definitionId || !options) return null;
+  if (!definitionId || !options || needsDefinitionRepair) return null;
   const entries = Object.entries(options);
   const regular = entries.filter(([, option]) => !option.advanced);
   const advanced = entries.filter(([, option]) => option.advanced);
@@ -81,31 +86,23 @@ export const WidgetCustomWidgetConfigurationInput = ({
           <Text size="sm">{labels("needsAttention", { message: issues[0].message })}</Text>
         </Alert>
       )}
-      {regular.map(([name, option]) => (
-        <OptionField
-          key={`${definitionId}:${name}`}
-          option={option}
-          path={`options.${property}.${name}`}
-          configuration={effectiveConfiguration}
-          definitionId={definitionId}
-        />
-      ))}
+      <OptionSections
+        entries={regular}
+        path={`options.${property}`}
+        configuration={effectiveConfiguration}
+        definitionId={definitionId}
+      />
       {advanced.length > 0 && (
         <Accordion variant="contained">
           <Accordion.Item value="advanced-options">
             <Accordion.Control>{labels("advancedOptions")}</Accordion.Control>
             <Accordion.Panel>
-              <Stack gap="sm">
-                {advanced.map(([name, option]) => (
-                  <OptionField
-                    key={`${definitionId}:${name}`}
-                    option={option}
-                    path={`options.${property}.${name}`}
-                    configuration={effectiveConfiguration}
-                    definitionId={definitionId}
-                  />
-                ))}
-              </Stack>
+              <OptionSections
+                entries={advanced}
+                path={`options.${property}`}
+                configuration={effectiveConfiguration}
+                definitionId={definitionId}
+              />
             </Accordion.Panel>
           </Accordion.Item>
         </Accordion>
@@ -113,6 +110,51 @@ export const WidgetCustomWidgetConfigurationInput = ({
     </Stack>
   );
 };
+
+function OptionSections({
+  entries,
+  path,
+  configuration,
+  definitionId,
+}: {
+  entries: Array<[string, CustomWidgetOption]>;
+  path: string;
+  configuration: Record<string, unknown>;
+  definitionId: string;
+}) {
+  const groups = new Map<string, Array<[string, CustomWidgetOption]>>();
+  for (const entry of entries) {
+    const group = entry[1].group ?? "";
+    const fields = groups.get(group) ?? [];
+    fields.push(entry);
+    groups.set(group, fields);
+  }
+  return (
+    <Stack gap="sm">
+      {[...groups].map(([group, fields]) => {
+        const inputs = (
+          <Stack gap="sm">
+            {fields.map(([name, option]) => (
+              <OptionField
+                key={`${definitionId}:${name}`}
+                option={option}
+                path={`${path}.${name}`}
+                configuration={configuration}
+                definitionId={definitionId}
+              />
+            ))}
+          </Stack>
+        );
+        if (!group) return <Stack key={group}>{inputs}</Stack>;
+        return (
+          <Fieldset key={group} legend={group}>
+            {inputs}
+          </Fieldset>
+        );
+      })}
+    </Stack>
+  );
+}
 
 function OptionField({
   option,
@@ -147,28 +189,28 @@ function OptionField({
         <Slider min={option.min ?? 0} max={option.max ?? 100} step={option.step ?? 1} {...input} />
       </Stack>
     );
-  const choices = option.choices?.map((choice) => ({ label: choice.label, value: String(choice.value) })) ?? [];
+  const choices = option.choices ?? [];
   if (option.control === "select")
     return (
-      <Select
+      <Select<string | number>
         {...common}
+        {...input}
         data={choices}
-        value={input.value == null ? null : String(input.value)}
-        onChange={(value) => form.setFieldValue(path, coerceChoice(value, option))}
+        allowDeselect={false}
+        value={isCustomWidgetChoiceValue(input.value) ? input.value : null}
+        onChange={(value) => {
+          if (value !== null) form.setFieldValue(path, value);
+        }}
       />
     );
   if (option.control === "multiSelect")
     return (
-      <MultiSelect
+      <MultiSelect<string | number>
         {...common}
+        {...input}
         data={choices}
-        value={Array.isArray(input.value) ? input.value.map(String) : []}
-        onChange={(value) =>
-          form.setFieldValue(
-            path,
-            value.map((entry) => coerceChoice(entry, option)),
-          )
-        }
+        value={Array.isArray(input.value) ? input.value.filter(isCustomWidgetChoiceValue) : []}
+        onChange={(value) => form.setFieldValue(path, value)}
       />
     );
   if (option.control === "textarea") return <Textarea {...common} autosize minRows={3} {...input} />;
@@ -177,7 +219,7 @@ function OptionField({
   if (option.control === "time") return <TimeInput {...common} {...input} />;
   if (option.control === "icon") return <IconPicker withAsterisk={false} {...input} />;
   if (option.control === "timeZone")
-    return <Select {...common} searchable data={Intl.supportedValuesOf("timeZone")} {...input} />;
+    return <Select {...common} searchable data={getTimeZoneChoices(input.value)} {...input} allowDeselect={false} />;
   if (option.control === "json")
     return (
       <JsonOption
@@ -205,52 +247,71 @@ function DynamicOptionField({
 }) {
   const form = useFormContext();
   const board = useOptionalBoard();
+  const formRef = useRef(form);
+  formRef.current = form;
+  const messages = useI18n("widget.customApi.customJsx");
+  const search = useI18n("search");
   const source = option.choicesFrom;
-  if (!source) return null;
   const query = clientApi.customWidget.optionRequest.useQuery(
     {
       boardId: board?.id ?? "",
       definitionId,
-      requestId: source.request,
-      params: primitiveConfiguration(configuration),
+      requestId: source?.request ?? "",
+      configuration,
     },
-    { enabled: Boolean(board?.id && definitionId && source.request) },
+    { enabled: Boolean(board?.id && definitionId && source?.request) },
   );
-  const collection = source.itemsPath ? getByPath(query.data?.data, source.itemsPath) : query.data?.data;
-  const data = (Array.isArray(collection) ? collection : []).flatMap((row) => {
-    const value = getByPath(row, source.valuePath);
-    const label = getByPath(row, source.labelPath);
-    return typeof value === "string" || typeof value === "number"
-      ? [{ value: String(value), label: String(label ?? value) }]
-      : [];
+  const response = query.data?.ok ? query.data.data : undefined;
+  const collection = source?.itemsPath ? getByPath(response, source.itemsPath) : response;
+  const choices = (source && Array.isArray(collection) ? collection : []).flatMap((row) => {
+    const value = getByPath(row, source?.valuePath ?? "");
+    const label = getByPath(row, source?.labelPath ?? "");
+    return isCustomWidgetChoiceValue(value) ? [{ value, label: String(label ?? value) }] : [];
   });
+  const uniqueChoices = new Map(choices.map((choice) => [String(choice.value), choice]));
+  const data = [...uniqueChoices.values()];
+  const error =
+    query.error?.message ??
+    (query.data && !query.data.ok ? (query.data.error ?? messages("requestFailed")) : undefined) ??
+    (choices.length !== data.length ? "Choice values must be unique" : undefined);
+  useEffect(() => {
+    if (error) form.setFieldError(path, error);
+    else form.clearFieldError(path);
+  }, [error, form, path]);
+  useEffect(() => () => formRef.current.clearFieldError(path), [path]);
+  if (!source) return null;
   const input = form.getInputProps(path);
+  const empty = query.isSuccess && !query.isFetching && !error && data.length === 0;
+  let description = option.description;
+  if (empty) description = [description, search("nothingFound")].filter(Boolean).join(" · ");
   const common = {
     label: option.label,
-    description: option.description,
+    description,
     data,
     searchable: true,
-    disabled: query.isError,
-    rightSection: query.isFetching ? "…" : undefined,
+    disabled: Boolean(error) || query.isPending,
+    loading: query.isFetching,
+    error: error ?? input.error,
+    nothingFoundMessage: search("nothingFound"),
   };
   if (option.control === "multiSelect")
     return (
-      <MultiSelect
+      <MultiSelect<string | number>
+        {...input}
         {...common}
-        value={Array.isArray(input.value) ? input.value.map(String) : []}
-        onChange={(value) =>
-          form.setFieldValue(
-            path,
-            value.map((entry) => coerceChoice(entry, option)),
-          )
-        }
+        value={Array.isArray(input.value) ? input.value.filter(isCustomWidgetChoiceValue) : []}
+        onChange={(value) => form.setFieldValue(path, value)}
       />
     );
   return (
-    <Select
+    <Select<string | number>
+      {...input}
       {...common}
-      value={input.value == null ? null : String(input.value)}
-      onChange={(value) => form.setFieldValue(path, coerceChoice(value, option))}
+      allowDeselect={false}
+      value={isCustomWidgetChoiceValue(input.value) ? input.value : null}
+      onChange={(value) => {
+        if (value !== null) form.setFieldValue(path, value);
+      }}
     />
   );
 }
@@ -333,20 +394,15 @@ export function JsonOption({
   );
 }
 
-function coerceChoice(value: string | null, option: CustomWidgetOption) {
-  if (value === null) return null;
-  return typeof option.default === "number" ||
-    option.choices?.some((choice) => typeof choice.value === "number" && String(choice.value) === value)
-    ? Number(value)
-    : value;
-}
-
-function primitiveConfiguration(value: Record<string, unknown>) {
-  return Object.fromEntries(
-    Object.entries(value).filter((entry): entry is [string, string | number | boolean] =>
-      ["string", "number", "boolean"].includes(typeof entry[1]),
-    ),
-  );
+function getTimeZoneChoices(value: unknown) {
+  const choices = [...new Set(["UTC", ...Intl.supportedValuesOf("timeZone")])];
+  if (typeof value !== "string" || choices.includes(value)) return choices;
+  try {
+    Intl.DateTimeFormat(undefined, { timeZone: value }).resolvedOptions();
+    return [value, ...choices];
+  } catch {
+    return choices;
+  }
 }
 
 function getByPath(value: unknown, path: string): unknown {

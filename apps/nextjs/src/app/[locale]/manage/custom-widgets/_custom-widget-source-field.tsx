@@ -85,7 +85,7 @@ export function CustomWidgetSourceField({
           />
           <TextInput
             label={t("name")}
-            value={source.name}
+            value={source.name ?? ""}
             onChange={(event) => onUpdate(index, { name: event.currentTarget.value })}
           />
         </Group>

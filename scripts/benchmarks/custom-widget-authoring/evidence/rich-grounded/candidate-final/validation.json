@@ -1,0 +1,13 @@
+{
+  "schema": true,
+  "issues": [],
+  "diagnostics": [
+    {
+      "severity": "warning",
+      "message": "UNKNOWN_MANTINE_PROP: 'request' on RefreshButton will be passed through",
+      "index": 157,
+      "line": 4,
+      "column": 20
+    }
+  ]
+}

@@ -8,6 +8,8 @@ import { useI18n } from "@homarr/translation/client";
 import type { WorkshopBackend } from "@homarr/workshop/backend";
 import type { WorkshopSubmissionSummary } from "@homarr/workshop/schema";
 
+import { WorkshopIntegrationBadges } from "./workshop-integration-badges";
+
 /** Aspect-ratio-preserving preview strip. Large enough to actually judge a widget by. */
 const PREVIEW_HEIGHT = 168;
 
@@ -71,6 +73,7 @@ export function WorkshopSubmissionCard({ client, item, actions }: WorkshopSubmis
             {t("author", { name: item.authorName || t("communityMember") })}
           </Text>
         </Box>
+        <WorkshopIntegrationBadges kinds={item.integrationKinds} />
         <Text size="sm" c="dimmed" lineClamp={2} style={{ flex: 1 }}>
           {item.description || t("noDescription")}
         </Text>

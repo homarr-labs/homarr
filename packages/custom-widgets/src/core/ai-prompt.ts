@@ -27,7 +27,9 @@ export interface CustomWidgetAiDiagnostic {
 export const CUSTOM_WIDGET_MANTINE_VERSION = customJsxAuthoringCatalog.mantineVersion;
 export const CUSTOM_WIDGET_SKILL_SOURCE_URL =
   "https://github.com/homarr-labs/homarr/tree/HEAD/.agents/skills/homarr-custom-widget";
-export const CUSTOM_WIDGET_COMMON_CHART_GUIDANCE = `Verified Mantine ${CUSTOM_WIDGET_MANTINE_VERSION} common chart contract: LineChart/AreaChart/BarChart require positive h, data: row[], dataKey: actual category/time row key, series: [{name: actual numeric row key, color: MantineColor}]. Sparkline requires positive h and data: number[]. Bind real response fields/series, never fabricated history or arbitrary formatter callbacks. Resolve only other chart props lazily.`;
+export const CUSTOM_WIDGET_COMMON_CHART_GUIDANCE = `Verified Mantine ${CUSTOM_WIDGET_MANTINE_VERSION}: LineChart/AreaChart/BarChart require positive h, data: row[], dataKey: category/time key, series: [{name: actual numeric row key, color: MantineColor}]. Sparkline requires positive h and data: number[]. Use real fields/series; no invented history/formatter callbacks. Other props stay lazy.`;
+export const CUSTOM_WIDGET_REQUEST_KIND_GUIDANCE = `HTTP read-only GET/POST/PUT/PATCH may be queries; semantics, not method, decide. Mutations: manual actions, modify permission, confirmation. Integration queries: GET only; non-GET integration requests are manual actions. DELETE: always action/full, confirmation.`;
+export const CUSTOM_WIDGET_VALUE_GUIDANCE = `Guard actual scalar values/types/finite numbers before arithmetic/formatting, not object truthiness. Keep 0/false; empty/missing values show —/No data, never NaN/undefined units. Map cross-collection IDs to verified friendly names or original IDs. Use documented rate semantics (ratio/percent/per-time).`;
 const CUSTOM_WIDGET_AI_PROMPT_LIMIT = 12_000;
 
 export const CUSTOM_WIDGET_FINAL_OUTPUT_INSTRUCTION =
@@ -41,9 +43,9 @@ const LEGACY_MIGRATION_AUTHORING_GUIDANCE = `Convert the supplied legacy widget 
 
 The importable manifest has "$schema":"${CUSTOM_WIDGET_SCHEMA}", name, optional description/iconUrl, keyed sources/requests/options, and a template string containing one JSX expression. Omit absent optional fields: iconUrl must be a valid URL string or omitted, never null. Use sources.default with baseUrl and credential-free auth: "none", "basic", "bearer", {"type":"apiKeyHeader","name":"X-Api-Key"}, or {"type":"apiKeyQuery","name":"api_key"}. Multiple encrypted headers use {"type":"headers","headers":[{"name":"X-Api-Key","slot":"key"},{"name":"X-Api-Secret","slot":"secret"}]}, with at most 8 unique HTTP header names and stable credential slots of at most 57 characters; configure values separately. Map legacy authType and headerName to that auth declaration, including authType:"none" to auth:"none". For authenticated sources, empty configuredSecretKinds means credentials need configuration, not removal of authentication; Homarr configures secrets separately.
 
-Each request has source:"default", slash-prefixed path, method, query, optional body, kind, trigger, and permission. For GET use "kind":"query", "trigger":"load", "permission":"view". For non-GET use "kind":"action", "trigger":"manual", "permission":"modify" (DELETE: "full") with an appropriate confirmation string or {title,message,confirmLabel,destructive}. "load" is a trigger, never a kind; "auto" and "automatic" are not valid triggers. Preserve original path, query values, and body. Do not invent a replacement GET for a legacy POST. Legacy actionButton also preserves buttonLabel, buttonColor, confirmText, and successMessage using ActionButton label/children, color, request confirmation, and successMessage props; keep failure feedback.
+Each request has source:"default", slash-prefixed path, method, query, optional body, kind, trigger, and permission. ${CUSTOM_WIDGET_REQUEST_KIND_GUIDANCE} Read-only queries use permission:"view" and trigger:"load" or "manual" according to the original interaction. Mutations use kind:"action", trigger:"manual", permission:"modify" (DELETE:"full") and confirmation string or {title,message,confirmLabel,destructive}. "load" is a trigger, never a kind; "auto" and "automatic" are invalid triggers. Preserve original path, query values, and body. Do not invent a replacement GET for a legacy POST. Legacy actionButton also preserves buttonLabel, buttonColor, confirmText, and successMessage using ActionButton label/children, color, request confirmation, and successMessage props; keep failure feedback.
 
-For request r, the untouched response body is data.r; status.r contains loading/ok/status/error. Preserve the response envelope and guard missing data. GET uses one RefreshButton requestId="r" outside its state branches. ActionButton requestId="r" uses the request's confirmation and publishes its response to data.r/status.r after a click; do not add automatic execution. Manual SubFetch instead renders its result in its child callback.
+For request r, the untouched response body is data.r; status.r contains loading/ok/status/error. Preserve the response envelope and guard missing data. Load queries use one RefreshButton requestId="r" outside state branches; never use its unknown request prop. ActionButton requestId="r" uses the request's confirmation and publishes its response to data.r/status.r after a click; never automatic execution. Manual SubFetch renders its result in its child callback.
 
 Templates cannot use imports, hooks, raw HTML/events, fetch, eval, statements, or arbitrary functions. Keep registered components and safe helpers. Resolve only genuinely unknown components through the available component tools. Send the complete migrated candidate directly to previewCreate (templateLines for multiline tool input), never an empty placeholder to probe the lifecycle. It validates manifest and JSX together. Follow concrete diagnostics and source-configuration/evidence steps; do not prevalidate every draft or speculate about future tool availability. Return the exact tested definition in the final JSON, joining tool-only templateLines into the template string; do not add legacy fields or wrap it in a definition property.`;
 
@@ -51,7 +53,7 @@ const leanShape = `{"$schema":"${CUSTOM_WIDGET_SCHEMA}","name":"Widget name","so
 
 const CUSTOM_WIDGET_MODE_GUIDANCE = `Mode handling: create from the request, verified documentation, and samples; repair preserves working contract and requested fields; migration preserves supported legacy URL, method, path, body, options, and visible behavior while omitting unknowns. A lifecycle plan is complete only after its preview, evidence, and persistence results.`;
 
-const CUSTOM_WIDGET_RESPONSE_PATH_GUIDANCE = `Use an exact response envelope: load request ID q with raw preview body B -> data.q === B. q=events, B={"events":[...]} -> data.events.events; never flatten repeated keys. Manual SubFetch receives B as result -> result.events. Before persistence, compare core JSX paths with preview; revise JSX and retest mismatches.`;
+const CUSTOM_WIDGET_RESPONSE_PATH_GUIDANCE = `Exact response envelope: load q with body B -> data.q === B; q=events/B={"events":[...]} -> data.events.events, never flatten repeated keys. Manual SubFetch receives B as result -> result.events. Before persistence compare core JSX paths with preview; revise/retest mismatches.`;
 
 const CUSTOM_WIDGET_AUTHORING_COMMUNICATION_RULE =
   "Use tools without a planning preamble; ask one blocker question; report success in 1-2 sentences.";
@@ -94,7 +96,7 @@ const CUSTOM_WIDGET_CONTRACT_RULES = `Contract check before JSX:
 - Paths: \`{option:name}\`/\`{param:name}\`; query/body: \`{"id":{"$option":"name"}}\`/\`{"id":{"$param":"name"}}\`. $param is manual-only; $option may load. Preserve action confirmation, permission, invalidates.
 - SubFetch/ActionButton params match every referenced $param exactly with string/number/boolean, never undefined/null. Omitted optional fields need separate verified request variants; empty strings require API support.
 - Validate nonblank optional inputs against documented formats; show field-level feedback and block requests while invalid. Never silently omit or forward invalid values.
-- Installation options use options.name; temporary controls use literal bind + default and inputs.name, passed to matching manual params. Every control changes a request or visible selection. Show friendly names, not raw IDs or duplicate choices. Structured options use control:"json"; render fields/JSON.stringify(value), never object JSX children.
+- Installation options use options.name; temporary controls use literal bind + default and inputs.name, passed to matching manual params. Every control changes a request or visible selection; never duplicate choices. Structured options use control:"json"; render fields/JSON.stringify(value), never object JSX children.
 - ${CUSTOM_WIDGET_RESPONSE_PATH_GUIDANCE} Guard (value ?? []).map(...) and nesting. Show loading/error/empty/success, with exactly one RefreshButton per load request outside branches. Preserve units or convert numbers before relabeling.`;
 
 const CUSTOM_WIDGET_VISUAL_QUALITY_GUIDANCE = `Visual quality for create jobs:
@@ -104,7 +106,7 @@ const CUSTOM_WIDGET_VISUAL_QUALITY_GUIDANCE = `Visual quality for create jobs:
 
 Repairs/migrations keep existing design unless asked.`;
 
-const CUSTOM_WIDGET_DATA_COVERAGE_GUIDANCE = `Keep useful data reachable: requested fields and meaningful observed facts/collections through summaries plus Table/details, working filters, pagination, or a bounded ScrollArea. Never silently slice rows. Label partial results and shown/total counts; pagination needs verified endpoints/params. Charts use real numeric/category/time series, never invented history/series. Use supplied contracts; resolve unknown chart props with component tools/docs. Bounded response observations are not full schemas; verify omitted fields.`;
+const CUSTOM_WIDGET_DATA_COVERAGE_GUIDANCE = `Keep useful/requested fields reachable through summaries, Table/details, filters, pagination or bounded ScrollArea; never silently slice rows. Label partial results/totals; verify pagination endpoints/params. Charts need real series; unknown props stay lazy. Observed shapes aren't full schemas. ${CUSTOM_WIDGET_VALUE_GUIDANCE}`;
 
 const AUTHORING_GUIDANCE = `You are writing one safe Homarr Custom JSX v2 dashboard widget for Mantine ${CUSTOM_WIDGET_MANTINE_VERSION}.
 Official skill: ${CUSTOM_WIDGET_SKILL_SOURCE_URL}. Load only needed references, not the full catalog.
@@ -114,9 +116,9 @@ ${leanShape}
 
 ${CUSTOM_WIDGET_MODE_GUIDANCE}
 
-Sources are keyed and include "default". HTTP: baseUrl and auth "none", "bearer", "basic", {"type":"apiKeyHeader","name":"X-Api-Key"}, {"type":"apiKeyQuery","name":"api_key"}, or {"type":"headers","headers":[{"name":"X-Api-Key","slot":"key"}]}. {"type":"none"} is invalid. Encrypted headers: at most 8 unique names and stable slots of at most 57 characters; values belong in Homarr's secure credential UI, never chat/manifest. Saved integrations: type:"integration", integrationKind, integrationId; omit baseUrl/auth. Discover kinds/full-access entries with integration_getKinds/integration_all when available. Exports omit integrationId; paths append to the saved URL; non-GET requests are manual actions. iCal and TrueNAS WebSocket are not generic HTTP APIs. Use documented public URLs; missing self-hosted URLs use https://your-service.example.com, never guessed .local hosts.
+HTTP sources: baseUrl and auth "none", "bearer", "basic", {"type":"apiKeyHeader","name":"X-Api-Key"}, {"type":"apiKeyQuery","name":"api_key"}, or {"type":"headers","headers":[{"name":"X-Api-Key","slot":"key"}]}. {"type":"none"} is invalid. Encrypted headers: at most 8 unique names/stable slots of at most 57 characters; values belong in Homarr's secure credential UI, never chat/manifest. Saved integrations: type:"integration", integrationKind, integrationId; omit baseUrl/auth. Use integration_getKinds/integration_all for exact full-access bindings. Exports omit integrationId; paths append to the saved URL. iCal and TrueNAS WebSocket are not generic HTTP APIs. Use documented public URLs; unknown self-hosted URL: https://your-service.example.com, never .local.
 
-Requests are keyed by ID. Defaults: source "default", kind "query", method "GET", trigger "load", inherited auth, permission "view" (actions: "modify"). A request that supplies the widget's initial/current display is a load query: set \`trigger: "load"\` explicitly, including option-driven requests; do not make it manual merely because it has an option binding. Set \`trigger: "manual"\` only when explicitly user-triggered or using invocation params. Actions are always manual; DELETE requires full permission. confirmation is a string or {title,message,confirmLabel,destructive}. Load queries cannot use params. Every path stays literal slash-prefixed after interpolation; never bind the whole path. Omit unknown migration requests, never guess /. Always include sources.default, even for static widgets. Path/query values are primitive; JSON bodies may bind structured options. JSON is decoded; application/x-ndjson becomes an array of decoded lines.
+Requests default to source "default", kind "query", method "GET", trigger "load", inherited auth, permission "view". ${CUSTOM_WIDGET_REQUEST_KIND_GUIDANCE} A request that supplies the widget's initial/current display is a load query: set \`trigger: "load"\` explicitly, including option-driven requests; do not make it manual merely because it has an option binding. Set \`trigger: "manual"\` only when explicitly user-triggered or using invocation params. confirmation is a string or {title,message,confirmLabel,destructive}. Load queries cannot use params. Paths stay slash-prefixed after interpolation; never bind the whole path or guess unknown migration requests. Always include sources.default, even for static widgets. Path/query values are primitive; JSON bodies may bind structured options. JSON is decoded; application/x-ndjson becomes an array of decoded lines.
 
 ${CUSTOM_WIDGET_CONTRACT_RULES}
 
@@ -128,7 +130,7 @@ Syntax: never write \`=> {\` anywhere. Use concise expression callbacks, inline 
 
 Use only API routes grounded in the request, docs, or verified notes. Ask for the missing API URL/docs/redacted response when the contract is unknown; never invent endpoints, fields, params, or mutations. Where tools are available, test the real request and compare response paths before final delivery; never claim unobserved validation/rendering/persistence.
 
-Registered helpers: RefreshButton, SubFetch, ActionButton, ToggleSwitch, <Icon name="tabler-icon-name" />.
+Helpers: RefreshButton (requestId, never request; omit to refresh all loads), SubFetch, ActionButton, ToggleSwitch, <Icon name="tabler-icon-name" />.
 
 ${CUSTOM_WIDGET_VISUAL_QUALITY_GUIDANCE}
 
@@ -159,7 +161,7 @@ export const CUSTOM_WIDGET_AUTHORING_PROMPT = AUTHORING_PROMPT;
 export const CUSTOM_WIDGET_TOOL_STAGING_INSTRUCTION =
   "Tools are staged by the authoring lifecycle. Use visible task-needed tools as phases advance.";
 
-const CUSTOM_WIDGET_REQUEST_INTERACTION_GUIDANCE = `- Reuse requests/helpers; separate request variants are needed when an optional input must omit a query field. Normalize manual inputs; supply every referenced $param as a valid string, number or boolean, never undefined/null. Use an empty value only when the verified API accepts it. Validate nonblank optional inputs against documented formats; show field-level feedback and block requests while invalid. Never silently omit or forward invalid values. Show manual triggers only for valid required inputs. Cache rate-limited/static load requests.`;
+const CUSTOM_WIDGET_REQUEST_INTERACTION_GUIDANCE = `- Normalize inputs; $param values are string/number/boolean, never undefined/null. Use separate request variants for omitted optional query fields; empty values need API support. Validate required/nonblank optional inputs against docs; show field-level feedback and block requests while invalid. Never silently omit or forward invalid values. Cache static/rate-limited loads.`;
 
 const CUSTOM_WIDGET_DESIGN_GUIDANCE = `DESIGN (create jobs; edits keep the existing design unless asked)
 Before previewCreate, list every requested capability, field, and tile size, then cover each one.
@@ -171,7 +173,7 @@ ${CUSTOM_WIDGET_REQUEST_INTERACTION_GUIDANCE}
 ${CUSTOM_WIDGET_DATA_COVERAGE_GUIDANCE}`;
 
 const CUSTOM_WIDGET_MCP_COMPACT_DESIGN_GUIDANCE = `DESIGN (compact; edits keep existing design unless asked)
-Cover every requested capability/field and narrow/wide loading/error/empty/success state. Use a purposeful header, scannable metrics, semantic theme tokens and wrapping layouts. Manual inputs precede the SubFetch trigger/result.
+Cover requested fields and narrow/wide states with theme tokens/wrapping; manual inputs precede SubFetch trigger/results.
 ${CUSTOM_WIDGET_REQUEST_INTERACTION_GUIDANCE}
 ${CUSTOM_WIDGET_DATA_COVERAGE_GUIDANCE}`;
 
@@ -184,17 +186,19 @@ For a missing contract, research primary API docs with up to three targeted sear
 Core schema/runtime/safety/lifecycle rules are bundled; do not call customWidget_getSkill or customWidget_getReference. Unknown edit: call customWidget_list once, then get the exact widget. Persisted follow-up: pass its id as definitionId to previewCreate. Preserve sources unless explicitly changed; style-only edits preserve requests/options. Never turn an edit into a create. Resolve uncertain components with customWidget_findComponents, then at most eight needed component documents in one getComponents batch. Reuse loaded context/contextAlreadyLoaded and follow nextStep. Inventory operations, paths, states, and count.
 
 CONTRACT
-Build a credential-free v2 definition with object inputs and sources.default. Copy URL/auth. Without an exact self-hosted URL, use https://your-service.example.com so preview returns sourceConfigurations; never guess .local. API keys need a named header/query object; integration sources need exact integrationKind/integrationId. Never request, accept, or send secrets in chat/tool inputs. Static headers are request headers string maps. Sources never contain a top-level headers field; source.auth.headers is allowed for header authentication.
+Build a credential-free v2 definition with sources.default. Copy URL/auth; missing self-hosted URLs use https://your-service.example.com for sourceConfigurations, never guessed .local. API keys need named header/query objects; integrations need exact integrationKind/integrationId. Never request, accept, or send secrets in chat/tool inputs. Static request headers are string maps. Sources never contain a top-level headers field; source.auth.headers is allowed for authentication.
 
 For a static widget, use \`sources:{default:{baseUrl:"https://example.com",auth:"none"}}\` and \`requests:{}\`. For the current local time, use the installed safe helper \`Date.toLocaleString(Date.now(), "en-US")\`; never use \`new Date()\`.
 
 Paths start with /. Use {option:name}/{param:name} in paths and $option/$param objects elsewhere. $param is manual-only; current/option queries load. Actions use kind:"action", trigger:"manual", required permission, required confirmation, and invalidations; DELETE requires full. Options need label/control/default. choicesFrom names a load request and exact item/value/label paths.
 
+${CUSTOM_WIDGET_REQUEST_KIND_GUIDANCE}
+
 JSX
 Every templateLines item is one complete JSX source line. Keep quoted attribute values inside that line. Use quoted strings for string props, for example \`<Badge color="green">Ready</Badge>\`; never turn strings into bindings such as \`{green}\`, \`{dimmed}\`, or \`{IconCircleCheck}\`.
 Write one JSX expression; never use => {, declarations, imports, hooks, raw HTML/events, fetch, eval, recursion, or root-name shadowing. Use registered components/helpers and <Icon name="..." />.
 
-For load q with body B, data.q === B. Preserve envelopes; use status.q and exactly one literal RefreshButton outside q's loading/error/empty/success branches. Keep requests/nullable siblings independent; guard arrays/nesting, never render objects. Manual SubFetch reads result, not data/status; SubFetch owns those states. Refresh with the same literal requestId.
+For load q with body B, data.q === B. Preserve envelopes; use status.q and exactly one literal RefreshButton outside q's loading/error/empty/success branches. Keep requests/nullable siblings independent; guard arrays/nesting, never render objects. Manual SubFetch reads result, not data/status; SubFetch owns those states. RefreshButton uses literal requestId, never request; omit it to refresh all loads.
 
 Every option/input control must affect a request or visible selection. For choicesFrom, request the selection and show matching friendly name/details, not raw ID/full collection or duplicate choices. Render every explicitly required response field once. Preserve units; convert the numeric value before changing a unit label. Humanize enums separately from Badge styling; use literal theme colors. Use bounded wrapping, minWidth:0, and truncation for secondary labels; keep essential values visible. Table/details, filters, pagination and bounded ScrollArea keep useful collections reachable on narrow tiles. Format requested ISO time with Date.toLocaleString(value, "en-US", "UTC") and label UTC only when documented; otherwise omit the timezone argument/label. Helpers use literal requestId; bind every $param.
 

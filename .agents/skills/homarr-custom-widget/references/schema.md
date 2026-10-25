@@ -22,9 +22,9 @@ HTTP sources have optional `name`, required `baseUrl`, and credential-free `auth
 57 characters; renaming either needs reconfiguration. Use `bearer` for Authorization; routing/proxy/cookie/hop-by-hop headers
 are reserved. Configure values only in Homarr's secure credential UI, never chat or definitions.
 
-Requests default to source `default`, query/GET/load, inherited auth, and
-view permission. Use `load` for initial/current display and `manual` only for explicit interactions or invocation
-params. Actions are manual/modify; DELETE requires full permission and confirmation.
+Requests default to source `default`, query/GET/load, inherited auth and view permission. Use `load` for initial/current
+display and `manual` for explicit interactions or invocation params. Actions default to modify permission.
+HTTP read-only GET/POST/PUT/PATCH may be queries; semantics, not method, decide. Mutations: manual actions, modify permission, confirmation. Integration queries: GET only; non-GET integration requests are manual actions. DELETE: always action/full, confirmation.
 
 JSON responses become their decoded value; `application/x-ndjson` becomes an array of decoded lines. Use real public
 API URLs and clear self-hosted placeholders; Homarr collects URL and credentials outside the manifest.
@@ -33,6 +33,6 @@ Paths start with `/`; use `{option:name}`/`{param:name}` in paths and `{"$option
 `$param` is manual-only; `$option` may drive loads. Path/query values are primitive. Actions use `kind:"action"`,
 `trigger:"manual"`, method/body, permission, confirmation, and `invalidates` request IDs; never invent mutation endpoints.
 
-Every option has `label`, `control`, and `default`. Optional fields are `description`, `choices`, `choicesFrom`, `min`, `max`, `step`, `advanced`, and `group`.
+Options: required `label`/`control`/`default`; optional `description`/`choices`/`choicesFrom`/`min`/`max`/`step`/`advanced`/`group`.
 Controls: `text`, `textarea`, `number`, `switch`, `select`, `multiSelect`, `slider`, `date`, `time`, `color`, `icon`, `url`,
 `duration`, `timeZone`, `json`. `choices`/`choicesFrom` need `select` or `multiSelect`.

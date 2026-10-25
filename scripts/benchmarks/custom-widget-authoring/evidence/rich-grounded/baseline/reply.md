@@ -1,0 +1,1 @@
+Could you provide the API documentation or a redacted complete response body for `GET /v1/overview`, including the capacity, active-session, incident, and request/error-history fields and series shape?

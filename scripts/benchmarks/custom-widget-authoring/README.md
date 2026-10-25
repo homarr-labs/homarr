@@ -4,7 +4,7 @@ Requires the matching Homarr checkout with its
 existing dependencies installed, Node 24, `tsx`, and `mise`; adds no dependencies. `ROOT` defaults to the repository
 working directory, or set it explicitly. Run directories are local synthetic fixtures, not live user data.
 
-## Recorded results (2026-10-24)
+## Historical recorded results (2026-10-24)
 
 | Prompt content                   |                     Dev `1a3df6ba3` |                          Candidate |
 | -------------------------------- | ----------------------------------: | ---------------------------------: |
@@ -18,8 +18,9 @@ The policy deliberately spends more on concrete design guidance while the comple
 `ROOT=/path/to/checkout node --import tsx scripts/benchmarks/custom-widget-authoring/measure-prompts.mts`.
 Counts are JavaScript UTF-16 lengths, not token counts or billed savings. Production cache and dollar effects
 remain unmeasured: no provider API key was available for a production-equivalent replay.
-The four portable skill files match their embedded copies; serialized `getCustomWidgetSkill()` is 11,988 bytes,
-below its 12,000-byte response budget. `portable-skill-cases/` retains five separate offline skill evaluation
+At that recorded revision, the four portable skill files matched their embedded copies; serialized
+`getCustomWidgetSkill()` was 11,988 bytes, below its 12,000-byte response budget. `portable-skill-cases/` retains
+five separate offline skill evaluation
 inputs and rubrics outside the distributed skill; they are not unit tests and are not part of the CLI trial table.
 
 The original five cases are Agify, Bored Activity, CoinMarketCap, service health and Pokédex. Each initial
@@ -36,7 +37,8 @@ interrupted session. This is a small, adaptively tuned sample, **not a controlle
 | 4, rejected polish wording    |   10 |                76.1 |                 0 |                50/50 |                    459,689 |
 | 5, retained wording           |   10 |                85.1 |                 1 |                50/50 |                    446,386 |
 
-Only **1/10** final core outputs meets the full quality bar. A high weighted mean is not a pass: every category
+The original unpinned judging reported **1/10** final core outputs meeting the full quality bar; the pinned
+rejudging below supersedes that headline. A high weighted mean is not a pass: every category
 must score at least 75, goal fulfillment at least 85, complexity discipline at least 80, the judge must choose
 daily use, and there must be no fatal problems. Remaining weaknesses are visual polish, compact layouts and
 manual-lookup details. Judge advisory totals/verdicts are preserved; the table recomputes weighted totals.
@@ -77,6 +79,14 @@ widgets, untouched judges, parser-normalized results and provenance. Baseline 5 
 **77.8 → 85.0**, but **all 15 fail and none chooses daily use**; this is descriptive, not a controlled comparison.
 Both optional-country attempts are retained: run 1 passes; run 2 handles blank/US but shows generic HTTP 422 for
 invalid country, without an undefined/null-parameter error. Historical evidence above remains unchanged.
+
+## Grounded rich-widget trial
+
+[`evidence/rich-grounded/`](evidence/rich-grounded/README.md) preserves the synthetic overview response, frozen
+copied prompts, failed attempts, original generated widget and a later model feedback repair. Actual assisted
+creation preserved the repaired template exactly through protected preview/save; all six services, 12 history
+rows, a real SVG/refetch and useful actual fixture states were verified. Original failures remain visible.
+This is not a blinded quality score or a source-stable timing comparison; both app reports state their limits.
 
 ## Run
 
@@ -127,11 +137,11 @@ The explicit `TSX_TSCONFIG_PATH` preserves the checkout's automatic JSX transfor
   Fixture matching, case sample-response fallbacks, and failed unknown-fixture responses remain exactly as
   implemented by that checkout. The CLI adds no success fallback and never replaces failure evidence.
 - `grade-sim.mts` uses `getDeterministicEvaluationSuiteIssues`, `buildJudgePrompt`,
-  `getAssistantEvaluationPreviewResponse`, and `getWeightedJudgeTotal` when exported (not exported by the
-  validation checkout, so the original fixed weights apply). It checks persistence count, lifecycle,
-  deterministic contract, and render safety. Efficiency
-  issues are reported, not a separate passing gate. Existing judge JSON is parsed, not schema-validated; invalid
-  JSON is treated as absent. The judge gate uses category thresholds/daily-use/fatal findings, not its verdict field.
+  `getAssistantEvaluationPreviewResponse`, and the shared `parseJudgeResult`. It checks persistence count,
+  lifecycle, deterministic contract and render safety. Efficiency issues are reported, not a separate passing
+  gate. The shared parser validates required categories and scores, then recomputes the authoritative weighted
+  total and verdict from category thresholds, daily-use and fatal findings. Invalid or incomplete judge output
+  is treated as absent and cannot pass; an advisory total or verdict cannot override the parser.
 - `render.mts` exports only `renderWidget`, `runtimeError`, and `textContent`. It uses the real React/Mantine,
   Custom JSX renderer/bindings and runtime provider in static server rendering. Its port returns null success data,
   confirms actions, and otherwise does nothing; icons are suppressed. It does not exercise browser interaction,

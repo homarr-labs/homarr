@@ -1,0 +1,158 @@
+{
+  "status": "degraded",
+  "checkedAt": "2026-10-25T00:00:00Z",
+  "summary": {
+    "services": 6,
+    "healthy": 5,
+    "degraded": 1,
+    "latencyMs": 184,
+    "openIncidents": 1,
+    "uptimePercent": 99.95,
+    "totalRequests": 183294,
+    "errorRate": 0.014
+  },
+  "services": [
+    {
+      "id": "media",
+      "name": "Media library",
+      "status": "operational",
+      "latencyMs": 42,
+      "uptimePercent": 99.99,
+      "version": "10.11.0"
+    },
+    {
+      "id": "photos",
+      "name": "Family photos",
+      "status": "degraded",
+      "latencyMs": 331,
+      "uptimePercent": 98.75,
+      "version": "2.3.1"
+    },
+    {
+      "id": "dns",
+      "name": "Local DNS",
+      "status": "operational",
+      "latencyMs": 8,
+      "uptimePercent": 100,
+      "version": "0.107.0"
+    },
+    {
+      "id": "backup",
+      "name": "Offsite backup",
+      "status": "operational",
+      "latencyMs": 65,
+      "uptimePercent": 99.97,
+      "version": "1.6.0"
+    },
+    {
+      "id": "automation",
+      "name": "Home automation",
+      "status": "operational",
+      "latencyMs": 21,
+      "uptimePercent": 99.96,
+      "version": "2026.10"
+    },
+    {
+      "id": "proxy",
+      "name": "Reverse proxy",
+      "status": "operational",
+      "latencyMs": 4,
+      "uptimePercent": 99.99,
+      "version": "3.5.0"
+    }
+  ],
+  "incidents": [
+    {
+      "id": "inc-1",
+      "title": "Photo indexing is delayed",
+      "severity": "warning",
+      "status": "investigating",
+      "startedAt": "2026-10-24T23:30:00Z",
+      "affectedServices": [
+        "photos"
+      ]
+    }
+  ],
+  "capacity": {
+    "cpuPercent": 43.2,
+    "memoryUsedBytes": 12884901888,
+    "memoryTotalBytes": 34359738368,
+    "diskUsedBytes": 2199023255552,
+    "diskTotalBytes": 8796093022208,
+    "activeSessions": 17
+  },
+  "history": [
+    {
+      "hour": "00:00",
+      "requests": 8000,
+      "errors": 10,
+      "latencyMs": 42
+    },
+    {
+      "hour": "02:00",
+      "requests": 8300,
+      "errors": 12,
+      "latencyMs": 44
+    },
+    {
+      "hour": "04:00",
+      "requests": 8600,
+      "errors": 8,
+      "latencyMs": 38
+    },
+    {
+      "hour": "06:00",
+      "requests": 8900,
+      "errors": 4,
+      "latencyMs": 35
+    },
+    {
+      "hour": "08:00",
+      "requests": 9200,
+      "errors": 0,
+      "latencyMs": 40
+    },
+    {
+      "hour": "10:00",
+      "requests": 9500,
+      "errors": 3,
+      "latencyMs": 42
+    },
+    {
+      "hour": "12:00",
+      "requests": 9800,
+      "errors": 18,
+      "latencyMs": 50
+    },
+    {
+      "hour": "14:00",
+      "requests": 10100,
+      "errors": 21,
+      "latencyMs": 70
+    },
+    {
+      "hour": "16:00",
+      "requests": 10400,
+      "errors": 90,
+      "latencyMs": 220
+    },
+    {
+      "hour": "18:00",
+      "requests": 10700,
+      "errors": 64,
+      "latencyMs": 210
+    },
+    {
+      "hour": "20:00",
+      "requests": 11000,
+      "errors": 25,
+      "latencyMs": 194
+    },
+    {
+      "hour": "22:00",
+      "requests": 11300,
+      "errors": 14,
+      "latencyMs": 184
+    }
+  ]
+}

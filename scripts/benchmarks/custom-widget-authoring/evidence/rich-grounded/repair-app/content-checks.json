@@ -1,0 +1,44 @@
+{
+  "allSixServicesAllFieldsMatch": true,
+  "servicesCount": 6,
+  "incidentAffectedFriendlyName": "Family photos",
+  "incidentRow": [
+    "Photo indexing is delayed",
+    "warning",
+    "investigating",
+    "2026-10-24T23:30:00Z",
+    "Family photos"
+  ],
+  "allTwelveHistoryAllFieldsMatch": true,
+  "historyCount": 12,
+  "actualSvg": {
+    "height": 220,
+    "paths": [
+      {
+        "class": "recharts-curve recharts-area-area",
+        "dLength": 871
+      },
+      {
+        "class": "recharts-curve recharts-area-curve",
+        "dLength": 475
+      },
+      {
+        "class": "recharts-curve recharts-area-area",
+        "dLength": 911
+      },
+      {
+        "class": "recharts-curve recharts-area-curve",
+        "dLength": 515
+      },
+      {
+        "class": "recharts-curve recharts-area-area",
+        "dLength": 871
+      },
+      {
+        "class": "recharts-curve recharts-area-area",
+        "dLength": 911
+      }
+    ],
+    "width": 694
+  }
+}

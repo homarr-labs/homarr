@@ -1,0 +1,9 @@
+{
+  "variant": "candidate",
+  "model": "openai/gpt-6-luna#max",
+  "method": "Offline copied-prompt roleplay; same request, fixture and draft. No production latency, billing or acceptance claims.",
+  "promptSha256": "bf7b469b36b7d45349eaf44df5d20d741bdca02844f9a517185b774e1766724d",
+  "sourceSha256": "0ff753e4c73308e807c4cc61f7cc2b4ce36522a6f6d0e584386cefd4e7d65086",
+  "responseSha256": "5050b61866c9a3e2630e4bc843c3928949e71fbd4a60df1466022c944d977fcf",
+  "promptChars": 11035
+}

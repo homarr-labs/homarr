@@ -4,6 +4,12 @@ import { useEffect, useState } from "react";
 import { ActionIcon, Button, Group, MultiSelect, NumberInput, Select, Stack, Switch, TextInput } from "@mantine/core";
 import { IconPlus, IconTrash } from "@tabler/icons-react";
 
+import {
+  customWidgetOptionControls,
+  customWidgetOptionSchema,
+  getCustomWidgetOptionValueIssue,
+  isCustomWidgetChoiceValue,
+} from "@homarr/custom-widgets/core";
 import { useI18n } from "@homarr/translation/client";
 
 import { CodeEditor } from "./_code-editor";
@@ -32,26 +38,34 @@ export function DefaultValueEditor({
     );
   if (["number", "slider", "duration"].includes(control))
     return <NumberInput label={t("default")} value={typeof value === "number" ? value : 0} onChange={onChange} />;
-  const choiceData = choices.map((choice) => ({ label: choice.label, value: String(choice.value) }));
+  const choiceData = [...new Map(choices.map((choice) => [String(choice.value), choice])).values()];
+  const choiceError = choices.length !== choiceData.length ? "Choice values must be unique" : undefined;
   if (control === "select" && choices.length > 0)
     return (
-      <Select
+      <Select<string | number>
         label={t("default")}
         data={choiceData}
-        value={value === undefined ? null : String(value)}
-        onChange={(next) => onChange(coerceChoice(next, choices))}
+        error={choiceError}
+        disabled={Boolean(choiceError)}
+        allowDeselect={false}
+        value={isCustomWidgetChoiceValue(value) ? value : null}
+        onChange={(next) => {
+          if (next !== null) onChange(next);
+        }}
       />
     );
   if (control === "multiSelect" && choices.length > 0)
     return (
-      <MultiSelect
+      <MultiSelect<string | number>
         label={t("default")}
         data={choiceData}
-        value={Array.isArray(value) ? value.map(String) : []}
-        onChange={(next) => onChange(next.map((entry) => coerceChoice(entry, choices)))}
+        error={choiceError}
+        disabled={Boolean(choiceError)}
+        value={Array.isArray(value) ? value.filter(isCustomWidgetChoiceValue) : []}
+        onChange={onChange}
       />
     );
-  if (control === "json" || control === "multiSelect")
+  if (control === "json" || control === "multiSelect" || control === "select")
     return <JsonValueEditor id={id} label={t("default")} value={value} onChange={onChange} />;
   return (
     <TextInput
@@ -63,8 +77,8 @@ export function DefaultValueEditor({
 }
 
 export function optionForControl(option: Record<string, unknown>, control: string | null): Record<string, unknown> {
-  const nextControl = control ?? "text";
-  const next: Record<string, unknown> = { ...option, control: nextControl, default: defaultForControl(nextControl) };
+  const nextControl = customWidgetOptionControls.find((candidate) => candidate === control) ?? "text";
+  const next: Record<string, unknown> = { ...option, control: nextControl };
   if (!["select", "multiSelect"].includes(nextControl)) {
     next.choices = undefined;
     next.choicesFrom = undefined;
@@ -73,6 +87,17 @@ export function optionForControl(option: Record<string, unknown>, control: strin
     next.min = undefined;
     next.max = undefined;
     next.step = undefined;
+  }
+  const choices = customWidgetOptionSchema.shape.choices.safeParse(next.choices).data;
+  const constraints = {
+    control: nextControl,
+    min: typeof next.min === "number" ? next.min : undefined,
+    max: typeof next.max === "number" ? next.max : undefined,
+    choices,
+  };
+  if (getCustomWidgetOptionValueIssue(constraints, option.default)) {
+    next.default = defaultForControl(nextControl);
+    if (nextControl === "select" && choices?.[0]) next.default = choices[0].value;
   }
   return next;
 }
@@ -101,18 +126,43 @@ export function OptionChoicesEditor({
               )
             }
           />
-          <TextInput
-            style={{ flex: "1 1 10rem" }}
-            label={t("choiceValue")}
-            value={String(choice.value)}
-            onChange={(event) =>
-              onChange(
-                value.map((entry, entryIndex) =>
-                  entryIndex === index ? { ...entry, value: parseChoiceValue(event.currentTarget.value) } : entry,
-                ),
-              )
-            }
+          <Select
+            style={{ flex: "0 1 7rem" }}
+            label={t("control")}
+            data={["text", "number"]}
+            value={typeof choice.value === "number" ? "number" : "text"}
+            allowDeselect={false}
+            onChange={(control) => {
+              let next: string | number = String(choice.value);
+              if (control === "number") {
+                const numeric = Number(choice.value);
+                next = Number.isFinite(numeric) ? numeric : 0;
+              }
+              onChange(value.map((entry, entryIndex) => (entryIndex === index ? { ...entry, value: next } : entry)));
+            }}
           />
+          {typeof choice.value === "number" ? (
+            <NumericChoiceValueEditor
+              label={t("choiceValue")}
+              value={choice.value}
+              onChange={(next) => {
+                onChange(value.map((entry, entryIndex) => (entryIndex === index ? { ...entry, value: next } : entry)));
+              }}
+            />
+          ) : (
+            <TextInput
+              style={{ flex: "1 1 10rem" }}
+              label={t("choiceValue")}
+              value={choice.value}
+              onChange={(event) =>
+                onChange(
+                  value.map((entry, entryIndex) =>
+                    entryIndex === index ? { ...entry, value: event.currentTarget.value } : entry,
+                  ),
+                )
+              }
+            />
+          )}
           <ActionIcon
             type="button"
             color="red"
@@ -134,6 +184,37 @@ export function OptionChoicesEditor({
         {t("addChoice")}
       </Button>
     </Stack>
+  );
+}
+
+function NumericChoiceValueEditor({
+  label,
+  value,
+  onChange,
+}: {
+  label: string;
+  value: number;
+  onChange(value: number): void;
+}) {
+  const [draft, setDraft] = useState<string | number>(value);
+  useEffect(() => {
+    setDraft((current) => {
+      if (current !== "" && Number(current) === value) return current;
+      return value;
+    });
+  }, [value]);
+  return (
+    <NumberInput
+      style={{ flex: "1 1 10rem" }}
+      label={label}
+      value={draft}
+      onChange={(next) => {
+        setDraft(next);
+        if (next === "" || (typeof next === "string" && next.endsWith("."))) return;
+        const numeric = Number(next);
+        if (Number.isFinite(numeric)) onChange(numeric);
+      }}
+    />
   );
 }
 
@@ -183,14 +264,4 @@ function defaultForControl(control: string | null) {
   if (control === "multiSelect") return [];
   if (control === "json") return {};
   return "";
-}
-
-function parseChoiceValue(value: string): string | number {
-  return /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/u.test(value.trim()) ? Number(value) : value;
-}
-
-function coerceChoice(value: string | null, choices: Array<{ value: string | number }>) {
-  if (value === null) return "";
-  const numeric = choices.find((choice) => typeof choice.value === "number" && String(choice.value) === value);
-  return numeric?.value ?? value;
 }

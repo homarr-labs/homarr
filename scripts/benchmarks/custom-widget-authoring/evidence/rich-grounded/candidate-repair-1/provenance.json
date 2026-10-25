@@ -1,0 +1,18 @@
+{
+  "method": "grounded repair of original, not standalone quality benchmark",
+  "inputs": {
+    "prompt.md": {
+      "path": "../candidate-final/prompt.md",
+      "sha256": "d1e1269504dcc5ccae80ebbc442ecccbb24b0916f5f8ffc6fd27c1429b00fac8"
+    },
+    "reply.md": {
+      "path": "../candidate-final/reply.md",
+      "sha256": "adca56c0427f1d725a8e46038e35da529fd789989786415dca825853c7449503"
+    },
+    "response.json": {
+      "path": "../response.json",
+      "sha256": "c0e4950419aa8cd715afcf7faaa26f6ce5d28fc2c4fb7e7f862ff0d83e3b2b6f"
+    }
+  },
+  "lifecycleVerification": "Not performed. No lifecycle tools or app services were available in this repair session; parent will run actual app verification."
+}

@@ -7,6 +7,7 @@
     "**/*.cjs",
     "**/lang/**",
     "static-data/**",
+    "scripts/benchmarks/**/evidence/**",
     "CHANGELOG.md",
     "apps/docs/.next/**",
     "apps/docs/out/**",

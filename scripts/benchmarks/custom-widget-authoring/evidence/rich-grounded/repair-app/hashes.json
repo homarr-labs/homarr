@@ -1,0 +1,29 @@
+{
+  "length": 7885,
+  "originalLength": 7885,
+  "exactMatch": true,
+  "originalSha256": "793e602dc5f5e3d4028be52710067b46b05b5850a73ad26e7192f34e7a86cfc9",
+  "persistedSha256": "793e602dc5f5e3d4028be52710067b46b05b5850a73ad26e7192f34e7a86cfc9",
+  "editUrl": "http://localhost:3102/manage/custom-widgets/edit/r9aoa3wo3dvow6zre7ak1857?created=1",
+  "rawReplySha256": "819f7f968e9e8f3d61ed8a6af9484986526bd2ae688250a0e5a2f8d636a2453b",
+  "rawTemplateSha256": "793e602dc5f5e3d4028be52710067b46b05b5850a73ad26e7192f34e7a86cfc9",
+  "rawTemplateMatchesParsed": true,
+  "rawTemplateMatchesPersisted": true,
+  "sourcesPersisted": {
+    "default": {
+      "baseUrl": "http://127.0.0.1:3904/",
+      "auth": "none"
+    }
+  },
+  "requestsPersisted": {
+    "overview": {
+      "source": "default",
+      "kind": "query",
+      "method": "GET",
+      "path": "/v1/overview",
+      "trigger": "load",
+      "auth": "inherit",
+      "permission": "view"
+    }
+  }
+}

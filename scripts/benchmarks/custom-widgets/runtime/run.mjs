@@ -1,10 +1,11 @@
 import { createRequire } from "node:module";
-import { mkdir, readFile } from "node:fs/promises";
+import { mkdir, readFile, realpath } from "node:fs/promises";
 import { resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 import { execFileSync } from "node:child_process";
-const root = process.env.ROOT;
-if (!root) throw new Error("ROOT required");
+const rootInput = process.env.ROOT;
+if (!rootInput) throw new Error("ROOT required");
+const root = await realpath(resolve(rootInput));
 const require = createRequire(`${root}/package.json`);
 const { build } = require("esbuild");
 const scratch = import.meta.dirname;

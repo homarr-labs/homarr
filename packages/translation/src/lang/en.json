@@ -1331,6 +1331,7 @@
     "hideScreenshotThumbnails": "Hide screenshot thumbnails",
     "closeScreenshotViewer": "Close screenshot viewer",
     "technicalDetails": "Technical details",
+    "integrations": "Integrations",
     "sourceCode": "Workshop entry",
     "export": "Export",
     "report": "Report",
@@ -1350,6 +1351,12 @@
       "copyright": "Copyright",
       "inappropriate": "Inappropriate",
       "other": "Other"
+    },
+    "share": {
+      "title": "Your widget is ready",
+      "description": "Want to share it? Review a credential-free copy and publish it to Workshop when you're ready. Sharing is optional.",
+      "action": "Share on Workshop",
+      "dismiss": "Not now"
     },
     "publish": {
       "title": "Publish to Workshop",
