@@ -347,7 +347,11 @@ jobs:
         if: "!env.ACT"
         with:
           persist-credentials: false
-          ref: ${{ github.event_name == 'workflow_dispatch' && inputs.ref || '' }}
+          ref: ${{ github.event.pull_request.head.sha || (github.event_name == 'workflow_dispatch' && inputs.ref) || github.sha }}
+
+      - name: Record image source
+        id: source
+        run: echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
 
       - name: Log in to GHCR
         if: "!env.ACT"
@@ -369,6 +373,9 @@ jobs:
           context: .
           network: host
           platforms: linux/amd64
+          labels: |
+            org.opencontainers.image.revision=${{ steps.source.outputs.sha }}
+            org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
           outputs: type=image,"name=${{ env.PREVIEW_IMAGE }}",push-by-digest=true,name-canonical=true,push=true
           cache-from: type=gha,scope=homarr-linux-amd64-${{ github.event_name == 'workflow_dispatch' && inputs.ref || github.ref_name }}
           cache-to: type=gha,scope=homarr-linux-amd64-${{ github.event_name == 'workflow_dispatch' && inputs.ref || github.ref_name }},mode=max
@@ -377,6 +384,15 @@ jobs:
             TURBO_TEAM=${{ secrets.TURBO_TEAM }}
             TURBO_TOKEN=${{ secrets.TURBO_TOKEN }}
             TURBO_REMOTE_CACHE_SIGNATURE_KEY=${{ secrets.TURBO_REMOTE_CACHE_SIGNATURE_KEY }}
+
+      - name: Index the existing amd64 image by source
+        if: "!env.ACT"
+        env:
+          SOURCE_SHA: ${{ steps.source.outputs.sha }}
+          DIGEST: ${{ steps.preview-build.outputs.digest }}
+        run: |
+          docker buildx imagetools create -t "${PREVIEW_IMAGE}:sha-${SOURCE_SHA}-amd64" \
+            "${PREVIEW_IMAGE}@${DIGEST}"
 
   preview-arm64:
     name: Build arm64 preview image
@@ -399,7 +415,11 @@ jobs:
         if: "!env.ACT"
         with:
           persist-credentials: false
-          ref: ${{ github.event_name == 'workflow_dispatch' && inputs.ref || '' }}
+          ref: ${{ github.event.pull_request.head.sha || (github.event_name == 'workflow_dispatch' && inputs.ref) || github.sha }}
+
+      - name: Record image source
+        id: source
+        run: echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
 
       - name: Log in to GHCR
         if: "!env.ACT"
@@ -421,6 +441,9 @@ jobs:
           context: .
           network: host
           platforms: linux/arm64
+          labels: |
+            org.opencontainers.image.revision=${{ steps.source.outputs.sha }}
+            org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
           outputs: type=image,"name=${{ env.PREVIEW_IMAGE }}",push-by-digest=true,name-canonical=true,push=true
           cache-from: type=gha,scope=homarr-linux-arm64-${{ github.event_name == 'workflow_dispatch' && inputs.ref || github.ref_name }}
           cache-to: type=gha,scope=homarr-linux-arm64-${{ github.event_name == 'workflow_dispatch' && inputs.ref || github.ref_name }},mode=max
@@ -528,7 +551,7 @@ jobs:
               `docker pull ${image}`,
               "```",
               "",
-              `[Build details](${runUrl}) · Commit \`${context.sha.slice(0, 7)}\``,
+              `[Build details](${runUrl}) · Commit \`${(context.payload.pull_request?.head.sha ?? context.sha).slice(0, 7)}\``,
               "This comment updates when a new preview is published.",
             ].join("\n");
             const comments = await github.paginate(github.rest.issues.listComments, {
