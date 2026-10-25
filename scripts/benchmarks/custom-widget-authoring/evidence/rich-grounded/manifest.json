@@ -171,6 +171,11 @@
       "path": "repair-app/refresh-check.json",
       "bytes": 198,
       "sha256": "560b7038c0bcfd6ea17ebe46f82b10f02270120ebf78e8f1d6c7feece5f98203"
+    },
+    {
+      "path": "app/request-journal-real-refetch.json",
+      "bytes": 537,
+      "sha256": "b1013ccdc99230542b65b602a81c4f4fb31d4339a643fe35903a32dd34f0dd51"
     }
   ]
 }

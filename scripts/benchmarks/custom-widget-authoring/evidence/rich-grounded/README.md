@@ -15,6 +15,6 @@ The model is the pinned Luna session recorded in the original provenance. No mod
 
 ## Integrity and app evidence
 
-`manifest.json` inventories the 34 named byte-preserved source artifacts, excluding this README and the manifest itself. Original prompts, definitions and outputs are not reformatted. The app reports record exact persistence hashes and honest fixture/viewport/console limitations; screenshots are published separately on PR #7358, not replaced with mockups or SSR output.
+`manifest.json` inventories the 35 named byte-preserved source artifacts, excluding this README and the manifest itself. Original prompts, definitions and outputs are not reformatted. The app reports record exact persistence hashes and honest fixture/viewport/console limitations; screenshots are published separately on PR #7358, not replaced with mockups or SSR output. `app/request-journal-real-refetch.json` retains the cited sanitized journal showing two real executions; other unlisted capture files referenced in the original reports are not packaged.
 
 No credentials, captured auth headers, machine environment, generated bundles or screenshots are packaged. Local addresses and IDs refer only to isolated synthetic fixtures. `candidate-final/provenance.json` describes its prompt-source hash, not a claim that subsequent repository edits were remeasured.

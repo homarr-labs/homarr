@@ -248,18 +248,37 @@ function DynamicOptionField({
   const form = useFormContext();
   const board = useOptionalBoard();
   const formRef = useRef(form);
-  formRef.current = form;
   const messages = useI18n("widget.customApi.customJsx");
   const search = useI18n("search");
   const source = option.choicesFrom;
+  const boardId = board?.id ?? "";
+  const requestId = source?.request ?? "";
+  useEffect(() => {
+    formRef.current = form;
+  }, [form]);
   const query = clientApi.customWidget.optionRequest.useQuery(
     {
-      boardId: board?.id ?? "",
+      boardId,
       definitionId,
-      requestId: source?.request ?? "",
+      requestId,
       configuration,
     },
-    { enabled: Boolean(board?.id && definitionId && source?.request) },
+    {
+      enabled: Boolean(board?.id && definitionId && source?.request),
+      placeholderData: (previousData, previousQuery) => {
+        const previousKey = previousQuery?.queryKey[1];
+        const previousInput = isRecord(previousKey) ? previousKey.input : undefined;
+        if (
+          !previousData?.ok ||
+          !isRecord(previousInput) ||
+          previousInput.boardId !== boardId ||
+          previousInput.definitionId !== definitionId ||
+          previousInput.requestId !== requestId
+        )
+          return undefined;
+        return previousData;
+      },
+    },
   );
   const response = query.data?.ok ? query.data.data : undefined;
   const collection = source?.itemsPath ? getByPath(response, source.itemsPath) : response;
