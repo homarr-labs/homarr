@@ -216,6 +216,7 @@ async function captureScenario(target: Target, scenario: (typeof scenarios)[numb
   page.on("pageerror", (error) => errors.push(error.message));
   try {
     await page.goto(`${target.identity.url}/en/boards/${boardName}`, { waitUntil: "domcontentloaded" });
+    await waitForBoardHydration(page);
     await expect(page.locator(`[data-grid-item-id='${boardName}-empty']`)).toBeVisible();
     await page.evaluate(() => document.fonts.ready);
     // Fixture assets are local; Date is fixed while animation and browser timers keep running.
@@ -271,6 +272,10 @@ async function captureScenario(target: Target, scenario: (typeof scenarios)[numb
   return result;
 }
 
+async function waitForBoardHydration(page: Page) {
+  await page.locator('[data-testid="board-canvas"][data-board-hydrated="true"]').waitFor({ timeout: 30_000 });
+}
+
 async function geometry(page: Page, boardName: string, expected: typeof placements) {
   const observed = await page.locator("[data-grid-item-id][data-grid-item-type='section']").evaluateAll(
     (elements, prefix) =>
@@ -310,6 +315,7 @@ async function editBoard(page: Page, target: Target, boardName: string, checks: 
     .poll(() => readPersistedPlacement(target.databasePath, boardName, "editable"))
     .toEqual(expectedPlacement);
   await page.reload({ waitUntil: "domcontentloaded" });
+  await waitForBoardHydration(page);
   await expect(entry).toHaveAttribute("data-grid-h", "1");
   await expect(entry).toHaveAttribute("data-grid-x", "1");
   addCheck(
@@ -332,6 +338,7 @@ async function editBoard(page: Page, target: Target, boardName: string, checks: 
   await expect(collapse).toHaveAttribute("aria-expanded", "false");
   await expect.poll(() => readPersistedCollapse(target.databasePath, boardName)).toBe(1);
   await page.reload({ waitUntil: "domcontentloaded" });
+  await waitForBoardHydration(page);
   await expect(collapse).toHaveAttribute("aria-expanded", "false");
   await collapse.click();
   await expect(collapse).toHaveAttribute("aria-expanded", "true");
