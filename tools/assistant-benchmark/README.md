@@ -18,8 +18,8 @@ and method/path counters; it never logs request headers.
 | `/openmeteo/v1` | `/forecast`, `/search`                                         | None                                           |
 
 These credentials are public dummy values, not real service keys. Configure
-them only in isolated QA integrations. Custom Widget HTTP sources need
-`networkScope: "loopback"`; do not relax production network policy.
+them only in isolated QA integrations. Custom Widget HTTP sources must be reachable from the Homarr server; keep
+credentials outside widget definitions.
 
 Supported response subsets and provenance are documented in `server.mjs`.
 This is not a full service emulator. Unknown paths return 404; unsupported

@@ -799,6 +799,11 @@
       }
     },
     "field": {
+      "url": {
+        "helpLabel": "URL 格式範例",
+        "examples": "支援的連結範例",
+        "requiresHandler": "自訂通訊協定需要在您的裝置上關聯相應的應用程式。"
+      },
       "description": {
         "label": "描述"
       },
@@ -1559,6 +1564,7 @@
             "untrusted": "此憑證不受信任。",
             "hostnameMismatch": "憑證主機名稱與 URL 不相符。"
           },
+          "secondaryUrl": "",
           "alert": {
             "permission": {
               "title": "權限不足",
@@ -1904,6 +1910,7 @@
       "tryAgain": "重試",
       "loading": "正在讀取",
       "show": "顯示",
+      "showAll": "",
       "hide": "隱藏",
       "undo": "復原",
       "editNamed": "編輯 {name}",
@@ -1913,6 +1920,7 @@
       "copied": "已複製",
       "refresh": "刷新"
     },
+    "hidden": "隱藏",
     "pagination": {
       "pageOf": "第 {page} 頁，共 {totalPages} 頁"
     },
@@ -1935,6 +1943,7 @@
       "clear": "清除圖片",
       "uploadImage": "上傳圖片",
       "results": "圖片搜尋結果",
+      "websiteIcon": "",
       "localImages": "你的圖像",
       "svgIcons": "SVG 圖示",
       "otherImages": "其他圖像",
@@ -2308,6 +2317,15 @@
       "option": {
         "appId": {
           "label": "選擇應用程式"
+        },
+        "openIn": {
+          "label": "開啟應用程式的位置",
+          "description": "選擇此應用程式的開啟位置。瀏覽器設定可能會變更在獨立視窗中開啟的行為。",
+          "option": {
+            "currentTab": "目前分頁",
+            "newTab": "新分頁",
+            "newWindow": "新視窗"
+          }
         },
         "showTitle": {
           "label": "顯示應用程式名稱"
@@ -3224,6 +3242,10 @@
         },
         "viewMode": {
           "label": ""
+        },
+        "hideHeader": {
+          "label": "",
+          "description": ""
         }
       },
       "advanced": {
@@ -3241,15 +3263,11 @@
         "agenda": ""
       },
       "controls": {
-        "view": "",
         "today": "今天",
         "previous": "",
         "next": "",
         "noEvents": "",
         "more": "",
-        "moreLabel": "",
-        "eventDetails": "",
-        "close": "",
         "timeSlot": "",
         "weekday": ""
       }
@@ -3936,11 +3954,28 @@
         "paused": "已暫停",
         "remaining": "剩餘 {minutes} 分鐘",
         "seasonEpisode": "S{season} E{episode}",
+        "state": {
+          "playing": "",
+          "buffering": ""
+        },
+        "details": {
+          "device": "裝置",
+          "location": "",
+          "sessionId": "",
+          "bitrate": "",
+          "audioHandling": "",
+          "direct": "",
+          "transcode": "",
+          "containerChanged": "",
+          "position": "",
+          "unknown": ""
+        },
         "metadata": {
           "title": "技術統計",
           "video": {
             "title": "影片",
-            "resolution": "解析度"
+            "resolution": "解析度",
+            "frameRate": ""
           },
           "audio": {
             "title": "音訊",
@@ -3961,6 +3996,109 @@
         "playing": "{count} 個播放中",
         "transcoding": "{count} 個轉碼中"
       }
+    },
+    "thingport-libraryStats": {
+      "name": "",
+      "description": "",
+      "title": "",
+      "option": {
+        "showModels": {
+          "label": ""
+        },
+        "showCollections": {
+          "label": ""
+        },
+        "showCategories": {
+          "label": ""
+        },
+        "showAuthors": {
+          "label": ""
+        }
+      },
+      "models": "",
+      "collections": "",
+      "categories": "",
+      "authors": ""
+    },
+    "thingport-featuredModel": {
+      "name": "",
+      "description": "",
+      "option": {
+        "autoRotate": {
+          "label": ""
+        },
+        "showDetails": {
+          "label": ""
+        }
+      },
+      "title": "",
+      "empty": "",
+      "hint": "",
+      "noPreview": "",
+      "views": "",
+      "prints": ""
+    },
+    "thingport-activityHeatmap": {
+      "name": "",
+      "description": "",
+      "title": "",
+      "option": {
+        "weekStart": {
+          "label": "一周的第一天",
+          "option": {
+            "sunday": "",
+            "monday": ""
+          }
+        },
+        "showTotal": {
+          "label": ""
+        },
+        "showLegend": {
+          "label": ""
+        }
+      },
+      "lastYear": "",
+      "totalLastYear": "",
+      "totalInYear": "",
+      "dayTotal": "",
+      "dayEmpty": "",
+      "kinds": {
+        "import": "",
+        "upload": "總上傳量",
+        "download": "總下載量",
+        "slicer": "",
+        "delete": "已刪除"
+      },
+      "less": "",
+      "more": ""
+    },
+    "thingport-models": {
+      "name": "",
+      "description": "",
+      "title": "",
+      "option": {
+        "defaultTab": {
+          "label": "預設頁面"
+        },
+        "itemCount": {
+          "label": ""
+        },
+        "showThumbnails": {
+          "label": ""
+        }
+      },
+      "tab": {
+        "recentlyAdded": "",
+        "topViewed": "",
+        "topPrinted": ""
+      },
+      "empty": {
+        "recentlyAdded": "",
+        "topViewed": "",
+        "topPrinted": ""
+      },
+      "views": "",
+      "prints": ""
     },
     "paperlessNgx": {
       "description": "你的 Paperless-ngx 文件歸檔概覽",
@@ -4634,27 +4772,59 @@
       "name": "版本發佈",
       "description": "顯示符合指定版本規則的儲存庫及其目前版本列表",
       "option": {
+        "layout": {
+          "label": "版面配置",
+          "description": "",
+          "option": {
+            "comfortable": "",
+            "compact": ""
+          }
+        },
+        "summary": {
+          "label": "",
+          "description": "",
+          "option": {
+            "detailed": "",
+            "count": "",
+            "hidden": "隱藏"
+          }
+        },
+        "sections": {
+          "label": "",
+          "description": ""
+        },
+        "collapsedSections": {
+          "label": "",
+          "description": ""
+        },
         "newReleaseWithin": {
           "label": "新版本發布於",
-          "description": "使用範例：1w（1週）、10m（10個月）。接受的單位類型有：h（小時）、d（天）、w（週）、m（個月）、y（年）。若留空，則不會特別標示新版本"
+          "description": "使用範例：1w（1週）、10m（10個月）。接受的單位類型有：h（小時）、d（天）、w（週）、m（個月）、y（年）。若留空，則不會特別標示新版本",
+          "option": {
+            "never": "",
+            "1d": "一日",
+            "3d": "",
+            "1w": "一周",
+            "2w": "",
+            "1M": "一月",
+            "3M": "三月"
+          }
         },
         "staleReleaseWithin": {
           "label": "過時版本範圍內",
-          "description": "使用範例：1w（1週）、10m（10個月）。接受的單位類型有：h（小時）、d（天）、w（週）、m（個月）、y（年）。若留空，則不會特別標示過時版本"
+          "description": "使用範例：1w（1週）、10m（10個月）。接受的單位類型有：h（小時）、d（天）、w（週）、m（個月）、y（年）。若留空，則不會特別標示過時版本",
+          "option": {
+            "never": "",
+            "1M": "一月",
+            "3M": "三月",
+            "6M": "六月",
+            "1y": "一年",
+            "2y": "兩年"
+          }
         },
-        "showOnlyHighlighted": {
-          "label": "只顯示已標示的項目",
-          "description": "只顯示新版本或過時版本。如上所述"
-        },
-        "showDetails": {
-          "label": "顯示詳情"
-        },
-        "showOnlyIcon": {
-          "label": "僅顯示圖示"
-        },
-        "topReleases": {
-          "label": "熱門發行版本",
-          "description": "要顯示的最新發行版本數量上限。零表示沒有限制。"
+        "showChangelogPreview": {
+          "label": "",
+          "description": ""
         },
         "repositories": {
           "label": "儲存庫",
@@ -4728,36 +4898,106 @@
           }
         }
       },
-      "not-found": "未找到",
-      "pre-release": "預發佈",
-      "archived": "已歸檔",
-      "forked": "已分支",
+      "summary": {
+        "newReleases": "",
+        "newShort": "新增",
+        "tracked": "",
+        "caughtUp": "",
+        "outdated": "",
+        "outdatedShort": "",
+        "failing": "",
+        "failingShort": "",
+        "latest": "",
+        "issues": ""
+      },
+      "section": {
+        "new": {
+          "label": "新增",
+          "description": ""
+        },
+        "attention": {
+          "label": "",
+          "description": ""
+        },
+        "upToDate": {
+          "label": "",
+          "description": ""
+        },
+        "quiet": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "status": {
+        "new": "",
+        "outdated": "",
+        "error": "",
+        "upToDate": "",
+        "quiet": ""
+      },
+      "tag": {
+        "new": "新增",
+        "preRelease": "",
+        "resolvedFrom": "",
+        "quiet": "",
+        "archived": "已歸檔",
+        "fork": ""
+      },
+      "issue": {
+        "affected": "",
+        "rateLimited": {
+          "title": "",
+          "hint": ""
+        },
+        "notFound": {
+          "title": "",
+          "hint": ""
+        },
+        "noMatchingVersion": {
+          "title": "",
+          "hint": ""
+        },
+        "noReleasesFound": {
+          "title": "",
+          "hint": ""
+        },
+        "invalidIdentifier": {
+          "title": "無效的識別碼",
+          "hint": ""
+        },
+        "noProviderSelected": {
+          "title": "",
+          "hint": ""
+        },
+        "noProviderResponse": {
+          "title": "",
+          "hint": ""
+        },
+        "unexpected": {
+          "title": "",
+          "hint": ""
+        }
+      },
+      "markViewed": "標記為已檢視",
+      "markAllViewed": "",
+      "markEntryViewed": "",
+      "viewed": "",
+      "copyVersion": "",
+      "copied": "",
+      "published": "",
+      "whatChanged": "",
+      "noNotes": "",
+      "changes": "",
       "starsCount": "星標",
       "forksCount": "分支數",
-      "issuesCount": "開放問題",
-      "markViewed": "標記為已檢視",
-      "openProjectPage": "開啟專案頁面",
-      "openReleasePage": "開啟發布葉面",
-      "releaseDescription": "版本描述",
-      "projectDescription": "專案說明",
+      "openIssues": "",
+      "created": "已創建",
+      "releasePage": "",
+      "projectPage": "",
       "runningVersions": "",
       "upToDate": "",
       "updateAvailable": "",
-      "unknownStatus": "未知",
-      "created": "已創建",
-      "error": {
-        "label": "錯誤",
-        "messages": {
-          "invalidIdentifier": "無效的識別碼",
-          "noMatchingVersion": "找不到匹配的版本",
-          "noReleasesFound": "找不到任何發行版本",
-          "noProviderSelected": "未選擇提供者",
-          "noProviderResponse": "提供者沒有回應",
-          "unexpected": "未預期的提供者錯誤"
-        }
-      },
-      "expandDetails": "顯示 {name} 的詳細資料",
-      "collapseDetails": "隱藏 {name} 的詳細資料"
+      "unknownStatus": "未知"
     },
     "networkControllerSummary": {
       "advanced": {
@@ -4930,45 +5170,116 @@
     "uptimeKuma": {
       "description": "從你的 Uptime Kuma 狀態頁面監控運作時間統計資料",
       "option": {
-        "showAverageUptime": {
-          "label": "顯示平均運作時間",
-          "description": "顯示合併的 24 小時平均運作時間百分比"
+        "statusPageSlug": {
+          "label": "",
+          "description": ""
         },
-        "showUptimeRing": {
-          "label": "顯示運作時間環",
-          "description": "在平均運作時間值旁顯示進度環"
+        "summaryOnly": {
+          "label": "",
+          "description": ""
         },
-        "showTotalMonitors": {
-          "label": "顯示監視器總數",
-          "description": "顯示已設定監視器的總數"
+        "showSummary": {
+          "label": "",
+          "description": ""
         },
-        "showUpCount": {
-          "label": "顯示正常數量",
-          "description": "顯示目前正常運作的監視器數量"
+        "showIncidents": {
+          "label": "",
+          "description": ""
         },
-        "showDownCount": {
-          "label": "顯示異常數量",
-          "description": "顯示目前異常的監視器數量"
+        "groupByStatusPageGroup": {
+          "label": "",
+          "description": ""
         },
-        "showPausedCount": {
-          "label": "顯示暫停數量",
-          "description": "顯示目前暫停的監視器數量"
+        "showOnlyProblems": {
+          "label": "",
+          "description": ""
+        },
+        "sortBy": {
+          "label": "",
+          "option": {
+            "status": "",
+            "statusPage": "",
+            "name": "工作名稱",
+            "uptime": ""
+          }
+        },
+        "showHeartbeatBar": {
+          "label": "",
+          "description": ""
+        },
+        "showUptime": {
+          "label": ""
+        },
+        "showResponseTime": {
+          "label": ""
+        },
+        "showCertificateExpiry": {
+          "label": "",
+          "description": ""
         }
-      },
-      "averageUptime": "平均運作時間（24 小時）",
-      "stats": {
-        "totalMonitors": "監視器總數",
-        "upCount": "正常",
-        "downCount": "異常",
-        "pausedCount": "已暫停"
-      },
-      "error": {
-        "internalServerError": "無法取得運作時間資料"
       },
       "status": {
         "up": "總上傳",
         "down": "下載速度",
-        "paused": "已暫停"
+        "pending": "待處理",
+        "maintenance": "",
+        "stale": "",
+        "unknown": ""
+      },
+      "overall": {
+        "operational": "",
+        "degraded": "",
+        "outage": "",
+        "maintenance": "",
+        "unknown": ""
+      },
+      "short": {
+        "operational": "",
+        "down": "",
+        "pending": "",
+        "maintenance": "",
+        "unknown": ""
+      },
+      "summary": {
+        "upRatio": "",
+        "upRatioShort": "",
+        "averageUptime": "",
+        "uptimeShort": "",
+        "statusCount": ""
+      },
+      "unit": {
+        "milliseconds": ""
+      },
+      "heartbeatBar": {
+        "label": ""
+      },
+      "detail": {
+        "checked": "",
+        "certificate": ""
+      },
+      "notice": {
+        "label": "",
+        "untitled": "未命名"
+      },
+      "empty": {
+        "title": "",
+        "description": ""
+      },
+      "allClear": "",
+      "error": {
+        "internalServerError": "無法取得運作時間資料"
+      },
+      "monitorType": {
+        "http": "",
+        "keyword": "",
+        "jsonQuery": "",
+        "port": "",
+        "ping": "Ping",
+        "dns": "",
+        "docker": "",
+        "push": "",
+        "group": "用戶組",
+        "realBrowser": ""
       }
     },
     "traefik": {
@@ -5575,6 +5886,8 @@
       "allHidden": "此檢視中的所有指標均已隱藏。使用「自訂此檢視」以還原。"
     },
     "wazuh": {
+      "name": "",
+      "description": "",
       "target": {
         "api": "Wazuh 伺服器 API",
         "indexer": "Wazuh 索引器",
@@ -5594,6 +5907,14 @@
         "certificate": {
           "title": "{target} 的憑證不受信任",
           "description": "Wazuh 預設使用自我簽署的憑證。在整合上執行「測試連線」並信任該憑證，或在「設定 → 憑證」中新增您的 CA。"
+        },
+        "certificateHostname": {
+          "title": "",
+          "description": ""
+        },
+        "certificateExpired": {
+          "title": "",
+          "description": ""
         },
         "unreachable": {
           "title": "無法連線至 {target}",
@@ -5618,7 +5939,9 @@
         "unknown": {
           "title": "無法從 {target} 載入資料",
           "description": "請查看 Homarr 記錄以取得詳細資料。"
-        }
+        },
+        "viewSaveTitle": "",
+        "viewSaveMessage": ""
       },
       "range": {
         "1h": "1 小時",
@@ -5626,268 +5949,234 @@
         "7d": "7 天",
         "30d": "30 天"
       },
-      "levelTooltip": "規則層級 {level}（{severity}）"
-    },
-    "wazuhAgents": {
-      "name": "Wazuh 代理程式",
-      "description": "可排序的 Wazuh 代理程式清單，包含狀態、作業系統、版本和最後保持連線時間",
+      "levelTooltip": "規則層級 {level}（{severity}）",
+      "summary": {
+        "title": "",
+        "alerts": "",
+        "none": "",
+        "trend": {
+          "new": "新增",
+          "tooltip": ""
+        },
+        "previous": "",
+        "maxLevel": "",
+        "health": "",
+        "manager": ""
+      },
+      "alerts": {
+        "title": "",
+        "empty": "",
+        "rule": "",
+        "openInDashboard": ""
+      },
+      "timeline": {
+        "title": "",
+        "total": "",
+        "interval": ""
+      },
+      "top": {
+        "title": {
+          "rules": "",
+          "agents": "",
+          "sourceIps": "",
+          "mitreTactics": "",
+          "mitreTechniques": ""
+        },
+        "empty": {
+          "rules": "",
+          "agents": "",
+          "sourceIps": "",
+          "mitreTactics": "",
+          "mitreTechniques": ""
+        },
+        "totalTooltip": "",
+        "private": "",
+        "public": "公開",
+        "agents": "",
+        "others": ""
+      },
+      "agents": {
+        "title": "",
+        "total": "",
+        "status": {
+          "active": "活動中",
+          "disconnected": "斷線",
+          "neverConnected": "",
+          "pending": "待處理"
+        },
+        "statusLabel": {
+          "active": "活動中",
+          "disconnected": "斷線",
+          "never_connected": "",
+          "pending": "待處理",
+          "unknown": "未知"
+        },
+        "live": "",
+        "snapshot": "",
+        "snapshotHint": "",
+        "staleSnapshot": "",
+        "noDisconnected": "",
+        "empty": "",
+        "column": {
+          "status": "狀態",
+          "name": "工作名稱",
+          "ip": "",
+          "os": "系統",
+          "version": "版本",
+          "lastKeepAlive": "",
+          "groups": "群組"
+        },
+        "outdated": ""
+      },
+      "vulnerabilities": {
+        "title": "",
+        "topCves": "",
+        "score": "",
+        "agentsShort": "",
+        "topAgents": "",
+        "criticalHigh": "",
+        "totalTooltip": "",
+        "affected": "",
+        "empty": "",
+        "distribution": "",
+        "worst": ""
+      },
+      "fim": {
+        "title": "",
+        "event": {
+          "added": "日期已新增",
+          "modified": "",
+          "deleted": "已刪除",
+          "unknown": ""
+        },
+        "empty": "",
+        "user": "",
+        "registry": ""
+      },
+      "authFailures": {
+        "title": "",
+        "seriesTooltip": "",
+        "peak": "",
+        "empty": "",
+        "failed": "",
+        "failedHint": "",
+        "bruteForce": "",
+        "bruteForceHint": "",
+        "sourceIps": "",
+        "ipTooltip": "",
+        "bruteForceCount": ""
+      },
+      "view": {
+        "overview": "",
+        "alerts": "",
+        "timeline": "",
+        "top": "",
+        "agents": "",
+        "vulnerabilities": "",
+        "fim": "",
+        "authFailures": ""
+      },
       "option": {
-        "statusFilter": {
-          "label": "顯示代理程式"
+        "visibleViews": {
+          "label": "",
+          "description": ""
         },
-        "sortBy": {
-          "label": "排序依據"
-        },
-        "showVersion": {
-          "label": "顯示 Wazuh 版本欄"
-        },
-        "showGroups": {
-          "label": "顯示群組欄"
-        }
-      },
-      "title": "代理程式",
-      "total": "{count} 個代理程式",
-      "status": {
-        "active": "活動中",
-        "disconnected": "斷線",
-        "neverConnected": "從未連線",
-        "pending": "待處理"
-      },
-      "statusLabel": {
-        "active": "活動中",
-        "disconnected": "斷線",
-        "never_connected": "從未連線",
-        "pending": "待處理",
-        "unknown": "未知"
-      },
-      "live": "即時",
-      "snapshot": "快照已存在 {age}",
-      "snapshotHint": "從 Wazuh 儀表板的代理程式快照（wazuh-monitoring）讀取，快照建立於 {time}。新增伺服器 API 認證資料以取得即時資料。",
-      "staleSnapshot": "{time} 的代理程式快照已過時。請確認 Wazuh 儀表板監控工作正在執行，或新增伺服器 API 認證資料。",
-      "noDisconnected": "所有代理程式都已連線",
-      "empty": "沒有代理程式符合此篩選條件",
-      "column": {
-        "status": "狀態",
-        "name": "工作名稱",
-        "ip": "IP 位址",
-        "os": "系統",
-        "version": "版本",
-        "lastKeepAlive": "保持連線",
-        "groups": "群組"
-      },
-      "outdated": "比最新代理程式版本（{version}）舊"
-    },
-    "wazuhAlerts": {
-      "name": "Wazuh 警示摘要",
-      "description": "包含等級、MITRE ATT&CK 技術、代理程式和來源 IP 的近期 Wazuh 警示",
-      "option": {
-        "minLevel": {
-          "label": "最低規則等級",
-          "description": "Wazuh 等級：0–6 低，7–11 中，12–14 高，15 以上嚴重"
-        },
-        "hours": {
-          "label": "時間範圍（小時）"
-        },
-        "limit": {
-          "label": "警示數量"
-        },
-        "showMitre": {
-          "label": "顯示 MITRE ATT&CK 技術"
-        },
-        "showAgent": {
-          "label": "顯示代理程式"
-        },
-        "showSourceIp": {
-          "label": "顯示來源 IP"
-        },
-        "showRuleId": {
-          "label": "顯示規則 ID"
-        }
-      },
-      "title": "警示 · 層級 {level}+ · {hours} 小時",
-      "empty": "此等級沒有警示。一切平靜。",
-      "rule": "規則 {id}",
-      "openInDashboard": "在 Wazuh 儀表板中開啟此警示"
-    },
-    "wazuhSummary": {
-      "name": "Wazuh 警示嚴重性",
-      "description": "警示嚴重性明細，並與上一個期間的趨勢比較",
-      "option": {
         "range": {
-          "label": "時間範圍"
+          "label": ""
         },
         "showTrend": {
-          "label": "顯示與上一個期間比較的趨勢"
+          "label": ""
         },
         "showFooter": {
-          "label": "顯示頁尾"
-        }
-      },
-      "title": "警示嚴重性 · {range}",
-      "alerts": "警示",
-      "none": "沒有警示",
-      "trend": {
-        "new": "創建",
-        "tooltip": "上一期間：{previous}"
-      },
-      "previous": "上一個 {range}：{count}",
-      "maxLevel": "最高層級 {level}",
-      "health": "索引器健康狀態：{status}",
-      "manager": "管理器 {version}"
-    },
-    "wazuhTimeline": {
-      "name": "Wazuh 警示時間軸",
-      "description": "依嚴重性顯示一段時間內 Wazuh 警示的堆疊圖表",
-      "option": {
-        "range": {
-          "label": "時間範圍"
+          "label": ""
         },
         "interval": {
-          "label": "時間間隔"
+          "label": ""
         },
         "chartType": {
-          "label": "圖表類型"
+          "label": ""
         },
         "yScale": {
-          "label": "Y 軸刻度",
-          "description": "平方根刻度可讓高嚴重性和嚴重警示在數千個低嚴重性警示旁仍清楚可見"
+          "label": "",
+          "description": ""
         },
         "minLevel": {
-          "label": "最低規則等級"
+          "label": ""
         },
         "showLegend": {
-          "label": "顯示包含總數的圖例"
-        }
-      },
-      "title": "警示時間軸 · {range}",
-      "total": "{count} 個警示",
-      "interval": "每 {interval}"
-    },
-    "wazuhTopList": {
-      "name": "Wazuh 排行清單",
-      "description": "依警示數量排列的熱門規則、代理程式、來源 IP，或 MITRE ATT&CK 戰術與技術",
-      "option": {
-        "kind": {
-          "label": "排名"
+          "label": ""
         },
-        "range": {
-          "label": "時間範圍"
+        "topKind": {
+          "label": ""
         },
-        "limit": {
-          "label": "項目數量"
-        },
-        "minLevel": {
-          "label": "最低規則等級"
+        "topLimit": {
+          "label": ""
         },
         "showBars": {
-          "label": "顯示長條"
-        }
-      },
-      "title": {
-        "rules": "熱門規則 · {range}",
-        "agents": "熱門代理程式 · {range}",
-        "sourceIps": "熱門來源 IP · {range}",
-        "mitreTactics": "MITRE 戰術 · {range}",
-        "mitreTechniques": "MITRE 技術 · {range}"
-      },
-      "empty": {
-        "rules": "此期間沒有警示",
-        "agents": "此期間沒有警示",
-        "sourceIps": "此期間沒有帶來源 IP 的警示",
-        "mitreTactics": "此期間沒有對應至 MITRE ATT&CK 的警示",
-        "mitreTechniques": "此期間沒有對應至 MITRE ATT&CK 的警示"
-      },
-      "totalTooltip": "符合條件的警示數：{count}",
-      "private": "區域網路",
-      "public": "公開",
-      "agents": "在 {count} 個代理程式上看見",
-      "others": "其他項目中還有 {count} 個警示"
-    },
-    "wazuhVulnerabilities": {
-      "name": "Wazuh 弱點",
-      "description": "弱點數量、熱門 CVE 與最易受攻擊的代理程式",
-      "option": {
+          "label": ""
+        },
+        "agentStatusFilter": {
+          "label": ""
+        },
+        "agentSortBy": {
+          "label": ""
+        },
+        "showVersion": {
+          "label": ""
+        },
+        "showGroups": {
+          "label": ""
+        },
         "cveOrder": {
-          "label": "CVE 排序依據"
+          "label": ""
         },
         "minSeverity": {
-          "label": "CVE 嚴重性"
+          "label": ""
         },
         "cveLimit": {
-          "label": "CVE 數量"
+          "label": ""
         },
         "agentLimit": {
-          "label": "代理程式數量"
+          "label": ""
         },
         "showAgents": {
-          "label": "顯示最易受攻擊的代理程式"
-        }
-      },
-      "title": "弱點",
-      "topCves": "熱門 CVE",
-      "score": "分數",
-      "agentsShort": "代理程式",
-      "topAgents": "最易受攻擊的代理程式",
-      "criticalHigh": "嚴重／高",
-      "totalTooltip": "{agents} 個代理程式上有 {count} 個發現項目",
-      "affected": "{count} 個代理程式",
-      "empty": "未偵測到弱點",
-      "distribution": "嚴重性分佈。沒有分數的 {unscored} 個發現項目不會顯示。",
-      "worst": "最嚴重：{id}（{score}），位於 {agents} 個代理程式上"
-    },
-    "wazuhFim": {
-      "name": "Wazuh 檔案完整性",
-      "description": "最近的檔案完整性監控（syscheck）事件",
-      "option": {
-        "range": {
-          "label": "時間範圍"
+          "label": ""
         },
-        "event": {
-          "label": "事件"
+        "fimEvent": {
+          "label": ""
         },
-        "limit": {
-          "label": "事件數量"
+        "fimLimit": {
+          "label": ""
         },
         "includeRegistry": {
-          "label": "包含 Windows 登錄檔事件"
-        }
-      },
-      "title": "檔案完整性 · {range}",
-      "event": {
-        "added": "日期已新增",
-        "modified": "已修改",
-        "deleted": "已刪除",
-        "unknown": "已變更"
-      },
-      "empty": "此期間沒有檔案完整性事件",
-      "user": "由 {user}",
-      "registry": "登錄檔"
-    },
-    "wazuhAuthFailures": {
-      "name": "Wazuh 驗證失敗",
-      "description": "依代理程式顯示失敗登入與暴力破解警示，並附上每小時迷你圖",
-      "option": {
-        "hours": {
-          "label": "時間視窗（小時）"
+          "label": ""
         },
-        "limit": {
-          "label": "代理程式數量"
+        "authLimit": {
+          "label": ""
         },
         "showSourceIps": {
-          "label": "顯示熱門來源 IP"
+          "label": ""
+        },
+        "alertsMinLevel": {
+          "label": "",
+          "description": ""
+        },
+        "alertsLimit": {
+          "label": ""
+        },
+        "showMitre": {
+          "label": ""
+        },
+        "showAgent": {
+          "label": ""
+        },
+        "showSourceIp": {
+          "label": ""
+        },
+        "showRuleId": {
+          "label": ""
         }
-      },
-      "title": "驗證失敗 · {hours} 小時",
-      "seriesTooltip": "過去 {hours} 小時內的所有代理程式",
-      "peak": "峰值 {count}/區段",
-      "empty": "此期間沒有失敗登入",
-      "failed": "失敗登入",
-      "failedHint": "單次驗證失敗（sshd、PAM、Windows 登入、無效使用者）",
-      "bruteForce": "暴力破解",
-      "bruteForceHint": "相關聯的暴力破解規則（短時間內多次失敗，MITRE T1110）",
-      "sourceIps": "來源 IP",
-      "ipTooltip": "{ip}：{count} 次失敗",
-      "bruteForceCount": "{count} 次暴力破解"
+      }
     }
   },
   "widgetPreview": {
@@ -5906,6 +6195,18 @@
       "addWidget": "新增小工具",
       "addApp": "新增應用程式",
       "connectService": "連線服務"
+    },
+    "urlDrop": {
+      "hint": "",
+      "resolving": "",
+      "notification": {
+        "success": {
+          "message": ""
+        },
+        "full": {
+          "message": ""
+        }
+      }
     },
     "setupChecklist": {
       "title": "讓此面板發揮作用",
@@ -8512,6 +8813,14 @@
     "conversationActions": "對話操作",
     "searchConversations": "搜尋對話",
     "noMatchingConversations": "沒有符合條件的對話",
+    "historyError": {
+      "title": "",
+      "load": "",
+      "loadMessages": "",
+      "saveMessages": "",
+      "switch": "",
+      "retry": ""
+    },
     "moreActions": "更多回應操作",
     "renameConversation": {
       "action": "重新命名",
@@ -8631,6 +8940,9 @@
     },
     "mentions": {
       "menu": "新增 Homarr 內容",
+      "back": "",
+      "loading": "",
+      "empty": "",
       "context": "上下文",
       "app": "應用程式",
       "integration": "集成",
@@ -8645,6 +8957,8 @@
     },
     "commands": {
       "menu": "助理指令",
+      "hint": "",
+      "empty": "",
       "health": "準備服務健康狀態檢查",
       "explore": "準備此 Homarr 執行個體的概覽",
       "media": "準備媒體搜尋",
@@ -8827,6 +9141,7 @@
     "approvalDescription": "執行前請檢視此變更。",
     "approveAndRun": "核准並執行",
     "deny": "拒絕",
+    "approvalError": "",
     "autoApproval": {
       "label": "自動核准",
       "composerLabel": "代我核准",

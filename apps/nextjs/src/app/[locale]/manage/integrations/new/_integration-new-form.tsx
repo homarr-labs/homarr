@@ -48,6 +48,7 @@ import { IntegrationTestConnectionError } from "../_components/test-connection/i
 import type { AnyMappedTestConnectionError } from "../_components/test-connection/types";
 
 interface NewIntegrationFormProps {
+  selectableApps?: RouterOutputs["app"]["selectable"];
   kind: IntegrationKind;
   initialUrl?: string;
   initialName?: string;
@@ -66,7 +67,14 @@ const formSchema = integrationCreateSchema.omit({ kind: true, app: true, skipCon
   }),
 );
 
-export const NewIntegrationForm = ({ kind, initialUrl, initialName, onSuccess, onCancel }: NewIntegrationFormProps) => {
+export const NewIntegrationForm = ({
+  kind,
+  initialUrl,
+  initialName,
+  onSuccess,
+  onCancel,
+  selectableApps,
+}: NewIntegrationFormProps) => {
   const tCommon = useI18n("common");
   const tIntegration = useI18n("integration");
   const secretKinds = getAllSecretKindOptions(kind);
@@ -212,7 +220,7 @@ export const NewIntegrationForm = ({ kind, initialUrl, initialName, onSuccess, o
           </section>
         )}
 
-        <AppForm form={form} canCreateApps={canCreateApps} />
+        <AppForm form={form} canCreateApps={canCreateApps} selectableApps={selectableApps} />
 
         <Group justify="end" align="center">
           {onCancel ? (
@@ -235,7 +243,15 @@ export const NewIntegrationForm = ({ kind, initialUrl, initialName, onSuccess, o
 
 type FormType = z.infer<typeof formSchema>;
 
-const AppForm = ({ form, canCreateApps }: { form: UseFormReturnType<FormType>; canCreateApps: boolean }) => {
+const AppForm = ({
+  form,
+  canCreateApps,
+  selectableApps,
+}: {
+  form: UseFormReturnType<FormType>;
+  canCreateApps: boolean;
+  selectableApps?: RouterOutputs["app"]["selectable"];
+}) => {
   const tIntegration = useI18n("integration");
   const checkboxInputProps = form.getInputProps("hasApp", { type: "checkbox" });
 
@@ -285,7 +301,7 @@ const AppForm = ({ form, canCreateApps }: { form: UseFormReturnType<FormType>; c
                 {...form.getInputProps("appHref")}
               />
             ) : (
-              <IntegrationAppSelect {...form.getInputProps("appId")} />
+              <IntegrationAppSelect {...form.getInputProps("appId")} selectableApps={selectableApps} />
             )}
           </Stack>
         </Fieldset>
@@ -333,11 +349,12 @@ type IntegrationAppSelectProps = Modify<
   {
     value?: string | null;
     onChange: (value: string | null) => void;
+    selectableApps?: RouterOutputs["app"]["selectable"];
   }
 >;
 
-const IntegrationAppSelect = ({ value, ...props }: IntegrationAppSelectProps) => {
-  const { data, isPending } = clientApi.app.selectable.useQuery();
+const IntegrationAppSelect = ({ value, selectableApps, ...props }: IntegrationAppSelectProps) => {
+  const { data, isPending } = clientApi.app.selectable.useQuery(undefined, { initialData: selectableApps });
   const tIntegration = useI18n("integration");
 
   const appMap = new Map(data?.map((app) => [app.id, app] as const));

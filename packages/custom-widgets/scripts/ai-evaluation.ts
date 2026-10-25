@@ -281,7 +281,7 @@ export const getExpectedWidgetCase = (
 });
 
 const getAuthName = (source: HomarrCustomWidgetV2["sources"][string] | undefined) =>
-  typeof source?.auth === "object" ? source.auth.name : undefined;
+  typeof source?.auth === "object" && "name" in source.auth ? source.auth.name : undefined;
 
 const requestMatchesExpectation = (
   request: HomarrCustomWidgetV2["requests"][string],
@@ -390,12 +390,6 @@ export function getDeterministicEvaluationIssues(
     issues.push({
       path: ["sources", "default", "auth"],
       message: `Use the verified ${expectations.sourceAuth} authentication mode.`,
-    });
-  }
-  if (expectations.sourceNetworkScope !== undefined && source?.networkScope !== expectations.sourceNetworkScope) {
-    issues.push({
-      path: ["sources", "default", "networkScope"],
-      message: `Use the verified ${expectations.sourceNetworkScope} network scope.`,
     });
   }
   if (expectations.sourceAuthName !== undefined && getAuthName(source) !== expectations.sourceAuthName) {

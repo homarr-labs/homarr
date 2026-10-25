@@ -7,7 +7,7 @@ import {
   parseCustomWidgetAiResponse,
   validateCustomWidgetOptions,
 } from "@homarr/custom-widgets/core";
-import type { CustomWidgetSource, HomarrCustomWidgetV2 } from "@homarr/custom-widgets/core";
+import type { CustomWidgetSource, HomarrCustomWidgetV2, CustomWidgetSecretKind } from "@homarr/custom-widgets/core";
 import type { CustomWidgetFormValues } from "@homarr/custom-widgets/workbench";
 import type { UseFormReturnType } from "@mantine/form";
 
@@ -35,7 +35,7 @@ export function getChangedSecrets(values: Pick<CustomWidgetFormValues, "secrets"
     .filter((secret) => secret.value.trim())
     .map(({ sourceId, kind, value }) => ({
       sourceId,
-      kind: kind as "apiKey" | "username" | "password",
+      kind: kind as CustomWidgetSecretKind,
       value,
     }));
 }

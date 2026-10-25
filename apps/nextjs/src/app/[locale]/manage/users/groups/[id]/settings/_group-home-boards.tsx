@@ -2,6 +2,7 @@
 
 import { Button, Group, Stack } from "@mantine/core";
 
+import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { useZodForm } from "@homarr/form";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
@@ -11,15 +12,15 @@ import { groupSettingsSchema } from "@homarr/validation/group";
 import { BoardSelect } from "~/components/board/board-select";
 
 interface GroupHomeBoardsProps {
+  availableBoards: RouterOutputs["board"]["getBoardsForGroup"];
   homeBoardId: string | null;
   mobileHomeBoardId: string | null;
   groupId: string;
 }
 
-export const GroupHomeBoards = ({ homeBoardId, mobileHomeBoardId, groupId }: GroupHomeBoardsProps) => {
+export const GroupHomeBoards = ({ homeBoardId, mobileHomeBoardId, groupId, availableBoards }: GroupHomeBoardsProps) => {
   const tGroup = useI18n("group");
   const tCommon = useI18n("common");
-  const [availableBoards] = clientApi.board.getBoardsForGroup.useSuspenseQuery({ groupId });
   const form = useZodForm(groupSettingsSchema.pick({ homeBoardId: true, mobileHomeBoardId: true }), {
     initialValues: {
       homeBoardId,

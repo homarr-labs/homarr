@@ -54,7 +54,10 @@ const getSharedOptionNamespace = (kind: WidgetKind, property: string): string | 
     return "widget.beszel.options";
   }
 
-  if (["dockerContainers", "downloads", "beszelSystemTable"].includes(kind) && TABLE_OPTION_PROPERTIES.has(property)) {
+  if (
+    ["dockerContainers", "downloads", "beszelSystemTable", "wazuh"].includes(kind) &&
+    TABLE_OPTION_PROPERTIES.has(property)
+  ) {
     return "widget.common.tableOptions";
   }
 
@@ -74,7 +77,6 @@ const getSharedOptionNamespace = (kind: WidgetKind, property: string): string | 
     (kind === "bookmarks" && property === "title") ||
     (kind === "clock" && property === "customTitle") ||
     (kind === "minecraftServerStatus" && property === "title") ||
-    (kind === "app" && property === "openInNewTab") ||
     (kind === "bookmarks" && property === "openNewTab") ||
     (kind === "wud" && property === "showTitle") ||
     (kind === "anchorNote" && property === "showTitle") ||

@@ -799,6 +799,11 @@
       }
     },
     "field": {
+      "url": {
+        "helpLabel": "URL format examples",
+        "examples": "Examples of accepted links",
+        "requiresHandler": "Custom protocols require an associated application on your device."
+      },
       "description": {
         "label": "Description"
       },
@@ -1555,6 +1560,7 @@
             "untrusted": "The certificate is not trusted.",
             "hostnameMismatch": "The certificate hostname does not match the URL."
           },
+          "secondaryUrl": "This certificate was presented by {url}, an additional endpoint configured on this integration.",
           "alert": {
             "permission": {
               "title": "Not enough permissions",
@@ -2307,6 +2313,15 @@
       "option": {
         "appId": {
           "label": "Choose app"
+        },
+        "openIn": {
+          "label": "Open app in",
+          "description": "Choose where this app opens. Your browser settings may override requests for a separate window.",
+          "option": {
+            "currentTab": "Current tab",
+            "newTab": "New tab",
+            "newWindow": "New window"
+          }
         },
         "showTitle": {
           "label": "Show app name"
@@ -3223,6 +3238,10 @@
         },
         "viewMode": {
           "label": "View"
+        },
+        "hideHeader": {
+          "label": "Hide header",
+          "description": "Hide the date navigation. Widgets that are too short always hide it."
         }
       },
       "advanced": {
@@ -3240,15 +3259,11 @@
         "agenda": "Agenda"
       },
       "controls": {
-        "view": "Calendar view",
         "today": "Today",
         "previous": "Previous period",
         "next": "Next period",
         "noEvents": "No events in this period",
         "more": "{count} more",
-        "moreLabel": "Show {count} more events",
-        "eventDetails": "Event details",
-        "close": "Close event details",
         "timeSlot": "Time slot",
         "weekday": "Weekday"
       }
@@ -4751,29 +4766,61 @@
     },
     "releases": {
       "name": "Releases",
-      "description": "Displays a list of the current version of the given repositories with the given version regex.",
+      "description": "Tracks the latest releases of repositories and container images, and shows their changelogs.",
       "option": {
+        "layout": {
+          "label": "Layout",
+          "description": "Compact shows every repository on a single line.",
+          "option": {
+            "comfortable": "Comfortable",
+            "compact": "Compact"
+          }
+        },
+        "summary": {
+          "label": "Summary",
+          "description": "What to show above the list. The status bar adds one segment per repository that jumps to it when clicked.",
+          "option": {
+            "detailed": "Count and status bar",
+            "count": "Count only",
+            "hidden": "Hidden"
+          }
+        },
+        "sections": {
+          "label": "Sections",
+          "description": "Groups of repositories to show. Hidden groups are not listed at all."
+        },
+        "collapsedSections": {
+          "label": "Collapsed sections",
+          "description": "Groups that start collapsed. Click a group title to expand it."
+        },
         "newReleaseWithin": {
-          "label": "New Release Within",
-          "description": "Usage example: 1w (1 week), 10M (10 months). Accepted unit types h (hours), d (days), w (weeks), M (months), y (years). Leave empty for no highlighting of new releases."
+          "label": "Highlight new releases for",
+          "description": "Releases published within this period are listed under New until you mark them as viewed.",
+          "option": {
+            "never": "Never",
+            "1d": "1 day",
+            "3d": "3 days",
+            "1w": "1 week",
+            "2w": "2 weeks",
+            "1M": "1 month",
+            "3M": "3 months"
+          }
         },
         "staleReleaseWithin": {
-          "label": "Stale Release Within",
-          "description": "Usage example: 1w (1 week), 10M (10 months). Accepted unit types h (hours), d (days), w (weeks), M (months), y (years). Leave empty for no highlighting of stale releases."
+          "label": "Move to Quiet after",
+          "description": "Repositories without a release for this long are listed under Quiet.",
+          "option": {
+            "never": "Never",
+            "1M": "1 month",
+            "3M": "3 months",
+            "6M": "6 months",
+            "1y": "1 year",
+            "2y": "2 years"
+          }
         },
-        "showOnlyHighlighted": {
-          "label": "Show Only Highlighted",
-          "description": "Show only new or stale releases. As per the above."
-        },
-        "showDetails": {
-          "label": "Show Details"
-        },
-        "showOnlyIcon": {
-          "label": "Show Only Icon"
-        },
-        "topReleases": {
-          "label": "Top Releases",
-          "description": "The max number of latest releases to show. Zero means no limit."
+        "showChangelogPreview": {
+          "label": "Show changelog preview",
+          "description": "Preview the release notes under new releases."
         },
         "repositories": {
           "label": "Repositories",
@@ -4847,36 +4894,106 @@
           }
         }
       },
-      "not-found": "Not Found",
-      "pre-release": "Pre-Release",
-      "archived": "Archived",
-      "forked": "Forked",
+      "summary": {
+        "newReleases": "{count, plural, one {new release} other {new releases}}",
+        "newShort": "new",
+        "tracked": "of {count} tracked",
+        "caughtUp": "All caught up",
+        "outdated": "{count, plural, one {running an older version} other {running older versions}}",
+        "outdatedShort": "outdated",
+        "failing": "could not be checked",
+        "failingShort": "failing",
+        "latest": "Latest: {name} {version}, {time}",
+        "issues": "{count, plural, one {# repository could not be checked} other {# repositories could not be checked}}"
+      },
+      "section": {
+        "new": {
+          "label": "New",
+          "description": "New releases you have not viewed yet"
+        },
+        "attention": {
+          "label": "Needs attention",
+          "description": "Integrations running an older version and repositories that could not be checked"
+        },
+        "upToDate": {
+          "label": "Up to date",
+          "description": "Nothing new to look at"
+        },
+        "quiet": {
+          "label": "Quiet",
+          "description": "No release for a long time"
+        }
+      },
+      "status": {
+        "new": "new, not viewed",
+        "outdated": "running an older version",
+        "error": "could not be checked",
+        "upToDate": "up to date",
+        "quiet": "quiet"
+      },
+      "tag": {
+        "new": "New",
+        "preRelease": "Pre-release",
+        "resolvedFrom": "from :{tag}",
+        "quiet": "Quiet",
+        "archived": "Archived",
+        "fork": "Fork"
+      },
+      "issue": {
+        "affected": "{count, plural, one {# repository affected} other {# repositories affected}}",
+        "rateLimited": {
+          "title": "Rate limited by {provider}",
+          "hint": "Add an access token in the widget settings to raise the limit, or wait for it to reset."
+        },
+        "notFound": {
+          "title": "Repository or image not found",
+          "hint": "Check the identifier and provider in the widget settings. Private projects need an access token."
+        },
+        "noMatchingVersion": {
+          "title": "No version matches the filter",
+          "hint": "Loosen the prefix, suffix or precision in the version filter of these repositories."
+        },
+        "noReleasesFound": {
+          "title": "No releases published yet",
+          "hint": "The provider has no releases or tags for this project yet."
+        },
+        "invalidIdentifier": {
+          "title": "Invalid identifier",
+          "hint": "Use the format of the provider, for example owner/name for GitHub or the full image path for registries."
+        },
+        "noProviderSelected": {
+          "title": "No provider selected",
+          "hint": "Choose a provider for these repositories in the widget settings."
+        },
+        "noProviderResponse": {
+          "title": "No response from {provider}",
+          "hint": "The provider returned nothing for these repositories. They are checked again on the next refresh."
+        },
+        "unexpected": {
+          "title": "Unexpected {provider} error",
+          "hint": "Something went wrong while checking. Try again later or check the server logs."
+        }
+      },
+      "markViewed": "Mark as viewed",
+      "markAllViewed": "Mark all as viewed",
+      "markEntryViewed": "Mark {name} {version} as viewed",
+      "viewed": "Viewed",
+      "copyVersion": "Copy version",
+      "copied": "Copied",
+      "published": "Published {time}",
+      "whatChanged": "What changed",
+      "noNotes": "{provider} does not publish release notes for this source.",
+      "changes": "{count, plural, one {# change} other {# changes}}",
       "starsCount": "Stars",
       "forksCount": "Forks",
-      "issuesCount": "Open Issues",
-      "markViewed": "Mark as viewed",
-      "openProjectPage": "Open Project Page",
-      "openReleasePage": "Open Release Page",
-      "releaseDescription": "Release Description",
-      "projectDescription": "Project Description",
+      "openIssues": "{count, plural, one {# open issue} other {# open issues}}",
+    "created": "Created {time}",
+      "releasePage": "Release",
+      "projectPage": "Project",
       "runningVersions": "Running Versions",
       "upToDate": "Up to date",
       "updateAvailable": "Update available",
-      "unknownStatus": "Unknown",
-      "created": "Created",
-      "error": {
-        "label": "Error",
-        "messages": {
-          "invalidIdentifier": "Invalid identifier",
-          "noMatchingVersion": "No matching version found",
-          "noReleasesFound": "No releases found",
-          "noProviderSelected": "No provider selected",
-          "noProviderResponse": "No response from provider",
-          "unexpected": "Unexpected provider error"
-        }
-      },
-      "expandDetails": "Show details for {name}",
-      "collapseDetails": "Hide details for {name}"
+      "unknownStatus": "Unknown"
     },
     "networkControllerSummary": {
       "advanced": {
@@ -5049,6 +5166,14 @@
     "uptimeKuma": {
       "description": "Live status, heartbeats and uptime of the monitors on an Uptime Kuma status page",
       "option": {
+        "statusPageSlug": {
+          "label": "Status page slug",
+          "description": "The part after /status/ in the page URL, such as homelab. Leave blank to use each integration's configured page."
+        },
+        "summaryOnly": {
+          "label": "General status only",
+          "description": "Hide monitor rows and chips. Overrides Show summary; full details remain available in the advanced view."
+        },
         "showSummary": {
           "label": "Show summary",
           "description": "Overall status, counts and averages"
@@ -5752,6 +5877,8 @@
       "allHidden": "All metrics are hidden in this view. Use Customize this view to restore them."
     },
     "wazuh": {
+      "name": "Wazuh",
+      "description": "Wazuh security overview with tabs for alert severity, alerts, timeline, top lists, agents, vulnerabilities, file integrity and authentication failures",
       "target": {
         "api": "Wazuh server API",
         "indexer": "Wazuh indexer",
@@ -5770,7 +5897,15 @@
         },
         "certificate": {
           "title": "{target} certificate is not trusted",
-          "description": "Wazuh uses a self-signed certificate by default. Run \"Test connection\" on the integration and trust the certificate, or add your CA under Settings → Certificates."
+          "description": "Wazuh uses self-signed certificates by default, and the server API and the indexer use different ones. Run \"Test connection\" on the integration and trust each certificate, or add the Wazuh root CA under Management → Tools → Certificates."
+        },
+        "certificateHostname": {
+          "title": "{target} certificate does not match the URL",
+          "description": "The certificate is not issued for the host in the integration URL. Use a hostname or IP address listed in the certificate, reissue the certificate with that name, or trust the hostname with \"Test connection\"."
+        },
+        "certificateExpired": {
+          "title": "{target} certificate has expired or is not valid yet",
+          "description": "Renew the Wazuh certificate, and check that the clocks of the Homarr and Wazuh hosts are correct."
         },
         "unreachable": {
           "title": "Cannot reach {target}",
@@ -5795,7 +5930,9 @@
         "unknown": {
           "title": "Could not load data from {target}",
           "description": "Check the Homarr logs for details."
-        }
+        },
+        "viewSaveTitle": "Could not save the selected tab",
+        "viewSaveMessage": "The tab is shown for now but will reset when the board reloads."
       },
       "range": {
         "1h": "1h",
@@ -5803,93 +5940,138 @@
         "7d": "7d",
         "30d": "30d"
       },
-      "levelTooltip": "Rule level {level} ({severity})"
-    },
-    "wazuhAgents": {
-      "name": "Wazuh agents",
-      "description": "Sortable list of Wazuh agents with status, OS, version and last keepalive",
+      "levelTooltip": "Rule level {level} ({severity})",
+      "summary": {
+        "title": "Alert severity · {range}",
+        "alerts": "alerts",
+        "none": "No alerts",
+        "trend": {
+          "new": "new",
+          "tooltip": "Previous period: {previous}"
+        },
+        "previous": "Previous {range}: {count}",
+        "maxLevel": "Max level {level}",
+        "health": "Indexer health: {status}",
+        "manager": "Manager {version}"
+      },
+      "alerts": {
+        "title": "Alerts · level {level}+ · {hours}h",
+        "empty": "No alerts at this level. All quiet.",
+        "rule": "Rule {id}",
+        "openInDashboard": "Open this alert in the Wazuh dashboard"
+      },
+      "timeline": {
+        "title": "Alerts timeline · {range}",
+        "total": "{count} alerts",
+        "interval": "per {interval}"
+      },
+      "top": {
+        "title": {
+          "rules": "Top rules · {range}",
+          "agents": "Top agents · {range}",
+          "sourceIps": "Top source IPs · {range}",
+          "mitreTactics": "MITRE tactics · {range}",
+          "mitreTechniques": "MITRE techniques · {range}"
+        },
+        "empty": {
+          "rules": "No alerts in this period",
+          "agents": "No alerts in this period",
+          "sourceIps": "No alerts with a source IP in this period",
+          "mitreTactics": "No alerts mapped to MITRE ATT&CK in this period",
+          "mitreTechniques": "No alerts mapped to MITRE ATT&CK in this period"
+        },
+        "totalTooltip": "{count} matching alerts",
+        "private": "LAN",
+        "public": "Public",
+        "agents": "Seen on {count} agents",
+        "others": "{count} more alerts in other entries"
+      },
+      "agents": {
+        "title": "Agents",
+        "total": "{count} agents",
+        "status": {
+          "active": "Active",
+          "disconnected": "Disconnected",
+          "neverConnected": "Never connected",
+          "pending": "Pending"
+        },
+        "statusLabel": {
+          "active": "Active",
+          "disconnected": "Disconnected",
+          "never_connected": "Never connected",
+          "pending": "Pending",
+          "unknown": "Unknown"
+        },
+        "live": "Live",
+        "snapshot": "Snapshot {age} old",
+        "snapshotHint": "Read from the Wazuh dashboard's agent snapshot (wazuh-monitoring) taken at {time}. Add server API credentials for live data.",
+        "staleSnapshot": "The agent snapshot from {time} is outdated. Check that the Wazuh dashboard monitoring job is running, or add server API credentials.",
+        "noDisconnected": "All agents are connected",
+        "empty": "No agents match this filter",
+        "column": {
+          "status": "Status",
+          "name": "Name",
+          "ip": "IP",
+          "os": "OS",
+          "version": "Version",
+          "lastKeepAlive": "Keepalive",
+          "groups": "Groups"
+        },
+        "outdated": "Older than the newest agent version ({version})"
+      },
+      "vulnerabilities": {
+        "title": "Vulnerabilities",
+        "topCves": "Top CVEs",
+        "score": "Score",
+        "agentsShort": "Agents",
+        "topAgents": "Most vulnerable agents",
+        "criticalHigh": "Crit / High",
+        "totalTooltip": "{count} findings on {agents} agents",
+        "affected": "{count} agents",
+        "empty": "No vulnerabilities detected",
+        "distribution": "Severity distribution. {unscored} findings without a score are not shown.",
+        "worst": "Worst: {id} ({score}) on {agents} agents"
+      },
+      "fim": {
+        "title": "File integrity · {range}",
+        "event": {
+          "added": "Added",
+          "modified": "Modified",
+          "deleted": "Deleted",
+          "unknown": "Changed"
+        },
+        "empty": "No file integrity events in this period",
+        "user": "by {user}",
+        "registry": "Registry"
+      },
+      "authFailures": {
+        "title": "Auth failures · {hours}h",
+        "seriesTooltip": "All agents over the last {hours}h",
+        "peak": "Peak {count}/bucket",
+        "empty": "No failed logins in this period",
+        "failed": "Failed logins",
+        "failedHint": "Single authentication failures (sshd, PAM, Windows logon, invalid users)",
+        "bruteForce": "Brute force",
+        "bruteForceHint": "Correlated brute-force rules (multiple failures in a short period, MITRE T1110)",
+        "sourceIps": "Source IPs",
+        "ipTooltip": "{ip}: {count} failures",
+        "bruteForceCount": "{count} brute force"
+      },
+      "view": {
+        "overview": "Severity",
+        "alerts": "Alerts",
+        "timeline": "Timeline",
+        "top": "Top lists",
+        "agents": "Agents",
+        "vulnerabilities": "Vulnerabilities",
+        "fim": "File integrity",
+        "authFailures": "Auth failures"
+      },
       "option": {
-        "statusFilter": {
-          "label": "Show agents"
+        "visibleViews": {
+          "label": "Visible tabs",
+          "description": "Only these tabs are offered in the tab switcher. With a single tab, the switcher is hidden."
         },
-        "sortBy": {
-          "label": "Sort by"
-        },
-        "showVersion": {
-          "label": "Show Wazuh version column"
-        },
-        "showGroups": {
-          "label": "Show groups column"
-        }
-      },
-      "title": "Agents",
-      "total": "{count} agents",
-      "status": {
-        "active": "Active",
-        "disconnected": "Disconnected",
-        "neverConnected": "Never connected",
-        "pending": "Pending"
-      },
-      "statusLabel": {
-        "active": "Active",
-        "disconnected": "Disconnected",
-        "never_connected": "Never connected",
-        "pending": "Pending",
-        "unknown": "Unknown"
-      },
-      "live": "Live",
-      "snapshot": "Snapshot {age} old",
-      "snapshotHint": "Read from the Wazuh dashboard's agent snapshot (wazuh-monitoring) taken at {time}. Add server API credentials for live data.",
-      "staleSnapshot": "The agent snapshot from {time} is outdated. Check that the Wazuh dashboard monitoring job is running, or add server API credentials.",
-      "noDisconnected": "All agents are connected",
-      "empty": "No agents match this filter",
-      "column": {
-        "status": "Status",
-        "name": "Name",
-        "ip": "IP",
-        "os": "OS",
-        "version": "Version",
-        "lastKeepAlive": "Keepalive",
-        "groups": "Groups"
-      },
-      "outdated": "Older than the newest agent version ({version})"
-    },
-    "wazuhAlerts": {
-      "name": "Wazuh alerts feed",
-      "description": "Recent Wazuh alerts with level, MITRE ATT&CK techniques, agent and source IP",
-      "option": {
-        "minLevel": {
-          "label": "Minimum rule level",
-          "description": "Wazuh levels: 0-6 low, 7-11 medium, 12-14 high, 15+ critical"
-        },
-        "hours": {
-          "label": "Time window (hours)"
-        },
-        "limit": {
-          "label": "Number of alerts"
-        },
-        "showMitre": {
-          "label": "Show MITRE ATT&CK techniques"
-        },
-        "showAgent": {
-          "label": "Show agent"
-        },
-        "showSourceIp": {
-          "label": "Show source IP"
-        },
-        "showRuleId": {
-          "label": "Show rule ID"
-        }
-      },
-      "title": "Alerts · level {level}+ · {hours}h",
-      "empty": "No alerts at this level. All quiet.",
-      "rule": "Rule {id}",
-      "openInDashboard": "Open this alert in the Wazuh dashboard"
-    },
-    "wazuhSummary": {
-      "name": "Wazuh alert severity",
-      "description": "Alert severity breakdown with a trend against the previous period",
-      "option": {
         "range": {
           "label": "Time range"
         },
@@ -5898,26 +6080,6 @@
         },
         "showFooter": {
           "label": "Show footer"
-        }
-      },
-      "title": "Alert severity · {range}",
-      "alerts": "alerts",
-      "none": "No alerts",
-      "trend": {
-        "new": "new",
-        "tooltip": "Previous period: {previous}"
-      },
-      "previous": "Previous {range}: {count}",
-      "maxLevel": "Max level {level}",
-      "health": "Indexer health: {status}",
-      "manager": "Manager {version}"
-    },
-    "wazuhTimeline": {
-      "name": "Wazuh alerts timeline",
-      "description": "Stacked chart of Wazuh alerts over time by severity",
-      "option": {
-        "range": {
-          "label": "Time range"
         },
         "interval": {
           "label": "Interval"
@@ -5930,60 +6092,32 @@
           "description": "Square root keeps high and critical alerts visible next to thousands of low ones"
         },
         "minLevel": {
-          "label": "Minimum rule level"
+          "label": "Minimum rule level (timeline and top lists)"
         },
         "showLegend": {
           "label": "Show legend with totals"
-        }
-      },
-      "title": "Alerts timeline · {range}",
-      "total": "{count} alerts",
-      "interval": "per {interval}"
-    },
-    "wazuhTopList": {
-      "name": "Wazuh top list",
-      "description": "Top rules, agents, source IPs or MITRE ATT&CK tactics and techniques by alert count",
-      "option": {
-        "kind": {
+        },
+        "topKind": {
           "label": "Rank"
         },
-        "range": {
-          "label": "Time range"
-        },
-        "limit": {
-          "label": "Number of entries"
-        },
-        "minLevel": {
-          "label": "Minimum rule level"
+        "topLimit": {
+          "label": "Top list entries"
         },
         "showBars": {
           "label": "Show bars"
-        }
-      },
-      "title": {
-        "rules": "Top rules · {range}",
-        "agents": "Top agents · {range}",
-        "sourceIps": "Top source IPs · {range}",
-        "mitreTactics": "MITRE tactics · {range}",
-        "mitreTechniques": "MITRE techniques · {range}"
-      },
-      "empty": {
-        "rules": "No alerts in this period",
-        "agents": "No alerts in this period",
-        "sourceIps": "No alerts with a source IP in this period",
-        "mitreTactics": "No alerts mapped to MITRE ATT&CK in this period",
-        "mitreTechniques": "No alerts mapped to MITRE ATT&CK in this period"
-      },
-      "totalTooltip": "{count} matching alerts",
-      "private": "LAN",
-      "public": "Public",
-      "agents": "Seen on {count} agents",
-      "others": "{count} more alerts in other entries"
-    },
-    "wazuhVulnerabilities": {
-      "name": "Wazuh vulnerabilities",
-      "description": "Vulnerability counts, top CVEs and the most vulnerable agents",
-      "option": {
+        },
+        "agentStatusFilter": {
+          "label": "Show agents"
+        },
+        "agentSortBy": {
+          "label": "Sort by"
+        },
+        "showVersion": {
+          "label": "Agents: show Wazuh version column"
+        },
+        "showGroups": {
+          "label": "Agents: show groups column"
+        },
         "cveOrder": {
           "label": "Rank CVEs by"
         },
@@ -5998,73 +6132,42 @@
         },
         "showAgents": {
           "label": "Show most vulnerable agents"
-        }
-      },
-      "title": "Vulnerabilities",
-      "topCves": "Top CVEs",
-      "score": "Score",
-      "agentsShort": "Agents",
-      "topAgents": "Most vulnerable agents",
-      "criticalHigh": "Crit / High",
-      "totalTooltip": "{count} findings on {agents} agents",
-      "affected": "{count} agents",
-      "empty": "No vulnerabilities detected",
-      "distribution": "Severity distribution. {unscored} findings without a score are not shown.",
-      "worst": "Worst: {id} ({score}) on {agents} agents"
-    },
-    "wazuhFim": {
-      "name": "Wazuh file integrity",
-      "description": "Recent file integrity monitoring (syscheck) events",
-      "option": {
-        "range": {
-          "label": "Time range"
         },
-        "event": {
+        "fimEvent": {
           "label": "Events"
         },
-        "limit": {
-          "label": "Number of events"
+        "fimLimit": {
+          "label": "File integrity events"
         },
         "includeRegistry": {
           "label": "Include Windows registry events"
-        }
-      },
-      "title": "File integrity · {range}",
-      "event": {
-        "added": "Added",
-        "modified": "Modified",
-        "deleted": "Deleted",
-        "unknown": "Changed"
-      },
-      "empty": "No file integrity events in this period",
-      "user": "by {user}",
-      "registry": "Registry"
-    },
-    "wazuhAuthFailures": {
-      "name": "Wazuh authentication failures",
-      "description": "Failed logins and brute-force alerts per agent with hourly sparklines",
-      "option": {
-        "hours": {
-          "label": "Time window (hours)"
         },
-        "limit": {
-          "label": "Number of agents"
+        "authLimit": {
+          "label": "Authentication failure agents"
         },
         "showSourceIps": {
           "label": "Show top source IPs"
+        },
+        "alertsMinLevel": {
+          "label": "Alerts: minimum rule level",
+          "description": "Wazuh levels: 0-6 low, 7-11 medium, 12-14 high, 15+ critical"
+        },
+        "alertsLimit": {
+          "label": "Alerts: number of alerts"
+        },
+        "showMitre": {
+          "label": "Show MITRE ATT&CK techniques"
+        },
+        "showAgent": {
+          "label": "Show agent"
+        },
+        "showSourceIp": {
+          "label": "Show source IP"
+        },
+        "showRuleId": {
+          "label": "Show rule ID"
         }
-      },
-      "title": "Auth failures · {hours}h",
-      "seriesTooltip": "All agents over the last {hours}h",
-      "peak": "Peak {count}/bucket",
-      "empty": "No failed logins in this period",
-      "failed": "Failed logins",
-      "failedHint": "Single authentication failures (sshd, PAM, Windows logon, invalid users)",
-      "bruteForce": "Brute force",
-      "bruteForceHint": "Correlated brute-force rules (multiple failures in a short period, MITRE T1110)",
-      "sourceIps": "Source IPs",
-      "ipTooltip": "{ip}: {count} failures",
-      "bruteForceCount": "{count} brute force"
+      }
     }
   },
   "widgetPreview": {
@@ -6083,6 +6186,18 @@
       "addWidget": "Add widget",
       "addApp": "Add app",
       "connectService": "Connect service"
+    },
+    "urlDrop": {
+      "hint": "Drop to add as an app",
+      "resolving": "Adding app…",
+      "notification": {
+        "success": {
+          "message": "{name} was added to the board"
+        },
+        "full": {
+          "message": "Your board is full"
+        }
+      }
     },
     "setupChecklist": {
       "title": "Make this board useful",
@@ -6209,11 +6324,11 @@
         "label": "Favicon image URL"
       },
       "backgroundImageUrl": {
-        "label": "Background image URL",
-        "placeholder": "Start typing to search local images",
+        "label": "Background image or video URL",
+        "placeholder": "Start typing to search local images and videos",
         "group": {
-          "your": "Your images",
-          "other": "Other images"
+          "your": "Your media",
+          "other": "Other media"
         }
       },
       "backgroundImageAttachment": {
@@ -6251,15 +6366,15 @@
         }
       },
       "backgroundImageSize": {
-        "label": "Background image size",
+        "label": "Background size",
         "option": {
           "cover": {
             "label": "Cover",
-            "description": "Scales the image as small as possible to cover the entire window by cropping excessive space."
+            "description": "Scales the background as small as possible to cover the entire window by cropping excessive space."
           },
           "contain": {
             "label": "Contain",
-            "description": "Scales the image as large as possible within its container without cropping or stretching the image."
+            "description": "Scales the background as large as possible within its container without cropping or stretching it."
           }
         }
       },
@@ -8689,6 +8804,14 @@
     "conversationActions": "Conversation actions",
     "searchConversations": "Search conversations",
     "noMatchingConversations": "No matching conversations",
+    "historyError": {
+      "title": "Conversation history",
+      "load": "Conversations could not be loaded.",
+      "loadMessages": "This conversation's messages could not be loaded. Retry to restore them before sending.",
+      "saveMessages": "Recent messages could not be saved and may be missing after a reload.",
+      "switch": "This conversation could not be opened.",
+      "retry": "Retry"
+    },
     "moreActions": "More response actions",
     "renameConversation": {
       "action": "Rename",
@@ -8710,7 +8833,7 @@
     "suggestions": {
       "health": {
         "label": "Check service health",
-        "prompt": "Check my integrations and summarize anything that needs attention."
+        "prompt": "Check the health of the services and integrations I can access. Summarize any problems and suggest next steps."
       },
       "explore": {
         "label": "Explore my Homarr",
@@ -8726,7 +8849,7 @@
       },
       "designWidget": {
         "label": "Design a widget",
-        "prompt": "Create and install a Custom Widget for "
+        "prompt": "Help me design a Custom Widget. Ask what I want it to show and where to add it, then use my available integrations."
       }
     },
     "composerPlaceholder": "Ask Assistant…",
@@ -8808,6 +8931,9 @@
     },
     "mentions": {
       "menu": "Add Homarr context",
+      "back": "All categories",
+      "loading": "Loading available context…",
+      "empty": "No matching context found.",
       "context": "Context",
       "app": "Apps",
       "integration": "Integrations",
@@ -8822,11 +8948,13 @@
     },
     "commands": {
       "menu": "Assistant commands",
-      "health": "Prepare a service-health check",
-      "explore": "Prepare an overview of this Homarr instance",
-      "media": "Prepare a media search",
-      "style": "Prepare a board appearance or custom CSS change",
-      "designWidget": "Prepare a one-prompt Custom Widget build"
+      "hint": "Choose a starting point, or type / for commands and @ for context. Edit your prompt before sending.",
+      "empty": "No matching commands. Try /health, /explore, /media, /style or /design-widget.",
+      "health": "Find unhealthy services and suggested fixes",
+      "explore": "See your apps, boards and available actions",
+      "media": "Find a movie or series to request",
+      "style": "Improve a board's layout, appearance or CSS",
+      "designWidget": "Build a Custom Widget with your integrations"
     },
     "usage": {
       "tokens": "tokens",
@@ -9004,6 +9132,7 @@
     "approvalDescription": "Review this change before it runs.",
     "approveAndRun": "Approve and run",
     "deny": "Deny",
+    "approvalError": "Your response could not be recorded. Try again.",
     "autoApproval": {
       "label": "Automatic approvals",
       "composerLabel": "Approve for me",

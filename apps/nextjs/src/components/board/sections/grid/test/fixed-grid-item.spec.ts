@@ -257,7 +257,7 @@ describe("fixed grid item behavior", () => {
     const item = container.querySelector<HTMLElement>('[data-grid-id="weather"]');
     expect(item).not.toBeNull();
     expect(item?.style.width).toBe(`${getLogicalGridSize(1)}px`);
-    expect(item?.style.height).toBe(`${getLogicalGridSize(1)}px`);
+    expect(item?.style.height).toBe(`calc(${getLogicalGridSize(1)}px * var(--board-grid-row-scale, 1))`);
     expect(item?.getAttribute("role")).toBeNull();
 
     act(() => item?.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowRight", bubbles: true })));

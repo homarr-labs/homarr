@@ -799,6 +799,11 @@
       }
     },
     "field": {
+      "url": {
+        "helpLabel": "Примеры форматов URL",
+        "examples": "Примеры поддерживаемых ссылок",
+        "requiresHandler": "Для пользовательских протоколов на вашем устройстве должно быть установлено связанное приложение."
+      },
       "description": {
         "label": "Описание"
       },
@@ -1559,6 +1564,7 @@
             "untrusted": "Сертификат не является доверенным.",
             "hostnameMismatch": "Имя хоста в сертификате не совпадает с URL."
           },
+          "secondaryUrl": "Этот сертификат предъявил {url} — дополнительная конечная точка, настроенная в этой интеграции.",
           "alert": {
             "permission": {
               "title": "Недостаточно прав",
@@ -1904,6 +1910,7 @@
       "tryAgain": "Попробовать снова",
       "loading": "Загрузка",
       "show": "Показать",
+      "showAll": "Показать все",
       "hide": "Скрыть",
       "undo": "Отменить",
       "editNamed": "Изменить {name}",
@@ -1913,6 +1920,7 @@
       "copied": "Скопировано",
       "refresh": "Обновить"
     },
+    "hidden": "Скрыто",
     "pagination": {
       "pageOf": "Страница {page} из {totalPages}"
     },
@@ -1935,6 +1943,7 @@
       "clear": "Очистить изображение",
       "uploadImage": "Загрузить изображение",
       "results": "Результаты поиска изображений",
+      "websiteIcon": "Иконка сайта",
       "localImages": "Ваши изображения",
       "svgIcons": "SVG-иконки",
       "otherImages": "Другие изображения",
@@ -2308,6 +2317,15 @@
       "option": {
         "appId": {
           "label": "Приложение"
+        },
+        "openIn": {
+          "label": "Открывать приложение в",
+          "description": "Выберите, где открывать это приложение. Настройки браузера могут изменить открытие в отдельном окне.",
+          "option": {
+            "currentTab": "Текущей вкладке",
+            "newTab": "Новой вкладке",
+            "newWindow": "Новом окне"
+          }
         },
         "showTitle": {
           "label": "Показывать название"
@@ -3224,6 +3242,10 @@
         },
         "viewMode": {
           "label": "Вид"
+        },
+        "hideHeader": {
+          "label": "",
+          "description": ""
         }
       },
       "advanced": {
@@ -3241,15 +3263,11 @@
         "agenda": "Расписание"
       },
       "controls": {
-        "view": "Вид календаря",
         "today": "Сегодня",
         "previous": "Предыдущий период",
         "next": "Следующий период",
         "noEvents": "Нет событий за этот период",
         "more": "Ещё {count}",
-        "moreLabel": "Показать ещё событий: {count}",
-        "eventDetails": "Подробности события",
-        "close": "Закрыть подробности события",
         "timeSlot": "Временной интервал",
         "weekday": "День недели"
       }
@@ -3936,11 +3954,28 @@
         "paused": "Приостановлено",
         "remaining": "Осталось {minutes} мин",
         "seasonEpisode": "S{season} E{episode}",
+        "state": {
+          "playing": "Воспроизводится",
+          "buffering": "Буферизация"
+        },
+        "details": {
+          "device": "Устройство",
+          "location": "Местоположение",
+          "sessionId": "ID сеанса",
+          "bitrate": "Битрейт",
+          "audioHandling": "Обработка аудио",
+          "direct": "Напрямую",
+          "transcode": "Транскодирование в {target}",
+          "containerChanged": "{container} (ремукс)",
+          "position": "{position} / {duration}",
+          "unknown": "неизвестный формат"
+        },
         "metadata": {
           "title": "Техническая информация",
           "video": {
             "title": "Видео",
-            "resolution": "Разрешение"
+            "resolution": "Разрешение",
+            "frameRate": "Частота кадров"
           },
           "audio": {
             "title": "Аудио",
@@ -3961,6 +3996,109 @@
         "playing": "Воспроизводится: {count}",
         "transcoding": "Транскодируется: {count}"
       }
+    },
+    "thingport-libraryStats": {
+      "name": "Статистика библиотеки Thingport",
+      "description": "Итоги по вашей библиотеке 3D-моделей Thingport",
+      "title": "Библиотека",
+      "option": {
+        "showModels": {
+          "label": "Показывать модели"
+        },
+        "showCollections": {
+          "label": "Показывать коллекции"
+        },
+        "showCategories": {
+          "label": "Показывать категории"
+        },
+        "showAuthors": {
+          "label": "Показывать авторов"
+        }
+      },
+      "models": "Модели",
+      "collections": "Коллекции",
+      "categories": "Категории",
+      "authors": "Авторы"
+    },
+    "thingport-featuredModel": {
+      "name": "Модель дня Thingport",
+      "description": "Каждый день одна модель из вашей библиотеки Thingport, вращающаяся в 3D",
+      "option": {
+        "autoRotate": {
+          "label": "Вращать модель"
+        },
+        "showDetails": {
+          "label": "Показывать сведения о модели"
+        }
+      },
+      "title": "Модель дня",
+      "empty": "3D-моделей для показа пока нет",
+      "hint": "Перетащите, чтобы повернуть; нажмите, чтобы открыть",
+      "noPreview": "3D-предпросмотра для этой модели пока нет",
+      "views": "{count, plural, one {# просмотр} few {# просмотра} many {# просмотров} other {# просмотра}}",
+      "prints": "{count, plural, one {напечатано # раз} few {напечатано # раза} many {напечатано # раз} other {напечатано # раза}}"
+    },
+    "thingport-activityHeatmap": {
+      "name": "Тепловая карта активности Thingport",
+      "description": "Импорты, скачивания и открытия в слайсере за год в вашем профиле Thingport",
+      "title": "Активность",
+      "option": {
+        "weekStart": {
+          "label": "Первый день недели",
+          "option": {
+            "sunday": "Воскресенье",
+            "monday": "Понедельник"
+          }
+        },
+        "showTotal": {
+          "label": "Показывать итог"
+        },
+        "showLegend": {
+          "label": "Показывать легенду"
+        }
+      },
+      "lastYear": "Последние 12 месяцев",
+      "totalLastYear": "{count, plural, one {# действие за последний год} few {# действия за последний год} many {# действий за последний год} other {# действия за последний год}}",
+      "totalInYear": "{count, plural, one {# действие в {year} году} few {# действия в {year} году} many {# действий в {year} году} other {# действия в {year} году}}",
+      "dayTotal": "{count, plural, one {{date}: # действие} few {{date}: # действия} many {{date}: # действий} other {{date}: # действия}}",
+      "dayEmpty": "{date}: нет активности",
+      "kinds": {
+        "import": "Импортировано",
+        "upload": "Загружено",
+        "download": "Скачано",
+        "slicer": "Открыто в слайсере",
+        "delete": "Удалено"
+      },
+      "less": "Меньше",
+      "more": "Больше"
+    },
+    "thingport-models": {
+      "name": "Модели Thingport",
+      "description": "Недавно добавленные, самые просматриваемые и самые печатаемые модели из Thingport",
+      "title": "Модели",
+      "option": {
+        "defaultTab": {
+          "label": "Вкладка по умолчанию"
+        },
+        "itemCount": {
+          "label": "Количество моделей"
+        },
+        "showThumbnails": {
+          "label": "Показывать миниатюры"
+        }
+      },
+      "tab": {
+        "recentlyAdded": "Недавние",
+        "topViewed": "Топ просмотров",
+        "topPrinted": "Топ печати"
+      },
+      "empty": {
+        "recentlyAdded": "Моделей в библиотеке пока нет",
+        "topViewed": "Просмотренных моделей пока нет",
+        "topPrinted": "Напечатанных моделей пока нет"
+      },
+      "views": "{count, plural, one {# просмотр} few {# просмотра} many {# просмотров} other {# просмотра}}",
+      "prints": "{count, plural, one {напечатано # раз} few {напечатано # раза} many {напечатано # раз} other {напечатано # раза}}"
     },
     "paperlessNgx": {
       "description": "Обзор архива документов Paperless-ngx",
@@ -4567,7 +4705,7 @@
     },
     "mediaMissing": {
       "name": "Отсутствующие медиа и очередь",
-      "description": "",
+      "description": "Показывает отсутствующие и поставленные в очередь фильмы, серии, события и книги из {radarr}, {sonarr}, {sportarr} и {bindery}",
       "option": {
         "showMissing": {
           "label": "Показывать отсутствующие"
@@ -4634,27 +4772,59 @@
       "name": "Релизы",
       "description": "Отображает список текущих версий указанных репозиториев с заданным регулярным выражением версии.",
       "option": {
+        "layout": {
+          "label": "Макет",
+          "description": "",
+          "option": {
+            "comfortable": "Удобно",
+            "compact": "Компактно"
+          }
+        },
+        "summary": {
+          "label": "",
+          "description": "",
+          "option": {
+            "detailed": "",
+            "count": "",
+            "hidden": "Скрыто"
+          }
+        },
+        "sections": {
+          "label": "",
+          "description": ""
+        },
+        "collapsedSections": {
+          "label": "",
+          "description": ""
+        },
         "newReleaseWithin": {
           "label": "Считать релиз новым в течение",
-          "description": "Пример: 1w (1 неделя), 10M (10 месяцев). Допустимые единицы: h (часы), d (дни), w (недели), M (месяцы), y (годы). Оставьте пустым, чтобы не выделять новые релизы."
+          "description": "Пример: 1w (1 неделя), 10M (10 месяцев). Допустимые единицы: h (часы), d (дни), w (недели), M (месяцы), y (годы). Оставьте пустым, чтобы не выделять новые релизы.",
+          "option": {
+            "never": "",
+            "1d": "1 дней",
+            "3d": "3 дней",
+            "1w": "1 неделя",
+            "2w": "",
+            "1M": "1 месяц",
+            "3M": "3 месяцев"
+          }
         },
         "staleReleaseWithin": {
           "label": "Считать релиз устаревшим через",
-          "description": "Пример: 1w (1 неделя), 10M (10 месяцев). Допустимые единицы: h (часы), d (дни), w (недели), M (месяцы), y (годы). Оставьте пустым, чтобы не выделять устаревшие релизы."
+          "description": "Пример: 1w (1 неделя), 10M (10 месяцев). Допустимые единицы: h (часы), d (дни), w (недели), M (месяцы), y (годы). Оставьте пустым, чтобы не выделять устаревшие релизы.",
+          "option": {
+            "never": "",
+            "1M": "1 месяц",
+            "3M": "3 месяцев",
+            "6M": "6 месяцев",
+            "1y": "1 год",
+            "2y": "2 лет"
+          }
         },
-        "showOnlyHighlighted": {
-          "label": "Показывать только выделенные",
-          "description": "Показывать только новые или устаревшие релизы в соответствии с настройками выше."
-        },
-        "showDetails": {
-          "label": "Показывать подробности"
-        },
-        "showOnlyIcon": {
-          "label": "Показывать только иконку"
-        },
-        "topReleases": {
-          "label": "Количество релизов",
-          "description": "Максимальное количество последних релизов для отображения. Ноль — без ограничений."
+        "showChangelogPreview": {
+          "label": "",
+          "description": ""
         },
         "repositories": {
           "label": "Репозитории",
@@ -4728,36 +4898,106 @@
           }
         }
       },
-      "not-found": "Не найдено",
-      "pre-release": "Предрелиз",
-      "archived": "В архиве",
-      "forked": "Форк",
+      "summary": {
+        "newReleases": "{count, plural, one {new release} other {new releases}}",
+        "newShort": "новые",
+        "tracked": "",
+        "caughtUp": "",
+        "outdated": "{count, plural, one {running an older version} other {running older versions}}",
+        "outdatedShort": "устарела",
+        "failing": "",
+        "failingShort": "",
+        "latest": "",
+        "issues": ""
+      },
+      "section": {
+        "new": {
+          "label": "Создание",
+          "description": ""
+        },
+        "attention": {
+          "label": "Требует внимания",
+          "description": ""
+        },
+        "upToDate": {
+          "label": "Актуально",
+          "description": ""
+        },
+        "quiet": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "status": {
+        "new": "",
+        "outdated": "",
+        "error": "",
+        "upToDate": "актуально",
+        "quiet": ""
+      },
+      "tag": {
+        "new": "Создание",
+        "preRelease": "",
+        "resolvedFrom": "",
+        "quiet": "",
+        "archived": "В архиве",
+        "fork": ""
+      },
+      "issue": {
+        "affected": "{count, plural, one {# repository affected} other {# repositories affected}}",
+        "rateLimited": {
+          "title": "",
+          "hint": ""
+        },
+        "notFound": {
+          "title": "",
+          "hint": ""
+        },
+        "noMatchingVersion": {
+          "title": "",
+          "hint": ""
+        },
+        "noReleasesFound": {
+          "title": "",
+          "hint": ""
+        },
+        "invalidIdentifier": {
+          "title": "Неверный идентификатор",
+          "hint": ""
+        },
+        "noProviderSelected": {
+          "title": "Провайдер не выбран",
+          "hint": ""
+        },
+        "noProviderResponse": {
+          "title": "",
+          "hint": ""
+        },
+        "unexpected": {
+          "title": "",
+          "hint": ""
+        }
+      },
+      "markViewed": "Отметить как просмотренное",
+      "markAllViewed": "",
+      "markEntryViewed": "",
+      "viewed": "",
+      "copyVersion": "",
+      "copied": "Скопировано",
+      "published": "",
+      "whatChanged": "",
+      "noNotes": "",
+      "changes": "{count, plural, one {# change} other {# changes}}",
       "starsCount": "Звёзды",
       "forksCount": "Форки",
-      "issuesCount": "Открытые issues",
-      "markViewed": "Отметить как просмотренное",
-      "openProjectPage": "Открыть страницу проекта",
-      "openReleasePage": "Открыть страницу релиза",
-      "releaseDescription": "Описание релиза",
-      "projectDescription": "Описание проекта",
+      "openIssues": "{count, plural, one {# open issue} other {# open issues}}",
+      "created": "Создано",
+      "releasePage": "",
+      "projectPage": "",
       "runningVersions": "Запущенные версии",
       "upToDate": "Актуально",
       "updateAvailable": "Доступно обновление",
-      "unknownStatus": "Неизвестно",
-      "created": "Создано",
-      "error": {
-        "label": "Ошибка",
-        "messages": {
-          "invalidIdentifier": "Неверный идентификатор",
-          "noMatchingVersion": "Подходящая версия не найдена",
-          "noReleasesFound": "Релизы не найдены",
-          "noProviderSelected": "Провайдер не выбран",
-          "noProviderResponse": "Нет ответа от провайдера",
-          "unexpected": "Неожиданная ошибка провайдера"
-        }
-      },
-      "expandDetails": "Показать подробности для {name}",
-      "collapseDetails": "Скрыть подробности для {name}"
+      "unknownStatus": "Неизвестно"
     },
     "networkControllerSummary": {
       "advanced": {
@@ -4928,47 +5168,118 @@
       }
     },
     "uptimeKuma": {
-      "description": "Статистика доступности со страницы статуса Uptime Kuma",
+      "description": "Текущий статус, проверки и доступность мониторов со страницы статуса Uptime Kuma",
       "option": {
-        "showAverageUptime": {
-          "label": "Показывать среднюю доступность",
-          "description": "Показывать средний процент доступности за 24 часа по всем мониторам"
+        "statusPageSlug": {
+          "label": "Slug страницы статуса",
+          "description": ""
         },
-        "showUptimeRing": {
-          "label": "Показывать кольцо доступности",
-          "description": "Показывать кольцевой индикатор рядом со средней доступностью"
+        "summaryOnly": {
+          "label": "",
+          "description": ""
         },
-        "showTotalMonitors": {
-          "label": "Показывать общее количество мониторов",
-          "description": "Показывать общее количество настроенных мониторов"
+        "showSummary": {
+          "label": "Показывать сводку",
+          "description": "Общий статус, количество и средние значения"
         },
-        "showUpCount": {
-          "label": "Показывать счётчик работающих",
-          "description": "Показывать, сколько мониторов сейчас работает"
+        "showIncidents": {
+          "label": "Показывать инциденты",
+          "description": "Инциденты и текущее обслуживание"
         },
-        "showDownCount": {
-          "label": "Показывать счётчик неработающих",
-          "description": "Показывать, сколько мониторов сейчас не работает"
+        "groupByStatusPageGroup": {
+          "label": "Группировать мониторы",
+          "description": "Использовать группы со страницы статуса"
         },
-        "showPausedCount": {
-          "label": "Показывать количество мониторов на паузе",
-          "description": "Показывать, сколько мониторов в данный момент приостановлено"
+        "showOnlyProblems": {
+          "label": "Показывать только проблемы",
+          "description": "Скрывать работающие мониторы, кроме расширенного вида"
+        },
+        "sortBy": {
+          "label": "Сортировка мониторов",
+          "option": {
+            "status": "Статус, сначала проблемные",
+            "statusPage": "Порядок на странице статуса",
+            "name": "Имя",
+            "uptime": "Доступность, сначала низкая"
+          }
+        },
+        "showHeartbeatBar": {
+          "label": "Показывать полосу проверок",
+          "description": "Последние проверки цветными полосками, новые справа"
+        },
+        "showUptime": {
+          "label": "Показывать доступность за 24 часа"
+        },
+        "showResponseTime": {
+          "label": "Показывать время отклика"
+        },
+        "showCertificateExpiry": {
+          "label": "Предупреждения о сертификатах",
+          "description": "Отмечать сертификаты, которые истекают в ближайшие 14 дней"
         }
-      },
-      "averageUptime": "Средняя доступность (24 ч)",
-      "stats": {
-        "totalMonitors": "Всего мониторов",
-        "upCount": "Работает",
-        "downCount": "Не работает",
-        "pausedCount": "Пауза"
-      },
-      "error": {
-        "internalServerError": "Не удалось получить данные о доступности"
       },
       "status": {
         "up": "Работает",
         "down": "Не работает",
-        "paused": "Пауза"
+        "pending": "В ожидании",
+        "maintenance": "Обслуживание",
+        "stale": "Нет свежих данных",
+        "unknown": "Нет данных"
+      },
+      "overall": {
+        "operational": "Все системы работают",
+        "degraded": "Частичный сбой",
+        "outage": "Серьёзный сбой",
+        "maintenance": "Идёт обслуживание",
+        "unknown": "Ожидание первых проверок"
+      },
+      "short": {
+        "operational": "Все работают",
+        "down": "Не работают: {count}",
+        "pending": "В ожидании: {count}",
+        "maintenance": "Обслуживание",
+        "unknown": "Нет данных"
+      },
+      "summary": {
+        "upRatio": "Мониторов работает: {up} из {total}",
+        "upRatioShort": "Работают: {up}/{total}",
+        "averageUptime": "доступность за 24 ч",
+        "uptimeShort": "доступность {value}",
+        "statusCount": "{status}: {count}"
+      },
+      "unit": {
+        "milliseconds": "{value} мс"
+      },
+      "heartbeatBar": {
+        "label": "{count, plural, one {# последняя проверка} few {# последние проверки} many {# последних проверок} other {# последней проверки}}, неудачных: {down}"
+      },
+      "detail": {
+        "checked": "проверено {time}",
+        "certificate": "{count, plural, one {сертификат истекает через # день} few {сертификат истекает через # дня} many {сертификат истекает через # дней} other {сертификат истекает через # дня}}"
+      },
+      "notice": {
+        "label": "{count, plural, one {# инцидент или обслуживание} few {# инцидента или обслуживания} many {# инцидентов или обслуживаний} other {# инцидента или обслуживания}}",
+        "untitled": "Без названия"
+      },
+      "empty": {
+        "title": "Мониторов нет",
+        "description": "Добавьте мониторы на страницу статуса, чтобы они появились здесь"
+      },
+      "allClear": "{count, plural, one {# монитор работает} few {Все # монитора работают} many {Все # мониторов работают} other {Все # монитора работают}}",
+      "error": {
+        "internalServerError": "Не удалось получить страницу статуса Uptime Kuma"
+      },
+      "monitorType": {
+        "http": "HTTP",
+        "keyword": "HTTP — ключевое слово",
+        "jsonQuery": "HTTP — JSON-запрос",
+        "port": "TCP-порт",
+        "ping": "Пинг",
+        "dns": "DNS",
+        "docker": "Контейнер Docker",
+        "push": "Push",
+        "group": "Группа",
+        "realBrowser": "Браузер"
       }
     },
     "traefik": {
@@ -5575,6 +5886,8 @@
       "allHidden": "В этом виде скрыты все метрики. Чтобы вернуть их, используйте \"Настроить этот вид\"."
     },
     "wazuh": {
+      "name": "Wazuh",
+      "description": "Обзор безопасности Wazuh с вкладками: серьёзность оповещений, оповещения, хронология, топ-списки, агенты, уязвимости, целостность файлов и сбои аутентификации",
       "target": {
         "api": "API сервера Wazuh",
         "indexer": "Индексатор Wazuh",
@@ -5593,7 +5906,15 @@
         },
         "certificate": {
           "title": "{target}: недоверенный сертификат",
-          "description": "Wazuh по умолчанию использует самоподписанный сертификат. Запустите \"Проверить подключение\" в интеграции и сделайте сертификат доверенным или добавьте свой CA в разделе Настройки → Сертификаты."
+          "description": "Wazuh по умолчанию использует самоподписанные сертификаты, причём у API сервера и индексатора они разные. Запустите \"Проверить подключение\" в интеграции и сделайте доверенным каждый сертификат или добавьте корневой CA Wazuh в разделе Управление → Инструменты → Сертификаты."
+        },
+        "certificateHostname": {
+          "title": "{target}: сертификат не соответствует URL",
+          "description": "Сертификат выпущен не для хоста из URL интеграции. Укажите имя хоста или IP-адрес из сертификата, перевыпустите сертификат с этим именем или сделайте имя хоста доверенным через \"Проверить подключение\"."
+        },
+        "certificateExpired": {
+          "title": "{target}: сертификат истёк или ещё не действует",
+          "description": "Обновите сертификат Wazuh и проверьте, что часы на хостах Homarr и Wazuh идут правильно."
         },
         "unreachable": {
           "title": "{target}: нет связи",
@@ -5618,7 +5939,9 @@
         "unknown": {
           "title": "{target}: не удалось загрузить данные",
           "description": "Подробности смотрите в логах Homarr."
-        }
+        },
+        "viewSaveTitle": "Не удалось сохранить выбранную вкладку",
+        "viewSaveMessage": "Вкладка пока показана, но сбросится при перезагрузке панели."
       },
       "range": {
         "1h": "1 ч",
@@ -5626,93 +5949,138 @@
         "7d": "7 д",
         "30d": "30 д"
       },
-      "levelTooltip": "Уровень правила {level} ({severity})"
-    },
-    "wazuhAgents": {
-      "name": "Агенты Wazuh",
-      "description": "Сортируемый список агентов Wazuh: статус, ОС, версия и последняя связь",
+      "levelTooltip": "Уровень правила {level} ({severity})",
+      "summary": {
+        "title": "Серьёзность оповещений · {range}",
+        "alerts": "оповещений",
+        "none": "Нет оповещений",
+        "trend": {
+          "new": "новые",
+          "tooltip": "Предыдущий период: {previous}"
+        },
+        "previous": "Предыдущий период ({range}): {count}",
+        "maxLevel": "Макс. уровень {level}",
+        "health": "Состояние индексатора: {status}",
+        "manager": "Менеджер {version}"
+      },
+      "alerts": {
+        "title": "Оповещения · уровень {level}+ · {hours} ч",
+        "empty": "Нет оповещений этого уровня. Всё спокойно.",
+        "rule": "Правило {id}",
+        "openInDashboard": "Открыть это оповещение в панели Wazuh"
+      },
+      "timeline": {
+        "title": "Хронология оповещений · {range}",
+        "total": "Оповещений: {count}",
+        "interval": "шаг {interval}"
+      },
+      "top": {
+        "title": {
+          "rules": "Топ правил · {range}",
+          "agents": "Топ агентов · {range}",
+          "sourceIps": "Топ IP-адресов источников · {range}",
+          "mitreTactics": "Тактики MITRE · {range}",
+          "mitreTechniques": "Техники MITRE · {range}"
+        },
+        "empty": {
+          "rules": "Нет оповещений за этот период",
+          "agents": "Нет оповещений за этот период",
+          "sourceIps": "Нет оповещений с IP-адресом источника за этот период",
+          "mitreTactics": "Нет оповещений, сопоставленных с MITRE ATT&CK, за этот период",
+          "mitreTechniques": "Нет оповещений, сопоставленных с MITRE ATT&CK, за этот период"
+        },
+        "totalTooltip": "Подходящих оповещений: {count}",
+        "private": "LAN",
+        "public": "Внешний",
+        "agents": "Замечено на агентах: {count}",
+        "others": "Ещё {count} — в других записях"
+      },
+      "agents": {
+        "title": "Агенты",
+        "total": "Агентов: {count}",
+        "status": {
+          "active": "Активно",
+          "disconnected": "Отключено",
+          "neverConnected": "Ни разу не подключалось",
+          "pending": "В ожидании"
+        },
+        "statusLabel": {
+          "active": "Активно",
+          "disconnected": "Отключено",
+          "never_connected": "Ни разу не подключалось",
+          "pending": "В ожидании",
+          "unknown": "Неизвестно"
+        },
+        "live": "Онлайн",
+        "snapshot": "Снимок {age} назад",
+        "snapshotHint": "Данные взяты из снимка агентов панели Wazuh (wazuh-monitoring) от {time}. Для данных в реальном времени добавьте учётные данные API сервера.",
+        "staleSnapshot": "Снимок агентов от {time} устарел. Проверьте, что на панели Wazuh работает задание мониторинга, или добавьте учётные данные API сервера.",
+        "noDisconnected": "Все агенты подключены",
+        "empty": "Нет агентов, соответствующих этому фильтру",
+        "column": {
+          "status": "Статус",
+          "name": "Имя",
+          "ip": "IP",
+          "os": "ОС",
+          "version": "Версия",
+          "lastKeepAlive": "Последняя связь",
+          "groups": "Группы"
+        },
+        "outdated": "Устаревшая версия (последняя — {version})"
+      },
+      "vulnerabilities": {
+        "title": "Уязвимости",
+        "topCves": "Топ CVE",
+        "score": "Оценка",
+        "agentsShort": "Агенты",
+        "topAgents": "Наиболее уязвимые агенты",
+        "criticalHigh": "Крит. / выс.",
+        "totalTooltip": "Находок: {count}, агентов: {agents}",
+        "affected": "Агентов: {count}",
+        "empty": "Уязвимости не обнаружены",
+        "distribution": "Распределение по серьёзности. Находки без оценки ({unscored}) не показаны.",
+        "worst": "Худшая: {id} ({score}), агентов: {agents}"
+      },
+      "fim": {
+        "title": "Целостность файлов · {range}",
+        "event": {
+          "added": "Добавлено",
+          "modified": "Изменено",
+          "deleted": "Удалено",
+          "unknown": "Изменено"
+        },
+        "empty": "Нет событий целостности файлов за этот период",
+        "user": "пользователь {user}",
+        "registry": "Реестр"
+      },
+      "authFailures": {
+        "title": "Сбои аутентификации · {hours} ч",
+        "seriesTooltip": "Все агенты за последние {hours} ч",
+        "peak": "Пик: {count} за интервал",
+        "empty": "Нет неудачных входов за этот период",
+        "failed": "Неудачные входы",
+        "failedHint": "Одиночные сбои аутентификации (sshd, PAM, вход в Windows, несуществующие пользователи)",
+        "bruteForce": "Перебор паролей",
+        "bruteForceHint": "Коррелированные правила перебора (несколько сбоев за короткое время, MITRE T1110)",
+        "sourceIps": "IP-адреса источников",
+        "ipTooltip": "{ip} — сбоев: {count}",
+        "bruteForceCount": "Перебор: {count}"
+      },
+      "view": {
+        "overview": "Серьёзность",
+        "alerts": "Оповещения",
+        "timeline": "Хронология",
+        "top": "Топ-списки",
+        "agents": "Агенты",
+        "vulnerabilities": "Уязвимости",
+        "fim": "Целостность файлов",
+        "authFailures": "Сбои аутентификации"
+      },
       "option": {
-        "statusFilter": {
-          "label": "Показывать агентов"
+        "visibleViews": {
+          "label": "Видимые вкладки",
+          "description": "В переключателе доступны только эти вкладки. Если вкладка одна, переключатель скрыт."
         },
-        "sortBy": {
-          "label": "Сортировать по"
-        },
-        "showVersion": {
-          "label": "Показывать столбец версии Wazuh"
-        },
-        "showGroups": {
-          "label": "Показывать столбец групп"
-        }
-      },
-      "title": "Агенты",
-      "total": "Агентов: {count}",
-      "status": {
-        "active": "Активно",
-        "disconnected": "Отключено",
-        "neverConnected": "Ни разу не подключалось",
-        "pending": "В ожидании"
-      },
-      "statusLabel": {
-        "active": "Активно",
-        "disconnected": "Отключено",
-        "never_connected": "Ни разу не подключалось",
-        "pending": "В ожидании",
-        "unknown": "Неизвестно"
-      },
-      "live": "Онлайн",
-      "snapshot": "Снимок {age} назад",
-      "snapshotHint": "Данные взяты из снимка агентов панели Wazuh (wazuh-monitoring) от {time}. Для данных в реальном времени добавьте учётные данные API сервера.",
-      "staleSnapshot": "Снимок агентов от {time} устарел. Проверьте, что на панели Wazuh работает задание мониторинга, или добавьте учётные данные API сервера.",
-      "noDisconnected": "Все агенты подключены",
-      "empty": "Нет агентов, соответствующих этому фильтру",
-      "column": {
-        "status": "Статус",
-        "name": "Имя",
-        "ip": "IP",
-        "os": "ОС",
-        "version": "Версия",
-        "lastKeepAlive": "Последняя связь",
-        "groups": "Группы"
-      },
-      "outdated": "Устаревшая версия (последняя — {version})"
-    },
-    "wazuhAlerts": {
-      "name": "Лента оповещений Wazuh",
-      "description": "Недавние оповещения Wazuh: уровень, техники MITRE ATT&CK, агент и IP-адрес источника",
-      "option": {
-        "minLevel": {
-          "label": "Минимальный уровень правила",
-          "description": "Уровни Wazuh: 0-6 низкий, 7-11 средний, 12-14 высокий, 15+ критический"
-        },
-        "hours": {
-          "label": "Период (ч)"
-        },
-        "limit": {
-          "label": "Количество оповещений"
-        },
-        "showMitre": {
-          "label": "Показывать техники MITRE ATT&CK"
-        },
-        "showAgent": {
-          "label": "Показывать агента"
-        },
-        "showSourceIp": {
-          "label": "Показывать IP-адрес источника"
-        },
-        "showRuleId": {
-          "label": "Показывать ID правила"
-        }
-      },
-      "title": "Оповещения · уровень {level}+ · {hours} ч",
-      "empty": "Нет оповещений этого уровня. Всё спокойно.",
-      "rule": "Правило {id}",
-      "openInDashboard": "Открыть это оповещение в панели Wazuh"
-    },
-    "wazuhSummary": {
-      "name": "Серьёзность оповещений Wazuh",
-      "description": "Распределение оповещений по серьёзности и динамика относительно предыдущего периода",
-      "option": {
         "range": {
           "label": "Диапазон времени"
         },
@@ -5721,26 +6089,6 @@
         },
         "showFooter": {
           "label": "Показывать нижнюю строку"
-        }
-      },
-      "title": "Серьёзность оповещений · {range}",
-      "alerts": "оповещения",
-      "none": "Нет оповещений",
-      "trend": {
-        "new": "новый",
-        "tooltip": "Предыдущий период: {previous}"
-      },
-      "previous": "Предыдущий период ({range}): {count}",
-      "maxLevel": "Макс. уровень {level}",
-      "health": "Состояние индексатора: {status}",
-      "manager": "Менеджер {version}"
-    },
-    "wazuhTimeline": {
-      "name": "Хронология оповещений Wazuh",
-      "description": "Диаграмма с накоплением: оповещения Wazuh во времени по серьёзности",
-      "option": {
-        "range": {
-          "label": "Диапазон времени"
         },
         "interval": {
           "label": "Интервал"
@@ -5753,60 +6101,32 @@
           "description": "Квадратный корень оставляет высокие и критические оповещения заметными рядом с тысячами низких"
         },
         "minLevel": {
-          "label": "Минимальный уровень правила"
+          "label": "Минимальный уровень правила (хронология и топ-списки)"
         },
         "showLegend": {
           "label": "Показывать легенду с итогами"
-        }
-      },
-      "title": "Хронология оповещений · {range}",
-      "total": "Оповещений: {count}",
-      "interval": "шаг {interval}"
-    },
-    "wazuhTopList": {
-      "name": "Рейтинг Wazuh",
-      "description": "Топ правил, агентов, IP-адресов источников или тактик и техник MITRE ATT&CK по числу оповещений",
-      "option": {
-        "kind": {
+        },
+        "topKind": {
           "label": "Ранжировать"
         },
-        "range": {
-          "label": "Диапазон времени"
-        },
-        "limit": {
-          "label": "Количество записей"
-        },
-        "minLevel": {
-          "label": "Минимальный уровень правила"
+        "topLimit": {
+          "label": "Топ-списки: количество записей"
         },
         "showBars": {
           "label": "Показывать полосы"
-        }
-      },
-      "title": {
-        "rules": "Топ правил · {range}",
-        "agents": "Топ агентов · {range}",
-        "sourceIps": "Топ IP-адресов источников · {range}",
-        "mitreTactics": "Тактики MITRE · {range}",
-        "mitreTechniques": "Техники MITRE · {range}"
-      },
-      "empty": {
-        "rules": "Нет оповещений за этот период",
-        "agents": "Нет оповещений за этот период",
-        "sourceIps": "Нет оповещений с IP-адресом источника за этот период",
-        "mitreTactics": "Нет оповещений, сопоставленных с MITRE ATT&CK, за этот период",
-        "mitreTechniques": "Нет оповещений, сопоставленных с MITRE ATT&CK, за этот период"
-      },
-      "totalTooltip": "Подходящих оповещений: {count}",
-      "private": "LAN",
-      "public": "Публичная",
-      "agents": "Замечено на агентах: {count}",
-      "others": "Ещё {count} — в других записях"
-    },
-    "wazuhVulnerabilities": {
-      "name": "Уязвимости Wazuh",
-      "description": "Число уязвимостей, топ CVE и самые уязвимые агенты",
-      "option": {
+        },
+        "agentStatusFilter": {
+          "label": "Показывать агентов"
+        },
+        "agentSortBy": {
+          "label": "Сортировать по"
+        },
+        "showVersion": {
+          "label": "Агенты: показывать столбец версии Wazuh"
+        },
+        "showGroups": {
+          "label": "Агенты: показывать столбец групп"
+        },
         "cveOrder": {
           "label": "Ранжировать CVE по"
         },
@@ -5821,73 +6141,42 @@
         },
         "showAgents": {
           "label": "Показывать самых уязвимых агентов"
-        }
-      },
-      "title": "Уязвимости",
-      "topCves": "Топ CVE",
-      "score": "Оценка",
-      "agentsShort": "Агенты",
-      "topAgents": "Наиболее уязвимые агенты",
-      "criticalHigh": "Крит. / выс.",
-      "totalTooltip": "Находок: {count}, агентов: {agents}",
-      "affected": "Агентов: {count}",
-      "empty": "Уязвимости не обнаружены",
-      "distribution": "Распределение по серьёзности. Находки без оценки ({unscored}) не показаны.",
-      "worst": "Худшая: {id} ({score}), агентов: {agents}"
-    },
-    "wazuhFim": {
-      "name": "Целостность файлов Wazuh",
-      "description": "Недавние события мониторинга целостности файлов (syscheck)",
-      "option": {
-        "range": {
-          "label": "Диапазон времени"
         },
-        "event": {
+        "fimEvent": {
           "label": "События"
         },
-        "limit": {
-          "label": "Количество событий"
+        "fimLimit": {
+          "label": "Целостность файлов: количество событий"
         },
         "includeRegistry": {
           "label": "Включать события реестра Windows"
-        }
-      },
-      "title": "Целостность файлов · {range}",
-      "event": {
-        "added": "Добавлено",
-        "modified": "Изменено",
-        "deleted": "Удалено",
-        "unknown": "Изменено"
-      },
-      "empty": "Нет событий целостности файлов за этот период",
-      "user": "пользователь {user}",
-      "registry": "Реестр"
-    },
-    "wazuhAuthFailures": {
-      "name": "Сбои аутентификации Wazuh",
-      "description": "Неудачные входы и оповещения о переборе паролей по каждому агенту с почасовыми мини-графиками",
-      "option": {
-        "hours": {
-          "label": "Период (ч)"
         },
-        "limit": {
-          "label": "Количество агентов"
+        "authLimit": {
+          "label": "Сбои аутентификации: количество агентов"
         },
         "showSourceIps": {
           "label": "Показывать топ IP-адресов источников"
+        },
+        "alertsMinLevel": {
+          "label": "Оповещения: минимальный уровень правила",
+          "description": "Уровни Wazuh: 0-6 низкий, 7-11 средний, 12-14 высокий, 15+ критический"
+        },
+        "alertsLimit": {
+          "label": "Оповещения: количество оповещений"
+        },
+        "showMitre": {
+          "label": "Показывать техники MITRE ATT&CK"
+        },
+        "showAgent": {
+          "label": "Показывать агента"
+        },
+        "showSourceIp": {
+          "label": "Показывать IP-адрес источника"
+        },
+        "showRuleId": {
+          "label": "Показывать ID правила"
         }
-      },
-      "title": "Сбои аутентификации · {hours} ч",
-      "seriesTooltip": "Все агенты за последние {hours}ч",
-      "peak": "Пик: {count} за интервал",
-      "empty": "Нет неудачных входов за этот период",
-      "failed": "Неудачные входы",
-      "failedHint": "Одиночные сбои аутентификации (sshd, PAM, вход в Windows, несуществующие пользователи)",
-      "bruteForce": "Перебор паролей",
-      "bruteForceHint": "Коррелированные правила перебора (несколько сбоев за короткое время, MITRE T1110)",
-      "sourceIps": "IP-адреса источников",
-      "ipTooltip": "{ip} — сбоев: {count}",
-      "bruteForceCount": "Перебор: {count}"
+      }
     }
   },
   "widgetPreview": {
@@ -5906,6 +6195,18 @@
       "addWidget": "Добавить виджет",
       "addApp": "Добавить приложение",
       "connectService": "Подключить сервис"
+    },
+    "urlDrop": {
+      "hint": "",
+      "resolving": "",
+      "notification": {
+        "success": {
+          "message": ""
+        },
+        "full": {
+          "message": ""
+        }
+      }
     },
     "setupChecklist": {
       "title": "Сделайте эту панель полезной",
@@ -8512,6 +8813,14 @@
     "conversationActions": "Действия с чатом",
     "searchConversations": "Поиск по чатам",
     "noMatchingConversations": "Нет подходящих чатов",
+    "historyError": {
+      "title": "",
+      "load": "",
+      "loadMessages": "",
+      "saveMessages": "",
+      "switch": "",
+      "retry": ""
+    },
     "moreActions": "Другие действия с ответом",
     "renameConversation": {
       "action": "Переименовать",
@@ -8631,6 +8940,9 @@
     },
     "mentions": {
       "menu": "Добавить контекст Homarr",
+      "back": "",
+      "loading": "",
+      "empty": "",
       "context": "Контекст",
       "app": "Приложения",
       "integration": "Интеграции",
@@ -8645,6 +8957,8 @@
     },
     "commands": {
       "menu": "Команды Ассистента",
+      "hint": "",
+      "empty": "",
       "health": "Подготовить проверку состояния сервисов",
       "explore": "Подготовить обзор этого экземпляра Homarr",
       "media": "Подготовить поиск медиа",
@@ -8827,6 +9141,7 @@
     "approvalDescription": "Проверьте это изменение перед выполнением.",
     "approveAndRun": "Одобрить и выполнить",
     "deny": "Отклонить",
+    "approvalError": "",
     "autoApproval": {
       "label": "Автоматическое одобрение",
       "composerLabel": "Одобрять за меня",

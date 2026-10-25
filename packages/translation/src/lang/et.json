@@ -799,6 +799,11 @@
       }
     },
     "field": {
+      "url": {
+        "helpLabel": "URL-vormingute näited",
+        "examples": "Toetatud linkide näited",
+        "requiresHandler": "Kohandatud protokollid nõuavad sinu seadmes nendega seotud rakendust."
+      },
       "description": {
         "label": "Kirjeldus"
       },
@@ -1559,6 +1564,7 @@
             "untrusted": "Sertifikaat ei ole usaldusväärne.",
             "hostnameMismatch": "Sertifikaadi hostinimi ei vasta URL-ile."
           },
+          "secondaryUrl": "",
           "alert": {
             "permission": {
               "title": "Õigustest ei piisa",
@@ -1904,6 +1910,7 @@
       "tryAgain": "Proovi uuesti",
       "loading": "Laadimine",
       "show": "Kuva",
+      "showAll": "",
       "hide": "Peida",
       "undo": "Võta tagasi",
       "editNamed": "Muuda {name}",
@@ -1913,6 +1920,7 @@
       "copied": "Kopeeritud",
       "refresh": "Värskenda"
     },
+    "hidden": "",
     "pagination": {
       "pageOf": "Lehekülg {page} / {totalPages}"
     },
@@ -1935,6 +1943,7 @@
       "clear": "Eemalda pilt",
       "uploadImage": "Laadi pilt üles",
       "results": "Pildiotsingu tulemused",
+      "websiteIcon": "",
       "localImages": "Sinu pildid",
       "svgIcons": "SVG ikoonid",
       "otherImages": "Teised pildid",
@@ -2308,6 +2317,15 @@
       "option": {
         "appId": {
           "label": "Vali rakendus"
+        },
+        "openIn": {
+          "label": "Rakenduse avamiskoht",
+          "description": "Vali, kus see rakendus avaneb. Brauseri seaded võivad eraldi aknas avamise soovi eirata.",
+          "option": {
+            "currentTab": "Praegune vahekaart",
+            "newTab": "Uus vahekaart",
+            "newWindow": "Uus aken"
+          }
         },
         "showTitle": {
           "label": "Näita rakenduse nime"
@@ -3224,6 +3242,10 @@
         },
         "viewMode": {
           "label": ""
+        },
+        "hideHeader": {
+          "label": "",
+          "description": ""
         }
       },
       "advanced": {
@@ -3241,15 +3263,11 @@
         "agenda": ""
       },
       "controls": {
-        "view": "",
         "today": "",
         "previous": "",
         "next": "",
         "noEvents": "",
         "more": "",
-        "moreLabel": "",
-        "eventDetails": "",
-        "close": "",
         "timeSlot": "",
         "weekday": ""
       }
@@ -3936,11 +3954,28 @@
         "paused": "Peatatud",
         "remaining": "{minutes} min jäänud",
         "seasonEpisode": "H{season} O{episode}",
+        "state": {
+          "playing": "",
+          "buffering": ""
+        },
+        "details": {
+          "device": "",
+          "location": "",
+          "sessionId": "",
+          "bitrate": "",
+          "audioHandling": "",
+          "direct": "",
+          "transcode": "",
+          "containerChanged": "",
+          "position": "",
+          "unknown": ""
+        },
         "metadata": {
           "title": "Nohikute statistika",
           "video": {
             "title": "Video",
-            "resolution": "Eraldusvõime"
+            "resolution": "Eraldusvõime",
+            "frameRate": ""
           },
           "audio": {
             "title": "Heli",
@@ -3961,6 +3996,109 @@
         "playing": "{count} esitamisel",
         "transcoding": "{count} transkodeerimisel"
       }
+    },
+    "thingport-libraryStats": {
+      "name": "",
+      "description": "",
+      "title": "",
+      "option": {
+        "showModels": {
+          "label": ""
+        },
+        "showCollections": {
+          "label": ""
+        },
+        "showCategories": {
+          "label": ""
+        },
+        "showAuthors": {
+          "label": ""
+        }
+      },
+      "models": "",
+      "collections": "",
+      "categories": "",
+      "authors": ""
+    },
+    "thingport-featuredModel": {
+      "name": "",
+      "description": "",
+      "option": {
+        "autoRotate": {
+          "label": ""
+        },
+        "showDetails": {
+          "label": ""
+        }
+      },
+      "title": "",
+      "empty": "",
+      "hint": "",
+      "noPreview": "",
+      "views": "",
+      "prints": ""
+    },
+    "thingport-activityHeatmap": {
+      "name": "",
+      "description": "",
+      "title": "",
+      "option": {
+        "weekStart": {
+          "label": "",
+          "option": {
+            "sunday": "",
+            "monday": ""
+          }
+        },
+        "showTotal": {
+          "label": ""
+        },
+        "showLegend": {
+          "label": ""
+        }
+      },
+      "lastYear": "",
+      "totalLastYear": "",
+      "totalInYear": "",
+      "dayTotal": "",
+      "dayEmpty": "",
+      "kinds": {
+        "import": "",
+        "upload": "Kokku üles laetud",
+        "download": "Kokku alla laetud",
+        "slicer": "",
+        "delete": ""
+      },
+      "less": "",
+      "more": ""
+    },
+    "thingport-models": {
+      "name": "",
+      "description": "",
+      "title": "",
+      "option": {
+        "defaultTab": {
+          "label": ""
+        },
+        "itemCount": {
+          "label": ""
+        },
+        "showThumbnails": {
+          "label": ""
+        }
+      },
+      "tab": {
+        "recentlyAdded": "",
+        "topViewed": "",
+        "topPrinted": ""
+      },
+      "empty": {
+        "recentlyAdded": "",
+        "topViewed": "",
+        "topPrinted": ""
+      },
+      "views": "",
+      "prints": ""
     },
     "paperlessNgx": {
       "description": "Ülevaade sinu Paperless-ngx dokumendiarhiivist",
@@ -4634,27 +4772,59 @@
       "name": "Väljalasked",
       "description": "Kuvab antud hoidlate praeguse versiooni loendi koos antud versiooni regulaaravaldisega.",
       "option": {
+        "layout": {
+          "label": "",
+          "description": "",
+          "option": {
+            "comfortable": "",
+            "compact": ""
+          }
+        },
+        "summary": {
+          "label": "",
+          "description": "",
+          "option": {
+            "detailed": "",
+            "count": "",
+            "hidden": ""
+          }
+        },
+        "sections": {
+          "label": "",
+          "description": ""
+        },
+        "collapsedSections": {
+          "label": "",
+          "description": ""
+        },
         "newReleaseWithin": {
           "label": "Uus väljalase ajavahemikus",
-          "description": "Kasutusnäide: 1w (1 nädal), 10M (10 kuud). Lubatud ühikud on h (tunnid), d (päevad), w (nädalad), M (kuud), y (aastad). Jäta tühjaks, et uusi väljalaskeid mitte esile tõsta."
+          "description": "Kasutusnäide: 1w (1 nädal), 10M (10 kuud). Lubatud ühikud on h (tunnid), d (päevad), w (nädalad), M (kuud), y (aastad). Jäta tühjaks, et uusi väljalaskeid mitte esile tõsta.",
+          "option": {
+            "never": "",
+            "1d": "",
+            "3d": "",
+            "1w": "",
+            "2w": "",
+            "1M": "",
+            "3M": ""
+          }
         },
         "staleReleaseWithin": {
           "label": "Aegunud väljalase ajavahemikus",
-          "description": "Kasutusnäide: 1w (1 nädal), 10M (10 kuud). Lubatud ühikud on h (tunnid), d (päevad), w (nädalad), M (kuud), y (aastad). Jäta tühjaks, et aegunud väljalaskeid mitte esile tõsta."
+          "description": "Kasutusnäide: 1w (1 nädal), 10M (10 kuud). Lubatud ühikud on h (tunnid), d (päevad), w (nädalad), M (kuud), y (aastad). Jäta tühjaks, et aegunud väljalaskeid mitte esile tõsta.",
+          "option": {
+            "never": "",
+            "1M": "",
+            "3M": "",
+            "6M": "",
+            "1y": "",
+            "2y": ""
+          }
         },
-        "showOnlyHighlighted": {
-          "label": "Kuva ainult esiletõstetud",
-          "description": "Kuva ainult uusi või aegunud väljalaskeid vastavalt ülaltoodule."
-        },
-        "showDetails": {
-          "label": "Kuva üksikasju"
-        },
-        "showOnlyIcon": {
-          "label": "Kuva ainult ikooni"
-        },
-        "topReleases": {
-          "label": "Tippväljalasked",
-          "description": "Kuvatavate uusimate väljalasete maksimaalne arv. Null tähendab piiranguta."
+        "showChangelogPreview": {
+          "label": "",
+          "description": ""
         },
         "repositories": {
           "label": "Hoidlad",
@@ -4728,36 +4898,106 @@
           }
         }
       },
-      "not-found": "Ei leitud",
-      "pre-release": "Eelväljalase",
-      "archived": "Arhiveeritud",
-      "forked": "Harundatud",
+      "summary": {
+        "newReleases": "",
+        "newShort": "",
+        "tracked": "",
+        "caughtUp": "",
+        "outdated": "",
+        "outdatedShort": "",
+        "failing": "",
+        "failingShort": "",
+        "latest": "",
+        "issues": ""
+      },
+      "section": {
+        "new": {
+          "label": "",
+          "description": ""
+        },
+        "attention": {
+          "label": "",
+          "description": ""
+        },
+        "upToDate": {
+          "label": "",
+          "description": ""
+        },
+        "quiet": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "status": {
+        "new": "",
+        "outdated": "",
+        "error": "",
+        "upToDate": "",
+        "quiet": ""
+      },
+      "tag": {
+        "new": "",
+        "preRelease": "",
+        "resolvedFrom": "",
+        "quiet": "",
+        "archived": "",
+        "fork": ""
+      },
+      "issue": {
+        "affected": "",
+        "rateLimited": {
+          "title": "",
+          "hint": ""
+        },
+        "notFound": {
+          "title": "",
+          "hint": ""
+        },
+        "noMatchingVersion": {
+          "title": "",
+          "hint": ""
+        },
+        "noReleasesFound": {
+          "title": "",
+          "hint": ""
+        },
+        "invalidIdentifier": {
+          "title": "",
+          "hint": ""
+        },
+        "noProviderSelected": {
+          "title": "",
+          "hint": ""
+        },
+        "noProviderResponse": {
+          "title": "",
+          "hint": ""
+        },
+        "unexpected": {
+          "title": "",
+          "hint": ""
+        }
+      },
+      "markViewed": "Märgi vaadatuks",
+      "markAllViewed": "",
+      "markEntryViewed": "",
+      "viewed": "",
+      "copyVersion": "",
+      "copied": "",
+      "published": "",
+      "whatChanged": "",
+      "noNotes": "",
+      "changes": "",
       "starsCount": "Tähed",
       "forksCount": "Harud",
-      "issuesCount": "Avatud probleemid",
-      "markViewed": "Märgi vaadatuks",
-      "openProjectPage": "Ava projekti leht",
-      "openReleasePage": "Ava väljalaske leht",
-      "releaseDescription": "Väljalaske kirjeldus",
-      "projectDescription": "Projekti kirjeldus",
+      "openIssues": "",
+      "created": "Loodud",
+      "releasePage": "",
+      "projectPage": "",
       "runningVersions": "",
       "upToDate": "",
       "updateAvailable": "",
-      "unknownStatus": "",
-      "created": "Loodud",
-      "error": {
-        "label": "Viga",
-        "messages": {
-          "invalidIdentifier": "Kehtetu identifikaator",
-          "noMatchingVersion": "Sobivat versiooni ei leitud",
-          "noReleasesFound": "Väljalaskeid ei leitud",
-          "noProviderSelected": "Pakkujat pole valitud",
-          "noProviderResponse": "Teenusepakkujalt ei saadud vastust",
-          "unexpected": "Ootamatu pakkuja viga"
-        }
-      },
-      "expandDetails": "Kuva {name} üksikasjad",
-      "collapseDetails": "Peida {name} üksikasjad"
+      "unknownStatus": ""
     },
     "networkControllerSummary": {
       "advanced": {
@@ -4930,45 +5170,116 @@
     "uptimeKuma": {
       "description": "Jälgi tööaja statistikat oma Uptime Kuma olekulehelt",
       "option": {
-        "showAverageUptime": {
-          "label": "Kuva keskmine tööaeg",
-          "description": "Kuva ühendatud 24 tunni keskmise tööaja protsent"
+        "statusPageSlug": {
+          "label": "",
+          "description": ""
         },
-        "showUptimeRing": {
-          "label": "Kuva tööaja rõngas",
-          "description": "Kuva keskmise tööaja väärtuse kõrval edenemisrõngas"
+        "summaryOnly": {
+          "label": "",
+          "description": ""
         },
-        "showTotalMonitors": {
-          "label": "Kuva monitoride koguarv",
-          "description": "Kuva seadistatud monitoride koguarv"
+        "showSummary": {
+          "label": "",
+          "description": ""
         },
-        "showUpCount": {
-          "label": "Kuva üleval olevate arv",
-          "description": "Kuva praegu töökorras olevate monitoride arv"
+        "showIncidents": {
+          "label": "",
+          "description": ""
         },
-        "showDownCount": {
-          "label": "Kuva maas olevate arv",
-          "description": "Kuva praegu maas olevate monitoride arv"
+        "groupByStatusPageGroup": {
+          "label": "",
+          "description": ""
         },
-        "showPausedCount": {
-          "label": "Kuva peatatud monitoride arv",
-          "description": "Kuva praegu peatatud monitoride arv"
+        "showOnlyProblems": {
+          "label": "",
+          "description": ""
+        },
+        "sortBy": {
+          "label": "",
+          "option": {
+            "status": "",
+            "statusPage": "",
+            "name": "Töö nimetus",
+            "uptime": ""
+          }
+        },
+        "showHeartbeatBar": {
+          "label": "",
+          "description": ""
+        },
+        "showUptime": {
+          "label": ""
+        },
+        "showResponseTime": {
+          "label": ""
+        },
+        "showCertificateExpiry": {
+          "label": "",
+          "description": ""
         }
-      },
-      "averageUptime": "Keskmine tööaeg (24 h)",
-      "stats": {
-        "totalMonitors": "Monitore kokku",
-        "upCount": "Üleval",
-        "downCount": "Maas",
-        "pausedCount": "Peatatud"
-      },
-      "error": {
-        "internalServerError": "Tööaja andmete toomine nurjus"
       },
       "status": {
         "up": "Kokku üles",
         "down": "Allalaadimiskiirus",
-        "paused": "Pausil"
+        "pending": "",
+        "maintenance": "",
+        "stale": "",
+        "unknown": ""
+      },
+      "overall": {
+        "operational": "",
+        "degraded": "",
+        "outage": "",
+        "maintenance": "",
+        "unknown": ""
+      },
+      "short": {
+        "operational": "",
+        "down": "",
+        "pending": "",
+        "maintenance": "",
+        "unknown": ""
+      },
+      "summary": {
+        "upRatio": "",
+        "upRatioShort": "",
+        "averageUptime": "",
+        "uptimeShort": "",
+        "statusCount": ""
+      },
+      "unit": {
+        "milliseconds": ""
+      },
+      "heartbeatBar": {
+        "label": ""
+      },
+      "detail": {
+        "checked": "",
+        "certificate": ""
+      },
+      "notice": {
+        "label": "",
+        "untitled": ""
+      },
+      "empty": {
+        "title": "",
+        "description": ""
+      },
+      "allClear": "",
+      "error": {
+        "internalServerError": "Tööaja andmete toomine nurjus"
+      },
+      "monitorType": {
+        "http": "",
+        "keyword": "",
+        "jsonQuery": "",
+        "port": "",
+        "ping": "",
+        "dns": "",
+        "docker": "",
+        "push": "",
+        "group": "",
+        "realBrowser": ""
       }
     },
     "traefik": {
@@ -5575,6 +5886,8 @@
       "allHidden": "Kõik mõõdikud on selles vaates peidetud. Nende taastamiseks vali „Kohanda seda vaadet“."
     },
     "wazuh": {
+      "name": "",
+      "description": "",
       "target": {
         "api": "Wazuhi serveri API",
         "indexer": "Wazuhi indekseerija",
@@ -5594,6 +5907,14 @@
         "certificate": {
           "title": "{target} sertifikaati ei usaldata",
           "description": "Wazuh kasutab vaikimisi iseallkirjastatud sertifikaati. Käivita integratsioonis „Testi ühendust“ ja usalda sertifikaati või lisa oma CA jaotises Seaded → Sertifikaadid."
+        },
+        "certificateHostname": {
+          "title": "",
+          "description": ""
+        },
+        "certificateExpired": {
+          "title": "",
+          "description": ""
         },
         "unreachable": {
           "title": "{target} pole kättesaadav",
@@ -5618,7 +5939,9 @@
         "unknown": {
           "title": "Sihtkohast {target} ei saanud andmeid laadida",
           "description": "Üksikasjade saamiseks kontrolli Homarri logisid."
-        }
+        },
+        "viewSaveTitle": "",
+        "viewSaveMessage": ""
       },
       "range": {
         "1h": "1 h",
@@ -5626,268 +5949,234 @@
         "7d": "7 päeva",
         "30d": "30 päeva"
       },
-      "levelTooltip": "Reegli tase {level} ({severity})"
-    },
-    "wazuhAgents": {
-      "name": "Wazuhi agendid",
-      "description": "Sorteeritav Wazuhi agentide loend oleku, operatsioonisüsteemi, versiooni ja viimase ühenduse hoidmise ajaga",
+      "levelTooltip": "Reegli tase {level} ({severity})",
+      "summary": {
+        "title": "",
+        "alerts": "",
+        "none": "",
+        "trend": {
+          "new": "",
+          "tooltip": ""
+        },
+        "previous": "",
+        "maxLevel": "",
+        "health": "",
+        "manager": ""
+      },
+      "alerts": {
+        "title": "",
+        "empty": "",
+        "rule": "",
+        "openInDashboard": ""
+      },
+      "timeline": {
+        "title": "",
+        "total": "",
+        "interval": ""
+      },
+      "top": {
+        "title": {
+          "rules": "",
+          "agents": "",
+          "sourceIps": "",
+          "mitreTactics": "",
+          "mitreTechniques": ""
+        },
+        "empty": {
+          "rules": "",
+          "agents": "",
+          "sourceIps": "",
+          "mitreTactics": "",
+          "mitreTechniques": ""
+        },
+        "totalTooltip": "",
+        "private": "",
+        "public": "",
+        "agents": "",
+        "others": ""
+      },
+      "agents": {
+        "title": "",
+        "total": "",
+        "status": {
+          "active": "",
+          "disconnected": "",
+          "neverConnected": "",
+          "pending": ""
+        },
+        "statusLabel": {
+          "active": "",
+          "disconnected": "",
+          "never_connected": "",
+          "pending": "",
+          "unknown": ""
+        },
+        "live": "",
+        "snapshot": "",
+        "snapshotHint": "",
+        "staleSnapshot": "",
+        "noDisconnected": "",
+        "empty": "",
+        "column": {
+          "status": "",
+          "name": "Töö nimetus",
+          "ip": "",
+          "os": "",
+          "version": "",
+          "lastKeepAlive": "",
+          "groups": ""
+        },
+        "outdated": ""
+      },
+      "vulnerabilities": {
+        "title": "",
+        "topCves": "",
+        "score": "",
+        "agentsShort": "",
+        "topAgents": "",
+        "criticalHigh": "",
+        "totalTooltip": "",
+        "affected": "",
+        "empty": "",
+        "distribution": "",
+        "worst": ""
+      },
+      "fim": {
+        "title": "",
+        "event": {
+          "added": "Lisamise kuupäev",
+          "modified": "",
+          "deleted": "",
+          "unknown": ""
+        },
+        "empty": "",
+        "user": "",
+        "registry": ""
+      },
+      "authFailures": {
+        "title": "",
+        "seriesTooltip": "",
+        "peak": "",
+        "empty": "",
+        "failed": "",
+        "failedHint": "",
+        "bruteForce": "",
+        "bruteForceHint": "",
+        "sourceIps": "",
+        "ipTooltip": "",
+        "bruteForceCount": ""
+      },
+      "view": {
+        "overview": "",
+        "alerts": "",
+        "timeline": "",
+        "top": "",
+        "agents": "",
+        "vulnerabilities": "",
+        "fim": "",
+        "authFailures": ""
+      },
       "option": {
-        "statusFilter": {
-          "label": "Kuva agendid"
+        "visibleViews": {
+          "label": "",
+          "description": ""
         },
-        "sortBy": {
-          "label": "Sordi alusel"
-        },
-        "showVersion": {
-          "label": "Kuva Wazuhi versiooni veerg"
-        },
-        "showGroups": {
-          "label": "Kuva rühmade veerg"
-        }
-      },
-      "title": "Agendid",
-      "total": "{count} agenti",
-      "status": {
-        "active": "Aktiivne",
-        "disconnected": "Ühenduseta",
-        "neverConnected": "Pole kunagi ühendunud",
-        "pending": "Ootel"
-      },
-      "statusLabel": {
-        "active": "Aktiivne",
-        "disconnected": "Ühenduseta",
-        "never_connected": "Pole kunagi ühendunud",
-        "pending": "Ootel",
-        "unknown": "Teadmata"
-      },
-      "live": "Reaalajas",
-      "snapshot": "Hetktõmmis on {age} vana",
-      "snapshotHint": "Loetud Wazuhi töölaua agendi hetktõmmisest (wazuh-monitoring), mis tehti kell {time}. Reaalajas andmete jaoks lisage serveri API mandaadid.",
-      "staleSnapshot": "Agendi hetktõmmis kellaajast {time} on aegunud. Kontrollige, kas Wazuhi töölaua jälgimistöö töötab, või lisage serveri API mandaadid.",
-      "noDisconnected": "Kõik agendid on ühendatud",
-      "empty": "Ükski agent ei vasta sellele filtrile",
-      "column": {
-        "status": "Olek",
-        "name": "Töö nimetus",
-        "ip": "IP",
-        "os": "Operatsioonisüsteem",
-        "version": "Versioon",
-        "lastKeepAlive": "Ühenduse elushoidmine",
-        "groups": "Rühmad"
-      },
-      "outdated": "Uusimast agendi versioonist vanem ({version})"
-    },
-    "wazuhAlerts": {
-      "name": "Wazuhi hoiatuste voog",
-      "description": "Hiljutised Wazuhi hoiatused taseme, MITRE ATT&CK tehnikate, agendi ja lähte-IP-ga",
-      "option": {
-        "minLevel": {
-          "label": "Minimaalne reegli tase",
-          "description": "Wazuhi tasemed: 0–6 madal, 7–11 keskmine, 12–14 kõrge, 15+ kriitiline"
-        },
-        "hours": {
-          "label": "Ajavahemik (tundides)"
-        },
-        "limit": {
-          "label": "Hoiatuste arv"
-        },
-        "showMitre": {
-          "label": "Kuva MITRE ATT&CK tehnikad"
-        },
-        "showAgent": {
-          "label": "Kuva agent"
-        },
-        "showSourceIp": {
-          "label": "Kuva lähte-IP"
-        },
-        "showRuleId": {
-          "label": "Kuva reegli ID"
-        }
-      },
-      "title": "Hoiatused · tase {level}+ · {hours} h",
-      "empty": "Sellel tasemel hoiatusi pole. Kõik on vaikne.",
-      "rule": "Reegel {id}",
-      "openInDashboard": "Ava see hoiatus Wazuhi töölaual"
-    },
-    "wazuhSummary": {
-      "name": "Wazuhi hoiatuste raskusaste",
-      "description": "Hoiatuste raskusastme jaotus koos eelmise perioodi trendiga",
-      "option": {
         "range": {
-          "label": "Ajavahemik"
+          "label": ""
         },
         "showTrend": {
-          "label": "Kuva trendi võrreldes eelmise perioodiga"
+          "label": ""
         },
         "showFooter": {
-          "label": "Kuva jalus"
-        }
-      },
-      "title": "Hoiatuste raskusaste · {range}",
-      "alerts": "hoiatused",
-      "none": "Hoiatusi pole",
-      "trend": {
-        "new": "uued",
-        "tooltip": "Eelmine periood: {previous}"
-      },
-      "previous": "Eelmine {range}: {count}",
-      "maxLevel": "Maksimaalne tase {level}",
-      "health": "Indekseerija seisund: {status}",
-      "manager": "Haldur {version}"
-    },
-    "wazuhTimeline": {
-      "name": "Wazuhi hoiatuste ajajoon",
-      "description": "Wazuhi hoiatuste raskusastmepõhine virnastatud ajagraafik",
-      "option": {
-        "range": {
-          "label": "Ajavahemik"
+          "label": ""
         },
         "interval": {
-          "label": "Intervall"
+          "label": ""
         },
         "chartType": {
-          "label": "Graafiku tüüp"
+          "label": ""
         },
         "yScale": {
-          "label": "Y-telje skaala",
-          "description": "Ruutjuur hoiab kõrged ja kriitilised hoiatused nähtavana tuhandete madalate hoiatuste kõrval"
+          "label": "",
+          "description": ""
         },
         "minLevel": {
-          "label": "Minimaalne reegli tase"
+          "label": ""
         },
         "showLegend": {
-          "label": "Kuva legend koos kogusummadega"
-        }
-      },
-      "title": "Hoiatuste ajajoon · {range}",
-      "total": "{count} hoiatust",
-      "interval": "intervalli kohta {interval}"
-    },
-    "wazuhTopList": {
-      "name": "Wazuhi edetabel",
-      "description": "Peamised reeglid, agendid, lähte-IP-aadressid või MITRE ATT&CK taktikad ja tehnikad hoiatuste arvu järgi",
-      "option": {
-        "kind": {
-          "label": "Järjestus"
+          "label": ""
         },
-        "range": {
-          "label": "Ajavahemik"
+        "topKind": {
+          "label": ""
         },
-        "limit": {
-          "label": "Kirjete arv"
-        },
-        "minLevel": {
-          "label": "Reegli minimaalne tase"
+        "topLimit": {
+          "label": ""
         },
         "showBars": {
-          "label": "Kuva ribad"
-        }
-      },
-      "title": {
-        "rules": "Peamised reeglid · {range}",
-        "agents": "Peamised agendid · {range}",
-        "sourceIps": "Peamised lähte-IP-d · {range}",
-        "mitreTactics": "MITRE taktikad · {range}",
-        "mitreTechniques": "MITRE tehnikad · {range}"
-      },
-      "empty": {
-        "rules": "Sellel perioodil hoiatusi pole",
-        "agents": "Sellel perioodil hoiatusi pole",
-        "sourceIps": "Sellel perioodil pole lähte-IP-ga hoiatusi",
-        "mitreTactics": "Sellel perioodil pole MITRE ATT&CK-iga seotud hoiatusi",
-        "mitreTechniques": "Sellel perioodil pole MITRE ATT&CK-iga seotud hoiatusi"
-      },
-      "totalTooltip": "{count} sobivat hoiatust",
-      "private": "LAN",
-      "public": "Avalik",
-      "agents": "Nähtud {count} agendil",
-      "others": "Veel {count} hoiatust teistes kirjete rühmades"
-    },
-    "wazuhVulnerabilities": {
-      "name": "Wazuhi turvanõrkused",
-      "description": "Turvanõrkuste arv, peamised CVE-d ja kõige haavatavamad agendid",
-      "option": {
+          "label": ""
+        },
+        "agentStatusFilter": {
+          "label": ""
+        },
+        "agentSortBy": {
+          "label": ""
+        },
+        "showVersion": {
+          "label": ""
+        },
+        "showGroups": {
+          "label": ""
+        },
         "cveOrder": {
-          "label": "Järjesta CVE-d järgmise järgi"
+          "label": ""
         },
         "minSeverity": {
-          "label": "CVE tõsidus"
+          "label": ""
         },
         "cveLimit": {
-          "label": "CVE-de arv"
+          "label": ""
         },
         "agentLimit": {
-          "label": "Agentide arv"
+          "label": ""
         },
         "showAgents": {
-          "label": "Kuva kõige haavatavamad agendid"
-        }
-      },
-      "title": "Turvanõrkused",
-      "topCves": "Peamised CVE-d",
-      "score": "Skoor",
-      "agentsShort": "Agendid",
-      "topAgents": "Kõige haavatavamad agendid",
-      "criticalHigh": "Kriitiline / kõrge",
-      "totalTooltip": "{count} leidu {agents} agendil",
-      "affected": "{count} agenti",
-      "empty": "Turvanõrkusi ei tuvastatud",
-      "distribution": "Tõsiduse jaotus. Ilma skoorita {unscored} leidu ei kuvata.",
-      "worst": "Halvim: {id} ({score}) {agents} agendil"
-    },
-    "wazuhFim": {
-      "name": "Wazuhi failide terviklus",
-      "description": "Hiljutised failide tervikluse jälgimise (syscheck) sündmused",
-      "option": {
-        "range": {
-          "label": "Ajavahemik"
+          "label": ""
         },
-        "event": {
-          "label": "Sündmused"
+        "fimEvent": {
+          "label": ""
         },
-        "limit": {
-          "label": "Sündmuste arv"
+        "fimLimit": {
+          "label": ""
         },
         "includeRegistry": {
-          "label": "Kaasa Windowsi registri sündmused"
-        }
-      },
-      "title": "Failide terviklus · {range}",
-      "event": {
-        "added": "Lisamise kuupäev",
-        "modified": "Muudetud",
-        "deleted": "Kustutatud",
-        "unknown": "Muud"
-      },
-      "empty": "Sellel perioodil pole failide tervikluse sündmusi",
-      "user": "kasutaja {user}",
-      "registry": "Register"
-    },
-    "wazuhAuthFailures": {
-      "name": "Wazuhi autentimise nurjumised",
-      "description": "Nurjunud sisselogimised ja jõuründeh hoiatused agentide kaupa koos tunniste minigraafikutega",
-      "option": {
-        "hours": {
-          "label": "Ajavahemik (tundides)"
+          "label": ""
         },
-        "limit": {
-          "label": "Agentide arv"
+        "authLimit": {
+          "label": ""
         },
         "showSourceIps": {
-          "label": "Kuva peamised lähte-IP-d"
+          "label": ""
+        },
+        "alertsMinLevel": {
+          "label": "",
+          "description": ""
+        },
+        "alertsLimit": {
+          "label": ""
+        },
+        "showMitre": {
+          "label": ""
+        },
+        "showAgent": {
+          "label": ""
+        },
+        "showSourceIp": {
+          "label": ""
+        },
+        "showRuleId": {
+          "label": ""
         }
-      },
-      "title": "Autentimise nurjumised · {hours} h",
-      "seriesTooltip": "Kõik agendid viimase {hours} tunni jooksul",
-      "peak": "Tipp {count}/ämber",
-      "empty": "Sellel perioodil nurjunud sisselogimisi pole",
-      "failed": "Nurjunud sisselogimised",
-      "failedHint": "Üksikud autentimise nurjumised (sshd, PAM, Windowsi sisselogimine, sobimatud kasutajad)",
-      "bruteForce": "Jõurünne",
-      "bruteForceHint": "Seotud jõuründereeglid (lühikese aja jooksul mitu nurjumist, MITRE T1110)",
-      "sourceIps": "Lähte-IP-d",
-      "ipTooltip": "{ip}: {count} nurjumist",
-      "bruteForceCount": "{count} jõurünnakut"
+      }
     }
   },
   "widgetPreview": {
@@ -5906,6 +6195,18 @@
       "addWidget": "Lisa vidin",
       "addApp": "Lisa rakendus",
       "connectService": "Ühenda teenus"
+    },
+    "urlDrop": {
+      "hint": "",
+      "resolving": "",
+      "notification": {
+        "success": {
+          "message": ""
+        },
+        "full": {
+          "message": ""
+        }
+      }
     },
     "setupChecklist": {
       "title": "Muuda see tahvel kasulikuks",
@@ -8512,6 +8813,14 @@
     "conversationActions": "Vestluse toimingud",
     "searchConversations": "Otsi vestlusi",
     "noMatchingConversations": "Sobivaid vestlusi pole",
+    "historyError": {
+      "title": "",
+      "load": "",
+      "loadMessages": "",
+      "saveMessages": "",
+      "switch": "",
+      "retry": ""
+    },
     "moreActions": "Rohkem vastuse toiminguid",
     "renameConversation": {
       "action": "Nimeta ümber",
@@ -8631,6 +8940,9 @@
     },
     "mentions": {
       "menu": "Lisa Homarri kontekst",
+      "back": "",
+      "loading": "",
+      "empty": "",
       "context": "Kontekst",
       "app": "Rakendused",
       "integration": "Integratsioonid",
@@ -8645,6 +8957,8 @@
     },
     "commands": {
       "menu": "Assistendi käsud",
+      "hint": "",
+      "empty": "",
       "health": "Valmista ette teenuse seisundi kontroll",
       "explore": "Valmista ette selle Homarri eksemplari ülevaade",
       "media": "Valmista ette meediaotsing",
@@ -8827,6 +9141,7 @@
     "approvalDescription": "Vaadake see muudatus enne käivitamist üle.",
     "approveAndRun": "Kiida heaks ja käivita",
     "deny": "Keeldu",
+    "approvalError": "",
     "autoApproval": {
       "label": "Automaatsed heakskiidud",
       "composerLabel": "Kiida minu eest heaks",
