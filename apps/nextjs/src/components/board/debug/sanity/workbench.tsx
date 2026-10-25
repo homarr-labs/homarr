@@ -1,8 +1,8 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { Alert, Badge, Button, FileButton, Group, Paper, Stack, Text, Title } from "@mantine/core";
-import { IconArrowLeft, IconFlask, IconUpload } from "@tabler/icons-react";
+import { Alert, Button, FileButton, Group, NativeSelect, Stack, Text, Title } from "@mantine/core";
+import { IconArrowLeft, IconCheck, IconCircleDashed, IconFileAnalytics, IconUpload, IconX } from "@tabler/icons-react";
 
 import { maxSanityReportBytes, parseSanityReport } from "@homarr/boards/sanity-report";
 import type { SanityIdentity, SanityReport, SanityScenario } from "@homarr/boards/sanity-report";
@@ -10,7 +10,10 @@ import type { SanityIdentity, SanityReport, SanityScenario } from "@homarr/board
 import { ScenarioEvidence } from "./evidence";
 import classes from "./workbench.module.css";
 
-function ScenarioStatus({ scenario }: { scenario: SanityScenario | undefined }) {
+function getScenarioStatus(scenario: SanityScenario | undefined) {
+  let state = "passed";
+  let label = "Passed";
+  let Icon = IconCheck;
   if (
     !scenario ||
     scenario.before.status === "error" ||
@@ -20,43 +23,84 @@ function ScenarioStatus({ scenario }: { scenario: SanityScenario | undefined }) 
     scenario.before.checks.length === 0 ||
     scenario.after.checks.length === 0
   ) {
-    return (
-      <Badge size="xs" color="orange" variant="light">
-        Incomplete
-      </Badge>
-    );
+    state = "incomplete";
+    label = "Incomplete";
+    Icon = IconCircleDashed;
+  } else if (scenario.after.checks.some((check) => check.status === "failed")) {
+    state = "failed";
+    label = "Failed";
+    Icon = IconX;
   }
-  if (scenario.after.checks.some((check) => check.status === "failed")) {
-    return (
-      <Badge size="xs" color="red" variant="light">
-        Failed
-      </Badge>
-    );
-  }
+  return { state, label, Icon };
+}
+
+function ScenarioStatus({ scenario }: { scenario: SanityScenario | undefined }) {
+  const { state, label, Icon } = getScenarioStatus(scenario);
   return (
-    <Badge size="xs" color="teal" variant="light">
-      Passed
-    </Badge>
+    <span className={classes.status} data-state={state}>
+      <Icon size={15} aria-hidden />
+      {label}
+    </span>
   );
 }
 
 function RunStatus({ report }: { report: SanityReport }) {
-  let color = "teal";
-  let title = "Candidate assertions passed · visual review pending";
+  let title = "Candidate checks passed";
   let detail = "An independent reviewer must explain visual changes before this evidence is accepted.";
+  let Icon = IconCheck;
+  if (report.selection.scenarios.length === 0) title = "No board checks selected";
   if (report.deterministicStatus === "failed") {
-    color = "red";
-    title = "Candidate assertions failed";
+    title = "Candidate checks failed";
     detail = "A behavior contract failed. Appearance review cannot override this result.";
+    Icon = IconX;
   } else if (report.deterministicStatus === "blocked") {
-    color = "orange";
     title = "Run incomplete";
     detail = "Resolve missing evidence, run errors, or unmapped changes before this run can support a release.";
+    Icon = IconCircleDashed;
   }
+  const passed = report.scenarios.reduce(
+    (count, scenario) => count + scenario.after.checks.filter((check) => check.status === "passed").length,
+    0,
+  );
+  const total = report.scenarios.reduce((count, scenario) => count + scenario.after.checks.length, 0);
   return (
-    <Alert color={color} title={title}>
-      {detail}
-    </Alert>
+    <section className={classes.runStatus} data-state={report.deterministicStatus} aria-label="Run result">
+      <div className={classes.runVerdict}>
+        <Icon size={20} aria-hidden />
+        <div>
+          <Text fw={600}>{title}</Text>
+          {report.deterministicStatus === "passed" && (
+            <details className={classes.verdictDetails}>
+              <summary>Independent visual review required</summary>
+              <Text size="sm" className={classes.muted}>
+                {detail}
+              </Text>
+            </details>
+          )}
+          {report.deterministicStatus !== "passed" && (
+            <Text size="sm" className={classes.muted}>
+              {detail}
+            </Text>
+          )}
+        </div>
+      </div>
+      <dl className={classes.runMetrics}>
+        <div>
+          <dt>Candidate checks</dt>
+          <dd>
+            {passed}
+            <span> / {total}</span>
+          </dd>
+        </div>
+        <div>
+          <dt>Check time</dt>
+          <dd>
+            {(report.timings.checksMs / 1000).toFixed(1)}
+            <span> seconds</span>
+          </dd>
+        </div>
+      </dl>
+    </section>
   );
 }
 
@@ -64,7 +108,7 @@ function Identity({ title, identity }: { title: string; identity: SanityIdentity
   return (
     <div>
       <Text fw={600} size="sm">
-        {title} · {identity.label}
+        {title}: {identity.label}
       </Text>
       <dl className={classes.provenance}>
         <dt>Source</dt>
@@ -94,9 +138,9 @@ function Identity({ title, identity }: { title: string; identity: SanityIdentity
 
 function Provenance({ report }: { report: SanityReport }) {
   return (
-    <Paper withBorder p="md">
+    <section className={classes.provenanceSection}>
       <details>
-        <summary className={classes.summary}>Run provenance</summary>
+        <summary className={classes.summary}>Run provenance and coverage</summary>
         <Stack gap="md" mt="md">
           <div className={classes.capturePair}>
             <Identity title="Before" identity={report.base} />
@@ -114,7 +158,7 @@ function Provenance({ report }: { report: SanityReport }) {
             <dt>Fixture SHA-256</dt>
             <dd>{report.fixture.sha256}</dd>
             <dt>Browser</dt>
-            <dd>Chromium {report.browser.version} · Linux</dd>
+            <dd>Chromium {report.browser.version} on Linux</dd>
             <dt>Startup</dt>
             <dd>{(report.timings.startupMs / 1000).toFixed(1)} seconds</dd>
             <dt>Checks</dt>
@@ -143,7 +187,7 @@ function Provenance({ report }: { report: SanityReport }) {
           </Text>
         </Stack>
       </details>
-    </Paper>
+    </section>
   );
 }
 
@@ -167,100 +211,109 @@ function LoadedReport({ report }: { report: SanityReport }) {
         </Alert>
       )}
       <div className={classes.workspace}>
-        <Paper withBorder className={classes.sidebar} component="nav" aria-label="Selected sanity checks">
+        <nav className={classes.sidebar} aria-label="Selected sanity checks">
           <div className={classes.sidebarHeading}>
-            <Text size="sm" fw={600}>
-              Selected checks
+            <Text fw={600} size="sm">
+              Scenarios
             </Text>
-            <Text size="xs" c="dimmed">
-              {report.selection.scenarios.length} scenarios · candidate results
+            <Text size="sm" className={classes.muted}>
+              {report.selection.scenarios.length} selected
             </Text>
           </div>
-          {report.selection.scenarios.map((selected) => {
-            const result = report.scenarios.find((entry) => entry.id === selected.id);
-            return (
-              <button
-                key={selected.id}
-                type="button"
-                className={classes.scenarioButton}
-                aria-pressed={selected.id === selectedId}
-                onClick={() => setSelectedId(selected.id)}
-              >
-                <span>
+          {report.selection.scenarios.length > 0 && (
+            <NativeSelect
+              className={classes.mobileScenario}
+              label="Scenario"
+              value={selectedId ?? ""}
+              onChange={(event) => setSelectedId(event.currentTarget.value)}
+              data={report.selection.scenarios.map((selected) => {
+                const result = report.scenarios.find((entry) => entry.id === selected.id);
+                const { label } = getScenarioStatus(result);
+                return { value: selected.id, label: `${result?.title ?? selected.id} (${label.toLowerCase()})` };
+              })}
+            />
+          )}
+          <div className={classes.scenarioList}>
+            {report.selection.scenarios.map((selected) => {
+              const result = report.scenarios.find((entry) => entry.id === selected.id);
+              return (
+                <button
+                  key={selected.id}
+                  type="button"
+                  className={classes.scenarioButton}
+                  aria-pressed={selected.id === selectedId}
+                  onClick={() => setSelectedId(selected.id)}
+                >
                   <strong>{result?.title ?? selected.id}</strong>
-                  {result && (
-                    <small>
-                      {result.viewport.width} × {result.viewport.height}px
-                    </small>
-                  )}
-                </span>
-                <ScenarioStatus scenario={result} />
-              </button>
-            );
-          })}
+                  <span className={classes.scenarioMeta}>
+                    {result && (
+                      <small>
+                        {result.viewport.width} × {result.viewport.height}px
+                      </small>
+                    )}
+                    <ScenarioStatus scenario={result} />
+                  </span>
+                </button>
+              );
+            })}
+          </div>
           {selection && (
-            <div className={classes.sidebarHeading}>
-              <Text size="xs" fw={600}>
-                Why this check?
-              </Text>
+            <details className={classes.selectionDetails}>
+              <summary className={classes.summary}>Why this check?</summary>
               <ul className={classes.reasonList}>
-                {selection.reasons.slice(0, 3).map((reason) => (
+                {selection.reasons.map((reason) => (
                   <li key={reason}>{reason}</li>
                 ))}
               </ul>
-              {selection.reasons.length > 3 && (
-                <details className={classes.moreReasons}>
-                  <summary>{selection.reasons.length - 3} more selection reasons</summary>
-                  <ul className={classes.reasonList}>
-                    {selection.reasons.slice(3).map((reason) => (
-                      <li key={reason}>{reason}</li>
-                    ))}
-                  </ul>
-                </details>
-              )}
               {coverageDecisions.length > 0 && (
                 <>
-                  <Text size="xs" fw={600} mt="md">
-                    Explicit coverage
+                  <Text size="sm" fw={600} mt="md">
+                    Coverage decisions
                   </Text>
                   <ul className={classes.reasonList}>
                     {coverageDecisions.map((decision) => (
                       <li key={decision.path}>
-                        {decision.path}: {decision.reason}
+                        <strong>{decision.path}</strong>: {decision.reason}
                       </li>
                     ))}
                   </ul>
                 </>
               )}
-            </div>
+            </details>
           )}
-        </Paper>
-        <Stack gap="md" className={classes.main}>
+        </nav>
+        <main className={classes.main} id="sanity-comparison">
           {scenario && (
             <>
-              <Group justify="space-between" align="flex-start">
+              <header className={classes.scenarioHeading}>
                 <div>
                   <Title order={2} size="h3">
                     {scenario.title}
                   </Title>
-                  <Text size="sm" c="dimmed" mt={4}>
+                  <Text size="sm" className={classes.muted}>
                     Same fixture and viewport on both pinned versions.
                   </Text>
                 </div>
-                <Badge color="orange" variant="light">
+                <span className={classes.reviewPending}>
+                  <IconCircleDashed size={16} aria-hidden />
                   Visual review pending
-                </Badge>
-              </Group>
+                </span>
+              </header>
               <ScenarioEvidence key={scenario.id} scenario={scenario} report={report} />
             </>
           )}
-          {!scenario && (
+          {!scenario && report.selection.scenarios.length > 0 && (
             <Alert color="orange" title="Evidence missing">
               No recorded result is available for the selected check.
             </Alert>
           )}
+          {report.selection.scenarios.length === 0 && (
+            <Text className={classes.muted}>
+              This report selected no board scenarios. Review its coverage decisions below.
+            </Text>
+          )}
           <Provenance report={report} />
-        </Stack>
+        </main>
       </div>
     </Stack>
   );
@@ -311,32 +364,36 @@ export function BoardSanityWorkbench() {
   };
 
   return (
-    <Stack className={classes.root} gap="lg">
-      <Group justify="space-between" align="flex-start">
-        <Stack gap="xs">
+    <div className={classes.root} data-sanity-workbench data-has-report={Boolean(report)}>
+      <a className={classes.skipLink} href="#sanity-comparison">
+        Skip to comparison
+      </a>
+      <header className={classes.header}>
+        <div className={classes.headerTitle}>
           <Button
             component="a"
             href="/debug/board"
             variant="subtle"
             color="gray"
-            size="xs"
-            w="fit-content"
-            leftSection={<IconArrowLeft size={14} />}
+            size="compact-sm"
+            className={classes.backLink}
+            leftSection={<IconArrowLeft size={15} aria-hidden />}
           >
             Board playground
           </Button>
-          <Group gap="xs">
-            <IconFlask size={25} aria-hidden />
-            <Title order={1} size="h2">
-              Board sanity workbench
-            </Title>
-            <Badge color="orange">Developer tool</Badge>
-          </Group>
-          <Text c="dimmed" size="sm">
+          <Title order={1} size="h2">
+            Board sanity workbench
+          </Title>
+          <Text size="sm" className={classes.muted}>
             Compare targeted checks on pinned before and after versions.
           </Text>
-        </Stack>
-        <Group>
+        </div>
+        <Group gap="sm" className={classes.headerActions}>
+          {report && (
+            <Button variant="subtle" color="gray" onClick={clear}>
+              Clear report
+            </Button>
+          )}
           <FileButton
             accept="application/json,.json"
             onChange={(file) => void upload(file)}
@@ -344,46 +401,66 @@ export function BoardSanityWorkbench() {
             disabled={loading}
           >
             {(props) => (
-              <Button {...props} loading={loading} leftSection={<IconUpload size={16} />}>
+              <Button
+                {...props}
+                loading={loading}
+                leftSection={<IconUpload size={16} aria-hidden />}
+                className={classes.primaryAction}
+              >
                 Load report
               </Button>
             )}
           </FileButton>
-          {report && (
-            <Button variant="default" onClick={clear}>
-              Clear report
-            </Button>
-          )}
         </Group>
-      </Group>
+      </header>
       {error && (
-        <Alert color="red" role="alert" title="Unable to load report">
+        <Alert color="red" role="alert" title="Unable to load report" mb="lg" className={classes.errorAlert}>
           {error}
         </Alert>
       )}
       {filename && (
-        <Text size="xs" c="dimmed" className={classes.filename}>
-          {filename} · stays in this browser tab
-        </Text>
+        <section className={classes.fileBar} aria-label="Loaded report">
+          <IconFileAnalytics size={16} aria-hidden />
+          <Text size="sm" className={classes.filename}>
+            {filename}
+          </Text>
+          <Text size="sm" className={classes.muted}>
+            Stays in this browser tab
+          </Text>
+        </section>
       )}
       {!report && !loading && (
-        <Paper withBorder p="xl">
-          <Stack align="center" py="xl" gap="sm">
-            <IconUpload size={36} aria-hidden />
-            <Title order={2} size="h3">
-              Load a sanity report
-            </Title>
-            <Text c="dimmed" ta="center" maw={520}>
-              Open the JSON produced by the targeted board sanity runner. Review selected scenarios, recorded
-              screenshots, behavior checks, and the exact versions used by the run.
-            </Text>
-            <Text size="xs" c="dimmed">
+        <main className={classes.emptyState} id="sanity-comparison">
+          <div className={classes.emptyIntro}>
+            <IconFileAnalytics size={36} stroke={1.5} aria-hidden />
+            <Title order={2}>Load a sanity report</Title>
+            <Text className={classes.muted}>Open the JSON produced by the targeted board sanity runner.</Text>
+            <Text size="sm" className={classes.localNotice}>
               Reports are read locally. No instance is changed by this workbench.
             </Text>
-          </Stack>
-        </Paper>
+          </div>
+          <dl className={classes.emptyGuide}>
+            <div>
+              <dt>Compare the captures</dt>
+              <dd>See before and after screenshots for each selected scenario.</dd>
+            </div>
+            <div>
+              <dt>Check the behavior</dt>
+              <dd>Review recorded assertions and inspect any failures.</dd>
+            </div>
+            <div>
+              <dt>Verify the versions</dt>
+              <dd>Inspect the exact source, image, and fixture used by the run.</dd>
+            </div>
+          </dl>
+        </main>
+      )}
+      {loading && (
+        <output className={classes.loadingState} aria-live="polite">
+          <Text>Reading report…</Text>
+        </output>
       )}
       {report && <LoadedReport key={report.runId} report={report} />}
-    </Stack>
+    </div>
   );
 }

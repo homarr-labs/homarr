@@ -5,7 +5,7 @@
 /* oxlint-disable react/iframe-missing-sandbox */
 
 import { useEffect, useRef, useState } from "react";
-import { Alert, Button, Stack, Text } from "@mantine/core";
+import { Alert, Button } from "@mantine/core";
 
 import type { BoardSnapshot, BoardSnapshotPayload } from "../snapshot";
 import classes from "./workbench.module.css";
@@ -44,9 +44,9 @@ export function SnapshotInspector({ text, label }: { text: string; label: string
   };
 
   return (
-    <Stack gap="xs">
+    <div className={classes.snapshotInspector}>
       {!loaded && (
-        <Button variant="default" size="xs" loading={loading} onClick={() => void inspect()}>
+        <Button variant="subtle" size="xs" loading={loading} onClick={() => void inspect()}>
           Inspect {label.toLowerCase()} snapshot
         </Button>
       )}
@@ -57,10 +57,10 @@ export function SnapshotInspector({ text, label }: { text: string; label: string
       )}
       {loaded && (
         <>
-          <Text size="xs" c="dimmed">
-            {label} snapshot · read-only, using this workbench’s renderer. The recorded screenshot above is the evidence
-            from the pinned version.
-          </Text>
+          <p className={classes.snapshotNotice}>
+            {label} snapshot is read-only, using this workbench’s renderer. The recorded screenshot above is the
+            evidence from the pinned version.
+          </p>
           <div className={classes.frameViewport}>
             <iframe
               ref={frameRef}
@@ -70,11 +70,13 @@ export function SnapshotInspector({ text, label }: { text: string; label: string
               style={{ width: loaded.payload.viewport.width, height: loaded.payload.viewport.height }}
             />
           </div>
-          <Button variant="subtle" size="xs" onClick={() => setLoaded(null)}>
-            Close {label.toLowerCase()} snapshot
-          </Button>
+          <div className={classes.snapshotActions}>
+            <Button variant="subtle" size="xs" onClick={() => setLoaded(null)}>
+              Close {label.toLowerCase()} snapshot
+            </Button>
+          </div>
         </>
       )}
-    </Stack>
+    </div>
   );
 }

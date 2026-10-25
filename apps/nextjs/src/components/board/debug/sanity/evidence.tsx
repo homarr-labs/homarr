@@ -1,45 +1,71 @@
 "use client";
 
 import { useState } from "react";
-import { Alert, Badge, Group, Paper, Stack, Table, Tabs, Text } from "@mantine/core";
+import { Alert, Tabs } from "@mantine/core";
+import { IconAlertTriangle, IconCheck, IconChevronDown, IconX } from "@tabler/icons-react";
 
-import type { SanityCapture, SanityCheck, SanityReport, SanityScenario } from "@homarr/boards/sanity-report";
+import type {
+  SanityCapture,
+  SanityCheck,
+  SanityIdentity,
+  SanityReport,
+  SanityScenario,
+} from "@homarr/boards/sanity-report";
 
 import { SnapshotInspector } from "./snapshot-inspector";
 import classes from "./workbench.module.css";
 
-function Capture({ capture, label, scenario }: { capture: SanityCapture; label: string; scenario: SanityScenario }) {
+function Capture({
+  capture,
+  label,
+  scenario,
+  identity,
+}: {
+  capture: SanityCapture;
+  label: string;
+  scenario: SanityScenario;
+  identity: SanityIdentity;
+}) {
+  const [imageError, setImageError] = useState(false);
   return (
-    <Stack gap="xs">
+    <div>
       <figure className={classes.capture}>
-        <figcaption>
+        <figcaption className={classes.captureHeading}>
           <span>{label}</span>
-          <span>
-            Viewport {scenario.viewport.width} × {scenario.viewport.height}px
+          <span className={classes.captureMeta}>
+            {scenario.viewport.width} × {scenario.viewport.height}px viewport
           </span>
         </figcaption>
-        {capture.image && (
-          <img
-            src={capture.image}
-            width={scenario.viewport.width}
-            height={scenario.viewport.height}
-            alt={`${label}: ${scenario.title}`}
-            className={classes.captureImage}
-          />
-        )}
-        {!capture.image && (
-          <Text p="lg" c="dimmed">
-            No screenshot was captured.
-          </Text>
-        )}
+        <div className={classes.imageStage}>
+          {capture.image && !imageError && (
+            <img
+              src={capture.image}
+              width={scenario.viewport.width}
+              height={scenario.viewport.height}
+              alt={`${label}: ${scenario.title}`}
+              className={classes.captureImage}
+              onError={() => setImageError(true)}
+            />
+          )}
+          {!capture.image && <p className={classes.captureError}>No screenshot was captured.</p>}
+          {imageError && (
+            <p className={classes.captureError} role="alert">
+              The captured PNG could not be decoded.
+            </p>
+          )}
+        </div>
+        <div className={classes.captureBuild}>
+          <span>{identity.label}</span>
+          <code title={identity.sourceSha}>{identity.sourceSha.slice(0, 12)}</code>
+        </div>
       </figure>
       {capture.error && (
-        <Alert color="red" title={`${label} run error`}>
+        <Alert color="red" title={`${label} run error`} className={classes.captureError}>
           {capture.error}
         </Alert>
       )}
       {capture.snapshot && <SnapshotInspector text={capture.snapshot} label={label} />}
-    </Stack>
+    </div>
   );
 }
 
@@ -60,12 +86,12 @@ function Difference({ scenario }: { scenario: SanityScenario }) {
     );
   }
   return (
-    <Stack gap="xs">
+    <div>
       <figure className={classes.capture}>
-        <figcaption>
+        <figcaption className={classes.captureHeading}>
           <span>Difference overlay</span>
-          <span>
-            Viewport {scenario.viewport.width} × {scenario.viewport.height}px
+          <span className={classes.captureMeta}>
+            {scenario.viewport.width} × {scenario.viewport.height}px viewport
           </span>
         </figcaption>
         <div className={classes.difference} data-ready={Boolean(beforeDimensions && afterDimensions)}>
@@ -93,39 +119,51 @@ function Difference({ scenario }: { scenario: SanityScenario }) {
           />
         </div>
       </figure>
-      <Text size="xs" c="dimmed">
+      <p className={classes.captureMeta}>
         Black areas match. Colored areas changed. This overlay helps inspect the supplied captures; it does not decide
         whether a change is acceptable.
-      </Text>
-    </Stack>
+      </p>
+    </div>
   );
 }
 
-function CheckValue({ check }: { check: SanityCheck | undefined }) {
-  if (!check)
-    return (
-      <Text size="xs" c="dimmed">
-        Not recorded
-      </Text>
-    );
-  let color = "teal";
-  let label = "Passed";
-  if (check.status === "failed") {
-    color = "red";
-    label = "Failed";
+function CheckStatus({ check, label }: { check: SanityCheck | undefined; label: string }) {
+  let status = "missing";
+  let description = "not recorded";
+  let Icon = IconAlertTriangle;
+  if (check?.status === "passed") {
+    status = "passed";
+    description = "passed";
+    Icon = IconCheck;
+  } else if (check?.status === "failed") {
+    status = "failed";
+    description = "failed";
+    Icon = IconX;
   }
   return (
-    <Stack gap={4}>
-      <Badge color={color} size="xs" variant="light">
-        {label}
-      </Badge>
-      <Text size="xs">
-        <strong>Expected:</strong> {check.expected}
-      </Text>
-      <Text size="xs">
-        <strong>Observed:</strong> {check.observed}
-      </Text>
-    </Stack>
+    <span className={classes.checkStatus} data-status={status}>
+      <Icon size={15} stroke={1.8} aria-hidden />
+      <span>
+        {label} {description}
+      </span>
+    </span>
+  );
+}
+
+function CheckValue({ check, label }: { check: SanityCheck | undefined; label: string }) {
+  return (
+    <div className={classes.checkValue}>
+      <h4 className={classes.checkValueTitle}>{label}</h4>
+      {check && (
+        <dl className={classes.checkDetail}>
+          <dt>Expected</dt>
+          <dd>{check.expected}</dd>
+          <dt>Observed</dt>
+          <dd>{check.observed}</dd>
+        </dl>
+      )}
+      {!check && <p className={classes.captureMeta}>No result was recorded for this version.</p>}
+    </div>
   );
 }
 
@@ -134,66 +172,54 @@ export function ScenarioEvidence({ scenario, report }: { scenario: SanityScenari
   const afterChecks = new Map(scenario.after.checks.map((check) => [check.id, check]));
   const checkIds = [...new Set([...afterChecks.keys(), ...beforeChecks.keys()])];
   return (
-    <Stack gap="lg">
+    <div className={classes.evidence}>
       <Tabs defaultValue="pair" keepMounted={false}>
-        <Tabs.List aria-label="Recorded evidence view" mb="md">
+        <Tabs.List aria-label="Recorded evidence view" className={classes.evidenceToolbar}>
           <Tabs.Tab value="pair">Before / after</Tabs.Tab>
           <Tabs.Tab value="difference">Difference</Tabs.Tab>
         </Tabs.List>
         <Tabs.Panel value="pair">
           <div className={classes.capturePair}>
-            <Capture capture={scenario.before} label="Before" scenario={scenario} />
-            <Capture capture={scenario.after} label="After" scenario={scenario} />
+            <Capture capture={scenario.before} label="Before" scenario={scenario} identity={report.base} />
+            <Capture capture={scenario.after} label="After" scenario={scenario} identity={report.candidate} />
           </div>
-          <Group justify="space-between" mt="xs">
-            <Text size="xs" c="dimmed">
-              Before · {report.base.label} · {report.base.sourceSha.slice(0, 12)}
-            </Text>
-            <Text size="xs" c="dimmed">
-              After · {report.candidate.label} · {report.candidate.sourceSha.slice(0, 12)}
-            </Text>
-          </Group>
         </Tabs.Panel>
         <Tabs.Panel value="difference">
           <Difference scenario={scenario} />
         </Tabs.Panel>
       </Tabs>
-      <Paper withBorder p="md">
-        <Text fw={600} size="sm" mb="sm">
-          Behavior checks
-        </Text>
-        {checkIds.length === 0 && (
-          <Text c="dimmed" size="sm">
-            No assertions were recorded for this scenario.
-          </Text>
-        )}
+      <section className={classes.checkSection} aria-label="Behavior checks">
+        <div className={classes.evidenceToolbar}>
+          <h3>Behavior checks</h3>
+          <span className={classes.checkCount}>{checkIds.length} checks</span>
+        </div>
+        {checkIds.length === 0 && <p className={classes.captureMeta}>No assertions were recorded for this scenario.</p>}
         {checkIds.length > 0 && (
-          <Table.ScrollContainer minWidth={560}>
-            <Table verticalSpacing="sm" className={classes.checkTable}>
-              <Table.Thead>
-                <Table.Tr>
-                  <Table.Th>Contract</Table.Th>
-                  <Table.Th>Before</Table.Th>
-                  <Table.Th>After</Table.Th>
-                </Table.Tr>
-              </Table.Thead>
-              <Table.Tbody>
-                {checkIds.map((id) => (
-                  <Table.Tr key={id}>
-                    <Table.Td>{afterChecks.get(id)?.label ?? beforeChecks.get(id)?.label}</Table.Td>
-                    <Table.Td>
-                      <CheckValue check={beforeChecks.get(id)} />
-                    </Table.Td>
-                    <Table.Td>
-                      <CheckValue check={afterChecks.get(id)} />
-                    </Table.Td>
-                  </Table.Tr>
-                ))}
-              </Table.Tbody>
-            </Table>
-          </Table.ScrollContainer>
+          <div className={classes.checkList}>
+            {checkIds.map((id) => {
+              const before = beforeChecks.get(id);
+              const after = afterChecks.get(id);
+              const needsAttention = before?.status !== "passed" || after?.status !== "passed";
+              return (
+                <details key={id} className={classes.checkRow} open={needsAttention} data-attention={needsAttention}>
+                  <summary className={classes.checkSummary}>
+                    <span className={classes.checkLabel}>{after?.label ?? before?.label}</span>
+                    <span className={classes.checkStatuses}>
+                      <CheckStatus check={before} label="Baseline" />
+                      <CheckStatus check={after} label="Candidate" />
+                    </span>
+                    <IconChevronDown size={16} stroke={1.8} aria-hidden />
+                  </summary>
+                  <div className={classes.checkValues}>
+                    <CheckValue check={before} label="Baseline" />
+                    <CheckValue check={after} label="Candidate" />
+                  </div>
+                </details>
+              );
+            })}
+          </div>
         )}
-      </Paper>
-    </Stack>
+      </section>
+    </div>
   );
 }
