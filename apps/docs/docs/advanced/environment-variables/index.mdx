@@ -30,6 +30,8 @@ This is especially useful for [docker secrets](https://docs.docker.com/engine/sw
 
 Both modes limit stored HTML to 8 MiB and 128 views. Disk mode keeps coordination metadata in Redis and reads HTML files on demand; it does not eliminate memory needed to render pages. Use local disk rather than a RAM-backed volume. Cached `.json` files contain private dashboard content and may be deleted to clear the cache; missing or unreadable views fall back to normal rendering.
 
+Unused pages from the previous Redis storage mode expire normally within 72 hours after switching to disk.
+
 ## General
 
 <Alert type="warning">
