@@ -74,14 +74,14 @@ export async function proxy(request: NextRequest, event?: NextFetchEvent) {
 
   const next = createI18nMiddleware(defaultLocale);
   const response = next(request);
-  if (!event || !isBoardDocumentRequest(request)) return response;
+  if (!event || process.env.NODE_ENV !== "production" || !isBoardDocumentRequest(request)) return response;
   // Exclude other routes before loading the prepared Board's server dependencies.
   const isBoardRoute = routeSegments.length === 0 || (routeSegments.length === 2 && routeSegments[0] === "boards");
   if (!isBoardRoute) return response;
   const { readCaptureViewId } = await import("@homarr/cron-jobs/board-preparation");
   if (readCaptureViewId(request.headers)) return response;
   const { getPreparedBoardResponseAsync } = await import("./board-preparation/proxy");
-  const prepared = await getPreparedBoardResponseAsync(request, event, response);
+  const prepared = await getPreparedBoardResponseAsync(request, response);
   if (prepared) return prepared;
   return response;
 }
