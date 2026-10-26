@@ -2,7 +2,7 @@
 import { gzipSync } from "node:zlib";
 import { describe, expect, test } from "vitest";
 
-import { compressDocumentAsync, decompressDocumentAsync, maxDocumentBytes } from "./document";
+import { compressDocumentAsync, decompressDocumentAsync, maxDocumentBytes, revealCapturedDocument } from "./document";
 
 describe("prepared Board storage", () => {
   test("round-trips streamed HTML and Unicode without retaining raw HTML in storage", async () => {
@@ -24,4 +24,13 @@ describe("prepared Board storage", () => {
   test("rejects corrupt data so the caller can use ordinary SSR", async () => {
     await expect(decompressDocumentAsync({ encoding: "gzip-base64", body: "corrupt" })).rejects.toThrow();
   });
+});
+
+test("removes React reveal delays without changing widget text or serialized values", () => {
+  const content = '<p>$RT=performance.now()</p><script>self.__next_f.push(["$RT=performance.now()"])</script>';
+  const bootstrap = '<script nonce="test">requestAnimationFrame(function(){$RT=performance.now()});</script>';
+  const reveal = "<script>$RB=[];$RV=function(a){$RT=performance.now();for(var b=0;b<a.length;b+=2){}}</script>";
+  expect(revealCapturedDocument(content + bootstrap + reveal)).toBe(
+    content + '<script nonce="test"></script><script>$RB=[];$RV=function(a){for(var b=0;b<a.length;b+=2){}}</script>',
+  );
 });

@@ -28,7 +28,7 @@ import {
   writePreparedDocumentAsync,
 } from "./store";
 import type { BoardPreparationSpec } from "./store";
-import { maxDocumentBytes } from "./document";
+import { maxDocumentBytes, revealCapturedDocument } from "./document";
 
 const logger = createLogger({ module: "boardPreparation" });
 const captureSessionPrefix = "board-preparation-capture:";
@@ -143,10 +143,9 @@ const captureDocumentAsync = async (
     const body = await readBoundedResponseAsync(response, maxDocumentBytes, "Prepared Board", signal);
     const html = new TextDecoder().decode(body ?? undefined);
     if (!html.includes('data-testid="board-canvas"')) throw new Error("Board capture did not render the Board");
-    return html.replaceAll(revealThrottleTimestamp, "");
+    return revealCapturedDocument(html);
   });
 
-const revealThrottleTimestamp = "$RT=performance.now()";
 const countStreamedReveals = (html: string) => html.split("$RC(").length - 1;
 
 export const prepareBoardAsync = async (id: string, runId?: string, signal?: AbortSignal) => {
