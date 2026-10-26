@@ -1,0 +1,16 @@
+packages/translation/src/lang/en.json
+  h_d6e478ca18e517 2518-2519
+packages/widgets/src/dns-hole/summary/index.ts
+  h_d6e478ca18e517 19
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "1b33730041d0451c7d5b11525fb52fcd204afe95",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
