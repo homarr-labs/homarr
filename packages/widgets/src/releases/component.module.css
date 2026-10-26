@@ -283,6 +283,10 @@
   gap: rem(4px);
 }
 
+.list[data-grouped="false"] {
+  gap: rem(1px);
+}
+
 .body[data-split] .list {
   flex: 0 0 clamp(rem(250px), 38%, rem(400px));
 }
@@ -852,6 +856,9 @@
 }
 
 .floatingActions {
+  display: flex;
+  align-items: center;
+  gap: rem(6px);
   position: absolute;
   top: rem(2px);
   right: rem(2px);

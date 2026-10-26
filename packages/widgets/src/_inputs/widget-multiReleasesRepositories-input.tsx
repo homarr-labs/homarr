@@ -105,6 +105,7 @@ export const WidgetMultiReleasesRepositoriesInput = ({
       form.setFieldValue(`options.${property}.${index}.identifier`, repository.identifier);
       form.setFieldValue(`options.${property}.${index}.name`, repository.name);
       form.setFieldValue(`options.${property}.${index}.versionFilter`, repository.versionFilter);
+      form.setFieldValue(`options.${property}.${index}.excludePrereleases`, repository.excludePrereleases);
       form.setFieldValue(`options.${property}.${index}.iconUrl`, repository.iconUrl);
       form.setFieldValue(`options.${property}.${index}.providerUrl`, repository.providerUrl);
       form.setFieldValue(`options.${property}.${index}.integrationIds`, repository.integrationIds);
@@ -563,6 +564,15 @@ const RepositoryEditModal = createModal<RepositoryEditProps>(({ innerProps, acti
           />
         </div>
       </Group>
+
+      {tempRepository.provider && ["github", "gitlab", "codeberg"].includes(tempRepository.provider) && (
+        <Checkbox
+          label={tRepository("excludePrereleases.label")}
+          description={tRepository("excludePrereleases.description")}
+          checked={tempRepository.excludePrereleases ?? false}
+          onChange={(event) => handleChange({ excludePrereleases: event.currentTarget.checked })}
+        />
+      )}
 
       <Fieldset legend={tRepository("versionFilter.label")}>
         <Group justify="stretch" align="center" grow>

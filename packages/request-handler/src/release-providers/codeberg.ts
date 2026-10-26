@@ -65,7 +65,13 @@ const listReleasesAsync = async (repositoryUrl: string, headers: Record<string, 
   }
 };
 
-export const getCodebergReleaseAsync: ReleaseProvider = async ({ baseUrl, identifier, versionPattern, token }) => {
+export const getCodebergReleaseAsync: ReleaseProvider = async ({
+  baseUrl,
+  identifier,
+  versionPattern,
+  token,
+  excludePrereleases,
+}) => {
   const repositoryPath = encodeOwnedName(parseOwnedName(identifier, "owner/repository"));
   const repositoryUrl = providerUrl(baseUrl, `/api/v1/repos/${repositoryPath}`);
   const headers = tokenHeaders(token, (value) => ({ Authorization: `token ${value}` }));
@@ -73,7 +79,7 @@ export const getCodebergReleaseAsync: ReleaseProvider = async ({ baseUrl, identi
   const releases = await listReleasesAsync(repositoryUrl, headers, identifier);
   if (releases.length === 0) throw noReleasesFoundError(identifier);
 
-  const release = selectNewestRelease(releases.map(toRelease), versionPattern);
+  const release = selectNewestRelease(releases.map(toRelease), versionPattern, excludePrereleases);
   const details = await loadOptionalDetailsAsync({ baseUrl, identifier, token }, () =>
     getProjectDetailsAsync(repositoryUrl, headers),
   );
