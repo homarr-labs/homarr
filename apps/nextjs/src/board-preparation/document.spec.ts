@@ -47,3 +47,8 @@ test("leaves script-looking text in custom CSS and comments unchanged", () => {
   const text = `<style>.note::before { content: '${bootstrap}'; }</style><!-- ${bootstrap} -->`;
   expect(revealCapturedDocument(text + bootstrap)).toBe(text + "<script></script>");
 });
+
+test("recognizes closing HTML tags with trailing whitespace", () => {
+  const html = "<script>requestAnimationFrame(function(){$RT=performance.now()});</script >";
+  expect(revealCapturedDocument(html)).toBe("<script></script >");
+});

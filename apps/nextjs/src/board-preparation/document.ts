@@ -14,7 +14,7 @@ export interface CompressedDocument {
 // from Next 16's React bootstrap, without rewriting widget text or RSC payloads.
 export const revealCapturedDocument = (html: string) =>
   html.replace(
-    /<!--[\s\S]*?-->|<(style|textarea|title)\b[^>]*>[\s\S]*?<\/\1>|(<script\b[^>]*>)([\s\S]*?)(<\/script>)/gi,
+    /<!--[\s\S]*?-->|<(style|textarea|title)\b[^>]*>[\s\S]*?<\/\1\s*>|(<script\b[^>]*>)([\s\S]*?)(<\/script\s*>)/gi,
     (script: string, _rawText: string | undefined, open: string | undefined, body: string, close: string) => {
       if (!open) return script;
       if (body === "requestAnimationFrame(function(){$RT=performance.now()});") return open + close;
