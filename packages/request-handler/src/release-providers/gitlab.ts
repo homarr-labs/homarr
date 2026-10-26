@@ -54,13 +54,7 @@ const getProjectDetailsAsync = async (projectUrl: string, headers: Record<string
   };
 };
 
-export const getGitlabReleaseAsync: ReleaseProvider = async ({
-  baseUrl,
-  identifier,
-  versionPattern,
-  token,
-  excludePrereleases,
-}) => {
+export const getGitlabReleaseAsync: ReleaseProvider = async ({ baseUrl, identifier, versionPattern, token }) => {
   const projectUrl = providerUrl(baseUrl, `/api/v4/projects/${encodeURIComponent(identifier)}`);
   const headers = tokenHeaders(token, (value) => ({ "PRIVATE-TOKEN": value }));
 
@@ -71,7 +65,6 @@ export const getGitlabReleaseAsync: ReleaseProvider = async ({
   const release = selectNewestRelease(
     releases.flatMap((candidate) => toReleases(candidate, now)),
     versionPattern,
-    excludePrereleases,
   );
   const details = await loadOptionalDetailsAsync({ baseUrl, identifier, token }, () =>
     getProjectDetailsAsync(projectUrl, headers),

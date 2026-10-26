@@ -55,9 +55,19 @@ const getProjectDetailsAsync = async (
   };
 };
 
-const listReleasesAsync = async (repositoryUrl: string, headers: Record<string, string>, identifier: string) => {
+const listReleasesAsync = async (
+  repositoryUrl: string,
+  headers: Record<string, string>,
+  identifier: string,
+  excludePrereleases = false,
+) => {
+  const releasesUrl = new URL(`${repositoryUrl}/releases`);
+  if (excludePrereleases) {
+    releasesUrl.searchParams.set("pre-release", "false");
+    releasesUrl.searchParams.set("draft", "false");
+  }
   try {
-    return await fetchJsonAsync(`${repositoryUrl}/releases`, releasesSchema, { headers });
+    return await fetchJsonAsync(releasesUrl.toString(), releasesSchema, { headers });
   } catch (error) {
     if (!isNotFoundError(error)) throw error;
     await fetchProviderAsync(repositoryUrl, { headers });
@@ -76,7 +86,7 @@ export const getCodebergReleaseAsync: ReleaseProvider = async ({
   const repositoryUrl = providerUrl(baseUrl, `/api/v1/repos/${repositoryPath}`);
   const headers = tokenHeaders(token, (value) => ({ Authorization: `token ${value}` }));
 
-  const releases = await listReleasesAsync(repositoryUrl, headers, identifier);
+  const releases = await listReleasesAsync(repositoryUrl, headers, identifier, excludePrereleases);
   if (releases.length === 0) throw noReleasesFoundError(identifier);
 
   const release = selectNewestRelease(releases.map(toRelease), versionPattern, excludePrereleases);

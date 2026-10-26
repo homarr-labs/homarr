@@ -855,14 +855,12 @@
   color: var(--releases-warn-text);
 }
 
-.floatingActions {
+.listActions {
   display: flex;
   align-items: center;
+  justify-content: flex-end;
   gap: rem(6px);
-  position: absolute;
-  top: rem(2px);
-  right: rem(2px);
-  z-index: 1;
+  flex: none;
 }
 
 @keyframes rise {

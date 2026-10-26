@@ -565,7 +565,7 @@ const RepositoryEditModal = createModal<RepositoryEditProps>(({ innerProps, acti
         </div>
       </Group>
 
-      {tempRepository.provider && ["github", "gitlab", "codeberg"].includes(tempRepository.provider) && (
+      {tempRepository.provider && ["github", "codeberg"].includes(tempRepository.provider) && (
         <Checkbox
           label={tRepository("excludePrereleases.label")}
           description={tRepository("excludePrereleases.description")}

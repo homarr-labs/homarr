@@ -413,7 +413,7 @@ const ReleasesInbox = ({
       )}
 
       {!showHeader && (failedIntegrations.length > 0 || (!groupReleases && newEntries.length > 0)) && (
-        <div className={classes.floatingActions}>
+        <div className={classes.listActions}>
           <IntegrationErrorIndicator results={failedIntegrations} />
           {!groupReleases && newEntries.length > 0 && (
             <MarkAllButton placement="section" onClick={handleMarkAllViewed} />
