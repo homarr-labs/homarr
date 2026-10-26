@@ -5,7 +5,6 @@ import { Suspense, use } from "react";
 import dynamic from "next/dynamic";
 
 import type { WidgetKind } from "@homarr/definitions";
-import { useInitialRenderTime } from "@homarr/common";
 
 import { loadWidgetDefinition } from "./manifest";
 
@@ -90,15 +89,11 @@ const RenderedWidgetStyles = ({ kind }: { kind: WidgetKind }) => {
 };
 
 export const WidgetStyles = ({ kinds }: { kinds: WidgetKind[] }) => {
-  const prepared = useInitialRenderTime() !== undefined;
-  // Next needs literal dynamic imports to discover CSS for server-rendered
-  // content. Placeholders need no widget CSS or component runtime on the server.
+  // Next needs literal dynamic imports for CSS and early JavaScript preloads.
+  // Keep those hints for data widgets, but never import browser-only runtimes.
   return (
     <Suspense fallback={null}>
-      {typeof window === "undefined" &&
-        kinds
-          .filter((kind) => prepared || kind === "app" || kind === "bookmarks")
-          .map((kind) => <RenderedWidgetStyles key={kind} kind={kind} />)}
+      {typeof window === "undefined" && kinds.map((kind) => <RenderedWidgetStyles key={kind} kind={kind} />)}
     </Suspense>
   );
 };
