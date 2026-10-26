@@ -5,6 +5,7 @@ import type { Session } from "@homarr/auth";
 import { createSessionAsync, sessionTokenCookieName } from "@homarr/auth/server";
 import { boardViewportWidthCookieName } from "@homarr/boards/layout-selection";
 import { createId, Stopwatch } from "@homarr/common";
+import { readBoundedResponseAsync } from "@homarr/common/server";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import { createCaptureHeaders, getPreparationOrigin } from "@homarr/cron-jobs/board-preparation";
 import { and, db, desc, eq, gt, like, notLike } from "@homarr/db";
@@ -27,6 +28,7 @@ import {
   writePreparedDocumentAsync,
 } from "./store";
 import type { BoardPreparationSpec } from "./store";
+import { maxDocumentBytes } from "./document";
 
 const logger = createLogger({ module: "boardPreparation" });
 const captureSessionPrefix = "board-preparation-capture:";
@@ -134,10 +136,12 @@ const captureDocumentAsync = async (
       cache: "no-store",
       signal: AbortSignal.any([AbortSignal.timeout(90_000), ...(signal ? [signal] : [])]),
     });
-    const html = await response.text();
     if (response.status !== 200 || !response.headers.get("content-type")?.includes("text/html")) {
+      await response.body?.cancel();
       throw new Error(`Board capture returned HTTP ${response.status}`);
     }
+    const body = await readBoundedResponseAsync(response, maxDocumentBytes, "Prepared Board", signal);
+    const html = new TextDecoder().decode(body ?? undefined);
     if (!html.includes('data-testid="board-canvas"')) throw new Error("Board capture did not render the Board");
     return html.replaceAll(revealThrottleTimestamp, "");
   });
@@ -223,7 +227,6 @@ export const prepareBoardAsync = async (id: string, runId?: string, signal?: Abo
       streamedReveals: countStreamedReveals(html),
       documentBytes: Buffer.byteLength(html),
       storedDocumentBytes: publication.storedDocumentBytes,
-      storage: process.env.BOARD_PREPARATION_STORAGE ?? "redis",
     });
     return "prepared" as const;
   } finally {

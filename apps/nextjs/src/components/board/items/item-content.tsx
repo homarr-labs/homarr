@@ -28,7 +28,7 @@ import {
   useWhenBoardRestored,
   useBoardRestoredAction,
 } from "@homarr/boards/context";
-import { useInitialRenderTime } from "@homarr/common";
+import { useInitialRenderTime, useIsHydrated } from "@homarr/common";
 import { getWidgetDataQueries, getWidgetDataQueryKey } from "@homarr/widgets/data";
 import { useEditMode } from "@homarr/boards/edit-mode";
 import { getWidgetName } from "@homarr/definitions";
@@ -42,7 +42,12 @@ import {
 } from "@homarr/widgets/definition";
 import type { WidgetComponentProps, WidgetDefinition, WidgetRuntimeRef } from "@homarr/widgets/definition";
 import { initialWidgetResources } from "@homarr/widgets/initial-widget-resources";
-import { loadWidgetResources, reduceWidgetOptionsWithDefinition, resetWidgetResources } from "@homarr/widgets/manifest";
+import {
+  loadWidgetResources,
+  loadWidgetDefinition,
+  reduceWidgetOptionsWithDefinition,
+  resetWidgetResources,
+} from "@homarr/widgets/manifest";
 import { WidgetCardShell, WidgetTitleBadge } from "@homarr/widgets/widget-card-shell";
 
 import type { SectionItem } from "~/app/[locale]/boards/_types";
@@ -229,7 +234,14 @@ const LoadedBoardItemContent = (props: LoadedBoardItemContentProps) => {
   return <DynamicBoardItemContent {...props} />;
 };
 
+const DeferredWidget = () => null;
+
 const DynamicBoardItemContent = (props: LoadedBoardItemContentProps) => {
+  const definition = use(loadWidgetDefinition(props.item.kind));
+  const hydrated = useIsHydrated();
+  if (definition.data.mode === "browser" && (!hydrated || !props.browserActive)) {
+    return <ResolvedBoardItemContent {...props} definition={definition} Component={DeferredWidget} />;
+  }
   const resources = use(loadWidgetResources(props.item.kind));
   return <ResolvedBoardItemContent {...props} {...resources} />;
 };

@@ -27,6 +27,10 @@ const filterSupportedStyles = (node: Element, style: string) => {
     const property = declaration.slice(0, separator).trim().toLowerCase();
     const value = declaration.slice(separator + 1).trim();
     if (!value) continue;
+    if ((node.nodeName === "TABLE" || node.nodeName === "COL") && (property === "width" || property === "min-width")) {
+      if (/^\d+(?:\.\d+)?px$/.test(value)) declarations.push(`${property}: ${value}`);
+      continue;
+    }
     if (property === "text-align" && textAlignValuePattern.test(value)) {
       declarations.push(`${property}: ${value}`);
       continue;
@@ -91,6 +95,8 @@ const notebookSanitizeConfig: Config = {
     "blockquote",
     "br",
     "code",
+    "col",
+    "colgroup",
     "del",
     "details",
     "div",

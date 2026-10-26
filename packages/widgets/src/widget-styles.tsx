@@ -1,10 +1,13 @@
 "use client";
 
 import type { ComponentType } from "react";
-import { Suspense } from "react";
+import { Suspense, use } from "react";
 import dynamic from "next/dynamic";
 
 import type { WidgetKind } from "@homarr/definitions";
+import { useInitialRenderTime } from "@homarr/common";
+
+import { loadWidgetDefinition } from "./manifest";
 
 const NoStyles = () => null;
 
@@ -79,16 +82,23 @@ const widgetStyles = {
   "thingport-activityHeatmap": dynamic(() => import("./thingport/activity-heatmap/component").then(() => NoStyles)),
 } satisfies Record<WidgetKind, ComponentType>;
 
+const RenderedWidgetStyles = ({ kind }: { kind: WidgetKind }) => {
+  const definition = use(loadWidgetDefinition(kind));
+  if (definition.data.mode === "browser") return null;
+  const Styles = widgetStyles[kind];
+  return <Styles />;
+};
+
 export const WidgetStyles = ({ kinds }: { kinds: WidgetKind[] }) => {
-  // Register CSS during SSR without importing every offscreen Widget again
-  // in the browser just to render these empty style-registration components.
+  const prepared = useInitialRenderTime() !== undefined;
+  // Next needs literal dynamic imports to discover CSS for server-rendered
+  // content. Placeholders need no widget CSS or component runtime on the server.
   return (
     <Suspense fallback={null}>
       {typeof window === "undefined" &&
-        kinds.map((kind) => {
-          const Styles = widgetStyles[kind];
-          return <Styles key={kind} />;
-        })}
+        kinds
+          .filter((kind) => prepared || kind === "app" || kind === "bookmarks")
+          .map((kind) => <RenderedWidgetStyles key={kind} kind={kind} />)}
     </Suspense>
   );
 };

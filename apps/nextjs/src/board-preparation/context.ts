@@ -5,6 +5,8 @@ import { getRepresentativeLayoutWidth } from "@homarr/boards/layout-preview";
 import { getLayoutIdForViewportWidth } from "@homarr/boards/layout-selection";
 import type { DeviceType } from "@homarr/common/server";
 import { createLogger } from "@homarr/core/infrastructure/logs";
+import { db, inArray } from "@homarr/db";
+import { apps } from "@homarr/db/schema";
 import { getIntegrationCacheGenerationAsync } from "@homarr/redis";
 import type { SupportedLanguage } from "@homarr/translation";
 
@@ -48,6 +50,23 @@ export const loadBoardPreparationContextAsync = async ({
     logger.debug("Board preparation context unavailable", { boardId: board.id, reason: "missing_integration" });
     return null;
   }
+  const appIds = [
+    ...new Set(
+      board.items.flatMap((item) => {
+        if (item.kind === "app" && typeof item.options.appId === "string") return [item.options.appId];
+        if (item.kind === "bookmarks" && Array.isArray(item.options.items)) {
+          return item.options.items.filter((id): id is string => typeof id === "string");
+        }
+        return [];
+      }),
+    ),
+  ];
+  // App targets live outside the Board row, but are actionable in prepared HTML.
+  // Include their current values so edits/deletions invalidate the captured links.
+  const linkedApps = await db.query.apps.findMany({
+    where: inArray(apps.id, appIds),
+    orderBy: apps.id,
+  });
   const generations: Record<string, string> = {};
   const values = await Promise.all(
     ids.map(async (id) => ({ id, generation: await getIntegrationCacheGenerationAsync(id) })),
@@ -68,6 +87,7 @@ export const loadBoardPreparationContextAsync = async ({
       root: { ...root, colorScheme: colorScheme ?? root.serverSettings.appearance.defaultColorScheme },
       integrations,
       generations,
+      apps: linkedApps,
       locale,
       viewportWidth: 0,
       layoutId,

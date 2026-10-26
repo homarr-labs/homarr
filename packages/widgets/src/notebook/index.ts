@@ -27,5 +27,5 @@ export const { definition, componentLoader } = createWidgetDefinition("notebook"
     );
   },
 })
-  .withData({ mode: "static" })
+  .withData({ mode: "browser", reason: "Rich-text sanitization uses the browser DOM" })
   .withDynamicImport(() => import("./component"));

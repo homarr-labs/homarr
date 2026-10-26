@@ -78,8 +78,10 @@ export const PreparedBoardRestorationProvider = ({ prepared, children }: PropsWi
     });
     if (!prepared) resolveRestored("restored");
     const cancel = (update = true) => {
-      if (phase === "restored" || phase === "cancelled") return;
+      if (phase === "cancelled") return;
       phase = "cancelled";
+      querySnapshot?.dispose();
+      querySnapshot = undefined;
       pending.clear();
       settled.clear();
       resolveRestored("cancelled");

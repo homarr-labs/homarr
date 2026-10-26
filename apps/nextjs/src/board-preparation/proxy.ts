@@ -75,6 +75,7 @@ const requestPreparation = (id: string, backgroundWork: Promise<void>[]) => {
     pendingPreparations.set(id, preparation);
   }
   backgroundWork.push(preparation);
+  return preparation;
 };
 
 const resolvePreparedResponseAsync = async (
@@ -110,12 +111,22 @@ const resolvePreparedResponseAsync = async (
   const variant = registry[id];
   const stale = !variant || variant.lastSeenAt < Date.now() - 60_000;
 
-  if (stale || !usable) {
+  if (!usable) {
     const registered = await rememberBoardPreparationAsync(id, spec, viewportWidth);
-    if (!registered && !usable) return { hit: false, reason: "registration_unavailable" };
-  }
-  if (usable && stale && variant && viewportWidth !== undefined && variant.viewportWidth !== viewportWidth) {
-    requestPreparation(id, backgroundWork);
+    if (!registered) return { hit: false, reason: "registration_unavailable" };
+  } else if (stale) {
+    // Last-seen bookkeeping must not turn an authorized cache hit into slow SSR.
+    backgroundWork.push(
+      rememberBoardPreparationAsync(id, spec, viewportWidth)
+        .then(async () => {
+          if (variant && viewportWidth !== undefined && variant.viewportWidth !== viewportWidth) {
+            await requestPreparation(id, backgroundWork);
+          }
+        })
+        .catch(() => {
+          logger.debug("Could not refresh prepared Board registration", { viewId: id.slice(0, 12) });
+        }),
+    );
   }
   if (!usable) {
     let reason = "missing";
@@ -135,17 +146,6 @@ const resolvePreparedResponseAsync = async (
   return { hit: true, html, viewId: id.slice(0, 12), preparedAt: ready.preparedAt };
 };
 
-const isDocumentRequest = (request: NextRequest) => {
-  if (request.method !== "GET" && request.method !== "HEAD") return false;
-  if (!request.headers.get("accept")?.includes("text/html")) return false;
-  for (const header of ["next-url", "next-request-id", "next-html-request-id", "next-action", "purpose"]) {
-    if (request.headers.has(header)) return false;
-  }
-  if (request.headers.get("sec-purpose")?.includes("prefetch")) return false;
-  const destination = request.headers.get("sec-fetch-dest");
-  return destination === null || destination === "document";
-};
-
 export const getPreparedBoardResponseAsync = async (
   request: NextRequest,
   event: NextFetchEvent,
@@ -160,8 +160,7 @@ export const getPreparedBoardResponseAsync = async (
     return null;
   };
   if (!(await getPreparationNamespaceAsync())) return bypass("no_production_build");
-  if (!isDocumentRequest(request)) return null;
-  if (request.nextUrl.search) return bypass("query_parameters");
+
   const locale = path[0] as SupportedLanguage;
   let name: string | undefined;
   if (path.length === 3 && path[2]) {

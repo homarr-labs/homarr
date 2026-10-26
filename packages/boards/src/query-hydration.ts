@@ -20,6 +20,7 @@ export const createQueryHydrationSnapshot = (sharedClient: QueryClient) => {
   });
   hydrate(snapshotClient, initialState);
   const denied = new Set<string>();
+  let disposed = false;
   let unsubscribe: () => void = noop;
   if (typeof window !== "undefined") {
     unsubscribe = sharedClient.getQueryCache().subscribe((event) => {
@@ -33,6 +34,7 @@ export const createQueryHydrationSnapshot = (sharedClient: QueryClient) => {
 
   return {
     dispose: () => {
+      disposed = true;
       unsubscribe();
       snapshotClient.clear();
       initialState = undefined;
@@ -43,7 +45,7 @@ export const createQueryHydrationSnapshot = (sharedClient: QueryClient) => {
         get(_target, property) {
           let current = snapshotCache;
           // Cache subscriptions follow live updates even while initial reads are frozen.
-          if (resumed || property === "subscribe") current = sharedClient.getQueryCache();
+          if (disposed || resumed || property === "subscribe") current = sharedClient.getQueryCache();
           const value = Reflect.get(current, property, current);
           if (typeof value === "function") return value.bind(current);
           return value;

@@ -7,6 +7,8 @@ import type { SupportedLanguage } from "@homarr/translation/languages";
 import { supportedLanguages } from "@homarr/translation/languages";
 import { createI18nMiddleware } from "@homarr/translation/middleware";
 
+import { isBoardDocumentRequest } from "./board-preparation/document-request";
+
 let isOnboardingFinished = false;
 let onboardingStepPromise: Promise<string> | null = null;
 let defaultLocalePromise: Promise<string> | null = null;
@@ -72,7 +74,10 @@ export async function proxy(request: NextRequest, event?: NextFetchEvent) {
 
   const next = createI18nMiddleware(defaultLocale);
   const response = next(request);
-  if (!event) return response;
+  if (!event || !isBoardDocumentRequest(request)) return response;
+  // Exclude other routes before loading the prepared Board's server dependencies.
+  const isBoardRoute = routeSegments.length === 0 || (routeSegments.length === 2 && routeSegments[0] === "boards");
+  if (!isBoardRoute) return response;
   const { readCaptureViewId } = await import("@homarr/cron-jobs/board-preparation");
   if (readCaptureViewId(request.headers)) return response;
   const { getPreparedBoardResponseAsync } = await import("./board-preparation/proxy");

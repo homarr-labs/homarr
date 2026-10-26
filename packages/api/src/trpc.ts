@@ -12,13 +12,11 @@ import type { OpenApiMeta } from "trpc-to-openapi";
 import { ZodError } from "zod/v4";
 
 import type { Session } from "@homarr/auth";
-import { extractBaseUrlFromHeaders, FlattenError, isRecord } from "@homarr/common";
+import { extractBaseUrlFromHeaders, FlattenError } from "@homarr/common";
 import { resolveRequestIdentity, userAgent } from "@homarr/common/server";
 import type { DeviceType, RequestIdentity } from "@homarr/common/server";
 import { createLogger } from "@homarr/core/infrastructure/logs";
-import { db, eq } from "@homarr/db";
-import { cronJobConfigurations } from "@homarr/db/schema";
-import { requestBoardPreparationAsync } from "@homarr/cron-jobs/board-preparation";
+import { db } from "@homarr/db";
 import type { GroupPermissionKey, OnboardingStep } from "@homarr/definitions";
 import { BoardLayoutBoundsError } from "@homarr/validation/board-layout-bounds-error";
 
@@ -127,35 +125,7 @@ const enforceDemoModeReadOnly = t.middleware(({ ctx, next, type }) => {
   return next({ ctx });
 });
 
-const prepareChangedBoard = t.middleware(async ({ next, type, path, getRawInput, ctx }) => {
-  const result = await next();
-  if (process.env.NODE_ENV !== "production" || process.env.CI || type !== "mutation" || !result.ok) return result;
-  if (!path.startsWith("board.") && path !== "widget.options.saveItemOptions") return result;
-  try {
-    const input: unknown = await getRawInput();
-    if (!isRecord(input)) return result;
-    let id: unknown = input.boardId;
-    if (id === undefined) id = input.id;
-    if (typeof id !== "string" || id.length === 0 || id.length > 128) return result;
-    const boardId = id;
-    void (async () => {
-      const configuration = await ctx.db.query.cronJobConfigurations.findFirst({
-        where: eq(cronJobConfigurations.name, "boardPreparation"),
-        columns: { isEnabled: true },
-      });
-      if (configuration?.isEnabled === false) return;
-      await requestBoardPreparationAsync({ boardId });
-    })().catch((cause: unknown) => {
-      logger.warn(new Error("Could not schedule the updated Board view", { cause }));
-    });
-  } catch (cause) {
-    logger.warn(new Error("Could not identify the changed Board for preparation", { cause }));
-  }
-  return result;
-});
-
-const boardAwareProcedure = t.procedure.use(prepareChangedBoard);
-const baseProcedure = isDemoReadOnly ? boardAwareProcedure.use(enforceDemoModeReadOnly) : boardAwareProcedure;
+const baseProcedure = isDemoReadOnly ? t.procedure.use(enforceDemoModeReadOnly) : t.procedure;
 
 /**
  * Public (unauthed) procedure
