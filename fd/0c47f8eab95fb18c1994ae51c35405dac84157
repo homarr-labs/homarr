@@ -1,0 +1,16 @@
+apps/docs/src/components/workshop/WorkshopIntegrationBadges.tsx
+  h_d6e478ca18e517 1,13-25
+apps/nextjs/src/components/workshop/workshop-integration-badges.tsx
+  h_d6e478ca18e517 3,5,16-23
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "fd0c47f8eab95fb18c1994ae51c35405dac84157",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
