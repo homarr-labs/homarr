@@ -16,6 +16,7 @@ export const { definition, componentLoader } = createWidgetDefinition(widgetKind
     return optionsBuilder.from((factory) => ({
       usePiHoleColors: factory.switch({
         defaultValue: true,
+        withDescription: true,
       }),
       layout: factory.select({
         options: (["grid", "row", "column"] as const).map((value) => ({
