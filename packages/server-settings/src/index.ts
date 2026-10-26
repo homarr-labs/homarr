@@ -49,6 +49,7 @@ export const brandingServerSettingsSchema = z.object({
   lockPrimaryColor: z.boolean(),
   signInBackgroundImageUrl: brandingImageUrlSchema,
   signInBackgroundOverlay: z.number().min(0).max(0.9),
+  showSignInMarquee: z.boolean(),
   authBranding: authBrandingSchema,
   defaultRadius: z.enum(brandingRadiusOptions),
   customCss: z.string().max(16_384),
@@ -66,6 +67,7 @@ export const defaultBrandingSettings: BrandingSettings = {
   lockPrimaryColor: false,
   signInBackgroundImageUrl: null,
   signInBackgroundOverlay: 0.55,
+  showSignInMarquee: true,
   authBranding: {
     showAppName: true,
     showLogo: true,

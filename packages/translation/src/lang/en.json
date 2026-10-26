@@ -7048,6 +7048,10 @@
             "signInOverlay": {
               "label": "Background overlay"
             },
+            "signInMarquee": {
+              "label": "Show background marquee",
+              "description": "Display floating application icons on authentication pages."
+            },
             "defaultRadius": {
               "label": "Corner style",
               "options": {
