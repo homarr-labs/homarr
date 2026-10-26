@@ -1,0 +1,26 @@
+apps/nextjs/src/app/[locale]/auth/invite/[id]/page.tsx
+  h_d6e478ca18e517 74
+apps/nextjs/src/app/[locale]/auth/login/page.tsx
+  h_d6e478ca18e517 53
+apps/nextjs/src/app/[locale]/auth/mcp/layout.tsx
+  h_d6e478ca18e517 41
+apps/nextjs/src/app/[locale]/manage/settings/_components/branding-settings-form.tsx
+  h_d6e478ca18e517 181-185
+packages/onboarding/src/onboarding-auth-shell.tsx
+  h_d6e478ca18e517 24,45,67
+packages/server-settings/src/index.ts
+  h_d6e478ca18e517 52,70
+packages/translation/src/lang/en.json
+  h_d6e478ca18e517 7051-7054
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "c10a7149e9eb6ee9d9ccb5abc7b80c6c63493ca3",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
