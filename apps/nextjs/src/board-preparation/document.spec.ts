@@ -34,3 +34,16 @@ test("removes React reveal delays without changing widget text or serialized val
     content + '<script nonce="test"></script><script>$RB=[];$RV=function(a){for(var b=0;b<a.length;b+=2){}}</script>',
   );
 });
+
+test("reveals captured boundaries when React prepends its stylesheet helper", () => {
+  const html = '<script>$RX=function(a){};$RB=[];$RV=function(a){$RT=performance.now();};$RC("B:1","S:1")</script>';
+  expect(revealCapturedDocument(html)).toBe(
+    '<script>$RX=function(a){};$RB=[];$RV=function(a){};$RC("B:1","S:1")</script>',
+  );
+});
+
+test("leaves script-looking text in custom CSS and comments unchanged", () => {
+  const bootstrap = "<script>requestAnimationFrame(function(){$RT=performance.now()});</script>";
+  const text = `<style>.note::before { content: '${bootstrap}'; }</style><!-- ${bootstrap} -->`;
+  expect(revealCapturedDocument(text + bootstrap)).toBe(text + "<script></script>");
+});
