@@ -1,8 +1,9 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import { useRouter, useSearchParams } from "next/navigation";
+import { Tooltip } from "@mantine/core";
 import { useHotkeys } from "@mantine/hooks";
 import { notifications } from "@mantine/notifications";
 import { IconDeviceFloppy, IconPencil, IconPencilOff, IconSettings, IconX } from "@tabler/icons-react";
@@ -10,6 +11,7 @@ import { IconDeviceFloppy, IconPencil, IconPencilOff, IconSettings, IconX } from
 import { clientApi } from "@homarr/api/client";
 import { useRequiredBoard, useWhenBoardRestored } from "@homarr/boards/context";
 import { useEditMode } from "@homarr/boards/edit-mode";
+import { useUpdateBoard } from "@homarr/boards/updater";
 import { revalidatePathActionAsync } from "@homarr/common/client";
 import { env } from "@homarr/common/env";
 import { hotkeys } from "@homarr/definitions";
@@ -17,6 +19,7 @@ import { useConfirmModal } from "@homarr/modals";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
 import { useBoardPermissions } from "~/components/board/permissions/client";
+import { normalizeBoardLayoutBounds } from "~/components/board/layout/normalize-board-layout-bounds";
 import { loadGridEditorAsync, scheduleGridEditorWarmup } from "~/components/board/sections/grid/grid-editor-loader";
 import { HeaderButton } from "~/components/layout/header/button";
 import { TourTarget } from "~/components/layout/header/tour-target";
@@ -63,9 +66,11 @@ export const BoardContentSettingsAction = ({ demoReadOnly }: { demoReadOnly: boo
 
   return (
     <TourTarget id="board-settings">
-      <HeaderButton href={`/boards/${board.name}/settings`} aria-label={t("action.settings")}>
-        <IconSettings stroke={1.5} />
-      </HeaderButton>
+      <Tooltip label={t("action.settings")} events={{ hover: true, focus: true, touch: false }}>
+        <HeaderButton href={`/boards/${board.name}/settings`} aria-label={t("action.settings")}>
+          <IconSettings stroke={1.5} />
+        </HeaderButton>
+      </Tooltip>
     </TourTarget>
   );
 };
@@ -76,6 +81,7 @@ const EditModeMenu = ({ demoReadOnly }: { demoReadOnly: boolean }) => {
   const [editorLoadState, setEditorLoadState] = useState<"scheduled" | "loading" | "ready" | "error">("scheduled");
   const [isEnteringEditMode, setIsEnteringEditMode] = useState(false);
   const board = useRequiredBoard();
+  const { updateBoard } = useUpdateBoard();
   const utils = clientApi.useUtils();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -91,6 +97,10 @@ const EditModeMenu = ({ demoReadOnly }: { demoReadOnly: boolean }) => {
   const latestBoardRef = useRef(board);
 
   latestBoardRef.current = board;
+  useLayoutEffect(() => {
+    if (isEditMode) updateBoard(normalizeBoardLayoutBounds);
+  }, [isEditMode, updateBoard]);
+
   const { mutate: saveBoard, isPending } = clientApi.board.saveBoard.useMutation({
     onMutate(boardToSave) {
       boardToSave.items.forEach(({ id }) => notifications.hide(`board-item-created:${id}`));
@@ -106,10 +116,12 @@ const EditModeMenu = ({ demoReadOnly }: { demoReadOnly: boolean }) => {
       close();
       if (returnToLayoutSettings) router.push(`/boards/${board.name}/settings?tab=layout`);
     },
-    onError() {
+    onError(error) {
+      let message = t("notification.error.message");
+      if (error.data?.isBoardLayoutBoundsError) message = error.message;
       showErrorNotification({
         title: tCommon("notification.update.error"),
-        message: t("notification.error.message"),
+        message,
       });
     },
   });
@@ -191,39 +203,50 @@ const EditModeMenu = ({ demoReadOnly }: { demoReadOnly: boolean }) => {
   if (returnToLayoutSettings) {
     return (
       <>
-        <HeaderButton
-          onClick={() => saveBoard(board)}
-          loading={isPending}
-          aria-label={tBoardSetting("section.layout.edit.save")}
+        <Tooltip label={tBoardSetting("section.layout.edit.save")} events={{ hover: true, focus: true, touch: false }}>
+          <HeaderButton
+            onClick={() => saveBoard(board)}
+            loading={isPending}
+            aria-label={tBoardSetting("section.layout.edit.save")}
+          >
+            <IconDeviceFloppy stroke={1.5} />
+          </HeaderButton>
+        </Tooltip>
+        <Tooltip
+          label={tBoardSetting("section.layout.edit.cancel.action")}
+          events={{ hover: true, focus: true, touch: false }}
         >
-          <IconDeviceFloppy stroke={1.5} />
-        </HeaderButton>
-        <HeaderButton
-          onClick={cancelLayoutEdit}
-          disabled={isPending}
-          aria-label={tBoardSetting("section.layout.edit.cancel.action")}
-        >
-          <IconX stroke={1.5} />
-        </HeaderButton>
+          <HeaderButton
+            onClick={cancelLayoutEdit}
+            disabled={isPending}
+            aria-label={tBoardSetting("section.layout.edit.cancel.action")}
+          >
+            <IconX stroke={1.5} />
+          </HeaderButton>
+        </Tooltip>
       </>
     );
   }
 
+  const editLabel = isEditMode ? (demoReadOnly ? t("exit") : t("save")) : t("enter");
+
   return (
     <TourTarget id="board-edit-mode">
-      <HeaderButton
-        onClick={() => void toggle()}
-        onFocus={prewarmEditor}
-        onPointerEnter={prewarmEditor}
-        loading={isPending || isEnteringEditMode}
-        data-testid="board-edit-mode-toggle"
-        data-board-editor-preload-state={editorLoadState}
-        aria-busy={isPending || isEnteringEditMode}
-        aria-label={isEditMode ? (demoReadOnly ? t("exit") : t("save")) : t("enter")}
-        aria-pressed={isEditMode}
-      >
-        {isEditMode ? <IconPencilOff stroke={1.5} /> : <IconPencil stroke={1.5} />}
-      </HeaderButton>
+      <Tooltip label={editLabel} events={{ hover: true, focus: true, touch: false }}>
+        <HeaderButton
+          onClick={() => void toggle()}
+          onFocus={prewarmEditor}
+          onPointerEnter={prewarmEditor}
+          loading={isPending || isEnteringEditMode}
+          data-testid="board-edit-mode-toggle"
+          data-board-editor-preload-state={editorLoadState}
+          aria-busy={isPending || isEnteringEditMode}
+          aria-label={editLabel}
+          aria-pressed={isEditMode}
+        >
+          {isEditMode ? <IconPencilOff stroke={1.5} /> : <IconPencil stroke={1.5} />}
+        </HeaderButton>
+      </Tooltip>
     </TourTarget>
   );
 };

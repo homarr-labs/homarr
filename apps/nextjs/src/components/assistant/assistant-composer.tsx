@@ -1,7 +1,7 @@
 "use client";
 
-import { useLayoutEffect, useRef } from "react";
-import { ComposerPrimitive, ThreadPrimitive, useAuiState } from "@assistant-ui/react";
+import { useState } from "react";
+import { ComposerPrimitive, ThreadPrimitive, useAui, useAuiState } from "@assistant-ui/react";
 import { LexicalComposerInput } from "@assistant-ui/react-lexical";
 import { ActionIcon, Box, Button, Group, Stack, Text, ThemeIcon, Tooltip } from "@mantine/core";
 import {
@@ -15,6 +15,7 @@ import {
 } from "@tabler/icons-react";
 
 import { useI18n } from "@homarr/translation/client";
+import { showErrorNotification } from "@homarr/notifications";
 
 import classes from "./assistant-panel.module.css";
 import { ComposerTriggers } from "./assistant-composer-triggers";
@@ -26,6 +27,8 @@ import { Attachment, ContextDirectiveChip } from "./assistant-message-content";
 import type { AssistantPendingAction } from "./assistant-pending-action";
 import { isAssistantProviderUnavailable } from "./assistant-provider-quota";
 import { HomarrProviderQuota, RuntimeControls } from "./assistant-runtime-controls";
+import { useAssistantHistoryState } from "./assistant-history-state";
+import { AssistantCommandPlugin } from "./assistant-command-plugin";
 
 type ComposerProps = AssistantConversationControls & {
   pendingAction: AssistantPendingAction | undefined;
@@ -35,6 +38,11 @@ type ComposerProps = AssistantConversationControls & {
 export const Composer = (props: ComposerProps) => {
   const t = useI18n("assistant");
   const preferences = useAssistantPreferences();
+  const aui = useAui();
+  const conversationId = useAuiState((state) => state.threadListItem.id);
+  const { failedThreadIds } = useAssistantHistoryState();
+  const historyLoadFailed = failedThreadIds.has(conversationId);
+  const [retryingHistory, setRetryingHistory] = useState(false);
   const running = useAuiState((state) => state.thread.isRunning);
   const hasPendingAction = props.pendingAction !== undefined;
   const providerUnavailable = isAssistantProviderUnavailable({
@@ -42,11 +50,11 @@ export const Composer = (props: ComposerProps) => {
     signedIn: preferences.providerUser !== null,
     remaining: preferences.quota?.remaining,
   });
-  const sendBlocked = hasPendingAction || providerUnavailable;
+  const sendBlocked = historyLoadFailed || hasPendingAction || providerUnavailable;
   let sendLabel = t("send");
   if (providerUnavailable) sendLabel = t("providerQuota.unavailableDescription");
   if (hasPendingAction) sendLabel = t("pendingAction.sendBlocked");
-  const composerInputRef = useRef<HTMLDivElement>(null);
+  if (historyLoadFailed) sendLabel = t("historyError.loadMessages");
   const composerLabel = t("composerPlaceholder");
   const actionSize = props.compact ? "sm" : "lg";
   const sendSize = props.compact ? "md" : "lg";
@@ -91,18 +99,33 @@ export const Composer = (props: ComposerProps) => {
     </ComposerPrimitive.Send>
   );
 
-  useLayoutEffect(() => {
-    const editor = composerInputRef.current?.querySelector<HTMLElement>(".aui-lexical-input");
-    if (!editor) return;
-    editor.setAttribute("aria-label", composerLabel);
-    return () => {
-      if (editor.getAttribute("aria-label") === composerLabel) editor.removeAttribute("aria-label");
-    };
-  }, [composerLabel]);
-
   return (
     <Box className={classes.composerWrap}>
-      <ComposerPrimitive.Unstable_TriggerPopoverRoot>
+      {historyLoadFailed && (
+        <Stack gap="xs" p="sm" role="alert">
+          <Text size="sm" c="red">
+            {t("historyError.loadMessages")}
+          </Text>
+          <Button
+            variant="light"
+            size="compact-sm"
+            loading={retryingHistory}
+            onClick={async () => {
+              setRetryingHistory(true);
+              try {
+                await aui.threads().reloadMainThread();
+              } catch {
+                showErrorNotification({ title: t("historyError.title"), message: t("historyError.loadMessages") });
+              } finally {
+                setRetryingHistory(false);
+              }
+            }}
+          >
+            {t("historyError.retry")}
+          </Button>
+        </Stack>
+      )}
+      <ComposerPrimitive.TriggerPopoverRoot>
         <ComposerPrimitive.AttachmentDropzone className={classes.composerDropzone}>
           <ComposerPrimitive.Root
             className={classes.composer}
@@ -127,7 +150,6 @@ export const Composer = (props: ComposerProps) => {
             <Box className={classes.composerMain}>
               {props.compact ? (
                 <LexicalComposerInput
-                  ref={composerInputRef}
                   className={`${classes.composerInput} ${classes.composerWidgetInput}`}
                   data-assistant-composer-input
                   placeholder={composerLabel}
@@ -135,14 +157,15 @@ export const Composer = (props: ComposerProps) => {
                   // oxlint-disable-next-line jsx-a11y/no-autofocus -- opening the assistant is an explicit intent to compose
                   autoFocus={props.autoFocusComposer}
                   data-autofocus={props.autoFocusComposer ? true : undefined}
-                />
+                >
+                  <AssistantCommandPlugin />
+                </LexicalComposerInput>
               ) : (
                 <Group className={classes.composerRow} gap="xs" wrap="nowrap" align="center">
                   <Group gap={2} wrap="nowrap">
                     {attachmentAction}
                   </Group>
                   <LexicalComposerInput
-                    ref={composerInputRef}
                     className={classes.composerInput}
                     data-assistant-composer-input
                     placeholder={composerLabel}
@@ -150,7 +173,9 @@ export const Composer = (props: ComposerProps) => {
                     // oxlint-disable-next-line jsx-a11y/no-autofocus -- opening the assistant is an explicit intent to compose
                     autoFocus={props.autoFocusComposer}
                     data-autofocus={props.autoFocusComposer ? true : undefined}
-                  />
+                  >
+                    <AssistantCommandPlugin />
+                  </LexicalComposerInput>
                   {sendAction}
                 </Group>
               )}
@@ -178,7 +203,7 @@ export const Composer = (props: ComposerProps) => {
             </Box>
           </ComposerPrimitive.Root>
         </ComposerPrimitive.AttachmentDropzone>
-      </ComposerPrimitive.Unstable_TriggerPopoverRoot>
+      </ComposerPrimitive.TriggerPopoverRoot>
     </Box>
   );
 };

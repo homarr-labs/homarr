@@ -16,7 +16,7 @@ export const { componentLoader, definition } = createWidgetDefinition("mediaTran
   queryKey: [["widget", "mediaTranscoding", "getDataAsync"]],
   queryMatcher: matchesWidgetRuntimeQuery,
   ...getWidgetIntegrationConfig("mediaTranscoding"),
-  refetchInterval: null,
+  refetchInterval: 10,
   createOptions() {
     return optionsBuilder.from((factory) => ({
       defaultView: factory.select({

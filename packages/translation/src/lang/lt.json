@@ -799,6 +799,11 @@
       }
     },
     "field": {
+      "url": {
+        "helpLabel": "URL formatų pavyzdžiai",
+        "examples": "Palaikomų nuorodų pavyzdžiai",
+        "requiresHandler": "Pasirinktiniams protokolams reikia susietos programos jūsų įrenginyje."
+      },
       "description": {
         "label": "Aprašymas"
       },
@@ -2313,6 +2318,15 @@
         "appId": {
           "label": "Pasirinkite programėlę"
         },
+        "openIn": {
+          "label": "Atverti programėlę",
+          "description": "Pasirinkite, kur atverti šią programėlę. Naršyklės nuostatos gali pakeisti atvėrimą atskirame lange.",
+          "option": {
+            "currentTab": "Dabartinėje kortelėje",
+            "newTab": "Naujoje kortelėje",
+            "newWindow": "Naujame lange"
+          }
+        },
         "showTitle": {
           "label": "Rodyti programėlės pavadinimą"
         },
@@ -3228,6 +3242,10 @@
         },
         "viewMode": {
           "label": ""
+        },
+        "hideHeader": {
+          "label": "",
+          "description": ""
         }
       },
       "advanced": {
@@ -3245,15 +3263,11 @@
         "agenda": ""
       },
       "controls": {
-        "view": "",
         "today": "",
         "previous": "",
         "next": "",
         "noEvents": "",
         "more": "",
-        "moreLabel": "",
-        "eventDetails": "",
-        "close": "",
         "timeSlot": "",
         "weekday": ""
       }
@@ -4758,27 +4772,59 @@
       "name": "Leidiniai",
       "description": "Rodo pateiktų saugyklų dabartinių versijų sąrašą, naudodamas pateiktą versijų reguliarųjį reiškinį.",
       "option": {
+        "layout": {
+          "label": "",
+          "description": "",
+          "option": {
+            "comfortable": "",
+            "compact": ""
+          }
+        },
+        "summary": {
+          "label": "",
+          "description": "",
+          "option": {
+            "detailed": "",
+            "count": "",
+            "hidden": ""
+          }
+        },
+        "sections": {
+          "label": "",
+          "description": ""
+        },
+        "collapsedSections": {
+          "label": "",
+          "description": ""
+        },
         "newReleaseWithin": {
           "label": "Naujas leidinys per",
-          "description": "Naudojimo pavyzdys: 1w (1 savaitė), 10M (10 mėnesių). Priimami vienetai: h (valandos), d (dienos), w (savaitės), M (mėnesiai), y (metai). Palikite tuščią, jei nenorite paryškinti naujų leidimų."
+          "description": "Naudojimo pavyzdys: 1w (1 savaitė), 10M (10 mėnesių). Priimami vienetai: h (valandos), d (dienos), w (savaitės), M (mėnesiai), y (metai). Palikite tuščią, jei nenorite paryškinti naujų leidimų.",
+          "option": {
+            "never": "",
+            "1d": "",
+            "3d": "",
+            "1w": "",
+            "2w": "",
+            "1M": "",
+            "3M": ""
+          }
         },
         "staleReleaseWithin": {
           "label": "Pasenęs leidinys per",
-          "description": "Naudojimo pavyzdys: 1w (1 savaitė), 10M (10 mėnesių). Priimami vienetai: h (valandos), d (dienos), w (savaitės), M (mėnesiai), y (metai). Palikite tuščią, jei nenorite paryškinti pasenusių leidimų."
+          "description": "Naudojimo pavyzdys: 1w (1 savaitė), 10M (10 mėnesių). Priimami vienetai: h (valandos), d (dienos), w (savaitės), M (mėnesiai), y (metai). Palikite tuščią, jei nenorite paryškinti pasenusių leidimų.",
+          "option": {
+            "never": "",
+            "1M": "",
+            "3M": "",
+            "6M": "",
+            "1y": "",
+            "2y": ""
+          }
         },
-        "showOnlyHighlighted": {
-          "label": "Rodyti tik paryškintus",
-          "description": "Rodyti tik naujas arba pasenusias versijas, kaip nurodyta pirmiau."
-        },
-        "showDetails": {
-          "label": "Rodyti informaciją"
-        },
-        "showOnlyIcon": {
-          "label": "Rodyti tik piktogramą"
-        },
-        "topReleases": {
-          "label": "Populiariausi",
-          "description": "Didžiausias rodomų naujausių leidimų skaičius. Nulis reiškia, kad apribojimo nėra."
+        "showChangelogPreview": {
+          "label": "",
+          "description": ""
         },
         "repositories": {
           "label": "Saugyklos",
@@ -4852,36 +4898,106 @@
           }
         }
       },
-      "not-found": "Nerasta",
-      "pre-release": "Išankstinis",
-      "archived": "Archyvuota",
-      "forked": "Fork",
+      "summary": {
+        "newReleases": "",
+        "newShort": "",
+        "tracked": "",
+        "caughtUp": "",
+        "outdated": "",
+        "outdatedShort": "",
+        "failing": "",
+        "failingShort": "",
+        "latest": "",
+        "issues": ""
+      },
+      "section": {
+        "new": {
+          "label": "",
+          "description": ""
+        },
+        "attention": {
+          "label": "",
+          "description": ""
+        },
+        "upToDate": {
+          "label": "",
+          "description": ""
+        },
+        "quiet": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "status": {
+        "new": "",
+        "outdated": "",
+        "error": "",
+        "upToDate": "",
+        "quiet": ""
+      },
+      "tag": {
+        "new": "",
+        "preRelease": "",
+        "resolvedFrom": "",
+        "quiet": "",
+        "archived": "",
+        "fork": ""
+      },
+      "issue": {
+        "affected": "",
+        "rateLimited": {
+          "title": "",
+          "hint": ""
+        },
+        "notFound": {
+          "title": "",
+          "hint": ""
+        },
+        "noMatchingVersion": {
+          "title": "",
+          "hint": ""
+        },
+        "noReleasesFound": {
+          "title": "",
+          "hint": ""
+        },
+        "invalidIdentifier": {
+          "title": "",
+          "hint": ""
+        },
+        "noProviderSelected": {
+          "title": "",
+          "hint": ""
+        },
+        "noProviderResponse": {
+          "title": "",
+          "hint": ""
+        },
+        "unexpected": {
+          "title": "",
+          "hint": ""
+        }
+      },
+      "markViewed": "Pažymėti kaip peržiūrėtą",
+      "markAllViewed": "",
+      "markEntryViewed": "",
+      "viewed": "",
+      "copyVersion": "",
+      "copied": "",
+      "published": "",
+      "whatChanged": "",
+      "noNotes": "",
+      "changes": "",
       "starsCount": "Žvaigždės",
       "forksCount": "Šakos",
-      "issuesCount": "Atviros problemos",
-      "markViewed": "Pažymėti kaip peržiūrėtą",
-      "openProjectPage": "Atidaryti projekto puslapį",
-      "openReleasePage": "Atidaryti leidimo puslapį",
-      "releaseDescription": "Leidimo aprašymas",
-      "projectDescription": "Projekto aprašymas",
+      "openIssues": "",
+      "created": "Sukurta",
+      "releasePage": "",
+      "projectPage": "",
       "runningVersions": "",
       "upToDate": "",
       "updateAvailable": "",
-      "unknownStatus": "Nežinoma",
-      "created": "Sukurta",
-      "error": {
-        "label": "Klaida",
-        "messages": {
-          "invalidIdentifier": "Netinkamas identifikatorius",
-          "noMatchingVersion": "Atitinkančios versijos nerasta",
-          "noReleasesFound": "Leidimų nerasta",
-          "noProviderSelected": "Teikėjas nepasirinktas",
-          "noProviderResponse": "Teikėjas neatsakė",
-          "unexpected": "Netikėta teikėjo klaida"
-        }
-      },
-      "expandDetails": "Rodyti {name} išsamią informaciją",
-      "collapseDetails": "Slėpti {name} išsamią informaciją"
+      "unknownStatus": "Nežinoma"
     },
     "networkControllerSummary": {
       "advanced": {
@@ -5054,6 +5170,14 @@
     "uptimeKuma": {
       "description": "Stebėkite veikimo statistiką iš savo Uptime Kuma būsenos puslapio",
       "option": {
+        "statusPageSlug": {
+          "label": "",
+          "description": ""
+        },
+        "summaryOnly": {
+          "label": "",
+          "description": ""
+        },
         "showSummary": {
           "label": "",
           "description": ""
@@ -6071,6 +6195,18 @@
       "addWidget": "Pridėti valdiklį",
       "addApp": "Pridėti programėlę",
       "connectService": "Prijungti paslaugą"
+    },
+    "urlDrop": {
+      "hint": "",
+      "resolving": "",
+      "notification": {
+        "success": {
+          "message": ""
+        },
+        "full": {
+          "message": ""
+        }
+      }
     },
     "setupChecklist": {
       "title": "Paverskite šią lentą naudinga",
@@ -8677,6 +8813,14 @@
     "conversationActions": "Pokalbio veiksmai",
     "searchConversations": "Ieškoti pokalbių",
     "noMatchingConversations": "Atitinkančių pokalbių nėra",
+    "historyError": {
+      "title": "",
+      "load": "",
+      "loadMessages": "",
+      "saveMessages": "",
+      "switch": "",
+      "retry": ""
+    },
     "moreActions": "Daugiau atsakymo veiksmų",
     "renameConversation": {
       "action": "Pervadinti",
@@ -8796,6 +8940,9 @@
     },
     "mentions": {
       "menu": "Pridėti „Homarr“ kontekstą",
+      "back": "",
+      "loading": "",
+      "empty": "",
       "context": "Kontekstas",
       "app": "Programėlės",
       "integration": "Integracijos",
@@ -8810,6 +8957,8 @@
     },
     "commands": {
       "menu": "Asistento komandos",
+      "hint": "",
+      "empty": "",
       "health": "Parengti paslaugos būklės patikrą",
       "explore": "Parengti šio „Homarr“ egzemplioriaus apžvalgą",
       "media": "Parengti medijos paiešką",
@@ -8992,6 +9141,7 @@
     "approvalDescription": "Peržiūrėkite šį pakeitimą prieš jį vykdydami.",
     "approveAndRun": "Patvirtinti ir vykdyti",
     "deny": "Atmesti",
+    "approvalError": "",
     "autoApproval": {
       "label": "Automatiniai patvirtinimai",
       "composerLabel": "Patvirtinti už mane",

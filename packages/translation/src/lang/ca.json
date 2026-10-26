@@ -799,6 +799,11 @@
       }
     },
     "field": {
+      "url": {
+        "helpLabel": "Exemples de formats d'URL",
+        "examples": "Exemples d'enllaços admesos",
+        "requiresHandler": "Els protocols personalitzats requereixen una aplicació associada al vostre dispositiu."
+      },
       "description": {
         "label": "Descripció"
       },
@@ -2313,6 +2318,15 @@
         "appId": {
           "label": "Trieu l'aplicació"
         },
+        "openIn": {
+          "label": "Obre l'aplicació a",
+          "description": "Trieu on s'obre aquesta aplicació. La configuració del navegador pot modificar l'obertura en una finestra separada.",
+          "option": {
+            "currentTab": "La pestanya actual",
+            "newTab": "Una pestanya nova",
+            "newWindow": "Una finestra nova"
+          }
+        },
         "showTitle": {
           "label": "Mostra el nom de l'aplicació"
         },
@@ -3228,6 +3242,10 @@
         },
         "viewMode": {
           "label": ""
+        },
+        "hideHeader": {
+          "label": "",
+          "description": ""
         }
       },
       "advanced": {
@@ -3245,15 +3263,11 @@
         "agenda": ""
       },
       "controls": {
-        "view": "",
         "today": "",
         "previous": "",
         "next": "",
         "noEvents": "",
         "more": "",
-        "moreLabel": "",
-        "eventDetails": "",
-        "close": "",
         "timeSlot": "",
         "weekday": ""
       }
@@ -4758,27 +4772,59 @@
       "name": "Versions",
       "description": "Mostra una llista de la versió actual dels repositoris indicats amb l'expressió regular de versió especificada.",
       "option": {
+        "layout": {
+          "label": "",
+          "description": "",
+          "option": {
+            "comfortable": "",
+            "compact": ""
+          }
+        },
+        "summary": {
+          "label": "",
+          "description": "",
+          "option": {
+            "detailed": "",
+            "count": "",
+            "hidden": ""
+          }
+        },
+        "sections": {
+          "label": "",
+          "description": ""
+        },
+        "collapsedSections": {
+          "label": "",
+          "description": ""
+        },
         "newReleaseWithin": {
           "label": "Llançaments nous dins de",
-          "description": "Exemple d'ús: 1w (1 setmana), 10M (10 mesos). Unitats acceptades: h (hores), d (dies), w (setmanes), M (mesos), y (anys). Deixa-ho buit per no destacar els llançaments nous."
+          "description": "Exemple d'ús: 1w (1 setmana), 10M (10 mesos). Unitats acceptades: h (hores), d (dies), w (setmanes), M (mesos), y (anys). Deixa-ho buit per no destacar els llançaments nous.",
+          "option": {
+            "never": "",
+            "1d": "",
+            "3d": "",
+            "1w": "",
+            "2w": "",
+            "1M": "",
+            "3M": ""
+          }
         },
         "staleReleaseWithin": {
           "label": "Llançaments antics dins de",
-          "description": "Exemple d'ús: 1w (1 setmana), 10M (10 mesos). Unitats acceptades: h (hores), d (dies), w (setmanes), M (mesos), y (anys). Deixa-ho buit per no destacar els llançaments antics."
+          "description": "Exemple d'ús: 1w (1 setmana), 10M (10 mesos). Unitats acceptades: h (hores), d (dies), w (setmanes), M (mesos), y (anys). Deixa-ho buit per no destacar els llançaments antics.",
+          "option": {
+            "never": "",
+            "1M": "",
+            "3M": "",
+            "6M": "",
+            "1y": "",
+            "2y": ""
+          }
         },
-        "showOnlyHighlighted": {
-          "label": "Mostra només els destacats",
-          "description": "Mostra només els llançaments nous o antics, segons el que s'ha indicat anteriorment."
-        },
-        "showDetails": {
-          "label": "Mostra els detalls"
-        },
-        "showOnlyIcon": {
-          "label": "Mostra només la icona"
-        },
-        "topReleases": {
-          "label": "Millors llançaments",
-          "description": "Nombre màxim dels últims llançaments que es mostraran. Zero significa que no hi ha límit."
+        "showChangelogPreview": {
+          "label": "",
+          "description": ""
         },
         "repositories": {
           "label": "Repositoris",
@@ -4852,36 +4898,106 @@
           }
         }
       },
-      "not-found": "No s'ha trobat",
-      "pre-release": "Prellançament",
-      "archived": "Arxivat",
-      "forked": "Bifurcat",
+      "summary": {
+        "newReleases": "",
+        "newShort": "",
+        "tracked": "",
+        "caughtUp": "",
+        "outdated": "",
+        "outdatedShort": "",
+        "failing": "",
+        "failingShort": "",
+        "latest": "",
+        "issues": ""
+      },
+      "section": {
+        "new": {
+          "label": "",
+          "description": ""
+        },
+        "attention": {
+          "label": "",
+          "description": ""
+        },
+        "upToDate": {
+          "label": "",
+          "description": ""
+        },
+        "quiet": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "status": {
+        "new": "",
+        "outdated": "",
+        "error": "",
+        "upToDate": "",
+        "quiet": ""
+      },
+      "tag": {
+        "new": "",
+        "preRelease": "",
+        "resolvedFrom": "",
+        "quiet": "",
+        "archived": "",
+        "fork": ""
+      },
+      "issue": {
+        "affected": "",
+        "rateLimited": {
+          "title": "",
+          "hint": ""
+        },
+        "notFound": {
+          "title": "",
+          "hint": ""
+        },
+        "noMatchingVersion": {
+          "title": "",
+          "hint": ""
+        },
+        "noReleasesFound": {
+          "title": "",
+          "hint": ""
+        },
+        "invalidIdentifier": {
+          "title": "",
+          "hint": ""
+        },
+        "noProviderSelected": {
+          "title": "",
+          "hint": ""
+        },
+        "noProviderResponse": {
+          "title": "",
+          "hint": ""
+        },
+        "unexpected": {
+          "title": "",
+          "hint": ""
+        }
+      },
+      "markViewed": "Marca com a vist",
+      "markAllViewed": "",
+      "markEntryViewed": "",
+      "viewed": "",
+      "copyVersion": "",
+      "copied": "",
+      "published": "",
+      "whatChanged": "",
+      "noNotes": "",
+      "changes": "",
       "starsCount": "Estrelles",
       "forksCount": "Forks",
-      "issuesCount": "Problemes oberts",
-      "markViewed": "Marca com a vist",
-      "openProjectPage": "Obre la pàgina del projecte",
-      "openReleasePage": "Obre la pàgina del llançament",
-      "releaseDescription": "Descripció del llançament",
-      "projectDescription": "Descripció del projecte",
+      "openIssues": "",
+      "created": "Creat",
+      "releasePage": "",
+      "projectPage": "",
       "runningVersions": "",
       "upToDate": "",
       "updateAvailable": "",
-      "unknownStatus": "",
-      "created": "Creat",
-      "error": {
-        "label": "Error",
-        "messages": {
-          "invalidIdentifier": "Identificador no vàlid",
-          "noMatchingVersion": "No s'ha trobat cap versió coincident",
-          "noReleasesFound": "No s'han trobat llançaments",
-          "noProviderSelected": "No s'ha seleccionat cap proveïdor",
-          "noProviderResponse": "El proveïdor no ha respost",
-          "unexpected": "Error inesperat del proveïdor"
-        }
-      },
-      "expandDetails": "Mostra els detalls de {name}",
-      "collapseDetails": "Amaga els detalls de {name}"
+      "unknownStatus": ""
     },
     "networkControllerSummary": {
       "advanced": {
@@ -5054,6 +5170,14 @@
     "uptimeKuma": {
       "description": "Supervisa les estadístiques de temps d'activitat de la teva pàgina d'estat d'Uptime Kuma",
       "option": {
+        "statusPageSlug": {
+          "label": "",
+          "description": ""
+        },
+        "summaryOnly": {
+          "label": "",
+          "description": ""
+        },
         "showSummary": {
           "label": "",
           "description": ""
@@ -6071,6 +6195,18 @@
       "addWidget": "Afegeix un giny",
       "addApp": "Afegeix una aplicació",
       "connectService": "Connecta un servei"
+    },
+    "urlDrop": {
+      "hint": "",
+      "resolving": "",
+      "notification": {
+        "success": {
+          "message": ""
+        },
+        "full": {
+          "message": ""
+        }
+      }
     },
     "setupChecklist": {
       "title": "Fes que aquest tauler sigui útil",
@@ -8677,6 +8813,14 @@
     "conversationActions": "Accions de la conversa",
     "searchConversations": "Cerca converses",
     "noMatchingConversations": "No hi ha converses coincidents",
+    "historyError": {
+      "title": "",
+      "load": "",
+      "loadMessages": "",
+      "saveMessages": "",
+      "switch": "",
+      "retry": ""
+    },
     "moreActions": "Més accions de resposta",
     "renameConversation": {
       "action": "Canvia el nom",
@@ -8796,6 +8940,9 @@
     },
     "mentions": {
       "menu": "Afegeix context de Homarr",
+      "back": "",
+      "loading": "",
+      "empty": "",
       "context": "Context",
       "app": "Apps",
       "integration": "Integracions",
@@ -8810,6 +8957,8 @@
     },
     "commands": {
       "menu": "Ordres de l'assistent",
+      "hint": "",
+      "empty": "",
       "health": "Prepara una comprovació de l'estat del servei",
       "explore": "Prepara una visió general d'aquesta instància de Homarr",
       "media": "Prepara una cerca de mitjans",
@@ -8992,6 +9141,7 @@
     "approvalDescription": "Revisa aquest canvi abans d'executar-lo.",
     "approveAndRun": "Aprova i executa",
     "deny": "Rebutja",
+    "approvalError": "",
     "autoApproval": {
       "label": "Aprovacions automàtiques",
       "composerLabel": "Aprova per mi",

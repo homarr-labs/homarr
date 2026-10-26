@@ -4,10 +4,13 @@ import { z } from "zod/v4";
 import {
   customWidgetOptionsSchema,
   customWidgetRequestsSchema,
-  customWidgetSecretKinds,
+  customWidgetSecretKindSchema,
   customWidgetSourcesSchema,
+  getCustomWidgetRequiredSecretKinds,
+  isCustomWidgetHeaderSecretKind,
 } from "../core";
-import type { CustomJsxRequest, CustomWidgetOptions, CustomWidgetSource } from "../core";
+import type { CustomJsxRequest, CustomWidgetOptions, CustomWidgetSource, CustomWidgetSecretKind } from "../core";
+import { isCustomWidgetHeaderSecretValue } from "../core/request-header-policy";
 import { CustomWidgetDomainError } from "./errors";
 import {
   getPreviewEvidenceKey,
@@ -25,7 +28,7 @@ const MAX_UPDATE_ATTEMPTS = 8;
 
 const encryptedSecretSchema = z.object({
   sourceId: z.string(),
-  kind: z.enum(customWidgetSecretKinds),
+  kind: customWidgetSecretKindSchema,
   value: z.string(),
 });
 
@@ -54,7 +57,7 @@ export type { CustomWidgetPreviewJournalEntry } from "./preview-session-evidence
 export interface CreatePreviewSessionInput {
   userId: string;
   sources: Record<string, CustomWidgetSource>;
-  secrets: Array<{ sourceId: string; kind: (typeof customWidgetSecretKinds)[number]; value: string }>;
+  secrets: Array<{ sourceId: string; kind: CustomWidgetSecretKind; value: string }>;
   requests: Record<string, CustomJsxRequest>;
   name: string;
   description?: string;
@@ -96,6 +99,7 @@ export class CustomWidgetPreviewSessionService {
   }
 
   public async create(input: CreatePreviewSessionInput) {
+    assertHeaderSecretSlots(input.sources, input.secrets);
     const sourceIds = new Set(Object.keys(input.sources));
     if (input.secrets.some((secret) => !sourceIds.has(secret.sourceId))) {
       throw new CustomWidgetDomainError({
@@ -211,9 +215,10 @@ export class CustomWidgetPreviewSessionService {
   public async setSecrets(
     id: string,
     userId: string,
-    secrets: Array<{ sourceId: string; kind: (typeof customWidgetSecretKinds)[number]; value: string }>,
+    secrets: Array<{ sourceId: string; kind: CustomWidgetSecretKind; value: string }>,
   ) {
     const next = await this.update(id, userId, (session) => {
+      assertHeaderSecretSlots(session.sources, secrets);
       const sourceIds = new Set(Object.keys(session.sources));
       if (secrets.some((secret) => !sourceIds.has(secret.sourceId))) {
         throw new CustomWidgetDomainError({
@@ -238,7 +243,7 @@ export class CustomWidgetPreviewSessionService {
     userId: string,
     sourceId: string,
     source: CustomWidgetSource,
-    secrets: Array<{ sourceId: string; kind: (typeof customWidgetSecretKinds)[number]; value: string }>,
+    secrets: Array<{ sourceId: string; kind: CustomWidgetSecretKind; value: string }>,
   ) {
     const next = await this.update(id, userId, (session) => {
       const currentSource = session.sources[sourceId];
@@ -251,6 +256,7 @@ export class CustomWidgetPreviewSessionService {
           message: "Preview source authentication changed; create a new configuration request",
         });
       }
+      assertHeaderSecretSlots({ ...session.sources, [sourceId]: source }, secrets);
       const replacements = new Set(secrets.map((secret) => `${secret.sourceId}:${secret.kind}`));
       return {
         ...session,
@@ -299,5 +305,29 @@ export class CustomWidgetPreviewSessionService {
     if (!ttlMs) throw new CustomWidgetDomainError({ code: "NOT_FOUND", message: "Preview session expired" });
     if (this.options.store) await this.options.store.saveSession(session.id, session, ttlMs);
     else this.sessions.set(session.id, session);
+  }
+}
+
+function assertHeaderSecretSlots(
+  sources: Record<string, CustomWidgetSource>,
+  secrets: Array<{ sourceId: string; kind: CustomWidgetSecretKind; value: string }>,
+) {
+  const supplied = new Set<string>();
+  for (const secret of secrets) {
+    const auth = sources[secret.sourceId]?.auth;
+    const usesHeaders = typeof auth === "object" && auth.type === "headers";
+    if (!usesHeaders && !isCustomWidgetHeaderSecretKind(secret.kind)) continue;
+    const identity = `${secret.sourceId}:${secret.kind}`;
+    if (
+      supplied.has(identity) ||
+      !getCustomWidgetRequiredSecretKinds(auth).includes(secret.kind) ||
+      !isCustomWidgetHeaderSecretValue(secret.value)
+    ) {
+      throw new CustomWidgetDomainError({
+        code: "BAD_REQUEST",
+        message: "Preview credentials do not match declared authentication headers",
+      });
+    }
+    supplied.add(identity);
   }
 }

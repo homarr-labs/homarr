@@ -20,6 +20,7 @@ import { db, eq } from "@homarr/db";
 import { cronJobConfigurations } from "@homarr/db/schema";
 import { requestBoardPreparationAsync } from "@homarr/cron-jobs/board-preparation";
 import type { GroupPermissionKey, OnboardingStep } from "@homarr/definitions";
+import { BoardLayoutBoundsError } from "@homarr/validation/board-layout-bounds-error";
 
 import { env } from "./env";
 import { getOnboardingClaimTokenFromCookieHeader, isClaimOnlyOnboardingAccessAllowedAsync } from "./onboarding-claim";
@@ -86,6 +87,7 @@ const t = initTRPC
         ...shape.data,
         zodError: error.cause instanceof ZodError ? error.cause.flatten() : null,
         error: error.cause instanceof FlattenError ? error.cause.flatten() : null,
+        isBoardLayoutBoundsError: error.cause instanceof BoardLayoutBoundsError,
       },
     }),
   });

@@ -1,3 +1,8 @@
+import {
+  getAllTrustedCertificatesAsync,
+  getTrustedCertificateHostnamesAsync,
+} from "@homarr/core/infrastructure/certificates";
+import { createCustomCheckServerIdentity } from "@homarr/core/infrastructure/http";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import {
   assertJsonBudget as assertDomainJsonBudget,
@@ -60,6 +65,15 @@ export async function executeCustomWidgetRequest(input: CustomWidgetHttpRequest)
   try {
     return await executeDomainRequest({
       ...input,
+      resolveConnectionAsync: async () => {
+        const connection = (await input.resolveConnectionAsync?.()) ?? input;
+        if (validateDomainUrl(connection.baseUrl).protocol !== "https:" || connection.tls) return connection;
+        const [ca, hostnames] = await Promise.all([
+          getAllTrustedCertificatesAsync(),
+          getTrustedCertificateHostnamesAsync(),
+        ]);
+        return { ...connection, tls: { ca, checkServerIdentity: createCustomCheckServerIdentity(hostnames) } };
+      },
       logError: (event) => logger.error("Custom widget request failed", event),
     });
   } catch (error) {

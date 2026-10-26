@@ -41,7 +41,25 @@ export const { definition, componentLoader } = createWidgetDefinition("app", {
     return optionsBuilder.from(
       (factory) => ({
         appId: factory.app(),
-        openInNewTab: factory.switch({ defaultValue: true }),
+        openIn: factory.select({
+          options: [
+            {
+              value: "currentTab",
+              label: (t) => t("widget.app.option.openIn.option.currentTab"),
+            },
+            {
+              value: "newTab",
+              label: (t) => t("widget.app.option.openIn.option.newTab"),
+            },
+            {
+              value: "newWindow",
+              label: (t) => t("widget.app.option.openIn.option.newWindow"),
+            },
+          ],
+          defaultValue: "newTab",
+          allowDeselect: false,
+          withDescription: true,
+        }),
         showTitle: factory.switch({ defaultValue: true }),
         descriptionDisplayMode: factory.select({
           options: [

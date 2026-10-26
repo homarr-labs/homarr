@@ -799,6 +799,11 @@
       }
     },
     "field": {
+      "url": {
+        "helpLabel": "URL 形式の例",
+        "examples": "使用できるリンクの例",
+        "requiresHandler": "カスタムプロトコルを使用するには、端末に対応するアプリを関連付ける必要があります。"
+      },
       "description": {
         "label": "説明"
       },
@@ -2313,6 +2318,15 @@
         "appId": {
           "label": "アプリを選択"
         },
+        "openIn": {
+          "label": "アプリを開く場所",
+          "description": "このアプリを開く場所を選択します。ブラウザーの設定によっては、別ウィンドウで開く指定が反映されない場合があります。",
+          "option": {
+            "currentTab": "現在のタブ",
+            "newTab": "新しいタブ",
+            "newWindow": "新しいウィンドウ"
+          }
+        },
         "showTitle": {
           "label": "アプリ名を表示"
         },
@@ -3228,6 +3242,10 @@
         },
         "viewMode": {
           "label": "表示"
+        },
+        "hideHeader": {
+          "label": "",
+          "description": ""
         }
       },
       "advanced": {
@@ -3245,15 +3263,11 @@
         "agenda": "予定"
       },
       "controls": {
-        "view": "カレンダー表示",
         "today": "今日",
         "previous": "前の期間",
         "next": "次の期間",
         "noEvents": "この期間に予定はありません",
         "more": "{count} 以上",
-        "moreLabel": "{count} 他のイベントを表示",
-        "eventDetails": "イベントの詳細",
-        "close": "イベントの詳細を閉じる",
         "timeSlot": "タイムスロット",
         "weekday": ""
       }
@@ -4758,27 +4772,59 @@
       "name": "リリース",
       "description": "指定されたバージョンのリポジトリの現在のバージョンと、指定されたバージョンの正規表現のリストを表示します。",
       "option": {
+        "layout": {
+          "label": "レイアウト",
+          "description": "",
+          "option": {
+            "comfortable": "快適さ",
+            "compact": "コンパクト化"
+          }
+        },
+        "summary": {
+          "label": "",
+          "description": "",
+          "option": {
+            "detailed": "",
+            "count": "",
+            "hidden": "非表示"
+          }
+        },
+        "sections": {
+          "label": "",
+          "description": ""
+        },
+        "collapsedSections": {
+          "label": "",
+          "description": ""
+        },
         "newReleaseWithin": {
           "label": "新しいリリースの期間",
-          "description": "使用例：1w (1 週間), 10M (10 ヶ月)。使用可能な単位種別： h (時間), d (日), w (週), M (月), y (年)。新しいリリースを強調表示しない場合は、空白のままにします。"
+          "description": "使用例：1w (1 週間), 10M (10 ヶ月)。使用可能な単位種別： h (時間), d (日), w (週), M (月), y (年)。新しいリリースを強調表示しない場合は、空白のままにします。",
+          "option": {
+            "never": "",
+            "1d": "1 日",
+            "3d": "3 日",
+            "1w": "1 週間",
+            "2w": "",
+            "1M": "1 ヵ月",
+            "3M": "3 ヵ月"
+          }
         },
         "staleReleaseWithin": {
           "label": "古いリリースの期間",
-          "description": "使用例：1w (1 週間), 10M (10 ヶ月)。使用可能な単位種別： h (時間), d (日), w (週), M (月), y (年)。古いリリースを強調表示しない場合は、空白のままにします。"
+          "description": "使用例：1w (1 週間), 10M (10 ヶ月)。使用可能な単位種別： h (時間), d (日), w (週), M (月), y (年)。古いリリースを強調表示しない場合は、空白のままにします。",
+          "option": {
+            "never": "",
+            "1M": "1 ヵ月",
+            "3M": "3 ヵ月",
+            "6M": "6 ヵ月",
+            "1y": "1 年",
+            "2y": "2 年"
+          }
         },
-        "showOnlyHighlighted": {
-          "label": "強調表示のみ表示",
-          "description": "上記に従って、新しいリリースまたは古いリリースのみを表示します。"
-        },
-        "showDetails": {
-          "label": "詳細を表示"
-        },
-        "showOnlyIcon": {
-          "label": "アイコンのみ表示"
-        },
-        "topReleases": {
-          "label": "トップリリース",
-          "description": "表示する最新リリースの最大数。ゼロは制限なしです。"
+        "showChangelogPreview": {
+          "label": "",
+          "description": ""
         },
         "repositories": {
           "label": "リポジトリー",
@@ -4852,36 +4898,106 @@
           }
         }
       },
-      "not-found": "見つかりませんでした",
-      "pre-release": "プレリリース",
-      "archived": "アーカイブ済み",
-      "forked": "フォークされました",
+      "summary": {
+        "newReleases": "",
+        "newShort": "新規作成",
+        "tracked": "",
+        "caughtUp": "",
+        "outdated": "",
+        "outdatedShort": "古い順",
+        "failing": "",
+        "failingShort": "",
+        "latest": "",
+        "issues": ""
+      },
+      "section": {
+        "new": {
+          "label": "新規作成",
+          "description": ""
+        },
+        "attention": {
+          "label": "注意が必要です",
+          "description": ""
+        },
+        "upToDate": {
+          "label": "最新です",
+          "description": ""
+        },
+        "quiet": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "status": {
+        "new": "",
+        "outdated": "",
+        "error": "",
+        "upToDate": "最新です",
+        "quiet": ""
+      },
+      "tag": {
+        "new": "新規作成",
+        "preRelease": "",
+        "resolvedFrom": "",
+        "quiet": "",
+        "archived": "アーカイブ済み",
+        "fork": ""
+      },
+      "issue": {
+        "affected": "",
+        "rateLimited": {
+          "title": "",
+          "hint": ""
+        },
+        "notFound": {
+          "title": "",
+          "hint": ""
+        },
+        "noMatchingVersion": {
+          "title": "",
+          "hint": ""
+        },
+        "noReleasesFound": {
+          "title": "",
+          "hint": ""
+        },
+        "invalidIdentifier": {
+          "title": "無効な識別子",
+          "hint": ""
+        },
+        "noProviderSelected": {
+          "title": "プロバイダーが選択されていません",
+          "hint": ""
+        },
+        "noProviderResponse": {
+          "title": "",
+          "hint": ""
+        },
+        "unexpected": {
+          "title": "",
+          "hint": ""
+        }
+      },
+      "markViewed": "閲覧済みにする",
+      "markAllViewed": "",
+      "markEntryViewed": "",
+      "viewed": "",
+      "copyVersion": "",
+      "copied": "コピーしました",
+      "published": "",
+      "whatChanged": "",
+      "noNotes": "",
+      "changes": "",
       "starsCount": "スター数",
       "forksCount": "フォーク数",
-      "issuesCount": "未解決の課題数",
-      "markViewed": "閲覧済みにする",
-      "openProjectPage": "プロジェクトページを開く",
-      "openReleasePage": "リリースページを開く",
-      "releaseDescription": "リリースの説明",
-      "projectDescription": "プロジェクトの説明",
+      "openIssues": "",
+      "created": "作成日",
+      "releasePage": "",
+      "projectPage": "",
       "runningVersions": "実行中のバージョン",
       "upToDate": "最新です",
       "updateAvailable": "アップデートがあります",
-      "unknownStatus": "不明",
-      "created": "作成日",
-      "error": {
-        "label": "エラー",
-        "messages": {
-          "invalidIdentifier": "無効な識別子",
-          "noMatchingVersion": "一致するバージョンが見つかりません",
-          "noReleasesFound": "リリースが見つかりませんでした",
-          "noProviderSelected": "",
-          "noProviderResponse": "プロバイダーからの応答がありません",
-          "unexpected": ""
-        }
-      },
-      "expandDetails": "{name} の詳細を表示",
-      "collapseDetails": "{name} の詳細を隠す"
+      "unknownStatus": "不明"
     },
     "networkControllerSummary": {
       "advanced": {
@@ -5054,6 +5170,14 @@
     "uptimeKuma": {
       "description": "",
       "option": {
+        "statusPageSlug": {
+          "label": "",
+          "description": ""
+        },
+        "summaryOnly": {
+          "label": "",
+          "description": ""
+        },
         "showSummary": {
           "label": "",
           "description": ""
@@ -6071,6 +6195,18 @@
       "addWidget": "ウィジェットを追加",
       "addApp": "アプリを追加",
       "connectService": "サービスに接続"
+    },
+    "urlDrop": {
+      "hint": "",
+      "resolving": "",
+      "notification": {
+        "success": {
+          "message": ""
+        },
+        "full": {
+          "message": ""
+        }
+      }
     },
     "setupChecklist": {
       "title": "このボードを便利にする",
@@ -8677,6 +8813,14 @@
     "conversationActions": "会話アクション",
     "searchConversations": "会話を検索",
     "noMatchingConversations": "一致する会話がありません",
+    "historyError": {
+      "title": "",
+      "load": "",
+      "loadMessages": "",
+      "saveMessages": "",
+      "switch": "",
+      "retry": ""
+    },
     "moreActions": "より多くのレスポンスアクション",
     "renameConversation": {
       "action": "名前の変更",
@@ -8796,6 +8940,9 @@
     },
     "mentions": {
       "menu": "Homarrコンテキストを追加",
+      "back": "",
+      "loading": "",
+      "empty": "",
       "context": "コンテキスト",
       "app": "アプリケーション",
       "integration": "連携機能",
@@ -8810,6 +8957,8 @@
     },
     "commands": {
       "menu": "アシスタントコマンド",
+      "hint": "",
+      "empty": "",
       "health": "サービスヘルスチェックを準備する",
       "explore": "この Homarr インスタンスの概要を準備する",
       "media": "メディア検索の準備",
@@ -8992,6 +9141,7 @@
     "approvalDescription": "実行する前にこの変更を確認します。",
     "approveAndRun": "承認して実行する",
     "deny": "拒否",
+    "approvalError": "",
     "autoApproval": {
       "label": "自動承認",
       "composerLabel": "承認してください",

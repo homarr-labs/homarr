@@ -18,6 +18,7 @@ export default async function VolumesPage({ searchParams }: { searchParams: Prom
   }
 
   const context = await getSelectedKubernetesContextAsync(searchParams);
+  if (!context) return <DynamicBreadcrumb />;
   const tResource = await getI18n("kubernetes.cluster.resources");
   const volumes =
     context.status === "unavailable" ? [] : await api.kubernetes.volumes.getVolumes({ contextId: context.contextId });

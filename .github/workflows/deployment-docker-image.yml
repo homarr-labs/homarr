@@ -66,7 +66,7 @@ jobs:
       - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
         if: env.SKIP_RELEASE == 'false'
         with:
-          bun-version: 1.4.3
+          bun-version: 1.4.4
       - name: Verify major release intent
         if: env.SKIP_RELEASE == 'false'
         run: |
@@ -153,7 +153,7 @@ jobs:
           images: "${{ env.GHCR_REPO }}"
 
       - name: Log in to the Container registry
-        uses: docker/login-action@dbcb813823bdd20940b903addbd779551569679f # v4.6.0
+        uses: docker/login-action@81c6f93d4bc991e510b342a00b419b3bb4efc5c6 # v4.7.0
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
@@ -181,7 +181,7 @@ jobs:
   build-arm64:
     name: Build docker image for arm64
     needs: release
-    runs-on: ubuntu-24.04-arm
+    runs-on: ubuntu-26.04-arm
     timeout-minutes: 20
     outputs:
       digest: ${{ steps.build.outputs.digest }}
@@ -198,7 +198,7 @@ jobs:
           images: "${{ env.GHCR_REPO }}"
 
       - name: Log in to the Container registry
-        uses: docker/login-action@dbcb813823bdd20940b903addbd779551569679f # v4.6.0
+        uses: docker/login-action@81c6f93d4bc991e510b342a00b419b3bb4efc5c6 # v4.7.0
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
@@ -247,7 +247,7 @@ jobs:
   extract-asset-arm64:
     name: Extract arm64 asset from docker image
     needs: [release, build-arm64]
-    runs-on: ubuntu-24.04-arm
+    runs-on: ubuntu-26.04-arm
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@v7
@@ -284,7 +284,7 @@ jobs:
           permission-contents: write # required to publish the release
 
       - name: Log in to the Container registry
-        uses: docker/login-action@dbcb813823bdd20940b903addbd779551569679f # v4.6.0
+        uses: docker/login-action@81c6f93d4bc991e510b342a00b419b3bb4efc5c6 # v4.7.0
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}

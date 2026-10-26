@@ -799,6 +799,11 @@
       }
     },
     "field": {
+      "url": {
+        "helpLabel": "crwdns11969:0crwdne11969:0",
+        "examples": "crwdns11971:0crwdne11971:0",
+        "requiresHandler": "crwdns11973:0crwdne11973:0"
+      },
       "description": {
         "label": "crwdns326:0crwdne326:0"
       },
@@ -2313,6 +2318,15 @@
         "appId": {
           "label": "crwdns736:0crwdne736:0"
         },
+        "openIn": {
+          "label": "crwdns11975:0crwdne11975:0",
+          "description": "crwdns11977:0crwdne11977:0",
+          "option": {
+            "currentTab": "crwdns11979:0crwdne11979:0",
+            "newTab": "crwdns11981:0crwdne11981:0",
+            "newWindow": "crwdns11983:0crwdne11983:0"
+          }
+        },
         "showTitle": {
           "label": "crwdns740:0crwdne740:0"
         },
@@ -3228,6 +3242,10 @@
         },
         "viewMode": {
           "label": "crwdns11139:0crwdne11139:0"
+        },
+        "hideHeader": {
+          "label": "crwdns11721:0crwdne11721:0",
+          "description": "crwdns11723:0crwdne11723:0"
         }
       },
       "advanced": {
@@ -3245,15 +3263,11 @@
         "agenda": "crwdns11149:0crwdne11149:0"
       },
       "controls": {
-        "view": "crwdns11151:0crwdne11151:0",
         "today": "crwdns11153:0crwdne11153:0",
         "previous": "crwdns11155:0crwdne11155:0",
         "next": "crwdns11157:0crwdne11157:0",
         "noEvents": "crwdns11159:0crwdne11159:0",
         "more": "crwdns11161:0{count}crwdne11161:0",
-        "moreLabel": "crwdns11163:0{count}crwdne11163:0",
-        "eventDetails": "crwdns11165:0crwdne11165:0",
-        "close": "crwdns11167:0crwdne11167:0",
         "timeSlot": "crwdns11169:0crwdne11169:0",
         "weekday": "crwdns11171:0crwdne11171:0"
       }
@@ -4756,29 +4770,61 @@
     },
     "releases": {
       "name": "crwdns3182:0crwdne3182:0",
-      "description": "crwdns3184:0crwdne3184:0",
+      "description": "crwdns11733:0crwdne11733:0",
       "option": {
+        "layout": {
+          "label": "crwdns11735:0crwdne11735:0",
+          "description": "crwdns11737:0crwdne11737:0",
+          "option": {
+            "comfortable": "crwdns11739:0crwdne11739:0",
+            "compact": "crwdns11741:0crwdne11741:0"
+          }
+        },
+        "summary": {
+          "label": "crwdns11743:0crwdne11743:0",
+          "description": "crwdns11745:0crwdne11745:0",
+          "option": {
+            "detailed": "crwdns11747:0crwdne11747:0",
+            "count": "crwdns11749:0crwdne11749:0",
+            "hidden": "crwdns11751:0crwdne11751:0"
+          }
+        },
+        "sections": {
+          "label": "crwdns11753:0crwdne11753:0",
+          "description": "crwdns11755:0crwdne11755:0"
+        },
+        "collapsedSections": {
+          "label": "crwdns11757:0crwdne11757:0",
+          "description": "crwdns11759:0crwdne11759:0"
+        },
         "newReleaseWithin": {
-          "label": "crwdns3186:0crwdne3186:0",
-          "description": "crwdns3258:0crwdne3258:0"
+          "label": "crwdns11761:0crwdne11761:0",
+          "description": "crwdns11763:0crwdne11763:0",
+          "option": {
+            "never": "crwdns11765:0crwdne11765:0",
+            "1d": "crwdns11767:0crwdne11767:0",
+            "3d": "crwdns11769:0crwdne11769:0",
+            "1w": "crwdns11771:0crwdne11771:0",
+            "2w": "crwdns11773:0crwdne11773:0",
+            "1M": "crwdns11775:0crwdne11775:0",
+            "3M": "crwdns11777:0crwdne11777:0"
+          }
         },
         "staleReleaseWithin": {
-          "label": "crwdns3190:0crwdne3190:0",
-          "description": "crwdns3260:0crwdne3260:0"
+          "label": "crwdns11779:0crwdne11779:0",
+          "description": "crwdns11781:0crwdne11781:0",
+          "option": {
+            "never": "crwdns11783:0crwdne11783:0",
+            "1M": "crwdns11785:0crwdne11785:0",
+            "3M": "crwdns11787:0crwdne11787:0",
+            "6M": "crwdns11789:0crwdne11789:0",
+            "1y": "crwdns11791:0crwdne11791:0",
+            "2y": "crwdns11793:0crwdne11793:0"
+          }
         },
-        "showOnlyHighlighted": {
-          "label": "crwdns3194:0crwdne3194:0",
-          "description": "crwdns3196:0crwdne3196:0"
-        },
-        "showDetails": {
-          "label": "crwdns3198:0crwdne3198:0"
-        },
-        "showOnlyIcon": {
-          "label": "crwdns3554:0crwdne3554:0"
-        },
-        "topReleases": {
-          "label": "crwdns3266:0crwdne3266:0",
-          "description": "crwdns3268:0crwdne3268:0"
+        "showChangelogPreview": {
+          "label": "crwdns11795:0crwdne11795:0",
+          "description": "crwdns11797:0crwdne11797:0"
         },
         "repositories": {
           "label": "crwdns3200:0crwdne3200:0",
@@ -4852,36 +4898,106 @@
           }
         }
       },
-      "not-found": "crwdns3234:0crwdne3234:0",
-      "pre-release": "crwdns3236:0crwdne3236:0",
-      "archived": "crwdns3238:0crwdne3238:0",
-      "forked": "crwdns3240:0crwdne3240:0",
+      "summary": {
+        "newReleases": "crwdns11799:0count={count}crwdne11799:0",
+        "newShort": "crwdns11801:0crwdne11801:0",
+        "tracked": "crwdns11803:0{count}crwdne11803:0",
+        "caughtUp": "crwdns11805:0crwdne11805:0",
+        "outdated": "crwdns11807:0count={count}crwdne11807:0",
+        "outdatedShort": "crwdns11809:0crwdne11809:0",
+        "failing": "crwdns11811:0crwdne11811:0",
+        "failingShort": "crwdns11813:0crwdne11813:0",
+        "latest": "crwdns11815:0{name}crwdnd11815:0{version}crwdnd11815:0{time}crwdne11815:0",
+        "issues": "crwdns11817:0count={count}crwdne11817:0"
+      },
+      "section": {
+        "new": {
+          "label": "crwdns11819:0crwdne11819:0",
+          "description": "crwdns11821:0crwdne11821:0"
+        },
+        "attention": {
+          "label": "crwdns11823:0crwdne11823:0",
+          "description": "crwdns11825:0crwdne11825:0"
+        },
+        "upToDate": {
+          "label": "crwdns11827:0crwdne11827:0",
+          "description": "crwdns11829:0crwdne11829:0"
+        },
+        "quiet": {
+          "label": "crwdns11831:0crwdne11831:0",
+          "description": "crwdns11833:0crwdne11833:0"
+        }
+      },
+      "status": {
+        "new": "crwdns11835:0crwdne11835:0",
+        "outdated": "crwdns11837:0crwdne11837:0",
+        "error": "crwdns11839:0crwdne11839:0",
+        "upToDate": "crwdns11841:0crwdne11841:0",
+        "quiet": "crwdns11843:0crwdne11843:0"
+      },
+      "tag": {
+        "new": "crwdns11845:0crwdne11845:0",
+        "preRelease": "crwdns11847:0crwdne11847:0",
+        "resolvedFrom": "crwdns11849:0{tag}crwdne11849:0",
+        "quiet": "crwdns11851:0crwdne11851:0",
+        "archived": "crwdns11853:0crwdne11853:0",
+        "fork": "crwdns11855:0crwdne11855:0"
+      },
+      "issue": {
+        "affected": "crwdns11857:0count={count}crwdne11857:0",
+        "rateLimited": {
+          "title": "crwdns11859:0{provider}crwdne11859:0",
+          "hint": "crwdns11861:0crwdne11861:0"
+        },
+        "notFound": {
+          "title": "crwdns11863:0crwdne11863:0",
+          "hint": "crwdns11865:0crwdne11865:0"
+        },
+        "noMatchingVersion": {
+          "title": "crwdns11867:0crwdne11867:0",
+          "hint": "crwdns11869:0crwdne11869:0"
+        },
+        "noReleasesFound": {
+          "title": "crwdns11871:0crwdne11871:0",
+          "hint": "crwdns11873:0crwdne11873:0"
+        },
+        "invalidIdentifier": {
+          "title": "crwdns11875:0crwdne11875:0",
+          "hint": "crwdns11877:0crwdne11877:0"
+        },
+        "noProviderSelected": {
+          "title": "crwdns11879:0crwdne11879:0",
+          "hint": "crwdns11881:0crwdne11881:0"
+        },
+        "noProviderResponse": {
+          "title": "crwdns11883:0{provider}crwdne11883:0",
+          "hint": "crwdns11885:0crwdne11885:0"
+        },
+        "unexpected": {
+          "title": "crwdns11887:0{provider}crwdne11887:0",
+          "hint": "crwdns11889:0crwdne11889:0"
+        }
+      },
+      "markViewed": "crwdns3556:0crwdne3556:0",
+      "markAllViewed": "crwdns11891:0crwdne11891:0",
+      "markEntryViewed": "crwdns11893:0{name}crwdnd11893:0{version}crwdne11893:0",
+      "viewed": "crwdns11895:0crwdne11895:0",
+      "copyVersion": "crwdns11897:0crwdne11897:0",
+      "copied": "crwdns11899:0crwdne11899:0",
+      "published": "crwdns11901:0{time}crwdne11901:0",
+      "whatChanged": "crwdns11903:0crwdne11903:0",
+      "noNotes": "crwdns11905:0{provider}crwdne11905:0",
+      "changes": "crwdns11907:0count={count}crwdne11907:0",
       "starsCount": "crwdns3242:0crwdne3242:0",
       "forksCount": "crwdns3244:0crwdne3244:0",
-      "issuesCount": "crwdns3246:0crwdne3246:0",
-      "markViewed": "crwdns3556:0crwdne3556:0",
-      "openProjectPage": "crwdns3248:0crwdne3248:0",
-      "openReleasePage": "crwdns3250:0crwdne3250:0",
-      "releaseDescription": "crwdns3252:0crwdne3252:0",
-      "projectDescription": "crwdns3522:0crwdne3522:0",
+      "openIssues": "crwdns11909:0count={count}crwdne11909:0",
+      "created": "crwdns11911:0{time}crwdne11911:0",
+      "releasePage": "crwdns11913:0crwdne11913:0",
+      "projectPage": "crwdns11915:0crwdne11915:0",
       "runningVersions": "crwdns11131:0crwdne11131:0",
       "upToDate": "crwdns11133:0crwdne11133:0",
       "updateAvailable": "crwdns11135:0crwdne11135:0",
-      "unknownStatus": "crwdns11137:0crwdne11137:0",
-      "created": "crwdns3254:0crwdne3254:0",
-      "error": {
-        "label": "crwdns3262:0crwdne3262:0",
-        "messages": {
-          "invalidIdentifier": "crwdns3512:0crwdne3512:0",
-          "noMatchingVersion": "crwdns3514:0crwdne3514:0",
-          "noReleasesFound": "crwdns3516:0crwdne3516:0",
-          "noProviderSelected": "crwdns5735:0crwdne5735:0",
-          "noProviderResponse": "crwdns3520:0crwdne3520:0",
-          "unexpected": "crwdns5737:0crwdne5737:0"
-        }
-      },
-      "expandDetails": "crwdns8771:0{name}crwdne8771:0",
-      "collapseDetails": "crwdns8773:0{name}crwdne8773:0"
+      "unknownStatus": "crwdns11137:0crwdne11137:0"
     },
     "networkControllerSummary": {
       "advanced": {
@@ -5054,6 +5170,14 @@
     "uptimeKuma": {
       "description": "crwdns11203:0crwdne11203:0",
       "option": {
+        "statusPageSlug": {
+          "label": "crwdns11713:0crwdne11713:0",
+          "description": "crwdns11715:0crwdne11715:0"
+        },
+        "summaryOnly": {
+          "label": "crwdns11717:0crwdne11717:0",
+          "description": "crwdns11719:0crwdne11719:0"
+        },
         "showSummary": {
           "label": "crwdns11205:0crwdne11205:0",
           "description": "crwdns11207:0crwdne11207:0"
@@ -6072,6 +6196,18 @@
       "addApp": "crwdns9543:0crwdne9543:0",
       "connectService": "crwdns9545:0crwdne9545:0"
     },
+    "urlDrop": {
+      "hint": "crwdns11725:0crwdne11725:0",
+      "resolving": "crwdns11727:0crwdne11727:0",
+      "notification": {
+        "success": {
+          "message": "crwdns11729:0{name}crwdne11729:0"
+        },
+        "full": {
+          "message": "crwdns11731:0crwdne11731:0"
+        }
+      }
+    },
     "setupChecklist": {
       "title": "crwdns9547:0crwdne9547:0",
       "description": "crwdns9549:0crwdne9549:0",
@@ -6197,11 +6333,11 @@
         "label": "crwdns1434:0crwdne1434:0"
       },
       "backgroundImageUrl": {
-        "label": "crwdns1436:0crwdne1436:0",
-        "placeholder": "crwdns3109:0crwdne3109:0",
+        "label": "crwdns11917:0crwdne11917:0",
+        "placeholder": "crwdns11919:0crwdne11919:0",
         "group": {
-          "your": "crwdns3111:0crwdne3111:0",
-          "other": "crwdns3113:0crwdne3113:0"
+          "your": "crwdns11921:0crwdne11921:0",
+          "other": "crwdns11923:0crwdne11923:0"
         }
       },
       "backgroundImageAttachment": {
@@ -6239,15 +6375,15 @@
         }
       },
       "backgroundImageSize": {
-        "label": "crwdns1466:0crwdne1466:0",
+        "label": "crwdns11925:0crwdne11925:0",
         "option": {
           "cover": {
             "label": "crwdns1468:0crwdne1468:0",
-            "description": "crwdns1470:0crwdne1470:0"
+            "description": "crwdns11927:0crwdne11927:0"
           },
           "contain": {
             "label": "crwdns1472:0crwdne1472:0",
-            "description": "crwdns1474:0crwdne1474:0"
+            "description": "crwdns11929:0crwdne11929:0"
           }
         }
       },
@@ -8677,6 +8813,14 @@
     "conversationActions": "crwdns10343:0crwdne10343:0",
     "searchConversations": "crwdns10345:0crwdne10345:0",
     "noMatchingConversations": "crwdns10347:0crwdne10347:0",
+    "historyError": {
+      "title": "crwdns11931:0crwdne11931:0",
+      "load": "crwdns11933:0crwdne11933:0",
+      "loadMessages": "crwdns11935:0crwdne11935:0",
+      "saveMessages": "crwdns11937:0crwdne11937:0",
+      "switch": "crwdns11939:0crwdne11939:0",
+      "retry": "crwdns11941:0crwdne11941:0"
+    },
     "moreActions": "crwdns10349:0crwdne10349:0",
     "renameConversation": {
       "action": "crwdns10351:0crwdne10351:0",
@@ -8698,7 +8842,7 @@
     "suggestions": {
       "health": {
         "label": "crwdns10377:0crwdne10377:0",
-        "prompt": "crwdns10379:0crwdne10379:0"
+        "prompt": "crwdns11943:0crwdne11943:0"
       },
       "explore": {
         "label": "crwdns10381:0crwdne10381:0",
@@ -8714,7 +8858,7 @@
       },
       "designWidget": {
         "label": "crwdns10393:0crwdne10393:0",
-        "prompt": "crwdns10395:0crwdne10395:0"
+        "prompt": "crwdns11945:0crwdne11945:0"
       }
     },
     "composerPlaceholder": "crwdns10397:0crwdne10397:0",
@@ -8796,6 +8940,9 @@
     },
     "mentions": {
       "menu": "crwdns10523:0crwdne10523:0",
+      "back": "crwdns11947:0crwdne11947:0",
+      "loading": "crwdns11949:0crwdne11949:0",
+      "empty": "crwdns11951:0crwdne11951:0",
       "context": "crwdns10525:0crwdne10525:0",
       "app": "crwdns10527:0crwdne10527:0",
       "integration": "crwdns10529:0crwdne10529:0",
@@ -8810,11 +8957,13 @@
     },
     "commands": {
       "menu": "crwdns10543:0crwdne10543:0",
-      "health": "crwdns10545:0crwdne10545:0",
-      "explore": "crwdns10547:0crwdne10547:0",
-      "media": "crwdns10549:0crwdne10549:0",
-      "style": "crwdns10551:0crwdne10551:0",
-      "designWidget": "crwdns10553:0crwdne10553:0"
+      "hint": "crwdns11953:0crwdne11953:0",
+      "empty": "crwdns11955:0crwdne11955:0",
+      "health": "crwdns11957:0crwdne11957:0",
+      "explore": "crwdns11959:0crwdne11959:0",
+      "media": "crwdns11961:0crwdne11961:0",
+      "style": "crwdns11963:0crwdne11963:0",
+      "designWidget": "crwdns11965:0crwdne11965:0"
     },
     "usage": {
       "tokens": "crwdns10555:0crwdne10555:0",
@@ -8992,6 +9141,7 @@
     "approvalDescription": "crwdns10837:0crwdne10837:0",
     "approveAndRun": "crwdns10839:0crwdne10839:0",
     "deny": "crwdns10841:0crwdne10841:0",
+    "approvalError": "crwdns11967:0crwdne11967:0",
     "autoApproval": {
       "label": "crwdns10843:0crwdne10843:0",
       "composerLabel": "crwdns10845:0crwdne10845:0",

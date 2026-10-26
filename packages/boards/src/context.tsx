@@ -9,6 +9,7 @@ import { clientApi } from "@homarr/api/client";
 import { createQueryHydrationSnapshot } from "./query-hydration";
 import { useQueryClient } from "@tanstack/react-query";
 
+import { useEditMode } from "./edit-mode";
 import { boardViewportWidthCookieName, getLayoutIdForViewportWidth } from "./layout-selection";
 import { updateBoardName } from "./updater";
 
@@ -284,6 +285,7 @@ export const BoardProvider = ({
   initialViewportWidth: number;
   layoutOverrideId?: string | null;
 }>) => {
+  const [isEditMode] = useEditMode();
   const { data } = clientApi.board.getBoardByName.useQuery(
     { name: initialBoard.name },
     {
@@ -292,6 +294,9 @@ export const BoardProvider = ({
       // avoid an immediate duplicate request while still surfacing remote edits
       // when a user later returns to the board.
       staleTime: 30_000,
+      // A refetch would replace the unsaved changes of edit mode with the saved board.
+      refetchOnWindowFocus: !isEditMode,
+      refetchOnReconnect: !isEditMode,
     },
   );
   const currentLayout = useSyncExternalStore(
@@ -305,6 +310,14 @@ export const BoardProvider = ({
 
   const pathname = usePathname();
   const utils = clientApi.useUtils();
+
+  // A refetch started just before edit mode turned on (e.g. from window focus) is not
+  // covered by the refetchOnWindowFocus/refetchOnReconnect guard below, since that guard
+  // only stops new refetches. Cancelling here stops that in-flight one from resolving
+  // later and overwriting unsaved edit mode changes.
+  useEffect(() => {
+    if (isEditMode) void utils.board.getBoardByName.cancel({ name: initialBoard.name });
+  }, [isEditMode, utils, initialBoard.name]);
 
   // Invalidate the board when the pathname changes
   // This allows to refetch the board when it might have changed - e.g. if someone else added an item

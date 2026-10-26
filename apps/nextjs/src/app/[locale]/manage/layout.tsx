@@ -166,6 +166,7 @@ async function ManageLayoutContent({ children }: PropsWithChildren) {
           label: t("items.tools.items.kubernetes"),
           icon: IconBox,
           href: "/manage/tools/kubernetes",
+          prefetch: false,
           hidden: !(session?.user.permissions.includes("admin") && env.ENABLE_KUBERNETES),
         },
         {

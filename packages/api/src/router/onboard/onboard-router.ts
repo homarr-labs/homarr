@@ -843,13 +843,13 @@ export const onboardRouter = createTRPCRouter({
       );
       for (const app of selectedApps.filter((app) => !dockerSourceByAppId.has(app.id))) {
         if (existingAppIds.has(app.id)) continue;
-        placeNewItem("app", SuperJSON.stringify({ appId: app.id, openInNewTab: true, showTitle: true }), 1, 1);
+        placeNewItem("app", SuperJSON.stringify({ appId: app.id, openIn: "newTab", showTitle: true }), 1, 1);
       }
 
       for (const service of ungroupedDockerSources) {
         const app = selectedApps.find((candidate) => candidate.id === stableOnboardingId("app", service.sourceId));
         if (app && !existingAppIds.has(app.id)) {
-          placeNewItem("app", SuperJSON.stringify({ appId: app.id, openInNewTab: true, showTitle: true }), 1, 1);
+          placeNewItem("app", SuperJSON.stringify({ appId: app.id, openIn: "newTab", showTitle: true }), 1, 1);
         }
         const plan = getDockerWidgetPlan(service);
         if (!plan || linkExistingDockerWidget(plan.widgetKind, plan.integration)) continue;
@@ -889,7 +889,7 @@ export const onboardRouter = createTRPCRouter({
           if (app && !existingAppIds.has(app.id)) {
             groupedItemPlans.push({
               kind: "app",
-              options: SuperJSON.stringify({ appId: app.id, openInNewTab: true, showTitle: true }),
+              options: SuperJSON.stringify({ appId: app.id, openIn: "newTab", showTitle: true }),
               width: 1,
               height: 1,
             });

@@ -4,8 +4,12 @@ import { useEffect, useState } from "react";
 import { Alert, Button, Card, Center, PasswordInput, Stack, Text, TextInput, ThemeIcon, Title } from "@mantine/core";
 import { IconCheck, IconKey, IconLock } from "@tabler/icons-react";
 
-import { isCustomWidgetSourceUrlPlaceholder } from "@homarr/custom-widgets/core";
-import type { CustomWidgetSource } from "@homarr/custom-widgets/core";
+import {
+  isCustomWidgetSourceUrlPlaceholder,
+  isCustomWidgetHeaderSecretKind,
+  getCustomWidgetSecretRequirements,
+} from "@homarr/custom-widgets/core";
+import type { CustomWidgetSource, CustomWidgetSecretKind } from "@homarr/custom-widgets/core";
 import { IntegrationSourceSelect } from "~/components/custom-widgets/integration-source-select";
 
 import { useI18n } from "@homarr/translation/client";
@@ -13,7 +17,7 @@ import { useI18n } from "@homarr/translation/client";
 interface RequestDetails {
   widgetName: string;
   sourceName: string;
-  kinds: Array<"apiKey" | "username" | "password">;
+  kinds: CustomWidgetSecretKind[];
   expiresAt: number;
   status: "pending" | "applying" | "completed";
   source: CustomWidgetSource;
@@ -116,10 +120,16 @@ export function CustomWidgetConfigurationEntry({ token }: { token: string }) {
               )}
               {details.kinds.map((kind) => {
                 const Input = kind === "username" ? TextInput : PasswordInput;
+                let label: string;
+                if (isCustomWidgetHeaderSecretKind(kind)) {
+                  label =
+                    getCustomWidgetSecretRequirements({ default: details.source }).find((field) => field.kind === kind)
+                      ?.destination ?? kind.slice(7);
+                } else label = tSecret(kind);
                 return (
                   <Input
                     key={kind}
-                    label={tSecret(kind)}
+                    label={label}
                     leftSection={<IconKey size={16} />}
                     value={values[kind] ?? ""}
                     onChange={(event) => {

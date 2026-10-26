@@ -799,6 +799,11 @@
       }
     },
     "field": {
+      "url": {
+        "helpLabel": "Przykłady formatów URL",
+        "examples": "Przykłady obsługiwanych linków",
+        "requiresHandler": "Niestandardowe protokoły wymagają powiązanej aplikacji na urządzeniu."
+      },
       "description": {
         "label": "Opis"
       },
@@ -2313,6 +2318,15 @@
         "appId": {
           "label": "Wybierz aplikację"
         },
+        "openIn": {
+          "label": "Otwórz aplikację w",
+          "description": "Wybierz, gdzie otworzyć tę aplikację. Ustawienia przeglądarki mogą zmienić otwieranie w osobnym oknie.",
+          "option": {
+            "currentTab": "Bieżącej karcie",
+            "newTab": "Nowej karcie",
+            "newWindow": "Nowym oknie"
+          }
+        },
         "showTitle": {
           "label": "Pokaż nazwę aplikacji"
         },
@@ -3228,6 +3242,10 @@
         },
         "viewMode": {
           "label": "Widok"
+        },
+        "hideHeader": {
+          "label": "",
+          "description": ""
         }
       },
       "advanced": {
@@ -3245,15 +3263,11 @@
         "agenda": "Harmonogram"
       },
       "controls": {
-        "view": "Widok kalendarza",
         "today": "Dzisiaj",
         "previous": "Poprzedni okres",
         "next": "Następny okres",
         "noEvents": "Brak wydarzeń w tym okresie",
         "more": "",
-        "moreLabel": "",
-        "eventDetails": "Szczegóły wydarzenia",
-        "close": "Zamknij szczegóły wydarzenia",
         "timeSlot": "Przedział czasowy",
         "weekday": "Dzień tygodnia"
       }
@@ -4758,27 +4772,59 @@
       "name": "Wydania",
       "description": "Wyświetla listę aktualnych wersji podanych repozytoriów na podstawie podanego wyrażenia regularnego wersji.",
       "option": {
+        "layout": {
+          "label": "Układ",
+          "description": "",
+          "option": {
+            "comfortable": "Komfortowalne",
+            "compact": "Kompaktowy"
+          }
+        },
+        "summary": {
+          "label": "",
+          "description": "",
+          "option": {
+            "detailed": "",
+            "count": "",
+            "hidden": "Ukryty"
+          }
+        },
+        "sections": {
+          "label": "",
+          "description": ""
+        },
+        "collapsedSections": {
+          "label": "",
+          "description": ""
+        },
         "newReleaseWithin": {
           "label": "Nowe wydanie w ciągu",
-          "description": "Przykład użycia: 1w (1 tydzień), 10M (10 miesięcy). Obsługiwane jednostki: h (godziny), d (dni), w (tygodnie), M (miesiące), y (lata). Pozostaw puste, aby nie wyróżniać nowych wydań."
+          "description": "Przykład użycia: 1w (1 tydzień), 10M (10 miesięcy). Obsługiwane jednostki: h (godziny), d (dni), w (tygodnie), M (miesiące), y (lata). Pozostaw puste, aby nie wyróżniać nowych wydań.",
+          "option": {
+            "never": "",
+            "1d": "1 dni",
+            "3d": "3 dni",
+            "1w": "1 tydzień",
+            "2w": "",
+            "1M": "1 miesiąc",
+            "3M": "3 miesięcy"
+          }
         },
         "staleReleaseWithin": {
           "label": "Nieaktualne wydanie w ciągu",
-          "description": "Przykład użycia: 1w (1 tydzień), 10M (10 miesięcy). Obsługiwane jednostki: h (godziny), d (dni), w (tygodnie), M (miesiące), y (lata). Pozostaw puste, aby nie wyróżniać nieaktualnych wydań."
+          "description": "Przykład użycia: 1w (1 tydzień), 10M (10 miesięcy). Obsługiwane jednostki: h (godziny), d (dni), w (tygodnie), M (miesiące), y (lata). Pozostaw puste, aby nie wyróżniać nieaktualnych wydań.",
+          "option": {
+            "never": "",
+            "1M": "1 miesiąc",
+            "3M": "3 miesięcy",
+            "6M": "6 miesięcy",
+            "1y": "1 rok",
+            "2y": "2 lat"
+          }
         },
-        "showOnlyHighlighted": {
-          "label": "Pokaż tylko wyróżnione",
-          "description": "„Pokaż tylko nowe lub nieaktualne wydania. Zgodnie z powyższymi ustawieniami.”."
-        },
-        "showDetails": {
-          "label": "Pokaż szczegóły"
-        },
-        "showOnlyIcon": {
-          "label": "Pokaż tylko ikonę"
-        },
-        "topReleases": {
-          "label": "Najlepsze wydania",
-          "description": "Maksymalna liczba najnowszych wydań do wyświetlenia. Zero oznacza brak limitu."
+        "showChangelogPreview": {
+          "label": "",
+          "description": ""
         },
         "repositories": {
           "label": "Repozytoria",
@@ -4852,36 +4898,106 @@
           }
         }
       },
-      "not-found": "Nie znaleziono",
-      "pre-release": "Wersja wstępna",
-      "archived": "Archiwalny",
-      "forked": "Forkowane",
+      "summary": {
+        "newReleases": "",
+        "newShort": "nowa",
+        "tracked": "",
+        "caughtUp": "",
+        "outdated": "",
+        "outdatedShort": "nieaktualny",
+        "failing": "",
+        "failingShort": "",
+        "latest": "",
+        "issues": ""
+      },
+      "section": {
+        "new": {
+          "label": "Nowa",
+          "description": ""
+        },
+        "attention": {
+          "label": "Potrzebne uwagi",
+          "description": ""
+        },
+        "upToDate": {
+          "label": "Na bieżąco",
+          "description": ""
+        },
+        "quiet": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "status": {
+        "new": "",
+        "outdated": "",
+        "error": "",
+        "upToDate": "na bieżąco",
+        "quiet": ""
+      },
+      "tag": {
+        "new": "Nowa",
+        "preRelease": "",
+        "resolvedFrom": "",
+        "quiet": "",
+        "archived": "Archiwalny",
+        "fork": ""
+      },
+      "issue": {
+        "affected": "",
+        "rateLimited": {
+          "title": "",
+          "hint": ""
+        },
+        "notFound": {
+          "title": "",
+          "hint": ""
+        },
+        "noMatchingVersion": {
+          "title": "",
+          "hint": ""
+        },
+        "noReleasesFound": {
+          "title": "",
+          "hint": ""
+        },
+        "invalidIdentifier": {
+          "title": "Nieprawidłowy identyfikator",
+          "hint": ""
+        },
+        "noProviderSelected": {
+          "title": "Nie wybrano dostawcy",
+          "hint": ""
+        },
+        "noProviderResponse": {
+          "title": "",
+          "hint": ""
+        },
+        "unexpected": {
+          "title": "",
+          "hint": ""
+        }
+      },
+      "markViewed": "Oznacz jako przeczytane",
+      "markAllViewed": "",
+      "markEntryViewed": "",
+      "viewed": "",
+      "copyVersion": "",
+      "copied": "Skopiowano",
+      "published": "",
+      "whatChanged": "",
+      "noNotes": "",
+      "changes": "",
       "starsCount": "Gwiazdki",
       "forksCount": "Forki",
-      "issuesCount": "Otwarte zgłoszenia",
-      "markViewed": "Oznacz jako przeczytane",
-      "openProjectPage": "Otwórz stronę projektu",
-      "openReleasePage": "Otwórz stronę wydania",
-      "releaseDescription": "Opis wydania",
-      "projectDescription": "Opis projektu",
+      "openIssues": "",
+      "created": "Utworzony",
+      "releasePage": "",
+      "projectPage": "",
       "runningVersions": "Uruchamianie wersji",
       "upToDate": "Na bieżąco",
       "updateAvailable": "Dostępna aktualizacja",
-      "unknownStatus": "Nieznany",
-      "created": "Utworzony",
-      "error": {
-        "label": "Błąd",
-        "messages": {
-          "invalidIdentifier": "Nieprawidłowy identyfikator",
-          "noMatchingVersion": "Nie znaleziono pasującej wersji",
-          "noReleasesFound": "Nie znaleziono wydań",
-          "noProviderSelected": "Nie wybrano dostawcy",
-          "noProviderResponse": "Brak odpowiedzi od dostawcy",
-          "unexpected": "Nieoczekiwany błąd dostawcy"
-        }
-      },
-      "expandDetails": "Pokaż szczegóły dla {name}",
-      "collapseDetails": "Ukryj szczegóły dla {name}"
+      "unknownStatus": "Nieznany"
     },
     "networkControllerSummary": {
       "advanced": {
@@ -5054,6 +5170,14 @@
     "uptimeKuma": {
       "description": "Monitoruj statystyki czasu pracy ze strony statusu Uptime Kuma",
       "option": {
+        "statusPageSlug": {
+          "label": "Slug strony statusu",
+          "description": ""
+        },
+        "summaryOnly": {
+          "label": "",
+          "description": ""
+        },
         "showSummary": {
           "label": "",
           "description": ""
@@ -6071,6 +6195,18 @@
       "addWidget": "Dodaj widżet",
       "addApp": "Dodaj aplikację",
       "connectService": "Połącz usługę"
+    },
+    "urlDrop": {
+      "hint": "",
+      "resolving": "",
+      "notification": {
+        "success": {
+          "message": ""
+        },
+        "full": {
+          "message": ""
+        }
+      }
     },
     "setupChecklist": {
       "title": "Spraw, by ten dział był użyteczny",
@@ -8677,6 +8813,14 @@
     "conversationActions": "Akcje konwersacji",
     "searchConversations": "Szukaj konwersacji",
     "noMatchingConversations": "Brak pasujących konwersacji",
+    "historyError": {
+      "title": "",
+      "load": "",
+      "loadMessages": "",
+      "saveMessages": "",
+      "switch": "",
+      "retry": ""
+    },
     "moreActions": "Więcej działań",
     "renameConversation": {
       "action": "Zmień nazwę",
@@ -8796,6 +8940,9 @@
     },
     "mentions": {
       "menu": "Dodaj kontekst Homarr",
+      "back": "",
+      "loading": "",
+      "empty": "",
       "context": "Kontekst",
       "app": "Aplikacje",
       "integration": "Integracje",
@@ -8810,6 +8957,8 @@
     },
     "commands": {
       "menu": "Polecenia asystenta",
+      "hint": "",
+      "empty": "",
       "health": "Przygotuj ocenę usług i zdrowia",
       "explore": "Przygotuj przegląd tej instancji Homarr",
       "media": "Przygotuj wyszukiwanie mediów",
@@ -8992,6 +9141,7 @@
     "approvalDescription": "Przejrzyj tę zmianę przed jej uruchomieniem.",
     "approveAndRun": "Zatwierdź i uruchom",
     "deny": "Odmowa",
+    "approvalError": "",
     "autoApproval": {
       "label": "Zatwierdzenia automatyczne",
       "composerLabel": "Zatwierdź dla mnie",

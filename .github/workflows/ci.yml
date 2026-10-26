@@ -351,7 +351,7 @@ jobs:
 
       - name: Log in to GHCR
         if: "!env.ACT"
-        uses: docker/login-action@dbcb813823bdd20940b903addbd779551569679f # v4.6.0
+        uses: docker/login-action@81c6f93d4bc991e510b342a00b419b3bb4efc5c6 # v4.7.0
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
@@ -387,7 +387,7 @@ jobs:
         (github.event_name == 'push' && github.ref == 'refs/heads/release/v2') ||
         (github.event_name == 'workflow_dispatch' && inputs.operation == 'publish')
       )
-    runs-on: ubuntu-24.04-arm
+    runs-on: ubuntu-26.04-arm
     timeout-minutes: 20
     permissions:
       contents: read
@@ -403,7 +403,7 @@ jobs:
 
       - name: Log in to GHCR
         if: "!env.ACT"
-        uses: docker/login-action@dbcb813823bdd20940b903addbd779551569679f # v4.6.0
+        uses: docker/login-action@81c6f93d4bc991e510b342a00b419b3bb4efc5c6 # v4.7.0
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
@@ -454,7 +454,7 @@ jobs:
     steps:
       - name: Log in to GHCR
         if: "!env.ACT"
-        uses: docker/login-action@dbcb813823bdd20940b903addbd779551569679f # v4.6.0
+        uses: docker/login-action@81c6f93d4bc991e510b342a00b419b3bb4efc5c6 # v4.7.0
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
@@ -466,7 +466,7 @@ jobs:
 
       - name: Verify PR head before publication
         if: github.event_name == 'pull_request'
-        uses: actions/github-script@v8
+        uses: actions/github-script@v9
         env:
           EXPECTED_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
         with:
@@ -512,7 +512,7 @@ jobs:
 
       - name: Comment with preview image
         if: github.event_name == 'pull_request' && !env.ACT
-        uses: actions/github-script@v8
+        uses: actions/github-script@v9
         with:
           script: |
             const marker = "<!-- homarr-preview-image -->";
@@ -561,7 +561,7 @@ jobs:
 
       - name: Delete GHCR package version
         if: "!env.ACT"
-        uses: actions/github-script@v8
+        uses: actions/github-script@v9
         with:
           script: |
             const packageName = "homarr-test";

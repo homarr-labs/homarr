@@ -29,7 +29,7 @@ export const widgetQueryRefetchIntervals = [
   { queryKey: [["widget", "immich", "getAlbums"]], intervalSeconds: null },
   { queryKey: [["widget", "indexerManager"]], intervalSeconds: null },
   { queryKey: [["widget", "mediaRelease"]], intervalSeconds: null },
-  { queryKey: [["widget", "mediaTranscoding", "getDataAsync"]], intervalSeconds: null },
+  { queryKey: [["widget", "mediaTranscoding", "getDataAsync"]], intervalSeconds: 10 },
   { queryKey: [["widget", "minecraft", "getServerStatus"]], intervalSeconds: null },
   { queryKey: [["widget", "networkController"]], intervalSeconds: null },
   { queryKey: [["widget", "paperlessNgx"]], intervalSeconds: null },

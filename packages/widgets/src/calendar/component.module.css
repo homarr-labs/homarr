@@ -57,10 +57,11 @@
 }
 .root .weekday {
   padding: 0;
-  font-size: clamp(8px, calc(var(--calendar-cell) * 0.4), 20px);
+  font-size: var(--mantine-font-size-sm);
 }
 .compactDay {
-  --calendar-font: clamp(8px, calc(var(--calendar-cell) * 0.6), 36px);
+  --calendar-max-font: var(--mantine-font-size-xs);
+  --calendar-font: clamp(8px, calc(var(--calendar-cell) * 0.6), var(--calendar-max-font));
   --indicator-size: clamp(3px, calc(var(--calendar-font) * 0.28), 10px);
   position: relative;
   width: 100%;
@@ -77,6 +78,21 @@
 .compactDayNumber {
   font-size: var(--calendar-font);
   line-height: 1;
+}
+@container (min-width: 250px) and (min-height: 250px) {
+  .compactDay {
+    --calendar-max-font: var(--mantine-font-size-sm);
+  }
+}
+@container (min-width: 450px) and (min-height: 450px) {
+  .compactDay {
+    --calendar-max-font: var(--mantine-font-size-md);
+  }
+}
+@container (min-width: 700px) and (min-height: 700px) {
+  .compactDay {
+    --calendar-max-font: var(--mantine-font-size-lg);
+  }
 }
 .indicators {
   position: absolute;

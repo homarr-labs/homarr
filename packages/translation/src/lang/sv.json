@@ -799,6 +799,11 @@
       }
     },
     "field": {
+      "url": {
+        "helpLabel": "Exempel på URL-format",
+        "examples": "Exempel på länkar som stöds",
+        "requiresHandler": "Anpassade protokoll kräver en associerad app på din enhet."
+      },
       "description": {
         "label": "Beskrivning"
       },
@@ -2313,6 +2318,15 @@
         "appId": {
           "label": "Välj applikation"
         },
+        "openIn": {
+          "label": "Öppna app i",
+          "description": "Välj var den här appen ska öppnas. Dina webbläsarinställningar kan åsidosätta öppning i ett separat fönster.",
+          "option": {
+            "currentTab": "Aktuell flik",
+            "newTab": "Ny flik",
+            "newWindow": "Nytt fönster"
+          }
+        },
         "showTitle": {
           "label": "Visa applikationsnamn"
         },
@@ -3228,6 +3242,10 @@
         },
         "viewMode": {
           "label": "Visa"
+        },
+        "hideHeader": {
+          "label": "",
+          "description": ""
         }
       },
       "advanced": {
@@ -3245,15 +3263,11 @@
         "agenda": "Föredragningslista"
       },
       "controls": {
-        "view": "Kalender vy",
         "today": "Idag",
         "previous": "Föregående period",
         "next": "Nästa period",
         "noEvents": "Inga händelser i denna period",
         "more": "{count} mer",
-        "moreLabel": "Visa {count} fler händelser",
-        "eventDetails": "Händelse detaljer",
-        "close": "Stäng händelsedetaljer",
         "timeSlot": "Tidsgräns",
         "weekday": "Veckodag"
       }
@@ -4758,27 +4772,59 @@
       "name": "Versioner",
       "description": "Visar en lista över den aktuella versionen för angivna arkiv med angivet versionsregex.",
       "option": {
+        "layout": {
+          "label": "",
+          "description": "",
+          "option": {
+            "comfortable": "Bekväm",
+            "compact": "Kompakt"
+          }
+        },
+        "summary": {
+          "label": "",
+          "description": "",
+          "option": {
+            "detailed": "",
+            "count": "",
+            "hidden": ""
+          }
+        },
+        "sections": {
+          "label": "",
+          "description": ""
+        },
+        "collapsedSections": {
+          "label": "",
+          "description": ""
+        },
         "newReleaseWithin": {
           "label": "Ny version inom",
-          "description": "Användningsexempel: 1w (1 vecka), 10M (10 månader). Godkända enhetstyper är h (timmar), d (dagar), w (veckor), M (månader) och y (år). Lämna tomt för att inte markera nya versioner."
+          "description": "Användningsexempel: 1w (1 vecka), 10M (10 månader). Godkända enhetstyper är h (timmar), d (dagar), w (veckor), M (månader) och y (år). Lämna tomt för att inte markera nya versioner.",
+          "option": {
+            "never": "",
+            "1d": "",
+            "3d": "",
+            "1w": "",
+            "2w": "",
+            "1M": "",
+            "3M": ""
+          }
         },
         "staleReleaseWithin": {
           "label": "Inaktuell version inom",
-          "description": "Användningsexempel: 1w (1 vecka), 10M (10 månader). Godkända enhetstyper är h (timmar), d (dagar), w (veckor), M (månader) och y (år). Lämna tomt för att inte markera inaktuella versioner."
+          "description": "Användningsexempel: 1w (1 vecka), 10M (10 månader). Godkända enhetstyper är h (timmar), d (dagar), w (veckor), M (månader) och y (år). Lämna tomt för att inte markera inaktuella versioner.",
+          "option": {
+            "never": "",
+            "1M": "",
+            "3M": "",
+            "6M": "",
+            "1y": "",
+            "2y": ""
+          }
         },
-        "showOnlyHighlighted": {
-          "label": "Visa endast markerade",
-          "description": "Visa endast nya eller inaktuella versioner enligt ovan."
-        },
-        "showDetails": {
-          "label": "Visa detaljer"
-        },
-        "showOnlyIcon": {
-          "label": "Visa endast ikon"
-        },
-        "topReleases": {
-          "label": "Toppversioner",
-          "description": "Maximalt antal senaste versioner som ska visas. Noll betyder ingen begränsning."
+        "showChangelogPreview": {
+          "label": "",
+          "description": ""
         },
         "repositories": {
           "label": "Arkiv",
@@ -4852,36 +4898,106 @@
           }
         }
       },
-      "not-found": "Hittades inte",
-      "pre-release": "Förhandsversion",
-      "archived": "Arkiverad",
-      "forked": "Förgrenad",
+      "summary": {
+        "newReleases": "",
+        "newShort": "ny",
+        "tracked": "",
+        "caughtUp": "",
+        "outdated": "",
+        "outdatedShort": "föråldrade",
+        "failing": "",
+        "failingShort": "",
+        "latest": "",
+        "issues": ""
+      },
+      "section": {
+        "new": {
+          "label": "Ny",
+          "description": ""
+        },
+        "attention": {
+          "label": "Behöver uppmärksamhet",
+          "description": ""
+        },
+        "upToDate": {
+          "label": "Senast uppdaterad",
+          "description": ""
+        },
+        "quiet": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "status": {
+        "new": "",
+        "outdated": "",
+        "error": "",
+        "upToDate": "senast uppdaterad",
+        "quiet": ""
+      },
+      "tag": {
+        "new": "Ny",
+        "preRelease": "",
+        "resolvedFrom": "",
+        "quiet": "",
+        "archived": "Arkiverad",
+        "fork": ""
+      },
+      "issue": {
+        "affected": "",
+        "rateLimited": {
+          "title": "",
+          "hint": ""
+        },
+        "notFound": {
+          "title": "",
+          "hint": ""
+        },
+        "noMatchingVersion": {
+          "title": "",
+          "hint": ""
+        },
+        "noReleasesFound": {
+          "title": "",
+          "hint": ""
+        },
+        "invalidIdentifier": {
+          "title": "",
+          "hint": ""
+        },
+        "noProviderSelected": {
+          "title": "",
+          "hint": ""
+        },
+        "noProviderResponse": {
+          "title": "",
+          "hint": ""
+        },
+        "unexpected": {
+          "title": "",
+          "hint": ""
+        }
+      },
+      "markViewed": "Markera som visad",
+      "markAllViewed": "",
+      "markEntryViewed": "",
+      "viewed": "",
+      "copyVersion": "",
+      "copied": "Kopierad",
+      "published": "",
+      "whatChanged": "",
+      "noNotes": "",
+      "changes": "",
       "starsCount": "Stjärnor",
       "forksCount": "Forkar",
-      "issuesCount": "Öppna ärenden",
-      "markViewed": "Markera som visad",
-      "openProjectPage": "Öppna projektsida",
-      "openReleasePage": "Öppna versionssida",
-      "releaseDescription": "Versionsbeskrivning",
-      "projectDescription": "Projektbeskrivning",
+      "openIssues": "",
+      "created": "Skapad",
+      "releasePage": "",
+      "projectPage": "",
       "runningVersions": "Löpande versioner",
       "upToDate": "Senast uppdaterad",
       "updateAvailable": "Uppdatering tillgänglig",
-      "unknownStatus": "Okänt",
-      "created": "Skapad",
-      "error": {
-        "label": "Fel",
-        "messages": {
-          "invalidIdentifier": "Ogiltig identifierare",
-          "noMatchingVersion": "Ingen matchande version hittades",
-          "noReleasesFound": "Inga versioner hittades",
-          "noProviderSelected": "Ingen leverantör vald",
-          "noProviderResponse": "Inget svar från leverantören",
-          "unexpected": "Oväntat leverantörsfel"
-        }
-      },
-      "expandDetails": "Visa detaljer för {name}",
-      "collapseDetails": "Dölj detaljer för {name}"
+      "unknownStatus": "Okänt"
     },
     "networkControllerSummary": {
       "advanced": {
@@ -5054,6 +5170,14 @@
     "uptimeKuma": {
       "description": "Övervaka drifttidsstatistik från din Uptime Kuma-statussida",
       "option": {
+        "statusPageSlug": {
+          "label": "",
+          "description": ""
+        },
+        "summaryOnly": {
+          "label": "",
+          "description": ""
+        },
         "showSummary": {
           "label": "",
           "description": ""
@@ -6071,6 +6195,18 @@
       "addWidget": "Lägg till widget",
       "addApp": "Lägg till app",
       "connectService": "Anslut tjänst"
+    },
+    "urlDrop": {
+      "hint": "",
+      "resolving": "",
+      "notification": {
+        "success": {
+          "message": ""
+        },
+        "full": {
+          "message": ""
+        }
+      }
     },
     "setupChecklist": {
       "title": "Gör denna tavla användbar",
@@ -8677,6 +8813,14 @@
     "conversationActions": "Konversation åtgärder",
     "searchConversations": "Sök konversationer",
     "noMatchingConversations": "Inga matchande konversationer",
+    "historyError": {
+      "title": "",
+      "load": "",
+      "loadMessages": "",
+      "saveMessages": "",
+      "switch": "",
+      "retry": ""
+    },
     "moreActions": "Fler svarsåtgärder",
     "renameConversation": {
       "action": "Döp om",
@@ -8796,6 +8940,9 @@
     },
     "mentions": {
       "menu": "Lägg till Homarr kontext",
+      "back": "",
+      "loading": "",
+      "empty": "",
       "context": "Kontext",
       "app": "Applikationer",
       "integration": "Integrationer",
@@ -8810,6 +8957,8 @@
     },
     "commands": {
       "menu": "Assistant kommandon",
+      "hint": "",
+      "empty": "",
       "health": "Förbered en service-hälsa kontroll",
       "explore": "Förbered en översikt över denna Homarr instans",
       "media": "Förbered en mediasökning",
@@ -8992,6 +9141,7 @@
     "approvalDescription": "Granska ändringen innan den körs.",
     "approveAndRun": "Godkänn och kör",
     "deny": "Neka",
+    "approvalError": "",
     "autoApproval": {
       "label": "Automatiska godkännande",
       "composerLabel": "Godkänn för mig",

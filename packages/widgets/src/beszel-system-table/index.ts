@@ -4,9 +4,10 @@ import { getWidgetIntegrationConfig, invariantTechnicalLabels } from "@homarr/de
 
 import { createWidgetDefinition, matchesWidgetRuntimeQuery, widgetQueryInputMatches } from "../definition";
 import type { SelectOption } from "../_inputs/widget-select-input";
-import { createBeszelMetricOptions, statusOptions } from "../beszel/_shared/options";
+import { statusOptions } from "../beszel/_shared/options";
 import { optionsBuilder } from "../options";
 import { widgetQuery } from "../data";
+import { beszelTableMetricOptionKeys } from "./display";
 
 const sortOptions = [
   { value: "name", label: (t) => t("widget.beszel.metric.system") },
@@ -38,6 +39,23 @@ export const { definition, componentLoader } = createWidgetDefinition("beszelSys
   createOptions() {
     return optionsBuilder.from(
       (factory) => ({
+        columns: factory.multiSelect({
+          defaultValue: [...beszelTableMetricOptionKeys],
+          options: [
+            { value: "showCpu", label: invariantTechnicalLabels.cpu },
+            { value: "showMemory", label: (t) => t("widget.beszel.metric.memory") },
+            { value: "showDisk", label: (t) => t("widget.beszel.metric.disk") },
+            { value: "showGpu", label: invariantTechnicalLabels.gpu },
+            { value: "showLoadAvg", label: (t) => t("widget.beszel.metric.loadAvg") },
+            { value: "showNet", label: (t) => t("widget.beszel.metric.net") },
+            { value: "showTemp", label: (t) => t("widget.beszel.metric.temp") },
+            { value: "showBattery", label: (t) => t("widget.beszel.metric.battery") },
+            { value: "showServices", label: (t) => t("common.services") },
+            { value: "showUptime", label: (t) => t("widget.beszel.metric.uptime") },
+            { value: "showAgent", label: (t) => t("widget.beszel.metric.agent") },
+          ],
+          searchable: true,
+        }),
         statusFilter: factory.select({
           defaultValue: "all",
           options: statusOptions,
@@ -47,7 +65,6 @@ export const { definition, componentLoader } = createWidgetDefinition("beszelSys
           defaultValue: "asc",
           options: sortDirectionOptions,
         }),
-        ...createBeszelMetricOptions(() => factory.switch({ defaultValue: true })),
         columnOrder: factory.text({ defaultValue: "" }),
         columnWidths: factory.text({ defaultValue: "" }),
       }),

@@ -799,6 +799,11 @@
       }
     },
     "field": {
+      "url": {
+        "helpLabel": "URL biçimi örnekleri",
+        "examples": "Desteklenen bağlantı örnekleri",
+        "requiresHandler": "Özel protokoller, cihazınızda ilişkilendirilmiş bir uygulama gerektirir."
+      },
       "description": {
         "label": "Tanım"
       },
@@ -2313,6 +2318,15 @@
         "appId": {
           "label": "Uygulama seç"
         },
+        "openIn": {
+          "label": "Uygulamayı şurada aç",
+          "description": "Bu uygulamanın nerede açılacağını seçin. Tarayıcı ayarlarınız ayrı bir pencerede açılmasını değiştirebilir.",
+          "option": {
+            "currentTab": "Geçerli sekme",
+            "newTab": "Yeni sekme",
+            "newWindow": "Yeni pencere"
+          }
+        },
         "showTitle": {
           "label": "Uygulama adını göster"
         },
@@ -3228,6 +3242,10 @@
         },
         "viewMode": {
           "label": "Görünüm"
+        },
+        "hideHeader": {
+          "label": "",
+          "description": ""
         }
       },
       "advanced": {
@@ -3245,15 +3263,11 @@
         "agenda": ""
       },
       "controls": {
-        "view": "",
         "today": "Bugün",
         "previous": "",
         "next": "",
         "noEvents": "",
         "more": "",
-        "moreLabel": "",
-        "eventDetails": "",
-        "close": "",
         "timeSlot": "",
         "weekday": ""
       }
@@ -4758,27 +4772,59 @@
       "name": "Sürümler",
       "description": "Verilen sürüm düzenli ifadesiyle, belirtilen depoların mevcut sürümlerinin bir listesini gösterir.",
       "option": {
+        "layout": {
+          "label": "Düzen",
+          "description": "",
+          "option": {
+            "comfortable": "",
+            "compact": ""
+          }
+        },
+        "summary": {
+          "label": "",
+          "description": "",
+          "option": {
+            "detailed": "",
+            "count": "",
+            "hidden": "Gizli"
+          }
+        },
+        "sections": {
+          "label": "",
+          "description": ""
+        },
+        "collapsedSections": {
+          "label": "",
+          "description": ""
+        },
         "newReleaseWithin": {
           "label": "Yeni Sürüm Süresi (içinde)",
-          "description": "Kullanım örneği: 1w (1 hafta), 10m (10 ay). Kabul edilen birim türleri: h (saat), d (gün), w (hafta), m (ay), y (yıl). Yeni sürümleri vurgulamak istemiyorsanız boş bırakın."
+          "description": "Kullanım örneği: 1w (1 hafta), 10m (10 ay). Kabul edilen birim türleri: h (saat), d (gün), w (hafta), m (ay), y (yıl). Yeni sürümleri vurgulamak istemiyorsanız boş bırakın.",
+          "option": {
+            "never": "",
+            "1d": "1 gün",
+            "3d": "3 gün",
+            "1w": "1 hafta",
+            "2w": "",
+            "1M": "1 ay",
+            "3M": "3 ay"
+          }
         },
         "staleReleaseWithin": {
           "label": "Eski Sürüm Süresi (içinde)",
-          "description": "Kullanım örneği: 1w (1 hafta), 10m (10 ay). Kabul edilen birim türleri h (saat), d (gün), w (hafta), m (ay), y (yıl). Eski sürümleri vurgulamak istemiyorsanız boş bırakın."
+          "description": "Kullanım örneği: 1w (1 hafta), 10m (10 ay). Kabul edilen birim türleri h (saat), d (gün), w (hafta), m (ay), y (yıl). Eski sürümleri vurgulamak istemiyorsanız boş bırakın.",
+          "option": {
+            "never": "",
+            "1M": "1 ay",
+            "3M": "3 ay",
+            "6M": "6 ay",
+            "1y": "1 yıl",
+            "2y": "2 yıl"
+          }
         },
-        "showOnlyHighlighted": {
-          "label": "Yalnızca Vurgulananları Göster",
-          "description": "Yalnızca yeni veya eski sürümleri göster. Yukarıdaki açıklamaya göre."
-        },
-        "showDetails": {
-          "label": "Ayrıntıları Göster"
-        },
-        "showOnlyIcon": {
-          "label": "Yalnızca İkon Göster"
-        },
-        "topReleases": {
-          "label": "En İyi Sürümler",
-          "description": "Gösterilecek en son sürümlerin maksimum sayısı. Sıfır, sınır olmadığı anlamına gelir."
+        "showChangelogPreview": {
+          "label": "",
+          "description": ""
         },
         "repositories": {
           "label": "Depolar",
@@ -4852,36 +4898,106 @@
           }
         }
       },
-      "not-found": "Bulunamadı",
-      "pre-release": "Ön Sürüm",
-      "archived": "Arşivlenmiş",
-      "forked": "Çatallanmış",
+      "summary": {
+        "newReleases": "",
+        "newShort": "yeni",
+        "tracked": "",
+        "caughtUp": "",
+        "outdated": "",
+        "outdatedShort": "",
+        "failing": "",
+        "failingShort": "",
+        "latest": "",
+        "issues": ""
+      },
+      "section": {
+        "new": {
+          "label": "Yeni",
+          "description": ""
+        },
+        "attention": {
+          "label": "",
+          "description": ""
+        },
+        "upToDate": {
+          "label": "Güncel",
+          "description": ""
+        },
+        "quiet": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "status": {
+        "new": "",
+        "outdated": "",
+        "error": "",
+        "upToDate": "güncel",
+        "quiet": ""
+      },
+      "tag": {
+        "new": "Yeni",
+        "preRelease": "",
+        "resolvedFrom": "",
+        "quiet": "",
+        "archived": "Arşivlenmiş",
+        "fork": ""
+      },
+      "issue": {
+        "affected": "",
+        "rateLimited": {
+          "title": "",
+          "hint": ""
+        },
+        "notFound": {
+          "title": "",
+          "hint": ""
+        },
+        "noMatchingVersion": {
+          "title": "",
+          "hint": ""
+        },
+        "noReleasesFound": {
+          "title": "",
+          "hint": ""
+        },
+        "invalidIdentifier": {
+          "title": "Geçersiz tanımlayıcı",
+          "hint": ""
+        },
+        "noProviderSelected": {
+          "title": "Sağlayıcı seçilmedi",
+          "hint": ""
+        },
+        "noProviderResponse": {
+          "title": "",
+          "hint": ""
+        },
+        "unexpected": {
+          "title": "",
+          "hint": ""
+        }
+      },
+      "markViewed": "Görüntülenmiş olarak işaretle",
+      "markAllViewed": "",
+      "markEntryViewed": "",
+      "viewed": "",
+      "copyVersion": "",
+      "copied": "Kopyalandı",
+      "published": "",
+      "whatChanged": "",
+      "noNotes": "",
+      "changes": "",
       "starsCount": "Yıldızlar",
       "forksCount": "Çatallar",
-      "issuesCount": "Sorunları Aç",
-      "markViewed": "Görüntülenmiş olarak işaretle",
-      "openProjectPage": "Proje Sayfasını Aç",
-      "openReleasePage": "Sürüm Sayfasını Aç",
-      "releaseDescription": "Sürüm Açıklaması",
-      "projectDescription": "Proje Açıklaması",
+      "openIssues": "",
+      "created": "Oluşturuldu",
+      "releasePage": "",
+      "projectPage": "",
       "runningVersions": "",
       "upToDate": "Güncel",
       "updateAvailable": "",
-      "unknownStatus": "Bilinmeyen",
-      "created": "Oluşturuldu",
-      "error": {
-        "label": "Hata",
-        "messages": {
-          "invalidIdentifier": "Geçersiz tanımlayıcı",
-          "noMatchingVersion": "Eşleşen sürüm bulunamadı",
-          "noReleasesFound": "Hiçbir sürüm bulunamadı",
-          "noProviderSelected": "Sağlayıcı seçilmedi",
-          "noProviderResponse": "Sağlayıcıdan yanıt alınamadı",
-          "unexpected": "Beklenmeyen sağlayıcı hatası"
-        }
-      },
-      "expandDetails": "{name} için ayrıntıları göster",
-      "collapseDetails": "{name} için ayrıntıları gizle"
+      "unknownStatus": "Bilinmeyen"
     },
     "networkControllerSummary": {
       "advanced": {
@@ -5054,6 +5170,14 @@
     "uptimeKuma": {
       "description": "Uptime Kuma durum sayfanızdaki çalışma süresi istatistiklerini izleyin",
       "option": {
+        "statusPageSlug": {
+          "label": "Durum sayfası kısa adı",
+          "description": ""
+        },
+        "summaryOnly": {
+          "label": "",
+          "description": ""
+        },
         "showSummary": {
           "label": "",
           "description": ""
@@ -6071,6 +6195,18 @@
       "addWidget": "Widget ekle",
       "addApp": "Uygulama ekle",
       "connectService": "Hizmet bağla"
+    },
+    "urlDrop": {
+      "hint": "",
+      "resolving": "",
+      "notification": {
+        "success": {
+          "message": ""
+        },
+        "full": {
+          "message": ""
+        }
+      }
     },
     "setupChecklist": {
       "title": "Bu panoyu kullanışlı hale getirin",
@@ -8677,6 +8813,14 @@
     "conversationActions": "Konuşma eylemleri",
     "searchConversations": "Konuşmalarda ara",
     "noMatchingConversations": "Eşleşen konuşma yok",
+    "historyError": {
+      "title": "",
+      "load": "",
+      "loadMessages": "",
+      "saveMessages": "",
+      "switch": "",
+      "retry": ""
+    },
     "moreActions": "Daha fazla yanıt eylemi",
     "renameConversation": {
       "action": "Yeniden adlandır",
@@ -8796,6 +8940,9 @@
     },
     "mentions": {
       "menu": "Homarr bağlamı ekle",
+      "back": "",
+      "loading": "",
+      "empty": "",
       "context": "Bağlam",
       "app": "Uygulamalar",
       "integration": "Entegrasyonlar",
@@ -8810,6 +8957,8 @@
     },
     "commands": {
       "menu": "Asistan komutları",
+      "hint": "",
+      "empty": "",
       "health": "Hizmet durumu denetimi hazırla",
       "explore": "Bu Homarr örneğine genel bakış hazırla",
       "media": "Medya araması hazırla",
@@ -8992,6 +9141,7 @@
     "approvalDescription": "Çalıştırmadan önce bu değişikliği inceleyin.",
     "approveAndRun": "Onayla ve çalıştır",
     "deny": "Reddet",
+    "approvalError": "",
     "autoApproval": {
       "label": "Otomatik onaylar",
       "composerLabel": "Benim için onayla",

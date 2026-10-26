@@ -799,6 +799,11 @@
       }
     },
     "field": {
+      "url": {
+        "helpLabel": "Eksempler på URL-formater",
+        "examples": "Eksempler på støttede lenker",
+        "requiresHandler": "Egendefinerte protokoller krever en tilknyttet app på enheten din."
+      },
       "description": {
         "label": "Beskrivelse"
       },
@@ -2313,6 +2318,15 @@
         "appId": {
           "label": "Velg app"
         },
+        "openIn": {
+          "label": "Åpne app i",
+          "description": "Velg hvor denne appen skal åpnes. Nettleserinnstillingene dine kan overstyre åpning i et eget vindu.",
+          "option": {
+            "currentTab": "Gjeldende fane",
+            "newTab": "Ny fane",
+            "newWindow": "Nytt vindu"
+          }
+        },
         "showTitle": {
           "label": "Vis app navn"
         },
@@ -3228,6 +3242,10 @@
         },
         "viewMode": {
           "label": "Visning"
+        },
+        "hideHeader": {
+          "label": "",
+          "description": ""
         }
       },
       "advanced": {
@@ -3245,15 +3263,11 @@
         "agenda": "Dagsorden"
       },
       "controls": {
-        "view": "Kalender visning",
         "today": "I dag",
         "previous": "Forrige periode",
         "next": "Neste periode",
         "noEvents": "Ingen hendelser i denne perioden",
         "more": "{count} mer",
-        "moreLabel": "Vis {count} flere hendelser",
-        "eventDetails": "Event detaljer",
-        "close": "Lukk hendelsesdetaljer",
         "timeSlot": "Tidslengde",
         "weekday": "Ukedag"
       }
@@ -4758,27 +4772,59 @@
       "name": "Utgivelser",
       "description": "Viser en liste over gjeldende versjoner for angitte repositorier med gitt versjonsregex.",
       "option": {
+        "layout": {
+          "label": "Oppsett",
+          "description": "",
+          "option": {
+            "comfortable": "Komfortabel",
+            "compact": "Kompakt"
+          }
+        },
+        "summary": {
+          "label": "",
+          "description": "",
+          "option": {
+            "detailed": "",
+            "count": "",
+            "hidden": "Skjult"
+          }
+        },
+        "sections": {
+          "label": "",
+          "description": ""
+        },
+        "collapsedSections": {
+          "label": "",
+          "description": ""
+        },
         "newReleaseWithin": {
           "label": "Ny utgivelse innen",
-          "description": "Brukseksempel: 1w (1 uke), 10M (10 måneder). Gyldige enheter h (timer), d (dager), w (uker), M (måneder), y (år). La stå tomt for ingen markering av nye utgivelser."
+          "description": "Brukseksempel: 1w (1 uke), 10M (10 måneder). Gyldige enheter h (timer), d (dager), w (uker), M (måneder), y (år). La stå tomt for ingen markering av nye utgivelser.",
+          "option": {
+            "never": "",
+            "1d": "1 dag",
+            "3d": "3 dager",
+            "1w": "1 uke",
+            "2w": "",
+            "1M": "1 måned",
+            "3M": "3 måneder"
+          }
         },
         "staleReleaseWithin": {
           "label": "Utdatert utgivelse innen",
-          "description": "Brukseksempel: 1w (1 uke), 10M (10 måneder). Gyldige enheter h (timer), d (dager), w (uker), M (måneder), y (år). La stå tomt for ingen markering av utdaterte utgivelser."
+          "description": "Brukseksempel: 1w (1 uke), 10M (10 måneder). Gyldige enheter h (timer), d (dager), w (uker), M (måneder), y (år). La stå tomt for ingen markering av utdaterte utgivelser.",
+          "option": {
+            "never": "",
+            "1M": "1 måned",
+            "3M": "3 måneder",
+            "6M": "6 måneder",
+            "1y": "1 år",
+            "2y": "2 år"
+          }
         },
-        "showOnlyHighlighted": {
-          "label": "Vis bare uthevede",
-          "description": "Vis bare nye eller utdaterte utgivelser. Som beskrevet ovenfor."
-        },
-        "showDetails": {
-          "label": "Vis detaljer"
-        },
-        "showOnlyIcon": {
-          "label": "Vis bare ikon"
-        },
-        "topReleases": {
-          "label": "Topp utgivelser",
-          "description": "Maks antall nyeste utgivelser som vises. Null betyr ingen grense."
+        "showChangelogPreview": {
+          "label": "",
+          "description": ""
         },
         "repositories": {
           "label": "Repositorier",
@@ -4852,36 +4898,106 @@
           }
         }
       },
-      "not-found": "Ikke funnet",
-      "pre-release": "Forhåndsutgivelse",
-      "archived": "Arkivert",
-      "forked": "Forgrenet",
+      "summary": {
+        "newReleases": "",
+        "newShort": "ny",
+        "tracked": "",
+        "caughtUp": "",
+        "outdated": "",
+        "outdatedShort": "utdatert",
+        "failing": "",
+        "failingShort": "",
+        "latest": "",
+        "issues": ""
+      },
+      "section": {
+        "new": {
+          "label": "Ny",
+          "description": ""
+        },
+        "attention": {
+          "label": "Trenger oppmerksomhet",
+          "description": ""
+        },
+        "upToDate": {
+          "label": "Opp til dato",
+          "description": ""
+        },
+        "quiet": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "status": {
+        "new": "",
+        "outdated": "",
+        "error": "",
+        "upToDate": "opp til dato",
+        "quiet": ""
+      },
+      "tag": {
+        "new": "Ny",
+        "preRelease": "",
+        "resolvedFrom": "",
+        "quiet": "",
+        "archived": "Arkivert",
+        "fork": ""
+      },
+      "issue": {
+        "affected": "",
+        "rateLimited": {
+          "title": "",
+          "hint": ""
+        },
+        "notFound": {
+          "title": "",
+          "hint": ""
+        },
+        "noMatchingVersion": {
+          "title": "",
+          "hint": ""
+        },
+        "noReleasesFound": {
+          "title": "",
+          "hint": ""
+        },
+        "invalidIdentifier": {
+          "title": "Ugyldig identifikator",
+          "hint": ""
+        },
+        "noProviderSelected": {
+          "title": "Ingen leverandør valgt",
+          "hint": ""
+        },
+        "noProviderResponse": {
+          "title": "",
+          "hint": ""
+        },
+        "unexpected": {
+          "title": "",
+          "hint": ""
+        }
+      },
+      "markViewed": "Merk som sett",
+      "markAllViewed": "",
+      "markEntryViewed": "",
+      "viewed": "",
+      "copyVersion": "",
+      "copied": "Kopiert",
+      "published": "",
+      "whatChanged": "",
+      "noNotes": "",
+      "changes": "",
       "starsCount": "Stjerner",
       "forksCount": "Forgreninger",
-      "issuesCount": "Åpne saker",
-      "markViewed": "Merk som sett",
-      "openProjectPage": "Åpne prosjektside",
-      "openReleasePage": "Åpne releaseside",
-      "releaseDescription": "Utgivelsesbeskrivelse",
-      "projectDescription": "Prosjektbeskrivelse",
+      "openIssues": "",
+      "created": "Opprettet",
+      "releasePage": "",
+      "projectPage": "",
       "runningVersions": "Kjører versjoner",
       "upToDate": "Opp til dato",
       "updateAvailable": "Oppdatering tilgjengelig",
-      "unknownStatus": "Ukjent",
-      "created": "Opprettet",
-      "error": {
-        "label": "Feil",
-        "messages": {
-          "invalidIdentifier": "Ugyldig identifikator",
-          "noMatchingVersion": "Ingen samsvarende versjon funnet",
-          "noReleasesFound": "Ingen utgivelser funnet",
-          "noProviderSelected": "Ingen leverandør valgt",
-          "noProviderResponse": "Ingen respons fra leverandør",
-          "unexpected": "Uventet leverandørfeil"
-        }
-      },
-      "expandDetails": "Vis detaljer for {name}",
-      "collapseDetails": "Skjul detaljer for {name}"
+      "unknownStatus": "Ukjent"
     },
     "networkControllerSummary": {
       "advanced": {
@@ -5054,6 +5170,14 @@
     "uptimeKuma": {
       "description": "Overvåke oppetid statistikk fra statussiden i Kuma",
       "option": {
+        "statusPageSlug": {
+          "label": "Statusside slug",
+          "description": ""
+        },
+        "summaryOnly": {
+          "label": "",
+          "description": ""
+        },
         "showSummary": {
           "label": "",
           "description": ""
@@ -6071,6 +6195,18 @@
       "addWidget": "Legg til modul",
       "addApp": "Legg til app",
       "connectService": "Koble til tjeneste"
+    },
+    "urlDrop": {
+      "hint": "",
+      "resolving": "",
+      "notification": {
+        "success": {
+          "message": ""
+        },
+        "full": {
+          "message": ""
+        }
+      }
     },
     "setupChecklist": {
       "title": "Gjør tavlen nyttig",
@@ -8677,6 +8813,14 @@
     "conversationActions": "Samtale handlinger",
     "searchConversations": "Søk i samtaler",
     "noMatchingConversations": "Ingen matchende samtaler",
+    "historyError": {
+      "title": "",
+      "load": "",
+      "loadMessages": "",
+      "saveMessages": "",
+      "switch": "",
+      "retry": ""
+    },
     "moreActions": "Flere responshandlinger",
     "renameConversation": {
       "action": "Omdøp",
@@ -8796,6 +8940,9 @@
     },
     "mentions": {
       "menu": "Legg til Homarr kontekst",
+      "back": "",
+      "loading": "",
+      "empty": "",
       "context": "Kontekst",
       "app": "Apper",
       "integration": "Integrasjoner",
@@ -8810,6 +8957,8 @@
     },
     "commands": {
       "menu": "Assistent kommandoer",
+      "hint": "",
+      "empty": "",
       "health": "Klargjør en tjeneste-helse sjekk",
       "explore": "Forbered en oversikt over denne Homarr forekomsten",
       "media": "Forbered et mediesøk",
@@ -8992,6 +9141,7 @@
     "approvalDescription": "Gjennomgå denne endringen før den kjører.",
     "approveAndRun": "Godkjenn og kjør",
     "deny": "Avslå",
+    "approvalError": "",
     "autoApproval": {
       "label": "Automatiske godkjenninger",
       "composerLabel": "Godkjenn for meg",
