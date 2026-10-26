@@ -20,9 +20,10 @@ if [ "${PUID}" != "0" ] || [ "${PGID}" != "0" ]; then
     # existing content, so a persistent volume with stale or root-owned
     # entries stays writable after a PUID/PGID change. These trees are small
     # (a single sqlite db, a redis dump, a few certs), unlike the /app tree.
-    mkdir -p /appdata/db /appdata/redis /appdata/trusted-certificates
+    mkdir -p /appdata/db /appdata/redis /appdata/trusted-certificates /appdata/cache/board-preparation
     chown "${PUID}:${PGID}" /appdata
-    chown -R "${PUID}:${PGID}" /appdata/db /appdata/redis /appdata/trusted-certificates
+    chown -R "${PUID}:${PGID}" /appdata/db /appdata/redis /appdata/trusted-certificates /appdata/cache/board-preparation
+    chmod 700 /appdata/cache/board-preparation
     # Next.js runtime cache (image optimization, fetch cache, ...)
     mkdir -p /app/apps/nextjs/.next/cache
     chown -R "${PUID}:${PGID}" /app/apps/nextjs/.next/cache

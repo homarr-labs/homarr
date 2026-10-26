@@ -258,9 +258,17 @@ export const readPreparedDocumentAsync = async (id: string, token: string) => {
   const namespace = await getPreparationNamespaceAsync();
   if (!namespace) return null;
   if (env.BOARD_PREPARATION_STORAGE === "disk") {
-    const document = await (await getDiskCacheAsync()).readAsync(`${namespace}:document:${id}`, token);
-    if (!document) return null;
-    return await decompressDocumentAsync(document);
+    try {
+      const document = await (await getDiskCacheAsync()).readAsync(`${namespace}:document:${id}`, token);
+      if (!document) return null;
+      return await decompressDocumentAsync(document);
+    } catch (error) {
+      logger.warn("Prepared Board disk document unavailable; requesting replacement", {
+        viewId: id.slice(0, 12),
+        errorType: error instanceof Error ? error.name : typeof error,
+      });
+      return null;
+    }
   }
   const document = await createGetSetChannel<PreparedDocument>(`${namespace}:document:${id}`, {
     useBoundedCacheClient: true,
