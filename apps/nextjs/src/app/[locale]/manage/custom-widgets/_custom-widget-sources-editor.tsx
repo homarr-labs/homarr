@@ -4,21 +4,16 @@ import { Accordion, Button, List, Stack, Text } from "@mantine/core";
 import { IconPlus } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
-import { hasSameCustomWidgetSourceAuthentication } from "@homarr/custom-widgets/core";
 import type { CustomWidgetSource, CustomWidgetHttpSource, CustomWidgetSecretKind } from "@homarr/custom-widgets/core";
+import { editCustomWidgetSource } from "@homarr/custom-widgets/workbench";
+import type { CustomWidgetSourceDraftEdit } from "@homarr/custom-widgets/workbench";
 import { useConfirmModal } from "@homarr/modals";
 import { showSuccessNotification } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
 
-import {
-  filterSecretsForSourceAuthentication,
-  isRecord,
-  isSimpleCustomWidgetQuerySetup,
-  parseJson,
-  parseSources,
-} from "./_custom-widget-form-utils";
+import { isSimpleCustomWidgetQuerySetup, parseSources } from "./_custom-widget-form-utils";
 import type { CustomWidgetWorkbenchForm } from "./_custom-widget-form-utils";
-import { getDependentRequestIds, removeDependentRequests } from "./_custom-widget-source-dependencies";
+import { getDependentRequestIds } from "./_custom-widget-source-dependencies";
 import { CustomWidgetSourceField } from "./_custom-widget-source-field";
 
 export function CustomWidgetSourcesEditor({
@@ -37,70 +32,22 @@ export function CustomWidgetSourcesEditor({
   const clearSecretMutation = clientApi.customWidget.secretClear.useMutation();
   const sources = parseSources(form.values.sources);
   const compactSetup = compact && isSimpleCustomWidgetQuerySetup(form.values);
-  const update = (index: number, changes: Partial<CustomWidgetSource> & { id?: string }) => {
-    const previous = sources[index];
-    if (changes.auth !== undefined && previous) {
-      let secrets = filterSecretsForSourceAuthentication(form.values.secrets, previous.id, changes.auth);
-      if (
-        definitionId &&
-        previous.type !== "integration" &&
-        typeof changes.auth === "object" &&
-        changes.auth.type === "headers" &&
-        !hasSameCustomWidgetSourceAuthentication(previous, { ...previous, auth: changes.auth })
-      ) {
-        secrets = secrets.map((secret) => {
-          if (secret.sourceId !== previous.id) return secret;
-          return { ...secret, hasValue: false };
-        });
-      }
-      form.setFieldValue("secrets", secrets);
-    }
-    if (changes.type) {
-      form.setFieldValue(
-        "secrets",
-        form.values.secrets.filter((secret) => secret.sourceId !== sources[index]?.id),
-      );
-    }
-    const previousId = sources[index]?.id;
-    const nextId = changes.id ?? previousId;
-    if (nextId && sources.some((source, sourceIndex) => sourceIndex !== index && source.id === nextId)) {
-      form.setFieldError("sources", t("duplicateSourceId"));
+  const applySourceEdit = (edit: CustomWidgetSourceDraftEdit) => {
+    const result = editCustomWidgetSource(form.getValues(), edit, Boolean(definitionId));
+    if (!result.success) {
+      form.setFieldError("sources", t(result.error));
       return;
     }
-    if (form.errors.sources === t("duplicateSourceId")) form.clearFieldError("sources");
-    const sourceEntries = sources.map(({ id, ...source }) => [id, source] as const);
-    form.setFieldValue(
-      "sources",
-      JSON.stringify(
-        Object.fromEntries(
-          sourceEntries.map(([id, source], i) => {
-            if (i !== index) return [id, source];
-            if (changes.type) return [nextId, { name: source.name, ...changes, id: undefined }];
-            return [nextId, { ...source, ...changes, id: undefined }];
-          }),
-        ),
-        null,
-        2,
-      ),
-    );
-    if (previousId && nextId && previousId !== nextId) {
-      const parsedRequests = parseJson(form.values.requests);
-      const requests = isRecord(parsedRequests)
-        ? Object.fromEntries(
-            Object.entries(parsedRequests).map(([id, request]) => [
-              id,
-              isRecord(request) && request.source === previousId ? { ...request, source: nextId } : request,
-            ]),
-          )
-        : {};
-      form.setFieldValue("requests", JSON.stringify(requests, null, 2));
-      form.setFieldValue(
-        "secrets",
-        form.values.secrets.map((secret) =>
-          secret.sourceId === previousId ? { ...secret, sourceId: nextId } : secret,
-        ),
-      );
+    if (edit.type === "update" && form.errors.sources === t("duplicateSourceId")) {
+      form.clearFieldError("sources");
     }
+    const { patch } = result;
+    if (patch.sources !== undefined) form.setFieldValue("sources", patch.sources);
+    if (patch.requests !== undefined) form.setFieldValue("requests", patch.requests);
+    if (patch.secrets !== undefined) form.setFieldValue("secrets", patch.secrets);
+  };
+  const update = (index: number, changes: Partial<CustomWidgetSource> & { id?: string }) => {
+    applySourceEdit({ type: "update", index, changes });
   };
   const setAuth = (index: number, type: string) => {
     let auth: CustomWidgetHttpSource["auth"];
@@ -139,26 +86,13 @@ export function CustomWidgetSourcesEditor({
     );
   };
   const removeSourceAndDependents = (index: number) => {
-    const removedId = sources[index]?.id;
-    form.setFieldValue(
-      "sources",
-      JSON.stringify(
-        Object.fromEntries(sources.filter((_, i) => i !== index).map(({ id, ...source }) => [id, source])),
-        null,
-        2,
-      ),
-    );
-    if (!removedId) return;
-    form.setFieldValue("requests", JSON.stringify(removeDependentRequests(form.values.requests, removedId), null, 2));
-    form.setFieldValue(
-      "secrets",
-      form.values.secrets.filter((secret) => secret.sourceId !== removedId),
-    );
+    applySourceEdit({ type: "remove", index });
   };
   const removeSource = (index: number) => {
-    const removedId = sources[index]?.id;
+    const values = form.getValues();
+    const removedId = parseSources(values.sources)[index]?.id;
     if (!removedId) return;
-    const dependentRequestIds = getDependentRequestIds(form.values.requests, removedId);
+    const dependentRequestIds = getDependentRequestIds(values.requests, removedId);
     if (dependentRequestIds.length === 0) {
       removeSourceAndDependents(index);
       return;

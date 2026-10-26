@@ -5,17 +5,17 @@ import {
   customWidgetRequestsSchema,
   customWidgetSourcesSchema,
   getCustomWidgetDefaultOptions,
-  getCustomWidgetRequiredSecretKinds,
   parseCustomWidgetAiResponse,
   validateCustomWidgetOptions,
 } from "@homarr/custom-widgets/core";
-import type { CustomWidgetSource, HomarrCustomWidgetV2, CustomWidgetSecretKind } from "@homarr/custom-widgets/core";
+import type { HomarrCustomWidgetV2, CustomWidgetSecretKind } from "@homarr/custom-widgets/core";
 import type { CustomWidgetFormValues } from "@homarr/custom-widgets/workbench";
 import type { UseFormReturnType } from "@mantine/form";
 
 export type CustomWidgetWorkbenchForm = UseFormReturnType<CustomWidgetFormValues>;
 
 export { isRecord };
+export { filterSecretsForSourceAuthentication, parseSources } from "@homarr/custom-widgets/workbench";
 
 const PREVIEW_QUERY_CONCURRENCY = 4;
 
@@ -63,15 +63,6 @@ export function isSimpleCustomWidgetQuerySetup(values: Pick<CustomWidgetFormValu
   );
 }
 
-export function filterSecretsForSourceAuthentication(
-  secrets: CustomWidgetFormValues["secrets"],
-  sourceId: string,
-  authType: Parameters<typeof getCustomWidgetRequiredSecretKinds>[0],
-) {
-  const requiredKinds = new Set<string>(getCustomWidgetRequiredSecretKinds(authType));
-  return secrets.filter((secret) => secret.sourceId !== sourceId || requiredKinds.has(secret.kind));
-}
-
 export function applyDefinition(form: CustomWidgetWorkbenchForm, widget: HomarrCustomWidgetV2) {
   form.setValues({
     ...form.getValues(),
@@ -90,15 +81,6 @@ export function applyCustomWidgetAiResponse(form: CustomWidgetWorkbenchForm, res
   const result = parseCustomWidgetAiResponse(response);
   if (result.success) applyDefinition(form, result.widget);
   return result;
-}
-
-export function parseSources(value: string): Array<CustomWidgetSource & { id: string }> {
-  const parsed = parseJson(value);
-  return isRecord(parsed)
-    ? Object.entries(parsed)
-        .flatMap(([id, entry]) => (isRecord(entry) ? [{ id, ...(entry as CustomWidgetSource) }] : []))
-        .toSorted((left, right) => Number(right.id === "default") - Number(left.id === "default"))
-    : [];
 }
 
 export function parseJson(value: string): unknown {
