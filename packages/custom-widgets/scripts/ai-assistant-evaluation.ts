@@ -36,7 +36,6 @@ import {
   getAiEvaluationProviderPreferences,
   getAiEvaluationReasoningOptions,
   getAiProviderChatCompletionsUrl,
-  getEvaluationRequestPath,
   getDeterministicEvaluationMatches,
   getDeterministicEvaluationSuiteIssues,
   judgeCustomWidgetPanel,
@@ -193,18 +192,13 @@ export const getRequiredAssistantEvaluationRequestParams = (request: HomarrCusto
 export const getAssistantEvaluationPreviewResponse = (
   testCase: CustomWidgetAiEvaluationCase,
   request: HomarrCustomWidgetV2["requests"][string],
-  source?: HomarrCustomWidgetV2["sources"][string],
-) => {
-  const requestPath = getEvaluationRequestPath(request, source);
-  return (
-    testCase.previewResponses?.find(
-      ({ pathIncludes, kind, method }) =>
-        (request.path.includes(pathIncludes) || requestPath.includes(pathIncludes)) &&
-        (kind === undefined || request.kind === kind) &&
-        (method === undefined || request.method === method),
-    )?.response ?? testCase.sampleResponse
-  );
-};
+) =>
+  testCase.previewResponses?.find(
+    ({ pathIncludes, kind, method }) =>
+      request.path.includes(pathIncludes) &&
+      (kind === undefined || request.kind === kind) &&
+      (method === undefined || request.method === method),
+  )?.response ?? testCase.sampleResponse;
 
 interface AssistantEvaluationToolCall {
   name: string;
@@ -848,7 +842,7 @@ const executeAssistantEvaluationToolCore = (
     if (missingParams.length > 0) {
       return { error: `Supply the required manual preview parameters: ${missingParams.join(", ")}` };
     }
-    const response = getAssistantEvaluationPreviewResponse(testCase, request, preview.widget.sources[request.source]);
+    const response = getAssistantEvaluationPreviewResponse(testCase, request);
     if (response === undefined) return { error: `No deterministic preview response is configured for ${request.path}` };
     preview.testedQueries.add(requestId);
     preview.journal.push({

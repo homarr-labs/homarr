@@ -260,15 +260,6 @@ export interface DeterministicEvaluationIssue {
   message: string;
 }
 
-export const getEvaluationRequestPath = (
-  request: Pick<HomarrCustomWidgetV2["requests"][string], "path">,
-  source?: HomarrCustomWidgetV2["sources"][string],
-) => {
-  if (source?.type === "integration" || !source?.baseUrl) return request.path;
-  const basePath = new URL(source.baseUrl).pathname.replace(/\/$/u, "");
-  return `${basePath}${request.path}`;
-};
-
 export const getExpectedWidgetCase = (
   testCase: CustomWidgetAiEvaluationCase,
   expectedWidget: NonNullable<CustomWidgetAiEvaluationCase["expectedWidgets"]>[number],
@@ -379,9 +370,7 @@ export function getDeterministicEvaluationIssues(
       message: `Use the verified ${expectations.sourceType} source type.`,
     });
   }
-  const expectedBaseUrl = expectations.sourceBaseUrl ? new URL(expectations.sourceBaseUrl) : undefined;
-  const sourceBaseUrl = source?.baseUrl ? new URL(source.baseUrl) : undefined;
-  if (expectedBaseUrl !== undefined && sourceBaseUrl?.origin !== expectedBaseUrl.origin) {
+  if (expectations.sourceBaseUrl !== undefined && (!source || source.baseUrl !== expectations.sourceBaseUrl)) {
     issues.push({
       path: ["sources", "default", "baseUrl"],
       message: `Use the verified source URL ${expectations.sourceBaseUrl}.`,
@@ -422,12 +411,7 @@ export function getDeterministicEvaluationIssues(
   for (const expected of expectations.requests) {
     const match = Object.entries(widget.requests).find(([requestId, request]) => {
       if (matchedRequestIds.has(requestId)) return false;
-      return requestMatchesExpectation(
-        { ...request, path: getEvaluationRequestPath(request, widget.sources[request.source]) },
-        { ...expected, pathIncludes: `${expectedBaseUrl?.pathname.replace(/\/$/u, "") ?? ""}${expected.pathIncludes}` },
-        widget.options,
-        widget.requests,
-      );
+      return requestMatchesExpectation(request, expected, widget.options, widget.requests);
     });
     if (!match) {
       issues.push({
