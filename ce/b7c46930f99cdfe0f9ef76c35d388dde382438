@@ -1,0 +1,16 @@
+packages/custom-widgets/scripts/ai-assistant-evaluation.ts
+  h_d6e478ca18e517 195-201,845
+packages/custom-widgets/scripts/ai-evaluation.ts
+  h_d6e478ca18e517 373,414
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "ceb7c46930f99cdfe0f9ef76c35d388dde382438",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
