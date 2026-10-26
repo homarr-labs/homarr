@@ -25,6 +25,8 @@ const publicHttpOrigin = (variableName: string) =>
 export const env = createEnv({
   server: {
     BASE_URL: publicHttpOrigin("BASE_URL").optional(),
+    BOARD_PREPARATION_STORAGE: z.enum(["redis", "disk"]).default("redis"),
+    BOARD_PREPARATION_CACHE_DIR: z.string().min(1).default("/appdata/cache/board-preparation"),
     UNSAFE_ENABLE_MOCK_INTEGRATION: createBooleanSchema(false),
     DEMO_MODE: createBooleanSchema(false),
     DEMO_READ_ONLY: createBooleanSchema(true),

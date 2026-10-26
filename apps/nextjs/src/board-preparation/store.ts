@@ -6,18 +6,28 @@ import { serialize } from "superjson";
 import { createKeyedFingerprint } from "@homarr/common/server";
 import { hashObjectBase64 } from "@homarr/common";
 import { createGetSetChannel, createLockChannel } from "@homarr/redis";
+import { createLogger } from "@homarr/core/infrastructure/logs";
 import type { SupportedLanguage } from "@homarr/translation";
 
 import { compressDocumentAsync, decompressDocumentAsync } from "./document";
 import type { CompressedDocument } from "./document";
+import type { createDiskDocumentCacheAsync } from "./disk-store";
+import { maxPreparationVariants as maxVariants, maxStoredDocumentBytes, preparationMaxAgeMs } from "./limits";
+import { env } from "~/env";
 
 import type { RootLayoutData } from "~/app/[locale]/_root-layout-data";
 import type { Board } from "~/app/[locale]/boards/_types";
 import type { getIntegrationsWithPermissionsAsync } from "@homarr/auth/server";
 
-export const preparationMaxAgeMs = 72 * 60 * 60_000;
-const maxVariants = 128;
-const maxStoredDocumentBytes = 8 * 1024 * 1024;
+export { preparationMaxAgeMs } from "./limits";
+const logger = createLogger({ module: "boardPreparation", scope: "storage" });
+let diskCachePromise: ReturnType<typeof createDiskDocumentCacheAsync> | undefined;
+const getDiskCacheAsync = () => {
+  diskCachePromise ??= import("./disk-store").then(({ createDiskDocumentCacheAsync }) =>
+    createDiskDocumentCacheAsync(env.BOARD_PREPARATION_CACHE_DIR),
+  );
+  return diskCachePromise;
+};
 
 export interface BoardPreparationSpec {
   boardId: string;
@@ -67,8 +77,16 @@ export const getPreparationNamespaceAsync = () => {
     try {
       const buildId = (await readFile(resolve(process.cwd(), ".next/BUILD_ID"), "utf8")).trim();
       if (!buildId) return null;
+      if (env.BOARD_PREPARATION_STORAGE === "disk") {
+        const disk = await getDiskCacheAsync();
+        return `board-preparation-v3:disk:${disk.identity}:${createKeyedFingerprint(buildId)}`;
+      }
       return `board-preparation-v3:${createKeyedFingerprint(buildId)}`;
-    } catch {
+    } catch (error) {
+      logger.warn("Prepared Board storage unavailable", {
+        storage: env.BOARD_PREPARATION_STORAGE,
+        errorType: error instanceof Error ? error.name : typeof error,
+      });
       return null;
     }
   })();
@@ -200,6 +218,30 @@ export const writePreparedDocumentAsync = async (
   const namespace = await getPreparationNamespaceAsync();
   if (!namespace) return false;
   const compressed = { token: document.token, ...(await compressDocumentAsync(document.html)) };
+  if (env.BOARD_PREPARATION_STORAGE === "disk") {
+    const disk = await getDiskCacheAsync();
+    const budgetLock = createLockChannel(`board-preparation:disk-budget:${disk.identity}`, {
+      useBoundedCacheClient: true,
+    });
+    const budgetLease = await budgetLock.acquireAsync(180);
+    if (!budgetLease) return false;
+    const key = `${namespace}:document:${id}`;
+    let published = false;
+    try {
+      if (!(await lock.renewAsync(lease, 180))) return false;
+      const storedDocumentBytes = await disk.writeAsync(key, compressed);
+      if (!(await budgetLock.renewAsync(budgetLease, 180))) return false;
+      published = await lock.setIfOwnedAsync(lease, `${namespace}:ready:${id}`, ready, preparationMaxAgeMs);
+      if (!published) return false;
+      return { storedDocumentBytes };
+    } finally {
+      try {
+        if (!published) await disk.removeAsync(key, document.token);
+      } finally {
+        await budgetLock.releaseAsync(budgetLease);
+      }
+    }
+  }
   if (
     !(await lock.setIfOwnedWithinBudgetAsync(lease, `${namespace}:document:${id}`, compressed, preparationMaxAgeMs, {
       indexName: "board-preparation:document-budget:v1",
@@ -215,6 +257,11 @@ export const writePreparedDocumentAsync = async (
 export const readPreparedDocumentAsync = async (id: string, token: string) => {
   const namespace = await getPreparationNamespaceAsync();
   if (!namespace) return null;
+  if (env.BOARD_PREPARATION_STORAGE === "disk") {
+    const document = await (await getDiskCacheAsync()).readAsync(`${namespace}:document:${id}`, token);
+    if (!document) return null;
+    return await decompressDocumentAsync(document);
+  }
   const document = await createGetSetChannel<PreparedDocument>(`${namespace}:document:${id}`, {
     useBoundedCacheClient: true,
   }).getAsync();

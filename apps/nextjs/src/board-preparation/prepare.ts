@@ -223,6 +223,7 @@ export const prepareBoardAsync = async (id: string, runId?: string, signal?: Abo
       streamedReveals: countStreamedReveals(html),
       documentBytes: Buffer.byteLength(html),
       storedDocumentBytes: publication.storedDocumentBytes,
+      storage: process.env.BOARD_PREPARATION_STORAGE ?? "redis",
     });
     return "prepared" as const;
   } finally {
