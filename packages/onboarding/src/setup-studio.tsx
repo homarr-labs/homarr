@@ -2,6 +2,7 @@
 
 import type { CSSProperties, KeyboardEvent, ReactNode } from "react";
 import { useEffect, useMemo, useRef, useState } from "react";
+import type { MantineSpacing } from "@mantine/core";
 import {
   Accordion,
   ActionIcon,
@@ -856,12 +857,14 @@ const SectionHeading = ({
   title,
   description,
   headingRef,
+  mb = "xl",
 }: {
   title: string;
   description: string;
   headingRef: React.RefObject<HTMLHeadingElement | null>;
+  mb?: MantineSpacing;
 }) => (
-  <Stack gap={4} mb="xl">
+  <Stack gap={4} mb={mb}>
     <Title id="studio-section-title" ref={headingRef} order={2} tabIndex={-1}>
       {title}
     </Title>
@@ -911,14 +914,9 @@ const ServerAddressReview = (props: StudioSectionProps) => {
       p="md"
       radius="md"
     >
-      <Stack gap="sm">
-        <Title order={3} size="h4">
-          {t("serverAddressReview")}
-        </Title>
-        <Text size="sm" c="dimmed">
-          {t("serverOriginHelp")}
-        </Text>
+      <Stack gap="xs">
         <ServiceUrlTemplate
+          description={t("serverOriginHelp")}
           serverOrigin={props.serverOrigin}
           onServerOriginChange={props.setServerOrigin}
           mode={props.urlMode}
@@ -1130,7 +1128,7 @@ const Connections = (props: StudioSectionProps) => {
   const t = useI18n("init.studio.connect");
   return (
     <Stack gap="xl">
-      <SectionHeading headingRef={props.headingRef} title={t("title")} description={t("description")} />
+      <SectionHeading headingRef={props.headingRef} title={t("title")} description={t("description")} mb={0} />
       {props.hasSelectedServices && <ServerAddressReview {...props} />}
       {props.discoveredIntegrations.length > 0 ? (
         <Fieldset legend={t("discoveredIntegrations", { count: String(props.discoveredIntegrations.length) })}>

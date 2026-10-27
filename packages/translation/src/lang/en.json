@@ -101,8 +101,7 @@
       "connect": {
         "title": "Connect what makes the board useful",
         "description": "Select several services at once. Docker labels take priority, image matching fills gaps, and every URL and credential stays reviewable.",
-        "serverAddressReview": "Prefill your service URLs",
-        "serverOriginHelp": "Choose the address and URL pattern you normally use for your services. Homarr prefills the connections below and updates them together, while keeping any URLs you edit individually.",
+        "serverOriginHelp": "Use your usual address and URL pattern to prefill the services below. Individual URL edits are kept.",
         "serverAddressExample": "Example: {url}",
         "confirmServerAddress": "This looks right",
         "serverAddressReviewed": "Server address reviewed. You can still edit each service URL below.",

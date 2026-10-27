@@ -256,6 +256,19 @@
   --server-address-action-width: 9rem;
 }
 
+.serverAddressReview .serverAddressConfirmation:global(.mantine-Button-root) {
+  min-height: 2rem;
+  height: 2rem;
+}
+
+.serverAddressReview .floatingControlRoot {
+  border: 0;
+}
+
+.serverAddressReview .floatingControlIndicator {
+  border: 0;
+}
+
 .serverAddressReview[data-review-required] {
   border-color: var(--mantine-color-red-6);
   box-shadow: var(--mantine-shadow-md);
@@ -570,6 +583,26 @@
 
   .serverAddressReview {
     --server-address-action-width: 3.25rem;
+  }
+
+  .serverAddressReview .serverAddressConfirmation:global(.mantine-Button-root) {
+    min-height: 2.75rem;
+    height: 2.75rem;
+  }
+
+  .serverAddressReview .floatingControlRoot {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    width: 100%;
+    min-width: 0;
+  }
+
+  .serverAddressReview .floatingControl {
+    min-width: 0;
+    min-height: 2.75rem;
+    font-size: var(--mantine-font-size-sm);
+    text-align: start;
+    white-space: normal;
   }
 
   .serverAddressConfirmation {

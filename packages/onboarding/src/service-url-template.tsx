@@ -68,6 +68,7 @@ interface ServiceUrlTemplateProps {
   onModeChange: (value: UrlTemplateMode) => void;
   readOnly?: boolean;
   required?: boolean;
+  description?: ReactNode;
   rightSection?: ReactNode;
   rightSectionWidth?: number | string;
 }
@@ -79,6 +80,7 @@ export const ServiceUrlTemplate = ({
   onModeChange,
   readOnly,
   required,
+  description,
   rightSection,
   rightSectionWidth,
 }: ServiceUrlTemplateProps) => {
@@ -88,6 +90,7 @@ export const ServiceUrlTemplate = ({
     <Stack gap="sm">
       <TextInput
         label={t("serverTitle")}
+        description={description}
         placeholder="home.lan · 192.168.1.10 · https://homarr.example.com"
         value={serverOrigin}
         onChange={(event) => onServerOriginChange(event.currentTarget.value)}
