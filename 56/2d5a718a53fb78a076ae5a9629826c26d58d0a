@@ -1,0 +1,16 @@
+packages/api/src/router/custom-widget/preview-base-procedures.ts
+  h_d6e478ca18e517 256
+packages/api/src/router/test/custom-widget/preview-authoring.spec.ts
+  h_d6e478ca18e517 12-16,19,414-418,439-483,487
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "562d5a718a53fb78a076ae5a9629826c26d58d0a",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
