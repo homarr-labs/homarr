@@ -1,0 +1,27 @@
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_copy-ai-prompt-button.tsx
+  s_da46d8bcf4b8ce::t_0cd4bb00d5c923 13,16,25,35,40-41,45,49
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-ai-card.tsx
+  s_da46d8bcf4b8ce::t_3094c91f801ff3 13,76
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-form-sections.tsx
+  s_da46d8bcf4b8ce::t_5af81844fad6da 27,33,43
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-form.tsx
+  s_da46d8bcf4b8ce::t_110e787973743b 158
+packages/custom-widgets/src/test/ai-prompt.spec.ts
+  s_da46d8bcf4b8ce::t_76ae847da96e6c 146-147,207,211,220-229
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "018c4ff948371a94da157e89dadeb2336b165268",
+  "prompts": {},
+  "sessions": {
+    "s_da46d8bcf4b8ce": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "2da0197c-e9c6-47c9-bec8-e8632f213477",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
