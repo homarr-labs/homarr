@@ -6,6 +6,7 @@ import { ActionIcon, Tooltip, useMantineColorScheme } from "@mantine/core";
 import { useHotkeys } from "@mantine/hooks";
 
 import { clientApi } from "@homarr/api/client";
+import { useBoardReplay } from "@homarr/api/board-replay";
 import { useSession } from "@homarr/auth/client";
 import { hotkeys } from "@homarr/definitions";
 import { useI18n } from "@homarr/translation/client";
@@ -25,6 +26,7 @@ export const UserButtonClient = ({ avatar, isAdmin, isDockerEnabled, boardSwitch
   const [canCheckForUpdates, setCanCheckForUpdates] = useState(false);
   const t = useI18n("common.userAvatar.menu");
   const session = useSession();
+  const replay = useBoardReplay();
   const { toggleColorScheme } = useMantineColorScheme();
   useHotkeys([[hotkeys.toggleColorScheme, toggleColorScheme]]);
   const isCurrentSessionAdmin =
@@ -47,6 +49,13 @@ export const UserButtonClient = ({ avatar, isAdmin, isDockerEnabled, boardSwitch
     staleTime: 60 * 60 * 1_000,
   });
   const visibleUpdates = isCurrentSessionAdmin ? availableUpdates : undefined;
+
+  if (replay)
+    return (
+      <ActionIcon aria-label={t("open")} variant="subtle" color="gray" size={44} radius="xl" disabled>
+        {avatar}
+      </ActionIcon>
+    );
 
   return (
     <UserAvatarMenu availableUpdates={visibleUpdates} isDockerEnabled={isDockerEnabled} boardSwitcher={boardSwitcher}>

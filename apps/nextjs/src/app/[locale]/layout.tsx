@@ -28,8 +28,11 @@ import { SettingsProvider } from "@homarr/settings";
 import { SpotlightProvider } from "@homarr/spotlight";
 import type { SupportedLanguage } from "@homarr/translation";
 import { isLocaleRTL, isLocaleSupported } from "@homarr/translation";
-import { getI18n } from "@homarr/translation/server";
+import { getI18n, getI18nMessages } from "@homarr/translation/server";
 import { resolveHomarrUrlConfig } from "@homarr/workshop/schema";
+
+import { isBoardDebugPreviewAsync } from "~/components/board/debug/request";
+import { DebugPreviewProviders } from "~/components/board/debug/providers";
 
 import { AssistantGate } from "~/components/assistant/assistant-gate";
 import { CrowdinLiveTranslation } from "~/components/layout/crowdin-live-translation";
@@ -54,6 +57,8 @@ const fontSans = Inter({
 const logger = createLogger({ module: "rootLayout" });
 
 export const generateMetadata = async (): Promise<Metadata> => {
+  if (await isBoardDebugPreviewAsync())
+    return { title: "Board snapshot preview", robots: { index: false, follow: false } };
   const [serverSettings, colorScheme, t] = await Promise.all([
     getRscServerSettingsAsync(),
     getCurrentColorSchemeAsync(),
@@ -90,6 +95,7 @@ export const generateMetadata = async (): Promise<Metadata> => {
 };
 
 export const generateViewport = async (): Promise<Viewport> => {
+  if (await isBoardDebugPreviewAsync()) return {};
   const serverSettings = await getRscServerSettingsAsync();
   return { themeColor: serverSettings.branding.primaryColor };
 };
@@ -101,6 +107,18 @@ export default async function Layout(props: {
   const { locale } = await props.params;
   if (!isLocaleSupported(locale)) {
     notFound();
+  }
+
+  if (await isBoardDebugPreviewAsync()) {
+    return (
+      <html lang={locale} dir={isLocaleRTL(locale) ? "rtl" : "ltr"} suppressHydrationWarning>
+        <body className={[fontSans.className, fontSans.variable].join(" ")}>
+          <NextIntlClientProvider locale={locale} messages={await getI18nMessages({ locale })}>
+            <DebugPreviewProviders>{props.children}</DebugPreviewProviders>
+          </NextIntlClientProvider>
+        </body>
+      </html>
+    );
   }
 
   const sessionPromise = auth();
