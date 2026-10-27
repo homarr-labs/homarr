@@ -1,0 +1,37 @@
+apps/nextjs/src/app/api/assistant/chat/assistant-tool-schema.spec.ts
+  s_da46d8bcf4b8ce::t_47c8f9aec92c89 35-46
+apps/nextjs/src/components/assistant/assistant-tool-result.spec.ts
+  s_da46d8bcf4b8ce::t_4ee4b85a091948 24-41
+apps/nextjs/src/components/assistant/assistant-tool-result.ts
+  s_da46d8bcf4b8ce::t_d34cd0e405f8b8 236-248
+packages/api/src/router/custom-widget/preview-base-procedures.ts
+  s_49ea3fbee7dd7e::t_78e50b1be60458 14,117,138,150,215,235,254-264,278,310-318
+packages/api/src/router/test/custom-widget/definition-persistence.spec.ts
+  s_da46d8bcf4b8ce::t_6361cfe18269b7 313,354-401
+packages/api/src/test/mcp.spec.ts
+  s_da46d8bcf4b8ce::t_79980617802b6f 231-240
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "79b813c5eb9b640e50e81eed49d6063b78ec7e5c",
+  "prompts": {},
+  "sessions": {
+    "s_49ea3fbee7dd7e": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "4bbd5d1e-1d9b-4028-8bba-3a932f39ccfb",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_da46d8bcf4b8ce": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "2da0197c-e9c6-47c9-bec8-e8632f213477",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
