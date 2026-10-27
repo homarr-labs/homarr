@@ -369,6 +369,7 @@ export const SetupStudio = ({ environment, assistantConfiguration }: OnboardingS
     if (!nextSection) return;
     focusSectionHeading.current = false;
     const selectedSection = selectSection(nextSection.id);
+    if (selectedSection === activeSection) focusSectionHeading.current = true;
     const selectedIndex = sectionDefinitions.findIndex((section) => section.id === selectedSection);
     sectionButtonRefs.current[selectedIndex]?.focus();
   };

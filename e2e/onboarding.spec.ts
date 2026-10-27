@@ -57,11 +57,16 @@ describe("Onboarding", () => {
         await page.locator("css=button[type='submit']").click();
         await page.getByRole("heading", { name: "Start with familiar defaults" }).waitFor({ timeout: 30_000 });
 
+        await page.getByRole("button", { name: "Connect (3/6)" }).click();
+        await page.getByRole("switch", { name: "Edit the usual server address and pattern" }).check();
         const serverOrigin = page.getByRole("textbox", { name: "Usual server address" });
         await serverOrigin.fill("https://home.example/homarr");
+        await page.getByRole("button", { name: "Essentials (1/6)" }).click();
         await page.getByLabel("Default language").click();
         await page.getByRole("option", { name: /Français/ }).click();
+        await page.getByRole("button", { name: "Connect (3/6)" }).click();
         expect(await serverOrigin.inputValue()).toBe("https://home.example/homarr");
+        await page.getByRole("button", { name: "Essentials (1/6)" }).click();
         expect(await page.getByRole("heading", { name: "Start with familiar defaults" }).isVisible()).toBe(true);
 
         expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1)).toBe(true);
@@ -300,6 +305,8 @@ describe("Onboarding", () => {
       expect(await page.locator('meta[name="homarr-workshop-api-url"]').getAttribute("content")).toBe(
         configuredWorkshopApiUrl,
       );
+      await page.getByRole("button", { name: "Connect (3/6)" }).click();
+      await page.getByRole("button", { name: "Yes, this looks right" }).click();
       await page.getByRole("button", { name: "Extend (5/6)" }).click();
       await page.getByRole("heading", { name: "Advanced features" }).waitFor();
       await page.getByRole("tab", { name: "Assistant" }).click();
