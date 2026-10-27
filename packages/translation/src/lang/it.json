@@ -2721,7 +2721,7 @@
       },
       "pollutant": {
         "pm2_5": "PM2,5",
-        "pm10": "",
+        "pm10": "PM10",
         "ozone": "Ozono",
         "nitrogenDioxide": "Biossido di azoto",
         "sulphurDioxide": "",
