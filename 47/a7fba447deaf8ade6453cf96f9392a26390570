@@ -1,0 +1,19 @@
+packages/custom-widgets/src/test/ai-assistant-evaluation.spec.ts
+  s_646db16e326abd::t_018d7e9e1af435 572-574
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "47a7fba447deaf8ade6453cf96f9392a26390570",
+  "prompts": {},
+  "sessions": {
+    "s_646db16e326abd": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "fc3ff591-fce6-4faf-b648-c4a35e176aec",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
