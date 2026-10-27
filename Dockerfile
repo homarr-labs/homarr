@@ -1,8 +1,8 @@
 # syntax=docker/dockerfile:1.28
 
-FROM oven/bun:1.4.4-alpine AS bun-tool
+FROM oven/bun:1.4.4-alpine@sha256:4cf82f5686b196504fe119db3fcd9185b191f82ece82c40680e597228ec6070a AS bun-tool
 
-FROM node:24.22.1-alpine AS base
+FROM node:24.22.1-alpine@sha256:06d7adf3e0ef61a13f1d28682726366f97a15aa1888c934d3ecec86c33918b53 AS base
 
 FROM base AS builder
 ARG TARGETPLATFORM
@@ -30,11 +30,12 @@ RUN --mount=type=secret,id=TURBO_API,env=TURBO_API \
     TURBO_PLATFORM="${TARGETPLATFORM:-linux/amd64}/musl/node-24.22.1" \
     bun run turbo run build --filter=@homarr/nextjs... --filter=@homarr/cli
 
-FROM alpine:3.24.3 AS runner
+FROM alpine:3.24.3@sha256:be2656061b536c1883c4034790e21d0a09c5aaaf51968b89368a3c0371ea2c9a AS runner
 WORKDIR /app
 COPY --from=base /usr/local/bin/node /usr/local/bin/node
 # envsubst, privilege drop and AUTH_SECRET generation are used by the entrypoint.
-RUN apk add --no-cache libstdc++ ca-certificates redis nginx bash gettext su-exec openssl && \
+RUN apk upgrade --no-cache && \
+    apk add --no-cache libstdc++ ca-certificates redis nginx bash gettext su-exec openssl && \
     mkdir -p /appdata /var/cache/nginx /var/log/nginx /var/lib/nginx \
       /run/nginx /etc/nginx/templates /etc/nginx/ssl/certs && \
     touch /run/nginx/nginx.pid
@@ -59,5 +60,6 @@ ENV AUTH_PROVIDERS='credentials'
 ENV REDIS_IS_EXTERNAL='false'
 ENV NODE_ENV='production'
 EXPOSE 7575
+HEALTHCHECK --interval=30s --timeout=5s --start-period=60s --retries=3 CMD wget -q --spider http://127.0.0.1:7575/api/health/live || exit 1
 ENTRYPOINT ["/app/entrypoint.sh"]
 CMD ["sh", "run.sh"]
