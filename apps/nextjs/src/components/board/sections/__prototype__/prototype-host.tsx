@@ -7,14 +7,14 @@ import { NativePrototypeControls } from "./prototype-controls";
 import { prototypeFixtureIds } from "./prototype-fixtures";
 import { PrototypeWidgetProvider } from "./prototype-widget-provider";
 
-// Three alternatives on Homarr's existing board route, shareable with ?variant=A|B|C.
+// One smart container: relevance chooses a page; its children compete for a shared row budget.
 export function AdaptiveContainerPrototypeHost({ children }: PropsWithChildren) {
   return (
     <AdaptiveContainerPrototypeProvider
       sectionId={prototypeFixtureIds.container}
       mediaItemId={prototypeFixtureIds.media}
-      statsItemId={prototypeFixtureIds.stats}
-      mediaSavedRows={3}
+      downloadsItemId={prototypeFixtureIds.downloads}
+      requestsItemId={prototypeFixtureIds.requests}
       savedContainerRows={6}
     >
       <PrototypeWidgetProvider>

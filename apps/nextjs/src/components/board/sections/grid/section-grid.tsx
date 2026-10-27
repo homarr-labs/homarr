@@ -222,6 +222,9 @@ export const SectionGrid = ({
   if (hasContainerHeader && !collapsedSectionIds.has(section.id)) {
     headerInset = (CONTAINER_HEADER_HEIGHT * calculateBoardUiScale(canvasScale)) / parentContentScale;
   }
+  if (adaptivePrototype?.sectionId === section.id) {
+    headerInset += (44 * calculateBoardUiScale(canvasScale)) / parentContentScale;
+  }
   let nestedHeaderInset = 0;
   if (
     section.kind === "container" &&
@@ -392,9 +395,7 @@ export const SectionGrid = ({
               <SectionContent />
               {adaptivePrototype?.sectionId === section.id && displayPlacements.length === 0 && !isEditMode && (
                 <Box component="output" p="md" c="dimmed" pos="absolute" top="40%" w="100%" ta="center">
-                  {adaptivePrototype.variant === "B" && adaptivePrototype.settings.showFallback
-                    ? "Selection paused. Choose Stats or resume automatic selection."
-                    : "No current activity. Container settings and activity observation remain available."}
+                  No current activity. Switch state or resume automatic selection.
                 </Box>
               )}
             </GridRowScaleContext.Provider>

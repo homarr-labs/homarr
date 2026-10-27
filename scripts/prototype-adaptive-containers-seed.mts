@@ -33,7 +33,13 @@ await database
   .insert(schema.integrations)
   .values([
     { id: ids.integration, name: "Jellyfin · prototype data", kind: "jellyfin", url: "http://127.0.0.1:1" },
-    { id: ids.failedIntegration, name: "Second source · prototype data", kind: "jellyfin", url: "http://127.0.0.1:1" },
+    {
+      id: ids.downloadsIntegration,
+      name: "qBittorrent · prototype data",
+      kind: "qBittorrent",
+      url: "http://127.0.0.1:1",
+    },
+    { id: ids.requestsIntegration, name: "Jellyseerr · prototype data", kind: "jellyseerr", url: "http://127.0.0.1:1" },
   ])
   .onConflictDoNothing();
 
@@ -45,7 +51,7 @@ await database.insert(schema.sections).values([
     id: ids.container,
     boardId: ids.board,
     kind: "container",
-    options: stringify({ ...containerSectionOptionsDefaults, title: "Media activity", showLabel: true }),
+    options: stringify({ ...containerSectionOptionsDefaults, title: "Smart container", showLabel: true }),
   },
   {
     id: linksId,
@@ -59,9 +65,24 @@ await database.insert(schema.items).values([
     id: ids.media,
     boardId: ids.board,
     kind: "mediaServer",
+    advancedOptions: stringify({ title: "Currently playing" }),
     options: stringify({ showOnlyPlaying: true, showBitrate: true, showLocation: true }),
   },
   { id: ids.stats, boardId: ids.board, kind: "stats", options: stringify(createPrototypeStatsOptions()) },
+  {
+    id: ids.downloads,
+    boardId: ids.board,
+    kind: "downloads",
+    advancedOptions: stringify({ title: "Downloads" }),
+    options: stringify({ columns: ["name", "progress", "downSpeed", "time", "state"] }),
+  },
+  {
+    id: ids.requests,
+    boardId: ids.board,
+    kind: "mediaRequests-requestList",
+    advancedOptions: stringify({ title: "Requests" }),
+    options: stringify({ linksTargetNewTab: true, statusFilter: ["pending"], recentDays: 0 }),
+  },
   {
     id: "adaptive-prototype-clock",
     boardId: ids.board,
@@ -71,13 +92,14 @@ await database.insert(schema.items).values([
 ]);
 await database.insert(schema.integrationItems).values([
   { itemId: ids.media, integrationId: ids.integration },
-  { itemId: ids.media, integrationId: ids.failedIntegration },
   { itemId: ids.stats, integrationId: ids.integration },
+  { itemId: ids.downloads, integrationId: ids.downloadsIntegration },
+  { itemId: ids.requests, integrationId: ids.requestsIntegration },
 ]);
 
 const services = [
   { slug: "jellyfin", kind: "jellyfin", name: "Jellyfin", href: "https://jellyfin.org" },
-  { slug: "sonarr", kind: "sonarr", name: "Sonarr", href: "https://sonarr.tv" },
+  { slug: "qbittorrent", kind: "qBittorrent", name: "qBittorrent", href: "https://www.qbittorrent.org" },
   { slug: "immich", kind: "immich", name: "Immich", href: "https://immich.app" },
   { slug: "home-assistant", kind: "homeAssistant", name: "Home Assistant", href: "https://www.home-assistant.io" },
 ] as const;
@@ -154,11 +176,20 @@ for (const layout of [
       height: 3,
     },
     {
-      itemId: ids.stats,
+      itemId: ids.downloads,
       layoutId: layout.id,
       sectionId: ids.container,
       xOffset: 0,
       yOffset: 3,
+      width: mediaWidth,
+      height: 2,
+    },
+    {
+      itemId: ids.requests,
+      layoutId: layout.id,
+      sectionId: ids.container,
+      xOffset: 0,
+      yOffset: 5,
       width: mediaWidth,
       height: 1,
     },
@@ -170,6 +201,15 @@ for (const layout of [
       yOffset: clockY,
       width: 3,
       height: clockHeight,
+    },
+    {
+      itemId: ids.stats,
+      layoutId: layout.id,
+      sectionId: mainId,
+      xOffset: clockX,
+      yOffset: clockY + clockHeight,
+      width: 3,
+      height: 1,
     },
   ]);
   for (const [index, service] of services.entries()) {

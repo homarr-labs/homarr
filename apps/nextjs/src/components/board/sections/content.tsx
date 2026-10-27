@@ -12,6 +12,7 @@ import { useSectionContext } from "./section-context";
 import { useSectionItems } from "./use-section-items";
 import { useAdaptiveContainerPrototype } from "./__prototype__/adaptive-container-context";
 import { isPrototypeItemHidden } from "./__prototype__/adaptive-container-projection";
+import { NativePrototypeCompactWidget } from "./__prototype__/prototype-compact-widget";
 
 export const SectionContent = () => {
   const { innerSections, integrations, items } = useSectionContext();
@@ -47,12 +48,25 @@ export const SectionContentItem = ({ item, integrations }: ItemProps) => {
   const { section } = useSectionContext();
   if (item.type === "section") return <ContainerSectionContentItem item={item} />;
 
-  const content = (
-    <FixedGridItem item={item}>
+  let body = (
+    <>
       {item.kind !== "app" && <WidgetHoverOverlay item={item} integrations={integrations} />}
       <BoardItemContent item={item} />
-    </FixedGridItem>
+    </>
   );
+  if (prototype?.sectionId === section.id) {
+    const allocation = prototype.allocations.find((entry) => entry.itemId === item.id);
+    const compact = !!allocation && !allocation.active && allocation.rows === 1 && !isEditMode;
+    body = (
+      <>
+        <div hidden={compact} inert={compact} style={{ width: "100%", height: "100%" }}>
+          {body}
+        </div>
+        {compact && <NativePrototypeCompactWidget label={allocation.label} />}
+      </>
+    );
+  }
+  const content = <FixedGridItem item={item}>{body}</FixedGridItem>;
   if (!prototype || prototype.sectionId !== section.id) return content;
   const hidden = isPrototypeItemHidden(prototype, item.id, isEditMode);
   return (
@@ -62,7 +76,7 @@ export const SectionContentItem = ({ item, integrations }: ItemProps) => {
       data-prototype-item={item.id}
       onFocusCapture={() => {
         prototype.setFocusedItemId(item.id, { y: item.yOffset, h: item.height });
-        if (prototype.variant === "B") prototype.pause("focus");
+        prototype.pause("focus");
       }}
       onBlurCapture={(event) => {
         if (!event.currentTarget.contains(event.relatedTarget)) prototype.setFocusedItemId(null);

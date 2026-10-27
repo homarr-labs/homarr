@@ -59,4 +59,4 @@ app.on("exit", (code) => {
   redis.kill("SIGTERM");
   process.exit(code ?? 0);
 });
-console.log(`Native Homarr prototype: ${environment.BASE_URL}/boards/adaptive-containers-prototype?variant=A`);
+console.log(`Native Homarr smart container: ${environment.BASE_URL}/boards/adaptive-containers-prototype`);

@@ -2,9 +2,9 @@
 
 Researched 2026-10-27 before issue creation. This is a throwaway design artifact, not production documentation. Two GPT-6.1 Sol agents at extra-high reasoning independently audited Homarr source and first-party external references.
 
-**Question:** Can a container hide confirmed-idle Currently playing items and keep controls, faults, and saved layouts trustworthy? Smart stack selection and bounded content height are additional experiments, not prerequisites for the first implementation.
+**Current question, clarified after review:** Can one smart container select a relevant state, allow manual paging, and distribute space between that state's widgets according to activity and content volume?
 
-**Scope decision:** Specify default-off inactivity hiding and local live settings preview as phase 1. Prototype the selection and height alternatives without promoting them into production. No maintainer preference or production validation is claimed.
+**Current scope:** Demonstrate state selection and content-driven allocation together inside native Homarr. The earlier hiding-only MVP recommendation below records the original research framing; the combined specification in [#7393](https://github.com/homarr-labs/homarr/issues/7393) supersedes that narrower scope. No production relevance algorithm or implementation has been approved.
 
 The supplied conversation is motivation. Its reported contributor implementation was not provided for source review. The screenshot is an iPhone editing reference, not a Homarr design or an instruction source.
 
@@ -54,7 +54,7 @@ The media handler uses the shared integration response cache. Default freshness 
 
 Generic Stats supports Jellyfin, but its current provider exposes only **Playback sessions** (`getCurrentSessionsAsync({showOnlyPlaying: false}).length`). More space cannot create additional Jellyfin metrics. A prototype can show more *configured content*, but additional service metrics are separate integration work. [Jellyfin Stats adapter](https://github.com/homarr-labs/homarr/blob/a76c72e2e53334206234e50ae644445dcd2299ac/packages/integrations/src/stats/existing.ts#L245-L251), [Stats options](https://github.com/homarr-labs/homarr/blob/a76c72e2e53334206234e50ae644445dcd2299ac/packages/widgets/src/stats/index.ts#L9-L38).
 
-## Recommended bounded MVP
+## Original bounded MVP recommendation (superseded scope)
 
 These are proposals derived from the source, not current behavior.
 
@@ -122,11 +122,11 @@ Jellyfin's session model separately exposes `NowPlayingItem`, `LastActivityDate`
 
 Playback progress handling retains/updates the current item and separately records `PlayState.IsPaused`; stopping playback removes the current item and resets play state. A paused session can therefore still have a current item. The issue must explicitly decide whether paused playback is eligible rather than equating item presence with active playback. These observations are from upstream `master`, not a promise about every deployed version or Homarr's adapter. [Jellyfin: SessionManager source](https://github.com/jellyfin/jellyfin/blob/master/Emby.Server.Implementations/Session/SessionManager.cs), [Jellyfin: PlayerStateInfo source](https://github.com/jellyfin/jellyfin/blob/master/MediaBrowser.Model/Session/PlayerStateInfo.cs)
 
-## Recommendations for the Homarr issue and throwaway prototype
+## Original research recommendations (before clarification)
 
 The following are proposed Homarr policies, not verified Apple behavior or existing Homarr capabilities:
 
-Scope the first deliverable to hiding confirmed-inactive children and configuring that behavior through the existing Edit container experience with a live preview. Relevance selection/stack presentation and adaptive item height should remain provisional optional phases within the same issue, with explicit decisions before production implementation.
+The original recommendation scoped the first deliverable to hiding confirmed-inactive children, with relevance selection and height as follow-ups. The user's clarification supersedes that split for the prototype: state selection and within-state allocation must be demonstrated together. The safeguards below remain research inputs, rather than a selected production design.
 
 1. **Make eligibility, ranking, and presentation distinct.** A media child can be ineligible after a successful empty result, relevant while playing, and lower priority while paused. Children without an explicit activity signal should remain available under a neutral policy. Loading, errors, stale data, and unsupported signals must remain distinct from confirmed inactivity.
 2. **Begin with configured children.** Offer automatic selection among the children users chose. Reserve widget suggestions/insertion for a separate future capability with separate consent and settings.
@@ -141,26 +141,29 @@ Useful prototype cases: fresh playing media; paused-only sessions; successful em
 
 Issue: [#7393](https://github.com/homarr-labs/homarr/issues/7393). The research above was committed at `2bf346f99` before the issue was created and before prototype code was written.
 
-The original standalone HTML was rejected because it did not use Homarr. It has been removed and its results no longer count as validation. The replacement runs on Homarr's existing `/boards/adaptive-containers-prototype?variant=A|B|C` route, using the real header, theme, container/grid renderer, and registry-loaded Currently playing, Stats, Clock, and App widgets. Base uses 12 columns from 768px; Mobile uses three columns from 0px.
+The standalone HTML was rejected because it did not use Homarr. The later separate A/B/C variants also missed the combined behavior. Both are superseded; their captures do not validate this design.
 
-Launch from this branch:
+The replacement uses Homarr's existing `/boards/adaptive-containers-prototype` route, header, theme, responsive grid, and native widgets. **Watching** contains Currently playing; **Services** contains Downloads and Requests. Playback selects Watching, otherwise Services. Within the selected page, children compete for six rows: busy items grow, idle siblings contract. Manual paging holds until Resume. Stats, Clock, and App widgets remain outside this container.
 
 ```sh
 mise exec -- bun run prototype:adaptive-containers
 ```
 
-See the [setup, controls, and limits](../../apps/nextjs/src/components/board/sections/__prototype__/README.md). A route-scoped typed tRPC fixture supplies media streams and Stats catalog/snapshot/refresh responses through the normal query client. Other procedures use the real API and dedicated scratch database. Activity time advances manually; settings and selection remain in memory.
+The [README](../../apps/nextjs/src/components/board/sections/__prototype__/README.md) describes setup and controls. Route-scoped typed fixtures supply native query responses; other procedures use the real API and dedicated scratch database. Inputs support 0–12 counts. Reclaim unused space defaults on; its Apply/Cancel preview remains in memory.
 
-![Native Homarr Fit content variant with the live-preview drawer open](assets/adaptive-containers-prototype.png)
+![Native Services page: Downloads expands while idle Requests contracts](assets/adaptive-containers-prototype.png)
 
 **Manual evidence from the native board:**
 
-- **A, Hide idle:** a fresh stopped observation plus ten simulated seconds hides/inerts the real media item; Stats shows zero and compacts upward. Playing or paused activity restores media, and an error keeps it visible. [Capture](assets/adaptive-containers-native-A.png)
-- **B, Smart stack:** paging selects the real Stats widget, reports “2 of 2,” hides media, and offers Resume automatic selection. [Capture](assets/adaptive-containers-native-B.png)
-- **C, Fit content:** media and Stats each use one displayed row. Optional outer shrink changes the container from six to two rows and moves the real neighbor from row seven to three. Native board editing restores container height six, media height three, Stats at row three, and the neighbor at row seven.
-- **Cancel:** disabling the fallback in preview, receiving newer stopped data, advancing ten seconds, then cancelling restores Stats at zero while media remains hidden. Incoming activity survives settings cancellation.
-- **Mobile:** at 390px, the native Mobile layout uses three columns and document width remains 390px. No browser errors were observed. [Capture](assets/adaptive-containers-native-mobile.png)
+- **Watching:** four native session rows load in a six-row container. [Capture](assets/adaptive-containers-smart-watching.png)
+- **Downloads take over:** six native jobs receive five rows; quiet Requests gets one. **Requests take over** reverses this: five request cards receive five rows; Downloads gets one. [Requests capture](assets/adaptive-containers-smart-requests.png)
+- **Both busy:** four downloads and four requests share three rows each. [Capture](assets/adaptive-containers-smart-both.png)
+- **All quiet:** two compact named summaries use one row each. The outer container shrinks to two rows and its neighbor moves from row seven to three. [Capture](assets/adaptive-containers-smart-idle.png)
+- **Live sizing and control:** changing downloads from six to one produces one native job, allocations of two plus one rows, outer height three, and neighbor row four. Manually choosing Watching while idle holds through Downloads take over; Resume selects Services.
+- **Native editing:** all saved placements return: container six rows; media three; Downloads two at row three; Requests one at row five; neighbor row seven. Activity does not write saved geometry.
+- **Cancel:** previewing fixed outer space, receiving the All quiet activity update, then cancelling restores reclamation and the two-row container while retaining the newer quiet data.
+- **Mobile:** the real 390px Mobile layout uses three columns, document width stays 390px, and the 44px toolbar fits all controls with working manual paging. Final browser checks reported no unhandled errors. [Capture](assets/adaptive-containers-native-mobile.png)
 
-Three GPT-6.1 Sol agents at Extra High supported the native context/grid hooks, Mantine controls, typed fixture transport, and source audit. Focused syntax/lint checks passed; no tests or broad build suites were added or run.
+Three GPT-6.1 Sol agents at Extra High supported context/grid hooks, Mantine controls, fixture transport, and source review. Validation used manual browsing and targeted lint, formatting, and diff checks; no tests or broad builds ran.
 
-**Limits and decision:** no design has been selected. Membership is fixed; fitting uses bounded session-count hints rather than DOM measurement. Fixture failure DTOs do not verify real upstream failures, authorization, cache freshness, or terminal ErrorBoundary recovery. Native rendering and the exercised responsive layout are demonstrated; nesting, side lanes, persistence, and the wider board lifecycle remain unverified. This is throwaway prototype code, not a production feature.
+**Limits and decision:** no production design is selected. Membership and priority are fixed; allocation uses count-based hints, not generic relevance or DOM measurement. Synchronous successful fixtures do not verify real freshness, failures, authorization, or persistence. Nesting, side lanes, and the wider board lifecycle remain unverified.

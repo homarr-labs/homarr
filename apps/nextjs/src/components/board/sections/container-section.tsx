@@ -49,6 +49,9 @@ export const BoardContainerSection = ({ section }: Props) => {
     if (section.xOffset + section.width === parent.columnCount) containerInlineInsetCount -= 1;
   }
   const [isEditMode] = useEditMode();
+  const isSmartPrototype = adaptivePrototype?.sectionId === section.id;
+  let bodyHeight = "100%";
+  if (isSmartPrototype) bodyHeight = "calc(100% - 44px * var(--board-canvas-ui-scale, 1))";
   const t = useI18n("section.container");
   const tSection = useI18n("section");
   const options = section.options;
@@ -128,10 +131,6 @@ export const BoardContainerSection = ({ section }: Props) => {
       data-grid-item-content
       w="100%"
       h="100%"
-      onMouseEnter={() => {
-        if (adaptivePrototype?.sectionId === section.id && adaptivePrototype.variant === "B")
-          adaptivePrototype.pause("hover");
-      }}
       style={{
         overflow: "visible",
       }}
@@ -236,10 +235,11 @@ export const BoardContainerSection = ({ section }: Props) => {
             <IconExternalLink size="var(--mantine-font-size-md)" />
           </ActionIcon>
         )}
+        {isSmartPrototype && <NativeContainerPrototypeActions sectionId={section.id} />}
         <Box
           id={contentId}
           className={classes.containerBody}
-          h="100%"
+          h={bodyHeight}
           data-board-container-body
           data-collapsed={isVisuallyCollapsed ? "true" : "false"}
           aria-hidden={isVisuallyCollapsed}
@@ -256,7 +256,6 @@ export const BoardContainerSection = ({ section }: Props) => {
             />
           </ContainerDepthContext>
         </Box>
-        {adaptivePrototype?.sectionId === section.id && <NativeContainerPrototypeActions sectionId={section.id} />}
         {isEditMode && <BoardContainerMenu section={section} position={menuPosition} />}
       </Card>
     </Box>

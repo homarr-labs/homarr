@@ -2,132 +2,168 @@
 
 import type { PropsWithChildren } from "react";
 import { createContext, useContext, useState } from "react";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
-// Throwaway native-board experiment. All state and activity data remain in memory.
-export type PrototypeVariant = "A" | "B" | "C";
-export type PrototypeProbeStatus = "success" | "loading" | "error" | "partial" | "stale" | "unconfigured" | "forbidden";
-export interface PrototypeSettings {
-  hideInactive: boolean;
-  showFallback: boolean;
-  fitStrategy: "compact" | "details";
-  shrinkContainer: boolean;
-}
-export interface PrototypeProbe {
-  status: PrototypeProbeStatus;
+// One native smart container: activity chooses a page and its children share six rows.
+export type SmartPageId = "watching" | "services";
+export type PrototypeScenario = "watching" | "downloads" | "requests" | "both" | "idle";
+export interface PrototypeCounts {
   playing: number;
-  paused: number;
-  observedAt: number;
-  idleSince: number | null;
-  refreshing: boolean;
+  downloads: number;
+  requests: number;
+}
+export interface PrototypeSettings {
+  reclaimSpace: boolean;
 }
 export interface PrototypeState {
-  now: number;
-  probe: PrototypeProbe;
-  settings: PrototypeSettings;
-  draft: PrototypeSettings | null;
-  selectedId: string;
+  counts: PrototypeCounts;
+  scenario: PrototypeScenario;
+  selectedPageId: SmartPageId;
   automatic: boolean;
   pausedReason: string | null;
   focusedItemId: string | null;
   focusedPlacement: { y: number; h: number } | null;
+  settings: PrototypeSettings;
+  draft: PrototypeSettings | null;
 }
-export interface PrototypeActivity {
-  kind: "active" | "inactive" | "unknown" | "error";
+export interface SmartPage {
+  id: SmartPageId;
+  label: string;
+  description: string;
+  active: boolean;
+  score: number;
+}
+export interface PrototypeAllocation {
+  itemId: string;
+  pageId: SmartPageId;
+  label: string;
+  count: number;
+  rows: number;
+  active: boolean;
   reason: string;
-  pendingSeconds: number | null;
-  age: number;
-  canHide: boolean;
 }
 export interface AdaptiveContainerPrototypeContextValue {
   sectionId: string;
   mediaItemId: string;
-  statsItemId: string;
-  mediaSavedRows: number;
+  downloadsItemId: string;
+  requestsItemId: string;
   savedContainerRows: number;
-  variant: PrototypeVariant;
-  setVariant: (value: PrototypeVariant) => void;
   state: PrototypeState;
   settings: PrototypeSettings;
-  activity: PrototypeActivity;
   editorOpened: boolean;
+  pages: SmartPage[];
+  selectedPageId: SmartPageId;
+  selectionReason: string;
+  allocations: PrototypeAllocation[];
+  setScenario: (id: PrototypeScenario) => void;
+  setCount: (key: keyof PrototypeCounts, count: number) => void;
+  manualSelectPage: (id: SmartPageId) => void;
+  resume: () => void;
+  pause: (reason: string) => void;
   openEditor: () => void;
   applyEditor: () => void;
   cancelEditor: () => void;
   setSetting: <K extends keyof PrototypeSettings>(key: K, value: PrototypeSettings[K]) => void;
-  setProbe: (probe: Pick<PrototypeProbe, "status"> & Partial<Pick<PrototypeProbe, "playing" | "paused">>) => void;
-  backgroundRefresh: () => void;
-  advance: (seconds: number) => void;
-  manualSelect: (id: string) => void;
-  resume: () => void;
-  pause: (reason: string) => void;
   setFocusedItemId: (id: string | null, placement?: { y: number; h: number }) => void;
   reset: () => void;
 }
 
 const Context = createContext<AdaptiveContainerPrototypeContextValue | null>(null);
-const defaults = (): PrototypeSettings => ({
-  hideInactive: true,
-  showFallback: true,
-  fitStrategy: "compact",
-  shrinkContainer: false,
-});
+const scenarios: Record<PrototypeScenario, PrototypeCounts> = {
+  watching: { playing: 4, downloads: 0, requests: 0 },
+  downloads: { playing: 0, downloads: 6, requests: 0 },
+  requests: { playing: 0, downloads: 0, requests: 5 },
+  both: { playing: 0, downloads: 4, requests: 4 },
+  idle: { playing: 0, downloads: 0, requests: 0 },
+};
 
-function createInitialState(mediaItemId: string): PrototypeState {
+function createInitialState(): PrototypeState {
   return {
-    now: 0,
-    probe: { status: "success", playing: 1, paused: 0, observedAt: 0, idleSince: null, refreshing: false },
-    settings: defaults(),
-    draft: null,
-    selectedId: mediaItemId,
+    counts: { ...scenarios.watching },
+    scenario: "watching",
+    selectedPageId: "watching",
     automatic: true,
     pausedReason: null,
     focusedItemId: null,
     focusedPlacement: null,
+    settings: { reclaimSpace: true },
+    draft: null,
   };
 }
 
-export function getPrototypeActivity(state: PrototypeState): PrototypeActivity {
-  const probe = state.probe;
-  const age = Math.max(0, state.now - probe.observedAt);
-  const result: PrototypeActivity = {
-    kind: "unknown",
-    reason: "Waiting for a complete fresh observation",
-    pendingSeconds: null,
-    age,
-    canHide: false,
-  };
-  if (["error", "partial", "forbidden", "unconfigured"].includes(probe.status)) {
-    result.kind = "error";
-    result.reason = "A service or configuration fault stays visible";
-    if (probe.status === "partial") result.reason = "A partial failure cannot establish inactivity";
-    return result;
+function desiredServiceRows(count: number) {
+  if (count === 0) return 1;
+  return Math.min(5, Math.max(2, count + 1));
+}
+
+function serviceRows(counts: PrototypeCounts): [number, number] {
+  const desired: [number, number] = [desiredServiceRows(counts.downloads), desiredServiceRows(counts.requests)];
+  if (desired[0] + desired[1] <= 6) return desired;
+  // A quiet child's one row is already reserved above. Only two active children
+  // can exceed six rows; proportion their desired heights with whole-row rounding.
+  const firstShare = Math.round((6 * desired[0]) / (desired[0] + desired[1]));
+  return [firstShare, 6 - firstShare];
+}
+
+function createAllocations(
+  state: PrototypeState,
+  ids: Pick<AdaptiveContainerPrototypeContextValue, "mediaItemId" | "downloadsItemId" | "requestsItemId">,
+): PrototypeAllocation[] {
+  let watchingRows = 1;
+  if (state.counts.playing > 0) watchingRows = Math.min(6, Math.max(2, state.counts.playing + 2));
+  const services = serviceRows(state.counts);
+  let downloadsRows = services[0];
+  let requestsRows = services[1];
+  const focused = state.focusedPlacement;
+  if (focused && state.focusedItemId === ids.mediaItemId) watchingRows = focused.h;
+  if (focused && state.focusedItemId === ids.downloadsItemId) {
+    downloadsRows = focused.h;
+    requestsRows = Math.max(1, Math.min(requestsRows, 6 - focused.y - focused.h));
   }
-  if (probe.status === "loading") return result;
-  if (probe.status === "stale" || age >= 30) {
-    result.reason = "Observation expired; keep the item visible";
-    return result;
+  if (focused && state.focusedItemId === ids.requestsItemId) {
+    requestsRows = focused.h;
+    downloadsRows = Math.max(1, Math.min(downloadsRows, focused.y));
   }
-  if (probe.playing + probe.paused > 0) {
-    result.kind = "active";
-    result.reason = "Current sessions, including paused sessions, remain visible";
-    return result;
+  const allocations: PrototypeAllocation[] = [
+    {
+      itemId: ids.mediaItemId,
+      pageId: "watching",
+      label: "Currently playing",
+      count: state.counts.playing,
+      rows: watchingRows,
+      active: state.counts.playing > 0,
+      reason: "Current sessions grow the watching page within six rows",
+    },
+    {
+      itemId: ids.downloadsItemId,
+      pageId: "services",
+      label: "Downloads",
+      count: state.counts.downloads,
+      rows: downloadsRows,
+      active: state.counts.downloads > 0,
+      reason: "Active downloads share the six-row service budget",
+    },
+    {
+      itemId: ids.requestsItemId,
+      pageId: "services",
+      label: "Requests",
+      count: state.counts.requests,
+      rows: requestsRows,
+      active: state.counts.requests > 0,
+      reason: "Active requests share the six-row service budget",
+    },
+  ];
+  for (const allocation of allocations) {
+    if (!allocation.active) allocation.reason = "Quiet widget keeps a compact one-row summary";
+    if (state.focusedItemId === allocation.itemId) allocation.reason = "Focused content retains its displayed geometry";
   }
-  result.kind = "inactive";
-  result.pendingSeconds = 10;
-  if (probe.idleSince !== null) result.pendingSeconds = Math.max(0, 10 - (state.now - probe.idleSince));
-  result.canHide = result.pendingSeconds === 0;
-  result.reason = "Fresh empty observation confirmed";
-  if (result.pendingSeconds > 0) result.reason = `Empty observation; ${result.pendingSeconds}s of grace remaining`;
-  if (probe.refreshing) result.reason += "; background refresh retains this decision";
-  return result;
+  return allocations;
 }
 
 interface ProviderProps {
   sectionId: string;
   mediaItemId: string;
-  statsItemId: string;
-  mediaSavedRows?: number;
+  downloadsItemId: string;
+  requestsItemId: string;
   savedContainerRows?: number;
 }
 
@@ -140,51 +176,69 @@ function PrototypeProvider({
   children,
   sectionId,
   mediaItemId,
-  statsItemId,
-  mediaSavedRows = 3,
-  savedContainerRows = 6,
+  downloadsItemId,
+  requestsItemId,
 }: PropsWithChildren<ProviderProps>) {
-  const [state, setState] = useState(() => createInitialState(mediaItemId));
-  const searchParams = useSearchParams();
-  const pathname = usePathname();
-  const router = useRouter();
-  const requestedVariant = searchParams.get("variant");
-  let variant: PrototypeVariant = "A";
-  if (requestedVariant === "B" || requestedVariant === "C") variant = requestedVariant;
+  const [state, setState] = useState(createInitialState);
   const settings = state.draft ?? state.settings;
-  const activity = getPrototypeActivity(state);
-
   const update = (callback: (previous: PrototypeState) => PrototypeState) => {
     setState((previous) => {
-      let next = callback(previous);
-      const effectiveSettings = next.draft ?? next.settings;
-      if (next.selectedId === statsItemId && !effectiveSettings.showFallback && next.focusedItemId !== statsItemId)
-        next = { ...next, selectedId: mediaItemId };
+      const next = callback(previous);
       if (!next.automatic || next.focusedItemId) return next;
-      let selectedId = mediaItemId;
-      const nextActivity = getPrototypeActivity(next);
-      if (nextActivity.canHide && effectiveSettings.hideInactive && effectiveSettings.showFallback)
-        selectedId = statsItemId;
-      return { ...next, selectedId };
+      let selectedPageId: SmartPageId = "services";
+      if (next.counts.playing > 0) selectedPageId = "watching";
+      return { ...next, selectedPageId };
     });
   };
+  const pages: [SmartPage, SmartPage] = [
+    { id: "watching", label: "Watching", description: "Currently playing", active: state.counts.playing > 0, score: 0 },
+    {
+      id: "services",
+      label: "Services",
+      description: "Downloads and requests share space",
+      active: state.counts.downloads + state.counts.requests > 0,
+      score: 10,
+    },
+  ];
+  if (pages[0].active) pages[0].score = 100;
+  if (pages[1].active) pages[1].score = 50;
+  let selectionReason = "Watching takes priority while media is playing";
+  if (state.selectedPageId === "services") selectionReason = "Services is relevant while media is quiet";
+  if (state.counts.playing + state.counts.downloads + state.counts.requests === 0)
+    selectionReason = "Quiet services remain available as the neutral fallback";
+  if (!state.automatic) selectionReason = "Manual page selection holds until Resume";
+  if (state.pausedReason && !state.automatic) selectionReason = `Automatic selection paused: ${state.pausedReason}`;
+  if (state.focusedItemId) selectionReason = "Focus protects this page and its current geometry";
 
   const value: AdaptiveContainerPrototypeContextValue = {
     sectionId,
     mediaItemId,
-    statsItemId,
-    mediaSavedRows,
-    savedContainerRows,
-    variant,
+    downloadsItemId,
+    requestsItemId,
+    savedContainerRows: 6,
     state,
     settings,
-    activity,
     editorOpened: state.draft !== null,
-    setVariant(nextVariant) {
-      const params = new URLSearchParams(searchParams.toString());
-      params.set("variant", nextVariant);
-      router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+    pages,
+    selectedPageId: state.selectedPageId,
+    selectionReason,
+    allocations: createAllocations(state, { mediaItemId, downloadsItemId, requestsItemId }),
+    setScenario(scenario) {
+      update((previous) => ({ ...previous, scenario, counts: { ...scenarios[scenario] } }));
     },
+    setCount(key, count) {
+      let nextCount = 0;
+      if (Number.isFinite(count)) nextCount = Math.max(0, Math.floor(count));
+      update((previous) => ({ ...previous, counts: { ...previous.counts, [key]: nextCount } }));
+    },
+    manualSelectPage(selectedPageId) {
+      update((previous) => {
+        if (previous.focusedItemId) return previous;
+        return { ...previous, selectedPageId, automatic: false, pausedReason: "manual selection" };
+      });
+    },
+    resume: () => update((previous) => ({ ...previous, automatic: true, pausedReason: null })),
+    pause: (reason) => update((previous) => ({ ...previous, automatic: false, pausedReason: reason })),
     openEditor: () => update((previous) => ({ ...previous, draft: { ...previous.settings } })),
     applyEditor: () =>
       update((previous) => ({ ...previous, settings: previous.draft ?? previous.settings, draft: null })),
@@ -195,50 +249,26 @@ function PrototypeProvider({
         return { ...previous, settings: { ...previous.settings, [key]: settingValue } };
       });
     },
-    setProbe(input) {
+    setFocusedItemId(focusedItemId, placement) {
       update((previous) => {
-        const probe = { ...previous.probe, ...input, refreshing: false, idleSince: null };
-        if (input.status === "success") {
-          probe.observedAt = previous.now;
-          if (probe.playing + probe.paused === 0) {
-            probe.idleSince = previous.now;
-            if (
-              previous.probe.status === "success" &&
-              previous.now - previous.probe.observedAt < 30 &&
-              previous.probe.playing + previous.probe.paused === 0
-            )
-              probe.idleSince = previous.probe.idleSince;
-          }
+        let selectedPageId = previous.selectedPageId;
+        if (focusedItemId === mediaItemId) selectedPageId = "watching";
+        if (focusedItemId === downloadsItemId || focusedItemId === requestsItemId) selectedPageId = "services";
+        if (focusedItemId) {
+          return {
+            ...previous,
+            focusedItemId,
+            focusedPlacement: placement ?? null,
+            selectedPageId,
+            automatic: false,
+            pausedReason: "focus",
+          };
         }
-        if (input.status === "forbidden" || input.status === "unconfigured") {
-          probe.playing = 0;
-          probe.paused = 0;
-        }
-        return { ...previous, probe };
+        return { ...previous, focusedItemId, focusedPlacement: null, selectedPageId };
       });
     },
-    backgroundRefresh: () => update((previous) => ({ ...previous, probe: { ...previous.probe, refreshing: true } })),
-    advance(seconds) {
-      update((previous) => {
-        const now = previous.now + Math.max(0, seconds);
-        const probe = { ...previous.probe };
-        if (probe.status === "success" && now - probe.observedAt >= 30) {
-          probe.status = "stale";
-          probe.idleSince = null;
-          probe.refreshing = false;
-        }
-        return { ...previous, now, probe };
-      });
-    },
-    manualSelect: (selectedId) =>
-      update((previous) => ({ ...previous, selectedId, automatic: false, pausedReason: "manual selection" })),
-    resume: () => update((previous) => ({ ...previous, automatic: true, pausedReason: null })),
-    pause: (reason) => update((previous) => ({ ...previous, automatic: false, pausedReason: reason })),
-    setFocusedItemId: (focusedItemId, placement) =>
-      update((previous) => ({ ...previous, focusedItemId, focusedPlacement: placement ?? null })),
-    reset: () => setState(createInitialState(mediaItemId)),
+    reset: () => setState(createInitialState()),
   };
-
   return <Context.Provider value={value}>{children}</Context.Provider>;
 }
 
