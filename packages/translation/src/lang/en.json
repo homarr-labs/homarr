@@ -74,11 +74,6 @@
       "discover": {
         "title": "See what this installation can actually reach",
         "description": "Homarr checks capabilities in place. A missing Docker socket or Kubernetes context never blocks a manual setup.",
-        "serverAddressReview": "Does this look right?",
-        "serverOriginHelp": "Homarr uses this address and pattern to prefill service URLs. Changing them updates detected apps and integrations live, while keeping URLs you edited individually. Confirm the address or edit it before continuing.",
-        "editServerAddress": "Edit the usual server address and pattern",
-        "confirmServerAddress": "Yes, this looks right",
-        "serverAddressReviewed": "Server address reviewed. You can still edit each service URL in the next step.",
         "database": "Database",
         "docker": "Docker and compatible sockets",
         "kubernetes": "Kubernetes",
@@ -106,6 +101,11 @@
       "connect": {
         "title": "Connect what makes the board useful",
         "description": "Select several services at once. Docker labels take priority, image matching fills gaps, and every URL and credential stays reviewable.",
+        "serverAddressReview": "Does this look right?",
+        "serverOriginHelp": "Homarr uses this address and pattern to prefill service URLs. Changing them updates detected apps and integrations live, while keeping URLs you edited individually. Confirm the address or edit it before continuing.",
+        "editServerAddress": "Edit the usual server address and pattern",
+        "confirmServerAddress": "Yes, this looks right",
+        "serverAddressReviewed": "Server address reviewed. You can still edit each service URL below.",
         "discoveredIntegrations": "Detected integration instances ({count})",
         "detectedIntegrationLabel": "Import {name}, detected as {kind}",
         "detectedAppLabel": "Import detected app {name}",

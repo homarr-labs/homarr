@@ -173,7 +173,8 @@ export const SetupStudio = ({ environment, assistantConfiguration }: OnboardingS
   const [serverAddressEdited, setServerAddressEdited] = useState(false);
   const [serverAddressConfirmed, setServerAddressConfirmed] = useState(false);
   const serverAddressValid =
-    normalizeServiceUrl(serverOrigin) !== null && buildIntegrationUrl("sonarr", serverOrigin, urlMode).length > 0;
+    normalizeServiceUrl(serverOrigin) !== null &&
+    normalizeServiceUrl(buildIntegrationUrl("sonarr", serverOrigin, urlMode)) !== null;
   const serverAddressReviewed = serverAddressValid && (serverAddressEdited || serverAddressConfirmed);
   const [analyticsEnabled, setAnalyticsEnabled] = useState(true);
   const [selectedKinds, setSelectedKinds] = useState<IntegrationKind[]>([]);
@@ -181,6 +182,8 @@ export const SetupStudio = ({ environment, assistantConfiguration }: OnboardingS
   const [drafts, setDrafts] = useState<IntegrationDraft[]>([]);
   const [selectedAppIds, setSelectedAppIds] = useState<string[]>([]);
   const [appUrlOverrides, setAppUrlOverrides] = useState<Record<string, string>>({});
+  const hasSelectedServices =
+    selectedKinds.length > 0 || selectedIntegrationSourceIds.length > 0 || selectedAppIds.length > 0;
   const initialBoard =
     environment.initialBoard ?? (environment.availableBoards.length === 1 ? environment.availableBoards[0] : null);
   const [selectedBoardId, setSelectedBoardId] = useState<string | null>(initialBoard?.id ?? null);
@@ -338,12 +341,14 @@ export const SetupStudio = ({ environment, assistantConfiguration }: OnboardingS
   };
 
   const selectSection = (section: StudioSection) => {
-    if (!serverAddressReviewed && section !== "essentials" && section !== "discover") {
-      section = "discover";
-    } else if ((section === "board" || section === "extend" || section === "review") && hasIncompleteConnections) {
-      setSectionAfterSkipping(section);
-      setIncompleteConnectionConfirmationOpened(true);
-      section = "connect";
+    if (section === "board" || section === "extend" || section === "review") {
+      if (hasSelectedServices && !serverAddressReviewed) {
+        section = "connect";
+      } else if (hasIncompleteConnections) {
+        setSectionAfterSkipping(section);
+        setIncompleteConnectionConfirmationOpened(true);
+        section = "connect";
+      }
     }
     if (section !== activeSection) sounds.swoosh();
     setActiveSection(section);
@@ -389,7 +394,7 @@ export const SetupStudio = ({ environment, assistantConfiguration }: OnboardingS
 
   const applySetupAsync = async () => {
     if (isApplying) return;
-    if (!serverAddressReviewed || hasIncompleteConnections) {
+    if ((hasSelectedServices && !serverAddressReviewed) || hasIncompleteConnections) {
       selectSection("review");
       return;
     }
@@ -523,6 +528,7 @@ export const SetupStudio = ({ environment, assistantConfiguration }: OnboardingS
       setUrlMode(value);
       setServerAddressEdited(true);
     },
+    hasSelectedServices,
     serverAddressValid,
     serverAddressReviewed,
     confirmServerAddress: () => {
@@ -614,7 +620,7 @@ export const SetupStudio = ({ environment, assistantConfiguration }: OnboardingS
     sounds.swoosh();
     setActiveSection(sectionAfterSkipping);
   };
-  const continueDisabled = isApplying || (activeSection === "discover" && !serverAddressReviewed);
+  const continueDisabled = isApplying || (activeSection === "connect" && hasSelectedServices && !serverAddressReviewed);
   const continueOnboarding = () => {
     if (continueDisabled) return;
     if (activeSection === "review") {
@@ -783,6 +789,7 @@ interface StudioSectionProps {
   setServerOrigin: (value: string) => void;
   urlMode: UrlTemplateMode;
   setUrlMode: (value: UrlTemplateMode) => void;
+  hasSelectedServices: boolean;
   serverAddressValid: boolean;
   serverAddressReviewed: boolean;
   confirmServerAddress: () => void;
@@ -897,7 +904,7 @@ const Essentials = (props: StudioSectionProps) => {
 };
 
 const ServerAddressReview = (props: StudioSectionProps) => {
-  const t = useI18n("init.studio.discover");
+  const t = useI18n("init.studio.connect");
   const [editingServerAddress, setEditingServerAddress] = useState(false);
   return (
     <Paper
@@ -927,7 +934,7 @@ const ServerAddressReview = (props: StudioSectionProps) => {
           readOnly={!editingServerAddress}
           required
         />
-        {editingServerAddress && props.serverAddressValid && (
+        {props.serverAddressValid && (
           <Code block>{buildIntegrationUrl("sonarr", props.serverOrigin, props.urlMode)}</Code>
         )}
         {!props.serverAddressReviewed && (
@@ -996,7 +1003,6 @@ const Discovery = (props: StudioSectionProps) => {
   return (
     <Stack gap="lg">
       <SectionHeading headingRef={props.headingRef} title={t("title")} description={t("description")} />
-      <ServerAddressReview {...props} />
       <Stack gap="sm">
         <CapabilityRow
           icon={IconDatabase}
@@ -1128,6 +1134,7 @@ const Connections = (props: StudioSectionProps) => {
   return (
     <Stack gap="xl">
       <SectionHeading headingRef={props.headingRef} title={t("title")} description={t("description")} />
+      {props.hasSelectedServices && <ServerAddressReview {...props} />}
       {props.discoveredIntegrations.length > 0 ? (
         <Fieldset legend={t("discoveredIntegrations", { count: String(props.discoveredIntegrations.length) })}>
           <Checkbox.Group value={props.selectedIntegrationSourceIds} onChange={props.setSelectedIntegrationSourceIds}>
