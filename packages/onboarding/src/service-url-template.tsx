@@ -68,7 +68,6 @@ interface ServiceUrlTemplateProps {
   onModeChange: (value: UrlTemplateMode) => void;
   readOnly?: boolean;
   required?: boolean;
-  error?: ReactNode;
 }
 
 export const ServiceUrlTemplate = ({
@@ -78,7 +77,6 @@ export const ServiceUrlTemplate = ({
   onModeChange,
   readOnly,
   required,
-  error,
 }: ServiceUrlTemplateProps) => {
   const t = useI18n("common.serviceUrlTemplate");
 
@@ -92,7 +90,6 @@ export const ServiceUrlTemplate = ({
         readOnly={readOnly}
         required={required}
         withAsterisk={required}
-        error={error}
       />
       {!readOnly && (
         <OnboardingFloatingControl

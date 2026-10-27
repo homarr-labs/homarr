@@ -252,6 +252,11 @@
   padding: clamp(1rem, 3vw, 2rem);
 }
 
+.serverAddressReview[data-review-required] {
+  border-color: var(--mantine-color-red-6);
+  box-shadow: var(--mantine-shadow-md);
+}
+
 .sectionCard {
   background: var(--studio-surface);
   border: 1px solid color-mix(in srgb, var(--mantine-color-default-border) 76%, transparent);

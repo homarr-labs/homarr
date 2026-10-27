@@ -338,14 +338,12 @@ export const SetupStudio = ({ environment, assistantConfiguration }: OnboardingS
   };
 
   const selectSection = (section: StudioSection) => {
-    if (section === "board" || section === "extend" || section === "review") {
-      if (!serverAddressReviewed) {
-        section = "connect";
-      } else if (hasIncompleteConnections) {
-        setSectionAfterSkipping(section);
-        setIncompleteConnectionConfirmationOpened(true);
-        section = "connect";
-      }
+    if (!serverAddressReviewed && section !== "essentials" && section !== "discover") {
+      section = "discover";
+    } else if ((section === "board" || section === "extend" || section === "review") && hasIncompleteConnections) {
+      setSectionAfterSkipping(section);
+      setIncompleteConnectionConfirmationOpened(true);
+      section = "connect";
     }
     if (section !== activeSection) sounds.swoosh();
     setActiveSection(section);
@@ -616,7 +614,7 @@ export const SetupStudio = ({ environment, assistantConfiguration }: OnboardingS
     sounds.swoosh();
     setActiveSection(sectionAfterSkipping);
   };
-  const continueDisabled = isApplying || (activeSection === "connect" && !serverAddressReviewed);
+  const continueDisabled = isApplying || (activeSection === "discover" && !serverAddressReviewed);
   const continueOnboarding = () => {
     if (continueDisabled) return;
     if (activeSection === "review") {
@@ -898,6 +896,61 @@ const Essentials = (props: StudioSectionProps) => {
   );
 };
 
+const ServerAddressReview = (props: StudioSectionProps) => {
+  const t = useI18n("init.studio.discover");
+  const [editingServerAddress, setEditingServerAddress] = useState(false);
+  return (
+    <Paper
+      className={classes.serverAddressReview}
+      data-review-required={!props.serverAddressReviewed || undefined}
+      withBorder
+      p="md"
+      radius="md"
+    >
+      <Stack gap="sm">
+        <Title order={3} size="h4">
+          {t("serverAddressReview")}
+        </Title>
+        <Text size="sm" c="dimmed">
+          {t("serverOriginHelp")}
+        </Text>
+        <Switch
+          checked={editingServerAddress}
+          onChange={(event) => setEditingServerAddress(event.currentTarget.checked)}
+          label={t("editServerAddress")}
+        />
+        <ServiceUrlTemplate
+          serverOrigin={props.serverOrigin}
+          onServerOriginChange={props.setServerOrigin}
+          mode={props.urlMode}
+          onModeChange={props.setUrlMode}
+          readOnly={!editingServerAddress}
+          required
+        />
+        {editingServerAddress && props.serverAddressValid && (
+          <Code block>{buildIntegrationUrl("sonarr", props.serverOrigin, props.urlMode)}</Code>
+        )}
+        {!props.serverAddressReviewed && (
+          <Button
+            variant="default"
+            leftSection={<IconCheck size={16} />}
+            disabled={!props.serverAddressValid}
+            onClick={props.confirmServerAddress}
+            style={{ alignSelf: "flex-start" }}
+          >
+            {t("confirmServerAddress")}
+          </Button>
+        )}
+        {props.serverAddressReviewed && (
+          <Text component="output" size="sm" c="dimmed">
+            {t("serverAddressReviewed")}
+          </Text>
+        )}
+      </Stack>
+    </Paper>
+  );
+};
+
 const Discovery = (props: StudioSectionProps) => {
   const t = useI18n("init.studio.discover");
   const dockerStatus = !props.environment.dockerConfigured
@@ -943,6 +996,7 @@ const Discovery = (props: StudioSectionProps) => {
   return (
     <Stack gap="lg">
       <SectionHeading headingRef={props.headingRef} title={t("title")} description={t("description")} />
+      <ServerAddressReview {...props} />
       <Stack gap="sm">
         <CapabilityRow
           icon={IconDatabase}
@@ -1071,53 +1125,9 @@ const CapabilityRow = ({
 
 const Connections = (props: StudioSectionProps) => {
   const t = useI18n("init.studio.connect");
-  const [editingServerAddress, setEditingServerAddress] = useState(false);
   return (
     <Stack gap="xl">
       <SectionHeading headingRef={props.headingRef} title={t("title")} description={t("description")} />
-      <Paper withBorder p="md" radius="md">
-        <Stack gap="sm">
-          <Title order={3} size="h4">
-            {t("serverAddressReview")}
-          </Title>
-          <Text size="sm" c="dimmed">
-            {t("serverOriginHelp")}
-          </Text>
-          <Switch
-            checked={editingServerAddress}
-            onChange={(event) => setEditingServerAddress(event.currentTarget.checked)}
-            label={t("editServerAddress")}
-          />
-          <ServiceUrlTemplate
-            serverOrigin={props.serverOrigin}
-            onServerOriginChange={props.setServerOrigin}
-            mode={props.urlMode}
-            onModeChange={props.setUrlMode}
-            readOnly={!editingServerAddress}
-            error={!props.serverAddressReviewed}
-            required
-          />
-          {editingServerAddress && props.serverAddressValid && (
-            <Code block>{buildIntegrationUrl("sonarr", props.serverOrigin, props.urlMode)}</Code>
-          )}
-          {!props.serverAddressReviewed && (
-            <Button
-              variant="light"
-              leftSection={<IconCheck size={16} />}
-              disabled={!props.serverAddressValid}
-              onClick={props.confirmServerAddress}
-              style={{ alignSelf: "flex-start" }}
-            >
-              {t("confirmServerAddress")}
-            </Button>
-          )}
-          {props.serverAddressReviewed && (
-            <Text component="output" size="sm" c="green">
-              {t("serverAddressReviewed")}
-            </Text>
-          )}
-        </Stack>
-      </Paper>
       {props.discoveredIntegrations.length > 0 ? (
         <Fieldset legend={t("discoveredIntegrations", { count: String(props.discoveredIntegrations.length) })}>
           <Checkbox.Group value={props.selectedIntegrationSourceIds} onChange={props.setSelectedIntegrationSourceIds}>
