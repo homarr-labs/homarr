@@ -1,0 +1,68 @@
+apps/nextjs/src/app/api/assistant/chat/assistant-tool-error.spec.ts
+  h_d6e478ca18e517 67-72,78
+apps/nextjs/src/app/api/assistant/chat/assistant-tool-error.ts
+  h_d6e478ca18e517 2,37-45
+apps/nextjs/src/app/api/assistant/chat/assistant-tool-input-repair.spec.ts
+  h_d6e478ca18e517 78-83,101
+packages/api/src/router/custom-widget/legacy-migration.ts
+  h_d6e478ca18e517 46-47
+packages/api/src/router/custom-widget/preview-base-procedures.ts
+  h_d6e478ca18e517 21,33-36,149-154,157-158,161,163-166,236,269-271
+packages/api/src/router/custom-widget/source-resolver.ts
+  h_d6e478ca18e517 3,8-9,16,25-26,30-66,74-88
+packages/api/src/router/custom-widget/transfer-procedures.ts
+  h_d6e478ca18e517 75
+packages/api/src/router/integration/integration-http.ts
+  h_d6e478ca18e517 26
+packages/api/src/router/test/custom-widget/definition-persistence.spec.ts
+  h_d6e478ca18e517 5,10,16,610-614,616-628,935-949
+packages/api/src/router/test/custom-widget/legacy-migration.spec.ts
+  h_d6e478ca18e517 31-34
+packages/api/src/router/test/custom-widget/preview-authoring.spec.ts
+  h_d6e478ca18e517 4-16,19,54-57,133,150-200,414-418,433,435,441-485,489
+packages/custom-widgets/src/core/ai-prompt.ts
+  h_d6e478ca18e517 4,44-45,135,141-142,147,171-172,193,202,204,211,214,232,290
+packages/custom-widgets/src/core/assistant-follow-up.ts
+  h_d6e478ca18e517 1-5,12,35-41,103,118-121,136-137
+packages/custom-widgets/src/core/assistant-template-lifecycle.ts
+  h_d6e478ca18e517 96,102-104
+packages/custom-widgets/src/core/assistant-tool-input.ts
+  h_d6e478ca18e517 86,95-101,118
+packages/custom-widgets/src/core/custom-jsx-schema.ts
+  h_d6e478ca18e517 300-314
+packages/custom-widgets/src/core/request-schema.ts
+  h_d6e478ca18e517 19-21,107-112,118-121,180-221
+packages/custom-widgets/src/jsx/analyzer-diagnostics.ts
+  h_d6e478ca18e517 26,30,33-36
+packages/custom-widgets/src/jsx/analyzer.ts
+  h_d6e478ca18e517 213-214
+packages/custom-widgets/src/jsx/interpreter.tsx
+  h_d6e478ca18e517 183-184
+packages/custom-widgets/src/server/preview-sessions.ts
+  h_d6e478ca18e517 156,160-165,173-174,297-299
+packages/custom-widgets/src/test/ai-prompt.spec.ts
+  h_d6e478ca18e517 110-113
+packages/custom-widgets/src/test/assistant-follow-up.spec.ts
+  h_d6e478ca18e517 49-51,53,74-81,163-172
+packages/custom-widgets/src/test/jsx-policy.spec.ts
+  h_d6e478ca18e517 155-166
+packages/custom-widgets/src/test/preview-sessions.spec.ts
+  h_d6e478ca18e517 347-351
+packages/custom-widgets/src/test/schema.spec.ts
+  h_d6e478ca18e517 82-89,117-126
+packages/form/src/index.ts
+  h_d6e478ca18e517 2,7-21,47
+packages/widgets/src/modals/widget-edit-modal.tsx
+  h_d6e478ca18e517 39,444,454
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "0f0085743504aafdde6bf5af83bf76866a6297e7",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
