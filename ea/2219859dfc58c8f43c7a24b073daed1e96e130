@@ -1,0 +1,33 @@
+apps/nextjs/src/app/api/assistant/chat/assistant-tool-input-repair.spec.ts
+  s_49ea3fbee7dd7e::t_38920eac2d2bc5 78-83,101
+packages/custom-widgets/src/core/assistant-follow-up.ts
+  s_da46d8bcf4b8ce::t_3af22ee8a97235 1-5,12,35-41,103,118-121,136-137
+packages/custom-widgets/src/core/assistant-tool-input.ts
+  s_da46d8bcf4b8ce::t_1fb62f3528444f 86,95-101,118
+packages/custom-widgets/src/test/assistant-follow-up.spec.ts
+  s_da46d8bcf4b8ce::t_c86329a84d9bbf 49-51,53,74-81,163-172
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "ea2219859dfc58c8f43c7a24b073daed1e96e130",
+  "prompts": {},
+  "sessions": {
+    "s_49ea3fbee7dd7e": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "4bbd5d1e-1d9b-4028-8bba-3a932f39ccfb",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_da46d8bcf4b8ce": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "2da0197c-e9c6-47c9-bec8-e8632f213477",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
