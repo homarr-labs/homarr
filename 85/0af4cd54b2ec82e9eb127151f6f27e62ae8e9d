@@ -1,0 +1,26 @@
+packages/api/src/router/custom-widget/legacy-migration.ts
+  h_d6e478ca18e517 46-47
+packages/api/src/router/custom-widget/preview-base-procedures.ts
+  h_d6e478ca18e517 156
+packages/api/src/router/custom-widget/transfer-procedures.ts
+  h_d6e478ca18e517 75
+packages/api/src/router/test/custom-widget/definition-persistence.spec.ts
+  h_d6e478ca18e517 5,10,16,505-509,517-523
+packages/api/src/router/test/custom-widget/legacy-migration.spec.ts
+  h_d6e478ca18e517 31-34
+packages/custom-widgets/src/core/ai-prompt.ts
+  h_d6e478ca18e517 44-45,171-172,202,204,290
+packages/custom-widgets/src/test/ai-prompt.spec.ts
+  h_d6e478ca18e517 110-113
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "850af4cd54b2ec82e9eb127151f6f27e62ae8e9d",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
