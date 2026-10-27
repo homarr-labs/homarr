@@ -159,4 +159,8 @@ const nextConfig: NextConfig = {
   },
 };
 
+if (process.env.NODE_ENV === "development" && process.env.PROTOTYPE_PUBLIC_URL) {
+  nextConfig.allowedDevOrigins = [new URL(process.env.PROTOTYPE_PUBLIC_URL).hostname];
+}
+
 export default withNextIntl(nextConfig);

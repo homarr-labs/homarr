@@ -6,6 +6,8 @@ import { useSearchParams } from "next/navigation";
 import { BoardProvider } from "@homarr/boards/context";
 import { EditModeProvider } from "@homarr/boards/edit-mode";
 
+import { AdaptiveContainerPrototypeHost } from "~/components/board/sections/__prototype__/prototype-host";
+
 import type { Board } from "./_types";
 
 interface Props {
@@ -27,6 +29,10 @@ export const BoardProviders = ({
   const isRequestedLayoutValid = initialBoard.layouts.some((layout) => layout.id === requestedLayoutId);
   const isLayoutEditRequest = canModify && searchParams.get("edit") === "true" && isRequestedLayoutValid;
   const layoutOverrideId = isLayoutEditRequest ? requestedLayoutId : null;
+  let content = children;
+  if (process.env.NODE_ENV === "development" && initialBoard.name === "adaptive-containers-prototype") {
+    content = <AdaptiveContainerPrototypeHost>{children}</AdaptiveContainerPrototypeHost>;
+  }
 
   return (
     <BoardProvider
@@ -35,7 +41,7 @@ export const BoardProviders = ({
       initialViewportWidth={initialViewportWidth}
       layoutOverrideId={layoutOverrideId}
     >
-      <EditModeProvider initialOpen={isLayoutEditRequest}>{children}</EditModeProvider>
+      <EditModeProvider initialOpen={isLayoutEditRequest}>{content}</EditModeProvider>
     </BoardProvider>
   );
 };

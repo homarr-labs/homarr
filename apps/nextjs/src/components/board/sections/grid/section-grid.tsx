@@ -29,6 +29,11 @@ import { useCollapsedSectionIds, useExpandSectionsForEditing } from "../section-
 import { SectionProvider } from "../section-context";
 import { useSectionItems } from "../use-section-items";
 import { useBoardGridPortalHost } from "./grid-portal-host";
+import { useAdaptiveContainerPrototype } from "../__prototype__/adaptive-container-context";
+import {
+  getPrototypeContainerRows,
+  projectAdaptiveContainerPlacements,
+} from "../__prototype__/adaptive-container-projection";
 import classes from "./section-grid.module.css";
 
 const GridContentScaleContext = createContext(1);
@@ -57,6 +62,7 @@ export const SectionGrid = ({
   className,
 }: SectionGridProps) => {
   const [isEditMode] = useEditMode();
+  const adaptivePrototype = useAdaptiveContainerPrototype();
   const canvasScale = useBoardCanvasScale();
   const parentContentScale = useContext(GridContentScaleContext);
   const parentRowScale = useContext(GridRowScaleContext);
@@ -124,7 +130,7 @@ export const SectionGrid = ({
     [collapsedSectionIds, collapsibleSectionIds, placements],
   );
   const hasCollapsedHeader = innerSections.some((child) => child.options.showLabel && directCollapsedIds.has(child.id));
-  const displayPlacements = useMemo(() => {
+  const collapsedDisplayPlacements = useMemo(() => {
     if (directCollapsedIds.size === 0) return placements;
 
     let collapsedRowCountById: ReadonlyMap<string, number> | undefined;
@@ -146,6 +152,17 @@ export const SectionGrid = ({
       collapsedRowCountById,
     });
   }, [canvasScale, columnCount, directCollapsedIds, innerSections, placements, collapsedRowsPerPixel, railPlacement]);
+  const displayPlacements = useMemo(
+    () =>
+      projectAdaptiveContainerPlacements(
+        adaptivePrototype,
+        section.id,
+        collapsedDisplayPlacements,
+        columnCount,
+        isEditMode,
+      ),
+    [adaptivePrototype, section.id, collapsedDisplayPlacements, columnCount, isEditMode],
+  );
 
   const placementById = useMemo(
     () => new Map(displayPlacements.map((placement) => [placement.id, placement])),
@@ -165,7 +182,11 @@ export const SectionGrid = ({
   const minimumViewportRowCount = useMinimumViewportRowCount(section.kind === "empty" && isEditMode, canvasScale);
   const contentRowCount = Math.max(1, getLayoutRowCount(displayPlacements));
   const railViewportRowCount = getGridRowCountForVisualHeight(railLogicalHeight, 1);
-  let rowCount = Math.max(contentRowCount, requestedRowCount, minimumViewportRowCount);
+  let effectiveRequestedRowCount = requestedRowCount;
+  if (adaptivePrototype?.sectionId === section.id) {
+    effectiveRequestedRowCount = getPrototypeContainerRows(adaptivePrototype, isEditMode);
+  }
+  let rowCount = Math.max(contentRowCount, effectiveRequestedRowCount, minimumViewportRowCount);
   if (isRail) {
     rowCount = Math.max(railViewportRowCount, contentRowCount);
   }
@@ -175,7 +196,7 @@ export const SectionGrid = ({
   // of expanding to fit every widget, so its viewport height is capped independently of rowCount.
   const isScrollableContainer = section.kind === "container" && section.options.scrollable;
   const viewportRowCount =
-    viewportRowCountOverride ?? (isScrollableContainer ? Math.max(requestedRowCount, 1) : rowCount);
+    viewportRowCountOverride ?? (isScrollableContainer ? Math.max(effectiveRequestedRowCount, 1) : rowCount);
   const parentScale = canvasScale * parentContentScale;
   const effectiveCanvasScale = Number.isFinite(parentScale) && parentScale > 0 ? parentScale : 1;
   // Match the card's inset without changing its persisted grid footprint. Include ancestor
@@ -369,6 +390,13 @@ export const SectionGrid = ({
           <GridContentScaleContext.Provider value={contentScale}>
             <GridRowScaleContext.Provider value={rowScale}>
               <SectionContent />
+              {adaptivePrototype?.sectionId === section.id && displayPlacements.length === 0 && !isEditMode && (
+                <Box component="output" p="md" c="dimmed" pos="absolute" top="40%" w="100%" ta="center">
+                  {adaptivePrototype.variant === "B" && adaptivePrototype.settings.showFallback
+                    ? "Selection paused. Choose Stats or resume automatic selection."
+                    : "No current activity. Container settings and activity observation remain available."}
+                </Box>
+              )}
             </GridRowScaleContext.Provider>
           </GridContentScaleContext.Provider>
         </Box>

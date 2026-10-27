@@ -17,6 +17,8 @@ import { useSectionCollapse } from "./section-collapse";
 import { useSectionContext } from "./section-context";
 import { useOpenSectionApps } from "./use-open-section-apps";
 import classes from "./item.module.css";
+import { useAdaptiveContainerPrototype } from "./__prototype__/adaptive-container-context";
+import { NativeContainerPrototypeActions } from "./__prototype__/prototype-controls";
 
 const BoardContainerMenu = dynamic(
   () => import("./container/container-menu").then((module) => module.BoardContainerMenu),
@@ -33,6 +35,7 @@ interface Props {
 }
 
 export const BoardContainerSection = ({ section }: Props) => {
+  const adaptivePrototype = useAdaptiveContainerPrototype();
   const board = useRequiredBoard();
   const togglePointer = useRef<{ x: number; y: number; moved: boolean } | null>(null);
   const containerDepth = useContext(ContainerDepthContext);
@@ -125,6 +128,10 @@ export const BoardContainerSection = ({ section }: Props) => {
       data-grid-item-content
       w="100%"
       h="100%"
+      onMouseEnter={() => {
+        if (adaptivePrototype?.sectionId === section.id && adaptivePrototype.variant === "B")
+          adaptivePrototype.pause("hover");
+      }}
       style={{
         overflow: "visible",
       }}
@@ -249,6 +256,7 @@ export const BoardContainerSection = ({ section }: Props) => {
             />
           </ContainerDepthContext>
         </Box>
+        {adaptivePrototype?.sectionId === section.id && <NativeContainerPrototypeActions sectionId={section.id} />}
         {isEditMode && <BoardContainerMenu section={section} position={menuPosition} />}
       </Card>
     </Box>

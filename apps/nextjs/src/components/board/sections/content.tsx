@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 
 import type { RouterOutputs } from "@homarr/api";
+import { useEditMode } from "@homarr/boards/edit-mode";
 
 import type { ContainerSectionItem, SectionItem } from "~/app/[locale]/boards/_types";
 import { BoardItemContent } from "../items/item-content";
@@ -9,6 +10,8 @@ import { BoardContainerSection } from "./container-section";
 import { FixedGridItem } from "./grid/fixed-grid-item";
 import { useSectionContext } from "./section-context";
 import { useSectionItems } from "./use-section-items";
+import { useAdaptiveContainerPrototype } from "./__prototype__/adaptive-container-context";
+import { isPrototypeItemHidden } from "./__prototype__/adaptive-container-projection";
 
 export const SectionContent = () => {
   const { innerSections, integrations, items } = useSectionContext();
@@ -39,13 +42,34 @@ interface ItemProps {
 }
 
 export const SectionContentItem = ({ item, integrations }: ItemProps) => {
+  const prototype = useAdaptiveContainerPrototype();
+  const [isEditMode] = useEditMode();
+  const { section } = useSectionContext();
   if (item.type === "section") return <ContainerSectionContentItem item={item} />;
 
-  return (
+  const content = (
     <FixedGridItem item={item}>
       {item.kind !== "app" && <WidgetHoverOverlay item={item} integrations={integrations} />}
       <BoardItemContent item={item} />
     </FixedGridItem>
+  );
+  if (!prototype || prototype.sectionId !== section.id) return content;
+  const hidden = isPrototypeItemHidden(prototype, item.id, isEditMode);
+  return (
+    <div
+      hidden={hidden}
+      inert={hidden}
+      data-prototype-item={item.id}
+      onFocusCapture={() => {
+        prototype.setFocusedItemId(item.id, { y: item.yOffset, h: item.height });
+        if (prototype.variant === "B") prototype.pause("focus");
+      }}
+      onBlurCapture={(event) => {
+        if (!event.currentTarget.contains(event.relatedTarget)) prototype.setFocusedItemId(null);
+      }}
+    >
+      {content}
+    </div>
   );
 };
 

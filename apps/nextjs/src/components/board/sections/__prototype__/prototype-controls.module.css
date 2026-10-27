@@ -1,0 +1,111 @@
+.switcher {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 450;
+  width: max-content;
+  max-width: calc(100vw - 24px);
+  padding: 7px;
+  border: 1px solid var(--mantine-color-violet-6);
+  border-radius: var(--mantine-radius-lg);
+  box-shadow: var(--mantine-shadow-xl);
+  background: var(--mantine-color-body);
+}
+
+.variantLabel {
+  min-width: 154px;
+  text-align: center;
+}
+
+.switcherDivider {
+  width: 1px;
+  height: 28px;
+  margin-inline: 4px;
+  background: var(--mantine-color-default-border);
+}
+
+.containerActions {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  z-index: 20;
+}
+
+.containerEdit {
+  background: var(--mantine-color-body);
+  box-shadow: var(--mantine-shadow-xs);
+}
+
+.pager {
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 20;
+  padding: 4px 6px;
+  border-radius: var(--mantine-radius-md);
+  border: 1px solid var(--mantine-color-default-border);
+  background: var(--mantine-color-body);
+  box-shadow: var(--mantine-shadow-sm);
+}
+
+.pagerLabel {
+  min-width: 115px;
+  text-align: center;
+}
+
+.activityMenu {
+  width: 295px;
+}
+
+.drawerBody {
+  padding-bottom: 100px;
+}
+
+.previewNote {
+  border-left: 3px solid var(--mantine-color-violet-5);
+  padding-left: var(--mantine-spacing-sm);
+}
+
+.quickActions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+
+.observationReport {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 5px 12px;
+  margin: 0;
+  font-size: var(--mantine-font-size-xs);
+}
+
+.observationReport dt {
+  color: var(--mantine-color-dimmed);
+}
+
+.observationReport dd {
+  margin: 0;
+  text-align: right;
+}
+
+@media (max-width: 600px) {
+  .switcher {
+    bottom: 12px;
+    padding: 5px;
+  }
+
+  .variantLabel {
+    min-width: 113px;
+  }
+
+  .switcherExtraLabel {
+    display: none;
+  }
+
+  .containerEdit {
+    padding-inline: 7px;
+  }
+}

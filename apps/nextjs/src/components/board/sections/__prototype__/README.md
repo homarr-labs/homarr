@@ -1,24 +1,29 @@
-# Adaptive containers — throwaway behavior prototype
+# Adaptive containers — native Homarr prototype
 
-Implementation issue: [#7393](https://github.com/homarr-labs/homarr/issues/7393).
-Primary-source research: [adaptive-containers.md](../../../../../../../docs/research/adaptive-containers.md).
+Issue: [#7393](https://github.com/homarr-labs/homarr/issues/7393). Research: [adaptive-containers.md](../../../../../../../docs/research/adaptive-containers.md).
 
-Open `adaptive-containers.html` directly in a browser. Nothing to install, no server, no credentials. All scripts and styles are inline. State lives in memory and resets when the file reloads; the clock advances only when you press a control.
+Run from this checkout, with the project's dependencies and pinned runtime installed:
 
-**Question:** Can a container hide confirmed-idle Currently playing items without hiding faults, losing control, or rewriting saved layout?
+```sh
+mise exec -- bun run prototype:adaptive-containers
+```
 
-The page compares three behaviors:
+Open `http://localhost:7394/boards/adaptive-containers-prototype?variant=A`.
 
-- **Hide idle:** the bounded first phase. Supported inactive items disappear and the remaining items move up inside the fixed container footprint.
-- **Smart stack:** an experiment in selecting one configured item by explicit relevance, with manual browsing and a hold until automatic selection is resumed.
-- **Fit content:** an experiment in bounded item height, existing session details versus a compact card, a configured 9×1 Stats item, and optional container shrinking.
+This is Homarr's existing board route, header, theme, responsive layouts, real container/grid renderer, and registry-loaded Currently playing, Stats, Clock, and App widgets. The prototype changes how the actual items are displayed. It does not recreate widget markup.
 
-The inactivity grace (10 seconds), freshness ceiling (30 seconds), and selection policy are proposed defaults for discussion. They are not a reproduction of Apple's ranking algorithm. Paused sessions count as current activity. Stats uses mock **Playback sessions**, an existing Jellyfin metric.
+The floating bottom switcher and left/right arrows select three shareable alternatives:
 
-Use the guided walkthroughs or change probe results freely. Edit container previews local settings; Apply keeps them in this demo's draft and Cancel restores the opening settings. Board editing reveals saved placements. The state report exposes every item, including invisible ones.
+- `?variant=A` — Hide idle: remove confirmed-inactive media display rows and compact the real Stats item inside the saved container footprint.
+- `?variant=B` — Smart stack: one real widget at a time, with native paging and explicit automatic-selection resume.
+- `?variant=C` — Fit content: bounded media height, the configured Stats item below, and optional shrinking/reflow through the actual grid renderer.
 
-This file deliberately simulates a single full-width arrangement. It does not run Homarr's real queries, permissions, cache, grid, saving, breakpoint selection, nested containers, or drag/resize behavior. A narrower browser previews responsive controls; it does not validate Homarr's Mobile layout. Saving, observing hidden data, and real layout projection still require production implementation and verification.
+Use **Activity** to switch the fixture between playing, paused, empty, unavailable, partial, or stale responses and to advance the simulated clock. Use **Edit container** for a native Mantine live-preview drawer with Apply, Cancel, and a toggle for Homarr's real board editing mode. The drawer has no overlay so the board remains visible while adjusting settings.
 
-No design winner has been selected by the maintainer. The prototype and research stay on `feat/prototype-adaptive-containers`; they are not intended to merge as production code. GPT-6.1 Sol agents at extra-high reasoning contributed source research, the pure model, the interactive shell, and independent scenario review.
+The launcher creates a dedicated scratch database under `/tmp/homarr-native-adaptive-prototype/`, seeds this public board, starts a local Redis on port 6397, and starts Homarr on port 7394. It does not use another instance's data. Stop the launcher with Ctrl+C. `PROTOTYPE_DATA_DIR`, `PROTOTYPE_PORT`, `PROTOTYPE_REDIS_PORT`, and `PROTOTYPE_PUBLIC_URL` can override those local defaults. The scratch database is intentionally named `PROTOTYPE-wipe-me.sqlite`; the fixture board is reset by each launch.
 
-Manual Chromium review covered the six scenario families, real focus retention during incoming observations, actual Apply/Cancel/Resume controls, and 1440px/390px page widths. The inlined scripts passed a syntax check. No tests were added or run. Detailed evidence and unresolved production checks are recorded in the research note.
+Only this development board receives a route-scoped fixture transport. It feeds real typed Currently playing and Stats query responses into the normal query client; other procedures use Homarr's real API and scratch database. Mock session activity, settings preview, and selection stay in memory; refreshing the page resets them, while `variant` stays in the URL. Hidden item bodies stay mounted, and board editing reveals saved placements.
+
+This is throwaway code retained on `feat/prototype-adaptive-containers`, not a production implementation. Fit sizing uses explicit session-count hints, not arbitrary DOM measurement. Mock error responses exercise the native per-source error indication; they do not establish real upstream failure behavior, permission correctness, or terminal ErrorBoundary recovery. No production design has been selected.
+
+The earlier standalone HTML simulation was rejected because it did not show Homarr. It has been removed from this branch's current version; its historical capture remains in commit `45fe28b4c`.

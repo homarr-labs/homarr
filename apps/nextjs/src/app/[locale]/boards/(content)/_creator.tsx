@@ -105,6 +105,11 @@ export const createBoardContentPage = <TParams extends Record<string, unknown>>(
         throw error;
       });
 
+      // This throwaway board uses route-scoped fixture responses in real widget components.
+      if (process.env.NODE_ENV === "development" && board.name === "adaptive-containers-prototype") {
+        return <BoardWithIntegrations integrationsPromise={integrationsPromise} />;
+      }
+
       const itemsMap = board.items.reduce((acc, item) => {
         const existing = acc.get(item.kind);
         if (existing) {
