@@ -225,22 +225,20 @@ export const SetupStudio = ({ environment, assistantConfiguration }: OnboardingS
   const discoveredAppUrls = useMemo(
     () =>
       Object.fromEntries(
-        discoveredApps.map((app) => [
-          app.sourceId,
-          resolveDiscoveredAppUrl(
-            appUrlOverrides[app.sourceId],
-            app.suggestedUrl,
-            serverOrigin
-              ? buildAppUrl(
-                  app.detectedType ?? app.containerName,
-                  serverOrigin,
-                  urlMode,
-                  app.publishedPort ?? undefined,
-                )
-              : null,
-            serverAddressEdited,
-          ),
-        ]),
+        discoveredApps.map((app) => {
+          let port = app.publishedPort ?? undefined;
+          const labelUrl = normalizeServiceUrl(app.suggestedUrl ?? "");
+          const labelPort = labelUrl && new URL(labelUrl).port;
+          if (port === undefined && labelPort) port = Number(labelPort);
+          let generatedUrl = app.suggestedUrl;
+          if (serverOrigin && (urlMode !== "hostPort" || port !== undefined || !labelUrl)) {
+            generatedUrl = buildAppUrl(app.detectedType ?? app.containerName, serverOrigin, urlMode, port);
+          }
+          return [
+            app.sourceId,
+            resolveDiscoveredAppUrl(appUrlOverrides[app.sourceId], app.suggestedUrl, generatedUrl, serverAddressEdited),
+          ];
+        }),
       ),
     [appUrlOverrides, discoveredApps, serverOrigin, urlMode, serverAddressEdited],
   );
@@ -933,20 +931,26 @@ const ServerAddressReview = (props: StudioSectionProps) => {
           onModeChange={props.setUrlMode}
           readOnly={!editingServerAddress}
           required
+          rightSectionWidth={!props.serverAddressReviewed ? "var(--server-address-action-width)" : undefined}
+          rightSection={
+            !props.serverAddressReviewed && (
+              <Button
+                className={classes.serverAddressConfirmation}
+                variant="default"
+                size="compact-xs"
+                leftSection={<IconCheck size={14} />}
+                disabled={!props.serverAddressValid}
+                onClick={props.confirmServerAddress}
+              >
+                {t("confirmServerAddress")}
+              </Button>
+            )
+          }
         />
         {props.serverAddressValid && (
-          <Code block>{buildIntegrationUrl("sonarr", props.serverOrigin, props.urlMode)}</Code>
-        )}
-        {!props.serverAddressReviewed && (
-          <Button
-            variant="default"
-            leftSection={<IconCheck size={16} />}
-            disabled={!props.serverAddressValid}
-            onClick={props.confirmServerAddress}
-            style={{ alignSelf: "flex-start" }}
-          >
-            {t("confirmServerAddress")}
-          </Button>
+          <Text size="xs" c="dimmed" style={{ overflowWrap: "anywhere" }}>
+            {buildIntegrationUrl("sonarr", props.serverOrigin, props.urlMode)}
+          </Text>
         )}
         {props.serverAddressReviewed && (
           <Text component="output" size="sm" c="dimmed">

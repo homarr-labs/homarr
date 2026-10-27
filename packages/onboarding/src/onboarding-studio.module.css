@@ -252,6 +252,10 @@
   padding: clamp(1rem, 3vw, 2rem);
 }
 
+.serverAddressReview {
+  --server-address-action-width: 9rem;
+}
+
 .serverAddressReview[data-review-required] {
   border-color: var(--mantine-color-red-6);
   box-shadow: var(--mantine-shadow-md);
@@ -562,6 +566,28 @@
 
   .stickyActions {
     gap: var(--mantine-spacing-xs);
+  }
+
+  .serverAddressReview {
+    --server-address-action-width: 3.25rem;
+  }
+
+  .serverAddressConfirmation {
+    width: 2.75rem;
+    padding-inline: 0;
+  }
+
+  .serverAddressConfirmation :global(.mantine-Button-section) {
+    margin-inline: 0;
+  }
+
+  .serverAddressConfirmation :global(.mantine-Button-label) {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
   }
 
   .backAction {

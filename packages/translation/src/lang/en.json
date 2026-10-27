@@ -104,7 +104,7 @@
         "serverAddressReview": "Does this look right?",
         "serverOriginHelp": "Homarr uses this address and pattern to prefill service URLs. Changing them updates detected apps and integrations live, while keeping URLs you edited individually. Confirm the address or edit it before continuing.",
         "editServerAddress": "Edit the usual server address and pattern",
-        "confirmServerAddress": "Yes, this looks right",
+        "confirmServerAddress": "This looks right",
         "serverAddressReviewed": "Server address reviewed. You can still edit each service URL below.",
         "discoveredIntegrations": "Detected integration instances ({count})",
         "detectedIntegrationLabel": "Import {name}, detected as {kind}",
