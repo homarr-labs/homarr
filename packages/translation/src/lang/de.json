@@ -921,7 +921,7 @@
       },
       "action": {
         "components": "Komponenten",
-        "format": "",
+        "format": "Formatieren",
         "insertStarter": "",
         "redo": "Wiederholen",
         "copied": "Kopiert",
@@ -5611,7 +5611,7 @@
         },
         "disk": {
           "title": "Festplattenbelegung",
-          "subtitle": "",
+          "subtitle": "Nutzung nach Dateisystem",
           "series": "Root"
         },
         "diskIO": {

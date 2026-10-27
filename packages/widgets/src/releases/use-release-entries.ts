@@ -62,6 +62,7 @@ export const useReleaseEntries = ({
             provider,
             identifier: repository.identifier,
             versionFilter: repository.versionFilter,
+            excludePrereleases: repository.excludePrereleases,
             providerUrl: repository.providerUrl,
           })),
         },

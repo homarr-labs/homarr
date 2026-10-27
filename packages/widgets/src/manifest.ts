@@ -7,6 +7,7 @@ import type { SettingsContextProps } from "@homarr/settings/creator";
 import { normalizeAppWidgetOptions } from "@homarr/validation/app";
 
 import type { WidgetComponentProps, WidgetDefinition } from "./definition";
+import { normalizeBeszelTableOptions } from "./beszel-system-table/display";
 import type { WidgetOptionDefinition } from "./options";
 import type { WidgetImports } from "./registry";
 import { widgetComponentLoaders, widgetModuleLoaders } from "./registry";
@@ -149,6 +150,9 @@ export const reduceWidgetOptionsWithDefinition = (
 ) => {
   if ("kind" in definition && definition.kind === "app") {
     currentValue = normalizeAppWidgetOptions(currentValue);
+  }
+  if ("kind" in definition && definition.kind === "beszelSystemTable") {
+    currentValue = normalizeBeszelTableOptions(currentValue);
   }
   const options: Record<string, WidgetOptionDefinition> = definition.createOptions(settings);
   const result: Record<string, unknown> = {};

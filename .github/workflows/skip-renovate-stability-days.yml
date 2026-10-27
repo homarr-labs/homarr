@@ -1,5 +1,4 @@
 permissions:
-  statuses: write
   contents: read
 
 on:
@@ -12,17 +11,20 @@ jobs:
     name: Skip Stability Days
     runs-on: ubuntu-latest
     timeout-minutes: 1
+    permissions:
+      statuses: write
     steps:
       - name: Add status check
         env:
           GH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
         run: |
           for attempt in 1 2 3 4 5; do
             if gh api \
               --method POST \
               -H "Accept: application/vnd.github+json" \
               -H "X-GitHub-Api-Version: 2022-11-28" \
-              /repos/${{github.repository}}/statuses/${{github.event.pull_request.head.sha}} \
+              "/repos/${GITHUB_REPOSITORY}/statuses/${HEAD_SHA}" \
               -f 'state=success' \
               -f 'target_url=https://docs.renovatebot.com/configuration-options#minimumreleaseage' \
               -f 'description=Skipped for non renovate branches' \

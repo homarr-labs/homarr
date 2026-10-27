@@ -18,7 +18,7 @@ jobs:
     steps:
       - name: Obtain token
         id: obtainToken
-        uses: actions/create-github-app-token@v3
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
         with:
           private-key: ${{ secrets.HOMARR_UPDATE_CONTRIBUTORS_PRIVATE_KEY }}
           client-id: ${{ vars.HOMARR_UPDATE_CONTRIBUTORS_CLIENT_ID }}
@@ -26,11 +26,9 @@ jobs:
           permission-pull-requests: write # required to create pr & enable automerge
 
       - name: Checkout repository
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-        env:
-          GITHUB_TOKEN: ${{ steps.obtainToken.outputs.token }}
       - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
         with:
           bun-version: 1.4.4
@@ -59,11 +57,9 @@ jobs:
           body: |
             This PR updates the contributors list in the static-data directory.
 
-      - name: Install GitHub CLI
-        run: sudo apt-get install -y gh
-
       - name: Enable auto-merge
         env:
           GITHUB_TOKEN: ${{ steps.obtainToken.outputs.token }}
+          PR_NUMBER: ${{ steps.create-pull-request.outputs.pull-request-number }}
         run: |
-          gh pr merge ${{steps.create-pull-request.outputs.pull-request-number}} --auto --squash
+          gh pr merge "$PR_NUMBER" --auto --squash

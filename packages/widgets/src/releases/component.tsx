@@ -69,8 +69,8 @@ const getDensity = (width: number, height: number): Density => {
   return "regular";
 };
 
-const getRowVariant = (section: ReleaseSectionKey, density: Density, layout: ReleaseLayout): RowVariant => {
-  if (layout === "compact" || section === "upToDate" || section === "quiet") return "dense";
+const getRowVariant = (density: Density, layout: ReleaseLayout): RowVariant => {
+  if (layout === "compact") return "dense";
   if (density === "micro") return "mini";
   return "rich";
 };
@@ -144,6 +144,7 @@ export default function ReleasesWidget({
       sections={sections}
       collapsedSections={options.collapsedSections}
       showChangelogPreview={options.showChangelogPreview}
+      groupReleases={options.groupReleases}
     />
   );
 }
@@ -162,6 +163,7 @@ interface ReleasesInboxProps {
   sections: readonly ReleaseSectionKey[];
   collapsedSections: ReleaseSectionKey[];
   showChangelogPreview: boolean;
+  groupReleases: boolean;
 }
 
 const ReleasesInbox = ({
@@ -178,6 +180,7 @@ const ReleasesInbox = ({
   sections,
   collapsedSections,
   showChangelogPreview,
+  groupReleases,
 }: ReleasesInboxProps) => {
   const t = useI18n("widget.releases");
   const formatter = useFormatter();
@@ -409,23 +412,27 @@ const ReleasesInbox = ({
         </header>
       )}
 
-      {!showHeader && failedIntegrations.length > 0 && (
-        <div className={classes.floatingActions}>
+      {!showHeader && (failedIntegrations.length > 0 || (!groupReleases && newEntries.length > 0)) && (
+        <div className={classes.listActions}>
           <IntegrationErrorIndicator results={failedIntegrations} />
+          {!groupReleases && newEntries.length > 0 && (
+            <MarkAllButton placement="section" onClick={handleMarkAllViewed} />
+          )}
         </div>
       )}
 
       <div className={classes.body} data-split={isSplit || undefined}>
-        <div className={classes.list}>
+        <div className={classes.list} data-grouped={groupReleases}>
           {releaseSectionKeys.map((key) => {
             const section = grouped[key];
             const count = section.entries.length + countIssueEntries(section.issues);
             if (count === 0) return null;
-            const variant = getRowVariant(key, density, layout);
+            const variant = getRowVariant(density, layout);
             return (
               <Section
                 key={key}
                 sectionKey={key}
+                groupReleases={groupReleases}
                 count={count}
                 isOpen={isOpen(key)}
                 onToggle={() => toggleSection(key)}
@@ -473,6 +480,7 @@ const MarkAllButton = ({ placement, onClick }: MarkAllButtonProps) => {
 
 interface SectionProps {
   sectionKey: ReleaseSectionKey;
+  groupReleases: boolean;
   count: number;
   isOpen: boolean;
   onToggle: () => void;
@@ -480,8 +488,9 @@ interface SectionProps {
   children: ReactNode;
 }
 
-const Section = ({ sectionKey, count, isOpen, onToggle, actions, children }: SectionProps) => {
+const Section = ({ sectionKey, groupReleases, count, isOpen, onToggle, actions, children }: SectionProps) => {
   const t = useI18n("widget.releases");
+  if (!groupReleases) return children;
 
   return (
     <section className={`releases-section releases-section-${sectionKey} ${classes.section}`}>
