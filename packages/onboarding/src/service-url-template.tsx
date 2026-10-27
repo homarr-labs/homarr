@@ -69,8 +69,7 @@ interface ServiceUrlTemplateProps {
   readOnly?: boolean;
   required?: boolean;
   description?: ReactNode;
-  rightSection?: ReactNode;
-  rightSectionWidth?: number | string;
+  addressAction?: ReactNode;
 }
 
 export const ServiceUrlTemplate = ({
@@ -81,26 +80,26 @@ export const ServiceUrlTemplate = ({
   readOnly,
   required,
   description,
-  rightSection,
-  rightSectionWidth,
+  addressAction,
 }: ServiceUrlTemplateProps) => {
   const t = useI18n("common.serviceUrlTemplate");
 
   return (
     <Stack gap="sm">
-      <TextInput
-        label={t("serverTitle")}
-        description={description}
-        placeholder="home.lan · 192.168.1.10 · https://homarr.example.com"
-        value={serverOrigin}
-        onChange={(event) => onServerOriginChange(event.currentTarget.value)}
-        readOnly={readOnly}
-        required={required}
-        withAsterisk={required}
-        rightSection={rightSection}
-        rightSectionWidth={rightSectionWidth}
-        rightSectionPointerEvents="all"
-      />
+      <div className={classes.serviceAddressRow}>
+        <TextInput
+          className={classes.serviceAddressInput}
+          label={t("serverTitle")}
+          description={description}
+          placeholder="home.lan · 192.168.1.10 · https://homarr.example.com"
+          value={serverOrigin}
+          onChange={(event) => onServerOriginChange(event.currentTarget.value)}
+          readOnly={readOnly}
+          required={required}
+          withAsterisk={required}
+        />
+        {addressAction}
+      </div>
       {!readOnly && (
         <OnboardingFloatingControl
           ariaLabel={t("urlModeLabel")}

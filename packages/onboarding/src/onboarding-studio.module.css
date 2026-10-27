@@ -252,13 +252,15 @@
   padding: clamp(1rem, 3vw, 2rem);
 }
 
-.serverAddressReview {
-  --server-address-action-width: 9rem;
+.serviceAddressRow {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--mantine-spacing-sm);
 }
 
-.serverAddressReview .serverAddressConfirmation:global(.mantine-Button-root) {
-  min-height: 2rem;
-  height: 2rem;
+.serviceAddressInput {
+  flex: 1 1 auto;
+  min-width: 0;
 }
 
 .serverAddressReview .floatingControlRoot {
@@ -581,13 +583,9 @@
     gap: var(--mantine-spacing-xs);
   }
 
-  .serverAddressReview {
-    --server-address-action-width: 3.25rem;
-  }
-
-  .serverAddressReview .serverAddressConfirmation:global(.mantine-Button-root) {
-    min-height: 2.75rem;
-    height: 2.75rem;
+  .serviceAddressRow {
+    flex-direction: column;
+    align-items: stretch;
   }
 
   .serverAddressReview .floatingControlRoot {
@@ -603,24 +601,6 @@
     font-size: var(--mantine-font-size-sm);
     text-align: start;
     white-space: normal;
-  }
-
-  .serverAddressConfirmation {
-    width: 2.75rem;
-    padding-inline: 0;
-  }
-
-  .serverAddressConfirmation :global(.mantine-Button-section) {
-    margin-inline: 0;
-  }
-
-  .serverAddressConfirmation :global(.mantine-Button-label) {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
-    clip-path: inset(50%);
-    white-space: nowrap;
   }
 
   .backAction {

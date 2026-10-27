@@ -922,14 +922,12 @@ const ServerAddressReview = (props: StudioSectionProps) => {
           mode={props.urlMode}
           onModeChange={props.setUrlMode}
           required
-          rightSectionWidth={!props.serverAddressReviewed ? "var(--server-address-action-width)" : undefined}
-          rightSection={
+          addressAction={
             !props.serverAddressReviewed && (
               <Button
-                className={classes.serverAddressConfirmation}
                 variant="default"
-                size="compact-xs"
-                leftSection={<IconCheck size={14} />}
+                size="sm"
+                leftSection={<IconCheck size={16} />}
                 disabled={!props.serverAddressValid}
                 onClick={props.confirmServerAddress}
               >
