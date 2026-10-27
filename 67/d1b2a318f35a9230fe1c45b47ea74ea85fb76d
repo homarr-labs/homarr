@@ -1,0 +1,25 @@
+apps/nextjs/src/app/api/assistant/chat/assistant-tool-error.spec.ts
+  s_da46d8bcf4b8ce::t_1aafec64da1f0a 67-72,78
+apps/nextjs/src/app/api/assistant/chat/assistant-tool-error.ts
+  s_da46d8bcf4b8ce::t_7a515590743466 2,37-45
+packages/custom-widgets/src/core/request-schema.ts
+  s_da46d8bcf4b8ce::t_e1d840cfaa661c 19-21,107-112,118-121,180-221
+packages/custom-widgets/src/test/schema.spec.ts
+  s_da46d8bcf4b8ce::t_b3966864c645d5 82-89,117-126
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "67d1b2a318f35a9230fe1c45b47ea74ea85fb76d",
+  "prompts": {},
+  "sessions": {
+    "s_da46d8bcf4b8ce": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "2da0197c-e9c6-47c9-bec8-e8632f213477",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
