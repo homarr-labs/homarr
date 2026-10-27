@@ -4772,27 +4772,59 @@
       "name": "Izdaje",
       "description": "Prikazuje seznam trenutnih različic danih repozitorijev z danim regularnim izrazom različice.",
       "option": {
+        "layout": {
+          "label": "Postavitev",
+          "description": "",
+          "option": {
+            "comfortable": "",
+            "compact": ""
+          }
+        },
+        "summary": {
+          "label": "",
+          "description": "",
+          "option": {
+            "detailed": "",
+            "count": "",
+            "hidden": ""
+          }
+        },
+        "sections": {
+          "label": "",
+          "description": ""
+        },
+        "collapsedSections": {
+          "label": "",
+          "description": ""
+        },
         "newReleaseWithin": {
           "label": "Nova izdaja v roku",
-          "description": "Primer uporabe: 1w (1 teden), 10M (10 mesecev). Sprejete enote so h (ure), d (dnevi), w (tedni), M (meseci), y (leta). Pustite prazno, da ne označite novih izdaj."
+          "description": "Primer uporabe: 1w (1 teden), 10M (10 mesecev). Sprejete enote so h (ure), d (dnevi), w (tedni), M (meseci), y (leta). Pustite prazno, da ne označite novih izdaj.",
+          "option": {
+            "never": "",
+            "1d": "",
+            "3d": "",
+            "1w": "",
+            "2w": "",
+            "1M": "",
+            "3M": ""
+          }
         },
         "staleReleaseWithin": {
           "label": "Zastarela izdaja v roku",
-          "description": "Primer uporabe: 1w (1 teden), 10M (10 mesecev). Sprejete enote so h (ure), d (dnevi), w (tedni), M (meseci), y (leta). Pustite prazno, da ne označite zastarelih izdaj."
+          "description": "Primer uporabe: 1w (1 teden), 10M (10 mesecev). Sprejete enote so h (ure), d (dnevi), w (tedni), M (meseci), y (leta). Pustite prazno, da ne označite zastarelih izdaj.",
+          "option": {
+            "never": "",
+            "1M": "",
+            "3M": "",
+            "6M": "",
+            "1y": "",
+            "2y": ""
+          }
         },
-        "showOnlyHighlighted": {
-          "label": "Prikaži samo poudarjene",
-          "description": "Prikaži samo nove ali zastarele izdaje, kot je opisano zgoraj."
-        },
-        "showDetails": {
-          "label": "Prikaži podrobnosti"
-        },
-        "showOnlyIcon": {
-          "label": "Prikaži samo ikono"
-        },
-        "topReleases": {
-          "label": "Najboljše izdaje",
-          "description": "Največje število najnovejših izdaj za prikaz. Nič pomeni brez omejitve."
+        "showChangelogPreview": {
+          "label": "",
+          "description": ""
         },
         "repositories": {
           "label": "Repozitoriji",
@@ -4866,36 +4898,106 @@
           }
         }
       },
-      "not-found": "Ni najdeno",
-      "pre-release": "Predizdaja",
-      "archived": "Arhivirano",
-      "forked": "Razcepljeno",
+      "summary": {
+        "newReleases": "",
+        "newShort": "",
+        "tracked": "",
+        "caughtUp": "",
+        "outdated": "",
+        "outdatedShort": "",
+        "failing": "",
+        "failingShort": "",
+        "latest": "",
+        "issues": ""
+      },
+      "section": {
+        "new": {
+          "label": "",
+          "description": ""
+        },
+        "attention": {
+          "label": "",
+          "description": ""
+        },
+        "upToDate": {
+          "label": "",
+          "description": ""
+        },
+        "quiet": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "status": {
+        "new": "",
+        "outdated": "",
+        "error": "",
+        "upToDate": "",
+        "quiet": ""
+      },
+      "tag": {
+        "new": "",
+        "preRelease": "",
+        "resolvedFrom": "",
+        "quiet": "",
+        "archived": "",
+        "fork": ""
+      },
+      "issue": {
+        "affected": "",
+        "rateLimited": {
+          "title": "",
+          "hint": ""
+        },
+        "notFound": {
+          "title": "",
+          "hint": ""
+        },
+        "noMatchingVersion": {
+          "title": "",
+          "hint": ""
+        },
+        "noReleasesFound": {
+          "title": "",
+          "hint": ""
+        },
+        "invalidIdentifier": {
+          "title": "",
+          "hint": ""
+        },
+        "noProviderSelected": {
+          "title": "",
+          "hint": ""
+        },
+        "noProviderResponse": {
+          "title": "",
+          "hint": ""
+        },
+        "unexpected": {
+          "title": "",
+          "hint": ""
+        }
+      },
+      "markViewed": "Označi kot ogledano",
+      "markAllViewed": "",
+      "markEntryViewed": "",
+      "viewed": "",
+      "copyVersion": "",
+      "copied": "",
+      "published": "",
+      "whatChanged": "",
+      "noNotes": "",
+      "changes": "",
       "starsCount": "Zvezdice",
       "forksCount": "Razcepi",
-      "issuesCount": "Odprte težave",
-      "markViewed": "Označi kot ogledano",
-      "openProjectPage": "Odpri stran projekta",
-      "openReleasePage": "Odpri stran izdaje",
-      "releaseDescription": "Opis izdaje",
-      "projectDescription": "Opis projekta",
+      "openIssues": "",
+      "created": "Ustvarjeno",
+      "releasePage": "",
+      "projectPage": "",
       "runningVersions": "",
       "upToDate": "",
       "updateAvailable": "",
-      "unknownStatus": "Neznano",
-      "created": "Ustvarjeno",
-      "error": {
-        "label": "Napaka",
-        "messages": {
-          "invalidIdentifier": "Neveljaven identifikator",
-          "noMatchingVersion": "Ustrezna različica ni bila najdena",
-          "noReleasesFound": "Izdaj ni bilo mogoče najti",
-          "noProviderSelected": "Ponudnik ni izbran",
-          "noProviderResponse": "Ponudnik ni odgovoril",
-          "unexpected": "Nepričakovana napaka ponudnika"
-        }
-      },
-      "expandDetails": "Prikaži podrobnosti za {name}",
-      "collapseDetails": "Skrij podrobnosti za {name}"
+      "unknownStatus": "Neznano"
     },
     "networkControllerSummary": {
       "advanced": {
@@ -6093,6 +6195,18 @@
       "addWidget": "Dodaj gradnik",
       "addApp": "Dodaj aplikacijo",
       "connectService": "Poveži storitev"
+    },
+    "urlDrop": {
+      "hint": "",
+      "resolving": "",
+      "notification": {
+        "success": {
+          "message": ""
+        },
+        "full": {
+          "message": ""
+        }
+      }
     },
     "setupChecklist": {
       "title": "Naredite to nadzorno ploščo uporabno",
@@ -8699,6 +8813,14 @@
     "conversationActions": "Dejanja pogovora",
     "searchConversations": "Išči pogovore",
     "noMatchingConversations": "Ni ustreznih pogovorov",
+    "historyError": {
+      "title": "",
+      "load": "",
+      "loadMessages": "",
+      "saveMessages": "",
+      "switch": "",
+      "retry": ""
+    },
     "moreActions": "Več dejanj odgovora",
     "renameConversation": {
       "action": "Preimenuj",
@@ -8818,6 +8940,9 @@
     },
     "mentions": {
       "menu": "Dodaj kontekst Homarr",
+      "back": "",
+      "loading": "",
+      "empty": "",
       "context": "Kontekst",
       "app": "Aplikacije",
       "integration": "Integracije",
@@ -8832,6 +8957,8 @@
     },
     "commands": {
       "menu": "Ukazi pomočnika",
+      "hint": "",
+      "empty": "",
       "health": "Pripravi preverjanje stanja storitev",
       "explore": "Pripravi pregled tega primerka Homarr",
       "media": "Pripravi iskanje predstavnosti",
@@ -9014,6 +9141,7 @@
     "approvalDescription": "Pred izvajanjem preglejte to spremembo.",
     "approveAndRun": "Odobri in zaženi",
     "deny": "Zavrni",
+    "approvalError": "",
     "autoApproval": {
       "label": "Samodejne odobritve",
       "composerLabel": "Odobri namesto mene",

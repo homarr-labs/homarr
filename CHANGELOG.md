@@ -1,4 +1,15 @@
 ## What's Changed
+* chore(deps): update dependency @assistant-ui/store to v0.3.22 by @homarr-renovate[bot] in https://github.com/homarr-labs/homarr/pull/7360
+* chore(deps): update dependency @assistant-ui/core to v0.3.30 by @homarr-renovate[bot] in https://github.com/homarr-labs/homarr/pull/7359
+* chore(deps): update dependency @assistant-ui/tap to v0.9.24 by @homarr-renovate[bot] in https://github.com/homarr-labs/homarr/pull/7361
+* chore(lang): updated translations from crowdin by @homarr-crowdin[bot] in https://github.com/homarr-labs/homarr/pull/7362
+* fix(board): restore saved container dimensions by @ajnart in https://github.com/homarr-labs/homarr/pull/7363
+* chore(release): automatic release v2.9.1 by @github-actions[bot] in https://github.com/homarr-labs/homarr/pull/7364
+
+
+**Full Changelog**: https://github.com/homarr-labs/homarr/compare/v2.9.0...v2.9.1
+
+## What's Changed
 * chore(lang): updated translations from crowdin by @homarr-crowdin[bot] in https://github.com/homarr-labs/homarr/pull/7289
 * fix(board): preserve square tiles inside categories by @ajnart in https://github.com/homarr-labs/homarr/pull/7265
 * chore: update bug report template by @homarr-releases[bot] in https://github.com/homarr-labs/homarr/pull/7277

@@ -2,15 +2,15 @@
 
 Map canonical skill roles to these exact GitHub label strings.
 
-| Label in mattpocock/skills | Label in our tracker             | Meaning                                                                                    |
-| -------------------------- | -------------------------------- | ------------------------------------------------------------------------------------------ |
-| `needs-triage`             | `needs triage`                   | Maintainer needs to evaluate the report                                                    |
-| `needs-info`               | `needs info from the maintainer` | Implementation waits for maintainer clarification or a decision                            |
-| `ready-for-agent`          | `specced-out`                    | Scope, expected behavior, and acceptance criteria are clear enough to implement            |
-| `ready-for-human`          | `waiting-for-reporter`           | The implemented change has a published demo image and awaits reporter testing and feedback |
-| `wontfix`                  | `wontfix`                        | The report will not be actioned                                                            |
+| Label in mattpocock/skills | Label in our tracker             | Meaning                                                                                             |
+| -------------------------- | -------------------------------- | --------------------------------------------------------------------------------------------------- |
+| `needs-triage`             | `needs triage`                   | Maintainer needs to evaluate the report                                                             |
+| `needs-info`               | `needs info from the maintainer` | Implementation waits for maintainer clarification or a decision                                     |
+| `ready-for-agent`          | `specced-out`                    | Product value, scope, expected behavior, and compatibility criteria are accepted for implementation |
+| `ready-for-human`          | `waiting-for-reporter`           | The implemented change has a published demo image and awaits reporter testing and feedback          |
+| `wontfix`                  | `wontfix`                        | The report will not be actioned                                                                     |
 
-Use `specced-out` when the specification is ready for implementation. The canonical `ready-for-human` role means reporter validation after implementation in this repo; map it to `waiting-for-reporter`, not a human implementation label.
+Use `specced-out` when the specification is ready for implementation, including an accepted value decision and the behavior existing users must retain. A reproducible report, detailed proposal, or contributor PR alone is insufficient. The canonical `ready-for-human` role means reporter validation after implementation in this repo; map it to `waiting-for-reporter`, not a human implementation label.
 
 ## Sizes and weights
 
