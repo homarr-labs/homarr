@@ -1,0 +1,18 @@
+packages/api/src/router/custom-widget/source-resolver.ts
+  h_d6e478ca18e517 3,9,16,49-52,54-60
+packages/api/src/router/integration/integration-http.ts
+  h_d6e478ca18e517 26
+packages/api/src/router/test/custom-widget/preview-authoring.spec.ts
+  h_d6e478ca18e517 4-11,153-154,171-181,185-194
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "f2c91d4522d71876d504e5db52376cabf82dffc3",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
