@@ -44,7 +44,7 @@ import type { WidgetComponentProps, WidgetDefinition, WidgetRuntimeRef } from "@
 import { initialWidgetResources } from "@homarr/widgets/initial-widget-resources";
 import {
   loadWidgetResources,
-  loadWidgetDefinition,
+  loadWidgetModule,
   reduceWidgetOptionsWithDefinition,
   resetWidgetResources,
 } from "@homarr/widgets/manifest";
@@ -237,7 +237,7 @@ const LoadedBoardItemContent = (props: LoadedBoardItemContentProps) => {
 const DeferredWidget = () => null;
 
 const DynamicBoardItemContent = (props: LoadedBoardItemContentProps) => {
-  const definition = use(loadWidgetDefinition(props.item.kind));
+  const { definition } = use(loadWidgetModule(props.item.kind));
   const hydrated = useIsHydrated();
   if (definition.data.mode === "browser" && (!hydrated || !props.browserActive)) {
     return <ResolvedBoardItemContent {...props} definition={definition} Component={DeferredWidget} />;

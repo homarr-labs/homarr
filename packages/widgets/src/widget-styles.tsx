@@ -6,7 +6,7 @@ import dynamic from "next/dynamic";
 
 import type { WidgetKind } from "@homarr/definitions";
 
-import { loadWidgetDefinition } from "./manifest";
+import { loadWidgetModule } from "./manifest";
 
 const NoStyles = () => null;
 
@@ -82,7 +82,7 @@ const widgetStyles = {
 } satisfies Record<WidgetKind, ComponentType>;
 
 const RenderedWidgetStyles = ({ kind }: { kind: WidgetKind }) => {
-  const definition = use(loadWidgetDefinition(kind));
+  const { definition } = use(loadWidgetModule(kind));
   if (definition.data.mode === "browser") return null;
   const Styles = widgetStyles[kind];
   return <Styles />;

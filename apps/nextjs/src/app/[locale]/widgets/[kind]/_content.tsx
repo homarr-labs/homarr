@@ -18,7 +18,7 @@ import { useSettings } from "@homarr/settings";
 import { useI18n } from "@homarr/translation/client";
 import type { BoardItemAdvancedOptions } from "@homarr/validation/shared";
 import { WidgetError } from "@homarr/widgets/errors";
-import { loadWidgetDefinition, loadWidgetResources, reduceWidgetOptionsWithDefinition } from "@homarr/widgets/manifest";
+import { loadWidgetModule, loadWidgetResources, reduceWidgetOptionsWithDefinition } from "@homarr/widgets/manifest";
 
 import { LazyWidgetEditModal, preloadWidgetEditModal } from "~/components/board/items/lazy-widget-edit-modal";
 import type { Dimensions } from "./_dimension-popover";
@@ -29,7 +29,7 @@ interface WidgetPreviewPageContentProps {
 }
 
 export const WidgetPreviewPageContent = (props: WidgetPreviewPageContentProps) => {
-  const definition = use(loadWidgetDefinition(props.kind));
+  const { definition } = use(loadWidgetModule(props.kind));
   const hydrated = useIsHydrated();
   if (definition.data.mode === "browser" && !hydrated) return null;
   return <LoadedWidgetPreviewPageContent {...props} />;
