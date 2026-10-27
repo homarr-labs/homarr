@@ -1,0 +1,39 @@
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_use-custom-widget-form-analysis.ts
+  s_da46d8bcf4b8ce::t_af53850fa7e130 80,82-83,85,88-89,92-93
+packages/api/src/router/custom-widget/source-resolver.ts
+  s_da46d8bcf4b8ce::t_31434493739184 65-69,80-81,109-111,113
+packages/custom-widgets/src/jsx/bindings.ts
+  s_da46d8bcf4b8ce::t_704d4f5e057500 1,74,76,79-90,103,106
+packages/custom-widgets/src/jsx/bounded-cache.ts
+  s_da46d8bcf4b8ce::t_e75452df8b5e06 1-19
+packages/custom-widgets/src/jsx/number-format.ts
+  s_da46d8bcf4b8ce::t_956a5667743486 1,23,51
+packages/custom-widgets/src/jsx/safe-properties.ts
+  s_da46d8bcf4b8ce::t_4cb3814da1d227 22
+packages/custom-widgets/src/runtime/context.tsx
+  s_da46d8bcf4b8ce::t_d660e025ac8cd5 25-38
+packages/custom-widgets/src/server/request-limits.ts
+  s_da46d8bcf4b8ce::t_31b24a67e15f7f 6,137,168-173,217,240
+packages/custom-widgets/src/server/response.ts
+  s_da46d8bcf4b8ce::t_459969c2ad712e 3
+packages/custom-widgets/src/test/server-policy.spec.ts
+  s_da46d8bcf4b8ce::t_11bb97ef9cfda5 1,3,14,150-151,153
+packages/custom-widgets/src/workbench/preview-response-panel.tsx
+  s_da46d8bcf4b8ce::t_06fbb995594289 1,46,124-128
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "fd7182a22ef0b4b7ba40a927f35d1992b06c9ee5",
+  "prompts": {},
+  "sessions": {
+    "s_da46d8bcf4b8ce": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "2da0197c-e9c6-47c9-bec8-e8632f213477",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
