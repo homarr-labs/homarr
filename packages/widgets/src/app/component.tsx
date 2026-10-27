@@ -2,7 +2,7 @@
 
 import type { PropsWithChildren } from "react";
 import { Fragment, Suspense } from "react";
-import { Box, Flex, rem, Stack, Text, Tooltip, UnstyledButton } from "@mantine/core";
+import { Box, Flex, rem, Stack, Text, Tooltip } from "@mantine/core";
 import { IconMinus } from "@tabler/icons-react";
 import combineClasses from "clsx";
 
@@ -13,10 +13,10 @@ import { useI18n } from "@homarr/translation/client";
 import { MaskedOrNormalImage } from "@homarr/ui";
 
 import { WidgetEmptyState } from "../common/empty-state";
-import { SAFE_NEW_TAB_REL } from "../common/application-url";
 import { getUsableWidgetQueryData, isInitialWidgetQueryPending } from "../common/query-state";
 import { WidgetQueryLoadingState } from "../common/query-state-indicator";
 import type { WidgetComponentProps } from "../definition";
+import { AppLink } from "./_app-link";
 import classes from "./app.module.css";
 import { PingDot } from "./ping/ping-dot";
 import { PingIndicator } from "./ping/ping-indicator";
@@ -60,7 +60,7 @@ export default function AppWidget({
 
   return (
     <Box h="100%" w="100%" pos="relative" style={{ "--mantine-scale": 1 / layoutScale }}>
-      <AppLink href={href} openInNewTab={options.openInNewTab} enabled={Boolean(href) && !isEditMode}>
+      <AppLink href={href} openIn={options.openIn} enabled={Boolean(href) && !isEditMode}>
         <AppDescriptionTooltip
           description={app.description}
           enabled={options.descriptionDisplayMode === "tooltip" && Boolean(app.description) && !isEditMode}
@@ -136,12 +136,6 @@ export default function AppWidget({
   );
 }
 
-interface AppLinkProps {
-  href: string | undefined;
-  openInNewTab: boolean;
-  enabled: boolean;
-}
-
 const AppDescriptionTooltip = ({
   description,
   enabled,
@@ -161,22 +155,6 @@ const AppDescriptionTooltip = ({
     >
       {children}
     </Tooltip.Floating>
-  ) : (
-    children
-  );
-
-const AppLink = ({ href, openInNewTab, enabled, children }: PropsWithChildren<AppLinkProps>) =>
-  enabled ? (
-    <UnstyledButton
-      component="a"
-      href={href}
-      target={openInNewTab ? "_blank" : undefined}
-      rel={openInNewTab ? SAFE_NEW_TAB_REL : undefined}
-      h="100%"
-      w="100%"
-    >
-      {children}
-    </UnstyledButton>
   ) : (
     children
   );

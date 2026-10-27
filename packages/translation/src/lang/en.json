@@ -799,6 +799,11 @@
       }
     },
     "field": {
+      "url": {
+        "helpLabel": "URL format examples",
+        "examples": "Examples of accepted links",
+        "requiresHandler": "Custom protocols require an associated application on your device."
+      },
       "description": {
         "label": "Description"
       },
@@ -2312,6 +2317,15 @@
       "option": {
         "appId": {
           "label": "Choose app"
+        },
+        "openIn": {
+          "label": "Open app in",
+          "description": "Choose where this app opens. Your browser settings may override requests for a separate window.",
+          "option": {
+            "currentTab": "Current tab",
+            "newTab": "New tab",
+            "newWindow": "New window"
+          }
         },
         "showTitle": {
           "label": "Show app name"
@@ -7033,6 +7047,10 @@
             },
             "signInOverlay": {
               "label": "Background overlay"
+            },
+            "signInMarquee": {
+              "label": "Show background marquee",
+              "description": "Display floating application icons on authentication pages."
             },
             "defaultRadius": {
               "label": "Corner style",

@@ -799,6 +799,11 @@
       }
     },
     "field": {
+      "url": {
+        "helpLabel": "URL 格式範例",
+        "examples": "支援的連結範例",
+        "requiresHandler": "自訂通訊協定需要在您的裝置上關聯相應的應用程式。"
+      },
       "description": {
         "label": "描述"
       },
@@ -2312,6 +2317,15 @@
       "option": {
         "appId": {
           "label": "選擇應用程式"
+        },
+        "openIn": {
+          "label": "開啟應用程式的位置",
+          "description": "選擇此應用程式的開啟位置。瀏覽器設定可能會變更在獨立視窗中開啟的行為。",
+          "option": {
+            "currentTab": "目前分頁",
+            "newTab": "新分頁",
+            "newWindow": "新視窗"
+          }
         },
         "showTitle": {
           "label": "顯示應用程式名稱"
@@ -4758,27 +4772,59 @@
       "name": "版本發佈",
       "description": "顯示符合指定版本規則的儲存庫及其目前版本列表",
       "option": {
+        "layout": {
+          "label": "版面配置",
+          "description": "",
+          "option": {
+            "comfortable": "",
+            "compact": ""
+          }
+        },
+        "summary": {
+          "label": "",
+          "description": "",
+          "option": {
+            "detailed": "",
+            "count": "",
+            "hidden": "隱藏"
+          }
+        },
+        "sections": {
+          "label": "",
+          "description": ""
+        },
+        "collapsedSections": {
+          "label": "",
+          "description": ""
+        },
         "newReleaseWithin": {
           "label": "新版本發布於",
-          "description": "使用範例：1w（1週）、10m（10個月）。接受的單位類型有：h（小時）、d（天）、w（週）、m（個月）、y（年）。若留空，則不會特別標示新版本"
+          "description": "使用範例：1w（1週）、10m（10個月）。接受的單位類型有：h（小時）、d（天）、w（週）、m（個月）、y（年）。若留空，則不會特別標示新版本",
+          "option": {
+            "never": "",
+            "1d": "一日",
+            "3d": "",
+            "1w": "一周",
+            "2w": "",
+            "1M": "一月",
+            "3M": "三月"
+          }
         },
         "staleReleaseWithin": {
           "label": "過時版本範圍內",
-          "description": "使用範例：1w（1週）、10m（10個月）。接受的單位類型有：h（小時）、d（天）、w（週）、m（個月）、y（年）。若留空，則不會特別標示過時版本"
+          "description": "使用範例：1w（1週）、10m（10個月）。接受的單位類型有：h（小時）、d（天）、w（週）、m（個月）、y（年）。若留空，則不會特別標示過時版本",
+          "option": {
+            "never": "",
+            "1M": "一月",
+            "3M": "三月",
+            "6M": "六月",
+            "1y": "一年",
+            "2y": "兩年"
+          }
         },
-        "showOnlyHighlighted": {
-          "label": "只顯示已標示的項目",
-          "description": "只顯示新版本或過時版本。如上所述"
-        },
-        "showDetails": {
-          "label": "顯示詳情"
-        },
-        "showOnlyIcon": {
-          "label": "僅顯示圖示"
-        },
-        "topReleases": {
-          "label": "熱門發行版本",
-          "description": "要顯示的最新發行版本數量上限。零表示沒有限制。"
+        "showChangelogPreview": {
+          "label": "",
+          "description": ""
         },
         "repositories": {
           "label": "儲存庫",
@@ -4852,36 +4898,106 @@
           }
         }
       },
-      "not-found": "未找到",
-      "pre-release": "預發佈",
-      "archived": "已歸檔",
-      "forked": "已分支",
+      "summary": {
+        "newReleases": "",
+        "newShort": "新增",
+        "tracked": "",
+        "caughtUp": "",
+        "outdated": "",
+        "outdatedShort": "",
+        "failing": "",
+        "failingShort": "",
+        "latest": "",
+        "issues": ""
+      },
+      "section": {
+        "new": {
+          "label": "新增",
+          "description": ""
+        },
+        "attention": {
+          "label": "",
+          "description": ""
+        },
+        "upToDate": {
+          "label": "",
+          "description": ""
+        },
+        "quiet": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "status": {
+        "new": "",
+        "outdated": "",
+        "error": "",
+        "upToDate": "",
+        "quiet": ""
+      },
+      "tag": {
+        "new": "新增",
+        "preRelease": "",
+        "resolvedFrom": "",
+        "quiet": "",
+        "archived": "已歸檔",
+        "fork": ""
+      },
+      "issue": {
+        "affected": "",
+        "rateLimited": {
+          "title": "",
+          "hint": ""
+        },
+        "notFound": {
+          "title": "",
+          "hint": ""
+        },
+        "noMatchingVersion": {
+          "title": "",
+          "hint": ""
+        },
+        "noReleasesFound": {
+          "title": "",
+          "hint": ""
+        },
+        "invalidIdentifier": {
+          "title": "無效的識別碼",
+          "hint": ""
+        },
+        "noProviderSelected": {
+          "title": "",
+          "hint": ""
+        },
+        "noProviderResponse": {
+          "title": "",
+          "hint": ""
+        },
+        "unexpected": {
+          "title": "",
+          "hint": ""
+        }
+      },
+      "markViewed": "標記為已檢視",
+      "markAllViewed": "",
+      "markEntryViewed": "",
+      "viewed": "",
+      "copyVersion": "",
+      "copied": "",
+      "published": "",
+      "whatChanged": "",
+      "noNotes": "",
+      "changes": "",
       "starsCount": "星標",
       "forksCount": "分支數",
-      "issuesCount": "開放問題",
-      "markViewed": "標記為已檢視",
-      "openProjectPage": "開啟專案頁面",
-      "openReleasePage": "開啟發布葉面",
-      "releaseDescription": "版本描述",
-      "projectDescription": "專案說明",
+      "openIssues": "",
+      "created": "已創建",
+      "releasePage": "",
+      "projectPage": "",
       "runningVersions": "",
       "upToDate": "",
       "updateAvailable": "",
-      "unknownStatus": "未知",
-      "created": "已創建",
-      "error": {
-        "label": "錯誤",
-        "messages": {
-          "invalidIdentifier": "無效的識別碼",
-          "noMatchingVersion": "找不到匹配的版本",
-          "noReleasesFound": "找不到任何發行版本",
-          "noProviderSelected": "未選擇提供者",
-          "noProviderResponse": "提供者沒有回應",
-          "unexpected": "未預期的提供者錯誤"
-        }
-      },
-      "expandDetails": "顯示 {name} 的詳細資料",
-      "collapseDetails": "隱藏 {name} 的詳細資料"
+      "unknownStatus": "未知"
     },
     "networkControllerSummary": {
       "advanced": {
@@ -6079,6 +6195,18 @@
       "addWidget": "新增小工具",
       "addApp": "新增應用程式",
       "connectService": "連線服務"
+    },
+    "urlDrop": {
+      "hint": "",
+      "resolving": "",
+      "notification": {
+        "success": {
+          "message": ""
+        },
+        "full": {
+          "message": ""
+        }
+      }
     },
     "setupChecklist": {
       "title": "讓此面板發揮作用",
@@ -8685,6 +8813,14 @@
     "conversationActions": "對話操作",
     "searchConversations": "搜尋對話",
     "noMatchingConversations": "沒有符合條件的對話",
+    "historyError": {
+      "title": "",
+      "load": "",
+      "loadMessages": "",
+      "saveMessages": "",
+      "switch": "",
+      "retry": ""
+    },
     "moreActions": "更多回應操作",
     "renameConversation": {
       "action": "重新命名",
@@ -8804,6 +8940,9 @@
     },
     "mentions": {
       "menu": "新增 Homarr 內容",
+      "back": "",
+      "loading": "",
+      "empty": "",
       "context": "上下文",
       "app": "應用程式",
       "integration": "集成",
@@ -8818,6 +8957,8 @@
     },
     "commands": {
       "menu": "助理指令",
+      "hint": "",
+      "empty": "",
       "health": "準備服務健康狀態檢查",
       "explore": "準備此 Homarr 執行個體的概覽",
       "media": "準備媒體搜尋",
@@ -9000,6 +9141,7 @@
     "approvalDescription": "執行前請檢視此變更。",
     "approveAndRun": "核准並執行",
     "deny": "拒絕",
+    "approvalError": "",
     "autoApproval": {
       "label": "自動核准",
       "composerLabel": "代我核准",

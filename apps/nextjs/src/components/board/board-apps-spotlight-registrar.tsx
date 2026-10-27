@@ -30,7 +30,9 @@ export const BoardAppsSpotlightRegistrar = () => {
       if (item.kind !== "app" || typeof item.options.appId !== "string" || item.options.appId.length === 0) continue;
 
       const existingOpenInNewTab = result.get(item.options.appId) ?? false;
-      result.set(item.options.appId, existingOpenInNewTab || item.options.openInNewTab === true);
+      const openInNewTab =
+        item.options.openIn === undefined ? item.options.openInNewTab === true : item.options.openIn !== "currentTab";
+      result.set(item.options.appId, existingOpenInNewTab || openInNewTab);
     }
 
     return result;

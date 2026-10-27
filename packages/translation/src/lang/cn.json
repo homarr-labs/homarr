@@ -799,6 +799,11 @@
       }
     },
     "field": {
+      "url": {
+        "helpLabel": "URL 格式示例",
+        "examples": "支持的链接示例",
+        "requiresHandler": "自定义协议需要在您的设备上关联相应的应用程序。"
+      },
       "description": {
         "label": "描述"
       },
@@ -2312,6 +2317,15 @@
       "option": {
         "appId": {
           "label": "选择应用"
+        },
+        "openIn": {
+          "label": "打开应用的位置",
+          "description": "选择此应用的打开位置。浏览器设置可能会更改在独立窗口中打开的行为。",
+          "option": {
+            "currentTab": "当前标签页",
+            "newTab": "新标签页",
+            "newWindow": "新窗口"
+          }
         },
         "showTitle": {
           "label": "显示应用名称"
@@ -4758,27 +4772,59 @@
       "name": "发布",
       "description": "显示特定版本正则表达式中当前版本的列表。",
       "option": {
+        "layout": {
+          "label": "布局",
+          "description": "",
+          "option": {
+            "comfortable": "舒适",
+            "compact": "紧凑"
+          }
+        },
+        "summary": {
+          "label": "",
+          "description": "",
+          "option": {
+            "detailed": "",
+            "count": "",
+            "hidden": "已隐藏"
+          }
+        },
+        "sections": {
+          "label": "",
+          "description": ""
+        },
+        "collapsedSections": {
+          "label": "",
+          "description": ""
+        },
         "newReleaseWithin": {
           "label": "新版本时间范围",
-          "description": "使用示例：1w（1周），10M（10个月）。支持单位类型h（小时），d（天），w（周），M（月），y（年）。留空不突出显示新版本。"
+          "description": "使用示例：1w（1周），10M（10个月）。支持单位类型h（小时），d（天），w（周），M（月），y（年）。留空不突出显示新版本。",
+          "option": {
+            "never": "",
+            "1d": "1 天",
+            "3d": "3 天",
+            "1w": "1 周",
+            "2w": "",
+            "1M": "1 个月",
+            "3M": "3 个月"
+          }
         },
         "staleReleaseWithin": {
           "label": "过期版本时间范围",
-          "description": "使用示例：1w（1周），10M（10个月）。支持单位类型h（小时），d（天），w（周），M（月），y（年）。留空不突出显示过时的版本。"
+          "description": "使用示例：1w（1周），10M（10个月）。支持单位类型h（小时），d（天），w（周），M（月），y（年）。留空不突出显示过时的版本。",
+          "option": {
+            "never": "",
+            "1M": "1 个月",
+            "3M": "3 个月",
+            "6M": "6 个月",
+            "1y": "1 年",
+            "2y": "2 年"
+          }
         },
-        "showOnlyHighlighted": {
-          "label": "只显示高亮显示",
-          "description": "只显示新的或过时的版本。如上所述。"
-        },
-        "showDetails": {
-          "label": "展开详情"
-        },
-        "showOnlyIcon": {
-          "label": "仅显示图标"
-        },
-        "topReleases": {
-          "label": "最新发布数量",
-          "description": "要显示的最新版本的最大数量。零表示没有限制。"
+        "showChangelogPreview": {
+          "label": "",
+          "description": ""
         },
         "repositories": {
           "label": "仓库",
@@ -4852,36 +4898,106 @@
           }
         }
       },
-      "not-found": "未找到",
-      "pre-release": "预发行",
-      "archived": "已归档",
-      "forked": "复刻成功",
+      "summary": {
+        "newReleases": "",
+        "newShort": "新增",
+        "tracked": "",
+        "caughtUp": "",
+        "outdated": "",
+        "outdatedShort": "已过时",
+        "failing": "",
+        "failingShort": "",
+        "latest": "",
+        "issues": ""
+      },
+      "section": {
+        "new": {
+          "label": "新建",
+          "description": ""
+        },
+        "attention": {
+          "label": "需要关注",
+          "description": ""
+        },
+        "upToDate": {
+          "label": "已是最新",
+          "description": ""
+        },
+        "quiet": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "status": {
+        "new": "",
+        "outdated": "",
+        "error": "",
+        "upToDate": "已是最新",
+        "quiet": ""
+      },
+      "tag": {
+        "new": "新建",
+        "preRelease": "",
+        "resolvedFrom": "",
+        "quiet": "",
+        "archived": "已归档",
+        "fork": ""
+      },
+      "issue": {
+        "affected": "",
+        "rateLimited": {
+          "title": "",
+          "hint": ""
+        },
+        "notFound": {
+          "title": "",
+          "hint": ""
+        },
+        "noMatchingVersion": {
+          "title": "",
+          "hint": ""
+        },
+        "noReleasesFound": {
+          "title": "",
+          "hint": ""
+        },
+        "invalidIdentifier": {
+          "title": "无效标识符",
+          "hint": ""
+        },
+        "noProviderSelected": {
+          "title": "未选择提供商",
+          "hint": ""
+        },
+        "noProviderResponse": {
+          "title": "",
+          "hint": ""
+        },
+        "unexpected": {
+          "title": "",
+          "hint": ""
+        }
+      },
+      "markViewed": "标记已读",
+      "markAllViewed": "",
+      "markEntryViewed": "",
+      "viewed": "",
+      "copyVersion": "",
+      "copied": "已复制",
+      "published": "",
+      "whatChanged": "",
+      "noNotes": "",
+      "changes": "",
       "starsCount": "星",
       "forksCount": "复刻",
-      "issuesCount": "未关闭的问题",
-      "markViewed": "标记已读",
-      "openProjectPage": "打开项目页面",
-      "openReleasePage": "打开发布页面",
-      "releaseDescription": "发布说明",
-      "projectDescription": "项目描述",
+      "openIssues": "",
+      "created": "已创建",
+      "releasePage": "",
+      "projectPage": "",
       "runningVersions": "运行中的版本",
       "upToDate": "已是最新",
       "updateAvailable": "有可用更新",
-      "unknownStatus": "未知",
-      "created": "已创建",
-      "error": {
-        "label": "错误",
-        "messages": {
-          "invalidIdentifier": "无效标识符",
-          "noMatchingVersion": "没有找到匹配的版本",
-          "noReleasesFound": "没有发现发布信息",
-          "noProviderSelected": "未选择提供商",
-          "noProviderResponse": "提供者没有响应",
-          "unexpected": "意外的提供商错误"
-        }
-      },
-      "expandDetails": "显示 {name} 的详情",
-      "collapseDetails": "隐藏 {name} 的详情"
+      "unknownStatus": "未知"
     },
     "networkControllerSummary": {
       "advanced": {
@@ -6079,6 +6195,18 @@
       "addWidget": "添加小部件",
       "addApp": "添加应用",
       "connectService": "连接服务"
+    },
+    "urlDrop": {
+      "hint": "",
+      "resolving": "",
+      "notification": {
+        "success": {
+          "message": ""
+        },
+        "full": {
+          "message": ""
+        }
+      }
     },
     "setupChecklist": {
       "title": "让这个看板更有用",
@@ -8685,6 +8813,14 @@
     "conversationActions": "对话操作",
     "searchConversations": "搜索对话",
     "noMatchingConversations": "没有匹配的对话",
+    "historyError": {
+      "title": "",
+      "load": "",
+      "loadMessages": "",
+      "saveMessages": "",
+      "switch": "",
+      "retry": ""
+    },
     "moreActions": "更多响应操作",
     "renameConversation": {
       "action": "重命名",
@@ -8804,6 +8940,9 @@
     },
     "mentions": {
       "menu": "添加 Homarr 上下文",
+      "back": "",
+      "loading": "",
+      "empty": "",
       "context": "上下文",
       "app": "应用",
       "integration": "集成",
@@ -8818,6 +8957,8 @@
     },
     "commands": {
       "menu": "助手命令",
+      "hint": "",
+      "empty": "",
       "health": "准备服务健康检查",
       "explore": "准备此 Homarr 实例的概述",
       "media": "准备媒体搜索",
@@ -9000,6 +9141,7 @@
     "approvalDescription": "在运行前请审阅此更改。",
     "approveAndRun": "批准并运行",
     "deny": "拒绝",
+    "approvalError": "",
     "autoApproval": {
       "label": "自动批准",
       "composerLabel": "为我批准",

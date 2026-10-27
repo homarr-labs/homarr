@@ -930,7 +930,7 @@ const buildDemoWidgets = (
       width: 1,
       height: 1,
       needsIntegration: false,
-      options: { appId, openInNewTab: true, showTitle: true, pingEnabled: false },
+      options: { appId, openIn: "newTab", showTitle: true, pingEnabled: false },
     }),
   ),
 ];

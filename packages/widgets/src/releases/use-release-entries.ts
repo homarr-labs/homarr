@@ -1,7 +1,6 @@
 "use client";
 
 import { useCallback, useMemo } from "react";
-import { readLocalStorageValue, useLocalStorage } from "@mantine/hooks";
 import { getQueryKey } from "@trpc/react-query";
 
 import { clientApi } from "@homarr/api/client";
@@ -17,11 +16,7 @@ import { getRowIntegrationVersions } from "./integration-version";
 import { getReleasesQueryStaleTimeMs } from "./query-options";
 import type { ReleaseEntry, ReleaseEntryErrorCode } from "./release-entry";
 import type { ReleasesRepository } from "./releases-repository";
-
-const viewedVersionsKey = "releases-viewed-versions";
-
-const readViewedVersions = () =>
-  readLocalStorageValue<Record<string, string>>({ key: viewedVersionsKey, defaultValue: {} });
+import { useViewedReleases } from "./use-viewed-releases";
 
 export const useReleaseEntries = ({
   options,
@@ -32,11 +27,6 @@ export const useReleaseEntries = ({
 }: Pick<WidgetComponentProps<"releases">, "options" | "itemId" | "integrationIds" | "widgetRuntimeRef"> & {
   boardId: string;
 }) => {
-  const [viewedVersions, setViewedVersions] = useLocalStorage<Record<string, string>>({
-    key: viewedVersionsKey,
-    defaultValue: {},
-  });
-
   const repositories = useMemo(
     () =>
       options.repositories.map((repository) => ({
@@ -46,6 +36,7 @@ export const useReleaseEntries = ({
       })),
     [options.repositories],
   );
+  const { viewedVersions, markViewed: markVersionViewed } = useViewedReleases(itemId, repositories);
 
   const batches = useMemo(() => {
     const byProvider = new Map<ReleaseProviderKind, ReleasesRepository[]>();
@@ -161,20 +152,18 @@ export const useReleaseEntries = ({
     (entry: ReleaseEntry) => {
       const { version } = entry;
       if (!version) return;
-      setViewedVersions({ ...readViewedVersions(), [entry.id]: version });
+      markVersionViewed(entry.id, version);
     },
-    [setViewedVersions],
+    [markVersionViewed],
   );
 
   const markAllViewed = useCallback(
     (entriesToMark: ReleaseEntry[]) => {
-      const next = readViewedVersions();
       for (const entry of entriesToMark) {
-        if (entry.version) next[entry.id] = entry.version;
+        if (entry.version) markVersionViewed(entry.id, entry.version);
       }
-      setViewedVersions(next);
     },
-    [setViewedVersions],
+    [markVersionViewed],
   );
 
   return { entries, isInitialLoading, isFetching, serviceVersionsQuery, markViewed, markAllViewed };

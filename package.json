@@ -1,6 +1,6 @@
 {
   "name": "homarr",
-  "version": "2.8.2",
+  "version": "2.9.1",
   "private": true,
   "workspaces": {
     "packages": [
@@ -356,9 +356,9 @@
     "@assistant-ui/ai-sdk>@ai-sdk/react": "4.0.147",
     "@assistant-ui/ai-sdk>ai": "7.0.143",
     "@assistant-ui/ai-sdk>assistant-stream": "0.3.52",
-    "@assistant-ui/core": "0.3.29",
-    "@assistant-ui/store": "0.3.21",
-    "@assistant-ui/tap": "0.9.23",
+    "@assistant-ui/core": "0.3.30",
+    "@assistant-ui/store": "0.3.22",
+    "@assistant-ui/tap": "0.9.24",
     "@babel/helpers@<7.26.10": "7.29.7",
     "@babel/runtime@<7.26.10": "7.29.7",
     "@grpc/grpc-js@<1.12.7": "1.13.6",
