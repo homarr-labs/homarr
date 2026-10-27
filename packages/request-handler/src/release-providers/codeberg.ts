@@ -87,7 +87,7 @@ export const getCodebergReleaseAsync: ReleaseProvider = async ({
   const headers = tokenHeaders(token, (value) => ({ Authorization: `token ${value}` }));
 
   const releases = await listReleasesAsync(repositoryUrl, headers, identifier, excludePrereleases);
-  if (releases.length === 0) throw noReleasesFoundError(identifier);
+  if (releases.length === 0 && !excludePrereleases) throw noReleasesFoundError(identifier);
 
   const release = selectNewestRelease(releases.map(toRelease), versionPattern, excludePrereleases);
   const details = await loadOptionalDetailsAsync({ baseUrl, identifier, token }, () =>
