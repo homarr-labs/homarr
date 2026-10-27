@@ -903,7 +903,6 @@ const Essentials = (props: StudioSectionProps) => {
 
 const ServerAddressReview = (props: StudioSectionProps) => {
   const t = useI18n("init.studio.connect");
-  const [editingServerAddress, setEditingServerAddress] = useState(false);
   return (
     <Paper
       className={classes.serverAddressReview}
@@ -919,17 +918,11 @@ const ServerAddressReview = (props: StudioSectionProps) => {
         <Text size="sm" c="dimmed">
           {t("serverOriginHelp")}
         </Text>
-        <Switch
-          checked={editingServerAddress}
-          onChange={(event) => setEditingServerAddress(event.currentTarget.checked)}
-          label={t("editServerAddress")}
-        />
         <ServiceUrlTemplate
           serverOrigin={props.serverOrigin}
           onServerOriginChange={props.setServerOrigin}
           mode={props.urlMode}
           onModeChange={props.setUrlMode}
-          readOnly={!editingServerAddress}
           required
           rightSectionWidth={!props.serverAddressReviewed ? "var(--server-address-action-width)" : undefined}
           rightSection={
@@ -949,7 +942,7 @@ const ServerAddressReview = (props: StudioSectionProps) => {
         />
         {props.serverAddressValid && (
           <Text size="xs" c="dimmed" style={{ overflowWrap: "anywhere" }}>
-            {buildIntegrationUrl("sonarr", props.serverOrigin, props.urlMode)}
+            {t("serverAddressExample", { url: buildIntegrationUrl("sonarr", props.serverOrigin, props.urlMode) })}
           </Text>
         )}
         {props.serverAddressReviewed && (

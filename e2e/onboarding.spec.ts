@@ -59,7 +59,6 @@ describe("Onboarding", () => {
 
         await page.getByRole("button", { name: "Connect (3/6)" }).click();
         await page.locator('button[aria-label="Sonarr"]').click();
-        await page.getByRole("switch", { name: "Edit the usual server address and pattern" }).check();
         const serverOrigin = page.getByRole("textbox", { name: "Usual server address" });
         await serverOrigin.fill("https://home.example/homarr");
         await page.getByRole("button", { name: "Essentials (1/6)" }).click();
