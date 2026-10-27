@@ -1,0 +1,270 @@
+.agents/skills/homarr-custom-widget/references/schema.md
+  h_d6e478ca18e517 44-46
+.agents/skills/homarr-triage/SKILL.md
+  h_d6e478ca18e517 3,13-14,32-58,60
+.agents/skills/homarr-triage/references/delivery.md
+  h_d6e478ca18e517 5-6,17-18
+.github/ISSUE_TEMPLATE/bug_report.yml
+  h_d6e478ca18e517 48
+.github/workflows/crowdin-schedule-download.yml
+  h_d6e478ca18e517 33
+.github/workflows/crowdin-upload.yml
+  h_d6e478ca18e517 26
+CHANGELOG.md
+  h_d6e478ca18e517 1-77
+apps/docs/docs/widgets/app/index.mdx
+  h_d6e478ca18e517 24-27
+apps/docs/docs/widgets/app/index.ts
+  h_d6e478ca18e517 18-21
+apps/docs/public/api/open-api-schema.json
+  h_d6e478ca18e517 2656
+apps/docs/src/components/workshop/DetailPage.tsx
+  h_d6e478ca18e517 115-117
+apps/nextjs/src/app/[locale]/auth/invite/[id]/page.tsx
+  h_d6e478ca18e517 74
+apps/nextjs/src/app/[locale]/auth/login/page.tsx
+  h_d6e478ca18e517 53
+apps/nextjs/src/app/[locale]/auth/mcp/layout.tsx
+  h_d6e478ca18e517 41
+apps/nextjs/src/app/[locale]/boards/(content)/_header-actions.tsx
+  h_d6e478ca18e517 3,14,22,83,99-102,118-120,123
+apps/nextjs/src/app/[locale]/custom-widget-configuration/[token]/configuration-entry.tsx
+  h_d6e478ca18e517 7-12,20,123-128,132
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-form-utils.ts
+  h_d6e478ca18e517 10,38
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-source-field.tsx
+  h_d6e478ca18e517 4,6-10,15-17,26,28,151-156,169,189-201,232-332
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-sources-editor.tsx
+  h_d6e478ca18e517 7-8,32-48,97-102,175
+apps/nextjs/src/app/[locale]/manage/settings/_components/branding-settings-form.tsx
+  h_d6e478ca18e517 181-185
+apps/nextjs/src/app/api/custom-widgets/configuration-request/[token]/route.ts
+  h_d6e478ca18e517 14-20,26,64-90,98-100,132-134
+apps/nextjs/src/app/api/custom-widgets/configuration-request/body.ts
+  h_d6e478ca18e517 2,5-16,31,36,49
+apps/nextjs/src/app/api/mcp/_handler.ts
+  h_d6e478ca18e517 24,216
+apps/nextjs/src/components/board/board-apps-spotlight-registrar.tsx
+  h_d6e478ca18e517 33-35
+apps/nextjs/src/components/board/layout/normalize-board-layout-bounds.ts
+  h_d6e478ca18e517 1-61
+apps/nextjs/src/components/board/sections/grid/section-grid.tsx
+  h_d6e478ca18e517 21,35,62,77-80,84-89,98-101,126,172-175,177-178,181-182,190-197,218-221,224,226-229,370-372,424,427,430,437,441,447,453-454,456-459,462,464-466,468-470,475-476,478-479,483-484,488
+bun.lock
+  h_d6e478ca18e517 1089-1091,1562,1572,1574
+docs/agents/triage-labels.md
+  h_d6e478ca18e517 5-11,13
+package.json
+  h_d6e478ca18e517 3,359-361
+packages/api/src/root.ts
+  h_d6e478ca18e517 8
+packages/api/src/router/board.ts
+  h_d6e478ca18e517 55,72-73,147-151,1720,1725,1734,1743,2321-2322,2399-2404,2469-2470
+packages/api/src/router/custom-widget/definition-update.ts
+  h_d6e478ca18e517 121,181
+packages/api/src/router/custom-widget/preview-base-procedures.ts
+  h_d6e478ca18e517 99,153,179
+packages/api/src/router/custom-widget/preview-procedure-helpers.ts
+  h_d6e478ca18e517 59-60,64
+packages/api/src/router/custom-widget/request-executor.ts
+  h_d6e478ca18e517 1-5,68-76
+packages/api/src/router/custom-widget/secret-policy.ts
+  h_d6e478ca18e517 6-7,9,11-12,29-30,32,35-40
+packages/api/src/router/custom-widget/secret-procedures.ts
+  h_d6e478ca18e517 9,195,217
+packages/api/src/router/custom-widget/source-resolver.ts
+  h_d6e478ca18e517 77-80,82-84
+packages/api/src/router/custom-widget/transfer-procedures.ts
+  h_d6e478ca18e517 99
+packages/api/src/router/onboard/onboard-router.ts
+  h_d6e478ca18e517 846,852,892
+packages/api/src/router/test/custom-widget/definition-persistence.spec.ts
+  h_d6e478ca18e517 884-889
+packages/api/src/router/user-item-state.ts
+  h_d6e478ca18e517 1-76
+packages/api/src/trpc.ts
+  h_d6e478ca18e517 21,88
+packages/custom-widgets/scripts/ai-evaluation.ts
+  h_d6e478ca18e517 284
+packages/custom-widgets/src/core/ai-prompt.ts
+  h_d6e478ca18e517 43,132,178
+packages/custom-widgets/src/core/authoring-resources.ts
+  h_d6e478ca18e517 83,156-158
+packages/custom-widgets/src/core/custom-jsx-schema.ts
+  h_d6e478ca18e517 14-20,60-82,86
+packages/custom-widgets/src/core/request-header-policy.ts
+  h_d6e478ca18e517 1-34
+packages/custom-widgets/src/core/request-schema.ts
+  h_d6e478ca18e517 5-10,23-58,64,149
+packages/custom-widgets/src/core/schema-types.ts
+  h_d6e478ca18e517 1,8-22
+packages/custom-widgets/src/core/secret-requirements.ts
+  h_d6e478ca18e517 2-4,9,14-20,22,31-42,47
+packages/custom-widgets/src/core/source-setup.ts
+  h_d6e478ca18e517 2,4,21,58-64,68-73
+packages/custom-widgets/src/server/auth.ts
+  h_d6e478ca18e517 2-5,36-55,79,81,84-91
+packages/custom-widgets/src/server/network-policy.ts
+  h_d6e478ca18e517 4,36
+packages/custom-widgets/src/server/preview-sessions.ts
+  h_d6e478ca18e517 7,9-10,12-13,31,60,102,218,221,246,259,310-333
+packages/custom-widgets/src/server/request-executor.ts
+  h_d6e478ca18e517 243
+packages/custom-widgets/src/server/request-types.ts
+  h_d6e478ca18e517 4,10
+packages/custom-widgets/src/test/authoring-resources.spec.ts
+  h_d6e478ca18e517 25
+packages/custom-widgets/src/workbench/source-setup.tsx
+  h_d6e478ca18e517 5-11,32,167-169,173
+packages/db/migrations/custom/0006_app_widget_open_in.ts
+  h_d6e478ca18e517 1-33
+packages/db/migrations/custom/index.ts
+  h_d6e478ca18e517 8,17
+packages/db/migrations/postgresql/0019_sturdy_power_pack.sql
+  h_d6e478ca18e517 1-10
+packages/db/migrations/postgresql/meta/0019_snapshot.json
+  h_d6e478ca18e517 1-2775
+packages/db/migrations/postgresql/meta/_journal.json
+  h_d6e478ca18e517 137-143
+packages/db/migrations/seed.ts
+  h_d6e478ca18e517 933
+packages/db/migrations/sqlite/0050_typical_madelyne_pryor.sql
+  h_d6e478ca18e517 1-9
+packages/db/migrations/sqlite/meta/0050_snapshot.json
+  h_d6e478ca18e517 1-2812
+packages/db/migrations/sqlite/meta/_journal.json
+  h_d6e478ca18e517 354-360
+packages/db/queries/widget-placement.ts
+  h_d6e478ca18e517 148
+packages/db/schema/index.ts
+  h_d6e478ca18e517 45
+packages/db/schema/postgresql.ts
+  h_d6e478ca18e517 447-463
+packages/db/schema/sqlite.ts
+  h_d6e478ca18e517 432-448
+packages/db/test/app-widget-open-in-migration.spec.ts
+  h_d6e478ca18e517 1-65
+packages/forms-collection/src/new-app/_form.tsx
+  h_d6e478ca18e517 16,151
+packages/forms-collection/src/new-app/_url-label.tsx
+  h_d6e478ca18e517 1-47
+packages/onboarding/src/onboarding-auth-shell.tsx
+  h_d6e478ca18e517 24,45,67
+packages/server-settings/src/index.ts
+  h_d6e478ca18e517 52,70
+packages/translation/src/lang/ca.json
+  h_d6e478ca18e517 802-806,2321-2329,4775-4799,4802-4811,4815-4823,4825-4827,4901-4990,4993-4996,5000,6199-6210,8816-8823,8943-8945,8960-8961,9144
+packages/translation/src/lang/cn.json
+  h_d6e478ca18e517 802-806,2321-2329,4775-4799,4802-4811,4815-4823,4825-4827,4901-4990,4993-4996,5000,6199-6210,8816-8823,8943-8945,8960-8961,9144
+packages/translation/src/lang/cr.json
+  h_d6e478ca18e517 802-806,2321-2329,4773,4775-4781,4783-4790,4792-4794,4796-4798,4800-4823,4825-4827,4901-4990,4993-4996,5000,6199-6210,6336-6337,6339-6340,6378,6382,6386,8816-8823,8845,8861,8943-8945,8960-8966,9144
+packages/translation/src/lang/cs.json
+  h_d6e478ca18e517 802-806,2321-2329,4775-4799,4802-4811,4815-4823,4825-4827,4901-4990,4993-4996,5000,6199-6210,8816-8823,8943-8945,8960-8961,9144
+packages/translation/src/lang/da.json
+  h_d6e478ca18e517 802-806,2321-2329,4775-4799,4802-4811,4815-4823,4825-4827,4901-4990,4993-4996,5000,6199-6210,8816-8823,8943-8945,8960-8961,9144
+packages/translation/src/lang/de-CH.json
+  h_d6e478ca18e517 802-806,2321-2329,4775-4799,4802-4811,4815-4823,4825-4827,4901-4990,4993-4996,5000,6199-6210,8816-8823,8943-8945,8960-8961,9144
+packages/translation/src/lang/de.json
+  h_d6e478ca18e517 802-806,924,2321-2329,4775-4799,4802-4811,4815-4823,4825-4827,4901-4990,4993-4996,5000,5614,6199-6210,8816-8823,8943-8945,8960-8961,9144
+packages/translation/src/lang/el.json
+  h_d6e478ca18e517 802-806,2321-2329,4775-4799,4802-4811,4815-4823,4825-4827,4901-4990,4993-4996,5000,6199-6210,8816-8823,8943-8945,8960-8961,9144
+packages/translation/src/lang/en-gb.json
+  h_d6e478ca18e517 802-806,2321-2329,4775-4783,4785-4790,4792,4796,4800-4811,4813-4823,4825,4901-4990,4993-4996,5000,6199-6210,8816-8823,8943-8945,8960-8961,9144
+packages/translation/src/lang/en.json
+  h_d6e478ca18e517 802-806,2321-2329,7051-7054
+packages/translation/src/lang/es.json
+  h_d6e478ca18e517 802-806,2321-2329,4775-4799,4802-4811,4815-4823,4825-4827,4901-4990,4993-4996,5000,6199-6210,8816-8823,8943-8945,8960-8961,9144
+packages/translation/src/lang/et.json
+  h_d6e478ca18e517 802-806,2321-2329,4775-4799,4802-4811,4815-4823,4825-4827,4901-4990,4993-4996,5000,6199-6210,8816-8823,8943-8945,8960-8961,9144
+packages/translation/src/lang/fi.json
+  h_d6e478ca18e517 802-806,2321-2329,4775-4783,4785-4790,4792,4796,4800-4811,4813-4823,4825,4827,4901-4990,4993-4996,5000,6199-6210,8816-8823,8943-8945,8960-8961,9144
+packages/translation/src/lang/fr.json
+  h_d6e478ca18e517 802-806,2321-2329,4775-4799,4802-4811,4815-4823,4825-4827,4901-4990,4993-4996,5000,6199-6210,8816-8823,8943-8945,8960-8961,9144
+packages/translation/src/lang/he.json
+  h_d6e478ca18e517 802-806,2321-2329,4775-4799,4802-4811,4815-4823,4825-4827,4901-4990,4993-4996,5000,6199-6210,8816-8823,8943-8945,8960-8961,9144
+packages/translation/src/lang/hr.json
+  h_d6e478ca18e517 802-806,2321-2329,4775-4799,4802-4811,4815-4823,4825-4827,4901-4990,4993-4996,5000,6199-6210,8816-8823,8943-8945,8960-8961,9144
+packages/translation/src/lang/hu.json
+  h_d6e478ca18e517 802-806,2321-2329,4775-4799,4802-4811,4815-4823,4825-4827,4901-4990,4993-4996,5000,6199-6210,8816-8823,8943-8945,8960-8961,9144
+packages/translation/src/lang/it.json
+  h_d6e478ca18e517 802-806,2321-2329,2724,4775-4799,4802-4811,4815-4823,4825-4827,4901-4990,4993-4996,5000,6199-6210,8816-8823,8943-8945,8960-8961,9144
+packages/translation/src/lang/ja.json
+  h_d6e478ca18e517 802-806,2321-2329,4775-4799,4802-4811,4815-4823,4825-4827,4901-4990,4993-4996,5000,6199-6210,8816-8823,8943-8945,8960-8961,9144
+packages/translation/src/lang/ko.json
+  h_d6e478ca18e517 802-806,2321-2329,4775-4799,4802-4811,4815-4823,4825-4827,4901-4990,4993-4996,5000,6199-6210,8816-8823,8943-8945,8960-8961,9144
+packages/translation/src/lang/lt.json
+  h_d6e478ca18e517 802-806,2321-2329,4775-4799,4802-4811,4815-4823,4825-4827,4901-4990,4993-4996,5000,6199-6210,8816-8823,8943-8945,8960-8961,9144
+packages/translation/src/lang/lv.json
+  h_d6e478ca18e517 802-806,2321-2329,4775-4799,4802-4811,4815-4823,4825-4827,4901-4990,4993-4996,5000,6199-6210,8816-8823,8943-8945,8960-8961,9144
+packages/translation/src/lang/nl.json
+  h_d6e478ca18e517 802-806,2321-2329,4775-4799,4802-4811,4815-4823,4825-4827,4901-4990,4993-4996,5000,6199-6210,8816-8823,8943-8945,8960-8961,9144
+packages/translation/src/lang/no.json
+  h_d6e478ca18e517 802-806,2321-2329,4775-4799,4802-4811,4815-4823,4825-4827,4901-4990,4993-4996,5000,6199-6210,8816-8823,8943-8945,8960-8961,9144
+packages/translation/src/lang/pl.json
+  h_d6e478ca18e517 802-806,2321-2329,4775-4799,4802-4811,4815-4823,4825-4827,4901-4990,4993-4996,5000,6199-6210,8816-8823,8943-8945,8960-8961,9144
+packages/translation/src/lang/pt-br.json
+  h_d6e478ca18e517 802-806,2321-2329,4775-4799,4802-4811,4815-4823,4825-4827,4901-4990,4993-4996,5000,6199-6210,8816-8823,8943-8945,8960-8961,9144
+packages/translation/src/lang/pt.json
+  h_d6e478ca18e517 802-806,2321-2329,4775-4799,4802-4811,4815-4823,4825,4827,4901-4990,4993-4996,5000,6199-6210,8816-8823,8943-8945,8960-8961,9144
+packages/translation/src/lang/ro.json
+  h_d6e478ca18e517 802-806,2321-2329,4775-4799,4802-4811,4815-4823,4825-4827,4901-4990,4993-4996,5000,6199-6210,8816-8823,8943-8945,8960-8961,9144
+packages/translation/src/lang/ru.json
+  h_d6e478ca18e517 802-806,2321-2329,3247-3248,4773,4775-4781,4783-4790,4792-4794,4796-4798,4800-4811,4813-4827,4901-4990,4993-4996,5000,5175,5178-5179,6199-6210,6336-6337,6339-6340,6378,6382,6386,8816-8823,8845,8861,8943-8945,8960-8966,9144
+packages/translation/src/lang/sk.json
+  h_d6e478ca18e517 802-806,2321-2329,4775-4799,4802-4811,4815-4823,4825-4827,4901-4990,4993-4996,5000,6199-6210,8816-8823,8943-8945,8960-8961,9144
+packages/translation/src/lang/sl.json
+  h_d6e478ca18e517 802-806,2321-2329,4775-4799,4802-4811,4815-4823,4825-4827,4901-4990,4993-4996,5000,6199-6210,8816-8823,8943-8945,8960-8961,9144
+packages/translation/src/lang/sv.json
+  h_d6e478ca18e517 802-806,2321-2329,4775-4799,4802-4811,4815-4823,4825-4827,4901-4990,4993-4996,5000,6199-6210,8816-8823,8943-8945,8960-8961,9144
+packages/translation/src/lang/tr.json
+  h_d6e478ca18e517 802-806,2321-2329,4775-4799,4802-4811,4815-4823,4825-4827,4901-4990,4993-4996,5000,6199-6210,8816-8823,8943-8945,8960-8961,9144
+packages/translation/src/lang/uk.json
+  h_d6e478ca18e517 802-806,2321-2329,4775-4799,4802-4811,4815-4823,4825-4827,4901-4990,4993-4996,5000,6199-6210,8816-8823,8943-8945,8960-8961,9144
+packages/translation/src/lang/vi.json
+  h_d6e478ca18e517 802-806,2321-2329,4775-4799,4802-4811,4815-4823,4825-4827,4901-4990,4993-4996,5000,6199-6210,8816-8823,8943-8945,8960-8961,9144
+packages/translation/src/lang/zh.json
+  h_d6e478ca18e517 802-806,2321-2329,4775-4799,4802-4811,4815-4823,4825-4827,4901-4990,4993-4996,5000,6199-6210,8816-8823,8943-8945,8960-8961,9144
+packages/validation/src/app.ts
+  h_d6e478ca18e517 33-44
+packages/validation/src/board-layout-bounds-error.ts
+  h_d6e478ca18e517 1
+packages/validation/src/board-layout-bounds.ts
+  h_d6e478ca18e517 1-82
+packages/widgets/src/_inputs/widget-select-input.tsx
+  h_d6e478ca18e517 77
+packages/widgets/src/app/_app-link.spec.tsx
+  h_d6e478ca18e517 1-177
+packages/widgets/src/app/_app-link.tsx
+  h_d6e478ca18e517 1-59
+packages/widgets/src/app/component.tsx
+  h_d6e478ca18e517 5,19,63
+packages/widgets/src/app/index.ts
+  h_d6e478ca18e517 24-42
+packages/widgets/src/beszel-system-table/display.ts
+  h_d6e478ca18e517 6-30
+packages/widgets/src/beszel-system-table/index.ts
+  h_d6e478ca18e517 7,9,41-57
+packages/widgets/src/downloads/component.tsx
+  h_d6e478ca18e517 32,697-718,723,732,809-811
+packages/widgets/src/downloads/helpers.ts
+  h_d6e478ca18e517 21,33
+packages/widgets/src/manifest.ts
+  h_d6e478ca18e517 7,10,151-156
+packages/widgets/src/options.ts
+  h_d6e478ca18e517 62,204
+packages/widgets/src/releases/use-release-entries.ts
+  h_d6e478ca18e517 19,39,155,157,163,166
+packages/widgets/src/releases/use-viewed-releases.ts
+  h_d6e478ca18e517 1-88
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "abf420c88b650012faef1e82dde172cae892db4b",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
