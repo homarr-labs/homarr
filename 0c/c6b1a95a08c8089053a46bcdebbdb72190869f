@@ -1,0 +1,21 @@
+packages/custom-widgets/src/test/ai-assistant-evaluation.spec.ts
+  s_646db16e326abd::t_e5a733910e3e57 366-368,376,378,382-383,397,401,406-408
+packages/custom-widgets/src/test/reference-widgets.spec.ts
+  s_646db16e326abd::t_495a5d1809f9d2 15,18,24-26,31
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "0cc6b1a95a08c8089053a46bcdebbdb72190869f",
+  "prompts": {},
+  "sessions": {
+    "s_646db16e326abd": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "fc3ff591-fce6-4faf-b648-c4a35e176aec",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
