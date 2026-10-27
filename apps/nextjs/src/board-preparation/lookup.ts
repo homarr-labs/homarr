@@ -187,7 +187,8 @@ export const lookupPreparedBoardResponseAsync = async (
     const result = await Promise.race([
       pending,
       new Promise<Lookup>((resolve) => {
-        timeout = setTimeout(() => resolve({ hit: false, reason: "lookup_budget_exceeded" }), 100);
+        // Brief lookup jitter should not discard usable HTML and trigger seconds of SSR.
+        timeout = setTimeout(() => resolve({ hit: false, reason: "lookup_budget_exceeded" }), 250);
       }),
     ]);
     const durationMs = Math.round(stopwatch.getElapsedInMilliseconds());

@@ -19,9 +19,9 @@ export const getPreparedBoardResponseAsync = async (request: NextRequest, locali
     if (value !== null) headers.set(name, value);
   }
   const controller = new AbortController();
-  // The lookup has a 100 ms budget; allow a little time for loopback transport.
+  // The lookup has a 250 ms budget; allow a little time for loopback transport.
   // Clear the timer after headers so a slow browser can finish reading the HTML.
-  const timer = setTimeout(() => controller.abort(), 125);
+  const timer = setTimeout(() => controller.abort(), 275);
   try {
     const response = await fetch(getPreparationOrigin() + path, {
       method: request.method,
