@@ -1,0 +1,1108 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Adaptive containers · throwaway behavior prototype</title>
+  <style>
+    :root { color-scheme: dark; --bg:#111018; --surface:#1b1924; --surface-2:#242130; --line:#373242; --muted:#aaa4b9; --text:#f1edf8; --purple:#b59bff; --purple-dark:#372b52; --green:#8fddb7; --amber:#f0cb8c; --red:#f2a0aa; --row:62px; --gap:8px; }
+    * { box-sizing:border-box; }
+    body { margin:0; background:var(--bg); color:var(--text); font:14px/1.5 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; }
+    button,input,select { font:inherit; }
+    button,select { cursor:pointer; }
+    button { border:1px solid var(--line); border-radius:7px; background:var(--surface-2); color:var(--text); padding:8px 12px; line-height:1.3; }
+    button:hover { background:#302a3e; border-color:#635475; }
+    button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible,a:focus-visible { outline:3px solid var(--purple); outline-offset:3px; }
+    button[aria-pressed="true"],button[aria-selected="true"] { background:var(--purple-dark); border-color:var(--purple); color:#e4d8ff; }
+    button.primary { background:#a991f1; border-color:#a991f1; color:#191023; font-weight:650; }
+    button.primary:hover { background:#c1aaff; }
+    button:disabled { opacity:.4; cursor:default; }
+    a { color:#c7b2ff; text-underline-offset:3px; }
+    h1,h2,h3,p { margin:0; }
+    h1 { font-size:27px; letter-spacing:-.6px; line-height:1.25; }
+    h2 { font-size:16px; letter-spacing:-.15px; }
+    h3 { font-size:14px; }
+    .muted { color:var(--muted); }
+    .small { font-size:12px; }
+    .eyebrow { color:var(--purple); font-size:11px; font-weight:700; letter-spacing:1.2px; text-transform:uppercase; }
+    .badge { display:inline-flex; align-items:center; gap:6px; white-space:nowrap; border:1px solid var(--line); border-radius:5px; font-size:11px; padding:3px 7px; color:#d2cbdc; background:#201d2a; }
+    .badge.purple { color:#d4c1ff; border-color:#64527e; background:#2c233e; }
+    .badge.mock { color:var(--amber); border-color:#65523a; background:#2a241f; }
+    .topbar { min-height:57px; display:flex; align-items:center; justify-content:space-between; gap:18px; padding:12px 30px; border-bottom:1px solid var(--line); background:#17151f; }
+    .wordmark { display:flex; align-items:center; gap:10px; font-weight:700; font-size:16px; }
+    .brand-mark { color:var(--purple); display:inline-grid; place-items:center; width:27px; height:27px; border:2px solid var(--purple); border-radius:8px; font-size:15px; line-height:1; }
+    .topbar-end,.toolbar,.inline,.policy-buttons,.step-actions { display:flex; align-items:center; flex-wrap:wrap; gap:8px; }
+    main { max-width:1500px; padding:28px 30px 42px; margin:0 auto; }
+    .intro { display:flex; justify-content:space-between; align-items:flex-start; gap:25px; margin-bottom:24px; }
+    .intro p { max-width:880px; margin-top:10px; color:#c5bfce; }
+    .intro .eyebrow { margin-bottom:7px; }
+    .intro-note { max-width:330px; border-left:2px solid #564367; padding-left:14px; color:var(--muted); font-size:12px; }
+    .intro-note strong { color:#d8cce9; }
+    .policy-bar { display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap; margin-bottom:16px; }
+    .policy-buttons button { padding:10px 14px; }
+    .experimental { margin-left:5px; font-size:10px; text-transform:uppercase; letter-spacing:.4px; opacity:.8; }
+    .toggle { display:flex; align-items:center; gap:8px; cursor:pointer; }
+    input[type="checkbox"] { width:16px; height:16px; accent-color:#b49af7; margin:0; flex:0 0 auto; }
+    .workspace { display:grid; grid-template-columns:minmax(0,1fr) 310px; gap:16px; align-items:start; }
+    .panel { border:1px solid var(--line); border-radius:10px; background:var(--surface); overflow:hidden; }
+    .panel-title { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:15px 17px; border-bottom:1px solid var(--line); }
+    .panel-title p { margin-top:3px; }
+    .board-canvas { padding:20px; background-color:#15131d; background-image:radial-gradient(#373140 .7px,transparent .7px); background-size:18px 18px; }
+    .board-label { display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px; color:#aaa1b9; font-size:11px; margin-bottom:12px; }
+    .adaptive-container { border:1px solid #645074; border-radius:9px; background:#191620; overflow:hidden; }
+    .container-head { min-height:50px; display:flex; align-items:center; justify-content:space-between; gap:12px; padding:10px 12px; background:#211b2d; border-bottom:1px solid #3d304e; }
+    .container-head h3 { display:flex; align-items:center; gap:9px; }
+    .container-head h3 span:first-child { color:#c4a7f7; }
+    .container-head button { padding:6px 10px; font-size:12px; }
+    .preview-items { position:relative; margin:10px; min-height:54px; }
+    .preview-item { position:absolute; left:0; width:100%; border:1px solid #40364e; border-radius:7px; background:#25202f; padding:0 12px; overflow:hidden; }
+    .preview-item[data-activity="error"] { border-color:#83515f; background:#2d202a; }
+    .preview-item[data-activity="unknown"] { border-color:#66553f; }
+    .preview-item:focus-within { outline:2px solid var(--purple); outline-offset:-2px; }
+    .item-head { display:flex; align-items:center; gap:10px; min-height:54px; }
+    .service-icon { flex:0 0 auto; display:grid; place-items:center; width:31px; height:31px; border-radius:7px; font-weight:750; font-size:17px; background:#312543; color:#cbb0ff; }
+    .service-icon.plex { color:#f4cd79; background:#41341f; }
+    .service-icon.stats { color:#aeb2e3; background:#2c2d44; }
+    .item-title { flex:1; min-width:0; }
+    .item-title h3 { font-size:12px; line-height:1.3; }
+    .item-title p { font-size:11px; color:var(--muted); margin-top:2px; }
+    .activity-pill { font-size:10px; color:var(--muted); white-space:nowrap; text-transform:uppercase; letter-spacing:.5px; }
+    .activity-pill[data-activity="active"] { color:var(--green); }
+    .activity-pill[data-activity="error"] { color:var(--red); }
+    .activity-pill[data-activity="unknown"] { color:var(--amber); }
+    .focus-input { flex:0 0 auto; width:97px; height:28px; border:1px solid #5a4c6a; border-radius:5px; background:#19151f; color:#e3d9ed; padding:4px 7px; font-size:11px; }
+    .focus-input::placeholder { color:#b1a3c0; }
+    .item-content { border-top:1px solid #3e344a; padding:10px 0; font-size:12px; }
+    .session-lines { display:grid; gap:6px; }
+    .session-line { display:flex; justify-content:space-between; gap:10px; padding:5px 8px; border-radius:4px; background:#1d1925; font-size:11px; }
+    .session-line span:last-child { color:#c3afd9; }
+    .item-decision { margin-top:7px; color:#b9aec7; font-size:11px; }
+    .stats-metric { display:flex; align-items:baseline; gap:8px; margin-left:auto; white-space:nowrap; }
+    .stats-metric strong { font-size:24px; font-weight:650; letter-spacing:-.7px; line-height:1; }
+    .stats-metric span { font-size:10px; color:var(--muted); }
+    .empty-preview { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; flex-direction:column; gap:7px; color:#b9acc9; text-align:center; border:1px dashed #4d3e5e; border-radius:6px; padding:16px; }
+    .empty-preview strong { color:#e4d8ef; }
+    .stack-controls { padding:10px 12px; border-top:1px solid #3c304a; display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:10px; }
+    .stack-controls button { font-size:11px; padding:6px 8px; }
+    .stack-position { color:var(--muted); font-size:11px; }
+    .selection-note { padding:8px 12px; font-size:11px; color:#c7b7d8; border-top:1px solid #3c304a; }
+    .neighbor { margin-top:12px; border:1px solid #3c3748; border-radius:8px; background:#211e29; padding:13px 15px; min-height:70px; display:flex; align-items:center; justify-content:space-between; gap:12px; }
+    .neighbor p { color:var(--muted); font-size:11px; margin-top:3px; }
+    .neighbor span { color:#aea2c2; font-size:12px; }
+    .notices { padding:12px 17px; border-top:1px solid var(--line); font-size:12px; }
+    .notices ul { margin:0; padding-left:17px; display:grid; gap:5px; color:#d2c1df; }
+    .notices li::marker { color:var(--purple); }
+    .settings-body { padding:16px; }
+    .settings-body p + p { margin-top:10px; }
+    .settings-status { border:1px solid #57436d; border-radius:6px; background:#2a2038; padding:10px; color:#d9c5f1; font-size:12px; margin-bottom:16px; }
+    .settings-fields { border:0; padding:0; margin:0; display:grid; gap:17px; }
+    .setting-label { display:grid; gap:5px; }
+    .setting-label>span { font-size:12px; font-weight:600; }
+    .setting-label small { color:var(--muted); font-size:11px; font-weight:400; }
+    select { background:#16121e; color:var(--text); border:1px solid #51445f; border-radius:6px; padding:8px; width:100%; }
+    .setting-check { align-items:flex-start; font-size:12px; }
+    .setting-check input { margin-top:2px; }
+    .setting-check small { color:var(--muted); display:block; margin-top:3px; font-size:11px; }
+    .settings-actions { display:flex; gap:8px; padding-top:18px; border-top:1px solid var(--line); margin-top:20px; }
+    .settings-actions button { font-size:12px; }
+    .reset-preview { margin-top:10px; width:100%; background:transparent; font-size:11px; color:var(--muted); }
+    .settings-footnote { font-size:11px; color:var(--muted); margin-top:16px; }
+    .snapshot { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:1px; background:var(--line); border:1px solid var(--line); border-radius:8px; overflow:hidden; margin-top:16px; }
+    .snapshot>div { background:var(--surface); padding:12px 14px; }
+    .snapshot dt { color:var(--muted); font-size:11px; margin-bottom:4px; }
+    .snapshot dd { margin:0; font-size:13px; }
+    .below { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:16px; margin-top:16px; }
+    .free-play { padding:16px; }
+    .probe-controls { display:grid; grid-template-columns:1fr 1fr; gap:15px; }
+    .probe-block { min-width:0; }
+    .probe-block h3 { margin-bottom:9px; }
+    .quick-probes { display:grid; grid-template-columns:1fr 1fr; gap:6px; }
+    .quick-probes button { padding:7px 5px; font-size:11px; }
+    .observation-controls { display:flex; gap:6px; margin-top:8px; }
+    .observation-controls select { font-size:11px; min-width:0; padding:7px; }
+    .observation-controls button { font-size:11px; padding:7px 8px; flex:0 0 auto; }
+    .free-play-footer { display:flex; flex-wrap:wrap; gap:12px 16px; border-top:1px solid var(--line); padding-top:14px; margin-top:15px; font-size:12px; }
+    .clock-controls { display:flex; align-items:center; gap:7px; flex-wrap:wrap; margin-bottom:13px; }
+    .clock-controls button { font-size:11px; }
+    .clock-controls strong { color:#d6c3ff; font-variant-numeric:tabular-nums; margin-right:auto; }
+    .scenario-tabs { display:flex; flex-wrap:wrap; gap:6px; padding:12px 15px 0; }
+    .scenario-tabs button { font-size:11px; padding:6px 8px; }
+    .scenario-panel { padding:14px 16px 16px; }
+    .scenario-panel>p { color:var(--muted); font-size:12px; margin-bottom:12px; min-height:36px; }
+    .scenario-steps { display:grid; gap:7px; }
+    .scenario-step { display:flex; align-items:center; text-align:left; gap:10px; padding:8px 10px; background:#201b2a; }
+    .scenario-step .step-number { width:22px; height:22px; flex:0 0 auto; display:grid; place-items:center; border:1px solid #62516f; border-radius:50%; font-size:11px; }
+    .scenario-step .step-label { flex:1; font-size:12px; }
+    .scenario-step .step-note { display:block; color:var(--muted); font-size:10px; margin-top:2px; }
+    .scenario-step.next { border-color:#a48ac8; background:#30253f; }
+    .scenario-step.completed .step-number { color:var(--green); border-color:#49745f; }
+    .scenario-start { margin-top:12px; font-size:11px; }
+    .state-panel { margin-top:16px; }
+    .state-table-wrap { overflow:auto; }
+    table { width:100%; border-collapse:collapse; min-width:760px; font-size:12px; }
+    th { text-align:left; color:var(--muted); font-weight:500; font-size:11px; padding:10px 14px; background:#201c29; }
+    td { padding:12px 14px; border-top:1px solid var(--line); vertical-align:top; }
+    td:first-child { width:165px; }
+    td strong { font-weight:600; display:block; }
+    td .subline { display:block; color:var(--muted); font-size:11px; margin-top:4px; }
+    .state-extras { display:grid; grid-template-columns:1fr 1fr; gap:14px; padding:13px 16px; border-top:1px solid var(--line); font-size:11px; }
+    .state-extras p+p { margin-top:5px; }
+    .state-extras strong { color:#dac9ed; font-weight:600; }
+    details { padding:12px 16px; border-top:1px solid var(--line); }
+    summary { cursor:pointer; color:var(--muted); font-size:11px; }
+    pre { white-space:pre-wrap; word-break:break-word; font-size:11px; color:#c8bdd5; margin:13px 0 0; max-height:360px; overflow:auto; }
+    .last-change { font-size:11px; color:#bdb0cf; }
+    footer { margin-top:20px; display:flex; flex-wrap:wrap; justify-content:space-between; gap:10px 20px; color:var(--muted); font-size:11px; }
+    [hidden] { display:none !important; }
+    @media (max-width:1120px) { .workspace { grid-template-columns:minmax(0,1fr) 280px; } .below { grid-template-columns:1fr; } .intro-note { max-width:250px; } .snapshot { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+    @media (max-width:800px) { main { padding:20px 16px 30px; } .topbar { padding:12px 16px; } .workspace { grid-template-columns:1fr; } .intro { flex-direction:column; gap:14px; } .intro-note { max-width:none; } .board-canvas { padding:12px; } .state-extras { grid-template-columns:1fr; } .item-head { gap:7px; } .activity-pill { display:none; } .focus-input { width:80px; } }
+    @media (max-width:480px) { h1 { font-size:23px; } .topbar-end .small { display:none; } .probe-controls { grid-template-columns:1fr; } .snapshot { grid-template-columns:1fr 1fr; } .policy-buttons { width:100%; } .policy-buttons button { flex:1; padding:9px 6px; font-size:11px; } .experimental { display:block; margin:3px 0 0; font-size:9px; } .preview-item { padding:0 8px; } .service-icon { width:24px; height:27px; font-size:14px; } .item-title h3 { font-size:10px; } .item-title p { font-size:9px; } .focus-input { width:65px; font-size:10px; } .stats-metric span { display:none; } }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="wordmark"><span class="brand-mark" aria-hidden="true">h</span>homarr <span class="badge">Board behavior lab</span></div>
+    <div class="topbar-end"><span class="small muted">In memory · no live services</span><button id="reset-demo" type="button">Reset demo</button></div>
+  </header>
+  <main>
+    <div class="intro">
+      <div>
+        <p class="eyebrow">Throwaway prototype · issue #7393</p>
+        <h1>Can a container adapt without losing your trust?</h1>
+        <p>Hide confirmed-idle Currently playing items, keep faults visible, and protect the layout you saved. Explore activity, manual control, and bounded height by sending mock observations below. This demo starts opted in; the proposed production default is off.</p>
+      </div>
+      <div class="intro-note"><span class="badge mock">MOCK DATA</span><p style="margin-top:9px"><strong>No design has been selected.</strong> Hide idle is the bounded first proposal; Smart stack and Fit content are experiments. This simulation does not validate Homarr's real layout engine, permissions, or integration lifecycle.</p></div>
+    </div>
+
+    <div class="policy-bar">
+      <div class="policy-buttons" role="group" aria-label="Container presentation">
+        <button type="button" data-mode="hide-idle" aria-pressed="true">Hide idle</button>
+        <button type="button" data-mode="smart-stack" aria-pressed="false">Smart stack <span class="experimental">Experiment</span></button>
+        <button type="button" data-mode="fit-content" aria-pressed="false">Fit content <span class="experimental">Experiment</span></button>
+      </div>
+      <label class="toggle small"><input id="board-editing" type="checkbox">Board edit: show saved geometry</label>
+    </div>
+
+    <div class="workspace">
+      <section class="panel" aria-labelledby="preview-heading">
+        <div class="panel-title"><div><h2 id="preview-heading">Board preview</h2><p class="small muted" id="preview-context">Runtime arrangement · saved positions stay untouched</p></div><div class="inline"><button type="button" id="resume-auto" hidden>Resume automatic selection</button><span class="badge purple" id="preview-policy">Hide idle</span></div></div>
+        <div class="board-canvas">
+          <div class="board-label"><span>Main lane · Base layout · 9 columns</span><span id="container-size">Container: 9 × 6 saved rows</span></div>
+          <section class="adaptive-container" id="adaptive-container" aria-labelledby="container-heading">
+            <div class="container-head"><h3 id="container-heading"><span aria-hidden="true">▤</span><span>Media corner</span></h3><button id="open-editor" type="button" aria-controls="settings-editor" aria-expanded="false">Edit container</button></div>
+            <div class="preview-items" id="preview-items">
+              <article id="item-jellyfin" data-item-id="jellyfin" class="preview-item" aria-label="Currently playing, Jellyfin">
+                <div class="item-head"><span class="service-icon" aria-hidden="true">J</span><div class="item-title"><h3>Currently playing · Jellyfin</h3><p id="summary-jellyfin">Mock media sessions</p></div><span id="pill-jellyfin" class="activity-pill">Active</span><input id="focus-jellyfin" class="focus-input" type="text" placeholder="Focus here" aria-label="Focus protection demo inside Jellyfin item" autocomplete="off"></div>
+                <div class="item-content" id="content-jellyfin"><div id="sessions-jellyfin" class="session-lines"></div><p id="decision-jellyfin" class="item-decision"></p></div>
+              </article>
+              <article id="item-plex" data-item-id="plex" class="preview-item" aria-label="Currently playing, Plex">
+                <div class="item-head"><span class="service-icon plex" aria-hidden="true">P</span><div class="item-title"><h3>Currently playing · Plex</h3><p id="summary-plex">Mock media sessions</p></div><span id="pill-plex" class="activity-pill">Active</span><input id="focus-plex" class="focus-input" type="text" placeholder="Focus here" aria-label="Focus protection demo inside Plex item" autocomplete="off"></div>
+                <div class="item-content" id="content-plex"><div id="sessions-plex" class="session-lines"></div><p id="decision-plex" class="item-decision"></p></div>
+              </article>
+              <article id="item-stats" data-item-id="stats" class="preview-item" aria-label="Stats, Playback sessions">
+                <div class="item-head"><span class="service-icon stats" aria-hidden="true">≡</span><div class="item-title"><h3>Stats · Playback sessions</h3><p>Configured 9 × 1 fallback · no idle signal</p></div><div class="stats-metric"><strong id="stats-value">1</strong><span>mock sessions</span></div></div>
+              </article>
+              <div class="empty-preview" id="empty-preview" hidden><strong>No activity</strong><span class="small">All eligible items are idle. Container controls remain available.</span></div>
+            </div>
+            <div class="stack-controls" id="stack-controls" hidden>
+              <div class="inline"><button id="stack-prev" type="button" aria-label="Previous configured item">← Previous</button><button type="button" data-select-item="jellyfin" aria-pressed="false">Jellyfin</button><button type="button" data-select-item="plex" aria-pressed="false">Plex</button><button type="button" data-select-item="stats" aria-pressed="false">Stats</button><button id="stack-next" type="button" aria-label="Next configured item">Next →</button></div>
+              <div class="inline"><span id="stack-position" class="stack-position"></span></div>
+            </div>
+            <p class="selection-note" id="selection-note" hidden></p>
+          </section>
+          <section class="neighbor" aria-label="Neighboring board section"><div><h3>Neighboring section</h3><p id="neighbor-description">Starts below the container's saved six-row footprint.</p></div><span id="neighbor-position">↓ row 6</span></section>
+        </div>
+        <div class="notices" aria-label="Container status and faults"><ul id="notices"></ul></div>
+      </section>
+
+      <aside class="panel" id="settings-editor" aria-labelledby="settings-heading">
+        <div class="panel-title"><div><h2 id="settings-heading">Container settings</h2><p class="small muted" id="settings-subtitle">Open Edit container to try a local preview.</p></div><span class="badge" id="editor-badge">Closed</span></div>
+        <div class="settings-body">
+          <div class="settings-status" id="settings-status">The board preview reacts to the controls above. Edit container creates an isolated settings draft.</div>
+          <fieldset id="settings-fields" class="settings-fields" disabled>
+            <label class="setting-label"><span>Presentation</span><select id="setting-mode"><option value="hide-idle">Hide idle</option><option value="smart-stack">Smart stack · experiment</option><option value="fit-content">Fit content · experiment</option></select></label>
+            <label class="toggle setting-check"><input id="setting-hide" type="checkbox"><span>Hide inactive widgets<small>Only confirmed empty Currently playing data. Paused sessions stay active. Proposed production default: off.</small></span></label>
+            <label class="toggle setting-check"><input id="setting-fallback" type="checkbox"><span>Include Stats fallback<small>Use the configured 9 × 1 Playback sessions item. Its numeric value is not an idle signal.</small></span></label>
+            <label class="setting-label"><span>Fit content strategy</span><select id="setting-fit"><option value="compact">Compact · 1 row up to saved height</option><option value="details">Details · use saved media height</option></select><small>Existing mock session details only; no new service metrics.</small></label>
+            <label class="toggle setting-check"><input id="setting-shrink" type="checkbox"><span>Shrink outer container<small>Fit experiment only. Move the neighboring section up using display rows; saved rows remain six.</small></span></label>
+          </fieldset>
+          <div class="settings-actions"><button type="button" id="apply-editor" class="primary" disabled>Apply preview</button><button type="button" id="cancel-editor" disabled>Cancel</button></div>
+          <button type="button" id="reset-editor" class="reset-preview" disabled>Reset preview to defaults</button>
+          <p class="settings-footnote">Apply changes only this demo's in-memory board settings. Cancel and Escape discard the local preview while retaining incoming activity. Reloading resets everything.</p>
+        </div>
+      </aside>
+    </div>
+
+    <dl class="snapshot" aria-label="Current behavior">
+      <div><dt>Simulated time</dt><dd id="snapshot-clock">0 seconds</dd></div>
+      <div><dt>Displayed bodies</dt><dd id="snapshot-visible">3 of 3</dd></div>
+      <div><dt>Outer footprint</dt><dd id="snapshot-geometry">6 displayed / 6 saved rows</dd></div>
+      <div><dt>User control</dt><dd id="snapshot-control">Automatic hide policy</dd></div>
+    </dl>
+
+    <div class="below">
+      <section class="panel" aria-labelledby="free-heading">
+        <div class="panel-title"><div><h2 id="free-heading">Free play</h2><p class="small muted">Send observations in any order. No real time passes.</p></div><span class="badge mock">Mock inputs</span></div>
+        <div class="free-play">
+          <div class="clock-controls"><strong id="clock-label">Clock: 0s</strong><button type="button" data-tick="10">Advance 10s</button><button type="button" data-tick="31">Advance 31s</button></div>
+          <div class="probe-controls">
+            <div class="probe-block"><h3>Jellyfin observation</h3><div class="quick-probes"><button type="button" data-probe-id="jellyfin" data-playing="1">1 playing</button><button type="button" data-probe-id="jellyfin" data-playing="4">4 playing</button><button type="button" data-probe-id="jellyfin" data-paused="1">Paused</button><button type="button" data-probe-id="jellyfin" data-playing="0">Stopped · empty</button></div><div class="observation-controls"><select id="observation-jellyfin" aria-label="Jellyfin exceptional observation"><option value="loading">Initial loading</option><option value="error">Integration error</option><option value="partial">Partial failure</option><option value="stale">Stale result</option><option value="unconfigured">Missing configuration</option><option value="forbidden">Access denied</option><option value="refresh">Background refresh</option></select><button type="button" data-observation-id="jellyfin">Send</button></div></div>
+            <div class="probe-block"><h3>Plex observation</h3><div class="quick-probes"><button type="button" data-probe-id="plex" data-playing="1">1 playing</button><button type="button" data-probe-id="plex" data-playing="4">4 playing</button><button type="button" data-probe-id="plex" data-paused="1">Paused</button><button type="button" data-probe-id="plex" data-playing="0">Stopped · empty</button></div><div class="observation-controls"><select id="observation-plex" aria-label="Plex exceptional observation"><option value="loading">Initial loading</option><option value="error">Integration error</option><option value="partial">Partial failure</option><option value="stale">Stale result</option><option value="unconfigured">Missing configuration</option><option value="forbidden">Access denied</option><option value="refresh">Background refresh</option></select><button type="button" data-observation-id="plex">Send</button></div></div>
+          </div>
+          <div class="free-play-footer"><label class="toggle"><input type="checkbox" id="search-empty">Search with no matches</label><label class="toggle"><input type="checkbox" id="free-fallback">Include Stats fallback</label></div>
+          <p class="small muted" style="margin-top:12px">Proposed timing: 10s idle grace, 30s freshness. Observers are simulated independently of the visible item bodies. Focus an item's input, or hover inside the container, to explore interaction protection.</p>
+        </div>
+      </section>
+
+      <section class="panel" aria-labelledby="walkthrough-heading">
+        <div class="panel-title"><div><h2 id="walkthrough-heading">Guided walkthroughs</h2><p class="small muted">Choosing a tab resets to a known mock state.</p></div></div>
+        <div class="scenario-tabs" id="scenario-tabs" role="tablist" aria-label="Behavior walkthroughs"></div>
+        <div id="scenario-panels"></div>
+      </section>
+    </div>
+
+    <section class="panel state-panel" aria-labelledby="state-heading">
+      <div class="panel-title"><div><h2 id="state-heading">Why each item is here</h2><p class="small muted">All configured items stay in this report, including hidden and unselected items.</p></div><span class="badge purple" id="saved-integrity">Saved geometry unchanged</span></div>
+      <div class="state-table-wrap"><table><thead><tr><th scope="col">Configured item</th><th scope="col">Activity and freshness</th><th scope="col">Display decision</th><th scope="col">Saved → displayed</th></tr></thead><tbody id="state-rows"></tbody></table></div>
+      <div class="state-extras"><div><p><strong>Selection:</strong> <span id="report-selection"></span></p><p><strong>Interaction:</strong> <span id="report-interaction"></span></p><p><strong>Last action:</strong> <span id="last-change">Demo opened.</span></p></div><div><p><strong>Board settings:</strong> <span id="report-settings"></span></p><p><strong>Editor preview:</strong> <span id="report-editor"></span></p><p><strong>Clock:</strong> <span id="report-clock"></span></p></div></div>
+      <details><summary>Inspect full in-memory state</summary><pre id="raw-state"></pre></details>
+    </section>
+    <footer><span>Throwaway behavior prototype · no persistence, network, real polling, or animation.</span><span><a href="https://github.com/homarr-labs/homarr/issues/7393" target="_blank" rel="noreferrer">Research and proposal: #7393</a> · Inputs, scores, timing, and neighbor reflow are illustrative.</span></footer>
+  </main>
+
+  <script>
+const PrototypeModel = (() => {
+  const GRACE_SECONDS = 10;
+  const FRESH_SECONDS = 30;
+  const SWITCH_SECONDS = 15;
+  const SAVED_ROWS = 6;
+  const items = Object.freeze([
+    Object.freeze({ id: 'jellyfin', title: 'Currently playing · Jellyfin', kind: 'mediaServer', saved: Object.freeze({ x: 0, y: 0, w: 9, h: 3 }) }),
+    Object.freeze({ id: 'plex', title: 'Currently playing · Plex', kind: 'mediaServer', saved: Object.freeze({ x: 0, y: 3, w: 9, h: 2 }) }),
+    Object.freeze({ id: 'stats', title: 'Stats · Playback sessions', kind: 'stats', saved: Object.freeze({ x: 0, y: 5, w: 9, h: 1 }) }),
+  ]);
+
+  const defaults = () => ({ mode: 'hide-idle', hideInactive: true, showFallback: true, fitStrategy: 'compact', shrinkContainer: false });
+  const settingsFor = (state) => state.editor?.settings || state.settings;
+  const knownItem = (id) => items.find((item) => item.id === id);
+  const count = (value, previous) => {
+    if (value === undefined) return previous;
+    if (!Number.isFinite(value)) return 0;
+    return Math.max(0, Math.floor(value));
+  };
+
+  function observe(state, item) {
+    if (item.kind !== 'mediaServer') {
+      return { activity: 'unsupported', reason: 'No activity signal; configured Stats remains available.', playing: 0, paused: 0, age: null, pendingSeconds: null, refreshing: false };
+    }
+    const probe = state.probes[item.id];
+    let age = null;
+    if (probe.observedAt !== null) age = Math.max(0, state.now - probe.observedAt);
+    const result = { activity: 'unknown', reason: '', playing: probe.playing, paused: probe.paused, age, pendingSeconds: null, refreshing: probe.refreshing };
+    if (probe.status === 'forbidden') {
+      result.activity = 'error';
+      result.reason = 'Access unavailable; keep permission-safe status visible.';
+      return result;
+    }
+    if (probe.status === 'unconfigured') {
+      result.activity = 'error';
+      result.reason = 'Integration is not configured; this is not inactivity.';
+      return result;
+    }
+    if (probe.status === 'error' || probe.status === 'partial') {
+      result.activity = 'error';
+      result.reason = 'Integration request failed; keep error treatment visible.';
+      if (probe.status === 'partial') result.reason = 'A configured integration failed; empty fallback rows cannot prove inactivity.';
+      return result;
+    }
+    if (probe.status === 'loading') {
+      result.reason = 'No current complete result; loading interrupts pending inactivity.';
+      return result;
+    }
+    if (probe.status === 'stale' || age === null || age >= FRESH_SECONDS) {
+      result.reason = 'Observation is stale; fresh evidence is required before hiding.';
+      return result;
+    }
+    if (probe.playing + probe.paused > 0) {
+      result.activity = 'active';
+      result.reason = 'Fresh current sessions; paused sessions remain eligible.';
+      return result;
+    }
+    result.activity = 'inactive';
+    result.pendingSeconds = GRACE_SECONDS;
+    if (probe.idleSince !== null) result.pendingSeconds = Math.max(0, GRACE_SECONDS - (state.now - probe.idleSince));
+    result.reason = 'Complete fresh result confirms no current sessions.';
+    if (result.pendingSeconds > 0) result.reason = `No sessions; ${result.pendingSeconds}s remain in the inactivity grace.`;
+    if (probe.refreshing) result.reason += ' Background refresh retains this still-fresh decision.';
+    return result;
+  }
+
+  function baseVisible(state, settings, item, observation) {
+    if (state.focusedItemId === item.id) return true;
+    if (item.kind === 'stats') return settings.showFallback;
+    if (!settings.hideInactive) return true;
+    return observation.activity !== 'inactive' || observation.pendingSeconds > 0;
+  }
+
+  function relevance(item, observation) {
+    if (observation.activity === 'error') return 500;
+    if (observation.activity === 'active' && observation.playing > 0) return 400;
+    if (observation.activity === 'active') return 300;
+    if (observation.activity === 'unknown') return 200;
+    if (item.kind === 'stats') return 100;
+    return 0;
+  }
+
+  function reconcile(state, force = false) {
+    const settings = settingsFor(state);
+    const stack = { ...state.stack };
+    if (settings.mode !== 'smart-stack') return { ...state, stack };
+    if (state.boardEditing && !state.editor) {
+      stack.selectionReason = 'Board editing shows every configured item at its saved placement.';
+      return { ...state, stack };
+    }
+    const candidates = items.map((item) => ({ item, observation: observe(state, item) }))
+      .filter(({ item, observation }) => baseVisible(state, settings, item, observation));
+    if (stack.selectedId === 'stats' && !settings.showFallback && state.focusedItemId !== 'stats') {
+      let successor = candidates[0];
+      for (const candidate of candidates) {
+        if (!successor || relevance(candidate.item, candidate.observation) > relevance(successor.item, successor.observation)) successor = candidate;
+      }
+      stack.selectedId = successor?.item.id || null;
+      stack.lastSelectedAt = state.now;
+      stack.selectionReason = 'Selected Stats was explicitly switched off; choose the highest-relevance available successor without resuming automatic selection.';
+      return { ...state, stack };
+    }
+    if (!stack.automatic) {
+      stack.selectionReason = 'Automatic selection is paused; Resume automatic selection is required.';
+      if (stack.pausedReason === 'manual') stack.selectionReason = 'Manual selection holds until Resume automatic selection.';
+      if (state.focusedItemId) stack.selectionReason = 'Focus protects the current item and pauses automatic selection.';
+      return { ...state, stack };
+    }
+    const incumbent = candidates.find(({ item }) => item.id === stack.selectedId);
+    let best = incumbent || candidates[0];
+    for (const candidate of candidates) {
+      if (!best || relevance(candidate.item, candidate.observation) > relevance(best.item, best.observation)) best = candidate;
+    }
+    if (!best) {
+      stack.selectedId = null;
+      stack.selectionReason = 'All eligible items are idle and the neutral fallback is off.';
+      return { ...state, stack };
+    }
+    if (best.item.id === stack.selectedId) {
+      stack.selectionReason = 'Highest relevance retained; equal relevance keeps the incumbent.';
+      return { ...state, stack };
+    }
+    const hasNewFault = best.observation.activity === 'error';
+    const remaining = SWITCH_SECONDS - (state.now - stack.lastSelectedAt);
+    if (!force && incumbent && !hasNewFault && remaining > 0) {
+      stack.selectionReason = `A more relevant item is waiting for the illustrative ${remaining}s switch cooldown.`;
+      return { ...state, stack };
+    }
+    stack.selectedId = best.item.id;
+    stack.lastSelectedAt = state.now;
+    stack.selectionReason = 'Selected the highest-relevance eligible item.';
+    if (hasNewFault) stack.selectionReason = 'New error takes priority and bypasses the illustrative switch cooldown.';
+    return { ...state, stack };
+  }
+
+  function createInitialState() {
+    return {
+      now: 0,
+      settings: defaults(),
+      editor: null,
+      boardEditing: false,
+      focusedItemId: null,
+      focusGeometry: null,
+      hovered: false,
+      searchEmpty: false,
+      probes: {
+        jellyfin: { status: 'success', playing: 1, paused: 0, observedAt: 0, idleSince: null, refreshing: false },
+        plex: { status: 'success', playing: 0, paused: 0, observedAt: 0, idleSince: 0, refreshing: false },
+      },
+      stack: { selectedId: 'jellyfin', automatic: true, pausedReason: null, lastSelectedAt: 0, selectionReason: 'Playing sessions outrank a neutral fallback.' },
+    };
+  }
+
+  function reduce(state, action) {
+    let next = state;
+    if (action.type === 'RESET') return createInitialState();
+    if (action.type === 'PROBE' && state.probes[action.id]) {
+      const previous = state.probes[action.id];
+      const probe = { ...previous, status: action.status, refreshing: false, idleSince: null };
+      probe.playing = count(action.playing, previous.playing);
+      probe.paused = count(action.paused, previous.paused);
+      if (action.status === 'forbidden' || action.status === 'unconfigured') {
+        probe.playing = 0;
+        probe.paused = 0;
+        probe.observedAt = null;
+      }
+      if (action.status === 'success') {
+        probe.observedAt = state.now;
+        if (probe.playing + probe.paused === 0) {
+          probe.idleSince = state.now;
+          const wasFreshEmpty = previous.status === 'success' && previous.observedAt !== null && state.now - previous.observedAt < FRESH_SECONDS && previous.playing + previous.paused === 0;
+          if (wasFreshEmpty && previous.idleSince !== null) probe.idleSince = previous.idleSince;
+        }
+      }
+      next = { ...state, probes: { ...state.probes, [action.id]: probe } };
+    }
+    if (action.type === 'BACKGROUND_REFRESH' && state.probes[action.id]) {
+      next = { ...state, probes: { ...state.probes, [action.id]: { ...state.probes[action.id], refreshing: true } } };
+    }
+    if (action.type === 'TICK') {
+      const seconds = count(action.seconds, 0);
+      const now = state.now + seconds;
+      const probes = {};
+      for (const [id, previous] of Object.entries(state.probes)) {
+        probes[id] = { ...previous };
+        if (previous.status === 'success' && previous.observedAt !== null && now - previous.observedAt >= FRESH_SECONDS) {
+          probes[id].status = 'stale';
+          probes[id].idleSince = null;
+          probes[id].refreshing = false;
+        }
+      }
+      next = { ...state, now, probes };
+    }
+    if (action.type === 'SET_SETTING' && Object.hasOwn(defaults(), action.key)) {
+      const settings = { ...settingsFor(state), [action.key]: action.value };
+      if (state.editor) next = { ...state, editor: { ...state.editor, settings } };
+      else next = { ...state, settings };
+    }
+    if (action.type === 'OPEN_EDITOR') next = { ...state, editor: { settings: { ...state.settings } } };
+    if (action.type === 'APPLY_EDITOR' && state.editor) next = { ...state, settings: { ...state.editor.settings }, editor: null };
+    if (action.type === 'CANCEL_EDITOR') next = { ...state, editor: null };
+    if (action.type === 'RESET_EDITOR' && state.editor) next = { ...state, editor: { ...state.editor, settings: defaults() } };
+    if (action.type === 'SET_BOARD_EDITING') next = { ...state, boardEditing: Boolean(action.value) };
+    if (action.type === 'SET_SEARCH_EMPTY') next = { ...state, searchEmpty: Boolean(action.value) };
+    if (action.type === 'MANUAL_SELECT' && knownItem(action.id)) {
+      next = { ...state, stack: { ...state.stack, selectedId: action.id, automatic: false, pausedReason: 'manual', lastSelectedAt: state.now, selectionReason: 'Manual selection holds until Resume automatic selection.' } };
+    }
+    if (action.type === 'PAUSE_AUTO' && settingsFor(state).mode === 'smart-stack') {
+      next = { ...state, stack: { ...state.stack, automatic: false, pausedReason: action.reason || 'focus' } };
+    }
+    if (action.type === 'RESUME_AUTO') {
+      const stack = { ...state.stack, automatic: true, pausedReason: null };
+      if (state.hovered || state.focusedItemId) {
+        stack.automatic = false;
+        stack.pausedReason = 'hover';
+        if (state.focusedItemId) stack.pausedReason = 'focus';
+      }
+      next = { ...state, stack };
+      return reconcile(next, true);
+    }
+    if (action.type === 'HOVER_CONTAINER') {
+      const stack = { ...state.stack };
+      if (action.value && stack.automatic) {
+        stack.automatic = false;
+        stack.pausedReason = 'hover';
+      }
+      next = { ...state, hovered: Boolean(action.value), stack };
+    }
+    if (action.type === 'FOCUS_ITEM') {
+      let focusGeometry = null;
+      const stack = { ...state.stack };
+      if (action.id !== null && knownItem(action.id)) {
+        const current = project(state);
+        const focused = current.items.find((item) => item.id === action.id);
+        focusGeometry = { id: action.id, y: focused.display?.y ?? focused.saved.y, h: focused.display?.h || focused.saved.h, containerRows: current.containerRows };
+        stack.automatic = false;
+        stack.pausedReason = 'focus';
+        if (settingsFor(state).mode === 'smart-stack') stack.selectedId = action.id;
+      }
+      next = { ...state, focusedItemId: action.id, focusGeometry, stack };
+    }
+    return reconcile(next);
+  }
+
+  function project(state) {
+    const settings = { ...settingsFor(state) };
+    const editingSavedLayout = state.boardEditing && !state.editor;
+    const stackMode = settings.mode === 'smart-stack' && !editingSavedLayout;
+    let selectedId = state.stack.selectedId;
+    if (stackMode && state.focusedItemId) selectedId = state.focusedItemId;
+    const notices = [];
+    const observations = items.map((item) => ({ ...item, ...observe(state, item), saved: { ...item.saved } }));
+    let nextRow = 0;
+    const projectedItems = observations.map((item) => {
+      let visible = baseVisible(state, settings, item, item);
+      let selected = stackMode && selectedId === item.id;
+      let reason = item.reason;
+      if (stackMode) {
+        if (selected && !state.stack.automatic && state.stack.pausedReason === 'manual' && (item.id !== 'stats' || settings.showFallback)) visible = true;
+        visible = visible && selected;
+      }
+      if (editingSavedLayout) {
+        visible = true;
+        selected = false;
+        reason += ' Board editing retains saved geometry and access.';
+      }
+      let display = null;
+      if (visible) {
+        let height = item.saved.h;
+        if (settings.mode === 'fit-content' && settings.fitStrategy === 'compact' && !editingSavedLayout && item.kind === 'mediaServer' && (item.activity === 'active' || item.activity === 'inactive')) {
+          height = Math.min(item.saved.h, Math.max(1, item.playing + item.paused));
+        }
+        if (state.focusedItemId === item.id && state.focusGeometry && !editingSavedLayout && !stackMode) height = Math.max(height, state.focusGeometry.h);
+        display = { x: item.saved.x, y: nextRow, w: item.saved.w, h: height };
+        if (state.focusedItemId === item.id && state.focusGeometry && !editingSavedLayout && !stackMode) display.y = Math.max(display.y, state.focusGeometry.y);
+        if (stackMode) display = { x: 0, y: 0, w: 9, h: SAVED_ROWS };
+        if (editingSavedLayout) display = { ...item.saved };
+        nextRow = display.y + display.h;
+      }
+      if (item.id === 'stats' && !settings.showFallback && !editingSavedLayout) reason = 'Explicitly switched off; lack of activity never hides unsupported Stats.';
+      if (state.focusedItemId === item.id && !editingSavedLayout) reason += ' Focus defers hiding and shrinking.';
+      if (item.activity === 'error') notices.push(`${item.title}: ${item.reason}`);
+      return { ...item, activity: item.activity, reason, visible, selected, display };
+    });
+    let containerRows = SAVED_ROWS;
+    if (settings.mode === 'fit-content' && settings.shrinkContainer && !editingSavedLayout) containerRows = Math.max(1, nextRow);
+    if (state.focusGeometry && !editingSavedLayout) containerRows = Math.max(containerRows, state.focusGeometry.containerRows);
+    if (projectedItems.every((item) => !item.visible)) {
+      const hasEligibleAlternative = observations.some((item) => baseVisible(state, settings, item, item));
+      if (stackMode && hasEligibleAlternative) notices.push('The current selection is inactive while selection is paused. Other eligible items remain available; choose one or Resume automatic selection.');
+      else notices.push('No activity. Configured items and container controls remain available; activity observation continues.');
+    }
+    if (state.searchEmpty) notices.push('Local search has no matches. Activity is still evaluated from the complete observation.');
+    if (editingSavedLayout) notices.push('Board editing reveals every configured item at its saved placement. Open container settings to simulate a separate adaptive preview.');
+    if (state.editor) notices.push('Live settings preview is isolated. Apply changes the board draft; Cancel restores its existing settings.');
+    if (stackMode && !state.stack.automatic) notices.push('Automatic selection is paused. Leaving hover or focus does not resume it.');
+    if (stackMode && projectedItems.some((item) => item.activity === 'error' && !item.visible)) notices.push('An unselected item has an error. Its status remains discoverable in the item report and selectors.');
+    if (settings.mode === 'fit-content') notices.push('Fit content is an optional experiment using mock whole-row sizing hints, not measured DOM or new Jellyfin metrics.');
+    if (stackMode) notices.push('Smart stack is an optional experiment. Ranking and the 15s switch cooldown are illustrative; there is no timer carousel.');
+    return {
+      settings,
+      items: projectedItems,
+      containerRows,
+      savedContainerRows: SAVED_ROWS,
+      selectedId: stackMode ? selectedId : null,
+      selectionReason: state.stack.selectionReason,
+      automatic: state.stack.automatic,
+      pausedReason: state.stack.pausedReason,
+      hiddenCount: projectedItems.filter((item) => !item.visible).length,
+      notices,
+      geometryUnchanged: true,
+    };
+  }
+
+  return { createInitialState, reduce, project, items };
+})();
+
+</script>
+  <script>
+    (() => {
+      "use strict";
+      const model = PrototypeModel;
+      let state = model.createInitialState();
+      let activeScenario = "lifecycle";
+      let scenarioProgress = 0;
+      let lastAction = "Demo opened. No live data has been fetched.";
+      const $ = (id) => document.getElementById(id);
+      const names = { jellyfin: "Jellyfin", plex: "Plex", stats: "Stats" };
+      const modes = { "hide-idle": "Hide idle", "smart-stack": "Smart stack · experiment", "fit-content": "Fit content · experiment" };
+      const itemIds = ["jellyfin", "plex", "stats"];
+      const rowHeight = 62;
+      const rows = new Map();
+      const success = (id, playing, paused = 0) => ({ type: "PROBE", id, status: "success", playing, paused });
+      const setting = (key, value) => ({ type: "SET_SETTING", key, value });
+      const tick = (seconds) => ({ type: "TICK", seconds });
+      const scenarios = [
+        {
+          id: "lifecycle", title: "Sessions", description: "Paused is still current activity. Empty data must survive the grace period, and a hidden item must return on a new observation.",
+          setup: [setting("mode", "hide-idle"), setting("hideInactive", true), success("jellyfin", 1), success("plex", 1)],
+          steps: [
+            { label: "Pause Jellyfin", note: "Its current media session remains active.", actions: [success("jellyfin", 0, 1)] },
+            { label: "Stop Jellyfin", note: "A successful empty snapshot starts the 10s grace.", actions: [success("jellyfin", 0)] },
+            { label: "Advance 10 seconds", note: "Jellyfin hides; Plex and Stats compact upward.", actions: [tick(10)] },
+            { label: "Refresh hidden Jellyfin", note: "The fresh empty decision remains hidden during refresh.", actions: [{ type: "BACKGROUND_REFRESH", id: "jellyfin" }] },
+            { label: "Start a new Jellyfin session", note: "The hidden observer restores its body immediately.", actions: [success("jellyfin", 1)] }
+          ]
+        },
+        {
+          id: "faults", title: "Faults", description: "No data and bad data must not look idle. Watch hidden Jellyfin reappear on failure, and a fresh grace begin only after recovery.",
+          setup: [setting("mode", "hide-idle"), setting("hideInactive", true), success("jellyfin", 0), success("plex", 1), tick(10)],
+          steps: [
+            { label: "Fail hidden Jellyfin", note: "An integration error must be visible.", actions: [{ type: "PROBE", id: "jellyfin", status: "error" }] },
+            { label: "Recover with partial data", note: "One failed source still prevents hiding.", actions: [{ type: "PROBE", id: "jellyfin", status: "partial" }] },
+            { label: "Receive a complete empty result", note: "A new uninterrupted grace begins now.", actions: [success("jellyfin", 0)] },
+            { label: "Start loading before grace ends", note: "Unknown data cancels pending hiding.", actions: [{ type: "PROBE", id: "jellyfin", status: "loading" }, tick(10)] },
+            { label: "Recover, then let the snapshot expire", note: "31 seconds without a fresh observation reveals it.", actions: [success("jellyfin", 0), tick(31)] }
+          ]
+        },
+        {
+          id: "control", title: "Stack control", description: "An event-driven stack holds your manual choice. A fault stays discoverable during that hold; focus and hover also pause automatic selection.",
+          setup: [setting("mode", "smart-stack"), setting("hideInactive", true), success("jellyfin", 1), success("plex", 0, 1)],
+          steps: [
+            { label: "Choose Plex manually", note: "Plex stays selected until an explicit resume.", actions: [{ type: "MANUAL_SELECT", id: "plex" }] },
+            { label: "Make Jellyfin fail", note: "The fault appears in the status strip without stealing your selection.", actions: [{ type: "PROBE", id: "jellyfin", status: "error" }] },
+            { label: "Resume automatic selection", note: "The illustrative rule can now select the visible fault.", actions: [{ type: "RESUME_AUTO" }] },
+            { label: "Focus the selected item's input", note: "This moves real keyboard focus; keep typing while data changes.", focusSelected: true },
+            { label: "Recover and send four Plex sessions", note: "Leaving focus does not restart automatic selection.", actions: [success("jellyfin", 0), success("plex", 4)] },
+            { label: "Explicitly resume once more", note: "Plex becomes eligible for automatic selection.", actions: [{ type: "RESUME_AUTO" }] }
+          ]
+        },
+        {
+          id: "idle", title: "All idle", description: "A neutral Stats item remains visible without an activity contract. Temporarily exclude it to inspect the true all-idle placeholder.",
+          setup: [setting("mode", "hide-idle"), setting("hideInactive", true), setting("showFallback", true), success("jellyfin", 0), success("plex", 0)],
+          steps: [
+            { label: "Confirm both idle after 10 seconds", note: "Only Stats remains, inside the saved outer footprint.", actions: [tick(10)] },
+            { label: "Exclude the configured fallback", note: "No activity remains, but the container and Edit control stay.", actions: [setting("showFallback", false)] },
+            { label: "Restore the Stats fallback", note: "Its numeric zero is not used to infer inactivity.", actions: [setting("showFallback", true)] },
+            { label: "Search active Jellyfin with no matches", note: "Rendered search emptiness never changes activity.", actions: [success("jellyfin", 1), { type: "SET_SEARCH_EMPTY", value: true }] },
+            { label: "Reveal every saved placement for editing", note: "Hidden items still exist at their original coordinates.", actions: [{ type: "SET_BOARD_EDITING", value: true }] }
+          ]
+        },
+        {
+          id: "editing", title: "Edit & cancel", description: "Preview settings locally. Incoming activity survives Cancel; Apply changes the in-memory board settings. No state here persists on reload.",
+          setup: [setting("mode", "hide-idle"), setting("hideInactive", true), success("jellyfin", 0), success("plex", 1), tick(10)],
+          steps: [
+            { label: "Open Edit container", note: "The stable pane owns a local settings draft.", actions: [{ type: "OPEN_EDITOR" }] },
+            { label: "Preview Fit content with outer shrink", note: "Only the editor settings change.", actions: [setting("mode", "fit-content"), setting("shrinkContainer", true)] },
+            { label: "Receive a new Jellyfin session", note: "Activity can change without overwriting the settings draft.", actions: [success("jellyfin", 1)] },
+            { label: "Cancel the settings preview", note: "Hide idle returns; the new session is retained.", actions: [{ type: "CANCEL_EDITOR" }] },
+            { label: "Preview, reset, then cancel again", note: "Reset affects only the local preview, not saved geometry.", actions: [{ type: "OPEN_EDITOR" }, setting("mode", "smart-stack"), { type: "RESET_EDITOR" }, { type: "CANCEL_EDITOR" }] }
+          ]
+        },
+        {
+          id: "fitting", title: "Fit & fallback", description: "Compare bounded compact rows with saved-height details. The 9 × 1 Stats item sits below; optional outer shrink moves the neighbor without saving geometry.",
+          setup: [setting("mode", "fit-content"), setting("hideInactive", true), setting("fitStrategy", "compact"), setting("showFallback", true), setting("shrinkContainer", false), success("jellyfin", 1), success("plex", 0), tick(10)],
+          steps: [
+            { label: "Show four Jellyfin sessions", note: "Compact height remains bounded; extra sessions use the summary.", actions: [success("jellyfin", 4)] },
+            { label: "Return to one Jellyfin session", note: "It uses a bounded compact row above Stats.", actions: [success("jellyfin", 1)] },
+            { label: "Use saved-height session details", note: "More space reveals existing content, not new metrics.", actions: [setting("fitStrategy", "details")] },
+            { label: "Compact and shrink the outer container", note: "The neighboring section moves up in the projection.", actions: [setting("fitStrategy", "compact"), setting("shrinkContainer", true)] },
+            { label: "Enter board editing", note: "All three items return to saved positions and six saved rows.", actions: [{ type: "SET_BOARD_EDITING", value: true }] }
+          ]
+        }
+      ];
+
+      function describeAction(action) {
+        if (action.type === "PROBE") return names[action.id] + ": " + action.status + " observation.";
+        if (action.type === "TICK") return "Advanced the simulated clock by " + action.seconds + " seconds.";
+        return action.type.toLowerCase().replaceAll("_", " ") + ".";
+      }
+
+      function dispatch(action, explanation) {
+        state = model.reduce(state, action);
+        lastAction = explanation || describeAction(action);
+        render();
+        return state;
+      }
+
+      function dispatchMany(actions, explanation) {
+        for (const action of actions) state = model.reduce(state, action);
+        lastAction = explanation;
+        render();
+      }
+
+      window.prototypeDispatch = dispatch;
+      Object.defineProperty(window, "prototypeState", { get: () => state });
+      Object.defineProperty(window, "prototypeProjection", { get: () => model.project(state) });
+
+      function settingsSummary(settings) {
+        let text = modes[settings.mode] + "; hide idle: ";
+        if (settings.hideInactive) text += "on";
+        else text += "off";
+        text += "; fallback: ";
+        if (settings.showFallback) text += "included";
+        else text += "excluded";
+        if (settings.mode === "fit-content") {
+          text += "; " + settings.fitStrategy + "; outer shrink: ";
+          if (settings.shrinkContainer) text += "on";
+          else text += "off";
+        }
+        return text;
+      }
+
+      function createReportRows() {
+        for (const id of itemIds) {
+          const tr = document.createElement("tr");
+          tr.innerHTML = "<td><strong></strong><span class='subline'></span></td><td><span></span><span class='subline'></span></td><td><span></span><span class='subline'></span></td><td><span></span><span class='subline'></span></td>";
+          $("state-rows").append(tr);
+          rows.set(id, tr);
+        }
+      }
+
+      function mediaSummary(item) {
+        if (item.activity === "error") return "Fault visible · not treated as idle";
+        if (item.activity === "unknown") return "Activity unknown · keep available";
+        if (state.searchEmpty && item.playing + item.paused > 0) return "No search matches · sessions still active";
+        const pieces = [];
+        if (item.playing > 0) pieces.push(item.playing + " playing");
+        if (item.paused > 0) pieces.push(item.paused + " paused");
+        if (!pieces.length) pieces.push("No current sessions");
+        return pieces.join(" · ");
+      }
+
+      function renderMedia(item) {
+        const card = $("item-" + item.id);
+        $("summary-" + item.id).textContent = mediaSummary(item);
+        const pill = $("pill-" + item.id);
+        pill.textContent = item.activity;
+        pill.dataset.activity = item.activity;
+        const content = $("content-" + item.id);
+        let showDetails = false;
+        if (item.display && item.display.h > 1) showDetails = true;
+        content.hidden = !showDetails;
+        const sessionList = $("sessions-" + item.id);
+        sessionList.replaceChildren();
+        if (item.activity === "active" && !state.searchEmpty) {
+          const total = item.playing + item.paused;
+          let maximum = 1;
+          if (item.display) maximum = Math.max(1, item.display.h - 1);
+          const count = Math.min(total, maximum);
+          for (let index = 0; index < count; index++) {
+            const line = document.createElement("div");
+            line.className = "session-line";
+            const name = document.createElement("span");
+            name.textContent = "Example session " + (index + 1);
+            const playback = document.createElement("span");
+            if (index < item.playing) playback.textContent = "Playing";
+            else playback.textContent = "Paused";
+            line.append(name, playback);
+            sessionList.append(line);
+          }
+          if (total > count) {
+            const extra = document.createElement("p");
+            extra.className = "small muted";
+            extra.textContent = "+ " + (total - count) + " more mock sessions";
+            sessionList.append(extra);
+          }
+        } else {
+          const empty = document.createElement("p");
+          empty.className = "small muted";
+          if (state.searchEmpty && item.activity === "active") empty.textContent = "No search matches. The activity probe still sees the sessions.";
+          else empty.textContent = item.reason;
+          sessionList.append(empty);
+        }
+        $("decision-" + item.id).textContent = item.reason;
+        card.dataset.activity = item.activity;
+      }
+
+      function render() {
+        const projection = model.project(state);
+        const effective = projection.settings;
+        const editing = state.editor !== null;
+        const isStack = effective.mode === "smart-stack" && (!state.boardEditing || editing);
+        for (const button of document.querySelectorAll("[data-mode]")) button.setAttribute("aria-pressed", String(button.dataset.mode === effective.mode));
+        $("board-editing").checked = state.boardEditing;
+        $("preview-policy").textContent = modes[effective.mode];
+        $("container-size").textContent = "Container: 9 × " + projection.containerRows + " displayed / 6 saved rows";
+        $("preview-context").textContent = "Runtime arrangement · saved positions stay untouched";
+        if (state.boardEditing && !editing) $("preview-context").textContent = "Board edit shows every configured item at its saved position";
+        if (editing) $("preview-context").textContent = "Local settings preview · Apply or Cancel in the stable pane";
+        $("preview-items").style.height = Math.max(1, projection.containerRows) * rowHeight - 8 + "px";
+        let displayedBodies = 0;
+        for (const item of projection.items) {
+          const card = $("item-" + item.id);
+          card.hidden = !item.visible;
+          card.inert = !item.visible;
+          card.setAttribute("aria-hidden", String(!item.visible));
+          if (item.visible && item.display) {
+            displayedBodies++;
+            card.style.top = item.display.y * rowHeight + "px";
+            card.style.left = item.display.x / 9 * 100 + "%";
+            card.style.width = item.display.w / 9 * 100 + "%";
+            card.style.height = item.display.h * rowHeight - 8 + "px";
+          }
+          if (item.id !== "stats") renderMedia(item);
+          const row = rows.get(item.id);
+          const cells = row.children;
+          cells[0].children[0].textContent = names[item.id];
+          cells[0].children[1].textContent = "Currently playing";
+          if (item.id === "stats") cells[0].children[1].textContent = "Stats · Playback sessions";
+          cells[1].children[0].textContent = item.activity;
+          let age = "No successful observation";
+          if (item.age !== null && item.age !== undefined) age = "Snapshot age: " + item.age + "s";
+          if (item.id === "stats") age = "Unsupported idle signal · neutral fallback";
+          if (item.refreshing) age += " · refreshing";
+          cells[1].children[1].textContent = age;
+          cells[2].children[0].textContent = "Hidden";
+          if (item.visible) cells[2].children[0].textContent = "Displayed";
+          if (isStack && item.selected) cells[2].children[0].textContent = "Selected";
+          let reason = item.reason;
+          if (item.pendingSeconds !== null && item.pendingSeconds !== undefined && item.pendingSeconds > 0) reason += " · " + item.pendingSeconds + "s grace remaining";
+          cells[2].children[1].textContent = reason;
+          let displayed = "not displayed";
+          if (item.display) displayed = item.display.w + " × " + item.display.h + ", row " + item.display.y;
+          cells[3].children[0].textContent = item.saved.w + " × " + item.saved.h + ", row " + item.saved.y + " → " + displayed;
+          cells[3].children[1].textContent = "Saved coordinates retained";
+        }
+        const jellyfin = state.probes.jellyfin;
+        $("stats-value").textContent = "—";
+        if (jellyfin.status === "success") $("stats-value").textContent = String(jellyfin.playing + jellyfin.paused);
+        $("empty-preview").hidden = displayedBodies > 0;
+        const emptyTitle = $("empty-preview").querySelector("strong");
+        const emptyDescription = $("empty-preview").querySelector("span");
+        emptyTitle.textContent = "No activity";
+        emptyDescription.textContent = "All eligible items are idle. Container controls remain available.";
+        if (isStack && projection.notices.some((notice) => notice.includes("Other eligible items remain available"))) {
+          emptyTitle.textContent = "Selection is paused";
+          emptyDescription.textContent = "The current item became idle. Choose an available item or resume automatic selection.";
+        }
+        $("stack-controls").hidden = !isStack;
+        $("resume-auto").hidden = !isStack;
+        $("selection-note").hidden = !isStack;
+        $("selection-note").textContent = projection.selectionReason;
+        for (const button of document.querySelectorAll("[data-select-item]")) button.setAttribute("aria-pressed", String(button.dataset.selectItem === projection.selectedId));
+        let selectedPosition = itemIds.indexOf(projection.selectedId) + 1;
+        if (selectedPosition < 1) selectedPosition = 0;
+        $("stack-position").textContent = selectedPosition + " / 3 configured";
+        $("resume-auto").disabled = projection.automatic && !projection.pausedReason;
+        const notices = $("notices");
+        notices.replaceChildren();
+        const visibleNotices = [...projection.notices];
+        if (isStack) {
+          for (const item of projection.items) {
+            if (item.activity === "unknown" && !item.visible) visibleNotices.unshift(item.title + ": " + item.reason);
+          }
+        }
+        for (const notice of visibleNotices) {
+          const li = document.createElement("li");
+          li.textContent = notice;
+          notices.append(li);
+        }
+        if (!visibleNotices.length) {
+          const li = document.createElement("li");
+          li.textContent = "Only fresh, complete, successful empty observations may hide eligible items. Paused sessions remain active.";
+          notices.append(li);
+        }
+        $("neighbor-position").textContent = "↓ row " + projection.containerRows;
+        $("neighbor-description").textContent = "Starts below the container's saved six-row footprint.";
+        if (projection.containerRows !== projection.savedContainerRows) $("neighbor-description").textContent = "Moved by the simulated display projection. Its saved placement stays unchanged.";
+        $("open-editor").setAttribute("aria-expanded", String(editing));
+        $("editor-badge").textContent = "Closed";
+        $("settings-subtitle").textContent = "Open Edit container to try a local preview.";
+        $("settings-status").textContent = "The board preview reacts to the controls above. Edit container creates an isolated settings draft.";
+        if (editing) {
+          $("editor-badge").textContent = "Local preview";
+          $("settings-subtitle").textContent = "Changes preview immediately; settings stay in this pane.";
+          $("settings-status").textContent = "You are previewing a local draft. Apply adopts these settings; Cancel restores the opening settings and retains newer activity.";
+        }
+        $("settings-fields").disabled = !editing;
+        $("apply-editor").disabled = !editing;
+        $("cancel-editor").disabled = !editing;
+        $("reset-editor").disabled = !editing;
+        $("setting-mode").value = effective.mode;
+        $("setting-hide").checked = effective.hideInactive;
+        $("setting-fallback").checked = effective.showFallback;
+        $("setting-fit").value = effective.fitStrategy;
+        $("setting-shrink").checked = effective.shrinkContainer;
+        $("setting-fit").disabled = !editing || effective.mode !== "fit-content";
+        $("setting-shrink").disabled = !editing || effective.mode !== "fit-content";
+        $("free-fallback").checked = effective.showFallback;
+        $("search-empty").checked = state.searchEmpty;
+        $("snapshot-clock").textContent = state.now + " seconds";
+        $("snapshot-visible").textContent = displayedBodies + " of 3 configured";
+        $("snapshot-geometry").textContent = projection.containerRows + " displayed / 6 saved rows";
+        let control = "Automatic hide policy";
+        if (!effective.hideInactive) control = "Idle hiding disabled";
+        if (state.focusedItemId) control = names[state.focusedItemId] + " protected by focus";
+        if (isStack) {
+          control = "Automatic selection";
+          if (!projection.automatic || projection.pausedReason) control = "Paused · " + (projection.pausedReason || "manual choice");
+        }
+        if (state.boardEditing && !editing) control = "Editing saved geometry";
+        $("snapshot-control").textContent = control;
+        $("clock-label").textContent = "Clock: " + state.now + "s";
+        $("report-selection").textContent = "No single-item selection in this presentation; every eligible item is displayed.";
+        if (isStack) $("report-selection").textContent = projection.selectionReason;
+        let interaction = "No child has keyboard focus; pointer outside container.";
+        if (state.focusedItemId) interaction = names[state.focusedItemId] + " contains keyboard focus.";
+        if (state.hovered) interaction += " Pointer is inside the container.";
+        $("report-interaction").textContent = interaction;
+        $("last-change").textContent = lastAction;
+        $("report-settings").textContent = settingsSummary(state.settings);
+        $("report-editor").textContent = "Closed; no local draft.";
+        if (editing) $("report-editor").textContent = settingsSummary(state.editor.settings);
+        $("report-clock").textContent = state.now + "s; time advances only through the buttons. 10s idle grace / 30s freshness.";
+        $("saved-integrity").textContent = "Saved geometry unchanged";
+        if (!projection.geometryUnchanged) $("saved-integrity").textContent = "Saved geometry differs";
+        $("raw-state").textContent = JSON.stringify({ state, projection }, null, 2);
+        renderScenarioProgress();
+      }
+
+      function chooseScenario(id) {
+        activeScenario = id;
+        scenarioProgress = 0;
+        const scenario = scenarios.find((entry) => entry.id === id);
+        state = model.createInitialState();
+        for (const input of document.querySelectorAll(".focus-input")) input.value = "";
+        for (const action of scenario.setup) state = model.reduce(state, action);
+        lastAction = "Started walkthrough: " + scenario.title + ". Mock state reset to its known starting point.";
+        for (const tab of $("scenario-tabs").children) {
+          const selected = tab.dataset.scenario === id;
+          tab.setAttribute("aria-selected", String(selected));
+          tab.tabIndex = -1;
+          if (selected) tab.tabIndex = 0;
+        }
+        for (const panel of $("scenario-panels").children) panel.hidden = panel.id !== "scenario-panel-" + id;
+        render();
+      }
+
+      function renderScenarioProgress() {
+        const panel = $("scenario-panel-" + activeScenario);
+        if (!panel) return;
+        for (const button of panel.querySelectorAll("[data-step]")) {
+          const index = Number(button.dataset.step);
+          button.classList.toggle("next", index === scenarioProgress);
+          button.classList.toggle("completed", index < scenarioProgress);
+          button.removeAttribute("aria-current");
+          if (index === scenarioProgress) button.setAttribute("aria-current", "step");
+          const counter = button.querySelector(".step-number");
+          counter.textContent = String(index + 1);
+          if (index < scenarioProgress) counter.textContent = "✓";
+        }
+      }
+
+      function createScenarios() {
+        for (const scenario of scenarios) {
+          const tab = document.createElement("button");
+          tab.type = "button";
+          tab.id = "scenario-tab-" + scenario.id;
+          tab.dataset.scenario = scenario.id;
+          tab.setAttribute("role", "tab");
+          tab.setAttribute("aria-controls", "scenario-panel-" + scenario.id);
+          tab.setAttribute("aria-selected", "false");
+          tab.tabIndex = -1;
+          tab.textContent = scenario.title;
+          tab.addEventListener("click", () => chooseScenario(scenario.id));
+          tab.addEventListener("keydown", (event) => {
+            let next = scenarios.indexOf(scenario);
+            if (event.key === "ArrowRight") next = (next + 1) % scenarios.length;
+            else if (event.key === "ArrowLeft") next = (next + scenarios.length - 1) % scenarios.length;
+            else if (event.key === "Home") next = 0;
+            else if (event.key === "End") next = scenarios.length - 1;
+            else return;
+            event.preventDefault();
+            chooseScenario(scenarios[next].id);
+            $("scenario-tab-" + scenarios[next].id).focus();
+          });
+          $("scenario-tabs").append(tab);
+          const panel = document.createElement("div");
+          panel.id = "scenario-panel-" + scenario.id;
+          panel.className = "scenario-panel";
+          panel.setAttribute("role", "tabpanel");
+          panel.setAttribute("aria-labelledby", tab.id);
+          panel.hidden = true;
+          const description = document.createElement("p");
+          description.textContent = scenario.description;
+          const steps = document.createElement("div");
+          steps.className = "scenario-steps";
+          scenario.steps.forEach((step, index) => {
+            const button = document.createElement("button");
+            button.type = "button";
+            button.className = "scenario-step";
+            button.dataset.step = String(index);
+            const number = document.createElement("span");
+            number.className = "step-number";
+            number.setAttribute("aria-hidden", "true");
+            number.textContent = String(index + 1);
+            const label = document.createElement("span");
+            label.className = "step-label";
+            label.textContent = step.label;
+            const note = document.createElement("span");
+            note.className = "step-note";
+            note.textContent = step.note;
+            label.append(note);
+            button.append(number, label);
+            button.addEventListener("click", () => {
+              scenarioProgress = index + 1;
+              if (step.focusSelected) {
+                const projection = model.project(state);
+                let id = projection.selectedId;
+                if (!id || id === "stats") id = "jellyfin";
+                if (!projection.items.find((item) => item.id === id && item.visible)) dispatch({ type: "MANUAL_SELECT", id }, "Selected " + names[id] + " so its real input can receive focus.");
+                $("focus-" + id).focus();
+                lastAction = "Focused the real input inside " + names[id] + ".";
+                render();
+              } else dispatchMany(step.actions, "Walkthrough: " + step.label + ". " + step.note);
+            });
+            steps.append(button);
+          });
+          const restart = document.createElement("button");
+          restart.type = "button";
+          restart.className = "scenario-start";
+          restart.textContent = "Restart this walkthrough";
+          restart.addEventListener("click", () => chooseScenario(scenario.id));
+          panel.append(description, steps, restart);
+          $("scenario-panels").append(panel);
+        }
+      }
+
+      for (const button of document.querySelectorAll("[data-mode]")) button.addEventListener("click", () => dispatch(setting("mode", button.dataset.mode), "Changed presentation to " + modes[button.dataset.mode] + "."));
+      for (const button of document.querySelectorAll("[data-tick]")) button.addEventListener("click", () => dispatch(tick(Number(button.dataset.tick))));
+      for (const button of document.querySelectorAll("[data-probe-id]")) button.addEventListener("click", () => {
+        const id = button.dataset.probeId;
+        let playing = 0;
+        let paused = 0;
+        if (button.dataset.playing) playing = Number(button.dataset.playing);
+        if (button.dataset.paused) paused = Number(button.dataset.paused);
+        dispatch(success(id, playing, paused), names[id] + ": complete successful observation, " + playing + " playing and " + paused + " paused sessions.");
+      });
+      for (const button of document.querySelectorAll("[data-observation-id]")) button.addEventListener("click", () => {
+        const id = button.dataset.observationId;
+        const status = $("observation-" + id).value;
+        if (status === "refresh") dispatch({ type: "BACKGROUND_REFRESH", id }, names[id] + ": background refresh; last fresh decision retained.");
+        else dispatch({ type: "PROBE", id, status });
+      });
+      for (const button of document.querySelectorAll("[data-select-item]")) button.addEventListener("click", () => dispatch({ type: "MANUAL_SELECT", id: button.dataset.selectItem }, "Manually selected " + names[button.dataset.selectItem] + "; automatic selection remains paused until explicit resume."));
+      function pageStack(direction) {
+        const projection = model.project(state);
+        const current = itemIds.indexOf(projection.selectedId);
+        const next = (current + direction + itemIds.length) % itemIds.length;
+        dispatch({ type: "MANUAL_SELECT", id: itemIds[next] }, "Manually paged to " + names[itemIds[next]] + "; automatic selection paused.");
+      }
+      $("stack-prev").addEventListener("click", () => pageStack(-1));
+      $("stack-next").addEventListener("click", () => pageStack(1));
+      $("resume-auto").addEventListener("click", () => dispatch({ type: "RESUME_AUTO" }, "Explicitly requested automatic selection. Hover or keyboard focus can still protect current content."));
+      $("board-editing").addEventListener("change", (event) => dispatch({ type: "SET_BOARD_EDITING", value: event.target.checked }));
+      $("search-empty").addEventListener("change", (event) => dispatch({ type: "SET_SEARCH_EMPTY", value: event.target.checked }, "Changed the local table search only; activity probes remain independent."));
+      $("free-fallback").addEventListener("change", (event) => dispatch(setting("showFallback", event.target.checked)));
+      $("open-editor").addEventListener("click", () => dispatch({ type: "OPEN_EDITOR" }, "Opened an isolated container settings preview."));
+      $("apply-editor").addEventListener("click", () => {
+        dispatch({ type: "APPLY_EDITOR" }, "Applied the local preview to in-memory board settings. Nothing was persisted.");
+        $("open-editor").focus();
+      });
+      $("cancel-editor").addEventListener("click", () => {
+        dispatch({ type: "CANCEL_EDITOR" }, "Cancelled settings preview; incoming activity and saved geometry retained.");
+        $("open-editor").focus();
+      });
+      $("reset-editor").addEventListener("click", () => dispatch({ type: "RESET_EDITOR" }, "Reset local editor settings to defaults; Cancel can still restore the opening settings."));
+      $("setting-mode").addEventListener("change", (event) => dispatch(setting("mode", event.target.value)));
+      $("setting-hide").addEventListener("change", (event) => dispatch(setting("hideInactive", event.target.checked)));
+      $("setting-fallback").addEventListener("change", (event) => dispatch(setting("showFallback", event.target.checked)));
+      $("setting-fit").addEventListener("change", (event) => dispatch(setting("fitStrategy", event.target.value)));
+      $("setting-shrink").addEventListener("change", (event) => dispatch(setting("shrinkContainer", event.target.checked)));
+      $("reset-demo").addEventListener("click", () => chooseScenario("lifecycle"));
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape" && state.editor) {
+          event.preventDefault();
+          dispatch({ type: "CANCEL_EDITOR" }, "Escape cancelled the local editor preview and retained activity.");
+          $("open-editor").focus();
+        }
+      });
+      $("adaptive-container").addEventListener("pointerenter", () => dispatch({ type: "HOVER_CONTAINER", value: true }, "Pointer entered the container; Smart stack automatic selection pauses."));
+      $("adaptive-container").addEventListener("pointerleave", () => dispatch({ type: "HOVER_CONTAINER", value: false }, "Pointer left the container; automatic selection still requires explicit resume."));
+      $("adaptive-container").addEventListener("focusin", (event) => {
+        if (!event.target.closest("[data-item-id]")) dispatch({ type: "PAUSE_AUTO", reason: "focus" }, "Keyboard focus entered a container control; automatic selection pauses until explicit resume.");
+      });
+      $("preview-items").addEventListener("focusin", (event) => {
+        const item = event.target.closest("[data-item-id]");
+        if (item) dispatch({ type: "FOCUS_ITEM", id: item.dataset.itemId }, "Keyboard focus entered " + names[item.dataset.itemId] + "; its interaction is protected.");
+      });
+      $("preview-items").addEventListener("focusout", () => {
+        queueMicrotask(() => {
+          const active = document.activeElement.closest("[data-item-id]");
+          let id = null;
+          if (active) id = active.dataset.itemId;
+          if (state.focusedItemId !== id) dispatch({ type: "FOCUS_ITEM", id }, "Keyboard focus left the item; deferred hiding may apply. Stack selection stays paused until explicit resume.");
+        });
+      });
+      createReportRows();
+      createScenarios();
+      chooseScenario(activeScenario);
+    })();
+  </script>
+</body>
+</html>
