@@ -48,7 +48,6 @@ import {
   IconDatabase,
   IconDeviceMobile,
   IconExternalLink,
-  IconInfoCircle,
   IconKey,
   IconLanguage,
   IconLayoutColumns,
@@ -166,17 +165,22 @@ export const SetupStudio = ({ environment, assistantConfiguration }: OnboardingS
   const { colorScheme, setColorScheme } = useMantineColorScheme();
   const sounds = useOnboardingSounds();
   const [activeSection, setActiveSection] = useState<StudioSection>("essentials");
-  const [incompleteIntegrationConfirmationOpened, setIncompleteIntegrationConfirmationOpened] = useState(false);
+  const [incompleteConnectionConfirmationOpened, setIncompleteConnectionConfirmationOpened] = useState(false);
+  const [sectionAfterSkipping, setSectionAfterSkipping] = useState<StudioSection>("board");
   const [selectedLocale, setSelectedLocale] = useState(currentLocale);
   const [serverOrigin, setServerOrigin] = useState(environment.serverOrigin);
   const [urlMode, setUrlMode] = useState<UrlTemplateMode>("hostPort");
+  const [serverAddressEdited, setServerAddressEdited] = useState(false);
+  const [serverAddressConfirmed, setServerAddressConfirmed] = useState(false);
+  const serverAddressValid =
+    normalizeServiceUrl(serverOrigin) !== null && buildIntegrationUrl("sonarr", serverOrigin, urlMode).length > 0;
+  const serverAddressReviewed = serverAddressValid && (serverAddressEdited || serverAddressConfirmed);
   const [analyticsEnabled, setAnalyticsEnabled] = useState(true);
   const [selectedKinds, setSelectedKinds] = useState<IntegrationKind[]>([]);
   const [selectedIntegrationSourceIds, setSelectedIntegrationSourceIds] = useState<string[]>([]);
   const [drafts, setDrafts] = useState<IntegrationDraft[]>([]);
   const [selectedAppIds, setSelectedAppIds] = useState<string[]>([]);
   const [appUrlOverrides, setAppUrlOverrides] = useState<Record<string, string>>({});
-  const [appErrorSourceId, setAppErrorSourceId] = useState<string | null>(null);
   const initialBoard =
     environment.initialBoard ?? (environment.availableBoards.length === 1 ? environment.availableBoards[0] : null);
   const [selectedBoardId, setSelectedBoardId] = useState<string | null>(initialBoard?.id ?? null);
@@ -191,7 +195,6 @@ export const SetupStudio = ({ environment, assistantConfiguration }: OnboardingS
   const [isApplying, setIsApplying] = useState(false);
   const [applyProgress, setApplyProgress] = useState(0);
   const [applyMessage, setApplyMessage] = useState("");
-  const [appError, setAppError] = useState<string | null>(null);
   const sectionHeadingRef = useRef<HTMLHeadingElement>(null);
   const sectionButtonRefs = useRef<(HTMLButtonElement | null)[]>([]);
   const initialSection = useRef(true);
@@ -232,10 +235,11 @@ export const SetupStudio = ({ environment, assistantConfiguration }: OnboardingS
                   app.publishedPort ?? undefined,
                 )
               : null,
+            serverAddressEdited,
           ),
         ]),
       ),
-    [appUrlOverrides, discoveredApps, serverOrigin, urlMode],
+    [appUrlOverrides, discoveredApps, serverOrigin, urlMode, serverAddressEdited],
   );
   const detectedKinds = useMemo(
     () => new Set(discoveredIntegrations.map((integration) => integration.kind)),
@@ -334,8 +338,18 @@ export const SetupStudio = ({ environment, assistantConfiguration }: OnboardingS
   };
 
   const selectSection = (section: StudioSection) => {
+    if (section === "board" || section === "extend" || section === "review") {
+      if (!serverAddressReviewed) {
+        section = "connect";
+      } else if (hasIncompleteConnections) {
+        setSectionAfterSkipping(section);
+        setIncompleteConnectionConfirmationOpened(true);
+        section = "connect";
+      }
+    }
     if (section !== activeSection) sounds.swoosh();
     setActiveSection(section);
+    return section;
   };
 
   const handleSectionKeyDown = (event: KeyboardEvent<HTMLButtonElement>, index: number) => {
@@ -354,8 +368,9 @@ export const SetupStudio = ({ environment, assistantConfiguration }: OnboardingS
     const nextSection = sectionDefinitions[nextIndex];
     if (!nextSection) return;
     focusSectionHeading.current = false;
-    selectSection(nextSection.id);
-    sectionButtonRefs.current[nextIndex]?.focus();
+    const selectedSection = selectSection(nextSection.id);
+    const selectedIndex = sectionDefinitions.findIndex((section) => section.id === selectedSection);
+    sectionButtonRefs.current[selectedIndex]?.focus();
   };
 
   const updateDraft = (id: string, patch: Partial<IntegrationDraft>) => {
@@ -375,9 +390,11 @@ export const SetupStudio = ({ environment, assistantConfiguration }: OnboardingS
 
   const applySetupAsync = async () => {
     if (isApplying) return;
+    if (!serverAddressReviewed || hasIncompleteConnections) {
+      selectSection("review");
+      return;
+    }
     setIsApplying(true);
-    setAppError(null);
-    setAppErrorSourceId(null);
     setApplyProgress(5);
     setBoardValidationAttempted(true);
     try {
@@ -391,14 +408,6 @@ export const SetupStudio = ({ environment, assistantConfiguration }: OnboardingS
       }
       const draftsToApply = drafts.filter(isIntegrationDraftComplete);
       const appsToCreate = discoveredApps.filter((app) => selectedAppIds.includes(app.sourceId));
-      const appWithoutAddress = appsToCreate.find((app) => (discoveredAppUrls[app.sourceId] ?? "").trim().length === 0);
-      if (appWithoutAddress) {
-        const message = t("connect.appAddressRequired", { name: appWithoutAddress.containerName });
-        setAppError(message);
-        setAppErrorSourceId(appWithoutAddress.sourceId);
-        setActiveSection("connect");
-        throw new Error(message);
-      }
 
       setApplyMessage(t("review.progress.applying"));
       setApplyProgress(20);
@@ -504,9 +513,23 @@ export const SetupStudio = ({ environment, assistantConfiguration }: OnboardingS
     environment,
     assistantConfiguration,
     serverOrigin,
-    setServerOrigin,
+    setServerOrigin: (value) => {
+      if (value === serverOrigin) return;
+      setServerOrigin(value);
+      setServerAddressEdited(true);
+    },
     urlMode,
-    setUrlMode,
+    setUrlMode: (value) => {
+      if (value === urlMode) return;
+      setUrlMode(value);
+      setServerAddressEdited(true);
+    },
+    serverAddressValid,
+    serverAddressReviewed,
+    confirmServerAddress: () => {
+      sounds.click();
+      setServerAddressConfirmed(true);
+    },
     analyticsEnabled,
     setAnalyticsEnabled: (value) => {
       sounds.toggle(value);
@@ -541,10 +564,6 @@ export const SetupStudio = ({ environment, assistantConfiguration }: OnboardingS
     discoveredAppUrls,
     setDiscoveredAppUrl: (sourceId, url) => {
       setAppUrlOverrides((current) => ({ ...current, [sourceId]: url }));
-      if (appErrorSourceId === sourceId) {
-        setAppErrorSourceId(null);
-        setAppError(null);
-      }
     },
     selectedAppIds,
     setSelectedAppIds: (value) => {
@@ -579,31 +598,28 @@ export const SetupStudio = ({ environment, assistantConfiguration }: OnboardingS
     },
     applyProgress,
     applyMessage,
-    appError,
-    appErrorSourceId,
   };
-  const hasIncompleteIntegrations = drafts.some((draft) => !isIntegrationDraftComplete(draft));
-  const selectedAppWithoutAddress = discoveredApps.find(
-    (app) => selectedAppIds.includes(app.sourceId) && (discoveredAppUrls[app.sourceId] ?? "").trim().length === 0,
-  );
-  const continueDisabled = isApplying || (activeSection === "essentials" && serverOrigin.trim().length === 0);
+  const hasIncompleteConnections =
+    drafts.some((draft) => !isIntegrationDraftComplete(draft)) ||
+    discoveredApps.some(
+      (app) => selectedAppIds.includes(app.sourceId) && (discoveredAppUrls[app.sourceId] ?? "").trim().length === 0,
+    );
+  const skipIncompleteConnections = () => {
+    const completeDrafts = drafts.filter(isIntegrationDraftComplete);
+    const completeDraftIds = new Set(completeDrafts.map((draft) => draft.id));
+    setDrafts(completeDrafts);
+    setSelectedIntegrationSourceIds((current) => current.filter((id) => completeDraftIds.has(id)));
+    setSelectedKinds((current) => current.filter((kind) => completeDraftIds.has(`manual:${kind}`)));
+    setSelectedAppIds((current) => current.filter((id) => (discoveredAppUrls[id] ?? "").trim().length > 0));
+    setIncompleteConnectionConfirmationOpened(false);
+    sounds.swoosh();
+    setActiveSection(sectionAfterSkipping);
+  };
+  const continueDisabled = isApplying || (activeSection === "connect" && !serverAddressReviewed);
   const continueOnboarding = () => {
     if (continueDisabled) return;
     if (activeSection === "review") {
       void applySetupAsync();
-    } else if (activeSection === "connect") {
-      if (selectedAppWithoutAddress) {
-        setAppError(t("connect.appAddressRequired", { name: selectedAppWithoutAddress.containerName }));
-        setAppErrorSourceId(selectedAppWithoutAddress.sourceId);
-        return;
-      }
-      setAppError(null);
-      setAppErrorSourceId(null);
-      if (hasIncompleteIntegrations) {
-        setIncompleteIntegrationConfirmationOpened(true);
-      } else {
-        move(1);
-      }
     } else {
       move(1);
     }
@@ -698,10 +714,10 @@ export const SetupStudio = ({ environment, assistantConfiguration }: OnboardingS
                   </Button>
                 ) : (
                   <Group className={classes.primaryActions} gap="xs" wrap="nowrap">
-                    {activeSection === "connect" && hasIncompleteIntegrations ? (
+                    {activeSection === "connect" && hasIncompleteConnections ? (
                       <Popover
-                        opened={incompleteIntegrationConfirmationOpened}
-                        onDismiss={() => setIncompleteIntegrationConfirmationOpened(false)}
+                        opened={incompleteConnectionConfirmationOpened}
+                        onDismiss={() => setIncompleteConnectionConfirmationOpened(false)}
                         transitionProps={{ duration: 0 }}
                         position="top-end"
                         width={320}
@@ -715,8 +731,8 @@ export const SetupStudio = ({ environment, assistantConfiguration }: OnboardingS
                             disabled={continueDisabled}
                             rightSection={<IconArrowRight size={16} />}
                             aria-haspopup="dialog"
-                            aria-expanded={incompleteIntegrationConfirmationOpened}
-                            onClick={() => setIncompleteIntegrationConfirmationOpened((opened) => !opened)}
+                            aria-expanded={incompleteConnectionConfirmationOpened}
+                            onClick={continueOnboarding}
                           >
                             {tCommon("continue")}
                           </Button>
@@ -728,18 +744,12 @@ export const SetupStudio = ({ environment, assistantConfiguration }: OnboardingS
                               <Button
                                 size="xs"
                                 variant="default"
-                                onClick={() => setIncompleteIntegrationConfirmationOpened(false)}
+                                onClick={() => setIncompleteConnectionConfirmationOpened(false)}
                               >
                                 {tCommon("cancel")}
                               </Button>
-                              <Button
-                                size="xs"
-                                onClick={() => {
-                                  setIncompleteIntegrationConfirmationOpened(false);
-                                  move(1);
-                                }}
-                              >
-                                {tCommon("confirm")}
+                              <Button size="xs" disabled={continueDisabled} onClick={skipIncompleteConnections}>
+                                {t("connect.skipIncomplete")}
                               </Button>
                             </Group>
                           </Stack>
@@ -774,6 +784,9 @@ interface StudioSectionProps {
   setServerOrigin: (value: string) => void;
   urlMode: UrlTemplateMode;
   setUrlMode: (value: UrlTemplateMode) => void;
+  serverAddressValid: boolean;
+  serverAddressReviewed: boolean;
+  confirmServerAddress: () => void;
   analyticsEnabled: boolean;
   setAnalyticsEnabled: (value: boolean) => void;
   selectedLocale: SupportedLanguage;
@@ -816,8 +829,6 @@ interface StudioSectionProps {
   setRightSidebar: (value: boolean) => void;
   applyProgress: number;
   applyMessage: string;
-  appError: string | null;
-  appErrorSourceId: string | null;
 }
 
 const StudioSectionContent = ({ section, ...props }: StudioSectionProps & { section: StudioSection }) => {
@@ -858,8 +869,6 @@ const SectionHeading = ({
 
 const Essentials = (props: StudioSectionProps) => {
   const t = useI18n("init.studio.essentials");
-  const [isHydrated, setIsHydrated] = useState(false);
-  useEffect(() => setIsHydrated(true), []);
   return (
     <Stack gap="lg">
       <SectionHeading headingRef={props.headingRef} title={t("title")} description={t("description")} />
@@ -877,23 +886,6 @@ const Essentials = (props: StudioSectionProps) => {
           width="100%"
         />
       </SimpleGrid>
-
-      <Stack gap="sm">
-        <Alert variant="light" icon={<IconInfoCircle size={18} />} my="xs">
-          {t("serverOriginHelp")}
-        </Alert>
-        <ServiceUrlTemplate
-          serverOrigin={props.serverOrigin}
-          onServerOriginChange={props.setServerOrigin}
-          mode={props.urlMode}
-          onModeChange={props.setUrlMode}
-          readOnly={!isHydrated}
-          required
-        />
-        {props.serverOrigin ? (
-          <Code block>{buildIntegrationUrl("sonarr", props.serverOrigin, props.urlMode)}</Code>
-        ) : null}
-      </Stack>
 
       <Switch
         checked={props.analyticsEnabled}
@@ -1078,9 +1070,53 @@ const CapabilityRow = ({
 
 const Connections = (props: StudioSectionProps) => {
   const t = useI18n("init.studio.connect");
+  const [editingServerAddress, setEditingServerAddress] = useState(false);
   return (
     <Stack gap="xl">
       <SectionHeading headingRef={props.headingRef} title={t("title")} description={t("description")} />
+      <Paper withBorder p="md" radius="md">
+        <Stack gap="sm">
+          <Title order={3} size="h4">
+            {t("serverAddressReview")}
+          </Title>
+          <Text size="sm" c="dimmed">
+            {t("serverOriginHelp")}
+          </Text>
+          <Switch
+            checked={editingServerAddress}
+            onChange={(event) => setEditingServerAddress(event.currentTarget.checked)}
+            label={t("editServerAddress")}
+          />
+          <ServiceUrlTemplate
+            serverOrigin={props.serverOrigin}
+            onServerOriginChange={props.setServerOrigin}
+            mode={props.urlMode}
+            onModeChange={props.setUrlMode}
+            readOnly={!editingServerAddress}
+            error={!props.serverAddressReviewed}
+            required
+          />
+          {editingServerAddress && props.serverAddressValid && (
+            <Code block>{buildIntegrationUrl("sonarr", props.serverOrigin, props.urlMode)}</Code>
+          )}
+          {!props.serverAddressReviewed && (
+            <Button
+              variant="light"
+              leftSection={<IconCheck size={16} />}
+              disabled={!props.serverAddressValid}
+              onClick={props.confirmServerAddress}
+              style={{ alignSelf: "flex-start" }}
+            >
+              {t("confirmServerAddress")}
+            </Button>
+          )}
+          {props.serverAddressReviewed && (
+            <Text component="output" size="sm" c="green">
+              {t("serverAddressReviewed")}
+            </Text>
+          )}
+        </Stack>
+      </Paper>
       {props.discoveredIntegrations.length > 0 ? (
         <Fieldset legend={t("discoveredIntegrations", { count: String(props.discoveredIntegrations.length) })}>
           <Checkbox.Group value={props.selectedIntegrationSourceIds} onChange={props.setSelectedIntegrationSourceIds}>
@@ -1153,7 +1189,6 @@ const Connections = (props: StudioSectionProps) => {
                       label={t("url")}
                       value={props.discoveredAppUrls[app.sourceId] ?? ""}
                       onChange={(event) => props.setDiscoveredAppUrl(app.sourceId, event.currentTarget.value)}
-                      error={props.appErrorSourceId === app.sourceId ? props.appError : undefined}
                       placeholder="service.local:8080"
                       required
                     />
@@ -1163,12 +1198,6 @@ const Connections = (props: StudioSectionProps) => {
             })}
           </SimpleGrid>
         </Fieldset>
-      ) : null}
-
-      {props.appError ? (
-        <Alert color="red" role="alert">
-          {props.appError}
-        </Alert>
       ) : null}
 
       <Fieldset legend={t("otherIntegrations")}>

@@ -59,13 +59,12 @@
       },
       "essentials": {
         "title": "Start with familiar defaults",
-        "description": "Set the language and appearance everyone sees first, then give Homarr the address pattern used by your services.",
+        "description": "Set the language and appearance everyone sees first.",
         "language": "Default language",
         "theme": "Default theme",
         "themeAuto": "System",
         "themeLight": "Light",
         "themeDark": "Dark",
-        "serverOriginHelp": "Homarr uses this address to prefill detected service URLs. You can still edit every service individually.",
         "serverDescription": "This is a shortcut, not a restriction. Every detected service remains editable.",
         "serverOrigin": "Domain, IP, or reverse-proxy path",
         "serverOriginDescription": "Examples: home.lan, 192.168.1.10, or https://home.example.com/services. Choose how each service is appended below.",
@@ -102,6 +101,11 @@
       "connect": {
         "title": "Connect what makes the board useful",
         "description": "Select several services at once. Docker labels take priority, image matching fills gaps, and every URL and credential stays reviewable.",
+        "serverAddressReview": "Does this look right?",
+        "serverOriginHelp": "Homarr uses this address and pattern to prefill service URLs. Changing them updates detected apps and integrations live, while keeping URLs you edited individually. Confirm the address or edit it before continuing.",
+        "editServerAddress": "Edit the usual server address and pattern",
+        "confirmServerAddress": "Yes, this looks right",
+        "serverAddressReviewed": "Server address reviewed. You can still edit each service URL below.",
         "discoveredIntegrations": "Detected integration instances ({count})",
         "detectedIntegrationLabel": "Import {name}, detected as {kind}",
         "detectedAppLabel": "Import detected app {name}",
@@ -126,7 +130,8 @@
         "needsConfiguration": "Needs configuration",
         "tested": "Connection tested",
         "testFailed": "Connection test failed",
-        "incompleteConfirmation": "Unfinished integrations will be skipped. Continue without them?"
+        "incompleteConfirmation": "Apps without a URL and integrations missing a URL or credentials will be deselected and skipped. Continue without them?",
+        "skipIncomplete": "Skip unfinished connections"
       },
       "board": {
         "title": "Shape the board before it is built",
