@@ -42,6 +42,10 @@ export const { definition, componentLoader } = createWidgetDefinition("releases"
           label: (t) => t(`widget.releases.option.summary.option.${value}`),
         })),
       }),
+      groupReleases: factory.switch({
+        defaultValue: true,
+        withDescription: true,
+      }),
       sections: factory.multiSelect({
         defaultValue: [...releaseSectionKeys],
         withDescription: true,
@@ -95,6 +99,7 @@ export const { definition, componentLoader } = createWidgetDefinition("releases"
             id: z.string().default(() => createId()),
             provider: z.enum(releaseProviderKinds).optional(),
             identifier: z.string().min(1),
+            excludePrereleases: z.boolean().optional(),
             name: z.string().optional(),
             versionFilter: z
               .object({
