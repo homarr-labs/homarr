@@ -1,0 +1,19 @@
+apps/nextjs/src/app/api/assistant/chat/assistant-execution-policy.spec.ts
+  s_646db16e326abd::t_bce5781256aaa4 15
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "29fa72fbacefb528d473fab8c456f19da98940fa",
+  "prompts": {},
+  "sessions": {
+    "s_646db16e326abd": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "fc3ff591-fce6-4faf-b648-c4a35e176aec",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
