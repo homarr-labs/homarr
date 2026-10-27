@@ -1,0 +1,216 @@
+name: Targeted board sanity
+
+on:
+  workflow_call:
+    inputs:
+      mode:
+        required: true
+        type: string
+      base-ref:
+        required: true
+        type: string
+      head-ref:
+        required: true
+        type: string
+      base-image:
+        default: ""
+        type: string
+      candidate-image:
+        default: ""
+        type: string
+
+    outputs:
+      artifact-name:
+        description: Evidence artifact from the attempt that executed the checks
+        value: ${{ jobs.selected.outputs.artifact-name }}
+      scenario-count:
+        description: Number of selected browser scenarios
+        value: ${{ jobs.selected.outputs.scenario-count }}
+
+permissions:
+  contents: read
+  packages: read
+
+jobs:
+  selected:
+    name: Selected board scenarios
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    outputs:
+      artifact-name: ${{ format('board-sanity-{0}-{1}-{2}', inputs.mode, github.run_id, github.run_attempt) }}
+      scenario-count: ${{ steps.selection.outputs.count }}
+    env:
+      SANITY_MODE: ${{ inputs.mode }}
+      BASE_REF: ${{ inputs.base-ref }}
+      HEAD_REF: ${{ inputs.head-ref }}
+      BASE_IMAGE: ${{ inputs.base-image }}
+      CANDIDATE_IMAGE: ${{ inputs.candidate-image }}
+      CI: "true"
+      NODE_ENV: development
+    steps:
+      - name: Validate source context
+        env:
+          PULL_REQUEST_HEAD: ${{ github.event.pull_request.head.sha }}
+          PULL_REQUEST_BASE: ${{ github.event.pull_request.base.sha }}
+        shell: bash
+        run: |
+          if [[ ! "$BASE_REF" =~ ^[a-f0-9]{40}$ || ! "$HEAD_REF" =~ ^[a-f0-9]{40}$ ]]; then
+            echo '::error::Sanity targets must be full commit SHAs.' >&2
+            exit 1
+          fi
+          case "$SANITY_MODE:$GITHUB_EVENT_NAME" in
+            pr:pull_request)
+              if [[ "$HEAD_REF" != "$PULL_REQUEST_HEAD" || "$BASE_REF" != "$PULL_REQUEST_BASE" ]]; then
+                echo '::error::PR sanity targets must match the triggering pull request.' >&2
+                exit 1
+              fi
+              ;;
+            pr:workflow_dispatch|pr:merge_group|pr:push)
+              if [[ "$HEAD_REF" != "$GITHUB_SHA" ]]; then
+                echo '::error::Dispatch CI on the candidate branch; its target must match the dispatched commit.' >&2
+                exit 1
+              fi
+              ;;
+            release:push|release:workflow_dispatch)
+              # Semantic Release may create a version commit after the triggering SHA.
+              ;;
+            *)
+              echo '::error::Unsupported sanity mode or caller event.' >&2
+              exit 1
+              ;;
+          esac
+      - name: Check out the caller-scoped harness
+        uses: actions/checkout@v7
+        with:
+          # The harness follows the caller's cache scope. Target images retain
+          # their own verified source SHAs, including post-version release commits.
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Fetch target history without executing it
+        shell: bash
+        run: |
+          for source_sha in "$BASE_REF" "$HEAD_REF"; do
+            if ! git cat-file -e "${source_sha}^{commit}"; then
+              git fetch --no-tags origin "$source_sha"
+            fi
+          done
+      - name: Setup
+        uses: ./tooling/github/setup
+      - name: Select affected scenarios
+        id: selection
+        run: |
+          mkdir -p sanity-artifacts
+          bun run sanity:select --base "$BASE_REF" --head "$HEAD_REF" \
+            --coverage-decisions scripts/sanity/coverage-decisions.json \
+            --output sanity-artifacts/selection.json
+          echo "count=$(jq '.scenarios | length' sanity-artifacts/selection.json)" >> "$GITHUB_OUTPUT"
+      - name: Set up image provenance inspection
+        if: steps.selection.outputs.count != '0'
+        uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4.4.1
+      - name: Resolve existing images
+        if: steps.selection.outputs.count != '0'
+        run: |
+          resolve_image() {
+            local requested="$1" source_sha="$2" resolved=""
+            if [[ -n "$requested" ]]; then
+              docker pull "$requested" >&2
+              resolved="$requested"
+            else
+              for repository in ghcr.io/homarr-labs/homarr-test ghcr.io/homarr-labs/homarr; do
+                if docker pull "${repository}:sha-${source_sha}-amd64" >&2; then
+                  resolved="${repository}:sha-${source_sha}-amd64"
+                  break
+                fi
+              done
+            fi
+            if [[ -z "$resolved" ]]; then
+              echo "::error::No existing amd64 image for ${source_sha}. Publish an exact-source preview or release candidate; this check never rebuilds a baseline." >&2
+              return 1
+            fi
+            if [[ "$resolved" == *@sha256:* ]]; then
+              docker image inspect "$resolved" --format '{{json .RepoDigests}}' | jq -e --arg expected "$resolved" 'index($expected) != null' >/dev/null
+              printf '%s\n' "$resolved"
+            else
+              docker image inspect "$resolved" --format '{{json .RepoDigests}}' | jq -er --arg prefix "${resolved%:*}@" '.[] | select(startswith($prefix))' | head -n 1
+            fi
+          }
+          base_sha="$(jq -r '.baseSha' sanity-artifacts/selection.json)"
+          head_sha="$(jq -r '.headSha' sanity-artifacts/selection.json)"
+          # Pull output goes to stderr so only the immutable reference is captured.
+          resolve_image "$BASE_IMAGE" "$base_sha" > "$RUNNER_TEMP/sanity-base-image"
+          resolve_image "$CANDIDATE_IMAGE" "$head_sha" > "$RUNNER_TEMP/sanity-candidate-image"
+          echo "BASE_IMAGE=$(tail -n 1 "$RUNNER_TEMP/sanity-base-image")" >> "$GITHUB_ENV"
+          echo "CANDIDATE_IMAGE=$(tail -n 1 "$RUNNER_TEMP/sanity-candidate-image")" >> "$GITHUB_ENV"
+      - name: Cache Chromium
+        if: steps.selection.outputs.count != '0'
+        id: browser-cache
+        uses: actions/cache@v6
+        with:
+          path: ~/.cache/ms-playwright
+          key: sanity-chromium-${{ runner.os }}-${{ hashFiles('bun.lock') }}
+      - name: Install Chromium
+        if: steps.selection.outputs.count != '0' && steps.browser-cache.outputs.cache-hit != 'true'
+        run: bun x playwright install --with-deps chromium
+      - name: Install Chromium system dependencies
+        if: steps.selection.outputs.count != '0' && steps.browser-cache.outputs.cache-hit == 'true'
+        run: bun x playwright install-deps chromium
+      - name: Record the expected fixture and browser
+        if: steps.selection.outputs.count != '0'
+        run: bun scripts/sanity/expected-run.mts --output sanity-artifacts/expected-run.json
+      - name: Run selected scenarios
+        if: steps.selection.outputs.count != '0'
+        shell: bash
+        run: |
+          node --input-type=module <<'NODE'
+          import { readFileSync, writeFileSync } from "node:fs";
+          const selection = JSON.parse(readFileSync("sanity-artifacts/selection.json", "utf8"));
+          const config = {
+            mode: process.env.SANITY_MODE, disposable: true,
+            base: { label: "Before", sourceRef: selection.baseSha, image: process.env.BASE_IMAGE },
+            candidate: { label: "After", sourceRef: selection.headSha, image: process.env.CANDIDATE_IMAGE },
+            coverageDecisions: JSON.parse(readFileSync("scripts/sanity/coverage-decisions.json", "utf8")),
+          };
+          writeFileSync(`${process.env.RUNNER_TEMP}/sanity-config.json`, JSON.stringify(config));
+          NODE
+          bun run sanity:run --config "$RUNNER_TEMP/sanity-config.json" --output sanity-artifacts/report.json 2>&1 | tee sanity-artifacts/run.log
+      - name: Require complete matching evidence
+        if: steps.selection.outputs.count != '0'
+        run: |
+          node --import tsx --input-type=module <<'NODE'
+          import { readFileSync } from "node:fs";
+          import { parseSanityReport } from "./packages/boards/src/sanity-report.ts";
+          const expectedRun = JSON.parse(readFileSync("sanity-artifacts/expected-run.json", "utf8"));
+          const report = parseSanityReport(readFileSync("sanity-artifacts/report.json", "utf8"), expectedRun);
+          const selected = JSON.parse(readFileSync("sanity-artifacts/selection.json", "utf8"));
+          const ids = (entries) => entries.map(({ id }) => id).sort().join("\n");
+          if (report.deterministicStatus !== "passed" || report.mode !== process.env.SANITY_MODE ||
+              report.base.sourceSha !== selected.baseSha || report.candidate.sourceSha !== selected.headSha ||
+              ids(report.scenarios) !== ids(selected.scenarios) ||
+              report.base.imageDigest !== process.env.BASE_IMAGE.split("@")[1] ||
+              report.candidate.imageDigest !== process.env.CANDIDATE_IMAGE.split("@")[1]) {
+            throw new Error("Missing, stale, or incomplete board sanity evidence");
+          }
+          NODE
+      - name: Describe review boundary
+        if: success()
+        env:
+          SCENARIO_COUNT: ${{ steps.selection.outputs.count }}
+        run: |
+          if [[ ! "$SCENARIO_COUNT" =~ ^(0|[1-9][0-9]*)$ ]]; then
+            echo '::error::Invalid selected scenario count.' >&2
+            exit 1
+          fi
+          if [[ "$SCENARIO_COUNT" == 0 ]]; then
+            echo 'No board scenarios selected; all changed paths have an explicit coverage decision.' >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo 'Selected deterministic board checks passed. Independent visual review remains pending; this job does not approve appearance changes.' >> "$GITHUB_STEP_SUMMARY"
+          fi
+      - name: Upload sanity evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: board-sanity-${{ inputs.mode }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: sanity-artifacts/
+          if-no-files-found: error
+          retention-days: 30

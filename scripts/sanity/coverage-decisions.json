@@ -1,0 +1,139 @@
+[
+  {
+    "path": ".env.example",
+    "blobSha": "a4a176cebbab3c167fc70117099c204397ac532d",
+    "reason": "Adds only the documented ENABLE_BOARD_DEBUG=false example; executable gating is separately assessed in env.ts and proxy.ts. No component or runtime behavior in this file.",
+    "scenarios": []
+  },
+  {
+    "path": "apps/nextjs/package.json",
+    "blobSha": "0c87a3cdf1e2412eb2150cf40a99807af36cdb09",
+    "reason": "Adds the manual snapshot-field generator and parser dependencies used by the lazy snapshot parser. Frozen dependency installation and Next workspace typecheck passed. The 9 existing snapshot/collection/storage tests and snapshot-proof/proof.json establish shared redaction/replay boundaries and exact parity for 9 containers plus 6 clock widgets, with no replay API or external requests. Select the board matrix for dependency/provider integration; this does not establish every widget parser case.",
+    "scenarios": [
+      "container-footprints-desktop",
+      "container-footprints-tablet",
+      "container-footprints-mobile",
+      "board-editing-desktop"
+    ]
+  },
+  {
+    "path": "apps/nextjs/public/images/board-snapshot-placeholder.svg",
+    "blobSha": "3b16586f570a644e99d74f00d4b2aed533fc4750",
+    "reason": "New static 64x64 replay placeholder containing only svg, rect, path and circle geometry; no scripts, external references or application imports. Source-reviewed asset only; current native clock fixture does not exercise replacement imagery.",
+    "scenarios": []
+  },
+  {
+    "path": "apps/nextjs/scripts/generate-snapshot-fields.mjs",
+    "blobSha": "5ec1361d5e075e0fd69ef1ba2c2f1210400df3a3",
+    "reason": "Manual build-time extraction of trusted field/enum/CSS contracts; not executed by normal board rendering. Regenerated successfully during foundation repair. The 9 existing snapshot/collection/storage tests and snapshot-proof/proof.json establish shared redaction/replay boundaries and exact parity for 9 containers plus 6 clock widgets, with no replay API or external requests. Board cases cover consuming the generated redaction contracts; they do not establish complete enum coverage for all integrations.",
+    "scenarios": ["container-footprints-desktop", "container-footprints-tablet", "container-footprints-mobile"]
+  },
+  {
+    "path": "apps/nextjs/src/env.ts",
+    "blobSha": "4e8e7e4cc049e32d58503d2b6aac3d33697f016a",
+    "reason": "Adds only server-side ENABLE_BOARD_DEBUG using createBooleanSchema(false). Source review confirms default-off behavior; native capture/replay proof exercises enabled development mode. Select all board cases for startup/provider integration; disabled-route rejection is the separate proxy boundary.",
+    "scenarios": [
+      "container-footprints-desktop",
+      "container-footprints-tablet",
+      "container-footprints-mobile",
+      "board-editing-desktop"
+    ]
+  },
+  {
+    "path": "apps/nextjs/src/proxy.ts",
+    "blobSha": "82647b330f1017e6422265790a9989c0aad54889",
+    "reason": "Adds default-off debug route gating, strips caller-supplied replay headers on normal requests, and applies a restrictive CSP only to the preview route. The 9 existing snapshot/collection/storage tests and snapshot-proof/proof.json establish shared redaction/replay boundaries and exact parity for 9 containers plus 6 clock widgets, with no replay API or external requests. Board cases exercise normal authenticated routes; source review covers default-off and header assignment. Evidence is development-browser behavior, not production CSP proof.",
+    "scenarios": [
+      "container-footprints-desktop",
+      "container-footprints-tablet",
+      "container-footprints-mobile",
+      "board-editing-desktop"
+    ]
+  },
+  {
+    "path": "packages/api/package.json",
+    "blobSha": "7f1a1ef56d8d4c9b637739617ea47c9edea5b058",
+    "reason": "Adds only narrow board-replay and board-snapshot exports. No server procedures or permissions changed. Next typecheck and 9 snapshot tests resolve these entrypoints; native capture/replay exercises their integration.",
+    "scenarios": [
+      "container-footprints-desktop",
+      "container-footprints-tablet",
+      "container-footprints-mobile",
+      "board-editing-desktop"
+    ]
+  },
+  {
+    "path": "packages/api/src/board-replay.tsx",
+    "blobSha": "cac4e8dacc5c80888b36813971d46e8de36b7f1b",
+    "reason": "New context defaults to false and is supplied true only by isolated replay. The 9 existing snapshot/collection/storage tests and snapshot-proof/proof.json establish shared redaction/replay boundaries and exact parity for 9 containers plus 6 clock widgets, with no replay API or external requests. Select the full board matrix to preserve normal rendering/editing while replay guards remain separate.",
+    "scenarios": [
+      "container-footprints-desktop",
+      "container-footprints-tablet",
+      "container-footprints-mobile",
+      "board-editing-desktop"
+    ]
+  },
+  {
+    "path": "packages/api/src/board-snapshot.ts",
+    "blobSha": "829f2f728a8e82ce25628dd0081990e1858337a3",
+    "reason": "New event-driven local-state collector reads refs only upon explicit capture and removes listeners on unmount; it does not persist state or write normal query data. Existing collection.spec.tsx is included in the 9 passing snapshot tests. Native Spotlight download and replay proof exercise its capture path; select the full board matrix.",
+    "scenarios": [
+      "container-footprints-desktop",
+      "container-footprints-tablet",
+      "container-footprints-mobile",
+      "board-editing-desktop"
+    ]
+  },
+  {
+    "path": "packages/auth/client.ts",
+    "blobSha": "5cbb41900150cdff95199f8b6fb5d13f316f69d7",
+    "reason": "Only re-exports the existing NextAuth SessionContext so replay can supply an unauthenticated in-memory session. signIn/signOut/useSession/SessionProvider implementations are unchanged. Native proof uses a real seeded session for a private board and a read-only replay session; select board cases. This is not sign-in/auth-provider coverage.",
+    "scenarios": [
+      "container-footprints-desktop",
+      "container-footprints-tablet",
+      "container-footprints-mobile",
+      "board-editing-desktop"
+    ]
+  },
+  {
+    "path": "packages/widgets/package.json",
+    "blobSha": "9399158066f16e6d2503dbc44455cc0440ddedf8",
+    "reason": "Adds narrow exports for unchanged Docker filtering and bookmark grouping helpers used by snapshot redaction. Export metadata only; no widget implementation changed in this file. Next typecheck and existing snapshot tests resolve these helpers.",
+    "scenarios": []
+  },
+  {
+    "path": "packages/widgets/src/beszel/_shared/use-live-stats.ts",
+    "blobSha": "545a7d124f4cd29eb8484515ae3691884f2173b7",
+    "reason": "Executed committed-source React/jsdom probe in snapshot-guards/proof.json verifies replay returns captured system/container buffers and supplies skipToken; normal mode subscribes, updates/captures its buffer, and cleans up on unmount. Select board cases for shared-provider protection. No live Beszel service or chart visuals were exercised.",
+    "scenarios": ["container-footprints-desktop", "container-footprints-tablet", "container-footprints-mobile"]
+  },
+  {
+    "path": "packages/widgets/src/calendar/component.tsx",
+    "blobSha": "3c2a18f6e1961f55e15e8ffe21ca3115cb06bd0b",
+    "reason": "Source-reviewed replay-only month initialization plus an event-driven capture hook; normal initialization still uses new Date and current calendar view options are unchanged. Existing collector tests cover ref capture/cleanup; shared snapshot tests and native board proof cover the surrounding boundary. Select board cases for shared-provider regression protection only; calendar-specific month navigation and visuals were not exercised.",
+    "scenarios": ["container-footprints-desktop", "container-footprints-tablet", "container-footprints-mobile"]
+  },
+  {
+    "path": "packages/widgets/src/custom-api/widget-definition-context.tsx",
+    "blobSha": "1e98dbf97d1ca8d6d2c229d4b001887494de694d",
+    "reason": "Executed committed-source React/jsdom probe in snapshot-guards/proof.json verifies captured/missing/pending replay queries, rejected actions and invalidation make zero imperative fetch/mutate calls; normal item and preview transports still run. Select board cases for shared-provider protection. No external service or Custom JSX visual parity claim.",
+    "scenarios": ["container-footprints-desktop", "container-footprints-tablet", "container-footprints-mobile"]
+  },
+  {
+    "path": "packages/widgets/src/docker/component.tsx",
+    "blobSha": "281601b84231d785fbf5530b1052aee9c9ae1fb9",
+    "reason": "Source-reviewed replay guards disable capabilities/Add to Homarr and return before logs navigation or opening the add-app modal; ordinary behavior is unchanged when the context default is false. Existing snapshot tests reject replay tRPC mutations, and native board proof verifies shared read-only boundaries. Select board cases for container/provider safety only; Docker table/actions were not browser-exercised.",
+    "scenarios": ["container-footprints-desktop", "container-footprints-tablet", "container-footprints-mobile"]
+  },
+  {
+    "path": "packages/widgets/src/notebook/notebook.tsx",
+    "blobSha": "05e9c1e40a37244634e43ed4cad5cc77e2073935",
+    "reason": "Source-reviewed image extension adds a numeric aspect-ratio attribute only in replay; the normal branch returns the original attributes unchanged. Existing snapshot privacy test covers sanitizing notebook HTML/image width, and native board proof covers the shared renderer. Select board cases for shared-provider safety only; notebook image visual parity was not exercised.",
+    "scenarios": ["container-footprints-desktop", "container-footprints-tablet", "container-footprints-mobile"]
+  },
+  {
+    "path": "scripts/qa/seed-board-snapshot.mjs",
+    "blobSha": "a83cb88dda4c03bc2763021d1596af3a08204f8c",
+    "reason": "Standalone optional local fixture generator, absent from application imports and release scripts. Source review confirms it refuses an existing seed.sqlite and writes synthetic boards plus credentials with mode 0600; no deployed browser behavior. This older generator was not used by the new sanity runner or native proof.",
+    "scenarios": []
+  }
+]

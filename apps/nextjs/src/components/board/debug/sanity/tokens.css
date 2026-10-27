@@ -1,0 +1,42 @@
+:root {
+  --sanity-paper: var(--mantine-color-gray-0);
+  --sanity-surface: var(--mantine-color-body);
+  --sanity-soft: var(--mantine-color-gray-1);
+  --sanity-ink: var(--mantine-color-text);
+  --sanity-muted: var(--mantine-color-gray-7);
+  --sanity-rule: var(--mantine-color-gray-3);
+  --sanity-accent: var(--mantine-color-red-8);
+  --sanity-selection: var(--mantine-color-red-0);
+  --sanity-success: var(--mantine-color-teal-9);
+  --sanity-success-surface: var(--mantine-color-teal-0);
+  --sanity-warning: color-mix(in srgb, var(--mantine-color-orange-9) 85%, var(--mantine-color-black));
+  --sanity-warning-surface: var(--mantine-color-orange-0);
+  --sanity-failure: var(--mantine-color-red-9);
+  --sanity-failure-surface: var(--mantine-color-red-0);
+  --sanity-difference: #000;
+  --sanity-clear: transparent;
+  --sanity-font: var(--mantine-font-family);
+  --sanity-font-code: var(--mantine-font-family-monospace);
+  --sanity-radius: var(--mantine-radius-md);
+  --sanity-container: 1600px;
+  --sanity-gap: 24px;
+}
+
+[data-sanity-workbench] {
+  --mantine-color-dimmed: var(--sanity-muted);
+}
+
+:root[data-mantine-color-scheme="dark"] {
+  --sanity-paper: var(--mantine-color-dark-8);
+  --sanity-soft: var(--mantine-color-dark-6);
+  --sanity-muted: var(--mantine-color-gray-4);
+  --sanity-rule: var(--mantine-color-dark-4);
+  --sanity-accent: var(--mantine-color-red-4);
+  --sanity-selection: var(--mantine-color-dark-5);
+  --sanity-success: var(--mantine-color-teal-3);
+  --sanity-success-surface: var(--mantine-color-dark-6);
+  --sanity-warning: var(--mantine-color-orange-3);
+  --sanity-warning-surface: var(--mantine-color-dark-6);
+  --sanity-failure: var(--mantine-color-red-3);
+  --sanity-failure-surface: var(--mantine-color-dark-6);
+}

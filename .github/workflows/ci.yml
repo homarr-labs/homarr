@@ -28,7 +28,7 @@ on:
         required: false
         type: number
       ref:
-        description: Git ref to validate or publish
+        description: Optional ref matching the dispatched branch or tag (required for publish)
         required: false
         type: string
 
@@ -64,6 +64,9 @@ jobs:
       builds-app: ${{ steps.plan.outputs.builds-app }}
       typecheck-matrix: ${{ steps.plan.outputs.typecheck-matrix }}
       has-typechecks: ${{ steps.plan.outputs.has-typechecks }}
+      sanity-needed: ${{ steps.sanity.outputs.needed }}
+      sanity-base: ${{ steps.sanity.outputs.base }}
+      sanity-head: ${{ steps.sanity.outputs.head }}
     env:
       TURBO_SCM_BASE: ${{ github.event.pull_request.base.sha || github.event.merge_group.base_sha || github.event.before || 'HEAD~1' }}
       TURBO_SCM_HEAD: ${{ github.sha }}
@@ -73,15 +76,29 @@ jobs:
         with:
           fetch-depth: 0
           persist-credentials: false
-          ref: ${{ github.event_name == 'workflow_dispatch' && inputs.ref || '' }}
+          ref: ${{ github.sha }}
       - name: Validate manual inputs
-        if: github.event_name == 'workflow_dispatch' && inputs.operation == 'publish'
+        if: github.event_name == 'workflow_dispatch'
         env:
           PR_NUMBER: ${{ inputs.pr_number }}
           BUILD_REF: ${{ inputs.ref }}
+          OPERATION: ${{ inputs.operation }}
+        shell: bash
         run: |
-          test -n "$PR_NUMBER" || { echo "pr_number is required for publish"; exit 1; }
-          test -n "$BUILD_REF" || { echo "ref is required for publish"; exit 1; }
+          if [[ "$OPERATION" == publish ]]; then
+            test -n "$PR_NUMBER" || { echo "pr_number is required for publish"; exit 1; }
+            test -n "$BUILD_REF" || { echo "ref is required for publish"; exit 1; }
+          fi
+          if [[ -n "$BUILD_REF" ]]; then
+            if ! resolved=$(git rev-parse --verify --end-of-options "${BUILD_REF}^{commit}" 2>/dev/null); then
+              branch_ref="${BUILD_REF#refs/heads/}"
+              resolved=$(git rev-parse --verify --end-of-options "refs/remotes/origin/${branch_ref}^{commit}")
+            fi
+            if [[ "$resolved" != "$GITHUB_SHA" ]]; then
+              echo '::error::The ref input must match the dispatched commit. Dispatch this workflow with --ref <candidate branch> instead of checking out another ref inside the run.' >&2
+              exit 1
+            fi
+          fi
       - name: Setup
         uses: ./tooling/github/setup
       - name: Plan validation
@@ -106,6 +123,31 @@ jobs:
             "has-typechecks=\($typechecks | length > 0)"
           ' "$RUNNER_TEMP/turbo-plan.json" >> "$GITHUB_OUTPUT"
 
+      - name: Select affected board scenarios
+        id: sanity
+        if: github.event_name == 'pull_request' || github.event_name == 'merge_group' || github.event_name == 'workflow_dispatch'
+        env:
+          SANITY_BASE: ${{ github.event.pull_request.base.sha || github.event.merge_group.base_sha || 'origin/dev' }}
+          SANITY_HEAD: ${{ github.event.pull_request.head.sha || 'HEAD' }}
+        run: |
+          mkdir -p sanity-artifacts
+          bun run sanity:select --base "$SANITY_BASE" --head "$SANITY_HEAD" \
+            --coverage-decisions scripts/sanity/coverage-decisions.json \
+            --output sanity-artifacts/selection.json
+          jq -r '"needed=\(.scenarios | length > 0)", "base=\(.baseSha)", "head=\(.headSha)"' \
+            sanity-artifacts/selection.json >> "$GITHUB_OUTPUT"
+          if [[ "$(jq '.scenarios | length' sanity-artifacts/selection.json)" -gt 0 ]]; then
+            echo 'Board scenarios selected. Browser evidence is pending until an exact-source preview is available; fork and draft PRs do not automatically build images.' >> "$GITHUB_STEP_SUMMARY"
+          fi
+      - name: Upload board coverage plan
+        if: always() && (github.event_name == 'pull_request' || github.event_name == 'merge_group' || github.event_name == 'workflow_dispatch')
+        uses: actions/upload-artifact@v7
+        with:
+          name: board-sanity-selection
+          path: sanity-artifacts/selection.json
+          if-no-files-found: error
+          retention-days: 30
+
   workspace-checks:
     name: Lint and build
     needs: validation-plan
@@ -122,7 +164,7 @@ jobs:
         with:
           fetch-depth: 0
           persist-credentials: false
-          ref: ${{ github.event_name == 'workflow_dispatch' && inputs.ref || '' }}
+          ref: ${{ github.sha }}
       - name: Setup
         uses: ./tooling/github/setup
         with:
@@ -179,7 +221,7 @@ jobs:
         if: "!env.ACT"
         with:
           persist-credentials: false
-          ref: ${{ github.event_name == 'workflow_dispatch' && inputs.ref || '' }}
+          ref: ${{ github.sha }}
       - name: Setup
         uses: ./tooling/github/setup
         with:
@@ -235,7 +277,7 @@ jobs:
         if: "!env.ACT"
         with:
           persist-credentials: false
-          ref: ${{ github.event_name == 'workflow_dispatch' && inputs.ref || '' }}
+          ref: ${{ github.sha }}
 
       - name: Setup
         uses: ./tooling/github/setup
@@ -269,11 +311,9 @@ jobs:
             org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
             org.opencontainers.image.revision=${{ github.sha }}
             org.opencontainers.image.ref.name=pr-${{ github.event.pull_request.number || inputs.pr_number || 'none' }}
-          # Scoped to the ref actually checked out (the dispatch input when
-          # set), so a cache written for one ref never seeds the image built
-          # for another.
-          cache-from: type=gha,scope=homarr-e2e-${{ github.event_name == 'workflow_dispatch' && inputs.ref || github.ref_name }}
-          cache-to: type=gha,scope=homarr-e2e-${{ github.event_name == 'workflow_dispatch' && inputs.ref || github.ref_name }},mode=max
+          # Match the caller branch used for checkout and its cache scope.
+          cache-from: type=gha,scope=homarr-e2e-${{ github.ref_name }}
+          cache-to: type=gha,scope=homarr-e2e-${{ github.ref_name }},mode=max
           secrets: |
             TURBO_API=${{ secrets.TURBO_API }}
             TURBO_TEAM=${{ secrets.TURBO_TEAM }}
@@ -299,7 +339,7 @@ jobs:
           path: ~/.cache/ms-playwright
           # Ref-scoped for the same reason as the build cache above, this
           # job can push a preview image after the browsers run.
-          key: playwright-${{ runner.os }}-${{ github.event_name == 'workflow_dispatch' && inputs.ref || github.ref_name }}-${{ hashFiles('bun.lock') }}
+          key: playwright-${{ runner.os }}-${{ github.ref_name }}-${{ hashFiles('bun.lock') }}
 
       - name: Install Playwright Chromium
         if: steps.playwright-cache.outputs.cache-hit != 'true' || env.ACT
@@ -347,7 +387,7 @@ jobs:
         if: "!env.ACT"
         with:
           persist-credentials: false
-          ref: ${{ github.event.pull_request.head.sha || (github.event_name == 'workflow_dispatch' && inputs.ref) || github.sha }}
+          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
 
       - name: Record image source
         id: source
@@ -377,8 +417,8 @@ jobs:
             org.opencontainers.image.revision=${{ steps.source.outputs.sha }}
             org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
           outputs: type=image,"name=${{ env.PREVIEW_IMAGE }}",push-by-digest=true,name-canonical=true,push=true
-          cache-from: type=gha,scope=homarr-linux-amd64-${{ github.event_name == 'workflow_dispatch' && inputs.ref || github.ref_name }}
-          cache-to: type=gha,scope=homarr-linux-amd64-${{ github.event_name == 'workflow_dispatch' && inputs.ref || github.ref_name }},mode=max
+          cache-from: type=gha,scope=homarr-linux-amd64-${{ github.ref_name }}
+          cache-to: type=gha,scope=homarr-linux-amd64-${{ github.ref_name }},mode=max
           secrets: |
             TURBO_API=${{ secrets.TURBO_API }}
             TURBO_TEAM=${{ secrets.TURBO_TEAM }}
@@ -393,6 +433,23 @@ jobs:
         run: |
           docker buildx imagetools create -t "${PREVIEW_IMAGE}:sha-${SOURCE_SHA}-amd64" \
             "${PREVIEW_IMAGE}@${DIGEST}"
+
+  board-sanity:
+    name: Board sanity
+    needs: [validation-plan, preview-amd64]
+    if: >-
+      !cancelled() && needs.validation-plan.result == 'success' &&
+      needs.validation-plan.outputs.sanity-needed == 'true' &&
+      needs.preview-amd64.result == 'success' && needs.preview-amd64.outputs.digest != ''
+    uses: ./.github/workflows/board-sanity.yml
+    permissions:
+      contents: read
+      packages: read
+    with:
+      mode: pr
+      base-ref: ${{ needs.validation-plan.outputs.sanity-base }}
+      head-ref: ${{ needs.validation-plan.outputs.sanity-head }}
+      candidate-image: ghcr.io/homarr-labs/homarr-test@${{ needs.preview-amd64.outputs.digest }}
 
   preview-arm64:
     name: Build arm64 preview image
@@ -415,7 +472,7 @@ jobs:
         if: "!env.ACT"
         with:
           persist-credentials: false
-          ref: ${{ github.event.pull_request.head.sha || (github.event_name == 'workflow_dispatch' && inputs.ref) || github.sha }}
+          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
 
       - name: Record image source
         id: source
@@ -445,8 +502,8 @@ jobs:
             org.opencontainers.image.revision=${{ steps.source.outputs.sha }}
             org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
           outputs: type=image,"name=${{ env.PREVIEW_IMAGE }}",push-by-digest=true,name-canonical=true,push=true
-          cache-from: type=gha,scope=homarr-linux-arm64-${{ github.event_name == 'workflow_dispatch' && inputs.ref || github.ref_name }}
-          cache-to: type=gha,scope=homarr-linux-arm64-${{ github.event_name == 'workflow_dispatch' && inputs.ref || github.ref_name }},mode=max
+          cache-from: type=gha,scope=homarr-linux-arm64-${{ github.ref_name }}
+          cache-to: type=gha,scope=homarr-linux-arm64-${{ github.ref_name }},mode=max
           secrets: |
             TURBO_API=${{ secrets.TURBO_API }}
             TURBO_TEAM=${{ secrets.TURBO_TEAM }}

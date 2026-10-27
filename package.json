@@ -305,6 +305,8 @@
     "lint:ws": "bun x sherif@latest",
     "qa:browser-agent:ux": "bash scripts/browser-agent/ux-coherence-happy-paths.sh",
     "release": "semantic-release",
+    "sanity:run": "bun scripts/sanity/run.mts",
+    "sanity:select": "node --import tsx scripts/sanity/select.mts",
     "scripts:update-bug-report-template": "tsx ./scripts/update-bug-report-template.mts",
     "scripts:update-openapi": "tsx ./scripts/check-openapi-schema.mts --write",
     "scripts:update-readme-integrations": "tsx ./scripts/update-integration-list.mts",

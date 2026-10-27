@@ -99,6 +99,8 @@ Only after this user-need test passes, use these locations:
 
 Add tests only when requested, and only when the test is extremely relevant and will plausibly prevent a future regression in user-visible behavior or a security boundary. Do not add tests that restate implementation details or duplicate stronger coverage. For focused changes, run only the relevant existing or newly requested checks when validation is needed. Do not run broad test, Docker, or E2E suites by default.
 
+For board layout/editing, shared rendering dependencies, or release candidates, follow [board sanity](docs/agents/board-sanity.md) for targeted scenarios and independent before/after review.
+
 ## AI-assisted pull requests
 
 These rules apply to every PR an agent prepares or opens, including contributor PRs. A PR that does not meet them will be closed.
