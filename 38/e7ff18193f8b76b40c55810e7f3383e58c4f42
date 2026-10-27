@@ -1,0 +1,16 @@
+packages/form/src/index.ts
+  h_d6e478ca18e517 8-22,48
+packages/widgets/src/modals/widget-edit-modal.tsx
+  h_d6e478ca18e517 39,444,454
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "38e7ff18193f8b76b40c55810e7f3383e58c4f42",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
