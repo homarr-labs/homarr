@@ -1,4 +1,5 @@
 "use client";
+import { definition } from ".";
 
 import type { CSSProperties, ReactNode } from "react";
 import { Anchor, Badge, OverflowList, ScrollArea, Text } from "@mantine/core";
@@ -94,10 +95,9 @@ function UptimeKumaContent({
 }: UptimeKumaContentProps) {
   const t = useI18n("widget.uptimeKuma");
   const now = useWidgetNow("minute");
-  const statusPagesQuery = clientApi.widget.uptimeKuma.getStatusPages.useQuery({
-    integrationIds,
-    statusPageSlug: options.statusPageSlug,
-  });
+  const statusPagesQuery = clientApi.widget.uptimeKuma.getStatusPages.useQuery(
+    definition.data.queries({ options, integrationIds }).main.input,
+  );
   const results = getUsableWidgetQueryData(statusPagesQuery);
 
   if (!results) return <WidgetQueryLoadingState />;

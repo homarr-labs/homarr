@@ -13,6 +13,7 @@
   },
   "exports": {
     ".": "./index.ts",
+    "./board-preparation": "./src/board-preparation-request.ts",
     "./job-manager": "./src/job-manager.ts"
   },
   "scripts": {

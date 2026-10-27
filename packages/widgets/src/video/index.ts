@@ -20,4 +20,6 @@ export const { definition, componentLoader } = createWidgetDefinition("video", {
       hasControls: factory.switch(),
     }));
   },
-}).withDynamicImport(() => import("./component"));
+})
+  .withData({ mode: "static" })
+  .withDynamicImport(() => import("./component"));

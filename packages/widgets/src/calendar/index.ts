@@ -6,6 +6,8 @@ import { radarrReleaseTypes } from "@homarr/integrations/types";
 
 import { createWidgetDefinition, matchesWidgetRuntimeQuery } from "../definition";
 import { optionsBuilder } from "../options";
+import { widgetQuery } from "../data";
+import { getCalendarQueryInput, getUnambiguousCalendarMonth } from "./query-input";
 import { calendarViews } from "./calendar-view";
 
 export const { definition, componentLoader } = createWidgetDefinition("calendar", {
@@ -47,4 +49,18 @@ export const { definition, componentLoader } = createWidgetDefinition("calendar"
     }));
   },
   ...getWidgetIntegrationConfig("calendar"),
-}).withDynamicImport(() => import("./component"));
+})
+  .withData({
+    mode: "browser",
+    reason: "The initial month depends on the browser timezone.",
+    stream: true,
+    queries: ({ options, integrationIds }) => {
+      const month = getUnambiguousCalendarMonth();
+      return {
+        main: month
+          ? widgetQuery("widget.calendar.findAllEvents", getCalendarQueryInput(integrationIds, options, month))
+          : null,
+      };
+    },
+  })
+  .withDynamicImport(() => import("./component"));

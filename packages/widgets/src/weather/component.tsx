@@ -1,4 +1,5 @@
 "use client";
+import { definition } from ".";
 
 import { Box, Center, Text } from "@mantine/core";
 
@@ -20,10 +21,7 @@ export default function WeatherWidget({
   displayMode,
 }: WidgetComponentProps<"weather">) {
   const t = useI18n("widget.weather");
-  const input = {
-    latitude: options.location.latitude,
-    longitude: options.location.longitude,
-  };
+  const input = definition.data.queries({ options, integrationIds: [] }).main.input;
   const weatherQuery = clientApi.widget.weather.atLocation.useQuery(input);
   const weather = getUsableWidgetQueryData(weatherQuery);
 

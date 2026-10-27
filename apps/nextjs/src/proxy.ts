@@ -1,4 +1,4 @@
-import type { NextRequest } from "next/server";
+import type { NextFetchEvent, NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
 import { getDefaultLocaleForProxyAsync, getOnboardingStepForProxyAsync } from "@homarr/db/proxy-reader";
@@ -6,6 +6,8 @@ import { localeCookieKey } from "@homarr/definitions/cookie";
 import type { SupportedLanguage } from "@homarr/translation/languages";
 import { supportedLanguages } from "@homarr/translation/languages";
 import { createI18nMiddleware } from "@homarr/translation/middleware";
+
+import { isBoardDocumentRequest } from "./board-preparation/document-request";
 
 let isOnboardingFinished = false;
 let onboardingStepPromise: Promise<string> | null = null;
@@ -39,7 +41,7 @@ const getDefaultLocaleDedupedAsync = () => {
   return defaultLocalePromise;
 };
 
-export async function proxy(request: NextRequest) {
+export async function proxy(request: NextRequest, event?: NextFetchEvent) {
   // Redirect to onboarding if it's not finished yet
   const pathname = request.nextUrl.pathname;
   const segments = pathname.split("/").filter(Boolean);
@@ -71,7 +73,17 @@ export async function proxy(request: NextRequest) {
   request.headers.set("accept-language", "");
 
   const next = createI18nMiddleware(defaultLocale);
-  return next(request);
+  const response = next(request);
+  if (!event || process.env.NODE_ENV !== "production" || !isBoardDocumentRequest(request)) return response;
+  // Exclude other routes before loading the prepared Board's server dependencies.
+  const isBoardRoute = routeSegments.length === 0 || (routeSegments.length === 2 && routeSegments[0] === "boards");
+  if (!isBoardRoute) return response;
+  const { readCaptureViewId } = await import("@homarr/cron-jobs/board-preparation");
+  if (readCaptureViewId(request.headers)) return response;
+  const { getPreparedBoardResponseAsync } = await import("./board-preparation/proxy");
+  const prepared = await getPreparedBoardResponseAsync(request, response);
+  if (prepared) return prepared;
+  return response;
 }
 
 export const config = {

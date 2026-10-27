@@ -706,7 +706,7 @@ const buildDemoWidgets = (
       showToolbar: false,
       allowReadOnlyCheck: true,
       content: `
-<p style="text-align: center"><img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/homarr-wordmark-light.svg" width="28%"></p>
+<p style="text-align: center"><img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/homarr-wordmark-light.svg" width="28%" style="aspect-ratio: 1477 / 1054"></p>
 <h2>Welcome to <strong><span style="color: rgb(250, 82, 82)">Homarr demo</span></strong></h2>
 <p>Your apps, live integrations, and notes, all in one place.</p>
 <p><strong>Hold Shift over any widget</strong> to reveal its advanced view. You can also rearrange the board or edit this notebook.</p>

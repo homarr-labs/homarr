@@ -4,6 +4,7 @@ import { z } from "zod/v4";
 import { getWidgetIntegrationConfig } from "@homarr/definitions";
 
 import { createWidgetDefinition, matchesWidgetRuntimeQuery } from "../../definition";
+import { widgetQuery } from "../../data";
 import { optionsBuilder } from "../../options";
 
 export const { definition, componentLoader } = createWidgetDefinition("thingport-models", {
@@ -44,4 +45,15 @@ export const { definition, componentLoader } = createWidgetDefinition("thingport
       openInNewTab: factory.switch({ defaultValue: true }),
     }));
   },
-}).withDynamicImport(() => import("./component"));
+})
+  .withData({
+    mode: "queries",
+    queries: ({ integrationIds, options }) => ({
+      main: widgetQuery("widget.thingport.getModels", {
+        integrationId: integrationIds[0] ?? "",
+        list: options.defaultTab,
+        limit: options.itemCount,
+      }),
+    }),
+  })
+  .withDynamicImport(() => import("./component"));

@@ -6,6 +6,7 @@ import { useI18n } from "@homarr/translation/client";
 
 import { createWidgetDefinition } from "../definition";
 import { optionsBuilder } from "../options";
+import { widgetQuery } from "../data";
 
 export const { componentLoader, definition } = createWidgetDefinition("timetable", {
   icon: IconBusStop,
@@ -51,4 +52,20 @@ export const { componentLoader, definition } = createWidgetDefinition("timetable
       }),
     }));
   },
-}).withDynamicImport(() => import("./component"));
+})
+  .withData({
+    mode: "queries",
+    queries: ({ options, itemId, displayMode }) => ({
+      main: widgetQuery(
+        "widget.timetable.getTimetable",
+        {
+          baseUrl: options.baseUrl,
+          stationId: options.station?.value ?? "",
+          itemId,
+          limit: displayMode === "advanced" ? 50 : 10,
+        },
+        { enabled: Boolean(options.station?.value) },
+      ),
+    }),
+  })
+  .withDynamicImport(() => import("./component"));

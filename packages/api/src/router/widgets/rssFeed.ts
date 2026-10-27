@@ -10,7 +10,6 @@ import { boards, items, users } from "@homarr/db/schema";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import { rssFeedsRequestHandler } from "@homarr/request-handler/rss-feeds";
 
-import type { WidgetComponentProps } from "../../../../widgets/src";
 import { createTRPCRouter, publicProcedure } from "../../trpc";
 import { isActionAllowedAsync } from "../board/board-access";
 
@@ -143,8 +142,8 @@ export async function restrictUrlsAsync(ctx: { db: Database; session: Session | 
 
   const urlsByBoard = new Map<string, Set<string>>();
   for (const item of rssFeedItems) {
-    const matchingUrls = SuperJSON.parse<WidgetComponentProps<"rssFeed">["options"]>(item.options).feedUrls.filter(
-      (url) => requestedUrls.has(url),
+    const matchingUrls = SuperJSON.parse<{ feedUrls: string[] }>(item.options).feedUrls.filter((url) =>
+      requestedUrls.has(url),
     );
     if (matchingUrls.length === 0) continue;
 

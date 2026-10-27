@@ -1,4 +1,5 @@
 "use client";
+import { definition } from ".";
 
 import type { BoxProps } from "@mantine/core";
 import {
@@ -9,17 +10,19 @@ import {
   Card,
   Flex,
   Group,
+  px,
   ScrollArea,
   SimpleGrid,
   Stack,
   Text,
   Tooltip,
+  useMantineTheme,
 } from "@mantine/core";
-import { useElementSize } from "@mantine/hooks";
 import { IconBarrierBlock, IconPercentage, IconSearch, IconWorldWww } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
 import { useRequiredBoard } from "@homarr/boards/context";
+import { calculateBoardUiScale } from "@homarr/boards/scale";
 import { formatNumber } from "@homarr/common";
 import { integrationDefs } from "@homarr/definitions";
 import type { DnsHoleSummary } from "@homarr/integrations/types";
@@ -28,12 +31,44 @@ import { translateIfNecessary } from "@homarr/translation";
 import { useI18n } from "@homarr/translation/client";
 import { zoomCompensatedSize } from "@homarr/ui";
 import type { TablerIcon } from "@homarr/ui";
+import { useHydrationSafeElementSize } from "@homarr/ui/hooks";
 
 import type { widgetKind } from ".";
 import type { WidgetComponentProps, WidgetProps } from "../../definition";
 import { IntegrationErrorIndicator } from "../../common/integration-error-indicator";
 import { getUsableWidgetQueryData, isInitialWidgetQueryPending } from "../../common/query-state";
 import { WidgetQueryLoadingState } from "../../common/query-state-indicator";
+
+type ElementSize = { width: number; height: number };
+
+const SUMMARY_FOOTER_HEIGHT = 32;
+
+const normalizeLayoutScale = (scale: number) => (Number.isFinite(scale) && scale > 0 ? scale : 1);
+
+const getStatCardSize = ({
+  layout,
+  width,
+  height,
+  gridSpacing,
+  footer,
+}: {
+  layout: WidgetProps<"dnsHoleSummary">["options"]["layout"];
+  width: number;
+  height: number;
+  gridSpacing: number;
+  footer: number;
+}): ElementSize => {
+  const usableWidth = Math.max(0, width - 2 * gridSpacing);
+  const usableHeight = Math.max(0, height - 2 * gridSpacing - footer);
+
+  if (layout === "row") return { width: Math.max(0, (usableWidth - 3 * gridSpacing) / 4), height: usableHeight };
+  if (layout === "column") return { width: usableWidth, height: Math.max(0, (usableHeight - 3 * gridSpacing) / 4) };
+
+  return {
+    width: Math.max(0, (usableWidth - gridSpacing) / 2),
+    height: Math.max(0, (usableHeight - gridSpacing) / 2),
+  };
+};
 
 export default function DnsHoleSummaryWidget({
   options,
@@ -42,9 +77,9 @@ export default function DnsHoleSummaryWidget({
   height,
   displayScale = 1,
 }: WidgetComponentProps<typeof widgetKind>) {
-  const summaryQuery = clientApi.widget.dnsHole.summary.useQuery({
-    integrationIds,
-  });
+  const summaryQuery = clientApi.widget.dnsHole.summary.useQuery(
+    definition.data.queries({ options, integrationIds }).main.input,
+  );
   const summaries = getUsableWidgetQueryData(summaryQuery) ?? [];
 
   const t = useI18n();
@@ -55,6 +90,23 @@ export default function DnsHoleSummaryWidget({
   const data = successfulSummaries.flatMap(({ summary }) => (summary ? [summary] : []));
   const layoutProps = boxPropsByLayout(options.layout);
   const showSourceStatuses = successfulSummaries.length > 1 && width >= 240 && height >= 220;
+
+  const theme = useMantineTheme();
+  const layoutScale = normalizeLayoutScale(displayScale);
+  const uiScale = calculateBoardUiScale(layoutScale);
+  const gridSpacing = Number(px(theme.spacing.xs)) * uiScale;
+  const statCardMetrics = {
+    padding: Number(px(theme.spacing.sm)) * uiScale,
+    compactPadding: 2 * uiScale,
+    border: uiScale,
+    initialSize: getStatCardSize({
+      layout: options.layout,
+      width,
+      height,
+      gridSpacing,
+      footer: showSourceStatuses ? SUMMARY_FOOTER_HEIGHT * uiScale : 0,
+    }),
+  };
 
   if (isInitialWidgetQueryPending(summaryQuery)) return <WidgetQueryLoadingState />;
 
@@ -74,7 +126,11 @@ export default function DnsHoleSummaryWidget({
               usePiHoleColors={options.usePiHoleColors}
               data={data}
               t={t}
-              displayScale={displayScale}
+              displayScale={layoutScale}
+              padding={statCardMetrics.padding}
+              compactPadding={statCardMetrics.compactPadding}
+              border={statCardMetrics.border}
+              initialSize={statCardMetrics.initialSize}
             />
           ))
         ) : (
@@ -184,15 +240,36 @@ interface StatCardProps {
   usePiHoleColors: boolean;
   t: TranslationFunction;
   displayScale: number;
+  padding: number;
+  compactPadding: number;
+  border: number;
+  initialSize: ElementSize;
 }
-const StatCard = ({ item, data, usePiHoleColors, t, displayScale }: StatCardProps) => {
-  const { ref, height, width } = useElementSize();
-  let layoutScale = displayScale;
-  if (!Number.isFinite(layoutScale) || layoutScale <= 0) layoutScale = 1;
+const StatCard = ({
+  item,
+  data,
+  usePiHoleColors,
+  t,
+  displayScale,
+  padding: normalPadding,
+  compactPadding,
+  border,
+  initialSize,
+}: StatCardProps) => {
+  const {
+    ref,
+    width: measuredWidth,
+    height: measuredHeight,
+  } = useHydrationSafeElementSize<HTMLDivElement>({ box: "border-box" });
+  const layoutScale = normalizeLayoutScale(displayScale);
 
-  // Element measurements are logical pixels; density follows the displayed card.
-  const displayedWidth = width * layoutScale;
-  const displayedHeight = height * layoutScale;
+  const boxWidth = measuredWidth || initialSize.width;
+  const boxHeight = measuredHeight || initialSize.height;
+
+  const contentWidth = Math.max(0, boxWidth - 2 * (normalPadding + border));
+  const contentHeight = Math.max(0, boxHeight - 2 * (normalPadding + border));
+  const displayedWidth = contentWidth * layoutScale;
+  const displayedHeight = contentHeight * layoutScale;
   const isLong = displayedWidth > displayedHeight + 20;
   const canStackText = displayedHeight > 32;
   const isCompact = (displayedHeight <= 32 && displayedWidth <= 256) || (displayedHeight <= 64 && displayedWidth <= 92);
@@ -203,9 +280,10 @@ const StatCard = ({ item, data, usePiHoleColors, t, displayScale }: StatCardProp
   let padding: number | "sm" = "sm";
   let valueSize = "lg";
   if (isCompact) {
+    const compactContentWidth = Math.max(0, boxWidth - 2 * (compactPadding + border));
     padding = 2;
     // Reserve padding and borders so four-character values fit narrow mobile cards.
-    valueSize = `calc(${Math.min(12, Math.max(0, displayedWidth - 6) / 3)}px * var(--board-canvas-ui-scale, 1))`;
+    valueSize = `calc(${Math.min(12, Math.max(0, compactContentWidth * layoutScale - 6) / 3)}px * var(--board-canvas-ui-scale, 1))`;
     let compactTooltip = label;
     if (tooltip) compactTooltip += `. ${tooltip}`;
     tooltip = compactTooltip;

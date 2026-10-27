@@ -1,4 +1,5 @@
 "use client";
+import { definition } from ".";
 
 import type { CSSProperties } from "react";
 import { Text } from "@mantine/core";
@@ -65,7 +66,7 @@ export default function BazarrWidget({
 }: WidgetComponentProps<"bazarr">) {
   const t = useI18n("widget.bazarr");
   const { data: badges, error } = clientApi.widget.bazarr.getBadges.useQuery(
-    { integrationId: integrationIds[0] ?? "" },
+    definition.data.queries({ options, integrationIds }).main.input,
     { enabled: Boolean(integrationIds[0]) },
   );
 

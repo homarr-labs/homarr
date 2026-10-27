@@ -6,6 +6,7 @@ import { clientApi } from "@homarr/api/client";
 
 import { createWidgetDefinition } from "../definition";
 import { optionsBuilder } from "../options";
+import { widgetQuery } from "../data";
 import { BookmarkAddButton } from "./add-button";
 import type { BookmarkSelectionItem } from "./add-button";
 import { createDirectBookmark, getBookmarkFaviconUrl, getDirectBookmarkUrl } from "./bookmark-item";
@@ -112,4 +113,16 @@ export const { definition, componentLoader } = createWidgetDefinition("bookmarks
       }),
     }));
   },
-}).withDynamicImport(() => import("./component"));
+})
+  .withData({
+    mode: "queries",
+    stream: true,
+    queries: ({ options }) => ({
+      main: widgetQuery(
+        "app.byIds",
+        options.items.filter((value) => !getDirectBookmarkUrl(value)),
+        { enabled: options.items.some((value) => !getDirectBookmarkUrl(value)) },
+      ),
+    }),
+  })
+  .withDynamicImport(() => import("./component"));

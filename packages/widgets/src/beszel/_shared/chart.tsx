@@ -1,9 +1,9 @@
 "use client";
 
-import { memo, useDeferredValue, useEffect, useMemo, useRef, useState } from "react";
+import { memo, useCallback, useDeferredValue, useEffect, useMemo, useRef, useState } from "react";
 import { Box, Group, Stack, Text } from "@mantine/core";
 import type { AreaChartProps } from "@mantine/charts";
-import { AreaChart } from "@mantine/charts";
+import dynamic from "next/dynamic";
 import { useInViewport } from "@mantine/hooks";
 import dayjs from "dayjs";
 
@@ -12,11 +12,21 @@ import { defaultBeszelTimePeriod } from "@homarr/definitions/beszel";
 import type { BeszelContainerStatsRecord, BeszelGPUData, BeszelSystemStatsRecord } from "@homarr/integrations/types";
 
 import { formatLocalizedDate } from "../../common/locale";
+import { useInitialRenderTime } from "@homarr/common";
+
+import { BeszelChartPreview } from "./chart-preview";
+import { chartStyle } from "./chart-style";
+import type { BeszelAreaChartProps } from "./interactive-chart";
 import { WidgetQueryLoadingState } from "../../common/query-state-indicator";
 import { containerChartColor } from "./colors";
 import classes from "./chart.module.css";
 
 export type { BeszelTimePeriod } from "@homarr/definitions/beszel";
+
+const BeszelAreaChart = dynamic(() => import("./interactive-chart"), {
+  ssr: false,
+  loading: () => <BeszelChartPlaceholder height={180} />,
+});
 
 const timeFormatOptions: Record<BeszelTimePeriod, Intl.DateTimeFormatOptions> = {
   "1m": { hour: "numeric", minute: "2-digit", second: "2-digit" },
@@ -94,18 +104,6 @@ export function padLiveTimeGrid(data: Record<string, unknown>[], pointCount = 60
   });
 }
 
-const yAxisBase = {
-  tickMargin: 0,
-  tick: { fontSize: 12, fill: "var(--beszel-chart-muted)" },
-} as const;
-const chartStyle = {
-  minWidth: 0,
-  minHeight: 1,
-  flexGrow: 1,
-  flexShrink: 0,
-  // Recharts measures pixels; keep points, axes and tooltips readable on a scaled board.
-  zoom: "var(--board-canvas-inverse-scale, 1)",
-} as const;
 const panelStyle = { minWidth: 0 } as const;
 const chartContainerStyle = {
   minWidth: 0,
@@ -115,7 +113,6 @@ const chartContainerStyle = {
   flexGrow: 1,
   flexShrink: 0,
 } as const;
-const chartMargin = { top: 12, right: 5, bottom: 0, left: 0 } as const;
 export const CPU_Y_AXIS_DOMAIN: [number, string] = [0, "auto"];
 
 interface BeszelChartPanelProps {
@@ -127,6 +124,9 @@ interface BeszelChartPanelProps {
 export const BeszelChartPanel = memo(({ title, subtitle, chartProps }: BeszelChartPanelProps) => {
   const { ref, inViewport } = useInViewport<HTMLDivElement>();
   const [hasBeenVisible, setHasBeenVisible] = useState(false);
+  const [chartReady, setChartReady] = useState(false);
+  const onReady = useCallback(() => setChartReady(true), []);
+  const prepared = useInitialRenderTime() !== undefined;
   const isVisible = inViewport || typeof IntersectionObserver === "undefined";
 
   useEffect(() => {
@@ -145,9 +145,22 @@ export const BeszelChartPanel = memo(({ title, subtitle, chartProps }: BeszelCha
           </Text>
         )}
       </Group>
-      <Box ref={ref} style={chartContainerStyle}>
-        {(inViewport || hasBeenVisible) && <DeferredBeszelChart chartProps={chartProps} isVisible={isVisible} />}
-        {!inViewport && !hasBeenVisible && <BeszelChartPlaceholder height={chartProps.h} />}
+      <Box ref={ref} style={{ ...chartContainerStyle, position: "relative" }}>
+        {prepared && !chartReady && (
+          <Box h={chartProps.h} className={classes.chart} style={chartStyle}>
+            <BeszelChartPreview title={title} {...chartProps} />
+          </Box>
+        )}
+        {(inViewport || hasBeenVisible) && (
+          <div
+            className={classes.interactiveChart}
+            data-ready={!prepared || chartReady}
+            inert={prepared && !chartReady}
+          >
+            <DeferredBeszelChart chartProps={chartProps} isVisible={isVisible} onReady={onReady} />
+          </div>
+        )}
+        {!prepared && !inViewport && !hasBeenVisible && <BeszelChartPlaceholder height={chartProps.h} />}
       </Box>
     </Stack>
   );
@@ -160,90 +173,13 @@ const BeszelChartPlaceholder = ({ height }: { height: AreaChartProps["h"] }) => 
 );
 
 const DeferredBeszelChart = memo(
-  ({ chartProps }: { chartProps: BeszelAreaChartProps; isVisible: boolean }) => {
-    // Let the dashboard hydrate and handle input before mounting or refreshing SVG charts.
-    const deferredChartProps = useDeferredValue(chartProps, null);
-    if (!deferredChartProps) {
-      return <BeszelChartPlaceholder height={chartProps.h} />;
-    }
-    return <BeszelAreaChart {...deferredChartProps} />;
+  ({ chartProps, onReady }: { chartProps: BeszelAreaChartProps; isVisible: boolean; onReady: () => void }) => {
+    // Show the first visible chart immediately; defer subsequent data updates.
+    const deferredChartProps = useDeferredValue(chartProps);
+    return <BeszelAreaChart {...deferredChartProps} onReady={onReady} />;
   },
   // Retain mounted charts while offscreen; apply the latest data when they re-enter view.
   (previous, next) => !next.isVisible || previous.chartProps === next.chartProps,
-);
-
-type BeszelAreaChartProps = Omit<AreaChartProps, "dataKey" | "curveType" | "withDots" | "withYAxis"> & {
-  yAxisFormatter: (value: number) => string;
-  yAxisDomain?: [number, string];
-};
-
-const BeszelAreaChart = memo(
-  ({
-    yAxisFormatter,
-    withXAxis = true,
-    yAxisDomain,
-    yAxisProps: yAxisPropsOverride,
-    xAxisProps: xAxisPropsOverride,
-    areaChartProps: areaChartPropsOverride,
-    type = "default",
-    fillOpacity = 0.4,
-    ...props
-  }: BeszelAreaChartProps) => {
-    const mergedXAxis = useMemo(
-      () => ({
-        interval: "preserveEnd" as const,
-        minTickGap: 50,
-        tick: { fontSize: 12, fill: "var(--beszel-chart-muted)" },
-        ...xAxisPropsOverride,
-      }),
-      [xAxisPropsOverride],
-    );
-    const mergedYAxis = useMemo(() => {
-      const base = {
-        ...yAxisBase,
-        width: "auto" as const,
-        tickMargin: 2,
-        tickFormatter: yAxisFormatter,
-        ...yAxisPropsOverride,
-      };
-      if (yAxisDomain) {
-        return { ...base, domain: yAxisDomain };
-      }
-      return base;
-    }, [yAxisFormatter, yAxisDomain, yAxisPropsOverride]);
-
-    return (
-      <AreaChart
-        // Recharts keeps registration order when keyed areas move; reset it when ranks change.
-        key={JSON.stringify(props.series.map(({ name }) => name))}
-        className={classes.chart}
-        dataKey="time"
-        curveType="monotone"
-        withGradient={false}
-        connectNulls={false}
-        withDots={false}
-        areaProps={({ color }) => ({
-          fill: color,
-          fillOpacity,
-          activeDot: { r: 4, fill: color, stroke: "transparent", strokeWidth: 2 },
-        })}
-        type={type}
-        strokeWidth={1}
-        fillOpacity={fillOpacity}
-        strokeDasharray="0"
-        gridColor="color-mix(in srgb, var(--beszel-chart-border) 50%, transparent)"
-        textColor="var(--beszel-chart-muted)"
-        withXAxis={withXAxis}
-        withYAxis
-        w="100%"
-        areaChartProps={{ margin: chartMargin, ...areaChartPropsOverride }}
-        style={chartStyle}
-        xAxisProps={mergedXAxis}
-        yAxisProps={mergedYAxis}
-        {...props}
-      />
-    );
-  },
 );
 
 export const useSystemChartData = (

@@ -20,4 +20,6 @@ export const { definition, componentLoader } = createWidgetDefinition("thingport
       openInNewTab: factory.switch({ defaultValue: true }),
     }));
   },
-}).withDynamicImport(() => import("./component"));
+})
+  .withData({ mode: "browser", reason: "The query depends on the browser local date and time zone" })
+  .withDynamicImport(() => import("./component"));

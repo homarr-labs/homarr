@@ -1,4 +1,5 @@
 "use client";
+import { definition } from ".";
 
 import { Badge, Box, Card, Center, Group, ScrollArea, SimpleGrid, Stack, Text } from "@mantine/core";
 
@@ -22,9 +23,9 @@ export default function NetworkControllerNetworkStatusWidget({
   height,
   displayScale = 1,
 }: WidgetComponentProps<"networkControllerStatus">) {
-  const summaryQuery = clientApi.widget.networkController.summary.useQuery({
-    integrationIds,
-  });
+  const summaryQuery = clientApi.widget.networkController.summary.useQuery(
+    definition.data.queries({ options, integrationIds }).main.input,
+  );
   const isAdvanced = displayMode === "advanced";
   let results = summaryQuery.data ?? [];
   if (isAdvanced) {

@@ -3,6 +3,7 @@ import { IconCloud, IconServerOff } from "@tabler/icons-react";
 import { getWidgetIntegrationConfig } from "@homarr/definitions";
 
 import { createWidgetDefinition } from "../definition";
+import { widgetQuery } from "../data";
 import { optionsBuilder } from "../options";
 
 export const { definition, componentLoader } = createWidgetDefinition("coolify", {
@@ -28,4 +29,9 @@ export const { definition, componentLoader } = createWidgetDefinition("coolify",
       message: (t) => t("widget.coolify.error.internalServerError"),
     },
   },
-}).withDynamicImport(() => import("./component"));
+})
+  .withData({
+    mode: "queries",
+    queries: ({ integrationIds }) => ({ main: widgetQuery("widget.coolify.getInstancesInfo", { integrationIds }) }),
+  })
+  .withDynamicImport(() => import("./component"));

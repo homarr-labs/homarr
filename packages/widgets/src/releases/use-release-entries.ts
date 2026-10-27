@@ -4,8 +4,6 @@ import { useCallback, useMemo } from "react";
 import { getQueryKey } from "@trpc/react-query";
 
 import { clientApi } from "@homarr/api/client";
-import { createId, splitToChunksWithNItems } from "@homarr/common";
-import type { ReleaseProviderKind } from "@homarr/definitions";
 import { getReleaseProviderIconUrl, getReleaseProviderName } from "@homarr/definitions";
 
 import { isInitialWidgetQueryPending } from "../common/query-state";
@@ -15,8 +13,9 @@ import { getEntryKind } from "./display";
 import { getRowIntegrationVersions } from "./integration-version";
 import { getReleasesQueryStaleTimeMs } from "./query-options";
 import type { ReleaseEntry, ReleaseEntryErrorCode } from "./release-entry";
-import type { ReleasesRepository } from "./releases-repository";
 import { useViewedReleases } from "./use-viewed-releases";
+import { definition } from ".";
+import { normalizeReleasesRepositories } from "./query-input";
 
 export const useReleaseEntries = ({
   options,
@@ -27,57 +26,19 @@ export const useReleaseEntries = ({
 }: Pick<WidgetComponentProps<"releases">, "options" | "itemId" | "integrationIds" | "widgetRuntimeRef"> & {
   boardId: string;
 }) => {
-  const repositories = useMemo(
-    () =>
-      options.repositories.map((repository) => ({
-        ...repository,
-        id: repository.id || createId(),
-        integrationIds: repository.integrationIds ?? [],
-      })),
-    [options.repositories],
-  );
+  const repositories = useMemo(() => normalizeReleasesRepositories(options.repositories), [options.repositories]);
   const { viewedVersions, markViewed: markVersionViewed } = useViewedReleases(itemId, repositories);
-
-  const batches = useMemo(() => {
-    const byProvider = new Map<ReleaseProviderKind, ReleasesRepository[]>();
-    for (const repository of repositories) {
-      if (!repository.provider) continue;
-      const group = byProvider.get(repository.provider) ?? [];
-      group.push(repository);
-      byProvider.set(repository.provider, group);
-    }
-    return [...byProvider.entries()].flatMap(([provider, group]) =>
-      splitToChunksWithNItems(group, 5).map((chunk) => ({ provider, repositories: chunk })),
-    );
-  }, [repositories]);
-
+  const inputs = definition.data.queries({
+    options,
+    integrationIds,
+    itemId,
+    board: { id: boardId, disableStatus: true },
+  });
   const queries = clientApi.useQueries((trpc) =>
-    batches.map(({ provider, repositories: chunk }) =>
-      trpc.widget.releases.getLatest(
-        {
-          itemId,
-          boardId,
-          repositories: chunk.map((repository) => ({
-            id: repository.id,
-            provider,
-            identifier: repository.identifier,
-            versionFilter: repository.versionFilter,
-            providerUrl: repository.providerUrl,
-          })),
-        },
-        { staleTime: getReleasesQueryStaleTimeMs },
-      ),
-    ),
+    inputs.latest.map(({ input }) => trpc.widget.releases.getLatest(input, { staleTime: getReleasesQueryStaleTimeMs })),
   );
-
-  const linkedIntegrationIds = useMemo(
-    () =>
-      integrationIds.filter((integrationId) =>
-        repositories.some((repository) => repository.integrationIds.includes(integrationId)),
-      ),
-    [integrationIds, repositories],
-  );
-  const serviceVersionsInput = useMemo(() => ({ integrationIds: linkedIntegrationIds }), [linkedIntegrationIds]);
+  const serviceVersionsInput = inputs.services.input;
+  const linkedIntegrationIds = serviceVersionsInput.integrationIds;
   const serviceVersionsQuery = clientApi.widget.releases.getServiceVersions.useQuery(serviceVersionsInput, {
     enabled: linkedIntegrationIds.length > 0,
   });

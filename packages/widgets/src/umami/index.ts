@@ -5,6 +5,7 @@ import { getWidgetIntegrationConfig } from "@homarr/definitions";
 
 import { createWidgetDefinition, matchesWidgetRuntimeQuery } from "../definition";
 import { optionsBuilder } from "../options";
+import { widgetQuery } from "../data";
 
 export const timeFrameValues = ["today", "24h", "7d", "30d", "month", "lastMonth"] as const;
 
@@ -97,4 +98,34 @@ export const { definition, componentLoader } = createWidgetDefinition("umami", {
       message: (t) => t("widget.umami.error.internalServerError"),
     },
   },
-}).withDynamicImport(() => import("./component"));
+})
+  .withData({
+    mode: "queries",
+    queries: ({ integrationIds, options, displayMode }) => {
+      const integrationId = integrationIds[0] ?? "";
+      const websiteId = options.websiteId;
+      const timeFrame = options.timeFrame;
+      const enabled = Boolean(websiteId.trim());
+      const topInput = { integrationId, websiteId, timeFrame, limit: options.topCount };
+      return {
+        visitors: widgetQuery(
+          "widget.umami.getVisitorStats",
+          { integrationIds, websiteId, timeFrame, eventName: options.eventName || undefined },
+          { enabled },
+        ),
+        active: widgetQuery("widget.umami.getActiveVisitors", { integrationId, websiteId }, { enabled }),
+        events: widgetQuery(
+          "widget.umami.getMultiEventTimeSeries",
+          { integrationId, websiteId, timeFrame, eventNames: [...options.eventNames].toSorted() },
+          { enabled: enabled && options.viewMode === "events" && options.eventNames.length > 0 },
+        ),
+        pages: widgetQuery("widget.umami.getTopPages", topInput, {
+          enabled: enabled && (displayMode === "advanced" || options.viewMode === "topPages"),
+        }),
+        referrers: widgetQuery("widget.umami.getTopReferrers", topInput, {
+          enabled: enabled && (displayMode === "advanced" || options.viewMode === "topReferrers"),
+        }),
+      };
+    },
+  })
+  .withDynamicImport(() => import("./component"));

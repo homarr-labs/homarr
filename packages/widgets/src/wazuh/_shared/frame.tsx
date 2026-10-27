@@ -10,7 +10,7 @@ import { useCurrentIntlLocale } from "@homarr/translation/client";
 import type { TablerIcon } from "@homarr/ui";
 
 import { WidgetQueryLoadingState } from "../../common/query-state-indicator";
-import { useWidgetNow } from "../../common/use-widget-now";
+import { useWidgetNow, useWidgetTimeZone } from "../../common/use-widget-now";
 import classes from "./wazuh.module.css";
 
 dayjs.extend(relativeTime);
@@ -89,7 +89,8 @@ export const WazuhRelativeTime = ({
   size?: "xs" | "sm";
 }) => {
   const locale = useCurrentIntlLocale();
-  useWidgetNow("minute");
+  const now = useWidgetNow("minute");
+  const timeZone = useWidgetTimeZone();
   if (value === null)
     return (
       <Text size={size} c="dimmed">
@@ -98,9 +99,9 @@ export const WazuhRelativeTime = ({
     );
   const date = dayjs(value);
   return (
-    <Tooltip label={date.toDate().toLocaleString(locale)} withArrow openDelay={300}>
+    <Tooltip label={date.toDate().toLocaleString(locale, { timeZone })} withArrow openDelay={300}>
       <Text size={size} c="dimmed" className={classes.nowrap}>
-        {date.fromNow(short)}
+        {date.from(dayjs(now ?? undefined), short)}
       </Text>
     </Tooltip>
   );

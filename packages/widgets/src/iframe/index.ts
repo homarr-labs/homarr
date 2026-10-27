@@ -35,4 +35,6 @@ export const { definition, componentLoader } = createWidgetDefinition("iframe", 
     ];
   },
   createOptions,
-}).withDynamicImport(() => import("./component"));
+})
+  .withData({ mode: "static" })
+  .withDynamicImport(() => import("./component"));

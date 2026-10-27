@@ -1,4 +1,5 @@
 "use client";
+import { definition } from ".";
 
 import type { MantineSize } from "@mantine/core";
 import { Badge, Box, Card, Center, Group, Progress, SimpleGrid, Stack, Text, UnstyledButton } from "@mantine/core";
@@ -455,7 +456,9 @@ export default function BeszelSystemGridWidget({
   const board = useRequiredBoard();
   const { openModal } = useModalAction(BeszelSystemStatsModal);
 
-  const systemsQuery = clientApi.widget.beszel.getSystems.useQuery({ integrationIds });
+  const systemsQuery = clientApi.widget.beszel.getSystems.useQuery(
+    definition.data.queries({ options, integrationIds }).main.input,
+  );
   const results = getUsableWidgetQueryData(systemsQuery) ?? [];
   const { isPending } = systemsQuery;
   const isAdvanced = displayMode === "advanced";

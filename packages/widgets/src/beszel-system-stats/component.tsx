@@ -1,4 +1,5 @@
 "use client";
+import { definition } from ".";
 
 import { useCallback, useMemo, useRef } from "react";
 import { ActionIcon, Box, Button, Center, Group, Menu, ScrollArea, Select, Stack, Text } from "@mantine/core";
@@ -54,7 +55,9 @@ export default function BeszelSystemStatsWidget({
           message: t("error.selectionSaveMessage"),
         }),
     });
-  const systemsQuery = clientApi.widget.beszel.getSystems.useQuery({ integrationIds });
+  const systemsQuery = clientApi.widget.beszel.getSystems.useQuery(
+    definition.data.queries({ options, integrationIds }).main.input,
+  );
   const systemsData = getUsableWidgetQueryData(systemsQuery);
   const systemsResult = useMemo(() => systemsData ?? [], [systemsData]);
   const { isPending: systemsPending } = systemsQuery;

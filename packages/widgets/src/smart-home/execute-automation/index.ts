@@ -15,4 +15,6 @@ export const { definition, componentLoader } = createWidgetDefinition("smartHome
       automationId: factory.text(),
     }));
   },
-}).withDynamicImport(() => import("./component"));
+})
+  .withData({ mode: "static" })
+  .withDynamicImport(() => import("./component"));

@@ -1,4 +1,5 @@
 "use client";
+import { definition } from "..";
 
 import { useMemo, useState } from "react";
 import { Anchor, Badge, Box, Center, Group, Stack, Text, Tooltip } from "@mantine/core";
@@ -116,9 +117,8 @@ export function WazuhAgentsView({
   const t = useI18n("widget.wazuh.agents");
   const locale = useCurrentIntlLocale();
   const now = useWidgetNow("minute");
-  const integrationId = integrationIds[0] ?? "";
   const query = clientApi.widget.wazuh.getAgents.useQuery(
-    { integrationId },
+    definition.data.queries({ options, integrationIds }).agents.input,
     { staleTime: 60_000, refetchInterval: 60_000 },
   );
   const result = getUsableWidgetQueryData(query);

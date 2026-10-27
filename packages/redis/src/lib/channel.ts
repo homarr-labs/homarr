@@ -241,6 +241,72 @@ export const createLockChannel = (name: string, options: RedisChannelOptions = {
       );
       return result === 1;
     },
+    // The index spans build namespaces so replacing a build cannot multiply the budget.
+    setIfOwnedWithinBudgetAsync: async <TData>(
+      token: string,
+      targetName: string,
+      data: TData,
+      ttlMs: number,
+      { indexName, maxBytes, maxEntries }: { indexName: string; maxBytes: number; maxEntries: number },
+    ) => {
+      if (
+        !Number.isSafeInteger(maxBytes) ||
+        maxBytes <= 0 ||
+        !Number.isSafeInteger(maxEntries) ||
+        maxEntries <= 0 ||
+        !Number.isSafeInteger(ttlMs) ||
+        ttlMs <= 0
+      )
+        throw new Error("Invalid cache budget or lifetime");
+      if (!selectedClient) return false;
+      const result = await (
+        await requireReadyRedisConnectionAsync(selectedClient)
+      ).eval(
+        `if redis.call('get', KEYS[1]) ~= ARGV[1] then return 0 end
+local bytes = string.len(ARGV[2])
+if bytes > tonumber(ARGV[4]) then return 0 end
+local entries = 0
+local members = redis.call('zrange', KEYS[3], 0, -1)
+for _, key in ipairs(members) do
+  if key ~= KEYS[2] then
+    local size = redis.call('strlen', key)
+    if size == 0 then
+      redis.call('zrem', KEYS[3], key)
+    else
+      bytes = bytes + size
+      entries = entries + 1
+    end
+  end
+end
+for _, key in ipairs(members) do
+  if bytes <= tonumber(ARGV[4]) and entries < tonumber(ARGV[5]) then break end
+  if key ~= KEYS[2] then
+    local size = redis.call('strlen', key)
+    redis.call('del', key)
+    redis.call('zrem', KEYS[3], key)
+    bytes = bytes - size
+    if size > 0 then entries = entries - 1 end
+  end
+end
+redis.call('set', KEYS[2], ARGV[2], 'PX', ARGV[3])
+redis.call('zadd', KEYS[3], ARGV[6], KEYS[2])
+if redis.call('pttl', KEYS[3]) < tonumber(ARGV[3]) then
+  redis.call('pexpire', KEYS[3], ARGV[3])
+end
+return 1`,
+        3,
+        name,
+        targetName,
+        indexName,
+        token,
+        superjson.stringify(data),
+        ttlMs,
+        maxBytes,
+        maxEntries,
+        Date.now(),
+      );
+      return result === 1;
+    },
     setPersistentIfOwnedAsync: async <TData>(token: string, targetName: string, data: TData) => {
       if (!selectedClient) return false;
       const result = await (

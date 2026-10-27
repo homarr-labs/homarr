@@ -7,6 +7,8 @@ import {
 } from "@homarr/definitions";
 
 import { createWidgetDefinition } from "../definition";
+import { widgetQuery } from "../data";
+import { partitionHealthMonitoringIntegrations } from "./integration-selection";
 import { supportsStorageVolumeSelection } from "../filter-storage-volumes";
 import { optionsBuilder } from "../options";
 import { createStorageVolumeMultiSelectOptions } from "../storage-volume-options";
@@ -140,4 +142,25 @@ export const { definition, componentLoader } = createWidgetDefinition("healthMon
       message: (t) => t("widget.healthMonitoring.error.internalServerError"),
     },
   },
-}).withDynamicImport(() => import("./component"));
+})
+  .withData({
+    mode: "queries",
+    queries: ({ integrationIds }) => ({
+      main: widgetQuery("integration.byIds", integrationIds, {
+        after: (integrations) => {
+          const { systemIntegrationIds, clusterIntegrationIds } = partitionHealthMonitoringIntegrations(integrations);
+          return {
+            system: widgetQuery(
+              "widget.healthMonitoring.getSystemHealthStatus",
+              { integrationIds: systemIntegrationIds },
+              { enabled: systemIntegrationIds.length > 0 },
+            ),
+            clusters: clusterIntegrationIds.map((integrationId) =>
+              widgetQuery("widget.healthMonitoring.getClusterHealthStatus", { integrationId }),
+            ),
+          };
+        },
+      }),
+    }),
+  })
+  .withDynamicImport(() => import("./component"));

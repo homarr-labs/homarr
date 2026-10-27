@@ -3,6 +3,7 @@ import { IconBatteryCharging, IconBatteryOff } from "@tabler/icons-react";
 import { getWidgetIntegrationConfig } from "@homarr/definitions";
 
 import { createWidgetDefinition } from "../definition";
+import { widgetQuery } from "../data";
 import { optionsBuilder } from "../options";
 
 export const { definition, componentLoader } = createWidgetDefinition("ups", {
@@ -28,4 +29,9 @@ export const { definition, componentLoader } = createWidgetDefinition("ups", {
       message: (t) => t("widget.ups.error.internalServerError"),
     },
   },
-}).withDynamicImport(() => import("./component"));
+})
+  .withData({
+    mode: "queries",
+    queries: ({ integrationIds }) => ({ main: widgetQuery("widget.ups.getSummaries", { integrationIds }) }),
+  })
+  .withDynamicImport(() => import("./component"));

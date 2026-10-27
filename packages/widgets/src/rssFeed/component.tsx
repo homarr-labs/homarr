@@ -1,12 +1,15 @@
 "use client";
+import { definition } from ".";
 
-import { Alert, Card, Flex, Group, Image, ScrollArea, SimpleGrid, Stack, Text } from "@mantine/core";
+import { Alert, Box, Card, Flex, Group, Image, ScrollArea, SimpleGrid, Stack, Text } from "@mantine/core";
 import { IconAlertTriangle, IconClock, IconServerOff } from "@tabler/icons-react";
 import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
 
 import type { RouterInputs, RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
-import { useRequiredBoard } from "@homarr/boards/context";
+import { useRequiredBoard, useBoardRestoredAction } from "@homarr/boards/context";
+import { useHydrationTime } from "@homarr/common";
 import { useI18n } from "@homarr/translation/client";
 
 import { getSafeApplicationUrl, SAFE_NEW_TAB_REL } from "../common/application-url";
@@ -15,6 +18,8 @@ import { WidgetQueryLoadingState } from "../common/query-state-indicator";
 import type { WidgetComponentProps } from "../definition";
 import { BaseWidgetError } from "../errors/base-component";
 import classes from "./component.module.scss";
+
+dayjs.extend(utc);
 
 const useLiveFeed = (input: RouterInputs["widget"]["rssFeed"]["getFeeds"]) => {
   const query = clientApi.widget.rssFeed.getFeeds.useQuery(input);
@@ -44,23 +49,30 @@ const useLiveFeed = (input: RouterInputs["widget"]["rssFeed"]["getFeeds"]) => {
 };
 
 export default function RssFeed({ options, width, height, displayMode }: WidgetComponentProps<"rssFeed">) {
-  const feed = useLiveFeed({
-    urls: options.feedUrls,
-    maximumAmountPosts: typeof options.maximumAmountPosts === "number" ? options.maximumAmountPosts : 100,
-    descriptionMaxLength:
-      typeof options.descriptionMaxLength === "number" ? options.descriptionMaxLength : 250,
-  });
+  const initialTime = useHydrationTime();
+  const now = dayjs(initialTime);
+  const formatTimestamp = (value: string) => {
+    let date = dayjs(value);
+    if (initialTime !== undefined) date = date.utc();
+    return date.format("YYYY-MM-DD HH:mm:ss Z");
+  };
+  const feed = useLiveFeed(definition.data.queries({ options, integrationIds: [] }).main.input);
 
   const board = useRequiredBoard();
   const t = useI18n("widget.rssFeed");
+  const { run: retry, isPending: retrying } = useBoardRestoredAction(async () => {
+    if (feed.hasError) await feed.refetch();
+  });
   if (feed.hasError) {
     return (
-      <BaseWidgetError
-        icon={IconServerOff}
-        message={t("error.allFeedsFailed")}
-        showLogsLink
-        onRetry={() => void feed.refetch()}
-      />
+      <Box component="fieldset" disabled={retrying} aria-busy={retrying} bd={0} p={0} m={0} miw={0} h="100%">
+        <BaseWidgetError
+          icon={IconServerOff}
+          message={t("error.allFeedsFailed")}
+          showLogsLink
+          onRetry={() => void retry()}
+        />
+      </Box>
     );
   }
   if (feed.isPending) return <WidgetQueryLoadingState />;
@@ -164,10 +176,8 @@ export default function RssFeed({ options, width, height, displayMode }: WidgetC
 
                     <InfoDisplay
                       source={entryDisplay.showSource ? getHostname(feedEntry.feedUrl) : undefined}
-                      date={feedEntry.published ? dayjs(feedEntry.published).fromNow() : undefined}
-                      timestamp={
-                        feedEntry.published ? dayjs(feedEntry.published).format("YYYY-MM-DD HH:mm:ss Z") : undefined
-                      }
+                      date={feedEntry.published ? dayjs(feedEntry.published).from(now) : undefined}
+                      timestamp={feedEntry.published ? formatTimestamp(feedEntry.published) : undefined}
                     />
                   </Flex>
                 </Group>
@@ -216,7 +226,7 @@ export default function RssFeed({ options, width, height, displayMode }: WidgetC
                         {feedDescriptionToText(feedEntry.description)}
                       </Text>
                     )}
-                    {feedEntry.published && <InfoDisplay date={dayjs(feedEntry.published).fromNow()} />}
+                    {feedEntry.published && <InfoDisplay date={dayjs(feedEntry.published).from(now)} />}
                   </Flex>
                 </Group>
               </Card>

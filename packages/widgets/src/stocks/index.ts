@@ -2,6 +2,7 @@ import { IconBuildingBank } from "@tabler/icons-react";
 
 import { createWidgetDefinition, widgetQueryInputMatches } from "../definition";
 import { optionsBuilder } from "../options";
+import { widgetQuery } from "../data";
 
 export const stockPriceTimeFrames = {
   range: ["1d", "5d", "1mo", "3mo", "6mo", "ytd", "1y", "2y", "5y", "10y", "max"] as const,
@@ -47,4 +48,9 @@ export const { definition, componentLoader } = createWidgetDefinition("stockPric
       }),
     }));
   },
-}).withDynamicImport(() => import("./component"));
+})
+  .withData({
+    mode: "queries",
+    queries: ({ options }) => ({ main: widgetQuery("widget.stockPrice.getPriceHistory", options) }),
+  })
+  .withDynamicImport(() => import("./component"));

@@ -1,4 +1,5 @@
 "use client";
+import { definition } from ".";
 
 import { useCallback, useState } from "react";
 import {
@@ -65,6 +66,7 @@ const getCompactRingSize = (width: number, height: number): number => {
 };
 
 export default function FirewallWidget({
+  options,
   integrationIds,
   width,
   height,
@@ -89,16 +91,11 @@ export default function FirewallWidget({
     setSelectedFirewall(value ?? "");
   }, []);
 
-  const cpuQuery = clientApi.widget.firewall.getFirewallCpuStatus.useQuery({ integrationIds });
-  const memoryQuery = clientApi.widget.firewall.getFirewallMemoryStatus.useQuery({
-    integrationIds,
-  });
-  const versionQuery = clientApi.widget.firewall.getFirewallVersionStatus.useQuery({
-    integrationIds,
-  });
-  const interfacesQuery = clientApi.widget.firewall.getFirewallInterfacesStatus.useQuery({
-    integrationIds,
-  });
+  const inputs = definition.data.queries({ options, integrationIds });
+  const cpuQuery = clientApi.widget.firewall.getFirewallCpuStatus.useQuery(inputs.cpu.input);
+  const memoryQuery = clientApi.widget.firewall.getFirewallMemoryStatus.useQuery(inputs.memory.input);
+  const versionQuery = clientApi.widget.firewall.getFirewallVersionStatus.useQuery(inputs.version.input);
+  const interfacesQuery = clientApi.widget.firewall.getFirewallInterfacesStatus.useQuery(inputs.interfaces.input);
   const firewallsCpuData = cpuQuery.data ?? [];
   const firewallsMemoryData = memoryQuery.data ?? [];
   const firewallsVersionData = versionQuery.data ?? [];

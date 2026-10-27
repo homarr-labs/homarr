@@ -1,0 +1,37 @@
+diff --git a/esm/use-id/use-id.mjs b/esm/use-id/use-id.mjs
+--- a/esm/use-id/use-id.mjs
++++ b/esm/use-id/use-id.mjs
+@@ -1,7 +1,7 @@
+ "use client";
+ import { randomId } from "../utils/random-id/random-id.mjs";
+ import { useIsomorphicEffect } from "../use-isomorphic-effect/use-isomorphic-effect.mjs";
+-import { useId, useRef, useState } from "react";
++import { startTransition, useId, useRef, useState } from "react";
+ //#region packages/@mantine/hooks/src/use-id/use-id.ts
+ function useId$1(staticId) {
+ 	const reactId = useId();
+@@ -10,7 +10,9 @@
+ 	useIsomorphicEffect(() => {
+ 		if (hasInitializedRef.current) return;
+ 		hasInitializedRef.current = true;
+-		setUuid(randomId());
++		startTransition(() => {
++			setUuid(randomId());
++		});
+ 	}, []);
+ 	if (typeof staticId === "string") return staticId;
+ 	return uuid;
+diff --git a/cjs/use-id/use-id.cjs b/cjs/use-id/use-id.cjs
+--- a/cjs/use-id/use-id.cjs
++++ b/cjs/use-id/use-id.cjs
+@@ -10,7 +10,9 @@
+ 	require_use_isomorphic_effect.useIsomorphicEffect(() => {
+ 		if (hasInitializedRef.current) return;
+ 		hasInitializedRef.current = true;
+-		setUuid(require_random_id.randomId());
++		(0, react.startTransition)(() => {
++			setUuid(require_random_id.randomId());
++		});
+ 	}, []);
+ 	if (typeof staticId === "string") return staticId;
+ 	return uuid;

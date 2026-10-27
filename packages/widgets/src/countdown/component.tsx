@@ -80,8 +80,14 @@ export default function CountdownWidget({
   useEffect(() => {
     if (!now || !storagePrefix) return;
     const previousNow = previousNowRef.current;
+    if (!previousNow) {
+      // Captured time is only for the initial display. Alerts start at this visit,
+      // so restoring an old page cannot announce already-finished countdowns.
+      previousNowRef.current = new Date();
+      return;
+    }
     previousNowRef.current = now;
-    if (!previousNow || !preferences.notifications) return;
+    if (!preferences.notifications) return;
 
     states.forEach((state) => {
       const occurrence = state.previousOccurrence;

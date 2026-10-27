@@ -1,4 +1,5 @@
 "use client";
+import { definition } from ".";
 
 import { Fragment, useMemo } from "react";
 import {
@@ -19,7 +20,7 @@ import { IconBook, IconCalendar, IconClock, IconStarFilled } from "@tabler/icons
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
-import { getMantineColor, toValidDate } from "@homarr/common";
+import { getMantineColor, toValidDate, useIsHydrated } from "@homarr/common";
 import { getIconUrl } from "@homarr/definitions";
 import type { MediaRelease } from "@homarr/integrations/types";
 import { mediaTypeConfigurations } from "@homarr/integrations/types";
@@ -43,8 +44,11 @@ export default function MediaReleasesWidget({
   displayMode,
 }: WidgetComponentProps<"mediaReleases">) {
   const locale = useCurrentIntlLocale();
-  const formatDate = useMemo(() => createReleaseDateFormatter(locale), [locale]);
-  const releasesQuery = clientApi.widget.mediaRelease.getMediaReleases.useQuery({ integrationIds });
+  const timeZone = useIsHydrated() ? undefined : "UTC";
+  const formatDate = useMemo(() => createReleaseDateFormatter(locale, timeZone), [locale, timeZone]);
+  const releasesQuery = clientApi.widget.mediaRelease.getMediaReleases.useQuery(
+    definition.data.queries({ options, integrationIds }).main.input,
+  );
   const response = getUsableWidgetQueryData(releasesQuery);
 
   if (isInitialWidgetQueryPending(releasesQuery)) return <WidgetQueryLoadingState />;
@@ -86,7 +90,7 @@ interface ItemProps {
   formatDate: ReturnType<typeof createReleaseDateFormatter>;
 }
 
-const createReleaseDateFormatter = (locale: string) => {
+const createReleaseDateFormatter = (locale: string, timeZone: string | undefined) => {
   const dateOptions: Intl.DateTimeFormatOptions = {
     month: "2-digit",
     year: "numeric",
@@ -106,6 +110,7 @@ const createReleaseDateFormatter = (locale: string) => {
       hour: "2-digit",
       minute: "2-digit",
       hour12: false,
+      timeZone,
     });
     return dateTimeFormatter.format(date);
   };

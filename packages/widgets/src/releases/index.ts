@@ -6,6 +6,8 @@ import { getWidgetIntegrationConfig, releaseProviderKinds } from "@homarr/defini
 
 import { createWidgetDefinition, matchesWidgetRuntimeQuery, widgetQueryInputMatches } from "../definition";
 import { optionsBuilder } from "../options";
+import { widgetQuery } from "../data";
+import { normalizeReleasesRepositories, getReleasesLatestInputs, getReleasesLinkedIntegrationIds } from "./query-input";
 import {
   newReleaseWithinOptions,
   releaseLayouts,
@@ -82,7 +84,7 @@ export const { definition, componentLoader } = createWidgetDefinition("releases"
       repositories: factory.multiReleasesRepositories({
         defaultValue: [
           {
-            id: createId(),
+            id: "homarr-labs-homarr",
             provider: "github" as const,
             identifier: "homarr-labs/homarr",
             name: "Homarr",
@@ -111,4 +113,24 @@ export const { definition, componentLoader } = createWidgetDefinition("releases"
       }),
     }));
   },
-}).withDynamicImport(() => import("./component"));
+})
+  .withData({
+    mode: "browser",
+    reason: "Viewed versions and relative release groups depend on live viewer state.",
+    stream: true,
+    queries: ({ integrationIds, options, itemId, board }) => {
+      const repositories = normalizeReleasesRepositories(options.repositories);
+      const linked = getReleasesLinkedIntegrationIds(integrationIds, repositories);
+      return {
+        services: widgetQuery(
+          "widget.releases.getServiceVersions",
+          { integrationIds: linked },
+          { enabled: linked.length > 0 },
+        ),
+        latest: getReleasesLatestInputs(itemId, repositories).map((input) =>
+          widgetQuery("widget.releases.getLatest", { ...input, boardId: board?.id }),
+        ),
+      };
+    },
+  })
+  .withDynamicImport(() => import("./component"));

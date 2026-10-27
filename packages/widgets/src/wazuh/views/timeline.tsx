@@ -1,4 +1,5 @@
 "use client";
+import { definition } from "..";
 
 import { useMemo } from "react";
 import { Badge, Box, Group } from "@mantine/core";
@@ -48,9 +49,8 @@ export function WazuhTimelineView({ integrationIds, options, width, height }: Wa
   const t = useI18n("widget.wazuh.timeline");
   const tShared = useI18n("widget.wazuh");
   const locale = useCurrentIntlLocale();
-  const integrationId = integrationIds[0] ?? "";
   const query = clientApi.widget.wazuh.getTimeline.useQuery(
-    { integrationId, range: options.range, interval: options.interval, minLevel: options.minLevel },
+    definition.data.queries({ options, integrationIds }).timeline.input,
     { staleTime: 60_000, refetchInterval: rangeToRefetchMs[options.range] },
   );
   const result = getUsableWidgetQueryData(query);

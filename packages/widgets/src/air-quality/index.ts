@@ -2,6 +2,7 @@ import { IconWind } from "@tabler/icons-react";
 
 import { createWidgetDefinition, widgetQueryInputMatches } from "../definition";
 import { optionsBuilder } from "../options";
+import { widgetQuery } from "../data";
 
 export const { definition, componentLoader } = createWidgetDefinition("airQuality", {
   icon: IconWind,
@@ -40,4 +41,14 @@ export const { definition, componentLoader } = createWidgetDefinition("airQualit
       showPollen: factory.switch({ defaultValue: true }),
     }));
   },
-}).withDynamicImport(() => import("./component"));
+})
+  .withData({
+    mode: "queries",
+    queries: ({ options }) => ({
+      main: widgetQuery("widget.airQuality.atLocation", {
+        latitude: options.location.latitude,
+        longitude: options.location.longitude,
+      }),
+    }),
+  })
+  .withDynamicImport(() => import("./component"));

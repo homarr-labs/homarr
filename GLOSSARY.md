@@ -61,6 +61,9 @@ _Avoid_: Marketplace, store, registry
 
 ### Scheduling
 
+**Prepared Board view**:
+An initial view of a Board prepared before a visit, whose Widget values continue updating while the Board is open.
+
 **Task**:
 A scheduled job as the user sees it, listed and triggered from the Tasks page.
 _Avoid_: Cron job, in user-facing copy

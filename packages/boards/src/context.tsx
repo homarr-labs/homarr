@@ -1,11 +1,13 @@
 "use client";
 
 import type { PropsWithChildren } from "react";
-import { createContext, useContext, useEffect, useSyncExternalStore } from "react";
+import { createContext, useCallback, useContext, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { usePathname } from "next/navigation";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
+import { createQueryHydrationSnapshot } from "./query-hydration";
+import { useQueryClient } from "@tanstack/react-query";
 
 import { useEditMode } from "./edit-mode";
 import { boardViewportWidthCookieName, getLayoutIdForViewportWidth } from "./layout-selection";
@@ -21,6 +23,220 @@ interface BoardContextValue {
 }
 
 const BoardContext = createContext<BoardContextValue | null>(null);
+
+type BoardRestorationResult = "restored" | "cancelled";
+
+interface BoardRestoration {
+  prepareQuerySnapshot: () => void;
+  createQueryClient: () => ReturnType<ReturnType<typeof createQueryHydrationSnapshot>["createClient"]> | undefined;
+  subscribe: (listener: () => void) => () => void;
+  getIsRestoring: () => boolean;
+  getInitialIsRestoring: () => boolean;
+  register: (id: string) => () => void;
+  settle: (id: string) => void;
+  seal: (host: object) => () => void;
+  whenRestored: () => Promise<BoardRestorationResult>;
+}
+
+const restored = Promise.resolve<BoardRestorationResult>("restored");
+const noop = () => undefined;
+const BoardRestorationContext = createContext<BoardRestoration>({
+  prepareQuerySnapshot: noop,
+  createQueryClient: () => undefined,
+  subscribe: () => noop,
+  getIsRestoring: () => false,
+  getInitialIsRestoring: () => false,
+  register: () => noop,
+  settle: noop,
+  seal: () => noop,
+  whenRestored: () => restored,
+});
+
+export const PreparedBoardRestorationProvider = ({ prepared, children }: PropsWithChildren<{ prepared: boolean }>) => {
+  const pathname = usePathname();
+  const queryClient = useQueryClient();
+  const [restoration] = useState(() => {
+    let phase: "pending" | "committing" | BoardRestorationResult = "restored";
+    if (prepared) phase = "pending";
+    let resumed = !prepared;
+    let querySnapshot: ReturnType<typeof createQueryHydrationSnapshot> | undefined;
+    let restoring = prepared;
+    const listeners = new Set<() => void>();
+    const finishRestoring = () => {
+      restoring = false;
+      for (const listener of listeners) listener();
+    };
+    const pending = new Map<string, object>();
+    const settled = new Set<string>();
+    let host: object | undefined;
+    let hostGeneration: object;
+    let providerGeneration: object;
+    let initialPath: string | null | undefined;
+    let resolveRestored: (result: BoardRestorationResult) => void = noop;
+    const completion = new Promise<BoardRestorationResult>((resolve) => {
+      resolveRestored = resolve;
+    });
+    if (!prepared) resolveRestored("restored");
+    const cancel = (update = true) => {
+      if (phase === "cancelled") return;
+      phase = "cancelled";
+      querySnapshot?.dispose();
+      querySnapshot = undefined;
+      pending.clear();
+      settled.clear();
+      resolveRestored("cancelled");
+      if (update) {
+        finishRestoring();
+        queueMicrotask(() => {
+          resumed = true;
+        });
+      }
+    };
+    const check = () => {
+      if (phase !== "pending" || !host || pending.size !== 0) return;
+      phase = "committing";
+      finishRestoring();
+      // Layout effects have now attached every initial visible Widget. Complete
+      // after this commit without waiting on unrelated offscreen transitions.
+      queueMicrotask(() => {
+        if (phase !== "committing") return;
+        resumed = true;
+        phase = "restored";
+        pending.clear();
+        settled.clear();
+        resolveRestored("restored");
+      });
+    };
+    const prepareQuerySnapshot = () => {
+      if (!prepared || phase === "cancelled") return undefined;
+      querySnapshot ??= createQueryHydrationSnapshot(queryClient);
+      return querySnapshot;
+    };
+    return {
+      prepareQuerySnapshot: () => {
+        prepareQuerySnapshot();
+      },
+      createQueryClient: () => prepareQuerySnapshot()?.createClient(),
+      subscribe: (listener: () => void) => {
+        listeners.add(listener);
+        return () => {
+          listeners.delete(listener);
+        };
+      },
+      getIsRestoring: () => restoring,
+      getInitialIsRestoring: () => prepared,
+      whenRestored: () => {
+        if (resumed) return restored;
+        return completion;
+      },
+      register: (id: string) => {
+        if (phase !== "pending" || settled.has(id)) return noop;
+        const token = {};
+        pending.set(id, token);
+        return () =>
+          queueMicrotask(() => {
+            if (pending.get(id) !== token) return;
+            pending.delete(id);
+            settled.add(id);
+            check();
+          });
+      },
+      settle: (id: string) => {
+        if (phase !== "pending") return;
+        settled.add(id);
+        pending.delete(id);
+        check();
+      },
+      seal: (owner: object) => {
+        if (host && host !== owner) cancel();
+        if (phase !== "pending" && phase !== "committing") return noop;
+        host = owner;
+        const token = {};
+        hostGeneration = token;
+        check();
+        return () =>
+          queueMicrotask(() => {
+            if (hostGeneration === token) cancel();
+          });
+      },
+      mount: () => {
+        const token = {};
+        providerGeneration = token;
+        return () =>
+          queueMicrotask(() => {
+            if (providerGeneration !== token) return;
+            cancel(false);
+            querySnapshot?.dispose();
+          });
+      },
+      navigate: (path: string | null) => {
+        if (initialPath !== undefined && initialPath !== path) cancel();
+        initialPath = path;
+      },
+    };
+  });
+  useEffect(() => restoration.mount(), [restoration]);
+  useEffect(() => restoration.navigate(pathname), [pathname, restoration]);
+  return <BoardRestorationContext.Provider value={restoration}>{children}</BoardRestorationContext.Provider>;
+};
+
+// Keep lifecycle registration independent of refresh state: changing a Context
+// value would wake every dehydrated Suspense boundary, including offscreen Widgets.
+export const useBoardRestorationLifecycle = () => useContext(BoardRestorationContext);
+
+export const useBoardRestoration = () => {
+  const restoration = useBoardRestorationLifecycle();
+  const isRestoring = useSyncExternalStore(
+    restoration.subscribe,
+    restoration.getIsRestoring,
+    restoration.getInitialIsRestoring,
+  );
+  return { ...restoration, isRestoring };
+};
+
+export const useWhenBoardRestored = () => {
+  const { whenRestored } = useBoardRestorationLifecycle();
+  const [lifetime] = useState(() => {
+    let resolveCancelled: (result: BoardRestorationResult) => void = noop;
+    const cancellation = new Promise<BoardRestorationResult>((resolve) => {
+      resolveCancelled = resolve;
+    });
+    return { token: {}, cancelled: false, cancellation, resolveCancelled };
+  });
+  useEffect(() => {
+    const token = {};
+    lifetime.token = token;
+    return () =>
+      queueMicrotask(() => {
+        if (lifetime.token !== token) return;
+        lifetime.cancelled = true;
+        lifetime.resolveCancelled("cancelled");
+      });
+  }, [lifetime]);
+  return useCallback(async () => {
+    const result = await Promise.race([whenRestored(), lifetime.cancellation]);
+    if (lifetime.cancelled) return "cancelled";
+    return result;
+  }, [lifetime, whenRestored]);
+};
+
+export const useBoardRestoredAction = (action: () => unknown | Promise<unknown>) => {
+  const whenRestored = useWhenBoardRestored();
+  const pendingRef = useRef(false);
+  const [isPending, setPending] = useState(false);
+  const run = useCallback(async () => {
+    if (pendingRef.current) return;
+    pendingRef.current = true;
+    setPending(true);
+    try {
+      if ((await whenRestored()) === "restored") await action();
+    } finally {
+      pendingRef.current = false;
+      setPending(false);
+    }
+  }, [action, whenRestored]);
+  return { run, isPending };
+};
 
 const subscribeToViewport = (onStoreChange: () => void) => {
   if (typeof window === "undefined") return () => undefined;

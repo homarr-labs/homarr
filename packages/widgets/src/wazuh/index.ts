@@ -4,10 +4,11 @@ import { z } from "zod/v4";
 import { getWidgetIntegrationConfig } from "@homarr/definitions";
 
 import { createWidgetDefinition } from "../definition";
+import { widgetQuery } from "../data";
 import { optionsBuilder } from "../options";
 import { wazuhTimeRangeOptions } from "./_shared/options";
 import type { WazuhView } from "./views";
-import { wazuhViews } from "./views";
+import { getVisibleWazuhViews, getWazuhRangeHours, resolveWazuhView, wazuhViews } from "./views";
 
 const hidden = { shouldHide: () => true };
 
@@ -169,4 +170,69 @@ export const { definition, componentLoader } = createWidgetDefinition("wazuh", {
       message: (t) => t("widget.wazuh.error.unknown.title", { target: "Wazuh" }),
     },
   },
-}).withDynamicImport(() => import("./component"));
+})
+  .withData({
+    mode: "queries",
+    queries: ({ integrationIds, options }) => {
+      const integrationId = integrationIds[0] ?? "";
+      const view = resolveWazuhView(options.view, getVisibleWazuhViews(options.visibleViews));
+      const hours = getWazuhRangeHours(options.range);
+      return {
+        overview: widgetQuery(
+          "widget.wazuh.getSummary",
+          { integrationId, range: options.range },
+          { enabled: view === "overview" },
+        ),
+        alerts: widgetQuery(
+          "widget.wazuh.getAlerts",
+          { integrationId, minLevel: options.alertsMinLevel, limit: options.alertsLimit, hours },
+          { enabled: view === "alerts" },
+        ),
+        timeline: widgetQuery(
+          "widget.wazuh.getTimeline",
+          { integrationId, range: options.range, interval: options.interval, minLevel: options.minLevel },
+          { enabled: view === "timeline" },
+        ),
+        top: widgetQuery(
+          "widget.wazuh.getTopList",
+          {
+            integrationId,
+            kind: options.topKind,
+            range: options.range,
+            limit: options.topLimit,
+            minLevel: options.minLevel,
+          },
+          { enabled: view === "top" },
+        ),
+        agents: widgetQuery("widget.wazuh.getAgents", { integrationId }, { enabled: view === "agents" }),
+        vulnerabilities: widgetQuery(
+          "widget.wazuh.getVulnerabilities",
+          {
+            integrationId,
+            cveLimit: options.cveLimit,
+            agentLimit: options.agentLimit,
+            cveOrder: options.cveOrder,
+            minSeverity: options.minSeverity,
+          },
+          { enabled: view === "vulnerabilities" },
+        ),
+        fim: widgetQuery(
+          "widget.wazuh.getFim",
+          {
+            integrationId,
+            range: options.range,
+            event: options.fimEvent,
+            limit: options.fimLimit,
+            includeRegistry: options.includeRegistry,
+          },
+          { enabled: view === "fim" },
+        ),
+        authFailures: widgetQuery(
+          "widget.wazuh.getAuthFailures",
+          { integrationId, hours, limit: options.authLimit },
+          { enabled: view === "authFailures" },
+        ),
+      };
+    },
+  })
+  .withDynamicImport(() => import("./component"));
