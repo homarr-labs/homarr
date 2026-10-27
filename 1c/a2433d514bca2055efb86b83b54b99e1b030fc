@@ -1,0 +1,25 @@
+packages/api/src/router/custom-widget/legacy-migration.ts
+  s_da46d8bcf4b8ce::t_95c3a045fee1a1 46
+packages/custom-widgets/src/jsx/analyzer.ts
+  s_da46d8bcf4b8ce::t_04f429dc0ec8fc 213-214
+packages/custom-widgets/src/jsx/interpreter.tsx
+  s_da46d8bcf4b8ce::t_3fb8faac742c65 183-184
+packages/custom-widgets/src/test/jsx-policy.spec.ts
+  s_da46d8bcf4b8ce::t_90236cd1ad150e 155-166
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "1ca2433d514bca2055efb86b83b54b99e1b030fc",
+  "prompts": {},
+  "sessions": {
+    "s_da46d8bcf4b8ce": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "2da0197c-e9c6-47c9-bec8-e8632f213477",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
