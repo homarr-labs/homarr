@@ -50,6 +50,7 @@ export default async function Login(props: LoginProps) {
       logoImageUrl={branding.logoImageUrl ?? undefined}
       backgroundImageUrl={branding.signInBackgroundImageUrl ?? undefined}
       backgroundOverlay={branding.signInBackgroundOverlay}
+      showMarquee={branding.showSignInMarquee}
       radius={branding.defaultRadius}
     >
       {appEnv.DEMO_MODE ? (
