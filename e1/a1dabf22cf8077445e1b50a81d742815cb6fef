@@ -1,0 +1,19 @@
+packages/custom-widgets/src/core/ai-prompt.ts
+  s_da46d8bcf4b8ce::t_07d88173321770 179-181,184,251,266
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "e1a1dabf22cf8077445e1b50a81d742815cb6fef",
+  "prompts": {},
+  "sessions": {
+    "s_da46d8bcf4b8ce": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "2da0197c-e9c6-47c9-bec8-e8632f213477",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
