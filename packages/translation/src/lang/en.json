@@ -4797,10 +4797,6 @@
           "label": "Sections",
           "description": "Groups of repositories to show. Hidden groups are not listed at all."
         },
-        "collapsedSections": {
-          "label": "Collapsed sections",
-          "description": "Groups that stay collapsed. Click a group title to expand or collapse it."
-        },
         "newReleaseWithin": {
           "label": "Highlight new releases for",
           "description": "Releases published within this period are listed under New until you mark them as viewed.",
