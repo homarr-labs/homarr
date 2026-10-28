@@ -12,7 +12,9 @@ import { createSessionStore } from "../base/session-store";
 import type { TestingResult } from "../base/test-connection/test-connection-service";
 import type { ISystemHealthMonitoringIntegration } from "../interfaces/health-monitoring/health-monitoring-integration";
 import type { SystemHealthMonitoring } from "../types";
+import { OpenMediaVaultTotpError } from "./openmediavault-totp-error";
 import { cpuTempSchema, fileSystemSchema, smartSchema, systemInformationSchema } from "./openmediavault-types";
+import { generateTotpCode, InvalidTotpSecretError, normalizeTotpSecret } from "./totp";
 
 const logger = createLogger({ module: "openMediaVaultIntegration" });
 
@@ -99,8 +101,15 @@ export class OpenMediaVaultIntegration extends Integration implements ISystemHea
   }
 
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
-    await this.getSessionAsync(input.fetchAsync);
-    return { success: true };
+    try {
+      await this.getSessionAsync(input.fetchAsync);
+      return { success: true };
+    } catch (error) {
+      if (error instanceof OpenMediaVaultTotpError) {
+        return error.toConnectionResult();
+      }
+      throw error;
+    }
   }
 
   private async getFileSystemsAsync(): Promise<SystemHealthMonitoring["fileSystem"]> {
@@ -194,11 +203,27 @@ export class OpenMediaVaultIntegration extends Integration implements ISystemHea
     return await callback(session);
   }
 
+  private readTotpSecret(): string | null {
+    if (!this.hasSecretValue("totpSecret")) return null;
+
+    try {
+      return normalizeTotpSecret(this.getSecretValue("totpSecret"));
+    } catch (error) {
+      if (error instanceof InvalidTotpSecretError) {
+        throw new OpenMediaVaultTotpError(this.publicIntegration, "totpSecretInvalid");
+      }
+      throw error;
+    }
+  }
+
   /**
-   * Get a session id from the openmediavault server
-   * @returns The session details
+   * Get a session id from the openmediavault server.
+   * Accounts with TOTP answer `session.login` with `challengeRequired`. The follow-up
+   * `session.verify` call must reuse that response's session cookie and send `{ code }`,
+   * which is the shape the TOTP plugin reads from the forwarded params.
    */
   private async getSessionAsync(fetchAsync?: typeof undiciFetch): Promise<SessionStoreValue> {
+    const totpSecret = this.readTotpSecret();
     const response = await this.makeRpcCallWithCustomFetchAsync(
       "session",
       "login",
@@ -214,29 +239,86 @@ export class OpenMediaVaultIntegration extends Integration implements ISystemHea
       throw new ResponseError(response);
     }
 
-    const data = (await response.json()) as { response?: { sessionid?: string } };
-    if (data.response?.sessionid) {
-      return {
-        type: "header",
-        sessionId: data.response.sessionid,
-      };
-    } else {
-      const sessionId = OpenMediaVaultIntegration.extractSessionIdFromCookies(response.headers);
-      const loginToken = OpenMediaVaultIntegration.extractLoginTokenFromCookies(response.headers);
-
-      if (!sessionId || !loginToken) {
-        throw new ResponseError({
-          status: 401,
-          url: response.url,
-        });
-      }
-
-      return {
-        type: "cookie",
-        loginToken,
-        sessionId,
-      };
+    const login = readAuthResult(await response.json());
+    if (login.challengeRequired) {
+      return await this.verifyTotpChallengeAsync(login.challengeKind, response.headers, totpSecret, fetchAsync);
     }
+
+    return this.sessionFromAuthenticatedResponse(login.sessionId, response);
+  }
+
+  private async verifyTotpChallengeAsync(
+    challengeKind: string | undefined,
+    loginHeaders: Headers,
+    totpSecret: string | null,
+    fetchAsync?: typeof undiciFetch,
+  ): Promise<SessionStoreValue> {
+    if (challengeKind && challengeKind !== "totp") {
+      throw new OpenMediaVaultTotpError(this.publicIntegration, "unsupportedChallenge");
+    }
+    if (!totpSecret) {
+      throw new OpenMediaVaultTotpError(this.publicIntegration, "totpSecretRequired");
+    }
+
+    const cookie = OpenMediaVaultIntegration.cookieHeaderFromSetCookie(loginHeaders);
+    const response = await this.makeRpcCallWithCustomFetchAsync(
+      "session",
+      "verify",
+      { code: generateTotpCode(totpSecret) },
+      cookie ? { Cookie: cookie } : undefined,
+      fetchAsync,
+    );
+
+    if (!response.ok) {
+      throw new OpenMediaVaultTotpError(this.publicIntegration, "totpVerificationFailed");
+    }
+
+    const verified = readAuthResult(await response.json());
+    if (verified.sessionId) {
+      return { type: "header", sessionId: verified.sessionId };
+    }
+
+    const sessionFromCookies = this.sessionFromCookies(response);
+    if (sessionFromCookies) return sessionFromCookies;
+
+    throw new OpenMediaVaultTotpError(this.publicIntegration, "totpVerificationFailed");
+  }
+
+  private sessionFromAuthenticatedResponse(sessionId: string | undefined, response: UndiciResponse): SessionStoreValue {
+    if (sessionId) {
+      return { type: "header", sessionId };
+    }
+
+    const sessionFromCookies = this.sessionFromCookies(response);
+    if (!sessionFromCookies) {
+      throw new ResponseError({
+        status: 401,
+        url: response.url,
+      });
+    }
+
+    return sessionFromCookies;
+  }
+
+  private sessionFromCookies(response: UndiciResponse): SessionStoreValue | null {
+    const sessionId = OpenMediaVaultIntegration.extractSessionIdFromCookies(response.headers);
+    const loginToken = OpenMediaVaultIntegration.extractLoginTokenFromCookies(response.headers);
+    if (!sessionId || !loginToken) return null;
+
+    return {
+      type: "cookie",
+      loginToken,
+      sessionId,
+    };
+  }
+
+  private static cookieHeaderFromSetCookie(headers: Headers): string | undefined {
+    const pairs = headers
+      .getSetCookie()
+      .map((cookie) => cookie.split(";")[0]?.trim() ?? "")
+      .filter((pair) => pair.includes("="));
+
+    return pairs.length > 0 ? pairs.join("; ") : undefined;
   }
 
   private static extractSessionIdFromCookies(headers: Headers): string | null {
@@ -257,3 +339,30 @@ export class OpenMediaVaultIntegration extends Integration implements ISystemHea
     return loginToken ?? null;
   }
 }
+
+interface OpenMediaVaultAuthResult {
+  challengeRequired: boolean;
+  challengeKind?: string;
+  sessionId?: string;
+}
+
+const isRecord = (value: unknown): value is Record<string, unknown> =>
+  typeof value === "object" && value !== null && !Array.isArray(value);
+
+const readAuthResult = (value: unknown): OpenMediaVaultAuthResult => {
+  if (!isRecord(value) || !isRecord(value.response)) {
+    return { challengeRequired: false };
+  }
+
+  const response = value.response;
+  const sessionId =
+    typeof response.sessionid === "string" && response.sessionid.length > 0 ? response.sessionid : undefined;
+  const challenge = isRecord(response.challenge) ? response.challenge : undefined;
+  const status = typeof response.status === "string" ? response.status : undefined;
+
+  return {
+    challengeRequired: status === "challengeRequired" || (challenge !== undefined && sessionId === undefined),
+    challengeKind: challenge && typeof challenge.kind === "string" ? challenge.kind : undefined,
+    sessionId,
+  };
+};
