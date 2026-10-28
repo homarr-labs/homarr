@@ -335,16 +335,28 @@ export class TrueNasIntegration extends Integration implements ISystemHealthMoni
     return result;
   }
 
+  /**
+   * TrueNAS can append a zero-filled row for the second that is still being collected. Ending the
+   * query a few seconds early avoids that when the clocks agree, but a Homarr host clock ahead of
+   * the NAS still includes it. Prefer the latest row with a collected value, and keep the last row
+   * when every sample is zero so a real idle reading stays zero.
+   */
+  private latestCollectedRow(legend: string[], data: number[][]) {
+    const timeIndex = legend.indexOf("time");
+    return data.findLast((row) => row.some((value, index) => index !== timeIndex && value !== 0)) ?? data.at(-1);
+  }
+
   private extractNetworkTrafficData = (data: z.infer<typeof reportingNetDataSchema>, column: "sent" | "received") => {
     return data.reduce((total, report) => {
-      const value = report.data.at(-1)?.[report.legend.indexOf(column)] ?? 0;
+      const row = this.latestCollectedRow(report.legend, report.data);
+      const value = row?.[report.legend.indexOf(column)] ?? 0;
       return total + value;
     }, 0);
   };
 
   private extractLatestReportingData(data: ReportingItem[], identifier: ReportingItem["identifier"]) {
     const item = data.find((reportingItem) => reportingItem.identifier === identifier);
-    const latest = item?.data.at(-1);
+    const latest = item ? this.latestCollectedRow(item.legend, item.data) : undefined;
     if (!item || !latest?.length) throw new ParseError(`TrueNAS returned no "${identifier}" reporting data`);
     if (new Set(item.legend).size !== item.legend.length) {
       throw new ParseError(`TrueNAS returned duplicate "${identifier}" reporting columns`);
