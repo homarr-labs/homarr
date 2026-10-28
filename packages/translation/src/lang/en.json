@@ -4799,7 +4799,7 @@
         },
         "collapsedSections": {
           "label": "Collapsed sections",
-          "description": "Groups that start collapsed. Click a group title to expand it."
+          "description": "Groups that stay collapsed. Click a group title to expand or collapse it."
         },
         "newReleaseWithin": {
           "label": "Highlight new releases for",
@@ -5005,7 +5005,11 @@
       "runningVersions": "Running Versions",
       "upToDate": "Up to date",
       "updateAvailable": "Update available",
-      "unknownStatus": "Unknown"
+      "unknownStatus": "Unknown",
+      "error": {
+        "collapsedSaveTitle": "Collapsed sections were not saved",
+        "collapsedSaveMessage": "The section could not be updated. Try again."
+      }
     },
     "networkControllerSummary": {
       "advanced": {
