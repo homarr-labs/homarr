@@ -17,6 +17,11 @@ interface GuardedFetchOptions {
   // Only server-registered integrations may trust their configured origin. Website
   // metadata and page-declared icons must never set this exception.
   trustedOrigin?: string;
+  // Page-declared icons are fetched again for anyone who can load the board. Private
+  // networks are refused for those fetches. "off-origin" still allows the first hop —
+  // the app the user named, which often lives on the LAN — and refuses private
+  // addresses once a redirect leaves that origin.
+  blockPrivateNetworks?: boolean | "off-origin";
   // Bounds the lookup, the connect and the response headers of every hop, and how long
   // the body may stay idle.
   timeout: number;
@@ -52,6 +57,19 @@ for (const [network, prefix] of [
   blockedAddresses.addSubnet(network, prefix, "ipv6");
 }
 
+// Addresses that are not loopback or metadata, but are still not the public internet.
+// Untrusted icons must not be fetched from here: the image proxy is unauthenticated.
+const privateAddresses = new BlockList();
+for (const [network, prefix] of [
+  ["10.0.0.0", 8],
+  ["100.64.0.0", 10],
+  ["172.16.0.0", 12],
+  ["192.168.0.0", 16],
+] as const) {
+  privateAddresses.addSubnet(network, prefix, "ipv4");
+}
+privateAddresses.addSubnet("fc00::", 7, "ipv6");
+
 const parseIpv6Groups = (part: string) =>
   part === ""
     ? []
@@ -82,11 +100,23 @@ const embeddedIpv4 = (address: string) => {
   return null;
 };
 
-const isBlockedAddress = ({ address, family }: ResolvedAddress) => {
-  if (family === 4) return blockedAddresses.check(address, "ipv4");
-  if (blockedAddresses.check(address, "ipv6")) return true;
+const matchesAddressList = (list: BlockList, { address, family }: ResolvedAddress) => {
+  if (family === 4) return list.check(address, "ipv4");
+  if (list.check(address, "ipv6")) return true;
   const embedded = embeddedIpv4(address);
-  return embedded !== null && blockedAddresses.check(embedded, "ipv4");
+  return embedded !== null && list.check(embedded, "ipv4");
+};
+
+const isBlockedAddress = (resolved: ResolvedAddress) => matchesAddressList(blockedAddresses, resolved);
+const isPrivateAddress = (resolved: ResolvedAddress) => matchesAddressList(privateAddresses, resolved);
+
+// Hostnames are not decided here; they are resolved by isNonPublicHttpTargetAsync.
+export const isLiteralNonPublicAddress = (hostname: string): boolean => {
+  const address = hostname.replace(/^\[(.*)\]$/, "$1");
+  const family = isIP(address);
+  if (family !== 4 && family !== 6) return false;
+  const resolved: ResolvedAddress = { address, family: family === 6 ? 6 : 4 };
+  return isBlockedAddress(resolved) || isPrivateAddress(resolved);
 };
 
 // A lookup cannot be cancelled, so one that never answers is abandoned instead.
@@ -98,7 +128,11 @@ const untilAbortedAsync = <T>(promise: Promise<T>, signal: AbortSignal) =>
     promise.then(resolve, reject).finally(() => signal.removeEventListener("abort", abort));
   });
 
-const resolveAllowedAddressesAsync = async (url: URL, signal: AbortSignal): Promise<ResolvedAddress[]> => {
+const resolveAllowedAddressesAsync = async (
+  url: URL,
+  signal: AbortSignal,
+  blockPrivateNetworks: boolean,
+): Promise<ResolvedAddress[]> => {
   if (url.protocol !== "http:" && url.protocol !== "https:") {
     throw new Error(`Refusing to request a ${url.protocol} url`);
   }
@@ -112,12 +146,26 @@ const resolveAllowedAddressesAsync = async (url: URL, signal: AbortSignal): Prom
   const addresses = resolved.filter((entry): entry is ResolvedAddress => entry.family === 4 || entry.family === 6);
 
   if (addresses.length === 0) throw new Error(`${url.hostname} did not resolve to an address`);
-  const blocked = addresses.find(isBlockedAddress);
+  const blocked = addresses.find(
+    (address) => isBlockedAddress(address) || (blockPrivateNetworks && isPrivateAddress(address)),
+  );
   if (blocked !== undefined) {
     throw new Error(`Refusing to request ${url.origin} because it resolves to ${blocked.address}`);
   }
 
   return addresses;
+};
+
+// True when this url must not be fetched for an untrusted icon: a non-http url, or an
+// address that is loopback, link-local, private, or otherwise not the public internet.
+export const isNonPublicHttpTargetAsync = async (url: URL, signal: AbortSignal): Promise<boolean> => {
+  try {
+    await resolveAllowedAddressesAsync(url, signal, true);
+    return false;
+  } catch (error) {
+    if (error instanceof Error && error.message.startsWith("Refusing")) return true;
+    throw error;
+  }
 };
 
 // Answers every lookup of the connection with the addresses that were checked, so a DNS
@@ -167,7 +215,10 @@ const requestHopAsync = async (
     const dispatcher =
       options.trustedOrigin === url.origin && (url.protocol === "http:" || url.protocol === "https:")
         ? await createCertificateAgentAsync(undefined, { bodyTimeout: options.timeout, logOriginOnly: true })
-        : await createPinnedDispatcherAsync(await resolveAllowedAddressesAsync(url, signal), options.timeout);
+        : await createPinnedDispatcherAsync(
+            await resolveAllowedAddressesAsync(url, signal, options.blockPrivateNetworks === true),
+            options.timeout,
+          );
     try {
       const response = await fetchWithTrustedCertificatesAsync(url, {
         headers: options.headers,
@@ -220,7 +271,13 @@ export const fetchGuardedAsync = async <TResult>(
       // Custom integration headers can contain credentials too. Once a redirect
       // leaves the origin, neither credentials nor its trust exception may follow.
       if (target.origin !== currentUrl.origin) {
-        currentOptions = { ...currentOptions, headers: undefined, trustedOrigin: undefined };
+        currentOptions = {
+          ...currentOptions,
+          headers: undefined,
+          trustedOrigin: undefined,
+          blockPrivateNetworks:
+            currentOptions.blockPrivateNetworks === "off-origin" ? true : currentOptions.blockPrivateNetworks,
+        };
       }
       currentUrl = target;
     } finally {
