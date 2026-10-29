@@ -1745,6 +1745,10 @@
         "title": "Reset secret",
         "message": "Are you sure you want to reset this secret?"
       },
+      "remove": {
+        "title": "Remove secret",
+        "message": "Are you sure you want to remove this stored secret?"
+      },
       "noSecretsRequired": {
         "segmentTitle": "No secrets",
         "text": "No secrets required for this integration"

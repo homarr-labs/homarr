@@ -107,6 +107,7 @@ export const EditIntegrationForm = ({
     },
   });
   const [error, setError] = useState<null | AnyMappedTestConnectionError>(null);
+  const [removedOptionalKinds, setRemovedOptionalKinds] = useState<IntegrationSecretKind[]>([]);
   const errorRef = useRef<HTMLDivElement>(null);
 
   const secretsMap = new Map(integration.secrets.map((secret) => [secret.kind, secret]));
@@ -138,10 +139,12 @@ export const EditIntegrationForm = ({
           })),
           // Public optional secrets that were cleared are left out, which removes them.
           // Private optional secrets are not returned to the browser, so an empty field keeps the stored value.
+          // An explicit remove omits the kind so the stored secret is deleted after the connection test.
           ...optionalSecretKinds.flatMap((optionalKind): { kind: IntegrationSecretKind; value: string | null }[] => {
             const value = optionalSecrets.find((secret) => secret.kind === optionalKind)?.value.trim() ?? "";
             if (value.length > 0) return [{ kind: optionalKind, value }];
             if (
+              !removedOptionalKinds.includes(optionalKind) &&
               !integrationSecretKindObject[optionalKind].isPublic &&
               integration.secrets.some((secret) => secret.kind === optionalKind)
             ) {
@@ -181,6 +184,7 @@ export const EditIntegrationForm = ({
       integration.id,
       integration.secrets,
       optionalSecretKinds,
+      removedOptionalKinds,
       mutateAsync,
       onSuccess,
       router,
@@ -207,9 +211,9 @@ export const EditIntegrationForm = ({
             () => resolve(false),
           )();
         }),
-      isDirty: () => form.isDirty(),
+      isDirty: () => form.isDirty() || removedOptionalKinds.length > 0,
     }),
-    [form, handleSubmitAsync],
+    [form, handleSubmitAsync, removedOptionalKinds],
   );
 
   const isInitialSecretKinds =
@@ -287,10 +291,31 @@ export const EditIntegrationForm = ({
               );
             }
 
+            const storedSecret = secretsMap.get(optionalKind);
+            const isRemoved = removedOptionalKinds.includes(optionalKind);
+
             return (
               <SecretCard
                 key={optionalKind}
-                secret={secretsMap.get(optionalKind) ?? { kind: optionalKind, value: null, updatedAt: null }}
+                secret={
+                  isRemoved || !storedSecret ? { kind: optionalKind, value: null, updatedAt: null } : storedSecret
+                }
+                onRemove={
+                  storedSecret && !isRemoved
+                    ? () => {
+                        openConfirmModal({
+                          title: tIntegration("secrets.remove.title"),
+                          children: tIntegration("secrets.remove.message"),
+                          onConfirm: () => {
+                            setRemovedOptionalKinds((kinds) =>
+                              kinds.includes(optionalKind) ? kinds : [...kinds, optionalKind],
+                            );
+                            form.setFieldValue(`optionalSecrets.${index}.value`, "");
+                          },
+                        });
+                      }
+                    : undefined
+                }
                 onCancel={() =>
                   new Promise((resolve) => {
                     const currentValue = form.values.optionalSecrets[index]?.value ?? "";
