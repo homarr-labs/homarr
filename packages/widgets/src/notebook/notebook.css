@@ -44,7 +44,7 @@
   vertical-align: top;
 }
 
-.tiptap table :where(th, td) > * {
+.homarr-notebook .tiptap table :where(th, td) > * {
   margin-bottom: 0;
 }
 
@@ -60,7 +60,7 @@
   z-index: 2;
 }
 
-.tiptap table p {
+.homarr-notebook .tiptap table p {
   margin: 0;
 }
 
@@ -131,4 +131,31 @@
 .homarr-notebook[data-notebook-compact="true"] .tiptap img {
   max-height: 2rem;
   object-fit: contain;
+}
+
+.homarr-notebook .tiptap :where(p) {
+  margin-top: 0;
+  margin-bottom: calc(0.4375rem * var(--mantine-scale));
+}
+
+.homarr-notebook .tiptap :where(h1, h2, h3, h4, h5, h6) {
+  margin-top: 0;
+}
+
+.homarr-notebook .tiptap :where(ul, ol) :where(li) {
+  margin-top: calc(0.125rem * var(--mantine-scale));
+}
+
+.homarr-notebook .tiptap :where(pre) {
+  font-family: var(--mantine-font-family-monospace);
+  border-radius: var(--mantine-radius-default);
+  padding: var(--mantine-spacing-sm) var(--mantine-spacing-md);
+}
+
+.homarr-notebook .tiptap :where(pre) :where(code) {
+  font-size: var(--mantine-font-size-sm);
+}
+
+.homarr-notebook .tiptap > :last-child {
+  margin-bottom: 0;
 }

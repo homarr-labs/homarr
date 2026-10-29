@@ -1,5 +1,5 @@
 import type { DependencyList, PropsWithChildren } from "react";
-import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { createContext, startTransition, useCallback, useContext, useEffect, useMemo, useState } from "react";
 
 import type { TablerIcon } from "@homarr/ui";
 
@@ -39,28 +39,32 @@ const createSpotlightContext = (displayName: string) => {
     const [itemsMap, setItemsMap] = useState<Map<string, { items: ContextSpecificItem[]; count: number }>>(new Map());
 
     const registerItems = useCallback((key: string, newItems: ContextSpecificItem[]) => {
-      setItemsMap((prevItems) => {
-        const newItemsMap = new Map(prevItems);
-        newItemsMap.set(key, { items: newItems, count: (newItemsMap.get(key)?.count ?? 0) + 1 });
-        return newItemsMap;
-      });
+      startTransition(() =>
+        setItemsMap((prevItems) => {
+          const newItemsMap = new Map(prevItems);
+          newItemsMap.set(key, { items: newItems, count: (newItemsMap.get(key)?.count ?? 0) + 1 });
+          return newItemsMap;
+        }),
+      );
     }, []);
 
     const unregisterItems = useCallback((key: string) => {
-      setItemsMap((prevItems) => {
-        const registrationCount = prevItems.get(key)?.count ?? 0;
+      startTransition(() =>
+        setItemsMap((prevItems) => {
+          const registrationCount = prevItems.get(key)?.count ?? 0;
 
-        if (registrationCount <= 1) {
+          if (registrationCount <= 1) {
+            const newItemsMap = new Map(prevItems);
+            newItemsMap.delete(key);
+            return newItemsMap;
+          }
+
           const newItemsMap = new Map(prevItems);
-          newItemsMap.delete(key);
+          newItemsMap.set(key, { items: newItemsMap.get(key)?.items ?? [], count: registrationCount - 1 });
+
           return newItemsMap;
-        }
-
-        const newItemsMap = new Map(prevItems);
-        newItemsMap.set(key, { items: newItemsMap.get(key)?.items ?? [], count: registrationCount - 1 });
-
-        return newItemsMap;
-      });
+        }),
+      );
     }, []);
 
     const items = useMemo(() => {

@@ -1012,6 +1012,7 @@
         "acorn-jsx": "catalog:",
         "clsx": "catalog:",
         "dayjs": "catalog:",
+        "isomorphic-dompurify": "catalog:",
         "lucide-react": "catalog:",
         "mantine-datatable": "catalog:",
         "mantine-react-table": "catalog:",
