@@ -2426,6 +2426,10 @@
         "hideHostname": {
           "label": "Hide hostnames"
         },
+        "showFullUrls": {
+          "label": "Show full URLs",
+          "description": "Shows each bookmark's full address, with copy and open actions, including when hostnames are hidden. The copied address stays complete when the line is shortened."
+        },
         "withBorder": {
           "label": "Show border"
         },
@@ -2448,6 +2452,9 @@
         }
       },
       "empty": "Add a URL or App in the widget settings",
+      "copyUrl": "Copy URL",
+      "copied": "Copied",
+      "openUrl": "Open URL",
       "groups": {
         "label": "Categories",
         "placeholder": "New category",
