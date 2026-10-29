@@ -4789,6 +4789,10 @@
             "hidden": "Gizli"
           }
         },
+        "groupReleases": {
+          "label": "",
+          "description": ""
+        },
         "sections": {
           "label": "",
           "description": ""
@@ -4857,6 +4861,10 @@
           },
           "name": {
             "label": "İsim"
+          },
+          "excludePrereleases": {
+            "label": "",
+            "description": ""
           },
           "versionFilter": {
             "label": "Sürüm Filtresi",
@@ -7052,6 +7060,10 @@
             },
             "signInOverlay": {
               "label": "Arka plan kaplaması"
+            },
+            "signInMarquee": {
+              "label": "",
+              "description": ""
             },
             "defaultRadius": {
               "label": "Köşe stili",

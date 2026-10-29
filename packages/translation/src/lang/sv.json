@@ -4789,6 +4789,10 @@
             "hidden": ""
           }
         },
+        "groupReleases": {
+          "label": "",
+          "description": ""
+        },
         "sections": {
           "label": "",
           "description": ""
@@ -4857,6 +4861,10 @@
           },
           "name": {
             "label": "Namn"
+          },
+          "excludePrereleases": {
+            "label": "",
+            "description": ""
           },
           "versionFilter": {
             "label": "Versionsfilter",
@@ -7052,6 +7060,10 @@
             },
             "signInOverlay": {
               "label": "Bakgrundsöverlagring"
+            },
+            "signInMarquee": {
+              "label": "",
+              "description": ""
             },
             "defaultRadius": {
               "label": "Hörnstil",

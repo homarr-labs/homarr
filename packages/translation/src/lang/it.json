@@ -4789,6 +4789,10 @@
             "hidden": "Nascosto"
           }
         },
+        "groupReleases": {
+          "label": "",
+          "description": ""
+        },
         "sections": {
           "label": "",
           "description": ""
@@ -4857,6 +4861,10 @@
           },
           "name": {
             "label": "Nome"
+          },
+          "excludePrereleases": {
+            "label": "",
+            "description": ""
           },
           "versionFilter": {
             "label": "Filtro Versione",
@@ -7052,6 +7060,10 @@
             },
             "signInOverlay": {
               "label": "Sovrapposizione sfondo"
+            },
+            "signInMarquee": {
+              "label": "",
+              "description": ""
             },
             "defaultRadius": {
               "label": "Stile angolo",
