@@ -15,6 +15,7 @@ import {
 } from "./release-options";
 
 export const { definition, componentLoader } = createWidgetDefinition("releases", {
+  deferUntilVisible: true,
   supportsAdvancedFocus: true,
   icon: IconRocket,
   queryKeys: [[["widget", "releases", "getLatest"]], [["widget", "releases", "getServiceVersions"]]],

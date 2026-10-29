@@ -8,7 +8,10 @@ import type { WidgetComponentProps } from "../definition";
 import type { Notebook as NotebookEditorComponent } from "./notebook";
 import dynamic from "next/dynamic";
 
-const NotebookReadMode = dynamic(() => import("./read-mode").then((module) => module.NotebookReadMode), { ssr: false });
+const loadReadMode = () => import("./read-mode").then((module) => module.NotebookReadMode);
+// Visible widget preloading should also start the read view's browser chunk.
+if (typeof window !== "undefined") void loadReadMode().catch(() => undefined);
+const NotebookReadMode = dynamic(loadReadMode, { ssr: false });
 
 export default function NotebookWidget(props: WidgetComponentProps<"notebook">) {
   const [editor, setEditor] = useState<typeof NotebookEditorComponent | null>(null);

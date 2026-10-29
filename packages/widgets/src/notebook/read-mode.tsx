@@ -218,7 +218,7 @@ export const NotebookReadMode = ({
             >
               <div
                 ref={contentRef}
-                className="tiptap ProseMirror"
+                className="tiptap ProseMirror homarr-notebook-read-mode"
                 style={{
                   backgroundColor: "transparent",
                   fontSize: "var(--mantine-font-size-md)",

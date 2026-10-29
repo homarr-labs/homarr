@@ -3,7 +3,7 @@ import { memo, Suspense, use, useCallback, useEffect, useMemo, useRef, useState,
 import { createPortal } from "react-dom";
 import dynamic from "next/dynamic";
 import { Box, Button, Center, Portal, Text } from "@mantine/core";
-import { useElementSize, useIsomorphicEffect } from "@mantine/hooks";
+import { useElementSize, useInViewport, useIsomorphicEffect } from "@mantine/hooks";
 import { QueryErrorResetBoundary, useQueryClient } from "@tanstack/react-query";
 import combineClasses from "clsx";
 import { NoIntegrationSelectedError } from "@homarr/widgets/errors/classes";
@@ -23,7 +23,7 @@ import {
 } from "@homarr/widgets/definition";
 import type { WidgetComponentProps, WidgetDefinition, WidgetRuntimeRef } from "@homarr/widgets/definition";
 import { initialWidgetResources } from "@homarr/widgets/initial-widget-resources";
-import { loadWidgetResources, reduceWidgetOptionsWithDefinition } from "@homarr/widgets/manifest";
+import { loadWidgetModule, loadWidgetResources, reduceWidgetOptionsWithDefinition } from "@homarr/widgets/manifest";
 import { WidgetCardShell, WidgetTitleBadge } from "@homarr/widgets/widget-card-shell";
 
 import type { SectionItem } from "~/app/[locale]/boards/_types";
@@ -173,6 +173,13 @@ const LoadedBoardItemContent = (props: LoadedBoardItemContentProps) => {
 };
 
 const DynamicBoardItemContent = (props: LoadedBoardItemContentProps) => {
+  const { definition } = use(loadWidgetModule(props.item.kind));
+  if (definition.deferUntilVisible)
+    return <ResolvedBoardItemContent {...props} definition={definition} Component={null} />;
+  return <LoadedDynamicBoardItemContent {...props} />;
+};
+
+const LoadedDynamicBoardItemContent = (props: LoadedBoardItemContentProps) => {
   const resources = use(loadWidgetResources(props.item.kind));
   return <ResolvedBoardItemContent {...props} {...resources} />;
 };
@@ -188,7 +195,7 @@ const ResolvedBoardItemContent = ({
   Component,
 }: LoadedBoardItemContentProps & {
   definition: WidgetDefinition;
-  Component: ComponentType<WidgetComponentProps<SectionItem["kind"]>>;
+  Component: ComponentType<WidgetComponentProps<SectionItem["kind"]>> | null;
 }) => {
   const sourceRef = useRef<HTMLDivElement>(null);
   const advancedFocusTriggerRef = useRef<HTMLButtonElement>(null);
@@ -465,7 +472,7 @@ interface InnerContentProps {
   widgetRuntimeRef: WidgetRuntimeRef;
   displayMode: "compact" | "advanced";
   definition: WidgetDefinition;
-  Component: ComponentType<WidgetComponentProps<SectionItem["kind"]>>;
+  Component: ComponentType<WidgetComponentProps<SectionItem["kind"]>> | null;
 }
 
 const InnerContent = memo(function InnerContent({ item, definition, Component, ...dimensions }: InnerContentProps) {
@@ -511,10 +518,12 @@ const InnerContent = memo(function InnerContent({ item, definition, Component, .
           <div
             className={itemContentClasses.editModeInertContent}
             data-board-grid-inert-content={isEditMode ? "true" : undefined}
-            data-homarr-widget-ready={item.kind}
+            data-homarr-widget-ready={Component ? item.kind : undefined}
             inert={isEditMode}
           >
-            <Component
+            <WidgetRuntime
+              kind={item.kind}
+              Component={Component}
               options={options as never}
               integrationIds={item.integrationIds}
               isEditMode={isEditMode}
@@ -537,6 +546,43 @@ const InnerContent = memo(function InnerContent({ item, definition, Component, .
     </QueryErrorResetBoundary>
   );
 });
+
+type WidgetRuntimeProps = WidgetComponentProps<SectionItem["kind"]> & {
+  kind: SectionItem["kind"];
+};
+
+const WidgetRuntime = ({ Component, ...props }: WidgetRuntimeProps & { Component: InnerContentProps["Component"] }) => {
+  if (Component) return <Component {...props} />;
+  return <VisibleWidgetRuntime {...props} />;
+};
+
+const VisibleWidgetRuntime = (props: WidgetRuntimeProps) => {
+  const { ref, inViewport } = useInViewport<HTMLDivElement>();
+  const [activated, setActivated] = useState(false);
+  useEffect(() => {
+    if (inViewport || props.displayMode === "advanced" || typeof IntersectionObserver === "undefined")
+      setActivated(true);
+  }, [inViewport, props.displayMode]);
+
+  return (
+    <div ref={ref} style={{ height: "100%", width: "100%" }}>
+      {activated && (
+        <Suspense fallback={null}>
+          <LoadedWidgetRuntime {...props} />
+        </Suspense>
+      )}
+    </div>
+  );
+};
+
+const LoadedWidgetRuntime = ({ kind, ...props }: WidgetRuntimeProps) => {
+  const { Component } = use(loadWidgetResources(kind));
+  return (
+    <div data-homarr-widget-ready={kind} style={{ height: "100%", width: "100%" }}>
+      <Component {...props} />
+    </div>
+  );
+};
 
 const Throw = ({ when, error }: { when: boolean; error: Error }) => {
   if (when) throw error;

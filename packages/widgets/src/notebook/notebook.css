@@ -159,3 +159,21 @@
 .homarr-notebook .tiptap > :last-child {
   margin-bottom: 0;
 }
+
+/* Read mode does not mount the editor that normally injects these text styles. */
+.homarr-notebook .homarr-notebook-read-mode {
+  white-space: normal;
+  overflow-wrap: break-word;
+}
+
+.homarr-notebook .ProseMirror pre {
+  white-space: pre-wrap;
+}
+
+.homarr-notebook .tiptap :where(p, h1, h2, h3, h4, h5, h6):empty::before {
+  content: "\00a0";
+}
+
+.homarr-notebook .tiptap li > p {
+  margin: 0;
+}
