@@ -39,9 +39,10 @@ export const BoardSectionCollapseProvider = ({ children }: PropsWithChildren) =>
 
   useEffect(() => {
     setCollapsedById((previous) => {
-      const next = { ...previous };
+      let next = previous;
       for (const section of board.sections) {
         if (section.kind === "empty" || section.id in next) continue;
+        if (next === previous) next = { ...previous };
         next[section.id] = section.collapsed;
       }
       return next;
