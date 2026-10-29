@@ -9,10 +9,16 @@ interface PendingWidgetQueryState extends WidgetQueryState {
   isPending: boolean;
 }
 
+/** Report unusable data without unmounting a widget's query observer. */
+export const getWidgetQueryError = ({ data, error }: WidgetQueryState): unknown => {
+  if (isTrpcForbiddenError(error) || (error && data === undefined)) return error;
+  return null;
+};
+
 /** Throws terminal query failures while preserving successful empty values and stale cached data. */
 export const getUsableWidgetQueryData = <TQuery extends WidgetQueryState>(query: TQuery): TQuery["data"] => {
-  if (isTrpcForbiddenError(query.error)) throw query.error;
-  if (query.error && query.data === undefined) throw query.error;
+  const error = getWidgetQueryError(query);
+  if (error) throw error;
   return query.data;
 };
 

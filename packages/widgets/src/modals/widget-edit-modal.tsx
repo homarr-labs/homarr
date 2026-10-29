@@ -13,7 +13,6 @@ import {
   Center,
   CloseButton,
   ColorInput,
-  Divider,
   Group,
   Input as MantineInput,
   NumberInput,
@@ -57,6 +56,7 @@ import { WidgetCardShell, WidgetTitleBadge } from "../widget-card-shell";
 import type { EmbeddedAppEditFormHandle } from "./embedded-app-edit-form";
 import { EmbeddedAppEditForm } from "./embedded-app-edit-form";
 import classes from "./widget-edit-modal.module.css";
+import { WidgetEditFooter, WidgetEditWorkspace } from "./widget-edit-workspace";
 
 export interface WidgetEditModalState {
   options: Record<string, unknown>;
@@ -100,6 +100,7 @@ export interface WidgetEditModalProps<TSort extends WidgetKind> {
   itemId?: string;
   boardId?: string;
   appId?: string;
+  allowResourceEditing?: boolean;
   integrationEditForm?: ComponentType<EmbeddedIntegrationEditFormProps>;
   onIntegrationSaved?: () => void;
   onOpenNewIntegration?: (onCreated?: (id: string) => void) => void;
@@ -460,10 +461,11 @@ export const WidgetEditModal = createModal<WidgetEditModalProps<WidgetKind>>(({ 
     validateInputOnChange: true,
   });
 
+  const allowResourceEditing = innerProps.allowResourceEditing !== false;
   const canModifyApps = session?.user.permissions.includes("app-modify-all") ?? false;
   const canConfigureWidget = innerProps.kind !== "customApi" || (session?.user.permissions.includes("admin") ?? false);
   const appId = innerProps.appId;
-  const showAppTab = innerProps.kind === "app" && canModifyApps && Boolean(appId);
+  const showAppTab = allowResourceEditing && innerProps.kind === "app" && canModifyApps && Boolean(appId);
   const canModifyAllIntegrations = session?.user.permissions.includes("integration-full-all") ?? false;
   const selectedIntegrations = getSelectedWidgetIntegrations(innerProps.integrationData, form.values.integrationIds);
   const editableIntegrationIds = selectedIntegrations
@@ -483,7 +485,7 @@ export const WidgetEditModal = createModal<WidgetEditModalProps<WidgetKind>>(({ 
     integrationIdsToRender.push(displayedIntegrationId);
   }
   const IntegrationEditForm = innerProps.integrationEditForm;
-  const showIntegrationTab = Boolean(IntegrationEditForm) && selectedIntegrations.length > 0;
+  const showIntegrationTab = allowResourceEditing && Boolean(IntegrationEditForm) && selectedIntegrations.length > 0;
   const showResourceTabs = showAppTab || showIntegrationTab;
   const [activeTab, setActiveTab] = useState<string | null>("widget");
 
@@ -562,7 +564,8 @@ export const WidgetEditModal = createModal<WidgetEditModalProps<WidgetKind>>(({ 
     handleSubmit(event);
   };
 
-  const canCreateIntegration = maxIntegrations === 1 || form.values.integrationIds.length < maxIntegrations;
+  const canCreateIntegration =
+    allowResourceEditing && (maxIntegrations === 1 || form.values.integrationIds.length < maxIntegrations);
   const handleOpenNewIntegration = innerProps.onOpenNewIntegration
     ? () => {
         innerProps.onOpenNewIntegration?.((newId) => {
@@ -607,28 +610,26 @@ export const WidgetEditModal = createModal<WidgetEditModalProps<WidgetKind>>(({ 
   }
 
   const widgetFormContent = (
-    <Box
-      className={classes.workspace}
-      data-with-preview={innerProps.previewComponent ? true : undefined}
-      data-with-settings
+    <WidgetEditWorkspace
+      preview={
+        innerProps.previewComponent && (
+          <WidgetEditPreview
+            kind={innerProps.kind}
+            Component={innerProps.previewComponent}
+            definition={definition}
+            state={form.values}
+            itemId={innerProps.itemId}
+            boardId={innerProps.boardId ?? board?.id}
+            dimensions={previewDimensions}
+            sectionId={innerProps.previewSectionId}
+            integrationData={innerProps.integrationData}
+            onChangeOptions={handlePreviewOptionsChange}
+            resize={resizeControls}
+            PreviewWrapper={innerProps.previewWrapper}
+          />
+        )
+      }
     >
-      {innerProps.previewComponent && (
-        <WidgetEditPreview
-          kind={innerProps.kind}
-          Component={innerProps.previewComponent}
-          definition={definition}
-          state={form.values}
-          itemId={innerProps.itemId}
-          boardId={innerProps.boardId ?? board?.id}
-          dimensions={previewDimensions}
-          sectionId={innerProps.previewSectionId}
-          integrationData={innerProps.integrationData}
-          onChangeOptions={handlePreviewOptionsChange}
-          resize={resizeControls}
-          PreviewWrapper={innerProps.previewWrapper}
-        />
-      )}
-      {innerProps.previewComponent && <Divider orientation="vertical" className={classes.previewDivider} />}
       <form id={widgetFormId} className={classes.settingsForm} onSubmit={onFormSubmit}>
         <Stack className={classes.settingsPanel} gap="sm">
           {hasWidgetSettings && (
@@ -748,13 +749,13 @@ export const WidgetEditModal = createModal<WidgetEditModalProps<WidgetKind>>(({ 
           </Accordion>
         </Stack>
       </form>
-    </Box>
+    </WidgetEditWorkspace>
   );
 
   const footer = (
-    <Box className={classes.footer}>
+    <WidgetEditFooter>
       <ModalFormFooter onCancel={actions.closeModal} form={widgetFormId} loading={isSubmitting} />
-    </Box>
+    </WidgetEditFooter>
   );
 
   return (

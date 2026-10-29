@@ -1,4 +1,10 @@
 import { useMemo } from "react";
+import { Text } from "@mantine/core";
+import { getWidgetName } from "@homarr/definitions";
+import { useI18n } from "@homarr/translation/client";
+import { getWidgetActivity } from "@homarr/widgets/activity";
+import { useSmartContainerProjection } from "./smart-container/smart-container-context";
+import smartClasses from "./smart-container/smart-container-surface.module.css";
 
 import type { RouterOutputs } from "@homarr/api";
 
@@ -39,12 +45,32 @@ interface ItemProps {
 }
 
 export const SectionContentItem = ({ item, integrations }: ItemProps) => {
+  const smart = useSmartContainerProjection();
+  const { section } = useSectionContext();
+  const translate = useI18n();
+  const t = useI18n("section.container.smart");
   if (item.type === "section") return <ContainerSectionContentItem item={item} />;
+  const compact =
+    smart?.sectionId === section.id &&
+    smart.focusedItemId !== item.id &&
+    getWidgetActivity(smart.runtime.activities[item.id], smart.now) === "quiet";
 
   return (
     <FixedGridItem item={item}>
       {item.kind !== "app" && <WidgetHoverOverlay item={item} integrations={integrations} />}
-      <BoardItemContent item={item} />
+      <div hidden={compact} inert={compact} style={{ width: "100%", height: "100%" }}>
+        <BoardItemContent item={item} />
+      </div>
+      {compact && (
+        <div className={smartClasses.compact}>
+          <Text size="sm" fw={600} truncate>
+            {item.advancedOptions.title || getWidgetName(item.kind, translate)}
+          </Text>
+          <Text size="xs" c="dimmed">
+            {t("quiet")}
+          </Text>
+        </div>
+      )}
     </FixedGridItem>
   );
 };

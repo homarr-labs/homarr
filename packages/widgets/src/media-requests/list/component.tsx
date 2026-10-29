@@ -15,16 +15,19 @@ import { useI18n } from "@homarr/translation/client";
 
 import { WidgetEmptyState } from "../../common/empty-state";
 import { getSafeApplicationUrl, SAFE_NEW_TAB_REL } from "../../common/application-url";
-import { getUsableWidgetQueryData, isInitialWidgetQueryPending } from "../../common/query-state";
+import { getWidgetQueryError, isInitialWidgetQueryPending } from "../../common/query-state";
 import { WidgetQueryLoadingState } from "../../common/query-state-indicator";
 import actionTargetClasses from "../../common/action-target.module.css";
 import { IntegrationErrorIndicator } from "../../common/integration-error-indicator";
 import type { WidgetComponentProps } from "../../definition";
+import { WidgetError } from "../../errors/component";
+import { useReportWidgetActivity } from "../../activity";
 import { MediaRequestsEmptyState } from "../empty-state";
 import classes from "./component.module.css";
 import searchClasses from "../search-button.module.css";
 
 export default function MediaServerWidget({
+  itemId,
   integrationIds,
   isEditMode,
   options,
@@ -44,7 +47,19 @@ export default function MediaServerWidget({
         : ["pending", "approved", "declined", "failed", "completed"],
     recentDays: options.recentDays,
   });
-  const mediaRequestData = getUsableWidgetQueryData(mediaRequestQuery);
+  useReportWidgetActivity({
+    itemId,
+    query: mediaRequestQuery,
+    count: mediaRequestQuery.data?.requests.length ?? 0,
+    complete: mediaRequestQuery.data?.failedIntegrations.length === 0,
+    configured: integrationIds.length > 0,
+    sourceUpdatedAt: mediaRequestQuery.data?.updatedAt?.getTime() ?? 0,
+  });
+  const queryError = getWidgetQueryError(mediaRequestQuery);
+  let mediaRequestData = mediaRequestQuery.data;
+  if (queryError) mediaRequestData = undefined;
+
+  if (queryError) return <WidgetError error={queryError} resetErrorBoundary={() => void mediaRequestQuery.refetch()} />;
 
   if (isInitialWidgetQueryPending(mediaRequestQuery)) return <WidgetQueryLoadingState />;
   if (!mediaRequestData) return <WidgetEmptyState />;

@@ -74,7 +74,8 @@ import { BoardLayoutBoundsError } from "@homarr/validation/board-layout-bounds-e
 import { byIdSchema } from "@homarr/validation/common";
 import { zodUnionFromArray } from "@homarr/validation/enums";
 import type { BoardItemAdvancedOptions } from "@homarr/validation/shared";
-import { sectionSchema, sharedItemSchema } from "@homarr/validation/shared";
+import { containerSectionOptionsSchema, sectionSchema, sharedItemSchema } from "@homarr/validation/shared";
+import { reconcileSmartContainerStates, remapSmartContainerItems } from "@homarr/validation/smart-container";
 
 import { createTRPCRouter, permissionRequiredProcedure, protectedProcedure, publicProcedure } from "../trpc";
 import { throwIfActionForbiddenAsync } from "./board/board-access";
@@ -859,13 +860,28 @@ export const boardRouter = createTRPCRouter({
       }));
 
       const sectionMap = new Map<string, string>(boardSections.map((section) => [section.id, createId()]));
+      const itemMap = new Map<string, string>(boardItems.map((item) => [item.id, createId()]));
       const sectionsToInsert: InferInsertModel<typeof sections>[] = boardSections.map(
-        ({ collapseStates: _, layouts: _layouts, ...section }) => ({
-          ...section,
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          id: sectionMap.get(section.id)!,
-          boardId: newBoardId,
-        }),
+        ({ collapseStates: _, layouts: _layouts, ...section }) => {
+          let options = section.options;
+          if (section.kind === "container") {
+            const parsedOptions = containerSectionOptionsSchema.parse(superjson.parse(options ?? emptySuperJSON));
+            if (parsedOptions.smart) {
+              options = superjson.stringify({
+                ...parsedOptions,
+                smart: remapSmartContainerItems(parsedOptions.smart, itemMap),
+              });
+            }
+          }
+
+          return {
+            ...section,
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            id: sectionMap.get(section.id)!,
+            boardId: newBoardId,
+            options,
+          };
+        },
       );
 
       const sectionLayoutsToInsert: InferInsertModel<typeof sectionLayouts>[] = boardSections
@@ -908,7 +924,6 @@ export const boardRouter = createTRPCRouter({
           ),
       );
 
-      const itemMap = new Map<string, string>(boardItems.map((item) => [item.id, createId()]));
       const itemsToInsert: InferInsertModel<typeof items>[] = boardItems.map(
         ({ integrations: _, layouts: _layouts, ...item }) => ({
           ...item,
@@ -1708,6 +1723,18 @@ export const boardRouter = createTRPCRouter({
       await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.id), "modify");
 
       const dbBoard = await getFullBoardWithWhereAsync(ctx.db, eq(boards.id, input.id), ctx.session.user.id);
+      const reconciledSections = reconcileSmartContainerStates(input.sections, input.items);
+      if (reconciledSections !== input.sections) {
+        const reconciledBoard = boardSaveSchema.safeParse({ ...input, sections: reconciledSections });
+        if (!reconciledBoard.success) {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: "Smart container state membership exceeds its configured limits",
+            cause: reconciledBoard.error,
+          });
+        }
+        input.sections = reconciledBoard.data.sections;
+      }
       throwIfBoardLayoutBoundsInvalid(getBoardLayoutBoundsIssue({ ...input, layouts: dbBoard.layouts }));
       await validateWidgetConfigurationsAsync(ctx, input.items, dbBoard.items);
       throwIfCustomWidgetPlacementChangeForbidden({

@@ -9,6 +9,7 @@ import { useSession } from "@homarr/auth/client";
 import { useRequiredBoard } from "@homarr/boards/context";
 import { useEditMode } from "@homarr/boards/edit-mode";
 import classes from "./section-grid.module.css";
+import { SmartContainerLayoutProvider } from "../smart-container/smart-container-context";
 
 interface GridPortalHostContextValue {
   announce: (message: string) => void;
@@ -50,12 +51,14 @@ export const BoardGridPortalHost = ({ children }: PropsWithChildren) => {
   );
 
   return (
-    <GridPortalHostContext.Provider value={value}>
-      {children}
-      <div className={classes.liveRegion} aria-live="polite" aria-atomic="true">
-        <span key={announcement.id}>{announcement.message}</span>
-      </div>
-    </GridPortalHostContext.Provider>
+    <SmartContainerLayoutProvider>
+      <GridPortalHostContext.Provider value={value}>
+        {children}
+        <div className={classes.liveRegion} aria-live="polite" aria-atomic="true">
+          <span key={announcement.id}>{announcement.message}</span>
+        </div>
+      </GridPortalHostContext.Provider>
+    </SmartContainerLayoutProvider>
   );
 };
 

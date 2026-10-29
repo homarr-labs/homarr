@@ -4,12 +4,12 @@ import { IconArrowsMove, IconLayoutKanban, IconPencil, IconTrash } from "@tabler
 import { useEditMode } from "@homarr/boards/edit-mode";
 import { useModalAction } from "@homarr/modals";
 import { useI18n } from "@homarr/translation/client";
-import { InlineConfirmMenuItem } from "@homarr/ui";
+import { InlineConfirmMenuItem, zoomCompensatedSize } from "@homarr/ui";
 
 import type { ContainerSectionItem } from "~/app/[locale]/boards/_types";
 import { useOpenItemMoveModal } from "../../items/item-move-modal";
 import { useContainerActions } from "./container-actions";
-import { ContainerEditModal } from "./container-edit-modal";
+import { LazyContainerEditModal } from "./lazy-container-edit-modal";
 
 interface ContainerMenuProps {
   section: ContainerSectionItem;
@@ -19,18 +19,19 @@ interface ContainerMenuProps {
 export const BoardContainerMenu = ({ section, position }: ContainerMenuProps) => {
   const tContainer = useI18n("section.container");
   const tItem = useI18n("item");
-  const { openModal } = useModalAction(ContainerEditModal);
+  const { openModal } = useModalAction(LazyContainerEditModal);
   const openMoveModal = useOpenItemMoveModal();
-  const { updateContainer, removeContainer } = useContainerActions();
+  const { removeContainer } = useContainerActions();
   const [isEditMode] = useEditMode();
   const label = section.options.title || tContainer("action.create");
+  const menuSize = section.options.smart?.enabled ? 44 : 24;
 
   if (!isEditMode) return null;
 
   const openEditModal = () => {
     openModal({
+      containerId: section.id,
       value: section.options,
-      onSuccessfulEdit: (options) => updateContainer({ containerId: section.id, newOptions: options }),
     });
   };
 
@@ -39,11 +40,11 @@ export const BoardContainerMenu = ({ section, position }: ContainerMenuProps) =>
       <Menu.Target>
         <ActionIcon
           variant="default"
-          size={24}
+          size={menuSize}
           radius="sm"
           pos="absolute"
           {...position}
-          style={{ zIndex: 26, minWidth: 0, minHeight: 0, maxWidth: "100%", maxHeight: "100%" }}
+          style={{ ...zoomCompensatedSize(menuSize), zIndex: 26 }}
           aria-label={tItem("menu.label.settingsFor", { name: label })}
         >
           <IconLayoutKanban size="1rem" />
