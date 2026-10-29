@@ -338,12 +338,32 @@ export class TrueNasIntegration extends Integration implements ISystemHealthMoni
   /**
    * TrueNAS can append a zero-filled row for the second that is still being collected. Ending the
    * query a few seconds early avoids that when the clocks agree, but a Homarr host clock ahead of
-   * the NAS still includes it. Prefer the latest row with a collected value, and keep the last row
-   * when every sample is zero so a real idle reading stays zero.
+   * the NAS still includes it. Prefer a collected row only when it falls inside the collection
+   * interval of the latest sample; older zeros are treated as a real idle reading.
    */
   private latestCollectedRow(legend: string[], data: number[][]) {
     const timeIndex = legend.indexOf("time");
-    return data.findLast((row) => row.some((value, index) => index !== timeIndex && value !== 0)) ?? data.at(-1);
+    const latest = data.at(-1);
+    if (!latest) return latest;
+
+    const hasCollectedValue = (row: number[]) => row.some((value, index) => index !== timeIndex && value !== 0);
+
+    if (hasCollectedValue(latest)) return latest;
+
+    const collected = data.findLast(hasCollectedValue);
+    if (!collected || timeIndex < 0) return latest;
+
+    const latestTime = latest[timeIndex];
+    const collectedTime = collected[timeIndex];
+    if (
+      latestTime === undefined ||
+      collectedTime === undefined ||
+      latestTime - collectedTime > REPORTING_DELAY_SECONDS
+    ) {
+      return latest;
+    }
+
+    return collected;
   }
 
   private extractNetworkTrafficData = (data: z.infer<typeof reportingNetDataSchema>, column: "sent" | "received") => {

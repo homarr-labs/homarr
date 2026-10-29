@@ -538,6 +538,93 @@ describe("TrueNasIntegration", () => {
     expect(result.network).toEqual({ up: 0, down: 0 });
   });
 
+  test("uses the latest row when zeros persist after a collected sample", async () => {
+    ws.setResponder((method) => {
+      if (method === "reporting.get_data") {
+        return [
+          {
+            name: "cpu",
+            identifier: "cpu",
+            aggregations: emptyAggregations(),
+            start: 0,
+            end: 7,
+            legend: ["time", "cpu"],
+            data: [
+              [1000, 12],
+              [1001, 0],
+              [1002, 0],
+              [1003, 0],
+              [1004, 0],
+              [1005, 0],
+              [1006, 0],
+            ],
+          },
+          {
+            name: "memory",
+            identifier: "memory",
+            aggregations: emptyAggregations(),
+            start: 0,
+            end: 7,
+            legend: ["time", "available"],
+            data: [
+              [1000, 6_000_000_000],
+              [1001, 0],
+              [1002, 0],
+              [1003, 0],
+              [1004, 0],
+              [1005, 0],
+              [1006, 0],
+            ],
+          },
+          {
+            name: "cputemp",
+            identifier: "cputemp",
+            aggregations: emptyAggregations(),
+            start: 0,
+            end: 7,
+            legend: ["time", "cpu0"],
+            data: [
+              [1000, 45],
+              [1001, 0],
+              [1002, 0],
+              [1003, 0],
+              [1004, 0],
+              [1005, 0],
+              [1006, 0],
+            ],
+          },
+        ];
+      }
+      if (method === "reporting.netdata_get_data") {
+        return [
+          {
+            name: "interface",
+            identifier: "eth0",
+            legend: ["sent", "time", "received"],
+            data: [
+              [200, 1000, 100],
+              [0, 1001, 0],
+              [0, 1002, 0],
+              [0, 1003, 0],
+              [0, 1004, 0],
+              [0, 1005, 0],
+              [0, 1006, 0],
+            ],
+          },
+        ];
+      }
+      return happyResponder(method);
+    });
+
+    const result = await createIntegration(credentials).getSystemInfoAsync();
+
+    expect(result.cpuUtilization).toBe(0);
+    expect(result.cpuTemp).toBe(0);
+    expect(result.memAvailableInBytes).toBe(0);
+    expect(result.memUsedInBytes).toBe(16_000_000_000);
+    expect(result.network).toEqual({ up: 0, down: 0 });
+  });
+
   test("still rejects reporting data that contains no rows", async () => {
     ws.setResponder(reportingResponder("cpu", ["time", "cpu"], []));
 
