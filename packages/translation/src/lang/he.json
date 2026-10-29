@@ -4789,6 +4789,10 @@
             "hidden": "מוסתר"
           }
         },
+        "groupReleases": {
+          "label": "",
+          "description": ""
+        },
         "sections": {
           "label": "",
           "description": ""
@@ -4857,6 +4861,10 @@
           },
           "name": {
             "label": "שם"
+          },
+          "excludePrereleases": {
+            "label": "",
+            "description": ""
           },
           "versionFilter": {
             "label": "מסנן גירסאות",
@@ -7052,6 +7060,10 @@
             },
             "signInOverlay": {
               "label": "שכבת רקע"
+            },
+            "signInMarquee": {
+              "label": "",
+              "description": ""
             },
             "defaultRadius": {
               "label": "סגנון פינות",

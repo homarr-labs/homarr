@@ -4789,6 +4789,10 @@
             "hidden": ""
           }
         },
+        "groupReleases": {
+          "label": "",
+          "description": ""
+        },
         "sections": {
           "label": "",
           "description": ""
@@ -4857,6 +4861,10 @@
           },
           "name": {
             "label": "Tên"
+          },
+          "excludePrereleases": {
+            "label": "",
+            "description": ""
           },
           "versionFilter": {
             "label": "Bộ lọc phiên bản",
@@ -7052,6 +7060,10 @@
             },
             "signInOverlay": {
               "label": "Lớp phủ nền"
+            },
+            "signInMarquee": {
+              "label": "",
+              "description": ""
             },
             "defaultRadius": {
               "label": "Kiểu góc",

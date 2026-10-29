@@ -4789,6 +4789,10 @@
             "hidden": "Rejtett"
           }
         },
+        "groupReleases": {
+          "label": "",
+          "description": ""
+        },
         "sections": {
           "label": "",
           "description": ""
@@ -4857,6 +4861,10 @@
           },
           "name": {
             "label": "Név"
+          },
+          "excludePrereleases": {
+            "label": "",
+            "description": ""
           },
           "versionFilter": {
             "label": "Verziószűrő",
@@ -7052,6 +7060,10 @@
             },
             "signInOverlay": {
               "label": "Háttérfedvény"
+            },
+            "signInMarquee": {
+              "label": "",
+              "description": ""
             },
             "defaultRadius": {
               "label": "Sarokstílus",

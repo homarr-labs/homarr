@@ -4789,6 +4789,10 @@
             "hidden": ""
           }
         },
+        "groupReleases": {
+          "label": "",
+          "description": ""
+        },
         "sections": {
           "label": "",
           "description": ""
@@ -4857,6 +4861,10 @@
           },
           "name": {
             "label": "Vardas"
+          },
+          "excludePrereleases": {
+            "label": "",
+            "description": ""
           },
           "versionFilter": {
             "label": "Versijos filtras",
@@ -7052,6 +7060,10 @@
             },
             "signInOverlay": {
               "label": "Fono perdanga"
+            },
+            "signInMarquee": {
+              "label": "",
+              "description": ""
             },
             "defaultRadius": {
               "label": "Kampų stilius",

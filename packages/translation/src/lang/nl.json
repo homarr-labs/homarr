@@ -4789,6 +4789,10 @@
             "hidden": "Verborgen"
           }
         },
+        "groupReleases": {
+          "label": "",
+          "description": ""
+        },
         "sections": {
           "label": "",
           "description": ""
@@ -4857,6 +4861,10 @@
           },
           "name": {
             "label": "Naam"
+          },
+          "excludePrereleases": {
+            "label": "",
+            "description": ""
           },
           "versionFilter": {
             "label": "Versie filter",
@@ -7052,6 +7060,10 @@
             },
             "signInOverlay": {
               "label": "Achtergrond overlay"
+            },
+            "signInMarquee": {
+              "label": "",
+              "description": ""
             },
             "defaultRadius": {
               "label": "Hoek stijl",

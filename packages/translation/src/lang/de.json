@@ -3,13 +3,13 @@
     "studio": {
       "navigationLabel": "Onboarding Bereiche",
       "back": "Zurück",
-      "buildBoard": "Brett bauen",
+      "buildBoard": "Mein Board erstellen",
       "common": {
         "unknownError": "Etwas ist schief gelaufen. Deine Auswahl ist noch hier; versuche es erneut."
       },
       "claim": {
         "checking": "Sicherstellen dieser Onboarding-Sitzung…",
-        "checkingTitle": "Sichere Einrichtung vorbereiten",
+        "checkingTitle": "Sicheres Setup vorbereiten",
         "lockedTitle": "Die Einrichtung ist bereits in einem anderen Browser geöffnet",
         "lockedDescription": "Fahren Sie dort fort oder warten Sie darauf, dass die sichere erste Sitzung abläuft, bevor Sie es erneut versuchen.",
         "signInTitle": "Administratoranmeldung erforderlich",
@@ -152,7 +152,7 @@
         "columns": "Brettspalten",
         "columnsDescription": "Spalten definieren das horizontale Raster für die Größe und Positionierung von Elementen. 12 ist für die meisten Leute reichlich.",
         "columnCount": "{count, plural, one {# Spalte} other {# Spalten}}",
-        "leftSidebar": "",
+        "leftSidebar": "Linke Seitenleiste",
         "rightSidebar": "Sidebar rechts",
         "previewLabel": "Live-Vorschau des ersten Board-Layouts"
       },
@@ -167,11 +167,11 @@
           "loginAction": "Anmelden, um Assistent zu konfigurieren"
         },
         "workshopSetup": {
-          "title": "",
+          "title": "Homarr Workshop",
           "description": "Durchsuchen Sie Community-benutzerdefinierte Widgets, prüfen Sie die gewünschten Fähigkeiten, installieren Sie sie und veröffentlichen Sie Ihre eigene Arbeit, ohne Code zwischen den Servern zu kopieren.",
           "available": "Verfügbar",
           "checking": "Überprüfe…",
-          "unavailable": "",
+          "unavailable": "Nicht verfügbar",
           "discoverTitle": "Entdecken",
           "discoverDescription": "Finden Sie Widgets für echte selbstgehostete Workflows.",
           "installTitle": "Überprüfen und installieren",
@@ -181,7 +181,7 @@
           "browse": "Workshop durchsuchen"
         },
         "mcpSetup": {
-          "title": "",
+          "title": "Homarr MCP",
           "description": "Verbinden Sie Claude, Codex oder einen anderen MCP-Client mit Homarr's typisierten Tools. API-Schlüssel behalten den Zugriff explizit und widerrufbar.",
           "endpoint": "Streambarer HTTP-Endpunkt",
           "keyTitle": "Diesen Schlüssel jetzt kopieren",
@@ -203,7 +203,7 @@
         "columns": "Brettspalten",
         "columnsValue": "{count, plural, one {# Spalte} other {# Spalten}}",
         "sidebars": "Seitenleisten",
-        "sidebarsValue": "",
+        "sidebarsValue": "{count, plural, =0 {Keine} one {# Sidebar} other {# Sidebars}}",
         "layouts": "Reaktive Layouts",
         "layoutsValue": "Mobile + Basis",
         "integrations": "Integrationen",
@@ -922,10 +922,10 @@
       "action": {
         "components": "Komponenten",
         "format": "Formatieren",
-        "insertStarter": "",
+        "insertStarter": "Starter einfügen",
         "redo": "Wiederholen",
         "copied": "Kopiert",
-        "schema": ""
+        "schema": "Schema"
       },
       "reference": {
         "minimal": "Minimales Beispiel",
@@ -940,14 +940,14 @@
         "errors": "{count, number} Fehler",
         "warnings": "{count, number} Warnungen",
         "ready": "Keine Tickets gefunden",
-        "position": "",
+        "position": "Zeile {line, number}, Spalte {column, number}",
         "characters": "{count, number} Zeichen",
-        "charactersWithLimit": ""
+        "charactersWithLimit": "{count, number} / {limit, number}"
       },
       "diagnostics": {
         "title": "Vorlagendiagnostik",
         "line": "Linie {line, number}",
-        "ast": "",
+        "ast": "{value}",
         "bindingTypeConflict": "Die Eingabe \"{value}\" wird von Steuerelementen mit inkompatiblen Werttypen geteilt.",
         "runtimeBindingTypeConflict": "Die Eingabe \"{value}\" ist als {firstType} und {secondType} gebunden.",
         "dynamicRequestId": "Eine wörtliche RequestId ist erforderlich. Dynamische Request-IDs werden nicht akzeptiert.",
@@ -971,7 +971,7 @@
         "sources": "API-Quellen",
         "requests": "Anfragen",
         "options": "Optionen",
-        "jsx": "",
+        "jsx": "JSX",
         "preview": "Vorschau"
       },
       "status": {
@@ -1002,7 +1002,7 @@
       "builder": {
         "advancedManifest": "Erweitertes rohes Manifest",
         "advancedJson": "Erweitertes Manifest JSON",
-        "manifestFilename": "",
+        "manifestFilename": "widget.json",
         "request": "Anfrage {count, number}",
         "requestId": "Anfrage-ID",
         "type": "Download Client",
@@ -1019,10 +1019,10 @@
         "queryKey": "Abfrageschlüssel",
         "queryKeyInvalid": "Verwenden Sie eine eindeutige ID, die mit einem Buchstaben beginnt und nur Buchstaben, Zahlen - oder _ enthält.",
         "valueSource": "Wertequelle",
-        "literal": "",
+        "literal": "Wortwörtlich",
         "widgetOption": "Widget Option",
         "invocationParameter": "Aufruf-Parameter",
-        "option": "",
+        "option": "Option",
         "parameterName": "Parametername",
         "value": "Wert",
         "removeQueryValue": "Abfragewert entfernen",
@@ -1073,7 +1073,7 @@
       },
       "sources": {
         "title": "API-Quellen und Zugangsdaten",
-        "newName": "",
+        "newName": "API {count, number}",
         "duplicateSourceId": "API-Quell-IDs müssen eindeutig sein.",
         "credentialRemoved": "Anmeldeinformationen entfernt",
         "credentialRemovedDescription": "Der gespeicherte Wert wurde gelöscht.",
@@ -1097,7 +1097,7 @@
         "advanced": "Erweitert",
         "add": "Weitere API-Quelle hinzufügen",
         "sourceType": "Integration",
-        "manualSource": "",
+        "manualSource": "HTTP API",
         "existingIntegration": "Vorhandene Integration",
         "integrationType": "Integrationstyp",
         "selectIntegration": "Konfigurierte Integration",
@@ -1168,9 +1168,9 @@
         "runAction": "Aktion ausführen",
         "deleteConfirmation": "Diese Vorschau-Aktion ändert entfernte Daten über die konfigurierte API.",
         "simulated": "Aktion simuliert",
-        "httpStatus": "",
+        "httpStatus": "HTTP {status, number}",
         "tab": {
-          "widget": "",
+          "widget": "Widget",
           "data": "Daten",
           "options": "Optionen",
           "state": "Jobstatus",
@@ -1179,11 +1179,11 @@
         },
         "size": {
           "compact": "Kompakt",
-          "standard": "",
+          "standard": "Standard",
           "wide": "Breit"
         },
         "fixture": {
-          "live": "",
+          "live": "Live",
           "loading": "Wird geladen",
           "empty": "Leer",
           "error": "Fehler"
@@ -1288,7 +1288,7 @@
     "outdated": "Veraltet",
     "outdatedWarning": "Der Autor markierte diese Einreichung als veraltet. Überprüfen Sie sie sorgfältig vor dem Importieren.",
     "score": "Punkte: {count, number}",
-    "upvote": "",
+    "upvote": "Upvote",
     "downvote": "Abstimmen",
     "voteError": "Die Abstimmung konnte nicht gespeichert werden.",
     "signIn": "Mit GitHub anmelden",
@@ -1301,7 +1301,7 @@
     "installReviewTitle": "Vor der Installation überprüfen",
     "installError": "Dieses Widget kann nicht installiert werden",
     "installErrorDescription": "Die Einreichung des Workshops ist kein gültiges benutzerdefiniertes JSX v2 Widget.",
-    "useCss": "",
+    "useCss": "CSS importieren",
     "importCss": "CSS aus Workshop importieren",
     "importCssConfirm": "Ersetzen Sie das aktuelle CSS durch \"{title}\"? Nichts wird gespeichert, bis Sie die Board-Einstellungen speichern.",
     "screenshotAlt": "{title} Screenshot {count, number}",
@@ -1329,8 +1329,8 @@
     "reportCategory": {
       "outdated": "Veraltet oder funktioniert nicht mehr",
       "malicious": "Bösartig",
-      "spam": "",
-      "copyright": "",
+      "spam": "Spam",
+      "copyright": "Copyright",
       "inappropriate": "Unangemessen",
       "other": "Andere"
     },
@@ -1348,7 +1348,7 @@
       "signInHint": "Melden Sie sich an, um unter Ihrer Workshop-Identität zu veröffentlichen.",
       "titleField": "Titel",
       "descriptionField": "Beschreibung",
-      "screenshots": "",
+      "screenshots": "Screenshots",
       "screenshotsDescription": "Bis zu fünf PNG-, JPEG- oder WebP-Bilder",
       "screenshotsPlaceholder": "Screenshots auswählen",
       "invalidScreenshot": "Benutzen Sie PNG, JPEG oder WebP-Bilder, die nicht größer als {maxSize} sind.",
@@ -1515,7 +1515,7 @@
       "vpn": "VPN",
       "mediaLibrary": "Medienbibliothek",
       "uptimeMonitoring": "Überwachung der Betriebszeit",
-      "beszel": "",
+      "beszel": "Beszel",
       "systemMonitoring": "Systemüberwachung",
       "security": "Sicherheit",
       "serviceVersion": "Version"
@@ -1564,7 +1564,7 @@
             "untrusted": "Dem Zertifikat wird nicht vertraut.",
             "hostnameMismatch": "Der Hostname des Zertifikats entspricht nicht der URL."
           },
-          "secondaryUrl": "",
+          "secondaryUrl": "Dieses Zertifikat wurde von {url} präsentiert, einem zusätzlichen Endpunkt, der für diese Integration konfiguriert ist.",
           "alert": {
             "permission": {
               "title": "Nicht genügend Berechtigungen",
@@ -1829,7 +1829,7 @@
       "full": "Voller Zugriff auf Integrationen"
     },
     "llamacpp": {
-      "name": "",
+      "name": "llama.cpp",
       "description": "Überwachung eines lokalen llama.cpp Lama-Servers: Gesundheit, Modell- und Generationsmetriken"
     }
   },
@@ -1910,7 +1910,7 @@
       "tryAgain": "Erneut versuchen",
       "loading": "Wird geladen",
       "show": "Anzeigen",
-      "showAll": "",
+      "showAll": "Alle anzeigen",
       "hide": "Ausblenden",
       "undo": "Rückgängig",
       "editNamed": "{name} bearbeiten",
@@ -1943,7 +1943,7 @@
       "clear": "Bild löschen",
       "uploadImage": "Bild hochladen",
       "results": "Bildsuchergebnisse",
-      "websiteIcon": "",
+      "websiteIcon": "Icon der Webseite",
       "localImages": "Ihre Bilder",
       "svgIcons": "SVG-Symbole",
       "otherImages": "Andere Bilder",
@@ -2008,7 +2008,7 @@
         "updateAvailable": "{countUpdates} Updates verfügbar: {tag}",
         "assistant": "Assistent",
         "assistantThinking": "Denken",
-        "modifier": ""
+        "modifier": "Moderator"
       }
     },
     "dangerZone": "Gefahrenbereich",
@@ -2237,11 +2237,11 @@
         },
         "width": {
           "label": "Breite",
-          "shortLabel": ""
+          "shortLabel": "W"
         },
         "height": {
           "label": "Höhe",
-          "shortLabel": ""
+          "shortLabel": " H "
         },
         "xOffset": {
           "label": "X Versatz"
@@ -2376,7 +2376,7 @@
               "label": "Gitter horizontal"
             },
             "icons": {
-              "label": ""
+              "label": "Symbole"
             }
           }
         },
@@ -2455,7 +2455,7 @@
         "remove": "{name} Kategorie entfernen",
         "rename": "Kategoriename für {name}",
         "assign": "Kategorie für {name}",
-        "ungrouped": ""
+        "ungrouped": "Nicht gruppiert"
       }
     },
     "archiveTeamWarrior": {
@@ -2635,25 +2635,25 @@
         "unsupportedPrimaryTitle": "Primäre Zeitzone ist nicht verfügbar",
         "unsupportedPrimary": "{timeZone} wird in diesem Browser nicht unterstützt. UTC wird als klar markierter Fallback angezeigt.",
         "unsupportedTimeZone": "Nicht unterstützte Zeitzone: {timeZone}",
-        "accessibleTime": "",
+        "accessibleTime": "{city}: {time}, {date}, {timeZone}",
         "advancedLabel": "Erweiterte Weltuhr",
         "cities": "Weltuhren",
-        "cityCount": "",
+        "cityCount": "{count} Zeitzonen",
         "timeBarLabel": "24-Stunden-Tageszeit für {city}",
         "dayProgress": "{percent}% abgelaufen · {hours}h {minutes}m verbleibend",
         "phaseLegend": "Tageslegende",
         "tick": {
-          "midnight": "",
-          "morning": "",
-          "noon": "",
-          "evening": "",
-          "end": ""
+          "midnight": "00",
+          "morning": "06",
+          "noon": "12",
+          "evening": "18",
+          "end": "24"
         },
         "phaseRange": {
-          "night": "",
-          "dawn": "",
-          "day": "",
-          "dusk": ""
+          "night": "00–05 · 21–24",
+          "dawn": "05–08",
+          "day": "08–18",
+          "dusk": "18–21"
         },
         "phase": {
           "night": "Nacht",
@@ -2675,7 +2675,7 @@
           "options": {
             "auto": "Automatisch für Gebietsschema",
             "european": "Europäischer AQI",
-            "us": ""
+            "us": "US AQI"
           }
         },
         "showUv": {
@@ -2713,7 +2713,7 @@
         }
       },
       "dominantPollutant": "",
-      "aqiLabel": "",
+      "aqiLabel": "AQI",
       "strongestPollen": "Höchste Pollen",
       "unit": {
         "concentration": "{value} μg/m3",
@@ -2721,7 +2721,7 @@
       },
       "pollutant": {
         "pm2_5": "PM2,5",
-        "pm10": "",
+        "pm10": "PM10",
         "ozone": "Ozon",
         "nitrogenDioxide": "Stickstoffdioxid",
         "sulphurDioxide": "",
@@ -4021,21 +4021,21 @@
       "authors": ""
     },
     "thingport-featuredModel": {
-      "name": "",
-      "description": "",
+      "name": "Vorgestelltes Thingport Modell",
+      "description": "Jeden Tag ein Modell aus deiner Thingport-Bibliothek, 3D",
       "option": {
         "autoRotate": {
-          "label": ""
+          "label": "Drehe das Modell"
         },
         "showDetails": {
-          "label": ""
+          "label": "Modelldetails anzeigen"
         }
       },
-      "title": "",
-      "empty": "",
-      "hint": "",
-      "noPreview": "",
-      "views": "",
+      "title": "Vorgestelltes Modell",
+      "empty": "Noch keine 3D-Modelle vorhanden",
+      "hint": "Zum Drehen ziehen, zum Öffnen klicken",
+      "noPreview": "Noch keine 3D-Vorschau für dieses Modell",
+      "views": "{count, plural, one {# Aufruf} other {# Aufrufe}}",
       "prints": ""
     },
     "thingport-activityHeatmap": {
@@ -4789,6 +4789,10 @@
             "hidden": "Versteckt"
           }
         },
+        "groupReleases": {
+          "label": "",
+          "description": ""
+        },
         "sections": {
           "label": "",
           "description": ""
@@ -4857,6 +4861,10 @@
           },
           "name": {
             "label": "Name"
+          },
+          "excludePrereleases": {
+            "label": "",
+            "description": ""
           },
           "versionFilter": {
             "label": "Versionsfilter",
@@ -5606,7 +5614,7 @@
         "memory": {
           "title": "Speicherverbrauch",
           "subtitle": "Genaue Auslastung zum erfassten Zeitpunkt",
-          "series": "Belegt",
+          "series": "Benutzt",
           "cache": ""
         },
         "disk": {
@@ -7052,6 +7060,10 @@
             },
             "signInOverlay": {
               "label": "Hintergrund-Overlay"
+            },
+            "signInMarquee": {
+              "label": "",
+              "description": ""
             },
             "defaultRadius": {
               "label": "Eckenstil",
