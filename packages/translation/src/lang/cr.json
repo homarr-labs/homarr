@@ -4789,6 +4789,10 @@
             "hidden": "crwdns11751:0crwdne11751:0"
           }
         },
+        "groupReleases": {
+          "label": "crwdns11989:0crwdne11989:0",
+          "description": "crwdns11991:0crwdne11991:0"
+        },
         "sections": {
           "label": "crwdns11753:0crwdne11753:0",
           "description": "crwdns11755:0crwdne11755:0"
@@ -4824,7 +4828,7 @@
         },
         "showChangelogPreview": {
           "label": "crwdns11795:0crwdne11795:0",
-          "description": "crwdns11797:0crwdne11797:0"
+          "description": "crwdns11993:0crwdne11993:0"
         },
         "repositories": {
           "label": "crwdns3200:0crwdne3200:0",
@@ -4857,6 +4861,10 @@
           },
           "name": {
             "label": "crwdns3270:0crwdne3270:0"
+          },
+          "excludePrereleases": {
+            "label": "crwdns11995:0crwdne11995:0",
+            "description": "crwdns11997:0crwdne11997:0"
           },
           "versionFilter": {
             "label": "crwdns3210:0crwdne3210:0",
@@ -7052,6 +7060,10 @@
             },
             "signInOverlay": {
               "label": "crwdns9817:0crwdne9817:0"
+            },
+            "signInMarquee": {
+              "label": "crwdns11985:0crwdne11985:0",
+              "description": "crwdns11987:0crwdne11987:0"
             },
             "defaultRadius": {
               "label": "crwdns9819:0crwdne9819:0",

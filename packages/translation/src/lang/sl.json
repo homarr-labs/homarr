@@ -4789,6 +4789,10 @@
             "hidden": ""
           }
         },
+        "groupReleases": {
+          "label": "",
+          "description": ""
+        },
         "sections": {
           "label": "",
           "description": ""
@@ -4857,6 +4861,10 @@
           },
           "name": {
             "label": "Ime"
+          },
+          "excludePrereleases": {
+            "label": "",
+            "description": ""
           },
           "versionFilter": {
             "label": "Filter različice",
@@ -7052,6 +7060,10 @@
             },
             "signInOverlay": {
               "label": "Prekrivanje ozadja"
+            },
+            "signInMarquee": {
+              "label": "",
+              "description": ""
             },
             "defaultRadius": {
               "label": "Slog vogalov",
