@@ -1,7 +1,7 @@
 "use client";
 
 import type { CSSProperties, KeyboardEvent, PointerEvent, RefObject } from "react";
-import { createContext, useContext, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { Box } from "@mantine/core";
 import combineClasses from "clsx";
 
@@ -24,8 +24,14 @@ import { calculateBoardUiScale, useBoardCanvasScale } from "~/components/board/l
 import { useGridEditorRuntimeStatus } from "./grid-editor-runtime";
 import { createGridEntryElementStore, useGridEditorRegistry } from "./grid-editor-registry";
 import type { SectionGridPlacement } from "./use-grid-layout-actions";
+import { FitContentReportContext, getFitRowCount } from "../auto-expand/fit-to-content";
 import { SectionContent } from "../content";
-import { useCollapsedSectionIds, useExpandSectionsForEditing } from "../section-collapse";
+import {
+  useAutoExpandedSectionIds,
+  useAutoExpandTargetSectionIds,
+  useCollapsedSectionIds,
+  useExpandSectionsForEditing,
+} from "../section-collapse";
 import { SectionProvider } from "../section-context";
 import { useSectionItems } from "../use-section-items";
 import { useBoardGridPortalHost } from "./grid-portal-host";
@@ -34,12 +40,19 @@ import classes from "./section-grid.module.css";
 const GridContentScaleContext = createContext(1);
 const GridRowScaleContext = createContext(1);
 const CONTAINER_CARD_INSET = 5;
+const EMPTY_SECTION_ID_SET: ReadonlySet<string> = new Set();
+
+const rendersContainerHeader = (container: ContainerSectionItem, autoExpandTargetSectionIds: ReadonlySet<string>) =>
+  container.options.collapsible &&
+  container.options.showLabel &&
+  !(autoExpandTargetSectionIds.has(container.id) && container.options.autoExpand.inactiveDisplay === "hidden");
 
 interface SectionGridProps {
   section: Exclude<Section, { kind: "container" }> | ContainerSectionItem;
   columnCount: number;
   requestedRowCount?: number;
   viewportRowCountOverride?: number;
+  fittedViewportRowCount?: number;
   containerInlineInsetCount?: number;
   label: string;
   railPlacement?: "main" | "left" | "right";
@@ -51,6 +64,7 @@ export const SectionGrid = ({
   columnCount,
   requestedRowCount = 0,
   viewportRowCountOverride,
+  fittedViewportRowCount,
   containerInlineInsetCount = 2,
   label,
   railPlacement = "main",
@@ -68,11 +82,16 @@ export const SectionGrid = ({
   const board = useRequiredBoard();
   const currentLayoutId = useCurrentLayout();
   const { items, innerSections } = useSectionItems(section.id);
-  const hasLabeledCollapsibleChildren = innerSections.some(
-    (child) => child.options.collapsible && child.options.showLabel,
+  const autoExpandTargetSectionIds = useAutoExpandTargetSectionIds();
+  const hasLabeledCollapsibleChildren = innerSections.some((child) =>
+    rendersContainerHeader(child, autoExpandTargetSectionIds),
+  );
+  const hasFitContentChildren = innerSections.some(
+    (inner) => inner.options.autoExpand.enabled && inner.options.autoExpand.fitToContent,
   );
   const { announce, integrations } = useBoardGridPortalHost();
   const collapsedSectionIds = useCollapsedSectionIds();
+  const autoExpandedSectionIds = useAutoExpandedSectionIds();
   const expandSectionsForEditing = useExpandSectionsForEditing();
   const minimumBySectionId = useMemo(() => {
     const minimumSizes = getContainerMinimumSizes(board, currentLayoutId);
@@ -123,29 +142,86 @@ export const SectionGrid = ({
       ),
     [collapsedSectionIds, collapsibleSectionIds, placements],
   );
-  const hasCollapsedHeader = innerSections.some((child) => child.options.showLabel && directCollapsedIds.has(child.id));
+  const hasCollapsedHeader = innerSections.some(
+    (child) => rendersContainerHeader(child, autoExpandTargetSectionIds) && directCollapsedIds.has(child.id),
+  );
+  const hiddenInactiveIds = useMemo(() => {
+    if (isEditMode) return EMPTY_SECTION_ID_SET;
+    return new Set(
+      innerSections
+        .filter(
+          (inner) =>
+            autoExpandTargetSectionIds.has(inner.id) &&
+            inner.options.autoExpand.inactiveDisplay === "hidden" &&
+            !autoExpandedSectionIds.has(inner.id),
+        )
+        .map((inner) => inner.id),
+    );
+  }, [autoExpandTargetSectionIds, autoExpandedSectionIds, innerSections, isEditMode]);
+  const fitSectionIds = useMemo(() => {
+    if (isEditMode) return EMPTY_SECTION_ID_SET;
+    return new Set(
+      innerSections
+        .filter(
+          (inner) =>
+            inner.options.autoExpand.enabled &&
+            inner.options.autoExpand.fitToContent &&
+            autoExpandedSectionIds.has(inner.id),
+        )
+        .map((inner) => inner.id),
+    );
+  }, [autoExpandedSectionIds, innerSections, isEditMode]);
+  const [fitRowCountById, setFitRowCountById] = useState<ReadonlyMap<string, number>>(() => new Map());
+  const fittedRowCountById = useMemo(
+    () => new Map([...fitRowCountById].filter(([id]) => fitSectionIds.has(id))),
+    [fitRowCountById, fitSectionIds],
+  );
+  const reportFitContentSlack = useCallback(
+    (sectionId: string, slackPx: number) => {
+      const savedRowCount = placements.find((placement) => placement.id === sectionId)?.h;
+      if (collapsedRowsPerPixel === undefined || savedRowCount === undefined || !fitSectionIds.has(sectionId)) return;
+      setFitRowCountById((previous) => {
+        const current = previous.get(sectionId) ?? savedRowCount;
+        const next = getFitRowCount({ current, savedRowCount, slackPx, rowsPerPixel: collapsedRowsPerPixel });
+        return next === current ? previous : new Map(previous).set(sectionId, next);
+      });
+    },
+    [collapsedRowsPerPixel, fitSectionIds, placements],
+  );
   const displayPlacements = useMemo(() => {
-    if (directCollapsedIds.size === 0) return placements;
+    if (directCollapsedIds.size === 0 && hiddenInactiveIds.size === 0 && fittedRowCountById.size === 0) {
+      return placements;
+    }
 
-    let collapsedRowCountById: ReadonlyMap<string, number> | undefined;
+    const collapsedRowCountById = new Map<string, number>();
     if (collapsedRowsPerPixel !== undefined) {
       const headerHeight = CONTAINER_HEADER_HEIGHT * calculateBoardUiScale(canvasScale) * canvasScale;
-      collapsedRowCountById = new Map(
-        innerSections
-          .filter((child) => child.options.collapsible && child.options.showLabel)
-          .map((child) => {
-            let topInset = CONTAINER_CARD_INSET;
-            if (railPlacement !== "main" && child.yOffset === 0) topInset = 0;
-            return [child.id, (headerHeight + topInset + 10) * collapsedRowsPerPixel];
-          }),
-      );
+      for (const child of innerSections) {
+        if (!rendersContainerHeader(child, autoExpandTargetSectionIds)) continue;
+        let topInset = CONTAINER_CARD_INSET;
+        if (railPlacement !== "main" && child.yOffset === 0) topInset = 0;
+        collapsedRowCountById.set(child.id, (headerHeight + topInset + 10) * collapsedRowsPerPixel);
+      }
     }
+    for (const id of hiddenInactiveIds) collapsedRowCountById.set(id, 0);
+    for (const [id, rowCount] of fittedRowCountById) collapsedRowCountById.set(id, rowCount);
     return getCollapsedDisplayLayout(placements, {
       columnCount,
-      collapsedItemIds: directCollapsedIds,
+      collapsedItemIds: new Set([...directCollapsedIds, ...hiddenInactiveIds, ...fittedRowCountById.keys()]),
       collapsedRowCountById,
     });
-  }, [canvasScale, columnCount, directCollapsedIds, innerSections, placements, collapsedRowsPerPixel, railPlacement]);
+  }, [
+    autoExpandTargetSectionIds,
+    canvasScale,
+    columnCount,
+    directCollapsedIds,
+    fittedRowCountById,
+    hiddenInactiveIds,
+    innerSections,
+    placements,
+    collapsedRowsPerPixel,
+    railPlacement,
+  ]);
 
   const placementById = useMemo(
     () => new Map(displayPlacements.map((placement) => [placement.id, placement])),
@@ -193,10 +269,12 @@ export const SectionGrid = ({
   if (isRail && railLogicalHeight > 0) {
     allocatedViewportHeight = railLogicalHeight;
   } else if (section.kind === "container") {
+    if (fittedViewportRowCount !== undefined) allocatedViewportHeight = getLogicalGridSize(fittedViewportRowCount);
     allocatedViewportHeight *= parentRowScale;
   }
   const logicalWidth = Math.max(1, fullGridWidth - outerCardInlineInset);
-  const hasContainerHeader = section.kind === "container" && section.options.collapsible && section.options.showLabel;
+  const hasContainerHeader =
+    section.kind === "container" && rendersContainerHeader(section, autoExpandTargetSectionIds);
   let headerInset = 0;
   if (hasContainerHeader && !collapsedSectionIds.has(section.id)) {
     headerInset = (CONTAINER_HEADER_HEIGHT * calculateBoardUiScale(canvasScale)) / parentContentScale;
@@ -238,10 +316,10 @@ export const SectionGrid = ({
   // silently breaking every icon/text/custom-CSS size that compensates off it for descendants.
   const combinedUiScale = calculateBoardUiScale(canvasScale) / contentScale;
   useLayoutEffect(() => {
-    if (!hasLabeledCollapsibleChildren) return;
+    if (!hasLabeledCollapsibleChildren && !hasFitContentChildren) return;
     // Convert the fixed header and visual insets into this grid's row units.
     setCollapsedRowsPerPixel(1 / (effectiveContentScale * LOGICAL_GRID_PITCH * rowScale));
-  }, [effectiveContentScale, hasLabeledCollapsibleChildren, rowScale]);
+  }, [effectiveContentScale, hasFitContentChildren, hasLabeledCollapsibleChildren, rowScale]);
   // A collapsed container's compact coordinates are display-only. Its own
   // nested grid stays inactive until an explicit edit interaction expands it.
   const isInteractionDisabled = section.kind === "container" && collapsedSectionIds.has(section.id);
@@ -368,7 +446,9 @@ export const SectionGrid = ({
         >
           <GridContentScaleContext.Provider value={contentScale}>
             <GridRowScaleContext.Provider value={rowScale}>
-              <SectionContent />
+              <FitContentReportContext value={reportFitContentSlack}>
+                <SectionContent />
+              </FitContentReportContext>
             </GridRowScaleContext.Provider>
           </GridContentScaleContext.Provider>
         </Box>

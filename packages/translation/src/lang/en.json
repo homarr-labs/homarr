@@ -2100,6 +2100,10 @@
       "scrollable": {
         "label": "Scrollable",
         "description": "Keep this container at its set size and scroll its contents instead of growing to fit them."
+      },
+      "autoExpand": {
+        "label": "Auto-expand when active",
+        "description": "Automatically reveal this container when a widget inside it goes active, and hide it again once it's not."
       }
     },
     "action": {
@@ -2126,10 +2130,27 @@
         },
         "borderColor": {
           "label": "Border color"
+        },
+        "autoExpand": {
+          "item": {
+            "label": "Widget to watch",
+            "placeholder": "Select a widget"
+          },
+          "inactiveDisplay": {
+            "collapsed": "Collapsed",
+            "hidden": "Hidden"
+          },
+          "fitToContent": {
+            "label": "Shrink to fit content",
+            "description": "While active, only take up as much height as the watched widget needs. The saved size is the maximum, and the widgets below move up into the freed space."
+          }
         }
       },
       "remove": {
         "message": "Remove this container? Its contents will move into the surrounding area."
+      },
+      "editBar": {
+        "edit": "Edit"
       }
     }
   },
@@ -3934,6 +3955,10 @@
         "showLocation": {
           "label": "Show location",
           "description": "Show whether the stream is on your LAN or WAN"
+        },
+        "detailedSessionLimit": {
+          "label": "Detailed stats up to",
+          "description": "While this many streams or fewer are active, each one gets a row of extra stats underneath it. Set to 0 to always keep rows compact"
         }
       },
       "footer": {
@@ -3968,6 +3993,10 @@
           "transcode": "Transcoding to {target}",
           "containerChanged": "{container} (remux)",
           "position": "{position} / {duration}",
+          "progress": "Progress",
+          "endsAt": "Ends at",
+          "episode": "Episode",
+          "album": "Album",
           "unknown": "unknown format"
         },
         "metadata": {
