@@ -122,10 +122,12 @@ describe("board background", () => {
       resolveHead(headResponse("video/webm; charset=binary"));
     });
 
-    expect(backgroundUrl()).toBe("");
-    expect(video()?.getAttribute("src")).toBe("/api/user-medias/clip");
-    expect(video()?.muted).toBe(true);
-    expect(video()?.loop).toBe(true);
+    await vi.waitFor(() => {
+      expect(backgroundUrl()).toBe("");
+      expect(video()?.getAttribute("src")).toBe("/api/user-medias/clip");
+      expect(video()?.muted).toBe(true);
+      expect(video()?.loop).toBe(true);
+    });
   });
 
   test.each(["mp4", "webm", "ogg"])("renders a .%s background as video without waiting for HEAD", async (format) => {
