@@ -353,6 +353,7 @@ export const SectionGrid = ({
           } as CSSProperties
         }
         data-section-id={section.id}
+        suppressHydrationWarning
         data-section-kind={section.kind}
         data-rail-placement={railPlacement}
         data-scrollable={isScrollableContainer ? "true" : undefined}
@@ -372,6 +373,7 @@ export const SectionGrid = ({
             } as CSSProperties
           }
           data-grid-section-id={section.id}
+          suppressHydrationWarning
           data-kind={section.kind}
           data-grid-editor-error={isEditMode && editorRuntimeStatus === "error" ? "true" : undefined}
         >
