@@ -24,6 +24,7 @@ import {
 } from "@assistant-ui/react";
 import { useChat } from "@ai-sdk/react";
 import { AssistantChatTransport, useAISDKRuntime } from "@assistant-ui/react-ai-sdk";
+import { useCallbackRef } from "@mantine/hooks";
 import { createAssistantStream } from "assistant-stream";
 
 import { clientApi, fetchApi } from "@homarr/api/client";
@@ -989,6 +990,8 @@ const EnabledAssistantProvider = ({
     });
   }, [conversationId, isLoading, refreshCurrentView, successfulMutationIds, t]);
 
+  // Spotlight can retain its previous item while a registration transition is pending.
+  const sendSpotlightPrompt = useCallbackRef(sendPrompt);
   const spotlightItem = useMemo(() => {
     const canSend =
       !historyLoadFailed && !providerUnavailable && !assistantIsRunning && latestStatus?.type !== "requires-action";
@@ -1006,13 +1009,13 @@ const EnabledAssistantProvider = ({
       placement: "fallback" as const,
       interaction: (query: string) =>
         createAssistantPromptInteraction({
-          sendPrompt,
+          sendPrompt: sendSpotlightPrompt,
           onPromptAccepted: closeSpotlight,
           prompt: query,
           canSend,
         }),
     };
-  }, [assistantIsRunning, historyLoadFailed, latestStatus?.type, providerUnavailable, sendPrompt, t]);
+  }, [assistantIsRunning, historyLoadFailed, latestStatus?.type, providerUnavailable, sendSpotlightPrompt, t]);
   useRegisterSpotlightContextResults("homarr-assistant", [spotlightItem], [spotlightItem]);
 
   const activeWidgetId = visibleWidgetIds.values().next().value ?? null;
