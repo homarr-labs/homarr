@@ -176,6 +176,10 @@
   .previewCanvas {
     height: 24rem;
   }
+
+  .footer button {
+    min-height: 44px;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

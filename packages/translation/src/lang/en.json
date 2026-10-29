@@ -2125,6 +2125,65 @@
       },
       "remove": {
         "message": "Remove this container? Its contents will move into the surrounding area."
+      },
+      "smart": {
+        "previousState": "Previous state",
+        "nextState": "Next state",
+        "resume": "Resume rotation",
+        "pause": "Pause rotation",
+        "position": "{current} of {total}",
+        "empty": "This state has no widgets",
+        "edit": "Edit container",
+        "addWidget": "Add widget",
+        "state": "State",
+        "manual": "Manual",
+        "timed": "Timed",
+        "smart": "Smart",
+        "hybrid": "Hybrid",
+        "quiet": "No activity",
+        "unsupported": "Always available",
+        "preview": "Arrangement",
+        "states": "States",
+        "rotation": "Rotation",
+        "appearance": "Appearance",
+        "enabled": "Smart container",
+        "enabledDescription": "Show one state at a time in a vertical reel.",
+        "editorContent": "Widgets",
+        "editorSettings": "Settings",
+        "statesDescription": "Each state is an arrangement of widgets. Use the + buttons to place a widget above or below another.",
+        "stateTitle": "State name",
+        "priority": "Relevance priority",
+        "priorityDescription": "Higher priority wins when states are equally active.",
+        "moveUp": "Move up",
+        "moveDown": "Move down",
+        "addStateAbove": "State above",
+        "addStateBelow": "State below",
+        "deleteState": "Delete state",
+        "deleteStateDescription": "Widgets in a deleted state move to the next available state.",
+        "addWidgetAbove": "Add widget above",
+        "addWidgetBelow": "Add widget below",
+        "editWidget": "Widget settings",
+        "editNamedWidget": "Edit {name}",
+        "moveWidgetUp": "Move {name} up",
+        "moveWidgetDown": "Move {name} down",
+        "deleteWidget": "Delete widget",
+        "moveToState": "Move to state",
+        "draftDescription": "Changes are saved with your board. Cancel discards your container edits. Deleting a widget removes it from all layouts on this board.",
+        "mode": "Rotation mode",
+        "interval": "Rotation interval (seconds)",
+        "intervalDescription": "Timed and Hybrid advance at this interval.",
+        "skipInactive": "Skip inactive states",
+        "skipInactiveDescription": "Automatic rotation skips states whose supported widgets have no activity.",
+        "pauseOnHover": "Pause on hover",
+        "pauseOnHoverDescription": "Give the current state time to read while the pointer is over it.",
+        "reclaimSpace": "Adapt widget height",
+        "reclaimSpaceDescription": "Active widgets share the available space according to their content.",
+        "modeDescription": {
+          "manual": "Change states yourself with the arrows.",
+          "timed": "Rotate through states at a regular interval.",
+          "smart": "Bring forward the state with the most relevant activity.",
+          "hybrid": "Rotate on a timer and bring relevant activity forward when it changes."
+        }
       }
     }
   },
@@ -2176,6 +2235,7 @@
       "standalone": "Standalone",
       "missingIntegration": {
         "title": "Connect a service first",
+        "containerDraft": "Set up a compatible service connection before adding this widget to a container.",
         "noPermission": "This widget needs a compatible service connection. Ask an administrator to connect one, then try again."
       },
       "notification": {
@@ -5726,9 +5786,14 @@
       "unavailable": "Unavailable",
       "refreshFailed": "Refresh failed — showing saved data",
       "stale": "Saved data — refresh to update",
-      "table": { "value": "Value", "status": "Status" },
+      "table": {
+        "value": "Value",
+        "status": "Status"
+      },
       "option": {
-        "table": { "label": "Table view" },
+        "table": {
+          "label": "Table view"
+        },
         "rows": {
           "label": "Compact rows"
         },

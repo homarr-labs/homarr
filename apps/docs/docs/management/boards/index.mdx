@@ -58,6 +58,15 @@ will remain when released.
 Dragging an item onto another item of the same size swaps their positions. Displaced items snap directly to their
 previewed positions without a movement animation and stay there when you release the pointer.
 
+Smart Containers are enabled in a Container's settings and use named states of widgets. Manual browsing holds a state until
+**Resume rotation**. Timed mode follows the configured order; Smart chooses active content and priorities; Hybrid combines both.
+Rotation pauses during editing, keyboard interaction, and hidden tabs. Mouse hover can pause it too.
+
+Currently playing, Download Client, and Media Requests List provide activity and sizing hints. A recent, complete successful
+empty result lets them shrink; failures, partial results, stale data, and missing integration configuration do not count as
+inactivity. Other widgets retain their configured size and stay eligible. Unselected widgets keep observing their data.
+Container settings join the board draft; the board's Save or Discard decides persistence.
+
 A **rail** reserves one to three columns at the left or right of a non-Mobile layout. Rails stay fixed while the page
 scrolls and store their contents separately for each layout. Layout settings and Manage Boards use the same preview,
 with enabled sidebars shown beside the main canvas.

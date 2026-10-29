@@ -40,7 +40,9 @@ import { zoomCompensatedSize } from "@homarr/ui";
 import type { TablerIcon } from "@homarr/ui";
 
 import type { WidgetComponentProps } from "../definition";
-import { getUsableWidgetQueryData } from "../common/query-state";
+import { WidgetError } from "../errors/component";
+import { useReportWidgetActivity } from "../activity";
+import { getWidgetQueryError } from "../common/query-state";
 import { IntegrationErrorIndicator } from "../common/integration-error-indicator";
 import classes from "./component.module.css";
 
@@ -168,6 +170,7 @@ function StreamTableHeader({
 }
 
 export default function MediaServerWidget({
+  itemId,
   options,
   integrationIds,
   width,
@@ -178,7 +181,19 @@ export default function MediaServerWidget({
     integrationIds,
     showOnlyPlaying: options.showOnlyPlaying,
   });
-  const currentStreamsData = getUsableWidgetQueryData(currentStreamsQuery);
+  useReportWidgetActivity({
+    itemId,
+    query: currentStreamsQuery,
+    count: currentStreamsQuery.data?.reduce((count, result) => count + result.sessions.length, 0) ?? 0,
+    complete:
+      currentStreamsQuery.data?.length === integrationIds.length &&
+      currentStreamsQuery.data.every((result) => !result.error),
+    configured: integrationIds.length > 0,
+    freshForMs: 35_000,
+  });
+  const queryError = getWidgetQueryError(currentStreamsQuery);
+  let currentStreamsData = currentStreamsQuery.data;
+  if (queryError) currentStreamsData = undefined;
   const currentStreams = useMemo(() => currentStreamsData ?? [], [currentStreamsData]);
 
   const t = useI18n("widget.mediaServer");
@@ -241,6 +256,9 @@ export default function MediaServerWidget({
   }
   const totalBitrateLabel = showBitrate ? formatBitrate(totalBitrateKbps) : null;
   const hasFailedIntegrations = currentStreams.some(({ error }) => Boolean(error));
+
+  if (queryError)
+    return <WidgetError error={queryError} resetErrorBoundary={() => void currentStreamsQuery.refetch()} />;
 
   return (
     <Stack className={classes.root} gap={0} h="100%" display="flex">

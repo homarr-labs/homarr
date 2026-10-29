@@ -139,6 +139,10 @@ export class OverseerrIntegration
           headers: { "X-Api-Key": this.getSecretValue("apiKey") },
           dispatcher,
         });
+        if (!response.ok) {
+          await response.body?.cancel().catch(() => undefined);
+          throw new Error(`Failed to fetch media requests: ${response.status} ${response.statusText}`);
+        }
         return (await getRequestsSchema.parseAsync(await response.json())).results;
       };
       const [pendingResults, allResults] = await Promise.all([
@@ -443,34 +447,26 @@ const searchSchema = z.object({
 });
 
 const getRequestsSchema = z.object({
-  results: z
-    .array(
-      z.object({
-        id: z.number(),
-        status: z.enum(UpstreamMediaRequestStatus),
-        createdAt: z.string().transform((value) => new Date(value)),
-        media: z.object({
-          status: z.enum(UpstreamMediaAvailability),
-          tmdbId: z.number(),
-          downloadStatus: z.array(z.unknown()).optional(),
-        }),
-        type: z.enum(["movie", "tv"]),
-        requestedBy: z
-          .object({
-            id: z.number(),
-            displayName: z.string(),
-            avatar: z.string(),
-          })
-          .optional(),
+  results: z.array(
+    z.object({
+      id: z.number(),
+      status: z.enum(UpstreamMediaRequestStatus),
+      createdAt: z.string().transform((value) => new Date(value)),
+      media: z.object({
+        status: z.enum(UpstreamMediaAvailability),
+        tmdbId: z.number(),
+        downloadStatus: z.array(z.unknown()).optional(),
       }),
-    )
-    .optional()
-    .transform((val) => {
-      if (!val) {
-        return [];
-      }
-      return val;
+      type: z.enum(["movie", "tv"]),
+      requestedBy: z
+        .object({
+          id: z.number(),
+          displayName: z.string(),
+          avatar: z.string(),
+        })
+        .optional(),
     }),
+  ),
 });
 
 const getStatsSchema = z.object({

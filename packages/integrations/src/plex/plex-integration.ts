@@ -165,6 +165,10 @@ export class PlexIntegration extends Integration implements IMediaServerIntegrat
         "X-Plex-Token": token,
       },
     });
+    if (!response.ok) {
+      await response.body?.cancel();
+      throw new ResponseError(response);
+    }
     const body = await response.text();
     // convert xml response to objects, as there is no JSON api
     const data = await PlexIntegration.parseXmlAsync<PlexResponse>(body);

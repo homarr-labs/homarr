@@ -21,6 +21,7 @@ interface IntegrationQueryResult<TData> {
   integration: { id: string; name: string; kind: IntegrationKindByCategory<"mediaRequest"> };
   data: TData;
   error?: string;
+  updatedAt?: Date;
 }
 
 export const mediaRequestsRouter = createTRPCRouter({
@@ -38,11 +39,12 @@ export const mediaRequestsRouter = createTRPCRouter({
       const results: IntegrationQueryResult<MediaRequest[]>[] = await settleIntegrationQueries(
         ctx.integrations,
         async (integration) => {
-          const { data } = await mediaRequestListRequestHandler.handler(integration, input).getDataAsync();
+          const { data, timestamp } = await mediaRequestListRequestHandler.handler(integration, input).getDataAsync();
           return {
             integration: { id: integration.id, name: integration.name, kind: integration.kind },
             data,
             error: undefined,
+            updatedAt: timestamp,
           };
         },
         {
@@ -74,6 +76,11 @@ export const mediaRequestsRouter = createTRPCRouter({
         });
       return {
         requests,
+        updatedAt: results.reduce<Date | null>((oldest, result) => {
+          if (!result.updatedAt) return oldest;
+          if (!oldest || result.updatedAt < oldest) return result.updatedAt;
+          return oldest;
+        }, null),
         failedIntegrations: results.flatMap(({ integration, error }) =>
           error ? [{ integrationId: integration.id, integrationName: integration.name, error }] : [],
         ),

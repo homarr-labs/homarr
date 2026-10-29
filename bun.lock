@@ -366,6 +366,7 @@
         "@homarr/api": "workspace:^0.1.0",
         "@homarr/common": "workspace:^0.1.0",
         "@homarr/definitions": "workspace:^0.1.0",
+        "@homarr/validation": "workspace:^0.1.0",
         "react": "catalog:",
         "react-dom": "catalog:",
       },

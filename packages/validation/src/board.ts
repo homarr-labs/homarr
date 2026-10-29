@@ -137,11 +137,36 @@ export const boardResetLayoutSchema = z.object({
   layoutId: z.string(),
 });
 
-export const boardSaveSchema = z.object({
-  id: z.string(),
-  sections: z.array(sectionSchema),
-  items: z.array(commonItemSchema),
-});
+export const boardSaveSchema = z
+  .object({
+    id: z.string(),
+    sections: z.array(sectionSchema),
+    items: z.array(commonItemSchema),
+  })
+  .superRefine((board, ctx) => {
+    const itemsById = new Map(board.items.map((item) => [item.id, item]));
+    board.sections.forEach((section, sectionIndex) => {
+      if (section.kind !== "container" || !section.options.smart) return;
+
+      const containerLayoutIds = new Set(section.layouts.map((layout) => layout.layoutId));
+      section.options.smart.states.forEach((state, stateIndex) => {
+        state.itemIds.forEach((itemId, itemIndex) => {
+          const item = itemsById.get(itemId);
+          if (
+            item?.layouts.some((layout) => layout.sectionId === section.id && containerLayoutIds.has(layout.layoutId))
+          ) {
+            return;
+          }
+
+          ctx.addIssue({
+            code: "custom",
+            message: "Smart state widgets must belong to this container on the submitted board",
+            path: ["sections", sectionIndex, "options", "smart", "states", stateIndex, "itemIds", itemIndex],
+          });
+        });
+      });
+    });
+  });
 
 export const boardCreateSchema = z.object({
   name: boardNameSchema,

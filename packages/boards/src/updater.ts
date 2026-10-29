@@ -4,6 +4,7 @@ import { useCallback } from "react";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
+import { reconcileSmartContainerStates } from "@homarr/validation/smart-container";
 
 type Board = RouterOutputs["board"]["getHomeBoard"];
 type UpdateCallback = (previous: Board) => Board;
@@ -25,7 +26,10 @@ export const useUpdateBoard = () => {
       let updatedBoard: Board | undefined;
       utils.board.getBoardByName.setData({ name: boardName }, (previous) => {
         if (!previous) return previous;
-        updatedBoard = updaterWithoutUndefined(previous);
+        const next = updaterWithoutUndefined(previous);
+        const sections = reconcileSmartContainerStates(next.sections, next.items);
+        updatedBoard = next;
+        if (sections !== next.sections) updatedBoard = { ...next, sections };
         return updatedBoard;
       });
       return updatedBoard;

@@ -54,8 +54,10 @@ import { useByteFormatter } from "@homarr/settings";
 import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
+import { WidgetError } from "../errors/component";
+import { useReportWidgetActivity } from "../activity";
 import { IntegrationErrorIndicator } from "../common/integration-error-indicator";
-import { getUsableWidgetQueryData, isInitialWidgetQueryPending } from "../common/query-state";
+import { getWidgetQueryError, isInitialWidgetQueryPending } from "../common/query-state";
 import { WidgetQueryLoadingState } from "../common/query-state-indicator";
 import { HomarrDataTable } from "../common/homarr-data-table";
 import { formatLocalizedDateTime } from "../common/locale";
@@ -320,7 +322,9 @@ export default function DownloadClientsWidget({
   const downloadsQuery = clientApi.widget.downloads.getJobsAndStatuses.useQuery(
     resolveDownloadsQueryInput(integrationIds, options),
   );
-  const currentItems = getUsableWidgetQueryData(downloadsQuery);
+  const queryError = getWidgetQueryError(downloadsQuery);
+  let currentItems = downloadsQuery.data;
+  if (queryError) currentItems = undefined;
   const availableItems = useMemo(() => currentItems?.filter((item) => item.data !== null) ?? [], [currentItems]);
   const { isFetching } = downloadsQuery;
 
@@ -417,6 +421,22 @@ export default function DownloadClientsWidget({
   ]);
 
   const data = useMemo(() => filterDownloadItemsByStatus(eligibleData, statusFilter), [eligibleData, statusFilter]);
+  useReportWidgetActivity({
+    itemId,
+    query: downloadsQuery,
+    // Local client/status filters must not make an active widget disappear.
+    count: availableItems.reduce(
+      (count, pair) =>
+        count +
+        pair.data.items
+          .filter(({ category }) => matchesCategoryFilter(category, options.categoryFilter, options.filterIsWhitelist))
+          .filter((item) => showCompletedItem(item, options)).length,
+      0,
+    ),
+    complete: currentItems?.length === integrationIds.length && currentItems.every((result) => !result.error),
+    configured: integrationIds.length > 0,
+    freshForMs: 35_000,
+  });
 
   const sortedData = useMemo(() => {
     const accessor = sortStatus.columnAccessor as keyof ExtendedDownloadClientItem;
@@ -743,6 +763,8 @@ export default function DownloadClientsWidget({
     }
     return { stateCounts, totalSize, completedSize, totalItems: data.length };
   }, [data]);
+
+  if (queryError) return <WidgetError error={queryError} resetErrorBoundary={() => void downloadsQuery.refetch()} />;
 
   if (!isAdvanced && options.columns.length === 0) {
     return (

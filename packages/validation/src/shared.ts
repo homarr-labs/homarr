@@ -3,6 +3,9 @@ import { z } from "zod/v4";
 import { integrationKinds, widgetKinds } from "@homarr/definitions";
 
 import { zodEnumFromArray } from "./enums";
+import { smartContainerOptionsSchema } from "./smart-container";
+
+export type { SmartContainerOptions, SmartContainerState } from "./smart-container";
 
 export const integrationSchema = z.object({
   id: z.string(),
@@ -73,6 +76,7 @@ export const containerSectionOptionsSchema = z
     collapsible: z.boolean().default(containerSectionOptionsDefaults.collapsible),
     showOpenAll: z.boolean().default(containerSectionOptionsDefaults.showOpenAll),
     scrollable: z.boolean().default(containerSectionOptionsDefaults.scrollable),
+    smart: smartContainerOptionsSchema.optional(),
   })
   .default(containerSectionOptionsDefaults);
 

@@ -1,0 +1,90 @@
+.editorPanel {
+  min-width: 0;
+}
+
+.mobileTabs {
+  display: none;
+}
+
+.preview {
+  position: sticky;
+  top: 0;
+  min-width: 0;
+  width: 100%;
+  padding: var(--mantine-spacing-lg);
+  border: 1px solid var(--mantine-color-default-border);
+  border-radius: var(--mantine-radius-lg);
+  background: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-8));
+}
+
+.reel {
+  padding: var(--mantine-spacing-sm);
+  border: 1px solid var(--mantine-color-default-border);
+  border-radius: var(--mantine-radius-md);
+  background: var(--mantine-color-body);
+}
+
+.widget {
+  min-width: 0;
+  padding: var(--mantine-spacing-sm);
+  border: 1px solid var(--mantine-color-default-border);
+  border-radius: var(--mantine-radius-md);
+  background: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-7));
+}
+
+.insert {
+  min-height: 44px;
+  border-style: dashed;
+}
+
+.stateButton {
+  min-height: 44px;
+  min-width: 0;
+  justify-content: flex-start;
+}
+
+.tabsList {
+  flex-wrap: nowrap;
+}
+
+.tab {
+  min-height: 44px;
+  padding-inline: var(--mantine-spacing-sm);
+}
+
+.settings {
+  min-width: 0;
+}
+
+.settings :global(.mantine-Switch-body) {
+  min-height: 44px;
+  align-items: center;
+}
+
+@media (max-width: 68em) {
+  .preview {
+    position: static;
+    padding: var(--mantine-spacing-sm);
+  }
+}
+
+@media (max-width: 36em) {
+  .mobileTabs {
+    display: flex;
+  }
+
+  .tabsList {
+    overflow-x: auto;
+  }
+
+  .tab {
+    flex-shrink: 0;
+    padding-inline: 6px;
+    font-size: var(--mantine-font-size-sm);
+  }
+}
+@media (min-width: 36.001em) {
+  .editorPanel {
+    display: block !important;
+  }
+}

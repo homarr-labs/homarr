@@ -1,0 +1,14 @@
+.preview {
+  min-width: 0;
+  width: 100%;
+  max-height: min(65dvh, 600px);
+  overflow: auto;
+  padding: 8px;
+  overscroll-behavior: contain;
+}
+
+@media (max-width: 36em) {
+  .preview {
+    max-height: 38dvh;
+  }
+}

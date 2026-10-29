@@ -30,6 +30,8 @@ import { SectionProvider } from "../section-context";
 import { useSectionItems } from "../use-section-items";
 import { useBoardGridPortalHost } from "./grid-portal-host";
 import classes from "./section-grid.module.css";
+import { useSmartContainerDisplayRows, useSmartContainerProjection } from "../smart-container/smart-container-context";
+import { getSmartContainerChromeHeight } from "../smart-container/constants";
 
 const GridContentScaleContext = createContext(1);
 const GridRowScaleContext = createContext(1);
@@ -57,6 +59,10 @@ export const SectionGrid = ({
   className,
 }: SectionGridProps) => {
   const [isEditMode] = useEditMode();
+  const smartContext = useSmartContainerProjection();
+  const smartRows = useSmartContainerDisplayRows();
+  let smartProjection: typeof smartContext = null;
+  if (smartContext?.sectionId === section.id) smartProjection = smartContext;
   const canvasScale = useBoardCanvasScale();
   const parentContentScale = useContext(GridContentScaleContext);
   const parentRowScale = useContext(GridRowScaleContext);
@@ -125,7 +131,27 @@ export const SectionGrid = ({
   );
   const hasCollapsedHeader = innerSections.some((child) => child.options.showLabel && directCollapsedIds.has(child.id));
   const displayPlacements = useMemo(() => {
-    if (directCollapsedIds.size === 0) return placements;
+    let projected = placements;
+    if (smartProjection) {
+      projected = placements
+        .filter((placement) => placement.type === "section" || smartProjection.projection.placements.has(placement.id))
+        .map((placement) => {
+          const statePlacement = smartProjection.projection.placements.get(placement.id);
+          if (statePlacement) return { ...placement, ...statePlacement };
+          return { ...placement, y: placement.y + smartProjection.projection.rowCount };
+        });
+    }
+    const resized = new Set(directCollapsedIds);
+    const heights = new Map<string, number>();
+    if (!isEditMode)
+      for (const placement of projected) {
+        const rows = smartRows.get(placement.id);
+        if (rows !== undefined && !directCollapsedIds.has(placement.id) && rows !== placement.h) {
+          resized.add(placement.id);
+          heights.set(placement.id, rows);
+        }
+      }
+    if (resized.size === 0) return projected;
 
     let collapsedRowCountById: ReadonlyMap<string, number> | undefined;
     if (collapsedRowsPerPixel !== undefined) {
@@ -140,12 +166,25 @@ export const SectionGrid = ({
           }),
       );
     }
-    return getCollapsedDisplayLayout(placements, {
+    if (collapsedRowCountById)
+      for (const [id, rows] of collapsedRowCountById) if (directCollapsedIds.has(id)) heights.set(id, rows);
+    return getCollapsedDisplayLayout(projected, {
       columnCount,
-      collapsedItemIds: directCollapsedIds,
-      collapsedRowCountById,
+      collapsedItemIds: resized,
+      collapsedRowCountById: heights,
     });
-  }, [canvasScale, columnCount, directCollapsedIds, innerSections, placements, collapsedRowsPerPixel, railPlacement]);
+  }, [
+    canvasScale,
+    columnCount,
+    directCollapsedIds,
+    innerSections,
+    placements,
+    collapsedRowsPerPixel,
+    railPlacement,
+    smartProjection,
+    smartRows,
+    isEditMode,
+  ]);
 
   const placementById = useMemo(
     () => new Map(displayPlacements.map((placement) => [placement.id, placement])),
@@ -166,6 +205,7 @@ export const SectionGrid = ({
   const contentRowCount = Math.max(1, getLayoutRowCount(displayPlacements));
   const railViewportRowCount = getGridRowCountForVisualHeight(railLogicalHeight, 1);
   let rowCount = Math.max(contentRowCount, requestedRowCount, minimumViewportRowCount);
+  if (smartProjection) rowCount = contentRowCount;
   if (isRail) {
     rowCount = Math.max(railViewportRowCount, contentRowCount);
   }
@@ -173,7 +213,8 @@ export const SectionGrid = ({
   const placementMaxRowCount = maxRowCount;
   // A scrollable container isn't forced to grow with its content - it scrolls internally instead
   // of expanding to fit every widget, so its viewport height is capped independently of rowCount.
-  const isScrollableContainer = section.kind === "container" && section.options.scrollable;
+  const isScrollableContainer =
+    section.kind === "container" && (section.options.scrollable || Boolean(smartProjection));
   const viewportRowCount =
     viewportRowCountOverride ?? (isScrollableContainer ? Math.max(requestedRowCount, 1) : rowCount);
   const parentScale = canvasScale * parentContentScale;
@@ -188,8 +229,10 @@ export const SectionGrid = ({
   }
   const fullGridWidth = getLogicalGridSize(columnCount);
   const fullGridHeight = getLogicalGridSize(rowCount);
-  const fullViewportHeight = getLogicalGridSize(viewportRowCount);
+  let fullViewportHeight = getLogicalGridSize(viewportRowCount);
+  if (smartProjection) fullViewportHeight = getLogicalGridSize(Math.min(rowCount, viewportRowCount));
   let allocatedViewportHeight = fullViewportHeight;
+  if (smartProjection) allocatedViewportHeight = getLogicalGridSize(viewportRowCount);
   if (isRail && railLogicalHeight > 0) {
     allocatedViewportHeight = railLogicalHeight;
   } else if (section.kind === "container") {
@@ -201,6 +244,11 @@ export const SectionGrid = ({
   if (hasContainerHeader && !collapsedSectionIds.has(section.id)) {
     headerInset = (CONTAINER_HEADER_HEIGHT * calculateBoardUiScale(canvasScale)) / parentContentScale;
   }
+  if (smartProjection && section.kind === "container")
+    headerInset +=
+      (getSmartContainerChromeHeight(section.options.smart?.states.length ?? 0, requestedRowCount) *
+        calculateBoardUiScale(canvasScale)) /
+      parentContentScale;
   let nestedHeaderInset = 0;
   if (
     section.kind === "container" &&
@@ -244,7 +292,8 @@ export const SectionGrid = ({
   }, [effectiveContentScale, hasLabeledCollapsibleChildren, rowScale]);
   // A collapsed container's compact coordinates are display-only. Its own
   // nested grid stays inactive until an explicit edit interaction expands it.
-  const isInteractionDisabled = section.kind === "container" && collapsedSectionIds.has(section.id);
+  const isInteractionDisabled =
+    Boolean(smartProjection) || (section.kind === "container" && collapsedSectionIds.has(section.id));
   const canvasAttributes =
     isEditMode && !isInteractionDisabled
       ? getEditableCanvasAttributes({ label, columnCount, rowCount })
@@ -459,7 +508,8 @@ const getContainerMinimumSizes = (board: ReturnType<typeof useRequiredBoard>, la
     const section = board.sections.find((candidate) => candidate.id === sectionId);
     // A scrollable container isn't forced to grow with its content - it scrolls internally instead,
     // so it shouldn't have a content-derived height floor imposed by its parent's grid.
-    const isScrollable = section?.kind === "container" && section.options.scrollable;
+    const isScrollable =
+      section?.kind === "container" && (section.options.scrollable || section.options.smart?.enabled);
 
     const itemBounds = directItemsBySectionId.get(sectionId) ?? [];
     const sectionBounds = (directSectionsBySectionId.get(sectionId) ?? []).map(({ id, placement }) => {
@@ -472,7 +522,10 @@ const getContainerMinimumSizes = (board: ReturnType<typeof useRequiredBoard>, la
     });
     const children = [...itemBounds, ...sectionBounds];
     const minimum = {
-      width: Math.max(1, ...children.map((child) => child.xOffset + child.width)),
+      width:
+        section?.kind === "container" && section.options.smart?.enabled
+          ? 1
+          : Math.max(1, ...children.map((child) => child.xOffset + child.width)),
       height: isScrollable ? 1 : Math.max(1, ...children.map((child) => child.yOffset + child.height)),
     };
     visiting.delete(sectionId);
