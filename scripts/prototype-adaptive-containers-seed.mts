@@ -22,7 +22,7 @@ await database.delete(schema.boards).where(eq(schema.boards.id, ids.board));
 await database.insert(schema.boards).values({
   id: ids.board,
   name: "adaptive-containers-prototype",
-  pageTitle: "Home",
+  pageTitle: "Homarr",
   isPublic: true,
   primaryColor: "#9775fa",
   secondaryColor: "#748ffc",
@@ -51,7 +51,7 @@ await database.insert(schema.sections).values([
     id: ids.container,
     boardId: ids.board,
     kind: "container",
-    options: stringify({ ...containerSectionOptionsDefaults, title: "Smart container", showLabel: true }),
+    options: stringify({ ...containerSectionOptionsDefaults, title: "SMART STACK", showLabel: true }),
   },
   {
     id: linksId,
@@ -87,6 +87,13 @@ await database.insert(schema.items).values([
     id: "adaptive-prototype-clock",
     boardId: ids.board,
     kind: "clock",
+    options: stringify({ showWeather: false, showDate: true, is24HourFormat: true }),
+  },
+  {
+    id: ids.overviewClock,
+    boardId: ids.board,
+    kind: "clock",
+    advancedOptions: stringify({ title: "Clock" }),
     options: stringify({ showWeather: false, showDate: true, is24HourFormat: true }),
   },
 ]);
@@ -205,11 +212,20 @@ for (const layout of [
     {
       itemId: ids.stats,
       layoutId: layout.id,
-      sectionId: mainId,
-      xOffset: clockX,
-      yOffset: clockY + clockHeight,
-      width: 3,
+      sectionId: ids.container,
+      xOffset: 0,
+      yOffset: 2,
+      width: mediaWidth,
       height: 1,
+    },
+    {
+      itemId: ids.overviewClock,
+      layoutId: layout.id,
+      sectionId: ids.container,
+      xOffset: 0,
+      yOffset: 0,
+      width: mediaWidth,
+      height: 2,
     },
   ]);
   for (const [index, service] of services.entries()) {
@@ -258,5 +274,5 @@ await database
     }),
   })
   .where(eq(schema.serverSettings.settingKey, "board"));
-console.log("Native adaptive-container prototype board prepared in its scratch database.");
+console.log("Native smart-stack prototype board prepared in its scratch database.");
 process.exit(0);

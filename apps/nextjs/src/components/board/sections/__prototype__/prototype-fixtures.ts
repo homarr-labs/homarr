@@ -17,6 +17,7 @@ export const prototypeFixtureIds = {
   container: "adaptive-prototype-container",
   media: "adaptive-prototype-media",
   stats: "adaptive-prototype-stats",
+  overviewClock: "adaptive-prototype-overview-clock",
   downloads: "adaptive-prototype-downloads",
   requests: "adaptive-prototype-requests",
   downloadsIntegration: "adaptive-prototype-qbittorrent",

@@ -20,7 +20,9 @@ export function getPrototypeContainerRows(context: AdaptiveContainerPrototypeCon
   let rows = selected.reduce((total, allocation) => total + allocation.rows, 0);
   if (context.state.focusedPlacement)
     rows = Math.max(rows, context.state.focusedPlacement.y + context.state.focusedPlacement.h);
-  return Math.max(1, Math.min(context.savedContainerRows, rows));
+  let minimumRows = 1;
+  if (context.variant === "B" || context.variant === "C") minimumRows = 3;
+  return Math.max(minimumRows, Math.min(context.savedContainerRows, rows));
 }
 
 export function projectAdaptiveContainerPlacements(
@@ -47,9 +49,9 @@ export function projectAdaptiveContainerPlacements(
     const allocation = context.allocations.find((entry) => entry.itemId === placement.id);
     if (!allocation) return placement;
     let y = 0;
-    if (allocation.itemId === context.requestsItemId) {
-      const downloads = context.allocations.find((entry) => entry.itemId === context.downloadsItemId);
-      if (downloads) y = downloads.rows;
+    for (const preceding of context.allocations) {
+      if (preceding.itemId === allocation.itemId) break;
+      if (preceding.pageId === allocation.pageId) y += preceding.rows;
     }
     return { ...placement, x: 0, y, w: columnCount, h: allocation.rows };
   });

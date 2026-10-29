@@ -15,6 +15,8 @@ export function AdaptiveContainerPrototypeHost({ children }: PropsWithChildren) 
       mediaItemId={prototypeFixtureIds.media}
       downloadsItemId={prototypeFixtureIds.downloads}
       requestsItemId={prototypeFixtureIds.requests}
+      statsItemId={prototypeFixtureIds.stats}
+      overviewClockItemId={prototypeFixtureIds.overviewClock}
       savedContainerRows={6}
     >
       <PrototypeWidgetProvider>

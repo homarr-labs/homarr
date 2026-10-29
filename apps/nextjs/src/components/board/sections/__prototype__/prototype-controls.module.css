@@ -3,60 +3,91 @@
   z-index: 8;
   min-height: calc(44px * var(--board-canvas-ui-scale, 1));
   height: calc(44px * var(--board-canvas-ui-scale, 1));
-  padding: calc(6px * var(--board-canvas-ui-scale, 1)) calc(8px * var(--board-canvas-ui-scale, 1));
+  padding: calc(5px * var(--board-canvas-ui-scale, 1)) calc(8px * var(--board-canvas-ui-scale, 1));
   border-bottom: 1px solid var(--mantine-color-default-border);
   background: var(--mantine-color-body);
 }
-
-.pagePosition {
-  min-width: calc(20px * var(--board-canvas-ui-scale, 1));
-  text-align: center;
-  font-variant-numeric: tabular-nums;
+.stateNavigation {
+  min-width: 0;
 }
-
-.toolbarButton {
-  height: calc(28px * var(--board-canvas-ui-scale, 1));
-  padding-inline: calc(8px * var(--board-canvas-ui-scale, 1));
+.currentState {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: calc(8px * var(--board-canvas-ui-scale, 1));
+  min-width: calc(135px * var(--board-canvas-ui-scale, 1));
+  max-width: calc(220px * var(--board-canvas-ui-scale, 1));
 }
-
-.demoPanel {
+.modeLabel {
+  white-space: nowrap;
+}
+.progressTrack {
+  position: absolute;
+  inset: auto 0 0;
+  height: calc(2px * var(--board-canvas-ui-scale, 1));
+  background: var(--mantine-color-default-hover);
+}
+.progressTrack > div {
+  height: 100%;
+}
+.floatingBar {
   position: fixed;
-  bottom: 16px;
+  z-index: 600;
+  bottom: 17px;
   left: 50%;
   transform: translateX(-50%);
-  z-index: 450;
-  width: min(850px, calc(100vw - 24px));
-  padding: 12px 15px;
+  width: max-content;
+  max-width: calc(100vw - 24px);
+  padding: 7px 10px;
   border: 1px solid var(--mantine-color-violet-6);
-  border-radius: var(--mantine-radius-md);
+  border-radius: var(--mantine-radius-lg);
   box-shadow: var(--mantine-shadow-xl);
   background: var(--mantine-color-body);
 }
-
-.scenarioButtons {
+.barMain {
   flex-wrap: wrap;
+  justify-content: center;
 }
-.scenarioButtons > button {
-  flex: 1 0 auto;
+.variantNavigation {
+  flex: 0 0 auto;
 }
-.drawerBody {
-  padding-bottom: 190px;
+.variantName {
+  min-width: 112px;
+  text-align: center;
 }
-.allocation {
-  padding-top: 8px;
-  border-top: 1px solid var(--mantine-color-default-border);
+.variantName :global(.mantine-Text-root):first-child {
+  font-size: 10px;
 }
-
+.barDivider {
+  width: 1px;
+  height: 27px;
+  margin-inline: 2px;
+  background: var(--mantine-color-default-border);
+}
+.rotationStatus {
+  min-width: 52px;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
 @media (max-width: 600px) {
-  .containerToolbar {
-    gap: 3px;
-    padding-inline: calc(4px * var(--board-canvas-ui-scale, 1));
+  .floatingBar {
+    bottom: 9px;
+    padding: 6px;
   }
-  .manualLabel {
+  .barDivider {
     display: none;
   }
-  .demoPanel {
-    bottom: 8px;
-    padding: 10px;
+  .variantName {
+    min-width: 100px;
+  }
+  .currentState {
+    min-width: calc(104px * var(--board-canvas-ui-scale, 1));
+    max-width: calc(140px * var(--board-canvas-ui-scale, 1));
+  }
+  .modeLabel {
+    max-width: calc(85px * var(--board-canvas-ui-scale, 1));
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 }

@@ -35,6 +35,7 @@ import {
   projectAdaptiveContainerPlacements,
 } from "../__prototype__/adaptive-container-projection";
 import classes from "./section-grid.module.css";
+import { getNativeStackFrameInset } from "../__prototype__/native-stack-surface";
 
 const GridContentScaleContext = createContext(1);
 const GridRowScaleContext = createContext(1);
@@ -207,6 +208,9 @@ export const SectionGrid = ({
     outerCardInset = (2 * CONTAINER_CARD_INSET) / effectiveCanvasScale;
     outerCardInlineInset = (containerInlineInsetCount * CONTAINER_CARD_INSET) / effectiveCanvasScale;
   }
+  if (adaptivePrototype?.sectionId === section.id && adaptivePrototype.variant === "A") {
+    outerCardInlineInset += 42 / effectiveCanvasScale;
+  }
   const fullGridWidth = getLogicalGridSize(columnCount);
   const fullGridHeight = getLogicalGridSize(rowCount);
   const fullViewportHeight = getLogicalGridSize(viewportRowCount);
@@ -223,7 +227,8 @@ export const SectionGrid = ({
     headerInset = (CONTAINER_HEADER_HEIGHT * calculateBoardUiScale(canvasScale)) / parentContentScale;
   }
   if (adaptivePrototype?.sectionId === section.id) {
-    headerInset += (44 * calculateBoardUiScale(canvasScale)) / parentContentScale;
+    const stackHeader = 44 + getNativeStackFrameInset(adaptivePrototype.variant);
+    headerInset += (stackHeader * calculateBoardUiScale(canvasScale)) / parentContentScale;
   }
   let nestedHeaderInset = 0;
   if (

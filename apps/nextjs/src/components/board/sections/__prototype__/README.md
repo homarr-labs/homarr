@@ -1,42 +1,42 @@
-# Smart container — native Homarr prototype
+# Smart stack — native Homarr prototype
 
-Issue: [#7393](https://github.com/homarr-labs/homarr/issues/7393). Research: [adaptive-containers.md](../../../../../../../docs/research/adaptive-containers.md).
+Issue: [#7393](https://github.com/homarr-labs/homarr/issues/7393). [Design record and verification](../../../../../../../docs/research/iphone-smart-stack-prototype.md). [Earlier research](../../../../../../../docs/research/adaptive-containers.md).
 
 Run from this checkout, with the project's dependencies and pinned runtime installed:
 
 ```sh
-mise exec -- bun run prototype:adaptive-containers
+mise exec -- bun run prototype:smart-stack
 ```
 
-Open the [prototype board](http://localhost:7394/boards/adaptive-containers-prototype).
+Open the [prototype board](http://localhost:7395/boards/adaptive-containers-prototype?variant=A).
 
-This uses Homarr's existing board route, header, theme, responsive layouts, real grid/container renderer, and registry-loaded widgets. One smart container combines two pages:
+This is a separate experiment on `feat/prototype-smart-stack`. It uses Homarr's existing board route, header, theme, grid/container renderer, and registry-loaded widgets. The earlier adaptive-container worktree remains separate.
+
+One **SMART STACK** contains three pages:
 
 - **Watching:** Currently playing.
 - **Services:** Downloads and Requests share the available space.
+- **Overview:** a native Clock and Stats widget.
 
-Automatic selection chooses Watching while playback is active, otherwise Services. Children within the selected page share a maximum of six rows: a busy widget grows while its idle sibling shrinks. The real Stats, Clock, and App widgets remain outside this container.
+Compare **A · Stack** (vertical navigation), **B · Reel** (neighboring-state glimpses), and **C · Inspector** (enabled-state tray) with the floating bar's variant arrows. They share the same behavior; `?variant=A`, `B`, or `C` selects the design. The top App tiles, side Clock, and Quick access section remain native board content.
 
-Try the activity buttons in the bottom panel with automatic selection enabled:
+Open **Activity** to change fixture counts or choose a scenario. Children within the selected page share a maximum of six rows: a busy service grows while its idle sibling contracts. Page buttons/arrows browse manually and hold that choice until **Resume**.
 
-| Click | Selected page | What moves |
-| --- | --- | --- |
-| **Watching** | Watching; four sessions | Currently playing fills six rows. |
-| **Downloads take over** | Services; six downloads, zero requests | Downloads gets five rows; Requests contracts to one. |
-| **Requests take over** | Services; zero downloads, five pending requests | Downloads contracts to one row; Requests gets five. |
-| **Both busy** | Services; four downloads and four requests | Each widget gets three rows. |
-| **All quiet** | Services; no activity | Each widget contracts to one row; the container shrinks to two rows and the neighboring section moves up. |
+The outer frame defaults to six rows. Optional reclaim follows smaller page allocations; Reel and Inspector retain at least three rows for their navigation. The native Clock fills five rows above one Stats row in the default Overview page.
 
-Use the container's **Watching/Services** buttons or arrows to page manually. Your page holds through activity changes until **Resume** or **Resume auto**.
+Use **Edit stack** for the native Mantine **Edit smart container** modal. It moves the five existing widget bodies into its preview instead of creating duplicate widgets. Controls stay beside the real preview, with previous/next paging and the selected position below. Tabs are vertical on desktop and horizontal on a phone:
 
-Open **Edit container** for the native Mantine preview drawer. **Reclaim unused space** is on by default; switch it off to keep the six-row outer footprint. Apply adopts the preview settings; Cancel retains newer activity while discarding settings changes. **Edit board layout** reveals all saved children together: Currently playing at three rows, Downloads at two, Requests at one. Activity never writes those saved placements.
+- **States:** edit labels, order, enabled pages, and relevance priorities.
+- **Rotation:** compare Manual, Timed, Smart, and Hybrid; adjust the interval and interaction pauses.
+- **Appearance:** change the design preset, accent, transition, and reclaim behavior.
+- **Data:** send scenarios or change the mock record counts.
 
-The drawer's **Playing**, **Downloads**, and **Requests** inputs change record counts directly. Try one download, then six: its native content and height grow together. Quiet widgets use a compact named summary while their native query bodies remain mounted.
+The default is **Hybrid, 12 seconds**. Manual never switches automatically. Timed cycles enabled page order, optionally skipping inactive pages. Smart promotes the highest-priority relevant page when activity or priorities change, retains ties, and has no timer. Hybrid combines timed paging with activity-driven promotion. Manual browsing holds until Resume. Editing, focused content, a hidden browser tab, and configured hover pauses freeze the countdown.
 
-The launcher creates a dedicated scratch database under `/tmp/homarr-native-adaptive-prototype/`, seeds this public board, starts a local Redis on port 6397, and starts Homarr on port 7394. It does not use another instance's data. Stop the launcher with Ctrl+C. `PROTOTYPE_DATA_DIR`, `PROTOTYPE_PORT`, `PROTOTYPE_REDIS_PORT`, and `PROTOTYPE_PUBLIC_URL` can override those local defaults. The scratch database is intentionally named `PROTOTYPE-wipe-me.sqlite`; the fixture board is reset by each launch.
+**Apply** adopts preview settings; **Cancel** restores the opening settings and design URL, including a pending design change. Both retain incoming activity counts and preserve an existing manual hold. If automatic Smart/Hybrid selection was enabled, closing reconciles the latest activity and priorities, so the selected page can change. Timed resumes its opening page/countdown, resetting the countdown when an applied mode or interval changes. Page membership and overlapping fixture placements are authored for this experiment; global board layout editing is outside its scope.
 
-Only this development board receives fixture transport for native Currently playing, Downloads, Requests, and Stats queries. Other procedures use Homarr's real API and scratch database. Activity, selection, and settings stay in memory and reset on reload. Hidden item bodies stay mounted.
+The launcher seeds a public board in `/tmp/homarr-iphone-smart-stack/PROTOTYPE-wipe-me.sqlite`, starts Redis on **6398**, and serves Homarr on **7395** with a distinct cookie prefix. Stop with Ctrl+C. `PROTOTYPE_DATA_DIR`, `PROTOTYPE_PORT`, `PROTOTYPE_REDIS_PORT`, and `PROTOTYPE_PUBLIC_URL` override local defaults. Each launch resets this fixture board.
 
-This is throwaway code on `feat/prototype-adaptive-containers`. Page selection and bounded sizing use explicit fixture counts, not generic DOM measurement or a production relevance algorithm. Fixed membership, mock transport, and display projections do not establish real upstream behavior, authorization, freshness, persistence, or nested/side-lane support. No tests or broad build suites were run for this prototype. No production design has been selected.
+Only this development board receives fixture transport for native Currently playing, Downloads, Requests, and Stats queries. Other procedures use Homarr's real API and scratch database. Activity, selection, and settings stay in memory and reset on reload; hidden widget bodies stay mounted.
 
-The standalone HTML was rejected because it did not show Homarr. The later separate A/B/C variants also missed the clarified combined behavior. Both are superseded by this single smart container.
+Manual checks cover desktop A/B/C rendering, widget reuse without duplication, timed paging, hover pause, Smart promotion/manual hold/Resume, Hybrid behavior, state reorder, and Apply/Cancel restoration. At 390×844, the phone modal fits without horizontal document overflow; preview/settings remain scrollable and Apply/Cancel stay visible. No automated tests or builds ran. Counts and priorities are fixture inputs, not DOM measurements or a production relevance algorithm; upstream behavior, authorization, freshness, persistence, and nested/side-lane support remain unverified. No production design has been selected.

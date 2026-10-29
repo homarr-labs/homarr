@@ -312,7 +312,8 @@
     "test:ui": "cross-env NODE_ENV=development CI=true vitest --project \"!e2e\" --project \"!integration\" --project \"!docs-screenshots\" --ui",
     "typecheck": "turbo typecheck",
     "with-env": "dotenv -e .env --",
-    "prototype:adaptive-containers": "node scripts/prototype-adaptive-containers.mjs"
+    "prototype:adaptive-containers": "node scripts/prototype-adaptive-containers.mjs",
+    "prototype:smart-stack": "node scripts/prototype-adaptive-containers.mjs"
   },
   "dependencies": {
     "jsonpath-plus": "catalog:"

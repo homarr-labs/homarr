@@ -13,6 +13,11 @@ export { calculateBoardUiScale } from "@homarr/boards/scale";
 
 const BoardCanvasScaleContext = createContext(1);
 
+// The throwaway stack editor previews the same native container at its modal's available scale.
+export const BoardCanvasScaleScope = ({ scale, children }: PropsWithChildren<{ scale: number }>) => (
+  <BoardCanvasScaleContext.Provider value={scale}>{children}</BoardCanvasScaleContext.Provider>
+);
+
 export const useBoardCanvasScale = () => useContext(BoardCanvasScaleContext);
 
 export const calculateBoardCanvasScale = (availableWidth: number, logicalWidth: number) => {

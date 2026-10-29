@@ -5,9 +5,9 @@ import { fileURLToPath } from "node:url";
 import { spawn } from "node:child_process";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const scratch = process.env.PROTOTYPE_DATA_DIR ?? "/tmp/homarr-native-adaptive-prototype";
-const port = process.env.PROTOTYPE_PORT ?? "7394";
-const redisPort = process.env.PROTOTYPE_REDIS_PORT ?? "6397";
+const scratch = process.env.PROTOTYPE_DATA_DIR ?? "/tmp/homarr-iphone-smart-stack";
+const port = process.env.PROTOTYPE_PORT ?? "7395";
+const redisPort = process.env.PROTOTYPE_REDIS_PORT ?? "6398";
 await mkdir(scratch, { recursive: true });
 const environment = {
   ...process.env,
@@ -17,7 +17,7 @@ const environment = {
   SECRET_ENCRYPTION_KEY: randomBytes(32).toString("hex"),
   AUTH_SECRET: randomBytes(32).toString("hex"),
   AUTH_TRUST_HOST: "true",
-  AUTH_COOKIE_PREFIX: "homarr-adaptive-prototype",
+  AUTH_COOKIE_PREFIX: "smart-stack-prototype",
   REDIS_IS_EXTERNAL: "true",
   REDIS_HOST: "127.0.0.1",
   REDIS_PORT: redisPort,
@@ -59,4 +59,4 @@ app.on("exit", (code) => {
   redis.kill("SIGTERM");
   process.exit(code ?? 0);
 });
-console.log(`Native Homarr smart container: ${environment.BASE_URL}/boards/adaptive-containers-prototype`);
+console.log(`Native Homarr smart stack: ${environment.BASE_URL}/boards/adaptive-containers-prototype?variant=A`);

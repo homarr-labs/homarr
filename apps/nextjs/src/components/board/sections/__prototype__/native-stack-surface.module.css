@@ -1,0 +1,274 @@
+.stage {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  isolation: isolate;
+  outline: none;
+}
+
+.stage:focus-visible {
+  outline: calc(2px * var(--board-canvas-ui-scale, 1)) solid var(--stack-accent);
+  outline-offset: calc(5px * var(--board-canvas-ui-scale, 1));
+  border-radius: var(--mantine-radius-lg);
+}
+
+.cardViewport {
+  position: relative;
+  width: 100%;
+  height: calc(100% - var(--stack-frame-inset));
+  z-index: 2;
+}
+
+.stage[data-stack-variant="A"] .cardViewport {
+  box-sizing: border-box;
+  padding-inline-end: calc(42px * var(--board-canvas-ui-scale, 1));
+  border-radius: var(--mantine-radius-xl);
+  box-shadow: 0 calc(12px * var(--board-canvas-ui-scale, 1)) calc(38px * var(--board-canvas-ui-scale, 1))
+    color-mix(in srgb, var(--mantine-color-text) 9%, transparent);
+}
+
+.stage[data-stack-editing] .cardViewport {
+  outline: calc(2px * var(--board-canvas-ui-scale, 1)) dashed var(--stack-accent);
+  outline-offset: calc(4px * var(--board-canvas-ui-scale, 1));
+}
+
+.backSheet {
+  position: absolute;
+  inset: 0;
+  border: calc(1px * var(--board-canvas-ui-scale, 1)) solid
+    color-mix(in srgb, var(--stack-accent) 24%, var(--mantine-color-default-border));
+  border-radius: var(--mantine-radius-xl);
+  background: color-mix(in srgb, var(--stack-accent) 7%, var(--mantine-color-body));
+  pointer-events: none;
+  z-index: 0;
+}
+
+.backSheet[data-layer="back"] {
+  transform: translateY(calc(-14px * var(--board-canvas-ui-scale, 1))) scaleX(0.95);
+}
+
+.backSheet[data-layer="front"] {
+  transform: translateY(calc(-7px * var(--board-canvas-ui-scale, 1))) scaleX(0.975);
+  z-index: 1;
+}
+
+.verticalRail {
+  position: absolute;
+  z-index: 25;
+  right: calc(2px * var(--board-canvas-ui-scale, 1));
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: calc(3px * var(--board-canvas-ui-scale, 1));
+  padding: calc(5px * var(--board-canvas-ui-scale, 1));
+  border: calc(1px * var(--board-canvas-ui-scale, 1)) solid var(--mantine-color-default-border);
+  border-radius: calc(18px * var(--board-canvas-ui-scale, 1));
+  background: color-mix(in srgb, var(--mantine-color-body) 95%, transparent);
+  box-shadow: var(--mantine-shadow-sm);
+  touch-action: none;
+}
+
+.verticalRail button {
+  display: grid;
+  place-items: center;
+  width: calc(26px * var(--board-canvas-ui-scale, 1));
+  height: calc(26px * var(--board-canvas-ui-scale, 1));
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--mantine-color-dimmed);
+  cursor: pointer;
+}
+
+.verticalRail svg {
+  width: calc(15px * var(--board-canvas-ui-scale, 1));
+  height: calc(15px * var(--board-canvas-ui-scale, 1));
+}
+
+.verticalRail .dot {
+  height: calc(21px * var(--board-canvas-ui-scale, 1));
+}
+
+.dot span {
+  width: calc(6px * var(--board-canvas-ui-scale, 1));
+  height: calc(6px * var(--board-canvas-ui-scale, 1));
+  background: var(--mantine-color-gray-4);
+  border-radius: 50%;
+}
+
+.dot[data-active] span {
+  height: calc(15px * var(--board-canvas-ui-scale, 1));
+  border-radius: calc(5px * var(--board-canvas-ui-scale, 1));
+  background: var(--stack-accent);
+}
+
+.verticalRail button:hover,
+.verticalRail button:focus-visible {
+  color: var(--stack-accent);
+  background: color-mix(in srgb, var(--stack-accent) 10%, transparent);
+}
+
+.stage[data-stack-variant="B"] .cardViewport {
+  top: calc(44px * var(--board-canvas-ui-scale, 1));
+}
+
+.peek {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  gap: calc(9px * var(--board-canvas-ui-scale, 1));
+  width: calc(100% - 24px * var(--board-canvas-ui-scale, 1));
+  left: calc(12px * var(--board-canvas-ui-scale, 1));
+  height: calc(35px * var(--board-canvas-ui-scale, 1));
+  padding: 0 calc(14px * var(--board-canvas-ui-scale, 1));
+  border: calc(1px * var(--board-canvas-ui-scale, 1)) solid var(--mantine-color-default-border);
+  border-radius: var(--mantine-radius-lg);
+  color: var(--mantine-color-text);
+  background: color-mix(in srgb, var(--stack-accent) 6%, var(--mantine-color-body));
+  cursor: pointer;
+  font: inherit;
+  font-size: var(--mantine-font-size-sm);
+  font-weight: 600;
+  overflow: hidden;
+}
+
+.peek[data-direction="previous"] {
+  top: 0;
+}
+
+.peek[data-direction="next"] {
+  bottom: 0;
+}
+
+.peek svg {
+  flex-shrink: 0;
+  width: calc(16px * var(--board-canvas-ui-scale, 1));
+  height: calc(16px * var(--board-canvas-ui-scale, 1));
+  color: var(--stack-accent);
+}
+
+.peekDetail {
+  margin-inline-start: auto;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-size: var(--mantine-font-size-xs);
+  font-weight: 400;
+  color: var(--mantine-color-dimmed);
+}
+
+.inspectorTray {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: calc(108px * var(--board-canvas-ui-scale, 1));
+  display: flex;
+  gap: calc(8px * var(--board-canvas-ui-scale, 1));
+}
+
+.inspectorState {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: calc(9px * var(--board-canvas-ui-scale, 1));
+  min-width: 0;
+  flex: 1;
+  padding: calc(13px * var(--board-canvas-ui-scale, 1));
+  border: calc(1px * var(--board-canvas-ui-scale, 1)) solid var(--mantine-color-default-border);
+  border-radius: var(--mantine-radius-md);
+  background: var(--mantine-color-body);
+  color: var(--mantine-color-text);
+  cursor: pointer;
+  text-align: start;
+  font: inherit;
+}
+
+.inspectorState[data-active] {
+  border-color: var(--stack-accent);
+  background: color-mix(in srgb, var(--stack-accent) 7%, var(--mantine-color-body));
+}
+
+.stateNumber {
+  font-size: var(--mantine-font-size-xs);
+  color: var(--stack-accent);
+  font-weight: 600;
+}
+
+.stateDetails {
+  display: grid;
+  gap: calc(5px * var(--board-canvas-ui-scale, 1));
+  min-width: 0;
+}
+
+.stateDetails strong {
+  font-size: var(--mantine-font-size-sm);
+  font-weight: 600;
+}
+
+.stateDetails small {
+  font-size: var(--mantine-font-size-xs);
+  color: var(--mantine-color-dimmed);
+}
+
+.stateIcon {
+  position: absolute;
+  right: calc(8px * var(--board-canvas-ui-scale, 1));
+  bottom: calc(8px * var(--board-canvas-ui-scale, 1));
+  width: calc(20px * var(--board-canvas-ui-scale, 1));
+  height: calc(20px * var(--board-canvas-ui-scale, 1));
+  color: var(--stack-accent);
+  opacity: 0.35;
+}
+
+.editingPlaceholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: var(--mantine-spacing-sm);
+  border: calc(1px * var(--board-canvas-ui-scale, 1)) dashed var(--mantine-color-default-border);
+  border-radius: var(--mantine-radius-xl);
+  color: var(--mantine-color-dimmed);
+  font-size: var(--mantine-font-size-sm);
+}
+
+.modalCanvas {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  padding: 14px;
+}
+
+.modalSizer {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.modalCanvas[data-scroll-preview] {
+  align-items: flex-start;
+  overflow-y: auto;
+}
+
+@media (max-width: 600px) {
+  .inspectorState {
+    padding: calc(9px * var(--board-canvas-ui-scale, 1));
+    gap: calc(5px * var(--board-canvas-ui-scale, 1));
+  }
+  .stateDetails small {
+    font-size: calc(10px * var(--board-canvas-ui-scale, 1));
+  }
+  .peekDetail {
+    display: none;
+  }
+}

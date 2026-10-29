@@ -19,6 +19,7 @@ import { useOpenSectionApps } from "./use-open-section-apps";
 import classes from "./item.module.css";
 import { useAdaptiveContainerPrototype } from "./__prototype__/adaptive-container-context";
 import { NativeContainerPrototypeActions } from "./__prototype__/prototype-controls";
+import { NativeSmartStackSurface } from "./__prototype__/native-stack-surface";
 
 const BoardContainerMenu = dynamic(
   () => import("./container/container-menu").then((module) => module.BoardContainerMenu),
@@ -64,7 +65,12 @@ export const BoardContainerSection = ({ section }: Props) => {
     sectionId: section.id,
     collapsible: options.collapsible,
   });
-  const label = options.title.trim() || t("untitled");
+  let label = options.title.trim() || t("untitled");
+  let cardRadius = board.itemRadius;
+  if (isSmartPrototype) {
+    label = adaptivePrototype.settings.title;
+    if (adaptivePrototype.variant === "A") cardRadius = "xl";
+  }
   const contentId = `board-container-${section.id}-content`;
   let menuTop = getBoundedMenuOffset(menuTopOffset);
   if (hasHeader) {
@@ -126,138 +132,140 @@ export const BoardContainerSection = ({ section }: Props) => {
   }
 
   return (
-    <Box
-      className="board-grid-item-content"
-      data-grid-item-content
-      w="100%"
-      h="100%"
-      style={{
-        overflow: "visible",
-      }}
-    >
-      <Card
-        className={combineClasses(
-          classes.itemCard,
-          classes.containerCard,
-          options.customCssClasses.join(" "),
-          isVisuallyCollapsed && !hasHeader && classes.collapsedContainerCard,
-          hasHeader && classes.labeledContainerCard,
-        )}
+    <NativeSmartStackSurface section={section}>
+      <Box
+        className="board-grid-item-content"
+        data-grid-item-content
         w="100%"
         h="100%"
-        data-board-container-collapsed={isVisuallyCollapsed ? "true" : "false"}
-        styles={{
-          root: {
-            overflow: "visible",
-            "--opacity": board.opacity / 100,
-            "--container-border-color": options.borderColor || undefined,
-            "--container-action-inset": headerActionInset,
-            "--container-header-height": `calc(${CONTAINER_HEADER_HEIGHT}px * var(--board-canvas-ui-scale, 1))`,
-          },
+        style={{
+          overflow: "visible",
         }}
-        radius={board.itemRadius}
-        p={0}
       >
-        {hasHeader && (
-          <div className={classes.containerHeader} data-board-container-header>
-            <button
-              type="button"
-              className={classes.containerHeaderToggle}
-              data-board-container-label
-              data-board-container-collapsed-control={isVisuallyCollapsed ? "true" : undefined}
+        <Card
+          className={combineClasses(
+            classes.itemCard,
+            classes.containerCard,
+            options.customCssClasses.join(" "),
+            isVisuallyCollapsed && !hasHeader && classes.collapsedContainerCard,
+            hasHeader && classes.labeledContainerCard,
+          )}
+          w="100%"
+          h="100%"
+          data-board-container-collapsed={isVisuallyCollapsed ? "true" : "false"}
+          styles={{
+            root: {
+              overflow: "visible",
+              "--opacity": board.opacity / 100,
+              "--container-border-color": options.borderColor || undefined,
+              "--container-action-inset": headerActionInset,
+              "--container-header-height": `calc(${CONTAINER_HEADER_HEIGHT}px * var(--board-canvas-ui-scale, 1))`,
+            },
+          }}
+          radius={cardRadius}
+          p={0}
+        >
+          {hasHeader && (
+            <div className={classes.containerHeader} data-board-container-header>
+              <button
+                type="button"
+                className={classes.containerHeaderToggle}
+                data-board-container-label
+                data-board-container-collapsed-control={isVisuallyCollapsed ? "true" : undefined}
+                {...toggleHandlers}
+                aria-expanded={!isVisuallyCollapsed}
+                aria-controls={contentId}
+                aria-label={`${t(isVisuallyCollapsed ? "action.expand" : "action.collapse")}: ${label}`}
+                title={label}
+              >
+                <span className={classes.containerHeaderTitle}>{label}</span>
+                <span className={classes.containerHeaderIcon}>{toggleIcon}</span>
+              </button>
+            </div>
+          )}
+          {options.collapsible && !hasHeader && (
+            <Button
+              className={classes.containerToggle}
+              pos="absolute"
+              {...toggleLayout}
+              px={6}
+              ps={labelLeft}
+              pe={collapsedLabelPaddingRight}
+              radius="sm"
+              variant="default"
+              justify="center"
               {...toggleHandlers}
               aria-expanded={!isVisuallyCollapsed}
               aria-controls={contentId}
               aria-label={`${t(isVisuallyCollapsed ? "action.expand" : "action.collapse")}: ${label}`}
-              title={label}
+              data-board-container-collapsed-control={isVisuallyCollapsed ? "true" : undefined}
+              data-board-container-label
             >
-              <span className={classes.containerHeaderTitle}>{label}</span>
-              <span className={classes.containerHeaderIcon}>{toggleIcon}</span>
-            </button>
-          </div>
-        )}
-        {options.collapsible && !hasHeader && (
-          <Button
-            className={classes.containerToggle}
-            pos="absolute"
-            {...toggleLayout}
-            px={6}
-            ps={labelLeft}
-            pe={collapsedLabelPaddingRight}
-            radius="sm"
-            variant="default"
-            justify="center"
-            {...toggleHandlers}
-            aria-expanded={!isVisuallyCollapsed}
-            aria-controls={contentId}
-            aria-label={`${t(isVisuallyCollapsed ? "action.expand" : "action.collapse")}: ${label}`}
-            data-board-container-collapsed-control={isVisuallyCollapsed ? "true" : undefined}
-            data-board-container-label
+              {toggleIcon}
+            </Button>
+          )}
+          {!isVisuallyCollapsed && !options.collapsible && options.showLabel && options.title && (
+            <Badge
+              className={classes.containerLabel}
+              pos="absolute"
+              top={labelTop}
+              left={labelLeft}
+              maw={labelMaxWidth}
+              size="md"
+              radius="sm"
+              variant="default"
+              c="var(--mantine-color-text)"
+              style={{
+                zIndex: 9,
+                pointerEvents: "none",
+              }}
+              title={label}
+              data-board-container-label
+            >
+              {label}
+            </Badge>
+          )}
+          {options.showOpenAll && !isEditMode && (
+            <ActionIcon
+              className={classes.containerAction}
+              pos="absolute"
+              top={isVisuallyCollapsed ? "50%" : labelTop}
+              right={8}
+              style={{ zIndex: 10, transform: isVisuallyCollapsed ? "translateY(-50%)" : undefined }}
+              variant={options.collapsible ? "subtle" : "default"}
+              size={24}
+              radius="sm"
+              loading={areAppsLoading}
+              onClick={openAllInNewTabs}
+              aria-label={tSection("action.openAllInNewTabsFor", { name: label })}
+            >
+              <IconExternalLink size="var(--mantine-font-size-md)" />
+            </ActionIcon>
+          )}
+          {isSmartPrototype && <NativeContainerPrototypeActions sectionId={section.id} />}
+          <Box
+            id={contentId}
+            className={classes.containerBody}
+            h={bodyHeight}
+            data-board-container-body
+            data-collapsed={isVisuallyCollapsed ? "true" : "false"}
+            aria-hidden={isVisuallyCollapsed}
+            inert={isVisuallyCollapsed}
           >
-            {toggleIcon}
-          </Button>
-        )}
-        {!isVisuallyCollapsed && !options.collapsible && options.showLabel && options.title && (
-          <Badge
-            className={classes.containerLabel}
-            pos="absolute"
-            top={labelTop}
-            left={labelLeft}
-            maw={labelMaxWidth}
-            size="md"
-            radius="sm"
-            variant="default"
-            c="var(--mantine-color-text)"
-            style={{
-              zIndex: 9,
-              pointerEvents: "none",
-            }}
-            title={options.title}
-            data-board-container-label
-          >
-            {options.title}
-          </Badge>
-        )}
-        {options.showOpenAll && !isEditMode && (
-          <ActionIcon
-            className={classes.containerAction}
-            pos="absolute"
-            top={isVisuallyCollapsed ? "50%" : labelTop}
-            right={8}
-            style={{ zIndex: 10, transform: isVisuallyCollapsed ? "translateY(-50%)" : undefined }}
-            variant={options.collapsible ? "subtle" : "default"}
-            size={24}
-            radius="sm"
-            loading={areAppsLoading}
-            onClick={openAllInNewTabs}
-            aria-label={tSection("action.openAllInNewTabsFor", { name: label })}
-          >
-            <IconExternalLink size="var(--mantine-font-size-md)" />
-          </ActionIcon>
-        )}
-        {isSmartPrototype && <NativeContainerPrototypeActions sectionId={section.id} />}
-        <Box
-          id={contentId}
-          className={classes.containerBody}
-          h={bodyHeight}
-          data-board-container-body
-          data-collapsed={isVisuallyCollapsed ? "true" : "false"}
-          aria-hidden={isVisuallyCollapsed}
-          inert={isVisuallyCollapsed}
-        >
-          <ContainerDepthContext value={containerDepth + 1}>
-            <SectionGrid
-              section={section}
-              columnCount={section.width}
-              containerInlineInsetCount={containerInlineInsetCount}
-              requestedRowCount={section.height}
-              viewportRowCountOverride={isVisuallyCollapsed ? section.height : undefined}
-              label={label}
-            />
-          </ContainerDepthContext>
-        </Box>
-        {isEditMode && <BoardContainerMenu section={section} position={menuPosition} />}
-      </Card>
-    </Box>
+            <ContainerDepthContext value={containerDepth + 1}>
+              <SectionGrid
+                section={section}
+                columnCount={section.width}
+                containerInlineInsetCount={containerInlineInsetCount}
+                requestedRowCount={section.height}
+                viewportRowCountOverride={isVisuallyCollapsed ? section.height : undefined}
+                label={label}
+              />
+            </ContainerDepthContext>
+          </Box>
+          {isEditMode && <BoardContainerMenu section={section} position={menuPosition} />}
+        </Card>
+      </Box>
+    </NativeSmartStackSurface>
   );
 };
