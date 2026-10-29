@@ -3,7 +3,7 @@ import { memo, Suspense, use, useCallback, useEffect, useMemo, useRef, useState,
 import { createPortal } from "react-dom";
 import dynamic from "next/dynamic";
 import { Box, Button, Center, Portal, Text } from "@mantine/core";
-import { useElementSize, useInViewport, useIsomorphicEffect } from "@mantine/hooks";
+import { useInViewport, useIsomorphicEffect } from "@mantine/hooks";
 import { QueryErrorResetBoundary, useQueryClient } from "@tanstack/react-query";
 import combineClasses from "clsx";
 import { NoIntegrationSelectedError } from "@homarr/widgets/errors/classes";
@@ -15,6 +15,7 @@ import { useEditMode } from "@homarr/boards/edit-mode";
 import { getWidgetName } from "@homarr/definitions";
 import { useSettings } from "@homarr/settings";
 import { useI18n } from "@homarr/translation/client";
+import { useDeferredElementSize } from "@homarr/ui/hooks";
 import { WidgetError } from "@homarr/widgets/errors";
 import {
   createWidgetRuntimeState,
@@ -105,7 +106,7 @@ const getServerHydratedSnapshot = () => false;
 
 export const BoardItemContent = ({ item }: BoardItemContentProps) => {
   const hydrated = useSyncExternalStore(subscribeToHydration, getHydratedSnapshot, getServerHydratedSnapshot);
-  const { ref, width: measuredWidth, height: measuredHeight } = useElementSize<HTMLDivElement>();
+  const { ref, width: measuredWidth, height: measuredHeight } = useDeferredElementSize<HTMLDivElement>();
   const { getEntryRuntime } = useBoardGridPortalHost();
   const { widgetStateRef, widgetRuntimeRef } = getEntryRuntime(item.id, createBoardItemRuntime);
   const width = measuredWidth || getLogicalTrackSize(item.width);

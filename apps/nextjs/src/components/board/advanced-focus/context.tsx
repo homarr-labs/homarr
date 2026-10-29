@@ -1,9 +1,9 @@
 "use client";
 
 import type { CSSProperties, PropsWithChildren } from "react";
-import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
+import { createContext, startTransition, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { Overlay, Portal } from "@mantine/core";
-import { useIsomorphicEffect, useViewportSize } from "@mantine/hooks";
+import { useIsomorphicEffect, useWindowEvent } from "@mantine/hooks";
 
 import { useEditMode } from "@homarr/boards/edit-mode";
 
@@ -42,6 +42,7 @@ const AdvancedFocusContext = createContext<AdvancedFocusContextValue | null>(nul
 const HOVER_DELAY_MS = 500;
 const POINTER_TRANSITION_GRACE_MS = 80;
 const CLOSE_DURATION_MS = 180;
+const VIEWPORT_EVENT_OPTIONS = { passive: true };
 
 const isEditableTarget = (target: EventTarget | null) =>
   target instanceof HTMLElement &&
@@ -49,7 +50,7 @@ const isEditableTarget = (target: EventTarget | null) =>
 
 export const BoardAdvancedFocusProvider = ({ children }: PropsWithChildren) => {
   const [isEditMode] = useEditMode();
-  const viewportSize = useViewportSize();
+  const viewportSize = useNonUrgentViewportSize();
   const [active, setActive] = useState<ActiveFocus | null>(null);
   const [isHoldPending, setIsHoldPending] = useState(false);
   const activeRef = useRef<ActiveFocus | null>(null);
@@ -408,6 +409,21 @@ export const BoardAdvancedFocusProvider = ({ children }: PropsWithChildren) => {
       )}
     </AdvancedFocusContext.Provider>
   );
+};
+
+const useNonUrgentViewportSize = () => {
+  const [viewportSize, setViewportSize] = useState({ width: 0, height: 0 });
+  const setSize = useCallback(() => {
+    startTransition(() => {
+      setViewportSize({ width: window.innerWidth || 0, height: window.innerHeight || 0 });
+    });
+  }, []);
+
+  useWindowEvent("resize", setSize, VIEWPORT_EVENT_OPTIONS);
+  useWindowEvent("orientationchange", setSize, VIEWPORT_EVENT_OPTIONS);
+  useEffect(setSize, [setSize]);
+
+  return viewportSize;
 };
 
 export const useAdvancedFocus = () => {

@@ -1,7 +1,16 @@
 "use client";
 
 import type { CSSProperties, KeyboardEvent, PointerEvent, RefObject } from "react";
-import { createContext, useContext, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import {
+  createContext,
+  startTransition,
+  useContext,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { Box } from "@mantine/core";
 import combineClasses from "clsx";
 
@@ -406,7 +415,11 @@ const useMinimumViewportRowCount = (enabled: boolean, canvasScale: number) => {
 
   useEffect(() => {
     if (!enabled) return;
-    const update = () => setVisualHeight(window.visualViewport?.height ?? window.innerHeight);
+    const update = () => {
+      startTransition(() => {
+        setVisualHeight(window.visualViewport?.height ?? window.innerHeight);
+      });
+    };
     update();
     window.addEventListener("resize", update, { passive: true });
     window.visualViewport?.addEventListener("resize", update, { passive: true });
