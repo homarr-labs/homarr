@@ -4804,10 +4804,6 @@
           "label": "Sections",
           "description": "Groups of repositories to show. Hidden groups are not listed at all."
         },
-        "collapsedSections": {
-          "label": "Collapsed sections",
-          "description": "Groups that start collapsed. Click a group title to expand it."
-        },
         "newReleaseWithin": {
           "label": "Highlight new releases for",
           "description": "Releases published within this period are listed under New until you mark them as viewed.",
@@ -5012,7 +5008,11 @@
       "runningVersions": "Running Versions",
       "upToDate": "Up to date",
       "updateAvailable": "Update available",
-      "unknownStatus": "Unknown"
+      "unknownStatus": "Unknown",
+      "error": {
+        "collapsedSaveTitle": "Collapsed sections were not saved",
+        "collapsedSaveMessage": "The section could not be updated. Try again."
+      }
     },
     "networkControllerSummary": {
       "advanced": {
@@ -5518,6 +5518,9 @@
       "name": "Beszel Systems (Table)",
       "description": "Table view of all Beszel-monitored systems with sortable columns and status indicators",
       "option": {
+        "fahrenheit": {
+          "label": "Temperature in Fahrenheit"
+        },
         "sortBy": {
           "label": "Sort by"
         },
@@ -5532,7 +5535,12 @@
     },
     "beszelSystemGrid": {
       "name": "Beszel Systems (Grid)",
-      "description": "Card grid view of all Beszel-monitored systems with real-time metrics"
+      "description": "Card grid view of all Beszel-monitored systems with real-time metrics",
+      "option": {
+        "fahrenheit": {
+          "label": "Temperature in Fahrenheit"
+        }
+      }
     },
     "beszelAlerts": {
       "name": "Beszel Alerts",

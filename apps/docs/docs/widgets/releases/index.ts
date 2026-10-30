@@ -28,12 +28,6 @@ export const releasesWidget: WidgetDefinition = {
         defaultValue: "All",
       },
       {
-        name: "Collapsed sections",
-        description: "Groups that start collapsed.",
-        values: { type: "select", options: ["New", "Needs attention", "Up to date", "Quiet"] },
-        defaultValue: "Quiet",
-      },
-      {
         name: "Highlight new releases for",
         description: "Releases published within this period are listed under New until you mark them as viewed.",
         values: { type: "select", options: ["Never", "1 day", "3 days", "1 week", "2 weeks", "1 month", "3 months"] },

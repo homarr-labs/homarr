@@ -1017,16 +1017,18 @@ export const integrationDefs = {
     httpAuth: {
       type: "modes",
       modes: [
-        { when: [], auth: { type: "none" } },
+        { when: ["personalAccessToken"], auth: { type: "bearer", secretKind: "personalAccessToken" } },
         { when: ["username", "password"], auth: { type: "basic" } },
+        { when: [], auth: { type: "none" } },
       ],
     },
     name: "What's Up Docker",
-    secretKinds: [[], ["username", "password"]],
+    secretKinds: [["personalAccessToken"], ["username", "password"], []],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/whats-up-docker.svg",
     category: ["healthMonitoring"],
     documentationSlug: "whats-up-docker",
     defaultPort: 3000,
+    apiKeySettingsPath: "/profile",
   },
   llamacpp: {
     httpAuth: { type: "none" },

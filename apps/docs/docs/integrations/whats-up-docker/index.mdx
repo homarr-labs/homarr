@@ -31,15 +31,20 @@ Use the root URL of your WUD instance, for example `https://wud.example.com`. Ho
 
 ### Secrets
 
-WUD 9 requires authentication. Enter your WUD username and password in Homarr; the initial admin credentials configured with `WUD_AUTH_ADMIN_USER` and `WUD_AUTH_ADMIN_PASSWORD` work with Basic authentication. Older WUD versions without authentication can leave both fields empty.
+WUD 9 requires authentication. The recommended option is a Personal API Token: in WUD, open **My Profile → Personal API Tokens**, create a token with the **read** scope, and enter it in Homarr. This also works when WUD uses OIDC and has no local password. Homarr sends the token as `Authorization: Bearer wud_...`.
+
+Username and password (HTTP Basic) remain supported for existing setups and older versions. WUD versions without authentication can leave the secrets empty.
 
 Credentials are sent to the configured URL over HTTP or HTTPS. Use HTTPS outside a trusted internal network.
 
 <IntegrationSecrets
   secrets={[
     {
-      credentials: [],
-      steps: [],
+      credentials: ["personalAccessToken"],
+      steps: [
+        "In WUD, open My Profile → Personal API Tokens and create a token with read access",
+        "Enter the wud_... token in Homarr; it is sent as a Bearer token",
+      ],
     },
     {
       credentials: ["username", "password"],
@@ -47,6 +52,10 @@ Credentials are sent to the configured URL over HTTP or HTTPS. Use HTTPS outside
         "Use your WUD account credentials; older versions can use a configured WUD_AUTH_BASIC_* user",
         "Enter that username and password in Homarr — Basic authentication is handled automatically",
       ],
+    },
+    {
+      credentials: [],
+      steps: [],
     },
   ]}
 />
