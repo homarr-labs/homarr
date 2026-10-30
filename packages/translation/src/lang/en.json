@@ -101,8 +101,6 @@
       "connect": {
         "title": "Connect what makes the board useful",
         "description": "Select several services at once. Docker labels take priority, image matching fills gaps, and every URL and credential stays reviewable.",
-        "serverOriginHelp": "Use your usual address and URL pattern to prefill the services below. Individual URL edits are kept.",
-        "serverAddressExample": "Example: {url}",
         "confirmServerAddress": "This looks right",
         "serverAddressReviewed": "Server address reviewed. You can still edit each service URL below.",
         "discoveredIntegrations": "Detected integration instances ({count})",
@@ -1934,6 +1932,8 @@
     "here": "here",
     "serviceUrlTemplate": {
       "serverTitle": "Usual server address",
+      "description": "Use your usual address and URL pattern to prefill the services below. Individual URL edits are kept.",
+      "example": "Example: {url}",
       "urlModeLabel": "Service address pattern",
       "hostPort": "Same host, different ports",
       "subdomain": "One subdomain per service",

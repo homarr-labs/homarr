@@ -2,11 +2,13 @@
 
 import type { ReactNode } from "react";
 import { useRef, useState } from "react";
-import { FloatingIndicator, Stack, TextInput, UnstyledButton } from "@mantine/core";
+import { FloatingIndicator, Stack, Text, TextInput, UnstyledButton } from "@mantine/core";
 
 import type { UrlTemplateMode } from "@homarr/definitions";
+import { buildIntegrationUrl } from "@homarr/definitions";
 import { useI18n } from "@homarr/translation/client";
 
+import { normalizeServiceUrl } from "./discovery-selection";
 import { useOnboardingSounds } from "./use-onboarding-sounds";
 import classes from "./onboarding-studio.module.css";
 
@@ -68,7 +70,6 @@ interface ServiceUrlTemplateProps {
   onModeChange: (value: UrlTemplateMode) => void;
   readOnly?: boolean;
   required?: boolean;
-  description?: ReactNode;
   addressAction?: ReactNode;
 }
 
@@ -79,18 +80,18 @@ export const ServiceUrlTemplate = ({
   onModeChange,
   readOnly,
   required,
-  description,
   addressAction,
 }: ServiceUrlTemplateProps) => {
   const t = useI18n("common.serviceUrlTemplate");
+  const exampleUrl = normalizeServiceUrl(buildIntegrationUrl("sonarr", serverOrigin, mode));
 
   return (
-    <Stack gap="sm">
+    <Stack className={classes.serviceUrlTemplate} gap="sm">
       <div className={classes.serviceAddressRow}>
         <TextInput
           className={classes.serviceAddressInput}
           label={t("serverTitle")}
-          description={description}
+          description={t("description")}
           placeholder="home.lan · 192.168.1.10 · https://homarr.example.com"
           value={serverOrigin}
           onChange={(event) => onServerOriginChange(event.currentTarget.value)}
@@ -111,6 +112,11 @@ export const ServiceUrlTemplate = ({
             { value: "path", label: t("path") },
           ]}
         />
+      )}
+      {exampleUrl && (
+        <Text size="xs" c="dimmed" style={{ overflowWrap: "anywhere" }}>
+          {t("example", { url: exampleUrl })}
+        </Text>
       )}
     </Stack>
   );

@@ -916,7 +916,6 @@ const ServerAddressReview = (props: StudioSectionProps) => {
     >
       <Stack gap="xs">
         <ServiceUrlTemplate
-          description={t("serverOriginHelp")}
           serverOrigin={props.serverOrigin}
           onServerOriginChange={props.setServerOrigin}
           mode={props.urlMode}
@@ -936,11 +935,6 @@ const ServerAddressReview = (props: StudioSectionProps) => {
             )
           }
         />
-        {props.serverAddressValid && (
-          <Text size="xs" c="dimmed" style={{ overflowWrap: "anywhere" }}>
-            {t("serverAddressExample", { url: buildIntegrationUrl("sonarr", props.serverOrigin, props.urlMode) })}
-          </Text>
-        )}
         {props.serverAddressReviewed && (
           <Text component="output" size="sm" c="dimmed">
             {t("serverAddressReviewed")}

@@ -252,6 +252,10 @@
   padding: clamp(1rem, 3vw, 2rem);
 }
 
+.serviceUrlTemplate {
+  min-width: 0;
+}
+
 .serviceAddressRow {
   display: flex;
   align-items: flex-end;
@@ -263,11 +267,15 @@
   min-width: 0;
 }
 
-.serverAddressReview .floatingControlRoot {
+.serviceAddressInput :global(.mantine-Input-input) {
+  min-height: 2.75rem;
+}
+
+.serviceUrlTemplate .floatingControlRoot {
   border: 0;
 }
 
-.serverAddressReview .floatingControlIndicator {
+.serviceUrlTemplate .floatingControlIndicator {
   border: 0;
 }
 
@@ -588,14 +596,14 @@
     align-items: stretch;
   }
 
-  .serverAddressReview .floatingControlRoot {
+  .serviceUrlTemplate .floatingControlRoot {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
     width: 100%;
     min-width: 0;
   }
 
-  .serverAddressReview .floatingControl {
+  .serviceUrlTemplate .floatingControl {
     min-width: 0;
     min-height: 2.75rem;
     font-size: var(--mantine-font-size-sm);
