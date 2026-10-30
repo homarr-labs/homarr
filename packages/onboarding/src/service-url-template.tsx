@@ -2,7 +2,8 @@
 
 import type { ReactNode } from "react";
 import { useRef, useState } from "react";
-import { FloatingIndicator, Stack, Text, TextInput, UnstyledButton } from "@mantine/core";
+import { Flex, FloatingIndicator, SegmentedControl, Stack, Text, TextInput, UnstyledButton } from "@mantine/core";
+import { useMediaQuery } from "@mantine/hooks";
 
 import type { UrlTemplateMode } from "@homarr/definitions";
 import { buildIntegrationUrl } from "@homarr/definitions";
@@ -68,7 +69,6 @@ interface ServiceUrlTemplateProps {
   onServerOriginChange: (value: string) => void;
   mode: UrlTemplateMode;
   onModeChange: (value: UrlTemplateMode) => void;
-  readOnly?: boolean;
   required?: boolean;
   addressAction?: ReactNode;
 }
@@ -78,41 +78,49 @@ export const ServiceUrlTemplate = ({
   onServerOriginChange,
   mode,
   onModeChange,
-  readOnly,
   required,
   addressAction,
 }: ServiceUrlTemplateProps) => {
   const t = useI18n("common.serviceUrlTemplate");
+  const sounds = useOnboardingSounds();
+  const isMobile = useMediaQuery("(max-width: 36em)");
   const exampleUrl = normalizeServiceUrl(buildIntegrationUrl("sonarr", serverOrigin, mode));
 
   return (
-    <Stack className={classes.serviceUrlTemplate} gap="sm">
-      <div className={classes.serviceAddressRow}>
+    <Stack gap="sm" miw={0}>
+      <Flex direction={{ base: "column", xs: "row" }} align={{ base: "stretch", xs: "end" }} gap="sm">
         <TextInput
-          className={classes.serviceAddressInput}
+          flex={1}
+          miw={0}
+          styles={{ input: { minHeight: 44 } }}
           label={t("serverTitle")}
           description={t("description")}
           placeholder="home.lan · 192.168.1.10 · https://homarr.example.com"
           value={serverOrigin}
           onChange={(event) => onServerOriginChange(event.currentTarget.value)}
-          readOnly={readOnly}
           required={required}
           withAsterisk={required}
         />
         {addressAction}
-      </div>
-      {!readOnly && (
-        <OnboardingFloatingControl
-          ariaLabel={t("urlModeLabel")}
-          value={mode}
-          onChange={onModeChange}
-          options={[
-            { value: "hostPort", label: t("hostPort") },
-            { value: "subdomain", label: t("subdomain") },
-            { value: "path", label: t("path") },
-          ]}
-        />
-      )}
+      </Flex>
+      <SegmentedControl<UrlTemplateMode>
+        aria-label={t("urlModeLabel")}
+        value={mode}
+        onChange={(value) => {
+          sounds.click();
+          onModeChange(value);
+        }}
+        fullWidth
+        size="md"
+        orientation={isMobile ? "vertical" : "horizontal"}
+        withItemsBorders={false}
+        styles={{ label: { whiteSpace: "normal" } }}
+        data={[
+          { value: "hostPort", label: t("hostPort") },
+          { value: "subdomain", label: t("subdomain") },
+          { value: "path", label: t("path") },
+        ]}
+      />
       {exampleUrl && (
         <Text size="xs" c="dimmed" style={{ overflowWrap: "anywhere" }}>
           {t("example", { url: exampleUrl })}

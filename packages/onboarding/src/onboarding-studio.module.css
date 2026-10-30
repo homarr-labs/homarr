@@ -252,38 +252,6 @@
   padding: clamp(1rem, 3vw, 2rem);
 }
 
-.serviceUrlTemplate {
-  min-width: 0;
-}
-
-.serviceAddressRow {
-  display: flex;
-  align-items: flex-end;
-  gap: var(--mantine-spacing-sm);
-}
-
-.serviceAddressInput {
-  flex: 1 1 auto;
-  min-width: 0;
-}
-
-.serviceAddressInput :global(.mantine-Input-input) {
-  min-height: 2.75rem;
-}
-
-.serviceUrlTemplate .floatingControlRoot {
-  border: 0;
-}
-
-.serviceUrlTemplate .floatingControlIndicator {
-  border: 0;
-}
-
-.serverAddressReview[data-review-required] {
-  border-color: var(--mantine-color-red-6);
-  box-shadow: var(--mantine-shadow-md);
-}
-
 .sectionCard {
   background: var(--studio-surface);
   border: 1px solid color-mix(in srgb, var(--mantine-color-default-border) 76%, transparent);
@@ -589,26 +557,6 @@
 
   .stickyActions {
     gap: var(--mantine-spacing-xs);
-  }
-
-  .serviceAddressRow {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .serviceUrlTemplate .floatingControlRoot {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr);
-    width: 100%;
-    min-width: 0;
-  }
-
-  .serviceUrlTemplate .floatingControl {
-    min-width: 0;
-    min-height: 2.75rem;
-    font-size: var(--mantine-font-size-sm);
-    text-align: start;
-    white-space: normal;
   }
 
   .backAction {

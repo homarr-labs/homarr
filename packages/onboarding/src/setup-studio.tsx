@@ -908,11 +908,12 @@ const ServerAddressReview = (props: StudioSectionProps) => {
   const t = useI18n("init.studio.connect");
   return (
     <Paper
-      className={classes.serverAddressReview}
       data-review-required={!props.serverAddressReviewed || undefined}
       withBorder
       p="md"
       radius="md"
+      bd={props.serverAddressReviewed ? undefined : "1px solid var(--mantine-color-red-6)"}
+      shadow={props.serverAddressReviewed ? undefined : "md"}
     >
       <Stack gap="xs">
         <ServiceUrlTemplate
@@ -926,6 +927,7 @@ const ServerAddressReview = (props: StudioSectionProps) => {
               <Button
                 variant="default"
                 size="sm"
+                h={44}
                 leftSection={<IconCheck size={16} />}
                 disabled={!props.serverAddressValid}
                 onClick={props.confirmServerAddress}
