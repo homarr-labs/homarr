@@ -223,23 +223,19 @@ description: Author, validate, preview, test, install, or configure API-backed H
 
 # Homarr Custom Widget
 
-Author requested widgets with release context; validate, test, persist, return artifacts.
-
-- Read missing/changed API contracts in primary docs. Samples/successful previews are binding. Load needed schema/runtime/security references
-  or component context only.
+- Read missing/changed API contracts in primary docs; samples/successful previews are binding. Load only needed references/components.
 - Batch unknown component searches/details. \`contextAlreadyLoaded\` reuses context; \`phaseComplete\` advances.
   Only genuine provider/model, lifecycle-service or workbench-closure failures are terminal.
 - Community: \`customWidget_workshopSearch\`, \`customWidget_workshopGet\`, \`customWidget_workshopInstall\`; configure/persist.
 
-Return one complete fenced \`json\` definition, evidence outside. Use keyed \`sources\`, \`requests\`, \`template\`, optional \`options\`;
-actions are requests with \`kind: "action"\`.
+Return one complete fenced \`json\` definition, evidence outside: keyed \`sources\`/\`requests\`, \`template\`, optional \`options\`.
 
 - Require \`sources.default\`. HTTP uses \`baseUrl\`/credential-free \`auth\`; Homarr holds secrets.
 - Saved integrations: discover kinds/full-access entries via \`integration_getKinds\`/\`integration_all\`; bind \`integrationId\`
   before preview, use \`type: "integration"\`/\`integrationKind\`, omit URL/auth; non-GET requests are actions.
 - Slash-prefixed paths use \`{option:name}\`/\`{param:name}\`; query/body: \`{"$option":"name"}\`/\`{"$param":"name"}\`.
   Loads: \`trigger: "load"\`; manual helpers: \`trigger: "manual"\`.
-- Keep actions manual with \`confirmation\`, \`permission\`, \`invalidates\`; DELETE requires full permission/confirmation.
+- Actions use \`kind: "action"\`, manual trigger, \`confirmation\`/\`permission\`/\`invalidates\`; DELETE requires full permission/confirmation.
   \`$param\` is manual-only; \`$option\` may drive loads.
 - Loads: data.requestId/status.requestId + RefreshButton; status.requestId?.ok === false signals error. Manual SubFetch
   keeps results local; render fields in its (result, metadata) child.
@@ -257,11 +253,13 @@ actions are requests with \`kind: "action"\`.
    omit unknown requests instead of guessing.
 2. Send the complete definition directly to \`customWidget_previewCreate\` (manifest + JSX validation).
    \`customWidget_validateTemplate\` is only for isolated JSX diagnostics, never a preview prerequisite.
-   \`customWidget_previewReviseTemplate\` repairs JSX only after preview creation. Assistant multiline JSX uses \`templateLines\`;
-   preview creation still receives the complete definition.
-3. Test every returned query/simulated action once; batch independent queries. For concrete schema/preview errors, fix that field
-   and retry \`customWidget_previewCreate\`; JSX-only preview repairs use \`customWidget_previewReviseTemplate\`.
-4. Persist with \`customWidget_updateFromPreview\` if preview used \`definitionId\`, otherwise \`customWidget_createFromPreview\`.
+   Assistant multiline JSX uses \`templateLines\`.
+3. Test every returned query/simulated action once; batch independent queries. Fix concrete schema/preview errors and retry
+   \`customWidget_previewCreate\`; JSX-only repairs after creation use \`customWidget_previewReviseTemplate\`.
+4. Before saving, if a browser/renderer is available, render at requested sizes and inspect actual screenshots and bounds.
+   Repair clipping, overlap and unrequested scrolling without hiding required content or controls; render and inspect again after repairs.
+   Otherwise report visual verification missing. Never invent tool calls or treat validation as proof of fit.
+5. Persist with \`customWidget_updateFromPreview\` if preview used \`definitionId\`, otherwise \`customWidget_createFromPreview\`.
    Follow create \`nextAction\` once. Configure secrets in Homarr; never repeat plaintext secrets.
    Edits: inspect \`removedFromSaved\`, restore unrelated losses; \`acknowledgedRemovals\` covers only exact user-requested removals.
    The guard is heuristic, not authorization or proof of semantic preservation.
@@ -272,31 +270,34 @@ Report actual lifecycle results; if unavailable, add one post-artifact \`Unverif
 Schema checks prove neither rendering nor persistence.
 `;
 
-const CUSTOM_WIDGET_SKILL_ENTRYPOINT_MD = `# Homarr Custom Widget authoring index
+const CUSTOM_WIDGET_SKILL_ENTRYPOINT_MD = `# Custom Widgets
 
-Current tools/primary docs: validate one preview, batch/test every query/action, persist.
-Assistant multiline JSX: \`templateLines\`; \`previewCreate\` takes the complete definition.
+Batch/test every query/action.
+Multiline JSX: \`templateLines\`; \`previewCreate\` takes the complete definition.
 
-Minimize while preserving migration intent/request shape/visible behavior. Fix only concrete schema/preview fields; retry
-\`customWidget_previewCreate\`. Source/request/option changes need fresh previews; JSX-only repairs:
-\`customWidget_previewReviseTemplate\` with its session, resetting evidence. \`customWidget_validateTemplate\`: JSX diagnostics only,
-never a preview prerequisite. \`contextAlreadyLoaded\` reuses context; \`phaseComplete\` advances. Only genuine provider/model,
-unavailable lifecycle service or closed-workbench failures are terminal. Without lifecycle tools: one importable definition
-and one unverified note.
+Preserve migration intent/request shape/visible behavior. Repair errors; retry
+\`customWidget_previewCreate\`. Source/request/option changes need new previews; JSX repairs:
+\`customWidget_previewReviseTemplate\` resets session evidence. \`customWidget_validateTemplate\`: JSX diagnostics,
+not a preview prerequisite. \`contextAlreadyLoaded\` reuses context; \`phaseComplete\` advances. Only genuine provider/model,
+lifecycle-service or workbench-closure failures are terminal. Without lifecycle tools: definition + unverified note.
 
 Paths: \`{option:name}\`/\`{param:name}\`; query/body: \`{"$option":"name"}\`/\`{"$param":"name"}\`.
 $param is manual-only; $option may drive loads. TextInput/Select/NumberInput/Pagination use literal \`bind\` + default,
 manual \`SubFetch params\` for matching \`$param\`; installation config uses \`options.name\`.
-Dependent pagination: \`defaultValue={1}\`/\`resetKey={inputs.query}\`. Preserve fallback source shape: HTTP \`baseUrl\`/\`auth\`;
+Dependent pagination: \`defaultValue={1}\`/\`resetKey={inputs.query}\`. Sources: HTTP \`baseUrl\`/\`auth\`;
 integrations \`type: "integration"\`/\`integrationKind\`/optional \`integrationId\`.
 
-Load \`schema\` once for new manifests, \`runtime\` for interactions, \`security\` for auth/mutations: \`customWidget_getReference\`
-(\`name\`) or \`homarr://custom-widgets/references/<name>\`. Live schema: \`customWidget_schema\` or
-\`homarr://custom-widgets/schema\` only when needed. Search once; use discovered components, external credentials, useful states.
+New manifests: \`schema\`; interactions: \`runtime\`; auth/mutations: \`security\`. Load via \`customWidget_getReference\`
+(\`name\`) or \`homarr://custom-widgets/references/<name>\`. Schema: \`customWidget_schema\` or
+\`homarr://custom-widgets/schema\` as needed. Search once; use discovered components, external credentials, useful states.
 
-Edits: restore unrelated \`removedFromSaved\` losses; \`customWidget_updateFromPreview\` takes \`acknowledgedRemovals\` only for exact
-user-requested keys. Guard: heuristic, not authorization/proof of semantic preservation. Create saves unplaced; use a placement
-tool or Homarr board editor; report saved unplaced until placed.`;
+Before saving, with a browser/renderer, render requested sizes; inspect screenshots/bounds.
+Repair clipping, overlap and unrequested scrolling, keeping required content/controls; re-render and inspect.
+Otherwise report visual verification missing.
+
+Edits: restore unrelated \`removedFromSaved\` losses; \`customWidget_updateFromPreview\`: \`acknowledgedRemovals\` only for exact
+user-requested keys. Guard: heuristic, not authorization/proof of semantic preservation. Saves are unplaced; use placement
+tools or Homarr board editor; report unplaced until placed.`;
 
 const CUSTOM_WIDGET_SKILL_BUNDLE_MD = [
   CUSTOM_WIDGET_SKILL_MD.trimEnd(),
