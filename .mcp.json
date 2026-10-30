@@ -2,7 +2,7 @@
   "mcpServers": {
     "mantine": {
       "command": "bun",
-      "args": ["run", "mcp:mantine"]
+      "args": ["run", "--bun", "--no-install", "mcp-server"]
     }
   }
 }

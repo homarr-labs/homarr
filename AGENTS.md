@@ -112,7 +112,7 @@ These rules apply to every PR an agent prepares or opens, including contributor 
 
 ## MCP servers
 
-`.mcp.json` and `.codex/config.toml` register the project-local Mantine documentation server for Claude-compatible clients and Codex respectively. The root package manifest owns its launch script and pinned development dependency; install dependencies with `bun install`. Keep shared definitions keyless; credentials belong in local dotfiles. See [Mantine LLM tooling](https://mantine.dev/guides/llms/) for client-specific setup.
+`.mcp.json` and `.codex/config.toml` register the project-local Mantine documentation server for Claude-compatible clients and Codex respectively. Both launch the installed binary from the root package manifest's pinned development dependency; install it with `bun install`. Keep shared definitions keyless; credentials belong in local dotfiles. See [Mantine LLM tooling](https://mantine.dev/guides/llms/) for client-specific setup.
 
 ## Agent Skills
 

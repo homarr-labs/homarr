@@ -301,7 +301,6 @@
     "lint": "turbo lint --continue",
     "lint:fix": "turbo lint --continue -- --fix",
     "lint:ws": "bun x sherif@latest",
-    "mcp:mantine": "bun node_modules/@mantine/mcp-server/bin/mcp-server.cjs",
     "qa:browser-agent:ux": "bash scripts/browser-agent/ux-coherence-happy-paths.sh",
     "release": "semantic-release",
     "scripts:update-bug-report-template": "tsx ./scripts/update-bug-report-template.mts",
