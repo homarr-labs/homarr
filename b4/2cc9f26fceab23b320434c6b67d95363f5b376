@@ -1,0 +1,76 @@
+.agents/skills/homarr-custom-widget/SKILL.md
+  h_d6e478ca18e517 8-24,26-31,33-34,38-49,53-54
+.agents/skills/homarr-custom-widget/references/runtime.md
+  h_d6e478ca18e517 3,15,17-19,23,25,27,29,35,37,39
+apps/nextjs/src/app/api/assistant/chat/assistant-tool-error.ts
+  h_d6e478ca18e517 99-107
+apps/nextjs/src/app/api/assistant/chat/assistant-tool-output.ts
+  h_d6e478ca18e517 4,29,41,49-206,253-271,284-291,299-301
+apps/nextjs/src/app/api/assistant/chat/custom-widget-authoring-context.spec.ts
+  h_d6e478ca18e517 76-77,136-137,413,550-551,554,600-604,620-622,645-651,995-996,1010,1013-1027,1029,1051-1057,1083-1084,1086-1087,1156-1157,1246-1247,1308-1309,1395-1396,1569-1570,1584-1585,1588,1617-1623,1626,1628-1629,1642,1646,1667-1672,1677-1678,1680,1693-1695,1698,1713-1719,1721-1724,1881,1886-1887,1902-1903,1906,1944-1956,1997,2018,2075-2085,2088-2098,2258,2280
+apps/nextjs/src/app/api/assistant/chat/custom-widget-authoring-context.ts
+  h_d6e478ca18e517 372-377,379,381-382,390,395-400
+apps/nextjs/src/app/api/assistant/chat/route.ts
+  h_d6e478ca18e517 992-994
+apps/nextjs/src/app/api/mcp/[transport]/route.spec.ts
+  h_d6e478ca18e517 153-154,168
+apps/nextjs/src/app/api/mcp/_handler.ts
+  h_d6e478ca18e517 96-97,104,234
+packages/api/src/router/custom-widget/creation-procedures.ts
+  h_d6e478ca18e517 6-10,14,97,100-105,131
+packages/api/src/router/custom-widget/creation-result.ts
+  h_d6e478ca18e517 1-14
+packages/api/src/router/custom-widget/definition-update.ts
+  h_d6e478ca18e517 6,69,97-99,165-167,242-256
+packages/api/src/router/custom-widget/management-queries.ts
+  h_d6e478ca18e517 80-86
+packages/api/src/router/custom-widget/preview-action-procedures.ts
+  h_d6e478ca18e517 27-37
+packages/api/src/router/custom-widget/preview-base-procedures.ts
+  h_d6e478ca18e517 14,19,117,138,150,215-216,236,245-266,268,271,274-280,294-301,333-345
+packages/api/src/router/custom-widget/preview-procedure-helpers.ts
+  h_d6e478ca18e517 25-27
+packages/api/src/router/custom-widget/template-procedures.ts
+  h_d6e478ca18e517 38-45,90-96,100-105
+packages/api/src/router/test/custom-widget/definition-persistence.spec.ts
+  h_d6e478ca18e517 150-151
+packages/api/src/test/mcp.spec.ts
+  h_d6e478ca18e517 45,455
+packages/custom-widgets/scripts/ai-assistant-evaluation.ts
+  h_d6e478ca18e517 784-785,832-833
+packages/custom-widgets/src/core/ai-prompt.ts
+  h_d6e478ca18e517 169-170,176-177,205-206,208,211-216,220-223
+packages/custom-widgets/src/core/assistant-authoring-phase.ts
+  h_d6e478ca18e517 4-9,11,31-32,170,190,192,194,198-205,207-219,223-252,303,330-333,378-381,383,387,397-402,417,424-429,542,582-584,586,591,601-602,616,622,628,631,636-639,643-647,656,704,710,718,782-784
+packages/custom-widgets/src/core/assistant-follow-up.ts
+  h_d6e478ca18e517 1-5,15-16,19-21,39-55,71,160-176
+packages/custom-widgets/src/core/authoring-resources.ts
+  h_d6e478ca18e517 170,182,184,186,190,192,194,196,202,204,206,226-242,244-249,251-252,256-267,271-272,277-299
+packages/custom-widgets/src/core/custom-jsx-schema.ts
+  h_d6e478ca18e517 225
+packages/custom-widgets/src/core/definition-removals.ts
+  h_d6e478ca18e517 1-187
+packages/custom-widgets/src/core/index.ts
+  h_d6e478ca18e517 2
+packages/custom-widgets/src/jsx/analyzer-jsx.ts
+  h_d6e478ca18e517 34-50,52-72,79,92-118,302-312,344-345,365-372
+packages/custom-widgets/src/test/ai-assistant-evaluation.spec.ts
+  h_d6e478ca18e517 354-358,367-372,570,668-669,696-702,731-747,756-757,761-764,782-788,815-832,963-967
+packages/custom-widgets/src/test/ai-prompt.spec.ts
+  h_d6e478ca18e517 126-136,176-177
+packages/custom-widgets/src/test/assistant-follow-up.spec.ts
+  h_d6e478ca18e517 60-62
+packages/custom-widgets/src/test/jsx-policy.spec.ts
+  h_d6e478ca18e517 141-142
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "b42cc9f26fceab23b320434c6b67d95363f5b376",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
