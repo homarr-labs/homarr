@@ -14,6 +14,7 @@ import {
   getAllSecretKindOptions,
   getDefaultSecretKinds,
   getOptionalSecretKinds,
+  integrationSecretKinds,
   invariantTechnicalLabels,
 } from "@homarr/definitions";
 import { useZodForm } from "@homarr/form";
@@ -22,6 +23,7 @@ import { AppSelectModal } from "@homarr/modals-collection";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
 import { Link } from "@homarr/ui";
+import { zodEnumFromArray } from "@homarr/validation/enums";
 import { integrationUpdateSchema } from "@homarr/validation/integration";
 
 import { SecretCard } from "../../_components/secrets/integration-secret-card";
@@ -42,8 +44,9 @@ export interface EditIntegrationFormHandle {
   isDirty: () => boolean;
 }
 
-const formSchema = integrationUpdateSchema.omit({ id: true, appId: true }).and(
+const formSchema = integrationUpdateSchema.omit({ id: true, appId: true, secrets: true, skipConnectionTest: true }).and(
   z.object({
+    secrets: z.array(z.object({ kind: zodEnumFromArray(integrationSecretKinds), value: z.string() })),
     app: z
       .object({
         id: z.string(),
@@ -96,16 +99,21 @@ export const EditIntegrationForm = ({
       })),
     },
   });
+  const [error, setError] = useState<null | AnyMappedTestConnectionError>(null);
+  const errorRef = useRef<HTMLDivElement>(null);
   const { mutateAsync, isPending } = clientApi.integration.update.useMutation({
-    onError() {
+    onError(mutationError) {
       showErrorNotification({
         title: tCommon("notification.update.error"),
         message: tIntegration("page.edit.notification.error.message"),
       });
+
+      const testConnectionError = mutationError.data?.error as AnyMappedTestConnectionError | null | undefined;
+      if (!testConnectionError) return;
+      setError(testConnectionError);
+      requestAnimationFrame(() => errorRef.current?.focus());
     },
   });
-  const [error, setError] = useState<null | AnyMappedTestConnectionError>(null);
-  const errorRef = useRef<HTMLDivElement>(null);
 
   const secretsMap = new Map(integration.secrets.map((secret) => [secret.kind, secret]));
 
@@ -125,32 +133,24 @@ export const EditIntegrationForm = ({
         return false;
       }
 
-      const data = await mutateAsync({
-        id: integration.id,
-        ...values,
-        url,
-        secrets: [
-          ...values.secrets.map((secret) => ({
-            kind: secret.kind,
-            value: secret.value === "" ? null : secret.value,
-          })),
-          // Optional secrets that were cleared are left out, which removes them from the integration.
-          ...optionalSecretKinds.flatMap((optionalKind) => {
-            const value = optionalSecrets.find((secret) => secret.kind === optionalKind)?.value.trim() ?? "";
-            return value.length > 0 ? [{ kind: optionalKind, value }] : [];
-          }),
-        ],
-        appId: app?.id ?? null,
-      });
-
-      // We do it this way as we are unable to send a typesafe error through onError
-      if (data?.error) {
-        setError(data.error);
-        showErrorNotification({
-          title: tCommon("notification.update.error"),
-          message: tIntegration("page.edit.notification.error.message"),
+      try {
+        await mutateAsync({
+          id: integration.id,
+          ...values,
+          url,
+          secrets: [
+            ...values.secrets.map((secret) => ({
+              kind: secret.kind,
+              value: secret.value === "" ? null : secret.value,
+            })),
+            ...optionalSecretKinds.flatMap((optionalKind) => {
+              const value = optionalSecrets.find((secret) => secret.kind === optionalKind)?.value.trim() ?? "";
+              return value.length > 0 ? [{ kind: optionalKind, value }] : [];
+            }),
+          ],
+          appId: app?.id ?? null,
         });
-        requestAnimationFrame(() => errorRef.current?.focus());
+      } catch {
         return false;
       }
 
