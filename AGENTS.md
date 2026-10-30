@@ -88,7 +88,7 @@ Only after this user-need test passes, use these locations:
 - Lint: oxlint (not ESLint)
 - Format: oxfmt (not Prettier)
 - UI: Mantine (not Tailwind) — Tailwind is only used in docs app
-- Mantine: use the `mantine` MCP server in `.mcp.json` for current v9 APIs before writing component code. Prefer built-in primitives (`Combobox`/`useCombobox`, the polymorphic `component` prop, `@mantine/hooks`) and check `packages/ui/` for existing conventions first.
+- Mantine: before creating, changing, or reviewing application UI, follow [mantine-ui](.agents/skills/mantine-ui/SKILL.md) for component discovery, mandatory `get_item_doc` lookups, and styling through built-in props and the Styles API.
 - Icons: @tabler/icons-react
 - Docs app can import from `@homarr/definitions` for shared types
 - Run `bun run dev:cli -- dev` to browse local `homarr:*` images and remote PR images.
@@ -112,13 +112,14 @@ These rules apply to every PR an agent prepares or opens, including contributor 
 
 ## MCP servers
 
-`.mcp.json` declares project-scoped MCP servers. Keep only keyless definitions there; credentials belong in local dotfiles. See [Mantine LLM tooling](https://mantine.dev/guides/llms/) for client-specific setup.
+`.mcp.json` and `.codex/config.toml` register the project-local Mantine documentation server for Claude-compatible clients and Codex respectively. The root package manifest owns its launch script and pinned development dependency; install dependencies with `bun install`. Keep shared definitions keyless; credentials belong in local dotfiles. See [Mantine LLM tooling](https://mantine.dev/guides/llms/) for client-specific setup.
 
 ## Agent Skills
 
 Portable skills live in `.agents/skills/`. Read the relevant `SKILL.md` before working in that domain; detailed references are loaded only when needed. Claude-compatible discovery is provided through `.claude/skills`.
 
 - `codebase-context` — architecture, package boundaries, and shared utilities
+- `mantine-ui` — component discovery, documentation, and built-in styling
 - `documentation-sync` — user-critical documentation only
 - `mcp-integration` — safe tRPC-to-MCP exposure
 - `homarr-custom-widget` — safe Custom JSX v2 authoring

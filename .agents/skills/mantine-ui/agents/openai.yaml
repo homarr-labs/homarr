@@ -1,0 +1,4 @@
+interface:
+  display_name: "Homarr Mantine UI"
+  short_description: "Discover Mantine components and use built-in styling"
+  default_prompt: "Use $mantine-ui to discover suitable Mantine components, read their documentation, and prefer built-in props and the Styles API."

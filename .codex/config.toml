@@ -1,0 +1,3 @@
+[mcp_servers.mantine]
+command = "bun"
+args = ["run", "mcp:mantine"]

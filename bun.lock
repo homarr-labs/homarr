@@ -9,6 +9,7 @@
       },
       "devDependencies": {
         "@babel/parser": "catalog:",
+        "@mantine/mcp-server": "9.7.4",
         "@playwright/test": "catalog:",
         "@semantic-release/changelog": "catalog:",
         "@semantic-release/commit-analyzer": "catalog:",
@@ -2148,6 +2149,8 @@
     "@mantine/hooks": ["@mantine/hooks@9.6.0", "", { "peerDependencies": { "react": "^19.2.0" } }, "sha512-r+1RWxc0F2XK9exKIk3Cxc17eyDTEtRqvomeQMCqI4S2Z3A78ObAGuNS8WXn8aqDGN66MJlO+WV7oCgQn2iQfQ=="],
 
     "@mantine/lightbox": ["@mantine/lightbox@9.6.0", "", { "dependencies": { "@mantine/store": "9.6.0" }, "peerDependencies": { "@mantine/core": "9.6.0", "@mantine/hooks": "9.6.0", "embla-carousel": ">=8.0.0", "embla-carousel-react": ">=8.0.0", "react": "^19.2.0", "react-dom": "^19.2.0" } }, "sha512-yr6Q/f9kOcvH1ZbWTuTfdx327tJUc7mINIWOwiyt2lmqYoHivEiaXMezPKW6hRQQvQgK6MsjAfIkSlKFvmYA4Q=="],
+
+    "@mantine/mcp-server": ["@mantine/mcp-server@9.7.4", "", { "dependencies": { "@modelcontextprotocol/server": "2.1.0", "zod": "^4.6.5" }, "bin": { "mcp-server": "bin/mcp-server.cjs" } }, "sha512-2r2M7lXep8idt9t7rsvcMZoHtIAJ+hh44oQE1fZ1sAieV9hKoU/w5w1+g6vTqNatCjGaVJHZMzUjRoAJVlVFfw=="],
 
     "@mantine/modals": ["@mantine/modals@9.6.0", "", { "peerDependencies": { "@mantine/core": "9.6.0", "@mantine/hooks": "9.6.0", "react": "^19.2.0", "react-dom": "^19.2.0" } }, "sha512-uNNwdYkk5ZqsPKi6zVe+bHq09RCM/HRbzC+UFGXmmOKq2AgOuCoLPNimvVV3y6GQ+jcPFFlkR4D7wbv4eQKPAQ=="],
 
@@ -5535,6 +5538,8 @@
 
     "@kubernetes/client-node/@types/node": ["@types/node@24.13.2", "", { "dependencies": { "undici-types": "7.18.2" } }, "sha512-fRa09kZTgu8o71KFcDjUFuc7F+dEbZYZmkI0mg5YBTRs0yMKjYHsq/c0urDKeDb+D5qVgXOdFcuu+DZPKOITwA=="],
 
+    "@mantine/mcp-server/@modelcontextprotocol/server": ["@modelcontextprotocol/server@2.1.0", "", { "dependencies": { "@modelcontextprotocol/core": "2.1.0", "zod": "^4.2.0" } }, "sha512-FdvwZU5N03O77Suh35JqjAqq5R1ZTEPFtwu6N4BgBq28qrQtrCnpbLL5U2pwYCuE194jAw0xnlOVmIqhfoYuUQ=="],
+
     "@mdx-js/mdx/unist-util-visit": ["unist-util-visit@5.1.0", "", { "dependencies": { "@types/unist": "3.0.3", "unist-util-is": "6.0.0", "unist-util-visit-parents": "6.0.1" } }, "sha512-m+vIdyeCOpdr/QeQCu2EzxX/ohgS8KbnPDgFni4dQsfSCtpz8UqDyY5GjRru8PDKuYn7Fq19j1CQ+nJSsGKOzg=="],
 
     "@nivo/scales/@types/d3-time-format": ["@types/d3-time-format@3.0.4", "", {}, "sha512-or9DiDnYI1h38J9hxKEsw513+KVuFbEVhl7qdxcaudoiqWWepapUen+2vAriFGexr6W5+P4l9+HJrB39GG+oRg=="],
@@ -6386,6 +6391,8 @@
     "@inquirer/core/wrap-ansi/strip-ansi": ["strip-ansi@6.0.1", "", { "dependencies": { "ansi-regex": "5.0.1" } }, "sha512-Y38VPSHcqkFrCpFnQ9vuSXmquuv5oXOKpGeT6aGrr3o3Gc9AlVa6JBfUSOCnbxGGZF+/0ooI7KrPuUSztUdU5A=="],
 
     "@isaacs/cliui/string-width/emoji-regex": ["emoji-regex@9.2.2", "", {}, "sha512-L18DaJsXSUk2+42pv8mLs5jJT2hqFkFE4j21wOmgbUqsZ2hL72NsUU785g9RXgo3s0ZNgVl42TiHp3ZtOv/Vyg=="],
+
+    "@mantine/mcp-server/@modelcontextprotocol/server/@modelcontextprotocol/core": ["@modelcontextprotocol/core@2.1.0", "", { "dependencies": { "zod": "^4.2.0" } }, "sha512-YdFj5gMRHr0gYNAhTbQDgjLHiEJdIAUYxomhKseUNye7ZGlISQmUoLh2sveFFCiQ7j2YMffT1kgSND0FSfIFjQ=="],
 
     "@mdx-js/mdx/unist-util-visit/unist-util-is": ["unist-util-is@6.0.0", "", { "dependencies": { "@types/unist": "3.0.3" } }, "sha512-2qCTHimwdxLfz+YzdGfkqNlH0tLi9xjTnHddPmJwtIG9MGsdbutfTc4P+haPD7l7Cjxf/WZj+we5qfVPvvxfYw=="],
 
