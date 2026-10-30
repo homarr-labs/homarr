@@ -1,4 +1,41 @@
 ## What's Changed
+* chore(deps): update crowdin/github-action action to v3.5.0 by @homarr-renovate[bot] in https://github.com/homarr-labs/homarr/pull/7373
+* fix(widgets): repair download resizing and table column options by @ajnart in https://github.com/homarr-labs/homarr/pull/7374
+* docs(triage): require value and compatibility decisions by @ajnart in https://github.com/homarr-labs/homarr/pull/7365
+* chore: update bug report template by @homarr-releases[bot] in https://github.com/homarr-labs/homarr/pull/7357
+* chore(lang): updated translations from crowdin by @homarr-crowdin[bot] in https://github.com/homarr-labs/homarr/pull/7372
+* feat(branding): allow hiding authentication background marquee by @ajnart in https://github.com/homarr-labs/homarr/pull/7381
+* chore(security): audit and harden dependencies, images and CI by @ajnart in https://github.com/homarr-labs/homarr/pull/7343
+* feat(homebox): support API key authentication by @ajnart in https://github.com/homarr-labs/homarr/pull/7237
+* docs: note that board viewers can read placed integrations by @szw-dariusz in https://github.com/homarr-labs/homarr/pull/7371
+* feat: add release list controls and correct board preview colors by @ajnart in https://github.com/homarr-labs/homarr/pull/7383
+* fix(truenas): query completed reporting intervals by @ajnart in https://github.com/homarr-labs/homarr/pull/7386
+* chore(deps): update dependency assistant-cloud to v0.2.8 by @homarr-renovate[bot] in https://github.com/homarr-labs/homarr/pull/7389
+* chore(deps): update dependency @assistant-ui/core to v0.3.31 by @homarr-renovate[bot] in https://github.com/homarr-labs/homarr/pull/7388
+* fix(deps): update module github.com/pocketbase/pocketbase to v0.40.6 by @homarr-renovate[bot] in https://github.com/homarr-labs/homarr/pull/7403
+* chore(lang): updated translations from crowdin by @homarr-crowdin[bot] in https://github.com/homarr-labs/homarr/pull/7395
+* fix(deps): update dependency postcss to ^8.5.32 by @homarr-renovate[bot] in https://github.com/homarr-labs/homarr/pull/7409
+* chore(lang): updated translations from crowdin by @homarr-crowdin[bot] in https://github.com/homarr-labs/homarr/pull/7410
+* docs(helm): update chart installation page by @homarr-charts-docs-sync[bot] in https://github.com/homarr-labs/homarr/pull/7254
+* chore(deps): pin dependencies by @homarr-renovate[bot] in https://github.com/homarr-labs/homarr/pull/7387
+* feat(wud): support personal API tokens by @xfdzcoder in https://github.com/homarr-labs/homarr/pull/7275
+* feat(beszel): add Fahrenheit option to System Grid and Table by @Octopus-98 in https://github.com/homarr-labs/homarr/pull/7399
+* feat(releases): persist section collapse state by @Octopus-98 in https://github.com/homarr-labs/homarr/pull/7401
+* fix(board): paint image background before video HEAD resolves by @Octopus-98 in https://github.com/homarr-labs/homarr/pull/7400
+* fix: target llama.cpp stats to displayed model by @ajnart in https://github.com/homarr-labs/homarr/pull/7150
+* fix(assistant): make availability controls clear and immediate by @ajnart in https://github.com/homarr-labs/homarr/pull/7282
+* perf(dashboard): retain loading gains without prepared pages by @ajnart in https://github.com/homarr-labs/homarr/pull/7406
+* fix(onboarding): align address review and skipped connections by @ajnart in https://github.com/homarr-labs/homarr/pull/7391
+* chore(release): automatic release v2.10.0 by @github-actions[bot] in https://github.com/homarr-labs/homarr/pull/7411
+
+## New Contributors
+* @szw-dariusz made their first contribution in https://github.com/homarr-labs/homarr/pull/7371
+* @xfdzcoder made their first contribution in https://github.com/homarr-labs/homarr/pull/7275
+* @Octopus-98 made their first contribution in https://github.com/homarr-labs/homarr/pull/7399
+
+**Full Changelog**: https://github.com/homarr-labs/homarr/compare/v2.9.1...v2.10.0
+
+## What's Changed
 * chore(deps): update dependency @assistant-ui/store to v0.3.22 by @homarr-renovate[bot] in https://github.com/homarr-labs/homarr/pull/7360
 * chore(deps): update dependency @assistant-ui/core to v0.3.30 by @homarr-renovate[bot] in https://github.com/homarr-labs/homarr/pull/7359
 * chore(deps): update dependency @assistant-ui/tap to v0.9.24 by @homarr-renovate[bot] in https://github.com/homarr-labs/homarr/pull/7361

@@ -720,7 +720,7 @@ export default function DownloadClientsWidget({
     return cols.filter(Boolean) as DataTableColumn<ExtendedDownloadClientItem>[];
   }, [columnContext, displayMode, formatByteRate, formatBytes, formatBytesPair, progressColumnWidth, size, t]);
 
-  const { effectiveColumns, storeKey, setMultipleColumnWidths } = usePersistedTableLayout({
+  const { effectiveColumns, storeKey, onColumnLayoutChange, setMultipleColumnWidths } = usePersistedTableLayout({
     columns,
     columnAccessors: DOWNLOAD_COLUMN_ACCESSORS,
     columnOrder: options.columnOrder,
@@ -816,6 +816,7 @@ export default function DownloadClientsWidget({
           records={sortedData}
           columns={effectiveColumns}
           storeColumnsKey={storeKey}
+          onColumnLayoutChange={onColumnLayoutChange}
           sortStatus={sortStatus}
           onSortStatusChange={setSortStatus}
           noRecordsText={t("errors.noItems")}

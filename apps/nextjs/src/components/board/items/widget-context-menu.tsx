@@ -1,8 +1,9 @@
 "use client";
 
 import type { MutableRefObject, ReactNode, RefObject } from "react";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Drawer, Group, Loader, Menu, Text, Tooltip } from "@mantine/core";
+import { useFocusReturn } from "@mantine/hooks";
 import { IconAlertTriangle, IconCircleCheck, IconMaximize, IconRefresh, IconSettings } from "@tabler/icons-react";
 import type { QueryClient, QueryKey } from "@tanstack/react-query";
 import { useIsFetching, useQueryClient } from "@tanstack/react-query";
@@ -345,12 +346,35 @@ interface WidgetContextMenuDropdownProps {
 const WidgetContextMenuDropdown = ({ opened, onClose, title, children }: WidgetContextMenuDropdownProps) => {
   const isMobile = useIsMobile();
 
-  if (!isMobile) return <Menu.Dropdown>{children}</Menu.Dropdown>;
+  return (
+    <>
+      {(!isMobile || !opened) && <Menu.Dropdown>{children}</Menu.Dropdown>}
+      {isMobile && (
+        <WidgetContextMenuDrawer opened={opened} onClose={onClose} title={title}>
+          {children}
+        </WidgetContextMenuDrawer>
+      )}
+    </>
+  );
+};
+
+const WidgetContextMenuDrawer = ({ opened, onClose, title, children }: WidgetContextMenuDropdownProps) => {
+  const [mounted, setMounted] = useState(false);
+  const drawerOpened = opened && mounted;
+  useFocusReturn({ opened: drawerOpened });
+
+  useEffect(() => {
+    if (opened) setMounted(true);
+  }, [opened]);
+
+  if (!opened && !mounted) return null;
 
   return (
     <Drawer
-      opened={opened}
+      opened={drawerOpened}
       onClose={onClose}
+      onExitTransitionEnd={() => setMounted(false)}
+      returnFocus={false}
       position="bottom"
       size="min(80dvh, 40rem)"
       title={title}

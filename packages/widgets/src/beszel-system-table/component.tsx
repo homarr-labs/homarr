@@ -364,7 +364,7 @@ export default function BeszelSystemTableWidget({
           </Group>
         ),
         sortable: true,
-        render: (record) => <Text size={size.fontSize}>{formatTemp(record.temp, false)}</Text>,
+        render: (record) => <Text size={size.fontSize}>{formatTemp(record.temp, options.fahrenheit)}</Text>,
       },
       visibleMetricKeys.has("showBattery") && {
         accessor: "battery",
@@ -416,9 +416,9 @@ export default function BeszelSystemTableWidget({
     ];
 
     return cols.filter(Boolean) as DataTableColumn<SystemRowWithKey>[];
-  }, [formatByteRate, formatBytes, tBeszel, tCommon, size, visibleMetricKeys, isAdvanced]);
+  }, [formatByteRate, formatBytes, options.fahrenheit, tBeszel, tCommon, size, visibleMetricKeys, isAdvanced]);
 
-  const { effectiveColumns, storeKey } = usePersistedTableLayout({
+  const { effectiveColumns, storeKey, onColumnLayoutChange } = usePersistedTableLayout({
     columns,
     columnAccessors,
     columnOrder: options.columnOrder,
@@ -458,6 +458,7 @@ export default function BeszelSystemTableWidget({
         noRecordsText={tBeszel("empty.noSystems")}
         idAccessor="rowKey"
         storeColumnsKey={storeKey}
+        onColumnLayoutChange={onColumnLayoutChange}
         onRowClick={isEditMode ? undefined : handleRowClick}
       />
     </div>

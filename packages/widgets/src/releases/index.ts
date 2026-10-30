@@ -6,6 +6,7 @@ import { getWidgetIntegrationConfig, releaseProviderKinds } from "@homarr/defini
 
 import { createWidgetDefinition, matchesWidgetRuntimeQuery, widgetQueryInputMatches } from "../definition";
 import { optionsBuilder } from "../options";
+import type { ReleaseSectionKey } from "./release-options";
 import {
   newReleaseWithinOptions,
   releaseLayouts,
@@ -15,6 +16,7 @@ import {
 } from "./release-options";
 
 export const { definition, componentLoader } = createWidgetDefinition("releases", {
+  deferUntilVisible: true,
   supportsAdvancedFocus: true,
   icon: IconRocket,
   queryKeys: [[["widget", "releases", "getLatest"]], [["widget", "releases", "getServiceVersions"]]],
@@ -54,14 +56,8 @@ export const { definition, componentLoader } = createWidgetDefinition("releases"
           label: (t) => t(`widget.releases.section.${value}.label`),
         })),
       }),
-      collapsedSections: factory.multiSelect({
-        defaultValue: ["quiet"],
-        withDescription: true,
-        options: releaseSectionKeys.map((value) => ({
-          value,
-          label: (t) => t(`widget.releases.section.${value}.label`),
-        })),
-      }),
+      // Saved from the widget itself, like the Beszel system switcher and Wazuh view.
+      collapsedSections: factory.internal({ defaultValue: ["quiet"] as ReleaseSectionKey[] }),
       newReleaseWithin: factory.select({
         defaultValue: "1w",
         withDescription: true,
