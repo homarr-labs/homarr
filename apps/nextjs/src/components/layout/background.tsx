@@ -11,9 +11,11 @@ const isVideoUrl = (url: string) =>
 
 export const useIsVideo = (url: string | null | undefined) => {
   const canDetectContentType = Boolean(url && /^(\/|https?:\/\/)/.test(url));
+  const extensionIsVideo = Boolean(url && isVideoUrl(url));
   const { data, isError } = useQuery({
     queryKey: ["background-content-type", url],
-    enabled: canDetectContentType,
+    // mp4, webm, and ogg already identify a video, so only ambiguous URLs are probed.
+    enabled: canDetectContentType && !extensionIsVideo,
     staleTime: Infinity,
     retry: false,
     queryFn: async ({ signal }) => {
@@ -28,8 +30,10 @@ export const useIsVideo = (url: string | null | undefined) => {
     },
   });
   if (!canDetectContentType) return false;
+  if (extensionIsVideo) return true;
   if (isError) return isVideoUrl(url ?? "");
-  return data;
+  // An in-flight probe stays an image until HEAD reports video/*.
+  return data ?? false;
 };
 
 export const useOptionalBackgroundProps = (): Partial<AppShellProps> => {
@@ -42,7 +46,8 @@ export const useOptionalBackgroundProps = (): Partial<AppShellProps> => {
   // Check if we are on a client board page
   if (pathname.split("/").length > 3) return {};
 
-  if (isVideo !== false) {
+  // Keep the image background up while the probe is in flight. Remove it once the URL is a video.
+  if (isVideo) {
     return {};
   }
 
