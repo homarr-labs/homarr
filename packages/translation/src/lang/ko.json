@@ -4789,6 +4789,10 @@
             "hidden": "숨김"
           }
         },
+        "groupReleases": {
+          "label": "",
+          "description": ""
+        },
         "sections": {
           "label": "",
           "description": ""
@@ -4857,6 +4861,10 @@
           },
           "name": {
             "label": "이름"
+          },
+          "excludePrereleases": {
+            "label": "",
+            "description": ""
           },
           "versionFilter": {
             "label": "버전 필터",
@@ -7052,6 +7060,10 @@
             },
             "signInOverlay": {
               "label": "배경 오버레이"
+            },
+            "signInMarquee": {
+              "label": "",
+              "description": ""
             },
             "defaultRadius": {
               "label": "모서리 스타일",

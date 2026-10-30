@@ -31,7 +31,7 @@ jobs:
     env:
       TRIAGE_APP_CONFIGURED: ${{ vars.HOMARR_UPDATE_CONTRIBUTORS_CLIENT_ID != '' && secrets.HOMARR_UPDATE_CONTRIBUTORS_PRIVATE_KEY != '' }}
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ref: dev
           persist-credentials: false
@@ -39,7 +39,7 @@ jobs:
         id: project-token
         if: env.TRIAGE_APP_CONFIGURED == 'true' && vars.TRIAGE_PROJECT_NUMBER != ''
         continue-on-error: true # Label handling must also work if Project authentication fails.
-        uses: actions/create-github-app-token@v3
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
         with:
           client-id: ${{ vars.HOMARR_UPDATE_CONTRIBUTORS_CLIENT_ID }}
           private-key: ${{ secrets.HOMARR_UPDATE_CONTRIBUTORS_PRIVATE_KEY }}
@@ -48,7 +48,7 @@ jobs:
           permission-organization-projects: write
           permission-issues: read
           permission-pull-requests: read
-      - uses: actions/github-script@v9
+      - uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
         env:
           TRIAGE_PROJECT_OWNER: ${{ vars.TRIAGE_PROJECT_OWNER }}
           TRIAGE_PROJECT_NUMBER: ${{ vars.TRIAGE_PROJECT_NUMBER }}

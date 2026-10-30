@@ -2,11 +2,14 @@
 
 import type { ReactNode } from "react";
 import { useRef, useState } from "react";
-import { FloatingIndicator, Stack, TextInput, UnstyledButton } from "@mantine/core";
+import { Flex, FloatingIndicator, SegmentedControl, Stack, Text, TextInput, UnstyledButton } from "@mantine/core";
+import { useMediaQuery } from "@mantine/hooks";
 
 import type { UrlTemplateMode } from "@homarr/definitions";
+import { buildIntegrationUrl } from "@homarr/definitions";
 import { useI18n } from "@homarr/translation/client";
 
+import { normalizeServiceUrl } from "./discovery-selection";
 import { useOnboardingSounds } from "./use-onboarding-sounds";
 import classes from "./onboarding-studio.module.css";
 
@@ -66,8 +69,8 @@ interface ServiceUrlTemplateProps {
   onServerOriginChange: (value: string) => void;
   mode: UrlTemplateMode;
   onModeChange: (value: UrlTemplateMode) => void;
-  readOnly?: boolean;
   required?: boolean;
+  addressAction?: ReactNode;
 }
 
 export const ServiceUrlTemplate = ({
@@ -75,32 +78,54 @@ export const ServiceUrlTemplate = ({
   onServerOriginChange,
   mode,
   onModeChange,
-  readOnly,
   required,
+  addressAction,
 }: ServiceUrlTemplateProps) => {
   const t = useI18n("common.serviceUrlTemplate");
+  const sounds = useOnboardingSounds();
+  const isMobile = useMediaQuery("(max-width: 36em)");
+  const exampleUrl = normalizeServiceUrl(buildIntegrationUrl("sonarr", serverOrigin, mode));
 
   return (
-    <Stack gap="sm">
-      <TextInput
-        label={t("serverTitle")}
-        placeholder="home.lan · 192.168.1.10 · https://homarr.example.com"
-        value={serverOrigin}
-        onChange={(event) => onServerOriginChange(event.currentTarget.value)}
-        readOnly={readOnly}
-        required={required}
-        withAsterisk={required}
-      />
-      <OnboardingFloatingControl
-        ariaLabel={t("urlModeLabel")}
+    <Stack gap="sm" miw={0}>
+      <Flex direction={{ base: "column", xs: "row" }} align={{ base: "stretch", xs: "end" }} gap="sm">
+        <TextInput
+          flex={1}
+          miw={0}
+          styles={{ input: { minHeight: 44 } }}
+          label={t("serverTitle")}
+          description={t("description")}
+          placeholder="home.lan · 192.168.1.10 · https://homarr.example.com"
+          value={serverOrigin}
+          onChange={(event) => onServerOriginChange(event.currentTarget.value)}
+          required={required}
+          withAsterisk={required}
+        />
+        {addressAction}
+      </Flex>
+      <SegmentedControl<UrlTemplateMode>
+        aria-label={t("urlModeLabel")}
         value={mode}
-        onChange={onModeChange}
-        options={[
+        onChange={(value) => {
+          sounds.click();
+          onModeChange(value);
+        }}
+        fullWidth
+        size="md"
+        orientation={isMobile ? "vertical" : "horizontal"}
+        withItemsBorders={false}
+        styles={{ label: { whiteSpace: "normal" } }}
+        data={[
           { value: "hostPort", label: t("hostPort") },
           { value: "subdomain", label: t("subdomain") },
           { value: "path", label: t("path") },
         ]}
       />
+      {exampleUrl && (
+        <Text size="xs" c="dimmed" style={{ overflowWrap: "anywhere" }}>
+          {t("example", { url: exampleUrl })}
+        </Text>
+      )}
     </Stack>
   );
 };

@@ -302,7 +302,7 @@ export function WazuhAgentsView({
     ];
     return all.filter(({ visible }) => visible).map(({ visible: _visible, ...column }) => column);
   }, [links, newestVersion, showGroups, showIp, showOs, showVersion, t, width]);
-  const { effectiveColumns, storeKey } = usePersistedTableLayout({
+  const { effectiveColumns, storeKey, onColumnLayoutChange } = usePersistedTableLayout({
     columns,
     columnAccessors: agentColumnAccessors,
     columnOrder: options.columnOrder,
@@ -417,6 +417,7 @@ export function WazuhAgentsView({
                 records={visibleAgents}
                 columns={effectiveColumns}
                 storeColumnsKey={storeKey}
+                onColumnLayoutChange={onColumnLayoutChange}
                 sortStatus={sortStatus}
                 onSortStatusChange={isEditMode ? undefined : setSortStatus}
                 idAccessor="id"

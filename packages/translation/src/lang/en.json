@@ -59,13 +59,12 @@
       },
       "essentials": {
         "title": "Start with familiar defaults",
-        "description": "Set the language and appearance everyone sees first, then give Homarr the address pattern used by your services.",
+        "description": "Set the language and appearance everyone sees first.",
         "language": "Default language",
         "theme": "Default theme",
         "themeAuto": "System",
         "themeLight": "Light",
         "themeDark": "Dark",
-        "serverOriginHelp": "Homarr uses this address to prefill detected service URLs. You can still edit every service individually.",
         "serverDescription": "This is a shortcut, not a restriction. Every detected service remains editable.",
         "serverOrigin": "Domain, IP, or reverse-proxy path",
         "serverOriginDescription": "Examples: home.lan, 192.168.1.10, or https://home.example.com/services. Choose how each service is appended below.",
@@ -102,6 +101,8 @@
       "connect": {
         "title": "Connect what makes the board useful",
         "description": "Select several services at once. Docker labels take priority, image matching fills gaps, and every URL and credential stays reviewable.",
+        "confirmServerAddress": "This looks right",
+        "serverAddressReviewed": "Server address reviewed. You can still edit each service URL below.",
         "discoveredIntegrations": "Detected integration instances ({count})",
         "detectedIntegrationLabel": "Import {name}, detected as {kind}",
         "detectedAppLabel": "Import detected app {name}",
@@ -126,7 +127,8 @@
         "needsConfiguration": "Needs configuration",
         "tested": "Connection tested",
         "testFailed": "Connection test failed",
-        "incompleteConfirmation": "Unfinished integrations will be skipped. Continue without them?"
+        "incompleteConfirmation": "Apps without a URL and integrations missing a URL or credentials will be deselected and skipped. Continue without them?",
+        "skipIncomplete": "Skip unfinished connections"
       },
       "board": {
         "title": "Shape the board before it is built",
@@ -1930,6 +1932,8 @@
     "here": "here",
     "serviceUrlTemplate": {
       "serverTitle": "Usual server address",
+      "description": "Use your usual address and URL pattern to prefill the services below. Individual URL edits are kept.",
+      "example": "Example: {url}",
       "urlModeLabel": "Service address pattern",
       "hostPort": "Same host, different ports",
       "subdomain": "One subdomain per service",
@@ -4789,13 +4793,13 @@
             "hidden": "Hidden"
           }
         },
+        "groupReleases": {
+          "label": "Group releases by status",
+          "description": "Turn off to show a continuous list without section headings. Collapsed sections are ignored."
+        },
         "sections": {
           "label": "Sections",
           "description": "Groups of repositories to show. Hidden groups are not listed at all."
-        },
-        "collapsedSections": {
-          "label": "Collapsed sections",
-          "description": "Groups that start collapsed. Click a group title to expand it."
         },
         "newReleaseWithin": {
           "label": "Highlight new releases for",
@@ -4824,7 +4828,7 @@
         },
         "showChangelogPreview": {
           "label": "Show changelog preview",
-          "description": "Preview the release notes under new releases."
+          "description": "Preview the release notes under each release."
         },
         "repositories": {
           "label": "Repositories",
@@ -4857,6 +4861,10 @@
           },
           "name": {
             "label": "Name"
+          },
+          "excludePrereleases": {
+            "label": "Exclude pre-releases",
+            "description": "Show the latest release not flagged as a pre-release by the provider."
           },
           "versionFilter": {
             "label": "Version Filter",
@@ -4997,7 +5005,11 @@
       "runningVersions": "Running Versions",
       "upToDate": "Up to date",
       "updateAvailable": "Update available",
-      "unknownStatus": "Unknown"
+      "unknownStatus": "Unknown",
+      "error": {
+        "collapsedSaveTitle": "Collapsed sections were not saved",
+        "collapsedSaveMessage": "The section could not be updated. Try again."
+      }
     },
     "networkControllerSummary": {
       "advanced": {
@@ -5503,6 +5515,9 @@
       "name": "Beszel Systems (Table)",
       "description": "Table view of all Beszel-monitored systems with sortable columns and status indicators",
       "option": {
+        "fahrenheit": {
+          "label": "Temperature in Fahrenheit"
+        },
         "sortBy": {
           "label": "Sort by"
         },
@@ -5517,7 +5532,12 @@
     },
     "beszelSystemGrid": {
       "name": "Beszel Systems (Grid)",
-      "description": "Card grid view of all Beszel-monitored systems with real-time metrics"
+      "description": "Card grid view of all Beszel-monitored systems with real-time metrics",
+      "option": {
+        "fahrenheit": {
+          "label": "Temperature in Fahrenheit"
+        }
+      }
     },
     "beszelAlerts": {
       "name": "Beszel Alerts",
@@ -7048,6 +7068,10 @@
             "signInOverlay": {
               "label": "Background overlay"
             },
+            "signInMarquee": {
+              "label": "Show background marquee",
+              "description": "Display floating application icons on authentication pages."
+            },
             "defaultRadius": {
               "label": "Corner style",
               "options": {
@@ -7213,6 +7237,7 @@
             "model": {
               "title": "Model",
               "description": "Select a discovered model or enter an exact endpoint model ID.",
+              "save": "Save model settings",
               "placeholder": "Model ID",
               "refresh": "Refresh models",
               "chooseModel": "Choose the model used for new conversations.",
@@ -7239,7 +7264,7 @@
             },
             "enabled": {
               "label": "Enable Assistant",
-              "description": "Shows the assistant to all signed-in users. Existing Homarr permissions still apply to every internal tool call."
+              "description": "Turn off to hide the Assistant for all users. Saved provider settings are kept for later."
             },
             "save": "Save assistant",
             "notification": {

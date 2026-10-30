@@ -56,11 +56,19 @@ export const noReleasesFoundError = (identifier: string) =>
 const byNewestRelease = (left: Release, right: Release) =>
   right.latestReleaseAt.getTime() - left.latestReleaseAt.getTime();
 
-export const selectNewestRelease = (releases: Release[], versionPattern?: RegExp): Release => {
+export const selectNewestRelease = (
+  releases: Release[],
+  versionPattern?: RegExp,
+  excludePrereleases = false,
+): Release => {
   const [newest] = releases
+    .filter((release) => !excludePrereleases || !release.isPreRelease)
     .filter((release) => matchesVersionPattern(release.latestRelease, versionPattern))
     .toSorted(byNewestRelease);
   if (!newest) {
+    if (excludePrereleases) {
+      throw new ReleaseLookupError("noMatchingVersion", "No stable release matches the configured version filter");
+    }
     throw noMatchingVersionError(
       releases.map((release) => release.latestRelease),
       versionPattern,

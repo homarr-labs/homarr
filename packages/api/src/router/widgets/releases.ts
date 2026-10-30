@@ -52,6 +52,7 @@ export const releasesRouter = createTRPCRouter({
             provider: z.enum(releaseProviderKinds),
             identifier: z.string(),
             versionFilter: releaseVersionFilterSchema.optional(),
+            excludePrereleases: z.boolean().optional(),
             providerUrl: z.string().url().optional(),
           }),
         ),
@@ -115,6 +116,7 @@ export const releasesRouter = createTRPCRouter({
                 provider: repository.provider,
                 identifier: repository.identifier,
                 versionRegex: formatVersionFilterRegex(repository.versionFilter),
+                excludePrereleases: repository.excludePrereleases,
                 providerUrl,
                 token,
               })

@@ -14,7 +14,11 @@ import {
 } from "@tabler/icons-react";
 import { useFormatter } from "next-intl";
 
+import { clientApi } from "@homarr/api/client";
+import { useSession } from "@homarr/auth/client";
+import { constructBoardPermissions } from "@homarr/auth/shared";
 import { useRequiredBoard } from "@homarr/boards/context";
+import { showErrorNotification } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
 import { zoomCompensatedSize } from "@homarr/ui";
 
@@ -69,8 +73,8 @@ const getDensity = (width: number, height: number): Density => {
   return "regular";
 };
 
-const getRowVariant = (section: ReleaseSectionKey, density: Density, layout: ReleaseLayout): RowVariant => {
-  if (layout === "compact" || section === "upToDate" || section === "quiet") return "dense";
+const getRowVariant = (density: Density, layout: ReleaseLayout): RowVariant => {
+  if (layout === "compact") return "dense";
   if (density === "micro") return "mini";
   return "rich";
 };
@@ -104,7 +108,9 @@ const getInboxDisplay = (
 
 export default function ReleasesWidget({
   options,
+  setOptions,
   itemId,
+  boardId,
   integrationIds,
   width,
   height,
@@ -115,6 +121,8 @@ export default function ReleasesWidget({
 }: WidgetComponentProps<"releases">) {
   const t = useI18n("widget.releases");
   const board = useRequiredBoard();
+  const { data: session } = useSession();
+  const hasChangeAccess = constructBoardPermissions(board, session ?? null).hasChangeAccess;
   const { entries, isInitialLoading, isFetching, serviceVersionsQuery, markViewed, markAllViewed } = useReleaseEntries({
     options,
     itemId,
@@ -144,6 +152,11 @@ export default function ReleasesWidget({
       sections={sections}
       collapsedSections={options.collapsedSections}
       showChangelogPreview={options.showChangelogPreview}
+      groupReleases={options.groupReleases}
+      setOptions={setOptions}
+      boardId={boardId}
+      itemId={itemId}
+      hasChangeAccess={hasChangeAccess}
     />
   );
 }
@@ -162,6 +175,11 @@ interface ReleasesInboxProps {
   sections: readonly ReleaseSectionKey[];
   collapsedSections: ReleaseSectionKey[];
   showChangelogPreview: boolean;
+  groupReleases: boolean;
+  setOptions: WidgetComponentProps<"releases">["setOptions"];
+  boardId: string | undefined;
+  itemId: string | undefined;
+  hasChangeAccess: boolean;
 }
 
 const ReleasesInbox = ({
@@ -178,10 +196,23 @@ const ReleasesInbox = ({
   sections,
   collapsedSections,
   showChangelogPreview,
+  groupReleases,
+  setOptions,
+  boardId,
+  itemId,
+  hasChangeAccess,
 }: ReleasesInboxProps) => {
   const t = useI18n("widget.releases");
   const formatter = useFormatter();
   const board = useRequiredBoard();
+  const savePendingRef = useRef(false);
+  const { mutate: saveCollapsedSections } = clientApi.widget.options.saveItemOptions.useMutation({
+    onError: () =>
+      showErrorNotification({
+        title: t("error.collapsedSaveTitle"),
+        message: t("error.collapsedSaveMessage"),
+      }),
+  });
   const now = useWidgetNow();
   const rootRef = useRef<HTMLDivElement>(null);
 
@@ -218,8 +249,43 @@ const ReleasesInbox = ({
 
   const isOpen = (key: ReleaseSectionKey) =>
     sectionOpen[key] ?? (!collapsedSections.includes(key) && (density === "regular" || key === "new"));
-  const toggleSection = (key: ReleaseSectionKey) =>
-    setSectionOpen((previous) => ({ ...previous, [key]: !isOpen(key) }));
+  const toggleSection = (key: ReleaseSectionKey) => {
+    if (savePendingRef.current) return;
+    const nextOpen = !isOpen(key);
+    const previousOpen = sectionOpen[key];
+    setSectionOpen((previous) => ({ ...previous, [key]: nextOpen }));
+
+    // Density closes some sections without recording them. Only a toggle that changes the saved list is stored.
+    const persistedCollapsed = collapsedSections.includes(key);
+    if (persistedCollapsed !== nextOpen) return;
+
+    const nextCollapsed = nextOpen
+      ? collapsedSections.filter((section) => section !== key)
+      : [...collapsedSections, key];
+    setOptions({ newOptions: { collapsedSections: nextCollapsed } });
+    if (!hasChangeAccess || !boardId || !itemId) return;
+
+    savePendingRef.current = true;
+    saveCollapsedSections(
+      { boardId, itemId, newOptions: { collapsedSections: nextCollapsed } },
+      {
+        onError: () => {
+          setSectionOpen((current) => {
+            if (previousOpen === undefined) {
+              const next = { ...current };
+              delete next[key];
+              return next;
+            }
+            return { ...current, [key]: previousOpen };
+          });
+          setOptions({ newOptions: { collapsedSections } });
+        },
+        onSettled: () => {
+          savePendingRef.current = false;
+        },
+      },
+    );
+  };
 
   useEffect(() => {
     if (!scrollTarget) return;
@@ -409,23 +475,27 @@ const ReleasesInbox = ({
         </header>
       )}
 
-      {!showHeader && failedIntegrations.length > 0 && (
-        <div className={classes.floatingActions}>
+      {!showHeader && (failedIntegrations.length > 0 || (!groupReleases && newEntries.length > 0)) && (
+        <div className={classes.listActions}>
           <IntegrationErrorIndicator results={failedIntegrations} />
+          {!groupReleases && newEntries.length > 0 && (
+            <MarkAllButton placement="section" onClick={handleMarkAllViewed} />
+          )}
         </div>
       )}
 
       <div className={classes.body} data-split={isSplit || undefined}>
-        <div className={classes.list}>
+        <div className={classes.list} data-grouped={groupReleases}>
           {releaseSectionKeys.map((key) => {
             const section = grouped[key];
             const count = section.entries.length + countIssueEntries(section.issues);
             if (count === 0) return null;
-            const variant = getRowVariant(key, density, layout);
+            const variant = getRowVariant(density, layout);
             return (
               <Section
                 key={key}
                 sectionKey={key}
+                groupReleases={groupReleases}
                 count={count}
                 isOpen={isOpen(key)}
                 onToggle={() => toggleSection(key)}
@@ -473,6 +543,7 @@ const MarkAllButton = ({ placement, onClick }: MarkAllButtonProps) => {
 
 interface SectionProps {
   sectionKey: ReleaseSectionKey;
+  groupReleases: boolean;
   count: number;
   isOpen: boolean;
   onToggle: () => void;
@@ -480,8 +551,9 @@ interface SectionProps {
   children: ReactNode;
 }
 
-const Section = ({ sectionKey, count, isOpen, onToggle, actions, children }: SectionProps) => {
+const Section = ({ sectionKey, groupReleases, count, isOpen, onToggle, actions, children }: SectionProps) => {
   const t = useI18n("widget.releases");
+  if (!groupReleases) return children;
 
   return (
     <section className={`releases-section releases-section-${sectionKey} ${classes.section}`}>

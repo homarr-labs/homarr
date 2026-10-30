@@ -415,6 +415,7 @@ export const boardRouter = createTRPCRouter({
         name: true,
         logoImageUrl: true,
         isPublic: true,
+        primaryColor: true,
       },
       with: {
         creator: {
@@ -652,6 +653,7 @@ export const boardRouter = createTRPCRouter({
         isMobileHome: currentUser?.mobileHomeBoardId === board.id,
         preview: previewLayout
           ? {
+              primaryColor: board.primaryColor,
               layouts: [previewLayout],
               sections: [...previewRoots, ...containerPreview],
               items: itemPreview,

@@ -26,7 +26,7 @@ import {
   dashboardSupportingQueryPolicies,
   isTrpcForbiddenError,
   isWidgetDataQueryKey,
-  queryCacheDefaultGcTimeMs,
+  getQueryCacheGcTime,
   queryCacheDefaultRefetchIntervalMs,
   queryCacheDefaultStaleTimeMs,
 } from "@homarr/api/query-cache";
@@ -131,7 +131,7 @@ const ScopedTRPCReactProvider = ({ children, demoReadOnly }: PropsWithChildren<{
       defaultOptions: {
         queries: {
           staleTime: queryCacheDefaultStaleTimeMs,
-          gcTime: queryCacheDefaultGcTimeMs,
+          gcTime: getQueryCacheGcTime(),
           retry: createQueryRetry(env.NODE_ENV === "development" ? 1 : 3),
         },
         mutations: {
