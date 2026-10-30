@@ -1601,7 +1601,7 @@ const Extensions = (props: StudioSectionProps) => {
         </Group>
         <AssistantSetup environment={props.environment} configuration={props.assistantConfiguration} />
       </Stack>
-      <Accordion variant="separated">
+      <Accordion variant="separated" order={3}>
         <Accordion.Item value="workshop">
           <Accordion.Control icon={<IconSparkles size={18} />}>{t("workshop")}</Accordion.Control>
           <Accordion.Panel>
