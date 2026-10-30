@@ -2,9 +2,13 @@
 
 import { ActionIcon, Badge, Code, CopyButton, Group, Stack, Text, Title, Tooltip } from "@mantine/core";
 import { IconCheck, IconCopy } from "@tabler/icons-react";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
 
 import type { RouterOutputs } from "@homarr/api";
 import { useI18n } from "@homarr/translation/client";
+
+dayjs.extend(relativeTime);
 
 type SignInInformationData = RouterOutputs["user"]["getSignInInformation"];
 
@@ -41,7 +45,50 @@ export const SignInInformation = ({ information }: SignInInformationProps) => {
             </Group>
           )}
         </Stack>
+        <GroupsClaimDetails information={information} />
       </Stack>
+    </Stack>
+  );
+};
+
+const GroupsClaimDetails = ({ information }: SignInInformationProps) => {
+  const t = useI18n("management.page.user.setting.general.item.signInInformation");
+  const homarrGroupNames = new Set(information.homarrGroups.map((group) => group.name));
+
+  return (
+    <Stack gap={4}>
+      <Group gap="xs">
+        <Text size="sm" fw={500}>
+          {t("groupsClaim")}
+        </Text>
+        {information.groupsClaimSeenAt && (
+          <Text size="xs" c="dimmed">
+            {t("groupsClaimSeenAt", { time: dayjs(information.groupsClaimSeenAt).fromNow() })}
+          </Text>
+        )}
+      </Group>
+      {information.groupsClaim === null ? (
+        <Text size="sm" c="dimmed">
+          {t("empty")}
+        </Text>
+      ) : information.groupsClaim.length === 0 ? (
+        <Text size="sm" c="dimmed">
+          {t("noGroups")}
+        </Text>
+      ) : (
+        <Group gap="xs">
+          {information.groupsClaim.map((claim) => {
+            const unmatched = !homarrGroupNames.has(claim);
+            return (
+              <Tooltip key={claim} label={unmatched ? t("unmatched") : claim} disabled={!unmatched}>
+                <Badge variant="light" color={unmatched ? "yellow" : "blue"}>
+                  {claim}
+                </Badge>
+              </Tooltip>
+            );
+          })}
+        </Group>
+      )}
     </Stack>
   );
 };

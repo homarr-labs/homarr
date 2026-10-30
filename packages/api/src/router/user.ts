@@ -508,6 +508,8 @@ export const userRouter = createTRPCRouter({
             name: z.string(),
           }),
         ),
+        groupsClaim: z.array(z.string()).nullable(),
+        groupsClaimSeenAt: z.date().nullable(),
       }),
     )
     .meta({
@@ -518,7 +520,7 @@ export const userRouter = createTRPCRouter({
         protect: true,
         summary: "Get sign-in information",
         description:
-          "Return the authentication provider, subject, email, and Homarr groups for a user. Users can read themselves; reading another user requires admin permission. Tokens are never returned.",
+          "Return the authentication provider, subject, email, Homarr groups, and the last groups claim seen at sign-in. Users can read themselves; reading another user requires admin permission. Tokens are never returned.",
       },
     })
     .query(async ({ input, ctx }) => {
@@ -539,6 +541,8 @@ export const userRouter = createTRPCRouter({
             columns: {
               provider: true,
               providerAccountId: true,
+              lastGroupsClaim: true,
+              lastGroupsClaimSeenAt: true,
             },
           },
           groups: {
@@ -573,6 +577,8 @@ export const userRouter = createTRPCRouter({
         email: user.email,
         subject: account?.providerAccountId ?? null,
         homarrGroups: user.groups.map(({ group }) => group).sort((left, right) => left.name.localeCompare(right.name)),
+        groupsClaim: parseLastGroupsClaim(account?.lastGroupsClaim ?? null),
+        groupsClaimSeenAt: account?.lastGroupsClaimSeenAt ?? null,
       };
     }),
   editProfile: protectedProcedure
@@ -1016,4 +1022,21 @@ const checkUsernameAlreadyTakenAndThrowAsync = async (
     code: "CONFLICT",
     message: "Username already taken",
   });
+};
+
+const parseLastGroupsClaim = (value: string | null): string[] | null => {
+  if (!value) {
+    return null;
+  }
+
+  try {
+    const parsed: unknown = JSON.parse(value);
+    if (!Array.isArray(parsed) || parsed.some((item) => typeof item !== "string")) {
+      return null;
+    }
+
+    return parsed;
+  } catch {
+    return null;
+  }
 };

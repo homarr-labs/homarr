@@ -6824,6 +6824,9 @@
                 "homarrGroups": "Homarr groups",
                 "empty": "Not available",
                 "noGroups": "None",
+                "groupsClaim": "Groups claim",
+                "groupsClaimSeenAt": "Last seen {time}",
+                "unmatched": "No matching Homarr group",
                 "copy": "Copy",
                 "copied": "Copied"
               },

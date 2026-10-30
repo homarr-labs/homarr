@@ -352,6 +352,8 @@ describe("getSignInInformation should return safe authentication details", () =>
       id_token: "secret-id-token",
       access_token: "secret-access-token",
       refresh_token: "secret-refresh-token",
+      lastGroupsClaim: JSON.stringify(["admins", "00000000-0000-0000-0000-000000000001"]),
+      lastGroupsClaimSeenAt: new Date("2026-10-30T12:00:00.000Z"),
     });
     await db.insert(groups).values({ id: groupId, name: "admins", position: 0 });
     await db.insert(groupMembers).values({ groupId, userId: defaultOwnerId });
@@ -363,6 +365,8 @@ describe("getSignInInformation should return safe authentication details", () =>
       email: "owner@example.com",
       subject: "oidc-subject",
       homarrGroups: [{ id: groupId, name: "admins" }],
+      groupsClaim: ["admins", "00000000-0000-0000-0000-000000000001"],
+      groupsClaimSeenAt: new Date("2026-10-30T12:00:00.000Z"),
     });
     expect(JSON.stringify(result)).not.toContain("secret-");
   });
@@ -407,6 +411,8 @@ describe("getSignInInformation should return safe authentication details", () =>
       email: "other@example.com",
       subject: null,
       homarrGroups: [],
+      groupsClaim: null,
+      groupsClaimSeenAt: null,
     });
   });
 });

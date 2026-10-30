@@ -141,6 +141,13 @@
       "when": 1792837634114,
       "tag": "0019_sturdy_power_pack",
       "breakpoints": true
+    },
+    {
+      "idx": 20,
+      "version": "7",
+      "when": 1793399859528,
+      "tag": "0020_add_account_last_groups_claim",
+      "breakpoints": true
     }
   ]
 }
