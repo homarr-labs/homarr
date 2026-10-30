@@ -517,6 +517,8 @@ export const userRouter = createTRPCRouter({
             name: z.string(),
           }),
         ),
+        groupsClaim: z.array(z.string()).nullable(),
+        groupsClaimSeenAt: z.date().nullable(),
       }),
     )
     .meta({
@@ -527,7 +529,7 @@ export const userRouter = createTRPCRouter({
         protect: true,
         summary: "Get sign-in information",
         description:
-          "Return a user's sign-in provider, subject, email, and Homarr groups. When an OIDC account is linked, the provider and subject come from that account. Users can read themselves. Reading another user requires admin permission.",
+          "Return a user's sign-in provider, subject, email, Homarr groups, and the last groups claim (group names and when they were seen). Provider, subject, and claim come from the same account row. Users can read themselves. Reading another user requires admin permission.",
       },
     })
     .query(async ({ input, ctx }) => {
@@ -548,6 +550,8 @@ export const userRouter = createTRPCRouter({
             columns: {
               provider: true,
               providerAccountId: true,
+              lastGroupsClaim: true,
+              lastGroupsClaimSeenAt: true,
             },
           },
           groups: {
@@ -579,6 +583,8 @@ export const userRouter = createTRPCRouter({
         email: user.email,
         subject: account?.providerAccountId ?? null,
         homarrGroups: user.groups.map(({ group }) => group).sort((left, right) => left.name.localeCompare(right.name)),
+        groupsClaim: parseLastGroupsClaim(account?.lastGroupsClaim ?? null),
+        groupsClaimSeenAt: account?.lastGroupsClaimSeenAt ?? null,
       };
     }),
   editProfile: protectedProcedure
@@ -1060,4 +1066,21 @@ const checkUsernameAlreadyTakenAndThrowAsync = async (
     code: "CONFLICT",
     message: "Username already taken",
   });
+};
+
+const parseLastGroupsClaim = (value: string | null): string[] | null => {
+  if (!value) {
+    return null;
+  }
+
+  try {
+    const parsed: unknown = JSON.parse(value);
+    if (!Array.isArray(parsed) || parsed.some((item) => typeof item !== "string")) {
+      return null;
+    }
+
+    return parsed;
+  } catch {
+    return null;
+  }
 };
