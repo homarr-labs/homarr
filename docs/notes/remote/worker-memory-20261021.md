@@ -2,7 +2,7 @@
 
 The standalone worker image measured on 21 October was **122.85 MiB Docker-reported uncompressed image size**. In one real browser run, Docker's cache-adjusted RAM was about **7 MiB before first use**, **92 MiB during initial dashboard use**, and **94 MiB after closing the browser**. The worker loads domain APIs on demand; the fresh-process figure is not its warmed footprint.
 
-The newer local worker is **119.79 MiB**; see [23 October packaging and classic validation](worker-compatibility-20261023.md). Its RAM was not remeasured. The samples below remain tied to the exact 21 October image.
+The newer local worker is **119.79 MiB**; see [23 October packaging and classic validation](worker-compatibility-20261023.md). RAM was not remeasured during that packaging pass. The [30 October live-demo report](worker-local-20261030.md) now measures the trimmed worker and its separate frontend; the samples below remain tied to the exact 21 October image.
 
 ## Measured RAM
 

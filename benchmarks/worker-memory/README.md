@@ -16,4 +16,4 @@ Change `--phase` and output path for each window. Only healthy, functionally ver
 
 `workingSetBytes` follows Linux Docker CLI accounting: `memory.current - inactive_file`. The output separately records full cgroup usage and summed process RSS/PSS; those metrics are not additive. RSS includes shared pages, PSS divides shared pages, and cgroup charge ownership can differ on a shared host. A missing counter is unknown. Report the sampled maximum rather than claiming an instantaneous peak. [Docker stats accounting](https://docs.docker.com/reference/cli/docker/container/stats/).
 
-Accepted current-image data and scope: [measurement report](../../docs/notes/remote/worker-memory-20261021.md). Initial failed relay-only setup diagnostics are excluded from the accepted results.
+Controlled small-fixture data and scope: [21 October report](../../docs/notes/remote/worker-memory-20261021.md). Latest live worker/frontend observations and local modes: [30 October report](../../docs/notes/remote/worker-local-20261030.md). Initial failed relay-only setup diagnostics are excluded from the accepted results.

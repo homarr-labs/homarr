@@ -1,0 +1,309 @@
+{
+  "date": "2026-10-30",
+  "sourceCommit": "88c979d7c6a0f050cc8760f8038fba23e3b5f11d",
+  "scope": "Existing live demo, restarted worker/frontend, 30-second sequential phases. Other user browsers not controlled; normal Compose healthchecks enabled. Optional worker jobs off and provider outbound disabled. Frontend, worker, relay, platform and gateway are distinct services.",
+  "dataset": {
+    "board": 2,
+    "item": 71,
+    "integration": 12,
+    "user": 5
+  },
+  "images": {
+    "worker": {
+      "tag": "homarr:worker-mini-local",
+      "imageId": "sha256:1dc48229e15292320e23178aa28e2b825e36cf61d2cef99ba6d79b59ea93caf7",
+      "imageBytes": 125604788,
+      "architecture": "amd64"
+    },
+    "frontend": {
+      "tag": "homarr:native-frontend-local",
+      "imageId": "sha256:c7ba8839680ed7f855213690f325cdd499a13b5ee0fe27c87089d00f261c6ffb",
+      "imageBytes": 363192000,
+      "architecture": "amd64"
+    }
+  },
+  "phases": {
+    "worker": {
+      "before-qa": {
+        "phase": "after-demo-restart-before-qa",
+        "summary": {
+          "workingSetBytes": {
+            "medianMiB": 21.1328125,
+            "minMiB": 20.5859375,
+            "maxMiB": 21.41015625
+          },
+          "cgroupCurrentBytes": {
+            "medianMiB": 23.91015625,
+            "minMiB": 23.36328125,
+            "maxMiB": 24.1875
+          },
+          "rssBytes": {
+            "medianMiB": 42.3359375,
+            "minMiB": 42.171875,
+            "maxMiB": 42.3359375
+          },
+          "pssBytes": {
+            "medianMiB": 31.5390625,
+            "minMiB": 31.1796875,
+            "maxMiB": 31.6953125
+          },
+          "averageCpuCores": 0.009893164143617475
+        },
+        "sampleCount": 31,
+        "requestedSeconds": 30,
+        "effectiveLimits": {
+          "memory.max": "max",
+          "memory.swap.max": "max",
+          "cpu.max": "max 100000",
+          "pids.max": "76800"
+        },
+        "memoryEvents": {
+          "low": 0,
+          "high": 0,
+          "max": 0,
+          "oom": 0,
+          "oom_kill": 0,
+          "oom_group_kill": 0
+        },
+        "restartCount": 0
+      },
+      "connected": {
+        "phase": "connected-dashboard-and-management",
+        "summary": {
+          "workingSetBytes": {
+            "medianMiB": 122.5390625,
+            "minMiB": 120.66796875,
+            "maxMiB": 132.10546875
+          },
+          "cgroupCurrentBytes": {
+            "medianMiB": 128.76171875,
+            "minMiB": 126.890625,
+            "maxMiB": 138.328125
+          },
+          "rssBytes": {
+            "medianMiB": 146.3046875,
+            "minMiB": 144.61328125,
+            "maxMiB": 155.2578125
+          },
+          "pssBytes": {
+            "medianMiB": 135.314453125,
+            "minMiB": 133.419921875,
+            "maxMiB": 144.326171875
+          },
+          "averageCpuCores": 0.021339243009221742
+        },
+        "sampleCount": 31,
+        "requestedSeconds": 30,
+        "effectiveLimits": {
+          "memory.max": "max",
+          "memory.swap.max": "max",
+          "cpu.max": "max 100000",
+          "pids.max": "76800"
+        },
+        "memoryEvents": {
+          "low": 0,
+          "high": 0,
+          "max": 0,
+          "oom": 0,
+          "oom_kill": 0,
+          "oom_group_kill": 0
+        },
+        "restartCount": 0
+      },
+      "after-use": {
+        "phase": "qa-browser-closed",
+        "summary": {
+          "workingSetBytes": {
+            "medianMiB": 124.8515625,
+            "minMiB": 123.75390625,
+            "maxMiB": 125.625
+          },
+          "cgroupCurrentBytes": {
+            "medianMiB": 131.07421875,
+            "minMiB": 129.9765625,
+            "maxMiB": 131.84765625
+          },
+          "rssBytes": {
+            "medianMiB": 149.00390625,
+            "minMiB": 148.16796875,
+            "maxMiB": 149.8125
+          },
+          "pssBytes": {
+            "medianMiB": 137.669921875,
+            "minMiB": 136.544921875,
+            "maxMiB": 138.396484375
+          },
+          "averageCpuCores": 0.013106543388007036
+        },
+        "sampleCount": 31,
+        "requestedSeconds": 30,
+        "effectiveLimits": {
+          "memory.max": "max",
+          "memory.swap.max": "max",
+          "cpu.max": "max 100000",
+          "pids.max": "76800"
+        },
+        "memoryEvents": {
+          "low": 0,
+          "high": 0,
+          "max": 0,
+          "oom": 0,
+          "oom_kill": 0,
+          "oom_group_kill": 0
+        },
+        "restartCount": 0
+      }
+    },
+    "frontend": {
+      "before-qa": {
+        "phase": "after-demo-restart-before-qa",
+        "summary": {
+          "workingSetBytes": {
+            "medianMiB": 62.5859375,
+            "minMiB": 62.5859375,
+            "maxMiB": 79.2421875
+          },
+          "cgroupCurrentBytes": {
+            "medianMiB": 62.59765625,
+            "minMiB": 62.59765625,
+            "maxMiB": 79.25390625
+          },
+          "rssBytes": {
+            "medianMiB": 111.203125,
+            "minMiB": 111.203125,
+            "maxMiB": 172.03125
+          },
+          "pssBytes": {
+            "medianMiB": 96.5234375,
+            "minMiB": 96.5234375,
+            "maxMiB": 112.865234375
+          },
+          "averageCpuCores": 0.004911110621034276
+        },
+        "sampleCount": 31,
+        "requestedSeconds": 30,
+        "effectiveLimits": {
+          "memory.max": "max",
+          "memory.swap.max": "max",
+          "cpu.max": "max 100000",
+          "pids.max": "76800"
+        },
+        "memoryEvents": {
+          "low": 0,
+          "high": 0,
+          "max": 0,
+          "oom": 0,
+          "oom_kill": 0,
+          "oom_group_kill": 0
+        },
+        "restartCount": 0
+      },
+      "connected": {
+        "phase": "connected-dashboard-and-management",
+        "summary": {
+          "workingSetBytes": {
+            "medianMiB": 130.73046875,
+            "minMiB": 130.73046875,
+            "maxMiB": 155.2890625
+          },
+          "cgroupCurrentBytes": {
+            "medianMiB": 130.7890625,
+            "minMiB": 130.7890625,
+            "maxMiB": 155.34765625
+          },
+          "rssBytes": {
+            "medianMiB": 185.98828125,
+            "minMiB": 185.98828125,
+            "maxMiB": 209.29296875
+          },
+          "pssBytes": {
+            "medianMiB": 170.748046875,
+            "minMiB": 170.748046875,
+            "maxMiB": 194.640625
+          },
+          "averageCpuCores": 0.020924148906802095
+        },
+        "sampleCount": 31,
+        "requestedSeconds": 30,
+        "effectiveLimits": {
+          "memory.max": "max",
+          "memory.swap.max": "max",
+          "cpu.max": "max 100000",
+          "pids.max": "76800"
+        },
+        "memoryEvents": {
+          "low": 0,
+          "high": 0,
+          "max": 0,
+          "oom": 0,
+          "oom_kill": 0,
+          "oom_group_kill": 0
+        },
+        "restartCount": 0
+      },
+      "after-use": {
+        "phase": "qa-browser-closed",
+        "summary": {
+          "workingSetBytes": {
+            "medianMiB": 153.80078125,
+            "minMiB": 153.80078125,
+            "maxMiB": 154.0625
+          },
+          "cgroupCurrentBytes": {
+            "medianMiB": 153.859375,
+            "minMiB": 153.859375,
+            "maxMiB": 154.12109375
+          },
+          "rssBytes": {
+            "medianMiB": 208.14453125,
+            "minMiB": 208.14453125,
+            "maxMiB": 208.14453125
+          },
+          "pssBytes": {
+            "medianMiB": 193.18359375,
+            "minMiB": 193.18359375,
+            "maxMiB": 193.18359375
+          },
+          "averageCpuCores": 0.004812818659719769
+        },
+        "sampleCount": 31,
+        "requestedSeconds": 30,
+        "effectiveLimits": {
+          "memory.max": "max",
+          "memory.swap.max": "max",
+          "cpu.max": "max 100000",
+          "pids.max": "76800"
+        },
+        "memoryEvents": {
+          "low": 0,
+          "high": 0,
+          "max": 0,
+          "oom": 0,
+          "oom_kill": 0,
+          "oom_group_kill": 0
+        },
+        "restartCount": 0
+      }
+    }
+  },
+  "functionalProof": {
+    "normalDashboardVisible": true,
+    "editControlsAvailable": true,
+    "savedConnectionRestoredAfterNavigation": true,
+    "setupFragmentAndFieldsCleared": true,
+    "browserPageErrors": 0,
+    "allPersistedKeysUnchanged": true,
+    "domainCountsUnchanged": true,
+    "workerAndFrontendUpdated": true,
+    "allFiveServicesHealthy": true,
+    "qaInvitationAndDeviceGrantRevoked": true,
+    "existingUserAuthorityNotRevoked": true
+  },
+  "sourceSha256": {
+    "Dockerfile.frontend": "7bd032f6ebe9d5d17db4df7ab6ec2adf91f5183ce5fa5c3be1bd0ca7a472c323",
+    "deployments/native/compose.yml": "316d96d8f91c569a272880deaaab14042aab08cb2d687c45eb5cd19406a79c21",
+    "scripts/native-demo.sh": "8fd6d5f3f6fcb3281f25d36ad2253bc773e874f12d937acc53feefc082dbd801",
+    "packages/api/src/client.ts": "6f778f771c90b8bb22bf336b61bde8cb2c61a2ead0fa83b66896a86cee7a6a96",
+    "scripts/assemble-backend.mjs": "924bf9775121bb7f66c1625a814c6a97aa3197fd3d5a05b6690c14443098921b"
+  }
+}
