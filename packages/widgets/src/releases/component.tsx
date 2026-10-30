@@ -14,7 +14,11 @@ import {
 } from "@tabler/icons-react";
 import { useFormatter } from "next-intl";
 
+import { clientApi } from "@homarr/api/client";
+import { useSession } from "@homarr/auth/client";
+import { constructBoardPermissions } from "@homarr/auth/shared";
 import { useRequiredBoard } from "@homarr/boards/context";
+import { showErrorNotification } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
 import { zoomCompensatedSize } from "@homarr/ui";
 
@@ -104,7 +108,9 @@ const getInboxDisplay = (
 
 export default function ReleasesWidget({
   options,
+  setOptions,
   itemId,
+  boardId,
   integrationIds,
   width,
   height,
@@ -115,6 +121,8 @@ export default function ReleasesWidget({
 }: WidgetComponentProps<"releases">) {
   const t = useI18n("widget.releases");
   const board = useRequiredBoard();
+  const { data: session } = useSession();
+  const hasChangeAccess = constructBoardPermissions(board, session ?? null).hasChangeAccess;
   const { entries, isInitialLoading, isFetching, serviceVersionsQuery, markViewed, markAllViewed } = useReleaseEntries({
     options,
     itemId,
@@ -145,6 +153,10 @@ export default function ReleasesWidget({
       collapsedSections={options.collapsedSections}
       showChangelogPreview={options.showChangelogPreview}
       groupReleases={options.groupReleases}
+      setOptions={setOptions}
+      boardId={boardId}
+      itemId={itemId}
+      hasChangeAccess={hasChangeAccess}
     />
   );
 }
@@ -164,6 +176,10 @@ interface ReleasesInboxProps {
   collapsedSections: ReleaseSectionKey[];
   showChangelogPreview: boolean;
   groupReleases: boolean;
+  setOptions: WidgetComponentProps<"releases">["setOptions"];
+  boardId: string | undefined;
+  itemId: string | undefined;
+  hasChangeAccess: boolean;
 }
 
 const ReleasesInbox = ({
@@ -181,10 +197,22 @@ const ReleasesInbox = ({
   collapsedSections,
   showChangelogPreview,
   groupReleases,
+  setOptions,
+  boardId,
+  itemId,
+  hasChangeAccess,
 }: ReleasesInboxProps) => {
   const t = useI18n("widget.releases");
   const formatter = useFormatter();
   const board = useRequiredBoard();
+  const savePendingRef = useRef(false);
+  const { mutate: saveCollapsedSections } = clientApi.widget.options.saveItemOptions.useMutation({
+    onError: () =>
+      showErrorNotification({
+        title: t("error.collapsedSaveTitle"),
+        message: t("error.collapsedSaveMessage"),
+      }),
+  });
   const now = useWidgetNow();
   const rootRef = useRef<HTMLDivElement>(null);
 
@@ -221,8 +249,43 @@ const ReleasesInbox = ({
 
   const isOpen = (key: ReleaseSectionKey) =>
     sectionOpen[key] ?? (!collapsedSections.includes(key) && (density === "regular" || key === "new"));
-  const toggleSection = (key: ReleaseSectionKey) =>
-    setSectionOpen((previous) => ({ ...previous, [key]: !isOpen(key) }));
+  const toggleSection = (key: ReleaseSectionKey) => {
+    if (savePendingRef.current) return;
+    const nextOpen = !isOpen(key);
+    const previousOpen = sectionOpen[key];
+    setSectionOpen((previous) => ({ ...previous, [key]: nextOpen }));
+
+    // Density closes some sections without recording them. Only a toggle that changes the saved list is stored.
+    const persistedCollapsed = collapsedSections.includes(key);
+    if (persistedCollapsed !== nextOpen) return;
+
+    const nextCollapsed = nextOpen
+      ? collapsedSections.filter((section) => section !== key)
+      : [...collapsedSections, key];
+    setOptions({ newOptions: { collapsedSections: nextCollapsed } });
+    if (!hasChangeAccess || !boardId || !itemId) return;
+
+    savePendingRef.current = true;
+    saveCollapsedSections(
+      { boardId, itemId, newOptions: { collapsedSections: nextCollapsed } },
+      {
+        onError: () => {
+          setSectionOpen((current) => {
+            if (previousOpen === undefined) {
+              const next = { ...current };
+              delete next[key];
+              return next;
+            }
+            return { ...current, [key]: previousOpen };
+          });
+          setOptions({ newOptions: { collapsedSections } });
+        },
+        onSettled: () => {
+          savePendingRef.current = false;
+        },
+      },
+    );
+  };
 
   useEffect(() => {
     if (!scrollTarget) return;

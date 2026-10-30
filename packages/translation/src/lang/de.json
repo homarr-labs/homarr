@@ -4714,7 +4714,7 @@
           "label": ""
         },
         "pageSize": {
-          "label": ""
+          "label": "Einträge pro Seite"
         }
       },
       "tab": {
@@ -4901,7 +4901,7 @@
           "tokens": {
             "label": "",
             "token": "",
-            "configured": "",
+            "configured": "Token konfiguriert",
             "notConfigured": ""
           }
         }
@@ -5551,7 +5551,7 @@
       }
     },
     "beszelSystemStats": {
-      "name": "",
+      "name": "Beszel Systemstatistiken",
       "description": "Zeit-Diagramme für CPU, Speicher, Festplatte, Netzwerk, GPU und Docker Container-Metriken",
       "option": {
         "systemId": {
@@ -6834,9 +6834,9 @@
                 }
               },
               "onboardingTours": {
-                "title": "",
-                "description": "",
-                "reset": "",
+                "title": "Einführungstouren",
+                "description": "Setzen Sie die Einführungstouren zurück, um diese beim nächsten Aufruf des Verwaltungsbereichs oder Dashboards erneut anzuzeigen.",
+                "reset": "Einführungstouren zurücksetzen",
                 "resetSuccess": {
                   "title": "",
                   "message": ""
@@ -7430,7 +7430,7 @@
               }
             },
             "mcp": {
-              "label": "",
+              "label": "AI & MCP",
               "title": "",
               "subtitle": "",
               "description": "",
@@ -7540,7 +7540,7 @@
               "title": "",
               "warningTitle": "",
               "warningBody": "",
-              "submit": ""
+              "submit": "Datenbank wiederherstellen"
             },
             "progress": {
               "title": "",
@@ -8210,7 +8210,7 @@
             "children": {
               "detail": {
                 "title": "",
-                "backHint": "",
+                "backHint": "Drücken Sie die Backspace Taste oder verwenden Sie die Zurück Schaltfläche, um zur vorherigen Seite zurückzukehren",
                 "backAction": "Zurück"
               }
             },
@@ -8268,7 +8268,7 @@
               "ddgBangs": {
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "DuckDuckGo-Bangs aktivieren"
                   }
                 }
               },
@@ -8296,7 +8296,7 @@
                 }
               },
               "mobileHomeBoardId": {
-                "label": "",
+                "label": "Mobiles Startdashboard",
                 "children": {
                   "detail": {
                     "title": ""

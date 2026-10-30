@@ -59,6 +59,9 @@ export const { definition, componentLoader } = createWidgetDefinition("beszelSys
           defaultValue: "all",
           options: statusOptions,
         }),
+        fahrenheit: factory.switch({
+          defaultValue: false,
+        }),
         sortBy: factory.select({ defaultValue: "name", options: sortOptions }),
         sortDirection: factory.select({
           defaultValue: "asc",

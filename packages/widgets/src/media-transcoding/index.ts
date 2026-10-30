@@ -11,6 +11,7 @@ import { views } from "./views";
 export { views };
 
 export const { componentLoader, definition } = createWidgetDefinition("mediaTranscoding", {
+  deferUntilVisible: true,
   icon: IconTransform,
   supportsAdvancedFocus: true,
   queryKey: [["widget", "mediaTranscoding", "getDataAsync"]],

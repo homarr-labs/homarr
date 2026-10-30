@@ -16,6 +16,9 @@ export const { definition, componentLoader } = createWidgetDefinition("beszelSys
         defaultValue: "all",
         options: statusOptions,
       }),
+      fahrenheit: factory.switch({
+        defaultValue: false,
+      }),
       ...createBeszelMetricOptions(() => factory.switch({ defaultValue: true })),
     }));
   },

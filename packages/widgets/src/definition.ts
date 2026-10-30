@@ -111,6 +111,8 @@ export const createWidgetDefinition = <TKind extends WidgetKind, TDefinition ext
 export interface WidgetDefinition {
   icon: TablerIcon;
   supportsAdvancedFocus?: boolean;
+  /** Start the browser runtime on first visibility, then retain its state offscreen. */
+  deferUntilVisible?: boolean;
   queryKey?: QueryKey;
   queryKeys?: readonly QueryKey[];
   queryMatcher?: WidgetQueryMatcher;

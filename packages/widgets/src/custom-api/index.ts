@@ -5,6 +5,7 @@ import { createWidgetDefinition } from "../definition";
 import { optionsBuilder } from "../options";
 
 export const { definition, componentLoader } = createWidgetDefinition("customApi", {
+  deferUntilVisible: true,
   icon: IconApi,
   createOptions() {
     return optionsBuilder.from((factory) => ({

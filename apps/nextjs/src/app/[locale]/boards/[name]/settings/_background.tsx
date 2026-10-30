@@ -163,7 +163,6 @@ const ImagePreview = ({ src, w, h }: ImagePreviewProps) => {
     return <IconPhotoOff size={w} />;
   }
 
-  if (isVideo === undefined) return <IconPhotoOff size={w} />;
   if (isVideo) {
     return <video src={src} muted preload="metadata" style={{ width: w, height: h, objectFit: "contain" }} />;
   }
