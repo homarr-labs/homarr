@@ -1,4 +1,12 @@
 ## What's Changed
+* chore: update contributors by @homarr-update-contributors[bot] in https://github.com/homarr-labs/homarr/pull/7415
+* fix(deps): update dependency @tabler/icons to ^3.50.0 by @homarr-renovate[bot] in https://github.com/homarr-labs/homarr/pull/7417
+* chore(release): automatic release v2.10.1 by @github-actions[bot] in https://github.com/homarr-labs/homarr/pull/7419
+
+
+**Full Changelog**: https://github.com/homarr-labs/homarr/compare/v2.10.0...v2.10.1
+
+## What's Changed
 * chore(deps): update crowdin/github-action action to v3.5.0 by @homarr-renovate[bot] in https://github.com/homarr-labs/homarr/pull/7373
 * fix(widgets): repair download resizing and table column options by @ajnart in https://github.com/homarr-labs/homarr/pull/7374
 * docs(triage): require value and compatibility decisions by @ajnart in https://github.com/homarr-labs/homarr/pull/7365
