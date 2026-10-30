@@ -18,6 +18,12 @@ export const beszelSystemGridWidget: WidgetDefinition = {
         defaultValue: "All Systems",
       },
       {
+        name: "Temperature in Fahrenheit",
+        description: "Display temperatures in Fahrenheit instead of Celsius",
+        values: { type: "boolean" },
+        defaultValue: "no",
+      },
+      {
         name: "Show CPU",
         description: "Displays CPU usage on each system card",
         values: { type: "boolean" },

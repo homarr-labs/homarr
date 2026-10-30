@@ -5511,6 +5511,9 @@
       "name": "Beszel Systems (Table)",
       "description": "Table view of all Beszel-monitored systems with sortable columns and status indicators",
       "option": {
+        "fahrenheit": {
+          "label": "Temperature in Fahrenheit"
+        },
         "sortBy": {
           "label": "Sort by"
         },
@@ -5525,7 +5528,12 @@
     },
     "beszelSystemGrid": {
       "name": "Beszel Systems (Grid)",
-      "description": "Card grid view of all Beszel-monitored systems with real-time metrics"
+      "description": "Card grid view of all Beszel-monitored systems with real-time metrics",
+      "option": {
+        "fahrenheit": {
+          "label": "Temperature in Fahrenheit"
+        }
+      }
     },
     "beszelAlerts": {
       "name": "Beszel Alerts",
