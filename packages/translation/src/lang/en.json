@@ -7233,6 +7233,7 @@
             "model": {
               "title": "Model",
               "description": "Select a discovered model or enter an exact endpoint model ID.",
+              "save": "Save model settings",
               "placeholder": "Model ID",
               "refresh": "Refresh models",
               "chooseModel": "Choose the model used for new conversations.",
@@ -7259,7 +7260,7 @@
             },
             "enabled": {
               "label": "Enable Assistant",
-              "description": "Shows the assistant to all signed-in users. Existing Homarr permissions still apply to every internal tool call."
+              "description": "Turn off to hide the Assistant for all users. Saved provider settings are kept for later."
             },
             "save": "Save assistant",
             "notification": {
