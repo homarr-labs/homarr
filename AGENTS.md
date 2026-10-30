@@ -112,7 +112,7 @@ These rules apply to every PR an agent prepares or opens, including contributor 
 
 ## MCP servers
 
-The [Homarr Mantine plugin](plugins/homarr-mantine/plugin.json) bundles the UI skill and pinned documentation MCP server. `.agents/plugins/marketplace.json` exposes it through the project marketplace, and `.codex/config.toml` enables it for this repository. Keep shared definitions keyless; credentials belong in local dotfiles. See [Mantine LLM tooling](https://mantine.dev/guides/llms/) for documentation sources.
+The [Homarr Mantine plugin](plugins/homarr-mantine/plugin.json) bundles the UI skill and pinned documentation MCP server. `.agents/plugins/marketplace.json` exposes it through the project marketplace, and `.codex/config.toml` enables it for this repository. For clients requiring registration, run `codex plugin marketplace add .` from the repository root, then `codex plugin add homarr-mantine@homarr-local`. Keep shared definitions keyless; credentials belong in local dotfiles. See [Mantine LLM tooling](https://mantine.dev/guides/llms/) for documentation sources.
 
 ## Agent Skills
 

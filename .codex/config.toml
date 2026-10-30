@@ -1,6 +1,2 @@
-[marketplaces.homarr-local]
-source_type = "local"
-source = "."
-
 [plugins."homarr-mantine@homarr-local"]
 enabled = true
