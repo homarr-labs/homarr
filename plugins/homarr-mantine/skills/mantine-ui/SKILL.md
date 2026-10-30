@@ -8,7 +8,7 @@ description: Build, change, or review Homarr application UI using Mantine compon
 ## Discover and read before editing
 
 1. Check the owning workspace's Mantine dependencies and existing `packages/ui` components. The live docs may describe a newer release; confirm the chosen API exists in the installed version.
-2. At the start of a UI task, call the `mantine` MCP server's `list_items({"kind":"component","limit":500})` to discover the available components across Core and extensions. Use `package`, `category`, or `query` filters to narrow the catalog, and `search_docs` for the behavior you need. Check hooks when they can replace custom interaction or state code.
+2. At the start of a UI task, call this plugin's Mantine MCP server's `list_items({"kind":"component","limit":500})` to discover the available components across Core and extensions. Use `package`, `category`, or `query` filters to narrow the catalog, and `search_docs` for the behavior you need. Check hooks when they can replace custom interaction or state code.
 3. **Always call `get_item_doc` for each component or hook you introduce, change, or review, before implementing it or drawing review conclusions.** Reuse documents already fetched during the task. For component styling, request `full: true` so you read the props and complete Styles API, including inner selectors and public CSS variables; an outline alone is insufficient. `get_item_props` and `get_api` supplement this lookup.
 
 For example:

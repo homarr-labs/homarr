@@ -88,7 +88,7 @@ Only after this user-need test passes, use these locations:
 - Lint: oxlint (not ESLint)
 - Format: oxfmt (not Prettier)
 - UI: Mantine (not Tailwind) — Tailwind is only used in docs app
-- Mantine: before creating, changing, or reviewing application UI, follow [mantine-ui](.agents/skills/mantine-ui/SKILL.md) for component discovery, mandatory `get_item_doc` lookups, and styling through built-in props and the Styles API.
+- Mantine: before creating, changing, or reviewing application UI, follow [mantine-ui](plugins/homarr-mantine/skills/mantine-ui/SKILL.md) for component discovery, mandatory `get_item_doc` lookups, and styling through built-in props and the Styles API.
 - Icons: @tabler/icons-react
 - Docs app can import from `@homarr/definitions` for shared types
 - Run `bun run dev:cli -- dev` to browse local `homarr:*` images and remote PR images.
@@ -112,14 +112,14 @@ These rules apply to every PR an agent prepares or opens, including contributor 
 
 ## MCP servers
 
-`.mcp.json` and `.codex/config.toml` register the project-local Mantine documentation server for Claude-compatible clients and Codex respectively. Both launch the installed binary from the root package manifest's pinned development dependency; install it with `bun install`. Keep shared definitions keyless; credentials belong in local dotfiles. See [Mantine LLM tooling](https://mantine.dev/guides/llms/) for client-specific setup.
+The [Homarr Mantine plugin](plugins/homarr-mantine/plugin.json) bundles the UI skill and pinned documentation MCP server. `.agents/plugins/marketplace.json` exposes it through the project marketplace, and `.codex/config.toml` enables it for this repository. Keep shared definitions keyless; credentials belong in local dotfiles. See [Mantine LLM tooling](https://mantine.dev/guides/llms/) for documentation sources.
 
 ## Agent Skills
 
 Portable skills live in `.agents/skills/`. Read the relevant `SKILL.md` before working in that domain; detailed references are loaded only when needed. Claude-compatible discovery is provided through `.claude/skills`.
 
 - `codebase-context` — architecture, package boundaries, and shared utilities
-- `mantine-ui` — component discovery, documentation, and built-in styling
+- `homarr-mantine:mantine-ui` — project plugin for Mantine component discovery, documentation, and built-in styling
 - `documentation-sync` — user-critical documentation only
 - `mcp-integration` — safe tRPC-to-MCP exposure
 - `homarr-custom-widget` — safe Custom JSX v2 authoring

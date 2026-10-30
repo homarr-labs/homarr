@@ -1,0 +1,20 @@
+{
+  "name": "homarr-local",
+  "interface": {
+    "displayName": "Homarr project plugins"
+  },
+  "plugins": [
+    {
+      "name": "homarr-mantine",
+      "source": {
+        "source": "local",
+        "path": "./plugins/homarr-mantine"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}

@@ -324,7 +324,6 @@
   },
   "devDependencies": {
     "@babel/parser": "catalog:",
-    "@mantine/mcp-server": "9.7.4",
     "@playwright/test": "catalog:",
     "@semantic-release/changelog": "catalog:",
     "@semantic-release/commit-analyzer": "catalog:",

@@ -1,3 +1,6 @@
-[mcp_servers.mantine]
-command = "bun"
-args = ["run", "--bun", "--no-install", "mcp-server"]
+[marketplaces.homarr-local]
+source_type = "local"
+source = "."
+
+[plugins."homarr-mantine@homarr-local"]
+enabled = true
