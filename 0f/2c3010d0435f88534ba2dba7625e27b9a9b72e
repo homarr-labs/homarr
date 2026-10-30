@@ -1,0 +1,200 @@
+.agents/plugins/marketplace.json
+  h_d6e478ca18e517 1-20
+.codex/config.toml
+  h_d6e478ca18e517 1-2
+.gitignore
+  h_d6e478ca18e517 80
+AGENTS.md
+  h_d6e478ca18e517 91,115,122
+CHANGELOG.md
+  h_d6e478ca18e517 2-38
+Dockerfile
+  h_d6e478ca18e517 1
+apps/docs/docs/getting-started/installation/helm.md
+  h_d6e478ca18e517 5,7,15,79-84,90-95,99,106,110,123,127,136,142,153,157,159,163-164,172,175-176,186,190,192,196,205,208-209,219,237-238,249,251,267-268,275,292,306-307,322,336-337,352,359-362,383-490,493
+apps/docs/docs/integrations/whats-up-docker/index.mdx
+  h_d6e478ca18e517 34-36,43-47,56-59
+apps/docs/docs/widgets/beszel-system-grid/index.ts
+  h_d6e478ca18e517 20-25
+apps/docs/docs/widgets/beszel-system-table/index.ts
+  h_d6e478ca18e517 20-25
+apps/docs/package.json
+  h_d6e478ca18e517 48
+apps/nextjs/src/app/[locale]/_client-providers/trpc.tsx
+  h_d6e478ca18e517 29,134
+apps/nextjs/src/app/[locale]/auth/loading.tsx
+  h_d6e478ca18e517 1
+apps/nextjs/src/app/[locale]/boards/(content)/_client.tsx
+  h_d6e478ca18e517 4,51,70-73,75-79
+apps/nextjs/src/app/[locale]/boards/(content)/_query-snapshot.ts
+  h_d6e478ca18e517 24,89,163
+apps/nextjs/src/app/[locale]/boards/[name]/settings/loading.tsx
+  h_d6e478ca18e517 1
+apps/nextjs/src/app/[locale]/custom-widget-configuration/loading.tsx
+  h_d6e478ca18e517 1
+apps/nextjs/src/app/[locale]/init/loading.tsx
+  h_d6e478ca18e517 1
+apps/nextjs/src/app/[locale]/manage/assistant/_components/assistant-configuration.tsx
+  h_d6e478ca18e517 186-196,214-217,277-279,295-305,308,317-326,408-421,716,719
+apps/nextjs/src/app/[locale]/manage/loading.tsx
+  h_d6e478ca18e517 1
+apps/nextjs/src/app/[locale]/reference/loading.tsx
+  h_d6e478ca18e517 1
+apps/nextjs/src/app/[locale]/widgets/loading.tsx
+  h_d6e478ca18e517 1
+apps/nextjs/src/components/assistant/assistant-launcher.tsx
+  h_d6e478ca18e517 4-14,68-74,91-94,127,130-135,139-146
+apps/nextjs/src/components/assistant/assistant-provider.tsx
+  h_d6e478ca18e517 27,932,934,993-994,1012,1018
+apps/nextjs/src/components/board/advanced-focus/context.tsx
+  h_d6e478ca18e517 4,6,45,53,414-428
+apps/nextjs/src/components/board/items/item-content.tsx
+  h_d6e478ca18e517 6,18,27,109,177-183,199,476,522,525-527,551-587
+apps/nextjs/src/components/board/items/widget-context-menu.tsx
+  h_d6e478ca18e517 4,6,349-370,374,376-377
+apps/nextjs/src/components/board/layout/scaled-board-canvas.tsx
+  h_d6e478ca18e517 10,25-127,147-148,167-180,182-184,186-200,203-204
+apps/nextjs/src/components/board/sections/grid/section-grid.tsx
+  h_d6e478ca18e517 4-13,356,376,420-424
+apps/nextjs/src/components/board/sections/section-collapse.tsx
+  h_d6e478ca18e517 42,45
+apps/nextjs/src/components/board/selection/board-selection-context.tsx
+  h_d6e478ca18e517 64-67
+apps/nextjs/src/components/layout/background.spec.tsx
+  h_d6e478ca18e517 1-163
+apps/nextjs/src/components/layout/background.tsx
+  h_d6e478ca18e517 14,17-18,33,35-36,49-50
+apps/nextjs/src/components/layout/loading.tsx
+  h_d6e478ca18e517 3-7
+apps/workshop/Dockerfile
+  h_d6e478ca18e517 1
+apps/workshop/docker-compose.staging.yml
+  h_d6e478ca18e517 5
+bun.lock
+  h_d6e478ca18e517 67,1015,4697
+e2e/onboarding.spec.ts
+  h_d6e478ca18e517 60-61,64,67,69-70
+package.json
+  h_d6e478ca18e517 3
+packages/api/src/query-cache.ts
+  h_d6e478ca18e517 19-25
+packages/api/src/router/assistant.ts
+  h_d6e478ca18e517 748,753-759,764-766,771-777
+packages/api/src/test/query-cache.spec.ts
+  h_d6e478ca18e517 6,115-144
+packages/definitions/src/integration.ts
+  h_d6e478ca18e517 1020,1022,1026,1031
+packages/definitions/src/test/api-key-url.spec.ts
+  h_d6e478ca18e517 45
+packages/integrations/src/llama-cpp/llamacpp-integration.ts
+  h_d6e478ca18e517 49,61-76,82
+packages/integrations/src/llama-cpp/test/llamacpp-integration.spec.ts
+  h_d6e478ca18e517 345-350
+packages/integrations/src/wud/test/wud-integration.spec.ts
+  h_d6e478ca18e517 25,81-83,205-238,308-319
+packages/integrations/src/wud/wud-integration.ts
+  h_d6e478ca18e517 54-57
+packages/onboarding/src/discovery-selection.ts
+  h_d6e478ca18e517 12-17,36-38
+packages/onboarding/src/service-url-template.tsx
+  h_d6e478ca18e517 5-6,9,12,73,82,85-87,90-107,109-118,124-128
+packages/onboarding/src/setup-studio.tsx
+  h_d6e478ca18e517 5,168-169,173-178,185-186,228-241,243,342-350,353,372-375,395-398,518-522,524-535,605-621,720,722-723,737-738,750,754-755,790-793,859,864,866,896-917,924-937,939-943,945,1124-1125,1629,1633-1653
+packages/spotlight/src/modes/home/context.tsx
+  h_d6e478ca18e517 2,42-48,52-54,56-60,62-63,65-67
+packages/translation/src/lang/de.json
+  h_d6e478ca18e517 4717,4904,5554,6837-6839,7433,7543,8213,8271,8299
+packages/translation/src/lang/en.json
+  h_d6e478ca18e517 62,104-105,130-131,1935-1936,5008-5012,5518-5520,5535-5540,7240,7267
+packages/ui/src/hooks/index.ts
+  h_d6e478ca18e517 2
+packages/ui/src/hooks/use-deferred-element-size.ts
+  h_d6e478ca18e517 1-22
+packages/widgets/package.json
+  h_d6e478ca18e517 100
+packages/widgets/src/assistant/index.ts
+  h_d6e478ca18e517 7
+packages/widgets/src/beszel-system-grid/component.tsx
+  h_d6e478ca18e517 185,286-293,298,431
+packages/widgets/src/beszel-system-grid/index.ts
+  h_d6e478ca18e517 19-21
+packages/widgets/src/beszel-system-table/component.tsx
+  h_d6e478ca18e517 367,419,421,461
+packages/widgets/src/beszel-system-table/index.ts
+  h_d6e478ca18e517 62-64
+packages/widgets/src/beszel/_shared/chart-style.ts
+  h_d6e478ca18e517 1-8
+packages/widgets/src/beszel/_shared/chart.tsx
+  h_d6e478ca18e517 6-8,20,24-28,159-160
+packages/widgets/src/beszel/_shared/interactive-chart.tsx
+  h_d6e478ca18e517 1-88
+packages/widgets/src/calendar/index.ts
+  h_d6e478ca18e517 12
+packages/widgets/src/common/homarr-data-table.tsx
+  h_d6e478ca18e517 11-12,31,49-53,60,100,142,160,182,267-293
+packages/widgets/src/common/use-persisted-table-layout.spec.ts
+  h_d6e478ca18e517 29,38,74
+packages/widgets/src/common/use-persisted-table-layout.ts
+  h_d6e478ca18e517 3,14-15,17,58,62,66,123-133,135-142,144-150,152,157-159,162,167,170-171,173,176,179-201,209,215-221,223-236,238-240
+packages/widgets/src/custom-api/index.ts
+  h_d6e478ca18e517 8
+packages/widgets/src/definition.ts
+  h_d6e478ca18e517 114-115
+packages/widgets/src/docker/component.tsx
+  h_d6e478ca18e517 395,448
+packages/widgets/src/downloads/component.tsx
+  h_d6e478ca18e517 723,819
+packages/widgets/src/manifest.ts
+  h_d6e478ca18e517 68-73
+packages/widgets/src/media-transcoding/index.ts
+  h_d6e478ca18e517 14
+packages/widgets/src/notebook/canonical-task.ts
+  h_d6e478ca18e517 1-13
+packages/widgets/src/notebook/component.tsx
+  h_d6e478ca18e517 3-5,8-9,11-14,17-55
+packages/widgets/src/notebook/notebook.css
+  h_d6e478ca18e517 47,63,135-179
+packages/widgets/src/notebook/notebook.tsx
+  h_d6e478ca18e517 62-63,84-101,112-113,123,185,337-342,356,548,585
+packages/widgets/src/notebook/read-mode.tsx
+  h_d6e478ca18e517 1-254
+packages/widgets/src/notebook/sanitize-content.spec.ts
+  h_d6e478ca18e517 1-15
+packages/widgets/src/notebook/sanitize-content.ts
+  h_d6e478ca18e517 1-222
+packages/widgets/src/notebook/surface.tsx
+  h_d6e478ca18e517 1-80
+packages/widgets/src/refetch-intervals.ts
+  h_d6e478ca18e517 27
+packages/widgets/src/releases/component.tsx
+  h_d6e478ca18e517 17-19,21,111,113,124-125,156-159,179-182,200-203,208-215,252-288
+packages/widgets/src/releases/index.ts
+  h_d6e478ca18e517 9,19,59-60
+packages/widgets/src/smart-home/entity-state/component.tsx
+  h_d6e478ca18e517 5,78,91,98
+packages/widgets/src/smart-home/execute-automation/component.tsx
+  h_d6e478ca18e517 15,65,81,88-96
+packages/widgets/src/thingport/featured-model/index.ts
+  h_d6e478ca18e517 9
+packages/widgets/src/wazuh/views/agents.tsx
+  h_d6e478ca18e517 305,420
+plugins/homarr-mantine/mcp.json
+  h_d6e478ca18e517 2,5,7-8
+plugins/homarr-mantine/plugin.json
+  h_d6e478ca18e517 1-21
+plugins/homarr-mantine/skills/mantine-ui/SKILL.md
+  h_d6e478ca18e517 1-42
+plugins/homarr-mantine/skills/mantine-ui/agents/openai.yaml
+  h_d6e478ca18e517 1-4
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "0f2c3010d0435f88534ba2dba7625e27b9a9b72e",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
