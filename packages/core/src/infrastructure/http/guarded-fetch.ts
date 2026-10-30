@@ -2,7 +2,7 @@ import { lookup } from "node:dns/promises";
 import type { LookupFunction } from "node:net";
 import { BlockList, isIP } from "node:net";
 
-import { createCertificateAgentAsync, fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
+import { createCertificateAgentAsync, fetchWithTrustedCertificatesAsync } from "./request";
 
 type FetchResponse = Awaited<ReturnType<typeof fetchWithTrustedCertificatesAsync>>;
 type Dispatcher = Awaited<ReturnType<typeof createCertificateAgentAsync>>;
@@ -14,6 +14,9 @@ interface ResolvedAddress {
 
 interface GuardedFetchOptions {
   headers?: Record<string, string>;
+  // Only server-registered integrations may trust their configured origin. Website
+  // metadata and page-declared icons must never set this exception.
+  trustedOrigin?: string;
   // Bounds the lookup, the connect and the response headers of every hop, and how long
   // the body may stay idle.
   timeout: number;
@@ -161,8 +164,10 @@ const requestHopAsync = async (
   const signal = options.signal ? AbortSignal.any([options.signal, timeout.signal]) : timeout.signal;
 
   try {
-    const addresses = await resolveAllowedAddressesAsync(url, signal);
-    const dispatcher = await createPinnedDispatcherAsync(addresses, options.timeout);
+    const dispatcher =
+      options.trustedOrigin === url.origin && (url.protocol === "http:" || url.protocol === "https:")
+        ? await createCertificateAgentAsync(undefined, { bodyTimeout: options.timeout, logOriginOnly: true })
+        : await createPinnedDispatcherAsync(await resolveAllowedAddressesAsync(url, signal), options.timeout);
     try {
       const response = await fetchWithTrustedCertificatesAsync(url, {
         headers: options.headers,
@@ -194,10 +199,11 @@ export const fetchGuardedAsync = async <TResult>(
   handleResponse: (response: FetchResponse, url: URL) => Promise<TResult>,
 ): Promise<TResult> => {
   let currentUrl = url;
+  let currentOptions = options;
 
   for (let redirects = 0; ; redirects++) {
     options.signal?.throwIfAborted();
-    const { response, dispatcher } = await requestHopAsync(currentUrl, options);
+    const { response, dispatcher } = await requestHopAsync(currentUrl, currentOptions);
 
     try {
       const location = redirectStatuses.has(response.status) ? response.headers.get("location") : null;
@@ -211,6 +217,11 @@ export const fetchGuardedAsync = async <TResult>(
       // undici refuses a url with credentials and puts all of it, query included, into its error.
       target.username = "";
       target.password = "";
+      // Custom integration headers can contain credentials too. Once a redirect
+      // leaves the origin, neither credentials nor its trust exception may follow.
+      if (target.origin !== currentUrl.origin) {
+        currentOptions = { ...currentOptions, headers: undefined, trustedOrigin: undefined };
+      }
       currentUrl = target;
     } finally {
       await dispatcher.destroy();

@@ -6,12 +6,23 @@ import { createId } from "@homarr/common";
 import { apps } from "@homarr/db/schema";
 import { createDb } from "@homarr/db/test";
 import type { GroupPermissionKey } from "@homarr/definitions";
+import type * as IconsModule from "@homarr/icons";
 
 import { appRouter } from "../app";
 import * as appAccessControl from "../app/app-access-control";
 
 // Mock the auth module to return an empty session
 vi.mock("@homarr/auth", () => ({ auth: () => ({}) as Session }));
+
+const { fetchWebsiteMetadataAsyncMock } = vi.hoisted(() => ({
+  fetchWebsiteMetadataAsyncMock: vi.fn(),
+}));
+
+// getIconForName keeps its real implementation, so only the network-dependent part is mocked
+vi.mock("@homarr/icons", async (importOriginal) => ({
+  ...(await importOriginal<typeof IconsModule>()),
+  fetchWebsiteMetadataAsync: fetchWebsiteMetadataAsyncMock,
+}));
 
 const createFakeAccessControl = (canAccess: boolean) =>
   vi.fn(
@@ -379,5 +390,70 @@ describe("delete should delete an app", () => {
     // Assert
     const dbApp = await db.query.apps.findFirst();
     expect(dbApp).toBeUndefined();
+  });
+});
+
+describe("detectMetadata", () => {
+  test("refuses a user who may not create apps without detecting anything", async () => {
+    // Arrange
+    const caller = appRouter.createCaller({ db: createDb(), deviceType: undefined, session: createDefaultSession([]) });
+
+    // Act & Assert
+    await expect(caller.detectMetadata({ href: "https://app.example.com" })).rejects.toThrow("Permission denied");
+    expect(fetchWebsiteMetadataAsyncMock).not.toHaveBeenCalled();
+  });
+
+  test("returns the detected icon URL without registering a server-side fetch", async () => {
+    // Arrange
+    fetchWebsiteMetadataAsyncMock.mockResolvedValueOnce({
+      title: "Example App",
+      iconUrl: "https://app.example.com/favicon.ico",
+    });
+    const caller = appRouter.createCaller({
+      db: createDb(),
+      deviceType: undefined,
+      session: createDefaultSession(["app-create"]),
+    });
+
+    // Act
+    const result = await caller.detectMetadata({ href: "https://app.example.com" });
+
+    // Assert
+    expect(result).toEqual({ name: "Example App", iconUrl: "https://app.example.com/favicon.ico" });
+  });
+
+  test("leaves page-declared LAN icon requests to the browser", async () => {
+    // Arrange
+    fetchWebsiteMetadataAsyncMock.mockResolvedValueOnce({
+      title: "Example App",
+      iconUrl: "http://192.168.1.10/private",
+    });
+    const caller = appRouter.createCaller({
+      db: createDb(),
+      deviceType: undefined,
+      session: createDefaultSession(["app-create"]),
+    });
+
+    // Act
+    const result = await caller.detectMetadata({ href: "https://app.example.com" });
+
+    // Assert
+    expect(result).toEqual({ name: "Example App", iconUrl: "http://192.168.1.10/private" });
+  });
+
+  test("uses the hostname when no title was detected", async () => {
+    // Arrange
+    fetchWebsiteMetadataAsyncMock.mockResolvedValueOnce({ title: null, iconUrl: null });
+    const caller = appRouter.createCaller({
+      db: createDb(),
+      deviceType: undefined,
+      session: createDefaultSession(["app-create"]),
+    });
+
+    // Act
+    const result = await caller.detectMetadata({ href: "https://app.example.com" });
+
+    // Assert
+    expect(result.name).toBe("app.example.com");
   });
 });

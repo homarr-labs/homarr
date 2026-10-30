@@ -18,6 +18,7 @@ import type { DeviceType, RequestIdentity } from "@homarr/common/server";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import { db } from "@homarr/db";
 import type { GroupPermissionKey, OnboardingStep } from "@homarr/definitions";
+import { BoardLayoutBoundsError } from "@homarr/validation/board-layout-bounds-error";
 
 import { env } from "./env";
 import { isReadOnlyProcedure } from "./credential-access";
@@ -86,6 +87,7 @@ const t = initTRPC
         ...shape.data,
         zodError: error.cause instanceof ZodError ? error.cause.flatten() : null,
         error: error.cause instanceof FlattenError ? error.cause.flatten() : null,
+        isBoardLayoutBoundsError: error.cause instanceof BoardLayoutBoundsError,
       },
     }),
   });

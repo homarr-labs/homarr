@@ -138,8 +138,15 @@
     {
       "idx": 19,
       "version": "7",
-      "when": 1792836531462,
-      "tag": "0019_add_api_key_read_only",
+      "when": 1792837634114,
+      "tag": "0019_sturdy_power_pack",
+      "breakpoints": true
+    },
+    {
+      "idx": 20,
+      "version": "7",
+      "when": 1793354551741,
+      "tag": "0020_add_api_key_read_only",
       "breakpoints": true
     }
   ]

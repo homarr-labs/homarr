@@ -1,7 +1,7 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "e5bb9ecb-11b1-481c-817c-f69b637555e0",
+  "id": "0d2a8338-2160-46d4-b805-42047782f5d5",
   "prevId": "9a92ea6e-efb6-4296-bd5c-8a9ee99e8a44",
   "tables": {
     "account": {
@@ -128,14 +128,6 @@
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
-        },
-        "read_only": {
-          "name": "read_only",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "default": false
         },
         "oauth_client_id": {
           "name": "oauth_client_id",
@@ -2461,6 +2453,68 @@
         "trusted_certificate_hostname_hostname_thumbprint_pk": {
           "columns": ["hostname", "thumbprint"],
           "name": "trusted_certificate_hostname_hostname_thumbprint_pk"
+        }
+      },
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "user_item_state": {
+      "name": "user_item_state",
+      "columns": {
+        "user_id": {
+          "name": "user_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "item_id": {
+          "name": "item_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "key": {
+          "name": "key",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "value": {
+          "name": "value",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "user_item_state_user_id_user_id_fk": {
+          "name": "user_item_state_user_id_user_id_fk",
+          "tableFrom": "user_item_state",
+          "tableTo": "user",
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "user_item_state_item_id_item_id_fk": {
+          "name": "user_item_state_item_id_item_id_fk",
+          "tableFrom": "user_item_state",
+          "tableTo": "item",
+          "columnsFrom": ["item_id"],
+          "columnsTo": ["id"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "user_item_state_user_id_item_id_key_pk": {
+          "columns": ["user_id", "item_id", "key"],
+          "name": "user_item_state_user_id_item_id_key_pk"
         }
       },
       "uniqueConstraints": {},

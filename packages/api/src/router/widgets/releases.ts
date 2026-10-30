@@ -6,7 +6,8 @@ import { createLogger } from "@homarr/core/infrastructure/logs";
 import { eq } from "@homarr/db";
 import { boards, items, widgetSecrets } from "@homarr/db/schema";
 import { releaseProviderKinds } from "@homarr/definitions";
-import { releasesRequestHandler } from "@homarr/request-handler/releases";
+import type { ReleaseErrorCode } from "@homarr/request-handler/releases";
+import { releasesRequestHandler, TransientReleaseError } from "@homarr/request-handler/releases";
 import { serviceVersionRequestHandler } from "@homarr/request-handler/service-version";
 
 import { createManyWidgetIntegrationMiddleware } from "../../middlewares/integration";
@@ -17,6 +18,11 @@ import { isActionAllowedAsync, throwIfActionForbiddenAsync } from "../board/boar
 const logger = createLogger({ module: "releasesRouter" });
 const PUBLIC_RELEASE_ERROR_MESSAGE: string = "Release provider request failed";
 const escapeForRegEx = (value: string) => value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+const getFailedLookupErrorCode = (error: unknown): ReleaseErrorCode => {
+  if (error instanceof TransientReleaseError) return error.releaseError.code;
+  return "unexpected";
+};
 
 const formatVersionFilterRegex = (versionFilter: z.infer<typeof releaseVersionFilterSchema> | undefined) => {
   if (!versionFilter) return undefined;
@@ -47,6 +53,7 @@ export const releasesRouter = createTRPCRouter({
             provider: z.enum(releaseProviderKinds),
             identifier: z.string(),
             versionFilter: releaseVersionFilterSchema.optional(),
+            excludePrereleases: z.boolean().optional(),
             providerUrl: z.string().url().optional(),
           }),
         ),
@@ -110,6 +117,7 @@ export const releasesRouter = createTRPCRouter({
                 provider: repository.provider,
                 identifier: repository.identifier,
                 versionRegex: formatVersionFilterRegex(repository.versionFilter),
+                excludePrereleases: repository.excludePrereleases,
                 providerUrl,
                 token,
               })
@@ -146,7 +154,7 @@ export const releasesRouter = createTRPCRouter({
               provider: repository.provider,
               timestamp: new Date(),
               success: false as const,
-              error: { code: "unexpected" as const, message: PUBLIC_RELEASE_ERROR_MESSAGE },
+              error: { code: getFailedLookupErrorCode(error), message: PUBLIC_RELEASE_ERROR_MESSAGE },
             };
           }
         }),

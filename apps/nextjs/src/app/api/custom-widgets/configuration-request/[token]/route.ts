@@ -11,13 +11,19 @@ import {
   releaseCustomWidgetConfigurationRequest,
   retryCustomWidgetConfigurationRequest,
 } from "@homarr/api/custom-widget-configuration";
-import { customWidgetSourceSchema, isCustomWidgetSourceUrlPlaceholder } from "@homarr/custom-widgets/core";
+import {
+  customWidgetSourceSchema,
+  customWidgetSecretInputSchema,
+  customWidgetAuthenticationHeadersSchema,
+  getCustomWidgetHeaderSecretKind,
+  isCustomWidgetSourceUrlPlaceholder,
+} from "@homarr/custom-widgets/core";
 import { invalidateCustomWidgetResponseCache } from "@homarr/custom-widgets/server";
 import { db } from "@homarr/db";
 
 import type { AdminSession } from "../../admin";
 import { adminRouteWithSession } from "../../admin";
-import { readConfigurationRequestBody } from "../body";
+import { readConfigurationRequestBody, getHeaderConfigurationRequestBodyLimit } from "../body";
 
 interface RouteContext {
   params: Promise<{ token: string }>;
@@ -55,7 +61,33 @@ const completeConfigurationRequest = async (
   if (!pending || pending.status !== "pending") {
     return NextResponse.json({ error: "This credential request is invalid, completed, or expired." }, { status: 404 });
   }
-  const parsedBody = await readConfigurationRequestBody(request);
+  let maximumBodyBytes: number | undefined;
+  let requestedHeaderKinds: Set<string> | undefined;
+  if (typeof pending.source.auth === "object" && pending.source.auth.type === "headers") {
+    const headers = customWidgetAuthenticationHeadersSchema.safeParse(pending.source.auth.headers);
+    if (!headers.success) {
+      return NextResponse.json(
+        { error: "This credential request is invalid. Request a new setup link." },
+        { status: 400 },
+      );
+    }
+    const declaredKinds = new Set<string>(headers.data.map(({ slot }) => getCustomWidgetHeaderSecretKind(slot)));
+    const requestedKinds = new Set<string>(pending.kinds);
+    const limit = getHeaderConfigurationRequestBodyLimit(requestedKinds.size);
+    if (
+      limit === null ||
+      requestedKinds.size !== pending.kinds.length ||
+      [...requestedKinds].some((kind) => !declaredKinds.has(kind))
+    ) {
+      return NextResponse.json(
+        { error: "This credential request is invalid. Request a new setup link." },
+        { status: 400 },
+      );
+    }
+    maximumBodyBytes = limit;
+    requestedHeaderKinds = requestedKinds;
+  }
+  const parsedBody = await readConfigurationRequestBody(request, maximumBodyBytes);
   if (parsedBody.status === "too-large") {
     return NextResponse.json({ error: "The configuration payload is too large." }, { status: 413 });
   }
@@ -63,6 +95,9 @@ const completeConfigurationRequest = async (
     return NextResponse.json({ error: "Enter a valid source configuration." }, { status: 400 });
   }
   const body = parsedBody.data;
+  if (requestedHeaderKinds && Object.keys(body.secrets).some((kind) => !requestedHeaderKinds.has(kind))) {
+    return NextResponse.json({ error: "Provide only the requested credential fields." }, { status: 400 });
+  }
   let candidate: unknown;
   if (pending.source.type === "integration") {
     if (!body.integrationId || body.baseUrl !== undefined || Object.keys(body.secrets).length > 0) {
@@ -94,9 +129,9 @@ const completeConfigurationRequest = async (
   }
   const secrets = pending.kinds.flatMap((kind) => {
     const value = body.secrets[kind];
-    return typeof value === "string" && value.length > 0 && value.length <= 8192
-      ? [{ sourceId: pending.sourceId, kind, value }]
-      : [];
+    const result = customWidgetSecretInputSchema.safeParse({ sourceId: pending.sourceId, kind, value });
+    if (!result.success) return [];
+    return [result.data];
   });
   if (secrets.length !== pending.kinds.length) {
     return NextResponse.json({ error: "Enter every requested credential field." }, { status: 400 });

@@ -799,6 +799,11 @@
       }
     },
     "field": {
+      "url": {
+        "helpLabel": "",
+        "examples": "",
+        "requiresHandler": ""
+      },
       "description": {
         "label": "Description"
       },
@@ -2312,6 +2317,15 @@
       "option": {
         "appId": {
           "label": "Choose app"
+        },
+        "openIn": {
+          "label": "",
+          "description": "",
+          "option": {
+            "currentTab": "",
+            "newTab": "",
+            "newWindow": ""
+          }
         },
         "showTitle": {
           "label": "Show app name"
@@ -4758,25 +4772,61 @@
       "name": "",
       "description": "",
       "option": {
-        "newReleaseWithin": {
+        "layout": {
+          "label": "Layout",
+          "description": "",
+          "option": {
+            "comfortable": "",
+            "compact": ""
+          }
+        },
+        "summary": {
+          "label": "",
+          "description": "",
+          "option": {
+            "detailed": "",
+            "count": "",
+            "hidden": "Hidden"
+          }
+        },
+        "groupReleases": {
           "label": "",
           "description": ""
+        },
+        "sections": {
+          "label": "",
+          "description": ""
+        },
+        "collapsedSections": {
+          "label": "",
+          "description": ""
+        },
+        "newReleaseWithin": {
+          "label": "",
+          "description": "",
+          "option": {
+            "never": "",
+            "1d": "1 day",
+            "3d": "3 days",
+            "1w": "1 week",
+            "2w": "",
+            "1M": "1 month",
+            "3M": "3 months"
+          }
         },
         "staleReleaseWithin": {
           "label": "",
-          "description": ""
+          "description": "",
+          "option": {
+            "never": "",
+            "1M": "1 month",
+            "3M": "3 months",
+            "6M": "6 months",
+            "1y": "1 year",
+            "2y": "2 years"
+          }
         },
-        "showOnlyHighlighted": {
-          "label": "",
-          "description": ""
-        },
-        "showDetails": {
-          "label": ""
-        },
-        "showOnlyIcon": {
-          "label": ""
-        },
-        "topReleases": {
+        "showChangelogPreview": {
           "label": "",
           "description": ""
         },
@@ -4811,6 +4861,10 @@
           },
           "name": {
             "label": ""
+          },
+          "excludePrereleases": {
+            "label": "",
+            "description": ""
           },
           "versionFilter": {
             "label": "",
@@ -4852,36 +4906,106 @@
           }
         }
       },
-      "not-found": "",
-      "pre-release": "",
-      "archived": "",
-      "forked": "",
+      "summary": {
+        "newReleases": "",
+        "newShort": "new",
+        "tracked": "",
+        "caughtUp": "",
+        "outdated": "",
+        "outdatedShort": "",
+        "failing": "",
+        "failingShort": "",
+        "latest": "",
+        "issues": ""
+      },
+      "section": {
+        "new": {
+          "label": "New",
+          "description": ""
+        },
+        "attention": {
+          "label": "",
+          "description": ""
+        },
+        "upToDate": {
+          "label": "",
+          "description": ""
+        },
+        "quiet": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "status": {
+        "new": "",
+        "outdated": "",
+        "error": "",
+        "upToDate": "",
+        "quiet": ""
+      },
+      "tag": {
+        "new": "New",
+        "preRelease": "",
+        "resolvedFrom": "",
+        "quiet": "",
+        "archived": "",
+        "fork": ""
+      },
+      "issue": {
+        "affected": "",
+        "rateLimited": {
+          "title": "",
+          "hint": ""
+        },
+        "notFound": {
+          "title": "",
+          "hint": ""
+        },
+        "noMatchingVersion": {
+          "title": "",
+          "hint": ""
+        },
+        "noReleasesFound": {
+          "title": "",
+          "hint": ""
+        },
+        "invalidIdentifier": {
+          "title": "",
+          "hint": ""
+        },
+        "noProviderSelected": {
+          "title": "",
+          "hint": ""
+        },
+        "noProviderResponse": {
+          "title": "",
+          "hint": ""
+        },
+        "unexpected": {
+          "title": "",
+          "hint": ""
+        }
+      },
+      "markViewed": "",
+      "markAllViewed": "",
+      "markEntryViewed": "",
+      "viewed": "",
+      "copyVersion": "",
+      "copied": "",
+      "published": "",
+      "whatChanged": "",
+      "noNotes": "",
+      "changes": "",
       "starsCount": "",
       "forksCount": "",
-      "issuesCount": "",
-      "markViewed": "",
-      "openProjectPage": "",
-      "openReleasePage": "",
-      "releaseDescription": "",
-      "projectDescription": "",
+      "openIssues": "",
+      "created": "",
+      "releasePage": "",
+      "projectPage": "",
       "runningVersions": "",
       "upToDate": "",
       "updateAvailable": "",
-      "unknownStatus": "Unknown",
-      "created": "",
-      "error": {
-        "label": "",
-        "messages": {
-          "invalidIdentifier": "",
-          "noMatchingVersion": "",
-          "noReleasesFound": "",
-          "noProviderSelected": "No provider selected",
-          "noProviderResponse": "",
-          "unexpected": "Unexpected provider error"
-        }
-      },
-      "expandDetails": "Show details for {name}",
-      "collapseDetails": "Hide details for {name}"
+      "unknownStatus": "Unknown"
     },
     "networkControllerSummary": {
       "advanced": {
@@ -6080,6 +6204,18 @@
       "addApp": "Add app",
       "connectService": "Connect service"
     },
+    "urlDrop": {
+      "hint": "",
+      "resolving": "",
+      "notification": {
+        "success": {
+          "message": ""
+        },
+        "full": {
+          "message": ""
+        }
+      }
+    },
     "setupChecklist": {
       "title": "Make this board useful",
       "description": "Pick up where you left off. Progress follows the content already on this board.",
@@ -6924,6 +7060,10 @@
             },
             "signInOverlay": {
               "label": "Background overlay"
+            },
+            "signInMarquee": {
+              "label": "",
+              "description": ""
             },
             "defaultRadius": {
               "label": "Corner style",
@@ -8685,6 +8825,14 @@
     "conversationActions": "Conversation actions",
     "searchConversations": "Search conversations",
     "noMatchingConversations": "No matching conversations",
+    "historyError": {
+      "title": "",
+      "load": "",
+      "loadMessages": "",
+      "saveMessages": "",
+      "switch": "",
+      "retry": ""
+    },
     "moreActions": "More response actions",
     "renameConversation": {
       "action": "Rename",
@@ -8804,6 +8952,9 @@
     },
     "mentions": {
       "menu": "Add Homarr context",
+      "back": "",
+      "loading": "",
+      "empty": "",
       "context": "Context",
       "app": "Apps",
       "integration": "Integrations",
@@ -8818,6 +8969,8 @@
     },
     "commands": {
       "menu": "Assistant commands",
+      "hint": "",
+      "empty": "",
       "health": "Prepare a service-health check",
       "explore": "Prepare an overview of this Homarr instance",
       "media": "Prepare a media search",
@@ -9000,6 +9153,7 @@
     "approvalDescription": "Review this change before it runs.",
     "approveAndRun": "Approve and run",
     "deny": "Reject",
+    "approvalError": "",
     "autoApproval": {
       "label": "Automatic approvals",
       "composerLabel": "Approve on my behalf",

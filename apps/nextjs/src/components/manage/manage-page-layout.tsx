@@ -28,16 +28,11 @@ export const ManagePageLayout = ({
   size,
   children,
 }: ManagePageLayoutProps) => {
-  const titleNode = typeof title === "string" ? <Title>{title}</Title> : title;
-
   return (
     <ManageContainer size={size}>
       {breadcrumb ?? <DynamicBreadcrumb />}
       <Stack pb={floatingPrimaryAction ? { base: MANAGE_FLOATING_ACTION_BOTTOM_OFFSET, md: 0 } : undefined}>
-        <Group justify="space-between" align="center">
-          {titleNode}
-          {primaryAction}
-        </Group>
+        <ManagePageHeader title={title} primaryAction={primaryAction} />
         {toolbar}
         {children}
         {footer && <Group justify="end">{footer}</Group>}
@@ -45,3 +40,10 @@ export const ManagePageLayout = ({
     </ManageContainer>
   );
 };
+
+export const ManagePageHeader = ({ title, primaryAction }: Pick<ManagePageLayoutProps, "title" | "primaryAction">) => (
+  <Group justify="space-between" align="center">
+    {typeof title === "string" ? <Title>{title}</Title> : title}
+    {primaryAction}
+  </Group>
+);

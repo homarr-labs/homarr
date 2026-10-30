@@ -23,6 +23,7 @@ import { db } from "@homarr/db";
 import type { Database } from "@homarr/db";
 import { applyCustomMigrationsAsync } from "@homarr/db/migrations/custom";
 import { schema } from "@homarr/db/schema";
+import { mediaUploadMaxSize } from "@homarr/validation/media";
 
 import { findMigrationsFolder } from "../shared";
 
@@ -318,6 +319,13 @@ export async function POST(req: Request) {
 
     if (importedKey) {
       reEncryptSecrets(tempDb, importedKey);
+    }
+
+    const oversizedMedia = tempDb
+      .prepare('SELECT 1 FROM "media" WHERE length("content") > ? OR "size" > ? LIMIT 1')
+      .get(mediaUploadMaxSize.bytes, mediaUploadMaxSize.bytes);
+    if (oversizedMedia) {
+      return NextResponse.json({ error: "Backup contains media exceeding the 32 MiB limit" }, { status: 413 });
     }
 
     const homeBoardName = getHomeBoardName(tempDb);

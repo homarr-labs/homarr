@@ -799,6 +799,11 @@
       }
     },
     "field": {
+      "url": {
+        "helpLabel": "URL-vormingute näited",
+        "examples": "Toetatud linkide näited",
+        "requiresHandler": "Kohandatud protokollid nõuavad sinu seadmes nendega seotud rakendust."
+      },
       "description": {
         "label": "Kirjeldus"
       },
@@ -2312,6 +2317,15 @@
       "option": {
         "appId": {
           "label": "Vali rakendus"
+        },
+        "openIn": {
+          "label": "Rakenduse avamiskoht",
+          "description": "Vali, kus see rakendus avaneb. Brauseri seaded võivad eraldi aknas avamise soovi eirata.",
+          "option": {
+            "currentTab": "Praegune vahekaart",
+            "newTab": "Uus vahekaart",
+            "newWindow": "Uus aken"
+          }
         },
         "showTitle": {
           "label": "Näita rakenduse nime"
@@ -4758,27 +4772,63 @@
       "name": "Väljalasked",
       "description": "Kuvab antud hoidlate praeguse versiooni loendi koos antud versiooni regulaaravaldisega.",
       "option": {
+        "layout": {
+          "label": "",
+          "description": "",
+          "option": {
+            "comfortable": "",
+            "compact": ""
+          }
+        },
+        "summary": {
+          "label": "",
+          "description": "",
+          "option": {
+            "detailed": "",
+            "count": "",
+            "hidden": ""
+          }
+        },
+        "groupReleases": {
+          "label": "",
+          "description": ""
+        },
+        "sections": {
+          "label": "",
+          "description": ""
+        },
+        "collapsedSections": {
+          "label": "",
+          "description": ""
+        },
         "newReleaseWithin": {
           "label": "Uus väljalase ajavahemikus",
-          "description": "Kasutusnäide: 1w (1 nädal), 10M (10 kuud). Lubatud ühikud on h (tunnid), d (päevad), w (nädalad), M (kuud), y (aastad). Jäta tühjaks, et uusi väljalaskeid mitte esile tõsta."
+          "description": "Kasutusnäide: 1w (1 nädal), 10M (10 kuud). Lubatud ühikud on h (tunnid), d (päevad), w (nädalad), M (kuud), y (aastad). Jäta tühjaks, et uusi väljalaskeid mitte esile tõsta.",
+          "option": {
+            "never": "",
+            "1d": "",
+            "3d": "",
+            "1w": "",
+            "2w": "",
+            "1M": "",
+            "3M": ""
+          }
         },
         "staleReleaseWithin": {
           "label": "Aegunud väljalase ajavahemikus",
-          "description": "Kasutusnäide: 1w (1 nädal), 10M (10 kuud). Lubatud ühikud on h (tunnid), d (päevad), w (nädalad), M (kuud), y (aastad). Jäta tühjaks, et aegunud väljalaskeid mitte esile tõsta."
+          "description": "Kasutusnäide: 1w (1 nädal), 10M (10 kuud). Lubatud ühikud on h (tunnid), d (päevad), w (nädalad), M (kuud), y (aastad). Jäta tühjaks, et aegunud väljalaskeid mitte esile tõsta.",
+          "option": {
+            "never": "",
+            "1M": "",
+            "3M": "",
+            "6M": "",
+            "1y": "",
+            "2y": ""
+          }
         },
-        "showOnlyHighlighted": {
-          "label": "Kuva ainult esiletõstetud",
-          "description": "Kuva ainult uusi või aegunud väljalaskeid vastavalt ülaltoodule."
-        },
-        "showDetails": {
-          "label": "Kuva üksikasju"
-        },
-        "showOnlyIcon": {
-          "label": "Kuva ainult ikooni"
-        },
-        "topReleases": {
-          "label": "Tippväljalasked",
-          "description": "Kuvatavate uusimate väljalasete maksimaalne arv. Null tähendab piiranguta."
+        "showChangelogPreview": {
+          "label": "",
+          "description": ""
         },
         "repositories": {
           "label": "Hoidlad",
@@ -4811,6 +4861,10 @@
           },
           "name": {
             "label": "Nimi"
+          },
+          "excludePrereleases": {
+            "label": "",
+            "description": ""
           },
           "versionFilter": {
             "label": "Versioonifilter",
@@ -4852,36 +4906,106 @@
           }
         }
       },
-      "not-found": "Ei leitud",
-      "pre-release": "Eelväljalase",
-      "archived": "Arhiveeritud",
-      "forked": "Harundatud",
+      "summary": {
+        "newReleases": "",
+        "newShort": "",
+        "tracked": "",
+        "caughtUp": "",
+        "outdated": "",
+        "outdatedShort": "",
+        "failing": "",
+        "failingShort": "",
+        "latest": "",
+        "issues": ""
+      },
+      "section": {
+        "new": {
+          "label": "",
+          "description": ""
+        },
+        "attention": {
+          "label": "",
+          "description": ""
+        },
+        "upToDate": {
+          "label": "",
+          "description": ""
+        },
+        "quiet": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "status": {
+        "new": "",
+        "outdated": "",
+        "error": "",
+        "upToDate": "",
+        "quiet": ""
+      },
+      "tag": {
+        "new": "",
+        "preRelease": "",
+        "resolvedFrom": "",
+        "quiet": "",
+        "archived": "",
+        "fork": ""
+      },
+      "issue": {
+        "affected": "",
+        "rateLimited": {
+          "title": "",
+          "hint": ""
+        },
+        "notFound": {
+          "title": "",
+          "hint": ""
+        },
+        "noMatchingVersion": {
+          "title": "",
+          "hint": ""
+        },
+        "noReleasesFound": {
+          "title": "",
+          "hint": ""
+        },
+        "invalidIdentifier": {
+          "title": "",
+          "hint": ""
+        },
+        "noProviderSelected": {
+          "title": "",
+          "hint": ""
+        },
+        "noProviderResponse": {
+          "title": "",
+          "hint": ""
+        },
+        "unexpected": {
+          "title": "",
+          "hint": ""
+        }
+      },
+      "markViewed": "Märgi vaadatuks",
+      "markAllViewed": "",
+      "markEntryViewed": "",
+      "viewed": "",
+      "copyVersion": "",
+      "copied": "",
+      "published": "",
+      "whatChanged": "",
+      "noNotes": "",
+      "changes": "",
       "starsCount": "Tähed",
       "forksCount": "Harud",
-      "issuesCount": "Avatud probleemid",
-      "markViewed": "Märgi vaadatuks",
-      "openProjectPage": "Ava projekti leht",
-      "openReleasePage": "Ava väljalaske leht",
-      "releaseDescription": "Väljalaske kirjeldus",
-      "projectDescription": "Projekti kirjeldus",
+      "openIssues": "",
+      "created": "Loodud",
+      "releasePage": "",
+      "projectPage": "",
       "runningVersions": "",
       "upToDate": "",
       "updateAvailable": "",
-      "unknownStatus": "",
-      "created": "Loodud",
-      "error": {
-        "label": "Viga",
-        "messages": {
-          "invalidIdentifier": "Kehtetu identifikaator",
-          "noMatchingVersion": "Sobivat versiooni ei leitud",
-          "noReleasesFound": "Väljalaskeid ei leitud",
-          "noProviderSelected": "Pakkujat pole valitud",
-          "noProviderResponse": "Teenusepakkujalt ei saadud vastust",
-          "unexpected": "Ootamatu pakkuja viga"
-        }
-      },
-      "expandDetails": "Kuva {name} üksikasjad",
-      "collapseDetails": "Peida {name} üksikasjad"
+      "unknownStatus": ""
     },
     "networkControllerSummary": {
       "advanced": {
@@ -6080,6 +6204,18 @@
       "addApp": "Lisa rakendus",
       "connectService": "Ühenda teenus"
     },
+    "urlDrop": {
+      "hint": "",
+      "resolving": "",
+      "notification": {
+        "success": {
+          "message": ""
+        },
+        "full": {
+          "message": ""
+        }
+      }
+    },
     "setupChecklist": {
       "title": "Muuda see tahvel kasulikuks",
       "description": "Jätka sealt, kus pooleli jäid. Edenemine põhineb sellel, mis tahvlil juba olemas on.",
@@ -6924,6 +7060,10 @@
             },
             "signInOverlay": {
               "label": "Tausta ülekate"
+            },
+            "signInMarquee": {
+              "label": "",
+              "description": ""
             },
             "defaultRadius": {
               "label": "Nurga stiil",
@@ -8685,6 +8825,14 @@
     "conversationActions": "Vestluse toimingud",
     "searchConversations": "Otsi vestlusi",
     "noMatchingConversations": "Sobivaid vestlusi pole",
+    "historyError": {
+      "title": "",
+      "load": "",
+      "loadMessages": "",
+      "saveMessages": "",
+      "switch": "",
+      "retry": ""
+    },
     "moreActions": "Rohkem vastuse toiminguid",
     "renameConversation": {
       "action": "Nimeta ümber",
@@ -8804,6 +8952,9 @@
     },
     "mentions": {
       "menu": "Lisa Homarri kontekst",
+      "back": "",
+      "loading": "",
+      "empty": "",
       "context": "Kontekst",
       "app": "Rakendused",
       "integration": "Integratsioonid",
@@ -8818,6 +8969,8 @@
     },
     "commands": {
       "menu": "Assistendi käsud",
+      "hint": "",
+      "empty": "",
       "health": "Valmista ette teenuse seisundi kontroll",
       "explore": "Valmista ette selle Homarri eksemplari ülevaade",
       "media": "Valmista ette meediaotsing",
@@ -9000,6 +9153,7 @@
     "approvalDescription": "Vaadake see muudatus enne käivitamist üle.",
     "approveAndRun": "Kiida heaks ja käivita",
     "deny": "Keeldu",
+    "approvalError": "",
     "autoApproval": {
       "label": "Automaatsed heakskiidud",
       "composerLabel": "Kiida minu eest heaks",

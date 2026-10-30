@@ -799,6 +799,11 @@
       }
     },
     "field": {
+      "url": {
+        "helpLabel": "Példák URL-formátumokra",
+        "examples": "Példák támogatott hivatkozásokra",
+        "requiresHandler": "Az egyéni protokollokhoz társított alkalmazás szükséges az eszközön."
+      },
       "description": {
         "label": "Leírás"
       },
@@ -2312,6 +2317,15 @@
       "option": {
         "appId": {
           "label": "Alkalmazás"
+        },
+        "openIn": {
+          "label": "Alkalmazás megnyitása",
+          "description": "Válassza ki, hol nyíljon meg az alkalmazás. A böngésző beállításai felülbírálhatják a külön ablakban való megnyitást.",
+          "option": {
+            "currentTab": "Az aktuális lapon",
+            "newTab": "Új lapon",
+            "newWindow": "Új ablakban"
+          }
         },
         "showTitle": {
           "label": "Alkalmazás nevének megjelenítése"
@@ -4758,27 +4772,63 @@
       "name": "Kiadások",
       "description": "Megjeleníti az adott tárolók aktuális verzióinak listáját a megadott verzió-kifejezés alapján.",
       "option": {
+        "layout": {
+          "label": "Elrendezés",
+          "description": "",
+          "option": {
+            "comfortable": "",
+            "compact": ""
+          }
+        },
+        "summary": {
+          "label": "",
+          "description": "",
+          "option": {
+            "detailed": "",
+            "count": "",
+            "hidden": "Rejtett"
+          }
+        },
+        "groupReleases": {
+          "label": "",
+          "description": ""
+        },
+        "sections": {
+          "label": "",
+          "description": ""
+        },
+        "collapsedSections": {
+          "label": "",
+          "description": ""
+        },
         "newReleaseWithin": {
           "label": "Új kiadás a",
-          "description": "Használati példa: 1w (1 hét), 10M (10 hónap). Elfogadott mértékegységek: h (óra), d (nap), w (hét), M (hónap), y (év). Hagyd üresen, ha nem szeretnéd kiemelni az új kiadásokat."
+          "description": "Használati példa: 1w (1 hét), 10M (10 hónap). Elfogadott mértékegységek: h (óra), d (nap), w (hét), M (hónap), y (év). Hagyd üresen, ha nem szeretnéd kiemelni az új kiadásokat.",
+          "option": {
+            "never": "",
+            "1d": "1 nap",
+            "3d": "3 nap",
+            "1w": "1 hét",
+            "2w": "",
+            "1M": "1 hónap",
+            "3M": "3 hónap"
+          }
         },
         "staleReleaseWithin": {
           "label": "Elavult kiadás",
-          "description": "Használati példa: 1w (1 hét), 10M (10 hónap). Elfogadott mértékegységek: h (óra), d (nap), w (hét), M (hónap), y (év). Hagyd üresen, ha nem szeretnéd kiemelni a régi kiadásokat."
+          "description": "Használati példa: 1w (1 hét), 10M (10 hónap). Elfogadott mértékegységek: h (óra), d (nap), w (hét), M (hónap), y (év). Hagyd üresen, ha nem szeretnéd kiemelni a régi kiadásokat.",
+          "option": {
+            "never": "",
+            "1M": "1 hónap",
+            "3M": "3 hónap",
+            "6M": "6 hónap",
+            "1y": "1 év",
+            "2y": "2 év"
+          }
         },
-        "showOnlyHighlighted": {
-          "label": "Csak a kiemelt elemeket mutasd",
-          "description": "Csak az új vagy lejárt kiadásokat mutassa. A fentiek szerint."
-        },
-        "showDetails": {
-          "label": "Részletek megjelenítése"
-        },
-        "showOnlyIcon": {
-          "label": "Csak ikonok megjelenítése"
-        },
-        "topReleases": {
-          "label": "Legnépszerűbb kiadások",
-          "description": "A megjelenítendő legújabb kiadások maximális száma. A nulla érték korlátlan számot jelent."
+        "showChangelogPreview": {
+          "label": "",
+          "description": ""
         },
         "repositories": {
           "label": "Csomagtárolók",
@@ -4811,6 +4861,10 @@
           },
           "name": {
             "label": "Név"
+          },
+          "excludePrereleases": {
+            "label": "",
+            "description": ""
           },
           "versionFilter": {
             "label": "Verziószűrő",
@@ -4852,36 +4906,106 @@
           }
         }
       },
-      "not-found": "Nem található",
-      "pre-release": "Előzetes verzió",
-      "archived": "Archivált",
-      "forked": "Forkolt",
+      "summary": {
+        "newReleases": "",
+        "newShort": "új",
+        "tracked": "",
+        "caughtUp": "",
+        "outdated": "",
+        "outdatedShort": "",
+        "failing": "",
+        "failingShort": "",
+        "latest": "",
+        "issues": ""
+      },
+      "section": {
+        "new": {
+          "label": "Új",
+          "description": ""
+        },
+        "attention": {
+          "label": "",
+          "description": ""
+        },
+        "upToDate": {
+          "label": "",
+          "description": ""
+        },
+        "quiet": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "status": {
+        "new": "",
+        "outdated": "",
+        "error": "",
+        "upToDate": "",
+        "quiet": ""
+      },
+      "tag": {
+        "new": "Új",
+        "preRelease": "",
+        "resolvedFrom": "",
+        "quiet": "",
+        "archived": "",
+        "fork": ""
+      },
+      "issue": {
+        "affected": "",
+        "rateLimited": {
+          "title": "",
+          "hint": ""
+        },
+        "notFound": {
+          "title": "",
+          "hint": ""
+        },
+        "noMatchingVersion": {
+          "title": "",
+          "hint": ""
+        },
+        "noReleasesFound": {
+          "title": "",
+          "hint": ""
+        },
+        "invalidIdentifier": {
+          "title": "",
+          "hint": ""
+        },
+        "noProviderSelected": {
+          "title": "Nincs kiválasztva szolgáltató",
+          "hint": ""
+        },
+        "noProviderResponse": {
+          "title": "",
+          "hint": ""
+        },
+        "unexpected": {
+          "title": "",
+          "hint": ""
+        }
+      },
+      "markViewed": "Megjelölés megtekintettként",
+      "markAllViewed": "",
+      "markEntryViewed": "",
+      "viewed": "",
+      "copyVersion": "",
+      "copied": "",
+      "published": "",
+      "whatChanged": "",
+      "noNotes": "",
+      "changes": "",
       "starsCount": "Csillagok",
       "forksCount": "Forkok",
-      "issuesCount": "Nyitott hibajegyek",
-      "markViewed": "Megjelölés megtekintettként",
-      "openProjectPage": "Projekt oldal megnyitása",
-      "openReleasePage": "Kiadási oldal megnyitása",
-      "releaseDescription": "Kiadás leírása",
-      "projectDescription": "Projekt leírása",
+      "openIssues": "",
+      "created": "Létrehozva",
+      "releasePage": "",
+      "projectPage": "",
       "runningVersions": "",
       "upToDate": "",
       "updateAvailable": "",
-      "unknownStatus": "Ismeretlen",
-      "created": "Létrehozva",
-      "error": {
-        "label": "Hiba",
-        "messages": {
-          "invalidIdentifier": "Érvénytelen azonosító",
-          "noMatchingVersion": "Nem található megfelelő verzió",
-          "noReleasesFound": "Nem találhatók kiadások",
-          "noProviderSelected": "Nincs kiválasztva szolgáltató",
-          "noProviderResponse": "Nincs válasz a szolgáltatótól",
-          "unexpected": "Váratlan szolgáltatói hiba"
-        }
-      },
-      "expandDetails": "{name} részleteinek megjelenítése",
-      "collapseDetails": "{name} részleteinek elrejtése"
+      "unknownStatus": "Ismeretlen"
     },
     "networkControllerSummary": {
       "advanced": {
@@ -6080,6 +6204,18 @@
       "addApp": "Alkalmazás hozzáadása",
       "connectService": "Szolgáltatás csatlakoztatása"
     },
+    "urlDrop": {
+      "hint": "",
+      "resolving": "",
+      "notification": {
+        "success": {
+          "message": ""
+        },
+        "full": {
+          "message": ""
+        }
+      }
+    },
     "setupChecklist": {
       "title": "Tedd hasznossá ezt a táblát",
       "description": "Folytasd ott, ahol abbahagytad. A haladás az ezen a táblán már meglévő tartalmat követi.",
@@ -6924,6 +7060,10 @@
             },
             "signInOverlay": {
               "label": "Háttérfedvény"
+            },
+            "signInMarquee": {
+              "label": "",
+              "description": ""
             },
             "defaultRadius": {
               "label": "Sarokstílus",
@@ -8685,6 +8825,14 @@
     "conversationActions": "Beszélgetési műveletek",
     "searchConversations": "Beszélgetések keresése",
     "noMatchingConversations": "Nincs egyező beszélgetés",
+    "historyError": {
+      "title": "",
+      "load": "",
+      "loadMessages": "",
+      "saveMessages": "",
+      "switch": "",
+      "retry": ""
+    },
     "moreActions": "További válaszműveletek",
     "renameConversation": {
       "action": "Átnevezés",
@@ -8804,6 +8952,9 @@
     },
     "mentions": {
       "menu": "Homarr-környezet hozzáadása",
+      "back": "",
+      "loading": "",
+      "empty": "",
       "context": "Kontextus",
       "app": "Alkalmazások",
       "integration": "Integrációk",
@@ -8818,6 +8969,8 @@
     },
     "commands": {
       "menu": "Asszisztensparancsok",
+      "hint": "",
+      "empty": "",
       "health": "Szolgáltatásállapot-ellenőrzés előkészítése",
       "explore": "A Homarr-példány áttekintésének előkészítése",
       "media": "Médiakeresés előkészítése",
@@ -9000,6 +9153,7 @@
     "approvalDescription": "Tekintse át ezt a módosítást a futtatás előtt.",
     "approveAndRun": "Jóváhagyás és futtatás",
     "deny": "Elutasítás",
+    "approvalError": "",
     "autoApproval": {
       "label": "Automatikus jóváhagyások",
       "composerLabel": "Jóváhagyás helyettem",

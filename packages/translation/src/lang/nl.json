@@ -799,6 +799,11 @@
       }
     },
     "field": {
+      "url": {
+        "helpLabel": "Voorbeelden van URL-indelingen",
+        "examples": "Voorbeelden van ondersteunde links",
+        "requiresHandler": "Aangepaste protocollen vereisen een gekoppelde toepassing op je apparaat."
+      },
       "description": {
         "label": "Beschrijving"
       },
@@ -2312,6 +2317,15 @@
       "option": {
         "appId": {
           "label": "App kiezen"
+        },
+        "openIn": {
+          "label": "App openen in",
+          "description": "Kies waar deze app wordt geopend. Je browserinstellingen kunnen het openen in een apart venster beïnvloeden.",
+          "option": {
+            "currentTab": "Huidig tabblad",
+            "newTab": "Nieuw tabblad",
+            "newWindow": "Nieuw venster"
+          }
         },
         "showTitle": {
           "label": "App naam weergeven"
@@ -4758,27 +4772,63 @@
       "name": "Uitgaves",
       "description": "Toont een lijst met de huidige versie van de opgegeven repositories met de opgegeven versie-regex.",
       "option": {
+        "layout": {
+          "label": "Lay-out",
+          "description": "",
+          "option": {
+            "comfortable": "Comfortabel",
+            "compact": "Compacte"
+          }
+        },
+        "summary": {
+          "label": "",
+          "description": "",
+          "option": {
+            "detailed": "",
+            "count": "",
+            "hidden": "Verborgen"
+          }
+        },
+        "groupReleases": {
+          "label": "",
+          "description": ""
+        },
+        "sections": {
+          "label": "",
+          "description": ""
+        },
+        "collapsedSections": {
+          "label": "",
+          "description": ""
+        },
         "newReleaseWithin": {
           "label": "Nieuwe uitgave binnen",
-          "description": "Gebruiksvoorbeeld: 1w (1 week), 10M (10 maanden). Geaccepteerde eenheidstypen: h (uren), d (dagen), w (weken), M (maanden), y (jaren). Laat leeg om nieuwe uitgaven niet te markeren."
+          "description": "Gebruiksvoorbeeld: 1w (1 week), 10M (10 maanden). Geaccepteerde eenheidstypen: h (uren), d (dagen), w (weken), M (maanden), y (jaren). Laat leeg om nieuwe uitgaven niet te markeren.",
+          "option": {
+            "never": "",
+            "1d": "1 dag",
+            "3d": "3 dagen",
+            "1w": "1 week",
+            "2w": "",
+            "1M": "1 maand",
+            "3M": "3 maanden"
+          }
         },
         "staleReleaseWithin": {
           "label": "Verouderde uitgave binnen",
-          "description": "Gebruiksvoorbeeld: 1w (1 week), 10M (10 maanden). Geaccepteerde eenheidstypen: h (uren), d (dagen), w (weken), M (maanden), y (jaren). Laat leeg om verouderde uitgaven niet te markeren."
+          "description": "Gebruiksvoorbeeld: 1w (1 week), 10M (10 maanden). Geaccepteerde eenheidstypen: h (uren), d (dagen), w (weken), M (maanden), y (jaren). Laat leeg om verouderde uitgaven niet te markeren.",
+          "option": {
+            "never": "",
+            "1M": "1 maand",
+            "3M": "3 maanden",
+            "6M": "6 maanden",
+            "1y": "1 jaar",
+            "2y": "2 jaar"
+          }
         },
-        "showOnlyHighlighted": {
-          "label": "Alleen gemarkeerde weergeven",
-          "description": "Alleen nieuwe of oude uitgaves weergeven. Zoals hierboven."
-        },
-        "showDetails": {
-          "label": "Details weergeven"
-        },
-        "showOnlyIcon": {
-          "label": "Alleen icoon weergeven"
-        },
-        "topReleases": {
-          "label": "Top uitgaven",
-          "description": "Het maximale aantal nieuwste uitgaven om te tonen. Nul betekent geen limiet."
+        "showChangelogPreview": {
+          "label": "",
+          "description": ""
         },
         "repositories": {
           "label": "Repositories",
@@ -4811,6 +4861,10 @@
           },
           "name": {
             "label": "Naam"
+          },
+          "excludePrereleases": {
+            "label": "",
+            "description": ""
           },
           "versionFilter": {
             "label": "Versie filter",
@@ -4852,36 +4906,106 @@
           }
         }
       },
-      "not-found": "Niet gevonden",
-      "pre-release": "Pre-release",
-      "archived": "Gearchiveerd",
-      "forked": "Geforked",
+      "summary": {
+        "newReleases": "",
+        "newShort": "nieuw",
+        "tracked": "",
+        "caughtUp": "",
+        "outdated": "",
+        "outdatedShort": "verouderd",
+        "failing": "",
+        "failingShort": "",
+        "latest": "",
+        "issues": ""
+      },
+      "section": {
+        "new": {
+          "label": "Nieuw",
+          "description": ""
+        },
+        "attention": {
+          "label": "Heeft aandacht nodig",
+          "description": ""
+        },
+        "upToDate": {
+          "label": "Bijgewerkt tot",
+          "description": ""
+        },
+        "quiet": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "status": {
+        "new": "",
+        "outdated": "",
+        "error": "",
+        "upToDate": "bijgewerkt tot",
+        "quiet": ""
+      },
+      "tag": {
+        "new": "Nieuw",
+        "preRelease": "",
+        "resolvedFrom": "",
+        "quiet": "",
+        "archived": "Gearchiveerd",
+        "fork": ""
+      },
+      "issue": {
+        "affected": "",
+        "rateLimited": {
+          "title": "",
+          "hint": ""
+        },
+        "notFound": {
+          "title": "",
+          "hint": ""
+        },
+        "noMatchingVersion": {
+          "title": "",
+          "hint": ""
+        },
+        "noReleasesFound": {
+          "title": "",
+          "hint": ""
+        },
+        "invalidIdentifier": {
+          "title": "Ongeldige identificator",
+          "hint": ""
+        },
+        "noProviderSelected": {
+          "title": "Geen aanbieder geselecteerd",
+          "hint": ""
+        },
+        "noProviderResponse": {
+          "title": "",
+          "hint": ""
+        },
+        "unexpected": {
+          "title": "",
+          "hint": ""
+        }
+      },
+      "markViewed": "Markeren als bekeken",
+      "markAllViewed": "",
+      "markEntryViewed": "",
+      "viewed": "",
+      "copyVersion": "",
+      "copied": "Gekoppeld",
+      "published": "",
+      "whatChanged": "",
+      "noNotes": "",
+      "changes": "",
       "starsCount": "Sterren",
       "forksCount": "Forks",
-      "issuesCount": "Openstaande issues",
-      "markViewed": "Markeren als bekeken",
-      "openProjectPage": "Projectpagina openen",
-      "openReleasePage": "Uitgavepagina openen",
-      "releaseDescription": "Uitgave beschrijving",
-      "projectDescription": "Project beschrijving",
+      "openIssues": "",
+      "created": "Aangemaakt",
+      "releasePage": "",
+      "projectPage": "",
       "runningVersions": "Lopende versies",
       "upToDate": "Bijgewerkt tot",
       "updateAvailable": "Update beschikbaar",
-      "unknownStatus": "Onbekend",
-      "created": "Aangemaakt",
-      "error": {
-        "label": "Fout",
-        "messages": {
-          "invalidIdentifier": "Ongeldige identificator",
-          "noMatchingVersion": "Geen overeenkomende versie gevonden",
-          "noReleasesFound": "Geen uitgaves gevonden",
-          "noProviderSelected": "",
-          "noProviderResponse": "Geen reactie van aanbieder",
-          "unexpected": ""
-        }
-      },
-      "expandDetails": "Toon details van {name}",
-      "collapseDetails": "Verberg details van {name}"
+      "unknownStatus": "Onbekend"
     },
     "networkControllerSummary": {
       "advanced": {
@@ -6080,6 +6204,18 @@
       "addApp": "App toevoegen",
       "connectService": "Verbind service"
     },
+    "urlDrop": {
+      "hint": "",
+      "resolving": "",
+      "notification": {
+        "success": {
+          "message": ""
+        },
+        "full": {
+          "message": ""
+        }
+      }
+    },
     "setupChecklist": {
       "title": "Maak dit bord nuttig",
       "description": "Houdt u op waar u bent gebleven. Voortgang volgt de inhoud al op dit bord.",
@@ -6924,6 +7060,10 @@
             },
             "signInOverlay": {
               "label": "Achtergrond overlay"
+            },
+            "signInMarquee": {
+              "label": "",
+              "description": ""
             },
             "defaultRadius": {
               "label": "Hoek stijl",
@@ -8685,6 +8825,14 @@
     "conversationActions": "Gesprek acties",
     "searchConversations": "conversaties doorzoeken",
     "noMatchingConversations": "Geen overeenkomende gesprekken",
+    "historyError": {
+      "title": "",
+      "load": "",
+      "loadMessages": "",
+      "saveMessages": "",
+      "switch": "",
+      "retry": ""
+    },
     "moreActions": "Meer responsacties",
     "renameConversation": {
       "action": "Hernoem",
@@ -8804,6 +8952,9 @@
     },
     "mentions": {
       "menu": "Homarr context toevoegen",
+      "back": "",
+      "loading": "",
+      "empty": "",
       "context": "",
       "app": "Apps",
       "integration": "Integraties",
@@ -8818,6 +8969,8 @@
     },
     "commands": {
       "menu": "Assistent commando's",
+      "hint": "",
+      "empty": "",
       "health": "Bereid een service-health check voor",
       "explore": "Bereid een overzicht voor van deze Homarr instantie",
       "media": "Bereid een media-zoekopdracht voor",
@@ -9000,6 +9153,7 @@
     "approvalDescription": "Controleer deze wijziging voordat het wordt uitgevoerd.",
     "approveAndRun": "Goedkeuren en uitvoeren",
     "deny": "Weigeren",
+    "approvalError": "",
     "autoApproval": {
       "label": "Automatische goedkeuringen",
       "composerLabel": "Goedkeuren voor mij",

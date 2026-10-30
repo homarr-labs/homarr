@@ -799,6 +799,11 @@
       }
     },
     "field": {
+      "url": {
+        "helpLabel": "Esimerkkejä URL-osoitteiden muodoista",
+        "examples": "Esimerkkejä tuetuista linkeistä",
+        "requiresHandler": "Mukautetut protokollat edellyttävät niihin liitettyä sovellusta laitteellasi."
+      },
       "description": {
         "label": "Kuvaus"
       },
@@ -2312,6 +2317,15 @@
       "option": {
         "appId": {
           "label": "Valitse sovellus"
+        },
+        "openIn": {
+          "label": "Avaa sovellus",
+          "description": "Valitse, missä tämä sovellus avautuu. Selaimen asetukset voivat ohittaa pyynnön avata erillinen ikkuna.",
+          "option": {
+            "currentTab": "Nykyisessä välilehdessä",
+            "newTab": "Uudessa välilehdessä",
+            "newWindow": "Uudessa ikkunassa"
+          }
         },
         "showTitle": {
           "label": "Näytä sovelluksen nimi"
@@ -4758,27 +4772,63 @@
       "name": "Julkaisut",
       "description": "",
       "option": {
-        "newReleaseWithin": {
+        "layout": {
+          "label": "Asettelu",
+          "description": "",
+          "option": {
+            "comfortable": "Mukava",
+            "compact": "Kompakti"
+          }
+        },
+        "summary": {
+          "label": "",
+          "description": "",
+          "option": {
+            "detailed": "",
+            "count": "",
+            "hidden": "Piilotettu"
+          }
+        },
+        "groupReleases": {
           "label": "",
           "description": ""
+        },
+        "sections": {
+          "label": "",
+          "description": ""
+        },
+        "collapsedSections": {
+          "label": "",
+          "description": ""
+        },
+        "newReleaseWithin": {
+          "label": "",
+          "description": "",
+          "option": {
+            "never": "",
+            "1d": "vuorokausi",
+            "3d": "",
+            "1w": "viikko",
+            "2w": "",
+            "1M": "kuukausi",
+            "3M": ""
+          }
         },
         "staleReleaseWithin": {
           "label": "",
-          "description": ""
+          "description": "",
+          "option": {
+            "never": "",
+            "1M": "kuukausi",
+            "3M": "",
+            "6M": "",
+            "1y": "",
+            "2y": ""
+          }
         },
-        "showOnlyHighlighted": {
+        "showChangelogPreview": {
           "label": "",
           "description": ""
-        },
-        "showDetails": {
-          "label": ""
-        },
-        "showOnlyIcon": {
-          "label": ""
-        },
-        "topReleases": {
-          "label": "",
-          "description": "Viimeisimpien näytettävien julkaisujen enimmäismäärä. Arvo nolla poistaa rajoituksen."
         },
         "repositories": {
           "label": "",
@@ -4811,6 +4861,10 @@
           },
           "name": {
             "label": ""
+          },
+          "excludePrereleases": {
+            "label": "",
+            "description": ""
           },
           "versionFilter": {
             "label": "",
@@ -4852,36 +4906,106 @@
           }
         }
       },
-      "not-found": "",
-      "pre-release": "",
-      "archived": "",
-      "forked": "",
+      "summary": {
+        "newReleases": "",
+        "newShort": "uusi",
+        "tracked": "",
+        "caughtUp": "",
+        "outdated": "",
+        "outdatedShort": "vanhentunut",
+        "failing": "",
+        "failingShort": "",
+        "latest": "",
+        "issues": ""
+      },
+      "section": {
+        "new": {
+          "label": "Uusi",
+          "description": ""
+        },
+        "attention": {
+          "label": "Tarvitsee huomiota",
+          "description": ""
+        },
+        "upToDate": {
+          "label": "Ajan tasalla",
+          "description": ""
+        },
+        "quiet": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "status": {
+        "new": "",
+        "outdated": "",
+        "error": "",
+        "upToDate": "ajan tasalla",
+        "quiet": ""
+      },
+      "tag": {
+        "new": "Uusi",
+        "preRelease": "",
+        "resolvedFrom": "",
+        "quiet": "",
+        "archived": "Arkistoitu",
+        "fork": ""
+      },
+      "issue": {
+        "affected": "",
+        "rateLimited": {
+          "title": "",
+          "hint": ""
+        },
+        "notFound": {
+          "title": "",
+          "hint": ""
+        },
+        "noMatchingVersion": {
+          "title": "",
+          "hint": ""
+        },
+        "noReleasesFound": {
+          "title": "",
+          "hint": ""
+        },
+        "invalidIdentifier": {
+          "title": "",
+          "hint": ""
+        },
+        "noProviderSelected": {
+          "title": "Toimittajaa ei ole valittu",
+          "hint": ""
+        },
+        "noProviderResponse": {
+          "title": "",
+          "hint": ""
+        },
+        "unexpected": {
+          "title": "",
+          "hint": ""
+        }
+      },
+      "markViewed": "",
+      "markAllViewed": "",
+      "markEntryViewed": "",
+      "viewed": "",
+      "copyVersion": "",
+      "copied": "Kopioitu",
+      "published": "",
+      "whatChanged": "",
+      "noNotes": "",
+      "changes": "",
       "starsCount": "",
       "forksCount": "",
-      "issuesCount": "",
-      "markViewed": "",
-      "openProjectPage": "",
-      "openReleasePage": "",
-      "releaseDescription": "",
-      "projectDescription": "",
+      "openIssues": "",
+      "created": "Luotu {time}",
+      "releasePage": "",
+      "projectPage": "",
       "runningVersions": "Käynnissä Olevat Versiot",
       "upToDate": "Ajan tasalla",
       "updateAvailable": "Päivitys saatavilla",
-      "unknownStatus": "Tuntematon",
-      "created": "",
-      "error": {
-        "label": "",
-        "messages": {
-          "invalidIdentifier": "",
-          "noMatchingVersion": "",
-          "noReleasesFound": "",
-          "noProviderSelected": "Palveluntarjoajaa ei ole valittu",
-          "noProviderResponse": "",
-          "unexpected": "Odottamaton palveluntarjoajan virhe"
-        }
-      },
-      "expandDetails": "Näytä tiedot kohteelle {name}",
-      "collapseDetails": "Piilota tiedot kohteelle {name}"
+      "unknownStatus": "Tuntematon"
     },
     "networkControllerSummary": {
       "advanced": {
@@ -6080,6 +6204,18 @@
       "addApp": "Lisää sovellus",
       "connectService": "Yhdistä palvelu"
     },
+    "urlDrop": {
+      "hint": "",
+      "resolving": "",
+      "notification": {
+        "success": {
+          "message": ""
+        },
+        "full": {
+          "message": ""
+        }
+      }
+    },
     "setupChecklist": {
       "title": "Tee tästä taulusta hyödyllinen",
       "description": "Poimi minne jäit. Edistys seuraa sisältöä jo tällä laudalla.",
@@ -6924,6 +7060,10 @@
             },
             "signInOverlay": {
               "label": "Taustan peitto"
+            },
+            "signInMarquee": {
+              "label": "",
+              "description": ""
             },
             "defaultRadius": {
               "label": "Kulman tyyli",
@@ -8685,6 +8825,14 @@
     "conversationActions": "Keskustelun toiminnot",
     "searchConversations": "Etsi keskusteluita",
     "noMatchingConversations": "Ei vastaavia keskusteluja",
+    "historyError": {
+      "title": "",
+      "load": "",
+      "loadMessages": "",
+      "saveMessages": "",
+      "switch": "",
+      "retry": ""
+    },
     "moreActions": "Enemmän vastaustoimia",
     "renameConversation": {
       "action": "Uudelleennimeä",
@@ -8804,6 +8952,9 @@
     },
     "mentions": {
       "menu": "Lisää Homarr konteksti",
+      "back": "",
+      "loading": "",
+      "empty": "",
       "context": "Konteksti",
       "app": "Sovellukset",
       "integration": "Integraatiot",
@@ -8818,6 +8969,8 @@
     },
     "commands": {
       "menu": "Avustavat komennot",
+      "hint": "",
+      "empty": "",
       "health": "Valmistele palvelun terveystarkastus",
       "explore": "Valmistele yleiskatsaus tähän Homarr instanssiin",
       "media": "Valmistele mediahaku",
@@ -9000,6 +9153,7 @@
     "approvalDescription": "Tarkista tämä muutos ennen sen päättymistä.",
     "approveAndRun": "Hyväksy ja aja",
     "deny": "Estä",
+    "approvalError": "",
     "autoApproval": {
       "label": "Automaattiset hyväksynnät",
       "composerLabel": "Hyväksy minulle",

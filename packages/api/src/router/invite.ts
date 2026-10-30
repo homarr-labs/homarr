@@ -59,7 +59,7 @@ export const inviteRouter = createTRPCRouter({
     .requiresPermission("admin")
     .input(
       z.object({
-        expirationDate: z.iso.datetime({ offset: true }),
+        expirationDate: z.union([z.iso.datetime({ offset: true }), z.iso.datetime({ offset: true, precision: -1 })]),
       }),
     )
     .output(z.object({ id: z.string(), token: z.string() }))

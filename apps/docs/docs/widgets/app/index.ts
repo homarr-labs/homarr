@@ -15,10 +15,10 @@ export const appWidget: WidgetDefinition = {
         defaultValue: "-",
       },
       {
-        name: "Open in new tab",
-        description: "Whether to open the link in a new tab.",
-        values: { type: "boolean" },
-        defaultValue: "yes",
+        name: "Open app in",
+        description: "Choose where the app opens. Browser settings may override requests for a separate window.",
+        values: { type: "select", options: ["Current tab", "New tab", "New window"] },
+        defaultValue: "New tab",
       },
       {
         name: "Show app name",

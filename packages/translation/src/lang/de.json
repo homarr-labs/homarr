@@ -3,13 +3,13 @@
     "studio": {
       "navigationLabel": "Onboarding Bereiche",
       "back": "Zurück",
-      "buildBoard": "Brett bauen",
+      "buildBoard": "Mein Board erstellen",
       "common": {
         "unknownError": "Etwas ist schief gelaufen. Deine Auswahl ist noch hier; versuche es erneut."
       },
       "claim": {
         "checking": "Sicherstellen dieser Onboarding-Sitzung…",
-        "checkingTitle": "Sichere Einrichtung vorbereiten",
+        "checkingTitle": "Sicheres Setup vorbereiten",
         "lockedTitle": "Die Einrichtung ist bereits in einem anderen Browser geöffnet",
         "lockedDescription": "Fahren Sie dort fort oder warten Sie darauf, dass die sichere erste Sitzung abläuft, bevor Sie es erneut versuchen.",
         "signInTitle": "Administratoranmeldung erforderlich",
@@ -152,7 +152,7 @@
         "columns": "Brettspalten",
         "columnsDescription": "Spalten definieren das horizontale Raster für die Größe und Positionierung von Elementen. 12 ist für die meisten Leute reichlich.",
         "columnCount": "{count, plural, one {# Spalte} other {# Spalten}}",
-        "leftSidebar": "",
+        "leftSidebar": "Linke Seitenleiste",
         "rightSidebar": "Sidebar rechts",
         "previewLabel": "Live-Vorschau des ersten Board-Layouts"
       },
@@ -167,11 +167,11 @@
           "loginAction": "Anmelden, um Assistent zu konfigurieren"
         },
         "workshopSetup": {
-          "title": "",
+          "title": "Homarr Workshop",
           "description": "Durchsuchen Sie Community-benutzerdefinierte Widgets, prüfen Sie die gewünschten Fähigkeiten, installieren Sie sie und veröffentlichen Sie Ihre eigene Arbeit, ohne Code zwischen den Servern zu kopieren.",
           "available": "Verfügbar",
           "checking": "Überprüfe…",
-          "unavailable": "",
+          "unavailable": "Nicht verfügbar",
           "discoverTitle": "Entdecken",
           "discoverDescription": "Finden Sie Widgets für echte selbstgehostete Workflows.",
           "installTitle": "Überprüfen und installieren",
@@ -181,7 +181,7 @@
           "browse": "Workshop durchsuchen"
         },
         "mcpSetup": {
-          "title": "",
+          "title": "Homarr MCP",
           "description": "Verbinden Sie Claude, Codex oder einen anderen MCP-Client mit Homarr's typisierten Tools. API-Schlüssel behalten den Zugriff explizit und widerrufbar.",
           "endpoint": "Streambarer HTTP-Endpunkt",
           "keyTitle": "Diesen Schlüssel jetzt kopieren",
@@ -203,7 +203,7 @@
         "columns": "Brettspalten",
         "columnsValue": "{count, plural, one {# Spalte} other {# Spalten}}",
         "sidebars": "Seitenleisten",
-        "sidebarsValue": "",
+        "sidebarsValue": "{count, plural, =0 {Keine} one {# Sidebar} other {# Sidebars}}",
         "layouts": "Reaktive Layouts",
         "layoutsValue": "Mobile + Basis",
         "integrations": "Integrationen",
@@ -799,6 +799,11 @@
       }
     },
     "field": {
+      "url": {
+        "helpLabel": "Beispiele für URL-Formate",
+        "examples": "Beispiele für unterstützte Links",
+        "requiresHandler": "Benutzerdefinierte Protokolle erfordern eine zugeordnete Anwendung auf deinem Gerät."
+      },
       "description": {
         "label": "Beschreibung"
       },
@@ -916,11 +921,11 @@
       },
       "action": {
         "components": "Komponenten",
-        "format": "",
-        "insertStarter": "",
+        "format": "Formatieren",
+        "insertStarter": "Starter einfügen",
         "redo": "Wiederholen",
         "copied": "Kopiert",
-        "schema": ""
+        "schema": "Schema"
       },
       "reference": {
         "minimal": "Minimales Beispiel",
@@ -935,14 +940,14 @@
         "errors": "{count, number} Fehler",
         "warnings": "{count, number} Warnungen",
         "ready": "Keine Tickets gefunden",
-        "position": "",
+        "position": "Zeile {line, number}, Spalte {column, number}",
         "characters": "{count, number} Zeichen",
-        "charactersWithLimit": ""
+        "charactersWithLimit": "{count, number} / {limit, number}"
       },
       "diagnostics": {
         "title": "Vorlagendiagnostik",
         "line": "Linie {line, number}",
-        "ast": "",
+        "ast": "{value}",
         "bindingTypeConflict": "Die Eingabe \"{value}\" wird von Steuerelementen mit inkompatiblen Werttypen geteilt.",
         "runtimeBindingTypeConflict": "Die Eingabe \"{value}\" ist als {firstType} und {secondType} gebunden.",
         "dynamicRequestId": "Eine wörtliche RequestId ist erforderlich. Dynamische Request-IDs werden nicht akzeptiert.",
@@ -966,7 +971,7 @@
         "sources": "API-Quellen",
         "requests": "Anfragen",
         "options": "Optionen",
-        "jsx": "",
+        "jsx": "JSX",
         "preview": "Vorschau"
       },
       "status": {
@@ -997,7 +1002,7 @@
       "builder": {
         "advancedManifest": "Erweitertes rohes Manifest",
         "advancedJson": "Erweitertes Manifest JSON",
-        "manifestFilename": "",
+        "manifestFilename": "widget.json",
         "request": "Anfrage {count, number}",
         "requestId": "Anfrage-ID",
         "type": "Download Client",
@@ -1014,10 +1019,10 @@
         "queryKey": "Abfrageschlüssel",
         "queryKeyInvalid": "Verwenden Sie eine eindeutige ID, die mit einem Buchstaben beginnt und nur Buchstaben, Zahlen - oder _ enthält.",
         "valueSource": "Wertequelle",
-        "literal": "",
+        "literal": "Wortwörtlich",
         "widgetOption": "Widget Option",
         "invocationParameter": "Aufruf-Parameter",
-        "option": "",
+        "option": "Option",
         "parameterName": "Parametername",
         "value": "Wert",
         "removeQueryValue": "Abfragewert entfernen",
@@ -1068,7 +1073,7 @@
       },
       "sources": {
         "title": "API-Quellen und Zugangsdaten",
-        "newName": "",
+        "newName": "API {count, number}",
         "duplicateSourceId": "API-Quell-IDs müssen eindeutig sein.",
         "credentialRemoved": "Anmeldeinformationen entfernt",
         "credentialRemovedDescription": "Der gespeicherte Wert wurde gelöscht.",
@@ -1092,7 +1097,7 @@
         "advanced": "Erweitert",
         "add": "Weitere API-Quelle hinzufügen",
         "sourceType": "Integration",
-        "manualSource": "",
+        "manualSource": "HTTP API",
         "existingIntegration": "Vorhandene Integration",
         "integrationType": "Integrationstyp",
         "selectIntegration": "Konfigurierte Integration",
@@ -1163,9 +1168,9 @@
         "runAction": "Aktion ausführen",
         "deleteConfirmation": "Diese Vorschau-Aktion ändert entfernte Daten über die konfigurierte API.",
         "simulated": "Aktion simuliert",
-        "httpStatus": "",
+        "httpStatus": "HTTP {status, number}",
         "tab": {
-          "widget": "",
+          "widget": "Widget",
           "data": "Daten",
           "options": "Optionen",
           "state": "Jobstatus",
@@ -1174,11 +1179,11 @@
         },
         "size": {
           "compact": "Kompakt",
-          "standard": "",
+          "standard": "Standard",
           "wide": "Breit"
         },
         "fixture": {
-          "live": "",
+          "live": "Live",
           "loading": "Wird geladen",
           "empty": "Leer",
           "error": "Fehler"
@@ -1283,7 +1288,7 @@
     "outdated": "Veraltet",
     "outdatedWarning": "Der Autor markierte diese Einreichung als veraltet. Überprüfen Sie sie sorgfältig vor dem Importieren.",
     "score": "Punkte: {count, number}",
-    "upvote": "",
+    "upvote": "Upvote",
     "downvote": "Abstimmen",
     "voteError": "Die Abstimmung konnte nicht gespeichert werden.",
     "signIn": "Mit GitHub anmelden",
@@ -1296,7 +1301,7 @@
     "installReviewTitle": "Vor der Installation überprüfen",
     "installError": "Dieses Widget kann nicht installiert werden",
     "installErrorDescription": "Die Einreichung des Workshops ist kein gültiges benutzerdefiniertes JSX v2 Widget.",
-    "useCss": "",
+    "useCss": "CSS importieren",
     "importCss": "CSS aus Workshop importieren",
     "importCssConfirm": "Ersetzen Sie das aktuelle CSS durch \"{title}\"? Nichts wird gespeichert, bis Sie die Board-Einstellungen speichern.",
     "screenshotAlt": "{title} Screenshot {count, number}",
@@ -1324,8 +1329,8 @@
     "reportCategory": {
       "outdated": "Veraltet oder funktioniert nicht mehr",
       "malicious": "Bösartig",
-      "spam": "",
-      "copyright": "",
+      "spam": "Spam",
+      "copyright": "Copyright",
       "inappropriate": "Unangemessen",
       "other": "Andere"
     },
@@ -1343,7 +1348,7 @@
       "signInHint": "Melden Sie sich an, um unter Ihrer Workshop-Identität zu veröffentlichen.",
       "titleField": "Titel",
       "descriptionField": "Beschreibung",
-      "screenshots": "",
+      "screenshots": "Screenshots",
       "screenshotsDescription": "Bis zu fünf PNG-, JPEG- oder WebP-Bilder",
       "screenshotsPlaceholder": "Screenshots auswählen",
       "invalidScreenshot": "Benutzen Sie PNG, JPEG oder WebP-Bilder, die nicht größer als {maxSize} sind.",
@@ -1510,7 +1515,7 @@
       "vpn": "VPN",
       "mediaLibrary": "Medienbibliothek",
       "uptimeMonitoring": "Überwachung der Betriebszeit",
-      "beszel": "",
+      "beszel": "Beszel",
       "systemMonitoring": "Systemüberwachung",
       "security": "Sicherheit",
       "serviceVersion": "Version"
@@ -1559,7 +1564,7 @@
             "untrusted": "Dem Zertifikat wird nicht vertraut.",
             "hostnameMismatch": "Der Hostname des Zertifikats entspricht nicht der URL."
           },
-          "secondaryUrl": "",
+          "secondaryUrl": "Dieses Zertifikat wurde von {url} präsentiert, einem zusätzlichen Endpunkt, der für diese Integration konfiguriert ist.",
           "alert": {
             "permission": {
               "title": "Nicht genügend Berechtigungen",
@@ -1824,7 +1829,7 @@
       "full": "Voller Zugriff auf Integrationen"
     },
     "llamacpp": {
-      "name": "",
+      "name": "llama.cpp",
       "description": "Überwachung eines lokalen llama.cpp Lama-Servers: Gesundheit, Modell- und Generationsmetriken"
     }
   },
@@ -1905,7 +1910,7 @@
       "tryAgain": "Erneut versuchen",
       "loading": "Wird geladen",
       "show": "Anzeigen",
-      "showAll": "",
+      "showAll": "Alle anzeigen",
       "hide": "Ausblenden",
       "undo": "Rückgängig",
       "editNamed": "{name} bearbeiten",
@@ -1938,7 +1943,7 @@
       "clear": "Bild löschen",
       "uploadImage": "Bild hochladen",
       "results": "Bildsuchergebnisse",
-      "websiteIcon": "",
+      "websiteIcon": "Icon der Webseite",
       "localImages": "Ihre Bilder",
       "svgIcons": "SVG-Symbole",
       "otherImages": "Andere Bilder",
@@ -2003,7 +2008,7 @@
         "updateAvailable": "{countUpdates} Updates verfügbar: {tag}",
         "assistant": "Assistent",
         "assistantThinking": "Denken",
-        "modifier": ""
+        "modifier": "Moderator"
       }
     },
     "dangerZone": "Gefahrenbereich",
@@ -2232,11 +2237,11 @@
         },
         "width": {
           "label": "Breite",
-          "shortLabel": ""
+          "shortLabel": "W"
         },
         "height": {
           "label": "Höhe",
-          "shortLabel": ""
+          "shortLabel": " H "
         },
         "xOffset": {
           "label": "X Versatz"
@@ -2313,6 +2318,15 @@
         "appId": {
           "label": "App auswählen"
         },
+        "openIn": {
+          "label": "App öffnen in",
+          "description": "Wähle, wo diese App geöffnet wird. Die Browsereinstellungen können das Öffnen in einem separaten Fenster beeinflussen.",
+          "option": {
+            "currentTab": "Aktuellem Tab",
+            "newTab": "Neuem Tab",
+            "newWindow": "Neuem Fenster"
+          }
+        },
         "showTitle": {
           "label": "App Namen anzeigen"
         },
@@ -2362,7 +2376,7 @@
               "label": "Gitter horizontal"
             },
             "icons": {
-              "label": ""
+              "label": "Symbole"
             }
           }
         },
@@ -2441,7 +2455,7 @@
         "remove": "{name} Kategorie entfernen",
         "rename": "Kategoriename für {name}",
         "assign": "Kategorie für {name}",
-        "ungrouped": ""
+        "ungrouped": "Nicht gruppiert"
       }
     },
     "archiveTeamWarrior": {
@@ -2621,25 +2635,25 @@
         "unsupportedPrimaryTitle": "Primäre Zeitzone ist nicht verfügbar",
         "unsupportedPrimary": "{timeZone} wird in diesem Browser nicht unterstützt. UTC wird als klar markierter Fallback angezeigt.",
         "unsupportedTimeZone": "Nicht unterstützte Zeitzone: {timeZone}",
-        "accessibleTime": "",
+        "accessibleTime": "{city}: {time}, {date}, {timeZone}",
         "advancedLabel": "Erweiterte Weltuhr",
         "cities": "Weltuhren",
-        "cityCount": "",
+        "cityCount": "{count} Zeitzonen",
         "timeBarLabel": "24-Stunden-Tageszeit für {city}",
         "dayProgress": "{percent}% abgelaufen · {hours}h {minutes}m verbleibend",
         "phaseLegend": "Tageslegende",
         "tick": {
-          "midnight": "",
-          "morning": "",
-          "noon": "",
-          "evening": "",
-          "end": ""
+          "midnight": "00",
+          "morning": "06",
+          "noon": "12",
+          "evening": "18",
+          "end": "24"
         },
         "phaseRange": {
-          "night": "",
-          "dawn": "",
-          "day": "",
-          "dusk": ""
+          "night": "00–05 · 21–24",
+          "dawn": "05–08",
+          "day": "08–18",
+          "dusk": "18–21"
         },
         "phase": {
           "night": "Nacht",
@@ -2661,7 +2675,7 @@
           "options": {
             "auto": "Automatisch für Gebietsschema",
             "european": "Europäischer AQI",
-            "us": ""
+            "us": "US AQI"
           }
         },
         "showUv": {
@@ -2699,7 +2713,7 @@
         }
       },
       "dominantPollutant": "",
-      "aqiLabel": "",
+      "aqiLabel": "AQI",
       "strongestPollen": "Höchste Pollen",
       "unit": {
         "concentration": "{value} μg/m3",
@@ -2707,7 +2721,7 @@
       },
       "pollutant": {
         "pm2_5": "PM2,5",
-        "pm10": "",
+        "pm10": "PM10",
         "ozone": "Ozon",
         "nitrogenDioxide": "Stickstoffdioxid",
         "sulphurDioxide": "",
@@ -4007,21 +4021,21 @@
       "authors": ""
     },
     "thingport-featuredModel": {
-      "name": "",
-      "description": "",
+      "name": "Vorgestelltes Thingport Modell",
+      "description": "Jeden Tag ein Modell aus deiner Thingport-Bibliothek, 3D",
       "option": {
         "autoRotate": {
-          "label": ""
+          "label": "Drehe das Modell"
         },
         "showDetails": {
-          "label": ""
+          "label": "Modelldetails anzeigen"
         }
       },
-      "title": "",
-      "empty": "",
-      "hint": "",
-      "noPreview": "",
-      "views": "",
+      "title": "Vorgestelltes Modell",
+      "empty": "Noch keine 3D-Modelle vorhanden",
+      "hint": "Zum Drehen ziehen, zum Öffnen klicken",
+      "noPreview": "Noch keine 3D-Vorschau für dieses Modell",
+      "views": "{count, plural, one {# Aufruf} other {# Aufrufe}}",
       "prints": ""
     },
     "thingport-activityHeatmap": {
@@ -4700,7 +4714,7 @@
           "label": ""
         },
         "pageSize": {
-          "label": ""
+          "label": "Einträge pro Seite"
         }
       },
       "tab": {
@@ -4758,27 +4772,63 @@
       "name": "Veröffentlichungen",
       "description": "Zeigt eine Liste der aktuellen Version der angegebenen Repositories mit der angegebenen Version regex an.",
       "option": {
+        "layout": {
+          "label": "Darstellung",
+          "description": "",
+          "option": {
+            "comfortable": "Bequemer",
+            "compact": "Kompakt"
+          }
+        },
+        "summary": {
+          "label": "",
+          "description": "",
+          "option": {
+            "detailed": "",
+            "count": "",
+            "hidden": "Versteckt"
+          }
+        },
+        "groupReleases": {
+          "label": "",
+          "description": ""
+        },
+        "sections": {
+          "label": "",
+          "description": ""
+        },
+        "collapsedSections": {
+          "label": "",
+          "description": ""
+        },
         "newReleaseWithin": {
           "label": "Neue Version innerhalb",
-          "description": "Anwendungsbeispiel: 1w (1 Woche), 10M (10 Monate). Akzeptierte Einheiten h (Stunden), d (Tage), w (Wochen), M (Monate), y (Jahre). Leer lassen für keine Hervorhebung neuer Releases."
+          "description": "Anwendungsbeispiel: 1w (1 Woche), 10M (10 Monate). Akzeptierte Einheiten h (Stunden), d (Tage), w (Wochen), M (Monate), y (Jahre). Leer lassen für keine Hervorhebung neuer Releases.",
+          "option": {
+            "never": "",
+            "1d": "1 tage",
+            "3d": "3 tage",
+            "1w": "1 woche",
+            "2w": "",
+            "1M": "1 monat",
+            "3M": "3 monate"
+          }
         },
         "staleReleaseWithin": {
           "label": "Veraltete Version innerhalb",
-          "description": "Anwendungsbeispiel: 1w (1 Woche), 10M (10 Monate). Akzeptierte Einheiten h (Stunden), d (Tage), w (Wochen), M (Monate), y (Jahre). Leer lassen für keine Hervorhebung von veralteten Releases."
+          "description": "Anwendungsbeispiel: 1w (1 Woche), 10M (10 Monate). Akzeptierte Einheiten h (Stunden), d (Tage), w (Wochen), M (Monate), y (Jahre). Leer lassen für keine Hervorhebung von veralteten Releases.",
+          "option": {
+            "never": "",
+            "1M": "1 monat",
+            "3M": "3 monate",
+            "6M": "6 monate",
+            "1y": "1 jahr",
+            "2y": "2 jahre"
+          }
         },
-        "showOnlyHighlighted": {
-          "label": "Nur markierte anzeigen",
-          "description": "Nur neue oder veraltete Versionen anzeigen. Wie oben beschrieben."
-        },
-        "showDetails": {
-          "label": "Details anzeigen"
-        },
-        "showOnlyIcon": {
-          "label": "Nur Symbole anzeigen"
-        },
-        "topReleases": {
-          "label": "Top Releases",
-          "description": "Die maximale Anzahl der neuesten Versionen, die angezeigt werden sollen. Null bedeutet kein Limit."
+        "showChangelogPreview": {
+          "label": "",
+          "description": ""
         },
         "repositories": {
           "label": "Repositories",
@@ -4811,6 +4861,10 @@
           },
           "name": {
             "label": "Name"
+          },
+          "excludePrereleases": {
+            "label": "",
+            "description": ""
           },
           "versionFilter": {
             "label": "Versionsfilter",
@@ -4847,41 +4901,111 @@
           "tokens": {
             "label": "",
             "token": "",
-            "configured": "",
+            "configured": "Token konfiguriert",
             "notConfigured": ""
           }
         }
       },
-      "not-found": "Nicht gefunden",
-      "pre-release": "Vorveröffentlichung",
-      "archived": "Archiviert",
-      "forked": "Forked",
+      "summary": {
+        "newReleases": "",
+        "newShort": "neu",
+        "tracked": "",
+        "caughtUp": "",
+        "outdated": "",
+        "outdatedShort": "veraltet",
+        "failing": "",
+        "failingShort": "",
+        "latest": "",
+        "issues": ""
+      },
+      "section": {
+        "new": {
+          "label": "Neu",
+          "description": ""
+        },
+        "attention": {
+          "label": "Benötigt Aufmerksamkeit",
+          "description": ""
+        },
+        "upToDate": {
+          "label": "Aktuell",
+          "description": ""
+        },
+        "quiet": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "status": {
+        "new": "",
+        "outdated": "",
+        "error": "",
+        "upToDate": "aktuell",
+        "quiet": ""
+      },
+      "tag": {
+        "new": "Neu",
+        "preRelease": "",
+        "resolvedFrom": "",
+        "quiet": "",
+        "archived": "Archiviert",
+        "fork": ""
+      },
+      "issue": {
+        "affected": "",
+        "rateLimited": {
+          "title": "",
+          "hint": ""
+        },
+        "notFound": {
+          "title": "",
+          "hint": ""
+        },
+        "noMatchingVersion": {
+          "title": "",
+          "hint": ""
+        },
+        "noReleasesFound": {
+          "title": "",
+          "hint": ""
+        },
+        "invalidIdentifier": {
+          "title": "Ungültige Kennung",
+          "hint": ""
+        },
+        "noProviderSelected": {
+          "title": "Kein Anbieter ausgewählt",
+          "hint": ""
+        },
+        "noProviderResponse": {
+          "title": "",
+          "hint": ""
+        },
+        "unexpected": {
+          "title": "",
+          "hint": ""
+        }
+      },
+      "markViewed": "Als gelesen markieren",
+      "markAllViewed": "",
+      "markEntryViewed": "",
+      "viewed": "",
+      "copyVersion": "",
+      "copied": "Kopiert",
+      "published": "",
+      "whatChanged": "",
+      "noNotes": "",
+      "changes": "",
       "starsCount": "Sterne",
       "forksCount": "Ableger",
-      "issuesCount": "Offene Tickets",
-      "markViewed": "Als gelesen markieren",
-      "openProjectPage": "Projektseite öffnen",
-      "openReleasePage": "Release Seite öffnen",
-      "releaseDescription": "Release Beschreibung",
-      "projectDescription": "Projektbeschreibung",
+      "openIssues": "",
+      "created": "Erstellt",
+      "releasePage": "",
+      "projectPage": "",
       "runningVersions": "Laufende Versionen",
       "upToDate": "Aktuell",
       "updateAvailable": "Update verfügbar",
-      "unknownStatus": "Unbekannt",
-      "created": "Erstellt",
-      "error": {
-        "label": "Fehler",
-        "messages": {
-          "invalidIdentifier": "Ungültige Kennung",
-          "noMatchingVersion": "Keine passende Version gefunden",
-          "noReleasesFound": "Keine Veröffentlichungen gefunden",
-          "noProviderSelected": "",
-          "noProviderResponse": "Keine Antwort vom Anbieter",
-          "unexpected": ""
-        }
-      },
-      "expandDetails": "Details für {name} anzeigen",
-      "collapseDetails": "Details für {name} ausblenden"
+      "unknownStatus": "Unbekannt"
     },
     "networkControllerSummary": {
       "advanced": {
@@ -5427,7 +5551,7 @@
       }
     },
     "beszelSystemStats": {
-      "name": "",
+      "name": "Beszel Systemstatistiken",
       "description": "Zeit-Diagramme für CPU, Speicher, Festplatte, Netzwerk, GPU und Docker Container-Metriken",
       "option": {
         "systemId": {
@@ -5490,12 +5614,12 @@
         "memory": {
           "title": "Speicherverbrauch",
           "subtitle": "Genaue Auslastung zum erfassten Zeitpunkt",
-          "series": "Belegt",
+          "series": "Benutzt",
           "cache": ""
         },
         "disk": {
           "title": "Festplattenbelegung",
-          "subtitle": "",
+          "subtitle": "Nutzung nach Dateisystem",
           "series": "Root"
         },
         "diskIO": {
@@ -6079,6 +6203,18 @@
       "addWidget": "Widget hinzufügen",
       "addApp": "App hinzufügen",
       "connectService": "Verbinde Dienst"
+    },
+    "urlDrop": {
+      "hint": "",
+      "resolving": "",
+      "notification": {
+        "success": {
+          "message": ""
+        },
+        "full": {
+          "message": ""
+        }
+      }
     },
     "setupChecklist": {
       "title": "Dieses Board nützlich machen",
@@ -6698,9 +6834,9 @@
                 }
               },
               "onboardingTours": {
-                "title": "",
-                "description": "",
-                "reset": "",
+                "title": "Einführungstouren",
+                "description": "Setzen Sie die Einführungstouren zurück, um diese beim nächsten Aufruf des Verwaltungsbereichs oder Dashboards erneut anzuzeigen.",
+                "reset": "Einführungstouren zurücksetzen",
                 "resetSuccess": {
                   "title": "",
                   "message": ""
@@ -6924,6 +7060,10 @@
             },
             "signInOverlay": {
               "label": "Hintergrund-Overlay"
+            },
+            "signInMarquee": {
+              "label": "",
+              "description": ""
             },
             "defaultRadius": {
               "label": "Eckenstil",
@@ -7290,7 +7430,7 @@
               }
             },
             "mcp": {
-              "label": "",
+              "label": "AI & MCP",
               "title": "",
               "subtitle": "",
               "description": "",
@@ -7400,7 +7540,7 @@
               "title": "",
               "warningTitle": "",
               "warningBody": "",
-              "submit": ""
+              "submit": "Datenbank wiederherstellen"
             },
             "progress": {
               "title": "",
@@ -8070,7 +8210,7 @@
             "children": {
               "detail": {
                 "title": "",
-                "backHint": "",
+                "backHint": "Drücken Sie die Backspace Taste oder verwenden Sie die Zurück Schaltfläche, um zur vorherigen Seite zurückzukehren",
                 "backAction": "Zurück"
               }
             },
@@ -8128,7 +8268,7 @@
               "ddgBangs": {
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "DuckDuckGo-Bangs aktivieren"
                   }
                 }
               },
@@ -8156,7 +8296,7 @@
                 }
               },
               "mobileHomeBoardId": {
-                "label": "",
+                "label": "Mobiles Startdashboard",
                 "children": {
                   "detail": {
                     "title": ""
@@ -8685,6 +8825,14 @@
     "conversationActions": "Konversationsaktionen",
     "searchConversations": "Unterhaltungen durchsuchen",
     "noMatchingConversations": "Keine passenden Unterhaltungen",
+    "historyError": {
+      "title": "",
+      "load": "",
+      "loadMessages": "",
+      "saveMessages": "",
+      "switch": "",
+      "retry": ""
+    },
     "moreActions": "Weitere Antwort-Aktionen",
     "renameConversation": {
       "action": "Umbenennen",
@@ -8804,6 +8952,9 @@
     },
     "mentions": {
       "menu": "Homarr Kontext hinzufügen",
+      "back": "",
+      "loading": "",
+      "empty": "",
       "context": "Kontext",
       "app": "Apps",
       "integration": "Integrationen",
@@ -8818,6 +8969,8 @@
     },
     "commands": {
       "menu": "Assistentenbefehle",
+      "hint": "",
+      "empty": "",
       "health": "Bereiten Sie einen Service-Gesundheitscheck vor",
       "explore": "Bereite eine Übersicht dieser Homarr-Instanz vor",
       "media": "Mediensuche vorbereiten",
@@ -9000,6 +9153,7 @@
     "approvalDescription": "Überprüfen Sie diese Änderung, bevor sie ausgeführt wird.",
     "approveAndRun": "Bestätigen und ausführen",
     "deny": "Leugnen",
+    "approvalError": "",
     "autoApproval": {
       "label": "Automatische Genehmigungen",
       "composerLabel": "Für mich freigeben",

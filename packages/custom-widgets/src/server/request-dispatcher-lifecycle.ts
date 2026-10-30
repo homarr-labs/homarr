@@ -30,7 +30,7 @@ function detachDispatcherDestroy(dispatcher: CustomWidgetDispatcher): void {
   }
 }
 
-function abortable<T>(operation: Promise<T>, signal: AbortSignal): Promise<T> {
+export function abortable<T>(operation: Promise<T>, signal: AbortSignal): Promise<T> {
   if (signal.aborted) {
     void operation.catch(() => undefined);
     return Promise.reject(signal.reason ?? createAbortError());
