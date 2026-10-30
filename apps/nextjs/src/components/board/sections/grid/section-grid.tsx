@@ -7,12 +7,10 @@ import combineClasses from "clsx";
 
 import { useCurrentLayout, useRequiredBoard } from "@homarr/boards/context";
 import { useEditMode } from "@homarr/boards/edit-mode";
-import { getBoardLaneColumnCount, getRootSectionLane } from "@homarr/definitions";
 
 import type { ContainerSectionItem, Section } from "~/app/[locale]/boards/_types";
 import {
   getCollapsedDisplayLayout,
-  CONTAINER_CARD_INSET,
   CONTAINER_HEADER_HEIGHT,
   getEditableCanvasAttributes,
   getGridRowCountForVisualHeight,
@@ -20,9 +18,9 @@ import {
   getLogicalGridSize,
   getReadonlyCanvasAttributes,
   LOGICAL_GRID_PITCH,
+  normalizeGridPlacement,
 } from "~/components/board/layout";
 import { calculateBoardUiScale, useBoardCanvasScale } from "~/components/board/layout/scaled-board-canvas";
-import { getContainerInlineInsetCount, getSectionSizing } from "~/components/board/layout/section-sizing";
 import { useGridEditorRuntimeStatus } from "./grid-editor-runtime";
 import { createGridEntryElementStore, useGridEditorRegistry } from "./grid-editor-registry";
 import type { SectionGridPlacement } from "./use-grid-layout-actions";
@@ -34,6 +32,8 @@ import { useBoardGridPortalHost } from "./grid-portal-host";
 import classes from "./section-grid.module.css";
 
 const GridContentScaleContext = createContext(1);
+const GridRowScaleContext = createContext(1);
+const CONTAINER_CARD_INSET = 5;
 
 interface SectionGridProps {
   section: Exclude<Section, { kind: "container" }> | ContainerSectionItem;
@@ -59,6 +59,7 @@ export const SectionGrid = ({
   const [isEditMode] = useEditMode();
   const canvasScale = useBoardCanvasScale();
   const parentContentScale = useContext(GridContentScaleContext);
+  const parentRowScale = useContext(GridRowScaleContext);
   const [collapsedRowsPerPixel, setCollapsedRowsPerPixel] = useState<number>();
   const editorRuntimeStatus = useGridEditorRuntimeStatus();
   const editorRegistry = useGridEditorRegistry();
@@ -73,20 +74,19 @@ export const SectionGrid = ({
   const { announce, integrations } = useBoardGridPortalHost();
   const collapsedSectionIds = useCollapsedSectionIds();
   const expandSectionsForEditing = useExpandSectionsForEditing();
-  const minimumBySectionId = useMemo(
-    () => getContainerMinimumSizes(board, currentLayoutId, canvasScale),
-    [board, canvasScale, currentLayoutId],
-  );
+  const minimumBySectionId = useMemo(() => {
+    const minimumSizes = getContainerMinimumSizes(board, currentLayoutId);
+    return new Map(innerSections.map((innerSection) => [innerSection.id, minimumSizes.get(innerSection.id)]));
+  }, [board, currentLayoutId, innerSections]);
 
-  // Resolve expanded footprints before rendering or editing so header growth cannot overlap neighbours.
   const placements = useMemo(
     () =>
-      getCollapsedDisplayLayout(
-        [...items, ...innerSections].map((item): SectionGridPlacement => {
-          const minimum = item.type === "section" ? minimumBySectionId.get(item.id) : undefined;
-          const isNonScrollableContainer = item.type === "section" && !item.options.scrollable;
-          const height = isNonScrollableContainer && minimum ? Math.max(item.height, minimum.height) : item.height;
-          return {
+      [...items, ...innerSections].map((item): SectionGridPlacement => {
+        const minimum = item.type === "section" ? minimumBySectionId.get(item.id) : undefined;
+        const isNonScrollableContainer = item.type === "section" && !item.options.scrollable;
+        const height = isNonScrollableContainer && minimum ? Math.max(item.height, minimum.height) : item.height;
+        return normalizeGridPlacement(
+          {
             id: item.id,
             type: item.type,
             x: item.xOffset,
@@ -95,10 +95,10 @@ export const SectionGrid = ({
             h: height,
             minW: minimum?.width,
             minH: minimum?.height,
-          };
-        }),
-        { columnCount, collapsedItemIds: new Set() },
-      ),
+          },
+          columnCount,
+        );
+      }),
     [columnCount, innerSections, items, minimumBySectionId],
   );
   const collapsibleSectionIds = useMemo(
@@ -123,6 +123,7 @@ export const SectionGrid = ({
       ),
     [collapsedSectionIds, collapsibleSectionIds, placements],
   );
+  const hasCollapsedHeader = innerSections.some((child) => child.options.showLabel && directCollapsedIds.has(child.id));
   const displayPlacements = useMemo(() => {
     if (directCollapsedIds.size === 0) return placements;
 
@@ -168,43 +169,65 @@ export const SectionGrid = ({
   if (isRail) {
     rowCount = Math.max(railViewportRowCount, contentRowCount);
   }
-  const isScrollableContainer = section.kind === "container" && section.options.scrollable;
-  const sizing = getSectionSizing({
-    section,
-    columnCount,
-    canvasScale,
-    parentContentScale,
-    inlineInsetCount: containerInlineInsetCount,
-    innerSections,
-    purpose: "viewport",
-  });
-  const effectiveCanvasScale = sizing.effectiveScale;
-  const fullGridWidth = getLogicalGridSize(columnCount);
-  const logicalWidth = sizing.logicalWidth;
-  const headerInset = collapsedSectionIds.has(section.id) ? 0 : sizing.headerInset;
-  let nestedHeaderInset = sizing.nestedHeaderInset;
-  let viewportHeight = getLogicalGridSize(rowCount);
-  const containerContentScale = sizing.contentScale;
-  let rowScale = 1;
-  if (section.kind === "container") {
-    const allocatedHeight = getLogicalGridSize(viewportRowCountOverride ?? Math.max(requestedRowCount, 1));
-    nestedHeaderInset = Math.min(nestedHeaderInset, Math.max(0, allocatedHeight - sizing.outerCardInset - 1));
-    viewportHeight = Math.max(1, allocatedHeight - sizing.outerCardInset - nestedHeaderInset - headerInset);
-    // The saved height is the outer footprint. Only complete square rows fit inside
-    // its header and insets; content-derived minimum sizes grow the parent if needed.
-    const availableRows = Math.floor(viewportHeight / (LOGICAL_GRID_PITCH * containerContentScale));
-    rowCount = Math.max(contentRowCount, availableRows, 1);
-  } else if (isRail && railLogicalHeight > 0) {
-    viewportHeight = railLogicalHeight;
-    // Container minimum heights reserve space for square content before rail sizing.
-    // Compressing their parent rows would remove that space again; let the rail scroll.
-    if (rowCount <= railViewportRowCount && innerSections.length === 0) {
-      rowScale = viewportHeight / getLogicalGridSize(rowCount);
-    }
-  }
-  const fullGridHeight = getLogicalGridSize(rowCount);
   const maxRowCount = section.kind === "container" ? rowCount : null;
   const placementMaxRowCount = maxRowCount;
+  // A scrollable container isn't forced to grow with its content - it scrolls internally instead
+  // of expanding to fit every widget, so its viewport height is capped independently of rowCount.
+  const isScrollableContainer = section.kind === "container" && section.options.scrollable;
+  const viewportRowCount =
+    viewportRowCountOverride ?? (isScrollableContainer ? Math.max(requestedRowCount, 1) : rowCount);
+  const parentScale = canvasScale * parentContentScale;
+  const effectiveCanvasScale = Number.isFinite(parentScale) && parentScale > 0 ? parentScale : 1;
+  // Match the card's inset without changing its persisted grid footprint. Include ancestor
+  // container zoom so equally sized nested containers keep distinct borders at every depth.
+  let outerCardInset = 0;
+  let outerCardInlineInset = 0;
+  if (section.kind === "container") {
+    outerCardInset = (2 * CONTAINER_CARD_INSET) / effectiveCanvasScale;
+    outerCardInlineInset = (containerInlineInsetCount * CONTAINER_CARD_INSET) / effectiveCanvasScale;
+  }
+  const fullGridWidth = getLogicalGridSize(columnCount);
+  const fullGridHeight = getLogicalGridSize(rowCount);
+  const fullViewportHeight = getLogicalGridSize(viewportRowCount);
+  let allocatedViewportHeight = fullViewportHeight;
+  if (isRail && railLogicalHeight > 0) {
+    allocatedViewportHeight = railLogicalHeight;
+  } else if (section.kind === "container") {
+    allocatedViewportHeight *= parentRowScale;
+  }
+  const logicalWidth = Math.max(1, fullGridWidth - outerCardInlineInset);
+  const hasContainerHeader = section.kind === "container" && section.options.collapsible && section.options.showLabel;
+  let headerInset = 0;
+  if (hasContainerHeader && !collapsedSectionIds.has(section.id)) {
+    headerInset = (CONTAINER_HEADER_HEIGHT * calculateBoardUiScale(canvasScale)) / parentContentScale;
+  }
+  let nestedHeaderInset = 0;
+  if (
+    section.kind === "container" &&
+    (section.options.collapsible || (section.options.showLabel && section.options.title)) &&
+    innerSections.some(
+      (child) =>
+        child.yOffset === 0 &&
+        (child.options.collapsible || (child.options.showLabel && child.options.title)) &&
+        (!hasContainerHeader || !child.options.collapsible || !child.options.showLabel),
+    )
+  ) {
+    // Keep the extra gap whenever either adjacent header still floats over its border.
+    nestedHeaderInset = (20 * calculateBoardUiScale(canvasScale)) / effectiveCanvasScale;
+  }
+  nestedHeaderInset = Math.min(nestedHeaderInset, Math.max(0, allocatedViewportHeight - outerCardInset - 1));
+  const viewportHeight = Math.max(1, allocatedViewportHeight - outerCardInset - nestedHeaderInset - headerInset);
+  // Fit columns to the card width. Rows fit the available height independently
+  // without creating horizontal gutters or distorting text and icons.
+  let containerContentScale = 1;
+  let rowScale = 1;
+  if (section.kind === "container" && fullGridWidth > 0 && fullViewportHeight > 0) {
+    containerContentScale = Math.max(0.01, Math.min(logicalWidth / fullGridWidth, 1));
+    rowScale = Math.max(0.01, viewportHeight / (fullViewportHeight * containerContentScale));
+  } else if (isRail && railLogicalHeight > 0 && rowCount <= railViewportRowCount && !hasCollapsedHeader) {
+    // Keep fixed-height collapsed headers out of the rail's fill compression.
+    rowScale = viewportHeight / fullViewportHeight;
+  }
   const contentScale = parentContentScale * containerContentScale;
   const effectiveContentScale = effectiveCanvasScale * containerContentScale;
   // Compute the combined value in JS rather than a CSS calc() referencing the existing
@@ -344,7 +367,9 @@ export const SectionGrid = ({
           data-grid-editor-error={isEditMode && editorRuntimeStatus === "error" ? "true" : undefined}
         >
           <GridContentScaleContext.Provider value={contentScale}>
-            <SectionContent />
+            <GridRowScaleContext.Provider value={rowScale}>
+              <SectionContent />
+            </GridRowScaleContext.Provider>
           </GridContentScaleContext.Provider>
         </Box>
         <div ref={editorHostRef} className={classes.editorPortalHost} />
@@ -396,115 +421,76 @@ const useMinimumViewportRowCount = (enabled: boolean, canvasScale: number) => {
 
 const containerMinimumSizeCache = new WeakMap<
   ReturnType<typeof useRequiredBoard>,
-  Map<string, { canvasScale: number; sizes: ReadonlyMap<string, { width: number; height: number }> }>
+  Map<string, ReadonlyMap<string, { width: number; height: number }>>
 >();
 
-const getContainerMinimumSizes = (
-  board: ReturnType<typeof useRequiredBoard>,
-  layoutId: string,
-  canvasScale: number,
-) => {
+const getContainerMinimumSizes = (board: ReturnType<typeof useRequiredBoard>, layoutId: string) => {
   const cachedByLayout = containerMinimumSizeCache.get(board);
   const cached = cachedByLayout?.get(layoutId);
-  if (cached?.canvasScale === canvasScale) return cached.sizes;
+  if (cached) return cached;
 
-  const boardLayout = board.layouts.find((layout) => layout.id === layoutId);
   const directItemsBySectionId = new Map<string, PlacementBounds[]>();
   for (const item of board.items) {
     const layout = item.layouts.find((candidate) => candidate.layoutId === layoutId);
     if (!layout) continue;
     const entries = directItemsBySectionId.get(layout.sectionId) ?? [];
-    entries.push({ ...layout, id: item.id });
+    entries.push(layout);
     directItemsBySectionId.set(layout.sectionId, entries);
   }
 
-  const directSectionsBySectionId = new Map<string, ContainerSectionItem[]>();
+  const directSectionsBySectionId = new Map<string, { id: string; placement: PlacementBounds }[]>();
   for (const section of board.sections) {
     if (section.kind !== "container") continue;
     const layout = section.layouts.find((candidate) => candidate.layoutId === layoutId);
     if (!layout) continue;
     const entries = directSectionsBySectionId.get(layout.parentSectionId) ?? [];
-    entries.push({ ...section, ...layout, type: "section" });
+    entries.push({ id: section.id, placement: layout });
     directSectionsBySectionId.set(layout.parentSectionId, entries);
   }
 
   const minimumBySectionId = new Map<string, { width: number; height: number }>();
   const visiting = new Set<string>();
-  const resolve = (
-    section: ContainerSectionItem,
-    parentContentScale = 1,
-    inlineInsetCount = 2,
-  ): { width: number; height: number } => {
-    const existing = minimumBySectionId.get(section.id);
+  const resolve = (sectionId: string): { width: number; height: number } => {
+    const existing = minimumBySectionId.get(sectionId);
     if (existing) return existing;
-    if (visiting.has(section.id)) return { width: 1, height: 1 };
-    visiting.add(section.id);
+    if (visiting.has(sectionId)) return { width: 1, height: 1 };
+    visiting.add(sectionId);
 
-    const innerSections = directSectionsBySectionId.get(section.id) ?? [];
-    const sizing = getSectionSizing({
-      section,
-      columnCount: section.width,
-      canvasScale,
-      parentContentScale,
-      inlineInsetCount,
-      innerSections,
-      purpose: "minimum",
-    });
+    const section = board.sections.find((candidate) => candidate.id === sectionId);
     // A scrollable container isn't forced to grow with its content - it scrolls internally instead,
     // so it shouldn't have a content-derived height floor imposed by its parent's grid.
-    const isScrollable = section.options.scrollable;
+    const isScrollable = section?.kind === "container" && section.options.scrollable;
 
-    const itemBounds = directItemsBySectionId.get(section.id) ?? [];
-    const sectionBounds = innerSections.map((child) => {
-      const minimum = resolve(child, parentContentScale * sizing.contentScale);
+    const itemBounds = directItemsBySectionId.get(sectionId) ?? [];
+    const sectionBounds = (directSectionsBySectionId.get(sectionId) ?? []).map(({ id, placement }) => {
+      const minimum = resolve(id);
       return {
-        ...child,
-        width: Math.max(child.width, minimum.width),
-        height: Math.max(child.height, minimum.height),
+        ...placement,
+        width: Math.max(placement.width, minimum.width),
+        height: Math.max(placement.height, minimum.height),
       };
     });
     const children = [...itemBounds, ...sectionBounds];
-    const width = Math.max(1, ...children.map((child) => child.xOffset + child.width));
-    const contentPlacements = getCollapsedDisplayLayout(
-      children.map((child) => ({ id: child.id, x: child.xOffset, y: child.yOffset, w: child.width, h: child.height })),
-      { columnCount: Math.max(width, section.width), collapsedItemIds: new Set() },
-    );
-    const contentRows = Math.max(1, getLayoutRowCount(contentPlacements));
     const minimum = {
-      width,
-      height: 1,
+      width: Math.max(1, ...children.map((child) => child.xOffset + child.width)),
+      height: isScrollable ? 1 : Math.max(1, ...children.map((child) => child.yOffset + child.height)),
     };
-    if (!isScrollable) {
-      minimum.height = Math.ceil(
-        (getLogicalGridSize(contentRows) * sizing.contentScale + sizing.expandedOverhead) / LOGICAL_GRID_PITCH,
-      );
-    }
-    visiting.delete(section.id);
-    minimumBySectionId.set(section.id, minimum);
+    visiting.delete(sectionId);
+    minimumBySectionId.set(sectionId, minimum);
     return minimum;
   };
 
-  // Carry scale down the same traversal that resolves child sizes.
-  for (const root of board.sections) {
-    if (root.kind !== "empty") continue;
-    for (const section of directSectionsBySectionId.get(root.id) ?? []) {
-      const lane = getRootSectionLane(root.xOffset);
-      const inlineInsetCount = getContainerInlineInsetCount(
-        section,
-        lane !== "main" && boardLayout ? { lane, columnCount: getBoardLaneColumnCount(boardLayout, lane) } : undefined,
-      );
-      resolve(section, 1, inlineInsetCount);
-    }
+  for (const section of board.sections) {
+    if (section.kind === "container") resolve(section.id);
   }
 
   const nextByLayout = cachedByLayout ?? new Map();
-  nextByLayout.set(layoutId, { canvasScale, sizes: minimumBySectionId });
+  nextByLayout.set(layoutId, minimumBySectionId);
   containerMinimumSizeCache.set(board, nextByLayout);
   return minimumBySectionId;
 };
 
 interface PlacementBounds {
-  id: string;
   xOffset: number;
   yOffset: number;
   width: number;

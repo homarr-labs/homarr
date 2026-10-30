@@ -799,6 +799,11 @@
       }
     },
     "field": {
+      "url": {
+        "helpLabel": "URL format examples",
+        "examples": "Examples of accepted links",
+        "requiresHandler": "Custom protocols require an associated application on your device."
+      },
       "description": {
         "label": "Description"
       },
@@ -2312,6 +2317,15 @@
       "option": {
         "appId": {
           "label": "Choose app"
+        },
+        "openIn": {
+          "label": "Open app in",
+          "description": "Choose where this app opens. Your browser settings may override requests for a separate window.",
+          "option": {
+            "currentTab": "Current tab",
+            "newTab": "New tab",
+            "newWindow": "New window"
+          }
         },
         "showTitle": {
           "label": "Show app name"
@@ -4775,6 +4789,10 @@
             "hidden": "Hidden"
           }
         },
+        "groupReleases": {
+          "label": "Group releases by status",
+          "description": "Turn off to show a continuous list without section headings. Collapsed sections are ignored."
+        },
         "sections": {
           "label": "Sections",
           "description": "Groups of repositories to show. Hidden groups are not listed at all."
@@ -4810,7 +4828,7 @@
         },
         "showChangelogPreview": {
           "label": "Show changelog preview",
-          "description": "Preview the release notes under new releases."
+          "description": "Preview the release notes under each release."
         },
         "repositories": {
           "label": "Repositories",
@@ -4843,6 +4861,10 @@
           },
           "name": {
             "label": "Name"
+          },
+          "excludePrereleases": {
+            "label": "Exclude pre-releases",
+            "description": "Show the latest release not flagged as a pre-release by the provider."
           },
           "versionFilter": {
             "label": "Version Filter",
@@ -6314,11 +6336,11 @@
         "label": "Favicon image URL"
       },
       "backgroundImageUrl": {
-        "label": "Background image URL",
-        "placeholder": "Start typing to search local images",
+        "label": "Background image or video URL",
+        "placeholder": "Start typing to search local images and videos",
         "group": {
-          "your": "Your images",
-          "other": "Other images"
+          "your": "Your media",
+          "other": "Other media"
         }
       },
       "backgroundImageAttachment": {
@@ -6356,15 +6378,15 @@
         }
       },
       "backgroundImageSize": {
-        "label": "Background image size",
+        "label": "Background size",
         "option": {
           "cover": {
             "label": "Cover",
-            "description": "Scales the image as small as possible to cover the entire window by cropping excessive space."
+            "description": "Scales the background as small as possible to cover the entire window by cropping excessive space."
           },
           "contain": {
             "label": "Contain",
-            "description": "Scales the image as large as possible within its container without cropping or stretching the image."
+            "description": "Scales the background as large as possible within its container without cropping or stretching it."
           }
         }
       },
@@ -7033,6 +7055,10 @@
             },
             "signInOverlay": {
               "label": "Background overlay"
+            },
+            "signInMarquee": {
+              "label": "Show background marquee",
+              "description": "Display floating application icons on authentication pages."
             },
             "defaultRadius": {
               "label": "Corner style",
@@ -8794,6 +8820,14 @@
     "conversationActions": "Conversation actions",
     "searchConversations": "Search conversations",
     "noMatchingConversations": "No matching conversations",
+    "historyError": {
+      "title": "Conversation history",
+      "load": "Conversations could not be loaded.",
+      "loadMessages": "This conversation's messages could not be loaded. Retry to restore them before sending.",
+      "saveMessages": "Recent messages could not be saved and may be missing after a reload.",
+      "switch": "This conversation could not be opened.",
+      "retry": "Retry"
+    },
     "moreActions": "More response actions",
     "renameConversation": {
       "action": "Rename",
@@ -8815,7 +8849,7 @@
     "suggestions": {
       "health": {
         "label": "Check service health",
-        "prompt": "Check my integrations and summarize anything that needs attention."
+        "prompt": "Check the health of the services and integrations I can access. Summarize any problems and suggest next steps."
       },
       "explore": {
         "label": "Explore my Homarr",
@@ -8831,7 +8865,7 @@
       },
       "designWidget": {
         "label": "Design a widget",
-        "prompt": "Create and install a Custom Widget for "
+        "prompt": "Help me design a Custom Widget. Ask what I want it to show and where to add it, then use my available integrations."
       }
     },
     "composerPlaceholder": "Ask Assistant…",
@@ -8913,6 +8947,9 @@
     },
     "mentions": {
       "menu": "Add Homarr context",
+      "back": "All categories",
+      "loading": "Loading available context…",
+      "empty": "No matching context found.",
       "context": "Context",
       "app": "Apps",
       "integration": "Integrations",
@@ -8927,11 +8964,13 @@
     },
     "commands": {
       "menu": "Assistant commands",
-      "health": "Prepare a service-health check",
-      "explore": "Prepare an overview of this Homarr instance",
-      "media": "Prepare a media search",
-      "style": "Prepare a board appearance or custom CSS change",
-      "designWidget": "Prepare a one-prompt Custom Widget build"
+      "hint": "Choose a starting point, or type / for commands and @ for context. Edit your prompt before sending.",
+      "empty": "No matching commands. Try /health, /explore, /media, /style or /design-widget.",
+      "health": "Find unhealthy services and suggested fixes",
+      "explore": "See your apps, boards and available actions",
+      "media": "Find a movie or series to request",
+      "style": "Improve a board's layout, appearance or CSS",
+      "designWidget": "Build a Custom Widget with your integrations"
     },
     "usage": {
       "tokens": "tokens",
@@ -9109,6 +9148,7 @@
     "approvalDescription": "Review this change before it runs.",
     "approveAndRun": "Approve and run",
     "deny": "Deny",
+    "approvalError": "Your response could not be recorded. Try again.",
     "autoApproval": {
       "label": "Automatic approvals",
       "composerLabel": "Approve for me",

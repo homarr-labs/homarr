@@ -12,7 +12,6 @@ import { useI18n } from "@homarr/translation/client";
 
 import type { ContainerSectionItem } from "~/app/[locale]/boards/_types";
 import { CONTAINER_HEADER_HEIGHT } from "~/components/board/layout";
-import { getContainerInlineInsetCount } from "~/components/board/layout/section-sizing";
 import { SectionGrid } from "./grid/section-grid";
 import { useSectionCollapse } from "./section-collapse";
 import { useSectionContext } from "./section-context";
@@ -41,12 +40,11 @@ export const BoardContainerSection = ({ section }: Props) => {
   const menuRightOffset = 4 + containerDepth * 32;
   const menuTopOffset = 4 + containerDepth * 32;
   const parent = useSectionContext();
-  const containerInlineInsetCount = getContainerInlineInsetCount(
-    section,
-    parent.section.kind === "empty"
-      ? { lane: getRootSectionLane(parent.section.xOffset), columnCount: parent.columnCount }
-      : undefined,
-  );
+  let containerInlineInsetCount = 2;
+  if (parent.section.kind === "empty" && getRootSectionLane(parent.section.xOffset) !== "main") {
+    if (section.xOffset === 0) containerInlineInsetCount -= 1;
+    if (section.xOffset + section.width === parent.columnCount) containerInlineInsetCount -= 1;
+  }
   const [isEditMode] = useEditMode();
   const t = useI18n("section.container");
   const tSection = useI18n("section");

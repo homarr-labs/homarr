@@ -16,13 +16,13 @@ jobs:
       # The optional RE2 addon uses V8 APIs; validation can use JavaScript regexes.
       RENOVATE_X_IGNORE_RE2: "true"
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        if: "!env.ACT"
         with:
           persist-credentials: false
-        if: "!env.ACT"
       - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
         with:
-          bun-version: 1.4.3
+          bun-version: 1.4.4
       - run: |
           bun x --package renovate \
               renovate-config-validator --strict .github/renovate.json5

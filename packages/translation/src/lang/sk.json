@@ -799,6 +799,11 @@
       }
     },
     "field": {
+      "url": {
+        "helpLabel": "Príklady formátov URL",
+        "examples": "Príklady podporovaných odkazov",
+        "requiresHandler": "Vlastné protokoly vyžadujú priradenú aplikáciu vo vašom zariadení."
+      },
       "description": {
         "label": "Popis"
       },
@@ -2312,6 +2317,15 @@
       "option": {
         "appId": {
           "label": "Vybrať aplikáciu"
+        },
+        "openIn": {
+          "label": "Otvoriť aplikáciu v",
+          "description": "Vyberte, kde sa má táto aplikácia otvoriť. Nastavenia prehliadača môžu zmeniť otváranie v samostatnom okne.",
+          "option": {
+            "currentTab": "Aktuálnej karte",
+            "newTab": "Novej karte",
+            "newWindow": "Novom okne"
+          }
         },
         "showTitle": {
           "label": "Zobraziť názov aplikácie"
@@ -4758,27 +4772,63 @@
       "name": "Vydania",
       "description": "Zobrazí zoznam aktuálnej verzie daných úložísk s daným regulárnym výrazom verzie.",
       "option": {
+        "layout": {
+          "label": "Rozloženie",
+          "description": "",
+          "option": {
+            "comfortable": "",
+            "compact": ""
+          }
+        },
+        "summary": {
+          "label": "",
+          "description": "",
+          "option": {
+            "detailed": "",
+            "count": "",
+            "hidden": ""
+          }
+        },
+        "groupReleases": {
+          "label": "",
+          "description": ""
+        },
+        "sections": {
+          "label": "",
+          "description": ""
+        },
+        "collapsedSections": {
+          "label": "",
+          "description": ""
+        },
         "newReleaseWithin": {
           "label": "Nové vydanie v rámci",
-          "description": "Príklad použitia: 1t (1 týždeň), 10M (10 mesiacov). Akceptované typy jednotiek h (hodiny), d (dni), t (týždne), M (mesiace), r (roky). Ak nechcete zvýrazniť nové vydania, nechajte prázdne."
+          "description": "Príklad použitia: 1t (1 týždeň), 10M (10 mesiacov). Akceptované typy jednotiek h (hodiny), d (dni), t (týždne), M (mesiace), r (roky). Ak nechcete zvýrazniť nové vydania, nechajte prázdne.",
+          "option": {
+            "never": "",
+            "1d": "1 dní",
+            "3d": "3 dní",
+            "1w": "1 týžden",
+            "2w": "",
+            "1M": "1 mesiac",
+            "3M": "3 mesiace"
+          }
         },
         "staleReleaseWithin": {
           "label": "Stale Release Within",
-          "description": "Príklad použitia: 1t (1 týždeň), 10M (10 mesiacov). Akceptované typy jednotiek h (hodiny), d (dni), t (týždne), M (mesiace), r (roky). Nechajte prázdne, ak nechcete zvýrazniť zastarané vydania."
+          "description": "Príklad použitia: 1t (1 týždeň), 10M (10 mesiacov). Akceptované typy jednotiek h (hodiny), d (dni), t (týždne), M (mesiace), r (roky). Nechajte prázdne, ak nechcete zvýrazniť zastarané vydania.",
+          "option": {
+            "never": "",
+            "1M": "1 mesiac",
+            "3M": "3 mesiace",
+            "6M": "6 mesiace",
+            "1y": "1 rok",
+            "2y": "2 rokov"
+          }
         },
-        "showOnlyHighlighted": {
-          "label": "Zobraziť iba zvýraznené",
-          "description": "Zobraziť iba nové alebo zastarané vydania. Podľa vyššie uvedeného."
-        },
-        "showDetails": {
-          "label": "Zobraziť podrobnosti"
-        },
-        "showOnlyIcon": {
-          "label": ""
-        },
-        "topReleases": {
-          "label": "Najlepšie vydania",
-          "description": "Maximálny počet najnovších vydaní na zobrazenie. Nula znamená žiadny limit."
+        "showChangelogPreview": {
+          "label": "",
+          "description": ""
         },
         "repositories": {
           "label": "Repozitáre",
@@ -4811,6 +4861,10 @@
           },
           "name": {
             "label": "Názov"
+          },
+          "excludePrereleases": {
+            "label": "",
+            "description": ""
           },
           "versionFilter": {
             "label": "Filter verzií",
@@ -4852,36 +4906,106 @@
           }
         }
       },
-      "not-found": "Nenájdené",
-      "pre-release": "Predbežné vydanie",
-      "archived": "Archivovaný",
-      "forked": "Vidlicový",
+      "summary": {
+        "newReleases": "",
+        "newShort": "nový",
+        "tracked": "",
+        "caughtUp": "",
+        "outdated": "",
+        "outdatedShort": "",
+        "failing": "",
+        "failingShort": "",
+        "latest": "",
+        "issues": ""
+      },
+      "section": {
+        "new": {
+          "label": "Nový",
+          "description": ""
+        },
+        "attention": {
+          "label": "",
+          "description": ""
+        },
+        "upToDate": {
+          "label": "",
+          "description": ""
+        },
+        "quiet": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "status": {
+        "new": "",
+        "outdated": "",
+        "error": "",
+        "upToDate": "",
+        "quiet": ""
+      },
+      "tag": {
+        "new": "Nový",
+        "preRelease": "",
+        "resolvedFrom": "",
+        "quiet": "",
+        "archived": "Archivovaný",
+        "fork": ""
+      },
+      "issue": {
+        "affected": "",
+        "rateLimited": {
+          "title": "",
+          "hint": ""
+        },
+        "notFound": {
+          "title": "",
+          "hint": ""
+        },
+        "noMatchingVersion": {
+          "title": "",
+          "hint": ""
+        },
+        "noReleasesFound": {
+          "title": "",
+          "hint": ""
+        },
+        "invalidIdentifier": {
+          "title": "",
+          "hint": ""
+        },
+        "noProviderSelected": {
+          "title": "",
+          "hint": ""
+        },
+        "noProviderResponse": {
+          "title": "",
+          "hint": ""
+        },
+        "unexpected": {
+          "title": "",
+          "hint": ""
+        }
+      },
+      "markViewed": "",
+      "markAllViewed": "",
+      "markEntryViewed": "",
+      "viewed": "",
+      "copyVersion": "",
+      "copied": "",
+      "published": "",
+      "whatChanged": "",
+      "noNotes": "",
+      "changes": "",
       "starsCount": "Hviezdy",
       "forksCount": "Vidlicový",
-      "issuesCount": "Problémy",
-      "markViewed": "",
-      "openProjectPage": "Otvorte stránku projektu",
-      "openReleasePage": "Otvorte stránku vydania",
-      "releaseDescription": "Popis vydania",
-      "projectDescription": "",
+      "openIssues": "",
+      "created": "Vytvorené",
+      "releasePage": "",
+      "projectPage": "",
       "runningVersions": "",
       "upToDate": "",
       "updateAvailable": "",
-      "unknownStatus": "Neznámy",
-      "created": "Vytvorené",
-      "error": {
-        "label": "Chyba",
-        "messages": {
-          "invalidIdentifier": "",
-          "noMatchingVersion": "Nenašla sa žiadna zodpovedajúca verzia",
-          "noReleasesFound": "",
-          "noProviderSelected": "",
-          "noProviderResponse": "",
-          "unexpected": ""
-        }
-      },
-      "expandDetails": "Zobraziť podrobnosti pre {name}",
-      "collapseDetails": "Skryť podrobnosti pre {name}"
+      "unknownStatus": "Neznámy"
     },
     "networkControllerSummary": {
       "advanced": {
@@ -6080,6 +6204,18 @@
       "addApp": "Pridajte aplikáciu",
       "connectService": "Pripojiť službu"
     },
+    "urlDrop": {
+      "hint": "",
+      "resolving": "",
+      "notification": {
+        "success": {
+          "message": ""
+        },
+        "full": {
+          "message": ""
+        }
+      }
+    },
     "setupChecklist": {
       "title": "Urobte túto dosku užitočnou",
       "description": "Pokračujte tam, kde ste skončili. Priebeh vychádza z obsahu, ktorý sa už na tejto doske nachádza.",
@@ -6924,6 +7060,10 @@
             },
             "signInOverlay": {
               "label": "Prekrytie pozadia"
+            },
+            "signInMarquee": {
+              "label": "",
+              "description": ""
             },
             "defaultRadius": {
               "label": "Štýl rohov",
@@ -8685,6 +8825,14 @@
     "conversationActions": "Akcie konverzácie",
     "searchConversations": "Vyhľadať konverzácie",
     "noMatchingConversations": "Žiadne zodpovedajúce konverzácie",
+    "historyError": {
+      "title": "",
+      "load": "",
+      "loadMessages": "",
+      "saveMessages": "",
+      "switch": "",
+      "retry": ""
+    },
     "moreActions": "Ďalšie akcie odpovede",
     "renameConversation": {
       "action": "Premenovať",
@@ -8804,6 +8952,9 @@
     },
     "mentions": {
       "menu": "Pridať kontext Homarr",
+      "back": "",
+      "loading": "",
+      "empty": "",
       "context": "Kontext",
       "app": "Aplikácie",
       "integration": "Integrácie",
@@ -8818,6 +8969,8 @@
     },
     "commands": {
       "menu": "Príkazy asistenta",
+      "hint": "",
+      "empty": "",
       "health": "Pripraviť kontrolu stavu služby",
       "explore": "Pripraviť prehľad tejto inštancie Homarr",
       "media": "Pripraviť vyhľadávanie médií",
@@ -9000,6 +9153,7 @@
     "approvalDescription": "Pred spustením túto zmenu skontrolujte.",
     "approveAndRun": "Schváliť a spustiť",
     "deny": "Zamietnuť",
+    "approvalError": "",
     "autoApproval": {
       "label": "Automatické schvaľovanie",
       "composerLabel": "Schvaľovať za mňa",

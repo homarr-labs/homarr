@@ -20,27 +20,28 @@ jobs:
       github.event.pull_request.head.repo.full_name == github.repository &&
       github.event.pull_request.base.ref == 'dev'
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v7
-        with:
-          persist-credentials: false
-
       - name: Obtain token
         id: obtainToken
-        uses: actions/create-github-app-token@v3
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
         with:
           private-key: ${{ secrets.RENOVATE_APPROVE_PRIVATE_KEY }}
           client-id: ${{ vars.RENOVATE_APPROVE_CLIENT_ID }}
           permission-pull-requests: write # required to approve a pull request and enable auto-merge
 
-      - name: Install GitHub CLI
-        run: sudo apt-get install -y gh
-
       - name: Approve and enable auto-merge
         env:
           GITHUB_TOKEN: ${{ steps.obtainToken.outputs.token }}
+          GH_REPO: ${{ github.repository }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          ACTOR_ID: ${{ github.actor_id }}
         run: |
-          PR_NUMBER="${{ github.event.pull_request.number }}"
+          if [ "$ACTOR_ID" = "158783068" ] && ! gh pr view "$PR_NUMBER" --json body --jq .body | grep -qF '**Automerge**: Enabled'; then
+            echo "Renovate automerge is disabled for PR #$PR_NUMBER; leaving it for manual review"
+            if [ "$(gh pr view "$PR_NUMBER" --json autoMergeRequest --jq '.autoMergeRequest != null')" = "true" ]; then
+              gh pr merge "$PR_NUMBER" --disable-auto
+            fi
+            exit 0
+          fi
           if [ "$(gh pr view "$PR_NUMBER" --json reviewDecision --jq .reviewDecision)" != "APPROVED" ]; then
             gh pr review "$PR_NUMBER" --approve --body "Automatically approved by Homarr bot policy"
           fi

@@ -20,7 +20,7 @@
     "verify:seo": "tsx ./scripts/verify-seo.ts"
   },
   "dependencies": {
-    "@base-ui/react": "^1.5.0",
+    "@base-ui/react": "^1.9.0",
     "@homarr/custom-widgets": "workspace:^",
     "@homarr/definitions": "workspace:^",
     "@homarr/ui": "workspace:^",
@@ -30,7 +30,7 @@
     "@nivo/line": "^0.99.0",
     "@scalar/api-client-react": "catalog:",
     "@tabler/icons-react": "catalog:",
-    "@tailwindcss/postcss": "^4.3.2",
+    "@tailwindcss/postcss": "^4.3.3",
     "class-variance-authority": "^0.7.1",
     "clsx": "catalog:",
     "date-fns": "catalog:",
@@ -45,7 +45,7 @@
     "next": "catalog:",
     "next-themes": "catalog:",
     "pocketbase": "catalog:",
-    "postcss": "^8.5.16",
+    "postcss": "^8.5.32",
     "posthog-js": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
@@ -53,9 +53,9 @@
     "serve": "catalog:",
     "shiki": "catalog:",
     "sonner": "catalog:",
-    "swiper": "^14.0.5",
-    "tailwind-merge": "^3.6.0",
-    "tailwindcss": "^4.3.2",
+    "swiper": "^14.3.0",
+    "tailwind-merge": "^3.7.0",
+    "tailwindcss": "^4.3.3",
     "three": "catalog:"
   },
   "devDependencies": {

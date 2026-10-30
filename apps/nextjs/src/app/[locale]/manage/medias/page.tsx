@@ -24,7 +24,7 @@ import { auth } from "@homarr/auth/next";
 import { defaultByteUnitSystem, formatBytes } from "@homarr/common";
 import type { ByteUnitSystem } from "@homarr/common";
 import type { inferSearchParamsFromSchema } from "@homarr/common/types";
-import { createLocalImageUrl } from "@homarr/icons/local";
+import { createLocalImageUrl, createLocalMediaUrl } from "@homarr/icons/local";
 import { getI18n } from "@homarr/translation/server";
 import { Link, SearchInput, TablePagination, UserAvatar } from "@homarr/ui";
 
@@ -155,14 +155,26 @@ const Row = async ({ media, byteUnitSystem }: RowProps) => {
   return (
     <TableTr>
       <TableTd w={64}>
-        <Image
-          // Switched to mantine image because next/image doesn't support svgs
-          src={createLocalImageUrl(media.id)}
-          alt={media.name}
-          w={64}
-          h={64}
-          fit="contain"
-        />
+        {media.contentType.startsWith("video/") ? (
+          <video
+            src={createLocalMediaUrl(media.id)}
+            aria-label={media.name}
+            muted
+            preload="metadata"
+            width={64}
+            height={64}
+            style={{ objectFit: "contain" }}
+          />
+        ) : (
+          <Image
+            // Switched to mantine image because next/image doesn't support svgs
+            src={createLocalImageUrl(media.id)}
+            alt={media.name}
+            w={64}
+            h={64}
+            fit="contain"
+          />
+        )}
       </TableTd>
       <TableTh scope="row">{media.name}</TableTh>
       <TableTd>{formatBytes(media.size, { unit: byteUnitSystem })}</TableTd>
@@ -185,7 +197,7 @@ const Row = async ({ media, byteUnitSystem }: RowProps) => {
             <ActionIcon
               aria-label={tMedia("action.open.labelNamed", { name: media.name })}
               component="a"
-              href={createLocalImageUrl(media.id)}
+              href={createLocalMediaUrl(media.id)}
               target="_blank"
               rel="noopener noreferrer"
               color="gray"

@@ -799,6 +799,11 @@
       }
     },
     "field": {
+      "url": {
+        "helpLabel": "Παραδείγματα μορφών URL",
+        "examples": "Παραδείγματα αποδεκτών συνδέσμων",
+        "requiresHandler": "Τα προσαρμοσμένα πρωτόκολλα απαιτούν μια συσχετισμένη εφαρμογή στη συσκευή σας."
+      },
       "description": {
         "label": "Περιγραφή"
       },
@@ -2312,6 +2317,15 @@
       "option": {
         "appId": {
           "label": "Επιλέξτε εφαρμογή"
+        },
+        "openIn": {
+          "label": "Άνοιγμα εφαρμογής σε",
+          "description": "Επιλέξτε πού ανοίγει αυτή η εφαρμογή. Οι ρυθμίσεις του προγράμματος περιήγησης ενδέχεται να αλλάξουν το άνοιγμα σε ξεχωριστό παράθυρο.",
+          "option": {
+            "currentTab": "Τρέχουσα καρτέλα",
+            "newTab": "Νέα καρτέλα",
+            "newWindow": "Νέο παράθυρο"
+          }
         },
         "showTitle": {
           "label": "Εμφάνιση ονόματος"
@@ -4758,27 +4772,63 @@
       "name": "Εκδόσεις",
       "description": "Εμφανίζει μια λίστα με την τρέχουσα έκδοση των καθορισμένων αποθετηρίων, με την καθορισμένη κανονική έκφραση έκδοσης.",
       "option": {
+        "layout": {
+          "label": "Διάταξη",
+          "description": "",
+          "option": {
+            "comfortable": "Άνετο",
+            "compact": "Συμπαγής"
+          }
+        },
+        "summary": {
+          "label": "",
+          "description": "",
+          "option": {
+            "detailed": "",
+            "count": "",
+            "hidden": ""
+          }
+        },
+        "groupReleases": {
+          "label": "",
+          "description": ""
+        },
+        "sections": {
+          "label": "",
+          "description": ""
+        },
+        "collapsedSections": {
+          "label": "",
+          "description": ""
+        },
         "newReleaseWithin": {
           "label": "Νέα έκδοση εντός",
-          "description": "Παράδειγμα χρήσης: 1w (1 εβδομάδα), 10M (10 μήνες). Αποδεκτές μονάδες: h (ώρες), d (ημέρες), w (εβδομάδες), M (μήνες), y (έτη). Αφήστε το κενό για να μην επισημαίνονται νέες εκδόσεις."
+          "description": "Παράδειγμα χρήσης: 1w (1 εβδομάδα), 10M (10 μήνες). Αποδεκτές μονάδες: h (ώρες), d (ημέρες), w (εβδομάδες), M (μήνες), y (έτη). Αφήστε το κενό για να μην επισημαίνονται νέες εκδόσεις.",
+          "option": {
+            "never": "",
+            "1d": "",
+            "3d": "",
+            "1w": "",
+            "2w": "",
+            "1M": "",
+            "3M": ""
+          }
         },
         "staleReleaseWithin": {
           "label": "Παρωχημένη έκδοση εντός",
-          "description": "Παράδειγμα χρήσης: 1w (1 εβδομάδα), 10M (10 μήνες). Αποδεκτές μονάδες: h (ώρες), d (ημέρες), w (εβδομάδες), M (μήνες), y (έτη). Αφήστε το κενό για να μην επισημαίνονται παρωχημένες εκδόσεις."
+          "description": "Παράδειγμα χρήσης: 1w (1 εβδομάδα), 10M (10 μήνες). Αποδεκτές μονάδες: h (ώρες), d (ημέρες), w (εβδομάδες), M (μήνες), y (έτη). Αφήστε το κενό για να μην επισημαίνονται παρωχημένες εκδόσεις.",
+          "option": {
+            "never": "",
+            "1M": "",
+            "3M": "",
+            "6M": "",
+            "1y": "",
+            "2y": ""
+          }
         },
-        "showOnlyHighlighted": {
-          "label": "Εμφάνιση μόνο επισημασμένων",
-          "description": "Εμφάνιση μόνο νέων ή παρωχημένων εκδόσεων, όπως παραπάνω."
-        },
-        "showDetails": {
-          "label": "Εμφάνιση λεπτομερειών"
-        },
-        "showOnlyIcon": {
-          "label": "Εμφάνιση μόνο εικονιδίου"
-        },
-        "topReleases": {
-          "label": "Κορυφαίες εκδόσεις",
-          "description": "Ο μέγιστος αριθμός πρόσφατων εκδόσεων προς εμφάνιση. Το μηδέν σημαίνει χωρίς όριο."
+        "showChangelogPreview": {
+          "label": "",
+          "description": ""
         },
         "repositories": {
           "label": "Αποθετήρια",
@@ -4811,6 +4861,10 @@
           },
           "name": {
             "label": "Όνομα"
+          },
+          "excludePrereleases": {
+            "label": "",
+            "description": ""
           },
           "versionFilter": {
             "label": "Φίλτρο έκδοσης",
@@ -4852,36 +4906,106 @@
           }
         }
       },
-      "not-found": "Δεν βρέθηκε",
-      "pre-release": "Προέκδοση",
-      "archived": "Αρχειοθετημένο",
-      "forked": "",
+      "summary": {
+        "newReleases": "",
+        "newShort": "νέο",
+        "tracked": "",
+        "caughtUp": "",
+        "outdated": "",
+        "outdatedShort": "παρωχημένο",
+        "failing": "",
+        "failingShort": "",
+        "latest": "",
+        "issues": ""
+      },
+      "section": {
+        "new": {
+          "label": "Νέο",
+          "description": ""
+        },
+        "attention": {
+          "label": "Χρειάζεται προσοχή",
+          "description": ""
+        },
+        "upToDate": {
+          "label": "Μέχρι σήμερα",
+          "description": ""
+        },
+        "quiet": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "status": {
+        "new": "",
+        "outdated": "",
+        "error": "",
+        "upToDate": "μέχρι σήμερα",
+        "quiet": ""
+      },
+      "tag": {
+        "new": "Νέο",
+        "preRelease": "",
+        "resolvedFrom": "",
+        "quiet": "",
+        "archived": "Αρχειοθετημένο",
+        "fork": ""
+      },
+      "issue": {
+        "affected": "",
+        "rateLimited": {
+          "title": "",
+          "hint": ""
+        },
+        "notFound": {
+          "title": "",
+          "hint": ""
+        },
+        "noMatchingVersion": {
+          "title": "",
+          "hint": ""
+        },
+        "noReleasesFound": {
+          "title": "",
+          "hint": ""
+        },
+        "invalidIdentifier": {
+          "title": "",
+          "hint": ""
+        },
+        "noProviderSelected": {
+          "title": "",
+          "hint": ""
+        },
+        "noProviderResponse": {
+          "title": "",
+          "hint": ""
+        },
+        "unexpected": {
+          "title": "",
+          "hint": ""
+        }
+      },
+      "markViewed": "Σήμανση ως προβεβλημένου",
+      "markAllViewed": "",
+      "markEntryViewed": "",
+      "viewed": "",
+      "copyVersion": "",
+      "copied": "Αντιγράφηκε",
+      "published": "",
+      "whatChanged": "",
+      "noNotes": "",
+      "changes": "",
       "starsCount": "Αστέρια",
       "forksCount": "Forks",
-      "issuesCount": "Ανοιχτά ζητήματα",
-      "markViewed": "Σήμανση ως προβεβλημένου",
-      "openProjectPage": "Άνοιγμα σελίδας έργου",
-      "openReleasePage": "Άνοιγμα σελίδας έκδοσης",
-      "releaseDescription": "Περιγραφή έκδοσης",
-      "projectDescription": "Περιγραφή έργου",
+      "openIssues": "",
+      "created": "",
+      "releasePage": "",
+      "projectPage": "",
       "runningVersions": "Εκτελούμενες Εκδόσεις",
       "upToDate": "Μέχρι σήμερα",
       "updateAvailable": "Διαθέσιμη ενημέρωση",
-      "unknownStatus": "Άγνωστο",
-      "created": "",
-      "error": {
-        "label": "Σφάλμα",
-        "messages": {
-          "invalidIdentifier": "Μη έγκυρο αναγνωριστικό",
-          "noMatchingVersion": "Δεν βρέθηκε αντίστοιχη έκδοση",
-          "noReleasesFound": "Δεν βρέθηκαν εκδόσεις",
-          "noProviderSelected": "Δεν επιλέχθηκε πάροχος",
-          "noProviderResponse": "Δεν υπάρχει απόκριση από τον πάροχο",
-          "unexpected": "Απρόσμενο σφάλμα παρόχου"
-        }
-      },
-      "expandDetails": "Εμφάνιση λεπτομερειών για το {name}",
-      "collapseDetails": "Απόκρυψη λεπτομερειών για το {name}"
+      "unknownStatus": "Άγνωστο"
     },
     "networkControllerSummary": {
       "advanced": {
@@ -6080,6 +6204,18 @@
       "addApp": "Προσθήκη εφαρμογής",
       "connectService": "Σύνδεση υπηρεσίας"
     },
+    "urlDrop": {
+      "hint": "",
+      "resolving": "",
+      "notification": {
+        "success": {
+          "message": ""
+        },
+        "full": {
+          "message": ""
+        }
+      }
+    },
     "setupChecklist": {
       "title": "Κάντε αυτόν τον πίνακα χρήσιμο",
       "description": "Παραλαβή από όπου σταματήσατε. Η πρόοδος ακολουθεί το περιεχόμενο που ήδη βρίσκεται σε αυτόν τον πίνακα.",
@@ -6924,6 +7060,10 @@
             },
             "signInOverlay": {
               "label": "Επικάλυψη φόντου"
+            },
+            "signInMarquee": {
+              "label": "",
+              "description": ""
             },
             "defaultRadius": {
               "label": "Στυλ γωνίας",
@@ -8685,6 +8825,14 @@
     "conversationActions": "Ενέργειες συνομιλίας",
     "searchConversations": "Αναζήτηση συνομιλιών",
     "noMatchingConversations": "Δεν υπάρχουν αντίστοιχες συνομιλίες",
+    "historyError": {
+      "title": "",
+      "load": "",
+      "loadMessages": "",
+      "saveMessages": "",
+      "switch": "",
+      "retry": ""
+    },
     "moreActions": "Περισσότερες ενέργειες απόκρισης",
     "renameConversation": {
       "action": "Μετονομασία",
@@ -8804,6 +8952,9 @@
     },
     "mentions": {
       "menu": "Προσθήκη περιβάλλοντος Homarr",
+      "back": "",
+      "loading": "",
+      "empty": "",
       "context": "Πλαίσιο",
       "app": "Εφαρμογές",
       "integration": "Ενσωματώσεις",
@@ -8818,6 +8969,8 @@
     },
     "commands": {
       "menu": "Βοηθητικές εντολές",
+      "hint": "",
+      "empty": "",
       "health": "Προετοιμάστε έναν έλεγχο υπηρεσιών-υγείας",
       "explore": "Προετοιμάστε μια επισκόπηση αυτής της παρουσίας του Homarr",
       "media": "Προετοιμάστε μια αναζήτηση πολυμέσων",
@@ -9000,6 +9153,7 @@
     "approvalDescription": "Επανεξέταση αυτής της αλλαγής πριν από την εκτέλεση.",
     "approveAndRun": "Έγκριση και εκτέλεση",
     "deny": "Άρνηση",
+    "approvalError": "",
     "autoApproval": {
       "label": "Αυτόματες εγκρίσεις",
       "composerLabel": "Έγκριση για μένα",

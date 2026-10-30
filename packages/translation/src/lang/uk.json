@@ -799,6 +799,11 @@
       }
     },
     "field": {
+      "url": {
+        "helpLabel": "Приклади форматів URL",
+        "examples": "Приклади підтримуваних посилань",
+        "requiresHandler": "Для власних протоколів на вашому пристрої має бути встановлений пов’язаний застосунок."
+      },
       "description": {
         "label": "Опис"
       },
@@ -2312,6 +2317,15 @@
       "option": {
         "appId": {
           "label": "Виберіть додаток"
+        },
+        "openIn": {
+          "label": "Відкривати застосунок у",
+          "description": "Виберіть, де відкривати цей застосунок. Налаштування браузера можуть змінити відкриття в окремому вікні.",
+          "option": {
+            "currentTab": "Поточній вкладці",
+            "newTab": "Новій вкладці",
+            "newWindow": "Новому вікні"
+          }
         },
         "showTitle": {
           "label": "Показувати назву додатка"
@@ -4758,27 +4772,63 @@
       "name": "Релізи",
       "description": "Відображає список поточної версії заданих репозиторіїв з заданим регулярним виразом версії.",
       "option": {
+        "layout": {
+          "label": "Макет",
+          "description": "",
+          "option": {
+            "comfortable": "Комфортний",
+            "compact": "Компактний"
+          }
+        },
+        "summary": {
+          "label": "",
+          "description": "",
+          "option": {
+            "detailed": "",
+            "count": "",
+            "hidden": "Приховати"
+          }
+        },
+        "groupReleases": {
+          "label": "",
+          "description": ""
+        },
+        "sections": {
+          "label": "",
+          "description": ""
+        },
+        "collapsedSections": {
+          "label": "",
+          "description": ""
+        },
         "newReleaseWithin": {
           "label": "Новий реліз всередині",
-          "description": "Приклад використання: 1w (1 тиждень), 10m (10 місяців). Допустимі типи одиниц h (години), d (дні), 1 РР), m (місяці), y (роки). Не заповнюйте, щоб не підсвічувати нові релізи."
+          "description": "Приклад використання: 1w (1 тиждень), 10m (10 місяців). Допустимі типи одиниц h (години), d (дні), 1 РР), m (місяці), y (роки). Не заповнюйте, щоб не підсвічувати нові релізи.",
+          "option": {
+            "never": "",
+            "1d": "1 днів",
+            "3d": "3 днів",
+            "1w": "1 тиждень",
+            "2w": "",
+            "1M": "1 місяць",
+            "3M": "3 місяці"
+          }
         },
         "staleReleaseWithin": {
           "label": "Застарілий реліз всередині",
-          "description": "Приклад використання: 1w (1 тиждень), 10m (10 місяців). Допустимі типи одиниць h (години), d (дні), 1 РР), m (місяці), y (роки). Залиште порожнім для підсвічування застарілих релізів."
+          "description": "Приклад використання: 1w (1 тиждень), 10m (10 місяців). Допустимі типи одиниць h (години), d (дні), 1 РР), m (місяці), y (роки). Залиште порожнім для підсвічування застарілих релізів.",
+          "option": {
+            "never": "",
+            "1M": "1 місяць",
+            "3M": "3 місяці",
+            "6M": "6 місяців",
+            "1y": "1 рік",
+            "2y": "2 роки"
+          }
         },
-        "showOnlyHighlighted": {
-          "label": "Показати лише виділені",
-          "description": "Показати лише нові або застарілі релізи. Як зазначено вище."
-        },
-        "showDetails": {
-          "label": "Показати деталі"
-        },
-        "showOnlyIcon": {
-          "label": "Показати тільки іконку"
-        },
-        "topReleases": {
-          "label": "Кращі релізи",
-          "description": "Максимальна кількість останніх релізів для відображення. Нуль означає відсутність обмежень."
+        "showChangelogPreview": {
+          "label": "",
+          "description": ""
         },
         "repositories": {
           "label": "Репозитарії",
@@ -4811,6 +4861,10 @@
           },
           "name": {
             "label": "Назва"
+          },
+          "excludePrereleases": {
+            "label": "",
+            "description": ""
           },
           "versionFilter": {
             "label": "Фільтр версії",
@@ -4852,36 +4906,106 @@
           }
         }
       },
-      "not-found": "Не знайдено",
-      "pre-release": "Попередній реліз",
-      "archived": "Архівовано",
-      "forked": "Роздвоєний",
+      "summary": {
+        "newReleases": "{count, plural, one {new release} other {new releases}}",
+        "newShort": "новий",
+        "tracked": "",
+        "caughtUp": "",
+        "outdated": "{count, plural, one {running an older version} other {running older versions}}",
+        "outdatedShort": "застарілий",
+        "failing": "",
+        "failingShort": "",
+        "latest": "",
+        "issues": ""
+      },
+      "section": {
+        "new": {
+          "label": "Новий",
+          "description": ""
+        },
+        "attention": {
+          "label": "Потребує уваги",
+          "description": ""
+        },
+        "upToDate": {
+          "label": "Остання версія",
+          "description": ""
+        },
+        "quiet": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "status": {
+        "new": "",
+        "outdated": "",
+        "error": "",
+        "upToDate": "остання версія",
+        "quiet": ""
+      },
+      "tag": {
+        "new": "Новий",
+        "preRelease": "",
+        "resolvedFrom": "",
+        "quiet": "",
+        "archived": "Архівовано",
+        "fork": ""
+      },
+      "issue": {
+        "affected": "{count, plural, one {# repository affected} other {# repositories affected}}",
+        "rateLimited": {
+          "title": "",
+          "hint": ""
+        },
+        "notFound": {
+          "title": "",
+          "hint": ""
+        },
+        "noMatchingVersion": {
+          "title": "",
+          "hint": ""
+        },
+        "noReleasesFound": {
+          "title": "",
+          "hint": ""
+        },
+        "invalidIdentifier": {
+          "title": "Неприпустимий ідентифікатор",
+          "hint": ""
+        },
+        "noProviderSelected": {
+          "title": "Постачальника не обрано",
+          "hint": ""
+        },
+        "noProviderResponse": {
+          "title": "",
+          "hint": ""
+        },
+        "unexpected": {
+          "title": "",
+          "hint": ""
+        }
+      },
+      "markViewed": "Позначити переглянуте",
+      "markAllViewed": "",
+      "markEntryViewed": "",
+      "viewed": "",
+      "copyVersion": "",
+      "copied": "Скопійовано",
+      "published": "",
+      "whatChanged": "",
+      "noNotes": "",
+      "changes": "{count, plural, one {# change} other {# changes}}",
       "starsCount": "Зірки",
       "forksCount": "Роздвоєнних",
-      "issuesCount": "Відкриті питання",
-      "markViewed": "Позначити переглянуте",
-      "openProjectPage": "Відкрити сторінку проєкту",
-      "openReleasePage": "Відкрити сторінку релізу",
-      "releaseDescription": "Опис релізу",
-      "projectDescription": "Опис проекту",
+      "openIssues": "{count, plural, one {# open issue} other {# open issues}}",
+      "created": "Створено",
+      "releasePage": "",
+      "projectPage": "",
       "runningVersions": "Запущені версії",
       "upToDate": "Остання версія",
       "updateAvailable": "Доступне оновлення",
-      "unknownStatus": "Невідомо",
-      "created": "Створено",
-      "error": {
-        "label": "Помилка",
-        "messages": {
-          "invalidIdentifier": "Неприпустимий ідентифікатор",
-          "noMatchingVersion": "Відповідної версії не знайдено",
-          "noReleasesFound": "Результатів не знайдено",
-          "noProviderSelected": "Постачальника не обрано",
-          "noProviderResponse": "Немає відповіді від провайдера",
-          "unexpected": "Неочікувана помилка провайдера"
-        }
-      },
-      "expandDetails": "Показати деталі для {name}",
-      "collapseDetails": "Приховати деталі для {name}"
+      "unknownStatus": "Невідомо"
     },
     "networkControllerSummary": {
       "advanced": {
@@ -6080,6 +6204,18 @@
       "addApp": "Додати застосунок",
       "connectService": "Підключити службу"
     },
+    "urlDrop": {
+      "hint": "",
+      "resolving": "",
+      "notification": {
+        "success": {
+          "message": ""
+        },
+        "full": {
+          "message": ""
+        }
+      }
+    },
     "setupChecklist": {
       "title": "Зробити цю дошку корисною",
       "description": "Підняти, де ви зупинилися. Прогрес слідує за вмістом вже на цій дошці.",
@@ -6924,6 +7060,10 @@
             },
             "signInOverlay": {
               "label": "Накладення тла"
+            },
+            "signInMarquee": {
+              "label": "",
+              "description": ""
             },
             "defaultRadius": {
               "label": "Кутовий стиль",
@@ -8685,6 +8825,14 @@
     "conversationActions": "Дії при бесіді",
     "searchConversations": "Пошук бесід",
     "noMatchingConversations": "Немає відповідних розмов",
+    "historyError": {
+      "title": "",
+      "load": "",
+      "loadMessages": "",
+      "saveMessages": "",
+      "switch": "",
+      "retry": ""
+    },
     "moreActions": "Більше дій з відповідями",
     "renameConversation": {
       "action": "Перейменувати",
@@ -8804,6 +8952,9 @@
     },
     "mentions": {
       "menu": "Додати контекст Homarr",
+      "back": "",
+      "loading": "",
+      "empty": "",
       "context": "Контекст",
       "app": "Додатки",
       "integration": "Інтеграції",
@@ -8818,6 +8969,8 @@
     },
     "commands": {
       "menu": "Команди помічників",
+      "hint": "",
+      "empty": "",
       "health": "Підготуйте перевірку працездатності служби",
       "explore": "Підготувати огляд цього екземпляра Homarr",
       "media": "Підготувати медіа пошук",
@@ -9000,6 +9153,7 @@
     "approvalDescription": "Переглянути зміни до її запуску.",
     "approveAndRun": "Затвердити та запустити",
     "deny": "Відмовити",
+    "approvalError": "",
     "autoApproval": {
       "label": "Автоматичне схвалення",
       "composerLabel": "Затвердити для мене",
