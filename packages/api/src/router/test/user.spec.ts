@@ -4,7 +4,7 @@ import type { Session } from "@homarr/auth";
 import { createId } from "@homarr/common";
 import type { Database } from "@homarr/db";
 import { eq } from "@homarr/db";
-import { invites, onboarding, users } from "@homarr/db/schema";
+import { accounts, groupMembers, groups, invites, onboarding, users } from "@homarr/db/schema";
 import { createDb } from "@homarr/db/test";
 import type { GroupPermissionKey, OnboardingStep } from "@homarr/definitions";
 
@@ -324,6 +324,89 @@ describe("editProfile shoud update user", () => {
       name: "abc",
       email: "myNewEmail@gmail.com",
       emailVerified: null,
+    });
+  });
+});
+
+describe("getSignInInformation should return safe authentication details", () => {
+  test("a user can read their own sign-in information without tokens", async () => {
+    const db = createDb();
+    const caller = userRouter.createCaller({
+      db,
+      deviceType: undefined,
+      session: defaultSession,
+    });
+    const groupId = createId();
+
+    await db.insert(users).values({
+      id: defaultOwnerId,
+      name: "owner",
+      email: "owner@example.com",
+      provider: "oidc",
+    });
+    await db.insert(accounts).values({
+      userId: defaultOwnerId,
+      type: "oidc",
+      provider: "oidc",
+      providerAccountId: "oidc-subject",
+      id_token: "secret-id-token",
+      access_token: "secret-access-token",
+      refresh_token: "secret-refresh-token",
+    });
+    await db.insert(groups).values({ id: groupId, name: "admins", position: 0 });
+    await db.insert(groupMembers).values({ groupId, userId: defaultOwnerId });
+
+    const result = await caller.getSignInInformation({ userId: defaultOwnerId });
+
+    expect(result).toEqual({
+      provider: "oidc",
+      email: "owner@example.com",
+      subject: "oidc-subject",
+      homarrGroups: [{ id: groupId, name: "admins" }],
+    });
+    expect(JSON.stringify(result)).not.toContain("secret-");
+  });
+
+  test("a non-admin cannot read another user's sign-in information", async () => {
+    const db = createDb();
+    const caller = userRouter.createCaller({
+      db,
+      deviceType: undefined,
+      session: defaultSession,
+    });
+    const otherUserId = createId();
+
+    await db.insert(users).values([
+      { id: defaultOwnerId, name: "owner" },
+      { id: otherUserId, name: "other", email: "other@example.com", provider: "oidc" },
+    ]);
+
+    await expect(caller.getSignInInformation({ userId: otherUserId })).rejects.toThrow(
+      "You are not allowed to view other users details",
+    );
+  });
+
+  test("an admin can read another user's sign-in information", async () => {
+    const db = createDb();
+    const caller = userRouter.createCaller({
+      db,
+      deviceType: undefined,
+      session: createSession(["admin"]),
+    });
+    const otherUserId = createId();
+
+    await db.insert(users).values([
+      { id: defaultOwnerId, name: "admin" },
+      { id: otherUserId, name: "other", email: "other@example.com", provider: "ldap" },
+    ]);
+
+    const result = await caller.getSignInInformation({ userId: otherUserId });
+
+    expect(result).toEqual({
+      provider: "ldap",
+      email: "other@example.com",
+      subject: null,
+      homarrGroups: [],
     });
   });
 });
