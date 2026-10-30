@@ -1,4 +1,5 @@
 export * from "./bundled-widgets";
+export * from "./definition-removals";
 export {
   containsCustomWidgetCredentialLiteral,
   getCustomWidgetCredentialKeyRisk,

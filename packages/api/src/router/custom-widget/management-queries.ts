@@ -77,7 +77,13 @@ export const managementQueryProcedures = {
 
   get: permissionRequiredProcedure
     .requiresPermission("admin")
-    .meta({ mcp: { enabled: true, description: "Get one Custom JSX widget without secret values." } })
+    .meta({
+      mcp: {
+        enabled: true,
+        description:
+          "Requires administrator permission. Get one Custom JSX widget without secret values. For line patches, call customWidget_readTemplate to obtain the revision required by customWidget_templatePatch.",
+      },
+    })
     .input(z.object({ id: z.string() }))
     .query(async ({ ctx, input }) => {
       const definition = await ctx.db.query.customWidgetDefinitions.findFirst({
