@@ -418,7 +418,7 @@ export default function BeszelSystemTableWidget({
     return cols.filter(Boolean) as DataTableColumn<SystemRowWithKey>[];
   }, [formatByteRate, formatBytes, options.fahrenheit, tBeszel, tCommon, size, visibleMetricKeys, isAdvanced]);
 
-  const { effectiveColumns, storeKey } = usePersistedTableLayout({
+  const { effectiveColumns, storeKey, onColumnLayoutChange } = usePersistedTableLayout({
     columns,
     columnAccessors,
     columnOrder: options.columnOrder,
@@ -458,6 +458,7 @@ export default function BeszelSystemTableWidget({
         noRecordsText={tBeszel("empty.noSystems")}
         idAccessor="rowKey"
         storeColumnsKey={storeKey}
+        onColumnLayoutChange={onColumnLayoutChange}
         onRowClick={isEditMode ? undefined : handleRowClick}
       />
     </div>

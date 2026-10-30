@@ -65,9 +65,12 @@ export const createRetryableLoader = <TKey, TValue>(loaders: ReadonlyMap<TKey, (
 
     const promise = loader();
     promises.set(key, promise);
-    void promise.catch(() => {
-      if (promises.get(key) === promise) promises.delete(key);
-    });
+    void promise.then(
+      (value) => Object.assign(promise, { status: "fulfilled", value }),
+      () => {
+        if (promises.get(key) === promise) promises.delete(key);
+      },
+    );
     return promise;
   };
 };
