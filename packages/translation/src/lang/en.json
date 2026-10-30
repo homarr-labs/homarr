@@ -6815,6 +6815,18 @@
               "search": "Search",
               "firstDayOfWeek": "First day of the week",
               "accessibility": "Accessibility",
+              "signInInformation": {
+                "title": "Sign-in information",
+                "description": "Read-only details from this user's authentication provider. Access and ID tokens are never shown.",
+                "provider": "Provider",
+                "subject": "Subject",
+                "email": "Email",
+                "homarrGroups": "Homarr groups",
+                "empty": "Not available",
+                "noGroups": "None",
+                "copy": "Copy",
+                "copied": "Copied"
+              },
               "oauthConnections": {
                 "title": "OAuth connections",
                 "description": "These clients obtained API credentials for your account through OAuth. The credentials work with Homarr's HTTP API as well as MCP, do not expire automatically, and remain valid after you sign out.",
