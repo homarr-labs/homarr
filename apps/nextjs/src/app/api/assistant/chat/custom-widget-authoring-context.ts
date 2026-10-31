@@ -579,77 +579,17 @@ export const hasExplicitCustomWidgetComponentDiscoveryRequest = (messages: reado
   );
 };
 
-export const getRequestedCustomWidgetExampleId = (messages: readonly UIMessage[]) => {
-  const latestUserMessage = messages.findLast((message) => message.role === "user");
-  const text = latestUserMessage ? getUiMessageText(latestUserMessage).toLowerCase() : "";
-  const explicitExample = getCustomWidgetExampleCatalog().find(({ title }) =>
-    text.includes(`bundled ${title.toLowerCase()} example`),
-  );
-  if (explicitExample) return explicitExample.id;
-  const target = getRequestedCustomWidgetServiceTarget(messages);
-  if (target === null) return null;
-  if (target === "dispatcharr" || (target.includes("dispatcharr") && /\bchannels?\b/iu.test(target))) {
-    return "dispatcharr-channels";
-  }
-  if (target === "karakeep" || (target.includes("karakeep") && /\bbookmarks?\b/iu.test(target))) {
-    return "karakeep-bookmarks";
-  }
-  if (target === "mealie" || (target.includes("mealie") && /\b(?:daily|meals?|plans?|today)\b/iu.test(target))) {
-    return "mealie-today";
-  }
-  if (target === "romm" || (target.includes("romm") && /\b(?:games?|library|recent)\b/iu.test(target))) {
-    return "romm-library";
-  }
-  const isTubeArchivist = target.includes("tube archivist") || target.includes("tubearchivist");
-  if (
-    target === "tube archivist" ||
-    target === "tubearchivist" ||
-    (isTubeArchivist && /\b(?:downloads?|queue)\b/iu.test(target))
-  ) {
-    return "tubearchivist-queue";
-  }
-  if (!target.includes("frigate")) return null;
-  if (/\b(?:review|alerts?)\b/iu.test(target)) return "frigate-alerts";
-  if (/\b(?:system|metrics?|stats?|health)\b/iu.test(target)) return "frigate-system";
-  if (/\b(?:live|camera|streams?)\b/iu.test(target)) return "frigate-live-streams";
-  return null;
+export const getRequestedCustomWidgetExampleIds = (messages: readonly UIMessage[]) => {
+  const text = getLatestUserText(messages).toLowerCase();
+  return getCustomWidgetExampleCatalog()
+    .map(({ id, title }) => ({ id, index: text.indexOf(`bundled ${title.toLowerCase()} example`) }))
+    .filter(({ index }) => index >= 0)
+    .toSorted((left, right) => left.index - right.index)
+    .map(({ id }) => id);
 };
 
-export const getRequestedCustomWidgetExampleIds = (messages: readonly UIMessage[]) => {
-  if (!hasMultiCustomWidgetCreationRequest(messages)) {
-    const exampleId = getRequestedCustomWidgetExampleId(messages);
-    return exampleId === null ? [] : [exampleId];
-  }
-  const text = getLatestUserText(messages).toLowerCase();
-  const uncoveredTarget = text
-    .replace(
-      /\b(?:build|create|design|make|install|custom|widgets?|for|using|with|me|us|a|an|the|dispatcharr|karakeep|mealie|romm|tube\s*archivist|tubearchivist|frigate|channels?|bookmarks?|daily|meals?|plans?|today|games?|library|recent|downloads?|queue|live|camera|streams?|review|alerts?|system|metrics?|stats?|health|and|or)\b/giu,
-      " ",
-    )
-    .replace(/[^\p{L}\p{N}]+/gu, "")
-    .trim();
-  if (uncoveredTarget) return [];
-  const candidates: Array<{ id: string; index: number }> = [];
-  const add = (id: string, pattern: RegExp) => {
-    const match = pattern.exec(text);
-    if (match?.index === undefined) return;
-    candidates.push({ id, index: match.index });
-  };
-  add("dispatcharr-channels", /\bdispatcharr\b/iu);
-  add("karakeep-bookmarks", /\bkarakeep\b/iu);
-  add("mealie-today", /\bmealie\b/iu);
-  add("romm-library", /\bromm\b/iu);
-  add("tubearchivist-queue", /\b(?:tube\s*archivist|tubearchivist)\b/iu);
-  if (/\bfrigate\b/iu.test(text)) {
-    add("frigate-live-streams", /\b(?:live|streams?)\b/iu);
-    add("frigate-alerts", /\b(?:review|alerts?)\b/iu);
-    add("frigate-system", /\b(?:system|metrics?|stats?|health)\b/iu);
-  }
-  return candidates
-    .toSorted((left, right) => left.index - right.index)
-    .map(({ id }) => id)
-    .filter((id, index, ids) => ids.indexOf(id) === index);
-};
+export const getRequestedCustomWidgetExampleId = (messages: readonly UIMessage[]) =>
+  getRequestedCustomWidgetExampleIds(messages)[0] ?? null;
 
 export const isFreshCustomWidgetCreationRequest = (messages: readonly UIMessage[]) =>
   hasCustomWidgetFreshCreationIntent(getLatestUserText(messages));
@@ -670,6 +610,14 @@ const hasExplicitCustomWidgetIntent = (message: UIMessage) =>
       typeof part.text === "string" &&
       hasCustomWidgetAuthoringText(part.text),
   );
+
+export const isCustomWidgetManagementPath = (pathname: string | null | undefined) =>
+  typeof pathname === "string" && /^(?:\/[^/]+)?\/manage\/custom-widgets(?:\/|$)/u.test(pathname);
+
+export const hasCustomWidgetToolHistory = (messages: readonly UIMessage[]) =>
+  messages
+    .findLast((message) => message.role === "assistant")
+    ?.parts.some((part) => isToolUIPart(part) && getToolName(part).startsWith("customWidget_")) ?? false;
 
 export const needsCustomWidgetAuthoringContext = (messages: UIMessage[]) => {
   const latestMessage = messages.at(-1);

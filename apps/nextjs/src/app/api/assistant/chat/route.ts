@@ -111,8 +111,10 @@ import {
   hasCustomWidgetLegacyMigrationContext,
   getRequestedCustomWidgetExampleIds,
   getRequestedCustomWidgetServiceTarget,
+  hasCustomWidgetToolHistory,
   hasExplicitCustomWidgetComponentDiscoveryRequest,
   hasMultiCustomWidgetCreationRequest,
+  isCustomWidgetManagementPath,
   isFreshCustomWidgetCreationRequest,
   needsCustomWidgetAuthoringContext,
   shouldRequireCustomWidgetAuthoringTool,
@@ -206,6 +208,12 @@ const integrationResearchReplayToolNames = new Set([
   "integration_request",
   assistantIntegrationResearchToolName,
   "ask_user",
+]);
+const customWidgetPhaseFrontendToolNames = new Set([
+  "ask_user",
+  "configure_widget",
+  "navigate_to_route",
+  "refresh_current_view",
 ]);
 
 const assistantInstructions = `You are Homarr Assistant, embedded in the user's self-hosted Homarr dashboard.
@@ -559,6 +567,12 @@ export async function POST(request: Request) {
   }
   const canAuthorCustomWidgets = session.user.permissions.includes("admin");
   const customWidgetAuthoringActive = canAuthorCustomWidgets && needsCustomWidgetAuthoringContext(incomingMessages);
+  let customWidgetReferenceLoaded =
+    canAuthorCustomWidgets &&
+    (customWidgetAuthoringActive ||
+      isCustomWidgetManagementPath(parsed.data.clientContext?.pathname) ||
+      hasCustomWidgetToolHistory(incomingMessages));
+  const initialCustomWidgetReferenceLoaded = customWidgetReferenceLoaded;
   const customWidgetLegacyMigrationOnly =
     customWidgetAuthoringActive && hasCustomWidgetLegacyMigrationContext(incomingMessages);
   const multiCustomWidgetCreationRequest =
@@ -988,8 +1002,15 @@ export async function POST(request: Request) {
         )
       : null;
     // Authoring phases constrain server lifecycle calls, not the user's ability
-    // to answer a question or review placement of an already saved widget.
-    if (phaseToolNames) return [...new Set([...phaseToolNames, ...frontendToolNames])];
+    // to answer a question or navigate; pending placement is handled above.
+    if (phaseToolNames) {
+      return [
+        ...new Set([
+          ...phaseToolNames,
+          ...frontendToolNames.filter((name) => customWidgetPhaseFrontendToolNames.has(name)),
+        ]),
+      ];
+    }
     return [
       assistantToolGroupActivationName,
       ...Object.keys(documentationTools).filter(() => documentationSearchCount < 2),
@@ -1053,16 +1074,26 @@ export async function POST(request: Request) {
       prepareMessagesForModel(incomingMessages),
     );
     const assistantStepContextMaxCharacters = getAssistantStepContextMaxCharacters(selectedModel?.contextLength);
-    const baseInstructions = `${assistantInstructions}${canAuthorCustomWidgets ? customWidgetAssistantInstructions : ""}${requestedCustomWidgetService !== null && requestedCustomWidgetExampleId === null ? getCustomWidgetProductionInstructions(openRouterServerToolsEnabled) : ""}${openRouterServerToolsEnabled ? webSearchInstructions : ""}${requestContext}`;
+    const getBaseInstructions = () =>
+      `${assistantInstructions}${customWidgetReferenceLoaded ? customWidgetAssistantInstructions : ""}${requestedCustomWidgetService !== null && requestedCustomWidgetExampleId === null ? getCustomWidgetProductionInstructions(openRouterServerToolsEnabled) : ""}${openRouterServerToolsEnabled ? webSearchInstructions : ""}${requestContext}`;
     const getStepInstructions = (activeToolNames: readonly string[]) => {
+      if (canAuthorCustomWidgets && activeToolNames.some((toolName) => toolName.startsWith("customWidget_"))) {
+        customWidgetReferenceLoaded = true;
+      }
       const integrationResearchInstructions = integrationResearch?.getStepInstructions() ?? "";
-      let instructions = `${baseInstructions}${integrationResearchInstructions}`;
+      let instructions = `${getBaseInstructions()}${integrationResearchInstructions}`;
       if (documentationSearchCount >= 2) {
         instructions +=
           "\nHomarr documentation lookup is complete. For a documentation-only question, give the concise answer now with supported citations and clearly identify any missing evidence. Do not enable other tool groups or fetch authoring references just to repeat this search. For an action request, continue only its remaining requested work.";
       }
       if (!customWidgetAuthoringActive) {
-        if (integrationResearchInstructions || documentationSearchCount >= 2) return instructions;
+        if (
+          integrationResearchInstructions ||
+          documentationSearchCount >= 2 ||
+          customWidgetReferenceLoaded !== initialCustomWidgetReferenceLoaded
+        ) {
+          return instructions;
+        }
         return undefined;
       }
       return appendActiveCustomWidgetToolInstruction(instructions, activeToolNames);
@@ -1085,7 +1116,7 @@ export async function POST(request: Request) {
     if (customWidgetLegacyMigrationOnly) stepTimeoutMs = assistantExecutionPolicy.totalTimeoutMs;
     const result = streamText({
       model: provider(modelId),
-      instructions: baseInstructions,
+      instructions: getBaseInstructions(),
       messages: initialModelMessages,
       tools: availableTools,
       prepareStep: ({ messages, responseMessages, stepNumber, steps }) => {
@@ -1096,7 +1127,7 @@ export async function POST(request: Request) {
           return {
             activeTools: [],
             toolChoice: "none",
-            instructions: `${baseInstructions}\nThe user denied a tool approval. Stop this action; do not retry, revise, or replace it. Briefly acknowledge the cancellation without claiming it succeeded.`,
+            instructions: `${getBaseInstructions()}\nThe user denied a tool approval. Stop this action; do not retry, revise, or replace it. Briefly acknowledge the cancellation without claiming it succeeded.`,
           };
         }
         const previewOutageStatus = getCustomWidgetPreviewOutageStatus(steps);
@@ -1104,7 +1135,7 @@ export async function POST(request: Request) {
           return {
             activeTools: [],
             toolChoice: "none",
-            instructions: `${baseInstructions}\nThe preview API returned HTTP ${previewOutageStatus}. Stop tool calls for this turn: an upstream server failure is not a JSX defect. Do not rebuild the preview, retry automatically, or claim verification or saving succeeded. Briefly explain that persistence requires successful API evidence, even when the outage was expected. Offer to retry when the service is available. Do not expose the raw response body.`,
+            instructions: `${getBaseInstructions()}\nThe preview API returned HTTP ${previewOutageStatus}. Stop tool calls for this turn: an upstream server failure is not a JSX defect. Do not rebuild the preview, retry automatically, or claim verification or saving succeeded. Briefly explain that persistence requires successful API evidence, even when the outage was expected. Offer to retry when the service is available. Do not expose the raw response body.`,
           };
         }
         const requiredToolNames = getRequiredAssistantToolNames(incomingMessages, steps, responseMessages).filter(
