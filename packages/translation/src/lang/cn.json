@@ -65,6 +65,7 @@
         "themeAuto": "系统",
         "themeLight": "浅色",
         "themeDark": "深色",
+        "serverOriginHelp": "Homarr 使用此地址预填检测到的服务 URL。您仍然可以单独编辑每个服务。",
         "serverDescription": "这是一种快捷方式，不是一种限制。每个检测到的服务都是可以编辑的。",
         "serverOrigin": "域名、IP 或反向代理路径",
         "serverOriginDescription": "示例：home.lan、192.168.1.10，或 https://home.example.com/services。在下方选择每项服务的附加方式。",
@@ -101,8 +102,6 @@
       "connect": {
         "title": "连接让看板真正有用的服务",
         "description": "可一次选择多个服务。Docker 标签优先，镜像匹配补全空缺，每个 URL 和凭据都可单独检查。",
-        "confirmServerAddress": "看起来没问题",
-        "serverAddressReviewed": "服务器地址已确认。你仍可编辑下方各服务的 URL。",
         "discoveredIntegrations": "检测到的集成实例（{count}）",
         "detectedIntegrationLabel": "导入 {name}，检测为 {kind}",
         "detectedAppLabel": "导入检测到的应用 {name}",
@@ -128,7 +127,9 @@
         "tested": "连接已测试",
         "testFailed": "连接测试失败",
         "incompleteConfirmation": "未完成的集成将被跳过。是否继续？",
-        "skipIncomplete": "跳过未完成的连接"
+        "confirmServerAddress": "This looks right",
+        "serverAddressReviewed": "Server address reviewed. You can still edit each service URL below.",
+        "skipIncomplete": "Skip unfinished connections"
       },
       "board": {
         "title": "在构建前先规划看板外观",
@@ -1932,12 +1933,12 @@
     "here": "这里",
     "serviceUrlTemplate": {
       "serverTitle": "常用服务器地址",
-      "description": "使用你常用的地址和 URL 格式预填下方服务。单独修改的 URL 会被保留。",
-      "example": "示例：{url}",
       "urlModeLabel": "服务地址模式",
       "hostPort": "同一主机，不同端口",
       "subdomain": "每个服务一个子域",
-      "path": "每个服务一个路径"
+      "path": "每个服务一个路径",
+      "description": "Use your usual address and URL pattern to prefill the services below. Individual URL edits are kept.",
+      "example": "Example: {url}"
     },
     "iconPicker": {
       "label": "图标 URL",
@@ -4801,6 +4802,10 @@
           "label": "",
           "description": ""
         },
+        "collapsedSections": {
+          "label": "",
+          "description": ""
+        },
         "newReleaseWithin": {
           "label": "新版本时间范围",
           "description": "使用示例：1w（1周），10M（10个月）。支持单位类型h（小时），d（天），w（周），M（月），y（年）。留空不突出显示新版本。",
@@ -5007,8 +5012,8 @@
       "updateAvailable": "有可用更新",
       "unknownStatus": "未知",
       "error": {
-        "collapsedSaveTitle": "折叠的分区未保存",
-        "collapsedSaveMessage": "该分区无法更新，请重试。"
+        "collapsedSaveTitle": "Collapsed sections were not saved",
+        "collapsedSaveMessage": "The section could not be updated. Try again."
       }
     },
     "networkControllerSummary": {
@@ -5515,14 +5520,14 @@
       "name": "Beszel 系统（表格）",
       "description": "所有 Beszel 监控系统的表格视图，包含可排序列和状态指示器",
       "option": {
-        "fahrenheit": {
-          "label": "温度（华氏度）"
-        },
         "sortBy": {
           "label": "排序方式"
         },
         "sortDirection": {
           "label": "排序方向"
+        },
+        "fahrenheit": {
+          "label": "Temperature in Fahrenheit"
         }
       },
       "error": {
@@ -5535,7 +5540,7 @@
       "description": "所有 Beszel 监控系统的卡片网格视图，包含实时指标",
       "option": {
         "fahrenheit": {
-          "label": "温度（华氏度）"
+          "label": "Temperature in Fahrenheit"
         }
       }
     },
@@ -7242,7 +7247,6 @@
             "model": {
               "title": "模型",
               "description": "选择一个已发现的模型，或输入确切的端点模型 ID。",
-              "save": "保存模型设置",
               "placeholder": "模型 ID",
               "refresh": "刷新模型",
               "chooseModel": "选择用于新对话的模型。",
@@ -7256,7 +7260,8 @@
               "discoveryFailed": "模型发现未完成",
               "context": "{count} 个上下文窗口",
               "toolsConfirmed": "已声明工具",
-              "toolsUnknown": "验证工具支持"
+              "toolsUnknown": "验证工具支持",
+              "save": "Save model settings"
             },
             "serverTools": {
               "title": "服务器工具",
