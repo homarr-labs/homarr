@@ -382,11 +382,12 @@ const BookmarkCard = ({
   if (isDense || iconOnly) padding = 6;
   if (isUltraDense) padding = 4;
   if (advanced) padding = "md";
-  const addressSize = advanced ? 10 : 9;
+  // 11px (12px advanced) with medium weight; icon-only and ultra-dense rows omit this line.
+  const addressSize = advanced ? 12 : 11;
   const vertical = orientation === "vertical" && !advanced;
 
   const hostnameLine = showHostname ? (
-    <Text fz={addressSize} c="dimmed" ta={vertical ? "center" : undefined} truncate w="100%">
+    <Text fz={addressSize} fw={500} lh={1.2} c="dimmed" ta={vertical ? "center" : undefined} truncate w="100%">
       {address}
     </Text>
   ) : null;
@@ -613,6 +614,8 @@ const BookmarkFullUrlLine = ({
           target={openNewTab ? "_blank" : "_self"}
           rel={openNewTab ? SAFE_NEW_TAB_REL : undefined}
           fz={size}
+          fw={500}
+          lh={1.2}
           c="dimmed"
           truncate
           w="100%"
