@@ -65,7 +65,6 @@
         "themeAuto": "Järjestelmä",
         "themeLight": "Vaalea",
         "themeDark": "Tumma",
-        "serverOriginHelp": "Homarr käyttää tätä osoitetta esitäyttää havaitut palvelun URLit. Voit silti muokata jokaista palvelua erikseen.",
         "serverDescription": "Tämä on pikanäppäin, ei rajoitus. Jokainen havaittu palvelu on muokattavissa.",
         "serverOrigin": "Verkkotunnus, IP tai käänteisvälityspalvelimen polku",
         "serverOriginDescription": "Esimerkkejä: home.lan, 192.168.1.10 tai https://home.example.com/services. Valitse miten jokainen palvelu on liitetty alla.",
@@ -102,6 +101,8 @@
       "connect": {
         "title": "Yhdistä mikä tekee hallituksesta hyödyllisen",
         "description": "Valitse useita palveluita kerralla. Telakoitsijan etiketit ovat etusijalla, kuvien täsmäytys täyttää aukot, ja jokainen URL ja käyttöoikeustiedot pysyvät arvioitavissa.",
+        "confirmServerAddress": "",
+        "serverAddressReviewed": "",
         "discoveredIntegrations": "Havaitut integraatiohäiriöt ({count})",
         "detectedIntegrationLabel": "Tuo {name}, tunnistettu tyypiksi {kind}",
         "detectedAppLabel": "Tuo havaittu sovellus {name}",
@@ -126,7 +127,8 @@
         "needsConfiguration": "Tarvitsee konfiguraatiota",
         "tested": "Yhteys testattu",
         "testFailed": "Yhteyden testi epäonnistui",
-        "incompleteConfirmation": "Keskeneräiset integraatiot ohitetaan. Jatketaanko ilman niitä?"
+        "incompleteConfirmation": "Keskeneräiset integraatiot ohitetaan. Jatketaanko ilman niitä?",
+        "skipIncomplete": ""
       },
       "board": {
         "title": "Muodosta lauta ennen kuin se rakennetaan",
@@ -1930,6 +1932,8 @@
     "here": "",
     "serviceUrlTemplate": {
       "serverTitle": "Tavallinen palvelimen osoite",
+      "description": "",
+      "example": "",
       "urlModeLabel": "Palvelun osoitteen malli",
       "hostPort": "Sama isäntä, eri portit",
       "subdomain": "Yksi aliverkkotunnus per palvelu",
@@ -4797,10 +4801,6 @@
           "label": "",
           "description": ""
         },
-        "collapsedSections": {
-          "label": "",
-          "description": ""
-        },
         "newReleaseWithin": {
           "label": "",
           "description": "",
@@ -5005,7 +5005,11 @@
       "runningVersions": "Käynnissä Olevat Versiot",
       "upToDate": "Ajan tasalla",
       "updateAvailable": "Päivitys saatavilla",
-      "unknownStatus": "Tuntematon"
+      "unknownStatus": "Tuntematon",
+      "error": {
+        "collapsedSaveTitle": "",
+        "collapsedSaveMessage": ""
+      }
     },
     "networkControllerSummary": {
       "advanced": {
@@ -5511,6 +5515,9 @@
       "name": "Beszel-järjestelmät (taulukko)",
       "description": "Taulukkonäkymä kaikista Beszel-valvotuista järjestelmistä, lajiteltavilla sarakkeilla ja tilaindikaattoreilla",
       "option": {
+        "fahrenheit": {
+          "label": "Käytä lämpötilalle Fahrenheit-yksikköä"
+        },
         "sortBy": {
           "label": "Lajitteluperuste"
         },
@@ -5525,7 +5532,12 @@
     },
     "beszelSystemGrid": {
       "name": "Beszel-järjestelmät (ruudukko)",
-      "description": "Korttiruudukkonäkymä kaikista Beszel-valvotuista järjestelmistä reaaliaikaisilla mittareilla"
+      "description": "Korttiruudukkonäkymä kaikista Beszel-valvotuista järjestelmistä reaaliaikaisilla mittareilla",
+      "option": {
+        "fahrenheit": {
+          "label": "Käytä lämpötilalle Fahrenheit-yksikköä"
+        }
+      }
     },
     "beszelAlerts": {
       "name": "Beszel-hälytykset",
@@ -7230,6 +7242,7 @@
             "model": {
               "title": "Malli",
               "description": "Valitse löydetty malli tai kirjoita tarkka päätepisteen malli ID.",
+              "save": "",
               "placeholder": "Malli ID",
               "refresh": "Päivitä mallit",
               "chooseModel": "Valitse malli, jota käytetään uusiin keskusteluihin.",

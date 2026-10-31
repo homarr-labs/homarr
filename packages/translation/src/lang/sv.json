@@ -65,7 +65,6 @@
         "themeAuto": "",
         "themeLight": "Ljus",
         "themeDark": "Mörk",
-        "serverOriginHelp": "Homarr använder denna adress för att förfylla upptäckta tjänst-URL:er. Du kan fortfarande redigera varje tjänst individuellt.",
         "serverDescription": "Detta är en genväg, inte en begränsning. Varje upptäckt tjänst förblir redigerbar.",
         "serverOrigin": "Sökväg för domän, IP eller reverse-proxy",
         "serverOriginDescription": "Exempel: home.lan, 192.168.1.10 eller https://home.example.com/services. Välj hur varje tjänst läggs till nedan.",
@@ -102,6 +101,8 @@
       "connect": {
         "title": "Koppla ihop det som gör tavlan användbar",
         "description": "Välj flera tjänster samtidigt. Dockeretiketter prioriteras, bildmatchning fyller luckor och varje URL och referens förblir granskbart.",
+        "confirmServerAddress": "",
+        "serverAddressReviewed": "",
         "discoveredIntegrations": "Upptäckta integrationsinstanser ({count})",
         "detectedIntegrationLabel": "Importera {name}, upptäckt som {kind}",
         "detectedAppLabel": "Importera upptäckt app {name}",
@@ -126,7 +127,8 @@
         "needsConfiguration": "Kräver konfiguration",
         "tested": "Anslutning testad",
         "testFailed": "Anslutningstest misslyckades",
-        "incompleteConfirmation": "Oavslutade integrationer kommer att hoppas över. Fortsätt utan dem?"
+        "incompleteConfirmation": "Oavslutade integrationer kommer att hoppas över. Fortsätt utan dem?",
+        "skipIncomplete": ""
       },
       "board": {
         "title": "Forma brädet innan det är byggt",
@@ -1930,6 +1932,8 @@
     "here": "här",
     "serviceUrlTemplate": {
       "serverTitle": "Vanlig serveradress",
+      "description": "",
+      "example": "",
       "urlModeLabel": "Namn på tjänstens adress",
       "hostPort": "Samma värd, olika portar",
       "subdomain": "En underdomän per tjänst",
@@ -4797,10 +4801,6 @@
           "label": "",
           "description": ""
         },
-        "collapsedSections": {
-          "label": "",
-          "description": ""
-        },
         "newReleaseWithin": {
           "label": "Ny version inom",
           "description": "Användningsexempel: 1w (1 vecka), 10M (10 månader). Godkända enhetstyper är h (timmar), d (dagar), w (veckor), M (månader) och y (år). Lämna tomt för att inte markera nya versioner.",
@@ -5005,7 +5005,11 @@
       "runningVersions": "Löpande versioner",
       "upToDate": "Senast uppdaterad",
       "updateAvailable": "Uppdatering tillgänglig",
-      "unknownStatus": "Okänt"
+      "unknownStatus": "Okänt",
+      "error": {
+        "collapsedSaveTitle": "",
+        "collapsedSaveMessage": ""
+      }
     },
     "networkControllerSummary": {
       "advanced": {
@@ -5511,6 +5515,9 @@
       "name": "Beszel-system (tabell)",
       "description": "Tabellvy över alla Beszel-övervakade system med sorterbara kolumner och statusindikatorer",
       "option": {
+        "fahrenheit": {
+          "label": ""
+        },
         "sortBy": {
           "label": "Sortera efter"
         },
@@ -5525,7 +5532,12 @@
     },
     "beszelSystemGrid": {
       "name": "Beszel-system (rutnät)",
-      "description": "Kortrutnätsvy över alla Beszel-övervakade system med realtidsmått"
+      "description": "Kortrutnätsvy över alla Beszel-övervakade system med realtidsmått",
+      "option": {
+        "fahrenheit": {
+          "label": ""
+        }
+      }
     },
     "beszelAlerts": {
       "name": "Beszel-larm",
@@ -7230,6 +7242,7 @@
             "model": {
               "title": "Modell",
               "description": "Välj en upptäckt modell eller ange ett exakt slutpunkts-modell-ID.",
+              "save": "",
               "placeholder": "Modell ID",
               "refresh": "Uppdatera modeller",
               "chooseModel": "Välj modell som används för nya konversationer.",

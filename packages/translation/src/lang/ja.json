@@ -65,7 +65,6 @@
         "themeAuto": "システム",
         "themeLight": "ライト",
         "themeDark": "ダーク",
-        "serverOriginHelp": "Homarrは検出されたサービスURLを予め入力するためにこのアドレスを使用します。あなたは個別にすべてのサービスを編集することができます。",
         "serverDescription": "これはショートカットであり、制限ではありません。検出されたすべてのサービスは編集可能です。",
         "serverOrigin": "ドメイン、IP、またはリバースプロキシ パス",
         "serverOriginDescription": "例: home.lan, 192.168.1.10 または https://home.example.com/services 各サービスの追加方法を選択してください。",
@@ -102,6 +101,8 @@
       "connect": {
         "title": "ボードを役に立たせるものを接続する",
         "description": "複数のサービスを一度に選択します。Docker ラベルは優先順位を取る、イメージマッチングの約定のギャップがあり、すべての URL と資格情報はレビュー可能です。",
+        "confirmServerAddress": "",
+        "serverAddressReviewed": "",
         "discoveredIntegrations": "検出された統合インスタンス ({count})",
         "detectedIntegrationLabel": "{name}をインポートします。 {kind} として検出されました",
         "detectedAppLabel": "検出されたアプリ {name}をインポート",
@@ -126,7 +127,8 @@
         "needsConfiguration": "設定が必要です",
         "tested": "接続がテストされました",
         "testFailed": "接続テストに失敗しました",
-        "incompleteConfirmation": "未完了の連携はスキップされます。連携せずに続行しますか？"
+        "incompleteConfirmation": "未完了の連携はスキップされます。連携せずに続行しますか？",
+        "skipIncomplete": ""
       },
       "board": {
         "title": "基板が構築される前に形成します。",
@@ -1930,6 +1932,8 @@
     "here": "こちら",
     "serviceUrlTemplate": {
       "serverTitle": "通常のサーバーアドレス",
+      "description": "",
+      "example": "",
       "urlModeLabel": "サービスアドレスパターン",
       "hostPort": "同じホスト、異なるポート",
       "subdomain": "サービスごとに1つのサブドメイン",
@@ -4797,10 +4801,6 @@
           "label": "",
           "description": ""
         },
-        "collapsedSections": {
-          "label": "",
-          "description": ""
-        },
         "newReleaseWithin": {
           "label": "新しいリリースの期間",
           "description": "使用例：1w (1 週間), 10M (10 ヶ月)。使用可能な単位種別： h (時間), d (日), w (週), M (月), y (年)。新しいリリースを強調表示しない場合は、空白のままにします。",
@@ -5005,7 +5005,11 @@
       "runningVersions": "実行中のバージョン",
       "upToDate": "最新です",
       "updateAvailable": "アップデートがあります",
-      "unknownStatus": "不明"
+      "unknownStatus": "不明",
+      "error": {
+        "collapsedSaveTitle": "",
+        "collapsedSaveMessage": ""
+      }
     },
     "networkControllerSummary": {
       "advanced": {
@@ -5511,6 +5515,9 @@
       "name": "",
       "description": "",
       "option": {
+        "fahrenheit": {
+          "label": "華氏温度"
+        },
         "sortBy": {
           "label": ""
         },
@@ -5525,7 +5532,12 @@
     },
     "beszelSystemGrid": {
       "name": "",
-      "description": ""
+      "description": "",
+      "option": {
+        "fahrenheit": {
+          "label": "華氏温度"
+        }
+      }
     },
     "beszelAlerts": {
       "name": "",
@@ -7230,6 +7242,7 @@
             "model": {
               "title": "モデル",
               "description": "検出されたモデルを選択するか、エンドポイントモデル ID を入力します。",
+              "save": "",
               "placeholder": "モデル ID",
               "refresh": "モデルを更新",
               "chooseModel": "新しい会話に使用するモデルを選択します。",
