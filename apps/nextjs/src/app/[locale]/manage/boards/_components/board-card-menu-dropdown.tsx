@@ -7,6 +7,7 @@ import { IconCopy, IconDeviceMobile, IconHome, IconSettings, IconTrash } from "@
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { useSession } from "@homarr/auth/client";
+import { useExpireBoardActions } from "@homarr/boards/updater";
 import { revalidatePathActionAsync } from "@homarr/common/client";
 import { useI18n } from "@homarr/translation/client";
 import { InlineConfirmMenuItem, Link } from "@homarr/ui";
@@ -33,6 +34,7 @@ export const BoardCardMenuDropdown = ({ board, onDuplicate }: BoardCardMenuDropd
 
   const { hasFullAccess, hasChangeAccess } = useBoardPermissions(board);
   const { data: session } = useSession();
+  const expireBoardActions = useExpireBoardActions();
 
   const setHomeBoardMutation = clientApi.board.setHomeBoard.useMutation({
     onSettled: async () => {
@@ -47,6 +49,9 @@ export const BoardCardMenuDropdown = ({ board, onDuplicate }: BoardCardMenuDropd
     },
   });
   const deleteBoardMutation = clientApi.board.deleteBoard.useMutation({
+    onSuccess(_data, input) {
+      expireBoardActions(input.id);
+    },
     onSettled: async () => {
       await revalidatePathActionAsync("/manage/boards");
     },
