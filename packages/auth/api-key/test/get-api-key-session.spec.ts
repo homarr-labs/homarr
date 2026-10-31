@@ -24,6 +24,14 @@ const defaultUserAgent = "test-agent";
 const defaultLogParams = [defaultIpAddress, defaultUserAgent] as const;
 
 describe("getSessionFromApiKeyAsync", () => {
+  test.each([true, false])("preserves the credential's read-only mode (%s) after authentication", async (readOnly) => {
+    const { db } = await setupAsync({ token: "scoped-token", readOnly });
+
+    const result = await getSessionFromApiKeyAsync(db, `${defaultApiKeyId}.scoped-token`, ...defaultLogParams);
+
+    expect(result).toMatchObject({ user: { id: defaultUserId }, apiKey: { readOnly, oauthClientId: null } });
+  });
+
   test("should return null when api key header is null", async () => {
     // Arrange
     const { db } = await setupAsync();
@@ -106,6 +114,7 @@ interface SetupOptions {
    * If provided, inserts an API key into the database for testing.
    */
   token?: string;
+  readOnly?: boolean;
 }
 
 const setupAsync = async (options?: SetupOptions) => {
@@ -122,6 +131,7 @@ const setupAsync = async (options?: SetupOptions) => {
       id: defaultApiKeyId,
       apiKey: await hashPasswordAsync(options.token),
       userId: defaultUserId,
+      readOnly: options.readOnly ?? false,
     });
   }
 

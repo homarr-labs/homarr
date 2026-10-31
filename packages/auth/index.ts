@@ -9,6 +9,10 @@ export type { Session } from "next-auth";
 
 declare module "next-auth" {
   interface Session {
+    apiKey?: {
+      readOnly: boolean;
+      oauthClientId: string | null;
+    };
     user: {
       id: string;
       permissions: GroupPermissionKey[];
