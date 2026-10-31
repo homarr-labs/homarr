@@ -59,30 +59,32 @@ const mapCertificate = (certificate: X509Certificate, code: RequestErrorCode): M
 
 type MappedData<TType extends TestConnectionErrorType> = TType extends "unknown" | "parse"
   ? undefined
-  : TType extends "certificate"
-    ? {
-        type: TestConnectionErrorDataOfType<TType>["requestError"]["type"];
-        reason: TestConnectionErrorDataOfType<TType>["requestError"]["reason"];
-        certificate: MappedCertificate;
-        url: TestConnectionErrorDataOfType<TType>["url"];
-      }
-    : TType extends "request"
+  : TType extends "openmediavault"
+    ? { reason: TestConnectionErrorDataOfType<"openmediavault">["reason"] }
+    : TType extends "certificate"
       ? {
           type: TestConnectionErrorDataOfType<TType>["requestError"]["type"];
           reason: TestConnectionErrorDataOfType<TType>["requestError"]["reason"];
+          certificate: MappedCertificate;
+          url: TestConnectionErrorDataOfType<TType>["url"];
         }
-      : TType extends "authorization"
+      : TType extends "request"
         ? {
-            statusCode: TestConnectionErrorDataOfType<TType>["statusCode"];
-            reason: TestConnectionErrorDataOfType<TType>["reason"];
+            type: TestConnectionErrorDataOfType<TType>["requestError"]["type"];
+            reason: TestConnectionErrorDataOfType<TType>["requestError"]["reason"];
           }
-        : TType extends "statusCode"
+        : TType extends "authorization"
           ? {
               statusCode: TestConnectionErrorDataOfType<TType>["statusCode"];
               reason: TestConnectionErrorDataOfType<TType>["reason"];
-              url: TestConnectionErrorDataOfType<TType>["url"];
             }
-          : never;
+          : TType extends "statusCode"
+            ? {
+                statusCode: TestConnectionErrorDataOfType<TType>["statusCode"];
+                reason: TestConnectionErrorDataOfType<TType>["reason"];
+                url: TestConnectionErrorDataOfType<TType>["url"];
+              }
+            : never;
 
 type AnyMappedData = {
   [TType in TestConnectionErrorType]: MappedData<TType>;
@@ -91,6 +93,9 @@ type AnyMappedData = {
 const mapData = (error: AnyTestConnectionError): AnyMappedData => {
   if (error.type === "unknown") return undefined;
   if (error.type === "parse") return undefined;
+  if (error.type === "openmediavault") {
+    return { reason: error.data.reason };
+  }
   if (error.type === "certificate") {
     return {
       type: error.data.requestError.type,

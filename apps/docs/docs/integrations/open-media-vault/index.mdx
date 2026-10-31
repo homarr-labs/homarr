@@ -52,3 +52,11 @@ Disk temperatures are matched to filesystem partitions, including device names w
     },
   ]}
 />
+
+### Two-factor authentication
+
+If the OpenMediaVault account has TOTP enabled, paste its Base32 shared secret into the optional TOTP secret field. Copy that secret while enabling two-factor authentication in OpenMediaVault: it is the secret shown next to the QR code, and OpenMediaVault does not display it again after enrollment. Paste the secret, not a 6-digit code from an authenticator app. Homarr generates a fresh code for each login, including after the session expires.
+
+Storing the TOTP secret next to the password is optional. It removes factor separation inside Homarr, because anyone who can read this integration's secrets can satisfy both factors. A dedicated OpenMediaVault administrator without TOTP keeps the second factor outside Homarr.
+
+When the account requires TOTP and the secret is missing, the connection test says to add the secret or use an account without TOTP. A rejected code means the secret does not match that account, or Homarr's clock is out of sync with OpenMediaVault.
