@@ -2351,7 +2351,29 @@
             "tooltip": "As tooltip",
             "hidden": "Hidden"
           }
+        },
+        "dockerContainer": {
+          "label": "Docker container",
+          "description": "Adds a button to the tile that starts the container when it is stopped and stops it while it runs. Only admins see it.",
+          "placeholder": "Pick a container",
+          "disabled": "Set ENABLE_DOCKER to pick a container.",
+          "unavailable": "The Docker containers could not be loaded."
         }
+      },
+      "docker": {
+        "action": {
+          "start": "Start {name}",
+          "stop": "Stop {name}"
+        },
+        "notification": {
+          "startFailed": "Could not start {name}",
+          "stopFailed": "Could not stop {name}"
+        },
+        "switch": {
+          "start": "Starting the container…",
+          "stop": "Stopping the container…"
+        },
+        "stopped": "The container is stopped"
       },
       "error": {
         "notFound": {

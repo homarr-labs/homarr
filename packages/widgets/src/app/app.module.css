@@ -46,3 +46,7 @@
 .appWithUrl:hover > div.appIcon {
   background-color: var(--mantine-color-iconColor-filled-hover);
 }
+
+.containerToggle[data-disabled] {
+  cursor: default;
+}
