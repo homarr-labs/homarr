@@ -65,7 +65,6 @@
         "themeAuto": "Systém",
         "themeLight": "Světlý",
         "themeDark": "Tmavý",
-        "serverOriginHelp": "Homarr používá tuto adresu k předvyplnění identifikovaných servisních URL. Stále můžete upravovat každou službu jednotlivě.",
         "serverDescription": "Toto je zkratka, ne omezení. Každá detekovaná služba zůstává upravitelná.",
         "serverOrigin": "Doména, IP nebo cesta obráceného proxy",
         "serverOriginDescription": "Příklady: home.lan, 192.168.1.10, nebo https://home.example.com/services. Vyberte si, jak je každá služba připojena níže.",
@@ -102,6 +101,8 @@
       "connect": {
         "title": "Připojte, co dělá desku užitečnou",
         "description": "Vyberte několik služeb najednou. Štítky Dockeru mají prioritu, zaplňují mezery obrázků a každá URL a důvěryhodnost zůstává recenzovatelná.",
+        "confirmServerAddress": "",
+        "serverAddressReviewed": "",
         "discoveredIntegrations": "Detekovány integrace ({count})",
         "detectedIntegrationLabel": "Import {name}detekován jako {kind}",
         "detectedAppLabel": "Importovat zjištěnou aplikaci {name}",
@@ -126,7 +127,8 @@
         "needsConfiguration": "Vyžaduje konfiguraci",
         "tested": "Připojení testováno",
         "testFailed": "Test připojení se nezdařil",
-        "incompleteConfirmation": "Nedokončené integrace budou přeskočeny. Pokračovat bez nich?"
+        "incompleteConfirmation": "Nedokončené integrace budou přeskočeny. Pokračovat bez nich?",
+        "skipIncomplete": ""
       },
       "board": {
         "title": "Nakreslete desku před jejím postavením",
@@ -1930,6 +1932,8 @@
     "here": "zde",
     "serviceUrlTemplate": {
       "serverTitle": "Obvyklá adresa serveru",
+      "description": "",
+      "example": "",
       "urlModeLabel": "Schéma adresy služby",
       "hostPort": "Stejný hostitel, různé porty",
       "subdomain": "Jedna subdoména na službu",
@@ -4797,10 +4801,6 @@
           "label": "",
           "description": ""
         },
-        "collapsedSections": {
-          "label": "",
-          "description": ""
-        },
         "newReleaseWithin": {
           "label": "Nové vydání v období",
           "description": "Příklad použití: 1w (1 týden), 10M (10 měsíců). Přijaté jednotky: h (hodiny), d (dny), w (týdny), M (měsíce), y (roky). Ponechte prázdné, pokud nechcete zvýrazňovat nová vydání.",
@@ -5005,7 +5005,11 @@
       "runningVersions": "Spuštěné verze",
       "upToDate": "Aktuální",
       "updateAvailable": "K dispozici je aktualizace",
-      "unknownStatus": "Neznámý"
+      "unknownStatus": "Neznámý",
+      "error": {
+        "collapsedSaveTitle": "",
+        "collapsedSaveMessage": ""
+      }
     },
     "networkControllerSummary": {
       "advanced": {
@@ -5511,6 +5515,9 @@
       "name": "Systémy Beszel (tabulka)",
       "description": "Tabulkový přehled všech monitorovaných systémů Beszel s řaditelnými sloupci a indikátory stavu",
       "option": {
+        "fahrenheit": {
+          "label": "Teplota ve Fahrenheitech"
+        },
         "sortBy": {
           "label": "Řadit podle"
         },
@@ -5525,7 +5532,12 @@
     },
     "beszelSystemGrid": {
       "name": "Systémy Beszel (mřížka)",
-      "description": "Kartový mřížkový přehled všech monitorovaných systémů Beszel s metrikami v reálném čase"
+      "description": "Kartový mřížkový přehled všech monitorovaných systémů Beszel s metrikami v reálném čase",
+      "option": {
+        "fahrenheit": {
+          "label": "Teplota ve Fahrenheitech"
+        }
+      }
     },
     "beszelAlerts": {
       "name": "Beszel výstrahy",
@@ -7230,6 +7242,7 @@
             "model": {
               "title": "Vzor",
               "description": "Vyberte objevený model nebo zadejte přesné ID koncového modelu.",
+              "save": "",
               "placeholder": "ID modelu",
               "refresh": "Aktualizovat modely",
               "chooseModel": "Vyberte model použitý pro nové konverzace.",

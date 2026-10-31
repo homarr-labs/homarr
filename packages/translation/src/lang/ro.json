@@ -65,7 +65,6 @@
         "themeAuto": "Sistem",
         "themeLight": "Lumină",
         "themeDark": "Întunecat",
-        "serverOriginHelp": "Homarr folosește această adresă pentru a pre-umple URL-urile de serviciu detectate. Poți edita în continuare fiecare serviciu individual.",
         "serverDescription": "Aceasta este o scurtătură, nu o restricţie. Fiecare serviciu detectat rămâne editabil.",
         "serverOrigin": "Domeniu, IP sau cale inversă proxy",
         "serverOriginDescription": "Exemple: home.lan, 192.168.1.10, sau https://home.example.com/services. Alegeţi modul în care fiecare serviciu este adăugat mai jos.",
@@ -102,6 +101,8 @@
       "connect": {
         "title": "Conectează ce face panoul folositor",
         "description": "Selectați mai multe servicii simultan. Etichetele de Docker sunt prioritare, completarea golurilor se potrivește cu imaginile, iar fiecare URL și acreditările rămân pot fi revizuite.",
+        "confirmServerAddress": "",
+        "serverAddressReviewed": "",
         "discoveredIntegrations": "Cazuri de integrare detectate ({count})",
         "detectedIntegrationLabel": "Importă {name}, detectat ca {kind}",
         "detectedAppLabel": "Aplicația de import detectată {name}",
@@ -126,7 +127,8 @@
         "needsConfiguration": "Necesită configurare",
         "tested": "Conexiune testată",
         "testFailed": "Testul conexiunii a eșuat",
-        "incompleteConfirmation": "Integrările neterminate vor fi sărite. Continuați fără ele?"
+        "incompleteConfirmation": "Integrările neterminate vor fi sărite. Continuați fără ele?",
+        "skipIncomplete": ""
       },
       "board": {
         "title": "Forma tabla înainte de a fi construită",
@@ -1930,6 +1932,8 @@
     "here": "aici",
     "serviceUrlTemplate": {
       "serverTitle": "Adresă server obişnuită",
+      "description": "",
+      "example": "",
       "urlModeLabel": "Modelul adresei serviciului",
       "hostPort": "Aceeași gazdă, porturi diferite",
       "subdomain": "Un subdomeniu per serviciu",
@@ -4797,10 +4801,6 @@
           "label": "",
           "description": ""
         },
-        "collapsedSections": {
-          "label": "",
-          "description": ""
-        },
         "newReleaseWithin": {
           "label": "Nouă lansare în",
           "description": "Exemplu de utilizare: 1 g (1 săptămână), 10 M (10 luni). Tipuri de unități acceptate h (ore), d (zile), w (săptămâni), M (luni), y (ani). Lăsați gol pentru a nu sublinia noile versiuni.",
@@ -5005,7 +5005,11 @@
       "runningVersions": "Versiuni care rulează",
       "upToDate": "Actualizare actualizată",
       "updateAvailable": "Actualizare disponibilă",
-      "unknownStatus": "Necunoscut"
+      "unknownStatus": "Necunoscut",
+      "error": {
+        "collapsedSaveTitle": "",
+        "collapsedSaveMessage": ""
+      }
     },
     "networkControllerSummary": {
       "advanced": {
@@ -5511,6 +5515,9 @@
       "name": "Sisteme Beszel (Tabel)",
       "description": "Vizualizare tabel a tuturor sistemelor monitorizate Beszel cu coloane sortabile și indicatori de stare",
       "option": {
+        "fahrenheit": {
+          "label": "Temperatură în Fahrenheit"
+        },
         "sortBy": {
           "label": "Sortează după"
         },
@@ -5525,7 +5532,12 @@
     },
     "beszelSystemGrid": {
       "name": "Sisteme Beszel (Grilă)",
-      "description": "Vizualizare grilă carduri a tuturor sistemelor monitorizate Beszel cu metrici în timp real"
+      "description": "Vizualizare grilă carduri a tuturor sistemelor monitorizate Beszel cu metrici în timp real",
+      "option": {
+        "fahrenheit": {
+          "label": "Temperatură în Fahrenheit"
+        }
+      }
     },
     "beszelAlerts": {
       "name": "Alerte Beszel",
@@ -7230,6 +7242,7 @@
             "model": {
               "title": "",
               "description": "Selectați un model descoperit sau introduceți un ID de model de punct exact.",
+              "save": "",
               "placeholder": "ID model",
               "refresh": "Reîmprospătare modele",
               "chooseModel": "Alege modelul folosit pentru conversații noi.",

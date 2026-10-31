@@ -65,7 +65,6 @@
         "themeAuto": "Système",
         "themeLight": "Clair",
         "themeDark": "Sombre",
-        "serverOriginHelp": "Homarr utilise cette adresse pour préremplir les URL de service détectées. Vous pouvez toujours modifier chaque service individuellement.",
         "serverDescription": "Ceci est un raccourci, pas une restriction. Chaque service détecté reste modifiable.",
         "serverOrigin": "Domaine, IP ou chemin de proxy inversé",
         "serverOriginDescription": "Exemples : home.lan, 192.168.1.10, ou https://home.example.com/services. Choisissez comment chaque service est ajouté ci-dessous.",
@@ -102,6 +101,8 @@
       "connect": {
         "title": "Connectez ce qui rend le tableau utile",
         "description": "Sélectionnez plusieurs services à la fois. Les étiquettes Docker prennent la priorité, les images correspondantes comblent les lacunes, et chaque URL et les informations d'identification restent vérifiables.",
+        "confirmServerAddress": "",
+        "serverAddressReviewed": "",
         "discoveredIntegrations": "Instances d'intégration détectées ({count})",
         "detectedIntegrationLabel": "Importer {name}, détecté comme {kind}",
         "detectedAppLabel": "Importer l'application détectée {name}",
@@ -126,7 +127,8 @@
         "needsConfiguration": "Configuration nécessaire",
         "tested": "Connexion testée",
         "testFailed": "Le test de connexion a échoué",
-        "incompleteConfirmation": "Les intégrations inachevées seront ignorées. Continuer sans ?"
+        "incompleteConfirmation": "Les intégrations inachevées seront ignorées. Continuer sans ?",
+        "skipIncomplete": ""
       },
       "board": {
         "title": "Formez la planche avant sa construction",
@@ -1930,6 +1932,8 @@
     "here": "ici",
     "serviceUrlTemplate": {
       "serverTitle": "Adresse du serveur habituelle",
+      "description": "",
+      "example": "",
       "urlModeLabel": "Modèle d'adresse de service",
       "hostPort": "Même hôte, ports différents",
       "subdomain": "Un sous-domaine par service",
@@ -4797,10 +4801,6 @@
           "label": "",
           "description": ""
         },
-        "collapsedSections": {
-          "label": "",
-          "description": ""
-        },
         "newReleaseWithin": {
           "label": "Nouvelle version dans",
           "description": "Exemple d'utilisation : 1w (1 semaine), 10M (10 mois). Type d'unité acceptée h (heures), d (jours), w (semaines), M (mois), y (années). Laisser vide pour ne pas mettre en évidence les nouvelles versions.",
@@ -5005,7 +5005,11 @@
       "runningVersions": "Versions en cours d'exécution",
       "upToDate": "À jour",
       "updateAvailable": "Mise à jour disponible",
-      "unknownStatus": "Inconnu"
+      "unknownStatus": "Inconnu",
+      "error": {
+        "collapsedSaveTitle": "",
+        "collapsedSaveMessage": ""
+      }
     },
     "networkControllerSummary": {
       "advanced": {
@@ -5511,6 +5515,9 @@
       "name": "Systèmes Beszel (Tableau)",
       "description": "Vue en tableau de tous les systèmes surveillés par Beszel avec colonnes triables et indicateurs d'état",
       "option": {
+        "fahrenheit": {
+          "label": "Température en Fahrenheit"
+        },
         "sortBy": {
           "label": "Trier par"
         },
@@ -5525,7 +5532,12 @@
     },
     "beszelSystemGrid": {
       "name": "",
-      "description": ""
+      "description": "",
+      "option": {
+        "fahrenheit": {
+          "label": "Température en Fahrenheit"
+        }
+      }
     },
     "beszelAlerts": {
       "name": "",
@@ -7230,6 +7242,7 @@
             "model": {
               "title": "Modélisation",
               "description": "Sélectionnez un modèle découvert ou entrez un identifiant exact du modèle de terminaison.",
+              "save": "",
               "placeholder": "ID du modèle",
               "refresh": "Rafraîchir les modèles",
               "chooseModel": "Choisissez le modèle utilisé pour les nouvelles conversations.",

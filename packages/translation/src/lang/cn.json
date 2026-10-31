@@ -65,7 +65,6 @@
         "themeAuto": "系统",
         "themeLight": "浅色",
         "themeDark": "深色",
-        "serverOriginHelp": "Homarr 使用此地址预填检测到的服务 URL。您仍然可以单独编辑每个服务。",
         "serverDescription": "这是一种快捷方式，不是一种限制。每个检测到的服务都是可以编辑的。",
         "serverOrigin": "域名、IP 或反向代理路径",
         "serverOriginDescription": "示例：home.lan、192.168.1.10，或 https://home.example.com/services。在下方选择每项服务的附加方式。",
@@ -102,6 +101,8 @@
       "connect": {
         "title": "连接让看板真正有用的服务",
         "description": "可一次选择多个服务。Docker 标签优先，镜像匹配补全空缺，每个 URL 和凭据都可单独检查。",
+        "confirmServerAddress": "",
+        "serverAddressReviewed": "",
         "discoveredIntegrations": "检测到的集成实例（{count}）",
         "detectedIntegrationLabel": "导入 {name}，检测为 {kind}",
         "detectedAppLabel": "导入检测到的应用 {name}",
@@ -126,7 +127,8 @@
         "needsConfiguration": "需要配置",
         "tested": "连接已测试",
         "testFailed": "连接测试失败",
-        "incompleteConfirmation": "未完成的集成将被跳过。是否继续？"
+        "incompleteConfirmation": "未完成的集成将被跳过。是否继续？",
+        "skipIncomplete": ""
       },
       "board": {
         "title": "在构建前先规划看板外观",
@@ -1930,6 +1932,8 @@
     "here": "这里",
     "serviceUrlTemplate": {
       "serverTitle": "常用服务器地址",
+      "description": "",
+      "example": "",
       "urlModeLabel": "服务地址模式",
       "hostPort": "同一主机，不同端口",
       "subdomain": "每个服务一个子域",
@@ -4797,10 +4801,6 @@
           "label": "",
           "description": ""
         },
-        "collapsedSections": {
-          "label": "",
-          "description": ""
-        },
         "newReleaseWithin": {
           "label": "新版本时间范围",
           "description": "使用示例：1w（1周），10M（10个月）。支持单位类型h（小时），d（天），w（周），M（月），y（年）。留空不突出显示新版本。",
@@ -5005,7 +5005,11 @@
       "runningVersions": "运行中的版本",
       "upToDate": "已是最新",
       "updateAvailable": "有可用更新",
-      "unknownStatus": "未知"
+      "unknownStatus": "未知",
+      "error": {
+        "collapsedSaveTitle": "",
+        "collapsedSaveMessage": ""
+      }
     },
     "networkControllerSummary": {
       "advanced": {
@@ -5511,6 +5515,9 @@
       "name": "Beszel 系统（表格）",
       "description": "所有 Beszel 监控系统的表格视图，包含可排序列和状态指示器",
       "option": {
+        "fahrenheit": {
+          "label": "华氏温度"
+        },
         "sortBy": {
           "label": "排序方式"
         },
@@ -5525,7 +5532,12 @@
     },
     "beszelSystemGrid": {
       "name": "Beszel 系统（网格）",
-      "description": "所有 Beszel 监控系统的卡片网格视图，包含实时指标"
+      "description": "所有 Beszel 监控系统的卡片网格视图，包含实时指标",
+      "option": {
+        "fahrenheit": {
+          "label": "华氏温度"
+        }
+      }
     },
     "beszelAlerts": {
       "name": "Beszel 告警",
@@ -7230,6 +7242,7 @@
             "model": {
               "title": "模型",
               "description": "选择一个已发现的模型，或输入确切的端点模型 ID。",
+              "save": "",
               "placeholder": "模型 ID",
               "refresh": "刷新模型",
               "chooseModel": "选择用于新对话的模型。",

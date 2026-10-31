@@ -65,7 +65,6 @@
         "themeAuto": "Sistēmas",
         "themeLight": "Gaišs",
         "themeDark": "Tumšs",
-        "serverOriginHelp": "Homarr izmanto šo adresi, lai automātiski aizpildītu atklāto pakalpojumu vietrāžus. Jūs joprojām varat rediģēt katru pakalpojumu atsevišķi.",
         "serverDescription": "Tas ir īsceļš, nevis ierobežojums. Katru atklāto pakalpojumu joprojām var rediģēt.",
         "serverOrigin": "Domēns, IP adrese vai reversā starpniekservera ceļš",
         "serverOriginDescription": "Piemēri: home.lan, 192.168.1.10 vai https://home.example.com/services. Tālāk izvēlieties, kā tiks pievienots katrs pakalpojums.",
@@ -102,6 +101,8 @@
       "connect": {
         "title": "Savienojiet to, kas padara paneli noderīgu",
         "description": "Atlasiet vairākus pakalpojumus vienlaikus. Docker etiķetēm ir prioritāte, attēlu atbilstība aizpilda trūkstošo, un katru vietrādi un akreditācijas datus var pārskatīt.",
+        "confirmServerAddress": "",
+        "serverAddressReviewed": "",
         "discoveredIntegrations": "Atklātās integrācijas instances ({count})",
         "detectedIntegrationLabel": "Importēt {name}, kas atpazīts kā {kind}",
         "detectedAppLabel": "Importēt atklāto lietotni {name}",
@@ -126,7 +127,8 @@
         "needsConfiguration": "Nepieciešama konfigurēšana",
         "tested": "Savienojums pārbaudīts",
         "testFailed": "Savienojuma pārbaude neizdevās",
-        "incompleteConfirmation": "Nepabeigtās integrācijas tiks izlaistas. Vai turpināt bez tām?"
+        "incompleteConfirmation": "Nepabeigtās integrācijas tiks izlaistas. Vai turpināt bez tām?",
+        "skipIncomplete": ""
       },
       "board": {
         "title": "Veidojiet dēli pirms tā izveides",
@@ -1930,6 +1932,8 @@
     "here": "šeit",
     "serviceUrlTemplate": {
       "serverTitle": "Parastā servera adrese",
+      "description": "",
+      "example": "",
       "urlModeLabel": "Pakalpojuma adreses shēma",
       "hostPort": "Tas pats resursdators, citi porti",
       "subdomain": "Viens apakšdomēns katram pakalpojumam",
@@ -4797,10 +4801,6 @@
           "label": "",
           "description": ""
         },
-        "collapsedSections": {
-          "label": "",
-          "description": ""
-        },
         "newReleaseWithin": {
           "label": "Jauns laidiens pēdējo",
           "description": "Lietošanas piemērs: 1w (1 nedēļa), 10M (10 mēneši). Pieņemtie mērvienību tipi: h (stundas), d (dienas), w (nedēļas), M (mēneši), y (gadi). Atstājiet tukšu, lai neizceltu jaunos laidienus.",
@@ -5005,7 +5005,11 @@
       "runningVersions": "",
       "upToDate": "",
       "updateAvailable": "",
-      "unknownStatus": "Nezināms"
+      "unknownStatus": "Nezināms",
+      "error": {
+        "collapsedSaveTitle": "",
+        "collapsedSaveMessage": ""
+      }
     },
     "networkControllerSummary": {
       "advanced": {
@@ -5511,6 +5515,9 @@
       "name": "Beszel sistēmas (Tabula)",
       "description": "Tabulas skats visām Beszel uzraudzītajām sistēmām ar kārtojamām kolonnām un statusa indikatoriem",
       "option": {
+        "fahrenheit": {
+          "label": ""
+        },
         "sortBy": {
           "label": "Kārtot pēc"
         },
@@ -5525,7 +5532,12 @@
     },
     "beszelSystemGrid": {
       "name": "Beszel sistēmas (Režģis)",
-      "description": "Karšu režģa skats visām Beszel uzraudzītajām sistēmām ar reāllaika metrikām"
+      "description": "Karšu režģa skats visām Beszel uzraudzītajām sistēmām ar reāllaika metrikām",
+      "option": {
+        "fahrenheit": {
+          "label": ""
+        }
+      }
     },
     "beszelAlerts": {
       "name": "Beszel brīdinājumi",
@@ -7230,6 +7242,7 @@
             "model": {
               "title": "Modelis",
               "description": "Atlasiet atrastu modeli vai ievadiet precīzu galapunkta modeļa ID.",
+              "save": "",
               "placeholder": "Modeļa ID",
               "refresh": "Atsvaidzināt modeļus",
               "chooseModel": "Izvēlieties modeli, kas tiks izmantots jaunām sarunām.",

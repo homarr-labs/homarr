@@ -65,7 +65,6 @@
         "themeAuto": "System",
         "themeLight": "Light",
         "themeDark": "Dark",
-        "serverOriginHelp": "Homarr uses this address to pre-fill detected service URLs. You can still edit every service individually.",
         "serverDescription": "This is a shortcut, not a restriction. Every detected service remains editable.",
         "serverOrigin": "Domain, IP or reverse-proxy path",
         "serverOriginDescription": "Examples: home.lan, 192.168.1.10 or https://home.example.com/services. Choose how each service is appended below.",
@@ -102,6 +101,8 @@
       "connect": {
         "title": "Connect what makes the board useful",
         "description": "Select several services at once. Docker labels take priority, image matching fills gaps, and every URL and credential stays reviewable.",
+        "confirmServerAddress": "",
+        "serverAddressReviewed": "",
         "discoveredIntegrations": "Detected integration instances ({count})",
         "detectedIntegrationLabel": "Import {name}, detected as {kind}",
         "detectedAppLabel": "Import detected app {name}",
@@ -126,7 +127,8 @@
         "needsConfiguration": "Configuration required",
         "tested": "Connection test successful",
         "testFailed": "Connection test failed",
-        "incompleteConfirmation": "Unfinished integrations will be skipped. Continue without them?"
+        "incompleteConfirmation": "Unfinished integrations will be skipped. Continue without them?",
+        "skipIncomplete": ""
       },
       "board": {
         "title": "Shape the board before it is built",
@@ -1930,6 +1932,8 @@
     "here": "here",
     "serviceUrlTemplate": {
       "serverTitle": "Usual server address",
+      "description": "",
+      "example": "",
       "urlModeLabel": "Service address pattern",
       "hostPort": "Same host, different ports",
       "subdomain": "One subdomain per service",
@@ -4797,10 +4801,6 @@
           "label": "",
           "description": ""
         },
-        "collapsedSections": {
-          "label": "",
-          "description": ""
-        },
         "newReleaseWithin": {
           "label": "",
           "description": "",
@@ -5005,7 +5005,11 @@
       "runningVersions": "",
       "upToDate": "",
       "updateAvailable": "",
-      "unknownStatus": "Unknown"
+      "unknownStatus": "Unknown",
+      "error": {
+        "collapsedSaveTitle": "",
+        "collapsedSaveMessage": ""
+      }
     },
     "networkControllerSummary": {
       "advanced": {
@@ -5511,6 +5515,9 @@
       "name": "Beszel Systems (Table)",
       "description": "Table view of all Beszel-monitored systems with sortable columns and status indicators",
       "option": {
+        "fahrenheit": {
+          "label": "Temperature in Fahrenheit"
+        },
         "sortBy": {
           "label": "Sort by"
         },
@@ -5525,7 +5532,12 @@
     },
     "beszelSystemGrid": {
       "name": "Beszel Systems (Grid)",
-      "description": "Card grid view of all Beszel-monitored systems with real-time metrics"
+      "description": "Card grid view of all Beszel-monitored systems with real-time metrics",
+      "option": {
+        "fahrenheit": {
+          "label": "Temperature in Fahrenheit"
+        }
+      }
     },
     "beszelAlerts": {
       "name": "Beszel Alerts",
@@ -7230,6 +7242,7 @@
             "model": {
               "title": "Model",
               "description": "Select a discovered model or enter an exact endpoint model ID.",
+              "save": "",
               "placeholder": "Model ID",
               "refresh": "Refresh models",
               "chooseModel": "Choose the model used for new conversations.",

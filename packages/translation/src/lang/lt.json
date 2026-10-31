@@ -65,7 +65,6 @@
         "themeAuto": "Sistema",
         "themeLight": "Šviesi",
         "themeDark": "Tamsi",
-        "serverOriginHelp": "„Homarr“ naudoja šį adresą, kad iš anksto užpildytų aptiktų paslaugų URL. Visas paslaugas vis tiek galite redaguoti atskirai.",
         "serverDescription": "Tai tik spartusis būdas, o ne apribojimas. Kiekvieną aptiktą paslaugą galima redaguoti.",
         "serverOrigin": "Domenas, IP arba atvirkštinio tarpinio serverio kelias",
         "serverOriginDescription": "Pavyzdžiai: home.lan, 192.168.1.10 arba https://home.example.com/services. Toliau pasirinkite, kaip bus pridedama kiekviena paslauga.",
@@ -102,6 +101,8 @@
       "connect": {
         "title": "Prijunkite tai, kas daro lentą naudingą",
         "description": "Pasirinkite kelias paslaugas vienu metu. „Docker“ etiketėms teikiama pirmenybė, spragas užpildo vaizdų atitiktis, o kiekvieną URL ir kredencialą galima peržiūrėti.",
+        "confirmServerAddress": "",
+        "serverAddressReviewed": "",
         "discoveredIntegrations": "Aptikti integracijų egzemplioriai ({count})",
         "detectedIntegrationLabel": "Importuoti {name}, aptikta kaip {kind}",
         "detectedAppLabel": "Importuoti aptiktą programą {name}",
@@ -126,7 +127,8 @@
         "needsConfiguration": "Reikia sukonfigūruoti",
         "tested": "Ryšys patikrintas",
         "testFailed": "Ryšio patikrinti nepavyko",
-        "incompleteConfirmation": "Nebaigtos integracijos bus praleistos. Tęsti be jų?"
+        "incompleteConfirmation": "Nebaigtos integracijos bus praleistos. Tęsti be jų?",
+        "skipIncomplete": ""
       },
       "board": {
         "title": "Suformuokite lentą prieš ją sukuriant",
@@ -1930,6 +1932,8 @@
     "here": "čia",
     "serviceUrlTemplate": {
       "serverTitle": "Įprastas serverio adresas",
+      "description": "",
+      "example": "",
       "urlModeLabel": "Paslaugos adreso šablonas",
       "hostPort": "Tas pats pagrindinis kompiuteris, kiti prievadai",
       "subdomain": "Po vieną padomenį kiekvienai paslaugai",
@@ -4797,10 +4801,6 @@
           "label": "",
           "description": ""
         },
-        "collapsedSections": {
-          "label": "",
-          "description": ""
-        },
         "newReleaseWithin": {
           "label": "Naujas leidinys per",
           "description": "Naudojimo pavyzdys: 1w (1 savaitė), 10M (10 mėnesių). Priimami vienetai: h (valandos), d (dienos), w (savaitės), M (mėnesiai), y (metai). Palikite tuščią, jei nenorite paryškinti naujų leidimų.",
@@ -5005,7 +5005,11 @@
       "runningVersions": "",
       "upToDate": "",
       "updateAvailable": "",
-      "unknownStatus": "Nežinoma"
+      "unknownStatus": "Nežinoma",
+      "error": {
+        "collapsedSaveTitle": "",
+        "collapsedSaveMessage": ""
+      }
     },
     "networkControllerSummary": {
       "advanced": {
@@ -5511,6 +5515,9 @@
       "name": "Beszel sistemos (lentelė)",
       "description": "Visų Beszel stebimų sistemų lentelės vaizdas su rūšiuojamais stulpeliais ir būsenos indikatoriais",
       "option": {
+        "fahrenheit": {
+          "label": ""
+        },
         "sortBy": {
           "label": "Rūšiuoti pagal"
         },
@@ -5525,7 +5532,12 @@
     },
     "beszelSystemGrid": {
       "name": "Beszel sistemos (tinklelis)",
-      "description": "Visų Beszel stebimų sistemų kortelių tinklelio vaizdas su realaus laiko metrika"
+      "description": "Visų Beszel stebimų sistemų kortelių tinklelio vaizdas su realaus laiko metrika",
+      "option": {
+        "fahrenheit": {
+          "label": ""
+        }
+      }
     },
     "beszelAlerts": {
       "name": "Beszel įspėjimai",
@@ -7230,6 +7242,7 @@
             "model": {
               "title": "Modelis",
               "description": "Pasirinkite aptiktą modelį arba įveskite tikslų galinio taško modelio ID.",
+              "save": "",
               "placeholder": "Modelio ID",
               "refresh": "Atnaujinti modelius",
               "chooseModel": "Pasirinkite modelį, naudojamą naujiems pokalbiams.",

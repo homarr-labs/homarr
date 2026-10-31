@@ -65,7 +65,6 @@
         "themeAuto": "Sistema",
         "themeLight": "Claro",
         "themeDark": "Oscuro",
-        "serverOriginHelp": "Homarr utiliza esta dirección para prellenar las URL del servicio detectado. Todavía puede editar todos los servicios individualmente.",
         "serverDescription": "Esto es un atajo, no una restricción. Todos los servicios detectados permanecen editables.",
         "serverOrigin": "Dominio, IP o ruta del proxy reverso",
         "serverOriginDescription": "Ejemplos: home.lan, 192.168.1.10, o https://home.example.com/services. Elija cómo se añade cada servicio a continuación.",
@@ -102,6 +101,8 @@
       "connect": {
         "title": "Conecta lo que hace que el tablero sea útil",
         "description": "Seleccione varios servicios a la vez. Las etiquetas Docker tienen prioridad, los espacios de coincidencia de imágenes y todas las URL y credenciales permanecen revisables.",
+        "confirmServerAddress": "",
+        "serverAddressReviewed": "",
         "discoveredIntegrations": "Instancias de integración detectadas ({count})",
         "detectedIntegrationLabel": "Importar {name}detectado como {kind}",
         "detectedAppLabel": "Importar aplicación detectada {name}",
@@ -126,7 +127,8 @@
         "needsConfiguration": "Necesita configuración",
         "tested": "Conexión probada",
         "testFailed": "Prueba de conexión fallida",
-        "incompleteConfirmation": "Se omitirán las integraciones sin finalizar. ¿Continuar sin ellas?"
+        "incompleteConfirmation": "Se omitirán las integraciones sin finalizar. ¿Continuar sin ellas?",
+        "skipIncomplete": ""
       },
       "board": {
         "title": "Forma el tablero antes de que se construya",
@@ -1930,6 +1932,8 @@
     "here": "aquí",
     "serviceUrlTemplate": {
       "serverTitle": "Dirección del servidor habitual",
+      "description": "",
+      "example": "",
       "urlModeLabel": "Patrón de dirección de servicio",
       "hostPort": "Mismo host, diferentes puertos",
       "subdomain": "Un subdominio por servicio",
@@ -4797,10 +4801,6 @@
           "label": "",
           "description": ""
         },
-        "collapsedSections": {
-          "label": "",
-          "description": ""
-        },
         "newReleaseWithin": {
           "label": "Nuevo lanzamiento dentro de",
           "description": "Ejemplo de uso: 1w (1 semana), 10M (10 meses). Tipos de unidad aceptados h (horas), d (días), w (semanas), M (meses), y (años). Dejar vacío para no resaltar nuevos lanzamientos.",
@@ -5005,7 +5005,11 @@
       "runningVersions": "Versiones en ejecución",
       "upToDate": "Actualizado",
       "updateAvailable": "Actualización disponible",
-      "unknownStatus": "Desconocido"
+      "unknownStatus": "Desconocido",
+      "error": {
+        "collapsedSaveTitle": "",
+        "collapsedSaveMessage": ""
+      }
     },
     "networkControllerSummary": {
       "advanced": {
@@ -5511,6 +5515,9 @@
       "name": "",
       "description": "",
       "option": {
+        "fahrenheit": {
+          "label": "Temperatura en Fahrenheit"
+        },
         "sortBy": {
           "label": ""
         },
@@ -5525,7 +5532,12 @@
     },
     "beszelSystemGrid": {
       "name": "",
-      "description": ""
+      "description": "",
+      "option": {
+        "fahrenheit": {
+          "label": "Temperatura en Fahrenheit"
+        }
+      }
     },
     "beszelAlerts": {
       "name": "",
@@ -7230,6 +7242,7 @@
             "model": {
               "title": "Modelo",
               "description": "Seleccione un modelo descubierto o introduzca un ID exacto del modelo de punto final.",
+              "save": "",
               "placeholder": "ID del modelo",
               "refresh": "Actualizar modelos",
               "chooseModel": "Elija el modelo utilizado para nuevas conversaciones.",
