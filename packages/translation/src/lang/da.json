@@ -65,7 +65,6 @@
         "themeAuto": "System",
         "themeLight": "Lys",
         "themeDark": "Mørk",
-        "serverOriginHelp": "Homarr bruger denne adresse til at forudfylde fundne tjeneste-URL'er. Du kan stadig redigere hver tjeneste individuelt.",
         "serverDescription": "Dette er en genvej, ikke en begrænsning. Hver registreret tjeneste forbliver redigerbare.",
         "serverOrigin": "Domæn, IP eller reverse-proxy sti",
         "serverOriginDescription": "Eksempler: home.lan, 192.168.1.10 eller https://home.example.com/services. Vælg hvordan hver tjeneste er tilføjet nedenfor.",
@@ -102,6 +101,8 @@
       "connect": {
         "title": "Tilslut hvad der gør tavlen nyttig",
         "description": "Vælg flere tjenester på én gang. Docker-etiketter prioriteres, billedmatchende fylder huller, og hver URL og legitimationsoplysninger forbliver vurderbar.",
+        "confirmServerAddress": "",
+        "serverAddressReviewed": "",
         "discoveredIntegrations": "Detekterede integrationsinstanser ({count})",
         "detectedIntegrationLabel": "Importer {name}, detekteret som {kind}",
         "detectedAppLabel": "Importer detekteret app {name}",
@@ -126,7 +127,8 @@
         "needsConfiguration": "Behøver konfiguration",
         "tested": "Forbindelse testet",
         "testFailed": "Forbindelsestest mislykkedes",
-        "incompleteConfirmation": "Ufærdige integrationer vil blive sprunget over. Fortsæt uden dem?"
+        "incompleteConfirmation": "Ufærdige integrationer vil blive sprunget over. Fortsæt uden dem?",
+        "skipIncomplete": ""
       },
       "board": {
         "title": "Form brættet, før det er bygget",
@@ -1930,6 +1932,8 @@
     "here": "her",
     "serviceUrlTemplate": {
       "serverTitle": "Sædvanlig serveradresse",
+      "description": "",
+      "example": "",
       "urlModeLabel": "Mønster for tjenestens adresse",
       "hostPort": "Samme vært, forskellige porte",
       "subdomain": "Et underdomæne pr. tjeneste",
@@ -4797,10 +4801,6 @@
           "label": "",
           "description": ""
         },
-        "collapsedSections": {
-          "label": "",
-          "description": ""
-        },
         "newReleaseWithin": {
           "label": "Ny Udgivelse Inden",
           "description": "Anvendelseseksempel: 1w (1 uge), 10M (10 måneder). Accepterede enhedstyper h (timer), d (dage), w (uger), M (måneder), y (år). Lad være tom for ingen fremhævning af nye udgivelser.",
@@ -5005,7 +5005,11 @@
       "runningVersions": "Kørende Versioner",
       "upToDate": "Op til dato",
       "updateAvailable": "Opdatering tilgængelig",
-      "unknownStatus": "Ukendt"
+      "unknownStatus": "Ukendt",
+      "error": {
+        "collapsedSaveTitle": "",
+        "collapsedSaveMessage": ""
+      }
     },
     "networkControllerSummary": {
       "advanced": {
@@ -5511,6 +5515,9 @@
       "name": "Beszel-systemer (tabel)",
       "description": "Tabelvisning af alle Beszel-overvågede systemer med sorterbare kolonner og statusindikatorer",
       "option": {
+        "fahrenheit": {
+          "label": "Temperatur i Fahrenheit"
+        },
         "sortBy": {
           "label": "Sorter efter"
         },
@@ -5525,7 +5532,12 @@
     },
     "beszelSystemGrid": {
       "name": "Beszel-systemer (gitter)",
-      "description": "Kortgittervisning af alle Beszel-overvågede systemer med realtidsmålinger"
+      "description": "Kortgittervisning af alle Beszel-overvågede systemer med realtidsmålinger",
+      "option": {
+        "fahrenheit": {
+          "label": "Temperatur i Fahrenheit"
+        }
+      }
     },
     "beszelAlerts": {
       "name": "Beszel-advarsler",
@@ -7230,6 +7242,7 @@
             "model": {
               "title": "",
               "description": "Vælg en opdaget model eller indtast et eksakt endpoint, model ID.",
+              "save": "",
               "placeholder": "",
               "refresh": "Opdater modeller",
               "chooseModel": "Vælg den model, der bruges til nye samtaler.",
