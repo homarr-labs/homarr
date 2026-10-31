@@ -3,6 +3,7 @@ import { createHash } from "node:crypto";
 import { TRPCError } from "@trpc/server";
 
 import { encryptSecret } from "@homarr/common/server";
+import { getCustomWidgetRemovals } from "@homarr/custom-widgets/core";
 import type { Database } from "@homarr/db";
 import { and, eq, handleTransactionsAsync, notInArray } from "@homarr/db";
 import { customWidgetDefinitions, customWidgetSecrets } from "@homarr/db/schema";
@@ -65,6 +66,7 @@ export async function updateCustomWidgetDefinition(
     definition: HomarrCustomWidgetV2;
     secrets?: CustomWidgetCreateInput["secrets"];
     expectedStateFingerprint?: string;
+    acknowledgedRemovals?: readonly string[];
   },
 ) {
   const updatedAt = new Date();
@@ -92,6 +94,9 @@ export async function updateCustomWidgetDefinition(
           .from(schema.customWidgetSecrets)
           .where(eq(schema.customWidgetSecrets.definitionId, input.id));
         assertExpectedState(stored, storedSecrets, input.expectedStateFingerprint);
+        if (input.expectedStateFingerprint !== undefined) {
+          assertAcknowledgedRemovals(stored, input.definition, input.acknowledgedRemovals);
+        }
         const changedSecretBindings = getChangedSecretBindings(stored, input.definition);
         const sourceIds = Object.keys(input.definition.sources);
 
@@ -157,6 +162,9 @@ export async function updateCustomWidgetDefinition(
             .where(eq(customWidgetSecrets.definitionId, input.id))
             .all();
           assertExpectedState(stored, storedSecrets, input.expectedStateFingerprint);
+          if (input.expectedStateFingerprint !== undefined) {
+            assertAcknowledgedRemovals(stored, input.definition, input.acknowledgedRemovals);
+          }
           const changedSecretBindings = getChangedSecretBindings(stored, input.definition);
           const sourceIds = Object.keys(input.definition.sources);
 
@@ -230,4 +238,19 @@ function getChangedSecretBindings(stored: StoredDefinitionState, definition: Hom
       return previous && !hasSameSecretBinding(previous, source) ? [sourceId] : [];
     }),
   );
+}
+
+function assertAcknowledgedRemovals(
+  stored: StoredDefinitionState,
+  definition: HomarrCustomWidgetV2,
+  acknowledged: readonly string[] = [],
+) {
+  const removals = getCustomWidgetRemovals(parseStoredCustomWidgetDefinition(stored), definition);
+  const acknowledgedKeys = new Set(acknowledged);
+  const unacknowledged = removals.filter((key) => !acknowledgedKeys.has(key));
+  if (unacknowledged.length === 0) return;
+  throw new TRPCError({
+    code: "BAD_REQUEST",
+    message: `Unacknowledged removals: ${JSON.stringify(unacknowledged)}. Restore them with customWidget_previewReviseTemplate, or pass these exact keys in acknowledgedRemovals only for removals the user explicitly requested. Manifest restorations require customWidget_previewCreate with definitionId.`,
+  });
 }

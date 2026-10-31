@@ -96,6 +96,15 @@ export const getSafeAssistantToolError = (error: unknown, options?: { toolName?:
       return "The requested resource was not found or is not compatible with this tool.";
     case "BAD_REQUEST":
       if (isCustomWidgetTool) {
+        if (
+          options?.toolName === "customWidget_updateFromPreview" &&
+          chain.some(
+            (candidate) =>
+              typeof candidate.message === "string" && /Unacknowledged removals:/iu.test(candidate.message),
+          )
+        ) {
+          return "Unacknowledged removals: restore the original JSX with customWidget_previewReviseTemplate, or supply acknowledgedRemovals to customWidget_updateFromPreview only for user-authorized keys from the complete removedFromSaved list. If that list is missing or incomplete, restore the loaded original JSX and make a narrower change; never guess acknowledgement keys.";
+        }
         const details = getCustomWidgetValidationDetails(chain);
         if (details) return `The custom widget input was invalid: ${details}`;
       }

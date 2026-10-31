@@ -147,9 +147,8 @@ describe("custom widget definition persistence", () => {
       type: "place-custom-widget",
       widgetKind: "customApi",
       options: { definitionId: created.id },
-      whenTargetIsKnown: "Call configure_widget now with the requested board and these exact widget options.",
-      whenTargetIsUnknown:
-        "Call ask_user now with 'Place on a board' and 'Leave unplaced'. Never ask this choice in prose.",
+      whenTargetIsKnown: expect.stringContaining("saved but unplaced"),
+      whenTargetIsUnknown: expect.stringContaining("saving unplaced"),
     });
     expect((await caller.get({ id: created.id })).template).toBe(template);
   });

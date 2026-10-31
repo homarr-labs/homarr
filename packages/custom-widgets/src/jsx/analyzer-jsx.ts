@@ -31,15 +31,52 @@ interface AnalyzerJsxContext {
 
 const componentsRequiringRequestId = new Set(["SubFetch", "ActionButton", "ToggleSwitch"]);
 const componentsWithLiteralRequestId = new Set([...componentsRequiringRequestId, "RefreshButton"]);
+const helperAdditionalProps: Readonly<Record<string, readonly string[]>> = {
+  ActionButton: ["children"],
+  Collapsible: ["children"],
+  PaginatedList: ["children"],
+  SubData: ["path", "alt"],
+  SubFetch: ["children", "path"],
+  TabPanel: ["children"],
+  TabsContainer: ["children"],
+};
+const helperPropsByName = new Map(
+  [...customJsxCatalogComponentByName.values()]
+    .filter((component) => component.package === "@homarr/widgets")
+    .map((component) => [
+      component.name,
+      new Set(["key", ...component.props.map((prop) => prop.name), ...(helperAdditionalProps[component.name] ?? [])]),
+    ]),
+);
 
-function staticParameterKeys(expression: AstNode | null, depth = 0): { keys: Set<string>; complete: boolean } {
+const analyzeHelperProp = (name: string, prop: string, node: AstNode, context: AnalyzerJsxContext) => {
+  const supportedProps = helperPropsByName.get(name);
+  if (!supportedProps || supportedProps.has(prop)) return false;
+  let guidance = "This helper does not forward arbitrary Mantine props; wrap it in a Mantine component for styling.";
+  if (name === "ToggleSwitch" && prop === "confirmMessage") {
+    guidance = "Use the action request's confirmation object instead; ToggleSwitch reads request-level confirmation.";
+  }
+  context.add(node, `UNSUPPORTED_HELPER_PROP: '${prop}' on ${name} is ignored. ${guidance}`, "warning");
+  return true;
+};
+
+interface StaticPropertyKeys {
+  keys: Set<string>;
+  complete: boolean;
+}
+
+function staticParameterKeys(
+  expression: AstNode | null,
+  depth = 0,
+  spreadKeys: (expression: AstNode | null, depth: number) => StaticPropertyKeys = staticParameterKeys,
+): StaticPropertyKeys {
   const keys = new Set<string>();
   if (!expression) return { keys, complete: true };
   if (expression.type !== "ObjectExpression" || depth > CUSTOM_JSX_LIMITS.astDepth) return { keys, complete: false };
   let complete = true;
   for (const property of nodesOf(expression.properties)) {
     if (property.type === "SpreadElement") {
-      const spread = staticParameterKeys(nodeOf(property.argument), depth + 1);
+      const spread = spreadKeys(nodeOf(property.argument), depth + 1);
       spread.keys.forEach((key) => keys.add(key));
       complete &&= spread.complete;
       continue;
@@ -50,6 +87,33 @@ function staticParameterKeys(expression: AstNode | null, depth = 0): { keys: Set
     if (name === undefined) complete = false;
     else keys.add(name);
   }
+  return { keys, complete };
+}
+
+function staticHelperSpreadKeys(expression: AstNode | null, depth = 0): StaticPropertyKeys {
+  const keys = new Set<string>();
+  if (!expression || depth > CUSTOM_JSX_LIMITS.astDepth) return { keys, complete: false };
+  if (expression.type === "ObjectExpression") return staticParameterKeys(expression, depth, staticHelperSpreadKeys);
+  if (expression.type === "ConditionalExpression" || expression.type === "LogicalExpression") {
+    let branches = [nodeOf(expression.consequent), nodeOf(expression.alternate)];
+    if (expression.type === "LogicalExpression") {
+      branches = [nodeOf(expression.right)];
+      if (expression.operator !== "&&") branches.push(nodeOf(expression.left));
+    }
+    let complete = true;
+    for (const branch of branches) {
+      const result = staticHelperSpreadKeys(branch, depth + 1);
+      result.keys.forEach((key) => keys.add(key));
+      complete &&= result.complete;
+    }
+    return { keys, complete };
+  }
+  const complete =
+    expression.type === "Literal" &&
+    (expression.value === null ||
+      typeof expression.value === "boolean" ||
+      typeof expression.value === "number" ||
+      expression.value === "");
   return { keys, complete };
 }
 const interactiveTriggerContentComponentNames = new Set([
@@ -235,6 +299,17 @@ export function analyzeCustomJsxElement(
   for (const attribute of attributes) {
     if (attribute.type === "JSXSpreadAttribute") {
       const argument = nodeOf(attribute.argument);
+      if (resolvedName && helperPropsByName.has(resolvedName)) {
+        const spread = staticHelperSpreadKeys(argument);
+        for (const prop of spread.keys) analyzeHelperProp(resolvedName, prop, attribute, context);
+        if (!spread.complete) {
+          context.add(
+            attribute,
+            `UNSUPPORTED_HELPER_PROP: Spread props on ${resolvedName} cannot be verified. Use explicit supported helper props or statically known object literals; helpers do not forward arbitrary Mantine props.`,
+            "warning",
+          );
+        }
+      }
       if (argument) context.visit(argument, depth + 1, bindings);
       continue;
     }
@@ -266,6 +341,8 @@ export function analyzeCustomJsxElement(
       );
     } else if (isBlockedCustomJsxProp(attributeName)) {
       context.add(attribute, `BLOCKED_CAPABILITY: Prop '${attributeName}' is not allowed`);
+    } else if (resolvedName && helperPropsByName.has(resolvedName)) {
+      analyzeHelperProp(resolvedName, attributeName, attribute, context);
     } else if (
       resolvedName &&
       attributeName !== "bind" &&
@@ -285,6 +362,14 @@ export function analyzeCustomJsxElement(
 
   nodesOf(node.children).forEach((child) => {
     const expression = child.type === "JSXExpressionContainer" ? nodeOf(child.expression) : null;
+    if (
+      resolvedName &&
+      helperPropsByName.has(resolvedName) &&
+      !(child.type === "JSXText" && typeof child.value === "string" && !child.value.trim()) &&
+      !(expression?.type === "JSXEmptyExpression")
+    ) {
+      analyzeHelperProp(resolvedName, "children", child, context);
+    }
     if (resolvedName === "SubFetch" && expression?.type === "ArrowFunctionExpression") {
       context.visitArrow(expression, depth + 1, bindings);
       return;

@@ -22,7 +22,9 @@ export const previewSessionRequestSchema = z.object({
   params: z
     .record(z.string(), z.union([z.string(), z.number(), z.boolean()]))
     .default({})
-    .describe("Invocation parameters required by a manual query. Load queries use an empty object."),
+    .describe(
+      "Invocation parameters matching this query's parameterNames from customWidget_previewCreate.queries. Load queries use an empty object.",
+    ),
 });
 
 export const recordPreviewJournal = async (...args: Parameters<typeof appendPreviewJournal>) => {
