@@ -35,6 +35,7 @@ import {
   IconInfoCircle,
   IconPlayerPause,
   IconPlayerPlay,
+  IconTag,
   IconTrash,
   IconTrashX,
   IconUpload,
@@ -50,6 +51,7 @@ import { useOptionalBoard } from "@homarr/boards/context";
 import { useIntegrationConnected } from "@homarr/common";
 import { getIconUrl, getIntegrationKindsByCategory } from "@homarr/definitions";
 import type { ExtendedClientStatus, ExtendedDownloadClientItem } from "@homarr/integrations";
+import { useModalAction } from "@homarr/modals";
 import { showErrorNotification } from "@homarr/notifications";
 import { useByteFormatter } from "@homarr/settings";
 import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";
@@ -69,6 +71,7 @@ import {
   getDownloadsStatsDisplay,
 } from "./helpers";
 import { resolveDownloadsQueryInput } from "./query-input";
+import { SetDownloadCategoryModal } from "./set-category-modal";
 
 dayjs.extend(relativeTime);
 
@@ -1097,6 +1100,10 @@ function RowContextMenu({ state, onClose, t }: { state: ContextMenuState; onClos
   const isPaused = item.state === "paused";
   const hasActions = !!item.actions;
   const [showDeleteConfirm, { open: openDelete }] = useDisclosure(false);
+  const { openModal: openSetCategory } = useModalAction(SetDownloadCategoryModal);
+  const categoryActionLabel = t(
+    item.integration.kind === "transmission" ? "contextMenu.setLabels" : "contextMenu.setCategory",
+  );
 
   let PauseResumeIcon = IconPlayerPause;
   let pauseResumeInvoke = item.actions?.pause;
@@ -1170,6 +1177,27 @@ function RowContextMenu({ state, onClose, t }: { state: ContextMenuState; onClos
                 >
                   {pauseResumeLabel}
                 </Menu.Item>
+
+                {["qBittorrent", "deluge", "transmission"].includes(item.integration.kind) && (
+                  <Menu.Item
+                    leftSection={<IconTag size="var(--mantine-font-size-sm)" />}
+                    onClick={() => {
+                      onClose();
+                      openSetCategory(
+                        {
+                          integrationId: item.integration.id,
+                          itemId: item.id,
+                          name: item.name,
+                          category: item.category ?? "",
+                          multiple: item.integration.kind === "transmission",
+                        },
+                        { title: categoryActionLabel },
+                      );
+                    }}
+                  >
+                    {categoryActionLabel}
+                  </Menu.Item>
+                )}
 
                 {!showDeleteConfirm && (
                   <Menu.Item
