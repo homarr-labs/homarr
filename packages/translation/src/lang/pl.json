@@ -65,7 +65,6 @@
         "themeAuto": "System",
         "themeLight": "Jasny",
         "themeDark": "Ciemny",
-        "serverOriginHelp": "Homarr używa tego adresu do wstępnego wypełnienia wykrytych adresów URL usługi. Nadal możesz edytować każdą usługę indywidualnie.",
         "serverDescription": "To jest skrót, a nie ograniczenie. Każda wykryta usługa pozostaje edytowalna.",
         "serverOrigin": "Domena, IP lub ścieżka odwrotnego proxy",
         "serverOriginDescription": "Przykłady: home.lan, 192.168.1.10 lub https://home.example.com/services. Wybierz sposób dołączenia każdej usługi poniżej.",
@@ -102,6 +101,8 @@
       "connect": {
         "title": "Połącz co sprawia, że tablica jest przydatna",
         "description": "Wybierz kilka usług jednocześnie. Etykiety dokujące przyjmują priorytet, obrazki pasujące do luk wypełniają luki, a każdy adres URL i dane logowania pozostają sprawdzalne.",
+        "confirmServerAddress": "",
+        "serverAddressReviewed": "",
         "discoveredIntegrations": "Wykryte instancje integracji ({count})",
         "detectedIntegrationLabel": "Importuj {name}, wykryto jako {kind}",
         "detectedAppLabel": "Importuj aplikację {name}",
@@ -126,7 +127,8 @@
         "needsConfiguration": "Wymagana konfiguracja",
         "tested": "Połączenie przetestowane",
         "testFailed": "Test połączenia nie powiódł się",
-        "incompleteConfirmation": "Nieukończone integracje zostaną pominięte. Kontynuować bez nich?"
+        "incompleteConfirmation": "Nieukończone integracje zostaną pominięte. Kontynuować bez nich?",
+        "skipIncomplete": ""
       },
       "board": {
         "title": "Kształtuj płytkę przed jej budową",
@@ -1930,6 +1932,8 @@
     "here": "tutaj",
     "serviceUrlTemplate": {
       "serverTitle": "Zwykły adres serwera",
+      "description": "",
+      "example": "",
       "urlModeLabel": "Wzorzec adresu usługi",
       "hostPort": "Ten sam host, różne porty",
       "subdomain": "Jedna subdomena na usługę",
@@ -4797,10 +4801,6 @@
           "label": "",
           "description": ""
         },
-        "collapsedSections": {
-          "label": "",
-          "description": ""
-        },
         "newReleaseWithin": {
           "label": "Nowe wydanie w ciągu",
           "description": "Przykład użycia: 1w (1 tydzień), 10M (10 miesięcy). Obsługiwane jednostki: h (godziny), d (dni), w (tygodnie), M (miesiące), y (lata). Pozostaw puste, aby nie wyróżniać nowych wydań.",
@@ -5005,7 +5005,11 @@
       "runningVersions": "Uruchamianie wersji",
       "upToDate": "Na bieżąco",
       "updateAvailable": "Dostępna aktualizacja",
-      "unknownStatus": "Nieznany"
+      "unknownStatus": "Nieznany",
+      "error": {
+        "collapsedSaveTitle": "",
+        "collapsedSaveMessage": ""
+      }
     },
     "networkControllerSummary": {
       "advanced": {
@@ -5511,6 +5515,9 @@
       "name": "Systemy Beszel (Tabela)",
       "description": "Widok tabeli wszystkich systemów monitorowanych przez Beszel z sortowalnymi kolumnami i wskaźnikami statusu",
       "option": {
+        "fahrenheit": {
+          "label": "Temperatura w Fahrenheit"
+        },
         "sortBy": {
           "label": "Sortuj według"
         },
@@ -5525,7 +5532,12 @@
     },
     "beszelSystemGrid": {
       "name": "Beszel Systems (Siatka)",
-      "description": "Widok siatki wszystkich systemów monitorowanych przez Beszel z miernikami w czasie rzeczywistym"
+      "description": "Widok siatki wszystkich systemów monitorowanych przez Beszel z miernikami w czasie rzeczywistym",
+      "option": {
+        "fahrenheit": {
+          "label": "Temperatura w Fahrenheit"
+        }
+      }
     },
     "beszelAlerts": {
       "name": "Alerty Beszel",
@@ -7230,6 +7242,7 @@
             "model": {
               "title": "Wzór",
               "description": "Wybierz odkryty model lub wprowadź dokładny identyfikator modelu punktu końcowego.",
+              "save": "",
               "placeholder": "Identyfikator modelu",
               "refresh": "Odśwież modele",
               "chooseModel": "Wybierz model używany do nowych konwersacji.",

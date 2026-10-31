@@ -65,7 +65,6 @@
         "themeAuto": "Hệ thống",
         "themeLight": "Sáng",
         "themeDark": "Tối",
-        "serverOriginHelp": "Homarr sử dụng địa chỉ này để điền sẵn URL của các dịch vụ được phát hiện. Bạn vẫn có thể chỉnh sửa từng dịch vụ.",
         "serverDescription": "Đây là lối tắt, không phải giới hạn. Mọi dịch vụ được phát hiện vẫn có thể chỉnh sửa.",
         "serverOrigin": "Tên miền, IP hoặc đường dẫn reverse proxy",
         "serverOriginDescription": "Ví dụ: home.lan, 192.168.1.10 hoặc https://home.example.com/services. Chọn cách thêm từng dịch vụ bên dưới.",
@@ -102,6 +101,8 @@
       "connect": {
         "title": "Kết nối những thành phần làm cho bảng trở nên hữu ích",
         "description": "Chọn nhiều dịch vụ cùng lúc. Nhãn Docker được ưu tiên, việc đối chiếu hình ảnh sẽ bổ sung phần còn thiếu, và mọi URL cùng thông tin đăng nhập đều có thể xem lại.",
+        "confirmServerAddress": "",
+        "serverAddressReviewed": "",
         "discoveredIntegrations": "Các phiên bản tích hợp được phát hiện ({count})",
         "detectedIntegrationLabel": "Nhập {name}, được phát hiện là {kind}",
         "detectedAppLabel": "Nhập ứng dụng được phát hiện {name}",
@@ -126,7 +127,8 @@
         "needsConfiguration": "Cần cấu hình",
         "tested": "Đã kiểm tra kết nối",
         "testFailed": "Kiểm tra kết nối thất bại",
-        "incompleteConfirmation": "Các tích hợp chưa hoàn tất sẽ bị bỏ qua. Tiếp tục mà không có chúng?"
+        "incompleteConfirmation": "Các tích hợp chưa hoàn tất sẽ bị bỏ qua. Tiếp tục mà không có chúng?",
+        "skipIncomplete": ""
       },
       "board": {
         "title": "Định hình bảng trước khi tạo",
@@ -1930,6 +1932,8 @@
     "here": "tại đây",
     "serviceUrlTemplate": {
       "serverTitle": "Địa chỉ máy chủ thông thường",
+      "description": "",
+      "example": "",
       "urlModeLabel": "Mẫu địa chỉ dịch vụ",
       "hostPort": "Cùng máy chủ, cổng khác nhau",
       "subdomain": "Mỗi dịch vụ một tên miền phụ",
@@ -4797,10 +4801,6 @@
           "label": "",
           "description": ""
         },
-        "collapsedSections": {
-          "label": "",
-          "description": ""
-        },
         "newReleaseWithin": {
           "label": "Bản phát hành mới trong khoảng",
           "description": "Ví dụ: 1w (1 tuần), 10M (10 tháng). Các đơn vị được chấp nhận: h (giờ), d (ngày), w (tuần), M (tháng), y (năm). Để trống nếu không muốn đánh dấu bản phát hành mới.",
@@ -5005,7 +5005,11 @@
       "runningVersions": "",
       "upToDate": "",
       "updateAvailable": "",
-      "unknownStatus": "Không rõ"
+      "unknownStatus": "Không rõ",
+      "error": {
+        "collapsedSaveTitle": "",
+        "collapsedSaveMessage": ""
+      }
     },
     "networkControllerSummary": {
       "advanced": {
@@ -5511,6 +5515,9 @@
       "name": "Beszel Systems (Bảng)",
       "description": "Dạng bảng của tất cả hệ thống được Beszel giám sát với các cột có thể sắp xếp và chỉ báo trạng thái",
       "option": {
+        "fahrenheit": {
+          "label": ""
+        },
         "sortBy": {
           "label": "Sắp xếp theo"
         },
@@ -5525,7 +5532,12 @@
     },
     "beszelSystemGrid": {
       "name": "Beszel Systems (Lưới)",
-      "description": "Dạng lưới thẻ của tất cả hệ thống được Beszel giám sát với các số liệu thời gian thực"
+      "description": "Dạng lưới thẻ của tất cả hệ thống được Beszel giám sát với các số liệu thời gian thực",
+      "option": {
+        "fahrenheit": {
+          "label": ""
+        }
+      }
     },
     "beszelAlerts": {
       "name": "Cảnh báo Beszel",
@@ -7230,6 +7242,7 @@
             "model": {
               "title": "Mô hình",
               "description": "Chọn mô hình được phát hiện hoặc nhập chính xác ID mô hình của điểm cuối.",
+              "save": "",
               "placeholder": "ID mô hình",
               "refresh": "Làm mới mô hình",
               "chooseModel": "Chọn mô hình được sử dụng cho các cuộc trò chuyện mới.",

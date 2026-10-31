@@ -65,7 +65,6 @@
         "themeAuto": "System",
         "themeLight": "Hell",
         "themeDark": "Dunkel",
-        "serverOriginHelp": "Homarr verwendet diese Adresse, um erkannte Service-URLs vorauszufüllen. Sie können immer noch jeden Dienst einzeln bearbeiten.",
         "serverDescription": "Dies ist eine Verknüpfung und keine Einschränkung. Jeder erkannte Dienst bleibt editierbar.",
         "serverOrigin": "Domänen, IP oder umgekehrter Proxy-Pfad",
         "serverOriginDescription": "Beispiele: home.lan, 192.168.1.10 oder https://home.example.com/services. Wählen Sie, wie jeder Dienst unten angehängt wird.",
@@ -102,6 +101,8 @@
       "connect": {
         "title": "Verbinden, was das Board nützlich macht",
         "description": "Wählen Sie mehrere Dienste auf einmal. Docker Labels haben Priorität, Bild-Matching füllt Lücken und jede URL und Anmeldeinformationen bleibt überprüfbar.",
+        "confirmServerAddress": "",
+        "serverAddressReviewed": "",
         "discoveredIntegrations": "Erkannte Integrationsinstanzen ({count})",
         "detectedIntegrationLabel": "Importiere {name}, wurde als {kind} erkannt",
         "detectedAppLabel": "Importiere App {name}",
@@ -126,7 +127,8 @@
         "needsConfiguration": "Benötigt Konfiguration",
         "tested": "Verbindung getestet",
         "testFailed": "Verbindungstest fehlgeschlagen",
-        "incompleteConfirmation": "Unfertige Integrationen werden übersprungen. Ohne sie fortfahren?"
+        "incompleteConfirmation": "Unfertige Integrationen werden übersprungen. Ohne sie fortfahren?",
+        "skipIncomplete": ""
       },
       "board": {
         "title": "Forme das Brett bevor es gebaut wird",
@@ -1930,6 +1932,8 @@
     "here": "Hier",
     "serviceUrlTemplate": {
       "serverTitle": "Übliche Server-Adresse",
+      "description": "",
+      "example": "",
       "urlModeLabel": "Service-Adressenmuster",
       "hostPort": "Gleicher Host, andere Ports",
       "subdomain": "Eine Subdomain pro Dienst",
@@ -4797,10 +4801,6 @@
           "label": "",
           "description": ""
         },
-        "collapsedSections": {
-          "label": "",
-          "description": ""
-        },
         "newReleaseWithin": {
           "label": "Neue Version innerhalb",
           "description": "Anwendungsbeispiel: 1w (1 Woche), 10M (10 Monate). Akzeptierte Einheiten h (Stunden), d (Tage), w (Wochen), M (Monate), y (Jahre). Leer lassen für keine Hervorhebung neuer Releases.",
@@ -5005,7 +5005,11 @@
       "runningVersions": "Laufende Versionen",
       "upToDate": "Aktuell",
       "updateAvailable": "Update verfügbar",
-      "unknownStatus": "Unbekannt"
+      "unknownStatus": "Unbekannt",
+      "error": {
+        "collapsedSaveTitle": "",
+        "collapsedSaveMessage": ""
+      }
     },
     "networkControllerSummary": {
       "advanced": {
@@ -5511,6 +5515,9 @@
       "name": "Beszel Systeme (Tabelle)",
       "description": "Tabellenansicht aller Beszel-überwachten Systeme mit sortierbaren Spalten und Statusindikatoren",
       "option": {
+        "fahrenheit": {
+          "label": "Temperatur in Fahrenheit"
+        },
         "sortBy": {
           "label": "Sortieren nach"
         },
@@ -5525,7 +5532,12 @@
     },
     "beszelSystemGrid": {
       "name": "Beszel Systems (Grid)",
-      "description": ""
+      "description": "",
+      "option": {
+        "fahrenheit": {
+          "label": "Temperatur in Fahrenheit"
+        }
+      }
     },
     "beszelAlerts": {
       "name": "Beszel-Meldungen",
@@ -7230,6 +7242,7 @@
             "model": {
               "title": "Modell",
               "description": "Wählen Sie ein entdecktes Modell aus oder geben Sie eine exakte Endpunkt-Modell-ID ein.",
+              "save": "",
               "placeholder": "Modell-ID",
               "refresh": "Modelle aktualisieren",
               "chooseModel": "Wählen Sie das Modell, das für neue Gespräche verwendet wird.",
