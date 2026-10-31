@@ -14,14 +14,20 @@ import * as appAccessControl from "../app/app-access-control";
 // Mock the auth module to return an empty session
 vi.mock("@homarr/auth", () => ({ auth: () => ({}) as Session }));
 
-const { fetchWebsiteMetadataAsyncMock } = vi.hoisted(() => ({
+const { fetchWebsiteMetadataAsyncMock, createImageAsyncMock } = vi.hoisted(() => ({
   fetchWebsiteMetadataAsyncMock: vi.fn(),
+  createImageAsyncMock: vi.fn(),
 }));
 
 // getIconForName keeps its real implementation, so only the network-dependent part is mocked
 vi.mock("@homarr/icons", async (importOriginal) => ({
   ...(await importOriginal<typeof IconsModule>()),
   fetchWebsiteMetadataAsync: fetchWebsiteMetadataAsyncMock,
+}));
+vi.mock("@homarr/image-proxy", () => ({
+  ImageProxy: class {
+    createImageAsync = createImageAsyncMock;
+  },
 }));
 
 const createFakeAccessControl = (canAccess: boolean) =>
@@ -403,12 +409,13 @@ describe("detectMetadata", () => {
     expect(fetchWebsiteMetadataAsyncMock).not.toHaveBeenCalled();
   });
 
-  test("returns the detected icon URL without registering a server-side fetch", async () => {
+  test("proxies the detected icon so the tile loads it from Homarr", async () => {
     // Arrange
     fetchWebsiteMetadataAsyncMock.mockResolvedValueOnce({
       title: "Example App",
       iconUrl: "https://app.example.com/favicon.ico",
     });
+    createImageAsyncMock.mockResolvedValueOnce("/api/image-proxy/persistent.abc");
     const caller = appRouter.createCaller({
       db: createDb(),
       deviceType: undefined,
@@ -419,10 +426,38 @@ describe("detectMetadata", () => {
     const result = await caller.detectMetadata({ href: "https://app.example.com" });
 
     // Assert
-    expect(result).toEqual({ name: "Example App", iconUrl: "https://app.example.com/favicon.ico" });
+    expect(result).toEqual({ name: "Example App", iconUrl: "/api/image-proxy/persistent.abc" });
+    expect(createImageAsyncMock).toHaveBeenCalledWith("https://app.example.com/favicon.ico", undefined, {
+      persistent: true,
+      allowPrivateNetwork: true,
+    });
   });
 
-  test("leaves page-declared LAN icon requests to the browser", async () => {
+  test("proxies an icon hosted on another public origin", async () => {
+    // Arrange
+    fetchWebsiteMetadataAsyncMock.mockResolvedValueOnce({
+      title: "Example App",
+      iconUrl: "https://cdn.example.com/favicon.ico",
+    });
+    createImageAsyncMock.mockResolvedValueOnce("/api/image-proxy/persistent.cdn");
+    const caller = appRouter.createCaller({
+      db: createDb(),
+      deviceType: undefined,
+      session: createDefaultSession(["app-create"]),
+    });
+
+    // Act
+    const result = await caller.detectMetadata({ href: "https://app.example.com" });
+
+    // Assert
+    expect(result).toEqual({ name: "Example App", iconUrl: "/api/image-proxy/persistent.cdn" });
+    expect(createImageAsyncMock).toHaveBeenCalledWith("https://cdn.example.com/favicon.ico", undefined, {
+      persistent: true,
+      allowPrivateNetwork: false,
+    });
+  });
+
+  test("leaves a page-declared icon on another private host to the browser", async () => {
     // Arrange
     fetchWebsiteMetadataAsyncMock.mockResolvedValueOnce({
       title: "Example App",
@@ -439,6 +474,51 @@ describe("detectMetadata", () => {
 
     // Assert
     expect(result).toEqual({ name: "Example App", iconUrl: "http://192.168.1.10/private" });
+    expect(createImageAsyncMock).not.toHaveBeenCalled();
+  });
+
+  test("proxies an icon on the private host that was dropped", async () => {
+    // Arrange
+    fetchWebsiteMetadataAsyncMock.mockResolvedValueOnce({
+      title: "Home Assistant",
+      iconUrl: "http://192.168.1.10/favicon.ico",
+    });
+    createImageAsyncMock.mockResolvedValueOnce("/api/image-proxy/persistent.local.abc");
+    const caller = appRouter.createCaller({
+      db: createDb(),
+      deviceType: undefined,
+      session: createDefaultSession(["app-create"]),
+    });
+
+    // Act
+    const result = await caller.detectMetadata({ href: "http://192.168.1.10:8123/" });
+
+    // Assert
+    expect(result).toEqual({ name: "Home Assistant", iconUrl: "/api/image-proxy/persistent.local.abc" });
+    expect(createImageAsyncMock).toHaveBeenCalledWith("http://192.168.1.10/favicon.ico", undefined, {
+      persistent: true,
+      allowPrivateNetwork: true,
+    });
+  });
+
+  test("falls back to the site icon url when registering it with the proxy fails", async () => {
+    // Arrange
+    fetchWebsiteMetadataAsyncMock.mockResolvedValueOnce({
+      title: "Example App",
+      iconUrl: "https://app.example.com/favicon.ico",
+    });
+    createImageAsyncMock.mockRejectedValueOnce(new Error("proxy unavailable"));
+    const caller = appRouter.createCaller({
+      db: createDb(),
+      deviceType: undefined,
+      session: createDefaultSession(["app-create"]),
+    });
+
+    // Act
+    const result = await caller.detectMetadata({ href: "https://app.example.com" });
+
+    // Assert
+    expect(result).toEqual({ name: "Example App", iconUrl: "https://app.example.com/favicon.ico" });
   });
 
   test("uses the hostname when no title was detected", async () => {
@@ -455,5 +535,6 @@ describe("detectMetadata", () => {
 
     // Assert
     expect(result.name).toBe("app.example.com");
+    expect(createImageAsyncMock).not.toHaveBeenCalled();
   });
 });

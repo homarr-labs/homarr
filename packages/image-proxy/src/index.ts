@@ -3,8 +3,19 @@ import { setImmediate } from "node:timers/promises";
 
 import { createId, formatBytes } from "@homarr/common";
 import { env } from "@homarr/common/env";
-import { decryptSecret, encryptSecret, readBoundedResponseAsync, verifyKeyedFingerprint } from "@homarr/common/server";
-import { cancelBodyAsync, fetchGuardedAsync } from "@homarr/core/infrastructure/http";
+import {
+  createKeyedFingerprint,
+  decryptSecret,
+  encryptSecret,
+  readBoundedResponseAsync,
+  verifyKeyedFingerprint,
+} from "@homarr/common/server";
+import {
+  cancelBodyAsync,
+  fetchGuardedAsync,
+  isLiteralNonPublicAddress,
+  isNonPublicHttpTargetAsync,
+} from "@homarr/core/infrastructure/http";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import { ErrorWithMetadata } from "@homarr/core/infrastructure/logs/error";
 import { createGetSetChannel } from "@homarr/redis";
@@ -40,7 +51,27 @@ export class ImageProxy {
     return this.hmacKey;
   }
 
-  public async createImageAsync(url: string, headers?: Record<string, string>): Promise<string> {
+  public async createImageAsync(
+    url: string,
+    headers?: Record<string, string>,
+    options?: { persistent?: boolean; allowPrivateNetwork?: boolean },
+  ): Promise<string> {
+    if (options?.persistent) {
+      if (headers) throw new Error("Persistent image URLs cannot contain integration headers");
+      // App icons are saved in the database, unlike periodically refreshed integration
+      // images. A signed, encrypted source survives Redis expiry and server restarts.
+      // allowPrivateNetwork is signed into the id so a caller cannot flip it later.
+      const encryptedUrl = encryptSecret(url);
+      const allowPrivateNetwork = options.allowPrivateNetwork === true;
+      const signature = createKeyedFingerprint(
+        allowPrivateNetwork ? `image-proxy:persistent:local:${encryptedUrl}` : `image-proxy:persistent:${encryptedUrl}`,
+      );
+      const id = allowPrivateNetwork
+        ? `persistent.local.${signature}.${encryptedUrl}`
+        : `persistent.${signature}.${encryptedUrl}`;
+      return this.createImageUrl(id);
+    }
+
     const existingId = await this.getExistingIdAsync(url, headers);
     if (existingId) {
       logger.debug("Image already exists in the proxy", {
@@ -87,11 +118,31 @@ export class ImageProxy {
   }
 
   public async forwardImageAsync(id: string, requestSignal?: AbortSignal): Promise<ForwardImageResult> {
-    if (id.startsWith("persistent.")) return this.getPersistentImageRedirect(id);
-    const urlAndHeaders = await this.getImageUrlAndHeadersAsync(id);
+    let urlAndHeaders: {
+      url: string;
+      headers: Record<string, string> | null;
+      trustedOrigin: string | undefined;
+    } | null;
+    let blockPrivateNetworks: boolean | "off-origin" | undefined;
+
+    if (id.startsWith("persistent.")) {
+      const persistent = this.parsePersistentImage(id);
+      if (!persistent) return { error: "not-found" };
+      // Legacy ids, and icons that are not on the host the user added, never fetch a
+      // private or metadata address. The browser can still request the source itself.
+      if (!persistent.allowPrivateNetwork && isLiteralNonPublicAddress(new URL(persistent.url).hostname)) {
+        return { redirectUrl: persistent.url };
+      }
+      urlAndHeaders = { url: persistent.url, headers: null, trustedOrigin: undefined };
+      blockPrivateNetworks = persistent.allowPrivateNetwork ? "off-origin" : true;
+    } else {
+      urlAndHeaders = await this.getImageUrlAndHeadersAsync(id);
+      blockPrivateNetworks = undefined;
+    }
     if (!urlAndHeaders) {
       return { error: "not-found" };
     }
+    const imageTarget = urlAndHeaders;
 
     const proxyUrl = this.createImageUrl(id);
     const controller = new AbortController();
@@ -102,11 +153,18 @@ export class ImageProxy {
     );
     try {
       signal.throwIfAborted();
+      if (blockPrivateNetworks === true && (await isNonPublicHttpTargetAsync(new URL(imageTarget.url), signal))) {
+        return { redirectUrl: imageTarget.url };
+      }
+      // Page-declared icons are untrusted on every fetch, including redirects and DNS
+      // changes. Existing integration images retain loopback and HTTP proxy support
+      // only on their registered origin; redirects elsewhere lose credentials and trust.
       return await fetchGuardedAsync(
-        new URL(urlAndHeaders.url),
+        new URL(imageTarget.url),
         {
-          headers: urlAndHeaders.headers ?? undefined,
-          trustedOrigin: urlAndHeaders.trustedOrigin,
+          headers: imageTarget.headers ?? undefined,
+          trustedOrigin: imageTarget.trustedOrigin,
+          blockPrivateNetworks,
           timeout: IMAGE_PROXY_TIMEOUT_MS,
           signal,
         },
@@ -116,8 +174,8 @@ export class ImageProxy {
             logger.error(
               new ErrorWithMetadata("Failed to fetch image", {
                 id,
-                url: this.redactUrl(urlAndHeaders.url),
-                headers: this.redactHeaders(urlAndHeaders.headers),
+                url: this.redactUrl(imageTarget.url),
+                headers: this.redactHeaders(imageTarget.headers),
                 proxyUrl,
                 statusCode: response.status,
               }),
@@ -129,8 +187,8 @@ export class ImageProxy {
           const image = body?.buffer ?? new ArrayBuffer(0);
           logger.debug("Forwarding image succeeded", {
             id,
-            url: this.redactUrl(urlAndHeaders.url),
-            headers: this.redactHeaders(urlAndHeaders.headers),
+            url: this.redactUrl(imageTarget.url),
+            headers: this.redactHeaders(imageTarget.headers),
             proxyUrl,
             size: formatBytes(image.byteLength),
           });
@@ -144,8 +202,8 @@ export class ImageProxy {
           "Failed to forward image",
           {
             id,
-            url: this.redactUrl(urlAndHeaders.url),
-            headers: this.redactHeaders(urlAndHeaders.headers),
+            url: this.redactUrl(imageTarget.url),
+            headers: this.redactHeaders(imageTarget.headers),
             proxyUrl,
           },
           { cause: error },
@@ -162,18 +220,24 @@ export class ImageProxy {
     return `/api/image-proxy/${id}`;
   }
 
-  private getPersistentImageRedirect(id: string): ForwardImageResult {
-    const parts = /^persistent\.([a-f0-9]{64})\.([a-f0-9]+)\.([a-f0-9]{32})$/.exec(id);
-    if (!parts) return { error: "not-found" };
+  private parsePersistentImage(id: string): { url: string; allowPrivateNetwork: boolean } | null {
+    const localParts = /^persistent\.local\.([a-f0-9]{64})\.([a-f0-9]+)\.([a-f0-9]{32})$/.exec(id);
+    const legacyParts = localParts ? null : /^persistent\.([a-f0-9]{64})\.([a-f0-9]+)\.([a-f0-9]{32})$/.exec(id);
+    const parts = localParts ?? legacyParts;
+    if (!parts) return null;
+    const allowPrivateNetwork = localParts !== null;
     const [, signature = "", ciphertext = "", initializationVector = ""] = parts;
     const encryptedUrl = `${ciphertext}.${initializationVector}` as const;
-    if (!verifyKeyedFingerprint(`image-proxy:persistent:${encryptedUrl}`, signature)) return { error: "not-found" };
+    const fingerprint = allowPrivateNetwork
+      ? `image-proxy:persistent:local:${encryptedUrl}`
+      : `image-proxy:persistent:${encryptedUrl}`;
+    if (!verifyKeyedFingerprint(fingerprint, signature)) return null;
     try {
       const url = URL.parse(decryptSecret(encryptedUrl));
-      if (!url || (url.protocol !== "http:" && url.protocol !== "https:")) return { error: "not-found" };
-      return { redirectUrl: url.href };
+      if (!url || (url.protocol !== "http:" && url.protocol !== "https:")) return null;
+      return { url: url.href, allowPrivateNetwork };
     } catch {
-      return { error: "not-found" };
+      return null;
     }
   }
 
