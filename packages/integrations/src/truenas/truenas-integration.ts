@@ -335,16 +335,48 @@ export class TrueNasIntegration extends Integration implements ISystemHealthMoni
     return result;
   }
 
+  /**
+   * TrueNAS can append a zero-filled row for the second that is still being collected. Ending the
+   * query a few seconds early avoids that when the clocks agree, but a Homarr host clock ahead of
+   * the NAS still includes it. Prefer a collected row only when it falls inside the collection
+   * interval of the latest sample; older zeros are treated as a real idle reading.
+   */
+  private latestCollectedRow(legend: string[], data: number[][]) {
+    const timeIndex = legend.indexOf("time");
+    const latest = data.at(-1);
+    if (!latest) return latest;
+
+    const hasCollectedValue = (row: number[]) => row.some((value, index) => index !== timeIndex && value !== 0);
+
+    if (hasCollectedValue(latest)) return latest;
+
+    const collected = data.findLast(hasCollectedValue);
+    if (!collected || timeIndex < 0) return latest;
+
+    const latestTime = latest[timeIndex];
+    const collectedTime = collected[timeIndex];
+    if (
+      latestTime === undefined ||
+      collectedTime === undefined ||
+      latestTime - collectedTime > REPORTING_DELAY_SECONDS
+    ) {
+      return latest;
+    }
+
+    return collected;
+  }
+
   private extractNetworkTrafficData = (data: z.infer<typeof reportingNetDataSchema>, column: "sent" | "received") => {
     return data.reduce((total, report) => {
-      const value = report.data.at(-1)?.[report.legend.indexOf(column)] ?? 0;
+      const row = this.latestCollectedRow(report.legend, report.data);
+      const value = row?.[report.legend.indexOf(column)] ?? 0;
       return total + value;
     }, 0);
   };
 
   private extractLatestReportingData(data: ReportingItem[], identifier: ReportingItem["identifier"]) {
     const item = data.find((reportingItem) => reportingItem.identifier === identifier);
-    const latest = item?.data.at(-1);
+    const latest = item ? this.latestCollectedRow(item.legend, item.data) : undefined;
     if (!item || !latest?.length) throw new ParseError(`TrueNAS returned no "${identifier}" reporting data`);
     if (new Set(item.legend).size !== item.legend.length) {
       throw new ParseError(`TrueNAS returned duplicate "${identifier}" reporting columns`);
