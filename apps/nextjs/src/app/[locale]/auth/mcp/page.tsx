@@ -1,6 +1,6 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { Anchor, Button, Code, Divider, Group, SimpleGrid, Stack, Text } from "@mantine/core";
+import { Anchor, Button, Code, Divider, Group, NativeSelect, SimpleGrid, Stack, Text } from "@mantine/core";
 
 import { auth } from "@homarr/auth/next";
 import { sessionTokenCookieName } from "@homarr/auth/server";
@@ -132,6 +132,16 @@ export default async function McpConsentPage({ params, searchParams }: McpConsen
         <input type="hidden" name="pending" value={consent.pendingId} />
         <input type="hidden" name="consentToken" value={consent.consentToken} />
         <Stack gap="sm">
+          <NativeSelect
+            name="accessMode"
+            label={t("mode.label")}
+            description={t("mode.readOnlyDescription")}
+            defaultValue="readOnly"
+          >
+            <option value="readOnly">{t("mode.readOnly")}</option>
+            {consent.requestedScope === "mcp:tools" && <option value="readWrite">{t("mode.readWrite")}</option>}
+          </NativeSelect>
+          {consent.requestedScope === "mcp:tools" && <Text size="sm">{t("mode.readWriteDescription")}</Text>}
           <Text size="sm" id="mcp-decision-hint">
             {t("decisionHint")}
           </Text>

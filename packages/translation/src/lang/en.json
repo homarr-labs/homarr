@@ -278,14 +278,21 @@
           "destinationHint": "Your decision will return to this callback. If you allow access, the client can exchange the authorization code for an API credential."
         },
         "access": {
-          "title": "Account access",
-          "description": "Uses your current permissions, including shared resources.",
+          "title": "Account permission ceiling",
+          "description": "These are your account's maximum permissions, including shared resources. Read-only credential access restricts them further.",
           "details": "View permissions ({count})",
           "noGlobalPermissions": "Uses your account and shared-resource access, with no global permissions."
         },
         "admin": {
-          "title": "Full administrator access",
-          "description": "Can manage Homarr and connected services, including destructive actions."
+          "title": "Administrator account",
+          "description": "Read-only access permits administrative reads, not changes. Choosing read and write permits managing Homarr and connected services, including destructive actions."
+        },
+        "mode": {
+          "label": "Credential access",
+          "readOnly": "Read-only (recommended)",
+          "readWrite": "Read and write",
+          "readOnlyDescription": "Read-only blocks changes, service actions, arbitrary integration requests and Custom Widget API execution. Your existing resource permissions still apply.",
+          "readWriteDescription": "Choose read and write only if this client needs to make changes or control connected services."
         },
         "credential": {
           "title": "Credential scope and lifetime",
@@ -7384,6 +7391,12 @@
             "apiKey": {
               "label": "Authentication",
               "title": "API Keys",
+              "access": {
+                "label": "Access",
+                "readOnly": "Read-only",
+                "readWrite": "Read and write",
+                "description": "Blocks changes, service actions and arbitrary upstream requests."
+              },
               "button": {
                 "createApiToken": "Create API token",
                 "confirmDeletion": "Confirm deletion"
@@ -7449,7 +7462,7 @@
               },
               "authentication": {
                 "title": "Authentication",
-                "intro": "You can authenticate with your MCP server using either an API key or OAuth. Both methods grant the same level of access.",
+                "intro": "Authenticate using an API key or OAuth. Both support read-only or read-and-write credentials.",
                 "apiKey": {
                   "title": "API Key (manual)",
                   "description": "Pass the ApiKey header with your full API key in the MCP client configuration."
@@ -7459,7 +7472,7 @@
                   "description": "Start authorization in your OAuth client and sign in to Homarr if needed. Review the client, callback destination and account access, then choose Allow access only if you trust the client. An API credential is created only after approval and a successful code exchange.",
                   "hint": "Revoke recorded OAuth connections in your own General settings. Administrators can also revoke credentials in the Authentication tab. These credentials work with Homarr's HTTP API and MCP, do not expire automatically, and remain valid after sign-out."
                 },
-                "permissions": "The API key determines the permissions available to the AI — it operates with the same access level as the key owner."
+                "permissions": "Credentials cannot exceed the owner's current permissions. Read-only credentials also block changes, service actions and arbitrary upstream requests."
               },
               "clientConfig": {
                 "title": "Client Configuration",

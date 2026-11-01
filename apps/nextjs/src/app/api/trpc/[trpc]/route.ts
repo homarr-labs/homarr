@@ -32,13 +32,17 @@ export function OPTIONS() {
 }
 
 const handler = auth(async (req) => {
-  // Try API key auth first, fall back to session cookie
   const apiKeyHeader = req.headers.get(API_KEY_HEADER_NAME);
   const ipAddress = ipAddressFromHeaders(req.headers);
 
   const { ua } = userAgent(req);
 
   const apiKeySession = await getSessionFromApiKeyAsync(db, apiKeyHeader, ipAddress, ua);
+  if (apiKeyHeader !== null && !apiKeySession) {
+    const response = Response.json({ error: "UNAUTHORIZED" }, { status: 401 });
+    setCorsHeaders(response);
+    return response;
+  }
   const session = apiKeySession ?? req.auth;
 
   const response = await fetchRequestHandler({

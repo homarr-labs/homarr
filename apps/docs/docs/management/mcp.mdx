@@ -60,6 +60,9 @@ For clients that only support STDIO, use `mcp-remote`:
 
 Clients with OAuth support can authorize through OAuth 2.1 with PKCE instead of an API key.
 Homarr publishes discovery metadata under `/.well-known/`.
+New consent defaults to read-only. Clients can request `mcp:tools:read` to prohibit write access, or `mcp:tools` to offer
+an explicit read-and-write choice. Omitting scope retains that broad request, but still requires opting into writes at
+consent. The token response reports the approved scope; the restriction also applies if the token is used with the HTTP API.
 
 Set `BASE_URL` to your canonical public origin, such as `https://homarr.example.com`, without a path,
 when a reverse proxy terminates TLS or changes the public Host. For TLS termination, an explicit HTTPS
@@ -67,7 +70,9 @@ when a reverse proxy terminates TLS or changes the public Host. For TLS terminat
 
 ## Permissions and tools
 
-Tools use the permissions of the API key owner or OAuth user. Queries read data; mutations change it.
+Tools cannot exceed the current permissions of the credential owner. Read-only credentials omit write tools and unsafe
+upstream-execution queries; direct calls are denied too. They cannot use `integration_request`, even for GET, or execute
+Custom Widget API requests. Existing credentials keep their previous writable access.
 Inspect the **AI / MCP** tab or your client's tool list for available actions.
 
 Custom Widget and Workshop authoring tools, prompts, and resources require administrator access.
@@ -116,7 +121,7 @@ A successful discovery or initialization response alone does not verify that too
 ## Troubleshooting
 
 - **`invalid_token`**: copy the complete API key in `<id>.<token>` format.
-- **Missing tools**: check the user's permissions. Invalid tool schemas and duplicate names are omitted; check server
+- **Missing tools**: check the credential's read-only mode and the user's permissions. Invalid tool schemas and duplicate names are omitted; check server
   logs for `MCP tool omitted from catalog` and report the diagnostic with your Homarr version. Exclude API keys.
 - **`Date cannot be represented in JSON Schema`**: update Homarr. Older versions could fail to list all tools because
   of an unsupported date schema.
