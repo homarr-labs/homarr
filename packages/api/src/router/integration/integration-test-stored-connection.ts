@@ -27,7 +27,16 @@ export const integrationTestStoredConnectionProcedure = protectedProcedure
       z.object({ success: z.literal(true) }),
       z.object({
         success: z.literal(false),
-        error: z.enum(["missingSecret", "authorization", "certificate", "request", "statusCode", "parse", "unknown"]),
+        error: z.enum([
+          "missingSecret",
+          "authorization",
+          "certificate",
+          "request",
+          "statusCode",
+          "parse",
+          "unknown",
+          "openmediavault",
+        ]),
       }),
     ]),
   )
