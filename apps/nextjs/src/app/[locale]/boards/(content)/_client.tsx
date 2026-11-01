@@ -1,7 +1,7 @@
 "use client";
 
 import type { PropsWithChildren } from "react";
-import { Box, Paper, Stack, Text } from "@mantine/core";
+import { Box, Paper, px, Stack, Text, useMantineTheme } from "@mantine/core";
 import { IconBulb } from "@tabler/icons-react";
 
 import { useCurrentLayout, useInitialViewportWidth, useLayoutOverride, useRequiredBoard } from "@homarr/boards/context";
@@ -11,6 +11,7 @@ import { useI18n } from "@homarr/translation/client";
 import { FloatingTip } from "@homarr/ui";
 
 import { BoardAdvancedFocusProvider } from "~/components/board/advanced-focus/context";
+import { BoardAppUrlDrop } from "~/components/board/board-app-url-drop";
 import { BoardAppsSpotlightRegistrar } from "~/components/board/board-apps-spotlight-registrar";
 import { BoardEmptyState } from "~/components/board/board-empty-state";
 import { BoardSetupChecklist } from "~/components/board/board-setup-checklist";
@@ -32,8 +33,6 @@ import { BoardSelectionProvider } from "~/components/board/selection/board-selec
 import { BoardSelectionToolbar } from "~/components/board/selection/board-selection-toolbar";
 import classes from "./_client.module.css";
 
-const APP_SHELL_SIDE_PADDING = 32;
-
 const BoardSelectionGridProvider = ({ children }: PropsWithChildren) => (
   <GridEditorRegistryProvider>
     <BoardSelectionProvider>{children}</BoardSelectionProvider>
@@ -49,6 +48,7 @@ export const ClientBoard = () => {
   const currentLayoutId = useCurrentLayout();
   const initialViewportWidth = useInitialViewportWidth();
   const layoutOverrideId = useLayoutOverride();
+  const theme = useMantineTheme();
   const currentLayout = board.layouts.find((layout) => layout.id === currentLayoutId) ?? board.layouts.at(0);
   if (!currentLayout) throw new Error("Expected the board to contain a layout");
 
@@ -67,11 +67,16 @@ export const ClientBoard = () => {
     laneWidths.reduce((total, width) => total + width, 0) + (laneWidths.length - 1) * LOGICAL_GRID_GAP;
   const initialLogicalHeight = getInitialBoardLogicalHeight(board, currentLayoutId);
   const representativeWidth = layoutOverrideId ? getRepresentativeLayoutWidth(currentLayout, board.layouts) : null;
+  const shellPadding = Number(px(theme.spacing.xs));
+  const belowSmallViewport = initialViewportWidth > 0 && initialViewportWidth < Number(px(theme.breakpoints.sm));
+  const isPreview = representativeWidth !== null;
+  const previewWidth = Math.max(1, Math.min(representativeWidth ?? 1, initialViewportWidth - Number(px("2rem"))));
   let inlinePadding = 0;
-  if (leftColumnCount === 0) inlinePadding += APP_SHELL_SIDE_PADDING;
-  if (rightColumnCount === 0) inlinePadding += APP_SHELL_SIDE_PADDING;
-  if (representativeWidth !== null) inlinePadding = APP_SHELL_SIDE_PADDING * 2;
-  const initialAvailableWidth = Math.max(1, (representativeWidth ?? initialViewportWidth) - inlinePadding);
+  if (!isPreview && !belowSmallViewport) {
+    if (leftColumnCount === 0) inlinePadding += shellPadding;
+    if (rightColumnCount === 0) inlinePadding += shellPadding;
+  }
+  const initialAvailableWidth = Math.max(1, (isPreview ? previewWidth : initialViewportWidth) - inlinePadding);
   const gridTemplateColumns = [
     leftColumnCount > 0 ? `${getLogicalGridSize(leftColumnCount)}px` : null,
     `${getLogicalGridSize(mainColumnCount)}px`,
@@ -96,6 +101,7 @@ export const ClientBoard = () => {
           <BoardBackgroundVideo />
           <BoardEmptyState />
           <BoardSetupChecklist />
+          <BoardAppUrlDrop />
           <BoardSectionCollapseProvider>
             <BoardGridPortalHost>
               <ScaledBoardCanvas

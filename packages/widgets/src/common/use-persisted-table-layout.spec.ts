@@ -26,7 +26,7 @@ const columns: DataTableColumn<{ name: string; state: string }>[] = [{ accessor:
 const columnAccessors = ["name", "state"] as const;
 
 const LayoutHarness = ({ itemId, onLayoutChange }: { itemId: string; onLayoutChange: (layout: unknown) => void }) => {
-  usePersistedTableLayout({
+  const { onColumnLayoutChange } = usePersistedTableLayout({
     columns,
     columnAccessors,
     columnOrder: "",
@@ -35,7 +35,7 @@ const LayoutHarness = ({ itemId, onLayoutChange }: { itemId: string; onLayoutCha
     storeKeyPrefix: "test-table",
     onLayoutChange,
   });
-  return null;
+  return createElement("button", { onClick: () => onColumnLayoutChange("columnOrder") }, "Reorder");
 };
 
 describe("usePersistedTableLayout", () => {
@@ -71,6 +71,7 @@ describe("usePersistedTableLayout", () => {
     await act(async () => {
       root.render(createElement(LayoutHarness, { itemId: "first", onLayoutChange: firstItemLayoutChange }));
     });
+    await act(async () => container.querySelector("button")?.click());
     expect(firstItemLayoutChange).not.toHaveBeenCalled();
 
     await act(async () => {

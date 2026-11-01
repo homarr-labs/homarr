@@ -9,6 +9,7 @@ import { optionsBuilder } from "../options";
 import { calendarViews } from "./calendar-view";
 
 export const { definition, componentLoader } = createWidgetDefinition("calendar", {
+  deferUntilVisible: true,
   icon: IconCalendar,
   supportsAdvancedFocus: true,
   queryKey: [["widget", "calendar", "findAllEvents"]],
@@ -21,6 +22,10 @@ export const { definition, componentLoader } = createWidgetDefinition("calendar"
           value,
           label: (t) => t(`widget.calendar.view.${value}`),
         })),
+      }),
+      hideHeader: factory.switch({
+        defaultValue: false,
+        withDescription: true,
       }),
       releaseType: factory.multiSelect({
         defaultValue: ["inCinemas", "digitalRelease"],

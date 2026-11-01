@@ -7,23 +7,33 @@ on:
   push:
     paths:
       - "packages/translation/src/lang/**"
+      - "crowdin.yml"
+      - ".github/workflows/crowdin-upload.yml"
     branches: [dev]
+
+concurrency:
+  group: crowdin-sync
+  queue: max
+  cancel-in-progress: false
 
 jobs:
   upload-crowdin-translations:
     # Don't run this action if the downloaded translations are being pushed
-    if: "!contains(github.event.head_commit.message, 'chore(lang)')"
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      !startsWith(github.event.head_commit.message, 'chore(lang): updated translations from crowdin')
     runs-on: ubuntu-latest
     timeout-minutes: 5
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          ref: dev
           persist-credentials: false
 
       - name: Upload Crowdin translations
-        uses: crowdin/github-action@8f01d54f70f1713ee3f09d82c2bbb2daeac28689 # v2.17.1
+        uses: crowdin/github-action@959dc74ac104447731cba99a016f85d0ae719788 # v3.5.0
         with:
           upload_sources: true
           upload_translations: true

@@ -197,6 +197,7 @@ export const getBookmarkDisplayPlan = ({
   advanced,
   gap = 0,
   height,
+  hideHostname = false,
   itemCount,
   layout,
   width,
@@ -204,6 +205,7 @@ export const getBookmarkDisplayPlan = ({
   advanced: boolean;
   gap?: number;
   height: number;
+  hideHostname?: boolean;
   itemCount: number;
   layout: BookmarkLayout;
   width: number;
@@ -247,14 +249,19 @@ export const getBookmarkDisplayPlan = ({
   }
 
   if (layout === "column") {
+    const itemGap = Math.min(gap, 4);
+    const availableItemHeight = (normalizedHeight - Math.max(0, count - 1) * itemGap) / count;
+    let itemHeight = 32;
+    if (!hideHostname && widthSettings.showTitle && availableItemHeight >= 48) itemHeight = 48;
+
     return {
       columns: 1,
       horizontalScroll: false,
-      itemGap: Math.min(gap, 4),
-      itemHeight: 32,
+      itemGap,
+      itemHeight,
       itemWidth: width,
       orientation: "horizontal",
-      showHostname: widthSettings.showHostname,
+      showHostname: widthSettings.showTitle,
       showTitle: widthSettings.showTitle,
     };
   }

@@ -2,11 +2,13 @@ import { z } from "zod/v4";
 
 import { httpIntegrationKinds } from "@homarr/definitions/integration";
 
-import { customWidgetMethods } from "./schema-types";
+import { customWidgetMethods, MAX_CUSTOM_WIDGET_HEADER_SLOT_LENGTH } from "./schema-types";
+import {
+  CUSTOM_WIDGET_HEADER_NAME_PATTERN,
+  isReservedCustomWidgetRequestHeader,
+  MAX_CUSTOM_WIDGET_AUTH_HEADERS,
+} from "./request-header-policy";
 import { getCustomWidgetHttpUrlIssue } from "./url-policy";
-
-export const customJsxNetworkScopes = ["public", "private", "loopback"] as const;
-export type CustomJsxNetworkScope = (typeof customJsxNetworkScopes)[number];
 
 export const customWidgetIdentifierSchema = z
   .string()
@@ -18,12 +20,48 @@ const headerNameSchema = z
   .string()
   .min(1)
   .max(256)
-  .regex(/^[!#$%&'*+\-.^_`|~0-9A-Za-z]+$/u, "Header names must be valid HTTP tokens");
+  .regex(CUSTOM_WIDGET_HEADER_NAME_PATTERN, "Header names must be valid HTTP tokens");
+
+export const customWidgetAuthenticationHeadersSchema = z
+  .array(
+    z.strictObject({
+      name: headerNameSchema,
+      slot: customWidgetIdentifierSchema.max(MAX_CUSTOM_WIDGET_HEADER_SLOT_LENGTH),
+    }),
+  )
+  .min(1)
+  .max(MAX_CUSTOM_WIDGET_AUTH_HEADERS)
+  .superRefine((headers, ctx) => {
+    const names = new Set<string>();
+    const slots = new Set<string>();
+    headers.forEach((header, index) => {
+      if (isReservedCustomWidgetRequestHeader(header.name)) {
+        ctx.addIssue({ code: "custom", path: [index, "name"], message: "This header is reserved" });
+      }
+      const name = header.name.toLowerCase();
+      if (names.has(name)) {
+        ctx.addIssue({ code: "custom", path: [index, "name"], message: "Authentication header names must be unique" });
+      }
+      if (slots.has(header.slot)) {
+        ctx.addIssue({
+          code: "custom",
+          path: [index, "slot"],
+          message: "Authentication credential slots must be unique",
+        });
+      }
+      names.add(name);
+      slots.add(header.slot);
+    });
+  });
+export type CustomWidgetAuthenticationHeader = z.infer<typeof customWidgetAuthenticationHeadersSchema>[number];
+
+export { MAX_CUSTOM_WIDGET_AUTH_HEADERS } from "./request-header-policy";
 
 const authSchema = z.union([
   z.enum(["none", "bearer", "basic"]),
   z.strictObject({ type: z.literal("apiKeyHeader"), name: headerNameSchema }),
   z.strictObject({ type: z.literal("apiKeyQuery"), name: z.string().trim().min(1).max(256) }),
+  z.strictObject({ type: z.literal("headers"), headers: customWidgetAuthenticationHeadersSchema }),
 ]);
 
 export type CustomWidgetSourceUrlIssue = "invalid" | "protocol" | "credentials" | "queryOrFragment";
@@ -56,7 +94,8 @@ export const customWidgetHttpSourceSchema = z.strictObject({
     })
     .url()
     .max(2048),
-  networkScope: z.enum(customJsxNetworkScopes),
+  // Retain legacy metadata so existing definitions and Workshop exports stay compatible.
+  networkScope: z.unknown().optional(),
   auth: authSchema.default("none"),
 });
 export const customWidgetIntegrationSourceSchema = z.strictObject({
@@ -103,38 +142,11 @@ export const boundValueSchema: z.ZodType<unknown> = z.lazy(() =>
   ]),
 );
 
-const reservedRequestHeaders = new Set([
-  "authorization",
-  "connection",
-  "content-length",
-  "cookie",
-  "expect",
-  "forwarded",
-  "host",
-  "keep-alive",
-  "proxy-authenticate",
-  "proxy-authorization",
-  "te",
-  "trailer",
-  "transfer-encoding",
-  "upgrade",
-  "via",
-]);
-
 const headersSchema = z
   .record(headerNameSchema, z.string().max(8192))
   .refine((headers) => Object.keys(headers).length <= 32, "A request can declare at most 32 headers")
   .refine(
-    (headers) =>
-      Object.keys(headers).every((name) => {
-        const normalized = name.toLowerCase();
-        return (
-          !reservedRequestHeaders.has(normalized) &&
-          !normalized.startsWith("proxy-") &&
-          !normalized.startsWith("sec-") &&
-          !normalized.startsWith("x-forwarded-")
-        );
-      }),
+    (headers) => Object.keys(headers).every((name) => !isReservedCustomWidgetRequestHeader(name)),
     "Headers cannot override authentication, cookies, routing, forwarding, proxy, or hop-by-hop headers",
   )
   .refine(
@@ -176,7 +188,13 @@ export const customJsxRequestSchema = z
     headers: headersSchema.optional(),
     auth: z.enum(["inherit", "none"]).default("inherit"),
     permission: z.enum(["view", "modify", "full"]).optional(),
-    cacheSeconds: z.number().int().min(0).max(3600).optional(),
+    cacheSeconds: z
+      .number()
+      .int()
+      .min(0)
+      .max(3600)
+      .optional()
+      .describe("Query response cache lifetime in seconds. Defaults to 30; set 0 to disable caching."),
     confirmation: confirmationSchema.optional(),
     invalidates: z.array(customWidgetIdentifierSchema).max(32).optional(),
   })

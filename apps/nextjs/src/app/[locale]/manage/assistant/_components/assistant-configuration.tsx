@@ -29,7 +29,6 @@ import {
   IconAlertTriangle,
   IconBrandGithub,
   IconCheck,
-  IconCircleCheck,
   IconDatabaseSearch,
   IconKey,
   IconPlus,
@@ -41,6 +40,7 @@ import {
   IconWorld,
 } from "@tabler/icons-react";
 
+import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import {
   assistantProviderCanUseOpenRouterServerTools,
@@ -140,27 +140,35 @@ const ConfigurationSkeleton = ({ label }: { label: string }) => (
 );
 
 interface AssistantConfigurationProps {
+  initialConfiguration?: RouterOutputs["assistant"]["getAdminConfiguration"];
   // Onboarding defers the root provider refresh until completion to preserve setup drafts.
   refreshAfterSave?: boolean;
 }
 
-export const AssistantConfiguration = ({ refreshAfterSave = true }: AssistantConfigurationProps) => {
+export const AssistantConfiguration = ({
+  initialConfiguration,
+  refreshAfterSave = true,
+}: AssistantConfigurationProps) => {
   const t = useI18n("management.page.settings.section.assistant");
   const tCommon = useI18n("common");
   const router = useRouter();
   const utils = clientApi.useUtils();
-  const { data: configuration, isLoading } = clientApi.assistant.getAdminConfiguration.useQuery();
-  const [provider, setProvider] = useState<AssistantProvider>("homarr");
-  const [baseUrl, setBaseUrl] = useState<string>(assistantProviderPresets.homarr.baseUrl);
-  const [modelDiscoveryPath, setModelDiscoveryPath] = useState<string>("/models");
+  const { data: configuration, isLoading } = clientApi.assistant.getAdminConfiguration.useQuery(undefined, {
+    initialData: initialConfiguration,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+  });
+  const [provider, setProvider] = useState<AssistantProvider>(configuration?.provider ?? "homarr");
+  const [baseUrl, setBaseUrl] = useState(configuration?.baseUrl ?? assistantProviderPresets.homarr.baseUrl);
+  const [modelDiscoveryPath, setModelDiscoveryPath] = useState(configuration?.modelDiscoveryPath ?? "/models");
   const [apiKey, setApiKey] = useState("");
   const [credentialFlow, setCredentialFlow] = useState<CredentialFlow>("idle");
   const [headers, setHeaders] = useState<HeaderEntry[]>([]);
   const [clearHeaders, setClearHeaders] = useState(false);
   const [nextHeaderId, setNextHeaderId] = useState(1);
-  const [modelId, setModelId] = useState("");
-  const [enabled, setEnabled] = useState(false);
-  const [webSearchEnabled, setWebSearchEnabled] = useState(false);
+  const [modelId, setModelId] = useState(configuration?.modelId ?? "");
+  const [enabled, setEnabled] = useState(configuration?.enabled ?? false);
+  const [webSearchEnabled, setWebSearchEnabled] = useState(configuration?.webSearchEnabled ?? false);
 
   useEffect(() => {
     const configuredProvider = configuration?.provider ?? "homarr";
@@ -172,11 +180,20 @@ export const AssistantConfiguration = ({ refreshAfterSave = true }: AssistantCon
     );
     setModelDiscoveryPath(configuration?.modelDiscoveryPath ?? "");
     setModelId(configuration?.modelId ?? "");
-    setEnabled(configuration?.enabled ?? false);
     setWebSearchEnabled(configuration?.webSearchEnabled ?? false);
     setApiKey("");
     setCredentialFlow("idle");
-  }, [configuration]);
+  }, [
+    configuration?.provider,
+    configuration?.baseUrl,
+    configuration?.modelDiscoveryPath,
+    configuration?.modelId,
+    configuration?.webSearchEnabled,
+  ]);
+
+  useEffect(() => {
+    setEnabled(configuration?.enabled ?? false);
+  }, [configuration?.enabled]);
 
   const normalizedBaseUrl = baseUrl.trim().replace(/\/$/, "");
   const normalizedModelDiscoveryPath = modelDiscoveryPath.trim() || null;
@@ -194,7 +211,10 @@ export const AssistantConfiguration = ({ refreshAfterSave = true }: AssistantCon
     refetch: discoverModels,
   } = clientApi.assistant.discoverModels.useQuery(undefined, {
     enabled:
-      configuration?.connectionConfigured === true && configuration.modelDiscoveryPath !== null && !connectionChanged,
+      enabled &&
+      configuration?.connectionConfigured === true &&
+      configuration.modelDiscoveryPath !== null &&
+      !connectionChanged,
     staleTime: 5 * 60_000,
     retry: false,
   });
@@ -254,6 +274,9 @@ export const AssistantConfiguration = ({ refreshAfterSave = true }: AssistantCon
       setCredentialFlow("idle");
       setHeaders([]);
       setClearHeaders(false);
+      // Disabled discovery queries keep their previous models when invalidated.
+      await utils.assistant.discoverModels.cancel();
+      utils.assistant.discoverModels.setData(undefined, []);
       await Promise.all([
         utils.assistant.getAdminConfiguration.invalidate(),
         utils.assistant.discoverModels.invalidate(),
@@ -269,16 +292,20 @@ export const AssistantConfiguration = ({ refreshAfterSave = true }: AssistantCon
     onError: (error) => showErrorNotification({ title: t("notification.error.title"), message: error.message }),
   });
 
+  const refreshAssistantConfiguration = async () => {
+    await Promise.all([
+      utils.assistant.getAdminConfiguration.invalidate(),
+      utils.assistant.getAvailability.invalidate(),
+      utils.assistant.getRuntimeOptions.invalidate(),
+    ]);
+    if (refreshAfterSave) {
+      router.refresh();
+    }
+  };
+
   const saveConfiguration = clientApi.assistant.updateConfiguration.useMutation({
     onSuccess: async () => {
-      await Promise.all([
-        utils.assistant.getAdminConfiguration.invalidate(),
-        utils.assistant.getAvailability.invalidate(),
-        utils.assistant.getRuntimeOptions.invalidate(),
-      ]);
-      if (refreshAfterSave) {
-        router.refresh();
-      }
+      await refreshAssistantConfiguration();
       showSuccessNotification({
         title: t("notification.saved.title"),
         message: t("notification.saved.message"),
@@ -287,7 +314,16 @@ export const AssistantConfiguration = ({ refreshAfterSave = true }: AssistantCon
     onError: (error) => showErrorNotification({ title: t("notification.error.title"), message: error.message }),
   });
 
-  const pending = updateConnection.isPending || saveConfiguration.isPending;
+  const updateAvailability = clientApi.assistant.updateConfiguration.useMutation({
+    onMutate: (input) => setEnabled(input.enabled),
+    onSuccess: refreshAssistantConfiguration,
+    onError: (error) => {
+      setEnabled(configuration?.enabled ?? false);
+      showErrorNotification({ title: t("notification.error.title"), message: error.message });
+    },
+  });
+
+  const pending = updateConnection.isPending || saveConfiguration.isPending || updateAvailability.isPending;
 
   const resetCredentialFlow = () => {
     setApiKey("");
@@ -299,7 +335,6 @@ export const AssistantConfiguration = ({ refreshAfterSave = true }: AssistantCon
     setHeaders([]);
     setClearHeaders(false);
     setModelId("");
-    setEnabled(false);
     setWebSearchEnabled(false);
   };
 
@@ -323,7 +358,6 @@ export const AssistantConfiguration = ({ refreshAfterSave = true }: AssistantCon
   const changeModelDiscoveryPath = (value: string) => {
     if (value !== modelDiscoveryPath) {
       setModelId("");
-      setEnabled(false);
     }
     setModelDiscoveryPath(value);
   };
@@ -371,6 +405,20 @@ export const AssistantConfiguration = ({ refreshAfterSave = true }: AssistantCon
   return (
     <>
       <Stack className={classes.configuration} gap="md">
+        <Paper className={classes.enableRow} withBorder p="md" radius="md">
+          <Switch
+            w="100%"
+            styles={{ body: { alignItems: "center", justifyContent: "space-between" } }}
+            checked={enabled}
+            onChange={(event) => updateAvailability.mutate({ enabled: event.currentTarget.checked })}
+            disabled={pending}
+            label={t("enabled.label")}
+            description={t("enabled.description")}
+            labelPosition="left"
+            size="lg"
+          />
+        </Paper>
+
         <Paper className={classes.summary} withBorder p="md" radius="md" pos="relative">
           <LoadingOverlay visible={pending} />
           <Group justify="space-between" align="center">
@@ -664,12 +712,11 @@ export const AssistantConfiguration = ({ refreshAfterSave = true }: AssistantCon
           actions={
             <Group justify="flex-end">
               <Button
-                leftSection={<IconCircleCheck size={16} />}
                 onClick={saveAssistantConfiguration}
-                disabled={!canSaveConfiguration}
+                disabled={!canSaveConfiguration || pending}
                 loading={saveConfiguration.isPending}
               >
-                {t("save")}
+                {t("model.save")}
               </Button>
             </Group>
           }
@@ -789,24 +836,6 @@ export const AssistantConfiguration = ({ refreshAfterSave = true }: AssistantCon
               </Group>
             </Stack>
           )}
-
-          <Group className={classes.enableRow} justify="space-between" align="center" wrap="nowrap">
-            <Box>
-              <Text size="sm" fw={600}>
-                {t("enabled.label")}
-              </Text>
-              <Text size="sm" c="dimmed">
-                {t("enabled.description")}
-              </Text>
-            </Box>
-            <Switch
-              checked={enabled}
-              onChange={(event) => setEnabled(event.currentTarget.checked)}
-              disabled={!canSaveConfiguration}
-              aria-label={t("enabled.label")}
-              size="md"
-            />
-          </Group>
         </ConfigurationSection>
       </Stack>
     </>

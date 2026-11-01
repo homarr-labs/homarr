@@ -4,8 +4,10 @@ import { objectEntries } from "@homarr/common";
 import type { WidgetKind } from "@homarr/definitions";
 import { widgetKinds as declaredWidgetKinds } from "@homarr/definitions";
 import type { SettingsContextProps } from "@homarr/settings/creator";
+import { normalizeAppWidgetOptions } from "@homarr/validation/app";
 
 import type { WidgetComponentProps, WidgetDefinition } from "./definition";
+import { normalizeBeszelTableOptions } from "./beszel-system-table/display";
 import type { WidgetOptionDefinition } from "./options";
 import type { WidgetImports } from "./registry";
 import { widgetComponentLoaders, widgetModuleLoaders } from "./registry";
@@ -63,9 +65,12 @@ export const createRetryableLoader = <TKey, TValue>(loaders: ReadonlyMap<TKey, (
 
     const promise = loader();
     promises.set(key, promise);
-    void promise.catch(() => {
-      if (promises.get(key) === promise) promises.delete(key);
-    });
+    void promise.then(
+      (value) => Object.assign(promise, { status: "fulfilled", value }),
+      () => {
+        if (promises.get(key) === promise) promises.delete(key);
+      },
+    );
     return promise;
   };
 };
@@ -146,6 +151,12 @@ export const reduceWidgetOptionsWithDefinition = (
   settings: Pick<SettingsContextProps, "enableStatusByDefault" | "forceDisableStatus">,
   currentValue: Record<string, unknown> = {},
 ) => {
+  if ("kind" in definition && definition.kind === "app") {
+    currentValue = normalizeAppWidgetOptions(currentValue);
+  }
+  if ("kind" in definition && definition.kind === "beszelSystemTable") {
+    currentValue = normalizeBeszelTableOptions(currentValue);
+  }
   const options: Record<string, WidgetOptionDefinition> = definition.createOptions(settings);
   const result: Record<string, unknown> = {};
   for (const [key, value] of objectEntries(options)) {

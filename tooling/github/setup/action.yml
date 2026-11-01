@@ -18,13 +18,13 @@ inputs:
 runs:
   using: composite
   steps:
-    - uses: actions/setup-node@v6
+    - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
       with:
-        node-version: 24.18.0
+        node-version: 24.22.1
 
     - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
       with:
-        bun-version: 1.4.2
+        bun-version: 1.4.4
 
     - name: Identify the build platform
       shell: bash
@@ -39,19 +39,19 @@ runs:
 
     - name: Restore Bun dependency cache
       if: "!env.ACT"
-      uses: actions/cache@v5
+      uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
       with:
         path: ~/.bun/install/cache
-        key: ${{ runner.os }}-${{ runner.arch }}-bun-1.4.2-${{ hashFiles('bun.lock', 'bunfig.toml', 'package.json', 'patches/**') }}
+        key: ${{ runner.os }}-${{ runner.arch }}-bun-1.4.4-${{ hashFiles('bun.lock', 'bunfig.toml', 'package.json', 'patches/**') }}
         restore-keys: |
-          ${{ runner.os }}-${{ runner.arch }}-bun-1.4.2-
+          ${{ runner.os }}-${{ runner.arch }}-bun-1.4.4-
 
     - shell: bash
       run: bun install --frozen-lockfile --concurrent-scripts=1
 
     - name: Restore local Turbo artifacts
       if: inputs.turbo-cache == 'true' && !env.ACT && !(env.TURBO_API != '' && env.TURBO_TEAM != '' && env.TURBO_TOKEN != '' && env.TURBO_REMOTE_CACHE_SIGNATURE_KEY != '')
-      uses: actions/cache@v5
+      uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
       with:
         path: .turbo/cache
         key: ${{ env.TURBO_PLATFORM }}-turbo-${{ github.job }}-${{ inputs.typecheck-cache-scope }}-${{ hashFiles('bun.lock') }}-${{ github.sha }}
@@ -60,7 +60,7 @@ runs:
 
     - name: Restore TypeScript incremental state
       if: inputs.typecheck-cache == 'true' && !env.ACT
-      uses: actions/cache@v5
+      uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
       with:
         path: |
           apps/*/node_modules/.cache/tsbuildinfo.json
@@ -71,7 +71,7 @@ runs:
 
     - name: Restore application compiler cache
       if: (inputs.next-cache == 'nextjs' || inputs.next-cache == 'all') && !env.ACT
-      uses: actions/cache@v5
+      uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
       with:
         path: apps/nextjs/.next/cache
         key: ${{ env.TURBO_PLATFORM }}-nextjs-${{ hashFiles('bun.lock') }}-${{ github.sha }}
@@ -80,7 +80,7 @@ runs:
 
     - name: Restore documentation compiler cache
       if: (inputs.next-cache == 'docs' || inputs.next-cache == 'all') && !env.ACT
-      uses: actions/cache@v5
+      uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
       with:
         path: apps/docs/.next/cache
         key: ${{ env.TURBO_PLATFORM }}-docs-${{ hashFiles('bun.lock') }}-${{ github.sha }}

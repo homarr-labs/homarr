@@ -1,0 +1,21 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "homarr-mantine",
+  "version": "1.0.0",
+  "description": "Mantine component discovery, full documentation, and styling guidance for Homarr UI work.",
+  "author": {
+    "name": "Homarr"
+  },
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "Homarr Mantine",
+        "shortDescription": "Mantine UI docs and guidance",
+        "longDescription": "Discover Mantine components, read their props and Styles API, and prefer built-in styling when changing Homarr UI.",
+        "developerName": "Homarr",
+        "category": "Productivity",
+        "capabilities": []
+      }
+    }
+  }
+}

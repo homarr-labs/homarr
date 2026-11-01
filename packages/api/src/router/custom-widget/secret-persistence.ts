@@ -16,8 +16,8 @@ type ConfigureCustomWidgetSourceInput = {
   definitionId: string;
   sourceId: string;
   baseUrl?: string;
+  networkScope?: unknown;
   integrationId?: string;
-  networkScope?: CustomWidgetSource["networkScope"];
   secrets: CustomWidgetCreateInput["secrets"];
   expectedSource?: CustomWidgetSource;
 };
@@ -228,7 +228,6 @@ function prepareSourceUpdate(
     configuration = {
       ...previousSource,
       baseUrl: input.baseUrl,
-      networkScope: input.networkScope ?? previousSource.networkScope,
     };
   }
   const source = customWidgetSourceSchema.parse(configuration);

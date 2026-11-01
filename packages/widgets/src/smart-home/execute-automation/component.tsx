@@ -12,7 +12,7 @@ import {
   UnstyledButton,
   VisuallyHidden,
 } from "@mantine/core";
-import { useDisclosure, useTimeout } from "@mantine/hooks";
+import { useCallbackRef, useDisclosure, useTimeout } from "@mantine/hooks";
 import { IconAutomation, IconCheck } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
@@ -62,6 +62,7 @@ export default function SmartHomeTriggerAutomationWidget({
       // The mutation exposes the error below and remains retryable.
     }
   }, [canInteract, integrationId, isEditMode, isPending, mutateAsync, options.automationId]);
+  const handleSpotlightClick = useCallbackRef(handleClick);
 
   const t = useI18n("widget.smartHome-executeAutomation");
   const locale = useCurrentIntlLocale();
@@ -77,14 +78,22 @@ export default function SmartHomeTriggerAutomationWidget({
             type: "javaScript",
             // eslint-disable-next-line no-restricted-syntax
             async onSelect() {
-              await handleClick();
+              await handleSpotlightClick();
             },
           };
         },
         disabled: !integrationId || !canInteract || isPending,
       },
     ],
-    [canInteract, handleClick, integrationId, isPending, options.automationId, options.displayName],
+    [
+      canInteract,
+      handleClick,
+      handleSpotlightClick,
+      integrationId,
+      isPending,
+      options.automationId,
+      options.displayName,
+    ],
   );
 
   const isTiny = isSmartHomeTiny(width, height);

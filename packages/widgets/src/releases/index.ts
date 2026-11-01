@@ -6,48 +6,77 @@ import { getWidgetIntegrationConfig, releaseProviderKinds } from "@homarr/defini
 
 import { createWidgetDefinition, matchesWidgetRuntimeQuery, widgetQueryInputMatches } from "../definition";
 import { optionsBuilder } from "../options";
-
-const relativeDateSchema = z
-  .string()
-  .regex(/^\d+[hdwmyHDWMY]$/)
-  .or(z.literal(""));
+import type { ReleaseSectionKey } from "./release-options";
+import {
+  newReleaseWithinOptions,
+  releaseLayouts,
+  releaseSectionKeys,
+  releaseSummaryModes,
+  staleReleaseWithinOptions,
+} from "./release-options";
 
 export const { definition, componentLoader } = createWidgetDefinition("releases", {
+  deferUntilVisible: true,
   supportsAdvancedFocus: true,
   icon: IconRocket,
   queryKeys: [[["widget", "releases", "getLatest"]], [["widget", "releases", "getServiceVersions"]]],
-  queryMatcher: (query, scope) =>
-    query.path.at(-1) === "getServiceVersions"
-      ? matchesWidgetRuntimeQuery(query, scope)
-      : widgetQueryInputMatches(query.input, { itemId: scope.itemId }),
+  queryMatcher: (query, scope) => {
+    if (query.path.at(-1) === "getServiceVersions") return matchesWidgetRuntimeQuery(query, scope);
+    return widgetQueryInputMatches(query.input, { itemId: scope.itemId });
+  },
   refetchInterval: null,
   ...getWidgetIntegrationConfig("releases"),
   createOptions() {
     return optionsBuilder.from((factory) => ({
-      newReleaseWithin: factory.text({
+      layout: factory.select({
+        defaultValue: "comfortable",
+        withDescription: true,
+        options: releaseLayouts.map((value) => ({
+          value,
+          label: (t) => t(`widget.releases.option.layout.option.${value}`),
+        })),
+      }),
+      summary: factory.select({
+        defaultValue: "count",
+        withDescription: true,
+        options: releaseSummaryModes.map((value) => ({
+          value,
+          label: (t) => t(`widget.releases.option.summary.option.${value}`),
+        })),
+      }),
+      groupReleases: factory.switch({
+        defaultValue: true,
+        withDescription: true,
+      }),
+      sections: factory.multiSelect({
+        defaultValue: [...releaseSectionKeys],
+        withDescription: true,
+        options: releaseSectionKeys.map((value) => ({
+          value,
+          label: (t) => t(`widget.releases.section.${value}.label`),
+        })),
+      }),
+      // Saved from the widget itself, like the Beszel system switcher and Wazuh view.
+      collapsedSections: factory.internal({ defaultValue: ["quiet"] as ReleaseSectionKey[] }),
+      newReleaseWithin: factory.select({
         defaultValue: "1w",
         withDescription: true,
-        validate: relativeDateSchema,
+        options: newReleaseWithinOptions.map((value) => ({
+          value,
+          label: (t) => t(`widget.releases.option.newReleaseWithin.option.${value}`),
+        })),
       }),
-      staleReleaseWithin: factory.text({
+      staleReleaseWithin: factory.select({
         defaultValue: "6M",
         withDescription: true,
-        validate: relativeDateSchema,
+        options: staleReleaseWithinOptions.map((value) => ({
+          value,
+          label: (t) => t(`widget.releases.option.staleReleaseWithin.option.${value}`),
+        })),
       }),
-      showOnlyHighlighted: factory.switch({
-        withDescription: true,
+      showChangelogPreview: factory.switch({
         defaultValue: true,
-      }),
-      showDetails: factory.switch({
-        defaultValue: true,
-      }),
-      showOnlyIcon: factory.switch({
-        defaultValue: false,
-      }),
-      topReleases: factory.number({
         withDescription: true,
-        defaultValue: 0,
-        validate: z.number().min(0),
       }),
       hiddenDockerSuggestions: factory.internal({ defaultValue: [] as string[] }),
       repositories: factory.multiReleasesRepositories({
@@ -66,6 +95,7 @@ export const { definition, componentLoader } = createWidgetDefinition("releases"
             id: z.string().default(() => createId()),
             provider: z.enum(releaseProviderKinds).optional(),
             identifier: z.string().min(1),
+            excludePrereleases: z.boolean().optional(),
             name: z.string().optional(),
             versionFilter: z
               .object({

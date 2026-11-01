@@ -1,6 +1,11 @@
 {
   $schema: "https://docs.renovatebot.com/renovate-schema.json",
-  extends: ["config:recommended", ":dependencyDashboardApproval"],
+  extends: [
+    "config:recommended",
+    "security:minimumReleaseAgeNpm",
+    "helpers:pinGitHubActionDigests",
+    "docker:pinDigests",
+  ],
   packageRules: [
     {
       matchPackageNames: ["@tabler/icons-react", "@tabler/icons-sprite"],
@@ -21,16 +26,21 @@
       automerge: true,
     },
     {
+      // workflow changes run with repository secrets, so they need a human review and a release age cooldown
+      matchManagers: ["github-actions"],
+      minimumReleaseAge: "3 days",
+      internalChecksFilter: "strict",
+      automerge: false,
+    },
+    {
       // disallow automerge for trustedDependencies (native builds need manual verification)
       matchPackageNames: [
-        "@tree-sitter-grammars/tree-sitter-yaml",
         "bcrypt",
+        "better-sqlite3",
         "cpu-features",
         "esbuild",
         "sharp",
         "ssh2",
-        "tree-sitter",
-        "tree-sitter-json",
       ],
       automerge: false,
     },

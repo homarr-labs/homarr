@@ -8,6 +8,8 @@ import { DataTable } from "mantine-datatable";
 
 import { scrollAreaDefaultProps } from "@homarr/ui";
 
+import type { TableLayoutChange } from "./use-persisted-table-layout";
+
 const fallbackColumnWidth = 60;
 
 const getColumnWidth = (width: string | number | undefined): number => {
@@ -26,6 +28,7 @@ type HomarrDataTableProps<T> = DataTableProps<T> & {
   cellPadding: string;
   rowCursor?: "auto" | "default";
   preserveColumnWidths?: boolean;
+  onColumnLayoutChange?: (change: TableLayoutChange) => void;
   fillColumnAccessor?: string;
   defaultColumnWidths?: readonly Pick<DataTableColumn<T>, "accessor" | "width">[];
   onColumnWidthsChange?: (widths: { accessor: string; width: number }[]) => void;
@@ -43,12 +46,18 @@ export function HomarrDataTable<T>({
   columns,
   defaultColumnProps,
   onMouseDownCapture,
+  onDoubleClick,
+  onDragStartCapture,
+  onDragEndCapture,
+  onDrop,
+  onColumnLayoutChange,
   scrollAreaProps,
   style,
   ...props
 }: HomarrDataTableProps<T>) {
   const [resizePreviewWidths, setResizePreviewWidths] = useState<Record<string, number>>();
   const removeResizeListeners = useRef<() => void>(() => undefined);
+  const draggedColumn = useRef<Element | null>(null);
   const internalScrollViewportRef = useRef<HTMLDivElement>(null);
   const scrollViewportRef = props.scrollViewportRef ?? internalScrollViewportRef;
   useEffect(() => () => removeResizeListeners.current(), []);
@@ -88,6 +97,7 @@ export function HomarrDataTable<T>({
       const startX = event.clientX;
 
       removeResizeListeners.current();
+      let resized = false;
       const usesDisplayedWidths = Boolean(
         preserveColumnWidths &&
         fillColumnAccessor &&
@@ -129,6 +139,7 @@ export function HomarrDataTable<T>({
           nextWidth - nextMinimumWidth,
           Math.max(currentMinimumWidth - currentWidth, moveEvent.clientX - startX),
         );
+        resized = moveEvent.clientX !== startX;
         previewWidths = {
           ...widths,
           [currentAccessor]: currentWidth + delta,
@@ -146,6 +157,7 @@ export function HomarrDataTable<T>({
           });
           if (resizedWidths.length > 0) onColumnWidthsChange?.(resizedWidths);
         }
+        if (resized) onColumnLayoutChange?.("columnWidths");
         requestAnimationFrame(() => requestAnimationFrame(() => setResizePreviewWidths(undefined)));
       };
       removeResizeListeners.current = () => {
@@ -167,6 +179,7 @@ export function HomarrDataTable<T>({
       defaultColumnWidths,
       fillColumnAccessor,
       onColumnWidthsChange,
+      onColumnLayoutChange,
       onMouseDownCapture,
       preserveColumnWidths,
       scrollViewportRef,
@@ -251,6 +264,33 @@ export function HomarrDataTable<T>({
       striped={false}
       columns={fittedColumns}
       onMouseDownCapture={handleMouseDownCapture}
+      onDoubleClick={(event) => {
+        onDoubleClick?.(event);
+        if (event.target instanceof Element && event.target.closest(".mantine-datatable-header-resizable-handle")) {
+          onColumnLayoutChange?.("columnWidths");
+        }
+      }}
+      onDragStartCapture={(event) => {
+        onDragStartCapture?.(event);
+        if (event.target instanceof Element) {
+          draggedColumn.current = event.target.closest('.mantine-datatable-header-cell-draggable[draggable="true"]');
+        }
+      }}
+      onDragEndCapture={(event) => {
+        onDragEndCapture?.(event);
+        draggedColumn.current = null;
+      }}
+      onDrop={(event) => {
+        onDrop?.(event);
+        let target: Element | null = null;
+        if (event.target instanceof Element) {
+          target = event.target.closest('.mantine-datatable-header-cell-draggable[draggable="true"]');
+        }
+        if (draggedColumn.current && target && draggedColumn.current !== target) {
+          onColumnLayoutChange?.("columnOrder");
+        }
+        draggedColumn.current = null;
+      }}
       className={mergedClassName}
       style={[{ pointerEvents: isEditMode ? "none" : undefined, "--homarr-table-min-width": minimumTableWidth }, style]}
       defaultColumnProps={{

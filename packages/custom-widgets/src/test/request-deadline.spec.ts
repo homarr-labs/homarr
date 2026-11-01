@@ -4,68 +4,37 @@ import type * as NetworkPolicy from "../server/network-policy";
 import type { CustomWidgetHttpRequest } from "../server/request-executor";
 
 const mocks = vi.hoisted(() => ({
-  lookup: vi.fn(),
-  createPinnedAgent: vi.fn(),
+  createRequestAgent: vi.fn(),
 }));
 
-vi.mock("node:dns/promises", () => ({ lookup: mocks.lookup }));
 vi.mock("../server/network-policy", async (importOriginal) => {
   const actual = await importOriginal<typeof NetworkPolicy>();
-  return { ...actual, createPinnedAgent: mocks.createPinnedAgent };
+  return { ...actual, createRequestAgent: mocks.createRequestAgent };
 });
 
-import { executeCustomWidgetRequest, MAX_REQUEST_DURATION_MS } from "../server/request-executor";
+import { executeCustomWidgetRequest } from "../server/request-executor";
 import { closeDispatcher, DISPATCHER_CLOSE_GRACE_MS } from "../server/request-dispatcher-lifecycle";
-import { resolveAndValidateHost } from "../server/network-policy";
 
 const query = {
   baseUrl: "https://example.com",
   method: "GET",
-  networkScope: "public",
   kind: "query",
 } satisfies CustomWidgetHttpRequest;
 
 describe("custom widget request deadline", () => {
   beforeEach(() => {
     vi.useFakeTimers();
-    mocks.lookup.mockReset();
-    mocks.createPinnedAgent.mockReset();
+    mocks.createRequestAgent.mockReset();
   });
 
   afterEach(() => {
     vi.useRealTimers();
   });
 
-  it("returns at the total deadline when DNS resolution stalls", async () => {
-    mocks.lookup.mockReturnValue(new Promise(() => undefined));
-    const assertion = expect(executeCustomWidgetRequest(query)).rejects.toMatchObject({
-      code: "BAD_GATEWAY",
-      reason: "timeout",
-    });
-
-    await vi.advanceTimersByTimeAsync(MAX_REQUEST_DURATION_MS);
-
-    await assertion;
-    expect(mocks.createPinnedAgent).not.toHaveBeenCalled();
-  });
-
-  it("cancels an injected stalled resolver when its deadline aborts", async () => {
-    const controller = new AbortController();
-    const resolver = vi.fn(() => new Promise<never>(() => undefined));
-    const assertion = expect(
-      resolveAndValidateHost("example.com", "public", { signal: controller.signal, resolver }),
-    ).rejects.toMatchObject({ name: "AbortError" });
-
-    controller.abort();
-
-    await assertion;
-    expect(resolver).toHaveBeenCalledWith("example.com");
-  });
-
   it("detaches stalled dispatcher cleanup after a bounded grace period", async () => {
     const close = vi.fn(() => new Promise<void>(() => undefined));
     const destroy = vi.fn(async () => undefined);
-    mocks.createPinnedAgent.mockReturnValue({
+    mocks.createRequestAgent.mockReturnValue({
       request: vi.fn(async () => ({
         statusCode: 200,
         headers: { "content-type": "application/json" },
@@ -80,7 +49,6 @@ describe("custom widget request deadline", () => {
     const request = executeCustomWidgetRequest({
       ...query,
       baseUrl: "http://127.0.0.1",
-      networkScope: "loopback",
       logError,
     });
 
@@ -102,7 +70,7 @@ describe("custom widget request deadline", () => {
       throw closeFailure;
     });
     const destroy = vi.fn(async () => undefined);
-    mocks.createPinnedAgent.mockReturnValue({
+    mocks.createRequestAgent.mockReturnValue({
       request: vi.fn(async () => ({
         statusCode: 200,
         headers: { "content-type": "application/json" },
@@ -120,7 +88,6 @@ describe("custom widget request deadline", () => {
         ...query,
         baseUrl: "http://127.0.0.1",
         method: "POST",
-        networkScope: "loopback",
         kind: "action",
         logError,
       }),
@@ -163,7 +130,7 @@ describe("custom widget request deadline", () => {
       failure.name = `SocketError:${path}`;
       throw failure;
     });
-    mocks.createPinnedAgent.mockReturnValue({
+    mocks.createRequestAgent.mockReturnValue({
       request,
       close: vi.fn(async () => undefined),
       destroy: vi.fn(async () => undefined),
@@ -174,7 +141,6 @@ describe("custom widget request deadline", () => {
       ...query,
       baseUrl: "http://127.0.0.1",
       targetUrl: "http://127.0.0.1/status?view=summary",
-      networkScope: "loopback",
       auth: {
         type: "apiKeyQuery",
         headerName: "access_token",

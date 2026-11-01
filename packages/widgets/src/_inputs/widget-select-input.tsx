@@ -74,6 +74,7 @@ export const WidgetSelectInput = ({ property, kind, options }: CommonWidgetInput
       description={options.withDescription ? tWidget("description") : undefined}
       placeholder={options.withPlaceholder ? tWidget("placeholder") : undefined}
       searchable={options.searchable}
+      allowDeselect={options.allowDeselect}
       {...inputProps}
     />
   );

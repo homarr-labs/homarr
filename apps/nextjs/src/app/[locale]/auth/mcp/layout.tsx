@@ -38,6 +38,7 @@ export default async function McpConsentLayout({ children }: PropsWithChildren) 
       logoImageUrl={branding.logoImageUrl ?? undefined}
       backgroundImageUrl={branding.signInBackgroundImageUrl ?? undefined}
       backgroundOverlay={branding.signInBackgroundOverlay}
+      showMarquee={branding.showSignInMarquee}
       radius={branding.defaultRadius}
     >
       {children}

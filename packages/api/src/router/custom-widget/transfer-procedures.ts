@@ -96,7 +96,7 @@ export const transferProcedures = {
       if (current) throw new TRPCError({ code: "CONFLICT", message: "A v2 widget already uses this identifier" });
 
       const explicitKeys = new Set(input.secrets.map(({ sourceId, kind }) => `${sourceId}:${kind}`));
-      const preservableKinds = new Set<string>(requiredSecretKinds(getAuthType(input.widget.sources.default?.auth)));
+      const preservableKinds = new Set<string>(requiredSecretKinds(input.widget.sources.default?.auth));
       const preservedSecrets = canPreserveLegacySecrets(legacy, input.widget)
         ? legacy.secrets.filter(({ kind }) => preservableKinds.has(kind) && !explicitKeys.has(`default:${kind}`))
         : [];

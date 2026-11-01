@@ -65,7 +65,6 @@
         "themeAuto": "시스템",
         "themeLight": "라이트",
         "themeDark": "다크",
-        "serverOriginHelp": "Homarr는 이 주소를 사용하여 감지된 서비스 URL을 미리 입력합니다. 각 서비스를 개별적으로 계속 편집할 수 있습니다.",
         "serverDescription": "이는 제한이 아닌 바로 가기입니다. 감지된 모든 서비스를 계속 편집할 수 있습니다.",
         "serverOrigin": "도메인, IP 또는 역방향 프록시 경로",
         "serverOriginDescription": "예: home.lan, 192.168.1.10 또는 https://home.example.com/services. 아래에서 각 서비스를 추가할 방식을 선택하세요.",
@@ -102,6 +101,8 @@
       "connect": {
         "title": "보드를 유용하게 만들어 줄 항목 연결",
         "description": "여러 서비스를 한 번에 선택하세요. Docker 레이블이 우선 적용되고, 이미지 매칭으로 누락된 항목을 채우며, 모든 URL과 자격 증명을 검토할 수 있습니다.",
+        "confirmServerAddress": "",
+        "serverAddressReviewed": "",
         "discoveredIntegrations": "감지된 통합 인스턴스({count})",
         "detectedIntegrationLabel": "{name} 가져오기, 유형 {kind}로 감지됨",
         "detectedAppLabel": "감지된 앱 {name} 가져오기",
@@ -126,7 +127,8 @@
         "needsConfiguration": "설정 필요",
         "tested": "연결 테스트 완료",
         "testFailed": "연결 테스트 실패",
-        "incompleteConfirmation": "완료되지 않은 통합 기능은 건너뜁니다. 해당 기능 없이 계속하시겠습니까?"
+        "incompleteConfirmation": "완료되지 않은 통합 기능은 건너뜁니다. 해당 기능 없이 계속하시겠습니까?",
+        "skipIncomplete": ""
       },
       "board": {
         "title": "생성 전에 보드 구성",
@@ -799,6 +801,11 @@
       }
     },
     "field": {
+      "url": {
+        "helpLabel": "URL 형식 예시",
+        "examples": "지원되는 링크 예시",
+        "requiresHandler": "사용자 지정 프로토콜을 사용하려면 기기에 연결된 앱이 필요합니다."
+      },
       "description": {
         "label": "설명"
       },
@@ -826,8 +833,8 @@
         "cancelMultiple": "다중 선택 종료",
         "customApplication": "사용자 지정 애플리케이션",
         "application": "애플리케이션",
-        "backToApps": "",
-        "createAndAdd": "",
+        "backToApps": "앱으로 돌아가기",
+        "createAndAdd": "생성 및 추가",
         "createAnother": ""
       },
       "create": {
@@ -1363,7 +1370,7 @@
       "description": "연결 테스트를 통과했습니다. 다음으로 이 보드에 표시할 항목을 선택하세요.",
       "connectionReady": "서비스 연결 준비 완료",
       "appReady": "앱 바로 가기 준비 완료",
-      "compatibleWidgets": "",
+      "compatibleWidgets": "{count, plural, =0 {호환 위젯 없음} one {호환 위젯 #개} other {호환 위젯 #개}} 사용 가능",
       "chooseWidget": "위젯 선택",
       "recipes": {
         "title": "이 보드에 권장",
@@ -1513,7 +1520,7 @@
       "beszel": "Beszel",
       "systemMonitoring": "시스템 모니터링",
       "security": "보안",
-      "serviceVersion": ""
+      "serviceVersion": "버전"
     },
     "testConnection": {
       "action": {
@@ -1559,6 +1566,7 @@
             "untrusted": "신뢰하는 인증서가 아닙니다.",
             "hostnameMismatch": "인증서 호스트네임이 URL과 일치하지 않습니다."
           },
+          "secondaryUrl": "이 인증서는 이 통합에 추가로 구성된 엔드포인트인 {url}에서 제공되었습니다.",
           "alert": {
             "permission": {
               "title": "권한 부족",
@@ -1904,6 +1912,7 @@
       "tryAgain": "다시 시도",
       "loading": "불러오는 중",
       "show": "표시",
+      "showAll": "모두 보기",
       "hide": "숨기기",
       "undo": "실행 취소",
       "editNamed": "{name} 편집",
@@ -1913,15 +1922,18 @@
       "copied": "복사됨",
       "refresh": "새로고침"
     },
+    "hidden": "숨김",
     "pagination": {
       "pageOf": "{totalPages}페이지 중 {page}페이지"
     },
     "navigation": {
-      "toggle": ""
+      "toggle": "네비게이션 전환"
     },
     "here": "여기",
     "serviceUrlTemplate": {
       "serverTitle": "일반적인 서버 주소",
+      "description": "",
+      "example": "",
       "urlModeLabel": "서비스 주소 패턴",
       "hostPort": "동일한 호스트, 다른 포트",
       "subdomain": "서비스마다 하나의 하위 도메인",
@@ -1935,6 +1947,7 @@
       "clear": "이미지 지우기",
       "uploadImage": "이미지 업로드",
       "results": "이미지 검색 결과",
+      "websiteIcon": "웹사이트 아이콘",
       "localImages": "내 이미지",
       "svgIcons": "SVG 아이콘",
       "otherImages": "기타 이미지",
@@ -2309,6 +2322,15 @@
         "appId": {
           "label": "앱 선택"
         },
+        "openIn": {
+          "label": "앱을 열 위치",
+          "description": "이 앱을 열 위치를 선택하세요. 브라우저 설정에 따라 별도 창으로 열리지 않을 수 있습니다.",
+          "option": {
+            "currentTab": "현재 탭",
+            "newTab": "새 탭",
+            "newWindow": "새 창"
+          }
+        },
         "showTitle": {
           "label": "앱 이름 표시"
         },
@@ -2431,13 +2453,13 @@
       },
       "empty": "위젯 설정에서 URL 또는 앱을 추가하세요",
       "groups": {
-        "label": "",
+        "label": "카테고리",
         "placeholder": "새 카테고리",
         "add": "카테고리 추가",
-        "remove": "",
-        "rename": "",
-        "assign": "",
-        "ungrouped": ""
+        "remove": "{name} 카테고리 제거",
+        "rename": "{name} 카테고리 이름",
+        "assign": "{name} 카테고리",
+        "ungrouped": "미지정"
       }
     },
     "archiveTeamWarrior": {
@@ -3223,7 +3245,11 @@
           "label": "모니터링되지 않음 표시"
         },
         "viewMode": {
-          "label": ""
+          "label": "보기 방식"
+        },
+        "hideHeader": {
+          "label": "",
+          "description": ""
         }
       },
       "advanced": {
@@ -3234,24 +3260,20 @@
         "noEvents": "이번 달에 이벤트 없음"
       },
       "view": {
-        "compact": "",
-        "month": "",
-        "week": "",
-        "day": "",
-        "agenda": ""
+        "compact": "월(축소)",
+        "month": "월",
+        "week": "주",
+        "day": "일",
+        "agenda": "일정 목록"
       },
       "controls": {
-        "view": "",
-        "today": "",
-        "previous": "",
-        "next": "",
-        "noEvents": "",
-        "more": "",
-        "moreLabel": "",
-        "eventDetails": "",
-        "close": "",
-        "timeSlot": "",
-        "weekday": ""
+        "today": "오늘",
+        "previous": "이전 기간",
+        "next": "다음 기간",
+        "noEvents": "이 기간에 일정이 없습니다",
+        "more": "{count}개 더",
+        "timeSlot": "시간 칸",
+        "weekday": "요일"
       }
     },
     "weather": {
@@ -3936,11 +3958,28 @@
         "paused": "일시 중지됨",
         "remaining": "남은 시간 {minutes}분",
         "seasonEpisode": "시즌 {season} 에피소드 {episode}",
+        "state": {
+          "playing": "",
+          "buffering": ""
+        },
+        "details": {
+          "device": "",
+          "location": "",
+          "sessionId": "",
+          "bitrate": "",
+          "audioHandling": "",
+          "direct": "",
+          "transcode": "",
+          "containerChanged": "",
+          "position": "",
+          "unknown": ""
+        },
         "metadata": {
           "title": "너드 통계",
           "video": {
             "title": "동영상",
-            "resolution": "해상도"
+            "resolution": "해상도",
+            "frameRate": ""
           },
           "audio": {
             "title": "오디오",
@@ -3961,6 +4000,109 @@
         "playing": "{count}개 재생 중",
         "transcoding": "{count}개 트랜스코딩 중"
       }
+    },
+    "thingport-libraryStats": {
+      "name": "",
+      "description": "",
+      "title": "",
+      "option": {
+        "showModels": {
+          "label": ""
+        },
+        "showCollections": {
+          "label": ""
+        },
+        "showCategories": {
+          "label": ""
+        },
+        "showAuthors": {
+          "label": ""
+        }
+      },
+      "models": "",
+      "collections": "",
+      "categories": "",
+      "authors": ""
+    },
+    "thingport-featuredModel": {
+      "name": "",
+      "description": "",
+      "option": {
+        "autoRotate": {
+          "label": ""
+        },
+        "showDetails": {
+          "label": ""
+        }
+      },
+      "title": "",
+      "empty": "",
+      "hint": "",
+      "noPreview": "",
+      "views": "",
+      "prints": ""
+    },
+    "thingport-activityHeatmap": {
+      "name": "",
+      "description": "",
+      "title": "",
+      "option": {
+        "weekStart": {
+          "label": "주 시작 요일",
+          "option": {
+            "sunday": "",
+            "monday": ""
+          }
+        },
+        "showTotal": {
+          "label": ""
+        },
+        "showLegend": {
+          "label": ""
+        }
+      },
+      "lastYear": "",
+      "totalLastYear": "",
+      "totalInYear": "",
+      "dayTotal": "",
+      "dayEmpty": "",
+      "kinds": {
+        "import": "",
+        "upload": "전체 업로드 용량",
+        "download": "전체 다운로드 용량",
+        "slicer": "",
+        "delete": ""
+      },
+      "less": "",
+      "more": ""
+    },
+    "thingport-models": {
+      "name": "",
+      "description": "",
+      "title": "",
+      "option": {
+        "defaultTab": {
+          "label": "기본 탭"
+        },
+        "itemCount": {
+          "label": ""
+        },
+        "showThumbnails": {
+          "label": ""
+        }
+      },
+      "tab": {
+        "recentlyAdded": "",
+        "topViewed": "",
+        "topPrinted": ""
+      },
+      "empty": {
+        "recentlyAdded": "",
+        "topViewed": "",
+        "topPrinted": ""
+      },
+      "views": "",
+      "prints": ""
     },
     "paperlessNgx": {
       "description": "Paperless-ngx 문서 아카이브 개요",
@@ -4634,27 +4776,59 @@
       "name": "릴리즈",
       "description": "지정된 버전 정규식으로 주어진 저장소의 현재 버전 목록을 표시합니다.",
       "option": {
+        "layout": {
+          "label": "레이아웃",
+          "description": "",
+          "option": {
+            "comfortable": "",
+            "compact": ""
+          }
+        },
+        "summary": {
+          "label": "",
+          "description": "",
+          "option": {
+            "detailed": "",
+            "count": "",
+            "hidden": "숨김"
+          }
+        },
+        "groupReleases": {
+          "label": "",
+          "description": ""
+        },
+        "sections": {
+          "label": "",
+          "description": ""
+        },
         "newReleaseWithin": {
           "label": "새 릴리스 내",
-          "description": "사용 예: 1w (1주), 10M (10개월). 허용되는 단위 유형 h (시간), d (일), w (주), M (월), y (년). 새 릴리스 강조 표시를 하지 않으려면 비워 두십시오."
+          "description": "사용 예: 1w (1주), 10M (10개월). 허용되는 단위 유형 h (시간), d (일), w (주), M (월), y (년). 새 릴리스 강조 표시를 하지 않으려면 비워 두십시오.",
+          "option": {
+            "never": "",
+            "1d": "",
+            "3d": "",
+            "1w": "",
+            "2w": "",
+            "1M": "",
+            "3M": ""
+          }
         },
         "staleReleaseWithin": {
           "label": "오래된 릴리스 내",
-          "description": "사용 예: 1w (1주), 10M (10개월). 허용되는 단위 유형 h (시간), d (일), w (주), M (월), y (년). 오래된 릴리스 강조 표시를 하지 않으려면 비워 두십시오."
+          "description": "사용 예: 1w (1주), 10M (10개월). 허용되는 단위 유형 h (시간), d (일), w (주), M (월), y (년). 오래된 릴리스 강조 표시를 하지 않으려면 비워 두십시오.",
+          "option": {
+            "never": "",
+            "1M": "",
+            "3M": "",
+            "6M": "",
+            "1y": "",
+            "2y": ""
+          }
         },
-        "showOnlyHighlighted": {
-          "label": "강조 표시만 표시",
-          "description": "위에서 설정한 대로 새 릴리스 또는 오래된 릴리스만 표시합니다."
-        },
-        "showDetails": {
-          "label": "세부 정보 표시"
-        },
-        "showOnlyIcon": {
-          "label": "아이콘만 표시"
-        },
-        "topReleases": {
-          "label": "최상위 릴리스",
-          "description": "표시할 최신 릴리스의 최대 개수입니다. 영은 제한이 없습니다."
+        "showChangelogPreview": {
+          "label": "",
+          "description": ""
         },
         "repositories": {
           "label": "저장소",
@@ -4687,6 +4861,10 @@
           },
           "name": {
             "label": "이름"
+          },
+          "excludePrereleases": {
+            "label": "",
+            "description": ""
           },
           "versionFilter": {
             "label": "버전 필터",
@@ -4728,36 +4906,110 @@
           }
         }
       },
-      "not-found": "찾을 수 없음",
-      "pre-release": "프리릴리스",
-      "archived": "보관됨",
-      "forked": "포크됨",
+      "summary": {
+        "newReleases": "",
+        "newShort": "신규",
+        "tracked": "",
+        "caughtUp": "",
+        "outdated": "",
+        "outdatedShort": "",
+        "failing": "",
+        "failingShort": "",
+        "latest": "",
+        "issues": ""
+      },
+      "section": {
+        "new": {
+          "label": "신규",
+          "description": ""
+        },
+        "attention": {
+          "label": "",
+          "description": ""
+        },
+        "upToDate": {
+          "label": "최신",
+          "description": ""
+        },
+        "quiet": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "status": {
+        "new": "",
+        "outdated": "",
+        "error": "",
+        "upToDate": "최신",
+        "quiet": ""
+      },
+      "tag": {
+        "new": "신규",
+        "preRelease": "",
+        "resolvedFrom": "",
+        "quiet": "",
+        "archived": "",
+        "fork": ""
+      },
+      "issue": {
+        "affected": "",
+        "rateLimited": {
+          "title": "",
+          "hint": ""
+        },
+        "notFound": {
+          "title": "",
+          "hint": ""
+        },
+        "noMatchingVersion": {
+          "title": "",
+          "hint": ""
+        },
+        "noReleasesFound": {
+          "title": "",
+          "hint": ""
+        },
+        "invalidIdentifier": {
+          "title": "",
+          "hint": ""
+        },
+        "noProviderSelected": {
+          "title": "",
+          "hint": ""
+        },
+        "noProviderResponse": {
+          "title": "",
+          "hint": ""
+        },
+        "unexpected": {
+          "title": "",
+          "hint": ""
+        }
+      },
+      "markViewed": "본 것으로 표시",
+      "markAllViewed": "",
+      "markEntryViewed": "",
+      "viewed": "",
+      "copyVersion": "",
+      "copied": "",
+      "published": "",
+      "whatChanged": "",
+      "noNotes": "",
+      "changes": "",
       "starsCount": "별",
       "forksCount": "포크",
-      "issuesCount": "열린 이슈",
-      "markViewed": "본 것으로 표시",
-      "openProjectPage": "프로젝트 페이지 열기",
-      "openReleasePage": "릴리스 페이지 열기",
-      "releaseDescription": "릴리스 설명",
-      "projectDescription": "프로젝트 설명",
+      "openIssues": "",
+      "created": "생성됨",
+      "releasePage": "",
+      "projectPage": "",
       "runningVersions": "",
       "upToDate": "최신",
       "updateAvailable": "",
       "unknownStatus": "알 수 없음",
-      "created": "생성됨",
       "error": {
-        "label": "오류",
-        "messages": {
-          "invalidIdentifier": "잘못된 식별자",
-          "noMatchingVersion": "일치하는 버전을 찾을 수 없습니다",
-          "noReleasesFound": "릴리스를 찾을 수 없습니다",
-          "noProviderSelected": "선택한 공급자가 없습니다",
-          "noProviderResponse": "제공자로부터 응답이 없습니다",
-          "unexpected": "예기치 않은 공급자 오류"
-        }
-      },
-      "expandDetails": "{name}의 세부 정보 표시",
-      "collapseDetails": "{name}의 세부 정보 숨기기"
+        "collapsedSaveTitle": "",
+        "collapsedSaveMessage": ""
+      }
     },
     "networkControllerSummary": {
       "advanced": {
@@ -4930,45 +5182,116 @@
     "uptimeKuma": {
       "description": "Uptime Kuma 상태 페이지에서 업타임 통계를 모니터링합니다",
       "option": {
-        "showAverageUptime": {
-          "label": "평균 업타임 표시",
-          "description": "24시간 평균 가동 시간 백분율을 표시합니다"
+        "statusPageSlug": {
+          "label": "",
+          "description": ""
         },
-        "showUptimeRing": {
-          "label": "가동 시간 링 표시",
-          "description": "평균 가동 시간 값과 함께 진행률 링을 표시합니다"
+        "summaryOnly": {
+          "label": "",
+          "description": ""
         },
-        "showTotalMonitors": {
-          "label": "총 모니터 수 표시",
-          "description": "구성된 총 모니터 수를 표시합니다"
+        "showSummary": {
+          "label": "",
+          "description": ""
         },
-        "showUpCount": {
-          "label": "작동 중 수 표시",
-          "description": "현재 작동 중인 모니터 수를 표시합니다"
+        "showIncidents": {
+          "label": "",
+          "description": ""
         },
-        "showDownCount": {
-          "label": "작동 중단 수 표시",
-          "description": "현재 작동 중단된 모니터 수를 표시합니다"
+        "groupByStatusPageGroup": {
+          "label": "",
+          "description": ""
         },
-        "showPausedCount": {
-          "label": "일시 중지 수 표시",
-          "description": "현재 일시 중지된 모니터 수를 표시합니다"
+        "showOnlyProblems": {
+          "label": "",
+          "description": ""
+        },
+        "sortBy": {
+          "label": "",
+          "option": {
+            "status": "",
+            "statusPage": "",
+            "name": "작업 이름",
+            "uptime": ""
+          }
+        },
+        "showHeartbeatBar": {
+          "label": "",
+          "description": ""
+        },
+        "showUptime": {
+          "label": ""
+        },
+        "showResponseTime": {
+          "label": ""
+        },
+        "showCertificateExpiry": {
+          "label": "",
+          "description": ""
         }
-      },
-      "averageUptime": "평균 가동 시간 (24시간)",
-      "stats": {
-        "totalMonitors": "총 모니터 수",
-        "upCount": "작동 중",
-        "downCount": "작동 중단",
-        "pausedCount": "일시 중지됨"
-      },
-      "error": {
-        "internalServerError": "가동 시간 데이터를 가져오지 못함"
       },
       "status": {
         "up": "총 업로드",
         "down": "다운로드 속도",
-        "paused": "일시 중지됨"
+        "pending": "",
+        "maintenance": "",
+        "stale": "",
+        "unknown": ""
+      },
+      "overall": {
+        "operational": "",
+        "degraded": "",
+        "outage": "",
+        "maintenance": "",
+        "unknown": ""
+      },
+      "short": {
+        "operational": "",
+        "down": "",
+        "pending": "{count}개 대기 중",
+        "maintenance": "",
+        "unknown": ""
+      },
+      "summary": {
+        "upRatio": "",
+        "upRatioShort": "",
+        "averageUptime": "",
+        "uptimeShort": "",
+        "statusCount": ""
+      },
+      "unit": {
+        "milliseconds": ""
+      },
+      "heartbeatBar": {
+        "label": ""
+      },
+      "detail": {
+        "checked": "",
+        "certificate": ""
+      },
+      "notice": {
+        "label": "",
+        "untitled": ""
+      },
+      "empty": {
+        "title": "",
+        "description": ""
+      },
+      "allClear": "",
+      "error": {
+        "internalServerError": "가동 시간 데이터를 가져오지 못함"
+      },
+      "monitorType": {
+        "http": "",
+        "keyword": "",
+        "jsonQuery": "",
+        "port": "",
+        "ping": "",
+        "dns": "DNS",
+        "docker": "",
+        "push": "",
+        "group": "그룹",
+        "realBrowser": ""
       }
     },
     "traefik": {
@@ -5192,6 +5515,9 @@
       "name": "Beszel 시스템 (표)",
       "description": "정렬 가능한 열과 상태 표시기가 있는 모든 Beszel 모니터링 시스템의 표 보기",
       "option": {
+        "fahrenheit": {
+          "label": "화씨 온도"
+        },
         "sortBy": {
           "label": "정렬 기준"
         },
@@ -5206,7 +5532,12 @@
     },
     "beszelSystemGrid": {
       "name": "Beszel 시스템 (그리드)",
-      "description": "실시간 메트릭이 포함된 모든 Beszel 모니터링 시스템의 카드 그리드 보기"
+      "description": "실시간 메트릭이 포함된 모든 Beszel 모니터링 시스템의 카드 그리드 보기",
+      "option": {
+        "fahrenheit": {
+          "label": "화씨 온도"
+        }
+      }
     },
     "beszelAlerts": {
       "name": "Beszel 알림",
@@ -5575,6 +5906,8 @@
       "allHidden": "이 보기에서는 모든 메트릭이 숨겨져 있습니다. 메트릭을 복원하려면 이 보기를 사용자 지정하십시오."
     },
     "wazuh": {
+      "name": "",
+      "description": "",
       "target": {
         "api": "Wazuh 서버 API",
         "indexer": "Wazuh 인덱서",
@@ -5594,6 +5927,14 @@
         "certificate": {
           "title": "{target} 인증서를 신뢰할 수 없습니다",
           "description": "Wazuh는 기본적으로 자체 서명 인증서를 사용합니다. 통합에서 \"연결 테스트\"를 실행하여 인증서를 신뢰하거나 설정 → 인증서에서 CA를 추가하십시오."
+        },
+        "certificateHostname": {
+          "title": "",
+          "description": ""
+        },
+        "certificateExpired": {
+          "title": "",
+          "description": ""
         },
         "unreachable": {
           "title": "{target}에 연결할 수 없음",
@@ -5618,7 +5959,9 @@
         "unknown": {
           "title": "{target}에서 데이터를 불러올 수 없음",
           "description": "자세한 내용은 Homarr 로그를 확인하십시오."
-        }
+        },
+        "viewSaveTitle": "",
+        "viewSaveMessage": ""
       },
       "range": {
         "1h": "1시간",
@@ -5626,268 +5969,234 @@
         "7d": "7일",
         "30d": "30일"
       },
-      "levelTooltip": "규칙 수준 {level}({severity})"
-    },
-    "wazuhAgents": {
-      "name": "Wazuh 에이전트",
-      "description": "상태, OS, 버전 및 마지막 연결 유지 시간이 포함된 정렬 가능한 Wazuh 에이전트 목록",
+      "levelTooltip": "규칙 수준 {level}({severity})",
+      "summary": {
+        "title": "",
+        "alerts": "",
+        "none": "",
+        "trend": {
+          "new": "신규",
+          "tooltip": ""
+        },
+        "previous": "",
+        "maxLevel": "",
+        "health": "",
+        "manager": ""
+      },
+      "alerts": {
+        "title": "",
+        "empty": "",
+        "rule": "",
+        "openInDashboard": ""
+      },
+      "timeline": {
+        "title": "",
+        "total": "",
+        "interval": ""
+      },
+      "top": {
+        "title": {
+          "rules": "",
+          "agents": "",
+          "sourceIps": "",
+          "mitreTactics": "",
+          "mitreTechniques": ""
+        },
+        "empty": {
+          "rules": "",
+          "agents": "",
+          "sourceIps": "",
+          "mitreTactics": "",
+          "mitreTechniques": ""
+        },
+        "totalTooltip": "",
+        "private": "",
+        "public": "공개",
+        "agents": "",
+        "others": ""
+      },
+      "agents": {
+        "title": "",
+        "total": "",
+        "status": {
+          "active": "",
+          "disconnected": "",
+          "neverConnected": "",
+          "pending": ""
+        },
+        "statusLabel": {
+          "active": "",
+          "disconnected": "",
+          "never_connected": "",
+          "pending": "",
+          "unknown": "알 수 없음"
+        },
+        "live": "",
+        "snapshot": "",
+        "snapshotHint": "",
+        "staleSnapshot": "",
+        "noDisconnected": "",
+        "empty": "",
+        "column": {
+          "status": "",
+          "name": "작업 이름",
+          "ip": "",
+          "os": "",
+          "version": "",
+          "lastKeepAlive": "",
+          "groups": "그룹"
+        },
+        "outdated": ""
+      },
+      "vulnerabilities": {
+        "title": "",
+        "topCves": "",
+        "score": "",
+        "agentsShort": "",
+        "topAgents": "",
+        "criticalHigh": "",
+        "totalTooltip": "",
+        "affected": "",
+        "empty": "",
+        "distribution": "",
+        "worst": ""
+      },
+      "fim": {
+        "title": "",
+        "event": {
+          "added": "추가된 날짜",
+          "modified": "",
+          "deleted": "",
+          "unknown": ""
+        },
+        "empty": "",
+        "user": "",
+        "registry": ""
+      },
+      "authFailures": {
+        "title": "",
+        "seriesTooltip": "",
+        "peak": "",
+        "empty": "",
+        "failed": "",
+        "failedHint": "",
+        "bruteForce": "",
+        "bruteForceHint": "",
+        "sourceIps": "",
+        "ipTooltip": "",
+        "bruteForceCount": ""
+      },
+      "view": {
+        "overview": "",
+        "alerts": "",
+        "timeline": "",
+        "top": "",
+        "agents": "",
+        "vulnerabilities": "",
+        "fim": "",
+        "authFailures": ""
+      },
       "option": {
-        "statusFilter": {
-          "label": "에이전트 표시"
+        "visibleViews": {
+          "label": "",
+          "description": ""
         },
-        "sortBy": {
-          "label": "정렬 기준"
-        },
-        "showVersion": {
-          "label": "Wazuh 버전 열 표시"
-        },
-        "showGroups": {
-          "label": "그룹 열 표시"
-        }
-      },
-      "title": "에이전트",
-      "total": "에이전트 {count}개",
-      "status": {
-        "active": "활성",
-        "disconnected": "연결 해제됨",
-        "neverConnected": "연결된 적 없음",
-        "pending": "대기 중"
-      },
-      "statusLabel": {
-        "active": "활성",
-        "disconnected": "연결 해제됨",
-        "never_connected": "연결된 적 없음",
-        "pending": "대기 중",
-        "unknown": "알 수 없음"
-      },
-      "live": "실시간",
-      "snapshot": "{age} 오래된 스냅샷",
-      "snapshotHint": "{time}에 생성된 Wazuh 대시보드의 에이전트 스냅샷(wazuh-monitoring)에서 읽습니다. 실시간 데이터를 사용하려면 서버 API 자격 증명을 추가하십시오.",
-      "staleSnapshot": "{time}의 에이전트 스냅샷이 오래되었습니다. Wazuh 대시보드 모니터링 작업이 실행 중인지 확인하거나 서버 API 자격 증명을 추가하십시오.",
-      "noDisconnected": "모든 에이전트가 연결됨",
-      "empty": "이 필터와 일치하는 에이전트 없음",
-      "column": {
-        "status": "상태",
-        "name": "작업 이름",
-        "ip": "IP",
-        "os": "OS",
-        "version": "버전",
-        "lastKeepAlive": "연결 유지",
-        "groups": "그룹"
-      },
-      "outdated": "최신 에이전트 버전({version})보다 오래됨"
-    },
-    "wazuhAlerts": {
-      "name": "Wazuh 알림 피드",
-      "description": "수준, MITRE ATT&CK 기술, 에이전트 및 소스 IP가 포함된 최근 Wazuh 알림",
-      "option": {
-        "minLevel": {
-          "label": "최소 규칙 수준",
-          "description": "Wazuh 수준: 0~6 낮음, 7~11 중간, 12~14 높음, 15 이상 심각"
-        },
-        "hours": {
-          "label": "시간 범위(시간)"
-        },
-        "limit": {
-          "label": "알림 수"
-        },
-        "showMitre": {
-          "label": "MITRE ATT&CK 기술 표시"
-        },
-        "showAgent": {
-          "label": "에이전트 표시"
-        },
-        "showSourceIp": {
-          "label": "소스 IP 표시"
-        },
-        "showRuleId": {
-          "label": "규칙 ID 표시"
-        }
-      },
-      "title": "알림 · 수준 {level}+ · {hours}시간",
-      "empty": "이 수준의 알림이 없습니다. 모두 정상입니다.",
-      "rule": "규칙 {id}",
-      "openInDashboard": "Wazuh 대시보드에서 이 알림 열기"
-    },
-    "wazuhSummary": {
-      "name": "Wazuh 알림 심각도",
-      "description": "이전 기간과 비교한 추이가 포함된 알림 심각도 분석",
-      "option": {
         "range": {
-          "label": "시간 범위"
+          "label": ""
         },
         "showTrend": {
-          "label": "이전 기간과 비교한 추이 표시"
+          "label": ""
         },
         "showFooter": {
-          "label": "바닥글 표시"
-        }
-      },
-      "title": "알림 심각도 · {range}",
-      "alerts": "알림",
-      "none": "알림 없음",
-      "trend": {
-        "new": "신규",
-        "tooltip": "이전 기간: {previous}"
-      },
-      "previous": "이전 {range}: {count}",
-      "maxLevel": "최대 수준 {level}",
-      "health": "인덱서 상태: {status}",
-      "manager": "관리자 {version}"
-    },
-    "wazuhTimeline": {
-      "name": "Wazuh 알림 타임라인",
-      "description": "심각도별 시간 경과에 따른 Wazuh 알림 누적 차트",
-      "option": {
-        "range": {
-          "label": "시간 범위"
+          "label": ""
         },
         "interval": {
-          "label": "간격"
+          "label": ""
         },
         "chartType": {
-          "label": "차트 유형"
+          "label": ""
         },
         "yScale": {
-          "label": "Y축 배율",
-          "description": "제곱근을 사용하면 수천 개의 낮은 알림 옆에 높은 알림과 심각한 알림을 표시할 수 있습니다"
+          "label": "",
+          "description": ""
         },
         "minLevel": {
-          "label": "최소 규칙 수준"
+          "label": ""
         },
         "showLegend": {
-          "label": "합계와 범례 표시"
-        }
-      },
-      "title": "알림 타임라인 · {range}",
-      "total": "알림 {count}개",
-      "interval": "{interval}당"
-    },
-    "wazuhTopList": {
-      "name": "Wazuh 상위 목록",
-      "description": "알림 수 기준 상위 규칙, 에이전트, 소스 IP 또는 MITRE ATT&CK 전술 및 기술",
-      "option": {
-        "kind": {
-          "label": "순위"
+          "label": ""
         },
-        "range": {
-          "label": "시간 범위"
+        "topKind": {
+          "label": ""
         },
-        "limit": {
-          "label": "항목 수"
-        },
-        "minLevel": {
-          "label": "최소 규칙 수준"
+        "topLimit": {
+          "label": ""
         },
         "showBars": {
-          "label": "막대 표시"
-        }
-      },
-      "title": {
-        "rules": "상위 규칙 · {range}",
-        "agents": "상위 에이전트 · {range}",
-        "sourceIps": "상위 소스 IP · {range}",
-        "mitreTactics": "MITRE 전술 · {range}",
-        "mitreTechniques": "MITRE 기술 · {range}"
-      },
-      "empty": {
-        "rules": "이 기간에 알림 없음",
-        "agents": "이 기간에 알림 없음",
-        "sourceIps": "이 기간에 소스 IP가 있는 알림 없음",
-        "mitreTactics": "이 기간에 MITRE ATT&CK에 매핑된 알림 없음",
-        "mitreTechniques": "이 기간에 MITRE ATT&CK에 매핑된 알림 없음"
-      },
-      "totalTooltip": "일치하는 알림 {count}개",
-      "private": "LAN",
-      "public": "공개",
-      "agents": "에이전트 {count}개에서 확인됨",
-      "others": "다른 항목에 알림 {count}개 더 있음"
-    },
-    "wazuhVulnerabilities": {
-      "name": "Wazuh 취약점",
-      "description": "취약점 수, 상위 CVE 및 가장 취약한 에이전트",
-      "option": {
+          "label": ""
+        },
+        "agentStatusFilter": {
+          "label": ""
+        },
+        "agentSortBy": {
+          "label": ""
+        },
+        "showVersion": {
+          "label": ""
+        },
+        "showGroups": {
+          "label": ""
+        },
         "cveOrder": {
-          "label": "CVE 순위 기준"
+          "label": ""
         },
         "minSeverity": {
-          "label": "CVE 심각도"
+          "label": ""
         },
         "cveLimit": {
-          "label": "CVE 수"
+          "label": ""
         },
         "agentLimit": {
-          "label": "에이전트 수"
+          "label": ""
         },
         "showAgents": {
-          "label": "가장 취약한 에이전트 표시"
-        }
-      },
-      "title": "취약점",
-      "topCves": "상위 CVE",
-      "score": "점수",
-      "agentsShort": "에이전트",
-      "topAgents": "가장 취약한 에이전트",
-      "criticalHigh": "심각 / 높음",
-      "totalTooltip": "에이전트 {agents}개에서 발견 {count}개",
-      "affected": "에이전트 {count}개",
-      "empty": "감지된 취약점 없음",
-      "distribution": "심각도 분포입니다. 점수가 없는 {unscored}개의 발견 항목은 표시되지 않습니다.",
-      "worst": "최악: {agents}개 에이전트의 {id}({score})"
-    },
-    "wazuhFim": {
-      "name": "Wazuh 파일 무결성",
-      "description": "최근 파일 무결성 모니터링(syscheck) 이벤트",
-      "option": {
-        "range": {
-          "label": "시간 범위"
+          "label": ""
         },
-        "event": {
-          "label": "이벤트"
+        "fimEvent": {
+          "label": ""
         },
-        "limit": {
-          "label": "이벤트 수"
+        "fimLimit": {
+          "label": ""
         },
         "includeRegistry": {
-          "label": "Windows 레지스트리 이벤트 포함"
-        }
-      },
-      "title": "파일 무결성 · {range}",
-      "event": {
-        "added": "추가된 날짜",
-        "modified": "수정됨",
-        "deleted": "삭제됨",
-        "unknown": "변경됨"
-      },
-      "empty": "이 기간에 파일 무결성 이벤트 없음",
-      "user": "{user}에 의해",
-      "registry": "레지스트리"
-    },
-    "wazuhAuthFailures": {
-      "name": "Wazuh 인증 실패",
-      "description": "시간별 스파크라인으로 에이전트별 로그인 실패 및 무차별 대입 알림 표시",
-      "option": {
-        "hours": {
-          "label": "시간 범위(시간)"
+          "label": ""
         },
-        "limit": {
-          "label": "에이전트 수"
+        "authLimit": {
+          "label": ""
         },
         "showSourceIps": {
-          "label": "상위 소스 IP 표시"
+          "label": ""
+        },
+        "alertsMinLevel": {
+          "label": "",
+          "description": ""
+        },
+        "alertsLimit": {
+          "label": ""
+        },
+        "showMitre": {
+          "label": ""
+        },
+        "showAgent": {
+          "label": ""
+        },
+        "showSourceIp": {
+          "label": ""
+        },
+        "showRuleId": {
+          "label": ""
         }
-      },
-      "title": "인증 실패 · {hours}시간",
-      "seriesTooltip": "지난 {hours}시간 동안의 모든 에이전트",
-      "peak": "최대 {count}/구간",
-      "empty": "이 기간에 로그인 실패 없음",
-      "failed": "로그인 실패",
-      "failedHint": "개별 인증 실패(sshd, PAM, Windows 로그온, 잘못된 사용자)",
-      "bruteForce": "무차별 대입",
-      "bruteForceHint": "연관된 무차별 대입 규칙(짧은 시간 내 여러 실패, MITRE T1110)",
-      "sourceIps": "소스 IP",
-      "ipTooltip": "{ip}: 실패 {count}회",
-      "bruteForceCount": "무차별 대입 {count}회"
+      }
     }
   },
   "widgetPreview": {
@@ -5906,6 +6215,18 @@
       "addWidget": "위젯 추가",
       "addApp": "앱 추가",
       "connectService": "서비스 연결"
+    },
+    "urlDrop": {
+      "hint": "",
+      "resolving": "",
+      "notification": {
+        "success": {
+          "message": ""
+        },
+        "full": {
+          "message": ""
+        }
+      }
     },
     "setupChecklist": {
       "title": "이 보드를 유용하게 만들기",
@@ -6752,6 +7073,10 @@
             "signInOverlay": {
               "label": "배경 오버레이"
             },
+            "signInMarquee": {
+              "label": "",
+              "description": ""
+            },
             "defaultRadius": {
               "label": "모서리 스타일",
               "options": {
@@ -6917,6 +7242,7 @@
             "model": {
               "title": "모델",
               "description": "검색된 모델을 선택하거나 정확한 엔드포인트 모델 ID를 입력하세요.",
+              "save": "",
               "placeholder": "모델 ID",
               "refresh": "모델 새로 고침",
               "chooseModel": "새 대화에 사용할 모델을 선택하세요.",
@@ -8512,6 +8838,14 @@
     "conversationActions": "대화 작업",
     "searchConversations": "대화 검색",
     "noMatchingConversations": "일치하는 대화 없음",
+    "historyError": {
+      "title": "",
+      "load": "",
+      "loadMessages": "",
+      "saveMessages": "",
+      "switch": "",
+      "retry": ""
+    },
     "moreActions": "추가 응답 작업",
     "renameConversation": {
       "action": "이름 변경",
@@ -8631,6 +8965,9 @@
     },
     "mentions": {
       "menu": "Homarr 컨텍스트 추가",
+      "back": "",
+      "loading": "",
+      "empty": "",
       "context": "컨텍스트",
       "app": "앱",
       "integration": "통합",
@@ -8645,6 +8982,8 @@
     },
     "commands": {
       "menu": "어시스턴트 명령",
+      "hint": "",
+      "empty": "",
       "health": "서비스 상태 확인 준비",
       "explore": "이 Homarr 인스턴스 개요 준비",
       "media": "미디어 검색 준비",
@@ -8827,6 +9166,7 @@
     "approvalDescription": "실행하기 전에 이 변경 사항을 검토하세요.",
     "approveAndRun": "승인하고 실행",
     "deny": "거부",
+    "approvalError": "",
     "autoApproval": {
       "label": "자동 승인",
       "composerLabel": "나를 대신해 승인",

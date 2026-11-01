@@ -65,7 +65,6 @@
         "themeAuto": "Sistema",
         "themeLight": "Clar",
         "themeDark": "Fosc",
-        "serverOriginHelp": "Homarr utilitza aquesta adreça per emplenar prèviament els URL dels serveis detectats. Encara podeu editar cada servei individualment.",
         "serverDescription": "És una drecera, no una restricció. Tots els serveis detectats es poden editar.",
         "serverOrigin": "Domini, IP o camí del proxy invers",
         "serverOriginDescription": "Exemples: home.lan, 192.168.1.10 o https://home.example.com/services. Trieu com s'afegirà cada servei a continuació.",
@@ -102,6 +101,8 @@
       "connect": {
         "title": "Connecta el que fa útil el tauler",
         "description": "Seleccioneu diversos serveis alhora. Les etiquetes de Docker tenen prioritat, la coincidència d'imatges omple els buits i podeu revisar tots els URL i les credencials.",
+        "confirmServerAddress": "",
+        "serverAddressReviewed": "",
         "discoveredIntegrations": "Instàncies d'integració detectades ({count})",
         "detectedIntegrationLabel": "Importa {name}, detectat com a {kind}",
         "detectedAppLabel": "Importa l'aplicació detectada {name}",
@@ -126,7 +127,8 @@
         "needsConfiguration": "Requereix configuració",
         "tested": "Connexió provada",
         "testFailed": "Error en provar la connexió",
-        "incompleteConfirmation": "Les integracions inacabades s'ometran. Voleu continuar sense aquestes integracions?"
+        "incompleteConfirmation": "Les integracions inacabades s'ometran. Voleu continuar sense aquestes integracions?",
+        "skipIncomplete": ""
       },
       "board": {
         "title": "Dona forma al tauler abans de crear-lo",
@@ -799,6 +801,11 @@
       }
     },
     "field": {
+      "url": {
+        "helpLabel": "Exemples de formats d'URL",
+        "examples": "Exemples d'enllaços admesos",
+        "requiresHandler": "Els protocols personalitzats requereixen una aplicació associada al vostre dispositiu."
+      },
       "description": {
         "label": "Descripció"
       },
@@ -1559,6 +1566,7 @@
             "untrusted": "No es confia en el certificat.",
             "hostnameMismatch": "El nom d'amfitrió del certificat no coincideix amb l'URL."
           },
+          "secondaryUrl": "",
           "alert": {
             "permission": {
               "title": "No hi ha prou permisos",
@@ -1904,6 +1912,7 @@
       "tryAgain": "Torna-ho a provar",
       "loading": "Carregant",
       "show": "Mostra",
+      "showAll": "",
       "hide": "Oculta",
       "undo": "Desfés",
       "editNamed": "Edita {name}",
@@ -1913,6 +1922,7 @@
       "copied": "Copiat",
       "refresh": "Actualitza"
     },
+    "hidden": "",
     "pagination": {
       "pageOf": "Pàgina {page} de {totalPages}"
     },
@@ -1922,6 +1932,8 @@
     "here": "aquí",
     "serviceUrlTemplate": {
       "serverTitle": "Adreça habitual del servidor",
+      "description": "",
+      "example": "",
       "urlModeLabel": "Patró de l'adreça del servei",
       "hostPort": "Mateix amfitrió, ports diferents",
       "subdomain": "Un subdomini per servei",
@@ -1935,6 +1947,7 @@
       "clear": "Esborra la imatge",
       "uploadImage": "Puja una imatge",
       "results": "Resultats de la cerca d'imatges",
+      "websiteIcon": "",
       "localImages": "Les teves imatges",
       "svgIcons": "Icones SVG",
       "otherImages": "Altres imatges",
@@ -2308,6 +2321,15 @@
       "option": {
         "appId": {
           "label": "Trieu l'aplicació"
+        },
+        "openIn": {
+          "label": "Obre l'aplicació a",
+          "description": "Trieu on s'obre aquesta aplicació. La configuració del navegador pot modificar l'obertura en una finestra separada.",
+          "option": {
+            "currentTab": "La pestanya actual",
+            "newTab": "Una pestanya nova",
+            "newWindow": "Una finestra nova"
+          }
         },
         "showTitle": {
           "label": "Mostra el nom de l'aplicació"
@@ -3224,6 +3246,10 @@
         },
         "viewMode": {
           "label": ""
+        },
+        "hideHeader": {
+          "label": "",
+          "description": ""
         }
       },
       "advanced": {
@@ -3241,15 +3267,11 @@
         "agenda": ""
       },
       "controls": {
-        "view": "",
         "today": "",
         "previous": "",
         "next": "",
         "noEvents": "",
         "more": "",
-        "moreLabel": "",
-        "eventDetails": "",
-        "close": "",
         "timeSlot": "",
         "weekday": ""
       }
@@ -3936,11 +3958,28 @@
         "paused": "En pausa",
         "remaining": "Queden {minutes} min",
         "seasonEpisode": "T{season} E{episode}",
+        "state": {
+          "playing": "",
+          "buffering": ""
+        },
+        "details": {
+          "device": "",
+          "location": "",
+          "sessionId": "",
+          "bitrate": "",
+          "audioHandling": "",
+          "direct": "",
+          "transcode": "",
+          "containerChanged": "",
+          "position": "",
+          "unknown": ""
+        },
         "metadata": {
           "title": "Dades curioses",
           "video": {
             "title": "Vídeo",
-            "resolution": "Resolució"
+            "resolution": "Resolució",
+            "frameRate": ""
           },
           "audio": {
             "title": "Àudio",
@@ -3961,6 +4000,109 @@
         "playing": "{count} en reproducció",
         "transcoding": "{count} transcodificant"
       }
+    },
+    "thingport-libraryStats": {
+      "name": "",
+      "description": "",
+      "title": "",
+      "option": {
+        "showModels": {
+          "label": ""
+        },
+        "showCollections": {
+          "label": ""
+        },
+        "showCategories": {
+          "label": ""
+        },
+        "showAuthors": {
+          "label": ""
+        }
+      },
+      "models": "",
+      "collections": "",
+      "categories": "",
+      "authors": ""
+    },
+    "thingport-featuredModel": {
+      "name": "",
+      "description": "",
+      "option": {
+        "autoRotate": {
+          "label": ""
+        },
+        "showDetails": {
+          "label": ""
+        }
+      },
+      "title": "",
+      "empty": "",
+      "hint": "",
+      "noPreview": "",
+      "views": "",
+      "prints": ""
+    },
+    "thingport-activityHeatmap": {
+      "name": "",
+      "description": "",
+      "title": "",
+      "option": {
+        "weekStart": {
+          "label": "",
+          "option": {
+            "sunday": "",
+            "monday": ""
+          }
+        },
+        "showTotal": {
+          "label": ""
+        },
+        "showLegend": {
+          "label": ""
+        }
+      },
+      "lastYear": "",
+      "totalLastYear": "",
+      "totalInYear": "",
+      "dayTotal": "",
+      "dayEmpty": "",
+      "kinds": {
+        "import": "",
+        "upload": "Total penjat",
+        "download": "Total descarregat",
+        "slicer": "",
+        "delete": ""
+      },
+      "less": "",
+      "more": ""
+    },
+    "thingport-models": {
+      "name": "",
+      "description": "",
+      "title": "",
+      "option": {
+        "defaultTab": {
+          "label": ""
+        },
+        "itemCount": {
+          "label": ""
+        },
+        "showThumbnails": {
+          "label": ""
+        }
+      },
+      "tab": {
+        "recentlyAdded": "",
+        "topViewed": "",
+        "topPrinted": ""
+      },
+      "empty": {
+        "recentlyAdded": "",
+        "topViewed": "",
+        "topPrinted": ""
+      },
+      "views": "",
+      "prints": ""
     },
     "paperlessNgx": {
       "description": "Visió general del teu arxiu de documents de Paperless-ngx",
@@ -4634,27 +4776,59 @@
       "name": "Versions",
       "description": "Mostra una llista de la versió actual dels repositoris indicats amb l'expressió regular de versió especificada.",
       "option": {
+        "layout": {
+          "label": "",
+          "description": "",
+          "option": {
+            "comfortable": "",
+            "compact": ""
+          }
+        },
+        "summary": {
+          "label": "",
+          "description": "",
+          "option": {
+            "detailed": "",
+            "count": "",
+            "hidden": ""
+          }
+        },
+        "groupReleases": {
+          "label": "",
+          "description": ""
+        },
+        "sections": {
+          "label": "",
+          "description": ""
+        },
         "newReleaseWithin": {
           "label": "Llançaments nous dins de",
-          "description": "Exemple d'ús: 1w (1 setmana), 10M (10 mesos). Unitats acceptades: h (hores), d (dies), w (setmanes), M (mesos), y (anys). Deixa-ho buit per no destacar els llançaments nous."
+          "description": "Exemple d'ús: 1w (1 setmana), 10M (10 mesos). Unitats acceptades: h (hores), d (dies), w (setmanes), M (mesos), y (anys). Deixa-ho buit per no destacar els llançaments nous.",
+          "option": {
+            "never": "",
+            "1d": "",
+            "3d": "",
+            "1w": "",
+            "2w": "",
+            "1M": "",
+            "3M": ""
+          }
         },
         "staleReleaseWithin": {
           "label": "Llançaments antics dins de",
-          "description": "Exemple d'ús: 1w (1 setmana), 10M (10 mesos). Unitats acceptades: h (hores), d (dies), w (setmanes), M (mesos), y (anys). Deixa-ho buit per no destacar els llançaments antics."
+          "description": "Exemple d'ús: 1w (1 setmana), 10M (10 mesos). Unitats acceptades: h (hores), d (dies), w (setmanes), M (mesos), y (anys). Deixa-ho buit per no destacar els llançaments antics.",
+          "option": {
+            "never": "",
+            "1M": "",
+            "3M": "",
+            "6M": "",
+            "1y": "",
+            "2y": ""
+          }
         },
-        "showOnlyHighlighted": {
-          "label": "Mostra només els destacats",
-          "description": "Mostra només els llançaments nous o antics, segons el que s'ha indicat anteriorment."
-        },
-        "showDetails": {
-          "label": "Mostra els detalls"
-        },
-        "showOnlyIcon": {
-          "label": "Mostra només la icona"
-        },
-        "topReleases": {
-          "label": "Millors llançaments",
-          "description": "Nombre màxim dels últims llançaments que es mostraran. Zero significa que no hi ha límit."
+        "showChangelogPreview": {
+          "label": "",
+          "description": ""
         },
         "repositories": {
           "label": "Repositoris",
@@ -4687,6 +4861,10 @@
           },
           "name": {
             "label": "Nom"
+          },
+          "excludePrereleases": {
+            "label": "",
+            "description": ""
           },
           "versionFilter": {
             "label": "Filtre de versions",
@@ -4728,36 +4906,110 @@
           }
         }
       },
-      "not-found": "No s'ha trobat",
-      "pre-release": "Prellançament",
-      "archived": "Arxivat",
-      "forked": "Bifurcat",
+      "summary": {
+        "newReleases": "",
+        "newShort": "",
+        "tracked": "",
+        "caughtUp": "",
+        "outdated": "",
+        "outdatedShort": "",
+        "failing": "",
+        "failingShort": "",
+        "latest": "",
+        "issues": ""
+      },
+      "section": {
+        "new": {
+          "label": "",
+          "description": ""
+        },
+        "attention": {
+          "label": "",
+          "description": ""
+        },
+        "upToDate": {
+          "label": "",
+          "description": ""
+        },
+        "quiet": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "status": {
+        "new": "",
+        "outdated": "",
+        "error": "",
+        "upToDate": "",
+        "quiet": ""
+      },
+      "tag": {
+        "new": "",
+        "preRelease": "",
+        "resolvedFrom": "",
+        "quiet": "",
+        "archived": "",
+        "fork": ""
+      },
+      "issue": {
+        "affected": "",
+        "rateLimited": {
+          "title": "",
+          "hint": ""
+        },
+        "notFound": {
+          "title": "",
+          "hint": ""
+        },
+        "noMatchingVersion": {
+          "title": "",
+          "hint": ""
+        },
+        "noReleasesFound": {
+          "title": "",
+          "hint": ""
+        },
+        "invalidIdentifier": {
+          "title": "",
+          "hint": ""
+        },
+        "noProviderSelected": {
+          "title": "",
+          "hint": ""
+        },
+        "noProviderResponse": {
+          "title": "",
+          "hint": ""
+        },
+        "unexpected": {
+          "title": "",
+          "hint": ""
+        }
+      },
+      "markViewed": "Marca com a vist",
+      "markAllViewed": "",
+      "markEntryViewed": "",
+      "viewed": "",
+      "copyVersion": "",
+      "copied": "",
+      "published": "",
+      "whatChanged": "",
+      "noNotes": "",
+      "changes": "",
       "starsCount": "Estrelles",
       "forksCount": "Forks",
-      "issuesCount": "Problemes oberts",
-      "markViewed": "Marca com a vist",
-      "openProjectPage": "Obre la pàgina del projecte",
-      "openReleasePage": "Obre la pàgina del llançament",
-      "releaseDescription": "Descripció del llançament",
-      "projectDescription": "Descripció del projecte",
+      "openIssues": "",
+      "created": "Creat",
+      "releasePage": "",
+      "projectPage": "",
       "runningVersions": "",
       "upToDate": "",
       "updateAvailable": "",
       "unknownStatus": "",
-      "created": "Creat",
       "error": {
-        "label": "Error",
-        "messages": {
-          "invalidIdentifier": "Identificador no vàlid",
-          "noMatchingVersion": "No s'ha trobat cap versió coincident",
-          "noReleasesFound": "No s'han trobat llançaments",
-          "noProviderSelected": "No s'ha seleccionat cap proveïdor",
-          "noProviderResponse": "El proveïdor no ha respost",
-          "unexpected": "Error inesperat del proveïdor"
-        }
-      },
-      "expandDetails": "Mostra els detalls de {name}",
-      "collapseDetails": "Amaga els detalls de {name}"
+        "collapsedSaveTitle": "",
+        "collapsedSaveMessage": ""
+      }
     },
     "networkControllerSummary": {
       "advanced": {
@@ -4930,45 +5182,116 @@
     "uptimeKuma": {
       "description": "Supervisa les estadístiques de temps d'activitat de la teva pàgina d'estat d'Uptime Kuma",
       "option": {
-        "showAverageUptime": {
-          "label": "Mostra el temps d'activitat mitjà",
-          "description": "Mostra el percentatge mitjà combinat de temps d'activitat de les darreres 24 hores"
+        "statusPageSlug": {
+          "label": "",
+          "description": ""
         },
-        "showUptimeRing": {
-          "label": "Mostra l'anell de temps d'activitat",
-          "description": "Mostra un anell de progrés al costat del valor mitjà de temps d'activitat"
+        "summaryOnly": {
+          "label": "",
+          "description": ""
         },
-        "showTotalMonitors": {
-          "label": "Mostra el total de monitors",
-          "description": "Mostra el nombre total de monitors configurats"
+        "showSummary": {
+          "label": "",
+          "description": ""
         },
-        "showUpCount": {
-          "label": "Mostra el recompte d'actius",
-          "description": "Mostra quants monitors estan actius actualment"
+        "showIncidents": {
+          "label": "",
+          "description": ""
         },
-        "showDownCount": {
-          "label": "Mostra el recompte d'inactius",
-          "description": "Mostra quants monitors estan inactius actualment"
+        "groupByStatusPageGroup": {
+          "label": "",
+          "description": ""
         },
-        "showPausedCount": {
-          "label": "Mostra el recompte de pausats",
-          "description": "Mostra quants monitors estan pausats actualment"
+        "showOnlyProblems": {
+          "label": "",
+          "description": ""
+        },
+        "sortBy": {
+          "label": "",
+          "option": {
+            "status": "",
+            "statusPage": "",
+            "name": "Nom de la feina",
+            "uptime": ""
+          }
+        },
+        "showHeartbeatBar": {
+          "label": "",
+          "description": ""
+        },
+        "showUptime": {
+          "label": ""
+        },
+        "showResponseTime": {
+          "label": ""
+        },
+        "showCertificateExpiry": {
+          "label": "",
+          "description": ""
         }
-      },
-      "averageUptime": "Temps d'activitat mitjà (24 h)",
-      "stats": {
-        "totalMonitors": "Total de monitors",
-        "upCount": "Actius",
-        "downCount": "Inactius",
-        "pausedCount": "Pausats"
-      },
-      "error": {
-        "internalServerError": "No s'han pogut obtenir les dades de temps d'activitat"
       },
       "status": {
         "up": "Velocitat de pujada",
         "down": "Velocitat de descàrrega",
-        "paused": "En pausa"
+        "pending": "",
+        "maintenance": "",
+        "stale": "",
+        "unknown": ""
+      },
+      "overall": {
+        "operational": "",
+        "degraded": "",
+        "outage": "",
+        "maintenance": "",
+        "unknown": ""
+      },
+      "short": {
+        "operational": "",
+        "down": "",
+        "pending": "",
+        "maintenance": "",
+        "unknown": ""
+      },
+      "summary": {
+        "upRatio": "",
+        "upRatioShort": "",
+        "averageUptime": "",
+        "uptimeShort": "",
+        "statusCount": ""
+      },
+      "unit": {
+        "milliseconds": ""
+      },
+      "heartbeatBar": {
+        "label": ""
+      },
+      "detail": {
+        "checked": "",
+        "certificate": ""
+      },
+      "notice": {
+        "label": "",
+        "untitled": ""
+      },
+      "empty": {
+        "title": "",
+        "description": ""
+      },
+      "allClear": "",
+      "error": {
+        "internalServerError": "No s'han pogut obtenir les dades de temps d'activitat"
+      },
+      "monitorType": {
+        "http": "",
+        "keyword": "",
+        "jsonQuery": "",
+        "port": "",
+        "ping": "",
+        "dns": "",
+        "docker": "",
+        "push": "",
+        "group": "Grup",
+        "realBrowser": ""
       }
     },
     "traefik": {
@@ -5192,6 +5515,9 @@
       "name": "Sistemes Beszel (taula)",
       "description": "Vista en taula de tots els sistemes monitorats per Beszel, amb columnes ordenables i indicadors d'estat",
       "option": {
+        "fahrenheit": {
+          "label": ""
+        },
         "sortBy": {
           "label": "Ordena per"
         },
@@ -5206,7 +5532,12 @@
     },
     "beszelSystemGrid": {
       "name": "Sistemes Beszel (graella)",
-      "description": "Vista en graella de targetes de tots els sistemes monitorats per Beszel, amb mètriques en temps real"
+      "description": "Vista en graella de targetes de tots els sistemes monitorats per Beszel, amb mètriques en temps real",
+      "option": {
+        "fahrenheit": {
+          "label": ""
+        }
+      }
     },
     "beszelAlerts": {
       "name": "Alertes de Beszel",
@@ -5575,6 +5906,8 @@
       "allHidden": "Totes les mètriques estan ocultes en aquesta vista. Utilitza «Personalitza aquesta vista» per restaurar-les."
     },
     "wazuh": {
+      "name": "",
+      "description": "",
       "target": {
         "api": "API del servidor Wazuh",
         "indexer": "Indexador Wazuh",
@@ -5594,6 +5927,14 @@
         "certificate": {
           "title": "El certificat de {target} no és de confiança",
           "description": "Wazuh utilitza un certificat autofirmat per defecte. Executa «Prova la connexió» a la integració i confia en el certificat, o afegeix la teva CA a Configuració → Certificats."
+        },
+        "certificateHostname": {
+          "title": "",
+          "description": ""
+        },
+        "certificateExpired": {
+          "title": "",
+          "description": ""
         },
         "unreachable": {
           "title": "No es pot accedir a {target}",
@@ -5618,7 +5959,9 @@
         "unknown": {
           "title": "No s'han pogut carregar les dades de {target}",
           "description": "Consulta els registres d'Homarr per obtenir més informació."
-        }
+        },
+        "viewSaveTitle": "",
+        "viewSaveMessage": ""
       },
       "range": {
         "1h": "1 h",
@@ -5626,268 +5969,234 @@
         "7d": "7 dies",
         "30d": "30 dies"
       },
-      "levelTooltip": "Nivell de regla {level} ({severity})"
-    },
-    "wazuhAgents": {
-      "name": "Agents de Wazuh",
-      "description": "Llista ordenable d'agents de Wazuh amb l'estat, el sistema operatiu, la versió i l'últim manteniment de connexió",
+      "levelTooltip": "Nivell de regla {level} ({severity})",
+      "summary": {
+        "title": "",
+        "alerts": "",
+        "none": "",
+        "trend": {
+          "new": "",
+          "tooltip": ""
+        },
+        "previous": "",
+        "maxLevel": "",
+        "health": "",
+        "manager": ""
+      },
+      "alerts": {
+        "title": "",
+        "empty": "",
+        "rule": "",
+        "openInDashboard": ""
+      },
+      "timeline": {
+        "title": "",
+        "total": "",
+        "interval": ""
+      },
+      "top": {
+        "title": {
+          "rules": "",
+          "agents": "",
+          "sourceIps": "",
+          "mitreTactics": "",
+          "mitreTechniques": ""
+        },
+        "empty": {
+          "rules": "",
+          "agents": "",
+          "sourceIps": "",
+          "mitreTactics": "",
+          "mitreTechniques": ""
+        },
+        "totalTooltip": "",
+        "private": "",
+        "public": "",
+        "agents": "",
+        "others": ""
+      },
+      "agents": {
+        "title": "",
+        "total": "",
+        "status": {
+          "active": "",
+          "disconnected": "",
+          "neverConnected": "",
+          "pending": ""
+        },
+        "statusLabel": {
+          "active": "",
+          "disconnected": "",
+          "never_connected": "",
+          "pending": "",
+          "unknown": ""
+        },
+        "live": "",
+        "snapshot": "",
+        "snapshotHint": "",
+        "staleSnapshot": "",
+        "noDisconnected": "",
+        "empty": "",
+        "column": {
+          "status": "",
+          "name": "Nom de la feina",
+          "ip": "",
+          "os": "",
+          "version": "",
+          "lastKeepAlive": "",
+          "groups": "Grups"
+        },
+        "outdated": ""
+      },
+      "vulnerabilities": {
+        "title": "",
+        "topCves": "",
+        "score": "",
+        "agentsShort": "",
+        "topAgents": "",
+        "criticalHigh": "",
+        "totalTooltip": "",
+        "affected": "",
+        "empty": "",
+        "distribution": "",
+        "worst": ""
+      },
+      "fim": {
+        "title": "",
+        "event": {
+          "added": "Data d'addició",
+          "modified": "",
+          "deleted": "",
+          "unknown": ""
+        },
+        "empty": "",
+        "user": "",
+        "registry": ""
+      },
+      "authFailures": {
+        "title": "",
+        "seriesTooltip": "",
+        "peak": "",
+        "empty": "",
+        "failed": "",
+        "failedHint": "",
+        "bruteForce": "",
+        "bruteForceHint": "",
+        "sourceIps": "",
+        "ipTooltip": "",
+        "bruteForceCount": ""
+      },
+      "view": {
+        "overview": "",
+        "alerts": "",
+        "timeline": "",
+        "top": "",
+        "agents": "",
+        "vulnerabilities": "",
+        "fim": "",
+        "authFailures": ""
+      },
       "option": {
-        "statusFilter": {
-          "label": "Mostra els agents"
+        "visibleViews": {
+          "label": "",
+          "description": ""
         },
-        "sortBy": {
-          "label": "Ordena per"
-        },
-        "showVersion": {
-          "label": "Mostra la columna de versió de Wazuh"
-        },
-        "showGroups": {
-          "label": "Mostra la columna de grups"
-        }
-      },
-      "title": "Agents",
-      "total": "{count} agents",
-      "status": {
-        "active": "Actiu",
-        "disconnected": "Desconnectat",
-        "neverConnected": "Mai connectat",
-        "pending": "Pendent"
-      },
-      "statusLabel": {
-        "active": "Actiu",
-        "disconnected": "Desconnectat",
-        "never_connected": "No s'ha connectat mai",
-        "pending": "Pendent",
-        "unknown": "Desconegut"
-      },
-      "live": "En directe",
-      "snapshot": "Instantània de fa {age}",
-      "snapshotHint": "Llegeix les dades de la instantània de l'agent del tauler de Wazuh (wazuh-monitoring), presa a les {time}. Afegeix les credencials de l'API del servidor per obtenir dades en temps real.",
-      "staleSnapshot": "La instantània de l'agent de les {time} està obsoleta. Comprova que la tasca de supervisió del tauler de Wazuh s'estigui executant o afegeix les credencials de l'API del servidor.",
-      "noDisconnected": "Tots els agents estan connectats",
-      "empty": "Cap agent coincideix amb aquest filtre",
-      "column": {
-        "status": "Estat",
-        "name": "Nom de la feina",
-        "ip": "IP",
-        "os": "SO",
-        "version": "Versió",
-        "lastKeepAlive": "Manteniment de connexió",
-        "groups": "Grups"
-      },
-      "outdated": "Més antiga que la versió més recent de l'agent ({version})"
-    },
-    "wazuhAlerts": {
-      "name": "Canal d'alertes de Wazuh",
-      "description": "Alertes recents de Wazuh amb el nivell, les tècniques MITRE ATT&CK, l'agent i l'adreça IP d'origen",
-      "option": {
-        "minLevel": {
-          "label": "Nivell mínim de regla",
-          "description": "Nivells de Wazuh: 0-6 baix, 7-11 mitjà, 12-14 alt, 15 o més crític"
-        },
-        "hours": {
-          "label": "Finestra temporal (hores)"
-        },
-        "limit": {
-          "label": "Nombre d'alertes"
-        },
-        "showMitre": {
-          "label": "Mostra les tècniques MITRE ATT&CK"
-        },
-        "showAgent": {
-          "label": "Mostra l'agent"
-        },
-        "showSourceIp": {
-          "label": "Mostra la IP d'origen"
-        },
-        "showRuleId": {
-          "label": "Mostra l'identificador de la regla"
-        }
-      },
-      "title": "Alertes · nivell {level}+ · {hours} h",
-      "empty": "No hi ha alertes en aquest nivell. Tot està tranquil.",
-      "rule": "Regla {id}",
-      "openInDashboard": "Obre aquesta alerta al tauler de Wazuh"
-    },
-    "wazuhSummary": {
-      "name": "Gravetat de les alertes de Wazuh",
-      "description": "Desglossament de la gravetat de les alertes amb una tendència respecte del període anterior",
-      "option": {
         "range": {
-          "label": "Interval de temps"
+          "label": ""
         },
         "showTrend": {
-          "label": "Mostra la tendència respecte del període anterior"
+          "label": ""
         },
         "showFooter": {
-          "label": "Mostra el peu de pàgina"
-        }
-      },
-      "title": "Gravetat de les alertes · {range}",
-      "alerts": "alertes",
-      "none": "No hi ha alertes",
-      "trend": {
-        "new": "noves",
-        "tooltip": "Període anterior: {previous}"
-      },
-      "previous": "Els {range} anteriors: {count}",
-      "maxLevel": "Nivell màxim {level}",
-      "health": "Estat de l'indexador: {status}",
-      "manager": "Gestor {version}"
-    },
-    "wazuhTimeline": {
-      "name": "Línia temporal de les alertes de Wazuh",
-      "description": "Gràfic apilat de les alertes de Wazuh al llarg del temps per gravetat",
-      "option": {
-        "range": {
-          "label": "Interval de temps"
+          "label": ""
         },
         "interval": {
-          "label": "Interval"
+          "label": ""
         },
         "chartType": {
-          "label": "Tipus de gràfic"
+          "label": ""
         },
         "yScale": {
-          "label": "Escala de l'eix Y",
-          "description": "L'arrel quadrada manté visibles les alertes altes i crítiques al costat de milers d'alertes baixes"
+          "label": "",
+          "description": ""
         },
         "minLevel": {
-          "label": "Nivell mínim de la regla"
+          "label": ""
         },
         "showLegend": {
-          "label": "Mostra la llegenda amb els totals"
-        }
-      },
-      "title": "Línia temporal de les alertes · {range}",
-      "total": "{count} alertes",
-      "interval": "cada {interval}"
-    },
-    "wazuhTopList": {
-      "name": "Llista principal de Wazuh",
-      "description": "Regles, agents, adreces IP d'origen o tàctiques i tècniques MITRE ATT&CK principals per nombre d'alertes",
-      "option": {
-        "kind": {
-          "label": "Classificació"
+          "label": ""
         },
-        "range": {
-          "label": "Interval de temps"
+        "topKind": {
+          "label": ""
         },
-        "limit": {
-          "label": "Nombre d'entrades"
-        },
-        "minLevel": {
-          "label": "Nivell mínim de la regla"
+        "topLimit": {
+          "label": ""
         },
         "showBars": {
-          "label": "Mostra les barres"
-        }
-      },
-      "title": {
-        "rules": "Regles principals · {range}",
-        "agents": "Agents principals · {range}",
-        "sourceIps": "IP d'origen principals · {range}",
-        "mitreTactics": "Tàctiques MITRE · {range}",
-        "mitreTechniques": "Tècniques MITRE · {range}"
-      },
-      "empty": {
-        "rules": "No hi ha alertes en aquest període",
-        "agents": "No hi ha alertes en aquest període",
-        "sourceIps": "No hi ha alertes amb una IP d'origen en aquest període",
-        "mitreTactics": "No hi ha alertes assignades a MITRE ATT&CK en aquest període",
-        "mitreTechniques": "No hi ha alertes assignades a MITRE ATT&CK en aquest període"
-      },
-      "totalTooltip": "{count} alertes coincidents",
-      "private": "LAN",
-      "public": "Pública",
-      "agents": "Vist en {count} agents",
-      "others": "{count} alertes més en altres entrades"
-    },
-    "wazuhVulnerabilities": {
-      "name": "Vulnerabilitats de Wazuh",
-      "description": "Nombre de vulnerabilitats, CVE principals i agents més vulnerables",
-      "option": {
+          "label": ""
+        },
+        "agentStatusFilter": {
+          "label": ""
+        },
+        "agentSortBy": {
+          "label": ""
+        },
+        "showVersion": {
+          "label": ""
+        },
+        "showGroups": {
+          "label": ""
+        },
         "cveOrder": {
-          "label": "Classifica els CVE per"
+          "label": ""
         },
         "minSeverity": {
-          "label": "Gravetat del CVE"
+          "label": ""
         },
         "cveLimit": {
-          "label": "Nombre de CVE"
+          "label": ""
         },
         "agentLimit": {
-          "label": "Nombre d'agents"
+          "label": ""
         },
         "showAgents": {
-          "label": "Mostra els agents més vulnerables"
-        }
-      },
-      "title": "Vulnerabilitats",
-      "topCves": "CVE principals",
-      "score": "Puntuació",
-      "agentsShort": "Agents",
-      "topAgents": "Agents més vulnerables",
-      "criticalHigh": "Crític / alt",
-      "totalTooltip": "{count} troballes en {agents} agents",
-      "affected": "{count} agents",
-      "empty": "No s'han detectat vulnerabilitats",
-      "distribution": "Distribució de la gravetat. No es mostren {unscored} troballes sense puntuació.",
-      "worst": "Pitjor: {id} ({score}) en {agents} agents"
-    },
-    "wazuhFim": {
-      "name": "Integritat dels fitxers de Wazuh",
-      "description": "Esdeveniments recents de supervisió de la integritat dels fitxers (syscheck)",
-      "option": {
-        "range": {
-          "label": "Interval de temps"
+          "label": ""
         },
-        "event": {
-          "label": "Esdeveniments"
+        "fimEvent": {
+          "label": ""
         },
-        "limit": {
-          "label": "Nombre d'esdeveniments"
+        "fimLimit": {
+          "label": ""
         },
         "includeRegistry": {
-          "label": "Inclou els esdeveniments del registre de Windows"
-        }
-      },
-      "title": "Integritat dels fitxers · {range}",
-      "event": {
-        "added": "Data d'addició",
-        "modified": "Modificat",
-        "deleted": "Eliminat",
-        "unknown": "Canviat"
-      },
-      "empty": "No hi ha esdeveniments d'integritat dels fitxers en aquest període",
-      "user": "per {user}",
-      "registry": "Registre"
-    },
-    "wazuhAuthFailures": {
-      "name": "Errors d'autenticació de Wazuh",
-      "description": "Inicis de sessió fallits i alertes de força bruta per agent amb gràfics horaris",
-      "option": {
-        "hours": {
-          "label": "Finestra temporal (hores)"
+          "label": ""
         },
-        "limit": {
-          "label": "Nombre d'agents"
+        "authLimit": {
+          "label": ""
         },
         "showSourceIps": {
-          "label": "Mostra les IP d'origen principals"
+          "label": ""
+        },
+        "alertsMinLevel": {
+          "label": "",
+          "description": ""
+        },
+        "alertsLimit": {
+          "label": ""
+        },
+        "showMitre": {
+          "label": ""
+        },
+        "showAgent": {
+          "label": ""
+        },
+        "showSourceIp": {
+          "label": ""
+        },
+        "showRuleId": {
+          "label": ""
         }
-      },
-      "title": "Errors d'autenticació · {hours} h",
-      "seriesTooltip": "Tots els agents durant les darreres {hours} h",
-      "peak": "Màxim: {count}/interval",
-      "empty": "No hi ha inicis de sessió fallits en aquest període",
-      "failed": "Inicis de sessió fallits",
-      "failedHint": "Errors d'autenticació individuals (sshd, PAM, inici de sessió de Windows, usuaris no vàlids)",
-      "bruteForce": "Força bruta",
-      "bruteForceHint": "Regles de força bruta correlacionades (diversos errors en un període curt, MITRE T1110)",
-      "sourceIps": "Adreces IP d'origen",
-      "ipTooltip": "{ip}: {count} errors",
-      "bruteForceCount": "{count} de força bruta"
+      }
     }
   },
   "widgetPreview": {
@@ -5906,6 +6215,18 @@
       "addWidget": "Afegeix un giny",
       "addApp": "Afegeix una aplicació",
       "connectService": "Connecta un servei"
+    },
+    "urlDrop": {
+      "hint": "",
+      "resolving": "",
+      "notification": {
+        "success": {
+          "message": ""
+        },
+        "full": {
+          "message": ""
+        }
+      }
     },
     "setupChecklist": {
       "title": "Fes que aquest tauler sigui útil",
@@ -6752,6 +7073,10 @@
             "signInOverlay": {
               "label": "Superposició del fons"
             },
+            "signInMarquee": {
+              "label": "",
+              "description": ""
+            },
             "defaultRadius": {
               "label": "Estil de les cantonades",
               "options": {
@@ -6917,6 +7242,7 @@
             "model": {
               "title": "Model",
               "description": "Selecciona un model detectat o introdueix l'ID exacte del model del punt final.",
+              "save": "",
               "placeholder": "ID del model",
               "refresh": "Actualitza els models",
               "chooseModel": "Tria el model que s'utilitzarà per a les converses noves.",
@@ -8512,6 +8838,14 @@
     "conversationActions": "Accions de la conversa",
     "searchConversations": "Cerca converses",
     "noMatchingConversations": "No hi ha converses coincidents",
+    "historyError": {
+      "title": "",
+      "load": "",
+      "loadMessages": "",
+      "saveMessages": "",
+      "switch": "",
+      "retry": ""
+    },
     "moreActions": "Més accions de resposta",
     "renameConversation": {
       "action": "Canvia el nom",
@@ -8631,6 +8965,9 @@
     },
     "mentions": {
       "menu": "Afegeix context de Homarr",
+      "back": "",
+      "loading": "",
+      "empty": "",
       "context": "Context",
       "app": "Apps",
       "integration": "Integracions",
@@ -8645,6 +8982,8 @@
     },
     "commands": {
       "menu": "Ordres de l'assistent",
+      "hint": "",
+      "empty": "",
       "health": "Prepara una comprovació de l'estat del servei",
       "explore": "Prepara una visió general d'aquesta instància de Homarr",
       "media": "Prepara una cerca de mitjans",
@@ -8827,6 +9166,7 @@
     "approvalDescription": "Revisa aquest canvi abans d'executar-lo.",
     "approveAndRun": "Aprova i executa",
     "deny": "Rebutja",
+    "approvalError": "",
     "autoApproval": {
       "label": "Aprovacions automàtiques",
       "composerLabel": "Aprova per mi",
