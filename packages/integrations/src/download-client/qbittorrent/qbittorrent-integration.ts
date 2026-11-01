@@ -197,6 +197,16 @@ export class QBitTorrentIntegration extends Integration implements IDownloadClie
     await client.removeTorrent(id, fromDisk);
   }
 
+  public async getCategoriesAsync(): Promise<string[]> {
+    const client = await this.getClientAsync();
+    return Object.keys(await client.getCategories()).toSorted((a, b) => a.localeCompare(b));
+  }
+
+  public async setItemCategoryAsync(id: string, category: string): Promise<void> {
+    const client = await this.getClientAsync();
+    await client.setTorrentCategory(id, category);
+  }
+
   private async getClientAsync(dispatcher?: Dispatcher) {
     const credentials = this.hasSecretValue("apiKey")
       ? {
