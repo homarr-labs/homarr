@@ -402,6 +402,237 @@ describe("TrueNasIntegration", () => {
     expect(result.network).toEqual({ up: 75_000, down: 50_000 });
   });
 
+  test("skips a trailing zero-filled reporting row and keeps the latest collected sample", async () => {
+    ws.setResponder((method) => {
+      if (method === "reporting.get_data") {
+        return [
+          {
+            name: "cpu",
+            identifier: "cpu",
+            aggregations: emptyAggregations(),
+            start: 0,
+            end: 3,
+            legend: ["time", "cpu"],
+            data: [
+              [1000, 0],
+              [1001, 12],
+              [1002, 0],
+            ],
+          },
+          {
+            name: "memory",
+            identifier: "memory",
+            aggregations: emptyAggregations(),
+            start: 0,
+            end: 3,
+            legend: ["time", "available"],
+            data: [
+              [1000, 1_000_000_000],
+              [1001, 6_000_000_000],
+              [1002, 0],
+            ],
+          },
+          {
+            name: "cputemp",
+            identifier: "cputemp",
+            aggregations: emptyAggregations(),
+            start: 0,
+            end: 2,
+            legend: ["cpu0", "time"],
+            data: [
+              [45, 1000],
+              [0, 1001],
+            ],
+          },
+        ];
+      }
+      if (method === "reporting.netdata_get_data") {
+        return [
+          {
+            name: "interface",
+            identifier: "eth0",
+            legend: ["sent", "time", "received"],
+            data: [
+              [200, 1000, 100],
+              [0, 1001, 0],
+            ],
+          },
+        ];
+      }
+      return happyResponder(method);
+    });
+
+    const result = await createIntegration(credentials).getSystemInfoAsync();
+
+    expect(result.cpuUtilization).toBe(12);
+    expect(result.cpuTemp).toBe(45);
+    expect(result.memAvailableInBytes).toBe(6_000_000_000);
+    expect(result.memUsedInBytes).toBe(10_000_000_000);
+    expect(result.network).toEqual({ up: 25_000, down: 12_500 });
+  });
+
+  test("uses the last row when every reporting sample is zero", async () => {
+    ws.setResponder((method) => {
+      if (method === "reporting.get_data") {
+        return [
+          {
+            name: "cpu",
+            identifier: "cpu",
+            aggregations: emptyAggregations(),
+            start: 0,
+            end: 2,
+            legend: ["time", "cpu"],
+            data: [
+              [1000, 0],
+              [1001, 0],
+            ],
+          },
+          {
+            name: "memory",
+            identifier: "memory",
+            aggregations: emptyAggregations(),
+            start: 0,
+            end: 2,
+            legend: ["time", "available"],
+            data: [
+              [1000, 0],
+              [1001, 0],
+            ],
+          },
+          {
+            name: "cputemp",
+            identifier: "cputemp",
+            aggregations: emptyAggregations(),
+            start: 0,
+            end: 2,
+            legend: ["time", "cpu0"],
+            data: [
+              [1000, 0],
+              [1001, 0],
+            ],
+          },
+        ];
+      }
+      if (method === "reporting.netdata_get_data") {
+        return [
+          {
+            name: "interface",
+            identifier: "eth0",
+            legend: ["time", "received", "sent"],
+            data: [
+              [1000, 0, 0],
+              [1001, 0, 0],
+            ],
+          },
+        ];
+      }
+      return happyResponder(method);
+    });
+
+    const result = await createIntegration(credentials).getSystemInfoAsync();
+
+    expect(result.cpuUtilization).toBe(0);
+    expect(result.cpuTemp).toBe(0);
+    expect(result.memAvailableInBytes).toBe(0);
+    expect(result.memUsedInBytes).toBe(16_000_000_000);
+    expect(result.network).toEqual({ up: 0, down: 0 });
+  });
+
+  test("uses the latest row when zeros persist after a collected sample", async () => {
+    ws.setResponder((method) => {
+      if (method === "reporting.get_data") {
+        return [
+          {
+            name: "cpu",
+            identifier: "cpu",
+            aggregations: emptyAggregations(),
+            start: 0,
+            end: 7,
+            legend: ["time", "cpu"],
+            data: [
+              [1000, 12],
+              [1001, 0],
+              [1002, 0],
+              [1003, 0],
+              [1004, 0],
+              [1005, 0],
+              [1006, 0],
+            ],
+          },
+          {
+            name: "memory",
+            identifier: "memory",
+            aggregations: emptyAggregations(),
+            start: 0,
+            end: 7,
+            legend: ["time", "available"],
+            data: [
+              [1000, 6_000_000_000],
+              [1001, 0],
+              [1002, 0],
+              [1003, 0],
+              [1004, 0],
+              [1005, 0],
+              [1006, 0],
+            ],
+          },
+          {
+            name: "cputemp",
+            identifier: "cputemp",
+            aggregations: emptyAggregations(),
+            start: 0,
+            end: 7,
+            legend: ["time", "cpu0"],
+            data: [
+              [1000, 45],
+              [1001, 0],
+              [1002, 0],
+              [1003, 0],
+              [1004, 0],
+              [1005, 0],
+              [1006, 0],
+            ],
+          },
+        ];
+      }
+      if (method === "reporting.netdata_get_data") {
+        return [
+          {
+            name: "interface",
+            identifier: "eth0",
+            legend: ["sent", "time", "received"],
+            data: [
+              [200, 1000, 100],
+              [0, 1001, 0],
+              [0, 1002, 0],
+              [0, 1003, 0],
+              [0, 1004, 0],
+              [0, 1005, 0],
+              [0, 1006, 0],
+            ],
+          },
+        ];
+      }
+      return happyResponder(method);
+    });
+
+    const result = await createIntegration(credentials).getSystemInfoAsync();
+
+    expect(result.cpuUtilization).toBe(0);
+    expect(result.cpuTemp).toBe(0);
+    expect(result.memAvailableInBytes).toBe(0);
+    expect(result.memUsedInBytes).toBe(16_000_000_000);
+    expect(result.network).toEqual({ up: 0, down: 0 });
+  });
+
+  test("still rejects reporting data that contains no rows", async () => {
+    ws.setResponder(reportingResponder("cpu", ["time", "cpu"], []));
+
+    await expect(createIntegration(credentials).getSystemInfoAsync()).rejects.toThrow(
+      "Failed to parse integration data",
+    );
+  });
+
   test("falls back to physical pool space when the root dataset reports no usable values", async () => {
     ws.setResponder((method) =>
       method === "pool.dataset.query"
