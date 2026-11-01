@@ -310,6 +310,7 @@
     "test": "cross-env NODE_ENV=development CI=true vitest run --project \"!e2e\" --project \"!integration\" --project \"!docs-screenshots\"",
     "test:coverage": "bun run test --coverage.enabled",
     "test:integration": "cross-env NODE_ENV=development CI=true vitest run --project integration --maxWorkers 2",
+    "test:weekly": "vitest run --config vitest.weekly.config.mts",
     "test:docs-screenshots": "cross-env UPDATE_DOCS_SCREENSHOTS=true NODE_ENV=development CI=true vitest run --project docs-screenshots",
     "test:e2e": "cross-env NODE_ENV=development CI=true vitest run --project e2e --maxWorkers 2",
     "test:workshop": "sh apps/workshop/test.sh",
