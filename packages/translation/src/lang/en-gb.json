@@ -101,8 +101,8 @@
       "connect": {
         "title": "Connect what makes the board useful",
         "description": "Select several services at once. Docker labels take priority, image matching fills gaps, and every URL and credential stays reviewable.",
-        "confirmServerAddress": "",
-        "serverAddressReviewed": "",
+        "confirmServerAddress": "This looks right",
+        "serverAddressReviewed": "Server address reviewed. You can still edit each service URL below.",
         "discoveredIntegrations": "Detected integration instances ({count})",
         "detectedIntegrationLabel": "Import {name}, detected as {kind}",
         "detectedAppLabel": "Import detected app {name}",
@@ -128,7 +128,7 @@
         "tested": "Connection test successful",
         "testFailed": "Connection test failed",
         "incompleteConfirmation": "Unfinished integrations will be skipped. Continue without them?",
-        "skipIncomplete": ""
+        "skipIncomplete": "Skip unfinished connections"
       },
       "board": {
         "title": "Shape the board before it is built",
@@ -250,20 +250,20 @@
         "subtitle": "Welcome back! Please enter your credentials"
       },
       "mcpConsent": {
-        "title": "",
-        "description": "",
-        "viewingHint": "",
-        "identityTitle": "",
-        "loading": "",
-        "allow": "",
-        "deny": "",
-        "decisionHint": "",
-        "requestExpires": "",
-        "details": "",
-        "returnHome": "",
-        "reload": "",
+        "title": "Review client access",
+        "description": "Review this client's access before connecting.",
+        "viewingHint": "Viewing this page does not grant access.",
+        "identityTitle": "Account and client",
+        "loading": "Loading the access request",
+        "allow": "Allow access",
+        "deny": "Deny access",
+        "decisionHint": "Only allow access if you trust this client and callback.",
+        "requestExpires": "Request expires (UTC):",
+        "details": "Technical details",
+        "returnHome": "Return to Homarr",
+        "reload": "Reload consent page",
         "account": {
-          "name": "",
+          "name": "Signed in as",
           "id": "",
           "nameNotRecorded": ""
         },
@@ -8127,7 +8127,7 @@
       }
     },
     "error": {
-      "fetch": ""
+      "fetch": "An error occurred while fetching data"
     },
     "mode": {
       "appIntegrationBoard": {
