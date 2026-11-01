@@ -45,24 +45,30 @@ const rootBindingCompletions: Completion[] = [...ROOT_BINDINGS].toSorted().map((
   detail: "Safe Custom JSX binding",
 }));
 
-export const createCustomJsxCompletionSource =
-  (additional: Completion[]): CompletionSource =>
-  (context) => {
+export const createCustomJsxCompletionSource = (additional: Completion[]): CompletionSource => {
+  let previousComponentName: string | undefined;
+  let options: Completion[] | undefined;
+  return (context) => {
     const word = context.matchBefore(/[A-Za-z](?:[\w."'_-]|\[|\])*/u);
     if (!word && !context.explicit) return null;
     const source = context.state.doc.toString();
     const componentName = activeOpeningComponent(source, context.pos);
-    const contextualCompletions = componentName
-      ? [
-          ...getCustomJsxComponentPropCompletions(componentName),
-          ...(componentName === "TablerIcon" ? iconCompletions : []),
-        ]
-      : componentCompletions;
+    if (!options || componentName !== previousComponentName) {
+      const contextualCompletions = componentName
+        ? [
+            ...getCustomJsxComponentPropCompletions(componentName),
+            ...(componentName === "TablerIcon" ? iconCompletions : []),
+          ]
+        : componentCompletions;
+      options = [...rootBindingCompletions, ...contextualCompletions, ...additional];
+      previousComponentName = componentName;
+    }
     return {
       from: word?.from ?? context.pos,
-      options: [...rootBindingCompletions, ...contextualCompletions, ...additional],
+      options,
     };
   };
+};
 
 export const customJsxComponentHover = hoverTooltip((view, position) => {
   const source = view.state.doc.toString();

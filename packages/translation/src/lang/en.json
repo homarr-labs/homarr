@@ -894,6 +894,7 @@
       "export": "Export",
       "duplicate": "Duplicate",
       "aiPrompt": "Design with AI",
+      "createAssisted": "Create with AI",
       "copyAiPrompt": "Copy AI prompt",
       "enable": "Enable",
       "disable": "Disable",
@@ -964,6 +965,20 @@
     },
     "workbench": {
       "configure": "Configure",
+      "assisted": {
+        "modeLabel": "Authoring mode",
+        "mode": "Assisted",
+        "advancedMode": "Advanced",
+        "description": "Connect your API, test a request, then let AI design a widget from real data.",
+        "test": "Test API request",
+        "testDescription": "Only load queries run automatically. Inspect Data, then copy the grounded prompt below. API documentation and response shapes help AI use the right fields.",
+        "importRequired": "An API test is not a finished widget. Paste the generated widget, then preview it before creating it.",
+        "previewRequired": "Run Test and preview for the current generated widget and preview options before creating it. Any edit requires a new final preview.",
+        "finalPreview": "Review the generated widget, run Test and preview, then create it. Test manual queries with the widget's controls and actions in the Actions tab; actions are simulated unless you enable live execution. Static widgets still need a final preview.",
+        "evidenceHelp": "Run a fresh preview after edits. Exercise each manual query in the widget and each action in the Actions tab, then retry Create. Keep live actions off unless you intend to change the real service.",
+        "invalidSources": "Fix the current API source JSON before importing a response so Homarr can verify that credentials stay attached to the same destination and authentication.",
+        "incompatibleSources": "The response changes the destination, authentication, or integration binding for source(s): {sources}. Keep the original source IDs and configuration in the AI response, or explicitly reconfigure these sources in Homarr and test again. Existing credentials have not been sent to the changed destination."
+      },
       "sectionNavigation": "Custom widget sections",
       "widgetPreview": "Widget preview",
       "generalInformation": "General information",
@@ -1110,9 +1125,11 @@
       "ai": {
         "title": "Create or fix with any AI",
         "description": "Add an API docs URL first if you have one. For fixes, run Preview if possible. Copy the prompt into any AI; it can ask for missing details. Paste its final JSON here.",
+        "assistedDescription": "Describe the widget and add API docs if available. Copy the prompt into your AI, then paste its complete JSON response here. Tested response shapes improve generation; credentials stay in Homarr. Review the prompt and response data before sharing them with an external AI.",
         "request": "What should this widget do?",
         "documentationUrl": "API documentation URL (optional)",
         "paste": "Paste",
+        "pasteResponse": "Paste AI response",
         "response": "AI response",
         "manualCopyDescription": "Clipboard access is unavailable. Select the prompt below and copy it manually.",
         "manualPasteDescription": "Clipboard access is unavailable or the copied response needs correction. Paste the AI's JSON response here.",
@@ -1316,6 +1333,7 @@
     "hideScreenshotThumbnails": "Hide screenshot thumbnails",
     "closeScreenshotViewer": "Close screenshot viewer",
     "technicalDetails": "Technical details",
+    "integrations": "Integrations",
     "sourceCode": "Workshop entry",
     "export": "Export",
     "report": "Report",
@@ -1335,6 +1353,12 @@
       "copyright": "Copyright",
       "inappropriate": "Inappropriate",
       "other": "Other"
+    },
+    "share": {
+      "title": "Your widget is ready",
+      "description": "Want to share it? Review a credential-free copy and publish it to Workshop when you're ready. Sharing is optional.",
+      "action": "Share on Workshop",
+      "dismiss": "Not now"
     },
     "publish": {
       "title": "Publish to Workshop",

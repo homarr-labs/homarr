@@ -124,6 +124,9 @@ describe("customWidgetAssistantInstructions", () => {
     expect(customWidgetAssistantInstructions).toContain("then board_getAllBoards");
     expect(customWidgetAssistantInstructions).toContain("zero means saved unplaced");
     expect(customWidgetAssistantInstructions).toContain("Never invent a board/ID");
+    expect(customWidgetAssistantInstructions).toContain("fetch the exact registered chart contracts lazily");
+    expect(customWidgetAssistantInstructions).toContain("Label partial results");
+    expect(customWidgetAssistantInstructions).toContain("bounded ScrollArea");
   });
 });
 

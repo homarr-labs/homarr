@@ -10,6 +10,7 @@ import { useI18n } from "@homarr/translation/client";
 import { CopyAiPromptButton } from "./_copy-ai-prompt-button";
 
 interface AiCardProps {
+  assisted?: boolean;
   getDraft(): CustomWidgetAiDraft | null;
   getDiagnostics(): readonly CustomWidgetAiDiagnostic[];
   getSampleResponse(): string | null;
@@ -24,6 +25,7 @@ export function CustomWidgetAiCard(props: AiCardProps) {
   const t = useI18n("customWidget.workbench.ai");
   const [manualResponse, setManualResponse] = useState<string | null>(null);
   const [manualError, setManualError] = useState<string | null>(null);
+  const [expanded, setExpanded] = useState<string | null>(props.assisted ? "ai" : null);
 
   const handlePaste = async () => {
     try {
@@ -50,13 +52,18 @@ export function CustomWidgetAiCard(props: AiCardProps) {
 
   return (
     <>
-      <Accordion variant="contained">
+      <Accordion
+        variant="contained"
+        value={props.assisted ? "ai" : expanded}
+        onChange={setExpanded}
+        disableCollapse={props.assisted}
+      >
         <Accordion.Item value="ai">
           <Accordion.Control icon={<IconSparkles size={18} />}>{t("title")}</Accordion.Control>
           <Accordion.Panel>
             <Stack gap="sm">
               <Text size="sm" c="light-dark(var(--mantine-color-gray-7), var(--mantine-color-gray-4))">
-                {t("description")}
+                {props.assisted ? t("assistedDescription") : t("description")}
               </Text>
               <Textarea
                 label={t("request")}
@@ -84,7 +91,7 @@ export function CustomWidgetAiCard(props: AiCardProps) {
                   leftSection={<IconClipboard size={16} />}
                   onClick={() => void handlePaste()}
                 >
-                  {t("paste")}
+                  {props.assisted ? t("pasteResponse") : t("paste")}
                 </Button>
               </Group>
             </Stack>

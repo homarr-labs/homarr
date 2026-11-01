@@ -83,6 +83,10 @@ const jsonValueSchema = z.json();
 export type CustomWidgetOption = z.infer<typeof customWidgetOptionSchema>;
 export type CustomWidgetOptions = z.infer<typeof customWidgetOptionsSchema>;
 
+export function isCustomWidgetChoiceValue(value: unknown): value is string | number {
+  return typeof value === "string" || (typeof value === "number" && Number.isFinite(value));
+}
+
 export function getCustomWidgetOptionValueIssue(
   option: Pick<CustomWidgetOption, "control" | "min" | "max" | "choices">,
   value: unknown,
@@ -94,8 +98,10 @@ export function getCustomWidgetOptionValueIssue(
   } else if (option.control === "switch") {
     if (typeof value !== "boolean") return "Expected a boolean";
   } else if (option.control === "multiSelect") {
-    if (!Array.isArray(value) || value.some((entry) => !["string", "number"].includes(typeof entry)))
+    if (!Array.isArray(value) || value.some((entry) => !isCustomWidgetChoiceValue(entry)))
       return "Expected a list of choices";
+  } else if (option.control === "select") {
+    if (!isCustomWidgetChoiceValue(value)) return "Expected text or a number";
   } else if (option.control === "json") {
     if (!jsonValueSchema.safeParse(value).success) return "Expected valid JSON";
   } else if (typeof value !== "string") return "Expected text";
