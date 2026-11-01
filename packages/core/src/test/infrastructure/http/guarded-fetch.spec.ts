@@ -354,6 +354,61 @@ describe("fetchGuardedAsync", () => {
     expect((error as Error).message).not.toMatch(/home|token/);
   });
 
+  test("refuses a private address when private networks are blocked", async () => {
+    await expect(
+      fetchGuardedAsync(new URL("http://192.168.1.10/icon.png"), { timeout: 1_000, blockPrivateNetworks: true }, () =>
+        Promise.resolve("fetched"),
+      ),
+    ).rejects.toThrow(/Refusing/);
+
+    expect(mockedFetch).not.toHaveBeenCalled();
+  });
+
+  test("refuses a public icon that redirects onto a private network when private networks are blocked", async () => {
+    mockResponses({
+      "https://93.184.216.34/favicon.ico": createResponse(302, "http://192.168.1.10/secret"),
+    });
+
+    await expect(
+      fetchGuardedAsync(
+        new URL("https://93.184.216.34/favicon.ico"),
+        { timeout: 1_000, blockPrivateNetworks: true },
+        () => Promise.resolve("fetched"),
+      ),
+    ).rejects.toThrow(/Refusing/);
+    expect(requestedUrls()).toEqual(["https://93.184.216.34/favicon.ico"]);
+  });
+
+  test("follows a private redirect that stays on the app the user named", async () => {
+    mockResponses({
+      "http://192.168.1.10/icon.png": createResponse(302, "/favicon.ico"),
+      "http://192.168.1.10/favicon.ico": createResponse(200),
+    });
+
+    await expect(
+      fetchGuardedAsync(
+        new URL("http://192.168.1.10/icon.png"),
+        { timeout: 1_000, blockPrivateNetworks: "off-origin" },
+        (response, finalUrl) => Promise.resolve({ status: response.status, url: finalUrl.href }),
+      ),
+    ).resolves.toEqual({ status: 200, url: "http://192.168.1.10/favicon.ico" });
+  });
+
+  test("refuses a redirect from the named app onto another private host", async () => {
+    mockResponses({
+      "http://192.168.1.10/icon.png": createResponse(302, "http://10.0.0.5/secret"),
+    });
+
+    await expect(
+      fetchGuardedAsync(
+        new URL("http://192.168.1.10/icon.png"),
+        { timeout: 1_000, blockPrivateNetworks: "off-origin" },
+        () => Promise.resolve("fetched"),
+      ),
+    ).rejects.toThrow(/Refusing/);
+    expect(requestedUrls()).toEqual(["http://192.168.1.10/icon.png"]);
+  });
+
   test("closes the connection of every hop", async () => {
     const destroy = vi.fn(() => Promise.resolve());
     mockedCreateAgent.mockImplementation(() => Promise.resolve({ destroy } as unknown as Dispatcher));

@@ -127,7 +127,7 @@ describe("ImageProxy.forwardImageAsync", () => {
     const result = await imageProxy.forwardImageAsync(id);
 
     expect(result).toEqual({ redirectUrl: "http://metadata.internal/latest/meta-data/" });
-    expect(mockedLookup).not.toHaveBeenCalled();
+    expect(mockedLookup).toHaveBeenCalled();
     expect(mockedFetch).not.toHaveBeenCalled();
   });
 
@@ -141,6 +141,86 @@ describe("ImageProxy.forwardImageAsync", () => {
     const result = await imageProxy.forwardImageAsync(id);
 
     expect(result).toEqual({ redirectUrl: "http://192.168.1.10/icon.png" });
+    expect(mockedFetch).not.toHaveBeenCalled();
+  });
+
+  test("serves a persistent public icon from Homarr instead of redirecting", async () => {
+    const imageProxy = new ImageProxy();
+    mockResponses({
+      "https://93.184.216.34/favicon.ico": createResponse(200, { contentType: "image/x-icon", body: "icon" }),
+    });
+    const proxyUrl = await imageProxy.createImageAsync("https://93.184.216.34/favicon.ico", undefined, {
+      persistent: true,
+    });
+    const id = proxyUrl.split("/").pop() as string;
+
+    const result = await imageProxy.forwardImageAsync(id);
+
+    expect(result).toMatchObject({ contentType: "image/x-icon" });
+    expect("image" in result && new TextDecoder().decode(result.image)).toBe("icon");
+    expect(proxyUrl.startsWith("/api/image-proxy/persistent.")).toBe(true);
+    expect(proxyUrl).not.toContain("persistent.local.");
+    expect(proxyUrl).not.toContain("93.184.216.34");
+    expect(mockedFetch).toHaveBeenCalledTimes(1);
+  });
+
+  test("does not follow a persistent public icon onto a private network", async () => {
+    const imageProxy = new ImageProxy();
+    mockResponses({
+      "https://93.184.216.34/favicon.ico": createResponse(302, { location: "http://192.168.1.10/secret" }),
+    });
+    const proxyUrl = await imageProxy.createImageAsync("https://93.184.216.34/favicon.ico", undefined, {
+      persistent: true,
+    });
+
+    const result = await imageProxy.forwardImageAsync(proxyUrl.split("/").pop() as string);
+
+    expect(result).toEqual({ error: "fetch-error" });
+    expect(mockedFetch).toHaveBeenCalledTimes(1);
+  });
+
+  test("fetches a persistent icon on the private host the user added", async () => {
+    const imageProxy = new ImageProxy();
+    mockResponses({
+      "http://192.168.1.10/icon.png": createResponse(200, { contentType: "image/png", body: "img" }),
+    });
+    const proxyUrl = await imageProxy.createImageAsync("http://192.168.1.10/icon.png", undefined, {
+      persistent: true,
+      allowPrivateNetwork: true,
+    });
+
+    const result = await imageProxy.forwardImageAsync(proxyUrl.split("/").pop() as string);
+
+    expect(result).toMatchObject({ contentType: "image/png" });
+    expect("image" in result && new TextDecoder().decode(result.image)).toBe("img");
+    expect(proxyUrl).toContain("/api/image-proxy/persistent.local.");
+    expect(mockedFetch).toHaveBeenCalledTimes(1);
+  });
+
+  test("does not follow a user-host icon redirect onto another private host", async () => {
+    const imageProxy = new ImageProxy();
+    mockResponses({
+      "http://192.168.1.10/icon.png": createResponse(302, { location: "http://10.0.0.5/secret" }),
+    });
+    const proxyUrl = await imageProxy.createImageAsync("http://192.168.1.10/icon.png", undefined, {
+      persistent: true,
+      allowPrivateNetwork: true,
+    });
+
+    const result = await imageProxy.forwardImageAsync(proxyUrl.split("/").pop() as string);
+
+    expect(result).toEqual({ error: "fetch-error" });
+    expect(mockedFetch).toHaveBeenCalledTimes(1);
+  });
+
+  test("rejects a persistent id whose private-network flag was flipped", async () => {
+    const imageProxy = new ImageProxy();
+    const proxyUrl = await imageProxy.createImageAsync("https://93.184.216.34/favicon.ico", undefined, {
+      persistent: true,
+    });
+    const forgedId = (proxyUrl.split("/").pop() as string).replace("persistent.", "persistent.local.");
+
+    await expect(imageProxy.forwardImageAsync(forgedId)).resolves.toEqual({ error: "not-found" });
     expect(mockedFetch).not.toHaveBeenCalled();
   });
 

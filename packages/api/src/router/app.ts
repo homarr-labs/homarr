@@ -4,11 +4,13 @@ import { z } from "zod/v4";
 import type { Session } from "@homarr/auth";
 import { createId } from "@homarr/common";
 import { env } from "@homarr/common/env";
+import { isLiteralNonPublicAddress } from "@homarr/core/infrastructure/http";
 import type { Database, InferSelectModel } from "@homarr/db";
 import { asc, eq, inArray, like } from "@homarr/db";
 import { apps, integrations } from "@homarr/db/schema";
 import { selectAppSchema } from "@homarr/db/validationSchemas";
 import { fetchWebsiteMetadataAsync, getIconForName } from "@homarr/icons";
+import { ImageProxy } from "@homarr/image-proxy";
 import { invalidateIntegrationResponseCacheAsync } from "@homarr/redis";
 import { appCreateManySchema, appEditSchema, appManageSchema } from "@homarr/validation/app";
 import { byIdSchema, paginatedSchema } from "@homarr/validation/common";
@@ -19,6 +21,25 @@ import { createTRPCRouter, permissionRequiredProcedure, protectedProcedure, publ
 import { AppAccessControl } from "./app/app-access-control";
 
 const defaultIcon = "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/homarr.svg";
+
+const hostnameOf = (url: URL) => url.hostname.replace(/^\[(.*)\]$/, "$1").toLowerCase();
+
+// The browser loads the stored icon from Homarr, so a site that sends
+// Cross-Origin-Resource-Policy: same-origin, or an icon served over plain HTTP to an
+// HTTPS board, still displays. An icon on some other private host is left as a direct
+// URL: the image proxy is unauthenticated and must not become a way to read the LAN.
+const proxyDetectedIconAsync = async (iconUrl: string, pageHref: string): Promise<string> => {
+  const icon = URL.parse(iconUrl);
+  const page = URL.parse(pageHref);
+  if (!icon || (icon.protocol !== "http:" && icon.protocol !== "https:")) return iconUrl;
+
+  const sameHost = page !== null && hostnameOf(icon) === hostnameOf(page);
+  if (!sameHost && isLiteralNonPublicAddress(icon.hostname)) return iconUrl;
+
+  return await new ImageProxy()
+    .createImageAsync(iconUrl, undefined, { persistent: true, allowPrivateNetwork: sameHost })
+    .catch(() => iconUrl);
+};
 
 export const appRouter = createTRPCRouter({
   getPaginated: permissionRequiredProcedure
@@ -233,9 +254,10 @@ export const appRouter = createTRPCRouter({
         ? { title: null, iconUrl: null }
         : await fetchWebsiteMetadataAsync(input.href);
       const name = (metadata.title ?? new URL(input.href).hostname).slice(0, 64);
+      const iconUrl = metadata.iconUrl ? await proxyDetectedIconAsync(metadata.iconUrl, input.href) : null;
       return {
         name,
-        iconUrl: metadata.iconUrl ?? getIconForName(ctx.db, name).sync()?.url ?? defaultIcon,
+        iconUrl: iconUrl ?? getIconForName(ctx.db, name).sync()?.url ?? defaultIcon,
       };
     }),
   createMany: permissionRequiredProcedure
