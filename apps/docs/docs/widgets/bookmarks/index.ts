@@ -64,6 +64,13 @@ export const bookmarksWidget: WidgetDefinition = {
         defaultValue: "no",
       },
       {
+        name: "Show full URLs",
+        description:
+          "Shows the full address from the App or bookmark, including scheme, port, and path, with separate copy and open actions. Off keeps the hostname line. Narrow cards shorten the line for display; copy still uses the complete address.",
+        values: { type: "boolean" },
+        defaultValue: "no",
+      },
+      {
         name: "Open in new tab",
         description: "Whether to open the bookmark items in a new tab.",
         values: { type: "boolean" },

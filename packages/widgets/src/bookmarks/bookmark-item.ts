@@ -31,6 +31,16 @@ export const getDirectBookmarkUrl = (value: string): string | undefined => {
   return normalizeBookmarkUrl(value.slice(directBookmarkPrefix.length));
 };
 
+export const getBookmarkAddressText = (href: string, showFullUrl: boolean): string | undefined => {
+  if (showFullUrl) return href;
+
+  try {
+    return new URL(href).hostname || undefined;
+  } catch {
+    return undefined;
+  }
+};
+
 export const getBookmarkFaviconUrl = (href: string | null): string | undefined => {
   const safeUrl = getSafeApplicationUrl(href);
   if (!safeUrl) return undefined;

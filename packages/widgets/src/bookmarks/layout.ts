@@ -27,12 +27,14 @@ export const getBookmarkCardDisplay = ({
   hideIcon,
   hideTitle,
   plan,
+  showFullUrls = false,
 }: {
   advanced: boolean;
   hideHostname: boolean;
   hideIcon: boolean;
   hideTitle: boolean;
   plan: BookmarkDisplayPlan;
+  showFullUrls?: boolean;
 }): BookmarkCardDisplay => {
   let orientation = plan.orientation;
   let showTitle = advanced || (!hideTitle && plan.showTitle);
@@ -40,8 +42,12 @@ export const getBookmarkCardDisplay = ({
     orientation = "horizontal";
     showTitle = true;
   }
+  const ultraDense = !advanced && plan.itemHeight <= 32 && showTitle;
   let showHostname = advanced || (!hideHostname && plan.showHostname);
-  if (!advanced && plan.itemHeight <= 32 && showTitle) showHostname = false;
+  if (ultraDense) showHostname = false;
+  // Full URLs stay visible on narrow cards that would otherwise drop the hostname. Icon-only and
+  // ultra-dense titled rows still omit the line; the address is ellipsized instead of wrapped.
+  if (showFullUrls && !advanced && orientation !== "icon" && !ultraDense) showHostname = true;
   const showIcon = advanced || !hideIcon || (!showTitle && !showHostname);
 
   return { orientation, showHostname, showIcon, showTitle };
@@ -200,6 +206,7 @@ export const getBookmarkDisplayPlan = ({
   hideHostname = false,
   itemCount,
   layout,
+  showFullUrls = false,
   width,
 }: {
   advanced: boolean;
@@ -208,6 +215,7 @@ export const getBookmarkDisplayPlan = ({
   hideHostname?: boolean;
   itemCount: number;
   layout: BookmarkLayout;
+  showFullUrls?: boolean;
   width: number;
 }): BookmarkDisplayPlan => {
   const count = Math.max(1, itemCount);
@@ -252,7 +260,8 @@ export const getBookmarkDisplayPlan = ({
     const itemGap = Math.min(gap, 4);
     const availableItemHeight = (normalizedHeight - Math.max(0, count - 1) * itemGap) / count;
     let itemHeight = 32;
-    if (!hideHostname && widthSettings.showTitle && availableItemHeight >= 48) itemHeight = 48;
+    const showAddressLine = showFullUrls || (!hideHostname && widthSettings.showTitle);
+    if (showAddressLine && availableItemHeight >= 48) itemHeight = 48;
 
     return {
       columns: 1,
@@ -324,7 +333,7 @@ export const getBookmarkDisplayPlan = ({
   if (layout === "grid") {
     showHostname = showHostname && densitySettings.showHostname;
     showTitle = showTitle && densitySettings.showTitle;
-    if (!showHostname && !showTitle) orientation = "icon";
+    if (!showHostname && !showTitle && !showFullUrls) orientation = "icon";
   }
 
   return {
