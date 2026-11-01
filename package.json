@@ -423,7 +423,7 @@
   },
   "engines": {
     "bun": ">=1.4.4",
-    "node": ">=24.22.1"
+    "node": ">=24.22.2"
   },
   "packageManager": "bun@1.4.4",
   "patchedDependencies": {
