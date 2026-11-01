@@ -23,6 +23,10 @@
       "x-displayName": "Manage users and preferences"
     },
     {
+      "name": "groups",
+      "x-displayName": "Manage groups and permissions"
+    },
+    {
       "name": "settings",
       "x-displayName": "Configure the instance"
     },
@@ -1240,7 +1244,7 @@
       "post": {
         "operationId": "boardRouter-createBoard",
         "summary": "Create a board",
-        "description": "Create a board with base and mobile layouts. Requires board-create permission. Returns the board ID, name, and base layout ID; sets the creator's home board if none is selected.",
+        "description": "Create a board under a unique name with base and mobile layouts. Optional gutter column counts apply to the base layout. Requires board-create permission. Returns the board ID, name, base layout ID, and mobile layout ID; sets the creator's home board if none is selected.",
         "tags": [
           "boards"
         ],
@@ -1267,6 +1271,16 @@
                     "type": "number",
                     "minimum": 1,
                     "maximum": 24
+                  },
+                  "leftGutterColumnCount": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 3
+                  },
+                  "rightGutterColumnCount": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 3
                   },
                   "isPublic": {
                     "type": "boolean"
@@ -1297,12 +1311,16 @@
                     },
                     "layoutId": {
                       "type": "string"
+                    },
+                    "mobileLayoutId": {
+                      "type": "string"
                     }
                   },
                   "required": [
                     "boardId",
                     "name",
-                    "layoutId"
+                    "layoutId",
+                    "mobileLayoutId"
                   ],
                   "additionalProperties": false
                 }
@@ -1356,7 +1374,7 @@
       "post": {
         "operationId": "boardRouter-duplicateBoard",
         "summary": "Duplicate a board",
-        "description": "Copy a board under a unique name and return its new ID. Requires board-create permission, view access to the source, and use access to its linked integrations. Widget configurations must be valid; boards containing Custom Widgets require admin permission.",
+        "description": "Copy a board under a unique name and return the IDs of the copy and its base and mobile layouts. Requires board-create permission, view access to the source, and use access to its linked integrations. Widget configurations must be valid; boards containing Custom Widgets require admin permission.",
         "tags": [
           "boards"
         ],
@@ -1406,10 +1424,18 @@
                   "properties": {
                     "boardId": {
                       "type": "string"
+                    },
+                    "baseLayoutId": {
+                      "type": "string"
+                    },
+                    "mobileLayoutId": {
+                      "type": "string"
                     }
                   },
                   "required": [
-                    "boardId"
+                    "boardId",
+                    "baseLayoutId",
+                    "mobileLayoutId"
                   ],
                   "additionalProperties": false
                 }
@@ -2357,6 +2383,144 @@
       }
     },
     "/api/boards/{id}/layouts": {
+      "get": {
+        "operationId": "boardRouter-getBoardLayouts",
+        "summary": "Read dashboard layouts",
+        "description": "Read a board's Mobile, Base, and custom layouts ordered by breakpoint. Requires view access to the board.",
+        "tags": [
+          "boards"
+        ],
+        "security": [
+          {
+            "apikey": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "name": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 32
+                      },
+                      "columnCount": {
+                        "type": "number",
+                        "minimum": 1,
+                        "maximum": 24
+                      },
+                      "leftGutterColumnCount": {
+                        "default": 0,
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 3
+                      },
+                      "rightGutterColumnCount": {
+                        "default": 0,
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 3
+                      },
+                      "breakpoint": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 32767
+                      },
+                      "role": {
+                        "type": "string",
+                        "enum": [
+                          "mobile",
+                          "base",
+                          "custom"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "name",
+                      "columnCount",
+                      "leftGutterColumnCount",
+                      "rightGutterColumnCount",
+                      "breakpoint",
+                      "role"
+                    ],
+                    "additionalProperties": false
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.BAD_REQUEST"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization not provided",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.UNAUTHORIZED"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Insufficient access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.FORBIDDEN"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.NOT_FOUND"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR"
+                }
+              }
+            }
+          }
+        }
+      },
       "put": {
         "operationId": "boardRouter-saveLayouts",
         "summary": "Save dashboard layouts",
@@ -2566,6 +2730,188 @@
         }
       }
     },
+    "/api/boards/{boardId}/layouts/{layoutId}": {
+      "patch": {
+        "operationId": "boardRouter-updateLayout",
+        "summary": "Update one dashboard layout",
+        "description": "Change one layout's name, column count, gutter column counts, or breakpoint and keep the other layouts. Items are rearranged as when saving all layouts. Requires modify access. The Mobile layout keeps breakpoint 0 and has no gutters.",
+        "tags": [
+          "boards"
+        ],
+        "security": [
+          {
+            "apikey": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "boardId",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          },
+          {
+            "in": "path",
+            "name": "layoutId",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 32
+                  },
+                  "columnCount": {
+                    "type": "number",
+                    "minimum": 1,
+                    "maximum": 24
+                  },
+                  "leftGutterColumnCount": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 3
+                  },
+                  "rightGutterColumnCount": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 3
+                  },
+                  "breakpoint": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 32767
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 32
+                    },
+                    "columnCount": {
+                      "type": "number",
+                      "minimum": 1,
+                      "maximum": 24
+                    },
+                    "leftGutterColumnCount": {
+                      "default": 0,
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 3
+                    },
+                    "rightGutterColumnCount": {
+                      "default": 0,
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 3
+                    },
+                    "breakpoint": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 32767
+                    },
+                    "role": {
+                      "type": "string",
+                      "enum": [
+                        "mobile",
+                        "base",
+                        "custom"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "name",
+                    "columnCount",
+                    "leftGutterColumnCount",
+                    "rightGutterColumnCount",
+                    "breakpoint",
+                    "role"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.BAD_REQUEST"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization not provided",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.UNAUTHORIZED"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Insufficient access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.FORBIDDEN"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.NOT_FOUND"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/boards/{boardId}/layouts/{layoutId}/reset": {
       "post": {
         "operationId": "boardRouter-resetLayout",
@@ -2650,6 +2996,498 @@
       }
     },
     "/api/boards/{id}/content": {
+      "get": {
+        "operationId": "boardRouter-getBoardContent",
+        "summary": "Read dashboard content",
+        "description": "Read a board's complete sections and items, including widget options and placements, in the shape accepted by PUT /api/boards/{id}/content. The board name and layouts are included to resolve layout IDs and are ignored when saving. Requires view access to the board.",
+        "tags": [
+          "boards"
+        ],
+        "security": [
+          {
+            "apikey": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "layouts": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "name": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 32
+                          },
+                          "columnCount": {
+                            "type": "number",
+                            "minimum": 1,
+                            "maximum": 24
+                          },
+                          "leftGutterColumnCount": {
+                            "default": 0,
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 3
+                          },
+                          "rightGutterColumnCount": {
+                            "default": 0,
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 3
+                          },
+                          "breakpoint": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 32767
+                          },
+                          "role": {
+                            "type": "string",
+                            "enum": [
+                              "mobile",
+                              "base",
+                              "custom"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "name",
+                          "columnCount",
+                          "leftGutterColumnCount",
+                          "rightGutterColumnCount",
+                          "breakpoint",
+                          "role"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "sections": {
+                      "type": "array",
+                      "items": {
+                        "anyOf": [
+                          {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string"
+                              },
+                              "kind": {
+                                "type": "string",
+                                "const": "empty"
+                              },
+                              "yOffset": {
+                                "type": "integer",
+                                "minimum": -9007199254740991,
+                                "maximum": 9007199254740991
+                              },
+                              "xOffset": {
+                                "type": "integer",
+                                "minimum": -9007199254740991,
+                                "maximum": 9007199254740991
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "kind",
+                              "yOffset",
+                              "xOffset"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string"
+                              },
+                              "kind": {
+                                "type": "string",
+                                "const": "container"
+                              },
+                              "options": {
+                                "default": {
+                                  "title": "",
+                                  "customCssClasses": [],
+                                  "borderColor": "",
+                                  "showLabel": true,
+                                  "collapsible": false,
+                                  "showOpenAll": false,
+                                  "scrollable": false
+                                },
+                                "type": "object",
+                                "properties": {
+                                  "title": {
+                                    "default": "",
+                                    "type": "string",
+                                    "maxLength": 64
+                                  },
+                                  "customCssClasses": {
+                                    "default": [],
+                                    "type": "array",
+                                    "items": {
+                                      "type": "string"
+                                    }
+                                  },
+                                  "borderColor": {
+                                    "default": "",
+                                    "type": "string"
+                                  },
+                                  "showLabel": {
+                                    "default": true,
+                                    "type": "boolean"
+                                  },
+                                  "collapsible": {
+                                    "default": false,
+                                    "type": "boolean"
+                                  },
+                                  "showOpenAll": {
+                                    "default": false,
+                                    "type": "boolean"
+                                  },
+                                  "scrollable": {
+                                    "default": false,
+                                    "type": "boolean"
+                                  }
+                                },
+                                "required": [
+                                  "title",
+                                  "customCssClasses",
+                                  "borderColor",
+                                  "showLabel",
+                                  "collapsible",
+                                  "showOpenAll",
+                                  "scrollable"
+                                ],
+                                "additionalProperties": false
+                              },
+                              "layouts": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "layoutId": {
+                                      "type": "string"
+                                    },
+                                    "yOffset": {
+                                      "type": "integer",
+                                      "minimum": 0,
+                                      "maximum": 32767
+                                    },
+                                    "xOffset": {
+                                      "type": "integer",
+                                      "minimum": 0,
+                                      "maximum": 32767
+                                    },
+                                    "width": {
+                                      "type": "integer",
+                                      "minimum": 1,
+                                      "maximum": 32767
+                                    },
+                                    "height": {
+                                      "type": "integer",
+                                      "minimum": 1,
+                                      "maximum": 32767
+                                    },
+                                    "parentSectionId": {
+                                      "type": "string"
+                                    }
+                                  },
+                                  "required": [
+                                    "layoutId",
+                                    "yOffset",
+                                    "xOffset",
+                                    "width",
+                                    "height",
+                                    "parentSectionId"
+                                  ],
+                                  "additionalProperties": false
+                                }
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "kind",
+                              "options",
+                              "layouts"
+                            ],
+                            "additionalProperties": false
+                          }
+                        ]
+                      }
+                    },
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "layouts": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "layoutId": {
+                                  "type": "string"
+                                },
+                                "yOffset": {
+                                  "type": "integer",
+                                  "minimum": 0,
+                                  "maximum": 32767
+                                },
+                                "xOffset": {
+                                  "type": "integer",
+                                  "minimum": 0,
+                                  "maximum": 32767
+                                },
+                                "width": {
+                                  "type": "integer",
+                                  "minimum": 1,
+                                  "maximum": 32767
+                                },
+                                "height": {
+                                  "type": "integer",
+                                  "minimum": 1,
+                                  "maximum": 32767
+                                },
+                                "sectionId": {
+                                  "type": "string"
+                                }
+                              },
+                              "required": [
+                                "layoutId",
+                                "yOffset",
+                                "xOffset",
+                                "width",
+                                "height",
+                                "sectionId"
+                              ],
+                              "additionalProperties": false
+                            }
+                          },
+                          "integrationIds": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          },
+                          "advancedOptions": {
+                            "type": "object",
+                            "properties": {
+                              "title": {
+                                "default": null,
+                                "anyOf": [
+                                  {
+                                    "type": "string",
+                                    "maxLength": 64
+                                  },
+                                  {
+                                    "type": "null"
+                                  }
+                                ]
+                              },
+                              "customCssClasses": {
+                                "default": [],
+                                "type": "array",
+                                "items": {
+                                  "type": "string"
+                                }
+                              },
+                              "borderColor": {
+                                "default": "",
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "title",
+                              "customCssClasses",
+                              "borderColor"
+                            ],
+                            "additionalProperties": false
+                          },
+                          "kind": {
+                            "type": "string",
+                            "enum": [
+                              "stats",
+                              "clock",
+                              "weather",
+                              "airQuality",
+                              "countdown",
+                              "timer",
+                              "app",
+                              "iframe",
+                              "video",
+                              "notebook",
+                              "anchorNote",
+                              "dnsHoleSummary",
+                              "dnsHoleControls",
+                              "smartHome-entityState",
+                              "smartHome-executeAutomation",
+                              "stockPrice",
+                              "mediaServer",
+                              "calendar",
+                              "downloads",
+                              "mediaRequests-requestList",
+                              "mediaRequests-requestStats",
+                              "mediaTranscoding",
+                              "mediaMissing",
+                              "minecraftServerStatus",
+                              "networkControllerSummary",
+                              "networkControllerStatus",
+                              "rssFeed",
+                              "bookmarks",
+                              "indexerManager",
+                              "healthMonitoring",
+                              "releases",
+                              "mediaReleases",
+                              "dockerContainers",
+                              "firewall",
+                              "notifications",
+                              "systemResources",
+                              "coolify",
+                              "systemDisks",
+                              "timetable",
+                              "immich-serverStats",
+                              "immich-albumCarousel",
+                              "paperlessNgx",
+                              "thingport-libraryStats",
+                              "thingport-models",
+                              "thingport-featuredModel",
+                              "thingport-activityHeatmap",
+                              "patchmon",
+                              "bazarr",
+                              "tracearr",
+                              "speedtestTracker",
+                              "uptimeKuma",
+                              "audioStats",
+                              "umami",
+                              "vpn",
+                              "archiveTeamWarrior",
+                              "ups",
+                              "beszelSystemTable",
+                              "beszelSystemGrid",
+                              "beszelAlerts",
+                              "beszelSystemStats",
+                              "traefik",
+                              "customApi",
+                              "assistant",
+                              "wud",
+                              "llamacpp",
+                              "wazuh"
+                            ]
+                          },
+                          "options": {
+                            "type": "object",
+                            "propertyNames": {
+                              "type": "string"
+                            },
+                            "additionalProperties": {}
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "layouts",
+                          "integrationIds",
+                          "advancedOptions",
+                          "kind",
+                          "options"
+                        ],
+                        "additionalProperties": false
+                      }
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "name",
+                    "layouts",
+                    "sections",
+                    "items"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.BAD_REQUEST"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization not provided",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.UNAUTHORIZED"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Insufficient access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.FORBIDDEN"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.NOT_FOUND"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR"
+                }
+              }
+            }
+          }
+        }
+      },
       "put": {
         "operationId": "boardRouter-saveBoard",
         "summary": "Save dashboard content",
@@ -3176,6 +4014,492 @@
         }
       }
     },
+    "/api/boards/{id}/permissions": {
+      "get": {
+        "operationId": "boardRouter-getBoardPermissions",
+        "summary": "Read board permissions",
+        "description": "Return the users and groups with explicit permissions on a board, and the groups that inherit access through global board permissions. Requires full access to the board.",
+        "tags": [
+          "boards"
+        ],
+        "security": [
+          {
+            "apikey": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "inherited": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "permission": {
+                            "type": "string",
+                            "enum": [
+                              "board-create",
+                              "board-view-all",
+                              "board-modify-all",
+                              "board-full-all",
+                              "app-create",
+                              "app-use-all",
+                              "app-modify-all",
+                              "app-full-all",
+                              "integration-create",
+                              "integration-use-all",
+                              "integration-interact-all",
+                              "integration-full-all",
+                              "search-engine-create",
+                              "search-engine-modify-all",
+                              "search-engine-full-all",
+                              "media-upload",
+                              "media-view-all",
+                              "media-full-all",
+                              "other-view-logs",
+                              "admin"
+                            ]
+                          },
+                          "group": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string"
+                              },
+                              "name": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "name"
+                            ],
+                            "additionalProperties": false
+                          }
+                        },
+                        "required": [
+                          "permission",
+                          "group"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "users": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "user": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string"
+                              },
+                              "name": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
+                              "image": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
+                              "email": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "name",
+                              "image",
+                              "email"
+                            ],
+                            "additionalProperties": false
+                          },
+                          "permission": {
+                            "type": "string",
+                            "enum": [
+                              "view",
+                              "modify",
+                              "full"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "user",
+                          "permission"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "groups": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "group": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string"
+                              },
+                              "name": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "name"
+                            ],
+                            "additionalProperties": false
+                          },
+                          "permission": {
+                            "type": "string",
+                            "enum": [
+                              "view",
+                              "modify",
+                              "full"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "group",
+                          "permission"
+                        ],
+                        "additionalProperties": false
+                      }
+                    }
+                  },
+                  "required": [
+                    "inherited",
+                    "users",
+                    "groups"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.BAD_REQUEST"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization not provided",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.UNAUTHORIZED"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Insufficient access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.FORBIDDEN"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.NOT_FOUND"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/boards/{entityId}/permissions/users": {
+      "put": {
+        "operationId": "boardRouter-saveUserBoardPermissions",
+        "summary": "Replace user board permissions",
+        "description": "Replace all explicit user permissions on a board. Omitted users lose their explicit permission; each user can be listed once. Requires full access to the board.",
+        "tags": [
+          "boards"
+        ],
+        "security": [
+          {
+            "apikey": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "entityId",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "permissions": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "principalId": {
+                          "type": "string"
+                        },
+                        "permission": {
+                          "type": "string",
+                          "enum": [
+                            "view",
+                            "modify",
+                            "full"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "principalId",
+                        "permission"
+                      ]
+                    }
+                  }
+                },
+                "required": [
+                  "permissions"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.BAD_REQUEST"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization not provided",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.UNAUTHORIZED"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Insufficient access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.FORBIDDEN"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.NOT_FOUND"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/boards/{entityId}/permissions/groups": {
+      "put": {
+        "operationId": "boardRouter-saveGroupBoardPermissions",
+        "summary": "Replace group board permissions",
+        "description": "Replace all explicit group permissions on a board. Omitted groups lose their explicit permission; each group can be listed once. Requires full access to the board.",
+        "tags": [
+          "boards"
+        ],
+        "security": [
+          {
+            "apikey": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "entityId",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "permissions": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "principalId": {
+                          "type": "string"
+                        },
+                        "permission": {
+                          "type": "string",
+                          "enum": [
+                            "view",
+                            "modify",
+                            "full"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "principalId",
+                        "permission"
+                      ]
+                    }
+                  }
+                },
+                "required": [
+                  "permissions"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.BAD_REQUEST"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization not provided",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.UNAUTHORIZED"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Insufficient access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.FORBIDDEN"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.NOT_FOUND"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/boards/items": {
       "post": {
         "operationId": "boardRouter-addItem",
@@ -3504,6 +4828,2047 @@
                   ],
                   "additionalProperties": false
                 }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.BAD_REQUEST"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization not provided",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.UNAUTHORIZED"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Insufficient access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.FORBIDDEN"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.NOT_FOUND"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/boards/{boardId}/items/{itemId}": {
+      "get": {
+        "operationId": "boardRouter-getItem",
+        "summary": "Read one board item",
+        "description": "Read one item's kind, widget options, advanced options, integration IDs, and placements in the shape used by the board content. Requires view access to the board.",
+        "tags": [
+          "boards"
+        ],
+        "security": [
+          {
+            "apikey": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "boardId",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          },
+          {
+            "in": "path",
+            "name": "itemId",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "layouts": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "layoutId": {
+                            "type": "string"
+                          },
+                          "yOffset": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 32767
+                          },
+                          "xOffset": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 32767
+                          },
+                          "width": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 32767
+                          },
+                          "height": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 32767
+                          },
+                          "sectionId": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "layoutId",
+                          "yOffset",
+                          "xOffset",
+                          "width",
+                          "height",
+                          "sectionId"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "integrationIds": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "advancedOptions": {
+                      "type": "object",
+                      "properties": {
+                        "title": {
+                          "default": null,
+                          "anyOf": [
+                            {
+                              "type": "string",
+                              "maxLength": 64
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "customCssClasses": {
+                          "default": [],
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "borderColor": {
+                          "default": "",
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "title",
+                        "customCssClasses",
+                        "borderColor"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "kind": {
+                      "type": "string",
+                      "enum": [
+                        "stats",
+                        "clock",
+                        "weather",
+                        "airQuality",
+                        "countdown",
+                        "timer",
+                        "app",
+                        "iframe",
+                        "video",
+                        "notebook",
+                        "anchorNote",
+                        "dnsHoleSummary",
+                        "dnsHoleControls",
+                        "smartHome-entityState",
+                        "smartHome-executeAutomation",
+                        "stockPrice",
+                        "mediaServer",
+                        "calendar",
+                        "downloads",
+                        "mediaRequests-requestList",
+                        "mediaRequests-requestStats",
+                        "mediaTranscoding",
+                        "mediaMissing",
+                        "minecraftServerStatus",
+                        "networkControllerSummary",
+                        "networkControllerStatus",
+                        "rssFeed",
+                        "bookmarks",
+                        "indexerManager",
+                        "healthMonitoring",
+                        "releases",
+                        "mediaReleases",
+                        "dockerContainers",
+                        "firewall",
+                        "notifications",
+                        "systemResources",
+                        "coolify",
+                        "systemDisks",
+                        "timetable",
+                        "immich-serverStats",
+                        "immich-albumCarousel",
+                        "paperlessNgx",
+                        "thingport-libraryStats",
+                        "thingport-models",
+                        "thingport-featuredModel",
+                        "thingport-activityHeatmap",
+                        "patchmon",
+                        "bazarr",
+                        "tracearr",
+                        "speedtestTracker",
+                        "uptimeKuma",
+                        "audioStats",
+                        "umami",
+                        "vpn",
+                        "archiveTeamWarrior",
+                        "ups",
+                        "beszelSystemTable",
+                        "beszelSystemGrid",
+                        "beszelAlerts",
+                        "beszelSystemStats",
+                        "traefik",
+                        "customApi",
+                        "assistant",
+                        "wud",
+                        "llamacpp",
+                        "wazuh"
+                      ]
+                    },
+                    "options": {
+                      "type": "object",
+                      "propertyNames": {
+                        "type": "string"
+                      },
+                      "additionalProperties": {}
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "layouts",
+                    "integrationIds",
+                    "advancedOptions",
+                    "kind",
+                    "options"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.BAD_REQUEST"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization not provided",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.UNAUTHORIZED"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Insufficient access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.FORBIDDEN"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.NOT_FOUND"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "operationId": "boardRouter-updateItem",
+        "summary": "Update one board item",
+        "description": "Replace the supplied widget options, advanced options, or integration IDs of one item without replacing the board. Omitted fields remain unchanged; the kind and placements cannot be changed here. Requires modify access to the board and use access to newly linked integrations; changing Custom Widget options requires admin permission.",
+        "tags": [
+          "boards"
+        ],
+        "security": [
+          {
+            "apikey": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "boardId",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          },
+          {
+            "in": "path",
+            "name": "itemId",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "options": {
+                    "type": "object",
+                    "propertyNames": {
+                      "type": "string"
+                    },
+                    "additionalProperties": {}
+                  },
+                  "advancedOptions": {
+                    "type": "object",
+                    "properties": {
+                      "title": {
+                        "default": null,
+                        "anyOf": [
+                          {
+                            "type": "string",
+                            "maxLength": 64
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "customCssClasses": {
+                        "default": [],
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "borderColor": {
+                        "default": "",
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "integrationIds": {
+                    "maxItems": 32,
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "layouts": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "layoutId": {
+                            "type": "string"
+                          },
+                          "yOffset": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 32767
+                          },
+                          "xOffset": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 32767
+                          },
+                          "width": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 32767
+                          },
+                          "height": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 32767
+                          },
+                          "sectionId": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "layoutId",
+                          "yOffset",
+                          "xOffset",
+                          "width",
+                          "height",
+                          "sectionId"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "integrationIds": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "advancedOptions": {
+                      "type": "object",
+                      "properties": {
+                        "title": {
+                          "default": null,
+                          "anyOf": [
+                            {
+                              "type": "string",
+                              "maxLength": 64
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "customCssClasses": {
+                          "default": [],
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "borderColor": {
+                          "default": "",
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "title",
+                        "customCssClasses",
+                        "borderColor"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "kind": {
+                      "type": "string",
+                      "enum": [
+                        "stats",
+                        "clock",
+                        "weather",
+                        "airQuality",
+                        "countdown",
+                        "timer",
+                        "app",
+                        "iframe",
+                        "video",
+                        "notebook",
+                        "anchorNote",
+                        "dnsHoleSummary",
+                        "dnsHoleControls",
+                        "smartHome-entityState",
+                        "smartHome-executeAutomation",
+                        "stockPrice",
+                        "mediaServer",
+                        "calendar",
+                        "downloads",
+                        "mediaRequests-requestList",
+                        "mediaRequests-requestStats",
+                        "mediaTranscoding",
+                        "mediaMissing",
+                        "minecraftServerStatus",
+                        "networkControllerSummary",
+                        "networkControllerStatus",
+                        "rssFeed",
+                        "bookmarks",
+                        "indexerManager",
+                        "healthMonitoring",
+                        "releases",
+                        "mediaReleases",
+                        "dockerContainers",
+                        "firewall",
+                        "notifications",
+                        "systemResources",
+                        "coolify",
+                        "systemDisks",
+                        "timetable",
+                        "immich-serverStats",
+                        "immich-albumCarousel",
+                        "paperlessNgx",
+                        "thingport-libraryStats",
+                        "thingport-models",
+                        "thingport-featuredModel",
+                        "thingport-activityHeatmap",
+                        "patchmon",
+                        "bazarr",
+                        "tracearr",
+                        "speedtestTracker",
+                        "uptimeKuma",
+                        "audioStats",
+                        "umami",
+                        "vpn",
+                        "archiveTeamWarrior",
+                        "ups",
+                        "beszelSystemTable",
+                        "beszelSystemGrid",
+                        "beszelAlerts",
+                        "beszelSystemStats",
+                        "traefik",
+                        "customApi",
+                        "assistant",
+                        "wud",
+                        "llamacpp",
+                        "wazuh"
+                      ]
+                    },
+                    "options": {
+                      "type": "object",
+                      "propertyNames": {
+                        "type": "string"
+                      },
+                      "additionalProperties": {}
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "layouts",
+                    "integrationIds",
+                    "advancedOptions",
+                    "kind",
+                    "options"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.BAD_REQUEST"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization not provided",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.UNAUTHORIZED"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Insufficient access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.FORBIDDEN"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.NOT_FOUND"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "operationId": "boardRouter-deleteItem",
+        "summary": "Delete one board item",
+        "description": "Remove one item with its placements and integration links without replacing the board. Requires modify access to the board.",
+        "tags": [
+          "boards"
+        ],
+        "security": [
+          {
+            "apikey": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "boardId",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          },
+          {
+            "in": "path",
+            "name": "itemId",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.BAD_REQUEST"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization not provided",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.UNAUTHORIZED"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Insufficient access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.FORBIDDEN"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.NOT_FOUND"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/groups": {
+      "get": {
+        "operationId": "groupRouter-getAll",
+        "summary": "List all groups",
+        "description": "Return every group with its position, home boards, owner ID, permissions, and members. A lower position takes precedence when resolving home boards. The reserved group named 'everyone' is joined by every user on sign-in, is not part of the group order, and cannot be renamed, deleted, or have its members changed. Requires admin permission.",
+        "tags": [
+          "groups"
+        ],
+        "security": [
+          {
+            "apikey": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "ownerId": {
+                        "type": [
+                          "string",
+                          "null"
+                        ]
+                      },
+                      "homeBoardId": {
+                        "type": [
+                          "string",
+                          "null"
+                        ]
+                      },
+                      "mobileHomeBoardId": {
+                        "type": [
+                          "string",
+                          "null"
+                        ]
+                      },
+                      "position": {
+                        "type": "integer",
+                        "minimum": -9007199254740991,
+                        "maximum": 9007199254740991
+                      },
+                      "members": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string"
+                            },
+                            "name": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "email": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "image": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "name",
+                            "email",
+                            "image"
+                          ],
+                          "additionalProperties": false
+                        }
+                      },
+                      "permissions": {
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "enum": [
+                            "board-create",
+                            "board-view-all",
+                            "board-modify-all",
+                            "board-full-all",
+                            "app-create",
+                            "app-use-all",
+                            "app-modify-all",
+                            "app-full-all",
+                            "integration-create",
+                            "integration-use-all",
+                            "integration-interact-all",
+                            "integration-full-all",
+                            "search-engine-create",
+                            "search-engine-modify-all",
+                            "search-engine-full-all",
+                            "media-upload",
+                            "media-view-all",
+                            "media-full-all",
+                            "other-view-logs",
+                            "admin"
+                          ]
+                        }
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "name",
+                      "ownerId",
+                      "homeBoardId",
+                      "mobileHomeBoardId",
+                      "position",
+                      "members",
+                      "permissions"
+                    ],
+                    "additionalProperties": false
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization not provided",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.UNAUTHORIZED"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Insufficient access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.FORBIDDEN"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "groupRouter-createGroup",
+        "summary": "Create a group",
+        "description": "Create a group without permissions or members at the end of the group order and return its ID. The name must be unique and cannot be 'everyone'. Requires admin permission.",
+        "tags": [
+          "groups"
+        ],
+        "security": [
+          {
+            "apikey": []
+          }
+        ],
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 64
+                  }
+                },
+                "required": [
+                  "name"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "id"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.BAD_REQUEST"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization not provided",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.UNAUTHORIZED"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Insufficient access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.FORBIDDEN"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/groups/{id}": {
+      "get": {
+        "operationId": "groupRouter-getById",
+        "summary": "Get a group",
+        "description": "Return a group with its position, home boards, owner, permissions, and members, including each member's authentication provider and whether the membership is managed locally. Memberships synchronized from an external provider (LDAP, or OIDC without local group management) cannot be changed. Requires admin permission.",
+        "tags": [
+          "groups"
+        ],
+        "security": [
+          {
+            "apikey": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "ownerId": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "homeBoardId": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "mobileHomeBoardId": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "position": {
+                      "type": "integer",
+                      "minimum": -9007199254740991,
+                      "maximum": 9007199254740991
+                    },
+                    "members": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "name": {
+                            "type": [
+                              "string",
+                              "null"
+                            ]
+                          },
+                          "email": {
+                            "type": [
+                              "string",
+                              "null"
+                            ]
+                          },
+                          "image": {
+                            "type": [
+                              "string",
+                              "null"
+                            ]
+                          },
+                          "provider": {
+                            "type": "string",
+                            "enum": [
+                              "credentials",
+                              "oidc",
+                              "ldap"
+                            ]
+                          },
+                          "isMembershipManagedLocally": {
+                            "type": "boolean"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "name",
+                          "email",
+                          "image",
+                          "provider",
+                          "isMembershipManagedLocally"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "permissions": {
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "enum": [
+                          "board-create",
+                          "board-view-all",
+                          "board-modify-all",
+                          "board-full-all",
+                          "app-create",
+                          "app-use-all",
+                          "app-modify-all",
+                          "app-full-all",
+                          "integration-create",
+                          "integration-use-all",
+                          "integration-interact-all",
+                          "integration-full-all",
+                          "search-engine-create",
+                          "search-engine-modify-all",
+                          "search-engine-full-all",
+                          "media-upload",
+                          "media-view-all",
+                          "media-full-all",
+                          "other-view-logs",
+                          "admin"
+                        ]
+                      }
+                    },
+                    "owner": {
+                      "anyOf": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string"
+                            },
+                            "name": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "image": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "email": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "name",
+                            "image",
+                            "email"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "name",
+                    "ownerId",
+                    "homeBoardId",
+                    "mobileHomeBoardId",
+                    "position",
+                    "members",
+                    "permissions",
+                    "owner"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.BAD_REQUEST"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization not provided",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.UNAUTHORIZED"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Insufficient access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.FORBIDDEN"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.NOT_FOUND"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "operationId": "groupRouter-updateGroup",
+        "summary": "Rename a group",
+        "description": "Change a group's name. The name must be unique and the 'everyone' group cannot be renamed. Requires admin permission.",
+        "tags": [
+          "groups"
+        ],
+        "security": [
+          {
+            "apikey": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 64
+                  }
+                },
+                "required": [
+                  "name"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.BAD_REQUEST"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization not provided",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.UNAUTHORIZED"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Insufficient access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.FORBIDDEN"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.NOT_FOUND"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "operationId": "groupRouter-deleteGroup",
+        "summary": "Delete a group",
+        "description": "Delete a group with its permissions and memberships. The 'everyone' group cannot be deleted. Requires admin permission.",
+        "tags": [
+          "groups"
+        ],
+        "security": [
+          {
+            "apikey": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.BAD_REQUEST"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization not provided",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.UNAUTHORIZED"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Insufficient access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.FORBIDDEN"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.NOT_FOUND"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/groups/{id}/settings": {
+      "patch": {
+        "operationId": "groupRouter-savePartialSettings",
+        "summary": "Update group home boards",
+        "description": "Set or clear a group's desktop and mobile home boards. Omitted values remain unchanged and null clears a home board. Each board must exist; whether the group's members can view it is not checked. Also allowed for the 'everyone' group. Requires admin permission.",
+        "tags": [
+          "groups"
+        ],
+        "security": [
+          {
+            "apikey": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "homeBoardId": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "mobileHomeBoardId": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.BAD_REQUEST"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization not provided",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.UNAUTHORIZED"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Insufficient access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.FORBIDDEN"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.NOT_FOUND"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/groups/positions": {
+      "put": {
+        "operationId": "groupRouter-savePositions",
+        "summary": "Reorder groups",
+        "description": "Set the order of all groups; the first group gets the lowest position and takes precedence when resolving home boards. List every group except 'everyone' exactly once. Requires admin permission.",
+        "tags": [
+          "groups"
+        ],
+        "security": [
+          {
+            "apikey": []
+          }
+        ],
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "positions": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "required": [
+                  "positions"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.BAD_REQUEST"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization not provided",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.UNAUTHORIZED"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Insufficient access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.FORBIDDEN"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.NOT_FOUND"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/groups/{groupId}/permissions": {
+      "put": {
+        "operationId": "groupRouter-savePermissions",
+        "summary": "Replace group permissions",
+        "description": "Replace all permissions of a group and return the stored permissions. Omitted permissions are removed; implied permissions are not added. Also allowed for the 'everyone' group. Requires admin permission.",
+        "tags": [
+          "groups"
+        ],
+        "security": [
+          {
+            "apikey": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "groupId",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "permissions": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "enum": [
+                        "board-create",
+                        "board-view-all",
+                        "board-modify-all",
+                        "board-full-all",
+                        "app-create",
+                        "app-use-all",
+                        "app-modify-all",
+                        "app-full-all",
+                        "integration-create",
+                        "integration-use-all",
+                        "integration-interact-all",
+                        "integration-full-all",
+                        "search-engine-create",
+                        "search-engine-modify-all",
+                        "search-engine-full-all",
+                        "media-upload",
+                        "media-view-all",
+                        "media-full-all",
+                        "other-view-logs",
+                        "admin"
+                      ]
+                    }
+                  }
+                },
+                "required": [
+                  "permissions"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "permissions": {
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "enum": [
+                          "board-create",
+                          "board-view-all",
+                          "board-modify-all",
+                          "board-full-all",
+                          "app-create",
+                          "app-use-all",
+                          "app-modify-all",
+                          "app-full-all",
+                          "integration-create",
+                          "integration-use-all",
+                          "integration-interact-all",
+                          "integration-full-all",
+                          "search-engine-create",
+                          "search-engine-modify-all",
+                          "search-engine-full-all",
+                          "media-upload",
+                          "media-view-all",
+                          "media-full-all",
+                          "other-view-logs",
+                          "admin"
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "permissions"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.BAD_REQUEST"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization not provided",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.UNAUTHORIZED"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Insufficient access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.FORBIDDEN"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.NOT_FOUND"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/groups/{groupId}/members": {
+      "put": {
+        "operationId": "groupRouter-saveMembers",
+        "summary": "Replace group members",
+        "description": "Replace the members of a group and return the resulting member IDs. Omitted members are removed. Users whose groups are synchronized from an external provider cannot be added or removed. Not allowed for the 'everyone' group. Requires admin permission.",
+        "tags": [
+          "groups"
+        ],
+        "security": [
+          {
+            "apikey": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "groupId",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "userIds": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "required": [
+                  "userIds"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "userIds": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "required": [
+                    "userIds"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.BAD_REQUEST"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization not provided",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.UNAUTHORIZED"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Insufficient access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.FORBIDDEN"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.NOT_FOUND"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/groups/{groupId}/members/{userId}": {
+      "post": {
+        "operationId": "groupRouter-addMember",
+        "summary": "Add a group member",
+        "description": "Add a user to a group. Adding an existing member has no effect. Users whose groups are synchronized from an external provider (LDAP, or OIDC without local group management) cannot be added. Not allowed for the 'everyone' group. Requires admin permission.",
+        "tags": [
+          "groups"
+        ],
+        "security": [
+          {
+            "apikey": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "groupId",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          },
+          {
+            "in": "path",
+            "name": "userId",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.BAD_REQUEST"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization not provided",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.UNAUTHORIZED"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Insufficient access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.FORBIDDEN"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "operationId": "groupRouter-removeMember",
+        "summary": "Remove a group member",
+        "description": "Remove a user from a group. Removing a user who is not a member has no effect. Users whose groups are synchronized from an external provider (LDAP, or OIDC without local group management) cannot be removed. Not allowed for the 'everyone' group. Requires admin permission.",
+        "tags": [
+          "groups"
+        ],
+        "security": [
+          {
+            "apikey": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "groupId",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          },
+          {
+            "in": "path",
+            "name": "userId",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {}
               }
             }
           },
@@ -3999,7 +7364,7 @@
       "patch": {
         "operationId": "serverSettingsRouter-updateBoardSettings",
         "summary": "Update global board settings",
-        "description": "Update supplied instance board defaults and return the resulting settings. Home board IDs must reference public boards, or be null to clear the default. Requires admin permission.",
+        "description": "Update supplied instance board defaults and return the resulting settings. Changed home board IDs must reference public boards, or be null to clear the default. Requires admin permission.",
         "tags": [
           "settings"
         ],
@@ -4134,7 +7499,7 @@
       "post": {
         "operationId": "userRouter-create",
         "summary": "Create a user",
-        "description": "Create a credentials account and assign the supplied groups. Requires admin permission and credentials authentication to be enabled. The username must be unique and password confirmation must match.",
+        "description": "Create a credentials account, assign the supplied groups, and return the new user's ID. Every group must exist; the user is not created otherwise. Requires admin permission and credentials authentication to be enabled. The username must be unique and password confirmation must match.",
         "tags": [
           "users"
         ],
@@ -4200,7 +7565,18 @@
             "description": "Successful response",
             "content": {
               "application/json": {
-                "schema": {}
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "id"
+                  ],
+                  "additionalProperties": false
+                }
               }
             }
           },
@@ -4249,7 +7625,7 @@
       "get": {
         "operationId": "userRouter-getAll",
         "summary": "List all users",
-        "description": "Return user IDs, names, email addresses, verification dates, and profile images. Requires admin permission.",
+        "description": "Return user IDs, names, email addresses, verification dates, profile images, and authentication providers. Requires admin permission.",
         "tags": [
           "users"
         ],
@@ -4294,6 +7670,9 @@
                           "string",
                           "null"
                         ]
+                      },
+                      "provider": {
+                        "type": "string"
                       }
                     },
                     "required": [
@@ -4301,7 +7680,8 @@
                       "name",
                       "email",
                       "emailVerified",
-                      "image"
+                      "image",
+                      "provider"
                     ],
                     "additionalProperties": false
                   }
@@ -5161,7 +8541,7 @@
       "get": {
         "operationId": "userRouter-getById",
         "summary": "Get a user",
-        "description": "Return a user's profile, authentication provider, and preferences. Users can read themselves; reading another user requires admin permission.",
+        "description": "Return a user's profile, authentication provider, preferences, and group memberships. Users can read themselves; reading another user requires admin permission.",
         "tags": [
           "users"
         ],
@@ -5271,6 +8651,13 @@
                     },
                     "completedBoardTour": {
                       "type": "boolean"
+                    },
+                    "groupIds": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "description": "IDs of the groups the user is a member of. Includes the everyone group once the user has signed in or was assigned to it on creation."
                     }
                   },
                   "required": [
@@ -5292,7 +8679,8 @@
                     "openSearchInNewTab",
                     "ddgBangs",
                     "completedManageTour",
-                    "completedBoardTour"
+                    "completedBoardTour",
+                    "groupIds"
                   ],
                   "additionalProperties": false
                 }
@@ -5435,11 +8823,131 @@
         }
       }
     },
+    "/api/users/{userId}/groups": {
+      "put": {
+        "operationId": "userRouter-setGroups",
+        "summary": "Set a user's groups",
+        "description": "Replace the groups of a user and return the resulting group IDs. The everyone group membership is kept automatically. Fails when the user's groups are synchronized from an external provider. Requires admin permission.",
+        "tags": [
+          "users"
+        ],
+        "security": [
+          {
+            "apikey": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "userId",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "groupIds": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "required": [
+                  "groupIds"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "groupIds": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "required": [
+                    "groupIds"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.BAD_REQUEST"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization not provided",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.UNAUTHORIZED"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Insufficient access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.FORBIDDEN"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.NOT_FOUND"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/users/profile": {
       "put": {
         "operationId": "userRouter-editProfile",
         "summary": "Update a user profile",
-        "description": "Update a credentials account's username and email. Users can update themselves; updating another user requires admin permission. External-provider profiles cannot be edited, and username changes are disabled in demo mode.",
+        "description": "Update a credentials account's username and email. Omitting the email keeps it; null or an empty string removes it. Users can update themselves; updating another user requires admin permission. External-provider profiles cannot be edited, and username changes are disabled in demo mode.",
         "tags": [
           "users"
         ],
@@ -7554,6 +11062,1945 @@
                   ],
                   "type": "object"
                 }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.BAD_REQUEST"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization not provided",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.UNAUTHORIZED"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Insufficient access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.FORBIDDEN"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.NOT_FOUND"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/integrations/kinds": {
+      "get": {
+        "operationId": "integration-getKinds",
+        "summary": "List integration kinds",
+        "description": "Return every supported integration kind with its name, categories and secret kind options. An integration needs all secret kinds of one option in requiredSecrets; an empty option means no secrets are needed.",
+        "tags": [
+          "integrations"
+        ],
+        "security": [
+          {},
+          {
+            "apikey": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "kind": {
+                        "type": "string",
+                        "enum": [
+                          "autobrr",
+                          "jellystat",
+                          "scrutiny",
+                          "tubearchivist",
+                          "frigate",
+                          "komga",
+                          "netalertx",
+                          "jackett",
+                          "yourSpotify",
+                          "romm",
+                          "homebox",
+                          "mealie",
+                          "xteve",
+                          "unmanic",
+                          "syncthingRelay",
+                          "stash",
+                          "prometheus",
+                          "plantit",
+                          "netdata",
+                          "fileflows",
+                          "trilium",
+                          "tandoor",
+                          "spoolman",
+                          "miniflux",
+                          "maintainerr",
+                          "linkwarden",
+                          "karakeep",
+                          "healthchecks",
+                          "gatus",
+                          "changedetection",
+                          "caddy",
+                          "sabNzbd",
+                          "nzbGet",
+                          "deluge",
+                          "transmission",
+                          "qBittorrent",
+                          "aria2",
+                          "slskd",
+                          "sonarr",
+                          "sportarr",
+                          "radarr",
+                          "lidarr",
+                          "readarr",
+                          "bindery",
+                          "prowlarr",
+                          "bazarr",
+                          "jellyfin",
+                          "emby",
+                          "plex",
+                          "jellyseerr",
+                          "seerr",
+                          "overseerr",
+                          "piHole",
+                          "adGuardHome",
+                          "technitiumDns",
+                          "homeAssistant",
+                          "openmediavault",
+                          "dashDot",
+                          "glances",
+                          "tdarr",
+                          "proxmox",
+                          "nextcloud",
+                          "unifiController",
+                          "opnsense",
+                          "ntfy",
+                          "gotify",
+                          "ical",
+                          "anchor",
+                          "truenas",
+                          "synology",
+                          "unraid",
+                          "coolify",
+                          "immich",
+                          "paperlessNgx",
+                          "thingport",
+                          "patchmon",
+                          "tracearr",
+                          "speedtestTracker",
+                          "uptimeKuma",
+                          "audiobookshelf",
+                          "navidrome",
+                          "umami",
+                          "peaNut",
+                          "beszel",
+                          "gluetun",
+                          "traefik",
+                          "archiveTeamWarrior",
+                          "wazuh",
+                          "wud",
+                          "llamacpp",
+                          "mock"
+                        ]
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "category": {
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "enum": [
+                            "dnsHole",
+                            "mediaService",
+                            "calendar",
+                            "mediaOrganizer",
+                            "mediaSearch",
+                            "mediaRelease",
+                            "mediaRequest",
+                            "downloadClient",
+                            "usenet",
+                            "torrent",
+                            "miscellaneous",
+                            "smartHomeServer",
+                            "indexerManager",
+                            "healthMonitoring",
+                            "beszel",
+                            "search",
+                            "mediaTranscoding",
+                            "networkController",
+                            "notifications",
+                            "firewall",
+                            "timetable",
+                            "photoService",
+                            "notes",
+                            "mediaMonitoring",
+                            "speedtest",
+                            "analytics",
+                            "vpn",
+                            "archiving",
+                            "ups",
+                            "documents",
+                            "mediaLibrary",
+                            "uptimeMonitoring",
+                            "subtitleManager",
+                            "reverseProxy",
+                            "systemMonitoring",
+                            "security",
+                            "serviceVersion"
+                          ]
+                        }
+                      },
+                      "requiredSecrets": {
+                        "type": "array",
+                        "items": {
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "enum": [
+                              "apiKey",
+                              "username",
+                              "password",
+                              "tokenId",
+                              "realm",
+                              "personalAccessToken",
+                              "topic",
+                              "opnsenseApiKey",
+                              "opnsenseApiSecret",
+                              "patchmonApiKey",
+                              "patchmonApiSecret",
+                              "url",
+                              "privateKey",
+                              "githubAppId",
+                              "githubInstallationId",
+                              "slug",
+                              "wazuhIndexerUrl",
+                              "wazuhIndexerUsername",
+                              "wazuhIndexerPassword",
+                              "wazuhDashboardUrl"
+                            ]
+                          }
+                        }
+                      }
+                    },
+                    "required": [
+                      "kind",
+                      "name",
+                      "category",
+                      "requiredSecrets"
+                    ],
+                    "additionalProperties": false
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.BAD_REQUEST"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization not provided",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.UNAUTHORIZED"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Insufficient access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.FORBIDDEN"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.NOT_FOUND"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/integrations": {
+      "get": {
+        "operationId": "integration-all",
+        "summary": "List accessible integrations",
+        "description": "Return the integrations the caller can use, with the caller's use, interact and full access flags. Secrets are not included.",
+        "tags": [
+          "integrations"
+        ],
+        "security": [
+          {
+            "apikey": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "kind": {
+                        "type": "string",
+                        "enum": [
+                          "autobrr",
+                          "jellystat",
+                          "scrutiny",
+                          "tubearchivist",
+                          "frigate",
+                          "komga",
+                          "netalertx",
+                          "jackett",
+                          "yourSpotify",
+                          "romm",
+                          "homebox",
+                          "mealie",
+                          "xteve",
+                          "unmanic",
+                          "syncthingRelay",
+                          "stash",
+                          "prometheus",
+                          "plantit",
+                          "netdata",
+                          "fileflows",
+                          "trilium",
+                          "tandoor",
+                          "spoolman",
+                          "miniflux",
+                          "maintainerr",
+                          "linkwarden",
+                          "karakeep",
+                          "healthchecks",
+                          "gatus",
+                          "changedetection",
+                          "caddy",
+                          "sabNzbd",
+                          "nzbGet",
+                          "deluge",
+                          "transmission",
+                          "qBittorrent",
+                          "aria2",
+                          "slskd",
+                          "sonarr",
+                          "sportarr",
+                          "radarr",
+                          "lidarr",
+                          "readarr",
+                          "bindery",
+                          "prowlarr",
+                          "bazarr",
+                          "jellyfin",
+                          "emby",
+                          "plex",
+                          "jellyseerr",
+                          "seerr",
+                          "overseerr",
+                          "piHole",
+                          "adGuardHome",
+                          "technitiumDns",
+                          "homeAssistant",
+                          "openmediavault",
+                          "dashDot",
+                          "glances",
+                          "tdarr",
+                          "proxmox",
+                          "nextcloud",
+                          "unifiController",
+                          "opnsense",
+                          "ntfy",
+                          "gotify",
+                          "ical",
+                          "anchor",
+                          "truenas",
+                          "synology",
+                          "unraid",
+                          "coolify",
+                          "immich",
+                          "paperlessNgx",
+                          "thingport",
+                          "patchmon",
+                          "tracearr",
+                          "speedtestTracker",
+                          "uptimeKuma",
+                          "audiobookshelf",
+                          "navidrome",
+                          "umami",
+                          "peaNut",
+                          "beszel",
+                          "gluetun",
+                          "traefik",
+                          "archiveTeamWarrior",
+                          "wazuh",
+                          "wud",
+                          "llamacpp",
+                          "mock"
+                        ]
+                      },
+                      "url": {
+                        "type": "string"
+                      },
+                      "permissions": {
+                        "type": "object",
+                        "properties": {
+                          "hasFullAccess": {
+                            "type": "boolean"
+                          },
+                          "hasInteractAccess": {
+                            "type": "boolean"
+                          },
+                          "hasUseAccess": {
+                            "type": "boolean"
+                          }
+                        },
+                        "required": [
+                          "hasFullAccess",
+                          "hasInteractAccess",
+                          "hasUseAccess"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "name",
+                      "kind",
+                      "url",
+                      "permissions"
+                    ],
+                    "additionalProperties": false
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.BAD_REQUEST"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization not provided",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.UNAUTHORIZED"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Insufficient access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.FORBIDDEN"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.NOT_FOUND"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "integration-create",
+        "summary": "Create an integration",
+        "description": "Create an integration with its secrets and optionally link or create an app. Secrets must cover one secret kind option from GET /api/integrations/kinds. The connection is tested before saving unless skipConnectionTest is set; a failed test returns BAD_REQUEST with the failure category. Requires integration-create permission, and app-create permission for a new app.",
+        "tags": [
+          "integrations"
+        ],
+        "security": [
+          {
+            "apikey": []
+          }
+        ],
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 127
+                  },
+                  "url": {
+                    "type": "string",
+                    "pattern": "^https?:\\/\\/"
+                  },
+                  "kind": {
+                    "type": "string",
+                    "enum": [
+                      "autobrr",
+                      "jellystat",
+                      "scrutiny",
+                      "tubearchivist",
+                      "frigate",
+                      "komga",
+                      "netalertx",
+                      "jackett",
+                      "yourSpotify",
+                      "romm",
+                      "homebox",
+                      "mealie",
+                      "xteve",
+                      "unmanic",
+                      "syncthingRelay",
+                      "stash",
+                      "prometheus",
+                      "plantit",
+                      "netdata",
+                      "fileflows",
+                      "trilium",
+                      "tandoor",
+                      "spoolman",
+                      "miniflux",
+                      "maintainerr",
+                      "linkwarden",
+                      "karakeep",
+                      "healthchecks",
+                      "gatus",
+                      "changedetection",
+                      "caddy",
+                      "sabNzbd",
+                      "nzbGet",
+                      "deluge",
+                      "transmission",
+                      "qBittorrent",
+                      "aria2",
+                      "slskd",
+                      "sonarr",
+                      "sportarr",
+                      "radarr",
+                      "lidarr",
+                      "readarr",
+                      "bindery",
+                      "prowlarr",
+                      "bazarr",
+                      "jellyfin",
+                      "emby",
+                      "plex",
+                      "jellyseerr",
+                      "seerr",
+                      "overseerr",
+                      "piHole",
+                      "adGuardHome",
+                      "technitiumDns",
+                      "homeAssistant",
+                      "openmediavault",
+                      "dashDot",
+                      "glances",
+                      "tdarr",
+                      "proxmox",
+                      "nextcloud",
+                      "unifiController",
+                      "opnsense",
+                      "ntfy",
+                      "gotify",
+                      "ical",
+                      "anchor",
+                      "truenas",
+                      "synology",
+                      "unraid",
+                      "coolify",
+                      "immich",
+                      "paperlessNgx",
+                      "thingport",
+                      "patchmon",
+                      "tracearr",
+                      "speedtestTracker",
+                      "uptimeKuma",
+                      "audiobookshelf",
+                      "navidrome",
+                      "umami",
+                      "peaNut",
+                      "beszel",
+                      "gluetun",
+                      "traefik",
+                      "archiveTeamWarrior",
+                      "wazuh",
+                      "wud",
+                      "llamacpp",
+                      "mock"
+                    ]
+                  },
+                  "secrets": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "kind": {
+                          "type": "string",
+                          "enum": [
+                            "apiKey",
+                            "username",
+                            "password",
+                            "tokenId",
+                            "realm",
+                            "personalAccessToken",
+                            "topic",
+                            "opnsenseApiKey",
+                            "opnsenseApiSecret",
+                            "patchmonApiKey",
+                            "patchmonApiSecret",
+                            "url",
+                            "privateKey",
+                            "githubAppId",
+                            "githubInstallationId",
+                            "slug",
+                            "wazuhIndexerUrl",
+                            "wazuhIndexerUsername",
+                            "wazuhIndexerPassword",
+                            "wazuhDashboardUrl"
+                          ]
+                        },
+                        "value": {
+                          "type": "string",
+                          "minLength": 1
+                        }
+                      },
+                      "required": [
+                        "kind",
+                        "value"
+                      ]
+                    }
+                  },
+                  "app": {
+                    "anyOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "id"
+                        ]
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "name": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 64
+                          },
+                          "description": {
+                            "anyOf": [
+                              {
+                                "type": "string",
+                                "maxLength": 512
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "iconUrl": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "href": {
+                            "type": [
+                              "string",
+                              "null"
+                            ]
+                          },
+                          "pingUrl": {
+                            "anyOf": [
+                              {
+                                "anyOf": [
+                                  {
+                                    "type": "string",
+                                    "pattern": "^https?:\\/\\/"
+                                  },
+                                  {
+                                    "type": "string",
+                                    "const": ""
+                                  }
+                                ]
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          }
+                        },
+                        "required": [
+                          "name",
+                          "description",
+                          "iconUrl",
+                          "href",
+                          "pingUrl"
+                        ]
+                      }
+                    ]
+                  },
+                  "skipConnectionTest": {
+                    "default": false,
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "name",
+                  "url",
+                  "kind",
+                  "secrets"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "integration": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "kind": {
+                          "type": "string",
+                          "enum": [
+                            "autobrr",
+                            "jellystat",
+                            "scrutiny",
+                            "tubearchivist",
+                            "frigate",
+                            "komga",
+                            "netalertx",
+                            "jackett",
+                            "yourSpotify",
+                            "romm",
+                            "homebox",
+                            "mealie",
+                            "xteve",
+                            "unmanic",
+                            "syncthingRelay",
+                            "stash",
+                            "prometheus",
+                            "plantit",
+                            "netdata",
+                            "fileflows",
+                            "trilium",
+                            "tandoor",
+                            "spoolman",
+                            "miniflux",
+                            "maintainerr",
+                            "linkwarden",
+                            "karakeep",
+                            "healthchecks",
+                            "gatus",
+                            "changedetection",
+                            "caddy",
+                            "sabNzbd",
+                            "nzbGet",
+                            "deluge",
+                            "transmission",
+                            "qBittorrent",
+                            "aria2",
+                            "slskd",
+                            "sonarr",
+                            "sportarr",
+                            "radarr",
+                            "lidarr",
+                            "readarr",
+                            "bindery",
+                            "prowlarr",
+                            "bazarr",
+                            "jellyfin",
+                            "emby",
+                            "plex",
+                            "jellyseerr",
+                            "seerr",
+                            "overseerr",
+                            "piHole",
+                            "adGuardHome",
+                            "technitiumDns",
+                            "homeAssistant",
+                            "openmediavault",
+                            "dashDot",
+                            "glances",
+                            "tdarr",
+                            "proxmox",
+                            "nextcloud",
+                            "unifiController",
+                            "opnsense",
+                            "ntfy",
+                            "gotify",
+                            "ical",
+                            "anchor",
+                            "truenas",
+                            "synology",
+                            "unraid",
+                            "coolify",
+                            "immich",
+                            "paperlessNgx",
+                            "thingport",
+                            "patchmon",
+                            "tracearr",
+                            "speedtestTracker",
+                            "uptimeKuma",
+                            "audiobookshelf",
+                            "navidrome",
+                            "umami",
+                            "peaNut",
+                            "beszel",
+                            "gluetun",
+                            "traefik",
+                            "archiveTeamWarrior",
+                            "wazuh",
+                            "wud",
+                            "llamacpp",
+                            "mock"
+                          ]
+                        },
+                        "url": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "name",
+                        "kind",
+                        "url"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "appId": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "integration",
+                    "appId"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.BAD_REQUEST"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization not provided",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.UNAUTHORIZED"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Insufficient access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.FORBIDDEN"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/integrations/{id}": {
+      "get": {
+        "operationId": "integration-byId",
+        "summary": "Get an integration",
+        "description": "Return an integration with its linked app and stored secret kinds. Secret values are only returned for public kinds such as usernames, all others are null; updatedAt shows when each secret was last saved. Requires full access to the integration.",
+        "tags": [
+          "integrations"
+        ],
+        "security": [
+          {
+            "apikey": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "kind": {
+                      "type": "string",
+                      "enum": [
+                        "autobrr",
+                        "jellystat",
+                        "scrutiny",
+                        "tubearchivist",
+                        "frigate",
+                        "komga",
+                        "netalertx",
+                        "jackett",
+                        "yourSpotify",
+                        "romm",
+                        "homebox",
+                        "mealie",
+                        "xteve",
+                        "unmanic",
+                        "syncthingRelay",
+                        "stash",
+                        "prometheus",
+                        "plantit",
+                        "netdata",
+                        "fileflows",
+                        "trilium",
+                        "tandoor",
+                        "spoolman",
+                        "miniflux",
+                        "maintainerr",
+                        "linkwarden",
+                        "karakeep",
+                        "healthchecks",
+                        "gatus",
+                        "changedetection",
+                        "caddy",
+                        "sabNzbd",
+                        "nzbGet",
+                        "deluge",
+                        "transmission",
+                        "qBittorrent",
+                        "aria2",
+                        "slskd",
+                        "sonarr",
+                        "sportarr",
+                        "radarr",
+                        "lidarr",
+                        "readarr",
+                        "bindery",
+                        "prowlarr",
+                        "bazarr",
+                        "jellyfin",
+                        "emby",
+                        "plex",
+                        "jellyseerr",
+                        "seerr",
+                        "overseerr",
+                        "piHole",
+                        "adGuardHome",
+                        "technitiumDns",
+                        "homeAssistant",
+                        "openmediavault",
+                        "dashDot",
+                        "glances",
+                        "tdarr",
+                        "proxmox",
+                        "nextcloud",
+                        "unifiController",
+                        "opnsense",
+                        "ntfy",
+                        "gotify",
+                        "ical",
+                        "anchor",
+                        "truenas",
+                        "synology",
+                        "unraid",
+                        "coolify",
+                        "immich",
+                        "paperlessNgx",
+                        "thingport",
+                        "patchmon",
+                        "tracearr",
+                        "speedtestTracker",
+                        "uptimeKuma",
+                        "audiobookshelf",
+                        "navidrome",
+                        "umami",
+                        "peaNut",
+                        "beszel",
+                        "gluetun",
+                        "traefik",
+                        "archiveTeamWarrior",
+                        "wazuh",
+                        "wud",
+                        "llamacpp",
+                        "mock"
+                      ]
+                    },
+                    "url": {
+                      "type": "string"
+                    },
+                    "secrets": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "kind": {
+                            "type": "string",
+                            "enum": [
+                              "apiKey",
+                              "username",
+                              "password",
+                              "tokenId",
+                              "realm",
+                              "personalAccessToken",
+                              "topic",
+                              "opnsenseApiKey",
+                              "opnsenseApiSecret",
+                              "patchmonApiKey",
+                              "patchmonApiSecret",
+                              "url",
+                              "privateKey",
+                              "githubAppId",
+                              "githubInstallationId",
+                              "slug",
+                              "wazuhIndexerUrl",
+                              "wazuhIndexerUsername",
+                              "wazuhIndexerPassword",
+                              "wazuhDashboardUrl"
+                            ]
+                          },
+                          "value": {
+                            "type": [
+                              "string",
+                              "null"
+                            ]
+                          },
+                          "updatedAt": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "kind",
+                          "value",
+                          "updatedAt"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "app": {
+                      "anyOf": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string"
+                            },
+                            "name": {
+                              "type": "string"
+                            },
+                            "iconUrl": {
+                              "type": "string"
+                            },
+                            "href": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "name",
+                            "iconUrl",
+                            "href"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "name",
+                    "kind",
+                    "url",
+                    "secrets",
+                    "app"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.BAD_REQUEST"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization not provided",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.UNAUTHORIZED"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Insufficient access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.FORBIDDEN"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.NOT_FOUND"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "operationId": "integration-update",
+        "summary": "Update an integration",
+        "description": "Replace the name, URL, linked app and secrets of an integration. Each listed secret kind is kept: a value replaces it, null keeps the stored value (only when the URL is unchanged); unlisted kinds are deleted. The connection is tested before saving unless skipConnectionTest is set; a failed test returns BAD_REQUEST with the failure category. Requires full access to the integration.",
+        "tags": [
+          "integrations"
+        ],
+        "security": [
+          {
+            "apikey": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string",
+              "minLength": 1
+            },
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 127
+                  },
+                  "url": {
+                    "type": "string",
+                    "pattern": "^https?:\\/\\/"
+                  },
+                  "secrets": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "kind": {
+                          "type": "string",
+                          "enum": [
+                            "apiKey",
+                            "username",
+                            "password",
+                            "tokenId",
+                            "realm",
+                            "personalAccessToken",
+                            "topic",
+                            "opnsenseApiKey",
+                            "opnsenseApiSecret",
+                            "patchmonApiKey",
+                            "patchmonApiSecret",
+                            "url",
+                            "privateKey",
+                            "githubAppId",
+                            "githubInstallationId",
+                            "slug",
+                            "wazuhIndexerUrl",
+                            "wazuhIndexerUsername",
+                            "wazuhIndexerPassword",
+                            "wazuhDashboardUrl"
+                          ]
+                        },
+                        "value": {
+                          "anyOf": [
+                            {
+                              "type": "string",
+                              "minLength": 1
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        }
+                      },
+                      "required": [
+                        "kind",
+                        "value"
+                      ]
+                    }
+                  },
+                  "appId": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "skipConnectionTest": {
+                    "default": false,
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "name",
+                  "url",
+                  "secrets",
+                  "appId"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.BAD_REQUEST"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization not provided",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.UNAUTHORIZED"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Insufficient access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.FORBIDDEN"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.NOT_FOUND"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "operationId": "integration-delete",
+        "summary": "Delete an integration",
+        "description": "Delete an integration with its secrets and permissions. Widgets lose the integration. Requires full access to the integration.",
+        "tags": [
+          "integrations"
+        ],
+        "security": [
+          {
+            "apikey": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.BAD_REQUEST"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization not provided",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.UNAUTHORIZED"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Insufficient access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.FORBIDDEN"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.NOT_FOUND"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/integrations/{id}/permissions": {
+      "get": {
+        "operationId": "integration-getIntegrationPermissions",
+        "summary": "Read integration permissions",
+        "description": "Return the users and groups with explicit permissions on an integration, and the groups that inherit access through global integration permissions. Requires full access to the integration.",
+        "tags": [
+          "integrations"
+        ],
+        "security": [
+          {
+            "apikey": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "inherited": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "permission": {
+                            "type": "string",
+                            "enum": [
+                              "board-create",
+                              "board-view-all",
+                              "board-modify-all",
+                              "board-full-all",
+                              "app-create",
+                              "app-use-all",
+                              "app-modify-all",
+                              "app-full-all",
+                              "integration-create",
+                              "integration-use-all",
+                              "integration-interact-all",
+                              "integration-full-all",
+                              "search-engine-create",
+                              "search-engine-modify-all",
+                              "search-engine-full-all",
+                              "media-upload",
+                              "media-view-all",
+                              "media-full-all",
+                              "other-view-logs",
+                              "admin"
+                            ]
+                          },
+                          "group": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string"
+                              },
+                              "name": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "name"
+                            ],
+                            "additionalProperties": false
+                          }
+                        },
+                        "required": [
+                          "permission",
+                          "group"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "users": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "user": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string"
+                              },
+                              "name": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
+                              "image": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
+                              "email": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "name",
+                              "image",
+                              "email"
+                            ],
+                            "additionalProperties": false
+                          },
+                          "permission": {
+                            "type": "string",
+                            "enum": [
+                              "use",
+                              "interact",
+                              "full"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "user",
+                          "permission"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "groups": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "group": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string"
+                              },
+                              "name": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "name"
+                            ],
+                            "additionalProperties": false
+                          },
+                          "permission": {
+                            "type": "string",
+                            "enum": [
+                              "use",
+                              "interact",
+                              "full"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "group",
+                          "permission"
+                        ],
+                        "additionalProperties": false
+                      }
+                    }
+                  },
+                  "required": [
+                    "inherited",
+                    "users",
+                    "groups"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.BAD_REQUEST"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization not provided",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.UNAUTHORIZED"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Insufficient access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.FORBIDDEN"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.NOT_FOUND"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/integrations/{entityId}/permissions/users": {
+      "put": {
+        "operationId": "integration-saveUserIntegrationPermissions",
+        "summary": "Replace user integration permissions",
+        "description": "Replace all explicit user permissions on an integration. Omitted users lose their explicit permission; each user can be listed once. Requires full access to the integration.",
+        "tags": [
+          "integrations"
+        ],
+        "security": [
+          {
+            "apikey": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "entityId",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "permissions": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "principalId": {
+                          "type": "string"
+                        },
+                        "permission": {
+                          "type": "string",
+                          "enum": [
+                            "use",
+                            "interact",
+                            "full"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "principalId",
+                        "permission"
+                      ]
+                    }
+                  }
+                },
+                "required": [
+                  "permissions"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.BAD_REQUEST"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization not provided",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.UNAUTHORIZED"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Insufficient access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.FORBIDDEN"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.NOT_FOUND"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/integrations/{entityId}/permissions/groups": {
+      "put": {
+        "operationId": "integration-saveGroupIntegrationPermissions",
+        "summary": "Replace group integration permissions",
+        "description": "Replace all explicit group permissions on an integration. Omitted groups lose their explicit permission; each group can be listed once. Requires full access to the integration.",
+        "tags": [
+          "integrations"
+        ],
+        "security": [
+          {
+            "apikey": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "entityId",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "permissions": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "principalId": {
+                          "type": "string"
+                        },
+                        "permission": {
+                          "type": "string",
+                          "enum": [
+                            "use",
+                            "interact",
+                            "full"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "principalId",
+                        "permission"
+                      ]
+                    }
+                  }
+                },
+                "required": [
+                  "permissions"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {}
               }
             }
           },
