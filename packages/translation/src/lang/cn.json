@@ -101,8 +101,8 @@
       "connect": {
         "title": "连接让看板真正有用的服务",
         "description": "可一次选择多个服务。Docker 标签优先，镜像匹配补全空缺，每个 URL 和凭据都可单独检查。",
-        "confirmServerAddress": "",
-        "serverAddressReviewed": "",
+        "confirmServerAddress": "看起来没问题",
+        "serverAddressReviewed": "服务器地址已确认。你仍可编辑下方各服务的 URL。",
         "discoveredIntegrations": "检测到的集成实例（{count}）",
         "detectedIntegrationLabel": "导入 {name}，检测为 {kind}",
         "detectedAppLabel": "导入检测到的应用 {name}",
@@ -128,7 +128,7 @@
         "tested": "连接已测试",
         "testFailed": "连接测试失败",
         "incompleteConfirmation": "未完成的集成将被跳过。是否继续？",
-        "skipIncomplete": ""
+        "skipIncomplete": "跳过未完成的连接"
       },
       "board": {
         "title": "在构建前先规划看板外观",
@@ -1932,8 +1932,8 @@
     "here": "这里",
     "serviceUrlTemplate": {
       "serverTitle": "常用服务器地址",
-      "description": "",
-      "example": "",
+      "description": "使用你常用的地址和 URL 模式预填下方服务。单独编辑过的 URL 会保留。",
+      "example": "示例：{url}",
       "urlModeLabel": "服务地址模式",
       "hostPort": "同一主机，不同端口",
       "subdomain": "每个服务一个子域",
@@ -3479,7 +3479,7 @@
             "name": "虚拟机"
           },
           "lxc": {
-            "name": "LXCs"
+            "name": "LXC"
           },
           "storage": {
             "name": "存储"
@@ -5007,8 +5007,8 @@
       "updateAvailable": "有可用更新",
       "unknownStatus": "未知",
       "error": {
-        "collapsedSaveTitle": "",
-        "collapsedSaveMessage": ""
+        "collapsedSaveTitle": "折叠的分区未保存",
+        "collapsedSaveMessage": "该分区无法更新，请重试。"
       }
     },
     "networkControllerSummary": {
@@ -5516,7 +5516,7 @@
       "description": "所有 Beszel 监控系统的表格视图，包含可排序列和状态指示器",
       "option": {
         "fahrenheit": {
-          "label": "华氏温度"
+          "label": "温度以华氏度显示"
         },
         "sortBy": {
           "label": "排序方式"
@@ -5535,7 +5535,7 @@
       "description": "所有 Beszel 监控系统的卡片网格视图，包含实时指标",
       "option": {
         "fahrenheit": {
-          "label": "华氏温度"
+          "label": "温度以华氏度显示"
         }
       }
     },
@@ -7242,7 +7242,7 @@
             "model": {
               "title": "模型",
               "description": "选择一个已发现的模型，或输入确切的端点模型 ID。",
-              "save": "",
+              "save": "保存模型设置",
               "placeholder": "模型 ID",
               "refresh": "刷新模型",
               "chooseModel": "选择用于新对话的模型。",
@@ -7305,7 +7305,7 @@
               "label": "分析"
             },
             "ping": {
-              "label": "Pings"
+              "label": "Ping 检测"
             }
           },
           "action": {
@@ -7474,7 +7474,7 @@
                   "worksWith": "适用于：Cursor、Claude Desktop、VS Code Copilot、Windsurf、Claude Code",
                   "addToConfig": "添加到您的 MCP 客户端配置文件中：",
                   "cursor": "{name}：项目或全局设置中的 {file}",
-                  "claudeDesktop": "{name}: {file}",
+                  "claudeDesktop": "{name}：{file}",
                   "claudeCode": "{name}：{file} 或使用 {command}",
                   "vsCodeCopilot": "{name}：工作区设置中的 {file}",
                   "replaceHint": "将占位符替换为您在创建时收到的 API 密钥。"
@@ -7861,7 +7861,7 @@
         "namespaces": "命名空间",
         "ingresses": "入口",
         "services": "服务",
-        "pods": "Pods",
+        "pods": "Pod",
         "configmaps": "配置映射",
         "secrets": "密钥",
         "volumes": "卷"
@@ -8049,7 +8049,7 @@
             "label": "服务"
           },
           "pods": {
-            "label": "pods"
+            "label": "Pod"
           },
           "configmaps": {
             "label": "配置映射"
