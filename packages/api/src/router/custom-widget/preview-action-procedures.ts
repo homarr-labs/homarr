@@ -24,7 +24,17 @@ export const previewActionProcedures = {
           "Test one action from the current preview revision. Supply its required params and keep preview actions simulated unless the user explicitly enabled live actions. Verify confirmation, permission, and invalidation metadata before createFromPreview or updateFromPreview persistence.",
       },
     })
-    .input(previewSessionRequestSchema.extend({ confirmed: z.boolean().optional() }))
+    .input(
+      previewSessionRequestSchema.extend({
+        requestId: previewSessionRequestSchema.shape.requestId.describe(
+          "One action requestId from customWidget_previewCreate.actions. Test every returned action.",
+        ),
+        params: previewSessionRequestSchema.shape.params.describe(
+          "Invocation parameters matching this action's parameterNames from customWidget_previewCreate.actions. Use an empty object when parameterNames is empty.",
+        ),
+        confirmed: z.boolean().optional(),
+      }),
+    )
     .mutation(async ({ ctx, input }) => {
       const session = await getPreviewSession(input.sessionId, ctx.session.user.id);
       const definition = session.requests[input.requestId];

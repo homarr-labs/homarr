@@ -369,25 +369,35 @@ export const createCustomWidgetDiscoveryPhaseController = (limit = MAX_FOCUSED_C
   const reset = () => {
     calls.clear();
   };
+  const canClaim = (toolName: string) => {
+    const configuredBudget = customWidgetContextToolBudgets[toolName];
+    if (configuredBudget === undefined) return true;
+    const budget = toolName === "customWidget_findComponents" ? limit : configuredBudget;
+    return (calls.get(toolName) ?? 0) < budget;
+  };
   return {
+    canClaim,
     claim(toolName: string) {
-      const configuredBudget = customWidgetContextToolBudgets[toolName];
-      if (configuredBudget === undefined) return true;
-      const budget = toolName === "customWidget_findComponents" ? limit : configuredBudget;
+      if (!canClaim(toolName)) return false;
+      if (customWidgetContextToolBudgets[toolName] === undefined) return true;
       const used = calls.get(toolName) ?? 0;
-      if (used >= budget) return false;
       calls.set(toolName, used + 1);
       return true;
     },
     observe(toolName: string, output: unknown) {
       const result = isRecord(output) ? output : null;
       if (toolName === "customWidget_validateTemplate" && result?.valid === false) reset();
-      if (toolName === "customWidget_previewCreate" && result?.success !== true) reset();
+      if (toolName === "customWidget_previewCreate" || toolName === "customWidget_previewReviseTemplate") reset();
       if (toolName === "customWidget_createFromPreview" && typeof result?.id === "string") reset();
       if (toolName === "customWidget_updateFromPreview" && typeof result?.id === "string") reset();
     },
     observeFailure(toolName: string) {
-      if (toolName === "customWidget_validateTemplate" || toolName === "customWidget_previewCreate") {
+      if (
+        toolName === "customWidget_validateTemplate" ||
+        toolName === "customWidget_previewCreate" ||
+        toolName === "customWidget_previewReviseTemplate" ||
+        toolName === "customWidget_updateFromPreview"
+      ) {
         reset();
         return;
       }

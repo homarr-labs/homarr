@@ -989,7 +989,9 @@ export async function POST(request: Request) {
       : null;
     // Authoring phases constrain server lifecycle calls, not the user's ability
     // to answer a question or review placement of an already saved widget.
-    if (phaseToolNames) return [...new Set([...phaseToolNames, ...frontendToolNames])];
+    if (phaseToolNames) {
+      return [...new Set([...phaseToolNames.filter(customWidgetDiscoveryPhase.canClaim), ...frontendToolNames])];
+    }
     return [
       assistantToolGroupActivationName,
       ...Object.keys(documentationTools).filter(() => documentationSearchCount < 2),

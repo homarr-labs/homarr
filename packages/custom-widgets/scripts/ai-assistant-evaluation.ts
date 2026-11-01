@@ -781,6 +781,8 @@ const executeAssistantEvaluationToolCore = (
       success: true,
       previewSession: { id, revision: 0 },
       previewPath: `/manage/custom-widgets/preview/${id}`,
+      persistenceTool: "customWidget_createFromPreview",
+      sourceConfigurations: [],
       ...getAssistantEvaluationPreviewChecklist(parsed.widget),
     };
   }
@@ -827,6 +829,8 @@ const executeAssistantEvaluationToolCore = (
       evidenceReset: true,
       previewSession: { id: sessionId, revision: preview.revision },
       previewPath: `/manage/custom-widgets/preview/${sessionId}`,
+      persistenceTool: "customWidget_createFromPreview",
+      sourceConfigurations: [],
       ...getAssistantEvaluationPreviewChecklist(preview.widget),
     };
   }

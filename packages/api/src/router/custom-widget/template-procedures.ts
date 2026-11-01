@@ -35,7 +35,14 @@ const validateTemplate = (definition: ReturnType<typeof parseStoredCustomWidgetD
 export const templateProcedures = {
   readTemplate: permissionRequiredProcedure
     .requiresPermission("admin")
-    .input(z.object({ id: z.string() }))
+    .meta({
+      mcp: {
+        enabled: true,
+        description:
+          "Requires administrator permission. Read a saved Custom JSX widget's template, templateLines, and revision. Use an ID from customWidget_list and pass the returned revision as customWidget_templatePatch.expectedRevision.",
+      },
+    })
+    .input(z.object({ id: z.string().describe("Saved widget ID from customWidget_list.") }))
     .query(async ({ ctx, input }) => {
       const definition = await ctx.db.query.customWidgetDefinitions.findFirst({
         where: eq(customWidgetDefinitions.id, input.id),
@@ -80,11 +87,22 @@ export const templateProcedures = {
 
   templatePatch: permissionRequiredProcedure
     .requiresPermission("admin")
-    .meta({ mcp: { enabled: true, description: "Patch selected JSX template lines using an optimistic revision." } })
+    .meta({
+      mcp: {
+        enabled: true,
+        description:
+          "Requires administrator permission. Patch selected saved JSX template lines using an optimistic revision. First call customWidget_readTemplate for this widget; pass its revision as expectedRevision. On conflict, read again before retrying.",
+      },
+    })
     .input(
       z.object({
         id: z.string(),
-        expectedRevision: z.string().length(16),
+        expectedRevision: z
+          .string()
+          .length(16)
+          .describe(
+            "Exact revision returned by customWidget_readTemplate for this widget. Read again after a conflict.",
+          ),
         edits: z
           .array(
             z.object({
