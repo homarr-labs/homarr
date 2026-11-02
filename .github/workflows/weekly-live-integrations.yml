@@ -8,6 +8,7 @@ on:
     paths:
       - .github/workflows/weekly-live-integrations.yml
       - vitest.weekly.config.mts
+      - tsconfig.weekly.json
       - packages/integrations/weekly/**
 
 permissions:
@@ -70,10 +71,12 @@ jobs:
       - name: Setup self-host testkit
         id: testkit
         uses: ajnart/self-host/testkit@v1.2.0
-      - name: Check SDK release layout
+      - name: Link matching Action SDK without replacing existing modules
         env:
-          SDK_PATH: ${{ steps.testkit.outputs.sdk-path }}
-        run: test -d "$SDK_PATH"
+          SELF_HOST_TESTKIT_SDK: ${{ steps.testkit.outputs.sdk-path }}
+        run: bun run setup:weekly-sdk
+      - name: Typecheck weekly suite against matching SDK declarations
+        run: bun run typecheck:weekly
       - name: Native adapter assertions against fresh peer image
         id: assertions
         timeout-minutes: 14
