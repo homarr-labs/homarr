@@ -15,6 +15,7 @@ import { getEntryKind } from "./display";
 import { getRowIntegrationVersions } from "./integration-version";
 import { getReleasesQueryStaleTimeMs } from "./query-options";
 import type { ReleaseEntry, ReleaseEntryErrorCode } from "./release-entry";
+import { missingReleaseResultError, toReleaseQueryRepository } from "./release-query";
 import type { ReleasesRepository } from "./releases-repository";
 import { useViewedReleases } from "./use-viewed-releases";
 
@@ -57,14 +58,16 @@ export const useReleaseEntries = ({
         {
           itemId,
           boardId,
-          repositories: chunk.map((repository) => ({
-            id: repository.id,
-            provider,
-            identifier: repository.identifier,
-            versionFilter: repository.versionFilter,
-            excludePrereleases: repository.excludePrereleases,
-            providerUrl: repository.providerUrl,
-          })),
+          repositories: chunk.map((repository) =>
+            toReleaseQueryRepository({
+              id: repository.id,
+              provider,
+              identifier: repository.identifier,
+              versionFilter: repository.versionFilter,
+              excludePrereleases: repository.excludePrereleases,
+              providerUrl: repository.providerUrl,
+            }),
+          ),
         },
         { staleTime: getReleasesQueryStaleTimeMs },
       ),
@@ -93,8 +96,14 @@ export const useReleaseEntries = ({
   const results = useMemo(() => queries.flatMap((query) => query.data ?? []), [queries]);
   const serviceVersions = useMemo(() => serviceVersionsQuery.data ?? [], [serviceVersionsQuery.data]);
 
+  const batchFailureKey = queries.map((query) => (query.isError ? "1" : "0")).join("");
   const entries = useMemo(() => {
     const resultById = new Map(results.map((result) => [result.id, result]));
+    const failedRepositoryIds = new Set(
+      batches.flatMap((batch, index) =>
+        batchFailureKey[index] === "1" ? batch.repositories.map((repository) => repository.id) : [],
+      ),
+    );
 
     return repositories.map((repository): ReleaseEntry => {
       const base = {
@@ -115,7 +124,7 @@ export const useReleaseEntries = ({
 
       if (!repository.provider) return errorEntry("noProviderSelected");
       const result = resultById.get(repository.id);
-      if (!result) return errorEntry("noProviderResponse");
+      if (!result) return errorEntry(missingReleaseResultError(failedRepositoryIds.has(repository.id)));
       if (!result.success) return errorEntry(result.error.code);
 
       const { data } = result;
@@ -147,7 +156,7 @@ export const useReleaseEntries = ({
         integrations,
       };
     });
-  }, [integrationIds, options, repositories, results, serviceVersions, viewedVersions]);
+  }, [batchFailureKey, batches, integrationIds, options, repositories, results, serviceVersions, viewedVersions]);
 
   const markViewed = useCallback(
     (entry: ReleaseEntry) => {
