@@ -1,0 +1,72 @@
+.oxfmtrc.json
+  h_d6e478ca18e517 20-23
+apps/nextjs/src/app/[locale]/manage/custom-widgets/arena/_actions.ts
+  h_d6e478ca18e517 1-39
+apps/nextjs/src/app/[locale]/manage/custom-widgets/arena/_arena-contract.ts
+  h_d6e478ca18e517 1-63
+apps/nextjs/src/app/[locale]/manage/custom-widgets/arena/_arena.tsx
+  h_d6e478ca18e517 1-459
+apps/nextjs/src/app/[locale]/manage/custom-widgets/arena/_authorize.ts
+  h_d6e478ca18e517 1-13
+apps/nextjs/src/app/[locale]/manage/custom-widgets/arena/_capture.tsx
+  h_d6e478ca18e517 1-55
+apps/nextjs/src/app/[locale]/manage/custom-widgets/arena/_dataset.ts
+  h_d6e478ca18e517 1-71
+apps/nextjs/src/app/[locale]/manage/custom-widgets/arena/_fixtures.json
+  h_d6e478ca18e517 1-1518
+apps/nextjs/src/app/[locale]/manage/custom-widgets/arena/_generated/pack.json
+  h_d6e478ca18e517 1-4696
+apps/nextjs/src/app/[locale]/manage/custom-widgets/arena/_review.ts
+  h_d6e478ca18e517 1-98
+apps/nextjs/src/app/[locale]/manage/custom-widgets/arena/_simulation.ts
+  h_d6e478ca18e517 1-120
+apps/nextjs/src/app/[locale]/manage/custom-widgets/arena/_smoke.ts
+  h_d6e478ca18e517 1-60
+apps/nextjs/src/app/[locale]/manage/custom-widgets/arena/_widget-frame.tsx
+  h_d6e478ca18e517 1-318
+apps/nextjs/src/app/[locale]/manage/custom-widgets/arena/page.tsx
+  h_d6e478ca18e517 1-52
+tools/widget-arena/README.md
+  h_d6e478ca18e517 1-14
+tools/widget-arena/admission.ts
+  h_d6e478ca18e517 1-54
+tools/widget-arena/capture.ts
+  h_d6e478ca18e517 1-275
+tools/widget-arena/context.json
+  h_d6e478ca18e517 1-6042
+tools/widget-arena/contract.md
+  h_d6e478ca18e517 1-27
+tools/widget-arena/fixture-source.ts
+  h_d6e478ca18e517 1-410
+tools/widget-arena/freeze.json
+  h_d6e478ca18e517 1-131
+tools/widget-arena/harness.ts
+  h_d6e478ca18e517 1-586
+tools/widget-arena/prompts/folio.md
+  h_d6e478ca18e517 1-13
+tools/widget-arena/prompts/prism.md
+  h_d6e478ca18e517 1-23
+tools/widget-arena/prompts/relay.md
+  h_d6e478ca18e517 1-15
+tools/widget-arena/prompts/vector.md
+  h_d6e478ca18e517 1-13
+tools/widget-arena/prompts/vitals.md
+  h_d6e478ca18e517 1-15
+tools/widget-arena/provenance.ts
+  h_d6e478ca18e517 1-96
+tools/widget-arena/results.json
+  h_d6e478ca18e517 1-135
+tools/widget-arena/tsconfig.json
+  h_d6e478ca18e517 1-15
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "b8c259437e83ec43cdd38dd24e05a95c75fccfb0",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
