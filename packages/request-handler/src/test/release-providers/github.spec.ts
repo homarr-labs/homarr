@@ -300,5 +300,25 @@ describe("GitHub releases", () => {
 
       expect(error.code).toBe(code);
     });
+
+    test.each([
+      {
+        status: 403,
+        message: "You have exceeded a secondary rate limit. Please wait a few minutes before you try again.",
+      },
+      { status: 429, message: "Too Many Requests" },
+    ])("does not wait for retry-after on $status", async ({ status, message }) => {
+      const requests = serveGithub({
+        releases: [],
+        releasesReply: { status, body: { message }, headers: { "retry-after": "30" } },
+      });
+      const startedAt = Date.now();
+
+      const error = await expectFailure({ provider: "github", identifier: "owner/repo" });
+
+      expect(error.code).toBe("rateLimited");
+      expect(releasePages(requests)).toEqual([1]);
+      expect(Date.now() - startedAt).toBeLessThan(1_000);
+    });
   });
 });

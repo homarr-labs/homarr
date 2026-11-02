@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useMemo } from "react";
+import { keepPreviousData } from "@tanstack/react-query";
 import { getQueryKey } from "@trpc/react-query";
 
 import { clientApi } from "@homarr/api/client";
@@ -8,11 +9,11 @@ import { createId, splitToChunksWithNItems } from "@homarr/common";
 import type { ReleaseProviderKind } from "@homarr/definitions";
 import { getReleaseProviderIconUrl, getReleaseProviderName } from "@homarr/definitions";
 
-import { isInitialWidgetQueryPending } from "../common/query-state";
 import type { WidgetComponentProps } from "../definition";
 import { useWidgetRuntimeQueries } from "../runtime-hooks";
 import { getEntryKind } from "./display";
 import { getRowIntegrationVersions } from "./integration-version";
+import { getInitialPendingReleaseIds, isReleasesInitialLoading } from "./loading";
 import { getReleasesQueryStaleTimeMs } from "./query-options";
 import type { ReleaseEntry, ReleaseEntryErrorCode } from "./release-entry";
 import type { ReleasesRepository } from "./releases-repository";
@@ -66,7 +67,13 @@ export const useReleaseEntries = ({
             providerUrl: repository.providerUrl,
           })),
         },
-        { staleTime: getReleasesQueryStaleTimeMs },
+        {
+          // A settings save changes this query key. Keep the previous rows visible while the
+          // new lookup runs, and don't let a thrown timeout get retried into a 30s+ blank widget.
+          placeholderData: keepPreviousData,
+          retry: false,
+          staleTime: getReleasesQueryStaleTimeMs,
+        },
       ),
     ),
   );
@@ -88,15 +95,26 @@ export const useReleaseEntries = ({
   }, [linkedIntegrationIds.length, serviceVersionsInput]);
   useWidgetRuntimeQueries(widgetRuntimeRef, runtimeQueries);
 
-  const isInitialLoading = queries.some(isInitialWidgetQueryPending);
   const isFetching = queries.some((query) => query.isFetching);
   const results = useMemo(() => queries.flatMap((query) => query.data ?? []), [queries]);
   const serviceVersions = useMemo(() => serviceVersionsQuery.data ?? [], [serviceVersionsQuery.data]);
+  const pendingIds = useMemo(
+    () =>
+      getInitialPendingReleaseIds(
+        queries.map((query, index) => ({
+          repositoryIds: batches[index]?.repositories.map((repository) => repository.id) ?? [],
+          data: query.data,
+          error: query.error,
+          isPending: query.isPending,
+        })),
+      ),
+    [batches, queries],
+  );
 
   const entries = useMemo(() => {
     const resultById = new Map(results.map((result) => [result.id, result]));
 
-    return repositories.map((repository): ReleaseEntry => {
+    return repositories.flatMap((repository): ReleaseEntry[] => {
       const base = {
         id: repository.id,
         name: repository.name?.trim() || repository.identifier,
@@ -113,10 +131,15 @@ export const useReleaseEntries = ({
 
       const errorEntry = (code: ReleaseEntryErrorCode): ReleaseEntry => ({ ...base, kind: "error", error: { code } });
 
-      if (!repository.provider) return errorEntry("noProviderSelected");
+      if (!repository.provider) return [errorEntry("noProviderSelected")];
       const result = resultById.get(repository.id);
-      if (!result) return errorEntry("noProviderResponse");
-      if (!result.success) return errorEntry(result.error.code);
+      if (!result) {
+        // This batch has not answered yet. Leave the row out instead of flashing a false error
+        // or replacing sibling batches with the empty loading state.
+        if (pendingIds.has(repository.id)) return [];
+        return [errorEntry("noProviderResponse")];
+      }
+      if (!result.success) return [errorEntry(result.error.code)];
 
       const { data } = result;
       const isViewed = viewedVersions[repository.id] === data.latestRelease;
@@ -126,28 +149,32 @@ export const useReleaseEntries = ({
         serviceVersions,
         data.latestRelease,
       );
-      return {
-        ...base,
-        kind: getEntryKind({ publishedAt: data.latestReleaseAt, isViewed, integrations }, options),
-        isViewed,
-        version: data.latestRelease,
-        resolvedFromTag: data.resolvedFromTag,
-        publishedAt: data.latestReleaseAt,
-        isPreRelease: data.isPreRelease,
-        releaseUrl: data.releaseUrl,
-        releaseNotes: data.releaseDescription,
-        projectUrl: data.projectUrl,
-        projectDescription: data.projectDescription,
-        createdAt: data.createdAt,
-        isArchived: data.isArchived,
-        isFork: data.isFork,
-        starsCount: data.starsCount,
-        forksCount: data.forksCount,
-        openIssues: data.openIssues,
-        integrations,
-      };
+      return [
+        {
+          ...base,
+          kind: getEntryKind({ publishedAt: data.latestReleaseAt, isViewed, integrations }, options),
+          isViewed,
+          version: data.latestRelease,
+          resolvedFromTag: data.resolvedFromTag,
+          publishedAt: data.latestReleaseAt,
+          isPreRelease: data.isPreRelease,
+          releaseUrl: data.releaseUrl,
+          releaseNotes: data.releaseDescription,
+          projectUrl: data.projectUrl,
+          projectDescription: data.projectDescription,
+          createdAt: data.createdAt,
+          isArchived: data.isArchived,
+          isFork: data.isFork,
+          starsCount: data.starsCount,
+          forksCount: data.forksCount,
+          openIssues: data.openIssues,
+          integrations,
+        },
+      ];
     });
-  }, [integrationIds, options, repositories, results, serviceVersions, viewedVersions]);
+  }, [integrationIds, options, pendingIds, repositories, results, serviceVersions, viewedVersions]);
+
+  const isInitialLoading = isReleasesInitialLoading(pendingIds, entries.length);
 
   const markViewed = useCallback(
     (entry: ReleaseEntry) => {
