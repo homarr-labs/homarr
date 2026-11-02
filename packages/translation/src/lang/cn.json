@@ -3479,7 +3479,7 @@
             "name": "虚拟机"
           },
           "lxc": {
-            "name": "LXC"
+            "name": "LXCs"
           },
           "storage": {
             "name": "存储"
@@ -7305,7 +7305,7 @@
               "label": "分析"
             },
             "ping": {
-              "label": "Ping 检测"
+              "label": "Pings"
             }
           },
           "action": {
@@ -7474,7 +7474,7 @@
                   "worksWith": "适用于：Cursor、Claude Desktop、VS Code Copilot、Windsurf、Claude Code",
                   "addToConfig": "添加到您的 MCP 客户端配置文件中：",
                   "cursor": "{name}：项目或全局设置中的 {file}",
-                  "claudeDesktop": "{name}：{file}",
+                  "claudeDesktop": "{name}: {file}",
                   "claudeCode": "{name}：{file} 或使用 {command}",
                   "vsCodeCopilot": "{name}：工作区设置中的 {file}",
                   "replaceHint": "将占位符替换为您在创建时收到的 API 密钥。"
@@ -7861,7 +7861,7 @@
         "namespaces": "命名空间",
         "ingresses": "入口",
         "services": "服务",
-        "pods": "Pod",
+        "pods": "Pods",
         "configmaps": "配置映射",
         "secrets": "密钥",
         "volumes": "卷"
@@ -8049,7 +8049,7 @@
             "label": "服务"
           },
           "pods": {
-            "label": "Pod"
+            "label": "pods"
           },
           "configmaps": {
             "label": "配置映射"
