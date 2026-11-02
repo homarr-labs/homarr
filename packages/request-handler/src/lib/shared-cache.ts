@@ -10,14 +10,16 @@ import {
   createLockChannel,
   getIntegrationCacheGenerationAsync,
   getWidgetCacheGenerationAsync,
+  withRedisOperationTimeoutAsync,
 } from "@homarr/redis";
 import type { IntegrationCacheGeneration, WidgetCacheGeneration } from "@homarr/redis";
 
 import type { CacheEntry, SharedCacheAdapter } from "./request-handler";
 
 const logger = createLogger({ module: "sharedRequestCache" });
-// The dedicated cache client rejects commands after 500 ms. This guard stays
-// above that deadline so lock outcomes are never abandoned while still pending.
+// Abandon a cache command that stays unanswered while the event loop is
+// running. Scheduling stalls are not counted, so a fast Redis does not log a
+// lock failure when the container was simply not on CPU.
 const REDIS_OPERATION_TIMEOUT_MS = 750;
 const REFRESH_LOCK_TTL_SECONDS = 15;
 const SHARED_CACHE_ENVELOPE_VERSION = 2;
@@ -41,14 +43,6 @@ export const hashSharedCacheInput = (options: Record<string, unknown>) => {
 };
 
 export const hashIntegrationCacheOptions = hashSharedCacheInput;
-
-const withTimeoutAsync = async <T>(promise: Promise<T>, durationMs: number): Promise<T> => {
-  return await new Promise<T>((resolve, reject) => {
-    const timer = setTimeout(() => reject(new Error("Redis operation timed out")), durationMs);
-    timer.unref?.();
-    void promise.then(resolve, reject).finally(() => clearTimeout(timer));
-  });
-};
 
 interface SharedCacheEnvelope<TData> {
   version: typeof SHARED_CACHE_ENVELOPE_VERSION;
@@ -121,7 +115,7 @@ const createRedisSharedCache = <TData>({
   const runRedisOperationAsync = async <T>(operation: string, callback: () => Promise<T>, fallback: T): Promise<T> => {
     if (!isShared) return fallback;
     try {
-      return await withTimeoutAsync(callback(), REDIS_OPERATION_TIMEOUT_MS);
+      return await withRedisOperationTimeoutAsync(callback(), REDIS_OPERATION_TIMEOUT_MS);
     } catch (error) {
       isShared = false;
       logRedisFailure(operation, logMetadata, error);
@@ -173,7 +167,7 @@ const createRedisSharedCache = <TData>({
       ),
     releaseRefreshLockAsync: async (token) => {
       try {
-        await withTimeoutAsync(lock.releaseAsync(token), REDIS_OPERATION_TIMEOUT_MS);
+        await withRedisOperationTimeoutAsync(lock.releaseAsync(token), REDIS_OPERATION_TIMEOUT_MS);
       } catch (error) {
         logRedisFailure("refresh-lock-release", logMetadata, error);
       }

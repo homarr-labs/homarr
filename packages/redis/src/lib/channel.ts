@@ -6,13 +6,16 @@ import { ErrorWithMetadata } from "@homarr/core/infrastructure/logs/error";
 
 import { ChannelSubscriptionTracker } from "./channel-subscription-tracker";
 import { createRedisConnection, requireRedisConnection, requireReadyRedisConnectionAsync } from "./connection";
+import { withRedisOperationTimeoutAsync } from "./operation-timeout";
 
 const publisher = createRedisConnection();
 const lastDataClient = createRedisConnection();
 const logger = createLogger({ module: "redisChannel" });
+// No ioredis commandTimeout: it rejects in the timers phase, before a reply
+// already buffered during a CPU stall is read. Callers enforce the deadline
+// with withRedisOperationTimeoutAsync after pending socket data is delivered.
 const boundedCacheClient = createRedisConnection({
   autoResendUnfulfilledCommands: false,
-  commandTimeout: 500,
   disableClientInfo: true,
   enableOfflineQueue: false,
   maxRetriesPerRequest: 1,
@@ -300,16 +303,12 @@ const logCacheGenerationFailure = (message: string, metadata: Record<string, unk
   logger.warn(new ErrorWithMetadata(message, metadata, { cause: error }));
 };
 
-const withCacheGenerationRedisTimeoutAsync = async <T>(promise: Promise<T>): Promise<T> => {
-  return await new Promise<T>((resolve, reject) => {
-    const timer = setTimeout(
-      () => reject(new Error("Redis cache generation operation timed out")),
-      CACHE_GENERATION_REDIS_TIMEOUT_MS,
-    );
-    timer.unref?.();
-    void promise.then(resolve, reject).finally(() => clearTimeout(timer));
-  });
-};
+const withCacheGenerationRedisTimeoutAsync = async <T>(promise: Promise<T>): Promise<T> =>
+  await withRedisOperationTimeoutAsync(
+    promise,
+    CACHE_GENERATION_REDIS_TIMEOUT_MS,
+    "Redis cache generation operation timed out",
+  );
 
 const combineCacheGenerations = (
   globalGeneration: string | null | undefined,

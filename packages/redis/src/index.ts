@@ -27,6 +27,7 @@ export {
   invalidateWidgetCache,
 } from "./lib/channel";
 export type { IntegrationCacheGeneration, WidgetCacheGeneration } from "./lib/channel";
+export { withRedisOperationTimeoutAsync } from "./lib/operation-timeout";
 
 export const pingChannel = createSubPubChannel<
   { url: string; statusCode: number; durationMs: number } | { url: string; error: string }

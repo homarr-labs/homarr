@@ -23,8 +23,8 @@ export const requireRedisConnection = (client: RedisClient | null): RedisClient 
 const connectionWaits = new WeakMap<RedisClient, Promise<void>>();
 
 // The response-cache client disables offline queues to avoid replaying expired
-// locks. Let its initial handshake finish before submitting a command, within
-// the existing 750 ms operation budget (200 ms connect + 500 ms command).
+// locks. Let its initial handshake finish before submitting a command. Callers
+// time out the whole attempt, including this wait.
 export const waitForRedisConnectionAsync = async (client: RedisClient | null) => {
   if (!client || client.options.enableOfflineQueue !== false || client.status === "ready") return client;
   let waiting = connectionWaits.get(client);
