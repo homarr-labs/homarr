@@ -5,6 +5,7 @@ on:
     - cron: "23 5 * * 1"
   workflow_dispatch:
   pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
     paths:
       - .github/workflows/weekly-live-integrations.yml
       - vitest.weekly.config.mts
@@ -24,6 +25,7 @@ env:
 
 jobs:
   plan:
+    if: github.event_name != 'pull_request' || github.event.pull_request.draft == false
     runs-on: ubuntu-latest
     timeout-minutes: 5
     outputs:
@@ -51,6 +53,7 @@ jobs:
           retention-days: 7
 
   live:
+    if: github.event_name != 'pull_request' || github.event.pull_request.draft == false
     needs: plan
     runs-on: ubuntu-latest
     timeout-minutes: 20
@@ -112,7 +115,7 @@ jobs:
           retention-days: 7
 
   checklist:
-    if: always()
+    if: always() && (github.event_name != 'pull_request' || github.event.pull_request.draft == false)
     needs: [plan, live]
     runs-on: ubuntu-latest
     timeout-minutes: 5
