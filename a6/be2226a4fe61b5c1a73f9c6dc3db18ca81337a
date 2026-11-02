@@ -1,0 +1,22 @@
+.github/workflows/weekly-live-integrations.yml
+  h_d6e478ca18e517 11,74,76-79
+package.json
+  h_d6e478ca18e517 313-315
+packages/integrations/tsconfig.json
+  h_d6e478ca18e517 6
+packages/integrations/weekly/sdk.mts
+  h_d6e478ca18e517 1-65
+tsconfig.weekly.json
+  h_d6e478ca18e517 1-11
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "a6be2226a4fe61b5c1a73f9c6dc3db18ca81337a",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
