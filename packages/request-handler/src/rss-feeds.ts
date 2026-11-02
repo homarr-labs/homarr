@@ -44,6 +44,10 @@ const attemptGetImageFromEntry = (feedUrl: string, entry: object) => {
   return getImageFromStringAsFallback(feedUrl, JSON.stringify(entry));
 };
 
+// HTML embedded in Atom is escaped twice, so the parsed text still contains `&amp;`.
+// preview.redd.it treats `amp;s` as a different parameter and responds 403.
+const normalizeExtractedImageUrl = (url: string) => url.replaceAll("&amp;", "&");
+
 const getImageFromStringAsFallback = (feedUrl: string, content: string) => {
   const regex =
     /https?:\/\/[^\s"'<>\\]+?\.(jpg|jpeg|png|gif|bmp|svg|webp|tiff)\b(?:\?[^\s"'<>\\#]*)?(?:#[^\s"'<>\\]*)?/i;
@@ -56,7 +60,7 @@ const getImageFromStringAsFallback = (feedUrl: string, content: string) => {
   console.debug(
     `Falling back to regex image search for '${feedUrl}'. Found ${result.length} matches in content: ${content}`,
   );
-  return result[0];
+  return normalizeExtractedImageUrl(result[0]);
 };
 
 const mediaProperties = ["enclosure", "media:content", "media:thumbnail"] as const;
@@ -80,7 +84,10 @@ const getFirstMediaProperty = (feedObject: object) => {
       }
 
       const url: unknown = Object.entries(mediaEntry).find(([key]) => key === "@_url")?.[1];
-      const validationResult = z.string().url().safeParse(url);
+      const validationResult = z
+        .string()
+        .url()
+        .safeParse(typeof url === "string" ? normalizeExtractedImageUrl(url) : url);
       if (!validationResult.success) {
         continue;
       }
