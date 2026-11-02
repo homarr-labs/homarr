@@ -10,8 +10,9 @@ vi.hoisted(() => {
 
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 
-import type { IntegrationSecret } from "../../../base/types";
 import type { IntegrationTestingInput } from "../../../base/integration";
+import type { IntegrationSecret } from "../../../base/types";
+import type { DownloadClientSelection } from "../../../interfaces/downloads/download-client-integration";
 import { NzbGetIntegration } from "../nzbget-integration";
 
 vi.mock("@homarr/core/infrastructure/http", () => ({
@@ -32,6 +33,44 @@ const createIntegration = () =>
     externalUrl: null,
     decryptedSecrets: secrets,
   });
+
+const queueGroup = (id: number, category: string) => ({
+  Status: "DOWNLOADING",
+  NZBID: id,
+  MaxPriority: id,
+  NZBName: `nzb-${id}`,
+  FileSizeLo: 100,
+  FileSizeHi: 0,
+  ActiveDownloads: 1,
+  RemainingSizeLo: 40,
+  RemainingSizeHi: 0,
+  DownloadTimeSec: 10,
+  Category: category,
+  DownloadedSizeMB: 1,
+  FileSizeMB: 2,
+});
+
+const selection = (overrides: Partial<DownloadClientSelection> = {}): DownloadClientSelection => ({
+  sort: "added",
+  descending: true,
+  categoryFilter: ["sonarr", "radarr"],
+  filterIsWhitelist: true,
+  showCompletedTorrent: true,
+  activeTorrentThreshold: 0,
+  ...overrides,
+});
+
+const mockJobs = (groups: ReturnType<typeof queueGroup>[]) => {
+  const results = {
+    listgroups: groups,
+    history: [],
+    status: { DownloadPaused: false, DownloadRate: 1000 },
+  };
+  mockFetch.mockImplementation(async (_url, init) => {
+    const { method } = JSON.parse(String(init?.body)) as { method: keyof typeof results };
+    return Response.json({ result: results[method] });
+  });
+};
 
 describe("NzbGetIntegration.getClientJobsAndStatusAsync", () => {
   beforeEach(() => {
@@ -100,5 +139,27 @@ describe("NzbGetIntegration.getClientJobsAndStatusAsync", () => {
     const [url, init] = fetchAsync.mock.calls[0] as [URL, { headers: Record<string, string> }];
     expect(url.toString()).toBe("https://nzbget.example.com/jsonrpc");
     expect(init.headers.Authorization).toBe(`Basic ${Buffer.from("test-user:test-password").toString("base64")}`);
+  });
+
+  test("keeps matching and uncategorized jobs ahead of the display limit", async () => {
+    mockJobs([queueGroup(1, "movies"), queueGroup(2, "Radarr"), queueGroup(3, "")]);
+
+    const { items } = await createIntegration().getClientJobsAndStatusAsync({
+      limit: 2,
+      selection: selection(),
+    });
+
+    expect(items.map((item) => item.name)).toEqual(["nzb-2", "nzb-3"]);
+  });
+
+  test("does not drop a matching category when the list is not a whitelist", async () => {
+    mockJobs([queueGroup(1, "radarr"), queueGroup(2, "")]);
+
+    const { items } = await createIntegration().getClientJobsAndStatusAsync({
+      limit: 10,
+      selection: selection({ filterIsWhitelist: false }),
+    });
+
+    expect(items.map((item) => item.name)).toEqual(["nzb-1", "nzb-2"]);
   });
 });

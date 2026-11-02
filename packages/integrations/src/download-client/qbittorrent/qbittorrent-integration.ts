@@ -17,6 +17,7 @@ import type {
 } from "../../interfaces/downloads/download-client-integration";
 import type { DownloadClientItem } from "../../interfaces/downloads/download-client-items";
 import type { DownloadClientStatus } from "../../interfaces/downloads/download-client-status";
+import { matchesDownloadCategoryFilter } from "../category-filter";
 
 @HandleIntegrationErrors([integrationOFetchHttpErrorHandler])
 export class QBitTorrentIntegration extends Integration implements IDownloadClientIntegration {
@@ -127,18 +128,12 @@ export class QBitTorrentIntegration extends Integration implements IDownloadClie
       downSpeed: "dlspeed",
       sent: "uploaded",
     };
-    let category: string | undefined;
-    if (selection.filterIsWhitelist && selection.categoryFilter.length === 1) {
-      category = selection.categoryFilter[0];
-    }
+    const hasCategoryWhitelist =
+      selection.filterIsWhitelist && selection.categoryFilter.some((filter) => filter.trim().length > 0);
 
     // Bound every response, retained items, and total work even when nearly the whole queue is hidden.
     let pageSize = Math.min(limit, 100);
-    if (
-      selection.categoryFilter.length > 0 ||
-      !selection.showCompletedTorrent ||
-      selection.activeTorrentThreshold > 0
-    ) {
+    if (hasCategoryWhitelist || !selection.showCompletedTorrent || selection.activeTorrentThreshold > 0) {
       pageSize = 100;
     }
     const torrents: Awaited<ReturnType<QBittorrent["listTorrents"]>> = [];
@@ -150,14 +145,12 @@ export class QBitTorrentIntegration extends Integration implements IDownloadClie
         offset: page * pageSize,
         sort: sortFields[selection.sort],
         reverse: selection.descending,
-        category,
       });
       for (const torrent of batch) {
         if (seen.has(torrent.hash)) continue;
         seen.add(torrent.hash);
-        if (selection.categoryFilter.length > 0) {
-          const matches = selection.categoryFilter.includes(torrent.category);
-          if (selection.filterIsWhitelist !== matches) continue;
+        if (!matchesDownloadCategoryFilter(torrent.category, selection.categoryFilter, selection.filterIsWhitelist)) {
+          continue;
         }
         if (torrent.progress >= 1) {
           if (!selection.showCompletedTorrent) continue;

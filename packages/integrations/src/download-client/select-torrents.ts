@@ -1,5 +1,6 @@
 import type { DownloadClientSelection } from "../interfaces/downloads/download-client-integration";
 import type { DownloadClientItem } from "../interfaces/downloads/download-client-items";
+import { matchesDownloadCategoryFilter } from "./category-filter";
 
 type TorrentSelectionFields<TTorrent> = {
   [TField in "category" | "progress" | "upSpeed"]: (torrent: TTorrent) => DownloadClientItem[TField];
@@ -13,13 +14,10 @@ export function selectDownloadTorrents<TTorrent>(
   if (!selection) return torrents.slice(0, limit);
 
   const eligibleTorrents = torrents.filter((torrent) => {
-    if (selection.categoryFilter.length > 0) {
-      const category = fields.category(torrent) ?? "";
-      let categories: string[];
-      if (Array.isArray(category)) categories = category;
-      else categories = [category];
-      const matches = selection.categoryFilter.some((filter) => categories.includes(filter));
-      if (matches !== selection.filterIsWhitelist) return false;
+    if (
+      !matchesDownloadCategoryFilter(fields.category(torrent), selection.categoryFilter, selection.filterIsWhitelist)
+    ) {
+      return false;
     }
     if (fields.progress(torrent) < 1) return true;
     return selection.showCompletedTorrent && (fields.upSpeed(torrent) ?? 0) >= selection.activeTorrentThreshold * 1024;

@@ -4422,7 +4422,8 @@
           "label": "Categories/labels to filter"
         },
         "filterIsWhitelist": {
-          "label": "Filter as a whitelist"
+          "label": "Filter as a whitelist",
+          "description": "Only show jobs in these categories. Jobs without a category stay visible. Turn off to show every job."
         },
         "applyFilterToRatio": {
           "label": "Use filter to calculate Ratio"

@@ -15,6 +15,7 @@
     ".": "./index.ts",
     "./anchor": "./src/anchor/anchor-types.ts",
     "./downloads": "./src/interfaces/downloads/download-client-items.ts",
+    "./download-category-filter": "./src/download-client/category-filter.ts",
     "./factory": "./src/factory.ts",
     "./response-contract": "./src/base/response-contract.ts",
     "./test-connection": "./src/base/test-connection/index.ts",

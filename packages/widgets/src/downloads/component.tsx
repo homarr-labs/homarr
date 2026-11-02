@@ -50,6 +50,7 @@ import { useOptionalBoard } from "@homarr/boards/context";
 import { useIntegrationConnected } from "@homarr/common";
 import { getIconUrl, getIntegrationKindsByCategory } from "@homarr/definitions";
 import type { ExtendedClientStatus, ExtendedDownloadClientItem } from "@homarr/integrations";
+import { matchesDownloadCategoryFilter } from "@homarr/integrations/download-category-filter";
 import { showErrorNotification } from "@homarr/notifications";
 import { useByteFormatter } from "@homarr/settings";
 import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";
@@ -174,21 +175,6 @@ function progressColor(state: DownloadState, progress: number): string {
   if (state === "paused") return "yellow";
   if (progress >= 1) return "green";
   return "blue";
-}
-
-function toCategoryArray(category: string | string[]): string[] {
-  if (Array.isArray(category)) return category;
-  return [category];
-}
-
-function matchesCategoryFilter(
-  category: string | string[] | undefined,
-  categoryFilter: string[],
-  filterIsWhitelist: boolean,
-): boolean {
-  if (categoryFilter.length === 0) return true;
-  const matches = categoryFilter.some((filter) => toCategoryArray(category ?? "").includes(filter));
-  return filterIsWhitelist === matches;
 }
 
 function formatCategoryDisplay(category: string | string[] | undefined): string | undefined {
@@ -382,7 +368,9 @@ export default function DownloadClientsWidget({
       .filter(({ integration }) => integrationIds.includes(integration.id))
       .flatMap((pair) =>
         pair.data.items
-          .filter(({ category }) => matchesCategoryFilter(category, options.categoryFilter, options.filterIsWhitelist))
+          .filter(({ category }) =>
+            matchesDownloadCategoryFilter(category, options.categoryFilter, options.filterIsWhitelist),
+          )
           .filter((item) => showCompletedItem(item, options))
           .filter(() => clientFilter.length === 0 || clientFilter.includes(pair.integration.id))
           .map((item): ExtendedDownloadClientItem => {
@@ -443,7 +431,7 @@ export default function DownloadClientsWidget({
         const { totalUp, totalDown } = (clientData.ratioItems ?? clientData.items)
           .filter(({ category }) => {
             if (!applyRatioFilter) return true;
-            return matchesCategoryFilter(category, options.categoryFilter, options.filterIsWhitelist);
+            return matchesDownloadCategoryFilter(category, options.categoryFilter, options.filterIsWhitelist);
           })
           .reduce(
             (acc, { sent, size, progress }) => {

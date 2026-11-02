@@ -94,7 +94,8 @@ export const { definition, componentLoader } = createWidgetDefinition("downloads
           validate: z.string(),
         }),
         filterIsWhitelist: factory.switch({
-          defaultValue: false,
+          defaultValue: true,
+          withDescription: true,
         }),
         applyFilterToRatio: factory.switch({
           defaultValue: true,

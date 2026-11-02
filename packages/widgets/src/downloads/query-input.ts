@@ -10,7 +10,7 @@ export const resolveDownloadsQueryInput = (integrationIds: readonly string[], op
       >["sort"],
       descending: (options.descendingDefaultSort ?? false) === true,
       categoryFilter: (options.categoryFilter ?? []) as string[],
-      filterIsWhitelist: (options.filterIsWhitelist ?? false) === true,
+      filterIsWhitelist: options.filterIsWhitelist !== false,
       showCompletedTorrent: options.showCompletedTorrent !== false,
       activeTorrentThreshold: Number(options.activeTorrentThreshold ?? 0),
     },

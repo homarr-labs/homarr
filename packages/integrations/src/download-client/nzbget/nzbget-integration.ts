@@ -8,9 +8,13 @@ import { Integration } from "../../base/integration";
 import type { IntegrationTestingInput } from "../../base/integration";
 import type { TestingResult } from "../../base/test-connection/test-connection-service";
 import type { DownloadClientJobsAndStatus } from "../../interfaces/downloads/download-client-data";
-import type { IDownloadClientIntegration } from "../../interfaces/downloads/download-client-integration";
+import type {
+  DownloadClientSelection,
+  IDownloadClientIntegration,
+} from "../../interfaces/downloads/download-client-integration";
 import type { DownloadClientItem } from "../../interfaces/downloads/download-client-items";
 import type { DownloadClientStatus } from "../../interfaces/downloads/download-client-status";
+import { matchesDownloadCategoryFilter } from "../category-filter";
 import type { NzbGetClient } from "./nzbget-types";
 
 export class NzbGetIntegration extends Integration implements IDownloadClientIntegration {
@@ -21,7 +25,10 @@ export class NzbGetIntegration extends Integration implements IDownloadClientInt
     };
   }
 
-  public async getClientJobsAndStatusAsync(input: { limit: number }): Promise<DownloadClientJobsAndStatus> {
+  public async getClientJobsAndStatusAsync(input: {
+    limit: number;
+    selection?: DownloadClientSelection;
+  }): Promise<DownloadClientJobsAndStatus> {
     const type = "usenet";
     const [queue, history, nzbGetStatus] = await Promise.all([
       this.nzbGetApiCallAsync("listgroups"),
@@ -68,6 +75,13 @@ export class NzbGetIntegration extends Integration implements IDownloadClientInt
             category: file.Category,
           };
         }),
+      )
+      .filter((item) =>
+        matchesDownloadCategoryFilter(
+          item.category,
+          input.selection?.categoryFilter ?? [],
+          input.selection?.filterIsWhitelist === true,
+        ),
       )
       .slice(0, input.limit);
     return { status, items };

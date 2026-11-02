@@ -13,6 +13,11 @@ describe("Downloads widget history options", () => {
     expect(options.historyWindowDays.validate.safeParse(days).success).toBe(false);
   });
 
+  test("includes matching categories unless the whitelist switch is turned off", () => {
+    const options = definition.createOptions();
+    expect(options.filterIsWhitelist.defaultValue).toBe(true);
+  });
+
   test("only matches results for its own archive settings", () => {
     const input = {
       integrationIds: ["sabnzbd-1"],

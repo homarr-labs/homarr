@@ -9,9 +9,13 @@ import { Integration } from "../../base/integration";
 import type { IntegrationTestingInput } from "../../base/integration";
 import type { TestingResult } from "../../base/test-connection/test-connection-service";
 import type { DownloadClientJobsAndStatus } from "../../interfaces/downloads/download-client-data";
-import type { IDownloadClientIntegration } from "../../interfaces/downloads/download-client-integration";
+import type {
+  DownloadClientSelection,
+  IDownloadClientIntegration,
+} from "../../interfaces/downloads/download-client-integration";
 import type { DownloadClientItem } from "../../interfaces/downloads/download-client-items";
 import type { DownloadClientStatus } from "../../interfaces/downloads/download-client-status";
+import { matchesDownloadCategoryFilter } from "../category-filter";
 import { getSabnzbdHistorySlotsAsync } from "./sabnzbd-history";
 import { historySchema, queueSchema } from "./sabnzbd-schema";
 
@@ -26,6 +30,7 @@ export class SabnzbdIntegration extends Integration implements IDownloadClientIn
 
   public async getClientJobsAndStatusAsync(input: {
     limit: number;
+    selection?: DownloadClientSelection;
     includeArchivedHistory?: boolean;
     historyWindowDays?: number;
   }): Promise<DownloadClientJobsAndStatus> {
@@ -106,6 +111,13 @@ export class SabnzbdIntegration extends Integration implements IDownloadClientIn
             category: slot.category,
           };
         }),
+      )
+      .filter((item) =>
+        matchesDownloadCategoryFilter(
+          item.category,
+          input.selection?.categoryFilter ?? [],
+          input.selection?.filterIsWhitelist === true,
+        ),
       )
       .slice(0, input.limit);
     return { status, items };

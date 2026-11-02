@@ -74,16 +74,17 @@ export const downloadsWidget: WidgetDefinition = {
       },
       {
         name: "Categories/labels to filter",
-        description: "You can filter the items by categories or labels. Use a comma to separate multiple values.",
+        description:
+          "One list for every selected client. A job matches when its category or label equals a value, ignoring case and surrounding spaces. Jobs without a category are not filtered out.",
         values: "Comma-separated list of categories or labels",
         defaultValue: "-",
       },
       {
         name: "Filter as a whitelist",
         description:
-          "If enabled, only items that match the filter will be shown. If disabled, items that do not match the filter will be hidden.",
+          "When enabled, only jobs in the listed categories are shown. Jobs without a category stay visible, including clients that do not support categories. When disabled, the category list is ignored.",
         values: { type: "boolean" },
-        defaultValue: "no",
+        defaultValue: "yes",
       },
       {
         name: "Use category filter for global torrent ratio",
