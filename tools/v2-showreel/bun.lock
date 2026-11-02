@@ -9,7 +9,7 @@
         "@fontsource-variable/inter-tight": "^5.3.0",
         "@fontsource-variable/jetbrains-mono": "^5.3.0",
         "@tabler/icons": "^3.50.0",
-        "three": "^0.186.1",
+        "three": "^0.187.0",
       },
       "devDependencies": {
         "@types/three": "^0.186.0",
@@ -97,6 +97,6 @@
 
     "playwright-core": ["playwright-core@1.64.1", "", { "bin": { "playwright-core": "cli.js" } }, "sha512-BC4s8y6SEVA6Q1rSxZTto8hI1KUI3xXlHGZgvGqP4IqPdI/a6FX9H29IDNz7vKo9l21b6LfYosScPL6M3xxyDQ=="],
 
-    "three": ["three@0.186.1", "", {}, "sha512-blFeqb49wRCSGUGj7gtpfnSGHy2lwDk94RhUmS1c/hTby70kvChbWpkJ4Pm1390LqzzvTmzgXKHPEafJwCb8jA=="],
+    "three": ["three@0.187.0", "", {}, "sha512-Qiu7R+Cmh8CstZsY1uJOSWnVlfo7ZtNLV7mF8Jltk3LB3AtDu9cRZlcnRKkAk8Y4z6KKw35z7Y7Urd7jWY8etA=="],
   }
 }
