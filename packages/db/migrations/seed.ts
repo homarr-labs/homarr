@@ -1,4 +1,4 @@
-import SuperJSON from "superjson";
+import SuperJSON, { parse as parseSuperJson } from "superjson";
 
 import { createId, generateResponsiveGridFor, objectKeys } from "@homarr/common";
 import { BUNDLED_CUSTOM_WIDGETS, customWidgetDefinitionSchema } from "@homarr/custom-widgets/core";
@@ -18,7 +18,7 @@ import type { IntegrationKind, WidgetKind } from "@homarr/definitions";
 import { defaultServerSettings, defaultServerSettingsKeys } from "@homarr/server-settings";
 
 import type { Database, InferInsertModel } from "..";
-import { eq, inArray } from "..";
+import { and, eq, inArray } from "..";
 import { getMaxGroupPositionAsync, placeAllWidgetsAsync } from "../queries";
 import {
   getServerSettingByKeyAsync,
@@ -195,6 +195,7 @@ interface BoardWithLayoutPositions {
   sections: Array<{
     id: string;
     kind: string;
+    options?: string | null;
     layouts: Array<{
       layoutId: string;
       parentSectionId: string | null;
@@ -230,7 +231,8 @@ const insertMissingProjectedPositionsAsync = async (
         : [];
     }),
     ...board.sections.flatMap((section) => {
-      if (section.kind !== "container") return [];
+      // Dynamic sections are the pre-container kind. They still nest through section layouts.
+      if (section.kind !== "container" && section.kind !== "dynamic") return [];
       const layout = section.layouts.find((sectionLayout) => sectionLayout.layoutId === sourceLayout.id);
       return layout?.parentSectionId
         ? [
@@ -248,8 +250,11 @@ const insertMissingProjectedPositionsAsync = async (
     }),
   ];
 
+  // Categories were full-width roots and had no section layout of their own. Responsive
+  // layouts are created before the sections-to-containers migration, so projecting only
+  // empty roots leaves the generated layout with empty container shells.
   const projectedElements = board.sections
-    .filter((section) => section.kind === "empty")
+    .filter((section) => section.kind === "empty" || section.kind === "category")
     .flatMap(
       (section) =>
         generateResponsiveGridFor({
@@ -265,41 +270,166 @@ const insertMissingProjectedPositionsAsync = async (
       .filter((item) => item.layouts.some((layout) => layout.layoutId === targetLayout.id))
       .map((item) => item.id),
   );
-  const itemPositions = projectedElements
-    .filter((element) => element.type === "item" && !existingItemIds.has(element.id))
-    .map(
-      (element): InferInsertModel<typeof itemLayouts> => ({
-        itemId: element.id,
-        layoutId: targetLayout.id,
-        sectionId: element.sectionId,
-        width: element.width,
-        height: element.height,
-        xOffset: element.xOffset,
-        yOffset: element.yOffset,
-      }),
-    );
+  const seenItemIds = new Set<string>();
+  const itemPositions: InferInsertModel<typeof itemLayouts>[] = [];
+  for (const element of projectedElements) {
+    if (element.type !== "item" || existingItemIds.has(element.id) || seenItemIds.has(element.id)) continue;
+    seenItemIds.add(element.id);
+    itemPositions.push({
+      itemId: element.id,
+      layoutId: targetLayout.id,
+      sectionId: element.sectionId,
+      width: element.width,
+      height: element.height,
+      xOffset: element.xOffset,
+      yOffset: element.yOffset,
+    });
+  }
 
   const existingSectionIds = new Set(
     board.sections
       .filter((section) => section.layouts.some((layout) => layout.layoutId === targetLayout.id))
       .map((section) => section.id),
   );
-  const sectionPositions = projectedElements
-    .filter((element) => element.type === "section" && !existingSectionIds.has(element.id))
-    .map(
-      (element): InferInsertModel<typeof sectionLayouts> => ({
-        sectionId: element.id,
-        layoutId: targetLayout.id,
-        parentSectionId: element.sectionId,
-        width: element.width,
-        height: element.height,
-        xOffset: element.xOffset,
-        yOffset: element.yOffset,
-      }),
-    );
+  const seenSectionIds = new Set<string>();
+  const sectionPositions: InferInsertModel<typeof sectionLayouts>[] = [];
+  for (const element of projectedElements) {
+    if (element.type !== "section" || existingSectionIds.has(element.id) || seenSectionIds.has(element.id)) continue;
+    seenSectionIds.add(element.id);
+    sectionPositions.push({
+      sectionId: element.id,
+      layoutId: targetLayout.id,
+      parentSectionId: element.sectionId,
+      width: element.width,
+      height: element.height,
+      xOffset: element.xOffset,
+      yOffset: element.yOffset,
+    });
+  }
 
   if (itemPositions.length > 0) await db.insert(itemLayouts).values(itemPositions);
   if (sectionPositions.length > 0) await db.insert(sectionLayouts).values(sectionPositions);
+  await growSectionLayoutsToFitChildrenAsync(db, board, targetLayout.id, itemPositions, sectionPositions);
+};
+
+const isScrollableSection = (options: string | null | undefined) => {
+  if (!options) return false;
+  try {
+    return parseSuperJson<{ scrollable?: boolean }>(options).scrollable === true;
+  } catch {
+    return false;
+  }
+};
+
+const overlapsHorizontally = (first: { xOffset: number; width: number }, second: { xOffset: number; width: number }) =>
+  first.xOffset < second.xOffset + second.width && first.xOffset + first.width > second.xOffset;
+
+/**
+ * Containers saved before their items were copied keep the empty one-row height.
+ * Expand just those shells to the children that were filled in this pass, and
+ * move later siblings down so the taller shell does not cover them.
+ */
+const growSectionLayoutsToFitChildrenAsync = async (
+  db: Database,
+  board: BoardWithLayoutPositions,
+  layoutId: string,
+  insertedItems: readonly InferInsertModel<typeof itemLayouts>[],
+  insertedSections: readonly InferInsertModel<typeof sectionLayouts>[],
+) => {
+  if (insertedItems.length === 0 && insertedSections.length === 0) return;
+
+  const [itemRows, sectionRows] = await Promise.all([
+    db.query.itemLayouts.findMany({ where: eq(itemLayouts.layoutId, layoutId) }),
+    db.query.sectionLayouts.findMany({ where: eq(sectionLayouts.layoutId, layoutId) }),
+  ]);
+  const affected = new Set<string>([
+    ...insertedItems.flatMap((item) => (item.sectionId ? [item.sectionId] : [])),
+    ...insertedSections.flatMap((section) =>
+      section.parentSectionId ? [section.sectionId, section.parentSectionId] : [section.sectionId],
+    ),
+  ]);
+  let expanded = true;
+  while (expanded) {
+    expanded = false;
+    for (const sectionRow of sectionRows) {
+      if (
+        !affected.has(sectionRow.sectionId) ||
+        !sectionRow.parentSectionId ||
+        affected.has(sectionRow.parentSectionId)
+      )
+        continue;
+      affected.add(sectionRow.parentSectionId);
+      expanded = true;
+    }
+  }
+
+  const sectionById = new Map(board.sections.map((section) => [section.id, section]));
+  const heightBySectionId = new Map(sectionRows.map((sectionRow) => [sectionRow.sectionId, sectionRow.height]));
+  const yOffsetBySectionId = new Map(sectionRows.map((sectionRow) => [sectionRow.sectionId, sectionRow.yOffset]));
+  const yOffsetByItemId = new Map(itemRows.map((itemRow) => [itemRow.itemId, itemRow.yOffset]));
+  const depthOf = (sectionId: string, seen = new Set<string>()): number => {
+    if (seen.has(sectionId)) return 0;
+    seen.add(sectionId);
+    const children = sectionRows.filter((sectionRow) => sectionRow.parentSectionId === sectionId);
+    return 1 + Math.max(0, ...children.map((child) => depthOf(child.sectionId, seen)));
+  };
+  const ordered = sectionRows.toSorted((first, second) => depthOf(second.sectionId) - depthOf(first.sectionId));
+
+  for (const sectionRow of ordered) {
+    if (!affected.has(sectionRow.sectionId)) continue;
+    const section = sectionById.get(sectionRow.sectionId);
+    if (!section || section.kind === "empty" || isScrollableSection(section.options)) continue;
+    const currentHeight = heightBySectionId.get(sectionRow.sectionId) ?? sectionRow.height;
+    const currentYOffset = yOffsetBySectionId.get(sectionRow.sectionId) ?? sectionRow.yOffset;
+    const itemExtent = itemRows
+      .filter((itemRow) => itemRow.sectionId === sectionRow.sectionId)
+      .map((itemRow) => (yOffsetByItemId.get(itemRow.itemId) ?? itemRow.yOffset) + itemRow.height);
+    const nestedExtent = sectionRows
+      .filter((child) => child.parentSectionId === sectionRow.sectionId)
+      .map(
+        (child) =>
+          (yOffsetBySectionId.get(child.sectionId) ?? child.yOffset) +
+          (heightBySectionId.get(child.sectionId) ?? child.height),
+      );
+    const extents = [...itemExtent, ...nestedExtent];
+    if (extents.length === 0) continue;
+    const height = Math.max(currentHeight, ...extents);
+    if (height === currentHeight) continue;
+    const growth = height - currentHeight;
+    const previousBottom = currentYOffset + currentHeight;
+    heightBySectionId.set(sectionRow.sectionId, height);
+    await db
+      .update(sectionLayouts)
+      .set({ height })
+      .where(and(eq(sectionLayouts.sectionId, sectionRow.sectionId), eq(sectionLayouts.layoutId, layoutId)));
+
+    if (!sectionRow.parentSectionId) continue;
+
+    for (const sibling of sectionRows) {
+      if (sibling.sectionId === sectionRow.sectionId || sibling.parentSectionId !== sectionRow.parentSectionId)
+        continue;
+      const siblingYOffset = yOffsetBySectionId.get(sibling.sectionId) ?? sibling.yOffset;
+      if (siblingYOffset < previousBottom || !overlapsHorizontally(sectionRow, sibling)) continue;
+      const nextYOffset = siblingYOffset + growth;
+      yOffsetBySectionId.set(sibling.sectionId, nextYOffset);
+      await db
+        .update(sectionLayouts)
+        .set({ yOffset: nextYOffset })
+        .where(and(eq(sectionLayouts.sectionId, sibling.sectionId), eq(sectionLayouts.layoutId, layoutId)));
+    }
+
+    for (const itemRow of itemRows) {
+      if (itemRow.sectionId !== sectionRow.parentSectionId) continue;
+      const itemYOffset = yOffsetByItemId.get(itemRow.itemId) ?? itemRow.yOffset;
+      if (itemYOffset < previousBottom || !overlapsHorizontally(sectionRow, itemRow)) continue;
+      const nextYOffset = itemYOffset + growth;
+      yOffsetByItemId.set(itemRow.itemId, nextYOffset);
+      await db
+        .update(itemLayouts)
+        .set({ yOffset: nextYOffset })
+        .where(and(eq(itemLayouts.itemId, itemRow.itemId), eq(itemLayouts.layoutId, layoutId)));
+    }
+  }
 };
 
 const seedEveryoneGroupAsync = async (db: Database) => {
