@@ -1,12 +1,13 @@
 "use client";
 
 import type { PropsWithChildren } from "react";
-import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { Box } from "@mantine/core";
 import { useElementSize } from "@mantine/hooks";
 
 import { calculateBoardUiScale } from "@homarr/boards/scale";
 
+import { getBoardScrollport, getClassicScrollbarWidth, stabilizeBoardCanvasWidth } from "./board-canvas-width";
 import classes from "./scaled-board-canvas.module.css";
 
 export { calculateBoardUiScale } from "@homarr/boards/scale";
@@ -41,20 +42,53 @@ export const ScaledBoardCanvas = ({
   label,
   children,
 }: PropsWithChildren<ScaledBoardCanvasProps>) => {
-  const { ref: viewportRef, width: availableWidth } = useElementSize<HTMLDivElement>();
+  const viewportNodeRef = useRef<HTMLDivElement>(null);
+  const sizerNodeRef = useRef<HTMLDivElement>(null);
+  const { ref: viewportSizeRef, width: availableWidth } = useElementSize<HTMLDivElement>();
+  const setViewportRef = useCallback(
+    (node: HTMLDivElement | null) => {
+      viewportNodeRef.current = node;
+      viewportSizeRef(node);
+    },
+    [viewportSizeRef],
+  );
   const { ref: canvasRef, height: logicalHeight } = useElementSize<HTMLDivElement>();
   const [isHydrated, setIsHydrated] = useState(false);
+  const [stableAvailableWidth, setStableAvailableWidth] = useState(0);
 
   useEffect(() => {
     setIsHydrated(true);
   }, []);
 
-  const resolvedAvailableWidth = availableWidth > 0 ? availableWidth : initialAvailableWidth;
+  const resolvedAvailableWidth =
+    stableAvailableWidth > 0 ? stableAvailableWidth : availableWidth > 0 ? availableWidth : initialAvailableWidth;
   const resolvedLogicalHeight = logicalHeight > 0 ? logicalHeight : initialLogicalHeight;
   const scale = useMemo(
     () => calculateBoardCanvasScale(resolvedAvailableWidth, logicalWidth),
     [logicalWidth, resolvedAvailableWidth],
   );
+
+  useLayoutEffect(() => {
+    if (availableWidth <= 0) return;
+
+    const scrollport = getBoardScrollport(viewportNodeRef.current);
+    const sizerNode = sizerNodeRef.current;
+    const roomBelowBoard = sizerNode
+      ? scrollport.getBoundingClientRect().bottom - sizerNode.getBoundingClientRect().bottom
+      : 0;
+    const nextWidth = stabilizeBoardCanvasWidth({
+      measuredWidth: availableWidth,
+      stableWidth: stableAvailableWidth,
+      logicalWidth,
+      logicalHeight: resolvedLogicalHeight,
+      scrollportHeight: scrollport.clientHeight,
+      contentHeight: scrollport.scrollHeight,
+      roomBelowBoard,
+      scrollbarWidth: getClassicScrollbarWidth(),
+    });
+    setStableAvailableWidth((currentWidth) => (Math.abs(currentWidth - nextWidth) < 0.5 ? currentWidth : nextWidth));
+  }, [availableWidth, logicalWidth, resolvedLogicalHeight, stableAvailableWidth]);
+
   const uiScale = calculateBoardUiScale(scale);
   const inverseScale = scale > 0 ? 1 / scale : 1;
   const visualWidth = logicalWidth * scale;
@@ -63,7 +97,7 @@ export const ScaledBoardCanvas = ({
   return (
     <Box
       component="section"
-      ref={viewportRef}
+      ref={setViewportRef}
       className={classes.viewport}
       data-testid="board-canvas"
       data-board-hydrated={isHydrated ? "true" : "false"}
@@ -73,7 +107,11 @@ export const ScaledBoardCanvas = ({
       data-canvas-initial-width={initialAvailableWidth}
       aria-label={label}
     >
-      <Box className={classes.sizer} style={{ width: visualWidth, height: resolvedLogicalHeight * scale }}>
+      <Box
+        ref={sizerNodeRef}
+        className={classes.sizer}
+        style={{ width: visualWidth, height: resolvedLogicalHeight * scale }}
+      >
         <Box
           ref={canvasRef}
           data-board-canvas-content
