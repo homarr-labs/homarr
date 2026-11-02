@@ -65,7 +65,6 @@
         "themeAuto": "מערכת",
         "themeLight": "בהיר",
         "themeDark": "כהה",
-        "serverOriginHelp": "Homarr משתמש בכתובת הזו כדי למלא מראש כתובות URL של שירותים שזוהו. עדיין ניתן לערוך כל שירות בנפרד.",
         "serverDescription": "זהו קיצור דרך, לא הגבלה. כל שירות שזוהה עדיין ניתן לעריכה.",
         "serverOrigin": "דומיין, כתובת IP או נתיב של פרוקסי הפוך",
         "serverOriginDescription": "דוגמאות: home.lan, 192.168.1.10 או https://home.example.com/services. בחר כיצד לצרף כל שירות בהמשך.",
@@ -102,6 +101,8 @@
       "connect": {
         "title": "חבר את מה שהופך את הלוח לשימושי",
         "description": "בחר כמה שירותים בו-זמנית. תוויות Docker מקבלות עדיפות, התאמת תמונות משלימה פערים, וכל כתובת URL ופרטי התחברות ניתנים לבדיקה.",
+        "confirmServerAddress": "",
+        "serverAddressReviewed": "",
         "discoveredIntegrations": "מופעי אינטגרציות שזוהו ({count})",
         "detectedIntegrationLabel": "ייבא את {name}, שזוהה בתור {kind}",
         "detectedAppLabel": "ייבא את האפליקציה שזוהתה {name}",
@@ -126,7 +127,8 @@
         "needsConfiguration": "נדרשת הגדרה",
         "tested": "בדיקת החיבור הושלמה",
         "testFailed": "בדיקת החיבור נכשלה",
-        "incompleteConfirmation": "על אינטגרציות שלא הושלמו יידלגו. להמשיך בלעדיהן?"
+        "incompleteConfirmation": "על אינטגרציות שלא הושלמו יידלגו. להמשיך בלעדיהן?",
+        "skipIncomplete": ""
       },
       "board": {
         "title": "עצבו את הלוח לפני בנייתו",
@@ -1930,6 +1932,8 @@
     "here": "כאן",
     "serviceUrlTemplate": {
       "serverTitle": "כתובת שרת רגילה",
+      "description": "",
+      "example": "",
       "urlModeLabel": "תבנית כתובת השירות",
       "hostPort": "אותו מארח, יציאות שונות",
       "subdomain": "תת-דומיין אחד לכל שירות",
@@ -4797,10 +4801,6 @@
           "label": "",
           "description": ""
         },
-        "collapsedSections": {
-          "label": "",
-          "description": ""
-        },
         "newReleaseWithin": {
           "label": "מהדורה חדשה בתוך",
           "description": "דוגמת שימוש: שבוע אחד (1), חודש אחד (10 חודשים). סוגי יחידות מקובלים: h (שעות), d (ימים), w (שבועות), M (חודשים), y (שנים). השאר ריק כדי לא להדגיש מהדורות חדשות.",
@@ -5005,7 +5005,11 @@
       "runningVersions": "",
       "upToDate": "",
       "updateAvailable": "",
-      "unknownStatus": "לא ידוע"
+      "unknownStatus": "לא ידוע",
+      "error": {
+        "collapsedSaveTitle": "",
+        "collapsedSaveMessage": ""
+      }
     },
     "networkControllerSummary": {
       "advanced": {
@@ -5511,6 +5515,9 @@
       "name": "",
       "description": "",
       "option": {
+        "fahrenheit": {
+          "label": "טמפרטורה בפרנהייט"
+        },
         "sortBy": {
           "label": ""
         },
@@ -5525,7 +5532,12 @@
     },
     "beszelSystemGrid": {
       "name": "",
-      "description": ""
+      "description": "",
+      "option": {
+        "fahrenheit": {
+          "label": "טמפרטורה בפרנהייט"
+        }
+      }
     },
     "beszelAlerts": {
       "name": "",
@@ -7230,6 +7242,7 @@
             "model": {
               "title": "מודל",
               "description": "בחר מודל שהתגלה או הזן מזהה מודל מדויק של נקודת הקצה.",
+              "save": "",
               "placeholder": "מזהה מודל",
               "refresh": "רענן מודלים",
               "chooseModel": "בחר את המודל שישמש לשיחות חדשות.",

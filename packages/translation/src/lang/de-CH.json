@@ -65,7 +65,6 @@
         "themeAuto": "Systemeinstellungen",
         "themeLight": "Hell",
         "themeDark": "Dunkel",
-        "serverOriginHelp": "Homarr verwendet diese Adresse, um erkannte Dienst-URLs vorauszufüllen. Du kannst jeden Dienst weiterhin einzeln bearbeiten.",
         "serverDescription": "Dies ist eine Abkürzung, keine Einschränkung. Jeder erkannte Dienst kann weiterhin bearbeitet werden.",
         "serverOrigin": "Domain, IP-Adresse oder Reverse-Proxy-Pfad",
         "serverOriginDescription": "Beispiele: home.lan, 192.168.1.10 oder https://home.example.com/services. Wähle unten aus, wie jeder Dienst angehängt wird.",
@@ -102,6 +101,8 @@
       "connect": {
         "title": "Verbinde, was das Board nützlich macht",
         "description": "Wähle mehrere Dienste gleichzeitig aus. Docker-Labels haben Priorität, die Zuordnung anhand von Images schliesst Lücken, und jede URL sowie jedes Zugangsdaten bleibt überprüfbar.",
+        "confirmServerAddress": "",
+        "serverAddressReviewed": "",
         "discoveredIntegrations": "Erkannte Integrationsinstanzen ({count})",
         "detectedIntegrationLabel": "{name} importieren, erkannt als {kind}",
         "detectedAppLabel": "Erkannte App {name} importieren",
@@ -126,7 +127,8 @@
         "needsConfiguration": "Konfiguration erforderlich",
         "tested": "Verbindung getestet",
         "testFailed": "Verbindungstest fehlgeschlagen",
-        "incompleteConfirmation": "Nicht abgeschlossene Integrationen werden übersprungen. Ohne sie fortfahren?"
+        "incompleteConfirmation": "Nicht abgeschlossene Integrationen werden übersprungen. Ohne sie fortfahren?",
+        "skipIncomplete": ""
       },
       "board": {
         "title": "Gestalte das Board, bevor es erstellt wird",
@@ -1930,6 +1932,8 @@
     "here": "Hier",
     "serviceUrlTemplate": {
       "serverTitle": "Übliche Serveradresse",
+      "description": "",
+      "example": "",
       "urlModeLabel": "Muster der Dienstadresse",
       "hostPort": "Gleicher Host, andere Ports",
       "subdomain": "Eine Subdomain pro Dienst",
@@ -4797,10 +4801,6 @@
           "label": "",
           "description": ""
         },
-        "collapsedSections": {
-          "label": "",
-          "description": ""
-        },
         "newReleaseWithin": {
           "label": "Neue Version innerhalb",
           "description": "Anwendungsbeispiel: 1w (1 Woche), 10M (10 Monate). Akzeptierte Einheiten: h (Stunden), d (Tage), w (Wochen), M (Monate), y (Jahre). Leer lassen, um neue Veröffentlichungen nicht hervorzuheben.",
@@ -5005,7 +5005,11 @@
       "runningVersions": "",
       "upToDate": "",
       "updateAvailable": "",
-      "unknownStatus": "Unbekannt"
+      "unknownStatus": "Unbekannt",
+      "error": {
+        "collapsedSaveTitle": "",
+        "collapsedSaveMessage": ""
+      }
     },
     "networkControllerSummary": {
       "advanced": {
@@ -5511,6 +5515,9 @@
       "name": "Beszel-Systeme (Tabelle)",
       "description": "Tabellenansicht aller von Beszel überwachten Systeme mit sortierbaren Spalten und Statusindikatoren",
       "option": {
+        "fahrenheit": {
+          "label": "Temperatur in Fahrenheit"
+        },
         "sortBy": {
           "label": "Sortieren nach"
         },
@@ -5525,7 +5532,12 @@
     },
     "beszelSystemGrid": {
       "name": "Beszel-Systeme (Raster)",
-      "description": "Kartenrasteransicht aller von Beszel überwachten Systeme mit Echtzeitmetriken"
+      "description": "Kartenrasteransicht aller von Beszel überwachten Systeme mit Echtzeitmetriken",
+      "option": {
+        "fahrenheit": {
+          "label": "Temperatur in Fahrenheit"
+        }
+      }
     },
     "beszelAlerts": {
       "name": "Beszel-Meldungen",
@@ -7230,6 +7242,7 @@
             "model": {
               "title": "Modell",
               "description": "Wählen Sie ein erkanntes Modell aus oder geben Sie eine exakte Modell-ID des Endpunkts ein.",
+              "save": "",
               "placeholder": "Modell-ID",
               "refresh": "Modelle aktualisieren",
               "chooseModel": "Wählen Sie das für neue Unterhaltungen verwendete Modell aus.",

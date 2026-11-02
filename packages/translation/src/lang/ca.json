@@ -65,7 +65,6 @@
         "themeAuto": "Sistema",
         "themeLight": "Clar",
         "themeDark": "Fosc",
-        "serverOriginHelp": "Homarr utilitza aquesta adreça per emplenar prèviament els URL dels serveis detectats. Encara podeu editar cada servei individualment.",
         "serverDescription": "És una drecera, no una restricció. Tots els serveis detectats es poden editar.",
         "serverOrigin": "Domini, IP o camí del proxy invers",
         "serverOriginDescription": "Exemples: home.lan, 192.168.1.10 o https://home.example.com/services. Trieu com s'afegirà cada servei a continuació.",
@@ -102,6 +101,8 @@
       "connect": {
         "title": "Connecta el que fa útil el tauler",
         "description": "Seleccioneu diversos serveis alhora. Les etiquetes de Docker tenen prioritat, la coincidència d'imatges omple els buits i podeu revisar tots els URL i les credencials.",
+        "confirmServerAddress": "",
+        "serverAddressReviewed": "",
         "discoveredIntegrations": "Instàncies d'integració detectades ({count})",
         "detectedIntegrationLabel": "Importa {name}, detectat com a {kind}",
         "detectedAppLabel": "Importa l'aplicació detectada {name}",
@@ -126,7 +127,8 @@
         "needsConfiguration": "Requereix configuració",
         "tested": "Connexió provada",
         "testFailed": "Error en provar la connexió",
-        "incompleteConfirmation": "Les integracions inacabades s'ometran. Voleu continuar sense aquestes integracions?"
+        "incompleteConfirmation": "Les integracions inacabades s'ometran. Voleu continuar sense aquestes integracions?",
+        "skipIncomplete": ""
       },
       "board": {
         "title": "Dona forma al tauler abans de crear-lo",
@@ -1930,6 +1932,8 @@
     "here": "aquí",
     "serviceUrlTemplate": {
       "serverTitle": "Adreça habitual del servidor",
+      "description": "",
+      "example": "",
       "urlModeLabel": "Patró de l'adreça del servei",
       "hostPort": "Mateix amfitrió, ports diferents",
       "subdomain": "Un subdomini per servei",
@@ -4797,10 +4801,6 @@
           "label": "",
           "description": ""
         },
-        "collapsedSections": {
-          "label": "",
-          "description": ""
-        },
         "newReleaseWithin": {
           "label": "Llançaments nous dins de",
           "description": "Exemple d'ús: 1w (1 setmana), 10M (10 mesos). Unitats acceptades: h (hores), d (dies), w (setmanes), M (mesos), y (anys). Deixa-ho buit per no destacar els llançaments nous.",
@@ -5005,7 +5005,11 @@
       "runningVersions": "",
       "upToDate": "",
       "updateAvailable": "",
-      "unknownStatus": ""
+      "unknownStatus": "",
+      "error": {
+        "collapsedSaveTitle": "",
+        "collapsedSaveMessage": ""
+      }
     },
     "networkControllerSummary": {
       "advanced": {
@@ -5511,6 +5515,9 @@
       "name": "Sistemes Beszel (taula)",
       "description": "Vista en taula de tots els sistemes monitorats per Beszel, amb columnes ordenables i indicadors d'estat",
       "option": {
+        "fahrenheit": {
+          "label": ""
+        },
         "sortBy": {
           "label": "Ordena per"
         },
@@ -5525,7 +5532,12 @@
     },
     "beszelSystemGrid": {
       "name": "Sistemes Beszel (graella)",
-      "description": "Vista en graella de targetes de tots els sistemes monitorats per Beszel, amb mètriques en temps real"
+      "description": "Vista en graella de targetes de tots els sistemes monitorats per Beszel, amb mètriques en temps real",
+      "option": {
+        "fahrenheit": {
+          "label": ""
+        }
+      }
     },
     "beszelAlerts": {
       "name": "Alertes de Beszel",
@@ -7230,6 +7242,7 @@
             "model": {
               "title": "Model",
               "description": "Selecciona un model detectat o introdueix l'ID exacte del model del punt final.",
+              "save": "",
               "placeholder": "ID del model",
               "refresh": "Actualitza els models",
               "chooseModel": "Tria el model que s'utilitzarà per a les converses noves.",

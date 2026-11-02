@@ -65,7 +65,6 @@
         "themeAuto": "Rendszer",
         "themeLight": "Világos",
         "themeDark": "Sötét",
-        "serverOriginHelp": "A Homarr ezt a címet használja az észlelt szolgáltatás-URL-ek előzetes kitöltéséhez. Minden szolgáltatás külön is szerkeszthető.",
         "serverDescription": "Ez egy parancsikon, nem korlátozás. Minden észlelt szolgáltatás továbbra is szerkeszthető.",
         "serverOrigin": "Domain, IP-cím vagy fordított proxy elérési útja",
         "serverOriginDescription": "Példák: home.lan, 192.168.1.10 vagy https://home.example.com/services. Az alábbiakban válassza ki, hogyan legyen hozzáfűzve az egyes szolgáltatásokhoz.",
@@ -102,6 +101,8 @@
       "connect": {
         "title": "Csatlakoztassa, amitől hasznos lesz a tábla",
         "description": "Válasszon ki egyszerre több szolgáltatást. A Docker-címkék elsőbbséget élveznek, a lemezkép-egyezés kitölti a hiányokat, és minden URL, valamint hitelesítő adat ellenőrizhető marad.",
+        "confirmServerAddress": "",
+        "serverAddressReviewed": "",
         "discoveredIntegrations": "Észlelt integrációpéldányok ({count})",
         "detectedIntegrationLabel": "{name} importálása, észlelt típus: {kind}",
         "detectedAppLabel": "Észlelt {name} alkalmazás importálása",
@@ -126,7 +127,8 @@
         "needsConfiguration": "Konfigurációra vár",
         "tested": "A kapcsolat tesztelve",
         "testFailed": "Kapcsolat tesztelése sikertelen",
-        "incompleteConfirmation": "A befejezetlen integrációk ki lesznek hagyva. Folytatja nélkülük?"
+        "incompleteConfirmation": "A befejezetlen integrációk ki lesznek hagyva. Folytatja nélkülük?",
+        "skipIncomplete": ""
       },
       "board": {
         "title": "Alakítsa ki a táblát, mielőtt létrehoznánk",
@@ -1930,6 +1932,8 @@
     "here": "itt",
     "serviceUrlTemplate": {
       "serverTitle": "Szokásos szervercím",
+      "description": "",
+      "example": "",
       "urlModeLabel": "Szolgáltatáscím mintája",
       "hostPort": "Azonos gazdagép, eltérő portok",
       "subdomain": "Szolgáltatásonként egy aldomain",
@@ -4797,10 +4801,6 @@
           "label": "",
           "description": ""
         },
-        "collapsedSections": {
-          "label": "",
-          "description": ""
-        },
         "newReleaseWithin": {
           "label": "Új kiadás a",
           "description": "Használati példa: 1w (1 hét), 10M (10 hónap). Elfogadott mértékegységek: h (óra), d (nap), w (hét), M (hónap), y (év). Hagyd üresen, ha nem szeretnéd kiemelni az új kiadásokat.",
@@ -5005,7 +5005,11 @@
       "runningVersions": "",
       "upToDate": "",
       "updateAvailable": "",
-      "unknownStatus": "Ismeretlen"
+      "unknownStatus": "Ismeretlen",
+      "error": {
+        "collapsedSaveTitle": "",
+        "collapsedSaveMessage": ""
+      }
     },
     "networkControllerSummary": {
       "advanced": {
@@ -5511,6 +5515,9 @@
       "name": "Beszel Rendszerek (Táblázat)",
       "description": "Az összes Beszel által figyelt rendszer táblázatos nézete rendezhető oszlopokkal és állapotjelzőkkel",
       "option": {
+        "fahrenheit": {
+          "label": "Hőmérséklet Fahrenheitben"
+        },
         "sortBy": {
           "label": "Rendezés alapja"
         },
@@ -5525,7 +5532,12 @@
     },
     "beszelSystemGrid": {
       "name": "Beszel Rendszerek (Rács)",
-      "description": "A Beszel által figyelt rendszerek kártyás rács nézete valós idejű metrikákkal"
+      "description": "A Beszel által figyelt rendszerek kártyás rács nézete valós idejű metrikákkal",
+      "option": {
+        "fahrenheit": {
+          "label": "Hőmérséklet Fahrenheitben"
+        }
+      }
     },
     "beszelAlerts": {
       "name": "Beszel Riasztások",
@@ -7230,6 +7242,7 @@
             "model": {
               "title": "Modell",
               "description": "Válasszon egy felderített modellt, vagy adja meg egy végpont pontos modellazonosítóját.",
+              "save": "",
               "placeholder": "Modellazonosító",
               "refresh": "Modellek frissítése",
               "chooseModel": "Válassza ki az új beszélgetésekhez használt modellt.",

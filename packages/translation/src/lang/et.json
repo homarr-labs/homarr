@@ -65,7 +65,6 @@
         "themeAuto": "Süsteem",
         "themeLight": "Hele",
         "themeDark": "Tume",
-        "serverOriginHelp": "Homarr kasutab seda aadressi tuvastatud teenuste URL-ide eeltäitmiseks. Iga teenust saab endiselt eraldi muuta.",
         "serverDescription": "See on otsetee, mitte piirang. Iga tuvastatud teenust saab endiselt muuta.",
         "serverOrigin": "Domeen, IP või pöördpuhvri tee",
         "serverOriginDescription": "Näited: home.lan, 192.168.1.10 või https://home.example.com/services. Vali all, kuidas iga teenus lisatakse.",
@@ -102,6 +101,8 @@
       "connect": {
         "title": "Ühenda see, mis muudab paneeli kasulikuks",
         "description": "Vali korraga mitu teenust. Dockeri sildid on esmatähtsad, kujutiste sobitamine täidab lüngad ning iga URL ja mandaat jääb ülevaadatavaks.",
+        "confirmServerAddress": "",
+        "serverAddressReviewed": "",
         "discoveredIntegrations": "Tuvastatud integratsioonieksemplarid ({count})",
         "detectedIntegrationLabel": "Impordi {name}, tuvastatud liigina {kind}",
         "detectedAppLabel": "Impordi tuvastatud rakendus {name}",
@@ -126,7 +127,8 @@
         "needsConfiguration": "Vajab seadistamist",
         "tested": "Ühendust on testitud",
         "testFailed": "Ühenduse test nurjus",
-        "incompleteConfirmation": "Lõpetamata integratsioonid jäetakse vahele. Kas jätkata ilma nendeta?"
+        "incompleteConfirmation": "Lõpetamata integratsioonid jäetakse vahele. Kas jätkata ilma nendeta?",
+        "skipIncomplete": ""
       },
       "board": {
         "title": "Kujunda paneel enne selle loomist",
@@ -1930,6 +1932,8 @@
     "here": "siin",
     "serviceUrlTemplate": {
       "serverTitle": "Tavaline serveriaadress",
+      "description": "",
+      "example": "",
       "urlModeLabel": "Teenuse aadressi muster",
       "hostPort": "Sama host, erinevad pordid",
       "subdomain": "Üks alamdomeen teenuse kohta",
@@ -4797,10 +4801,6 @@
           "label": "",
           "description": ""
         },
-        "collapsedSections": {
-          "label": "",
-          "description": ""
-        },
         "newReleaseWithin": {
           "label": "Uus väljalase ajavahemikus",
           "description": "Kasutusnäide: 1w (1 nädal), 10M (10 kuud). Lubatud ühikud on h (tunnid), d (päevad), w (nädalad), M (kuud), y (aastad). Jäta tühjaks, et uusi väljalaskeid mitte esile tõsta.",
@@ -5005,7 +5005,11 @@
       "runningVersions": "",
       "upToDate": "",
       "updateAvailable": "",
-      "unknownStatus": ""
+      "unknownStatus": "",
+      "error": {
+        "collapsedSaveTitle": "",
+        "collapsedSaveMessage": ""
+      }
     },
     "networkControllerSummary": {
       "advanced": {
@@ -5511,6 +5515,9 @@
       "name": "Beszeli süsteemid (tabel)",
       "description": "Kõigi Beszeli jälgitavate süsteemide tabelivaade sorteeritavate veergude ja olekunäidikutega",
       "option": {
+        "fahrenheit": {
+          "label": ""
+        },
         "sortBy": {
           "label": "Sorteerimisalus"
         },
@@ -5525,7 +5532,12 @@
     },
     "beszelSystemGrid": {
       "name": "Beszeli süsteemid (ruudustik)",
-      "description": "Kaardiruudustiku vaade kõigist Beszeli jälgitavatest süsteemidest reaalajas mõõdikutega"
+      "description": "Kaardiruudustiku vaade kõigist Beszeli jälgitavatest süsteemidest reaalajas mõõdikutega",
+      "option": {
+        "fahrenheit": {
+          "label": ""
+        }
+      }
     },
     "beszelAlerts": {
       "name": "Beszeli hoiatused",
@@ -7230,6 +7242,7 @@
             "model": {
               "title": "Mudel",
               "description": "Valige leitud mudel või sisestage lõpp-punkti täpne mudeli ID.",
+              "save": "",
               "placeholder": "Mudeli ID",
               "refresh": "Värskenda mudeleid",
               "chooseModel": "Valige uute vestluste jaoks kasutatav mudel.",

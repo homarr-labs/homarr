@@ -65,7 +65,6 @@
         "themeAuto": "Sistema",
         "themeLight": "Claro",
         "themeDark": "Escuro",
-        "serverOriginHelp": "Homarr usa esse endereço para pré-preencher URLs de serviço detectado. Você ainda pode editar cada serviço individualmente.",
         "serverDescription": "Este é um atalho, não uma restrição. Todo serviço detectado permanece editável.",
         "serverOrigin": "Domínio, IP ou caminho reverso do proxy",
         "serverOriginDescription": "Exemplos: home.lan, 192.168.1.10 ou https://home.example.com/services. Escolha como cada serviço é anexado abaixo.",
@@ -102,6 +101,8 @@
       "connect": {
         "title": "Conecte o que faz com que o fórum seja útil",
         "description": "Selecione vários serviços de uma só vez. Os rótulos de Docker têm prioridade, imagens que correspondem preenchem lacunas e todas as URL e credenciais permanecem revisáveis.",
+        "confirmServerAddress": "",
+        "serverAddressReviewed": "",
         "discoveredIntegrations": "Instâncias de integração detectadas ({count})",
         "detectedIntegrationLabel": "Importar {name}, detectado como {kind}",
         "detectedAppLabel": "Importar aplicativo detectado {name}",
@@ -126,7 +127,8 @@
         "needsConfiguration": "Precisa de configuração",
         "tested": "Conexão testada",
         "testFailed": "Falha no teste de conexão",
-        "incompleteConfirmation": "Integrações não concluídas serão ignoradas. Continuar sem elas?"
+        "incompleteConfirmation": "Integrações não concluídas serão ignoradas. Continuar sem elas?",
+        "skipIncomplete": ""
       },
       "board": {
         "title": "Forme o quadro antes de ser construído",
@@ -1930,6 +1932,8 @@
     "here": "aqui",
     "serviceUrlTemplate": {
       "serverTitle": "Endereço normal do servidor",
+      "description": "",
+      "example": "",
       "urlModeLabel": "Padrão de serviço",
       "hostPort": "Mesmo hospedeiro, portas diferentes",
       "subdomain": "Um subdomínio por serviço",
@@ -4797,10 +4801,6 @@
           "label": "",
           "description": ""
         },
-        "collapsedSections": {
-          "label": "",
-          "description": ""
-        },
         "newReleaseWithin": {
           "label": "Novo lançamento dentro de",
           "description": "Exemplo de uso: 1w (1 semana), 10M (10 meses). Tipos de unidades aceitas: h (horas), d (dias), w (semanas), M (meses), y (anos). Deixe em branco para não destacar novos lançamentos.",
@@ -5005,7 +5005,11 @@
       "runningVersions": "Versões em execução",
       "upToDate": "Até a data",
       "updateAvailable": "Atualização disponível",
-      "unknownStatus": "Desconhecido"
+      "unknownStatus": "Desconhecido",
+      "error": {
+        "collapsedSaveTitle": "",
+        "collapsedSaveMessage": ""
+      }
     },
     "networkControllerSummary": {
       "advanced": {
@@ -5511,6 +5515,9 @@
       "name": "Sistemas Beszel (Tabela)",
       "description": "Visualização em tabela de todos os sistemas monitorados pelo Beszel com colunas classificáveis e indicadores de status",
       "option": {
+        "fahrenheit": {
+          "label": "Temperatura em Fahrenheit"
+        },
         "sortBy": {
           "label": "Ordenar por"
         },
@@ -5525,7 +5532,12 @@
     },
     "beszelSystemGrid": {
       "name": "Sistemas Beszel (Grade)",
-      "description": "Visualização em grade de cartões de todos os sistemas monitorados pelo Beszel com métricas em tempo real"
+      "description": "Visualização em grade de cartões de todos os sistemas monitorados pelo Beszel com métricas em tempo real",
+      "option": {
+        "fahrenheit": {
+          "label": "Temperatura em Fahrenheit"
+        }
+      }
     },
     "beszelAlerts": {
       "name": "Alertas Beszel",
@@ -7230,6 +7242,7 @@
             "model": {
               "title": "Modelo",
               "description": "Selecione um modelo descoberto ou digite uma ID exata de modelo de endpoints.",
+              "save": "",
               "placeholder": "ID do modelo",
               "refresh": "Atualizar modelos",
               "chooseModel": "Escolha o modelo usado para novas conversas.",

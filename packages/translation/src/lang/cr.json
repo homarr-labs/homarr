@@ -59,13 +59,12 @@
       },
       "essentials": {
         "title": "crwdns6337:0crwdne6337:0",
-        "description": "crwdns6339:0crwdne6339:0",
+        "description": "crwdns12011:0crwdne12011:0",
         "language": "crwdns6341:0crwdne6341:0",
         "theme": "crwdns6343:0crwdne6343:0",
         "themeAuto": "crwdns6345:0crwdne6345:0",
         "themeLight": "crwdns6347:0crwdne6347:0",
         "themeDark": "crwdns6349:0crwdne6349:0",
-        "serverOriginHelp": "crwdns6351:0crwdne6351:0",
         "serverDescription": "crwdns6353:0crwdne6353:0",
         "serverOrigin": "crwdns6355:0crwdne6355:0",
         "serverOriginDescription": "crwdns6357:0crwdne6357:0",
@@ -102,6 +101,8 @@
       "connect": {
         "title": "crwdns6409:0crwdne6409:0",
         "description": "crwdns6411:0crwdne6411:0",
+        "confirmServerAddress": "crwdns12013:0crwdne12013:0",
+        "serverAddressReviewed": "crwdns12015:0crwdne12015:0",
         "discoveredIntegrations": "crwdns6413:0{count}crwdne6413:0",
         "detectedIntegrationLabel": "crwdns6415:0{name}crwdnd6415:0{kind}crwdne6415:0",
         "detectedAppLabel": "crwdns6417:0{name}crwdne6417:0",
@@ -126,7 +127,8 @@
         "needsConfiguration": "crwdns6455:0crwdne6455:0",
         "tested": "crwdns6457:0crwdne6457:0",
         "testFailed": "crwdns6459:0crwdne6459:0",
-        "incompleteConfirmation": "crwdns6461:0crwdne6461:0"
+        "incompleteConfirmation": "crwdns12017:0crwdne12017:0",
+        "skipIncomplete": "crwdns12019:0crwdne12019:0"
       },
       "board": {
         "title": "crwdns6463:0crwdne6463:0",
@@ -1930,6 +1932,8 @@
     "here": "crwdns552:0crwdne552:0",
     "serviceUrlTemplate": {
       "serverTitle": "crwdns7621:0crwdne7621:0",
+      "description": "crwdns12021:0crwdne12021:0",
+      "example": "crwdns12023:0{url}crwdne12023:0",
       "urlModeLabel": "crwdns7623:0crwdne7623:0",
       "hostPort": "crwdns7625:0crwdne7625:0",
       "subdomain": "crwdns7627:0crwdne7627:0",
@@ -4797,10 +4801,6 @@
           "label": "crwdns11753:0crwdne11753:0",
           "description": "crwdns11755:0crwdne11755:0"
         },
-        "collapsedSections": {
-          "label": "crwdns11757:0crwdne11757:0",
-          "description": "crwdns11759:0crwdne11759:0"
-        },
         "newReleaseWithin": {
           "label": "crwdns11761:0crwdne11761:0",
           "description": "crwdns11763:0crwdne11763:0",
@@ -5005,7 +5005,11 @@
       "runningVersions": "crwdns11131:0crwdne11131:0",
       "upToDate": "crwdns11133:0crwdne11133:0",
       "updateAvailable": "crwdns11135:0crwdne11135:0",
-      "unknownStatus": "crwdns11137:0crwdne11137:0"
+      "unknownStatus": "crwdns11137:0crwdne11137:0",
+      "error": {
+        "collapsedSaveTitle": "crwdns12003:0crwdne12003:0",
+        "collapsedSaveMessage": "crwdns12005:0crwdne12005:0"
+      }
     },
     "networkControllerSummary": {
       "advanced": {
@@ -5511,6 +5515,9 @@
       "name": "crwdns4779:0crwdne4779:0",
       "description": "crwdns4781:0crwdne4781:0",
       "option": {
+        "fahrenheit": {
+          "label": "crwdns11999:0crwdne11999:0"
+        },
         "sortBy": {
           "label": "crwdns4785:0crwdne4785:0"
         },
@@ -5525,7 +5532,12 @@
     },
     "beszelSystemGrid": {
       "name": "crwdns4837:0crwdne4837:0",
-      "description": "crwdns4839:0crwdne4839:0"
+      "description": "crwdns4839:0crwdne4839:0",
+      "option": {
+        "fahrenheit": {
+          "label": "crwdns12001:0crwdne12001:0"
+        }
+      }
     },
     "beszelAlerts": {
       "name": "crwdns4887:0crwdne4887:0",
@@ -7230,6 +7242,7 @@
             "model": {
               "title": "crwdns10003:0crwdne10003:0",
               "description": "crwdns10005:0crwdne10005:0",
+              "save": "crwdns12007:0crwdne12007:0",
               "placeholder": "crwdns10007:0crwdne10007:0",
               "refresh": "crwdns10009:0crwdne10009:0",
               "chooseModel": "crwdns10011:0crwdne10011:0",
@@ -7256,7 +7269,7 @@
             },
             "enabled": {
               "label": "crwdns10045:0crwdne10045:0",
-              "description": "crwdns10047:0crwdne10047:0"
+              "description": "crwdns12009:0crwdne12009:0"
             },
             "save": "crwdns10049:0crwdne10049:0",
             "notification": {

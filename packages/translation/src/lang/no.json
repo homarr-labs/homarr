@@ -65,7 +65,6 @@
         "themeAuto": "System",
         "themeLight": "Lys",
         "themeDark": "Mørk",
-        "serverOriginHelp": "Homarr bruker denne adressen for å forhåndsutfylle oppdagede tjeneste-adresser. Du kan fremdeles redigere hver tjeneste individuelt.",
         "serverDescription": "Dette er en snarvei, ikke en restriksjon. Alle oppdagede tjenester er fortsatt redigerbare.",
         "serverOrigin": "",
         "serverOriginDescription": "Eksempler: home.lan, 192.168.1.10, eller https://home.example.com/services. Velg hvordan hver tjeneste er lagt til nedenfor.",
@@ -102,6 +101,8 @@
       "connect": {
         "title": "Tilknytt hva som gjør tavlen nyttig",
         "description": "Velg flere tjenester samtidig. Legeetikettene prioriterer bilde, bilder som matcher filer og alle URL-er og legitimasjonsopphold kan gjennomgås.",
+        "confirmServerAddress": "",
+        "serverAddressReviewed": "",
         "discoveredIntegrations": "Oppdagede integrasjonsinstanser ({count})",
         "detectedIntegrationLabel": "Importer {name}, oppdaget som {kind}",
         "detectedAppLabel": "Importer oppdagede apper {name}",
@@ -126,7 +127,8 @@
         "needsConfiguration": "Trenger konfigurasjon",
         "tested": "Tilkobling testet",
         "testFailed": "Tilkoblingstesten mislyktes",
-        "incompleteConfirmation": "Uferdige integrasjoner vil bli hoppet over. Fortsette uten dem?"
+        "incompleteConfirmation": "Uferdige integrasjoner vil bli hoppet over. Fortsette uten dem?",
+        "skipIncomplete": ""
       },
       "board": {
         "title": "Rist brettet før det er bygget",
@@ -1930,6 +1932,8 @@
     "here": "her",
     "serviceUrlTemplate": {
       "serverTitle": "Vanlig serveradresse",
+      "description": "",
+      "example": "",
       "urlModeLabel": "Service adresse mønster",
       "hostPort": "Samme vert, forskjellige porter",
       "subdomain": "Ett deldomene per tjeneste",
@@ -4797,10 +4801,6 @@
           "label": "",
           "description": ""
         },
-        "collapsedSections": {
-          "label": "",
-          "description": ""
-        },
         "newReleaseWithin": {
           "label": "Ny utgivelse innen",
           "description": "Brukseksempel: 1w (1 uke), 10M (10 måneder). Gyldige enheter h (timer), d (dager), w (uker), M (måneder), y (år). La stå tomt for ingen markering av nye utgivelser.",
@@ -5005,7 +5005,11 @@
       "runningVersions": "Kjører versjoner",
       "upToDate": "Opp til dato",
       "updateAvailable": "Oppdatering tilgjengelig",
-      "unknownStatus": "Ukjent"
+      "unknownStatus": "Ukjent",
+      "error": {
+        "collapsedSaveTitle": "",
+        "collapsedSaveMessage": ""
+      }
     },
     "networkControllerSummary": {
       "advanced": {
@@ -5511,6 +5515,9 @@
       "name": "Beszel systemer (tabell)",
       "description": "Tabellvisning for alle Beszel-overvåkede systemer med sorterbare kolonner og statusindikatorer",
       "option": {
+        "fahrenheit": {
+          "label": "Temperatur i Fahrenheit"
+        },
         "sortBy": {
           "label": "Sorter etter"
         },
@@ -5525,7 +5532,12 @@
     },
     "beszelSystemGrid": {
       "name": "",
-      "description": "Korttabellvisning for alle Beszel-overvåkede systemer med sanntidsmåltall"
+      "description": "Korttabellvisning for alle Beszel-overvåkede systemer med sanntidsmåltall",
+      "option": {
+        "fahrenheit": {
+          "label": "Temperatur i Fahrenheit"
+        }
+      }
     },
     "beszelAlerts": {
       "name": "",
@@ -7230,6 +7242,7 @@
             "model": {
               "title": "Modell",
               "description": "Velg en oppdaget modell eller angi en eksakt endepunkt-modell-ID.",
+              "save": "",
               "placeholder": "Modell ID",
               "refresh": "Oppdater modeller",
               "chooseModel": "Velg modellen som brukes til nye samtaler.",
