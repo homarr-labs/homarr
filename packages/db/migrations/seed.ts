@@ -43,6 +43,7 @@ import {
   searchEngines,
   sections,
   sectionLayouts,
+  serverSettings,
   users,
 } from "../schema";
 import type { Integration } from "../schema";
@@ -415,11 +416,14 @@ const seedServerSettingsAsync = async (db: Database) => {
   }
 };
 
-const seedDefaultIntegrationsAsync = async (db: Database) => {
-  const defaultIntegrations = integrationKinds.reduce<Integration[]>((acc, kind) => {
+/** Kinds already considered for default integration seeding. Restarted migrations must not recreate deletions. */
+export const seededDefaultIntegrationKindsKey = "__seeded_default_integration_kinds";
+
+const collectDefaultIntegrationSeeds = (): Integration[] =>
+  integrationKinds.reduce<Integration[]>((acc, kind) => {
     const name = getIntegrationName(kind);
     const defaultUrl = getIntegrationDefaultUrl(kind);
-    const hasNoAuthOption = integrationDefs[kind].secretKinds.some((kinds) => kinds.length === 0);
+    const hasNoAuthOption = integrationDefs[kind].secretKinds.some((secretKinds) => secretKinds.length === 0);
 
     if (defaultUrl !== undefined && hasNoAuthOption) {
       acc.push({
@@ -434,37 +438,104 @@ const seedDefaultIntegrationsAsync = async (db: Database) => {
     return acc;
   }, []);
 
+const parseSeededIntegrationKinds = (value: string): string[] | null => {
+  try {
+    const parsed: unknown = JSON.parse(value);
+    if (!Array.isArray(parsed)) return null;
+    const kinds: string[] = [];
+    for (const kind of parsed) {
+      if (typeof kind !== "string") return null;
+      kinds.push(kind);
+    }
+    return kinds;
+  } catch {
+    return null;
+  }
+};
+
+const hasPriorInstallDataAsync = async (db: Database) => {
+  if ((await db.$count(users)) > 0) return true;
+  if ((await db.$count(boards)) > 0) return true;
+  if ((await db.$count(integrations)) > 0) return true;
+  return (await db.$count(apps)) > 0;
+};
+
+const rememberSeededIntegrationKindsAsync = async (
+  db: Database,
+  storedValue: string | undefined,
+  seededKinds: ReadonlySet<string>,
+) => {
+  const kinds = [...seededKinds].toSorted();
+  const value = JSON.stringify(kinds);
+  if (storedValue === undefined) {
+    await db.insert(serverSettings).values({ settingKey: seededDefaultIntegrationKindsKey, value });
+    return;
+  }
+
+  const parsed = parseSeededIntegrationKinds(storedValue);
+  if (parsed?.toSorted().join("\0") === kinds.join("\0")) return;
+
+  await db.update(serverSettings).set({ value }).where(eq(serverSettings.settingKey, seededDefaultIntegrationKindsKey));
+};
+
+export const seedDefaultIntegrationsAsync = async (
+  db: Database,
+  defaultIntegrations: Integration[] = collectDefaultIntegrationSeeds(),
+) => {
   if (defaultIntegrations.length === 0) {
     console.warn("No default integrations found to seed");
-    return;
+  }
+
+  const stored = await db.query.serverSettings.findFirst({
+    where: eq(serverSettings.settingKey, seededDefaultIntegrationKindsKey),
+  });
+  const parsedKinds = stored ? parseSeededIntegrationKinds(stored.value) : null;
+  const seededKinds = new Set(parsedKinds ?? []);
+
+  // The marker is new. Existing installs may already have deleted these defaults, so record the
+  // current kinds without inserting the missing ones. Kinds added in a later version are absent
+  // from the marker and are still created once.
+  if (!stored) {
+    if (await hasPriorInstallDataAsync(db)) {
+      for (const integration of defaultIntegrations) seededKinds.add(integration.kind);
+      if (defaultIntegrations.length > 0) {
+        console.log("Recording previously available default integrations without recreating removed ones");
+      }
+    }
+  } else if (!parsedKinds) {
+    for (const integration of defaultIntegrations) seededKinds.add(integration.kind);
   }
 
   let createdCount = 0;
-  await Promise.all(
-    defaultIntegrations.map(async (integration) => {
-      const existingKind = await db.$count(integrations, eq(integrations.kind, integration.kind));
+  let consideredCount = 0;
+  for (const integration of defaultIntegrations) {
+    if (seededKinds.has(integration.kind)) continue;
 
-      if (existingKind > 0) {
-        console.log(`Skipping seeding of default ${integration.kind} integration as one already exists`);
-        return;
-      }
+    consideredCount++;
+    const existingKind = await db.$count(integrations, eq(integrations.kind, integration.kind));
+    seededKinds.add(integration.kind);
+    if (existingKind > 0) {
+      console.log(`Skipping seeding of default ${integration.kind} integration as one already exists`);
+      continue;
+    }
 
-      const newIntegration = {
-        ...integration,
-        id: createId(),
-      };
+    await db.insert(integrations).values({
+      ...integration,
+      id: createId(),
+    });
+    createdCount++;
+  }
 
-      await db.insert(integrations).values(newIntegration);
-      createdCount++;
-    }),
-  );
+  await rememberSeededIntegrationKindsAsync(db, stored?.value, seededKinds);
 
-  if (createdCount === 0) {
-    console.log("No default integrations were created as they already exist");
+  if (createdCount > 0) {
+    console.log(`Created ${createdCount} default integrations through seeding process`);
     return;
   }
 
-  console.log(`Created ${createdCount} default integrations through seeding process`);
+  if (consideredCount > 0) {
+    console.log("No default integrations were created as they already exist");
+  }
 };
 
 const seedDefaultAppsAsync = async (db: Database) => {
