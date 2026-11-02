@@ -1,0 +1,14 @@
+.github/workflows/weekly-live-integrations.yml
+  h_d6e478ca18e517 76
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "cd2d88410b97a6de90666204d33fb0b37a5f3df5",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
