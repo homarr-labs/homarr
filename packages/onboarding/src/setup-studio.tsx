@@ -104,6 +104,8 @@ import { IntegrationMultiSelectGrid } from "@homarr/ui/integration-select-grid";
 import type { OnboardingStudioProps } from "./types";
 import { getBoardValidationErrors } from "./board-validation";
 import { OnboardingBackdrop } from "./onboarding-backdrop";
+import { discoveredAppUrlInputId, getSetupCompletionBlock } from "./setup-completion";
+import type { SetupCompletionBlock } from "./setup-completion";
 import { OnboardingWordmark } from "./onboarding-wordmark";
 import { OnboardingFloatingControl, ServiceUrlTemplate } from "./service-url-template";
 import { useOnboardingSounds } from "./use-onboarding-sounds";
@@ -195,6 +197,7 @@ export const SetupStudio = ({ environment, assistantConfiguration }: OnboardingS
   const [leftSidebar, setLeftSidebar] = useState(false);
   const [rightSidebar, setRightSidebar] = useState(false);
   const [boardValidationAttempted, setBoardValidationAttempted] = useState(false);
+  const [reviewValidationAttempted, setReviewValidationAttempted] = useState(false);
   const [isApplying, setIsApplying] = useState(false);
   const [applyProgress, setApplyProgress] = useState(0);
   const [applyMessage, setApplyMessage] = useState("");
@@ -332,6 +335,37 @@ export const SetupStudio = ({ environment, assistantConfiguration }: OnboardingS
     sectionHeadingRef.current?.focus();
   }, [activeSection]);
 
+  const setupCompletionApps = discoveredApps.map((app) => ({
+    sourceId: app.sourceId,
+    name: app.containerName,
+    selected: selectedAppIds.includes(app.sourceId),
+    url: discoveredAppUrls[app.sourceId] ?? "",
+  }));
+  const setupCompletionIntegrations = drafts.map((draft) => ({
+    name: draft.name,
+    url: draft.url,
+    secrets: draft.secrets,
+  }));
+  const completionBlock = getSetupCompletionBlock({
+    hasSelectedServices,
+    serverAddressReviewed,
+    apps: setupCompletionApps,
+    integrations: setupCompletionIntegrations,
+  });
+  const hasIncompleteConnections = completionBlock?.kind === "app-address" || completionBlock?.kind === "integration";
+  const completionBlockMessage = (block: SetupCompletionBlock) => {
+    if (block.kind === "app-address") return t("connect.appAddressRequired", { name: block.name });
+    if (block.kind === "integration") return t("connect.integrationIncomplete", { name: block.name });
+    return t("connect.serverAddressRequired");
+  };
+  const connectionError =
+    reviewValidationAttempted && completionBlock
+      ? {
+          message: completionBlockMessage(completionBlock),
+          appSourceId: completionBlock.kind === "app-address" ? completionBlock.sourceId : null,
+        }
+      : null;
+
   const activeIndex = sectionDefinitions.findIndex((section) => section.id === activeSection);
   const move = (direction: -1 | 1) => {
     const next = sectionDefinitions[activeIndex + direction];
@@ -392,8 +426,12 @@ export const SetupStudio = ({ environment, assistantConfiguration }: OnboardingS
 
   const applySetupAsync = async () => {
     if (isApplying) return;
-    if ((hasSelectedServices && !serverAddressReviewed) || hasIncompleteConnections) {
-      selectSection("review");
+    if (completionBlock) {
+      setReviewValidationAttempted(true);
+      sounds.error();
+      showErrorNotification({ title: t("review.errorTitle"), message: completionBlockMessage(completionBlock) });
+      if (completionBlock.kind === "app-address") focusSectionHeading.current = false;
+      setActiveSection("connect");
       return;
     }
     setIsApplying(true);
@@ -601,12 +639,8 @@ export const SetupStudio = ({ environment, assistantConfiguration }: OnboardingS
     },
     applyProgress,
     applyMessage,
+    connectionError,
   };
-  const hasIncompleteConnections =
-    drafts.some((draft) => !isIntegrationDraftComplete(draft)) ||
-    discoveredApps.some(
-      (app) => selectedAppIds.includes(app.sourceId) && (discoveredAppUrls[app.sourceId] ?? "").trim().length === 0,
-    );
   const skipIncompleteConnections = () => {
     const completeDrafts = drafts.filter(isIntegrationDraftComplete);
     const completeDraftIds = new Set(completeDrafts.map((draft) => draft.id));
@@ -833,6 +867,7 @@ interface StudioSectionProps {
   setRightSidebar: (value: boolean) => void;
   applyProgress: number;
   applyMessage: string;
+  connectionError: { message: string; appSourceId: string | null } | null;
 }
 
 const StudioSectionContent = ({ section, ...props }: StudioSectionProps & { section: StudioSection }) => {
@@ -1119,9 +1154,21 @@ const CapabilityRow = ({
 
 const Connections = (props: StudioSectionProps) => {
   const t = useI18n("init.studio.connect");
+  const invalidAppSourceId = props.connectionError?.appSourceId;
+  useEffect(() => {
+    if (!invalidAppSourceId) return;
+    const input = document.getElementById(discoveredAppUrlInputId(invalidAppSourceId));
+    input?.focus();
+    input?.scrollIntoView({ block: "center" });
+  }, [invalidAppSourceId]);
   return (
     <Stack gap="xl">
       <SectionHeading headingRef={props.headingRef} title={t("title")} description={t("description")} mb={0} />
+      {props.connectionError ? (
+        <Alert color="red" variant="light" role="alert" icon={<IconAlertCircle size={18} />}>
+          {props.connectionError.message}
+        </Alert>
+      ) : null}
       {props.hasSelectedServices && <ServerAddressReview {...props} />}
       {props.discoveredIntegrations.length > 0 ? (
         <Fieldset legend={t("discoveredIntegrations", { count: String(props.discoveredIntegrations.length) })}>
@@ -1192,11 +1239,15 @@ const Connections = (props: StudioSectionProps) => {
                   </Checkbox.Card>
                   {selected ? (
                     <TextInput
+                      id={discoveredAppUrlInputId(app.sourceId)}
                       label={t("url")}
                       value={props.discoveredAppUrls[app.sourceId] ?? ""}
                       onChange={(event) => props.setDiscoveredAppUrl(app.sourceId, event.currentTarget.value)}
                       placeholder="service.local:8080"
                       required
+                      error={
+                        props.connectionError?.appSourceId === app.sourceId ? props.connectionError.message : undefined
+                      }
                     />
                   ) : null}
                 </div>

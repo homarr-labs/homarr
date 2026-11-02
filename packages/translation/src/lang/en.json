@@ -110,6 +110,8 @@
         "configureIntegrations": "Configure integrations",
         "discoveredApps": "Detected apps ({count})",
         "appAddressRequired": "Add an address for {name}, or remove it from the selection.",
+        "integrationIncomplete": "Finish the address and credentials for {name}, or remove it from the selection.",
+        "serverAddressRequired": "Confirm the usual server address before building the board.",
         "empty": "No integrations selected. Homarr will still create a useful starter board with general widgets.",
         "dockerSource": "Docker",
         "manualSource": "Manual",
