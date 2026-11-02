@@ -259,7 +259,7 @@ describe("Docker Hub releases", () => {
       expect(error.code).toBe("noReleasesFound");
     });
 
-    test("only reads the first tag page", async () => {
+    test("reads later pages to find latest instead of an older version on the first page", async () => {
       const requests = serveHub({
         namespace: "owner",
         name: "app",
@@ -268,8 +268,80 @@ describe("Docker Hub releases", () => {
 
       const release = await expectRelease({ provider: "dockerHub", identifier: "owner/app" });
 
-      expect(release.latestRelease).toBe("1.0.0");
-      expect(requestedPages(requests)).toEqual([1]);
+      expect(release).toMatchObject({ latestRelease: "2.0.0", latestReleaseAt: new Date(day(2)) });
+      expect(requestedPages(requests)).toEqual([1, 2]);
+    });
+  });
+
+  describe("explicit image tags", () => {
+    const unpackerrPages = [
+      [
+        tag("nightly", 21, "sha256:nightly"),
+        tag("latest", 20, "sha256:stable"),
+        tag("1.0.1", 20, "sha256:stable"),
+        tag("v1.0.1", 20, "sha256:stable"),
+      ],
+    ];
+
+    test("follows latest when a newer nightly tag exists (unpackerr)", async () => {
+      serveHub({ namespace: "golift", name: "unpackerr", pages: unpackerrPages });
+
+      const release = await expectRelease({ provider: "dockerHub", identifier: "golift/unpackerr" });
+
+      expect(release).toMatchObject({ latestRelease: "1.0.1", resolvedFromTag: "latest" });
+    });
+
+    test("follows the branch saved in the identifier", async () => {
+      serveHub({ namespace: "golift", name: "unpackerr", pages: unpackerrPages });
+
+      const release = await expectRelease({ provider: "dockerHub", identifier: "golift/unpackerr:nightly" });
+
+      expect(release).toMatchObject({ latestRelease: "nightly", latestReleaseAt: new Date(day(21)) });
+      expect(release.resolvedFromTag).toBeUndefined();
+    });
+
+    test("keeps reading pages until the requested branch is found", async () => {
+      const requests = serveHub({
+        namespace: "golift",
+        name: "unpackerr",
+        pages: [
+          [tag("latest", 20, "sha256:stable"), tag("1.0.1", 20, "sha256:stable")],
+          [tag("nightly", 21, "sha256:n")],
+        ],
+      });
+
+      const release = await expectRelease({ provider: "dockerHub", identifier: "docker.io/golift/unpackerr:nightly" });
+
+      expect(release.latestRelease).toBe("nightly");
+      expect(requestedPages(requests)).toEqual([1, 2]);
+    });
+
+    test("keeps a numeric image tag on the latest track", async () => {
+      serveHub({
+        namespace: "library",
+        name: "postgres",
+        pages: [
+          [
+            tag("nightly", 22, "sha256:n"),
+            tag("latest", 20, "sha256:18"),
+            tag("18.1", 20, "sha256:18"),
+            tag("17.2", 10, "sha256:17"),
+            tag("17", 10, "sha256:17"),
+          ],
+        ],
+      });
+
+      const release = await expectRelease({ provider: "dockerHub", identifier: "postgres:17" });
+
+      expect(release).toMatchObject({ latestRelease: "18.1", resolvedFromTag: "latest" });
+    });
+
+    test("reports noMatchingVersion when the requested branch does not exist", async () => {
+      serveHub({ namespace: "golift", name: "unpackerr", pages: unpackerrPages });
+
+      const error = await expectFailure({ provider: "dockerHub", identifier: "golift/unpackerr:master" });
+
+      expect(error.code).toBe("noMatchingVersion");
     });
   });
 

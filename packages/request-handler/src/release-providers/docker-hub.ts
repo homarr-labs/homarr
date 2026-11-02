@@ -4,7 +4,7 @@ import { fetchJsonAsync, loadOptionalDetailsAsync, providerUrl, tokenHeaders } f
 import type { OwnedName } from "./identifier";
 import { parseOwnedName } from "./identifier";
 import type { RegistryTag } from "./registry-tags";
-import { hasUnresolvedFloatingTag, selectRegistryRelease } from "./registry-tags";
+import { findFloatingTag, hasUnresolvedFloatingTag, selectRegistryRelease } from "./registry-tags";
 import type { ProjectDetails, ReleaseProvider } from "./types";
 
 const MAX_TAG_PAGES = 5;
@@ -44,17 +44,27 @@ const toRegistryTags = (tag: DockerHubTag): RegistryTag[] => {
   return [{ name: tag.name, date: new Date(tag.last_updated), digest: tag.digest ?? undefined }];
 };
 
-const needsMoreTags = (tags: RegistryTag[], page: number, versionPattern?: RegExp) => {
-  if (versionPattern) return !tags.some((tag) => versionPattern.test(tag.name));
+const needsMoreTags = (tags: RegistryTag[], page: number, versionPattern?: RegExp, tag?: string) => {
+  if (versionPattern) return !tags.some((candidate) => versionPattern.test(candidate.name));
+  if (tag && !tags.some((candidate) => candidate.name === tag)) return page < MAX_TAG_PAGES;
+  // A newer nightly tag can fill the first page and hide latest. Keep reading until that track appears.
+  const floatingTag = findFloatingTag(tags);
+  if (!floatingTag) return page < MAX_TAG_PAGES;
+  if (tag && floatingTag.name !== tag) return false;
   return page < MAX_FLOATING_TAG_PAGES && hasUnresolvedFloatingTag(tags);
 };
 
-const listTagsAsync = async (repositoryUrl: string, headers: Record<string, string>, versionPattern?: RegExp) => {
+const listTagsAsync = async (
+  repositoryUrl: string,
+  headers: Record<string, string>,
+  versionPattern?: RegExp,
+  tag?: string,
+) => {
   const tags: RegistryTag[] = [];
   for (let page = 1; page <= MAX_TAG_PAGES; page++) {
     const result = await fetchJsonAsync(`${repositoryUrl}/tags?page_size=100&page=${page}`, tagsSchema, { headers });
     tags.push(...result.results.flatMap(toRegistryTags));
-    if (!result.next || !needsMoreTags(tags, page, versionPattern)) break;
+    if (!result.next || !needsMoreTags(tags, page, versionPattern, tag)) break;
   }
   return tags;
 };
@@ -85,7 +95,10 @@ export const getDockerHubReleaseAsync: ReleaseProvider = async (lookup) => {
   );
   const headers = tokenHeaders(lookup.token, (token) => ({ Authorization: `Bearer ${token}` }));
 
-  const release = selectRegistryRelease(await listTagsAsync(repositoryUrl, headers, lookup.versionPattern), lookup);
+  const release = selectRegistryRelease(
+    await listTagsAsync(repositoryUrl, headers, lookup.versionPattern, lookup.tag),
+    lookup,
+  );
   const details = await loadOptionalDetailsAsync(lookup, () => getProjectDetailsAsync(repositoryUrl, headers));
   return { ...details, ...release };
 };

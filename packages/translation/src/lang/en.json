@@ -4857,7 +4857,7 @@
           },
           "identifier": {
             "label": "Identifier",
-            "placeholder": "Name or Owner/Name"
+            "placeholder": "Name or Owner/Name:tag"
           },
           "name": {
             "label": "Name"

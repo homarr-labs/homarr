@@ -50,6 +50,8 @@ export type ReleaseResponse = { success: true; data: ReleaseData } | { success: 
 export interface ReleaseLookup {
   baseUrl: string;
   identifier: string;
+  /** Container tag from `owner/name:tag`. Absent means the registry's latest/stable track. */
+  tag?: string;
   versionPattern?: RegExp;
   excludePrereleases?: boolean;
   token?: string;

@@ -1,5 +1,5 @@
 import type { ReleaseProviderKind } from "@homarr/definitions";
-import { getReleaseProviderDefaultUrl, normalizeReleaseProviderIdentifier } from "@homarr/definitions";
+import { getReleaseProviderDefaultUrl, splitReleaseProviderReference } from "@homarr/definitions";
 
 import { getCodebergReleaseAsync } from "./codeberg";
 import { getDockerHubReleaseAsync } from "./docker-hub";
@@ -11,7 +11,7 @@ import { getLinuxServerReleaseAsync } from "./linuxserver";
 import { getNpmReleaseAsync } from "./npm";
 import { getQuayReleaseAsync } from "./quay";
 import type { ReleaseLookup, ReleaseProvider, ReleaseResponse, ReleasesRepositoryRequest } from "./types";
-import { compileVersionPattern } from "./versions";
+import { compileVersionPattern, isVersionLikeTag } from "./versions";
 
 export type * from "./types";
 
@@ -27,12 +27,15 @@ const releaseProviders: Record<ReleaseProviderKind, ReleaseProvider> = {
 };
 
 const createLookup = (request: ReleasesRepositoryRequest): ReleaseLookup => {
-  const identifier = normalizeReleaseProviderIdentifier(request.provider, request.identifier);
-  if (!identifier) throw new ReleaseLookupError("invalidIdentifier", "The identifier is empty");
+  const reference = splitReleaseProviderReference(request.provider, request.identifier);
+  if (!reference.identifier) throw new ReleaseLookupError("invalidIdentifier", "The identifier is empty");
+  // Numeric suffixes are the image's current version. Branch names such as nightly or master select a track.
+  const tag = reference.tag && !isVersionLikeTag(reference.tag) ? reference.tag : undefined;
 
   return {
     baseUrl: (request.providerUrl ?? getReleaseProviderDefaultUrl(request.provider)).replace(/\/$/, ""),
-    identifier,
+    identifier: reference.identifier,
+    tag,
     versionPattern: compileVersionPattern(request.versionRegex),
     excludePrereleases: request.excludePrereleases,
     token: request.token,

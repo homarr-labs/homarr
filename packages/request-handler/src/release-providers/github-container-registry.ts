@@ -1,3 +1,4 @@
+import { isNotFoundError } from "./errors";
 import type { OwnedName } from "./identifier";
 import { parseGithubRepositoryUrl, parseOwnedPackageName } from "./identifier";
 import type { OciImage } from "./oci-registry";
@@ -112,8 +113,27 @@ const resolveTaggedImageAsync = async (
   return { image: newestImage };
 };
 
-const resolveImageAsync = async (registry: OciRegistry, identifier: string, versionPattern?: RegExp) => {
+const escapeRegExp = (value: string) => value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+const resolveNamedImageAsync = async (registry: OciRegistry, tag: string): Promise<ResolvedImage> => {
+  const image = await registry.getImageAsync(tag).catch((error: unknown) => {
+    if (isNotFoundError(error)) return undefined;
+    throw error;
+  });
+  if (!image) {
+    const tags = await registry.listTagsAsync().catch(() => []);
+    throw noMatchingVersionError(tags, new RegExp(`^${escapeRegExp(tag)}$`));
+  }
+
+  if (floatingTagNames.includes(tag)) return await resolveFloatingImageAsync(registry, image);
+  const version = await findFloatingVersionAsync(registry, image);
+  if (version) return { image, version };
+  return { image };
+};
+
+const resolveImageAsync = async (registry: OciRegistry, identifier: string, versionPattern?: RegExp, tag?: string) => {
   if (versionPattern) return await resolveTaggedImageAsync(registry, identifier, versionPattern);
+  if (tag) return await resolveNamedImageAsync(registry, tag);
 
   const floatingImage = await registry.findFloatingImageAsync();
   if (floatingImage) return await resolveFloatingImageAsync(registry, floatingImage);
@@ -140,10 +160,11 @@ export const getGitHubContainerRegistryReleaseAsync: ReleaseProvider = async ({
   baseUrl,
   identifier,
   versionPattern,
+  tag,
   token,
 }) => {
   const repository = parseOwnedPackageName(identifier, "owner/package");
   const registry = await OciRegistry.connectAsync(baseUrl, `${repository.owner}/${repository.name}`, token);
-  const resolved = await resolveImageAsync(registry, identifier, versionPattern);
+  const resolved = await resolveImageAsync(registry, identifier, versionPattern, tag);
   return { ...describeProject(repository, resolved.image.labels), ...toRelease(resolved) };
 };

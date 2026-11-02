@@ -46,6 +46,7 @@ import {
   getReleaseProviderIconUrl,
   getReleaseProviderName,
   getReleaseSourceFromDockerImage,
+  releaseIdentifierForImageTag,
   releaseProviderKinds,
 } from "@homarr/definitions";
 import { IconPicker } from "@homarr/forms-collection";
@@ -437,7 +438,10 @@ const formatVersionFilterRegex = (versionFilter: ReleasesVersionFilter | undefin
 };
 
 const formatIdentifierName = (identifier: string) => {
-  const unformattedName = identifier.split("/").pop();
+  const unformattedName = identifier
+    .split("/")
+    .pop()
+    ?.replace(/[@:].*$/, "");
   return unformattedName?.replace(/[-_]/g, " ").replace(/(?:^\w|[A-Z]|\b\w)/g, (char) => char.toUpperCase()) ?? "";
 };
 
@@ -511,6 +515,7 @@ const RepositoryEditModal = createModal<RepositoryEditProps>(({ innerProps, acti
         <TextInput
           withAsterisk
           label={tRepository("identifier.label")}
+          placeholder={tRepository("identifier.placeholder")}
           value={tempRepository.identifier}
           onChange={(event) => {
             const name =
@@ -812,16 +817,16 @@ const RepositoryImportModal = createModal<RepositoryImportProps>(({ innerProps, 
       const source = getReleaseSourceFromDockerImage(container.image);
       if (!source || !container.releaseSourceToken) return acc;
       const { provider, identifier, version } = source;
-      const key = `${provider}:${identifier}`;
+      const repositoryIdentifier = releaseIdentifierForImageTag(identifier, version);
+      const key = `${provider}:${repositoryIdentifier}`;
       if (seen.has(key)) return acc;
       seen.add(key);
-
       acc.push({
         id: createId(),
         provider,
-        identifier,
+        identifier: repositoryIdentifier,
         iconUrl: container.iconUrl ?? undefined,
-        name: formatIdentifierName(identifier),
+        name: formatIdentifierName(repositoryIdentifier),
         versionFilter: version ? parseImageVersionToVersionFilter(version) : undefined,
         alreadyImported: imported.has(key),
         sourceToken: container.releaseSourceToken,

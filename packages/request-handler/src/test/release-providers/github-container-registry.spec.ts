@@ -276,6 +276,37 @@ describe("GitHub Container Registry releases", () => {
       expect(release.latestRelease).toBe("4.0.20.3014-ls1");
     });
 
+    test("uses the requested branch instead of latest", async () => {
+      const latest = image("sha256:stable", {
+        created: created(10),
+        labels: { "org.opencontainers.image.version": "6.4.4" },
+      });
+      serveOciRegistry({
+        repository: "hotio/radarr",
+        tags: {
+          "6.4.4": latest,
+          latest,
+          nightly: image("sha256:nightly", { created: created(21) }),
+        },
+      });
+
+      const release = await expectRelease(lookupGhcr("ghcr.io/hotio/radarr:nightly"));
+
+      expect(release).toMatchObject({ latestRelease: "nightly", latestReleaseAt: new Date(created(21)) });
+      expect(release.resolvedFromTag).toBeUndefined();
+    });
+
+    test("reports noMatchingVersion when the requested branch does not exist", async () => {
+      serveOciRegistry({
+        repository: "hotio/radarr",
+        tags: { latest: image("sha256:stable"), "6.4.4": image("sha256:stable") },
+      });
+
+      const error = await expectFailure(lookupGhcr("ghcr.io/hotio/radarr:master"));
+
+      expect(error.code).toBe("noMatchingVersion");
+    });
+
     test("uses the newest of the last tags when no tag looks like a version", async () => {
       serveOciRegistry({
         repository: "owner/app",

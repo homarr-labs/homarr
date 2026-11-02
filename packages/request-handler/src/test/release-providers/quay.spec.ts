@@ -59,6 +59,24 @@ describe("Quay releases", () => {
     });
   });
 
+  test("uses an explicit tag instead of latest", async () => {
+    serveQuay({
+      body: {
+        description: "Monitoring system",
+        tags: tagsOf(
+          quayTag("latest", 20, "sha256:b"),
+          quayTag("v3.15.1", 20, "sha256:b"),
+          quayTag("main", 21, "sha256:c"),
+        ),
+      },
+    });
+
+    const release = await expectRelease({ provider: "quay", identifier: "quay.io/prometheus/prometheus:main" });
+
+    expect(release.latestRelease).toBe("main");
+    expect(release.releaseUrl).toBe("https://quay.io/repository/prometheus/prometheus/tag/main");
+  });
+
   test("uses the highest tag that matches the version filter", async () => {
     serveQuay({
       body: {

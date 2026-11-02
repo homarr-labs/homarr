@@ -3,7 +3,7 @@ import { observable } from "@trpc/server/observable";
 import { z } from "zod/v4";
 
 import { createKeyedFingerprint } from "@homarr/common/server";
-import { getReleaseSourceFromDockerImage } from "@homarr/definitions";
+import { getReleaseSourceFromDockerImage, releaseIdentifierForImageTag } from "@homarr/definitions";
 import type { ContainerState, DockerContainerTarget, Port } from "@homarr/docker";
 import { DockerSingleton } from "@homarr/docker";
 import {
@@ -91,7 +91,11 @@ export const dockerRouter = createTRPCRouter({
           let releaseSourceToken: string | undefined;
           if (source) {
             releaseSourceToken = createKeyedFingerprint(
-              JSON.stringify(["releases-docker-suggestion-v1", source.provider, source.identifier]),
+              JSON.stringify([
+                "releases-docker-suggestion-v1",
+                source.provider,
+                releaseIdentifierForImageTag(source.identifier, source.version),
+              ]),
             );
           }
           return { ...container, releaseSourceToken };

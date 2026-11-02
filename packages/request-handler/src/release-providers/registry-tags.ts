@@ -72,16 +72,38 @@ const resolveFloatingTag = (floatingTag: RegistryTag, tags: RegistryTag[]): Rele
   return releaseFromTag(findVersionTagNotOlderThan(floatingTag, tags) ?? floatingTag);
 };
 
+const escapeRegExp = (value: string) => value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+const selectNamedTag = (tags: RegistryTag[], tagName: string) => {
+  const selected = tags.find((candidate) => candidate.name === tagName);
+  if (!selected) {
+    throw noMatchingVersionError(
+      tags.map((candidate) => candidate.name),
+      new RegExp(`^${escapeRegExp(tagName)}$`),
+    );
+  }
+  if (floatingTagNames.includes(selected.name)) return resolveFloatingTag(selected, tags);
+
+  const versionTag = findDigestSibling(selected, tags);
+  if (versionTag) {
+    return { latestRelease: versionTag.name, latestReleaseAt: selected.date, resolvedFromTag: selected.name };
+  }
+  return releaseFromTag(selected);
+};
+
 export const selectRegistryRelease = (
   tags: RegistryTag[],
-  { identifier, versionPattern }: Pick<ReleaseLookup, "identifier" | "versionPattern">,
+  { identifier, versionPattern, tag }: Pick<ReleaseLookup, "identifier" | "versionPattern" | "tag">,
 ): Release => {
   const newestTag = pickNewestTag(tags);
   if (!newestTag) throw noReleasesFoundError(identifier);
   if (versionPattern) return selectMatchingTag(tags, versionPattern);
+  if (tag) return selectNamedTag(tags, tag);
 
   const floatingTag = findFloatingTag(tags);
   if (floatingTag) return resolveFloatingTag(floatingTag, tags);
 
-  return releaseFromTag(pickHighestVersionTag(tags.filter((tag) => isPlainVersionTag(tag.name))) ?? newestTag);
+  return releaseFromTag(
+    pickHighestVersionTag(tags.filter((candidate) => isPlainVersionTag(candidate.name))) ?? newestTag,
+  );
 };

@@ -57,15 +57,7 @@ const releaseProviderRegistryPrefixes: Partial<Record<ReleaseProviderKind, strin
   quay: "quay.io/",
 };
 
-const removeContainerImageVersion = (identifier: string) => {
-  const digestIndex = identifier.indexOf("@");
-  const withoutDigest = digestIndex === -1 ? identifier : identifier.slice(0, digestIndex);
-  const tagIndex = withoutDigest.indexOf(":", withoutDigest.lastIndexOf("/") + 1);
-
-  return tagIndex === -1 ? withoutDigest : withoutDigest.slice(0, tagIndex);
-};
-
-export const normalizeReleaseProviderIdentifier = (provider: ReleaseProviderKind, identifier: string) => {
+export const splitReleaseProviderReference = (provider: ReleaseProviderKind, identifier: string) => {
   const trimmedIdentifier = identifier.trim();
   const registryPrefix = releaseProviderRegistryPrefixes[provider];
   const withoutRegistry =
@@ -73,8 +65,26 @@ export const normalizeReleaseProviderIdentifier = (provider: ReleaseProviderKind
       ? trimmedIdentifier.slice(registryPrefix.length)
       : trimmedIdentifier;
 
-  // ponytail: only strip container image versions/digests for providers that use them
-  return registryPrefix ? removeContainerImageVersion(withoutRegistry) : withoutRegistry;
+  // Git releases are not container references; a colon there is part of the repository name.
+  if (!registryPrefix) return { identifier: withoutRegistry, tag: undefined };
+
+  const digestIndex = withoutRegistry.indexOf("@");
+  const withoutDigest = digestIndex === -1 ? withoutRegistry : withoutRegistry.slice(0, digestIndex);
+  const name = withoutDigest.slice(0, withoutDigest.lastIndexOf("/") + 1);
+  const tagIndex = withoutDigest.indexOf(":", name.length);
+  if (tagIndex === -1) return { identifier: withoutDigest, tag: undefined };
+
+  const tag = withoutDigest.slice(tagIndex + 1).trim();
+  return { identifier: withoutDigest.slice(0, tagIndex), tag: tag || undefined };
+};
+
+export const normalizeReleaseProviderIdentifier = (provider: ReleaseProviderKind, identifier: string) =>
+  splitReleaseProviderReference(provider, identifier).identifier;
+
+/** Keeps a non-numeric image tag, such as nightly or master, on the repository identifier. */
+export const releaseIdentifierForImageTag = (identifier: string, version: string | undefined) => {
+  if (!version || version === "latest" || /\d/.test(version)) return identifier;
+  return `${identifier}:${version}`;
 };
 
 const containerImageToProviderKind: Record<string, ReleaseProviderKind> = {
