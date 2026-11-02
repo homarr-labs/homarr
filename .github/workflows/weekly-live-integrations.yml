@@ -73,7 +73,7 @@ jobs:
         run: bun packages/integrations/weekly/plan.ts initialize
       - name: Setup self-host testkit
         id: testkit
-        uses: ajnart/self-host/testkit@v1.2.0
+        uses: ajnart/self-host/testkit@3bfa67711597c25a9d1e0f8c1d8c9b80b61c2c51
       - name: Link matching Action SDK without replacing existing modules
         env:
           SELF_HOST_TESTKIT_SDK: ${{ steps.testkit.outputs.sdk-path }}
