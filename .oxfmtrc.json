@@ -17,6 +17,9 @@
     "apps/docs/blog/authors.yml",
     "apps/docs/public/api/open-api-schema.json",
     "packages/custom-widgets/src/core/component-catalog.generated.json",
-    "apps/docs/public/custom-widgets/component-catalog-v1.json"
+    "apps/docs/public/custom-widgets/component-catalog-v1.json",
+    "**/manage/custom-widgets/arena/_fixtures.json",
+    "**/manage/custom-widgets/arena/_generated/pack.json",
+    "tools/widget-arena/context.json"
   ]
 }

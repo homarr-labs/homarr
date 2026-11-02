@@ -1,0 +1,1518 @@
+[
+  {
+    "id": "ntfy",
+    "title": "Notifications",
+    "prompt": "Show newest-first notifications filtered by configured topic. Include title, message, priority, timestamp, local placeholder images and each action label. Invoke notificationAction with id and actionId through a confirmed ActionButton; never follow external links. Keep refresh and all query states.",
+    "definition": {
+      "$schema": "homarr-custom-widget-v2",
+      "name": "Notifications",
+      "description": "Synthetic arena fixture; all requests and controls are simulated.",
+      "sources": {
+        "default": {
+          "name": "Arena fixture",
+          "baseUrl": "https://arena.example.com",
+          "auth": "none"
+        }
+      },
+      "requests": {
+        "notifications": {
+          "source": "default",
+          "kind": "query",
+          "method": "GET",
+          "path": "/fixtures/notifications",
+          "query": {
+            "topic": {
+              "$option": "topic"
+            }
+          },
+          "auth": "inherit",
+          "trigger": "load",
+          "permission": "view"
+        },
+        "notificationAction": {
+          "source": "default",
+          "kind": "action",
+          "method": "POST",
+          "path": "/fixtures/notifications/{param:id}/actions/{param:actionId}",
+          "auth": "inherit",
+          "confirmation": "Simulate this notification action?",
+          "invalidates": [
+            "notifications"
+          ],
+          "trigger": "manual",
+          "permission": "modify"
+        }
+      },
+      "options": {
+        "topic": {
+          "label": "Topic",
+          "control": "text",
+          "default": "homelab"
+        }
+      },
+      "template": "<Stack p=\"md\"><Text>Notifications</Text><Text>Synthetic fixture simulation</Text></Stack>"
+    },
+    "responses": {
+      "notifications": {
+        "messages": [
+          {
+            "id": "n3",
+            "topic": "homelab",
+            "title": "Backup completed",
+            "message": "Nightly archive verified.",
+            "priority": 3,
+            "time": "2026-11-02T11:58:00Z",
+            "image": "/images/demo-dashboard-background.svg",
+            "actions": [
+              {
+                "id": "ack",
+                "label": "Acknowledge"
+              }
+            ]
+          },
+          {
+            "id": "n2",
+            "topic": "homelab",
+            "title": "Front gate",
+            "message": "Parcel detected.",
+            "priority": 4,
+            "time": "2026-11-02T11:42:00Z",
+            "image": "/images/demo-dashboard-background.svg",
+            "actions": [
+              {
+                "id": "dismiss",
+                "label": "Dismiss"
+              }
+            ]
+          },
+          {
+            "id": "n1",
+            "topic": "homelab",
+            "title": "Maintenance",
+            "message": "Storage check scheduled.",
+            "priority": 2,
+            "time": "2026-11-02T10:00:00Z",
+            "actions": []
+          }
+        ]
+      },
+      "notificationAction": {
+        "accepted": true,
+        "message": "Simulated acknowledgement"
+      }
+    },
+    "emptyResponses": {
+      "notifications": {
+        "messages": []
+      },
+      "notificationAction": {
+        "accepted": true
+      }
+    },
+    "manualParams": {
+      "notificationAction": {
+        "id": "n3",
+        "actionId": "ack"
+      }
+    },
+    "defaultOptions": {
+      "topic": "homelab"
+    },
+    "simulation": {
+      "clock": "2026-11-02T12:00:00Z",
+      "refreshSeconds": null,
+      "note": "Fixture simulation only; refresh intent is not live polling. No source HTTP or mutations."
+    }
+  },
+  {
+    "id": "currency",
+    "title": "Currency rates",
+    "prompt": "Display EUR-base currency rates with configured decimal precision and symbols/codes, as-of date, compact responsive layout and no unnecessary fixed-height blank area. Preserve refresh and every query state.",
+    "definition": {
+      "$schema": "homarr-custom-widget-v2",
+      "name": "Currency rates",
+      "description": "Synthetic arena fixture; all requests and controls are simulated.",
+      "sources": {
+        "default": {
+          "name": "Arena fixture",
+          "baseUrl": "https://arena.example.com",
+          "auth": "none"
+        }
+      },
+      "requests": {
+        "rates": {
+          "source": "default",
+          "kind": "query",
+          "method": "GET",
+          "path": "/fixtures/rates",
+          "query": {
+            "base": {
+              "$option": "base"
+            }
+          },
+          "auth": "inherit",
+          "trigger": "load",
+          "permission": "view"
+        }
+      },
+      "options": {
+        "base": {
+          "label": "Base currency",
+          "control": "select",
+          "default": "EUR",
+          "choices": [
+            {
+              "label": "EUR",
+              "value": "EUR"
+            }
+          ]
+        },
+        "decimals": {
+          "label": "Decimal places",
+          "control": "number",
+          "default": 2,
+          "min": 0,
+          "max": 4
+        }
+      },
+      "template": "<Stack p=\"md\"><Text>Currency rates</Text><Text>Synthetic fixture simulation</Text></Stack>"
+    },
+    "responses": {
+      "rates": {
+        "base": "EUR",
+        "asOf": "2026-11-02T12:00:00Z",
+        "rates": [
+          {
+            "code": "USD",
+            "symbol": "$",
+            "rate": 1.08723
+          },
+          {
+            "code": "GBP",
+            "symbol": "£",
+            "rate": 0.84267
+          },
+          {
+            "code": "JPY",
+            "symbol": "¥",
+            "rate": 164.324
+          }
+        ]
+      }
+    },
+    "emptyResponses": {
+      "rates": {
+        "base": "EUR",
+        "asOf": "2026-11-02T12:00:00Z",
+        "rates": []
+      }
+    },
+    "manualParams": {},
+    "defaultOptions": {
+      "base": "EUR",
+      "decimals": 2
+    },
+    "simulation": {
+      "clock": "2026-11-02T12:00:00Z",
+      "refreshSeconds": null,
+      "note": "Fixture simulation only; refresh intent is not live polling. No source HTTP or mutations."
+    }
+  },
+  {
+    "id": "dog-facts",
+    "title": "Dog facts",
+    "prompt": "Show the current dog fact with a clearly labeled manual New fact SubFetch requestId=nextFact (no params). Its child receives {fact}. Handle initial fact query states and the manual helper's loading/error/empty result. Never call a public dog API.",
+    "definition": {
+      "$schema": "homarr-custom-widget-v2",
+      "name": "Dog facts",
+      "description": "Synthetic arena fixture; all requests and controls are simulated.",
+      "sources": {
+        "default": {
+          "name": "Arena fixture",
+          "baseUrl": "https://arena.example.com",
+          "auth": "none"
+        }
+      },
+      "requests": {
+        "fact": {
+          "source": "default",
+          "kind": "query",
+          "method": "GET",
+          "path": "/fixtures/dog-fact",
+          "auth": "inherit",
+          "trigger": "load",
+          "permission": "view"
+        },
+        "nextFact": {
+          "source": "default",
+          "kind": "query",
+          "method": "GET",
+          "path": "/fixtures/dog-fact/next",
+          "trigger": "manual",
+          "auth": "inherit",
+          "cacheSeconds": 0,
+          "permission": "view"
+        }
+      },
+      "options": {},
+      "template": "<Stack p=\"md\"><Text>Dog facts</Text><Text>Synthetic fixture simulation</Text></Stack>"
+    },
+    "responses": {
+      "fact": {
+        "fact": "Dogs have a highly developed sense of smell."
+      },
+      "nextFact": {
+        "fact": "Dogs communicate using posture as well as sound."
+      }
+    },
+    "emptyResponses": {
+      "fact": {
+        "fact": ""
+      },
+      "nextFact": {
+        "fact": ""
+      }
+    },
+    "manualParams": {},
+    "defaultOptions": {},
+    "simulation": {
+      "clock": "2026-11-02T12:00:00Z",
+      "refreshSeconds": null,
+      "note": "Fixture simulation only; refresh intent is not live polling. No source HTTP or mutations."
+    }
+  },
+  {
+    "id": "ha-cameras",
+    "title": "Home cameras",
+    "prompt": "Display selected camera placeholders in the configured grid/stack layout, with camera names, online state and capture timestamps. options.cameraIds is comma-separated persistent installation configuration, not temporary inputs; options.layout selects grid/stack. Data is adapted synthetic JSON and a local illustration, NOT live Home Assistant streams or camera feeds. Include refresh and query states.",
+    "definition": {
+      "$schema": "homarr-custom-widget-v2",
+      "name": "Home cameras",
+      "description": "Synthetic arena fixture; all requests and controls are simulated.",
+      "sources": {
+        "default": {
+          "name": "Arena fixture",
+          "baseUrl": "https://arena.example.com",
+          "auth": "none"
+        }
+      },
+      "requests": {
+        "cameras": {
+          "source": "default",
+          "kind": "query",
+          "method": "GET",
+          "path": "/fixtures/cameras",
+          "query": {
+            "ids": {
+              "$option": "cameraIds"
+            }
+          },
+          "auth": "inherit",
+          "trigger": "load",
+          "permission": "view"
+        }
+      },
+      "options": {
+        "cameraIds": {
+          "label": "Camera IDs",
+          "control": "text",
+          "default": "entry,garden"
+        },
+        "layout": {
+          "label": "Layout",
+          "control": "select",
+          "default": "grid",
+          "choices": [
+            {
+              "label": "Grid",
+              "value": "grid"
+            },
+            {
+              "label": "Stack",
+              "value": "stack"
+            }
+          ]
+        }
+      },
+      "template": "<Stack p=\"md\"><Text>Home cameras</Text><Text>Synthetic fixture simulation</Text></Stack>"
+    },
+    "responses": {
+      "cameras": {
+        "cameras": [
+          {
+            "id": "entry",
+            "name": "Entry",
+            "online": true,
+            "capturedAt": "2026-11-02T11:59:00Z",
+            "image": "/images/demo-dashboard-background.svg"
+          },
+          {
+            "id": "garden",
+            "name": "Garden",
+            "online": false,
+            "capturedAt": "2026-11-02T11:50:00Z",
+            "image": "/images/demo-dashboard-background.svg"
+          }
+        ]
+      }
+    },
+    "emptyResponses": {
+      "cameras": {
+        "cameras": []
+      }
+    },
+    "manualParams": {},
+    "defaultOptions": {
+      "cameraIds": "entry,garden",
+      "layout": "grid"
+    },
+    "simulation": {
+      "clock": "2026-11-02T12:00:00Z",
+      "refreshSeconds": null,
+      "note": "Fixture simulation only; refresh intent is not live polling. No source HTTP or mutations."
+    }
+  },
+  {
+    "id": "game-server",
+    "title": "Game server",
+    "prompt": "Emphasize the server name and supplied gamepad icon, display fictional server IP/address, online status, current/max players, and every player's actual supplied name and ping in ms. Omit map name and country markers; do not add a game/map headline. Do not invent player names from counts. Balance spacing at both sizes, with refresh/loading/error/empty.",
+    "definition": {
+      "$schema": "homarr-custom-widget-v2",
+      "name": "Game server",
+      "description": "Synthetic arena fixture; all requests and controls are simulated.",
+      "sources": {
+        "default": {
+          "name": "Arena fixture",
+          "baseUrl": "https://arena.example.com",
+          "auth": "none"
+        }
+      },
+      "requests": {
+        "server": {
+          "source": "default",
+          "kind": "query",
+          "method": "GET",
+          "path": "/fixtures/game-server",
+          "auth": "inherit",
+          "trigger": "load",
+          "permission": "view"
+        }
+      },
+      "options": {},
+      "template": "<Stack p=\"md\"><Text>Game server</Text><Text>Synthetic fixture simulation</Text></Stack>"
+    },
+    "responses": {
+      "server": {
+        "name": "Arena survival",
+        "address": "192.0.2.42:25565",
+        "icon": "device-gamepad-2",
+        "online": true,
+        "maxPlayers": 16,
+        "players": [
+          {
+            "name": "Fern",
+            "ping": 23
+          },
+          {
+            "name": "Birch",
+            "ping": 47
+          },
+          {
+            "name": "Moss",
+            "ping": 81
+          }
+        ]
+      }
+    },
+    "emptyResponses": {
+      "server": {
+        "name": "Arena survival",
+        "address": "192.0.2.42:25565",
+        "icon": "device-gamepad-2",
+        "online": true,
+        "maxPlayers": 16,
+        "players": []
+      }
+    },
+    "manualParams": {},
+    "defaultOptions": {},
+    "simulation": {
+      "clock": "2026-11-02T12:00:00Z",
+      "refreshSeconds": null,
+      "note": "Fixture simulation only; refresh intent is not live polling. No source HTTP or mutations."
+    }
+  },
+  {
+    "id": "sonarr",
+    "title": "Upcoming episodes",
+    "prompt": "Combine date-range episode status with weekly day selection in this SAME case. Show series/episode names, season/episode numbers, air date and downloaded/missing status. start/end installation options define the week; offer a bound day Select and a manual SubFetch requestId=episodesForDay params={{day: inputs.day ?? options.start}}. Its result envelope is {episodes:[...]}. Include initial full-week list, day result and query states; simulation only.",
+    "definition": {
+      "$schema": "homarr-custom-widget-v2",
+      "name": "Upcoming episodes",
+      "description": "Synthetic arena fixture; all requests and controls are simulated.",
+      "sources": {
+        "default": {
+          "name": "Arena fixture",
+          "baseUrl": "https://arena.example.com",
+          "auth": "none"
+        }
+      },
+      "requests": {
+        "episodes": {
+          "source": "default",
+          "kind": "query",
+          "method": "GET",
+          "path": "/fixtures/episodes",
+          "query": {
+            "start": {
+              "$option": "start"
+            },
+            "end": {
+              "$option": "end"
+            }
+          },
+          "auth": "inherit",
+          "trigger": "load",
+          "permission": "view"
+        },
+        "episodesForDay": {
+          "source": "default",
+          "kind": "query",
+          "method": "GET",
+          "path": "/fixtures/episodes/day",
+          "trigger": "manual",
+          "query": {
+            "day": {
+              "$param": "day"
+            }
+          },
+          "auth": "inherit",
+          "permission": "view"
+        }
+      },
+      "options": {
+        "start": {
+          "label": "Start date",
+          "control": "date",
+          "default": "2026-11-02"
+        },
+        "end": {
+          "label": "End date",
+          "control": "date",
+          "default": "2026-11-08"
+        }
+      },
+      "template": "<Stack p=\"md\"><Text>Upcoming episodes</Text><Text>Synthetic fixture simulation</Text></Stack>"
+    },
+    "responses": {
+      "episodes": {
+        "episodes": [
+          {
+            "id": "e1",
+            "series": "The Observatory",
+            "title": "First light",
+            "season": 2,
+            "episode": 4,
+            "airDate": "2026-11-02T20:00:00Z",
+            "status": "downloaded"
+          },
+          {
+            "id": "e2",
+            "series": "Garden paths",
+            "title": "Rain",
+            "season": 1,
+            "episode": 7,
+            "airDate": "2026-11-04T19:00:00Z",
+            "status": "missing"
+          }
+        ]
+      },
+      "episodesForDay": {
+        "episodes": [
+          {
+            "id": "e1",
+            "series": "The Observatory",
+            "title": "First light",
+            "season": 2,
+            "episode": 4,
+            "airDate": "2026-11-02T20:00:00Z",
+            "status": "downloaded"
+          }
+        ]
+      }
+    },
+    "emptyResponses": {
+      "episodes": {
+        "episodes": []
+      },
+      "episodesForDay": {
+        "episodes": []
+      }
+    },
+    "manualParams": {
+      "episodesForDay": {
+        "day": "2026-11-02"
+      }
+    },
+    "defaultOptions": {
+      "start": "2026-11-02",
+      "end": "2026-11-08"
+    },
+    "simulation": {
+      "clock": "2026-11-02T12:00:00Z",
+      "refreshSeconds": null,
+      "note": "Fixture simulation only; refresh intent is not live polling. No source HTTP or mutations."
+    }
+  },
+  {
+    "id": "your-spotify",
+    "title": "Listening statistics",
+    "prompt": "Exactly two primary statistics labeled Songs listened and Listening time. Convert listeningSeconds to minutes by /60 and show exactly one decimal with min unit; do not show seconds as minutes or add unrelated headline stats. Include as-of and explicit Hourly refresh — fixture simulation intent, not live polling. Handle refresh/loading/error/empty.",
+    "definition": {
+      "$schema": "homarr-custom-widget-v2",
+      "name": "Listening statistics",
+      "description": "Synthetic arena fixture; all requests and controls are simulated.",
+      "sources": {
+        "default": {
+          "name": "Arena fixture",
+          "baseUrl": "https://arena.example.com",
+          "auth": "none"
+        }
+      },
+      "requests": {
+        "statistics": {
+          "source": "default",
+          "kind": "query",
+          "method": "GET",
+          "path": "/fixtures/listening",
+          "auth": "inherit",
+          "cacheSeconds": 3600,
+          "trigger": "load",
+          "permission": "view"
+        }
+      },
+      "options": {},
+      "template": "<Stack p=\"md\"><Text>Listening statistics</Text><Text>Synthetic fixture simulation</Text></Stack>"
+    },
+    "responses": {
+      "statistics": {
+        "songsListened": 137,
+        "listeningSeconds": 25865,
+        "asOf": "2026-11-02T12:00:00Z",
+        "hasData": true
+      }
+    },
+    "emptyResponses": {
+      "statistics": {
+        "songsListened": 0,
+        "listeningSeconds": 0,
+        "asOf": "2026-11-02T12:00:00Z",
+        "hasData": false
+      }
+    },
+    "manualParams": {},
+    "defaultOptions": {},
+    "simulation": {
+      "clock": "2026-11-02T12:00:00Z",
+      "refreshSeconds": 3600,
+      "note": "Fixture simulation only; refresh intent is not live polling. No source HTTP or mutations."
+    }
+  },
+  {
+    "id": "wireguard",
+    "title": "WireGuard peers",
+    "prompt": "Show peer name, connection state, latest handshake, transferred bytes and refresh intent. Preserve source timestamps exactly or format with documented UTC only; never invent a local timezone offset. Fixture timezone is UTC. Distinguish never-handshaken peers. Display automatic-refresh intent as simulated, not a live timer. Include every query state.",
+    "definition": {
+      "$schema": "homarr-custom-widget-v2",
+      "name": "WireGuard peers",
+      "description": "Synthetic arena fixture; all requests and controls are simulated.",
+      "sources": {
+        "default": {
+          "name": "Arena fixture",
+          "baseUrl": "https://arena.example.com",
+          "auth": "none"
+        }
+      },
+      "requests": {
+        "peers": {
+          "source": "default",
+          "kind": "query",
+          "method": "GET",
+          "path": "/fixtures/wireguard",
+          "auth": "inherit",
+          "cacheSeconds": 30,
+          "trigger": "load",
+          "permission": "view"
+        }
+      },
+      "options": {},
+      "template": "<Stack p=\"md\"><Text>WireGuard peers</Text><Text>Synthetic fixture simulation</Text></Stack>"
+    },
+    "responses": {
+      "peers": {
+        "timezone": "UTC",
+        "asOf": "2026-11-02T12:00:00Z",
+        "peers": [
+          {
+            "id": "p1",
+            "name": "Laptop",
+            "connected": true,
+            "latestHandshake": "2026-11-02T11:59:20Z",
+            "receivedBytes": 1843200,
+            "sentBytes": 409600
+          },
+          {
+            "id": "p2",
+            "name": "Tablet",
+            "connected": false,
+            "latestHandshake": null,
+            "receivedBytes": 0,
+            "sentBytes": 0
+          }
+        ]
+      }
+    },
+    "emptyResponses": {
+      "peers": {
+        "timezone": "UTC",
+        "asOf": "2026-11-02T12:00:00Z",
+        "peers": []
+      }
+    },
+    "manualParams": {},
+    "defaultOptions": {},
+    "simulation": {
+      "clock": "2026-11-02T12:00:00Z",
+      "refreshSeconds": 30,
+      "note": "Fixture simulation only; refresh intent is not live polling. No source HTTP or mutations."
+    }
+  },
+  {
+    "id": "netronome",
+    "title": "Speed history",
+    "prompt": "Visualize chronological download/upload Mbps history, latency ms and measured timestamps with legible units and a legend. Include current values and an actual supported chart or clear proportional bars, not invented chart components. Refresh and loading/error/empty required.",
+    "definition": {
+      "$schema": "homarr-custom-widget-v2",
+      "name": "Speed history",
+      "description": "Synthetic arena fixture; all requests and controls are simulated.",
+      "sources": {
+        "default": {
+          "name": "Arena fixture",
+          "baseUrl": "https://arena.example.com",
+          "auth": "none"
+        }
+      },
+      "requests": {
+        "history": {
+          "source": "default",
+          "kind": "query",
+          "method": "GET",
+          "path": "/fixtures/speed-history",
+          "auth": "inherit",
+          "trigger": "load",
+          "permission": "view"
+        }
+      },
+      "options": {},
+      "template": "<Stack p=\"md\"><Text>Speed history</Text><Text>Synthetic fixture simulation</Text></Stack>"
+    },
+    "responses": {
+      "history": {
+        "samples": [
+          {
+            "measuredAt": "2026-11-02T09:00:00Z",
+            "downloadMbps": 850,
+            "uploadMbps": 210,
+            "latencyMs": 8
+          },
+          {
+            "measuredAt": "2026-11-02T10:00:00Z",
+            "downloadMbps": 720,
+            "uploadMbps": 195,
+            "latencyMs": 14
+          },
+          {
+            "measuredAt": "2026-11-02T11:00:00Z",
+            "downloadMbps": 925,
+            "uploadMbps": 230,
+            "latencyMs": 7
+          }
+        ]
+      }
+    },
+    "emptyResponses": {
+      "history": {
+        "samples": []
+      }
+    },
+    "manualParams": {},
+    "defaultOptions": {},
+    "simulation": {
+      "clock": "2026-11-02T12:00:00Z",
+      "refreshSeconds": null,
+      "note": "Fixture simulation only; refresh intent is not live polling. No source HTTP or mutations."
+    }
+  },
+  {
+    "id": "proxmox-security",
+    "title": "Security overview",
+    "prompt": "Create one fictional Proxmox node security status card from data.security.status. Show updated timestamp, failed/successful SSH logins over 7 days, SSH password authentication, failed Proxmox UI logins over 7 days, root 2FA, firewall service and Homarr firewall, Tailscale state/online peers, rpcbind service, pending Nexus and Homarr CT updates, listening ports, uptime days and PVE version. Preserve every supplied field with readable labels and meaningful status badges. Distinguish unknown/null from healthy/false; empty status is null. Do not invent remediation actions. Keep refresh and all query states.",
+    "definition": {
+      "$schema": "homarr-custom-widget-v2",
+      "name": "Security overview",
+      "description": "Synthetic arena fixture; all requests and controls are simulated.",
+      "sources": {
+        "default": {
+          "name": "Arena fixture",
+          "baseUrl": "https://arena.example.com",
+          "auth": "none"
+        }
+      },
+      "requests": {
+        "security": {
+          "source": "default",
+          "kind": "query",
+          "method": "GET",
+          "path": "/fixtures/security",
+          "auth": "inherit",
+          "trigger": "load",
+          "permission": "view"
+        }
+      },
+      "options": {},
+      "template": "<Stack p=\"md\"><Text>Security overview</Text><Text>Synthetic fixture simulation</Text></Stack>"
+    },
+    "responses": {
+      "security": {
+        "status": {
+          "updated": "2026-11-02T11:30:00Z",
+          "ssh_failed_7d": 12,
+          "ssh_success_7d": 28,
+          "ssh_password_auth": false,
+          "proxmox_ui_failed_7d": 3,
+          "root_2fa_enabled": true,
+          "firewall_running": true,
+          "homarr_firewall_on": true,
+          "tailscale_state": "Running",
+          "tailscale_peers_online": 4,
+          "rpcbind_running": false,
+          "updates_nexus": 2,
+          "updates_homarr_ct": 1,
+          "listening_ports": [
+            22,
+            443,
+            8006
+          ],
+          "uptime_days": 18.4,
+          "pve_version": "9.0.1"
+        }
+      }
+    },
+    "emptyResponses": {
+      "security": {
+        "status": null
+      }
+    },
+    "manualParams": {},
+    "defaultOptions": {},
+    "simulation": {
+      "clock": "2026-11-02T12:00:00Z",
+      "refreshSeconds": null,
+      "note": "Fixture simulation only; refresh intent is not live polling. No source HTTP or mutations."
+    }
+  },
+  {
+    "id": "monthly-calendar",
+    "title": "November calendar",
+    "prompt": "Render November 2026 as a Monday-first month grid including weekday labels, numbered dates and readable event NAMES in their cells, not dots alone. Today is November 2 from the frozen clock. Synthetic JSON adaptation, NOT iCal parsing. data.calendar.days supplies all 42 grid cells (including adjacent months) and per-day event lists. Handle no events distinctly from loading/error and preserve month context.",
+    "definition": {
+      "$schema": "homarr-custom-widget-v2",
+      "name": "November calendar",
+      "description": "Synthetic arena fixture; all requests and controls are simulated.",
+      "sources": {
+        "default": {
+          "name": "Arena fixture",
+          "baseUrl": "https://arena.example.com",
+          "auth": "none"
+        }
+      },
+      "requests": {
+        "calendar": {
+          "source": "default",
+          "kind": "query",
+          "method": "GET",
+          "path": "/fixtures/calendar",
+          "query": {
+            "month": {
+              "$option": "month"
+            }
+          },
+          "auth": "inherit",
+          "trigger": "load",
+          "permission": "view"
+        }
+      },
+      "options": {
+        "month": {
+          "label": "Month",
+          "control": "text",
+          "default": "2026-11"
+        }
+      },
+      "template": "<Stack p=\"md\"><Text>November calendar</Text><Text>Synthetic fixture simulation</Text></Stack>"
+    },
+    "responses": {
+      "calendar": {
+        "month": "November 2026",
+        "today": "2026-11-02",
+        "days": [
+          {
+            "date": "2026-10-26",
+            "day": 26,
+            "inMonth": false,
+            "events": []
+          },
+          {
+            "date": "2026-10-27",
+            "day": 27,
+            "inMonth": false,
+            "events": []
+          },
+          {
+            "date": "2026-10-28",
+            "day": 28,
+            "inMonth": false,
+            "events": []
+          },
+          {
+            "date": "2026-10-29",
+            "day": 29,
+            "inMonth": false,
+            "events": []
+          },
+          {
+            "date": "2026-10-30",
+            "day": 30,
+            "inMonth": false,
+            "events": []
+          },
+          {
+            "date": "2026-10-31",
+            "day": 31,
+            "inMonth": false,
+            "events": []
+          },
+          {
+            "date": "2026-11-01",
+            "day": 1,
+            "inMonth": true,
+            "events": []
+          },
+          {
+            "date": "2026-11-02",
+            "day": 2,
+            "inMonth": true,
+            "events": [
+              {
+                "name": "Team planning",
+                "time": "09:00"
+              }
+            ]
+          },
+          {
+            "date": "2026-11-03",
+            "day": 3,
+            "inMonth": true,
+            "events": []
+          },
+          {
+            "date": "2026-11-04",
+            "day": 4,
+            "inMonth": true,
+            "events": []
+          },
+          {
+            "date": "2026-11-05",
+            "day": 5,
+            "inMonth": true,
+            "events": []
+          },
+          {
+            "date": "2026-11-06",
+            "day": 6,
+            "inMonth": true,
+            "events": []
+          },
+          {
+            "date": "2026-11-07",
+            "day": 7,
+            "inMonth": true,
+            "events": []
+          },
+          {
+            "date": "2026-11-08",
+            "day": 8,
+            "inMonth": true,
+            "events": []
+          },
+          {
+            "date": "2026-11-09",
+            "day": 9,
+            "inMonth": true,
+            "events": []
+          },
+          {
+            "date": "2026-11-10",
+            "day": 10,
+            "inMonth": true,
+            "events": []
+          },
+          {
+            "date": "2026-11-11",
+            "day": 11,
+            "inMonth": true,
+            "events": []
+          },
+          {
+            "date": "2026-11-12",
+            "day": 12,
+            "inMonth": true,
+            "events": [
+              {
+                "name": "Storage maintenance",
+                "time": "18:00"
+              }
+            ]
+          },
+          {
+            "date": "2026-11-13",
+            "day": 13,
+            "inMonth": true,
+            "events": []
+          },
+          {
+            "date": "2026-11-14",
+            "day": 14,
+            "inMonth": true,
+            "events": []
+          },
+          {
+            "date": "2026-11-15",
+            "day": 15,
+            "inMonth": true,
+            "events": []
+          },
+          {
+            "date": "2026-11-16",
+            "day": 16,
+            "inMonth": true,
+            "events": []
+          },
+          {
+            "date": "2026-11-17",
+            "day": 17,
+            "inMonth": true,
+            "events": []
+          },
+          {
+            "date": "2026-11-18",
+            "day": 18,
+            "inMonth": true,
+            "events": []
+          },
+          {
+            "date": "2026-11-19",
+            "day": 19,
+            "inMonth": true,
+            "events": []
+          },
+          {
+            "date": "2026-11-20",
+            "day": 20,
+            "inMonth": true,
+            "events": []
+          },
+          {
+            "date": "2026-11-21",
+            "day": 21,
+            "inMonth": true,
+            "events": [
+              {
+                "name": "Community meetup",
+                "time": "14:00"
+              }
+            ]
+          },
+          {
+            "date": "2026-11-22",
+            "day": 22,
+            "inMonth": true,
+            "events": []
+          },
+          {
+            "date": "2026-11-23",
+            "day": 23,
+            "inMonth": true,
+            "events": []
+          },
+          {
+            "date": "2026-11-24",
+            "day": 24,
+            "inMonth": true,
+            "events": []
+          },
+          {
+            "date": "2026-11-25",
+            "day": 25,
+            "inMonth": true,
+            "events": []
+          },
+          {
+            "date": "2026-11-26",
+            "day": 26,
+            "inMonth": true,
+            "events": []
+          },
+          {
+            "date": "2026-11-27",
+            "day": 27,
+            "inMonth": true,
+            "events": []
+          },
+          {
+            "date": "2026-11-28",
+            "day": 28,
+            "inMonth": true,
+            "events": []
+          },
+          {
+            "date": "2026-11-29",
+            "day": 29,
+            "inMonth": true,
+            "events": []
+          },
+          {
+            "date": "2026-11-30",
+            "day": 30,
+            "inMonth": true,
+            "events": []
+          },
+          {
+            "date": "2026-12-01",
+            "day": 1,
+            "inMonth": false,
+            "events": []
+          },
+          {
+            "date": "2026-12-02",
+            "day": 2,
+            "inMonth": false,
+            "events": []
+          },
+          {
+            "date": "2026-12-03",
+            "day": 3,
+            "inMonth": false,
+            "events": []
+          },
+          {
+            "date": "2026-12-04",
+            "day": 4,
+            "inMonth": false,
+            "events": []
+          },
+          {
+            "date": "2026-12-05",
+            "day": 5,
+            "inMonth": false,
+            "events": []
+          },
+          {
+            "date": "2026-12-06",
+            "day": 6,
+            "inMonth": false,
+            "events": []
+          }
+        ]
+      }
+    },
+    "emptyResponses": {
+      "calendar": {
+        "month": "November 2026",
+        "today": "2026-11-02",
+        "days": [
+          {
+            "date": "2026-10-26",
+            "day": 26,
+            "inMonth": false,
+            "events": []
+          },
+          {
+            "date": "2026-10-27",
+            "day": 27,
+            "inMonth": false,
+            "events": []
+          },
+          {
+            "date": "2026-10-28",
+            "day": 28,
+            "inMonth": false,
+            "events": []
+          },
+          {
+            "date": "2026-10-29",
+            "day": 29,
+            "inMonth": false,
+            "events": []
+          },
+          {
+            "date": "2026-10-30",
+            "day": 30,
+            "inMonth": false,
+            "events": []
+          },
+          {
+            "date": "2026-10-31",
+            "day": 31,
+            "inMonth": false,
+            "events": []
+          },
+          {
+            "date": "2026-11-01",
+            "day": 1,
+            "inMonth": true,
+            "events": []
+          },
+          {
+            "date": "2026-11-02",
+            "day": 2,
+            "inMonth": true,
+            "events": []
+          },
+          {
+            "date": "2026-11-03",
+            "day": 3,
+            "inMonth": true,
+            "events": []
+          },
+          {
+            "date": "2026-11-04",
+            "day": 4,
+            "inMonth": true,
+            "events": []
+          },
+          {
+            "date": "2026-11-05",
+            "day": 5,
+            "inMonth": true,
+            "events": []
+          },
+          {
+            "date": "2026-11-06",
+            "day": 6,
+            "inMonth": true,
+            "events": []
+          },
+          {
+            "date": "2026-11-07",
+            "day": 7,
+            "inMonth": true,
+            "events": []
+          },
+          {
+            "date": "2026-11-08",
+            "day": 8,
+            "inMonth": true,
+            "events": []
+          },
+          {
+            "date": "2026-11-09",
+            "day": 9,
+            "inMonth": true,
+            "events": []
+          },
+          {
+            "date": "2026-11-10",
+            "day": 10,
+            "inMonth": true,
+            "events": []
+          },
+          {
+            "date": "2026-11-11",
+            "day": 11,
+            "inMonth": true,
+            "events": []
+          },
+          {
+            "date": "2026-11-12",
+            "day": 12,
+            "inMonth": true,
+            "events": []
+          },
+          {
+            "date": "2026-11-13",
+            "day": 13,
+            "inMonth": true,
+            "events": []
+          },
+          {
+            "date": "2026-11-14",
+            "day": 14,
+            "inMonth": true,
+            "events": []
+          },
+          {
+            "date": "2026-11-15",
+            "day": 15,
+            "inMonth": true,
+            "events": []
+          },
+          {
+            "date": "2026-11-16",
+            "day": 16,
+            "inMonth": true,
+            "events": []
+          },
+          {
+            "date": "2026-11-17",
+            "day": 17,
+            "inMonth": true,
+            "events": []
+          },
+          {
+            "date": "2026-11-18",
+            "day": 18,
+            "inMonth": true,
+            "events": []
+          },
+          {
+            "date": "2026-11-19",
+            "day": 19,
+            "inMonth": true,
+            "events": []
+          },
+          {
+            "date": "2026-11-20",
+            "day": 20,
+            "inMonth": true,
+            "events": []
+          },
+          {
+            "date": "2026-11-21",
+            "day": 21,
+            "inMonth": true,
+            "events": []
+          },
+          {
+            "date": "2026-11-22",
+            "day": 22,
+            "inMonth": true,
+            "events": []
+          },
+          {
+            "date": "2026-11-23",
+            "day": 23,
+            "inMonth": true,
+            "events": []
+          },
+          {
+            "date": "2026-11-24",
+            "day": 24,
+            "inMonth": true,
+            "events": []
+          },
+          {
+            "date": "2026-11-25",
+            "day": 25,
+            "inMonth": true,
+            "events": []
+          },
+          {
+            "date": "2026-11-26",
+            "day": 26,
+            "inMonth": true,
+            "events": []
+          },
+          {
+            "date": "2026-11-27",
+            "day": 27,
+            "inMonth": true,
+            "events": []
+          },
+          {
+            "date": "2026-11-28",
+            "day": 28,
+            "inMonth": true,
+            "events": []
+          },
+          {
+            "date": "2026-11-29",
+            "day": 29,
+            "inMonth": true,
+            "events": []
+          },
+          {
+            "date": "2026-11-30",
+            "day": 30,
+            "inMonth": true,
+            "events": []
+          },
+          {
+            "date": "2026-12-01",
+            "day": 1,
+            "inMonth": false,
+            "events": []
+          },
+          {
+            "date": "2026-12-02",
+            "day": 2,
+            "inMonth": false,
+            "events": []
+          },
+          {
+            "date": "2026-12-03",
+            "day": 3,
+            "inMonth": false,
+            "events": []
+          },
+          {
+            "date": "2026-12-04",
+            "day": 4,
+            "inMonth": false,
+            "events": []
+          },
+          {
+            "date": "2026-12-05",
+            "day": 5,
+            "inMonth": false,
+            "events": []
+          },
+          {
+            "date": "2026-12-06",
+            "day": 6,
+            "inMonth": false,
+            "events": []
+          }
+        ]
+      }
+    },
+    "manualParams": {},
+    "defaultOptions": {
+      "month": "2026-11"
+    },
+    "simulation": {
+      "clock": "2026-11-02T12:00:00Z",
+      "refreshSeconds": null,
+      "note": "Fixture simulation only; refresh intent is not live polling. No source HTTP or mutations."
+    }
+  },
+  {
+    "id": "event-feed",
+    "title": "Activity feed",
+    "prompt": "Display QueueItemDeleted, SearchTriggered and removal activity newest-first with event name, description, category/status, timestamp and relative age using the frozen response now value (not Date.now). Include filter Select bind=category with all/queue/search/removal choices and manual SubFetch requestId=filteredEvents params={{category: inputs.category ?? 'all'}}; render its {events:[...],now} result. Keep full initial feed, manual filter and every query state.",
+    "definition": {
+      "$schema": "homarr-custom-widget-v2",
+      "name": "Activity feed",
+      "description": "Synthetic arena fixture; all requests and controls are simulated.",
+      "sources": {
+        "default": {
+          "name": "Arena fixture",
+          "baseUrl": "https://arena.example.com",
+          "auth": "none"
+        }
+      },
+      "requests": {
+        "events": {
+          "source": "default",
+          "kind": "query",
+          "method": "GET",
+          "path": "/fixtures/events",
+          "auth": "inherit",
+          "trigger": "load",
+          "permission": "view"
+        },
+        "filteredEvents": {
+          "source": "default",
+          "kind": "query",
+          "method": "GET",
+          "path": "/fixtures/events/filter",
+          "trigger": "manual",
+          "query": {
+            "category": {
+              "$param": "category"
+            }
+          },
+          "auth": "inherit",
+          "permission": "view"
+        }
+      },
+      "options": {},
+      "template": "<Stack p=\"md\"><Text>Activity feed</Text><Text>Synthetic fixture simulation</Text></Stack>"
+    },
+    "responses": {
+      "events": {
+        "now": "2026-11-02T12:00:00Z",
+        "events": [
+          {
+            "id": "a3",
+            "name": "QueueItemDeleted",
+            "description": "Fictional episode download removed from the queue.",
+            "category": "queue",
+            "status": "success",
+            "timestamp": "2026-11-02T11:55:00Z"
+          },
+          {
+            "id": "a2",
+            "name": "SearchTriggered",
+            "description": "Manual search requested for The Observatory.",
+            "category": "search",
+            "status": "info",
+            "timestamp": "2026-11-02T11:30:00Z"
+          },
+          {
+            "id": "a1",
+            "name": "EpisodeFileRemoved",
+            "description": "Fictional superseded episode file removed.",
+            "category": "removal",
+            "status": "info",
+            "timestamp": "2026-11-02T10:15:00Z"
+          }
+        ]
+      },
+      "filteredEvents": {
+        "now": "2026-11-02T12:00:00Z",
+        "events": [
+          {
+            "id": "a3",
+            "name": "QueueItemDeleted",
+            "description": "Fictional episode download removed from the queue.",
+            "category": "queue",
+            "status": "success",
+            "timestamp": "2026-11-02T11:55:00Z"
+          }
+        ]
+      }
+    },
+    "emptyResponses": {
+      "events": {
+        "now": "2026-11-02T12:00:00Z",
+        "events": []
+      },
+      "filteredEvents": {
+        "now": "2026-11-02T12:00:00Z",
+        "events": []
+      }
+    },
+    "manualParams": {
+      "filteredEvents": {
+        "category": "queue"
+      }
+    },
+    "defaultOptions": {},
+    "simulation": {
+      "clock": "2026-11-02T12:00:00Z",
+      "refreshSeconds": null,
+      "note": "Fixture simulation only; refresh intent is not live polling. No source HTTP or mutations."
+    }
+  }
+]

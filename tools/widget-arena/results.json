@@ -1,0 +1,135 @@
+{
+  "version": 1,
+  "kind": "Matched fixture visual-authoring study; human preference collection not yet performed",
+  "model": "openai/gpt-6.1-sol#medium",
+  "runtimeBase": "8a0b643921922c739490c9ec1f1f0579dc7db193",
+  "planHash": "016b4e2b1fd8bbda0df0b42ceacdc3d4b604586401e9357768d0d7302bf43a07",
+  "freezeHash": "ede15b04e21b4690b29a49cb1910f0ec2f018e39d34ee34dc6dd35f8571c2024",
+  "datasetHash": "f6e739e3458e77f2a2ed13402474ed7e0eba68c497e866268200ae4749ea86f8",
+  "conditions": 5,
+  "cases": 12,
+  "authorJobs": 15,
+  "outputs": 60,
+  "validDefinitions": 52,
+  "invalidDefinitions": 8,
+  "scheduledComparisons": 120,
+  "initialUsableComparisons": 91,
+  "initialUnavailableComparisons": 29,
+  "retries": 0,
+  "repairs": 0,
+  "oneWritePerArtifactVerified": true,
+  "modelMediumVerifiedForEveryAssistantMessage": true,
+  "artifactsMatchModelWrites": true,
+  "captures": {
+    "views": 480,
+    "candidates": 60,
+    "states": 4,
+    "sizes": 2,
+    "admittedRuntimeReadyViews": 416,
+    "invalidUnavailableViews": 64,
+    "captureFailures": 0,
+    "candidateRuntimeFailures": 0,
+    "detectedHorizontalOverflowViews": 0,
+    "pixelSizeMismatches": 0,
+    "shellDiagnostics": "Browser error buffers contain application-board hydration diagnostics, not candidate render failures; this is not a clean whole-application console claim. Development badges appear in captured views."
+  },
+  "artifacts": [
+    {
+      "assignment": "condition-1-batch-1",
+      "sha256": "7be4d76432a70d9b8ccbba128712ed35da7e008cac10663498586e656e856aed",
+      "valid": 4,
+      "invalid": 0
+    },
+    {
+      "assignment": "condition-1-batch-2",
+      "sha256": "a93ef91139551577829eea47497b112610ec27b008b646a394dd18e5cf7d4b35",
+      "valid": 3,
+      "invalid": 1
+    },
+    {
+      "assignment": "condition-1-batch-3",
+      "sha256": "8232f28e0fa79aeed50a36936251c795df312bd45aa42a49c2dee085de3419c3",
+      "valid": 4,
+      "invalid": 0
+    },
+    {
+      "assignment": "condition-2-batch-1",
+      "sha256": "d981cb09a06f9077f1df1bb5d29090836bf0e93117ee5f35802993d5620ac9a2",
+      "valid": 0,
+      "invalid": 4
+    },
+    {
+      "assignment": "condition-2-batch-2",
+      "sha256": "cd1759655ad60142654871cf874cde0195791edb68a9f40f30f68dabbc1fe2dd",
+      "valid": 4,
+      "invalid": 0
+    },
+    {
+      "assignment": "condition-2-batch-3",
+      "sha256": "bddccb8788bdb6d9dba36efbc7e90d9d54f7f8f98111950995a218a4f1d90e24",
+      "valid": 3,
+      "invalid": 1
+    },
+    {
+      "assignment": "condition-3-batch-1",
+      "sha256": "8450b2154592d91044382dd066c38a0c96a810eeab7aa22f567adb54976ce32e",
+      "valid": 4,
+      "invalid": 0
+    },
+    {
+      "assignment": "condition-3-batch-2",
+      "sha256": "6df5853a5c2a32de74569398ddf1ef68661a5987e95cec3f853cc9b7101d0f3a",
+      "valid": 3,
+      "invalid": 1
+    },
+    {
+      "assignment": "condition-3-batch-3",
+      "sha256": "378347510b5746d315ac53bcf3052190c3e480654eee2f36da2fb09a067b24ca",
+      "valid": 4,
+      "invalid": 0
+    },
+    {
+      "assignment": "condition-4-batch-1",
+      "sha256": "3586c4dd6113244f662209cd60fbf98218e2203f79c1cb9e6278a8e98082c20f",
+      "valid": 4,
+      "invalid": 0
+    },
+    {
+      "assignment": "condition-4-batch-2",
+      "sha256": "831f7c8d839606fb3a28aaffedee7271ccbfe4b334d2e620f1fb5680a8d04157",
+      "valid": 3,
+      "invalid": 1
+    },
+    {
+      "assignment": "condition-4-batch-3",
+      "sha256": "74c294d5e09f8978144beba8c54b15e9d435b856d32946507f1ce0c348ecb61b",
+      "valid": 4,
+      "invalid": 0
+    },
+    {
+      "assignment": "condition-5-batch-1",
+      "sha256": "a322dcad9ce96a2d894795a1ecf2d48af3f17821a07a2c987da2d7ad440cc0ab",
+      "valid": 4,
+      "invalid": 0
+    },
+    {
+      "assignment": "condition-5-batch-2",
+      "sha256": "47a569db5a7de569b2ab4763a018a0fb8b9011f214e98f94daa9a1289ed41499",
+      "valid": 4,
+      "invalid": 0
+    },
+    {
+      "assignment": "condition-5-batch-3",
+      "sha256": "05d48f2d9f7150a05c6158e98007319ae271318d21c563c648330ea8fa7596da",
+      "valid": 4,
+      "invalid": 0
+    }
+  ],
+  "limitations": [
+    "New synthetic cases inspired by anonymized Langfuse inputs, not recovered historical fixtures or complete trace history",
+    "Four cases share each author context; no statistically independent repetitions",
+    "Schema/admission success is not visual quality, complete behavior, live-service or persistence certification",
+    "No human preference scores or winning prompt yet; Elo will describe one reviewer\u2019s choices",
+    "All invalid attempts retained; no repaired/replacement outputs"
+  ]
+}

@@ -1,0 +1,6042 @@
+{
+  "schema": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "properties": {
+      "$schema": {
+        "type": "string",
+        "const": "homarr-custom-widget-v2"
+      },
+      "name": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 128
+      },
+      "description": {
+        "type": "string",
+        "maxLength": 512
+      },
+      "iconUrl": {
+        "type": "string",
+        "maxLength": 2048,
+        "format": "uri"
+      },
+      "sources": {
+        "type": "object",
+        "propertyNames": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "pattern": "^[A-Za-z][A-Za-z0-9_-]*$"
+        },
+        "additionalProperties": {
+          "anyOf": [
+            {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "const": "http"
+                },
+                "integrationKind": {
+                  "not": {}
+                },
+                "integrationId": {
+                  "not": {}
+                },
+                "name": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 128
+                },
+                "baseUrl": {
+                  "type": "string",
+                  "maxLength": 2048,
+                  "format": "uri"
+                },
+                "networkScope": {},
+                "auth": {
+                  "default": "none",
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "enum": [
+                        "none",
+                        "bearer",
+                        "basic"
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "const": "apiKeyHeader"
+                        },
+                        "name": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 256,
+                          "pattern": "^[!#$%&'*+\\-.^_`|~0-9A-Za-z]+$"
+                        }
+                      },
+                      "required": [
+                        "type",
+                        "name"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "const": "apiKeyQuery"
+                        },
+                        "name": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 256
+                        }
+                      },
+                      "required": [
+                        "type",
+                        "name"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "const": "headers"
+                        },
+                        "headers": {
+                          "minItems": 1,
+                          "maxItems": 8,
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "name": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 256,
+                                "pattern": "^[!#$%&'*+\\-.^_`|~0-9A-Za-z]+$"
+                              },
+                              "slot": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 57,
+                                "pattern": "^[A-Za-z][A-Za-z0-9_-]*$"
+                              }
+                            },
+                            "required": [
+                              "name",
+                              "slot"
+                            ],
+                            "additionalProperties": false
+                          }
+                        }
+                      },
+                      "required": [
+                        "type",
+                        "headers"
+                      ],
+                      "additionalProperties": false
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "baseUrl"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "const": "integration"
+                },
+                "name": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 128
+                },
+                "integrationKind": {
+                  "type": "string",
+                  "enum": [
+                    "autobrr",
+                    "jellystat",
+                    "scrutiny",
+                    "tubearchivist",
+                    "frigate",
+                    "komga",
+                    "netalertx",
+                    "jackett",
+                    "yourSpotify",
+                    "romm",
+                    "homebox",
+                    "mealie",
+                    "xteve",
+                    "unmanic",
+                    "syncthingRelay",
+                    "stash",
+                    "prometheus",
+                    "plantit",
+                    "netdata",
+                    "fileflows",
+                    "trilium",
+                    "tandoor",
+                    "spoolman",
+                    "miniflux",
+                    "maintainerr",
+                    "linkwarden",
+                    "karakeep",
+                    "healthchecks",
+                    "gatus",
+                    "changedetection",
+                    "caddy",
+                    "sabNzbd",
+                    "nzbGet",
+                    "deluge",
+                    "transmission",
+                    "qBittorrent",
+                    "aria2",
+                    "slskd",
+                    "sonarr",
+                    "sportarr",
+                    "radarr",
+                    "lidarr",
+                    "readarr",
+                    "bindery",
+                    "prowlarr",
+                    "bazarr",
+                    "jellyfin",
+                    "emby",
+                    "plex",
+                    "jellyseerr",
+                    "seerr",
+                    "overseerr",
+                    "piHole",
+                    "adGuardHome",
+                    "technitiumDns",
+                    "homeAssistant",
+                    "openmediavault",
+                    "dashDot",
+                    "glances",
+                    "tdarr",
+                    "proxmox",
+                    "nextcloud",
+                    "unifiController",
+                    "opnsense",
+                    "ntfy",
+                    "gotify",
+                    "anchor",
+                    "synology",
+                    "unraid",
+                    "coolify",
+                    "immich",
+                    "paperlessNgx",
+                    "thingport",
+                    "patchmon",
+                    "tracearr",
+                    "speedtestTracker",
+                    "uptimeKuma",
+                    "audiobookshelf",
+                    "navidrome",
+                    "umami",
+                    "peaNut",
+                    "beszel",
+                    "gluetun",
+                    "traefik",
+                    "archiveTeamWarrior",
+                    "wazuh",
+                    "wud",
+                    "llamacpp",
+                    "mock"
+                  ]
+                },
+                "integrationId": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 100
+                },
+                "baseUrl": {
+                  "not": {}
+                },
+                "networkScope": {
+                  "not": {}
+                },
+                "auth": {
+                  "not": {}
+                }
+              },
+              "required": [
+                "type",
+                "integrationKind"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        }
+      },
+      "requests": {
+        "type": "object",
+        "propertyNames": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "pattern": "^[A-Za-z][A-Za-z0-9_-]*$"
+        },
+        "additionalProperties": {
+          "type": "object",
+          "properties": {
+            "source": {
+              "default": "default",
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 64,
+              "pattern": "^[A-Za-z][A-Za-z0-9_-]*$"
+            },
+            "kind": {
+              "default": "query",
+              "type": "string",
+              "enum": [
+                "query",
+                "action"
+              ]
+            },
+            "method": {
+              "default": "GET",
+              "type": "string",
+              "enum": [
+                "GET",
+                "POST",
+                "PUT",
+                "DELETE",
+                "PATCH"
+              ]
+            },
+            "path": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 2048,
+              "format": "starts_with",
+              "pattern": "^\\/.*"
+            },
+            "trigger": {
+              "type": "string",
+              "enum": [
+                "load",
+                "manual"
+              ]
+            },
+            "query": {
+              "type": "object",
+              "propertyNames": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 256
+              },
+              "additionalProperties": {
+                "$ref": "#/$defs/__schema0"
+              }
+            },
+            "body": {
+              "$ref": "#/$defs/__schema0"
+            },
+            "headers": {
+              "type": "object",
+              "propertyNames": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 256,
+                "pattern": "^[!#$%&'*+\\-.^_`|~0-9A-Za-z]+$"
+              },
+              "additionalProperties": {
+                "type": "string",
+                "maxLength": 8192
+              }
+            },
+            "auth": {
+              "default": "inherit",
+              "type": "string",
+              "enum": [
+                "inherit",
+                "none"
+              ]
+            },
+            "permission": {
+              "type": "string",
+              "enum": [
+                "view",
+                "modify",
+                "full"
+              ]
+            },
+            "cacheSeconds": {
+              "description": "Query response cache lifetime in seconds. Defaults to 30; set 0 to disable caching.",
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 3600
+            },
+            "confirmation": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 512
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "title": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 128
+                    },
+                    "message": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 512
+                    },
+                    "confirmLabel": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 64
+                    },
+                    "destructive": {
+                      "type": "boolean"
+                    }
+                  },
+                  "required": [
+                    "title",
+                    "message"
+                  ],
+                  "additionalProperties": false
+                }
+              ]
+            },
+            "invalidates": {
+              "maxItems": 32,
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 64,
+                "pattern": "^[A-Za-z][A-Za-z0-9_-]*$"
+              }
+            }
+          },
+          "required": [
+            "path"
+          ],
+          "additionalProperties": false
+        },
+        "description": "At most 64 load/manual queries and actions total, not a simultaneous-load entitlement. Identified viewer/Item: 4 active requests and 60 queries/minute; definition: 8 active requests and 240 queries/minute. Unattributed callers share the 4-active/60-query-per-minute budget across Items and definitions. Loads wait up to 60 seconds for capacity; manual requests fail fast."
+      },
+      "options": {
+        "type": "object",
+        "propertyNames": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "pattern": "^[A-Za-z][A-Za-z0-9_-]*$"
+        },
+        "additionalProperties": {
+          "type": "object",
+          "properties": {
+            "label": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            },
+            "description": {
+              "type": "string",
+              "maxLength": 512
+            },
+            "control": {
+              "type": "string",
+              "enum": [
+                "text",
+                "textarea",
+                "number",
+                "switch",
+                "select",
+                "multiSelect",
+                "slider",
+                "date",
+                "time",
+                "color",
+                "icon",
+                "url",
+                "duration",
+                "timeZone",
+                "json"
+              ]
+            },
+            "default": {
+              "$ref": "#/$defs/__schema1"
+            },
+            "choices": {
+              "minItems": 1,
+              "maxItems": 100,
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "label": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 128
+                  },
+                  "value": {
+                    "type": [
+                      "string",
+                      "number"
+                    ]
+                  }
+                },
+                "required": [
+                  "label",
+                  "value"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "choicesFrom": {
+              "type": "object",
+              "properties": {
+                "request": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 64,
+                  "pattern": "^[A-Za-z][A-Za-z0-9_-]*$"
+                },
+                "itemsPath": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "valuePath": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "labelPath": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": [
+                "request",
+                "valuePath",
+                "labelPath"
+              ],
+              "additionalProperties": false
+            },
+            "min": {
+              "type": "number"
+            },
+            "max": {
+              "type": "number"
+            },
+            "step": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "advanced": {
+              "type": "boolean"
+            },
+            "group": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            }
+          },
+          "required": [
+            "label",
+            "control",
+            "default"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "template": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "$schema",
+      "name",
+      "sources",
+      "requests",
+      "template"
+    ],
+    "additionalProperties": false,
+    "$defs": {
+      "__schema0": {
+        "anyOf": [
+          {
+            "type": "null"
+          },
+          {
+            "type": "string"
+          },
+          {
+            "type": "number"
+          },
+          {
+            "type": "boolean"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "$option": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 64,
+                "pattern": "^[A-Za-z][A-Za-z0-9_-]*$"
+              }
+            },
+            "required": [
+              "$option"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "$param": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 64,
+                "pattern": "^[A-Za-z][A-Za-z0-9_-]*$"
+              }
+            },
+            "required": [
+              "$param"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/__schema0"
+            }
+          },
+          {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {
+              "$ref": "#/$defs/__schema0"
+            }
+          }
+        ]
+      },
+      "__schema1": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "number"
+          },
+          {
+            "type": "boolean"
+          },
+          {
+            "type": "null"
+          },
+          {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/__schema1"
+            }
+          },
+          {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {
+              "$ref": "#/$defs/__schema1"
+            }
+          }
+        ]
+      }
+    },
+    "title": "Homarr Custom JSX v2 widget",
+    "description": "The only supported Homarr custom-widget format. Secrets are configured separately."
+  },
+  "components": {
+    "mantineVersion": "9.6.0",
+    "iconNames": [
+      "server",
+      "database",
+      "bell",
+      "cloud",
+      "circle-check",
+      "air-conditioning",
+      "brand-github",
+      "star-filled"
+    ],
+    "iconNaming": "All installed Tabler kebab-case names are supported; iconNames are examples. Filled icons end in -filled.",
+    "format": "Props are [name, type ID, required]. Shared props apply unless blocked. Type IDs resolve through types.",
+    "types": {
+      "0": "\"\" | \"anonymous\" | \"use-credentials\"",
+      "1": "\"-moz-initial\" | \"inherit\" | \"initial\" | \"revert\" | \"revert-layer\" | \"unset\" | \"auto\" | \"fixed\"",
+      "2": "\"-moz-initial\" | \"inherit\" | \"initial\" | \"revert\" | \"revert-layer\" | \"unset\" | \"none\" | \"auto\" | \"all\" | \"fill\" | \"stroke\" | \"painted\" | \"visible\" | \"visibleFill\" | \"visiblePainted\" | \"visibleStroke\"",
+      "4": "\"-moz-initial\" | \"inherit\" | \"initial\" | \"revert\" | \"revert-layer\" | \"unset\" | \"none\" | \"contain\" | \"cover\" | \"fill\" | \"scale-down\"",
+      "5": "\"-moz-initial\" | \"inherit\" | \"initial\" | \"revert\" | \"revert-layer\" | \"unset\" | \"wrap\" | \"nowrap\" | \"wrap-reverse\"",
+      "7": "\"activity\" | \"display-none\"",
+      "10": "\"always\" | \"hover\" | \"not-hover\" | \"never\"",
+      "12": "\"auto\" | \"scroll\" | \"always\" | \"hover\" | \"never\"",
+      "13": "\"auto-fit\" | \"auto-fill\"",
+      "15": "\"both\" | \"rightSection\" | \"clear\"",
+      "16": "\"bottom\" | \"top\"",
+      "17": "\"bottom\" | \"top\" | \"baseline\" | \"middle\"",
+      "20": "\"button\" | \"submit\" | \"reset\"",
+      "22": "\"center\" | \"left\" | \"right\"",
+      "28": "\"default\" | \"responsive\"",
+      "36": "\"horizontal\" | \"vertical\"",
+      "39": "\"inherit\" | \"auto\" | \"baseline\" | \"before-edge\" | \"text-before-edge\" | \"middle\" | \"central\" | \"after-edge\" | \"text-after-edge\" | \"ideographic\" | \"alphabetic\" | \"hanging\" | \"mathematical\"",
+      "40": "\"inherit\" | \"auto\" | \"sRGB\" | \"linearRGB\"",
+      "41": "\"inherit\" | \"auto\" | \"text-before-edge\" | \"middle\" | \"central\" | \"text-after-edge\" | \"ideographic\" | \"alphabetic\" | \"hanging\" | \"mathematical\" | \"use-script\" | \"no-change\" | \"reset-size\"",
+      "42": "\"inherit\" | \"end\" | \"start\" | \"middle\"",
+      "43": "\"inherit\" | \"nonzero\" | \"evenodd\"",
+      "44": "\"inherit\" | \"round\" | \"butt\" | \"square\"",
+      "45": "\"inherit\" | \"round\" | \"miter\" | \"bevel\"",
+      "46": "\"initial\" | \"medial\" | \"terminal\" | \"isolated\"",
+      "48": "\"left\" | \"right\"",
+      "52": "\"link\" | \"none\" | \"copy\" | \"execute\" | \"move\" | \"popup\"",
+      "53": "\"media\" | \"container\"",
+      "56": "\"none\" | \"all\" | \"rows\" | \"groups\" | \"columns\"",
+      "58": "\"none\" | \"ascending\" | \"descending\" | \"other\"",
+      "59": "\"none\" | \"inline\" | \"list\" | \"both\"",
+      "60": "\"none\" | \"strict\" | \"blur\"",
+      "61": "\"none\" | \"sum\"",
+      "62": "\"none\" | \"thousand\" | \"lakh\" | \"wan\"",
+      "65": "\"off\" | \"assertive\" | \"polite\"",
+      "66": "\"off\" | \"on\"",
+      "71": "\"search\" | \"enter\" | \"done\" | \"go\" | \"next\" | \"previous\" | \"send\"",
+      "72": "\"search\" | \"text\" | \"none\" | \"tel\" | \"url\" | \"email\" | \"numeric\" | \"decimal\"",
+      "75": "\"sum\" | \"replace\"",
+      "77": "\"text\" | \"additions\" | \"additions removals\" | \"additions text\" | \"all\" | \"removals\" | \"removals additions\" | \"removals text\" | \"text additions\" | \"text removals\"",
+      "78": "\"text\" | \"tel\" | \"password\"",
+      "82": "\"viewport\"",
+      "83": "\"wrap\" | \"nowrap\" | \"balance\" | \"pretty\" | \"stable\"",
+      "85": "\"xs\" | \"sm\" | \"md\" | \"lg\" | \"xl\"",
+      "86": "\"xs\" | \"sm\" | \"md\" | \"lg\" | \"xl\" | (string & {})",
+      "87": "\"yes\" | \"no\"",
+      "88": "'Text' | 'Title' | 'Badge' | 'Code' | 'Image'",
+      "89": "'auto' | 'manual'",
+      "90": "'json' | 'text'",
+      "91": "'xs' | 'sm' | 'md' | 'lg' | 'xl'",
+      "92": "(\"input\" | \"label\" | \"description\" | \"error\")[]",
+      "98": "(InputDescriptionProps & DataAttributes & PlaceholderPolymorphicProps)",
+      "99": "(InputErrorProps & DataAttributes & PlaceholderPolymorphicProps)",
+      "100": "(InputLabelProps & DataAttributes & PlaceholderPolymorphicProps)",
+      "101": "(InputSuccessProps & DataAttributes & PlaceholderPolymorphicProps)",
+      "106": "(React.ClassAttributes<HTMLDivElement> & React.HTMLAttributes<HTMLDivElement> & DataAttributes)",
+      "115": "(string & {}) | \"none\" | \"off\" | \"on\" | \"sentences\" | \"words\" | \"characters\"",
+      "118": "(string & {}) | AlertVariant",
+      "120": "(string & {}) | BadgeVariant",
+      "123": "(string & {}) | CheckboxVariant",
+      "126": "(string & {}) | DividerVariant",
+      "128": "(string & {}) | InputVariant",
+      "133": "(string & {}) | TableVariant",
+      "134": "(string & {}) | TabsVariant",
+      "135": "(string & {}) | TextVariant",
+      "136": "(string & {}) | ThemeIconVariant",
+      "139": "1 | 2 | 3 | 4 | 5 | 6",
+      "141": "2 | 3 | 4 | 5 | 6 | 1",
+      "144": "AriaRole",
+      "147": "BoxMod",
+      "151": "CSSProperties",
+      "160": "ComboboxData<Value>",
+      "162": "ComboboxProps",
+      "171": "DefaultMantineColor",
+      "180": "HTMLInputAutoCompleteAttribute",
+      "181": "HTMLInputTypeAttribute",
+      "182": "InputClearButtonProps",
+      "183": "Key | null",
+      "187": "MantineBreakpoint",
+      "189": "MantineGradient",
+      "190": "MantineRadius",
+      "191": "MantineShadow",
+      "192": "MantineSize | (string & {})",
+      "193": "MantineSpacing",
+      "198": "NumberInputValue<T>",
+      "207": "Omit<React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>, \"value\">",
+      "235": "Partial<Record<\"label\", CSSProperties>>",
+      "259": "Property.AlignItems",
+      "261": "Property.BorderRadius<string | number>",
+      "262": "Property.Height<string | number>",
+      "263": "Property.JustifyContent",
+      "268": "Property.OverscrollBehavior",
+      "269": "Property.Width<string | number>",
+      "274": "React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>",
+      "278": "React.ReactNode",
+      "279": "ReactNode",
+      "285": "Record<string, string | number | boolean>",
+      "289": "ScrollAreaProps",
+      "296": "StyleProp<\"text\" | (string & {}) | \"monospace\" | \"heading\">",
+      "298": "StyleProp<DefaultMantineColor>",
+      "299": "StyleProp<MantineSpacing>",
+      "302": "StyleProp<Property.BackgroundAttachment>",
+      "303": "StyleProp<Property.BackgroundPosition<string | number>>",
+      "304": "StyleProp<Property.BackgroundRepeat>",
+      "305": "StyleProp<Property.BackgroundSize<string | number>>",
+      "306": "StyleProp<Property.Border<string | number>>",
+      "307": "StyleProp<Property.Display>",
+      "308": "StyleProp<Property.Flex<string | number>>",
+      "311": "StyleProp<Property.FontStyle>",
+      "312": "StyleProp<Property.FontWeight>",
+      "313": "StyleProp<Property.Height<string | number>>",
+      "315": "StyleProp<Property.LetterSpacing<string | number>>",
+      "316": "StyleProp<Property.MaxHeight<string | number>>",
+      "317": "StyleProp<Property.MaxWidth<string | number>>",
+      "318": "StyleProp<Property.MinHeight<string | number>>",
+      "319": "StyleProp<Property.MinWidth<string | number>>",
+      "320": "StyleProp<Property.Opacity>",
+      "321": "StyleProp<Property.TextAlign>",
+      "322": "StyleProp<Property.TextDecoration<string | number>>",
+      "323": "StyleProp<Property.TextTransform>",
+      "324": "StyleProp<Property.Width<string | number>>",
+      "325": "StyleProp<number | \"h1\" | \"h2\" | \"h3\" | \"h4\" | \"h5\" | \"h6\" | MantineFontSize>",
+      "326": "StyleProp<number | \"h1\" | \"h2\" | \"h3\" | \"h4\" | \"h5\" | \"h6\" | MantineLineHeight>",
+      "327": "StyleProp<number>",
+      "329": "T",
+      "331": "TableData",
+      "334": "TitleSize",
+      "345": "Value | null",
+      "348": "WrapperProps",
+      "353": "boolean",
+      "356": "boolean | string",
+      "358": "false | \"x\" | \"y\" | \"xy\"",
+      "359": "false | true",
+      "360": "false | true | \"auto\" | \"true\" | \"false\"",
+      "361": "false | true | \"dialog\" | \"menu\" | \"grid\" | \"true\" | \"false\" | \"listbox\" | \"tree\"",
+      "362": "false | true | \"end\" | \"start\"",
+      "363": "false | true | \"odd\" | \"even\"",
+      "364": "false | true | \"time\" | \"true\" | \"false\" | \"page\" | \"step\" | \"location\" | \"date\"",
+      "365": "false | true | \"true\" | \"false\"",
+      "366": "false | true | \"true\" | \"false\" | \"grammar\" | \"spelling\"",
+      "367": "false | true | \"true\" | \"false\" | \"mixed\"",
+      "368": "false | true | \"user\" | \"environment\"",
+      "369": "false | true | \"x\" | \"y\" | \"present\"",
+      "370": "null | string",
+      "371": "number",
+      "373": "number | MantineSize | (string & {})",
+      "374": "number | MantineSize | (string & {}) | \"input-xs\" | \"input-sm\" | \"input-md\" | \"input-lg\" | \"input-xl\"",
+      "377": "string",
+      "382": "string | false | true",
+      "383": "string | number",
+      "384": "string | number | readonly string[]",
+      "386": "string[]",
+      "389": "unknown",
+      "392": "{ body?: Record<string, any>; input?: Record<string, any>; label?: Record<string, any>; root?: Record<string, any>; ... 4 more ...; labelWrapper?: Record<...>; }",
+      "394": "{ body?: Record<string, any>; input?: Record<string, any>; label?: Record<string, any>; track?: Record<string, any>; ... 5 more ...; trackLabel?: Record<...>; }",
+      "397": "{ body?: Record<string, any>; label?: Record<string, any>; title?: Record<string, any>; root?: Record<string, any>; icon?: Record<...>; wrapper?: Record<...>; message?: Record<...>; closeButton?: Record<...>; }",
+      "409": "{ caption?: Record<string, any>; table?: Record<string, any>; tbody?: Record<string, any>; td?: Record<string, any>; tfoot?: Record<...>; th?: Record<...>; thead?: Record<...>; tr?: Record<...>; }",
+      "416": "{ content?: Record<string, any>; root?: Record<string, any>; scrollbar?: Record<string, any>; thumb?: Record<string, any>; viewport?: Record<...>; corner?: Record<...>; }",
+      "426": "{ input?: Record<string, any>; label?: Record<string, any>; option?: Record<string, any>; section?: Record<string, any>; ... 11 more ...; groupLabel?: Record<...>; }",
+      "438": "{ input?: Record<string, any>; label?: Record<string, any>; section?: Record<string, any>; root?: Record<string, any>; ... 5 more ...; bottomSection?: Record<...>; }",
+      "439": "{ input?: Record<string, any>; label?: Record<string, any>; section?: Record<string, any>; root?: Record<string, any>; ... 7 more ...; controls?: Record<...>; }",
+      "447": "{ label?: Record<string, any>; root?: Record<string, any>; control?: Record<string, any>; dots?: Record<string, any>; items?: Record<...>; }",
+      "451": "{ label?: Record<string, any>; root?: Record<string, any>; }",
+      "454": "{ label?: Record<string, any>; section?: Record<string, any>; root?: Record<string, any>; }",
+      "481": "{ root?: Record<string, any>; container?: Record<string, any>; }",
+      "492": "{ root?: Record<string, any>; panel?: Record<string, any>; list?: Record<string, any>; tab?: Record<string, any>; tabSection?: Record<...>; tabLabel?: Record<...>; }",
+      "497": "{ root?: Record<string, any>; }",
+      "499": "{ section?: Record<string, any>; root?: Record<string, any>; }",
+      "506": "{ x?: number; y?: number; }"
+    },
+    "registeredNames": [
+      "Accordion",
+      "Accordion.Chevron",
+      "Accordion.Control",
+      "Accordion.Item",
+      "Accordion.Panel",
+      "AccordionChevron",
+      "AccordionControl",
+      "AccordionItem",
+      "AccordionPanel",
+      "ActionButton",
+      "ActionIcon",
+      "ActionIcon.Group",
+      "ActionIcon.GroupSection",
+      "ActionIconGroup",
+      "ActionIconGroupSection",
+      "Alert",
+      "AlphaSlider",
+      "Anchor",
+      "AngleSlider",
+      "AreaChart",
+      "AspectRatio",
+      "Autocomplete",
+      "Avatar",
+      "Avatar.Group",
+      "AvatarGroup",
+      "BackgroundImage",
+      "Badge",
+      "BarChart",
+      "BarsList",
+      "Blockquote",
+      "Box",
+      "Breadcrumbs",
+      "BubbleChart",
+      "BulletChart",
+      "Burger",
+      "Button",
+      "Button.Group",
+      "Button.GroupSection",
+      "ButtonGroup",
+      "ButtonGroupSection",
+      "Calendar",
+      "CalendarHeader",
+      "CandlestickChart",
+      "Card",
+      "Card.Section",
+      "CardSection",
+      "Cascader",
+      "Center",
+      "ChartBrush",
+      "ChartLegend",
+      "ChartTooltip",
+      "CheckIcon",
+      "Checkbox",
+      "Checkbox.Card",
+      "Checkbox.Group",
+      "Checkbox.Indicator",
+      "CheckboxCard",
+      "CheckboxGroup",
+      "CheckboxIndicator",
+      "Chip",
+      "Chip.Group",
+      "ChipGroup",
+      "CloseButton",
+      "CloseIcon",
+      "Code",
+      "Collapse",
+      "Collapsible",
+      "ColorInput",
+      "ColorPicker",
+      "ColorSwatch",
+      "CompositeChart",
+      "Container",
+      "CopyButton",
+      "DataList",
+      "DataList.Item",
+      "DataList.ItemLabel",
+      "DataList.ItemValue",
+      "DataListItem",
+      "DataListItemLabel",
+      "DataListItemValue",
+      "DateInput",
+      "DatePicker",
+      "DatePickerInput",
+      "DateTimePicker",
+      "Day",
+      "DecadeLevel",
+      "DecadeLevelGroup",
+      "Divider",
+      "DonutChart",
+      "EmptyState",
+      "EmptyState.Actions",
+      "EmptyState.Description",
+      "EmptyState.Indicator",
+      "EmptyState.Title",
+      "EmptyStateActions",
+      "EmptyStateDescription",
+      "EmptyStateIndicator",
+      "EmptyStateTitle",
+      "Fieldset",
+      "FlatTreeNode",
+      "Flex",
+      "FloatingArrow",
+      "FloatingIndicator",
+      "FunnelChart",
+      "GaugeChart",
+      "Grid",
+      "Grid.Col",
+      "GridCol",
+      "Group",
+      "Heatmap",
+      "Highlight",
+      "HoverCard",
+      "HoverCard.Dropdown",
+      "HoverCard.Group",
+      "HoverCard.Target",
+      "HoverCardDropdown",
+      "HoverCardGroup",
+      "HoverCardTarget",
+      "HueSlider",
+      "Image",
+      "Indicator",
+      "InlineDateTimePicker",
+      "JsonInput",
+      "Kbd",
+      "LevelsGroup",
+      "LineChart",
+      "List",
+      "List.Item",
+      "ListItem",
+      "Loader",
+      "LoadingOverlay",
+      "Mark",
+      "Marquee",
+      "MaskInput",
+      "MatrixChart",
+      "Menu",
+      "Menu.CheckboxGroup",
+      "Menu.CheckboxItem",
+      "Menu.ContextMenu",
+      "Menu.Divider",
+      "Menu.Dropdown",
+      "Menu.Item",
+      "Menu.Label",
+      "Menu.RadioGroup",
+      "Menu.RadioItem",
+      "Menu.Search",
+      "Menu.Sub",
+      "Menu.Target",
+      "MenuCheckboxGroup",
+      "MenuCheckboxItem",
+      "MenuContextMenu",
+      "MenuDivider",
+      "MenuDropdown",
+      "MenuItem",
+      "MenuLabel",
+      "MenuRadioGroup",
+      "MenuRadioItem",
+      "MenuSearch",
+      "MenuSub",
+      "MenuSub.Dropdown",
+      "MenuSub.Item",
+      "MenuSub.Target",
+      "MenuSubDropdown",
+      "MenuSubItem",
+      "MenuSubTarget",
+      "MenuTarget",
+      "MiniCalendar",
+      "Month",
+      "MonthLevel",
+      "MonthLevelGroup",
+      "MonthPicker",
+      "MonthPickerInput",
+      "MonthsList",
+      "MultiSelect",
+      "NativeScrollArea",
+      "NativeSelect",
+      "NavLink",
+      "Notification",
+      "NumberFormatter",
+      "NumberInput",
+      "OverflowList",
+      "Overlay",
+      "PaginatedList",
+      "Pagination",
+      "Pagination.Control",
+      "Pagination.Dots",
+      "Pagination.First",
+      "Pagination.Items",
+      "Pagination.Label",
+      "Pagination.Last",
+      "Pagination.Next",
+      "Pagination.Previous",
+      "Pagination.Root",
+      "PaginationControl",
+      "PaginationDots",
+      "PaginationFirst",
+      "PaginationItems",
+      "PaginationLabel",
+      "PaginationLast",
+      "PaginationNext",
+      "PaginationPrevious",
+      "PaginationRoot",
+      "Paper",
+      "PasswordInput",
+      "PickerControl",
+      "PieChart",
+      "Pill",
+      "Pill.Group",
+      "PillGroup",
+      "PinInput",
+      "Popover",
+      "Popover.ContextMenu",
+      "Popover.Dropdown",
+      "Popover.Target",
+      "PopoverContextMenu",
+      "PopoverDropdown",
+      "PopoverTarget",
+      "Progress",
+      "Progress.Label",
+      "Progress.Root",
+      "Progress.Section",
+      "ProgressLabel",
+      "ProgressRoot",
+      "ProgressSection",
+      "RadarChart",
+      "RadialBarChart",
+      "Radio",
+      "Radio.Card",
+      "Radio.Group",
+      "Radio.Indicator",
+      "RadioCard",
+      "RadioGroup",
+      "RadioIcon",
+      "RadioIndicator",
+      "RangeSlider",
+      "Rating",
+      "RefreshButton",
+      "RingProgress",
+      "RollingNumber",
+      "SankeyChart",
+      "ScatterChart",
+      "ScrollArea",
+      "ScrollArea.Autosize",
+      "ScrollAreaAutosize",
+      "Scroller",
+      "SegmentedControl",
+      "Select",
+      "SemiCircleProgress",
+      "SimpleGrid",
+      "Skeleton",
+      "Slider",
+      "Space",
+      "Sparkline",
+      "Splitter",
+      "Splitter.Pane",
+      "SplitterPane",
+      "Spoiler",
+      "Stack",
+      "StatBar",
+      "Stepper",
+      "Stepper.Completed",
+      "Stepper.Step",
+      "StepperCompleted",
+      "StepperStep",
+      "SubData",
+      "SubFetch",
+      "SunburstChart",
+      "Switch",
+      "Switch.Group",
+      "SwitchGroup",
+      "TabPanel",
+      "Table",
+      "Table.Caption",
+      "Table.DataRenderer",
+      "Table.ScrollContainer",
+      "Table.Tbody",
+      "Table.Td",
+      "Table.Tfoot",
+      "Table.Th",
+      "Table.Thead",
+      "Table.Tr",
+      "TableCaption",
+      "TableScrollContainer",
+      "TableTbody",
+      "TableTd",
+      "TableTfoot",
+      "TableTh",
+      "TableThead",
+      "TableTr",
+      "TablerIcon",
+      "Tabs",
+      "Tabs.List",
+      "Tabs.Panel",
+      "Tabs.Tab",
+      "TabsContainer",
+      "TabsList",
+      "TabsPanel",
+      "TabsTab",
+      "TagsInput",
+      "Text",
+      "TextInput",
+      "Textarea",
+      "ThemeIcon",
+      "TimeGrid",
+      "TimeInput",
+      "TimePicker",
+      "TimeValue",
+      "Timeline",
+      "Timeline.Item",
+      "TimelineItem",
+      "Title",
+      "ToggleSwitch",
+      "Tooltip",
+      "Tooltip.Floating",
+      "Tooltip.Group",
+      "TooltipFloating",
+      "TooltipGroup",
+      "Tree",
+      "TreeSelect",
+      "TreeSelectOption",
+      "Treemap",
+      "TypeBadge",
+      "Typography",
+      "UnstyledButton",
+      "VisuallyHidden",
+      "WaffleChart",
+      "WeekdaysRow",
+      "YearLevel",
+      "YearLevelGroup",
+      "YearPicker",
+      "YearPickerInput",
+      "YearsList"
+    ],
+    "sharedProps": [
+      [
+        "abbr",
+        377,
+        false
+      ],
+      [
+        "about",
+        377,
+        false
+      ],
+      [
+        "accentHeight",
+        383,
+        false
+      ],
+      [
+        "accept",
+        377,
+        false
+      ],
+      [
+        "accessKey",
+        377,
+        false
+      ],
+      [
+        "accumulate",
+        61,
+        false
+      ],
+      [
+        "additive",
+        75,
+        false
+      ],
+      [
+        "align",
+        22,
+        false
+      ],
+      [
+        "alignmentBaseline",
+        39,
+        false
+      ],
+      [
+        "allowReorder",
+        87,
+        false
+      ],
+      [
+        "alphabetic",
+        383,
+        false
+      ],
+      [
+        "alt",
+        377,
+        false
+      ],
+      [
+        "amplitude",
+        383,
+        false
+      ],
+      [
+        "arabicForm",
+        46,
+        false
+      ],
+      [
+        "aria-activedescendant",
+        377,
+        false
+      ],
+      [
+        "aria-atomic",
+        365,
+        false
+      ],
+      [
+        "aria-autocomplete",
+        59,
+        false
+      ],
+      [
+        "aria-braillelabel",
+        377,
+        false
+      ],
+      [
+        "aria-brailleroledescription",
+        377,
+        false
+      ],
+      [
+        "aria-busy",
+        365,
+        false
+      ],
+      [
+        "aria-checked",
+        367,
+        false
+      ],
+      [
+        "aria-colcount",
+        371,
+        false
+      ],
+      [
+        "aria-colindex",
+        371,
+        false
+      ],
+      [
+        "aria-colindextext",
+        377,
+        false
+      ],
+      [
+        "aria-colspan",
+        371,
+        false
+      ],
+      [
+        "aria-controls",
+        377,
+        false
+      ],
+      [
+        "aria-current",
+        364,
+        false
+      ],
+      [
+        "aria-describedby",
+        377,
+        false
+      ],
+      [
+        "aria-description",
+        377,
+        false
+      ],
+      [
+        "aria-details",
+        377,
+        false
+      ],
+      [
+        "aria-disabled",
+        365,
+        false
+      ],
+      [
+        "aria-dropeffect",
+        52,
+        false
+      ],
+      [
+        "aria-errormessage",
+        377,
+        false
+      ],
+      [
+        "aria-expanded",
+        365,
+        false
+      ],
+      [
+        "aria-flowto",
+        377,
+        false
+      ],
+      [
+        "aria-grabbed",
+        365,
+        false
+      ],
+      [
+        "aria-haspopup",
+        361,
+        false
+      ],
+      [
+        "aria-hidden",
+        365,
+        false
+      ],
+      [
+        "aria-invalid",
+        366,
+        false
+      ],
+      [
+        "aria-keyshortcuts",
+        377,
+        false
+      ],
+      [
+        "aria-label",
+        377,
+        false
+      ],
+      [
+        "aria-labelledby",
+        377,
+        false
+      ],
+      [
+        "aria-level",
+        371,
+        false
+      ],
+      [
+        "aria-live",
+        65,
+        false
+      ],
+      [
+        "aria-modal",
+        365,
+        false
+      ],
+      [
+        "aria-multiline",
+        365,
+        false
+      ],
+      [
+        "aria-multiselectable",
+        365,
+        false
+      ],
+      [
+        "aria-orientation",
+        36,
+        false
+      ],
+      [
+        "aria-owns",
+        377,
+        false
+      ],
+      [
+        "aria-placeholder",
+        377,
+        false
+      ],
+      [
+        "aria-posinset",
+        371,
+        false
+      ],
+      [
+        "aria-pressed",
+        367,
+        false
+      ],
+      [
+        "aria-readonly",
+        365,
+        false
+      ],
+      [
+        "aria-relevant",
+        77,
+        false
+      ],
+      [
+        "aria-required",
+        365,
+        false
+      ],
+      [
+        "aria-roledescription",
+        377,
+        false
+      ],
+      [
+        "aria-rowcount",
+        371,
+        false
+      ],
+      [
+        "aria-rowindex",
+        371,
+        false
+      ],
+      [
+        "aria-rowindextext",
+        377,
+        false
+      ],
+      [
+        "aria-rowspan",
+        371,
+        false
+      ],
+      [
+        "aria-selected",
+        365,
+        false
+      ],
+      [
+        "aria-setsize",
+        371,
+        false
+      ],
+      [
+        "aria-sort",
+        58,
+        false
+      ],
+      [
+        "aria-valuemax",
+        371,
+        false
+      ],
+      [
+        "aria-valuemin",
+        371,
+        false
+      ],
+      [
+        "aria-valuenow",
+        371,
+        false
+      ],
+      [
+        "aria-valuetext",
+        377,
+        false
+      ],
+      [
+        "ascent",
+        383,
+        false
+      ],
+      [
+        "attributeName",
+        377,
+        false
+      ],
+      [
+        "attributeType",
+        377,
+        false
+      ],
+      [
+        "autoCapitalize",
+        115,
+        false
+      ],
+      [
+        "autoComplete",
+        180,
+        false
+      ],
+      [
+        "autoCorrect",
+        377,
+        false
+      ],
+      [
+        "autoReverse",
+        365,
+        false
+      ],
+      [
+        "autoSave",
+        377,
+        false
+      ],
+      [
+        "azimuth",
+        383,
+        false
+      ],
+      [
+        "baseFrequency",
+        383,
+        false
+      ],
+      [
+        "baseProfile",
+        383,
+        false
+      ],
+      [
+        "baselineShift",
+        383,
+        false
+      ],
+      [
+        "bbox",
+        383,
+        false
+      ],
+      [
+        "bd",
+        306,
+        false
+      ],
+      [
+        "bdrs",
+        299,
+        false
+      ],
+      [
+        "begin",
+        383,
+        false
+      ],
+      [
+        "bg",
+        298,
+        false
+      ],
+      [
+        "bga",
+        302,
+        false
+      ],
+      [
+        "bgcolor",
+        377,
+        false
+      ],
+      [
+        "bgp",
+        303,
+        false
+      ],
+      [
+        "bgr",
+        304,
+        false
+      ],
+      [
+        "bgsz",
+        305,
+        false
+      ],
+      [
+        "bias",
+        383,
+        false
+      ],
+      [
+        "border",
+        371,
+        false
+      ],
+      [
+        "by",
+        383,
+        false
+      ],
+      [
+        "c",
+        298,
+        false
+      ],
+      [
+        "calcMode",
+        383,
+        false
+      ],
+      [
+        "capHeight",
+        383,
+        false
+      ],
+      [
+        "capture",
+        368,
+        false
+      ],
+      [
+        "cellPadding",
+        383,
+        false
+      ],
+      [
+        "cellSpacing",
+        383,
+        false
+      ],
+      [
+        "checked",
+        359,
+        false
+      ],
+      [
+        "clip",
+        383,
+        false
+      ],
+      [
+        "clipPath",
+        377,
+        false
+      ],
+      [
+        "clipPathUnits",
+        383,
+        false
+      ],
+      [
+        "clipRule",
+        383,
+        false
+      ],
+      [
+        "colSpan",
+        371,
+        false
+      ],
+      [
+        "color",
+        377,
+        false
+      ],
+      [
+        "colorInterpolation",
+        383,
+        false
+      ],
+      [
+        "colorInterpolationFilters",
+        40,
+        false
+      ],
+      [
+        "colorProfile",
+        383,
+        false
+      ],
+      [
+        "colorRendering",
+        383,
+        false
+      ],
+      [
+        "cols",
+        371,
+        false
+      ],
+      [
+        "content",
+        377,
+        false
+      ],
+      [
+        "contentScriptType",
+        383,
+        false
+      ],
+      [
+        "contentStyleType",
+        383,
+        false
+      ],
+      [
+        "contextMenu",
+        377,
+        false
+      ],
+      [
+        "crossOrigin",
+        0,
+        false
+      ],
+      [
+        "cursor",
+        383,
+        false
+      ],
+      [
+        "cx",
+        383,
+        false
+      ],
+      [
+        "cy",
+        383,
+        false
+      ],
+      [
+        "d",
+        377,
+        false
+      ],
+      [
+        "darkHidden",
+        359,
+        false
+      ],
+      [
+        "datatype",
+        377,
+        false
+      ],
+      [
+        "decelerate",
+        383,
+        false
+      ],
+      [
+        "defaultChecked",
+        359,
+        false
+      ],
+      [
+        "defaultValue",
+        384,
+        false
+      ],
+      [
+        "descent",
+        383,
+        false
+      ],
+      [
+        "diffuseConstant",
+        383,
+        false
+      ],
+      [
+        "dir",
+        377,
+        false
+      ],
+      [
+        "dirName",
+        377,
+        false
+      ],
+      [
+        "direction",
+        383,
+        false
+      ],
+      [
+        "disabled",
+        359,
+        false
+      ],
+      [
+        "display",
+        307,
+        false
+      ],
+      [
+        "divisor",
+        383,
+        false
+      ],
+      [
+        "dominantBaseline",
+        41,
+        false
+      ],
+      [
+        "draggable",
+        365,
+        false
+      ],
+      [
+        "dur",
+        383,
+        false
+      ],
+      [
+        "dx",
+        383,
+        false
+      ],
+      [
+        "dy",
+        383,
+        false
+      ],
+      [
+        "edgeMode",
+        383,
+        false
+      ],
+      [
+        "elevation",
+        383,
+        false
+      ],
+      [
+        "enableBackground",
+        383,
+        false
+      ],
+      [
+        "end",
+        383,
+        false
+      ],
+      [
+        "enterKeyHint",
+        71,
+        false
+      ],
+      [
+        "exponent",
+        383,
+        false
+      ],
+      [
+        "exportparts",
+        377,
+        false
+      ],
+      [
+        "externalResourcesRequired",
+        365,
+        false
+      ],
+      [
+        "ff",
+        296,
+        false
+      ],
+      [
+        "fill",
+        377,
+        false
+      ],
+      [
+        "fillOpacity",
+        383,
+        false
+      ],
+      [
+        "fillRule",
+        43,
+        false
+      ],
+      [
+        "filter",
+        377,
+        false
+      ],
+      [
+        "filterRes",
+        383,
+        false
+      ],
+      [
+        "filterUnits",
+        383,
+        false
+      ],
+      [
+        "flex",
+        308,
+        false
+      ],
+      [
+        "floodColor",
+        383,
+        false
+      ],
+      [
+        "floodOpacity",
+        383,
+        false
+      ],
+      [
+        "focusable",
+        360,
+        false
+      ],
+      [
+        "fontFamily",
+        377,
+        false
+      ],
+      [
+        "fontSize",
+        383,
+        false
+      ],
+      [
+        "fontSizeAdjust",
+        383,
+        false
+      ],
+      [
+        "fontStretch",
+        383,
+        false
+      ],
+      [
+        "fontStyle",
+        383,
+        false
+      ],
+      [
+        "fontVariant",
+        383,
+        false
+      ],
+      [
+        "fontWeight",
+        383,
+        false
+      ],
+      [
+        "format",
+        383,
+        false
+      ],
+      [
+        "fr",
+        383,
+        false
+      ],
+      [
+        "frame",
+        359,
+        false
+      ],
+      [
+        "from",
+        383,
+        false
+      ],
+      [
+        "fs",
+        311,
+        false
+      ],
+      [
+        "fw",
+        312,
+        false
+      ],
+      [
+        "fx",
+        383,
+        false
+      ],
+      [
+        "fy",
+        383,
+        false
+      ],
+      [
+        "fz",
+        325,
+        false
+      ],
+      [
+        "g1",
+        383,
+        false
+      ],
+      [
+        "g2",
+        383,
+        false
+      ],
+      [
+        "glyphName",
+        383,
+        false
+      ],
+      [
+        "glyphOrientationHorizontal",
+        383,
+        false
+      ],
+      [
+        "glyphOrientationVertical",
+        383,
+        false
+      ],
+      [
+        "gradientTransform",
+        377,
+        false
+      ],
+      [
+        "gradientUnits",
+        377,
+        false
+      ],
+      [
+        "h",
+        313,
+        false
+      ],
+      [
+        "hanging",
+        383,
+        false
+      ],
+      [
+        "headers",
+        377,
+        false
+      ],
+      [
+        "height",
+        383,
+        false
+      ],
+      [
+        "hidden",
+        359,
+        false
+      ],
+      [
+        "hiddenFrom",
+        187,
+        false
+      ],
+      [
+        "horizAdvX",
+        383,
+        false
+      ],
+      [
+        "horizOriginX",
+        383,
+        false
+      ],
+      [
+        "href",
+        377,
+        false
+      ],
+      [
+        "id",
+        377,
+        false
+      ],
+      [
+        "ideographic",
+        383,
+        false
+      ],
+      [
+        "imageRendering",
+        383,
+        false
+      ],
+      [
+        "in",
+        377,
+        false
+      ],
+      [
+        "in2",
+        383,
+        false
+      ],
+      [
+        "inert",
+        359,
+        false
+      ],
+      [
+        "inlist",
+        389,
+        false
+      ],
+      [
+        "inputMode",
+        72,
+        false
+      ],
+      [
+        "intercept",
+        383,
+        false
+      ],
+      [
+        "is",
+        377,
+        false
+      ],
+      [
+        "itemID",
+        377,
+        false
+      ],
+      [
+        "itemProp",
+        377,
+        false
+      ],
+      [
+        "itemScope",
+        359,
+        false
+      ],
+      [
+        "itemType",
+        377,
+        false
+      ],
+      [
+        "k",
+        383,
+        false
+      ],
+      [
+        "k1",
+        383,
+        false
+      ],
+      [
+        "k2",
+        383,
+        false
+      ],
+      [
+        "k3",
+        383,
+        false
+      ],
+      [
+        "k4",
+        383,
+        false
+      ],
+      [
+        "kernelMatrix",
+        383,
+        false
+      ],
+      [
+        "kernelUnitLength",
+        383,
+        false
+      ],
+      [
+        "kerning",
+        383,
+        false
+      ],
+      [
+        "key",
+        183,
+        false
+      ],
+      [
+        "keyPoints",
+        383,
+        false
+      ],
+      [
+        "keySplines",
+        383,
+        false
+      ],
+      [
+        "keyTimes",
+        383,
+        false
+      ],
+      [
+        "lang",
+        377,
+        false
+      ],
+      [
+        "lengthAdjust",
+        383,
+        false
+      ],
+      [
+        "letterSpacing",
+        383,
+        false
+      ],
+      [
+        "lh",
+        326,
+        false
+      ],
+      [
+        "lightHidden",
+        359,
+        false
+      ],
+      [
+        "lightingColor",
+        383,
+        false
+      ],
+      [
+        "limitingConeAngle",
+        383,
+        false
+      ],
+      [
+        "list",
+        377,
+        false
+      ],
+      [
+        "local",
+        383,
+        false
+      ],
+      [
+        "lts",
+        315,
+        false
+      ],
+      [
+        "m",
+        299,
+        false
+      ],
+      [
+        "mah",
+        316,
+        false
+      ],
+      [
+        "markerEnd",
+        377,
+        false
+      ],
+      [
+        "markerHeight",
+        383,
+        false
+      ],
+      [
+        "markerMid",
+        377,
+        false
+      ],
+      [
+        "markerStart",
+        377,
+        false
+      ],
+      [
+        "markerUnits",
+        383,
+        false
+      ],
+      [
+        "markerWidth",
+        383,
+        false
+      ],
+      [
+        "mask",
+        377,
+        false
+      ],
+      [
+        "maskContentUnits",
+        383,
+        false
+      ],
+      [
+        "maskUnits",
+        383,
+        false
+      ],
+      [
+        "mathematical",
+        383,
+        false
+      ],
+      [
+        "maw",
+        317,
+        false
+      ],
+      [
+        "max",
+        383,
+        false
+      ],
+      [
+        "maxLength",
+        371,
+        false
+      ],
+      [
+        "mb",
+        299,
+        false
+      ],
+      [
+        "me",
+        299,
+        false
+      ],
+      [
+        "media",
+        377,
+        false
+      ],
+      [
+        "method",
+        377,
+        false
+      ],
+      [
+        "mie",
+        299,
+        false
+      ],
+      [
+        "mih",
+        318,
+        false
+      ],
+      [
+        "min",
+        383,
+        false
+      ],
+      [
+        "minLength",
+        371,
+        false
+      ],
+      [
+        "mis",
+        299,
+        false
+      ],
+      [
+        "miw",
+        319,
+        false
+      ],
+      [
+        "ml",
+        299,
+        false
+      ],
+      [
+        "mod",
+        147,
+        false
+      ],
+      [
+        "mode",
+        383,
+        false
+      ],
+      [
+        "mr",
+        299,
+        false
+      ],
+      [
+        "ms",
+        299,
+        false
+      ],
+      [
+        "mt",
+        299,
+        false
+      ],
+      [
+        "multiple",
+        359,
+        false
+      ],
+      [
+        "mx",
+        299,
+        false
+      ],
+      [
+        "my",
+        299,
+        false
+      ],
+      [
+        "name",
+        377,
+        false
+      ],
+      [
+        "nonce",
+        377,
+        false
+      ],
+      [
+        "numOctaves",
+        383,
+        false
+      ],
+      [
+        "offset",
+        383,
+        false
+      ],
+      [
+        "opacity",
+        320,
+        false
+      ],
+      [
+        "operator",
+        383,
+        false
+      ],
+      [
+        "order",
+        383,
+        false
+      ],
+      [
+        "orient",
+        383,
+        false
+      ],
+      [
+        "orientation",
+        383,
+        false
+      ],
+      [
+        "origin",
+        383,
+        false
+      ],
+      [
+        "overflow",
+        383,
+        false
+      ],
+      [
+        "overlinePosition",
+        383,
+        false
+      ],
+      [
+        "overlineThickness",
+        383,
+        false
+      ],
+      [
+        "p",
+        299,
+        false
+      ],
+      [
+        "paintOrder",
+        383,
+        false
+      ],
+      [
+        "panose1",
+        383,
+        false
+      ],
+      [
+        "part",
+        377,
+        false
+      ],
+      [
+        "path",
+        377,
+        false
+      ],
+      [
+        "pathLength",
+        383,
+        false
+      ],
+      [
+        "pattern",
+        377,
+        false
+      ],
+      [
+        "patternContentUnits",
+        377,
+        false
+      ],
+      [
+        "patternTransform",
+        383,
+        false
+      ],
+      [
+        "patternUnits",
+        377,
+        false
+      ],
+      [
+        "pb",
+        299,
+        false
+      ],
+      [
+        "pe",
+        299,
+        false
+      ],
+      [
+        "pie",
+        299,
+        false
+      ],
+      [
+        "pis",
+        299,
+        false
+      ],
+      [
+        "pl",
+        299,
+        false
+      ],
+      [
+        "placeholder",
+        377,
+        false
+      ],
+      [
+        "pointerEvents",
+        383,
+        false
+      ],
+      [
+        "points",
+        377,
+        false
+      ],
+      [
+        "pointsAtX",
+        383,
+        false
+      ],
+      [
+        "pointsAtY",
+        383,
+        false
+      ],
+      [
+        "pointsAtZ",
+        383,
+        false
+      ],
+      [
+        "pr",
+        299,
+        false
+      ],
+      [
+        "prefix",
+        377,
+        false
+      ],
+      [
+        "preserveAlpha",
+        365,
+        false
+      ],
+      [
+        "preserveAspectRatio",
+        377,
+        false
+      ],
+      [
+        "primitiveUnits",
+        383,
+        false
+      ],
+      [
+        "property",
+        377,
+        false
+      ],
+      [
+        "ps",
+        299,
+        false
+      ],
+      [
+        "pt",
+        299,
+        false
+      ],
+      [
+        "px",
+        299,
+        false
+      ],
+      [
+        "py",
+        299,
+        false
+      ],
+      [
+        "r",
+        383,
+        false
+      ],
+      [
+        "radioGroup",
+        377,
+        false
+      ],
+      [
+        "radius",
+        190,
+        false
+      ],
+      [
+        "readOnly",
+        359,
+        false
+      ],
+      [
+        "rel",
+        377,
+        false
+      ],
+      [
+        "renderingIntent",
+        383,
+        false
+      ],
+      [
+        "repeatCount",
+        383,
+        false
+      ],
+      [
+        "repeatDur",
+        383,
+        false
+      ],
+      [
+        "required",
+        359,
+        false
+      ],
+      [
+        "requiredExtensions",
+        383,
+        false
+      ],
+      [
+        "requiredFeatures",
+        383,
+        false
+      ],
+      [
+        "resource",
+        377,
+        false
+      ],
+      [
+        "restart",
+        383,
+        false
+      ],
+      [
+        "result",
+        377,
+        false
+      ],
+      [
+        "results",
+        371,
+        false
+      ],
+      [
+        "rev",
+        377,
+        false
+      ],
+      [
+        "role",
+        144,
+        false
+      ],
+      [
+        "rotate",
+        383,
+        false
+      ],
+      [
+        "rowSpan",
+        371,
+        false
+      ],
+      [
+        "rows",
+        371,
+        false
+      ],
+      [
+        "rules",
+        56,
+        false
+      ],
+      [
+        "rx",
+        383,
+        false
+      ],
+      [
+        "ry",
+        383,
+        false
+      ],
+      [
+        "scale",
+        383,
+        false
+      ],
+      [
+        "scope",
+        377,
+        false
+      ],
+      [
+        "security",
+        377,
+        false
+      ],
+      [
+        "seed",
+        383,
+        false
+      ],
+      [
+        "shadow",
+        191,
+        false
+      ],
+      [
+        "shapeRendering",
+        383,
+        false
+      ],
+      [
+        "size",
+        85,
+        false
+      ],
+      [
+        "slope",
+        383,
+        false
+      ],
+      [
+        "slot",
+        377,
+        false
+      ],
+      [
+        "spacing",
+        383,
+        false
+      ],
+      [
+        "specularConstant",
+        383,
+        false
+      ],
+      [
+        "specularExponent",
+        383,
+        false
+      ],
+      [
+        "speed",
+        383,
+        false
+      ],
+      [
+        "spellCheck",
+        365,
+        false
+      ],
+      [
+        "spreadMethod",
+        377,
+        false
+      ],
+      [
+        "src",
+        377,
+        false
+      ],
+      [
+        "startOffset",
+        383,
+        false
+      ],
+      [
+        "stdDeviation",
+        383,
+        false
+      ],
+      [
+        "stemh",
+        383,
+        false
+      ],
+      [
+        "stemv",
+        383,
+        false
+      ],
+      [
+        "step",
+        383,
+        false
+      ],
+      [
+        "stitchTiles",
+        383,
+        false
+      ],
+      [
+        "stopColor",
+        377,
+        false
+      ],
+      [
+        "stopOpacity",
+        383,
+        false
+      ],
+      [
+        "strikethroughPosition",
+        383,
+        false
+      ],
+      [
+        "strikethroughThickness",
+        383,
+        false
+      ],
+      [
+        "string",
+        383,
+        false
+      ],
+      [
+        "stroke",
+        377,
+        false
+      ],
+      [
+        "strokeDasharray",
+        383,
+        false
+      ],
+      [
+        "strokeDashoffset",
+        383,
+        false
+      ],
+      [
+        "strokeLinecap",
+        44,
+        false
+      ],
+      [
+        "strokeLinejoin",
+        45,
+        false
+      ],
+      [
+        "strokeMiterlimit",
+        383,
+        false
+      ],
+      [
+        "strokeOpacity",
+        383,
+        false
+      ],
+      [
+        "strokeWidth",
+        383,
+        false
+      ],
+      [
+        "style",
+        151,
+        false
+      ],
+      [
+        "styles",
+        235,
+        false
+      ],
+      [
+        "summary",
+        377,
+        false
+      ],
+      [
+        "surfaceScale",
+        383,
+        false
+      ],
+      [
+        "systemLanguage",
+        383,
+        false
+      ],
+      [
+        "ta",
+        321,
+        false
+      ],
+      [
+        "tabIndex",
+        371,
+        false
+      ],
+      [
+        "tableValues",
+        383,
+        false
+      ],
+      [
+        "target",
+        377,
+        false
+      ],
+      [
+        "targetX",
+        383,
+        false
+      ],
+      [
+        "targetY",
+        383,
+        false
+      ],
+      [
+        "td",
+        322,
+        false
+      ],
+      [
+        "textAnchor",
+        42,
+        false
+      ],
+      [
+        "textDecoration",
+        383,
+        false
+      ],
+      [
+        "textLength",
+        383,
+        false
+      ],
+      [
+        "textRendering",
+        383,
+        false
+      ],
+      [
+        "title",
+        377,
+        false
+      ],
+      [
+        "to",
+        383,
+        false
+      ],
+      [
+        "transform",
+        377,
+        false
+      ],
+      [
+        "translate",
+        87,
+        false
+      ],
+      [
+        "tt",
+        323,
+        false
+      ],
+      [
+        "type",
+        20,
+        false
+      ],
+      [
+        "typeof",
+        377,
+        false
+      ],
+      [
+        "u1",
+        383,
+        false
+      ],
+      [
+        "u2",
+        383,
+        false
+      ],
+      [
+        "underlinePosition",
+        383,
+        false
+      ],
+      [
+        "underlineThickness",
+        383,
+        false
+      ],
+      [
+        "unicode",
+        383,
+        false
+      ],
+      [
+        "unicodeBidi",
+        383,
+        false
+      ],
+      [
+        "unicodeRange",
+        383,
+        false
+      ],
+      [
+        "unitsPerEm",
+        383,
+        false
+      ],
+      [
+        "unselectable",
+        66,
+        false
+      ],
+      [
+        "vAlphabetic",
+        383,
+        false
+      ],
+      [
+        "vHanging",
+        383,
+        false
+      ],
+      [
+        "vIdeographic",
+        383,
+        false
+      ],
+      [
+        "vMathematical",
+        383,
+        false
+      ],
+      [
+        "valign",
+        17,
+        false
+      ],
+      [
+        "value",
+        384,
+        false
+      ],
+      [
+        "values",
+        377,
+        false
+      ],
+      [
+        "variant",
+        377,
+        false
+      ],
+      [
+        "vectorEffect",
+        383,
+        false
+      ],
+      [
+        "version",
+        377,
+        false
+      ],
+      [
+        "vertAdvY",
+        383,
+        false
+      ],
+      [
+        "vertOriginX",
+        383,
+        false
+      ],
+      [
+        "vertOriginY",
+        383,
+        false
+      ],
+      [
+        "viewBox",
+        377,
+        false
+      ],
+      [
+        "viewTarget",
+        383,
+        false
+      ],
+      [
+        "visibility",
+        383,
+        false
+      ],
+      [
+        "visibleFrom",
+        187,
+        false
+      ],
+      [
+        "vocab",
+        377,
+        false
+      ],
+      [
+        "w",
+        324,
+        false
+      ],
+      [
+        "width",
+        383,
+        false
+      ],
+      [
+        "widths",
+        383,
+        false
+      ],
+      [
+        "withBorder",
+        359,
+        false
+      ],
+      [
+        "wordSpacing",
+        383,
+        false
+      ],
+      [
+        "wrap",
+        377,
+        false
+      ],
+      [
+        "writingMode",
+        383,
+        false
+      ],
+      [
+        "x",
+        383,
+        false
+      ],
+      [
+        "x1",
+        383,
+        false
+      ],
+      [
+        "x2",
+        383,
+        false
+      ],
+      [
+        "xChannelSelector",
+        377,
+        false
+      ],
+      [
+        "xHeight",
+        383,
+        false
+      ],
+      [
+        "xlinkActuate",
+        377,
+        false
+      ],
+      [
+        "xlinkArcrole",
+        377,
+        false
+      ],
+      [
+        "xlinkHref",
+        377,
+        false
+      ],
+      [
+        "xlinkRole",
+        377,
+        false
+      ],
+      [
+        "xlinkShow",
+        377,
+        false
+      ],
+      [
+        "xlinkTitle",
+        377,
+        false
+      ],
+      [
+        "xlinkType",
+        377,
+        false
+      ],
+      [
+        "xmlBase",
+        377,
+        false
+      ],
+      [
+        "xmlLang",
+        377,
+        false
+      ],
+      [
+        "xmlSpace",
+        377,
+        false
+      ],
+      [
+        "xmlns",
+        377,
+        false
+      ],
+      [
+        "xmlnsXlink",
+        377,
+        false
+      ],
+      [
+        "y",
+        383,
+        false
+      ],
+      [
+        "y1",
+        383,
+        false
+      ],
+      [
+        "y2",
+        383,
+        false
+      ],
+      [
+        "yChannelSelector",
+        377,
+        false
+      ],
+      [
+        "z",
+        383,
+        false
+      ],
+      [
+        "zoomAndPan",
+        377,
+        false
+      ]
+    ],
+    "components": [
+      {
+        "name": "ActionButton",
+        "description": "Runs a named user-triggered action.",
+        "props": [
+          [
+            "color",
+            377,
+            false
+          ],
+          [
+            "confirmMessage",
+            377,
+            false
+          ],
+          [
+            "disabled",
+            356,
+            false
+          ],
+          [
+            "errorMessage",
+            377,
+            false
+          ],
+          [
+            "fullWidth",
+            356,
+            false
+          ],
+          [
+            "icon",
+            377,
+            false
+          ],
+          [
+            "label",
+            377,
+            false
+          ],
+          [
+            "params",
+            285,
+            false
+          ],
+          [
+            "requestId",
+            377,
+            false
+          ],
+          [
+            "size",
+            377,
+            false
+          ],
+          [
+            "successMessage",
+            377,
+            false
+          ],
+          [
+            "variant",
+            377,
+            false
+          ]
+        ],
+        "blockedProps": [],
+        "subcomponents": [],
+        "accessibilityRequirements": [
+          "Action labels must describe their effect; destructive actions require confirmation."
+        ]
+      },
+      {
+        "name": "Alert",
+        "props": [
+          [
+            "attributes",
+            397,
+            false
+          ],
+          [
+            "autoContrast",
+            359,
+            false
+          ],
+          [
+            "closeButtonLabel",
+            377,
+            false
+          ],
+          [
+            "color",
+            171,
+            false
+          ],
+          [
+            "icon",
+            278,
+            false
+          ],
+          [
+            "title",
+            278,
+            false
+          ],
+          [
+            "unstyled",
+            359,
+            false
+          ],
+          [
+            "variant",
+            118,
+            false
+          ],
+          [
+            "withCloseButton",
+            359,
+            false
+          ]
+        ],
+        "blockedProps": [],
+        "subcomponents": [],
+        "accessibilityRequirements": [
+          "Do not rely on color alone to communicate status."
+        ]
+      },
+      {
+        "name": "Anchor",
+        "props": [
+          [
+            "attributes",
+            497,
+            false
+          ],
+          [
+            "gradient",
+            189,
+            false
+          ],
+          [
+            "inherit",
+            359,
+            false
+          ],
+          [
+            "inline",
+            359,
+            false
+          ],
+          [
+            "lineClamp",
+            371,
+            false
+          ],
+          [
+            "size",
+            86,
+            false
+          ],
+          [
+            "textWrap",
+            83,
+            false
+          ],
+          [
+            "truncate",
+            362,
+            false
+          ],
+          [
+            "underline",
+            10,
+            false
+          ],
+          [
+            "unstyled",
+            359,
+            false
+          ],
+          [
+            "variant",
+            135,
+            false
+          ]
+        ],
+        "blockedProps": [],
+        "subcomponents": [],
+        "accessibilityRequirements": [
+          "Provide an accessible label for controls without visible text."
+        ]
+      },
+      {
+        "name": "Badge",
+        "props": [
+          [
+            "attributes",
+            454,
+            false
+          ],
+          [
+            "autoContrast",
+            359,
+            false
+          ],
+          [
+            "circle",
+            359,
+            false
+          ],
+          [
+            "color",
+            171,
+            false
+          ],
+          [
+            "fullWidth",
+            359,
+            false
+          ],
+          [
+            "gradient",
+            189,
+            false
+          ],
+          [
+            "leftSection",
+            278,
+            false
+          ],
+          [
+            "rightSection",
+            278,
+            false
+          ],
+          [
+            "size",
+            192,
+            false
+          ],
+          [
+            "unstyled",
+            359,
+            false
+          ],
+          [
+            "variant",
+            120,
+            false
+          ]
+        ],
+        "blockedProps": [],
+        "subcomponents": [],
+        "accessibilityRequirements": [
+          "Provide meaningful text alternatives for non-text content."
+        ]
+      },
+      {
+        "name": "Box",
+        "props": [
+          [
+            "size",
+            383,
+            false
+          ],
+          [
+            "variant",
+            377,
+            false
+          ]
+        ],
+        "blockedProps": [],
+        "subcomponents": [],
+        "accessibilityRequirements": [
+          "Keep visual order consistent with reading order."
+        ]
+      },
+      {
+        "name": "Card",
+        "props": [
+          [
+            "attributes",
+            499,
+            false
+          ],
+          [
+            "orientation",
+            36,
+            false
+          ],
+          [
+            "padding",
+            193,
+            false
+          ],
+          [
+            "unstyled",
+            359,
+            false
+          ],
+          [
+            "variant",
+            377,
+            false
+          ]
+        ],
+        "blockedProps": [],
+        "subcomponents": [
+          "Card.Section"
+        ],
+        "accessibilityRequirements": [
+          "Keep visual order consistent with reading order."
+        ]
+      },
+      {
+        "name": "Center",
+        "props": [
+          [
+            "attributes",
+            497,
+            false
+          ],
+          [
+            "inline",
+            359,
+            false
+          ],
+          [
+            "unstyled",
+            359,
+            false
+          ],
+          [
+            "variant",
+            377,
+            false
+          ]
+        ],
+        "blockedProps": [],
+        "subcomponents": [],
+        "accessibilityRequirements": [
+          "Keep visual order consistent with reading order."
+        ]
+      },
+      {
+        "name": "Checkbox",
+        "props": [
+          [
+            "attributes",
+            392,
+            false
+          ],
+          [
+            "autoContrast",
+            359,
+            false
+          ],
+          [
+            "color",
+            171,
+            false
+          ],
+          [
+            "description",
+            278,
+            false
+          ],
+          [
+            "error",
+            278,
+            false
+          ],
+          [
+            "iconColor",
+            171,
+            false
+          ],
+          [
+            "indeterminate",
+            359,
+            false
+          ],
+          [
+            "label",
+            278,
+            false
+          ],
+          [
+            "labelPosition",
+            48,
+            false
+          ],
+          [
+            "size",
+            192,
+            false
+          ],
+          [
+            "type",
+            181,
+            false
+          ],
+          [
+            "unstyled",
+            359,
+            false
+          ],
+          [
+            "variant",
+            123,
+            false
+          ],
+          [
+            "withErrorStyles",
+            359,
+            false
+          ],
+          [
+            "wrapperProps",
+            106,
+            false
+          ]
+        ],
+        "blockedProps": [],
+        "bind": {
+          "type": "boolean",
+          "initialProp": "defaultChecked",
+          "resetProp": "resetKey"
+        },
+        "subcomponents": [
+          "Checkbox.Card",
+          "Checkbox.Group",
+          "Checkbox.Indicator"
+        ],
+        "accessibilityRequirements": [
+          "Provide a visible label or aria-label."
+        ]
+      },
+      {
+        "name": "Collapsible",
+        "description": "Shows and hides a bounded content section.",
+        "props": [
+          [
+            "defaultOpen",
+            353,
+            false
+          ],
+          [
+            "title",
+            377,
+            true
+          ]
+        ],
+        "blockedProps": [],
+        "subcomponents": [],
+        "accessibilityRequirements": [
+          "Provide a visible label or aria-label."
+        ]
+      },
+      {
+        "name": "Divider",
+        "props": [
+          [
+            "attributes",
+            451,
+            false
+          ],
+          [
+            "color",
+            171,
+            false
+          ],
+          [
+            "label",
+            278,
+            false
+          ],
+          [
+            "labelPosition",
+            22,
+            false
+          ],
+          [
+            "orientation",
+            36,
+            false
+          ],
+          [
+            "size",
+            373,
+            false
+          ],
+          [
+            "unstyled",
+            359,
+            false
+          ],
+          [
+            "variant",
+            126,
+            false
+          ]
+        ],
+        "blockedProps": [],
+        "subcomponents": [],
+        "accessibilityRequirements": [
+          "Keep visual order consistent with reading order."
+        ]
+      },
+      {
+        "name": "Group",
+        "props": [
+          [
+            "align",
+            259,
+            false
+          ],
+          [
+            "attributes",
+            497,
+            false
+          ],
+          [
+            "color",
+            377,
+            false
+          ],
+          [
+            "gap",
+            193,
+            false
+          ],
+          [
+            "grow",
+            359,
+            false
+          ],
+          [
+            "justify",
+            263,
+            false
+          ],
+          [
+            "preventGrowOverflow",
+            359,
+            false
+          ],
+          [
+            "unstyled",
+            359,
+            false
+          ],
+          [
+            "variant",
+            377,
+            false
+          ],
+          [
+            "wrap",
+            5,
+            false
+          ]
+        ],
+        "blockedProps": [],
+        "subcomponents": [],
+        "accessibilityRequirements": [
+          "Keep visual order consistent with reading order."
+        ]
+      },
+      {
+        "name": "Image",
+        "props": [
+          [
+            "attributes",
+            497,
+            false
+          ],
+          [
+            "fallbackSrc",
+            377,
+            false
+          ],
+          [
+            "fit",
+            4,
+            false
+          ],
+          [
+            "src",
+            389,
+            false
+          ],
+          [
+            "unstyled",
+            359,
+            false
+          ],
+          [
+            "variant",
+            377,
+            false
+          ]
+        ],
+        "blockedProps": [],
+        "subcomponents": [],
+        "accessibilityRequirements": [
+          "Provide meaningful text alternatives for non-text content."
+        ]
+      },
+      {
+        "name": "NumberInput",
+        "props": [
+          [
+            "allowDecimal",
+            359,
+            false
+          ],
+          [
+            "allowLeadingZeros",
+            359,
+            false
+          ],
+          [
+            "allowNegative",
+            359,
+            false
+          ],
+          [
+            "allowedDecimalSeparators",
+            386,
+            false
+          ],
+          [
+            "attributes",
+            439,
+            false
+          ],
+          [
+            "clampBehavior",
+            60,
+            false
+          ],
+          [
+            "color",
+            377,
+            false
+          ],
+          [
+            "decimalScale",
+            371,
+            false
+          ],
+          [
+            "decimalSeparator",
+            377,
+            false
+          ],
+          [
+            "defaultValue",
+            198,
+            false
+          ],
+          [
+            "description",
+            278,
+            false
+          ],
+          [
+            "descriptionProps",
+            98,
+            false
+          ],
+          [
+            "error",
+            278,
+            false
+          ],
+          [
+            "errorProps",
+            99,
+            false
+          ],
+          [
+            "fixedDecimalScale",
+            359,
+            false
+          ],
+          [
+            "hideControls",
+            359,
+            false
+          ],
+          [
+            "inputSize",
+            377,
+            false
+          ],
+          [
+            "inputWrapperOrder",
+            92,
+            false
+          ],
+          [
+            "label",
+            278,
+            false
+          ],
+          [
+            "labelProps",
+            100,
+            false
+          ],
+          [
+            "leftSection",
+            278,
+            false
+          ],
+          [
+            "leftSectionPointerEvents",
+            2,
+            false
+          ],
+          [
+            "leftSectionProps",
+            274,
+            false
+          ],
+          [
+            "leftSectionWidth",
+            269,
+            false
+          ],
+          [
+            "loading",
+            359,
+            false
+          ],
+          [
+            "loadingPosition",
+            48,
+            false
+          ],
+          [
+            "max",
+            329,
+            false
+          ],
+          [
+            "min",
+            329,
+            false
+          ],
+          [
+            "rightSection",
+            278,
+            false
+          ],
+          [
+            "rightSectionPointerEvents",
+            2,
+            false
+          ],
+          [
+            "rightSectionProps",
+            274,
+            false
+          ],
+          [
+            "rightSectionWidth",
+            269,
+            false
+          ],
+          [
+            "selectAllOnFocus",
+            359,
+            false
+          ],
+          [
+            "size",
+            192,
+            false
+          ],
+          [
+            "startValue",
+            329,
+            false
+          ],
+          [
+            "step",
+            329,
+            false
+          ],
+          [
+            "stepHoldDelay",
+            371,
+            false
+          ],
+          [
+            "success",
+            278,
+            false
+          ],
+          [
+            "successProps",
+            101,
+            false
+          ],
+          [
+            "suffix",
+            377,
+            false
+          ],
+          [
+            "thousandSeparator",
+            382,
+            false
+          ],
+          [
+            "thousandsGroupStyle",
+            62,
+            false
+          ],
+          [
+            "trimLeadingZeroesOnBlur",
+            359,
+            false
+          ],
+          [
+            "type",
+            78,
+            false
+          ],
+          [
+            "unstyled",
+            359,
+            false
+          ],
+          [
+            "value",
+            198,
+            false
+          ],
+          [
+            "valueIsNumericString",
+            359,
+            false
+          ],
+          [
+            "variant",
+            128,
+            false
+          ],
+          [
+            "withAsterisk",
+            359,
+            false
+          ],
+          [
+            "withErrorStyles",
+            359,
+            false
+          ],
+          [
+            "withKeyboardEvents",
+            359,
+            false
+          ],
+          [
+            "withSuccessStyles",
+            359,
+            false
+          ],
+          [
+            "wrapperProps",
+            348,
+            false
+          ]
+        ],
+        "blockedProps": [],
+        "bind": {
+          "type": "number",
+          "initialProp": "defaultValue",
+          "resetProp": "resetKey"
+        },
+        "subcomponents": [],
+        "accessibilityRequirements": [
+          "Provide a visible label or aria-label."
+        ]
+      },
+      {
+        "name": "PaginatedList",
+        "description": "Renders a bounded page of collection items.",
+        "props": [
+          [
+            "pageSize",
+            371,
+            false
+          ]
+        ],
+        "blockedProps": [],
+        "subcomponents": [],
+        "accessibilityRequirements": [
+          "Provide a visible label or aria-label."
+        ]
+      },
+      {
+        "name": "Pagination",
+        "props": [
+          [
+            "attributes",
+            447,
+            false
+          ],
+          [
+            "autoContrast",
+            359,
+            false
+          ],
+          [
+            "boundaries",
+            371,
+            false
+          ],
+          [
+            "color",
+            171,
+            false
+          ],
+          [
+            "defaultValue",
+            371,
+            false
+          ],
+          [
+            "gap",
+            193,
+            false
+          ],
+          [
+            "hideWithOnePage",
+            359,
+            false
+          ],
+          [
+            "layout",
+            28,
+            false
+          ],
+          [
+            "siblings",
+            371,
+            false
+          ],
+          [
+            "size",
+            374,
+            false
+          ],
+          [
+            "startValue",
+            371,
+            false
+          ],
+          [
+            "total",
+            371,
+            true
+          ],
+          [
+            "unstyled",
+            359,
+            false
+          ],
+          [
+            "value",
+            371,
+            false
+          ],
+          [
+            "variant",
+            377,
+            false
+          ],
+          [
+            "withControls",
+            359,
+            false
+          ],
+          [
+            "withEdges",
+            359,
+            false
+          ],
+          [
+            "withPages",
+            359,
+            false
+          ]
+        ],
+        "blockedProps": [],
+        "bind": {
+          "type": "number",
+          "initialProp": "defaultValue",
+          "resetProp": "resetKey"
+        },
+        "subcomponents": [
+          "Pagination.Control",
+          "Pagination.Dots",
+          "Pagination.First",
+          "Pagination.Items",
+          "Pagination.Label",
+          "Pagination.Last",
+          "Pagination.Next",
+          "Pagination.Previous",
+          "Pagination.Root"
+        ],
+        "accessibilityRequirements": [
+          "Provide a visible label or aria-label."
+        ]
+      },
+      {
+        "name": "Paper",
+        "props": [
+          [
+            "attributes",
+            497,
+            false
+          ],
+          [
+            "unstyled",
+            359,
+            false
+          ],
+          [
+            "variant",
+            377,
+            false
+          ]
+        ],
+        "blockedProps": [],
+        "subcomponents": [],
+        "accessibilityRequirements": [
+          "Keep visual order consistent with reading order."
+        ]
+      },
+      {
+        "name": "Progress",
+        "props": [
+          [
+            "animated",
+            359,
+            false
+          ],
+          [
+            "attributes",
+            454,
+            false
+          ],
+          [
+            "autoContrast",
+            359,
+            false
+          ],
+          [
+            "color",
+            171,
+            false
+          ],
+          [
+            "orientation",
+            36,
+            false
+          ],
+          [
+            "size",
+            373,
+            false
+          ],
+          [
+            "striped",
+            359,
+            false
+          ],
+          [
+            "transitionDuration",
+            371,
+            false
+          ],
+          [
+            "unstyled",
+            359,
+            false
+          ],
+          [
+            "value",
+            371,
+            true
+          ],
+          [
+            "variant",
+            377,
+            false
+          ]
+        ],
+        "blockedProps": [],
+        "subcomponents": [
+          "Progress.Label",
+          "Progress.Root",
+          "Progress.Section"
+        ],
+        "accessibilityRequirements": [
+          "Do not rely on color alone to communicate status."
+        ]
+      },
+      {
+        "name": "RefreshButton",
+        "description": "Refreshes one active named query or all widget queries.",
+        "props": [
+          [
+            "color",
+            377,
+            false
+          ],
+          [
+            "label",
+            377,
+            false
+          ],
+          [
+            "requestId",
+            377,
+            false
+          ],
+          [
+            "size",
+            377,
+            false
+          ],
+          [
+            "variant",
+            377,
+            false
+          ]
+        ],
+        "blockedProps": [],
+        "subcomponents": [],
+        "accessibilityRequirements": [
+          "Action labels must describe their effect; destructive actions require confirmation."
+        ]
+      },
+      {
+        "name": "ScrollArea",
+        "props": [
+          [
+            "attributes",
+            416,
+            false
+          ],
+          [
+            "color",
+            377,
+            false
+          ],
+          [
+            "offsetScrollbars",
+            369,
+            false
+          ],
+          [
+            "overscrollBehavior",
+            268,
+            false
+          ],
+          [
+            "scrollHideDelay",
+            371,
+            false
+          ],
+          [
+            "scrollbarSize",
+            383,
+            false
+          ],
+          [
+            "scrollbars",
+            358,
+            false
+          ],
+          [
+            "startScrollPosition",
+            506,
+            false
+          ],
+          [
+            "type",
+            12,
+            false
+          ],
+          [
+            "unstyled",
+            359,
+            false
+          ],
+          [
+            "variant",
+            377,
+            false
+          ],
+          [
+            "verticalScrollbarPosition",
+            48,
+            false
+          ],
+          [
+            "viewportProps",
+            274,
+            false
+          ]
+        ],
+        "blockedProps": [],
+        "subcomponents": [
+          "ScrollArea.Autosize"
+        ],
+        "accessibilityRequirements": [
+          "Keep visual order consistent with reading order."
+        ]
+      },
+      {
+        "name": "Select",
+        "props": [
+          [
+            "allowDeselect",
+            359,
+            false
+          ],
+          [
+            "attributes",
+            426,
+            false
+          ],
+          [
+            "autoSelectOnBlur",
+            359,
+            false
+          ],
+          [
+            "checkIconPosition",
+            48,
+            false
+          ],
+          [
+            "chevronColor",
+            171,
+            false
+          ],
+          [
+            "clearButtonProps",
+            182,
+            false
+          ],
+          [
+            "clearSectionMode",
+            15,
+            false
+          ],
+          [
+            "clearable",
+            359,
+            false
+          ],
+          [
+            "color",
+            377,
+            false
+          ],
+          [
+            "comboboxProps",
+            162,
+            false
+          ],
+          [
+            "data",
+            160,
+            false
+          ],
+          [
+            "defaultDropdownOpened",
+            359,
+            false
+          ],
+          [
+            "defaultSearchValue",
+            377,
+            false
+          ],
+          [
+            "defaultValue",
+            345,
+            false
+          ],
+          [
+            "description",
+            278,
+            false
+          ],
+          [
+            "descriptionProps",
+            98,
+            false
+          ],
+          [
+            "dropdownOpened",
+            359,
+            false
+          ],
+          [
+            "error",
+            278,
+            false
+          ],
+          [
+            "errorProps",
+            99,
+            false
+          ],
+          [
+            "floatingHeight",
+            82,
+            false
+          ],
+          [
+            "hiddenInputProps",
+            207,
+            false
+          ],
+          [
+            "inputSize",
+            377,
+            false
+          ],
+          [
+            "inputWrapperOrder",
+            92,
+            false
+          ],
+          [
+            "label",
+            278,
+            false
+          ],
+          [
+            "labelProps",
+            100,
+            false
+          ],
+          [
+            "leftSection",
+            278,
+            false
+          ],
+          [
+            "leftSectionPointerEvents",
+            2,
+            false
+          ],
+          [
+            "leftSectionProps",
+            274,
+            false
+          ],
+          [
+            "leftSectionWidth",
+            269,
+            false
+          ],
+          [
+            "limit",
+            371,
+            false
+          ],
+          [
+            "loading",
+            359,
+            false
+          ],
+          [
+            "loadingPosition",
+            48,
+            false
+          ],
+          [
+            "maxDropdownHeight",
+            383,
+            false
+          ],
+          [
+            "nothingFoundMessage",
+            278,
+            false
+          ],
+          [
+            "openOnFocus",
+            359,
+            false
+          ],
+          [
+            "pointer",
+            359,
+            false
+          ],
+          [
+            "rightSection",
+            278,
+            false
+          ],
+          [
+            "rightSectionPointerEvents",
+            2,
+            false
+          ],
+          [
+            "rightSectionProps",
+            274,
+            false
+          ],
+          [
+            "rightSectionWidth",
+            269,
+            false
+          ],
+          [
+            "scrollAreaProps",
+            289,
+            false
+          ],
+          [
+            "searchValue",
+            377,
+            false
+          ],
+          [
+            "searchable",
+            359,
+            false
+          ],
+          [
+            "selectFirstOptionOnChange",
+            359,
+            false
+          ],
+          [
+            "selectFirstOptionOnDropdownOpen",
+            359,
+            false
+          ],
+          [
+            "size",
+            192,
+            false
+          ],
+          [
+            "success",
+            278,
+            false
+          ],
+          [
+            "successProps",
+            101,
+            false
+          ],
+          [
+            "type",
+            181,
+            false
+          ],
+          [
+            "unstyled",
+            359,
+            false
+          ],
+          [
+            "value",
+            345,
+            false
+          ],
+          [
+            "variant",
+            128,
+            false
+          ],
+          [
+            "withAlignedLabels",
+            359,
+            false
+          ],
+          [
+            "withAsterisk",
+            359,
+            false
+          ],
+          [
+            "withCheckIcon",
+            359,
+            false
+          ],
+          [
+            "withErrorStyles",
+            359,
+            false
+          ],
+          [
+            "withScrollArea",
+            359,
+            false
+          ],
+          [
+            "withSuccessStyles",
+            359,
+            false
+          ],
+          [
+            "wrapperProps",
+            348,
+            false
+          ]
+        ],
+        "blockedProps": [],
+        "bind": {
+          "type": "string",
+          "initialProp": "defaultValue",
+          "resetProp": "resetKey"
+        },
+        "subcomponents": [],
+        "accessibilityRequirements": [
+          "Provide a visible label or aria-label."
+        ]
+      },
+      {
+        "name": "SimpleGrid",
+        "props": [
+          [
+            "attributes",
+            481,
+            false
+          ],
+          [
+            "autoFlow",
+            13,
+            false
+          ],
+          [
+            "autoRows",
+            377,
+            false
+          ],
+          [
+            "color",
+            377,
+            false
+          ],
+          [
+            "cols",
+            327,
+            false
+          ],
+          [
+            "minColWidth",
+            383,
+            false
+          ],
+          [
+            "spacing",
+            299,
+            false
+          ],
+          [
+            "type",
+            53,
+            false
+          ],
+          [
+            "unstyled",
+            359,
+            false
+          ],
+          [
+            "variant",
+            377,
+            false
+          ],
+          [
+            "verticalSpacing",
+            299,
+            false
+          ]
+        ],
+        "blockedProps": [],
+        "subcomponents": [],
+        "accessibilityRequirements": [
+          "Keep visual order consistent with reading order."
+        ]
+      },
+      {
+        "name": "Skeleton",
+        "props": [
+          [
+            "animate",
+            359,
+            false
+          ],
+          [
+            "attributes",
+            497,
+            false
+          ],
+          [
+            "circle",
+            359,
+            false
+          ],
+          [
+            "color",
+            377,
+            false
+          ],
+          [
+            "height",
+            262,
+            false
+          ],
+          [
+            "radius",
+            261,
+            false
+          ],
+          [
+            "unstyled",
+            359,
+            false
+          ],
+          [
+            "variant",
+            377,
+            false
+          ],
+          [
+            "visible",
+            359,
+            false
+          ],
+          [
+            "width",
+            269,
+            false
+          ]
+        ],
+        "blockedProps": [],
+        "subcomponents": [],
+        "accessibilityRequirements": [
+          "Do not rely on color alone to communicate status."
+        ]
+      },
+      {
+        "name": "Stack",
+        "props": [
+          [
+            "align",
+            259,
+            false
+          ],
+          [
+            "attributes",
+            497,
+            false
+          ],
+          [
+            "color",
+            377,
+            false
+          ],
+          [
+            "gap",
+            193,
+            false
+          ],
+          [
+            "justify",
+            263,
+            false
+          ],
+          [
+            "unstyled",
+            359,
+            false
+          ],
+          [
+            "variant",
+            377,
+            false
+          ]
+        ],
+        "blockedProps": [],
+        "subcomponents": [],
+        "accessibilityRequirements": [
+          "Keep visual order consistent with reading order."
+        ]
+      },
+      {
+        "name": "StatBar",
+        "description": "Displays a compact labeled statistic and progress value.",
+        "props": [
+          [
+            "color",
+            377,
+            false
+          ],
+          [
+            "label",
+            377,
+            false
+          ],
+          [
+            "max",
+            371,
+            false
+          ],
+          [
+            "value",
+            371,
+            true
+          ]
+        ],
+        "blockedProps": [],
+        "subcomponents": [],
+        "accessibilityRequirements": [
+          "Provide a visible label or aria-label."
+        ]
+      },
+      {
+        "name": "SubData",
+        "description": "Reads a nested value from a named manual-query result.",
+        "props": [
+          [
+            "as",
+            88,
+            false
+          ],
+          [
+            "c",
+            377,
+            false
+          ],
+          [
+            "color",
+            377,
+            false
+          ],
+          [
+            "fit",
+            377,
+            false
+          ],
+          [
+            "fw",
+            371,
+            false
+          ],
+          [
+            "h",
+            383,
+            false
+          ],
+          [
+            "order",
+            139,
+            false
+          ],
+          [
+            "radius",
+            383,
+            false
+          ],
+          [
+            "size",
+            377,
+            false
+          ],
+          [
+            "variant",
+            377,
+            false
+          ],
+          [
+            "w",
+            383,
+            false
+          ]
+        ],
+        "blockedProps": [],
+        "subcomponents": [],
+        "accessibilityRequirements": [
+          "Action labels must describe their effect; destructive actions require confirmation."
+        ]
+      },
+      {
+        "name": "SubFetch",
+        "description": "Runs a named manual query with invocation-time parameters.",
+        "props": [
+          [
+            "as",
+            90,
+            false
+          ],
+          [
+            "errorMessage",
+            377,
+            false
+          ],
+          [
+            "fallback",
+            279,
+            false
+          ],
+          [
+            "loadingLabel",
+            377,
+            false
+          ],
+          [
+            "params",
+            285,
+            false
+          ],
+          [
+            "refreshInterval",
+            371,
+            false
+          ],
+          [
+            "requestId",
+            377,
+            false
+          ],
+          [
+            "trigger",
+            89,
+            false
+          ],
+          [
+            "triggerAriaLabel",
+            377,
+            false
+          ],
+          [
+            "triggerContent",
+            279,
+            false
+          ]
+        ],
+        "blockedProps": [],
+        "subcomponents": [],
+        "accessibilityRequirements": [
+          "Action labels must describe their effect; destructive actions require confirmation."
+        ]
+      },
+      {
+        "name": "Switch",
+        "props": [
+          [
+            "attributes",
+            394,
+            false
+          ],
+          [
+            "color",
+            171,
+            false
+          ],
+          [
+            "description",
+            278,
+            false
+          ],
+          [
+            "error",
+            278,
+            false
+          ],
+          [
+            "label",
+            278,
+            false
+          ],
+          [
+            "labelPosition",
+            48,
+            false
+          ],
+          [
+            "offLabel",
+            278,
+            false
+          ],
+          [
+            "size",
+            192,
+            false
+          ],
+          [
+            "thumbIcon",
+            278,
+            false
+          ],
+          [
+            "type",
+            181,
+            false
+          ],
+          [
+            "unstyled",
+            359,
+            false
+          ],
+          [
+            "variant",
+            377,
+            false
+          ],
+          [
+            "withThumbIndicator",
+            359,
+            false
+          ],
+          [
+            "wrapperProps",
+            106,
+            false
+          ]
+        ],
+        "blockedProps": [],
+        "bind": {
+          "type": "boolean",
+          "initialProp": "defaultChecked",
+          "resetProp": "resetKey"
+        },
+        "subcomponents": [
+          "Switch.Group"
+        ],
+        "accessibilityRequirements": [
+          "Provide a visible label or aria-label."
+        ]
+      },
+      {
+        "name": "TabPanel",
+        "description": "Renders content for one declarative tab.",
+        "props": [
+          [
+            "label",
+            377,
+            false
+          ],
+          [
+            "value",
+            377,
+            true
+          ]
+        ],
+        "blockedProps": [],
+        "subcomponents": [],
+        "accessibilityRequirements": [
+          "Provide a visible label or aria-label."
+        ]
+      },
+      {
+        "name": "Table",
+        "props": [
+          [
+            "align",
+            22,
+            false
+          ],
+          [
+            "attributes",
+            409,
+            false
+          ],
+          [
+            "borderColor",
+            171,
+            false
+          ],
+          [
+            "captionSide",
+            16,
+            false
+          ],
+          [
+            "color",
+            377,
+            false
+          ],
+          [
+            "data",
+            331,
+            false
+          ],
+          [
+            "highlightOnHover",
+            359,
+            false
+          ],
+          [
+            "highlightOnHoverColor",
+            171,
+            false
+          ],
+          [
+            "horizontalSpacing",
+            193,
+            false
+          ],
+          [
+            "layout",
+            1,
+            false
+          ],
+          [
+            "stickyHeader",
+            359,
+            false
+          ],
+          [
+            "stickyHeaderOffset",
+            383,
+            false
+          ],
+          [
+            "striped",
+            363,
+            false
+          ],
+          [
+            "stripedColor",
+            171,
+            false
+          ],
+          [
+            "tabularNums",
+            359,
+            false
+          ],
+          [
+            "unstyled",
+            359,
+            false
+          ],
+          [
+            "variant",
+            133,
+            false
+          ],
+          [
+            "verticalSpacing",
+            193,
+            false
+          ],
+          [
+            "withColumnBorders",
+            359,
+            false
+          ],
+          [
+            "withRowBorders",
+            359,
+            false
+          ],
+          [
+            "withTableBorder",
+            359,
+            false
+          ]
+        ],
+        "blockedProps": [],
+        "subcomponents": [
+          "Table.Caption",
+          "Table.DataRenderer",
+          "Table.ScrollContainer",
+          "Table.Tbody",
+          "Table.Td",
+          "Table.Tfoot",
+          "Table.Th",
+          "Table.Thead",
+          "Table.Tr"
+        ],
+        "accessibilityRequirements": [
+          "Provide meaningful text alternatives for non-text content."
+        ]
+      },
+      {
+        "name": "TablerIcon",
+        "description": "Resolves an installed Tabler icon by its safe name.",
+        "props": [
+          [
+            "color",
+            377,
+            false
+          ],
+          [
+            "name",
+            377,
+            true
+          ],
+          [
+            "size",
+            383,
+            false
+          ],
+          [
+            "stroke",
+            383,
+            false
+          ]
+        ],
+        "blockedProps": [],
+        "subcomponents": [],
+        "accessibilityRequirements": [
+          "Provide meaningful text alternatives for non-text content."
+        ]
+      },
+      {
+        "name": "Tabs",
+        "props": [
+          [
+            "activateTabWithKeyboard",
+            359,
+            false
+          ],
+          [
+            "allowTabDeactivation",
+            359,
+            false
+          ],
+          [
+            "attributes",
+            492,
+            false
+          ],
+          [
+            "autoContrast",
+            359,
+            false
+          ],
+          [
+            "color",
+            171,
+            false
+          ],
+          [
+            "defaultValue",
+            370,
+            false
+          ],
+          [
+            "inverted",
+            359,
+            false
+          ],
+          [
+            "keepMounted",
+            359,
+            false
+          ],
+          [
+            "keepMountedMode",
+            7,
+            false
+          ],
+          [
+            "loop",
+            359,
+            false
+          ],
+          [
+            "orientation",
+            36,
+            false
+          ],
+          [
+            "placement",
+            48,
+            false
+          ],
+          [
+            "unstyled",
+            359,
+            false
+          ],
+          [
+            "value",
+            370,
+            false
+          ],
+          [
+            "variant",
+            134,
+            false
+          ]
+        ],
+        "blockedProps": [],
+        "bind": {
+          "type": "string",
+          "initialProp": "defaultValue",
+          "resetProp": "resetKey"
+        },
+        "subcomponents": [
+          "Tabs.List",
+          "Tabs.Panel",
+          "Tabs.Tab"
+        ],
+        "accessibilityRequirements": [
+          "Provide an accessible label for controls without visible text."
+        ]
+      },
+      {
+        "name": "TabsContainer",
+        "description": "Renders a declarative tab container.",
+        "props": [
+          [
+            "defaultTab",
+            377,
+            false
+          ]
+        ],
+        "blockedProps": [],
+        "subcomponents": [],
+        "accessibilityRequirements": [
+          "Provide a visible label or aria-label."
+        ]
+      },
+      {
+        "name": "Text",
+        "props": [
+          [
+            "attributes",
+            497,
+            false
+          ],
+          [
+            "gradient",
+            189,
+            false
+          ],
+          [
+            "inherit",
+            359,
+            false
+          ],
+          [
+            "inline",
+            359,
+            false
+          ],
+          [
+            "lineClamp",
+            371,
+            false
+          ],
+          [
+            "size",
+            86,
+            false
+          ],
+          [
+            "span",
+            359,
+            false
+          ],
+          [
+            "textWrap",
+            83,
+            false
+          ],
+          [
+            "truncate",
+            362,
+            false
+          ],
+          [
+            "unstyled",
+            359,
+            false
+          ],
+          [
+            "variant",
+            135,
+            false
+          ]
+        ],
+        "blockedProps": [],
+        "subcomponents": [],
+        "accessibilityRequirements": [
+          "Provide meaningful text alternatives for non-text content."
+        ]
+      },
+      {
+        "name": "TextInput",
+        "props": [
+          [
+            "attributes",
+            438,
+            false
+          ],
+          [
+            "color",
+            377,
+            false
+          ],
+          [
+            "description",
+            278,
+            false
+          ],
+          [
+            "descriptionProps",
+            98,
+            false
+          ],
+          [
+            "error",
+            278,
+            false
+          ],
+          [
+            "errorProps",
+            99,
+            false
+          ],
+          [
+            "inputSize",
+            377,
+            false
+          ],
+          [
+            "inputWrapperOrder",
+            92,
+            false
+          ],
+          [
+            "label",
+            278,
+            false
+          ],
+          [
+            "labelProps",
+            100,
+            false
+          ],
+          [
+            "leftSection",
+            278,
+            false
+          ],
+          [
+            "leftSectionPointerEvents",
+            2,
+            false
+          ],
+          [
+            "leftSectionProps",
+            274,
+            false
+          ],
+          [
+            "leftSectionWidth",
+            269,
+            false
+          ],
+          [
+            "loading",
+            359,
+            false
+          ],
+          [
+            "loadingPosition",
+            48,
+            false
+          ],
+          [
+            "pointer",
+            359,
+            false
+          ],
+          [
+            "rightSection",
+            278,
+            false
+          ],
+          [
+            "rightSectionPointerEvents",
+            2,
+            false
+          ],
+          [
+            "rightSectionProps",
+            274,
+            false
+          ],
+          [
+            "rightSectionWidth",
+            269,
+            false
+          ],
+          [
+            "size",
+            192,
+            false
+          ],
+          [
+            "success",
+            278,
+            false
+          ],
+          [
+            "successProps",
+            101,
+            false
+          ],
+          [
+            "type",
+            181,
+            false
+          ],
+          [
+            "unstyled",
+            359,
+            false
+          ],
+          [
+            "variant",
+            128,
+            false
+          ],
+          [
+            "withAsterisk",
+            359,
+            false
+          ],
+          [
+            "withErrorStyles",
+            359,
+            false
+          ],
+          [
+            "withSuccessStyles",
+            359,
+            false
+          ],
+          [
+            "wrapperProps",
+            348,
+            false
+          ]
+        ],
+        "blockedProps": [],
+        "bind": {
+          "type": "string",
+          "initialProp": "defaultValue",
+          "resetProp": "resetKey"
+        },
+        "subcomponents": [],
+        "accessibilityRequirements": [
+          "Provide a visible label or aria-label."
+        ]
+      },
+      {
+        "name": "ThemeIcon",
+        "props": [
+          [
+            "attributes",
+            497,
+            false
+          ],
+          [
+            "autoContrast",
+            359,
+            false
+          ],
+          [
+            "color",
+            171,
+            false
+          ],
+          [
+            "gradient",
+            189,
+            false
+          ],
+          [
+            "size",
+            373,
+            false
+          ],
+          [
+            "unstyled",
+            359,
+            false
+          ],
+          [
+            "variant",
+            136,
+            false
+          ]
+        ],
+        "blockedProps": [],
+        "subcomponents": [],
+        "accessibilityRequirements": [
+          "Provide meaningful text alternatives for non-text content."
+        ]
+      },
+      {
+        "name": "Title",
+        "props": [
+          [
+            "attributes",
+            497,
+            false
+          ],
+          [
+            "lineClamp",
+            371,
+            false
+          ],
+          [
+            "order",
+            141,
+            false
+          ],
+          [
+            "size",
+            334,
+            false
+          ],
+          [
+            "textWrap",
+            83,
+            false
+          ],
+          [
+            "unstyled",
+            359,
+            false
+          ],
+          [
+            "variant",
+            377,
+            false
+          ]
+        ],
+        "blockedProps": [],
+        "subcomponents": [],
+        "accessibilityRequirements": [
+          "Provide meaningful text alternatives for non-text content."
+        ]
+      },
+      {
+        "name": "ToggleSwitch",
+        "description": "Runs named actions for the enabled and disabled states.",
+        "props": [
+          [
+            "color",
+            377,
+            false
+          ],
+          [
+            "disabled",
+            356,
+            false
+          ],
+          [
+            "disabledParams",
+            285,
+            false
+          ],
+          [
+            "enabledParams",
+            285,
+            false
+          ],
+          [
+            "errorMessage",
+            377,
+            false
+          ],
+          [
+            "initialValue",
+            356,
+            false
+          ],
+          [
+            "label",
+            377,
+            false
+          ],
+          [
+            "requestId",
+            377,
+            false
+          ],
+          [
+            "size",
+            377,
+            false
+          ]
+        ],
+        "blockedProps": [],
+        "subcomponents": [],
+        "accessibilityRequirements": [
+          "Action labels must describe their effect; destructive actions require confirmation."
+        ]
+      },
+      {
+        "name": "TypeBadge",
+        "description": "Displays a compact semantic type badge.",
+        "props": [
+          [
+            "size",
+            91,
+            false
+          ],
+          [
+            "type",
+            377,
+            true
+          ]
+        ],
+        "blockedProps": [],
+        "subcomponents": [],
+        "accessibilityRequirements": [
+          "Provide a visible label or aria-label."
+        ]
+      }
+    ]
+  },
+  "runtime": "# Runtime\n\nLoad queries render `data.requestId`/`status.requestId` with `RefreshButton`, not `SubFetch`. Status: `{ loading, ok, status, statusText, error }`. Manual `SubFetch` results are instance-local, never `data`/`status`; render them in its child.\n\n`bind` is temporary; manual request values go in `params` and map to `$param`:\n\n```jsx\n<TextInput bind=\"search\" label=\"Search\" />\n<NumberInput bind=\"page\" label=\"Page\" defaultValue={1} resetKey={inputs.search} min={1} />\n<SubFetch requestId=\"search\" trigger=\"manual\" params={{ query: inputs.search ?? \"\", page: inputs.page ?? 1 }}>\n  {(result) => <Stack>{(result.results ?? []).map(item => <Text key={item.id}>{item.name}</Text>)}</Stack>}\n</SubFetch>\n```\n\nManual queries need `trigger: \"manual\"` on request and `SubFetch`; otherwise they run automatically. `triggerContent`/`triggerAriaLabel` customize its button wrapper: use non-interactive Text/Card, never Button, Anchor or form controls. `SubFetch` owns loading/error/retry; its child receives (result, `{ ok, status, statusText, loading: false }`) on success. No authored `onClick`/fetch callbacks.\n\n`SubFetch`, `ActionButton`, `ToggleSwitch` require literal `requestId`; missing/computed IDs fail validation.\n\nExplicit `ActionButton`/`ToggleSwitch` invocations publish responses to that widget's `data.requestId`/`status.requestId`. Guard the pre-action state. Responses do not survive reloads; actions never run automatically.\n\nInside a successful manual result, `<RefreshButton requestId=\"search\" label=\"Run again\" />` reruns the same parameters.\n\nSubFetch/ActionButton params must exactly match that request's $param/{param:name} names. Fixed query values (limit/fields) belong in requests.<id>.query, not params. Test the JSX's parameter names; repair mismatches in both. Changing a manual SubFetch ID, params or definition hides old results and restores the trigger; fetch again only on invocation.\n\nExact paths: load ID `q`, raw body `B` -> `data.q === B`; ID `events`, body `{\"events\":[...]}` -> `data.events.events`. Manual `SubFetch` receives `B` -> `result.events`. Preserve repeated keys; check core paths against previews, revise/retest before saving.\n\nUse static `Date.toLocaleString(value, \"en-US\", documentedTimezone)`, labeling only documented timezones; otherwise preserve the source value or omit the timezone label. UTC requires a UTC response contract. Countdowns: `Date.getTime(isoTimestamp) - Date.now()` is milliseconds. Also supported: `Date.toISOString`, `Date.toLocaleDateString`, `Date.toLocaleTimeString`. No `new Date`, `Date.parse` or invented formatter components.\n\nNumeric enum labels need a fallback:\n\n```jsx\n<Text>{[\"Unknown\", \"Pending\", \"Ready\"][(item.status ?? 1) - 1] ?? \"Unknown\"}</Text>\n```\n\nRequest controls use literal `bind` + default (`defaultChecked` for Switch/Checkbox); map temporary `inputs.<name>` through manual `SubFetch params` to matching `$param`. Installation config is `options.name`, not `inputs`. Dependent pagination: `defaultValue={1}`/`resetKey={inputs.query}`. Remove dead controls.\n\nCallback parameters cannot shadow `data`, `status`, `options`, `inputs`. Discover registered names; `Icon` aliases `TablerIcon`, not invented `<IconFoo />` components.\n\nUse expression callbacks for supported collections/trusted slots; no blocks, IIFEs, recursion or raw events. Regex: safe string operations only.\n\n",
+  "security": "# Security\n\nAll requests use Homarr's protected server executor. Source origin, credential destinations, rate limits, permissions, size limits, timeouts, and encrypted credential injection remain enforced. HTTP sources can reach any address accessible to the Homarr server.\n\nThe JSX interpreter blocks imports, hooks, refs, raw event callbacks, browser requests, eval, arbitrary functions, prototype access, unsafe URLs, global CSS escape, arbitrary portals, bigint, statement blocks, IIFEs, and recursion. Regex literals must be bounded and reject backreferences, lookbehind, nested quantifiers, excessive length, and unsupported flags.\n\nCredentials are stored separately and never exported or returned to an agent. A published self-hosted source URL is only a suggestion: installers must confirm or replace private and loopback URLs for their own Homarr deployment. Source origins cannot be controlled through widget options.\n",
+  "protocol": "Write ONCE a strict JSON ARRAY of four {caseId,definition} to assigned absolute outputPath via patch. Only template changes. No validation/feedback/rewrite/retry. Final reply only JSON acknowledgement {jobId,artifact,caseIds}, not definitions. No markdown or templateLines."
+}
