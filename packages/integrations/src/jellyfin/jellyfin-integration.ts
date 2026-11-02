@@ -71,10 +71,18 @@ export const getMediaReleaseTitle = (item: BaseItemDto): string => {
   return item.Name ?? "";
 };
 
+const episodeReleaseName = (item: BaseItemDto): string => {
+  const name = item.Name?.trim();
+  const episodeTitle = item.EpisodeTitle?.trim();
+  // Name is blank, or only repeats the series, when Jellyfin put the episode title on EpisodeTitle.
+  if (episodeTitle && (!name || name === item.SeriesName?.trim())) return episodeTitle;
+  return name || episodeTitle || "";
+};
+
 export const formatEpisodeSubtitle = (item: BaseItemDto): string | undefined => {
   // Without a series name the title stays the item name, so the previous tagline is kept as the subtitle.
   if (!item.SeriesName) return item.Taglines?.at(0);
-  const name = item.Name ?? item.EpisodeTitle ?? "";
+  const name = episodeReleaseName(item);
   const season = item.ParentIndexNumber;
   const episode = item.IndexNumber;
   if (season === undefined || season === null || episode === undefined || episode === null) {
@@ -82,6 +90,82 @@ export const formatEpisodeSubtitle = (item: BaseItemDto): string | undefined => 
   }
   const code = `S${String(season).padStart(2, "0")}E${String(episode).padStart(2, "0")}`;
   return name ? `${code} – ${name}` : code;
+};
+
+// Jellyfin's latest view treats episodes added within a day of each other as one batch.
+const recentEpisodeBatchWindowMs = 24 * 60 * 60 * 1000;
+
+const episodeAddedAtMs = (item: BaseItemDto): number | undefined => {
+  if (!item.DateCreated) return undefined;
+  const addedAt = new Date(item.DateCreated).getTime();
+  return Number.isNaN(addedAt) ? undefined : addedAt;
+};
+
+const episodesBySeriesId = (items: readonly BaseItemDto[]): Map<string, BaseItemDto[]> => {
+  const grouped = new Map<string, BaseItemDto[]>();
+  for (const item of items) {
+    if (item.Type !== "Episode" || !item.SeriesId) continue;
+    const episodes = grouped.get(item.SeriesId);
+    if (episodes) episodes.push(item);
+    else grouped.set(item.SeriesId, [item]);
+  }
+  return grouped;
+};
+
+const isRecentEpisodeBatch = (episodes: readonly BaseItemDto[]): boolean => {
+  if (episodes.length < 2) return false;
+  let newest: number | undefined;
+  const addedAt: number[] = [];
+  for (const episode of episodes) {
+    const time = episodeAddedAtMs(episode);
+    if (time === undefined) continue;
+    addedAt.push(time);
+    if (newest === undefined || time > newest) newest = time;
+  }
+  // Undated episodes keep the previous behavior and collapse together.
+  if (newest === undefined) return true;
+  const latest = newest;
+  return addedAt.filter((time) => latest - time <= recentEpisodeBatchWindowMs).length > 1;
+};
+
+const newestEpisode = (episodes: readonly BaseItemDto[]): BaseItemDto =>
+  episodes.reduce((selected, episode) => {
+    const selectedAt = episodeAddedAtMs(selected);
+    const addedAt = episodeAddedAtMs(episode);
+    if (addedAt === undefined) return selected;
+    if (selectedAt === undefined || addedAt > selectedAt) return episode;
+    return selected;
+  });
+
+export const seriesIdsWithRecentEpisodeBatch = (items: readonly BaseItemDto[]): string[] =>
+  [...episodesBySeriesId(items).entries()].flatMap(([seriesId, episodes]) =>
+    isRecentEpisodeBatch(episodes) ? [seriesId] : [],
+  );
+
+// A same-day batch uses the series. One new episode stays itself, even when older episodes of that
+// series are still in the latest page. Replacing those with the series drops the episode title.
+export const groupRecentJellyfinEpisodes = (
+  items: readonly BaseItemDto[],
+  seriesById: ReadonlyMap<string, BaseItemDto>,
+): BaseItemDto[] => {
+  const grouped = episodesBySeriesId(items);
+  const emitted = new Set<string>();
+  return items.flatMap((item) => {
+    if (item.Type !== "Episode" || !item.SeriesId) return [item];
+    const episodes = grouped.get(item.SeriesId);
+    if (!episodes || episodes.length < 2) return [item];
+    if (isRecentEpisodeBatch(episodes)) {
+      const parent = seriesById.get(item.SeriesId);
+      // Keep playable episodes if the parent is missing or inaccessible.
+      if (!parent) return [item];
+      if (emitted.has(item.SeriesId)) return [];
+      emitted.add(item.SeriesId);
+      return [parent];
+    }
+    if (emitted.has(item.SeriesId)) return [];
+    emitted.add(item.SeriesId);
+    return [newestEpisode(episodes)];
+  });
 };
 
 const authorizationPrefix = 'MediaBrowser Client="Homarr", Device="Homarr", DeviceId="homarr", Version="0.0.1"';
@@ -260,13 +344,8 @@ export class JellyfinIntegration extends Integration implements IMediaServerInte
       groupItems: false,
     });
     // Match Jellyfin's latest-media grouping without losing mixed-library results.
-    // A single recent episode stays visible; batches use the series artwork and metadata.
-    const episodeCounts = new Map<string, number>();
-    for (const item of result.data) {
-      if (item.Type !== "Episode" || !item.SeriesId) continue;
-      episodeCounts.set(item.SeriesId, (episodeCounts.get(item.SeriesId) ?? 0) + 1);
-    }
-    const seriesIds = [...episodeCounts].filter(([, count]) => count > 1).map(([id]) => id);
+    // A same-day batch uses the series artwork. A single new episode stays visible.
+    const seriesIds = seriesIdsWithRecentEpisodeBatch(result.data);
     const seriesResults = await Promise.allSettled(
       seriesIds.map((itemId) => userLibraryApi.getItem({ userId, itemId })),
     );
@@ -276,16 +355,7 @@ export class JellyfinIntegration extends Integration implements IMediaServerInte
       const item = seriesResult.value.data;
       if (item.Type === "Series" && item.Id) series.set(item.Id, item);
     }
-    const displayedSeries = new Set<string>();
-    const items = result.data.flatMap((item) => {
-      if (item.Type !== "Episode" || !item.SeriesId) return [item];
-      const parent = series.get(item.SeriesId);
-      // Keep playable episodes if the parent is missing or inaccessible.
-      if (!parent) return [item];
-      if (displayedSeries.has(item.SeriesId)) return [];
-      displayedSeries.add(item.SeriesId);
-      return [parent];
-    });
+    const items = groupRecentJellyfinEpisodes(result.data, series);
     return items.map((item) => {
       const isEpisode = item.Type === "Episode";
       return {

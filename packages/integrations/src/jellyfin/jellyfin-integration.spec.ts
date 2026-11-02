@@ -1,6 +1,15 @@
+// @vitest-environment node
+import type { BaseItemDto } from "@jellyfin/sdk/lib/generated-client/models";
 import { describe, expect, test } from "vitest";
 
-import { extractHost, formatEpisodeSubtitle, getMediaReleaseTitle, parseLocation } from "./jellyfin-integration";
+import {
+  extractHost,
+  formatEpisodeSubtitle,
+  getMediaReleaseTitle,
+  groupRecentJellyfinEpisodes,
+  parseLocation,
+  seriesIdsWithRecentEpisodeBatch,
+} from "./jellyfin-integration";
 
 describe("extractHost", () => {
   test("strips the port from an IPv4 endpoint", () => {
@@ -111,5 +120,89 @@ describe("formatEpisodeSubtitle", () => {
 
   test("keeps the tagline when the series name is missing", () => {
     expect(formatEpisodeSubtitle({ Type: "Episode", Name: "Pilot", Taglines: ["A tagline"] })).toBe("A tagline");
+  });
+
+  test("uses the episode title when the item name is blank or only repeats the series", () => {
+    expect(
+      formatEpisodeSubtitle({
+        Type: "Episode",
+        Name: "  ",
+        EpisodeTitle: "A Different Corner",
+        SeriesName: "MobLand",
+        ParentIndexNumber: 2,
+        IndexNumber: 6,
+      }),
+    ).toBe("S02E06 – A Different Corner");
+    expect(
+      formatEpisodeSubtitle({
+        Type: "Episode",
+        Name: "MobLand",
+        EpisodeTitle: "A Different Corner",
+        SeriesName: "MobLand",
+        ParentIndexNumber: 2,
+        IndexNumber: 6,
+      }),
+    ).toBe("S02E06 – A Different Corner");
+  });
+});
+
+const seriesItem = { Id: "series-1", Type: "Series" as const, Name: "MobLand" };
+const seriesById = new Map<string, BaseItemDto>([["series-1", seriesItem]]);
+
+const episode = (id: string, dateCreated: string | undefined, name: string): BaseItemDto => ({
+  Id: id,
+  Type: "Episode",
+  SeriesId: "series-1",
+  SeriesName: "MobLand",
+  Name: name,
+  DateCreated: dateCreated,
+  ParentIndexNumber: 2,
+  IndexNumber: id === "recent" ? 6 : 1,
+});
+
+describe("groupRecentJellyfinEpisodes", () => {
+  test("keeps a single new episode when older episodes of the series are also in the list", () => {
+    const recent = episode("recent", "2026-10-20T18:00:00.000Z", "A Different Corner");
+    const older = episode("older", "2026-09-01T18:00:00.000Z", "Pilot");
+    const items = groupRecentJellyfinEpisodes([recent, older], seriesById);
+
+    expect(seriesIdsWithRecentEpisodeBatch([recent, older])).toEqual([]);
+    expect(items).toEqual([recent]);
+    expect(groupRecentJellyfinEpisodes([older, recent], seriesById)).toEqual([recent]);
+    expect(items.map((item) => [getMediaReleaseTitle(item), formatEpisodeSubtitle(item)])).toEqual([
+      ["MobLand", "S02E06 – A Different Corner"],
+    ]);
+  });
+
+  test("groups episodes added within a day into the series", () => {
+    const first = episode("recent", "2026-10-20T18:00:00.000Z", "One");
+    const second = episode("second", "2026-10-20T01:00:00.000Z", "Two");
+    const movie = { Id: "movie-1", Type: "Movie" as const, Name: "Mars Express" };
+
+    expect(seriesIdsWithRecentEpisodeBatch([first, movie, second])).toEqual(["series-1"]);
+    expect(groupRecentJellyfinEpisodes([first, movie, second], seriesById)).toEqual([seriesItem, movie]);
+  });
+
+  test("keeps an episode added just outside the day-long batch window", () => {
+    const recent = episode("recent", "2026-10-20T18:00:00.000Z", "A Different Corner");
+    const boundary = episode("boundary", "2026-10-19T18:00:00.000Z", "Included");
+    const outside = episode("outside", "2026-10-19T17:59:59.000Z", "Excluded");
+
+    expect(groupRecentJellyfinEpisodes([recent, boundary], seriesById)).toEqual([seriesItem]);
+    expect(groupRecentJellyfinEpisodes([recent, outside], seriesById)).toEqual([recent]);
+  });
+
+  test("keeps the episodes when the series cannot be loaded", () => {
+    const first = episode("recent", "2026-10-20T18:00:00.000Z", "One");
+    const second = episode("second", "2026-10-20T01:00:00.000Z", "Two");
+
+    expect(groupRecentJellyfinEpisodes([first, second], new Map())).toEqual([first, second]);
+  });
+
+  test("leaves movies and episodes without a series id untouched", () => {
+    const movie = { Id: "movie-1", Type: "Movie" as const, Name: "Mars Express" };
+    const loose = { Id: "loose", Type: "Episode" as const, Name: "Special" };
+
+    expect(groupRecentJellyfinEpisodes([movie, loose], seriesById)).toEqual([movie, loose]);
   });
 });
