@@ -1,0 +1,35 @@
+apps/docs/docs/advanced/development/workshop-operator.mdx
+  s_f572e02fff5ec4::t_a82933e46cc33a 36,66-67
+apps/docs/docs/advanced/environment-variables/index.mdx
+  s_f572e02fff5ec4::t_fa46b3ab5d085b 71
+apps/nextjs/src/components/assistant/assistant-preferences.spec.ts
+  s_f572e02fff5ec4::t_18bf830545af6e 6,114,117,125-128
+apps/nextjs/src/components/assistant/assistant-preferences.ts
+  s_f572e02fff5ec4::t_1d2cac02c040cf 1,15,21-22,24
+apps/nextjs/src/components/assistant/assistant-runtime-controls.tsx
+  s_f572e02fff5ec4::t_f0aca75c211ff7 41,76-77,79,81,84
+apps/workshop/docker-compose.staging.yml
+  s_f572e02fff5ec4::t_48f7a6b4965a00 19
+apps/workshop/docker-compose.yml
+  s_f572e02fff5ec4::t_d94c28ba53e4bc 34,69
+apps/workshop/homarr_provider.go
+  s_f572e02fff5ec4::t_1f62a7cdfd248a 29,499
+apps/workshop/homarr_provider_test.go
+  s_f572e02fff5ec4::t_8544d43635668d 126-127,139,143-144
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "ecdbdef3a630786fdd9192bef254b9e979db335e",
+  "prompts": {},
+  "sessions": {
+    "s_f572e02fff5ec4": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "e174794f-c78b-4525-b787-deeb501a1d58",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
