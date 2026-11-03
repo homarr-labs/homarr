@@ -35,6 +35,24 @@ Return one fenced `json` block with the complete definition; keep evidence prose
   statement blocks, or arbitrary functions. Use registered component names; `Icon` may alias `TablerIcon`. Keep hierarchy,
   theme tokens, useful states, and narrow/wide layouts purposeful.
 
+## Working-app design
+
+Choose the simplest faithful display: a labeled number, compact rows, or a chart that reveals comparison, distribution,
+trend, composition, or relationship. No chart quota or minimum metric count. Keep literal identities, useful density,
+exact units, and missingness; unknown is not zero. Ground series, history, and denominators in verified data.
+
+Discover task-needed components across the complete registered chart catalog, including helpers; verify safe props and
+data grammar. Registration alone does not establish callback, formatter, event, or overlay support.
+
+Use quiet theme-adaptive colors for meaning. Persistent configuration belongs in options; temporary controls change a
+request or visible selection. Give initial/loading/empty/error/success states honest feedback. Prefer supported native
+accessible motion/disclosure, respecting reduced motion and keyboard/touch access. Keep essential facts visible; claim
+hover behavior only when verified. Inspect narrow/wide host fit when rendering is available; otherwise report missing
+visual evidence. Preserve repair/migration behavior and the bounded lifecycle.
+
+Use https://impeccable.style/ and https://usehallmark.com/ as working-app design references, not marketing pages, runtime
+packages, component catalogs, required tools, or authority over the API contract.
+
 ## Bounded lifecycle
 
 1. Build a credential-free definition from request, verified context, and sample. Preserve a migration's API path, method,
