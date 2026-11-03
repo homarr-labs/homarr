@@ -286,7 +286,7 @@ export class CoolifyIntegration extends Integration {
       this.getVersionAsync(),
       this.listApplicationsAsync(),
       this.listServicesAsync(),
-      this.listProjectsWithEnvironmentsAsync(),
+      this.listProjectsWithEnvironmentsAsync().catch(() => []),
       this.listServersAsync(),
     ]);
 
@@ -344,8 +344,8 @@ export class CoolifyIntegration extends Integration {
    */
   private async listProjectsWithEnvironmentsAsync(): Promise<CoolifyProjectWithEnvironments[]> {
     const projects = await this.listProjectsAsync();
-    const projectsWithEnvs = await Promise.all(projects.map((project) => this.getProjectByUuidAsync(project.uuid)));
-    return projectsWithEnvs;
+    const results = await Promise.allSettled(projects.map((project) => this.getProjectByUuidAsync(project.uuid)));
+    return results.flatMap((result) => (result.status === "fulfilled" ? [result.value] : []));
   }
 
   private getAuthHeaders(): Record<string, string> {
