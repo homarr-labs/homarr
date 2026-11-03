@@ -1,0 +1,19 @@
+apps/nextjs/src/components/assistant/assistant-provider.tsx
+  s_f572e02fff5ec4::t_6862307b706b62 210,214-215,242
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "1bb23683677ca862632e5f58473b4cbf7799b98c",
+  "prompts": {},
+  "sessions": {
+    "s_f572e02fff5ec4": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "e174794f-c78b-4525-b787-deeb501a1d58",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
