@@ -31,11 +31,10 @@ interface ResourceRowProps {
     environmentUuid?: string;
   };
   baseUrl: string;
-  isTiny: boolean;
   resourceType: "application" | "service";
 }
 
-export function ResourceRow({ item, baseUrl, isTiny, resourceType }: ResourceRowProps) {
+export function ResourceRow({ item, baseUrl, resourceType }: ResourceRowProps) {
   const t = useI18n("widget.coolify");
   const status = parseStatus(item.status ?? "");
   const statusColor = getStatusColor(status);
@@ -48,18 +47,7 @@ export function ResourceRow({ item, baseUrl, isTiny, resourceType }: ResourceRow
         : status === "unknown"
           ? IconHelpCircleFilled
           : IconCircleXFilled;
-  const statusLabel =
-    status === "running"
-      ? t("status.running")
-      : status === "stopped"
-        ? t("status.stopped")
-        : status === "exited"
-          ? t("status.exited")
-          : status === "starting"
-            ? t("status.starting")
-            : status === "restarting"
-              ? t("status.restarting")
-              : t("status.unknown");
+  const statusLabel = t(`status.${status}`);
 
   const resourceUrl = getSafeApplicationUrl(
     item.projectUuid && item.environmentUuid
@@ -73,10 +61,10 @@ export function ResourceRow({ item, baseUrl, isTiny, resourceType }: ResourceRow
 
   return (
     <Stack gap={0}>
-      <Group wrap="nowrap" gap={isTiny ? 4 : "xs"}>
+      <Group wrap="nowrap" gap="xs">
         <StatusIcon
           aria-label={statusLabel}
-          style={zoomCompensatedSize(isTiny ? 12 : 16)}
+          style={zoomCompensatedSize(16)}
           color={`var(--mantine-color-${statusColor}-6)`}
         />
         {resourceUrl ? (
@@ -97,6 +85,9 @@ export function ResourceRow({ item, baseUrl, isTiny, resourceType }: ResourceRow
             {item.name}
           </Text>
         )}
+        <Text fz="xs" c={statusColor} ml="auto" style={{ flexShrink: 0 }}>
+          {statusLabel}
+        </Text>
       </Group>
       <Group wrap="nowrap" gap={4} ml={16}>
         {publicUrl && (
@@ -129,11 +120,11 @@ export function ResourceRow({ item, baseUrl, isTiny, resourceType }: ResourceRow
             <IconFileText size="var(--mantine-font-size-xs)" />
           </ActionIcon>
         )}
-        <Text fz="10px" c="dimmed" lineClamp={1}>
+        <Text fz="xs" c="dimmed" lineClamp={1}>
           {item.projectName ?? "-"} / {item.environmentName ?? "-"}
         </Text>
         {resourceTimestamp && (
-          <Text fz="10px" c="dimmed" ml="auto">
+          <Text fz="xs" c="dimmed" ml="auto">
             {resourceTimestamp}
           </Text>
         )}

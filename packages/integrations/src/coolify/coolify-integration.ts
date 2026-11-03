@@ -1,5 +1,6 @@
 import { ResponseError } from "@homarr/common/server";
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
+import { createLogger } from "@homarr/core/infrastructure/logs";
 
 import type { IntegrationHttpAuthentication } from "../http-auth";
 import type { IntegrationTestingInput } from "../base/integration";
@@ -31,6 +32,8 @@ import {
   coolifyServerSchema,
   coolifyServiceSchema,
 } from "./coolify-types";
+
+const logger = createLogger({ module: "coolifyIntegration" });
 
 export class CoolifyIntegration extends Integration {
   public async getHttpAuthenticationAsync(): Promise<IntegrationHttpAuthentication> {
@@ -286,7 +289,13 @@ export class CoolifyIntegration extends Integration {
       this.getVersionAsync(),
       this.listApplicationsAsync(),
       this.listServicesAsync(),
-      this.listProjectsWithEnvironmentsAsync().catch(() => []),
+      this.listProjectsWithEnvironmentsAsync().catch((error: unknown) => {
+        logger.warn("Coolify project context unavailable; continuing with resource statuses", {
+          integrationId: this.integration.id,
+          statusCode: error instanceof ResponseError ? error.statusCode : undefined,
+        });
+        return [];
+      }),
       this.listServersAsync(),
     ]);
 
@@ -345,6 +354,14 @@ export class CoolifyIntegration extends Integration {
   private async listProjectsWithEnvironmentsAsync(): Promise<CoolifyProjectWithEnvironments[]> {
     const projects = await this.listProjectsAsync();
     const results = await Promise.allSettled(projects.map((project) => this.getProjectByUuidAsync(project.uuid)));
+    const failedCount = results.filter((result) => result.status === "rejected").length;
+    if (failedCount > 0) {
+      logger.warn("Coolify project context incomplete; continuing with available projects", {
+        integrationId: this.integration.id,
+        failedCount,
+        projectCount: projects.length,
+      });
+    }
     return results.flatMap((result) => (result.status === "fulfilled" ? [result.value] : []));
   }
 

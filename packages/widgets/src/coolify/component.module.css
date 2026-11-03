@@ -1,25 +1,111 @@
-.accordion {
-  --coolify-neutral-fill: rgb(from var(--mantine-color-default-hover) r g b / calc(var(--opacity, 1) * 0.12));
-  --coolify-neutral-border: rgb(from var(--mantine-color-default-border) r g b / calc(var(--opacity, 1) * 0.45));
+.instance {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+  border: 1px solid var(--mantine-color-default-border);
+  border-radius: var(--mantine-radius-sm);
 }
 
-.accordion :global(.mantine-Accordion-item) {
-  --item-border-color: var(--coolify-neutral-border);
-  --item-filled-color: var(--coolify-neutral-fill);
+.single {
+  border: 0;
+  border-radius: 0;
 }
 
-.accordion :global(.mantine-Accordion-control) {
-  background-color: transparent;
+.header {
+  min-height: 37px;
+  padding: 6px 10px;
+  border-bottom: 1px solid var(--mantine-color-default-border);
 }
 
-.accordion :global(.mantine-Accordion-control:not(:disabled, [data-disabled]):hover) {
-  background-color: var(--coolify-neutral-fill);
+.tiny .header {
+  min-height: 30px;
+  padding: 4px 7px;
 }
 
-.neutralDividerBottom {
-  border-bottom: 1px solid var(--coolify-neutral-border);
+.metrics {
+  min-height: 57px;
+  border-bottom: 1px solid var(--mantine-color-default-border);
 }
 
-.neutralDividerTop {
-  border-top: 1px solid var(--coolify-neutral-border);
+.tiny .metrics {
+  min-height: 40px;
+}
+
+.metric {
+  flex: 1 1 0;
+  min-width: 0;
+  padding: 5px 9px;
+}
+
+.tiny .metric {
+  padding: 3px 5px;
+}
+
+.metric + .metric {
+  border-left: 1px solid var(--mantine-color-default-border);
+}
+
+.compactBody {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  padding: 6px 10px;
+}
+
+.healthyState {
+  height: 100%;
+}
+
+.tiny .compactBody {
+  padding: 3px 7px;
+}
+
+.attentionRow {
+  min-height: 22px;
+}
+
+.statusDot {
+  width: 7px;
+  height: 7px;
+  flex: 0 0 auto;
+  border-radius: 50%;
+}
+
+.footer {
+  padding: 3px 10px;
+  border-top: 1px solid var(--mantine-color-default-border);
+}
+
+.details {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.tabList {
+  flex-wrap: nowrap;
+  overflow-x: auto;
+}
+
+.tabList > * {
+  flex-shrink: 0;
+}
+
+.panel {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.panel[data-active] {
+  display: flex;
+  flex-direction: column;
+}
+
+.listScroll {
+  flex: 1;
+  min-height: 0;
 }

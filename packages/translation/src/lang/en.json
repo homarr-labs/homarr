@@ -3553,7 +3553,20 @@
       }
     },
     "coolify": {
-      "description": "Overview of your Coolify instance with servers and applications",
+      "description": "Coolify resource health at a glance, with details in advanced view",
+      "summary": {
+        "needsAttention": "{count} need attention",
+        "healthy": "No issues",
+        "empty": "No resources",
+        "healthyDetail": "No resources need attention",
+        "more": "+{count} more resources",
+        "moreInstances": "+{count} more instances in advanced view"
+      },
+      "details": {
+        "tabs": "Coolify details",
+        "overview": "Overview",
+        "search": "Filter resources"
+      },
       "option": {
         "showServers": {
           "label": "Show servers"
@@ -3585,7 +3598,8 @@
       },
       "source": {
         "url": "Source: {url}",
-        "unavailable": "{source}: unavailable"
+        "unavailable": "{source}: unavailable",
+        "unavailableCount": "{count, plural, one {# source unavailable} other {# sources unavailable}}"
       },
       "instances": {
         "title": "Instances"
@@ -3602,6 +3616,7 @@
         "exited": "Exited",
         "starting": "Starting",
         "restarting": "Restarting",
+        "unhealthy": "Unhealthy",
         "unknown": "Unknown",
         "online": "Online",
         "offline": "Offline",

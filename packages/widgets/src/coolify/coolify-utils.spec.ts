@@ -2,12 +2,16 @@ import dayjs from "dayjs";
 import frenchLocale from "dayjs/locale/fr";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
+import type { CoolifyInstanceInfo } from "@homarr/integrations/types";
+
 import {
   formatRelativeTime,
+  getCoolifyAttentionItems,
   getCoolifySectionVisibility,
   getCoolifyServerState,
   getResourceTimestamp,
   isCoolifyServerOnline,
+  parseStatus,
 } from "./coolify-utils";
 
 describe("Coolify time formatting", () => {
@@ -31,6 +35,62 @@ describe("Coolify time formatting", () => {
     expect(formatRelativeTime(undefined)).toBeUndefined();
     expect(formatRelativeTime("invalid")).toBeUndefined();
     expect(getResourceTimestamp({ status: "running", updated_at: "2026-08-02T11:00:00Z" }, "service")).toBeUndefined();
+  });
+});
+
+describe("Coolify attention overview", () => {
+  const info = {
+    version: "4.0.0",
+    servers: [
+      { uuid: "offline", name: "Offline server", is_reachable: false },
+      { uuid: "unusable", name: "Unusable server", is_reachable: true, is_usable: false },
+      { uuid: "online", name: "Online server", is_reachable: true },
+    ],
+    applications: [
+      {
+        uuid: "unhealthy",
+        name: "Unhealthy app",
+        status: "running:unhealthy",
+        projectUuid: "project",
+        environmentUuid: "environment",
+      },
+      { uuid: "running", name: "Running app", status: "running:healthy" },
+    ],
+    services: [{ uuid: "restarting", name: "Restarting service", status: "restarting" }],
+  } as CoolifyInstanceInfo;
+
+  it("shows unhealthy and offline resources before transitioning resources", () => {
+    expect(parseStatus("running:unhealthy")).toBe("unhealthy");
+    expect(getCoolifyAttentionItems(info, { showServers: true, showApplications: true, showServices: true })).toEqual([
+      { kind: "server", uuid: "offline", name: "Offline server", status: "offline" },
+      { kind: "server", uuid: "unusable", name: "Unusable server", status: "unusable" },
+      {
+        kind: "application",
+        uuid: "unhealthy",
+        name: "Unhealthy app",
+        status: "unhealthy",
+        projectUuid: "project",
+        environmentUuid: "environment",
+      },
+      {
+        kind: "service",
+        uuid: "restarting",
+        name: "Restarting service",
+        status: "restarting",
+        projectUuid: undefined,
+        environmentUuid: undefined,
+      },
+    ]);
+  });
+
+  it("honors compact section visibility", () => {
+    expect(
+      getCoolifyAttentionItems(info, { showServers: false, showApplications: true, showServices: false }),
+    ).toHaveLength(1);
+  });
+
+  it("normalizes unexpected API statuses to an unknown state", () => {
+    expect(parseStatus("degraded")).toBe("unknown");
   });
 });
 

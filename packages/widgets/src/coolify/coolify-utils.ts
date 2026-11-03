@@ -3,16 +3,28 @@ import relativeTime from "dayjs/plugin/relativeTime";
 
 import type {
   CoolifyApplicationWithContext,
+  CoolifyInstanceInfo,
   CoolifyServer,
   CoolifyServiceWithContext,
 } from "@homarr/integrations/types";
 
 dayjs.extend(relativeTime);
 
-export function parseStatus(status: string): string {
+export type CoolifyStatus = "running" | "stopped" | "exited" | "starting" | "restarting" | "unhealthy" | "unknown";
+
+export function parseStatus(status: string): CoolifyStatus {
+  if (status.toLowerCase().includes(":unhealthy")) return "unhealthy";
   const firstPart = status.split(":")[0]?.toLowerCase();
-  if (!firstPart) return "unknown";
-  return firstPart;
+  if (
+    firstPart === "running" ||
+    firstPart === "stopped" ||
+    firstPart === "exited" ||
+    firstPart === "starting" ||
+    firstPart === "restarting"
+  ) {
+    return firstPart;
+  }
+  return "unknown";
 }
 
 export function cleanFqdn(fqdn: string | undefined | null): string | undefined {
@@ -34,15 +46,10 @@ export function getStatusColor(status: string): string {
     exited: "red",
     starting: "yellow",
     restarting: "yellow",
+    unhealthy: "red",
+    offline: "red",
   };
   return colors[status] ?? "gray";
-}
-
-export function getBadgeColor(running: number, total: number): string {
-  if (total === 0) return "gray";
-  if (running === total) return "green";
-  if (running > 0) return "yellow";
-  return "red";
 }
 
 export function formatRelativeTime(dateString: string | null | undefined): string | undefined {
@@ -102,15 +109,6 @@ export function buildServerResourceCounts(
   return serverResourceCounts;
 }
 
-export function createWidgetKey(integrationIds: string[]): string {
-  return integrationIds.toSorted().join("-");
-}
-
-export function createStorageKey(widgetKey: string, integrationId: string, type: "sections" | "show-ip"): string {
-  const cardKey = widgetKey.includes("-") ? `${widgetKey}-${integrationId}` : widgetKey;
-  return `coolify-${type}-${cardKey}`;
-}
-
 interface CoolifySectionOptions {
   showServers: boolean;
   showApplications: boolean;
@@ -133,3 +131,67 @@ export function getCoolifyServerState(server: CoolifyServer, field: "is_reachabl
 
 export const isCoolifyServerOnline = (server: CoolifyServer): boolean =>
   getCoolifyServerState(server, "is_reachable") === true;
+
+export const isCoolifyServerHealthy = (server: CoolifyServer): boolean =>
+  isCoolifyServerOnline(server) && getCoolifyServerState(server, "is_usable") !== false;
+
+export interface CoolifyAttentionItem {
+  kind: "server" | "application" | "service";
+  uuid: string;
+  name: string;
+  status: Exclude<CoolifyStatus, "running"> | "offline" | "unusable";
+  projectUuid?: string;
+  environmentUuid?: string;
+}
+
+const attentionPriority: Record<string, number> = {
+  offline: 0,
+  unusable: 0,
+  unhealthy: 0,
+  exited: 0,
+  stopped: 0,
+  starting: 1,
+  restarting: 1,
+  unknown: 2,
+};
+
+export function getCoolifyAttentionItems(
+  info: CoolifyInstanceInfo,
+  options: CoolifySectionOptions,
+): CoolifyAttentionItem[] {
+  const items: CoolifyAttentionItem[] = [];
+  if (options.showServers) {
+    for (const server of info.servers) {
+      if (isCoolifyServerHealthy(server)) continue;
+      items.push({
+        kind: "server",
+        uuid: server.uuid,
+        name: server.name,
+        status:
+          getCoolifyServerState(server, "is_reachable") === false
+            ? "offline"
+            : getCoolifyServerState(server, "is_usable") === false
+              ? "unusable"
+              : "unknown",
+      });
+    }
+  }
+  for (const [kind, resources] of [
+    ["application", options.showApplications ? info.applications : []],
+    ["service", options.showServices ? info.services : []],
+  ] as const) {
+    for (const resource of resources) {
+      const status = parseStatus(resource.status ?? "");
+      if (status === "running") continue;
+      items.push({
+        kind,
+        uuid: resource.uuid,
+        name: resource.name,
+        status,
+        projectUuid: resource.projectUuid,
+        environmentUuid: resource.environmentUuid,
+      });
+    }
+  }
+  return items.toSorted((a, b) => (attentionPriority[a.status] ?? 2) - (attentionPriority[b.status] ?? 2));
+}
