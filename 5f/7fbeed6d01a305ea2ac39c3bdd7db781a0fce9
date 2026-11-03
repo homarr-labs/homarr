@@ -1,0 +1,18 @@
+.agents/skills/homarr-custom-widget/SKILL.md
+  h_d6e478ca18e517 38-55
+packages/custom-widgets/src/core/ai-prompt.ts
+  h_d6e478ca18e517 116-117,119,121,158-159,192-193
+packages/custom-widgets/src/core/authoring-resources.ts
+  h_d6e478ca18e517 257-274,299-301
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "5f7fbeed6d01a305ea2ac39c3bdd7db781a0fce9",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
