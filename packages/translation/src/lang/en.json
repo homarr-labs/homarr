@@ -3556,6 +3556,8 @@
       "description": "Coolify resource health at a glance, with details in advanced view",
       "summary": {
         "needsAttention": "{count} need attention",
+        "inProgress": "{count} in progress",
+        "unknown": "{count} unknown",
         "healthy": "No issues",
         "empty": "No resources",
         "healthyDetail": "No resources need attention",

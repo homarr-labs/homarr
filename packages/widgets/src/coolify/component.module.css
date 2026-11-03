@@ -109,3 +109,7 @@
   flex: 1;
   min-height: 0;
 }
+
+.nestedApplications {
+  border-left: 1px solid var(--mantine-color-default-border);
+}

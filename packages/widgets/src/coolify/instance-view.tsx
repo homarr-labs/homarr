@@ -13,6 +13,7 @@ import { getSafeApplicationUrl, SAFE_NEW_TAB_REL } from "../common/application-u
 import {
   buildServerResourceCounts,
   getCoolifyAttentionItems,
+  getCoolifyAttentionSummary,
   getStatusColor,
   isCoolifyServerHealthy,
   parseStatus,
@@ -29,16 +30,25 @@ interface InstanceViewProps {
   options: CoolifyOptions;
   isAdvanced: boolean;
   isSingle: boolean;
+  storageKey: string;
   width: number;
   height: number;
 }
 
-export function InstanceView({ instance, options, isAdvanced, isSingle, width, height }: InstanceViewProps) {
+export function InstanceView({
+  instance,
+  options,
+  isAdvanced,
+  isSingle,
+  storageKey,
+  width,
+  height,
+}: InstanceViewProps) {
   const t = useI18n("widget.coolify");
   const tCommon = useI18n("common");
   const [search, setSearch] = useState("");
   const [showIp, setShowIp] = useLocalStorage({
-    key: `coolify-show-ip-${instance.integrationId}`,
+    key: storageKey,
     defaultValue: false,
   });
   const info = instance.instanceInfo;
@@ -48,14 +58,11 @@ export function InstanceView({ instance, options, isAdvanced, isSingle, width, h
     (visibleOptions.showServers ? info.servers.length : 0) +
     (visibleOptions.showApplications ? info.applications.length : 0) +
     (visibleOptions.showServices ? info.services.length : 0);
+  const summary = getCoolifyAttentionSummary(attention, trackedCount);
   const healthyServers = info.servers.filter(isCoolifyServerHealthy).length;
   const runningApps = info.applications.filter((app) => parseStatus(app.status ?? "") === "running").length;
   const runningServices = info.services.filter((service) => parseStatus(service.status ?? "") === "running").length;
-  const baseUrl =
-    (getSafeApplicationUrl(instance.externalUrl) ?? getSafeApplicationUrl(instance.integrationUrl))?.replace(
-      /\/+$/,
-      "",
-    ) ?? "";
+  const baseUrl = getSafeApplicationUrl(instance.externalUrl ?? instance.integrationUrl)?.replace(/\/+$/, "") ?? "";
   const relativeTime = useTimeAgo(instance.updatedAt, 60_000);
   const normalizedSearch = search.trim().toLocaleLowerCase();
   const matchesSearch = (name: string, projectName?: string, environmentName?: string) =>
@@ -70,15 +77,17 @@ export function InstanceView({ instance, options, isAdvanced, isSingle, width, h
   const isNarrow = !isAdvanced && width < 320;
   const visibleAttentionCount = Math.max(0, Math.min(3, Math.floor((height - (isTiny ? 80 : 105)) / 26)));
   const summaryLabel =
-    attention.length > 0
-      ? t("summary.needsAttention", { count: attention.length })
-      : trackedCount === 0
-        ? t("summary.empty")
-        : t("summary.healthy");
+    summary.kind === "problem"
+      ? t("summary.needsAttention", { count: summary.count })
+      : summary.kind === "transition"
+        ? t("summary.inProgress", { count: summary.count })
+        : summary.kind === "unknown"
+          ? t("summary.unknown", { count: summary.count })
+          : t(`summary.${summary.kind}`);
   const summaryText = isNarrow
-    ? attention.length > 0
-      ? attention.length
-      : trackedCount === 0
+    ? summary.count > 0
+      ? summary.count
+      : summary.kind === "empty"
         ? "—"
         : "✓"
     : summaryLabel;
@@ -105,7 +114,15 @@ export function InstanceView({ instance, options, isAdvanced, isSingle, width, h
         <Badge
           size="xs"
           variant="light"
-          color={attention.length > 0 ? "red" : trackedCount === 0 ? "gray" : "green"}
+          color={
+            summary.kind === "problem"
+              ? "red"
+              : summary.kind === "transition"
+                ? "yellow"
+                : summary.kind === "healthy"
+                  ? "green"
+                  : "gray"
+          }
           aria-label={summaryLabel}
         >
           {summaryText}
@@ -130,7 +147,7 @@ export function InstanceView({ instance, options, isAdvanced, isSingle, width, h
       </Group>
 
       {isAdvanced ? (
-        <Tabs defaultValue="overview" className={classes.details} keepMounted={false}>
+        <Tabs defaultValue="overview" className={classes.details} keepMounted={false} onChange={() => setSearch("")}>
           <Tabs.List aria-label={t("details.tabs")} className={classes.tabList}>
             <Tabs.Tab value="overview">{t("details.overview")}</Tabs.Tab>
             <Tabs.Tab value="servers">
@@ -204,9 +221,16 @@ export function InstanceView({ instance, options, isAdvanced, isSingle, width, h
                 {services.map((service) => (
                   <Stack key={service.uuid} gap={2}>
                     <ResourceRow item={service} baseUrl={baseUrl} resourceType="service" />
-                    {service.applications?.map((application) => (
-                      <ServiceApplicationRow key={application.uuid} application={application} />
-                    ))}
+                    {service.applications && service.applications.length > 0 && (
+                      <Stack className={classes.nestedApplications} gap={4} ml="md" pl="xs">
+                        <Text fz="xs" c="dimmed" fw={600}>
+                          {tCommon("applications")}
+                        </Text>
+                        {service.applications.map((application) => (
+                          <ServiceApplicationRow key={application.uuid} application={application} />
+                        ))}
+                      </Stack>
+                    )}
                   </Stack>
                 ))}
                 {services.length === 0 && <EmptyDetail label={search ? tCommon("noResults") : t("empty.services")} />}

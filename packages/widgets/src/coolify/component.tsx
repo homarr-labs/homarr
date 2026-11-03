@@ -67,6 +67,7 @@ export default function CoolifyWidget({
   );
   const maxCompactInstances = Math.max(1, Math.floor((renderedHeight - (failedInstances.length ? 32 : 0)) / 120));
   const visibleInstances = isAdvanced ? orderedInstances : orderedInstances.slice(0, maxCompactInstances);
+  const widgetKey = integrationIds.toSorted().join("-");
   const useTwoColumns = isAdvanced && renderedWidth >= 760 && visibleInstances.length > 1;
   const hasHiddenInstances = !isAdvanced && orderedInstances.length > visibleInstances.length;
   const compactAvailableHeight =
@@ -91,6 +92,7 @@ export default function CoolifyWidget({
                 options={visibleOptions}
                 isAdvanced={isAdvanced}
                 isSingle={visibleInstances.length === 1}
+                storageKey={`coolify-show-ip-${integrationIds.length > 1 ? `${widgetKey}-${instance.integrationId}` : widgetKey}`}
                 width={useTwoColumns ? Math.floor(renderedWidth / 2) - 16 : renderedWidth - 16}
                 height={instanceHeight}
               />

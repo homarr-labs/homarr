@@ -7,6 +7,7 @@ import type { CoolifyInstanceInfo } from "@homarr/integrations/types";
 import {
   formatRelativeTime,
   getCoolifyAttentionItems,
+  getCoolifyAttentionSummary,
   getCoolifySectionVisibility,
   getCoolifyServerState,
   getResourceTimestamp,
@@ -56,7 +57,7 @@ describe("Coolify attention overview", () => {
       },
       { uuid: "running", name: "Running app", status: "running:healthy" },
     ],
-    services: [{ uuid: "restarting", name: "Restarting service", status: "restarting" }],
+    services: [{ uuid: "starting", name: "Starting service", status: "starting:unhealthy" }],
   } as CoolifyInstanceInfo;
 
   it("shows unhealthy and offline resources before transitioning resources", () => {
@@ -74,9 +75,9 @@ describe("Coolify attention overview", () => {
       },
       {
         kind: "service",
-        uuid: "restarting",
-        name: "Restarting service",
-        status: "restarting",
+        uuid: "starting",
+        name: "Starting service",
+        status: "starting",
         projectUuid: undefined,
         environmentUuid: undefined,
       },
@@ -91,6 +92,28 @@ describe("Coolify attention overview", () => {
 
   it("normalizes unexpected API statuses to an unknown state", () => {
     expect(parseStatus("degraded")).toBe("unknown");
+  });
+
+  it("keeps transitional states distinct from unhealthy resources", () => {
+    expect(parseStatus("starting:unhealthy")).toBe("starting");
+    expect(parseStatus("restarting:unhealthy")).toBe("restarting");
+    expect(parseStatus("degraded:unhealthy")).toBe("unhealthy");
+    expect(parseStatus("running:unknown")).toBe("running");
+    expect(parseStatus("running:unhealthy:excluded")).toBe("running");
+  });
+
+  it("does not label starting resources as failures", () => {
+    const transitioning = getCoolifyAttentionItems(
+      { ...info, servers: [], applications: [], services: info.services },
+      { showServers: true, showApplications: true, showServices: true },
+    );
+    expect(getCoolifyAttentionSummary(transitioning, 1)).toEqual({ kind: "transition", count: 1 });
+    expect(
+      getCoolifyAttentionSummary(
+        getCoolifyAttentionItems(info, { showServers: true, showApplications: true, showServices: true }),
+        6,
+      ),
+    ).toEqual({ kind: "problem", count: 3 });
   });
 });
 

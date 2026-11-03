@@ -13,8 +13,13 @@ dayjs.extend(relativeTime);
 export type CoolifyStatus = "running" | "stopped" | "exited" | "starting" | "restarting" | "unhealthy" | "unknown";
 
 export function parseStatus(status: string): CoolifyStatus {
-  if (status.toLowerCase().includes(":unhealthy")) return "unhealthy";
-  const firstPart = status.split(":")[0]?.toLowerCase();
+  const [firstPart, health, ...qualifiers] = status.toLowerCase().split(":");
+  if (
+    health === "unhealthy" &&
+    (firstPart === "degraded" || (firstPart === "running" && !qualifiers.includes("excluded")))
+  ) {
+    return "unhealthy";
+  }
   if (
     firstPart === "running" ||
     firstPart === "stopped" ||
@@ -142,6 +147,22 @@ export interface CoolifyAttentionItem {
   status: Exclude<CoolifyStatus, "running"> | "offline" | "unusable";
   projectUuid?: string;
   environmentUuid?: string;
+}
+
+export function getCoolifyAttentionSummary(
+  items: CoolifyAttentionItem[],
+  trackedCount: number,
+): { kind: "problem" | "transition" | "unknown" | "healthy" | "empty"; count: number } {
+  const problemCount = items.filter(
+    ({ status }) => status !== "starting" && status !== "restarting" && status !== "unknown",
+  ).length;
+  if (problemCount > 0) return { kind: "problem", count: problemCount };
+
+  const transitionCount = items.filter(({ status }) => status === "starting" || status === "restarting").length;
+  if (transitionCount > 0) return { kind: "transition", count: transitionCount };
+
+  if (items.length > 0) return { kind: "unknown", count: items.length };
+  return { kind: trackedCount > 0 ? "healthy" : "empty", count: 0 };
 }
 
 const attentionPriority: Record<string, number> = {
