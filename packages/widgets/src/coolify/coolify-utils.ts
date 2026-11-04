@@ -53,6 +53,7 @@ export function getStatusColor(status: string): string {
     restarting: "yellow",
     unhealthy: "red",
     offline: "red",
+    unusable: "red",
   };
   return colors[status] ?? "gray";
 }

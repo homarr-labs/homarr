@@ -189,7 +189,14 @@ export function InstanceView({
 
       <Group className={classes.metrics} gap={0} wrap="nowrap">
         {visibleOptions.showServers && (
-          <Metric label={tCommon("servers")} value={healthyServers} total={info.servers.length} isTiny={isTiny} />
+          <Metric
+            icon={IconServer}
+            label={tCommon("servers")}
+            value={healthyServers}
+            total={info.servers.length}
+            isTiny={isTiny}
+            isNarrow={isNarrow}
+          />
         )}
         {visibleOptions.showApplications && (
           <Metric
@@ -197,10 +204,19 @@ export function InstanceView({
             value={runningApps}
             total={info.applications.length}
             isTiny={isTiny}
+            isNarrow={isNarrow}
+            icon={IconApps}
           />
         )}
         {visibleOptions.showServices && (
-          <Metric label={tCommon("services")} value={runningServices} total={info.services.length} isTiny={isTiny} />
+          <Metric
+            icon={IconStack2}
+            label={tCommon("services")}
+            value={runningServices}
+            total={info.services.length}
+            isTiny={isTiny}
+            isNarrow={isNarrow}
+          />
         )}
       </Group>
 
@@ -339,12 +355,33 @@ export function InstanceView({
   );
 }
 
-function Metric({ label, value, total, isTiny }: { label: string; value: number; total: number; isTiny: boolean }) {
+function Metric({
+  icon: Icon,
+  label,
+  value,
+  total,
+  isTiny,
+  isNarrow,
+}: {
+  icon: typeof IconServer;
+  label: string;
+  value: number;
+  total: number;
+  isTiny: boolean;
+  isNarrow: boolean;
+}) {
   return (
     <Stack gap={0} className={classes.metric}>
-      <Text fz={isTiny ? 10 : "xs"} c="dimmed" truncate>
-        {label}
-      </Text>
+      {isNarrow ? (
+        <>
+          <Icon size={isTiny ? 12 : 14} aria-hidden="true" />
+          <VisuallyHidden>{label}: </VisuallyHidden>
+        </>
+      ) : (
+        <Text fz={isTiny ? 10 : "xs"} c="dimmed" truncate>
+          {label}
+        </Text>
+      )}
       <Text fw={600} fz={isTiny ? "sm" : "lg"} lh={1.1}>
         {value}
         <Text component="span" size="xs" c="dimmed">

@@ -10,6 +10,7 @@ import {
   getCoolifyAttentionSummary,
   getCoolifySectionVisibility,
   getCoolifyServerState,
+  getStatusColor,
   getResourceTimestamp,
   isCoolifyServerOnline,
   parseStatus,
@@ -62,6 +63,7 @@ describe("Coolify attention overview", () => {
 
   it("shows unhealthy and offline resources before transitioning resources", () => {
     expect(parseStatus("running:unhealthy")).toBe("unhealthy");
+    expect(getStatusColor("unusable")).toBe("red");
     expect(getCoolifyAttentionItems(info, { showServers: true, showApplications: true, showServices: true })).toEqual([
       { kind: "server", uuid: "offline", name: "Offline server", status: "offline" },
       { kind: "server", uuid: "unusable", name: "Unusable server", status: "unusable" },
