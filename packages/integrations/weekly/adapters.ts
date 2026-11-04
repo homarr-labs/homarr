@@ -1,4 +1,4 @@
-import type { App } from "@self-host/testkit";
+import type { App } from "@ajnart/self-host-testkit";
 import { expect } from "vitest";
 
 import type { IntegrationKind } from "@homarr/definitions";

@@ -73,19 +73,12 @@ jobs:
         run: bun packages/integrations/weekly/plan.ts initialize
       - name: Setup self-host testkit
         id: testkit
-        uses: ajnart/self-host/testkit@3bfa67711597c25a9d1e0f8c1d8c9b80b61c2c51
-      - name: Link matching Action SDK without replacing existing modules
-        env:
-          SELF_HOST_TESTKIT_SDK: ${{ steps.testkit.outputs.sdk-path }}
-        run: bun run setup:weekly-sdk
+        uses: ajnart/self-host/testkit@eb8569ec50a8c62d1406d55b19f6bfee218a4240
       - name: Typecheck weekly suite against matching SDK declarations
         run: bun run typecheck:weekly
       - name: Native adapter assertions against fresh peer image
         id: assertions
         timeout-minutes: 14
-        env:
-          SELF_HOST_TESTKIT_BINARY: ${{ steps.testkit.outputs.binary-path }}
-          SELF_HOST_TESTKIT_MANIFEST: ${{ steps.testkit.outputs.manifest-path }}
         run: timeout --signal=TERM --kill-after=30s 13m bun run test:weekly
       - name: Cleanup fixture manifest
         id: cleanup
