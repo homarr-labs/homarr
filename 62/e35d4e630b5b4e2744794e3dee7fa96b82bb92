@@ -1,0 +1,14 @@
+packages/custom-widgets/src/core/authoring-resources.ts
+  h_d6e478ca18e517 89
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "62e35d4e630b5b4e2744794e3dee7fa96b82bb92",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
