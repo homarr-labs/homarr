@@ -1,0 +1,23 @@
+packages/api/src/router/onboard/onboard-router.ts
+  s_0ea216d29f6ac4::t_0bd0a6ad86e2d0 183-189,221-234
+packages/docker/src/icon-match.ts
+  s_0ea216d29f6ac4::t_5c23098ce2c933 3-5
+packages/request-handler/src/docker.ts
+  s_0ea216d29f6ac4::t_e184955727bc3a 12-18,454-469
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "6a7450d95ad055212402b4cc830b43e961bba39d",
+  "prompts": {},
+  "sessions": {
+    "s_0ea216d29f6ac4": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "eaaaee0b-6d9e-4479-96ca-b3ef9821c135",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
