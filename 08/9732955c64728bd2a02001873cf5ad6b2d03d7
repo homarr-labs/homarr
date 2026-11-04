@@ -1,0 +1,16 @@
+packages/common/package.json
+  h_d6e478ca18e517 18
+packages/db/migrations/custom/0007_wazuh_dashboard_url.ts
+  h_d6e478ca18e517 1
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "089732955c64728bd2a02001873cf5ad6b2d03d7",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
