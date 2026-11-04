@@ -7,7 +7,6 @@ import type { Database } from "@homarr/db";
 import { and, eq, handleTransactionsAsync, notInArray } from "@homarr/db";
 import { customWidgetDefinitions, customWidgetSecrets } from "@homarr/db/schema";
 import type { CustomWidgetDefinition, CustomWidgetSecret } from "@homarr/db/schema";
-import { getCustomWidgetSourceAuthType } from "@homarr/custom-widgets/core";
 import type { CustomWidgetCreateInput, HomarrCustomWidgetV2 } from "@homarr/custom-widgets/core";
 
 import { hasSameSecretBinding, requiredSecretKinds } from "./secret-policy";
@@ -119,7 +118,7 @@ export async function updateCustomWidgetDefinition(
             );
         }
         for (const [sourceId, source] of Object.entries(input.definition.sources)) {
-          const kinds = [...requiredSecretKinds(getCustomWidgetSourceAuthType(source))];
+          const kinds = [...requiredSecretKinds(source.auth)];
           const where = and(
             eq(schema.customWidgetSecrets.definitionId, input.id),
             eq(schema.customWidgetSecrets.sourceId, sourceId),
@@ -179,7 +178,7 @@ export async function updateCustomWidgetDefinition(
               .run();
           }
           for (const [sourceId, source] of Object.entries(input.definition.sources)) {
-            const kinds = [...requiredSecretKinds(getCustomWidgetSourceAuthType(source))];
+            const kinds = [...requiredSecretKinds(source.auth)];
             const where = and(
               eq(customWidgetSecrets.definitionId, input.id),
               eq(customWidgetSecrets.sourceId, sourceId),

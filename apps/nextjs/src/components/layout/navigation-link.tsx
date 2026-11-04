@@ -53,6 +53,7 @@ const NavLinkHref = (props: NavigationLinkHref) => {
       label={props.label}
       leftSection={props.icon}
       href={props.href}
+      prefetch={props.prefetch ?? true}
       active={isActive}
       onClick={() => setNavigationCollapsed(true)}
     />
@@ -88,6 +89,7 @@ interface CommonNavigationLinkProps {
 
 interface NavigationLinkHref extends CommonNavigationLinkProps {
   href: string;
+  prefetch?: boolean;
   external?: boolean;
   exact?: boolean;
   active?: boolean;

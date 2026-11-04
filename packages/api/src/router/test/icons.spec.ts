@@ -1,11 +1,45 @@
 // @vitest-environment node
 
-import { describe, expect, test } from "vitest";
+import { describe, expect, test, vi } from "vitest";
 
+import type { Session } from "@homarr/auth";
+import { createId } from "@homarr/common";
 import { iconRepositories, icons } from "@homarr/db/schema";
 import { createDb } from "@homarr/db/test";
+import type { GroupPermissionKey } from "@homarr/definitions";
+import { fetchFaviconUrlAsync } from "@homarr/icons";
 
 import { iconsRouter } from "../icons";
+
+vi.mock("@homarr/icons", () => ({ fetchFaviconUrlAsync: vi.fn() }));
+
+const createSession = (permissions: GroupPermissionKey[]): Session => ({
+  user: { id: createId(), permissions, colorScheme: "light" },
+  expires: new Date().toISOString(),
+});
+
+describe("detectFavicon", () => {
+  test("refuses a user who may not create apps without requesting the website", async () => {
+    const caller = iconsRouter.createCaller({ db: createDb(), deviceType: undefined, session: createSession([]) });
+
+    await expect(caller.detectFavicon({ href: "https://app.example.com" })).rejects.toThrow("Permission denied");
+    expect(fetchFaviconUrlAsync).not.toHaveBeenCalled();
+  });
+
+  test("detects the icon for a user who may create apps", async () => {
+    vi.mocked(fetchFaviconUrlAsync).mockResolvedValueOnce("https://app.example.com/favicon.ico");
+    const caller = iconsRouter.createCaller({
+      db: createDb(),
+      deviceType: undefined,
+      session: createSession(["app-create"]),
+    });
+
+    await expect(caller.detectFavicon({ href: "https://app.example.com" })).resolves.toEqual({
+      url: "https://app.example.com/favicon.ico",
+    });
+    expect(fetchFaviconUrlAsync).toHaveBeenCalledWith("https://app.example.com");
+  });
+});
 
 describe("findIcons", () => {
   test("returns only repositories containing matches for a search", async () => {

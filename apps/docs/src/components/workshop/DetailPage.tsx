@@ -112,7 +112,9 @@ const sourceAuthLabel = (source: WidgetSource) => {
   if (auth === "none") return "No credentials";
   if (auth === "basic") return "Basic auth";
   if (auth === "bearer") return "Bearer token";
-  return auth.type === "apiKeyHeader" ? `API key header · ${auth.name}` : `API key query · ${auth.name}`;
+  if (auth.type === "headers") return `Authentication headers · ${auth.headers.map(({ name }) => name).join(", ")}`;
+  if (auth.type === "apiKeyHeader") return `API key header · ${auth.name}`;
+  return `API key query · ${auth.name}`;
 };
 
 const sourceNeedsSecret = (source: WidgetSource) => source.type !== "integration" && source.auth !== "none";
@@ -160,7 +162,7 @@ const WidgetSafetySummary = ({ widget }: { widget: HomarrCustomWidgetV2 }) => {
               <span key={id} className="flex min-w-0 items-center justify-between gap-2">
                 <span className="truncate font-mono text-xs font-medium">{sourceHost(source)}</span>
                 <Badge variant="secondary" className="shrink-0 font-normal">
-                  {source.networkScope ?? "integration"}
+                  {source.type ?? "http"}
                 </Badge>
               </span>
             ))}
@@ -780,7 +782,7 @@ const MarketplaceDetail = ({ workshopUrl, submissionId }: { workshopUrl: string;
                         <div className="flex items-center justify-between gap-2 text-sm">
                           <span className="truncate font-medium">{source.name || id}</span>
                           <Badge variant="secondary" className="shrink-0">
-                            {source.networkScope ?? "integration"}
+                            {source.type ?? "http"}
                           </Badge>
                         </div>
                         <p className="truncate text-xs text-muted-foreground">{sourceHost(source)}</p>

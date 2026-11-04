@@ -1,21 +1,24 @@
 "use client";
 
+import type { PropsWithChildren } from "react";
 import { useEffect, useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Button, Card, Collapse, Group, Stack, TextInput } from "@mantine/core";
+import { Button, Card, Collapse, TextInput } from "@mantine/core";
 import { IconSearch } from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";
 import { useI18n } from "@homarr/translation/client";
 
+import { ManagePageLayout } from "~/components/manage/manage-page-layout";
 import { GroupCreateForm } from "./_components/group-create-form";
 import { GroupsTable } from "./_groups-table";
 
 interface GroupsListProps {
+  title: string;
   groups: RouterOutputs["group"]["getAll"];
 }
 
-export const GroupsList = ({ groups }: GroupsListProps) => {
+export const GroupsList = ({ title, groups, children }: PropsWithChildren<GroupsListProps>) => {
   const [search, setSearch] = useState("");
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -58,10 +61,14 @@ export const GroupsList = ({ groups }: GroupsListProps) => {
   };
 
   return (
-    <Stack>
-      <Group justify="end">
-        <Button onClick={toggleCreate}>{tGroup("action.create.label")}</Button>
-      </Group>
+    <ManagePageLayout
+      title={title}
+      primaryAction={
+        <Button onClick={toggleCreate} aria-expanded={isCreateOpen}>
+          {tGroup("action.create.label")}
+        </Button>
+      }
+    >
       <Collapse expanded={isCreateOpen}>
         <Card withBorder>
           <GroupCreateForm
@@ -74,6 +81,7 @@ export const GroupsList = ({ groups }: GroupsListProps) => {
           />
         </Card>
       </Collapse>
+      {children}
       <TextInput
         leftSection={<IconSearch size={20} stroke={1.5} />}
         value={search}
@@ -81,6 +89,6 @@ export const GroupsList = ({ groups }: GroupsListProps) => {
         placeholder={`${tGroup("search")}...`}
       />
       <GroupsTable groups={filteredGroups} initialGroupIds={initialGroupIds} hasFilter={search.length !== 0} />
-    </Stack>
+    </ManagePageLayout>
   );
 };

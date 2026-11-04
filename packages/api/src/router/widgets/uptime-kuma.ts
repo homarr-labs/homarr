@@ -1,14 +1,18 @@
+import { z } from "zod/v4";
+
 import { uptimeKumaRequestHandler } from "@homarr/request-handler/uptime-kuma";
 import { mockWidgetData } from "@homarr/integrations";
+import { uptimeKumaStatusPageSlugSchema } from "@homarr/validation/uptime-kuma";
 
 import { createManyWidgetIntegrationMiddleware } from "../../middlewares/integration";
 import { settleIntegrationQueries, toPublicIntegrationError } from "../../settle-integrations";
 import { createTRPCRouter, publicProcedure } from "../../trpc";
 
 export const uptimeKumaRouter = createTRPCRouter({
-  getDashboard: publicProcedure
+  getStatusPages: publicProcedure
     .concat(createManyWidgetIntegrationMiddleware("query", "uptimeKuma"))
-    .query(async ({ ctx }) => {
+    .input(z.object({ statusPageSlug: uptimeKumaStatusPageSlugSchema.optional() }))
+    .query(async ({ ctx, input }) => {
       return await settleIntegrationQueries(
         ctx.integrations,
         async (integration) => {
@@ -17,19 +21,22 @@ export const uptimeKumaRouter = createTRPCRouter({
               integrationId: integration.id,
               integrationName: integration.name,
               integrationUrl: integration.url,
-              dashboard: mockWidgetData.uptimeKuma,
+              statusPage: mockWidgetData.uptimeKuma,
               updatedAt: new Date(mockWidgetData.timestamp),
               error: undefined,
             };
           }
-          const innerHandler = uptimeKumaRequestHandler.handler({ ...integration, kind: "uptimeKuma" }, {});
+          const innerHandler = uptimeKumaRequestHandler.handler(
+            { ...integration, kind: "uptimeKuma" },
+            { statusPageSlug: input.statusPageSlug },
+          );
           const { data, timestamp } = await innerHandler.getDataAsync();
 
           return {
             integrationId: integration.id,
             integrationName: integration.name,
             integrationUrl: integration.url,
-            dashboard: data,
+            statusPage: data,
             updatedAt: timestamp,
             error: undefined,
           };
@@ -39,7 +46,7 @@ export const uptimeKumaRouter = createTRPCRouter({
             integrationId: integration.id,
             integrationName: integration.name,
             integrationUrl: integration.url,
-            dashboard: null,
+            statusPage: null,
             updatedAt: new Date(0),
             error: toPublicIntegrationError(error),
           }),

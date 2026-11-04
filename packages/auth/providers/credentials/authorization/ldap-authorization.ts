@@ -18,6 +18,7 @@ const logger = createLogger({ module: "ldapAuthorization" });
 export const authorizeWithLdapCredentialsAsync = async (
   db: Database,
   credentials: z.infer<typeof ldapSignInSchema>,
+  ipAddress: string,
 ) => {
   logger.info("User is trying to log in using LDAP. Connecting to LDAP server...", { userName: credentials.name });
   const client = new LdapClient();
@@ -62,6 +63,7 @@ export const authorizeWithLdapCredentialsAsync = async (
       });
 
     if (!ldapUser) {
+      logger.warn("User not found", { userName: credentials.name, ipAddress });
       throw new CredentialsSignin(`User not found in LDAP username="${credentials.name}"`);
     }
 
@@ -87,7 +89,7 @@ export const authorizeWithLdapCredentialsAsync = async (
           password: credentials.password,
         })
         .catch(() => {
-          logger.warn("Wrong credentials for user", { userName: credentials.name });
+          logger.warn("Wrong credentials for user", { userName: credentials.name, ipAddress });
           throw new CredentialsSignin();
         });
     } catch (error) {

@@ -17,6 +17,8 @@ import type { TablerIcon } from "@homarr/ui";
 const errorIcons: Record<WazuhErrorReason, TablerIcon> = {
   unauthorized: IconLock,
   certificate: IconCertificateOff,
+  certificateHostname: IconCertificateOff,
+  certificateExpired: IconCertificateOff,
   unreachable: IconPlugConnectedX,
   timeout: IconClockExclamation,
   status: IconExclamationCircle,

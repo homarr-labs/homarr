@@ -80,7 +80,7 @@ export const CUSTOM_WIDGET_SKILL_SOURCE_URL =
   "https://github.com/homarr-labs/homarr/tree/HEAD/.agents/skills/homarr-custom-widget";
 export const CUSTOM_WIDGET_SKILL_INSTALL_COMMAND =
   "npx skills add https://github.com/homarr-labs/homarr --skill homarr-custom-widget";
-export const CUSTOM_WIDGET_SKILL_VERSION = "2.10.8";
+export const CUSTOM_WIDGET_SKILL_VERSION = "2.10.9";
 export const CUSTOM_WIDGET_SKILL_REFERENCE_NAMES = ["schema", "runtime", "security"] as const;
 export type CustomWidgetSkillReferenceName = (typeof CUSTOM_WIDGET_SKILL_REFERENCE_NAMES)[number];
 
@@ -125,7 +125,7 @@ interface HomarrCustomWidgetV2 {
 }
 \`\`\`
 
-Key \`default\` is the required source ID, not a source property. Fields: \`name?\`, \`baseUrl\`, \`networkScope\`, \`auth?\`; localhost/loopback URLs require \`networkScope: "loopback"\`; never widen explicit scope:
+Key \`default\` is the required source ID, not a source property. Fields: \`name?\`, \`baseUrl\`, \`auth?\`:
 
 \`\`\`json
 {
@@ -133,7 +133,6 @@ Key \`default\` is the required source ID, not a source property. Fields: \`name
     "default": {
       "name": "Service",
       "baseUrl": "http://service.local:5055/api/v1",
-      "networkScope": "private",
       "auth": { "type": "apiKeyHeader", "name": "X-Api-Key" }
     }
   },
@@ -154,16 +153,17 @@ Key \`default\` is the required source ID, not a source property. Fields: \`name
 
 Saved sources use \`{"type":"integration","integrationKind":"sonarr","integrationId":"saved-id"}\`. Discover and bind a full-access entry before preview. Omit URL/auth; paths append to its URL, non-GET requests are actions, and exports omit \`integrationId\`.
 
-Auth is \`none\`, \`bearer\`, \`basic\`, \`apiKeyHeader\`, or \`apiKeyQuery\`. Requests default to source \`default\`, query/GET/load, inherited auth, and view permission. Use \`load\` for initial/current display and \`manual\` only for explicit interactions or invocation params. Actions are manual/modify; DELETE requires full permission and confirmation.
+Auth is \`none\`, \`bearer\`, \`basic\`, \`apiKeyHeader\`, \`apiKeyQuery\`, or \`headers\`. Requests default to source \`default\`, query/GET/load, inherited auth, and view permission. Use \`load\` for initial/current display and \`manual\` only for explicit interactions or invocation params. Actions are manual/modify; DELETE requires full permission and confirmation.
+
+For multiple secret headers, use \`auth: {"type":"headers","headers":[{"name":"X-Api-Key","slot":"key"},{"name":"X-Api-Secret","slot":"secret"}]}\`. Up to 8 HTTP-token names are allowed, unique ignoring case, with distinct stable slot IDs of at most 57 characters. Homarr configures each slot separately and stores its value encrypted; the manifest contains only names and slots. Header name or slot changes require credential configuration again. Use \`bearer\` for Authorization; routing, proxy, forwarding, cookie and hop-by-hop headers remain reserved.
 
 JSON responses become their decoded value. Responses with \`application/x-ndjson\` become an array with one decoded object per non-empty line.
 
-Use real public API URLs and clear self-hosted placeholders. Homarr collects URL, scope, and credentials outside the manifest.
+Use real public API URLs and clear self-hosted placeholders. Homarr collects URL and credentials outside the manifest.
 
 Paths use \`{option:name}\`/\`{param:name}\`; query/body objects use \`{"$option":"name"}\`/\`{"$param":"name"}\`. \`$param\` is manual-only; \`$option\` may drive loads. Constants stay primitive.
 
 Every option has \`label\`, \`control\`, and \`default\`. Optional fields are \`description\`, \`choices\`, \`choicesFrom\`, \`min\`, \`max\`, \`step\`, \`advanced\`, and \`group\`.
-
 `,
   "references/runtime.md": `# Runtime
 
@@ -209,7 +209,7 @@ Use expression callbacks for supported collections and trusted slots. No callbac
 `,
   "references/security.md": `# Security
 
-All requests use Homarr's protected server executor. Source origin, network scope, DNS, redirects, SSRF, rate limits, permissions, size limits, timeouts, and encrypted credential injection remain enforced.
+All requests use Homarr's protected server executor. Source origin, credential destinations, rate limits, permissions, size limits, timeouts, and encrypted credential injection remain enforced. HTTP sources can reach any address accessible to the Homarr server.
 
 The JSX interpreter blocks imports, hooks, refs, raw event callbacks, browser requests, eval, arbitrary functions, prototype access, unsafe URLs, global CSS escape, arbitrary portals, bigint, statement blocks, IIFEs, and recursion. Regex literals must be bounded and reject backreferences, lookbehind, nested quantifiers, excessive length, and unsupported flags.
 
@@ -236,8 +236,7 @@ Author requested widgets with release context; validate, test, persist, and retu
 Return one fenced \`json\` block with the complete definition; keep evidence prose outside it. The definition has keyed
 \`sources\`, \`requests\`, \`template\`, and optional \`options\`; actions are requests with \`kind: "action"\`.
 
-- \`sources.default\` is required. HTTP has \`baseUrl\`, \`networkScope\`, and credential-free \`auth\`; localhost/loopback requires
-  \`networkScope: "loopback"\`; never widen an explicit scope. Saved sources use \`type: "integration"\`/\`integrationKind\`;
+- \`sources.default\` is required. HTTP has \`baseUrl\` and credential-free \`auth\`. Saved sources use \`type: "integration"\`/\`integrationKind\`;
   Homarr holds credentials.
 - Saved integrations: discover kinds/full-access entries with \`integration_getKinds\`/\`integration_all\`, bind \`integrationId\`
   before preview, omit URL/auth, and keep non-GET requests as actions.
@@ -275,7 +274,6 @@ Return one fenced \`json\` block with the complete definition; keep evidence pro
 
 Report actual lifecycle results. If unavailable, add one post-artifact \`Unverified:\` line naming missing validation, preview,
 renderer, or persistence. Never claim rendering/persistence from schema checks.
-
 `;
 
 const CUSTOM_WIDGET_SKILL_ENTRYPOINT_MD = `# Homarr Custom Widget authoring index
@@ -295,8 +293,7 @@ Binding: path strings use \`{option:name}\`/\`{param:name}\`; query/body objects
 $param is manual-only and $option may drive loads. Request-bound TextInput, Select, NumberInput, and Pagination use literal
 \`bind\`, a default, and manual \`SubFetch params\` for matching \`$param\`; options are installation config via \`options.name\`.
 Dependent pagination uses \`defaultValue={1}\`/\`resetKey={inputs.query}\`. Fallbacks preserve source shape: HTTP keeps \`baseUrl\`,
-\`networkScope\`, \`auth\`; integrations use \`type: "integration"\`, \`integrationKind\`, optional \`integrationId\`; loopback URLs
-require \`networkScope: "loopback"\`.
+\`auth\`; integrations use \`type: "integration"\`, \`integrationKind\`, optional \`integrationId\`.
 
 Load \`schema\` once for a new manifest, \`runtime\` for manual interactions, and \`security\` for auth/mutations. Search once,
 prefer discovered components, keep credentials outside definitions, and make all states useful.`;

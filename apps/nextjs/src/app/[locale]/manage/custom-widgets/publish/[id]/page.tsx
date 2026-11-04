@@ -15,7 +15,10 @@ export default async function WorkshopPublishPage(props: WorkshopPublishPageProp
   const [session, { id }] = await Promise.all([auth(), props.params]);
   if (!session) redirect(createLoginUrl(`/manage/custom-widgets/publish/${id}`));
   if (!session.user.permissions.includes("admin")) redirect("/");
-  const definition = await api.customWidget.get({ id }).catch(catchTrpcNotFound);
+  const [definition, exportedDefinition] = await Promise.all([
+    api.customWidget.get({ id }).catch(catchTrpcNotFound),
+    api.customWidget.export({ id }).catch(catchTrpcNotFound),
+  ]);
 
-  return <WorkshopPublishForm widget={{ id, name: definition.name }} />;
+  return <WorkshopPublishForm widget={{ id, name: definition.name }} initialDefinition={exportedDefinition} />;
 }

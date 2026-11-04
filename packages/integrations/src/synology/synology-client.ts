@@ -305,9 +305,6 @@ export class SynologyClient {
   private async loginAsync(): Promise<StoredSession> {
     const authDefinition = await this.getApiDefinitionAsync(AUTH_API_NAME);
     const loginUrl = new URL(`${this.baseUrl}/webapi/${authDefinition.cgiPath}`);
-    loginUrl.searchParams.set("api", AUTH_API_NAME);
-    loginUrl.searchParams.set("version", String(authDefinition.maxVersion));
-    loginUrl.searchParams.set("method", "login");
     const safeLoginUrl = loginUrl.toString();
 
     const response = await fetchWithTrustedCertificatesAsync(loginUrl, {
@@ -317,6 +314,9 @@ export class SynologyClient {
         "Content-Type": "application/x-www-form-urlencoded",
       },
       body: new URLSearchParams({
+        api: AUTH_API_NAME,
+        version: String(authDefinition.maxVersion),
+        method: "login",
         account: this.username,
         passwd: this.password,
         session: AUTH_SESSION_NAME,

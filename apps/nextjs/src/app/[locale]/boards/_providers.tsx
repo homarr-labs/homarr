@@ -29,13 +29,15 @@ export const BoardProviders = ({
   const layoutOverrideId = isLayoutEditRequest ? requestedLayoutId : null;
 
   return (
-    <BoardProvider
-      initialBoard={initialBoard}
-      initialLayoutId={initialLayoutId}
-      initialViewportWidth={initialViewportWidth}
-      layoutOverrideId={layoutOverrideId}
-    >
-      <EditModeProvider initialOpen={isLayoutEditRequest}>{children}</EditModeProvider>
-    </BoardProvider>
+    <EditModeProvider initialOpen={isLayoutEditRequest}>
+      <BoardProvider
+        initialBoard={initialBoard}
+        initialLayoutId={initialLayoutId}
+        initialViewportWidth={initialViewportWidth}
+        layoutOverrideId={layoutOverrideId}
+      >
+        {children}
+      </BoardProvider>
+    </EditModeProvider>
   );
 };

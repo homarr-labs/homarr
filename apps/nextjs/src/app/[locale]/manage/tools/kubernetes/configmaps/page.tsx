@@ -22,6 +22,7 @@ export default async function ConfigMapsPage({
   }
 
   const context = await getSelectedKubernetesContextAsync(searchParams);
+  if (!context) return <DynamicBreadcrumb />;
   const tResource = await getI18n("kubernetes.cluster.resources");
   const configMaps =
     context.status === "unavailable"

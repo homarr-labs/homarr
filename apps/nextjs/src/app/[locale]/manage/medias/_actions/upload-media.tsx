@@ -6,6 +6,7 @@ import { IconUpload } from "@tabler/icons-react";
 import { revalidatePathActionAsync } from "@homarr/common/client";
 import { UploadMedia } from "@homarr/forms-collection";
 import { useI18n } from "@homarr/translation/client";
+import { supportedMediaUploadFormats } from "@homarr/validation/media";
 
 export const UploadMediaButton = () => {
   const t = useI18n("media");
@@ -14,7 +15,7 @@ export const UploadMediaButton = () => {
   };
 
   return (
-    <UploadMedia onSettled={onSettledAsync} multiple>
+    <UploadMedia onSettled={onSettledAsync} accept={supportedMediaUploadFormats} multiple>
       {({ onClick, loading }) => (
         <Button onClick={onClick} loading={loading} rightSection={<IconUpload size={16} stroke={1.5} />}>
           {t("action.upload.label")}

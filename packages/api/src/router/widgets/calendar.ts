@@ -13,7 +13,7 @@ export const calendarRouter = createTRPCRouter({
       mcp: {
         enabled: true,
         description:
-          "Get calendar events from calendar-capable integrations. REQUIRED: integrationIds (IDs from integration_all whose kinds include Sonarr, Radarr, Lidarr, Readarr, Home Assistant, Nextcloud, or iCal), year (four-digit number), month (human month number from 1=January through 12=December), releaseType (Radarr filters: 'inCinemas'|'digitalRelease'|'physicalRelease'), showUnmonitored (boolean). Great for 'what's coming out this week/month?'",
+          "Get calendar events from calendar-capable integrations. REQUIRED: integrationIds (IDs from integration_all whose kinds include Sonarr, Sportarr, Radarr, Lidarr, Readarr, Home Assistant, Nextcloud, or iCal), year (four-digit number), month (human month number from 1=January through 12=December), releaseType (Radarr filters: 'inCinemas'|'digitalRelease'|'physicalRelease'), showUnmonitored (boolean). Great for 'what's coming out this week/month?'",
       },
     })
     .input(

@@ -68,7 +68,7 @@ jobs:
       TURBO_SCM_BASE: ${{ github.event.pull_request.base.sha || github.event.merge_group.base_sha || github.event.before || 'HEAD~1' }}
       TURBO_SCM_HEAD: ${{ github.sha }}
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         if: "!env.ACT"
         with:
           fetch-depth: 0
@@ -117,7 +117,7 @@ jobs:
       TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
       TURBO_REMOTE_CACHE_SIGNATURE_KEY: ${{ secrets.TURBO_REMOTE_CACHE_SIGNATURE_KEY }}
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         if: "!env.ACT"
         with:
           fetch-depth: 0
@@ -175,7 +175,7 @@ jobs:
       TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
       TURBO_REMOTE_CACHE_SIGNATURE_KEY: ${{ secrets.TURBO_REMOTE_CACHE_SIGNATURE_KEY }}
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         if: "!env.ACT"
         with:
           persist-credentials: false
@@ -231,7 +231,7 @@ jobs:
       contents: read
       packages: read
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         if: "!env.ACT"
         with:
           persist-credentials: false
@@ -244,18 +244,20 @@ jobs:
         if: needs.preview-amd64.outputs.digest != '' && !env.ACT
         env:
           DIGEST: ${{ needs.preview-amd64.outputs.digest }}
+          GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GHCR_ACTOR: ${{ github.actor }}
         run: |
-          echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
+          echo "$GHCR_TOKEN" | docker login ghcr.io -u "$GHCR_ACTOR" --password-stdin
           docker pull "${PREVIEW_IMAGE}@${DIGEST}"
           docker tag "${PREVIEW_IMAGE}@${DIGEST}" homarr-e2e
 
       - name: Set up Docker Buildx
         if: needs.preview-amd64.outputs.digest == '' && !env.ACT
-        uses: docker/setup-buildx-action@v4
+        uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4.4.1
 
       - name: Build container once
         if: needs.preview-amd64.outputs.digest == '' && !env.ACT
-        uses: docker/build-push-action@v7
+        uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7.4.0
         with:
           context: .
           network: host
@@ -269,8 +271,11 @@ jobs:
             org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
             org.opencontainers.image.revision=${{ github.sha }}
             org.opencontainers.image.ref.name=pr-${{ github.event.pull_request.number || inputs.pr_number || 'none' }}
-          cache-from: type=gha,scope=homarr-e2e
-          cache-to: type=gha,scope=homarr-e2e,mode=max
+          # Scoped to the ref actually checked out (the dispatch input when
+          # set), so a cache written for one ref never seeds the image built
+          # for another.
+          cache-from: type=gha,scope=homarr-e2e-${{ github.event_name == 'workflow_dispatch' && inputs.ref || github.ref_name }}
+          cache-to: type=gha,scope=homarr-e2e-${{ github.event_name == 'workflow_dispatch' && inputs.ref || github.ref_name }},mode=max
           secrets: |
             TURBO_API=${{ secrets.TURBO_API }}
             TURBO_TEAM=${{ secrets.TURBO_TEAM }}
@@ -291,10 +296,12 @@ jobs:
       - name: Cache Playwright browsers
         if: "!env.ACT"
         id: playwright-cache
-        uses: actions/cache@v6
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: ~/.cache/ms-playwright
-          key: playwright-${{ runner.os }}-${{ hashFiles('bun.lock') }}
+          # Ref-scoped for the same reason as the build cache above, this
+          # job can push a preview image after the browsers run.
+          key: playwright-${{ runner.os }}-${{ github.event_name == 'workflow_dispatch' && inputs.ref || github.ref_name }}-${{ hashFiles('bun.lock') }}
 
       - name: Install Playwright Chromium
         if: steps.playwright-cache.outputs.cache-hit != 'true' || env.ACT
@@ -315,7 +322,7 @@ jobs:
 
       - name: Upload E2E artifacts
         if: failure() && !env.ACT
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: playwright-report
           path: e2e/test-results/
@@ -338,7 +345,7 @@ jobs:
     outputs:
       digest: ${{ steps.preview-build.outputs.digest }}
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         if: "!env.ACT"
         with:
           persist-credentials: false
@@ -346,7 +353,7 @@ jobs:
 
       - name: Log in to GHCR
         if: "!env.ACT"
-        uses: docker/login-action@v4
+        uses: docker/login-action@81c6f93d4bc991e510b342a00b419b3bb4efc5c6 # v4.7.0
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
@@ -354,19 +361,19 @@ jobs:
 
       - name: Set up Docker Buildx
         if: "!env.ACT"
-        uses: docker/setup-buildx-action@v4
+        uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4.4.1
 
       - name: Build and push amd64 preview image by digest
         id: preview-build
         if: "!env.ACT"
-        uses: docker/build-push-action@v7
+        uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7.4.0
         with:
           context: .
           network: host
           platforms: linux/amd64
           outputs: type=image,"name=${{ env.PREVIEW_IMAGE }}",push-by-digest=true,name-canonical=true,push=true
-          cache-from: type=gha,scope=homarr-linux-amd64
-          cache-to: type=gha,scope=homarr-linux-amd64,mode=max
+          cache-from: type=gha,scope=homarr-linux-amd64-${{ github.event_name == 'workflow_dispatch' && inputs.ref || github.ref_name }}
+          cache-to: type=gha,scope=homarr-linux-amd64-${{ github.event_name == 'workflow_dispatch' && inputs.ref || github.ref_name }},mode=max
           secrets: |
             TURBO_API=${{ secrets.TURBO_API }}
             TURBO_TEAM=${{ secrets.TURBO_TEAM }}
@@ -382,7 +389,7 @@ jobs:
         (github.event_name == 'push' && github.ref == 'refs/heads/release/v2') ||
         (github.event_name == 'workflow_dispatch' && inputs.operation == 'publish')
       )
-    runs-on: ubuntu-24.04-arm
+    runs-on: ubuntu-26.04-arm
     timeout-minutes: 20
     permissions:
       contents: read
@@ -390,7 +397,7 @@ jobs:
     outputs:
       digest: ${{ steps.preview-build.outputs.digest }}
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         if: "!env.ACT"
         with:
           persist-credentials: false
@@ -398,7 +405,7 @@ jobs:
 
       - name: Log in to GHCR
         if: "!env.ACT"
-        uses: docker/login-action@v4
+        uses: docker/login-action@81c6f93d4bc991e510b342a00b419b3bb4efc5c6 # v4.7.0
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
@@ -406,19 +413,19 @@ jobs:
 
       - name: Set up Docker Buildx
         if: "!env.ACT"
-        uses: docker/setup-buildx-action@v4
+        uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4.4.1
 
       - name: Build and push arm64 preview image by digest
         id: preview-build
         if: "!env.ACT"
-        uses: docker/build-push-action@v7
+        uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7.4.0
         with:
           context: .
           network: host
           platforms: linux/arm64
           outputs: type=image,"name=${{ env.PREVIEW_IMAGE }}",push-by-digest=true,name-canonical=true,push=true
-          cache-from: type=gha,scope=homarr-linux-arm64
-          cache-to: type=gha,scope=homarr-linux-arm64,mode=max
+          cache-from: type=gha,scope=homarr-linux-arm64-${{ github.event_name == 'workflow_dispatch' && inputs.ref || github.ref_name }}
+          cache-to: type=gha,scope=homarr-linux-arm64-${{ github.event_name == 'workflow_dispatch' && inputs.ref || github.ref_name }},mode=max
           secrets: |
             TURBO_API=${{ secrets.TURBO_API }}
             TURBO_TEAM=${{ secrets.TURBO_TEAM }}
@@ -449,7 +456,7 @@ jobs:
     steps:
       - name: Log in to GHCR
         if: "!env.ACT"
-        uses: docker/login-action@v4
+        uses: docker/login-action@81c6f93d4bc991e510b342a00b419b3bb4efc5c6 # v4.7.0
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
@@ -457,11 +464,11 @@ jobs:
 
       - name: Set up Docker Buildx
         if: "!env.ACT"
-        uses: docker/setup-buildx-action@v4
+        uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4.4.1
 
       - name: Verify PR head before publication
         if: github.event_name == 'pull_request'
-        uses: actions/github-script@v8
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
         env:
           EXPECTED_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
         with:
@@ -507,7 +514,7 @@ jobs:
 
       - name: Comment with preview image
         if: github.event_name == 'pull_request' && !env.ACT
-        uses: actions/github-script@v8
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
         with:
           script: |
             const marker = "<!-- homarr-preview-image -->";
@@ -556,7 +563,7 @@ jobs:
 
       - name: Delete GHCR package version
         if: "!env.ACT"
-        uses: actions/github-script@v8
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
         with:
           script: |
             const packageName = "homarr-test";

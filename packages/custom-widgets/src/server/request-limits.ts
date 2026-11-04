@@ -21,6 +21,7 @@ export interface RequestLimitInput {
   itemId: string;
   definitionId: string;
   load?: { signal?: AbortSignal };
+  phase?: "rate" | "concurrency";
 }
 
 export interface RequestLimitStore {
@@ -65,6 +66,7 @@ export class CustomWidgetRequestLimiter {
         input.category,
         input.load,
         unattributedRateKey,
+        input.phase,
       );
     try {
       return await this.acquireStored(
@@ -76,6 +78,7 @@ export class CustomWidgetRequestLimiter {
         this.options.store,
         input.load,
         unattributedRateKey,
+        input.phase,
       );
     } catch (error) {
       if (error instanceof CustomWidgetDomainError) throw error;
@@ -95,12 +98,22 @@ export class CustomWidgetRequestLimiter {
     category: RequestCategory,
     load: RequestLimitInput["load"],
     unattributedRateKey: string | undefined,
+    phase: RequestLimitInput["phase"],
   ) {
-    const now = Date.now();
-    if (unattributedRateKey)
-      this.acquireLocalRate(unattributedRateKey, CATEGORY_LIMITS[category], now, load, UNATTRIBUTED_LOAD_RATE_MESSAGE);
-    this.acquireLocalRate(rateKey, CATEGORY_LIMITS[category], now, load);
-    this.acquireLocalRate(definitionRateKey, DEFINITION_CATEGORY_LIMITS[category], now, load);
+    if (phase !== "concurrency") {
+      const now = Date.now();
+      if (unattributedRateKey)
+        this.acquireLocalRate(
+          unattributedRateKey,
+          CATEGORY_LIMITS[category],
+          now,
+          load,
+          UNATTRIBUTED_LOAD_RATE_MESSAGE,
+        );
+      this.acquireLocalRate(rateKey, CATEGORY_LIMITS[category], now, load);
+      this.acquireLocalRate(definitionRateKey, DEFINITION_CATEGORY_LIMITS[category], now, load);
+    }
+    if (phase === "rate") return async () => undefined;
     return this.waitForCapacity(() => {
       if (!this.acquireLocalConcurrency(userKey, CUSTOM_WIDGET_USER_ITEM_CONCURRENCY_LIMIT)) return undefined;
       if (!this.acquireLocalConcurrency(definitionKey, CUSTOM_WIDGET_DEFINITION_CONCURRENCY_LIMIT)) {
@@ -126,17 +139,24 @@ export class CustomWidgetRequestLimiter {
     store: RequestLimitStore,
     load: RequestLimitInput["load"],
     unattributedRateKey: string | undefined,
+    phase: RequestLimitInput["phase"],
   ) {
-    if (unattributedRateKey) {
-      const rate = await store.incrementRate(unattributedRateKey, WINDOW_MS);
-      if (rate.count > CATEGORY_LIMITS[category])
-        throwLimit(rate.retryAfterMs, load ? UNATTRIBUTED_LOAD_RATE_MESSAGE : undefined);
+    if (phase !== "concurrency") {
+      if (unattributedRateKey) {
+        const rate = await store.incrementRate(unattributedRateKey, WINDOW_MS);
+        if (rate.count > CATEGORY_LIMITS[category])
+          throwLimit(rate.retryAfterMs, load ? UNATTRIBUTED_LOAD_RATE_MESSAGE : undefined);
+      }
+      const rate = await store.incrementRate(rateKey, WINDOW_MS);
+      if (rate.count > CATEGORY_LIMITS[category]) throwLimit(rate.retryAfterMs, load ? LOAD_RATE_MESSAGE : undefined);
+      const definitionRate = await store.incrementRate(definitionRateKey, WINDOW_MS);
+      if (definitionRate.count > DEFINITION_CATEGORY_LIMITS[category])
+        throwLimit(definitionRate.retryAfterMs, load ? LOAD_RATE_MESSAGE : undefined);
     }
-    const rate = await store.incrementRate(rateKey, WINDOW_MS);
-    if (rate.count > CATEGORY_LIMITS[category]) throwLimit(rate.retryAfterMs, load ? LOAD_RATE_MESSAGE : undefined);
-    const definitionRate = await store.incrementRate(definitionRateKey, WINDOW_MS);
-    if (definitionRate.count > DEFINITION_CATEGORY_LIMITS[category])
-      throwLimit(definitionRate.retryAfterMs, load ? LOAD_RATE_MESSAGE : undefined);
+    if (phase === "rate") {
+      assertLoadActive(load);
+      return async () => undefined;
+    }
     return this.waitForCapacity(() => this.acquireStoredConcurrency(userKey, definitionKey, store), load);
   }
 

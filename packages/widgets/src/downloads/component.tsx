@@ -29,6 +29,7 @@ import {
   IconCopy,
   IconDatabase,
   IconDownload,
+  IconDots,
   IconFilter,
   IconFilterOff,
   IconInfoCircle,
@@ -693,11 +694,33 @@ export default function DownloadClientsWidget({
           </Text>
         ),
       },
+      includeColumn("actions") && {
+        accessor: "actions",
+        title: "",
+        width: 40,
+        textAlign: "right",
+        render: (record) => (
+          <Tooltip label={t("items.actions.columnTitle")} withArrow>
+            <ActionIcon
+              variant="subtle"
+              size="sm"
+              aria-label={t("items.actions.columnTitle")}
+              onClick={(event) => {
+                event.stopPropagation();
+                const { right, bottom } = event.currentTarget.getBoundingClientRect();
+                setContextMenu({ x: right, y: bottom, item: record });
+              }}
+            >
+              <IconDots size={size.iconSize} />
+            </ActionIcon>
+          </Tooltip>
+        ),
+      },
     ];
     return cols.filter(Boolean) as DataTableColumn<ExtendedDownloadClientItem>[];
   }, [columnContext, displayMode, formatByteRate, formatBytes, formatBytesPair, progressColumnWidth, size, t]);
 
-  const { effectiveColumns, storeKey } = usePersistedTableLayout({
+  const { effectiveColumns, storeKey, onColumnLayoutChange, setMultipleColumnWidths } = usePersistedTableLayout({
     columns,
     columnAccessors: DOWNLOAD_COLUMN_ACCESSORS,
     columnOrder: options.columnOrder,
@@ -706,6 +729,7 @@ export default function DownloadClientsWidget({
     storeKeyPrefix: "downloads",
     onLayoutChange: persistOption,
   });
+  const fillColumnAccessor = columns.find(({ accessor }) => accessor === "name")?.accessor ?? columns[0]?.accessor;
 
   const handleContextMenu = useCallback(
     ({ record, event }: { record: ExtendedDownloadClientItem; event: React.MouseEvent }) => {
@@ -782,6 +806,9 @@ export default function DownloadClientsWidget({
         </Box>
         <HomarrDataTable
           preserveColumnWidths
+          fillColumnAccessor={fillColumnAccessor}
+          defaultColumnWidths={columns}
+          onColumnWidthsChange={setMultipleColumnWidths}
           isEditMode={isEditMode}
           cellPadding={`${size.cellPadding}px 8px`}
           fetching={isFetching && (currentItems?.length ?? 0) === 0}
@@ -789,6 +816,7 @@ export default function DownloadClientsWidget({
           records={sortedData}
           columns={effectiveColumns}
           storeColumnsKey={storeKey}
+          onColumnLayoutChange={onColumnLayoutChange}
           sortStatus={sortStatus}
           onSortStatusChange={setSortStatus}
           noRecordsText={t("errors.noItems")}

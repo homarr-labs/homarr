@@ -10,9 +10,13 @@ import { Integration } from "../../base/integration";
 import type { IntegrationTestingInput } from "../../base/integration";
 import type { TestingResult } from "../../base/test-connection/test-connection-service";
 import type { DownloadClientJobsAndStatus } from "../../interfaces/downloads/download-client-data";
-import type { IDownloadClientIntegration } from "../../interfaces/downloads/download-client-integration";
+import type {
+  DownloadClientSelection,
+  IDownloadClientIntegration,
+} from "../../interfaces/downloads/download-client-integration";
 import type { DownloadClientItem } from "../../interfaces/downloads/download-client-items";
 import type { DownloadClientStatus } from "../../interfaces/downloads/download-client-status";
+import { selectDownloadTorrents } from "../select-torrents";
 
 @HandleIntegrationErrors([integrationOFetchHttpErrorHandler])
 export class TransmissionIntegration extends Integration implements IDownloadClientIntegration {
@@ -24,7 +28,10 @@ export class TransmissionIntegration extends Integration implements IDownloadCli
     };
   }
 
-  public async getClientJobsAndStatusAsync(input: { limit: number }): Promise<DownloadClientJobsAndStatus> {
+  public async getClientJobsAndStatusAsync(input: {
+    limit: number;
+    selection?: DownloadClientSelection;
+  }): Promise<DownloadClientJobsAndStatus> {
     const type = "torrent";
     const client = await this.getClientAsync();
     // Currently there is no way to limit the number of returned torrents
@@ -36,7 +43,32 @@ export class TransmissionIntegration extends Integration implements IDownloadCli
     const paused =
       torrents.find(({ status }) => TransmissionIntegration.getTorrentState(status) !== "paused") === undefined;
     const status: DownloadClientStatus = { paused, rates, types: [type] };
-    const items = torrents.slice(0, input.limit).map((torrent): DownloadClientItem => {
+    const currentTime = dayjs().valueOf();
+    const selectedTorrents = selectDownloadTorrents(torrents, input, {
+      category: (torrent) => torrent.labels,
+      progress: (torrent) => torrent.percentDone,
+      upSpeed: (torrent) => torrent.rateUpload,
+      downSpeed: (torrent) => {
+        if (torrent.percentDone === 1) return undefined;
+        return torrent.rateDownload;
+      },
+      name: (torrent) => torrent.name,
+      size: (torrent) => torrent.totalSize,
+      added: (torrent) => torrent.addedDate * 1000,
+      index: (torrent) => torrent.queuePosition,
+      sent: (torrent) => torrent.uploadedEver,
+      received: (torrent) => torrent.downloadedEver,
+      ratio: (torrent) => {
+        if (torrent.totalSize <= 0) return undefined;
+        return torrent.uploadedEver / torrent.totalSize;
+      },
+      state: (torrent) => TransmissionIntegration.getTorrentState(torrent.status),
+      time: (torrent) => {
+        if (torrent.percentDone === 1) return Math.min(torrent.doneDate * 1000 - currentTime, -1);
+        return Math.max(torrent.eta * 1000, 0);
+      },
+    });
+    const items = selectedTorrents.map((torrent): DownloadClientItem => {
       const state = TransmissionIntegration.getTorrentState(torrent.status);
       return {
         type,
@@ -50,7 +82,7 @@ export class TransmissionIntegration extends Integration implements IDownloadCli
         upSpeed: torrent.rateUpload,
         time:
           torrent.percentDone === 1
-            ? Math.min(torrent.doneDate * 1000 - dayjs().valueOf(), -1)
+            ? Math.min(torrent.doneDate * 1000 - currentTime, -1)
             : Math.max(torrent.eta * 1000, 0),
         added: torrent.addedDate * 1000,
         state,
@@ -58,7 +90,15 @@ export class TransmissionIntegration extends Integration implements IDownloadCli
         category: torrent.labels,
       };
     });
-    return { status, items };
+    if (!input.selection) return { status, items };
+
+    const ratioItems = torrents.slice(0, input.limit).map((torrent) => ({
+      sent: torrent.uploadedEver,
+      size: torrent.totalSize,
+      progress: torrent.percentDone,
+      category: torrent.labels,
+    }));
+    return { status, items, ratioItems };
   }
 
   public async pauseQueueAsync() {

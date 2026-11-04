@@ -5,7 +5,7 @@ import type { LookupFunction } from "node:net";
 import { checkServerIdentity, createSecureContext } from "node:tls";
 import type { SecureContext } from "node:tls";
 import axios from "axios";
-import type { EnvHttpProxyAgent as UndiciEnvHttpProxyAgent, RequestInfo, RequestInit, Response } from "undici";
+import type { RequestInfo, RequestInit, Response } from "undici";
 import { fetch } from "undici";
 
 import {
@@ -15,6 +15,7 @@ import {
 import { UndiciHttpAgent } from "@homarr/core/infrastructure/http";
 
 import type { TrustedCertificateHostname } from "../certificates/hostnames";
+import type { HttpAgentOptions } from "./http-agent";
 import { getHttpRequestSignal } from "./request-signal";
 import { withTimeoutAsync } from "./timeout";
 
@@ -63,8 +64,8 @@ export const createCertificateAgentAsync = async (
     lookup: LookupFunction;
   }>,
   agentOptions?: Pick<
-    UndiciEnvHttpProxyAgent.Options,
-    "autoSelectFamily" | "bodyTimeout" | "httpProxy" | "httpsProxy" | "noProxy"
+    HttpAgentOptions,
+    "autoSelectFamily" | "bodyTimeout" | "httpProxy" | "httpsProxy" | "noProxy" | "logOriginOnly"
   >,
 ) => {
   const ca = override?.ca ?? (await getAllTrustedCertificatesAsync());

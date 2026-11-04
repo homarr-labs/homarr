@@ -1,6 +1,6 @@
 import { X509Certificate } from "node:crypto";
 import { notFound } from "next/navigation";
-import { Button, Card, Group, SimpleGrid, Stack, Text, Title } from "@mantine/core";
+import { Card, Group, SimpleGrid, Stack, Text } from "@mantine/core";
 import { IconAlertTriangle, IconCertificate, IconCertificateOff } from "@tabler/icons-react";
 import dayjs from "dayjs";
 
@@ -9,11 +9,10 @@ import { getMantineColor } from "@homarr/common";
 import { loadCustomRootCertificatesAsync } from "@homarr/core/infrastructure/certificates";
 import type { SupportedLanguage } from "@homarr/translation";
 import { getI18n } from "@homarr/translation/server";
-import { Link } from "@homarr/ui";
 
 import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
 import { NoResults } from "~/components/no-results";
-import { AddCertificateSection } from "./_components/add-certificate";
+import { CertificatesPageContent } from "./_components/add-certificate";
 import { RemoveCertificate } from "./_components/remove-certificate";
 
 interface CertificatesPageProps {
@@ -58,22 +57,7 @@ export default async function CertificatesPage({ params }: CertificatesPageProps
     <>
       <DynamicBreadcrumb />
 
-      <Stack>
-        <Group justify="space-between">
-          <Stack gap={4}>
-            <Title>{t("page.list.title")}</Title>
-            <Text>{t("page.list.description")}</Text>
-          </Stack>
-
-          <Group>
-            <Button variant="default" component={Link} href="/manage/tools/certificates/hostnames">
-              {t("page.list.toHostnames")}
-            </Button>
-          </Group>
-        </Group>
-
-        <AddCertificateSection />
-
+      <CertificatesPageContent>
         {x509Certificates.length === 0 && (
           <NoResults icon={IconCertificateOff} title={t("page.list.noResults.title")} />
         )}
@@ -128,7 +112,7 @@ export default async function CertificatesPage({ params }: CertificatesPageProps
             </Card>
           ))}
         </SimpleGrid>
-      </Stack>
+      </CertificatesPageContent>
     </>
   );
 }

@@ -71,6 +71,7 @@ interface CommonNavigationLinkProps {
 
 interface NavigationLinkHref extends CommonNavigationLinkProps {
   href: string;
+  prefetch?: boolean;
   external?: boolean;
   exact?: boolean;
 }

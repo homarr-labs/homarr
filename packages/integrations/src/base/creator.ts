@@ -258,6 +258,8 @@ const integrationCreators = {
   plex: async (input: IntegrationInput) => new (await import("../plex/plex-integration")).PlexIntegration(input),
   sonarr: async (input: IntegrationInput) =>
     new (await import("../media-organizer/sonarr/sonarr-integration")).SonarrIntegration(input),
+  sportarr: async (input: IntegrationInput) =>
+    new (await import("../media-organizer/sportarr/sportarr-integration")).SportarrIntegration(input),
   radarr: async (input: IntegrationInput) =>
     new (await import("../media-organizer/radarr/radarr-integration")).RadarrIntegration(input),
   sabNzbd: async (input: IntegrationInput) =>
@@ -323,6 +325,8 @@ const integrationCreators = {
     new (await import("../immich/immich-integration")).ImmichIntegration(input),
   paperlessNgx: async (input: IntegrationInput) =>
     new (await import("../paperless-ngx/paperless-ngx-integration")).PaperlessNgxIntegration(input),
+  thingport: async (input: IntegrationInput) =>
+    new (await import("../thingport/thingport-integration")).ThingportIntegration(input),
   wazuh: async (input: IntegrationInput) => new (await import("../wazuh/wazuh-integration")).WazuhIntegration(input),
   patchmon: async (input: IntegrationInput) =>
     new (await import("../patchmon/patchmon-integration")).PatchMonIntegration(input),

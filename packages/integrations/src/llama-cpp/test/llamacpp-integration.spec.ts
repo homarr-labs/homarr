@@ -342,7 +342,12 @@ describe("LlamacppIntegration getStatsAsync", () => {
 
     const requestedUrls = mockFetch.mock.calls.map((call) => String(call[0])).toSorted();
     expect(requestedUrls).toStrictEqual(
-      [`${TEST_URL}/health`, `${TEST_URL}/metrics`, `${TEST_URL}/slots`, `${TEST_URL}/v1/models`].toSorted(),
+      [
+        `${TEST_URL}/health`,
+        `${TEST_URL}/metrics?model=%2Froot%2Fmodels%2Funsloth%2FQwen3.8-27B-UD-Q4_K_XL.gguf`,
+        `${TEST_URL}/slots?model=%2Froot%2Fmodels%2Funsloth%2FQwen3.8-27B-UD-Q4_K_XL.gguf`,
+        `${TEST_URL}/v1/models`,
+      ].toSorted(),
     );
   });
 

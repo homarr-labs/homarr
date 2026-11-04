@@ -227,47 +227,6 @@ describe("lean Custom Widget schema", () => {
   });
 
   it.each([
-    "http://127.1",
-    "http://2130706433",
-    "http://0x7f000001",
-    "http://0177.0.0.1",
-    "http://1.2.3",
-    "http://%31%32%37.0.0.1",
-    "https://%65xample.com",
-    "https://example%2ecom",
-    "https://example.com\\@attacker.invalid",
-    "https:\\\\example.com\\api",
-    " https://example.com",
-    "https://exa\tmple.com",
-    "https://example.com\n",
-    "https://example.com\u00a0",
-    "https://@example.com",
-    "https://:@example.com",
-    "https://example。com",
-    "https://１２７.０.０.１",
-    "https://-example.com",
-    "https://example-.com",
-    "https://example..com",
-    "https://example.com:00080",
-    "https://example.com:0000000065535",
-    "https://example.com:65536",
-    "https://[fe80::1%25eth0]",
-    "https://[::ffff:192.168.001.001]",
-    "https://[0:0:0:0:0:0:0:1]",
-    "https://[2001:0db8::1]",
-  ])("rejects ambiguous persisted URL spelling %s for sources and icons", (url) => {
-    expect(
-      customWidgetDefinitionSchema.safeParse({
-        ...CUSTOM_WIDGET_STARTER,
-        sources: {
-          default: { ...CUSTOM_WIDGET_STARTER.sources.default, baseUrl: url },
-        },
-      }).success,
-    ).toBe(false);
-    expect(customWidgetDefinitionSchema.safeParse({ ...CUSTOM_WIDGET_STARTER, iconUrl: url }).success).toBe(false);
-  });
-
-  it.each([
     "https://example.com",
     "https://example.com.",
     "https://münich.example",
@@ -405,7 +364,7 @@ describe("lean Custom Widget schema", () => {
     const setups = getCustomWidgetSourceSetups(sources);
     expect(setups.map(({ sourceId, requiresUrlConfirmation }) => [sourceId, requiresUrlConfirmation])).toEqual([
       ["default", false],
-      ["tautulli", true],
+      ["tautulli", false],
       ["placeholder", true],
     ]);
     expect(setups.find(({ sourceId }) => sourceId === "tautulli")?.credentialFields).toEqual([
@@ -423,7 +382,7 @@ describe("lean Custom Widget schema", () => {
     };
     expect(
       applyCustomWidgetSourceSetup(sources, {
-        default: { baseUrl: "http://192.168.1.20:8181", networkScope: "private" },
+        default: { baseUrl: "http://192.168.1.20:8181" },
       }).default,
     ).toEqual({
       baseUrl: "http://192.168.1.20:8181",

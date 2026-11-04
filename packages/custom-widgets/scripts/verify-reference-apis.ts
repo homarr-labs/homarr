@@ -129,7 +129,6 @@ async function runPortainerAction(action: string, containerId: string, ignoreCon
     baseUrl: portainerBaseUrl,
     targetUrl: target,
     method: "POST",
-    networkScope: "private",
     kind: "action",
     auth: {
       type: "apiKeyHeader",

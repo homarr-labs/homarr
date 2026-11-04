@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Card, Collapse, Group, Stack } from "@mantine/core";
+import { Card, Collapse } from "@mantine/core";
 import { IconTrash } from "@tabler/icons-react";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
@@ -15,16 +15,19 @@ import { invariantTechnicalLabels } from "@homarr/definitions";
 import { useI18n } from "@homarr/translation/client";
 import { InlineConfirmActionIcon } from "@homarr/ui";
 import { useTranslatedMantineReactTable } from "@homarr/ui/hooks";
+
+import { ManagePageLayout } from "~/components/manage/manage-page-layout";
 import { InviteCreateButton } from "./invite-create-button";
 import { InviteCreateForm } from "./invite-create-form";
 
 dayjs.extend(relativeTime);
 
 interface InviteListComponentProps {
+  title: string;
   initialInvites: RouterOutputs["invite"]["getAll"];
 }
 
-export const InviteListComponent = ({ initialInvites }: InviteListComponentProps) => {
+export const InviteListComponent = ({ title, initialInvites }: InviteListComponentProps) => {
   const t = useI18n("management.page.user.invite");
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -104,17 +107,14 @@ export const InviteListComponent = ({ initialInvites }: InviteListComponentProps
   };
 
   return (
-    <Stack>
-      <Group justify="end">
-        <InviteCreateButton onClick={toggleCreate} />
-      </Group>
+    <ManagePageLayout title={title} primaryAction={<InviteCreateButton onClick={toggleCreate} />}>
       <Collapse expanded={isCreateOpen}>
         <Card withBorder>
           <InviteCreateForm key={formKey} onClose={closeCreate} />
         </Card>
       </Collapse>
       <MantineReactTable table={table} />
-    </Stack>
+    </ManagePageLayout>
   );
 };
 

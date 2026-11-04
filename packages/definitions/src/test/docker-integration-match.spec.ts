@@ -116,4 +116,13 @@ describe("matchIntegrationKindFromContainer", () => {
       }),
     ).toBeNull();
   });
+
+  it("matches Sportarr from its official image name", () => {
+    expect(
+      matchIntegrationKindFromContainer({
+        image: "sportarr/sportarr:latest",
+        name: "sportarr",
+      }),
+    ).toBe("sportarr");
+  });
 });

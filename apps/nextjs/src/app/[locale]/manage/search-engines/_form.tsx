@@ -5,6 +5,7 @@ import { Button, Fieldset, Grid, Group, SegmentedControl, Stack, Textarea, TextI
 import { WidgetIntegrationSelect } from "@homarr/widgets/widget-integration-select";
 import type { z } from "zod/v4";
 
+import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { searchEngineTypes } from "@homarr/definitions";
 import { useZodForm } from "@homarr/form";
@@ -17,6 +18,7 @@ import { searchEngineManageSchema } from "@homarr/validation/search-engine";
 type FormType = z.infer<typeof searchEngineManageSchema>;
 
 interface SearchEngineFormProps {
+  integrations: RouterOutputs["integration"]["allThatSupportSearch"];
   submitButtonTranslation: (t: ScopedTranslationFunction<"common">) => string;
   initialValues?: FormType;
   handleSubmit: (values: FormType) => void;
@@ -25,11 +27,12 @@ interface SearchEngineFormProps {
 }
 
 export const SearchEngineForm = (props: SearchEngineFormProps) => {
-  const { submitButtonTranslation, handleSubmit, initialValues, isPending, disableShort } = props;
+  const { integrations, submitButtonTranslation, handleSubmit, initialValues, isPending, disableShort } = props;
   const t = useI18n("search.engine");
   const tCommon = useI18n("common");
-
-  const [integrationData] = clientApi.integration.allThatSupportSearch.useSuspenseQuery();
+  const { data: availableIntegrations } = clientApi.integration.allThatSupportSearch.useQuery(undefined, {
+    initialData: integrations,
+  });
 
   const form = useZodForm(searchEngineManageSchema, {
     initialValues: initialValues ?? {
@@ -83,7 +86,7 @@ export const SearchEngineForm = (props: SearchEngineFormProps) => {
           {form.values.type === "fromIntegration" && (
             <WidgetIntegrationSelect
               label="Integration"
-              data={integrationData}
+              data={availableIntegrations}
               canSelectMultiple={false}
               onChange={(value) => form.setFieldValue("integrationId", value[0])}
               value={form.values.integrationId !== undefined ? [form.values.integrationId] : []}

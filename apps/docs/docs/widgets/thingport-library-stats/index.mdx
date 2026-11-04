@@ -1,0 +1,44 @@
+---
+title: "Thingport Library Stats"
+description: "Displays model, collection, category and author totals from Thingport."
+hide_title: true
+---
+
+import { WidgetInteractionGuide } from "@site/src/components/widgets/interactions";
+
+import { WidgetHeader } from "@site/src/components/widgets/header";
+import { AddingWidget } from "@site/src/components/widgets/adding";
+import { WidgetConfig } from "@site/src/components/widgets/configuration";
+import { WidgetIntegrations } from "@site/src/components/widgets/integrations";
+import { thingportLibraryStatsWidget } from ".";
+import { thingportIntegration } from "@site/docs/integrations/thingport";
+
+<WidgetHeader widget={thingportLibraryStatsWidget} categories={["Miscellaneous"]} />
+
+This widget displays the totals of your Thingport library: models, collections, categories and authors. Selecting models or collections opens that page in Thingport. Thingport has no page listing all categories or authors, so those open the Thingport dashboard.
+
+### Screenshots
+
+The widget at several grid sizes, in dark and light mode.
+
+import sizesDark from "./img/sizes-dark.png";
+import sizesLight from "./img/sizes-light.png";
+
+<div className="flex gap-2 flex-wrap">
+  <img src={sizesDark.src} alt="Thingport Library Stats widget at several sizes in dark mode" width={720} />
+  <img src={sizesLight.src} alt="Thingport Library Stats widget at several sizes in light mode" width={720} />
+</div>
+
+### Supported Integrations
+
+<WidgetIntegrations items={[{ integration: thingportIntegration }]} />
+
+<WidgetInteractionGuide advancedView={false} />
+
+### Adding the widget
+
+<AddingWidget />
+
+### Configuration
+
+<WidgetConfig configuration={thingportLibraryStatsWidget.configuration} />

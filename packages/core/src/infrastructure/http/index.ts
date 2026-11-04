@@ -6,5 +6,6 @@ export {
   createHttpsAgentAsync,
   fetchWithTrustedCertificatesAsync,
 } from "./request";
+export { cancelBodyAsync, fetchGuardedAsync } from "./guarded-fetch";
 
 export { withHttpRequestSignalAsync, getHttpRequestSignal } from "./request-signal";

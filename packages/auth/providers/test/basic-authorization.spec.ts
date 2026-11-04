@@ -1,4 +1,4 @@
-import { describe, expect, test } from "vitest";
+import { describe, expect, test, vi } from "vitest";
 
 import { createId } from "@homarr/common";
 import { users } from "@homarr/db/schema";
@@ -7,7 +7,16 @@ import { createDb } from "@homarr/db/test";
 import { hashPasswordAsync } from "../../security";
 import { authorizeWithBasicCredentialsAsync } from "../credentials/authorization/basic-authorization";
 
+const mocks = vi.hoisted(() => ({
+  logger: { info: vi.fn(), warn: vi.fn() },
+}));
+
+vi.mock("@homarr/core/infrastructure/logs", () => ({
+  createLogger: () => mocks.logger,
+}));
+
 const defaultUserId = createId();
+const ipAddress = "203.0.113.7";
 
 describe("authorizeWithBasicCredentials", () => {
   test("should authorize user with correct credentials", async () => {
@@ -20,10 +29,14 @@ describe("authorizeWithBasicCredentials", () => {
     });
 
     // Act
-    const result = await authorizeWithBasicCredentialsAsync(db, {
-      name: "test",
-      password: "test",
-    });
+    const result = await authorizeWithBasicCredentialsAsync(
+      db,
+      {
+        name: "test",
+        password: "test",
+      },
+      ipAddress,
+    );
 
     // Assert
     expect(result).toEqual({ id: defaultUserId, name: "test" });
@@ -39,13 +52,18 @@ describe("authorizeWithBasicCredentials", () => {
     });
 
     // Act
-    const result = await authorizeWithBasicCredentialsAsync(db, {
-      name: "test",
-      password: "wrong",
-    });
+    const result = await authorizeWithBasicCredentialsAsync(
+      db,
+      {
+        name: "test",
+        password: "wrong",
+      },
+      ipAddress,
+    );
 
     // Assert
     expect(result).toBeNull();
+    expect(mocks.logger.warn).toHaveBeenCalledWith("Password for user was incorrect", { userName: "test", ipAddress });
   });
 
   test("should not authorize user with incorrect username", async () => {
@@ -58,13 +76,18 @@ describe("authorizeWithBasicCredentials", () => {
     });
 
     // Act
-    const result = await authorizeWithBasicCredentialsAsync(db, {
-      name: "wrong",
-      password: "test",
-    });
+    const result = await authorizeWithBasicCredentialsAsync(
+      db,
+      {
+        name: "wrong",
+        password: "test",
+      },
+      ipAddress,
+    );
 
     // Assert
     expect(result).toBeNull();
+    expect(mocks.logger.warn).toHaveBeenCalledWith("User not found", { userName: "wrong", ipAddress });
   });
 
   test("should not authorize user when password is not set", async () => {
@@ -76,10 +99,14 @@ describe("authorizeWithBasicCredentials", () => {
     });
 
     // Act
-    const result = await authorizeWithBasicCredentialsAsync(db, {
-      name: "test",
-      password: "test",
-    });
+    const result = await authorizeWithBasicCredentialsAsync(
+      db,
+      {
+        name: "test",
+        password: "test",
+      },
+      ipAddress,
+    );
 
     // Assert
     expect(result).toBeNull();

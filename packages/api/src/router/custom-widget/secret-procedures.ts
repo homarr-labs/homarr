@@ -1,5 +1,4 @@
 import { assertCustomWidgetIntegrationBindings } from "./source-resolver";
-import { getCustomWidgetSourceAuthType } from "@homarr/custom-widgets/core";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod/v4";
 
@@ -7,6 +6,7 @@ import { eq } from "@homarr/db";
 import { customWidgetDefinitions } from "@homarr/db/schema";
 import {
   customWidgetSecretInputSchema,
+  customWidgetSecretKindSchema,
   customWidgetSecretsInputSchema,
   customWidgetSourceSchema,
 } from "@homarr/custom-widgets/core";
@@ -93,8 +93,8 @@ export const secretProcedures = {
         definitionId: z.string(),
         sourceId: z.string(),
         baseUrl: z.string().optional(),
+        networkScope: z.unknown().optional(),
         integrationId: z.string().min(1).max(100).optional(),
-        networkScope: z.enum(["public", "private", "loopback"]).optional(),
         secrets: customWidgetSecretsInputSchema.default([]),
       }),
     )
@@ -108,12 +108,7 @@ export const secretProcedures = {
       if (!current) throw new TRPCError({ code: "NOT_FOUND", message: "Widget source not found" });
       let configuration: unknown;
       if (current.type === "integration") {
-        if (
-          !input.integrationId ||
-          input.baseUrl !== undefined ||
-          input.networkScope !== undefined ||
-          input.secrets.length > 0
-        ) {
+        if (!input.integrationId || input.baseUrl !== undefined || input.secrets.length > 0) {
           throw new TRPCError({ code: "BAD_REQUEST", message: "Integration sources require only an integrationId" });
         }
         configuration = { ...current, integrationId: input.integrationId };
@@ -123,7 +118,6 @@ export const secretProcedures = {
         configuration = {
           ...current,
           baseUrl: input.baseUrl,
-          networkScope: input.networkScope ?? current.networkScope,
         };
       }
       const source = customWidgetSourceSchema.parse(configuration);
@@ -135,7 +129,6 @@ export const secretProcedures = {
         sourceId: input.sourceId,
         integrationId: configuredSource.integrationId,
         baseUrl: configuredSource.baseUrl,
-        networkScope: configuredSource.networkScope,
         configuredSecrets: input.secrets.map(({ kind }) => kind),
       };
     }),
@@ -199,7 +192,7 @@ export const secretProcedures = {
         target = { type: "preview", id: preview.id };
       }
       if (!source) throw new TRPCError({ code: "NOT_FOUND", message: "Widget source not found" });
-      const kinds = [...requiredSecretKinds(getCustomWidgetSourceAuthType(source))];
+      const kinds = [...requiredSecretKinds(source.auth)];
       const request = await createCustomWidgetConfigurationRequest({
         userId: ctx.session.user.id,
         target,
@@ -221,9 +214,7 @@ export const secretProcedures = {
 
   secretClear: permissionRequiredProcedure
     .requiresPermission("admin")
-    .input(
-      z.object({ definitionId: z.string(), sourceId: z.string(), kind: z.enum(["apiKey", "username", "password"]) }),
-    )
+    .input(z.object({ definitionId: z.string(), sourceId: z.string(), kind: customWidgetSecretKindSchema }))
     .mutation(async ({ ctx, input }) => {
       const existing = await ctx.db.query.customWidgetDefinitions.findFirst({
         where: eq(customWidgetDefinitions.id, input.definitionId),

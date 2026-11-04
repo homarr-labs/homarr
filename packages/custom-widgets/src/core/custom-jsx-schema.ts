@@ -11,7 +11,13 @@ import {
   customWidgetSourcesSchema,
 } from "./request-schema";
 import type { CustomJsxRequest } from "./request-schema";
-import { customWidgetSecretKinds } from "./schema-types";
+import {
+  CUSTOM_WIDGET_HEADER_SECRET_KIND_PATTERN,
+  customWidgetSecretKinds,
+  isCustomWidgetHeaderSecretKind,
+} from "./schema-types";
+import type { CustomWidgetHeaderSecretKind } from "./schema-types";
+import { isCustomWidgetHeaderSecretValue } from "./request-header-policy";
 import { getCustomWidgetHttpUrlIssue } from "./url-policy";
 
 export * from "./options-schema";
@@ -51,15 +57,33 @@ export const customJsxTemplateSchema = z
     }),
   );
 
-export const customWidgetSecretInputSchema = z.strictObject({
-  sourceId: customWidgetIdentifierSchema,
-  kind: z.enum(customWidgetSecretKinds),
-  value: z.string().min(1).max(8_192),
-});
+export const customWidgetSecretKindSchema = z.union([
+  z.enum(customWidgetSecretKinds),
+  z
+    .string()
+    .regex(CUSTOM_WIDGET_HEADER_SECRET_KIND_PATTERN)
+    .transform((kind) => kind as CustomWidgetHeaderSecretKind),
+]);
+
+export const customWidgetSecretInputSchema = z
+  .strictObject({
+    sourceId: customWidgetIdentifierSchema,
+    kind: customWidgetSecretKindSchema,
+    value: z.string().min(1).max(8_192),
+  })
+  .superRefine((secret, ctx) => {
+    if (isCustomWidgetHeaderSecretKind(secret.kind) && !isCustomWidgetHeaderSecretValue(secret.value)) {
+      ctx.addIssue({
+        code: "custom",
+        path: ["value"],
+        message: "Authentication header values must use Latin-1 characters without unsupported control characters",
+      });
+    }
+  });
 
 export const customWidgetSecretsInputSchema = z
   .array(customWidgetSecretInputSchema)
-  .max(24)
+  .max(64)
   .superRefine((secrets, ctx) => {
     const identities = new Set<string>();
     secrets.forEach((secret, index) => {

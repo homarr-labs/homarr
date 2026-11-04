@@ -22,6 +22,7 @@ export default async function NamespacesPage({
   }
 
   const context = await getSelectedKubernetesContextAsync(searchParams);
+  if (!context) return <DynamicBreadcrumb />;
   const tResource = await getI18n("kubernetes.cluster.resources");
   const namespaces =
     context.status === "unavailable"

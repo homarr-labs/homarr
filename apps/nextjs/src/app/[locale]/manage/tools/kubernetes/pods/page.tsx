@@ -18,6 +18,7 @@ export default async function PodsPage({ searchParams }: { searchParams: Promise
   }
 
   const context = await getSelectedKubernetesContextAsync(searchParams);
+  if (!context) return <DynamicBreadcrumb />;
   const tResource = await getI18n("kubernetes.cluster.resources");
   const pods =
     context.status === "unavailable" ? [] : await api.kubernetes.pods.getPods({ contextId: context.contextId });

@@ -1,6 +1,6 @@
 ---
 title: "Uptime Kuma"
-description: "Displays monitor uptime statistics, average uptime percentage, and service status counts."
+description: "Displays the live status, heartbeats and uptime of the monitors on an Uptime Kuma status page."
 hide_title: true
 ---
 
@@ -15,11 +15,15 @@ import { uptimeKumaIntegration } from "@site/docs/integrations/uptime-kuma";
 
 <WidgetHeader widget={uptimeKumaWidget} categories={["Monitoring"]} />
 
-This widget displays uptime statistics from your Uptime Kuma status page, including a visual uptime ring, average uptime percentage, and per-status monitor counts. Compact mode shows every configured ring and statistic without dropping them based on widget height.
+This widget shows the monitors of an Uptime Kuma status page: the overall status, each monitor's recent heartbeats, its 24-hour uptime and response time, and pinned incidents or active maintenance.
 
-Advanced view always shows the uptime ring, all status totals, and the complete monitor list with source identity, regardless of compact visibility switches.
+The widget only sees what the status page publishes:
 
-When multiple Uptime Kuma integrations are selected, monitors from healthy sources remain visible if another source fails. A warning indicator identifies each unavailable integration without exposing private request details. If every selected integration fails, the widget reports an error; if cached data remains visible after a later total failure, a stale-data warning is shown.
+- Only monitors in the status page's groups are shown.
+- Certificate expiry is only available when **Show Certificate Expiry** is enabled on the status page.
+- The status page does not publish pause state. Monitors with old heartbeats show **No recent data** and are excluded from average uptime.
+
+When multiple Uptime Kuma integrations are selected, monitors from healthy sources remain visible if another source fails. A warning indicator identifies each unavailable integration. If every selected integration fails, the widget reports an error.
 
 ### Supported Integrations
 
@@ -27,7 +31,7 @@ When multiple Uptime Kuma integrations are selected, monitors from healthy sourc
   items={[
     {
       integration: uptimeKumaIntegration,
-      note: "Displays monitors from the configured status page",
+      note: "Displays the monitors of the configured status page",
     },
   ]}
 />

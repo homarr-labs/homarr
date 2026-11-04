@@ -156,12 +156,14 @@ const getCollapsedVerticalShift = (
     .filter(
       (collapsed) =>
         collapsed.id !== candidate.id &&
-        collapsed.y + collapsed.h <= candidate.y &&
+        collapsed.y < candidate.y &&
         doGridPlacementsOverlapHorizontally(candidate, collapsed),
     )
     .map((collapsed) => ({
       start: collapsed.y + getRequiredPlacement(displayById, collapsed.id).h,
-      end: collapsed.y + collapsed.h,
+      // A container can outgrow its saved footprint and overlap this neighbour.
+      // Only remove the collapsed space above the neighbour's saved row.
+      end: Math.min(collapsed.y + collapsed.h, candidate.y),
     }))
     .toSorted((first, second) => first.start - second.start || first.end - second.end);
 

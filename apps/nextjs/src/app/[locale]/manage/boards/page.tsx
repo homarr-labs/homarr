@@ -7,24 +7,18 @@ import { constructBoardPermissions } from "@homarr/auth/shared";
 import { getI18n } from "@homarr/translation/server";
 
 import { TourTarget } from "~/components/layout/header/tour-target";
-import { ManagePageLayout } from "~/components/manage/manage-page-layout";
 import { NoResults } from "~/components/no-results";
 import { BoardCard } from "./_components/board-card";
-import { CreateBoardButton } from "./_components/create-board-button";
+import { BoardsPageContent } from "./_components/boards-page-content";
 
 export default async function ManageBoardsPage() {
   const t = await getI18n("management.page.board");
   const session = await auth();
   const boards = await api.board.getManageOverview();
-  const canCreateBoards = session?.user.permissions.includes("board-create");
+  const canCreateBoards = session?.user.permissions.includes("board-create") ?? false;
 
   return (
-    <ManagePageLayout title={t("title")}>
-      {canCreateBoards && (
-        <TourTarget id="manage-boards-create">
-          <CreateBoardButton />
-        </TourTarget>
-      )}
+    <BoardsPageContent title={t("title")} canCreateBoards={canCreateBoards}>
       {boards.length === 0 && (
         <NoResults icon={IconLayoutDashboard} title={t("noResults.title")} description={t("noResults.description")} />
       )}
@@ -56,6 +50,6 @@ export default async function ManageBoardsPage() {
           </Grid>
         </TourTarget>
       )}
-    </ManagePageLayout>
+    </BoardsPageContent>
   );
 }

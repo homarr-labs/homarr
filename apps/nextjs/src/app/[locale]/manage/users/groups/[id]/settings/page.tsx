@@ -22,7 +22,10 @@ export default async function GroupPermissionsPage(props: GroupSettingsPageProps
     notFound();
   }
 
-  const group = await api.group.getById({ id: params.id });
+  const [group, availableBoards] = await Promise.all([
+    api.group.getById({ id: params.id }),
+    api.board.getBoardsForGroup({ groupId: params.id }),
+  ]);
   const t = await getI18n("management.page.group.setting.setting");
   const tEntities = await getI18n("common.entity");
 
@@ -36,7 +39,12 @@ export default async function GroupPermissionsPage(props: GroupSettingsPageProps
 
       <Title order={3}>{tEntities("boards")}</Title>
 
-      <GroupHomeBoards homeBoardId={group.homeBoardId} mobileHomeBoardId={group.mobileHomeBoardId} groupId={group.id} />
+      <GroupHomeBoards
+        homeBoardId={group.homeBoardId}
+        mobileHomeBoardId={group.mobileHomeBoardId}
+        groupId={group.id}
+        availableBoards={availableBoards}
+      />
     </Stack>
   );
 }

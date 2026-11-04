@@ -104,6 +104,7 @@ export const statsIntegrationKinds = [
   "coolify",
   "immich",
   "paperlessNgx",
+  "thingport",
   "patchmon",
   "tracearr",
   "speedtestTracker",
@@ -118,6 +119,7 @@ export const statsIntegrationKinds = [
   "archiveTeamWarrior",
   "wud",
   "llamacpp",
+  "wazuh",
   "mock",
 ] as const satisfies readonly IntegrationKind[];
 
@@ -165,6 +167,10 @@ export const widgetIntegrationConfigs = {
   "immich-serverStats": { supportedIntegrations: ["immich", "mock"], maxIntegrations: 1 },
   "immich-albumCarousel": { supportedIntegrations: ["immich", "mock"], maxIntegrations: 1 },
   paperlessNgx: { supportedIntegrations: ["paperlessNgx", "mock"], maxIntegrations: 1 },
+  "thingport-libraryStats": { supportedIntegrations: ["thingport", "mock"], maxIntegrations: 1 },
+  "thingport-models": { supportedIntegrations: ["thingport", "mock"], maxIntegrations: 1 },
+  "thingport-featuredModel": { supportedIntegrations: ["thingport", "mock"], maxIntegrations: 1 },
+  "thingport-activityHeatmap": { supportedIntegrations: ["thingport", "mock"], maxIntegrations: 1 },
   patchmon: { supportedIntegrations: ["patchmon", "mock"], maxIntegrations: 1 },
   bazarr: { supportedIntegrations: ["bazarr", "mock"], maxIntegrations: 1 },
   tracearr: { supportedIntegrations: ["tracearr", "mock"] },
@@ -179,14 +185,7 @@ export const widgetIntegrationConfigs = {
   traefik: { supportedIntegrations: ["traefik", "mock"] },
   wud: { supportedIntegrations: ["wud", "mock"], maxIntegrations: 1 },
   llamacpp: { supportedIntegrations: ["llamacpp", "mock"], maxIntegrations: 1 },
-  wazuhAgents: { supportedIntegrations: ["wazuh", "mock"], maxIntegrations: 1 },
-  wazuhAlerts: { supportedIntegrations: ["wazuh", "mock"], maxIntegrations: 1 },
-  wazuhSummary: { supportedIntegrations: ["wazuh", "mock"], maxIntegrations: 1 },
-  wazuhTimeline: { supportedIntegrations: ["wazuh", "mock"], maxIntegrations: 1 },
-  wazuhTopList: { supportedIntegrations: ["wazuh", "mock"], maxIntegrations: 1 },
-  wazuhVulnerabilities: { supportedIntegrations: ["wazuh", "mock"], maxIntegrations: 1 },
-  wazuhFim: { supportedIntegrations: ["wazuh", "mock"], maxIntegrations: 1 },
-  wazuhAuthFailures: { supportedIntegrations: ["wazuh", "mock"], maxIntegrations: 1 },
+  wazuh: { supportedIntegrations: ["wazuh", "mock"], maxIntegrations: 1 },
 } satisfies Partial<Record<WidgetKind, WidgetIntegrationConfig>>;
 
 export type WidgetKindWithIntegration = keyof typeof widgetIntegrationConfigs;

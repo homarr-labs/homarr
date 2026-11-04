@@ -18,6 +18,7 @@ export default async function SecretsPage({ searchParams }: { searchParams: Prom
   }
 
   const context = await getSelectedKubernetesContextAsync(searchParams);
+  if (!context) return <DynamicBreadcrumb />;
   const tResource = await getI18n("kubernetes.cluster.resources");
   const secrets =
     context.status === "unavailable" ? [] : await api.kubernetes.secrets.getSecrets({ contextId: context.contextId });

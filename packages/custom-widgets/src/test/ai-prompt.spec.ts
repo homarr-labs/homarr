@@ -45,7 +45,6 @@ describe("AI prompt", () => {
     expect(prompt).toContain("never write `=> {` anywhere");
     expect(prompt).toContain('"choicesFrom"');
     expect(prompt).toContain("must not shadow the reserved roots");
-    expect(prompt).toContain('networkScope must be "public", "private", or "loopback"');
     expect(prompt.endsWith(CUSTOM_WIDGET_FINAL_OUTPUT_INSTRUCTION)).toBe(true);
   });
 

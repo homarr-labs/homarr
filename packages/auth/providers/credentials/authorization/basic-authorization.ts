@@ -13,13 +13,14 @@ const logger = createLogger({ module: "basicAuthorization" });
 export const authorizeWithBasicCredentialsAsync = async (
   db: Database,
   credentials: z.infer<typeof userSignInSchema>,
+  ipAddress: string,
 ) => {
   const user = await db.query.users.findFirst({
     where: and(eq(users.name, credentials.name.toLowerCase()), eq(users.provider, "credentials")),
   });
 
   if (!user?.password) {
-    logger.info("User not found", { userName: credentials.name });
+    logger.warn("User not found", { userName: credentials.name, ipAddress });
     return null;
   }
 
@@ -27,7 +28,7 @@ export const authorizeWithBasicCredentialsAsync = async (
   const isValidPassword = await comparePasswordsAsync(credentials.password, user.password);
 
   if (!isValidPassword) {
-    logger.warn("Password for user was incorrect", { userName: user.name });
+    logger.warn("Password for user was incorrect", { userName: user.name, ipAddress });
     return null;
   }
 
