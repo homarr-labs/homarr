@@ -127,7 +127,15 @@ export function InstanceView({
         className={`${classes.instance} ${classes.mini} ${isSingle ? classes.single : ""}`}
         title={instance.integrationName}
       >
-        <Image src={COOLIFY_ICON_URL} alt="Coolify" w={20} h={20} />
+        <Anchor
+          className={actionTargetClasses.root}
+          component={baseUrl ? "a" : "span"}
+          href={baseUrl}
+          target={baseUrl ? "_blank" : undefined}
+          rel={baseUrl ? SAFE_NEW_TAB_REL : undefined}
+        >
+          <Image src={COOLIFY_ICON_URL} alt="Coolify" w={20} h={20} />
+        </Anchor>
         <Text fw={700} fz={20} lh={1} c={summaryColor} aria-label={summaryLabel}>
           {summaryText}
         </Text>
