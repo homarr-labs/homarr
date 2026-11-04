@@ -1,0 +1,19 @@
+packages/translation/src/lang/en.json
+  s_05ef861992d1bd::t_d2624a320a2bea 1415,1461,1467-1469,8912
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "58f4a8092226edf36c581f0e6faf3cfd9f9671cd",
+  "prompts": {},
+  "sessions": {
+    "s_05ef861992d1bd": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1a6e7-d402-7d23-bf4e-544804888af2",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
