@@ -185,7 +185,7 @@ export const onboardRouter = createTRPCRouter({
         listDiscoveredContainersAsync,
         dockerLabels,
         getContainerImageIconFallback,
-        getContainerImageIconPrefix,
+        getContainerImageIconNamePattern,
       } = await import("@homarr/docker");
       const discovery = await listDiscoveredContainersAsync();
       const successfulHosts = discovery.hosts.filter((host) => host.status === "success");
@@ -218,18 +218,20 @@ export const onboardRouter = createTRPCRouter({
         );
       };
 
-      const fallbackPrefixes = new Set(
-        imageCandidates
-          .map((container) => extractContainerImageName(container.Image))
-          .filter((imageName) => !strictIconMatch(imageName))
-          .map(getContainerImageIconPrefix)
-          .filter(Boolean),
-      );
+      const fallbackPatterns = [
+        ...new Set(
+          imageCandidates
+            .map((container) => extractContainerImageName(container.Image))
+            .filter((imageName) => !strictIconMatch(imageName))
+            .map(getContainerImageIconNamePattern)
+            .filter(Boolean),
+        ),
+      ].slice(0, 64);
       const fallbackIcons =
-        fallbackPrefixes.size > 0
+        fallbackPatterns.length > 0
           ? await ctx.db.query.icons.findMany({
               columns: { name: true, url: true },
-              where: or(...[...fallbackPrefixes].map((prefix) => like(icons.name, `${prefix}%`))),
+              where: or(...fallbackPatterns.map((pattern) => like(icons.name, pattern))),
             })
           : [];
       const discoveredIntegrations: DiscoveredIntegration[] = [];

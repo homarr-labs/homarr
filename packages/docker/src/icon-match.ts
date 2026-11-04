@@ -1,7 +1,9 @@
 import { getImageMatchRank, normalizeImageName } from "@homarr/common";
 
-export const getContainerImageIconPrefix = (imageName: string) =>
-  normalizeImageName(imageName).replaceAll(" ", "").slice(0, 3);
+export const getContainerImageIconNamePattern = (imageName: string) => {
+  const prefix = normalizeImageName(imageName).replaceAll(" ", "").slice(0, 3);
+  return prefix && `${[...prefix].join("%")}%`;
+};
 
 export const getContainerImageIconFallback = <TIcon extends { name: string }>(imageName: string, icons: TIcon[]) => {
   const tokens = imageName.split(/[-_.]+/);

@@ -13,7 +13,7 @@ import {
   dockerLabels,
   DockerSingleton,
   getContainerImageIconFallback,
-  getContainerImageIconPrefix,
+  getContainerImageIconNamePattern,
   resolveContainerIcon,
 } from "@homarr/docker";
 
@@ -451,20 +451,20 @@ export async function getContainersWithStatsAsync(
       : [];
 
   const degradedEndpointIds = new Set<string>();
-  const fallbackPrefixes = new Set(
+  const fallbackPatterns = new Set(
     containers
       .filter(
         (container) =>
           !resolveContainerIcon(container.Labels) && !bestMatch(extractImage(container), dbIcons, (icon) => icon.name),
       )
-      .map((container) => getContainerImageIconPrefix(extractImage(container)))
+      .map((container) => getContainerImageIconNamePattern(extractImage(container)))
       .filter(Boolean),
   );
   const fallbackIcons =
-    fallbackPrefixes.size > 0
+    fallbackPatterns.size > 0
       ? await db.query.icons.findMany({
           columns: { name: true, url: true },
-          where: or(...[...fallbackPrefixes].map((prefix) => like(icons.name, `${prefix}%`))),
+          where: or(...[...fallbackPatterns].map((pattern) => like(icons.name, pattern))),
         })
       : [];
   const containerStatsPromises = containers.map(async (container) => {
