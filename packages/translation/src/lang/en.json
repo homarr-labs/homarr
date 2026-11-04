@@ -8808,6 +8808,7 @@
       "imageInput": "Accepts image input",
       "thinking": "Thinking mode",
       "reasoning": {
+        "default": "Default",
         "auto": "Auto",
         "none": "Off",
         "minimal": "Minimal",
