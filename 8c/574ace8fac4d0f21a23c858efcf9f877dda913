@@ -1,0 +1,16 @@
+packages/request-handler/src/release-providers/docker-hub.ts
+  h_d6e478ca18e517 4,14-19,22,36,48,59-68,73
+packages/widgets/src/bookmarks/bookmarks-widget.tsx
+  h_d6e478ca18e517 4,22,529,531-534
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "8c574ace8fac4d0f21a23c858efcf9f877dda913",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
