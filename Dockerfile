@@ -1,4 +1,4 @@
-# syntax=docker/dockerfile:1.25
+# syntax=docker/dockerfile:1.28@sha256:bb22d9815c728170f72750f4e5b0d672e06176142e1d602c7e66c050100b7e5b
 
 FROM oven/bun:1.4.4-debian@sha256:93d5032fe06d163427822dc1598f420363759bb18155c9cc90eb1be05a64a19e AS bun-tool
 
@@ -17,7 +17,7 @@ COPY --from=bun-tool /usr/local/bin/bun /usr/local/bin/bun
 COPY bun.lock bunfig.toml package.json ./
 COPY patches ./patches
 COPY --parents ./apps/*/package.json ./packages/*/package.json ./tooling/*/package.json ./
-RUN --mount=type=cache,id=homarr-bun-${TARGETPLATFORM}-glibc-2.41-node-24.18.0-bun-1.4.3,target=/root/.bun/install/cache,sharing=locked \
+RUN --mount=type=cache,id=homarr-bun-${TARGETPLATFORM}-glibc-2.41-node-24.22.2-bun-1.4.4,target=/root/.bun/install/cache,sharing=locked \
     npm_config_nodedir=/usr/local bun install --frozen-lockfile --concurrent-scripts=1
 
 # Runtime configuration changes do not invalidate the application build.
@@ -70,5 +70,6 @@ ENV AUTH_PROVIDERS='credentials'
 ENV REDIS_IS_EXTERNAL='false'
 ENV NODE_ENV='production'
 EXPOSE 7575
+HEALTHCHECK --interval=30s --timeout=5s --start-period=60s --retries=3 CMD ["node", "-e", "fetch('http://127.0.0.1:7575/api/health/live', { method: 'HEAD', signal: AbortSignal.timeout(4000) }).then((response) => { process.exitCode = Number(!response.ok); }).catch((error) => { console.error(error); process.exitCode = 1; })"]
 ENTRYPOINT ["/app/entrypoint.sh"]
 CMD ["sh", "run.sh"]
