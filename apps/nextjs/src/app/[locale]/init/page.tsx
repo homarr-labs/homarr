@@ -29,19 +29,21 @@ export default async function InitPage() {
   const onboardingClaim = getOnboardingClaimTokenFromCookieHeader(requestHeaders.get("cookie"));
   const canReadSetupContext =
     canConfigurePrivileged || (!firstUser && (await isOnboardingClaimValidAsync(db, onboardingClaim)));
-  const [defaultGroup, availableBoards] = canReadSetupContext
-    ? await Promise.all([
-        db.query.groups.findFirst({
-          where: eq(groups.name, everyoneGroup),
-          columns: { homeBoardId: true },
-        }),
-        db.query.boards.findMany({ columns: { id: true, name: true, primaryColor: true, secondaryColor: true } }),
-      ])
-    : [undefined, []];
+  const currentStep = normalizeOnboardingStep(state?.step);
+  const needsBoardContext = currentStep === "setup" || currentStep === "finish";
+  const [defaultGroup, availableBoards] =
+    canReadSetupContext && needsBoardContext
+      ? await Promise.all([
+          db.query.groups.findFirst({
+            where: eq(groups.name, everyoneGroup),
+            columns: { homeBoardId: true },
+          }),
+          db.query.boards.findMany({ columns: { id: true, name: true, primaryColor: true, secondaryColor: true } }),
+        ])
+      : [undefined, []];
   const homeBoardId = defaultGroup?.homeBoardId;
   const homeBoard = availableBoards.find((board) => board.id === homeBoardId);
   const initialBoard = homeBoard ?? (availableBoards.length === 1 ? availableBoards[0] : null);
-  const currentStep = normalizeOnboardingStep(state?.step);
   const databaseDriver = dbEnv.DRIVER === "better-sqlite3" ? "sqlite" : "postgresql";
   const { workshopApiUrl, workshopWebUrl } = canReadSetupContext
     ? resolveHomarrUrlConfig({
@@ -70,8 +72,16 @@ export default async function InitPage() {
         initialBoard: initialBoard ?? null,
         availableBoards: availableBoards.map(({ id, name }) => ({ id, name })),
       }}
-      sqliteRestore={databaseDriver === "sqlite" ? <DatabaseRestoreFlow variant="standalone" /> : undefined}
-      assistantConfiguration={canConfigurePrivileged ? <AssistantConfiguration refreshAfterSave={false} /> : undefined}
+      sqliteRestore={
+        currentStep === "start" && databaseDriver === "sqlite" ? (
+          <DatabaseRestoreFlow variant="standalone" />
+        ) : undefined
+      }
+      assistantConfiguration={
+        currentStep === "setup" && canConfigurePrivileged ? (
+          <AssistantConfiguration refreshAfterSave={false} />
+        ) : undefined
+      }
     />
   );
 }

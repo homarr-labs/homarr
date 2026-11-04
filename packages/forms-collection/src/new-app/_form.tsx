@@ -143,7 +143,7 @@ export const AppForm = ({
         />
         <Textarea
           {...form.getInputProps("description")}
-          label={tApp("field.description.label")}
+          label={tCommon("field.description")}
           autosize
           minRows={2}
           resize="vertical"

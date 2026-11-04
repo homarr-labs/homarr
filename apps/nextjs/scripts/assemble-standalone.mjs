@@ -1,11 +1,13 @@
-import { copyFileSync, cpSync, existsSync, mkdirSync, readFileSync, rmSync } from "node:fs";
+import { constants, copyFileSync, cpSync, existsSync, mkdirSync, readFileSync, rmSync } from "node:fs";
 import { join } from "node:path";
 import {
   appDirectory,
   collectFiles,
   compiled,
   copyFiles,
+  createDependencyManifest,
   dependencies,
+  dependencyManifest,
   isCompiledFile,
   standalone,
 } from "./standalone-artifact.mjs";
@@ -14,9 +16,17 @@ import {
 if (!existsSync(join(dependencies, appDirectory, "package.json"))) {
   throw new Error("Standalone dependencies are missing; run the production build through Turbo");
 }
+const files = collectFiles();
+if (
+  readFileSync(dependencyManifest, "utf8") !==
+  JSON.stringify(createDependencyManifest(files.filter((file) => !isCompiledFile(file))))
+) {
+  throw new Error("Standalone dependencies differ from compilation; reinstall dependencies or rebuild with --force");
+}
 rmSync(standalone, { recursive: true, force: true });
-cpSync(dependencies, standalone, { recursive: true, verbatimSymlinks: true });
-copyFiles(collectFiles().filter(isCompiledFile), standalone);
+const copyOptions = { recursive: true, verbatimSymlinks: true, mode: constants.COPYFILE_FICLONE };
+cpSync(dependencies, standalone, copyOptions);
+copyFiles(files.filter(isCompiledFile), standalone);
 const application = join(standalone, appDirectory);
 mkdirSync(application, { recursive: true });
 copyFileSync(join(compiled, "standalone-server.js"), join(application, "server.js"));
@@ -26,14 +36,13 @@ for (const directory of ["app", "pages"]) {
   const source = join(compiled, "server", directory);
   if (existsSync(source)) {
     cpSync(source, join(application, ".next/server", directory), {
-      recursive: true,
+      ...copyOptions,
       force: true,
-      verbatimSymlinks: true,
     });
   }
 }
-cpSync(join(compiled, "static"), join(application, ".next/static"), { recursive: true, verbatimSymlinks: true });
-cpSync("public", join(application, "public"), { recursive: true, verbatimSymlinks: true });
+cpSync(join(compiled, "static"), join(application, ".next/static"), copyOptions);
+cpSync("public", join(application, "public"), copyOptions);
 if (readFileSync(join(compiled, "BUILD_ID"), "utf8") !== readFileSync(join(application, ".next/BUILD_ID"), "utf8")) {
   throw new Error("Standalone build ID differs from the compiled build");
 }

@@ -65,7 +65,6 @@
         "themeAuto": "Sistēmas",
         "themeLight": "Gaišs",
         "themeDark": "Tumšs",
-        "serverOriginHelp": "Homarr izmanto šo adresi, lai automātiski aizpildītu atklāto pakalpojumu vietrāžus. Jūs joprojām varat rediģēt katru pakalpojumu atsevišķi.",
         "serverDescription": "Tas ir īsceļš, nevis ierobežojums. Katru atklāto pakalpojumu joprojām var rediģēt.",
         "serverOrigin": "Domēns, IP adrese vai reversā starpniekservera ceļš",
         "serverOriginDescription": "Piemēri: home.lan, 192.168.1.10 vai https://home.example.com/services. Tālāk izvēlieties, kā tiks pievienots katrs pakalpojums.",
@@ -102,6 +101,8 @@
       "connect": {
         "title": "Savienojiet to, kas padara paneli noderīgu",
         "description": "Atlasiet vairākus pakalpojumus vienlaikus. Docker etiķetēm ir prioritāte, attēlu atbilstība aizpilda trūkstošo, un katru vietrādi un akreditācijas datus var pārskatīt.",
+        "confirmServerAddress": "",
+        "serverAddressReviewed": "",
         "discoveredIntegrations": "Atklātās integrācijas instances ({count})",
         "detectedIntegrationLabel": "Importēt {name}, kas atpazīts kā {kind}",
         "detectedAppLabel": "Importēt atklāto lietotni {name}",
@@ -126,7 +127,8 @@
         "needsConfiguration": "Nepieciešama konfigurēšana",
         "tested": "Savienojums pārbaudīts",
         "testFailed": "Savienojuma pārbaude neizdevās",
-        "incompleteConfirmation": "Nepabeigtās integrācijas tiks izlaistas. Vai turpināt bez tām?"
+        "incompleteConfirmation": "Nepabeigtās integrācijas tiks izlaistas. Vai turpināt bez tām?",
+        "skipIncomplete": ""
       },
       "board": {
         "title": "Veidojiet dēli pirms tā izveides",
@@ -142,13 +144,7 @@
         "secondaryColor": "Sekundārā krāsa",
         "resetColors": "Atiestatīt krāsas",
         "radius": "Logrīka stūru noapaļojums",
-        "radiusOptions": {
-          "xs": "Cieši",
-          "sm": "Maigi",
-          "md": "Līdzsvaroti",
-          "lg": "Noapaļoti",
-          "xl": "Mīksti"
-        },
+        "radiusOptions": {},
         "columns": "Tāfeles kolonnas",
         "columnsDescription": "Kolonnas nosaka horizontālo režģi, ko izmanto vienumu izmēra un novietojuma noteikšanai. Lielākajai daļai lietotāju pietiek ar 12.",
         "columnCount": "{count, plural, zero {# kolonnas} one {# kolonna} other {# kolonnas}}",
@@ -192,7 +188,6 @@
           "loginRequired": "Pēc iestatīšanas piesakieties kā administrators, lai izveidotu API atslēgu.",
           "configuration": "Klienta konfigurācija",
           "copy": "Kopēt konfigurāciju",
-          "copied": "Nokopēts",
           "advanced": "Atvērt MCP rīkus, atļaujas un iestatīšanas informāciju"
         }
       },
@@ -804,9 +799,7 @@
         "examples": "Atbalstīto saišu piemēri",
         "requiresHandler": "Pielāgotiem protokoliem ir nepieciešama saistīta lietotne jūsu ierīcē."
       },
-      "description": {
-        "label": "Apraksts"
-      },
+      "description": {},
       "useDifferentUrlForPing": {
         "checkbox": {
           "label": "Izmantot citu URL ping pārbaudei",
@@ -858,7 +851,6 @@
       "source": "API avots: {name}",
       "baseUrl": "Servera URL",
       "networkScope": "Tīkla piekļuve",
-      "save": "Saglabāt API konfigurāciju",
       "expires": "Šis vienreizējais pieprasījums beidzas {time}."
     },
     "page": {
@@ -889,13 +881,11 @@
       "pasteImportHint": "Ielīmējiet pilnu pielāgotā logrīka JSON, izmantojot Ctrl+V vai Command+V",
       "delete": "Dzēst pielāgoto logrīku",
       "deleteConfirm": "Vai tiešām vēlaties dzēst \"{name}\"? Šo darbību nevar atsaukt.",
-      "export": "Eksportēt",
       "duplicate": "Dublēt",
       "aiPrompt": "Veidot ar MI",
       "copyAiPrompt": "Kopēt MI uzvedni",
       "enable": "Iespējot",
       "disable": "Atspējot",
-      "menu": "Darbības",
       "downloadSkill": "Skatīt pielāgotā logrīka prasmes",
       "publishWorkshop": "Publicēt darbnīcā",
       "migrate": "Migrēt pielāgoto logrīku",
@@ -909,12 +899,9 @@
     "sourceSetupDialog": {
       "title": "Konfigurēt logrīka avotus",
       "description": "Pārskatiet, ar kurieni šis logrīks izveido savienojumu, un pievienojiet vai aizstājiet tā šifrētos akreditācijas datus.",
-      "credentialsRequired": "Pieprasījumi neizdosies, kamēr nebūs pievienoti nepieciešamie akreditācijas dati.",
-      "save": "Saglabāt konfigurāciju"
+      "credentialsRequired": "Pieprasījumi neizdosies, kamēr nebūs pievienoti nepieciešamie akreditācijas dati."
     },
-    "field": {
-      "description": "Apraksts"
-    },
+    "field": {},
     "editor": {
       "errorBoundary": {
         "title": "Radās kļūda"
@@ -924,7 +911,6 @@
         "format": "Formatēt",
         "insertStarter": "Ievietot sākuma veidni",
         "redo": "Atkārtot",
-        "copied": "Nokopēts",
         "schema": "Shēma"
       },
       "reference": {
@@ -1005,7 +991,6 @@
         "manifestFilename": "widget.json",
         "request": "Pieprasījums {count, number}",
         "requestId": "Pieprasījuma ID",
-        "type": "Lejupielādes klienta tips",
         "method": "Metode",
         "source": "API avots",
         "run": "Palaist",
@@ -1042,7 +1027,6 @@
         "optionName": "Opcijas nosaukums",
         "label": "Etiķete",
         "control": "Vadīkla",
-        "description": "Apraksts",
         "default": "Noklusējums",
         "optionDetails": "Ierobežojumi un dinamiskās izvēles",
         "minimum": "Minimums",
@@ -1079,7 +1063,6 @@
         "credentialRemovedDescription": "Saglabātā vērtība tika dzēsta.",
         "primary": "Primārais API",
         "id": "Avota ID",
-        "name": "Darba vārds",
         "baseUrl": "Bāzes URL",
         "baseUrlError": {
           "invalid": "Ievadiet pilnu URL.",
@@ -1096,7 +1079,6 @@
         "remove": "Noņemt avotu un tā pieprasījumus",
         "advanced": "Papildu",
         "add": "Pievienot citu API avotu",
-        "sourceType": "Integrācija",
         "manualSource": "HTTP API",
         "existingIntegration": "Esoša integrācija",
         "integrationType": "Integrācijas veids",
@@ -1230,7 +1212,6 @@
       "migrationTitle": "Pārskatīt migrēto v2 aizstājēju",
       "migrationDescription": "Pārskatiet un apstipriniet šo ģenerēto v2 definīciju. Apstiprināšana atomiski aizstāj saglabāto v1 ierakstu, vienlaikus saglabājot esošos paneļa izvietojumus, kas saistīti ar to pašu logrīka ID.",
       "fileLabel": "Izvēlieties pielāgotā logrīka JSON failu",
-      "name": "Darba vārds",
       "origin": "Bāzes izcelsme",
       "authentication": "Autentifikācija",
       "networkScope": "Tīkla tvērums",
@@ -1250,8 +1231,6 @@
         "title": "Šis logrīks var mainīt attālos datus",
         "description": "Pēc importēšanas pārskatiet katru nosaukto darbību, mantotos akreditācijas datus un destruktīvo darbību apstiprinājumus. Noslēpumi failā nav iekļauti."
       },
-      "cancel": "Atcelt importēšanu",
-      "confirm": "Importēt logrīku",
       "confirmMigration": "Apstiprināt v2 aizstāšanu"
     },
     "secret": {
@@ -1315,7 +1294,6 @@
     "closeScreenshotViewer": "Aizvērt ekrānuzņēmumu skatītāju",
     "technicalDetails": "Tehniskā informācija",
     "sourceCode": "Workshop ieraksts",
-    "export": "Eksportēt",
     "report": "Ziņot",
     "reportTitle": "Ziņot par iesniegumu",
     "reportReason": "Iemesls",
@@ -1346,8 +1324,6 @@
       "viewSubmission": "Skatīt un pārvaldīt iesniegumu",
       "done": "Pabeigts",
       "signInHint": "Pierakstieties, lai publicētu ar savu Workshop identitāti.",
-      "titleField": "Virsraksts",
-      "descriptionField": "Apraksts",
       "screenshots": "Ekrānuzņēmumi",
       "screenshotsDescription": "Līdz pieciem PNG, JPEG vai WebP attēliem",
       "screenshotsPlaceholder": "Izvēlieties ekrānuzņēmumus",
@@ -1613,11 +1589,9 @@
             },
             "notification": {
               "success": {
-                "title": "Uzticams sertifikāts",
                 "message": "Sertifikāts pievienots uzticamo sertifikātu sarakstam"
               },
               "error": {
-                "title": "Neizdevās uzticēties sertifikātam",
                 "message": "Neizdevās pievienot sertifikātu uzticamo sertifikātu sarakstam"
               }
             }
@@ -1838,9 +1812,7 @@
     "search": "Atrast multividi",
     "field": {
       "preview": "Priekšskatījums",
-      "size": "Lielums",
-      "creator": "Izveidotājs",
-      "actions": "Vadīklas"
+      "creator": "Izveidotājs"
     },
     "action": {
       "upload": {
@@ -1918,7 +1890,8 @@
       "clearSearch": "Notīrīt meklēšanu",
       "copy": "Kopēt",
       "copied": "Nokopēts",
-      "refresh": "Atsvaidzināt"
+      "refresh": "Atsvaidzināt",
+      "export": "Eksportēt"
     },
     "hidden": "",
     "pagination": {
@@ -1930,6 +1903,8 @@
     "here": "šeit",
     "serviceUrlTemplate": {
       "serverTitle": "Parastā servera adrese",
+      "description": "",
+      "example": "",
       "urlModeLabel": "Pakalpojuma adreses shēma",
       "hostPort": "Tas pats resursdators, citi porti",
       "subdomain": "Viens apakšdomēns katram pakalpojumam",
@@ -2063,7 +2038,18 @@
     "total": "Kopā",
     "filesystemUsage": "{count, plural, zero {Rādīt lietojumu # failu sistēmai} one {Rādīt lietojumu # failu sistēmai} other {Rādīt lietojumu # failu sistēmām}}",
     "field": {
-      "name": "Darba vārds"
+      "name": "Vārds",
+      "state": "Stāvoklis",
+      "size": "Lielums",
+      "actions": "Darbības",
+      "source": "Avots",
+      "title": "Tituls",
+      "description": "Apraksts",
+      "created": "Izveidots",
+      "namespace": "Nosaukumvieta",
+      "status": "Statuss",
+      "architecture": "Arhitektūra",
+      "type": "Tips"
     },
     "label": {
       "new": "Jauns"
@@ -2081,6 +2067,15 @@
       "searchEngines": "Meklētājprogrammas",
       "tasks": "Uzdevumi",
       "users": "Lietotāji"
+    },
+    "cornerStyle": {
+      "options": {
+        "md": "Līdzsvarots",
+        "lg": "Noapaļots",
+        "xs": "Ciešs",
+        "sm": "Smalks",
+        "xl": "Maigs"
+      }
     }
   },
   "section": {
@@ -2118,9 +2113,7 @@
         "collapse": "Sakļaut"
       },
       "option": {
-        "title": {
-          "label": "Virsraksts"
-        },
+        "title": {},
         "customCssClasses": {
           "label": "Pielāgotas CSS klases"
         },
@@ -2144,8 +2137,7 @@
       "label": {
         "settings": "Iestatījumi",
         "settingsFor": "Iestatījumi: {name}",
-        "options": "Opcijas",
-        "actions": "Darbības"
+        "options": "Opcijas"
       },
       "status": {
         "success": "Labi",
@@ -2198,7 +2190,6 @@
     "selection": {
       "summary": "{count, plural, zero {# atlasītu vienumu} one {# atlasīts vienums} other {# atlasīti vienumi}}",
       "selected": "{count, plural, zero {# atlasītu} one {# atlasīts} other {# atlasīti}}",
-      "copy": "Kopēt",
       "copied": "{count, plural, zero {# vienumu nokopēts starpliktuvē} one {# vienums nokopēts starpliktuvē} other {# vienumi nokopēti starpliktuvē}}",
       "copyError": "Atlasītos vienumus neizdevās nokopēt. Iespējams, pārlūkprogramma neļauj piekļūt starpliktuvei.",
       "paste": "Ielīmēt",
@@ -2210,7 +2201,6 @@
       "removed": "{count, plural, zero {# vienumu noņemts} one {# vienums noņemts} other {# vienumi noņemti}}",
       "move": "Pārvietot",
       "moveTo": "Pārvietot atlasītos vienumus",
-      "delete": "Dzēst",
       "clear": "Notīrīt atlasi",
       "clearShortcut": "Notīrīt atlasi (Escape)",
       "saveErrorTitle": "Neizdevās atjaunināt vienumus",
@@ -2286,9 +2276,7 @@
           "label": "Integrācijas",
           "removeLabel": "Noņemt {name} integrāciju"
         },
-        "title": {
-          "label": "Tituls"
-        },
+        "title": {},
         "customCssClasses": {
           "label": "Pielāgotas css klases"
         },
@@ -3501,7 +3489,6 @@
         },
         "table": {
           "header": {
-            "name": "Vārds",
             "node": "Mezgls"
           }
         }
@@ -3531,8 +3518,6 @@
         },
         "defaultSort": {
           "option": {
-            "name": "Vārds",
-            "state": "Stāvoklis",
             "cpuUsage": "CPU lietojums",
             "memoryUsage": "Atmiņas lietojums"
           }
@@ -3943,9 +3928,7 @@
       "items": {
         "currentlyPlaying": "Pašlaik atskaņo",
         "user": "",
-        "name": "Vārds",
         "id": "ID",
-        "status": "Statuss",
         "directPlay": "Tiešā atskaņošana",
         "directStream": "Tiešā straume",
         "transcodeVideo": "Video transkodēšana",
@@ -4440,38 +4423,29 @@
           "columnTitle": "Vadīklas"
         },
         "added": {
-          "columnTitle": "",
-          "detailsTitle": "Pievienošanas datums"
+          "columnTitle": "Pievienošanas datums"
         },
         "category": {
-          "columnTitle": "Papildu",
-          "detailsTitle": "Kategorijas (vai papildu informācija)"
+          "columnTitle": "Papildu"
         },
         "downSpeed": {
-          "columnTitle": "Lejupielāde",
-          "detailsTitle": "Lejupielādes Ātrums"
+          "columnTitle": "Lejupielāde"
         },
         "index": {
           "columnTitle": "#",
           "detailsTitle": "Pašreizējais klienta indekss"
         },
         "id": {
-          "columnTitle": "Vienuma ID",
-          "detailsTitle": "Vienuma ID"
+          "columnTitle": "Vienuma ID"
         },
-        "integration": {
-          "columnTitle": "Integrācija"
-        },
-        "name": {
-          "columnTitle": "Darba vārds"
-        },
+        "integration": {},
+        "name": {},
         "progress": {
           "columnTitle": "Norise",
           "detailsTitle": "Lejupielādes progress"
         },
         "ratio": {
-          "columnTitle": "Attiecība",
-          "detailsTitle": "Torrenta attiecība (saņemts/nosūtīts)"
+          "columnTitle": "Attiecība"
         },
         "received": {
           "columnTitle": "Kopā lejupielād.",
@@ -4481,26 +4455,16 @@
           "columnTitle": "Augšupielādes ātrums",
           "detailsTitle": "Kopā augšupielādēts"
         },
-        "size": {
-          "columnTitle": "Faila lielums",
-          "detailsTitle": "Atlasīto vienumu/failu kopējais lielums"
-        },
-        "state": {
-          "columnTitle": "Stāvoklis",
-          "detailsTitle": "Darba stāvoklis"
-        },
+        "size": {},
+        "state": {},
         "time": {
-          "columnTitle": "Pabeigšanas laiks",
-          "detailsTitle": "Laiks kopš pabeigšanas/līdz pabeigšanai",
-          "eta": "Paredzamais pabeigšanas laiks"
+          "columnTitle": "Pabeigšanas laiks"
         },
         "type": {
-          "columnTitle": "Tips",
           "detailsTitle": "Lejupielādes klienta tips"
         },
         "upSpeed": {
-          "columnTitle": "Augšupielāde",
-          "detailsTitle": "Augšupielādes ātrums"
+          "columnTitle": "Augšupielāde"
         }
       },
       "states": {
@@ -4689,9 +4653,7 @@
           }
         },
         "queue": {
-          "table": {
-            "size": "Lielums"
-          }
+          "table": {}
         },
         "common": {
           "empty": "Tukšs",
@@ -4797,10 +4759,6 @@
           "label": "",
           "description": ""
         },
-        "collapsedSections": {
-          "label": "",
-          "description": ""
-        },
         "newReleaseWithin": {
           "label": "Jauns laidiens pēdējo",
           "description": "Lietošanas piemērs: 1w (1 nedēļa), 10M (10 mēneši). Pieņemtie mērvienību tipi: h (stundas), d (dienas), w (nedēļas), M (mēneši), y (gadi). Atstājiet tukšu, lai neizceltu jaunos laidienus.",
@@ -4859,9 +4817,7 @@
             "label": "Identifikators",
             "placeholder": "Vārds vai īpašnieks/vārds"
           },
-          "name": {
-            "label": "Vārds"
-          },
+          "name": {},
           "excludePrereleases": {
             "label": "",
             "description": ""
@@ -5005,7 +4961,11 @@
       "runningVersions": "",
       "upToDate": "",
       "updateAvailable": "",
-      "unknownStatus": "Nezināms"
+      "unknownStatus": "Nezināms",
+      "error": {
+        "collapsedSaveTitle": "",
+        "collapsedSaveMessage": ""
+      }
     },
     "networkControllerSummary": {
       "advanced": {
@@ -5162,7 +5122,6 @@
       "download": "Lejupielāde",
       "upload": "Augšupielāde",
       "ping": "Ping",
-      "status": "Statuss",
       "avgDownload": "Vid. lejupielāde",
       "avgUpload": "Vid. augšupielāde",
       "avgPing": "Vid. ping",
@@ -5470,7 +5429,6 @@
         "actionsDisabledEditMode": "Darbības ir atspējotas, kamēr panelis ir rediģēšanas režīmā.",
         "widgetItemUnavailable": "Šis logrīka elements nav pieejams.",
         "toggle": "Pārslēgt",
-        "copied": "Nokopēts",
         "confirmDelete": "Apstipriniet šo neatgriezenisko darbību."
       },
       "option": {
@@ -5511,6 +5469,9 @@
       "name": "Beszel sistēmas (Tabula)",
       "description": "Tabulas skats visām Beszel uzraudzītajām sistēmām ar kārtojamām kolonnām un statusa indikatoriem",
       "option": {
+        "fahrenheit": {
+          "label": ""
+        },
         "sortBy": {
           "label": "Kārtot pēc"
         },
@@ -5525,7 +5486,12 @@
     },
     "beszelSystemGrid": {
       "name": "Beszel sistēmas (Režģis)",
-      "description": "Karšu režģa skats visām Beszel uzraudzītajām sistēmām ar reāllaika metrikām"
+      "description": "Karšu režģa skats visām Beszel uzraudzītajām sistēmām ar reāllaika metrikām",
+      "option": {
+        "fahrenheit": {
+          "label": ""
+        }
+      }
     },
     "beszelAlerts": {
       "name": "Beszel brīdinājumi",
@@ -5739,7 +5705,6 @@
       },
       "metric": {
         "system": "Sistēma",
-        "source": "Integrācija",
         "hostname": "Saimniekdatora nosaukums",
         "cpuModel": "CPU modelis",
         "cores": "Kodoli",
@@ -6429,13 +6394,7 @@
       "itemRadius": {
         "label": "Vienuma rādiuss",
         "description": "Maina elementu noapaļojumu jūsu dēlī",
-        "option": {
-          "xs": "Ļoti mazs",
-          "sm": "Mazs",
-          "md": "Vidējs",
-          "lg": "Liels",
-          "xl": "Ļoti liels"
-        }
+        "option": {}
       },
       "isPublic": {
         "label": "Publisks",
@@ -7067,13 +7026,7 @@
             },
             "defaultRadius": {
               "label": "Stūru stils",
-              "options": {
-                "xs": "Ciešs",
-                "sm": "Smalks",
-                "md": "Līdzsvarots",
-                "lg": "Noapaļots",
-                "xl": "Maigs"
-              }
+              "options": {}
             },
             "customCss": {
               "label": "Globāls pielāgots CSS",
@@ -7095,7 +7048,6 @@
               "greetingDefault": "Noklusējuma sveiciens",
               "boardColorLocked": "Paneļa krāsa bloķēta",
               "boardColorFlexible": "Paneļu krāsas atļautas",
-              "appName": "Darba vārds",
               "logo": "Logotips",
               "greeting": "Sveiciens",
               "on": "Ieslēgts",
@@ -7230,6 +7182,7 @@
             "model": {
               "title": "Modelis",
               "description": "Atlasiet atrastu modeli vai ievadiet precīzu galapunkta modeļa ID.",
+              "save": "",
               "placeholder": "Modeļa ID",
               "refresh": "Atsvaidzināt modeļus",
               "chooseModel": "Izvēlieties modeli, kas tiks izmantots jaunām sarunām.",
@@ -7322,9 +7275,7 @@
             "lastExecution": {
               "label": "Pēdējā izpilde"
             },
-            "actions": {
-              "label": "Darbības"
-            }
+            "actions": {}
           },
           "table": {
             "search": "Meklēt {count} uzdevumus..."
@@ -7388,9 +7339,7 @@
               },
               "table": {
                 "header": {
-                  "createdBy": "Izveidoja",
-                  "source": "Integrācija",
-                  "actions": "Darbības"
+                  "createdBy": "Izveidoja"
                 }
               },
               "provenance": {
@@ -7683,7 +7632,6 @@
     },
     "field": {
       "state": {
-        "label": "Stāvoklis",
         "option": {
           "created": "Izveidots",
           "running": "Darbojas",
@@ -7710,7 +7658,6 @@
       }
     },
     "action": {
-      "title": "Darbības",
       "logs": {
         "label": "Skatīt žurnālus",
         "page": {
@@ -7948,27 +7895,13 @@
       "internalServerError": "Neizdevās iegūt Kubernetes datus"
     },
     "field": {
-      "name": {
-        "label": "Darba vārds"
-      },
-      "namespace": {
-        "label": "Nosaukumvieta"
-      },
-      "creationTimestamp": {
-        "label": "Izveidots"
-      },
-      "state": {
-        "label": "Darba stāvoklis"
-      },
-      "status": {
-        "label": "Statuss"
-      },
-      "type": {
-        "label": "Lejupielādes klienta tips"
-      },
-      "architecture": {
-        "label": "Arhitektūra"
-      }
+      "name": {},
+      "namespace": {},
+      "creationTimestamp": {},
+      "state": {},
+      "status": {},
+      "type": {},
+      "architecture": {}
     }
   },
   "permission": {
@@ -7995,10 +7928,7 @@
         "label": "Atļauja"
       }
     },
-    "action": {
-      "saveUser": "Saglabāt lietotāja atļauju",
-      "saveGroup": "Saglabāt grupas atļauju"
-    }
+    "action": {}
   },
   "navigationStructure": {
     "manage": {
@@ -8109,8 +8039,7 @@
       "resultsAriaLabel": "{mode} rezultāti",
       "footer": {
         "navigate": "Navigēt",
-        "open": "Atvērt",
-        "close": "Aizvērt"
+        "open": "Atvērt"
       }
     },
     "error": {
@@ -8540,9 +8469,7 @@
         "urlTemplate": {
           "label": "URL meklēšanas veidne"
         },
-        "description": {
-          "label": "Apraksts"
-        }
+        "description": {}
       },
       "page": {
         "list": {
@@ -8611,8 +8538,7 @@
             "table": {
               "header": {
                 "season": "Sezona",
-                "episodes": "Sērijas",
-                "status": "Statuss"
+                "episodes": "Sērijas"
               },
               "status": {
                 "requested": "Pieprasīts"
@@ -9121,7 +9047,6 @@
       "cssDescription": "Rediģējiet visu stilu lapu. Esošie noteikumi tiek saglabāti, ja vien tie šeit netiek noņemti.",
       "cssCharacters": "{count} no 16384 rakstzīmēm",
       "copyCss": "Kopēt CSS",
-      "copied": "Nokopēts",
       "restoreCss": "Atjaunot pašreizējo CSS",
       "remoteCssTitle": "Šis CSS ielādē attālu resursu",
       "remoteCssDescription": "Importētās stilu lapas un attālie URL, ielādējot paneli, sazinās ar citu serveri. Pirms turpināšanas tos pārskatiet."

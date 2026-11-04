@@ -35,7 +35,7 @@ export const BackupPreviewPanel = ({ analysis }: BackupPreviewPanelProps) => {
 
   return (
     <Stack gap="md">
-      <Paper p="md" radius="md" withBorder>
+      <Paper p="md" radius="md">
         <Stack gap="sm">
           <Group gap="sm">
             <ThemeIcon variant="light" color="blue" size="lg" radius="xl">
@@ -117,7 +117,7 @@ export const BackupPreviewPanel = ({ analysis }: BackupPreviewPanelProps) => {
       )}
 
       {!hasPendingMigrations && (
-        <Paper p="md" radius="md" withBorder>
+        <Paper p="md" radius="md">
           <Group gap="sm">
             <ThemeIcon variant="light" color="green" size="lg" radius="xl">
               <IconGitBranch size={18} />

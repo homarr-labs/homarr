@@ -31,9 +31,10 @@ const feedsInput = z.object({
   maximumAmountPosts: z.number(),
   descriptionMaxLength: z.number().int().min(1).max(5000).default(250),
 });
+const readFeedsProcedure = publicProcedure.meta({ readOnly: false }).input(feedsInput);
 
 export const rssFeedRouter = createTRPCRouter({
-  getFeeds: publicProcedure.input(feedsInput).query(async ({ ctx, input }) => {
+  getFeeds: readFeedsProcedure.query(async ({ ctx, input }) => {
     if (env.NO_EXTERNAL_CONNECTION) return { entries: [], failedFeedCount: 0 };
 
     const urls = (await canAccessAllFeedsAsync(ctx.db, ctx.session))

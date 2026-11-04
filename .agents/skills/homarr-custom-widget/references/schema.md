@@ -13,42 +13,57 @@ interface HomarrCustomWidgetV2 {
 }
 ```
 
-Key `default` is the required source ID, not a source property. Fields: `name?`, `baseUrl`, `auth?`:
+`sources.default` is required. HTTP sources have `baseUrl`, optional `name`, and optional `auth` (default `"none"`). Base URLs
+have no credentials, query, or fragment. Use documented public URLs or `https://your-service.example.com` for missing
+self-hosted URLs; Homarr configures URLs and credentials separately.
 
 ```json
 {
   "sources": {
     "default": {
-      "name": "Service",
-      "baseUrl": "http://service.local:5055/api/v1",
+      "baseUrl": "https://your-service.example.com/api/v1",
       "auth": { "type": "apiKeyHeader", "name": "X-Api-Key" }
     }
   },
   "requests": {
     "summary": { "path": "/summary" },
-    "search": { "trigger": "manual", "path": "/search", "query": { "q": { "$param": "query" } } },
+    "search": {
+      "trigger": "manual",
+      "path": "/search",
+      "query": { "q": { "$param": "query" }, "page": { "$param": "page" } }
+    },
     "create": {
       "kind": "action",
       "method": "POST",
       "path": "/items",
       "body": { "id": { "$param": "id" } },
       "confirmation": "Create this item?",
-      "invalidates": ["search"]
+      "invalidates": ["summary"]
     }
   }
 }
 ```
 
-Saved sources use `{"type":"integration","integrationKind":"sonarr","integrationId":"saved-id"}`. Discover and bind a full-access entry before preview. Omit URL/auth; paths append to its URL, non-GET requests are actions, and exports omit `integrationId`.
+Auth: `"none"`, `"bearer"`, `"basic"`, `{"type":"apiKeyHeader","name":"X-Api-Key"}`, or
+`{"type":"apiKeyQuery","name":"api_key"}`. Values are credential-free declarations.
 
-Auth is `none`, `bearer`, `basic`, `apiKeyHeader`, `apiKeyQuery`, or `headers`. Requests default to source `default`, query/GET/load, inherited auth, and view permission. Use `load` for initial/current display and `manual` only for explicit interactions or invocation params. Actions are manual/modify; DELETE requires full permission and confirmation.
+Multiple encrypted headers use `{"type":"headers","headers":[{"name":"X-Api-Key","slot":"key"},{"name":"X-Api-Secret","slot":"secret"}]}`.
+Use at most 8 HTTP-token names, unique ignoring case, with distinct stable slot IDs of at most 57 characters. Configure
+values separately in Homarr. Header name or slot changes require credential configuration again. Use `bearer` for
+Authorization; routing, proxy, forwarding, cookie and hop-by-hop headers remain reserved.
 
-For multiple secret headers, use `auth: {"type":"headers","headers":[{"name":"X-Api-Key","slot":"key"},{"name":"X-Api-Secret","slot":"secret"}]}`. Up to 8 HTTP-token names are allowed, unique ignoring case, with distinct stable slot IDs of at most 57 characters. Homarr configures each slot separately and stores its value encrypted; the manifest contains only names and slots. Header name or slot changes require credential configuration again. Use `bearer` for Authorization; routing, proxy, forwarding, cookie and hop-by-hop headers remain reserved.
+Saved sources use `{"type":"integration","integrationKind":"sonarr","integrationId":"saved-id"}`. Discover supported kinds
+and matching full-access entries with integration tools. Bind the ID before preview; omit URL/auth. Paths append to the
+saved URL; non-GET requests are actions. Portable exports omit integrationId.
 
-JSON responses become their decoded value. Responses with `application/x-ndjson` become an array with one decoded object per non-empty line.
+Requests default to source `default`, query/GET/load, inherited auth, and view permission. Initial/current displays use load;
+explicit interactions use manual. Actions stay manual with modify permission; DELETE requires full permission and
+confirmation. Preserve confirmation, permission, and invalidates. Query responses are decoded JSON; application/x-ndjson is
+an array of decoded lines.
 
-Use real public API URLs and clear self-hosted placeholders. Homarr collects URL and credentials outside the manifest.
+Paths start with `/` and use `{option:name}`/`{param:name}`. Query/body bindings use `{"$option":"name"}`/`{"$param":"name"}`.
+`$param` is manual-only; `$option` may drive loads. Path/query values are primitive; JSON bodies may contain structured options.
 
-Paths use `{option:name}`/`{param:name}`; query/body objects use `{"$option":"name"}`/`{"$param":"name"}`. `$param` is manual-only; `$option` may drive loads. Constants stay primitive.
-
-Every option has `label`, `control`, and `default`. Optional fields are `description`, `choices`, `choicesFrom`, `min`, `max`, `step`, `advanced`, and `group`.
+Every option has label, control, default. Optional fields: description, choices, choicesFrom, min, max, step, advanced, group.
+Static select choices are label/value objects; choicesFrom uses request, optional itemsPath, valuePath, and labelPath. Use a
+load request and preserve its response envelope. Structured options use control `json`.

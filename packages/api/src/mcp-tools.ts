@@ -4,6 +4,8 @@ import { addFormats, AjvJsonSchemaValidator } from "@modelcontextprotocol/server
 import type { AnyProcedure, AnyRootTypes, Router, RouterRecord } from "@trpc/server/unstable-core-do-not-import";
 import { z } from "zod/v4";
 
+import { isReadOnlyProcedure } from "./credential-access";
+
 export interface McpMeta {
   mcp?: {
     enabled: boolean;
@@ -137,7 +139,7 @@ export function extractMcpToolsFromProcedures<TRoot extends AnyRootTypes, TRecor
         description: metadata.description ?? "",
         type: definition.type,
         annotations: {
-          readOnlyHint: definition.type === "query",
+          readOnlyHint: isReadOnlyProcedure(definition.type, definition.meta),
           destructiveHint: definition.type === "mutation" && metadata.effect !== "additive",
         },
         pathInRouter: path.split("."),
