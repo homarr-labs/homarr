@@ -203,7 +203,7 @@ export function InstanceView({
           rel={baseUrl ? SAFE_NEW_TAB_REL : undefined}
           aria-label={instance.integrationName}
         >
-          <Image src={COOLIFY_ICON_URL} alt="" w={20} h={20} />
+          <Image src={COOLIFY_ICON_URL} alt="" w={16} h={16} />
         </a>
         {pill}
         {showStats && statList}
