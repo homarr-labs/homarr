@@ -60,7 +60,7 @@ const releaseProviderRegistryPrefixes: Partial<Record<ReleaseProviderKind, strin
 export const supportsReleaseProviderTracks = (provider: ReleaseProviderKind) =>
   provider === "dockerHub" || provider === "gitHubContainerRegistry" || provider === "quay";
 
-export const isVersionLikeTag = (tag: string) => /^v?\d{1,4}(?:\.\d+)*$/.test(tag) || /\d+\.\d+/.test(tag);
+export const isVersionLikeTag = (tag: string) => /^v?\d{1,4}$/.test(tag) || /\d\.\d/.test(tag);
 
 export const splitReleaseProviderReference = (provider: ReleaseProviderKind, identifier: string) => {
   const trimmedIdentifier = identifier.trim();
