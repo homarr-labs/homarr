@@ -42,6 +42,7 @@ const MCP_TOOL_ALLOWLIST = {
     "customWidget_list",
     "customWidget_previewJournal",
     "customWidget_previewQuery",
+    "customWidget_readTemplate",
     "customWidget_schema",
     "customWidget_validate",
     "customWidget_validateTemplate",
@@ -451,6 +452,7 @@ test.each([false, true])(
     };
     const params: Record<string, unknown> = {};
     if (modern) {
+      headers["MCP-Protocol-Version"] = "2026-07-28";
       headers["Mcp-Method"] = "tools/list";
       headers["Mcp-Name"] = "homarr";
       params["_meta"] = {

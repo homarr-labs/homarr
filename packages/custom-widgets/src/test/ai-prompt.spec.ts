@@ -123,7 +123,17 @@ describe("AI prompt", () => {
     expect(CUSTOM_WIDGET_MCP_AUTHORING_PROMPT.length).toBeLessThan(8_500);
     expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("do not call customWidget_getSkill");
     expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("Make lifecycle/mutation calls one per step");
-    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("Load required references and uncertain components");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("Core schema/runtime/safety/lifecycle rules are bundled");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("Resolve uncertain components with customWidget_findComponents");
+    expect(CUSTOM_WIDGET_MCP_AUTHORING_PROMPT).toContain("References are not bundled");
+    expect(CUSTOM_WIDGET_MCP_AUTHORING_PROMPT).toContain(
+      "Start with customWidget_getSkill or homarr://custom-widgets/skill",
+    );
+    expect(CUSTOM_WIDGET_MCP_AUTHORING_PROMPT).toContain("via customWidget_getReference with that name");
+    expect(CUSTOM_WIDGET_MCP_AUTHORING_PROMPT).toContain("homarr://custom-widgets/references/<name>");
+    expect(CUSTOM_WIDGET_MCP_AUTHORING_PROMPT).not.toContain("do not call customWidget_getSkill");
+    expect(CUSTOM_WIDGET_MCP_AUTHORING_PROMPT).not.toContain("ask_user");
+    expect(CUSTOM_WIDGET_MCP_AUTHORING_PROMPT).not.toContain("configure_widget");
     expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("at most eight needed component documents");
     expect(CUSTOM_WIDGET_TOOL_STAGING_INSTRUCTION).toContain("staged by the authoring lifecycle");
     expect(CUSTOM_WIDGET_TOOL_STAGING_INSTRUCTION).toContain("task-needed");
@@ -163,7 +173,8 @@ describe("AI prompt", () => {
     expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("Render every explicitly required response field once");
     expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("templateLines");
     expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("Send a coherent complete definition directly");
-    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("Sources never contain headers");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("Sources never contain a top-level headers field");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("source.auth.headers is allowed for header authentication");
     expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("Never switch to a probe service");
     expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("Never persist a header probe");
     expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("finish unplaced without asking again");

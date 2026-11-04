@@ -138,8 +138,8 @@ describe("shared Custom JSX policy", () => {
           message: expect.stringContaining("MISSING_REQUIRED_PROP: 'name' on TablerIcon"),
         }),
         expect.objectContaining({
-          severity: "error",
-          message: expect.stringContaining("UNKNOWN_COMPONENT_PROP: 'icon' on TablerIcon"),
+          severity: "warning",
+          message: expect.stringContaining("UNSUPPORTED_HELPER_PROP: 'icon' on TablerIcon"),
         }),
       ]),
     );

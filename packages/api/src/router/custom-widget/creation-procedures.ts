@@ -3,10 +3,15 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod/v4";
 
 import { createLogger } from "@homarr/core/infrastructure/logs";
-import { customWidgetCreateSchema, normalizeCustomWidgetAuthoringDefinition } from "@homarr/custom-widgets/core";
+import {
+  customWidgetAcknowledgedRemovalsSchema,
+  customWidgetCreateSchema,
+  normalizeCustomWidgetAuthoringDefinition,
+} from "@homarr/custom-widgets/core";
 
 import { permissionRequiredProcedure } from "../../trpc";
 import { parseCustomWidgetAuthoringInput } from "./authoring-validation";
+import { getCreatedCustomWidgetResult } from "./creation-result";
 import { insertCustomWidgetDefinition } from "./definition-insert";
 import { updateCustomWidgetDefinition } from "./definition-update";
 import { assertCurrentPreviewEvidence, parsePreviewDefinition } from "./preview-persistence";
@@ -14,20 +19,6 @@ import { getPreviewEvidence, getPreviewSession, getPreviewSessionSecrets } from 
 import { assertSecretSources } from "./secret-policy";
 
 const logger = createLogger({ module: "custom-widget" });
-
-const getCreatedCustomWidgetResult = (id: string, targetBoardId?: string) => ({
-  id,
-  managementPath: `/manage/custom-widgets/edit/${id}`,
-  nextAction: {
-    type: "place-custom-widget" as const,
-    widgetKind: "customApi" as const,
-    options: { definitionId: id },
-    ...(targetBoardId ? { targetBoardId } : {}),
-    whenTargetIsKnown: "Call configure_widget now with the requested board and these exact widget options.",
-    whenTargetIsUnknown:
-      "Call ask_user now with 'Place on a board' and 'Leave unplaced'. Never ask this choice in prose.",
-  },
-});
 
 export const creationProcedures = {
   create: permissionRequiredProcedure
@@ -103,10 +94,15 @@ export const creationProcedures = {
         enabled: true,
         effect: "destructive",
         description:
-          "Requires administrator permission. Update the existing Custom JSX widget associated with an edit preview, using that exact tested preview revision without creating a duplicate. Every query and action in the final preview revision must have current evidence.",
+          "Requires administrator permission. Update the existing widget from its exact tested edit preview. Every query and action needs current evidence. Restore unrelated removedFromSaved items or pass all user-requested removal keys in acknowledgedRemovals. This preview-only heuristic check does not prove semantic preservation or visual fit.",
       },
     })
-    .input(z.object({ previewSessionId: z.string().min(1) }))
+    .input(
+      z.object({
+        previewSessionId: z.string().min(1),
+        acknowledgedRemovals: customWidgetAcknowledgedRemovalsSchema.optional(),
+      }),
+    )
     .mutation(async ({ ctx, input }) => {
       const session = await getPreviewSession(input.previewSessionId, ctx.session.user.id);
       if (!session.definitionId) {
@@ -132,6 +128,7 @@ export const creationProcedures = {
         definition,
         secrets,
         expectedStateFingerprint: session.definitionStateFingerprint,
+        acknowledgedRemovals: input.acknowledgedRemovals,
       });
       logger.info("Updated custom widget definition from tested preview", {
         id: session.definitionId,

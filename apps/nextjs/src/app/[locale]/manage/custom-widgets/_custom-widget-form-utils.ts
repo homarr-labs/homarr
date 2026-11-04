@@ -2,6 +2,7 @@ import { fetchApi } from "@homarr/api/client";
 import { isRecord } from "@homarr/common";
 import {
   customWidgetDefinitionSchema,
+  customWidgetPreviewDefinitionSchema,
   getCustomWidgetDefaultOptions,
   getCustomWidgetRequiredSecretKinds,
   parseCustomWidgetAiResponse,
@@ -17,8 +18,9 @@ export { isRecord };
 
 const PREVIEW_QUERY_CONCURRENCY = 4;
 
-export function buildDefinition(values: CustomWidgetFormValues) {
-  return customWidgetDefinitionSchema.safeParse({
+export function buildDefinition(values: CustomWidgetFormValues, strictAuthoring = false) {
+  const schema = strictAuthoring ? customWidgetPreviewDefinitionSchema : customWidgetDefinitionSchema;
+  return schema.safeParse({
     $schema: "homarr-custom-widget-v2",
     name: values.name,
     description: values.description || undefined,

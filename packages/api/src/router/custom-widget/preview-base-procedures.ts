@@ -11,11 +11,12 @@ import {
   customWidgetTemplateLinesSchema,
   getCustomWidgetConfirmation,
   getCustomWidgetDefaultOptions,
+  getCustomWidgetRemovals,
   isCustomWidgetSourceUrlPlaceholder,
   normalizeCustomWidgetAuthoringDefinition,
   validateCustomWidgetOptions,
 } from "@homarr/custom-widgets/core";
-import type { CustomJsxRequest, CustomWidgetSource } from "@homarr/custom-widgets/core";
+import type { CustomJsxRequest, CustomWidgetSource, HomarrCustomWidgetV2 } from "@homarr/custom-widgets/core";
 import { eq } from "@homarr/db";
 import { customWidgetDefinitions } from "@homarr/db/schema";
 
@@ -113,7 +114,7 @@ const previewCreateProcedure = permissionRequiredProcedure
       enabled: true,
       effect: "additive",
       description:
-        "Fully validate a complete Custom JSX definition and create a short-lived preview in one call. Pass definition directly as an object, never serialized JSON. Prefer templateLines for multiline JSX. The result lists every query and action that needs evidence before saving.",
+        "Fully validate a complete Custom JSX definition and create a short-lived preview. Pass definition as an object; prefer templateLines for multiline JSX. For edits, pass definitionId from customWidget_get. Returns required evidence and complete heuristic removedFromSaved keys to restore or acknowledge before updateFromPreview; this does not prove semantic preservation or visual fit.",
     },
   })
   .input(previewCreateInputSchema)
@@ -134,6 +135,7 @@ const previewCreateProcedure = permissionRequiredProcedure
 
     const secrets = [...input.secrets];
     let definitionStateFingerprint: string | undefined;
+    let removedFromSaved: string[] = [];
     let persistenceTool: "customWidget_createFromPreview" | "customWidget_updateFromPreview" =
       "customWidget_createFromPreview";
     if (input.definitionId) {
@@ -145,6 +147,7 @@ const previewCreateProcedure = permissionRequiredProcedure
       definitionStateFingerprint = getCustomWidgetDefinitionStateFingerprint(existing, existing.secrets);
       persistenceTool = "customWidget_updateFromPreview";
       const existingDefinition = parseStoredCustomWidgetDefinition(existing);
+      removedFromSaved = getCustomWidgetRemovals(existingDefinition, definition);
       for (const [sourceId, existingSource] of Object.entries(existingDefinition.sources)) {
         const submittedSource = definition.sources[sourceId];
         const hasStoredSecrets = existing.secrets.some((secret) => secret.sourceId === sourceId);
@@ -209,6 +212,8 @@ const previewCreateProcedure = permissionRequiredProcedure
       previewPath,
       previewUrl: new URL(previewPath, ctx.baseUrl ?? "http://localhost").toString(),
       persistenceTool,
+      definitionId: input.definitionId,
+      ...getRemovalReport(removedFromSaved),
       sourceConfigurations: getRequiredSourceConfigurations(
         definition.sources,
         definition.requests,
@@ -228,7 +233,7 @@ export const previewBaseProcedures = {
         enabled: true,
         effect: "destructive",
         description:
-          "Replace only the JSX template in an existing preview after a response-driven correction. The inherited sources, requests, options, and secrets are fully revalidated without resending them. Prior evidence becomes stale, so rerun every returned query and action before persistence.",
+          "Replace only a preview's JSX template, inheriting and revalidating its manifest. Prior evidence becomes stale: rerun every returned query and action. Edit previews return complete heuristic removedFromSaved keys against their original saved-state fingerprint; restore unrelated removals before saving. This does not prove semantic preservation or visual fit.",
       },
     })
     .input(previewReviseTemplateInputSchema)
@@ -237,16 +242,42 @@ export const previewBaseProcedures = {
       if (template === undefined) {
         throw new TRPCError({ code: "BAD_REQUEST", message: "Provide template or templateLines" });
       }
-      const revised = await revisePreviewSessionTemplate(
-        input.sessionId,
-        ctx.session.user.id,
-        template,
-        input.expectedRevision,
-      );
-      const session = await getPreviewSession(revised.id, ctx.session.user.id);
+      const current = await getPreviewSession(input.sessionId, ctx.session.user.id);
       let persistenceTool: "customWidget_createFromPreview" | "customWidget_updateFromPreview" =
         "customWidget_createFromPreview";
-      if (session.definitionId) persistenceTool = "customWidget_updateFromPreview";
+      let savedDefinition: HomarrCustomWidgetV2 | undefined;
+      if (current.definitionId) {
+        persistenceTool = "customWidget_updateFromPreview";
+        const existing = await ctx.db.query.customWidgetDefinitions.findFirst({
+          where: eq(customWidgetDefinitions.id, current.definitionId),
+          with: { secrets: true },
+        });
+        if (!existing) throw new TRPCError({ code: "NOT_FOUND", message: "Custom widget definition not found" });
+        if (
+          getCustomWidgetDefinitionStateFingerprint(existing, existing.secrets) !== current.definitionStateFingerprint
+        ) {
+          throw new TRPCError({
+            code: "CONFLICT",
+            message:
+              "Custom widget definition or credentials changed after this preview was created. Create a new preview and retry.",
+          });
+        }
+        savedDefinition = parseStoredCustomWidgetDefinition(existing);
+      }
+      const revised = await revisePreviewSessionTemplate(
+        current.id,
+        ctx.session.user.id,
+        template,
+        input.expectedRevision ?? current.revision,
+      );
+      const session = await getPreviewSession(revised.id, ctx.session.user.id);
+      let removedFromSaved: string[] = [];
+      if (savedDefinition) {
+        removedFromSaved = getCustomWidgetRemovals(savedDefinition, {
+          ...session,
+          options: session.optionDefinitions,
+        });
+      }
       const previewPath = `/manage/custom-widgets/preview/${session.id}`;
       return {
         success: true as const,
@@ -260,6 +291,14 @@ export const previewBaseProcedures = {
         previewPath,
         previewUrl: new URL(previewPath, ctx.baseUrl ?? "http://localhost").toString(),
         persistenceTool,
+        definitionId: session.definitionId,
+        ...getRemovalReport(removedFromSaved),
+        sourceConfigurations: getRequiredSourceConfigurations(
+          session.sources,
+          session.requests,
+          session.secrets,
+          session.id,
+        ),
         ...getPreviewEvidenceChecklist(session.requests, session.id),
       };
     }),
@@ -291,3 +330,16 @@ export const previewBaseProcedures = {
       };
     }),
 };
+
+function getRemovalReport(removedFromSaved: string[]) {
+  const report = {
+    removedFromSaved,
+    removalDetection: "Heuristic structural check only; does not prove semantic preservation or visual fit.",
+  };
+  if (removedFromSaved.length === 0) return report;
+  return {
+    ...report,
+    nextStep:
+      "Restore unrelated items from the complete removedFromSaved list with customWidget_previewReviseTemplate (manifest changes need customWidget_previewCreate with definitionId); pass every user-requested removal key as acknowledgedRemovals to customWidget_updateFromPreview.",
+  };
+}

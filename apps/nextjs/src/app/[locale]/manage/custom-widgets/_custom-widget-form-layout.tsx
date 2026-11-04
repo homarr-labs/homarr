@@ -68,6 +68,7 @@ export function SaveActions({
   savePending,
   previewPending,
   invalid,
+  saveInvalid,
   mode,
   onPreview,
 }: {
@@ -75,6 +76,7 @@ export function SaveActions({
   savePending: boolean;
   previewPending: boolean;
   invalid: boolean;
+  saveInvalid: boolean;
   mode: "create" | "edit";
   onPreview(): void;
 }) {
@@ -103,7 +105,7 @@ export function SaveActions({
         >
           {previewPending ? t("action.previewLoading") : t("action.preview")}
         </Button>
-        <Button type="submit" loading={savePending} disabled={invalid || previewPending}>
+        <Button type="submit" loading={savePending} disabled={saveInvalid || previewPending}>
           {mode === "create" ? tCommon("action.create") : tCommon("action.save")}
         </Button>
       </Group>
@@ -155,13 +157,18 @@ export function CustomWidgetSaveActions({
 }) {
   const dirty = useCustomWidgetFormDocumentDirty();
   const candidateValid = useCustomWidgetFormAnalysisField("candidateValid");
+  const saveCandidateValid = useCustomWidgetFormAnalysisField("saveCandidateValid");
   const hasDiagnostics = useCustomWidgetFormAnalysisField("hasDiagnostics");
+  const invalid = hasDiagnostics || !candidateValid;
+  let saveInvalid = invalid;
+  if (mode === "edit") saveInvalid = !saveCandidateValid;
   return (
     <SaveActions
       dirty={dirty}
       savePending={savePending}
       previewPending={previewPending}
-      invalid={hasDiagnostics || !candidateValid}
+      invalid={invalid}
+      saveInvalid={saveInvalid}
       mode={mode}
       onPreview={onPreview}
     />

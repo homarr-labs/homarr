@@ -57,7 +57,9 @@ describe("Custom Widget follow-up edit guard", () => {
     expect(
       controller.validateInput(
         "customWidget_previewCreate",
-        previewInput({ template: '<Stack gap="xs"><Text c="violet">{data.meals?.name}</Text></Stack>' }),
+        previewInput({
+          template: '<Stack gap="xs"><Title>{options.title}</Title><Text c="violet">{data.meals?.name}</Text></Stack>',
+        }),
       ),
     ).toBeNull();
   });

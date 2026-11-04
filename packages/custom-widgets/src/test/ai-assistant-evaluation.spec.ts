@@ -351,7 +351,11 @@ describe("Custom Widget assistant live evaluation harness", () => {
     const getActiveNames = () =>
       getActiveAssistantEvaluationToolDefinitions(state).map(({ function: definition }) => definition.name);
 
-    expect(getActiveNames()).toEqual(["customWidget_previewCreate"]);
+    expect(getActiveNames()).toEqual([
+      "customWidget_getComponent",
+      "customWidget_getSharedProps",
+      "customWidget_previewCreate",
+    ]);
     expect(getActiveNames()).not.toEqual(
       expect.arrayContaining(["customWidget_getSkill", "customWidget_validateTemplate"]),
     );
@@ -360,7 +364,12 @@ describe("Custom Widget assistant live evaluation harness", () => {
       executeActiveAssistantEvaluationTool(testCase, state, "customWidget_previewCreate", {
         definition: healthWidget,
       }),
-    ).toMatchObject({ success: true, previewSession: { id: "preview-1" } });
+    ).toMatchObject({
+      success: true,
+      previewSession: { id: "preview-1" },
+      persistenceTool: "customWidget_createFromPreview",
+      sourceConfigurations: [],
+    });
   });
 
   it("runs a named preset through the production example and integration phases", () => {
@@ -558,7 +567,7 @@ describe("Custom Widget assistant live evaluation harness", () => {
     });
     expect(
       getActiveAssistantEvaluationToolDefinitions(state).map(({ function: definition }) => definition.name),
-    ).toEqual(["customWidget_previewCreate"]);
+    ).toEqual(["customWidget_getComponent", "customWidget_getSharedProps", "customWidget_previewCreate"]);
     expect(
       executeAssistantEvaluationTool(testCase, state, "customWidget_getComponents", {
         names: ["Image", "Badge"],
@@ -656,6 +665,8 @@ describe("Custom Widget assistant live evaluation harness", () => {
     ).toMatchObject({
       success: true,
       previewSession: { id: "preview-1" },
+      persistenceTool: "customWidget_createFromPreview",
+      sourceConfigurations: [],
       queries: [{ requestId: "health" }],
       actions: [],
     });
@@ -682,7 +693,13 @@ describe("Custom Widget assistant live evaluation harness", () => {
     });
     expect(
       getActiveAssistantEvaluationToolDefinitions(state).map(({ function: definition }) => definition.name),
-    ).toEqual(["customWidget_createFromPreview"]);
+    ).toEqual([
+      "customWidget_getComponent",
+      "customWidget_getSharedProps",
+      "customWidget_previewCreate",
+      "customWidget_previewReviseTemplate",
+      "customWidget_createFromPreview",
+    ]);
     expect(
       executeActiveAssistantEvaluationTool(testCase, state, "customWidget_createFromPreview", {
         previewSessionId: "preview-1",
@@ -711,7 +728,23 @@ describe("Custom Widget assistant live evaluation harness", () => {
       requestId: "health",
       params: {},
     });
-    const revised = executeAssistantEvaluationTool(testCase, state, "customWidget_previewReviseTemplate", {
+    expect(
+      executeActiveAssistantEvaluationTool(testCase, state, "customWidget_previewReviseTemplate", {
+        sessionId: "preview-1",
+        template: "<UnknownComponent />",
+      }),
+    ).toMatchObject({ error: "Revised preview template is invalid" });
+    expect(
+      getActiveAssistantEvaluationToolDefinitions(state).map(({ function: definition }) => definition.name),
+    ).toEqual([
+      "customWidget_findComponents",
+      "customWidget_getComponent",
+      "customWidget_getSharedProps",
+      "customWidget_previewReviseTemplate",
+    ]);
+    expect(state.previews.get("preview-1")?.revision).toBe(0);
+    expect(state.previews.get("preview-1")?.testedQueries.has("health")).toBe(true);
+    const revised = executeActiveAssistantEvaluationTool(testCase, state, "customWidget_previewReviseTemplate", {
       sessionId: "preview-1",
       templateLines: revisedDefinition.templateLines,
     });
@@ -720,9 +753,15 @@ describe("Custom Widget assistant live evaluation harness", () => {
       success: true,
       evidenceReset: true,
       previewSession: { id: "preview-1", revision: 1 },
+      persistenceTool: "customWidget_createFromPreview",
+      sourceConfigurations: [],
       queries: [{ requestId: "health" }],
     });
     expect(revised).not.toHaveProperty("definition");
+    expect(state.previews.get("preview-1")?.testedQueries.size).toBe(0);
+    expect(
+      getActiveAssistantEvaluationToolDefinitions(state).map(({ function: definition }) => definition.name),
+    ).toEqual(["customWidget_previewQuery"]);
     expect(state.previews.get("preview-1")?.widget).toMatchObject({
       sources: healthWidget.sources,
       requests: healthWidget.requests,
@@ -740,7 +779,13 @@ describe("Custom Widget assistant live evaluation harness", () => {
     });
     expect(
       getActiveAssistantEvaluationToolDefinitions(state).map(({ function: definition }) => definition.name),
-    ).toEqual(["customWidget_createFromPreview"]);
+    ).toEqual([
+      "customWidget_getComponent",
+      "customWidget_getSharedProps",
+      "customWidget_previewCreate",
+      "customWidget_previewReviseTemplate",
+      "customWidget_createFromPreview",
+    ]);
     expect(
       executeAssistantEvaluationTool(testCase, state, "customWidget_createFromPreview", {
         previewSessionId: "preview-1",
@@ -767,6 +812,24 @@ describe("Custom Widget assistant live evaluation harness", () => {
     expect(
       getActiveAssistantEvaluationToolDefinitions(state).map(({ function: definition }) => definition.name),
     ).toEqual(["customWidget_previewQuery"]);
+    expect(
+      executeActiveAssistantEvaluationTool(testCase, state, "customWidget_previewCreate", {
+        definition: { ...healthWidget, name: "Another health widget" },
+      }),
+    ).toMatchObject({
+      error: "Tool 'customWidget_previewCreate' is not active in the current authoring phase.",
+      activeTools: ["customWidget_previewQuery"],
+    });
+    expect(
+      executeActiveAssistantEvaluationTool(testCase, state, "customWidget_createFromPreview", {
+        previewSessionId: "preview-1",
+      }),
+    ).toMatchObject({
+      error: "Tool 'customWidget_createFromPreview' is not active in the current authoring phase.",
+      activeTools: ["customWidget_previewQuery"],
+    });
+    expect(state.previews.size).toBe(1);
+    expect(state.createdWidgets).toEqual([]);
   });
 
   it("normalizes invisible model formatting consistently between template validation and preview", () => {
@@ -897,7 +960,11 @@ describe("Custom Widget assistant live evaluation harness", () => {
     const activeNames = getActiveAssistantEvaluationToolDefinitions(state).map(
       ({ function: definition }) => definition.name,
     );
-    expect(activeNames).toEqual(["customWidget_previewCreate"]);
+    expect(activeNames).toEqual([
+      "customWidget_getComponent",
+      "customWidget_getSharedProps",
+      "customWidget_previewCreate",
+    ]);
   });
 
   it("completes two advanced Seerr widgets, every query and action, from one research pass", () => {

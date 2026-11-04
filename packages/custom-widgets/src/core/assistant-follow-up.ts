@@ -1,3 +1,8 @@
+import { customJsxTemplateSchema } from "./custom-jsx-schema";
+import { getCustomWidgetRemovals } from "./definition-removals";
+import { customWidgetOptionsSchema } from "./options-schema";
+import { customWidgetRequestsSchema, customWidgetSourcesSchema } from "./request-schema";
+
 const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === "object" && value !== null && !Array.isArray(value);
 
@@ -7,9 +12,13 @@ const customWidgetDataContractIntentPattern =
   /\b(?:api|endpoint|field|filter|metric|parameter|query|request|response|sort)\b|\b(?:add|include|remove|show)\b[^\n]{0,50}\b(?:action|button|data|details?|items?|records?|rows?|status)\b|\b(?:show|use|display)\b[^\n]{0,30}\b(?:\d+|one|two|three|four|five|six|seven|eight|nine|ten)\s+(?:items?|records?|rows?)\b/iu;
 const customWidgetSourceChangeIntentPattern =
   /\b(?:change|move|rebind|replace|switch)\b[^\n]{0,50}\b(?:authentication|credentials?|integration|instance|server|source|url)\b|\b(?:bind|connect|use)\b[^\n]{0,30}\b(?:another|different|new)\b[^\n]{0,30}\b(?:integration|instance|server|source)\b/iu;
+const customWidgetPresentationFeatureIntentPattern =
+  /\b(?:add|include|remove|hide|omit|drop|delete|show|display|replace)\b[^\n]{0,50}\b(?:charts?|graphs?|brand(?:ing|ed)?|logos?|images?|legends?|axes|axis|tooltips?|sparklines?|progress)\b|\b(?:without|no)\s+(?:(?:the|a|an)\s+)?(?:charts?|graphs?|brand(?:ing)?|logos?|images?)\b/iu;
 
 export const hasCustomWidgetStyleOnlyFollowUpIntent = (text: string) =>
-  customWidgetStyleIntentPattern.test(text) && !customWidgetDataContractIntentPattern.test(text);
+  customWidgetStyleIntentPattern.test(text) &&
+  !customWidgetDataContractIntentPattern.test(text) &&
+  !customWidgetPresentationFeatureIntentPattern.test(text);
 
 export const hasExplicitCustomWidgetSourceChangeIntent = (text: string) =>
   customWidgetSourceChangeIntentPattern.test(text);
@@ -27,6 +36,23 @@ const hasSameValue = (left: unknown, right: unknown): boolean => {
   return leftKeys.every((key) => hasSameValue(left[key], right[key]));
 };
 
+const getPreservationDefinition = (value: Record<string, unknown>) => {
+  let templateInput = value.template;
+  if (
+    templateInput === undefined &&
+    Array.isArray(value.templateLines) &&
+    value.templateLines.every((line: unknown) => typeof line === "string")
+  ) {
+    templateInput = value.templateLines.join("\n");
+  }
+  const template = customJsxTemplateSchema.safeParse(templateInput);
+  const sources = customWidgetSourcesSchema.safeParse(value.sources);
+  const requests = customWidgetRequestsSchema.safeParse(value.requests);
+  const options = customWidgetOptionsSchema.safeParse(value.options ?? {});
+  if (!template.success || !sources.success || !requests.success || !options.success) return null;
+  return { template: template.data, sources: sources.data, requests: requests.data, options: options.data };
+};
+
 interface CustomWidgetFollowUpEditControllerOptions {
   definitionId: string;
   preserveDataContract: boolean;
@@ -42,6 +68,7 @@ interface CustomWidgetFollowUpGuardFailure {
       | "follow-up-definition-load-required"
       | "follow-up-definition-target-mismatch"
       | "follow-up-data-contract-changed"
+      | "follow-up-presentation-changed"
       | "follow-up-source-binding-changed";
     requiredNextTool: "customWidget_get" | "customWidget_previewCreate";
   };
@@ -129,6 +156,23 @@ export const createCustomWidgetFollowUpEditController = ({
           },
           nextStep: "Restore the loaded requests and options exactly, change only presentation, then preview again.",
         };
+      }
+      if (preserveDataContract) {
+        const saved = getPreservationDefinition(loadedDefinition);
+        const next = getPreservationDefinition(candidate);
+        const removals = saved && next ? getCustomWidgetRemovals(saved, next) : [];
+        if (removals.length > 0) {
+          return {
+            error: `A style-only follow-up must preserve the widget's existing UI and data bindings. Detected heuristic removals: ${JSON.stringify(removals)}.`,
+            recovery: {
+              recoverable: true,
+              kind: "follow-up-presentation-changed",
+              requiredNextTool: "customWidget_previewCreate",
+            },
+            nextStep:
+              "Restore the reported items from the loaded definition, keep its complete template and manifest, then preview only the requested styling change. This heuristic check does not prove semantic preservation or visual fit.",
+          };
+        }
       }
       return null;
     },

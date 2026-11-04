@@ -1,9 +1,14 @@
 import type { CustomWidgetAssistantLifecycleEvent } from "./assistant-placement";
 
 const customWidgetPreviewPhaseToolNames = new Set(["customWidget_previewCreate", "customWidget_previewReviseTemplate"]);
-const customWidgetWarningRepairPhaseToolNames = new Set(["customWidget_getComponent", "customWidget_previewCreate"]);
-const customWidgetDirectPreviewPhaseToolNames = new Set(["customWidget_previewCreate"]);
+const customWidgetExactLookupToolNames = new Set(["customWidget_getComponent", "customWidget_getSharedProps"]);
+const customWidgetDirectPreviewPhaseToolNames = new Set([
+  ...customWidgetExactLookupToolNames,
+  "customWidget_previewCreate",
+]);
+const customWidgetWarningRepairPhaseToolNames = customWidgetDirectPreviewPhaseToolNames;
 const customWidgetPreviewCreateRepairToolNames = new Set([
+  ...customWidgetExactLookupToolNames,
   "customWidget_findComponents",
   "customWidget_getComponents",
   "customWidget_getComponent",
@@ -23,6 +28,8 @@ const customWidgetEvidencePhaseToolNames = new Set([
   "customWidget_updateFromPreview",
 ]);
 const customWidgetFinalizationPhaseToolNames = new Set([
+  ...customWidgetExactLookupToolNames,
+  ...customWidgetPreviewPhaseToolNames,
   "customWidget_createFromPreview",
   "customWidget_updateFromPreview",
 ]);
@@ -160,6 +167,7 @@ const recoverablePreviewErrorPattern =
   /(?:definition is invalid|invalid input|provide template|unrecognized key|unknown widget option|sources\.|requests\.|options\.|template)/iu;
 const terminalPreviewErrorPattern =
   /(?:closed|connection|credential|forbidden|model|not found|permission denied|provider|session|timed? out|unavailable)/iu;
+const missingPreviewEvidenceErrorPattern = /test every final preview (?:query|action)/iu;
 
 export const isRecoverableCustomWidgetAuthoringFailure = (toolName: string, output: unknown) => {
   if (!isRecord(output)) return false;
@@ -179,27 +187,69 @@ export const isRecoverableCustomWidgetAuthoringFailure = (toolName: string, outp
     return false;
   }
   if (typeof output.error !== "string") return false;
-  if (terminalPreviewErrorPattern.test(output.error)) return false;
+  if (toolName === "customWidget_updateFromPreview" && /Unacknowledged removals:/iu.test(output.error)) return true;
   if (toolName === "customWidget_createFromPreview" || toolName === "customWidget_updateFromPreview") {
-    return /test every final preview (?:query|action)/iu.test(output.error);
+    return missingPreviewEvidenceErrorPattern.test(output.error);
   }
+  if (terminalPreviewErrorPattern.test(output.error)) return false;
   return recoverablePreviewErrorPattern.test(output.error);
 };
 
-const getPreviewRequestIds = (value: unknown) => {
-  if (!Array.isArray(value)) return [];
-  return value.flatMap((entry) => {
-    if (!isRecord(entry) || typeof entry.requestId !== "string") return [];
-    return [entry.requestId];
+const getCurrentPreviewEvidenceSteps = (steps: readonly CustomWidgetToolStep[]): readonly CustomWidgetToolStep[] => {
+  const results = steps.flatMap((step) => step.toolResults);
+  const rejectionIndex = results.findLastIndex((result) => {
+    if (result.toolName !== "customWidget_createFromPreview" && result.toolName !== "customWidget_updateFromPreview") {
+      return false;
+    }
+    const output = isRecord(result.output) ? result.output : null;
+    return typeof output?.error === "string" && missingPreviewEvidenceErrorPattern.test(output.error);
   });
+  if (rejectionIndex < 0) return steps;
+  return [{ toolResults: results.slice(rejectionIndex + 1) }];
+};
+
+const getPreviewRequestIds = (value: unknown) => {
+  if (!Array.isArray(value)) return null;
+  const ids: string[] = [];
+  for (const entry of value) {
+    if (!isRecord(entry) || typeof entry.requestId !== "string" || !entry.requestId.trim()) return null;
+    ids.push(entry.requestId);
+  }
+  if (new Set(ids).size !== ids.length) return null;
+  return ids;
 };
 
 const getPreviewSourceConfigurationIds = (value: unknown) => {
-  if (!Array.isArray(value)) return [];
-  return value.flatMap((entry) => {
-    if (!isRecord(entry) || typeof entry.sourceId !== "string") return [];
-    return [entry.sourceId];
-  });
+  if (!Array.isArray(value)) return null;
+  const ids: string[] = [];
+  for (const entry of value) {
+    if (!isRecord(entry) || typeof entry.sourceId !== "string" || !entry.sourceId.trim()) return null;
+    ids.push(entry.sourceId);
+  }
+  return ids;
+};
+
+export const hasCompleteCustomWidgetPreviewHandoff = (value: unknown, toolName: string) => {
+  if (!isRecord(value) || value.handoffComplete === false) return false;
+  if (value.truncated === true && value.handoffComplete !== true) return false;
+  const session = isRecord(value.previewSession) ? value.previewSession : null;
+  if (typeof session?.id !== "string" || !session.id.trim()) return false;
+  if (typeof session.revision !== "number" || !Number.isInteger(session.revision) || session.revision < 0) return false;
+  if (getPreviewRequestIds(value.queries) === null || getPreviewRequestIds(value.actions) === null) return false;
+  if (
+    !(toolName === "customWidget_previewReviseTemplate" && value.sourceConfigurations === undefined) &&
+    getPreviewSourceConfigurationIds(value.sourceConfigurations) === null
+  ) {
+    return false;
+  }
+  if (value.persistenceTool === "customWidget_createFromPreview") return true;
+  return (
+    value.persistenceTool === "customWidget_updateFromPreview" &&
+    typeof value.definitionId === "string" &&
+    value.definitionId.length > 0 &&
+    Array.isArray(value.removedFromSaved) &&
+    value.removedFromSaved.every((key) => typeof key === "string" && key.length > 0)
+  );
 };
 
 const hasCompletedPreviewSourceConfiguration = (
@@ -250,7 +300,7 @@ const getLatestPreviewEvidenceFailures = (laterSteps: readonly CustomWidgetToolS
   }
 
   return [...latestEvidenceByRequest.values()].filter(({ index, output }) => {
-    if (output.ok === true) return false;
+    if (output.ok === true && output.handoffComplete !== false) return false;
     if (!isPreviewSourceConfigurationFailure(output)) return true;
     return !indexedResults.slice(index + 1).some(({ result }) => {
       if (result.toolName !== "customWidget_configurationRequestUser") return false;
@@ -277,7 +327,10 @@ const getPreviewPersistenceTool = (output: unknown) => {
   if (isRecord(output) && output.persistenceTool === "customWidget_updateFromPreview") {
     return "customWidget_updateFromPreview";
   }
-  return "customWidget_createFromPreview";
+  if (isRecord(output) && output.persistenceTool === "customWidget_createFromPreview") {
+    return "customWidget_createFromPreview";
+  }
+  return null;
 };
 
 export const getLatestPersistedCustomWidgetDefinitionId = (steps: readonly CustomWidgetToolStep[]) => {
@@ -322,12 +375,16 @@ const hasCompletePreviewEvidence = (previewOutput: unknown, laterSteps: readonly
   const sessionId = typeof previewSession?.id === "string" ? previewSession.id : null;
   if (!sessionId) return false;
 
+  const queryIds = getPreviewRequestIds(output?.queries);
+  const actionIds = getPreviewRequestIds(output?.actions);
+  if (queryIds === null || actionIds === null) return false;
+
   const requirements = [
-    ...getPreviewRequestIds(output?.queries).map((requestId) => ({
+    ...queryIds.map((requestId) => ({
       requestId,
       toolName: "customWidget_previewQuery",
     })),
-    ...getPreviewRequestIds(output?.actions).map((requestId) => ({
+    ...actionIds.map((requestId) => ({
       requestId,
       toolName: "customWidget_previewAction",
     })),
@@ -337,7 +394,12 @@ const hasCompletePreviewEvidence = (previewOutput: unknown, laterSteps: readonly
     evidenceResults.some((result) => {
       if (result.toolName !== requirement.toolName) return false;
       const evidence = isRecord(result.output) ? result.output : null;
-      return evidence?.ok === true && evidence.sessionId === sessionId && evidence.requestId === requirement.requestId;
+      return (
+        evidence?.ok === true &&
+        evidence.handoffComplete !== false &&
+        evidence.sessionId === sessionId &&
+        evidence.requestId === requirement.requestId
+      );
     }),
   );
 };
@@ -352,13 +414,19 @@ const hasPendingPreviewEvidence = (
   const sessionId = typeof previewSession?.id === "string" ? previewSession.id : null;
   if (!sessionId) return false;
   const requestIds = getPreviewRequestIds(toolName === "customWidget_previewQuery" ? output?.queries : output?.actions);
+  if (requestIds === null) return true;
   const evidenceResults = laterSteps.flatMap((step) => step.toolResults);
   return requestIds.some(
     (requestId) =>
       !evidenceResults.some((result) => {
         if (result.toolName !== toolName) return false;
         const evidence = isRecord(result.output) ? result.output : null;
-        return evidence?.ok === true && evidence.sessionId === sessionId && evidence.requestId === requestId;
+        return (
+          evidence?.ok === true &&
+          evidence.handoffComplete !== false &&
+          evidence.sessionId === sessionId &&
+          evidence.requestId === requestId
+        );
       }),
   );
 };
@@ -471,8 +539,7 @@ export const getCustomWidgetPhaseToolNames = <TToolName extends string>(
         return typeof output?.id === "string";
       });
       if (!succeeded) {
-        if (hasPreviewEvidence) continue;
-        return phaseAvailableToolNames.filter((toolName) => customWidgetEvidencePhaseToolNames.has(toolName));
+        continue;
       }
       if (!continueAfterPersistence) return [];
       discoveryStartStep = stepIndex + 1;
@@ -512,12 +579,16 @@ export const getCustomWidgetPhaseToolNames = <TToolName extends string>(
         return output?.success === true || isRecord(output?.previewSession);
       });
       if (succeeded) {
+        if (!previewResults.every((result) => hasCompleteCustomWidgetPreviewHandoff(result.output, result.toolName))) {
+          return phaseAvailableToolNames.filter((toolName) => customWidgetEvidenceRepairToolNames.has(toolName));
+        }
         const laterSteps = steps.slice(stepIndex + 1);
+        const evidenceSteps = getCurrentPreviewEvidenceSteps(laterSteps);
         if (hasPendingPreviewSourceConfiguration(laterSteps)) {
           if (legacyMigrationOnly) return [];
           return availableToolNames.filter((toolName) => toolName === "customWidget_configurationRequestUser");
         }
-        const evidenceFailures = getLatestPreviewEvidenceFailures(laterSteps);
+        const evidenceFailures = getLatestPreviewEvidenceFailures(evidenceSteps);
         if (evidenceFailures.some(({ output }) => isPreviewSourceConfigurationFailure(output))) {
           if (legacyMigrationOnly) return [];
           return availableToolNames.filter((toolName) => toolName === "customWidget_configurationRequestUser");
@@ -527,7 +598,8 @@ export const getCustomWidgetPhaseToolNames = <TToolName extends string>(
         }
         const sourceConfigurationComplete = previewResults.every((result) => {
           const output = isRecord(result.output) ? result.output : null;
-          const sourceIds = getPreviewSourceConfigurationIds(output?.sourceConfigurations);
+          const sourceIds = getPreviewSourceConfigurationIds(output?.sourceConfigurations ?? []);
+          if (sourceIds === null) return false;
           if (sourceIds.length === 0) return true;
           const previewSession = isRecord(output?.previewSession) ? output.previewSession : null;
           const sessionId = typeof previewSession?.id === "string" ? previewSession.id : null;
@@ -541,31 +613,38 @@ export const getCustomWidgetPhaseToolNames = <TToolName extends string>(
           return availableToolNames.filter((toolName) => toolName === "customWidget_configurationRequestUser");
         }
         const hasPendingQuery = previewResults.some((result) =>
-          hasPendingPreviewEvidence(result.output, laterSteps, "customWidget_previewQuery"),
+          hasPendingPreviewEvidence(result.output, evidenceSteps, "customWidget_previewQuery"),
         );
         if (hasPendingQuery) {
           return phaseAvailableToolNames.filter((toolName) => toolName === "customWidget_previewQuery");
         }
         const hasPendingAction = previewResults.some((result) =>
-          hasPendingPreviewEvidence(result.output, laterSteps, "customWidget_previewAction"),
+          hasPendingPreviewEvidence(result.output, evidenceSteps, "customWidget_previewAction"),
         );
         if (hasPendingAction) {
           return phaseAvailableToolNames.filter((toolName) => toolName === "customWidget_previewAction");
         }
         const evidenceComplete = previewResults.every((result) =>
-          hasCompletePreviewEvidence(result.output, laterSteps),
+          hasCompletePreviewEvidence(result.output, evidenceSteps),
         );
         if (evidenceComplete) {
-          const persistenceToolNames = new Set<string>(
+          const persistenceToolNames = new Set<string | null>(
             previewResults.map((result) => getPreviewPersistenceTool(result.output)),
           );
           if (legacyMigrationOnly) {
             return phaseAvailableToolNames.filter(
-              (toolName) => toolName === "customWidget_updateFromPreview" && persistenceToolNames.has(toolName),
+              (toolName) =>
+                customWidgetExactLookupToolNames.has(toolName) ||
+                customWidgetPreviewPhaseToolNames.has(toolName) ||
+                (toolName === "customWidget_updateFromPreview" && persistenceToolNames.has(toolName)),
             );
           }
           return phaseAvailableToolNames.filter(
-            (toolName) => customWidgetFinalizationPhaseToolNames.has(toolName) && persistenceToolNames.has(toolName),
+            (toolName) =>
+              customWidgetFinalizationPhaseToolNames.has(toolName) &&
+              (customWidgetExactLookupToolNames.has(toolName) ||
+                customWidgetPreviewPhaseToolNames.has(toolName) ||
+                persistenceToolNames.has(toolName)),
           );
         }
         return phaseAvailableToolNames.filter((toolName) => customWidgetEvidencePhaseToolNames.has(toolName));
@@ -574,7 +653,7 @@ export const getCustomWidgetPhaseToolNames = <TToolName extends string>(
         return phaseAvailableToolNames.filter(
           (toolName) =>
             toolName === "customWidget_previewReviseTemplate" ||
-            toolName === "customWidget_getComponent" ||
+            customWidgetExactLookupToolNames.has(toolName) ||
             toolName === "customWidget_findComponents",
         );
       }
@@ -622,12 +701,13 @@ export const getCustomWidgetPhaseToolNames = <TToolName extends string>(
           (diagnostic) =>
             isRecord(diagnostic) &&
             typeof diagnostic.message === "string" &&
-            /UNKNOWN_(?:COMPONENT|MANTINE_PROP)/u.test(diagnostic.message),
+            /UNKNOWN_(?:COMPONENT|MANTINE_PROP)|UNSUPPORTED_HELPER_PROP/u.test(diagnostic.message),
         );
       });
       return phaseAvailableToolNames.filter(
         (toolName) =>
           toolName === "customWidget_previewCreate" ||
+          (needsComponentRepair && toolName === "customWidget_getSharedProps") ||
           (needsComponentRepair && !componentLookupFailed && toolName === "customWidget_getComponent") ||
           (needsComponentRepair && componentLookupFailed && toolName === "customWidget_findComponents") ||
           (needsComponentRepair && componentLookupFailed && toolName === "customWidget_getComponents"),
@@ -635,7 +715,7 @@ export const getCustomWidgetPhaseToolNames = <TToolName extends string>(
     }
   }
   if (hasPreviewEvidence) {
-    return phaseAvailableToolNames.filter((toolName) => customWidgetEvidencePhaseToolNames.has(toolName));
+    return phaseAvailableToolNames.filter((toolName) => customWidgetEvidenceRepairToolNames.has(toolName));
   }
   if (followUpDefinitionId && hasLoadedFollowUpDefinition(steps, followUpDefinitionId)) {
     return phaseAvailableToolNames.filter((toolName) => customWidgetDirectPreviewPhaseToolNames.has(toolName));
@@ -699,7 +779,9 @@ export const getCustomWidgetPhaseToolNames = <TToolName extends string>(
   const repeatedContextToolNames = new Set(
     discoveryResults.flatMap((result) => {
       const output = isRecord(result.output) ? result.output : null;
-      return output?.contextAlreadyLoaded === true ? [result.toolName] : [];
+      return output?.contextAlreadyLoaded === true && !customWidgetExactLookupToolNames.has(result.toolName)
+        ? [result.toolName]
+        : [];
     }),
   );
   const getAvailablePhaseTools = (phaseToolNames: ReadonlySet<string>) =>

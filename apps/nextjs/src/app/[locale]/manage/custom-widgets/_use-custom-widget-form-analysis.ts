@@ -64,7 +64,7 @@ export function analyzeCustomWidgetAiDiagnostics(values: CustomWidgetFormValues)
   const parsedRequests = parseJson(values.requests);
   const requestIds = isRecord(parsedRequests) ? Object.keys(parsedRequests) : [];
   return createAiDiagnostics(
-    buildDefinition(values),
+    buildDefinition(values, true),
     analyzeRequestManifest(values.requests),
     analyzeJsxTemplate(values.template, { requestIds }),
   );
@@ -72,7 +72,11 @@ export function analyzeCustomWidgetAiDiagnostics(values: CustomWidgetFormValues)
 
 export function useCustomWidgetFormAnalysis(values: CustomWidgetFormValues) {
   const analysisValues = useDeferredValue(values);
-  const candidate = useMemo(() => buildDefinition(analysisValues), [analysisValues]);
+  const candidate = useMemo(() => buildDefinition(analysisValues, true), [analysisValues]);
+  const saveCandidateValid = useMemo(
+    () => candidate.success || buildDefinition(analysisValues).success,
+    [analysisValues, candidate.success],
+  );
   const parsedOptions = useMemo(
     () => customWidgetOptionsSchema.safeParse(parseJson(analysisValues.options)),
     [analysisValues.options],
@@ -122,6 +126,7 @@ export function useCustomWidgetFormAnalysis(values: CustomWidgetFormValues) {
     () => ({
       candidate,
       candidateValid: candidate.success,
+      saveCandidateValid,
       parsedOptions,
       jsxCompletions,
       templateDiagnostics,
@@ -133,6 +138,7 @@ export function useCustomWidgetFormAnalysis(values: CustomWidgetFormValues) {
     }),
     [
       candidate,
+      saveCandidateValid,
       hasDiagnostics,
       invalidSections,
       jsxCompletions,
