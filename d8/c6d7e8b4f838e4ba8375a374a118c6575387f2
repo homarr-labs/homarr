@@ -1,0 +1,33 @@
+packages/integrations/src/ical/ical-integration.ts
+  s_665fd85a58ec3c::t_1115a7e97066fd 19-23,30,78-79,101,104-105,135-136
+packages/integrations/src/interfaces/calendar/calendar-types.ts
+  s_53d352251b1ff4::t_de9c41648e8bc0 36
+packages/widgets/src/calendar/calendar-events.ts
+  s_665fd85a58ec3c::t_966f4dc8efded7 7-17
+packages/widgets/src/calendar/component.tsx
+  s_665fd85a58ec3c::t_e0e188b4f37e71 15,74
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "d8c6d7e8b4f838e4ba8375a374a118c6575387f2",
+  "prompts": {},
+  "sessions": {
+    "s_53d352251b1ff4": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "1996f7db-81a3-4e66-b9b8-ca24f9d9d14c",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_665fd85a58ec3c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b10b4c5a-b53f-4ae7-bd7a-8da5f459c9c8",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
