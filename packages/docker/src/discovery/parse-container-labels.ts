@@ -40,6 +40,8 @@ const resolveIcon = (labels: Record<string, string>, useHomepageFallback: boolea
   return `https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/${extension}/${dashboardIcon[1].toLowerCase()}.${extension}`;
 };
 
+export const resolveContainerIcon = (labels: Record<string, string>) => resolveIcon(labels, true);
+
 const parseIntegrationKind = (value: string | undefined): IntegrationKind | undefined =>
   value && integrationKindSet.has(value) ? (value as IntegrationKind) : undefined;
 
