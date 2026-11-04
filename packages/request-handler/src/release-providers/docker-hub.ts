@@ -1,6 +1,7 @@
 import { z } from "zod/v4";
 
 import { fetchJsonAsync, loadOptionalDetailsAsync, providerUrl, tokenHeaders } from "./http";
+import { isNotFoundError, ReleaseLookupError } from "./errors";
 import type { OwnedName } from "./identifier";
 import { parseOwnedName } from "./identifier";
 import type { RegistryTag } from "./registry-tags";
@@ -10,15 +11,15 @@ import type { ProjectDetails, ReleaseProvider } from "./types";
 const MAX_TAG_PAGES = 5;
 const MAX_FLOATING_TAG_PAGES = 2;
 
+const tagSchema = z.object({
+  name: z.string(),
+  last_updated: z.string().nullish(),
+  digest: z.string().nullish(),
+});
+
 const tagsSchema = z.object({
   next: z.string().nullish(),
-  results: z.array(
-    z.object({
-      name: z.string(),
-      last_updated: z.string().nullish(),
-      digest: z.string().nullish(),
-    }),
-  ),
+  results: z.array(tagSchema),
 });
 
 const repositorySchema = z.object({
@@ -32,7 +33,7 @@ const repositorySchema = z.object({
     .nullish(),
 });
 
-type DockerHubTag = z.infer<typeof tagsSchema>["results"][number];
+type DockerHubTag = z.infer<typeof tagSchema>;
 
 const parseRepository = (identifier: string): OwnedName => {
   if (!identifier.includes("/")) return { owner: "library", name: identifier };
@@ -44,9 +45,8 @@ const toRegistryTags = (tag: DockerHubTag): RegistryTag[] => {
   return [{ name: tag.name, date: new Date(tag.last_updated), digest: tag.digest ?? undefined }];
 };
 
-const needsMoreTags = (tags: RegistryTag[], page: number, versionPattern?: RegExp, tag?: string) => {
+const needsMoreTags = (tags: RegistryTag[], page: number, versionPattern?: RegExp) => {
   if (versionPattern) return !tags.some((tag) => versionPattern.test(tag.name));
-  if (tag) return !tags.some((candidate) => candidate.name === tag);
   return page < MAX_FLOATING_TAG_PAGES && hasUnresolvedFloatingTag(tags);
 };
 
@@ -56,11 +56,21 @@ const listTagsAsync = async (
   versionPattern?: RegExp,
   tag?: string,
 ) => {
+  if (tag && !versionPattern) {
+    const result = await fetchJsonAsync(`${repositoryUrl}/tags/${encodeURIComponent(tag)}`, tagSchema, {
+      headers,
+    }).catch((error: unknown) => {
+      if (isNotFoundError(error)) throw new ReleaseLookupError("noMatchingVersion", `No tag named ${tag}`);
+      throw error;
+    });
+    return toRegistryTags(result);
+  }
+
   const tags: RegistryTag[] = [];
   for (let page = 1; page <= MAX_TAG_PAGES; page++) {
     const result = await fetchJsonAsync(`${repositoryUrl}/tags?page_size=100&page=${page}`, tagsSchema, { headers });
     tags.push(...result.results.flatMap(toRegistryTags));
-    if (!result.next || !needsMoreTags(tags, page, versionPattern, tag)) break;
+    if (!result.next || !needsMoreTags(tags, page, versionPattern)) break;
   }
   return tags;
 };

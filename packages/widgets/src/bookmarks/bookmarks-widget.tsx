@@ -1,7 +1,7 @@
 "use client";
 
 import type { CSSProperties } from "react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   Accordion,
   ActionIcon,
@@ -19,7 +19,7 @@ import {
   ThemeIcon,
   Tooltip,
 } from "@mantine/core";
-import { useClipboard, useLocalStorage, useReducedMotion } from "@mantine/hooks";
+import { useClipboard, useLocalStorage, useReducedMotion, useTimeout } from "@mantine/hooks";
 import { IconArrowUpRight, IconBookmark, IconCheck, IconCopy, IconLink, IconAlertTriangle } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
@@ -526,7 +526,12 @@ const BookmarkCard = ({
 
 const BookmarkCopyUrl = ({ href }: { href: string }) => {
   const clipboard = useClipboard({ timeout: 1500 });
+  const { start, clear } = useTimeout(clipboard.reset, 1500);
   const t = useI18n("widget.bookmarks");
+  useEffect(() => {
+    if (clipboard.error) start();
+    return clear;
+  }, [clipboard.error, start, clear]);
   let label = t("copyUrl");
   let color = "gray";
   let Icon = IconCopy;
