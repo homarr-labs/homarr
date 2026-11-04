@@ -58,6 +58,7 @@ interface InstanceViewProps {
   storageKey: string;
   width: number;
   height: number;
+  uiScale: number;
 }
 
 export function InstanceView({
@@ -68,6 +69,7 @@ export function InstanceView({
   storageKey,
   width,
   height,
+  uiScale,
 }: InstanceViewProps) {
   const t = useI18n("widget.coolify");
   const tCommon = useI18n("common");
@@ -109,7 +111,12 @@ export function InstanceView({
   const isTiny = !isAdvanced && height < 125;
   const isNarrow = !isAdvanced && width < 320;
   const visibleAttentionCount = Math.max(0, Math.min(3, Math.floor((height - 80) / 26)));
-  const visibleProjectCount = Math.min(projects.length, height >= 220 ? 3 : 2);
+  // Mantine sizes use the inverse board scale; the supplied height is in board pixels.
+  const projectBodyHeight = height * uiScale - 37 - 57 - (height >= 175 ? 25 : 0) - 12 - 2;
+  const visibleProjectCount =
+    [3, 2, 1].find(
+      (count) => count <= projects.length && count * 39 + (projects.length > count ? 20 : 0) <= projectBodyHeight,
+    ) ?? 0;
   const summaryLabel =
     summary.kind === "problem"
       ? t("summary.needsAttention", { count: summary.count })
@@ -402,7 +409,7 @@ export function InstanceView({
       ) : !isTiny ? (
         <div className={classes.compactBody}>
           {attention.length === 0 ? (
-            height >= 135 && showResources && projects.length > 0 ? (
+            showResources && visibleProjectCount > 0 ? (
               <>
                 <ProjectList projects={projects.slice(0, visibleProjectCount)} available baseUrl={baseUrl} compact />
                 {projects.length > visibleProjectCount && (

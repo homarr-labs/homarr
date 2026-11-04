@@ -95,6 +95,7 @@ export default function CoolifyWidget({
                 storageKey={`coolify-show-ip-${integrationIds.length > 1 ? `${widgetKey}-${instance.integrationId}` : widgetKey}`}
                 width={useTwoColumns ? Math.floor(renderedWidth / 2) - 16 : renderedWidth - 16}
                 height={instanceHeight}
+                uiScale={uiScale}
               />
             </Box>
           ))}
