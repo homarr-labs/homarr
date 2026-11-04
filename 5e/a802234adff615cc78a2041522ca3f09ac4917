@@ -1,0 +1,18 @@
+bun.lock
+  h_d6e478ca18e517 11,1277,1551-1552
+bunfig.toml
+  h_d6e478ca18e517 6-7
+package.json
+  h_d6e478ca18e517 14,329
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "5ea802234adff615cc78a2041522ca3f09ac4917",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
