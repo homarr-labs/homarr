@@ -96,7 +96,7 @@ export function InstanceView({
   const isMini = !isAdvanced && width < 110;
   const isTiny = !isAdvanced && height < 125;
   const isNarrow = !isAdvanced && width < 320;
-  const visibleAttentionCount = Math.max(0, Math.min(3, Math.floor((height - (isTiny ? 80 : 105)) / 26)));
+  const visibleAttentionCount = Math.max(0, Math.min(3, Math.floor((height - 80) / 26)));
   const summaryLabel =
     summary.kind === "problem"
       ? t("summary.needsAttention", { count: summary.count })
@@ -312,23 +312,19 @@ export function InstanceView({
             </ScrollArea>
           </Tabs.Panel>
         </Tabs>
-      ) : (
+      ) : !isTiny ? (
         <div className={classes.compactBody}>
           {attention.length === 0 ? (
-            !isTiny && (
-              <Stack className={classes.healthyState} gap={4} align="center" justify="center">
-                {trackedCount > 0 && height >= 180 && (
-                  <IconCircleCheck size={28} color="var(--mantine-color-green-6)" />
-                )}
-                <Text size="xs" c="dimmed" ta="center">
-                  {trackedCount === 0
-                    ? t("summary.empty")
-                    : height < 180
-                      ? t("summary.healthy")
-                      : t("summary.healthyDetail")}
-                </Text>
-              </Stack>
-            )
+            <Stack className={classes.healthyState} gap={4} align="center" justify="center">
+              {trackedCount > 0 && height >= 180 && <IconCircleCheck size={28} color="var(--mantine-color-green-6)" />}
+              <Text size="xs" c="dimmed" ta="center">
+                {trackedCount === 0
+                  ? t("summary.empty")
+                  : height < 180
+                    ? t("summary.healthy")
+                    : t("summary.healthyDetail")}
+              </Text>
+            </Stack>
           ) : (
             <AttentionList
               items={attention.slice(0, visibleAttentionCount)}
@@ -343,7 +339,7 @@ export function InstanceView({
             </Text>
           )}
         </div>
-      )}
+      ) : null}
 
       {(isAdvanced || (!isTiny && height >= 175)) && (
         <Text className={classes.footer} size="xs" c="dimmed" truncate>
