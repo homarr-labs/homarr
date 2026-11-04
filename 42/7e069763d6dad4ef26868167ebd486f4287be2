@@ -1,0 +1,25 @@
+apps/docs/docs/integrations/docker-labels/index.mdx
+  s_9ad79ec790bde6::t_e6be3cda280ca7 33-36
+packages/docker/src/discovery/index.ts
+  s_9ad79ec790bde6::t_0413a8db95d708 2-7
+packages/docker/src/discovery/parse-container-labels.ts
+  s_9ad79ec790bde6::t_7c265dc91b069f 43-44
+packages/request-handler/src/docker.ts
+  s_9ad79ec790bde6::t_4689c1ac49abef 12,500-503
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "427e069763d6dad4ef26868167ebd486f4287be2",
+  "prompts": {},
+  "sessions": {
+    "s_9ad79ec790bde6": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "091698b4-ae47-4ef4-9a03-00318e1fffa9",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
