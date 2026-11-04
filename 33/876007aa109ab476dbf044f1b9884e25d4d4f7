@@ -1,0 +1,67 @@
+apps/nextjs/src/app/[locale]/manage/integrations/_components/secrets/integration-secret-card.tsx
+  s_05ef861992d1bd::t_bf02c8a33d0ee8 25,28,72-76
+apps/nextjs/src/app/[locale]/manage/integrations/_components/secrets/integration-secret-icons.ts
+  s_05ef861992d1bd::t_c7df787b411a85 8,40
+apps/nextjs/src/app/[locale]/manage/integrations/_components/secrets/integration-secret-inputs.tsx
+  s_05ef861992d1bd::t_e2e85276663950 81
+apps/nextjs/src/app/[locale]/manage/integrations/_components/test-connection/integration-test-connection-error.tsx
+  s_05ef861992d1bd::t_40d4b6bf7afc39 28-31,35-40
+apps/nextjs/src/app/[locale]/manage/integrations/edit/[id]/_integration-edit-form.tsx
+  s_05ef861992d1bd::t_6f8769277f65f3 13,18,110,140,142-150,182-183,211,213,280-316
+packages/api/src/router/integration/integration-router.ts
+  s_05ef861992d1bd::t_6a24c219c32ea4 350-352
+packages/api/src/router/integration/integration-test-stored-connection.ts
+  s_05ef861992d1bd::t_7f91699e737a87 30-39
+packages/api/src/router/integration/map-test-connection-error.ts
+  s_05ef861992d1bd::t_2f722d4d3835b6 60-64,68-69,71,73-74,76,81-87,94
+packages/definitions/src/integration.ts
+  s_05ef861992d1bd::t_e2d2b9bbf97f89 32,651
+packages/integrations/src/openmediavault/openmediavault-integration.ts
+  s_05ef861992d1bd::t_edcce2ef9badd4 3,17-18,105-111,210,226-251,254,275-288,307-311
+packages/integrations/src/openmediavault/totp.ts
+  s_05ef861992d1bd::t_929684ebc2c033 1-39
+packages/request-handler/src/release-providers/docker-hub.ts
+  s_05ef861992d1bd::t_7215b3ff430083 47,49,53-58,63,94-97
+packages/request-handler/src/release-providers/github-container-registry.ts
+  s_05ef861992d1bd::t_cd2dac0663c5a7 2-3,117-122,124-138,165,170
+packages/request-handler/src/release-providers/index.ts
+  s_05ef861992d1bd::t_85a5dc29a5962f 2,30,32-37,42
+packages/request-handler/src/release-providers/registry-tags.ts
+  s_05ef861992d1bd::t_e1dba9bab3b87e 2,78,83-89
+packages/request-handler/src/release-providers/types.ts
+  s_05ef861992d1bd::t_a0eec5b6a88ccc 51
+packages/request-handler/src/release-providers/versions.ts
+  s_05ef861992d1bd::t_6cbfcc92d26f53 2
+packages/request-handler/src/rss-feeds.ts
+  s_05ef861992d1bd::t_2130366497ae62 59
+packages/translation/src/lang/en.json
+  s_05ef861992d1bd::t_eec2b6c79d85e9 1540-1548,1750-1754,1836-1839,2451-2454,2477-2479,4885
+packages/widgets/src/_inputs/widget-multiReleasesRepositories-input.tsx
+  s_05ef861992d1bd::t_b9cd46874a7320 49-50,442-445,519-523,835
+apps/docs/public/api/open-api-schema.json
+  s_59bf535574fce9::t_06efc11d0b48e2 7544-7545
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "33876007aa109ab476dbf044f1b9884e25d4d4f7",
+  "prompts": {},
+  "sessions": {
+    "s_05ef861992d1bd": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1a6e7-d402-7d23-bf4e-544804888af2",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_59bf535574fce9": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "9e17f6ec-5e2d-4c16-b9d5-75fae35a58e1",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
