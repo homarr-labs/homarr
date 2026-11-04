@@ -56,9 +56,12 @@ export function getPreviewRequestSourceConfigurationFailure(
   if (isCustomWidgetSourceUrlPlaceholder(source.baseUrl)) {
     error = `Preview source '${request.source}' URL is a placeholder; complete secure source configuration before testing requests`;
   } else if (request.auth !== "none") {
+    let headerSlots;
+    if (typeof source.auth === "object" && source.auth.type === "headers") headerSlots = source.auth.headers;
     error = getCustomWidgetAuthConfigurationError({
       type: getCustomWidgetSourceAuthType(source),
       secrets: getPreviewSessionSecrets(session, request.source),
+      headerSlots,
     });
   }
   if (error === null) return null;

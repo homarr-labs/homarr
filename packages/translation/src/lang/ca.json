@@ -65,7 +65,6 @@
         "themeAuto": "Sistema",
         "themeLight": "Clar",
         "themeDark": "Fosc",
-        "serverOriginHelp": "Homarr utilitza aquesta adreça per emplenar prèviament els URL dels serveis detectats. Encara podeu editar cada servei individualment.",
         "serverDescription": "És una drecera, no una restricció. Tots els serveis detectats es poden editar.",
         "serverOrigin": "Domini, IP o camí del proxy invers",
         "serverOriginDescription": "Exemples: home.lan, 192.168.1.10 o https://home.example.com/services. Trieu com s'afegirà cada servei a continuació.",
@@ -102,6 +101,8 @@
       "connect": {
         "title": "Connecta el que fa útil el tauler",
         "description": "Seleccioneu diversos serveis alhora. Les etiquetes de Docker tenen prioritat, la coincidència d'imatges omple els buits i podeu revisar tots els URL i les credencials.",
+        "confirmServerAddress": "",
+        "serverAddressReviewed": "",
         "discoveredIntegrations": "Instàncies d'integració detectades ({count})",
         "detectedIntegrationLabel": "Importa {name}, detectat com a {kind}",
         "detectedAppLabel": "Importa l'aplicació detectada {name}",
@@ -126,7 +127,8 @@
         "needsConfiguration": "Requereix configuració",
         "tested": "Connexió provada",
         "testFailed": "Error en provar la connexió",
-        "incompleteConfirmation": "Les integracions inacabades s'ometran. Voleu continuar sense aquestes integracions?"
+        "incompleteConfirmation": "Les integracions inacabades s'ometran. Voleu continuar sense aquestes integracions?",
+        "skipIncomplete": ""
       },
       "board": {
         "title": "Dona forma al tauler abans de crear-lo",
@@ -799,6 +801,11 @@
       }
     },
     "field": {
+      "url": {
+        "helpLabel": "Exemples de formats d'URL",
+        "examples": "Exemples d'enllaços admesos",
+        "requiresHandler": "Els protocols personalitzats requereixen una aplicació associada al vostre dispositiu."
+      },
       "description": {
         "label": "Descripció"
       },
@@ -1925,6 +1932,8 @@
     "here": "aquí",
     "serviceUrlTemplate": {
       "serverTitle": "Adreça habitual del servidor",
+      "description": "",
+      "example": "",
       "urlModeLabel": "Patró de l'adreça del servei",
       "hostPort": "Mateix amfitrió, ports diferents",
       "subdomain": "Un subdomini per servei",
@@ -2312,6 +2321,15 @@
       "option": {
         "appId": {
           "label": "Trieu l'aplicació"
+        },
+        "openIn": {
+          "label": "Obre l'aplicació a",
+          "description": "Trieu on s'obre aquesta aplicació. La configuració del navegador pot modificar l'obertura en una finestra separada.",
+          "option": {
+            "currentTab": "La pestanya actual",
+            "newTab": "Una pestanya nova",
+            "newWindow": "Una finestra nova"
+          }
         },
         "showTitle": {
           "label": "Mostra el nom de l'aplicació"
@@ -4758,27 +4776,59 @@
       "name": "Versions",
       "description": "Mostra una llista de la versió actual dels repositoris indicats amb l'expressió regular de versió especificada.",
       "option": {
+        "layout": {
+          "label": "",
+          "description": "",
+          "option": {
+            "comfortable": "",
+            "compact": ""
+          }
+        },
+        "summary": {
+          "label": "",
+          "description": "",
+          "option": {
+            "detailed": "",
+            "count": "",
+            "hidden": ""
+          }
+        },
+        "groupReleases": {
+          "label": "",
+          "description": ""
+        },
+        "sections": {
+          "label": "",
+          "description": ""
+        },
         "newReleaseWithin": {
           "label": "Llançaments nous dins de",
-          "description": "Exemple d'ús: 1w (1 setmana), 10M (10 mesos). Unitats acceptades: h (hores), d (dies), w (setmanes), M (mesos), y (anys). Deixa-ho buit per no destacar els llançaments nous."
+          "description": "Exemple d'ús: 1w (1 setmana), 10M (10 mesos). Unitats acceptades: h (hores), d (dies), w (setmanes), M (mesos), y (anys). Deixa-ho buit per no destacar els llançaments nous.",
+          "option": {
+            "never": "",
+            "1d": "",
+            "3d": "",
+            "1w": "",
+            "2w": "",
+            "1M": "",
+            "3M": ""
+          }
         },
         "staleReleaseWithin": {
           "label": "Llançaments antics dins de",
-          "description": "Exemple d'ús: 1w (1 setmana), 10M (10 mesos). Unitats acceptades: h (hores), d (dies), w (setmanes), M (mesos), y (anys). Deixa-ho buit per no destacar els llançaments antics."
+          "description": "Exemple d'ús: 1w (1 setmana), 10M (10 mesos). Unitats acceptades: h (hores), d (dies), w (setmanes), M (mesos), y (anys). Deixa-ho buit per no destacar els llançaments antics.",
+          "option": {
+            "never": "",
+            "1M": "",
+            "3M": "",
+            "6M": "",
+            "1y": "",
+            "2y": ""
+          }
         },
-        "showOnlyHighlighted": {
-          "label": "Mostra només els destacats",
-          "description": "Mostra només els llançaments nous o antics, segons el que s'ha indicat anteriorment."
-        },
-        "showDetails": {
-          "label": "Mostra els detalls"
-        },
-        "showOnlyIcon": {
-          "label": "Mostra només la icona"
-        },
-        "topReleases": {
-          "label": "Millors llançaments",
-          "description": "Nombre màxim dels últims llançaments que es mostraran. Zero significa que no hi ha límit."
+        "showChangelogPreview": {
+          "label": "",
+          "description": ""
         },
         "repositories": {
           "label": "Repositoris",
@@ -4811,6 +4861,10 @@
           },
           "name": {
             "label": "Nom"
+          },
+          "excludePrereleases": {
+            "label": "",
+            "description": ""
           },
           "versionFilter": {
             "label": "Filtre de versions",
@@ -4852,36 +4906,110 @@
           }
         }
       },
-      "not-found": "No s'ha trobat",
-      "pre-release": "Prellançament",
-      "archived": "Arxivat",
-      "forked": "Bifurcat",
+      "summary": {
+        "newReleases": "",
+        "newShort": "",
+        "tracked": "",
+        "caughtUp": "",
+        "outdated": "",
+        "outdatedShort": "",
+        "failing": "",
+        "failingShort": "",
+        "latest": "",
+        "issues": ""
+      },
+      "section": {
+        "new": {
+          "label": "",
+          "description": ""
+        },
+        "attention": {
+          "label": "",
+          "description": ""
+        },
+        "upToDate": {
+          "label": "",
+          "description": ""
+        },
+        "quiet": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "status": {
+        "new": "",
+        "outdated": "",
+        "error": "",
+        "upToDate": "",
+        "quiet": ""
+      },
+      "tag": {
+        "new": "",
+        "preRelease": "",
+        "resolvedFrom": "",
+        "quiet": "",
+        "archived": "",
+        "fork": ""
+      },
+      "issue": {
+        "affected": "",
+        "rateLimited": {
+          "title": "",
+          "hint": ""
+        },
+        "notFound": {
+          "title": "",
+          "hint": ""
+        },
+        "noMatchingVersion": {
+          "title": "",
+          "hint": ""
+        },
+        "noReleasesFound": {
+          "title": "",
+          "hint": ""
+        },
+        "invalidIdentifier": {
+          "title": "",
+          "hint": ""
+        },
+        "noProviderSelected": {
+          "title": "",
+          "hint": ""
+        },
+        "noProviderResponse": {
+          "title": "",
+          "hint": ""
+        },
+        "unexpected": {
+          "title": "",
+          "hint": ""
+        }
+      },
+      "markViewed": "Marca com a vist",
+      "markAllViewed": "",
+      "markEntryViewed": "",
+      "viewed": "",
+      "copyVersion": "",
+      "copied": "",
+      "published": "",
+      "whatChanged": "",
+      "noNotes": "",
+      "changes": "",
       "starsCount": "Estrelles",
       "forksCount": "Forks",
-      "issuesCount": "Problemes oberts",
-      "markViewed": "Marca com a vist",
-      "openProjectPage": "Obre la pàgina del projecte",
-      "openReleasePage": "Obre la pàgina del llançament",
-      "releaseDescription": "Descripció del llançament",
-      "projectDescription": "Descripció del projecte",
+      "openIssues": "",
+      "created": "Creat",
+      "releasePage": "",
+      "projectPage": "",
       "runningVersions": "",
       "upToDate": "",
       "updateAvailable": "",
       "unknownStatus": "",
-      "created": "Creat",
       "error": {
-        "label": "Error",
-        "messages": {
-          "invalidIdentifier": "Identificador no vàlid",
-          "noMatchingVersion": "No s'ha trobat cap versió coincident",
-          "noReleasesFound": "No s'han trobat llançaments",
-          "noProviderSelected": "No s'ha seleccionat cap proveïdor",
-          "noProviderResponse": "El proveïdor no ha respost",
-          "unexpected": "Error inesperat del proveïdor"
-        }
-      },
-      "expandDetails": "Mostra els detalls de {name}",
-      "collapseDetails": "Amaga els detalls de {name}"
+        "collapsedSaveTitle": "",
+        "collapsedSaveMessage": ""
+      }
     },
     "networkControllerSummary": {
       "advanced": {
@@ -5387,6 +5515,9 @@
       "name": "Sistemes Beszel (taula)",
       "description": "Vista en taula de tots els sistemes monitorats per Beszel, amb columnes ordenables i indicadors d'estat",
       "option": {
+        "fahrenheit": {
+          "label": ""
+        },
         "sortBy": {
           "label": "Ordena per"
         },
@@ -5401,7 +5532,12 @@
     },
     "beszelSystemGrid": {
       "name": "Sistemes Beszel (graella)",
-      "description": "Vista en graella de targetes de tots els sistemes monitorats per Beszel, amb mètriques en temps real"
+      "description": "Vista en graella de targetes de tots els sistemes monitorats per Beszel, amb mètriques en temps real",
+      "option": {
+        "fahrenheit": {
+          "label": ""
+        }
+      }
     },
     "beszelAlerts": {
       "name": "Alertes de Beszel",
@@ -6079,6 +6215,18 @@
       "addWidget": "Afegeix un giny",
       "addApp": "Afegeix una aplicació",
       "connectService": "Connecta un servei"
+    },
+    "urlDrop": {
+      "hint": "",
+      "resolving": "",
+      "notification": {
+        "success": {
+          "message": ""
+        },
+        "full": {
+          "message": ""
+        }
+      }
     },
     "setupChecklist": {
       "title": "Fes que aquest tauler sigui útil",
@@ -6925,6 +7073,10 @@
             "signInOverlay": {
               "label": "Superposició del fons"
             },
+            "signInMarquee": {
+              "label": "",
+              "description": ""
+            },
             "defaultRadius": {
               "label": "Estil de les cantonades",
               "options": {
@@ -7090,6 +7242,7 @@
             "model": {
               "title": "Model",
               "description": "Selecciona un model detectat o introdueix l'ID exacte del model del punt final.",
+              "save": "",
               "placeholder": "ID del model",
               "refresh": "Actualitza els models",
               "chooseModel": "Tria el model que s'utilitzarà per a les converses noves.",
@@ -8685,6 +8838,14 @@
     "conversationActions": "Accions de la conversa",
     "searchConversations": "Cerca converses",
     "noMatchingConversations": "No hi ha converses coincidents",
+    "historyError": {
+      "title": "",
+      "load": "",
+      "loadMessages": "",
+      "saveMessages": "",
+      "switch": "",
+      "retry": ""
+    },
     "moreActions": "Més accions de resposta",
     "renameConversation": {
       "action": "Canvia el nom",
@@ -8804,6 +8965,9 @@
     },
     "mentions": {
       "menu": "Afegeix context de Homarr",
+      "back": "",
+      "loading": "",
+      "empty": "",
       "context": "Context",
       "app": "Apps",
       "integration": "Integracions",
@@ -8818,6 +8982,8 @@
     },
     "commands": {
       "menu": "Ordres de l'assistent",
+      "hint": "",
+      "empty": "",
       "health": "Prepara una comprovació de l'estat del servei",
       "explore": "Prepara una visió general d'aquesta instància de Homarr",
       "media": "Prepara una cerca de mitjans",
@@ -9000,6 +9166,7 @@
     "approvalDescription": "Revisa aquest canvi abans d'executar-lo.",
     "approveAndRun": "Aprova i executa",
     "deny": "Rebutja",
+    "approvalError": "",
     "autoApproval": {
       "label": "Aprovacions automàtiques",
       "composerLabel": "Aprova per mi",

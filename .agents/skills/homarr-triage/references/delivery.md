@@ -2,6 +2,8 @@
 
 ## Investigation and implementation
 
+Start from the accepted outcome and preserved behavior recorded by the value and compatibility gate in `SKILL.md`. Reassess before broadening the change if the proposed fix violates either or costs substantially more than anticipated.
+
 Reproduce the reporter's path before claiming a bug is fixed. Keep a source finding, local fixture, browser reproduction, published image, and reporter confirmation as separate evidence. When reproduction is incomplete, report the exact missing detail and a concrete next check. A useful question resolves a remaining uncertainty; do not ask the reporter to reconfirm an answer already provided.
 
 Inspect current code and overlapping PRs before editing. Prefer updating an existing contributor fix when authorized; refresh its head before pushing and preserve contributor credit. Use isolated branches/checkouts so parallel agents cannot overwrite each other or unrelated user work. Follow `AGENTS.md` for targeted validation: add tests only when requested, run only relevant checks, and use runtime/browser/container validation when it materially verifies the claimed behavior. Avoid broad suites and image builds for a focused documentation or metadata change.
@@ -11,6 +13,8 @@ Review fork code at an exact commit before approved CI execution or preview publ
 ## UI proof and PR body
 
 For a visible UI fix, capture matched before/after screenshots of the reported case: same viewport, fixture data, theme, and relevant settings. State what the fixture proves and what still requires the reporter's environment. Do not substitute a mock-up for a reproduced application screenshot.
+
+Verify the preserved behavior as well as the symptom. For a shared layout change, compare existing saved dimensions and neighboring placements, including a simple configuration that never had the reported problem. Show that the benefit does not depend on silently moving or resizing the user's layout. Select similarly relevant compatibility checks for other domains; a better reporter screenshot and reporter acceptance alone do not establish compatibility.
 
 Use a current `gh` with `--attach` support. Check command help if the installed version is older; the [current CLI manual](https://cli.github.com/manual/gh_pr_create) describes attachment rewriting. A PR body can reference the same files in a table:
 

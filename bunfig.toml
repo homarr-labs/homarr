@@ -1,6 +1,8 @@
 [install]
 # Share compatible dependencies across all workspaces at the repository root.
 linker = "hoisted"
+# Ignore versions published less than 3 days ago when resolving new dependencies.
+minimumReleaseAge = 259200
 
 [run]
 # Preserve Node runtimes for tools with a Node shebang.

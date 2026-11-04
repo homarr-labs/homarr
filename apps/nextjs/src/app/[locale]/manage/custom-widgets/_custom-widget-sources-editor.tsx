@@ -4,7 +4,8 @@ import { Accordion, Button, List, Stack, Text } from "@mantine/core";
 import { IconPlus } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
-import type { CustomWidgetSource } from "@homarr/custom-widgets/core";
+import { hasSameCustomWidgetSourceAuthentication } from "@homarr/custom-widgets/core";
+import type { CustomWidgetSource, CustomWidgetHttpSource, CustomWidgetSecretKind } from "@homarr/custom-widgets/core";
 import { useConfirmModal } from "@homarr/modals";
 import { showSuccessNotification } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
@@ -28,6 +29,23 @@ export function CustomWidgetSourcesEditor({
   const clearSecretMutation = clientApi.customWidget.secretClear.useMutation();
   const sources = parseSources(form.values.sources);
   const update = (index: number, changes: Partial<CustomWidgetSource> & { id?: string }) => {
+    const previous = sources[index];
+    if (changes.auth !== undefined && previous) {
+      let secrets = filterSecretsForSourceAuthentication(form.values.secrets, previous.id, changes.auth);
+      if (
+        definitionId &&
+        previous.type !== "integration" &&
+        typeof changes.auth === "object" &&
+        changes.auth.type === "headers" &&
+        !hasSameCustomWidgetSourceAuthentication(previous, { ...previous, auth: changes.auth })
+      ) {
+        secrets = secrets.map((secret) => {
+          if (secret.sourceId !== previous.id) return secret;
+          return { ...secret, hasValue: false };
+        });
+      }
+      form.setFieldValue("secrets", secrets);
+    }
     if (changes.type) {
       form.setFieldValue(
         "secrets",
@@ -76,17 +94,12 @@ export function CustomWidgetSourcesEditor({
     }
   };
   const setAuth = (index: number, type: string) => {
-    const auth =
-      type === "apiKeyHeader" ? { type, name: "X-API-Key" } : type === "apiKeyQuery" ? { type, name: "api_key" } : type;
-    update(index, { auth: auth as CustomWidgetSource["auth"] });
-    form.setFieldValue(
-      "secrets",
-      filterSecretsForSourceAuthentication(
-        form.values.secrets,
-        sources[index]?.id ?? "",
-        type as Parameters<typeof filterSecretsForSourceAuthentication>[2],
-      ),
-    );
+    let auth: CustomWidgetHttpSource["auth"];
+    if (type === "apiKeyHeader") auth = { type, name: "X-API-Key" };
+    else if (type === "apiKeyQuery") auth = { type, name: "api_key" };
+    else if (type === "headers") auth = { type, headers: [{ name: "X-API-Key", slot: "key" }] };
+    else auth = type as "none" | "basic" | "bearer";
+    update(index, { auth });
   };
   const setSecret = (sourceId: string, kind: string, value: string) => {
     const current = form.values.secrets.filter((secret) => !(secret.sourceId === sourceId && secret.kind === kind));
@@ -159,7 +172,7 @@ export function CustomWidgetSourcesEditor({
       onConfirm: () => removeSourceAndDependents(index),
     });
   };
-  const clearSecret = async (sourceId: string, kind: "apiKey" | "username" | "password") => {
+  const clearSecret = async (sourceId: string, kind: CustomWidgetSecretKind) => {
     if (!definitionId) return;
     await clearSecretMutation.mutateAsync({ definitionId, sourceId, kind });
     const current = form.values.secrets.filter((secret) => !(secret.sourceId === sourceId && secret.kind === kind));

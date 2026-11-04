@@ -1,10 +1,15 @@
-import { Box, Center, Image } from "@mantine/core";
+"use client";
+
+import { Box, Center, Image, useComputedColorScheme, useMantineTheme, v8CssVariablesResolver } from "@mantine/core";
 import { IconLayoutGrid } from "@tabler/icons-react";
 
 import type { BoardPreviewData, BoardPreviewLayout } from "@homarr/boards/layout-preview";
 import { projectBoardLayout } from "@homarr/boards/layout-preview";
 import { boardLanes, getBoardLaneColumnCount, getRootSectionLane } from "@homarr/definitions";
+import { useSettings } from "@homarr/settings";
 import { widgetCatalogIcons } from "@homarr/ui/widget-icons";
+
+import { generateColorScale } from "~/theme/branding";
 
 import classes from "./board-layout-thumbnail.module.css";
 
@@ -28,12 +33,29 @@ export const BoardLayoutThumbnail = ({
   layout: selectedLayout,
   sourceLayout,
 }: BoardLayoutThumbnailProps) => {
+  const theme = useMantineTheme();
+  const colorScheme = useComputedColorScheme("light");
+  const { branding } = useSettings();
+  let colorVariables;
+  if (preview?.primaryColor) {
+    const primaryColor = branding.lockPrimaryColor ? branding.primaryColor : preview.primaryColor;
+    const variables = v8CssVariablesResolver({
+      ...theme,
+      primaryColor: "boardPreview",
+      colors: { ...theme.colors, boardPreview: generateColorScale(primaryColor) },
+    });
+    colorVariables = Object.fromEntries(
+      Object.entries({ ...variables.variables, ...variables[colorScheme] }).filter(
+        ([key]) => key.startsWith("--mantine-primary-color-") || key.startsWith("--mantine-color-boardPreview-"),
+      ),
+    );
+  }
   const canvasClassName = [classes.canvas, className].filter(Boolean).join(" ");
   const layout =
     selectedLayout ?? preview?.layouts.find((candidate) => candidate.role === "base") ?? preview?.layouts.at(0);
   if (!preview || !layout) {
     return (
-      <Center className={canvasClassName} role="img" aria-label={label}>
+      <Center className={canvasClassName} style={colorVariables} role="img" aria-label={label}>
         <IconLayoutGrid size={28} stroke={1.4} aria-hidden />
       </Center>
     );
@@ -51,7 +73,7 @@ export const BoardLayoutThumbnail = ({
   });
   if (lanes.length === 0) {
     return (
-      <Center className={canvasClassName} role="img" aria-label={label}>
+      <Center className={canvasClassName} style={colorVariables} role="img" aria-label={label}>
         <IconLayoutGrid size={28} stroke={1.4} aria-hidden />
       </Center>
     );
@@ -68,7 +90,7 @@ export const BoardLayoutThumbnail = ({
   };
 
   return (
-    <Box className={canvasClassName} role="img" aria-label={label}>
+    <Box className={canvasClassName} style={colorVariables} role="img" aria-label={label}>
       <div
         className={classes.lanes}
         style={{ gridTemplateColumns: lanes.map(({ columnCount }) => `${columnCount}fr`).join(" ") }}

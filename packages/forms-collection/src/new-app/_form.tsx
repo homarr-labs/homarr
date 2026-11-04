@@ -13,6 +13,7 @@ import { Link } from "@homarr/ui";
 import { appManageSchema } from "@homarr/validation/app";
 
 import { IconPicker } from "../icon-picker/icon-picker";
+import { AppUrlLabel } from "./_url-label";
 
 type FormType = z.infer<typeof appManageSchema>;
 
@@ -147,7 +148,7 @@ export const AppForm = ({
           minRows={2}
           resize="vertical"
         />
-        <TextInput {...form.getInputProps("href")} label={invariantTechnicalLabels.url} />
+        <TextInput {...form.getInputProps("href")} label={<AppUrlLabel />} aria-label={invariantTechnicalLabels.url} />
 
         <Checkbox
           checked={opened}

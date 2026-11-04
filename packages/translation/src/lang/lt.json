@@ -65,7 +65,6 @@
         "themeAuto": "Sistema",
         "themeLight": "Šviesi",
         "themeDark": "Tamsi",
-        "serverOriginHelp": "„Homarr“ naudoja šį adresą, kad iš anksto užpildytų aptiktų paslaugų URL. Visas paslaugas vis tiek galite redaguoti atskirai.",
         "serverDescription": "Tai tik spartusis būdas, o ne apribojimas. Kiekvieną aptiktą paslaugą galima redaguoti.",
         "serverOrigin": "Domenas, IP arba atvirkštinio tarpinio serverio kelias",
         "serverOriginDescription": "Pavyzdžiai: home.lan, 192.168.1.10 arba https://home.example.com/services. Toliau pasirinkite, kaip bus pridedama kiekviena paslauga.",
@@ -102,6 +101,8 @@
       "connect": {
         "title": "Prijunkite tai, kas daro lentą naudingą",
         "description": "Pasirinkite kelias paslaugas vienu metu. „Docker“ etiketėms teikiama pirmenybė, spragas užpildo vaizdų atitiktis, o kiekvieną URL ir kredencialą galima peržiūrėti.",
+        "confirmServerAddress": "",
+        "serverAddressReviewed": "",
         "discoveredIntegrations": "Aptikti integracijų egzemplioriai ({count})",
         "detectedIntegrationLabel": "Importuoti {name}, aptikta kaip {kind}",
         "detectedAppLabel": "Importuoti aptiktą programą {name}",
@@ -126,7 +127,8 @@
         "needsConfiguration": "Reikia sukonfigūruoti",
         "tested": "Ryšys patikrintas",
         "testFailed": "Ryšio patikrinti nepavyko",
-        "incompleteConfirmation": "Nebaigtos integracijos bus praleistos. Tęsti be jų?"
+        "incompleteConfirmation": "Nebaigtos integracijos bus praleistos. Tęsti be jų?",
+        "skipIncomplete": ""
       },
       "board": {
         "title": "Suformuokite lentą prieš ją sukuriant",
@@ -799,6 +801,11 @@
       }
     },
     "field": {
+      "url": {
+        "helpLabel": "URL formatų pavyzdžiai",
+        "examples": "Palaikomų nuorodų pavyzdžiai",
+        "requiresHandler": "Pasirinktiniams protokolams reikia susietos programos jūsų įrenginyje."
+      },
       "description": {
         "label": "Aprašymas"
       },
@@ -1925,6 +1932,8 @@
     "here": "čia",
     "serviceUrlTemplate": {
       "serverTitle": "Įprastas serverio adresas",
+      "description": "",
+      "example": "",
       "urlModeLabel": "Paslaugos adreso šablonas",
       "hostPort": "Tas pats pagrindinis kompiuteris, kiti prievadai",
       "subdomain": "Po vieną padomenį kiekvienai paslaugai",
@@ -2312,6 +2321,15 @@
       "option": {
         "appId": {
           "label": "Pasirinkite programėlę"
+        },
+        "openIn": {
+          "label": "Atverti programėlę",
+          "description": "Pasirinkite, kur atverti šią programėlę. Naršyklės nuostatos gali pakeisti atvėrimą atskirame lange.",
+          "option": {
+            "currentTab": "Dabartinėje kortelėje",
+            "newTab": "Naujoje kortelėje",
+            "newWindow": "Naujame lange"
+          }
         },
         "showTitle": {
           "label": "Rodyti programėlės pavadinimą"
@@ -4758,27 +4776,59 @@
       "name": "Leidiniai",
       "description": "Rodo pateiktų saugyklų dabartinių versijų sąrašą, naudodamas pateiktą versijų reguliarųjį reiškinį.",
       "option": {
+        "layout": {
+          "label": "",
+          "description": "",
+          "option": {
+            "comfortable": "",
+            "compact": ""
+          }
+        },
+        "summary": {
+          "label": "",
+          "description": "",
+          "option": {
+            "detailed": "",
+            "count": "",
+            "hidden": ""
+          }
+        },
+        "groupReleases": {
+          "label": "",
+          "description": ""
+        },
+        "sections": {
+          "label": "",
+          "description": ""
+        },
         "newReleaseWithin": {
           "label": "Naujas leidinys per",
-          "description": "Naudojimo pavyzdys: 1w (1 savaitė), 10M (10 mėnesių). Priimami vienetai: h (valandos), d (dienos), w (savaitės), M (mėnesiai), y (metai). Palikite tuščią, jei nenorite paryškinti naujų leidimų."
+          "description": "Naudojimo pavyzdys: 1w (1 savaitė), 10M (10 mėnesių). Priimami vienetai: h (valandos), d (dienos), w (savaitės), M (mėnesiai), y (metai). Palikite tuščią, jei nenorite paryškinti naujų leidimų.",
+          "option": {
+            "never": "",
+            "1d": "",
+            "3d": "",
+            "1w": "",
+            "2w": "",
+            "1M": "",
+            "3M": ""
+          }
         },
         "staleReleaseWithin": {
           "label": "Pasenęs leidinys per",
-          "description": "Naudojimo pavyzdys: 1w (1 savaitė), 10M (10 mėnesių). Priimami vienetai: h (valandos), d (dienos), w (savaitės), M (mėnesiai), y (metai). Palikite tuščią, jei nenorite paryškinti pasenusių leidimų."
+          "description": "Naudojimo pavyzdys: 1w (1 savaitė), 10M (10 mėnesių). Priimami vienetai: h (valandos), d (dienos), w (savaitės), M (mėnesiai), y (metai). Palikite tuščią, jei nenorite paryškinti pasenusių leidimų.",
+          "option": {
+            "never": "",
+            "1M": "",
+            "3M": "",
+            "6M": "",
+            "1y": "",
+            "2y": ""
+          }
         },
-        "showOnlyHighlighted": {
-          "label": "Rodyti tik paryškintus",
-          "description": "Rodyti tik naujas arba pasenusias versijas, kaip nurodyta pirmiau."
-        },
-        "showDetails": {
-          "label": "Rodyti informaciją"
-        },
-        "showOnlyIcon": {
-          "label": "Rodyti tik piktogramą"
-        },
-        "topReleases": {
-          "label": "Populiariausi",
-          "description": "Didžiausias rodomų naujausių leidimų skaičius. Nulis reiškia, kad apribojimo nėra."
+        "showChangelogPreview": {
+          "label": "",
+          "description": ""
         },
         "repositories": {
           "label": "Saugyklos",
@@ -4811,6 +4861,10 @@
           },
           "name": {
             "label": "Vardas"
+          },
+          "excludePrereleases": {
+            "label": "",
+            "description": ""
           },
           "versionFilter": {
             "label": "Versijos filtras",
@@ -4852,36 +4906,110 @@
           }
         }
       },
-      "not-found": "Nerasta",
-      "pre-release": "Išankstinis",
-      "archived": "Archyvuota",
-      "forked": "Fork",
+      "summary": {
+        "newReleases": "",
+        "newShort": "",
+        "tracked": "",
+        "caughtUp": "",
+        "outdated": "",
+        "outdatedShort": "",
+        "failing": "",
+        "failingShort": "",
+        "latest": "",
+        "issues": ""
+      },
+      "section": {
+        "new": {
+          "label": "",
+          "description": ""
+        },
+        "attention": {
+          "label": "",
+          "description": ""
+        },
+        "upToDate": {
+          "label": "",
+          "description": ""
+        },
+        "quiet": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "status": {
+        "new": "",
+        "outdated": "",
+        "error": "",
+        "upToDate": "",
+        "quiet": ""
+      },
+      "tag": {
+        "new": "",
+        "preRelease": "",
+        "resolvedFrom": "",
+        "quiet": "",
+        "archived": "",
+        "fork": ""
+      },
+      "issue": {
+        "affected": "",
+        "rateLimited": {
+          "title": "",
+          "hint": ""
+        },
+        "notFound": {
+          "title": "",
+          "hint": ""
+        },
+        "noMatchingVersion": {
+          "title": "",
+          "hint": ""
+        },
+        "noReleasesFound": {
+          "title": "",
+          "hint": ""
+        },
+        "invalidIdentifier": {
+          "title": "",
+          "hint": ""
+        },
+        "noProviderSelected": {
+          "title": "",
+          "hint": ""
+        },
+        "noProviderResponse": {
+          "title": "",
+          "hint": ""
+        },
+        "unexpected": {
+          "title": "",
+          "hint": ""
+        }
+      },
+      "markViewed": "Pažymėti kaip peržiūrėtą",
+      "markAllViewed": "",
+      "markEntryViewed": "",
+      "viewed": "",
+      "copyVersion": "",
+      "copied": "",
+      "published": "",
+      "whatChanged": "",
+      "noNotes": "",
+      "changes": "",
       "starsCount": "Žvaigždės",
       "forksCount": "Šakos",
-      "issuesCount": "Atviros problemos",
-      "markViewed": "Pažymėti kaip peržiūrėtą",
-      "openProjectPage": "Atidaryti projekto puslapį",
-      "openReleasePage": "Atidaryti leidimo puslapį",
-      "releaseDescription": "Leidimo aprašymas",
-      "projectDescription": "Projekto aprašymas",
+      "openIssues": "",
+      "created": "Sukurta",
+      "releasePage": "",
+      "projectPage": "",
       "runningVersions": "",
       "upToDate": "",
       "updateAvailable": "",
       "unknownStatus": "Nežinoma",
-      "created": "Sukurta",
       "error": {
-        "label": "Klaida",
-        "messages": {
-          "invalidIdentifier": "Netinkamas identifikatorius",
-          "noMatchingVersion": "Atitinkančios versijos nerasta",
-          "noReleasesFound": "Leidimų nerasta",
-          "noProviderSelected": "Teikėjas nepasirinktas",
-          "noProviderResponse": "Teikėjas neatsakė",
-          "unexpected": "Netikėta teikėjo klaida"
-        }
-      },
-      "expandDetails": "Rodyti {name} išsamią informaciją",
-      "collapseDetails": "Slėpti {name} išsamią informaciją"
+        "collapsedSaveTitle": "",
+        "collapsedSaveMessage": ""
+      }
     },
     "networkControllerSummary": {
       "advanced": {
@@ -5387,6 +5515,9 @@
       "name": "Beszel sistemos (lentelė)",
       "description": "Visų Beszel stebimų sistemų lentelės vaizdas su rūšiuojamais stulpeliais ir būsenos indikatoriais",
       "option": {
+        "fahrenheit": {
+          "label": ""
+        },
         "sortBy": {
           "label": "Rūšiuoti pagal"
         },
@@ -5401,7 +5532,12 @@
     },
     "beszelSystemGrid": {
       "name": "Beszel sistemos (tinklelis)",
-      "description": "Visų Beszel stebimų sistemų kortelių tinklelio vaizdas su realaus laiko metrika"
+      "description": "Visų Beszel stebimų sistemų kortelių tinklelio vaizdas su realaus laiko metrika",
+      "option": {
+        "fahrenheit": {
+          "label": ""
+        }
+      }
     },
     "beszelAlerts": {
       "name": "Beszel įspėjimai",
@@ -6079,6 +6215,18 @@
       "addWidget": "Pridėti valdiklį",
       "addApp": "Pridėti programėlę",
       "connectService": "Prijungti paslaugą"
+    },
+    "urlDrop": {
+      "hint": "",
+      "resolving": "",
+      "notification": {
+        "success": {
+          "message": ""
+        },
+        "full": {
+          "message": ""
+        }
+      }
     },
     "setupChecklist": {
       "title": "Paverskite šią lentą naudinga",
@@ -6925,6 +7073,10 @@
             "signInOverlay": {
               "label": "Fono perdanga"
             },
+            "signInMarquee": {
+              "label": "",
+              "description": ""
+            },
             "defaultRadius": {
               "label": "Kampų stilius",
               "options": {
@@ -7090,6 +7242,7 @@
             "model": {
               "title": "Modelis",
               "description": "Pasirinkite aptiktą modelį arba įveskite tikslų galinio taško modelio ID.",
+              "save": "",
               "placeholder": "Modelio ID",
               "refresh": "Atnaujinti modelius",
               "chooseModel": "Pasirinkite modelį, naudojamą naujiems pokalbiams.",
@@ -8685,6 +8838,14 @@
     "conversationActions": "Pokalbio veiksmai",
     "searchConversations": "Ieškoti pokalbių",
     "noMatchingConversations": "Atitinkančių pokalbių nėra",
+    "historyError": {
+      "title": "",
+      "load": "",
+      "loadMessages": "",
+      "saveMessages": "",
+      "switch": "",
+      "retry": ""
+    },
     "moreActions": "Daugiau atsakymo veiksmų",
     "renameConversation": {
       "action": "Pervadinti",
@@ -8804,6 +8965,9 @@
     },
     "mentions": {
       "menu": "Pridėti „Homarr“ kontekstą",
+      "back": "",
+      "loading": "",
+      "empty": "",
       "context": "Kontekstas",
       "app": "Programėlės",
       "integration": "Integracijos",
@@ -8818,6 +8982,8 @@
     },
     "commands": {
       "menu": "Asistento komandos",
+      "hint": "",
+      "empty": "",
       "health": "Parengti paslaugos būklės patikrą",
       "explore": "Parengti šio „Homarr“ egzemplioriaus apžvalgą",
       "media": "Parengti medijos paiešką",
@@ -9000,6 +9166,7 @@
     "approvalDescription": "Peržiūrėkite šį pakeitimą prieš jį vykdydami.",
     "approveAndRun": "Patvirtinti ir vykdyti",
     "deny": "Atmesti",
+    "approvalError": "",
     "autoApproval": {
       "label": "Automatiniai patvirtinimai",
       "composerLabel": "Patvirtinti už mane",

@@ -65,7 +65,6 @@
         "themeAuto": "System",
         "themeLight": "Lys",
         "themeDark": "Mørk",
-        "serverOriginHelp": "Homarr bruker denne adressen for å forhåndsutfylle oppdagede tjeneste-adresser. Du kan fremdeles redigere hver tjeneste individuelt.",
         "serverDescription": "Dette er en snarvei, ikke en restriksjon. Alle oppdagede tjenester er fortsatt redigerbare.",
         "serverOrigin": "",
         "serverOriginDescription": "Eksempler: home.lan, 192.168.1.10, eller https://home.example.com/services. Velg hvordan hver tjeneste er lagt til nedenfor.",
@@ -102,6 +101,8 @@
       "connect": {
         "title": "Tilknytt hva som gjør tavlen nyttig",
         "description": "Velg flere tjenester samtidig. Legeetikettene prioriterer bilde, bilder som matcher filer og alle URL-er og legitimasjonsopphold kan gjennomgås.",
+        "confirmServerAddress": "",
+        "serverAddressReviewed": "",
         "discoveredIntegrations": "Oppdagede integrasjonsinstanser ({count})",
         "detectedIntegrationLabel": "Importer {name}, oppdaget som {kind}",
         "detectedAppLabel": "Importer oppdagede apper {name}",
@@ -126,7 +127,8 @@
         "needsConfiguration": "Trenger konfigurasjon",
         "tested": "Tilkobling testet",
         "testFailed": "Tilkoblingstesten mislyktes",
-        "incompleteConfirmation": "Uferdige integrasjoner vil bli hoppet over. Fortsette uten dem?"
+        "incompleteConfirmation": "Uferdige integrasjoner vil bli hoppet over. Fortsette uten dem?",
+        "skipIncomplete": ""
       },
       "board": {
         "title": "Rist brettet før det er bygget",
@@ -799,6 +801,11 @@
       }
     },
     "field": {
+      "url": {
+        "helpLabel": "Eksempler på URL-formater",
+        "examples": "Eksempler på støttede lenker",
+        "requiresHandler": "Egendefinerte protokoller krever en tilknyttet app på enheten din."
+      },
       "description": {
         "label": "Beskrivelse"
       },
@@ -1925,6 +1932,8 @@
     "here": "her",
     "serviceUrlTemplate": {
       "serverTitle": "Vanlig serveradresse",
+      "description": "",
+      "example": "",
       "urlModeLabel": "Service adresse mønster",
       "hostPort": "Samme vert, forskjellige porter",
       "subdomain": "Ett deldomene per tjeneste",
@@ -2312,6 +2321,15 @@
       "option": {
         "appId": {
           "label": "Velg app"
+        },
+        "openIn": {
+          "label": "Åpne app i",
+          "description": "Velg hvor denne appen skal åpnes. Nettleserinnstillingene dine kan overstyre åpning i et eget vindu.",
+          "option": {
+            "currentTab": "Gjeldende fane",
+            "newTab": "Ny fane",
+            "newWindow": "Nytt vindu"
+          }
         },
         "showTitle": {
           "label": "Vis app navn"
@@ -4758,27 +4776,59 @@
       "name": "Utgivelser",
       "description": "Viser en liste over gjeldende versjoner for angitte repositorier med gitt versjonsregex.",
       "option": {
+        "layout": {
+          "label": "Oppsett",
+          "description": "",
+          "option": {
+            "comfortable": "Komfortabel",
+            "compact": "Kompakt"
+          }
+        },
+        "summary": {
+          "label": "",
+          "description": "",
+          "option": {
+            "detailed": "",
+            "count": "",
+            "hidden": "Skjult"
+          }
+        },
+        "groupReleases": {
+          "label": "",
+          "description": ""
+        },
+        "sections": {
+          "label": "",
+          "description": ""
+        },
         "newReleaseWithin": {
           "label": "Ny utgivelse innen",
-          "description": "Brukseksempel: 1w (1 uke), 10M (10 måneder). Gyldige enheter h (timer), d (dager), w (uker), M (måneder), y (år). La stå tomt for ingen markering av nye utgivelser."
+          "description": "Brukseksempel: 1w (1 uke), 10M (10 måneder). Gyldige enheter h (timer), d (dager), w (uker), M (måneder), y (år). La stå tomt for ingen markering av nye utgivelser.",
+          "option": {
+            "never": "",
+            "1d": "1 dag",
+            "3d": "3 dager",
+            "1w": "1 uke",
+            "2w": "",
+            "1M": "1 måned",
+            "3M": "3 måneder"
+          }
         },
         "staleReleaseWithin": {
           "label": "Utdatert utgivelse innen",
-          "description": "Brukseksempel: 1w (1 uke), 10M (10 måneder). Gyldige enheter h (timer), d (dager), w (uker), M (måneder), y (år). La stå tomt for ingen markering av utdaterte utgivelser."
+          "description": "Brukseksempel: 1w (1 uke), 10M (10 måneder). Gyldige enheter h (timer), d (dager), w (uker), M (måneder), y (år). La stå tomt for ingen markering av utdaterte utgivelser.",
+          "option": {
+            "never": "",
+            "1M": "1 måned",
+            "3M": "3 måneder",
+            "6M": "6 måneder",
+            "1y": "1 år",
+            "2y": "2 år"
+          }
         },
-        "showOnlyHighlighted": {
-          "label": "Vis bare uthevede",
-          "description": "Vis bare nye eller utdaterte utgivelser. Som beskrevet ovenfor."
-        },
-        "showDetails": {
-          "label": "Vis detaljer"
-        },
-        "showOnlyIcon": {
-          "label": "Vis bare ikon"
-        },
-        "topReleases": {
-          "label": "Topp utgivelser",
-          "description": "Maks antall nyeste utgivelser som vises. Null betyr ingen grense."
+        "showChangelogPreview": {
+          "label": "",
+          "description": ""
         },
         "repositories": {
           "label": "Repositorier",
@@ -4811,6 +4861,10 @@
           },
           "name": {
             "label": "Navn"
+          },
+          "excludePrereleases": {
+            "label": "",
+            "description": ""
           },
           "versionFilter": {
             "label": "Versjonsfilter",
@@ -4852,36 +4906,110 @@
           }
         }
       },
-      "not-found": "Ikke funnet",
-      "pre-release": "Forhåndsutgivelse",
-      "archived": "Arkivert",
-      "forked": "Forgrenet",
+      "summary": {
+        "newReleases": "",
+        "newShort": "ny",
+        "tracked": "",
+        "caughtUp": "",
+        "outdated": "",
+        "outdatedShort": "utdatert",
+        "failing": "",
+        "failingShort": "",
+        "latest": "",
+        "issues": ""
+      },
+      "section": {
+        "new": {
+          "label": "Ny",
+          "description": ""
+        },
+        "attention": {
+          "label": "Trenger oppmerksomhet",
+          "description": ""
+        },
+        "upToDate": {
+          "label": "Opp til dato",
+          "description": ""
+        },
+        "quiet": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "status": {
+        "new": "",
+        "outdated": "",
+        "error": "",
+        "upToDate": "opp til dato",
+        "quiet": ""
+      },
+      "tag": {
+        "new": "Ny",
+        "preRelease": "",
+        "resolvedFrom": "",
+        "quiet": "",
+        "archived": "Arkivert",
+        "fork": ""
+      },
+      "issue": {
+        "affected": "",
+        "rateLimited": {
+          "title": "",
+          "hint": ""
+        },
+        "notFound": {
+          "title": "",
+          "hint": ""
+        },
+        "noMatchingVersion": {
+          "title": "",
+          "hint": ""
+        },
+        "noReleasesFound": {
+          "title": "",
+          "hint": ""
+        },
+        "invalidIdentifier": {
+          "title": "Ugyldig identifikator",
+          "hint": ""
+        },
+        "noProviderSelected": {
+          "title": "Ingen leverandør valgt",
+          "hint": ""
+        },
+        "noProviderResponse": {
+          "title": "",
+          "hint": ""
+        },
+        "unexpected": {
+          "title": "",
+          "hint": ""
+        }
+      },
+      "markViewed": "Merk som sett",
+      "markAllViewed": "",
+      "markEntryViewed": "",
+      "viewed": "",
+      "copyVersion": "",
+      "copied": "Kopiert",
+      "published": "",
+      "whatChanged": "",
+      "noNotes": "",
+      "changes": "",
       "starsCount": "Stjerner",
       "forksCount": "Forgreninger",
-      "issuesCount": "Åpne saker",
-      "markViewed": "Merk som sett",
-      "openProjectPage": "Åpne prosjektside",
-      "openReleasePage": "Åpne releaseside",
-      "releaseDescription": "Utgivelsesbeskrivelse",
-      "projectDescription": "Prosjektbeskrivelse",
+      "openIssues": "",
+      "created": "Opprettet",
+      "releasePage": "",
+      "projectPage": "",
       "runningVersions": "Kjører versjoner",
       "upToDate": "Opp til dato",
       "updateAvailable": "Oppdatering tilgjengelig",
       "unknownStatus": "Ukjent",
-      "created": "Opprettet",
       "error": {
-        "label": "Feil",
-        "messages": {
-          "invalidIdentifier": "Ugyldig identifikator",
-          "noMatchingVersion": "Ingen samsvarende versjon funnet",
-          "noReleasesFound": "Ingen utgivelser funnet",
-          "noProviderSelected": "Ingen leverandør valgt",
-          "noProviderResponse": "Ingen respons fra leverandør",
-          "unexpected": "Uventet leverandørfeil"
-        }
-      },
-      "expandDetails": "Vis detaljer for {name}",
-      "collapseDetails": "Skjul detaljer for {name}"
+        "collapsedSaveTitle": "",
+        "collapsedSaveMessage": ""
+      }
     },
     "networkControllerSummary": {
       "advanced": {
@@ -5387,6 +5515,9 @@
       "name": "Beszel systemer (tabell)",
       "description": "Tabellvisning for alle Beszel-overvåkede systemer med sorterbare kolonner og statusindikatorer",
       "option": {
+        "fahrenheit": {
+          "label": "Temperatur i Fahrenheit"
+        },
         "sortBy": {
           "label": "Sorter etter"
         },
@@ -5401,7 +5532,12 @@
     },
     "beszelSystemGrid": {
       "name": "",
-      "description": "Korttabellvisning for alle Beszel-overvåkede systemer med sanntidsmåltall"
+      "description": "Korttabellvisning for alle Beszel-overvåkede systemer med sanntidsmåltall",
+      "option": {
+        "fahrenheit": {
+          "label": "Temperatur i Fahrenheit"
+        }
+      }
     },
     "beszelAlerts": {
       "name": "",
@@ -6079,6 +6215,18 @@
       "addWidget": "Legg til modul",
       "addApp": "Legg til app",
       "connectService": "Koble til tjeneste"
+    },
+    "urlDrop": {
+      "hint": "",
+      "resolving": "",
+      "notification": {
+        "success": {
+          "message": ""
+        },
+        "full": {
+          "message": ""
+        }
+      }
     },
     "setupChecklist": {
       "title": "Gjør tavlen nyttig",
@@ -6925,6 +7073,10 @@
             "signInOverlay": {
               "label": "Bakgrunnsoverlegg"
             },
+            "signInMarquee": {
+              "label": "",
+              "description": ""
+            },
             "defaultRadius": {
               "label": "Stil på hjørne",
               "options": {
@@ -7090,6 +7242,7 @@
             "model": {
               "title": "Modell",
               "description": "Velg en oppdaget modell eller angi en eksakt endepunkt-modell-ID.",
+              "save": "",
               "placeholder": "Modell ID",
               "refresh": "Oppdater modeller",
               "chooseModel": "Velg modellen som brukes til nye samtaler.",
@@ -8685,6 +8838,14 @@
     "conversationActions": "Samtale handlinger",
     "searchConversations": "Søk i samtaler",
     "noMatchingConversations": "Ingen matchende samtaler",
+    "historyError": {
+      "title": "",
+      "load": "",
+      "loadMessages": "",
+      "saveMessages": "",
+      "switch": "",
+      "retry": ""
+    },
     "moreActions": "Flere responshandlinger",
     "renameConversation": {
       "action": "Omdøp",
@@ -8804,6 +8965,9 @@
     },
     "mentions": {
       "menu": "Legg til Homarr kontekst",
+      "back": "",
+      "loading": "",
+      "empty": "",
       "context": "Kontekst",
       "app": "Apper",
       "integration": "Integrasjoner",
@@ -8818,6 +8982,8 @@
     },
     "commands": {
       "menu": "Assistent kommandoer",
+      "hint": "",
+      "empty": "",
       "health": "Klargjør en tjeneste-helse sjekk",
       "explore": "Forbered en oversikt over denne Homarr forekomsten",
       "media": "Forbered et mediesøk",
@@ -9000,6 +9166,7 @@
     "approvalDescription": "Gjennomgå denne endringen før den kjører.",
     "approveAndRun": "Godkjenn og kjør",
     "deny": "Avslå",
+    "approvalError": "",
     "autoApproval": {
       "label": "Automatiske godkjenninger",
       "composerLabel": "Godkjenn for meg",

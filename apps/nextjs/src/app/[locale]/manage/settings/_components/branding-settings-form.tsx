@@ -178,6 +178,11 @@ export const BrandingSettingsForm = ({ form }: BrandingSettingsFormProps) => {
                 </SimpleGrid>
               </Stack>
             </SimpleGrid>
+            <Switch
+              label={t("signInMarquee.label")}
+              description={t("signInMarquee.description")}
+              {...form.getInputProps("branding.showSignInMarquee", { type: "checkbox" })}
+            />
           </Stack>
         </Fieldset>
 

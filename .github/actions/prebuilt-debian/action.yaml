@@ -30,8 +30,8 @@ runs:
       shell: bash
     - name: Extract prebuilt dependencies from ${{ inputs.architecture }} container
       run: |
-        mkdir -p ${{ runner.temp }}/prebuilts && \
-        docker cp prebuilt-debian:/app/node_modules/better-sqlite3/build/Release/better_sqlite3.node ${{ runner.temp }}/prebuilts/better_sqlite3.node
+        mkdir -p "${RUNNER_TEMP}/prebuilts" && \
+        docker cp prebuilt-debian:/app/node_modules/better-sqlite3/build/Release/better_sqlite3.node "${RUNNER_TEMP}/prebuilts/better_sqlite3.node"
       shell: bash
     - name: Stop ${{ inputs.architecture }} container
       if: always()

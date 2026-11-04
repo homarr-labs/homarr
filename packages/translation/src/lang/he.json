@@ -65,7 +65,6 @@
         "themeAuto": "מערכת",
         "themeLight": "בהיר",
         "themeDark": "כהה",
-        "serverOriginHelp": "Homarr משתמש בכתובת הזו כדי למלא מראש כתובות URL של שירותים שזוהו. עדיין ניתן לערוך כל שירות בנפרד.",
         "serverDescription": "זהו קיצור דרך, לא הגבלה. כל שירות שזוהה עדיין ניתן לעריכה.",
         "serverOrigin": "דומיין, כתובת IP או נתיב של פרוקסי הפוך",
         "serverOriginDescription": "דוגמאות: home.lan, 192.168.1.10 או https://home.example.com/services. בחר כיצד לצרף כל שירות בהמשך.",
@@ -102,6 +101,8 @@
       "connect": {
         "title": "חבר את מה שהופך את הלוח לשימושי",
         "description": "בחר כמה שירותים בו-זמנית. תוויות Docker מקבלות עדיפות, התאמת תמונות משלימה פערים, וכל כתובת URL ופרטי התחברות ניתנים לבדיקה.",
+        "confirmServerAddress": "",
+        "serverAddressReviewed": "",
         "discoveredIntegrations": "מופעי אינטגרציות שזוהו ({count})",
         "detectedIntegrationLabel": "ייבא את {name}, שזוהה בתור {kind}",
         "detectedAppLabel": "ייבא את האפליקציה שזוהתה {name}",
@@ -126,7 +127,8 @@
         "needsConfiguration": "נדרשת הגדרה",
         "tested": "בדיקת החיבור הושלמה",
         "testFailed": "בדיקת החיבור נכשלה",
-        "incompleteConfirmation": "על אינטגרציות שלא הושלמו יידלגו. להמשיך בלעדיהן?"
+        "incompleteConfirmation": "על אינטגרציות שלא הושלמו יידלגו. להמשיך בלעדיהן?",
+        "skipIncomplete": ""
       },
       "board": {
         "title": "עצבו את הלוח לפני בנייתו",
@@ -799,6 +801,11 @@
       }
     },
     "field": {
+      "url": {
+        "helpLabel": "דוגמאות לפורמטים של כתובות URL",
+        "examples": "דוגמאות לקישורים נתמכים",
+        "requiresHandler": "פרוטוקולים מותאמים אישית דורשים אפליקציה משויכת במכשיר שלכם."
+      },
       "description": {
         "label": "תיאור"
       },
@@ -1925,6 +1932,8 @@
     "here": "כאן",
     "serviceUrlTemplate": {
       "serverTitle": "כתובת שרת רגילה",
+      "description": "",
+      "example": "",
       "urlModeLabel": "תבנית כתובת השירות",
       "hostPort": "אותו מארח, יציאות שונות",
       "subdomain": "תת-דומיין אחד לכל שירות",
@@ -2312,6 +2321,15 @@
       "option": {
         "appId": {
           "label": "בחר אפליקציה"
+        },
+        "openIn": {
+          "label": "מיקום פתיחת האפליקציה",
+          "description": "בחרו היכן האפליקציה תיפתח. הגדרות הדפדפן עשויות לשנות את הפתיחה בחלון נפרד.",
+          "option": {
+            "currentTab": "הכרטיסייה הנוכחית",
+            "newTab": "כרטיסייה חדשה",
+            "newWindow": "חלון חדש"
+          }
         },
         "showTitle": {
           "label": "הצג את שם האפליקציה"
@@ -4758,27 +4776,59 @@
       "name": "מהדורות",
       "description": "מציג רשימה של הגרסה הנוכחית של המאגרים הנתונים עם הקוד הרגולרי של הגרסה הנתון.",
       "option": {
+        "layout": {
+          "label": "פריסה",
+          "description": "",
+          "option": {
+            "comfortable": "",
+            "compact": ""
+          }
+        },
+        "summary": {
+          "label": "",
+          "description": "",
+          "option": {
+            "detailed": "",
+            "count": "",
+            "hidden": "מוסתר"
+          }
+        },
+        "groupReleases": {
+          "label": "",
+          "description": ""
+        },
+        "sections": {
+          "label": "",
+          "description": ""
+        },
         "newReleaseWithin": {
           "label": "מהדורה חדשה בתוך",
-          "description": "דוגמת שימוש: שבוע אחד (1), חודש אחד (10 חודשים). סוגי יחידות מקובלים: h (שעות), d (ימים), w (שבועות), M (חודשים), y (שנים). השאר ריק כדי לא להדגיש מהדורות חדשות."
+          "description": "דוגמת שימוש: שבוע אחד (1), חודש אחד (10 חודשים). סוגי יחידות מקובלים: h (שעות), d (ימים), w (שבועות), M (חודשים), y (שנים). השאר ריק כדי לא להדגיש מהדורות חדשות.",
+          "option": {
+            "never": "",
+            "1d": "יום אחד",
+            "3d": "",
+            "1w": "שבוע אחד",
+            "2w": "",
+            "1M": "חודש אחד",
+            "3M": "שלושה חודשים"
+          }
         },
         "staleReleaseWithin": {
           "label": "מהדורה חדשה בתוך",
-          "description": "דוגמת שימוש: 1w (שבוע אחד), 10M (10 חודשים). סוגי יחידות מקובלים h (שעות), d (ימים), w (שבועות), M (חודשים), y (שנים). השאר ריק כדי לא להדגיש גרסאות ישנות."
+          "description": "דוגמת שימוש: 1w (שבוע אחד), 10M (10 חודשים). סוגי יחידות מקובלים h (שעות), d (ימים), w (שבועות), M (חודשים), y (שנים). השאר ריק כדי לא להדגיש גרסאות ישנות.",
+          "option": {
+            "never": "",
+            "1M": "חודש אחד",
+            "3M": "שלושה חודשים",
+            "6M": "שישה חודשים",
+            "1y": "שנה אחת",
+            "2y": "שנתיים"
+          }
         },
-        "showOnlyHighlighted": {
-          "label": "הצג רק את המודגשים",
-          "description": "הצג רק מהדורות חדשות או ישנות. בהתאם לאמור לעיל."
-        },
-        "showDetails": {
-          "label": "הצג פרטים"
-        },
-        "showOnlyIcon": {
-          "label": "הצג רק אייקון"
-        },
-        "topReleases": {
-          "label": "מהדורות מובילות",
-          "description": "המספר המרבי של מהדורות אחרונות להצגה. אפס פירושו שאין הגבלה."
+        "showChangelogPreview": {
+          "label": "",
+          "description": ""
         },
         "repositories": {
           "label": "מאגרים",
@@ -4811,6 +4861,10 @@
           },
           "name": {
             "label": "שם"
+          },
+          "excludePrereleases": {
+            "label": "",
+            "description": ""
           },
           "versionFilter": {
             "label": "מסנן גירסאות",
@@ -4852,36 +4906,110 @@
           }
         }
       },
-      "not-found": "לא נמצא",
-      "pre-release": "קדם-הפצה",
-      "archived": "בארכיון",
-      "forked": "מפוצל",
+      "summary": {
+        "newReleases": "",
+        "newShort": "חדש",
+        "tracked": "",
+        "caughtUp": "",
+        "outdated": "",
+        "outdatedShort": "",
+        "failing": "",
+        "failingShort": "",
+        "latest": "",
+        "issues": ""
+      },
+      "section": {
+        "new": {
+          "label": "חדש",
+          "description": ""
+        },
+        "attention": {
+          "label": "",
+          "description": ""
+        },
+        "upToDate": {
+          "label": "",
+          "description": ""
+        },
+        "quiet": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "status": {
+        "new": "",
+        "outdated": "",
+        "error": "",
+        "upToDate": "",
+        "quiet": ""
+      },
+      "tag": {
+        "new": "חדש",
+        "preRelease": "",
+        "resolvedFrom": "",
+        "quiet": "",
+        "archived": "בארכיון",
+        "fork": ""
+      },
+      "issue": {
+        "affected": "",
+        "rateLimited": {
+          "title": "",
+          "hint": ""
+        },
+        "notFound": {
+          "title": "",
+          "hint": ""
+        },
+        "noMatchingVersion": {
+          "title": "",
+          "hint": ""
+        },
+        "noReleasesFound": {
+          "title": "",
+          "hint": ""
+        },
+        "invalidIdentifier": {
+          "title": "מזהה לא חוקי",
+          "hint": ""
+        },
+        "noProviderSelected": {
+          "title": "לא נבחר ספק",
+          "hint": ""
+        },
+        "noProviderResponse": {
+          "title": "",
+          "hint": ""
+        },
+        "unexpected": {
+          "title": "",
+          "hint": ""
+        }
+      },
+      "markViewed": "סמן כנצפה",
+      "markAllViewed": "",
+      "markEntryViewed": "",
+      "viewed": "",
+      "copyVersion": "",
+      "copied": "",
+      "published": "",
+      "whatChanged": "",
+      "noNotes": "",
+      "changes": "",
       "starsCount": "כוכבים",
       "forksCount": "פיצולים",
-      "issuesCount": "תקלות פתוחות",
-      "markViewed": "סמן כנצפה",
-      "openProjectPage": "פתח את דף הפרויקט",
-      "openReleasePage": "פתח את דף הגרסאות",
-      "releaseDescription": "תיאור הגרסה",
-      "projectDescription": "תיאור הפרויקט",
+      "openIssues": "",
+      "created": "נוצר",
+      "releasePage": "",
+      "projectPage": "",
       "runningVersions": "",
       "upToDate": "",
       "updateAvailable": "",
       "unknownStatus": "לא ידוע",
-      "created": "נוצר",
       "error": {
-        "label": "שגיאה",
-        "messages": {
-          "invalidIdentifier": "מזהה לא חוקי",
-          "noMatchingVersion": "לא נמצאה גרסה תואמת",
-          "noReleasesFound": "לא נמצאו שיחרורים",
-          "noProviderSelected": "",
-          "noProviderResponse": "אין תשובה מהספק",
-          "unexpected": ""
-        }
-      },
-      "expandDetails": "הצג פרטים עבור {name}",
-      "collapseDetails": "הסתר פרטים עבור {name}"
+        "collapsedSaveTitle": "",
+        "collapsedSaveMessage": ""
+      }
     },
     "networkControllerSummary": {
       "advanced": {
@@ -5387,6 +5515,9 @@
       "name": "",
       "description": "",
       "option": {
+        "fahrenheit": {
+          "label": "טמפרטורה בפרנהייט"
+        },
         "sortBy": {
           "label": ""
         },
@@ -5401,7 +5532,12 @@
     },
     "beszelSystemGrid": {
       "name": "",
-      "description": ""
+      "description": "",
+      "option": {
+        "fahrenheit": {
+          "label": "טמפרטורה בפרנהייט"
+        }
+      }
     },
     "beszelAlerts": {
       "name": "",
@@ -6079,6 +6215,18 @@
       "addWidget": "הוסף ווידג׳ט",
       "addApp": "הוסף אפליקציה",
       "connectService": "חבר שירות"
+    },
+    "urlDrop": {
+      "hint": "",
+      "resolving": "",
+      "notification": {
+        "success": {
+          "message": ""
+        },
+        "full": {
+          "message": ""
+        }
+      }
     },
     "setupChecklist": {
       "title": "הפוך את הלוח הזה לשימושי",
@@ -6925,6 +7073,10 @@
             "signInOverlay": {
               "label": "שכבת רקע"
             },
+            "signInMarquee": {
+              "label": "",
+              "description": ""
+            },
             "defaultRadius": {
               "label": "סגנון פינות",
               "options": {
@@ -7090,6 +7242,7 @@
             "model": {
               "title": "מודל",
               "description": "בחר מודל שהתגלה או הזן מזהה מודל מדויק של נקודת הקצה.",
+              "save": "",
               "placeholder": "מזהה מודל",
               "refresh": "רענן מודלים",
               "chooseModel": "בחר את המודל שישמש לשיחות חדשות.",
@@ -8685,6 +8838,14 @@
     "conversationActions": "פעולות שיחה",
     "searchConversations": "חיפוש שיחות",
     "noMatchingConversations": "אין שיחות תואמות",
+    "historyError": {
+      "title": "",
+      "load": "",
+      "loadMessages": "",
+      "saveMessages": "",
+      "switch": "",
+      "retry": ""
+    },
     "moreActions": "פעולות תגובה נוספות",
     "renameConversation": {
       "action": "שינוי שם",
@@ -8804,6 +8965,9 @@
     },
     "mentions": {
       "menu": "הוסף הקשר של Homarr",
+      "back": "",
+      "loading": "",
+      "empty": "",
       "context": "הקשר",
       "app": "אפליקציות",
       "integration": "אינטגרציות",
@@ -8818,6 +8982,8 @@
     },
     "commands": {
       "menu": "פקודות המסייע",
+      "hint": "",
+      "empty": "",
       "health": "הכן בדיקת תקינות שירות",
       "explore": "הכן סקירה של מופע Homarr זה",
       "media": "הכן חיפוש מדיה",
@@ -9000,6 +9166,7 @@
     "approvalDescription": "סקור את השינוי הזה לפני הפעלתו.",
     "approveAndRun": "אשר והפעל",
     "deny": "דחה",
+    "approvalError": "",
     "autoApproval": {
       "label": "אישורים אוטומטיים",
       "composerLabel": "אשר עבורי",

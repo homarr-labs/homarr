@@ -65,7 +65,6 @@
         "themeAuto": "Sistem",
         "themeLight": "Lumină",
         "themeDark": "Întunecat",
-        "serverOriginHelp": "Homarr folosește această adresă pentru a pre-umple URL-urile de serviciu detectate. Poți edita în continuare fiecare serviciu individual.",
         "serverDescription": "Aceasta este o scurtătură, nu o restricţie. Fiecare serviciu detectat rămâne editabil.",
         "serverOrigin": "Domeniu, IP sau cale inversă proxy",
         "serverOriginDescription": "Exemple: home.lan, 192.168.1.10, sau https://home.example.com/services. Alegeţi modul în care fiecare serviciu este adăugat mai jos.",
@@ -102,6 +101,8 @@
       "connect": {
         "title": "Conectează ce face panoul folositor",
         "description": "Selectați mai multe servicii simultan. Etichetele de Docker sunt prioritare, completarea golurilor se potrivește cu imaginile, iar fiecare URL și acreditările rămân pot fi revizuite.",
+        "confirmServerAddress": "",
+        "serverAddressReviewed": "",
         "discoveredIntegrations": "Cazuri de integrare detectate ({count})",
         "detectedIntegrationLabel": "Importă {name}, detectat ca {kind}",
         "detectedAppLabel": "Aplicația de import detectată {name}",
@@ -126,7 +127,8 @@
         "needsConfiguration": "Necesită configurare",
         "tested": "Conexiune testată",
         "testFailed": "Testul conexiunii a eșuat",
-        "incompleteConfirmation": "Integrările neterminate vor fi sărite. Continuați fără ele?"
+        "incompleteConfirmation": "Integrările neterminate vor fi sărite. Continuați fără ele?",
+        "skipIncomplete": ""
       },
       "board": {
         "title": "Forma tabla înainte de a fi construită",
@@ -799,6 +801,11 @@
       }
     },
     "field": {
+      "url": {
+        "helpLabel": "Exemple de formate URL",
+        "examples": "Exemple de linkuri acceptate",
+        "requiresHandler": "Protocoalele personalizate necesită o aplicație asociată pe dispozitivul tău."
+      },
       "description": {
         "label": "Descriere"
       },
@@ -1925,6 +1932,8 @@
     "here": "aici",
     "serviceUrlTemplate": {
       "serverTitle": "Adresă server obişnuită",
+      "description": "",
+      "example": "",
       "urlModeLabel": "Modelul adresei serviciului",
       "hostPort": "Aceeași gazdă, porturi diferite",
       "subdomain": "Un subdomeniu per serviciu",
@@ -2312,6 +2321,15 @@
       "option": {
         "appId": {
           "label": "Alegeți aplicația"
+        },
+        "openIn": {
+          "label": "Deschide aplicația în",
+          "description": "Alege unde se deschide această aplicație. Setările browserului pot modifica deschiderea într-o fereastră separată.",
+          "option": {
+            "currentTab": "Fila curentă",
+            "newTab": "O filă nouă",
+            "newWindow": "O fereastră nouă"
+          }
         },
         "showTitle": {
           "label": "Arată numele aplicației"
@@ -4758,27 +4776,59 @@
       "name": "Lansări",
       "description": "Afişează o listă a versiunii curente a depozitelor date cu o anumită versiune regex.",
       "option": {
+        "layout": {
+          "label": "Aspect",
+          "description": "",
+          "option": {
+            "comfortable": "",
+            "compact": ""
+          }
+        },
+        "summary": {
+          "label": "",
+          "description": "",
+          "option": {
+            "detailed": "",
+            "count": "",
+            "hidden": ""
+          }
+        },
+        "groupReleases": {
+          "label": "",
+          "description": ""
+        },
+        "sections": {
+          "label": "",
+          "description": ""
+        },
         "newReleaseWithin": {
           "label": "Nouă lansare în",
-          "description": "Exemplu de utilizare: 1 g (1 săptămână), 10 M (10 luni). Tipuri de unități acceptate h (ore), d (zile), w (săptămâni), M (luni), y (ani). Lăsați gol pentru a nu sublinia noile versiuni."
+          "description": "Exemplu de utilizare: 1 g (1 săptămână), 10 M (10 luni). Tipuri de unități acceptate h (ore), d (zile), w (săptămâni), M (luni), y (ani). Lăsați gol pentru a nu sublinia noile versiuni.",
+          "option": {
+            "never": "",
+            "1d": "1 zi",
+            "3d": "3 zile",
+            "1w": "1 săptămână",
+            "2w": "",
+            "1M": "1 lună",
+            "3M": "3 luni"
+          }
         },
         "staleReleaseWithin": {
           "label": "Eliberare veche în",
-          "description": "Exemplu de utilizare: 1 g (1 săptămână), 10 M (10 luni). Tipuri de unități acceptate h (ore), d (zile), w (săptămâni), M (luni), y (ani). Lăsați gol pentru a nu evidenția versiunile vechi."
+          "description": "Exemplu de utilizare: 1 g (1 săptămână), 10 M (10 luni). Tipuri de unități acceptate h (ore), d (zile), w (săptămâni), M (luni), y (ani). Lăsați gol pentru a nu evidenția versiunile vechi.",
+          "option": {
+            "never": "",
+            "1M": "1 lună",
+            "3M": "3 luni",
+            "6M": "6 luni",
+            "1y": "1 an",
+            "2y": "2 ani"
+          }
         },
-        "showOnlyHighlighted": {
-          "label": "Arată doar evidențiate",
-          "description": "Arată doar versiunile noi sau vechi. Conform celor de mai sus."
-        },
-        "showDetails": {
-          "label": "Arată detalii"
-        },
-        "showOnlyIcon": {
-          "label": "Arată doar pictograma"
-        },
-        "topReleases": {
-          "label": "Top lansări",
-          "description": "Numărul maxim de versiuni recente pentru afișare. Zero înseamnă nelimitat."
+        "showChangelogPreview": {
+          "label": "",
+          "description": ""
         },
         "repositories": {
           "label": "Repertorii",
@@ -4811,6 +4861,10 @@
           },
           "name": {
             "label": "Nume"
+          },
+          "excludePrereleases": {
+            "label": "",
+            "description": ""
           },
           "versionFilter": {
             "label": "Filtru versiune",
@@ -4852,36 +4906,110 @@
           }
         }
       },
-      "not-found": "Nu s-a găsit",
-      "pre-release": "Pre-lansare",
-      "archived": "Arhivat",
-      "forked": "Făcut",
+      "summary": {
+        "newReleases": "",
+        "newShort": "nou",
+        "tracked": "",
+        "caughtUp": "",
+        "outdated": "",
+        "outdatedShort": "învechit",
+        "failing": "",
+        "failingShort": "",
+        "latest": "",
+        "issues": ""
+      },
+      "section": {
+        "new": {
+          "label": "Nou",
+          "description": ""
+        },
+        "attention": {
+          "label": "Necesită atenție",
+          "description": ""
+        },
+        "upToDate": {
+          "label": "Actualizare actualizată",
+          "description": ""
+        },
+        "quiet": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "status": {
+        "new": "",
+        "outdated": "",
+        "error": "",
+        "upToDate": "actualizare actualizată",
+        "quiet": ""
+      },
+      "tag": {
+        "new": "Nou",
+        "preRelease": "",
+        "resolvedFrom": "",
+        "quiet": "",
+        "archived": "Arhivat",
+        "fork": ""
+      },
+      "issue": {
+        "affected": "",
+        "rateLimited": {
+          "title": "",
+          "hint": ""
+        },
+        "notFound": {
+          "title": "",
+          "hint": ""
+        },
+        "noMatchingVersion": {
+          "title": "",
+          "hint": ""
+        },
+        "noReleasesFound": {
+          "title": "",
+          "hint": ""
+        },
+        "invalidIdentifier": {
+          "title": "Identificator nevalid",
+          "hint": ""
+        },
+        "noProviderSelected": {
+          "title": "Niciun furnizor selectat",
+          "hint": ""
+        },
+        "noProviderResponse": {
+          "title": "",
+          "hint": ""
+        },
+        "unexpected": {
+          "title": "",
+          "hint": ""
+        }
+      },
+      "markViewed": "Marchează ca vizualizat",
+      "markAllViewed": "",
+      "markEntryViewed": "",
+      "viewed": "",
+      "copyVersion": "",
+      "copied": "Copiat",
+      "published": "",
+      "whatChanged": "",
+      "noNotes": "",
+      "changes": "",
       "starsCount": "Stele",
       "forksCount": "",
-      "issuesCount": "Probleme deschise",
-      "markViewed": "Marchează ca vizualizat",
-      "openProjectPage": "Deschide Pagina Proiectului",
-      "openReleasePage": "Deschide pagina de lansare",
-      "releaseDescription": "Descriere lansare",
-      "projectDescription": "Descriere proiect",
+      "openIssues": "",
+      "created": "Creat",
+      "releasePage": "",
+      "projectPage": "",
       "runningVersions": "Versiuni care rulează",
       "upToDate": "Actualizare actualizată",
       "updateAvailable": "Actualizare disponibilă",
       "unknownStatus": "Necunoscut",
-      "created": "Creat",
       "error": {
-        "label": "Eroare",
-        "messages": {
-          "invalidIdentifier": "Identificator nevalid",
-          "noMatchingVersion": "Nu s-a găsit nicio versiune potrivită",
-          "noReleasesFound": "Nu s-au găsit Partajări",
-          "noProviderSelected": "Niciun furnizor selectat",
-          "noProviderResponse": "Niciun răspuns din partea furnizorului",
-          "unexpected": "Eroare neașteptată la furnizor"
-        }
-      },
-      "expandDetails": "Arată detalii pentru {name}",
-      "collapseDetails": "Ascunde detaliile pentru {name}"
+        "collapsedSaveTitle": "",
+        "collapsedSaveMessage": ""
+      }
     },
     "networkControllerSummary": {
       "advanced": {
@@ -5387,6 +5515,9 @@
       "name": "Sisteme Beszel (Tabel)",
       "description": "Vizualizare tabel a tuturor sistemelor monitorizate Beszel cu coloane sortabile și indicatori de stare",
       "option": {
+        "fahrenheit": {
+          "label": "Temperatură în Fahrenheit"
+        },
         "sortBy": {
           "label": "Sortează după"
         },
@@ -5401,7 +5532,12 @@
     },
     "beszelSystemGrid": {
       "name": "Sisteme Beszel (Grilă)",
-      "description": "Vizualizare grilă carduri a tuturor sistemelor monitorizate Beszel cu metrici în timp real"
+      "description": "Vizualizare grilă carduri a tuturor sistemelor monitorizate Beszel cu metrici în timp real",
+      "option": {
+        "fahrenheit": {
+          "label": "Temperatură în Fahrenheit"
+        }
+      }
     },
     "beszelAlerts": {
       "name": "Alerte Beszel",
@@ -6079,6 +6215,18 @@
       "addWidget": "Adaugă widget",
       "addApp": "Adaugă aplicație",
       "connectService": "Conectare serviciu"
+    },
+    "urlDrop": {
+      "hint": "",
+      "resolving": "",
+      "notification": {
+        "success": {
+          "message": ""
+        },
+        "full": {
+          "message": ""
+        }
+      }
     },
     "setupChecklist": {
       "title": "Fă această secţiune folositoare",
@@ -6925,6 +7073,10 @@
             "signInOverlay": {
               "label": "Suprapunere de fundal"
             },
+            "signInMarquee": {
+              "label": "",
+              "description": ""
+            },
             "defaultRadius": {
               "label": "Stilul colţului",
               "options": {
@@ -7090,6 +7242,7 @@
             "model": {
               "title": "",
               "description": "Selectați un model descoperit sau introduceți un ID de model de punct exact.",
+              "save": "",
               "placeholder": "ID model",
               "refresh": "Reîmprospătare modele",
               "chooseModel": "Alege modelul folosit pentru conversații noi.",
@@ -8685,6 +8838,14 @@
     "conversationActions": "Acțiuni conversație",
     "searchConversations": "Caută conversații",
     "noMatchingConversations": "Nicio conversație potrivită",
+    "historyError": {
+      "title": "",
+      "load": "",
+      "loadMessages": "",
+      "saveMessages": "",
+      "switch": "",
+      "retry": ""
+    },
     "moreActions": "Mai multe acțiuni de răspuns",
     "renameConversation": {
       "action": "Redenumire",
@@ -8804,6 +8965,9 @@
     },
     "mentions": {
       "menu": "Adaugă context Homarr",
+      "back": "",
+      "loading": "",
+      "empty": "",
       "context": "",
       "app": "Aplicații",
       "integration": "Integrări",
@@ -8818,6 +8982,8 @@
     },
     "commands": {
       "menu": "Comenzi asistente",
+      "hint": "",
+      "empty": "",
       "health": "Pregătiți un control al stării de sănătate",
       "explore": "Pregătiți o prezentare generală a acestei instanțe Homarr",
       "media": "Pregătiți o căutare media",
@@ -9000,6 +9166,7 @@
     "approvalDescription": "Examinați această modificare înainte de a rula.",
     "approveAndRun": "Aprobă și rulează",
     "deny": "Refuză",
+    "approvalError": "",
     "autoApproval": {
       "label": "Aprobări automate",
       "composerLabel": "Aproba pentru mine",

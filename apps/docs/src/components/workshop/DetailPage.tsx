@@ -112,7 +112,9 @@ const sourceAuthLabel = (source: WidgetSource) => {
   if (auth === "none") return "No credentials";
   if (auth === "basic") return "Basic auth";
   if (auth === "bearer") return "Bearer token";
-  return auth.type === "apiKeyHeader" ? `API key header · ${auth.name}` : `API key query · ${auth.name}`;
+  if (auth.type === "headers") return `Authentication headers · ${auth.headers.map(({ name }) => name).join(", ")}`;
+  if (auth.type === "apiKeyHeader") return `API key header · ${auth.name}`;
+  return `API key query · ${auth.name}`;
 };
 
 const sourceNeedsSecret = (source: WidgetSource) => source.type !== "integration" && source.auth !== "none";

@@ -71,6 +71,7 @@ export default async function InviteUsagePage(props: InviteUsagePageProps) {
       logoImageUrl={branding.logoImageUrl ?? undefined}
       backgroundImageUrl={branding.signInBackgroundImageUrl ?? undefined}
       backgroundOverlay={branding.signInBackgroundOverlay}
+      showMarquee={branding.showSignInMarquee}
       radius={branding.defaultRadius}
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       footer={t("description", { username: invite.creator.name! })}

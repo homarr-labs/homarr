@@ -65,7 +65,6 @@
         "themeAuto": "Hệ thống",
         "themeLight": "Sáng",
         "themeDark": "Tối",
-        "serverOriginHelp": "Homarr sử dụng địa chỉ này để điền sẵn URL của các dịch vụ được phát hiện. Bạn vẫn có thể chỉnh sửa từng dịch vụ.",
         "serverDescription": "Đây là lối tắt, không phải giới hạn. Mọi dịch vụ được phát hiện vẫn có thể chỉnh sửa.",
         "serverOrigin": "Tên miền, IP hoặc đường dẫn reverse proxy",
         "serverOriginDescription": "Ví dụ: home.lan, 192.168.1.10 hoặc https://home.example.com/services. Chọn cách thêm từng dịch vụ bên dưới.",
@@ -102,6 +101,8 @@
       "connect": {
         "title": "Kết nối những thành phần làm cho bảng trở nên hữu ích",
         "description": "Chọn nhiều dịch vụ cùng lúc. Nhãn Docker được ưu tiên, việc đối chiếu hình ảnh sẽ bổ sung phần còn thiếu, và mọi URL cùng thông tin đăng nhập đều có thể xem lại.",
+        "confirmServerAddress": "",
+        "serverAddressReviewed": "",
         "discoveredIntegrations": "Các phiên bản tích hợp được phát hiện ({count})",
         "detectedIntegrationLabel": "Nhập {name}, được phát hiện là {kind}",
         "detectedAppLabel": "Nhập ứng dụng được phát hiện {name}",
@@ -126,7 +127,8 @@
         "needsConfiguration": "Cần cấu hình",
         "tested": "Đã kiểm tra kết nối",
         "testFailed": "Kiểm tra kết nối thất bại",
-        "incompleteConfirmation": "Các tích hợp chưa hoàn tất sẽ bị bỏ qua. Tiếp tục mà không có chúng?"
+        "incompleteConfirmation": "Các tích hợp chưa hoàn tất sẽ bị bỏ qua. Tiếp tục mà không có chúng?",
+        "skipIncomplete": ""
       },
       "board": {
         "title": "Định hình bảng trước khi tạo",
@@ -799,6 +801,11 @@
       }
     },
     "field": {
+      "url": {
+        "helpLabel": "Ví dụ về định dạng URL",
+        "examples": "Ví dụ về liên kết được hỗ trợ",
+        "requiresHandler": "Giao thức tùy chỉnh yêu cầu một ứng dụng được liên kết trên thiết bị của bạn."
+      },
       "description": {
         "label": "Mô tả"
       },
@@ -1925,6 +1932,8 @@
     "here": "tại đây",
     "serviceUrlTemplate": {
       "serverTitle": "Địa chỉ máy chủ thông thường",
+      "description": "",
+      "example": "",
       "urlModeLabel": "Mẫu địa chỉ dịch vụ",
       "hostPort": "Cùng máy chủ, cổng khác nhau",
       "subdomain": "Mỗi dịch vụ một tên miền phụ",
@@ -2312,6 +2321,15 @@
       "option": {
         "appId": {
           "label": "Chọn ứng dụng"
+        },
+        "openIn": {
+          "label": "Mở ứng dụng trong",
+          "description": "Chọn nơi mở ứng dụng này. Cài đặt trình duyệt có thể thay đổi việc mở trong cửa sổ riêng.",
+          "option": {
+            "currentTab": "Thẻ hiện tại",
+            "newTab": "Thẻ mới",
+            "newWindow": "Cửa sổ mới"
+          }
         },
         "showTitle": {
           "label": "Hiện tên ứng dụng"
@@ -4758,27 +4776,59 @@
       "name": "Bản phát hành",
       "description": "Hiển thị danh sách phiên bản hiện tại của các kho lưu trữ được chỉ định bằng biểu thức chính quy phiên bản tương ứng.",
       "option": {
+        "layout": {
+          "label": "Bố cục",
+          "description": "",
+          "option": {
+            "comfortable": "",
+            "compact": ""
+          }
+        },
+        "summary": {
+          "label": "",
+          "description": "",
+          "option": {
+            "detailed": "",
+            "count": "",
+            "hidden": ""
+          }
+        },
+        "groupReleases": {
+          "label": "",
+          "description": ""
+        },
+        "sections": {
+          "label": "",
+          "description": ""
+        },
         "newReleaseWithin": {
           "label": "Bản phát hành mới trong khoảng",
-          "description": "Ví dụ: 1w (1 tuần), 10M (10 tháng). Các đơn vị được chấp nhận: h (giờ), d (ngày), w (tuần), M (tháng), y (năm). Để trống nếu không muốn đánh dấu bản phát hành mới."
+          "description": "Ví dụ: 1w (1 tuần), 10M (10 tháng). Các đơn vị được chấp nhận: h (giờ), d (ngày), w (tuần), M (tháng), y (năm). Để trống nếu không muốn đánh dấu bản phát hành mới.",
+          "option": {
+            "never": "",
+            "1d": "",
+            "3d": "",
+            "1w": "",
+            "2w": "",
+            "1M": "",
+            "3M": ""
+          }
         },
         "staleReleaseWithin": {
           "label": "Bản phát hành cũ trong khoảng",
-          "description": "Ví dụ: 1w (1 tuần), 10M (10 tháng). Các đơn vị được chấp nhận: h (giờ), d (ngày), w (tuần), M (tháng), y (năm). Để trống nếu không muốn đánh dấu bản phát hành cũ."
+          "description": "Ví dụ: 1w (1 tuần), 10M (10 tháng). Các đơn vị được chấp nhận: h (giờ), d (ngày), w (tuần), M (tháng), y (năm). Để trống nếu không muốn đánh dấu bản phát hành cũ.",
+          "option": {
+            "never": "",
+            "1M": "",
+            "3M": "",
+            "6M": "",
+            "1y": "",
+            "2y": ""
+          }
         },
-        "showOnlyHighlighted": {
-          "label": "Chỉ hiển thị bản nổi bật",
-          "description": "Chỉ hiển thị các bản phát hành mới hoặc cũ. Như mô tả ở trên."
-        },
-        "showDetails": {
-          "label": "Hiển thị chi tiết"
-        },
-        "showOnlyIcon": {
-          "label": "Chỉ hiển thị biểu tượng"
-        },
-        "topReleases": {
-          "label": "Phát hành nổi bật",
-          "description": "Số bản phát hành mới nhất tối đa được hiển thị. Số 0 nghĩa là không giới hạn."
+        "showChangelogPreview": {
+          "label": "",
+          "description": ""
         },
         "repositories": {
           "label": "Kho lưu trữ",
@@ -4811,6 +4861,10 @@
           },
           "name": {
             "label": "Tên"
+          },
+          "excludePrereleases": {
+            "label": "",
+            "description": ""
           },
           "versionFilter": {
             "label": "Bộ lọc phiên bản",
@@ -4852,36 +4906,110 @@
           }
         }
       },
-      "not-found": "Không tìm thấy",
-      "pre-release": "Bản phát hành thử",
-      "archived": "Đã lưu trữ",
-      "forked": "Fork",
+      "summary": {
+        "newReleases": "",
+        "newShort": "",
+        "tracked": "",
+        "caughtUp": "",
+        "outdated": "",
+        "outdatedShort": "",
+        "failing": "",
+        "failingShort": "",
+        "latest": "",
+        "issues": ""
+      },
+      "section": {
+        "new": {
+          "label": "",
+          "description": ""
+        },
+        "attention": {
+          "label": "",
+          "description": ""
+        },
+        "upToDate": {
+          "label": "",
+          "description": ""
+        },
+        "quiet": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "status": {
+        "new": "",
+        "outdated": "",
+        "error": "",
+        "upToDate": "",
+        "quiet": ""
+      },
+      "tag": {
+        "new": "",
+        "preRelease": "",
+        "resolvedFrom": "",
+        "quiet": "",
+        "archived": "",
+        "fork": ""
+      },
+      "issue": {
+        "affected": "",
+        "rateLimited": {
+          "title": "",
+          "hint": ""
+        },
+        "notFound": {
+          "title": "",
+          "hint": ""
+        },
+        "noMatchingVersion": {
+          "title": "",
+          "hint": ""
+        },
+        "noReleasesFound": {
+          "title": "",
+          "hint": ""
+        },
+        "invalidIdentifier": {
+          "title": "",
+          "hint": ""
+        },
+        "noProviderSelected": {
+          "title": "",
+          "hint": ""
+        },
+        "noProviderResponse": {
+          "title": "",
+          "hint": ""
+        },
+        "unexpected": {
+          "title": "",
+          "hint": ""
+        }
+      },
+      "markViewed": "Đánh dấu đã xem",
+      "markAllViewed": "",
+      "markEntryViewed": "",
+      "viewed": "",
+      "copyVersion": "",
+      "copied": "",
+      "published": "",
+      "whatChanged": "",
+      "noNotes": "",
+      "changes": "",
       "starsCount": "Sao",
       "forksCount": "Fork",
-      "issuesCount": "Vấn đề đang mở",
-      "markViewed": "Đánh dấu đã xem",
-      "openProjectPage": "Mở trang dự án",
-      "openReleasePage": "Mở trang bản phát hành",
-      "releaseDescription": "Mô tả bản phát hành",
-      "projectDescription": "Mô tả dự án",
+      "openIssues": "",
+      "created": "Đã tạo",
+      "releasePage": "",
+      "projectPage": "",
       "runningVersions": "",
       "upToDate": "",
       "updateAvailable": "",
       "unknownStatus": "Không rõ",
-      "created": "Đã tạo",
       "error": {
-        "label": "Lỗi",
-        "messages": {
-          "invalidIdentifier": "Mã định danh không hợp lệ",
-          "noMatchingVersion": "Không tìm thấy phiên bản phù hợp",
-          "noReleasesFound": "Không có bản phát hành",
-          "noProviderSelected": "Chưa chọn nhà cung cấp",
-          "noProviderResponse": "Không có phản hồi từ nhà cung cấp",
-          "unexpected": "Lỗi nhà cung cấp không mong muốn"
-        }
-      },
-      "expandDetails": "Hiển thị chi tiết của {name}",
-      "collapseDetails": "Ẩn chi tiết của {name}"
+        "collapsedSaveTitle": "",
+        "collapsedSaveMessage": ""
+      }
     },
     "networkControllerSummary": {
       "advanced": {
@@ -5387,6 +5515,9 @@
       "name": "Beszel Systems (Bảng)",
       "description": "Dạng bảng của tất cả hệ thống được Beszel giám sát với các cột có thể sắp xếp và chỉ báo trạng thái",
       "option": {
+        "fahrenheit": {
+          "label": ""
+        },
         "sortBy": {
           "label": "Sắp xếp theo"
         },
@@ -5401,7 +5532,12 @@
     },
     "beszelSystemGrid": {
       "name": "Beszel Systems (Lưới)",
-      "description": "Dạng lưới thẻ của tất cả hệ thống được Beszel giám sát với các số liệu thời gian thực"
+      "description": "Dạng lưới thẻ của tất cả hệ thống được Beszel giám sát với các số liệu thời gian thực",
+      "option": {
+        "fahrenheit": {
+          "label": ""
+        }
+      }
     },
     "beszelAlerts": {
       "name": "Cảnh báo Beszel",
@@ -6079,6 +6215,18 @@
       "addWidget": "Thêm tiện ích",
       "addApp": "Thêm ứng dụng",
       "connectService": "Kết nối dịch vụ"
+    },
+    "urlDrop": {
+      "hint": "",
+      "resolving": "",
+      "notification": {
+        "success": {
+          "message": ""
+        },
+        "full": {
+          "message": ""
+        }
+      }
     },
     "setupChecklist": {
       "title": "Làm cho bảng này hữu ích",
@@ -6925,6 +7073,10 @@
             "signInOverlay": {
               "label": "Lớp phủ nền"
             },
+            "signInMarquee": {
+              "label": "",
+              "description": ""
+            },
             "defaultRadius": {
               "label": "Kiểu góc",
               "options": {
@@ -7090,6 +7242,7 @@
             "model": {
               "title": "Mô hình",
               "description": "Chọn mô hình được phát hiện hoặc nhập chính xác ID mô hình của điểm cuối.",
+              "save": "",
               "placeholder": "ID mô hình",
               "refresh": "Làm mới mô hình",
               "chooseModel": "Chọn mô hình được sử dụng cho các cuộc trò chuyện mới.",
@@ -8685,6 +8838,14 @@
     "conversationActions": "Thao tác cuộc trò chuyện",
     "searchConversations": "Tìm kiếm cuộc trò chuyện",
     "noMatchingConversations": "Không có cuộc trò chuyện phù hợp",
+    "historyError": {
+      "title": "",
+      "load": "",
+      "loadMessages": "",
+      "saveMessages": "",
+      "switch": "",
+      "retry": ""
+    },
     "moreActions": "Thao tác phản hồi khác",
     "renameConversation": {
       "action": "Đổi tên",
@@ -8804,6 +8965,9 @@
     },
     "mentions": {
       "menu": "Thêm ngữ cảnh Homarr",
+      "back": "",
+      "loading": "",
+      "empty": "",
       "context": "Ngữ cảnh",
       "app": "Ứng dụng",
       "integration": "Tích hợp",
@@ -8818,6 +8982,8 @@
     },
     "commands": {
       "menu": "Lệnh Trợ lý",
+      "hint": "",
+      "empty": "",
       "health": "Chuẩn bị kiểm tra tình trạng dịch vụ",
       "explore": "Chuẩn bị tổng quan về phiên bản Homarr này",
       "media": "Chuẩn bị tìm kiếm phương tiện",
@@ -9000,6 +9166,7 @@
     "approvalDescription": "Xem xét thay đổi này trước khi chạy.",
     "approveAndRun": "Phê duyệt và chạy",
     "deny": "Từ chối",
+    "approvalError": "",
     "autoApproval": {
       "label": "Phê duyệt tự động",
       "composerLabel": "Phê duyệt thay tôi",

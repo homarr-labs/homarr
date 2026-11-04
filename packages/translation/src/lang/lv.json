@@ -65,7 +65,6 @@
         "themeAuto": "Sistēmas",
         "themeLight": "Gaišs",
         "themeDark": "Tumšs",
-        "serverOriginHelp": "Homarr izmanto šo adresi, lai automātiski aizpildītu atklāto pakalpojumu vietrāžus. Jūs joprojām varat rediģēt katru pakalpojumu atsevišķi.",
         "serverDescription": "Tas ir īsceļš, nevis ierobežojums. Katru atklāto pakalpojumu joprojām var rediģēt.",
         "serverOrigin": "Domēns, IP adrese vai reversā starpniekservera ceļš",
         "serverOriginDescription": "Piemēri: home.lan, 192.168.1.10 vai https://home.example.com/services. Tālāk izvēlieties, kā tiks pievienots katrs pakalpojums.",
@@ -102,6 +101,8 @@
       "connect": {
         "title": "Savienojiet to, kas padara paneli noderīgu",
         "description": "Atlasiet vairākus pakalpojumus vienlaikus. Docker etiķetēm ir prioritāte, attēlu atbilstība aizpilda trūkstošo, un katru vietrādi un akreditācijas datus var pārskatīt.",
+        "confirmServerAddress": "",
+        "serverAddressReviewed": "",
         "discoveredIntegrations": "Atklātās integrācijas instances ({count})",
         "detectedIntegrationLabel": "Importēt {name}, kas atpazīts kā {kind}",
         "detectedAppLabel": "Importēt atklāto lietotni {name}",
@@ -126,7 +127,8 @@
         "needsConfiguration": "Nepieciešama konfigurēšana",
         "tested": "Savienojums pārbaudīts",
         "testFailed": "Savienojuma pārbaude neizdevās",
-        "incompleteConfirmation": "Nepabeigtās integrācijas tiks izlaistas. Vai turpināt bez tām?"
+        "incompleteConfirmation": "Nepabeigtās integrācijas tiks izlaistas. Vai turpināt bez tām?",
+        "skipIncomplete": ""
       },
       "board": {
         "title": "Veidojiet dēli pirms tā izveides",
@@ -799,6 +801,11 @@
       }
     },
     "field": {
+      "url": {
+        "helpLabel": "URL formātu piemēri",
+        "examples": "Atbalstīto saišu piemēri",
+        "requiresHandler": "Pielāgotiem protokoliem ir nepieciešama saistīta lietotne jūsu ierīcē."
+      },
       "description": {
         "label": "Apraksts"
       },
@@ -1925,6 +1932,8 @@
     "here": "šeit",
     "serviceUrlTemplate": {
       "serverTitle": "Parastā servera adrese",
+      "description": "",
+      "example": "",
       "urlModeLabel": "Pakalpojuma adreses shēma",
       "hostPort": "Tas pats resursdators, citi porti",
       "subdomain": "Viens apakšdomēns katram pakalpojumam",
@@ -2312,6 +2321,15 @@
       "option": {
         "appId": {
           "label": "Izvēlēties lietotni"
+        },
+        "openIn": {
+          "label": "Atvērt lietotni",
+          "description": "Izvēlieties, kur atvērt šo lietotni. Pārlūkprogrammas iestatījumi var mainīt atvēršanu atsevišķā logā.",
+          "option": {
+            "currentTab": "Pašreizējā cilnē",
+            "newTab": "Jaunā cilnē",
+            "newWindow": "Jaunā logā"
+          }
         },
         "showTitle": {
           "label": "Rādīt lietotnes nosaukumu"
@@ -4758,27 +4776,59 @@
       "name": "Laidieni",
       "description": "Parāda jaunāko norādīto repozitoriju versiju sarakstu, izmantojot norādīto versiju regulāro izteiksmi.",
       "option": {
+        "layout": {
+          "label": "Izkārtojums",
+          "description": "",
+          "option": {
+            "comfortable": "",
+            "compact": ""
+          }
+        },
+        "summary": {
+          "label": "",
+          "description": "",
+          "option": {
+            "detailed": "",
+            "count": "",
+            "hidden": ""
+          }
+        },
+        "groupReleases": {
+          "label": "",
+          "description": ""
+        },
+        "sections": {
+          "label": "",
+          "description": ""
+        },
         "newReleaseWithin": {
           "label": "Jauns laidiens pēdējo",
-          "description": "Lietošanas piemērs: 1w (1 nedēļa), 10M (10 mēneši). Pieņemtie mērvienību tipi: h (stundas), d (dienas), w (nedēļas), M (mēneši), y (gadi). Atstājiet tukšu, lai neizceltu jaunos laidienus."
+          "description": "Lietošanas piemērs: 1w (1 nedēļa), 10M (10 mēneši). Pieņemtie mērvienību tipi: h (stundas), d (dienas), w (nedēļas), M (mēneši), y (gadi). Atstājiet tukšu, lai neizceltu jaunos laidienus.",
+          "option": {
+            "never": "",
+            "1d": "",
+            "3d": "",
+            "1w": "",
+            "2w": "",
+            "1M": "",
+            "3M": ""
+          }
         },
         "staleReleaseWithin": {
           "label": "Novecojis laidiens pēdējo",
-          "description": "Lietošanas piemērs: 1w (1 nedēļa), 10M (10 mēneši). Pieņemtie mērvienību tipi: h (stundas), d (dienas), w (nedēļas), M (mēneši), y (gadi). Atstājiet tukšu, lai neizceltu novecojušos laidienus."
+          "description": "Lietošanas piemērs: 1w (1 nedēļa), 10M (10 mēneši). Pieņemtie mērvienību tipi: h (stundas), d (dienas), w (nedēļas), M (mēneši), y (gadi). Atstājiet tukšu, lai neizceltu novecojušos laidienus.",
+          "option": {
+            "never": "",
+            "1M": "",
+            "3M": "",
+            "6M": "",
+            "1y": "",
+            "2y": ""
+          }
         },
-        "showOnlyHighlighted": {
-          "label": "Rādīt tikai izceltos",
-          "description": "Rādīt tikai jaunos vai novecojušos laidienus, kā norādīts iepriekš."
-        },
-        "showDetails": {
-          "label": "Rādīt detaļas"
-        },
-        "showOnlyIcon": {
-          "label": "Rādīt tikai ikonu"
-        },
-        "topReleases": {
-          "label": "Populārākie laidieni",
-          "description": "Maksimālais rādāmo jaunāko laidienu skaits. Nulle nozīmē, ka ierobežojuma nav."
+        "showChangelogPreview": {
+          "label": "",
+          "description": ""
         },
         "repositories": {
           "label": "Repozitoriji",
@@ -4811,6 +4861,10 @@
           },
           "name": {
             "label": "Vārds"
+          },
+          "excludePrereleases": {
+            "label": "",
+            "description": ""
           },
           "versionFilter": {
             "label": "Versijas filtrs",
@@ -4852,36 +4906,110 @@
           }
         }
       },
-      "not-found": "Nav atrasts",
-      "pre-release": "Pirmslaidiens",
-      "archived": "Arhivēts",
-      "forked": "Atvasināts",
+      "summary": {
+        "newReleases": "",
+        "newShort": "",
+        "tracked": "",
+        "caughtUp": "",
+        "outdated": "",
+        "outdatedShort": "",
+        "failing": "",
+        "failingShort": "",
+        "latest": "",
+        "issues": ""
+      },
+      "section": {
+        "new": {
+          "label": "",
+          "description": ""
+        },
+        "attention": {
+          "label": "",
+          "description": ""
+        },
+        "upToDate": {
+          "label": "",
+          "description": ""
+        },
+        "quiet": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "status": {
+        "new": "",
+        "outdated": "",
+        "error": "",
+        "upToDate": "",
+        "quiet": ""
+      },
+      "tag": {
+        "new": "",
+        "preRelease": "",
+        "resolvedFrom": "",
+        "quiet": "",
+        "archived": "",
+        "fork": ""
+      },
+      "issue": {
+        "affected": "",
+        "rateLimited": {
+          "title": "",
+          "hint": ""
+        },
+        "notFound": {
+          "title": "",
+          "hint": ""
+        },
+        "noMatchingVersion": {
+          "title": "",
+          "hint": ""
+        },
+        "noReleasesFound": {
+          "title": "",
+          "hint": ""
+        },
+        "invalidIdentifier": {
+          "title": "",
+          "hint": ""
+        },
+        "noProviderSelected": {
+          "title": "",
+          "hint": ""
+        },
+        "noProviderResponse": {
+          "title": "",
+          "hint": ""
+        },
+        "unexpected": {
+          "title": "",
+          "hint": ""
+        }
+      },
+      "markViewed": "Atzīmēt kā skatītu",
+      "markAllViewed": "",
+      "markEntryViewed": "",
+      "viewed": "",
+      "copyVersion": "",
+      "copied": "",
+      "published": "",
+      "whatChanged": "",
+      "noNotes": "",
+      "changes": "",
       "starsCount": "Zvaigznes",
       "forksCount": "Atzari",
-      "issuesCount": "Atvērtās problēmas",
-      "markViewed": "Atzīmēt kā skatītu",
-      "openProjectPage": "Atvērt projekta lapu",
-      "openReleasePage": "Atvērt laidiena lapu",
-      "releaseDescription": "Laidiena apraksts",
-      "projectDescription": "Projekta apraksts",
+      "openIssues": "",
+      "created": "Izveidots",
+      "releasePage": "",
+      "projectPage": "",
       "runningVersions": "",
       "upToDate": "",
       "updateAvailable": "",
       "unknownStatus": "Nezināms",
-      "created": "Izveidots",
       "error": {
-        "label": "Kļūda",
-        "messages": {
-          "invalidIdentifier": "Nederīgs identifikators",
-          "noMatchingVersion": "Atbilstoša versija nav atrasta",
-          "noReleasesFound": "Laidieni nav atrasti",
-          "noProviderSelected": "Nav atlasīts nodrošinātājs",
-          "noProviderResponse": "No nodrošinātāja nav atbildes",
-          "unexpected": "Negaidīta nodrošinātāja kļūda"
-        }
-      },
-      "expandDetails": "Rādīt detalizētu informāciju par {name}",
-      "collapseDetails": "Paslēpt detalizētu informāciju par {name}"
+        "collapsedSaveTitle": "",
+        "collapsedSaveMessage": ""
+      }
     },
     "networkControllerSummary": {
       "advanced": {
@@ -5387,6 +5515,9 @@
       "name": "Beszel sistēmas (Tabula)",
       "description": "Tabulas skats visām Beszel uzraudzītajām sistēmām ar kārtojamām kolonnām un statusa indikatoriem",
       "option": {
+        "fahrenheit": {
+          "label": ""
+        },
         "sortBy": {
           "label": "Kārtot pēc"
         },
@@ -5401,7 +5532,12 @@
     },
     "beszelSystemGrid": {
       "name": "Beszel sistēmas (Režģis)",
-      "description": "Karšu režģa skats visām Beszel uzraudzītajām sistēmām ar reāllaika metrikām"
+      "description": "Karšu režģa skats visām Beszel uzraudzītajām sistēmām ar reāllaika metrikām",
+      "option": {
+        "fahrenheit": {
+          "label": ""
+        }
+      }
     },
     "beszelAlerts": {
       "name": "Beszel brīdinājumi",
@@ -6079,6 +6215,18 @@
       "addWidget": "Pievienot logrīku",
       "addApp": "Pievienot lietotni",
       "connectService": "Savienot pakalpojumu"
+    },
+    "urlDrop": {
+      "hint": "",
+      "resolving": "",
+      "notification": {
+        "success": {
+          "message": ""
+        },
+        "full": {
+          "message": ""
+        }
+      }
     },
     "setupChecklist": {
       "title": "Padariet šo paneli noderīgu",
@@ -6925,6 +7073,10 @@
             "signInOverlay": {
               "label": "Fona pārklājums"
             },
+            "signInMarquee": {
+              "label": "",
+              "description": ""
+            },
             "defaultRadius": {
               "label": "Stūru stils",
               "options": {
@@ -7090,6 +7242,7 @@
             "model": {
               "title": "Modelis",
               "description": "Atlasiet atrastu modeli vai ievadiet precīzu galapunkta modeļa ID.",
+              "save": "",
               "placeholder": "Modeļa ID",
               "refresh": "Atsvaidzināt modeļus",
               "chooseModel": "Izvēlieties modeli, kas tiks izmantots jaunām sarunām.",
@@ -8685,6 +8838,14 @@
     "conversationActions": "Sarunas darbības",
     "searchConversations": "Meklēt sarunas",
     "noMatchingConversations": "Nav atbilstošu sarunu",
+    "historyError": {
+      "title": "",
+      "load": "",
+      "loadMessages": "",
+      "saveMessages": "",
+      "switch": "",
+      "retry": ""
+    },
     "moreActions": "Citas atbildes darbības",
     "renameConversation": {
       "action": "Pārdēvēt",
@@ -8804,6 +8965,9 @@
     },
     "mentions": {
       "menu": "Pievienot Homarr kontekstu",
+      "back": "",
+      "loading": "",
+      "empty": "",
       "context": "Konteksts",
       "app": "Lietotnes",
       "integration": "Integrācijas",
@@ -8818,6 +8982,8 @@
     },
     "commands": {
       "menu": "Asistenta komandas",
+      "hint": "",
+      "empty": "",
       "health": "Sagatavot pakalpojuma darbspējas pārbaudi",
       "explore": "Sagatavot šīs Homarr instances pārskatu",
       "media": "Sagatavot multivides meklēšanu",
@@ -9000,6 +9166,7 @@
     "approvalDescription": "Pirms izpildes pārskatiet šīs izmaiņas.",
     "approveAndRun": "Apstiprināt un izpildīt",
     "deny": "Noraidīt",
+    "approvalError": "",
     "autoApproval": {
       "label": "Automātiskie apstiprinājumi",
       "composerLabel": "Apstiprināt manā vietā",

@@ -4,24 +4,36 @@ on:
   workflow_dispatch:
   schedule:
     - cron: "0 0 * * *" # every day at midnight
+  workflow_run:
+    workflows: ["[Crowdin] Upload translations"]
+    types: [completed]
+    branches: [dev]
+
+concurrency:
+  group: crowdin-sync
+  queue: max
+  cancel-in-progress: false
 
 permissions:
-  contents: write # required to push changes
+  contents: read
 
 jobs:
   download-crowdin-translations:
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
     timeout-minutes: 5
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          ref: dev
+          fetch-depth: 0
           persist-credentials: false
 
       - name: Obtain token
         id: obtainToken
-        uses: actions/create-github-app-token@v3
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
         with:
           private-key: ${{ secrets.CROWDIN_APP_PRIVATE_KEY }}
           client-id: ${{ vars.CROWDIN_CLIENT_ID }}
@@ -29,29 +41,41 @@ jobs:
           permission-pull-requests: write # required to create pull request
 
       - name: Download Crowdin translations
-        id: crowdin-download
-        uses: crowdin/github-action@8f01d54f70f1713ee3f09d82c2bbb2daeac28689 # v2.17.1
+        uses: crowdin/github-action@959dc74ac104447731cba99a016f85d0ae719788 # v3.5.0
         with:
-          upload_sources: false
+          # Refresh the source even when an earlier upload was skipped or superseded.
+          upload_sources: true
           upload_translations: false
           download_translations: true
-          localization_branch_name: crowdin
-          create_pull_request: true
-          pull_request_title: "chore(lang): updated translations from crowdin"
-          pull_request_body: "New Crowdin translations by [Crowdin GH Action](https://github.com/crowdin/github-action)"
-          commit_message: "chore(lang): update translations from crowdin"
-          pull_request_base_branch_name: "dev"
-          github_user_name: "Crowdin Homarr"
-          github_user_email: "190541745+homarr-crowdin[bot]@users.noreply.github.com"
+          push_translations: false
+          create_pull_request: false
           skip_untranslated_strings: true
         env:
-          GITHUB_TOKEN: ${{ steps.obtainToken.outputs.token }}
           CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
           CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
 
+      - name: Create or update translation pull request
+        id: create-pull-request
+        uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8.1.1
+        with:
+          token: ${{ steps.obtainToken.outputs.token }}
+          # Rebuild from dev instead of retaining already squash-merged Crowdin commits.
+          branch: crowdin
+          base: dev
+          delete-branch: true
+          add-paths: |
+            packages/translation/src/lang/*.json
+            :(exclude)packages/translation/src/lang/en.json
+          title: "chore(lang): updated translations from crowdin"
+          body: "New Crowdin translations by [Crowdin GH Action](https://github.com/crowdin/github-action)"
+          commit-message: "chore(lang): update translations from crowdin"
+          author: "Crowdin Homarr <190541745+homarr-crowdin[bot]@users.noreply.github.com>"
+          committer: "Crowdin Homarr <190541745+homarr-crowdin[bot]@users.noreply.github.com>"
+
       - name: Enable auto-merge
-        if: steps.crowdin-download.outputs.pull_request_number != '' && steps.crowdin-download.outputs.pull_request_number != null
+        if: steps.create-pull-request.outputs.pull-request-number != ''
         env:
           GITHUB_TOKEN: ${{ steps.obtainToken.outputs.token }}
+          PR_NUMBER: ${{ steps.create-pull-request.outputs.pull-request-number }}
         run: |
-          gh pr merge ${{steps.crowdin-download.outputs.pull_request_number}} --auto --squash --delete-branch --subject "chore(lang): updated translations from crowdin"
+          gh pr merge "$PR_NUMBER" --auto --squash --delete-branch --subject "chore(lang): updated translations from crowdin"

@@ -65,7 +65,6 @@
         "themeAuto": "Sistem",
         "themeLight": "Svetla",
         "themeDark": "Temna",
-        "serverOriginHelp": "Homarr ta naslov uporabi za vnaprejšnje izpolnjevanje zaznanih URL-jev storitev. Vsako storitev lahko še vedno urejate posamezno.",
         "serverDescription": "To je bližnjica, ne omejitev. Vsako zaznano storitev je še vedno mogoče urejati.",
         "serverOrigin": "Domena, naslov IP ali pot povratnega posredniškega strežnika",
         "serverOriginDescription": "Primeri: home.lan, 192.168.1.10 ali https://home.example.com/services. Spodaj izberite, kako naj se doda posamezna storitev.",
@@ -102,6 +101,8 @@
       "connect": {
         "title": "Povežite, kar naredi ploščo uporabno",
         "description": "Izberite več storitev hkrati. Oznake Docker imajo prednost, ujemanje slik zapolni vrzeli, vsak URL in vsaka poverilnica pa sta še vedno pregledna.",
+        "confirmServerAddress": "",
+        "serverAddressReviewed": "",
         "discoveredIntegrations": "Zaznane instance integracij ({count})",
         "detectedIntegrationLabel": "Uvozi {name}, zaznano kot {kind}",
         "detectedAppLabel": "Uvozi zaznano aplikacijo {name}",
@@ -126,7 +127,8 @@
         "needsConfiguration": "Potrebna je konfiguracija",
         "tested": "Povezava je bila preizkušena",
         "testFailed": "Preizkus povezave ni uspel",
-        "incompleteConfirmation": "Nedokončane integracije bodo preskočene. Ali želite nadaljevati brez njih?"
+        "incompleteConfirmation": "Nedokončane integracije bodo preskočene. Ali želite nadaljevati brez njih?",
+        "skipIncomplete": ""
       },
       "board": {
         "title": "Oblikujte tablo, preden jo ustvarite",
@@ -799,6 +801,11 @@
       }
     },
     "field": {
+      "url": {
+        "helpLabel": "Primeri oblik URL",
+        "examples": "Primeri podprtih povezav",
+        "requiresHandler": "Protokoli po meri zahtevajo povezano aplikacijo v vaši napravi."
+      },
       "description": {
         "label": "Opis"
       },
@@ -1925,6 +1932,8 @@
     "here": "tukaj",
     "serviceUrlTemplate": {
       "serverTitle": "Običajni naslov strežnika",
+      "description": "",
+      "example": "",
       "urlModeLabel": "Vzorec naslova storitve",
       "hostPort": "Isti gostitelj, drugačna vrata",
       "subdomain": "Ena poddomena za vsako storitev",
@@ -2312,6 +2321,15 @@
       "option": {
         "appId": {
           "label": "Izberi aplikacijo"
+        },
+        "openIn": {
+          "label": "Odpri aplikacijo v",
+          "description": "Izberite, kje naj se ta aplikacija odpre. Nastavitve brskalnika lahko spremenijo odpiranje v ločenem oknu.",
+          "option": {
+            "currentTab": "Trenutnem zavihku",
+            "newTab": "Novem zavihku",
+            "newWindow": "Novem oknu"
+          }
         },
         "showTitle": {
           "label": "Pokaži ime aplikacije"
@@ -4758,27 +4776,59 @@
       "name": "Izdaje",
       "description": "Prikazuje seznam trenutnih različic danih repozitorijev z danim regularnim izrazom različice.",
       "option": {
+        "layout": {
+          "label": "Postavitev",
+          "description": "",
+          "option": {
+            "comfortable": "",
+            "compact": ""
+          }
+        },
+        "summary": {
+          "label": "",
+          "description": "",
+          "option": {
+            "detailed": "",
+            "count": "",
+            "hidden": ""
+          }
+        },
+        "groupReleases": {
+          "label": "",
+          "description": ""
+        },
+        "sections": {
+          "label": "",
+          "description": ""
+        },
         "newReleaseWithin": {
           "label": "Nova izdaja v roku",
-          "description": "Primer uporabe: 1w (1 teden), 10M (10 mesecev). Sprejete enote so h (ure), d (dnevi), w (tedni), M (meseci), y (leta). Pustite prazno, da ne označite novih izdaj."
+          "description": "Primer uporabe: 1w (1 teden), 10M (10 mesecev). Sprejete enote so h (ure), d (dnevi), w (tedni), M (meseci), y (leta). Pustite prazno, da ne označite novih izdaj.",
+          "option": {
+            "never": "",
+            "1d": "",
+            "3d": "",
+            "1w": "",
+            "2w": "",
+            "1M": "",
+            "3M": ""
+          }
         },
         "staleReleaseWithin": {
           "label": "Zastarela izdaja v roku",
-          "description": "Primer uporabe: 1w (1 teden), 10M (10 mesecev). Sprejete enote so h (ure), d (dnevi), w (tedni), M (meseci), y (leta). Pustite prazno, da ne označite zastarelih izdaj."
+          "description": "Primer uporabe: 1w (1 teden), 10M (10 mesecev). Sprejete enote so h (ure), d (dnevi), w (tedni), M (meseci), y (leta). Pustite prazno, da ne označite zastarelih izdaj.",
+          "option": {
+            "never": "",
+            "1M": "",
+            "3M": "",
+            "6M": "",
+            "1y": "",
+            "2y": ""
+          }
         },
-        "showOnlyHighlighted": {
-          "label": "Prikaži samo poudarjene",
-          "description": "Prikaži samo nove ali zastarele izdaje, kot je opisano zgoraj."
-        },
-        "showDetails": {
-          "label": "Prikaži podrobnosti"
-        },
-        "showOnlyIcon": {
-          "label": "Prikaži samo ikono"
-        },
-        "topReleases": {
-          "label": "Najboljše izdaje",
-          "description": "Največje število najnovejših izdaj za prikaz. Nič pomeni brez omejitve."
+        "showChangelogPreview": {
+          "label": "",
+          "description": ""
         },
         "repositories": {
           "label": "Repozitoriji",
@@ -4811,6 +4861,10 @@
           },
           "name": {
             "label": "Ime"
+          },
+          "excludePrereleases": {
+            "label": "",
+            "description": ""
           },
           "versionFilter": {
             "label": "Filter različice",
@@ -4852,36 +4906,110 @@
           }
         }
       },
-      "not-found": "Ni najdeno",
-      "pre-release": "Predizdaja",
-      "archived": "Arhivirano",
-      "forked": "Razcepljeno",
+      "summary": {
+        "newReleases": "",
+        "newShort": "",
+        "tracked": "",
+        "caughtUp": "",
+        "outdated": "",
+        "outdatedShort": "",
+        "failing": "",
+        "failingShort": "",
+        "latest": "",
+        "issues": ""
+      },
+      "section": {
+        "new": {
+          "label": "",
+          "description": ""
+        },
+        "attention": {
+          "label": "",
+          "description": ""
+        },
+        "upToDate": {
+          "label": "",
+          "description": ""
+        },
+        "quiet": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "status": {
+        "new": "",
+        "outdated": "",
+        "error": "",
+        "upToDate": "",
+        "quiet": ""
+      },
+      "tag": {
+        "new": "",
+        "preRelease": "",
+        "resolvedFrom": "",
+        "quiet": "",
+        "archived": "",
+        "fork": ""
+      },
+      "issue": {
+        "affected": "",
+        "rateLimited": {
+          "title": "",
+          "hint": ""
+        },
+        "notFound": {
+          "title": "",
+          "hint": ""
+        },
+        "noMatchingVersion": {
+          "title": "",
+          "hint": ""
+        },
+        "noReleasesFound": {
+          "title": "",
+          "hint": ""
+        },
+        "invalidIdentifier": {
+          "title": "",
+          "hint": ""
+        },
+        "noProviderSelected": {
+          "title": "",
+          "hint": ""
+        },
+        "noProviderResponse": {
+          "title": "",
+          "hint": ""
+        },
+        "unexpected": {
+          "title": "",
+          "hint": ""
+        }
+      },
+      "markViewed": "Označi kot ogledano",
+      "markAllViewed": "",
+      "markEntryViewed": "",
+      "viewed": "",
+      "copyVersion": "",
+      "copied": "",
+      "published": "",
+      "whatChanged": "",
+      "noNotes": "",
+      "changes": "",
       "starsCount": "Zvezdice",
       "forksCount": "Razcepi",
-      "issuesCount": "Odprte težave",
-      "markViewed": "Označi kot ogledano",
-      "openProjectPage": "Odpri stran projekta",
-      "openReleasePage": "Odpri stran izdaje",
-      "releaseDescription": "Opis izdaje",
-      "projectDescription": "Opis projekta",
+      "openIssues": "",
+      "created": "Ustvarjeno",
+      "releasePage": "",
+      "projectPage": "",
       "runningVersions": "",
       "upToDate": "",
       "updateAvailable": "",
       "unknownStatus": "Neznano",
-      "created": "Ustvarjeno",
       "error": {
-        "label": "Napaka",
-        "messages": {
-          "invalidIdentifier": "Neveljaven identifikator",
-          "noMatchingVersion": "Ustrezna različica ni bila najdena",
-          "noReleasesFound": "Izdaj ni bilo mogoče najti",
-          "noProviderSelected": "Ponudnik ni izbran",
-          "noProviderResponse": "Ponudnik ni odgovoril",
-          "unexpected": "Nepričakovana napaka ponudnika"
-        }
-      },
-      "expandDetails": "Prikaži podrobnosti za {name}",
-      "collapseDetails": "Skrij podrobnosti za {name}"
+        "collapsedSaveTitle": "",
+        "collapsedSaveMessage": ""
+      }
     },
     "networkControllerSummary": {
       "advanced": {
@@ -5387,6 +5515,9 @@
       "name": "Beszel sistemi (tabela)",
       "description": "Tabelarni pogled vseh sistemov, ki jih spremlja Beszel, z razvrščljivimi stolpci in indikatorji stanja",
       "option": {
+        "fahrenheit": {
+          "label": ""
+        },
         "sortBy": {
           "label": "Razvrsti po"
         },
@@ -5401,7 +5532,12 @@
     },
     "beszelSystemGrid": {
       "name": "Beszel sistemi (mreža)",
-      "description": "Mrežni pogled kartic vseh sistemov, ki jih spremlja Beszel, z meritvami v realnem času"
+      "description": "Mrežni pogled kartic vseh sistemov, ki jih spremlja Beszel, z meritvami v realnem času",
+      "option": {
+        "fahrenheit": {
+          "label": ""
+        }
+      }
     },
     "beszelAlerts": {
       "name": "Beszel opozorila",
@@ -6079,6 +6215,18 @@
       "addWidget": "Dodaj gradnik",
       "addApp": "Dodaj aplikacijo",
       "connectService": "Poveži storitev"
+    },
+    "urlDrop": {
+      "hint": "",
+      "resolving": "",
+      "notification": {
+        "success": {
+          "message": ""
+        },
+        "full": {
+          "message": ""
+        }
+      }
     },
     "setupChecklist": {
       "title": "Naredite to nadzorno ploščo uporabno",
@@ -6925,6 +7073,10 @@
             "signInOverlay": {
               "label": "Prekrivanje ozadja"
             },
+            "signInMarquee": {
+              "label": "",
+              "description": ""
+            },
             "defaultRadius": {
               "label": "Slog vogalov",
               "options": {
@@ -7090,6 +7242,7 @@
             "model": {
               "title": "Model",
               "description": "Izberite odkriti model ali vnesite natančen ID modela končne točke.",
+              "save": "",
               "placeholder": "ID modela",
               "refresh": "Osveži modele",
               "chooseModel": "Izberite model, ki bo uporabljen za nove pogovore.",
@@ -8685,6 +8838,14 @@
     "conversationActions": "Dejanja pogovora",
     "searchConversations": "Išči pogovore",
     "noMatchingConversations": "Ni ustreznih pogovorov",
+    "historyError": {
+      "title": "",
+      "load": "",
+      "loadMessages": "",
+      "saveMessages": "",
+      "switch": "",
+      "retry": ""
+    },
     "moreActions": "Več dejanj odgovora",
     "renameConversation": {
       "action": "Preimenuj",
@@ -8804,6 +8965,9 @@
     },
     "mentions": {
       "menu": "Dodaj kontekst Homarr",
+      "back": "",
+      "loading": "",
+      "empty": "",
       "context": "Kontekst",
       "app": "Aplikacije",
       "integration": "Integracije",
@@ -8818,6 +8982,8 @@
     },
     "commands": {
       "menu": "Ukazi pomočnika",
+      "hint": "",
+      "empty": "",
       "health": "Pripravi preverjanje stanja storitev",
       "explore": "Pripravi pregled tega primerka Homarr",
       "media": "Pripravi iskanje predstavnosti",
@@ -9000,6 +9166,7 @@
     "approvalDescription": "Pred izvajanjem preglejte to spremembo.",
     "approveAndRun": "Odobri in zaženi",
     "deny": "Zavrni",
+    "approvalError": "",
     "autoApproval": {
       "label": "Samodejne odobritve",
       "composerLabel": "Odobri namesto mene",

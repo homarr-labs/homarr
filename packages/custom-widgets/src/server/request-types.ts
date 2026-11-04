@@ -1,12 +1,13 @@
 import type { ConnectionOptions } from "node:tls";
 
 import type { IntegrationHttpBodyAuth } from "@homarr/definitions";
-import type { CustomWidgetMethod } from "../core";
+import type { CustomWidgetMethod, CustomWidgetAuthenticationHeader } from "../core";
 
 export interface CustomWidgetAuthConfig {
   type: string;
   secrets: Array<{ kind: string; value: string }>;
   headerName?: string | null;
+  headerSlots?: CustomWidgetAuthenticationHeader[];
   headers?: Record<string, string>;
   query?: Record<string, string>;
   body?: IntegrationHttpBodyAuth;
@@ -30,6 +31,7 @@ export interface CustomWidgetHttpRequest {
   textFallback?: boolean;
   cacheKey?: string;
   cacheTtlSeconds?: number;
+  beforeRequest?: () => Promise<void>;
   logError?: (event: {
     origin: string;
     method: CustomWidgetMethod | "HEAD" | "OPTIONS";

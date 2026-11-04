@@ -34,6 +34,7 @@ vi.mock("@homarr/redis", () => ({
 
 const { createCertificateAgentAsync, fetchWithTrustedCertificatesAsync } =
   await import("@homarr/core/infrastructure/http/request");
+const { createKeyedFingerprint, encryptSecret } = await import("@homarr/common/server");
 const { ImageProxy } = await import("../index");
 
 const mockedLookup = vi.mocked(lookup as unknown as (hostname: string) => Promise<LookupAddress[]>);
@@ -41,6 +42,12 @@ const mockedFetch = vi.mocked(fetchWithTrustedCertificatesAsync);
 const mockedCreateAgent = vi.mocked(createCertificateAgentAsync);
 
 const encoder = new TextEncoder();
+
+const createPersistentImageId = (url: string) => {
+  const encryptedUrl = encryptSecret(url);
+  const signature = createKeyedFingerprint(`image-proxy:persistent:${encryptedUrl}`);
+  return `persistent.${signature}.${encryptedUrl}`;
+};
 
 const createResponse = (status: number, options: { location?: string; contentType?: string; body?: string } = {}) => {
   const bytes = options.body !== undefined ? encoder.encode(options.body) : undefined;
@@ -97,49 +104,44 @@ describe("ImageProxy.forwardImageAsync", () => {
     mockedCreateAgent.mockClear();
   });
 
-  test("forwards a persistent image after its Redis registration is lost", async () => {
+  test("redirects an existing persistent image to its source without fetching it", async () => {
     const imageProxy = new ImageProxy();
     mockResponses({ "http://192.168.1.10/icon.png": createResponse(200, { contentType: "image/png", body: "img" }) });
-    const proxyUrl = await imageProxy.createImageAsync("http://192.168.1.10/icon.png", undefined, { persistent: true });
-    const id = proxyUrl.split("/").pop() as string;
+    const id = createPersistentImageId("http://192.168.1.10/icon.png");
     mocks.store.clear();
 
     const result = await new ImageProxy().forwardImageAsync(id);
 
-    expect(result).toMatchObject({ contentType: "image/png" });
-    expect("image" in result && new TextDecoder().decode(result.image)).toBe("img");
-    expect(proxyUrl).not.toContain("192.168.1.10");
+    expect(result).toEqual({ redirectUrl: "http://192.168.1.10/icon.png" });
+    expect(id).not.toContain("192.168.1.10");
     const tamperedId = `${id.slice(0, -1)}${id.endsWith("0") ? "1" : "0"}`;
     await expect(imageProxy.forwardImageAsync(tamperedId)).resolves.toEqual({ error: "not-found" });
-    expect(mockedFetch).toHaveBeenCalledTimes(1);
-  });
-
-  test("refuses to forward an image whose registered url resolves to a blocked address", async () => {
-    const imageProxy = new ImageProxy();
-    mockDns({ "metadata.internal": ["169.254.169.254"] });
-    const proxyUrl = await imageProxy.createImageAsync("http://metadata.internal/latest/meta-data/", undefined, {
-      persistent: true,
-    });
-    const id = proxyUrl.split("/").pop() as string;
-
-    const result = await imageProxy.forwardImageAsync(id);
-
-    expect(result).toEqual({ error: "fetch-error" });
     expect(mockedFetch).not.toHaveBeenCalled();
   });
 
-  test("refuses to forward when a redirect points at a blocked address", async () => {
+  test("does not request a persistent image whose source resolves to a blocked address", async () => {
+    const imageProxy = new ImageProxy();
+    mockDns({ "metadata.internal": ["169.254.169.254"] });
+    const id = createPersistentImageId("http://metadata.internal/latest/meta-data/");
+
+    const result = await imageProxy.forwardImageAsync(id);
+
+    expect(result).toEqual({ redirectUrl: "http://metadata.internal/latest/meta-data/" });
+    expect(mockedLookup).not.toHaveBeenCalled();
+    expect(mockedFetch).not.toHaveBeenCalled();
+  });
+
+  test("does not follow upstream redirects for a persistent image", async () => {
     const imageProxy = new ImageProxy();
     mockResponses({
       "http://192.168.1.10/icon.png": createResponse(302, { location: "http://169.254.169.254/latest/meta-data/" }),
     });
-    const proxyUrl = await imageProxy.createImageAsync("http://192.168.1.10/icon.png", undefined, { persistent: true });
-    const id = proxyUrl.split("/").pop() as string;
+    const id = createPersistentImageId("http://192.168.1.10/icon.png");
 
     const result = await imageProxy.forwardImageAsync(id);
 
-    expect(result).toEqual({ error: "fetch-error" });
-    expect(mockedFetch).toHaveBeenCalledTimes(1);
+    expect(result).toEqual({ redirectUrl: "http://192.168.1.10/icon.png" });
+    expect(mockedFetch).not.toHaveBeenCalled();
   });
 
   test("still allows a private network address, for self hosted integrations", async () => {

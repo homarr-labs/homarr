@@ -48,10 +48,57 @@ const hasMatchingValidator = (ifNoneMatch: string | null, etag: string) => {
   return false;
 };
 
+const parseRange = (header: string | null, size: number) => {
+  if (size === 0) return null;
+  const match = header?.trim().match(/^bytes=(\d*)-(\d*)$/i);
+  if (!match) return null;
+  const [, startText = "", endText = ""] = match;
+  if (startText === "" && endText === "") return null;
+
+  if (startText === "") {
+    const length = Number(endText);
+    if (length === 0) return "unsatisfiable";
+    return { start: Math.max(0, size - length), end: size - 1 };
+  }
+
+  const start = Number(startText);
+  if (endText !== "" && Number(endText) < start) return null;
+  const end = endText === "" ? size - 1 : Math.min(Number(endText), size - 1);
+  if (start >= size || end < start) return "unsatisfiable";
+  return { start, end };
+};
+
+const createMediaHeaders = (contentType: string) => {
+  const headers = new Headers();
+  headers.set("Cache-Control", "private, no-cache");
+  headers.set("Content-Type", contentType);
+  headers.set("Content-Security-Policy", "default-src 'none'; style-src 'unsafe-inline'; sandbox");
+  headers.set("X-Content-Type-Options", "nosniff");
+  if (contentType !== "image/svg+xml" && contentType !== "image/svg") {
+    headers.set("Accept-Ranges", "bytes");
+  }
+  return headers;
+};
+
+export async function HEAD(request: NextRequest, props: { params: Promise<{ id: string }> }) {
+  if (request.headers.has("if-none-match")) return GET(request, props);
+  const { id } = await props.params;
+  const media = await db.query.medias.findFirst({
+    where: eq(medias.id, id.replace(/\.(mp4|webm)$/i, "")),
+    columns: { contentType: true, size: true },
+  });
+  if (!media) notFound();
+
+  const headers = createMediaHeaders(media.contentType);
+  if (headers.has("Accept-Ranges")) headers.set("Content-Length", media.size.toString());
+  return new NextResponse(null, { status: 200, headers });
+}
+
 export async function GET(request: NextRequest, props: { params: Promise<{ id: string }> }) {
   const params = await props.params;
+  const id = params.id.replace(/\.(mp4|webm)$/i, "");
   const image = await db.query.medias.findFirst({
-    where: eq(medias.id, params.id),
+    where: eq(medias.id, id),
     columns: {
       content: true,
       contentType: true,
@@ -62,32 +109,46 @@ export async function GET(request: NextRequest, props: { params: Promise<{ id: s
     notFound();
   }
 
-  let content = new Uint8Array(image.content);
+  let content = image.content;
+  const isSvg = image.contentType === "image/svg+xml" || image.contentType === "image/svg";
 
   // Sanitize SVG content to prevent XSS attacks
-  if (image.contentType === "image/svg+xml" || image.contentType === "image/svg") {
+  if (isSvg) {
     const svgText = new TextDecoder().decode(content);
     const sanitized = sanitize(svgText, {
       USE_PROFILES: { svg: true, svgFilters: true },
     });
-    content = new TextEncoder().encode(sanitized);
+    content = Buffer.from(sanitized);
   }
 
-  const headers = new Headers();
+  const headers = createMediaHeaders(image.contentType);
   const etag = `"${createHash("sha256").update(content).digest("base64url")}"`;
-  headers.set("Cache-Control", "private, no-cache");
   headers.set("ETag", etag);
-  headers.set("Content-Type", image.contentType);
   headers.set("Content-Length", content.length.toString());
-  headers.set("Content-Security-Policy", "default-src 'none'; style-src 'unsafe-inline'; sandbox");
-  headers.set("X-Content-Type-Options", "nosniff");
 
   if (hasMatchingValidator(request.headers.get("if-none-match"), etag)) {
     headers.delete("Content-Length");
     return new NextResponse(null, { status: 304, headers });
   }
 
-  return new NextResponse(content, {
+  if (request.method === "HEAD") return new NextResponse(null, { status: 200, headers });
+
+  const ifRange = request.headers.get("if-range");
+  if (!isSvg && (ifRange === null || ifRange.trim() === etag)) {
+    const range = parseRange(request.headers.get("range"), content.length);
+    if (range === "unsatisfiable") {
+      headers.set("Content-Length", "0");
+      headers.set("Content-Range", `bytes */${content.length}`);
+      return new NextResponse(null, { status: 416, headers });
+    }
+    if (range) {
+      headers.set("Content-Range", `bytes ${range.start}-${range.end}/${content.length}`);
+      headers.set("Content-Length", (range.end - range.start + 1).toString());
+      return new NextResponse(new Uint8Array(content.subarray(range.start, range.end + 1)), { status: 206, headers });
+    }
+  }
+
+  return new NextResponse(new Uint8Array(content), {
     status: 200,
     headers,
   });

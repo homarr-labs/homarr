@@ -281,7 +281,7 @@ export const getExpectedWidgetCase = (
 });
 
 const getAuthName = (source: HomarrCustomWidgetV2["sources"][string] | undefined) =>
-  typeof source?.auth === "object" ? source.auth.name : undefined;
+  typeof source?.auth === "object" && "name" in source.auth ? source.auth.name : undefined;
 
 const requestMatchesExpectation = (
   request: HomarrCustomWidgetV2["requests"][string],

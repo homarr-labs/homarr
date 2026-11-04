@@ -21,6 +21,7 @@ import {
 } from "@homarr/custom-widgets/authoring-resources";
 import { customJsxExamples, getCustomWidgetJsonSchema } from "@homarr/custom-widgets/core";
 import { db } from "@homarr/db";
+import { BoardLayoutBoundsError } from "@homarr/validation/board-layout-bounds-error";
 
 import { getPackageVersion } from "~/versions/package-reader";
 import { getSafeAssistantToolError } from "../assistant/chat/assistant-tool-error";
@@ -212,6 +213,7 @@ const SAFE_ERROR_MESSAGES: Record<string, string> = {
 };
 
 function sanitizeErrorMessage(error: unknown, toolName: string): string {
+  if (error instanceof Error && error.cause instanceof BoardLayoutBoundsError) return error.cause.message;
   if (toolName.startsWith("customWidget_")) return getSafeAssistantToolError(error, { toolName });
   if (error instanceof Error && "code" in error) {
     const trpcCode = (error as Error & { code: string }).code;

@@ -131,6 +131,7 @@ const withRequestLimit = async <T>(
   category: RequestLimitInput["category"],
   callback: () => Promise<T>,
   load?: RequestLimitInput["load"],
+  phase?: RequestLimitInput["phase"],
 ) => {
   const release = await acquireCustomWidgetRequestLimit({
     category,
@@ -139,6 +140,7 @@ const withRequestLimit = async <T>(
     itemId: resolved.item.id,
     definitionId: resolved.stored.id,
     load,
+    phase,
   });
   try {
     return await callback();
@@ -162,6 +164,12 @@ const executeRequest = async (
   const values = resolveCustomWidgetRequestValues(request, resolved.configuration, params);
   let category: RequestLimitInput["category"] = "query";
   if (request.kind === "action") category = request.method === "DELETE" ? "delete" : "action";
+  let phase: RequestLimitInput["phase"];
+  let beforeRequest: (() => Promise<void>) | undefined;
+  if (request.kind === "query") {
+    phase = "concurrency";
+    beforeRequest = () => withRequestLimit(ctx, resolved, "query", async () => undefined, load, "rate");
+  }
   return withRequestLimit(
     ctx,
     resolved,
@@ -185,10 +193,12 @@ const executeRequest = async (
         cacheKey:
           request.kind === "query" ? `${getCacheKey(resolved, request, values)}:${connection.cacheVersion}` : undefined,
         cacheTtlSeconds: request.cacheSeconds,
+        beforeRequest,
       });
       return { ...response, sourceCacheVersion: connection.cacheVersion };
     },
     load,
+    phase,
   );
 };
 

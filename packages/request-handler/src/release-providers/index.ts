@@ -34,6 +34,7 @@ const createLookup = (request: ReleasesRepositoryRequest): ReleaseLookup => {
     baseUrl: (request.providerUrl ?? getReleaseProviderDefaultUrl(request.provider)).replace(/\/$/, ""),
     identifier,
     versionPattern: compileVersionPattern(request.versionRegex),
+    excludePrereleases: request.excludePrereleases,
     token: request.token,
   };
 };

@@ -65,7 +65,6 @@
         "themeAuto": "Systém",
         "themeLight": "Světlý",
         "themeDark": "Tmavý",
-        "serverOriginHelp": "Homarr používá tuto adresu k předvyplnění identifikovaných servisních URL. Stále můžete upravovat každou službu jednotlivě.",
         "serverDescription": "Toto je zkratka, ne omezení. Každá detekovaná služba zůstává upravitelná.",
         "serverOrigin": "Doména, IP nebo cesta obráceného proxy",
         "serverOriginDescription": "Příklady: home.lan, 192.168.1.10, nebo https://home.example.com/services. Vyberte si, jak je každá služba připojena níže.",
@@ -102,6 +101,8 @@
       "connect": {
         "title": "Připojte, co dělá desku užitečnou",
         "description": "Vyberte několik služeb najednou. Štítky Dockeru mají prioritu, zaplňují mezery obrázků a každá URL a důvěryhodnost zůstává recenzovatelná.",
+        "confirmServerAddress": "",
+        "serverAddressReviewed": "",
         "discoveredIntegrations": "Detekovány integrace ({count})",
         "detectedIntegrationLabel": "Import {name}detekován jako {kind}",
         "detectedAppLabel": "Importovat zjištěnou aplikaci {name}",
@@ -126,7 +127,8 @@
         "needsConfiguration": "Vyžaduje konfiguraci",
         "tested": "Připojení testováno",
         "testFailed": "Test připojení se nezdařil",
-        "incompleteConfirmation": "Nedokončené integrace budou přeskočeny. Pokračovat bez nich?"
+        "incompleteConfirmation": "Nedokončené integrace budou přeskočeny. Pokračovat bez nich?",
+        "skipIncomplete": ""
       },
       "board": {
         "title": "Nakreslete desku před jejím postavením",
@@ -799,6 +801,11 @@
       }
     },
     "field": {
+      "url": {
+        "helpLabel": "Příklady formátů URL",
+        "examples": "Příklady podporovaných odkazů",
+        "requiresHandler": "Vlastní protokoly vyžadují přidruženou aplikaci ve vašem zařízení."
+      },
       "description": {
         "label": "Popis"
       },
@@ -1925,6 +1932,8 @@
     "here": "zde",
     "serviceUrlTemplate": {
       "serverTitle": "Obvyklá adresa serveru",
+      "description": "",
+      "example": "",
       "urlModeLabel": "Schéma adresy služby",
       "hostPort": "Stejný hostitel, různé porty",
       "subdomain": "Jedna subdoména na službu",
@@ -2312,6 +2321,15 @@
       "option": {
         "appId": {
           "label": "Vyberte aplikaci"
+        },
+        "openIn": {
+          "label": "Otevřít aplikaci v",
+          "description": "Vyberte, kde se tato aplikace otevře. Nastavení prohlížeče může změnit otevírání v samostatném okně.",
+          "option": {
+            "currentTab": "Aktuální kartě",
+            "newTab": "Nové kartě",
+            "newWindow": "Novém okně"
+          }
         },
         "showTitle": {
           "label": "Zobrazit název aplikace"
@@ -4758,27 +4776,59 @@
       "name": "Vydání",
       "description": "Zobrazuje seznam aktuální verze zadaných repozitářů podle zadaného regulárního výrazu verze.",
       "option": {
+        "layout": {
+          "label": "Rozložení",
+          "description": "",
+          "option": {
+            "comfortable": "Komfortní",
+            "compact": "Kompaktní"
+          }
+        },
+        "summary": {
+          "label": "",
+          "description": "",
+          "option": {
+            "detailed": "",
+            "count": "",
+            "hidden": ""
+          }
+        },
+        "groupReleases": {
+          "label": "",
+          "description": ""
+        },
+        "sections": {
+          "label": "",
+          "description": ""
+        },
         "newReleaseWithin": {
           "label": "Nové vydání v období",
-          "description": "Příklad použití: 1w (1 týden), 10M (10 měsíců). Přijaté jednotky: h (hodiny), d (dny), w (týdny), M (měsíce), y (roky). Ponechte prázdné, pokud nechcete zvýrazňovat nová vydání."
+          "description": "Příklad použití: 1w (1 týden), 10M (10 měsíců). Přijaté jednotky: h (hodiny), d (dny), w (týdny), M (měsíce), y (roky). Ponechte prázdné, pokud nechcete zvýrazňovat nová vydání.",
+          "option": {
+            "never": "",
+            "1d": "",
+            "3d": "",
+            "1w": "",
+            "2w": "",
+            "1M": "",
+            "3M": ""
+          }
         },
         "staleReleaseWithin": {
           "label": "Zastaralé vydání v období",
-          "description": "Příklad použití: 1w (1 týden), 10M (10 měsíců). Přijaté jednotky: h (hodiny), d (dny), w (týdny), M (měsíce), y (roky). Ponechte prázdné, pokud nechcete zvýrazňovat zastaralá vydání."
+          "description": "Příklad použití: 1w (1 týden), 10M (10 měsíců). Přijaté jednotky: h (hodiny), d (dny), w (týdny), M (měsíce), y (roky). Ponechte prázdné, pokud nechcete zvýrazňovat zastaralá vydání.",
+          "option": {
+            "never": "",
+            "1M": "",
+            "3M": "",
+            "6M": "",
+            "1y": "",
+            "2y": ""
+          }
         },
-        "showOnlyHighlighted": {
-          "label": "Zobrazit pouze zvýrazněné",
-          "description": "Zobrazí pouze nová nebo zastaralá vydání podle výše uvedených nastavení."
-        },
-        "showDetails": {
-          "label": "Zobrazit podrobnosti"
-        },
-        "showOnlyIcon": {
-          "label": "Zobrazit pouze ikonu"
-        },
-        "topReleases": {
-          "label": "Nejnovější vydání",
-          "description": "Maximální počet nejnovějších vydání k zobrazení. Nula znamená bez omezení."
+        "showChangelogPreview": {
+          "label": "",
+          "description": ""
         },
         "repositories": {
           "label": "Repozitáře",
@@ -4811,6 +4861,10 @@
           },
           "name": {
             "label": "Název"
+          },
+          "excludePrereleases": {
+            "label": "",
+            "description": ""
           },
           "versionFilter": {
             "label": "Filtr verze",
@@ -4852,36 +4906,110 @@
           }
         }
       },
-      "not-found": "Nenalezeno",
-      "pre-release": "Předběžné vydání",
-      "archived": "Archivováno",
-      "forked": "Fork",
+      "summary": {
+        "newReleases": "",
+        "newShort": "nový",
+        "tracked": "",
+        "caughtUp": "",
+        "outdated": "",
+        "outdatedShort": "zastaralé",
+        "failing": "",
+        "failingShort": "",
+        "latest": "",
+        "issues": ""
+      },
+      "section": {
+        "new": {
+          "label": "Nové",
+          "description": ""
+        },
+        "attention": {
+          "label": "Potřebuje pozornost",
+          "description": ""
+        },
+        "upToDate": {
+          "label": "Aktuální",
+          "description": ""
+        },
+        "quiet": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "status": {
+        "new": "",
+        "outdated": "",
+        "error": "",
+        "upToDate": "aktuální",
+        "quiet": ""
+      },
+      "tag": {
+        "new": "Nové",
+        "preRelease": "",
+        "resolvedFrom": "",
+        "quiet": "",
+        "archived": "Archivováno",
+        "fork": ""
+      },
+      "issue": {
+        "affected": "",
+        "rateLimited": {
+          "title": "",
+          "hint": ""
+        },
+        "notFound": {
+          "title": "",
+          "hint": ""
+        },
+        "noMatchingVersion": {
+          "title": "",
+          "hint": ""
+        },
+        "noReleasesFound": {
+          "title": "",
+          "hint": ""
+        },
+        "invalidIdentifier": {
+          "title": "",
+          "hint": ""
+        },
+        "noProviderSelected": {
+          "title": "",
+          "hint": ""
+        },
+        "noProviderResponse": {
+          "title": "",
+          "hint": ""
+        },
+        "unexpected": {
+          "title": "",
+          "hint": ""
+        }
+      },
+      "markViewed": "Označit jako zobrazené",
+      "markAllViewed": "",
+      "markEntryViewed": "",
+      "viewed": "",
+      "copyVersion": "",
+      "copied": "Zkopírováno",
+      "published": "",
+      "whatChanged": "",
+      "noNotes": "",
+      "changes": "",
       "starsCount": "Hvězdičky",
       "forksCount": "Forky",
-      "issuesCount": "Otevřené problémy",
-      "markViewed": "Označit jako zobrazené",
-      "openProjectPage": "Otevřít stránku projektu",
-      "openReleasePage": "Otevřít stránku vydání",
-      "releaseDescription": "Popis vydání",
-      "projectDescription": "Popis projektu",
+      "openIssues": "",
+      "created": "Vytvořeno",
+      "releasePage": "",
+      "projectPage": "",
       "runningVersions": "Spuštěné verze",
       "upToDate": "Aktuální",
       "updateAvailable": "K dispozici je aktualizace",
       "unknownStatus": "Neznámý",
-      "created": "Vytvořeno",
       "error": {
-        "label": "Chyba",
-        "messages": {
-          "invalidIdentifier": "Neplatný identifikátor",
-          "noMatchingVersion": "Nebyla nalezena žádná odpovídající verze",
-          "noReleasesFound": "Nebyla nalezena žádná vydání",
-          "noProviderSelected": "Není vybrán žádný poskytovatel",
-          "noProviderResponse": "Poskytovatel neodpověděl",
-          "unexpected": "Neočekávaná chyba poskytovatele"
-        }
-      },
-      "expandDetails": "Zobrazit podrobnosti pro {name}",
-      "collapseDetails": "Skrýt podrobnosti pro {name}"
+        "collapsedSaveTitle": "",
+        "collapsedSaveMessage": ""
+      }
     },
     "networkControllerSummary": {
       "advanced": {
@@ -5387,6 +5515,9 @@
       "name": "Systémy Beszel (tabulka)",
       "description": "Tabulkový přehled všech monitorovaných systémů Beszel s řaditelnými sloupci a indikátory stavu",
       "option": {
+        "fahrenheit": {
+          "label": "Teplota ve Fahrenheitech"
+        },
         "sortBy": {
           "label": "Řadit podle"
         },
@@ -5401,7 +5532,12 @@
     },
     "beszelSystemGrid": {
       "name": "Systémy Beszel (mřížka)",
-      "description": "Kartový mřížkový přehled všech monitorovaných systémů Beszel s metrikami v reálném čase"
+      "description": "Kartový mřížkový přehled všech monitorovaných systémů Beszel s metrikami v reálném čase",
+      "option": {
+        "fahrenheit": {
+          "label": "Teplota ve Fahrenheitech"
+        }
+      }
     },
     "beszelAlerts": {
       "name": "Beszel výstrahy",
@@ -6079,6 +6215,18 @@
       "addWidget": "Přidat widget",
       "addApp": "Přidat aplikaci",
       "connectService": "Připojit službu"
+    },
+    "urlDrop": {
+      "hint": "",
+      "resolving": "",
+      "notification": {
+        "success": {
+          "message": ""
+        },
+        "full": {
+          "message": ""
+        }
+      }
     },
     "setupChecklist": {
       "title": "Udělejte tuto desku užitečnou",
@@ -6925,6 +7073,10 @@
             "signInOverlay": {
               "label": "Překrytí pozadí"
             },
+            "signInMarquee": {
+              "label": "",
+              "description": ""
+            },
             "defaultRadius": {
               "label": "Styl rohů",
               "options": {
@@ -7090,6 +7242,7 @@
             "model": {
               "title": "Vzor",
               "description": "Vyberte objevený model nebo zadejte přesné ID koncového modelu.",
+              "save": "",
               "placeholder": "ID modelu",
               "refresh": "Aktualizovat modely",
               "chooseModel": "Vyberte model použitý pro nové konverzace.",
@@ -8685,6 +8838,14 @@
     "conversationActions": "Akce konverzace",
     "searchConversations": "Hledat konverzace",
     "noMatchingConversations": "Žádné odpovídající konverzace",
+    "historyError": {
+      "title": "",
+      "load": "",
+      "loadMessages": "",
+      "saveMessages": "",
+      "switch": "",
+      "retry": ""
+    },
     "moreActions": "Další akce odezvy",
     "renameConversation": {
       "action": "Přejmenovat",
@@ -8804,6 +8965,9 @@
     },
     "mentions": {
       "menu": "Přidat Domovský kontext",
+      "back": "",
+      "loading": "",
+      "empty": "",
       "context": "Kontext",
       "app": "Aplikace",
       "integration": "Integrace",
@@ -8818,6 +8982,8 @@
     },
     "commands": {
       "menu": "Příkazy asistenta",
+      "hint": "",
+      "empty": "",
       "health": "Připravte si kontrolu stavu služeb",
       "explore": "Připravte přehled této instance Homarr",
       "media": "Připravit vyhledávání médií",
@@ -9000,6 +9166,7 @@
     "approvalDescription": "Zkontrolovat tuto změnu před jejím spuštěním.",
     "approveAndRun": "Schválit a spustit",
     "deny": "Zamítnout",
+    "approvalError": "",
     "autoApproval": {
       "label": "Automatická schválení",
       "composerLabel": "Schválit pro mě",
