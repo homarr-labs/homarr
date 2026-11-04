@@ -46,6 +46,8 @@ import {
   getReleaseProviderIconUrl,
   getReleaseProviderName,
   getReleaseSourceFromDockerImage,
+  isVersionLikeTag,
+  supportsReleaseProviderTracks,
   releaseProviderKinds,
 } from "@homarr/definitions";
 import { IconPicker } from "@homarr/forms-collection";
@@ -437,7 +439,10 @@ const formatVersionFilterRegex = (versionFilter: ReleasesVersionFilter | undefin
 };
 
 const formatIdentifierName = (identifier: string) => {
-  const unformattedName = identifier.split("/").pop();
+  const unformattedName = identifier
+    .split("/")
+    .pop()
+    ?.replace(/[@:].*$/, "");
   return unformattedName?.replace(/[-_]/g, " ").replace(/(?:^\w|[A-Z]|\b\w)/g, (char) => char.toUpperCase()) ?? "";
 };
 
@@ -511,6 +516,11 @@ const RepositoryEditModal = createModal<RepositoryEditProps>(({ innerProps, acti
         <TextInput
           withAsterisk
           label={tRepository("identifier.label")}
+          placeholder={tRepository(
+            supportsReleaseProviderTracks(tempRepository.provider ?? "github")
+              ? "identifier.containerPlaceholder"
+              : "identifier.placeholder",
+          )}
           value={tempRepository.identifier}
           onChange={(event) => {
             const name =
@@ -822,7 +832,7 @@ const RepositoryImportModal = createModal<RepositoryImportProps>(({ innerProps, 
         identifier,
         iconUrl: container.iconUrl ?? undefined,
         name: formatIdentifierName(identifier),
-        versionFilter: version ? parseImageVersionToVersionFilter(version) : undefined,
+        versionFilter: version && isVersionLikeTag(version) ? parseImageVersionToVersionFilter(version) : undefined,
         alreadyImported: imported.has(key),
         sourceToken: container.releaseSourceToken,
       });

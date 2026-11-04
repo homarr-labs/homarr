@@ -1,4 +1,5 @@
 import type { Release, ReleaseLookup } from "./types";
+import { ReleaseLookupError } from "./errors";
 import {
   byHighestVersion,
   byMostSpecificVersion,
@@ -74,11 +75,18 @@ const resolveFloatingTag = (floatingTag: RegistryTag, tags: RegistryTag[]): Rele
 
 export const selectRegistryRelease = (
   tags: RegistryTag[],
-  { identifier, versionPattern }: Pick<ReleaseLookup, "identifier" | "versionPattern">,
+  { identifier, versionPattern, tag }: Pick<ReleaseLookup, "identifier" | "versionPattern" | "tag">,
 ): Release => {
   const newestTag = pickNewestTag(tags);
   if (!newestTag) throw noReleasesFoundError(identifier);
   if (versionPattern) return selectMatchingTag(tags, versionPattern);
+  if (tag) {
+    const selected = tags.find((candidate) => candidate.name === tag);
+    if (!selected) throw new ReleaseLookupError("noMatchingVersion", `No tag named ${tag}`);
+    const version = findDigestSibling(selected, tags);
+    if (version) return { latestRelease: version.name, latestReleaseAt: selected.date, resolvedFromTag: selected.name };
+    return releaseFromTag(selected);
+  }
 
   const floatingTag = findFloatingTag(tags);
   if (floatingTag) return resolveFloatingTag(floatingTag, tags);
