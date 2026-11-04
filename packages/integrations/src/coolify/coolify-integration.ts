@@ -10,7 +10,6 @@ import type {
   CoolifyApplication,
   CoolifyApplicationWithContext,
   CoolifyEnvironment,
-  CoolifyEnvironmentVariable,
   CoolifyHealthcheck,
   CoolifyInstanceInfo,
   CoolifyProject,
@@ -21,10 +20,8 @@ import type {
   CoolifyServiceWithContext,
 } from "./coolify-types";
 import {
-  coolifyApplicationLogSchema,
   coolifyApplicationSchema,
   coolifyEnvironmentSchema,
-  coolifyEnvironmentVariableSchema,
   coolifyHealthcheckSchema,
   coolifyProjectSchema,
   coolifyProjectWithEnvironmentsSchema,
@@ -34,6 +31,7 @@ import {
 } from "./coolify-types";
 
 const logger = createLogger({ module: "coolifyIntegration" });
+const PROJECT_DETAIL_CONCURRENCY = 4;
 
 export class CoolifyIntegration extends Integration {
   public async getHttpAuthenticationAsync(): Promise<IntegrationHttpAuthentication> {
@@ -128,41 +126,6 @@ export class CoolifyIntegration extends Integration {
     }
 
     return coolifyApplicationSchema.parse(await response.json());
-  }
-
-  /**
-   * Get application logs by UUID
-   * https://coolify.io/docs/api-reference/api/operations/get-application-logs-by-uuid
-   */
-  public async getApplicationLogsAsync(uuid: string): Promise<string> {
-    const url = this.url(`/api/v1/applications/${uuid}/logs`);
-    const response = await fetchWithTrustedCertificatesAsync(url, {
-      headers: this.getAuthHeaders(),
-    });
-
-    if (!response.ok) {
-      throw new ResponseError(response);
-    }
-
-    const result = coolifyApplicationLogSchema.parse(await response.json());
-    return result.logs;
-  }
-
-  /**
-   * List environment variables by application UUID
-   * https://coolify.io/docs/api-reference/api/operations/list-envs-by-application-uuid
-   */
-  public async listEnvsByApplicationUuidAsync(uuid: string): Promise<CoolifyEnvironmentVariable[]> {
-    const url = this.url(`/api/v1/applications/${uuid}/envs`);
-    const response = await fetchWithTrustedCertificatesAsync(url, {
-      headers: this.getAuthHeaders(),
-    });
-
-    if (!response.ok) {
-      throw new ResponseError(response);
-    }
-
-    return coolifyEnvironmentVariableSchema.array().parse(await response.json());
   }
 
   /**
@@ -354,7 +317,11 @@ export class CoolifyIntegration extends Integration {
    */
   private async listProjectsWithEnvironmentsAsync(): Promise<CoolifyProjectWithEnvironments[]> {
     const projects = await this.listProjectsAsync();
-    const results = await Promise.allSettled(projects.map((project) => this.getProjectByUuidAsync(project.uuid)));
+    const results: PromiseSettledResult<CoolifyProjectWithEnvironments>[] = [];
+    for (let index = 0; index < projects.length; index += PROJECT_DETAIL_CONCURRENCY) {
+      const batch = projects.slice(index, index + PROJECT_DETAIL_CONCURRENCY);
+      results.push(...(await Promise.allSettled(batch.map((project) => this.getProjectByUuidAsync(project.uuid)))));
+    }
     const failedCount = results.filter((result) => result.status === "rejected").length;
     if (failedCount > 0) {
       logger.warn("Coolify project context incomplete; continuing with available projects", {

@@ -210,6 +210,40 @@ describe("CoolifyIntegration", () => {
   });
 
   describe("getInstanceInfoAsync", () => {
+    test("limits concurrent project detail requests while retaining all projects", async () => {
+      let activeProjects = 0;
+      let peakProjects = 0;
+      const projects = Array.from({ length: 10 }, (_, index) => ({
+        id: index + 1,
+        uuid: `proj-${index + 1}`,
+        name: `Project ${index + 1}`,
+      }));
+
+      mockFetchWithTrustedCertificates.mockImplementation(async (url) => {
+        const path = new URL(url.toString()).pathname;
+        if (path.startsWith("/api/v1/projects/")) {
+          activeProjects++;
+          peakProjects = Math.max(peakProjects, activeProjects);
+          await new Promise((resolve) => setTimeout(resolve, 1));
+          activeProjects--;
+          const project = projects.find((item) => `/api/v1/projects/${item.uuid}` === path);
+          return new Response(JSON.stringify({ ...project, environments: [] })) as unknown as Awaited<
+            ReturnType<typeof fetchWithTrustedCertificatesAsync>
+          >;
+        }
+
+        const data = path === "/api/v1/version" ? "4.0.0" : path === "/api/v1/projects" ? projects : [];
+        return new Response(typeof data === "string" ? data : JSON.stringify(data)) as unknown as Awaited<
+          ReturnType<typeof fetchWithTrustedCertificatesAsync>
+        >;
+      });
+
+      const result = await createCoolifyIntegration().getInstanceInfoAsync();
+
+      expect(result.projects).toHaveLength(projects.length);
+      expect(peakProjects).toBe(4);
+    });
+
     test("should aggregate all instance data with project context", async () => {
       const projectWithEnvs: CoolifyProjectWithEnvironments = {
         id: 1,
