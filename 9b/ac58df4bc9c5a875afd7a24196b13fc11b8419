@@ -1,0 +1,20 @@
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-form-layout.tsx
+  h_d6e478ca18e517 71,79,108,160,162-164,170-171
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_use-custom-widget-form-actions.ts
+  h_d6e478ca18e517 98
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_use-custom-widget-form-analysis.ts
+  h_d6e478ca18e517 76-79,129,141
+packages/custom-widgets/src/core/definition-removals.ts
+  h_d6e478ca18e517 28-41,72
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "9bac58df4bc9c5a875afd7a24196b13fc11b8419",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
