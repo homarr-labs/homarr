@@ -1,0 +1,19 @@
+apps/nextjs/src/app/[locale]/boards/(content)/_client.module.css
+  s_9ca5359a9ec255::t_cb4446d1a41d88 1-4
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "19e0af818a72188e46f853f997b495dc09817d95",
+  "prompts": {},
+  "sessions": {
+    "s_9ca5359a9ec255": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "6d5d7108-e559-405e-8079-1a588ee13e34",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
