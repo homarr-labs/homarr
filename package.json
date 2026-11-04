@@ -11,6 +11,7 @@
     "catalog": {
       "@ai-sdk/openai-compatible": "3.0.71",
       "@ai-sdk/react": "4.0.147",
+      "@ajnart/self-host-testkit": "1.3.0",
       "@assistant-ui/react": "0.15.29",
       "@assistant-ui/react-ai-sdk": "1.4.18",
       "@assistant-ui/react-lexical": "0.2.18",
@@ -325,6 +326,7 @@
     "jsonpath-plus": "catalog:"
   },
   "devDependencies": {
+    "@ajnart/self-host-testkit": "catalog:",
     "@babel/parser": "catalog:",
     "@playwright/test": "catalog:",
     "@semantic-release/changelog": "catalog:",
