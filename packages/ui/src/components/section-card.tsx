@@ -8,7 +8,7 @@ interface SectionCardProps {
 
 export const SectionCard = ({ title, children }: SectionCardProps) => {
   return (
-    <Card withBorder bg="transparent">
+    <Card bg="transparent">
       <Stack gap="md">
         <Title order={3}>{title}</Title>
         <Divider />

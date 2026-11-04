@@ -11,6 +11,7 @@ import { MissingSecretError, testConnectionAsync } from "./integration-test-conn
 
 export const integrationTestStoredConnectionProcedure = protectedProcedure
   .meta({
+    readOnly: false,
     openapi: {
       method: "GET",
       path: "/api/integrations/{id}/test-connection",

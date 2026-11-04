@@ -144,13 +144,7 @@
         "secondaryColor": "Дополнительный цвет",
         "resetColors": "Сбросить цвета",
         "radius": "Скругление углов виджетов",
-        "radiusOptions": {
-          "xs": "Строгое",
-          "sm": "Лёгкое",
-          "md": "Среднее",
-          "lg": "Сильное",
-          "xl": "Мягкое"
-        },
+        "radiusOptions": {},
         "columns": "Столбцы панели",
         "columnsDescription": "Столбцы задают горизонтальную сетку, по которой определяются размер и положение элементов. Большинству хватает 12.",
         "columnCount": "{count, plural, one {# столбец} few {# столбца} many {# столбцов} other {# столбца}}",
@@ -194,7 +188,6 @@
           "loginRequired": "Чтобы создать API-ключ, войдите как администратор после настройки.",
           "configuration": "Конфигурация клиента",
           "copy": "Копировать конфигурацию",
-          "copied": "Скопировано",
           "advanced": "Открыть инструменты MCP, разрешения и подробности настройки"
         }
       },
@@ -806,9 +799,7 @@
         "examples": "Примеры поддерживаемых ссылок",
         "requiresHandler": "Для пользовательских протоколов на вашем устройстве должно быть установлено связанное приложение."
       },
-      "description": {
-        "label": "Описание"
-      },
+      "description": {},
       "useDifferentUrlForPing": {
         "checkbox": {
           "label": "Отдельный URL для проверки доступности",
@@ -860,7 +851,6 @@
       "source": "Источник API: {name}",
       "baseUrl": "URL сервера",
       "networkScope": "Доступ к сети",
-      "save": "Сохранить конфигурацию API",
       "expires": "Этот одноразовый запрос действует до {time}."
     },
     "page": {
@@ -891,13 +881,11 @@
       "pasteImportHint": "Вставьте полный JSON пользовательского виджета с помощью Ctrl+V или Command+V",
       "delete": "Удалить пользовательский виджет",
       "deleteConfirm": "Вы уверены, что хотите удалить \"{name}\"? Это действие нельзя отменить.",
-      "export": "Экспорт",
       "duplicate": "Создать копию",
       "aiPrompt": "Создать с помощью ИИ",
       "copyAiPrompt": "Копировать промпт для ИИ",
       "enable": "Включить",
       "disable": "Выключить",
-      "menu": "Действия",
       "downloadSkill": "Skill для пользовательских виджетов",
       "publishWorkshop": "Опубликовать в Мастерской",
       "migrate": "Миграция пользовательского виджета",
@@ -911,12 +899,9 @@
     "sourceSetupDialog": {
       "title": "Настройка источников виджета",
       "description": "Проверьте, куда подключается этот виджет, и добавьте или замените его зашифрованные учётные данные.",
-      "credentialsRequired": "Запросы не будут работать, пока не добавлены необходимые учётные данные.",
-      "save": "Сохранить конфигурацию"
+      "credentialsRequired": "Запросы не будут работать, пока не добавлены необходимые учётные данные."
     },
-    "field": {
-      "description": "Описание"
-    },
+    "field": {},
     "editor": {
       "errorBoundary": {
         "title": "Что-то пошло не так"
@@ -926,7 +911,6 @@
         "format": "Форматировать",
         "insertStarter": "Вставить шаблон",
         "redo": "Повторить",
-        "copied": "Скопировано",
         "schema": "Схема"
       },
       "reference": {
@@ -1007,7 +991,6 @@
         "manifestFilename": "widget.json",
         "request": "Запрос {count, number}",
         "requestId": "ID запроса",
-        "type": "Тип",
         "method": "Метод",
         "source": "Источник API",
         "run": "Запуск",
@@ -1044,7 +1027,6 @@
         "optionName": "Имя опции",
         "label": "Метка",
         "control": "Тип поля",
-        "description": "Описание",
         "default": "По умолчанию",
         "optionDetails": "Ограничения и динамические варианты",
         "minimum": "Минимум",
@@ -1081,7 +1063,6 @@
         "credentialRemovedDescription": "Сохранённое значение удалено.",
         "primary": "Основной API",
         "id": "ID источника",
-        "name": "Имя",
         "baseUrl": "Базовый URL",
         "baseUrlError": {
           "invalid": "Введите полный URL.",
@@ -1098,7 +1079,6 @@
         "remove": "Удалить источник и его запросы",
         "advanced": "Дополнительно",
         "add": "Добавить ещё один источник API",
-        "sourceType": "Источник",
         "manualSource": "HTTP API",
         "existingIntegration": "Существующая интеграция",
         "integrationType": "Тип интеграции",
@@ -1232,7 +1212,6 @@
       "migrationTitle": "Проверка замены на v2",
       "migrationDescription": "Проверьте и подтвердите сгенерированное определение v2. Подтверждение одной операцией заменит сохранённую запись v1, а размещения на панелях останутся привязаны к тому же ID виджета.",
       "fileLabel": "Выберите JSON-файл пользовательского виджета",
-      "name": "Название",
       "origin": "Базовый адрес",
       "authentication": "Аутентификация",
       "networkScope": "Доступ к сети",
@@ -1252,8 +1231,6 @@
         "title": "Этот виджет может изменять данные на удалённом сервисе",
         "description": "После импорта проверьте все именованные действия, унаследованные учётные данные и подтверждения опасных действий. Секреты в файл не входят."
       },
-      "cancel": "Отменить импорт",
-      "confirm": "Импорт виджета",
       "confirmMigration": "Подтвердить замену v2"
     },
     "secret": {
@@ -1317,7 +1294,6 @@
     "closeScreenshotViewer": "Закрыть просмотр скриншотов",
     "technicalDetails": "Технические подробности",
     "sourceCode": "Содержимое публикации",
-    "export": "Экспорт",
     "report": "Пожаловаться",
     "reportTitle": "Жалоба на публикацию",
     "reportReason": "Причина",
@@ -1348,8 +1324,6 @@
       "viewSubmission": "Управлять публикацией",
       "done": "Готово",
       "signInHint": "Войдите, чтобы публиковать от имени своей учётной записи Мастерской.",
-      "titleField": "Заголовок",
-      "descriptionField": "Описание",
       "screenshots": "Скриншоты",
       "screenshotsDescription": "До пяти изображений PNG, JPEG или WebP",
       "screenshotsPlaceholder": "Выберите скриншоты",
@@ -1615,11 +1589,9 @@
             },
             "notification": {
               "success": {
-                "title": "Сертификат добавлен в доверенные",
                 "message": "Сертификат добавлен в список доверенных сертификатов"
               },
               "error": {
-                "title": "Не удалось добавить сертификат в доверенные",
                 "message": "Не удалось добавить сертификат в список доверенных сертификатов"
               }
             }
@@ -1840,9 +1812,7 @@
     "search": "Поиск медиафайлов",
     "field": {
       "preview": "Предпросмотр",
-      "size": "Размер",
-      "creator": "Создатель",
-      "actions": "Управление"
+      "creator": "Создатель"
     },
     "action": {
       "upload": {
@@ -1920,7 +1890,8 @@
       "clearSearch": "Очистить поиск",
       "copy": "Копировать",
       "copied": "Скопировано",
-      "refresh": "Обновить"
+      "refresh": "Обновить",
+      "export": "Экспорт"
     },
     "hidden": "Скрыто",
     "pagination": {
@@ -2067,7 +2038,18 @@
     "total": "Всего",
     "filesystemUsage": "{count, plural, one {Показать использование файловых систем: #} few {Показать использование файловых систем: #} many {Показать использование файловых систем: #} other {Показать использование файловых систем: #}}",
     "field": {
-      "name": "Название"
+      "name": "Название",
+      "state": "Состояние",
+      "size": "Размер",
+      "actions": "Действия",
+      "source": "Источник",
+      "title": "Заголовок",
+      "description": "Описание",
+      "created": "Создано",
+      "namespace": "Пространство имён",
+      "status": "Статус",
+      "architecture": "Архитектура",
+      "type": "Тип"
     },
     "label": {
       "new": "Создание"
@@ -2085,6 +2067,15 @@
       "searchEngines": "Поисковые системы",
       "tasks": "Задачи",
       "users": "Пользователи"
+    },
+    "cornerStyle": {
+      "options": {
+        "md": "Среднее",
+        "lg": "Сильное",
+        "xs": "Строгое",
+        "sm": "Лёгкое",
+        "xl": "Мягкое"
+      }
     }
   },
   "section": {
@@ -2122,9 +2113,7 @@
         "collapse": "Свернуть"
       },
       "option": {
-        "title": {
-          "label": "Заголовок"
-        },
+        "title": {},
         "customCssClasses": {
           "label": "Пользовательские CSS классы"
         },
@@ -2148,8 +2137,7 @@
       "label": {
         "settings": "Настройки",
         "settingsFor": "Настройки для {name}",
-        "options": "Опции",
-        "actions": "Действия"
+        "options": "Опции"
       },
       "status": {
         "success": "ОК",
@@ -2202,7 +2190,6 @@
     "selection": {
       "summary": "{count, plural, one {Выбрано элементов: #} few {Выбрано элементов: #} many {Выбрано элементов: #} other {Выбрано элементов: #}}",
       "selected": "{count, plural, one {Выбрано: #} few {Выбрано: #} many {Выбрано: #} other {Выбрано: #}}",
-      "copy": "Копировать",
       "copied": "{count, plural, one {В буфер обмена скопирован # элемент} few {В буфер обмена скопировано # элемента} many {В буфер обмена скопировано # элементов} other {В буфер обмена скопировано # элемента}}",
       "copyError": "Не удалось скопировать выбранные элементы. Возможно, браузер не разрешает доступ к буферу обмена.",
       "paste": "Вставить",
@@ -2214,7 +2201,6 @@
       "removed": "{count, plural, one {Удалён # элемент} few {Удалено # элемента} many {Удалено # элементов} other {Удалено # элемента}}",
       "move": "Переместить",
       "moveTo": "Переместить выбранные элементы",
-      "delete": "Удалить",
       "clear": "Снять выделение",
       "clearShortcut": "Снять выделение (Escape)",
       "saveErrorTitle": "Не удалось обновить элементы",
@@ -2290,9 +2276,7 @@
           "label": "Интеграции",
           "removeLabel": "Удалить интеграцию {name}"
         },
-        "title": {
-          "label": "Заголовок"
-        },
+        "title": {},
         "customCssClasses": {
           "label": "Пользовательские CSS-классы"
         },
@@ -3505,7 +3489,6 @@
         },
         "table": {
           "header": {
-            "name": "Имя",
             "node": "Узел"
           }
         }
@@ -3535,8 +3518,6 @@
         },
         "defaultSort": {
           "option": {
-            "name": "Имя",
-            "state": "Состояние",
             "cpuUsage": "Использование ЦП",
             "memoryUsage": "Использование памяти"
           }
@@ -3947,9 +3928,7 @@
       "items": {
         "currentlyPlaying": "Сейчас воспроизводится",
         "user": "Пользователь",
-        "name": "Название",
         "id": "ID",
-        "status": "Статус",
         "directPlay": "Прямое воспроизведение",
         "directStream": "Прямой поток",
         "transcodeVideo": "Транскодирование видео",
@@ -4444,38 +4423,29 @@
           "columnTitle": "Действия"
         },
         "added": {
-          "columnTitle": "Добавлено",
-          "detailsTitle": "Добавлено"
+          "columnTitle": "Добавлено"
         },
         "category": {
-          "columnTitle": "Категория",
-          "detailsTitle": "Категория"
+          "columnTitle": "Категория"
         },
         "downSpeed": {
-          "columnTitle": "Загрузка",
-          "detailsTitle": "Скорость загрузки"
+          "columnTitle": "Загрузка"
         },
         "index": {
           "columnTitle": "#",
           "detailsTitle": "Индекс"
         },
         "id": {
-          "columnTitle": "ID",
-          "detailsTitle": "ID"
+          "columnTitle": "ID"
         },
-        "integration": {
-          "columnTitle": "Источник"
-        },
-        "name": {
-          "columnTitle": "Название"
-        },
+        "integration": {},
+        "name": {},
         "progress": {
           "columnTitle": "Прогресс",
           "detailsTitle": "Прогресс"
         },
         "ratio": {
-          "columnTitle": "Рейтинг",
-          "detailsTitle": "Рейтинг"
+          "columnTitle": "Рейтинг"
         },
         "received": {
           "columnTitle": "Скачано",
@@ -4485,26 +4455,16 @@
           "columnTitle": "Отдано",
           "detailsTitle": "Отдано"
         },
-        "size": {
-          "columnTitle": "Размер",
-          "detailsTitle": "Размер"
-        },
-        "state": {
-          "columnTitle": "Состояние",
-          "detailsTitle": "Состояние"
-        },
+        "size": {},
+        "state": {},
         "time": {
-          "columnTitle": "Осталось",
-          "detailsTitle": "Осталось",
-          "eta": "Осталось"
+          "columnTitle": "Осталось"
         },
         "type": {
-          "columnTitle": "Тип",
           "detailsTitle": "Тип"
         },
         "upSpeed": {
-          "columnTitle": "Отдача",
-          "detailsTitle": "Скорость отдачи"
+          "columnTitle": "Отдача"
         }
       },
       "states": {
@@ -4693,9 +4653,7 @@
           }
         },
         "queue": {
-          "table": {
-            "size": "Размер"
-          }
+          "table": {}
         },
         "common": {
           "empty": "Пусто",
@@ -4859,9 +4817,7 @@
             "label": "Идентификатор",
             "placeholder": "Имя или Владелец/Имя"
           },
-          "name": {
-            "label": "Имя"
-          },
+          "name": {},
           "excludePrereleases": {
             "label": "Не учитывать предрелизы",
             "description": "Показывать последний релиз, который провайдер не пометил как предрелиз."
@@ -5166,7 +5122,6 @@
       "download": "Скачивание",
       "upload": "Загрузка",
       "ping": "Пинг",
-      "status": "Статус",
       "avgDownload": "Среднее скачивание",
       "avgUpload": "Средняя загрузка",
       "avgPing": "Средний пинг",
@@ -5474,7 +5429,6 @@
         "actionsDisabledEditMode": "Действия недоступны, пока панель в режиме редактирования.",
         "widgetItemUnavailable": "Этот элемент виджета недоступен.",
         "toggle": "Переключить",
-        "copied": "Скопировано",
         "confirmDelete": "Подтвердите это необратимое действие."
       },
       "option": {
@@ -5751,7 +5705,6 @@
       },
       "metric": {
         "system": "Система",
-        "source": "Интеграция",
         "hostname": "Имя хоста",
         "cpuModel": "Модель ЦП",
         "cores": "Ядер",
@@ -6441,13 +6394,7 @@
       "itemRadius": {
         "label": "Скругление углов",
         "description": "Изменяет скругление углов плиток на вашей панели",
-        "option": {
-          "xs": "Очень маленькое",
-          "sm": "Маленькое",
-          "md": "Среднее",
-          "lg": "Большое",
-          "xl": "Очень большое"
-        }
+        "option": {}
       },
       "isPublic": {
         "label": "Публичная",
@@ -7079,13 +7026,7 @@
             },
             "defaultRadius": {
               "label": "Скругление углов",
-              "options": {
-                "xs": "Строгое",
-                "sm": "Лёгкое",
-                "md": "Среднее",
-                "lg": "Сильное",
-                "xl": "Мягкое"
-              }
+              "options": {}
             },
             "customCss": {
               "label": "Глобальный пользовательский CSS",
@@ -7107,7 +7048,6 @@
               "greetingDefault": "Приветствие по умолчанию",
               "boardColorLocked": "Цвет панелей закреплён",
               "boardColorFlexible": "Цвета панелей разрешены",
-              "appName": "Название",
               "logo": "Логотип",
               "greeting": "Приветствие",
               "on": "Вкл",
@@ -7335,9 +7275,7 @@
             "lastExecution": {
               "label": "Последний запуск"
             },
-            "actions": {
-              "label": "Действия"
-            }
+            "actions": {}
           },
           "table": {
             "search": "Поиск по задачам ({count})..."
@@ -7401,9 +7339,7 @@
               },
               "table": {
                 "header": {
-                  "createdBy": "Кем создан",
-                  "source": "Источник",
-                  "actions": "Действия"
+                  "createdBy": "Кем создан"
                 }
               },
               "provenance": {
@@ -7696,7 +7632,6 @@
     },
     "field": {
       "state": {
-        "label": "Состояние",
         "option": {
           "created": "Создан",
           "running": "Работает",
@@ -7723,7 +7658,6 @@
       }
     },
     "action": {
-      "title": "Действия",
       "logs": {
         "label": "Просмотреть логи",
         "page": {
@@ -7961,27 +7895,13 @@
       "internalServerError": "Не удалось получить данные Kubernetes"
     },
     "field": {
-      "name": {
-        "label": "Имя"
-      },
-      "namespace": {
-        "label": "Пространство имён"
-      },
-      "creationTimestamp": {
-        "label": "Создано"
-      },
-      "state": {
-        "label": "Состояние"
-      },
-      "status": {
-        "label": "Статус"
-      },
-      "type": {
-        "label": "Тип"
-      },
-      "architecture": {
-        "label": "Архитектура"
-      }
+      "name": {},
+      "namespace": {},
+      "creationTimestamp": {},
+      "state": {},
+      "status": {},
+      "type": {},
+      "architecture": {}
     }
   },
   "permission": {
@@ -8008,10 +7928,7 @@
         "label": "Разрешение"
       }
     },
-    "action": {
-      "saveUser": "Сохранить разрешения пользователя",
-      "saveGroup": "Сохранить разрешения группы"
-    }
+    "action": {}
   },
   "navigationStructure": {
     "manage": {
@@ -8122,8 +8039,7 @@
       "resultsAriaLabel": "Результаты: {mode}",
       "footer": {
         "navigate": "Навигация",
-        "open": "Открыть",
-        "close": "Закрыть"
+        "open": "Открыть"
       }
     },
     "error": {
@@ -8553,9 +8469,7 @@
         "urlTemplate": {
           "label": "Шаблон URL поиска"
         },
-        "description": {
-          "label": "Описание"
-        }
+        "description": {}
       },
       "page": {
         "list": {
@@ -8624,8 +8538,7 @@
             "table": {
               "header": {
                 "season": "Сезон",
-                "episodes": "Серии",
-                "status": "Статус"
+                "episodes": "Серии"
               },
               "status": {
                 "requested": "Запрошено"
@@ -9134,7 +9047,6 @@
       "cssDescription": "Редактируется вся таблица стилей. Существующие правила сохранятся, если не удалить их здесь.",
       "cssCharacters": "{count} из 16384 символов",
       "copyCss": "Копировать CSS",
-      "copied": "Скопировано",
       "restoreCss": "Вернуть текущий CSS",
       "remoteCssTitle": "Этот CSS загружает внешний ресурс",
       "remoteCssDescription": "Импортированные таблицы стилей и внешние URL обращаются к другому серверу при загрузке панели. Проверьте их, прежде чем продолжить."

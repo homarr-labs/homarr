@@ -172,7 +172,7 @@ const SortableEvent = ({ kind, event, timeZoneOptions, onChange, onRemove }: Sor
   };
 
   return (
-    <Card ref={setNodeRef} withBorder p="sm" style={style}>
+    <Card ref={setNodeRef} p="sm" style={style}>
       <Stack gap="xs">
         <Group gap="xs" wrap="nowrap" align="end">
           <ActionIcon

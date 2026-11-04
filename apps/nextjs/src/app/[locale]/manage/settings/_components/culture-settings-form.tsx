@@ -5,7 +5,7 @@ import type { SupportedLanguage } from "@homarr/translation";
 import { useI18n } from "@homarr/translation/client";
 
 import { LanguageCombobox } from "~/components/language/language-combobox";
-import { SectionCard } from "~/components/manage/section-card";
+import { SectionCard } from "@homarr/ui";
 import type { FormValues } from "./settings-form";
 
 interface CultureSettingsFormProps {

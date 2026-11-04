@@ -55,7 +55,7 @@ export const RequestMediaModal = createModal<RequestMediaModalProps>(({ actions,
       },
       {
         id: "status",
-        header: t("search.engine.media.request.modal.table.header.status"),
+        header: t("common.field.status"),
         Cell: ({ row }) =>
           requestedSeasons.has(row.original.seasonNumber) ? (
             <Badge size="xs" color="violet" variant="light">

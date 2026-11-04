@@ -3,12 +3,12 @@
 import type { CSSProperties, MouseEvent as ReactMouseEvent } from "react";
 import { Button, Group, Paper, SimpleGrid, Stack, Text, ThemeIcon, Title } from "@mantine/core";
 import { IconArrowRight, IconBook2, IconSparkles, IconTool } from "@tabler/icons-react";
-import confetti from "canvas-confetti";
 
 import { createDocumentationLink } from "@homarr/definitions";
 import { useI18n } from "@homarr/translation/client";
 import { Link } from "@homarr/ui";
 
+import { celebrateWithConfetti } from "./confetti";
 import { OnboardingBackdrop } from "./onboarding-backdrop";
 import { OnboardingWordmark } from "./onboarding-wordmark";
 import type { OnboardingStudioProps } from "./types";
@@ -43,7 +43,7 @@ export const Finish = ({ environment }: OnboardingStudioProps) => {
 
     event.preventDefault();
     const button = event.currentTarget.getBoundingClientRect();
-    void confetti({
+    celebrateWithConfetti({
       particleCount: 120,
       spread: 75,
       startVelocity: 45,
@@ -51,7 +51,6 @@ export const Finish = ({ environment }: OnboardingStudioProps) => {
         x: (button.left + button.width / 2) / window.innerWidth,
         y: (button.top + button.height / 2) / window.innerHeight,
       },
-      disableForReducedMotion: true,
     });
     window.setTimeout(() => window.location.assign(destination), 450);
   };

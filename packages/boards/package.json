@@ -17,7 +17,8 @@
     "./layout-preview": "./src/layout-preview.ts",
     "./updater": "./src/updater.ts",
     "./edit-mode": "./src/edit-mode.tsx",
-    "./scale": "./src/scale.ts"
+    "./scale": "./src/scale.ts",
+    "./layout-data": "./src/layout-data.ts"
   },
   "scripts": {
     "clean": "rm -rf .turbo node_modules",

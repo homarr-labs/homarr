@@ -1,4 +1,36 @@
 ## What's Changed
+* chore(deps): update dependency @assistant-ui/core to v0.3.32 by @homarr-renovate[bot] in https://github.com/homarr-labs/homarr/pull/7423
+* chore(deps): update dependency assistant-cloud to v0.2.9 by @homarr-renovate[bot] in https://github.com/homarr-labs/homarr/pull/7424
+* chore(lang): updated translations from crowdin by @homarr-crowdin[bot] in https://github.com/homarr-labs/homarr/pull/7422
+* chore(deps): update node.js to v24.22.2 by @homarr-renovate[bot] in https://github.com/homarr-labs/homarr/pull/7431
+* fix(ci): regenerate Crowdin PRs from dev by @ajnart in https://github.com/homarr-labs/homarr/pull/7430
+* chore(lang): updated translations from crowdin by @homarr-crowdin[bot] in https://github.com/homarr-labs/homarr/pull/7433
+* i18n: monthly sync of the Chinese catalog (10 new keys) by @ApplesBear-X in https://github.com/homarr-labs/homarr/pull/7429
+* chore: update bug report template by @homarr-releases[bot] in https://github.com/homarr-labs/homarr/pull/7412
+* chore(lang): updated translations from crowdin by @homarr-crowdin[bot] in https://github.com/homarr-labs/homarr/pull/7434
+* fix(deps): update dependency three to ^0.187.0 by @homarr-renovate[bot] in https://github.com/homarr-labs/homarr/pull/7450
+* fix(deps): update module charm.land/bubbletea/v2 to v2.1.1 by @homarr-renovate[bot] in https://github.com/homarr-labs/homarr/pull/7449
+* chore(deps): update dependency @types/three to ^0.187.0 by @homarr-renovate[bot] in https://github.com/homarr-labs/homarr/pull/7453
+* fix(deps): update dependency swiper to ^14.4.0 by @homarr-renovate[bot] in https://github.com/homarr-labs/homarr/pull/7454
+* fix(assistant): send the Workshop token after runtime options load by @ajnart in https://github.com/homarr-labs/homarr/pull/7457
+* docs(helm): update chart installation page by @homarr-charts-docs-sync[bot] in https://github.com/homarr-labs/homarr/pull/7418
+* fix(board): show one discard dialog when leaving edit mode by @Anandumv in https://github.com/homarr-labs/homarr/pull/7426
+* feat(assistant): switch the Homarr model from GPT-6 Luna to GPT-6.1 Sol for smarter, less lazy and faster answers by @ajnart in https://github.com/homarr-labs/homarr/pull/7458
+* feat(integrations): add external URL field for widget links by @ajnart in https://github.com/homarr-labs/homarr/pull/7296
+* perf: apply 5 fixes to reduce RAM usage and optimize widget bundles by @ajnart in https://github.com/homarr-labs/homarr/pull/7160
+* chore(deps): update dependency node to v24.22.2 by @homarr-renovate[bot] in https://github.com/homarr-labs/homarr/pull/7432
+* feat(docker): honor icon labels in the Docker widget by @ajnart in https://github.com/homarr-labs/homarr/pull/7459
+* fix(calendar): preserve iCal all-day dates across timezones by @ajnart in https://github.com/homarr-labs/homarr/pull/7460
+* feat(auth): share read-only access across API keys and MCP by @ajnart in https://github.com/homarr-labs/homarr/pull/7297
+* perf: streamline widget runtime, builds and shared UI by @ajnart in https://github.com/homarr-labs/homarr/pull/7217
+* chore(release): automatic release v2.11.0 by @github-actions[bot] in https://github.com/homarr-labs/homarr/pull/7465
+
+## New Contributors
+* @Anandumv made their first contribution in https://github.com/homarr-labs/homarr/pull/7426
+
+**Full Changelog**: https://github.com/homarr-labs/homarr/compare/v2.10.1...v2.11.0
+
+## What's Changed
 * chore: update contributors by @homarr-update-contributors[bot] in https://github.com/homarr-labs/homarr/pull/7415
 * fix(deps): update dependency @tabler/icons to ^3.50.0 by @homarr-renovate[bot] in https://github.com/homarr-labs/homarr/pull/7417
 * chore(release): automatic release v2.10.1 by @github-actions[bot] in https://github.com/homarr-labs/homarr/pull/7419

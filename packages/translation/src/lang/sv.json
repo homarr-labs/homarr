@@ -144,13 +144,7 @@
         "secondaryColor": "Sekundärfärg",
         "resetColors": "Återställ färger",
         "radius": "Widget hörnradie",
-        "radiusOptions": {
-          "xs": "Snäll",
-          "sm": "Subtila",
-          "md": "Balanserad",
-          "lg": "Avrundad",
-          "xl": "Mjuk"
-        },
+        "radiusOptions": {},
         "columns": "Kolumner för tavlor",
         "columnsDescription": "Kolumner definierar det horisontella nätet som används för storlek och position objekt. 12 är gott för de flesta.",
         "columnCount": "{count, plural, one {# kolumn} other {# kolumner}}",
@@ -194,7 +188,6 @@
           "loginRequired": "Logga in som administratör efter installation för att skapa en API-nyckel.",
           "configuration": "Klient konfiguration",
           "copy": "Kopiera konfiguration",
-          "copied": "Kopierad",
           "advanced": "Öppna MCP-verktyg, behörigheter och installationsdetaljer"
         }
       },
@@ -806,9 +799,7 @@
         "examples": "Exempel på länkar som stöds",
         "requiresHandler": "Anpassade protokoll kräver en associerad app på din enhet."
       },
-      "description": {
-        "label": "Beskrivning"
-      },
+      "description": {},
       "useDifferentUrlForPing": {
         "checkbox": {
           "label": "Använd annan URL för ping",
@@ -846,7 +837,7 @@
   },
   "tips": {
     "dismiss": "Avfärda tips",
-    "multiSelectApps": "Tips: Håll Ctrl / <unk> för att välja flera appar samtidigt"
+    "multiSelectApps": "Tips: Håll Ctrl / ⌘ för att välja flera appar samtidigt"
   },
   "customWidget": {
     "secretEntry": {
@@ -860,7 +851,6 @@
       "source": "API källa: {name}",
       "baseUrl": "",
       "networkScope": "Nätverksåtkomst",
-      "save": "Spara API-konfiguration",
       "expires": "Denna engångsförfrågan löper ut på {time}."
     },
     "page": {
@@ -891,13 +881,11 @@
       "pasteImportHint": "Klistra in en komplett anpassad widget JSON med Ctrl+V eller Command+V",
       "delete": "Ta bort anpassad widget",
       "deleteConfirm": "Är du säker på att du vill ta bort \"{name}\"? Den här åtgärden kan inte ångras.",
-      "export": "Exportera",
       "duplicate": "Duplicera",
       "aiPrompt": "Designa med AI",
       "copyAiPrompt": "Kopiera AI-prompt",
       "enable": "Aktivera",
       "disable": "Inaktivera",
-      "menu": "Åtgärder",
       "downloadSkill": "Visa anpassad Widget-färdighet",
       "publishWorkshop": "Publicera till Workshop",
       "migrate": "Migrera anpassad widget",
@@ -911,12 +899,9 @@
     "sourceSetupDialog": {
       "title": "Konfigurera widget-källor",
       "description": "Granska var denna widget ansluter och lägga till eller ersätta dess krypterade uppgifter.",
-      "credentialsRequired": "Förfrågningar kommer att misslyckas tills de nödvändiga uppgifterna har lagts till.",
-      "save": "Spara konfiguration"
+      "credentialsRequired": "Förfrågningar kommer att misslyckas tills de nödvändiga uppgifterna har lagts till."
     },
-    "field": {
-      "description": "Beskrivning"
-    },
+    "field": {},
     "editor": {
       "errorBoundary": {
         "title": "Något gick fel"
@@ -926,7 +911,6 @@
         "format": "Formatera",
         "insertStarter": "",
         "redo": "Gör om",
-        "copied": "Kopierad",
         "schema": ""
       },
       "reference": {
@@ -1007,7 +991,6 @@
         "manifestFilename": "",
         "request": "Begär {count, number}",
         "requestId": "Begär ID",
-        "type": "Nedladdningsklientens typ",
         "method": "Metod",
         "source": "API källa",
         "run": "Kör",
@@ -1044,7 +1027,6 @@
         "optionName": "Alternativ namn",
         "label": "Etikett",
         "control": "Kontroll",
-        "description": "Beskrivning",
         "default": "Standard",
         "optionDetails": "Begränsningar och dynamiska val",
         "minimum": "Minsta",
@@ -1081,7 +1063,6 @@
         "credentialRemovedDescription": "Det lagrade värdet har tagits bort.",
         "primary": "Primär API",
         "id": "Källans ID",
-        "name": "Jobbnamn",
         "baseUrl": "Bas URL",
         "baseUrlError": {
           "invalid": "Ange en komplett URL.",
@@ -1098,7 +1079,6 @@
         "remove": "Ta bort källa och dess förfrågningar",
         "advanced": "Avancerat",
         "add": "Lägg till en annan API-källa",
-        "sourceType": "Integration",
         "manualSource": "",
         "existingIntegration": "Befintlig integration",
         "integrationType": "Integrationstyp",
@@ -1232,7 +1212,6 @@
       "migrationTitle": "Granska migrerad v2-ersättning",
       "migrationDescription": "Granska och bekräfta denna genererade v2-definition. Bekräftande atomiskt ersätter den bevarade v1-posten samtidigt som befintliga styrelseplaceringar kopplade till samma widget-ID.",
       "fileLabel": "Välj en anpassad widget JSON-fil",
-      "name": "Jobbnamn",
       "origin": "Bas ursprung",
       "authentication": "Autentisering",
       "networkScope": "Nätverkets omfattning",
@@ -1252,8 +1231,6 @@
         "title": "Denna widget kan ändra fjärrdata",
         "description": "Granska varje namngiven åtgärd, ärvd autentisering och destruktiv bekräftelse efter import. Hemligheter ingår inte i filen."
       },
-      "cancel": "Avbryt import",
-      "confirm": "Importera widget",
       "confirmMigration": "Bekräfta utbyte av v2"
     },
     "secret": {
@@ -1317,7 +1294,6 @@
     "closeScreenshotViewer": "Stäng skärmdump viewer",
     "technicalDetails": "Tekniska detaljer",
     "sourceCode": "Verkstad post",
-    "export": "Exportera",
     "report": "Rapportera",
     "reportTitle": "Rapportera inlämning",
     "reportReason": "Anledning",
@@ -1348,8 +1324,6 @@
       "viewSubmission": "Visa och hantera inlämning",
       "done": "Klar",
       "signInHint": "Logga in för att publicera under din Workshop-identitet.",
-      "titleField": "Titel",
-      "descriptionField": "Beskrivning",
       "screenshots": "Skärmdumpar",
       "screenshotsDescription": "Upp till fem PNG, JPEG eller WebP bilder",
       "screenshotsPlaceholder": "Välj skärmdumpar",
@@ -1615,11 +1589,9 @@
             },
             "notification": {
               "success": {
-                "title": "Betrodda certifikat",
                 "message": "Certifikatet lades till i listan över betrodda certifikat"
               },
               "error": {
-                "title": "Det gick inte att betro certifikatet",
                 "message": "Det gick inte att lägga till certifikatet i listan över betrodda certifikat"
               }
             }
@@ -1840,9 +1812,7 @@
     "search": "Hitta media",
     "field": {
       "preview": "Förhandsgranska",
-      "size": "Storlek",
-      "creator": "Adderad av",
-      "actions": "Kontroller"
+      "creator": "Adderad av"
     },
     "action": {
       "upload": {
@@ -1920,7 +1890,8 @@
       "clearSearch": "Rensa sökning",
       "copy": "Kopiera",
       "copied": "Kopierad",
-      "refresh": "Uppdatera"
+      "refresh": "Uppdatera",
+      "export": "Exportera"
     },
     "hidden": "",
     "pagination": {
@@ -2067,7 +2038,18 @@
     "total": "Totalt",
     "filesystemUsage": "{count, plural, one {Visa användning för # filsystem} other {Visa användning för # filsystem}}",
     "field": {
-      "name": "Jobbnamn"
+      "name": "Namn",
+      "state": "Status",
+      "size": "Storlek",
+      "actions": "Åtgärder",
+      "source": "Källa",
+      "title": "Titel",
+      "description": "Beskrivning",
+      "created": "Adderad",
+      "namespace": "Namnplats",
+      "status": "Status",
+      "architecture": "Arkitektur",
+      "type": "Typ"
     },
     "label": {
       "new": "Ny"
@@ -2085,6 +2067,15 @@
       "searchEngines": "Sökmotorer",
       "tasks": "Uppgifter",
       "users": "Användare"
+    },
+    "cornerStyle": {
+      "options": {
+        "md": "Balanserad",
+        "lg": "Avrundad",
+        "xs": "Snäll",
+        "sm": "Subtila",
+        "xl": "Mjuk"
+      }
     }
   },
   "section": {
@@ -2122,9 +2113,7 @@
         "collapse": "Komprimera"
       },
       "option": {
-        "title": {
-          "label": "Titel"
-        },
+        "title": {},
         "customCssClasses": {
           "label": "Egna CSS-klasser"
         },
@@ -2148,8 +2137,7 @@
       "label": {
         "settings": "Inställningar",
         "settingsFor": "Inställningar för {name}",
-        "options": "Alternativ",
-        "actions": "Åtgärder"
+        "options": "Alternativ"
       },
       "status": {
         "success": "OK",
@@ -2202,11 +2190,10 @@
     "selection": {
       "summary": "{count, plural, one {# valt objekt} other {# valda objekt}}",
       "selected": "{count, plural, one {# valda} other {# valda}}",
-      "copy": "Kopiera",
       "copied": "{count, plural, one {# objekt kopierades till urklipp} other {# objekt kopierades till urklipp}}",
       "copyError": "De valda objekten kunde inte kopieras. Din webbläsare kanske inte tillåter urklipp åtkomst.",
       "paste": "Klistra in",
-      "pasteShortcut": "Klistra in kopierade objekt här (Ctrl / <unk> + V)",
+      "pasteShortcut": "Klistra in kopierade objekt här (Ctrl / ⌘ + V)",
       "pasted": "{count, plural, one {# objekt klistrade in} other {# objekt klistrade in}}",
       "pasteError": "Urklipp kunde inte läsas. Din webbläsare kanske inte tillåter urklipp åtkomst.",
       "pasteInvalid": "Urklipp innehåller inte giltiga Homarr board objekt.",
@@ -2214,7 +2201,6 @@
       "removed": "{count, plural, one {# objekt borttagna} other {# objekt borttagna}}",
       "move": "Flytta",
       "moveTo": "Flytta valda objekt",
-      "delete": "Ta bort",
       "clear": "Rensa markering",
       "clearShortcut": "Rensa markering (Escape)",
       "saveErrorTitle": "Det gick inte att uppdatera objekt",
@@ -2290,9 +2276,7 @@
           "label": "Integrationer",
           "removeLabel": "Ta bort {name} integration"
         },
-        "title": {
-          "label": "Titel"
-        },
+        "title": {},
         "customCssClasses": {
           "label": "Egna CSS-klasser"
         },
@@ -3505,7 +3489,6 @@
         },
         "table": {
           "header": {
-            "name": "Namn",
             "node": "Nod"
           }
         }
@@ -3535,8 +3518,6 @@
         },
         "defaultSort": {
           "option": {
-            "name": "Namn",
-            "state": "Status",
             "cpuUsage": "CPU-användning",
             "memoryUsage": "Minnesanvändning"
           }
@@ -3947,9 +3928,7 @@
       "items": {
         "currentlyPlaying": "Spelas upp nu",
         "user": "",
-        "name": "Namn",
         "id": "ID",
-        "status": "Status",
         "directPlay": "Direktuppspelning",
         "directStream": "Direktström",
         "transcodeVideo": "Omkodning av video",
@@ -4444,38 +4423,29 @@
           "columnTitle": "Kontroller"
         },
         "added": {
-          "columnTitle": "Tillagd",
-          "detailsTitle": "Datum har adderats"
+          "columnTitle": "Tillagd"
         },
         "category": {
-          "columnTitle": "Extra",
-          "detailsTitle": "Kategorier (eller extra information)"
+          "columnTitle": "Extra"
         },
         "downSpeed": {
-          "columnTitle": "Ner",
-          "detailsTitle": "Nedladdningshastighet "
+          "columnTitle": "Ner"
         },
         "index": {
           "columnTitle": "#",
           "detailsTitle": "Aktuellt index i klienten"
         },
         "id": {
-          "columnTitle": "Objekt-ID",
-          "detailsTitle": "Objekt-ID"
+          "columnTitle": "Objekt-ID"
         },
-        "integration": {
-          "columnTitle": "Integration"
-        },
-        "name": {
-          "columnTitle": "Jobbnamn"
-        },
+        "integration": {},
+        "name": {},
         "progress": {
           "columnTitle": "Förlopp",
           "detailsTitle": "Nedladdningsförlopp"
         },
         "ratio": {
-          "columnTitle": "Förhållande",
-          "detailsTitle": "Torrentratio (mottaget/skickat)"
+          "columnTitle": "Förhållande"
         },
         "received": {
           "columnTitle": "Totalt ned",
@@ -4485,26 +4455,16 @@
           "columnTitle": "Totalt upp",
           "detailsTitle": "Totalt uppladdat"
         },
-        "size": {
-          "columnTitle": "Filstorlek",
-          "detailsTitle": "Total storlek för valda filer"
-        },
-        "state": {
-          "columnTitle": "Läge",
-          "detailsTitle": "Jobbstatus"
-        },
+        "size": {},
+        "state": {},
         "time": {
-          "columnTitle": "Sluttid",
-          "detailsTitle": "Tid sedan/till slutförande",
-          "eta": "Beräknad sluttid"
+          "columnTitle": "Sluttid"
         },
         "type": {
-          "columnTitle": "Typ",
           "detailsTitle": "Nedladdningsklientens typ"
         },
         "upSpeed": {
-          "columnTitle": "Upp",
-          "detailsTitle": "Uppladdningshastighet"
+          "columnTitle": "Upp"
         }
       },
       "states": {
@@ -4693,9 +4653,7 @@
           }
         },
         "queue": {
-          "table": {
-            "size": "Storlek"
-          }
+          "table": {}
         },
         "common": {
           "empty": "Tom",
@@ -4859,9 +4817,7 @@
             "label": "Identifierare",
             "placeholder": "Namn eller Ägare/Namn"
           },
-          "name": {
-            "label": "Namn"
-          },
+          "name": {},
           "excludePrereleases": {
             "label": "",
             "description": ""
@@ -5166,7 +5122,6 @@
       "download": "Nedladdning",
       "upload": "Uppladdning",
       "ping": "Ping",
-      "status": "Status",
       "avgDownload": "Genomsnittlig nedladdning",
       "avgUpload": "Genomsnittlig uppladdning",
       "avgPing": "Genomsnittlig ping",
@@ -5474,7 +5429,6 @@
         "actionsDisabledEditMode": "Åtgärder är inaktiverade medan tavlan är i redigeringsläge.",
         "widgetItemUnavailable": "Denna widget är inte tillgänglig.",
         "toggle": "Växla",
-        "copied": "Kopierad",
         "confirmDelete": "Bekräfta denna destruktiva handling."
       },
       "option": {
@@ -5751,7 +5705,6 @@
       },
       "metric": {
         "system": "",
-        "source": "Integration",
         "hostname": "",
         "cpuModel": "CPU modell",
         "cores": "",
@@ -6441,13 +6394,7 @@
       "itemRadius": {
         "label": "Radie på objekt",
         "description": "Ändrar radien för objekten på din tavla",
-        "option": {
-          "xs": "Mycket liten",
-          "sm": "Liten",
-          "md": "Mellan",
-          "lg": "Stor",
-          "xl": "Mycket stor"
-        }
+        "option": {}
       },
       "isPublic": {
         "label": "Allmän",
@@ -7079,13 +7026,7 @@
             },
             "defaultRadius": {
               "label": "Hörnstil",
-              "options": {
-                "xs": "Snäll",
-                "sm": "Subtila",
-                "md": "Balanserad",
-                "lg": "Avrundad",
-                "xl": "Mjuk"
-              }
+              "options": {}
             },
             "customCss": {
               "label": "Globala anpassade CSS",
@@ -7107,7 +7048,6 @@
               "greetingDefault": "Förvald hälsning",
               "boardColorLocked": "Tavlans färg låst",
               "boardColorFlexible": "Färger tillåtna",
-              "appName": "Jobbnamn",
               "logo": "Logotyp",
               "greeting": "Hälsning",
               "on": "På",
@@ -7335,9 +7275,7 @@
             "lastExecution": {
               "label": "Senaste körning"
             },
-            "actions": {
-              "label": "Åtgärder"
-            }
+            "actions": {}
           },
           "table": {
             "search": "Sök bland {count} uppgifter..."
@@ -7401,9 +7339,7 @@
               },
               "table": {
                 "header": {
-                  "createdBy": "Skapad av",
-                  "source": "Integration",
-                  "actions": "Åtgärder"
+                  "createdBy": "Skapad av"
                 }
               },
               "provenance": {
@@ -7696,7 +7632,6 @@
     },
     "field": {
       "state": {
-        "label": "Status",
         "option": {
           "created": "Adderad",
           "running": "Körs",
@@ -7723,7 +7658,6 @@
       }
     },
     "action": {
-      "title": "Åtgärder",
       "logs": {
         "label": "Visa loggar",
         "page": {
@@ -7961,27 +7895,13 @@
       "internalServerError": "Kunde inte hämta Kubernetes-data"
     },
     "field": {
-      "name": {
-        "label": "Jobbnamn"
-      },
-      "namespace": {
-        "label": "Namnplats"
-      },
-      "creationTimestamp": {
-        "label": "Adderad"
-      },
-      "state": {
-        "label": "Jobbstatus"
-      },
-      "status": {
-        "label": ""
-      },
-      "type": {
-        "label": "Nedladdningsklientens typ"
-      },
-      "architecture": {
-        "label": "Arkitektur"
-      }
+      "name": {},
+      "namespace": {},
+      "creationTimestamp": {},
+      "state": {},
+      "status": {},
+      "type": {},
+      "architecture": {}
     }
   },
   "permission": {
@@ -8008,10 +7928,7 @@
         "label": "Behörighet"
       }
     },
-    "action": {
-      "saveUser": "Spara behörighet",
-      "saveGroup": "Spara gruppbehörighet"
-    }
+    "action": {}
   },
   "navigationStructure": {
     "manage": {
@@ -8122,8 +8039,7 @@
       "resultsAriaLabel": "{mode} resultat",
       "footer": {
         "navigate": "",
-        "open": "Öppna",
-        "close": "Stäng"
+        "open": "Öppna"
       }
     },
     "error": {
@@ -8553,9 +8469,7 @@
         "urlTemplate": {
           "label": "URL-mall för sökning"
         },
-        "description": {
-          "label": "Beskrivning"
-        }
+        "description": {}
       },
       "page": {
         "list": {
@@ -8624,8 +8538,7 @@
             "table": {
               "header": {
                 "season": "Säsong",
-                "episodes": "Avsnitt",
-                "status": "Status"
+                "episodes": "Avsnitt"
               },
               "status": {
                 "requested": "Begärd"
@@ -9134,7 +9047,6 @@
       "cssDescription": "Redigera hela stilmallen. Befintliga regler hålls om de inte tas bort här.",
       "cssCharacters": "{count} av 16384 tecken",
       "copyCss": "",
-      "copied": "Kopierad",
       "restoreCss": "",
       "remoteCssTitle": "Denna CSS laddar en fjärrresurs",
       "remoteCssDescription": "Importerade stilmallar och fjärr-URL:er kontaktar en annan server när forumet laddas. Granska dem innan du fortsätter."

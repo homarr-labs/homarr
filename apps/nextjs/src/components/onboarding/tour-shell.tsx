@@ -28,19 +28,26 @@ const stepAtOffset = (controller: TourController, offset: number) => {
   return controller.tour[index];
 };
 
-const pollForElement = (targetId: string, callback: () => void) => {
-  const interval = setInterval(() => {
-    const targetElement = document.querySelector(`[data-tour-target="${targetId}"]`);
-    if (targetElement) {
-      clearInterval(interval);
-      callback();
-    }
-  }, 50);
-  const timeout = setTimeout(() => clearInterval(interval), 5000);
-  return () => {
-    clearInterval(interval);
+const waitForTourTarget = (targetId: string, callback: () => void) => {
+  const stop = () => {
+    observer.disconnect();
     clearTimeout(timeout);
   };
+  const checkForTarget = () => {
+    if (!document.querySelector(`[data-tour-target="${targetId}"]`)) return;
+    stop();
+    callback();
+  };
+  const observer = new MutationObserver(checkForTarget);
+  const timeout = setTimeout(stop, 5000);
+  observer.observe(document.body, {
+    childList: true,
+    subtree: true,
+    attributes: true,
+    attributeFilter: ["data-tour-target"],
+  });
+  checkForTarget();
+  return stop;
 };
 
 const isTypingTarget = (target: EventTarget | null) => {
@@ -81,9 +88,12 @@ export const TourShell = ({ steps, started, onEnd, stepRoutes, position, childre
   const { branding } = useSettings();
   const router = useRouter();
   const forwardActionRef = useRef<(() => void) | null>(null);
+  const pendingTargetCleanupRef = useRef<(() => void) | null>(null);
 
   const navigateAndAdvance = useCallback(
     (currentStepId: string | undefined, targetStepId: string | undefined, advance: () => void) => {
+      pendingTargetCleanupRef.current?.();
+      pendingTargetCleanupRef.current = null;
       if (!stepRoutes || !targetStepId) {
         advance();
         return;
@@ -94,7 +104,7 @@ export const TourShell = ({ steps, started, onEnd, stepRoutes, position, childre
 
       if (targetRoute && targetRoute !== currentRoute) {
         router.push(targetRoute);
-        pollForElement(targetStepId, advance);
+        pendingTargetCleanupRef.current = waitForTourTarget(targetStepId, advance);
       } else {
         advance();
       }
@@ -110,6 +120,8 @@ export const TourShell = ({ steps, started, onEnd, stepRoutes, position, childre
   useEffect(() => {
     if (!started) {
       forwardActionRef.current = null;
+      pendingTargetCleanupRef.current?.();
+      pendingTargetCleanupRef.current = null;
       return;
     }
 
@@ -121,7 +133,11 @@ export const TourShell = ({ steps, started, onEnd, stepRoutes, position, childre
     };
 
     window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
+    return () => {
+      window.removeEventListener("keydown", onKeyDown);
+      pendingTargetCleanupRef.current?.();
+      pendingTargetCleanupRef.current = null;
+    };
   }, [started]);
 
   return (

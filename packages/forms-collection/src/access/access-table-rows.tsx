@@ -19,7 +19,7 @@ interface AccessSelectRowProps {
 
 export const AccessSelectRow = ({ itemContent, permission, index, handleCountChange }: AccessSelectRowProps) => {
   const tCommon = useI18n("common");
-  const { icons, getSelectData } = useAccessContext();
+  const { icons, selectData } = useAccessContext();
   const form = useFormContext();
 
   const handleRemove = useCallback(() => {
@@ -43,7 +43,7 @@ export const AccessSelectRow = ({ itemContent, permission, index, handleCountCha
             leftSection={<Icon size="1rem" />}
             renderOption={RenderOption}
             variant="unstyled"
-            data={getSelectData()}
+            data={selectData}
             {...form.getInputProps(`items.${index}.permission`)}
           />
 

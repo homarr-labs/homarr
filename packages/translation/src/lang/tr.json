@@ -144,13 +144,7 @@
         "secondaryColor": "İkincil renk",
         "resetColors": "Renkleri sıfırla",
         "radius": "Widget köşe yarıçapı",
-        "radiusOptions": {
-          "xs": "Sıkı",
-          "sm": "Hafif",
-          "md": "Dengeli",
-          "lg": "Yuvarlak",
-          "xl": "Yumuşak"
-        },
+        "radiusOptions": {},
         "columns": "Pano sütunları",
         "columnsDescription": "Sütunlar, öğeleri boyutlandırmak ve konumlandırmak için kullanılan yatay ızgarayı tanımlar. Çoğu kişi için 12 sütun yeterlidir.",
         "columnCount": "{count, plural, one {# sütun} other {# sütun}}",
@@ -194,7 +188,6 @@
           "loginRequired": "API anahtarı oluşturmak için kurulumdan sonra yönetici olarak oturum açın.",
           "configuration": "İstemci yapılandırması",
           "copy": "Yapılandırmayı kopyala",
-          "copied": "Kopyalandı",
           "advanced": "MCP araçlarını, izinleri ve kurulum ayrıntılarını aç"
         }
       },
@@ -806,9 +799,7 @@
         "examples": "Desteklenen bağlantı örnekleri",
         "requiresHandler": "Özel protokoller, cihazınızda ilişkilendirilmiş bir uygulama gerektirir."
       },
-      "description": {
-        "label": "Tanım"
-      },
+      "description": {},
       "useDifferentUrlForPing": {
         "checkbox": {
           "label": "Ping için farklı URL kullan",
@@ -860,7 +851,6 @@
       "source": "API kaynağı: {name}",
       "baseUrl": "Sunucu URL'si",
       "networkScope": "Ağ erişimi",
-      "save": "API yapılandırmasını kaydet",
       "expires": "Bu tek seferlik isteğin süresi {time} tarihinde doluyor."
     },
     "page": {
@@ -891,13 +881,11 @@
       "pasteImportHint": "Ctrl+V veya Command+V ile tam bir özel widget JSON'u yapıştırın",
       "delete": "Özel Widget'ı Sil",
       "deleteConfirm": "“{name}” adlı widget'ı silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.",
-      "export": "Dışa aktar",
       "duplicate": "Çoğalt",
       "aiPrompt": "Yapay zekâ ile tasarla",
       "copyAiPrompt": "Yapay zekâ istemini kopyala",
       "enable": "Etkinleştir",
       "disable": "Devre dışı bırak",
-      "menu": "Eylemler",
       "downloadSkill": "Özel Widget Yeteneğini Görüntüle",
       "publishWorkshop": "Workshop'a yayımla",
       "migrate": "Özel Widget'ı geçir",
@@ -911,12 +899,9 @@
     "sourceSetupDialog": {
       "title": "Widget kaynaklarını yapılandır",
       "description": "Bu widget'ın nereye bağlandığını inceleyin ve şifrelenmiş kimlik bilgilerini ekleyin veya değiştirin.",
-      "credentialsRequired": "Gerekli kimlik bilgileri eklenene kadar istekler başarısız olur.",
-      "save": "Yapılandırmayı kaydet"
+      "credentialsRequired": "Gerekli kimlik bilgileri eklenene kadar istekler başarısız olur."
     },
-    "field": {
-      "description": "Açıklama"
-    },
+    "field": {},
     "editor": {
       "errorBoundary": {
         "title": "Bir şeyler yanlış gitti"
@@ -926,7 +911,6 @@
         "format": "Biçim",
         "insertStarter": "Başlangıç şablonu ekle",
         "redo": "Yinele",
-        "copied": "Kopyalandı",
         "schema": "Şema"
       },
       "reference": {
@@ -1007,7 +991,6 @@
         "manifestFilename": "widget.json",
         "request": "İstek {count, number}",
         "requestId": "İstek kimliği",
-        "type": "Tip",
         "method": "Yöntem",
         "source": "API kaynağı",
         "run": "Çalıştır",
@@ -1044,7 +1027,6 @@
         "optionName": "Seçenek adı",
         "label": "Etiket",
         "control": "Denetim",
-        "description": "Açıklama",
         "default": "Varsayılan",
         "optionDetails": "Kısıtlamalar ve dinamik seçenekler",
         "minimum": "En düşük",
@@ -1081,7 +1063,6 @@
         "credentialRemovedDescription": "Kayıtlı değer silindi.",
         "primary": "Birincil API",
         "id": "Kaynak kimliği",
-        "name": "Ad",
         "baseUrl": "Temel URL",
         "baseUrlError": {
           "invalid": "Tam bir URL girin.",
@@ -1098,7 +1079,6 @@
         "remove": "Kaynağı ve isteklerini kaldır",
         "advanced": "Gelişmiş",
         "add": "Başka bir API kaynağı ekle",
-        "sourceType": "Entegrasyon",
         "manualSource": "HTTP API'si",
         "existingIntegration": "Mevcut entegrasyon",
         "integrationType": "Entegrasyon türü",
@@ -1232,7 +1212,6 @@
       "migrationTitle": "Geçirilmiş v2 değişimini incele",
       "migrationDescription": "Oluşturulan bu v2 tanımını inceleyip onaylayın. Onaylama, korunan v1 kaydını atomik olarak değiştirir ve mevcut pano yerleşimlerini aynı widget kimliğine bağlı tutar.",
       "fileLabel": "Bir özel widget JSON dosyası seçin",
-      "name": "İş adı",
       "origin": "Temel kaynak",
       "authentication": "Kimlik Doğrulama",
       "networkScope": "Ağ kapsamı",
@@ -1252,8 +1231,6 @@
         "title": "Bu widget uzak verileri değiştirebilir",
         "description": "İçe aktardıktan sonra tüm adlandırılmış eylemleri, devralınan kimlik bilgilerini ve yıkıcı onayları inceleyin. Gizli bilgiler dosyaya dahil edilmez."
       },
-      "cancel": "İçe aktarmayı iptal et",
-      "confirm": "Widget'ı içe aktar",
       "confirmMigration": "V2 değişimini onayla"
     },
     "secret": {
@@ -1317,7 +1294,6 @@
     "closeScreenshotViewer": "Ekran görüntüsü görüntüleyicisini kapat",
     "technicalDetails": "Teknik ayrıntılar",
     "sourceCode": "Workshop gönderisi",
-    "export": "Dışa aktar",
     "report": "Bildir",
     "reportTitle": "Gönderiyi bildir",
     "reportReason": "Neden",
@@ -1348,8 +1324,6 @@
       "viewSubmission": "Gönderiyi görüntüle ve yönet",
       "done": "Tamam",
       "signInHint": "Workshop kimliğinizle yayımlamak için oturum açın.",
-      "titleField": "Başlık",
-      "descriptionField": "Açıklama",
       "screenshots": "Ekran görüntüleri",
       "screenshotsDescription": "En fazla beş PNG, JPEG veya WebP görseli",
       "screenshotsPlaceholder": "Ekran görüntülerini seç",
@@ -1615,11 +1589,9 @@
             },
             "notification": {
               "success": {
-                "title": "Güvenilen sertifika",
                 "message": "Sertifika güvenilen sertifika listesine eklendi"
               },
               "error": {
-                "title": "Sertifikaya güvenilemedi",
                 "message": "Sertifika güvenilen sertifika listesine eklenemedi"
               }
             }
@@ -1840,9 +1812,7 @@
     "search": "Bir medya bul",
     "field": {
       "preview": "Önizleme",
-      "size": "Boyut",
-      "creator": "Oluşturan",
-      "actions": "Kontroller"
+      "creator": "Oluşturan"
     },
     "action": {
       "upload": {
@@ -1920,7 +1890,8 @@
       "clearSearch": "Aramayı temizle",
       "copy": "Kopyala",
       "copied": "Kopyalandı",
-      "refresh": "Yenile"
+      "refresh": "Yenile",
+      "export": "Dışa aktar"
     },
     "hidden": "Gizli",
     "pagination": {
@@ -2067,7 +2038,18 @@
     "total": "Toplam",
     "filesystemUsage": "{count, plural, one {# dosya sisteminin kullanımını göster} other {# dosya sisteminin kullanımını göster}}",
     "field": {
-      "name": "İş adı"
+      "name": "İsim",
+      "state": "Durum",
+      "size": "Boyut",
+      "actions": "Eylemler",
+      "source": "Kaynak",
+      "title": "Başlık",
+      "description": "Tanım",
+      "created": "Oluşturuldu",
+      "namespace": "İsim Alanı",
+      "status": "Durum",
+      "architecture": "Mimari",
+      "type": "Tür"
     },
     "label": {
       "new": "Yeni"
@@ -2085,6 +2067,15 @@
       "searchEngines": "Arama motorları",
       "tasks": "Görevler",
       "users": "Kullanıcılar"
+    },
+    "cornerStyle": {
+      "options": {
+        "md": "Dengeli",
+        "lg": "Yuvarlatılmış",
+        "xs": "Sıkı",
+        "sm": "Hafif",
+        "xl": "Yumuşak"
+      }
     }
   },
   "section": {
@@ -2122,9 +2113,7 @@
         "collapse": "Daralt"
       },
       "option": {
-        "title": {
-          "label": "Başlık"
-        },
+        "title": {},
         "customCssClasses": {
           "label": "Özel CSS sınıfları"
         },
@@ -2148,8 +2137,7 @@
       "label": {
         "settings": "Ayarlar",
         "settingsFor": "{name} için ayarlar",
-        "options": "Seçenekler",
-        "actions": "Eylemler"
+        "options": "Seçenekler"
       },
       "status": {
         "success": "Tamam",
@@ -2202,7 +2190,6 @@
     "selection": {
       "summary": "{count, plural, one {# öğe seçildi} other {# öğe seçildi}}",
       "selected": "{count, plural, one {# seçildi} other {# seçildi}}",
-      "copy": "Kopyala",
       "copied": "{count, plural, one {# öğe panoya kopyalandı} other {# öğe panoya kopyalandı}}",
       "copyError": "Seçilen öğeler kopyalanamadı. Tarayıcınız pano erişimine izin vermiyor olabilir.",
       "paste": "Yapıştır",
@@ -2214,7 +2201,6 @@
       "removed": "{count, plural, one {# öğe kaldırıldı} other {# öğe kaldırıldı}}",
       "move": "Taşı",
       "moveTo": "Seçilen öğeleri taşı",
-      "delete": "Sil",
       "clear": "Seçimi temizle",
       "clearShortcut": "Seçimi temizle (Escape)",
       "saveErrorTitle": "Öğeler güncellenemiyor",
@@ -2290,9 +2276,7 @@
           "label": "Entegrasyonlar",
           "removeLabel": "{name} entegrasyonunu kaldır"
         },
-        "title": {
-          "label": "Başlık"
-        },
+        "title": {},
         "customCssClasses": {
           "label": "Özel CSS Alanı"
         },
@@ -3505,7 +3489,6 @@
         },
         "table": {
           "header": {
-            "name": "İsim",
             "node": "Düğüm"
           }
         }
@@ -3535,8 +3518,6 @@
         },
         "defaultSort": {
           "option": {
-            "name": "Ad",
-            "state": "Durum",
             "cpuUsage": "CPU kullanımı",
             "memoryUsage": "Bellek kullanımı"
           }
@@ -3947,9 +3928,7 @@
       "items": {
         "currentlyPlaying": "Şuan Oynatılan",
         "user": "Kullanıcı",
-        "name": "İsim",
         "id": "Kimlik",
-        "status": "Durum",
         "directPlay": "Doğrudan oynatma",
         "directStream": "Doğrudan yayın",
         "transcodeVideo": "Video kodu dönüştürülüyor",
@@ -4444,38 +4423,29 @@
           "columnTitle": "Kontroller"
         },
         "added": {
-          "columnTitle": "Eklenme",
-          "detailsTitle": "Eklenme Tarihi"
+          "columnTitle": "Eklenme"
         },
         "category": {
-          "columnTitle": "Ekstralar",
-          "detailsTitle": "Kategoriler (Veya ek bilgiler)"
+          "columnTitle": "Ekstralar"
         },
         "downSpeed": {
-          "columnTitle": "İndirme",
-          "detailsTitle": "İndirme Hızı"
+          "columnTitle": "İndirme"
         },
         "index": {
           "columnTitle": "#",
           "detailsTitle": "İstemci içindeki mevcut endeks"
         },
         "id": {
-          "columnTitle": "İd",
-          "detailsTitle": "Öğe Kimliği"
+          "columnTitle": "İd"
         },
-        "integration": {
-          "columnTitle": "Entegrasyon"
-        },
-        "name": {
-          "columnTitle": "İş adı"
-        },
+        "integration": {},
+        "name": {},
         "progress": {
           "columnTitle": "İlerleme",
           "detailsTitle": "İndirme İlerlemesi"
         },
         "ratio": {
-          "columnTitle": "Oran",
-          "detailsTitle": "Torrent oranı (alınan/gönderilen)"
+          "columnTitle": "Oran"
         },
         "received": {
           "columnTitle": "Toplam İndirme",
@@ -4485,26 +4455,16 @@
           "columnTitle": "Toplam gönderilen",
           "detailsTitle": "Toplam Yüklenen"
         },
-        "size": {
-          "columnTitle": "Dosya Boyutu",
-          "detailsTitle": "Seçilen dosyaların toplam boyutu"
-        },
-        "state": {
-          "columnTitle": "Durum",
-          "detailsTitle": "İş Durumu"
-        },
+        "size": {},
+        "state": {},
         "time": {
-          "columnTitle": "Bitiş zamanı",
-          "detailsTitle": "Tamamlanmasından bu yana geçen süre",
-          "eta": "Tahmini Kalan Süre"
+          "columnTitle": "Bitiş zamanı"
         },
         "type": {
-          "columnTitle": "Tür",
           "detailsTitle": "İndirme İstemcisi türü"
         },
         "upSpeed": {
-          "columnTitle": "Yükleme",
-          "detailsTitle": "Gönderme Hızı"
+          "columnTitle": "Yükleme"
         }
       },
       "states": {
@@ -4693,9 +4653,7 @@
           }
         },
         "queue": {
-          "table": {
-            "size": "Boyut"
-          }
+          "table": {}
         },
         "common": {
           "empty": "Boş",
@@ -4859,9 +4817,7 @@
             "label": "Tanımlayıcı",
             "placeholder": "Ad veya Sahip/Ad"
           },
-          "name": {
-            "label": "İsim"
-          },
+          "name": {},
           "excludePrereleases": {
             "label": "",
             "description": ""
@@ -5166,7 +5122,6 @@
       "download": "İndirme",
       "upload": "Yükleme",
       "ping": "Ping",
-      "status": "Durum",
       "avgDownload": "Ort. İndirme",
       "avgUpload": "Ort. Yükleme",
       "avgPing": "Ort. Ping",
@@ -5474,7 +5429,6 @@
         "actionsDisabledEditMode": "Pano düzenleme modundayken eylemler devre dışıdır.",
         "widgetItemUnavailable": "Bu widget öğesi kullanılamıyor.",
         "toggle": "Aç/kapat",
-        "copied": "Kopyalandı",
         "confirmDelete": "Bu yıkıcı eylemi onaylayın."
       },
       "option": {
@@ -5751,7 +5705,6 @@
       },
       "metric": {
         "system": "Sistem",
-        "source": "Entegrasyon",
         "hostname": "Sunucu",
         "cpuModel": "CPU modeli",
         "cores": "Çekirdekler",
@@ -6441,13 +6394,7 @@
       "itemRadius": {
         "label": "Öğe yarıçapı",
         "description": "Panelinizdeki yuvaların yuvarlaklığını değiştirir",
-        "option": {
-          "xs": "Çok küçük",
-          "sm": "Küçük",
-          "md": "Orta",
-          "lg": "Büyük",
-          "xl": "Çok büyük"
-        }
+        "option": {}
       },
       "isPublic": {
         "label": "Herkese açık",
@@ -7079,13 +7026,7 @@
             },
             "defaultRadius": {
               "label": "Köşe stili",
-              "options": {
-                "xs": "Sıkı",
-                "sm": "Hafif",
-                "md": "Dengeli",
-                "lg": "Yuvarlatılmış",
-                "xl": "Yumuşak"
-              }
+              "options": {}
             },
             "customCss": {
               "label": "Genel özel CSS",
@@ -7107,7 +7048,6 @@
               "greetingDefault": "Varsayılan karşılama",
               "boardColorLocked": "Pano rengi kilitli",
               "boardColorFlexible": "Pano renklerine izin veriliyor",
-              "appName": "İş adı",
               "logo": "Amblem",
               "greeting": "Karşılama",
               "on": "Açık",
@@ -7335,9 +7275,7 @@
             "lastExecution": {
               "label": "Son Çalıştırma"
             },
-            "actions": {
-              "label": "Eylemler"
-            }
+            "actions": {}
           },
           "table": {
             "search": "{count} görevi ara..."
@@ -7401,9 +7339,7 @@
               },
               "table": {
                 "header": {
-                  "createdBy": "Tarafından oluşturuldu",
-                  "source": "Entegrasyon",
-                  "actions": "Eylemler"
+                  "createdBy": "Tarafından oluşturuldu"
                 }
               },
               "provenance": {
@@ -7696,7 +7632,6 @@
     },
     "field": {
       "state": {
-        "label": "Durum",
         "option": {
           "created": "Oluşturuldu",
           "running": "Çalışıyor",
@@ -7723,7 +7658,6 @@
       }
     },
     "action": {
-      "title": "Eylemler",
       "logs": {
         "label": "Günlükleri görüntüle",
         "page": {
@@ -7961,27 +7895,13 @@
       "internalServerError": "Kubernetes verileri alınamadı"
     },
     "field": {
-      "name": {
-        "label": "İş adı"
-      },
-      "namespace": {
-        "label": "İsim Alanı"
-      },
-      "creationTimestamp": {
-        "label": "Oluşturuldu"
-      },
-      "state": {
-        "label": "İş Durumu"
-      },
-      "status": {
-        "label": "Durum"
-      },
-      "type": {
-        "label": "İndirme İstemcisi türü"
-      },
-      "architecture": {
-        "label": "Mimari"
-      }
+      "name": {},
+      "namespace": {},
+      "creationTimestamp": {},
+      "state": {},
+      "status": {},
+      "type": {},
+      "architecture": {}
     }
   },
   "permission": {
@@ -8008,10 +7928,7 @@
         "label": "İzin"
       }
     },
-    "action": {
-      "saveUser": "Kullanıcı iznini kaydet",
-      "saveGroup": "Grup iznini kaydet"
-    }
+    "action": {}
   },
   "navigationStructure": {
     "manage": {
@@ -8122,8 +8039,7 @@
       "resultsAriaLabel": "{mode} sonuçları",
       "footer": {
         "navigate": "Gezin",
-        "open": "Aç",
-        "close": "Kapat"
+        "open": "Aç"
       }
     },
     "error": {
@@ -8553,9 +8469,7 @@
         "urlTemplate": {
           "label": "URL arama şablonu"
         },
-        "description": {
-          "label": "Tanım"
-        }
+        "description": {}
       },
       "page": {
         "list": {
@@ -8624,8 +8538,7 @@
             "table": {
               "header": {
                 "season": "Sezon",
-                "episodes": "Bölüm",
-                "status": "Durum"
+                "episodes": "Bölüm"
               },
               "status": {
                 "requested": "Talep edildi"
@@ -9134,7 +9047,6 @@
       "cssDescription": "Tam stil sayfasını düzenleyin. Buradan kaldırılmadığı sürece mevcut kurallar korunur.",
       "cssCharacters": "{count} / 16384 karakter",
       "copyCss": "CSS'yi kopyala",
-      "copied": "Kopyalandı",
       "restoreCss": "Mevcut CSS'yi geri yükle",
       "remoteCssTitle": "Bu CSS uzak bir kaynak yüklüyor",
       "remoteCssDescription": "İçe aktarılan stil sayfaları ve uzak URL'ler, pano yüklendiğinde başka bir sunucuyla iletişim kurar. Devam etmeden önce bunları inceleyin."

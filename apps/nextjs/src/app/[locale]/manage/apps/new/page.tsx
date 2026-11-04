@@ -1,11 +1,10 @@
 import { notFound } from "next/navigation";
-import { Container, Stack, Title } from "@mantine/core";
 
 import { auth } from "@homarr/auth/next";
 import { AppNewForm } from "@homarr/forms-collection";
 import { getI18n } from "@homarr/translation/server";
 
-import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
+import { ManagePageLayout } from "~/components/manage/manage-page-layout";
 
 export default async function AppNewPage() {
   const session = await auth();
@@ -17,14 +16,8 @@ export default async function AppNewPage() {
   const t = await getI18n();
 
   return (
-    <>
-      <DynamicBreadcrumb />
-      <Container>
-        <Stack>
-          <Title>{t("app.page.create.title")}</Title>
-          <AppNewForm showBackToOverview showCreateAnother />
-        </Stack>
-      </Container>
-    </>
+    <ManagePageLayout title={t("app.page.create.title")} container="default" breadcrumbPlacement="outside">
+      <AppNewForm showBackToOverview showCreateAnother />
+    </ManagePageLayout>
   );
 }

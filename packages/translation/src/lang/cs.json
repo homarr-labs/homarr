@@ -144,13 +144,7 @@
         "secondaryColor": "Doplňková barva",
         "resetColors": "Obnovit barvy",
         "radius": "Poloměr rohu widgetu",
-        "radiusOptions": {
-          "xs": "Mírný",
-          "sm": "Jemný",
-          "md": "Vyvážená",
-          "lg": "Zaobleno",
-          "xl": "Měkké"
-        },
+        "radiusOptions": {},
         "columns": "Sloupce náhledu",
         "columnsDescription": "Sloupce definují vodorovnou mřížku pro velikost a položky. 12 je pro většinu lidí mnoho.",
         "columnCount": "{count, plural, one {# sloupec} other {# sloupců}}",
@@ -194,7 +188,6 @@
           "loginRequired": "Přihlaste se jako správce po nastavení pro vytvoření API klíče.",
           "configuration": "Konfigurace klienta",
           "copy": "Kopírovat konfiguraci",
-          "copied": "Zkopírováno",
           "advanced": "Otevřít MCP nástroje, oprávnění a detaily nastavení"
         }
       },
@@ -806,9 +799,7 @@
         "examples": "Příklady podporovaných odkazů",
         "requiresHandler": "Vlastní protokoly vyžadují přidruženou aplikaci ve vašem zařízení."
       },
-      "description": {
-        "label": "Popis"
-      },
+      "description": {},
       "useDifferentUrlForPing": {
         "checkbox": {
           "label": "Použít jinou URL pro ping",
@@ -846,7 +837,7 @@
   },
   "tips": {
     "dismiss": "Odmítnout tip",
-    "multiSelectApps": "Tip: Podržte Ctrl / <unk> pro vybrání více aplikací najednou"
+    "multiSelectApps": "Tip: Podržte Ctrl / ⌘ pro vybrání více aplikací najednou"
   },
   "customWidget": {
     "secretEntry": {
@@ -860,7 +851,6 @@
       "source": "Zdroj APL: {name}",
       "baseUrl": "URL serveru",
       "networkScope": "Přístup k síti",
-      "save": "Uložit konfiguraci API",
       "expires": "Tato jednorázová žádost vyprší v {time}."
     },
     "page": {
@@ -891,13 +881,11 @@
       "pasteImportHint": "Vložte celý vlastní widget JSON s Ctrl+V nebo Command+V",
       "delete": "Odstranit vlastní widget",
       "deleteConfirm": "Opravdu chcete odstranit „{name}“? Tuto akci nelze vrátit zpět.",
-      "export": "Export",
       "duplicate": "Duplikovat",
       "aiPrompt": "Návrh s AI",
       "copyAiPrompt": "Kopírovat výzvu AI",
       "enable": "Povolit",
       "disable": "Zakázat",
-      "menu": "Akce",
       "downloadSkill": "Zobrazit vlastní dovednosti widgetu",
       "publishWorkshop": "Publikovat do Workshopu",
       "migrate": "Migrovat vlastní widget",
@@ -911,12 +899,9 @@
     "sourceSetupDialog": {
       "title": "Konfigurace zdrojů widgetu",
       "description": "Zkontrolujte kde se tento widget připojuje a přidává nebo nahrazuje jeho šifrované údaje.",
-      "credentialsRequired": "Žádosti nebudou úspěšné, dokud nebudou přidány požadované přihlašovací údaje.",
-      "save": "Uložit konfiguraci"
+      "credentialsRequired": "Žádosti nebudou úspěšné, dokud nebudou přidány požadované přihlašovací údaje."
     },
-    "field": {
-      "description": "Popis"
-    },
+    "field": {},
     "editor": {
       "errorBoundary": {
         "title": "Něco se pokazilo"
@@ -926,7 +911,6 @@
         "format": "Formát",
         "insertStarter": "",
         "redo": "Znovu",
-        "copied": "Zkopírováno",
         "schema": "Schéma"
       },
       "reference": {
@@ -1007,7 +991,6 @@
         "manifestFilename": "",
         "request": "Požádat o {count, number}",
         "requestId": "ID požadavku",
-        "type": "Typ",
         "method": "Metoda",
         "source": "Zdroj API",
         "run": "Spustit",
@@ -1044,7 +1027,6 @@
         "optionName": "Název možnosti",
         "label": "Popisek",
         "control": "Ovládání",
-        "description": "Popis",
         "default": "Výchozí",
         "optionDetails": "Omezení a dynamická volba",
         "minimum": "Minimální",
@@ -1081,7 +1063,6 @@
         "credentialRemovedDescription": "Uložená hodnota byla odstraněna.",
         "primary": "Primární API",
         "id": "ID zdroje",
-        "name": "Jméno",
         "baseUrl": "Základní URL",
         "baseUrlError": {
           "invalid": "Zadejte úplnou adresu URL.",
@@ -1098,7 +1079,6 @@
         "remove": "Odstranit zdroj a jeho požadavky",
         "advanced": "Rozšířené",
         "add": "Přidat další zdroj API",
-        "sourceType": "Integrace",
         "manualSource": "",
         "existingIntegration": "Stávající integrace",
         "integrationType": "Typ integrace",
@@ -1232,7 +1212,6 @@
       "migrationTitle": "Recenze migrována náhrada v2",
       "migrationDescription": "Zkontrolovat a potvrdit tuto vygenerovanou definici v2. Potvrzení atomicky nahrazuje zachovaný záznam v1 a zároveň uchovává umístění existujících desek propojených se stejným ID widgetu.",
       "fileLabel": "Vyberte vlastní JSON soubor widgetu",
-      "name": "Název úlohy",
       "origin": "Základní původ",
       "authentication": "Ověření",
       "networkScope": "Oblast působnosti sítě",
@@ -1252,8 +1231,6 @@
         "title": "Tento widget může změnit vzdálená data",
         "description": "Zkontrolovat každou pojmenovanou akci, zděděné přihlašovací údaje a destruktivní potvrzení po importu. Tajná tajemství nejsou součástí souboru."
       },
-      "cancel": "Zrušit import",
-      "confirm": "Importovat widget",
       "confirmMigration": "Potvrdit výměnu v2"
     },
     "secret": {
@@ -1317,7 +1294,6 @@
     "closeScreenshotViewer": "Zavřít prohlížeč snímků obrazovky",
     "technicalDetails": "Technické podrobnosti",
     "sourceCode": "Vstup do dílny",
-    "export": "Export",
     "report": "Nahlásit",
     "reportTitle": "Odeslání zprávy",
     "reportReason": "Důvod",
@@ -1348,8 +1324,6 @@
       "viewSubmission": "Zobrazit a spravovat příspěvky",
       "done": "Hotovo",
       "signInHint": "Přihlaste se pro publikování pod vaší identitou Workshopu.",
-      "titleField": "Název",
-      "descriptionField": "Popis",
       "screenshots": "Snímek obrazovky",
       "screenshotsDescription": "Až pět PNG, JPEG nebo WebP obrázků",
       "screenshotsPlaceholder": "Vybrat snímky obrazovky",
@@ -1615,11 +1589,9 @@
             },
             "notification": {
               "success": {
-                "title": "Důvěryhodný certifikát",
                 "message": "Certifikát byl přidán do seznamu důvěryhodných certifikátů"
               },
               "error": {
-                "title": "Certifikátu se nepodařilo důvěřovat",
                 "message": "Certifikát se nepodařilo přidat do seznamu důvěryhodných certifikátů"
               }
             }
@@ -1840,9 +1812,7 @@
     "search": "Najít mediální soubor",
     "field": {
       "preview": "Náhled",
-      "size": "Velikost",
-      "creator": "Vytvořil/a",
-      "actions": "Ovládací prvky"
+      "creator": "Vytvořil/a"
     },
     "action": {
       "upload": {
@@ -1920,7 +1890,8 @@
       "clearSearch": "Vymazat hledání",
       "copy": "Kopírovat",
       "copied": "Zkopírováno",
-      "refresh": "Aktualizovat"
+      "refresh": "Aktualizovat",
+      "export": "Export"
     },
     "hidden": "",
     "pagination": {
@@ -2067,7 +2038,18 @@
     "total": "Celkem",
     "filesystemUsage": "{count, plural, one {Zobrazit použití pro # souborový systém} other {Zobrazit použití pro # souborových systémů}}",
     "field": {
-      "name": "Název úlohy"
+      "name": "Název",
+      "state": "Status",
+      "size": "Velikost",
+      "actions": "Akce",
+      "source": "Zdroj",
+      "title": "Název",
+      "description": "Popis",
+      "created": "Vytvořený",
+      "namespace": "Jmenný prostor",
+      "status": "Stav",
+      "architecture": "Architektura",
+      "type": "Typ"
     },
     "label": {
       "new": "Nové"
@@ -2085,6 +2067,15 @@
       "searchEngines": "Vyhledávače",
       "tasks": "Úkoly",
       "users": "Uživatelé"
+    },
+    "cornerStyle": {
+      "options": {
+        "md": "Vyvážená",
+        "lg": "Zaobleno",
+        "xs": "Mírný",
+        "sm": "Jemný",
+        "xl": "Měkké"
+      }
     }
   },
   "section": {
@@ -2122,9 +2113,7 @@
         "collapse": "Sbalit"
       },
       "option": {
-        "title": {
-          "label": "Název"
-        },
+        "title": {},
         "customCssClasses": {
           "label": "Vlastní CSS třídy"
         },
@@ -2148,8 +2137,7 @@
       "label": {
         "settings": "Nastavení",
         "settingsFor": "Nastavení pro {name}",
-        "options": "Možnosti",
-        "actions": "Akce"
+        "options": "Možnosti"
       },
       "status": {
         "success": "OK",
@@ -2202,11 +2190,10 @@
     "selection": {
       "summary": "{count, plural, one {# vybraných položek} other {# vybraných položek}}",
       "selected": "{count, plural, one {# vybráno} other {# vybráno}}",
-      "copy": "Kopírovat",
       "copied": "{count, plural, one {# položka zkopírována do schránky} other {# položek zkopírováno do schránky}}",
       "copyError": "Vybrané položky nelze zkopírovat. Váš prohlížeč nemusí povolit přístup do schránky.",
       "paste": "Vložit",
-      "pasteShortcut": "Zde vložte zkopírované položky (Ctrl / <unk> + V)",
+      "pasteShortcut": "Zde vložte zkopírované položky (Ctrl / ⌘ + V)",
       "pasted": "{count, plural, one {# položka vložena} other {# položek vložilo}}",
       "pasteError": "Schránka nemohla být přečtena. Váš prohlížeč nemusí povolit přístup do schránky.",
       "pasteInvalid": "Schránka neobsahuje platné položky Homarr desky.",
@@ -2214,7 +2201,6 @@
       "removed": "{count, plural, one {# položka odstraněna} other {# položek odebráno}}",
       "move": "Přesunout",
       "moveTo": "Přesunout vybrané položky",
-      "delete": "Odstranit",
       "clear": "Vymazat výběr",
       "clearShortcut": "Vymazat výběr (Escape)",
       "saveErrorTitle": "Položky nelze aktualizovat",
@@ -2290,9 +2276,7 @@
           "label": "Integrace",
           "removeLabel": "Odstranit integraci {name}"
         },
-        "title": {
-          "label": "Název"
-        },
+        "title": {},
         "customCssClasses": {
           "label": "Vlastní CSS třídy"
         },
@@ -3505,7 +3489,6 @@
         },
         "table": {
           "header": {
-            "name": "Název",
             "node": "Uzel"
           }
         }
@@ -3535,8 +3518,6 @@
         },
         "defaultSort": {
           "option": {
-            "name": "Název",
-            "state": "Stav",
             "cpuUsage": "Využití CPU",
             "memoryUsage": "Využití paměti"
           }
@@ -3947,9 +3928,7 @@
       "items": {
         "currentlyPlaying": "Právě se přehrává",
         "user": "Uživatel",
-        "name": "Jméno",
         "id": "Id",
-        "status": "Stav",
         "directPlay": "Přímé přehrávání",
         "directStream": "Přímý stream",
         "transcodeVideo": "Překódování videa",
@@ -4444,38 +4423,29 @@
           "columnTitle": "Ovládací prvky"
         },
         "added": {
-          "columnTitle": "Přidáno",
-          "detailsTitle": "Datum přidání"
+          "columnTitle": "Přidáno"
         },
         "category": {
-          "columnTitle": "Doplňky",
-          "detailsTitle": "Kategorie (nebo další informace)"
+          "columnTitle": "Doplňky"
         },
         "downSpeed": {
-          "columnTitle": "Stahování",
-          "detailsTitle": "Rychlost stahování"
+          "columnTitle": "Stahování"
         },
         "index": {
           "columnTitle": "#",
           "detailsTitle": "Aktuální index v klientovi"
         },
         "id": {
-          "columnTitle": "Id",
-          "detailsTitle": "ID položky"
+          "columnTitle": "Id"
         },
-        "integration": {
-          "columnTitle": "Integrace"
-        },
-        "name": {
-          "columnTitle": "Název úlohy"
-        },
+        "integration": {},
+        "name": {},
         "progress": {
           "columnTitle": "Postup",
           "detailsTitle": "Průběh stahování"
         },
         "ratio": {
-          "columnTitle": "Poměr",
-          "detailsTitle": "Poměr torrentu (přijato/odesláno)"
+          "columnTitle": "Poměr"
         },
         "received": {
           "columnTitle": "Celkem staženo",
@@ -4485,26 +4455,16 @@
           "columnTitle": "Celkem nahráno",
           "detailsTitle": "Celkem nahráno"
         },
-        "size": {
-          "columnTitle": "Velikost souboru",
-          "detailsTitle": "Celková velikost výběru/souborů"
-        },
-        "state": {
-          "columnTitle": "Status",
-          "detailsTitle": "Stav úlohy"
-        },
+        "size": {},
+        "state": {},
         "time": {
-          "columnTitle": "Čas dokončení",
-          "detailsTitle": "Čas od dokončení/do dokončení",
-          "eta": "Odhadovaný čas"
+          "columnTitle": "Čas dokončení"
         },
         "type": {
-          "columnTitle": "Typ",
           "detailsTitle": "Typ klienta stahování"
         },
         "upSpeed": {
-          "columnTitle": "Nahrávání",
-          "detailsTitle": "Rychlost odesílání"
+          "columnTitle": "Nahrávání"
         }
       },
       "states": {
@@ -4693,9 +4653,7 @@
           }
         },
         "queue": {
-          "table": {
-            "size": "Velikost"
-          }
+          "table": {}
         },
         "common": {
           "empty": "Prázdné",
@@ -4859,9 +4817,7 @@
             "label": "Identifikátor",
             "placeholder": "Název nebo Vlastník/Název"
           },
-          "name": {
-            "label": "Název"
-          },
+          "name": {},
           "excludePrereleases": {
             "label": "",
             "description": ""
@@ -5166,7 +5122,6 @@
       "download": "Stahování",
       "upload": "Odesílání",
       "ping": "Ping",
-      "status": "Stav",
       "avgDownload": "Prům. stahování",
       "avgUpload": "Prům. odesílání",
       "avgPing": "Prům. ping",
@@ -5474,7 +5429,6 @@
         "actionsDisabledEditMode": "Akce jsou zakázány, když je panel v režimu úprav.",
         "widgetItemUnavailable": "Tato položka widgetu není k dispozici.",
         "toggle": "Přepínač",
-        "copied": "Zkopírováno",
         "confirmDelete": "Potvrďte tuto destruktivní akci."
       },
       "option": {
@@ -5751,7 +5705,6 @@
       },
       "metric": {
         "system": "Systém",
-        "source": "Integrace",
         "hostname": "",
         "cpuModel": "Model CPU",
         "cores": "",
@@ -6441,13 +6394,7 @@
       "itemRadius": {
         "label": "Poloměr položky",
         "description": "Mění zaoblení dlaždic na ploše",
-        "option": {
-          "xs": "Velmi malé",
-          "sm": "Malé",
-          "md": "Střední",
-          "lg": "Velké",
-          "xl": "Velmi velké"
-        }
+        "option": {}
       },
       "isPublic": {
         "label": "Veřejné",
@@ -7079,13 +7026,7 @@
             },
             "defaultRadius": {
               "label": "Styl rohů",
-              "options": {
-                "xs": "Mírný",
-                "sm": "Jemný",
-                "md": "Vyvážená",
-                "lg": "Zaobleno",
-                "xl": "Měkké"
-              }
+              "options": {}
             },
             "customCss": {
               "label": "Globální vlastní CSS",
@@ -7107,7 +7048,6 @@
               "greetingDefault": "Výchozí pozdrav",
               "boardColorLocked": "Barva tabule uzamčena",
               "boardColorFlexible": "Barvy desky jsou povoleny",
-              "appName": "Název úlohy",
               "logo": "",
               "greeting": "Zdravím",
               "on": "Zapnuto",
@@ -7335,9 +7275,7 @@
             "lastExecution": {
               "label": "Poslední spuštění"
             },
-            "actions": {
-              "label": "Akce"
-            }
+            "actions": {}
           },
           "table": {
             "search": "Hledat {count} úloh..."
@@ -7401,9 +7339,7 @@
               },
               "table": {
                 "header": {
-                  "createdBy": "Vytvořil/a",
-                  "source": "Integrace",
-                  "actions": "Akce"
+                  "createdBy": "Vytvořil/a"
                 }
               },
               "provenance": {
@@ -7696,7 +7632,6 @@
     },
     "field": {
       "state": {
-        "label": "Status",
         "option": {
           "created": "Vytvořený",
           "running": "Běží",
@@ -7723,7 +7658,6 @@
       }
     },
     "action": {
-      "title": "Akce",
       "logs": {
         "label": "Zobrazit logy",
         "page": {
@@ -7961,27 +7895,13 @@
       "internalServerError": "Nepodařilo se načíst data Kubernetes"
     },
     "field": {
-      "name": {
-        "label": "Název úlohy"
-      },
-      "namespace": {
-        "label": "Jmenný prostor"
-      },
-      "creationTimestamp": {
-        "label": "Vytvořený"
-      },
-      "state": {
-        "label": "Stav úlohy"
-      },
-      "status": {
-        "label": "Stav"
-      },
-      "type": {
-        "label": "Typ klienta stahování"
-      },
-      "architecture": {
-        "label": "Architektura"
-      }
+      "name": {},
+      "namespace": {},
+      "creationTimestamp": {},
+      "state": {},
+      "status": {},
+      "type": {},
+      "architecture": {}
     }
   },
   "permission": {
@@ -8008,10 +7928,7 @@
         "label": "Oprávnění"
       }
     },
-    "action": {
-      "saveUser": "Uložit oprávnění uživatele",
-      "saveGroup": "Uložit oprávnění skupiny"
-    }
+    "action": {}
   },
   "navigationStructure": {
     "manage": {
@@ -8122,8 +8039,7 @@
       "resultsAriaLabel": "Výsledky {mode}",
       "footer": {
         "navigate": "",
-        "open": "Otevřít",
-        "close": "Zavřít"
+        "open": "Otevřít"
       }
     },
     "error": {
@@ -8553,9 +8469,7 @@
         "urlTemplate": {
           "label": "Šablona URL vyhledávání"
         },
-        "description": {
-          "label": "Popis"
-        }
+        "description": {}
       },
       "page": {
         "list": {
@@ -8624,8 +8538,7 @@
             "table": {
               "header": {
                 "season": "Řada",
-                "episodes": "Epizody",
-                "status": "Stav"
+                "episodes": "Epizody"
               },
               "status": {
                 "requested": "Vyžádáno"
@@ -9134,7 +9047,6 @@
       "cssDescription": "Upravte kompletní seznam stylů. Existující pravidla jsou zachována, pokud nejsou odstraněna.",
       "cssCharacters": "{count} s 16384 znaky",
       "copyCss": "",
-      "copied": "Zkopírováno",
       "restoreCss": "",
       "remoteCssTitle": "Tento CSS načte vzdálený zdroj",
       "remoteCssDescription": "Importované styly a vzdálené URL adresy kontaktují jiný server při načítání desky. Před pokračováním je zkontrolujte."
