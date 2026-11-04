@@ -35,5 +35,4 @@ export const integrationSecretIcons = {
   wazuhIndexerUrl: IconLink,
   wazuhIndexerUsername: IconUser,
   wazuhIndexerPassword: IconPassword,
-  wazuhDashboardUrl: IconLink,
 } satisfies Record<IntegrationSecretKind, TablerIcon>;

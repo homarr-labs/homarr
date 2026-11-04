@@ -109,7 +109,7 @@ const createOneIntegrationMiddlewareForKinds = <TKind extends IntegrationKind>(
       ctx: {
         integration: {
           ...rest,
-          externalUrl: rest.app?.href ?? null,
+          externalUrl: rest.externalUrl ?? rest.app?.href ?? null,
           kind: narrowedKind,
           decryptedSecrets: secrets.map((secret) => ({
             ...secret,
@@ -201,7 +201,7 @@ const createManyIntegrationMiddlewareForKinds = <TKind extends IntegrationKind>(
             if (!narrowedKind) return throwUnexpectedIntegrationKind(kind, kinds);
             return {
               ...rest,
-              externalUrl: rest.app?.href ?? null,
+              externalUrl: rest.externalUrl ?? rest.app?.href ?? null,
               kind: narrowedKind,
               decryptedSecrets: secrets.map((secret) => ({
                 ...secret,
