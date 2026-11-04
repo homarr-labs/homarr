@@ -99,7 +99,8 @@ export const previewGridMove = <TPlacement extends GridPlacement>(
 /**
  * Computes an eight-direction resize preview. Deltas describe movement of the
  * selected handle, while the opposite edge stays anchored. Bounds and caller
- * constraints are applied before pinned collision reflow.
+ * constraints are applied first, growth stops at stationary containers, and
+ * pinned collision reflow then pushes only items.
  */
 export const previewGridResize = <TPlacement extends GridPlacement>(
   transaction: GridTransaction<TPlacement>,
@@ -113,8 +114,9 @@ export const previewGridResize = <TPlacement extends GridPlacement>(
   }
 
   const constraints = getResizeConstraints(input, grid);
-  const resized = resizePlacement(active, input.direction, input, constraints, grid);
-  if (!resized) return rejected(transaction, { code: "resize-constraints" });
+  const requested = resizePlacement(active, input.direction, input, constraints, grid);
+  if (!requested) return rejected(transaction, { code: "resize-constraints" });
+  const resized = clampResizeAroundContainers(active, requested, grid.placements);
 
   const preview = cloneGridState(transaction.snapshot);
   const previewGrid = getGrid(preview, grid.id);
@@ -345,6 +347,45 @@ const resizePlacement = <TPlacement extends GridPlacement>(
   }
 
   return { ...placement, x, y, w: width, h: height };
+};
+
+const clampResizeAroundContainers = <TPlacement extends GridPlacement>(
+  active: TPlacement,
+  requested: TPlacement,
+  placements: readonly TPlacement[],
+): TPlacement => {
+  const obstacles = placements.filter((placement) => placement.id !== active.id && isContainerPlacement(placement));
+  const collides = (candidate: TPlacement) =>
+    obstacles.some((obstacle) => doGridPlacementsOverlap(candidate, obstacle));
+  if (!collides(requested)) return requested;
+
+  const growsWest = Math.max(0, active.x - requested.x);
+  const growsEast = Math.max(0, requested.x + requested.w - (active.x + active.w));
+  const growsNorth = Math.max(0, active.y - requested.y);
+  const growsSouth = Math.max(0, requested.y + requested.h - (active.y + active.h));
+  const horizontalGrowth = growsWest + growsEast;
+  const verticalGrowth = growsNorth + growsSouth;
+
+  let best: TPlacement | null = null;
+  for (let cutRows = 0; cutRows <= verticalGrowth; cutRows += 1) {
+    for (let cutColumns = 0; cutColumns <= horizontalGrowth; cutColumns += 1) {
+      const cutWest = Math.min(growsWest, cutColumns);
+      const cutEast = Math.min(growsEast, cutColumns);
+      const cutNorth = Math.min(growsNorth, cutRows);
+      const cutSouth = Math.min(growsSouth, cutRows);
+      const candidate = {
+        ...requested,
+        x: requested.x + cutWest,
+        y: requested.y + cutNorth,
+        w: requested.w - cutWest - cutEast,
+        h: requested.h - cutNorth - cutSouth,
+      };
+      if (collides(candidate)) continue;
+      if (!best || candidate.w * candidate.h > best.w * best.h) best = candidate;
+      break;
+    }
+  }
+  return best ?? requested;
 };
 
 const evaluateMoveGuards = <TPlacement extends GridPlacement>(
