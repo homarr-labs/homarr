@@ -1,0 +1,20 @@
+apps/docs/docs/widgets/wazuh/index.mdx
+  h_d6e478ca18e517 53
+packages/db/migrations/custom/0007_wazuh_dashboard_url.ts
+  h_d6e478ca18e517 1-32
+packages/db/migrations/custom/index.ts
+  h_d6e478ca18e517 9,19
+packages/integrations/src/plex/plex-integration.ts
+  h_d6e478ca18e517 373-377
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "6bae92a643693d42660e3c0b360e77ee2f6f8fee",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
