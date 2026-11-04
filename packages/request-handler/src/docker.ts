@@ -9,7 +9,13 @@ import { db, like, or } from "@homarr/db";
 import { icons } from "@homarr/db/schema";
 import { extractContainerImageName } from "@homarr/definitions";
 import type { ContainerState, DockerContainerTarget, DockerEndpointStatus, Port } from "@homarr/docker";
-import { dockerLabels, DockerSingleton, getContainerImageIconFallback, resolveContainerIcon } from "@homarr/docker";
+import {
+  dockerLabels,
+  DockerSingleton,
+  getContainerImageIconFallback,
+  getContainerImageIconPrefix,
+  resolveContainerIcon,
+} from "@homarr/docker";
 
 import { createDockerLogStreamProcessor, decodeDockerLogs } from "./docker-log-decode";
 import { createWidgetRequestHandler } from "./lib/widget-request-handler";
@@ -445,12 +451,22 @@ export async function getContainersWithStatsAsync(
       : [];
 
   const degradedEndpointIds = new Set<string>();
-  const fallbackIcons = containers.some(
-    (container) =>
-      !resolveContainerIcon(container.Labels) && !bestMatch(extractImage(container), dbIcons, (icon) => icon.name),
-  )
-    ? await db.query.icons.findMany({ columns: { name: true, url: true } })
-    : [];
+  const fallbackPrefixes = new Set(
+    containers
+      .filter(
+        (container) =>
+          !resolveContainerIcon(container.Labels) && !bestMatch(extractImage(container), dbIcons, (icon) => icon.name),
+      )
+      .map((container) => getContainerImageIconPrefix(extractImage(container)))
+      .filter(Boolean),
+  );
+  const fallbackIcons =
+    fallbackPrefixes.size > 0
+      ? await db.query.icons.findMany({
+          columns: { name: true, url: true },
+          where: or(...[...fallbackPrefixes].map((prefix) => like(icons.name, `${prefix}%`))),
+        })
+      : [];
   const containerStatsPromises = containers.map(async (container) => {
     const instance = DockerSingleton.findInstance(container.endpointId)?.instance;
     if (!instance) return null;
