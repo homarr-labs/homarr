@@ -1,0 +1,37 @@
+apps/docs/docs/advanced/development/workshop-operator.mdx
+  s_05ef861992d1bd::t_30b84fc08d135b 36,66-67
+apps/docs/docs/advanced/environment-variables/index.mdx
+  s_05ef861992d1bd::t_bc0d2360b83726 71
+apps/nextjs/src/components/assistant/assistant-preferences.spec.ts
+  s_05ef861992d1bd::t_2c1cf3cc0226ac 6,114,117,125-128
+apps/nextjs/src/components/assistant/assistant-preferences.ts
+  s_05ef861992d1bd::t_7bb45a0f1552a3 1,15,21-22,24
+apps/nextjs/src/components/assistant/assistant-runtime-controls.tsx
+  s_05ef861992d1bd::t_668d41a0054a9c 41,76-77,79,81,84
+apps/workshop/docker-compose.staging.yml
+  s_05ef861992d1bd::t_c0c4eec3e03f0a 19
+apps/workshop/docker-compose.yml
+  s_05ef861992d1bd::t_22a5a8b68e4bca 34,69
+apps/workshop/homarr_provider.go
+  s_05ef861992d1bd::t_3480bce60d101f 29,499
+apps/workshop/homarr_provider_test.go
+  s_05ef861992d1bd::t_e3c555281a6f09 126-127,139,143-144
+packages/translation/src/lang/en.json
+  s_05ef861992d1bd::t_a8786a9a5b74ff 8811
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "978b3702264533266eed96dbfd0b1c70d4c98821",
+  "prompts": {},
+  "sessions": {
+    "s_05ef861992d1bd": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1a6e7-d402-7d23-bf4e-544804888af2",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
