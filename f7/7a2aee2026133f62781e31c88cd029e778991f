@@ -1,0 +1,29 @@
+apps/nextjs/src/components/assistant/assistant-preferences.ts
+  s_53d352251b1ff4::t_67c8ff52bd5b9c 21-22
+packages/translation/src/lang/en.json
+  s_f572e02fff5ec4::t_b9cc383af39319 8893
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "f77a2aee2026133f62781e31c88cd029e778991f",
+  "prompts": {},
+  "sessions": {
+    "s_53d352251b1ff4": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "1996f7db-81a3-4e66-b9b8-ca24f9d9d14c",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_f572e02fff5ec4": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "e174794f-c78b-4525-b787-deeb501a1d58",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
