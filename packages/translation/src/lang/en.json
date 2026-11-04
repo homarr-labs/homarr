@@ -1412,11 +1412,7 @@
               "label": "Select existing app"
             },
             "new": {
-              "title": "New",
-              "url": {
-                "label": "App url",
-                "description": "The url the app will open when accessed from the dashboard"
-              }
+              "title": "New"
             }
           }
         }
@@ -1462,14 +1458,15 @@
       },
       "createApp": {
         "label": "Create app",
-        "description": "Create an app with the same name and icon as the integration. Leave the input field below empty to create the app with the integration URL."
+        "description": "Create an app with the same name and icon as the integration."
       },
       "linkApp": {
         "label": "Link an existing app",
         "description": "Connect this integration to an app you can already use."
       },
-      "appHref": {
-        "placeholder": "Custom app URL"
+      "externalUrl": {
+        "label": "External URL",
+        "description": "Address your browser opens from widget links. Leave empty to use the linked app's URL or the integration URL."
       },
       "apiKeySettings": {
         "label": "Get API key"
@@ -1836,10 +1833,6 @@
         "totpSecret": {
           "label": "TOTP secret (optional)",
           "newLabel": "New TOTP secret"
-        },
-        "wazuhDashboardUrl": {
-          "label": "Dashboard URL (optional)",
-          "newLabel": "New dashboard URL"
         }
       }
     },
@@ -8916,6 +8909,7 @@
       "imageInput": "Accepts image input",
       "thinking": "Thinking mode",
       "reasoning": {
+        "default": "Default",
         "auto": "Auto",
         "none": "Off",
         "minimal": "Minimal",

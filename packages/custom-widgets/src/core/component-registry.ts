@@ -1,11 +1,29 @@
-import { customJsxAuthoringCatalog } from "./component-catalog";
-import type { CustomJsxCatalogBindingType } from "./component-catalog-types";
+import runtimeCatalogJson from "./component-catalog.runtime.generated.json";
+import type { CustomJsxBindingDescriptor, CustomJsxComponentBlockedProp } from "./component-catalog-types";
 import type { CustomJsxComponentDescriptor } from "./component-descriptor";
+import type { CustomJsxComponentPackage, CustomJsxComponentSafety } from "./component-types";
 
-const globalPropNames = customJsxAuthoringCatalog.globalProps.map(({ name }) => name);
+interface RuntimeCatalogComponent {
+  name: string;
+  package: CustomJsxComponentPackage;
+  safety: CustomJsxComponentSafety;
+  props: readonly { name: string; required: boolean }[];
+  blockedProps: readonly CustomJsxComponentBlockedProp[];
+  bind?: CustomJsxBindingDescriptor;
+  deniedReason?: string;
+}
 
-export const customJsxComponentRegistry: readonly CustomJsxComponentDescriptor[] =
-  customJsxAuthoringCatalog.components.map((component) => ({
+interface CustomJsxRuntimeCatalog {
+  globalPropNames: readonly string[];
+  components: readonly RuntimeCatalogComponent[];
+}
+
+const runtimeCatalog = runtimeCatalogJson as CustomJsxRuntimeCatalog;
+
+const globalPropNames = runtimeCatalog.globalPropNames;
+
+export const customJsxComponentRegistry: readonly CustomJsxComponentDescriptor[] = runtimeCatalog.components.map(
+  (component) => ({
     name: component.name,
     package: component.package,
     safety: component.safety,
@@ -23,7 +41,8 @@ export const customJsxComponentRegistry: readonly CustomJsxComponentDescriptor[]
           ],
     blockedProps: component.blockedProps,
     ...(component.deniedReason ? { reason: component.deniedReason } : {}),
-  }));
+  }),
+);
 
 export const enabledCustomJsxComponents = customJsxComponentRegistry.filter(
   (component) => component.safety !== "denied",
@@ -31,6 +50,12 @@ export const enabledCustomJsxComponents = customJsxComponentRegistry.filter(
 export const customJsxComponentByName = new Map(customJsxComponentRegistry.map((entry) => [entry.name, entry]));
 export const customJsxSupportedPropsByName = new Map(
   customJsxComponentRegistry.map((entry) => [entry.name, new Set(entry.supportedProps)]),
+);
+export const customJsxRequiredPropsByName: ReadonlyMap<string, readonly string[]> = new Map(
+  runtimeCatalog.components.map((component) => [
+    component.name,
+    component.props.flatMap(({ name, required }) => (required ? [name] : [])),
+  ]),
 );
 
 export function resolveCustomJsxComponentName(name: string): string {
@@ -40,9 +65,7 @@ export function resolveCustomJsxComponentName(name: string): string {
   return customJsxComponentByName.has(flat) ? flat : name;
 }
 
-const catalogComponentsByName = new Map(
-  customJsxAuthoringCatalog.components.map((component) => [component.name, component]),
-);
+const catalogComponentsByName = new Map(runtimeCatalog.components.map((component) => [component.name, component]));
 
 const multipleDateBindingComponents = new Set([
   "DatePicker",
@@ -55,10 +78,10 @@ const multipleDateBindingComponents = new Set([
 const rangeDateBindingComponents = new Set(["DateTimePicker", "InlineDateTimePicker"]);
 
 export const customJsxBindableComponentNames: ReadonlySet<string> = new Set(
-  customJsxAuthoringCatalog.components.flatMap((component) => (component.bind ? [component.name] : [])),
+  runtimeCatalog.components.flatMap((component) => (component.bind ? [component.name] : [])),
 );
 
-export type CustomJsxBindingType = CustomJsxCatalogBindingType;
+export type CustomJsxBindingType = CustomJsxBindingDescriptor["type"];
 
 export function getCustomJsxBindingType(
   componentName: string,

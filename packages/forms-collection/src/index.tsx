@@ -1,5 +1,6 @@
 export * from "./new-app/_app-new-form";
 export * from "./new-app/_form";
+export * from "./new-app/_url-label";
 
 export * from "./board-create/board-create-form";
 

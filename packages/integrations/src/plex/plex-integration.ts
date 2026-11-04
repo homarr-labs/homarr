@@ -371,8 +371,7 @@ export class PlexIntegration extends Integration implements IMediaServerIntegrat
           rating: item.rating?.toFixed(1),
           tags: item.Genre?.map((genre) => genre.tag) ?? [],
           href: super
-            .url(
-              // Url with children on the end results in infinite loading screen, see https://github.com/homarr-labs/homarr/issues/4078
+            .externalUrl(
               `/web/index.html#!/server/${machineIdentifier}/details?key=${encodeURIComponent(item.key.replace("/children", ""))}`,
             )
             .toString(),

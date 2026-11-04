@@ -33,7 +33,7 @@ Stable images also have `:v<major>` and `:v<version>` tags, such as `:v2` and `:
 | `HOMARR_AI_DAILY_REQUEST_LIMIT`        | Per-user daily request allowance             | `50`                           |
 | `HOMARR_AI_GLOBAL_DAILY_REQUEST_LIMIT` | Shared daily request ceiling                 | `10000`                        |
 | `HOMARR_AI_OPENROUTER_BASE_URL`        | OpenRouter-compatible upstream               | `https://openrouter.ai/api/v1` |
-| `HOMARR_AI_OPENROUTER_MODEL`           | Upstream model behind `homarr/model`         | `openai/gpt-6-luna`            |
+| `HOMARR_AI_OPENROUTER_MODEL`           | Upstream model behind `homarr/model`         | `openai/gpt-6.1-sol`           |
 
 Public URL variables accept HTTP(S) origins without embedded credentials, query strings, or fragments. Restart the
 container after changing runtime configuration.
@@ -63,8 +63,8 @@ can use a comma-separated allowlist.
 
 ## Homarr provider
 
-`OPENROUTER_API_KEY` enables the [Homarr provider](/docs/workshop/homarr-provider). The default is `openai/gpt-6-luna`
-with Max reasoning and a 32K combined reasoning/output budget. Remove an old `HOMARR_AI_OPENROUTER_MODEL` override or set
+`OPENROUTER_API_KEY` enables the [Homarr provider](/docs/workshop/homarr-provider). The default is `openai/gpt-6.1-sol`
+with Low reasoning, which clients cannot override, and a 32K combined reasoning/output budget. Remove an old `HOMARR_AI_OPENROUTER_MODEL` override or set
 it explicitly to this model when upgrading. OpenRouter selects an eligible provider for the model; Workshop does not
 pin a provider. Provider fallbacks remain disabled.
 

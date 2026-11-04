@@ -19,6 +19,7 @@ import {
   invariantTechnicalLabels,
 } from "@homarr/definitions";
 import { useZodForm } from "@homarr/form";
+import { AppUrlLabel } from "@homarr/forms-collection";
 import { useConfirmModal, useModalAction } from "@homarr/modals";
 import { AppSelectModal } from "@homarr/modals-collection";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
@@ -44,8 +45,9 @@ export interface EditIntegrationFormHandle {
   isDirty: () => boolean;
 }
 
-const formSchema = integrationUpdateSchema.omit({ id: true, appId: true }).and(
+const formSchema = integrationUpdateSchema.omit({ id: true, appId: true, externalUrl: true }).and(
   z.object({
+    externalUrl: z.string(),
     app: z
       .object({
         id: z.string(),
@@ -87,6 +89,7 @@ export const EditIntegrationForm = ({
     initialValues: {
       name: integration.name,
       url: integration.url,
+      externalUrl: integration.externalUrl ?? "",
       secrets: initialSecretsKinds.map((kind) => ({
         kind,
         value: integration.secrets.find((secret) => secret.kind === kind)?.value ?? "",
@@ -224,6 +227,13 @@ export const EditIntegrationForm = ({
       {hasUrlSecret ? null : (
         <TextInput withAsterisk label={invariantTechnicalLabels.url} {...form.getInputProps("url")} />
       )}
+
+      <TextInput
+        label={<AppUrlLabel label={tIntegration("field.externalUrl.label")} />}
+        aria-label={tIntegration("field.externalUrl.label")}
+        description={tIntegration("field.externalUrl.description")}
+        {...form.getInputProps("externalUrl")}
+      />
 
       <Fieldset legend={tIntegration("secrets.title")}>
         <Stack gap="sm">

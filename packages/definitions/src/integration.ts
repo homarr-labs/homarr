@@ -28,7 +28,6 @@ export const integrationSecretKindObject = {
   wazuhIndexerUrl: { isPublic: true, multiline: false },
   wazuhIndexerUsername: { isPublic: true, multiline: false },
   wazuhIndexerPassword: { isPublic: false, multiline: false },
-  wazuhDashboardUrl: { isPublic: true, multiline: false },
   totpSecret: { isPublic: false, multiline: false },
 } satisfies Record<string, { isPublic: boolean; multiline: boolean }>;
 
@@ -1007,8 +1006,6 @@ export const integrationDefs = {
       ["username", "password", "wazuhIndexerUrl", "wazuhIndexerUsername", "wazuhIndexerPassword"],
       ["wazuhIndexerUsername", "wazuhIndexerPassword"],
     ],
-    // Used for deep links from the widgets into the Wazuh dashboard.
-    optionalSecretKinds: ["wazuhDashboardUrl"],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/wazuh.svg",
     category: ["security", "notifications"],
     documentationSlug: "wazuh",

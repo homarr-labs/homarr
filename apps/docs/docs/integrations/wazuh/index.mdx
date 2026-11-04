@@ -20,6 +20,8 @@ Wazuh stores data in two places, and each uses its own users:
 
 Alerts and severity counts need the indexer. Without server API credentials, agent counts come from the latest `wazuh-monitoring-*` snapshot, which the Wazuh dashboard writes every 15 minutes.
 
+Set the integration's **External URL** to your Wazuh dashboard address, not the API or indexer address, to enable links from the widgets.
+
 ### Adding the integration
 
 <AddingIntegration />

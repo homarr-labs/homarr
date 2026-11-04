@@ -123,7 +123,7 @@ export const BoardCard = ({ board, isMenuVisible, labels }: BoardCardProps) => {
           </Group>
         </CardSection>
       </Card>
-      <Collapse expanded={isDuplicateOpen}>
+      <Collapse expanded={isDuplicateOpen} keepMounted={false}>
         <Card mt="sm" withBorder>
           <DuplicateBoardForm key={duplicateFormKey} board={board} onCancel={() => setIsDuplicateOpen(false)} />
         </Card>
