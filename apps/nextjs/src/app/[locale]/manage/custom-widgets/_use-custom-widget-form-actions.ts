@@ -95,7 +95,7 @@ export function useCustomWidgetFormActions(input: FormActionsInput) {
   const save = input.form.onSubmit(async (values) => {
     clearSaveIssues(input.form, saveIssues);
     setSaveIssues([]);
-    const definition = buildDefinition(values, true);
+    const definition = buildDefinition(values, input.mode === "create");
     if (!definition.success) {
       reportSaveIssues(
         input.form,

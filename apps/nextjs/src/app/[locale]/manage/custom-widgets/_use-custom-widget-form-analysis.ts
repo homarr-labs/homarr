@@ -73,6 +73,10 @@ export function analyzeCustomWidgetAiDiagnostics(values: CustomWidgetFormValues)
 export function useCustomWidgetFormAnalysis(values: CustomWidgetFormValues) {
   const analysisValues = useDeferredValue(values);
   const candidate = useMemo(() => buildDefinition(analysisValues, true), [analysisValues]);
+  const saveCandidateValid = useMemo(
+    () => candidate.success || buildDefinition(analysisValues).success,
+    [analysisValues, candidate.success],
+  );
   const parsedOptions = useMemo(
     () => customWidgetOptionsSchema.safeParse(parseJson(analysisValues.options)),
     [analysisValues.options],
@@ -122,6 +126,7 @@ export function useCustomWidgetFormAnalysis(values: CustomWidgetFormValues) {
     () => ({
       candidate,
       candidateValid: candidate.success,
+      saveCandidateValid,
       parsedOptions,
       jsxCompletions,
       templateDiagnostics,
@@ -133,6 +138,7 @@ export function useCustomWidgetFormAnalysis(values: CustomWidgetFormValues) {
     }),
     [
       candidate,
+      saveCandidateValid,
       hasDiagnostics,
       invalidSections,
       jsxCompletions,

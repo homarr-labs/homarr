@@ -25,6 +25,20 @@ export const customWidgetAcknowledgedRemovalsSchema = z
   );
 
 const hasProtectedProps = (tag: string) => /(?:Chart|Progress|Table|Image)(?:\.|$)|^Sparkline$|^Heatmap$/u.test(tag);
+const layoutTags = new Set([
+  "Box",
+  "Card",
+  "Card.Section",
+  "Center",
+  "Container",
+  "Flex",
+  "Grid",
+  "Grid.Col",
+  "Group",
+  "Paper",
+  "SimpleGrid",
+  "Stack",
+]);
 const hasProtectedCount = (tag: string) =>
   hasProtectedProps(tag) ||
   /(?:Input|Select|Picker|Switch|Checkbox|Radio|Slider|Textarea|Autocomplete|Rating|Chip|SegmentedControl|Pagination|ActionButton|SubFetch)(?:\.|$)/u.test(
@@ -55,6 +69,7 @@ export function getCustomWidgetRemovals(saved: Definition, candidate: Definition
   const before = summarize(saved.template);
   const after = summarize(candidate.template, requests, options);
   for (const [tag, count] of [...before.tags].toSorted()) {
+    if (layoutTags.has(tag)) continue;
     const remaining = after.tags.get(tag) ?? 0;
     if (remaining === 0 || (hasProtectedCount(tag) && remaining < count)) removals.push(`component:${tag}`);
     if (remaining === 0) continue;
