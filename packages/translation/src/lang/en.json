@@ -2224,6 +2224,7 @@
     },
     "moveResize": {
       "title": "Move / resize item",
+      "sizeOverlap": "This size overlaps another container. Reduce the size or change the position to make room.",
       "entryLabel": "{name}, column {column}, row {row}",
       "target": {
         "numbered": "{name}, destination {index}",
