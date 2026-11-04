@@ -1,4 +1,4 @@
-import { decryptSecret } from "@homarr/common/server";
+import { decryptSecret } from "@homarr/common/encryption";
 
 import type { Database } from "../..";
 import { and, eq, executeWritePlanAsync, isNull, sql } from "../..";
