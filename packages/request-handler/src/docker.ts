@@ -9,7 +9,7 @@ import { db, like, or } from "@homarr/db";
 import { icons } from "@homarr/db/schema";
 import { extractContainerImageName } from "@homarr/definitions";
 import type { ContainerState, DockerContainerTarget, DockerEndpointStatus, Port } from "@homarr/docker";
-import { dockerLabels, DockerSingleton } from "@homarr/docker";
+import { dockerLabels, DockerSingleton, resolveContainerIcon } from "@homarr/docker";
 
 import { createDockerLogStreamProcessor, decodeDockerLogs } from "./docker-log-decode";
 import { createWidgetRequestHandler } from "./lib/widget-request-handler";
@@ -497,7 +497,10 @@ export async function getContainersWithStatsAsync(
       name: container.Names[0]?.split("/")[1] ?? "Unknown",
       host: container.instance,
       state: container.State as ContainerState,
-      iconUrl: bestMatch(extractImage(container), dbIcons, (icon) => icon.name)?.url ?? null,
+      iconUrl:
+        resolveContainerIcon(container.Labels) ??
+        bestMatch(extractImage(container), dbIcons, (icon) => icon.name)?.url ??
+        null,
       cpuUsage,
       memoryUsage,
       image: container.Image,
