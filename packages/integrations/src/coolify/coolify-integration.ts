@@ -32,6 +32,7 @@ import {
 
 const logger = createLogger({ module: "coolifyIntegration" });
 const PROJECT_DETAIL_CONCURRENCY = 4;
+const PROJECT_DETAIL_TIMEOUT_MS = 5_000;
 
 export class CoolifyIntegration extends Integration {
   public async getHttpAuthenticationAsync(): Promise<IntegrationHttpAuthentication> {
@@ -153,6 +154,8 @@ export class CoolifyIntegration extends Integration {
     const url = this.url(`/api/v1/projects/${uuid}`);
     const response = await fetchWithTrustedCertificatesAsync(url, {
       headers: this.getAuthHeaders(),
+      timeout: PROJECT_DETAIL_TIMEOUT_MS,
+      bodyTimeout: PROJECT_DETAIL_TIMEOUT_MS,
     });
 
     if (!response.ok) {
