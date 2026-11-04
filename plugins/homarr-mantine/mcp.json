@@ -1,0 +1,11 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/mcp.schema.json",
+  "mcpServers": {
+    "mantine": {
+      "type": "stdio",
+      "command": "bun",
+      "args": ["x", "--bun", "@mantine/mcp-server@9.7.4"],
+      "cwd": "${PLUGIN_ROOT}"
+    }
+  }
+}

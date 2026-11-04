@@ -1,7 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 
 import {
-  getPrivateWorkshopSourceNames,
   publishWorkshopDefinition,
   serializeWorkshopDefinition,
   workshopDefinitionChanged,
@@ -17,10 +16,6 @@ const definition = {
 };
 
 describe("Workshop publish definition inspection", () => {
-  it("reports every source URL that requires review", () => {
-    expect(getPrivateWorkshopSourceNames(definition)).toEqual(["Home server", "local"]);
-  });
-
   it("detects an export that changed after inspection", () => {
     expect(workshopDefinitionChanged(definition, definition)).toBe(false);
     expect(workshopDefinitionChanged(definition, { ...definition, name: "Updated" })).toBe(true);

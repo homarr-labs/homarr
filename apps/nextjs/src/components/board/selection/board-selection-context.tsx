@@ -61,7 +61,10 @@ export const BoardSelectionProvider = ({ children }: PropsWithChildren) => {
   // Clear selection if leaving edit mode
   useEffect(() => {
     if (!isEditMode) {
-      setSelectedItemIds(new Set());
+      setSelectedItemIds((previous) => {
+        if (previous.size === 0) return previous;
+        return new Set();
+      });
     }
   }, [isEditMode]);
 

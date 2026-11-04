@@ -42,7 +42,7 @@ export function InstanceCard({ instance, options, isTiny, isAdvanced, widgetKey 
     instance.instanceInfo.services,
   );
 
-  const baseUrl = getSafeApplicationUrl(instance.integrationUrl)?.replace(/\/+$/, "") ?? "";
+  const baseUrl = getSafeApplicationUrl(instance.externalUrl ?? instance.integrationUrl)?.replace(/\/+$/, "") ?? "";
   const displayUrl = baseUrl ? baseUrl.replace(/^https?:\/\//, "") : "—";
   const onlineServers = instance.instanceInfo.servers.filter(isCoolifyServerOnline).length;
   const runningApps = instance.instanceInfo.applications.filter(

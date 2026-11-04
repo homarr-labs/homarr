@@ -7,6 +7,7 @@ import { getI18n } from "@homarr/translation/server";
 
 import { ConfigmapsTable } from "~/app/[locale]/manage/tools/kubernetes/configmaps/configmaps-table";
 import { ManagePageLayout } from "~/components/manage/manage-page-layout";
+import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
 import type { KubernetesContextSearchParams } from "../kubernetes-context";
 import { getSelectedKubernetesContextAsync } from "../kubernetes-context";
 
@@ -21,6 +22,7 @@ export default async function ConfigMapsPage({
   }
 
   const context = await getSelectedKubernetesContextAsync(searchParams);
+  if (!context) return <DynamicBreadcrumb />;
   const tResource = await getI18n("kubernetes.cluster.resources");
   const configMaps =
     context.status === "unavailable"

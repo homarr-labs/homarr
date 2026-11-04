@@ -11,7 +11,8 @@ const getErrorRefetchInterval = (query: QueryWithStatus) => {
 
 export const createKubernetesResourceQueryOptions = <TData>(initialData: TData) => ({
   initialData,
-  refetchOnMount: "always" as const,
+  staleTime: 30_000,
+  refetchOnMount: true,
   refetchOnWindowFocus: true,
   refetchOnReconnect: true,
   refetchInterval: getErrorRefetchInterval,

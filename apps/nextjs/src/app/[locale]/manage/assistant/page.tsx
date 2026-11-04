@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { Text } from "@mantine/core";
 
+import { api } from "@homarr/api/server";
 import { auth } from "@homarr/auth/next";
 import { getI18n } from "@homarr/translation/server";
 
@@ -22,12 +23,13 @@ export default async function AssistantPage() {
   }
 
   const t = await getI18n("management.page.settings.section.assistant");
+  const configuration = await api.assistant.getAdminConfiguration();
   return (
     <ManagePageLayout title={t("title")}>
       <Text c="dimmed" maw="70ch">
         {t("description")}
       </Text>
-      <AssistantConfiguration />
+      <AssistantConfiguration initialConfiguration={configuration} />
     </ManagePageLayout>
   );
 }

@@ -1,9 +1,12 @@
 import { notFound } from "next/navigation";
+import { Stack, Title } from "@mantine/core";
 
+import { api } from "@homarr/api/server";
 import { auth } from "@homarr/auth/next";
 import { getI18n } from "@homarr/translation/server";
 
-import { ManagePageLayout } from "~/components/manage/manage-page-layout";
+import { ManageContainer } from "~/components/manage/manage-container";
+import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
 import { SearchEngineNewForm } from "./_search-engine-new-form";
 
 export default async function SearchEngineNewPage() {
@@ -14,10 +17,15 @@ export default async function SearchEngineNewPage() {
   }
 
   const t = await getI18n("search.engine.page.create");
+  const integrations = await api.integration.allThatSupportSearch();
 
   return (
-    <ManagePageLayout title={t("title")}>
-      <SearchEngineNewForm />
-    </ManagePageLayout>
+    <ManageContainer>
+      <DynamicBreadcrumb />
+      <Stack>
+        <Title>{t("title")}</Title>
+        <SearchEngineNewForm integrations={integrations} />
+      </Stack>
+    </ManageContainer>
   );
 }

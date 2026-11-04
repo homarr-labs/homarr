@@ -1,0 +1,19 @@
+.row {
+  display: block;
+  padding: 4px 6px;
+  border-radius: var(--mantine-radius-sm);
+}
+
+.row:hover {
+  background-color: light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-5));
+}
+
+.thumbnail {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--mantine-radius-sm);
+  object-fit: cover;
+  color: var(--mantine-color-dimmed);
+  background-color: light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-6));
+}

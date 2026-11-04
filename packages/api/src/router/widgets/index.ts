@@ -10,6 +10,7 @@ export const widgetRouter = createTRPCRouter({
   coolify: lazy(() => import("./coolify").then((mod) => mod.coolifyRouter)),
   immich: lazy(() => import("./immich").then((mod) => mod.immichRouter)),
   paperlessNgx: lazy(() => import("./paperless-ngx").then((mod) => mod.paperlessNgxRouter)),
+  thingport: lazy(() => import("./thingport").then((mod) => mod.thingportRouter)),
   patchmon: lazy(() => import("./patchmon").then((mod) => mod.patchmonRouter)),
   bazarr: lazy(() => import("./bazarr").then((mod) => mod.bazarrRouter)),
   notebook: lazy(() => import("./notebook").then((mod) => mod.notebookRouter)),

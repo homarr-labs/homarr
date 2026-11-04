@@ -7,6 +7,7 @@ import { getI18n } from "@homarr/translation/server";
 
 import { VolumesTable } from "~/app/[locale]/manage/tools/kubernetes/volumes/volumes-table";
 import { ManagePageLayout } from "~/components/manage/manage-page-layout";
+import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
 import type { KubernetesContextSearchParams } from "../kubernetes-context";
 import { getSelectedKubernetesContextAsync } from "../kubernetes-context";
 
@@ -17,6 +18,7 @@ export default async function VolumesPage({ searchParams }: { searchParams: Prom
   }
 
   const context = await getSelectedKubernetesContextAsync(searchParams);
+  if (!context) return <DynamicBreadcrumb />;
   const tResource = await getI18n("kubernetes.cluster.resources");
   const volumes =
     context.status === "unavailable" ? [] : await api.kubernetes.volumes.getVolumes({ contextId: context.contextId });

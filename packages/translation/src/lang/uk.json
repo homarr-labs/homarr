@@ -65,7 +65,6 @@
         "themeAuto": "Система",
         "themeLight": "Світла",
         "themeDark": "Темна",
-        "serverOriginHelp": "Homarr використовує цю адресу для попереднього заповнення URL-адрес. Ви все ще можете відредагувати всі сервіси.",
         "serverDescription": "Це ярлик, а не обмеження. Кожна виявлена служба залишається редагованою.",
         "serverOrigin": "Домен, IP або шлях до зворотного проксі",
         "serverOriginDescription": "Приклад: home.lan, 192.168.1.10 або https://home.example.com/services. Виберіть, як правильно додається кожна послуга.",
@@ -102,6 +101,8 @@
       "connect": {
         "title": "Підключіть те, що зробить дошку корисною",
         "description": "Вибрати декілька служб одразу. Мітки Docker мають пріоритет, зображення заповнюють прогалини, а також кожне посилання і облікові дані можуть бути переглянуті.",
+        "confirmServerAddress": "",
+        "serverAddressReviewed": "",
         "discoveredIntegrations": "Виявлені екземпляри інтеграції ({count})",
         "detectedIntegrationLabel": "Імпорт {name}виявилося як {kind}",
         "detectedAppLabel": "Імпортувати виявлений додаток {name}",
@@ -126,7 +127,8 @@
         "needsConfiguration": "Потрібна конфігурація",
         "tested": "Перевірка підключення",
         "testFailed": "Помилка тестування підключення",
-        "incompleteConfirmation": "Незавершена інтеграція буде пропущена. Продовжити без них?"
+        "incompleteConfirmation": "Незавершена інтеграція буде пропущена. Продовжити без них?",
+        "skipIncomplete": ""
       },
       "board": {
         "title": "Об’єднайте дошку до її будівництва",
@@ -142,10 +144,11 @@
         "secondaryColor": "Вторинний колір",
         "resetColors": "Скинути кольори",
         "radius": "Радіус кута віджета",
+        "radiusOptions": {},
         "columns": "Стовпці дошки",
         "columnsDescription": "Колонки визначають горизонтальну сітку, яка використовується для розмірів та позиціонування. 12 - це достатньо для більшості людей.",
         "columnCount": "{count, plural, one {# стовпець} other {# стовпчиків}}",
-        "leftSidebar": "Left sidebar",
+        "leftSidebar": "Лівий сайдбар",
         "rightSidebar": "Права бічна панель",
         "previewLabel": "Попередній перегляд першого макету дошки"
       },
@@ -164,7 +167,7 @@
           "description": "Переглядайте Користувальницькі Віджети спільноти, огляньте потрібні можливості, встановіть їх та публікуйте власну роботу без копіювання коду між серверами.",
           "available": "Доступно",
           "checking": "Перевірка…",
-          "unavailable": "Unavailable",
+          "unavailable": "Недоступно",
           "discoverTitle": "Відкрийте для себе",
           "discoverDescription": "Знайти віджети побудовані для справжніх робочих процесів самозапуску.",
           "installTitle": "Перегляд та встановлення",
@@ -195,7 +198,7 @@
         "columns": "Стовпці дошки",
         "columnsValue": "{count, plural, one {# стовпець} other {# стовпчиків}}",
         "sidebars": "Бічні панелі",
-        "sidebarsValue": "{count, plural, =0 {None} one {# sidebar} other {# sidebars}}",
+        "sidebarsValue": "{count, plural, =0 {None} one {# sidebar} few {# sidebars} many {# sidebars} other {# sidebars}}",
         "layouts": "Адаптивні макети",
         "layoutsValue": "Мобільний + Базовий",
         "integrations": "Інтеграції",
@@ -791,6 +794,12 @@
       }
     },
     "field": {
+      "url": {
+        "helpLabel": "Приклади форматів URL",
+        "examples": "Приклади підтримуваних посилань",
+        "requiresHandler": "Для власних протоколів на вашому пристрої має бути встановлений пов’язаний застосунок."
+      },
+      "description": {},
       "useDifferentUrlForPing": {
         "checkbox": {
           "label": "Використовуйте іншу URL-адресу для ping",
@@ -892,6 +901,7 @@
       "description": "Повторіть, куди цей віджет з'єднує його і додає або замінює зашифровані облікові дані.",
       "credentialsRequired": "Запити не виконуватимуться, доки додаються необхідні облікові дані."
     },
+    "field": {},
     "editor": {
       "errorBoundary": {
         "title": "Сталася помилка"
@@ -899,7 +909,7 @@
       "action": {
         "components": "Компоненти",
         "format": "Форматувати",
-        "insertStarter": "Insert starter",
+        "insertStarter": "Вставити таблицю",
         "redo": "Повторити дію",
         "schema": "Схема"
       },
@@ -1069,7 +1079,7 @@
         "remove": "Видалити вихідні запити та їх",
         "advanced": "Додатково",
         "add": "Додати інше джерело API",
-        "manualSource": "HTTP API",
+        "manualSource": "",
         "existingIntegration": "Існуюча інтеграція",
         "integrationType": "Тип інтеграції",
         "selectIntegration": "Налаштована інтеграція",
@@ -1140,7 +1150,7 @@
         "runAction": "Виконати дію",
         "deleteConfirmation": "Ця попередній перегляд змінює віддалені дані через налаштований API.",
         "simulated": "Дія симуляція",
-        "httpStatus": "HTTP {status, number}",
+        "httpStatus": "",
         "tab": {
           "widget": "Віджет",
           "data": "Дані",
@@ -1257,7 +1267,7 @@
     "outdated": "Застарілий",
     "outdatedWarning": "Автор позначив цей запит як застарілий. уважно перегляньте його.",
     "score": "Рахунок: {count, number}",
-    "upvote": "Upvote",
+    "upvote": "",
     "downvote": "Голос Проти",
     "voteError": "Голос не вдалося зберегти.",
     "signIn": "Увійти за допомогою GitHub",
@@ -1270,7 +1280,7 @@
     "installReviewTitle": "Відгук перед встановленням",
     "installError": "Неможливо встановити цей віджет",
     "installErrorDescription": "Обробка Workshop не є допустимим віджетом JSX v2.",
-    "useCss": "Import CSS",
+    "useCss": "",
     "importCss": "Імпортувати CSS з Майстерні",
     "importCssConfirm": "Замінити поточний користувацький CSS на \"{title}\"? Нічого не зберігається, поки ви не збережете налаштування форуму.",
     "screenshotAlt": "{title} скріншот {count, number}",
@@ -1481,7 +1491,7 @@
       "vpn": "VPN",
       "mediaLibrary": "Медіа бібліотека",
       "uptimeMonitoring": "Моніторинг безперебійної роботи",
-      "beszel": "Beszel",
+      "beszel": "",
       "systemMonitoring": "Системний моніторинг",
       "security": "Безпека",
       "serviceVersion": "Версія"
@@ -1530,6 +1540,7 @@
             "untrusted": "Сертифікат не є надійним.",
             "hostnameMismatch": "Назва хоста сертифікату не відповідає URL-адресі."
           },
+          "secondaryUrl": "",
           "alert": {
             "permission": {
               "title": "Недостатньо прав доступу",
@@ -1792,7 +1803,7 @@
       "full": "Повний доступ до інтеграції"
     },
     "llamacpp": {
-      "name": "llama.cpp",
+      "name": "",
       "description": "Стежити за локальними llama.cpp llama-server: здоров'я, моделями і показниками покоління"
     }
   },
@@ -1842,15 +1853,6 @@
     }
   },
   "common": {
-    "cornerStyle": {
-      "options": {
-        "xs": "Теренд",
-        "sm": "Тонкий",
-        "md": "Збалансований",
-        "lg": "Округлі",
-        "xl": "М'яко"
-      }
-    },
     "success": "Успішно",
     "beta": "Бета-версія",
     "error": "Помилка",
@@ -1880,6 +1882,7 @@
       "tryAgain": "Повторіть спробу",
       "loading": "Завантаження",
       "show": "Показати",
+      "showAll": "",
       "hide": "Приховати",
       "undo": "Скасувати",
       "editNamed": "Редагувати {name}",
@@ -1890,6 +1893,7 @@
       "refresh": "Оновити",
       "export": "Експорт"
     },
+    "hidden": "Приховати",
     "pagination": {
       "pageOf": "Сторінка {page} з {totalPages}"
     },
@@ -1899,6 +1903,8 @@
     "here": "тут",
     "serviceUrlTemplate": {
       "serverTitle": "Адреса серверу Usual",
+      "description": "",
+      "example": "",
       "urlModeLabel": "Шаблони адрес служби",
       "hostPort": "Той же хост, різні порти",
       "subdomain": "Один піддомен на послугу",
@@ -1912,6 +1918,7 @@
       "clear": "Очистити зображення",
       "uploadImage": "Вивантажити зображення",
       "results": "Результати пошуку зображень",
+      "websiteIcon": "",
       "localImages": "Ваші зображення",
       "svgIcons": "Іконки SVG",
       "otherImages": "Інші зображення",
@@ -1976,7 +1983,7 @@
         "updateAvailable": "{countUpdates} оновлень доступно: {tag}",
         "assistant": "Помічник",
         "assistantThinking": "Мислення",
-        "modifier": "Mod"
+        "modifier": ""
       }
     },
     "dangerZone": "Небезпечна зона",
@@ -2032,17 +2039,17 @@
     "filesystemUsage": "{count, plural, one {Показати використання # файлової системи} other {Показувати використання для # файлової системи}}",
     "field": {
       "name": "Назва",
-      "description": "Опис",
-      "title": "Заголовок",
-      "actions": "Дії",
-      "type": "Тип",
-      "status": "Статус",
       "state": "Стан",
       "size": "Розмір",
+      "actions": "Дії",
       "source": "Джерело",
-      "namespace": "Простір імен",
+      "title": "Заголовок",
+      "description": "Опис",
       "created": "Створено",
-      "architecture": "Архітектура"
+      "namespace": "Простір імен",
+      "status": "Статус",
+      "architecture": "Архітектура",
+      "type": "Тип"
     },
     "label": {
       "new": "Новий"
@@ -2060,6 +2067,15 @@
       "searchEngines": "Пошукові системи",
       "tasks": "Завдання",
       "users": "Користувачі"
+    },
+    "cornerStyle": {
+      "options": {
+        "md": "Збалансований",
+        "lg": "Округлі",
+        "xs": "Теренд",
+        "sm": "Тонкий",
+        "xl": "М'яко"
+      }
     }
   },
   "section": {
@@ -2097,6 +2113,7 @@
         "collapse": "Згорнути"
       },
       "option": {
+        "title": {},
         "customCssClasses": {
           "label": "Користувацькі css класи"
         },
@@ -2259,6 +2276,7 @@
           "label": "Інтеграції",
           "removeLabel": "Видалити інтеграцію з {name}"
         },
+        "title": {},
         "customCssClasses": {
           "label": "Користувацькі css класи"
         },
@@ -2287,6 +2305,15 @@
       "option": {
         "appId": {
           "label": "Виберіть додаток"
+        },
+        "openIn": {
+          "label": "Відкривати застосунок у",
+          "description": "Виберіть, де відкривати цей застосунок. Налаштування браузера можуть змінити відкриття в окремому вікні.",
+          "option": {
+            "currentTab": "Поточній вкладці",
+            "newTab": "Новій вкладці",
+            "newWindow": "Новому вікні"
+          }
         },
         "showTitle": {
           "label": "Показувати назву додатка"
@@ -2416,7 +2443,7 @@
         "remove": "Видалити категорію {name}",
         "rename": "Назва категорії для {name}",
         "assign": "Категорія для {name}",
-        "ungrouped": "Ungrouped"
+        "ungrouped": ""
       }
     },
     "archiveTeamWarrior": {
@@ -2428,7 +2455,7 @@
         }
       },
       "noProjectSelected": "Жоден проект не вибрано",
-      "runnerStatus": "Runner: {status}",
+      "runnerStatus": "",
       "projectId": "Проєкт: {id}",
       "sessionReceived": "Сеанс отримано: {value}",
       "sessionSent": "Сеанс надіслано: {value}",
@@ -2596,25 +2623,25 @@
         "unsupportedPrimaryTitle": "Основний часовий пояс недоступний",
         "unsupportedPrimary": "{timeZone} не підтримується в цьому браузері. Показано UTC як чітко позначене fallback.",
         "unsupportedTimeZone": "Непідтримуваний часовий пояс: {timeZone}",
-        "accessibleTime": "{city}: {time}, {date}, {timeZone}",
+        "accessibleTime": "",
         "advancedLabel": "Передовий світовий годинник",
         "cities": "Світовий час",
-        "cityCount": "{count} timezones",
+        "cityCount": "",
         "timeBarLabel": "24-годинна позиція на день для {city}",
         "dayProgress": "Минуло {percent}% · залишилося {hours} год {minutes} хв",
         "phaseLegend": "Кінцева легенда часу",
         "tick": {
-          "midnight": "00",
-          "morning": "06",
-          "noon": "12",
-          "evening": "18",
-          "end": "24"
+          "midnight": "",
+          "morning": "",
+          "noon": "",
+          "evening": "",
+          "end": ""
         },
         "phaseRange": {
-          "night": "00–05 · 21–24",
-          "dawn": "05–08",
-          "day": "08–18",
-          "dusk": "18–21"
+          "night": "",
+          "dawn": "",
+          "day": "",
+          "dusk": ""
         },
         "phase": {
           "night": "Ніч",
@@ -2673,7 +2700,7 @@
           "unknown": "Жодних прочитань"
         }
       },
-      "dominantPollutant": "Dominant pollutant",
+      "dominantPollutant": "",
       "aqiLabel": "ІЯП",
       "strongestPollen": "Найбільше пилок",
       "unit": {
@@ -2685,11 +2712,11 @@
         "pm10": "УДПМ10",
         "ozone": "Озон",
         "nitrogenDioxide": "Оксид азоту",
-        "sulphurDioxide": "Sulphur dioxide",
+        "sulphurDioxide": "",
         "carbonMonoxide": "Монооксид вуглецю"
       },
       "pollen": {
-        "alder": "Alder",
+        "alder": "",
         "birch": "Береза",
         "grass": "Трава",
         "mugwort": "Мугорт",
@@ -2705,7 +2732,7 @@
         "pollutants": "Забруднюючі концентрації",
         "pollen": "Полярна концентрація пилка",
         "sevenDayForecast": "7-денний максимальний прогноз",
-        "aqiValue": "AQI {value}",
+        "aqiValue": "",
         "uvValue": "УФ {value}",
         "uvShort": "УФ {value}",
         "noForecast": "Немає даних про прогноз"
@@ -2758,7 +2785,7 @@
       "invalid": {
         "title": "Деякі події не можуть бути відображені",
         "description": "{count, plural, one {Одна подія має невірну дату або непідтримувану часову зону.} other {# події мають некоректну дату або непідтримувану часову зону.}}",
-        "value": "Unavailable"
+        "value": ""
       },
       "alert": {
         "notifications": "Сповіщення браузера",
@@ -2767,14 +2794,14 @@
       }
     },
     "timer": {
-      "name": "Timer / Pomodoro",
+      "name": "",
       "description": "Запускає простий таймер або налаштовуваний Pomodoro послідовності.",
       "option": {
         "mode": {
           "label": "Режим",
           "options": {
             "timer": "Таймер",
-            "pomodoro": "Pomodoro"
+            "pomodoro": ""
           }
         },
         "timerMinutes": {
@@ -2808,10 +2835,10 @@
       "action": {
         "start": "Пуск",
         "pause": "Пауза",
-        "reset": "Reset"
+        "reset": ""
       },
       "attention": {
-        "timerComplete": "Timer complete",
+        "timerComplete": "",
         "phaseReady": "{phase} готовий"
       },
       "progress": "Прогрес таймер: {progress}%",
@@ -2819,11 +2846,11 @@
         "completedFocus": "{count, plural, =0 {Немає фокусів завершених сесій} one {# фокус завершено} other {# фокус завершені}}"
       },
       "alert": {
-        "title": "Timer complete",
+        "title": "",
         "completed": "{phase} виконано."
       },
       "advanced": {
-        "sequence": "Pomodoro sequence",
+        "sequence": "",
         "focusSession": "Фокус {session}",
         "settings": "Постійні налаштування",
         "settingsHint": "Використовуйте контекстне меню віджета, щоб редагувати ці налаштування форуму.",
@@ -3045,7 +3072,7 @@
       "state": {
         "on": "Увімк",
         "off": "Вимкнено",
-        "unavailable": "Unavailable",
+        "unavailable": "",
         "unknown": "Невідомо"
       },
       "advanced": {
@@ -3203,6 +3230,10 @@
         },
         "viewMode": {
           "label": "Вигляд"
+        },
+        "hideHeader": {
+          "label": "",
+          "description": ""
         }
       },
       "advanced": {
@@ -3220,15 +3251,11 @@
         "agenda": "Порядок денний"
       },
       "controls": {
-        "view": "Подання календаря",
         "today": "Сьогодні",
         "previous": "Попередній період",
         "next": "Наступний період",
         "noEvents": "Немає подій у цьому періоді",
         "more": "{count} більше",
-        "moreLabel": "",
-        "eventDetails": "Подробиці події",
-        "close": "Закрити деталі події",
         "timeSlot": "Гніздо часу",
         "weekday": "Будній день"
       }
@@ -3310,7 +3337,7 @@
         "currentHumidity": "Поточна вологість",
         "wind": "Вітрові / пориви ({unit})",
         "currentWind": "Поточні пориви",
-        "windValue": "{speed} / {gusts} {unit}",
+        "windValue": "",
         "windDetail": "Максимальний вітер / gusts: {speed} / {gusts} {unit}",
         "nextHourPrecipitation": "Наступна година",
         "precipitationChance": "Шанс отримати опади",
@@ -3327,7 +3354,7 @@
           "humidity": "Середня вологість",
           "wind": "Максимальний вітер і порив",
           "uv": "Макс. індекс UV",
-          "daylight": "Daylight"
+          "daylight": ""
         },
         "sun": "Схід/захід сонця",
         "noForecast": "Немає даних про прогноз"
@@ -3384,7 +3411,7 @@
           "label": "Вкладка за замовчуванням"
         },
         "tabOrder": {
-          "label": "Tab order",
+          "label": "",
           "systemFirst": "Система, потім кластер",
           "clusterFirst": "Кластер потім система"
         },
@@ -3539,7 +3566,7 @@
       },
       "source": {
         "url": "Джерело: {url}",
-        "unavailable": "{source}: unavailable"
+        "unavailable": ""
       },
       "instances": {
         "title": "Iнстанси"
@@ -3572,8 +3599,8 @@
       "status": {
         "running": "Запущено",
         "notRunning": "Не працює",
-        "unavailable": "Unavailable",
-        "vpn": "VPN: {status}"
+        "unavailable": "",
+        "vpn": ""
       }
     },
     "ups": {
@@ -3910,11 +3937,28 @@
         "paused": "Призупинено",
         "remaining": "Залишилося {minutes} хв",
         "seasonEpisode": "С{season} Е{episode}",
+        "state": {
+          "playing": "",
+          "buffering": ""
+        },
+        "details": {
+          "device": "Пристрій",
+          "location": "",
+          "sessionId": "",
+          "bitrate": "",
+          "audioHandling": "",
+          "direct": "Прямий",
+          "transcode": "",
+          "containerChanged": "",
+          "position": "",
+          "unknown": ""
+        },
         "metadata": {
           "title": "Статистика ботів",
           "video": {
             "title": "Відео",
-            "resolution": "Роздільна здатність"
+            "resolution": "Роздільна здатність",
+            "frameRate": ""
           },
           "audio": {
             "title": "Аудіо",
@@ -3935,6 +3979,109 @@
         "playing": "Відтворюється: {count}",
         "transcoding": "Транскодування {count}"
       }
+    },
+    "thingport-libraryStats": {
+      "name": "",
+      "description": "",
+      "title": "",
+      "option": {
+        "showModels": {
+          "label": ""
+        },
+        "showCollections": {
+          "label": ""
+        },
+        "showCategories": {
+          "label": ""
+        },
+        "showAuthors": {
+          "label": ""
+        }
+      },
+      "models": "",
+      "collections": "",
+      "categories": "Категорії",
+      "authors": ""
+    },
+    "thingport-featuredModel": {
+      "name": "",
+      "description": "",
+      "option": {
+        "autoRotate": {
+          "label": ""
+        },
+        "showDetails": {
+          "label": ""
+        }
+      },
+      "title": "",
+      "empty": "",
+      "hint": "",
+      "noPreview": "",
+      "views": "",
+      "prints": ""
+    },
+    "thingport-activityHeatmap": {
+      "name": "",
+      "description": "",
+      "title": "",
+      "option": {
+        "weekStart": {
+          "label": "Перший день тижня",
+          "option": {
+            "sunday": "",
+            "monday": ""
+          }
+        },
+        "showTotal": {
+          "label": ""
+        },
+        "showLegend": {
+          "label": ""
+        }
+      },
+      "lastYear": "",
+      "totalLastYear": "",
+      "totalInYear": "",
+      "dayTotal": "",
+      "dayEmpty": "",
+      "kinds": {
+        "import": "",
+        "upload": "Всього вивантажено",
+        "download": "Всього завантажено",
+        "slicer": "",
+        "delete": "Видалити"
+      },
+      "less": "",
+      "more": ""
+    },
+    "thingport-models": {
+      "name": "",
+      "description": "",
+      "title": "",
+      "option": {
+        "defaultTab": {
+          "label": ""
+        },
+        "itemCount": {
+          "label": ""
+        },
+        "showThumbnails": {
+          "label": ""
+        }
+      },
+      "tab": {
+        "recentlyAdded": "",
+        "topViewed": "",
+        "topPrinted": ""
+      },
+      "empty": {
+        "recentlyAdded": "",
+        "topViewed": "",
+        "topPrinted": ""
+      },
+      "views": "",
+      "prints": ""
     },
     "paperlessNgx": {
       "description": "Огляд архіву документів Paperless-ngx",
@@ -4220,7 +4367,7 @@
       "actions": {
         "previousPhoto": "Попереднє фото",
         "nextPhoto": "Наступне фото",
-        "pauseSlideshow": "Pause slideshow",
+        "pauseSlideshow": "",
         "resumeSlideshow": "Відновити слайд-шоу",
         "toggleSlideshow": "Призупинити чи відновити слайд-шоу",
         "photo": "Фото {number}"
@@ -4291,6 +4438,8 @@
         "id": {
           "columnTitle": "Id"
         },
+        "integration": {},
+        "name": {},
         "progress": {
           "columnTitle": "Прогрес",
           "detailsTitle": "Прогрес завантаження"
@@ -4306,6 +4455,8 @@
           "columnTitle": "Всього відвантажено",
           "detailsTitle": "Всього вивантажено"
         },
+        "size": {},
+        "state": {},
         "time": {
           "columnTitle": "Час завершення"
         },
@@ -4501,6 +4652,9 @@
             "progress": "Прогрес"
           }
         },
+        "queue": {
+          "table": {}
+        },
         "common": {
           "empty": "Пусто",
           "file": "Файл",
@@ -4580,27 +4734,59 @@
       "name": "Релізи",
       "description": "Відображає список поточної версії заданих репозиторіїв з заданим регулярним виразом версії.",
       "option": {
+        "layout": {
+          "label": "Макет",
+          "description": "",
+          "option": {
+            "comfortable": "Комфортний",
+            "compact": "Компактний"
+          }
+        },
+        "summary": {
+          "label": "",
+          "description": "",
+          "option": {
+            "detailed": "",
+            "count": "",
+            "hidden": "Приховати"
+          }
+        },
+        "groupReleases": {
+          "label": "",
+          "description": ""
+        },
+        "sections": {
+          "label": "",
+          "description": ""
+        },
         "newReleaseWithin": {
           "label": "Новий реліз всередині",
-          "description": "Приклад використання: 1w (1 тиждень), 10m (10 місяців). Допустимі типи одиниц h (години), d (дні), 1 РР), m (місяці), y (роки). Не заповнюйте, щоб не підсвічувати нові релізи."
+          "description": "Приклад використання: 1w (1 тиждень), 10m (10 місяців). Допустимі типи одиниц h (години), d (дні), 1 РР), m (місяці), y (роки). Не заповнюйте, щоб не підсвічувати нові релізи.",
+          "option": {
+            "never": "",
+            "1d": "1 днів",
+            "3d": "3 днів",
+            "1w": "1 тиждень",
+            "2w": "",
+            "1M": "1 місяць",
+            "3M": "3 місяці"
+          }
         },
         "staleReleaseWithin": {
           "label": "Застарілий реліз всередині",
-          "description": "Приклад використання: 1w (1 тиждень), 10m (10 місяців). Допустимі типи одиниць h (години), d (дні), 1 РР), m (місяці), y (роки). Залиште порожнім для підсвічування застарілих релізів."
+          "description": "Приклад використання: 1w (1 тиждень), 10m (10 місяців). Допустимі типи одиниць h (години), d (дні), 1 РР), m (місяці), y (роки). Залиште порожнім для підсвічування застарілих релізів.",
+          "option": {
+            "never": "",
+            "1M": "1 місяць",
+            "3M": "3 місяці",
+            "6M": "6 місяців",
+            "1y": "1 рік",
+            "2y": "2 роки"
+          }
         },
-        "showOnlyHighlighted": {
-          "label": "Показати лише виділені",
-          "description": "Показати лише нові або застарілі релізи. Як зазначено вище."
-        },
-        "showDetails": {
-          "label": "Показати деталі"
-        },
-        "showOnlyIcon": {
-          "label": "Показати тільки іконку"
-        },
-        "topReleases": {
-          "label": "Кращі релізи",
-          "description": "Максимальна кількість останніх релізів для відображення. Нуль означає відсутність обмежень."
+        "showChangelogPreview": {
+          "label": "",
+          "description": ""
         },
         "repositories": {
           "label": "Репозитарії",
@@ -4630,6 +4816,11 @@
           "identifier": {
             "label": "Ідентифікатор",
             "placeholder": "Назва або Власник/Назва"
+          },
+          "name": {},
+          "excludePrereleases": {
+            "label": "",
+            "description": ""
           },
           "versionFilter": {
             "label": "Фільтр версії",
@@ -4671,36 +4862,110 @@
           }
         }
       },
-      "not-found": "Не знайдено",
-      "pre-release": "Попередній реліз",
-      "archived": "Архівовано",
-      "forked": "Роздвоєний",
+      "summary": {
+        "newReleases": "{count, plural, one {new release} other {new releases}}",
+        "newShort": "новий",
+        "tracked": "",
+        "caughtUp": "",
+        "outdated": "{count, plural, one {running an older version} other {running older versions}}",
+        "outdatedShort": "застарілий",
+        "failing": "",
+        "failingShort": "",
+        "latest": "",
+        "issues": ""
+      },
+      "section": {
+        "new": {
+          "label": "Новий",
+          "description": ""
+        },
+        "attention": {
+          "label": "Потребує уваги",
+          "description": ""
+        },
+        "upToDate": {
+          "label": "Остання версія",
+          "description": ""
+        },
+        "quiet": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "status": {
+        "new": "",
+        "outdated": "",
+        "error": "",
+        "upToDate": "остання версія",
+        "quiet": ""
+      },
+      "tag": {
+        "new": "Новий",
+        "preRelease": "",
+        "resolvedFrom": "",
+        "quiet": "",
+        "archived": "Архівовано",
+        "fork": ""
+      },
+      "issue": {
+        "affected": "{count, plural, one {# repository affected} other {# repositories affected}}",
+        "rateLimited": {
+          "title": "",
+          "hint": ""
+        },
+        "notFound": {
+          "title": "",
+          "hint": ""
+        },
+        "noMatchingVersion": {
+          "title": "",
+          "hint": ""
+        },
+        "noReleasesFound": {
+          "title": "",
+          "hint": ""
+        },
+        "invalidIdentifier": {
+          "title": "Неприпустимий ідентифікатор",
+          "hint": ""
+        },
+        "noProviderSelected": {
+          "title": "Постачальника не обрано",
+          "hint": ""
+        },
+        "noProviderResponse": {
+          "title": "",
+          "hint": ""
+        },
+        "unexpected": {
+          "title": "",
+          "hint": ""
+        }
+      },
+      "markViewed": "Позначити переглянуте",
+      "markAllViewed": "",
+      "markEntryViewed": "",
+      "viewed": "",
+      "copyVersion": "",
+      "copied": "Скопійовано",
+      "published": "",
+      "whatChanged": "",
+      "noNotes": "",
+      "changes": "{count, plural, one {# change} other {# changes}}",
       "starsCount": "Зірки",
       "forksCount": "Роздвоєнних",
-      "issuesCount": "Відкриті питання",
-      "markViewed": "Позначити переглянуте",
-      "openProjectPage": "Відкрити сторінку проєкту",
-      "openReleasePage": "Відкрити сторінку релізу",
-      "releaseDescription": "Опис релізу",
-      "projectDescription": "Опис проекту",
+      "openIssues": "{count, plural, one {# open issue} other {# open issues}}",
+      "created": "Створено",
+      "releasePage": "",
+      "projectPage": "",
       "runningVersions": "Запущені версії",
       "upToDate": "Остання версія",
       "updateAvailable": "Доступне оновлення",
       "unknownStatus": "Невідомо",
-      "created": "Створено",
       "error": {
-        "label": "Помилка",
-        "messages": {
-          "invalidIdentifier": "Неприпустимий ідентифікатор",
-          "noMatchingVersion": "Відповідної версії не знайдено",
-          "noReleasesFound": "Результатів не знайдено",
-          "noProviderSelected": "Постачальника не обрано",
-          "noProviderResponse": "Немає відповіді від провайдера",
-          "unexpected": "Неочікувана помилка провайдера"
-        }
-      },
-      "expandDetails": "Показати деталі для {name}",
-      "collapseDetails": "Приховати деталі для {name}"
+        "collapsedSaveTitle": "",
+        "collapsedSaveMessage": ""
+      }
     },
     "networkControllerSummary": {
       "advanced": {
@@ -4718,10 +4983,10 @@
           "countConnected": "{count, plural, one {# підключено} other {# підключено}}",
           "label": "VPN"
         },
-        "wan": "WAN",
+        "wan": "",
         "web": "Веб",
         "wifi": "Wi-Fi",
-        "lan": "LAN"
+        "lan": ""
       },
       "error": {
         "unknownContentOption": "Невідомий вміст для віджета зведення мережевого контролера: "
@@ -4821,7 +5086,7 @@
           "option": {
             "auto": "Автоматично",
             "plain": "Простий текст",
-            "markdown": "Markdown",
+            "markdown": "",
             "html": "Вікі формату HTML"
           }
         }
@@ -4872,45 +5137,116 @@
     "uptimeKuma": {
       "description": "Відстежуйте статистику безвідмовної роботи на сторінці стану Uptime Kuma",
       "option": {
-        "showAverageUptime": {
-          "label": "Показати середній час роботи",
-          "description": "Відображати сукупний середній відсоток безвідмовної роботи за 24 години"
+        "statusPageSlug": {
+          "label": "Слаг сторінки статусу",
+          "description": ""
         },
-        "showUptimeRing": {
-          "label": "Показати кільце робочого часу",
-          "description": "Відображати кільце прогресу поруч із середнім значенням часу безвідмовної роботи"
+        "summaryOnly": {
+          "label": "",
+          "description": ""
         },
-        "showTotalMonitors": {
-          "label": "Показати загальну кількість моніторів",
-          "description": "Відображати загальну кількість налаштованих моніторів"
+        "showSummary": {
+          "label": "",
+          "description": ""
         },
-        "showUpCount": {
-          "label": "Кількість показів",
-          "description": "Відображає кількість увімкнених моніторів"
+        "showIncidents": {
+          "label": "",
+          "description": ""
         },
-        "showDownCount": {
-          "label": "Відлік показів",
-          "description": "Відображати, скільки моніторів зараз не працюють"
+        "groupByStatusPageGroup": {
+          "label": "",
+          "description": ""
         },
-        "showPausedCount": {
-          "label": "Показати призупинену кількість",
-          "description": "Відображати кількість моніторів зараз призупинено"
+        "showOnlyProblems": {
+          "label": "",
+          "description": ""
+        },
+        "sortBy": {
+          "label": "",
+          "option": {
+            "status": "",
+            "statusPage": "",
+            "name": "Назва",
+            "uptime": ""
+          }
+        },
+        "showHeartbeatBar": {
+          "label": "",
+          "description": ""
+        },
+        "showUptime": {
+          "label": ""
+        },
+        "showResponseTime": {
+          "label": ""
+        },
+        "showCertificateExpiry": {
+          "label": "",
+          "description": ""
         }
-      },
-      "averageUptime": "Середній час безвідмовної роботи (24 год)",
-      "stats": {
-        "totalMonitors": "Всього моніторів",
-        "upCount": "Віддача",
-        "downCount": "Завантаження",
-        "pausedCount": "Призупинено"
-      },
-      "error": {
-        "internalServerError": "Не вдалося отримати дані про час роботи"
       },
       "status": {
         "up": "Швидкість вивантаження",
         "down": "Швидкість завантаження",
-        "paused": "Призупинено"
+        "pending": "Очікує підтвердження",
+        "maintenance": "",
+        "stale": "",
+        "unknown": ""
+      },
+      "overall": {
+        "operational": "",
+        "degraded": "",
+        "outage": "",
+        "maintenance": "",
+        "unknown": ""
+      },
+      "short": {
+        "operational": "",
+        "down": "",
+        "pending": "{count} очікується",
+        "maintenance": "",
+        "unknown": ""
+      },
+      "summary": {
+        "upRatio": "",
+        "upRatioShort": "",
+        "averageUptime": "",
+        "uptimeShort": "",
+        "statusCount": ""
+      },
+      "unit": {
+        "milliseconds": ""
+      },
+      "heartbeatBar": {
+        "label": ""
+      },
+      "detail": {
+        "checked": "",
+        "certificate": ""
+      },
+      "notice": {
+        "label": "",
+        "untitled": "Без назви"
+      },
+      "empty": {
+        "title": "",
+        "description": ""
+      },
+      "allClear": "",
+      "error": {
+        "internalServerError": "Не вдалося отримати дані про час роботи"
+      },
+      "monitorType": {
+        "http": "",
+        "keyword": "",
+        "jsonQuery": "",
+        "port": "",
+        "ping": "Пінг",
+        "dns": "DNS",
+        "docker": "",
+        "push": "",
+        "group": "Група",
+        "realBrowser": ""
       }
     },
     "traefik": {
@@ -5041,7 +5377,7 @@
         "network": "Мережа",
         "up": "Відвантаження",
         "down": "Завантаження",
-        "memoryTooltip": "{used} / {available} ({percent}%)"
+        "memoryTooltip": ""
       }
     },
     "systemDisks": {
@@ -5133,6 +5469,9 @@
       "name": "Beszel системи (Таблиця)",
       "description": "Вид таблиць всіх систем, що контролюються в Beszel, з сортованими стовпцями і індикатори стану",
       "option": {
+        "fahrenheit": {
+          "label": "Температура за Фаренгейтом"
+        },
         "sortBy": {
           "label": "Сортувати за"
         },
@@ -5147,7 +5486,12 @@
     },
     "beszelSystemGrid": {
       "name": "Beszel система (Сітка)",
-      "description": "Таблиця карток усіх систем, що контролюються Beszel, з показниками в режимі реального часу"
+      "description": "Таблиця карток усіх систем, що контролюються Beszel, з показниками в режимі реального часу",
+      "option": {
+        "fahrenheit": {
+          "label": "Температура за Фаренгейтом"
+        }
+      }
     },
     "beszelAlerts": {
       "name": "Beszel сповіщення",
@@ -5376,9 +5720,9 @@
       }
     },
     "llamacpp": {
-      "name": "llama.cpp",
+      "name": "",
       "description": "Показати здоров'я, завантажену модель і швидкість генерування вашого локального llama.cppp-сервера.",
-      "title": "llama.cpp",
+      "title": "",
       "status": {
         "unhealthy": "Нездоровий ({status})"
       },
@@ -5408,7 +5752,7 @@
       "unit": {
         "speed": "{value} т/с",
         "parameters": "{value} Б",
-        "none": "—",
+        "none": "",
         "speedShort": "/с"
       },
       "option": {
@@ -5468,7 +5812,7 @@
       "moveDown": "Перемістити вниз",
       "remove": "Видалити метрику",
       "loading": "Завантаження…",
-      "unavailable": "Unavailable",
+      "unavailable": "",
       "refreshFailed": "Помилка оновлення — показ збережених даних",
       "stale": "Збережені дані — оновлення",
       "table": {
@@ -5515,10 +5859,12 @@
       "allHidden": "Всі метрики приховані у цьому вигляді. Для їх відновлення використовуйте цей представ."
     },
     "wazuh": {
+      "name": "",
+      "description": "",
       "target": {
         "api": "Wazuh сервер API",
         "indexer": "Індексор Wazu",
-        "wazuh": "Wazuh"
+        "wazuh": ""
       },
       "severity": {
         "low": "Низька",
@@ -5533,7 +5879,15 @@
         },
         "certificate": {
           "title": "Сертифікат {target} ненадійний",
-          "description": "Wazuh використовує самостійно підписаний сертифікат. Запустіть \"Перевірити підключення\" при інтеграції і довіряйте сертифікату, або додайте свою CA в налаштуваннях → Сертифікати."
+          "description": ""
+        },
+        "certificateHostname": {
+          "title": "",
+          "description": ""
+        },
+        "certificateExpired": {
+          "title": "",
+          "description": ""
         },
         "unreachable": {
           "title": "Не вдалося зв’язатися з {target}",
@@ -5558,7 +5912,9 @@
         "unknown": {
           "title": "Не вдалося завантажити дані з {target}",
           "description": "Перевірте журнал Homarr для деталей."
-        }
+        },
+        "viewSaveTitle": "",
+        "viewSaveMessage": ""
       },
       "range": {
         "1h": "1 год",
@@ -5566,91 +5922,138 @@
         "7d": "7 днів",
         "30d": "30д"
       },
-      "levelTooltip": "Рівень правила {level} ({severity})"
-    },
-    "wazuhAgents": {
-      "name": "Вазухові агенти",
-      "description": "Список Wazuh агентів зі статусом, ОС, версія і остання підтримка",
+      "levelTooltip": "Рівень правила {level} ({severity})",
+      "summary": {
+        "title": "Рівень тривоги · {range}",
+        "alerts": "Сповіщення",
+        "none": "Немає сповіщень",
+        "trend": {
+          "new": "новий",
+          "tooltip": "Попередній період: {previous}"
+        },
+        "previous": "",
+        "maxLevel": "Максимальний рівень {level}",
+        "health": "",
+        "manager": "Менеджер {version}"
+      },
+      "alerts": {
+        "title": "Оповіщення · Рівень {level}+ · {hours}год",
+        "empty": "Немає сповіщень на цьому рівні. Усе тихо.",
+        "rule": "Правило {id}",
+        "openInDashboard": "Відкрити це повідомлення у меню налаштувань Wazuh"
+      },
+      "timeline": {
+        "title": "Часова шкала попереджень · {range}",
+        "total": "Сповіщення {count}",
+        "interval": "на {interval}"
+      },
+      "top": {
+        "title": {
+          "rules": "Кращі правила · {range}",
+          "agents": "Найкращі агенти · {range}",
+          "sourceIps": "IP з найвищого джерела · {range}",
+          "mitreTactics": "MITRE тактика · {range}",
+          "mitreTechniques": ""
+        },
+        "empty": {
+          "rules": "У цьому періоді немає сповіщень",
+          "agents": "У цьому періоді немає сповіщень",
+          "sourceIps": "Немає сповіщень з вихідним IP в цьому періоді",
+          "mitreTactics": "За цей період немає сповіщень, змінених для MITRE ATT&CK",
+          "mitreTechniques": "За цей період немає сповіщень, змінених для MITRE ATT&CK"
+        },
+        "totalTooltip": "Сповіщення {count}",
+        "private": "",
+        "public": "Публічний",
+        "agents": "На агентах з {count}",
+        "others": "{count} більше попереджень у інших записах"
+      },
+      "agents": {
+        "title": "Агенти",
+        "total": "Агенти {count}",
+        "status": {
+          "active": "Активно",
+          "disconnected": "Відключено",
+          "neverConnected": "Ніколи не підключено",
+          "pending": "Очікує підтвердження"
+        },
+        "statusLabel": {
+          "active": "Активно",
+          "disconnected": "Відключено",
+          "never_connected": "Ніколи не підключено",
+          "pending": "Очікує підтвердження",
+          "unknown": "Невідомо"
+        },
+        "live": "Наживо",
+        "snapshot": "Знімок {age} старий",
+        "snapshotHint": "Читайте з Wazuh dashshot (wazuh-monitoring) в системі {time}. Додайте облікові дані сервера для живих даних.",
+        "staleSnapshot": "Agent: snapshot з {time} є застарілим. Перевірте, чи працює робота з моніторингом Wazuh або додайте серверні облікові дані API.",
+        "noDisconnected": "Всі агенти підключені",
+        "empty": "Немає агентів, які відповідають цьому фільтру",
+        "column": {
+          "status": "Статус",
+          "name": "Назва",
+          "ip": "Адреса IP",
+          "os": "ОС",
+          "version": "Версія",
+          "lastKeepAlive": "Не потребує підтримки",
+          "groups": "Групи"
+        },
+        "outdated": "Старіші за найновішу версію агента ({version})"
+      },
+      "vulnerabilities": {
+        "title": "Вразливості",
+        "topCves": "Кращі опубліковані",
+        "score": "Рахунок",
+        "agentsShort": "Агенти",
+        "topAgents": "Найвразливіші агенти",
+        "criticalHigh": "Тістечко / Високе",
+        "totalTooltip": "",
+        "affected": "Агенти {count}",
+        "empty": "вразливостей не виявлено",
+        "distribution": "Розподіл серйозності. знахідки {unscored} без рахунку не відображаються.",
+        "worst": "Гірше: {id} ({score}) на агентах {agents}"
+      },
+      "fim": {
+        "title": "Цілісність файлу · {range}",
+        "event": {
+          "added": "Дата додавання",
+          "modified": "Змінено",
+          "deleted": "Видалити",
+          "unknown": "Змінено"
+        },
+        "empty": "Немає події цілісності файлу у цьому періоді",
+        "user": "від {user}",
+        "registry": "Реєстр"
+      },
+      "authFailures": {
+        "title": "Невдачі автентифікації · {hours}год",
+        "seriesTooltip": "",
+        "peak": "Пік {count}/bucket",
+        "empty": "За цей період немає помилок",
+        "failed": "Помилка входу",
+        "failedHint": "Помилка самоперевірки автентичності (shd, PAM, Windows logon, невірні користувачі)",
+        "bruteForce": "Груба сила",
+        "bruteForceHint": "Правило жорстокої сили (кілька невдач в короткий період, MITRE T1110)",
+        "sourceIps": "IP джерела",
+        "ipTooltip": "{ip}: {count} невдачі",
+        "bruteForceCount": "{count} груба сила"
+      },
+      "view": {
+        "overview": "",
+        "alerts": "",
+        "timeline": "",
+        "top": "",
+        "agents": "Агенти",
+        "vulnerabilities": "Вразливості",
+        "fim": "",
+        "authFailures": ""
+      },
       "option": {
-        "statusFilter": {
-          "label": "Показати агентів"
+        "visibleViews": {
+          "label": "",
+          "description": ""
         },
-        "sortBy": {
-          "label": "Сортувати за"
-        },
-        "showVersion": {
-          "label": "Показати колонку версій Wazuh"
-        },
-        "showGroups": {
-          "label": "Показувати стовпчик груп"
-        }
-      },
-      "title": "Агенти",
-      "total": "Агенти {count}",
-      "status": {
-        "active": "Активно",
-        "disconnected": "Відключено",
-        "neverConnected": "Ніколи не підключено",
-        "pending": "Очікує підтвердження"
-      },
-      "statusLabel": {
-        "active": "Активно",
-        "disconnected": "Відключено",
-        "never_connected": "Ніколи не підключено",
-        "pending": "Очікує підтвердження",
-        "unknown": "Невідомо"
-      },
-      "live": "Наживо",
-      "snapshot": "Знімок {age} старий",
-      "snapshotHint": "Читайте з Wazuh dashshot (wazuh-monitoring) в системі {time}. Додайте облікові дані сервера для живих даних.",
-      "staleSnapshot": "Agent: snapshot з {time} є застарілим. Перевірте, чи працює робота з моніторингом Wazuh або додайте серверні облікові дані API.",
-      "noDisconnected": "Всі агенти підключені",
-      "empty": "Немає агентів, які відповідають цьому фільтру",
-      "column": {
-        "ip": "Адреса IP",
-        "os": "ОС",
-        "version": "Версія",
-        "lastKeepAlive": "Не потребує підтримки",
-        "groups": "Групи"
-      },
-      "outdated": "Старіші за найновішу версію агента ({version})"
-    },
-    "wazuhAlerts": {
-      "name": "Журнал сповіщень Wazu",
-      "description": "Останні повідомлення про Wazuh з рівнем використання, техніки MITRE ATT&CK, агент і хост IP джерела",
-      "option": {
-        "minLevel": {
-          "label": "Мінімальний рівень правила",
-          "description": "Рівень Wazu: 0-6 низький, 7-11 середній, 12-14 високий, 15 + критичний"
-        },
-        "hours": {
-          "label": "Вікно часу (години)"
-        },
-        "limit": {
-          "label": "Кількість оповіщень"
-        },
-        "showMitre": {
-          "label": "Show MITRE ATT&CK techniques"
-        },
-        "showAgent": {
-          "label": "Показати агента"
-        },
-        "showSourceIp": {
-          "label": "Показати IP джерела"
-        },
-        "showRuleId": {
-          "label": "Показати ідентифікатор правила"
-        }
-      },
-      "title": "Оповіщення · Рівень {level}+ · {hours}год",
-      "empty": "Немає сповіщень на цьому рівні. Усе тихо.",
-      "rule": "Правило {id}",
-      "openInDashboard": "Відкрити це повідомлення у меню налаштувань Wazuh"
-    },
-    "wazuhSummary": {
-      "name": "Вазуховий рівень",
-      "description": "Попередження про серйозність розриву з тенденцією проти попереднього періоду",
-      "option": {
         "range": {
           "label": "Проміжок часу"
         },
@@ -5659,26 +6062,6 @@
         },
         "showFooter": {
           "label": "Показати футер"
-        }
-      },
-      "title": "Рівень тривоги · {range}",
-      "alerts": "Сповіщення",
-      "none": "Немає сповіщень",
-      "trend": {
-        "new": "новий",
-        "tooltip": "Попередній період: {previous}"
-      },
-      "previous": "Попередній {range}: {count}",
-      "maxLevel": "Максимальний рівень {level}",
-      "health": "Стан індексатора: {status}",
-      "manager": "Менеджер {version}"
-    },
-    "wazuhTimeline": {
-      "name": "Wazuh alerts timeline",
-      "description": "Необроблені графіки Wazu сповіщень з часом за допомогою тяжкості",
-      "option": {
-        "range": {
-          "label": "Проміжок часу"
         },
         "interval": {
           "label": "Проміжок"
@@ -5691,60 +6074,32 @@
           "description": "Квадратний корінь зберігає високі і критичні оповіщення, видимі поруч із тисячами низьких"
         },
         "minLevel": {
-          "label": "Мінімальний рівень правила"
+          "label": ""
         },
         "showLegend": {
           "label": "Показати легенду з загальним підсумком"
-        }
-      },
-      "title": "Часова шкала попереджень · {range}",
-      "total": "Сповіщення {count}",
-      "interval": "на {interval}"
-    },
-    "wazuhTopList": {
-      "name": "Список верхніх елементів Wazu",
-      "description": "Найкращі правила, агенти, вихідні адреси або MITRE ATT&CK тактики та методи, за допомогою лічильника попереджень",
-      "option": {
-        "kind": {
+        },
+        "topKind": {
           "label": "Ранг"
         },
-        "range": {
-          "label": "Проміжок часу"
-        },
-        "limit": {
-          "label": "Кількість матеріалів"
-        },
-        "minLevel": {
-          "label": "Мінімальний рівень правила"
+        "topLimit": {
+          "label": ""
         },
         "showBars": {
           "label": "Показувати панелі"
-        }
-      },
-      "title": {
-        "rules": "Кращі правила · {range}",
-        "agents": "Найкращі агенти · {range}",
-        "sourceIps": "IP з найвищого джерела · {range}",
-        "mitreTactics": "MITRE тактика · {range}",
-        "mitreTechniques": "MITRE techniques · {range}"
-      },
-      "empty": {
-        "rules": "У цьому періоді немає сповіщень",
-        "agents": "У цьому періоді немає сповіщень",
-        "sourceIps": "Немає сповіщень з вихідним IP в цьому періоді",
-        "mitreTactics": "За цей період немає сповіщень, змінених для MITRE ATT&CK",
-        "mitreTechniques": "За цей період немає сповіщень, змінених для MITRE ATT&CK"
-      },
-      "totalTooltip": "Сповіщення {count}",
-      "private": "LAN",
-      "public": "Публічний",
-      "agents": "На агентах з {count}",
-      "others": "{count} більше попереджень у інших записах"
-    },
-    "wazuhVulnerabilities": {
-      "name": "Уразливості в Wazuh",
-      "description": "Кількість вразливих верств населення, провідних веж та найбільш вразливих агентів",
-      "option": {
+        },
+        "agentStatusFilter": {
+          "label": "Показати агентів"
+        },
+        "agentSortBy": {
+          "label": "Сортувати за"
+        },
+        "showVersion": {
+          "label": ""
+        },
+        "showGroups": {
+          "label": ""
+        },
         "cveOrder": {
           "label": "Рейтинги CVEs по"
         },
@@ -5759,73 +6114,42 @@
         },
         "showAgents": {
           "label": "Показувати найбільш уразливих агентів"
-        }
-      },
-      "title": "Вразливості",
-      "topCves": "Кращі опубліковані",
-      "score": "Рахунок",
-      "agentsShort": "Агенти",
-      "topAgents": "Найвразливіші агенти",
-      "criticalHigh": "Тістечко / Високе",
-      "totalTooltip": "{count} виявлених проблем у {agents} агентів",
-      "affected": "Агенти {count}",
-      "empty": "вразливостей не виявлено",
-      "distribution": "Розподіл серйозності. знахідки {unscored} без рахунку не відображаються.",
-      "worst": "Гірше: {id} ({score}) на агентах {agents}"
-    },
-    "wazuhFim": {
-      "name": "Wazuh цілісність файлу",
-      "description": "Останні події моніторингу цілісності файлів (syscheck)",
-      "option": {
-        "range": {
-          "label": "Проміжок часу"
         },
-        "event": {
+        "fimEvent": {
           "label": "Події"
         },
-        "limit": {
-          "label": "Кількість подій"
+        "fimLimit": {
+          "label": ""
         },
         "includeRegistry": {
           "label": "Включати події в реєстрі Windows"
-        }
-      },
-      "title": "Цілісність файлу · {range}",
-      "event": {
-        "added": "Дата додавання",
-        "modified": "Змінено",
-        "deleted": "Видалити",
-        "unknown": "Змінено"
-      },
-      "empty": "Немає події цілісності файлу у цьому періоді",
-      "user": "від {user}",
-      "registry": "Реєстр"
-    },
-    "wazuhAuthFailures": {
-      "name": "Помилка автентифікації Wazuh",
-      "description": "Помилка входів і жорстоких оповіщень 1 агента з погодинними іскрколініями",
-      "option": {
-        "hours": {
-          "label": "Вікно часу (години)"
         },
-        "limit": {
-          "label": "Кількість агентів"
+        "authLimit": {
+          "label": ""
         },
         "showSourceIps": {
           "label": "Показати IP з найточніших джерел"
+        },
+        "alertsMinLevel": {
+          "label": "",
+          "description": "Рівень Wazu: 0-6 низький, 7-11 середній, 12-14 високий, 15 + критичний"
+        },
+        "alertsLimit": {
+          "label": ""
+        },
+        "showMitre": {
+          "label": ""
+        },
+        "showAgent": {
+          "label": "Показати агента"
+        },
+        "showSourceIp": {
+          "label": "Показати IP джерела"
+        },
+        "showRuleId": {
+          "label": "Показати ідентифікатор правила"
         }
-      },
-      "title": "Невдачі автентифікації · {hours}год",
-      "seriesTooltip": "Усі агенти за останні {hours} год",
-      "peak": "Пік {count}/bucket",
-      "empty": "За цей період немає помилок",
-      "failed": "Помилка входу",
-      "failedHint": "Помилка самоперевірки автентичності (shd, PAM, Windows logon, невірні користувачі)",
-      "bruteForce": "Груба сила",
-      "bruteForceHint": "Правило жорстокої сили (кілька невдач в короткий період, MITRE T1110)",
-      "sourceIps": "IP джерела",
-      "ipTooltip": "{ip}: {count} невдачі",
-      "bruteForceCount": "{count} груба сила"
+      }
     }
   },
   "widgetPreview": {
@@ -5844,6 +6168,18 @@
       "addWidget": "Додати віджет",
       "addApp": "Додати застосунок",
       "connectService": "Підключити службу"
+    },
+    "urlDrop": {
+      "hint": "",
+      "resolving": "",
+      "notification": {
+        "success": {
+          "message": ""
+        },
+        "full": {
+          "message": ""
+        }
+      }
     },
     "setupChecklist": {
       "title": "Зробити цю дошку корисною",
@@ -5882,7 +6218,7 @@
         "preview": "Попередній перегляд {name} за допомогою елементів {count}",
         "currentHidden": "Поточна панель: {name}",
         "keyboard": {
-          "navigate": "Navigate",
+          "navigate": "",
           "open": "Відкриті",
           "instructions": "Введіть, щоб фільтрувати дошки. Використовуйте клавіші зі стрілками для переміщення по результатах і Enter щоб відкрити дошку."
         },
@@ -6057,7 +6393,8 @@
       },
       "itemRadius": {
         "label": "Радіус елемента",
-        "description": "Змінює округлення плиток на вашій дошці"
+        "description": "Змінює округлення плиток на вашій дошці",
+        "option": {}
       },
       "isPublic": {
         "label": "Публічний",
@@ -6098,12 +6435,12 @@
             "columns": "стовпці",
             "empty": "Ця розкладка порожня",
             "dynamicSection": "Динамічна секція",
-            "editorWidthLabel": "{layoutName} · {width}px"
+            "editorWidthLabel": ""
           },
           "reset": {
             "action": "Скидання з основи",
             "confirm": {
-              "title": "Reset {layoutName}?",
+              "title": "",
               "message": "Це замінює будь-яку збережену позицію та розмір цієї макет з створеною з Бази. Це не можна буде скасувати."
             }
           },
@@ -6232,9 +6569,9 @@
         "label": "Фіксована бічна панель",
         "description": "Зарезервовано до трьох панелей на обох сторонах. Залишилося полотно автоматично посилиться.",
         "left": {
-          "label": "Left sidebar",
+          "label": "",
           "description": "Залишати цю область видимою під час гортання панелі керування.",
-          "thumbLabel": "Left sidebar width"
+          "thumbLabel": ""
         },
         "right": {
           "label": "Права бічна панель",
@@ -6646,7 +6983,7 @@
             "groups": {
               "identity": "Тотожність",
               "appearance": "Вигляд",
-              "customCss": "Custom CSS",
+              "customCss": "",
               "authentication": "Аутентифікація"
             },
             "identity": {
@@ -6660,7 +6997,7 @@
             },
             "logo": {
               "label": "Логотип застосунку",
-              "placeholder": "/logo/logo.png"
+              "placeholder": ""
             },
             "favicon": {
               "label": "Іконка браузера (іконка)",
@@ -6683,8 +7020,13 @@
             "signInOverlay": {
               "label": "Накладення тла"
             },
+            "signInMarquee": {
+              "label": "",
+              "description": ""
+            },
             "defaultRadius": {
-              "label": "Кутовий стиль"
+              "label": "Кутовий стиль",
+              "options": {}
             },
             "customCss": {
               "label": "Глобальний користувацький CSS",
@@ -6699,7 +7041,7 @@
             "summary": {
               "title": "Поточний брендинг",
               "cornerStyle": "Кутовий стиль",
-              "palette": "Palette",
+              "palette": "",
               "backgroundConfigured": "Свій фон · {overlay}% накладання",
               "backgroundDefault": "Стандартний фон",
               "greetingConfigured": "Користувальницьке привітання",
@@ -6840,6 +7182,7 @@
             "model": {
               "title": "Модель",
               "description": "Оберіть знайдену модель або введіть ID точної кінцевої моделі.",
+              "save": "",
               "placeholder": "ID моделі",
               "refresh": "Оновити моделі",
               "chooseModel": "Виберіть модель, що використовується для нових розмов.",
@@ -6931,7 +7274,8 @@
             },
             "lastExecution": {
               "label": "Останнє виконання"
-            }
+            },
+            "actions": {}
           },
           "table": {
             "search": "Шукати завдання {count}..."
@@ -6999,7 +7343,7 @@
                 }
               },
               "provenance": {
-                "oauth": "OAuth",
+                "oauth": "",
                 "unattributed": "Ручний або застарілий ключ API",
                 "unnamedClient": "Ім'я клієнта не записано",
                 "clientNameHint": "Імена клієнта самостійно повідомляються і не перевіряються.",
@@ -7426,8 +7770,8 @@
       },
       "status": {
         "available": "Доступно",
-        "degraded": "Metrics unavailable",
-        "unavailable": "Unavailable"
+        "degraded": "",
+        "unavailable": ""
       },
       "unavailable": "Цей контекст Kubernetes не може бути досягнутий. Виберіть інший контекст, або перевірте його облікові дані та кінцеву точку.",
       "metricsUnavailable": "Цей контекст доступний, але сервер Metrics недоступний. Інвентар залишається доступним без використання ЦП та пам'яті."
@@ -7459,7 +7803,7 @@
     },
     "nodes": {
       "field": {
-        "metricsUnavailable": "Unavailable",
+        "metricsUnavailable": "",
         "kubernetesVersion": {
           "label": "Версія Kubernetes"
         }
@@ -7549,6 +7893,15 @@
     },
     "error": {
       "internalServerError": "Не вдалося отримати дані Kubernetes"
+    },
+    "field": {
+      "name": {},
+      "namespace": {},
+      "creationTimestamp": {},
+      "state": {},
+      "status": {},
+      "type": {},
+      "architecture": {}
     }
   },
   "permission": {
@@ -7574,7 +7927,8 @@
       "permission": {
         "label": "Дозвіл"
       }
-    }
+    },
+    "action": {}
   },
   "navigationStructure": {
     "manage": {
@@ -7684,7 +8038,7 @@
       "modeAriaLabel": "Режим {mode}",
       "resultsAriaLabel": "{mode} результатів",
       "footer": {
-        "navigate": "Navigate",
+        "navigate": "",
         "open": "Відкриті"
       }
     },
@@ -8114,7 +8468,8 @@
         },
         "urlTemplate": {
           "label": "Шаблон пошуку URL-адрес"
-        }
+        },
+        "description": {}
       },
       "page": {
         "list": {
@@ -8396,6 +8751,14 @@
     "conversationActions": "Дії при бесіді",
     "searchConversations": "Пошук бесід",
     "noMatchingConversations": "Немає відповідних розмов",
+    "historyError": {
+      "title": "",
+      "load": "",
+      "loadMessages": "",
+      "saveMessages": "",
+      "switch": "",
+      "retry": ""
+    },
     "moreActions": "Більше дій з відповідями",
     "renameConversation": {
       "action": "Перейменувати",
@@ -8515,6 +8878,9 @@
     },
     "mentions": {
       "menu": "Додати контекст Homarr",
+      "back": "",
+      "loading": "",
+      "empty": "",
       "context": "Контекст",
       "app": "Додатки",
       "integration": "Інтеграції",
@@ -8529,6 +8895,8 @@
     },
     "commands": {
       "menu": "Команди помічників",
+      "hint": "",
+      "empty": "",
       "health": "Підготуйте перевірку працездатності служби",
       "explore": "Підготувати огляд цього екземпляра Homarr",
       "media": "Підготувати медіа пошук",
@@ -8671,15 +9039,15 @@
       "automaticContinue": "Прийняття запропонованих змін дошки автоматично",
       "resetAll": "Скинути всі зміни",
       "tabs": {
-        "css": "Custom CSS",
+        "css": "",
         "appearance": "Вигляд",
         "background": "Фон",
         "general": "Загальна"
       },
       "cssDescription": "Редагувати повну таблицю стилів. Існуючі правила залишаються, якщо їх не видалили тут.",
       "cssCharacters": "{count} з 16384 символів",
-      "copyCss": "Copy CSS",
-      "restoreCss": "Restore current CSS",
+      "copyCss": "",
+      "restoreCss": "",
       "remoteCssTitle": "Цей CSS завантажує віддалений ресурс",
       "remoteCssDescription": "Імпортовані стилі та віддалені URL-адреси контактують з іншим сервером під час завантаження дошки. Перегляньте їх, перш ніж продовжити."
     },
@@ -8703,13 +9071,14 @@
       "errorDescription": "Модель не забезпечила повної конфігурації віджету. Віджет не було додано."
     },
     "approvalRequired": "Потрібне затвердження",
-    "complete": "Complete",
+    "complete": "",
     "denied": "Відмовлено",
     "failed": "Невдало",
     "working": "Працюю",
     "approvalDescription": "Переглянути зміни до її запуску.",
     "approveAndRun": "Затвердити та запустити",
     "deny": "Відмовити",
+    "approvalError": "",
     "autoApproval": {
       "label": "Автоматичне схвалення",
       "composerLabel": "Затвердити для мене",

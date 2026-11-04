@@ -22,12 +22,12 @@ runs:
       run: |
         case "$LIBC" in
           debian)
-            echo 'node=node:24.18.0-trixie-slim' >> "$GITHUB_OUTPUT"
-            echo 'bun=oven/bun:1.4.3-debian' >> "$GITHUB_OUTPUT"
+            echo 'node=node:24.22.2-trixie-slim@sha256:54f84b4cf8432b21aaffd5d3ce8d41e12cea0d10d33c09d2f3c9879d49d6b446' >> "$GITHUB_OUTPUT"
+            echo 'bun=oven/bun:1.4.4-debian@sha256:93d5032fe06d163427822dc1598f420363759bb18155c9cc90eb1be05a64a19e' >> "$GITHUB_OUTPUT"
             ;;
           alpine)
-            echo 'node=node:24.18.0-alpine' >> "$GITHUB_OUTPUT"
-            echo 'bun=oven/bun:1.4.3-alpine' >> "$GITHUB_OUTPUT"
+            echo 'node=node:24.22.2-alpine@sha256:8a32c8cf649a49915a66e81e7a609223c708d0adabf288ee3f4077d765542f85' >> "$GITHUB_OUTPUT"
+            echo 'bun=oven/bun:1.4.4-alpine@sha256:4cf82f5686b196504fe119db3fcd9185b191f82ece82c40680e597228ec6070a' >> "$GITHUB_OUTPUT"
             ;;
           *) echo "Unsupported libc: $LIBC" >&2; exit 1 ;;
         esac

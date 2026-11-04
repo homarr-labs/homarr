@@ -81,8 +81,8 @@ runs:
         ARCHITECTURE: ${{ inputs.architecture }}
       run: |
         for distribution in debian alpine; do
-          node_image=node:24.18.0-trixie-slim
-          if [[ "$distribution" = alpine ]]; then node_image=node:24.18.0-alpine; fi
+          node_image=node:24.22.2-trixie-slim@sha256:54f84b4cf8432b21aaffd5d3ce8d41e12cea0d10d33c09d2f3c9879d49d6b446
+          if [[ "$distribution" = alpine ]]; then node_image=node:24.22.2-alpine@sha256:8a32c8cf649a49915a66e81e7a609223c708d0adabf288ee3f4077d765542f85; fi
           docker run --rm --platform "linux/$ARCHITECTURE" \
             --mount "type=bind,src=$ARCHIVE_DIR,dst=/archives,readonly" \
             --mount "type=bind,src=$GITHUB_WORKSPACE/.github/actions/extract-build-artifact/validate-native.cjs,dst=/validate-native.cjs,readonly" \

@@ -11,6 +11,7 @@ import { resolveDownloadsQueryInput } from "./query-input";
 
 const columnTranslationKeys = {
   name: "common.field.name",
+  actions: "common.field.actions",
   progress: "widget.downloads.items.progress.columnTitle",
   size: "common.field.size",
   downSpeed: "widget.downloads.items.downSpeed.columnTitle",

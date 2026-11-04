@@ -21,3 +21,7 @@ check from the tile's edit actions. In view mode, right-click uses the browser's
 ### Configuration
 
 <WidgetConfig configuration={appWidget.configuration} />
+
+In **New window** mode, only HTTP(S) and relative links request a separate browser window. Other protocols, such as
+`microsoft-edge:`, `vscode:`, or `ftp:`, are handled from the current tab without requesting an intermediate window.
+The browser may still ask for confirmation before opening an associated application.

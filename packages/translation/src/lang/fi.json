@@ -19,7 +19,7 @@
         "errorDescription": "Lataa sivu uudelleen kokeillaksesi suojattua ensimmäistä kertaa -istuntoa uudelleen."
       },
       "navigation": {
-        "essentials": "Essentials",
+        "essentials": "",
         "discover": "Löydä",
         "connect": "Yhdistä",
         "board": "Lauta",
@@ -65,7 +65,6 @@
         "themeAuto": "Järjestelmä",
         "themeLight": "Vaalea",
         "themeDark": "Tumma",
-        "serverOriginHelp": "Homarr käyttää tätä osoitetta esitäyttää havaitut palvelun URLit. Voit silti muokata jokaista palvelua erikseen.",
         "serverDescription": "Tämä on pikanäppäin, ei rajoitus. Jokainen havaittu palvelu on muokattavissa.",
         "serverOrigin": "Verkkotunnus, IP tai käänteisvälityspalvelimen polku",
         "serverOriginDescription": "Esimerkkejä: home.lan, 192.168.1.10 tai https://home.example.com/services. Valitse miten jokainen palvelu on liitetty alla.",
@@ -94,7 +93,7 @@
           "checking": "Tarkistetaan saatavuutta…",
           "available": "Saatavilla",
           "partial": "Osittain saatavilla",
-          "empty": "Reachable, no matching running services",
+          "empty": "",
           "disabled": "Poistettu käytöstä palvelimen kokoonpanon perusteella",
           "unavailable": "Ei saatavilla tästä Homarr-prosessista"
         }
@@ -102,6 +101,8 @@
       "connect": {
         "title": "Yhdistä mikä tekee hallituksesta hyödyllisen",
         "description": "Valitse useita palveluita kerralla. Telakoitsijan etiketit ovat etusijalla, kuvien täsmäytys täyttää aukot, ja jokainen URL ja käyttöoikeustiedot pysyvät arvioitavissa.",
+        "confirmServerAddress": "",
+        "serverAddressReviewed": "",
         "discoveredIntegrations": "Havaitut integraatiohäiriöt ({count})",
         "detectedIntegrationLabel": "Tuo {name}, tunnistettu tyypiksi {kind}",
         "detectedAppLabel": "Tuo havaittu sovellus {name}",
@@ -126,7 +127,8 @@
         "needsConfiguration": "Tarvitsee konfiguraatiota",
         "tested": "Yhteys testattu",
         "testFailed": "Yhteyden testi epäonnistui",
-        "incompleteConfirmation": "Keskeneräiset integraatiot ohitetaan. Jatketaanko ilman niitä?"
+        "incompleteConfirmation": "Keskeneräiset integraatiot ohitetaan. Jatketaanko ilman niitä?",
+        "skipIncomplete": ""
       },
       "board": {
         "title": "Muodosta lauta ennen kuin se rakennetaan",
@@ -142,10 +144,11 @@
         "secondaryColor": "Toissijainen väri",
         "resetColors": "Nollaa värit",
         "radius": "Widgetin kulman säde",
+        "radiusOptions": {},
         "columns": "Laudan sarakkeet",
         "columnsDescription": "Sarakkeet määrittelevät vaakasuoran ruudukon, jota käytetään kokoon ja sijoitukseen. 12 on monille ihmisille.",
         "columnCount": "{count, plural, one {# saraketta} other {# saraketta}}",
-        "leftSidebar": "Left sidebar",
+        "leftSidebar": "",
         "rightSidebar": "Oikea sivupalkki",
         "previewLabel": "Ensimmäisen taulun näkymän reaaliaikainen esikatselu"
       },
@@ -164,7 +167,7 @@
           "description": "Selaa yhteisön Mukautettuja widgetejä, tarkasta niiden pyydetyt ominaisuudet, asenna ne ja julkaise oma työsi ilman koodia palvelimien välillä.",
           "available": "Saatavilla",
           "checking": "Tarkistetaan…",
-          "unavailable": "Unavailable",
+          "unavailable": "",
           "discoverTitle": "Löydä",
           "discoverDescription": "Etsi widgetit rakennettu todellinen itsenäinen työnkulkua.",
           "installTitle": "Arvostele ja asenna",
@@ -174,7 +177,7 @@
           "browse": "Selaa Työpajaa"
         },
         "mcpSetup": {
-          "title": "Homarr MCP",
+          "title": "",
           "description": "Yhdistä Claude, Codex, tai toinen MCP asiakas Homarr's kirjoitetut työkalut. API näppäimet pitää käyttää nimenomaista ja peruutettavissa.",
           "endpoint": "Streamable HTTP päätepiste",
           "keyTitle": "Kopioi tämä avain nyt",
@@ -195,7 +198,7 @@
         "columns": "Laudan sarakkeet",
         "columnsValue": "{count, plural, one {# saraketta} other {# saraketta}}",
         "sidebars": "Sivupalkit",
-        "sidebarsValue": "{count, plural, =0 {None} one {# sidebar} other {# sidebars}}",
+        "sidebarsValue": "",
         "layouts": "Responsiiviset asettelut",
         "layoutsValue": "Mobiili + Perus",
         "integrations": "Integraatiot",
@@ -791,6 +794,12 @@
       }
     },
     "field": {
+      "url": {
+        "helpLabel": "Esimerkkejä URL-osoitteiden muodoista",
+        "examples": "Esimerkkejä tuetuista linkeistä",
+        "requiresHandler": "Mukautetut protokollat edellyttävät niihin liitettyä sovellusta laitteellasi."
+      },
+      "description": {},
       "useDifferentUrlForPing": {
         "checkbox": {
           "label": "Käytä erillistä ping-osoitetta",
@@ -892,6 +901,7 @@
       "description": "Tarkista, missä tämä widget yhdistää ja korvaa sen salatut käyttäjätunnukset.",
       "credentialsRequired": "Pyynnöt epäonnistuvat, kunnes vaaditut tiedot on lisätty."
     },
+    "field": {},
     "editor": {
       "errorBoundary": {
         "title": "Jokin meni pieleen"
@@ -899,7 +909,7 @@
       "action": {
         "components": "Komponentit",
         "format": "Muoto",
-        "insertStarter": "Insert starter",
+        "insertStarter": "",
         "redo": "Toista",
         "schema": "Skeema"
       },
@@ -916,14 +926,14 @@
         "errors": "{count, number} virheet",
         "warnings": "{count, number} varoitukset",
         "ready": "Ongelmia ei löytynyt",
-        "position": "Ln {line, number}, Col {column, number}",
+        "position": "",
         "characters": "{count, number} merkkiä",
-        "charactersWithLimit": "{count, number} / {limit, number}"
+        "charactersWithLimit": ""
       },
       "diagnostics": {
         "title": "Mallin diagnostiikka",
         "line": "Rivi {line, number}",
-        "ast": "{value}",
+        "ast": "",
         "bindingTypeConflict": "Syöte \"{value}\" on jaettu kontrollien kanssa yhteensopimattomilla arvotyypeillä.",
         "runtimeBindingTypeConflict": "Syöte \"{value}\" on sidottu sekä tyyppiin {firstType} että tyyppiin {secondType}.",
         "dynamicRequestId": "Tarvitaan kirjaimellinen pyyntöID. Dynaaminen pyyntö tunnuksia ei hyväksytä.",
@@ -947,7 +957,7 @@
         "sources": "API lähteet",
         "requests": "Pyynnöt",
         "options": "Valinnat",
-        "jsx": "JSX",
+        "jsx": "",
         "preview": "Esikatselu"
       },
       "status": {
@@ -978,7 +988,7 @@
       "builder": {
         "advancedManifest": "Kehittynyt raaka manifesti",
         "advancedJson": "Edistynyt manifest JSON",
-        "manifestFilename": "widget.json",
+        "manifestFilename": "",
         "request": "Pyydä {count, number}",
         "requestId": "Pyydä ID",
         "method": "Menetelmä",
@@ -1047,7 +1057,7 @@
       },
       "sources": {
         "title": "API-lähteet ja tunnistetiedot",
-        "newName": "API {count, number}",
+        "newName": "",
         "duplicateSourceId": "API-lähdetunnusten on oltava ainutlaatuisia.",
         "credentialRemoved": "Käyttöoikeustiedot poistettu",
         "credentialRemovedDescription": "Tallennettu arvo poistettiin.",
@@ -1069,7 +1079,7 @@
         "remove": "Poista lähde ja sen pyynnöt",
         "advanced": "Lisäasetukset",
         "add": "Lisää toinen API-lähde",
-        "manualSource": "HTTP API",
+        "manualSource": "",
         "existingIntegration": "Nykyinen integraatio",
         "integrationType": "Integraation tyyppi",
         "selectIntegration": "Määritetty integraatio",
@@ -1133,14 +1143,14 @@
           "actionIconLabel": "Lisää aria-etiketti tai otsikko jokaiseen ActionIcon.",
           "inputLabel": "Lisää jokaiseen syötteeseen näkyvä tunniste tai saavutettavissa oleva nimi."
         },
-        "journal": "Redacted request journal",
+        "journal": "",
         "actionParameters": "Toiminnan parametrit (JSON)",
         "invalidParameters": "Käytä ilmoitettua merkkijonoa, numeroa ja totuusparametrityyppejä.",
         "runDestructive": "Suorita tuhoisa toiminta",
         "runAction": "Suorita toiminto",
         "deleteConfirmation": "Tämä esikatselutoiminto muuttaa etädataa määritetyn APIn kautta.",
         "simulated": "Simuloitu toiminta",
-        "httpStatus": "HTTP {status, number}",
+        "httpStatus": "",
         "tab": {
           "widget": "Pienoisohjelma",
           "data": "Tiedot",
@@ -1257,7 +1267,7 @@
     "outdated": "Vanhentunut",
     "outdatedWarning": "Kirjoittaja merkitsi tämän lähetyksen vanhentuneeksi. Tarkista se huolellisesti ennen tuontia.",
     "score": "Pisteet: {count, number}",
-    "upvote": "Upvote",
+    "upvote": "",
     "downvote": "Alaäänestys",
     "voteError": "Äänestystä ei voitu tallentaa.",
     "signIn": "Kirjaudu sisään GitHubilla",
@@ -1270,7 +1280,7 @@
     "installReviewTitle": "Tarkista ennen asennusta",
     "installError": "Tätä widgetiä ei voi asentaa",
     "installErrorDescription": "Korjaamon lähetys ei ole kelvollinen Custom JSX v2 widget.",
-    "useCss": "Import CSS",
+    "useCss": "",
     "importCss": "Tuo CSS Workshopista",
     "importCssConfirm": "Korvaa nykyinen mukautettu CSS \"{title}\"? Mitään ei tallenneta, ennen kuin tallennat taulun asetukset.",
     "screenshotAlt": "{title} kuvakaappaus {count, number}",
@@ -1481,7 +1491,7 @@
       "vpn": "VPN",
       "mediaLibrary": "Mediakirjasto",
       "uptimeMonitoring": "Käytettävyysvalvonta",
-      "beszel": "Beszel",
+      "beszel": "",
       "systemMonitoring": "Järjestelmän Valvonta",
       "security": "Suojaus",
       "serviceVersion": "Versio"
@@ -1530,6 +1540,7 @@
             "untrusted": "Varmenteeseen ei luoteta.",
             "hostnameMismatch": "Varmenteen isäntänimi ei täsmää URL-osoitteeseen."
           },
+          "secondaryUrl": "",
           "alert": {
             "permission": {
               "title": "Oikeudet eivät riitä",
@@ -1792,7 +1803,7 @@
       "full": "Integraatioiden hallinta"
     },
     "llamacpp": {
-      "name": "llama.cpp",
+      "name": "",
       "description": "Seurata paikallista llama.cpp llama-palvelinta: terveys, malli ja sukupolven mittareita"
     }
   },
@@ -1842,15 +1853,6 @@
     }
   },
   "common": {
-    "cornerStyle": {
-      "options": {
-        "xs": "Tiukka",
-        "sm": "Hieno",
-        "md": "Tasapainotettu",
-        "lg": "Pyöristetty",
-        "xl": "Pehmeä"
-      }
-    },
     "success": "",
     "beta": "",
     "error": "",
@@ -1880,6 +1882,7 @@
       "tryAgain": "",
       "loading": "",
       "show": "Näytä",
+      "showAll": "",
       "hide": "Piilota",
       "undo": "Kumoa",
       "editNamed": "Muokkaa {name}",
@@ -1890,6 +1893,7 @@
       "refresh": "Päivitä",
       "export": "Vie"
     },
+    "hidden": "Piilotettu",
     "pagination": {
       "pageOf": "Sivu {page} / {totalPages}"
     },
@@ -1899,6 +1903,8 @@
     "here": "",
     "serviceUrlTemplate": {
       "serverTitle": "Tavallinen palvelimen osoite",
+      "description": "",
+      "example": "",
       "urlModeLabel": "Palvelun osoitteen malli",
       "hostPort": "Sama isäntä, eri portit",
       "subdomain": "Yksi aliverkkotunnus per palvelu",
@@ -1912,6 +1918,7 @@
       "clear": "Tyhjennä kuva",
       "uploadImage": "Lataa kuva",
       "results": "Haun tulokset",
+      "websiteIcon": "",
       "localImages": "Omat kuvat",
       "svgIcons": "SVG kuvakkeet",
       "otherImages": "Muut kuvat",
@@ -1976,7 +1983,7 @@
         "updateAvailable": "",
         "assistant": "Avustaja",
         "assistantThinking": "Ajattelu",
-        "modifier": "Mod"
+        "modifier": ""
       }
     },
     "dangerZone": "Vaaravyöhyke",
@@ -2032,17 +2039,17 @@
     "filesystemUsage": "{count, plural, one {Näytä käyttö # tiedostojärjestelmälle} other {Näytä käyttö # tiedostojärjestelmälle}}",
     "field": {
       "name": "Nimi",
-      "description": "Kuvaus",
-      "title": "Otsikko",
-      "actions": "Toiminnot",
-      "type": "Tyyppi",
-      "status": "Tila",
       "state": "Tila",
       "size": "Koko",
+      "actions": "Toiminnot",
       "source": "Lähde",
-      "namespace": "Nimiavaruus",
+      "title": "Otsikko",
+      "description": "Kuvaus",
       "created": "Luotu",
-      "architecture": "Arkkitehtuuri"
+      "namespace": "Nimiavaruus",
+      "status": "Tila",
+      "architecture": "Arkkitehtuuri",
+      "type": "Tyyppi"
     },
     "label": {
       "new": "Uusi"
@@ -2060,6 +2067,15 @@
       "searchEngines": "Hakukoneet",
       "tasks": "Tehtävät",
       "users": "Käyttäjät"
+    },
+    "cornerStyle": {
+      "options": {
+        "md": "Tasapainotettu",
+        "lg": "Pyöristetty",
+        "xs": "Tiukka",
+        "sm": "Hieno",
+        "xl": "Pehmeä"
+      }
     }
   },
   "section": {
@@ -2097,6 +2113,7 @@
         "collapse": "Kutista"
       },
       "option": {
+        "title": {},
         "customCssClasses": {
           "label": "Omat CSS-luokat"
         },
@@ -2153,7 +2170,7 @@
         "noConnectionRequired": "Yhteyttä ei tarvita"
       },
       "customWidget": "Mukautettu widget",
-      "standalone": "Standalone",
+      "standalone": "",
       "missingIntegration": {
         "title": "Yhdistä palvelu ensin",
         "noPermission": "Tämä widget tarvitsee yhteensopivan palveluyhteyden. Pyydä järjestelmänvalvojaa yhdistämään se ja yritä uudelleen."
@@ -2210,11 +2227,11 @@
         },
         "width": {
           "label": "",
-          "shortLabel": "W"
+          "shortLabel": ""
         },
         "height": {
           "label": "",
-          "shortLabel": "H"
+          "shortLabel": ""
         },
         "xOffset": {
           "label": ""
@@ -2259,6 +2276,7 @@
           "label": "Integraatiot",
           "removeLabel": "Poista {name} integraatio"
         },
+        "title": {},
         "customCssClasses": {
           "label": "Omat CSS-luokat"
         },
@@ -2287,6 +2305,15 @@
       "option": {
         "appId": {
           "label": "Valitse sovellus"
+        },
+        "openIn": {
+          "label": "Avaa sovellus",
+          "description": "Valitse, missä tämä sovellus avautuu. Selaimen asetukset voivat ohittaa pyynnön avata erillinen ikkuna.",
+          "option": {
+            "currentTab": "Nykyisessä välilehdessä",
+            "newTab": "Uudessa välilehdessä",
+            "newWindow": "Uudessa ikkunassa"
+          }
         },
         "showTitle": {
           "label": "Näytä sovelluksen nimi"
@@ -2416,7 +2443,7 @@
         "remove": "",
         "rename": "Kategorian nimi {name}",
         "assign": "Kategoria char@@0 {name}",
-        "ungrouped": "Ungrouped"
+        "ungrouped": ""
       }
     },
     "archiveTeamWarrior": {
@@ -2599,22 +2626,22 @@
         "accessibleTime": "{city}: {date} klo {time}, aikavyöhyke {timeZone}",
         "advancedLabel": "Edistynyt maailmankello",
         "cities": "Maailman kellot",
-        "cityCount": "{count} timezones",
+        "cityCount": "",
         "timeBarLabel": "24 tunnin aika päivässä: {city}",
         "dayProgress": "{percent} % kulunut · {hours} t {minutes} min jäljellä",
         "phaseLegend": "Päivän selite",
         "tick": {
-          "midnight": "00",
-          "morning": "06",
-          "noon": "12",
-          "evening": "18",
-          "end": "24"
+          "midnight": "",
+          "morning": "",
+          "noon": "",
+          "evening": "",
+          "end": ""
         },
         "phaseRange": {
-          "night": "00–05 · 21–24",
-          "dawn": "05–08",
-          "day": "08–18",
-          "dusk": "18–21"
+          "night": "",
+          "dawn": "",
+          "day": "",
+          "dusk": ""
         },
         "phase": {
           "night": "Yö",
@@ -2636,7 +2663,7 @@
           "options": {
             "auto": "Automaattinen lokaatioon",
             "european": "Eurooppalainen AQI",
-            "us": "US AQI"
+            "us": ""
           }
         },
         "showUv": {
@@ -2673,8 +2700,8 @@
           "unknown": "Ei lukua"
         }
       },
-      "dominantPollutant": "Dominant pollutant",
-      "aqiLabel": "AQI",
+      "dominantPollutant": "",
+      "aqiLabel": "",
       "strongestPollen": "Korkein siitepöly",
       "unit": {
         "concentration": "{value} μg/m3",
@@ -2682,19 +2709,19 @@
       },
       "pollutant": {
         "pm2_5": "PM2,5",
-        "pm10": "PM10",
+        "pm10": "",
         "ozone": "Otsoni",
         "nitrogenDioxide": "Typpidioksidi",
-        "sulphurDioxide": "Sulphur dioxide",
+        "sulphurDioxide": "",
         "carbonMonoxide": "Hiilimonoksidi"
       },
       "pollen": {
-        "alder": "Alder",
+        "alder": "",
         "birch": "Koivu",
         "grass": "Ruoho",
-        "mugwort": "Mugwort",
+        "mugwort": "",
         "olive": "Oliivit",
-        "ragweed": "Ragweed"
+        "ragweed": ""
       },
       "compact": {
         "sixHourTrend": "AQI trendi seuraavien kuuden tunnin aikana"
@@ -2758,7 +2785,7 @@
       "invalid": {
         "title": "Joitakin tapahtumia ei voi näyttää",
         "description": "{count, plural, one {Yhdellä tapahtumalla on virheellinen päivämäärä tai sitä ei tueta.} other {# tapahtumassa on virheellinen päivämäärä tai sitä ei tueta.}}",
-        "value": "Unavailable"
+        "value": ""
       },
       "alert": {
         "notifications": "Selain ilmoitukset",
@@ -2767,14 +2794,14 @@
       }
     },
     "timer": {
-      "name": "Timer / Pomodoro",
+      "name": "",
       "description": "Suorittaa yksinkertaisen ajastimen tai konfiguroitavan Pomodoro sekvenssin.",
       "option": {
         "mode": {
           "label": "Tila",
           "options": {
             "timer": "Ajastin",
-            "pomodoro": "Pomodoro"
+            "pomodoro": ""
           }
         },
         "timerMinutes": {
@@ -2808,10 +2835,10 @@
       "action": {
         "start": "Käynnistä",
         "pause": "Tauko",
-        "reset": "Reset"
+        "reset": ""
       },
       "attention": {
-        "timerComplete": "Timer complete",
+        "timerComplete": "",
         "phaseReady": "{phase} valmis"
       },
       "progress": "Ajastin etenee: {progress}%",
@@ -2819,11 +2846,11 @@
         "completedFocus": "{count, plural, =0 {Kohdistusistuntoja ei ole suoritettu} one {# kohdistusistunto valmistui} other {# kohdistusistuntoa suoritettu}}"
       },
       "alert": {
-        "title": "Timer complete",
+        "title": "",
         "completed": "{phase} valmis."
       },
       "advanced": {
-        "sequence": "Pomodoro sequence",
+        "sequence": "",
         "focusSession": "Tarkenna {session}",
         "settings": "Pysyvät asetukset",
         "settingsHint": "Käytä widgetin kontekstivalikkoa muokataksesi näitä taulun asetuksia.",
@@ -2871,7 +2898,7 @@
       },
       "warning": {
         "stale": "Aikataulua ei voitu päivittää. Näyttää lähdöt viimeksi päivitetty klo {time}.",
-        "staleCompact": "Stale data"
+        "staleCompact": ""
       }
     },
     "notebook": {
@@ -3045,7 +3072,7 @@
       "state": {
         "on": "Päällä",
         "off": "Pois",
-        "unavailable": "Unavailable",
+        "unavailable": "",
         "unknown": "Tuntematon"
       },
       "advanced": {
@@ -3203,6 +3230,10 @@
         },
         "viewMode": {
           "label": "Näytä"
+        },
+        "hideHeader": {
+          "label": "",
+          "description": ""
         }
       },
       "advanced": {
@@ -3220,15 +3251,11 @@
         "agenda": "Esityslista"
       },
       "controls": {
-        "view": "Kalenterin näkymä",
         "today": "Tänään",
         "previous": "Edellinen jakso",
         "next": "Seuraava kausi",
         "noEvents": "Ei tapahtumia tänä aikana",
         "more": "{count} lisää",
-        "moreLabel": "Näytä {count} muuta tapahtumaa",
-        "eventDetails": "Tapahtuman tiedot",
-        "close": "Sulje tapahtuman tiedot",
         "timeSlot": "Ajan paikka",
         "weekday": "Arkipäivä"
       }
@@ -3327,7 +3354,7 @@
           "humidity": "Keskimääräinen kosteus",
           "wind": "Maksimi tuuli / puuska",
           "uv": "Suurin UV-indeksi",
-          "daylight": "Daylight"
+          "daylight": ""
         },
         "sun": "Auringonnousu / auringonlasku",
         "noForecast": "Ennustetietoja ei saatavilla"
@@ -3384,7 +3411,7 @@
           "label": ""
         },
         "tabOrder": {
-          "label": "Tab order",
+          "label": "",
           "systemFirst": "Järjestelmä ja klusteri",
           "clusterFirst": "Klusteri ja järjestelmä"
         },
@@ -3533,13 +3560,13 @@
       },
       "server": {
         "buildServer": "",
-        "resourceCounts": "{applications, plural, one {# app} other {# apps}} / {services, plural, one {# service} other {# services}}",
+        "resourceCounts": "",
         "reachability": "Saavutettavuus",
         "usability": "Käytettävyys"
       },
       "source": {
         "url": "Lähde: {url}",
-        "unavailable": "{source}: unavailable"
+        "unavailable": ""
       },
       "instances": {
         "title": ""
@@ -3572,7 +3599,7 @@
       "status": {
         "running": "Käynnissä",
         "notRunning": "Ei käynnissä",
-        "unavailable": "Unavailable",
+        "unavailable": "",
         "vpn": "Vpn: {status}"
       }
     },
@@ -3910,11 +3937,28 @@
         "paused": "Keskeytetty",
         "remaining": "{minutes} min jäljellä",
         "seasonEpisode": "K{season} J{episode}",
+        "state": {
+          "playing": "",
+          "buffering": ""
+        },
+        "details": {
+          "device": "Device",
+          "location": "",
+          "sessionId": "",
+          "bitrate": "",
+          "audioHandling": "",
+          "direct": "",
+          "transcode": "",
+          "containerChanged": "",
+          "position": "",
+          "unknown": ""
+        },
         "metadata": {
           "title": "",
           "video": {
             "title": "",
-            "resolution": ""
+            "resolution": "",
+            "frameRate": ""
           },
           "audio": {
             "title": "",
@@ -3935,6 +3979,109 @@
         "playing": "{count} soi",
         "transcoding": "{count} transkoodausta"
       }
+    },
+    "thingport-libraryStats": {
+      "name": "",
+      "description": "",
+      "title": "",
+      "option": {
+        "showModels": {
+          "label": ""
+        },
+        "showCollections": {
+          "label": ""
+        },
+        "showCategories": {
+          "label": ""
+        },
+        "showAuthors": {
+          "label": ""
+        }
+      },
+      "models": "",
+      "collections": "",
+      "categories": "Kategoriat",
+      "authors": ""
+    },
+    "thingport-featuredModel": {
+      "name": "",
+      "description": "",
+      "option": {
+        "autoRotate": {
+          "label": ""
+        },
+        "showDetails": {
+          "label": ""
+        }
+      },
+      "title": "",
+      "empty": "",
+      "hint": "",
+      "noPreview": "",
+      "views": "",
+      "prints": ""
+    },
+    "thingport-activityHeatmap": {
+      "name": "",
+      "description": "",
+      "title": "",
+      "option": {
+        "weekStart": {
+          "label": "Viikon ensimmäinen päivä",
+          "option": {
+            "sunday": "",
+            "monday": ""
+          }
+        },
+        "showTotal": {
+          "label": ""
+        },
+        "showLegend": {
+          "label": ""
+        }
+      },
+      "lastYear": "",
+      "totalLastYear": "",
+      "totalInYear": "",
+      "dayTotal": "",
+      "dayEmpty": "",
+      "kinds": {
+        "import": "",
+        "upload": "Ladattu",
+        "download": "Ladattu",
+        "slicer": "",
+        "delete": "Poistettu"
+      },
+      "less": "",
+      "more": ""
+    },
+    "thingport-models": {
+      "name": "",
+      "description": "",
+      "title": "",
+      "option": {
+        "defaultTab": {
+          "label": ""
+        },
+        "itemCount": {
+          "label": ""
+        },
+        "showThumbnails": {
+          "label": ""
+        }
+      },
+      "tab": {
+        "recentlyAdded": "",
+        "topViewed": "",
+        "topPrinted": ""
+      },
+      "empty": {
+        "recentlyAdded": "",
+        "topViewed": "",
+        "topPrinted": ""
+      },
+      "views": "",
+      "prints": ""
     },
     "paperlessNgx": {
       "description": "Yleiskatsaus Paperless-ngx-dokumenttiarkistostasi",
@@ -4220,7 +4367,7 @@
       "actions": {
         "previousPhoto": "Edellinen kuva",
         "nextPhoto": "Seuraava kuva",
-        "pauseSlideshow": "Pause slideshow",
+        "pauseSlideshow": "",
         "resumeSlideshow": "Jatka diaesitystä",
         "toggleSlideshow": "Keskeytä tai jatka diaesitystä",
         "photo": "Kuva {number}"
@@ -4291,6 +4438,8 @@
         "id": {
           "columnTitle": "Tunniste"
         },
+        "integration": {},
+        "name": {},
         "progress": {
           "columnTitle": "Edistyminen",
           "detailsTitle": "Edistyminen"
@@ -4306,6 +4455,8 @@
           "columnTitle": "Lähetty kaikkiaan",
           "detailsTitle": "Ladattu"
         },
+        "size": {},
+        "state": {},
         "time": {
           "columnTitle": "Valmistumisaika"
         },
@@ -4501,6 +4652,9 @@
             "progress": ""
           }
         },
+        "queue": {
+          "table": {}
+        },
         "common": {
           "empty": "Tyhjä",
           "file": "Tiedosto",
@@ -4580,27 +4734,59 @@
       "name": "Julkaisut",
       "description": "",
       "option": {
-        "newReleaseWithin": {
+        "layout": {
+          "label": "Asettelu",
+          "description": "",
+          "option": {
+            "comfortable": "Mukava",
+            "compact": "Kompakti"
+          }
+        },
+        "summary": {
+          "label": "",
+          "description": "",
+          "option": {
+            "detailed": "",
+            "count": "",
+            "hidden": "Piilotettu"
+          }
+        },
+        "groupReleases": {
           "label": "",
           "description": ""
+        },
+        "sections": {
+          "label": "",
+          "description": ""
+        },
+        "newReleaseWithin": {
+          "label": "",
+          "description": "",
+          "option": {
+            "never": "",
+            "1d": "vuorokausi",
+            "3d": "",
+            "1w": "viikko",
+            "2w": "",
+            "1M": "kuukausi",
+            "3M": ""
+          }
         },
         "staleReleaseWithin": {
           "label": "",
-          "description": ""
+          "description": "",
+          "option": {
+            "never": "",
+            "1M": "kuukausi",
+            "3M": "",
+            "6M": "",
+            "1y": "",
+            "2y": ""
+          }
         },
-        "showOnlyHighlighted": {
+        "showChangelogPreview": {
           "label": "",
           "description": ""
-        },
-        "showDetails": {
-          "label": ""
-        },
-        "showOnlyIcon": {
-          "label": ""
-        },
-        "topReleases": {
-          "label": "",
-          "description": "Viimeisimpien näytettävien julkaisujen enimmäismäärä. Arvo nolla poistaa rajoituksen."
         },
         "repositories": {
           "label": "",
@@ -4630,6 +4816,11 @@
           "identifier": {
             "label": "",
             "placeholder": ""
+          },
+          "name": {},
+          "excludePrereleases": {
+            "label": "",
+            "description": ""
           },
           "versionFilter": {
             "label": "",
@@ -4671,36 +4862,110 @@
           }
         }
       },
-      "not-found": "",
-      "pre-release": "",
-      "archived": "",
-      "forked": "",
+      "summary": {
+        "newReleases": "",
+        "newShort": "uusi",
+        "tracked": "",
+        "caughtUp": "",
+        "outdated": "",
+        "outdatedShort": "vanhentunut",
+        "failing": "",
+        "failingShort": "",
+        "latest": "",
+        "issues": ""
+      },
+      "section": {
+        "new": {
+          "label": "Uusi",
+          "description": ""
+        },
+        "attention": {
+          "label": "Tarvitsee huomiota",
+          "description": ""
+        },
+        "upToDate": {
+          "label": "Ajan tasalla",
+          "description": ""
+        },
+        "quiet": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "status": {
+        "new": "",
+        "outdated": "",
+        "error": "",
+        "upToDate": "ajan tasalla",
+        "quiet": ""
+      },
+      "tag": {
+        "new": "Uusi",
+        "preRelease": "",
+        "resolvedFrom": "",
+        "quiet": "",
+        "archived": "Arkistoitu",
+        "fork": ""
+      },
+      "issue": {
+        "affected": "",
+        "rateLimited": {
+          "title": "",
+          "hint": ""
+        },
+        "notFound": {
+          "title": "",
+          "hint": ""
+        },
+        "noMatchingVersion": {
+          "title": "",
+          "hint": ""
+        },
+        "noReleasesFound": {
+          "title": "",
+          "hint": ""
+        },
+        "invalidIdentifier": {
+          "title": "",
+          "hint": ""
+        },
+        "noProviderSelected": {
+          "title": "Toimittajaa ei ole valittu",
+          "hint": ""
+        },
+        "noProviderResponse": {
+          "title": "",
+          "hint": ""
+        },
+        "unexpected": {
+          "title": "",
+          "hint": ""
+        }
+      },
+      "markViewed": "",
+      "markAllViewed": "",
+      "markEntryViewed": "",
+      "viewed": "",
+      "copyVersion": "",
+      "copied": "Kopioitu",
+      "published": "",
+      "whatChanged": "",
+      "noNotes": "",
+      "changes": "",
       "starsCount": "",
       "forksCount": "",
-      "issuesCount": "",
-      "markViewed": "",
-      "openProjectPage": "",
-      "openReleasePage": "",
-      "releaseDescription": "",
-      "projectDescription": "",
+      "openIssues": "",
+      "created": "Luotu {time}",
+      "releasePage": "",
+      "projectPage": "",
       "runningVersions": "Käynnissä Olevat Versiot",
       "upToDate": "Ajan tasalla",
       "updateAvailable": "Päivitys saatavilla",
       "unknownStatus": "Tuntematon",
-      "created": "",
       "error": {
-        "label": "",
-        "messages": {
-          "invalidIdentifier": "",
-          "noMatchingVersion": "",
-          "noReleasesFound": "",
-          "noProviderSelected": "Palveluntarjoajaa ei ole valittu",
-          "noProviderResponse": "",
-          "unexpected": "Odottamaton palveluntarjoajan virhe"
-        }
-      },
-      "expandDetails": "Näytä tiedot kohteelle {name}",
-      "collapseDetails": "Piilota tiedot kohteelle {name}"
+        "collapsedSaveTitle": "",
+        "collapsedSaveMessage": ""
+      }
     },
     "networkControllerSummary": {
       "advanced": {
@@ -4716,12 +4981,12 @@
       "card": {
         "vpn": {
           "countConnected": "{count, plural, one {# yhdistetty} other {# yhdistetty}}",
-          "label": "VPN"
+          "label": ""
         },
-        "wan": "WAN",
+        "wan": "",
         "web": "Verkko",
-        "wifi": "Wi-Fi",
-        "lan": "LAN"
+        "wifi": "",
+        "lan": ""
       },
       "error": {
         "unknownContentOption": ""
@@ -4821,8 +5086,8 @@
           "option": {
             "auto": "Automaattinen",
             "plain": "Pelkkä teksti",
-            "markdown": "Markdown",
-            "html": "HTML"
+            "markdown": "",
+            "html": ""
           }
         }
       },
@@ -4872,45 +5137,116 @@
     "uptimeKuma": {
       "description": "Tarkkaile käytettävyystilastoja Uptime Kuma -tilasivultasi",
       "option": {
-        "showAverageUptime": {
-          "label": "Näytä keskimääräinen käytettävyys",
-          "description": "Näytä yhdistetty 24 tunnin keskimääräinen käytettävyysprosentti"
+        "statusPageSlug": {
+          "label": "",
+          "description": ""
         },
-        "showUptimeRing": {
-          "label": "Näytä käytettävyysrengas",
-          "description": "Näytä edistymisrengas keskimääräisen käytettävyysarvon ohella"
+        "summaryOnly": {
+          "label": "",
+          "description": ""
         },
-        "showTotalMonitors": {
-          "label": "Näytä valvontakohteiden kokonaismäärä",
-          "description": "Näytä määritettyjen valvontakohteiden kokonaismäärä"
+        "showSummary": {
+          "label": "",
+          "description": ""
         },
-        "showUpCount": {
-          "label": "Näytä ylhäällä olevien määrä",
-          "description": "Näytä kuinka monta valvontakohdetta on tällä hetkellä ylhäällä"
+        "showIncidents": {
+          "label": "",
+          "description": ""
         },
-        "showDownCount": {
-          "label": "Näytä alhaalla olevien määrä",
-          "description": "Näytä kuinka monta valvontakohdetta on tällä hetkellä alhaalla"
+        "groupByStatusPageGroup": {
+          "label": "",
+          "description": ""
         },
-        "showPausedCount": {
-          "label": "Näytä keskeytettyjen määrä",
-          "description": "Näytä kuinka monta valvontakohdetta on tällä hetkellä keskeytettynä"
+        "showOnlyProblems": {
+          "label": "",
+          "description": ""
+        },
+        "sortBy": {
+          "label": "",
+          "option": {
+            "status": "",
+            "statusPage": "",
+            "name": "Työn nimi",
+            "uptime": ""
+          }
+        },
+        "showHeartbeatBar": {
+          "label": "",
+          "description": ""
+        },
+        "showUptime": {
+          "label": ""
+        },
+        "showResponseTime": {
+          "label": ""
+        },
+        "showCertificateExpiry": {
+          "label": "",
+          "description": ""
         }
-      },
-      "averageUptime": "Keskimääräinen käytettävyys (24h)",
-      "stats": {
-        "totalMonitors": "Valvontakohteita yhteensä",
-        "upCount": "Ylhäällä",
-        "downCount": "Alhaalla",
-        "pausedCount": "Keskeytetty"
-      },
-      "error": {
-        "internalServerError": "Käytettävyystietojen haku epäonnistui"
       },
       "status": {
         "up": "Lähetty kaikkiaan",
         "down": "Ladattu kaikkiaan",
-        "paused": "Keskeytetty"
+        "pending": "Odottaa",
+        "maintenance": "",
+        "stale": "",
+        "unknown": ""
+      },
+      "overall": {
+        "operational": "",
+        "degraded": "",
+        "outage": "",
+        "maintenance": "",
+        "unknown": ""
+      },
+      "short": {
+        "operational": "",
+        "down": "",
+        "pending": "",
+        "maintenance": "",
+        "unknown": ""
+      },
+      "summary": {
+        "upRatio": "",
+        "upRatioShort": "",
+        "averageUptime": "",
+        "uptimeShort": "",
+        "statusCount": ""
+      },
+      "unit": {
+        "milliseconds": ""
+      },
+      "heartbeatBar": {
+        "label": ""
+      },
+      "detail": {
+        "checked": "",
+        "certificate": ""
+      },
+      "notice": {
+        "label": "",
+        "untitled": ""
+      },
+      "empty": {
+        "title": "",
+        "description": ""
+      },
+      "allClear": "",
+      "error": {
+        "internalServerError": "Käytettävyystietojen haku epäonnistui"
+      },
+      "monitorType": {
+        "http": "",
+        "keyword": "",
+        "jsonQuery": "",
+        "port": "",
+        "ping": "Viive",
+        "dns": "DNS",
+        "docker": "",
+        "push": "",
+        "group": "Ryhmä",
+        "realBrowser": ""
       }
     },
     "traefik": {
@@ -5071,7 +5407,7 @@
       },
       "status": {
         "unhealthy": "",
-        "smart": "SMART",
+        "smart": "",
         "free": "{percentage}% vapaa"
       }
     },
@@ -5133,6 +5469,9 @@
       "name": "Beszel-järjestelmät (taulukko)",
       "description": "Taulukkonäkymä kaikista Beszel-valvotuista järjestelmistä, lajiteltavilla sarakkeilla ja tilaindikaattoreilla",
       "option": {
+        "fahrenheit": {
+          "label": "Käytä lämpötilalle Fahrenheit-yksikköä"
+        },
         "sortBy": {
           "label": "Lajitteluperuste"
         },
@@ -5147,7 +5486,12 @@
     },
     "beszelSystemGrid": {
       "name": "Beszel-järjestelmät (ruudukko)",
-      "description": "Korttiruudukkonäkymä kaikista Beszel-valvotuista järjestelmistä reaaliaikaisilla mittareilla"
+      "description": "Korttiruudukkonäkymä kaikista Beszel-valvotuista järjestelmistä reaaliaikaisilla mittareilla",
+      "option": {
+        "fahrenheit": {
+          "label": "Käytä lämpötilalle Fahrenheit-yksikköä"
+        }
+      }
     },
     "beszelAlerts": {
       "name": "Beszel-hälytykset",
@@ -5289,9 +5633,9 @@
       "period": {
         "live": "Suora",
         "oneHour": "1t",
-        "twelveHours": "12h",
-        "oneDay": "24h",
-        "oneWeek": "1w",
+        "twelveHours": "",
+        "oneDay": "",
+        "oneWeek": "",
         "thirtyDays": "30pv"
       }
     },
@@ -5361,9 +5705,9 @@
       },
       "metric": {
         "system": "Järjestelmä",
-        "hostname": "Hostname",
+        "hostname": "",
         "cpuModel": "Suorittimen malli",
-        "cores": "Cores",
+        "cores": "",
         "memoryTotal": "Muistia yhteensä",
         "memory": "Muisti",
         "disk": "Levy",
@@ -5376,9 +5720,9 @@
       }
     },
     "llamacpp": {
-      "name": "llama.cpp",
+      "name": "",
       "description": "Näytä paikallisen llama.cpp palvelimen terveys, ladattu malli ja sukupolven nopeus.",
-      "title": "llama.cpp",
+      "title": "",
       "status": {
         "unhealthy": "Epäterveellinen ({status})"
       },
@@ -5406,10 +5750,10 @@
         "unreachable": "llama-palvelin ei ole tavoitettavissa"
       },
       "unit": {
-        "speed": "{value} t/s",
-        "parameters": "{value}B",
-        "none": "—",
-        "speedShort": "t/s"
+        "speed": "",
+        "parameters": "",
+        "none": "",
+        "speedShort": ""
       },
       "option": {
         "showTitle": {
@@ -5468,7 +5812,7 @@
       "moveDown": "Siirrä alas",
       "remove": "Poista metrinen",
       "loading": "Ladataan…",
-      "unavailable": "Unavailable",
+      "unavailable": "",
       "refreshFailed": "Päivitys epäonnistui — tallennettujen tietojen näyttäminen",
       "stale": "Tallennetut tiedot — päivitä",
       "table": {
@@ -5500,7 +5844,7 @@
           }
         },
         "entries": {
-          "label": "Metrics"
+          "label": ""
         },
         "plain": {
           "label": "Poista kortin taustat"
@@ -5515,10 +5859,12 @@
       "allHidden": "Kaikki mittarit on piilotettu tähän näkymään. Käytä Muokkaa tätä näkymää palauttaaksesi ne."
     },
     "wazuh": {
+      "name": "",
+      "description": "",
       "target": {
         "api": "Wazuh palvelimen API",
-        "indexer": "Wazuh indexer",
-        "wazuh": "Wazuh"
+        "indexer": "",
+        "wazuh": ""
       },
       "severity": {
         "low": "Matala",
@@ -5533,7 +5879,15 @@
         },
         "certificate": {
           "title": "{target} varmenne ei ole luotettu",
-          "description": "Wazuh käyttää oletuksena itse allekirjoitettua varmennetta. Suorita \"Testaa yhteyttä\" integraatiossa ja luota varmenteeseen tai lisää varmenne Asetukset → Sertifikaatit."
+          "description": ""
+        },
+        "certificateHostname": {
+          "title": "",
+          "description": ""
+        },
+        "certificateExpired": {
+          "title": "",
+          "description": ""
         },
         "unreachable": {
           "title": "{target} ei tavoita",
@@ -5558,99 +5912,148 @@
         "unknown": {
           "title": "Tietoja ei voitu ladata {target}",
           "description": "Tarkista Homarr lokit lisätietoja."
-        }
+        },
+        "viewSaveTitle": "",
+        "viewSaveMessage": ""
       },
       "range": {
         "1h": "1t",
-        "24h": "24h",
+        "24h": "",
         "7d": "7pv",
         "30d": "30pv"
       },
-      "levelTooltip": "Säännön taso {level} ({severity})"
-    },
-    "wazuhAgents": {
-      "name": "Wazuh aineet",
-      "description": "Sortable list of Wazuh agents with status, OS, version and last keepalive",
+      "levelTooltip": "Säännön taso {level} ({severity})",
+      "summary": {
+        "title": "Hälytyksen vakavuus · {range}",
+        "alerts": "hälytykset",
+        "none": "Ei hälytyksiä",
+        "trend": {
+          "new": "uusi",
+          "tooltip": "Edellinen jakso: {previous}"
+        },
+        "previous": "",
+        "maxLevel": "Maksimi taso {level}",
+        "health": "Indeksoijan terveys: {status}",
+        "manager": "Hallitse {version}"
+      },
+      "alerts": {
+        "title": "",
+        "empty": "Ei hälytyksiä tällä tasolla. Kaikki hiljainen.",
+        "rule": "Sääntö {id}",
+        "openInDashboard": "Avaa tämä hälytys Wazuhin hallintapaneelissa"
+      },
+      "timeline": {
+        "title": "Hälytysten aikajana · {range}",
+        "total": "{count} hälytystä",
+        "interval": ""
+      },
+      "top": {
+        "title": {
+          "rules": "Parhaat säännöt · {range}",
+          "agents": "Parhaat agentit · {range}",
+          "sourceIps": "Parhaat lähteet · {range}",
+          "mitreTactics": "MITRE taktiikka · {range}",
+          "mitreTechniques": ""
+        },
+        "empty": {
+          "rules": "Ei hälytyksiä tänä aikana",
+          "agents": "Ei hälytyksiä tänä aikana",
+          "sourceIps": "Ei hälytyksiä lähteen IP-osoitteella tällä ajanjaksolla",
+          "mitreTactics": "MITRE ATT&CK:iin ei ole liitetty hälytyksiä tällä ajanjaksolla",
+          "mitreTechniques": "MITRE ATT&CK:iin ei ole liitetty hälytyksiä tällä ajanjaksolla"
+        },
+        "totalTooltip": "{count} vastaavaa hälytystä",
+        "private": "",
+        "public": "Julkinen",
+        "agents": "Nähty {count} agenttia",
+        "others": "{count} lisää hälytyksiä muissa merkinnöissä"
+      },
+      "agents": {
+        "title": "Agentit",
+        "total": "{count} agenttia",
+        "status": {
+          "active": "Aktiivinen",
+          "disconnected": "Yhteys Katkaistu",
+          "neverConnected": "Ei yhdistetty",
+          "pending": "Odottaa"
+        },
+        "statusLabel": {
+          "active": "Aktiivinen",
+          "disconnected": "Yhteys Katkaistu",
+          "never_connected": "Ei yhdistetty",
+          "pending": "Odottaa",
+          "unknown": "Tuntematon"
+        },
+        "live": "Suora",
+        "snapshot": "Tilannevedos {age} vanha",
+        "snapshotHint": "Lue Wazuh kojelaudan agentin tilannevedosta (wazuh-monitoring) joka on otettu {time}-palvelimen kautta. Lisää palvelimen API-tunnukset live datalle.",
+        "staleSnapshot": "Asiakkaan {time} tilannekatsaus on vanhentunut. Tarkista, että Wazuh kojelaudan seurantatyö on käynnissä, tai lisää palvelimen API-tunnisteet.",
+        "noDisconnected": "Kaikki agentit ovat yhteydessä",
+        "empty": "Suodatinta ei vastaa agentteja",
+        "column": {
+          "status": "Tila",
+          "name": "Työn nimi",
+          "ip": "",
+          "os": "Käyttöjärjestelmä",
+          "version": "Versio",
+          "lastKeepAlive": "",
+          "groups": "Ryhmät"
+        },
+        "outdated": "Vanhempi kuin uusin agenttiversio ({version})"
+      },
+      "vulnerabilities": {
+        "title": "Haavoittuvuus",
+        "topCves": "Parhaat CVE:t",
+        "score": "Pisteet",
+        "agentsShort": "Agentit",
+        "topAgents": "Eniten haavoittuvia tekijöitä",
+        "criticalHigh": "Crit / Korkea",
+        "totalTooltip": "",
+        "affected": "{count} agenttia",
+        "empty": "Ei havaittuja haavoittuvuuksia",
+        "distribution": "Vakavuuden jakauma. {unscored} havaintoa ilman pisteytystä ei näytetä.",
+        "worst": ""
+      },
+      "fim": {
+        "title": "Tiedoston eheys · {range}",
+        "event": {
+          "added": "Lisätty",
+          "modified": "Muokattu",
+          "deleted": "Poistettu",
+          "unknown": "Muutettu"
+        },
+        "empty": "Ei tiedostojen eheystapahtumia tänä aikana",
+        "user": "esittäjä: {user}",
+        "registry": "Rekisteriin"
+      },
+      "authFailures": {
+        "title": "Auth epäonnistumiset · {hours}h",
+        "seriesTooltip": "Kaikki agentit viimeisen {hours}tunnin aikana",
+        "peak": "",
+        "empty": "Tällä ajanjaksolla ei ole kirjautumisia",
+        "failed": "Epäonnistuneet kirjautuminen",
+        "failedHint": "Yksittäinen todennus epäonnistumiset (sshd, PAM, Windows-loki, virheellinen käyttäjä)",
+        "bruteForce": "Brute voima",
+        "bruteForceHint": "Korreloivat brute-force -säännöt (useita epäonnistumisia lyhyellä aikavälillä, MITRE T1110)",
+        "sourceIps": "Lähteen IP-osoitteet",
+        "ipTooltip": "",
+        "bruteForceCount": ""
+      },
+      "view": {
+        "overview": "",
+        "alerts": "",
+        "timeline": "",
+        "top": "",
+        "agents": "Agentit",
+        "vulnerabilities": "Haavoittuvuus",
+        "fim": "",
+        "authFailures": ""
+      },
       "option": {
-        "statusFilter": {
-          "label": "Näytä agentit"
+        "visibleViews": {
+          "label": "",
+          "description": ""
         },
-        "sortBy": {
-          "label": "Järjestä"
-        },
-        "showVersion": {
-          "label": "Näytä Wazuh versio sarake"
-        },
-        "showGroups": {
-          "label": "Näytä ryhmien sarake"
-        }
-      },
-      "title": "Agentit",
-      "total": "{count} agenttia",
-      "status": {
-        "active": "Aktiivinen",
-        "disconnected": "Yhteys Katkaistu",
-        "neverConnected": "Ei yhdistetty",
-        "pending": "Odottaa"
-      },
-      "statusLabel": {
-        "active": "Aktiivinen",
-        "disconnected": "Yhteys Katkaistu",
-        "never_connected": "Ei yhdistetty",
-        "pending": "Odottaa",
-        "unknown": "Tuntematon"
-      },
-      "live": "Suora",
-      "snapshot": "Tilannevedos {age} vanha",
-      "snapshotHint": "Lue Wazuh kojelaudan agentin tilannevedosta (wazuh-monitoring) joka on otettu {time}-palvelimen kautta. Lisää palvelimen API-tunnukset live datalle.",
-      "staleSnapshot": "Asiakkaan {time} tilannekatsaus on vanhentunut. Tarkista, että Wazuh kojelaudan seurantatyö on käynnissä, tai lisää palvelimen API-tunnisteet.",
-      "noDisconnected": "Kaikki agentit ovat yhteydessä",
-      "empty": "Suodatinta ei vastaa agentteja",
-      "column": {
-        "ip": "IP",
-        "os": "Käyttöjärjestelmä",
-        "version": "Versio",
-        "lastKeepAlive": "Keepalive",
-        "groups": "Ryhmät"
-      },
-      "outdated": "Vanhempi kuin uusin agenttiversio ({version})"
-    },
-    "wazuhAlerts": {
-      "name": "Wazuh hälytykset syöte",
-      "description": "Viimeaikaiset Wazuh hälytykset tasolla, MITRE ATT&CK tekniikoita, agentti ja lähde IP",
-      "option": {
-        "minLevel": {
-          "label": "Pienin sääntötaso",
-          "description": "Wazuh tasot: 0–6 matala, 7–11 keskitaso, 12–14 korkea, 15+ kriittinen"
-        },
-        "hours": {
-          "label": "Aika-ikkuna (tuntia)"
-        },
-        "limit": {
-          "label": "Kuulutusten määrä"
-        },
-        "showMitre": {
-          "label": "Show MITRE ATT&CK techniques"
-        },
-        "showAgent": {
-          "label": "Näytä agentti"
-        },
-        "showSourceIp": {
-          "label": "Näytä lähde IP"
-        },
-        "showRuleId": {
-          "label": "Näytä säännön tunnus"
-        }
-      },
-      "title": "Hälytykset · taso {level}+ · {hours} h",
-      "empty": "Ei hälytyksiä tällä tasolla. Kaikki hiljainen.",
-      "rule": "Sääntö {id}",
-      "openInDashboard": "Avaa tämä hälytys Wazuhin hallintapaneelissa"
-    },
-    "wazuhSummary": {
-      "name": "Wazuh hälytyksen vakavuus",
-      "description": "Hälytyksen vakavuusjakauma ja suuntaus edelliseen kauteen verrattuna",
-      "option": {
         "range": {
           "label": "Aikaväli"
         },
@@ -5659,26 +6062,6 @@
         },
         "showFooter": {
           "label": "Näytä alatunniste"
-        }
-      },
-      "title": "Hälytyksen vakavuus · {range}",
-      "alerts": "hälytykset",
-      "none": "Ei hälytyksiä",
-      "trend": {
-        "new": "uusi",
-        "tooltip": "Edellinen jakso: {previous}"
-      },
-      "previous": "Edellinen {range}: {count}",
-      "maxLevel": "Maksimi taso {level}",
-      "health": "Indeksoijan terveys: {status}",
-      "manager": "Hallitse {version}"
-    },
-    "wazuhTimeline": {
-      "name": "Wazuh alerts timeline",
-      "description": "Pinottu kaavio Wazuh hälytyksiä ajan mittaan vakavuuden mukaan",
-      "option": {
-        "range": {
-          "label": "Aikaväli"
         },
         "interval": {
           "label": "Aikaväli"
@@ -5691,60 +6074,32 @@
           "description": "Neliöjuuri pitää korkeat ja kriittiset hälytykset näkyvissä tuhansien alhaisten hälytysten vieressä"
         },
         "minLevel": {
-          "label": "Pienin sääntötaso"
+          "label": ""
         },
         "showLegend": {
           "label": "Näytä selitteet yhteenlaskettuina"
-        }
-      },
-      "title": "Hälytysten aikajana · {range}",
-      "total": "{count} hälytystä",
-      "interval": "per {interval}"
-    },
-    "wazuhTopList": {
-      "name": "Wazuh top list",
-      "description": "Eniten sääntöjä, agentteja, lähdeIP-osoitteita tai MITRE ATT&CK taktiikoita ja tekniikoita hälytysten mukaan",
-      "option": {
-        "kind": {
+        },
+        "topKind": {
           "label": "Sija"
         },
-        "range": {
-          "label": "Aikaväli"
-        },
-        "limit": {
-          "label": "Tietueiden määrä"
-        },
-        "minLevel": {
-          "label": "Pienin sääntötaso"
+        "topLimit": {
+          "label": ""
         },
         "showBars": {
           "label": "Näytä palkit"
-        }
-      },
-      "title": {
-        "rules": "Parhaat säännöt · {range}",
-        "agents": "Parhaat agentit · {range}",
-        "sourceIps": "Parhaat lähteet · {range}",
-        "mitreTactics": "MITRE taktiikka · {range}",
-        "mitreTechniques": "MITRE techniques · {range}"
-      },
-      "empty": {
-        "rules": "Ei hälytyksiä tänä aikana",
-        "agents": "Ei hälytyksiä tänä aikana",
-        "sourceIps": "Ei hälytyksiä lähteen IP-osoitteella tällä ajanjaksolla",
-        "mitreTactics": "MITRE ATT&CK:iin ei ole liitetty hälytyksiä tällä ajanjaksolla",
-        "mitreTechniques": "MITRE ATT&CK:iin ei ole liitetty hälytyksiä tällä ajanjaksolla"
-      },
-      "totalTooltip": "{count} vastaavaa hälytystä",
-      "private": "LAN",
-      "public": "Julkinen",
-      "agents": "Nähty {count} agenttia",
-      "others": "{count} lisää hälytyksiä muissa merkinnöissä"
-    },
-    "wazuhVulnerabilities": {
-      "name": "Wazuh haavoittuvuudet",
-      "description": "Haavoittuvuusluku, parhaat CVE:t ja haavoittuvimmat tekijät",
-      "option": {
+        },
+        "agentStatusFilter": {
+          "label": "Näytä agentit"
+        },
+        "agentSortBy": {
+          "label": "Järjestä"
+        },
+        "showVersion": {
+          "label": ""
+        },
+        "showGroups": {
+          "label": ""
+        },
         "cveOrder": {
           "label": "Sijoitus CVE:t by"
         },
@@ -5759,73 +6114,42 @@
         },
         "showAgents": {
           "label": "Näytä haavoittuvimmat tekijät"
-        }
-      },
-      "title": "Haavoittuvuus",
-      "topCves": "Parhaat CVE:t",
-      "score": "Pisteet",
-      "agentsShort": "Agentit",
-      "topAgents": "Eniten haavoittuvia tekijöitä",
-      "criticalHigh": "Crit / Korkea",
-      "totalTooltip": "{count} havaintoa {agents} agentissa",
-      "affected": "{count} agenttia",
-      "empty": "Ei havaittuja haavoittuvuuksia",
-      "distribution": "Vakavuuden jakauma. {unscored} havaintoa ilman pisteytystä ei näytetä.",
-      "worst": "Huonoin: {id} ({score}) {agents} agentissa"
-    },
-    "wazuhFim": {
-      "name": "Wazuh tiedoston eheys",
-      "description": "Viimeaikaiset tiedostojen eheyden seuranta (syscheck)",
-      "option": {
-        "range": {
-          "label": "Aikaväli"
         },
-        "event": {
+        "fimEvent": {
           "label": "Tapahtumat"
         },
-        "limit": {
-          "label": "Tapahtumien lukumäärä"
+        "fimLimit": {
+          "label": ""
         },
         "includeRegistry": {
           "label": "Sisällytä Windows-rekisterin tapahtumat"
-        }
-      },
-      "title": "Tiedoston eheys · {range}",
-      "event": {
-        "added": "Lisätty",
-        "modified": "Muokattu",
-        "deleted": "Poistettu",
-        "unknown": "Muutettu"
-      },
-      "empty": "Ei tiedostojen eheystapahtumia tänä aikana",
-      "user": "esittäjä: {user}",
-      "registry": "Rekisteriin"
-    },
-    "wazuhAuthFailures": {
-      "name": "Wazuh autentikointi epäonnistuu",
-      "description": "Epäonnistuneet kirjautumiset ja brute-force hälytykset per agentti tuntikohtaisesti sparklines",
-      "option": {
-        "hours": {
-          "label": "Aika-ikkuna (tuntia)"
         },
-        "limit": {
-          "label": "Apuaineiden lukumäärä"
+        "authLimit": {
+          "label": ""
         },
         "showSourceIps": {
           "label": "Näytä ylimmän lähdekoodin IP-osoitteet"
+        },
+        "alertsMinLevel": {
+          "label": "",
+          "description": "Wazuh tasot: 0–6 matala, 7–11 keskitaso, 12–14 korkea, 15+ kriittinen"
+        },
+        "alertsLimit": {
+          "label": ""
+        },
+        "showMitre": {
+          "label": ""
+        },
+        "showAgent": {
+          "label": "Näytä agentti"
+        },
+        "showSourceIp": {
+          "label": "Näytä lähde IP"
+        },
+        "showRuleId": {
+          "label": "Näytä säännön tunnus"
         }
-      },
-      "title": "Auth epäonnistumiset · {hours}h",
-      "seriesTooltip": "Kaikki agentit viimeisen {hours}tunnin aikana",
-      "peak": "Huippu {count}/jakso",
-      "empty": "Tällä ajanjaksolla ei ole kirjautumisia",
-      "failed": "Epäonnistuneet kirjautuminen",
-      "failedHint": "Yksittäinen todennus epäonnistumiset (sshd, PAM, Windows-loki, virheellinen käyttäjä)",
-      "bruteForce": "Brute voima",
-      "bruteForceHint": "Korreloivat brute-force -säännöt (useita epäonnistumisia lyhyellä aikavälillä, MITRE T1110)",
-      "sourceIps": "Lähteen IP-osoitteet",
-      "ipTooltip": "{ip}: {count} epäonnistumista",
-      "bruteForceCount": "{count} brute force"
+      }
     }
   },
   "widgetPreview": {
@@ -5844,6 +6168,18 @@
       "addWidget": "Lisää widget",
       "addApp": "Lisää sovellus",
       "connectService": "Yhdistä palvelu"
+    },
+    "urlDrop": {
+      "hint": "",
+      "resolving": "",
+      "notification": {
+        "success": {
+          "message": ""
+        },
+        "full": {
+          "message": ""
+        }
+      }
     },
     "setupChecklist": {
       "title": "Tee tästä taulusta hyödyllinen",
@@ -5882,7 +6218,7 @@
         "preview": "Kohteen {name} esikatselu, {count} kohdetta",
         "currentHidden": "Nykyinen taulu: {name}",
         "keyboard": {
-          "navigate": "Navigate",
+          "navigate": "",
           "open": "Avaa",
           "instructions": "Kirjoita suodattaaksesi levyt. Käytä nuolinäppäimiä liikkuaksesi tulosten läpi ja Syötä avataksesi levyn."
         },
@@ -6057,7 +6393,8 @@
       },
       "itemRadius": {
         "label": "Kohteen säde",
-        "description": "Muuttaa paneelin korttien pyöreyttä"
+        "description": "Muuttaa paneelin korttien pyöreyttä",
+        "option": {}
       },
       "isPublic": {
         "label": "Julkinen",
@@ -6098,12 +6435,12 @@
             "columns": "sarakkeet",
             "empty": "Tämä asettelu on tyhjä",
             "dynamicSection": "Dynaaminen osio",
-            "editorWidthLabel": "{layoutName} · {width}px"
+            "editorWidthLabel": ""
           },
           "reset": {
             "action": "Nollaa Base",
             "confirm": {
-              "title": "Reset {layoutName}?",
+              "title": "",
               "message": "Tämä korvaa tämän asettelun jokaisen tallennetun sijainnin ja koon uudella asettelulla, joka on luotu emäksestä. Tätä ei voi perua."
             }
           },
@@ -6232,9 +6569,9 @@
         "label": "Kiinteät sivupalkit",
         "description": "Varaa kummallakin puolella enintään kolme kojelautaa. Jäljellä oleva kojelauta aukeaa automaattisesti.",
         "left": {
-          "label": "Left sidebar",
+          "label": "",
           "description": "Pidä tämä alue näkyvissä, kun dashboard vierittää",
-          "thumbLabel": "Left sidebar width"
+          "thumbLabel": ""
         },
         "right": {
           "label": "Oikea sivupalkki",
@@ -6404,7 +6741,7 @@
                 }
               },
               "items": {
-                "logo": "Logo",
+                "logo": "",
                 "search": "Haku",
                 "home": "Kotipaneeli",
                 "boardSwitcher": "Paneelit",
@@ -6646,7 +6983,7 @@
             "groups": {
               "identity": "Identiteetti",
               "appearance": "Ulkoasu",
-              "customCss": "Custom CSS",
+              "customCss": "",
               "authentication": "Tunnistautuminen"
             },
             "identity": {
@@ -6660,7 +6997,7 @@
             },
             "logo": {
               "label": "Sovelluksen logo",
-              "placeholder": "/logo/logo.png"
+              "placeholder": ""
             },
             "favicon": {
               "label": "Selaimen kuvake (favicon)",
@@ -6678,13 +7015,18 @@
             },
             "signInBackground": {
               "label": "Tunnistautumisen tausta",
-              "placeholder": "https://example.com/background.jpg"
+              "placeholder": ""
             },
             "signInOverlay": {
               "label": "Taustan peitto"
             },
+            "signInMarquee": {
+              "label": "",
+              "description": ""
+            },
             "defaultRadius": {
-              "label": "Kulman tyyli"
+              "label": "Kulman tyyli",
+              "options": {}
             },
             "customCss": {
               "label": "Globaalit mukautetut CSS",
@@ -6699,14 +7041,14 @@
             "summary": {
               "title": "Nykyinen tuotemerkki",
               "cornerStyle": "Kulman tyyli",
-              "palette": "Palette",
+              "palette": "",
               "backgroundConfigured": "Mukautettu tausta · {overlay}% peitto",
               "backgroundDefault": "Oletus tausta",
               "greetingConfigured": "Mukautettu tervehdys",
               "greetingDefault": "Tervehdyksen oletus",
               "boardColorLocked": "Laudan väri lukittu",
               "boardColorFlexible": "Hallituksen värit sallittu",
-              "logo": "Logo",
+              "logo": "",
               "greeting": "Tervehdys",
               "on": "Päällä",
               "off": "Pois"
@@ -6803,7 +7145,7 @@
               }
             },
             "baseUrl": {
-              "title": "API base URL",
+              "title": "",
               "description": "Sisällytä API etuliite, yleensä /v1. Konteissa, paikallinen isäntä viittaa Homarr konttiin."
             },
             "apiKey": {
@@ -6840,6 +7182,7 @@
             "model": {
               "title": "Malli",
               "description": "Valitse löydetty malli tai kirjoita tarkka päätepisteen malli ID.",
+              "save": "",
               "placeholder": "Malli ID",
               "refresh": "Päivitä mallit",
               "chooseModel": "Valitse malli, jota käytetään uusiin keskusteluihin.",
@@ -6931,7 +7274,8 @@
             },
             "lastExecution": {
               "label": "Viimeksi suoritettu"
-            }
+            },
+            "actions": {}
           },
           "table": {
             "search": "Suodata {count} tehtävää..."
@@ -6999,7 +7343,7 @@
                 }
               },
               "provenance": {
-                "oauth": "OAuth",
+                "oauth": "",
                 "unattributed": "Manuaalinen tai perinteinen API-avain",
                 "unnamedClient": "Asiakkaan nimeä ei tallennettu",
                 "clientNameHint": "Asiakkaan nimet ovat itse raportoituja eikä niitä ole vahvistettu.",
@@ -7084,7 +7428,7 @@
               "availableTools": {
                 "title": "Käytettävissä olevat työkalut",
                 "description": "{count} työkalua käytettävissä. Laajenna kategoria nähdäksesi yksittäiset työkalut ja niiden kuvaukset.",
-                "filteredDescription": "{count} matching tools across expanded categories.",
+                "filteredDescription": "",
                 "search": "Hae työkaluja",
                 "noResults": {
                   "title": "Ei hakua vastaavia työkaluja",
@@ -7426,8 +7770,8 @@
       },
       "status": {
         "available": "Saatavilla",
-        "degraded": "Metrics unavailable",
-        "unavailable": "Unavailable"
+        "degraded": "",
+        "unavailable": ""
       },
       "unavailable": "Kubernetesin kontekstia ei voida saavuttaa. Valitse toinen konteksti tai vahvista sen käyttäjätunnukset ja päätepiste.",
       "metricsUnavailable": "Tämä konteksti on saavutettavissa, mutta Metrics Server ei ole käytettävissä. Tavaraluettelo on saatavilla ilman live CPU ja muistin käyttöä."
@@ -7459,7 +7803,7 @@
     },
     "nodes": {
       "field": {
-        "metricsUnavailable": "Unavailable",
+        "metricsUnavailable": "",
         "kubernetesVersion": {
           "label": "Kubernetes-versio"
         }
@@ -7549,6 +7893,15 @@
     },
     "error": {
       "internalServerError": "Kubernetesin tietojen nouto epäonnistui"
+    },
+    "field": {
+      "name": {},
+      "namespace": {},
+      "creationTimestamp": {},
+      "state": {},
+      "status": {},
+      "type": {},
+      "architecture": {}
     }
   },
   "permission": {
@@ -7574,7 +7927,8 @@
       "permission": {
         "label": "Käyttöoikeus"
       }
-    }
+    },
+    "action": {}
   },
   "navigationStructure": {
     "manage": {
@@ -7684,7 +8038,7 @@
       "modeAriaLabel": "{mode} tila",
       "resultsAriaLabel": "{mode} tulosta",
       "footer": {
-        "navigate": "Navigate",
+        "navigate": "",
         "open": "Avaa"
       }
     },
@@ -8114,7 +8468,8 @@
         },
         "urlTemplate": {
           "label": "URL-hakujen pohja"
-        }
+        },
+        "description": {}
       },
       "page": {
         "list": {
@@ -8396,6 +8751,14 @@
     "conversationActions": "Keskustelun toiminnot",
     "searchConversations": "Etsi keskusteluita",
     "noMatchingConversations": "Ei vastaavia keskusteluja",
+    "historyError": {
+      "title": "",
+      "load": "",
+      "loadMessages": "",
+      "saveMessages": "",
+      "switch": "",
+      "retry": ""
+    },
     "moreActions": "Enemmän vastaustoimia",
     "renameConversation": {
       "action": "Uudelleennimeä",
@@ -8515,6 +8878,9 @@
     },
     "mentions": {
       "menu": "Lisää Homarr konteksti",
+      "back": "",
+      "loading": "",
+      "empty": "",
       "context": "Konteksti",
       "app": "Sovellukset",
       "integration": "Integraatiot",
@@ -8529,6 +8895,8 @@
     },
     "commands": {
       "menu": "Avustavat komennot",
+      "hint": "",
+      "empty": "",
       "health": "Valmistele palvelun terveystarkastus",
       "explore": "Valmistele yleiskatsaus tähän Homarr instanssiin",
       "media": "Valmistele mediahaku",
@@ -8542,7 +8910,7 @@
       "used": "Viimeisin vaihe",
       "remaining": "Jäljellä",
       "capacity": "Tilavuus",
-      "input": "Input",
+      "input": "",
       "output": "Ulostulo",
       "cached": "Välimuistissa oleva syöte",
       "cacheWrite": "Välimuistin kirjoittaminen",
@@ -8566,7 +8934,7 @@
       "fallbackLatency": "Takaisinperinnän latenssi",
       "cacheDiscount": "Välimuistin alennus",
       "normalizedTokens": "OpenRouter normalisoitu tulo / tuloste",
-      "byok": "BYOK",
+      "byok": "",
       "cost": "Kustannukset",
       "reported": "Palveluntarjoajan ilmoittama",
       "estimated": "Arvioitu mallihinnoittelun perusteella",
@@ -8578,7 +8946,7 @@
       "step": "Vaihe {number}",
       "generation": "Luominen"
     },
-    "toolInput": "Input",
+    "toolInput": "",
     "toolOutput": "Ulostulo",
     "toolActivity": {
       "iconSearch": "Etsitään “{query}” kuvakkeita",
@@ -8671,15 +9039,15 @@
       "automaticContinue": "Ehdotettujen muutosten hyväksyminen automaattisesti",
       "resetAll": "Nollaa kaikki muutokset",
       "tabs": {
-        "css": "Custom CSS",
+        "css": "",
         "appearance": "Ulkoasu",
         "background": "Tausta",
         "general": "Yleiset"
       },
       "cssDescription": "Muokkaa kokonaista tyyliä. Olemassa olevat säännöt säilytetään, ellei niitä poisteta täältä.",
       "cssCharacters": "{count} / 16384 merkkiä",
-      "copyCss": "Copy CSS",
-      "restoreCss": "Restore current CSS",
+      "copyCss": "",
+      "restoreCss": "",
       "remoteCssTitle": "Tämä CSS lataa etäresurssin",
       "remoteCssDescription": "Tuodut tyylitiedostot ja etäosoitteet ottavat yhteyttä toiseen palvelimeen, kun latautuu. Tarkista ne ennen jatkamista."
     },
@@ -8703,13 +9071,14 @@
       "errorDescription": "Malli ei tarjonnut täydellistä widgetin konfiguraatiota. Mitään widgetiä ei lisätty."
     },
     "approvalRequired": "Hyväksyntä vaaditaan",
-    "complete": "Complete",
+    "complete": "",
     "denied": "Estetty",
     "failed": "Epäonnistui",
     "working": "Työskentely",
     "approvalDescription": "Tarkista tämä muutos ennen sen päättymistä.",
     "approveAndRun": "Hyväksy ja aja",
     "deny": "Estä",
+    "approvalError": "",
     "autoApproval": {
       "label": "Automaattiset hyväksynnät",
       "composerLabel": "Hyväksy minulle",

@@ -63,6 +63,20 @@ export const throwIfActionForbiddenAsync = async (
   notAllowed();
 };
 
+export const isActionAllowedAsync = async (
+  ctx: { db: Database; session: Session | null },
+  boardWhere: SQL<unknown>,
+  permission: BoardPermission,
+) => {
+  try {
+    await throwIfActionForbiddenAsync(ctx, boardWhere, permission);
+    return true;
+  } catch (error) {
+    if (error instanceof TRPCError && error.code === "NOT_FOUND") return false;
+    throw error;
+  }
+};
+
 /**
  * This method returns NOT_FOUND to prevent snooping on board existence
  * A function is used to use the method without return statement

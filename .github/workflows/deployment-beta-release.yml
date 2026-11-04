@@ -10,13 +10,15 @@ on:
         description: Send notifications
 
 permissions:
-  contents: write
-  pull-requests: write
+  contents: read
 
 jobs:
   create-and-merge-pr:
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    permissions:
+      contents: read
+      pull-requests: write # Required to create the release PR
     steps:
       - name: Discord notification
         if: ${{ inputs.send-notifications }}
@@ -26,7 +28,7 @@ jobs:
         with:
           args: "Beta release has been triggered: [run ${{ github.run_number }}](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})"
       - name: Checkout repository
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
           fetch-depth: 0
@@ -42,8 +44,8 @@ jobs:
           pr_url="$(gh pr list --base beta --head next --state open --json url --jq '.[0].url // empty')"
           if [[ -z "$pr_url" ]]; then
             pr_url="$(gh pr create \
-              --title "chore(release): release ${{ steps.semver.outputs.next }}-beta" \
-              --body "Detected change to be ${{ steps.semver.outputs.bump }}<br/>Bump version from ${{ steps.semver.outputs.current }} to ${{ steps.semver.outputs.next }}-beta" \
+              --title "chore(release): release ${NEXT_VERSION}-beta" \
+              --body "Detected change to be ${VERSION_BUMP}<br/>Bump version from ${CURRENT_VERSION} to ${NEXT_VERSION}-beta" \
               --base beta \
               --head next \
               --label automerge)"
@@ -52,6 +54,9 @@ jobs:
           echo "pr_number=${pr_url##*/}" >> "$GITHUB_OUTPUT"
         env:
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+          NEXT_VERSION: ${{ steps.semver.outputs.next }}
+          VERSION_BUMP: ${{ steps.semver.outputs.bump }}
+          CURRENT_VERSION: ${{ steps.semver.outputs.current }}
       - name: Discord notification
         if: ${{ inputs.send-notifications }}
         env:
@@ -61,7 +66,7 @@ jobs:
           args: "Created a release PR ${{ steps.create-pull-request.outputs.url }} for version ${{ steps.semver.outputs.next }}-beta (new behaviour: ${{ steps.semver.outputs.bump }})"
       - name: Obtain token
         id: obtainApprovalToken
-        uses: actions/create-github-app-token@v3
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
         with:
           private-key: ${{ secrets.RENOVATE_APPROVE_PRIVATE_KEY }}
           client-id: ${{ vars.RENOVATE_APPROVE_CLIENT_ID }}
@@ -69,11 +74,12 @@ jobs:
       - name: Approve PR
         env:
           GITHUB_TOKEN: ${{ steps.obtainApprovalToken.outputs.token }}
+          PR_URL: ${{ steps.create-pull-request.outputs.url }}
         run: |
-          gh pr review "${{ steps.create-pull-request.outputs.url }}" --approve --body "Automatically approved by GitHub Action"
+          gh pr review "$PR_URL" --approve --body "Automatically approved by GitHub Action"
       - name: Obtain token
         id: obtainMergeToken
-        uses: actions/create-github-app-token@v3
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
         with:
           private-key: ${{ secrets.RENOVATE_MERGE_PRIVATE_KEY }}
           client-id: ${{ vars.RENOVATE_MERGE_CLIENT_ID }}
@@ -82,7 +88,7 @@ jobs:
       - id: automerge
         if: ${{ steps.semver.outputs.bump != 'major' }}
         name: automerge
-        uses: "pascalgn/automerge-action@7961b8b5eec56cc088c140b56d864285eabd3f67" # v0.16.4
+        uses: pascalgn/automerge-action@7961b8b5eec56cc088c140b56d864285eabd3f67 # v0.16.4
         env:
           GITHUB_TOKEN: ${{ steps.obtainMergeToken.outputs.token }}
           MERGE_METHOD: merge # we prefer merge commits for merging to beta

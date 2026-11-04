@@ -18,6 +18,7 @@ export const DOWNLOAD_COLUMN_ACCESSORS = [
   "integration",
   "index",
   "type",
+  "actions",
 ] as const satisfies readonly (keyof ExtendedDownloadClientItem)[];
 
 export const ADVANCED_DOWNLOAD_COLUMN_ACCESSORS = [
@@ -29,6 +30,7 @@ export const ADVANCED_DOWNLOAD_COLUMN_ACCESSORS = [
   "time",
   "state",
   "integration",
+  "actions",
 ] as const satisfies readonly (typeof DOWNLOAD_COLUMN_ACCESSORS)[number][];
 
 type DownloadColumnAccessor = (typeof DOWNLOAD_COLUMN_ACCESSORS)[number];

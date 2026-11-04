@@ -11,7 +11,7 @@ import type {
 } from "@assistant-ui/react";
 import { AttachmentPrimitive, useAuiState, useMessagePartText } from "@assistant-ui/react";
 import type { DirectiveChipProps } from "@assistant-ui/react-lexical";
-import { MarkdownTextPrimitive, unstable_memoizeMarkdownComponents } from "@assistant-ui/react-markdown";
+import { MarkdownTextPrimitive, memoizeMarkdownComponents } from "@assistant-ui/react-markdown";
 import type { SyntaxHighlighterProps } from "@assistant-ui/react-markdown";
 import { ActionIcon, Anchor, Box, Group, Loader, Text, useComputedColorScheme } from "@mantine/core";
 import {
@@ -311,7 +311,7 @@ const AssistantMarkdownSpan = ({
   return <span {...props}>{children}</span>;
 };
 
-const assistantMarkdownComponents = unstable_memoizeMarkdownComponents({
+const assistantMarkdownComponents = memoizeMarkdownComponents({
   a: MarkdownLink,
   img: MarkdownImage,
   span: AssistantMarkdownSpan,

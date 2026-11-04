@@ -13,13 +13,15 @@ on:
         description: Send notifications
 
 permissions:
-  contents: write
-  pull-requests: write
+  contents: read
 
 jobs:
   create-and-merge-pr:
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    permissions:
+      contents: write # Required to generate release notes
+      pull-requests: write # Required to create the release PR
     steps:
       - name: Discord notification
         if: ${{ github.event_name == 'schedule' || inputs.send-notifications }}
@@ -29,7 +31,7 @@ jobs:
         with:
           args: "Automatic release has been triggered: [run ${{ github.run_number }}](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})"
       - name: Checkout repository
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
           fetch-depth: 0
@@ -44,7 +46,9 @@ jobs:
           noVersionBumpBehavior: silent
       - name: No release needed
         if: ${{ steps.semver.outputs.bump == '' || steps.semver.outputs.bump == 'none' }}
-        run: echo "No release-worthy commits were found since ${{ steps.semver.outputs.current }}." >> "$GITHUB_STEP_SUMMARY"
+        env:
+          CURRENT_VERSION: ${{ steps.semver.outputs.current }}
+        run: echo "No release-worthy commits were found since ${CURRENT_VERSION}." >> "$GITHUB_STEP_SUMMARY"
       - name: Generate release notes
         if: ${{ steps.semver.outputs.bump != '' && steps.semver.outputs.bump != 'none' }}
         env:
@@ -97,7 +101,7 @@ jobs:
       - name: Obtain token
         id: obtainApprovalToken
         if: ${{ steps.create-pull-request.outcome == 'success' }}
-        uses: actions/create-github-app-token@v3
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
         with:
           private-key: ${{ secrets.RENOVATE_APPROVE_PRIVATE_KEY }}
           client-id: ${{ vars.RENOVATE_APPROVE_CLIENT_ID }}
@@ -106,12 +110,13 @@ jobs:
         if: ${{ steps.create-pull-request.outcome == 'success' }}
         env:
           GITHUB_TOKEN: ${{ steps.obtainApprovalToken.outputs.token }}
+          PR_URL: ${{ steps.create-pull-request.outputs.url }}
         run: |
-          gh pr review "${{ steps.create-pull-request.outputs.url }}" --approve --body "Automatically approved by GitHub Action"
+          gh pr review "$PR_URL" --approve --body "Automatically approved by GitHub Action"
       - name: Obtain token
         id: obtainMergeToken
         if: ${{ steps.create-pull-request.outcome == 'success' }}
-        uses: actions/create-github-app-token@v3
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
         with:
           private-key: ${{ secrets.RENOVATE_MERGE_PRIVATE_KEY }}
           client-id: ${{ vars.RENOVATE_MERGE_CLIENT_ID }}
@@ -120,7 +125,7 @@ jobs:
       - id: automerge
         if: ${{ steps.create-pull-request.outcome == 'success' && steps.semver.outputs.bump != 'major' }}
         name: automerge
-        uses: "pascalgn/automerge-action@7961b8b5eec56cc088c140b56d864285eabd3f67" # v0.16.4
+        uses: pascalgn/automerge-action@7961b8b5eec56cc088c140b56d864285eabd3f67 # v0.16.4
         env:
           GITHUB_TOKEN: ${{ steps.obtainMergeToken.outputs.token }}
           MERGE_METHOD: merge # we prefer merge commits for merging to main

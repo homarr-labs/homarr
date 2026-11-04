@@ -2,9 +2,6 @@ import { z } from "zod/v4";
 
 export const appHrefSchema = z
   .string()
-  .trim()
-  .refine((val) => !/^javascript:/i.test(val), "JavaScript URIs are not permitted")
-  .or(z.literal(""))
   .transform((value) => (value.length === 0 ? null : value))
   .nullable();
 
@@ -33,3 +30,15 @@ export const appCreateManySchema = z
   .min(1);
 
 export const appEditSchema = appManageSchema.and(z.object({ id: z.string() }));
+
+export const normalizeAppWidgetOptions = (options: Record<string, unknown>): Record<string, unknown> => {
+  if (options.openIn !== undefined) return options;
+  if (options.openInNewTab === undefined && options.openInNewWindow === undefined) return options;
+
+  const { openInNewTab, openInNewWindow, ...remainingOptions } = options;
+  let openIn = "newTab";
+  if (openInNewWindow === true) openIn = "newWindow";
+  else if (openInNewTab === false) openIn = "currentTab";
+
+  return { ...remainingOptions, openIn };
+};

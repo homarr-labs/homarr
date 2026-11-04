@@ -9,6 +9,7 @@ export interface InstanceData {
   integrationId: string;
   integrationName: string;
   integrationUrl: string;
+  externalUrl: string | null;
   instanceInfo: CoolifyInstanceInfo;
   updatedAt: Date;
 }

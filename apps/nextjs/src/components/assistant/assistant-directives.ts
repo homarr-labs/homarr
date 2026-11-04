@@ -1,6 +1,6 @@
-import { unstable_defaultDirectiveFormatter } from "@assistant-ui/react";
+import { defaultDirectiveFormatter } from "@assistant-ui/react";
 
-export const parseAssistantDirectives = (text: string) => unstable_defaultDirectiveFormatter.parse(text);
+export const parseAssistantDirectives = (text: string) => defaultDirectiveFormatter.parse(text);
 
 export const getAssistantDirectiveTranslationKey = (type: string) => {
   if (type === "tool" || type === "tools") return "tools" as const;

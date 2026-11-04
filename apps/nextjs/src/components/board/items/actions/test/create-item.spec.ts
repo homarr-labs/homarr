@@ -2,7 +2,7 @@ import { afterEach, describe, expect, test, vi } from "vitest";
 
 import * as boardContext from "@homarr/boards/context";
 
-import { createItemCallback } from "../create-item";
+import { createItemCallback, hasRoomForItem } from "../create-item";
 import * as emptyPositionModule from "../empty-position";
 import { BoardMockBuilder } from "./mocks/board-mock";
 import { ContainerSectionMockBuilder } from "./mocks/container-section-mock";
@@ -267,5 +267,21 @@ describe("item actions create-item", () => {
         yOffset: 1,
       }),
     ]);
+  });
+
+  test("hasRoomForItem reports true when a position is found", () => {
+    const board = new BoardMockBuilder().addEmptySection({ id: "canvas" }).build();
+    vi.spyOn(emptyPositionModule, "getFirstEmptyPosition").mockReturnValue({ xOffset: 0, yOffset: 0 });
+
+    expect(hasRoomForItem(board, "app")).toBe(true);
+    expect(hasRoomForItem({ ...board, sections: [] }, "app")).toBe(false);
+    expect(hasRoomForItem({ ...board, layouts: [] }, "app")).toBe(false);
+  });
+
+  test("hasRoomForItem reports false instead of throwing when the board is full", () => {
+    const board = new BoardMockBuilder().addEmptySection({ id: "canvas" }).build();
+    vi.spyOn(emptyPositionModule, "getFirstEmptyPosition").mockReturnValue(undefined);
+
+    expect(hasRoomForItem(board, "app")).toBe(false);
   });
 });

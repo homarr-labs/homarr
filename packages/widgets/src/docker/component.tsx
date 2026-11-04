@@ -44,7 +44,7 @@ import { AddDockerAppToHomarr, useDockerContainerRemovalConfirmation } from "@ho
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useByteFormatter } from "@homarr/settings";
 import { useI18n } from "@homarr/translation/client";
-import { zoomCompensatedSize } from "@homarr/ui";
+import { iconSizes, zoomCompensatedSize } from "@homarr/ui";
 
 import type { WidgetComponentProps } from "../definition";
 import { getUsableWidgetQueryData } from "../common/query-state";
@@ -392,7 +392,7 @@ export default function DockerWidget({
       ({ accessor }) => columnVisibility[String(accessor) as keyof typeof columnVisibility],
     );
   }, [actionHandlers, columnVisibility, formatBytes, isAdvanced, isEditMode, options.enableRowSorting, t, tCommon]);
-  const { effectiveColumns, storeKey, setMultipleColumnWidths } = usePersistedTableLayout({
+  const { effectiveColumns, storeKey, onColumnLayoutChange, setMultipleColumnWidths } = usePersistedTableLayout({
     columns,
     columnAccessors,
     columnOrder: options.columnOrder,
@@ -445,6 +445,7 @@ export default function DockerWidget({
           noRecordsText={tWidget("empty.noContainers")}
           columns={effectiveColumns}
           storeColumnsKey={storeKey}
+          onColumnLayoutChange={onColumnLayoutChange}
           sortStatus={sortStatus}
           onSortStatusChange={(isAdvanced || options.enableRowSorting) && !isEditMode ? setSortStatus : undefined}
           idAccessor="resourceId"
@@ -466,7 +467,7 @@ export default function DockerWidget({
           wrap="nowrap"
         >
           <Group gap={4} wrap="nowrap">
-            <IconBrandDocker size="var(--mantine-font-size-md)" style={{ flexShrink: 0 }} />
+            <IconBrandDocker style={{ ...iconSizes.md, flexShrink: 0 }} />
             <Text size="xs" truncate>
               {t("table.footer", { count: containers.length.toString() })}
             </Text>

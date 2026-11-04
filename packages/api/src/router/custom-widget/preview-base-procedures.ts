@@ -1,5 +1,4 @@
 import { assertCustomWidgetIntegrationBindings } from "./source-resolver";
-import { getCustomWidgetSourceAuthType } from "@homarr/custom-widgets/core";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod/v4";
 
@@ -97,8 +96,7 @@ const getRequiredSourceConfigurations = (
     );
     const sourceRequiresCredentials = sourceRequests.some((request) => request.auth !== "none");
     const isMissingCredential =
-      sourceRequiresCredentials &&
-      requiredSecretKinds(getCustomWidgetSourceAuthType(source)).some((kind) => !configuredSecretKinds.has(kind));
+      sourceRequiresCredentials && requiredSecretKinds(source.auth).some((kind) => !configuredSecretKinds.has(kind));
     if (!isCustomWidgetSourceUrlPlaceholder(source.baseUrl) && !isMissingCredential) return [];
     return [
       {
@@ -152,8 +150,7 @@ const previewCreateProcedure = permissionRequiredProcedure
         const hasStoredSecrets = existing.secrets.some((secret) => secret.sourceId === sourceId);
         if (!submittedSource || !hasStoredSecrets || hasSameSecretBinding(existingSource, submittedSource)) continue;
 
-        const authType = getCustomWidgetSourceAuthType(submittedSource);
-        const missingReplacement = requiredSecretKinds(authType).some(
+        const missingReplacement = requiredSecretKinds(submittedSource.auth).some(
           (kind) => !secrets.some((secret) => secret.sourceId === sourceId && secret.kind === kind),
         );
         if (missingReplacement) {
@@ -179,13 +176,7 @@ const previewCreateProcedure = permissionRequiredProcedure
 
     const invalid = secrets.find((secret) => {
       const source = definition.sources[secret.sourceId];
-      const authType = getCustomWidgetSourceAuthType(source);
-      const kinds =
-        authType === "basic"
-          ? ["username", "password"]
-          : source && authType && ["bearer", "apiKeyHeader", "apiKeyQuery"].includes(authType)
-            ? ["apiKey"]
-            : [];
+      const kinds = requiredSecretKinds(source?.auth);
       return !source || !kinds.includes(secret.kind);
     });
     if (invalid) {

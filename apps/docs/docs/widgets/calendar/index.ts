@@ -10,9 +10,15 @@ export const calendarWidget: WidgetDefinition = {
     items: [
       {
         name: "View",
-        description: "Shared default view. View menu selections are remembered only in the current browser.",
+        description: "Layout used to display events.",
         values: "Compact month, Month, Week, Day, Agenda",
         defaultValue: "Compact month",
+      },
+      {
+        name: "Hide header",
+        description: "Hide the date navigation. Widgets that are too short always hide it.",
+        values: { type: "boolean" },
+        defaultValue: "no",
       },
       {
         name: "Radarr release type",

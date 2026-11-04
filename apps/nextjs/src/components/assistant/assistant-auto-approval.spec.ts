@@ -30,7 +30,7 @@ const AutomaticActionProbe = ({
 }: {
   ready: boolean;
   completed: boolean;
-  confirm: () => void;
+  confirm: () => void | Promise<void>;
 }) => {
   automaticActionInProgress = useAssistantAutomaticAction({
     toolCallId: "configure-app-1",
@@ -246,6 +246,8 @@ describe("assistant automatic approval tracker", () => {
     document.body.append(container);
     const root = createRoot(container);
     let confirmationCount = 0;
+    const firstResponse = Promise.withResolvers<void>();
+    const secondResponse = Promise.withResolvers<void>();
 
     await act(async () => {
       root.render(
@@ -261,6 +263,8 @@ describe("assistant automatic approval tracker", () => {
               completed: false,
               confirm: () => {
                 confirmationCount += 1;
+                if (confirmationCount === 1) return firstResponse.promise;
+                return secondResponse.promise;
               },
             }),
           ),
@@ -275,8 +279,15 @@ describe("assistant automatic approval tracker", () => {
     expect(confirmationCount).toBe(2);
     expect(automaticActionInProgress).toBe(true);
 
-    await act(async () => vi.advanceTimersByTime(5_000));
+    await act(async () => vi.advanceTimersByTime(2_500));
+    await act(async () => firstResponse.resolve());
+    await act(async () => vi.advanceTimersByTime(2_500));
     expect(confirmationCount).toBe(2);
+    expect(automaticActionInProgress).toBe(false);
+
+    const retryRevision = currentAutoApproval?.retryRevision;
+    await act(async () => secondResponse.reject(new Error("Approval transport timed out")));
+    expect(currentAutoApproval?.retryRevision).toBe(retryRevision);
     expect(automaticActionInProgress).toBe(false);
 
     await act(async () => root.unmount());

@@ -13,18 +13,15 @@ interface HomarrCustomWidgetV2 {
 }
 ```
 
-`sources.default` is required. HTTP sources have `baseUrl`, `networkScope`, optional `name`, and optional `auth` (default
-`"none"`). Scope `public` permits public addresses, `private` additionally permits private addresses, and `loopback` additionally
-permits loopback. Blocked address classes remain blocked at every scope. Localhost requires `loopback`; preserve explicit
-scope rather than widening it on failure. Base URLs have no credentials, query, or fragment. Use documented public URLs or
-`https://your-service.example.com` for missing self-hosted URLs; Homarr configures URL/scope/credentials separately.
+`sources.default` is required. HTTP sources have `baseUrl`, optional `name`, and optional `auth` (default `"none"`). Base URLs
+have no credentials, query, or fragment. Use documented public URLs or `https://your-service.example.com` for missing
+self-hosted URLs; Homarr configures URLs and credentials separately.
 
 ```json
 {
   "sources": {
     "default": {
       "baseUrl": "https://your-service.example.com/api/v1",
-      "networkScope": "private",
       "auth": { "type": "apiKeyHeader", "name": "X-Api-Key" }
     }
   },
@@ -50,8 +47,13 @@ scope rather than widening it on failure. Base URLs have no credentials, query, 
 Auth: `"none"`, `"bearer"`, `"basic"`, `{"type":"apiKeyHeader","name":"X-Api-Key"}`, or
 `{"type":"apiKeyQuery","name":"api_key"}`. Values are credential-free declarations.
 
+Multiple encrypted headers use `{"type":"headers","headers":[{"name":"X-Api-Key","slot":"key"},{"name":"X-Api-Secret","slot":"secret"}]}`.
+Use at most 8 HTTP-token names, unique ignoring case, with distinct stable slot IDs of at most 57 characters. Configure
+values separately in Homarr. Header name or slot changes require credential configuration again. Use `bearer` for
+Authorization; routing, proxy, forwarding, cookie and hop-by-hop headers remain reserved.
+
 Saved sources use `{"type":"integration","integrationKind":"sonarr","integrationId":"saved-id"}`. Discover supported kinds
-and matching full-access entries with integration tools. Bind the ID before preview; omit URL/scope/auth. Paths append to the
+and matching full-access entries with integration tools. Bind the ID before preview; omit URL/auth. Paths append to the
 saved URL; non-GET requests are actions. Portable exports omit integrationId.
 
 Requests default to source `default`, query/GET/load, inherited auth, and view permission. Initial/current displays use load;

@@ -11,10 +11,14 @@ import type { IntegrationTestingInput } from "../../base/integration";
 import { TestConnectionError } from "../../base/test-connection/test-connection-error";
 import type { TestingResult } from "../../base/test-connection/test-connection-service";
 import type { DownloadClientJobsAndStatus } from "../../interfaces/downloads/download-client-data";
-import type { IDownloadClientIntegration } from "../../interfaces/downloads/download-client-integration";
+import type {
+  DownloadClientSelection,
+  IDownloadClientIntegration,
+} from "../../interfaces/downloads/download-client-integration";
 import type { DownloadClientItem } from "../../interfaces/downloads/download-client-items";
 import type { DownloadClientStatus } from "../../interfaces/downloads/download-client-status";
 import type { IntegrationHttpAuthentication } from "../../http-auth";
+import { selectDownloadTorrents } from "../select-torrents";
 
 @HandleIntegrationErrors([integrationOFetchHttpErrorHandler])
 export class DelugeIntegration extends Integration implements IDownloadClientIntegration {
@@ -55,7 +59,10 @@ export class DelugeIntegration extends Integration implements IDownloadClientInt
     };
   }
 
-  public async getClientJobsAndStatusAsync(input: { limit: number }): Promise<DownloadClientJobsAndStatus> {
+  public async getClientJobsAndStatusAsync(input: {
+    limit: number;
+    selection?: DownloadClientSelection;
+  }): Promise<DownloadClientJobsAndStatus> {
     const type = "torrent";
     const client = await this.getClientAsync();
     // Currently there is no way to limit the number of returned torrents
@@ -76,7 +83,32 @@ export class DelugeIntegration extends Integration implements IDownloadClientInt
       },
       types: [type],
     };
-    const items = torrents.slice(0, input.limit).map((torrent): DownloadClientItem => {
+    const currentTime = dayjs().unix();
+    const selectedTorrents = selectDownloadTorrents(torrents, input, {
+      category: (torrent) => torrent.label,
+      progress: (torrent) => torrent.progress / 100,
+      upSpeed: (torrent) => torrent.upload_payload_rate,
+      downSpeed: (torrent) => {
+        if (torrent.progress === 100) return undefined;
+        return torrent.download_payload_rate;
+      },
+      name: (torrent) => torrent.name,
+      size: (torrent) => torrent.total_wanted,
+      added: (torrent) => torrent.time_added * 1000,
+      index: (torrent) => torrent.queue,
+      sent: (torrent) => torrent.total_uploaded,
+      received: (torrent) => Math.floor(torrent.total_wanted * (torrent.progress / 100)),
+      ratio: (torrent) => {
+        if (torrent.total_wanted <= 0) return undefined;
+        return torrent.total_uploaded / torrent.total_wanted;
+      },
+      state: (torrent) => DelugeIntegration.getTorrentState(torrent.state),
+      time: (torrent) => {
+        if (torrent.progress === 100) return Math.min((torrent.completed_time - currentTime) * 1000, -1);
+        return Math.max(torrent.eta * 1000, 0);
+      },
+    });
+    const items = selectedTorrents.map((torrent): DownloadClientItem => {
       const state = DelugeIntegration.getTorrentState(torrent.state);
       return {
         type,
@@ -89,7 +121,7 @@ export class DelugeIntegration extends Integration implements IDownloadClientInt
         upSpeed: torrent.upload_payload_rate,
         time:
           torrent.progress === 100
-            ? Math.min((torrent.completed_time - dayjs().unix()) * 1000, -1)
+            ? Math.min((torrent.completed_time - currentTime) * 1000, -1)
             : Math.max(torrent.eta * 1000, 0),
         added: torrent.time_added * 1000,
         state,
@@ -97,7 +129,15 @@ export class DelugeIntegration extends Integration implements IDownloadClientInt
         category: torrent.label,
       };
     });
-    return { status, items };
+    if (!input.selection) return { status, items };
+
+    const ratioItems = torrents.slice(0, input.limit).map((torrent) => ({
+      sent: torrent.total_uploaded,
+      size: torrent.total_wanted,
+      progress: torrent.progress / 100,
+      category: torrent.label,
+    }));
+    return { status, items, ratioItems };
   }
 
   public async pauseQueueAsync() {

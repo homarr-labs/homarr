@@ -48,12 +48,13 @@ export const createSessionCallback = (db: Database): NextAuthCallbackOf<"session
     ]);
 
     return {
-      ...session,
+      expires: session.expires,
       user: {
-        ...session.user,
-        ...additionalProperties,
         id: user.id,
         name: user.name,
+        email: user.email,
+        image: user.image,
+        colorScheme: additionalProperties?.colorScheme ?? "auto",
         permissions,
       },
     };

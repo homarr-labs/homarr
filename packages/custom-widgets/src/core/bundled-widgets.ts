@@ -14,7 +14,7 @@ export const BUNDLED_CUSTOM_WIDGETS: readonly BundledCustomWidget[] = [
       description:
         "Current temperature, feels-like temperature, wind, and a five-day rain outlook. Set your coordinates in widget options.",
       sources: {
-        default: { name: "Open-Meteo", baseUrl: "https://api.open-meteo.com", networkScope: "public", auth: "none" },
+        default: { name: "Open-Meteo", baseUrl: "https://api.open-meteo.com", auth: "none" },
       },
       requests: {
         forecast: {
@@ -64,7 +64,7 @@ export const BUNDLED_CUSTOM_WIDGETS: readonly BundledCustomWidget[] = [
       $schema: "homarr-custom-widget-v2",
       name: "Random Dog Fact",
       description: "Displays a random fun fact about dogs.",
-      sources: { default: { name: "Dog API", baseUrl: "https://dogapi.dog", networkScope: "public", auth: "none" } },
+      sources: { default: { name: "Dog API", baseUrl: "https://dogapi.dog", auth: "none" } },
       requests: { fact: { path: "/api/v2/facts", cacheSeconds: 30 } },
       options: {},
       template: `<Stack gap="md" p="sm" h="100%" justify="center" style={{ minWidth: 0 }}>
@@ -82,7 +82,7 @@ export const BUNDLED_CUSTOM_WIDGETS: readonly BundledCustomWidget[] = [
       name: "Currency Exchange",
       description: "Converts an amount using European Central Bank exchange rates.",
       sources: {
-        default: { name: "Frankfurter", baseUrl: "https://api.frankfurter.dev", networkScope: "public", auth: "none" },
+        default: { name: "Frankfurter", baseUrl: "https://api.frankfurter.dev", auth: "none" },
       },
       requests: {
         rates: {
@@ -124,7 +124,6 @@ export const BUNDLED_CUSTOM_WIDGETS: readonly BundledCustomWidget[] = [
         default: {
           name: "Jellyfin",
           baseUrl: "http://jellyfin.local",
-          networkScope: "private",
           auth: { type: "apiKeyHeader", name: "X-Emby-Token" },
         },
       },
@@ -143,7 +142,7 @@ export const BUNDLED_CUSTOM_WIDGETS: readonly BundledCustomWidget[] = [
       name: "Pokédex",
       description: "Browse Pokémon and open a responsive detail view.",
       iconUrl: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/poke-ball.png",
-      sources: { default: { name: "PokeAPI", baseUrl: "https://pokeapi.co", networkScope: "public", auth: "none" } },
+      sources: { default: { name: "PokeAPI", baseUrl: "https://pokeapi.co", auth: "none" } },
       requests: {
         pokemon: {
           path: "/api/v2/pokemon",

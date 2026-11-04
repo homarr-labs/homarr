@@ -1,0 +1,102 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  padding: 8px;
+  gap: 6px;
+}
+
+.root {
+  container-type: size;
+  display: grid;
+  flex: 1;
+  min-height: 0;
+  gap: clamp(4px, 2cqi, 8px);
+  grid-template-columns: repeat(var(--stat-cols, 2), minmax(0, 1fr));
+  grid-auto-rows: 1fr;
+  overflow: hidden;
+}
+
+/* Each tile is its own container, so its contents scale with the tile rather than the whole widget:
+   four tiles on a 1x1 widget are small, one tile on the same widget is not. */
+.tile {
+  container-type: size;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 0;
+  min-width: 0;
+  gap: 2px;
+  padding: clamp(2px, 1.5cqi, 8px);
+  border-radius: var(--mantine-radius-md);
+  background-color: rgb(
+    from light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-6)) r g b / var(--opacity, 1)
+  );
+  overflow: hidden;
+  color: inherit;
+  text-decoration: none;
+  transition: background-color 120ms ease;
+}
+
+.tile:hover {
+  background-color: light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-5));
+}
+
+.tile:focus-visible {
+  outline: 2px solid var(--mantine-primary-color-filled);
+  outline-offset: -2px;
+}
+
+.icon {
+  color: var(--mantine-color-dimmed);
+  flex-shrink: 0;
+  width: clamp(calc(12px * var(--board-canvas-ui-scale, 1)), 28cqh, calc(22px * var(--board-canvas-ui-scale, 1)));
+  height: clamp(calc(12px * var(--board-canvas-ui-scale, 1)), 28cqh, calc(22px * var(--board-canvas-ui-scale, 1)));
+}
+
+/* Sized to whichever of the tile's sides runs out first; "12,345" is about 3.5em wide in bold. */
+.value {
+  flex-shrink: 0;
+  font-size: clamp(
+    calc(10px * var(--board-canvas-ui-scale, 1)),
+    min(26cqi, 30cqh),
+    calc(26px * var(--board-canvas-ui-scale, 1))
+  );
+  font-weight: 700;
+  color: var(--mantine-primary-color-filled);
+  line-height: 1.1;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.label {
+  flex-shrink: 0;
+  font-size: clamp(
+    calc(8px * var(--board-canvas-ui-scale, 1)),
+    min(12cqi, 16cqh),
+    calc(12px * var(--board-canvas-ui-scale, 1))
+  );
+  color: var(--mantine-color-dimmed);
+  line-height: 1.2;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* On a short tile the number matters most: the icon goes first, then the label. */
+@container (max-height: 64px) {
+  .icon {
+    display: none;
+  }
+}
+
+@container (max-height: 34px) {
+  .label {
+    display: none;
+  }
+}

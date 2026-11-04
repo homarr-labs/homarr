@@ -57,6 +57,7 @@ const MCP_TOOL_ALLOWLIST = {
     "healthMonitoring_getClusterHealthStatus",
     "healthMonitoring_getSystemHealthStatus",
     "healthMonitoring_listStorageVolumes",
+    "icon_detectFavicon",
     "icon_findIcons",
     "info_getInfo",
     "integration_all",

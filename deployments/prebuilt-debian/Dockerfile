@@ -1,5 +1,5 @@
-ARG NODE_IMAGE=node:24.18.0-trixie-slim
-ARG BUN_IMAGE=oven/bun:1.4.3-debian
+ARG NODE_IMAGE=node:24.22.2-trixie-slim@sha256:54f84b4cf8432b21aaffd5d3ce8d41e12cea0d10d33c09d2f3c9879d49d6b446
+ARG BUN_IMAGE=oven/bun:1.4.4-debian@sha256:93d5032fe06d163427822dc1598f420363759bb18155c9cc90eb1be05a64a19e
 FROM ${BUN_IMAGE} AS bun-tool
 FROM ${NODE_IMAGE}
 WORKDIR /app

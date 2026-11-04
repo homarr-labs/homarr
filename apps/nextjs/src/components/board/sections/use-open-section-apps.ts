@@ -2,7 +2,6 @@ import { useCallback, useMemo } from "react";
 
 import { clientApi } from "@homarr/api/client";
 import { useCurrentLayout, useRequiredBoard } from "@homarr/boards/context";
-import { getSafeAppHref } from "@homarr/common";
 import { useConfirmModal } from "@homarr/modals";
 import { useI18n } from "@homarr/translation/client";
 
@@ -94,7 +93,7 @@ export const useOpenSectionApps = (sectionId: string, enabled: boolean) => {
   });
 
   const open = useCallback(() => {
-    const appUrls = apps.map((app) => getSafeAppHref(app.href)).filter((href) => href !== undefined);
+    const appUrls = apps.map((app) => app.href).filter((href): href is string => Boolean(href));
 
     for (const href of appUrls) {
       const openedWindow = window.open(href);

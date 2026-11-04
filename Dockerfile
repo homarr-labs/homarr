@@ -1,10 +1,10 @@
 # syntax=docker/dockerfile:1.25
 
-FROM oven/bun:1.4.3-debian AS bun-tool
+FROM oven/bun:1.4.4-debian@sha256:93d5032fe06d163427822dc1598f420363759bb18155c9cc90eb1be05a64a19e AS bun-tool
 
-FROM redis:8.8.0-trixie AS redis-tool
+FROM redis:8.8.0-trixie@sha256:234c902a2db49461a129e2d4aeff85b28cf20187ed274a67f6e50995fa713c7b AS redis-tool
 
-FROM node:24.18.0-trixie-slim AS base
+FROM node:24.22.2-trixie-slim@sha256:54f84b4cf8432b21aaffd5d3ce8d41e12cea0d10d33c09d2f3c9879d49d6b446 AS base
 
 FROM base AS builder
 ARG TARGETPLATFORM
@@ -30,15 +30,16 @@ RUN --mount=type=secret,id=TURBO_API,env=TURBO_API \
     --mount=type=secret,id=TURBO_TEAM,env=TURBO_TEAM \
     --mount=type=secret,id=TURBO_TOKEN,env=TURBO_TOKEN \
     --mount=type=secret,id=TURBO_REMOTE_CACHE_SIGNATURE_KEY,env=TURBO_REMOTE_CACHE_SIGNATURE_KEY \
-    --mount=type=cache,id=homarr-next-build-${TARGETPLATFORM}-glibc-2.41-node-24.18.0,target=/app/apps/nextjs/.next/cache,sharing=locked \
-    --mount=type=cache,id=homarr-turbo-${TARGETPLATFORM}-glibc-2.41-node-24.18.0,target=/app/.turbo,sharing=locked \
-    TURBO_PLATFORM="${TARGETPLATFORM:-linux/amd64}/glibc-2.41/node-24.18.0" \
+    --mount=type=cache,id=homarr-next-build-${TARGETPLATFORM}-glibc-2.41-node-24.22.2,target=/app/apps/nextjs/.next/cache,sharing=locked \
+    --mount=type=cache,id=homarr-turbo-${TARGETPLATFORM}-glibc-2.41-node-24.22.2,target=/app/.turbo,sharing=locked \
+    TURBO_PLATFORM="${TARGETPLATFORM:-linux/amd64}/glibc-2.41/node-24.22.2" \
     bun run turbo run build --filter=@homarr/nextjs... --filter=@homarr/cli
 
-FROM debian:trixie-slim AS runner
+FROM debian:trixie-slim@sha256:f6b08b09a05725f9431502d3b5714f5c4576e82c1a84fa1debe0c24a7e0c3ec4 AS runner
 WORKDIR /app
 # envsubst, privilege drop and AUTH_SECRET generation are used by the entrypoint.
 RUN apt-get update && \
+    apt-get upgrade -y && \
     apt-get install -y --no-install-recommends \
       libstdc++6 libatomic1 libzstd1 zlib1g ca-certificates nginx bash gettext-base util-linux openssl && \
     rm -rf /var/lib/apt/lists/* && \

@@ -131,18 +131,15 @@ interface HomarrCustomWidgetV2 {
 }
 \`\`\`
 
-\`sources.default\` is required. HTTP sources have \`baseUrl\`, \`networkScope\`, optional \`name\`, and optional \`auth\` (default
-\`"none"\`). Scope \`public\` permits public addresses, \`private\` additionally permits private addresses, and \`loopback\` additionally
-permits loopback. Blocked address classes remain blocked at every scope. Localhost requires \`loopback\`; preserve explicit
-scope rather than widening it on failure. Base URLs have no credentials, query, or fragment. Use documented public URLs or
-\`https://your-service.example.com\` for missing self-hosted URLs; Homarr configures URL/scope/credentials separately.
+\`sources.default\` is required. HTTP sources have \`baseUrl\`, optional \`name\`, and optional \`auth\` (default \`"none"\`). Base URLs
+have no credentials, query, or fragment. Use documented public URLs or \`https://your-service.example.com\` for missing
+self-hosted URLs; Homarr configures URLs and credentials separately.
 
 \`\`\`json
 {
   "sources": {
     "default": {
       "baseUrl": "https://your-service.example.com/api/v1",
-      "networkScope": "private",
       "auth": { "type": "apiKeyHeader", "name": "X-Api-Key" }
     }
   },
@@ -168,8 +165,13 @@ scope rather than widening it on failure. Base URLs have no credentials, query, 
 Auth: \`"none"\`, \`"bearer"\`, \`"basic"\`, \`{"type":"apiKeyHeader","name":"X-Api-Key"}\`, or
 \`{"type":"apiKeyQuery","name":"api_key"}\`. Values are credential-free declarations.
 
+Multiple encrypted headers use \`{"type":"headers","headers":[{"name":"X-Api-Key","slot":"key"},{"name":"X-Api-Secret","slot":"secret"}]}\`.
+Use at most 8 HTTP-token names, unique ignoring case, with distinct stable slot IDs of at most 57 characters. Configure
+values separately in Homarr. Header name or slot changes require credential configuration again. Use \`bearer\` for
+Authorization; routing, proxy, forwarding, cookie and hop-by-hop headers remain reserved.
+
 Saved sources use \`{"type":"integration","integrationKind":"sonarr","integrationId":"saved-id"}\`. Discover supported kinds
-and matching full-access entries with integration tools. Bind the ID before preview; omit URL/scope/auth. Paths append to the
+and matching full-access entries with integration tools. Bind the ID before preview; omit URL/auth. Paths append to the
 saved URL; non-GET requests are actions. Portable exports omit integrationId.
 
 Requests default to source \`default\`, query/GET/load, inherited auth, and view permission. Initial/current displays use load;
@@ -236,7 +238,7 @@ limited to safe string operations. Numeric enums can use a literal label array w
 `,
   "references/security.md": `# Security
 
-All requests use Homarr's protected server executor. Source origin, network scope, DNS, redirects, SSRF, rate limits, permissions, size limits, timeouts, and encrypted credential injection remain enforced.
+All requests use Homarr's protected server executor. Source origin, credential destinations, rate limits, permissions, size limits, timeouts, and encrypted credential injection remain enforced. HTTP sources can reach any address accessible to the Homarr server.
 
 The JSX interpreter blocks imports, hooks, refs, raw event callbacks, browser requests, eval, arbitrary functions, prototype access, unsafe URLs, global CSS escape, arbitrary portals, bigint, statement blocks, IIFEs, and recursion. Regex literals must be bounded and reject backreferences, lookbehind, nested quantifiers, excessive length, and unsupported flags.
 
@@ -269,7 +271,7 @@ when the component name is unknown. Fetch a full component document only for an 
 ## Author
 
 - Include \`$schema: "homarr-custom-widget-v2"\`, \`name\`, keyed \`sources\`/\`requests\`, and one JSX \`template\`; \`options\` is optional.
-  \`sources.default\` is required even for static widgets. HTTP sources use \`baseUrl\`, \`networkScope\`, and credential-free \`auth\`.
+  \`sources.default\` is required even for static widgets. HTTP sources use \`baseUrl\` and credential-free \`auth\`.
   Saved integration sources use \`type: "integration"\`/\`integrationKind\`; bind a matching full-access \`integrationId\` before preview.
 - Load requests render \`data.requestId\`/\`status.requestId\`, with a RefreshButton and useful loading/error/empty/success states.
   Preserve response envelopes and guard nullable fields. Manual SubFetch renders its result inside its child callback.
@@ -311,7 +313,7 @@ Manifest changes need a fresh preview; JSX-only fixes use previewReviseTemplate 
 for focused diagnostics. Batch reads; reuse contextAlreadyLoaded and advance on phaseComplete. Stop a failing path when
 repeated attempts make no progress.
 
-Include sources.default, keyed requests, optional options, and one JSX template. Preserve source scope, request shape,
+Include sources.default, keyed requests, optional options, and one JSX template. Preserve source shape, request shape,
 response envelopes, and migration behavior. Keep credentials outside definitions. Every control affects a request or visible
 selection; render useful states in narrow tiles.
 

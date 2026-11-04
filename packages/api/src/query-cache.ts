@@ -16,6 +16,13 @@ export const isTrpcForbiddenError = (error: unknown): error is ForbiddenTrpcErro
 export const queryCacheDefaultStaleTimeMs = 30_000;
 export const queryCacheDefaultRefetchIntervalMs = 30_000;
 export const queryCacheDefaultGcTimeMs = 1000 * 60 * 5;
+// A finite server GC timer roots the request cache after SSR has finished.
+// Infinity schedules no timer; the request's QueryClient can be collected normally.
+export const getQueryCacheGcTime = () => {
+  if (typeof window === "undefined") return Infinity;
+  return queryCacheDefaultGcTimeMs;
+};
+
 export const queryCacheMetadataStaleTimeMs = 1000 * 60 * 5;
 
 const widgetDataQueryPaths = new Set(["app.byId", "app.byIds", "docker.getContainers", "integration.byIds"]);

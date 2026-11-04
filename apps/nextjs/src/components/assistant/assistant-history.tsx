@@ -2,7 +2,18 @@
 
 import { createContext, useContext, useEffect, useRef, useState } from "react";
 import { ThreadListItemPrimitive, ThreadListPrimitive, useAui, useAuiState } from "@assistant-ui/react";
-import { ActionIcon, Button, Group, Popover, ScrollArea, Stack, Text, TextInput, UnstyledButton } from "@mantine/core";
+import {
+  ActionIcon,
+  Button,
+  Group,
+  Loader,
+  Popover,
+  ScrollArea,
+  Stack,
+  Text,
+  TextInput,
+  UnstyledButton,
+} from "@mantine/core";
 import {
   IconCheck,
   IconDotsVertical,
@@ -217,6 +228,43 @@ const ThreadListItem = () => {
   );
 };
 
+const ThreadHistoryStatus = () => {
+  const t = useI18n("assistant");
+  const aui = useAui();
+  const isLoading = useAuiState((state) => state.threads.isLoading);
+  const hasLoadError = useAuiState((state) => state.threads.loadError !== undefined);
+  const switchErrorThreadId = useAuiState((state) => state.threads.switchError?.threadId);
+  const isEmpty = useAuiState((state) => state.threads.threadIds.length === 0);
+
+  if (hasLoadError || switchErrorThreadId !== undefined) {
+    const retry = () => {
+      const action =
+        switchErrorThreadId === undefined ? aui.threads().reload() : aui.threads().switchToThread(switchErrorThreadId);
+      void Promise.resolve(action).catch(() => undefined);
+    };
+    return (
+      <Stack align="center" gap={6} py="md">
+        <Text size="xs" c="dimmed" ta="center">
+          {hasLoadError ? t("historyError.load") : t("historyError.switch")}
+        </Text>
+        <Button variant="light" size="compact-xs" onClick={retry}>
+          {t("historyError.retry")}
+        </Button>
+      </Stack>
+    );
+  }
+
+  if (isLoading && isEmpty) {
+    return (
+      <Group justify="center" py="md">
+        <Loader size="sm" type="dots" />
+      </Group>
+    );
+  }
+
+  return null;
+};
+
 const ThreadHistory = ({ onSelect, compact }: { onSelect: () => void; compact: boolean }) => {
   const t = useI18n("assistant");
   const [query, setQuery] = useState("");
@@ -282,6 +330,7 @@ const ThreadHistory = ({ onSelect, compact }: { onSelect: () => void; compact: b
                 return <ThreadListItem />;
               }}
             </ThreadListPrimitive.Items>
+            <ThreadHistoryStatus />
             {!compact && normalizedQuery && !hasMatchingConversation && (
               <Text size="xs" c="dimmed" ta="center" py="md">
                 {t("noMatchingConversations")}

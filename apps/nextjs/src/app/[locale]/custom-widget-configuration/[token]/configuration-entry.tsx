@@ -1,23 +1,15 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import {
-  Alert,
-  Button,
-  Card,
-  Center,
-  PasswordInput,
-  Select,
-  Stack,
-  Text,
-  TextInput,
-  ThemeIcon,
-  Title,
-} from "@mantine/core";
+import { Alert, Button, Card, Center, PasswordInput, Stack, Text, TextInput, ThemeIcon, Title } from "@mantine/core";
 import { IconCheck, IconKey, IconLock } from "@tabler/icons-react";
 
-import { isCustomWidgetSourceUrlPlaceholder } from "@homarr/custom-widgets/core";
-import type { CustomWidgetSource } from "@homarr/custom-widgets/core";
+import {
+  isCustomWidgetSourceUrlPlaceholder,
+  isCustomWidgetHeaderSecretKind,
+  getCustomWidgetSecretRequirements,
+} from "@homarr/custom-widgets/core";
+import type { CustomWidgetSource, CustomWidgetSecretKind } from "@homarr/custom-widgets/core";
 import { IntegrationSourceSelect } from "@homarr/forms-collection/custom-widgets";
 
 import { useI18n } from "@homarr/translation/client";
@@ -25,7 +17,7 @@ import { useI18n } from "@homarr/translation/client";
 interface RequestDetails {
   widgetName: string;
   sourceName: string;
-  kinds: Array<"apiKey" | "username" | "password">;
+  kinds: CustomWidgetSecretKind[];
   expiresAt: number;
   status: "pending" | "applying" | "completed";
   source: CustomWidgetSource;
@@ -39,7 +31,6 @@ export function CustomWidgetConfigurationEntry({ token }: { token: string }) {
   const [values, setValues] = useState<Record<string, string>>({});
   const [integrationId, setIntegrationId] = useState<string>();
   const [baseUrl, setBaseUrl] = useState("");
-  const [networkScope, setNetworkScope] = useState<"public" | "private" | "loopback">("public");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -52,7 +43,6 @@ export function CustomWidgetConfigurationEntry({ token }: { token: string }) {
         setDetails(body);
         const sourceBaseUrl = body.source.baseUrl ?? "";
         setBaseUrl(isCustomWidgetSourceUrlPlaceholder(sourceBaseUrl) ? "" : sourceBaseUrl);
-        setNetworkScope(body.source.networkScope ?? "public");
         setIntegrationId(body.source.integrationId);
       })
       .catch((cause: unknown) => setError(cause instanceof Error ? cause.message : t("unavailable")))
@@ -63,7 +53,7 @@ export function CustomWidgetConfigurationEntry({ token }: { token: string }) {
     setSaving(true);
     setError(null);
     try {
-      let configuration: unknown = { baseUrl, networkScope, secrets: values };
+      let configuration: unknown = { baseUrl, secrets: values };
       if (details?.source.type === "integration") configuration = { integrationId, secrets: {} };
       const response = await fetch(`/api/custom-widgets/configuration-request/${encodeURIComponent(token)}`, {
         method: "POST",
@@ -127,21 +117,20 @@ export function CustomWidgetConfigurationEntry({ token }: { token: string }) {
                     onChange={(event) => setBaseUrl(event.currentTarget.value)}
                     required
                   />
-                  <Select
-                    label={t("networkScope")}
-                    data={["public", "private", "loopback"]}
-                    value={networkScope}
-                    allowDeselect={false}
-                    onChange={(value) => value && setNetworkScope(value as typeof networkScope)}
-                  />
                 </>
               )}
               {details.kinds.map((kind) => {
                 const Input = kind === "username" ? TextInput : PasswordInput;
+                let label: string;
+                if (isCustomWidgetHeaderSecretKind(kind)) {
+                  label =
+                    getCustomWidgetSecretRequirements({ default: details.source }).find((field) => field.kind === kind)
+                      ?.destination ?? kind.slice(7);
+                } else label = tSecret(kind);
                 return (
                   <Input
                     key={kind}
-                    label={tSecret(kind)}
+                    label={label}
                     leftSection={<IconKey size={16} />}
                     value={values[kind] ?? ""}
                     onChange={(event) => {

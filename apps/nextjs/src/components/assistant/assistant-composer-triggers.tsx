@@ -2,22 +2,23 @@
 
 import type { RefObject } from "react";
 import { useContext, useLayoutEffect, useMemo, useRef } from "react";
-import type { Unstable_TriggerItem } from "@assistant-ui/react";
+import type { DirectiveFormatter, TriggerItem as AssistantTriggerItem } from "@assistant-ui/react";
 import {
   ComposerPrimitive,
-  useAui,
+  defaultDirectiveFormatter,
   unstable_useMentionAdapter,
   unstable_useSlashCommandAdapter,
   unstable_useTriggerPopoverScopeContext,
 } from "@assistant-ui/react";
-import { Text, ThemeIcon } from "@mantine/core";
-import { IconAt, IconChevronRight } from "@tabler/icons-react";
+import { Button, Text, ThemeIcon } from "@mantine/core";
+import { IconAt, IconChevronLeft, IconChevronRight } from "@tabler/icons-react";
 
 import { useI18n } from "@homarr/translation/client";
 
 import classes from "./assistant-panel.module.css";
 import { AssistantDirectiveEntitiesContext, contextIcons } from "./assistant-message-content";
 import { getNearestTriggerScrollTop } from "./assistant-trigger-scroll";
+import { assistantPromptDefinitions, useAssistantPrompts } from "./assistant-prompts";
 
 const TriggerPopoverAutoScroll = ({ viewportRef }: { viewportRef: RefObject<HTMLDivElement | null> }) => {
   const { activeCategoryId, categories, highlightedIndex, isSearchMode, items, open, query } =
@@ -47,13 +48,21 @@ const TriggerPopoverAutoScroll = ({ viewportRef }: { viewportRef: RefObject<HTML
   return null;
 };
 
-const TriggerItem = ({ item, index }: { item: Unstable_TriggerItem; index: number }) => {
-  const Icon =
+const TriggerItem = ({ item, index }: { item: AssistantTriggerItem; index: number }) => {
+  let Icon =
     typeof item.metadata?.icon === "string" && item.metadata.icon in contextIcons
       ? contextIcons[item.metadata.icon as keyof typeof contextIcons]
       : IconAt;
+  if (item.type === "command") {
+    Icon = assistantPromptDefinitions.find((definition) => definition.id === item.id)?.Icon ?? IconAt;
+  }
   return (
-    <ComposerPrimitive.Unstable_TriggerPopoverItem className={classes.triggerItem} item={item} index={index}>
+    <ComposerPrimitive.TriggerPopoverItem
+      className={classes.triggerItem}
+      item={item}
+      index={index}
+      onMouseDown={(event) => event.preventDefault()}
+    >
       <ThemeIcon size="sm" variant="light" color="gray">
         <Icon size={13} />
       </ThemeIcon>
@@ -67,13 +76,18 @@ const TriggerItem = ({ item, index }: { item: Unstable_TriggerItem; index: numbe
           </Text>
         )}
       </div>
-    </ComposerPrimitive.Unstable_TriggerPopoverItem>
+      {item.type === "command" && (
+        <Text size="xs" c="dimmed" span>
+          /{item.id}
+        </Text>
+      )}
+    </ComposerPrimitive.TriggerPopoverItem>
   );
 };
 
 export const ComposerTriggers = () => {
   const t = useI18n("assistant");
-  const aui = useAui();
+  const prompts = useAssistantPrompts();
   const mentionViewportRef = useRef<HTMLDivElement>(null);
   const slashViewportRef = useRef<HTMLDivElement>(null);
   const { entities, isLoading } = useContext(AssistantDirectiveEntitiesContext);
@@ -105,44 +119,19 @@ export const ComposerTriggers = () => {
     fallbackIcon: IconAt,
   });
   const slash = unstable_useSlashCommandAdapter({
-    removeOnExecute: true,
-    commands: [
-      {
-        id: "health",
-        label: "/health",
-        description: t("commands.health"),
-        execute: () => aui.composer().setText(t("suggestions.health.prompt")),
-      },
-      {
-        id: "explore",
-        label: "/explore",
-        description: t("commands.explore"),
-        execute: () => aui.composer().setText(t("suggestions.explore.prompt")),
-      },
-      {
-        id: "media",
-        label: "/media",
-        description: t("commands.media"),
-        execute: () => aui.composer().setText(t("suggestions.media.prompt")),
-      },
-      {
-        id: "style",
-        label: "/style",
-        description: t("commands.style"),
-        execute: () => aui.composer().setText(t("suggestions.style.prompt")),
-      },
-      {
-        id: "design-widget",
-        label: "/design-widget",
-        description: t("commands.designWidget"),
-        execute: () => aui.composer().setText(t("suggestions.designWidget.prompt")),
-      },
-    ],
+    commands: prompts.map(({ id, label, description }) => ({ id, label, description, execute: () => undefined })),
   });
+  const promptFormatter = useMemo<DirectiveFormatter>(
+    () => ({
+      parse: defaultDirectiveFormatter.parse,
+      serialize: (item) => prompts.find((prompt) => prompt.id === item.id)?.prompt ?? item.label,
+    }),
+    [prompts],
+  );
 
   return (
     <>
-      <ComposerPrimitive.Unstable_TriggerPopover
+      <ComposerPrimitive.TriggerPopover
         ref={mentionViewportRef}
         className={classes.triggerPopover}
         char="@"
@@ -151,13 +140,18 @@ export const ComposerTriggers = () => {
         aria-label={t("mentions.menu")}
       >
         <TriggerPopoverAutoScroll viewportRef={mentionViewportRef} />
-        <ComposerPrimitive.Unstable_TriggerPopover.Directive {...mention.directive} />
-        <ComposerPrimitive.Unstable_TriggerPopoverCategories className={classes.triggerList}>
+        <ComposerPrimitive.TriggerPopover.Directive {...mention.directive} />
+        <ComposerPrimitive.TriggerPopoverBack asChild>
+          <Button variant="subtle" size="compact-sm" leftSection={<IconChevronLeft size={14} />}>
+            {t("mentions.back")}
+          </Button>
+        </ComposerPrimitive.TriggerPopoverBack>
+        <ComposerPrimitive.TriggerPopoverCategories className={classes.triggerList}>
           {(items) =>
             items.map((category) => {
               const Icon = contextIcons[category.id as keyof typeof contextIcons] ?? IconAt;
               return (
-                <ComposerPrimitive.Unstable_TriggerPopoverCategoryItem
+                <ComposerPrimitive.TriggerPopoverCategoryItem
                   key={category.id}
                   categoryId={category.id}
                   className={classes.triggerItem}
@@ -169,18 +163,27 @@ export const ComposerTriggers = () => {
                     {category.label}
                   </Text>
                   <IconChevronRight size={14} />
-                </ComposerPrimitive.Unstable_TriggerPopoverCategoryItem>
+                </ComposerPrimitive.TriggerPopoverCategoryItem>
               );
             })
           }
-        </ComposerPrimitive.Unstable_TriggerPopoverCategories>
-        <ComposerPrimitive.Unstable_TriggerPopoverItems className={classes.triggerList}>
-          {(items) =>
-            items.map((item, index) => <TriggerItem key={`${item.type}:${item.id}`} item={item} index={index} />)
-          }
-        </ComposerPrimitive.Unstable_TriggerPopoverItems>
-      </ComposerPrimitive.Unstable_TriggerPopover>
-      <ComposerPrimitive.Unstable_TriggerPopover
+        </ComposerPrimitive.TriggerPopoverCategories>
+        <ComposerPrimitive.TriggerPopoverItems className={classes.triggerList}>
+          {(items) => (
+            <>
+              {items.map((item, index) => (
+                <TriggerItem key={`${item.type}:${item.id}`} item={item} index={index} />
+              ))}
+              {items.length === 0 && (
+                <Text size="xs" c="dimmed" p="sm">
+                  {isLoading ? t("mentions.loading") : t("mentions.empty")}
+                </Text>
+              )}
+            </>
+          )}
+        </ComposerPrimitive.TriggerPopoverItems>
+      </ComposerPrimitive.TriggerPopover>
+      <ComposerPrimitive.TriggerPopover
         ref={slashViewportRef}
         className={classes.triggerPopover}
         char="/"
@@ -188,11 +191,22 @@ export const ComposerTriggers = () => {
         aria-label={t("commands.menu")}
       >
         <TriggerPopoverAutoScroll viewportRef={slashViewportRef} />
-        <ComposerPrimitive.Unstable_TriggerPopover.Action {...slash.action} />
-        <ComposerPrimitive.Unstable_TriggerPopoverItems className={classes.triggerList}>
-          {(items) => items.map((item, index) => <TriggerItem key={item.id} item={item} index={index} />)}
-        </ComposerPrimitive.Unstable_TriggerPopoverItems>
-      </ComposerPrimitive.Unstable_TriggerPopover>
+        <ComposerPrimitive.TriggerPopover.Action {...slash.action} formatter={promptFormatter} />
+        <ComposerPrimitive.TriggerPopoverItems className={classes.triggerList}>
+          {(items) => (
+            <>
+              {items.map((item, index) => (
+                <TriggerItem key={item.id} item={item} index={index} />
+              ))}
+              {items.length === 0 && (
+                <Text size="xs" c="dimmed" p="sm">
+                  {t("commands.empty")}
+                </Text>
+              )}
+            </>
+          )}
+        </ComposerPrimitive.TriggerPopoverItems>
+      </ComposerPrimitive.TriggerPopover>
     </>
   );
 };

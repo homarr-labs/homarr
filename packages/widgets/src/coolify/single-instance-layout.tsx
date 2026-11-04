@@ -41,7 +41,7 @@ export function SingleInstanceLayout({ instance, options, isTiny, isAdvanced, wi
     instance.instanceInfo.services,
   );
 
-  const baseUrl = getSafeApplicationUrl(instance.integrationUrl)?.replace(/\/+$/, "") ?? "";
+  const baseUrl = getSafeApplicationUrl(instance.externalUrl ?? instance.integrationUrl)?.replace(/\/+$/, "") ?? "";
   const displayUrl = baseUrl ? baseUrl.replace(/^https?:\/\//, "") : "—";
   return (
     <ScrollArea h="100%">

@@ -8,7 +8,7 @@ import { decryptSecret } from "@homarr/common/server";
 import type { AtLeastOneOf } from "@homarr/common/types";
 import type { Database } from "@homarr/db";
 import { and, eq, inArray } from "@homarr/db";
-import { integrations } from "@homarr/db/schema";
+import { groupMembers, integrationGroupPermissions, integrations, integrationUserPermissions } from "@homarr/db/schema";
 import type { IntegrationKind, WidgetIntegrationKind, WidgetKindWithIntegration } from "@homarr/definitions";
 import { getWidgetIntegrationConfig } from "@homarr/definitions";
 import { createLogger } from "@homarr/core/infrastructure/logs";
@@ -40,6 +40,22 @@ const throwUnexpectedIntegrationKind = (kind: IntegrationKind, allowedKinds: rea
   throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Integration kind validation failed" });
 };
 
+const getCallerPermissionRelationsAsync = async (db: Database, session: Session | null) => {
+  const userId = session?.user.id ?? "";
+  const groupsOfCurrentUser = await db.query.groupMembers.findMany({
+    where: eq(groupMembers.userId, userId),
+  });
+
+  return {
+    userPermissions: {
+      where: eq(integrationUserPermissions.userId, userId),
+    },
+    groupPermissions: {
+      where: inArray(integrationGroupPermissions.groupId, groupsOfCurrentUser.map(({ groupId }) => groupId).concat("")),
+    },
+  };
+};
+
 const createOneIntegrationMiddlewareForKinds = <TKind extends IntegrationKind>(
   action: IntegrationAction,
   kinds: readonly TKind[],
@@ -59,8 +75,7 @@ const createOneIntegrationMiddlewareForKinds = <TKind extends IntegrationKind>(
       with: {
         app: true,
         secrets: true,
-        groupPermissions: true,
-        userPermissions: true,
+        ...(await getCallerPermissionRelationsAsync(ctx.db, ctx.session)),
         items: {
           with: {
             item: true,
@@ -149,8 +164,7 @@ const createManyIntegrationMiddlewareForKinds = <TKind extends IntegrationKind>(
               item: true,
             },
           },
-          userPermissions: true,
-          groupPermissions: true,
+          ...(await getCallerPermissionRelationsAsync(ctx.db, ctx.session)),
         },
       });
     };

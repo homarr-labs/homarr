@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { Group, Title } from "@mantine/core";
 import { z } from "zod/v4";
 
+import { api } from "@homarr/api/server";
 import { auth } from "@homarr/auth/next";
 import { getIntegrationName, integrationKinds } from "@homarr/definitions";
 import { getI18n } from "@homarr/translation/server";
@@ -41,6 +42,7 @@ export default async function IntegrationsNewPage(props: NewIntegrationPageProps
   const tCreate = await getI18n("integration.page.create");
 
   const currentKind = result.data;
+  const selectableApps = await api.app.selectable();
 
   return (
     <ManagePageLayout
@@ -53,7 +55,12 @@ export default async function IntegrationsNewPage(props: NewIntegrationPageProps
       container="default"
       breadcrumbPlacement="outside"
     >
-      <IntegrationNewFormWrapper kind={currentKind} initialUrl={searchParams.url} initialName={searchParams.name} />
+      <IntegrationNewFormWrapper
+        kind={currentKind}
+        initialUrl={searchParams.url}
+        initialName={searchParams.name}
+        selectableApps={selectableApps}
+      />
     </ManagePageLayout>
   );
 }

@@ -23,7 +23,7 @@ when the component name is unknown. Fetch a full component document only for an 
 ## Author
 
 - Include `$schema: "homarr-custom-widget-v2"`, `name`, keyed `sources`/`requests`, and one JSX `template`; `options` is optional.
-  `sources.default` is required even for static widgets. HTTP sources use `baseUrl`, `networkScope`, and credential-free `auth`.
+  `sources.default` is required even for static widgets. HTTP sources use `baseUrl` and credential-free `auth`.
   Saved integration sources use `type: "integration"`/`integrationKind`; bind a matching full-access `integrationId` before preview.
 - Load requests render `data.requestId`/`status.requestId`, with a RefreshButton and useful loading/error/empty/success states.
   Preserve response envelopes and guard nullable fields. Manual SubFetch renders its result inside its child callback.

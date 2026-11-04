@@ -40,7 +40,7 @@ const CUSTOM_WIDGET_CONTEXT_BOUNDARY_INSTRUCTION = `Context security boundary:
 
 const LEGACY_MIGRATION_AUTHORING_GUIDANCE = `Convert the supplied legacy widget to Homarr Custom JSX v2 for Mantine ${CUSTOM_WIDGET_MANTINE_VERSION}. This is a migration, not a redesign: reuse the original JSX hierarchy, labels, interactions, and known component props. Change only what v2 compatibility, safe manual actions, null handling, and tile-width readability require. Do not inventory unrelated components or rediscover the supplied API.
 
-The importable manifest has "$schema":"${CUSTOM_WIDGET_SCHEMA}", name, optional description/iconUrl, keyed sources/requests/options, and a template string containing one JSX expression. Omit absent optional fields: iconUrl must be a valid URL string or omitted, never null. Use sources.default with baseUrl, networkScope (public/private/loopback), and credential-free auth: "none", "basic", "bearer", {"type":"apiKeyHeader","name":"X-Api-Key"}, or {"type":"apiKeyQuery","name":"api_key"}. Map legacy authType and headerName to that auth declaration, including authType:"none" to auth:"none". For authenticated sources, empty configuredSecretKinds means credentials need configuration, not removal of authentication; Homarr configures secrets separately.
+The importable manifest has "$schema":"${CUSTOM_WIDGET_SCHEMA}", name, optional description/iconUrl, keyed sources/requests/options, and a template string containing one JSX expression. Omit absent optional fields: iconUrl must be a valid URL string or omitted, never null. Use sources.default with baseUrl and credential-free auth: "none", "basic", "bearer", {"type":"apiKeyHeader","name":"X-Api-Key"}, or {"type":"apiKeyQuery","name":"api_key"}. Map legacy authType and headerName to that auth declaration, including authType:"none" to auth:"none". For authenticated sources, empty configuredSecretKinds means credentials need configuration, not removal of authentication; Homarr configures secrets separately.
 
 Each request has source:"default", slash-prefixed path, method, query, optional body, kind, trigger, and permission. For GET use "kind":"query", "trigger":"load", "permission":"view". For non-GET use "kind":"action", "trigger":"manual", "permission":"modify" (DELETE: "full") with an appropriate confirmation string or {title,message,confirmLabel,destructive}. "load" is a trigger, never a kind; "auto" and "automatic" are not valid triggers. Preserve original path, query values, and body. Do not invent a replacement GET for a legacy POST. Legacy actionButton also preserves buttonLabel, buttonColor, confirmText, and successMessage using ActionButton label/children, color, request confirmation, and successMessage props; keep failure feedback.
 
@@ -53,7 +53,7 @@ const leanShape = `{
   "name": "Widget name",
   "description": "Optional summary",
   "sources": {
-    "default": { "name": "API", "baseUrl": "https://api.example.com", "networkScope": "public", "auth": "none" }
+    "default": { "name": "API", "baseUrl": "https://api.example.com", "auth": "none" }
   },
   "requests": {
     "items": { "path": "/items/{option:category}", "query": { "limit": { "$option": "limit" } } },
@@ -76,7 +76,7 @@ const CUSTOM_WIDGET_AUTHORING_COMMUNICATION_RULE =
 const COMPACT_LOAD_EXAMPLE = {
   $schema: CUSTOM_WIDGET_SCHEMA,
   name: "Status",
-  sources: { default: { baseUrl: "https://example.test", networkScope: "public", auth: "none" } },
+  sources: { default: { baseUrl: "https://example.test", auth: "none" } },
   requests: { status: { path: "/status" } },
   options: {},
   template: `<Stack>{status.status?.loading ? <Skeleton /> : status.status?.ok === false ? <Alert>{status.status.error ?? "Unavailable"}</Alert> : <Text>{data.status?.value ?? "No status"}</Text>}<RefreshButton requestId="status" /></Stack>`,
@@ -85,7 +85,7 @@ const COMPACT_LOAD_EXAMPLE = {
 const COMPACT_MANUAL_EXAMPLE = {
   $schema: CUSTOM_WIDGET_SCHEMA,
   name: "Search",
-  sources: { default: { baseUrl: "https://example.test", networkScope: "public", auth: "none" } },
+  sources: { default: { baseUrl: "https://example.test", auth: "none" } },
   requests: {
     search: { trigger: "manual", path: "/search", query: { q: { $param: "query" }, page: { $param: "page" } } },
   },
@@ -123,7 +123,7 @@ ${leanShape}
 
 ${CUSTOM_WIDGET_MODE_GUIDANCE}
 
-Always include sources.default, even for static widgets. HTTP sources have baseUrl, optional name/auth; networkScope must be "public", "private", or "loopback". Preserve the supplied scope; localhost requires loopback. Auth declarations: "none", "bearer", "basic", {"type":"apiKeyHeader","name":"X-Api-Key"}, or {"type":"apiKeyQuery","name":"api_key"}. Keep credentials in Homarr. For missing self-hosted URLs use https://your-service.example.com; use documented URLs for public APIs. Saved sources use {"type":"integration","integrationKind":"...","integrationId":"..."}; omit URL/scope/auth, discover supported kinds and bind a full-access saved integration before preview. Exports omit integrationId. iCal feeds and the TrueNAS WebSocket API are unavailable as generic HTTP sources.
+Always include sources.default, even for static widgets. HTTP sources have baseUrl and optional name/auth. Auth declarations: "none", "bearer", "basic", {"type":"apiKeyHeader","name":"X-Api-Key"}, {"type":"apiKeyQuery","name":"api_key"}, or {"type":"headers","headers":[{"name":"X-Api-Key","slot":"key"},{"name":"X-Api-Secret","slot":"secret"}]}. Multiple encrypted headers allow at most 8 unique HTTP header names and distinct stable credential slots of at most 57 characters; configure values separately in Homarr. For missing self-hosted URLs use https://your-service.example.com; use documented URLs for public APIs. Saved sources use {"type":"integration","integrationKind":"...","integrationId":"..."}; omit URL/auth, discover supported kinds and bind a full-access saved integration before preview. Exports omit integrationId. iCal feeds and the TrueNAS WebSocket API are unavailable as generic HTTP sources.
 
 Requests are keyed by ID; defaults are source default, query/GET/load, inherited auth, view permission. A request that supplies the widget's initial/current display uses load: set \`trigger: "load"\` explicitly for current/automatic display. Set \`trigger: "manual"\` only when the user requests an explicit interaction or invocation params; do not make it manual merely because it has an option binding. Actions use kind action, trigger manual, modify permission (DELETE: full), confirmation, and invalidates; preserve original methods, paths, bodies, and behavior. A request path starts with / and remains slash-prefixed after interpolation. Omit unknown requests instead of guessing endpoints.
 
@@ -173,9 +173,9 @@ For a missing contract, research primary API docs with up to three targeted sear
 Load required references and uncertain components from the supplied context first; do not call customWidget_getSkill or customWidget_getReference when already bundled. Unknown edit: call customWidget_list once, then get the exact widget. Persisted follow-up: pass its id as definitionId to previewCreate. Preserve sources unless explicitly changed; style-only edits preserve requests/options. Never turn an edit into a create. Resolve uncertain components with customWidget_findComponents, then at most eight needed component documents in one getComponents batch. Reuse loaded context/contextAlreadyLoaded and follow nextStep. Inventory operations, paths, states, and count.
 
 CONTRACT
-Build a credential-free v2 definition with object inputs and sources.default. Copy URL/scope/auth. Without an exact self-hosted URL, use https://your-service.example.com so preview returns sourceConfigurations; never guess .local. API keys need a named header/query object; integration sources need exact integrationKind/integrationId. Never request, accept, or send secrets in chat/tool inputs. Static headers are request headers string maps. Sources never contain headers or header arrays.
+Build a credential-free v2 definition with object inputs and sources.default. Copy URL/auth. Without an exact self-hosted URL, use https://your-service.example.com so preview returns sourceConfigurations; never guess .local. API keys need a named header/query object; integration sources need exact integrationKind/integrationId. Never request, accept, or send secrets in chat/tool inputs. Static headers are request headers string maps. Sources never contain a top-level headers field; source.auth.headers is allowed for header authentication.
 
-For a static widget, use \`sources:{default:{baseUrl:"https://example.com",networkScope:"public",auth:"none"}}\` and \`requests:{}\`. For the current local time, use the installed safe helper \`Date.toLocaleString(Date.now(), "en-US")\`; never use \`new Date()\`.
+For a static widget, use \`sources:{default:{baseUrl:"https://example.com",auth:"none"}}\` and \`requests:{}\`. For the current local time, use the installed safe helper \`Date.toLocaleString(Date.now(), "en-US")\`; never use \`new Date()\`.
 
 Paths start with /. Use {option:name}/{param:name} in paths and $option/$param objects elsewhere. $param is manual-only; current/option queries load. Actions use kind:"action", trigger:"manual", required permission, required confirmation, and invalidations; DELETE requires full. Options need label/control/default. choicesFrom names a load request and exact item/value/label paths.
 

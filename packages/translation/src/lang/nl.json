@@ -19,7 +19,7 @@
         "errorDescription": "Herlaad de pagina om de veilige eerste sessie opnieuw te proberen."
       },
       "navigation": {
-        "essentials": "Essentials",
+        "essentials": "",
         "discover": "Ontdek",
         "connect": "Verbinden",
         "board": "Bord",
@@ -65,7 +65,6 @@
         "themeAuto": "Systeem",
         "themeLight": "Licht",
         "themeDark": "Donker",
-        "serverOriginHelp": "Homarr gebruikt dit adres voor het voorvullen van gedetecteerde service-URLs. U kunt nog steeds elke dienst afzonderlijk bewerken.",
         "serverDescription": "Dit is een snelkoppeling, geen beperking. Elke gedetecteerde dienst blijft bewerkbaar.",
         "serverOrigin": "Domain, IP, of reverse-proxy pad",
         "serverOriginDescription": "Voorbeelden: home.lan, 192.168.1.10 of https://home.example.com/services. Kies hoe elke dienst hieronder wordt toegevoegd.",
@@ -75,7 +74,7 @@
       "discover": {
         "title": "Kijk wat deze installatie daadwerkelijk kan bereiken",
         "description": "Homarr controleert mogelijkheden ter plekke. Een ontbrekende Docker socket of Kubernetes context blokkeert nooit een handmatige installatie.",
-        "database": "Database",
+        "database": "",
         "docker": "Docker en compatibele sockets",
         "kubernetes": "Kubernetes",
         "assistantWorkshop": "Assistent en Workshop",
@@ -102,6 +101,8 @@
       "connect": {
         "title": "Verbind wat het bord nuttig maakt",
         "description": "Selecteer verschillende diensten in één keer. Docker labels hebben voorrang, afbeelding die overeenkomen met vul hiaten en elke URL en inloggegevens worden gerapporteerd.",
+        "confirmServerAddress": "",
+        "serverAddressReviewed": "",
         "discoveredIntegrations": "Gedetecteerde integratiefases ({count})",
         "detectedIntegrationLabel": "Import {name}, gedetecteerd als {kind}",
         "detectedAppLabel": "Importeer gedetecteerde app {name}",
@@ -112,7 +113,7 @@
         "empty": "Er zijn geen integraties geselecteerd. Homarr maakt nog steeds een nuttig starterbord met algemene widgets aan.",
         "dockerSource": "Docker",
         "manualSource": "Handleiding",
-        "url": "Service URL",
+        "url": "",
         "noCredentials": "Geen inloggegevens",
         "noCredentialsDescription": "Deze integratie heeft geen referenties nodig.",
         "credentialMethod": "Toegangsmethode voor certificaten",
@@ -126,7 +127,8 @@
         "needsConfiguration": "Configuratie nodig",
         "tested": "Verbinding getest",
         "testFailed": "Verbindingstest mislukt",
-        "incompleteConfirmation": "Onvoltooide integraties worden overgeslagen. Doorgaan zonder deze integraties?"
+        "incompleteConfirmation": "Onvoltooide integraties worden overgeslagen. Doorgaan zonder deze integraties?",
+        "skipIncomplete": ""
       },
       "board": {
         "title": "Vorm het bord voordat het wordt gebouwd",
@@ -142,10 +144,11 @@
         "secondaryColor": "Secundaire kleur",
         "resetColors": "Kleuren opnieuw instellen",
         "radius": "Widget hoek radius",
+        "radiusOptions": {},
         "columns": "Bord kolommen",
         "columnsDescription": "Kolommen definiëren het horizontale raster dat wordt gebruikt voor grootte en positie items. 12 is veel voor de meeste mensen.",
         "columnCount": "{count, plural, one {# kolom} other {# kolommen}}",
-        "leftSidebar": "Left sidebar",
+        "leftSidebar": "",
         "rightSidebar": "Sidebar rechts",
         "previewLabel": "Live preview van de lay-out van het eerste bord"
       },
@@ -164,7 +167,7 @@
           "description": "Blader door de community Custom Widgets, bekijk hun gevraagde capaciteiten, installeer ze en publiceer uw eigen werk zonder de code tussen servers te kopiëren.",
           "available": "Beschikbaar",
           "checking": "Controleren…",
-          "unavailable": "Unavailable",
+          "unavailable": "",
           "discoverTitle": "Ontdek",
           "discoverDescription": "Zoek widgets gebouwd voor echte zelf gehoste workflows.",
           "installTitle": "Review en installeer",
@@ -174,7 +177,7 @@
           "browse": "Blader door de Workshop"
         },
         "mcpSetup": {
-          "title": "Homarr MCP",
+          "title": "",
           "description": "Connect Claude, Codex of een andere MCP-client voor Homarr getypte tools. API-sleutels behouden de toegang expliciet en herroepbaar.",
           "endpoint": "Streamable HTTP eindpunt",
           "keyTitle": "Kopieer deze sleutel nu",
@@ -195,7 +198,7 @@
         "columns": "Bord kolommen",
         "columnsValue": "{count, plural, one {# kolom} other {# kolommen}}",
         "sidebars": "Zijbalken",
-        "sidebarsValue": "{count, plural, =0 {None} one {# sidebar} other {# sidebars}}",
+        "sidebarsValue": "",
         "layouts": "Responsive lay-outs",
         "layoutsValue": "Mobiel + Basis",
         "integrations": "Integraties",
@@ -791,6 +794,12 @@
       }
     },
     "field": {
+      "url": {
+        "helpLabel": "Voorbeelden van URL-indelingen",
+        "examples": "Voorbeelden van ondersteunde links",
+        "requiresHandler": "Aangepaste protocollen vereisen een gekoppelde toepassing op je apparaat."
+      },
+      "description": {},
       "useDifferentUrlForPing": {
         "checkbox": {
           "label": "Gebruik andere URL voor ping",
@@ -840,7 +849,7 @@
       "unavailable": "Verzoek niet beschikbaar",
       "saveError": "Kan API-bron niet configureren",
       "source": "API bron: {name}",
-      "baseUrl": "Server URL",
+      "baseUrl": "",
       "networkScope": "Netwerk toegang",
       "expires": "Deze eenmalige aanvraag verloopt op {time}."
     },
@@ -892,6 +901,7 @@
       "description": "Controleer waar deze widget verbindt en voeg toe of vervang de versleutelde inloggegevens.",
       "credentialsRequired": "Verzoek zal mislukken totdat de vereiste inloggegevens worden toegevoegd."
     },
+    "field": {},
     "editor": {
       "errorBoundary": {
         "title": "Er ging iets mis"
@@ -899,9 +909,9 @@
       "action": {
         "components": "Onderdelen",
         "format": "Formatteren",
-        "insertStarter": "Insert starter",
+        "insertStarter": "",
         "redo": "Opnieuw",
-        "schema": "Schema"
+        "schema": ""
       },
       "reference": {
         "minimal": "Minimaal voorbeeld",
@@ -916,14 +926,14 @@
         "errors": "{count, number} fouten",
         "warnings": "{count, number} waarschuwingen",
         "ready": "Geen problemen gevonden",
-        "position": "Ln {line, number}, Col {column, number}",
+        "position": "",
         "characters": "{count, number} tekens",
-        "charactersWithLimit": "{count, number} / {limit, number}"
+        "charactersWithLimit": ""
       },
       "diagnostics": {
         "title": "Sjabloon diagnostiek",
         "line": "Lijn {line, number}",
-        "ast": "{value}",
+        "ast": "",
         "bindingTypeConflict": "De input \"{value}\" wordt gedeeld door besturingselementen met incompatibele waardetypes.",
         "runtimeBindingTypeConflict": "De invoer \"{value}\" is gebonden als zowel {firstType} als {secondType}.",
         "dynamicRequestId": "Een letterlijke verzoek ID is vereist. Dynamisch verzoek IDs worden niet geaccepteerd.",
@@ -947,7 +957,7 @@
         "sources": "API bronnen",
         "requests": "Aanvragen",
         "options": "Instellingen",
-        "jsx": "JSX",
+        "jsx": "",
         "preview": "Voorvertoning"
       },
       "status": {
@@ -978,7 +988,7 @@
       "builder": {
         "advancedManifest": "Geavanceerd rauw manifest",
         "advancedJson": "Geavanceerd manifest JSON",
-        "manifestFilename": "widget.json",
+        "manifestFilename": "",
         "request": "Verzoek {count, number}",
         "requestId": "ID aanvragen",
         "method": "Methode",
@@ -1019,8 +1029,8 @@
         "control": "Bediening",
         "default": "Standaard",
         "optionDetails": "Beperkingen en dynamische keuzes",
-        "minimum": "Minimum",
-        "maximum": "Maximum",
+        "minimum": "",
+        "maximum": "",
         "step": "Stap",
         "choiceLabel": "Keuze label",
         "choiceValue": "Keuze waarde",
@@ -1047,7 +1057,7 @@
       },
       "sources": {
         "title": "API bronnen en referenties",
-        "newName": "API {count, number}",
+        "newName": "",
         "duplicateSourceId": "API-bron-ID's moeten uniek zijn.",
         "credentialRemoved": "Toegangssleutel verwijderd",
         "credentialRemovedDescription": "De opgeslagen waarde is verwijderd.",
@@ -1063,13 +1073,13 @@
         "networkScope": "Netwerk toegang",
         "authentication": "Authenticatie",
         "headerName": "Naam koptekst",
-        "queryParameter": "Query parameter",
+        "queryParameter": "",
         "configured": "Geconfigureerd - voer een vervanging in",
         "clear": "Wissen",
         "remove": "Verwijder de bron en de bijbehorende verzoeken",
         "advanced": "Geavanceerd",
         "add": "Een andere API-bron toevoegen",
-        "manualSource": "HTTP API",
+        "manualSource": "",
         "existingIntegration": "Bestaande integratie",
         "integrationType": "Integratie type",
         "selectIntegration": "Geconfigureerde integratie",
@@ -1140,9 +1150,9 @@
         "runAction": "Actie uitvoeren",
         "deleteConfirmation": "Deze voorbeeldactie verandert externe gegevens via de geconfigureerde API.",
         "simulated": "Actie gesimuleerd",
-        "httpStatus": "HTTP {status, number}",
+        "httpStatus": "",
         "tab": {
-          "widget": "Widget",
+          "widget": "",
           "data": "Gegevens",
           "options": "Instellingen",
           "state": "Taakstatus",
@@ -1241,7 +1251,7 @@
     "sort": "Sorteren",
     "sortTop": "Best beoordeeld",
     "sortNewest": "Nieuwste",
-    "listAriaLabel": "Workshop widgets",
+    "listAriaLabel": "",
     "listAriaLabelCss": "CSS-thema's workshop",
     "empty": "Geen enkele widget komt overeen met deze zoekopdracht.",
     "emptyDescription": "De communautaire widgets die in de Workshop zijn gepubliceerd, worden hier getoond.",
@@ -1256,8 +1266,8 @@
     "communityMember": "Community lid",
     "outdated": "Verouderd",
     "outdatedWarning": "De auteur markeerde deze inzending als verouderd. Controleer het zorgvuldig voordat u importeert.",
-    "score": "Score: {count, number}",
-    "upvote": "Upvote",
+    "score": "",
+    "upvote": "",
     "downvote": "Negativ",
     "voteError": "De stemming kon niet worden opgeslagen.",
     "signIn": "Log in met GitHub",
@@ -1270,7 +1280,7 @@
     "installReviewTitle": "Review voor installeren",
     "installError": "Deze widget kan niet worden geïnstalleerd",
     "installErrorDescription": "De werkplaats indiening is geen geldige aangepaste JSX v2 widget.",
-    "useCss": "Import CSS",
+    "useCss": "",
     "importCss": "CSS importeren uit Workshop",
     "importCssConfirm": "Vervang de huidige aangepaste CSS met \"{title}\"? Niets opgeslagen totdat u de board instellingen opslaat.",
     "screenshotAlt": "{title} schermafbeelding {count, number}",
@@ -1297,7 +1307,7 @@
     "reportCategory": {
       "outdated": "Verouderd of niet meer werkt",
       "malicious": "Kwaadaardig",
-      "spam": "Spam",
+      "spam": "",
       "copyright": "Auteursrecht",
       "inappropriate": "Ongepast",
       "other": "Andere"
@@ -1481,7 +1491,7 @@
       "vpn": "",
       "mediaLibrary": "Mediabibliotheek",
       "uptimeMonitoring": "Uptime-monitoring",
-      "beszel": "Beszel",
+      "beszel": "",
       "systemMonitoring": "Systeem monitoring",
       "security": "Beveiliging",
       "serviceVersion": "Versie"
@@ -1530,6 +1540,7 @@
             "untrusted": "Het certificaat wordt niet vertrouwd.",
             "hostnameMismatch": "Het certificaat hostname komt niet overeen met de URL."
           },
+          "secondaryUrl": "",
           "alert": {
             "permission": {
               "title": "Onvoldoende rechten",
@@ -1792,7 +1803,7 @@
       "full": "Volledige integratietoegang"
     },
     "llamacpp": {
-      "name": "llama.cpp",
+      "name": "",
       "description": "Volg een lokale llama.cpp llama-server: gezondheid, model en generatie metrieken"
     }
   },
@@ -1834,7 +1845,7 @@
       },
       "open": {
         "label": "Media openen",
-        "labelNamed": "Open {name}"
+        "labelNamed": ""
       }
     },
     "noResults": {
@@ -1842,15 +1853,6 @@
     }
   },
   "common": {
-    "cornerStyle": {
-      "options": {
-        "xs": "Strak",
-        "sm": "Subtiel",
-        "md": "Evenwichtig",
-        "lg": "Afgerond",
-        "xl": "Zacht"
-      }
-    },
     "success": "Succes",
     "beta": "Beta",
     "error": "Fout",
@@ -1880,6 +1882,7 @@
       "tryAgain": "Probeer opnieuw",
       "loading": "Laden",
       "show": "Weergeven",
+      "showAll": "",
       "hide": "Verbergen",
       "undo": "Herstel",
       "editNamed": "{name} bewerken",
@@ -1890,6 +1893,7 @@
       "refresh": "Vernieuwen",
       "export": "Exporteren"
     },
+    "hidden": "Verborgen",
     "pagination": {
       "pageOf": "Pagina {page} van {totalPages}"
     },
@@ -1899,6 +1903,8 @@
     "here": "hier",
     "serviceUrlTemplate": {
       "serverTitle": "Usual serveradres",
+      "description": "",
+      "example": "",
       "urlModeLabel": "Service adres patroon",
       "hostPort": "Dezelfde host, verschillende poorten",
       "subdomain": "Eén subdomein per service",
@@ -1912,6 +1918,7 @@
       "clear": "Verwijder afbeelding",
       "uploadImage": "Afbeelding uploaden",
       "results": "Zoekresultaten afbeeldingen",
+      "websiteIcon": "",
       "localImages": "Jouw afbeeldingen",
       "svgIcons": "SVG iconen",
       "otherImages": "Andere afbeeldingen",
@@ -1976,7 +1983,7 @@
         "updateAvailable": "{countUpdates} updates beschikbaar: {tag}",
         "assistant": "Assistent",
         "assistantThinking": "Denken",
-        "modifier": "Mod"
+        "modifier": ""
       }
     },
     "dangerZone": "Gevarenzone",
@@ -2032,17 +2039,17 @@
     "filesystemUsage": "{count, plural, one {Toon gebruik voor # bestandssysteem} other {Toon gebruik voor # filesystemen}}",
     "field": {
       "name": "Naam",
-      "description": "Beschrijving",
-      "title": "Titel",
-      "actions": "Acties",
-      "type": "Type",
-      "status": "Status",
       "state": "Status",
       "size": "Grootte",
+      "actions": "Acties",
       "source": "Bron",
-      "namespace": "Namespace",
+      "title": "Titel",
+      "description": "Beschrijving",
       "created": "Aangemaakt",
-      "architecture": "Architectuur"
+      "namespace": "Namespace",
+      "status": "Status",
+      "architecture": "Architectuur",
+      "type": "Type"
     },
     "label": {
       "new": "Nieuw"
@@ -2060,6 +2067,15 @@
       "searchEngines": "Zoekmachines",
       "tasks": "Taken",
       "users": "Gebruikers"
+    },
+    "cornerStyle": {
+      "options": {
+        "md": "Evenwichtig",
+        "lg": "Afgerond",
+        "xs": "Strak",
+        "sm": "Subtiel",
+        "xl": "Zacht"
+      }
     }
   },
   "section": {
@@ -2097,6 +2113,7 @@
         "collapse": "Samenvouwen"
       },
       "option": {
+        "title": {},
         "customCssClasses": {
           "label": "Aangepaste CSS-classes"
         },
@@ -2210,7 +2227,7 @@
         },
         "width": {
           "label": "Breedte",
-          "shortLabel": "W"
+          "shortLabel": ""
         },
         "height": {
           "label": "Hoogte",
@@ -2259,6 +2276,7 @@
           "label": "Integraties",
           "removeLabel": "{name} integratie verwijderen"
         },
+        "title": {},
         "customCssClasses": {
           "label": "Aangepaste CSS-classes"
         },
@@ -2287,6 +2305,15 @@
       "option": {
         "appId": {
           "label": "App kiezen"
+        },
+        "openIn": {
+          "label": "App openen in",
+          "description": "Kies waar deze app wordt geopend. Je browserinstellingen kunnen het openen in een apart venster beïnvloeden.",
+          "option": {
+            "currentTab": "Huidig tabblad",
+            "newTab": "Nieuw tabblad",
+            "newWindow": "Nieuw venster"
+          }
         },
         "showTitle": {
           "label": "App naam weergeven"
@@ -2416,7 +2443,7 @@
         "remove": "Verwijder {name} categorie",
         "rename": "Categorienaam voor {name}",
         "assign": "Categorie voor {name}",
-        "ungrouped": "Ungrouped"
+        "ungrouped": ""
       }
     },
     "archiveTeamWarrior": {
@@ -2428,8 +2455,8 @@
         }
       },
       "noProjectSelected": "Geen project geselecteerd",
-      "runnerStatus": "Runner: {status}",
-      "projectId": "Project: {id}",
+      "runnerStatus": "",
+      "projectId": "",
       "sessionReceived": "Sessie ontvangen: {value}",
       "sessionSent": "Sessie verzonden: {value}",
       "sessionId": "Sessie: {id}",
@@ -2596,29 +2623,29 @@
         "unsupportedPrimaryTitle": "Primaire tijdzone is niet beschikbaar",
         "unsupportedPrimary": "{timeZone} wordt niet ondersteund in deze browser. UTC wordt weergegeven als een duidelijk gemarkeerde terugval.",
         "unsupportedTimeZone": "Niet-ondersteunde tijdzone: {timeZone}",
-        "accessibleTime": "{city}: {time}, {date}, {timeZone}",
+        "accessibleTime": "",
         "advancedLabel": "Geavanceerde wereldklok",
         "cities": "Wereld klokken",
-        "cityCount": "{count} timezones",
+        "cityCount": "",
         "timeBarLabel": "24-uurs positie voor {city}",
         "dayProgress": "{percent}% is verstreken · {hours}h {minutes}m resterend",
         "phaseLegend": "Tijd van dag legende",
         "tick": {
-          "midnight": "00",
-          "morning": "06",
-          "noon": "12",
-          "evening": "18",
-          "end": "24"
+          "midnight": "",
+          "morning": "",
+          "noon": "",
+          "evening": "",
+          "end": ""
         },
         "phaseRange": {
-          "night": "00–05 · 21–24",
-          "dawn": "05–08",
-          "day": "08–18",
-          "dusk": "18–21"
+          "night": "",
+          "dawn": "",
+          "day": "",
+          "dusk": ""
         },
         "phase": {
           "night": "Nacht",
-          "dawn": "Dawn",
+          "dawn": "",
           "day": "dag",
           "dusk": "Schemering"
         }
@@ -2663,7 +2690,7 @@
         "unknown": "Geen AQI lezen"
       },
       "uv": {
-        "label": "UV index",
+        "label": "",
         "category": {
           "low": "laag",
           "moderate": "Matig",
@@ -2673,28 +2700,28 @@
           "unknown": "Geen uitlezing"
         }
       },
-      "dominantPollutant": "Dominant pollutant",
-      "aqiLabel": "AQI",
+      "dominantPollutant": "",
+      "aqiLabel": "",
       "strongestPollen": "Hoogste pollen",
       "unit": {
         "concentration": "{value} μg/m3",
         "pollen": "{value} grains/m3"
       },
       "pollutant": {
-        "pm2_5": "PM2.5",
-        "pm10": "PM10",
+        "pm2_5": "",
+        "pm10": "",
         "ozone": "Ozon",
         "nitrogenDioxide": "Nitrogeen dioxide",
-        "sulphurDioxide": "Sulphur dioxide",
-        "carbonMonoxide": "Carbon monoxide"
+        "sulphurDioxide": "",
+        "carbonMonoxide": ""
       },
       "pollen": {
-        "alder": "Alder",
+        "alder": "",
         "birch": "Berken",
         "grass": "Gras",
         "mugwort": "Dreuzel",
         "olive": "Olijf",
-        "ragweed": "Ragweed"
+        "ragweed": ""
       },
       "compact": {
         "sixHourTrend": "AQI trend voor de komende zes uur"
@@ -2705,9 +2732,9 @@
         "pollutants": "Vervuilende concentraties",
         "pollen": "Pollen concentraties",
         "sevenDayForecast": "7-daagse maximale voorspelling",
-        "aqiValue": "AQI {value}",
-        "uvValue": "UV {value}",
-        "uvShort": "UV {value}",
+        "aqiValue": "",
+        "uvValue": "",
+        "uvShort": "",
         "noForecast": "Geen voorspellingsgegevens beschikbaar"
       }
     },
@@ -2758,7 +2785,7 @@
       "invalid": {
         "title": "Sommige afspraken kunnen niet worden weergegeven",
         "description": "{count, plural, one {Eén gebeurtenis heeft een ongeldige datum of niet-ondersteunde tijdzone.} other {# gebeurtenissen hebben een ongeldige datum of niet-ondersteunde tijdzone.}}",
-        "value": "Unavailable"
+        "value": ""
       },
       "alert": {
         "notifications": "Browser notificaties",
@@ -2767,14 +2794,14 @@
       }
     },
     "timer": {
-      "name": "Timer / Pomodoro",
+      "name": "",
       "description": "Voer een eenvoudige timer of een configureerbare Pomodoro reeks uit.",
       "option": {
         "mode": {
           "label": "Modus",
           "options": {
-            "timer": "Timer",
-            "pomodoro": "Pomodoro"
+            "timer": "",
+            "pomodoro": ""
           }
         },
         "timerMinutes": {
@@ -2800,18 +2827,18 @@
         }
       },
       "phase": {
-        "timer": "Timer",
-        "focus": "Focus",
+        "timer": "",
+        "focus": "",
         "shortBreak": "Korte pauze",
         "longBreak": "Lange pauze"
       },
       "action": {
         "start": "Starten",
         "pause": "Onderbreken",
-        "reset": "Reset"
+        "reset": ""
       },
       "attention": {
-        "timerComplete": "Timer complete",
+        "timerComplete": "",
         "phaseReady": "{phase} klaar"
       },
       "progress": "Timer vooruitgang: {progress}%",
@@ -2819,12 +2846,12 @@
         "completedFocus": "{count, plural, =0 {Geen focussessies voltooid} one {# focus sessie voltooid} other {# focus sessies voltooid}}"
       },
       "alert": {
-        "title": "Timer complete",
+        "title": "",
         "completed": "{phase} voltooid."
       },
       "advanced": {
-        "sequence": "Pomodoro sequence",
-        "focusSession": "Focus {session}",
+        "sequence": "",
+        "focusSession": "",
         "settings": "Permanente instellingen",
         "settingsHint": "Gebruik het contextmenu widget om deze board instellingen aan te passen.",
         "localAlerts": "Lokale waarschuwingen",
@@ -3045,7 +3072,7 @@
       "state": {
         "on": "op",
         "off": "UIT",
-        "unavailable": "Unavailable",
+        "unavailable": "",
         "unknown": "Onbekend"
       },
       "advanced": {
@@ -3097,8 +3124,8 @@
         "currentPrice": "Huidige prijs",
         "previousClose": "Vorige sluiting",
         "changePercentage": "Verandering (%)",
-        "minimum": "Minimum",
-        "maximum": "Maximum"
+        "minimum": "",
+        "maximum": ""
       },
       "option": {
         "stock": {
@@ -3203,6 +3230,10 @@
         },
         "viewMode": {
           "label": "Bekijken"
+        },
+        "hideHeader": {
+          "label": "",
+          "description": ""
         }
       },
       "advanced": {
@@ -3217,18 +3248,14 @@
         "month": "maand",
         "week": "week",
         "day": "dag",
-        "agenda": "Agenda"
+        "agenda": ""
       },
       "controls": {
-        "view": "Kalender weergave",
         "today": "vandaag",
         "previous": "Vorige periode",
         "next": "Volgende periode",
         "noEvents": "Geen gebeurtenissen in deze periode",
         "more": "{count} meer",
-        "moreLabel": "Toon {count} meer evenementen",
-        "eventDetails": "Details evenement",
-        "close": "Sluit evenement details",
         "timeSlot": "Tijd slot",
         "weekday": "Weekdag"
       }
@@ -3310,14 +3337,14 @@
         "currentHumidity": "Huidige luchtvochtigheid",
         "wind": "Wind / gasten ({unit})",
         "currentWind": "Huidige wind / gast",
-        "windValue": "{speed} / {gusts} {unit}",
+        "windValue": "",
         "windDetail": "Maximale wind / gassen: {speed} / {gusts} {unit}",
         "nextHourPrecipitation": "Neerslag volgend uur",
         "precipitationChance": "Neerslag kans",
-        "precipitationValue": "{probability}% · {amount} mm",
+        "precipitationValue": "",
         "precipitationDetail": "Neerslag: {probability}% · {amount} mm",
         "todayUv": "Max. UV index vandaag",
-        "uvIndex": "Max UV index: {value}",
+        "uvIndex": "",
         "daylight": "Daglicht: {duration}",
         "hourlyTooltip": "Voelt als {feelsLike}{temperatureUnit} · {amount} mm · {humidity}% vochtigheid · {speed} {speedUnit} wind",
         "hourlyTooltipWithoutHumidity": "Voelt als {feelsLike}{temperatureUnit} · {amount} mm · {speed} {speedUnit} wind",
@@ -3326,8 +3353,8 @@
           "precipitation": "Neerslag",
           "humidity": "Gemiddelde luchtvochtigheid",
           "wind": "Maximale wind / gast",
-          "uv": "Max UV index",
-          "daylight": "Daylight"
+          "uv": "",
+          "daylight": ""
         },
         "sun": "Zonsopgang / zonsondergang",
         "noForecast": "Geen voorspellingsgegevens beschikbaar"
@@ -3384,7 +3411,7 @@
           "label": "Standaard tab"
         },
         "tabOrder": {
-          "label": "Tab order",
+          "label": "",
           "systemFirst": "Systeem dan cluster",
           "clusterFirst": "Cluster dan systeem"
         },
@@ -3539,14 +3566,14 @@
       },
       "source": {
         "url": "Bron: {url}",
-        "unavailable": "{source}: unavailable"
+        "unavailable": ""
       },
       "instances": {
         "title": "Instanties"
       },
       "action": {
-        "openResource": "Open {name}",
-        "openLogs": "Open {name} logs",
+        "openResource": "",
+        "openLogs": "",
         "showIp": "Toon IP adres",
         "hideIp": "IP-adres verbergen"
       },
@@ -3572,8 +3599,8 @@
       "status": {
         "running": "Actief",
         "notRunning": "Niet actief",
-        "unavailable": "Unavailable",
-        "vpn": "VPN: {status}"
+        "unavailable": "",
+        "vpn": ""
       }
     },
     "ups": {
@@ -3606,7 +3633,7 @@
         "power": "Vermogen",
         "temperature": "Temperatuur",
         "manufacturer": "Fabrikant",
-        "model": "Model",
+        "model": "",
         "serial": "Serienummer"
       },
       "error": {
@@ -3909,12 +3936,29 @@
         "transcoding": "",
         "paused": "",
         "remaining": "",
-        "seasonEpisode": "S{season} E{episode}",
+        "seasonEpisode": "",
+        "state": {
+          "playing": "",
+          "buffering": ""
+        },
+        "details": {
+          "device": "",
+          "location": "",
+          "sessionId": "",
+          "bitrate": "",
+          "audioHandling": "",
+          "direct": "",
+          "transcode": "",
+          "containerChanged": "",
+          "position": "",
+          "unknown": ""
+        },
         "metadata": {
           "title": "Statistieken voor nerds",
           "video": {
             "title": "Video",
-            "resolution": "Resolutie"
+            "resolution": "Resolutie",
+            "frameRate": ""
           },
           "audio": {
             "title": "Audio",
@@ -3935,6 +3979,109 @@
         "playing": "{count} speelt",
         "transcoding": "{count} transcodering"
       }
+    },
+    "thingport-libraryStats": {
+      "name": "",
+      "description": "",
+      "title": "",
+      "option": {
+        "showModels": {
+          "label": ""
+        },
+        "showCollections": {
+          "label": ""
+        },
+        "showCategories": {
+          "label": ""
+        },
+        "showAuthors": {
+          "label": ""
+        }
+      },
+      "models": "",
+      "collections": "",
+      "categories": "Categoriechar@@0n",
+      "authors": ""
+    },
+    "thingport-featuredModel": {
+      "name": "",
+      "description": "",
+      "option": {
+        "autoRotate": {
+          "label": ""
+        },
+        "showDetails": {
+          "label": ""
+        }
+      },
+      "title": "",
+      "empty": "",
+      "hint": "",
+      "noPreview": "",
+      "views": "",
+      "prints": ""
+    },
+    "thingport-activityHeatmap": {
+      "name": "",
+      "description": "",
+      "title": "",
+      "option": {
+        "weekStart": {
+          "label": "Eerste dag van de week",
+          "option": {
+            "sunday": "",
+            "monday": ""
+          }
+        },
+        "showTotal": {
+          "label": ""
+        },
+        "showLegend": {
+          "label": ""
+        }
+      },
+      "lastYear": "",
+      "totalLastYear": "",
+      "totalInYear": "",
+      "dayTotal": "",
+      "dayEmpty": "",
+      "kinds": {
+        "import": "",
+        "upload": "Totaal geüpload",
+        "download": "Totaal gedownload",
+        "slicer": "",
+        "delete": "Verwijderd"
+      },
+      "less": "",
+      "more": ""
+    },
+    "thingport-models": {
+      "name": "",
+      "description": "",
+      "title": "",
+      "option": {
+        "defaultTab": {
+          "label": "Standaard tab"
+        },
+        "itemCount": {
+          "label": ""
+        },
+        "showThumbnails": {
+          "label": ""
+        }
+      },
+      "tab": {
+        "recentlyAdded": "",
+        "topViewed": "",
+        "topPrinted": ""
+      },
+      "empty": {
+        "recentlyAdded": "",
+        "topViewed": "",
+        "topPrinted": ""
+      },
+      "views": "",
+      "prints": ""
     },
     "paperlessNgx": {
       "description": "Overzicht van je Paperless-ngx documentenarchief",
@@ -4220,7 +4367,7 @@
       "actions": {
         "previousPhoto": "Vorige foto",
         "nextPhoto": "Volgende foto",
-        "pauseSlideshow": "Pause slideshow",
+        "pauseSlideshow": "",
         "resumeSlideshow": "Diavoorstelling hervatten",
         "toggleSlideshow": "Pauzeer of hervatten diashow",
         "photo": "Foto {number}"
@@ -4291,6 +4438,8 @@
         "id": {
           "columnTitle": "ID"
         },
+        "integration": {},
+        "name": {},
         "progress": {
           "columnTitle": "Voortgang",
           "detailsTitle": "Downloadvoortgang"
@@ -4306,6 +4455,8 @@
           "columnTitle": "Totaal up",
           "detailsTitle": "Totaal geüpload"
         },
+        "size": {},
+        "state": {},
         "time": {
           "columnTitle": "Eindtijd"
         },
@@ -4501,6 +4652,9 @@
             "progress": "Voortgang"
           }
         },
+        "queue": {
+          "table": {}
+        },
         "common": {
           "empty": "Leeg",
           "file": "Bestand",
@@ -4580,27 +4734,59 @@
       "name": "Uitgaves",
       "description": "Toont een lijst met de huidige versie van de opgegeven repositories met de opgegeven versie-regex.",
       "option": {
+        "layout": {
+          "label": "Lay-out",
+          "description": "",
+          "option": {
+            "comfortable": "Comfortabel",
+            "compact": "Compacte"
+          }
+        },
+        "summary": {
+          "label": "",
+          "description": "",
+          "option": {
+            "detailed": "",
+            "count": "",
+            "hidden": "Verborgen"
+          }
+        },
+        "groupReleases": {
+          "label": "",
+          "description": ""
+        },
+        "sections": {
+          "label": "",
+          "description": ""
+        },
         "newReleaseWithin": {
           "label": "Nieuwe uitgave binnen",
-          "description": "Gebruiksvoorbeeld: 1w (1 week), 10M (10 maanden). Geaccepteerde eenheidstypen: h (uren), d (dagen), w (weken), M (maanden), y (jaren). Laat leeg om nieuwe uitgaven niet te markeren."
+          "description": "Gebruiksvoorbeeld: 1w (1 week), 10M (10 maanden). Geaccepteerde eenheidstypen: h (uren), d (dagen), w (weken), M (maanden), y (jaren). Laat leeg om nieuwe uitgaven niet te markeren.",
+          "option": {
+            "never": "",
+            "1d": "1 dag",
+            "3d": "3 dagen",
+            "1w": "1 week",
+            "2w": "",
+            "1M": "1 maand",
+            "3M": "3 maanden"
+          }
         },
         "staleReleaseWithin": {
           "label": "Verouderde uitgave binnen",
-          "description": "Gebruiksvoorbeeld: 1w (1 week), 10M (10 maanden). Geaccepteerde eenheidstypen: h (uren), d (dagen), w (weken), M (maanden), y (jaren). Laat leeg om verouderde uitgaven niet te markeren."
+          "description": "Gebruiksvoorbeeld: 1w (1 week), 10M (10 maanden). Geaccepteerde eenheidstypen: h (uren), d (dagen), w (weken), M (maanden), y (jaren). Laat leeg om verouderde uitgaven niet te markeren.",
+          "option": {
+            "never": "",
+            "1M": "1 maand",
+            "3M": "3 maanden",
+            "6M": "6 maanden",
+            "1y": "1 jaar",
+            "2y": "2 jaar"
+          }
         },
-        "showOnlyHighlighted": {
-          "label": "Alleen gemarkeerde weergeven",
-          "description": "Alleen nieuwe of oude uitgaves weergeven. Zoals hierboven."
-        },
-        "showDetails": {
-          "label": "Details weergeven"
-        },
-        "showOnlyIcon": {
-          "label": "Alleen icoon weergeven"
-        },
-        "topReleases": {
-          "label": "Top uitgaven",
-          "description": "Het maximale aantal nieuwste uitgaven om te tonen. Nul betekent geen limiet."
+        "showChangelogPreview": {
+          "label": "",
+          "description": ""
         },
         "repositories": {
           "label": "Repositories",
@@ -4630,6 +4816,11 @@
           "identifier": {
             "label": "Identificator",
             "placeholder": "Naam of Eigenaar/naam"
+          },
+          "name": {},
+          "excludePrereleases": {
+            "label": "",
+            "description": ""
           },
           "versionFilter": {
             "label": "Versie filter",
@@ -4671,43 +4862,117 @@
           }
         }
       },
-      "not-found": "Niet gevonden",
-      "pre-release": "Pre-release",
-      "archived": "Gearchiveerd",
-      "forked": "Geforked",
+      "summary": {
+        "newReleases": "",
+        "newShort": "nieuw",
+        "tracked": "",
+        "caughtUp": "",
+        "outdated": "",
+        "outdatedShort": "verouderd",
+        "failing": "",
+        "failingShort": "",
+        "latest": "",
+        "issues": ""
+      },
+      "section": {
+        "new": {
+          "label": "Nieuw",
+          "description": ""
+        },
+        "attention": {
+          "label": "Heeft aandacht nodig",
+          "description": ""
+        },
+        "upToDate": {
+          "label": "Bijgewerkt tot",
+          "description": ""
+        },
+        "quiet": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "status": {
+        "new": "",
+        "outdated": "",
+        "error": "",
+        "upToDate": "bijgewerkt tot",
+        "quiet": ""
+      },
+      "tag": {
+        "new": "Nieuw",
+        "preRelease": "",
+        "resolvedFrom": "",
+        "quiet": "",
+        "archived": "Gearchiveerd",
+        "fork": ""
+      },
+      "issue": {
+        "affected": "",
+        "rateLimited": {
+          "title": "",
+          "hint": ""
+        },
+        "notFound": {
+          "title": "",
+          "hint": ""
+        },
+        "noMatchingVersion": {
+          "title": "",
+          "hint": ""
+        },
+        "noReleasesFound": {
+          "title": "",
+          "hint": ""
+        },
+        "invalidIdentifier": {
+          "title": "Ongeldige identificator",
+          "hint": ""
+        },
+        "noProviderSelected": {
+          "title": "Geen aanbieder geselecteerd",
+          "hint": ""
+        },
+        "noProviderResponse": {
+          "title": "",
+          "hint": ""
+        },
+        "unexpected": {
+          "title": "",
+          "hint": ""
+        }
+      },
+      "markViewed": "Markeren als bekeken",
+      "markAllViewed": "",
+      "markEntryViewed": "",
+      "viewed": "",
+      "copyVersion": "",
+      "copied": "Gekoppeld",
+      "published": "",
+      "whatChanged": "",
+      "noNotes": "",
+      "changes": "",
       "starsCount": "Sterren",
       "forksCount": "Forks",
-      "issuesCount": "Openstaande issues",
-      "markViewed": "Markeren als bekeken",
-      "openProjectPage": "Projectpagina openen",
-      "openReleasePage": "Uitgavepagina openen",
-      "releaseDescription": "Uitgave beschrijving",
-      "projectDescription": "Project beschrijving",
+      "openIssues": "",
+      "created": "Aangemaakt",
+      "releasePage": "",
+      "projectPage": "",
       "runningVersions": "Lopende versies",
       "upToDate": "Bijgewerkt tot",
       "updateAvailable": "Update beschikbaar",
       "unknownStatus": "Onbekend",
-      "created": "Aangemaakt",
       "error": {
-        "label": "Fout",
-        "messages": {
-          "invalidIdentifier": "Ongeldige identificator",
-          "noMatchingVersion": "Geen overeenkomende versie gevonden",
-          "noReleasesFound": "Geen uitgaves gevonden",
-          "noProviderSelected": "",
-          "noProviderResponse": "Geen reactie van aanbieder",
-          "unexpected": ""
-        }
-      },
-      "expandDetails": "Toon details van {name}",
-      "collapseDetails": "Verberg details van {name}"
+        "collapsedSaveTitle": "",
+        "collapsedSaveMessage": ""
+      }
     },
     "networkControllerSummary": {
       "advanced": {
         "updated": "Bijgewerkt",
         "metric": {
           "latency": "Latentie",
-          "ping": "Ping",
+          "ping": "",
           "uptime": "Uptime",
           "users": "Gebruikers",
           "guests": "Gasten"
@@ -4716,12 +4981,12 @@
       "card": {
         "vpn": {
           "countConnected": "{count, plural, one {# heeft} other {# is aangesloten}}",
-          "label": "VPN"
+          "label": ""
         },
-        "wan": "WAN",
+        "wan": "",
         "web": "Internet",
         "wifi": "Wi-Fi",
-        "lan": "LAN"
+        "lan": ""
       },
       "error": {
         "unknownContentOption": "Onbekende inhoudsoptie voor netwerkcontroller samenvatting widget: "
@@ -4801,7 +5066,7 @@
         "noInterfaces": "Nog geen netwerkgegevens"
       },
       "versionUnknown": "Onbekende versie",
-      "metricAccessible": "{metric}: {value}%, {status}",
+      "metricAccessible": "",
       "status": {
         "normal": "normaal",
         "warning": "Waarschuwing",
@@ -4821,8 +5086,8 @@
           "option": {
             "auto": "Automatisch",
             "plain": "Onopgemaakte tekst",
-            "markdown": "Markdown",
-            "html": "HTML"
+            "markdown": "",
+            "html": ""
           }
         }
       },
@@ -4872,45 +5137,116 @@
     "uptimeKuma": {
       "description": "Bewaak uptime-statistieken van je Uptime Kuma statuspagina",
       "option": {
-        "showAverageUptime": {
-          "label": "Toon gemiddelde uptime",
-          "description": ""
-        },
-        "showUptimeRing": {
+        "statusPageSlug": {
           "label": "",
           "description": ""
         },
-        "showTotalMonitors": {
+        "summaryOnly": {
           "label": "",
           "description": ""
         },
-        "showUpCount": {
+        "showSummary": {
           "label": "",
           "description": ""
         },
-        "showDownCount": {
+        "showIncidents": {
           "label": "",
           "description": ""
         },
-        "showPausedCount": {
+        "groupByStatusPageGroup": {
+          "label": "",
+          "description": ""
+        },
+        "showOnlyProblems": {
+          "label": "",
+          "description": ""
+        },
+        "sortBy": {
+          "label": "",
+          "option": {
+            "status": "",
+            "statusPage": "",
+            "name": "Taaknaam",
+            "uptime": ""
+          }
+        },
+        "showHeartbeatBar": {
+          "label": "",
+          "description": ""
+        },
+        "showUptime": {
+          "label": ""
+        },
+        "showResponseTime": {
+          "label": ""
+        },
+        "showCertificateExpiry": {
           "label": "",
           "description": ""
         }
       },
-      "averageUptime": "",
-      "stats": {
-        "totalMonitors": "",
-        "upCount": "",
-        "downCount": "",
-        "pausedCount": ""
-      },
-      "error": {
-        "internalServerError": ""
-      },
       "status": {
         "up": "Totaal up",
         "down": "Totaal down",
-        "paused": "Gepauzeerd"
+        "pending": "In afwachting",
+        "maintenance": "",
+        "stale": "",
+        "unknown": ""
+      },
+      "overall": {
+        "operational": "",
+        "degraded": "",
+        "outage": "",
+        "maintenance": "",
+        "unknown": ""
+      },
+      "short": {
+        "operational": "",
+        "down": "",
+        "pending": "",
+        "maintenance": "",
+        "unknown": ""
+      },
+      "summary": {
+        "upRatio": "",
+        "upRatioShort": "",
+        "averageUptime": "",
+        "uptimeShort": "",
+        "statusCount": ""
+      },
+      "unit": {
+        "milliseconds": ""
+      },
+      "heartbeatBar": {
+        "label": ""
+      },
+      "detail": {
+        "checked": "",
+        "certificate": ""
+      },
+      "notice": {
+        "label": "",
+        "untitled": ""
+      },
+      "empty": {
+        "title": "",
+        "description": ""
+      },
+      "allClear": "",
+      "error": {
+        "internalServerError": ""
+      },
+      "monitorType": {
+        "http": "",
+        "keyword": "",
+        "jsonQuery": "",
+        "port": "",
+        "ping": "",
+        "dns": "",
+        "docker": "",
+        "push": "",
+        "group": "Groep",
+        "realBrowser": ""
       }
     },
     "traefik": {
@@ -4945,9 +5281,9 @@
         "internalServerError": ""
       },
       "resourceType": {
-        "router": "Router",
+        "router": "",
         "service": "Diensten",
-        "middleware": "Middleware"
+        "middleware": ""
       },
       "resourceStatus": {
         "enabled": "Ingeschakeld",
@@ -5041,7 +5377,7 @@
         "network": "NET",
         "up": "OMHOOG",
         "down": "OMLAAG",
-        "memoryTooltip": "{used} / {available} ({percent}%)"
+        "memoryTooltip": ""
       }
     },
     "systemDisks": {
@@ -5133,6 +5469,9 @@
       "name": "Beszel-systemen (tabel)",
       "description": "Tabelweergave van alle door Beszel bewaakte systemen met sorteerbare kolommen en statusindicatoren",
       "option": {
+        "fahrenheit": {
+          "label": "Temperatuur in fahrenheit"
+        },
         "sortBy": {
           "label": "Sorteer op"
         },
@@ -5147,7 +5486,12 @@
     },
     "beszelSystemGrid": {
       "name": "Beszel-systemen (raster)",
-      "description": "Kaartrasterweergave van alle door Beszel bewaakte systemen met realtime metingen"
+      "description": "Kaartrasterweergave van alle door Beszel bewaakte systemen met realtime metingen",
+      "option": {
+        "fahrenheit": {
+          "label": "Temperatuur in fahrenheit"
+        }
+      }
     },
     "beszelAlerts": {
       "name": "Beszel-waarschuwingen",
@@ -5323,7 +5667,7 @@
       },
       "options": {
         "statusFilter": {
-          "label": "Status filter"
+          "label": ""
         },
         "showCpu": {
           "label": "Toon CPU"
@@ -5362,7 +5706,7 @@
       "metric": {
         "system": "Systeem",
         "hostname": "Hostnaam",
-        "cpuModel": "CPU model",
+        "cpuModel": "",
         "cores": "Cores",
         "memoryTotal": "Geheugen totaal",
         "memory": "Geheugen",
@@ -5372,13 +5716,13 @@
         "temp": "Tijdelijk",
         "battery": "Vleermuis",
         "uptime": "Uptime",
-        "agent": "Agent"
+        "agent": ""
       }
     },
     "llamacpp": {
-      "name": "llama.cpp",
+      "name": "",
       "description": "Toon de gezondheid, geladen model en generatiesnelheid van uw lokale llama.cpp server.",
-      "title": "llama.cpp",
+      "title": "",
       "status": {
         "unhealthy": "Ongezond ({status})"
       },
@@ -5390,10 +5734,10 @@
       },
       "busy": "{count, plural, one {# verzoek loopt} other {# verzoeken lopen}}",
       "modelInfo": {
-        "context": "Context",
+        "context": "",
         "size": "Bestands grootte",
-        "parameters": "Parameters",
-        "model": "Model",
+        "parameters": "",
+        "model": "",
         "quantization": "Kwantisering"
       },
       "stats": {
@@ -5406,9 +5750,9 @@
         "unreachable": "llama-server is niet bereikbaar"
       },
       "unit": {
-        "speed": "{value} t/s",
-        "parameters": "{value}B",
-        "none": "—",
+        "speed": "",
+        "parameters": "",
+        "none": "",
         "speedShort": "/s"
       },
       "option": {
@@ -5468,7 +5812,7 @@
       "moveDown": "Omlaag",
       "remove": "Metrische eenheden verwijderen",
       "loading": "Laden…",
-      "unavailable": "Unavailable",
+      "unavailable": "",
       "refreshFailed": "Vernieuwen mislukt — opgeslagen gegevens tonen",
       "stale": "Opgeslagen gegevens — verversen om bij te werken",
       "table": {
@@ -5515,10 +5859,12 @@
       "allHidden": "Alle statistieken zijn verborgen in deze weergave. Gebruik Aanpassen van deze weergave om ze te herstellen."
     },
     "wazuh": {
+      "name": "",
+      "description": "",
       "target": {
-        "api": "Wazuh server API",
-        "indexer": "Wazuh indexer",
-        "wazuh": "Wazuh"
+        "api": "",
+        "indexer": "",
+        "wazuh": ""
       },
       "severity": {
         "low": "laag",
@@ -5533,7 +5879,15 @@
         },
         "certificate": {
           "title": "{target} certificaat wordt niet vertrouwd",
-          "description": "Wazuh gebruikt standaard een zelfondertekend certificaat. Voer \"Test connectie\" uit op de integratie en vertrouwt het certificaat, of voeg je CA toe onder Instellingen → Certificaten."
+          "description": ""
+        },
+        "certificateHostname": {
+          "title": "",
+          "description": ""
+        },
+        "certificateExpired": {
+          "title": "",
+          "description": ""
         },
         "unreachable": {
           "title": "Kan {target} niet bereiken",
@@ -5558,7 +5912,9 @@
         "unknown": {
           "title": "Kan de gegevens van {target} niet laden",
           "description": "Bekijk de Homarr logs voor meer informatie."
-        }
+        },
+        "viewSaveTitle": "",
+        "viewSaveMessage": ""
       },
       "range": {
         "1h": "1u",
@@ -5566,91 +5922,138 @@
         "7d": "7D",
         "30d": "30D"
       },
-      "levelTooltip": "Regel niveau {level} ({severity})"
-    },
-    "wazuhAgents": {
-      "name": "Wazuh agents",
-      "description": "Sorteerbare lijst van Wazuh agents met status, OS, versie en laatste keepalive",
+      "levelTooltip": "Regel niveau {level} ({severity})",
+      "summary": {
+        "title": "Ernstigheid · {range}",
+        "alerts": "waarschuwingen",
+        "none": "Geen meldingen",
+        "trend": {
+          "new": "nieuw",
+          "tooltip": "Vorige periode: {previous}"
+        },
+        "previous": "Vorige {range}: {count}",
+        "maxLevel": "Max. niveau {level}",
+        "health": "Indexeren gezondheid: {status}",
+        "manager": ""
+      },
+      "alerts": {
+        "title": "Waarschuwingen · niveau {level}+ · {hours}h",
+        "empty": "Geen meldingen op dit niveau. Alles stil.",
+        "rule": "Regel {id}",
+        "openInDashboard": "Open deze waarschuwing in het Wazuh dashboard"
+      },
+      "timeline": {
+        "title": "Tijdlijn waarschuwingen · {range}",
+        "total": "{count} waarschuwingen",
+        "interval": ""
+      },
+      "top": {
+        "title": {
+          "rules": "Top regels · {range}",
+          "agents": "Top agenten · {range}",
+          "sourceIps": "Top bron IPs · {range}",
+          "mitreTactics": "MITRE tactieken · {range}",
+          "mitreTechniques": ""
+        },
+        "empty": {
+          "rules": "Geen meldingen in deze periode",
+          "agents": "Geen meldingen in deze periode",
+          "sourceIps": "Geen meldingen met een bron IP in deze periode",
+          "mitreTactics": "Geen waarschuwingen toegewezen aan MITRE ATT&CK in deze periode",
+          "mitreTechniques": "Geen waarschuwingen toegewezen aan MITRE ATT&CK in deze periode"
+        },
+        "totalTooltip": "{count} passende waarschuwingen",
+        "private": "",
+        "public": "Openbaar",
+        "agents": "Gezien op {count} agents",
+        "others": "{count} meer meldingen in andere items"
+      },
+      "agents": {
+        "title": "Agenten",
+        "total": "",
+        "status": {
+          "active": "Actief",
+          "disconnected": "Verbinding verbroken",
+          "neverConnected": "Nooit verbonden",
+          "pending": "In afwachting"
+        },
+        "statusLabel": {
+          "active": "Actief",
+          "disconnected": "Verbinding verbroken",
+          "never_connected": "Nooit verbonden",
+          "pending": "In afwachting",
+          "unknown": "Onbekend"
+        },
+        "live": "Zichtbaar",
+        "snapshot": "Momentopname {age} oud",
+        "snapshotHint": "Lees van de Wazuh dashboard snapshot (wazuh-monitoring) genomen bij {time}. Voeg de server API gegevens toe voor live data.",
+        "staleSnapshot": "De agent snapshot van {time} is verouderd. Controleer of de Wazuh dashboard monitoring job actief is, of voeg de server API referenties toe.",
+        "noDisconnected": "Alle agenten zijn verbonden",
+        "empty": "Er komen geen agenten overeen met deze filter",
+        "column": {
+          "status": "Status",
+          "name": "Taaknaam",
+          "ip": "IP-adres",
+          "os": "OS",
+          "version": "Versie",
+          "lastKeepAlive": "Blijven",
+          "groups": "Groepen"
+        },
+        "outdated": "Ouder dan de nieuwste versie van de agent ({version})"
+      },
+      "vulnerabilities": {
+        "title": "Kwetsbaarheden",
+        "topCves": "Top CVE's",
+        "score": "Beoordeling",
+        "agentsShort": "Agenten",
+        "topAgents": "Meest kwetsbare agenten",
+        "criticalHigh": "Krit / hoog",
+        "totalTooltip": "{count} bevindingen van {agents} agents",
+        "affected": "",
+        "empty": "Geen kwetsbaarheden gevonden",
+        "distribution": "Ernstige verdeling. {unscored} bevindingen zonder een score worden niet getoond.",
+        "worst": "Het belangrijkste: {id} ({score}) op {agents} agenten"
+      },
+      "fim": {
+        "title": "Bestandsintegriteit · {range}",
+        "event": {
+          "added": "Datum toegevoegd",
+          "modified": "Gewijzigd",
+          "deleted": "Verwijderd",
+          "unknown": "Veranderd"
+        },
+        "empty": "Geen gebeurtenissen van integriteit bestand in deze periode",
+        "user": "door {user}",
+        "registry": "Register"
+      },
+      "authFailures": {
+        "title": "Authenticatie mislukt · {hours}u",
+        "seriesTooltip": "Alle agents van de laatste {hours}h",
+        "peak": "Piek {count}/emmer",
+        "empty": "Geen mislukte aanmeldingen in deze periode",
+        "failed": "Mislukte aanmeldingen",
+        "failedHint": "Enkelvoudige authenticatie fouten (logboek, pAM, Windows login, ongeldige gebruikers)",
+        "bruteForce": "Brute kracht",
+        "bruteForceHint": "Corgerelateerde brute-kracht regels (meerdere fouten in een korte periode, MITRE T1110)",
+        "sourceIps": "Bron IPs",
+        "ipTooltip": "{ip}: {count} fouten",
+        "bruteForceCount": "{count} brute kracht"
+      },
+      "view": {
+        "overview": "",
+        "alerts": "",
+        "timeline": "",
+        "top": "",
+        "agents": "Agenten",
+        "vulnerabilities": "Kwetsbaarheden",
+        "fim": "",
+        "authFailures": ""
+      },
       "option": {
-        "statusFilter": {
-          "label": "Toon medewerkers"
+        "visibleViews": {
+          "label": "",
+          "description": ""
         },
-        "sortBy": {
-          "label": "Sorteren op"
-        },
-        "showVersion": {
-          "label": "Toon Wazuh versiekolom"
-        },
-        "showGroups": {
-          "label": "Groepskolom tonen"
-        }
-      },
-      "title": "Agenten",
-      "total": "{count} agents",
-      "status": {
-        "active": "Actief",
-        "disconnected": "Verbinding verbroken",
-        "neverConnected": "Nooit verbonden",
-        "pending": "In afwachting"
-      },
-      "statusLabel": {
-        "active": "Actief",
-        "disconnected": "Verbinding verbroken",
-        "never_connected": "Nooit verbonden",
-        "pending": "In afwachting",
-        "unknown": "Onbekend"
-      },
-      "live": "Zichtbaar",
-      "snapshot": "Momentopname {age} oud",
-      "snapshotHint": "Lees van de Wazuh dashboard snapshot (wazuh-monitoring) genomen bij {time}. Voeg de server API gegevens toe voor live data.",
-      "staleSnapshot": "De agent snapshot van {time} is verouderd. Controleer of de Wazuh dashboard monitoring job actief is, of voeg de server API referenties toe.",
-      "noDisconnected": "Alle agenten zijn verbonden",
-      "empty": "Er komen geen agenten overeen met deze filter",
-      "column": {
-        "ip": "IP-adres",
-        "os": "OS",
-        "version": "Versie",
-        "lastKeepAlive": "Blijven",
-        "groups": "Groepen"
-      },
-      "outdated": "Ouder dan de nieuwste versie van de agent ({version})"
-    },
-    "wazuhAlerts": {
-      "name": "Wazuh waarschuwingen",
-      "description": "Recente Wazuh waarschuwingen met level, MITRE ATT&CK technieken, agent en bron IP",
-      "option": {
-        "minLevel": {
-          "label": "Minimum regelniveau",
-          "description": "Wazuh levels: 0-6 laag, 7-11 medium, 12-14 hoog, 15+ kritisch"
-        },
-        "hours": {
-          "label": "Tijdvenster (uren)"
-        },
-        "limit": {
-          "label": "Aantal waarschuwingen"
-        },
-        "showMitre": {
-          "label": "Show MITRE ATT&CK techniques"
-        },
-        "showAgent": {
-          "label": "Toon medewerker"
-        },
-        "showSourceIp": {
-          "label": "Toon bron IP"
-        },
-        "showRuleId": {
-          "label": "Toon regel-ID"
-        }
-      },
-      "title": "Waarschuwingen · niveau {level}+ · {hours}h",
-      "empty": "Geen meldingen op dit niveau. Alles stil.",
-      "rule": "Regel {id}",
-      "openInDashboard": "Open deze waarschuwing in het Wazuh dashboard"
-    },
-    "wazuhSummary": {
-      "name": "Wazuh alarm ernst",
-      "description": "Melding is mislukt met een trend ten opzichte van de vorige periode",
-      "option": {
         "range": {
           "label": "Tijdsbereik"
         },
@@ -5659,29 +6062,9 @@
         },
         "showFooter": {
           "label": "Toon voettekst"
-        }
-      },
-      "title": "Ernstigheid · {range}",
-      "alerts": "waarschuwingen",
-      "none": "Geen meldingen",
-      "trend": {
-        "new": "nieuw",
-        "tooltip": "Vorige periode: {previous}"
-      },
-      "previous": "Vorige {range}: {count}",
-      "maxLevel": "Max. niveau {level}",
-      "health": "Indexeren gezondheid: {status}",
-      "manager": "Manager {version}"
-    },
-    "wazuhTimeline": {
-      "name": "Wazuh alerts timeline",
-      "description": "Gestapelde grafiek met Wazuh waarschuwingen na verloop van tijd door ernst",
-      "option": {
-        "range": {
-          "label": "Tijdsbereik"
         },
         "interval": {
-          "label": "Interval"
+          "label": ""
         },
         "chartType": {
           "label": "Grafiek type"
@@ -5691,60 +6074,32 @@
           "description": "Vierkante wortel blijft hoge en kritische waarschuwingen zichtbaar naast duizenden lage"
         },
         "minLevel": {
-          "label": "Minimum regelniveau"
+          "label": ""
         },
         "showLegend": {
           "label": "Toon legende met totalen"
-        }
-      },
-      "title": "Tijdlijn waarschuwingen · {range}",
-      "total": "{count} waarschuwingen",
-      "interval": "per {interval}"
-    },
-    "wazuhTopList": {
-      "name": "Wazuh toplijst",
-      "description": "Top regels, agenten, bron IP's of MITRE ATT&CK en technieken bij aantal meldingen",
-      "option": {
-        "kind": {
+        },
+        "topKind": {
           "label": "Positie"
         },
-        "range": {
-          "label": "Tijdsbereik"
-        },
-        "limit": {
-          "label": "Aantal items"
-        },
-        "minLevel": {
-          "label": "Minimum regelniveau"
+        "topLimit": {
+          "label": ""
         },
         "showBars": {
           "label": "Toon balken"
-        }
-      },
-      "title": {
-        "rules": "Top regels · {range}",
-        "agents": "Top agenten · {range}",
-        "sourceIps": "Top bron IPs · {range}",
-        "mitreTactics": "MITRE tactieken · {range}",
-        "mitreTechniques": "MITRE techniques · {range}"
-      },
-      "empty": {
-        "rules": "Geen meldingen in deze periode",
-        "agents": "Geen meldingen in deze periode",
-        "sourceIps": "Geen meldingen met een bron IP in deze periode",
-        "mitreTactics": "Geen waarschuwingen toegewezen aan MITRE ATT&CK in deze periode",
-        "mitreTechniques": "Geen waarschuwingen toegewezen aan MITRE ATT&CK in deze periode"
-      },
-      "totalTooltip": "{count} passende waarschuwingen",
-      "private": "LAN",
-      "public": "Openbaar",
-      "agents": "Gezien op {count} agents",
-      "others": "{count} meer meldingen in andere items"
-    },
-    "wazuhVulnerabilities": {
-      "name": "Wazuh kwetsbaarheden",
-      "description": "Kwetsbaarheid telt, top CVE's en de meest kwetsbare agenten",
-      "option": {
+        },
+        "agentStatusFilter": {
+          "label": "Toon medewerkers"
+        },
+        "agentSortBy": {
+          "label": "Sorteren op"
+        },
+        "showVersion": {
+          "label": ""
+        },
+        "showGroups": {
+          "label": ""
+        },
         "cveOrder": {
           "label": "Rank CVEs op"
         },
@@ -5759,73 +6114,42 @@
         },
         "showAgents": {
           "label": "Toon de meest kwetsbare agenten"
-        }
-      },
-      "title": "Kwetsbaarheden",
-      "topCves": "Top CVE's",
-      "score": "Beoordeling",
-      "agentsShort": "Agenten",
-      "topAgents": "Meest kwetsbare agenten",
-      "criticalHigh": "Krit / hoog",
-      "totalTooltip": "{count} bevindingen van {agents} agents",
-      "affected": "{count} agents",
-      "empty": "Geen kwetsbaarheden gevonden",
-      "distribution": "Ernstige verdeling. {unscored} bevindingen zonder een score worden niet getoond.",
-      "worst": "Het belangrijkste: {id} ({score}) op {agents} agenten"
-    },
-    "wazuhFim": {
-      "name": "Wazuh bestand integriteit",
-      "description": "Recente integriteitsbewaking van bestand (syscheck) gebeurtenissen",
-      "option": {
-        "range": {
-          "label": "Tijdsbereik"
         },
-        "event": {
+        "fimEvent": {
           "label": "Evenementen"
         },
-        "limit": {
-          "label": "Aantal gebeurtenissen"
+        "fimLimit": {
+          "label": ""
         },
         "includeRegistry": {
           "label": "Inclusief Windows register gebeurtenissen"
-        }
-      },
-      "title": "Bestandsintegriteit · {range}",
-      "event": {
-        "added": "Datum toegevoegd",
-        "modified": "Gewijzigd",
-        "deleted": "Verwijderd",
-        "unknown": "Veranderd"
-      },
-      "empty": "Geen gebeurtenissen van integriteit bestand in deze periode",
-      "user": "door {user}",
-      "registry": "Register"
-    },
-    "wazuhAuthFailures": {
-      "name": "Wazuh authenticatie mislukt",
-      "description": "Mislukte logins en brute-force waarschuwingen per agent met uurlijkse sparklines",
-      "option": {
-        "hours": {
-          "label": "Tijdvenster (uren)"
         },
-        "limit": {
-          "label": "Aantal agenten"
+        "authLimit": {
+          "label": ""
         },
         "showSourceIps": {
           "label": "Toon top source IP's"
+        },
+        "alertsMinLevel": {
+          "label": "",
+          "description": "Wazuh levels: 0-6 laag, 7-11 medium, 12-14 hoog, 15+ kritisch"
+        },
+        "alertsLimit": {
+          "label": ""
+        },
+        "showMitre": {
+          "label": ""
+        },
+        "showAgent": {
+          "label": "Toon medewerker"
+        },
+        "showSourceIp": {
+          "label": "Toon bron IP"
+        },
+        "showRuleId": {
+          "label": "Toon regel-ID"
         }
-      },
-      "title": "Authenticatie mislukt · {hours}u",
-      "seriesTooltip": "Alle agents van de laatste {hours}h",
-      "peak": "Piek {count}/emmer",
-      "empty": "Geen mislukte aanmeldingen in deze periode",
-      "failed": "Mislukte aanmeldingen",
-      "failedHint": "Enkelvoudige authenticatie fouten (logboek, pAM, Windows login, ongeldige gebruikers)",
-      "bruteForce": "Brute kracht",
-      "bruteForceHint": "Corgerelateerde brute-kracht regels (meerdere fouten in een korte periode, MITRE T1110)",
-      "sourceIps": "Bron IPs",
-      "ipTooltip": "{ip}: {count} fouten",
-      "bruteForceCount": "{count} brute kracht"
+      }
     }
   },
   "widgetPreview": {
@@ -5844,6 +6168,18 @@
       "addWidget": "Widget toevoegen",
       "addApp": "App toevoegen",
       "connectService": "Verbind service"
+    },
+    "urlDrop": {
+      "hint": "",
+      "resolving": "",
+      "notification": {
+        "success": {
+          "message": ""
+        },
+        "full": {
+          "message": ""
+        }
+      }
     },
     "setupChecklist": {
       "title": "Maak dit bord nuttig",
@@ -5882,8 +6218,8 @@
         "preview": "Voorbeeld van {name} met {count} items",
         "currentHidden": "Huidig bord: {name}",
         "keyboard": {
-          "navigate": "Navigate",
-          "open": "Open",
+          "navigate": "",
+          "open": "",
           "instructions": "Typ om borden te filteren. Gebruik de pijltoetsen om door de resultaten te gaan en Enter om een bord te openen."
         },
         "empty": {
@@ -5951,10 +6287,10 @@
       }
     },
     "landmark": {
-      "canvas": "Dashboard canvas",
+      "canvas": "",
       "leftRail": "Links dashboard spoor",
       "rightRail": "Rechts dashboard spoor",
-      "items": "Dashboard items"
+      "items": ""
     },
     "field": {
       "pageTitle": {
@@ -6057,7 +6393,8 @@
       },
       "itemRadius": {
         "label": "Item radius",
-        "description": "Verandert de rondheid van tegels op je bord"
+        "description": "Verandert de rondheid van tegels op je bord",
+        "option": {}
       },
       "isPublic": {
         "label": "Openbaar",
@@ -6098,12 +6435,12 @@
             "columns": "kolommen",
             "empty": "Deze lay-out is leeg",
             "dynamicSection": "Dynamische sectie",
-            "editorWidthLabel": "{layoutName} · {width}px"
+            "editorWidthLabel": ""
           },
           "reset": {
             "action": "Reset vanaf basis",
             "confirm": {
-              "title": "Reset {layoutName}?",
+              "title": "",
               "message": "Dit vervangt elke opgeslagen positie en grootte in deze lay-out door een nieuwe lay-out gegenereerd op basis van basis. Dit kan niet ongedaan worden gemaakt."
             }
           },
@@ -6232,9 +6569,9 @@
         "label": "Vaste sidebars",
         "description": "Reserveer tot drie dashboardkolommen aan beide zijden. Het resterende doek vult automatisch op.",
         "left": {
-          "label": "Left sidebar",
+          "label": "",
           "description": "Dit gebied zichtbaar houden tijdens het dashboard scrollen.",
-          "thumbLabel": "Left sidebar width"
+          "thumbLabel": ""
         },
         "right": {
           "label": "Sidebar rechts",
@@ -6404,7 +6741,7 @@
                 }
               },
               "items": {
-                "logo": "Logo",
+                "logo": "",
                 "search": "Zoeken",
                 "home": "Home-bord",
                 "boardSwitcher": "Borden",
@@ -6642,11 +6979,11 @@
             }
           },
           "branding": {
-            "title": "Instance branding",
+            "title": "",
             "groups": {
               "identity": "Identiteit",
               "appearance": "Weergave",
-              "customCss": "Custom CSS",
+              "customCss": "",
               "authentication": "Authenticatie"
             },
             "identity": {
@@ -6660,7 +6997,7 @@
             },
             "logo": {
               "label": "Applicatie logo",
-              "placeholder": "/logo/logo.png"
+              "placeholder": ""
             },
             "favicon": {
               "label": "Browser pictogram (favicon)",
@@ -6683,8 +7020,13 @@
             "signInOverlay": {
               "label": "Achtergrond overlay"
             },
+            "signInMarquee": {
+              "label": "",
+              "description": ""
+            },
             "defaultRadius": {
-              "label": "Hoek stijl"
+              "label": "Hoek stijl",
+              "options": {}
             },
             "customCss": {
               "label": "Globale aangepaste CSS",
@@ -6699,14 +7041,14 @@
             "summary": {
               "title": "Huidige branding",
               "cornerStyle": "Hoek stijl",
-              "palette": "Palette",
+              "palette": "",
               "backgroundConfigured": "Aangepaste achtergrond · {overlay}% overlay",
               "backgroundDefault": "Standaard achtergrond",
               "greetingConfigured": "Aangepaste begroeting",
               "greetingDefault": "Standaard begroeting",
               "boardColorLocked": "Kleur op bord vergrendeld",
               "boardColorFlexible": "Kleuren op bord toegestaan",
-              "logo": "Logo",
+              "logo": "",
               "greeting": "Begroeting",
               "on": "op",
               "off": "UIT"
@@ -6838,9 +7180,10 @@
               "keep": "Opgeslagen koppen behouden"
             },
             "model": {
-              "title": "Model",
+              "title": "",
               "description": "Selecteer een ontdekt model of voer een exact eindpunt model ID in.",
-              "placeholder": "Model ID",
+              "save": "",
+              "placeholder": "",
               "refresh": "Ververs modellen",
               "chooseModel": "Kies het model dat gebruikt wordt voor nieuwe gesprekken",
               "discoveryPath": "Model ontdekking pad",
@@ -6856,7 +7199,7 @@
               "toolsUnknown": "Verifieer tool ondersteuning"
             },
             "serverTools": {
-              "title": "Server tools",
+              "title": "",
               "webSearch": {
                 "label": "Web zoeken",
                 "description": "Sta het model toe om via OpenRouter te zoeken als een aanvraag actuele informatie nodig heeft. Het zoekgebruik wordt afzonderlijk door OpenRouter in rekening gebracht.",
@@ -6931,7 +7274,8 @@
             },
             "lastExecution": {
               "label": "Laatste uitvoering"
-            }
+            },
+            "actions": {}
           },
           "table": {
             "search": "{count} taken zoeken…"
@@ -6999,7 +7343,7 @@
                 }
               },
               "provenance": {
-                "oauth": "OAuth",
+                "oauth": "",
                 "unattributed": "Handmatige of oudere API-sleutel",
                 "unnamedClient": "Klant naam niet opgenomen",
                 "clientNameHint": "Clientnamen zijn zelf gerapporteerd en niet geverifieerd.",
@@ -7248,8 +7592,8 @@
           "authentication": "Authenticatie",
           "apiRequest": "API",
           "appRepresentation": "App",
-          "widgetConfiguration": "Widget",
-          "widgetQuery": "Widget query"
+          "widgetConfiguration": "",
+          "widgetQuery": ""
         },
         "status": {
           "available": "Beschikbaar",
@@ -7419,15 +7763,15 @@
   },
   "kubernetes": {
     "context": {
-      "label": "Kubernetes context",
+      "label": "",
       "loadError": {
         "title": "Kubernetes contexten konden niet geladen worden",
         "message": "Context informatie is niet beschikbaar. Probeer het opnieuw zonder deze pagina te verlaten."
       },
       "status": {
         "available": "Beschikbaar",
-        "degraded": "Metrics unavailable",
-        "unavailable": "Unavailable"
+        "degraded": "",
+        "unavailable": ""
       },
       "unavailable": "Deze Kubernetes-context kan niet worden bereikt. Selecteer een andere context of controleer de inloggegevens en eindpunt.",
       "metricsUnavailable": "Deze context is bereikbaar, maar Metrics Server is niet beschikbaar. Inventaris blijft beschikbaar zonder live CPU en geheugengebruik."
@@ -7459,7 +7803,7 @@
     },
     "nodes": {
       "field": {
-        "metricsUnavailable": "Unavailable",
+        "metricsUnavailable": "",
         "kubernetesVersion": {
           "label": "Kubernetes versie"
         }
@@ -7549,6 +7893,15 @@
     },
     "error": {
       "internalServerError": "Kubernetes gegevens ophalen mislukt"
+    },
+    "field": {
+      "name": {},
+      "namespace": {},
+      "creationTimestamp": {},
+      "state": {},
+      "status": {},
+      "type": {},
+      "architecture": {}
     }
   },
   "permission": {
@@ -7574,7 +7927,8 @@
       "permission": {
         "label": "Machtiging"
       }
-    }
+    },
+    "action": {}
   },
   "navigationStructure": {
     "manage": {
@@ -7684,8 +8038,8 @@
       "modeAriaLabel": "{mode} modus",
       "resultsAriaLabel": "{mode} resultaten",
       "footer": {
-        "navigate": "Navigate",
-        "open": "Open"
+        "navigate": "",
+        "open": ""
       }
     },
     "error": {
@@ -8114,7 +8468,8 @@
         },
         "urlTemplate": {
           "label": "URL zoektemplate"
-        }
+        },
+        "description": {}
       },
       "page": {
         "list": {
@@ -8370,7 +8725,7 @@
   },
   "metadata": {
     "description": "Een zelfgehoste dashboard voor de *arr stack en je hele vaderland. Integreert met 50+ diensten, real-time widgets, geen configuratie bestanden.",
-    "dashboardTitle": "{appName} Dashboard"
+    "dashboardTitle": ""
   },
   "assistant": {
     "title": "Assistent",
@@ -8396,6 +8751,14 @@
     "conversationActions": "Gesprek acties",
     "searchConversations": "conversaties doorzoeken",
     "noMatchingConversations": "Geen overeenkomende gesprekken",
+    "historyError": {
+      "title": "",
+      "load": "",
+      "loadMessages": "",
+      "saveMessages": "",
+      "switch": "",
+      "retry": ""
+    },
     "moreActions": "Meer responsacties",
     "renameConversation": {
       "action": "Hernoem",
@@ -8438,7 +8801,7 @@
     },
     "composerPlaceholder": "Assistent vragen…",
     "runtime": {
-      "model": "Model",
+      "model": "",
       "searchModels": "Zoek modellen",
       "noModels": "Geen modellen beschikbaar",
       "otherModels": "Andere modellen",
@@ -8498,7 +8861,7 @@
     "previousResponse": "Vorige reactie",
     "nextResponse": "Volgende reactie",
     "removeAttachment": "Bijlage verwijderen",
-    "downloadFile": "Download {name}",
+    "downloadFile": "",
     "attachedImage": "Bijgevoegde afbeelding",
     "externalImageBlocked": "Externe afbeelding geblokkeerd voor privacy",
     "image": {
@@ -8515,20 +8878,25 @@
     },
     "mentions": {
       "menu": "Homarr context toevoegen",
-      "context": "Context",
+      "back": "",
+      "loading": "",
+      "empty": "",
+      "context": "",
       "app": "Apps",
       "integration": "Integraties",
       "board": "Borden",
-      "widget": "Widgets",
+      "widget": "",
       "tools": "Beschikbare gereedschappen"
     },
     "markdown": {
-      "diagram": "Diagram",
+      "diagram": "",
       "renderingDiagram": "Diagram genereren…",
       "diagramUnavailable": "Dit diagram kon niet worden weergegeven."
     },
     "commands": {
       "menu": "Assistent commando's",
+      "hint": "",
+      "empty": "",
       "health": "Bereid een service-health check voor",
       "explore": "Bereid een overzicht voor van deze Homarr instantie",
       "media": "Bereid een media-zoekopdracht voor",
@@ -8536,13 +8904,13 @@
       "designWidget": "Bereid een een-prompt aangepaste widget build voor"
     },
     "usage": {
-      "tokens": "tokens",
+      "tokens": "",
       "contextWindow": "Context venster",
       "requestDetails": "Details opvragen",
       "used": "Laatste stap",
       "remaining": "Resterend",
       "capacity": "Capaciteit",
-      "input": "Input",
+      "input": "",
       "output": "Uitvoer",
       "cached": "Gebufferde invoer",
       "cacheWrite": "Cache schrijven",
@@ -8578,7 +8946,7 @@
       "step": "Stap {number}",
       "generation": "Genereren"
     },
-    "toolInput": "Input",
+    "toolInput": "",
     "toolOutput": "Uitvoer",
     "toolActivity": {
       "iconSearch": "Zoeken naar \"{query}\" pictogrammen",
@@ -8671,15 +9039,15 @@
       "automaticContinue": "Automatisch wijzigingen in het voorgestelde bord accepteren",
       "resetAll": "Reset alle wijzigingen",
       "tabs": {
-        "css": "Custom CSS",
+        "css": "",
         "appearance": "Weergave",
         "background": "Achtergrond",
         "general": "Algemeen"
       },
       "cssDescription": "Bewerk het volledige stylesheet. Bestaande regels worden bewaard tenzij ze hier verwijderd worden.",
       "cssCharacters": "{count} van 16384 tekens",
-      "copyCss": "Copy CSS",
-      "restoreCss": "Restore current CSS",
+      "copyCss": "",
+      "restoreCss": "",
       "remoteCssTitle": "Deze CSS laadt een externe bron",
       "remoteCssDescription": "Geïmporteerde stylesheets en externe URL's nemen contact op met een andere server wanneer het bord wordt geladen. Controleer deze voordat u doorgaat."
     },
@@ -8703,13 +9071,14 @@
       "errorDescription": "Het model heeft geen volledige widget configuratie opgegeven. Er is geen widget toegevoegd."
     },
     "approvalRequired": "Goedkeuring vereist",
-    "complete": "Complete",
+    "complete": "",
     "denied": "Geweigerd",
     "failed": "Mislukt",
     "working": "Werken",
     "approvalDescription": "Controleer deze wijziging voordat het wordt uitgevoerd.",
     "approveAndRun": "Goedkeuren en uitvoeren",
     "deny": "Weigeren",
+    "approvalError": "",
     "autoApproval": {
       "label": "Automatische goedkeuringen",
       "composerLabel": "Goedkeuren voor mij",

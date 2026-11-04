@@ -881,7 +881,12 @@ describe("custom widget definition persistence", () => {
     const created = await createCaller(db).create({ ...jellyfin, secrets: [] });
     const definition = customWidgetDefinitionSchema.parse(jellyfin);
     const expectedSource = definition.sources.default;
-    if (!expectedSource || expectedSource.type === "integration" || typeof expectedSource.auth === "string") {
+    if (
+      !expectedSource ||
+      expectedSource.type === "integration" ||
+      typeof expectedSource.auth === "string" ||
+      expectedSource.auth.type !== "apiKeyHeader"
+    ) {
       throw new Error("Jellyfin default source must use header authentication");
     }
     await db
