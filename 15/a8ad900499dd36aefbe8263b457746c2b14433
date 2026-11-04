@@ -1,0 +1,18 @@
+apps/docs/docs/management/mcp.mdx
+  h_d6e478ca18e517 63-67
+apps/nextjs/src/app/[locale]/manage/tools/api/components/mcp-instructions.tsx
+  h_d6e478ca18e517 153
+packages/onboarding/src/setup-studio.tsx
+  h_d6e478ca18e517 1775
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "15a8ad900499dd36aefbe8263b457746c2b14433",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
