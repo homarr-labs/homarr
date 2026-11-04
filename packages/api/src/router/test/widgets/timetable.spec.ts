@@ -372,7 +372,7 @@ describe("timetableRouter source authorization", () => {
     const { boardId, itemId } = await createTimetableItemAsync(db, { baseUrl });
 
     await expect(createCaller(db, null).searchStations({ baseUrl, boardId, query: "Bern" })).rejects.toMatchObject({
-      code: "NOT_FOUND",
+      code: "FORBIDDEN",
     });
     await expect(createCaller(db, null).searchStations({ baseUrl, itemId, query: "Bern" })).rejects.toMatchObject({
       code: "FORBIDDEN",

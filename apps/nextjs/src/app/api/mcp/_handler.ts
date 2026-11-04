@@ -24,7 +24,7 @@ import { db } from "@homarr/db";
 import { BoardLayoutBoundsError } from "@homarr/validation/board-layout-bounds-error";
 
 import { getPackageVersion } from "~/versions/package-reader";
-import { getSafeAssistantToolError } from "../assistant/chat/assistant-tool-error";
+import { getConnectionTestFailureMessage, getSafeAssistantToolError } from "../assistant/chat/assistant-tool-error";
 import { getMcpBaseUrl } from "./_base-url";
 import { extractMcpTools } from "./_extract-tools";
 import { createMcpProtocolHandler } from "./_protocol";
@@ -215,6 +215,8 @@ const SAFE_ERROR_MESSAGES: Record<string, string> = {
 function sanitizeErrorMessage(error: unknown, toolName: string): string {
   if (error instanceof Error && error.cause instanceof BoardLayoutBoundsError) return error.cause.message;
   if (toolName.startsWith("customWidget_")) return getSafeAssistantToolError(error, { toolName });
+  const connectionTestFailure = getConnectionTestFailureMessage(error, toolName);
+  if (connectionTestFailure) return connectionTestFailure;
   if (error instanceof Error && "code" in error) {
     const trpcCode = (error as Error & { code: string }).code;
     const safeMessage = SAFE_ERROR_MESSAGES[trpcCode];

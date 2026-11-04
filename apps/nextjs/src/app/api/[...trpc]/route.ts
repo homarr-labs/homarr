@@ -44,7 +44,7 @@ const handlerAsync = async (req: NextRequest) => {
     req,
     endpoint: "/",
     router: openApiRouter,
-    createContext: () => createTRPCContext({ session, headers: req.headers }),
+    createContext: () => createTRPCContext({ session, headers: req.headers, isOpenApiRequest: true }),
     onError({ error, path, type }) {
       logger.error(new ErrorWithMetadata("tRPC Error occured", { path, type }, { cause: error }));
     },

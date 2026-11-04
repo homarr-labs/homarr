@@ -14,6 +14,8 @@ vi.mock("@homarr/core/infrastructure/logs", () => ({ createLogger: () => ({ info
 vi.mock("@homarr/core/infrastructure/logs/error", () => ({ ErrorWithMetadata: Error }));
 vi.mock("@homarr/db", () => ({ db: {} }));
 
+import { createTRPCContext } from "@homarr/api";
+
 import { GET, OPTIONS } from "./route";
 
 describe("REST API browser access", () => {
@@ -41,6 +43,17 @@ describe("REST API browser access", () => {
     expect(response.headers.get("access-control-allow-origin")).toBe("*");
     expect(response.headers.has("access-control-allow-credentials")).toBe(false);
     expect(sessionFromKey).toHaveBeenCalledWith({}, "test-id.test-token", "127.0.0.1", expect.any(String));
+  });
+
+  it("marks the context as a REST request, which hides upstream error details", async () => {
+    handle.mockImplementationOnce(({ createContext }: { createContext: () => unknown }) => {
+      createContext();
+      return Response.json({});
+    });
+    await GET(
+      new NextRequest("https://homarr.example/api/integrations", { headers: { ApiKey: "test-id.test-token" } }),
+    );
+    expect(createTRPCContext).toHaveBeenCalledWith(expect.objectContaining({ isOpenApiRequest: true }));
   });
 
   it("does not substitute a session cookie for an API key", async () => {

@@ -1,5 +1,6 @@
 import type { X509Certificate } from "node:crypto";
 
+import { FlattenError } from "@homarr/common";
 import type { RequestErrorCode } from "@homarr/common/server";
 import type {
   AnyTestConnectionError,
@@ -143,3 +144,9 @@ export const mapTestConnectionError = (error: AnyTestConnectionError) => {
     cause: error.cause ? mapError(error.cause) : undefined,
   } as AnyMappedTestConnectionError;
 };
+
+export class TestConnectionFailedError extends FlattenError {
+  constructor(mappedError: AnyMappedTestConnectionError) {
+    super(mappedError.message, { ...mappedError });
+  }
+}

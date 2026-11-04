@@ -5,13 +5,21 @@ import {
   backgroundImageRepeats,
   backgroundImageSizes,
   boardPermissions,
+  groupPermissionKeys,
   layoutRoles,
   widgetKinds,
 } from "@homarr/definitions";
 
 import { zodEnumFromArray } from "./enums";
 import { createSavePermissionsSchema } from "./permissions";
-import { commonItemSchema, sectionSchema } from "./shared";
+import {
+  commonItemSchema,
+  containerSectionSchema,
+  emptySectionSchema,
+  itemAdvancedOptionsSchema,
+  sectionSchema,
+  sharedItemSchema,
+} from "./shared";
 
 const hexColorSchema = z.string().regex(/^#[0-9A-Fa-f]{6}$/);
 
@@ -79,16 +87,17 @@ export const boardSettingsSchema = boardSavePartialSettingsSchema.required().ext
   name: z.string(),
 });
 
-export const boardLayoutSchema = z
-  .object({
-    id: z.string(),
-    name: z.string().trim().nonempty().max(32),
-    columnCount: boardColumnCountSchema,
-    leftGutterColumnCount: boardGutterColumnCountSchema.default(0),
-    rightGutterColumnCount: boardGutterColumnCountSchema.default(0),
-    breakpoint: z.number().int().min(0).max(32767),
-    role: z.enum(layoutRoles.values),
-  })
+export const boardLayoutFieldsSchema = z.object({
+  id: z.string(),
+  name: z.string().trim().nonempty().max(32),
+  columnCount: boardColumnCountSchema,
+  leftGutterColumnCount: boardGutterColumnCountSchema.default(0),
+  rightGutterColumnCount: boardGutterColumnCountSchema.default(0),
+  breakpoint: z.number().int().min(0).max(32767),
+  role: z.enum(layoutRoles.values),
+});
+
+export const boardLayoutSchema = boardLayoutFieldsSchema
   .refine((layout) => layout.leftGutterColumnCount + layout.rightGutterColumnCount < layout.columnCount, {
     message: "Gutters must leave at least one dashboard column",
     path: ["columnCount"],
@@ -137,19 +146,67 @@ export const boardResetLayoutSchema = z.object({
   layoutId: z.string(),
 });
 
+export const boardUpdateLayoutSchema = z.object({
+  boardId: z.string(),
+  layoutId: z.string(),
+  name: boardLayoutFieldsSchema.shape.name.optional(),
+  columnCount: boardColumnCountSchema.optional(),
+  leftGutterColumnCount: boardGutterColumnCountSchema.optional(),
+  rightGutterColumnCount: boardGutterColumnCountSchema.optional(),
+  breakpoint: boardLayoutFieldsSchema.shape.breakpoint.optional(),
+});
+
 export const boardSaveSchema = z.object({
   id: z.string(),
   sections: z.array(sectionSchema),
   items: z.array(commonItemSchema),
 });
 
-export const boardCreateSchema = z.object({
-  name: boardNameSchema,
-  columnCount: boardColumnCountSchema,
-  isPublic: z.boolean(),
-});
+export const boardCreateSchema = z
+  .object({
+    name: boardNameSchema,
+    columnCount: boardColumnCountSchema,
+    leftGutterColumnCount: boardGutterColumnCountSchema.optional(),
+    rightGutterColumnCount: boardGutterColumnCountSchema.optional(),
+    isPublic: z.boolean(),
+  })
+  .refine((board) => (board.leftGutterColumnCount ?? 0) + (board.rightGutterColumnCount ?? 0) < board.columnCount, {
+    message: "Gutters must leave at least one dashboard column",
+    path: ["columnCount"],
+  });
 
 export const boardSavePermissionsSchema = createSavePermissionsSchema(zodEnumFromArray(boardPermissions));
+
+const boardPermissionGroupSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+});
+
+export const boardPermissionsSchema = z.object({
+  inherited: z.array(
+    z.object({
+      permission: zodEnumFromArray(groupPermissionKeys),
+      group: boardPermissionGroupSchema,
+    }),
+  ),
+  users: z.array(
+    z.object({
+      user: z.object({
+        id: z.string(),
+        name: z.string().nullable(),
+        image: z.string().nullable(),
+        email: z.string().nullable(),
+      }),
+      permission: z.enum(boardPermissions),
+    }),
+  ),
+  groups: z.array(
+    z.object({
+      group: boardPermissionGroupSchema,
+      permission: z.enum(boardPermissions),
+    }),
+  ),
+});
 
 const boardPermissionEntrySchema = z.object({
   permission: z.enum(boardPermissions),
@@ -193,4 +250,32 @@ export const updateBoardItemLayoutSchema = z.object({
   yOffset: z.number().int().min(0).max(32767),
   width: z.number().int().min(1).max(24),
   height: z.number().int().min(1).max(24),
+});
+
+export const boardItemSchema = sharedItemSchema.extend({
+  kind: zodEnumFromArray(widgetKinds),
+  options: z.record(z.string(), z.unknown()),
+});
+
+export const boardContentSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  layouts: z.array(boardLayoutFieldsSchema),
+  sections: z.array(z.union([emptySectionSchema, containerSectionSchema.omit({ collapsed: true })])),
+  items: z.array(boardItemSchema),
+});
+
+export const boardItemByIdSchema = z.object({
+  boardId: z.string(),
+  itemId: z.string(),
+});
+
+export const updateBoardItemSchema = boardItemByIdSchema.extend({
+  options: boardItemSchema.shape.options.optional(),
+  advancedOptions: itemAdvancedOptionsSchema.optional(),
+  integrationIds: z
+    .array(z.string())
+    .max(32)
+    .refine((ids) => new Set(ids).size === ids.length, { message: "Integration IDs must be unique" })
+    .optional(),
 });
