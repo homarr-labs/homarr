@@ -16,6 +16,7 @@ import {
   getCustomWidgetSkillReference,
 } from "../core/authoring-resources";
 import { validateCustomJsxTemplate } from "../jsx/analyzer";
+import { CUSTOM_WIDGET_COMMON_CHART_GUIDANCE } from "../core/ai-prompt";
 
 const skillSourceDirectory = path.resolve(import.meta.dirname, "../../../../.agents/skills/homarr-custom-widget");
 
@@ -45,6 +46,12 @@ describe("authoring resources", () => {
     );
     expect(JSON.stringify(entrypoint)).not.toContain("# Runtime");
     const schemaReference = getCustomWidgetSkillReference("schema").content;
+    expect(getCustomWidgetSkillReference("runtime").content).toContain(CUSTOM_WIDGET_COMMON_CHART_GUIDANCE);
+    expect(schemaReference).toContain('`"none"`, `"bearer"`, `"basic"`');
+    expect(schemaReference).toContain('"type":"apiKeyHeader"');
+    expect(schemaReference).toContain('"type":"apiKeyQuery"');
+    expect(schemaReference).toContain('"type":"headers"');
+    expect(schemaReference).toContain('`{"type":"none"}` is invalid');
     expect(Buffer.byteLength(schemaReference, "utf8")).toBeLessThan(4_000);
     expect(Buffer.byteLength(JSON.stringify(entrypoint), "utf8")).toBeLessThan(3_000);
     expect(Buffer.byteLength(JSON.stringify(entrypoint), "utf8")).toBeLessThan(

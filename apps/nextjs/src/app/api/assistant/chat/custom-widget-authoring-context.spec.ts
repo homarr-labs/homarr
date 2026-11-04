@@ -408,15 +408,11 @@ describe("Custom Widget authoring context", () => {
 
   test.each([
     ["Create QA Weather Default from the bundled Weather Outlook example", "weather-outlook"],
-    ["Create a widget from the bundled ntfy Inbox example", "ntfy-inbox"],
-    ["Make me a Mealie widget", "mealie-today"],
-    ["Create a Dispatcharr channels widget", "dispatcharr-channels"],
-    ["Create a Karakeep bookmarks widget", "karakeep-bookmarks"],
-    ["Build a RomM library widget", "romm-library"],
-    ["Create a Tube Archivist queue widget", "tubearchivist-queue"],
-    ["Create a Frigate review alerts widget", "frigate-alerts"],
-    ["Create a Frigate system metrics widget", "frigate-system"],
-    ["Create a Frigate live camera streams widget", "frigate-live-streams"],
+    ["Create a widget from the bundled Pokédex example", "pokedex"],
+    ["Create a widget from the bundled ntfy Inbox example", null],
+    ["Make me a Mealie widget", null],
+    ["Create a Karakeep bookmarks widget", null],
+    ["Create a Frigate live camera streams widget", null],
     ["Create a Mealie shopping list widget", null],
     ["Create a Karakeep tag metrics widget", null],
     ["Create a RomM download queue widget", null],
@@ -427,11 +423,11 @@ describe("Custom Widget authoring context", () => {
   });
 
   test.each([
-    ["Create Mealie and RomM widgets", ["mealie-today", "romm-library"]],
     [
-      "Create Frigate live, review alerts, and system metrics widgets",
-      ["frigate-live-streams", "frigate-alerts", "frigate-system"],
+      "Create widgets from the bundled Pokédex example and the bundled Weather Outlook example",
+      ["pokedex", "weather-outlook"],
     ],
+    ["Create Mealie and RomM widgets", []],
     ["Create Mealie and ntfy widgets", []],
     ["Create Frigate alerts and Prometheus system metrics widgets", []],
   ])("queues distinct bundled examples for a batch: %s", (text, expected) => {

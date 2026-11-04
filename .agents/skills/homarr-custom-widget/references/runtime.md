@@ -1,6 +1,9 @@
 # Runtime
 
-Load-query templates read `data.requestId` and `status.requestId`, plus `options.name` and temporary `inputs.name`. Manual `SubFetch` results stay local to that instance and never populate `data`/`status`; render them in its child callback. Status is `{ loading, ok, status, statusText, error }`. Render load queries directly from `data` and `status` with `RefreshButton`; never wrap them in `SubFetch`.
+Loads read `data.requestId`/`status.requestId` with RefreshButton `requestId` (never `request`); omit it to refresh all loads.
+Installation config is `options.name`;
+temporary controls use `inputs.name`. Manual SubFetch results stay in its child callback, never data/status.
+Status is `{ loading, ok, status, statusText, error }`; test `status.requestId?.ok === false` for errors.
 
 `bind` is temporary; manual request values go in `params` and map to `$param`:
 
@@ -12,26 +15,43 @@ Load-query templates read `data.requestId` and `status.requestId`, plus `options
 </SubFetch>
 ```
 
-Manual queries require `trigger: "manual"` on request and `SubFetch`; otherwise they run automatically. `triggerContent` with `triggerAriaLabel` makes custom content the launcher. `SubFetch` owns loading/error/retry; its child receives success plus `{ ok, status, statusText, loading: false }`. Never author `onClick` or fetch callbacks.
+Manual queries require `trigger: "manual"` on request and SubFetch. `triggerContent` plus `triggerAriaLabel` makes a launcher
+already wrapped in a button: use non-interactive content, never Button/Anchor/controls. SubFetch owns loading/error/retry;
+its child receives success plus `{ ok, status, statusText, loading: false }`. Never author onClick/fetch callbacks.
 
 `SubFetch`, `ActionButton`, and `ToggleSwitch` need literal `requestId`; validation rejects missing/computed IDs.
 
-Inside a successful manual result, `<RefreshButton requestId="search" label="Run again" />` reruns the same parameters.
+`ActionButton`/`ToggleSwitch` publish responses to local data.requestId/status.requestId only after explicit invocation.
+Guard the initial state; responses are not persisted across reloads and actions never run automatically.
 
+SubFetch/ActionButton params must contain exactly the names referenced by $param or {param:name}, with valid primitive values,
+never undefined/null. Omitted optional query fields need separate verified request variants; empty strings require API support.
+Validate nonblank optional inputs against documented formats; show field-level feedback and block requests while invalid.
+Never silently omit or forward invalid values.
+Fixed query values belong in requests.<id>.query, not params. Test the same names/values the JSX supplies.
 When a manual SubFetch ID, params, or definition changes, Homarr hides the prior result and returns to the trigger; new params fetch only after triggering again.
 
-Exact paths: load request ID `q` with raw preview body `B` -> `data.q === B`. `q=events` body`{"events":[...]}` -> `data.events.events`; do not flatten repeated keys. Manual `SubFetch` receives `B` as result -> `result.events`. Before persistence inspect core paths against preview; revise JSX and retest if mismatched
+Load `q` with response body `B` -> `data.q === B`; `q=events`/`B={"events":[...]}` -> `data.events.events`.
+Manual SubFetch receives B as result. Preserve envelopes; compare paths with preview and revise/retest before persistence.
 
-Format timestamps with safe static helpers; never use `new Date`. Never invent a formatter component. Use `Date.toLocaleString(value, "en-US", documentedTimezone)` and label the documented timezone; if no timezone is documented, preserve the source value or omit any timezone label; use UTC only when the response contract says UTC. Also available: `Date.toISOString`, `Date.toLocaleDateString`, and `Date.toLocaleTimeString`.
+Safe timestamps: `Date.toLocaleString(value, "en-US", documentedTimezone)`; omit the timezone argument/label if unknown.
+UTC needs a documented UTC contract. Also: Date.toISOString/toLocaleDateString/toLocaleTimeString. Countdowns:
+`Date.getTime(isoTimestamp) - Date.now()` in milliseconds; no new Date, Date.parse, or invented formatters.
+Numbers: `n.toLocaleString("en-US", { maximumFractionDigits: 1, notation: "compact" })`;
+style percent/currency/unit (with currency/unit) and signDisplay also work. Preserve units or convert numbers before relabeling.
 
-For compact numeric enums, index a literal label array with a fallback:
+Guard actual scalar values/types/finite numbers before arithmetic/formatting, not object truthiness. Keep 0/false; empty/missing values show —/No data, never NaN/undefined units. Map cross-collection IDs to verified friendly names or original IDs. Use documented rate semantics (ratio/percent/per-time).
 
-```jsx
-<Text>{["Unknown", "Pending", "Ready"][(item.status ?? 1) - 1] ?? "Unknown"}</Text>
-```
+Keep useful data reachable: summaries plus Table/details, working filters, pagination, or a bounded ScrollArea for collections.
+Cover requested fields and meaningful observed facts; never silently slice rows. Label partial results and shown/total counts.
+Use only verified pagination params/endpoints. Charts need real numeric/category/time series, never invented history/series.
+A bounded response-shape summary is not a full schema: inspect omitted
+fields when needed, preserve envelopes, and guard heterogeneous items. Keep loading/error/empty/success and narrow/wide states useful.
 
-Request-bound controls use literal `bind` plus a default (`defaultChecked` for Switch/Checkbox); pass `inputs.<name>` through manual `SubFetch params` to matching `$param`. Options are installation config via `options.name`, never `inputs`; dependent pagination uses `defaultValue={1}`/`resetKey={inputs.query}`. Remove dead controls.
+Verified Mantine 9.6.0: LineChart/AreaChart/BarChart require positive h, data: row[], dataKey: category/time key, series: [{name: actual numeric row key, color: MantineColor}]. Sparkline requires positive h and data: number[]. Use real fields/series; no invented history/formatter callbacks. Other props stay lazy.
 
-Callback parameters must not shadow the reserved roots `data`, `status`, `options`, or `inputs`. Use registered component names returned by discovery; `Icon` is an accepted alias for canonical `TablerIcon`. Never invent components such as `<IconFoo />`.
+Switch/Checkbox defaults use defaultChecked. Dependent pagination uses `defaultValue={1}`/`resetKey={inputs.query}`.
 
-Use expression callbacks for supported collections and trusted slots. No callback blocks, IIFEs, authored recursion, or raw events. Regex is limited to safe string operations.
+Callback parameters must not shadow the reserved roots `data`, `status`, `options`, or `inputs`. Never invent components such as `<IconFoo />`.
+
+Use expression callbacks for supported collections and trusted slots; regex is limited to safe string operations.

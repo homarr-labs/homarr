@@ -1,8 +1,10 @@
-import { useMemo, useState } from "react";
+import { memo, useMemo, useState } from "react";
 import { Button, Collapse, CopyButton, Group, Paper, ScrollArea, Stack, Text, Textarea } from "@mantine/core";
 import { IconCheck, IconCopy, IconExternalLink } from "@tabler/icons-react";
 
 import { ResponseTree } from "./response-tree";
+
+const MemoizedResponseTree = memo(ResponseTree);
 
 export interface PreviewResponseMessages {
   empty: string;
@@ -43,7 +45,14 @@ export function PreviewResponsePanel({
   onSampleDataChange,
   messages,
 }: PreviewResponsePanelProps) {
-  const responseJson = value == null ? "" : JSON.stringify(value, null, 2);
+  const responseJson = useMemo(() => {
+    if (value == null) return "";
+    return JSON.stringify(value, null, 2);
+  }, [value]);
+  const treeLabels = useMemo(
+    () => ({ copyPath: messages.copyPath, pathCopied: messages.pathCopied, insertPath: messages.insertPath }),
+    [messages.copyPath, messages.insertPath, messages.pathCopied],
+  );
   const [draft, setDraft] = useState(responseJson);
   const [editing, setEditing] = useState(false);
   const error = useMemo(() => {
@@ -121,11 +130,7 @@ export function PreviewResponsePanel({
       {responseJson ? (
         <>
           <ScrollArea h={360} type="auto">
-            <ResponseTree
-              value={value}
-              onInsertDataPath={onInsertDataPath}
-              labels={{ copyPath: messages.copyPath, pathCopied: messages.pathCopied, insertPath: messages.insertPath }}
-            />
+            <MemoizedResponseTree value={value} onInsertDataPath={onInsertDataPath} labels={treeLabels} />
           </ScrollArea>
           {rawResponse && (
             <Button

@@ -2,18 +2,20 @@ import { fetchApi } from "@homarr/api/client";
 import { isRecord } from "@homarr/common";
 import {
   customWidgetDefinitionSchema,
+  customWidgetRequestsSchema,
+  customWidgetSourcesSchema,
   getCustomWidgetDefaultOptions,
-  getCustomWidgetRequiredSecretKinds,
   parseCustomWidgetAiResponse,
   validateCustomWidgetOptions,
 } from "@homarr/custom-widgets/core";
-import type { CustomWidgetSource, HomarrCustomWidgetV2, CustomWidgetSecretKind } from "@homarr/custom-widgets/core";
+import type { HomarrCustomWidgetV2, CustomWidgetSecretKind } from "@homarr/custom-widgets/core";
 import type { CustomWidgetFormValues } from "@homarr/custom-widgets/workbench";
 import type { UseFormReturnType } from "@mantine/form";
 
 export type CustomWidgetWorkbenchForm = UseFormReturnType<CustomWidgetFormValues>;
 
 export { isRecord };
+export { filterSecretsForSourceAuthentication, parseSources } from "@homarr/custom-widgets/workbench";
 
 const PREVIEW_QUERY_CONCURRENCY = 4;
 
@@ -40,13 +42,25 @@ export function getChangedSecrets(values: Pick<CustomWidgetFormValues, "secrets"
     }));
 }
 
-export function filterSecretsForSourceAuthentication(
-  secrets: CustomWidgetFormValues["secrets"],
-  sourceId: string,
-  authType: Parameters<typeof getCustomWidgetRequiredSecretKinds>[0],
-) {
-  const requiredKinds = new Set<string>(getCustomWidgetRequiredSecretKinds(authType));
-  return secrets.filter((secret) => secret.sourceId !== sourceId || requiredKinds.has(secret.kind));
+export function isSimpleCustomWidgetQuerySetup(values: Pick<CustomWidgetFormValues, "sources" | "requests">) {
+  const sources = customWidgetSourcesSchema.safeParse(parseJson(values.sources));
+  const requests = customWidgetRequestsSchema.safeParse(parseJson(values.requests));
+  if (!sources.success || !requests.success) return false;
+  if (Object.keys(sources.data).length !== 1 || Object.keys(requests.data).length !== 1) return false;
+  const request = Object.values(requests.data)[0];
+  return (
+    request?.source === "default" &&
+    request.kind === "query" &&
+    request.method === "GET" &&
+    request.trigger === "load" &&
+    request.permission === "view" &&
+    request.auth === "inherit" &&
+    request.body === undefined &&
+    request.headers === undefined &&
+    request.confirmation === undefined &&
+    request.invalidates === undefined &&
+    request.cacheSeconds === undefined
+  );
 }
 
 export function applyDefinition(form: CustomWidgetWorkbenchForm, widget: HomarrCustomWidgetV2) {
@@ -59,6 +73,7 @@ export function applyDefinition(form: CustomWidgetWorkbenchForm, widget: HomarrC
     requests: JSON.stringify(widget.requests, null, 2),
     options: JSON.stringify(widget.options, null, 2),
     template: widget.template,
+    secrets: form.getValues().secrets.filter((secret) => Object.hasOwn(widget.sources, secret.sourceId)),
   });
 }
 
@@ -66,15 +81,6 @@ export function applyCustomWidgetAiResponse(form: CustomWidgetWorkbenchForm, res
   const result = parseCustomWidgetAiResponse(response);
   if (result.success) applyDefinition(form, result.widget);
   return result;
-}
-
-export function parseSources(value: string): Array<CustomWidgetSource & { id: string }> {
-  const parsed = parseJson(value);
-  return isRecord(parsed)
-    ? Object.entries(parsed)
-        .flatMap(([id, entry]) => (isRecord(entry) ? [{ id, ...(entry as CustomWidgetSource) }] : []))
-        .toSorted((left, right) => Number(right.id === "default") - Number(left.id === "default"))
-    : [];
 }
 
 export function parseJson(value: string): unknown {
@@ -122,7 +128,8 @@ export async function loadPreviewQueries(definition: HomarrCustomWidgetV2, sessi
       const [requestId] = request;
       try {
         const result = await fetchApi.customWidget.previewQuery.query({ sessionId, requestId, params: {} });
-        results[index] = { requestId, data: result.data, status: { loading: false, ...result } };
+        const { data, ...status } = result;
+        results[index] = { requestId, data, status: { loading: false, ...status } };
       } catch (error) {
         results[index] = {
           requestId,

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import type { Dispatch, SetStateAction } from "react";
-import { TextInput, Textarea } from "@mantine/core";
+import { Box, TextInput, Textarea } from "@mantine/core";
 import { IconApi, IconBraces, IconCode, IconDatabase, IconSettings } from "@tabler/icons-react";
 
 import type { CustomWidgetAiDiagnostic, CustomWidgetAiDraft } from "@homarr/custom-widgets/authoring-prompt";
@@ -14,6 +14,7 @@ import { CustomWidgetAiCard } from "./_custom-widget-ai-card";
 import { EditorSection } from "./_custom-widget-form-layout";
 import { customWidgetOptionsSchemaReference, customWidgetRequestReference } from "./_custom-widget-form-references";
 import { useCustomWidgetFormDocumentField } from "./_custom-widget-form-state";
+import { isSimpleCustomWidgetQuerySetup } from "./_custom-widget-form-utils";
 import type { CustomWidgetWorkbenchForm } from "./_custom-widget-form-utils";
 import { CustomWidgetOptionsEditor } from "./_custom-widget-options-editor";
 import { CustomWidgetPreviewPanel } from "./_custom-widget-preview-panel";
@@ -28,16 +29,19 @@ export function CustomWidgetAiSection({
   getDiagnostics,
   getSampleResponse,
   onPaste,
+  assisted,
 }: {
   getDraft(): CustomWidgetAiDraft | null;
   getDiagnostics(): readonly CustomWidgetAiDiagnostic[];
   getSampleResponse(): string | null;
   onPaste(response: string): string | null;
+  assisted?: boolean;
 }) {
   const [request, setRequest] = useState("");
   const [documentationUrl, setDocumentationUrl] = useState("");
   return (
     <CustomWidgetAiCard
+      assisted={assisted}
       getDraft={getDraft}
       getDiagnostics={getDiagnostics}
       getSampleResponse={getSampleResponse}
@@ -99,9 +103,11 @@ export function CustomWidgetGeneralSection({
 export function CustomWidgetSourcesSection({
   form,
   definitionId,
+  compact,
 }: {
   form: CustomWidgetWorkbenchForm;
   definitionId?: string;
+  compact?: boolean;
 }) {
   const w = useI18n("customWidget.workbench");
   useCustomWidgetFormDocumentField("sources");
@@ -109,7 +115,7 @@ export function CustomWidgetSourcesSection({
   useCustomWidgetFormDocumentField("secrets");
   return (
     <EditorSection id="sources" title={w("sources.title")} icon={IconApi}>
-      <CustomWidgetSourcesEditor form={form} definitionId={definitionId} />
+      <CustomWidgetSourcesEditor form={form} definitionId={definitionId} compact={compact} />
     </EditorSection>
   );
 }
@@ -117,32 +123,37 @@ export function CustomWidgetSourcesSection({
 export function CustomWidgetRequestsSection({
   form,
   onRename,
+  compact = false,
 }: {
   form: CustomWidgetWorkbenchForm;
   onRename(currentId: string, nextId: string): void;
+  compact?: boolean;
 }) {
   const w = useI18n("customWidget.workbench");
   const requests = useCustomWidgetFormDocumentField("requests");
   useCustomWidgetFormDocumentField("sources");
   useCustomWidgetFormDocumentField("options");
   const requestDiagnostics = useCustomWidgetFormAnalysisField("requestDiagnostics");
+  const compactSetup = compact && isSimpleCustomWidgetQuerySetup(form.values);
   return (
     <EditorSection id="requests" title={w("requests.title")} icon={IconDatabase}>
-      <CustomWidgetRequestsEditor form={form} onRename={onRename} />
-      <LazyOnceAccordion label={w("builder.advancedJson")}>
-        <CodeEditor
-          id="requests-editor"
-          label={w("requests.label")}
-          description={w("requests.description")}
-          language="json"
-          value={requests}
-          onChange={(value) => form.setFieldValue("requests", value, { forceUpdate: false })}
-          diagnostics={requestDiagnostics}
-          error={form.errors.requests}
-          reference={customWidgetRequestReference}
-          required
-        />
-      </LazyOnceAccordion>
+      <CustomWidgetRequestsEditor form={form} onRename={onRename} compact={compact} />
+      <Box hidden={compactSetup}>
+        <LazyOnceAccordion label={w("builder.advancedJson")}>
+          <CodeEditor
+            id="requests-editor"
+            label={w("requests.label")}
+            description={w("requests.description")}
+            language="json"
+            value={requests}
+            onChange={(value) => form.setFieldValue("requests", value, { forceUpdate: false })}
+            diagnostics={requestDiagnostics}
+            error={form.errors.requests}
+            reference={customWidgetRequestReference}
+            required
+          />
+        </LazyOnceAccordion>
+      </Box>
     </EditorSection>
   );
 }

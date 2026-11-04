@@ -12,7 +12,7 @@ import { createCustomCheckServerIdentity } from "@homarr/core/infrastructure/htt
 import { CustomWidgetDomainError } from "@homarr/custom-widgets/server";
 import type { CustomWidgetAuthConfig, CustomWidgetHttpRequest } from "@homarr/custom-widgets/server";
 import type { Database } from "@homarr/db";
-import { asc, eq, inArray } from "@homarr/db";
+import { asc, eq, inArray, or } from "@homarr/db";
 import { groupMembers, integrations, integrationGroupPermissions, integrationUserPermissions } from "@homarr/db/schema";
 import type { IntegrationKind } from "@homarr/definitions";
 import { getIntegrationHttpUnavailableReason } from "@homarr/definitions";
@@ -23,16 +23,24 @@ export interface IntegrationHttpContext {
   session: Session | null;
 }
 
+const getGroupPermissionWhere = (ctx: IntegrationHttpContext, userId: string) =>
+  or(
+    eq(integrationGroupPermissions.groupId, ""),
+    inArray(
+      integrationGroupPermissions.groupId,
+      ctx.db.select({ groupId: groupMembers.groupId }).from(groupMembers).where(eq(groupMembers.userId, userId)),
+    ),
+  );
+
 export async function getIntegrationForHttpRequest(ctx: IntegrationHttpContext, integrationId: string) {
   const userId = ctx.session?.user.id ?? "";
-  const groups = await ctx.db.query.groupMembers.findMany({ where: eq(groupMembers.userId, userId) });
   const integration = await ctx.db.query.integrations.findFirst({
     where: eq(integrations.id, integrationId),
     with: {
       secrets: true,
       userPermissions: { where: eq(integrationUserPermissions.userId, userId) },
       groupPermissions: {
-        where: inArray(integrationGroupPermissions.groupId, groups.map(({ groupId }) => groupId).concat("")),
+        where: getGroupPermissionWhere(ctx, userId),
       },
     },
   });
@@ -55,7 +63,6 @@ export async function selectIntegrationForHttpRequest(
 ) {
   if (selector.integrationId) return getIntegrationForHttpRequest(ctx, selector.integrationId);
   const userId = ctx.session?.user.id ?? "";
-  const groups = await ctx.db.query.groupMembers.findMany({ where: eq(groupMembers.userId, userId) });
   let where;
   if (selector.integrationName) where = eq(integrations.name, selector.integrationName);
   else if (selector.integrationKind) where = eq(integrations.kind, selector.integrationKind);
@@ -67,7 +74,7 @@ export async function selectIntegrationForHttpRequest(
       secrets: true,
       userPermissions: { where: eq(integrationUserPermissions.userId, userId) },
       groupPermissions: {
-        where: inArray(integrationGroupPermissions.groupId, groups.map(({ groupId }) => groupId).concat("")),
+        where: getGroupPermissionWhere(ctx, userId),
       },
     },
   });

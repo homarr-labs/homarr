@@ -1,9 +1,9 @@
 import type { ComponentType, ErrorInfo, ReactNode } from "react";
-import { Component, useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
+import { Component, memo, useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
 import { Alert, Box, Stack, Text } from "@mantine/core";
 import { IconAlertTriangle } from "@tabler/icons-react";
 
-import { renderSafeJsx } from "../jsx/interpreter";
+import { createSafeJsxRenderer } from "../jsx/interpreter";
 import { CustomJsxInputsProvider } from "../jsx/runtime-components";
 import type { WidgetInputType, WidgetInputValue } from "../jsx/runtime-components";
 import { sameInputRecord, sameStringArray, sameTypeRecord } from "./input-state-utils";
@@ -61,7 +61,7 @@ function ErrorAlert({ error }: { error: Error }) {
   );
 }
 
-export function CustomJsxRenderer(props: CustomJsxRendererProps) {
+export const CustomJsxRenderer = memo(function CustomJsxRenderer(props: CustomJsxRendererProps) {
   if (!props.template.trim())
     return (
       <Alert color="gray" variant="light" p="xs">
@@ -72,7 +72,7 @@ export function CustomJsxRenderer(props: CustomJsxRendererProps) {
     );
 
   return <CustomJsxRendererSession {...props} />;
-}
+});
 
 interface InputRegistration {
   name: string;
@@ -185,11 +185,20 @@ function CustomJsxRendererSession({
       return { ...current, values: { ...current.values, [name]: activeRegistration.initialValue } };
     });
   }, []);
+  const renderTemplate = useMemo(() => createSafeJsxRenderer(template), [template]);
+  const dataBindings = useMemo(() => {
+    try {
+      return { value: createBindings(data) };
+    } catch (error) {
+      return { error };
+    }
+  }, [createBindings, data]);
   const rendered = useMemo(() => {
     try {
-      const bindings = { ...createBindings(data), status, options, inputs };
+      if ("error" in dataBindings) throw dataBindings.error;
+      const bindings = { ...dataBindings.value, status, options, inputs };
       return {
-        ...renderSafeJsx({ template, components, bindings }),
+        ...renderTemplate({ components, bindings }),
         boundaryKey: createBoundaryKey(template, bindings),
         error: null,
       };
@@ -201,8 +210,8 @@ function CustomJsxRendererSession({
         error: error instanceof Error ? error : new Error(String(error)),
       };
     }
-  }, [components, createBindings, data, inputs, options, status, template]);
-  useEffect(() => setParseErrors([]), [rendered.boundaryKey, template]);
+  }, [components, dataBindings, inputs, options, renderTemplate, status, template]);
+  useEffect(() => setParseErrors((current) => (current.length === 0 ? current : [])), [rendered.boundaryKey, template]);
   const handleError = useCallback(
     (error: Error) =>
       setParseErrors((current) => {

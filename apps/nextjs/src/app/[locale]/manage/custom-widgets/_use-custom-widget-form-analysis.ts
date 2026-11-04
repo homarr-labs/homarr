@@ -91,8 +91,11 @@ export function useCustomWidgetFormAnalysis(values: CustomWidgetFormValues) {
     [analysisValues.options, analysisValues.sources, requestIdsSignature],
   );
   const templateDiagnostics = useMemo(
-    () => analyzeJsxTemplate(analysisValues.template, { requestIds }),
-    [analysisValues.template, requestIds],
+    () =>
+      analyzeJsxTemplate(analysisValues.template, {
+        requestIds: requestIdsSignature ? requestIdsSignature.split("\0") : [],
+      }),
+    [analysisValues.template, requestIdsSignature],
   );
   const requestDiagnostics = useMemo(() => analyzeRequestManifest(analysisValues.requests), [analysisValues.requests]);
   const hasDiagnostics = [...templateDiagnostics, ...requestDiagnostics].some((entry) => entry.severity === "error");

@@ -5,7 +5,7 @@ import { IconArrowDown, IconArrowUp, IconPlus, IconTrash } from "@tabler/icons-r
 
 import { useI18n } from "@homarr/translation/client";
 
-import { isRecord, parseJson } from "./_custom-widget-form-utils";
+import { isRecord, isSimpleCustomWidgetQuerySetup, parseJson } from "./_custom-widget-form-utils";
 import type { CustomWidgetWorkbenchForm } from "./_custom-widget-form-utils";
 import { QueryValuesEditor, RequestBodyEditor } from "./_custom-widget-request-value-editors";
 import { CustomWidgetIdentifierInput } from "./_custom-widget-identifier-input";
@@ -16,9 +16,11 @@ const methods = ["GET", "POST", "PUT", "PATCH", "DELETE"];
 export function CustomWidgetRequestsEditor({
   form,
   onRename,
+  compact = false,
 }: {
   form: CustomWidgetWorkbenchForm;
   onRename(currentId: string, nextId: string): void;
+  compact?: boolean;
 }) {
   const t = useI18n("customWidget.workbench.builder");
   const parsed = parseJson(form.values.requests);
@@ -27,6 +29,7 @@ export function CustomWidgetRequestsEditor({
   const sourceIds = isRecord(sources) ? Object.keys(sources) : ["default"];
   const options = parseJson(form.values.options);
   const optionNames = isRecord(options) ? Object.keys(options) : [];
+  const compactSetup = compact && isSimpleCustomWidgetQuerySetup(form.values);
 
   const commit = (next: Array<[string, unknown]>) =>
     form.setFieldValue("requests", JSON.stringify(Object.fromEntries(next), null, 2));
@@ -53,9 +56,14 @@ export function CustomWidgetRequestsEditor({
         const kind = request.kind === "action" ? "action" : "query";
         const trigger = request.trigger === "manual" ? "manual" : "load";
         return (
-          <Fieldset key={id} legend={id || t("request", { count: index + 1 })}>
+          <Fieldset
+            key={id}
+            legend={compactSetup ? undefined : id || t("request", { count: index + 1 })}
+            p={compactSetup ? 0 : undefined}
+            style={compactSetup ? { border: 0 } : undefined}
+          >
             <Stack gap="sm">
-              <Group grow align="start">
+              <Group grow align="start" display={compactSetup ? "none" : undefined}>
                 <CustomWidgetIdentifierInput
                   label={t("requestId")}
                   value={id}
@@ -89,7 +97,7 @@ export function CustomWidgetRequestsEditor({
                   }
                 />
               </Group>
-              <Group grow align="start">
+              <Group grow align="start" display={compactSetup ? "none" : undefined}>
                 <Select
                   label={t("source")}
                   data={sourceIds}
@@ -121,7 +129,7 @@ export function CustomWidgetRequestsEditor({
               </Group>
               <TextInput
                 label={t("path")}
-                description={t("pathDescription")}
+                description={compactSetup ? undefined : t("pathDescription")}
                 descriptionProps={{
                   style: { color: "light-dark(var(--mantine-color-gray-7), var(--mantine-color-gray-4))" },
                 }}
@@ -177,7 +185,7 @@ export function CustomWidgetRequestsEditor({
                   />
                 </Stack>
               </LazyOnceAccordion>
-              <Group justify="space-between">
+              <Group justify="space-between" display={compactSetup ? "none" : undefined}>
                 <Group gap="xs">
                   <ActionIcon
                     type="button"
@@ -212,7 +220,13 @@ export function CustomWidgetRequestsEditor({
           </Fieldset>
         );
       })}
-      <Button type="button" variant="light" leftSection={<IconPlus size={16} />} onClick={add}>
+      <Button
+        type="button"
+        variant="light"
+        leftSection={<IconPlus size={16} />}
+        onClick={add}
+        display={compactSetup ? "none" : undefined}
+      >
         {t("addRequest")}
       </Button>
       {form.errors.requests && (

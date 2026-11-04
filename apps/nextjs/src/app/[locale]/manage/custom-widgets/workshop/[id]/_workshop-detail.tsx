@@ -21,7 +21,7 @@ import {
 import { useDisclosure } from "@mantine/hooks";
 import { IconAlertTriangle, IconArrowLeft, IconDownload, IconExternalLink, IconFlag } from "@tabler/icons-react";
 
-import { CUSTOM_WIDGET_SCHEMA } from "@homarr/custom-widgets/core";
+import { CUSTOM_WIDGET_SCHEMA, getCustomWidgetIntegrationKinds } from "@homarr/custom-widgets/core";
 import type { HomarrCustomWidgetV2 } from "@homarr/custom-widgets/core";
 import { ImportReviewContent } from "@homarr/custom-widgets/workbench";
 import { useI18n } from "@homarr/translation/client";
@@ -35,6 +35,7 @@ import { ManagePageLayout } from "~/components/manage/manage-page-layout";
 import { ManageStickyFooter } from "~/components/manage/manage-sticky-footer";
 import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
 import { WorkshopCodeViewer } from "~/components/workshop/workshop-code-viewer";
+import { WorkshopIntegrationBadges } from "~/components/workshop/workshop-integration-badges";
 import { getWorkshopWebUrl } from "~/components/workshop/workshop-client";
 import { WorkshopReportForm } from "~/components/workshop/workshop-report-form";
 import { WorkshopScreenshots } from "~/components/workshop/workshop-screenshots";
@@ -103,6 +104,8 @@ export function WorkshopDetail({ id }: { id: string }) {
   }
 
   const submission = detail.data;
+  let integrationKinds = submission.integrationKinds;
+  if (integrationKinds.length === 0 && widget) integrationKinds = getCustomWidgetIntegrationKinds(widget.sources);
 
   return (
     <ManagePageLayout
@@ -173,6 +176,7 @@ export function WorkshopDetail({ id }: { id: string }) {
         )}
 
         {submission.description && <Text>{submission.description}</Text>}
+        <WorkshopIntegrationBadges kinds={integrationKinds} />
 
         <WorkshopScreenshots
           client={session.client}

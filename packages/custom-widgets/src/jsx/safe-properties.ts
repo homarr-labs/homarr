@@ -12,7 +12,13 @@ import {
 } from "./policy";
 
 export function normalizedProperty(value: unknown): string {
-  if (typeof value !== "string" && typeof value !== "number") {
+  if (
+    typeof value !== "string" &&
+    typeof value !== "number" &&
+    typeof value !== "boolean" &&
+    value !== null &&
+    value !== undefined
+  ) {
     throw new SafeJsxError("Property names must be strings or numbers");
   }
   const property = String(value);
@@ -126,6 +132,7 @@ function sanitizeObject(
 
 function sanitizeSerializableData(value: unknown): unknown {
   if (typeof value === "function" || isInterpreterCallback(value)) return undefined;
+  if (isValidElement(value)) return value;
   if (Array.isArray(value)) return value.map(sanitizeSerializableData);
   if (value !== null && typeof value === "object") {
     const safe: Record<string, unknown> = Object.create(null);

@@ -101,6 +101,9 @@ WORKSHOP_IMAGE_TEST_IMAGE=homarr-workshop:candidate bun run test:workshop-image
 PocketBase data lives in `/pb_data`. Normal start, stop, and down operations retain the named volume. Back up the
 database before migrations or image promotion, and test restores in a separate empty volume.
 
+The integration-tag migration is additive for databases on the current v2 migration chain. It preserves content and
+advances submission revisions; reload open edits after upgrading.
+
 The v2 branch consolidates the unreleased Workshop migrations. Volumes that ran an earlier v2 migration chain are
 unsupported and must be backed up and recreated. The following command permanently removes the local Workshop volume:
 

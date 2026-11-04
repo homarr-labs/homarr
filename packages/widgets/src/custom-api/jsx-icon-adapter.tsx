@@ -1,3 +1,5 @@
+import { memo } from "react";
+
 import { customJsxTablerIconNames, customJsxTablerIconSpriteBasePath } from "@homarr/custom-widgets/tabler-icons";
 
 export const SAFE_TABLER_ICON_NAMES = customJsxTablerIconNames;
@@ -7,7 +9,7 @@ function isValidIconProp(value: unknown): value is string | number {
   return typeof value === "number" || typeof value === "string";
 }
 
-export function SafeTablerIcon(props: Record<string, unknown>) {
+export const SafeTablerIcon = memo(function SafeTablerIcon(props: Record<string, unknown>) {
   if (typeof props.name !== "string" || !supportedIconNames.has(props.name)) return null;
   let name = props.name;
   // Preserve Homarr's legacy pulse alias (previously IconHeartbeat) for existing saved widgets.
@@ -42,4 +44,4 @@ export function SafeTablerIcon(props: Record<string, unknown>) {
       <use href={`${customJsxTablerIconSpriteBasePath}/${sprite}.svg#${symbol}`} />
     </svg>
   );
-}
+});

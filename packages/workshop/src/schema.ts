@@ -1,5 +1,9 @@
 import { exportCustomWidgetDefinition } from "@homarr/custom-widgets/core";
-import { CUSTOM_WIDGET_SCHEMA, customWidgetImportSchema } from "@homarr/custom-widgets/core";
+import {
+  CUSTOM_WIDGET_SCHEMA,
+  customWidgetImportSchema,
+  customWidgetIntegrationSourceSchema,
+} from "@homarr/custom-widgets/core";
 import { z } from "zod/v4";
 
 export const HOMARR_WEBSITE_URL = "https://homarr.dev";
@@ -96,6 +100,23 @@ const workshopFileListSchema = z
   }, z.array(z.string()))
   .default([]);
 
+const workshopIntegrationKindsSchema = z.preprocess((value) => {
+  let parsed: unknown = value;
+  if (typeof parsed === "string") {
+    try {
+      parsed = JSON.parse(parsed) as unknown;
+    } catch {
+      return [];
+    }
+  }
+  if (!Array.isArray(parsed)) return [];
+  const kinds = parsed.flatMap((kind: unknown) => {
+    const result = customWidgetIntegrationSourceSchema.shape.integrationKind.safeParse(kind);
+    return result.success ? [result.data] : [];
+  });
+  return [...new Set(kinds)].slice(0, 8);
+}, z.array(customWidgetIntegrationSourceSchema.shape.integrationKind).max(8));
+
 export const workshopUserSchema = z.object({
   id: z.string(),
   name: z.string().default(""),
@@ -127,6 +148,7 @@ const workshopSubmissionBaseObjectSchema = z.object({
   title: z.string(),
   description: z.string().default(""),
   widgetSchema: z.string(),
+  integrationKinds: workshopIntegrationKindsSchema,
   screenshots: workshopFileListSchema,
   author: z.string(),
   authorName: z.string().default(""),

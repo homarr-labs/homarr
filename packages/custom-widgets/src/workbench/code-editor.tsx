@@ -3,7 +3,7 @@
 import { indentSelection, redo, redoDepth, undo, undoDepth } from "@codemirror/commands";
 import type { EditorView as EditorViewType, ViewUpdate } from "@codemirror/view";
 import { EditorView } from "@codemirror/view";
-import { lazy, Suspense, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { lazy, memo, Suspense, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Badge, Collapse, Group, Input, Loader, Tabs, Text, useComputedColorScheme } from "@mantine/core";
 import { IconCheck } from "@tabler/icons-react";
 
@@ -33,6 +33,7 @@ export function CustomWidgetCodeEditor(props: CustomWidgetCodeEditorProps) {
   const [editorReady, setEditorReady] = useState(false);
   const [copied, setCopied] = useState(false);
   const [referenceOpened, setReferenceOpened] = useState(false);
+  const [referenceMounted, setReferenceMounted] = useState(false);
   const [cursor, setCursor] = useState({ line: 1, column: 1 });
   const [editorCreated, setEditorCreated] = useState(false);
   const [historyDepth, setHistoryDepth] = useState({ undo: 0, redo: 0 });
@@ -101,7 +102,10 @@ export function CustomWidgetCodeEditor(props: CustomWidgetCodeEditorProps) {
     editorView.dispatch({ selection: { anchor }, scrollIntoView: true });
     editorView.focus();
   }, []);
-  const formattedValue = useMemo(() => formatCode(props.value, props.language), [props.language, props.value]);
+  const formattedValue = useMemo(() => {
+    if (props.readOnly || props.language === "jsx") return props.value;
+    return formatCode(props.value, props.language);
+  }, [props.language, props.readOnly, props.value]);
   const errorCount = diagnostics.filter(({ severity }) => severity === "error").length;
   const warningCount = diagnostics.length - errorCount;
   const isCharacterLimitExceeded = props.maxLength !== undefined && props.value.length > props.maxLength;
@@ -133,7 +137,10 @@ export function CustomWidgetCodeEditor(props: CustomWidgetCodeEditorProps) {
           formattedValue={formattedValue}
           copied={copied}
           referenceOpened={referenceOpened}
-          onReferenceToggle={() => setReferenceOpened((value) => !value)}
+          onReferenceToggle={() => {
+            setReferenceMounted(true);
+            setReferenceOpened((value) => !value);
+          }}
           onCopy={() => void copy()}
           onUndo={handleUndo}
           onRedo={handleRedo}
@@ -155,7 +162,7 @@ export function CustomWidgetCodeEditor(props: CustomWidgetCodeEditorProps) {
             }
           }}
         />
-        {props.reference && (
+        {props.reference && referenceMounted && (
           <Collapse expanded={referenceOpened}>
             <CustomWidgetSchemaReference
               id={`${props.id}-schema-reference`}
@@ -233,7 +240,7 @@ export function ReadOnlyCustomWidgetCode(props: Omit<CustomWidgetCodeEditorProps
   return <CustomWidgetCodeEditor {...props} readOnly onChange={() => undefined} />;
 }
 
-export function CustomWidgetSchemaReference({
+export const CustomWidgetSchemaReference = memo(function CustomWidgetSchemaReference({
   id,
   reference,
   messages,
@@ -265,7 +272,7 @@ export function CustomWidgetSchemaReference({
       ))}
     </Tabs>
   );
-}
+});
 
 function EditorLoader() {
   return (

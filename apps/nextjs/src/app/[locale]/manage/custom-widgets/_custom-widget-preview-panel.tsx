@@ -51,6 +51,14 @@ function CustomWidgetPreviewPanelContent(props: PreviewPanelProps) {
     { sessionId: props.preview.session?.id ?? "" },
     { enabled: showDiagnostics, refetchInterval: showDiagnostics && 2_000, staleTime: 0 },
   );
+  const previewDataJson = useMemo(() => {
+    if (activeTab !== "data") return "";
+    return JSON.stringify({ data: props.preview.data, status: props.preview.status }, null, 2);
+  }, [activeTab, props.preview.data, props.preview.status]);
+  const journalJson = useMemo(() => {
+    if (!showDiagnostics) return "";
+    return JSON.stringify(journalQuery.data ?? [], null, 2);
+  }, [journalQuery.data, showDiagnostics]);
   const candidate = props.candidate;
   const candidateTemplate = candidate?.template;
   const candidateRequests = candidate?.requests;
@@ -183,7 +191,7 @@ function CustomWidgetPreviewPanelContent(props: PreviewPanelProps) {
               id="preview-data"
               label={t("requestData")}
               language="json"
-              value={JSON.stringify({ data: props.preview.data, status: props.preview.status }, null, 2)}
+              value={previewDataJson}
               readOnly
               onChange={() => undefined}
             />
@@ -263,7 +271,7 @@ function CustomWidgetPreviewPanelContent(props: PreviewPanelProps) {
                   id="preview-journal"
                   label={t("journal")}
                   language="json"
-                  value={JSON.stringify(journalQuery.data ?? [], null, 2)}
+                  value={journalJson}
                   readOnly
                   onChange={() => undefined}
                 />

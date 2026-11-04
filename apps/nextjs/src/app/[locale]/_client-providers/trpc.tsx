@@ -204,24 +204,33 @@ const ScopedTRPCReactProvider = ({ children, demoReadOnly }: PropsWithChildren<{
             }),
           }),
           false: splitLink({
-            condition: ({ input }) => isNonJsonSerializable(input),
+            condition: ({ path }) => path === "customWidget.optionRequest",
             true: httpLink({
-              transformer: {
-                serialize(object: unknown) {
-                  return object;
-                },
-                deserialize(data: SuperJSONResult) {
-                  return superjson.deserialize<unknown>(data);
-                },
-              },
-              url: getTrpcUrl(),
-              headers: createHeadersCallbackForSource("nextjs-react (form-data)"),
-            }),
-            false: httpBatchStreamLink({
               transformer: superjson,
               url: getTrpcUrl(),
-              maxURLLength: 2083,
               headers: createHeadersCallbackForSource("nextjs-react (json)"),
+              methodOverride: "POST",
+            }),
+            false: splitLink({
+              condition: ({ input }) => isNonJsonSerializable(input),
+              true: httpLink({
+                transformer: {
+                  serialize(object: unknown) {
+                    return object;
+                  },
+                  deserialize(data: SuperJSONResult) {
+                    return superjson.deserialize<unknown>(data);
+                  },
+                },
+                url: getTrpcUrl(),
+                headers: createHeadersCallbackForSource("nextjs-react (form-data)"),
+              }),
+              false: httpBatchStreamLink({
+                transformer: superjson,
+                url: getTrpcUrl(),
+                maxURLLength: 2083,
+                headers: createHeadersCallbackForSource("nextjs-react (json)"),
+              }),
             }),
           }),
         }),

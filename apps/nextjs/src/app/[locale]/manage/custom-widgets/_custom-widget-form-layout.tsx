@@ -70,6 +70,8 @@ export function SaveActions({
   invalid,
   mode,
   onPreview,
+  saveDisabled = false,
+  previewLabel,
 }: {
   dirty: boolean;
   savePending: boolean;
@@ -77,6 +79,8 @@ export function SaveActions({
   invalid: boolean;
   mode: "create" | "edit";
   onPreview(): void;
+  saveDisabled?: boolean;
+  previewLabel?: string;
 }) {
   const t = useI18n("customWidget.workbench");
   const tCommon = useI18n("common");
@@ -101,9 +105,9 @@ export function SaveActions({
           loading={previewPending}
           disabled={invalid || savePending}
         >
-          {previewPending ? t("action.previewLoading") : t("action.preview")}
+          {previewPending ? t("action.previewLoading") : (previewLabel ?? t("action.preview"))}
         </Button>
-        <Button type="submit" loading={savePending} disabled={invalid || previewPending}>
+        <Button type="submit" loading={savePending} disabled={invalid || previewPending || saveDisabled}>
           {mode === "create" ? tCommon("action.create") : tCommon("action.save")}
         </Button>
       </Group>
@@ -113,14 +117,17 @@ export function SaveActions({
 
 export function CustomWidgetSectionNavigation({
   onSelect,
+  assisted = false,
 }: {
   onSelect(section: (typeof sectionLinks)[number][0]): void;
+  assisted?: boolean;
 }) {
   const t = useI18n("customWidget.workbench");
   const invalidSections = useCustomWidgetFormAnalysisField("invalidSections");
   return (
     <nav className={classes.sectionNav} aria-label={t("sectionNavigation")}>
       {sectionLinks.map(([id, key, SectionIcon]) => {
+        if (assisted && (id === "options" || id === "jsx" || id === "general")) return null;
         const invalid = invalidSections.has(id);
         return (
           <Button
@@ -147,11 +154,15 @@ export function CustomWidgetSaveActions({
   savePending,
   previewPending,
   onPreview,
+  saveDisabled,
+  previewLabel,
 }: {
   mode: "create" | "edit";
   savePending: boolean;
   previewPending: boolean;
   onPreview(): void;
+  saveDisabled?: boolean;
+  previewLabel?: string;
 }) {
   const dirty = useCustomWidgetFormDocumentDirty();
   const candidateValid = useCustomWidgetFormAnalysisField("candidateValid");
@@ -164,6 +175,8 @@ export function CustomWidgetSaveActions({
       invalid={hasDiagnostics || !candidateValid}
       mode={mode}
       onPreview={onPreview}
+      saveDisabled={saveDisabled}
+      previewLabel={previewLabel}
     />
   );
 }

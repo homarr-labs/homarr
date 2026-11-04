@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   IconAlertCircle,
   IconBraces,
@@ -14,6 +14,8 @@ import {
 
 import type { SubmissionType } from "@site/src/lib/workshop-schema";
 import { validateSubmissionContent } from "@site/src/lib/workshop-schema";
+import { getCustomWidgetIntegrationKinds } from "@homarr/custom-widgets/core";
+import { workshopScreenshotsSchema, workshopSubmissionInputSchema } from "@homarr/workshop/schema";
 
 import { CustomWidgetCodeInput } from "@/components/custom-widget-code";
 
@@ -37,6 +39,7 @@ import { cn, errorMessage } from "@/lib/utils";
 
 import type { SubmitInput } from "./useWorkshop";
 import { ScreenshotEditor } from "./ScreenshotEditor";
+import { WorkshopIntegrationBadges } from "./WorkshopIntegrationBadges";
 
 interface Props {
   onClose: () => void;
@@ -85,7 +88,17 @@ export const SubmitForm = ({ onClose, onSubmit }: Props) => {
     track("Workshop Submit Started");
   }, []);
 
-  const canAdvance = [type !== null, title.trim().length >= 3 && content.trim().length > 0, true];
+  const canAdvance = [
+    type !== null,
+    title.trim().length >= 3 && title.trim().length <= 100 && content.trim().length > 0,
+    true,
+  ];
+  const integrationKinds = useMemo(() => {
+    if (type !== "customWidget") return [];
+    const validation = validateSubmissionContent(type, content);
+    if (!validation.success || typeof validation.data === "string") return [];
+    return getCustomWidgetIntegrationKinds(validation.data.sources);
+  }, [type, content]);
 
   const goTo = useCallback((next: number) => setStep(next), []);
 
@@ -93,7 +106,7 @@ export const SubmitForm = ({ onClose, onSubmit }: Props) => {
     setContent(json);
     const meta = parseJsonObject(json);
     if (!meta) return;
-    if (typeof meta.name === "string" && !currentTitle) setTitle(meta.name);
+    if (typeof meta.name === "string" && !currentTitle) setTitle(meta.name.slice(0, 100));
     if (typeof meta.description === "string" && !currentDesc) setDescription(String(meta.description));
   }, []);
 
@@ -160,17 +173,22 @@ export const SubmitForm = ({ onClose, onSubmit }: Props) => {
   );
 
   const handleSubmit = async () => {
-    if (!type) return;
-    const validation = validateSubmissionContent(type, content);
+    if (!type || pending) return;
+    const validation = workshopSubmissionInputSchema.safeParse({ type, title, description, changelog, content });
     if (!validation.success) {
-      setError(validation.error);
+      setError(validation.error.issues.map((issue) => issue.message).join("\n"));
       goTo(1);
+      return;
+    }
+    if (!workshopScreenshotsSchema.safeParse(screenshots).success) {
+      setError("Use up to five PNG, JPG, or WebP images no larger than 5 MiB each.");
+      goTo(2);
       return;
     }
     setError(null);
     setPending(true);
     try {
-      await onSubmit({ type, title, description, changelog, content, screenshots });
+      await onSubmit({ ...validation.data, screenshots });
     } catch (caught) {
       setError(errorMessage(caught, "Submission failed"));
     } finally {
@@ -257,6 +275,7 @@ export const SubmitForm = ({ onClose, onSubmit }: Props) => {
               />
             )}
           </div>
+          <WorkshopIntegrationBadges kinds={integrationKinds} />
         </div>
 
         <DialogFooter className="sm:justify-between">
@@ -426,8 +445,8 @@ const StepDetails = ({
   content: string;
   onContentChange: (v: string) => void;
 }) => (
-  <div className="grid gap-5 lg:grid-cols-[minmax(0,1.45fr)_minmax(18rem,0.55fr)]">
-    <div className="flex flex-col gap-1.5">
+  <div className="grid min-w-0 grid-cols-1 gap-5 lg:grid-cols-[minmax(0,1.45fr)_minmax(18rem,0.55fr)]">
+    <div className="flex min-w-0 flex-col gap-1.5">
       <CustomWidgetCodeInput
         id="submit-content"
         label={contentLabels[type]}
@@ -445,7 +464,7 @@ const StepDetails = ({
         }
       />
     </div>
-    <FieldGroup className="gap-4">
+    <FieldGroup className="min-w-0 gap-4">
       <Field>
         <FieldLabel htmlFor="submit-title">
           Title <span aria-hidden="true">*</span>
