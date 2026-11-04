@@ -157,6 +157,13 @@ export function getCoolifyServerState(server: CoolifyServer, field: "is_reachabl
   return server[field] ?? server.settings?.[field] ?? undefined;
 }
 
+export function getCoolifyServerStatus(server: CoolifyServer): "online" | "offline" | "unusable" | "unknown" {
+  const reachability = getCoolifyServerState(server, "is_reachable");
+  if (reachability === false) return "offline";
+  if (getCoolifyServerState(server, "is_usable") === false) return "unusable";
+  return reachability === true ? "online" : "unknown";
+}
+
 export const isCoolifyServerOnline = (server: CoolifyServer): boolean =>
   getCoolifyServerState(server, "is_reachable") === true;
 

@@ -1,13 +1,12 @@
 "use client";
 
-import { Anchor, Badge, Group, Text } from "@mantine/core";
-
 import type { CoolifyServiceWithContext } from "@homarr/integrations/types";
 import { useI18n } from "@homarr/translation/client";
 
-import actionTargetClasses from "../common/action-target.module.css";
 import { getSafeApplicationUrl, SAFE_NEW_TAB_REL } from "../common/application-url";
-import { cleanFqdn, getStatusColor, parseStatus } from "./coolify-utils";
+import classes from "./component.module.css";
+import { cleanFqdn, parseStatus } from "./coolify-utils";
+import { getStatusTone, StatusDot } from "./status-pill";
 
 type ServiceApplication = NonNullable<CoolifyServiceWithContext["applications"]>[number];
 
@@ -15,39 +14,18 @@ export const ServiceApplicationRow = ({ application }: { application: ServiceApp
   const t = useI18n("widget.coolify");
   const status = parseStatus(application.status ?? "");
   const publicUrl = getSafeApplicationUrl(cleanFqdn(application.fqdn));
-  const statusLabel =
-    status === "running" ||
-    status === "stopped" ||
-    status === "exited" ||
-    status === "starting" ||
-    status === "restarting" ||
-    status === "unhealthy"
-      ? t(`status.${status}`)
-      : t("status.unknown");
 
   return (
-    <Group gap={4} wrap="nowrap">
-      <Badge size="xs" variant="dot" color={getStatusColor(status)}>
-        {statusLabel}
-      </Badge>
+    <li className={classes.nestedRow}>
+      <StatusDot tone={getStatusTone(status)} />
       {publicUrl ? (
-        <Anchor
-          className={actionTargetClasses.root}
-          href={publicUrl}
-          target="_blank"
-          rel={SAFE_NEW_TAB_REL}
-          fz="xs"
-          c="inherit"
-          truncate="end"
-          style={{ textDecoration: "none" }}
-        >
+        <a className={classes.rowName} href={publicUrl} target="_blank" rel={SAFE_NEW_TAB_REL}>
           {application.name}
-        </Anchor>
+        </a>
       ) : (
-        <Text fz="xs" truncate="end">
-          {application.name}
-        </Text>
+        <span className={classes.rowName}>{application.name}</span>
       )}
-    </Group>
+      <span className={classes.rowMeta}>{t(`status.${status}`)}</span>
+    </li>
   );
 };

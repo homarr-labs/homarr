@@ -1,31 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import {
-  ActionIcon,
-  Anchor,
-  Badge,
-  Box,
-  Group,
-  Image,
-  ScrollArea,
-  Stack,
-  Tabs,
-  Text,
-  TextInput,
-  VisuallyHidden,
-} from "@mantine/core";
+import type { CSSProperties } from "react";
+import { ActionIcon, Image, ScrollArea, Tabs, TextInput, VisuallyHidden } from "@mantine/core";
 import { useElementSize, useLocalStorage } from "@mantine/hooks";
-import {
-  IconApps,
-  IconCircleCheck,
-  IconEye,
-  IconEyeOff,
-  IconLayoutGrid,
-  IconSearch,
-  IconServer,
-  IconStack2,
-} from "@tabler/icons-react";
+import { IconCheck, IconEye, IconEyeOff, IconLayoutGrid, IconSearch } from "@tabler/icons-react";
 
 import { useTimeAgo } from "@homarr/common";
 import { useI18n } from "@homarr/translation/client";
@@ -37,16 +16,16 @@ import {
   getCoolifyAttentionItems,
   getCoolifyAttentionSummary,
   getCoolifyProjectSummaries,
-  getCoolifyServerState,
-  getStatusColor,
+  getCoolifyServerStatus,
   isCoolifyServerHealthy,
   parseStatus,
 } from "./coolify-utils";
-import type { CoolifyProjectSummary } from "./coolify-utils";
+import type { CoolifyAttentionItem, CoolifyProjectSummary } from "./coolify-utils";
 import classes from "./component.module.css";
 import { ResourceRow } from "./resource-row";
 import { ServerRow } from "./server-row";
-import { ServiceApplicationRow } from "./service-application-row";
+import { getStatusTone, StatusDot, StatusPill } from "./status-pill";
+import type { CoolifyTone } from "./status-pill";
 import type { CoolifyOptions, InstanceData } from "./types";
 import { COOLIFY_ICON_URL } from "./types";
 
@@ -61,6 +40,27 @@ interface InstanceViewProps {
   uiScale: number;
 }
 
+interface CoolifyStat {
+  key: string;
+  label: string;
+  /** Shown instead of the label where the advanced view has room for it. */
+  longLabel?: string;
+  value: number | string;
+  total?: number;
+}
+
+// Row geometry in board UI pixels; it must match the rem() values in component.module.css.
+const ROW_HEIGHT = 25;
+const MORE_HEIGHT = 21;
+
+const fitRows = (total: number, available: number, uiScale: number) => {
+  for (let count = Math.min(total, 6); count > 0; count--) {
+    const needed = (count * ROW_HEIGHT + (total > count ? MORE_HEIGHT : 0)) * uiScale;
+    if (needed <= available + 0.5) return count;
+  }
+  return 0;
+};
+
 export function InstanceView({
   instance,
   options,
@@ -74,10 +74,7 @@ export function InstanceView({
   const t = useI18n("widget.coolify");
   const tCommon = useI18n("common");
   const [search, setSearch] = useState("");
-  const [showIp, setShowIp] = useLocalStorage({
-    key: storageKey,
-    defaultValue: false,
-  });
+  const [showIp, setShowIp] = useLocalStorage({ key: storageKey, defaultValue: false });
   const { ref: compactBodyRef, height: compactBodyHeight } = useElementSize<HTMLDivElement>();
   const info = instance.instanceInfo;
   const visibleOptions = isAdvanced ? { showServers: true, showApplications: true, showServices: true } : options;
@@ -99,34 +96,13 @@ export function InstanceView({
     (visibleOptions.showApplications ? runningApps : 0) + (visibleOptions.showServices ? runningServices : 0);
   const baseUrl = getSafeApplicationUrl(instance.externalUrl ?? instance.integrationUrl)?.replace(/\/+$/, "") ?? "";
   const relativeTime = useTimeAgo(instance.updatedAt, 60_000);
-  const normalizedSearch = search.trim().toLocaleLowerCase();
-  const matchesSearch = (name: string, projectName?: string, environmentName?: string) =>
-    [name, projectName, environmentName].some((value) => value?.toLocaleLowerCase().includes(normalizedSearch));
-  const applications = info.applications.filter((app) => matchesSearch(app.name, app.projectName, app.environmentName));
-  const services = info.services.filter((service) =>
-    matchesSearch(service.name, service.projectName, service.environmentName),
-  );
-  const servers = info.servers.filter((server) => matchesSearch(server.name));
-  const serverResourceCounts = buildServerResourceCounts(info.servers, info.applications, info.services);
+  const updatedLabel = t("footer.updated", { when: relativeTime });
+
   const isMini = !isAdvanced && width < 110;
   const isTiny = !isAdvanced && height < 125;
-  const isNarrow = !isAdvanced && width < 320;
-  const availableBodyHeight = Math.max(0, compactBodyHeight - 12);
-  const rowTextHeight = 19.5 * uiScale;
-  const moreTextHeight = 18 * uiScale;
-  const visibleAttentionCount =
-    [3, 2, 1].find(
-      (count) =>
-        count <= attention.length &&
-        count * Math.max(22, rowTextHeight) + (count - 1) * 4 + (attention.length > count ? moreTextHeight : 0) <=
-          availableBodyHeight,
-    ) ?? 0;
-  const visibleProjectCount =
-    [3, 2, 1].find(
-      (count) =>
-        count <= projects.length &&
-        count * Math.max(39, rowTextHeight) + (projects.length > count ? moreTextHeight : 0) <= availableBodyHeight,
-    ) ?? 0;
+  const isNarrow = !isAdvanced && width < 240;
+  const showVersion = isAdvanced || width >= 320;
+
   const summaryLabel =
     summary.kind === "problem"
       ? t("summary.needsAttention", { count: summary.count })
@@ -135,548 +111,572 @@ export function InstanceView({
         : summary.kind === "unknown"
           ? t("summary.unknown", { count: summary.count })
           : t(`summary.${summary.kind}`);
-  const summaryText = isNarrow
-    ? summary.count > 0
-      ? summary.count
-      : summary.kind === "empty"
-        ? "—"
-        : "✓"
-    : summaryLabel;
-  const summaryColor =
+  const summaryTone: CoolifyTone =
     summary.kind === "problem"
-      ? "red"
+      ? "negative"
       : summary.kind === "transition"
-        ? "yellow"
+        ? "warning"
         : summary.kind === "healthy"
-          ? "green"
-          : "gray";
+          ? "positive"
+          : "neutral";
+  const shortSummary =
+    summary.count > 0 ? summary.count : summary.kind === "empty" ? "—" : <IconCheck size={12} stroke={2.5} />;
+  const pill = (
+    <StatusPill tone={summaryTone} label={summaryLabel} size={isAdvanced ? "lg" : "md"}>
+      {isNarrow || isMini ? shortSummary : undefined}
+    </StatusPill>
+  );
+
+  const stats: CoolifyStat[] = [];
+  if (showResources) {
+    stats.push({ key: "projects", label: t("overview.projects"), value: info.projects ? projects.length : "—" });
+    stats.push({
+      key: "resources",
+      label: t("overview.running"),
+      longLabel: isAdvanced ? t("overview.resources") : undefined,
+      value: runningResources,
+      total: totalResources,
+    });
+  }
+  if (visibleOptions.showServers) {
+    stats.push({ key: "servers", label: tCommon("servers"), value: healthyServers, total: info.servers.length });
+  }
+
+  const statList = (
+    <dl
+      className={isMini ? classes.miniStats : classes.stats}
+      data-narrow={(!isAdvanced && !isMini && width < 240) || undefined}
+      style={{ "--cf-stat-count": stats.length } as CSSProperties}
+    >
+      {stats.map((stat) => (
+        <div key={stat.key} className={classes.stat}>
+          <dt className={classes.statLabel}>
+            {stat.longLabel ? (
+              <>
+                <span className={classes.wideOnly}>{stat.longLabel}</span>
+                <span className={classes.narrowOnly}>{stat.label}</span>
+              </>
+            ) : (
+              stat.label
+            )}
+          </dt>
+          <dd className={classes.statValue}>
+            {stat.value}
+            {stat.total !== undefined && <span className={classes.statTotal}>/{stat.total}</span>}
+          </dd>
+        </div>
+      ))}
+    </dl>
+  );
+
+  const nameLink = (
+    <a
+      className={`${classes.name} ${actionTargetClasses.root}`}
+      href={baseUrl || undefined}
+      target={baseUrl ? "_blank" : undefined}
+      rel={baseUrl ? SAFE_NEW_TAB_REL : undefined}
+      style={{
+        fontSize: isAdvanced
+          ? "var(--mantine-font-size-md)"
+          : isTiny
+            ? "var(--mantine-font-size-xs)"
+            : "var(--mantine-font-size-sm)",
+      }}
+    >
+      {instance.integrationName}
+    </a>
+  );
 
   if (isMini) {
+    const showStats = height >= 150 && stats.length > 0;
     return (
       <div
-        className={`${classes.instance} ${classes.mini} ${isSingle ? classes.single : ""}`}
-        title={instance.integrationName}
+        className={`${classes.instance} ${classes.mini}`}
+        data-single={isSingle || undefined}
+        data-short={!showStats || undefined}
+        title={`${instance.integrationName}: ${summaryLabel}`}
       >
-        <Anchor
-          className={actionTargetClasses.root}
-          component={baseUrl ? "a" : "span"}
-          href={baseUrl}
+        <a
+          className={`${classes.logo} ${actionTargetClasses.root}`}
+          href={baseUrl || undefined}
           target={baseUrl ? "_blank" : undefined}
           rel={baseUrl ? SAFE_NEW_TAB_REL : undefined}
+          aria-label={instance.integrationName}
         >
-          <Image src={COOLIFY_ICON_URL} alt="Coolify" w={20} h={20} />
-        </Anchor>
-        <Text fw={700} fz={20} lh={1} c={summaryColor} aria-label={summaryLabel}>
-          {summaryText}
-        </Text>
-        {height >= 120 && (
-          <Stack className={classes.miniMetrics} gap={1}>
-            {showResources && (
-              <MiniMetric
-                icon={IconLayoutGrid}
-                label={t("overview.projects")}
-                value={info.projects ? projects.length : "—"}
-              />
-            )}
-            {showResources && (
-              <MiniMetric
-                icon={IconApps}
-                label={t("overview.resources")}
-                value={runningResources}
-                total={totalResources}
-              />
-            )}
-            {visibleOptions.showServers && (
-              <MiniMetric
-                icon={IconServer}
-                label={tCommon("servers")}
-                value={healthyServers}
-                total={info.servers.length}
-              />
-            )}
-          </Stack>
-        )}
+          <Image src={COOLIFY_ICON_URL} alt="" w={20} h={20} />
+        </a>
+        {pill}
+        {showStats && statList}
       </div>
     );
   }
 
-  return (
-    <div className={`${classes.instance} ${isTiny ? classes.tiny : ""} ${isSingle ? classes.single : ""}`}>
-      <Group className={classes.header} gap="xs" wrap="nowrap" justify="space-between">
-        <Group gap="xs" wrap="nowrap" miw={0}>
-          <Image src={COOLIFY_ICON_URL} alt="" w={isTiny ? 16 : 20} h={isTiny ? 16 : 20} />
-          <Anchor
-            className={actionTargetClasses.root}
-            component={baseUrl ? "a" : "span"}
-            href={baseUrl}
-            target={baseUrl ? "_blank" : undefined}
-            rel={baseUrl ? SAFE_NEW_TAB_REL : undefined}
-            c="inherit"
-            fw={600}
-            fz="sm"
-            truncate="end"
-          >
-            {instance.integrationName}
-          </Anchor>
-        </Group>
-        <Badge size="xs" variant="light" color={summaryColor} aria-label={summaryLabel}>
-          {summaryText}
-        </Badge>
-      </Group>
-
-      <Group className={classes.metrics} gap={0} wrap="nowrap">
-        {showResources && (
-          <Metric
-            icon={IconLayoutGrid}
-            label={t("overview.projects")}
-            value={info.projects ? projects.length : "—"}
-            isTiny={isTiny}
-            isNarrow={isNarrow}
-          />
-        )}
-        {showResources && (
-          <Metric
-            label={t("overview.resources")}
-            value={runningResources}
-            total={totalResources}
-            isTiny={isTiny}
-            isNarrow={isNarrow}
-            icon={IconApps}
-          />
-        )}
-        {visibleOptions.showServers && (
-          <Metric
-            icon={IconServer}
-            label={tCommon("servers")}
-            value={healthyServers}
-            total={info.servers.length}
-            isTiny={isTiny}
-            isNarrow={isNarrow}
-          />
-        )}
-      </Group>
-
+  const header = (
+    <div className={classes.header}>
+      <span className={classes.logo}>
+        <Image
+          src={COOLIFY_ICON_URL}
+          alt=""
+          w={isAdvanced ? 28 : isTiny ? 16 : 18}
+          h={isAdvanced ? 28 : isTiny ? 16 : 18}
+        />
+      </span>
       {isAdvanced ? (
-        <Tabs defaultValue="overview" className={classes.details} keepMounted={false} onChange={() => setSearch("")}>
-          <Tabs.List aria-label={t("details.tabs")} className={classes.tabList}>
+        <div className={classes.headerText}>
+          <div className={classes.headerTitle}>
+            {nameLink}
+            <span
+              className={`${classes.version} ${classes.wideOnly}`}
+              style={{ fontSize: "var(--mantine-font-size-xs)" }}
+            >
+              v{info.version}
+            </span>
+          </div>
+          <span className={classes.subline}>
+            <span className={classes.narrowOnly}>v{info.version} · </span>
+            {updatedLabel}
+          </span>
+        </div>
+      ) : (
+        <div className={classes.headerTitle}>
+          {nameLink}
+          {showVersion && (
+            <span className={classes.version} style={{ fontSize: "var(--mantine-font-size-xs)" }}>
+              v{info.version}
+            </span>
+          )}
+        </div>
+      )}
+      {pill}
+    </div>
+  );
+
+  if (isAdvanced) {
+    const serverResourceCounts = buildServerResourceCounts(info.servers, info.applications, info.services);
+    const normalizedSearch = search.trim().toLocaleLowerCase();
+    const matchesSearch = (name: string, projectName?: string, environmentName?: string) =>
+      [name, projectName, environmentName].some((value) => value?.toLocaleLowerCase().includes(normalizedSearch));
+    const applications = info.applications.filter((app) =>
+      matchesSearch(app.name, app.projectName, app.environmentName),
+    );
+    const services = info.services.filter((service) =>
+      matchesSearch(service.name, service.projectName, service.environmentName),
+    );
+    const servers = info.servers.filter((server) => matchesSearch(server.name));
+    const hasAttention = attention.length > 0;
+
+    const attentionSection = (
+      <section className={classes.section} aria-labelledby={`${storageKey}-attention`}>
+        <div className={classes.sectionHead}>
+          <h3 id={`${storageKey}-attention`} className={classes.sectionTitle}>
+            {t("overview.attention")}
+          </h3>
+        </div>
+        <div className={classes.table}>
+          {hasAttention ? (
+            attention.map((item) => (
+              <AttentionTableRow key={`${item.kind}-${item.uuid}`} item={item} baseUrl={baseUrl} />
+            ))
+          ) : (
+            <div className={classes.emptyRow}>
+              {trackedCount === 0 ? t("summary.empty") : t("summary.healthyDetail")}
+            </div>
+          )}
+        </div>
+      </section>
+    );
+
+    const serversSection = (
+      <section className={classes.section} aria-labelledby={`${storageKey}-servers`}>
+        <div className={classes.sectionHead}>
+          <h3 id={`${storageKey}-servers`} className={classes.sectionTitle}>
+            {tCommon("servers")}
+          </h3>
+          <span className={classes.sectionNote}>
+            {healthyServers}/{info.servers.length}
+          </span>
+        </div>
+        <div className={classes.table}>
+          {info.servers.map((server) => {
+            const status = getCoolifyServerStatus(server);
+            const href = baseUrl ? getSafeApplicationUrl(`${baseUrl}/server/${server.uuid}`) : null;
+            return (
+              <div key={server.uuid} className={classes.tableRow}>
+                <div className={classes.tableMain}>
+                  <a
+                    className={classes.tableName}
+                    href={href ?? undefined}
+                    target={href ? "_blank" : undefined}
+                    rel={href ? SAFE_NEW_TAB_REL : undefined}
+                  >
+                    {server.name}
+                  </a>
+                  {server.description && <span className={classes.tableMeta}>{server.description}</span>}
+                </div>
+                <StatusPill
+                  tone={getStatusTone(status)}
+                  label={t(status === "online" ? "overview.ready" : `status.${status}`)}
+                />
+              </div>
+            );
+          })}
+          {info.servers.length === 0 && <div className={classes.emptyRow}>{t("empty.servers")}</div>}
+        </div>
+      </section>
+    );
+
+    const projectsSection = (
+      <section className={classes.section} aria-labelledby={`${storageKey}-projects`}>
+        <div className={classes.sectionHead}>
+          <h3 id={`${storageKey}-projects`} className={classes.sectionTitle}>
+            {t("overview.projects")}
+          </h3>
+          {info.projects && <span className={classes.sectionNote}>{projects.length}</span>}
+        </div>
+        <ProjectCards projects={projects} available={info.projects != null} baseUrl={baseUrl} />
+      </section>
+    );
+
+    return (
+      <div className={`${classes.instance} ${classes.advanced}`} data-single={isSingle || undefined}>
+        {header}
+        {statList}
+        <Tabs
+          defaultValue="overview"
+          className={classes.details}
+          keepMounted={false}
+          onChange={() => setSearch("")}
+          variant="unstyled"
+          classNames={{ list: classes.tabList, tab: classes.tab, panel: classes.panel }}
+        >
+          <Tabs.List aria-label={t("details.tabs")}>
             <Tabs.Tab value="overview">{t("details.overview")}</Tabs.Tab>
             <Tabs.Tab value="servers">
-              {tCommon("servers")} ({info.servers.length})
+              {tCommon("servers")} <span className={classes.tabCount}>{info.servers.length}</span>
             </Tabs.Tab>
             <Tabs.Tab value="applications">
-              {tCommon("applications")} ({info.applications.length})
+              {tCommon("applications")} <span className={classes.tabCount}>{info.applications.length}</span>
             </Tabs.Tab>
             <Tabs.Tab value="services">
-              {tCommon("services")} ({info.services.length})
+              {tCommon("services")} <span className={classes.tabCount}>{info.services.length}</span>
             </Tabs.Tab>
           </Tabs.List>
-          <Tabs.Panel value="overview" className={classes.panel}>
+
+          <Tabs.Panel value="overview">
             <ScrollArea className={classes.listScroll}>
               <div className={classes.overviewGrid}>
-                <section className={classes.overviewSection}>
-                  <Text fw={600} fz="sm" mb="xs">
-                    {t("overview.projects")}
-                  </Text>
-                  <ProjectList projects={projects} available={info.projects != null} baseUrl={baseUrl} />
-                </section>
-                <section className={classes.overviewSection}>
-                  <Text fw={600} fz="sm" mb="xs">
-                    {t("overview.attention")}
-                  </Text>
-                  <AttentionList
-                    items={attention}
-                    baseUrl={baseUrl}
-                    emptyLabel={trackedCount === 0 ? t("summary.empty") : t("summary.healthyDetail")}
-                    showContext
-                  />
-                </section>
-                <section className={`${classes.overviewSection} ${classes.overviewServers}`}>
-                  <Text fw={600} fz="sm" mb="xs">
-                    {tCommon("servers")}
-                  </Text>
-                  <Stack gap={0}>
-                    {info.servers.map((server) => {
-                      const reachability = getCoolifyServerState(server, "is_reachable");
-                      const usability = getCoolifyServerState(server, "is_usable");
-                      const status =
-                        reachability === false
-                          ? "offline"
-                          : usability === false
-                            ? "unusable"
-                            : reachability === true
-                              ? "online"
-                              : "unknown";
-                      const href = baseUrl ? getSafeApplicationUrl(`${baseUrl}/server/${server.uuid}`) : null;
-                      return (
-                        <Group key={server.uuid} className={classes.overviewRow} gap="xs" wrap="nowrap">
-                          <IconServer size={15} className={classes.overviewIcon} aria-hidden="true" />
-                          <Box style={{ minWidth: 0, flex: 1 }}>
-                            <Anchor
-                              component={href ? "a" : "span"}
-                              href={href ?? undefined}
-                              target={href ? "_blank" : undefined}
-                              rel={href ? SAFE_NEW_TAB_REL : undefined}
-                              c="inherit"
-                              fz="xs"
-                              fw={600}
-                              truncate="end"
-                            >
-                              {server.name}
-                            </Anchor>
-                            {server.description && (
-                              <Text size="xs" c="dimmed" truncate>
-                                {server.description}
-                              </Text>
-                            )}
-                          </Box>
-                          <Group gap={5} wrap="nowrap">
-                            <span
-                              className={classes.statusDot}
-                              style={{ backgroundColor: `var(--mantine-color-${getStatusColor(status)}-6)` }}
-                            />
-                            <Text size="xs" c="dimmed">
-                              {t(status === "online" && usability === true ? "overview.ready" : `status.${status}`)}
-                            </Text>
-                          </Group>
-                        </Group>
-                      );
-                    })}
-                    {info.servers.length === 0 && <EmptyDetail label={t("empty.servers")} />}
-                  </Stack>
-                </section>
+                <div className={classes.overviewColumn}>
+                  {attentionSection}
+                  {serversSection}
+                </div>
+                <div className={classes.overviewColumn}>{projectsSection}</div>
               </div>
             </ScrollArea>
           </Tabs.Panel>
-          <Tabs.Panel value="servers" className={classes.panel}>
-            <DetailSearch value={search} onChange={setSearch} />
-            <Group justify="flex-end" px="xs">
+
+          <Tabs.Panel value="servers">
+            <div className={classes.toolbar}>
+              <DetailSearch value={search} onChange={setSearch} />
               <ActionIcon
                 aria-label={t(showIp ? "action.hideIp" : "action.showIp")}
                 aria-pressed={showIp}
-                variant="subtle"
+                variant="default"
+                size="lg"
                 onClick={() => setShowIp((previous) => !previous)}
               >
                 {showIp ? <IconEye size={16} /> : <IconEyeOff size={16} />}
               </ActionIcon>
-            </Group>
+            </div>
             <ScrollArea className={classes.listScroll}>
-              <Stack gap="xs" p="xs">
-                {servers.map((server) => (
-                  <ServerRow
-                    key={server.uuid}
-                    server={server}
-                    counts={
-                      serverResourceCounts.get(server.settings?.server_id ?? server.id ?? -1) ?? {
-                        apps: 0,
-                        services: 0,
+              <div className={classes.panelBody}>
+                <div className={classes.table}>
+                  {servers.map((server) => (
+                    <ServerRow
+                      key={server.uuid}
+                      server={server}
+                      counts={
+                        serverResourceCounts.get(server.settings?.server_id ?? server.id ?? -1) ?? {
+                          apps: 0,
+                          services: 0,
+                        }
                       }
-                    }
-                    baseUrl={baseUrl}
-                    showIp={showIp}
-                  />
-                ))}
-                {servers.length === 0 && <EmptyDetail label={search ? tCommon("noResults") : t("empty.servers")} />}
-              </Stack>
+                      baseUrl={baseUrl}
+                      showIp={showIp}
+                    />
+                  ))}
+                  {servers.length === 0 && (
+                    <div className={classes.emptyRow}>{search ? tCommon("noResults") : t("empty.servers")}</div>
+                  )}
+                </div>
+              </div>
             </ScrollArea>
           </Tabs.Panel>
-          <Tabs.Panel value="applications" className={classes.panel}>
-            <DetailSearch value={search} onChange={setSearch} />
+
+          <Tabs.Panel value="applications">
+            <div className={classes.toolbar}>
+              <DetailSearch value={search} onChange={setSearch} />
+            </div>
             <ScrollArea className={classes.listScroll}>
-              <Stack gap="xs" p="xs">
-                {applications.map((app) => (
-                  <ResourceRow key={app.uuid} item={app} baseUrl={baseUrl} resourceType="application" />
-                ))}
-                {applications.length === 0 && (
-                  <EmptyDetail label={search ? tCommon("noResults") : t("empty.applications")} />
-                )}
-              </Stack>
+              <div className={classes.panelBody}>
+                <div className={classes.table}>
+                  {applications.map((app) => (
+                    <ResourceRow key={app.uuid} item={app} baseUrl={baseUrl} resourceType="application" />
+                  ))}
+                  {applications.length === 0 && (
+                    <div className={classes.emptyRow}>{search ? tCommon("noResults") : t("empty.applications")}</div>
+                  )}
+                </div>
+              </div>
             </ScrollArea>
           </Tabs.Panel>
-          <Tabs.Panel value="services" className={classes.panel}>
-            <DetailSearch value={search} onChange={setSearch} />
+
+          <Tabs.Panel value="services">
+            <div className={classes.toolbar}>
+              <DetailSearch value={search} onChange={setSearch} />
+            </div>
             <ScrollArea className={classes.listScroll}>
-              <Stack gap="xs" p="xs">
-                {services.map((service) => (
-                  <Stack key={service.uuid} gap={2}>
-                    <ResourceRow item={service} baseUrl={baseUrl} resourceType="service" />
-                    {service.applications && service.applications.length > 0 && (
-                      <Stack className={classes.nestedApplications} gap={4} ml="md" pl="xs">
-                        <Text fz="xs" c="dimmed" fw={600}>
-                          {tCommon("applications")}
-                        </Text>
-                        {service.applications.map((application) => (
-                          <ServiceApplicationRow key={application.uuid} application={application} />
-                        ))}
-                      </Stack>
-                    )}
-                  </Stack>
-                ))}
-                {services.length === 0 && <EmptyDetail label={search ? tCommon("noResults") : t("empty.services")} />}
-              </Stack>
+              <div className={classes.panelBody}>
+                <div className={classes.table}>
+                  {services.map((service) => (
+                    <ResourceRow
+                      key={service.uuid}
+                      item={service}
+                      baseUrl={baseUrl}
+                      resourceType="service"
+                      nestedApplications={service.applications}
+                    />
+                  ))}
+                  {services.length === 0 && (
+                    <div className={classes.emptyRow}>{search ? tCommon("noResults") : t("empty.services")}</div>
+                  )}
+                </div>
+              </div>
             </ScrollArea>
           </Tabs.Panel>
         </Tabs>
-      ) : !isTiny ? (
-        <div ref={compactBodyRef} className={classes.compactBody}>
-          {attention.length === 0 ? (
-            showResources && visibleProjectCount > 0 ? (
-              <>
-                <ProjectList projects={projects.slice(0, visibleProjectCount)} available baseUrl={baseUrl} compact />
-                {projects.length > visibleProjectCount && (
-                  <Text size="xs" c="dimmed">
-                    {t("overview.moreProjects", { count: projects.length - visibleProjectCount })}
-                  </Text>
-                )}
-              </>
-            ) : availableBodyHeight >= moreTextHeight ? (
-              <Stack className={classes.healthyState} gap={4} align="center" justify="center">
-                {trackedCount > 0 && height >= 180 && (
-                  <IconCircleCheck size={28} color="var(--mantine-color-green-6)" />
-                )}
-                <Text size="xs" c="dimmed" ta="center">
-                  {trackedCount === 0
-                    ? t("summary.empty")
-                    : height < 180
-                      ? t("summary.healthy")
-                      : t("summary.healthyDetail")}
-                </Text>
-              </Stack>
-            ) : null
-          ) : (
-            <AttentionList
-              items={attention.slice(0, visibleAttentionCount)}
-              baseUrl={baseUrl}
-              emptyLabel=""
-              hideEmpty
-            />
-          )}
-          {attention.length > visibleAttentionCount && availableBodyHeight >= moreTextHeight && (
-            <Text size="xs" c="dimmed">
-              {t("summary.more", { count: attention.length - visibleAttentionCount })}
-            </Text>
-          )}
-        </div>
-      ) : null}
+      </div>
+    );
+  }
 
-      {(isAdvanced || (!isTiny && height >= 175)) && (
-        <Text className={classes.footer} size="xs" c="dimmed" truncate>
-          {t("footer.updated", { when: relativeTime })}
-          {isAdvanced && ` · v${info.version}`}
-        </Text>
+  // Compact tiles: header and counts, then what needs attention, or the projects when all is well.
+  const showBody = !isTiny;
+  const showFooter = showBody && height >= 175;
+  const availableBodyHeight = Math.max(0, compactBodyHeight);
+  const visibleAttentionCount = fitRows(attention.length, availableBodyHeight, uiScale);
+  const visibleProjectCount = showResources ? fitRows(projects.length, availableBodyHeight, uiScale) : 0;
+
+  return (
+    <div className={`${classes.instance} ${isTiny ? classes.tiny : ""}`} data-single={isSingle || undefined}>
+      {header}
+      {stats.length > 0 && statList}
+      {showBody && (
+        <div ref={compactBodyRef} className={classes.compactBody}>
+          {attention.length > 0 ? (
+            <>
+              {attention.slice(0, visibleAttentionCount).map((item) => (
+                <CompactAttentionRow
+                  key={`${item.kind}-${item.uuid}`}
+                  item={item}
+                  baseUrl={baseUrl}
+                  showStatus={width >= 150}
+                />
+              ))}
+              {attention.length > visibleAttentionCount && availableBodyHeight >= MORE_HEIGHT * uiScale && (
+                <span className={classes.more}>
+                  {t("summary.more", { count: attention.length - visibleAttentionCount })}
+                </span>
+              )}
+            </>
+          ) : visibleProjectCount > 0 ? (
+            <>
+              {projects.slice(0, visibleProjectCount).map((summaryItem) => (
+                <CompactProjectRow
+                  key={summaryItem.project.uuid}
+                  summary={summaryItem}
+                  baseUrl={baseUrl}
+                  showUnit={width >= 280}
+                />
+              ))}
+              {projects.length > visibleProjectCount && (
+                <span className={classes.more}>
+                  {t("overview.moreProjects", { count: projects.length - visibleProjectCount })}
+                </span>
+              )}
+            </>
+          ) : availableBodyHeight >= MORE_HEIGHT * uiScale ? (
+            <div className={classes.calm}>
+              <StatusDot tone={trackedCount === 0 ? "neutral" : "positive"} />
+              {trackedCount === 0 ? t("summary.empty") : t("summary.healthyDetail")}
+            </div>
+          ) : null}
+        </div>
+      )}
+      {showFooter && <div className={classes.footer}>{updatedLabel}</div>}
+    </div>
+  );
+}
+
+const getAttentionHref = (item: CoolifyAttentionItem, baseUrl: string) => {
+  if (!baseUrl) return null;
+  if (item.kind === "server") return getSafeApplicationUrl(`${baseUrl}/server/${item.uuid}`);
+  if (!item.projectUuid || !item.environmentUuid) return null;
+  return getSafeApplicationUrl(
+    `${baseUrl}/project/${item.projectUuid}/environment/${item.environmentUuid}/${item.kind}/${item.uuid}`,
+  );
+};
+
+function CompactAttentionRow({
+  item,
+  baseUrl,
+  showStatus,
+}: {
+  item: CoolifyAttentionItem;
+  baseUrl: string;
+  showStatus: boolean;
+}) {
+  const t = useI18n("widget.coolify");
+  const href = getAttentionHref(item, baseUrl);
+  const statusLabel = t(`status.${item.status}`);
+  return (
+    <div className={classes.row} title={`${item.name}: ${statusLabel}`}>
+      <StatusDot tone={getStatusTone(item.status)} />
+      <a
+        className={classes.rowName}
+        href={href ?? undefined}
+        target={href ? "_blank" : undefined}
+        rel={href ? SAFE_NEW_TAB_REL : undefined}
+      >
+        {item.name}
+      </a>
+      {showStatus ? (
+        <span className={classes.rowMeta}>{statusLabel}</span>
+      ) : (
+        <VisuallyHidden>{statusLabel}</VisuallyHidden>
       )}
     </div>
   );
 }
 
-function Metric({
-  icon: Icon,
-  label,
-  value,
-  total,
-  isTiny,
-  isNarrow,
+function CompactProjectRow({
+  summary,
+  baseUrl,
+  showUnit,
 }: {
-  icon: typeof IconServer;
-  label: string;
-  value: number | string;
-  total?: number;
-  isTiny: boolean;
-  isNarrow: boolean;
+  summary: CoolifyProjectSummary;
+  baseUrl: string;
+  showUnit: boolean;
 }) {
+  const t = useI18n("widget.coolify");
+  const { project, applications, services, contextAvailable } = summary;
+  const href = baseUrl ? getSafeApplicationUrl(`${baseUrl}/project/${project.uuid}`) : null;
+  const resourceCount = applications + services;
+  const countLabel = t("overview.resourceCount", { count: resourceCount });
   return (
-    <Stack gap={0} className={classes.metric}>
-      {isNarrow ? (
-        <>
-          <Icon size={isTiny ? 12 : 14} aria-hidden="true" />
-          <VisuallyHidden>{label}: </VisuallyHidden>
-        </>
+    <div className={classes.row}>
+      <span className={classes.projectGlyph} aria-hidden="true">
+        <IconLayoutGrid size={13} />
+      </span>
+      <a
+        className={classes.rowName}
+        href={href ?? undefined}
+        target={href ? "_blank" : undefined}
+        rel={href ? SAFE_NEW_TAB_REL : undefined}
+        style={{ fontWeight: 600 }}
+      >
+        {project.name}
+      </a>
+      {contextAvailable ? (
+        <span className={classes.rowMeta} title={countLabel} aria-label={countLabel}>
+          {showUnit ? countLabel : resourceCount}
+        </span>
       ) : (
-        <Text fz={isTiny ? 10 : "xs"} c="dimmed" truncate>
-          {label}
-        </Text>
+        <span className={classes.rowMeta} title={t("overview.projectsUnavailable")}>
+          —
+        </span>
       )}
-      <Text fw={600} fz={isTiny ? "sm" : "lg"} lh={1.1}>
-        {value}
-        {total !== undefined && (
-          <Text component="span" size="xs" c="dimmed">
-            /{total}
-          </Text>
-        )}
-      </Text>
-    </Stack>
+    </div>
   );
 }
 
-function MiniMetric({
-  icon: Icon,
-  label,
-  value,
-  total,
-}: {
-  icon: typeof IconServer;
-  label: string;
-  value: number | string;
-  total?: number;
-}) {
+function AttentionTableRow({ item, baseUrl }: { item: CoolifyAttentionItem; baseUrl: string }) {
+  const t = useI18n("widget.coolify");
+  const href = getAttentionHref(item, baseUrl);
+  const context = [item.projectName, item.environmentName].filter(Boolean).join(" / ");
   return (
-    <Group
-      className={classes.miniMetric}
-      gap={2}
-      wrap="nowrap"
-      title={`${label}: ${value}${total === undefined ? "" : `/${total}`}`}
-    >
-      <Icon size={14} aria-hidden="true" />
-      <VisuallyHidden>{label}: </VisuallyHidden>
-      <Text fz={12} lh={1}>
-        {value}
-        {total === undefined ? "" : `/${total}`}
-      </Text>
-    </Group>
+    <div className={classes.tableRow}>
+      <div className={classes.tableMain}>
+        <a
+          className={classes.tableName}
+          href={href ?? undefined}
+          target={href ? "_blank" : undefined}
+          rel={href ? SAFE_NEW_TAB_REL : undefined}
+        >
+          {item.name}
+        </a>
+        <span className={classes.tableMeta}>
+          {t(`kind.${item.kind}`)}
+          {context && ` · ${context}`}
+        </span>
+      </div>
+      <StatusPill tone={getStatusTone(item.status)} label={t(`status.${item.status}`)} />
+    </div>
   );
 }
 
-function ProjectList({
+function ProjectCards({
   projects,
   available,
   baseUrl,
-  compact = false,
 }: {
   projects: CoolifyProjectSummary[];
   available: boolean;
   baseUrl: string;
-  compact?: boolean;
 }) {
   const t = useI18n("widget.coolify");
-  const tCommon = useI18n("common");
   if (!available || projects.length === 0) {
     return (
-      <Text size="xs" c="dimmed">
-        {t(available ? "overview.noProjects" : "overview.projectsUnavailable")}
-      </Text>
+      <div className={classes.table}>
+        <div className={classes.emptyRow}>{t(available ? "overview.noProjects" : "overview.projectsUnavailable")}</div>
+      </div>
     );
   }
 
   return (
-    <Stack gap={0}>
-      {!compact && (
-        <Group className={classes.projectTableHead} justify="space-between" wrap="nowrap">
-          <Text size="xs" c="dimmed">
-            {t("overview.project")}
-          </Text>
-          <Text size="xs" c="dimmed">
-            {t("overview.contents")}
-          </Text>
-        </Group>
-      )}
+    <div className={classes.projectGrid}>
       {projects.map(({ project, applications, services, contextAvailable }) => {
         const href = baseUrl ? getSafeApplicationUrl(`${baseUrl}/project/${project.uuid}`) : null;
+        const Card = href ? "a" : "div";
         return (
-          <Group key={project.uuid} className={classes.projectRow} gap="xs" wrap="nowrap">
-            <span className={classes.projectIcon}>
-              <IconLayoutGrid size={14} aria-hidden="true" />
-            </span>
-            <Box style={{ minWidth: 0, flex: 1 }}>
-              <Anchor
-                component={href ? "a" : "span"}
-                href={href ?? undefined}
-                target={href ? "_blank" : undefined}
-                rel={href ? SAFE_NEW_TAB_REL : undefined}
-                c="inherit"
-                fw={600}
-                fz="xs"
-                truncate="end"
-              >
-                {project.name}
-              </Anchor>
-              {!compact && project.description && (
-                <Text size="xs" c="dimmed" truncate>
-                  {project.description}
-                </Text>
-              )}
-            </Box>
-            {contextAvailable ? (
-              <Group gap="sm" wrap="nowrap" className={classes.projectCounts}>
-                <Group gap={3} wrap="nowrap" title={`${tCommon("applications")}: ${applications}`}>
-                  <IconApps size={13} aria-hidden="true" />
-                  <Text size="xs">{applications}</Text>
-                </Group>
-                <Group gap={3} wrap="nowrap" title={`${tCommon("services")}: ${services}`}>
-                  <IconStack2 size={13} aria-hidden="true" />
-                  <Text size="xs">{services}</Text>
-                </Group>
-              </Group>
-            ) : (
-              <Text size="xs" c="dimmed" title={t("overview.projectsUnavailable")}>
-                —
-              </Text>
-            )}
-          </Group>
-        );
-      })}
-    </Stack>
-  );
-}
-
-function AttentionList({
-  items,
-  baseUrl,
-  emptyLabel,
-  hideEmpty = false,
-  showContext = false,
-}: {
-  items: ReturnType<typeof getCoolifyAttentionItems>;
-  baseUrl: string;
-  emptyLabel: string;
-  hideEmpty?: boolean;
-  showContext?: boolean;
-}) {
-  const t = useI18n("widget.coolify");
-  if (items.length === 0)
-    return hideEmpty ? null : (
-      <Text size="xs" c="dimmed">
-        {emptyLabel}
-      </Text>
-    );
-  return (
-    <Stack gap={4}>
-      {items.map((item) => {
-        const href =
-          item.kind === "server"
-            ? getSafeApplicationUrl(`${baseUrl}/server/${item.uuid}`)
-            : item.projectUuid && item.environmentUuid
-              ? getSafeApplicationUrl(
-                  `${baseUrl}/project/${item.projectUuid}/environment/${item.environmentUuid}/${item.kind}/${item.uuid}`,
-                )
-              : null;
-        return (
-          <Group key={`${item.kind}-${item.uuid}`} gap="xs" wrap="nowrap" className={classes.attentionRow}>
-            <span
-              className={classes.statusDot}
-              style={{ backgroundColor: `var(--mantine-color-${getStatusColor(item.status)}-6)` }}
-            />
-            <Box style={{ minWidth: 0, flex: 1 }}>
-              {href ? (
-                <Anchor href={href} target="_blank" rel={SAFE_NEW_TAB_REL} c="inherit" fz="xs" truncate>
-                  {item.name}
-                </Anchor>
+          <Card
+            key={project.uuid}
+            className={classes.projectCard}
+            href={href ?? undefined}
+            target={href ? "_blank" : undefined}
+            rel={href ? SAFE_NEW_TAB_REL : undefined}
+          >
+            <div className={classes.projectTop}>
+              <span className={classes.projectGlyphLg} aria-hidden="true">
+                <IconLayoutGrid size={16} />
+              </span>
+              <div className={classes.tableMain}>
+                <span className={classes.tableName}>{project.name}</span>
+                {project.description && <span className={classes.tableMeta}>{project.description}</span>}
+              </div>
+            </div>
+            <div className={classes.projectFoot}>
+              {contextAvailable ? (
+                <>
+                  <span>{t("overview.environmentCount", { count: project.environments?.length ?? 0 })}</span>
+                  <span>{t("overview.resourceCount", { count: applications + services })}</span>
+                </>
               ) : (
-                <Text size="xs" truncate>
-                  {item.name}
-                </Text>
+                <span>{t("overview.projectsUnavailable")}</span>
               )}
-              {showContext && (item.projectName || item.environmentName) && (
-                <Text size="xs" c="dimmed" truncate>
-                  {[item.projectName, item.environmentName].filter(Boolean).join(" / ")}
-                </Text>
-              )}
-            </Box>
-            <Text size="xs" c="dimmed" ml="auto">
-              {t(`status.${item.status}`)}
-            </Text>
-          </Group>
+            </div>
+          </Card>
         );
       })}
-    </Stack>
+    </div>
   );
 }
 
@@ -689,15 +689,8 @@ function DetailSearch({ value, onChange }: { value: string; onChange: (value: st
       value={value}
       onChange={(event) => onChange(event.currentTarget.value)}
       leftSection={<IconSearch size={14} />}
-      size="xs"
-      mx="xs"
-      mt="xs"
+      size="sm"
+      classNames={{ input: classes.searchInput }}
     />
   );
 }
-
-const EmptyDetail = ({ label }: { label: string }) => (
-  <Text size="sm" c="dimmed" ta="center" py="xs">
-    {label}
-  </Text>
-);

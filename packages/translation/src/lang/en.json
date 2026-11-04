@@ -3567,18 +3567,20 @@
       "details": {
         "tabs": "Coolify details",
         "overview": "Overview",
-        "search": "Filter resources"
+        "search": "Filter resources",
+        "serviceApplications": "Applications in {name}"
       },
       "overview": {
         "projects": "Projects",
-        "project": "Project",
         "resources": "Resources running",
-        "contents": "Contents",
         "attention": "Needs attention",
         "ready": "Ready",
         "noProjects": "No projects found",
         "projectsUnavailable": "Projects unavailable",
-        "moreProjects": "+{count, plural, one {# more project} other {# more projects}}"
+        "moreProjects": "+{count, plural, one {# more project} other {# more projects}}",
+        "running": "Running",
+        "resourceCount": "{count, plural, one {# resource} other {# resources}}",
+        "environmentCount": "{count, plural, one {# environment} other {# environments}}"
       },
       "option": {
         "showServers": {
@@ -3613,6 +3615,11 @@
         "url": "Source: {url}",
         "unavailable": "{source}: unavailable",
         "unavailableCount": "{count, plural, one {# source unavailable} other {# sources unavailable}}"
+      },
+      "kind": {
+        "server": "Server",
+        "application": "Application",
+        "service": "Service"
       },
       "instances": {
         "title": "Instances"
