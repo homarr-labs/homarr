@@ -1,0 +1,19 @@
+apps/docs/docs/widgets/docker-containers/index.mdx
+  s_59bf535574fce9::t_6281b7402207e7 38-42
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "b00de99fbce04223e738eceed78b747793ba2bbb",
+  "prompts": {},
+  "sessions": {
+    "s_59bf535574fce9": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "9e17f6ec-5e2d-4c16-b9d5-75fae35a58e1",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
