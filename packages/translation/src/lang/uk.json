@@ -65,7 +65,6 @@
         "themeAuto": "Система",
         "themeLight": "Світла",
         "themeDark": "Темна",
-        "serverOriginHelp": "Homarr використовує цю адресу для попереднього заповнення URL-адрес. Ви все ще можете відредагувати всі сервіси.",
         "serverDescription": "Це ярлик, а не обмеження. Кожна виявлена служба залишається редагованою.",
         "serverOrigin": "Домен, IP або шлях до зворотного проксі",
         "serverOriginDescription": "Приклад: home.lan, 192.168.1.10 або https://home.example.com/services. Виберіть, як правильно додається кожна послуга.",
@@ -102,6 +101,8 @@
       "connect": {
         "title": "Підключіть те, що зробить дошку корисною",
         "description": "Вибрати декілька служб одразу. Мітки Docker мають пріоритет, зображення заповнюють прогалини, а також кожне посилання і облікові дані можуть бути переглянуті.",
+        "confirmServerAddress": "",
+        "serverAddressReviewed": "",
         "discoveredIntegrations": "Виявлені екземпляри інтеграції ({count})",
         "detectedIntegrationLabel": "Імпорт {name}виявилося як {kind}",
         "detectedAppLabel": "Імпортувати виявлений додаток {name}",
@@ -126,7 +127,8 @@
         "needsConfiguration": "Потрібна конфігурація",
         "tested": "Перевірка підключення",
         "testFailed": "Помилка тестування підключення",
-        "incompleteConfirmation": "Незавершена інтеграція буде пропущена. Продовжити без них?"
+        "incompleteConfirmation": "Незавершена інтеграція буде пропущена. Продовжити без них?",
+        "skipIncomplete": ""
       },
       "board": {
         "title": "Об’єднайте дошку до її будівництва",
@@ -1930,6 +1932,8 @@
     "here": "тут",
     "serviceUrlTemplate": {
       "serverTitle": "Адреса серверу Usual",
+      "description": "",
+      "example": "",
       "urlModeLabel": "Шаблони адрес служби",
       "hostPort": "Той же хост, різні порти",
       "subdomain": "Один піддомен на послугу",
@@ -4797,10 +4801,6 @@
           "label": "",
           "description": ""
         },
-        "collapsedSections": {
-          "label": "",
-          "description": ""
-        },
         "newReleaseWithin": {
           "label": "Новий реліз всередині",
           "description": "Приклад використання: 1w (1 тиждень), 10m (10 місяців). Допустимі типи одиниц h (години), d (дні), 1 РР), m (місяці), y (роки). Не заповнюйте, щоб не підсвічувати нові релізи.",
@@ -5005,7 +5005,11 @@
       "runningVersions": "Запущені версії",
       "upToDate": "Остання версія",
       "updateAvailable": "Доступне оновлення",
-      "unknownStatus": "Невідомо"
+      "unknownStatus": "Невідомо",
+      "error": {
+        "collapsedSaveTitle": "",
+        "collapsedSaveMessage": ""
+      }
     },
     "networkControllerSummary": {
       "advanced": {
@@ -5511,6 +5515,9 @@
       "name": "Beszel системи (Таблиця)",
       "description": "Вид таблиць всіх систем, що контролюються в Beszel, з сортованими стовпцями і індикатори стану",
       "option": {
+        "fahrenheit": {
+          "label": "Температура за Фаренгейтом"
+        },
         "sortBy": {
           "label": "Сортувати за"
         },
@@ -5525,7 +5532,12 @@
     },
     "beszelSystemGrid": {
       "name": "Beszel система (Сітка)",
-      "description": "Таблиця карток усіх систем, що контролюються Beszel, з показниками в режимі реального часу"
+      "description": "Таблиця карток усіх систем, що контролюються Beszel, з показниками в режимі реального часу",
+      "option": {
+        "fahrenheit": {
+          "label": "Температура за Фаренгейтом"
+        }
+      }
     },
     "beszelAlerts": {
       "name": "Beszel сповіщення",
@@ -7230,6 +7242,7 @@
             "model": {
               "title": "Модель",
               "description": "Оберіть знайдену модель або введіть ID точної кінцевої моделі.",
+              "save": "",
               "placeholder": "ID моделі",
               "refresh": "Оновити моделі",
               "chooseModel": "Виберіть модель, що використовується для нових розмов.",

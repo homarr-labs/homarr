@@ -65,7 +65,6 @@
         "themeAuto": "Systeem",
         "themeLight": "Licht",
         "themeDark": "Donker",
-        "serverOriginHelp": "Homarr gebruikt dit adres voor het voorvullen van gedetecteerde service-URLs. U kunt nog steeds elke dienst afzonderlijk bewerken.",
         "serverDescription": "Dit is een snelkoppeling, geen beperking. Elke gedetecteerde dienst blijft bewerkbaar.",
         "serverOrigin": "Domain, IP, of reverse-proxy pad",
         "serverOriginDescription": "Voorbeelden: home.lan, 192.168.1.10 of https://home.example.com/services. Kies hoe elke dienst hieronder wordt toegevoegd.",
@@ -102,6 +101,8 @@
       "connect": {
         "title": "Verbind wat het bord nuttig maakt",
         "description": "Selecteer verschillende diensten in één keer. Docker labels hebben voorrang, afbeelding die overeenkomen met vul hiaten en elke URL en inloggegevens worden gerapporteerd.",
+        "confirmServerAddress": "",
+        "serverAddressReviewed": "",
         "discoveredIntegrations": "Gedetecteerde integratiefases ({count})",
         "detectedIntegrationLabel": "Import {name}, gedetecteerd als {kind}",
         "detectedAppLabel": "Importeer gedetecteerde app {name}",
@@ -126,7 +127,8 @@
         "needsConfiguration": "Configuratie nodig",
         "tested": "Verbinding getest",
         "testFailed": "Verbindingstest mislukt",
-        "incompleteConfirmation": "Onvoltooide integraties worden overgeslagen. Doorgaan zonder deze integraties?"
+        "incompleteConfirmation": "Onvoltooide integraties worden overgeslagen. Doorgaan zonder deze integraties?",
+        "skipIncomplete": ""
       },
       "board": {
         "title": "Vorm het bord voordat het wordt gebouwd",
@@ -1930,6 +1932,8 @@
     "here": "hier",
     "serviceUrlTemplate": {
       "serverTitle": "Usual serveradres",
+      "description": "",
+      "example": "",
       "urlModeLabel": "Service adres patroon",
       "hostPort": "Dezelfde host, verschillende poorten",
       "subdomain": "Eén subdomein per service",
@@ -4797,10 +4801,6 @@
           "label": "",
           "description": ""
         },
-        "collapsedSections": {
-          "label": "",
-          "description": ""
-        },
         "newReleaseWithin": {
           "label": "Nieuwe uitgave binnen",
           "description": "Gebruiksvoorbeeld: 1w (1 week), 10M (10 maanden). Geaccepteerde eenheidstypen: h (uren), d (dagen), w (weken), M (maanden), y (jaren). Laat leeg om nieuwe uitgaven niet te markeren.",
@@ -5005,7 +5005,11 @@
       "runningVersions": "Lopende versies",
       "upToDate": "Bijgewerkt tot",
       "updateAvailable": "Update beschikbaar",
-      "unknownStatus": "Onbekend"
+      "unknownStatus": "Onbekend",
+      "error": {
+        "collapsedSaveTitle": "",
+        "collapsedSaveMessage": ""
+      }
     },
     "networkControllerSummary": {
       "advanced": {
@@ -5511,6 +5515,9 @@
       "name": "Beszel-systemen (tabel)",
       "description": "Tabelweergave van alle door Beszel bewaakte systemen met sorteerbare kolommen en statusindicatoren",
       "option": {
+        "fahrenheit": {
+          "label": "Temperatuur in fahrenheit"
+        },
         "sortBy": {
           "label": "Sorteer op"
         },
@@ -5525,7 +5532,12 @@
     },
     "beszelSystemGrid": {
       "name": "Beszel-systemen (raster)",
-      "description": "Kaartrasterweergave van alle door Beszel bewaakte systemen met realtime metingen"
+      "description": "Kaartrasterweergave van alle door Beszel bewaakte systemen met realtime metingen",
+      "option": {
+        "fahrenheit": {
+          "label": "Temperatuur in fahrenheit"
+        }
+      }
     },
     "beszelAlerts": {
       "name": "Beszel-waarschuwingen",
@@ -7230,6 +7242,7 @@
             "model": {
               "title": "",
               "description": "Selecteer een ontdekt model of voer een exact eindpunt model ID in.",
+              "save": "",
               "placeholder": "",
               "refresh": "Ververs modellen",
               "chooseModel": "Kies het model dat gebruikt wordt voor nieuwe gesprekken",

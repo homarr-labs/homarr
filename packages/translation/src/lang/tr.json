@@ -65,7 +65,6 @@
         "themeAuto": "Sistem",
         "themeLight": "Aydınlık",
         "themeDark": "Koyu",
-        "serverOriginHelp": "Homarr, algılanan hizmet URL'lerini önceden doldurmak için bu adresi kullanır. Her hizmeti yine de ayrı ayrı düzenleyebilirsiniz.",
         "serverDescription": "Bu bir kısayoldur, kısıtlama değildir. Algılanan her hizmet düzenlenebilir.",
         "serverOrigin": "Etki alanı, IP veya ters proxy yolu",
         "serverOriginDescription": "Örnekler: home.lan, 192.168.1.10 veya https://home.example.com/services. Aşağıda her hizmetin nasıl ekleneceğini seçin.",
@@ -102,6 +101,8 @@
       "connect": {
         "title": "Panoyu kullanışlı kılanları bağlayın",
         "description": "Birden fazla hizmeti aynı anda seçin. Docker etiketleri önceliklidir, görüntü eşleştirme eksikleri tamamlar ve her URL ile kimlik bilgisi incelenebilir durumda kalır.",
+        "confirmServerAddress": "",
+        "serverAddressReviewed": "",
         "discoveredIntegrations": "Algılanan entegrasyon örnekleri ({count})",
         "detectedIntegrationLabel": "{name} içe aktarılıyor; {kind} olarak algılandı",
         "detectedAppLabel": "Algılanan {name} uygulamasını içe aktar",
@@ -126,7 +127,8 @@
         "needsConfiguration": "Yapılandırma gerekiyor",
         "tested": "Bağlantı test edildi",
         "testFailed": "Bağlantı testi başarısız oldu",
-        "incompleteConfirmation": "Tamamlanmamış entegrasyonlar atlanacak. Bunlar olmadan devam edilsin mi?"
+        "incompleteConfirmation": "Tamamlanmamış entegrasyonlar atlanacak. Bunlar olmadan devam edilsin mi?",
+        "skipIncomplete": ""
       },
       "board": {
         "title": "Oluşturmadan önce panoyu şekillendirin",
@@ -1930,6 +1932,8 @@
     "here": "buraya",
     "serviceUrlTemplate": {
       "serverTitle": "Normal sunucu adresi",
+      "description": "",
+      "example": "",
       "urlModeLabel": "Hizmet adresi kalıbı",
       "hostPort": "Aynı ana bilgisayar, farklı bağlantı noktaları",
       "subdomain": "Her hizmet için bir alt alan adı",
@@ -4797,10 +4801,6 @@
           "label": "",
           "description": ""
         },
-        "collapsedSections": {
-          "label": "",
-          "description": ""
-        },
         "newReleaseWithin": {
           "label": "Yeni Sürüm Süresi (içinde)",
           "description": "Kullanım örneği: 1w (1 hafta), 10m (10 ay). Kabul edilen birim türleri: h (saat), d (gün), w (hafta), m (ay), y (yıl). Yeni sürümleri vurgulamak istemiyorsanız boş bırakın.",
@@ -5005,7 +5005,11 @@
       "runningVersions": "",
       "upToDate": "Güncel",
       "updateAvailable": "",
-      "unknownStatus": "Bilinmeyen"
+      "unknownStatus": "Bilinmeyen",
+      "error": {
+        "collapsedSaveTitle": "",
+        "collapsedSaveMessage": ""
+      }
     },
     "networkControllerSummary": {
       "advanced": {
@@ -5511,6 +5515,9 @@
       "name": "Beszel Sistemleri (Tablo)",
       "description": "Sıralanabilir sütunlar ve durum göstergeleri ile tüm Beszel tarafından izlenen sistemlerin tablo görünümü",
       "option": {
+        "fahrenheit": {
+          "label": "Fahrenheit cinsinden sıcaklık"
+        },
         "sortBy": {
           "label": "Sıralama ölçütü"
         },
@@ -5525,7 +5532,12 @@
     },
     "beszelSystemGrid": {
       "name": "Beszel Sistemleri (Izgara)",
-      "description": "Gerçek zamanlı metrikler ile tüm Beszel tarafından izlenen sistemlerin kart ızgara görünümü"
+      "description": "Gerçek zamanlı metrikler ile tüm Beszel tarafından izlenen sistemlerin kart ızgara görünümü",
+      "option": {
+        "fahrenheit": {
+          "label": "Fahrenheit cinsinden sıcaklık"
+        }
+      }
     },
     "beszelAlerts": {
       "name": "Beszel Uyarıları",
@@ -7230,6 +7242,7 @@
             "model": {
               "title": "Model adı",
               "description": "Keşfedilen bir model seçin veya tam bir uç nokta model kimliği girin.",
+              "save": "",
               "placeholder": "Model kimliği",
               "refresh": "Modelleri yenile",
               "chooseModel": "Yeni konuşmalar için kullanılacak modeli seçin.",

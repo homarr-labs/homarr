@@ -65,7 +65,6 @@
         "themeAuto": "Sustav",
         "themeLight": "Svijetla",
         "themeDark": "Tamna",
-        "serverOriginHelp": "Homarr upotrebljava ovu adresu za unaprijed ispunjavanje otkrivenih URL-ova usluga. I dalje možete pojedinačno urediti svaku uslugu.",
         "serverDescription": "Ovo je prečac, a ne ograničenje. Svaka otkrivena usluga i dalje se može uređivati.",
         "serverOrigin": "Domena, IP adresa ili putanja obrnutog proxyja",
         "serverOriginDescription": "Primjeri: home.lan, 192.168.1.10 ili https://home.example.com/services. U nastavku odaberite kako će se svaka usluga dodavati.",
@@ -102,6 +101,8 @@
       "connect": {
         "title": "Povežite ono što ploču čini korisnom",
         "description": "Odaberite više usluga odjednom. Dockerove oznake imaju prednost, podudaranje slika popunjava praznine, a svaki URL i vjerodajnica mogu se pregledati.",
+        "confirmServerAddress": "",
+        "serverAddressReviewed": "",
         "discoveredIntegrations": "Otkrivene instance integracija ({count})",
         "detectedIntegrationLabel": "Uvezi {name}, otkriveno kao {kind}",
         "detectedAppLabel": "Uvezi otkrivenu aplikaciju {name}",
@@ -126,7 +127,8 @@
         "needsConfiguration": "Zahtijeva konfiguraciju",
         "tested": "Veza je testirana",
         "testFailed": "Testiranje veze nije uspjelo",
-        "incompleteConfirmation": "Nedovršene integracije bit će preskočene. Želite li nastaviti bez njih?"
+        "incompleteConfirmation": "Nedovršene integracije bit će preskočene. Želite li nastaviti bez njih?",
+        "skipIncomplete": ""
       },
       "board": {
         "title": "Oblikujte ploču prije izrade",
@@ -1930,6 +1932,8 @@
     "here": "ovdje",
     "serviceUrlTemplate": {
       "serverTitle": "Uobičajena adresa poslužitelja",
+      "description": "",
+      "example": "",
       "urlModeLabel": "Uzorak adrese usluge",
       "hostPort": "Isti host, različiti portovi",
       "subdomain": "Jedna poddomena po usluzi",
@@ -4797,10 +4801,6 @@
           "label": "",
           "description": ""
         },
-        "collapsedSections": {
-          "label": "",
-          "description": ""
-        },
         "newReleaseWithin": {
           "label": "Novo izdanje unutar",
           "description": "Primjer upotrebe: 1w (1 tjedan), 10M (10 mjeseci). Prihvaćene jedinice su h (sati), d (dani), w (tjedni), M (mjeseci), y (godine). Ostavite prazno da se nova izdanja ne ističu.",
@@ -5005,7 +5005,11 @@
       "runningVersions": "",
       "upToDate": "Ažurirano",
       "updateAvailable": "",
-      "unknownStatus": "Nepoznato"
+      "unknownStatus": "Nepoznato",
+      "error": {
+        "collapsedSaveTitle": "",
+        "collapsedSaveMessage": ""
+      }
     },
     "networkControllerSummary": {
       "advanced": {
@@ -5511,6 +5515,9 @@
       "name": "Beszel sustavi (tablica)",
       "description": "Tablični prikaz svih Beszel nadziranih sustava s sortabilnim stupcima i indikatorima statusa",
       "option": {
+        "fahrenheit": {
+          "label": ""
+        },
         "sortBy": {
           "label": "Sortiraj po"
         },
@@ -5525,7 +5532,12 @@
     },
     "beszelSystemGrid": {
       "name": "Beszel sustavi (mreža)",
-      "description": "Prikaz kartice mreže svih Beszel nadziranih sustava s metrikama u stvarnom vremenu"
+      "description": "Prikaz kartice mreže svih Beszel nadziranih sustava s metrikama u stvarnom vremenu",
+      "option": {
+        "fahrenheit": {
+          "label": ""
+        }
+      }
     },
     "beszelAlerts": {
       "name": "Beszel upozorenja",
@@ -7230,6 +7242,7 @@
             "model": {
               "title": "Model",
               "description": "Odaberite otkriveni model ili unesite točan ID modela krajnje točke.",
+              "save": "",
               "placeholder": "ID modela",
               "refresh": "Osvježi modele",
               "chooseModel": "Odaberite model koji će se koristiti za nove razgovore.",

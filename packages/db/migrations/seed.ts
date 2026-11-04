@@ -426,6 +426,7 @@ const seedDefaultIntegrationsAsync = async (db: Database) => {
         id: "new",
         name: `${name} Default`,
         url: defaultUrl,
+        externalUrl: null,
         kind,
         appId: null,
       });

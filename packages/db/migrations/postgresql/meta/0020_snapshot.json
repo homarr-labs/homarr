@@ -1,5 +1,5 @@
 {
-  "id": "009ad2b6-2a27-46d6-8c81-1eed679919d2",
+  "id": "fabea923-86f3-4292-8d45-0c85737a86b1",
   "prevId": "5cc75e27-3959-40de-b8ba-6670521e7623",
   "version": "7",
   "dialect": "postgresql",
@@ -129,13 +129,6 @@
           "type": "text",
           "primaryKey": false,
           "notNull": true
-        },
-        "read_only": {
-          "name": "read_only",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": true,
-          "default": false
         },
         "oauth_client_id": {
           "name": "oauth_client_id",
@@ -1439,6 +1432,12 @@
           "type": "text",
           "primaryKey": false,
           "notNull": true
+        },
+        "external_url": {
+          "name": "external_url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
         },
         "kind": {
           "name": "kind",

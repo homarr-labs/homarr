@@ -65,7 +65,6 @@
         "themeAuto": "Sistem",
         "themeLight": "Svetla",
         "themeDark": "Temna",
-        "serverOriginHelp": "Homarr ta naslov uporabi za vnaprejšnje izpolnjevanje zaznanih URL-jev storitev. Vsako storitev lahko še vedno urejate posamezno.",
         "serverDescription": "To je bližnjica, ne omejitev. Vsako zaznano storitev je še vedno mogoče urejati.",
         "serverOrigin": "Domena, naslov IP ali pot povratnega posredniškega strežnika",
         "serverOriginDescription": "Primeri: home.lan, 192.168.1.10 ali https://home.example.com/services. Spodaj izberite, kako naj se doda posamezna storitev.",
@@ -102,6 +101,8 @@
       "connect": {
         "title": "Povežite, kar naredi ploščo uporabno",
         "description": "Izberite več storitev hkrati. Oznake Docker imajo prednost, ujemanje slik zapolni vrzeli, vsak URL in vsaka poverilnica pa sta še vedno pregledna.",
+        "confirmServerAddress": "",
+        "serverAddressReviewed": "",
         "discoveredIntegrations": "Zaznane instance integracij ({count})",
         "detectedIntegrationLabel": "Uvozi {name}, zaznano kot {kind}",
         "detectedAppLabel": "Uvozi zaznano aplikacijo {name}",
@@ -126,7 +127,8 @@
         "needsConfiguration": "Potrebna je konfiguracija",
         "tested": "Povezava je bila preizkušena",
         "testFailed": "Preizkus povezave ni uspel",
-        "incompleteConfirmation": "Nedokončane integracije bodo preskočene. Ali želite nadaljevati brez njih?"
+        "incompleteConfirmation": "Nedokončane integracije bodo preskočene. Ali želite nadaljevati brez njih?",
+        "skipIncomplete": ""
       },
       "board": {
         "title": "Oblikujte tablo, preden jo ustvarite",
@@ -1930,6 +1932,8 @@
     "here": "tukaj",
     "serviceUrlTemplate": {
       "serverTitle": "Običajni naslov strežnika",
+      "description": "",
+      "example": "",
       "urlModeLabel": "Vzorec naslova storitve",
       "hostPort": "Isti gostitelj, drugačna vrata",
       "subdomain": "Ena poddomena za vsako storitev",
@@ -4797,10 +4801,6 @@
           "label": "",
           "description": ""
         },
-        "collapsedSections": {
-          "label": "",
-          "description": ""
-        },
         "newReleaseWithin": {
           "label": "Nova izdaja v roku",
           "description": "Primer uporabe: 1w (1 teden), 10M (10 mesecev). Sprejete enote so h (ure), d (dnevi), w (tedni), M (meseci), y (leta). Pustite prazno, da ne označite novih izdaj.",
@@ -5005,7 +5005,11 @@
       "runningVersions": "",
       "upToDate": "",
       "updateAvailable": "",
-      "unknownStatus": "Neznano"
+      "unknownStatus": "Neznano",
+      "error": {
+        "collapsedSaveTitle": "",
+        "collapsedSaveMessage": ""
+      }
     },
     "networkControllerSummary": {
       "advanced": {
@@ -5511,6 +5515,9 @@
       "name": "Beszel sistemi (tabela)",
       "description": "Tabelarni pogled vseh sistemov, ki jih spremlja Beszel, z razvrščljivimi stolpci in indikatorji stanja",
       "option": {
+        "fahrenheit": {
+          "label": ""
+        },
         "sortBy": {
           "label": "Razvrsti po"
         },
@@ -5525,7 +5532,12 @@
     },
     "beszelSystemGrid": {
       "name": "Beszel sistemi (mreža)",
-      "description": "Mrežni pogled kartic vseh sistemov, ki jih spremlja Beszel, z meritvami v realnem času"
+      "description": "Mrežni pogled kartic vseh sistemov, ki jih spremlja Beszel, z meritvami v realnem času",
+      "option": {
+        "fahrenheit": {
+          "label": ""
+        }
+      }
     },
     "beszelAlerts": {
       "name": "Beszel opozorila",
@@ -7230,6 +7242,7 @@
             "model": {
               "title": "Model",
               "description": "Izberite odkriti model ali vnesite natančen ID modela končne točke.",
+              "save": "",
               "placeholder": "ID modela",
               "refresh": "Osveži modele",
               "chooseModel": "Izberite model, ki bo uporabljen za nove pogovore.",

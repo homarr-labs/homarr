@@ -65,7 +65,6 @@
         "themeAuto": "系統",
         "themeLight": "日間",
         "themeDark": "暗黑",
-        "serverOriginHelp": "Homarr 會使用此位址預先填入偵測到的服務 URL。您仍可個別編輯每項服務。",
         "serverDescription": "這是捷徑，而非限制。每項偵測到的服務仍可編輯。",
         "serverOrigin": "網域、IP 或反向代理路徑",
         "serverOriginDescription": "範例：home.lan、192.168.1.10 或 https://home.example.com/services。請選擇下方附加各項服務的方式。",
@@ -102,6 +101,8 @@
       "connect": {
         "title": "連線讓面板實用的內容",
         "description": "一次選取多項服務。Docker 標籤優先，映像檔比對會填補缺漏，而每個 URL 和憑證都可供檢查。",
+        "confirmServerAddress": "",
+        "serverAddressReviewed": "",
         "discoveredIntegrations": "已偵測到的整合執行個體 ({count})",
         "detectedIntegrationLabel": "匯入 {name}，偵測為 {kind}",
         "detectedAppLabel": "匯入偵測到的應用程式 {name}",
@@ -126,7 +127,8 @@
         "needsConfiguration": "需要設定",
         "tested": "連線已測試",
         "testFailed": "連線測試失敗",
-        "incompleteConfirmation": "未完成的整合將會略過。要在沒有這些整合的情況下繼續嗎？"
+        "incompleteConfirmation": "未完成的整合將會略過。要在沒有這些整合的情況下繼續嗎？",
+        "skipIncomplete": ""
       },
       "board": {
         "title": "在建立面板前先規劃其外觀",
@@ -1930,6 +1932,8 @@
     "here": "此處",
     "serviceUrlTemplate": {
       "serverTitle": "一般伺服器位址",
+      "description": "",
+      "example": "",
       "urlModeLabel": "服務位址模式",
       "hostPort": "相同主機、不同連接埠",
       "subdomain": "每項服務使用一個子網域",
@@ -4797,10 +4801,6 @@
           "label": "",
           "description": ""
         },
-        "collapsedSections": {
-          "label": "",
-          "description": ""
-        },
         "newReleaseWithin": {
           "label": "新版本發布於",
           "description": "使用範例：1w（1週）、10m（10個月）。接受的單位類型有：h（小時）、d（天）、w（週）、m（個月）、y（年）。若留空，則不會特別標示新版本",
@@ -5005,7 +5005,11 @@
       "runningVersions": "",
       "upToDate": "",
       "updateAvailable": "",
-      "unknownStatus": "未知"
+      "unknownStatus": "未知",
+      "error": {
+        "collapsedSaveTitle": "",
+        "collapsedSaveMessage": ""
+      }
     },
     "networkControllerSummary": {
       "advanced": {
@@ -5511,6 +5515,9 @@
       "name": "Beszel 系統（表格）",
       "description": "所有 Beszel 監控系統的表格檢視，帶有可排序的欄位和狀態指示器",
       "option": {
+        "fahrenheit": {
+          "label": "華氏溫度"
+        },
         "sortBy": {
           "label": "排序依據"
         },
@@ -5525,7 +5532,12 @@
     },
     "beszelSystemGrid": {
       "name": "Beszel 系統（網格）",
-      "description": "所有 Beszel 監控系統的卡片網格檢視，帶有即時指標"
+      "description": "所有 Beszel 監控系統的卡片網格檢視，帶有即時指標",
+      "option": {
+        "fahrenheit": {
+          "label": "華氏溫度"
+        }
+      }
     },
     "beszelAlerts": {
       "name": "Beszel 警報",
@@ -7230,6 +7242,7 @@
             "model": {
               "title": "模型",
               "description": "選擇已探索的模型，或輸入確切的端點模型 ID。",
+              "save": "",
               "placeholder": "模型 ID",
               "refresh": "重新整理模型",
               "chooseModel": "選擇新對話使用的模型。",
