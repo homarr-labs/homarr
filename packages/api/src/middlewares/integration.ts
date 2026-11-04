@@ -78,7 +78,9 @@ const createOneIntegrationMiddlewareForKinds = <TKind extends IntegrationKind>(
         ...(await getCallerPermissionRelationsAsync(ctx.db, ctx.session)),
         items: {
           with: {
-            item: true,
+            item: {
+              columns: { boardId: true },
+            },
           },
         },
       },
@@ -109,7 +111,7 @@ const createOneIntegrationMiddlewareForKinds = <TKind extends IntegrationKind>(
       ctx: {
         integration: {
           ...rest,
-          externalUrl: rest.app?.href ?? null,
+          externalUrl: rest.externalUrl ?? rest.app?.href ?? null,
           kind: narrowedKind,
           decryptedSecrets: secrets.map((secret) => ({
             ...secret,
@@ -161,7 +163,9 @@ const createManyIntegrationMiddlewareForKinds = <TKind extends IntegrationKind>(
           secrets: true,
           items: {
             with: {
-              item: true,
+              item: {
+                columns: { boardId: true },
+              },
             },
           },
           ...(await getCallerPermissionRelationsAsync(ctx.db, ctx.session)),
@@ -201,7 +205,7 @@ const createManyIntegrationMiddlewareForKinds = <TKind extends IntegrationKind>(
             if (!narrowedKind) return throwUnexpectedIntegrationKind(kind, kinds);
             return {
               ...rest,
-              externalUrl: rest.app?.href ?? null,
+              externalUrl: rest.externalUrl ?? rest.app?.href ?? null,
               kind: narrowedKind,
               decryptedSecrets: secrets.map((secret) => ({
                 ...secret,

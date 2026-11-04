@@ -114,7 +114,6 @@ export async function getIntegrationHttpConnection(integration: HttpIntegration,
           if (authenticate) {
             const authentication = await getIntegrationHttpAuthenticationAsync({
               ...integration,
-              externalUrl: null,
               decryptedSecrets: secrets,
             });
             headers = authentication.headers;
