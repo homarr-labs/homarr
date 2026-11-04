@@ -29,6 +29,7 @@ export async function getUserPreferencesAsync(ctx: PreferencesContext, userId: s
   const row = await ctx.db.query.users.findFirst({
     where: eq(users.id, userId),
     columns: {
+      themeId: true,
       colorScheme: true,
       byteUnitSystem: true,
       firstDayOfWeek: true,

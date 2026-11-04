@@ -19,6 +19,7 @@ import { IconPicker } from "@homarr/forms-collection";
 import type { UseFormReturnType } from "@homarr/form";
 import { useI18n } from "@homarr/translation/client";
 import { BoardColorInput, CornerStylePicker, SectionCard } from "@homarr/ui";
+import { ThemeSelect } from "@homarr/ui/theme-select";
 
 import { CustomCssEditor } from "~/components/custom-css/custom-css-editor";
 
@@ -69,6 +70,14 @@ export const BrandingSettingsForm = ({ form }: BrandingSettingsFormProps) => {
         </Fieldset>
 
         <Fieldset legend={t("groups.appearance")} p="sm">
+          <ThemeSelect
+            mb="md"
+            {...form.getInputProps("branding.themeId")}
+            value={branding.themeId}
+            onChange={(themeId) => {
+              if (themeId) form.setFieldValue("branding.themeId", themeId);
+            }}
+          />
           <SimpleGrid cols={{ base: 1, lg: 2 }} spacing="md" verticalSpacing="sm">
             <Stack gap="sm">
               <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="sm">

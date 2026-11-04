@@ -2076,6 +2076,14 @@
         "sm": "Subtle",
         "xl": "Soft"
       }
+    },
+    "customTheme": {
+      "appearance": "Appearance",
+      "label": "Theme",
+      "serverDescription": "Default theme for this server. Users can choose their own theme.",
+      "userDescription": "Choose your theme or inherit the server default.",
+      "serverDefault": "Server default",
+      "nothingFound": "No themes found"
     }
   },
   "section": {
@@ -8254,6 +8262,14 @@
               },
               "fullPreferencesPage": {
                 "label": "Open full preferences page"
+              },
+              "themeId": {
+                "label": "Theme",
+                "children": {
+                  "detail": {
+                    "title": "Choose a theme"
+                  }
+                }
               }
             }
           }

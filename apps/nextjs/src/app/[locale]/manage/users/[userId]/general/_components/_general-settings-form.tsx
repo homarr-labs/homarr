@@ -31,6 +31,7 @@ import { env } from "@homarr/common/env";
 import { useZodForm } from "@homarr/form";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
+import { ThemeSelect } from "@homarr/ui/theme-select";
 import {
   headerPreferencesSchema,
   parseHeaderPreferences,
@@ -41,6 +42,7 @@ import {
   userEnableRightClickOnWidgetsSchema,
   userFirstDayOfWeekSchema,
   userPingIconsEnabledSchema,
+  userPreferencesSchema,
 } from "@homarr/validation/user";
 
 import { BoardSelect } from "~/components/board/board-select";
@@ -51,6 +53,7 @@ import { HeaderComposer } from "./header-composer";
 dayjs.extend(localeData);
 
 const userGeneralSettingsSchema = z.object({
+  themeId: userPreferencesSchema.shape.themeId,
   name: userEditProfileSchema.shape.name,
   email: userEditProfileSchema.shape.email,
   homeBoardId: userChangeHomeBoardsSchema.shape.homeBoardId,
@@ -82,6 +85,7 @@ interface UserGeneralSettingsFormProps {
 }
 
 const buildInitialValues = (user: RouterOutputs["user"]["getById"]): FormValues => ({
+  themeId: user.themeId,
   name: user.name ?? "",
   email: user.email ?? "",
   homeBoardId: user.homeBoardId,
@@ -118,6 +122,7 @@ export const UserGeneralSettingsForm = ({
   const changePingIconsEnabledMutation = clientApi.user.changePingIconsEnabled.useMutation();
   const changeEnableRightClickOnWidgetsMutation = clientApi.user.changeEnableRightClickOnWidgets.useMutation();
   const changeHeaderPreferencesMutation = clientApi.user.changeHeaderPreferences.useMutation();
+  const changeThemeMutation = clientApi.user.updatePreferences.useMutation();
 
   const initialValues = buildInitialValues(user);
   const initialValuesRef = useRef(initialValues);
@@ -131,6 +136,7 @@ export const UserGeneralSettingsForm = ({
   const weekDays = useMemo(() => dayjs.weekdays(false), []);
 
   const mutations = [
+    changeThemeMutation,
     editProfileMutation,
     changeHomeBoardsMutation,
     changeSearchPreferencesMutation,
@@ -151,6 +157,10 @@ export const UserGeneralSettingsForm = ({
       fields.some((f) => (f === "email" ? (values[f] || null) !== (defaults[f] || null) : values[f] !== defaults[f]));
 
     const saveActions: { when: boolean; action: () => Promise<unknown> }[] = [
+      {
+        when: changed("themeId"),
+        action: () => changeThemeMutation.mutateAsync({ userId: user.id, themeId: parsed.data.themeId }),
+      },
       {
         when: isCredentialsUser && changed("name", "email"),
         action: () =>
@@ -332,6 +342,19 @@ export const UserGeneralSettingsForm = ({
                 </Card>
 
                 <Card bg="transparent">
+                  <Stack gap="md">
+                    <Title order={3}>{tCommon("customTheme.appearance")}</Title>
+                    <Divider />
+                    <ThemeSelect
+                      inherit
+                      {...form.getInputProps("themeId")}
+                      value={form.values.themeId}
+                      onChange={(themeId) => form.setFieldValue("themeId", themeId)}
+                    />
+                  </Stack>
+                </Card>
+
+                <Card withBorder bg="transparent">
                   <Stack gap="md">
                     <Stack gap={2}>
                       <Title order={3}>{tGeneral("item.language")}</Title>

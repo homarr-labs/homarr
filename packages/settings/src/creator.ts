@@ -1,5 +1,6 @@
 import type { User } from "@homarr/db/schema";
 import { defaultByteUnitSystem } from "@homarr/common";
+import { isThemeId } from "@homarr/definitions";
 import type { ServerSettings } from "@homarr/server-settings";
 import { parseBrandingSettings } from "@homarr/server-settings";
 import type { HeaderPreferences } from "@homarr/validation/user";
@@ -9,6 +10,7 @@ export type SettingsContextProps = Omit<
   Pick<
     User,
     | "firstDayOfWeek"
+    | "themeId"
     | "defaultSearchEngineId"
     | "homeBoardId"
     | "mobileHomeBoardId"
@@ -41,6 +43,7 @@ export interface PublicServerSettings {
 export type UserSettings = Pick<
   User,
   | "firstDayOfWeek"
+  | "themeId"
   | "defaultSearchEngineId"
   | "homeBoardId"
   | "mobileHomeBoardId"
@@ -59,6 +62,7 @@ export const createSettings = ({
   user: UserSettings | null;
   serverSettings: PublicServerSettings;
 }) => ({
+  themeId: isThemeId(user?.themeId) ? user.themeId : null,
   defaultSearchEngineId: user?.defaultSearchEngineId ?? serverSettings.search.defaultSearchEngineId,
   openSearchInNewTab: user?.openSearchInNewTab ?? true,
   ddgBangs: user?.ddgBangs ?? true,

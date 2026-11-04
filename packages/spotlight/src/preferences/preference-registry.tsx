@@ -8,6 +8,7 @@ import {
   IconExternalLink,
   IconHome,
   IconLanguage,
+  IconPalette,
   IconLayoutBoard,
   IconRulerMeasure,
   IconSearch,
@@ -19,7 +20,7 @@ import dayjs from "dayjs";
 import localeData from "dayjs/plugin/localeData";
 
 import { clientApi } from "@homarr/api/client";
-import { colorSchemes } from "@homarr/definitions";
+import { colorSchemes, themeIds, themeNames } from "@homarr/definitions";
 import type { UserPreferenceKey } from "@homarr/settings";
 import { useI18n } from "@homarr/translation/client";
 import type { TablerIcon } from "@homarr/ui";
@@ -56,6 +57,7 @@ export const userFieldPreferenceLabels: Partial<Record<UserPreferenceKey, UserFi
 } satisfies Partial<Record<UserPreferenceKey, UserFieldPreferenceKey>>;
 
 export const preferenceIcons: Record<UserPreferenceKey, TablerIcon> = {
+  themeId: IconPalette,
   colorScheme: IconDeviceDesktop,
   locale: IconLanguage,
   defaultSearchEngineId: IconSearch,
@@ -73,11 +75,17 @@ export const preferenceIcons: Record<UserPreferenceKey, TablerIcon> = {
 const createStaticChildren = (
   preferenceKey: UserPreferenceKey,
   useOptions: () => Array<{ key: string; label: string; value: unknown }>,
+  searchable = false,
 ): ChildrenFactory =>
   createChildrenOptions<Record<string, unknown>>({
-    useActions: () => {
+    useActions: (_, query) => {
       const { value, setValue, isPending } = useUserPreference(preferenceKey);
-      return useOptions().map((opt) =>
+      let options = useOptions();
+      if (searchable) {
+        const normalized = query.trim().toLowerCase();
+        options = options.filter((option) => option.label.toLowerCase().includes(normalized));
+      }
+      return options.map((opt) =>
         createCheckmarkPreferenceAction({
           key: opt.key,
           label: opt.label,
@@ -121,6 +129,17 @@ const createAsyncSelectableChildren = <TItem,>(
 const firstDayOfWeekOptions: DayOfWeek[] = [1, 6, 0];
 
 export const preferenceChildrenOptionsByKey: Partial<Record<UserPreferenceKey, ChildrenFactory>> = {
+  themeId: createStaticChildren(
+    "themeId",
+    () => {
+      const t = useI18n("common.customTheme");
+      return [
+        { key: "server", label: t("serverDefault"), value: null },
+        ...themeIds.map((id) => ({ key: id, label: themeNames[id], value: id })),
+      ];
+    },
+    true,
+  ),
   colorScheme: createStaticChildren("colorScheme", () => {
     const t = useI18n("common.colorScheme.options");
     return colorSchemes.map((s) => ({ key: s, label: t(s), value: s }));

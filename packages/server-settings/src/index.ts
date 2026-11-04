@@ -1,5 +1,5 @@
 import type { ColorScheme } from "@homarr/definitions";
-import { cornerStyleValues } from "@homarr/definitions";
+import { cornerStyleValues, themeIds } from "@homarr/definitions";
 import type { SupportedLanguage } from "@homarr/translation";
 import { z } from "zod/v4";
 
@@ -41,6 +41,7 @@ const brandingImageUrlSchema = z
   .nullable();
 
 export const brandingServerSettingsSchema = z.object({
+  themeId: z.enum(themeIds).default("default"),
   appName: z.string().trim().min(1).max(80),
   greeting: z.string().trim().max(160),
   logoImageUrl: brandingImageUrlSchema,
@@ -59,6 +60,7 @@ export const brandingServerSettingsSchema = z.object({
 export type BrandingSettings = z.infer<typeof brandingServerSettingsSchema>;
 
 export const defaultBrandingSettings: BrandingSettings = {
+  themeId: "default",
   appName: "Homarr",
   greeting: "",
   logoImageUrl: null,

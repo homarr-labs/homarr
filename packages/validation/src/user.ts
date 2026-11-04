@@ -1,6 +1,6 @@
 import { z } from "zod/v4";
 
-import { colorSchemes } from "@homarr/definitions";
+import { colorSchemes, themeIds } from "@homarr/definitions";
 import type { TranslationObject } from "@homarr/translation";
 
 import { zodEnumFromArray } from "./enums";
@@ -175,6 +175,7 @@ export const userDdgBangsSchema = z.object({
 });
 
 export const userPreferencesSchema = z.strictObject({
+  themeId: z.enum(themeIds).nullable(),
   ...userChangeColorSchemeSchema.shape,
   ...userByteUnitSystemSchema.shape,
   ...userFirstDayOfWeekSchema.shape,

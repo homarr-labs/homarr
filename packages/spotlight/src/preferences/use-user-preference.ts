@@ -8,7 +8,7 @@ import type { DayOfWeek } from "@mantine/dates";
 import { clientApi } from "@homarr/api/client";
 import { useSession } from "@homarr/auth/client";
 import type { ByteUnitSystem } from "@homarr/common";
-import type { ColorScheme } from "@homarr/definitions";
+import type { ColorScheme, ThemeId } from "@homarr/definitions";
 import { showErrorNotification } from "@homarr/notifications";
 import type { SettingsContextProps } from "@homarr/settings/creator";
 import { userPreferenceDefinitions, userPreferenceDefinitionByKey } from "@homarr/settings";
@@ -91,6 +91,7 @@ export const useUserPreferences = () => {
   const refresh = () => router.refresh();
 
   const searchMutation = clientApi.user.changeSearchPreferences.useMutation({ onSuccess: refresh });
+  const themeMutation = clientApi.user.updatePreferences.useMutation({ onSuccess: refresh });
   const homeBoardsMutation = clientApi.user.changeHomeBoards.useMutation({ onSuccess: refresh });
   const firstDayMutation = clientApi.user.changeFirstDayOfWeek.useMutation({ onSuccess: refresh });
   const byteUnitSystemMutation = clientApi.user.changeByteUnitSystem.useMutation({ onSuccess: refresh });
@@ -104,6 +105,7 @@ export const useUserPreferences = () => {
     field === changedKey ? value : getEffective(field);
 
   const groupDispatchers: Record<string, (uid: string, key: UserPreferenceKey, value: unknown) => Promise<unknown>> = {
+    themeId: (uid, _key, value) => themeMutation.mutateAsync({ userId: uid, themeId: value as ThemeId | null }),
     searchPreferences: (uid, key, value) =>
       searchMutation.mutateAsync({
         userId: uid,
@@ -126,6 +128,7 @@ export const useUserPreferences = () => {
   };
 
   const groupPending: Record<string, boolean> = {
+    themeId: themeMutation.isPending,
     searchPreferences: searchMutation.isPending,
     homeBoards: homeBoardsMutation.isPending,
     firstDayOfWeek: firstDayMutation.isPending,

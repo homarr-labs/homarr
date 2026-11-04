@@ -53,6 +53,7 @@ const userPreferencesResponseSchema = userPreferencesSchema.extend({ userId: z.s
   example: {
     userId: "example-user",
     colorScheme: "light",
+    themeId: null,
     byteUnitSystem: "binary",
     firstDayOfWeek: 0,
     pingIconsEnabled: true,
@@ -429,6 +430,7 @@ export const userRouter = createTRPCRouter({
         homeBoardId: true,
         mobileHomeBoardId: true,
         colorScheme: true,
+        themeId: true,
         byteUnitSystem: true,
         firstDayOfWeek: true,
         pingIconsEnabled: true,
@@ -472,6 +474,7 @@ export const userRouter = createTRPCRouter({
           homeBoardId: true,
           mobileHomeBoardId: true,
           colorScheme: true,
+          themeId: true,
           byteUnitSystem: true,
           firstDayOfWeek: true,
           pingIconsEnabled: true,
@@ -685,7 +688,7 @@ export const userRouter = createTRPCRouter({
       mcp: {
         enabled: true,
         description:
-          "Patch one or more user preferences and return the complete result. Read current values with user_getPreferences. All preference fields are optional; supply at least one. Omitted fields remain unchanged; null clears home-board/search-engine references. Header fields and zones merge; supplied zone arrays replace their zone and must preserve unique items and account access. Optional userId defaults to yourself; changing another user requires admin permission.",
+          "Patch one or more user preferences and return the complete result. Read current values with user_getPreferences. All preference fields are optional; supply at least one. Omitted fields remain unchanged; null clears home-board/search-engine references or restores the server theme. themeId selects a built-in theme independently of colorScheme. Header fields and zones merge; supplied zone arrays replace their zone and must preserve unique items and account access. Optional userId defaults to yourself; changing another user requires admin permission.",
       },
     })
     .input(

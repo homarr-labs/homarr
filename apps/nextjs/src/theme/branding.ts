@@ -2,7 +2,9 @@ import type { MantineColorsTuple, MantineThemeOverride } from "@mantine/core";
 import { createTheme, darken, lighten, mergeThemeOverrides } from "@mantine/core";
 
 import type { ServerSettings } from "@homarr/server-settings";
+import type { ThemeId } from "@homarr/definitions";
 import { theme as homarrTheme } from "@homarr/ui";
+import { createPresetTheme } from "@homarr/ui/themes";
 
 export const generateColorScale = (hex: string) => {
   const lightnessSteps = [-0.25, -0.2, -0.15, -0.1, -0.05, 0, 0.05, 0.1, 0.15, 0.2] as const;
@@ -23,8 +25,11 @@ export const generateColorScale = (hex: string) => {
   }) as unknown as MantineColorsTuple;
 };
 
-export const createBrandTheme = (branding: ServerSettings["branding"]): MantineThemeOverride =>
-  mergeThemeOverrides(
+export const createBrandTheme = (
+  branding: ServerSettings["branding"],
+  themeId: ThemeId = branding.themeId,
+): MantineThemeOverride => {
+  const base = mergeThemeOverrides(
     homarrTheme,
     createTheme({
       colors: {
@@ -41,3 +46,21 @@ export const createBrandTheme = (branding: ServerSettings["branding"]): MantineT
       },
     }),
   );
+
+  if (themeId === "default") return base;
+  let lockedPrimaryColor: string | undefined;
+  if (branding.lockPrimaryColor) lockedPrimaryColor = branding.primaryColor;
+  const preset = mergeThemeOverrides(base, createPresetTheme(themeId, lockedPrimaryColor));
+  // Explicit server corner settings apply on top of the preset tokens.
+  preset.defaultRadius = branding.defaultRadius;
+  for (const component of ["ActionIcon", "Button", "Card", "Paper"]) {
+    const current = preset.components?.[component];
+    if (current && preset.components) {
+      preset.components[component] = {
+        ...current,
+        defaultProps: { ...current.defaultProps, radius: branding.defaultRadius },
+      };
+    }
+  }
+  return preset;
+};
