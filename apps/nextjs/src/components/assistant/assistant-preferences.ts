@@ -18,8 +18,8 @@ export const resolveForcedAssistantReasoning = ({
 }: {
   provider: AssistantProvider | null;
   modelId: string | null;
-}): "low" | "max" | null => {
-  if (provider === "homarr") return "low";
+}): "default" | "max" | null => {
+  if (provider === "homarr") return "default";
   if (provider === "openrouter" && modelId === "openai/gpt-6-luna") return "max";
   return null;
 };
