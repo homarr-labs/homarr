@@ -171,6 +171,7 @@ export const EditIntegrationForm = ({
         title: tCommon("notification.update.success"),
         message: tIntegration("page.edit.notification.success.message"),
       });
+      setRemovedOptionalKinds([]);
       void Promise.allSettled([utils.integration.invalidate(), utils.widget.invalidate()]);
       onSuccess?.();
       if (!hideButtons) {
