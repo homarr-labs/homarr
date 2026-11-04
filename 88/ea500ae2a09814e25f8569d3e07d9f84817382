@@ -1,0 +1,16 @@
+packages/request-handler/src/release-providers/docker-hub.ts
+  h_d6e478ca18e517 3-4,50,52,62-63,71-73,76-86
+packages/request-handler/src/release-providers/registry-tags.ts
+  h_d6e478ca18e517 55
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "88ea500ae2a09814e25f8569d3e07d9f84817382",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
