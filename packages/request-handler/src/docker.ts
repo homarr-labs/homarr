@@ -9,7 +9,7 @@ import { db, like, or } from "@homarr/db";
 import { icons } from "@homarr/db/schema";
 import { extractContainerImageName } from "@homarr/definitions";
 import type { ContainerState, DockerContainerTarget, DockerEndpointStatus, Port } from "@homarr/docker";
-import { dockerLabels, DockerSingleton, resolveContainerIcon } from "@homarr/docker";
+import { dockerLabels, DockerSingleton, getContainerImageIconFallback, resolveContainerIcon } from "@homarr/docker";
 
 import { createDockerLogStreamProcessor, decodeDockerLogs } from "./docker-log-decode";
 import { createWidgetRequestHandler } from "./lib/widget-request-handler";
@@ -445,6 +445,12 @@ export async function getContainersWithStatsAsync(
       : [];
 
   const degradedEndpointIds = new Set<string>();
+  const fallbackIcons = containers.some(
+    (container) =>
+      !resolveContainerIcon(container.Labels) && !bestMatch(extractImage(container), dbIcons, (icon) => icon.name),
+  )
+    ? await db.query.icons.findMany({ columns: { name: true, url: true } })
+    : [];
   const containerStatsPromises = containers.map(async (container) => {
     const instance = DockerSingleton.findInstance(container.endpointId)?.instance;
     if (!instance) return null;
@@ -500,6 +506,7 @@ export async function getContainersWithStatsAsync(
       iconUrl:
         resolveContainerIcon(container.Labels) ??
         bestMatch(extractImage(container), dbIcons, (icon) => icon.name)?.url ??
+        getContainerImageIconFallback(extractImage(container), fallbackIcons)?.url ??
         null,
       cpuUsage,
       memoryUsage,

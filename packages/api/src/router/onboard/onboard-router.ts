@@ -180,7 +180,8 @@ export const onboardRouter = createTRPCRouter({
     const empty = { integrations: [] as DiscoveredIntegration[], apps: [] as DiscoveredApp[] };
 
     try {
-      const { createDockerSourceId, listDiscoveredContainersAsync, dockerLabels } = await import("@homarr/docker");
+      const { createDockerSourceId, listDiscoveredContainersAsync, dockerLabels, getContainerImageIconFallback } =
+        await import("@homarr/docker");
       const discovery = await listDiscoveredContainersAsync();
       const successfulHosts = discovery.hosts.filter((host) => host.status === "success");
       const unavailableHosts = discovery.hosts.filter((host) => host.status === "unavailable");
@@ -212,6 +213,9 @@ export const onboardRouter = createTRPCRouter({
         );
       };
 
+      const fallbackIcons = candidateImageNames.some((imageName) => !strictIconMatch(imageName))
+        ? await ctx.db.query.icons.findMany({ columns: { name: true, url: true } })
+        : [];
       const discoveredIntegrations: DiscoveredIntegration[] = [];
       const discoveredApps: DiscoveredApp[] = [];
 
@@ -256,7 +260,7 @@ export const onboardRouter = createTRPCRouter({
       for (const container of imageCandidates) {
         const imageName = extractContainerImageName(container.Image);
         const containerName = container.Names[0]?.split("/")[1] ?? "Unknown";
-        const dbIcon = strictIconMatch(imageName);
+        const dbIcon = strictIconMatch(imageName) ?? getContainerImageIconFallback(imageName, fallbackIcons);
         const iconUrl = dbIcon?.url ?? cdnIconUrl(imageName.toLowerCase());
         const { url: suggestedUrl, publishedPort } = buildSuggestedUrl(container.Ports, container.host);
         const kind = matchIntegrationKindFromContainer({ image: container.Image, name: containerName });
