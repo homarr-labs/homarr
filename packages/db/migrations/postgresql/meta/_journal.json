@@ -148,6 +148,13 @@
       "when": 1793784849527,
       "tag": "0020_add_integration_external_url",
       "breakpoints": true
+    },
+    {
+      "idx": 21,
+      "version": "7",
+      "when": 1793804202727,
+      "tag": "0021_add_api_key_read_only",
+      "breakpoints": true
     }
   ]
 }

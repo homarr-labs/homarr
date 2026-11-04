@@ -11,10 +11,12 @@ type OAuthConnection = RouterOutputs["apiKeys"]["getOwnOAuth"][number];
 
 export const OAuthConnectionDetails = ({ connection }: { connection: OAuthConnection }) => {
   const t = useI18n("management.page.tool.api.tab.apiKey.provenance");
+  const tAccess = useI18n("management.page.tool.api.tab.apiKey.access");
   const locale = useCurrentIntlLocale();
   const issuedAt = connection.oauthIssuedAt;
   const hasIssuedAt = issuedAt !== null && Number.isFinite(issuedAt.getTime());
   const fields = [
+    { label: tAccess("label"), value: connection.readOnly ? tAccess("readOnly") : tAccess("readWrite") },
     { label: t("credentialId"), value: connection.id },
     { label: t("clientId"), value: connection.oauthClientId },
     { label: t("callbackHost"), value: getOAuthCallbackHost(connection.oauthRedirectUri) },

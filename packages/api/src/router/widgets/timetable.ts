@@ -265,6 +265,7 @@ export const timetableRouter = createTRPCRouter({
       return data;
     }),
   searchStations: publicProcedure
+    .meta({ readOnly: false })
     .input(
       timetableSourceSchema.extend({
         query: z.string().max(200),

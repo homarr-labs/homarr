@@ -123,6 +123,7 @@ export const managementQueryProcedures = {
 
   optionRequest: permissionRequiredProcedure
     .requiresPermission("admin")
+    .meta({ readOnly: false })
     .input(
       z.object({
         boardId: z.string(),
