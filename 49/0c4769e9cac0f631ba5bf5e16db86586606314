@@ -1,0 +1,241 @@
+packages/db/migrations/postgresql/meta/0021_snapshot.json
+  s_05ef861992d1bd::t_c85702615d0840 1-2788
+packages/db/migrations/postgresql/meta/_journal.json
+  s_05ef861992d1bd::t_5d678ed8341d3b 148-156
+packages/db/migrations/sqlite/meta/0052_snapshot.json
+  s_05ef861992d1bd::t_7f84407cbf3e19 1-2827
+packages/db/migrations/sqlite/meta/_journal.json
+  s_05ef861992d1bd::t_0ed8177d070ed7 365-373
+.agents/plugins/marketplace.json
+  s_59bf535574fce9::t_7eff9b6b6560fc 1-20
+.codex/config.toml
+  s_59bf535574fce9::t_841fc60c7a0a54 1-2
+.github/ISSUE_TEMPLATE/bug_report.yml
+  s_59bf535574fce9::t_6e2979d0e3eaa9 48
+.github/workflows/crowdin-schedule-download.yml
+  s_59bf535574fce9::t_d3233a10463125 7-15,22,30-31,46-47,50-51,57-74,76,79
+.github/workflows/crowdin-upload.yml
+  s_59bf535574fce9::t_5e74e388fd7c7e 10-11,14-18,22-24,32
+.gitignore
+  s_59bf535574fce9::t_43416f84683394 80
+.nvmrc
+  s_59bf535574fce9::t_47ce0d05b9c079 1
+AGENTS.md
+  s_59bf535574fce9::t_52f9889a20115e 91,115,122
+CHANGELOG.md
+  s_59bf535574fce9::t_c890d9541fea48 2-46
+apps/docs/docs/advanced/development/workshop-operator.mdx
+  s_59bf535574fce9::t_ef28e5e3e5eaa8 36,66-67
+apps/docs/docs/advanced/environment-variables/index.mdx
+  s_59bf535574fce9::t_5d8fad186f6f49 71
+apps/docs/docs/getting-started/installation/helm.md
+  s_59bf535574fce9::t_53215a728330b4 5,7,440
+apps/docs/docs/integrations/coolify/index.mdx
+  s_59bf535574fce9::t_996fc56b262da3 28
+apps/docs/docs/integrations/wazuh/index.mdx
+  s_59bf535574fce9::t_febdd8da77c602 23-24
+apps/docs/docs/widgets/wazuh/index.mdx
+  s_59bf535574fce9::t_6561ea9e0cfd86 53
+apps/docs/package.json
+  s_59bf535574fce9::t_796549d2155613 56
+apps/nextjs/src/app/[locale]/boards/(content)/_header-actions.tsx
+  s_59bf535574fce9::t_385165b1f5703d 26,262-276
+apps/nextjs/src/app/[locale]/boards/(content)/board-dirty-leave-guard.spec.ts
+  s_59bf535574fce9::t_52cbfe2966a789 1-116
+apps/nextjs/src/app/[locale]/boards/(content)/board-dirty-leave-guard.ts
+  s_59bf535574fce9::t_2e185eb5d0a677 1-80
+apps/nextjs/src/app/[locale]/manage/integrations/edit/[id]/_integration-edit-form.tsx
+  s_59bf535574fce9::t_a32a747cf1459a 20,46,48,90,219-225
+apps/nextjs/src/app/[locale]/manage/integrations/new/_integration-new-form.tsx
+  s_59bf535574fce9::t_0758236a63e7cc 3,40,62,64,66,87-90,99,106,122,172,199-205,289,303,305-306,311
+apps/nextjs/src/components/assistant/assistant-preferences.spec.ts
+  s_59bf535574fce9::t_8ba06f9fc0dac7 6,114,117,125-128
+apps/nextjs/src/components/assistant/assistant-preferences.ts
+  s_59bf535574fce9::t_c683b0c60f4ed5 1,15,21-22,24
+apps/nextjs/src/components/assistant/assistant-provider.tsx
+  s_59bf535574fce9::t_31db8e813185a3 210,214-215,242
+apps/nextjs/src/components/assistant/assistant-runtime-controls.tsx
+  s_59bf535574fce9::t_9931f508edb401 41,76-77,79,81,84
+apps/workshop/docker-compose.staging.yml
+  s_59bf535574fce9::t_400eba27fd3cff 19
+apps/workshop/docker-compose.yml
+  s_59bf535574fce9::t_23aac4c6ca19cb 34,69
+apps/workshop/homarr_provider.go
+  s_59bf535574fce9::t_457afcee8413bd 29,499
+apps/workshop/homarr_provider_test.go
+  s_59bf535574fce9::t_cf18a8b1ecca2d 126-127,139,143-144
+bun.lock
+  s_59bf535574fce9::t_145849b865bd06 75,1090,1108,1563,3335,5135,5475,5931
+deployments/prebuilt-debian/package.json
+  s_59bf535574fce9::t_a10228c3da1dcc 9
+e2e/onboarding.spec.ts
+  s_59bf535574fce9::t_5d1b3b0b83ad76 60-61,64,67,69-70
+mise.toml
+  s_59bf535574fce9::t_2659ae188571b3 2
+package.json
+  s_59bf535574fce9::t_06ce7712736b0f 3,359,367,426
+packages/api/src/middlewares/integration.ts
+  s_59bf535574fce9::t_16ca21f1873283 112,204
+packages/api/src/router/integration/integration-router.ts
+  s_59bf535574fce9::t_e172d0ad0e9472 227,244,291,374,687
+packages/api/src/router/integration/integration-test-connection.ts
+  s_59bf535574fce9::t_55a094fc9988f6 11
+packages/api/src/router/onboard/onboard-router.ts
+  s_59bf535574fce9::t_ad6bcc3008017d 449
+packages/api/src/router/widgets/wazuh.ts
+  s_59bf535574fce9::t_6e871bfd753aa4 43,45
+packages/common/package.json
+  s_59bf535574fce9::t_87d22166ca083b 18
+packages/db/migrations/custom/0007_wazuh_dashboard_url.ts
+  s_59bf535574fce9::t_f55cf16705db54 1-32
+packages/db/migrations/custom/index.ts
+  s_59bf535574fce9::t_e15db33fbf0aa4 9,19
+packages/db/migrations/postgresql/0020_add_integration_external_url.sql
+  s_59bf535574fce9::t_81a7862debb79c 1
+packages/db/migrations/postgresql/meta/0020_snapshot.json
+  s_59bf535574fce9::t_08bb4a24650d49 2,1436-1441
+packages/db/migrations/seed.ts
+  s_59bf535574fce9::t_9d39fc4a0a1f72 429
+packages/db/migrations/sqlite/0051_add_integration_external_url.sql
+  s_59bf535574fce9::t_724730c91a516b 1
+packages/db/migrations/sqlite/meta/0051_snapshot.json
+  s_59bf535574fce9::t_a61ce480d72119 4,1433-1439
+packages/db/schema/postgresql.ts
+  s_59bf535574fce9::t_3f023c597b8ed5 217
+packages/db/schema/sqlite.ts
+  s_59bf535574fce9::t_04ce43d0387e96 203
+packages/forms-collection/src/index.tsx
+  s_59bf535574fce9::t_a2818fc8befc82 3
+packages/forms-collection/src/new-app/_url-label.tsx
+  s_59bf535574fce9::t_78e99f1ee27f40 3,10,15
+packages/integrations/src/plex/plex-integration.ts
+  s_59bf535574fce9::t_519b8707e09746 374
+packages/integrations/src/wazuh/test/wazuh-integration.spec.ts
+  s_59bf535574fce9::t_6df18127515dca 67,74,251-258
+packages/onboarding/src/discovery-selection.ts
+  s_59bf535574fce9::t_6d883366173abb 12-17,36-38
+packages/onboarding/src/service-url-template.tsx
+  s_59bf535574fce9::t_ae45b20e6af895 5-6,9,12,73,82,85-87,90-107,109-118,124-128
+packages/onboarding/src/setup-studio.tsx
+  s_59bf535574fce9::t_23fd3dfe0e18a9 5,168-169,173-178,185-186,228-241,243,342-350,353,372-375,395-398,518-522,524-535,605-621,720,722-723,737-738,750,754-755,790-793,859,864,866,896-917,924-937,939-943,945,1124-1125
+packages/translation/src/lang/ca.json
+  s_59bf535574fce9::t_53ba981c099138 104-105,130-131,1935-1936,5008-5012,5518-5520,5535-5540,7245
+packages/translation/src/lang/cn.json
+  s_59bf535574fce9::t_14371206af0040 104-105,130-131,1935-1936,5008-5012,5518-5520,5535-5540,7245
+packages/translation/src/lang/cr.json
+  s_59bf535574fce9::t_3e327b396884de 62,104-105,130-131,1935-1936,5008-5012,5518-5520,5535-5540,7245,7272
+packages/translation/src/lang/cs.json
+  s_59bf535574fce9::t_9b98fca68e895a 104-105,130-131,1935-1936,5008-5012,5518-5520,5535-5540,7245
+packages/translation/src/lang/da.json
+  s_59bf535574fce9::t_fb402d8871e18d 104-105,130-131,1935-1936,5008-5012,5518-5520,5535-5540,7245
+packages/translation/src/lang/de-CH.json
+  s_59bf535574fce9::t_fd190ec62c96dc 104-105,130-131,1935-1936,5008-5012,5518-5520,5535-5540,7245
+packages/translation/src/lang/de.json
+  s_59bf535574fce9::t_4f5162dcb7f074 104-105,130-131,1935-1936,5008-5012,5518-5520,5535-5540,7245
+packages/translation/src/lang/el.json
+  s_59bf535574fce9::t_80658dd9b875e3 104-105,130-131,1935-1936,5008-5012,5518-5520,5535-5540,7245
+packages/translation/src/lang/en-gb.json
+  s_59bf535574fce9::t_19fa74e85c0748 104-105,130-131,253-264,266,1935-1936,5008-5012,5518-5520,5535-5540,7245,8130
+packages/translation/src/lang/en.json
+  s_59bf535574fce9::t_ef0d133264265c 62,104-105,130-131,1422,1468,1474-1476,1935-1936,8899
+packages/translation/src/lang/es.json
+  s_59bf535574fce9::t_208aa4a2bf84a2 104-105,130-131,1935-1936,5008-5012,5518-5520,5535-5540,7245
+packages/translation/src/lang/et.json
+  s_59bf535574fce9::t_1e271b5195605d 104-105,130-131,1935-1936,5008-5012,5518-5520,5535-5540,7245
+packages/translation/src/lang/fi.json
+  s_59bf535574fce9::t_37e4860a828d4c 104-105,130-131,1935-1936,5008-5012,5518-5520,5535-5540,7245
+packages/translation/src/lang/fr.json
+  s_59bf535574fce9::t_170f4cba98c38d 104-105,130-131,1935-1936,5008-5012,5518-5520,5535-5540,7245
+packages/translation/src/lang/he.json
+  s_59bf535574fce9::t_042b489f66bd9b 104-105,130-131,1935-1936,5008-5012,5518-5520,5535-5540,7245
+packages/translation/src/lang/hr.json
+  s_59bf535574fce9::t_028749e2ad2de8 104-105,130-131,1935-1936,5008-5012,5518-5520,5535-5540,7245
+packages/translation/src/lang/hu.json
+  s_59bf535574fce9::t_467051f027038d 104-105,130-131,1935-1936,5008-5012,5518-5520,5535-5540,7245
+packages/translation/src/lang/it.json
+  s_59bf535574fce9::t_5befdf5aa73cee 77,104-105,130-131,157,176,186,271,623,930,952,976,1007,1078,1102,1175,1184,1188,1306,1309,1328,1334-1335,1520,1834,1915,1935-1936,1950,2015,2185,2244,2248,2462,2820,2846,2854,3022,3091,3267,3430,3621-3622,3960,3963,3967-3969,3975,4007,4010,4013,4016,4019,4022-4023,4025,4035,4053-4054,4058,4061,4064,4068,4070,4076-4077,4082,4088,4091,4095,4788,4801,4808,4812,4821,4918,4935-4936,4948-4950,4952,4992-4993,4995-4996,5004,5008-5012,5030-5031,5033,5133-5134,5198,5202,5210,5245,5249-5250,5252-5253,5285,5288,5291,5294,5329,5331,5455,5518-5520,5535-5540,5681-5685,5770,5772,5800-5803,5862,5909,5914,5967-5970,6013,6034,6043,6091-6092,6096,6101,6227,6268,6625,6757,6797,6807,7039,7053,7103,7111,7245,7410,7659,7840,7872,8106,8847,8968,9024,9129,9136,9162
+packages/translation/src/lang/ja.json
+  s_59bf535574fce9::t_b5b60722603f85 104-105,130-131,1935-1936,5008-5012,5518-5520,5535-5540,7245
+packages/translation/src/lang/ko.json
+  s_59bf535574fce9::t_90fc826f73ca4c 104-105,130-131,1935-1936,5008-5012,5518-5520,5535-5540,7245
+packages/translation/src/lang/lt.json
+  s_59bf535574fce9::t_8b2f2c29db5e6e 104-105,130-131,1935-1936,5008-5012,5518-5520,5535-5540,7245
+packages/translation/src/lang/lv.json
+  s_59bf535574fce9::t_50adc5a24f9dbb 104-105,130-131,1935-1936,5008-5012,5518-5520,5535-5540,7245
+packages/translation/src/lang/nl.json
+  s_59bf535574fce9::t_e862c115ffddb0 104-105,130-131,1935-1936,5008-5012,5518-5520,5535-5540,7245
+packages/translation/src/lang/no.json
+  s_59bf535574fce9::t_2cbe828a9287d0 104-105,130-131,1935-1936,5008-5012,5518-5520,5535-5540,7245
+packages/translation/src/lang/pl.json
+  s_59bf535574fce9::t_0cd86074c254ac 104-105,130-131,1935-1936,5008-5012,5518-5520,5535-5540,7245
+packages/translation/src/lang/pt-br.json
+  s_59bf535574fce9::t_d35a57bbe2a92d 104-105,130-131,1935-1936,5008-5012,5518-5520,5535-5540,7245
+packages/translation/src/lang/pt.json
+  s_59bf535574fce9::t_0992e4f10dd696 104-105,130-131,1935-1936,5008-5012,5518-5520,5535-5540,7245
+packages/translation/src/lang/ro.json
+  s_59bf535574fce9::t_d97a2642b9f9cb 104-105,130-131,1935-1936,5008-5012,5518-5520,5535-5540,7245
+packages/translation/src/lang/ru.json
+  s_59bf535574fce9::t_4ea88472551b69 62,104-105,130-131,1935-1936,5008-5012,5518-5520,5535-5540,7245,7272
+packages/translation/src/lang/sk.json
+  s_59bf535574fce9::t_0c58ff9074f525 104-105,130-131,1935-1936,5008-5012,5518-5520,5535-5540,7245
+packages/translation/src/lang/sl.json
+  s_59bf535574fce9::t_51a168a82ec065 104-105,130-131,1935-1936,5008-5012,5518-5520,5535-5540,7245
+packages/translation/src/lang/sv.json
+  s_59bf535574fce9::t_726d56121c0eae 104-105,130-131,1935-1936,5008-5012,5518-5520,5535-5540,7245
+packages/translation/src/lang/tr.json
+  s_59bf535574fce9::t_be293bf6b3b89f 104-105,130-131,1935-1936,5008-5012,5518-5520,5535-5540,7245
+packages/translation/src/lang/uk.json
+  s_59bf535574fce9::t_f08448bbde1adc 104-105,130-131,1935-1936,5008-5012,5518-5520,5535-5540,7245
+packages/translation/src/lang/vi.json
+  s_59bf535574fce9::t_1ae7f2028397b0 104-105,130-131,1935-1936,5008-5012,5518-5520,5535-5540,7245
+packages/translation/src/lang/zh.json
+  s_59bf535574fce9::t_48dbfd0c7821a9 104-105,130-131,1935-1936,5008-5012,5518-5520,5535-5540,7245
+packages/validation/src/integration.ts
+  s_59bf535574fce9::t_a1531e5c440e44 9-15,22,44
+plugins/homarr-mantine/mcp.json
+  s_59bf535574fce9::t_35e28b7148821f 2,5,7-8
+plugins/homarr-mantine/plugin.json
+  s_59bf535574fce9::t_219ed5a9553a83 1-21
+plugins/homarr-mantine/skills/mantine-ui/SKILL.md
+  s_59bf535574fce9::t_c271d9f5e7d74e 1-42
+plugins/homarr-mantine/skills/mantine-ui/agents/openai.yaml
+  s_59bf535574fce9::t_e7591e1e85a5bb 1-4
+static-data/contributors.json
+  s_59bf535574fce9::t_20a742cba8a5cd 1
+static-data/opencollective-contributors.json
+  s_59bf535574fce9::t_523a11ef9813f4 1
+static-data/translators.json
+  s_59bf535574fce9::t_205b79499df838 1
+tools/homarr-dev/go.mod
+  s_59bf535574fce9::t_2d28c77f53adfc 7
+tools/homarr-dev/go.sum
+  s_59bf535574fce9::t_05a534e9964ce2 5-6
+tools/v2-showreel/bun.lock
+  s_59bf535574fce9::t_90d4843eb0e866 11-12,15,82,88,100
+tools/v2-showreel/package.json
+  s_59bf535574fce9::t_521781ee3cf8ec 13-14,17
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "490c4769e9cac0f631ba5bf5e16db86586606314",
+  "prompts": {},
+  "sessions": {
+    "s_05ef861992d1bd": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1a6e7-d402-7d23-bf4e-544804888af2",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_59bf535574fce9": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "9e17f6ec-5e2d-4c16-b9d5-75fae35a58e1",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
