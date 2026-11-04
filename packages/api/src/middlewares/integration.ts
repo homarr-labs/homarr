@@ -78,7 +78,9 @@ const createOneIntegrationMiddlewareForKinds = <TKind extends IntegrationKind>(
         ...(await getCallerPermissionRelationsAsync(ctx.db, ctx.session)),
         items: {
           with: {
-            item: true,
+            item: {
+              columns: { boardId: true },
+            },
           },
         },
       },
@@ -161,7 +163,9 @@ const createManyIntegrationMiddlewareForKinds = <TKind extends IntegrationKind>(
           secrets: true,
           items: {
             with: {
-              item: true,
+              item: {
+                columns: { boardId: true },
+              },
             },
           },
           ...(await getCallerPermissionRelationsAsync(ctx.db, ctx.session)),

@@ -85,11 +85,29 @@ const componentRegistry = await readFile(
   join(repositoryRoot, "packages/custom-widgets/src/core/component-registry.ts"),
   "utf8",
 );
-if (!/from\s+["'].\/component-catalog["']/u.test(componentRegistry)) {
-  failures.push("The Custom JSX runtime registry must use the canonical authoring catalog");
+if (!/from\s+["']\.\/component-catalog\.runtime\.generated\.json["']/u.test(componentRegistry)) {
+  failures.push("The Custom JSX runtime registry must use the generated runtime projection");
 }
-if (/component-runtime\.generated\.json/u.test(componentRegistry)) {
-  failures.push("The Custom JSX runtime registry must not use a second generated component catalog");
+if (/from\s+["']\.\/component-catalog["']/u.test(componentRegistry)) {
+  failures.push("The Custom JSX runtime registry must not import the full authoring catalog");
+}
+const metadataGenerator = await readFile(
+  join(repositoryRoot, "packages/custom-widgets/scripts/generate-component-metadata.ts"),
+  "utf8",
+);
+if (
+  !/const runtimeCatalog = \{[\s\S]*?catalog\.globalProps[\s\S]*?catalog\.components/u.test(metadataGenerator) ||
+  !/component-catalog\.runtime\.generated\.json/u.test(metadataGenerator) ||
+  !/props\.map\(\(\{ name: propName, required \}\)/u.test(metadataGenerator)
+) {
+  failures.push("The runtime projection must preserve required prop metadata from the canonical authoring catalog");
+}
+const jsxAnalyzer = await readFile(join(packageRoot, "src/jsx/analyzer-jsx.ts"), "utf8");
+if (
+  !/customJsxRequiredPropsByName/u.test(jsxAnalyzer) ||
+  /from\s+["']\.\.\/core\/component-catalog["']/u.test(jsxAnalyzer)
+) {
+  failures.push("The JSX analyzer must use required props from the runtime projection");
 }
 
 if (failures.length > 0) {
