@@ -1,0 +1,19 @@
+apps/nextjs/src/app/[locale]/manage/integrations/edit/[id]/_integration-edit-form.tsx
+  s_0ea216d29f6ac4::t_78ec6d5b394d6b 174
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "4c60ff27bade15806605f5507e06968f0052b596",
+  "prompts": {},
+  "sessions": {
+    "s_0ea216d29f6ac4": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "eaaaee0b-6d9e-4479-96ca-b3ef9821c135",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
