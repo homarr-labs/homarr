@@ -213,7 +213,9 @@ export const onboardRouter = createTRPCRouter({
         );
       };
 
-      const fallbackIcons = candidateImageNames.some((imageName) => !strictIconMatch(imageName))
+      const fallbackIcons = imageCandidates.some(
+        (container) => !strictIconMatch(extractContainerImageName(container.Image)),
+      )
         ? await ctx.db.query.icons.findMany({ columns: { name: true, url: true } })
         : [];
       const discoveredIntegrations: DiscoveredIntegration[] = [];
