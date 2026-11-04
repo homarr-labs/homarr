@@ -1,0 +1,1181 @@
+.agents/plugins/marketplace.json
+  s_05ef861992d1bd::t_9b698bd1cc5d98 1-20
+.agents/skills/codebase-context/SKILL.md
+  s_05ef861992d1bd::t_4920049af90fc7 20
+.agents/skills/homarr-custom-widget/references/schema.md
+  s_05ef861992d1bd::t_c5bd7b7a85de80 16-18,50-54,56
+.agents/skills/homarr-custom-widget/references/security.md
+  s_05ef861992d1bd::t_045556ca9b4626 3
+.agents/skills/homarr-triage/SKILL.md
+  s_05ef861992d1bd::t_efd43c12434b47 1-96
+.agents/skills/homarr-triage/agents/openai.yaml
+  s_05ef861992d1bd::t_f375a09326b02c 1-6
+.agents/skills/homarr-triage/references/delivery.md
+  s_05ef861992d1bd::t_6488ed19cacb11 1-67
+.agents/skills/homarr-triage/references/github-operations.md
+  s_05ef861992d1bd::t_8d6be1cae13787 1-91
+.codex/config.toml
+  s_05ef861992d1bd::t_52abeed74c1712 1-2
+.github/ISSUE_TEMPLATE/bug_report.yml
+  s_05ef861992d1bd::t_d20406502cd864 48-51
+.github/actions/extract-build-artifact/action.yaml
+  s_05ef861992d1bd::t_7d9fdd4ad81271 84-85
+.github/actions/prebuilt-debian/action.yaml
+  s_05ef861992d1bd::t_bc5c0e1a1524da 25-26,29-30
+.github/pull_request_template.md
+  s_05ef861992d1bd::t_ef049d2201fea3 15-16
+.github/renovate.json5
+  s_05ef861992d1bd::t_41dfed7de1db25 3-8,28-34,39
+.github/scripts/triage-project.cjs
+  s_05ef861992d1bd::t_d34855b75b861c 1-227
+.github/workflows/bot-auto-merge-reconcile.yml
+  s_05ef861992d1bd::t_baba12314d0d32 1-45
+.github/workflows/bot-pr-automerge.yml
+  s_05ef861992d1bd::t_d0d886d3419859 12-17,19-21,25,29,31,33,36,38-41,43-49
+.github/workflows/crowdin-schedule-download.yml
+  s_05ef861992d1bd::t_e3b5111732c3f9 7-15,18,22,28,30-31,36,44,46-47,50-51,57-74,76,79,81
+.github/workflows/crowdin-upload.yml
+  s_05ef861992d1bd::t_8e51783a5fdcfb 10-11,14-18,22-24,30,32,36
+.github/workflows/deployment-beta-release.yml
+  s_05ef861992d1bd::t_3861168d24c746 13,19-21,31,47-48,57-59,69,77,79,82,91
+.github/workflows/deployment-docker-image.yml
+  s_05ef861992d1bd::t_9795c1be79f2e1 19,47,54,60,65,67-68,89-91,139-142,146,158,186-190,194,206,231-253,255-268,273,280,283-285,288-289,296,303,312-314,319-321,325-327,334,353,356
+.github/workflows/deployment-docs.yml
+  s_05ef861992d1bd::t_da2c356d249a5e 32-39,41,59,61,68-70,77
+.github/workflows/deployment-weekly-release.yml
+  s_05ef861992d1bd::t_5d56380f1f4879 16,22-24,34,49-51,104,113,115,119,128
+.github/workflows/on-pr-prebuilt-debian-validate.yml
+  s_05ef861992d1bd::t_aef982c13c968e 24,28
+.github/workflows/on-pr-renovate-validate.yml
+  s_05ef861992d1bd::t_fe22310c5c498b 19-20,25
+.github/workflows/on-release.yml
+  s_05ef861992d1bd::t_e58ece3bf9bb3b 15,22,53,55
+.github/workflows/skip-renovate-stability-days.yml
+  s_05ef861992d1bd::t_75070e3c7b352a 14-15,20,27
+.github/workflows/triage-project.yml
+  s_05ef861992d1bd::t_78b50f57167b15 1-63
+.github/workflows/update-integration-list.yml
+  s_05ef861992d1bd::t_d42f719e7eb944 12,24,31,34-36,54,56
+.github/workflows/validate-docs.yml
+  s_05ef861992d1bd::t_b502b280d5e6b7 44
+.github/workflows/workshop.yml
+  s_05ef861992d1bd::t_9d3dc88d2baf90 102,109,141,143,147,152,154-155,193,201,206,208-209,211,240,248,253,255-256,258,287,297,303,354
+.gitignore
+  s_05ef861992d1bd::t_249ed5a841f58c 80
+.nvmrc
+  s_05ef861992d1bd::t_54cafb5533a397 1
+AGENTS.md
+  s_05ef861992d1bd::t_3f6de3a8bc74b9 91,102-112,115,122,126
+CHANGELOG.md
+  s_05ef861992d1bd::t_1e1f1ca53a60d9 1-210
+Dockerfile
+  s_05ef861992d1bd::t_b910b9f5084819 3,5,7,33-35,38,42
+apps/docs/docs/advanced/development/getting-started.mdx
+  s_05ef861992d1bd::t_a07d32ce59bce2 15
+apps/docs/docs/advanced/icons/index.mdx
+  s_05ef861992d1bd::t_feb267681998dc 38-41
+apps/docs/docs/getting-started/installation/helm.md
+  s_05ef861992d1bd::t_1ff6aedc9cf017 5,7,15,79-84,90-95,99,106,110,123,127,136,142,153,157,159,163-164,172,175-176,186,190,192,196,205,208-209,219,237-238,249,251,267-268,275,292,306-307,322,336-337,352,359-362,383-490,493
+apps/docs/docs/getting-started/installation/source.mdx
+  s_05ef861992d1bd::t_568e4975e99aed 24
+apps/docs/docs/integrations/coolify/index.mdx
+  s_05ef861992d1bd::t_f2453f63ff52c3 28-29
+apps/docs/docs/integrations/homebox/index.mdx
+  s_05ef861992d1bd::t_7d0f4ea558be24 30,41-44
+apps/docs/docs/integrations/thingport/index.mdx
+  s_05ef861992d1bd::t_f50f6d183b4d61 1-69
+apps/docs/docs/integrations/thingport/index.ts
+  s_05ef861992d1bd::t_3942f25840802d 1-8
+apps/docs/docs/integrations/wazuh/index.mdx
+  s_05ef861992d1bd::t_7d27457b8b515f 14,29,52-54
+apps/docs/docs/integrations/whats-up-docker/index.mdx
+  s_05ef861992d1bd::t_9df6accd1b28db 34-36,43-47,56-59
+apps/docs/docs/management/boards/index.mdx
+  s_05ef861992d1bd::t_b77d2d7e016b6b 113-115
+apps/docs/docs/management/custom-widgets/authoring.mdx
+  s_05ef861992d1bd::t_2d8bf18e5741f9 8
+apps/docs/docs/management/custom-widgets/requests-and-security.mdx
+  s_05ef861992d1bd::t_1d0b5d3f6bc75e 5,89
+apps/docs/docs/management/custom-widgets/troubleshooting.mdx
+  s_05ef861992d1bd::t_4587f0d761d7bf 31
+apps/docs/docs/management/integrations/index.mdx
+  s_05ef861992d1bd::t_01a27fa40411f9 71-75
+apps/docs/docs/management/search-engines/index.mdx
+  s_05ef861992d1bd::t_7d172acbd19a7e 55-58
+apps/docs/docs/widgets/app/index.mdx
+  s_05ef861992d1bd::t_df8a68ed2e99c1 24-27
+apps/docs/docs/widgets/app/index.ts
+  s_05ef861992d1bd::t_b17b5cd6406366 18-21
+apps/docs/docs/widgets/beszel-system-grid/index.ts
+  s_05ef861992d1bd::t_937ce7c2285b80 20-25
+apps/docs/docs/widgets/beszel-system-table/index.ts
+  s_05ef861992d1bd::t_8f5fb0d2c7811b 20-25
+apps/docs/docs/widgets/calendar/index.mdx
+  s_05ef861992d1bd::t_cd04f999f50ff3 28,52-56,60
+apps/docs/docs/widgets/calendar/index.ts
+  s_05ef861992d1bd::t_25e91daa546f89 13,17-22
+apps/docs/docs/widgets/custom-api/index.mdx
+  s_05ef861992d1bd::t_7a536040645170 41
+apps/docs/docs/widgets/notifications/index.mdx
+  s_05ef861992d1bd::t_1c6909640e2360 15,25-30
+apps/docs/docs/widgets/releases/index.mdx
+  s_05ef861992d1bd::t_93e91614ab7115 3,23-24,29-30,33-34,42-47
+apps/docs/docs/widgets/releases/index.ts
+  s_05ef861992d1bd::t_4e224215295312 7,12-15,18-22,25-28,31-34,37-40,43-46
+apps/docs/docs/widgets/stats/index.mdx
+  s_05ef861992d1bd::t_f3cd212e8cf378 38,76,79-80
+apps/docs/docs/widgets/thingport-activity-heatmap/index.mdx
+  s_05ef861992d1bd::t_c9bb9b0269a3e1 1-56
+apps/docs/docs/widgets/thingport-activity-heatmap/index.ts
+  s_05ef861992d1bd::t_95471b230c8866 1-37
+apps/docs/docs/widgets/thingport-featured-model/index.mdx
+  s_05ef861992d1bd::t_dabafaf90df8c2 1-54
+apps/docs/docs/widgets/thingport-featured-model/index.ts
+  s_05ef861992d1bd::t_37d694d6129829 1-2,4-22,24-27,30-33,35-37
+apps/docs/docs/widgets/thingport-library-stats/index.mdx
+  s_05ef861992d1bd::t_a9586d6bca1359 1-44
+apps/docs/docs/widgets/thingport-library-stats/index.ts
+  s_05ef861992d1bd::t_a61a726835750f 1-49
+apps/docs/docs/widgets/thingport-models/index.mdx
+  s_05ef861992d1bd::t_0536e312a788bf 1-44
+apps/docs/docs/widgets/thingport-models/index.ts
+  s_05ef861992d1bd::t_191a277e6ea89f 1-43
+apps/docs/docs/widgets/uptime-kuma/index.mdx
+  s_05ef861992d1bd::t_fc90097eeb4025 3,18,20,22-26,34
+apps/docs/docs/widgets/uptime-kuma/index.ts
+  s_05ef861992d1bd::t_73c5f9806960cc 7,12-13,18-19,24-46,51-52,57-58,63-64
+apps/docs/docs/widgets/wazuh/index.mdx
+  s_05ef861992d1bd::t_5da353a5372920 1-65
+apps/docs/docs/widgets/wazuh/index.ts
+  s_05ef861992d1bd::t_5967f2b7d9b446 1-249
+apps/docs/package.json
+  s_05ef861992d1bd::t_d52c19bfd59d02 23,33,48,56-58
+apps/docs/public/api/open-api-schema.json
+  s_05ef861992d1bd::t_f9341005abdbac 112-114,121-123,127-129,240-242,249-251,255-257,348-350,390-393,395-420,422-432,530-532,539-541,545-547,651-653,657-659,663-665,755-757,764-766,770-772,891-893,1103-1105,1120-1122,1126-1128,1962-1964,1968-1970,1974-1976,1980-1982,1986-1988,2032-2034,2177-2179,2183-2185,2189-2191,2195-2197,2201-2203,2656,2938-3008,3011,3013-3050,3053-3085,3091-3093,3095,3097-3104,3248-3251,3271,3662-3664,3742-3752,3938-3940,3944-3946,4020-4022,4026-4028,4051-4053,4057-4059,4275-4277,4281-4283,4287-4289,4293-4295,4496-4498,4502-4504,4508-4510,4631-4633,4637-4639,4643-4645,4848-4850,4854-4856,5195-5197,5201-5203,5207-5209,5213-5215,5222-5224,5228-5230,5258-5260,5694-5696,5700-5702,7213,7390,7904-7906,7910-7912
+apps/docs/src/components/workshop/DetailPage.tsx
+  s_05ef861992d1bd::t_280138df783068 115-117,165,785
+apps/nextjs/package.json
+  s_05ef861992d1bd::t_e0ae6b632ea814 65-68,110
+apps/nextjs/src/app/[locale]/_client-providers/trpc.tsx
+  s_05ef861992d1bd::t_e10faf2cffd629 29,134
+apps/nextjs/src/app/[locale]/auth/invite/[id]/page.tsx
+  s_05ef861992d1bd::t_0e75c7197da9f8 74
+apps/nextjs/src/app/[locale]/auth/loading.tsx
+  s_05ef861992d1bd::t_9b3fe82fa2b859 1
+apps/nextjs/src/app/[locale]/auth/login/page.tsx
+  s_05ef861992d1bd::t_617d8789c15e50 53
+apps/nextjs/src/app/[locale]/auth/mcp/layout.tsx
+  s_05ef861992d1bd::t_77d45f99ed0225 41
+apps/nextjs/src/app/[locale]/boards/(content)/_client.tsx
+  s_05ef861992d1bd::t_742e03e7a94b2d 4,14,51,70-73,75-79,104
+apps/nextjs/src/app/[locale]/boards/(content)/_header-actions.tsx
+  s_05ef861992d1bd::t_44ed431b1ff1bb 3,6,14,22,26,70-74,84,100-103,119-121,124,205-216,218-225,230-231,234-248,262-276
+apps/nextjs/src/app/[locale]/boards/(content)/_query-snapshot.ts
+  s_05ef861992d1bd::t_df4ef121a6c5f9 24,89,163
+apps/nextjs/src/app/[locale]/boards/(content)/board-dirty-leave-guard.spec.ts
+  s_05ef861992d1bd::t_98ba9aa5bde961 1-116
+apps/nextjs/src/app/[locale]/boards/(content)/board-dirty-leave-guard.ts
+  s_05ef861992d1bd::t_4ac0e67a48d8e9 1-80
+apps/nextjs/src/app/[locale]/boards/[name]/settings/_background.tsx
+  s_05ef861992d1bd::t_59eac2dbdd3e9a 13,18-20,39-43,78,96,98,102,104,111,161,166-169,171
+apps/nextjs/src/app/[locale]/boards/[name]/settings/loading.tsx
+  s_05ef861992d1bd::t_c65e232adb556e 1
+apps/nextjs/src/app/[locale]/boards/_providers.tsx
+  s_05ef861992d1bd::t_b1b35295fc12d1 32-41
+apps/nextjs/src/app/[locale]/custom-widget-configuration/[token]/configuration-entry.tsx
+  s_05ef861992d1bd::t_0e4d28f375aff0 4,7-12,20,56,124-129,133
+apps/nextjs/src/app/[locale]/custom-widget-configuration/loading.tsx
+  s_05ef861992d1bd::t_a7a4c414fd4b15 1
+apps/nextjs/src/app/[locale]/init/loading.tsx
+  s_05ef861992d1bd::t_eebebc215c6d6e 1
+apps/nextjs/src/app/[locale]/manage/apps/page.tsx
+  s_05ef861992d1bd::t_ef7f0e5b1ddf7a 160,162
+apps/nextjs/src/app/[locale]/manage/assistant/_components/assistant-configuration.tsx
+  s_05ef861992d1bd::t_2e2368f0b455d0 43,143,148-151,156-163,169-171,186-196,214-217,277-279,295-305,308,317-326,408-422,716,719
+apps/nextjs/src/app/[locale]/manage/assistant/page.tsx
+  s_05ef861992d1bd::t_7791211c9734df 4,26,32
+apps/nextjs/src/app/[locale]/manage/boards/_components/boards-page-content.tsx
+  s_05ef861992d1bd::t_b3941a44fc95d0 3,6,12-20,51-71
+apps/nextjs/src/app/[locale]/manage/boards/page.tsx
+  s_05ef861992d1bd::t_7033fd2bccf3db 12,18,21,53
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-form-utils.ts
+  s_05ef861992d1bd::t_2dcda05d55c969 10,38
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-source-field.tsx
+  s_05ef861992d1bd::t_c8b3df62804b94 4,6-10,15-17,26,28,97,152-157,170,190-202,233-333
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-sources-editor.tsx
+  s_05ef861992d1bd::t_c3728ad99995d9 7-8,32-48,97-102,175
+apps/nextjs/src/app/[locale]/manage/custom-widgets/publish/[id]/_workshop-publish-form.tsx
+  s_05ef861992d1bd::t_6dbdd6c6b831ed 3,18,20,32,37-42,54,128
+apps/nextjs/src/app/[locale]/manage/custom-widgets/publish/[id]/page.tsx
+  s_05ef861992d1bd::t_c9894bce45e20d 18-21,23
+apps/nextjs/src/app/[locale]/manage/integrations/_components/test-connection/test-connection-certificate.tsx
+  s_05ef861992d1bd::t_cc51dfefa1ea06 35-37,40,65,90-99,339-346
+apps/nextjs/src/app/[locale]/manage/integrations/new/_integration-new-form-wrapper.tsx
+  s_05ef861992d1bd::t_bc3f7879bfa1c8 5,11,17-22,30
+apps/nextjs/src/app/[locale]/manage/integrations/new/_integration-new-form.tsx
+  s_05ef861992d1bd::t_772aef4150d151 52,71-78,248,271-279,329,377,381-382
+apps/nextjs/src/app/[locale]/manage/integrations/new/page.tsx
+  s_05ef861992d1bd::t_37b2c2b2dedb79 5,45,58-63
+apps/nextjs/src/app/[locale]/manage/layout.tsx
+  s_05ef861992d1bd::t_80c98a6bbe9ef0 167
+apps/nextjs/src/app/[locale]/manage/loading.tsx
+  s_05ef861992d1bd::t_16a5d287b62f94 1
+apps/nextjs/src/app/[locale]/manage/medias/_actions/copy-media.tsx
+  s_05ef861992d1bd::t_f85cc8471c9732 7,18
+apps/nextjs/src/app/[locale]/manage/medias/_actions/upload-media.tsx
+  s_05ef861992d1bd::t_f8a9640567cca0 9,18
+apps/nextjs/src/app/[locale]/manage/medias/page.tsx
+  s_05ef861992d1bd::t_ac8b5f5c1e33c5 27,158-177,200
+apps/nextjs/src/app/[locale]/manage/search-engines/edit/[id]/_search-engine-edit-form.tsx
+  s_05ef861992d1bd::t_a2e08376d150ca 18,22,59
+apps/nextjs/src/app/[locale]/manage/search-engines/edit/[id]/page.tsx
+  s_05ef861992d1bd::t_829250612f82ae 2,8,24-27,31-37
+apps/nextjs/src/app/[locale]/manage/search-engines/new/_search-engine-new-form.tsx
+  s_05ef861992d1bd::t_1ac98e9ed6a509 7,17-21,53
+apps/nextjs/src/app/[locale]/manage/search-engines/new/page.tsx
+  s_05ef861992d1bd::t_dd1fe1800a7225 2,4,8-9,20,23-29
+apps/nextjs/src/app/[locale]/manage/settings/_components/branding-settings-form.tsx
+  s_05ef861992d1bd::t_39d55a913a9c6e 176-180
+apps/nextjs/src/app/[locale]/manage/tools/certificates/_components/add-certificate.tsx
+  s_05ef861992d1bd::t_ba5b7672700df1 3-4,9,11,14,19-33,45
+apps/nextjs/src/app/[locale]/manage/tools/certificates/page.tsx
+  s_05ef861992d1bd::t_b2c1980ee95105 3,12,15,60,115
+apps/nextjs/src/app/[locale]/manage/tools/kubernetes/cluster-dashboard/cluster-dashboard.tsx
+  s_05ef861992d1bd::t_9c76813c8b7926 3,6,15,17-21,23-24,26-28,31-36,41-42,61-63,69-78
+apps/nextjs/src/app/[locale]/manage/tools/kubernetes/kubernetes-context-selector.tsx
+  s_05ef861992d1bd::t_9c288fe58bbc33 3,8,12-21,28,31,42-51,71
+apps/nextjs/src/app/[locale]/manage/tools/kubernetes/kubernetes-context.constants.ts
+  s_05ef861992d1bd::t_a81fba92d696d4 1
+apps/nextjs/src/app/[locale]/manage/tools/kubernetes/kubernetes-context.ts
+  s_05ef861992d1bd::t_521b641d043647 1-3,5-18,25-26,28,31
+apps/nextjs/src/app/[locale]/manage/tools/kubernetes/kubernetes-query-options.ts
+  s_05ef861992d1bd::t_093c88a1d4c2b0 14-15
+apps/nextjs/src/app/[locale]/manage/tools/kubernetes/layout.tsx
+  s_05ef861992d1bd::t_d904f028088477 1-2,5-7,9-17,21-24
+apps/nextjs/src/app/[locale]/manage/tools/kubernetes/page.tsx
+  s_05ef861992d1bd::t_28c7caaea32ea6 3,5,10-11,13-19,25-37,41-45
+apps/nextjs/src/app/[locale]/manage/users/[userId]/general/_components/_oauth-connections.tsx
+  s_05ef861992d1bd::t_19f276e84e9f6e 4,7,17-21,28,33-34,70,90,97,102
+apps/nextjs/src/app/[locale]/manage/users/[userId]/general/_components/_reset-tours.tsx
+  s_05ef861992d1bd::t_c82d39a685117e 7,12,16,35-43
+apps/nextjs/src/app/[locale]/manage/users/[userId]/general/page.tsx
+  s_05ef861992d1bd::t_ae456d27bf8885 7,20-21,57-58,61-72,97,99,102
+apps/nextjs/src/app/[locale]/manage/users/groups/[id]/members/page.tsx
+  s_05ef861992d1bd::t_80a5b53f58d916 2,17,57-69
+apps/nextjs/src/app/[locale]/manage/users/groups/[id]/settings/_group-home-boards.tsx
+  s_05ef861992d1bd::t_d749fe6a869e61 5,15,21
+apps/nextjs/src/app/[locale]/manage/users/groups/[id]/settings/page.tsx
+  s_05ef861992d1bd::t_a642ead43e6945 25-28,42-47
+apps/nextjs/src/app/[locale]/manage/users/groups/_client.tsx
+  s_05ef861992d1bd::t_cd223c3fbe1b4c 3,6,12,17,21,64-71,84,92
+apps/nextjs/src/app/[locale]/manage/users/groups/page.tsx
+  s_05ef861992d1bd::t_8d44f69c4315f9 28-48
+apps/nextjs/src/app/[locale]/manage/users/invites/_components/invite-list.tsx
+  s_05ef861992d1bd::t_30e70ff894222f 5,18-19,26,30,110,117
+apps/nextjs/src/app/[locale]/manage/users/invites/page.tsx
+  s_05ef861992d1bd::t_3a44922c78afd4 23
+apps/nextjs/src/app/[locale]/reference/loading.tsx
+  s_05ef861992d1bd::t_603a0e27f117e9 1
+apps/nextjs/src/app/[locale]/widgets/loading.tsx
+  s_05ef861992d1bd::t_882add0a98ab69 1
+apps/nextjs/src/app/api/backup/import/route.ts
+  s_05ef861992d1bd::t_d2d7fd59b5d67b 26,324-330
+apps/nextjs/src/app/api/custom-widgets/configuration-request/[token]/route.ts
+  s_05ef861992d1bd::t_4494c856c9944c 14-20,26,64-90,98-100,103,110,132-134
+apps/nextjs/src/app/api/custom-widgets/configuration-request/body.ts
+  s_05ef861992d1bd::t_ea66ca225f801a 2,5-16,21,25,31,36,49
+apps/nextjs/src/app/api/image-proxy/[id]/route.ts
+  s_05ef861992d1bd::t_08340a9fa17bb7 20-21,25-28
+apps/nextjs/src/app/api/mcp/_handler.ts
+  s_05ef861992d1bd::t_2d3c7f3994e3b5 24,216
+apps/nextjs/src/app/api/user-medias/[id]/route.spec.ts
+  s_05ef861992d1bd::t_0930bcae8b7fa9 1-117
+apps/nextjs/src/app/api/user-medias/[id]/route.ts
+  s_05ef861992d1bd::t_a7f01c15272b86 50-95,98,100,111-112,115,121,124,134-151
+apps/nextjs/src/components/assistant/assistant-auto-approval.spec.ts
+  s_05ef861992d1bd::t_7624b400279af8 33,249-250,266-267,282-284,288-292
+apps/nextjs/src/components/assistant/assistant-auto-approval.tsx
+  s_05ef861992d1bd::t_5b6fab61586513 39,54,68,92,94-104,106-111,114,124,158
+apps/nextjs/src/components/assistant/assistant-command-plugin.tsx
+  s_05ef861992d1bd::t_c43cd3a1eda119 1-46
+apps/nextjs/src/components/assistant/assistant-composer-triggers.tsx
+  s_05ef861992d1bd::t_ef68028fba1577 5,8,13-14,21,51-52,56-58,60-65,79-84,90,122,124-130,134,143-149,154,166,170-186,194-209
+apps/nextjs/src/components/assistant/assistant-composer.tsx
+  s_05ef861992d1bd::t_06ad65520862aa 3-4,18,30-31,41-45,53,57,104-128,160-162,176-178,206
+apps/nextjs/src/components/assistant/assistant-directives.ts
+  s_05ef861992d1bd::t_60de797d84bcdf 1,3
+apps/nextjs/src/components/assistant/assistant-history-state.tsx
+  s_05ef861992d1bd::t_b3c4b4a0ce1aca 1-32
+apps/nextjs/src/components/assistant/assistant-history.tsx
+  s_05ef861992d1bd::t_62d6e70ace769a 5-16,231-267,333
+apps/nextjs/src/components/assistant/assistant-launcher.tsx
+  s_05ef861992d1bd::t_2329b7fd4929fa 4-14,68-74,91-94,127,130-135,139-146
+apps/nextjs/src/components/assistant/assistant-message-content.tsx
+  s_05ef861992d1bd::t_3f853cd18691cf 14,314
+apps/nextjs/src/components/assistant/assistant-panel-controls.tsx
+  s_05ef861992d1bd::t_667f41176e329e 4-5,7,15-18,132-153,156-158,161,163,165,170,184-187,190
+apps/nextjs/src/components/assistant/assistant-prompts.ts
+  s_05ef861992d1bd::t_5c093fb4649cfc 1-28
+apps/nextjs/src/components/assistant/assistant-provider.tsx
+  s_05ef861992d1bd::t_78384d1d58d275 27,78,91,93,95-100,135,144,210,214-215,242,424-448,464-465,468,470-472,482-485,488-498,502,505-515,519,521-526,537,553-567,617,800,809-810,878-881,901,908,911-912,932,934,941-946,951,954,993-994,996-997,1012,1018,1079,1105-1109,1118,1133-1135,1146,1149,1151
+apps/nextjs/src/components/assistant/assistant-runtime-provider.tsx
+  s_05ef861992d1bd::t_0d3ec98abe5f90 6,21,23,141,143,349
+apps/nextjs/src/components/assistant/assistant-tool-rendering.tsx
+  s_05ef861992d1bd::t_1e5782e4322804 24,262-270,275,341,355
+apps/nextjs/src/components/board/advanced-focus/context.tsx
+  s_05ef861992d1bd::t_ae6a781d4f0bc1 4,6,45,53,414-428
+apps/nextjs/src/components/board/board-app-url-drop.spec.tsx
+  s_05ef861992d1bd::t_0f06a649d88f50 1-163
+apps/nextjs/src/components/board/board-app-url-drop.tsx
+  s_05ef861992d1bd::t_7e50f0f5038757 1-202
+apps/nextjs/src/components/board/board-apps-spotlight-registrar.tsx
+  s_05ef861992d1bd::t_409dbe941698f2 33-35,46
+apps/nextjs/src/components/board/board-layout-thumbnail.tsx
+  s_05ef861992d1bd::t_ddb127f76a982e 1-3,9,12-13,36-52,58,76,93
+apps/nextjs/src/components/board/items/actions/create-item.ts
+  s_05ef861992d1bd::t_4851732fec0e3b 70-82
+apps/nextjs/src/components/board/items/actions/test/create-item.spec.ts
+  s_05ef861992d1bd::t_458e6544c368fa 5,271-286
+apps/nextjs/src/components/board/items/item-content.tsx
+  s_05ef861992d1bd::t_7da5f7441048fb 6,18,27,109,177-183,199,476,522,525-527,551-587
+apps/nextjs/src/components/board/items/item-move-modal.tsx
+  s_05ef861992d1bd::t_70fe636deea0c2 23-24,35,129-132,150-153,170,249-251,254,270,295,299,309,344-345
+apps/nextjs/src/components/board/items/widget-context-menu.tsx
+  s_05ef861992d1bd::t_80ca70473ec266 4,6,349-370,374,376-377
+apps/nextjs/src/components/board/layout/normalize-board-layout-bounds.ts
+  s_05ef861992d1bd::t_5943a1a489385e 1-61
+apps/nextjs/src/components/board/layout/scaled-board-canvas.tsx
+  s_05ef861992d1bd::t_dc41533f966cac 10,25-127,147-148,167-180,182-184,186-200,203-204
+apps/nextjs/src/components/board/sections/grid/fixed-grid-item.tsx
+  s_05ef861992d1bd::t_cd05b2b46cda2a 158-159
+apps/nextjs/src/components/board/sections/grid/section-grid.tsx
+  s_05ef861992d1bd::t_cfca976fd6ebd6 4-13,357,377,421-425
+apps/nextjs/src/components/board/sections/grid/test/fixed-grid-item.spec.ts
+  s_05ef861992d1bd::t_c7c365b76796a2 260
+apps/nextjs/src/components/board/sections/section-collapse.tsx
+  s_05ef861992d1bd::t_c85ec29be033a5 42,45
+apps/nextjs/src/components/board/sections/use-open-section-apps.ts
+  s_05ef861992d1bd::t_7bdb18553d560e 96
+apps/nextjs/src/components/board/selection/board-selection-context.tsx
+  s_05ef861992d1bd::t_fb3cf251cfe24f 64-67
+apps/nextjs/src/components/custom-widgets/use-custom-widget-import.ts
+  s_05ef861992d1bd::t_bb869ba3baa282 63
+apps/nextjs/src/components/layout/background.spec.tsx
+  s_05ef861992d1bd::t_9c0ec91b78937e 1-163
+apps/nextjs/src/components/layout/background.tsx
+  s_05ef861992d1bd::t_276ae013a7b89b 3-4,9-37,42,49-50,65-66,69,73-75,79,82-85,89-90,92
+apps/nextjs/src/components/layout/header/user-client.tsx
+  s_05ef861992d1bd::t_d59152a7f069ae 5,53-59
+apps/nextjs/src/components/layout/loading.tsx
+  s_05ef861992d1bd::t_42a85626423014 3-7
+apps/nextjs/src/components/layout/navigation-link.tsx
+  s_05ef861992d1bd::t_1b9c7f622aa78a 56,92
+apps/nextjs/src/components/layout/navigation.tsx
+  s_05ef861992d1bd::t_e7a4657d0f9e24 74
+apps/nextjs/src/components/manage/manage-page-layout.tsx
+  s_05ef861992d1bd::t_9d805604722707 42,63-69
+apps/workshop/.gitignore
+  s_05ef861992d1bd::t_8e4d4484707e64 2
+apps/workshop/Dockerfile
+  s_05ef861992d1bd::t_c2279e94096f9c 1,3,5,16,18,71,76
+apps/workshop/docker-compose.staging.yml
+  s_05ef861992d1bd::t_6c170b25810173 5
+apps/workshop/docker-compose.yml
+  s_05ef861992d1bd::t_2a44b6c6e518a9 7
+apps/workshop/go.mod
+  s_05ef861992d1bd::t_3f506f70cd726f 3,7,13,16,18,21,25,28-30,36-44,46-47
+apps/workshop/go.sum
+  s_05ef861992d1bd::t_660b80b424dcbe 11-14,19-22,25-26,33-34,48-51,62-67,74-77,92-93,96-97,99-102,104-109,111-112,115-116,118-119,124-129,134-135,138-139,142-143,148-149
+bun.lock
+  s_05ef861992d1bd::t_d074094e527983 42,52,67,75-77,143-146,188,530,680,1017,1022,1031,1037,1069,1083-1090,1092-1094,1096,1099,1110,1126-1131,1133-1136,1138-1148,1153-1155,1157-1160,1171-1172,1184,1189-1194,1199,1207-1209,1219-1222,1229-1231,1235-1238,1241-1243,1248,1251-1254,1257-1260,1269-1272,1276-1281,1308,1313-1316,1331-1332,1343,1391,1398,1400-1401,1408,1410,1417,1436,1439,1447,1449,1459,1462,1467-1468,1481,1484,1489,1491,1516,1518,1523,1536,1538,1540,1542,1544,1546,1562-1564,1566,1568,1570,1572,1574,1576,1618,1620,1928,1930,1932,1934,1936,1938,1940,1942,1944,1946,1948,1950,1952,1954,1956,1958,1960,1962,1964,1966,1968,1970,1972,1974,1976,1978,2048,2050,2052,2054,2056,2058,2060,2062,2064,2066,2068,2070,2072,2074,2076,2078,2080,2082,2084,2086,2088,2090,2092,2174,2176,2182,2184,2186,2188,2190,2192,2194,2196,2198,2280,2434,2438,2440,2442,2444,2446,2456,2464,2470,2472,2476,2478,2480,2484,2486,2496,2498,2500,2506,2508,2510,2514,2518,2520,2522,2524,2526,2534,2544,2568,2570,2572,2574,2576,2578,2580,2582,2584,2586,2588,2590,2592,2594,2596,2754,2756,2758,2760,2762,2764,2766,2768,2770,2772,2774,2776,2778,2780,2782,3162,3164,3166,3168,3170,3172,3174,3176,3178,3294,3298,3336,3338,3518,3698-3699,3726,3770,3862,3870,3880,3906,3980,4102,4230,4364,4468,4500,4512,4664,4692,4702,4780,4790,4932,4946,4976,4990,4996,5000,5002,5036,5126,5138,5140,5182,5186,5250,5320,5346,5350,5442,5450,5454,5458,5462,5464,5466,5494-5495,5510-5511,5536-5661,5664-5801,5850-5858,5860,5862,5864-5866,5868,5872-5877,5906-5907,5918-5920,6018,6022-6023,6036,6082-6085,6138-6139,6164-6174,6182-6225,6240-6241,6256-6257,6294-6295,6298-6299,6310,6326-6328,6346,6352-6357,6378-6407,6410-6433,6440,6462-6463,6470-6471,6480-6483,6610-6613,6668-6669,6680-6689,6748-6749,6760-6761,6790-6792,6798-6803,6806-6807
+bunfig.toml
+  s_05ef861992d1bd::t_8b287b8dab2d05 4-5
+deployments/prebuilt-debian/Dockerfile
+  s_05ef861992d1bd::t_074cd817104aa0 1-2
+deployments/prebuilt-debian/package.json
+  s_05ef861992d1bd::t_581a0fb88606f7 8-9,11
+development/development.docker-compose.yml
+  s_05ef861992d1bd::t_2a212ea45734bd 12,14,17,35
+docs/README.md
+  s_05ef861992d1bd::t_8c8a8d0fd817bc 581-587,600-601,607-608,649-650,656-657
+docs/agents/triage-labels.md
+  s_05ef861992d1bd::t_6ec8bea09c42aa 5-11,13
+docs/agents/triage-project.md
+  s_05ef861992d1bd::t_7b79fd3b063d1d 1-33
+e2e/onboarding.spec.ts
+  s_05ef861992d1bd::t_11382a8148d59a 60-61,64,67,69-70
+mise.toml
+  s_05ef861992d1bd::t_f4498f6ed63c47 2-3
+package.json
+  s_05ef861992d1bd::t_5ada1fff6dcdab 3,12-17,44,49-52,67-68,79,116,127,134,136-137,144,146,149,153,172,175,183,185,195,198,203-204,217,220,225,227,252,254,259,261,353-362,366,372-379,381-383,387,391,393-394,396,398,403-404,407,409-411,413-417,420-421,424-425,427,439
+packages/api/src/middlewares/integration.ts
+  s_05ef861992d1bd::t_f4a57a15e5838f 11,43-58,78,167
+packages/api/src/query-cache.ts
+  s_05ef861992d1bd::t_895d79e6c4e208 19-25
+packages/api/src/root.ts
+  s_05ef861992d1bd::t_94f1a02afa7c33 8
+packages/api/src/router/app.ts
+  s_05ef861992d1bd::t_ffab4a3885ae11 6,11,15,226-240
+packages/api/src/router/assistant.ts
+  s_05ef861992d1bd::t_cb7fb40d02d144 748,753-759,764-766,771-777
+packages/api/src/router/board.ts
+  s_05ef861992d1bd::t_17b78533601183 55,72-73,147-151,393,631,1697,1702,1711,1720,2298-2299,2376-2381,2446-2447
+packages/api/src/router/board/board-access.ts
+  s_05ef861992d1bd::t_05f8eaff401c1b 66-79
+packages/api/src/router/custom-widget/definition-update.ts
+  s_05ef861992d1bd::t_9649541de113d6 121,181
+packages/api/src/router/custom-widget/preview-base-procedures.ts
+  s_05ef861992d1bd::t_284abd899d6beb 99,153,179
+packages/api/src/router/custom-widget/preview-procedure-helpers.ts
+  s_05ef861992d1bd::t_c0ee95b55c6744 59-60,64
+packages/api/src/router/custom-widget/request-executor.ts
+  s_05ef861992d1bd::t_ff492f4ac5905d 1-5,28,68-76
+packages/api/src/router/custom-widget/secret-persistence.ts
+  s_05ef861992d1bd::t_09c8c1a17e0c00 19
+packages/api/src/router/custom-widget/secret-policy.ts
+  s_05ef861992d1bd::t_c02304a8b6e048 6-7,9,11-12,18,29-30,32,35-40
+packages/api/src/router/custom-widget/secret-procedures.ts
+  s_05ef861992d1bd::t_16962a1e83add3 9,96,111,195,217
+packages/api/src/router/custom-widget/source-resolver.ts
+  s_05ef861992d1bd::t_f455271e428931 61,85-88,90-92
+packages/api/src/router/custom-widget/transfer-procedures.ts
+  s_05ef861992d1bd::t_9d2e05f9473c1b 99
+packages/api/src/router/custom-widget/workshop-procedures.ts
+  s_05ef861992d1bd::t_6e6ab0a9fcac30 78
+packages/api/src/router/docker/docker-router.ts
+  s_05ef861992d1bd::t_1251e33db03c9e 5-6,89-98,306
+packages/api/src/router/icons.ts
+  s_05ef861992d1bd::t_c25fa81d8eb5c1 2,4-5,7,61-75
+packages/api/src/router/integration/integration-router.ts
+  s_05ef861992d1bd::t_5afc0b73ddbffd 21-26,36,56-60,343,622,745-752
+packages/api/src/router/integration/map-test-connection-error.ts
+  s_05ef861992d1bd::t_38d04521652b8d 67,99
+packages/api/src/router/invite.ts
+  s_05ef861992d1bd::t_4cb6195198b3d9 62
+packages/api/src/router/medias/media-router.ts
+  s_05ef861992d1bd::t_4f3749f66cc31a 8-13,87-92,95,108
+packages/api/src/router/onboard/onboard-router.ts
+  s_05ef861992d1bd::t_e5714a38cf3d90 846,852,892
+packages/api/src/router/search-engine/search-engine-router.ts
+  s_05ef861992d1bd::t_bd11da26eebf31 117-120
+packages/api/src/router/test/app.spec.ts
+  s_05ef861992d1bd::t_ffab0138f4b856 9,17-26,395-459
+packages/api/src/router/test/custom-widget/definition-persistence.spec.ts
+  s_05ef861992d1bd::t_3e78cc04278037 884-889
+packages/api/src/router/test/icons.spec.ts
+  s_05ef861992d1bd::t_c4cd305d531484 3,5-6,9-10,14-43
+packages/api/src/router/test/media.spec.ts
+  s_05ef861992d1bd::t_74ac6cb0a982b0 1-62
+packages/api/src/router/test/widgets/partial-integration-failures.spec.ts
+  s_05ef861992d1bd::t_74e917c648e8fe 19,238-243,366,371
+packages/api/src/router/test/widgets/rssFeed.spec.ts
+  s_05ef861992d1bd::t_88a2b9925c7022 254,279
+packages/api/src/router/user-item-state.ts
+  s_05ef861992d1bd::t_ab4fad7ca9b2a2 1,4-45,47-76
+packages/api/src/router/widgets/__tests__/coolify.spec.ts
+  s_05ef861992d1bd::t_435de11a6d8600 1-30
+packages/api/src/router/widgets/coolify.ts
+  s_05ef861992d1bd::t_67b2f3f96054f7 1,14,20-32,40-41,47,60,70
+packages/api/src/router/widgets/custom-api.ts
+  s_05ef861992d1bd::t_4327435ac43603 145,154,178-183,207,212
+packages/api/src/router/widgets/downloads.ts
+  s_05ef861992d1bd::t_f3b80d679d1db6 55
+packages/api/src/router/widgets/index.ts
+  s_05ef861992d1bd::t_c938e98766b4a4 13
+packages/api/src/router/widgets/releases.ts
+  s_05ef861992d1bd::t_41d2eaaf44372a 9-10,16,22-26,48,55,64,71,101-104,109-111,119-121,156
+packages/api/src/router/widgets/rssFeed.ts
+  s_05ef861992d1bd::t_a77d39a75af9e8 9,15,41,137-140,144-161,163
+packages/api/src/router/widgets/thingport.ts
+  s_05ef861992d1bd::t_5810fe320543d2 1-68
+packages/api/src/router/widgets/uptime-kuma.ts
+  s_05ef861992d1bd::t_c785796a0587c0 1-2,5,12,14-15,24,29-32,39,49
+packages/api/src/router/widgets/wazuh.ts
+  s_05ef861992d1bd::t_0d3ac065c0890b 91,100,109,127,139,157,176,195,214,219
+packages/api/src/test/mcp.spec.ts
+  s_05ef861992d1bd::t_6cd7ac6c25afb3 60
+packages/api/src/test/query-cache.spec.ts
+  s_05ef861992d1bd::t_53206fcd6335fa 6,115-144
+packages/api/src/trpc.ts
+  s_05ef861992d1bd::t_2f459ccbbb8b97 21,88
+packages/auth/callbacks.ts
+  s_05ef861992d1bd::t_ec657b3a3b4f96 51,55-57
+packages/auth/providers/credentials/authorization/basic-authorization.ts
+  s_05ef861992d1bd::t_0518ff7b9b9fb1 16,23,31
+packages/auth/providers/credentials/authorization/ldap-authorization.ts
+  s_05ef861992d1bd::t_6418b1d40608ec 21,61,85
+packages/auth/providers/credentials/credentials-provider.ts
+  s_05ef861992d1bd::t_4b1025be59421f 3,18,20,22,32,34-35
+packages/auth/providers/test/basic-authorization.spec.ts
+  s_05ef861992d1bd::t_2785b4889a16f0 1,10-17,19,32-39,55-62,66,79-86,90,102-109
+packages/auth/providers/test/ldap-authorization.spec.ts
+  s_05ef861992d1bd::t_fa3648e9c6080a 29-38,58-62,89-96,114-121,125,147-154,182-189,194,217-224,265-272,323-330,386-393
+packages/auth/providers/test/ldap-sign-in.spec.ts
+  s_05ef861992d1bd::t_e811af3e75575b 7,66,80,97,107,115
+packages/boards/src/context.spec.tsx
+  s_05ef861992d1bd::t_8e404610fcb550 1-89
+packages/boards/src/context.tsx
+  s_05ef861992d1bd::t_b2e5e291a318f0 10,74,83-85,100-107
+packages/boards/src/layout-preview.ts
+  s_05ef861992d1bd::t_48c2bda7881d59 35
+packages/core/package.json
+  s_05ef861992d1bd::t_fd9ab07b48f1d7 29-30
+packages/core/src/infrastructure/http/guarded-fetch.ts
+  s_05ef861992d1bd::t_01d589dd0b43a4 1-238
+packages/core/src/infrastructure/http/http-agent.ts
+  s_05ef861992d1bd::t_4a0a10b9793713 10,12,17,22,31-38
+packages/core/src/infrastructure/http/index.ts
+  s_05ef861992d1bd::t_fec137bde468fb 9
+packages/core/src/infrastructure/http/request.ts
+  s_05ef861992d1bd::t_1c97d71da7a763 8,18,67-68
+packages/core/src/test/infrastructure/http/guarded-fetch.spec.ts
+  s_05ef861992d1bd::t_f42f1c3baada80 1-369
+packages/custom-widgets/package.json
+  s_05ef861992d1bd::t_2cc6d235a11e09 74
+packages/custom-widgets/scripts/ai-evaluation-cases.ts
+  s_05ef861992d1bd::t_422deda033e019 55
+packages/custom-widgets/scripts/ai-evaluation.ts
+  s_05ef861992d1bd::t_a099c17761c644 284
+packages/custom-widgets/src/core/authoring-resources.ts
+  s_05ef861992d1bd::t_a3b1d1ef3d8b77 134-136,168-172,174,241,274,316
+packages/custom-widgets/src/core/bundled-widgets.ts
+  s_05ef861992d1bd::t_c7af1832d1d60b 17,67,85,145
+packages/custom-widgets/src/core/custom-jsx-schema.ts
+  s_05ef861992d1bd::t_122a263c7f0e9e 14-20,63-85,89
+packages/custom-widgets/src/core/examples.ts
+  s_05ef861992d1bd::t_a5a12a397c02d3 19,34
+packages/custom-widgets/src/core/request-header-policy.ts
+  s_05ef861992d1bd::t_cce816bfb74425 1-2,4-20,22-23,25-28,31-34
+packages/custom-widgets/src/core/request-schema.ts
+  s_05ef861992d1bd::t_98bbd133bf2c6b 5-10,23-58,64,97-98,149,191-197
+packages/custom-widgets/src/core/schema-types.ts
+  s_05ef861992d1bd::t_5952a83a58daa5 1,8-22
+packages/custom-widgets/src/core/secret-requirements.ts
+  s_05ef861992d1bd::t_ddef5c4fb67d19 2-4,9,14-20,22,31-42,47
+packages/custom-widgets/src/core/source-setup.ts
+  s_05ef861992d1bd::t_3d9e9814f05bc9 2,4,21,46,58-64,68-73,108
+packages/custom-widgets/src/core/url-policy.ts
+  s_05ef861992d1bd::t_2bd84bdec7ac43 11
+packages/custom-widgets/src/server/auth.ts
+  s_05ef861992d1bd::t_124f7c9bd89e44 2-5,36-55,79,81,84-91
+packages/custom-widgets/src/server/network-policy.ts
+  s_05ef861992d1bd::t_7f5972badfb2aa 4,36,42,44
+packages/custom-widgets/src/server/preview-sessions.ts
+  s_05ef861992d1bd::t_44d91510519a82 7,9-10,12-13,31,60,102,218,221,246,259,310-333
+packages/custom-widgets/src/server/request-dispatcher-lifecycle.ts
+  s_05ef861992d1bd::t_19c874e5b94594 1,5,33
+packages/custom-widgets/src/server/request-executor.ts
+  s_05ef861992d1bd::t_efe5118d0226b3 12,16,19,48,50-51,62,102,242,257,261,263
+packages/custom-widgets/src/server/request-limits.ts
+  s_05ef861992d1bd::t_413fde2b5a4450 24,69,81,101,103-116,142,144-158
+packages/custom-widgets/src/server/request-types.ts
+  s_05ef861992d1bd::t_662cda77228a19 4,10,34
+packages/custom-widgets/src/test/authoring-resources.spec.ts
+  s_05ef861992d1bd::t_acf3cab5b5d949 25
+packages/custom-widgets/src/test/request-deadline.spec.ts
+  s_05ef861992d1bd::t_0017bc7e054c97 7,12,15,27,37,73,133
+packages/custom-widgets/src/test/schema.spec.ts
+  s_05ef861992d1bd::t_b42a22b02e4841 367,385
+packages/custom-widgets/src/test/server-policy.spec.ts
+  s_05ef861992d1bd::t_19559ff55cd1bd 16
+packages/custom-widgets/src/workbench/source-setup.tsx
+  s_05ef861992d1bd::t_dd86895315394d 2,7,11,32,167-169,173
+packages/db/migrations/custom/0005_releases_widget_options.ts
+  s_05ef861992d1bd::t_44e16036effd54 1-79
+packages/db/migrations/custom/0006_app_widget_open_in.ts
+  s_05ef861992d1bd::t_70d711d8898e08 1-33
+packages/db/migrations/custom/index.ts
+  s_05ef861992d1bd::t_51d3ecca612e94 7-8,16-17
+packages/db/migrations/postgresql/0019_sturdy_power_pack.sql
+  s_05ef861992d1bd::t_159c441576f69c 1-10
+packages/db/migrations/postgresql/meta/0019_snapshot.json
+  s_05ef861992d1bd::t_ace63ead4aec91 1-2775
+packages/db/migrations/postgresql/meta/_journal.json
+  s_05ef861992d1bd::t_4169faddde160c 137-143
+packages/db/migrations/seed.ts
+  s_05ef861992d1bd::t_8477e69ada4075 933
+packages/db/migrations/sqlite/0050_typical_madelyne_pryor.sql
+  s_05ef861992d1bd::t_d8f065fc5e3a0b 1-9
+packages/db/migrations/sqlite/meta/0050_snapshot.json
+  s_05ef861992d1bd::t_d77deb66f97e9c 1-2812
+packages/db/migrations/sqlite/meta/_journal.json
+  s_05ef861992d1bd::t_12628b8a6417b1 354-360
+packages/db/queries/widget-placement.ts
+  s_05ef861992d1bd::t_28d144dac65afb 148
+packages/db/schema/index.ts
+  s_05ef861992d1bd::t_09629a29b2981b 45
+packages/db/schema/postgresql.ts
+  s_05ef861992d1bd::t_db7cabb388ae35 447-463
+packages/db/schema/sqlite.ts
+  s_05ef861992d1bd::t_40f9bc5ed43e62 432-448
+packages/db/test/app-widget-open-in-migration.spec.ts
+  s_05ef861992d1bd::t_020e4ad0804968 1-65
+packages/db/test/releases-widget-options-migration.spec.ts
+  s_05ef861992d1bd::t_9deb6d102fdab8 1-278
+packages/definitions/src/docs/homarr-docs-sitemap.ts
+  s_05ef861992d1bd::t_48147d618e783d 186,275-278,288
+packages/definitions/src/docs/sitemap-paths.json
+  s_05ef861992d1bd::t_bba45f818be69c 182,271-274
+packages/definitions/src/docs/widget-doc-slugs.ts
+  s_05ef861992d1bd::t_7f52d06c011b01 46-49,69
+packages/definitions/src/integration.ts
+  s_05ef861992d1bd::t_f2e0c04a9f80ef 179,833-843,1011,1020,1022,1026,1031
+packages/definitions/src/release-provider.ts
+  s_05ef861992d1bd::t_d4cc27724577a0 79-110
+packages/definitions/src/test/api-key-url.spec.ts
+  s_05ef861992d1bd::t_7ad902ec3cd006 45
+packages/definitions/src/test/widget-integration-map.spec.ts
+  s_05ef861992d1bd::t_0ac40d04d5d4c9 44-47,56
+packages/definitions/src/widget-integration-map.ts
+  s_05ef861992d1bd::t_4b5a4a450a2ec5 107,122,170-173,188
+packages/definitions/src/widget.ts
+  s_05ef861992d1bd::t_3bb3dcf322270c 44-47,67,86-89,97
+packages/forms-collection/src/icon-picker/icon-picker.spec.ts
+  s_05ef861992d1bd::t_e83e9db4ee2527 9,11,29,40-45,116,139,142,144,161-166,308-392
+packages/forms-collection/src/icon-picker/icon-picker.tsx
+  s_05ef861992d1bd::t_b2d1c8f73feb88 33,42,55-56,73,78-82,92,103-114,129-138,140-153,160,190,193-201,218,220,225,236-260,299,304,309,403,442
+packages/forms-collection/src/icon-picker/icon-picker.utils.ts
+  s_05ef861992d1bd::t_7fafbf2d4857e0 49,58-59
+packages/forms-collection/src/new-app/_form.tsx
+  s_05ef861992d1bd::t_6e67b7ff5a7fa4 16,142,151
+packages/forms-collection/src/new-app/_url-label.tsx
+  s_05ef861992d1bd::t_ae920bba62dba0 1-47
+packages/forms-collection/src/upload-media/upload-media.tsx
+  s_05ef861992d1bd::t_2fccd2450e9520 8,13,18-24,27-28,38-43,61
+packages/icons/index.ts
+  s_05ef861992d1bd::t_5b977218608501 4
+packages/icons/package.json
+  s_05ef861992d1bd::t_30645f9e8132f6 16-17
+packages/icons/src/favicon-fetcher.ts
+  s_05ef861992d1bd::t_5a0ea97bc3be5e 1-270
+packages/icons/src/local-media-url.ts
+  s_05ef861992d1bd::t_7306212b0f5d1c 1-2
+packages/icons/src/local.ts
+  s_05ef861992d1bd::t_3aeac7f5716820 1-2
+packages/icons/src/repositories/local.icon-repository.ts
+  s_05ef861992d1bd::t_632fa39f93e474 4,7,18
+packages/icons/src/test/favicon-fetcher.spec.ts
+  s_05ef861992d1bd::t_f4161662088e00 1-410
+packages/image-proxy/src/index.ts
+  s_05ef861992d1bd::t_ef19107e3960f1 6-7,27,90,105-130,135-136,138-140,165-179,188,190,192
+packages/image-proxy/src/test/index.spec.ts
+  s_05ef861992d1bd::t_c297e7dec42cb0 1-180
+packages/integrations/package.json
+  s_05ef861992d1bd::t_597edf0f0a7ab6 45
+packages/integrations/src/base/creator.ts
+  s_05ef861992d1bd::t_c17003e72843fe 330-331
+packages/integrations/src/base/errors/http/integration-request-error.ts
+  s_05ef861992d1bd::t_742118d53bffa4 11-18,21-25
+packages/integrations/src/base/test-connection/test-connection-error.ts
+  s_05ef861992d1bd::t_b09b4266c646ef 55,61,69-78,181-182
+packages/integrations/src/base/test-connection/test-connection-service.ts
+  s_05ef861992d1bd::t_e4106c1b9b8b10 2,41,77,84,92-102,107-115,118,120,123-124,130-132,140-142,152
+packages/integrations/src/download-client/deluge/deluge-integration.ts
+  s_05ef861992d1bd::t_fa3b75e01ba2eb 14-17,21,62-65,86-111,124,132-140
+packages/integrations/src/download-client/select-torrents.ts
+  s_05ef861992d1bd::t_4b6ced902ee72a 1-50
+packages/integrations/src/download-client/transmission/transmission-integration.ts
+  s_05ef861992d1bd::t_27388f704e20fd 13-16,19,31-34,46-71,85,93-101
+packages/integrations/src/emby/emby-integration.ts
+  s_05ef861992d1bd::t_5cd5d5abbb6ce4 83
+packages/integrations/src/factory.ts
+  s_05ef861992d1bd::t_4a777a3c95c759 2
+packages/integrations/src/index.ts
+  s_05ef861992d1bd::t_45b890937e0fae 52,80-90,105
+packages/integrations/src/jellyfin/jellyfin-integration.spec.ts
+  s_05ef861992d1bd::t_a5ec00ec907925 3,66-115
+packages/integrations/src/jellyfin/jellyfin-integration.ts
+  s_05ef861992d1bd::t_9a1b7019431209 68-86,289-311
+packages/integrations/src/llama-cpp/llamacpp-integration.ts
+  s_05ef861992d1bd::t_2feef7c88f7a6c 49,61-76,82
+packages/integrations/src/llama-cpp/test/llamacpp-integration.spec.ts
+  s_05ef861992d1bd::t_b82b475bfa8039 345-350
+packages/integrations/src/mock/widget-data.ts
+  s_05ef861992d1bd::t_a54b01a3fdd7cd 10-17,21,189-212,352,406-462
+packages/integrations/src/stats/existing.ts
+  s_05ef861992d1bd::t_3df3fd4cb3bec7 8,53-68,321-323,326-338,456-482
+packages/integrations/src/stats/providers/homebox.ts
+  s_05ef861992d1bd::t_2587a453918473 61-65
+packages/integrations/src/synology/synology-client.ts
+  s_05ef861992d1bd::t_4be3e256adc08a 317-319
+packages/integrations/src/synology/test/synology-integration.spec.ts
+  s_05ef861992d1bd::t_292a58ac737911 185-191,218,220-222,576,578-580,608-610
+packages/integrations/src/thingport/thingport-integration.ts
+  s_05ef861992d1bd::t_1b97710834ae5a 1-245
+packages/integrations/src/thingport/thingport-types.ts
+  s_05ef861992d1bd::t_f9419dfd3d26ab 1-131
+packages/integrations/src/truenas/test/truenas-integration.spec.ts
+  s_05ef861992d1bd::t_881892a5facfc0 141,159,176-178,186-194,257,275-404,541
+packages/integrations/src/truenas/truenas-integration.ts
+  s_05ef861992d1bd::t_02b96d4ef4d584 4,18-21,62-64,66-87,90-91,264,312,338-342,348-360,410,418
+packages/integrations/src/types.ts
+  s_05ef861992d1bd::t_5e060c6e113934 24,28
+packages/integrations/src/uptime-kuma/test/uptime-kuma-integration.spec.ts
+  s_05ef861992d1bd::t_51308537b7fd07 1-2,4-10,27-28,32-37,39,41,43,45-48,50-51,54-56,58-90,93-104,106,108-169,172-202,204-221,224-255,257,259-265,268-274,277-278,280-282
+packages/integrations/src/uptime-kuma/uptime-kuma-integration.ts
+  s_05ef861992d1bd::t_5b66840c6c0a8b 9,11-12,15-32,36,48,63-64,66-67,72-79,83-100,104-105,112-113,116-117,122,128-233
+packages/integrations/src/uptime-kuma/uptime-kuma-mock.ts
+  s_05ef861992d1bd::t_6ec6bb31ff84ed 1-137
+packages/integrations/src/uptime-kuma/uptime-kuma-summary.ts
+  s_05ef861992d1bd::t_f1328afdf94b76 1-58
+packages/integrations/src/uptime-kuma/uptime-kuma-types.ts
+  s_05ef861992d1bd::t_916511bcf7ca55 3-11,14-26,29-33,36,39,42-54,57-62,66-69,73-87,91-100,103-105,109-130
+packages/integrations/src/wazuh/test/wazuh-integration.spec.ts
+  s_05ef861992d1bd::t_19009f8bafc96e 1-296
+packages/integrations/src/wazuh/wazuh-errors.ts
+  s_05ef861992d1bd::t_f86530a0e548ee 7,9-12,55-60
+packages/integrations/src/wazuh/wazuh-integration.ts
+  s_05ef861992d1bd::t_1886676660b5ca 2,9,15-16,23-24,73-76,98-99,103,433-452,957,961-965
+packages/integrations/src/wazuh/wazuh-queries.ts
+  s_05ef861992d1bd::t_3e54eff21c71ea 3,152-185
+packages/integrations/src/wud/test/wud-integration.spec.ts
+  s_05ef861992d1bd::t_c56db5c0576a5e 25,81-83,205-238,308-319
+packages/integrations/src/wud/wud-integration.ts
+  s_05ef861992d1bd::t_59bc77c653f29d 54-57
+packages/integrations/test/base.spec.ts
+  s_05ef861992d1bd::t_6e0afb56e366f6 1-3,5,8,33-48,50-91
+packages/onboarding/src/discovery-selection.ts
+  s_05ef861992d1bd::t_68398ca336b9fb 12-17,36-38
+packages/onboarding/src/onboarding-auth-shell.tsx
+  s_05ef861992d1bd::t_c17b314967fa17 24,45,67
+packages/onboarding/src/service-url-template.tsx
+  s_05ef861992d1bd::t_464f8da824c847 5-6,9,12,73,82,85-87,90-107,109-118,124-128
+packages/onboarding/src/setup-studio.tsx
+  s_05ef861992d1bd::t_bf04590c81b47e 5,167-168,172-177,184-185,227-240,242,341-349,352,371-374,394-397,517-521,523-534,604-620,719,721-722,736-737,749,753-754,789-792,858,863,865,895-916,923-936,938-942,944,1123-1124,1619,1623-1643
+packages/request-handler/src/lib/request-handler.ts
+  s_05ef861992d1bd::t_f53cd03ea3385d 4,32-36,263,267-269,340,347-348,350
+packages/request-handler/src/release-providers/codeberg.ts
+  s_05ef861992d1bd::t_0f15dbcd159cf6 1-97
+packages/request-handler/src/release-providers/docker-hub.ts
+  s_05ef861992d1bd::t_1d5aa991e3f2cd 1-91
+packages/request-handler/src/release-providers/errors.ts
+  s_05ef861992d1bd::t_f624e285bec377 1-50
+packages/request-handler/src/release-providers/github-container-registry.ts
+  s_05ef861992d1bd::t_aaea412a8cd97e 1-149
+packages/request-handler/src/release-providers/github.ts
+  s_05ef861992d1bd::t_f3f95d20cf1a48 1-115
+packages/request-handler/src/release-providers/gitlab.ts
+  s_05ef861992d1bd::t_94937f9563a861 1-73
+packages/request-handler/src/release-providers/http.ts
+  s_05ef861992d1bd::t_ca2b5903695d88 1-75
+packages/request-handler/src/release-providers/identifier.ts
+  s_05ef861992d1bd::t_4109b1be7dfb0f 1-30
+packages/request-handler/src/release-providers/index.ts
+  s_05ef861992d1bd::t_3fd82ba563109d 1-49
+packages/request-handler/src/release-providers/linuxserver.ts
+  s_05ef861992d1bd::t_e1fe967baa0b65 1-77
+packages/request-handler/src/release-providers/npm.ts
+  s_05ef861992d1bd::t_7931c6b82411ba 1-44
+packages/request-handler/src/release-providers/oci-registry.ts
+  s_05ef861992d1bd::t_2e7693015e5541 1-137
+packages/request-handler/src/release-providers/quay.ts
+  s_05ef861992d1bd::t_6753b9316597c2 1-39
+packages/request-handler/src/release-providers/registry-tags.ts
+  s_05ef861992d1bd::t_913ec70dd47ee6 1-87
+packages/request-handler/src/release-providers/types.ts
+  s_05ef861992d1bd::t_10204d24982da2 8,13,24,27,33,35-41,43-46,48,50-56,58
+packages/request-handler/src/release-providers/versions.ts
+  s_05ef861992d1bd::t_0760fbdc6ddade 1-78
+packages/request-handler/src/releases.ts
+  s_05ef861992d1bd::t_f2045fa71461f1 1-3,7-26,28-33,35-39
+packages/request-handler/src/test/release-providers/codeberg.spec.ts
+  s_05ef861992d1bd::t_3b883bcbdf7e75 1-157
+packages/request-handler/src/test/release-providers/dispatcher.spec.ts
+  s_05ef861992d1bd::t_03693f1274d09b 3,5,10-13,15-19,22-23,25-26,29-36,38-39,41,43
+packages/request-handler/src/test/release-providers/docker-hub.spec.ts
+  s_05ef861992d1bd::t_c2725cb8b38966 1-368
+packages/request-handler/src/test/release-providers/github-container-registry.spec.ts
+  s_05ef861992d1bd::t_0ea08f9a058c1c 1-484
+packages/request-handler/src/test/release-providers/github.spec.ts
+  s_05ef861992d1bd::t_6dafb359c21af5 1-304
+packages/request-handler/src/test/release-providers/gitlab.spec.ts
+  s_05ef861992d1bd::t_89babecc319e4f 1-164
+packages/request-handler/src/test/release-providers/linuxserver.spec.ts
+  s_05ef861992d1bd::t_6a9fc3556322b8 3-19,21-23,25-34,36-41,44-46,49-50,52-54,57-65,67,70-71,73,75-76,79-80,83-93,96,102-107,111-112,114,117,120,123-124,126,129,132,135-136,138,140,143-146,148,150-154,156
+packages/request-handler/src/test/release-providers/npm.spec.ts
+  s_05ef861992d1bd::t_e2350da97b5c58 1-115
+packages/request-handler/src/test/release-providers/oci-registry-server.ts
+  s_05ef861992d1bd::t_bb6f004429d8f7 1-87
+packages/request-handler/src/test/release-providers/provider-server.ts
+  s_05ef861992d1bd::t_f47f7fb8b10a0c 1-76
+packages/request-handler/src/test/release-providers/quay.spec.ts
+  s_05ef861992d1bd::t_afbf45ff07f48d 1-116
+packages/request-handler/src/test/releases.spec.ts
+  s_05ef861992d1bd::t_d86c806ad85cf1 1-121
+packages/request-handler/src/thingport.ts
+  s_05ef861992d1bd::t_3c9f2d5109ded5 1-61
+packages/request-handler/src/uptime-kuma.ts
+  s_05ef861992d1bd::t_873729589ae851 2,7,9,11-14,16
+packages/server-settings/src/index.ts
+  s_05ef861992d1bd::t_7a0a63359cc167 53,71
+packages/spotlight/src/components/actions/items/children-action-item.tsx
+  s_05ef861992d1bd::t_f314e34f675a3a 3,20,24
+packages/spotlight/src/components/actions/items/group-action-item.tsx
+  s_05ef861992d1bd::t_69f1a37d44a704 3,36,40
+packages/spotlight/src/modes/external/search-engines-search-group.tsx
+  s_05ef861992d1bd::t_07b526eb2a8af9 22-23,77
+packages/spotlight/src/modes/home/context.tsx
+  s_05ef861992d1bd::t_b726339d908f09 2,42-48,52-54,56-60,62-63,65-67
+packages/translation/src/lang/ca.json
+  s_05ef861992d1bd::t_7d218666ad9a0c 104-105,130-131,147,797-802,904,1543,1885,1896,1906-1907,1921,2044,2046-2047,2049-2052,2070-2078,2116,2279,2309-2317,3233-3236,3940-3955,3960-3961,3983-4085,4441-4442,4458-4459,4655-4657,4737-4761,4764-4773,4777-4785,4787-4789,4820-4824,4865-4954,4957-4960,4966-4968,5140-5142,5144-5146,5148-5162,5164-5171,5173-5181,5183-5185,5188-5225,5227-5235,5239-5249,5472-5474,5489-5494,5862-5863,5884-5891,5915-5917,5925-5932,5934-5937,5939-5943,5945-5948,5950-5956,5958-6023,6025-6050,6053-6056,6058,6061,6064,6067,6070,6073-6074,6077,6080,6082-6083,6085-6086,6089-6102,6104,6107,6110,6113,6116,6118-6119,6121-6122,6125,6127-6128,6131-6152,6172-6183,6396-6397,7023-7026,7028-7029,7185,7277-7278,7896-7904,7930-7931,8471-8472,8754-8761,8881-8883,8898-8899,9081
+packages/translation/src/lang/cn.json
+  s_05ef861992d1bd::t_dbac8339c383f3 5,27,41,66-67,104-105,130-131,140,143-144,147,180,205,211-212,276,456,471-472,475-476,490,511,524,527,531,536,540,553,629,721,725,797-802,817,904,923,926-927,930-931,935,960,1060,1066,1078,1082,1153,1158-1159,1347,1376,1379,1392,1459,1494,1543,1555,1601,1609,1803,1806,1885,1896,1906-1907,1916,1921-1922,1924,1934-1935,1986,1989,1991-1992,2007,2020-2021,2038,2044,2046-2047,2049-2052,2059,2061,2070-2078,2104-2105,2116,2158,2172,2191,2252,2257,2265,2279,2304,2309-2317,2358,2443-2446,2527,2530,2535,2634-2638,2641-2644,2704,2711-2712,2787,2865,2912,2938,2981,3219,3233-3236,3242,3258,3376,3414,3451,3475,3498,3540,3550,3636,3756,3821,3856,3874,3889,3940-3955,3960-3961,3978,3983-4085,4439,4441-4442,4458-4459,4478,4523,4594,4619,4629,4633,4638,4655-4657,4670,4709,4737-4743,4745-4752,4754-4756,4758-4760,4762-4773,4775-4789,4805,4818-4823,4865-4954,4957-4960,4966-4968,4978,4983,4986-4987,4989,5089-5090,5140-5142,5144-5146,5148-5150,5152-5154,5156-5158,5160-5185,5188-5225,5227-5235,5239-5249,5289-5290,5410,5472-5474,5489-5494,5723,5725,5735,5755,5809,5862-5863,5867,5884-5891,5915-5917,5925-5948,5950-6040,6042-6050,6053-6055,6061,6073-6074,6077,6080,6082-6083,6085-6086,6090-6102,6116,6118,6121-6122,6127-6128,6131-6152,6172-6183,6248-6249,6252-6253,6256-6257,6267,6270,6284,6312-6313,6334,6354,6364,6380-6381,6383-6384,6389,6396-6397,6401,6405,6408,6424,6438,6475,6478,6487,6490-6491,6495,6497-6498,6506-6507,6510-6511,6516,6518-6519,6530-6531,6534-6536,6540,6542-6544,6547-6549,6552-6554,6636,6639,6643,6647,6650,6653,6662,6666,6669,6674,6679-6680,6687,6746-6747,6761,6797,6809,6840,6843,6880,6926,6946-6948,6986,7000,7007,7023-7026,7028-7029,7072,7090,7185,7195,7277-7278,7346,7403,7446,7452,7491,7548,7610,7628,7642,7726,7780,7800,7864,7896-7904,7930-7931,7975,8023,8050,8071,8074,8077,8084,8113,8220,8223,8228,8231,8289,8291,8302,8376,8418,8471-8472,8561,8564,8573,8595,8668,8671-8672,8675-8676,8680,8684,8696,8705-8706,8713-8714,8717-8718,8722,8754-8761,8881-8883,8887-8888,8898-8899,8962,8982,9081
+packages/translation/src/lang/cr.json
+  s_05ef861992d1bd::t_2e6242ca8c908f 62,104-105,130-131,147,797-802,904,1543,1885,1896,1906-1907,1921,2044,2046-2047,2049-2052,2070-2078,2116,2279,2309-2317,3233-3236,3940-3955,3960-3961,3983-4085,4441-4442,4458-4459,4655-4657,4670,4735,4737-4743,4745-4752,4754-4756,4758-4760,4762-4785,4787-4789,4820-4824,4865-4954,4957-4960,4966-4968,5138,5140-5158,5160-5162,5164-5171,5173-5175,5177-5178,5180-5185,5191-5249,5472-5474,5489-5494,5862-5863,5882-5890,5915-5917,5925-5948,5950-5956,5958-6050,6053-6056,6058,6061,6064,6067,6070,6073-6074,6077,6080,6082-6083,6085-6086,6089-6102,6104,6107,6110,6113,6116,6118-6119,6121-6122,6125,6127-6128,6131-6152,6172-6183,6309-6310,6312-6313,6351,6355,6359,6396-6397,7023-7026,7028-7029,7185,7212,7277-7278,7896-7904,7930-7931,8471-8472,8754-8761,8783,8799,8881-8883,8898-8904,9081
+packages/translation/src/lang/cs.json
+  s_05ef861992d1bd::t_9522889a59e385 79,104-105,130-131,147,151,159,166,170,180,201,231,616,797-802,877,904,912,929,931,936,960,991,1060,1082,1153,1155,1244,1270,1283,1494,1543,1806,1885,1896,1906-1907,1921,1986,2044,2046-2047,2049-2052,2070-2078,2116,2234,2279,2309-2317,2446,2458,2626,2629,2634-2638,2641-2644,2662,2693,2703-2704,2711-2712,2715,2719,2722,2735-2737,2788,2797,2804,2838,2841,2849,2853,3006,3075,3233-3236,3340,3344,3357,3414,3569,3587-3588,3602-3603,3939-3955,3960-3961,3983-4085,4370,4441-4442,4458-4459,4655-4657,4737-4761,4764-4773,4777-4785,4787-4789,4820-4824,4865-4954,4957-4960,4966-4968,4975,4986,4988-4989,5069,5089-5090,5140-5154,5156-5162,5164-5175,5177-5178,5180-5181,5183-5185,5188-5215,5217-5235,5239-5249,5284,5286,5380,5410,5472-5474,5489-5494,5637,5639,5708,5710,5713,5719,5723,5725,5753-5756,5809,5815,5862-5863,5867,5882-5890,5915-5917,5921-5923,5925-5956,5958-5985,5987-6040,6042-6050,6053-6055,6067,6077,6082-6083,6085-6086,6090-6102,6118,6121-6122,6127-6128,6132-6150,6152,6172-6183,6221,6396-6397,6438,6443,6572,6574,6740,6744,6986,7000,7023-7026,7028-7029,7044,7051,7185,7277-7278,7346,7593,7595,7773-7774,7806,7896-7904,7930-7931,7943,8041,8471-8472,8754-8761,8836,8881-8883,8898-8899,8913,8937,8949,9042,9049-9050,9074,9081
+packages/translation/src/lang/da.json
+  s_05ef861992d1bd::t_7ffcab9813a36b 77,104-105,116,130-131,147,151,170,180,201,214,362,616,797-802,852,904,912,929,931,936,960,991,1009,1060,1066,1082,1084,1155-1156,1164,1254,1269-1271,1283,1310,1494,1543,1806,1885,1896,1906-1907,1921,1986,2044,2046-2047,2049-2052,2070-2078,2096,2116,2173,2215-2216,2230,2234,2279,2309-2317,2446,2458,2462,2626,2629,2634-2638,2641-2644,2650,2662,2666,2703-2704,2711-2712,2715,2719,2722,2735-2737,2788,2797,2803-2804,2830,2837-2838,2841,2844,2849,2853,3006,3075,3233-3236,3340,3344,3357,3414,3564,3569,3602-3603,3636,3939-3955,3960-3961,3983-4085,4370,4441-4442,4458-4459,4655-4657,4737-4761,4764-4773,4777-4785,4787-4789,4820-4824,4865-4954,4957-4960,4966-4968,4984,4986-4987,4989,5069,5071,5089-5090,5140-5142,5144-5145,5148,5152,5156,5160-5183,5188-5215,5217-5235,5239-5249,5284,5286,5380,5410,5472-5474,5489-5494,5638-5639,5670,5709,5713,5716,5719,5723,5725,5740,5753-5756,5815,5862-5863,5865,5867,5882-5890,5915-5917,5922-5923,5925-5956,5958-5985,5987-6040,6042-6050,6053-6055,6067,6077,6082-6083,6085-6086,6090-6102,6118,6121-6122,6127-6128,6132-6150,6152,6172-6183,6221,6396-6397,6438,6443,6572,6574,6744,6986,7000,7018,7023-7026,7028-7029,7044,7051,7148,7183,7185-7186,7277-7278,7346,7351,7595,7773-7774,7806,7896-7904,7930-7931,8023,8041,8471-8472,8740,8754-8761,8804,8813,8821,8864,8881-8883,8892,8898-8899,8907,8913-8914,8931,8933,8937,8947,8949-8950,9042,9049-9050,9074,9081
+packages/translation/src/lang/de-CH.json
+  s_05ef861992d1bd::t_03b574c259dfb8 104-105,130-131,147,797-802,904,1543,1885,1896,1906-1907,1921,2044,2046-2047,2049-2052,2070-2078,2116,2279,2309-2317,3233-3236,3940-3955,3960-3961,3983-4085,4441-4442,4458-4459,4655-4657,4737-4761,4764-4773,4777-4785,4787-4789,4820-4824,4865-4954,4957-4960,4966-4968,5140-5142,5144-5146,5148-5150,5152-5154,5156-5178,5180-5185,5188-5225,5227-5235,5239-5249,5472-5474,5489-5494,5862-5863,5884-5891,5915-5917,5925-5932,5934-5937,5939-5943,5945-5948,5950-5956,5958-6023,6025-6050,6053-6056,6058,6061,6064,6067,6070,6073-6074,6077,6080,6082-6083,6085-6086,6089-6102,6104,6107,6110,6113,6116,6118-6119,6121-6122,6125,6127-6128,6131-6152,6172-6183,6396-6397,7023-7026,7028-7029,7185,7277-7278,7896-7904,7930-7931,8471-8472,8754-8761,8881-8883,8898-8899,9081
+packages/translation/src/lang/de.json
+  s_05ef861992d1bd::t_59769e9cc01b0f 4,6,8,12-14,104-105,130-131,147,151,170,201,797-802,904,911-912,929,1007,1283,1543,1885,1896,1906-1907,1921,1986,2044,2046-2047,2049-2052,2070-2078,2116,2234,2279,2309-2317,2367,2446,2629,2703,2715,2719,2724,2735,2742,2788,2797,2803-2804,2830,2837-2838,2841,2849,2853,3075,3233-3236,3340,3344,3357,3414,3569,3602-3603,3637,3939-3955,3960-3961,3983-4085,4370,4441-4442,4458-4459,4655-4657,4679,4737-4761,4764-4773,4777-4785,4787-4789,4820-4824,4860,4865-4954,4957-4960,4966-4968,4986-4987,4989,5069,5071,5089-5090,5140-5142,5144-5154,5156-5158,5160-5162,5164-5181,5183-5185,5188-5221,5223-5235,5239-5249,5284-5286,5380,5410,5472-5474,5489-5494,5520,5583,5588,5634-5637,5723,5725,5753-5756,5815,5862-5863,5867,5882-5890,5915-5917,5920-5921,5925-5948,5950-6040,6042-6050,6053-6055,6077,6082-6083,6085-6086,6090-6102,6118,6121-6122,6127-6128,6132-6150,6152,6172-6183,6221,6396-6397,6438,6443,6572,6574,6704,6744,6796-6798,6986,7000,7023-7026,7028-7029,7044,7051,7185,7277-7278,7382,7492,7500,7595,7773-7774,7806,7896-7904,7930-7931,8023,8041,8142,8200,8228,8471-8472,8728,8754-8761,8813,8864,8881-8883,8898-8899,8918,8931,8937,9015,9042,9049-9050,9074,9081
+packages/translation/src/lang/el.json
+  s_05ef861992d1bd::t_2f9cb7859f7fb5 79,96,104-105,130-131,147,151,170,180,201,797-802,904,912,929,931,960,991,1007,1060,1082,1153,1155,1270,1283,1494,1543,1806,1885,1896,1906-1907,1921,1986,2044,2046-2047,2049-2052,2070-2078,2116,2230,2234,2279,2309-2317,2446,2626,2629,2634-2638,2641-2644,2666,2703-2704,2712,2715,2719,2788,2797,2804,2838,2841,2849,2853,3075,3233-3236,3333,3340,3357,3414,3569,3602,3939-3955,3960-3961,3980,3983-4085,4370,4441-4442,4458-4459,4655-4657,4737-4761,4764-4773,4777-4785,4787-4789,4820-4824,4865-4954,4957-4960,4966-4968,4984,4986,4988-4989,5089-5090,5140-5146,5148-5171,5173-5175,5177-5178,5180-5181,5183-5185,5188-5229,5231-5235,5239-5249,5284,5380,5472-5474,5489-5494,5708,5723,5725,5755,5809,5815,5862-5863,5867,5882-5890,5915-5917,5925-5956,5958-5985,5987-6023,6025-6027,6029-6040,6042-6050,6053-6055,6077,6082-6083,6085-6086,6090-6102,6118,6121-6122,6127-6128,6132-6150,6152,6172-6183,6221,6396-6397,6438,6443,6572,6574,6986,7000,7018,7023-7026,7028-7029,7044,7185,7277-7278,7593,7595,7773-7774,7806,7896-7904,7930-7931,8041,8471-8472,8754-8761,8881-8883,8898-8899,8913,8920,8937,8949,9042,9049-9050,9074,9081
+packages/translation/src/lang/en-gb.json
+  s_05ef861992d1bd::t_59b81f32daa98b 104-105,130-131,147,246-257,259,797-802,904,1543,1885,1896,1906-1907,1921,2044,2046-2047,2049-2052,2070-2078,2116,2279,2309-2317,3233-3236,3940-3955,3960-3961,3983-4085,4441-4442,4458-4459,4655-4657,4737-4745,4747-4752,4754,4758,4762-4773,4775-4785,4787,4820-4824,4865-4954,4957-4960,4966-4968,5140-5154,5156-5158,5160-5162,5164-5171,5173-5175,5177-5185,5188-5233,5235,5239-5249,5472-5474,5489-5494,5862-5863,5884-5891,5915-5917,5925-5932,5934-5937,5939-5943,5945-5948,5950-5956,5958-6023,6025-6050,6053-6056,6058,6061,6064,6067,6070,6073-6074,6077,6080,6082-6083,6085-6086,6089-6102,6104,6107,6110,6113,6116,6118-6119,6121-6122,6125,6127-6128,6131-6152,6172-6183,6396-6397,7023-7026,7028-7029,7185,7277-7278,7896-7904,7930-7931,8046,8471-8472,8754-8761,8881-8883,8898-8899,9081
+packages/translation/src/lang/en.json
+  s_05ef861992d1bd::t_f65834f546f09c 62,104-105,130-131,147,797-802,904,1543,1885,1896,1906-1907,1921,2044,2046-2047,2049-2052,2070-2078,2116,2279,2309-2317,3233-3236,3940-3955,3960-3961,3983-4085,4441-4442,4458-4459,4655-4657,4735,4737-4743,4745-4752,4754-4756,4758-4773,4775-4785,4787-4789,4820-4824,4865-4954,4957-4960,4966-4968,5138,5140-5146,5148-5150,5152-5154,5156-5178,5180-5181,5183-5185,5191-5249,5472-5474,5489-5494,5818-5821,5823-5825,5862-5863,5882-5890,5915-5917,5925-5956,5958-5985,5987-6040,6042-6050,6053-6055,6077,6082-6083,6085-6086,6090-6102,6118,6121-6122,6127-6128,6132-6150,6152,6172-6183,6309-6310,6312-6313,6351,6355,6359,6396-6397,7023-7026,7028-7029,7185,7212,7277-7278,7896-7904,7930-7931,8471-8472,8754-8761,8783,8799,8881-8883,8898-8904,9081
+packages/translation/src/lang/es.json
+  s_05ef861992d1bd::t_f0d595bf823211 104-105,115,130-131,147,151,170,201,362,616,797-802,904,912,929,931,936,960,991,1007,1029,1060,1082,1155,1270,1283,1310-1311,1494,1543,1806,1885,1896,1906-1907,1921,1986,2044,2046-2047,2049-2052,2070-2078,2116,2279,2309-2317,2446,2626,2629,2634-2638,2641-2644,2665,2703-2704,2711-2712,2715,2719,2722,2735-2737,2788,2797,2804,2838,2841,2849,2853,3006,3075,3233-3236,3340,3344,3357,3414,3569,3591,3602-3603,3637,3940-3955,3960-3961,3983-4085,4370,4441-4442,4458-4459,4655-4657,4737-4761,4764-4773,4777-4785,4787-4789,4820-4824,4865-4954,4957-4960,4966-4968,4986-4987,4989,5069,5071,5089-5090,5140-5144,5148,5152,5156,5160,5164-5183,5188-5215,5217-5235,5239-5249,5380,5410,5472-5474,5489-5494,5636-5637,5639,5723,5725,5753-5756,5815,5862-5863,5867,5882-5890,5915-5917,5921-5923,5925-5956,5958-5985,5987-6040,6042-6050,6053-6055,6077,6082-6083,6085-6086,6090-6102,6118,6121-6122,6127-6128,6132-6150,6152,6172-6183,6221,6396-6397,6425,6438,6443,6572,6574,6701,6744,6986,7000,7023-7026,7028-7029,7044,7051,7185,7277-7278,7346,7500,7595,7773-7774,7806,7896-7904,7930-7931,8023,8041,8471-8472,8754-8761,8881-8883,8888,8898-8899,8933,8937,9042,9049-9050,9074,9081
+packages/translation/src/lang/et.json
+  s_05ef861992d1bd::t_568ac199f21468 104-105,130-131,147,797-802,904,1543,1885,1896,1906-1907,1921,2044,2046-2047,2049-2052,2070-2078,2116,2279,2309-2317,3233-3236,3940-3955,3960-3961,3983-4085,4441-4442,4458-4459,4655-4657,4737-4761,4764-4773,4777-4785,4787-4789,4820-4824,4865-4954,4957-4960,4966-4968,5140-5142,5144-5146,5148-5171,5173-5175,5177-5178,5180-5185,5188-5225,5227-5235,5239-5249,5472-5474,5489-5494,5862-5863,5884-5891,5915-5917,5925-5932,5934-5937,5939-5943,5945-5948,5950-5956,5958-6023,6025-6050,6053-6056,6058,6061,6064,6067,6070,6073-6074,6077,6080,6082-6083,6085-6086,6089-6102,6104,6107,6110,6113,6116,6118-6119,6121-6122,6125,6127-6128,6131-6152,6172-6183,6396-6397,7023-7026,7028-7029,7185,7277-7278,7896-7904,7930-7931,8471-8472,8754-8761,8881-8883,8898-8899,9081
+packages/translation/src/lang/fi.json
+  s_05ef861992d1bd::t_6bee8ac47d17fc 22,96,104-105,130-131,147,151,170,180,201,797-802,904,912,929,931,936,960,991,1060,1082,1146,1153,1270,1283,1494,1543,1806,1885,1896,1906-1907,1921,1986,2044,2046-2047,2049-2052,2070-2078,2116,2173,2230,2234,2279,2309-2317,2446,2629,2634-2638,2641-2644,2666,2703-2704,2712,2715,2719,2722,2724,2788,2797,2804,2838,2841,2849,2853,2901,3075,3233-3236,3357,3414,3563,3569,3602,3940-3955,3960-3961,3983-4085,4370,4441-4442,4458-4459,4655-4657,4737-4745,4747-4752,4754,4758,4762-4773,4775-4785,4787,4789,4820-4824,4865-4954,4957-4960,4966-4968,4984,4986,4988-4989,5089-5090,5140-5154,5156-5158,5160-5162,5164-5171,5173-5175,5177-5185,5188-5225,5227-5235,5239-5249,5410,5472-5474,5489-5494,5636-5638,5708,5710,5723,5725,5753-5756,5815,5847,5862-5863,5866-5867,5882-5890,5915-5917,5921,5925-5943,5945-5948,5950-5956,5958-5978,5980-5985,5987-6050,6053-6056,6077,6082-6083,6085-6086,6090-6102,6118,6121-6122,6127-6128,6132-6150,6152,6172-6183,6221,6396-6397,6438,6443,6572,6574,6744,6986,7000,7018,7023-7026,7028-7029,7044,7051,7148,7185,7277-7278,7346,7431,7773-7774,7806,7896-7904,7930-7931,8041,8471-8472,8754-8761,8881-8883,8898-8899,8913,8937,8949,9042,9049-9050,9074,9081
+packages/translation/src/lang/fr.json
+  s_05ef861992d1bd::t_905ecf9aa0278e 104-105,130-131,147,151,158,170,201,203,264,797-802,826,904,912,929,931,960,991,1010,1032-1033,1060,1082,1135,1153,1155,1160,1163-1164,1270,1283,1310,1494,1543,1806,1885,1896,1906-1907,1921,1984,1986,2044,2046-2047,2049-2052,2070-2078,2116,2215-2216,2234,2279,2309-2317,2446,2629,2634-2638,2641-2644,2703-2704,2712-2713,2715,2719,2722-2723,2735-2737,2788,2797,2801,2804,2838,2841,2849,2853,3075,3127-3128,3233-3236,3340,3344,3357,3414,3563,3568-3569,3602-3603,3939-3955,3960-3961,3978,3983-4085,4370,4373,4441-4442,4458-4459,4655-4657,4737-4761,4764-4773,4777-4785,4787-4789,4820-4824,4865-4954,4957-4960,4966-4968,4975,4986-4987,4989,5089-5090,5140-5144,5148,5152,5154,5156,5160,5164-5183,5188-5208,5210-5235,5239-5249,5285-5286,5380,5410,5455,5472-5474,5489-5494,5635-5637,5643,5650,5723,5725,5754-5755,5815,5836,5862-5863,5867,5882-5890,5915-5917,5920-5921,5925-5956,5958-5985,5987-6040,6042-6050,6053-6055,6077,6082-6083,6085-6086,6090-6102,6118,6121-6122,6127-6128,6132-6150,6152,6172-6183,6221,6396-6397,6425,6438,6443,6572,6574,6630,6744,6748,6986,7023-7026,7028-7029,7044,7051,7065,7185,7277-7278,7346,7595,7773-7774,7806,7896-7904,7930-7931,7994,8019,8023,8041,8471-8472,8731,8750,8754-8761,8813,8881-8883,8888,8898-8899,8963,9015,9042,9049-9050,9074,9081
+packages/translation/src/lang/he.json
+  s_05ef861992d1bd::t_a9ee31b54ab271 104-105,130-131,147,797-802,904,1543,1885,1896,1906-1907,1921,2044,2046-2047,2049-2052,2070-2078,2116,2279,2309-2317,3233-3236,3940-3955,3960-3961,3983-4085,4441-4442,4458-4459,4655-4657,4737-4761,4764-4773,4777-4785,4787-4789,4820-4824,4865-4954,4957-4960,4966-4968,5140-5144,5148,5152,5156,5160,5164-5183,5188-5233,5235,5239-5249,5472-5474,5489-5494,5862-5863,5884-5891,5915-5917,5925-5932,5934-5937,5939-5943,5945-5948,5950-5956,5958-6023,6025-6050,6053-6056,6058,6061,6064,6067,6070,6073-6074,6077,6080,6082-6083,6085-6086,6089-6102,6104,6107,6110,6113,6116,6118-6119,6121-6122,6125,6127-6128,6131-6152,6172-6183,6396-6397,7023-7026,7028-7029,7185,7277-7278,7896-7904,7930-7931,8471-8472,8754-8761,8881-8883,8898-8899,9081
+packages/translation/src/lang/hr.json
+  s_05ef861992d1bd::t_774dcef0d113ab 104-105,130-131,147,797-802,904,1543,1885,1896,1906-1907,1921,2044,2046-2047,2049-2052,2070-2078,2116,2279,2309-2317,3233-3236,3940-3955,3960-3961,3983-4085,4441-4442,4458-4459,4655-4657,4737-4761,4764-4773,4777-4785,4787-4789,4820-4824,4865-4954,4957-4960,4966-4968,5140-5158,5160-5162,5164-5171,5173-5175,5177-5178,5180-5185,5188-5218,5220-5235,5239-5249,5472-5474,5489-5494,5862-5863,5884-5891,5915-5917,5925-5932,5934-5937,5939-5943,5945-5948,5950-5956,5958-6023,6025-6050,6053-6056,6058,6061,6064,6067,6070,6073-6074,6077,6080,6082-6083,6085-6086,6089-6102,6104,6107,6110,6113,6116,6118-6119,6121-6122,6125,6127-6128,6131-6152,6172-6183,6396-6397,7023-7026,7028-7029,7185,7277-7278,7896-7904,7930-7931,8471-8472,8754-8761,8881-8883,8898-8899,9081
+packages/translation/src/lang/hu.json
+  s_05ef861992d1bd::t_501d293c628142 104-105,130-131,147,797-802,904,1543,1885,1896,1906-1907,1921,2044,2046-2047,2049-2052,2070-2078,2116,2279,2309-2317,3233-3236,3940-3955,3960-3961,3983-4085,4441-4442,4458-4459,4655-4657,4737-4761,4764-4773,4777-4785,4787-4789,4820-4824,4865-4954,4957-4960,4966-4968,5140-5162,5164-5171,5173-5175,5177-5178,5180-5181,5183-5185,5188-5221,5223-5235,5239-5249,5472-5474,5489-5494,5862-5863,5884-5891,5915-5917,5925-5932,5934-5937,5939-5943,5945-5948,5950-5956,5958-6023,6025-6050,6053-6056,6058,6061,6064,6067,6073-6074,6077,6080,6082-6083,6085-6086,6089-6102,6104,6107,6110,6113,6116,6118,6121-6122,6125,6127-6128,6131-6152,6172-6183,6396-6397,7023-7026,7028-7029,7185,7277-7278,7896-7904,7930-7931,8471-8472,8754-8761,8881-8883,8898-8899,9081
+packages/translation/src/lang/it.json
+  s_05ef861992d1bd::t_58199c562b8510 104-105,130-131,147,151,159,166,170,180,201,231,797-802,877,904,912,929,931,1082,1153,1168,1244,1252,1270-1271,1283,1304,1543,1885,1896,1906-1907,1921,2044,2046-2047,2049-2052,2070-2078,2116,2279,2309-2317,2446,2458,2626,2629,2666,2703-2704,2715,2719,2723-2724,2735,2788,2797,2803,2831,2841,2849,2853-2854,3074-3075,3233-3236,3340,3344,3357,3414,3416,3569,3602,3940-3955,3960-3961,3983-4085,4370,4441-4442,4458-4459,4655-4657,4737-4761,4764-4773,4777-4785,4787-4789,4820-4824,4865-4954,4957-4960,4966-4968,5069,5090,5140-5162,5164-5171,5173-5175,5177-5178,5180-5181,5183-5185,5188-5208,5210-5235,5239-5249,5380,5419,5472-5474,5489-5494,5512,5634,5636,5639,5815,5862-5863,5882-5890,5915-5917,5923,5925-5948,5950-6040,6042-6050,6053-6055,6077,6082-6083,6085-6086,6090-6102,6118,6121-6122,6127-6128,6132-6150,6152,6172-6183,6221,6396-6397,6425,6438,6443,6572,6574,6986,7023-7026,7028-7029,7044,7054,7148,7185,7277-7278,7773-7774,7806,7896-7904,7930-7931,7943,8041,8471-8472,8754-8761,8812,8881-8883,8898-8899,8918-8919,8933,9042,9049-9050,9074,9081
+packages/translation/src/lang/ja.json
+  s_05ef861992d1bd::t_ca715a7a7be99a 23,104-105,130-131,147,151,170-171,180,201,305,313,797-802,821,863,904,912-913,929,931,936,960,991,1006,1010,1034,1060,1082,1153,1212,1270-1271,1283,1459,1494,1543,1806,1885,1896,1906-1907,1921,1986,2044,2046-2047,2049-2052,2070-2078,2116,2165,2192,2230,2234,2279,2309-2317,2361,2384,2446,2458,2484,2486,2626,2629,2634-2638,2641-2644,2648,2703-2704,2711-2712,2715,2719,2735-2737,2742,2788,2797,2804,2838,2841,2849,2853,3075,3233-3236,3260,3333,3335,3340,3344,3357,3414,3416,3569,3602-3603,3787,3939-3955,3960-3961,3978,3983-4085,4370,4441-4442,4458-4459,4655-4657,4737-4761,4764-4773,4777-4785,4787-4789,4820-4824,4865-4954,4957-4960,4966-4968,4983-4984,4986,4989,5069,5073,5089-5090,5140-5148,5152,5156,5160,5164-5173,5177-5183,5188-5208,5210-5235,5239-5249,5284,5380,5410,5456,5472-5474,5489-5494,5715-5716,5723,5725,5735,5750,5754-5756,5791-5793,5815,5842,5862-5863,5865-5867,5873,5882-5890,5902,5909,5915-5917,5922,5925-5956,5958-5985,5987-6040,6042-6050,6053-6055,6077,6082-6083,6085-6086,6090-6102,6118,6121-6122,6127-6128,6132-6150,6152,6172-6183,6221,6243,6396-6397,6425,6438,6443,6572,6574,6984,6986,7000,7018,7023-7026,7028-7029,7044,7185,7277-7278,7346,7500,7773-7774,7806,7896-7904,7930-7931,8041,8471-8472,8754-8761,8881-8883,8898-8899,8913,8918,8924,8937,8949,8962,9015,9042,9049-9050,9062,9074,9081
+packages/translation/src/lang/ko.json
+  s_05ef861992d1bd::t_2f516660392c76 104-105,130-131,147,797-802,827-828,904,1347,1497,1543,1885,1896,1901,1906-1907,1921,2044,2046-2047,2049-2052,2070-2078,2116,2279,2309-2317,2440,2443-2446,3232-3236,3247-3251,3254-3260,3940-3955,3960-3961,3983-4085,4441-4442,4458-4459,4655-4657,4737-4761,4764-4773,4777-4785,4787-4789,4820-4824,4865-4954,4957-4960,4966-4968,5140-5142,5144-5158,5160-5162,5164-5178,5180-5181,5183-5185,5188-5218,5220-5235,5239-5249,5472-5474,5489-5494,5862-5863,5884-5891,5915-5917,5925-5932,5934-5937,5939-5943,5945-5948,5950-5956,5958-6023,6025-6050,6053-6056,6058,6061,6064,6067,6070,6073-6074,6077,6080,6082-6083,6085-6086,6089-6102,6104,6107,6110,6113,6116,6118-6119,6121-6122,6125,6127-6128,6131-6152,6172-6183,6396-6397,7023-7026,7028-7029,7185,7277-7278,7896-7904,7930-7931,8471-8472,8754-8761,8881-8883,8898-8899,9081
+packages/translation/src/lang/lt.json
+  s_05ef861992d1bd::t_dc4576ca6c9c34 104-105,130-131,147,797-802,904,1543,1885,1896,1906-1907,1921,2044,2046-2047,2049-2052,2070-2078,2116,2279,2309-2317,3233-3236,3940-3955,3960-3961,3983-4085,4441-4442,4458-4459,4655-4657,4737-4761,4764-4773,4777-4785,4787-4789,4820-4824,4865-4954,4957-4960,4966-4968,5140-5142,5144-5146,5148-5171,5173-5175,5177-5178,5180-5185,5188-5225,5227-5235,5239-5249,5472-5474,5489-5494,5862-5863,5884-5891,5915-5917,5925-5932,5934-5937,5939-5943,5945-5948,5950-5956,5958-6023,6025-6050,6053-6056,6058,6061,6064,6067,6070,6073-6074,6077,6080,6082-6083,6085-6086,6089-6102,6104,6107,6110,6113,6116,6118-6119,6121-6122,6125,6127-6128,6131-6152,6172-6183,6396-6397,7023-7026,7028-7029,7185,7277-7278,7896-7904,7930-7931,8471-8472,8754-8761,8881-8883,8898-8899,9081
+packages/translation/src/lang/lv.json
+  s_05ef861992d1bd::t_3d8301d6ac94dd 104-105,130-131,147,797-802,904,1543,1885,1896,1906-1907,1921,2044,2046-2047,2049-2052,2070-2078,2116,2279,2309-2317,3233-3236,3940-3955,3960-3961,3983-4085,4441-4442,4458-4459,4655-4657,4737-4761,4764-4773,4777-4785,4787-4789,4820-4824,4865-4954,4957-4960,4966-4968,5140-5142,5144-5146,5148-5171,5173-5175,5177-5178,5180-5185,5188-5225,5227-5235,5239-5249,5472-5474,5489-5494,5862-5863,5884-5891,5915-5917,5925-5932,5934-5937,5939-5943,5945-5948,5950-5956,5958-6023,6025-6050,6053-6056,6058,6061,6064,6067,6070,6073-6074,6077,6080,6082-6083,6085-6086,6089-6102,6104,6107,6110,6113,6116,6118-6119,6121-6122,6125,6127-6128,6131-6152,6172-6183,6396-6397,7023-7026,7028-7029,7185,7277-7278,7896-7904,7930-7931,8471-8472,8754-8761,8881-8883,8898-8899,9081
+packages/translation/src/lang/nl.json
+  s_05ef861992d1bd::t_9499009ed34583 22,77,104-105,116,130-131,147,151,170,180,201,797-802,852,904,912,914,929,931,936,960,991,1032-1033,1060,1076,1082,1153,1155,1254,1269-1270,1283,1310,1494,1543,1806,1848,1885,1896,1906-1907,1921,1986,2044,2046-2047,2049-2052,2070-2078,2116,2230,2279,2309-2317,2446,2458-2459,2626,2629,2634-2638,2641-2644,2648,2693,2703-2704,2711-2712,2715-2716,2719,2724,2735-2737,2788,2797,2803-2804,2830-2831,2838,2841,2849,2853-2854,3075,3127-3128,3233-3236,3251,3340,3344,3347,3356-3357,3414,3569,3575-3576,3602-3603,3636,3939-3955,3960-3961,3983-4085,4370,4441-4442,4458-4459,4655-4657,4737-4761,4764-4773,4777-4785,4787-4789,4820-4824,4865-4954,4957-4960,4966-4968,4975,4984,4986,4989,5069,5089-5090,5140-5141,5144,5148,5152,5156,5160-5183,5188-5233,5235,5239-5249,5284,5286,5380,5472-5474,5489-5494,5670,5709,5719,5723,5725,5737,5739-5740,5753-5755,5815,5862-5863,5865-5867,5882-5890,5915-5917,5925-5956,5958-5985,5987-6040,6042-6050,6053-6055,6067,6077,6082-6083,6085-6086,6090-6102,6118,6121-6122,6127-6128,6132-6150,6152,6172-6183,6221-6222,6290,6293,6396-6397,6438,6443,6572,6574,6744,6982,6986,7000,7023-7026,7028-7029,7044,7051,7183,7185-7186,7202,7277-7278,7346,7595-7596,7766,7773-7774,7806,7896-7904,7930-7931,8041-8042,8471-8472,8728,8754-8761,8804,8864,8881-8884,8888,8892,8898-8899,8907,8913,8949,9042,9049-9050,9074,9081
+packages/translation/src/lang/no.json
+  s_05ef861992d1bd::t_bb23c293012866 69,104-105,130-131,147,151,170,180,201,214,633,797-802,884,904,912,929,931,936,960,991,1007,1032,1060,1082,1153,1156,1180,1270,1283,1449,1465,1472-1473,1491,1494,1543,1806-1807,1885,1896,1906-1907,1921,1986,2044,2046-2047,2049-2052,2070-2078,2116,2279,2309-2317,2446,2458,2584,2626,2629,2634-2638,2641-2644,2662,2665,2703-2704,2711-2712,2715,2719,2724,2735-2737,2788,2797,2804,2838,2841,2849,2853,3075,3127,3233-3236,3340,3344,3357,3414,3569,3596,3602-3603,3630,3939-3955,3960-3961,3983-4085,4142-4143,4271,4370,4441-4442,4458-4459,4655-4657,4688,4737-4761,4764-4773,4777-4785,4787-4789,4820-4824,4865-4954,4957-4960,4966-4968,4984,4986,4989,5069,5089-5090,5140-5158,5160-5162,5164-5171,5173-5178,5180-5181,5183-5185,5191-5249,5259,5380,5472-5474,5488-5494,5497,5520,5639,5670,5713,5719,5723,5725,5753-5756,5815,5862-5863,5865,5867,5882-5890,5915-5917,5922-5923,5925-5956,5958-5985,5987-6040,6042-6050,6053-6055,6077,6082-6083,6085-6086,6090-6102,6118,6121-6122,6127-6128,6132-6150,6152,6172-6183,6221,6396-6397,6438,6443,6572,6574,6600,6744,6800,6986,7000,7018,7023-7026,7028-7029,7044,7051,7185,7277-7278,7346,7382,7413,7630-7631,7773-7774,7806,7896-7904,7930-7931,8041,8471-8472,8754-8761,8881-8883,8898-8899,8913,8949,9042,9049-9050,9074,9081
+packages/translation/src/lang/pl.json
+  s_05ef861992d1bd::t_ed538d5e87e647 104-105,130-131,147,151,170,180,201,797-802,904,912,929,931,936,960,991,1060,1082,1153,1270,1283,1310,1494,1543,1806,1885,1896,1906-1907,1921,1986,2044,2046-2047,2049-2052,2070-2078,2116,2234,2279,2309-2317,2446,2626,2629,2634-2638,2641-2644,2703-2704,2712,2715,2719,2735-2737,2788,2797,2803-2804,2830,2838,2841,2849,2853,3075,3233-3236,3340,3344,3357,3414,3569,3602-3603,3939-3955,3960-3961,3983-4085,4370,4441-4442,4458-4459,4655-4657,4737-4761,4764-4773,4777-4785,4787-4789,4820-4824,4865-4954,4957-4960,4966-4968,4986-4987,4989,5069,5089-5090,5140-5162,5164-5171,5173-5175,5177-5178,5180-5181,5183-5185,5188-5208,5210-5235,5239-5249,5380,5410,5472-5474,5489-5494,5635-5637,5639,5723,5725,5753-5756,5815,5862-5863,5867,5882-5890,5915-5917,5920-5923,5925-5956,5958-5985,5987-6040,6042-6050,6053-6055,6077,6082-6083,6085-6086,6090-6102,6118,6121-6122,6127-6128,6132-6150,6152,6172-6183,6221,6396-6397,6438,6443,6572,6574,6744,6986,7000,7023-7026,7028-7029,7044,7051,7185,7277-7278,7346,7773-7774,7806,7896-7904,7930-7931,8023,8041,8471-8472,8754-8761,8881-8883,8898-8899,8933,9042,9049-9050,9074,9081
+packages/translation/src/lang/pt-br.json
+  s_05ef861992d1bd::t_31b639e0794636 104-105,130-131,147,151,170,201,797-802,904,912,929,931,960,991,1007,1060,1082,1153,1155,1270,1283,1310,1327,1494,1543,1806,1885,1896,1906-1907,1921,1986,2044,2046-2047,2049-2052,2070-2078,2116,2279,2309-2317,2446,2458,2626,2629,2634-2638,2641-2644,2703,2712,2715,2719,2722,2733,2788,2797,2804,2838,2841,2849,2853,3075,3233-3236,3344,3357,3414,3569,3602-3603,3940-3955,3960-3961,3983-4085,4370,4441-4442,4458-4459,4655-4657,4737-4761,4764-4773,4777-4785,4787-4789,4820-4824,4865-4954,4957-4960,4966-4968,4984,4986-4987,4989,5069,5089-5090,5140-5142,5144-5146,5148-5150,5152-5154,5156-5158,5160-5185,5188-5229,5231-5235,5239-5249,5380,5455,5472-5474,5489-5494,5635-5637,5639,5723,5725,5753-5756,5815,5862-5863,5867,5882-5890,5915-5917,5920-5921,5923,5925-5956,5958-5985,5987-6040,6042-6050,6053-6055,6077,6082-6083,6085-6086,6090-6102,6118,6121-6122,6127-6128,6132-6150,6152,6172-6183,6221,6396-6397,6425,6438,6443,6572,6574,6986,7000,7023-7026,7028-7029,7044,7185,7277-7278,7346,7595,7773-7774,7806,7896-7904,7930-7931,8023,8041,8471-8472,8754-8761,8881-8883,8898-8899,8907,8933,8937,8963,9042,9049-9050,9074,9081
+packages/translation/src/lang/pt.json
+  s_05ef861992d1bd::t_f36036867b969e 79,104-105,130-131,147,151,170,201,797-802,904,912,929,931,960,991,1007,1060,1082,1153,1155,1270,1283,1310,1327,1494,1543,1806,1885,1896,1906-1907,1921,1986,2044,2046-2047,2049-2052,2070-2078,2116,2279,2309-2317,2446,2458,2626,2629,2634-2638,2641-2644,2703,2712,2715,2719,2722,2733,2788,2797,2804,2838,2841,2849,2853,3075,3233-3236,3344,3357,3414,3569,3602-3603,3845-3846,3940-3955,3960-3961,3983-4085,4370,4441-4442,4458-4459,4655-4657,4737-4761,4764-4773,4777-4785,4787,4789,4820-4824,4865-4954,4957-4960,4966-4968,4984,4986-4989,5069,5089-5090,5140-5158,5160-5162,5164-5175,5177-5178,5180-5181,5183-5185,5188-5215,5217-5235,5239-5249,5380,5455,5472-5474,5489-5494,5635-5637,5639,5708,5723,5725,5753-5756,5815,5862-5863,5867,5882-5890,5915-5917,5920-5921,5923,5925-5956,5958-5985,5987-6040,6042-6050,6053-6055,6077,6082-6083,6085-6086,6090-6102,6118,6121-6122,6127-6128,6132-6150,6152,6172-6183,6221,6396-6397,6425,6438,6443,6572,6574,6986,7000,7023-7026,7028-7029,7044,7185,7277-7278,7346,7593,7595,7773-7774,7806,7896-7904,7930-7931,8023,8041,8471-8472,8754-8761,8881-8883,8898-8899,8907,8913,8933,8937,8949,8963,9042,9049-9050,9074,9081
+packages/translation/src/lang/ro.json
+  s_05ef861992d1bd::t_41efa88adf103c 79,104-105,115,130-131,147,151,170,180,201,264,355,406,442,460,484,510,518,566,616,762,773,784,797-802,812-813,817,884,904,911-912,914,929,931,960,991,1029,1060,1082,1153,1155,1163-1164,1168,1270,1283,1310,1412,1435,1446,1491,1494,1515,1543,1767,1806,1811-1812,1815,1857,1862,1885,1896,1906-1907,1921,1935,1986,1993,1997,2031,2038,2044,2046-2047,2049-2052,2066,2070-2078,2116,2173,2279,2303,2309-2317,2336,2342,2412,2446,2540-2541,2584,2626,2629,2634-2638,2641-2644,2650,2703,2712,2715,2719,2722,2724,2735-2737,2788,2797,2804,2838,2841,2849,2853,2876-2877,3006,3075,3208,3233-3236,3283,3296,3340,3344,3357,3411,3414,3435,3460,3463,3475-3476,3479,3562,3569,3587-3588,3596,3602-3603,3636,3668,3708,3819,3896,3926,3930-3931,3940-3955,3960-3961,3964,3972,3983-4085,4095,4143,4252-4254,4271,4321,4329,4348,4370,4441-4442,4458-4459,4477,4480,4532,4547,4591,4625,4655-4657,4737-4761,4764-4773,4777-4785,4787-4789,4817,4820-4824,4828,4833,4837,4865-4944,4946-4960,4966-4968,4975,4984,4986-4989,5004,5008,5018,5069,5089-5090,5121,5124,5140-5158,5160-5162,5164-5171,5173-5178,5180-5181,5183-5185,5188-5229,5231-5235,5239-5249,5259,5265,5286,5376-5377,5380,5385,5410,5472-5474,5489-5494,5634-5637,5639,5708,5710,5715,5719,5723,5725,5737,5740,5753-5755,5809,5815,5820,5836,5839,5862-5863,5867,5882-5890,5915-5917,5920-5923,5925-5948,5950-6040,6042-6050,6053-6055,6067,6077,6082-6083,6085-6086,6090-6102,6118,6121-6122,6127-6128,6132-6150,6152,6172-6183,6221,6374,6396-6397,6438,6443,6465,6565,6572,6574,6594,6614-6615,6701,6740,6744,6874,6986,7000,7018,7023-7026,7028-7029,7044,7051,7183,7185,7277-7278,7346,7382,7413,7593,7595,7630-7631,7773-7774,7789,7794,7799,7806,7896-7904,7930-7931,7957,7972,8023,8027,8041,8056,8059,8310,8314,8318,8326,8379,8434,8471-8472,8515,8558,8570,8587,8654-8655,8754-8761,8804,8881-8884,8898-8899,8913,8937-8938,8949,9042,9049-9050,9074,9081
+packages/translation/src/lang/ru.json
+  s_05ef861992d1bd::t_58267c3845bfbe 62,104-105,130-131,147,797-802,904,1543,1885,1896,1906-1907,1921,2044,2046-2047,2049-2052,2070-2078,2116,2279,2309-2317,3233-3236,3940-3955,3960-3961,3983-4085,4441-4442,4458-4459,4655-4657,4670,4735,4737-4743,4745-4752,4754-4756,4758-4760,4762-4785,4787-4789,4820-4824,4865-4954,4957-4960,4966-4968,5138,5140-5154,5156-5171,5173-5175,5177-5178,5180-5181,5183-5185,5191-5249,5472-5474,5489-5494,5862-5863,5882-5890,5915-5917,5925-5956,5958-5985,5987-6040,6042-6050,6053-6055,6077,6082-6083,6085-6086,6090-6102,6118,6121-6122,6127-6128,6132-6150,6152,6172-6183,6309-6310,6312-6313,6351,6355,6359,6396-6397,7023-7026,7028-7029,7185,7212,7277-7278,7896-7904,7930-7931,8471-8472,8754-8761,8783,8799,8881-8883,8898-8904,9081
+packages/translation/src/lang/sk.json
+  s_05ef861992d1bd::t_ba8ca5a10e8f4b 104-105,130-131,147,797-802,904,1543,1885,1896,1906-1907,1921,2044,2046-2047,2049-2052,2070-2078,2116,2279,2309-2317,3233-3236,3940-3955,3960-3961,3983-4085,4441-4442,4458-4459,4655-4657,4737-4761,4764-4773,4777-4785,4787-4789,4820-4824,4865-4954,4957-4960,4966-4968,5140-5158,5160-5162,5164-5171,5173-5175,5177-5178,5180-5185,5188-5208,5210-5235,5239-5249,5472-5474,5489-5494,5862-5863,5884-5891,5915-5917,5925-5932,5934-5937,5939-5943,5945-5948,5950-5956,5958-6023,6025-6050,6053-6056,6058,6061,6064,6067,6070,6073-6074,6077,6080,6082-6083,6085-6086,6089-6102,6104,6107,6110,6113,6116,6118-6119,6121-6122,6125,6127-6128,6131-6152,6172-6183,6396-6397,7023-7026,7028-7029,7185,7277-7278,7896-7904,7930-7931,8471-8472,8754-8761,8881-8883,8898-8899,9081
+packages/translation/src/lang/sl.json
+  s_05ef861992d1bd::t_082197c1344df6 104-105,130-131,147,797-802,904,1543,1885,1896,1906-1907,1921,2044,2046-2047,2049-2052,2070-2078,2116,2279,2309-2317,3233-3236,3940-3955,3960-3961,3983-4085,4441-4442,4458-4459,4655-4657,4737-4761,4764-4773,4777-4785,4787-4789,4820-4824,4865-4954,4957-4960,4966-4968,5140-5142,5144-5146,5148-5171,5173-5175,5177-5178,5180-5185,5188-5218,5220-5235,5239-5249,5472-5474,5489-5494,5862-5863,5884-5891,5915-5917,5925-5932,5934-5937,5939-5943,5945-5948,5950-5956,5958-6023,6025-6050,6053-6056,6058,6061,6064,6067,6070,6073-6074,6077,6080,6082-6083,6085-6086,6089-6102,6104,6107,6110,6113,6116,6118-6119,6121-6122,6125,6127-6128,6131-6152,6172-6183,6396-6397,7023-7026,7028-7029,7185,7277-7278,7896-7904,7930-7931,8471-8472,8754-8761,8881-8883,8898-8899,9081
+packages/translation/src/lang/sv.json
+  s_05ef861992d1bd::t_0339c591c70ba7 65,79,104-105,130-131,147,151,170,180,201,362,797-802,852,904,912,914,929,931,936,960,991,1009,1060,1082,1153,1155-1156,1164,1168,1270,1283,1310,1494,1497,1543,1806,1885,1896,1906-1907,1921,1986,2044,2046-2047,2049-2052,2066,2070-2078,2116,2173,2215-2216,2230,2234,2279,2309-2317,2446,2462,2626,2629,2632,2634-2638,2641-2644,2662,2666,2703-2704,2711-2712,2715,2719,2724,2735-2737,2788,2797,2803-2804,2830,2838,2841,2849,2853,3075,3233-3236,3340,3344,3357,3414,3563,3569,3587-3588,3602-3603,3843,3939-3955,3960-3961,3983-4085,4370,4441-4442,4458-4459,4655-4657,4737-4761,4764-4773,4777-4785,4787-4789,4820-4824,4865-4954,4957-4960,4966-4968,4975,4984,4986,4988-4989,5069,5071,5089-5090,5140-5150,5152-5171,5173-5175,5177-5178,5180-5181,5183-5185,5188-5233,5235,5239-5249,5284,5286,5380,5410,5472-5474,5489-5494,5634,5638-5639,5707-5708,5710,5716,5723,5725,5753-5756,5804,5809,5815,5820,5862-5863,5865,5867,5882-5890,5915-5917,5922-5923,5925-5948,5950-6040,6042-6050,6053-6055,6077,6082-6083,6085-6086,6090-6102,6118,6121-6122,6127-6128,6132-6150,6152,6172-6183,6221,6396-6397,6438,6443,6572,6574,6986,7000,7018,7023-7026,7028-7029,7044,7185,7277-7278,7346,7591,7594-7595,7773-7774,7806,7896-7904,7930-7931,8027,8041,8471-8472,8487,8754-8761,8813,8881-8883,8892,8898-8899,8907,8913,8947,8949,9042,9049-9050,9074,9081
+packages/translation/src/lang/tr.json
+  s_05ef861992d1bd::t_39fa5b149681a5 104-105,130-131,147,797-802,904,1543,1885,1896,1906-1907,1921,2044,2046-2047,2049-2052,2070-2078,2116,2279,2309-2317,3233-3236,3940-3955,3960-3961,3983-4085,4441-4442,4458-4459,4655-4657,4737-4761,4764-4773,4777-4785,4787-4789,4820-4824,4865-4954,4957-4960,4966-4968,5140-5162,5164-5171,5173-5175,5177-5178,5180-5181,5183-5185,5188-5218,5220-5235,5239-5249,5472-5474,5489-5494,5862-5863,5884-5891,5915-5917,5925-5932,5934-5937,5939-5943,5945-5948,5950-5956,5958-6023,6025-6050,6053-6056,6058,6061,6064,6067,6073-6074,6077,6080,6082-6083,6085-6086,6089-6102,6104,6107,6110,6113,6116,6118,6121-6122,6125,6127-6128,6131-6152,6172-6183,6396-6397,7023-7026,7028-7029,7185,7277-7278,7896-7904,7930-7931,8471-8472,8754-8761,8881-8883,8898-8899,9081
+packages/translation/src/lang/uk.json
+  s_05ef861992d1bd::t_331b2262a61ed7 104-105,130-131,147,151,170,201,797-802,904,912,1082,1153,1270,1283,1494,1543,1806,1885,1896,1906-1907,1921,1986,2044,2046-2047,2049-2052,2070-2078,2116,2279,2309-2317,2446,2458,2626,2629,2634-2638,2641-2644,2703,2715,2719,2735,2788,2797,2804,2838,2841,2849,2853,3075,3233-3236,3340,3357,3414,3569,3602-3603,3940-3955,3960-3961,3983-4085,4370,4441-4442,4458-4459,4655-4657,4737-4761,4764-4773,4777-4785,4787-4789,4820-4824,4865-4954,4957-4960,4966-4968,4986,4989,5089,5140-5162,5164-5171,5173-5175,5177-5178,5180-5181,5183-5185,5188-5233,5235,5239-5249,5380,5472-5474,5489-5494,5723,5725,5755,5815,5862-5863,5867,5882-5890,5915-5917,5925-5956,5958-5985,5987-6040,6042-6050,6053-6055,6077,6082-6083,6085-6086,6090-6102,6118,6121-6122,6127-6128,6132-6150,6152,6172-6183,6221,6396-6397,6438,6443,6572,6574,6986,7000,7023-7026,7028-7029,7044,7185,7277-7278,7346,7773-7774,7806,7896-7904,7930-7931,8041,8471-8472,8754-8761,8881-8883,8898-8899,9042,9049-9050,9074,9081
+packages/translation/src/lang/vi.json
+  s_05ef861992d1bd::t_491c62e45d679e 104-105,130-131,147,797-802,904,1543,1885,1896,1906-1907,1921,2044,2046-2047,2049-2052,2070-2078,2116,2279,2309-2317,3233-3236,3940-3955,3960-3961,3983-4085,4441-4442,4458-4459,4655-4657,4737-4761,4764-4773,4777-4785,4787-4789,4820-4824,4865-4954,4957-4960,4966-4968,5140-5142,5144-5146,5148-5150,5152-5154,5156-5178,5180-5185,5188-5218,5220-5235,5239-5249,5472-5474,5489-5494,5862-5863,5884-5891,5915-5917,5925-5932,5934-5937,5939-5943,5945-5948,5950-5956,5958-6023,6025-6050,6053-6056,6058,6061,6064,6067,6070,6073-6074,6077,6080,6082-6083,6085-6086,6089-6102,6104,6107,6110,6113,6116,6118-6119,6121-6122,6125,6127-6128,6131-6152,6172-6183,6396-6397,7023-7026,7028-7029,7185,7277-7278,7896-7904,7930-7931,8471-8472,8754-8761,8881-8883,8898-8899,9081
+packages/translation/src/lang/zh.json
+  s_05ef861992d1bd::t_1dd90e1f6df7c4 94,104-105,130-131,147,168,204,797-802,904,1543,1885,1896,1906-1907,1914,1921,2044,2046-2047,2049-2052,2063,2065,2070-2078,2116,2279,2309-2317,3233-3236,3940-3955,3960-3961,3983-4085,4441-4442,4458-4459,4655-4657,4737-4761,4764-4773,4777-4785,4787-4789,4820-4824,4865-4954,4957-4960,4966-4968,5140-5142,5144-5146,5148-5162,5164-5171,5173-5181,5183-5185,5188-5221,5223-5235,5239-5249,5472-5474,5489-5494,5862-5863,5884-5891,5915-5917,5925-5932,5934-5937,5939-5943,5945-5948,5950-5956,5958-6023,6025-6050,6053-6056,6058,6061,6064,6067,6070,6073-6074,6077,6080,6082-6083,6085-6086,6089-6102,6104,6107,6110,6113,6116,6118-6119,6121-6122,6125,6127-6128,6131-6152,6172-6183,6249,6374,6380-6381,6384,6396-6397,6491,7023-7026,7028-7029,7185,7277-7278,7896-7904,7930-7931,8471-8472,8754-8761,8881-8883,8898-8899,9081
+packages/ui/src/hooks/index.ts
+  s_05ef861992d1bd::t_a6258ba5eb0f21 2
+packages/ui/src/hooks/use-deferred-element-size.ts
+  s_05ef861992d1bd::t_16ba480a00e1d5 1-22
+packages/ui/src/widget-icons.ts
+  s_05ef861992d1bd::t_dea5191d11e95c 18,25-26,44,109-112,131
+packages/validation/src/app.ts
+  s_05ef861992d1bd::t_7f7d266b292bdd 33-44
+packages/validation/src/board-layout-bounds-error.ts
+  s_05ef861992d1bd::t_b46b7a0d2fdb99 1
+packages/validation/src/board-layout-bounds.ts
+  s_05ef861992d1bd::t_51f8cead158c27 1-82
+packages/validation/src/icons.ts
+  s_05ef861992d1bd::t_ee60fcb489d389 7-14
+packages/validation/src/media.ts
+  s_05ef861992d1bd::t_6d35226119f519 6-43,48,61,66,72-83
+packages/validation/src/uptime-kuma.ts
+  s_05ef861992d1bd::t_7c98555abb27e4 1-8
+packages/widgets/package.json
+  s_05ef861992d1bd::t_83852727984863 100,105,114,120
+packages/widgets/src/_inputs/widget-multiReleasesRepositories-input.tsx
+  s_05ef861992d1bd::t_d108c9bd940db6 31-32,48,81-87,108,186,188,196,569-577,676,685-686,695-696,699,701-706,769-780,787,789,795,798-801,813-816,823,825,828,834-861,865,869,872-873,877-878,880-882,891,898-918,920-937,941,943-952,955-983,987-1016,1022-1026
+packages/widgets/src/_inputs/widget-select-input.tsx
+  s_05ef861992d1bd::t_24be0405dcab50 77
+packages/widgets/src/app/_app-link.spec.tsx
+  s_05ef861992d1bd::t_a7305894ce4a30 1-177
+packages/widgets/src/app/_app-link.tsx
+  s_05ef861992d1bd::t_cd744f029ce3eb 1-59
+packages/widgets/src/app/component.tsx
+  s_05ef861992d1bd::t_878ad3e19ebb5d 5,19,36,63
+packages/widgets/src/app/index.ts
+  s_05ef861992d1bd::t_2ddec34bcadd9c 24-42
+packages/widgets/src/assistant/index.ts
+  s_05ef861992d1bd::t_6539d851f241e1 7
+packages/widgets/src/beszel-system-grid/component.tsx
+  s_05ef861992d1bd::t_889c9c771f2ead 185,286-293,298,431
+packages/widgets/src/beszel-system-grid/index.ts
+  s_05ef861992d1bd::t_0c12705453eba6 19-21
+packages/widgets/src/beszel-system-table/component.tsx
+  s_05ef861992d1bd::t_e6adae5470ce31 367,419,421,461
+packages/widgets/src/beszel-system-table/display.ts
+  s_05ef861992d1bd::t_87547bb4a19fd3 6-30
+packages/widgets/src/beszel-system-table/index.ts
+  s_05ef861992d1bd::t_f9af423d7332e8 7,9,41-57,62-64
+packages/widgets/src/beszel/_shared/chart-style.ts
+  s_05ef861992d1bd::t_ae707d72fc179b 1-8
+packages/widgets/src/beszel/_shared/chart.tsx
+  s_05ef861992d1bd::t_0641b67ad207e8 6-8,20,24-28,192-193
+packages/widgets/src/beszel/_shared/colors.ts
+  s_05ef861992d1bd::t_18ef2e5222a3c1 4-5
+packages/widgets/src/beszel/_shared/interactive-chart.tsx
+  s_05ef861992d1bd::t_e6a0eb2ae2a9b1 1-88
+packages/widgets/src/bookmarks/bookmarks-widget.tsx
+  s_05ef861992d1bd::t_9ccb9e86e7a836 30,100-121,128,155-157,161,232,258,273,275,297-298,346,526-529
+packages/widgets/src/bookmarks/layout.ts
+  s_05ef861992d1bd::t_73012a61c4127b 200,208,252-256,260-261,264
+packages/widgets/src/calendar/calendar-display.tsx
+  s_05ef861992d1bd::t_68d01db9ccad1f 3,20-21,33,47,61,67,93-97,124-125,127-128,131,134,141-153,213,222,238-239,270,272,297-302,310,312-313,318-335
+packages/widgets/src/calendar/calendar-event-list.tsx
+  s_05ef861992d1bd::t_6abc48e996002b 2,9,33-57
+packages/widgets/src/calendar/calender-day.tsx
+  s_05ef861992d1bd::t_12edc6c8e0d252 1,5-6,14-21,23-25,28,31-34
+packages/widgets/src/calendar/component.module.css
+  s_05ef861992d1bd::t_7397a083eec367 2,7-14,24,39-123,172,182-201,217-220
+packages/widgets/src/calendar/component.tsx
+  s_05ef861992d1bd::t_1a7ba86b74d811 105,113-114
+packages/widgets/src/calendar/index.ts
+  s_05ef861992d1bd::t_abff9fe1e79604 12,26-29
+packages/widgets/src/common/application-url.spec.ts
+  s_05ef861992d1bd::t_9a9263cec50813 3
+packages/widgets/src/common/application-url.ts
+  s_05ef861992d1bd::t_dd8bdeb11b6379 1
+packages/widgets/src/common/homarr-data-table.tsx
+  s_05ef861992d1bd::t_e0fb17412faa5d 11-12,31,49-53,60,100,142,160,182,267-293
+packages/widgets/src/common/use-persisted-table-layout.spec.ts
+  s_05ef861992d1bd::t_0e5f8b3886e086 29,38,74
+packages/widgets/src/common/use-persisted-table-layout.ts
+  s_05ef861992d1bd::t_25f484056bffad 3,14-15,17,58,62,66,123-133,135-142,144-150,152,157-159,162,167,170-171,173,176,179-201,209,215-221,223-236,238-240
+packages/widgets/src/coolify/instance-card.tsx
+  s_05ef861992d1bd::t_47b77675730c91 45
+packages/widgets/src/coolify/single-instance-layout.tsx
+  s_05ef861992d1bd::t_f14af045d78618 44
+packages/widgets/src/coolify/types.ts
+  s_05ef861992d1bd::t_07178eea41222c 12
+packages/widgets/src/custom-api/index.ts
+  s_05ef861992d1bd::t_475808f8042a43 8
+packages/widgets/src/definition.ts
+  s_05ef861992d1bd::t_3bf63356bd05f2 114-115
+packages/widgets/src/docker/component.tsx
+  s_05ef861992d1bd::t_61552a28355524 47,395,448,470
+packages/widgets/src/docker/styles.css
+  s_05ef861992d1bd::t_17464f3be1f5cc 6-23
+packages/widgets/src/downloads/component.tsx
+  s_05ef861992d1bd::t_e9805b8d8fdb7e 32,698-719,724,733,810-812,820
+packages/widgets/src/downloads/helpers.ts
+  s_05ef861992d1bd::t_3108488b6b568d 21,33
+packages/widgets/src/manifest.ts
+  s_05ef861992d1bd::t_e1e5b9f2027247 7,10,68-73,154-159
+packages/widgets/src/media-server/component.spec.tsx
+  s_05ef861992d1bd::t_91059a6a45ccb8 13-16,110-191
+packages/widgets/src/media-transcoding/index.ts
+  s_05ef861992d1bd::t_4b066ce6d08820 14,20
+packages/widgets/src/notebook/canonical-task.ts
+  s_05ef861992d1bd::t_1ad2904a3b801a 1-13
+packages/widgets/src/notebook/component.tsx
+  s_05ef861992d1bd::t_345a02cdf27455 3-5,8-9,11-14,17-55
+packages/widgets/src/notebook/notebook.css
+  s_05ef861992d1bd::t_fea7d13db97f8e 47,63,135-179
+packages/widgets/src/notebook/notebook.tsx
+  s_05ef861992d1bd::t_6edcd2c1c68a1f 62-63,84-101,112-113,123,185,337-342,356,548,585
+packages/widgets/src/notebook/read-mode.tsx
+  s_05ef861992d1bd::t_133bc7964d012b 1-254
+packages/widgets/src/notebook/sanitize-content.spec.ts
+  s_05ef861992d1bd::t_07f887ddc57a1c 1-15
+packages/widgets/src/notebook/sanitize-content.ts
+  s_05ef861992d1bd::t_464ff94993a177 1-222
+packages/widgets/src/notebook/surface.tsx
+  s_05ef861992d1bd::t_5399b6709cfeac 1-80
+packages/widgets/src/option-translation.ts
+  s_05ef861992d1bd::t_6640838293a71d 49-52,57-60
+packages/widgets/src/options.ts
+  s_05ef861992d1bd::t_274f22fe145f3d 62,204
+packages/widgets/src/refetch-intervals.ts
+  s_05ef861992d1bd::t_a98477c7e0ac77 27,32,36-39
+packages/widgets/src/registry.ts
+  s_05ef861992d1bd::t_9faa4f516750b5 43-46,66,117-120,138,186-189,207,262-265,283
+packages/widgets/src/releases/component.module.css
+  s_05ef861992d1bd::t_a92cddf17b6869 1-882
+packages/widgets/src/releases/component.tsx
+  s_05ef861992d1bd::t_1d5e1d71a7a324 3-6,8,10-12,15,18-19,21,23,25,28,30-79,82-106,111,113,116-117,119,124-131,133,135-136,138,140-160,162,164-214,216-235,237-244,246-350,352-382,385-399,402-475,478-493,495-503,506-508,511-522,524,526-528,531,533,536-542,544-552,554-556,558-581,585-595,598-609,612-625,628-639,641-690,692-694,698-704,707-711,714-748
+packages/widgets/src/releases/display.spec.ts
+  s_05ef861992d1bd::t_7c870d25a9f9a7 1-166,168-179,181-279,282-295,297-358,360
+packages/widgets/src/releases/display.ts
+  s_05ef861992d1bd::t_84642ea0f4c628 1-20,23-25,28-72,74-99,101-121
+packages/widgets/src/releases/index.ts
+  s_05ef861992d1bd::t_1baf3c263cd81e 9-16,19,23-26,31-32,34-37,39-40,42-45,47,49,51-57,59-67,69-78,81,98
+packages/widgets/src/releases/release-detail.tsx
+  s_05ef861992d1bd::t_0034c54d426812 1-336
+packages/widgets/src/releases/release-entry.ts
+  s_05ef861992d1bd::t_7c9a6237ea4ddc 1-46
+packages/widgets/src/releases/release-options.ts
+  s_05ef861992d1bd::t_5ba4956340be95 1-11
+packages/widgets/src/releases/releases-repository.ts
+  s_05ef861992d1bd::t_f72716ed720a1e 15
+packages/widgets/src/releases/use-release-entries.ts
+  s_05ef861992d1bd::t_f75c75ea9794f8 1-171
+packages/widgets/src/releases/use-viewed-releases.ts
+  s_05ef861992d1bd::t_6a8e9c3c731fb0 1-88
+packages/widgets/src/rssFeed/component.tsx
+  s_05ef861992d1bd::t_b47bd807f1e4b3 50
+packages/widgets/src/smart-home/entity-state/component.tsx
+  s_05ef861992d1bd::t_a75f4835d2da65 5,78,91,98
+packages/widgets/src/smart-home/execute-automation/component.tsx
+  s_05ef861992d1bd::t_398d12503c60f3 15,65,81,88-96
+packages/widgets/src/thingport/activity-heatmap/calendar.spec.ts
+  s_05ef861992d1bd::t_87bbd9e5fc743e 1-34
+packages/widgets/src/thingport/activity-heatmap/calendar.ts
+  s_05ef861992d1bd::t_db6855c796548c 1-74
+packages/widgets/src/thingport/activity-heatmap/component.module.css
+  s_05ef861992d1bd::t_6ea1173a1cc388 1-131
+packages/widgets/src/thingport/activity-heatmap/component.tsx
+  s_05ef861992d1bd::t_af2c21aae61d79 1-260
+packages/widgets/src/thingport/activity-heatmap/index.ts
+  s_05ef861992d1bd::t_24e2fbf867207e 1,5-6,8-14,17-18,20-29,31-32
+packages/widgets/src/thingport/common/rendered-size.ts
+  s_05ef861992d1bd::t_73ef936f066a73 1-16
+packages/widgets/src/thingport/common/widget-header.tsx
+  s_05ef861992d1bd::t_cbe999c1f1c47f 1,3-25,27-37
+packages/widgets/src/thingport/featured-model/component.module.css
+  s_05ef861992d1bd::t_1ac09ecc88bd4a 1-7,10-15,18-20,23-29,32-33
+packages/widgets/src/thingport/featured-model/component.tsx
+  s_05ef861992d1bd::t_0d13477bea8008 1-137
+packages/widgets/src/thingport/featured-model/index.ts
+  s_05ef861992d1bd::t_e39380e04668b3 1,5-6,8-15,18-21
+packages/widgets/src/thingport/featured-model/model-viewer.tsx
+  s_05ef861992d1bd::t_45aa261498d566 1-250
+packages/widgets/src/thingport/library-stats/component.module.css
+  s_05ef861992d1bd::t_31bb391f60dac4 1-102
+packages/widgets/src/thingport/library-stats/component.tsx
+  s_05ef861992d1bd::t_f4af1869dbe97e 1-74
+packages/widgets/src/thingport/library-stats/index.ts
+  s_05ef861992d1bd::t_d9798d6e06d5d4 1,5-6,8-14,17-22
+packages/widgets/src/thingport/models/component.module.css
+  s_05ef861992d1bd::t_888def0ba3c3d5 1-19
+packages/widgets/src/thingport/models/component.tsx
+  s_05ef861992d1bd::t_7ee5067aad734d 1-167
+packages/widgets/src/thingport/models/index.ts
+  s_05ef861992d1bd::t_3e74da80724fab 1,6-7,9-15,18-19,21-37,39-41,43-44
+packages/widgets/src/uptime-kuma/component.module.css
+  s_05ef861992d1bd::t_85d57e2902f449 1-2,7-44,46-49,52-55,57-66,69-76,78-79,82-93,95-96,99-107,110,112-114,116-117,120-122,125-137,139,142-146,150-160,162-171,174-184,189-243,245-263,265-277,279-298,301-302,305-328,330-338,341-344,348,350-351,354-357,360-363,365-415,417,422-430,432-445,447-540
+packages/widgets/src/uptime-kuma/component.tsx
+  s_05ef861992d1bd::t_b8d8b7134d0a0b 3-6,9-12,14,18-20,23-52,72,80,83,92,96-101,103,105-106,108-124,127,129-131,135,137-139,144-154,158-160,163-196,199-203,205-230,233-289,291-320,322-438
+packages/widgets/src/uptime-kuma/heartbeat-bar.tsx
+  s_05ef861992d1bd::t_e42cf0f66c46a2 1-64
+packages/widgets/src/uptime-kuma/index.ts
+  s_05ef861992d1bd::t_561d50fcf5960d 4,14-16,19-31,33-36
+packages/widgets/src/uptime-kuma/layout.ts
+  s_05ef861992d1bd::t_55f7c3c256b610 1-58
+packages/widgets/src/uptime-kuma/monitor-row.tsx
+  s_05ef861992d1bd::t_7a635b5bef1c8c 1-158
+packages/widgets/src/uptime-kuma/monitors.ts
+  s_05ef861992d1bd::t_99834c8b505be4 1-90
+packages/widgets/src/uptime-kuma/notices.tsx
+  s_05ef861992d1bd::t_67ae9fb35a1ab8 1-124
+packages/widgets/src/uptime-kuma/status.ts
+  s_05ef861992d1bd::t_3fe88cecaac627 1-104
+packages/widgets/src/uptime-kuma/summary.tsx
+  s_05ef861992d1bd::t_033f58647e6fa5 1-160
+packages/widgets/src/wazuh/_shared/error-state.tsx
+  s_05ef861992d1bd::t_2efe448b087416 20-21
+packages/widgets/src/wazuh/component.module.css
+  s_05ef861992d1bd::t_826c6cc1ad8778 1-43
+packages/widgets/src/wazuh/component.tsx
+  s_05ef861992d1bd::t_21eb220fe18bee 1-138
+packages/widgets/src/wazuh/index.ts
+  s_05ef861992d1bd::t_c4be602ac932c0 1,8-10,12-16,18-158,160-164
+packages/widgets/src/wazuh/view-props.ts
+  s_05ef861992d1bd::t_36aef2a4d1eb8b 1-7
+packages/widgets/src/wazuh/views.spec.ts
+  s_05ef861992d1bd::t_aad30287d4dcfa 1-32
+packages/widgets/src/wazuh/views.ts
+  s_05ef861992d1bd::t_d175637cea1b64 1-32
+packages/widgets/src/wazuh/views/agents.tsx
+  s_05ef861992d1bd::t_2168609eabc3ff 4,16,19-21,26-36,39,98,106,111-116,120-123,127-131,150-313,388-389,411-425
+packages/widgets/src/wazuh/views/alerts.tsx
+  s_05ef861992d1bd::t_11229c1844490d 9-18,20-21,23,25-26,31,57
+packages/widgets/src/wazuh/views/auth-failures.tsx
+  s_05ef861992d1bd::t_ccb1c28804fccb 10-19,24-25,28,30-31,36,54,151
+packages/widgets/src/wazuh/views/fim.tsx
+  s_05ef861992d1bd::t_442907c03f3118 18-26,41-42,50-51,54
+packages/widgets/src/wazuh/views/overview.tsx
+  s_05ef861992d1bd::t_3454a91ecea33d 11-15,22-24,37,70-71,77
+packages/widgets/src/wazuh/views/timeline.tsx
+  s_05ef861992d1bd::t_e9d69d95c2b904 11-17,30,32,34-44,47-48
+packages/widgets/src/wazuh/views/top.tsx
+  s_05ef861992d1bd::t_9a49b48b777bd1 3,11-20,57-58,63,69-70,74,85,87,91,99,109-113,118,121,134-136,152,154,177
+packages/widgets/src/wazuh/views/vulnerabilities.tsx
+  s_05ef861992d1bd::t_1ff716a91345a6 3,10-18,35,102,155-156,209-213
+plugins/homarr-mantine/mcp.json
+  s_05ef861992d1bd::t_747c4af78bb459 2,5,7-8
+plugins/homarr-mantine/plugin.json
+  s_05ef861992d1bd::t_85449a88d0243b 1-18
+plugins/homarr-mantine/skills/mantine-ui/SKILL.md
+  s_05ef861992d1bd::t_382f16816d2278 1-42
+plugins/homarr-mantine/skills/mantine-ui/agents/openai.yaml
+  s_05ef861992d1bd::t_c44012c83d3b4a 1-4
+static-data/contributors.json
+  s_05ef861992d1bd::t_9bf3f1fb3819a4 1
+static-data/opencollective-contributors.json
+  s_05ef861992d1bd::t_ff0cb96230fb5f 1
+static-data/translators.json
+  s_05ef861992d1bd::t_dee1de34b39e60 1
+tooling/github/setup/action.yml
+  s_05ef861992d1bd::t_24661f9e5e395d 21,23,27,36,42,45,47,54,63,74,83
+tools/assistant-benchmark/README.md
+  s_05ef861992d1bd::t_a034eb08911ad2 21-22
+tools/brand-art/bun.lock
+  s_05ef861992d1bd::t_37b3e29b7fd963 13,24
+tools/brand-art/package.json
+  s_05ef861992d1bd::t_05ecd2160e7c3f 14
+tools/homarr-dev/go.mod
+  s_05ef861992d1bd::t_ab5235be3e68c4 3,6-8,10,17,24-25,29-31
+tools/homarr-dev/go.sum
+  s_05ef861992d1bd::t_ae64504995a978 1-8,17-20,36-39,49-50,54-57
+tools/mysql-to-sqlite/Dockerfile
+  s_05ef861992d1bd::t_57694d5b18eff5 1,3,9
+tools/mysql-to-sqlite/bun.lock
+  s_05ef861992d1bd::t_52b9f1a3702e71 8,27
+tools/mysql-to-sqlite/package.json
+  s_05ef861992d1bd::t_ab8c704183e8fe 11,14
+tools/v2-showreel/bun.lock
+  s_05ef861992d1bd::t_a9628b8543a7ce 11-12,15-17,24,26,28,30,32,34,36,38,40,42,44,46,48,50,52,54,56,58,60,62,64,66,68,70,72,74,82,88,92,96,98,100
+tools/v2-showreel/package.json
+  s_05ef861992d1bd::t_1023be2fdaba60 13-14,17-19
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "b93887e40ad8884ad88ddf76309a247c749040ed",
+  "prompts": {},
+  "sessions": {
+    "s_05ef861992d1bd": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1a6e7-d402-7d23-bf4e-544804888af2",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
