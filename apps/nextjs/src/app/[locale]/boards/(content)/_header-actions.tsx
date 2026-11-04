@@ -23,6 +23,7 @@ import { normalizeBoardLayoutBounds } from "~/components/board/layout/normalize-
 import { loadGridEditorAsync, scheduleGridEditorWarmup } from "~/components/board/sections/grid/grid-editor-loader";
 import { HeaderButton } from "~/components/layout/header/button";
 import { TourTarget } from "~/components/layout/header/tour-target";
+import { registerBoardDirtyLeaveGuard } from "./board-dirty-leave-guard";
 import type * as EditActionsModule from "./_edit-actions";
 
 let editActionsModulePromise: Promise<typeof EditActionsModule> | undefined;
@@ -249,7 +250,6 @@ const EditModeMenu = ({ demoReadOnly }: { demoReadOnly: boolean }) => {
   );
 };
 
-const anchorSelector = "a[href]:not([target='_blank'])";
 const usePreventLeaveWithDirty = (isDirty: boolean) => {
   const tBoard = useI18n("board");
   const tCommon = useI18n("common");
@@ -259,46 +259,20 @@ const usePreventLeaveWithDirty = (isDirty: boolean) => {
   useEffect(() => {
     if (!isDirty) return;
 
-    const handleClick = (event: MouseEvent) => {
-      if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
-      const target = event.target instanceof Element ? event.target.closest<HTMLAnchorElement>(anchorSelector) : null;
-      if (!target) return;
-
-      event.preventDefault();
-      event.stopPropagation();
-
-      openConfirmModal({
-        title: tBoard("action.edit.confirmLeave.title"),
-        children: tBoard("action.edit.confirmLeave.message"),
-        onConfirm() {
-          router.push(target.href);
-        },
-        confirmProps: {
-          children: tCommon("action.discard"),
-        },
-      });
-    };
-
-    const handlePopState = (event: Event) => {
-      window.history.pushState(null, document.title, window.location.href);
-      event.preventDefault();
-    };
-
-    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
-      if (env.NODE_ENV === "development") return;
-
-      event.preventDefault();
-      event.returnValue = true;
-    };
-
-    document.addEventListener("click", handleClick, true);
-    window.addEventListener("popstate", handlePopState);
-    window.addEventListener("beforeunload", handleBeforeUnload);
-
-    return () => {
-      document.removeEventListener("click", handleClick, true);
-      window.removeEventListener("popstate", handlePopState);
-      window.removeEventListener("beforeunload", handleBeforeUnload);
-    };
+    return registerBoardDirtyLeaveGuard({
+      guardBeforeUnload: env.NODE_ENV !== "development",
+      confirmLeave(href) {
+        openConfirmModal({
+          title: tBoard("action.edit.confirmLeave.title"),
+          children: tBoard("action.edit.confirmLeave.message"),
+          onConfirm() {
+            router.push(href);
+          },
+          confirmProps: {
+            children: tCommon("action.discard"),
+          },
+        });
+      },
+    });
   }, [isDirty, openConfirmModal, router, tBoard, tCommon]);
 };
