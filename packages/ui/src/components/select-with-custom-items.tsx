@@ -65,11 +65,14 @@ export const SelectWithCustomItems = <TSelectItem extends BaseSelectItem>({
 
   const selectedOption = useMemo(() => data.find((item) => item.value === selectedValue), [data, selectedValue]);
 
-  const normalizedSearch = search.toLocaleLowerCase().trim();
-  const filteredData = data.filter((item) => !searchable || item.label.toLocaleLowerCase().includes(normalizedSearch));
+  const filteredData = useMemo(() => {
+    const normalizedSearch = search.toLocaleLowerCase().trim();
+    if (!searchable || !normalizedSearch) return data;
+    return data.filter((item) => item.label.toLocaleLowerCase().includes(normalizedSearch));
+  }, [data, search, searchable]);
   const options = filteredData.map((item) => (
     <Combobox.Option value={item.value} key={item.value} active={item.value === selectedValue}>
-      <SelectOption {...item} checked={item.value === selectedValue} />
+      {combobox.dropdownOpened && <SelectOption {...item} checked={item.value === selectedValue} />}
     </Combobox.Option>
   ));
 

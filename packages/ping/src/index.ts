@@ -23,6 +23,7 @@ export const sendPingRequestAsync = async (url: string) => {
     }).then((response) => {
       const end = performance.now();
       const durationMs = end - start;
+      void response.body?.cancel().catch(() => undefined);
       return { statusCode: response.status, durationMs };
     });
   } catch (error) {

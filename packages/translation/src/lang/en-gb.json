@@ -144,13 +144,7 @@
         "secondaryColor": "Secondary colour",
         "resetColors": "Reset colours",
         "radius": "Widget corner radius",
-        "radiusOptions": {
-          "xs": "Tight",
-          "sm": "Subtle",
-          "md": "Balanced",
-          "lg": "Rounded",
-          "xl": "Soft"
-        },
+        "radiusOptions": {},
         "columns": "Board columns",
         "columnsDescription": "Columns define the horizontal grid used to size and position items. 12 is plenty for most people.",
         "columnCount": "{count, plural, one {# column} other {# columns}}",
@@ -194,7 +188,6 @@
           "loginRequired": "Sign in as an administrator after setup to create an API key.",
           "configuration": "Client configuration",
           "copy": "Copy configuration",
-          "copied": "Copied",
           "advanced": "Open MCP tools, permissions and setup details"
         }
       },
@@ -806,9 +799,7 @@
         "examples": "",
         "requiresHandler": ""
       },
-      "description": {
-        "label": "Description"
-      },
+      "description": {},
       "useDifferentUrlForPing": {
         "checkbox": {
           "label": "Use a different URL for pings",
@@ -860,7 +851,6 @@
       "source": "API source: {name}",
       "baseUrl": "Server URL",
       "networkScope": "Network access",
-      "save": "Save API configuration",
       "expires": "This one-time request expires at {time}."
     },
     "page": {
@@ -891,13 +881,11 @@
       "pasteImportHint": "Paste a complete custom widget JSON with Ctrl+V or Command+V",
       "delete": "Delete Custom Widget",
       "deleteConfirm": "Are you sure you want to delete \"{name}\"? This action cannot be undone.",
-      "export": "Export",
       "duplicate": "Duplicate",
       "aiPrompt": "Design with AI",
       "copyAiPrompt": "Copy AI prompt",
       "enable": "Enable",
       "disable": "Disable",
-      "menu": "Actions",
       "downloadSkill": "View custom widget skill",
       "publishWorkshop": "Publish to Workshop",
       "migrate": "Migrate custom widget",
@@ -911,12 +899,9 @@
     "sourceSetupDialog": {
       "title": "Configure widget sources",
       "description": "Review where this widget connects and add or replace its encrypted credentials.",
-      "credentialsRequired": "Requests will fail until the required credentials are added.",
-      "save": "Save configuration"
+      "credentialsRequired": "Requests will fail until the required credentials are added."
     },
-    "field": {
-      "description": "Description"
-    },
+    "field": {},
     "editor": {
       "errorBoundary": {
         "title": "Something went wrong"
@@ -926,7 +911,6 @@
         "format": "Format",
         "insertStarter": "Insert starter",
         "redo": "Redo",
-        "copied": "Copied",
         "schema": "Schema"
       },
       "reference": {
@@ -1007,7 +991,6 @@
         "manifestFilename": "widget.json",
         "request": "Request {count, number}",
         "requestId": "Request ID",
-        "type": "Type",
         "method": "Method",
         "source": "API source",
         "run": "Run",
@@ -1044,7 +1027,6 @@
         "optionName": "Option name",
         "label": "Label",
         "control": "Control",
-        "description": "Description",
         "default": "Default",
         "optionDetails": "Constraints and dynamic choices",
         "minimum": "Minimum",
@@ -1081,7 +1063,6 @@
         "credentialRemovedDescription": "The stored value was deleted.",
         "primary": "Primary API",
         "id": "Source ID",
-        "name": "Name",
         "baseUrl": "Base URL",
         "baseUrlError": {
           "invalid": "Enter a complete URL.",
@@ -1098,7 +1079,6 @@
         "remove": "Remove source and its requests",
         "advanced": "Advanced",
         "add": "Add another API source",
-        "sourceType": "Source",
         "manualSource": "HTTP API",
         "existingIntegration": "Existing integration",
         "integrationType": "Integration type",
@@ -1232,7 +1212,6 @@
       "migrationTitle": "Review migrated v2 replacement",
       "migrationDescription": "Review and confirm this generated v2 definition. Confirming atomically replaces the preserved v1 record while keeping existing board placements linked to the same widget ID.",
       "fileLabel": "Choose a custom widget JSON file",
-      "name": "Job name",
       "origin": "Base origin",
       "authentication": "Authentication",
       "networkScope": "Network scope",
@@ -1252,8 +1231,6 @@
         "title": "This widget can change remote data",
         "description": "Review every named action, inherited credential and destructive confirmation after import. Secrets are not included in the file."
       },
-      "cancel": "Cancel import",
-      "confirm": "Import widget",
       "confirmMigration": "Confirm v2 replacement"
     },
     "secret": {
@@ -1317,7 +1294,6 @@
     "closeScreenshotViewer": "Close screenshot viewer",
     "technicalDetails": "Technical details",
     "sourceCode": "Workshop entry",
-    "export": "Export",
     "report": "Report",
     "reportTitle": "Report submission",
     "reportReason": "Reason",
@@ -1348,8 +1324,6 @@
       "viewSubmission": "View and manage submission",
       "done": "Done",
       "signInHint": "Sign in to publish under your Workshop identity.",
-      "titleField": "Title",
-      "descriptionField": "Description",
       "screenshots": "Screenshots",
       "screenshotsDescription": "Up to five PNG, JPEG, or WebP images",
       "screenshotsPlaceholder": "Choose screenshots",
@@ -1615,11 +1589,9 @@
             },
             "notification": {
               "success": {
-                "title": "Trusted certificate",
                 "message": "Added certificate to trusted certificate list"
               },
               "error": {
-                "title": "Failed to trust certificate",
                 "message": "Failed to add certificate to trusted certificate list"
               }
             }
@@ -1840,9 +1812,7 @@
     "search": "Find media",
     "field": {
       "preview": "Preview",
-      "size": "Size",
-      "creator": "Creator",
-      "actions": "Actions"
+      "creator": "Creator"
     },
     "action": {
       "upload": {
@@ -1920,7 +1890,8 @@
       "clearSearch": "Clear search",
       "copy": "Copy",
       "copied": "Copied",
-      "refresh": "Refresh"
+      "refresh": "Refresh",
+      "export": "Export"
     },
     "hidden": "Hidden",
     "pagination": {
@@ -2067,7 +2038,18 @@
     "total": "Total",
     "filesystemUsage": "{count, plural, one {Show usage for # filesystem} other {Show usage for # filesystems}}",
     "field": {
-      "name": "Job name"
+      "name": "Name",
+      "state": "State",
+      "size": "Size",
+      "actions": "Actions",
+      "source": "Source",
+      "title": "Title",
+      "description": "Description",
+      "created": "Created",
+      "namespace": "Namespace",
+      "status": "Status",
+      "architecture": "Architecture",
+      "type": "Type"
     },
     "label": {
       "new": "New"
@@ -2085,6 +2067,15 @@
       "searchEngines": "Search engines",
       "tasks": "Tasks",
       "users": "Users"
+    },
+    "cornerStyle": {
+      "options": {
+        "md": "Balanced",
+        "lg": "Rounded corners",
+        "xs": "Tight",
+        "sm": "Subtle",
+        "xl": "Soft"
+      }
     }
   },
   "section": {
@@ -2122,9 +2113,7 @@
         "collapse": "Collapse"
       },
       "option": {
-        "title": {
-          "label": "Title"
-        },
+        "title": {},
         "customCssClasses": {
           "label": "Custom CSS classes"
         },
@@ -2148,8 +2137,7 @@
       "label": {
         "settings": "Settings",
         "settingsFor": "Settings for {name}",
-        "options": "Options",
-        "actions": "Actions"
+        "options": "Options"
       },
       "status": {
         "success": "OK",
@@ -2202,7 +2190,6 @@
     "selection": {
       "summary": "{count, plural, one {# selected item} other {# selected items}}",
       "selected": "{count, plural, one {# selected} other {# selected}}",
-      "copy": "Copy",
       "copied": "{count, plural, one {# item copied to the clipboard} other {# items copied to the clipboard}}",
       "copyError": "The selected items could not be copied. Your browser may not allow clipboard access.",
       "paste": "Paste",
@@ -2214,7 +2201,6 @@
       "removed": "{count, plural, one {# item removed} other {# items removed}}",
       "move": "Move",
       "moveTo": "Move selected items",
-      "delete": "Delete",
       "clear": "Clear selection",
       "clearShortcut": "Clear selection (Escape)",
       "saveErrorTitle": "Unable to update items",
@@ -2290,9 +2276,7 @@
           "label": "Integrations",
           "removeLabel": "Remove {name} integration"
         },
-        "title": {
-          "label": "Title"
-        },
+        "title": {},
         "customCssClasses": {
           "label": "Custom CSS classes"
         },
@@ -3505,7 +3489,6 @@
         },
         "table": {
           "header": {
-            "name": "Name",
             "node": "Node"
           }
         }
@@ -3535,8 +3518,6 @@
         },
         "defaultSort": {
           "option": {
-            "name": "Name",
-            "state": "State",
             "cpuUsage": "CPU usage",
             "memoryUsage": "Memory usage"
           }
@@ -3947,9 +3928,7 @@
       "items": {
         "currentlyPlaying": "Currently playing",
         "user": "User",
-        "name": "Name",
         "id": "Id",
-        "status": "Status",
         "directPlay": "Direct play",
         "directStream": "Direct stream",
         "transcodeVideo": "Transcoding video",
@@ -4444,38 +4423,29 @@
           "columnTitle": "Actions"
         },
         "added": {
-          "columnTitle": "",
-          "detailsTitle": "Added"
+          "columnTitle": "Added"
         },
         "category": {
-          "columnTitle": "Category",
-          "detailsTitle": "Category"
+          "columnTitle": "Category"
         },
         "downSpeed": {
-          "columnTitle": "Down",
-          "detailsTitle": "Down"
+          "columnTitle": "Down"
         },
         "index": {
           "columnTitle": "",
           "detailsTitle": "Index"
         },
         "id": {
-          "columnTitle": "Item ID",
-          "detailsTitle": "Item ID"
+          "columnTitle": "Item ID"
         },
-        "integration": {
-          "columnTitle": "Source"
-        },
-        "name": {
-          "columnTitle": "Job name"
-        },
+        "integration": {},
+        "name": {},
         "progress": {
           "columnTitle": "Progress",
           "detailsTitle": "Progress"
         },
         "ratio": {
-          "columnTitle": "",
-          "detailsTitle": "Ratio"
+          "columnTitle": "Ratio"
         },
         "received": {
           "columnTitle": "Down",
@@ -4485,26 +4455,16 @@
           "columnTitle": "Up",
           "detailsTitle": "Uploaded"
         },
-        "size": {
-          "columnTitle": "Size",
-          "detailsTitle": "Size"
-        },
-        "state": {
-          "columnTitle": "State",
-          "detailsTitle": "State"
-        },
+        "size": {},
+        "state": {},
         "time": {
-          "columnTitle": "ETA",
-          "detailsTitle": "ETA",
-          "eta": "ETA"
+          "columnTitle": "ETA"
         },
         "type": {
-          "columnTitle": "",
           "detailsTitle": "Type"
         },
         "upSpeed": {
-          "columnTitle": "",
-          "detailsTitle": "Up"
+          "columnTitle": "Up"
         }
       },
       "states": {
@@ -4693,9 +4653,7 @@
           }
         },
         "queue": {
-          "table": {
-            "size": ""
-          }
+          "table": {}
         },
         "common": {
           "empty": "Empty",
@@ -4859,9 +4817,7 @@
             "label": "",
             "placeholder": ""
           },
-          "name": {
-            "label": ""
-          },
+          "name": {},
           "excludePrereleases": {
             "label": "",
             "description": ""
@@ -5166,7 +5122,6 @@
       "download": "",
       "upload": "",
       "ping": "",
-      "status": "",
       "avgDownload": "",
       "avgUpload": "",
       "avgPing": "",
@@ -5474,7 +5429,6 @@
         "actionsDisabledEditMode": "Actions are disabled while the board is in edit mode.",
         "widgetItemUnavailable": "This widget item is not available.",
         "toggle": "Toggle",
-        "copied": "Copied",
         "confirmDelete": "Confirm this destructive action."
       },
       "option": {
@@ -5751,7 +5705,6 @@
       },
       "metric": {
         "system": "System",
-        "source": "Source",
         "hostname": "Hostname",
         "cpuModel": "CPU model",
         "cores": "Cores",
@@ -6441,13 +6394,7 @@
       "itemRadius": {
         "label": "",
         "description": "",
-        "option": {
-          "xs": "",
-          "sm": "",
-          "md": "",
-          "lg": "",
-          "xl": ""
-        }
+        "option": {}
       },
       "isPublic": {
         "label": "",
@@ -7079,13 +7026,7 @@
             },
             "defaultRadius": {
               "label": "Corner style",
-              "options": {
-                "xs": "Tight",
-                "sm": "Subtle",
-                "md": "Balanced",
-                "lg": "Rounded corners",
-                "xl": "Soft"
-              }
+              "options": {}
             },
             "customCss": {
               "label": "Global custom CSS",
@@ -7107,7 +7048,6 @@
               "greetingDefault": "Default greeting",
               "boardColorLocked": "Board colour locked",
               "boardColorFlexible": "Board colours allowed",
-              "appName": "Job name",
               "logo": "Logo",
               "greeting": "Greeting",
               "on": "On",
@@ -7335,9 +7275,7 @@
             "lastExecution": {
               "label": ""
             },
-            "actions": {
-              "label": ""
-            }
+            "actions": {}
           },
           "table": {
             "search": ""
@@ -7401,9 +7339,7 @@
               },
               "table": {
                 "header": {
-                  "createdBy": "",
-                  "source": "Source",
-                  "actions": ""
+                  "createdBy": ""
                 }
               },
               "provenance": {
@@ -7696,7 +7632,6 @@
     },
     "field": {
       "state": {
-        "label": "",
         "option": {
           "created": "",
           "running": "",
@@ -7723,7 +7658,6 @@
       }
     },
     "action": {
-      "title": "",
       "logs": {
         "label": "View logs",
         "page": {
@@ -7961,27 +7895,13 @@
       "internalServerError": ""
     },
     "field": {
-      "name": {
-        "label": "Job name"
-      },
-      "namespace": {
-        "label": "Namespace"
-      },
-      "creationTimestamp": {
-        "label": "Created"
-      },
-      "state": {
-        "label": "State"
-      },
-      "status": {
-        "label": "Status"
-      },
-      "type": {
-        "label": "Type"
-      },
-      "architecture": {
-        "label": "Architecture"
-      }
+      "name": {},
+      "namespace": {},
+      "creationTimestamp": {},
+      "state": {},
+      "status": {},
+      "type": {},
+      "architecture": {}
     }
   },
   "permission": {
@@ -8008,10 +7928,7 @@
         "label": ""
       }
     },
-    "action": {
-      "saveUser": "",
-      "saveGroup": ""
-    }
+    "action": {}
   },
   "navigationStructure": {
     "manage": {
@@ -8122,8 +8039,7 @@
       "resultsAriaLabel": "{mode} results",
       "footer": {
         "navigate": "Navigate",
-        "open": "Open",
-        "close": "Close"
+        "open": "Open"
       }
     },
     "error": {
@@ -8553,9 +8469,7 @@
         "urlTemplate": {
           "label": "URL search template"
         },
-        "description": {
-          "label": "Description"
-        }
+        "description": {}
       },
       "page": {
         "list": {
@@ -8624,8 +8538,7 @@
             "table": {
               "header": {
                 "season": "Season",
-                "episodes": "Episodes",
-                "status": "Status"
+                "episodes": "Episodes"
               },
               "status": {
                 "requested": "Requested"
@@ -9134,7 +9047,6 @@
       "cssDescription": "Edit the complete stylesheet. Existing rules are kept unless they are removed here.",
       "cssCharacters": "{count} of 16384 characters",
       "copyCss": "Copy CSS",
-      "copied": "Copied",
       "restoreCss": "Restore current CSS",
       "remoteCssTitle": "This CSS loads a remote resource",
       "remoteCssDescription": "Imported stylesheets and remote URLs contact another server when the board loads. Review them before continuing."

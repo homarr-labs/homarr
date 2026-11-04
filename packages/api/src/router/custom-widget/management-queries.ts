@@ -35,11 +35,10 @@ export const managementQueryProcedures = {
       const [definitions, legacyDefinitions] = await Promise.all([
         ctx.db.query.customWidgetDefinitions.findMany({
           orderBy: (table, { asc }) => asc(table.name),
-          with: { secrets: true },
+          with: { secrets: { columns: { sourceId: true, kind: true } } },
         }),
         ctx.db.query.legacyCustomWidgetDefinitions.findMany({
           orderBy: (table, { asc }) => asc(table.name),
-          with: { secrets: true },
         }),
       ]);
       const current = definitions.map(mapCustomWidgetListItem);
@@ -61,7 +60,7 @@ export const managementQueryProcedures = {
     .query(async ({ ctx, input }) => {
       const definition = await ctx.db.query.legacyCustomWidgetDefinitions.findFirst({
         where: eq(legacyCustomWidgetDefinitions.id, input.id),
-        with: { secrets: true },
+        with: { secrets: { columns: { kind: true } } },
       });
       if (!definition) throw new TRPCError({ code: "NOT_FOUND", message: "Legacy custom widget not found" });
       return {
@@ -82,7 +81,7 @@ export const managementQueryProcedures = {
     .query(async ({ ctx, input }) => {
       const definition = await ctx.db.query.customWidgetDefinitions.findFirst({
         where: eq(customWidgetDefinitions.id, input.id),
-        with: { secrets: true },
+        with: { secrets: { columns: { sourceId: true, kind: true, updatedAt: true } } },
       });
       if (!definition) throw new TRPCError({ code: "NOT_FOUND", message: "Custom widget definition not found" });
       return {

@@ -7,6 +7,7 @@ const AccessContext = createContext<{
   icons: Record<string, TablerIcon>;
   translate: (key: string) => string;
   defaultPermission: string;
+  selectData: { value: string; label: string }[];
 } | null>(null);
 
 export const useAccessContext = <TPermission extends string>() => {
@@ -18,8 +19,7 @@ export const useAccessContext = <TPermission extends string>() => {
 
   return {
     icons: context.icons as Record<TPermission, TablerIcon>,
-    getSelectData: () =>
-      context.permissions.map((permission) => ({ value: permission, label: context.translate(permission) })),
+    selectData: context.selectData,
     permissions: context.permissions as readonly TPermission[],
     translate: context.translate as (key: TPermission) => string,
     defaultPermission: context.defaultPermission as TPermission,
@@ -46,6 +46,7 @@ export const AccessProvider = <TPermission extends string>({
         permissions,
         icons,
         translate: translate as (key: string) => string,
+        selectData: permissions.map((permission) => ({ value: permission, label: translate(permission) })),
       }}
     >
       {children}
