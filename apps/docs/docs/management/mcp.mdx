@@ -60,9 +60,11 @@ For clients that only support STDIO, use `mcp-remote`:
 
 Clients with OAuth support can authorize through OAuth 2.1 with PKCE instead of an API key.
 Homarr publishes discovery metadata under `/.well-known/`.
-New consent defaults to read-only. Clients can request `mcp:tools:read` to prohibit write access, or `mcp:tools` to offer
-an explicit read-and-write choice. Omitting scope retains that broad request, but still requires opting into writes at
-consent. The token response reports the approved scope; the restriction also applies if the token is used with the HTTP API.
+New consent deliberately defaults to read-only, even when the client requests broad access.
+Clients can request `mcp:tools:read` to prohibit write access. To enable writes, request `mcp:tools` and select
+**Read and write** at consent. Omitting scope retains the broad request for compatibility, but still requires opting into
+writes at consent. A client requesting only `mcp:tools:read` must authorize again with the broad scope to enable writes.
+The token response reports the approved scope; the restriction also applies if the token is used with the HTTP API.
 
 Set `BASE_URL` to your canonical public origin, such as `https://homarr.example.com`, without a path,
 when a reverse proxy terminates TLS or changes the public Host. For TLS termination, an explicit HTTPS

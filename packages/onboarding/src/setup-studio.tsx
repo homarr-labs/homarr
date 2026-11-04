@@ -1772,7 +1772,7 @@ const McpSetup = ({ environment }: { environment: StudioSectionProps["environmen
               loading={createKey.isPending}
               onClick={() => {
                 sounds.click();
-                createKey.mutate();
+                createKey.mutate({ readOnly: true });
               }}
             >
               {t("createKey")}
