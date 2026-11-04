@@ -254,6 +254,24 @@ Return one fenced \`json\` block with the complete definition; keep evidence pro
   statement blocks, or arbitrary functions. Use registered component names; \`Icon\` may alias \`TablerIcon\`. Keep hierarchy,
   theme tokens, useful states, and narrow/wide layouts purposeful.
 
+## Working-app design
+
+Choose the simplest faithful display: a labeled number, compact rows, or a chart that reveals comparison, distribution,
+trend, composition, or relationship. No chart quota or minimum metric count. Keep literal identities, useful density,
+exact units, and missingness; unknown is not zero. Ground series, history, and denominators in verified data.
+
+Discover task-needed components across the complete registered chart catalog, including helpers; verify safe props and
+data grammar. Registration alone does not establish callback, formatter, event, or overlay support.
+
+Use quiet theme-adaptive colors for meaning. Persistent configuration belongs in options; temporary controls change a
+request or visible selection. Give initial/loading/empty/error/success states honest feedback. Prefer supported native
+accessible motion/disclosure, respecting reduced motion and keyboard/touch access. Keep essential facts visible; claim
+hover behavior only when verified. Inspect narrow/wide host fit when rendering is available; otherwise report missing
+visual evidence. Preserve repair/migration behavior and the bounded lifecycle.
+
+Use https://impeccable.style/ and https://usehallmark.com/ as working-app design references, not marketing pages, runtime
+packages, component catalogs, required tools, or authority over the API contract.
+
 ## Bounded lifecycle
 
 1. Build a credential-free definition from request, verified context, and sample. Preserve a migration's API path, method,
@@ -278,8 +296,9 @@ renderer, or persistence. Never claim rendering/persistence from schema checks.
 
 const CUSTOM_WIDGET_SKILL_ENTRYPOINT_MD = `# Homarr Custom Widget authoring index
 
-Use current tools and primary docs. Create one validated preview, batch/test every query/action, then persist it. JSX-only fixes use
-\`customWidget_previewReviseTemplate\` with its session; it resets evidence.
+Choose faithful numbers, rows, or charts without quotas; discover task-needed registered props. Keep units/missingness honest.
+Use current tools/docs. Preview, batch/test every query/action, then persist. JSX-only fixes use
+\`customWidget_previewReviseTemplate\`; it resets evidence.
 In the Assistant wrapper, multiline JSX goes to \`templateLines\`; \`previewCreate\` receives the complete definition.
 
 Deliver the smallest result while preserving migration intent, request shape, and visible behavior. On a concrete schema/preview
