@@ -294,7 +294,7 @@ export class CoolifyIntegration extends Integration {
           integrationId: this.integration.id,
           statusCode: error instanceof ResponseError ? error.statusCode : undefined,
         });
-        return [];
+        return null;
       }),
       this.listServersAsync(),
     ]);
@@ -303,7 +303,7 @@ export class CoolifyIntegration extends Integration {
       number,
       { projectName: string; projectUuid: string; environmentName: string; environmentUuid?: string }
     >();
-    for (const project of projectsWithEnvs) {
+    for (const project of projectsWithEnvs ?? []) {
       for (const env of project.environments ?? []) {
         if (env.id != null) {
           envToProjectMap.set(env.id, {
@@ -342,6 +342,7 @@ export class CoolifyIntegration extends Integration {
 
     return {
       version,
+      projects: projectsWithEnvs,
       applications: applicationsWithContext,
       services: servicesWithContext,
       servers,
@@ -362,7 +363,12 @@ export class CoolifyIntegration extends Integration {
         projectCount: projects.length,
       });
     }
-    return results.flatMap((result) => (result.status === "fulfilled" ? [result.value] : []));
+    return projects.map((project, index) => {
+      const result = results[index];
+      return result?.status === "fulfilled"
+        ? { ...result.value, description: result.value.description ?? project.description }
+        : project;
+    });
   }
 
   private getAuthHeaders(): Record<string, string> {

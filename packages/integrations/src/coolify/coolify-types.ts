@@ -48,6 +48,7 @@ export const coolifyProjectSchema = z.object({
   id: z.number().nullish(),
   uuid: z.string(),
   name: z.string(),
+  description: z.string().nullish(),
 });
 
 export type CoolifyProject = z.infer<typeof coolifyProjectSchema>;
@@ -95,6 +96,7 @@ export const coolifyServerSchema = z.object({
   id: z.number().nullish(),
   uuid: z.string(),
   name: z.string(),
+  description: z.string().nullish(),
   ip: z.string().nullish(),
   is_reachable: z.boolean().nullish(),
   is_usable: z.boolean().nullish(),
@@ -148,6 +150,7 @@ export interface CoolifyServiceWithContext extends CoolifyService {
 // Aggregated information for the Coolify instance
 export interface CoolifyInstanceInfo {
   version: string;
+  projects: CoolifyProjectWithEnvironments[] | null;
   applications: CoolifyApplicationWithContext[];
   services: CoolifyServiceWithContext[];
   servers: CoolifyServer[];

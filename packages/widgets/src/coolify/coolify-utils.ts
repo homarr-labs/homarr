@@ -4,6 +4,7 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import type {
   CoolifyApplicationWithContext,
   CoolifyInstanceInfo,
+  CoolifyProjectWithEnvironments,
   CoolifyServer,
   CoolifyServiceWithContext,
 } from "@homarr/integrations/types";
@@ -47,6 +48,7 @@ export function cleanFqdn(fqdn: string | undefined | null): string | undefined {
 export function getStatusColor(status: string): string {
   const colors: Record<string, string> = {
     running: "green",
+    online: "green",
     stopped: "red",
     exited: "red",
     starting: "yellow",
@@ -115,6 +117,26 @@ export function buildServerResourceCounts(
   return serverResourceCounts;
 }
 
+export interface CoolifyProjectSummary {
+  project: CoolifyProjectWithEnvironments;
+  applications: number;
+  services: number;
+  contextAvailable: boolean;
+}
+
+export function getCoolifyProjectSummaries(info: CoolifyInstanceInfo): CoolifyProjectSummary[] {
+  if (!info.projects) return [];
+
+  return info.projects
+    .map((project) => ({
+      project,
+      applications: info.applications.filter((app) => app.projectUuid === project.uuid).length,
+      services: info.services.filter((service) => service.projectUuid === project.uuid).length,
+      contextAvailable: Array.isArray(project.environments),
+    }))
+    .toSorted((first, second) => first.project.name.localeCompare(second.project.name));
+}
+
 interface CoolifySectionOptions {
   showServers: boolean;
   showApplications: boolean;
@@ -148,6 +170,8 @@ export interface CoolifyAttentionItem {
   status: Exclude<CoolifyStatus, "running"> | "offline" | "unusable";
   projectUuid?: string;
   environmentUuid?: string;
+  projectName?: string;
+  environmentName?: string;
 }
 
 export function getCoolifyAttentionSummary(
@@ -212,6 +236,8 @@ export function getCoolifyAttentionItems(
         status,
         projectUuid: resource.projectUuid,
         environmentUuid: resource.environmentUuid,
+        projectName: resource.projectName,
+        environmentName: resource.environmentName,
       });
     }
   }

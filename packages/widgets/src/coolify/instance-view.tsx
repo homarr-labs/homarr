@@ -5,6 +5,7 @@ import {
   ActionIcon,
   Anchor,
   Badge,
+  Box,
   Group,
   Image,
   ScrollArea,
@@ -20,6 +21,7 @@ import {
   IconCircleCheck,
   IconEye,
   IconEyeOff,
+  IconLayoutGrid,
   IconSearch,
   IconServer,
   IconStack2,
@@ -34,10 +36,13 @@ import {
   buildServerResourceCounts,
   getCoolifyAttentionItems,
   getCoolifyAttentionSummary,
+  getCoolifyProjectSummaries,
+  getCoolifyServerState,
   getStatusColor,
   isCoolifyServerHealthy,
   parseStatus,
 } from "./coolify-utils";
+import type { CoolifyProjectSummary } from "./coolify-utils";
 import classes from "./component.module.css";
 import { ResourceRow } from "./resource-row";
 import { ServerRow } from "./server-row";
@@ -82,6 +87,13 @@ export function InstanceView({
   const healthyServers = info.servers.filter(isCoolifyServerHealthy).length;
   const runningApps = info.applications.filter((app) => parseStatus(app.status ?? "") === "running").length;
   const runningServices = info.services.filter((service) => parseStatus(service.status ?? "") === "running").length;
+  const projects = getCoolifyProjectSummaries(info);
+  const showResources = visibleOptions.showApplications || visibleOptions.showServices;
+  const totalResources =
+    (visibleOptions.showApplications ? info.applications.length : 0) +
+    (visibleOptions.showServices ? info.services.length : 0);
+  const runningResources =
+    (visibleOptions.showApplications ? runningApps : 0) + (visibleOptions.showServices ? runningServices : 0);
   const baseUrl = getSafeApplicationUrl(instance.externalUrl ?? instance.integrationUrl)?.replace(/\/+$/, "") ?? "";
   const relativeTime = useTimeAgo(instance.updatedAt, 60_000);
   const normalizedSearch = search.trim().toLocaleLowerCase();
@@ -97,6 +109,7 @@ export function InstanceView({
   const isTiny = !isAdvanced && height < 125;
   const isNarrow = !isAdvanced && width < 320;
   const visibleAttentionCount = Math.max(0, Math.min(3, Math.floor((height - 80) / 26)));
+  const visibleProjectCount = Math.min(projects.length, height >= 220 ? 3 : 2);
   const summaryLabel =
     summary.kind === "problem"
       ? t("summary.needsAttention", { count: summary.count })
@@ -141,28 +154,27 @@ export function InstanceView({
         </Text>
         {height >= 120 && (
           <Stack className={classes.miniMetrics} gap={1}>
+            {showResources && (
+              <MiniMetric
+                icon={IconLayoutGrid}
+                label={t("overview.projects")}
+                value={info.projects ? projects.length : "—"}
+              />
+            )}
+            {showResources && (
+              <MiniMetric
+                icon={IconApps}
+                label={t("overview.resources")}
+                value={runningResources}
+                total={totalResources}
+              />
+            )}
             {visibleOptions.showServers && (
               <MiniMetric
                 icon={IconServer}
                 label={tCommon("servers")}
                 value={healthyServers}
                 total={info.servers.length}
-              />
-            )}
-            {visibleOptions.showApplications && (
-              <MiniMetric
-                icon={IconApps}
-                label={tCommon("applications")}
-                value={runningApps}
-                total={info.applications.length}
-              />
-            )}
-            {visibleOptions.showServices && (
-              <MiniMetric
-                icon={IconStack2}
-                label={tCommon("services")}
-                value={runningServices}
-                total={info.services.length}
               />
             )}
           </Stack>
@@ -196,32 +208,31 @@ export function InstanceView({
       </Group>
 
       <Group className={classes.metrics} gap={0} wrap="nowrap">
+        {showResources && (
+          <Metric
+            icon={IconLayoutGrid}
+            label={t("overview.projects")}
+            value={info.projects ? projects.length : "—"}
+            isTiny={isTiny}
+            isNarrow={isNarrow}
+          />
+        )}
+        {showResources && (
+          <Metric
+            label={t("overview.resources")}
+            value={runningResources}
+            total={totalResources}
+            isTiny={isTiny}
+            isNarrow={isNarrow}
+            icon={IconApps}
+          />
+        )}
         {visibleOptions.showServers && (
           <Metric
             icon={IconServer}
             label={tCommon("servers")}
             value={healthyServers}
             total={info.servers.length}
-            isTiny={isTiny}
-            isNarrow={isNarrow}
-          />
-        )}
-        {visibleOptions.showApplications && (
-          <Metric
-            label={tCommon("applications")}
-            value={runningApps}
-            total={info.applications.length}
-            isTiny={isTiny}
-            isNarrow={isNarrow}
-            icon={IconApps}
-          />
-        )}
-        {visibleOptions.showServices && (
-          <Metric
-            icon={IconStack2}
-            label={tCommon("services")}
-            value={runningServices}
-            total={info.services.length}
             isTiny={isTiny}
             isNarrow={isNarrow}
           />
@@ -243,12 +254,80 @@ export function InstanceView({
             </Tabs.Tab>
           </Tabs.List>
           <Tabs.Panel value="overview" className={classes.panel}>
-            <ScrollArea h="100%" p="xs">
-              <AttentionList
-                items={attention}
-                baseUrl={baseUrl}
-                emptyLabel={trackedCount === 0 ? t("summary.empty") : t("summary.healthyDetail")}
-              />
+            <ScrollArea className={classes.listScroll}>
+              <div className={classes.overviewGrid}>
+                <section className={classes.overviewSection}>
+                  <Text fw={600} fz="sm" mb="xs">
+                    {t("overview.projects")}
+                  </Text>
+                  <ProjectList projects={projects} available={info.projects != null} baseUrl={baseUrl} />
+                </section>
+                <section className={classes.overviewSection}>
+                  <Text fw={600} fz="sm" mb="xs">
+                    {t("overview.attention")}
+                  </Text>
+                  <AttentionList
+                    items={attention}
+                    baseUrl={baseUrl}
+                    emptyLabel={trackedCount === 0 ? t("summary.empty") : t("summary.healthyDetail")}
+                    showContext
+                  />
+                </section>
+                <section className={`${classes.overviewSection} ${classes.overviewServers}`}>
+                  <Text fw={600} fz="sm" mb="xs">
+                    {tCommon("servers")}
+                  </Text>
+                  <Stack gap={0}>
+                    {info.servers.map((server) => {
+                      const reachability = getCoolifyServerState(server, "is_reachable");
+                      const usability = getCoolifyServerState(server, "is_usable");
+                      const status =
+                        reachability === false
+                          ? "offline"
+                          : usability === false
+                            ? "unusable"
+                            : reachability === true
+                              ? "online"
+                              : "unknown";
+                      const href = baseUrl ? getSafeApplicationUrl(`${baseUrl}/server/${server.uuid}`) : null;
+                      return (
+                        <Group key={server.uuid} className={classes.overviewRow} gap="xs" wrap="nowrap">
+                          <IconServer size={15} className={classes.overviewIcon} aria-hidden="true" />
+                          <Box style={{ minWidth: 0, flex: 1 }}>
+                            <Anchor
+                              component={href ? "a" : "span"}
+                              href={href ?? undefined}
+                              target={href ? "_blank" : undefined}
+                              rel={href ? SAFE_NEW_TAB_REL : undefined}
+                              c="inherit"
+                              fz="xs"
+                              fw={600}
+                              truncate="end"
+                            >
+                              {server.name}
+                            </Anchor>
+                            {server.description && (
+                              <Text size="xs" c="dimmed" truncate>
+                                {server.description}
+                              </Text>
+                            )}
+                          </Box>
+                          <Group gap={5} wrap="nowrap">
+                            <span
+                              className={classes.statusDot}
+                              style={{ backgroundColor: `var(--mantine-color-${getStatusColor(status)}-6)` }}
+                            />
+                            <Text size="xs" c="dimmed">
+                              {t(status === "online" && usability === true ? "overview.ready" : `status.${status}`)}
+                            </Text>
+                          </Group>
+                        </Group>
+                      );
+                    })}
+                    {info.servers.length === 0 && <EmptyDetail label={t("empty.servers")} />}
+                  </Stack>
+                </section>
+              </div>
             </ScrollArea>
           </Tabs.Panel>
           <Tabs.Panel value="servers" className={classes.panel}>
@@ -323,16 +402,29 @@ export function InstanceView({
       ) : !isTiny ? (
         <div className={classes.compactBody}>
           {attention.length === 0 ? (
-            <Stack className={classes.healthyState} gap={4} align="center" justify="center">
-              {trackedCount > 0 && height >= 180 && <IconCircleCheck size={28} color="var(--mantine-color-green-6)" />}
-              <Text size="xs" c="dimmed" ta="center">
-                {trackedCount === 0
-                  ? t("summary.empty")
-                  : height < 180
-                    ? t("summary.healthy")
-                    : t("summary.healthyDetail")}
-              </Text>
-            </Stack>
+            height >= 135 && showResources && projects.length > 0 ? (
+              <>
+                <ProjectList projects={projects.slice(0, visibleProjectCount)} available baseUrl={baseUrl} compact />
+                {projects.length > visibleProjectCount && (
+                  <Text size="xs" c="dimmed">
+                    {t("overview.moreProjects", { count: projects.length - visibleProjectCount })}
+                  </Text>
+                )}
+              </>
+            ) : (
+              <Stack className={classes.healthyState} gap={4} align="center" justify="center">
+                {trackedCount > 0 && height >= 180 && (
+                  <IconCircleCheck size={28} color="var(--mantine-color-green-6)" />
+                )}
+                <Text size="xs" c="dimmed" ta="center">
+                  {trackedCount === 0
+                    ? t("summary.empty")
+                    : height < 180
+                      ? t("summary.healthy")
+                      : t("summary.healthyDetail")}
+                </Text>
+              </Stack>
+            )
           ) : (
             <AttentionList
               items={attention.slice(0, visibleAttentionCount)}
@@ -369,8 +461,8 @@ function Metric({
 }: {
   icon: typeof IconServer;
   label: string;
-  value: number;
-  total: number;
+  value: number | string;
+  total?: number;
   isTiny: boolean;
   isNarrow: boolean;
 }) {
@@ -388,9 +480,11 @@ function Metric({
       )}
       <Text fw={600} fz={isTiny ? "sm" : "lg"} lh={1.1}>
         {value}
-        <Text component="span" size="xs" c="dimmed">
-          /{total}
-        </Text>
+        {total !== undefined && (
+          <Text component="span" size="xs" c="dimmed">
+            /{total}
+          </Text>
+        )}
       </Text>
     </Stack>
   );
@@ -404,17 +498,105 @@ function MiniMetric({
 }: {
   icon: typeof IconServer;
   label: string;
-  value: number;
-  total: number;
+  value: number | string;
+  total?: number;
 }) {
   return (
-    <Group className={classes.miniMetric} gap={2} wrap="nowrap" title={`${label}: ${value}/${total}`}>
+    <Group
+      className={classes.miniMetric}
+      gap={2}
+      wrap="nowrap"
+      title={`${label}: ${value}${total === undefined ? "" : `/${total}`}`}
+    >
       <Icon size={14} aria-hidden="true" />
       <VisuallyHidden>{label}: </VisuallyHidden>
       <Text fz={12} lh={1}>
-        {value}/{total}
+        {value}
+        {total === undefined ? "" : `/${total}`}
       </Text>
     </Group>
+  );
+}
+
+function ProjectList({
+  projects,
+  available,
+  baseUrl,
+  compact = false,
+}: {
+  projects: CoolifyProjectSummary[];
+  available: boolean;
+  baseUrl: string;
+  compact?: boolean;
+}) {
+  const t = useI18n("widget.coolify");
+  const tCommon = useI18n("common");
+  if (!available || projects.length === 0) {
+    return (
+      <Text size="xs" c="dimmed">
+        {t(available ? "overview.noProjects" : "overview.projectsUnavailable")}
+      </Text>
+    );
+  }
+
+  return (
+    <Stack gap={0}>
+      {!compact && (
+        <Group className={classes.projectTableHead} justify="space-between" wrap="nowrap">
+          <Text size="xs" c="dimmed">
+            {t("overview.project")}
+          </Text>
+          <Text size="xs" c="dimmed">
+            {t("overview.contents")}
+          </Text>
+        </Group>
+      )}
+      {projects.map(({ project, applications, services, contextAvailable }) => {
+        const href = baseUrl ? getSafeApplicationUrl(`${baseUrl}/project/${project.uuid}`) : null;
+        return (
+          <Group key={project.uuid} className={classes.projectRow} gap="xs" wrap="nowrap">
+            <span className={classes.projectIcon}>
+              <IconLayoutGrid size={14} aria-hidden="true" />
+            </span>
+            <Box style={{ minWidth: 0, flex: 1 }}>
+              <Anchor
+                component={href ? "a" : "span"}
+                href={href ?? undefined}
+                target={href ? "_blank" : undefined}
+                rel={href ? SAFE_NEW_TAB_REL : undefined}
+                c="inherit"
+                fw={600}
+                fz="xs"
+                truncate="end"
+              >
+                {project.name}
+              </Anchor>
+              {!compact && project.description && (
+                <Text size="xs" c="dimmed" truncate>
+                  {project.description}
+                </Text>
+              )}
+            </Box>
+            {contextAvailable ? (
+              <Group gap="sm" wrap="nowrap" className={classes.projectCounts}>
+                <Group gap={3} wrap="nowrap" title={`${tCommon("applications")}: ${applications}`}>
+                  <IconApps size={13} aria-hidden="true" />
+                  <Text size="xs">{applications}</Text>
+                </Group>
+                <Group gap={3} wrap="nowrap" title={`${tCommon("services")}: ${services}`}>
+                  <IconStack2 size={13} aria-hidden="true" />
+                  <Text size="xs">{services}</Text>
+                </Group>
+              </Group>
+            ) : (
+              <Text size="xs" c="dimmed" title={t("overview.projectsUnavailable")}>
+                —
+              </Text>
+            )}
+          </Group>
+        );
+      })}
+    </Stack>
   );
 }
 
@@ -423,11 +605,13 @@ function AttentionList({
   baseUrl,
   emptyLabel,
   hideEmpty = false,
+  showContext = false,
 }: {
   items: ReturnType<typeof getCoolifyAttentionItems>;
   baseUrl: string;
   emptyLabel: string;
   hideEmpty?: boolean;
+  showContext?: boolean;
 }) {
   const t = useI18n("widget.coolify");
   if (items.length === 0)
@@ -453,15 +637,22 @@ function AttentionList({
               className={classes.statusDot}
               style={{ backgroundColor: `var(--mantine-color-${getStatusColor(item.status)}-6)` }}
             />
-            {href ? (
-              <Anchor href={href} target="_blank" rel={SAFE_NEW_TAB_REL} c="inherit" fz="xs" truncate>
-                {item.name}
-              </Anchor>
-            ) : (
-              <Text size="xs" truncate>
-                {item.name}
-              </Text>
-            )}
+            <Box style={{ minWidth: 0, flex: 1 }}>
+              {href ? (
+                <Anchor href={href} target="_blank" rel={SAFE_NEW_TAB_REL} c="inherit" fz="xs" truncate>
+                  {item.name}
+                </Anchor>
+              ) : (
+                <Text size="xs" truncate>
+                  {item.name}
+                </Text>
+              )}
+              {showContext && (item.projectName || item.environmentName) && (
+                <Text size="xs" c="dimmed" truncate>
+                  {[item.projectName, item.environmentName].filter(Boolean).join(" / ")}
+                </Text>
+              )}
+            </Box>
             <Text size="xs" c="dimmed" ml="auto">
               {t(`status.${item.status}`)}
             </Text>

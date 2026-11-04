@@ -8,6 +8,7 @@ import {
   formatRelativeTime,
   getCoolifyAttentionItems,
   getCoolifyAttentionSummary,
+  getCoolifyProjectSummaries,
   getCoolifySectionVisibility,
   getCoolifyServerState,
   getStatusColor,
@@ -40,6 +41,27 @@ describe("Coolify time formatting", () => {
   });
 });
 
+describe("Coolify projects overview", () => {
+  const info = {
+    version: "4.5.3",
+    projects: [
+      { uuid: "other", name: "Other" },
+      { uuid: "main", name: "Main", environments: [{ id: 1, uuid: "production", name: "Production" }] },
+    ],
+    servers: [],
+    applications: [{ uuid: "app", name: "App", projectUuid: "main" }],
+    services: [{ uuid: "service", name: "Service", projectUuid: "main" }],
+  } as CoolifyInstanceInfo;
+
+  it("sorts projects and distinguishes unavailable context from an empty project", () => {
+    expect(getCoolifyProjectSummaries(info)).toEqual([
+      { project: info.projects?.[1], applications: 1, services: 1, contextAvailable: true },
+      { project: info.projects?.[0], applications: 0, services: 0, contextAvailable: false },
+    ]);
+    expect(getCoolifyProjectSummaries({ ...info, projects: null })).toEqual([]);
+  });
+});
+
 describe("Coolify attention overview", () => {
   const info = {
     version: "4.0.0",
@@ -55,6 +77,8 @@ describe("Coolify attention overview", () => {
         status: "running:unhealthy",
         projectUuid: "project",
         environmentUuid: "environment",
+        projectName: "Production",
+        environmentName: "Main",
       },
       { uuid: "running", name: "Running app", status: "running:healthy" },
     ],
@@ -64,6 +88,7 @@ describe("Coolify attention overview", () => {
   it("shows unhealthy and offline resources before transitioning resources", () => {
     expect(parseStatus("running:unhealthy")).toBe("unhealthy");
     expect(getStatusColor("unusable")).toBe("red");
+    expect(getStatusColor("online")).toBe("green");
     expect(getCoolifyAttentionItems(info, { showServers: true, showApplications: true, showServices: true })).toEqual([
       { kind: "server", uuid: "offline", name: "Offline server", status: "offline" },
       { kind: "server", uuid: "unusable", name: "Unusable server", status: "unusable" },
@@ -74,6 +99,8 @@ describe("Coolify attention overview", () => {
         status: "unhealthy",
         projectUuid: "project",
         environmentUuid: "environment",
+        projectName: "Production",
+        environmentName: "Main",
       },
       {
         kind: "service",
@@ -82,6 +109,8 @@ describe("Coolify attention overview", () => {
         status: "starting",
         projectUuid: undefined,
         environmentUuid: undefined,
+        projectName: undefined,
+        environmentName: undefined,
       },
     ]);
   });

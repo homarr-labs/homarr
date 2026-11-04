@@ -1,4 +1,5 @@
 .instance {
+  container-type: inline-size;
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -120,6 +121,62 @@
 .listScroll {
   flex: 1;
   min-height: 0;
+}
+
+.overviewGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+  gap: 10px;
+  padding: 10px;
+}
+
+.overviewSection {
+  min-width: 0;
+  padding: 10px;
+  border: 1px solid var(--mantine-color-default-border);
+  border-radius: var(--mantine-radius-sm);
+}
+
+.overviewServers {
+  grid-column: 1 / -1;
+}
+
+.overviewRow,
+.projectRow {
+  min-height: 39px;
+  border-top: 1px solid var(--mantine-color-default-border);
+}
+
+.projectTableHead {
+  padding: 0 2px 7px;
+}
+
+.projectIcon {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  width: 27px;
+  height: 27px;
+  color: var(--mantine-color-violet-5);
+  background: var(--mantine-color-violet-light);
+  border: 1px solid var(--mantine-color-default-border);
+  border-radius: var(--mantine-radius-sm);
+}
+
+.projectCounts,
+.overviewIcon {
+  color: var(--mantine-color-dimmed);
+}
+
+@container (max-width: 540px) {
+  .overviewGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .overviewServers {
+    grid-column: auto;
+  }
 }
 
 .nestedApplications {

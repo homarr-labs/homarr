@@ -62,6 +62,11 @@ export function ServerRow({ server, counts, baseUrl, showIp }: ServerRowProps) {
           </Text>
         )}
       </Group>
+      {server.description && (
+        <Text fz="xs" c="dimmed" ml={16} truncate>
+          {server.description}
+        </Text>
+      )}
       <Group wrap="nowrap" gap={4} ml={16}>
         <Text fz="xs" c="dimmed">
           {showIp ? (server.ip ?? "—") : "***.***.***.***"}

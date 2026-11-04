@@ -1,6 +1,6 @@
 ---
 title: "Coolify"
-description: "Overview of your Coolify instance with servers, applications, and services."
+description: "Overview of your Coolify projects, resources, and servers."
 hide_title: true
 ---
 
@@ -15,8 +15,8 @@ import { coolifyIntegration } from "@site/docs/integrations/coolify";
 
 <WidgetHeader widget={coolifyWidget} categories={["System monitoring", "Deployment"]} />
 
-The Coolify widget highlights servers, applications, and services that need attention. The compact view shows status
-counts and the most urgent resources without a long list.
+The Coolify widget summarizes projects, running resources, and available servers. The compact view shows resources that
+need attention; when all are healthy, larger cards show projects instead.
 
 ### Supported Integrations
 
@@ -28,9 +28,10 @@ counts and the most urgent resources without a long list.
   ]}
 />
 
-Advanced view has an overview and searchable tabs for servers, applications, and services. It shows project and
-environment context, links, reachability fields, and nested service applications. IP addresses remain masked until
-revealed. Healthy integrations remain visible when another source fails.
+Advanced view puts projects, resources needing attention, and servers together. Searchable tabs show individual
+servers, applications, and services, with project and environment context, links, reachability fields, and nested
+service applications. IP addresses remain masked until revealed. Healthy integrations remain visible when another
+source fails. Project details can be unavailable without hiding resource statuses.
 
 <WidgetInteractionGuide advancedView />
 
@@ -46,8 +47,11 @@ revealed. Healthy integrations remain visible when another source fails.
 
 | Section          | Description                                                                                                                        |
 | ---------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| **Overview**     | Shows projects and their known application/service counts, resources needing attention, and server readiness.                      |
 | **Servers**      | Lists Coolify servers, reachability status, and application/service counts per server.                                             |
 | **Applications** | Lists applications with runtime status, project and environment context, public URL links, Coolify dashboard links, and log links. |
 | **Services**     | Lists services with runtime status, project and environment context, public URL links, Coolify dashboard links, and log links.     |
 
 The Coolify API token is team-scoped; Homarr shows only resources available to that team.
+The public API does not provide the dashboard's recent completed deployments or server CPU and memory in these list
+responses, so the widget does not show those fields.

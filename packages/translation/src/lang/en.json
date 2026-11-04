@@ -3553,7 +3553,7 @@
       }
     },
     "coolify": {
-      "description": "Coolify resource health at a glance, with details in advanced view",
+      "description": "Coolify projects, resources, and servers at a glance, with details in advanced view",
       "summary": {
         "needsAttention": "{count} need attention",
         "inProgress": "{count} in progress",
@@ -3568,6 +3568,17 @@
         "tabs": "Coolify details",
         "overview": "Overview",
         "search": "Filter resources"
+      },
+      "overview": {
+        "projects": "Projects",
+        "project": "Project",
+        "resources": "Resources running",
+        "contents": "Contents",
+        "attention": "Needs attention",
+        "ready": "Ready",
+        "noProjects": "No projects found",
+        "projectsUnavailable": "Projects unavailable",
+        "moreProjects": "+{count, plural, one {# more project} other {# more projects}}"
       },
       "option": {
         "showServers": {

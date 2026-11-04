@@ -258,6 +258,7 @@ describe("CoolifyIntegration", () => {
             id: 1,
             uuid: "proj-uuid-1",
             name: "Production",
+            description: "Main workloads",
           },
           {
             id: 2,
@@ -286,6 +287,9 @@ describe("CoolifyIntegration", () => {
       expect(result.applications).toHaveLength(2);
       expect(result.services).toHaveLength(1);
       expect(result.servers).toHaveLength(1);
+      expect(result.projects).toHaveLength(2);
+      expect(result.projects?.[0]?.description).toBe("Main workloads");
+      expect(result.projects?.[1]?.environments).toBeUndefined();
       expect(result.applications[0]?.projectName).toBe("Production");
       expect(result.applications[0]?.environmentName).toBe("production");
       expect(result.applications[1]?.status).toBe("stopped");
@@ -305,6 +309,7 @@ describe("CoolifyIntegration", () => {
       expect(result.applications[0]?.status).toBe("running");
       expect(result.services[0]?.status).toBe("stopped");
       expect(result.servers[0]?.is_reachable).toBe(true);
+      expect(result.projects).toBeNull();
       expect(result.applications[0]?.projectName).toBeUndefined();
     });
   });
