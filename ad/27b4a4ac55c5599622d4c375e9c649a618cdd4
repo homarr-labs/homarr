@@ -1,0 +1,14 @@
+packages/api/src/router/onboard/onboard-router.ts
+  h_d6e478ca18e517 216-218
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "ad27b4a4ac55c5599622d4c375e9c649a618cdd4",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
