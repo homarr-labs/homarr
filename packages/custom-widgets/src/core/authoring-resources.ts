@@ -86,7 +86,7 @@ export const CUSTOM_WIDGET_SKILL_SOURCE_URL =
   "https://github.com/homarr-labs/homarr/tree/HEAD/.agents/skills/homarr-custom-widget";
 export const CUSTOM_WIDGET_SKILL_INSTALL_COMMAND =
   "npx skills add https://github.com/homarr-labs/homarr --skill homarr-custom-widget";
-export const CUSTOM_WIDGET_SKILL_VERSION = "2.10.8";
+export const CUSTOM_WIDGET_SKILL_VERSION = "2.10.9";
 export const CUSTOM_WIDGET_SKILL_REFERENCE_NAMES = ["schema", "runtime", "security"] as const;
 export type CustomWidgetSkillReferenceName = (typeof CUSTOM_WIDGET_SKILL_REFERENCE_NAMES)[number];
 
