@@ -52,8 +52,7 @@ const findDigestSibling = (floatingTag: RegistryTag, tags: RegistryTag[]) => {
   );
 };
 
-export const hasUnresolvedFloatingTag = (tags: RegistryTag[]) => {
-  const floatingTag = findFloatingTag(tags);
+export const hasUnresolvedFloatingTag = (tags: RegistryTag[], floatingTag = findFloatingTag(tags)) => {
   if (!floatingTag) return false;
   const versionTag = findDigestSibling(floatingTag, tags);
   return !versionTag || !isVersionPrefixedTag(versionTag.name);

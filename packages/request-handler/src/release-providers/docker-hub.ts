@@ -1,5 +1,7 @@
 import { z } from "zod/v4";
 
+import { createLogger } from "@homarr/core/infrastructure/logs";
+
 import { fetchJsonAsync, loadOptionalDetailsAsync, providerUrl, tokenHeaders } from "./http";
 import { isNotFoundError, ReleaseLookupError } from "./errors";
 import type { OwnedName } from "./identifier";
@@ -45,8 +47,9 @@ const toRegistryTags = (tag: DockerHubTag): RegistryTag[] => {
   return [{ name: tag.name, date: new Date(tag.last_updated), digest: tag.digest ?? undefined }];
 };
 
-const needsMoreTags = (tags: RegistryTag[], page: number, versionPattern?: RegExp) => {
+const needsMoreTags = (tags: RegistryTag[], page: number, versionPattern?: RegExp, tag?: RegistryTag) => {
   if (versionPattern) return !tags.some((tag) => versionPattern.test(tag.name));
+  if (tag) return hasUnresolvedFloatingTag(tags, tag);
   return page < MAX_FLOATING_TAG_PAGES && hasUnresolvedFloatingTag(tags);
 };
 
@@ -56,6 +59,8 @@ const listTagsAsync = async (
   versionPattern?: RegExp,
   tag?: string,
 ) => {
+  const tags: RegistryTag[] = [];
+  let selectedTag: RegistryTag | undefined;
   if (tag && !versionPattern) {
     const result = await fetchJsonAsync(`${repositoryUrl}/tags/${encodeURIComponent(tag)}`, tagSchema, {
       headers,
@@ -63,14 +68,22 @@ const listTagsAsync = async (
       if (isNotFoundError(error)) throw new ReleaseLookupError("noMatchingVersion", `No tag named ${tag}`);
       throw error;
     });
-    return toRegistryTags(result);
+    tags.push(...toRegistryTags(result));
+    selectedTag = tags[0];
+    if (!selectedTag?.digest) return tags;
   }
 
-  const tags: RegistryTag[] = [];
-  for (let page = 1; page <= MAX_TAG_PAGES; page++) {
-    const result = await fetchJsonAsync(`${repositoryUrl}/tags?page_size=100&page=${page}`, tagsSchema, { headers });
-    tags.push(...result.results.flatMap(toRegistryTags));
-    if (!result.next || !needsMoreTags(tags, page, versionPattern)) break;
+  try {
+    for (let page = 1; page <= MAX_TAG_PAGES; page++) {
+      const result = await fetchJsonAsync(`${repositoryUrl}/tags?page_size=100&page=${page}`, tagsSchema, { headers });
+      tags.push(...result.results.flatMap(toRegistryTags));
+      if (!result.next || !needsMoreTags(tags, page, versionPattern, selectedTag)) break;
+    }
+  } catch (error) {
+    if (!selectedTag) throw error;
+    createLogger({ module: "dockerHub" }).warn("Optional version discovery failed; using available tag metadata", {
+      error,
+    });
   }
   return tags;
 };
