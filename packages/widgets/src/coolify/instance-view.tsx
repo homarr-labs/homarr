@@ -1,9 +1,29 @@
 "use client";
 
 import { useState } from "react";
-import { ActionIcon, Anchor, Badge, Group, Image, ScrollArea, Stack, Tabs, Text, TextInput } from "@mantine/core";
+import {
+  ActionIcon,
+  Anchor,
+  Badge,
+  Group,
+  Image,
+  ScrollArea,
+  Stack,
+  Tabs,
+  Text,
+  TextInput,
+  VisuallyHidden,
+} from "@mantine/core";
 import { useLocalStorage } from "@mantine/hooks";
-import { IconCircleCheck, IconEye, IconEyeOff, IconSearch } from "@tabler/icons-react";
+import {
+  IconApps,
+  IconCircleCheck,
+  IconEye,
+  IconEyeOff,
+  IconSearch,
+  IconServer,
+  IconStack2,
+} from "@tabler/icons-react";
 
 import { useTimeAgo } from "@homarr/common";
 import { useI18n } from "@homarr/translation/client";
@@ -73,7 +93,8 @@ export function InstanceView({
   );
   const servers = info.servers.filter((server) => matchesSearch(server.name));
   const serverResourceCounts = buildServerResourceCounts(info.servers, info.applications, info.services);
-  const isTiny = !isAdvanced && (height < 145 || width < 190);
+  const isMini = !isAdvanced && width < 110;
+  const isTiny = !isAdvanced && height < 125;
   const isNarrow = !isAdvanced && width < 320;
   const visibleAttentionCount = Math.max(0, Math.min(3, Math.floor((height - (isTiny ? 80 : 105)) / 26)));
   const summaryLabel =
@@ -91,6 +112,56 @@ export function InstanceView({
         ? "—"
         : "✓"
     : summaryLabel;
+  const summaryColor =
+    summary.kind === "problem"
+      ? "red"
+      : summary.kind === "transition"
+        ? "yellow"
+        : summary.kind === "healthy"
+          ? "green"
+          : "gray";
+
+  if (isMini) {
+    return (
+      <div
+        className={`${classes.instance} ${classes.mini} ${isSingle ? classes.single : ""}`}
+        title={instance.integrationName}
+      >
+        <Image src={COOLIFY_ICON_URL} alt="Coolify" w={20} h={20} />
+        <Text fw={700} fz={20} lh={1} c={summaryColor} aria-label={summaryLabel}>
+          {summaryText}
+        </Text>
+        {height >= 120 && (
+          <Stack className={classes.miniMetrics} gap={1}>
+            {visibleOptions.showServers && (
+              <MiniMetric
+                icon={IconServer}
+                label={tCommon("servers")}
+                value={healthyServers}
+                total={info.servers.length}
+              />
+            )}
+            {visibleOptions.showApplications && (
+              <MiniMetric
+                icon={IconApps}
+                label={tCommon("applications")}
+                value={runningApps}
+                total={info.applications.length}
+              />
+            )}
+            {visibleOptions.showServices && (
+              <MiniMetric
+                icon={IconStack2}
+                label={tCommon("services")}
+                value={runningServices}
+                total={info.services.length}
+              />
+            )}
+          </Stack>
+        )}
+      </div>
+    );
+  }
 
   return (
     <div className={`${classes.instance} ${isTiny ? classes.tiny : ""} ${isSingle ? classes.single : ""}`}>
@@ -111,20 +182,7 @@ export function InstanceView({
             {instance.integrationName}
           </Anchor>
         </Group>
-        <Badge
-          size="xs"
-          variant="light"
-          color={
-            summary.kind === "problem"
-              ? "red"
-              : summary.kind === "transition"
-                ? "yellow"
-                : summary.kind === "healthy"
-                  ? "green"
-                  : "gray"
-          }
-          aria-label={summaryLabel}
-        >
+        <Badge size="xs" variant="light" color={summaryColor} aria-label={summaryLabel}>
           {summaryText}
         </Badge>
       </Group>
@@ -243,9 +301,15 @@ export function InstanceView({
           {attention.length === 0 ? (
             !isTiny && (
               <Stack className={classes.healthyState} gap={4} align="center" justify="center">
-                {trackedCount > 0 && <IconCircleCheck size={28} color="var(--mantine-color-green-6)" />}
+                {trackedCount > 0 && height >= 180 && (
+                  <IconCircleCheck size={28} color="var(--mantine-color-green-6)" />
+                )}
                 <Text size="xs" c="dimmed" ta="center">
-                  {trackedCount === 0 ? t("summary.empty") : t("summary.healthyDetail")}
+                  {trackedCount === 0
+                    ? t("summary.empty")
+                    : height < 180
+                      ? t("summary.healthy")
+                      : t("summary.healthyDetail")}
                 </Text>
               </Stack>
             )
@@ -288,6 +352,28 @@ function Metric({ label, value, total, isTiny }: { label: string; value: number;
         </Text>
       </Text>
     </Stack>
+  );
+}
+
+function MiniMetric({
+  icon: Icon,
+  label,
+  value,
+  total,
+}: {
+  icon: typeof IconServer;
+  label: string;
+  value: number;
+  total: number;
+}) {
+  return (
+    <Group className={classes.miniMetric} gap={2} wrap="nowrap" title={`${label}: ${value}/${total}`}>
+      <Icon size={14} aria-hidden="true" />
+      <VisuallyHidden>{label}: </VisuallyHidden>
+      <Text fz={12} lh={1}>
+        {value}/{total}
+      </Text>
+    </Group>
   );
 }
 

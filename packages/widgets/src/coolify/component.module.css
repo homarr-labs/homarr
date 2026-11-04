@@ -13,6 +13,22 @@
   border-radius: 0;
 }
 
+.mini {
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  padding: 3px;
+}
+
+.miniMetrics {
+  width: 100%;
+  padding-left: 3px;
+}
+
+.miniMetric {
+  min-height: 18px;
+}
+
 .header {
   min-height: 37px;
   padding: 6px 10px;
