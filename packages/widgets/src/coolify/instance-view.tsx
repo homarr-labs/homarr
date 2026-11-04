@@ -15,7 +15,7 @@ import {
   TextInput,
   VisuallyHidden,
 } from "@mantine/core";
-import { useLocalStorage } from "@mantine/hooks";
+import { useElementSize, useLocalStorage } from "@mantine/hooks";
 import {
   IconApps,
   IconCircleCheck,
@@ -78,6 +78,7 @@ export function InstanceView({
     key: storageKey,
     defaultValue: false,
   });
+  const { ref: compactBodyRef, height: compactBodyHeight } = useElementSize<HTMLDivElement>();
   const info = instance.instanceInfo;
   const visibleOptions = isAdvanced ? { showServers: true, showApplications: true, showServices: true } : options;
   const attention = getCoolifyAttentionItems(info, visibleOptions);
@@ -110,12 +111,21 @@ export function InstanceView({
   const isMini = !isAdvanced && width < 110;
   const isTiny = !isAdvanced && height < 125;
   const isNarrow = !isAdvanced && width < 320;
-  const visibleAttentionCount = Math.max(0, Math.min(3, Math.floor((height - 80) / 26)));
-  // Mantine sizes use the inverse board scale; the supplied height is in board pixels.
-  const projectBodyHeight = height * uiScale - 37 - 57 - (height >= 175 ? 25 : 0) - 12 - 2;
+  const availableBodyHeight = Math.max(0, compactBodyHeight - 12);
+  const rowTextHeight = 19.5 * uiScale;
+  const moreTextHeight = 18 * uiScale;
+  const visibleAttentionCount =
+    [3, 2, 1].find(
+      (count) =>
+        count <= attention.length &&
+        count * Math.max(22, rowTextHeight) + (count - 1) * 4 + (attention.length > count ? moreTextHeight : 0) <=
+          availableBodyHeight,
+    ) ?? 0;
   const visibleProjectCount =
     [3, 2, 1].find(
-      (count) => count <= projects.length && count * 39 + (projects.length > count ? 20 : 0) <= projectBodyHeight,
+      (count) =>
+        count <= projects.length &&
+        count * Math.max(39, rowTextHeight) + (projects.length > count ? moreTextHeight : 0) <= availableBodyHeight,
     ) ?? 0;
   const summaryLabel =
     summary.kind === "problem"
@@ -407,7 +417,7 @@ export function InstanceView({
           </Tabs.Panel>
         </Tabs>
       ) : !isTiny ? (
-        <div className={classes.compactBody}>
+        <div ref={compactBodyRef} className={classes.compactBody}>
           {attention.length === 0 ? (
             showResources && visibleProjectCount > 0 ? (
               <>
@@ -418,7 +428,7 @@ export function InstanceView({
                   </Text>
                 )}
               </>
-            ) : (
+            ) : availableBodyHeight >= moreTextHeight ? (
               <Stack className={classes.healthyState} gap={4} align="center" justify="center">
                 {trackedCount > 0 && height >= 180 && (
                   <IconCircleCheck size={28} color="var(--mantine-color-green-6)" />
@@ -431,7 +441,7 @@ export function InstanceView({
                       : t("summary.healthyDetail")}
                 </Text>
               </Stack>
-            )
+            ) : null
           ) : (
             <AttentionList
               items={attention.slice(0, visibleAttentionCount)}
@@ -440,7 +450,7 @@ export function InstanceView({
               hideEmpty
             />
           )}
-          {attention.length > visibleAttentionCount && (
+          {attention.length > visibleAttentionCount && availableBodyHeight >= moreTextHeight && (
             <Text size="xs" c="dimmed">
               {t("summary.more", { count: attention.length - visibleAttentionCount })}
             </Text>
