@@ -495,6 +495,92 @@ export const userRouter = createTRPCRouter({
 
       return user;
     }),
+  getSignInInformation: protectedProcedure
+    .input(z.object({ userId: z.string() }))
+    .output(
+      z.object({
+        provider: z.enum(supportedAuthProviders),
+        email: z.string().nullable(),
+        subject: z.string().nullable(),
+        homarrGroups: z.array(
+          z.object({
+            id: z.string(),
+            name: z.string(),
+          }),
+        ),
+        groupsClaim: z.array(z.string()).nullable(),
+        groupsClaimSeenAt: z.date().nullable(),
+      }),
+    )
+    .meta({
+      openapi: {
+        method: "GET",
+        path: "/api/users/{userId}/sign-in-information",
+        tags: ["users"],
+        protect: true,
+        summary: "Get sign-in information",
+        description:
+          "Return the authentication provider, subject, email, Homarr groups, and the last groups claim seen at sign-in. Users can read themselves; reading another user requires admin permission. Tokens are never returned.",
+      },
+    })
+    .query(async ({ input, ctx }) => {
+      if (ctx.session.user.id !== input.userId && !ctx.session.user.permissions.includes("admin")) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "You are not allowed to view other users details",
+        });
+      }
+
+      const user = await ctx.db.query.users.findFirst({
+        columns: {
+          email: true,
+          provider: true,
+        },
+        with: {
+          accounts: {
+            columns: {
+              provider: true,
+              providerAccountId: true,
+              lastGroupsClaim: true,
+              lastGroupsClaimSeenAt: true,
+            },
+          },
+          groups: {
+            with: {
+              group: {
+                columns: {
+                  id: true,
+                  name: true,
+                },
+              },
+            },
+          },
+        },
+        where: eq(users.id, input.userId),
+      });
+
+      if (!user) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "User not found",
+        });
+      }
+
+      const account =
+        user.accounts.find((entry) => entry.provider === "oidc") ??
+        user.accounts.find((entry) => entry.provider === user.provider) ??
+        user.accounts[0] ??
+        null;
+
+      return {
+        provider: user.provider,
+        email: user.email,
+        subject: account?.providerAccountId ?? null,
+        homarrGroups: user.groups.map(({ group }) => group).sort((left, right) => left.name.localeCompare(right.name)),
+        groupsClaim: parseLastGroupsClaim(account?.lastGroupsClaim ?? null),
+        groupsClaimSeenAt: account?.lastGroupsClaimSeenAt ?? null,
+      };
+    }),
   editProfile: protectedProcedure
     .input(userEditProfileSchema)
     .output(z.void())
@@ -936,4 +1022,21 @@ const checkUsernameAlreadyTakenAndThrowAsync = async (
     code: "CONFLICT",
     message: "Username already taken",
   });
+};
+
+const parseLastGroupsClaim = (value: string | null): string[] | null => {
+  if (!value) {
+    return null;
+  }
+
+  try {
+    const parsed: unknown = JSON.parse(value);
+    if (!Array.isArray(parsed) || parsed.some((item) => typeof item !== "string")) {
+      return null;
+    }
+
+    return parsed;
+  } catch {
+    return null;
+  }
 };

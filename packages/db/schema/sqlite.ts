@@ -94,6 +94,8 @@ export const accounts = sqliteTable(
     scope: text(),
     id_token: text(),
     session_state: text(),
+    lastGroupsClaim: text(),
+    lastGroupsClaimSeenAt: int({ mode: "timestamp_ms" }),
   },
   (account) => ({
     compoundKey: primaryKey({

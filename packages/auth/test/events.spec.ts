@@ -5,7 +5,7 @@ import { afterEach, describe, expect, test, vi } from "vitest";
 
 import { eq } from "@homarr/db";
 import type { Database } from "@homarr/db";
-import { groupMembers, groups, users } from "@homarr/db/schema";
+import { accounts, groupMembers, groups, users } from "@homarr/db/schema";
 import { createDb } from "@homarr/db/test";
 import { colorSchemeCookieKey, everyoneGroup } from "@homarr/definitions";
 
@@ -230,6 +230,27 @@ describe("createSignInEventHandler should create signInEventHandler", () => {
       });
       expect(dbGroupMembers?.groupId).toBe("1");
     });
+    test("should store the last groups claim even when local management is enabled", async () => {
+      mockEnv.AUTH_OIDC_GROUPS_LOCAL_MANAGEMENT = true;
+      const db = createDb();
+      await createUserAsync(db, "oidc");
+      await createAccountAsync(db);
+      const eventHandler = createSignInEventHandler(db);
+
+      await eventHandler?.({
+        user: { id: "1", name: "test" },
+        profile: {
+          preferred_username: "test",
+          someRandomGroupsKey: ["admins", "00000000-0000-0000-0000-000000000001"],
+        },
+        account: null,
+      });
+
+      const account = await db.query.accounts.findFirst({ where: eq(accounts.userId, "1") });
+      expect(account?.lastGroupsClaim).toBe(JSON.stringify(["admins", "00000000-0000-0000-0000-000000000001"]));
+      expect(account?.lastGroupsClaimSeenAt).toBeInstanceOf(Date);
+      expect(account?.id_token).toBe("secret-id-token");
+    });
     test("should not synchronize groups when AUTH_OIDC_GROUPS_LOCAL_MANAGEMENT is enabled", async () => {
       // Arrange
       mockEnv.AUTH_OIDC_GROUPS_LOCAL_MANAGEMENT = true;
@@ -342,6 +363,15 @@ const createUserAsync = async (
     colorScheme: "dark",
     image,
     provider,
+  });
+
+const createAccountAsync = async (db: Database) =>
+  await db.insert(accounts).values({
+    userId: "1",
+    type: "oidc",
+    provider: "oidc",
+    providerAccountId: "oidc-subject",
+    id_token: "secret-id-token",
   });
 
 const createGroupAsync = async (db: Database, name = "test") =>

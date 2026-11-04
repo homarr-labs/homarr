@@ -112,6 +112,8 @@ export const accounts = pgTable(
     scope: text(),
     id_token: text(),
     session_state: text(),
+    lastGroupsClaim: text(),
+    lastGroupsClaimSeenAt: timestamp({ mode: "date" }),
   },
   (account) => ({
     compoundKey: primaryKey({

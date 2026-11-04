@@ -5,7 +5,7 @@ import type { NextAuthConfig } from "next-auth";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import { and, eq, inArray } from "@homarr/db";
 import type { Database } from "@homarr/db";
-import { groupMembers, groups, users } from "@homarr/db/schema";
+import { accounts, groupMembers, groups, users } from "@homarr/db/schema";
 import { colorSchemeCookieKey, everyoneGroup } from "@homarr/definitions";
 
 import { env } from "./env";
@@ -31,18 +31,24 @@ export const createSignInEventHandler = (db: Database): Exclude<NextAuthConfig["
     if (!dbUser) throw new Error("User not found");
 
     const groupsKey = env.AUTH_OIDC_GROUPS_ATTRIBUTE;
-    const profileGroupsClaim = profile ? getProfileValueByPath(profile, groupsKey) : undefined;
-    const profileGroups = typeof profileGroupsClaim === "string" ? [profileGroupsClaim] : profileGroupsClaim;
+    const profileGroups = asStringGroups(profile ? getProfileValueByPath(profile, groupsKey) : undefined);
     // Groups from oidc provider are provided from the profile, it's not typed.
-    if (!env.AUTH_OIDC_GROUPS_LOCAL_MANAGEMENT && dbUser.provider === "oidc" && Array.isArray(profileGroups)) {
-      logger.debug(`Using profile groups (${groupsKey}): ${JSON.stringify(profileGroups)}`);
-      await synchronizeGroupsWithExternalForUserAsync(db, user.id, profileGroups as string[]);
+    if (profileGroups) {
+      await storeLastGroupsClaimAsync(db, user.id, profileGroups);
+      if (!env.AUTH_OIDC_GROUPS_LOCAL_MANAGEMENT && dbUser.provider === "oidc") {
+        logger.debug(`Using profile groups (${groupsKey}): ${JSON.stringify(profileGroups)}`);
+        await synchronizeGroupsWithExternalForUserAsync(db, user.id, profileGroups);
+      }
     }
 
     // In ldap-authroization we return the groups from ldap, it's not typed.
-    if ("groups" in user && Array.isArray(user.groups)) {
-      logger.debug(`Using profile groups: ${JSON.stringify(user.groups)}`);
-      await synchronizeGroupsWithExternalForUserAsync(db, user.id, user.groups as string[]);
+    if ("groups" in user) {
+      const ldapGroups = asStringGroups(user.groups);
+      if (ldapGroups) {
+        logger.debug(`Using profile groups: ${JSON.stringify(ldapGroups)}`);
+        await storeLastGroupsClaimAsync(db, user.id, ldapGroups);
+        await synchronizeGroupsWithExternalForUserAsync(db, user.id, ldapGroups);
+      }
     }
     await addUserToEveryoneGroupIfNotMemberAsync(db, user.id);
 
@@ -90,6 +96,28 @@ export const createSignInEventHandler = (db: Database): Exclude<NextAuthConfig["
       expires: dayjs().add(1, "year").toDate(),
     });
   };
+};
+
+const asStringGroups = (value: unknown): string[] | null => {
+  if (typeof value === "string") {
+    return [value];
+  }
+
+  if (Array.isArray(value) && value.every((item) => typeof item === "string")) {
+    return value;
+  }
+
+  return null;
+};
+
+const storeLastGroupsClaimAsync = async (db: Database, userId: string, groupsClaim: string[]) => {
+  await db
+    .update(accounts)
+    .set({
+      lastGroupsClaim: JSON.stringify(groupsClaim),
+      lastGroupsClaimSeenAt: new Date(),
+    })
+    .where(eq(accounts.userId, userId));
 };
 
 const addUserToEveryoneGroupIfNotMemberAsync = async (db: Database, userId: string) => {
