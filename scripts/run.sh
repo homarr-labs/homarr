@@ -82,7 +82,8 @@ if [ "${HOMARR_DISABLE_IPV6:-false}" != "true" ] && grep -q . /proc/net/if_inet6
     NGINX_LISTEN_IPV6='listen [::]:7575;'
 fi
 envsubst '${NGINX_LISTEN_IPV6} ${NGINX_TRUSTED_PROXIES} ${HOMARR_REQUEST_IDENTITY_SECRET}' < /etc/nginx/templates/nginx.conf > /etc/nginx/nginx.conf
-# Keep the container PID writable without changing the exported nginx config.
+# Native installs bypass the Docker entrypoint, and /run is cleared on reboot.
+mkdir -p /run/nginx || exit 1
 nginx -t -g 'pid /run/nginx/nginx.pid;' || exit 1
 # Start services in the background and store their PIDs
 nginx -g 'daemon off; pid /run/nginx/nginx.pid;' &
