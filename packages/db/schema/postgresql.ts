@@ -56,6 +56,7 @@ export * from "@homarr/core/infrastructure/certificates/hostnames/db/postgresql"
 export const apiKeys = pgTable("apiKey", {
   id: varchar({ length: 64 }).notNull().primaryKey(),
   apiKey: text().notNull(),
+  readOnly: boolean().notNull().default(false),
   oauthClientId: text(),
   oauthClientName: text(),
   oauthRedirectUri: text(),
@@ -213,6 +214,7 @@ export const integrations = pgTable(
     id: varchar({ length: 64 }).notNull().primaryKey(),
     name: text().notNull(),
     url: text().notNull(),
+    externalUrl: text(),
     kind: varchar({ length: 128 }).$type<IntegrationKind>().notNull(),
     appId: varchar({ length: 128 }).references(() => apps.id, { onDelete: "set null" }),
   },

@@ -30,6 +30,10 @@ still be suggested from their image and published ports.
 | `homarr.widget`      | Homarr widget kind to add when it supports the selected integration        |
 | `homarr.hide`        | Excludes the container when this label is present, regardless of its value |
 
+`homarr.icon` also sets the container icon in the [Docker stats](/docs/widgets/docker-containers) widget, with or
+without the other labels. `homepage.icon` is used when `homarr.icon` is absent. Without either label, the widget
+matches the image name against the icon library.
+
 Unknown integration and widget kinds are ignored. Do not put API keys, passwords, or other secrets in labels. Enter
 credentials in onboarding, where Homarr stores them using its normal encrypted integration-secret flow.
 

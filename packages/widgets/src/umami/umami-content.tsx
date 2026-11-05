@@ -14,6 +14,7 @@ import { getUmamiLayout } from "./umami-layout";
 import { UmamiTopPagesContent, UmamiTopReferrersContent } from "./umami-top-list";
 import { formatTimeFrameLabel, formatXLabel, useUmamiQueryOptions } from "./umami-utils";
 import type { TimeFrame } from "./umami-utils";
+import { WidgetEmptyState } from "../common/empty-state";
 import { getUsableWidgetQueryData, isInitialWidgetQueryPending } from "../common/query-state";
 import { WidgetQueryLoadingState } from "../common/query-state-indicator";
 
@@ -73,15 +74,7 @@ export function UmamiContent({
 
   const firstResult = results?.[0];
   if (isInitialWidgetQueryPending(statsQuery)) return <WidgetQueryLoadingState />;
-  if (!firstResult) {
-    return (
-      <Stack align="center" justify="center" h="100%">
-        <Text c="dimmed" size="sm">
-          {t("error.noData")}
-        </Text>
-      </Stack>
-    );
-  }
+  if (!firstResult) return <WidgetEmptyState message={t("error.noData")} />;
 
   const { visitorStats } = firstResult;
 

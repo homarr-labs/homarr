@@ -86,6 +86,17 @@ function analyzeTemplate(
   requestParameters?: ReadonlyMap<string, ReadonlySet<string>>,
   requestParameterChecks?: CustomJsxRequestParameterCheck[],
 ): CustomJsxTemplateDiagnostic[] {
+  if (template.length > CUSTOM_JSX_LIMITS.templateLength) {
+    return [
+      {
+        severity: "error",
+        message: `Template exceeds the ${CUSTOM_JSX_LIMITS.templateLength} character limit`,
+        index: 0,
+        line: 1,
+        column: 1,
+      },
+    ];
+  }
   const diagnostics: CustomJsxTemplateDiagnostic[] = [];
   let operations = 0;
 

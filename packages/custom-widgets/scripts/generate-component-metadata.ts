@@ -152,9 +152,25 @@ async function generateCatalog() {
   };
 
   const serialized = `${JSON.stringify(catalog)}\n`;
+  const runtimeCatalog = {
+    globalPropNames: catalog.globalProps.map(({ name }) => name),
+    components: catalog.components.map(
+      ({ name, package: packageName, safety, props, blockedProps, bind, deniedReason }) => ({
+        name,
+        package: packageName,
+        safety,
+        props: props.map(({ name: propName, required }) => ({ name: propName, required })),
+        blockedProps,
+        ...(bind ? { bind } : {}),
+        ...(deniedReason ? { deniedReason } : {}),
+      }),
+    ),
+  };
+  const serializedRuntimeCatalog = `${JSON.stringify(runtimeCatalog)}\n`;
   await Promise.all([
     writeFile(resolve(packageRoot, "src/core/component-catalog.generated.json"), serialized),
     writeFile(resolve(repositoryRoot, "apps/docs/public/custom-widgets/component-catalog-v1.json"), serialized),
+    writeFile(resolve(packageRoot, "src/core/component-catalog.runtime.generated.json"), serializedRuntimeCatalog),
   ]);
 }
 

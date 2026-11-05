@@ -38,7 +38,7 @@ import type { AssistantConversationControls } from "./assistant-conversation-con
 import { useAssistantPreferences } from "./assistant-context";
 import type { AssistantPendingAction } from "./assistant-pending-action";
 import type { AssistantReasoningMode, AssistantRuntimeModelOption } from "./assistant-preferences";
-import { resolveAssistantReasoningDisplayMode } from "./assistant-preferences";
+import { resolveForcedAssistantReasoning } from "./assistant-preferences";
 import { getAssistantProviderQuotaLevel } from "./assistant-provider-quota";
 
 type ComposerProps = AssistantConversationControls & {
@@ -73,15 +73,15 @@ export const RuntimeControls = ({
   const { provider: assistantProvider } = useAssistantPreferences();
   const [modelSearch, setModelSearch] = useState("");
   const selectedModel = models.find((model) => model.id === modelId);
-  const displayedReasoning = resolveAssistantReasoningDisplayMode({ provider: assistantProvider, modelId, reasoning });
-  const reasoningIsForced = displayedReasoning === "max";
+  const forcedReasoning = resolveForcedAssistantReasoning({ provider: assistantProvider, modelId });
+  const displayedReasoning = forcedReasoning ?? reasoning;
   let reasoningLabel = "Max";
-  if (!reasoningIsForced) reasoningLabel = t(`runtime.reasoning.${displayedReasoning}`);
+  if (displayedReasoning !== "max") reasoningLabel = t(`runtime.reasoning.${displayedReasoning}`);
   let reasoningControl: ReactNode;
-  if (reasoningIsForced) {
+  if (forcedReasoning) {
     reasoningControl = (
       <Badge size="sm" variant="light" color="gray">
-        Max
+        {reasoningLabel}
       </Badge>
     );
   } else {

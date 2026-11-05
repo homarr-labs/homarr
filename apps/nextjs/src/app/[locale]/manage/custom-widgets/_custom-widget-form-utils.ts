@@ -122,7 +122,8 @@ export async function loadPreviewQueries(definition: HomarrCustomWidgetV2, sessi
       const [requestId] = request;
       try {
         const result = await fetchApi.customWidget.previewQuery.query({ sessionId, requestId, params: {} });
-        results[index] = { requestId, data: result.data, status: { loading: false, ...result } };
+        const { data, ...status } = result;
+        results[index] = { requestId, data, status: { loading: false, ...status } };
       } catch (error) {
         results[index] = {
           requestId,
