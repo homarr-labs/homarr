@@ -280,6 +280,13 @@
           "title": "",
           "description": ""
         },
+        "mode": {
+          "label": "",
+          "readOnly": "",
+          "readWrite": "",
+          "readOnlyDescription": "",
+          "readWriteDescription": ""
+        },
         "credential": {
           "title": "",
           "breadth": "",
@@ -1386,11 +1393,7 @@
               "label": "Meglévő alkalmazás kiválasztása"
             },
             "new": {
-              "title": "Új",
-              "url": {
-                "label": "Alkalmazás url",
-                "description": "Az Url, amelyre az alkalmazás a műszerfalról történő eléréskor irányít"
-              }
+              "title": "Új"
             }
           }
         }
@@ -1442,8 +1445,9 @@
         "label": "Meglévő alkalmazás összekapcsolása",
         "description": "Csatlakoztasd ezt az integrációt egy már használható alkalmazáshoz."
       },
-      "appHref": {
-        "placeholder": "Egyéni alkalmazás URL"
+      "externalUrl": {
+        "label": "",
+        "description": ""
       },
       "apiKeySettings": {
         "label": "API-kulcs beszerzése"
@@ -1790,10 +1794,6 @@
         "wazuhIndexerPassword": {
           "label": "Indexer-jelszó",
           "newLabel": "Új indexer-jelszó"
-        },
-        "wazuhDashboardUrl": {
-          "label": "Irányítópult URL-je (nem kötelező)",
-          "newLabel": "Új irányítópult-URL"
         }
       }
     },
@@ -2038,7 +2038,7 @@
     "total": "Összesen",
     "filesystemUsage": "{count, plural, one {Használat megjelenítése ehhez: # fájlrendszer} other {Használat megjelenítése ehhez: # fájlrendszer}}",
     "field": {
-      "name": "Név",
+      "name": "Folyamat neve",
       "state": "Állapot",
       "size": "Méret",
       "actions": "Műveletek",
@@ -7327,6 +7327,12 @@
             "apiKey": {
               "label": "Hitelesítés",
               "title": "API kulcsok",
+              "access": {
+                "label": "",
+                "readOnly": "",
+                "readWrite": "",
+                "description": ""
+              },
               "button": {
                 "createApiToken": "API token létrehozása",
                 "confirmDeletion": ""
@@ -8808,6 +8814,7 @@
       "imageInput": "Képbemenetet fogad",
       "thinking": "Gondolkodási mód",
       "reasoning": {
+        "default": "",
         "auto": "Automatikus",
         "none": "Ki",
         "minimal": "Minimális",

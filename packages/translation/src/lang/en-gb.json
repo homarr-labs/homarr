@@ -280,6 +280,13 @@
           "title": "",
           "description": ""
         },
+        "mode": {
+          "label": "",
+          "readOnly": "",
+          "readWrite": "",
+          "readOnlyDescription": "",
+          "readWriteDescription": ""
+        },
         "credential": {
           "title": "",
           "breadth": "",
@@ -1386,11 +1393,7 @@
               "label": "Select existing app"
             },
             "new": {
-              "title": "New",
-              "url": {
-                "label": "App URL",
-                "description": "The URL the app will open when accessed from the dashboard"
-              }
+              "title": "New"
             }
           }
         }
@@ -1442,8 +1445,9 @@
         "label": "Link an existing app",
         "description": "Connect this integration to an app you can already use."
       },
-      "appHref": {
-        "placeholder": "Custom application URL"
+      "externalUrl": {
+        "label": "",
+        "description": ""
       },
       "apiKeySettings": {
         "label": "Get API key"
@@ -1790,10 +1794,6 @@
         "wazuhIndexerPassword": {
           "label": "Indexer password",
           "newLabel": "New indexer password"
-        },
-        "wazuhDashboardUrl": {
-          "label": "Dashboard URL (optional)",
-          "newLabel": "New dashboard URL"
         }
       }
     },
@@ -2038,18 +2038,18 @@
     "total": "Total",
     "filesystemUsage": "{count, plural, one {Show usage for # filesystem} other {Show usage for # filesystems}}",
     "field": {
-      "name": "Name",
+      "name": "Job name",
       "state": "State",
       "size": "Size",
       "actions": "Actions",
       "source": "Source",
       "title": "Title",
       "description": "Description",
-      "created": "Created",
-      "namespace": "Namespace",
+      "created": "",
+      "namespace": "",
       "status": "Status",
-      "architecture": "Architecture",
-      "type": "Type"
+      "architecture": "",
+      "type": ""
     },
     "label": {
       "new": "New"
@@ -2070,11 +2070,11 @@
     },
     "cornerStyle": {
       "options": {
-        "md": "Balanced",
+        "md": "",
         "lg": "Rounded corners",
-        "xs": "Tight",
-        "sm": "Subtle",
-        "xl": "Soft"
+        "xs": "",
+        "sm": "",
+        "xl": ""
       }
     }
   },
@@ -4423,7 +4423,7 @@
           "columnTitle": "Actions"
         },
         "added": {
-          "columnTitle": "Added"
+          "columnTitle": ""
         },
         "category": {
           "columnTitle": "Category"
@@ -4445,7 +4445,7 @@
           "detailsTitle": "Progress"
         },
         "ratio": {
-          "columnTitle": "Ratio"
+          "columnTitle": ""
         },
         "received": {
           "columnTitle": "Down",
@@ -4464,7 +4464,7 @@
           "detailsTitle": "Type"
         },
         "upSpeed": {
-          "columnTitle": "Up"
+          "columnTitle": ""
         }
       },
       "states": {
@@ -7327,6 +7327,12 @@
             "apiKey": {
               "label": "",
               "title": "",
+              "access": {
+                "label": "",
+                "readOnly": "",
+                "readWrite": "",
+                "description": ""
+              },
               "button": {
                 "createApiToken": "",
                 "confirmDeletion": ""
@@ -8808,6 +8814,7 @@
       "imageInput": "Accepts image input",
       "thinking": "Thinking mode",
       "reasoning": {
+        "default": "",
         "auto": "Auto",
         "none": "Off",
         "minimal": "Minimal",

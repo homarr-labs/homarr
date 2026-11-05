@@ -280,6 +280,13 @@
           "title": "Повний доступ адміністратора",
           "description": "Дозволяє керувати Омарром і підключеними послугами, включаючи деструктивні дії."
         },
+        "mode": {
+          "label": "",
+          "readOnly": "",
+          "readWrite": "",
+          "readOnlyDescription": "",
+          "readWriteDescription": ""
+        },
         "credential": {
           "title": "Посвідчення облікових даних і час життя",
           "breadth": "Працює з HTTP API та MCP, в тому числі поза цим клієнтом.",
@@ -1386,11 +1393,7 @@
               "label": "Виберіть наявний застосунок"
             },
             "new": {
-              "title": "Новий",
-              "url": {
-                "label": "URL-адреса додатку",
-                "description": "URL-адреса додатку відкриється при доступі до панелі керування"
-              }
+              "title": "Новий"
             }
           }
         }
@@ -1442,8 +1445,9 @@
         "label": "Прив'язати існуючу програму",
         "description": "Під'єднайте цю інтеграцію до програми, яку ви вже можете використовувати."
       },
-      "appHref": {
-        "placeholder": "Власний URL додатку"
+      "externalUrl": {
+        "label": "",
+        "description": ""
       },
       "apiKeySettings": {
         "label": "Отримати API ключ"
@@ -1790,10 +1794,6 @@
         "wazuhIndexerPassword": {
           "label": "Пароль індексатора",
           "newLabel": "Новий пароль індексатора"
-        },
-        "wazuhDashboardUrl": {
-          "label": "URL-адреса панелі (необов’язково)",
-          "newLabel": "Нова URL-адреса панелі керування"
         }
       }
     },
@@ -7327,6 +7327,12 @@
             "apiKey": {
               "label": "Аутентифікація",
               "title": "Ключі API",
+              "access": {
+                "label": "",
+                "readOnly": "",
+                "readWrite": "",
+                "description": ""
+              },
               "button": {
                 "createApiToken": "Створити API токен",
                 "confirmDeletion": "Підтвердіть видалення"
@@ -8808,6 +8814,7 @@
       "imageInput": "Приймає введення зображення",
       "thinking": "Режим мислення",
       "reasoning": {
+        "default": "Типово",
         "auto": "Авто",
         "none": "Вимкнено",
         "minimal": "Мінімальні",

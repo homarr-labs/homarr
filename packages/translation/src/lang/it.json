@@ -280,6 +280,13 @@
           "title": "Accesso amministratore completo",
           "description": "Puoi gestire Homarr e i servizi connessi, comprese le azioni distruttive."
         },
+        "mode": {
+          "label": "",
+          "readOnly": "",
+          "readWrite": "",
+          "readOnlyDescription": "",
+          "readWriteDescription": ""
+        },
         "credential": {
           "title": "Ambito e durata delle credenziali",
           "breadth": "Funziona con l'API HTTP di Homar e MCP, anche al di fuori di questo client.",
@@ -1386,11 +1393,7 @@
               "label": "Seleziona app esistente"
             },
             "new": {
-              "title": "Nuovo",
-              "url": {
-                "label": "Url app",
-                "description": "L'Url che l'app aprirà quando vi si accede dalla dashboard"
-              }
+              "title": "Nuovo"
             }
           }
         }
@@ -1442,8 +1445,9 @@
         "label": "Collega un'app esistente",
         "description": "Collega questa integrazione ad un'app che puoi già utilizzare."
       },
-      "appHref": {
-        "placeholder": "URL app personalizzata"
+      "externalUrl": {
+        "label": "",
+        "description": ""
       },
       "apiKeySettings": {
         "label": "Ottieni la chiave API"
@@ -1790,10 +1794,6 @@
         "wazuhIndexerPassword": {
           "label": "Password indicizzatore",
           "newLabel": "Nuova password indicizzatore"
-        },
-        "wazuhDashboardUrl": {
-          "label": "Url Dashboard (opzionale)",
-          "newLabel": "Nuovo URL dashboard"
         }
       }
     },
@@ -2038,7 +2038,7 @@
     "total": "Totale",
     "filesystemUsage": "{count, plural, one {Mostra utilizzo per # filesystem} other {Mostra utilizzo per # filesystem}}",
     "field": {
-      "name": "Nome",
+      "name": "Nome del job",
       "state": "Stato",
       "size": "Dimensione",
       "actions": "Azioni",
@@ -7327,6 +7327,12 @@
             "apiKey": {
               "label": "Autenticazione",
               "title": "Chiavi API",
+              "access": {
+                "label": "",
+                "readOnly": "",
+                "readWrite": "",
+                "description": ""
+              },
               "button": {
                 "createApiToken": "Crea token API",
                 "confirmDeletion": "Conferma eliminazione"
@@ -8808,6 +8814,7 @@
       "imageInput": "Accetta input immagine",
       "thinking": "Modalità di pensiero",
       "reasoning": {
+        "default": "Predefinito",
         "auto": "Automatico",
         "none": "",
         "minimal": "Minimo",

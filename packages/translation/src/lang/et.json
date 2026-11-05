@@ -280,6 +280,13 @@
           "title": "",
           "description": ""
         },
+        "mode": {
+          "label": "",
+          "readOnly": "",
+          "readWrite": "",
+          "readOnlyDescription": "",
+          "readWriteDescription": ""
+        },
         "credential": {
           "title": "",
           "breadth": "",
@@ -1386,11 +1393,7 @@
               "label": "Vali olemasolev rakendus"
             },
             "new": {
-              "title": "Uus",
-              "url": {
-                "label": "Äpi URL",
-                "description": "Veebiaadress, mille rakendus juhtpaneelilt avab"
-              }
+              "title": "Uus"
             }
           }
         }
@@ -1442,8 +1445,9 @@
         "label": "Seo olemasolev rakendus",
         "description": "Ühenda see integratsioon rakendusega, mida saad juba kasutada."
       },
-      "appHref": {
-        "placeholder": "Kohandatud rakenduse URL"
+      "externalUrl": {
+        "label": "",
+        "description": ""
       },
       "apiKeySettings": {
         "label": "Hangi API võti"
@@ -1790,10 +1794,6 @@
         "wazuhIndexerPassword": {
           "label": "Indekseerija parool",
           "newLabel": "Uus indekseerija parool"
-        },
-        "wazuhDashboardUrl": {
-          "label": "Armatuurlaua URL (valikuline)",
-          "newLabel": "Uus armatuurlaua URL"
         }
       }
     },
@@ -2038,7 +2038,7 @@
     "total": "Kokku",
     "filesystemUsage": "{count, plural, one {Kuva # failisüsteemi kasutus} other {Kuva # failisüsteemi kasutus}}",
     "field": {
-      "name": "Nimi",
+      "name": "Töö nimetus",
       "state": "Olek",
       "size": "Suurus",
       "actions": "Toimingud",
@@ -7327,6 +7327,12 @@
             "apiKey": {
               "label": "Autentimine",
               "title": "API-võtmed",
+              "access": {
+                "label": "",
+                "readOnly": "",
+                "readWrite": "",
+                "description": ""
+              },
               "button": {
                 "createApiToken": "Loo API-luba",
                 "confirmDeletion": ""
@@ -8808,6 +8814,7 @@
       "imageInput": "Toetab pildisisendit",
       "thinking": "Mõtlemisrežiim",
       "reasoning": {
+        "default": "",
         "auto": "Automaatne",
         "none": "Väljas",
         "minimal": "Minimaalne",

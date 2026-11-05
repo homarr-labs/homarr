@@ -280,6 +280,13 @@
           "title": "フル管理者アクセス",
           "description": "破壊行為を含むHomarrと接続されたサービスを管理することができます。"
         },
+        "mode": {
+          "label": "",
+          "readOnly": "",
+          "readWrite": "",
+          "readOnlyDescription": "",
+          "readWriteDescription": ""
+        },
         "credential": {
           "title": "資格情報の範囲と有効期間",
           "breadth": "HomarrのHTTP APIとMCPで動作します。このクライアントの外部を含みます。",
@@ -1386,11 +1393,7 @@
               "label": "既存のアプリを選択"
             },
             "new": {
-              "title": "新規作成",
-              "url": {
-                "label": "アプリURL",
-                "description": "ダッシュボードからアクセスしたときにアプリが開くURL"
-              }
+              "title": "新規作成"
             }
           }
         }
@@ -1442,8 +1445,9 @@
         "label": "既存のアプリをリンク",
         "description": "この連携機能を既に使用できるアプリに接続します。"
       },
-      "appHref": {
-        "placeholder": "カスタムアプリ URL"
+      "externalUrl": {
+        "label": "",
+        "description": ""
       },
       "apiKeySettings": {
         "label": ""
@@ -1790,10 +1794,6 @@
         "wazuhIndexerPassword": {
           "label": "インデクサのパスワード",
           "newLabel": "新しいインデクサーのパスワード"
-        },
-        "wazuhDashboardUrl": {
-          "label": "ダッシュボード URL (オプション)",
-          "newLabel": "新しいダッシュボード URL"
         }
       }
     },
@@ -2038,7 +2038,7 @@
     "total": "合計",
     "filesystemUsage": "{count, plural, one {# ファイルシステムの使用状況を表示} other {# ファイルシステムの使用状況を表示}}",
     "field": {
-      "name": "名称",
+      "name": "ジョブ名",
       "state": "状態",
       "size": "サイズ",
       "actions": "アクション",
@@ -2073,7 +2073,7 @@
         "md": "バランス",
         "lg": "四捨五入済み",
         "xs": "タイトな",
-        "sm": "Subtle",
+        "sm": "",
         "xl": "ソフト"
       }
     }
@@ -7327,6 +7327,12 @@
             "apiKey": {
               "label": "認証",
               "title": "API キー",
+              "access": {
+                "label": "",
+                "readOnly": "",
+                "readWrite": "",
+                "description": ""
+              },
               "button": {
                 "createApiToken": "API トークンの生成",
                 "confirmDeletion": "削除の確認"
@@ -8808,6 +8814,7 @@
       "imageInput": "画像の入力を受け入れます",
       "thinking": "思考モード",
       "reasoning": {
+        "default": "デフォルト",
         "auto": "自動",
         "none": "オフ",
         "minimal": "最小",

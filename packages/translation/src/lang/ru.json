@@ -280,6 +280,13 @@
           "title": "Полный доступ администратора",
           "description": "Может управлять Homarr и подключёнными сервисами, включая разрушительные действия."
         },
+        "mode": {
+          "label": "",
+          "readOnly": "",
+          "readWrite": "",
+          "readOnlyDescription": "",
+          "readWriteDescription": ""
+        },
         "credential": {
           "title": "Охват и срок действия учётных данных",
           "breadth": "Работают с HTTP API и MCP Homarr, в том числе вне этого клиента.",
@@ -1386,11 +1393,7 @@
               "label": "Выберите существующее приложение"
             },
             "new": {
-              "title": "Новое",
-              "url": {
-                "label": "URL приложения",
-                "description": "URL, который откроется при переходе к приложению с панели"
-              }
+              "title": "Новое"
             }
           }
         }
@@ -1442,8 +1445,9 @@
         "label": "Привязать существующее приложение",
         "description": "Свяжите эту интеграцию с приложением, которое вам уже доступно."
       },
-      "appHref": {
-        "placeholder": "Свой URL приложения"
+      "externalUrl": {
+        "label": "",
+        "description": ""
       },
       "apiKeySettings": {
         "label": "Получить API-ключ"
@@ -1790,10 +1794,6 @@
         "wazuhIndexerPassword": {
           "label": "Пароль индексатора",
           "newLabel": "Новый пароль индексатора"
-        },
-        "wazuhDashboardUrl": {
-          "label": "URL панели Wazuh (необязательно)",
-          "newLabel": "Новый URL панели Wazuh"
         }
       }
     },
@@ -7327,6 +7327,12 @@
             "apiKey": {
               "label": "Аутентификация",
               "title": "API-ключи",
+              "access": {
+                "label": "",
+                "readOnly": "",
+                "readWrite": "",
+                "description": ""
+              },
               "button": {
                 "createApiToken": "Создать API-токен",
                 "confirmDeletion": "Подтвердить удаление"
@@ -8808,6 +8814,7 @@
       "imageInput": "Принимает изображения",
       "thinking": "Режим рассуждения",
       "reasoning": {
+        "default": "По умолчанию",
         "auto": "Авто",
         "none": "Выкл",
         "minimal": "Минимум",

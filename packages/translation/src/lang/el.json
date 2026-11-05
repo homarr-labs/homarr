@@ -280,6 +280,13 @@
           "title": "Πλήρης πρόσβαση διαχειριστή",
           "description": "Μπορεί να διαχειριστεί Homarr και συνδεδεμένες υπηρεσίες, συμπεριλαμβανομένων καταστροφικών δράσεων."
         },
+        "mode": {
+          "label": "",
+          "readOnly": "",
+          "readWrite": "",
+          "readOnlyDescription": "",
+          "readWriteDescription": ""
+        },
         "credential": {
           "title": "Πεδίο εφαρμογής και διάρκεια ζωής",
           "breadth": "Λειτουργεί με HTTP API και MCP, συμπεριλαμβανομένου και εκτός αυτού του υπολογιστή-πελάτη.",
@@ -1386,11 +1393,7 @@
               "label": "Επιλέξτε υπάρχουσα εφαρμογή"
             },
             "new": {
-              "title": "Νέο",
-              "url": {
-                "label": "",
-                "description": "URL που ανοίγει η εφαρμογή από τον πίνακα"
-              }
+              "title": "Νέο"
             }
           }
         }
@@ -1442,8 +1445,9 @@
         "label": "Σύνδεση μιας υπάρχουσας εφαρμογής",
         "description": "Συνδέστε αυτήν την ενσωμάτωση σε μια εφαρμογή που μπορείτε ήδη να χρησιμοποιήσετε."
       },
-      "appHref": {
-        "placeholder": ""
+      "externalUrl": {
+        "label": "",
+        "description": ""
       },
       "apiKeySettings": {
         "label": "Λήψη κλειδιού API"
@@ -1790,10 +1794,6 @@
         "wazuhIndexerPassword": {
           "label": "Κωδικός ευρετηρίου",
           "newLabel": "Νέος κωδικός ευρετηρίου"
-        },
-        "wazuhDashboardUrl": {
-          "label": "Διεύθυνση URL Ταμπλό (Προαιρετικό)",
-          "newLabel": "Νέο dashboard URL"
         }
       }
     },
@@ -2038,7 +2038,7 @@
     "total": "Σύνολο",
     "filesystemUsage": "{count, plural, one {Δείξε χρήση για # σύστημα αρχείων} other {Δείξε χρήση για # συστήματα αρχείων}}",
     "field": {
-      "name": "Όνομα",
+      "name": "Όνομα εργασίας",
       "state": "Κατάσταση",
       "size": "Μέγεθος",
       "actions": "Ενέργειες",
@@ -4423,7 +4423,7 @@
           "columnTitle": "Έλεγχοι"
         },
         "added": {
-          "columnTitle": "Ημερομηνία Προσθήκης"
+          "columnTitle": ""
         },
         "category": {
           "columnTitle": "Επιπλέον"
@@ -7327,6 +7327,12 @@
             "apiKey": {
               "label": "Έλεγχος ταυτότητας",
               "title": "Κλειδιά API",
+              "access": {
+                "label": "",
+                "readOnly": "",
+                "readWrite": "",
+                "description": ""
+              },
               "button": {
                 "createApiToken": "Δημιουργία διακριτικού API",
                 "confirmDeletion": "Επιβεβαίωση διαγραφής"
@@ -8808,6 +8814,7 @@
       "imageInput": "Αποδέχεται την είσοδο εικόνας",
       "thinking": "Λειτουργία σκέψης",
       "reasoning": {
+        "default": "Προεπιλογή",
         "auto": "Αυτόματο",
         "none": "Ανενεργό",
         "minimal": "Ελάχιστα",

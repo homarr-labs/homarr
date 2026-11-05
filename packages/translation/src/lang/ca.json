@@ -280,6 +280,13 @@
           "title": "",
           "description": ""
         },
+        "mode": {
+          "label": "",
+          "readOnly": "",
+          "readWrite": "",
+          "readOnlyDescription": "",
+          "readWriteDescription": ""
+        },
         "credential": {
           "title": "",
           "breadth": "",
@@ -1386,11 +1393,7 @@
               "label": "Selecciona una aplicació existent"
             },
             "new": {
-              "title": "Nou",
-              "url": {
-                "label": "App URL",
-                "description": "L'URL que obrirà l'aplicació en accedir-hi des del tauler"
-              }
+              "title": "Nou"
             }
           }
         }
@@ -1442,8 +1445,9 @@
         "label": "Enllaça una aplicació existent",
         "description": "Connecteu aquesta integració a una aplicació que ja pugueu utilitzar."
       },
-      "appHref": {
-        "placeholder": "URL d'app pròpia"
+      "externalUrl": {
+        "label": "",
+        "description": ""
       },
       "apiKeySettings": {
         "label": "Obtén la clau d'API"
@@ -1790,10 +1794,6 @@
         "wazuhIndexerPassword": {
           "label": "Contrasenya de l'indexador",
           "newLabel": "Contrasenya nova de l'indexador"
-        },
-        "wazuhDashboardUrl": {
-          "label": "URL del tauler (opcional)",
-          "newLabel": "URL nou del tauler"
         }
       }
     },
@@ -2038,7 +2038,7 @@
     "total": "Total",
     "filesystemUsage": "{count, plural, one {Mostra l'ús de # sistema de fitxers} other {Mostra l'ús de # sistemes de fitxers}}",
     "field": {
-      "name": "Nom",
+      "name": "Nom de la feina",
       "state": "Estat",
       "size": "Mida",
       "actions": "Accions",
@@ -7327,6 +7327,12 @@
             "apiKey": {
               "label": "Autenticació",
               "title": "Claus d'API",
+              "access": {
+                "label": "",
+                "readOnly": "",
+                "readWrite": "",
+                "description": ""
+              },
               "button": {
                 "createApiToken": "Crea un token d'API",
                 "confirmDeletion": ""
@@ -8808,6 +8814,7 @@
       "imageInput": "Accepta entrada d'imatges",
       "thinking": "Mode de raonament",
       "reasoning": {
+        "default": "",
         "auto": "Automàtic",
         "none": "Desactivat",
         "minimal": "Mínim",

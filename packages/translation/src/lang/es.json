@@ -280,6 +280,13 @@
           "title": "Acceso total al administrador",
           "description": "Puede administrar Homarr y servicios conectados, incluyendo acciones destructivas."
         },
+        "mode": {
+          "label": "",
+          "readOnly": "",
+          "readWrite": "",
+          "readOnlyDescription": "",
+          "readWriteDescription": ""
+        },
         "credential": {
           "title": "Movimiento de credenciales y tiempo de vida",
           "breadth": "Funciona con la API HTTP y MCP de Homarr, incluyendo fuera de este cliente.",
@@ -1386,11 +1393,7 @@
               "label": "Seleccionar aplicación existente"
             },
             "new": {
-              "title": "Nueva",
-              "url": {
-                "label": "URL de aplicación",
-                "description": "La URL que abrirá la aplicación cuando se acceda desde el tablero"
-              }
+              "title": "Nueva"
             }
           }
         }
@@ -1442,8 +1445,9 @@
         "label": "Vincular una aplicación existente",
         "description": "Conecte esta integración a una aplicación que ya puede usar."
       },
-      "appHref": {
-        "placeholder": "URL personalizada de aplicación"
+      "externalUrl": {
+        "label": "",
+        "description": ""
       },
       "apiKeySettings": {
         "label": "Obtener Clave de API"
@@ -1790,10 +1794,6 @@
         "wazuhIndexerPassword": {
           "label": "Contraseña del indexador",
           "newLabel": "Nueva contraseña del indexador"
-        },
-        "wazuhDashboardUrl": {
-          "label": "Tablero URL (opcional)",
-          "newLabel": "Nuevo dashboard URL"
         }
       }
     },
@@ -2038,7 +2038,7 @@
     "total": "Total",
     "filesystemUsage": "{count, plural, one {Mostrar uso para # filesystem} other {Mostrar uso para # filesystems}}",
     "field": {
-      "name": "Nombre",
+      "name": "Nombre de la tarea",
       "state": "Estado",
       "size": "Tamaño",
       "actions": "Acciones",
@@ -7327,6 +7327,12 @@
             "apiKey": {
               "label": "Autenticación",
               "title": "Claves API",
+              "access": {
+                "label": "",
+                "readOnly": "",
+                "readWrite": "",
+                "description": ""
+              },
               "button": {
                 "createApiToken": "Crear token de API",
                 "confirmDeletion": "Confirmar eliminación"
@@ -8808,6 +8814,7 @@
       "imageInput": "Acepta entrada de imagen",
       "thinking": "Modo de pensamiento",
       "reasoning": {
+        "default": "Por defecto",
         "auto": "Automático",
         "none": "Apagado",
         "minimal": "Mínimo",

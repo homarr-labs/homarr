@@ -280,6 +280,13 @@
           "title": "",
           "description": ""
         },
+        "mode": {
+          "label": "",
+          "readOnly": "",
+          "readWrite": "",
+          "readOnlyDescription": "",
+          "readWriteDescription": ""
+        },
         "credential": {
           "title": "",
           "breadth": "",
@@ -1386,11 +1393,7 @@
               "label": "Odaberite postojeću aplikaciju"
             },
             "new": {
-              "title": "Novo",
-              "url": {
-                "label": "URL aplik.",
-                "description": "URL koji će se otvoriti pri pristupu aplikaciji s nadzorne ploče"
-              }
+              "title": "Novo"
             }
           }
         }
@@ -1442,8 +1445,9 @@
         "label": "Poveži postojeću aplikaciju",
         "description": "Povežite ovu integraciju s aplikacijom koju već možete upotrebljavati."
       },
-      "appHref": {
-        "placeholder": "Prilagođeni URL"
+      "externalUrl": {
+        "label": "",
+        "description": ""
       },
       "apiKeySettings": {
         "label": "Dohvati API ključ"
@@ -1790,10 +1794,6 @@
         "wazuhIndexerPassword": {
           "label": "Lozinka indeksatora",
           "newLabel": "Nova lozinka indeksatora"
-        },
-        "wazuhDashboardUrl": {
-          "label": "URL nadzorne ploče (neobavezno)",
-          "newLabel": "Novi URL nadzorne ploče"
         }
       }
     },
@@ -2038,7 +2038,7 @@
     "total": "Ukupno",
     "filesystemUsage": "{count, plural, one {Prikaži upotrebu za # datotečni sustav} few {Prikaži upotrebu za # datotečna sustava} other {Prikaži upotrebu za # datotečnih sustava}}",
     "field": {
-      "name": "Naziv",
+      "name": "Naziv posla",
       "state": "Stanje",
       "size": "Veličina",
       "actions": "Radnje",
@@ -2047,7 +2047,7 @@
       "description": "Opis",
       "created": "Kreirano",
       "namespace": "Prostor imena",
-      "status": "Status",
+      "status": "",
       "architecture": "Arhitektura",
       "type": "Vrsta"
     },
@@ -7327,6 +7327,12 @@
             "apiKey": {
               "label": "Autentifikacija",
               "title": "API ključevi",
+              "access": {
+                "label": "",
+                "readOnly": "",
+                "readWrite": "",
+                "description": ""
+              },
               "button": {
                 "createApiToken": "Stvori API token",
                 "confirmDeletion": ""
@@ -8808,6 +8814,7 @@
       "imageInput": "Prihvaća slikovni unos",
       "thinking": "Način razmišljanja",
       "reasoning": {
+        "default": "",
         "auto": "Automatski",
         "none": "Isključeno",
         "minimal": "Minimalno",
