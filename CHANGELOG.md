@@ -1,4 +1,10 @@
 ## What's Changed
+* fix(startup): create nginx runtime directory for native installs by @ajnart in https://github.com/homarr-labs/homarr/pull/7471
+
+
+**Full Changelog**: https://github.com/homarr-labs/homarr/compare/v2.11.0...v2.11.1
+
+## What's Changed
 * chore(deps): update dependency @assistant-ui/core to v0.3.32 by @homarr-renovate[bot] in https://github.com/homarr-labs/homarr/pull/7423
 * chore(deps): update dependency assistant-cloud to v0.2.9 by @homarr-renovate[bot] in https://github.com/homarr-labs/homarr/pull/7424
 * chore(lang): updated translations from crowdin by @homarr-crowdin[bot] in https://github.com/homarr-labs/homarr/pull/7422
