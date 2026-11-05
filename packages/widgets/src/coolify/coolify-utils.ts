@@ -79,6 +79,10 @@ export function getResourceTimestamp(
   return formatRelativeTime(timestamp);
 }
 
+export function getCoolifyServerId(server: CoolifyServer): number | undefined {
+  return server.settings?.server_id ?? server.id ?? undefined;
+}
+
 export function buildServerResourceCounts(
   servers: CoolifyServer[],
   applications: CoolifyApplicationWithContext[],
@@ -87,7 +91,8 @@ export function buildServerResourceCounts(
   const serverResourceCounts = new Map<number, { apps: number; services: number }>();
 
   for (const server of servers) {
-    const serverId = server.settings?.server_id ?? server.id ?? 0;
+    const serverId = getCoolifyServerId(server);
+    if (serverId == null) continue;
     serverResourceCounts.set(serverId, { apps: 0, services: 0 });
   }
 
@@ -99,7 +104,11 @@ export function buildServerResourceCounts(
   }
 
   for (const app of applications) {
-    const serverId = app.server_id ?? destinationToServer.get(app.destination_id ?? 0) ?? app.destination_id ?? 0;
+    const serverId =
+      app.server_id ??
+      (app.destination_id == null ? undefined : destinationToServer.get(app.destination_id)) ??
+      app.destination_id;
+    if (serverId == null) continue;
     const counts = serverResourceCounts.get(serverId);
     if (counts) {
       counts.apps++;
@@ -107,7 +116,8 @@ export function buildServerResourceCounts(
   }
 
   for (const service of services) {
-    const serverId = service.server_id ?? service.destination_id ?? 0;
+    const serverId = service.server_id ?? service.destination_id;
+    if (serverId == null) continue;
     const counts = serverResourceCounts.get(serverId);
     if (counts) {
       counts.services++;

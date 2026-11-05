@@ -16,6 +16,7 @@ import {
   getCoolifyAttentionItems,
   getCoolifyAttentionSummary,
   getCoolifyProjectSummaries,
+  getCoolifyServerId,
   getCoolifyServerStatus,
   isCoolifyServerHealthy,
   parseStatus,
@@ -390,20 +391,23 @@ export function InstanceView({
             <ScrollArea className={classes.listScroll}>
               <div className={classes.panelBody}>
                 <div className={classes.table}>
-                  {servers.map((server) => (
-                    <ServerRow
-                      key={server.uuid}
-                      server={server}
-                      counts={
-                        serverResourceCounts.get(server.settings?.server_id ?? server.id ?? -1) ?? {
-                          apps: 0,
-                          services: 0,
+                  {servers.map((server) => {
+                    const serverId = getCoolifyServerId(server);
+                    return (
+                      <ServerRow
+                        key={server.uuid}
+                        server={server}
+                        counts={
+                          (serverId == null ? undefined : serverResourceCounts.get(serverId)) ?? {
+                            apps: 0,
+                            services: 0,
+                          }
                         }
-                      }
-                      baseUrl={baseUrl}
-                      showIp={showIp}
-                    />
-                  ))}
+                        baseUrl={baseUrl}
+                        showIp={showIp}
+                      />
+                    );
+                  })}
                   {servers.length === 0 && (
                     <div className={classes.emptyRow}>{search ? tCommon("noResults") : t("empty.servers")}</div>
                   )}
