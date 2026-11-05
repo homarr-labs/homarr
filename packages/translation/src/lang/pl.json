@@ -280,6 +280,13 @@
           "title": "Pełny dostęp administratora",
           "description": "Może zarządzać Homarrem i połączonymi usługami, w tym działaniami destrukcyjnymi."
         },
+        "mode": {
+          "label": "",
+          "readOnly": "",
+          "readWrite": "",
+          "readOnlyDescription": "",
+          "readWriteDescription": ""
+        },
         "credential": {
           "title": "Zakres poświadczeń i okres użytkowania",
           "breadth": "Działa z API HTTP Homarra i MCP, również poza tym klientem.",
@@ -1386,11 +1393,7 @@
               "label": "Wybierz istniejącą aplikację"
             },
             "new": {
-              "title": "Nowa",
-              "url": {
-                "label": "Adres URL aplikacji",
-                "description": "Adres URL, który zostanie otwarty po kliknięciu aplikacji na tablicy"
-              }
+              "title": "Nowa"
             }
           }
         }
@@ -1442,8 +1445,9 @@
         "label": "Połącz istniejącą aplikację",
         "description": "Połącz tę integrację z aplikacją, którą możesz już użyć."
       },
-      "appHref": {
-        "placeholder": "Niestandardowy adres URL aplikacji"
+      "externalUrl": {
+        "label": "",
+        "description": ""
       },
       "apiKeySettings": {
         "label": "Uzyskaj klucz API"
@@ -1790,10 +1794,6 @@
         "wazuhIndexerPassword": {
           "label": "Hasło indeksatora",
           "newLabel": "Nowe hasło indeksatora"
-        },
-        "wazuhDashboardUrl": {
-          "label": "Adres URL panelu ustawień (opcjonalnie)",
-          "newLabel": "Adres URL nowego panelu ustawień"
         }
       }
     },
@@ -2038,7 +2038,7 @@
     "total": "Razem",
     "filesystemUsage": "{count, plural, one {Pokaż użycie systemu plików #} other {Pokaż użycie # systemów plików}}",
     "field": {
-      "name": "Nazwa",
+      "name": "Nazwa zlecenia",
       "state": "Status",
       "size": "Rozmiar",
       "actions": "Akcje",
@@ -7327,6 +7327,12 @@
             "apiKey": {
               "label": "Uwierzytelnianie",
               "title": "Klucze API",
+              "access": {
+                "label": "",
+                "readOnly": "",
+                "readWrite": "",
+                "description": ""
+              },
               "button": {
                 "createApiToken": "Utwórz token API",
                 "confirmDeletion": "Potwierdź usunięcie"
@@ -8808,6 +8814,7 @@
       "imageInput": "Akceptuje wprowadzanie obrazu",
       "thinking": "Tryb myślenia",
       "reasoning": {
+        "default": "Domyślny",
         "auto": "Auto",
         "none": "Wyłączony",
         "minimal": "Minimalny",

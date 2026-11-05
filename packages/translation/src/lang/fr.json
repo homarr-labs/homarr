@@ -280,6 +280,13 @@
           "title": "Accès complet à l'administrateur",
           "description": "Permet de gérer Homarr et les services connectés, y compris les actions destructrices."
         },
+        "mode": {
+          "label": "",
+          "readOnly": "",
+          "readWrite": "",
+          "readOnlyDescription": "",
+          "readWriteDescription": ""
+        },
         "credential": {
           "title": "Périmètre d’identification et durée de vie",
           "breadth": "Fonctionne avec l'API HTTP d'Homarr, et MCP, y compris en dehors de ce client.",
@@ -1386,11 +1393,7 @@
               "label": "Sélectionner une application existante"
             },
             "new": {
-              "title": "Nouveau",
-              "url": {
-                "label": "Lien de l'application",
-                "description": "Lien d'ouverture de l'application depuis le tableau de bord"
-              }
+              "title": "Nouveau"
             }
           }
         }
@@ -1442,8 +1445,9 @@
         "label": "Lier une application existante",
         "description": "Connectez cette intégration à une application que vous pouvez déjà utiliser."
       },
-      "appHref": {
-        "placeholder": "URL personnalisée de l'application"
+      "externalUrl": {
+        "label": "",
+        "description": ""
       },
       "apiKeySettings": {
         "label": "Obtenir la clé API"
@@ -1790,10 +1794,6 @@
         "wazuhIndexerPassword": {
           "label": "Mot de passe de l'indexeur",
           "newLabel": "Nouveau mot de passe de l'indexeur"
-        },
-        "wazuhDashboardUrl": {
-          "label": "URL du tableau de bord (facultatif)",
-          "newLabel": "Nouvelle URL du tableau de bord"
         }
       }
     },
@@ -2038,18 +2038,18 @@
     "total": "Total",
     "filesystemUsage": "{count, plural, one {Affiche l'utilisation du # système de fichiers} other {Affiche l'utilisation de # systèmes de fichiers}}",
     "field": {
-      "name": "Nom",
+      "name": "Nom de la tâche",
       "state": "État",
       "size": "Taille",
-      "actions": "Actions",
-      "source": "Source",
+      "actions": "Contrôles",
+      "source": "Intégration",
       "title": "Titre",
       "description": "Description",
       "created": "Créé le",
       "namespace": "Espace de noms",
       "status": "Statut",
       "architecture": "Architecture",
-      "type": "Type"
+      "type": "Type de client de téléchargement"
     },
     "label": {
       "new": "Nouveau"
@@ -7327,6 +7327,12 @@
             "apiKey": {
               "label": "Authentification",
               "title": "Clés API",
+              "access": {
+                "label": "",
+                "readOnly": "",
+                "readWrite": "",
+                "description": ""
+              },
               "button": {
                 "createApiToken": "Créer un jeton API",
                 "confirmDeletion": "Confirmer la suppression"
@@ -8808,6 +8814,7 @@
       "imageInput": "Accepte la saisie de l'image",
       "thinking": "Mode de pensée",
       "reasoning": {
+        "default": "Par défaut",
         "auto": "Auto",
         "none": "Désactivé",
         "minimal": "",

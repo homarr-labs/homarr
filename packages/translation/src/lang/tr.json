@@ -280,6 +280,13 @@
           "title": "",
           "description": ""
         },
+        "mode": {
+          "label": "",
+          "readOnly": "",
+          "readWrite": "",
+          "readOnlyDescription": "",
+          "readWriteDescription": ""
+        },
         "credential": {
           "title": "",
           "breadth": "",
@@ -1386,11 +1393,7 @@
               "label": "Mevcut uygulamayı seçin"
             },
             "new": {
-              "title": "Yeni",
-              "url": {
-                "label": "Uygulama url  si",
-                "description": "Kontrol panelinden erişildiğinde uygulamanın açılacağı URL"
-              }
+              "title": "Yeni"
             }
           }
         }
@@ -1442,8 +1445,9 @@
         "label": "Mevcut bir uygulamayı bağla",
         "description": "Bu entegrasyonu zaten kullanabileceğiniz bir uygulamaya bağlayın."
       },
-      "appHref": {
-        "placeholder": "Özel Uygulama URL'si"
+      "externalUrl": {
+        "label": "",
+        "description": ""
       },
       "apiKeySettings": {
         "label": "API anahtarı al"
@@ -1790,10 +1794,6 @@
         "wazuhIndexerPassword": {
           "label": "İndeksleyici parolası",
           "newLabel": "Yeni indeksleyici parolası"
-        },
-        "wazuhDashboardUrl": {
-          "label": "Kontrol paneli URL'si (isteğe bağlı)",
-          "newLabel": "Yeni kontrol paneli URL'si"
         }
       }
     },
@@ -2038,7 +2038,7 @@
     "total": "Toplam",
     "filesystemUsage": "{count, plural, one {# dosya sisteminin kullanımını göster} other {# dosya sisteminin kullanımını göster}}",
     "field": {
-      "name": "İsim",
+      "name": "İş adı",
       "state": "Durum",
       "size": "Boyut",
       "actions": "Eylemler",
@@ -7327,6 +7327,12 @@
             "apiKey": {
               "label": "Kimlik doğrulama",
               "title": "API Anahtarları",
+              "access": {
+                "label": "",
+                "readOnly": "",
+                "readWrite": "",
+                "description": ""
+              },
               "button": {
                 "createApiToken": "API anahtarı oluştur",
                 "confirmDeletion": ""
@@ -8808,6 +8814,7 @@
       "imageInput": "Görüntü girdisini kabul eder",
       "thinking": "Düşünme modu",
       "reasoning": {
+        "default": "",
         "auto": "Otomatik",
         "none": "Kapalı",
         "minimal": "Minimum",

@@ -280,6 +280,13 @@
           "title": "",
           "description": ""
         },
+        "mode": {
+          "label": "",
+          "readOnly": "",
+          "readWrite": "",
+          "readOnlyDescription": "",
+          "readWriteDescription": ""
+        },
         "credential": {
           "title": "",
           "breadth": "",
@@ -1386,11 +1393,7 @@
               "label": ""
             },
             "new": {
-              "title": "",
-              "url": {
-                "label": "",
-                "description": ""
-              }
+              "title": ""
             }
           }
         }
@@ -1442,8 +1445,9 @@
         "label": "Prepojiť existujúcu aplikáciu",
         "description": "Pripojte túto integráciu k aplikácii, ktorú už môžete používať."
       },
-      "appHref": {
-        "placeholder": "Adresa URL vlastnej aplikácie"
+      "externalUrl": {
+        "label": "",
+        "description": ""
       },
       "apiKeySettings": {
         "label": "Získať kľúč API"
@@ -1790,10 +1794,6 @@
         "wazuhIndexerPassword": {
           "label": "Heslo indexera",
           "newLabel": "Nové heslo indexera"
-        },
-        "wazuhDashboardUrl": {
-          "label": "URL dashboardu (voliteľné)",
-          "newLabel": "Nová URL dashboardu"
         }
       }
     },
@@ -2038,7 +2038,7 @@
     "total": "Celkom",
     "filesystemUsage": "{count, plural, one {Zobraziť využitie pre # súborový systém} few {Zobraziť využitie pre # súborové systémy} many {Zobraziť využitie pre # súborových systémov} other {Zobraziť využitie pre # súborových systémov}}",
     "field": {
-      "name": "Názov",
+      "name": "Názov úlohy",
       "state": "Stav",
       "size": "Veľkosť",
       "actions": "Akcie",
@@ -7327,6 +7327,12 @@
             "apiKey": {
               "label": "Autentifikácia",
               "title": "API kľúče",
+              "access": {
+                "label": "",
+                "readOnly": "",
+                "readWrite": "",
+                "description": ""
+              },
               "button": {
                 "createApiToken": "Vytvorte token API",
                 "confirmDeletion": ""
@@ -8808,6 +8814,7 @@
       "imageInput": "Podporuje obrazový vstup",
       "thinking": "Režim premýšľania",
       "reasoning": {
+        "default": "",
         "auto": "Automaticky",
         "none": "Vypnuté",
         "minimal": "Minimálne",

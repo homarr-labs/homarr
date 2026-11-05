@@ -271,14 +271,21 @@
           "destinationHint": "crwdns10985:0crwdne10985:0"
         },
         "access": {
-          "title": "crwdns10987:0crwdne10987:0",
-          "description": "crwdns10989:0crwdne10989:0",
+          "title": "crwdns12033:0crwdne12033:0",
+          "description": "crwdns12035:0crwdne12035:0",
           "details": "crwdns10991:0{count}crwdne10991:0",
           "noGlobalPermissions": "crwdns10993:0crwdne10993:0"
         },
         "admin": {
-          "title": "crwdns10995:0crwdne10995:0",
-          "description": "crwdns10997:0crwdne10997:0"
+          "title": "crwdns12037:0crwdne12037:0",
+          "description": "crwdns12039:0crwdne12039:0"
+        },
+        "mode": {
+          "label": "crwdns12041:0crwdne12041:0",
+          "readOnly": "crwdns12043:0crwdne12043:0",
+          "readWrite": "crwdns12045:0crwdne12045:0",
+          "readOnlyDescription": "crwdns12047:0crwdne12047:0",
+          "readWriteDescription": "crwdns12049:0crwdne12049:0"
         },
         "credential": {
           "title": "crwdns10999:0crwdne10999:0",
@@ -1386,11 +1393,7 @@
               "label": "crwdns3788:0crwdne3788:0"
             },
             "new": {
-              "title": "crwdns3790:0crwdne3790:0",
-              "url": {
-                "label": "crwdns3792:0crwdne3792:0",
-                "description": "crwdns3794:0crwdne3794:0"
-              }
+              "title": "crwdns3790:0crwdne3790:0"
             }
           }
         }
@@ -1436,14 +1439,15 @@
       },
       "createApp": {
         "label": "crwdns3050:0crwdne3050:0",
-        "description": "crwdns3052:0crwdne3052:0"
+        "description": "crwdns12027:0crwdne12027:0"
       },
       "linkApp": {
         "label": "crwdns7559:0crwdne7559:0",
         "description": "crwdns7561:0crwdne7561:0"
       },
-      "appHref": {
-        "placeholder": "crwdns3054:0crwdne3054:0"
+      "externalUrl": {
+        "label": "crwdns12029:0crwdne12029:0",
+        "description": "crwdns12031:0crwdne12031:0"
       },
       "apiKeySettings": {
         "label": "crwdns4421:0crwdne4421:0"
@@ -1790,10 +1794,6 @@
         "wazuhIndexerPassword": {
           "label": "crwdns7585:0crwdne7585:0",
           "newLabel": "crwdns7587:0crwdne7587:0"
-        },
-        "wazuhDashboardUrl": {
-          "label": "crwdns7589:0crwdne7589:0",
-          "newLabel": "crwdns7591:0crwdne7591:0"
         }
       }
     },
@@ -1891,7 +1891,7 @@
       "copy": "crwdns7613:0crwdne7613:0",
       "copied": "crwdns7615:0crwdne7615:0",
       "refresh": "crwdns7617:0crwdne7617:0",
-      "export": "crwdns5305:0crwdne5305:0"
+      "export": "crwdns12063:0crwdne12063:0"
     },
     "hidden": "crwdns11433:0crwdne11433:0",
     "pagination": {
@@ -2039,17 +2039,17 @@
     "filesystemUsage": "crwdns7643:0count={count}crwdne7643:0",
     "field": {
       "name": "crwdns7645:0crwdne7645:0",
-      "state": "crwdns1902:0crwdne1902:0",
-      "size": "crwdns486:0crwdne486:0",
-      "actions": "crwdns5711:0crwdne5711:0",
-      "source": "crwdns938:0crwdne938:0",
-      "title": "crwdns3180:0crwdne3180:0",
-      "description": "crwdns326:0crwdne326:0",
-      "created": "crwdns10213:0crwdne10213:0",
-      "namespace": "crwdns10211:0crwdne10211:0",
-      "status": "crwdns6085:0crwdne6085:0",
-      "architecture": "crwdns10221:0crwdne10221:0",
-      "type": "crwdns1250:0crwdne1250:0"
+      "state": "crwdns12065:0crwdne12065:0",
+      "size": "crwdns12067:0crwdne12067:0",
+      "actions": "crwdns12069:0crwdne12069:0",
+      "source": "crwdns12071:0crwdne12071:0",
+      "title": "crwdns12073:0crwdne12073:0",
+      "description": "crwdns12075:0crwdne12075:0",
+      "created": "crwdns12077:0crwdne12077:0",
+      "namespace": "crwdns12079:0crwdne12079:0",
+      "status": "crwdns12081:0crwdne12081:0",
+      "architecture": "crwdns12083:0crwdne12083:0",
+      "type": "crwdns12085:0crwdne12085:0"
     },
     "label": {
       "new": "crwdns7647:0crwdne7647:0"
@@ -2070,11 +2070,11 @@
     },
     "cornerStyle": {
       "options": {
-        "md": "crwdns9825:0crwdne9825:0",
-        "lg": "crwdns9827:0crwdne9827:0",
-        "xs": "crwdns9821:0crwdne9821:0",
-        "sm": "crwdns9823:0crwdne9823:0",
-        "xl": "crwdns9829:0crwdne9829:0"
+        "md": "crwdns12087:0crwdne12087:0",
+        "lg": "crwdns12089:0crwdne12089:0",
+        "xs": "crwdns12091:0crwdne12091:0",
+        "sm": "crwdns12093:0crwdne12093:0",
+        "xl": "crwdns12095:0crwdne12095:0"
       }
     }
   },
@@ -7327,6 +7327,12 @@
             "apiKey": {
               "label": "crwdns1866:0crwdne1866:0",
               "title": "crwdns1868:0crwdne1868:0",
+              "access": {
+                "label": "crwdns12051:0crwdne12051:0",
+                "readOnly": "crwdns12053:0crwdne12053:0",
+                "readWrite": "crwdns12055:0crwdne12055:0",
+                "description": "crwdns12057:0crwdne12057:0"
+              },
               "button": {
                 "createApiToken": "crwdns1870:0crwdne1870:0",
                 "confirmDeletion": "crwdns11075:0crwdne11075:0"
@@ -7390,7 +7396,7 @@
               },
               "authentication": {
                 "title": "crwdns5187:0crwdne5187:0",
-                "intro": "crwdns5189:0crwdne5189:0",
+                "intro": "crwdns12059:0crwdne12059:0",
                 "apiKey": {
                   "title": "crwdns5191:0crwdne5191:0",
                   "description": "crwdns5193:0crwdne5193:0"
@@ -7400,7 +7406,7 @@
                   "description": "crwdns11123:0crwdne11123:0",
                   "hint": "crwdns11125:0crwdne11125:0"
                 },
-                "permissions": "crwdns5201:0crwdne5201:0"
+                "permissions": "crwdns12061:0crwdne12061:0"
               },
               "clientConfig": {
                 "title": "crwdns5203:0crwdne5203:0",
@@ -8808,6 +8814,7 @@
       "imageInput": "crwdns10407:0crwdne10407:0",
       "thinking": "crwdns10409:0crwdne10409:0",
       "reasoning": {
+        "default": "crwdns12025:0crwdne12025:0",
         "auto": "crwdns10411:0crwdne10411:0",
         "none": "crwdns10413:0crwdne10413:0",
         "minimal": "crwdns10415:0crwdne10415:0",

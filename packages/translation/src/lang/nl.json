@@ -280,6 +280,13 @@
           "title": "Volledige administrator-toegang",
           "description": "Kan Homarr en verbonden diensten beheren, inclusief destructieve acties."
         },
+        "mode": {
+          "label": "",
+          "readOnly": "",
+          "readWrite": "",
+          "readOnlyDescription": "",
+          "readWriteDescription": ""
+        },
         "credential": {
           "title": "Geldige scope en levensduur",
           "breadth": "Werkt met Homarr HTTP API en MCP, ook buiten deze client.",
@@ -1386,11 +1393,7 @@
               "label": "Bestaande app selecteren"
             },
             "new": {
-              "title": "Nieuw",
-              "url": {
-                "label": "App URL",
-                "description": "De URL die de app opent als deze wordt geopend vanaf het dashboard"
-              }
+              "title": "Nieuw"
             }
           }
         }
@@ -1442,8 +1445,9 @@
         "label": "Koppel een bestaande app",
         "description": "Verbind deze integratie met een app die je al kunt gebruiken."
       },
-      "appHref": {
-        "placeholder": "Aangepaste app-URL"
+      "externalUrl": {
+        "label": "",
+        "description": ""
       },
       "apiKeySettings": {
         "label": "API-sleutel ophalen"
@@ -1790,10 +1794,6 @@
         "wazuhIndexerPassword": {
           "label": "Indexer wachtwoord",
           "newLabel": "Nieuw indexer wachtwoord"
-        },
-        "wazuhDashboardUrl": {
-          "label": "Dashboard URL (optioneel)",
-          "newLabel": "Nieuwe dashboard URL"
         }
       }
     },
@@ -2038,7 +2038,7 @@
     "total": "Totaal",
     "filesystemUsage": "{count, plural, one {Toon gebruik voor # bestandssysteem} other {Toon gebruik voor # filesystemen}}",
     "field": {
-      "name": "Naam",
+      "name": "Taaknaam",
       "state": "Status",
       "size": "Grootte",
       "actions": "Acties",
@@ -2049,7 +2049,7 @@
       "namespace": "Namespace",
       "status": "Status",
       "architecture": "Architectuur",
-      "type": "Type"
+      "type": "Client type downloaden"
     },
     "label": {
       "new": "Nieuw"
@@ -7327,6 +7327,12 @@
             "apiKey": {
               "label": "Authenticatie",
               "title": "API-sleutels",
+              "access": {
+                "label": "",
+                "readOnly": "",
+                "readWrite": "",
+                "description": ""
+              },
               "button": {
                 "createApiToken": "API-token aanmaken",
                 "confirmDeletion": "Bevestig verwijdering"
@@ -8808,6 +8814,7 @@
       "imageInput": "Afbeeldinginvoer accepteren",
       "thinking": "Denken modus",
       "reasoning": {
+        "default": "Standaard",
         "auto": "Automatisch",
         "none": "UIT",
         "minimal": "Minimaal",
