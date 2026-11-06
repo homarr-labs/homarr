@@ -280,6 +280,13 @@
           "title": "",
           "description": ""
         },
+        "mode": {
+          "label": "",
+          "readOnly": "",
+          "readWrite": "",
+          "readOnlyDescription": "",
+          "readWriteDescription": ""
+        },
         "credential": {
           "title": "",
           "breadth": "",
@@ -1386,11 +1393,7 @@
               "label": "選擇現有應用程式"
             },
             "new": {
-              "title": "新增",
-              "url": {
-                "label": "應用程式網址",
-                "description": "從儀表板存取應用程式時所開啟的網址"
-              }
+              "title": "新增"
             }
           }
         }
@@ -1442,8 +1445,9 @@
         "label": "連結現有應用程式",
         "description": "將此整合連線至您已可使用的應用程式。"
       },
-      "appHref": {
-        "placeholder": "自訂應用程式網址"
+      "externalUrl": {
+        "label": "",
+        "description": ""
       },
       "apiKeySettings": {
         "label": "取得 API 金鑰"
@@ -1790,10 +1794,6 @@
         "wazuhIndexerPassword": {
           "label": "Indexer 密碼",
           "newLabel": "新的 Indexer 密碼"
-        },
-        "wazuhDashboardUrl": {
-          "label": "儀表板 URL（選填）",
-          "newLabel": "新的儀表板 URL"
         }
       }
     },
@@ -2038,7 +2038,7 @@
     "total": "總計",
     "filesystemUsage": "{count, plural, other {顯示 # 個檔案系統的使用量}}",
     "field": {
-      "name": "名稱",
+      "name": "工作名稱",
       "state": "狀態",
       "size": "大小",
       "actions": "動作",
@@ -7327,6 +7327,12 @@
             "apiKey": {
               "label": "認證",
               "title": "API 密鑰\n",
+              "access": {
+                "label": "",
+                "readOnly": "",
+                "readWrite": "",
+                "description": ""
+              },
               "button": {
                 "createApiToken": "創建 API 密鑰",
                 "confirmDeletion": ""
@@ -8808,6 +8814,7 @@
       "imageInput": "接受影像輸入",
       "thinking": "思考模式",
       "reasoning": {
+        "default": "",
         "auto": "自動",
         "none": "關閉",
         "minimal": "最小",

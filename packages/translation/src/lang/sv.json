@@ -280,6 +280,13 @@
           "title": "Fullständig administratörsåtkomst",
           "description": "Kan hantera Homarr och uppkopplade tjänster, inklusive destruktiva åtgärder."
         },
+        "mode": {
+          "label": "",
+          "readOnly": "",
+          "readWrite": "",
+          "readOnlyDescription": "",
+          "readWriteDescription": ""
+        },
         "credential": {
           "title": "Uppgiftens omfattning och livslängd",
           "breadth": "Fungerar med Homarr's HTTP API och MCP, inklusive utanför denna klient.",
@@ -1386,11 +1393,7 @@
               "label": "Välj befintlig app"
             },
             "new": {
-              "title": "Ny",
-              "url": {
-                "label": "App URL",
-                "description": "URL:en som appen kommer att öppna när den används från tavlan"
-              }
+              "title": "Ny"
             }
           }
         }
@@ -1442,8 +1445,9 @@
         "label": "Länka en befintlig app",
         "description": "Anslut integrationen till en app som du redan kan använda."
       },
-      "appHref": {
-        "placeholder": "Egen app-URL"
+      "externalUrl": {
+        "label": "",
+        "description": ""
       },
       "apiKeySettings": {
         "label": "Hämta API-nyckel"
@@ -1790,10 +1794,6 @@
         "wazuhIndexerPassword": {
           "label": "Indexerare lösenord",
           "newLabel": "Nytt lösenord för indexerare"
-        },
-        "wazuhDashboardUrl": {
-          "label": "Dashboard URL (valfritt)",
-          "newLabel": "Ny URL för instrumentpanelen"
         }
       }
     },
@@ -2038,7 +2038,7 @@
     "total": "Totalt",
     "filesystemUsage": "{count, plural, one {Visa användning för # filsystem} other {Visa användning för # filsystem}}",
     "field": {
-      "name": "Namn",
+      "name": "Jobbnamn",
       "state": "Status",
       "size": "Storlek",
       "actions": "Åtgärder",
@@ -2047,7 +2047,7 @@
       "description": "Beskrivning",
       "created": "Adderad",
       "namespace": "Namnplats",
-      "status": "Status",
+      "status": "",
       "architecture": "Arkitektur",
       "type": "Typ"
     },
@@ -7327,6 +7327,12 @@
             "apiKey": {
               "label": "Autentisering",
               "title": "API-nycklar",
+              "access": {
+                "label": "",
+                "readOnly": "",
+                "readWrite": "",
+                "description": ""
+              },
               "button": {
                 "createApiToken": "Skapa API-token",
                 "confirmDeletion": "Bekräfta radering"
@@ -8808,6 +8814,7 @@
       "imageInput": "Accepterar bildinmatning",
       "thinking": "Tänker läge",
       "reasoning": {
+        "default": "Standard",
         "auto": "Automatiskt",
         "none": "Av",
         "minimal": "",
