@@ -1,0 +1,19 @@
+.github/workflows/workshop.yml
+  s_ba20c705e4a0f5::t_b13bd52262ee42 290,304,311-315,321,323,325-326,328-330,332-344,346,358,376
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "7df07b5bfcdf387427c15b16c87e25b0b6feab1a",
+  "prompts": {},
+  "sessions": {
+    "s_ba20c705e4a0f5": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "42917853-5a37-476f-9bef-b44320ea9491",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
