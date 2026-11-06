@@ -1,4 +1,6 @@
 import type { OwnedName } from "./identifier";
+import { isNotFoundError, ReleaseLookupError } from "./errors";
+import { createLogger } from "@homarr/core/infrastructure/logs";
 import { parseGithubRepositoryUrl, parseOwnedPackageName } from "./identifier";
 import type { OciImage } from "./oci-registry";
 import { OciRegistry } from "./oci-registry";
@@ -112,8 +114,28 @@ const resolveTaggedImageAsync = async (
   return { image: newestImage };
 };
 
-const resolveImageAsync = async (registry: OciRegistry, identifier: string, versionPattern?: RegExp) => {
+const resolveImageAsync = async (
+  registry: OciRegistry,
+  identifier: string,
+  versionPattern?: RegExp,
+  tag?: string,
+): Promise<ResolvedImage> => {
   if (versionPattern) return await resolveTaggedImageAsync(registry, identifier, versionPattern);
+  if (tag) {
+    const image = await registry.getImageAsync(tag).catch((error: unknown) => {
+      if (isNotFoundError(error)) throw new ReleaseLookupError("noMatchingVersion", `No tag named ${tag}`);
+      throw error;
+    });
+    try {
+      return { image, version: await findFloatingVersionAsync(registry, image) };
+    } catch (error) {
+      createLogger({ module: "githubContainerRegistry" }).warn(
+        "Optional version discovery failed; using requested image tag",
+        { error },
+      );
+      return { image };
+    }
+  }
 
   const floatingImage = await registry.findFloatingImageAsync();
   if (floatingImage) return await resolveFloatingImageAsync(registry, floatingImage);
@@ -140,10 +162,11 @@ export const getGitHubContainerRegistryReleaseAsync: ReleaseProvider = async ({
   baseUrl,
   identifier,
   versionPattern,
+  tag,
   token,
 }) => {
   const repository = parseOwnedPackageName(identifier, "owner/package");
   const registry = await OciRegistry.connectAsync(baseUrl, `${repository.owner}/${repository.name}`, token);
-  const resolved = await resolveImageAsync(registry, identifier, versionPattern);
+  const resolved = await resolveImageAsync(registry, identifier, versionPattern, tag);
   return { ...describeProject(repository, resolved.image.labels), ...toRelease(resolved) };
 };

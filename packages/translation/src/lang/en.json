@@ -1515,6 +1515,15 @@
           "title": "Unknown error",
           "description": "An unknown error occurred, open the cause below to see more details"
         },
+        "openmediavault": {
+          "title": "OpenMediaVault authentication",
+          "description": {
+            "totpSecretRequired": "Add the Base32 TOTP secret from OpenMediaVault, or use a separate admin account without TOTP.",
+            "totpSecretInvalid": "Use the Base32 shared secret from OpenMediaVault two-factor enrollment, not a 6-digit code.",
+            "totpVerificationFailed": "OpenMediaVault rejected the TOTP code. Check the secret and sync both servers' clocks.",
+            "unsupportedChallenge": "Homarr only supports OpenMediaVault TOTP challenges."
+          }
+        },
         "parse": {
           "title": "Parse error",
           "description": "The response could not be parsed. Please verify that the URL is pointing to the base URL of the service."
@@ -1714,6 +1723,11 @@
         "title": "Reset secret",
         "message": "Are you sure you want to reset this secret?"
       },
+      "totpNotice": "Stored encrypted. Keeping the TOTP secret and password together removes factor separation inside Homarr.",
+      "remove": {
+        "title": "Remove secret",
+        "message": "Are you sure you want to remove this stored secret?"
+      },
       "noSecretsRequired": {
         "segmentTitle": "No secrets",
         "text": "No secrets required for this integration"
@@ -1794,6 +1808,10 @@
         "wazuhIndexerPassword": {
           "label": "Indexer password",
           "newLabel": "New indexer password"
+        },
+        "totpSecret": {
+          "label": "TOTP secret (optional)",
+          "newLabel": "New TOTP secret"
         }
       }
     },
@@ -2414,6 +2432,10 @@
         "hideHostname": {
           "label": "Hide hostnames"
         },
+        "showFullUrls": {
+          "label": "Show full URLs",
+          "description": "Show and copy the complete bookmark address, even when hostnames are hidden. Very dense rows show the address instead of the title; icon-only layouts omit addresses."
+        },
         "withBorder": {
           "label": "Show border"
         },
@@ -2436,6 +2458,9 @@
         }
       },
       "empty": "Add a URL or App in the widget settings",
+      "copyUrl": "Copy URL",
+      "copied": "Copied",
+      "copyFailed": "Could not copy. Try HTTPS or use the browser's Copy Link Address action.",
       "groups": {
         "label": "Categories",
         "placeholder": "New category",
@@ -4815,6 +4840,7 @@
           },
           "identifier": {
             "label": "Identifier",
+            "containerPlaceholder": "Name or Owner/Name:track",
             "placeholder": "Name or Owner/Name"
           },
           "name": {},
