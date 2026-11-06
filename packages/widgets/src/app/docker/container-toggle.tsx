@@ -38,23 +38,35 @@ const useToggleAction = (action: "start" | "stop", name: string) => {
 };
 
 const useAppStartWait = (appId: string | null, onAnswered: () => void) => {
-  const [until, setUntil] = useState<number | null>(null);
+  const [startedAt, setStartedAt] = useState<number | null>(null);
   const { data, dataUpdatedAt } = clientApi.widget.app.ping.useQuery(
     { id: appId ?? "" },
-    { enabled: appId !== null, refetchOnMount: false, refetchInterval: until ? pingRetryInterval : false },
+    { enabled: appId !== null, refetchOnMount: false, refetchInterval: startedAt !== null && pingRetryInterval },
   );
 
   useEffect(() => {
-    if (!until || !data) return;
+    if (startedAt === null) return;
+    const timeout = setTimeout(
+      () => {
+        setStartedAt(null);
+        onAnswered();
+      },
+      Math.max(0, startedAt + pingRetryLimit - Date.now()),
+    );
+    return () => clearTimeout(timeout);
+  }, [startedAt, onAnswered]);
+
+  useEffect(() => {
+    if (startedAt === null || !data || dataUpdatedAt <= startedAt) return;
     const isUp = !("error" in data) && data.statusCode < 500;
-    if (!isUp && Date.now() < until) return;
-    setUntil(null);
+    if (!isUp) return;
+    setStartedAt(null);
     onAnswered();
-  }, [until, data, dataUpdatedAt, onAnswered]);
+  }, [startedAt, data, dataUpdatedAt, onAnswered]);
 
   return () => {
     if (appId === null) onAnswered();
-    else setUntil(Date.now() + pingRetryLimit);
+    else setStartedAt(Date.now());
   };
 };
 
