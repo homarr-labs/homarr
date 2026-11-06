@@ -1,0 +1,19 @@
+apps/docs/docs/advanced/single-sign-on/index.mdx
+  s_0ec53e873c6577::t_97fab243ca174c 192-206
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "4d6ee95b0a58bb9bdcfbd33d45c4a44eeaee63e7",
+  "prompts": {},
+  "sessions": {
+    "s_0ec53e873c6577": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "c7be1e01-4627-4bf7-8db7-dbdc91188528",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
