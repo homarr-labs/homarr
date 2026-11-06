@@ -5,7 +5,7 @@ import { Switch } from "@mantine/core";
 import type { UseFormReturnType } from "@homarr/form";
 import { useI18n } from "@homarr/translation/client";
 
-import { SectionCard } from "~/components/manage/section-card";
+import { SectionCard } from "@homarr/ui";
 import type { FormValues } from "./settings-form";
 
 interface UserSettingsFormProps {

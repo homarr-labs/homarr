@@ -38,6 +38,7 @@ export const previewQueryProcedures = {
   previewQuery: permissionRequiredProcedure
     .requiresPermission("admin")
     .meta({
+      readOnly: false,
       mcp: {
         enabled: true,
         description:

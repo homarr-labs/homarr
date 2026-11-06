@@ -4,6 +4,7 @@ import {
   backgroundImageAttachments,
   backgroundImageRepeats,
   backgroundImageSizes,
+  cornerStyleValues,
   widgetKinds,
 } from "@homarr/definitions";
 
@@ -46,7 +47,7 @@ export const assistantBoardSettingsChangesSchema = z
         "The complete resulting board stylesheet. Preserve existing rules from board_getBoardSettings unless the user explicitly asks to replace them.",
       ),
     iconColor: boardColorSchema.nullable().optional(),
-    itemRadius: z.enum(["xs", "sm", "md", "lg", "xl"]).optional(),
+    itemRadius: z.enum(cornerStyleValues).optional(),
     disableStatus: z.boolean().optional(),
   })
   .describe("Only the board fields the user asked to change.");

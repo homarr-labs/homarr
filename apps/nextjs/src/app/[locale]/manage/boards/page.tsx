@@ -7,7 +7,7 @@ import { constructBoardPermissions } from "@homarr/auth/shared";
 import { getI18n } from "@homarr/translation/server";
 
 import { TourTarget } from "~/components/layout/header/tour-target";
-import { NoResults } from "~/components/no-results";
+import { NoResults } from "@homarr/ui";
 import { BoardCard } from "./_components/board-card";
 import { BoardsPageContent } from "./_components/boards-page-content";
 

@@ -1,6 +1,6 @@
 {
   "name": "homarr",
-  "version": "2.10.1",
+  "version": "2.11.1",
   "private": true,
   "workspaces": {
     "packages": [
@@ -110,7 +110,7 @@
       "@trpc/react-query": "11.18.0",
       "@trpc/server": "11.18.0",
       "@trpc/tanstack-react-query": "11.18.0",
-      "@turbo/gen": "2.11.7",
+      "@turbo/gen": "2.11.8",
       "@types/adm-zip": "0.5.8",
       "@types/bcrypt": "6.0.0",
       "@types/better-sqlite3": "7.6.13",
@@ -216,9 +216,9 @@
       "posthog-node": "5.41.0",
       "prismjs": "1.30.0",
       "proxmox-api": "1.1.1",
-      "react": "19.2.7",
+      "react": "19.2.9",
       "react-day-picker": "10.0.1",
-      "react-dom": "19.2.7",
+      "react-dom": "19.2.9",
       "react-error-boundary": "6.1.2",
       "react-markdown": "10.1.0",
       "react-quill-new": "3.8.3",
@@ -239,13 +239,12 @@
       "sonner": "2.0.7",
       "sql.js": "1.14.1",
       "superjson": "2.2.6",
-      "svgson": "5.3.1",
       "testcontainers": "12.0.4",
       "three": "0.180.0",
       "timezones-ical-library": "2.2.1",
       "trpc-to-openapi": "3.3.0",
       "tsdav": "2.3.0",
-      "turbo": "2.11.7",
+      "turbo": "2.11.8",
       "typescript": "7.0.2",
       "undici": "7.30.1",
       "use-deep-compare-effect": "1.8.1",
@@ -263,7 +262,7 @@
     }
   },
   "scripts": {
-    "build": "cross-env CI=true turbo run build",
+    "build": "cross-env CI=true node scripts/run-turbo.mjs run build",
     "benchmark:build:docker": "node --experimental-strip-types scripts/benchmarks/docker-build.mts",
     "benchmark:compare": "node --experimental-strip-types scripts/benchmarks/benchmark-compare.mts",
     "benchmark:board-graph": "node --experimental-strip-types scripts/benchmarks/board-static-graph.mts",
@@ -297,9 +296,9 @@
     "docker:dev": "docker compose -f ./development/development.docker-compose.yml up",
     "docker:dev:up": "docker compose -f ./development/development.docker-compose.yml up -d redis",
     "format": "turbo format --continue -- --check",
-    "format:fix": "turbo format --continue",
+    "format:fix": "turbo format --continue --force",
     "lint": "turbo lint --continue",
-    "lint:fix": "turbo lint --continue -- --fix",
+    "lint:fix": "turbo lint --continue --force -- --fix",
     "lint:ws": "bun x sherif@latest",
     "qa:browser-agent:ux": "bash scripts/browser-agent/ux-coherence-happy-paths.sh",
     "release": "semantic-release",
@@ -423,7 +422,7 @@
   },
   "engines": {
     "bun": ">=1.4.4",
-    "node": ">=24.22.1"
+    "node": ">=24.22.2"
   },
   "packageManager": "bun@1.4.4",
   "patchedDependencies": {

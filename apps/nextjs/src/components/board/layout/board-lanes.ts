@@ -1,3 +1,4 @@
+import { getBoardLayoutData } from "@homarr/boards/layout-data";
 import type { BoardLane } from "@homarr/definitions";
 import { getBoardLaneColumnCount, getRootSectionLane } from "@homarr/definitions";
 
@@ -22,65 +23,29 @@ export const getRootSectionForLane = (board: Board, lane: BoardLane): EmptySecti
 export const getInitialBoardLogicalHeight = (board: Board, layoutId: string) => {
   const layout = board.layouts.find((candidate) => candidate.id === layoutId);
   if (!layout) return 0;
+  const data = getBoardLayoutData(board, layoutId);
 
   const rowCounts = (["left", "main", "right"] as const).flatMap((lane) => {
     const columnCount = getBoardLaneColumnCount(layout, lane);
     const root = getRootSectionForLane(board, lane);
     if (columnCount === 0 || !root) return [];
 
-    const placements: GridPlacement[] = [
-      ...board.items.flatMap((item) => {
-        const itemLayout = item.layouts.find(
-          (candidate) => candidate.layoutId === layoutId && candidate.sectionId === root.id,
-        );
-        return itemLayout
-          ? [
-              normalizeGridPlacement(
-                {
-                  id: item.id,
-                  type: "item" as const,
-                  x: itemLayout.xOffset,
-                  y: itemLayout.yOffset,
-                  w: itemLayout.width,
-                  h: itemLayout.height,
-                },
-                columnCount,
-              ),
-            ]
-          : [];
-      }),
-      ...board.sections.flatMap((section) => {
-        if (section.kind !== "container") return [];
-        const sectionLayout = section.layouts.find(
-          (candidate) => candidate.layoutId === layoutId && candidate.parentSectionId === root.id,
-        );
-        return sectionLayout
-          ? [
-              normalizeGridPlacement(
-                {
-                  id: section.id,
-                  type: "section" as const,
-                  x: sectionLayout.xOffset,
-                  y: sectionLayout.yOffset,
-                  w: sectionLayout.width,
-                  h: sectionLayout.height,
-                },
-                columnCount,
-              ),
-            ]
-          : [];
-      }),
-    ];
+    const innerSections = data.innerSectionsByParentId.get(root.id) ?? [];
+    const placements: GridPlacement[] = [...(data.itemsBySectionId.get(root.id) ?? []), ...innerSections].map((entry) =>
+      normalizeGridPlacement(
+        {
+          id: entry.id,
+          type: entry.type,
+          x: entry.xOffset,
+          y: entry.yOffset,
+          w: entry.width,
+          h: entry.height,
+        },
+        columnCount,
+      ),
+    );
     const collapsedSectionIds = new Set(
-      board.sections
-        .filter(
-          (section) =>
-            section.kind === "container" &&
-            section.collapsed &&
-            section.options.collapsible &&
-            placements.some((placement) => placement.id === section.id),
-        )
-        .map((section) => section.id),
+      innerSections.filter((section) => section.collapsed && section.options.collapsible).map((section) => section.id),
     );
     const displayPlacements =
       collapsedSectionIds.size > 0

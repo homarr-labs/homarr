@@ -96,11 +96,33 @@ export const mockWidgetData = {
   } satisfies BazarrBadges,
   coolify: {
     version: "4.0.0-beta.420",
+    projects: [
+      {
+        id: 1,
+        uuid: "home-cloud-demo",
+        name: "Home cloud",
+        description: "Personal services",
+        environments: [{ id: 1, uuid: "production-demo", name: "Production", project_id: 1 }],
+      },
+      {
+        id: 2,
+        uuid: "media-demo",
+        name: "Media",
+        environments: [{ id: 2, uuid: "media-production-demo", name: "Production", project_id: 2 }],
+      },
+      {
+        id: 3,
+        uuid: "lab-demo",
+        name: "Lab",
+        environments: [{ id: 3, uuid: "lab-production-demo", name: "Production", project_id: 3 }],
+      },
+    ],
     servers: [
       {
         id: 1,
         uuid: "homarr-demo-edge",
         name: "Paris edge",
+        description: "Deployment node",
         ip: "10.0.0.20",
         is_reachable: true,
         is_usable: true,
@@ -115,7 +137,9 @@ export const mockWidgetData = {
         status: "running:healthy",
         fqdn: "https://homarr.dev",
         projectName: "Home cloud",
+        projectUuid: "home-cloud-demo",
         environmentName: "Production",
+        environmentUuid: "production-demo",
       },
       {
         id: 2,
@@ -123,8 +147,10 @@ export const mockWidgetData = {
         name: "Media stack",
         status: "running:healthy",
         fqdn: null,
-        projectName: "Home cloud",
+        projectName: "Media",
+        projectUuid: "media-demo",
         environmentName: "Production",
+        environmentUuid: "media-production-demo",
       },
     ],
     services: [
@@ -135,8 +161,10 @@ export const mockWidgetData = {
         status: "running:healthy",
         fqdn: null,
         applications: [],
-        projectName: "Home cloud",
+        projectName: "Lab",
+        projectUuid: "lab-demo",
         environmentName: "Production",
+        environmentUuid: "lab-production-demo",
       },
     ],
   } satisfies CoolifyInstanceInfo,

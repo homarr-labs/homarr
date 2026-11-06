@@ -25,7 +25,7 @@ export async function GET(req: NextRequest, props: { params: Promise<{ path: str
         grant_types_supported: ["authorization_code"],
         code_challenge_methods_supported: ["S256"],
         token_endpoint_auth_methods_supported: ["none"],
-        scopes_supported: ["mcp:tools"],
+        scopes_supported: ["mcp:tools:read", "mcp:tools"],
         resource_indicators_supported: true,
       },
       { headers: corsHeaders },
@@ -38,6 +38,7 @@ export async function GET(req: NextRequest, props: { params: Promise<{ path: str
       {
         resource,
         authorization_servers: [baseUrl],
+        scopes_supported: ["mcp:tools:read"],
       },
       { headers: corsHeaders },
     );

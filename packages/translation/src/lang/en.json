@@ -144,13 +144,7 @@
         "secondaryColor": "Secondary color",
         "resetColors": "Reset colors",
         "radius": "Widget corner radius",
-        "radiusOptions": {
-          "xs": "Tight",
-          "sm": "Subtle",
-          "md": "Balanced",
-          "lg": "Rounded",
-          "xl": "Soft"
-        },
+        "radiusOptions": {},
         "columns": "Board columns",
         "columnsDescription": "Columns define the horizontal grid used to size and position items. 12 is plenty for most people.",
         "columnCount": "{count, plural, one {# column} other {# columns}}",
@@ -194,7 +188,6 @@
           "loginRequired": "Sign in as an administrator after setup to create an API key.",
           "configuration": "Client configuration",
           "copy": "Copy configuration",
-          "copied": "Copied",
           "advanced": "Open MCP tools, permissions, and setup details"
         }
       },
@@ -278,14 +271,21 @@
           "destinationHint": "Your decision will return to this callback. If you allow access, the client can exchange the authorization code for an API credential."
         },
         "access": {
-          "title": "Account access",
-          "description": "Uses your current permissions, including shared resources.",
+          "title": "Account permission ceiling",
+          "description": "These are your account's maximum permissions, including shared resources. Read-only credential access restricts them further.",
           "details": "View permissions ({count})",
           "noGlobalPermissions": "Uses your account and shared-resource access, with no global permissions."
         },
         "admin": {
-          "title": "Full administrator access",
-          "description": "Can manage Homarr and connected services, including destructive actions."
+          "title": "Administrator account",
+          "description": "Read-only access permits administrative reads, not changes. Choosing read and write permits managing Homarr and connected services, including destructive actions."
+        },
+        "mode": {
+          "label": "Credential access",
+          "readOnly": "Read-only (recommended)",
+          "readWrite": "Read and write",
+          "readOnlyDescription": "Read-only blocks changes, service actions, arbitrary integration requests and Custom Widget API execution. Your existing resource permissions still apply.",
+          "readWriteDescription": "Choose read and write only if this client needs to make changes or control connected services."
         },
         "credential": {
           "title": "Credential scope and lifetime",
@@ -806,9 +806,7 @@
         "examples": "Examples of accepted links",
         "requiresHandler": "Custom protocols require an associated application on your device."
       },
-      "description": {
-        "label": "Description"
-      },
+      "description": {},
       "useDifferentUrlForPing": {
         "checkbox": {
           "label": "Use different URL for ping",
@@ -860,7 +858,6 @@
       "source": "API source: {name}",
       "baseUrl": "Server URL",
       "networkScope": "Network access",
-      "save": "Save API configuration",
       "expires": "This one-time request expires at {time}."
     },
     "page": {
@@ -891,13 +888,11 @@
       "pasteImportHint": "Paste a full custom widget JSON with Ctrl+V or Command+V",
       "delete": "Delete Custom Widget",
       "deleteConfirm": "Are you sure you want to delete \"{name}\"? This action cannot be undone.",
-      "export": "Export",
       "duplicate": "Duplicate",
       "aiPrompt": "Design with AI",
       "copyAiPrompt": "Copy AI prompt",
       "enable": "Enable",
       "disable": "Disable",
-      "menu": "Actions",
       "downloadSkill": "View Custom Widget Skill",
       "publishWorkshop": "Publish to Workshop",
       "migrate": "Migrate Custom Widget",
@@ -911,12 +906,9 @@
     "sourceSetupDialog": {
       "title": "Configure widget sources",
       "description": "Review where this widget connects and add or replace its encrypted credentials.",
-      "credentialsRequired": "Requests will fail until the required credentials are added.",
-      "save": "Save configuration"
+      "credentialsRequired": "Requests will fail until the required credentials are added."
     },
-    "field": {
-      "description": "Description"
-    },
+    "field": {},
     "editor": {
       "errorBoundary": {
         "title": "Something went wrong"
@@ -926,7 +918,6 @@
         "format": "Format",
         "insertStarter": "Insert starter",
         "redo": "Redo",
-        "copied": "Copied",
         "schema": "Schema"
       },
       "reference": {
@@ -1007,7 +998,6 @@
         "manifestFilename": "widget.json",
         "request": "Request {count, number}",
         "requestId": "Request ID",
-        "type": "Type",
         "method": "Method",
         "source": "API source",
         "run": "Run",
@@ -1044,7 +1034,6 @@
         "optionName": "Option name",
         "label": "Label",
         "control": "Control",
-        "description": "Description",
         "default": "Default",
         "optionDetails": "Constraints and dynamic choices",
         "minimum": "Minimum",
@@ -1081,7 +1070,6 @@
         "credentialRemovedDescription": "The stored value was deleted.",
         "primary": "Primary API",
         "id": "Source ID",
-        "name": "Name",
         "baseUrl": "Base URL",
         "baseUrlError": {
           "invalid": "Enter a complete URL.",
@@ -1098,7 +1086,6 @@
         "remove": "Remove source and its requests",
         "advanced": "Advanced",
         "add": "Add another API source",
-        "sourceType": "Source",
         "manualSource": "HTTP API",
         "existingIntegration": "Existing integration",
         "integrationType": "Integration type",
@@ -1232,7 +1219,6 @@
       "migrationTitle": "Review migrated v2 replacement",
       "migrationDescription": "Review and confirm this generated v2 definition. Confirming atomically replaces the preserved v1 record while keeping existing board placements linked to the same widget ID.",
       "fileLabel": "Choose a custom widget JSON file",
-      "name": "Name",
       "origin": "Base origin",
       "authentication": "Authentication",
       "networkScope": "Network scope",
@@ -1252,8 +1238,6 @@
         "title": "This widget can change remote data",
         "description": "Review every named action, inherited credential, and destructive confirmation after import. Secrets are not included in the file."
       },
-      "cancel": "Cancel import",
-      "confirm": "Import widget",
       "confirmMigration": "Confirm v2 replacement"
     },
     "secret": {
@@ -1317,7 +1301,6 @@
     "closeScreenshotViewer": "Close screenshot viewer",
     "technicalDetails": "Technical details",
     "sourceCode": "Workshop entry",
-    "export": "Export",
     "report": "Report",
     "reportTitle": "Report submission",
     "reportReason": "Reason",
@@ -1348,8 +1331,6 @@
       "viewSubmission": "View and manage submission",
       "done": "Done",
       "signInHint": "Sign in to publish under your Workshop identity.",
-      "titleField": "Title",
-      "descriptionField": "Description",
       "screenshots": "Screenshots",
       "screenshotsDescription": "Up to five PNG, JPEG, or WebP images",
       "screenshotsPlaceholder": "Choose screenshots",
@@ -1412,11 +1393,7 @@
               "label": "Select existing app"
             },
             "new": {
-              "title": "New",
-              "url": {
-                "label": "App url",
-                "description": "The url the app will open when accessed from the dashboard"
-              }
+              "title": "New"
             }
           }
         }
@@ -1462,14 +1439,15 @@
       },
       "createApp": {
         "label": "Create app",
-        "description": "Create an app with the same name and icon as the integration. Leave the input field below empty to create the app with the integration URL."
+        "description": "Create an app with the same name and icon as the integration."
       },
       "linkApp": {
         "label": "Link an existing app",
         "description": "Connect this integration to an app you can already use."
       },
-      "appHref": {
-        "placeholder": "Custom app URL"
+      "externalUrl": {
+        "label": "External URL",
+        "description": "Address your browser opens from widget links. Leave empty to use the linked app's URL or the integration URL."
       },
       "apiKeySettings": {
         "label": "Get API key"
@@ -1536,6 +1514,27 @@
         "unknown": {
           "title": "Unknown error",
           "description": "An unknown error occurred, open the cause below to see more details"
+        },
+        "frigate": {
+          "title": "Frigate authentication",
+          "status": " (HTTP {statusCode})",
+          "description": {
+            "cookie": "Frigate login did not return a valid frigate_token session cookie. Check the Frigate authentication and reverse proxy configuration.",
+            "profileMismatch": "Frigate returned a profile that is not an admin or whose username differs from the configured username.",
+            "redirect": "Frigate returned a redirect, which Homarr did not follow to protect your credentials. Use the direct authenticated Frigate URL.",
+            "login": "The Frigate login request failed. Check the credentials, integration URL and connectivity.",
+            "profile": "The Frigate profile request failed. Check the authenticated endpoint and reverse proxy configuration.",
+            "stats": "The Frigate stats request failed after authentication. Check the stats endpoint and connectivity."
+          }
+        },
+        "openmediavault": {
+          "title": "OpenMediaVault authentication",
+          "description": {
+            "totpSecretRequired": "Add the Base32 TOTP secret from OpenMediaVault, or use a separate admin account without TOTP.",
+            "totpSecretInvalid": "Use the Base32 shared secret from OpenMediaVault two-factor enrollment, not a 6-digit code.",
+            "totpVerificationFailed": "OpenMediaVault rejected the TOTP code. Check the secret and sync both servers' clocks.",
+            "unsupportedChallenge": "Homarr only supports OpenMediaVault TOTP challenges."
+          }
         },
         "parse": {
           "title": "Parse error",
@@ -1615,11 +1614,9 @@
             },
             "notification": {
               "success": {
-                "title": "Trusted certificate",
                 "message": "Added certificate to trusted certificate list"
               },
               "error": {
-                "title": "Failed to trust certificate",
                 "message": "Failed to add certificate to trusted certificate list"
               }
             }
@@ -1738,6 +1735,11 @@
         "title": "Reset secret",
         "message": "Are you sure you want to reset this secret?"
       },
+      "totpNotice": "Stored encrypted. Keeping the TOTP secret and password together removes factor separation inside Homarr.",
+      "remove": {
+        "title": "Remove secret",
+        "message": "Are you sure you want to remove this stored secret?"
+      },
       "noSecretsRequired": {
         "segmentTitle": "No secrets",
         "text": "No secrets required for this integration"
@@ -1819,9 +1821,9 @@
           "label": "Indexer password",
           "newLabel": "New indexer password"
         },
-        "wazuhDashboardUrl": {
-          "label": "Dashboard URL (optional)",
-          "newLabel": "New dashboard URL"
+        "totpSecret": {
+          "label": "TOTP secret (optional)",
+          "newLabel": "New TOTP secret"
         }
       }
     },
@@ -1840,9 +1842,7 @@
     "search": "Find a media",
     "field": {
       "preview": "Preview",
-      "size": "Size",
-      "creator": "Creator",
-      "actions": "Actions"
+      "creator": "Creator"
     },
     "action": {
       "upload": {
@@ -1920,7 +1920,8 @@
       "clearSearch": "Clear search",
       "copy": "Copy",
       "copied": "Copied",
-      "refresh": "Refresh"
+      "refresh": "Refresh",
+      "export": "Export"
     },
     "hidden": "Hidden",
     "pagination": {
@@ -2067,7 +2068,18 @@
     "total": "Total",
     "filesystemUsage": "{count, plural, one {Show usage for # filesystem} other {Show usage for # filesystems}}",
     "field": {
-      "name": "Name"
+      "name": "Name",
+      "state": "State",
+      "size": "Size",
+      "actions": "Actions",
+      "source": "Source",
+      "title": "Title",
+      "description": "Description",
+      "created": "Created",
+      "namespace": "Namespace",
+      "status": "Status",
+      "architecture": "Architecture",
+      "type": "Type"
     },
     "label": {
       "new": "New"
@@ -2085,6 +2097,15 @@
       "searchEngines": "Search engines",
       "tasks": "Tasks",
       "users": "Users"
+    },
+    "cornerStyle": {
+      "options": {
+        "md": "Balanced",
+        "lg": "Rounded",
+        "xs": "Tight",
+        "sm": "Subtle",
+        "xl": "Soft"
+      }
     }
   },
   "section": {
@@ -2122,9 +2143,7 @@
         "collapse": "Collapse"
       },
       "option": {
-        "title": {
-          "label": "Title"
-        },
+        "title": {},
         "customCssClasses": {
           "label": "Custom css classes"
         },
@@ -2148,8 +2167,7 @@
       "label": {
         "settings": "Settings",
         "settingsFor": "Settings for {name}",
-        "options": "Options",
-        "actions": "Actions"
+        "options": "Options"
       },
       "status": {
         "success": "OK",
@@ -2202,7 +2220,6 @@
     "selection": {
       "summary": "{count, plural, one {# selected item} other {# selected items}}",
       "selected": "{count, plural, one {# selected} other {# selected}}",
-      "copy": "Copy",
       "copied": "{count, plural, one {# item copied to the clipboard} other {# items copied to the clipboard}}",
       "copyError": "The selected items could not be copied. Your browser may not allow clipboard access.",
       "paste": "Paste",
@@ -2214,7 +2231,6 @@
       "removed": "{count, plural, one {# item removed} other {# items removed}}",
       "move": "Move",
       "moveTo": "Move selected items",
-      "delete": "Delete",
       "clear": "Clear selection",
       "clearShortcut": "Clear selection (Escape)",
       "saveErrorTitle": "Unable to update items",
@@ -2290,9 +2306,7 @@
           "label": "Integrations",
           "removeLabel": "Remove {name} integration"
         },
-        "title": {
-          "label": "Title"
-        },
+        "title": {},
         "customCssClasses": {
           "label": "Custom css classes"
         },
@@ -2452,6 +2466,10 @@
         "hideHostname": {
           "label": "Hide hostnames"
         },
+        "showFullUrls": {
+          "label": "Show full URLs",
+          "description": "Show and copy the complete bookmark address, even when hostnames are hidden. Very dense rows show the address instead of the title; icon-only layouts omit addresses."
+        },
         "withBorder": {
           "label": "Show border"
         },
@@ -2474,6 +2492,9 @@
         }
       },
       "empty": "Add a URL or App in the widget settings",
+      "copyUrl": "Copy URL",
+      "copied": "Copied",
+      "copyFailed": "Could not copy. Try HTTPS or use the browser's Copy Link Address action.",
       "groups": {
         "label": "Categories",
         "placeholder": "New category",
@@ -3527,7 +3548,6 @@
         },
         "table": {
           "header": {
-            "name": "Name",
             "node": "Node"
           }
         }
@@ -3557,8 +3577,6 @@
         },
         "defaultSort": {
           "option": {
-            "name": "Name",
-            "state": "State",
             "cpuUsage": "CPU usage",
             "memoryUsage": "Memory usage"
           }
@@ -3575,7 +3593,35 @@
       }
     },
     "coolify": {
-      "description": "Overview of your Coolify instance with servers and applications",
+      "description": "Coolify projects, resources, and servers at a glance, with details in advanced view",
+      "summary": {
+        "needsAttention": "{count} need attention",
+        "inProgress": "{count} in progress",
+        "unknown": "{count} unknown",
+        "healthy": "No issues",
+        "empty": "No resources",
+        "healthyDetail": "No resources need attention",
+        "more": "+{count} more resources",
+        "moreInstances": "+{count} more instances in advanced view"
+      },
+      "details": {
+        "tabs": "Coolify details",
+        "overview": "Overview",
+        "search": "Filter resources",
+        "serviceApplications": "Applications in {name}"
+      },
+      "overview": {
+        "projects": "Projects",
+        "resources": "Resources running",
+        "attention": "Needs attention",
+        "ready": "Ready",
+        "noProjects": "No projects found",
+        "projectsUnavailable": "Projects unavailable",
+        "moreProjects": "+{count, plural, one {# more project} other {# more projects}}",
+        "running": "Running",
+        "resourceCount": "{count, plural, one {# resource} other {# resources}}",
+        "environmentCount": "{count, plural, one {# environment} other {# environments}}"
+      },
       "option": {
         "showServers": {
           "label": "Show servers"
@@ -3607,7 +3653,13 @@
       },
       "source": {
         "url": "Source: {url}",
-        "unavailable": "{source}: unavailable"
+        "unavailable": "{source}: unavailable",
+        "unavailableCount": "{count, plural, one {# source unavailable} other {# sources unavailable}}"
+      },
+      "kind": {
+        "server": "Server",
+        "application": "Application",
+        "service": "Service"
       },
       "instances": {
         "title": "Instances"
@@ -3624,6 +3676,7 @@
         "exited": "Exited",
         "starting": "Starting",
         "restarting": "Restarting",
+        "unhealthy": "Unhealthy",
         "unknown": "Unknown",
         "online": "Online",
         "offline": "Offline",
@@ -3969,9 +4022,7 @@
       "items": {
         "currentlyPlaying": "Currently playing",
         "user": "User",
-        "name": "Name",
         "id": "Id",
-        "status": "Status",
         "directPlay": "Direct play",
         "directStream": "Direct stream",
         "transcodeVideo": "Transcoding video",
@@ -4466,38 +4517,29 @@
           "columnTitle": "Actions"
         },
         "added": {
-          "columnTitle": "Added",
-          "detailsTitle": "Added"
+          "columnTitle": "Added"
         },
         "category": {
-          "columnTitle": "Category",
-          "detailsTitle": "Category"
+          "columnTitle": "Category"
         },
         "downSpeed": {
-          "columnTitle": "Down",
-          "detailsTitle": "Down"
+          "columnTitle": "Down"
         },
         "index": {
           "columnTitle": "#",
           "detailsTitle": "Index"
         },
         "id": {
-          "columnTitle": "ID",
-          "detailsTitle": "ID"
+          "columnTitle": "ID"
         },
-        "integration": {
-          "columnTitle": "Source"
-        },
-        "name": {
-          "columnTitle": "Name"
-        },
+        "integration": {},
+        "name": {},
         "progress": {
           "columnTitle": "Progress",
           "detailsTitle": "Progress"
         },
         "ratio": {
-          "columnTitle": "Ratio",
-          "detailsTitle": "Ratio"
+          "columnTitle": "Ratio"
         },
         "received": {
           "columnTitle": "Down",
@@ -4507,26 +4549,16 @@
           "columnTitle": "Up",
           "detailsTitle": "Uploaded"
         },
-        "size": {
-          "columnTitle": "Size",
-          "detailsTitle": "Size"
-        },
-        "state": {
-          "columnTitle": "State",
-          "detailsTitle": "State"
-        },
+        "size": {},
+        "state": {},
         "time": {
-          "columnTitle": "ETA",
-          "detailsTitle": "ETA",
-          "eta": "ETA"
+          "columnTitle": "ETA"
         },
         "type": {
-          "columnTitle": "Type",
           "detailsTitle": "Type"
         },
         "upSpeed": {
-          "columnTitle": "Up",
-          "detailsTitle": "Up"
+          "columnTitle": "Up"
         }
       },
       "states": {
@@ -4715,9 +4747,7 @@
           }
         },
         "queue": {
-          "table": {
-            "size": "Size"
-          }
+          "table": {}
         },
         "common": {
           "empty": "Empty",
@@ -4879,11 +4909,10 @@
           },
           "identifier": {
             "label": "Identifier",
+            "containerPlaceholder": "Name or Owner/Name:track",
             "placeholder": "Name or Owner/Name"
           },
-          "name": {
-            "label": "Name"
-          },
+          "name": {},
           "excludePrereleases": {
             "label": "Exclude pre-releases",
             "description": "Show the latest release not flagged as a pre-release by the provider."
@@ -5021,7 +5050,7 @@
       "starsCount": "Stars",
       "forksCount": "Forks",
       "openIssues": "{count, plural, one {# open issue} other {# open issues}}",
-    "created": "Created {time}",
+      "created": "Created {time}",
       "releasePage": "Release",
       "projectPage": "Project",
       "runningVersions": "Running Versions",
@@ -5188,7 +5217,6 @@
       "download": "Download",
       "upload": "Upload",
       "ping": "Ping",
-      "status": "Status",
       "avgDownload": "Avg Download",
       "avgUpload": "Avg Upload",
       "avgPing": "Avg Ping",
@@ -5496,7 +5524,6 @@
         "actionsDisabledEditMode": "Actions are disabled while the board is in edit mode.",
         "widgetItemUnavailable": "This widget item is not available.",
         "toggle": "Toggle",
-        "copied": "Copied",
         "confirmDelete": "Confirm this destructive action."
       },
       "option": {
@@ -5773,7 +5800,6 @@
       },
       "metric": {
         "system": "System",
-        "source": "Source",
         "hostname": "Hostname",
         "cpuModel": "CPU model",
         "cores": "Cores",
@@ -5884,9 +5910,14 @@
       "unavailable": "Unavailable",
       "refreshFailed": "Refresh failed — showing saved data",
       "stale": "Saved data — refresh to update",
-      "table": { "value": "Value", "status": "Status" },
+      "table": {
+        "value": "Value",
+        "status": "Status"
+      },
       "option": {
-        "table": { "label": "Table view" },
+        "table": {
+          "label": "Table view"
+        },
         "rows": {
           "label": "Compact rows"
         },
@@ -6458,13 +6489,7 @@
       "itemRadius": {
         "label": "Item radius",
         "description": "Changes the roundness of tiles on your board",
-        "option": {
-          "xs": "Very small",
-          "sm": "Small",
-          "md": "Medium",
-          "lg": "Large",
-          "xl": "Very large"
-        }
+        "option": {}
       },
       "isPublic": {
         "label": "Public",
@@ -7096,13 +7121,7 @@
             },
             "defaultRadius": {
               "label": "Corner style",
-              "options": {
-                "xs": "Tight",
-                "sm": "Subtle",
-                "md": "Balanced",
-                "lg": "Rounded",
-                "xl": "Soft"
-              }
+              "options": {}
             },
             "customCss": {
               "label": "Global custom CSS",
@@ -7124,7 +7143,6 @@
               "greetingDefault": "Default greeting",
               "boardColorLocked": "Board color locked",
               "boardColorFlexible": "Board colors allowed",
-              "appName": "Name",
               "logo": "Logo",
               "greeting": "Greeting",
               "on": "On",
@@ -7352,9 +7370,7 @@
             "lastExecution": {
               "label": "Last Execution"
             },
-            "actions": {
-              "label": "Actions"
-            }
+            "actions": {}
           },
           "table": {
             "search": "Search {count} tasks..."
@@ -7406,6 +7422,12 @@
             "apiKey": {
               "label": "Authentication",
               "title": "API Keys",
+              "access": {
+                "label": "Access",
+                "readOnly": "Read-only",
+                "readWrite": "Read and write",
+                "description": "Blocks changes, service actions and arbitrary upstream requests."
+              },
               "button": {
                 "createApiToken": "Create API token",
                 "confirmDeletion": "Confirm deletion"
@@ -7418,9 +7440,7 @@
               },
               "table": {
                 "header": {
-                  "createdBy": "Created by",
-                  "source": "Source",
-                  "actions": "Actions"
+                  "createdBy": "Created by"
                 }
               },
               "provenance": {
@@ -7471,7 +7491,7 @@
               },
               "authentication": {
                 "title": "Authentication",
-                "intro": "You can authenticate with your MCP server using either an API key or OAuth. Both methods grant the same level of access.",
+                "intro": "Authenticate using an API key or OAuth. Both support read-only or read-and-write credentials.",
                 "apiKey": {
                   "title": "API Key (manual)",
                   "description": "Pass the ApiKey header with your full API key in the MCP client configuration."
@@ -7481,7 +7501,7 @@
                   "description": "Start authorization in your OAuth client and sign in to Homarr if needed. Review the client, callback destination and account access, then choose Allow access only if you trust the client. An API credential is created only after approval and a successful code exchange.",
                   "hint": "Revoke recorded OAuth connections in your own General settings. Administrators can also revoke credentials in the Authentication tab. These credentials work with Homarr's HTTP API and MCP, do not expire automatically, and remain valid after sign-out."
                 },
-                "permissions": "The API key determines the permissions available to the AI — it operates with the same access level as the key owner."
+                "permissions": "Credentials cannot exceed the owner's current permissions. Read-only credentials also block changes, service actions and arbitrary upstream requests."
               },
               "clientConfig": {
                 "title": "Client Configuration",
@@ -7713,7 +7733,6 @@
     },
     "field": {
       "state": {
-        "label": "State",
         "option": {
           "created": "Created",
           "running": "Running",
@@ -7740,7 +7759,6 @@
       }
     },
     "action": {
-      "title": "Actions",
       "logs": {
         "label": "View logs",
         "page": {
@@ -7978,27 +7996,13 @@
       "internalServerError": "Failed to fetch Kubernetes data"
     },
     "field": {
-      "name": {
-        "label": "Name"
-      },
-      "namespace": {
-        "label": "Namespace"
-      },
-      "creationTimestamp": {
-        "label": "Created"
-      },
-      "state": {
-        "label": "State"
-      },
-      "status": {
-        "label": "Status"
-      },
-      "type": {
-        "label": "Type"
-      },
-      "architecture": {
-        "label": "Architecture"
-      }
+      "name": {},
+      "namespace": {},
+      "creationTimestamp": {},
+      "state": {},
+      "status": {},
+      "type": {},
+      "architecture": {}
     }
   },
   "permission": {
@@ -8025,10 +8029,7 @@
         "label": "Permission"
       }
     },
-    "action": {
-      "saveUser": "Save user permission",
-      "saveGroup": "Save group permission"
-    }
+    "action": {}
   },
   "navigationStructure": {
     "manage": {
@@ -8139,8 +8140,7 @@
       "resultsAriaLabel": "{mode} results",
       "footer": {
         "navigate": "Navigate",
-        "open": "Open",
-        "close": "Close"
+        "open": "Open"
       }
     },
     "error": {
@@ -8570,9 +8570,7 @@
         "urlTemplate": {
           "label": "URL search template"
         },
-        "description": {
-          "label": "Description"
-        }
+        "description": {}
       },
       "page": {
         "list": {
@@ -8641,8 +8639,7 @@
             "table": {
               "header": {
                 "season": "Season",
-                "episodes": "Episodes",
-                "status": "Status"
+                "episodes": "Episodes"
               },
               "status": {
                 "requested": "Requested"
@@ -8912,6 +8909,7 @@
       "imageInput": "Accepts image input",
       "thinking": "Thinking mode",
       "reasoning": {
+        "default": "Default",
         "auto": "Auto",
         "none": "Off",
         "minimal": "Minimal",
@@ -9151,7 +9149,6 @@
       "cssDescription": "Edit the complete stylesheet. Existing rules are kept unless they are removed here.",
       "cssCharacters": "{count} of 16384 characters",
       "copyCss": "Copy CSS",
-      "copied": "Copied",
       "restoreCss": "Restore current CSS",
       "remoteCssTitle": "This CSS loads a remote resource",
       "remoteCssDescription": "Imported stylesheets and remote URLs contact another server when the board loads. Review them before continuing."

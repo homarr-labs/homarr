@@ -61,6 +61,7 @@ export const iconsRouter = createTRPCRouter({
   detectFavicon: permissionRequiredProcedure
     .requiresPermission("app-create")
     .meta({
+      readOnly: false,
       mcp: {
         enabled: true,
         description:

@@ -225,7 +225,7 @@ const LocationSelectResult = ({ city, onLocationSelect }: LocationSelectResultPr
   }, [city, onLocationSelect]);
 
   return (
-    <Paper withBorder p="xs">
+    <Paper p="xs">
       <Group justify="space-between" align="flex-start" wrap="nowrap">
         <Stack gap={2} miw={0}>
           <Text fw={500} style={{ overflowWrap: "anywhere" }}>

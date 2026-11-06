@@ -70,7 +70,7 @@ export const GroupsList = ({ title, groups, children }: PropsWithChildren<Groups
       }
     >
       <Collapse expanded={isCreateOpen}>
-        <Card withBorder>
+        <Card>
           <GroupCreateForm
             key={formKey}
             onCancel={closeCreate}

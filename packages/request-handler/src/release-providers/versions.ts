@@ -1,4 +1,5 @@
 import { ReleaseLookupError } from "./errors";
+export { isVersionLikeTag } from "@homarr/definitions";
 import type { Release } from "./types";
 
 export const floatingTagNames = ["latest", "release", "stable"];
@@ -19,8 +20,6 @@ export const byHighestVersion = (left: string, right: string) =>
 export const isPlainVersionTag = (tag: string) => /^v?\d{1,4}(?:\.\d+)*$/.test(tag);
 
 export const isVersionPrefixedTag = (tag: string) => /^v?\d+\.\d+/.test(tag);
-
-export const isVersionLikeTag = (tag: string) => isPlainVersionTag(tag) || /\d+\.\d+/.test(tag);
 
 export const byMostSpecificVersion = (left: string, right: string) =>
   Number(isPlainVersionTag(right)) - Number(isPlainVersionTag(left)) ||

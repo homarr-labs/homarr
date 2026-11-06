@@ -1,5 +1,4 @@
 import { notFound } from "next/navigation";
-import { Stack, Title } from "@mantine/core";
 
 import { api } from "@homarr/api/server";
 import { auth } from "@homarr/auth/next";
@@ -7,6 +6,7 @@ import { env } from "@homarr/docker/env";
 import { getI18n } from "@homarr/translation/server";
 
 import { ConfigmapsTable } from "~/app/[locale]/manage/tools/kubernetes/configmaps/configmaps-table";
+import { ManagePageLayout } from "~/components/manage/manage-page-layout";
 import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
 import type { KubernetesContextSearchParams } from "../kubernetes-context";
 import { getSelectedKubernetesContextAsync } from "../kubernetes-context";
@@ -29,12 +29,8 @@ export default async function ConfigMapsPage({
       ? []
       : await api.kubernetes.configMaps.getConfigMaps({ contextId: context.contextId });
   return (
-    <>
-      <DynamicBreadcrumb />
-      <Stack>
-        <Title order={1}>{tResource("configmaps")}</Title>
-        <ConfigmapsTable contextId={context.contextId} initialConfigMaps={configMaps} />
-      </Stack>
-    </>
+    <ManagePageLayout title={tResource("configmaps")} container={false}>
+      <ConfigmapsTable contextId={context.contextId} initialConfigMaps={configMaps} />
+    </ManagePageLayout>
   );
 }
