@@ -1,0 +1,19 @@
+apps/nextjs/src/components/board/layout/scaled-board-canvas.module.css
+  s_0b32b370da97a2::t_89f9116a3f237f 1-4
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "1cc75d0e720e6e9eefc7797bc1de3fead463942e",
+  "prompts": {},
+  "sessions": {
+    "s_0b32b370da97a2": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "8f9bc1a8-9c4b-4fb9-8d78-aff93c6771e3",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
