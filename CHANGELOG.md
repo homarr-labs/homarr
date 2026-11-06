@@ -1,4 +1,32 @@
 ## What's Changed
+* chore(lang): updated translations from crowdin by @homarr-crowdin[bot] in https://github.com/homarr-labs/homarr/pull/7470
+* fix(deps): update tailwindcss monorepo to ^4.3.4 by @homarr-renovate[bot] in https://github.com/homarr-labs/homarr/pull/7479
+* fix(docker): restore wget for existing health checks by @ajnart in https://github.com/homarr-labs/homarr/pull/7475
+* fix(docker): run nginx workers as www-data by @ajnart in https://github.com/homarr-labs/homarr/pull/7487
+* fix(releases): avoid URL limits for repository batches by @ajnart in https://github.com/homarr-labs/homarr/pull/7425
+* fix(auth): resolve namespaced OIDC claim names by @ajnart in https://github.com/homarr-labs/homarr/pull/7482
+* fix(pi-hole): reuse stored v6 session for custom widget requests by @Epoustouflant in https://github.com/homarr-labs/homarr/pull/7481
+* feat: salvage OMV TOTP, explicit container tracks, bookmark URLs and RSS fallback decoding by @ajnart in https://github.com/homarr-labs/homarr/pull/7462
+* docs(triage): record out-of-scope decisions by @ajnart in https://github.com/homarr-labs/homarr/pull/7489
+* ci(workshop): publish when dev moves without Workshop changes by @ajnart in https://github.com/homarr-labs/homarr/pull/7491
+* docs(triage): correct viewer identity rejection rationale by @ajnart in https://github.com/homarr-labs/homarr/pull/7492
+* fix(board): stop scrollbar resize loop by @ajnart in https://github.com/homarr-labs/homarr/pull/7485
+* fix(jackett): test indexers independently by @ajnart in https://github.com/homarr-labs/homarr/pull/7484
+* fix(frigate): report which authentication step failed by @ajnart in https://github.com/homarr-labs/homarr/pull/7486
+* chore(deps): update crowdin/github-action action to v3.5.1 by @homarr-renovate[bot] in https://github.com/homarr-labs/homarr/pull/7476
+* chore: update bug report template by @homarr-releases[bot] in https://github.com/homarr-labs/homarr/pull/7466
+* fix(icons): prefer a curated icon match over a dropped url's own favicon by @mawcs in https://github.com/homarr-labs/homarr/pull/7392
+* docs(helm): update chart installation page by @homarr-charts-docs-sync[bot] in https://github.com/homarr-labs/homarr/pull/7474
+* feat(coolify): redesign widget and retain status on project errors by @Rhiz3K in https://github.com/homarr-labs/homarr/pull/7463
+* feat(app-widget): start and stop a linked docker container from the tile by @junkerderprovinz in https://github.com/homarr-labs/homarr/pull/7428
+* chore(release): automatic release v2.12.0 by @github-actions[bot] in https://github.com/homarr-labs/homarr/pull/7495
+
+## New Contributors
+* @Epoustouflant made their first contribution in https://github.com/homarr-labs/homarr/pull/7481
+
+**Full Changelog**: https://github.com/homarr-labs/homarr/compare/v2.11.1...v2.12.0
+
+## What's Changed
 * fix(startup): create nginx runtime directory for native installs by @ajnart in https://github.com/homarr-labs/homarr/pull/7471
 
 
