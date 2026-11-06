@@ -5,7 +5,7 @@ import { IconLayoutGrid } from "@tabler/icons-react";
 
 import type { BoardPreviewData, BoardPreviewLayout } from "@homarr/boards/layout-preview";
 import { projectBoardLayout } from "@homarr/boards/layout-preview";
-import { boardLanes, getBoardLaneColumnCount, getRootSectionLane } from "@homarr/definitions";
+import { boardLanes, compareRootSections, getBoardLaneColumnCount, getRootSectionLane } from "@homarr/definitions";
 import { useSettings } from "@homarr/settings";
 import { widgetCatalogIcons } from "@homarr/ui/widget-icons";
 
@@ -63,9 +63,7 @@ export const BoardLayoutThumbnail = ({
 
   const elements = projectBoardLayout(preview, sourceLayout ?? layout, layout);
   const thumbnailRowLimit = Math.max(1, Math.min(Math.floor(previewRowLimit), maxBoardLayoutThumbnailRows));
-  const roots = preview.sections
-    .filter((section) => section.kind === "empty")
-    .toSorted((first, second) => (first.xOffset ?? 0) - (second.xOffset ?? 0) || first.id.localeCompare(second.id));
+  const roots = preview.sections.filter((section) => section.kind === "empty").toSorted(compareRootSections);
   const lanes = boardLanes.flatMap((lane) => {
     const root = roots.find((section) => getRootSectionLane(section.xOffset) === lane);
     const columnCount = getBoardLaneColumnCount(layout, lane);

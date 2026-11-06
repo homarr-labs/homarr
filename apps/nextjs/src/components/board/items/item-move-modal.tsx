@@ -3,7 +3,7 @@ import { Grid, NumberInput, Select, Stack } from "@mantine/core";
 import { z } from "zod/v4";
 
 import { useCurrentLayout, useRequiredBoard } from "@homarr/boards/context";
-import { getRootSectionLane } from "@homarr/definitions";
+import { getBoardTabSections, getRootSectionLane } from "@homarr/definitions";
 import { useZodForm } from "@homarr/form";
 import { createModal, ModalFormFooter, modalSizeForm, useModalAction } from "@homarr/modals";
 import { useI18n } from "@homarr/translation/client";
@@ -272,6 +272,12 @@ export const getMoveTargets = (
   const minimum = getEntryMinimumSize(board, layoutId, entry);
 
   const candidates = board.sections.flatMap((section): MoveTargetCandidate[] => {
+    if (
+      getBoardTabSections(board.sections).length > 1 &&
+      registeredGridEditors &&
+      !registeredGridEditors.has(section.id)
+    )
+      return [];
     if (section.kind === "empty") {
       const columnCount = getSectionColumnCount(board, layoutId, section.id);
       const lane = getRootSectionLane(section.xOffset);

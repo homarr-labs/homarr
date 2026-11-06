@@ -1,0 +1,97 @@
+"use client";
+
+import { useRef } from "react";
+import { Group, Popover, Stack, Tabs, Text } from "@mantine/core";
+import { useDisclosure, useTimeout } from "@mantine/hooks";
+
+import { useBoardTabs } from "@homarr/boards/tabs";
+import { useEditMode } from "@homarr/boards/edit-mode";
+import { useI18n } from "@homarr/translation/client";
+import type { HeaderTabsDisplay } from "@homarr/validation/user";
+
+import { HeaderButton } from "~/components/layout/header/button";
+import { BoardTabBar } from "./board-tabs";
+import { useBoardTabLabel } from "./use-board-tab-label";
+import classes from "./header-board-tabs.module.css";
+
+export const HeaderBoardTabs = ({ display }: { display: HeaderTabsDisplay }) => {
+  const { tabs, activeTab, selectTab } = useBoardTabs();
+  const [opened, { open, close, set: setOpened }] = useDisclosure(false);
+  const [isEditMode] = useEditMode();
+  const { start: closeSoon, clear: cancelClose } = useTimeout(close, 150);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const getTabLabel = useBoardTabLabel();
+  const t = useI18n("board.tabs");
+  if (tabs.length < 2 || !activeTab) return null;
+
+  const reveal = () => {
+    cancelClose();
+    open();
+  };
+  const hideSoon = () => {
+    if (!isEditMode) closeSoon();
+  };
+  const select = (value: string | null) => {
+    if (!value) return;
+    selectTab(value);
+    close();
+  };
+
+  if (display !== "indicator") {
+    return (
+      <Tabs value={activeTab.id} onChange={select} variant="pills" radius="md" miw={0} maw="100%" flex="0 1 auto">
+        <BoardTabBar compact={display === "compact"} />
+      </Tabs>
+    );
+  }
+
+  const activeIndex = tabs.findIndex((tab) => tab.id === activeTab.id);
+
+  return (
+    <Popover opened={opened} onChange={setOpened} position="bottom-end" withArrow withinPortal shadow="md">
+      <Popover.Target>
+        <HeaderButton
+          aria-label={t("indicator", { index: activeIndex + 1, count: tabs.length, name: getTabLabel(activeTab) })}
+          onClick={reveal}
+          onPointerEnter={reveal}
+          onPointerLeave={hideSoon}
+          onFocus={reveal}
+          onBlur={hideSoon}
+          onKeyDown={(event) => {
+            if (event.key !== "ArrowDown") return;
+            event.preventDefault();
+            reveal();
+            window.requestAnimationFrame(() =>
+              dropdownRef.current?.querySelector<HTMLElement>('[role="tab"][aria-selected="true"]')?.focus(),
+            );
+          }}
+        >
+          <Stack component="span" align="center" gap={3} aria-hidden>
+            <Text component="span" className={classes.number} fz="0.8rem" fw={600} lh={1}>
+              {activeIndex + 1}
+            </Text>
+            <Group component="span" gap={2} wrap="nowrap">
+              {tabs.map((tab) => (
+                <span key={tab.id} className={classes.dot} data-active={tab.id === activeTab.id || undefined} />
+              ))}
+            </Group>
+          </Stack>
+        </HeaderButton>
+      </Popover.Target>
+      <Popover.Dropdown
+        ref={dropdownRef}
+        data-board-tab-picker
+        maw="calc(100vw - 1rem)"
+        p={4}
+        onPointerEnter={cancelClose}
+        onPointerLeave={hideSoon}
+        onFocusCapture={cancelClose}
+        onBlurCapture={hideSoon}
+      >
+        <Tabs value={activeTab.id} onChange={select} variant="pills" radius="md">
+          <BoardTabBar menuWithinPortal={false} />
+        </Tabs>
+      </Popover.Dropdown>
+    </Popover>
+  );
+};

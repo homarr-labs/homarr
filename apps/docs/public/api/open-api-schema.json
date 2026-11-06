@@ -2702,6 +2702,17 @@
                               "type": "integer",
                               "minimum": -9007199254740991,
                               "maximum": 9007199254740991
+                            },
+                            "name": {
+                              "anyOf": [
+                                {
+                                  "type": "string",
+                                  "maxLength": 32
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ]
                             }
                           },
                           "required": [
@@ -4878,7 +4889,7 @@
                     "properties": {
                       "version": {
                         "type": "number",
-                        "const": 3
+                        "const": 4
                       },
                       "visible": {
                         "type": "boolean"
@@ -4895,6 +4906,14 @@
                         "enum": [
                           "logo",
                           "logoAndText"
+                        ]
+                      },
+                      "tabsDisplay": {
+                        "type": "string",
+                        "enum": [
+                          "wide",
+                          "compact",
+                          "indicator"
                         ]
                       },
                       "zones": {
@@ -4919,6 +4938,7 @@
                                         "search",
                                         "home",
                                         "boardSwitcher",
+                                        "boardTabs",
                                         "assistant",
                                         "docker",
                                         "boardEdit",
@@ -4976,6 +4996,7 @@
                                         "search",
                                         "home",
                                         "boardSwitcher",
+                                        "boardTabs",
                                         "assistant",
                                         "docker",
                                         "boardEdit",
@@ -5033,6 +5054,7 @@
                                         "search",
                                         "home",
                                         "boardSwitcher",
+                                        "boardTabs",
                                         "assistant",
                                         "docker",
                                         "boardEdit",
@@ -6230,7 +6252,7 @@
                         "properties": {
                           "version": {
                             "type": "number",
-                            "const": 3
+                            "const": 4
                           },
                           "visible": {
                             "type": "boolean"
@@ -6248,6 +6270,15 @@
                             "enum": [
                               "logo",
                               "logoAndText"
+                            ]
+                          },
+                          "tabsDisplay": {
+                            "default": "compact",
+                            "type": "string",
+                            "enum": [
+                              "wide",
+                              "compact",
+                              "indicator"
                             ]
                           },
                           "zones": {
@@ -6272,6 +6303,7 @@
                                             "search",
                                             "home",
                                             "boardSwitcher",
+                                            "boardTabs",
                                             "assistant",
                                             "docker",
                                             "boardEdit",
@@ -6330,6 +6362,7 @@
                                             "search",
                                             "home",
                                             "boardSwitcher",
+                                            "boardTabs",
                                             "assistant",
                                             "docker",
                                             "boardEdit",
@@ -6388,6 +6421,7 @@
                                             "search",
                                             "home",
                                             "boardSwitcher",
+                                            "boardTabs",
                                             "assistant",
                                             "docker",
                                             "boardEdit",
@@ -6548,6 +6582,228 @@
                         "required": [
                           "version",
                           "visible",
+                          "zones"
+                        ],
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "version": {
+                            "type": "number",
+                            "const": 3
+                          },
+                          "visible": {
+                            "type": "boolean"
+                          },
+                          "searchDisplay": {
+                            "type": "string",
+                            "enum": [
+                              "input",
+                              "icon"
+                            ]
+                          },
+                          "logoDisplay": {
+                            "default": "logoAndText",
+                            "type": "string",
+                            "enum": [
+                              "logo",
+                              "logoAndText"
+                            ]
+                          },
+                          "zones": {
+                            "type": "object",
+                            "properties": {
+                              "left": {
+                                "maxItems": 100,
+                                "type": "array",
+                                "items": {
+                                  "oneOf": [
+                                    {
+                                      "type": "object",
+                                      "properties": {
+                                        "type": {
+                                          "type": "string",
+                                          "const": "builtin"
+                                        },
+                                        "id": {
+                                          "type": "string",
+                                          "enum": [
+                                            "logo",
+                                            "search",
+                                            "home",
+                                            "boardSwitcher",
+                                            "boardTabs",
+                                            "assistant",
+                                            "docker",
+                                            "boardEdit",
+                                            "boardSettings",
+                                            "settings",
+                                            "themeToggle",
+                                            "user"
+                                          ]
+                                        }
+                                      },
+                                      "required": [
+                                        "type",
+                                        "id"
+                                      ],
+                                      "additionalProperties": false
+                                    },
+                                    {
+                                      "type": "object",
+                                      "properties": {
+                                        "type": {
+                                          "type": "string",
+                                          "const": "board"
+                                        },
+                                        "boardId": {
+                                          "type": "string",
+                                          "minLength": 1,
+                                          "maxLength": 255
+                                        }
+                                      },
+                                      "required": [
+                                        "type",
+                                        "boardId"
+                                      ],
+                                      "additionalProperties": false
+                                    }
+                                  ],
+                                  "type": "object"
+                                }
+                              },
+                              "center": {
+                                "maxItems": 100,
+                                "type": "array",
+                                "items": {
+                                  "oneOf": [
+                                    {
+                                      "type": "object",
+                                      "properties": {
+                                        "type": {
+                                          "type": "string",
+                                          "const": "builtin"
+                                        },
+                                        "id": {
+                                          "type": "string",
+                                          "enum": [
+                                            "logo",
+                                            "search",
+                                            "home",
+                                            "boardSwitcher",
+                                            "boardTabs",
+                                            "assistant",
+                                            "docker",
+                                            "boardEdit",
+                                            "boardSettings",
+                                            "settings",
+                                            "themeToggle",
+                                            "user"
+                                          ]
+                                        }
+                                      },
+                                      "required": [
+                                        "type",
+                                        "id"
+                                      ],
+                                      "additionalProperties": false
+                                    },
+                                    {
+                                      "type": "object",
+                                      "properties": {
+                                        "type": {
+                                          "type": "string",
+                                          "const": "board"
+                                        },
+                                        "boardId": {
+                                          "type": "string",
+                                          "minLength": 1,
+                                          "maxLength": 255
+                                        }
+                                      },
+                                      "required": [
+                                        "type",
+                                        "boardId"
+                                      ],
+                                      "additionalProperties": false
+                                    }
+                                  ],
+                                  "type": "object"
+                                }
+                              },
+                              "right": {
+                                "maxItems": 100,
+                                "type": "array",
+                                "items": {
+                                  "oneOf": [
+                                    {
+                                      "type": "object",
+                                      "properties": {
+                                        "type": {
+                                          "type": "string",
+                                          "const": "builtin"
+                                        },
+                                        "id": {
+                                          "type": "string",
+                                          "enum": [
+                                            "logo",
+                                            "search",
+                                            "home",
+                                            "boardSwitcher",
+                                            "boardTabs",
+                                            "assistant",
+                                            "docker",
+                                            "boardEdit",
+                                            "boardSettings",
+                                            "settings",
+                                            "themeToggle",
+                                            "user"
+                                          ]
+                                        }
+                                      },
+                                      "required": [
+                                        "type",
+                                        "id"
+                                      ],
+                                      "additionalProperties": false
+                                    },
+                                    {
+                                      "type": "object",
+                                      "properties": {
+                                        "type": {
+                                          "type": "string",
+                                          "const": "board"
+                                        },
+                                        "boardId": {
+                                          "type": "string",
+                                          "minLength": 1,
+                                          "maxLength": 255
+                                        }
+                                      },
+                                      "required": [
+                                        "type",
+                                        "boardId"
+                                      ],
+                                      "additionalProperties": false
+                                    }
+                                  ],
+                                  "type": "object"
+                                }
+                              }
+                            },
+                            "required": [
+                              "left",
+                              "center",
+                              "right"
+                            ],
+                            "additionalProperties": false
+                          }
+                        },
+                        "required": [
+                          "version",
+                          "visible",
+                          "searchDisplay",
                           "zones"
                         ],
                         "additionalProperties": false
@@ -7936,7 +8192,7 @@
             "properties": {
               "version": {
                 "type": "number",
-                "const": 3
+                "const": 4
               },
               "visible": {
                 "type": "boolean"
@@ -7954,6 +8210,15 @@
                 "enum": [
                   "logo",
                   "logoAndText"
+                ]
+              },
+              "tabsDisplay": {
+                "default": "compact",
+                "type": "string",
+                "enum": [
+                  "wide",
+                  "compact",
+                  "indicator"
                 ]
               },
               "zones": {
@@ -7978,6 +8243,7 @@
                                 "search",
                                 "home",
                                 "boardSwitcher",
+                                "boardTabs",
                                 "assistant",
                                 "docker",
                                 "boardEdit",
@@ -8036,6 +8302,7 @@
                                 "search",
                                 "home",
                                 "boardSwitcher",
+                                "boardTabs",
                                 "assistant",
                                 "docker",
                                 "boardEdit",
@@ -8094,6 +8361,7 @@
                                 "search",
                                 "home",
                                 "boardSwitcher",
+                                "boardTabs",
                                 "assistant",
                                 "docker",
                                 "boardEdit",
@@ -8147,6 +8415,7 @@
               "visible",
               "searchDisplay",
               "logoDisplay",
+              "tabsDisplay",
               "zones"
             ],
             "additionalProperties": false
@@ -8183,10 +8452,11 @@
           "openSearchInNewTab": true,
           "ddgBangs": true,
           "headerPreferences": {
-            "version": 3,
+            "version": 4,
             "visible": true,
             "searchDisplay": "input",
             "logoDisplay": "logoAndText",
+            "tabsDisplay": "compact",
             "zones": {
               "left": [
                 {
@@ -8201,6 +8471,10 @@
                 }
               ],
               "right": [
+                {
+                  "type": "builtin",
+                  "id": "boardTabs"
+                },
                 {
                   "type": "builtin",
                   "id": "boardEdit"

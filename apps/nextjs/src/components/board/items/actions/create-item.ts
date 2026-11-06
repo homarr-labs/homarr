@@ -1,4 +1,5 @@
 import { getBoardLayouts } from "@homarr/boards/context";
+import { getBoardTabs } from "@homarr/boards/tabs";
 import { createId } from "@homarr/common";
 import type { Modify } from "@homarr/common/types";
 import { getRootSectionLane } from "@homarr/definitions";
@@ -24,13 +25,7 @@ export interface CreateItemInput {
 export const createItemCallback =
   ({ id, kind, options = {}, integrationIds = [], targetSectionId, advancedOptions, size }: CreateItemInput) =>
   (previous: Board): Board => {
-    const firstCanvasSection = previous.sections
-      .filter(
-        (section): section is EmptySection =>
-          section.kind === "empty" && getRootSectionLane(section.xOffset) === "main",
-      )
-      .toSorted((sectionA, sectionB) => sectionA.yOffset - sectionB.yOffset)
-      .at(0);
+    const firstCanvasSection = getBoardTabs(previous).at(0);
     const requestedSection = targetSectionId
       ? previous.sections.find(
           (section): section is EmptySection | ContainerSection =>
