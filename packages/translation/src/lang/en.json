@@ -1515,6 +1515,18 @@
           "title": "Unknown error",
           "description": "An unknown error occurred, open the cause below to see more details"
         },
+        "frigate": {
+          "title": "Frigate authentication",
+          "status": " (HTTP {statusCode})",
+          "description": {
+            "cookie": "Frigate login did not return a valid frigate_token session cookie. Check the Frigate authentication and reverse proxy configuration.",
+            "profileMismatch": "Frigate returned a profile that is not an admin or whose username differs from the configured username.",
+            "redirect": "Frigate returned a redirect, which Homarr did not follow to protect your credentials. Use the direct authenticated Frigate URL.",
+            "login": "The Frigate login request failed. Check the credentials, integration URL and connectivity.",
+            "profile": "The Frigate profile request failed. Check the authenticated endpoint and reverse proxy configuration.",
+            "stats": "The Frigate stats request failed after authentication. Check the stats endpoint and connectivity."
+          }
+        },
         "openmediavault": {
           "title": "OpenMediaVault authentication",
           "description": {

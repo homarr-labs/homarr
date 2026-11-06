@@ -1,18 +1,8 @@
 import { z } from "zod";
 
 import { RequestError, ResponseError } from "@homarr/common/server";
-import { createLogger } from "@homarr/core/infrastructure/logs";
-
+import { FrigateAuthenticationError } from "../frigate-authentication-error";
 import type { StatsFetchContext, StatsProvider } from "../types";
-
-const logger = createLogger({ module: "frigateStatsProvider" });
-
-type AuthenticationStep = "login" | "cookie" | "profile" | "profileMismatch";
-
-const fail = (step: AuthenticationStep, error: Error): never => {
-  logger.warn("Frigate authentication failed", { step });
-  throw error;
-};
 
 const statsSchema = z
   .object({
@@ -40,7 +30,13 @@ export const frigateStatsProvider = {
         version: stats.service.version,
       };
     } catch (error) {
-      if (error instanceof RequestError || error instanceof ResponseError) throw error;
+      if (
+        error instanceof RequestError ||
+        error instanceof ResponseError ||
+        error instanceof FrigateAuthenticationError
+      ) {
+        throw error;
+      }
       throw new Error("Frigate stats request failed");
     }
   },
@@ -59,27 +55,21 @@ async function getHttpAuthenticationAsync(context: StatsFetchContext) {
     body: JSON.stringify({ user: username, password }),
     signal: context.signal,
   });
-  if (response.status !== 200) fail("login", new ResponseError({ status: response.status }));
   const cookies = response.headers.getSetCookie().filter((cookie) => cookie.startsWith("frigate_token="));
   if (cookies.length !== 1) {
-    fail("cookie", new Error("Frigate login did not return exactly one frigate_token session cookie"));
+    throw new FrigateAuthenticationError(context.integration, "cookie");
   }
   const token = cookies[0]?.split(";", 1)[0]?.slice("frigate_token=".length);
   if (!token || token.length > 4096 || !/^[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+$/.test(token)) {
-    fail("cookie", new Error("Frigate returned a malformed frigate_token session cookie"));
+    throw new FrigateAuthenticationError(context.integration, "cookie");
   }
   const headers = { Authorization: `Bearer ${token}` };
-  const profile: unknown = await context
-    .requestAsync("/api/profile", { headers, signal: context.signal })
-    .catch((error: unknown) => {
-      logger.warn("Frigate authentication failed", { step: "profile" satisfies AuthenticationStep });
-      throw error;
-    });
+  const profile: unknown = await context.requestAsync("/api/profile", { headers, signal: context.signal });
   const parsed = z
     .object({ username: z.literal(username), role: z.literal("admin"), allowed_cameras: z.array(z.string()) })
     .safeParse(profile);
   if (!parsed.success) {
-    fail("profileMismatch", new Error("Frigate user is not an admin or its username differs from the configured one"));
+    throw new FrigateAuthenticationError(context.integration, "profileMismatch");
   }
-  return { headers, redactValues: [token as string] };
+  return { headers, redactValues: [token] };
 }
