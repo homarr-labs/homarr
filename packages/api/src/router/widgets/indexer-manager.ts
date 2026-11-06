@@ -44,7 +44,7 @@ export const indexerManagerRouter = createTRPCRouter({
           await client.testAllAsync().catch((err) => {
             throw new TRPCError({
               code: "INTERNAL_SERVER_ERROR",
-              message: `Failed to test all indexers for ${integration.name} (${integration.id})`,
+              message: `Failed to test all indexers for ${integration.name} (${integration.id}): ${err instanceof Error ? err.message : String(err)}`,
               cause: err,
             });
           });

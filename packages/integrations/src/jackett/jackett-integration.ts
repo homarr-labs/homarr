@@ -58,22 +58,37 @@ export class JackettIntegration extends Integration implements IIndexerManagerIn
     return { configured: (await this.getConfiguredIndexersAsync()).length };
   }
 
+  private async testIndexerAsync(indexer: { $: { id: string }; title: string[] }) {
+    const response = await fetchWithTrustedCertificatesAsync(this.torznabUrl(indexer.$.id, "search"), {
+      signal: AbortSignal.timeout(30_000),
+      redirect: "error",
+    });
+    if (!response.ok) throw new Error(`status ${response.status}`);
+    // A Torznab <error> can use HTTP 200; only a valid RSS result is success.
+    searchSchema.parse(await parseStringPromise(await response.text(), { explicitArray: true }));
+  }
+
   public async testAllAsync(): Promise<void> {
-    const indexers = await this.getConfiguredIndexersAsync();
+    const indexers = await this.getConfiguredIndexersAsync().catch((error: unknown) => {
+      throw new Error(`Failed to load Jackett indexers: ${error instanceof Error ? error.message : String(error)}`, {
+        cause: error,
+      });
+    });
+    const failures: string[] = [];
     // Torznab search exercises the upstream indexer; caps only returns metadata.
     // Limit concurrency so a large catalog does not flood every tracker at once.
     for (let offset = 0; offset < indexers.length; offset += 4) {
-      await Promise.all(
-        indexers.slice(offset, offset + 4).map(async (indexer) => {
-          const response = await fetchWithTrustedCertificatesAsync(this.torznabUrl(indexer.$.id, "search"), {
-            signal: AbortSignal.timeout(30_000),
-            redirect: "error",
-          });
-          if (!response.ok) throw new Error(`Jackett indexer test failed (${response.status})`);
-          // A Torznab <error> can use HTTP 200; only a valid RSS result is success.
-          searchSchema.parse(await parseStringPromise(await response.text(), { explicitArray: true }));
-        }),
-      );
+      const batch = indexers.slice(offset, offset + 4);
+      const results = await Promise.allSettled(batch.map((indexer) => this.testIndexerAsync(indexer)));
+      results.forEach((result, index) => {
+        if (result.status === "fulfilled") return;
+        const indexer = batch[index];
+        const reason = result.reason instanceof Error ? result.reason.message : String(result.reason);
+        failures.push(`${indexer?.title[0] ?? indexer?.$.id} (${indexer?.$.id}): ${reason}`);
+      });
+    }
+    if (failures.length > 0) {
+      throw new Error(`${failures.length} of ${indexers.length} Jackett indexers failed: ${failures.join("; ")}`);
     }
   }
 
