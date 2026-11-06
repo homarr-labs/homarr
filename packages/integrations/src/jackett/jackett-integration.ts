@@ -9,6 +9,9 @@ import { TestConnectionError } from "../base/test-connection/test-connection-err
 import type { TestingResult } from "../base/test-connection/test-connection-service";
 import type { IIndexerManagerIntegration } from "../interfaces/indexer-manager/indexer-manager-integration";
 import type { Indexer } from "../interfaces/indexer-manager/indexer-manager-types";
+import { JackettIndexerTestError } from "./jackett-indexer-test-error";
+
+const indexerTestConcurrency = 4;
 
 const indexerSchema = z.object({
   $: z.object({ id: z.string().min(1), configured: z.enum(["true", "false"]) }),
@@ -58,7 +61,7 @@ export class JackettIntegration extends Integration implements IIndexerManagerIn
     return { configured: (await this.getConfiguredIndexersAsync()).length };
   }
 
-  private async testIndexerAsync(indexer: { $: { id: string }; title: string[] }) {
+  private async testIndexerAsync(indexer: z.infer<typeof indexerSchema>) {
     const response = await fetchWithTrustedCertificatesAsync(this.torznabUrl(indexer.$.id, "search"), {
       signal: AbortSignal.timeout(30_000),
       redirect: "error",
@@ -69,26 +72,21 @@ export class JackettIntegration extends Integration implements IIndexerManagerIn
   }
 
   public async testAllAsync(): Promise<void> {
-    const indexers = await this.getConfiguredIndexersAsync().catch((error: unknown) => {
-      throw new Error(`Failed to load Jackett indexers: ${error instanceof Error ? error.message : String(error)}`, {
-        cause: error,
-      });
-    });
+    const indexers = await this.getConfiguredIndexersAsync();
     const failures: string[] = [];
-    // Torznab search exercises the upstream indexer; caps only returns metadata.
-    // Limit concurrency so a large catalog does not flood every tracker at once.
-    for (let offset = 0; offset < indexers.length; offset += 4) {
-      const batch = indexers.slice(offset, offset + 4);
-      const results = await Promise.allSettled(batch.map((indexer) => this.testIndexerAsync(indexer)));
-      results.forEach((result, index) => {
-        if (result.status === "fulfilled") return;
-        const indexer = batch[index];
-        const reason = result.reason instanceof Error ? result.reason.message : String(result.reason);
-        failures.push(`${indexer?.title[0] ?? indexer?.$.id} (${indexer?.$.id}): ${reason}`);
-      });
+    for (let offset = 0; offset < indexers.length; offset += indexerTestConcurrency) {
+      await Promise.all(
+        indexers.slice(offset, offset + indexerTestConcurrency).map(async (indexer) => {
+          try {
+            await this.testIndexerAsync(indexer);
+          } catch {
+            failures.push(indexer.title[0] ?? indexer.$.id);
+          }
+        }),
+      );
     }
     if (failures.length > 0) {
-      throw new Error(`${failures.length} of ${indexers.length} Jackett indexers failed: ${failures.join("; ")}`);
+      throw new JackettIndexerTestError(this.publicIntegration, failures, indexers.length);
     }
   }
 
