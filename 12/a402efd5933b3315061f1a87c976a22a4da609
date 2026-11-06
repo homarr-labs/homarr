@@ -1,0 +1,16 @@
+packages/integrations/src/truenas/test/truenas-integration.spec.ts
+  h_d6e478ca18e517 315,327-334,368-373,380-412,416,421,425-437,439,441-443,459-467
+packages/integrations/src/truenas/truenas-integration.ts
+  h_d6e478ca18e517 340,347,364-368
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "12a402efd5933b3315061f1a87c976a22a4da609",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
