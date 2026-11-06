@@ -12,4 +12,4 @@ People who keep separate desktop and phone boards can simply ignore the layout t
 
 ## Prior requests
 
-- #7379: "Option to Hide Unused Layouts in Board Settings"
+- [#7379](https://github.com/homarr-labs/homarr/issues/7379): "Option to Hide Unused Layouts in Board Settings"

@@ -10,4 +10,4 @@ Beszel already has per-system alerting with its own thresholds. That is the righ
 
 ## Prior requests
 
-- #7214: "feat(beszel): configure metric color thresholds"
+- [#7214](https://github.com/homarr-labs/homarr/issues/7214): "feat(beszel): configure metric color thresholds"
