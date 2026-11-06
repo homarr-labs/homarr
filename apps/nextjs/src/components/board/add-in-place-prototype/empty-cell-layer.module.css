@@ -1,0 +1,58 @@
+.layer {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+:global(body[data-board-grid-interacting]) .layer {
+  display: none;
+}
+
+.cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--board-grid-item-inset, 0px);
+  box-sizing: border-box;
+  pointer-events: auto;
+  cursor: crosshair;
+  touch-action: none;
+  user-select: none;
+}
+
+.plus {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 50%;
+  color: var(--mantine-primary-color-filled);
+  background: color-mix(in srgb, var(--mantine-primary-color-filled) 14%, transparent);
+  border: 1px dashed var(--mantine-primary-color-filled);
+  opacity: 0;
+  transform: scale(0.85);
+  transition:
+    opacity 120ms ease,
+    transform 120ms ease;
+}
+
+.cell:hover .plus {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.layer[data-dragging] .cell:hover .plus {
+  opacity: 0;
+}
+
+.selection {
+  z-index: 2;
+  box-sizing: border-box;
+  pointer-events: none;
+  border: 2px solid var(--mantine-primary-color-filled);
+  border-radius: var(--mantine-radius-md);
+  background: color-mix(in srgb, var(--mantine-primary-color-filled) 14%, transparent);
+  clip-path: inset(var(--board-grid-item-inset, 0px));
+}

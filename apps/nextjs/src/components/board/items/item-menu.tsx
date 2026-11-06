@@ -13,6 +13,7 @@ import type { WidgetDefinition } from "@homarr/widgets/definition";
 import type { WidgetPreviewDimensions } from "@homarr/widgets/modals";
 
 import type { SectionItem } from "~/app/[locale]/boards/_types";
+import { useEditItemInPlace } from "~/components/board/add-in-place-prototype/use-edit-item-in-place";
 import { useSectionContext } from "../sections/section-context";
 import { useItemActions } from "./item-actions";
 import itemContentClasses from "./item-content.module.css";
@@ -56,7 +57,23 @@ const BoardItemMenuInner = ({ item, definition, previewDimensions, resetErrorBou
     }
   }, [item, resetErrorBoundary]);
 
+  const editInPlace = useEditItemInPlace(item, () => {
+    refResetErrorBoundaryOnNextRender.current = true;
+  });
+
+  useEffect(() => {
+    const entry = document.querySelector(`[data-item-id="${CSS.escape(item.id)}"]`)?.closest(".board-grid-entry");
+    if (!entry) return;
+    const handleDoubleClick = (event: Event) => {
+      if (event.target instanceof Element && event.target.closest("[data-board-widget-settings], button, a")) return;
+      editInPlace();
+    };
+    entry.addEventListener("dblclick", handleDoubleClick);
+    return () => entry.removeEventListener("dblclick", handleDoubleClick);
+  }, [editInPlace, item.id]);
+
   const openEditModal = () => {
+    if (editInPlace()) return;
     openModal(
       {
         kind: item.kind,

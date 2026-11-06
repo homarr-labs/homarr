@@ -39,6 +39,7 @@ import { useCurrentLayout, useRequiredBoard } from "@homarr/boards/context";
 import { getWidgetName } from "@homarr/definitions";
 import { useI18n } from "@homarr/translation/client";
 
+import { AddInPlaceGridLayer } from "~/components/board/add-in-place-prototype/grid-layer";
 import { getLogicalGridSize, LOGICAL_GRID_PITCH } from "~/components/board/layout";
 import {
   beginGridTransaction,
@@ -829,6 +830,14 @@ export default function GridEditor({
         gridRef={gridRef}
         entryElements={entryElements}
         interactionStore={interactionStore}
+      />
+      <AddInPlaceGridLayer
+        sectionId={sectionId}
+        columnCount={columnCount}
+        rowCount={rowCount}
+        maxRowCount={maxRowCount}
+        placements={placements}
+        entryElements={entryElements}
       />
       <span
         data-grid-runtime="homarr-dnd-kit-v1"

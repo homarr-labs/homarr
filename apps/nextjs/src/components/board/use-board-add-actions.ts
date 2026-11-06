@@ -7,6 +7,7 @@ import { useRequiredBoard } from "@homarr/boards/context";
 import { useModalAction } from "@homarr/modals";
 import { AppSelectModal } from "@homarr/modals-collection";
 
+import { useAddInPlaceEntry } from "./add-in-place-prototype/use-add-in-place-entry";
 import { IntegrationSelectModal } from "~/components/integration/integration-select-modal";
 import { useItemActions } from "./items/item-actions";
 import { ItemSelectModal } from "./items/item-select-modal";
@@ -20,9 +21,12 @@ export const useBoardAddActions = () => {
   const { openModal: openIntegrationSelectModal } = useModalAction(IntegrationSelectModal);
   const { addContainer } = useContainerActions();
   const { createItem } = useItemActions();
+  const { addWidgetInPlace } = useAddInPlaceEntry();
   const canCreateApp = session?.user.permissions.includes("app-create") ?? false;
   const canConnectService = session?.user.permissions.includes("integration-create") ?? false;
-  const addWidget = useCallback(() => openItemSelectModal({ boardId: board.id }), [board.id, openItemSelectModal]);
+  const addWidget = useCallback(() => {
+    if (!addWidgetInPlace()) openItemSelectModal({ boardId: board.id });
+  }, [addWidgetInPlace, board.id, openItemSelectModal]);
   const addApp = useCallback(
     () =>
       openAppSelectModal({
