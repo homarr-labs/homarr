@@ -337,14 +337,14 @@ export class TrueNasIntegration extends Integration implements ISystemHealthMoni
 
   private extractNetworkTrafficData = (data: z.infer<typeof reportingNetDataSchema>, column: "sent" | "received") => {
     return data.reduce((total, report) => {
-      const value = report.data.at(-1)?.[report.legend.indexOf(column)] ?? 0;
+      const value = latestCollectedRow(report.legend, report.data)?.[report.legend.indexOf(column)] ?? 0;
       return total + value;
     }, 0);
   };
 
   private extractLatestReportingData(data: ReportingItem[], identifier: ReportingItem["identifier"]) {
     const item = data.find((reportingItem) => reportingItem.identifier === identifier);
-    const latest = item?.data.at(-1);
+    const latest = item ? latestCollectedRow(item.legend, item.data) : undefined;
     if (!item || !latest?.length) throw new ParseError(`TrueNAS returned no "${identifier}" reporting data`);
     if (new Set(item.legend).size !== item.legend.length) {
       throw new ParseError(`TrueNAS returned duplicate "${identifier}" reporting columns`);
@@ -360,6 +360,11 @@ export class TrueNasIntegration extends Integration implements ISystemHealthMoni
     return values;
   }
 }
+
+const latestCollectedRow = (legend: string[], data: number[][]) => {
+  const timeIndex = legend.indexOf("time");
+  return data.findLast((row) => row.some((value, index) => index !== timeIndex && value !== 0)) ?? data.at(-1);
+};
 
 const reportingItemSchema = z.object({
   name: z.enum(["cpu", "memory", "cputemp"]),

@@ -359,6 +359,13 @@ describe("TrueNasIntegration", () => {
   test.each([
     { legend: ["time", "system", "user", "idle", "softirq", "nice", "iowait"], data: [[1000, 4, 8, 87, 0, 0, 1]] },
     { legend: ["cpu1", "cpu", "time", "cpu0"], data: [[100, 12, 1000, 0]] },
+    {
+      legend: ["time", "system", "user", "idle", "softirq", "nice", "iowait"],
+      data: [
+        [1000, 4, 8, 87, 0, 0, 1],
+        [1005, 0, 0, 0, 0, 0, 0],
+      ],
+    },
   ])(
     "reads CPU utilization without averaging timestamps, idle time or duplicate core totals: $legend",
     async ({ legend, data }) => {
