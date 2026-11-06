@@ -1,0 +1,22 @@
+packages/api/src/router/widgets/indexer-manager.ts
+  h_d6e478ca18e517 1,40-42,44-53,57
+packages/integrations/src/index.ts
+  h_d6e478ca18e517 36
+packages/integrations/src/jackett/jackett-indexer-test-error.ts
+  h_d6e478ca18e517 1-8
+packages/integrations/src/jackett/jackett-integration.ts
+  h_d6e478ca18e517 12-14,64,75,77-86,89
+packages/widgets/src/indexer-manager/component.tsx
+  h_d6e478ca18e517 64-65,67-77,85
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "445dffd07fd40fcbcec7195b156e945b699f1429",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
