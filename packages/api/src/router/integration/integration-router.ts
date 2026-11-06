@@ -342,7 +342,9 @@ export const integrationRouter = createTRPCRouter({
         kind: integration.kind,
         secrets: input.secrets,
       },
-      isSameUrl(integration.url, input.url) ? integration.secrets : [],
+      isSameUrl(integration.url, input.url)
+        ? integration.secrets.filter((secret) => input.secrets.some((submitted) => submitted.kind === secret.kind))
+        : [],
     ).catch((error) => {
       if (!(error instanceof MissingSecretError)) throw error;
 
