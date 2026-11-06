@@ -11,6 +11,7 @@
     "catalog": {
       "@ai-sdk/openai-compatible": "3.0.71",
       "@ai-sdk/react": "4.0.147",
+      "@ajnart/self-host-testkit": "1.3.0",
       "@assistant-ui/react": "0.15.29",
       "@assistant-ui/react-ai-sdk": "1.4.18",
       "@assistant-ui/react-lexical": "0.2.18",
@@ -309,6 +310,8 @@
     "test": "cross-env NODE_ENV=development CI=true vitest run --project \"!e2e\" --project \"!integration\" --project \"!docs-screenshots\"",
     "test:coverage": "bun run test --coverage.enabled",
     "test:integration": "cross-env NODE_ENV=development CI=true vitest run --project integration --maxWorkers 2",
+    "test:weekly": "vitest run --config vitest.weekly.config.mts",
+    "typecheck:weekly": "tsc --noEmit -p tsconfig.weekly.json",
     "test:docs-screenshots": "cross-env UPDATE_DOCS_SCREENSHOTS=true NODE_ENV=development CI=true vitest run --project docs-screenshots",
     "test:e2e": "cross-env NODE_ENV=development CI=true vitest run --project e2e --maxWorkers 2",
     "test:workshop": "sh apps/workshop/test.sh",
@@ -322,6 +325,7 @@
     "jsonpath-plus": "catalog:"
   },
   "devDependencies": {
+    "@ajnart/self-host-testkit": "catalog:",
     "@babel/parser": "catalog:",
     "@playwright/test": "catalog:",
     "@semantic-release/changelog": "catalog:",

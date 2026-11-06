@@ -1,0 +1,11 @@
+{
+  "extends": "@homarr/tsconfig/base.json",
+  "compilerOptions": {
+    "tsBuildInfoFile": "node_modules/.cache/tsbuildinfo.weekly.json",
+    "paths": {
+      "@homarr/node-unifi": ["./node_modules/@types/node-unifi"]
+    }
+  },
+  "include": ["packages/integrations/weekly", "vitest.weekly.config.mts"],
+  "exclude": ["node_modules"]
+}
