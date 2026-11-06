@@ -1,0 +1,32 @@
+apps/nextjs/src/app/[locale]/manage/integrations/_components/test-connection/integration-test-connection-error.tsx
+  h_d6e478ca18e517 31,42-49
+packages/api/src/router/integration/integration-test-stored-connection.ts
+  h_d6e478ca18e517 40
+packages/api/src/router/integration/map-test-connection-error.ts
+  h_d6e478ca18e517 60,94
+packages/integrations/src/base/test-connection/test-connection-error.ts
+  h_d6e478ca18e517 10-11,139-141,153-157,187
+packages/integrations/src/stats/frigate-auth.spec.ts
+  h_d6e478ca18e517 14,24,27,62-74,92,98,140-143,151,161,170,214-233,241-262
+packages/integrations/src/stats/frigate-authentication-error.ts
+  h_d6e478ca18e517 1-20
+packages/integrations/src/stats/providers/frigate.ts
+  h_d6e478ca18e517 4,33-39,60,64,67,72,74
+packages/integrations/src/stats/stats-integration.ts
+  h_d6e478ca18e517 16,22,25,42,47,65,70,80-81,84,87-89,93,98,108,111,131-136,146-154
+packages/integrations/src/stats/types.ts
+  h_d6e478ca18e517 5,30
+packages/translation/src/lang/en.json
+  h_d6e478ca18e517 1518-1529
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "bed68c5c01310c9d2e0cf1238f80b6912004d84c",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
