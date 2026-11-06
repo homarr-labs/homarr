@@ -1,6 +1,9 @@
 import { z } from "zod/v4";
 
+import { createLogger } from "@homarr/core/infrastructure/logs";
+
 import { fetchJsonAsync, loadOptionalDetailsAsync, providerUrl, tokenHeaders } from "./http";
+import { isNotFoundError, ReleaseLookupError } from "./errors";
 import type { OwnedName } from "./identifier";
 import { parseOwnedName } from "./identifier";
 import type { RegistryTag } from "./registry-tags";
@@ -10,15 +13,15 @@ import type { ProjectDetails, ReleaseProvider } from "./types";
 const MAX_TAG_PAGES = 5;
 const MAX_FLOATING_TAG_PAGES = 2;
 
+const tagSchema = z.object({
+  name: z.string(),
+  last_updated: z.string().nullish(),
+  digest: z.string().nullish(),
+});
+
 const tagsSchema = z.object({
   next: z.string().nullish(),
-  results: z.array(
-    z.object({
-      name: z.string(),
-      last_updated: z.string().nullish(),
-      digest: z.string().nullish(),
-    }),
-  ),
+  results: z.array(tagSchema),
 });
 
 const repositorySchema = z.object({
@@ -32,7 +35,7 @@ const repositorySchema = z.object({
     .nullish(),
 });
 
-type DockerHubTag = z.infer<typeof tagsSchema>["results"][number];
+type DockerHubTag = z.infer<typeof tagSchema>;
 
 const parseRepository = (identifier: string): OwnedName => {
   if (!identifier.includes("/")) return { owner: "library", name: identifier };
@@ -44,17 +47,43 @@ const toRegistryTags = (tag: DockerHubTag): RegistryTag[] => {
   return [{ name: tag.name, date: new Date(tag.last_updated), digest: tag.digest ?? undefined }];
 };
 
-const needsMoreTags = (tags: RegistryTag[], page: number, versionPattern?: RegExp) => {
+const needsMoreTags = (tags: RegistryTag[], page: number, versionPattern?: RegExp, tag?: RegistryTag) => {
   if (versionPattern) return !tags.some((tag) => versionPattern.test(tag.name));
+  if (tag) return hasUnresolvedFloatingTag(tags, tag);
   return page < MAX_FLOATING_TAG_PAGES && hasUnresolvedFloatingTag(tags);
 };
 
-const listTagsAsync = async (repositoryUrl: string, headers: Record<string, string>, versionPattern?: RegExp) => {
+const listTagsAsync = async (
+  repositoryUrl: string,
+  headers: Record<string, string>,
+  versionPattern?: RegExp,
+  tag?: string,
+) => {
   const tags: RegistryTag[] = [];
-  for (let page = 1; page <= MAX_TAG_PAGES; page++) {
-    const result = await fetchJsonAsync(`${repositoryUrl}/tags?page_size=100&page=${page}`, tagsSchema, { headers });
-    tags.push(...result.results.flatMap(toRegistryTags));
-    if (!result.next || !needsMoreTags(tags, page, versionPattern)) break;
+  let selectedTag: RegistryTag | undefined;
+  if (tag && !versionPattern) {
+    const result = await fetchJsonAsync(`${repositoryUrl}/tags/${encodeURIComponent(tag)}`, tagSchema, {
+      headers,
+    }).catch((error: unknown) => {
+      if (isNotFoundError(error)) throw new ReleaseLookupError("noMatchingVersion", `No tag named ${tag}`);
+      throw error;
+    });
+    tags.push(...toRegistryTags(result));
+    selectedTag = tags[0];
+    if (!selectedTag?.digest) return tags;
+  }
+
+  try {
+    for (let page = 1; page <= MAX_TAG_PAGES; page++) {
+      const result = await fetchJsonAsync(`${repositoryUrl}/tags?page_size=100&page=${page}`, tagsSchema, { headers });
+      tags.push(...result.results.flatMap(toRegistryTags));
+      if (!result.next || !needsMoreTags(tags, page, versionPattern, selectedTag)) break;
+    }
+  } catch (error) {
+    if (!selectedTag) throw error;
+    createLogger({ module: "dockerHub" }).warn("Optional version discovery failed; using available tag metadata", {
+      error,
+    });
   }
   return tags;
 };
@@ -85,7 +114,10 @@ export const getDockerHubReleaseAsync: ReleaseProvider = async (lookup) => {
   );
   const headers = tokenHeaders(lookup.token, (token) => ({ Authorization: `Bearer ${token}` }));
 
-  const release = selectRegistryRelease(await listTagsAsync(repositoryUrl, headers, lookup.versionPattern), lookup);
+  const release = selectRegistryRelease(
+    await listTagsAsync(repositoryUrl, headers, lookup.versionPattern, lookup.tag),
+    lookup,
+  );
   const details = await loadOptionalDetailsAsync(lookup, () => getProjectDetailsAsync(repositoryUrl, headers));
   return { ...details, ...release };
 };
