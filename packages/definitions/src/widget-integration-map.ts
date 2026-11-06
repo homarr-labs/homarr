@@ -51,6 +51,7 @@ export const statsIntegrationKinds = [
   "stash",
   "prometheus",
   "plantit",
+  "yuvomi",
   "netdata",
   "fileflows",
   "trilium",

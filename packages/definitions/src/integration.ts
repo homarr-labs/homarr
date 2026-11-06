@@ -253,6 +253,17 @@ export const integrationDefs = {
     defaultPort: 8080,
   },
 
+  yuvomi: {
+    httpAuth: { type: "bearer" },
+    name: "Yuvomi",
+    secretKinds: [["apiKey"]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/selfhst/icons/svg/yuvomi.svg",
+    category: ["miscellaneous"],
+    documentationSlug: "yuvomi",
+    defaultPort: 3000,
+    apiKeySettingsPath: "/settings/admin/api",
+  },
+
   netdata: {
     httpAuth: { type: "adapter" },
     name: "Netdata",

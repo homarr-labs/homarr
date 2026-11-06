@@ -1,0 +1,44 @@
+---
+title: "Yuvomi"
+description: "A self-hosted family planner for shared tasks, shopping lists, calendars and meals."
+hide_title: true
+---
+
+import { IntegrationHeader } from "@site/src/components/integrations/header";
+import { IntegrationCapabilites } from "@site/src/components/integrations/widgets";
+import { AddingIntegration } from "@site/src/components/integrations/adding";
+import { IntegrationSecrets } from "@site/src/components/integrations/secrets";
+import { yuvomiIntegration } from ".";
+import { statsWidget } from "@site/docs/widgets/stats";
+
+<IntegrationHeader integration={yuvomiIntegration} categories={["Family planner"]} />
+
+### Widgets & Capabilities
+
+<IntegrationCapabilites items={[{ widget: statsWidget }]} />
+
+The [Stats widget](/docs/widgets/stats) displays open tasks, open tasks with high or urgent priority, and unchecked
+items across all shopping lists. Tasks are counted as the token's user sees them; subtasks and archived tasks are not
+counted.
+
+To show Yuvomi events in the Calendar widget, add an [iCal](/docs/integrations/ical) integration with the calendar feed
+URL from Yuvomi's **Settings → Feed subscriptions**.
+
+### Adding the integration
+
+<AddingIntegration />
+
+### Secrets
+
+<IntegrationSecrets
+  secrets={[
+    {
+      credentials: ["apiKey"],
+      steps: [
+        "Sign in to Yuvomi as an administrator and open Settings → API access.",
+        "Create a token. To limit it, select only the tasks:read and shopping:read scopes.",
+        "Copy the token, which is shown only once, into Homarr's API Key field.",
+      ],
+    },
+  ]}
+/>
