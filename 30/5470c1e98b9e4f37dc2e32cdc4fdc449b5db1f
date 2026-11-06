@@ -1,0 +1,23 @@
+apps/docs/docs/advanced/single-sign-on/index.mdx
+  s_e3a390a93b14d7::t_47ff09b49e4909 200
+packages/auth/providers/oidc/profile.ts
+  s_e3a390a93b14d7::t_c0233e3e33c4de 6-9
+packages/auth/providers/oidc/test/profile.spec.ts
+  s_e3a390a93b14d7::t_38d3673dbe00b1 19,31-34
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "305470c1e98b9e4f37dc2e32cdc4fdc449b5db1f",
+  "prompts": {},
+  "sessions": {
+    "s_e3a390a93b14d7": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "724a0d94-2b4e-419a-8cc4-295d0801bc74",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
