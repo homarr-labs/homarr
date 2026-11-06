@@ -13,6 +13,7 @@ import { IntegrationRequestError } from "../base/errors/http/integration-request
 import { IntegrationResponseError } from "../base/errors/http/integration-response-error";
 import { TestConnectionService } from "../base/test-connection/test-connection-service";
 import { frigateStatsProvider } from "./providers/frigate";
+import { autobrrStatsProvider } from "./providers/autobrr";
 import { StatsIntegration } from "./stats-integration";
 
 const logger = vi.hoisted(() => ({ debug: vi.fn(), info: vi.fn(), warn: vi.fn(), error: vi.fn() }));
@@ -72,6 +73,37 @@ const connectionFailureAsync = async () => {
   if (result.success) throw new Error("Expected connection failure");
   return result.error;
 };
+
+test("returns a redacted structured error for a query-authenticated stats provider returning HTTP 500", async () => {
+  const apiKey = "private-query-api-key";
+  const integration = new StatsIntegration(
+    {
+      id: "query-auth-test",
+      kind: "autobrr",
+      name: "Query-auth stats",
+      url: "https://stats.test",
+      externalUrl: null,
+      decryptedSecrets: [{ kind: "apiKey", value: apiKey }],
+    },
+    autobrrStatsProvider,
+  );
+  fetchAsync.mockResolvedValue(new Response(null, { status: 500 }));
+  const result = await new TestConnectionService(new URL("https://stats.test")).handleAsync(async () => {
+    await integration.getStatsAsync();
+    return { success: true };
+  });
+  expect(new URL(String(fetchAsync.mock.calls[0]?.[0])).searchParams.get("apikey")).toBe(apiKey);
+  expect(result).toMatchObject({
+    success: false,
+    error: {
+      type: "statusCode",
+      data: { statusCode: 500, url: "https://stats.test/api/release/stats" },
+    },
+  });
+  expect(inspect(result, { depth: 10 })).not.toContain(apiKey);
+  expect(inspect(result, { depth: 10 })).not.toContain("apikey");
+  expect(inspect(logger.warn.mock.calls, { depth: 10 })).not.toContain(apiKey);
+});
 
 describe("authenticated Frigate", () => {
   test("uses a bodyless cookie login and the same verified session for native stats", async () => {

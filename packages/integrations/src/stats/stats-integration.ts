@@ -131,8 +131,11 @@ export class StatsIntegration extends Integration {
         const redirect = sanitizeErrors ? "manual" : "error";
         const response = await fetchAsync(url, { ...init, headers, signal, redirect });
         if (!response.ok) {
-          if (!sanitizeErrors) throw new ResponseError({ status: response.status });
-          throw new ResponseError({ status: response.status, url: url.toString() }, { cause: requestFailure });
+          if (!sanitizeErrors && !hasQueryAuthentication) throw new ResponseError({ status: response.status });
+          const responseUrl = new URL(url);
+          responseUrl.search = "";
+          responseUrl.hash = "";
+          throw new ResponseError({ status: response.status, url: responseUrl.toString() }, { cause: requestFailure });
         }
         return await response.json();
       } catch (error) {
