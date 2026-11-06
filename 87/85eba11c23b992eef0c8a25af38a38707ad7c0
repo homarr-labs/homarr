@@ -1,0 +1,14 @@
+.github/workflows/workshop.yml
+  h_d6e478ca18e517 101,329-330,338-357,363
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "8785eba11c23b992eef0c8a25af38a38707ad7c0",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
