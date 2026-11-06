@@ -98,7 +98,7 @@ jobs:
   validate:
     if: |
       (github.event_name != 'release' || !github.event.release.prerelease) &&
-      (github.event_name != 'workflow_dispatch' || github.ref_name == 'main' || github.ref_name == 'dev')
+      (github.event_name != 'workflow_dispatch' || (startsWith(github.ref, 'refs/heads/') && (github.ref_name == 'main' || github.ref_name == 'dev')))
     runs-on: ubuntu-26.04
     timeout-minutes: 5
     outputs:
@@ -326,8 +326,8 @@ jobs:
             const branchName = context.eventName === "release" ? "main" : context.ref.replace("refs/heads/", "");
             const { data: branch } = await github.rest.repos.getBranch({ ...context.repo, branch: branchName });
             if (branch.commit.sha === expected) return publish();
-            if (context.eventName === "release") {
-              return core.setFailed("main changed while building the release; refusing stale publication.");
+            if (branchName !== "dev") {
+              return core.setFailed(`${branchName} changed while building; refusing stale publication.`);
             }
             const { data: comparison } = await github.rest.repos.compareCommitsWithBasehead({
               ...context.repo, basehead: `${expected}...${branch.commit.sha}`,
@@ -335,12 +335,32 @@ jobs:
             if (comparison.status !== "ahead") {
               return core.setFailed(`${branchName} was rewritten while building; refusing stale publication.`);
             }
+            const files = comparison.files;
+            if (!files || files.length >= 300) return skip("Unable to verify every changed Workshop input.");
+            const inputFiles = new Set([
+              ".github/workflows/workshop.yml", ".dockerignore", "tooling/github/docker-build.sh",
+              "package.json", "bun.lock", "bunfig.toml", "turbo.json",
+            ]);
+            const inputDirectories = [
+              "apps/workshop/", "apps/docs/", "tools/motion-reel/three/", "tooling/typescript/", "patches/",
+              "packages/common/", "packages/core/", "packages/custom-widgets/", "packages/definitions/",
+              "packages/db/", "packages/server-settings/", "packages/settings/", "packages/translation/",
+              "packages/ui/", "packages/validation/", "packages/workshop/",
+            ];
+            const isWorkshopInput = (path) => {
+              if (path === "packages/db/migrations/seed.ts") return false;
+              if (path.startsWith("packages/") && (/\.(?:spec|test)\.tsx?$|\.md$/.test(path) || path.includes("/__tests__/"))) return false;
+              return inputFiles.has(path) || inputDirectories.some((directory) => path.startsWith(directory));
+            };
+            if (files.some((file) => isWorkshopInput(file.filename) || (file.previous_filename && isWorkshopInput(file.previous_filename)))) {
+              return skip(`${branchName} has newer Workshop inputs; only the newer build may publish.`);
+            }
             const { data: runs } = await github.rest.actions.listWorkflowRuns({
               ...context.repo, workflow_id: "workshop.yml", branch: branchName, per_page: 20,
             });
             const newerRun = runs.workflow_runs.find((run) => run.event !== "pull_request" && run.run_number > context.runNumber);
             if (newerRun) return skip(`Workshop run #${newerRun.run_number} on ${branchName} publishes the newer commits.`);
-            core.notice(`${branchName} moved to ${branch.commit.sha.slice(0, 7)} without Workshop changes; publishing this build.`);
+            core.notice(`${branchName} moved to ${branch.commit.sha.slice(0, 7)} without changing Workshop inputs; publishing this build.`);
             return publish();
       - name: Publish multi-platform image
         if: steps.source.outputs.publish == 'true'
