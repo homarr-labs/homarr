@@ -82,7 +82,7 @@ if [ "${HOMARR_DISABLE_IPV6:-false}" != "true" ] && grep -q . /proc/net/if_inet6
     NGINX_LISTEN_IPV6='listen [::]:7575;'
 fi
 export NGINX_USER=''
-if [ "$(id -u)" = "0" ]; then
+if [ "$(id -u)" = "0" ] && id www-data >/dev/null 2>&1; then
     NGINX_USER='user www-data;'
 fi
 envsubst '${NGINX_USER} ${NGINX_LISTEN_IPV6} ${NGINX_TRUSTED_PROXIES} ${HOMARR_REQUEST_IDENTITY_SECRET}' < /etc/nginx/templates/nginx.conf > /etc/nginx/nginx.conf
