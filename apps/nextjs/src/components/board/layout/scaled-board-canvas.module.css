@@ -1,3 +1,7 @@
+:global(html):has(.viewport) {
+  scrollbar-gutter: stable;
+}
+
 .viewport {
   width: 100%;
   max-width: 100%;
