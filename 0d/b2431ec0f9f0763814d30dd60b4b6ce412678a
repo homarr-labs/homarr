@@ -1,0 +1,67 @@
+apps/nextjs/src/components/board/add-in-place-prototype/PROTOTYPE.md
+  s_9862dead82f918::t_3fbd62ef2a7261 1-53
+apps/nextjs/src/components/board/add-in-place-prototype/anchor.ts
+  s_5d155f4b4a2bb3::t_3144ce99cfebf1 1-37
+apps/nextjs/src/components/board/add-in-place-prototype/area-overlay.module.css
+  s_5d155f4b4a2bb3::t_39a4d64dc59e90 1-91
+apps/nextjs/src/components/board/add-in-place-prototype/area-size-inputs.tsx
+  s_5d155f4b4a2bb3::t_75f4762a317f43 1-48
+apps/nextjs/src/components/board/add-in-place-prototype/create-app.tsx
+  s_5d155f4b4a2bb3::t_4c35b138ae1abb 1-62
+apps/nextjs/src/components/board/add-in-place-prototype/dim-layer.tsx
+  s_5d155f4b4a2bb3::t_c685ea5419cfb5 1-42
+apps/nextjs/src/components/board/add-in-place-prototype/empty-cell-layer.module.css
+  s_5d155f4b4a2bb3::t_3043860039d536 1-58
+apps/nextjs/src/components/board/add-in-place-prototype/grid-layer.tsx
+  s_5d155f4b4a2bb3::t_a7253bbd9bc834 1-47
+apps/nextjs/src/components/board/add-in-place-prototype/keyboard.ts
+  s_5d155f4b4a2bb3::t_1aa3c6bd83d313 1-28
+apps/nextjs/src/components/board/add-in-place-prototype/occupancy.ts
+  s_6a12c23f162d49::t_e51a480dfae565 1-118
+apps/nextjs/src/components/board/add-in-place-prototype/resources.ts
+  s_5d155f4b4a2bb3::t_0a4728ae8e89a7 1-137
+apps/nextjs/src/components/board/add-in-place-prototype/types.ts
+  s_6a12c23f162d49::t_543842bcb99489 1-44
+apps/nextjs/src/components/board/items/lazy-widget-edit-modal.tsx
+  s_6a12c23f162d49::t_276dc169c05f14 34
+packages/widgets/src/modals/index.ts
+  s_6a12c23f162d49::t_d5d3b10cdfd4ed 2-3
+packages/widgets/src/modals/widget-edit-modal.tsx
+  s_6a12c23f162d49::t_bb1ede44100298 22,24,31-32,34,39-40,289,291-294,296-305,310,344-348,431,486-499
+packages/widgets/src/modals/widget-editor-form.tsx
+  s_6a12c23f162d49::t_476b268af5ba5d 1-354
+packages/widgets/src/modals/widget-live-preview.tsx
+  s_6a12c23f162d49::t_4c4828a1ae058e 1-130
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "0db2431ec0f9f0763814d30dd60b4b6ce412678a",
+  "prompts": {},
+  "sessions": {
+    "s_5d155f4b4a2bb3": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "f3be9b1d-168f-4b11-bcec-1085a196abf3",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_6a12c23f162d49": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "037c6f46-c2f1-4f1a-88ac-d0ece6563b32",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_9862dead82f918": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "66506a2b-c8ca-4f8a-b3a9-a5e7ab7007d6",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
