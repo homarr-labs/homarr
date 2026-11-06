@@ -1,0 +1,21 @@
+nginx.conf
+  s_319c91b7539830::t_d480c36653e02a 1
+scripts/run.sh
+  s_319c91b7539830::t_f22c0af2840781 84-88
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "99f4cf54f61bd81c61f3b08396b6509505deb4de",
+  "prompts": {},
+  "sessions": {
+    "s_319c91b7539830": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "813e51d0-b748-4a13-9293-6540d6f6fa7b",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
