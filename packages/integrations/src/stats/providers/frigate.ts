@@ -1,6 +1,18 @@
 import { z } from "zod";
 
+import { RequestError, ResponseError } from "@homarr/common/server";
+import { createLogger } from "@homarr/core/infrastructure/logs";
+
 import type { StatsFetchContext, StatsProvider } from "../types";
+
+const logger = createLogger({ module: "frigateStatsProvider" });
+
+type AuthenticationStep = "login" | "cookie" | "profile" | "profileMismatch";
+
+const fail = (step: AuthenticationStep, error: Error): never => {
+  logger.warn("Frigate authentication failed", { step });
+  throw error;
+};
 
 const statsSchema = z
   .object({
@@ -27,7 +39,8 @@ export const frigateStatsProvider = {
         uptime: stats.service.uptime,
         version: stats.service.version,
       };
-    } catch {
+    } catch (error) {
+      if (error instanceof RequestError || error instanceof ResponseError) throw error;
       throw new Error("Frigate stats request failed");
     }
   },
@@ -37,29 +50,36 @@ async function getHttpAuthenticationAsync(context: StatsFetchContext) {
   if (context.url.protocol !== "https:") {
     throw new Error("Frigate authentication requires an HTTPS integration URL to protect credentials");
   }
-  try {
-    const username = context.secret("username");
-    const password = context.secret("password");
-    if (!username || !password) throw new Error("Missing credentials");
-    const response = await context.requestResponseAsync("/api/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ user: username, password }),
-      signal: context.signal,
-    });
-    if (response.status !== 200) throw new Error("Login rejected");
-    const cookies = response.headers.getSetCookie().filter((cookie) => cookie.startsWith("frigate_token="));
-    if (cookies.length !== 1) throw new Error("Missing or ambiguous session cookie");
-    const token = cookies[0]?.split(";", 1)[0]?.slice("frigate_token=".length);
-    if (!token || token.length > 4096 || !/^[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+$/.test(token)) {
-      throw new Error("Invalid session cookie");
-    }
-    const headers = { Authorization: `Bearer ${token}` };
-    z.object({ username: z.literal(username), role: z.literal("admin"), allowed_cameras: z.array(z.string()) }).parse(
-      await context.requestAsync("/api/profile", { headers, signal: context.signal }),
-    );
-    return { headers, redactValues: [token] };
-  } catch {
-    throw new Error("Frigate authentication failed");
+  const username = context.secret("username");
+  const password = context.secret("password");
+  if (!username || !password) throw new Error("Frigate username and password are required");
+  const response = await context.requestResponseAsync("/api/login", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ user: username, password }),
+    signal: context.signal,
+  });
+  if (response.status !== 200) fail("login", new ResponseError({ status: response.status }));
+  const cookies = response.headers.getSetCookie().filter((cookie) => cookie.startsWith("frigate_token="));
+  if (cookies.length !== 1) {
+    fail("cookie", new Error("Frigate login did not return exactly one frigate_token session cookie"));
   }
+  const token = cookies[0]?.split(";", 1)[0]?.slice("frigate_token=".length);
+  if (!token || token.length > 4096 || !/^[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+$/.test(token)) {
+    fail("cookie", new Error("Frigate returned a malformed frigate_token session cookie"));
+  }
+  const headers = { Authorization: `Bearer ${token}` };
+  const profile: unknown = await context
+    .requestAsync("/api/profile", { headers, signal: context.signal })
+    .catch((error: unknown) => {
+      logger.warn("Frigate authentication failed", { step: "profile" satisfies AuthenticationStep });
+      throw error;
+    });
+  const parsed = z
+    .object({ username: z.literal(username), role: z.literal("admin"), allowed_cameras: z.array(z.string()) })
+    .safeParse(profile);
+  if (!parsed.success) {
+    fail("profileMismatch", new Error("Frigate user is not an admin or its username differs from the configured one"));
+  }
+  return { headers, redactValues: [token as string] };
 }

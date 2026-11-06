@@ -9,6 +9,8 @@ import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/h
 import { integrationDefs } from "@homarr/definitions";
 
 import type { IntegrationInput, IntegrationTestingInput } from "../base/integration";
+import { IntegrationRequestError } from "../base/errors/http/integration-request-error";
+import { IntegrationResponseError } from "../base/errors/http/integration-response-error";
 import { frigateStatsProvider } from "./providers/frigate";
 import { StatsIntegration } from "./stats-integration";
 
@@ -189,6 +191,32 @@ describe("authenticated Frigate", () => {
     expect(inspect(failure, { depth: 10 })).not.toContain(credentials[1]?.value);
     expect(inspect(logger.warn.mock.calls, { depth: 10 })).not.toContain(token);
     expect(inspect(logger.warn.mock.calls, { depth: 10 })).not.toContain(credentials[1]?.value);
+  });
+
+  test.each(["login", "profile", "stats"])(
+    "surfaces certificate errors from %s as a typed request error",
+    async (stage) => {
+      if (stage !== "login") fetchAsync.mockResolvedValueOnce(loginResponse());
+      if (stage === "stats") fetchAsync.mockResolvedValueOnce(profileResponse());
+      const certificateError = new TypeError("fetch failed", {
+        cause: Object.assign(new Error("self-signed"), { code: "DEPTH_ZERO_SELF_SIGNED_CERT" }),
+      });
+      fetchAsync.mockRejectedValueOnce(certificateError);
+      const failure: unknown = await createIntegration()
+        .getStatsAsync()
+        .catch((error: unknown) => error);
+      expect(failure).toBeInstanceOf(IntegrationRequestError);
+      expect(failure).toMatchObject({ cause: { type: "certificate", reason: "untrusted" } });
+    },
+  );
+
+  test("reports login rejection as a response error with the status", async () => {
+    fetchAsync.mockResolvedValueOnce(new Response("nope", { status: 401 }));
+    const failure: unknown = await createIntegration()
+      .getStatsAsync()
+      .catch((error: unknown) => error);
+    expect(failure).toBeInstanceOf(IntegrationResponseError);
+    expect(failure).toMatchObject({ cause: { statusCode: 401 } });
   });
 
   test("rejects HTTP integration URLs without transmitting credentials", async () => {

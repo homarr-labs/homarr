@@ -1,6 +1,6 @@
 import { Headers } from "undici";
 
-import { ResponseError } from "@homarr/common/server";
+import { AxiosHttpErrorHandler, FetchHttpErrorHandler, RequestError, ResponseError } from "@homarr/common/server";
 import { getIntegrationHttpAuthDefinition } from "@homarr/definitions";
 import {
   createAxiosCertificateInstanceAsync,
@@ -13,6 +13,31 @@ import type { IntegrationHttpAuthentication } from "../http-auth";
 import { resolveDeclaredHttpAuthentication } from "../http-auth";
 import type { StatsProvider } from "./types";
 import type { StatsFetchContext } from "./types";
+
+const fetchErrorHandler = new FetchHttpErrorHandler();
+const axiosErrorHandler = new AxiosHttpErrorHandler();
+
+export class StatsRedirectError extends Error {
+  constructor() {
+    super("Stats request received a redirect");
+    this.name = StatsRedirectError.name;
+  }
+}
+
+const sanitizeTransportError = (error: unknown, fallback: Error): Error => {
+  if (error instanceof ResponseError || error instanceof StatsRedirectError) return error;
+  if (error instanceof TypeError && error.cause instanceof Error && /redirect/i.test(error.cause.message)) {
+    return new StatsRedirectError();
+  }
+  const requestError = fetchErrorHandler.handleRequestError(error) ?? axiosErrorHandler.handleRequestError(error);
+  if (!requestError) return fallback;
+  return new RequestError(
+    { type: requestError.type, reason: requestError.reason, code: requestError.code } as ConstructorParameters<
+      typeof RequestError
+    >[0],
+    { cause: new Error("Request failed") },
+  );
+};
 
 export class StatsIntegration extends Integration {
   constructor(
@@ -54,7 +79,12 @@ export class StatsIntegration extends Integration {
       url: new URL(this.integration.url),
       secret: (kind) => this.getSecretValue(kind),
       hasSecret: (kind) => this.hasSecretValue(kind),
-      requestAsync: this.createRequestAsync(signal, testing, authentication),
+      requestAsync: this.createRequestAsync(
+        signal,
+        testing,
+        authentication,
+        Boolean(this.provider.getHttpAuthenticationAsync),
+      ),
       requestResponseAsync: this.createResponseRequestAsync(signal, testing),
     });
   }
@@ -75,9 +105,9 @@ export class StatsIntegration extends Integration {
           if (headerBytes > 16_384) throw new Error("Response headers are too large");
         }
         return { status: response.status, headers: response.headers };
-      } catch {
+      } catch (error) {
         // Fetch errors may retain the password body or session cookies in their cause.
-        throw new Error("Stats authentication request failed");
+        throw sanitizeTransportError(error, new Error("Stats authentication request failed"));
       }
     };
   }
@@ -115,9 +145,8 @@ export class StatsIntegration extends Integration {
         return await response.json();
       } catch (error) {
         if (!sanitizeErrors && !hasQueryAuthentication) throw error;
-        if (error instanceof ResponseError) throw error;
         // A transport error may contain credentials in its URL, body, or cause.
-        throw requestFailure;
+        throw sanitizeTransportError(error, requestFailure);
       }
     };
   }
