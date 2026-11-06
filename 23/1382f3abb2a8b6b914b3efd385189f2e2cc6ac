@@ -1,0 +1,21 @@
+packages/integrations/src/stats/providers/frigate.ts
+  s_0b32b370da97a2::t_f2936f59efecda 3-5,8-16,42-43,53-76,78-82,84
+packages/integrations/src/stats/stats-integration.ts
+  s_0b32b370da97a2::t_fe82914e30c9a9 3,17-41,82-87,108,110,149
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "231382f3abb2a8b6b914b3efd385189f2e2cc6ac",
+  "prompts": {},
+  "sessions": {
+    "s_0b32b370da97a2": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "8f9bc1a8-9c4b-4fb9-8d78-aff93c6771e3",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
