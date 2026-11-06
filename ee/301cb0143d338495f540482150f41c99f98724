@@ -1,0 +1,1901 @@
+.agents/plugins/marketplace.json
+  s_0ec53e873c6577::t_3861b257af24bd 1-20
+.agents/skills/codebase-context/SKILL.md
+  s_0ec53e873c6577::t_7776868f1fb903 20
+.agents/skills/homarr-custom-widget/SKILL.md
+  s_0ec53e873c6577::t_f1e45a24d760bc 3,8-53
+.agents/skills/homarr-custom-widget/references/runtime.md
+  s_0ec53e873c6577::t_99e76171a3af80 3-6,8-10,13-25,28-30,32-35,37-39,41-45,47-49
+.agents/skills/homarr-custom-widget/references/schema.md
+  s_0ec53e873c6577::t_4c1b3af14dc8ee 16-18,24,30-34,41,47-48,50-53,55-57,59-62,64-65,67-69
+.agents/skills/homarr-custom-widget/references/security.md
+  s_0ec53e873c6577::t_17e40e37b1977b 3
+.agents/skills/homarr-triage/SKILL.md
+  s_0ec53e873c6577::t_15db5199fafcf7 1-96
+.agents/skills/homarr-triage/agents/openai.yaml
+  s_0ec53e873c6577::t_9b079701f07d11 1-6
+.agents/skills/homarr-triage/references/delivery.md
+  s_0ec53e873c6577::t_fd15d1f0bd9e33 1-67
+.agents/skills/homarr-triage/references/github-operations.md
+  s_0ec53e873c6577::t_5ef1008c0b3581 1-91
+.codex/config.toml
+  s_0ec53e873c6577::t_a96724c1c9896d 1-2
+.dockerignore
+  s_0ec53e873c6577::t_4699a388b481ed 26-42
+.github/ISSUE_TEMPLATE/bug_report.yml
+  s_0ec53e873c6577::t_676a67601ab83f 48-53
+.github/actions/extract-build-artifact/action.yaml
+  s_0ec53e873c6577::t_ca41fa2bf33ac6 2,8,23,25-56,58,61-63,65-70,72-77,79-81,83-97,102-109
+.github/actions/extract-build-artifact/validate-native.cjs
+  s_0ec53e873c6577::t_3ecf2b07d54798 1-38
+.github/actions/prebuilt-debian/action.yaml
+  s_0ec53e873c6577::t_88ac6926bd5084 1-2,5,7-9,12-13,15,17-36,42-48,50-52,54-59
+.github/pull_request_template.md
+  s_0ec53e873c6577::t_0eb092d0ce3669 15-16
+.github/renovate.json5
+  s_0ec53e873c6577::t_ebec05e3df95d8 3-8,10-13,28-34,39
+.github/scripts/triage-project.cjs
+  s_0ec53e873c6577::t_2f04eff2d7329f 1-227
+.github/workflows/bot-auto-merge-reconcile.yml
+  s_0ec53e873c6577::t_8a5592d98196f0 17,26,32-34,39-45
+.github/workflows/bot-pr-automerge.yml
+  s_0ec53e873c6577::t_52ed1e248976d5 25,34-36,38-44
+.github/workflows/ci.yml
+  s_0ec53e873c6577::t_f4d543ccdd49f4 53-54,63,68,82-109,112-119,142-168,180,238,259,266-267,275-280,300,313-314,316,322,326,340-341,362,365,386,409,417,425,430,436-437,453,461,469,477,482,488-489,520,528,532,578,627
+.github/workflows/conventions-semantic-pull-requests.yml
+  s_0ec53e873c6577::t_0bf3d4d6d5f73b 18
+.github/workflows/crowdin-schedule-download.yml
+  s_0ec53e873c6577::t_d675760e08d046 7-15,18,22,28-32,36,44,46-47,50-51,57-74,76,79,81
+.github/workflows/crowdin-upload.yml
+  s_0ec53e873c6577::t_419f128ddd4a86 10-11,14-18,22-24,30-33,36
+.github/workflows/deployment-beta-release.yml
+  s_0ec53e873c6577::t_a7df6753a7beca 13,19-21,27,31,33,37,47-48,57-59,64,69,77,79,82,91,106,113,120
+.github/workflows/deployment-docker-image.yml
+  s_0ec53e873c6577::t_119120b8069a95 19,47,54,60,65,68,140-142,146,148,153,158,165,169,186,188-190,194,196,201,206,213,217,236-238,240,258,260-262,264,283-285,288-289,296,303,312-314,319-321,325-327,334,346,356,361
+.github/workflows/deployment-docs.yml
+  s_0ec53e873c6577::t_57e8eaaa60e5ba 32-39,41-43,59,61,68-70,77
+.github/workflows/deployment-weekly-release.yml
+  s_0ec53e873c6577::t_700c54cdc420dd 16,22-24,30,34,36,40,49-51,98,104,113,115,119,128,143,150,157
+.github/workflows/on-pr-prebuilt-debian-validate.yml
+  s_0ec53e873c6577::t_bf4366125ecafa 24,28-30
+.github/workflows/on-pr-renovate-validate.yml
+  s_0ec53e873c6577::t_4cfd719ef0ef45 19,22-25
+.github/workflows/on-release.yml
+  s_0ec53e873c6577::t_8b1e8dbf98bbcd 15,22,24,27-30,36,50,53,55
+.github/workflows/skip-renovate-stability-days.yml
+  s_0ec53e873c6577::t_7a947d0a80e20c 14-15,20,27
+.github/workflows/triage-project.yml
+  s_0ec53e873c6577::t_ffb346b5aba14d 1,4-15,19-20,23-25,28,30-32,34,36,38-51,53-63
+.github/workflows/update-contributors.yml
+  s_0ec53e873c6577::t_063799ed375e35 5,10-14,18,22,26-27,29,31-34,36,38-40,42-44,47-48,52,55-57,60-61,64,67,69-72
+.github/workflows/update-integration-list.yml
+  s_0ec53e873c6577::t_495bcc6294aed6 12,24,31-33,39,43,51,54,56
+.github/workflows/validate-docs.yml
+  s_0ec53e873c6577::t_cd2dcf571d583c 44
+.github/workflows/workshop.yml
+  s_0ec53e873c6577::t_5cd81aa3c98d7e 101-102,109,141,143,147,152,154-155,158,161,193,201,206,208-211,216,240,248,253,255-258,263,287,290,297-298,304-305,311-315,321,323,325-326,328-330,332-364,366,378,396-397
+.gitignore
+  s_0ec53e873c6577::t_f3dc97dc20fcfb 72,80
+.nvmrc
+  s_0ec53e873c6577::t_25d53130b9d7af 1
+.out-of-scope/beszel-custom-thresholds.md
+  s_0ec53e873c6577::t_3d208c479d3ffa 1-13
+.out-of-scope/custom-widget-viewer-identity.md
+  s_0ec53e873c6577::t_74c0a59550cfd3 1-15
+.out-of-scope/single-layout-boards.md
+  s_0ec53e873c6577::t_8fcf6badad3616 1-15
+.oxfmtrc.json
+  s_0ec53e873c6577::t_da0ec677215109 20
+AGENTS.md
+  s_0ec53e873c6577::t_00d7ff5a5d576a 91,102-112,115,122,126-140
+CHANGELOG.md
+  s_0ec53e873c6577::t_98af77cd52dbbf 1-308
+Dockerfile
+  s_0ec53e873c6577::t_e612629a24e80d 1,3,5-7,13-16,20,23-24,33-35,38,41-46,50-52,74
+PERFORMANCE_FINDINGS.md
+  s_0ec53e873c6577::t_75ec8521683c8f 1-395
+apps/docs/docs/advanced/development/getting-started.mdx
+  s_0ec53e873c6577::t_108ed99bbc4ce4 15
+apps/docs/docs/advanced/development/workshop-operator.mdx
+  s_0ec53e873c6577::t_01d589111e002a 36,66-67
+apps/docs/docs/advanced/icons/index.mdx
+  s_0ec53e873c6577::t_db196d1c4a0b33 38-41
+apps/docs/docs/advanced/single-sign-on/index.mdx
+  s_0ec53e873c6577::t_6c97cef5c30f66 42-43,52,104-105,192-206
+apps/docs/docs/getting-started/installation/helm.md
+  s_0ec53e873c6577::t_0373789e83e48c 5,7,440
+apps/docs/docs/getting-started/installation/source.mdx
+  s_0ec53e873c6577::t_667958f6554955 24
+apps/docs/docs/integrations/coolify/index.mdx
+  s_0ec53e873c6577::t_59607dba5e22ea 28-29
+apps/docs/docs/integrations/docker-labels/index.mdx
+  s_0ec53e873c6577::t_f09c4ec5b88950 33-36
+apps/docs/docs/integrations/gluetun/index.mdx
+  s_0ec53e873c6577::t_9bdd273cdc7d12 17-18,34-36,43
+apps/docs/docs/integrations/homebox/index.mdx
+  s_0ec53e873c6577::t_3d8df886276efa 30,41-44
+apps/docs/docs/integrations/jellyfin/index.mdx
+  s_0ec53e873c6577::t_6bc195f08e1c4e 22
+apps/docs/docs/integrations/open-media-vault/index.mdx
+  s_0ec53e873c6577::t_80991173676836 55-60
+apps/docs/docs/integrations/sportarr/index.mdx
+  s_0ec53e873c6577::t_237c0f10a5a1ee 1-54
+apps/docs/docs/integrations/sportarr/index.ts
+  s_0ec53e873c6577::t_abbd6ccf98ea49 1-8
+apps/docs/docs/integrations/thingport/index.mdx
+  s_0ec53e873c6577::t_d6a9b617d8a24c 1-69
+apps/docs/docs/integrations/thingport/index.ts
+  s_0ec53e873c6577::t_8e9dc3961d7a67 1-8
+apps/docs/docs/integrations/uptime-kuma/index.mdx
+  s_0ec53e873c6577::t_4bd9d1f7e1adbc 26-59
+apps/docs/docs/integrations/wazuh/index.mdx
+  s_0ec53e873c6577::t_18462ff02e287e 14,23-24,31,54-56
+apps/docs/docs/integrations/whats-up-docker/index.mdx
+  s_0ec53e873c6577::t_628aebc043c0cb 34-36,43-47,56-59
+apps/docs/docs/management/api/index.mdx
+  s_0ec53e873c6577::t_c89d4f648fe5cd 29-35
+apps/docs/docs/management/boards/index.mdx
+  s_0ec53e873c6577::t_fd5116e45df1c2 113-115
+apps/docs/docs/management/custom-widgets/authoring.mdx
+  s_0ec53e873c6577::t_e530538a2d8370 8
+apps/docs/docs/management/custom-widgets/custom-jsx.mdx
+  s_0ec53e873c6577::t_3e9db9e34062ec 74-83
+apps/docs/docs/management/custom-widgets/requests-and-security.mdx
+  s_0ec53e873c6577::t_c081c513ecf8ba 5,71-89
+apps/docs/docs/management/custom-widgets/troubleshooting.mdx
+  s_0ec53e873c6577::t_a609982c14620b 31
+apps/docs/docs/management/integrations/index.mdx
+  s_0ec53e873c6577::t_43eac0168ad074 71-75
+apps/docs/docs/management/mcp.mdx
+  s_0ec53e873c6577::t_916fd8a45e02ab 63-67,75-77,126
+apps/docs/docs/management/search-engines/index.mdx
+  s_0ec53e873c6577::t_021750c83ff95f 55-58
+apps/docs/docs/widgets/app/index.mdx
+  s_0ec53e873c6577::t_db4e128e816e18 24-27
+apps/docs/docs/widgets/app/index.ts
+  s_0ec53e873c6577::t_409a0f060566c0 18-21
+apps/docs/docs/widgets/beszel-system-grid/index.ts
+  s_0ec53e873c6577::t_0ddca1f71709fe 20-25
+apps/docs/docs/widgets/beszel-system-table/index.ts
+  s_0ec53e873c6577::t_f09e8088e522b5 20-25
+apps/docs/docs/widgets/calendar/index.mdx
+  s_0ec53e873c6577::t_8834fa8f45293e 20,25-26,28-29,40,46-57,60
+apps/docs/docs/widgets/calendar/index.ts
+  s_0ec53e873c6577::t_32e5a94e6364a0 11-22
+apps/docs/docs/widgets/custom-api/index.mdx
+  s_0ec53e873c6577::t_baaace2430030c 41
+apps/docs/docs/widgets/docker-containers/index.mdx
+  s_0ec53e873c6577::t_3627f4c3911c72 38-42
+apps/docs/docs/widgets/media-missing/index.mdx
+  s_0ec53e873c6577::t_91bae682c1d5f1 3,16,21-22,52-54,63-66,76
+apps/docs/docs/widgets/media-missing/index.ts
+  s_0ec53e873c6577::t_8cdcddc3a58aeb 7,13
+apps/docs/docs/widgets/notifications/index.mdx
+  s_0ec53e873c6577::t_1bc1217164103f 15,25-30
+apps/docs/docs/widgets/releases/index.mdx
+  s_0ec53e873c6577::t_a5b047b5dc0188 3,12,14-19,23-24,29-30,33-34,42-47,53-68
+apps/docs/docs/widgets/releases/index.ts
+  s_0ec53e873c6577::t_768b15ee6670e1 7,12-15,18-22,25-28,31-34,37-40,43-46,121-126
+apps/docs/docs/widgets/stats/index.mdx
+  s_0ec53e873c6577::t_1d4dbc711a8d01 38,76,79-80
+apps/docs/docs/widgets/thingport-activity-heatmap/index.mdx
+  s_0ec53e873c6577::t_6f8379d2093881 1-56
+apps/docs/docs/widgets/thingport-activity-heatmap/index.ts
+  s_0ec53e873c6577::t_3edda174002711 1-37
+apps/docs/docs/widgets/thingport-featured-model/index.mdx
+  s_0ec53e873c6577::t_fea8dc30a3dfef 1-54
+apps/docs/docs/widgets/thingport-featured-model/index.ts
+  s_0ec53e873c6577::t_862b1052f803de 1-2,4-22,24-27,30-33,35-37
+apps/docs/docs/widgets/thingport-library-stats/index.mdx
+  s_0ec53e873c6577::t_40b1067298936a 1-44
+apps/docs/docs/widgets/thingport-library-stats/index.ts
+  s_0ec53e873c6577::t_a8e78c829094d1 1-49
+apps/docs/docs/widgets/thingport-models/index.mdx
+  s_0ec53e873c6577::t_bb52d6185a7fac 1-44
+apps/docs/docs/widgets/thingport-models/index.ts
+  s_0ec53e873c6577::t_e7839fd88ae92e 1-43
+apps/docs/docs/widgets/uptime-kuma/index.mdx
+  s_0ec53e873c6577::t_1d24efca86dbfc 3,18,20,22-26,34
+apps/docs/docs/widgets/uptime-kuma/index.ts
+  s_0ec53e873c6577::t_3e5e70e21b5158 7,12-13,18-19,24-46,51-52,57-58,63-64
+apps/docs/docs/widgets/wazuh/index.mdx
+  s_0ec53e873c6577::t_91a68ed32cd79b 1-65
+apps/docs/docs/widgets/wazuh/index.ts
+  s_0ec53e873c6577::t_f98cc4de5b9ca9 1-249
+apps/docs/package.json
+  s_0ec53e873c6577::t_633eeab483738a 23,33,48,56-58
+apps/docs/src/components/workshop/DetailPage.tsx
+  s_0ec53e873c6577::t_a73253be468a3d 115-117,165,785
+apps/docs/src/components/workshop/WorkshopApp.tsx
+  s_0ec53e873c6577::t_95e28438756ef1 3,46-47,337-350
+apps/docs/src/components/workshop/WorkshopNotFoundRouter.tsx
+  s_0ec53e873c6577::t_aba65eac1435b2 4,13,27-31
+apps/docs/turbo.json
+  s_0ec53e873c6577::t_2382e30458e03d 7-9,33-36
+apps/nextjs/next.config.ts
+  s_0ec53e873c6577::t_0e6bb6f86994b2 104-107
+apps/nextjs/package.json
+  s_0ec53e873c6577::t_d8ab8ba9a419bf 7,9,65-68,110,132
+apps/nextjs/public/images/apps/sportarr.svg
+  s_0ec53e873c6577::t_da9626abbb587f 1-268
+apps/nextjs/scripts/assemble-standalone.mjs
+  s_0ec53e873c6577::t_1b576113440219 1,8,10,19-25,27-29,39,44-45
+apps/nextjs/scripts/cache-standalone.mjs
+  s_0ec53e873c6577::t_05e000c86a0538 1-9,14-16
+apps/nextjs/scripts/compile-standalone.mjs
+  s_0ec53e873c6577::t_70f9420b4bdf8f 1,3-10,14-17
+apps/nextjs/scripts/prepare-tabler-icons.mjs
+  s_0ec53e873c6577::t_b10e64f00cad01 1-25
+apps/nextjs/scripts/standalone-artifact.mjs
+  s_0ec53e873c6577::t_5d1fcf66020f52 1-12,20,76-91
+apps/nextjs/src/app/[locale]/_client-providers/trpc.tsx
+  s_0ec53e873c6577::t_af55ac17fbca25 29,134,220-235
+apps/nextjs/src/app/[locale]/auth/invite/[id]/_registration-form.tsx
+  s_0ec53e873c6577::t_17109a6f22cab9 4,9,76-89
+apps/nextjs/src/app/[locale]/auth/invite/[id]/page.tsx
+  s_0ec53e873c6577::t_cb65741900380c 74
+apps/nextjs/src/app/[locale]/auth/loading.tsx
+  s_0ec53e873c6577::t_1ac67ecf9e1bb0 1
+apps/nextjs/src/app/[locale]/auth/login/page.tsx
+  s_0ec53e873c6577::t_7635a3bde705cf 53
+apps/nextjs/src/app/[locale]/boards/(content)/_cached-widget-refresh.tsx
+  s_0ec53e873c6577::t_d408ef6746b280 1-35
+apps/nextjs/src/app/[locale]/boards/(content)/_client.tsx
+  s_0ec53e873c6577::t_a7371d0e90bdbe 4,14,51,70-73,75-79,104
+apps/nextjs/src/app/[locale]/boards/(content)/_creator.tsx
+  s_0ec53e873c6577::t_06749eeb2a2e04 25,158
+apps/nextjs/src/app/[locale]/boards/(content)/_header-actions.tsx
+  s_0ec53e873c6577::t_2e44d9bcb481b4 3,6,14,22,26,70-74,84,100-103,119-121,124,205-216,218-225,230-231,234-248,262-276
+apps/nextjs/src/app/[locale]/boards/(content)/_query-snapshot.ts
+  s_0ec53e873c6577::t_7513d4054df32a 24,59,64,89,163
+apps/nextjs/src/app/[locale]/boards/(content)/board-dirty-leave-guard.spec.ts
+  s_0ec53e873c6577::t_5287e2c00a7698 1-116
+apps/nextjs/src/app/[locale]/boards/(content)/board-dirty-leave-guard.ts
+  s_0ec53e873c6577::t_438071a43299c7 1-80
+apps/nextjs/src/app/[locale]/boards/[name]/settings/_appereance.tsx
+  s_0ec53e873c6577::t_01bf3271586c6c 17,38-54
+apps/nextjs/src/app/[locale]/boards/[name]/settings/_background.tsx
+  s_0ec53e873c6577::t_90c08816b5532f 13,18-20,39-43,78,96,98,102,104,111,161,166-169,171
+apps/nextjs/src/app/[locale]/boards/[name]/settings/_behavior.tsx
+  s_0ec53e873c6577::t_5faa12307725c5 8
+apps/nextjs/src/app/[locale]/boards/[name]/settings/_board-access.tsx
+  s_0ec53e873c6577::t_7f65d953f350a1 10
+apps/nextjs/src/app/[locale]/boards/[name]/settings/_customCss.tsx
+  s_0ec53e873c6577::t_930f7721462717 11
+apps/nextjs/src/app/[locale]/boards/[name]/settings/_general.tsx
+  s_0ec53e873c6577::t_166b22b585f9bc 13
+apps/nextjs/src/app/[locale]/boards/[name]/settings/_layout.tsx
+  s_0ec53e873c6577::t_5cccb4bccd183e 28
+apps/nextjs/src/app/[locale]/boards/[name]/settings/_settings-form.tsx
+  s_0ec53e873c6577::t_e06997de8439fb 18
+apps/nextjs/src/app/[locale]/boards/[name]/settings/loading.tsx
+  s_0ec53e873c6577::t_83b527a71a361a 1
+apps/nextjs/src/app/[locale]/boards/_layout-creator.tsx
+  s_0ec53e873c6577::t_463985b385501d 108-125
+apps/nextjs/src/app/[locale]/boards/_providers.tsx
+  s_0ec53e873c6577::t_8c293725ce8d4c 32-41
+apps/nextjs/src/app/[locale]/boards/_types.ts
+  s_0ec53e873c6577::t_a34db29d934105 1-12
+apps/nextjs/src/app/[locale]/custom-widget-configuration/[token]/configuration-entry.tsx
+  s_0ec53e873c6577::t_428072f6a7333e 4,7-13,20,28,56,76,97,124-129,133,155
+apps/nextjs/src/app/[locale]/custom-widget-configuration/loading.tsx
+  s_0ec53e873c6577::t_72e3e1092c52e0 1
+apps/nextjs/src/app/[locale]/init/loading.tsx
+  s_0ec53e873c6577::t_0a668efb1fb0a9 1
+apps/nextjs/src/app/[locale]/init/page.tsx
+  s_0ec53e873c6577::t_5697b77e02c853 32-43,75-84
+apps/nextjs/src/app/[locale]/manage/apps/edit/[id]/page.tsx
+  s_0ec53e873c6577::t_af2b6034c4bd5c 7,26-33
+apps/nextjs/src/app/[locale]/manage/apps/new/page.tsx
+  s_0ec53e873c6577::t_e071c28e803397 7,19-21
+apps/nextjs/src/app/[locale]/manage/apps/page.tsx
+  s_0ec53e873c6577::t_a64f9795917dba 12,17,160,162
+apps/nextjs/src/app/[locale]/manage/assistant/_components/assistant-configuration.tsx
+  s_0ec53e873c6577::t_e9840b371cc245 43,118,131,143,148-151,156-163,169-171,186-196,214-217,277-279,295-305,308,317-326,408-421,716,719
+apps/nextjs/src/app/[locale]/manage/assistant/page.tsx
+  s_0ec53e873c6577::t_82090b0cb0ce68 4,26,32
+apps/nextjs/src/app/[locale]/manage/boards/_components/board-card.tsx
+  s_0ec53e873c6577::t_4606df70f90a29 49,126-127
+apps/nextjs/src/app/[locale]/manage/boards/_components/boards-page-content.tsx
+  s_0ec53e873c6577::t_6856317154fb96 3,6,12-20,51-71
+apps/nextjs/src/app/[locale]/manage/boards/page.tsx
+  s_0ec53e873c6577::t_9c213403c960d5 10,12,18,21,53
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_code-editor.tsx
+  s_0ec53e873c6577::t_7a6b536dfc5109 1
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-actions.tsx
+  s_0ec53e873c6577::t_2f7c23db1fdfe6 124,201,227
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-form-layout.tsx
+  s_0ec53e873c6577::t_7f032b80f6f7e0 50
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-form-sections.tsx
+  s_0ec53e873c6577::t_eba768c43c9627 82
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-form-utils.ts
+  s_0ec53e873c6577::t_891c61ff6f238b 10,38,125-126
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-list.tsx
+  s_0ec53e873c6577::t_a7a011d9b8251e 9,13
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-options-editor.tsx
+  s_0ec53e873c6577::t_5c8f0dc6872d2d 34,96
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-preview-panel.tsx
+  s_0ec53e873c6577::t_9cd6d4ad45aa9d 54-61,127,194,274
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-requests-editor.tsx
+  s_0ec53e873c6577::t_4fbd83060ed56d 24,67
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-source-field.tsx
+  s_0ec53e873c6577::t_e3d48a3efefea1 4,6-10,15-17,21,26,28,68,82,88,97,152-157,170,190-202,233-333
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-sources-editor.tsx
+  s_0ec53e873c6577::t_a4aea04c005949 7-8,32-48,97-102,175
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_use-custom-widget-form-analysis.ts
+  s_0ec53e873c6577::t_93c74234c537ce 94-98
+apps/nextjs/src/app/[locale]/manage/custom-widgets/publish/[id]/_workshop-publish-form.tsx
+  s_0ec53e873c6577::t_85a5698e0299bc 3,18,20,32,37-42,54,96,128,144,160,171,177
+apps/nextjs/src/app/[locale]/manage/custom-widgets/publish/[id]/page.tsx
+  s_0ec53e873c6577::t_7d35a32a32cc31 18-21,23
+apps/nextjs/src/app/[locale]/manage/custom-widgets/workshop/[id]/_workshop-detail.tsx
+  s_0ec53e873c6577::t_bdd9ec599ea183 23,49,153,186,241
+apps/nextjs/src/app/[locale]/manage/custom-widgets/workshop/_workshop-browse.tsx
+  s_0ec53e873c6577::t_aa96b57ca230a8 9,13
+apps/nextjs/src/app/[locale]/manage/integrations/_components/integration-access-settings.tsx
+  s_0ec53e873c6577::t_4ceb3809cc6b39 10
+apps/nextjs/src/app/[locale]/manage/integrations/_components/secrets/integration-secret-card.tsx
+  s_0ec53e873c6577::t_4918c3ebcfe51f 25,28,72-76
+apps/nextjs/src/app/[locale]/manage/integrations/_components/secrets/integration-secret-icons.ts
+  s_0ec53e873c6577::t_cad3d86988b4e4 8,39
+apps/nextjs/src/app/[locale]/manage/integrations/_components/secrets/integration-secret-inputs.tsx
+  s_0ec53e873c6577::t_642cc148725d49 81
+apps/nextjs/src/app/[locale]/manage/integrations/_components/test-connection/integration-test-connection-error.tsx
+  s_0ec53e873c6577::t_6d095a4eb3b86e 28-32,36-49
+apps/nextjs/src/app/[locale]/manage/integrations/_components/test-connection/test-connection-certificate.tsx
+  s_0ec53e873c6577::t_49ed900f6ad10a 35-37,40,65,76,83,90-99,155,339-346
+apps/nextjs/src/app/[locale]/manage/integrations/edit/[id]/_integration-edit-form.tsx
+  s_0ec53e873c6577::t_2f12574fa85370 13,18,22,48,50,92,113,143,145-153,174,186-187,215,217,232-238,291-327
+apps/nextjs/src/app/[locale]/manage/integrations/edit/[id]/page.tsx
+  s_0ec53e873c6577::t_39dae8a00f2920 1,8,26-39,41-45
+apps/nextjs/src/app/[locale]/manage/integrations/new/_integration-new-form-wrapper.tsx
+  s_0ec53e873c6577::t_49ff14574f11ae 5,11,17-22,30
+apps/nextjs/src/app/[locale]/manage/integrations/new/_integration-new-form.tsx
+  s_0ec53e873c6577::t_45ff1477ade8aa 3,40,52,62,64,66,72-79,87-90,99,106,122,172,199-205,253,276-284,289,303,305-306,311-312,360,364-365
+apps/nextjs/src/app/[locale]/manage/integrations/new/page.tsx
+  s_0ec53e873c6577::t_fbd4fdd256bb2a 2,5,11,36-38,45,48-64
+apps/nextjs/src/app/[locale]/manage/integrations/page.tsx
+  s_0ec53e873c6577::t_3aa3d7b41b117d 11,16
+apps/nextjs/src/app/[locale]/manage/layout.tsx
+  s_0ec53e873c6577::t_5b3aef3c3e266c 167
+apps/nextjs/src/app/[locale]/manage/loading.tsx
+  s_0ec53e873c6577::t_a315fcbba92202 1
+apps/nextjs/src/app/[locale]/manage/medias/_actions/copy-media.tsx
+  s_0ec53e873c6577::t_36b4954d72e2e5 7,18
+apps/nextjs/src/app/[locale]/manage/medias/_actions/upload-media.tsx
+  s_0ec53e873c6577::t_fdc167c6e90557 9,18
+apps/nextjs/src/app/[locale]/manage/medias/page.tsx
+  s_0ec53e873c6577::t_e9d0fb516ff9bd 27,29,33,122,125,158-177,200
+apps/nextjs/src/app/[locale]/manage/search-engines/_form.tsx
+  s_0ec53e873c6577::t_0ed886385c48af 8,21,30,33-35,89,98
+apps/nextjs/src/app/[locale]/manage/search-engines/edit/[id]/_search-engine-edit-form.tsx
+  s_0ec53e873c6577::t_d1733ede359ab8 18,22,59
+apps/nextjs/src/app/[locale]/manage/search-engines/edit/[id]/page.tsx
+  s_0ec53e873c6577::t_21761268b69c24 24-27,35
+apps/nextjs/src/app/[locale]/manage/search-engines/new/_search-engine-new-form.tsx
+  s_0ec53e873c6577::t_c35586f30a01d5 7,17-21,53
+apps/nextjs/src/app/[locale]/manage/search-engines/new/page.tsx
+  s_0ec53e873c6577::t_7abb03895a01e4 4,20,27
+apps/nextjs/src/app/[locale]/manage/search-engines/page.tsx
+  s_0ec53e873c6577::t_21c0b8346f95db 12,16
+apps/nextjs/src/app/[locale]/manage/settings/_components/analytics.settings.tsx
+  s_0ec53e873c6577::t_19e8a2b167bcf6 10
+apps/nextjs/src/app/[locale]/manage/settings/_components/appearance-settings-form.tsx
+  s_0ec53e873c6577::t_36f9347e9ee54e 5,18,20,22
+apps/nextjs/src/app/[locale]/manage/settings/_components/board-settings-form.tsx
+  s_0ec53e873c6577::t_1d25eb88e8c1d5 10
+apps/nextjs/src/app/[locale]/manage/settings/_components/branding-settings-form.tsx
+  s_0ec53e873c6577::t_48caf2ac8a2f87 21,24,95,176-180,192-193,209,255
+apps/nextjs/src/app/[locale]/manage/settings/_components/crawling-and-indexing.settings.tsx
+  s_0ec53e873c6577::t_a9a2281d9c3db6 8
+apps/nextjs/src/app/[locale]/manage/settings/_components/culture-settings-form.tsx
+  s_0ec53e873c6577::t_b6ef65724ba90c 8
+apps/nextjs/src/app/[locale]/manage/settings/_components/search-settings-form.tsx
+  s_0ec53e873c6577::t_29de49b3ac629e 9
+apps/nextjs/src/app/[locale]/manage/settings/_components/user-settings-form.tsx
+  s_0ec53e873c6577::t_d1a0bba33a1e1c 8
+apps/nextjs/src/app/[locale]/manage/tools/api/components/mcp-instructions.tsx
+  s_0ec53e873c6577::t_d550158438d721 153
+apps/nextjs/src/app/[locale]/manage/tools/backup/_components/backup-export-card.tsx
+  s_0ec53e873c6577::t_c0a236b28a3a0f 51
+apps/nextjs/src/app/[locale]/manage/tools/backup/_components/backup-import-card.tsx
+  s_0ec53e873c6577::t_28ef4e34ac9baa 14
+apps/nextjs/src/app/[locale]/manage/tools/certificates/_components/add-certificate.tsx
+  s_0ec53e873c6577::t_792e47ef65ad29 3-4,9,11,14,19-33,35,45
+apps/nextjs/src/app/[locale]/manage/tools/certificates/hostnames/page.tsx
+  s_0ec53e873c6577::t_572522d2e729a1 21,24
+apps/nextjs/src/app/[locale]/manage/tools/certificates/page.tsx
+  s_0ec53e873c6577::t_73e72fb049b976 3,12,15,60,115
+apps/nextjs/src/app/[locale]/manage/tools/docker/docker-reconciliation.tsx
+  s_0ec53e873c6577::t_b58a27007f1e0e 129
+apps/nextjs/src/app/[locale]/manage/tools/kubernetes/cluster-dashboard/cluster-dashboard.tsx
+  s_0ec53e873c6577::t_986ed9f3ecb118 3,6,15,17-21,23-24,26-28,31-36,41-42,61-63,69-78
+apps/nextjs/src/app/[locale]/manage/tools/kubernetes/cluster-dashboard/header-card/header-card.tsx
+  s_0ec53e873c6577::t_3095f79d746bc6 18,21
+apps/nextjs/src/app/[locale]/manage/tools/kubernetes/configmaps/configmaps-table.tsx
+  s_0ec53e873c6577::t_5e14e1685d0e1b 27,31,36,41,48
+apps/nextjs/src/app/[locale]/manage/tools/kubernetes/configmaps/page.tsx
+  s_0ec53e873c6577::t_5b3cf6294536a9 9,25,32-34
+apps/nextjs/src/app/[locale]/manage/tools/kubernetes/ingresses/ingresses-table.tsx
+  s_0ec53e873c6577::t_fc6da68a2db403 31,35,40,77,84
+apps/nextjs/src/app/[locale]/manage/tools/kubernetes/ingresses/page.tsx
+  s_0ec53e873c6577::t_dbbef491237d42 9,25,32-34
+apps/nextjs/src/app/[locale]/manage/tools/kubernetes/kubernetes-context-selector.tsx
+  s_0ec53e873c6577::t_172cf648893904 3,8,12-21,28,31,42-51,71
+apps/nextjs/src/app/[locale]/manage/tools/kubernetes/kubernetes-context.constants.ts
+  s_0ec53e873c6577::t_014ad071203a1d 1
+apps/nextjs/src/app/[locale]/manage/tools/kubernetes/kubernetes-context.ts
+  s_0ec53e873c6577::t_f283066225da64 1-3,5-18,25-26,28,31
+apps/nextjs/src/app/[locale]/manage/tools/kubernetes/kubernetes-query-options.ts
+  s_0ec53e873c6577::t_0bc940088ca2fe 14-15
+apps/nextjs/src/app/[locale]/manage/tools/kubernetes/layout.tsx
+  s_0ec53e873c6577::t_42b2e49f1430af 1-2,5-7,9-17,21-24
+apps/nextjs/src/app/[locale]/manage/tools/kubernetes/namespaces/namespaces-table.tsx
+  s_0ec53e873c6577::t_0eac6de6a2563d 29,33,55,60,67
+apps/nextjs/src/app/[locale]/manage/tools/kubernetes/namespaces/page.tsx
+  s_0ec53e873c6577::t_76cd764b8dc8a4 9,25,32-34
+apps/nextjs/src/app/[locale]/manage/tools/kubernetes/nodes/nodes-table.tsx
+  s_0ec53e873c6577::t_a19b1959818564 31,36,54,81,89,96
+apps/nextjs/src/app/[locale]/manage/tools/kubernetes/nodes/page.tsx
+  s_0ec53e873c6577::t_c692ca02753c15 9,21,26-28
+apps/nextjs/src/app/[locale]/manage/tools/kubernetes/page.tsx
+  s_0ec53e873c6577::t_90c27a78880c1f 3,5,10-11,13-19,25-37,41-45
+apps/nextjs/src/app/[locale]/manage/tools/kubernetes/pods/page.tsx
+  s_0ec53e873c6577::t_cfa02ab4bd0671 9,21,26-28
+apps/nextjs/src/app/[locale]/manage/tools/kubernetes/pods/pods-table.tsx
+  s_0ec53e873c6577::t_158b3b088e698b 27,31,35,47,51,58
+apps/nextjs/src/app/[locale]/manage/tools/kubernetes/secrets/page.tsx
+  s_0ec53e873c6577::t_6efeb51b664a9e 9,21,26-28
+apps/nextjs/src/app/[locale]/manage/tools/kubernetes/secrets/secrets-table.tsx
+  s_0ec53e873c6577::t_71b3725be0082f 27,31,36,41,46,53
+apps/nextjs/src/app/[locale]/manage/tools/kubernetes/services/page.tsx
+  s_0ec53e873c6577::t_0e84679300192f 9,21,26-28
+apps/nextjs/src/app/[locale]/manage/tools/kubernetes/services/services-table.tsx
+  s_0ec53e873c6577::t_eac1fe60df5aa4 28,32,37,42,65,72
+apps/nextjs/src/app/[locale]/manage/tools/kubernetes/volumes/page.tsx
+  s_0ec53e873c6577::t_9aa44f98c79935 9,21,26-28
+apps/nextjs/src/app/[locale]/manage/tools/kubernetes/volumes/volumes-table.tsx
+  s_0ec53e873c6577::t_41ce83ff13abff 27,31,35,40,70,77
+apps/nextjs/src/app/[locale]/manage/tools/tasks/_components/tasks-table.tsx
+  s_0ec53e873c6577::t_6475f6dafaad6d 223
+apps/nextjs/src/app/[locale]/manage/users/[userId]/general/_components/_general-settings-form.tsx
+  s_0ec53e873c6577::t_0aa81e3d0c881a 260,285,310,334,388
+apps/nextjs/src/app/[locale]/manage/users/[userId]/general/_components/_reset-tours.tsx
+  s_0ec53e873c6577::t_925fb6c3dc9f4c 7,12,16,35-43
+apps/nextjs/src/app/[locale]/manage/users/[userId]/general/_components/header-composer.tsx
+  s_0ec53e873c6577::t_991019cc8c6713 207,307
+apps/nextjs/src/app/[locale]/manage/users/create/_components/create-user-stepper.tsx
+  s_0ec53e873c6577::t_f7d959ea17cf0f 22
+apps/nextjs/src/app/[locale]/manage/users/groups/[id]/_transfer-group-ownership.tsx
+  s_0ec53e873c6577::t_45dc47b78aee08 11
+apps/nextjs/src/app/[locale]/manage/users/groups/[id]/members/_add-group-member.tsx
+  s_0ec53e873c6577::t_94409e39767aa1 10
+apps/nextjs/src/app/[locale]/manage/users/groups/[id]/members/page.tsx
+  s_0ec53e873c6577::t_5e2c71ffeba37a 2,17,57-69
+apps/nextjs/src/app/[locale]/manage/users/groups/[id]/permissions/_group-permission-form.tsx
+  s_0ec53e873c6577::t_575d21097fe829 38-39,289,353,433-440
+apps/nextjs/src/app/[locale]/manage/users/groups/[id]/settings/_group-home-boards.tsx
+  s_0ec53e873c6577::t_0de7abb0205a15 5,15,21
+apps/nextjs/src/app/[locale]/manage/users/groups/[id]/settings/page.tsx
+  s_0ec53e873c6577::t_24789ce947d6c2 25-28,42-47
+apps/nextjs/src/app/[locale]/manage/users/groups/_client.tsx
+  s_0ec53e873c6577::t_26b5071b171de9 3,6,12,17,21,64-71,73,84,92
+apps/nextjs/src/app/[locale]/manage/users/groups/_groups-table.tsx
+  s_0ec53e873c6577::t_cddecda41790ad 42-43,154-161
+apps/nextjs/src/app/[locale]/manage/users/groups/page.tsx
+  s_0ec53e873c6577::t_2d10e78658e4d5 28-48
+apps/nextjs/src/app/[locale]/manage/users/invites/_components/invite-list.tsx
+  s_0ec53e873c6577::t_25994df2f6fbd1 5,18-19,26,30,110,112,117
+apps/nextjs/src/app/[locale]/manage/users/invites/page.tsx
+  s_0ec53e873c6577::t_01d4c730ffae25 23
+apps/nextjs/src/app/[locale]/reference/loading.tsx
+  s_0ec53e873c6577::t_430b53643a14c2 1
+apps/nextjs/src/app/[locale]/widgets/loading.tsx
+  s_0ec53e873c6577::t_2d5eb59f882cab 1
+apps/nextjs/src/app/api/[...trpc]/route.spec.ts
+  s_0ec53e873c6577::t_b27b25ef4308cd 34,52-60
+apps/nextjs/src/app/api/[...trpc]/route.ts
+  s_0ec53e873c6577::t_1b9cb50e1c09bb 37-39
+apps/nextjs/src/app/api/assistant/chat/assistant-tool-policy.ts
+  s_0ec53e873c6577::t_4cf4d4288a38c1 35
+apps/nextjs/src/app/api/assistant/chat/route.ts
+  s_0ec53e873c6577::t_67e91715315142 448-455
+apps/nextjs/src/app/api/backup/export/route.ts
+  s_0ec53e873c6577::t_7819ceff965a79 3,28,51,56
+apps/nextjs/src/app/api/backup/import/route.ts
+  s_0ec53e873c6577::t_d8bd73c53dd72f 26,324-330
+apps/nextjs/src/app/api/backup/sql-wasm/route.ts
+  s_0ec53e873c6577::t_50478201d8e3b5 13,24
+apps/nextjs/src/app/api/custom-widgets/configuration-request/[token]/route.ts
+  s_0ec53e873c6577::t_5bd1d23e45f6b0 14-20,26,64-90,98-100,103,110,132-134
+apps/nextjs/src/app/api/custom-widgets/configuration-request/body.ts
+  s_0ec53e873c6577::t_83c87b6b398545 2,5-16,21,25,31,36,49
+apps/nextjs/src/app/api/mcp/[transport]/route.spec.ts
+  s_0ec53e873c6577::t_e8be6c06af5a2a 61,70,79,84-101,355-375
+apps/nextjs/src/app/api/mcp/_handler.ts
+  s_0ec53e873c6577::t_ce1047a4d39b71 24,87-91,218,239,257,322-327,330,332,350-351
+apps/nextjs/src/app/api/trpc/[trpc]/route.spec.ts
+  s_0ec53e873c6577::t_b8b5f63c86c3e8 1-63
+apps/nextjs/src/app/api/trpc/[trpc]/route.ts
+  s_0ec53e873c6577::t_89689cdf6e8bf9 41-45,51
+apps/nextjs/src/app/api/user-medias/[id]/route.spec.ts
+  s_0ec53e873c6577::t_e6e27023912058 1-117
+apps/nextjs/src/app/api/user-medias/[id]/route.ts
+  s_0ec53e873c6577::t_3e9844cb2c2119 50-95,98,100,111-112,115-116,121,124,134-151
+apps/nextjs/src/app/well-known/[...path]/route.ts
+  s_0ec53e873c6577::t_1b531a7d741d1f 28,41
+apps/nextjs/src/components/assistant/assistant-auto-approval.spec.ts
+  s_0ec53e873c6577::t_9f5c219b9a5f7c 33,249-250,266-267,282-284,288-292
+apps/nextjs/src/components/assistant/assistant-auto-approval.tsx
+  s_0ec53e873c6577::t_fd72553dbba6ec 39,44,54,68,92,94-104,106-111,114,124,158
+apps/nextjs/src/components/assistant/assistant-board-settings-tool.tsx
+  s_0ec53e873c6577::t_bf669ea3ba31c5 40,293,300,331
+apps/nextjs/src/components/assistant/assistant-command-plugin.tsx
+  s_0ec53e873c6577::t_53cf71d0efc4bf 1-46
+apps/nextjs/src/components/assistant/assistant-composer-triggers.tsx
+  s_0ec53e873c6577::t_de7edf84d73c26 5,8,13-14,21,51-52,56-58,60-65,79-84,90,122,124-130,134,143-149,154,166,170-186,194-209
+apps/nextjs/src/components/assistant/assistant-composer.tsx
+  s_0ec53e873c6577::t_a8c0e21edfdbd6 3-4,18,30-31,41-45,53,57,104-128,160-162,176-178,206
+apps/nextjs/src/components/assistant/assistant-directives.ts
+  s_0ec53e873c6577::t_6a6d0c735019ae 1,3
+apps/nextjs/src/components/assistant/assistant-gate.tsx
+  s_0ec53e873c6577::t_921ee655a00643 10,66
+apps/nextjs/src/components/assistant/assistant-history-state.tsx
+  s_0ec53e873c6577::t_2747adf7ba1c3c 1-32
+apps/nextjs/src/components/assistant/assistant-history.tsx
+  s_0ec53e873c6577::t_ae3a929e6e7040 5-16,231-267,333
+apps/nextjs/src/components/assistant/assistant-launcher.tsx
+  s_0ec53e873c6577::t_50bdf3ce9bed90 1-195
+apps/nextjs/src/components/assistant/assistant-message-content.tsx
+  s_0ec53e873c6577::t_0a6e97555a088e 14,314
+apps/nextjs/src/components/assistant/assistant-message-metadata.ts
+  s_0ec53e873c6577::t_a1a6a0908c5ac7 213,287,295,343,353-354,356-358
+apps/nextjs/src/components/assistant/assistant-panel-controls.tsx
+  s_0ec53e873c6577::t_116b04111ef4d4 4-5,7,15-18,132-153,156-158,161,163,165,170,184-187,190
+apps/nextjs/src/components/assistant/assistant-preferences.spec.ts
+  s_0ec53e873c6577::t_b2494accda41ef 6,114,117,125-128
+apps/nextjs/src/components/assistant/assistant-preferences.ts
+  s_0ec53e873c6577::t_fb514d41dcf552 1,15,21-22,24
+apps/nextjs/src/components/assistant/assistant-prompts.ts
+  s_0ec53e873c6577::t_fc8e1ae2c208f9 1-28
+apps/nextjs/src/components/assistant/assistant-provider.tsx
+  s_0ec53e873c6577::t_39b976df7fd272 22-23,27,32,37,41-42,45-49,78,91,93,95-100,135,144,153,157,163,210,214-216,242,273-276,283,287-299,309,311,314,317-324,333,351-352,424-448,464-465,468,470-472,482-485,488-498,502,505-515,519,521-526,537,553-567,617,773-795,800,809-810,851-853,878-882,901,906-918,930-935,941-946,951,954,993-994,996-997,1012,1018,1057-1058,1063,1079,1099-1100,1102-1103,1105-1109,1113-1155
+apps/nextjs/src/components/assistant/assistant-runtime-controls.tsx
+  s_0ec53e873c6577::t_4c2d20eb35f8df 41,76-77,79,81,84
+apps/nextjs/src/components/assistant/assistant-runtime-provider.tsx
+  s_0ec53e873c6577::t_5e208222cc165d 6,21,23,141,143,349
+apps/nextjs/src/components/assistant/assistant-tool-contracts.ts
+  s_0ec53e873c6577::t_f0531e05a24e4e 7,50
+apps/nextjs/src/components/assistant/assistant-tool-rendering.tsx
+  s_0ec53e873c6577::t_f0ba5584c659b5 24,262-270,275,341,355
+apps/nextjs/src/components/backup/backup-preview-panel.tsx
+  s_0ec53e873c6577::t_d6797a3d1f2286 38,120
+apps/nextjs/src/components/board/advanced-focus/context.tsx
+  s_0ec53e873c6577::t_948a041ea4f672 4,6,45,53,414-428
+apps/nextjs/src/components/board/board-app-url-drop.spec.tsx
+  s_0ec53e873c6577::t_d55cadd689f79f 1-163
+apps/nextjs/src/components/board/board-app-url-drop.tsx
+  s_0ec53e873c6577::t_a965c7cb98a7d1 1-202
+apps/nextjs/src/components/board/board-apps-spotlight-registrar.tsx
+  s_0ec53e873c6577::t_a7d6d0b3de7be6 33-35,46
+apps/nextjs/src/components/board/board-empty-state.tsx
+  s_0ec53e873c6577::t_47847fdbf44e0c 24
+apps/nextjs/src/components/board/board-layout-thumbnail.tsx
+  s_0ec53e873c6577::t_5fc97f66238737 1-3,9,12-13,36-52,58,76,93
+apps/nextjs/src/components/board/board-setup-checklist.tsx
+  s_0ec53e873c6577::t_b293a593ff4f89 56
+apps/nextjs/src/components/board/items/actions/create-item.ts
+  s_0ec53e873c6577::t_d31b573465c27f 70-82
+apps/nextjs/src/components/board/items/actions/test/create-item.spec.ts
+  s_0ec53e873c6577::t_238ff07cb50839 5,271-286
+apps/nextjs/src/components/board/items/item-content.tsx
+  s_0ec53e873c6577::t_a4e6eb90e0416d 6,18,27,109,177-183,199,476,522,525-527,551-587
+apps/nextjs/src/components/board/items/item-move-modal.tsx
+  s_0ec53e873c6577::t_da665c4dd9578c 23-24,35,129-132,150-153,170,249-251,254,270,295,299,309,344-345
+apps/nextjs/src/components/board/items/item-select-modal.tsx
+  s_0ec53e873c6577::t_ddf5d750436ce6 161
+apps/nextjs/src/components/board/items/widget-context-menu.tsx
+  s_0ec53e873c6577::t_15cfe281648a13 4,6,349-370,374,376-377,408,424
+apps/nextjs/src/components/board/items/widget-query-scope.spec.ts
+  s_0ec53e873c6577::t_e1baeb42327067 73-87
+apps/nextjs/src/components/board/layout/board-lanes.ts
+  s_0ec53e873c6577::t_7a478262dca2db 1,26,33-46,48
+apps/nextjs/src/components/board/layout/normalize-board-layout-bounds.ts
+  s_0ec53e873c6577::t_35d55ff5c3457a 1-61
+apps/nextjs/src/components/board/layout/reflow.ts
+  s_0ec53e873c6577::t_c42a3342f5db5c 159,164-166
+apps/nextjs/src/components/board/layout/scaled-board-canvas.module.css
+  s_0ec53e873c6577::t_272e2e9f77cb2f 1-4,27
+apps/nextjs/src/components/board/layout/scaled-board-canvas.tsx
+  s_0ec53e873c6577::t_182a1ba6fb40f9 10,25-127,147-148,167-180,182-184,186-200,203-204
+apps/nextjs/src/components/board/layout/test/reflow.spec.ts
+  s_0ec53e873c6577::t_7a2feeba581072 68-91
+apps/nextjs/src/components/board/layout/test/scaled-board-canvas.spec.ts
+  s_0ec53e873c6577::t_d0971cd670b253 47,51
+apps/nextjs/src/components/board/sections/container/container-edit-modal.tsx
+  s_0ec53e873c6577::t_e13b33eb00570c 19,34
+apps/nextjs/src/components/board/sections/grid/fixed-grid-item.tsx
+  s_0ec53e873c6577::t_4dcf798d642b4c 158-159
+apps/nextjs/src/components/board/sections/grid/section-grid-placements.ts
+  s_0ec53e873c6577::t_b01922e370aa1d 1,7-19,22
+apps/nextjs/src/components/board/sections/grid/section-grid.tsx
+  s_0ec53e873c6577::t_84f3af4174283c 4-13,19,175,357,377,421-425,451-458
+apps/nextjs/src/components/board/sections/grid/test/fixed-grid-item.spec.ts
+  s_0ec53e873c6577::t_7cb2bb07d8172e 260
+apps/nextjs/src/components/board/sections/item.module.css
+  s_0ec53e873c6577::t_c9f60b970ebec9 171
+apps/nextjs/src/components/board/sections/section-collapse.tsx
+  s_0ec53e873c6577::t_4d87f2baa8a81c 42,45
+apps/nextjs/src/components/board/sections/use-open-section-apps.ts
+  s_0ec53e873c6577::t_b400dcddf7a144 96
+apps/nextjs/src/components/board/sections/use-section-items.ts
+  s_0ec53e873c6577::t_102b00ec56cc32 4,11
+apps/nextjs/src/components/board/selection/board-selection-context.tsx
+  s_0ec53e873c6577::t_87a80f2e12c68a 64-67
+apps/nextjs/src/components/board/selection/board-selection-toolbar.tsx
+  s_0ec53e873c6577::t_6a3991b4c225f5 237,281
+apps/nextjs/src/components/custom-css/custom-css-editor.tsx
+  s_0ec53e873c6577::t_a7455848410bf2 3
+apps/nextjs/src/components/custom-widgets/custom-widget-import-dialog.tsx
+  s_0ec53e873c6577::t_088e38b658f3ac 5,41,68-69
+apps/nextjs/src/components/custom-widgets/custom-widget-source-setup-dialog.tsx
+  s_0ec53e873c6577::t_5f33c678d2511f 7,86-91,132
+apps/nextjs/src/components/custom-widgets/use-custom-widget-import.ts
+  s_0ec53e873c6577::t_8fa9b7421bce94 63,126
+apps/nextjs/src/components/integration/integration-completion-modal.tsx
+  s_0ec53e873c6577::t_2b6fbba1a08ac7 46-48
+apps/nextjs/src/components/integration/integration-select-modal.tsx
+  s_0ec53e873c6577::t_f7fbc468281f8e 4,19-22,42-46
+apps/nextjs/src/components/layout/background.spec.tsx
+  s_0ec53e873c6577::t_552b8ed22fac3d 1-163
+apps/nextjs/src/components/layout/background.tsx
+  s_0ec53e873c6577::t_84d39e529894f8 3-4,9-37,42,49-50,65-66,69,73-75,79,82-85,89-90,92
+apps/nextjs/src/components/layout/header/button.tsx
+  s_0ec53e873c6577::t_bc36c9df975745 37
+apps/nextjs/src/components/layout/header/docker-quick-access-modal.tsx
+  s_0ec53e873c6577::t_77317c4cadcd12 3-4,7-9
+apps/nextjs/src/components/layout/header/header-logo.tsx
+  s_0ec53e873c6577::t_da5c72595b8d11 25-32
+apps/nextjs/src/components/layout/header/user-client.tsx
+  s_0ec53e873c6577::t_01c285d0856fc8 5,53-59
+apps/nextjs/src/components/layout/loading.tsx
+  s_0ec53e873c6577::t_c9d98f1e0f9a8d 3-7
+apps/nextjs/src/components/layout/navigation-link.tsx
+  s_0ec53e873c6577::t_100bb65ea47df9 56,92
+apps/nextjs/src/components/layout/navigation.tsx
+  s_0ec53e873c6577::t_0c63ca7b1517c9 74
+apps/nextjs/src/components/layout/search-engine-optimization.tsx
+  s_0ec53e873c6577::t_98837089184a18 1,4
+apps/nextjs/src/components/manage/manage-collection.tsx
+  s_0ec53e873c6577::t_68ef4e77857eb1 52
+apps/nextjs/src/components/manage/manage-page-layout.tsx
+  s_0ec53e873c6577::t_a442b4c05487d2 3,13-15,27-28,36,38-40,42,47-60,63-69
+apps/nextjs/src/components/manage/unsaved-changes-bar.tsx
+  s_0ec53e873c6577::t_39cd27f74d4d30 3-5,11-13,16,19-25,27-39
+apps/nextjs/src/components/onboarding/tour-shell.tsx
+  s_0ec53e873c6577::t_5c891ff0985acd 31-33,36-50,91,95-96,107,123-124,136-140
+apps/nextjs/src/components/workshop/workshop-code-viewer.tsx
+  s_0ec53e873c6577::t_f679a198afe220 3,9-12,25-33
+apps/nextjs/src/components/workshop/workshop-css-import-button.tsx
+  s_0ec53e873c6577::t_02280f0e0e2e07 16
+apps/nextjs/src/components/workshop/workshop-screenshots.tsx
+  s_0ec53e873c6577::t_77a92f258b6f51 45,123-131
+apps/nextjs/src/components/workshop/workshop-submission-card.tsx
+  s_0ec53e873c6577::t_f66b11e01a4755 26,31-32
+apps/nextjs/src/versions/package-reader.ts
+  s_0ec53e873c6577::t_30d190648c48a9 7,18,20,22-24,26
+apps/nextjs/turbo.json
+  s_0ec53e873c6577::t_074e7382d36962 29,34-43
+apps/tasks/src/on-start/session-cleanup.ts
+  s_0ec53e873c6577::t_ca95e1a9841358 3,18-21,23-27,29,31
+apps/websocket/src/main.ts
+  s_0ec53e873c6577::t_f9273562adde0c 2,41-43
+apps/workshop/.gitignore
+  s_0ec53e873c6577::t_d2dc85faf9fcfb 2
+apps/workshop/Dockerfile
+  s_0ec53e873c6577::t_99df418d0da32c 1,3,5,16,18,71,76
+apps/workshop/docker-compose.staging.yml
+  s_0ec53e873c6577::t_f6f94c8f6064f9 5,19
+apps/workshop/docker-compose.yml
+  s_0ec53e873c6577::t_2ba3f8f83ad179 7,34,69
+apps/workshop/go.mod
+  s_0ec53e873c6577::t_d92b933d1dda18 3,7,13,16,18,21,25,28-30,36-44,46-47
+apps/workshop/go.sum
+  s_0ec53e873c6577::t_eebd9db5a45618 11-14,19-22,25-26,33-34,48-51,62-67,74-77,92-93,96-97,99-102,104-109,111-112,115-116,118-119,124-129,134-135,138-139,142-143,148-149
+apps/workshop/homarr_provider.go
+  s_0ec53e873c6577::t_2ecdc8e28f5662 29,499
+apps/workshop/homarr_provider_test.go
+  s_0ec53e873c6577::t_e065de640561f5 126-127,139,143-144
+bun.lock
+  s_0ec53e873c6577::t_193fc43526b56b 42,52,67,75-77,143-146,188,210,530,617,625,680,720,992,1017,1022,1031,1037,1069,1081,1083-1084,1086-1094,1096,1099,1110,1126-1131,1133-1145,1147-1148,1153-1155,1157-1160,1171-1172,1181,1184,1189-1194,1199,1207-1209,1217,1219-1222,1229-1231,1235-1238,1241-1243,1248,1251-1254,1257,1259-1260,1262-1266,1269-1272,1276-1281,1308,1313-1316,1328,1331-1332,1343,1346,1377,1391,1398,1400-1401,1408,1410,1417,1436,1439,1447,1449,1459,1462,1467-1468,1481,1483-1485,1489,1491,1511,1513,1516,1518,1523,1536,1538,1540,1542,1544,1546,1562-1564,1566,1568,1570,1572,1574,1576,1618,1620,1928,1930,1932,1934,1936,1938,1940,1942,1944,1946,1948,1950,1952,1954,1956,1958,1960,1962,1964,1966,1968,1970,1972,1974,1976,1978,2048,2050,2052,2054,2056,2058,2060,2062,2064,2066,2068,2070,2072,2074,2076,2078,2080,2082,2084,2086,2088,2090,2092,2158-2159,2174,2176,2182,2184,2186,2188,2190,2192,2194,2196,2198,2280,2434,2438,2440,2442,2444,2446,2456,2464,2470,2472,2476,2478,2480,2484,2486,2496,2498,2500,2506,2508,2510,2514,2518,2520,2522,2524,2526,2534,2544,2568,2570,2572,2574,2576,2578,2580,2582,2584,2586,2588,2590,2592,2594,2596,2752-2754,2756,2758,2760,2762,2764,2766,2768,2770,2772,2774,2776,2778,2780,2782,2912,2914,2916,2918,2920,2922,2924,3162,3164,3166,3168,3170,3172,3174,3176,3178,3294,3298,3336,3338,3518,3698-3699,3726,3770,3862,3870,3880,3906,3980,4102,4230,4364,4468,4500,4512,4664,4692,4702,4780,4790,4802,4804,4810,4932,4938-4939,4946,4976,4990,4996,5000,5002,5036,5126,5138,5140,5182,5186,5240,5250,5260,5320,5346,5350,5442,5450,5454,5456,5458,5462,5464,5466,5494-5495,5510-5511,5536-5661,5664-5801,5850-5852,5854,5856,5858,5860-5870,5874-5879,5908-5909,5920-5922,6020,6024-6025,6038,6084-6087,6094,6140-6141,6166-6176,6184-6227,6242-6243,6258-6259,6296-6297,6300-6301,6308,6312,6328-6330,6348,6354-6359,6380-6409,6412-6435,6442,6464-6485,6492-6493,6502-6505,6632-6635,6690-6691,6702-6711,6770-6771,6782-6783,6812-6814,6820-6825,6828-6829
+bunfig.toml
+  s_0ec53e873c6577::t_da572c56dbf59a 4-5
+deployments/prebuilt-debian/Dockerfile
+  s_0ec53e873c6577::t_5be16ffc458635 1-4,7-14,16-17
+deployments/prebuilt-debian/package.json
+  s_0ec53e873c6577::t_c206851a735df5 8-9,11
+development/development.docker-compose.yml
+  s_0ec53e873c6577::t_4533ef0c8bdbd7 12,14,17,35
+docs/README.md
+  s_0ec53e873c6577::t_34f62981ff9535 532-538,551-552,558-559,581-587,600-601,614-615,649-650,663-664
+docs/agents/triage-project.md
+  s_0ec53e873c6577::t_464e464ce2ff00 1-33
+e2e/onboarding.spec.ts
+  s_0ec53e873c6577::t_8e4d550bf78dff 60-61,64,67,69-70
+mise.toml
+  s_0ec53e873c6577::t_76bc345dfa8278 2-3
+nginx.conf
+  s_0ec53e873c6577::t_f15600b2d4c9ff 1
+package.json
+  s_0ec53e873c6577::t_21a28c4de0cb6b 3,12-17,44,49-52,64,67-68,79,82,113,116,127,134,136-137,144,146,149,153,172,175,183,185,195,198,203-204,217,219-221,225,227,247,249,252,254,259,261,265,299,301,352-362,366,372-379,381-383,387,390-391,393-394,396,398,402-404,407,409-411,413-421,424-425,427,439
+packages/api/src/credential-access.ts
+  s_0ec53e873c6577::t_9f2e921e85d5b2 1-6
+packages/api/src/middlewares/integration.ts
+  s_0ec53e873c6577::t_3eea22a5866885 11,43-58,78,81-83,114,166-168,171,208
+packages/api/src/query-cache.ts
+  s_0ec53e873c6577::t_cfa1e3bac7a72a 19-25
+packages/api/src/root.ts
+  s_0ec53e873c6577::t_ca7678c35a6231 8
+packages/api/src/router/app.ts
+  s_0ec53e873c6577::t_154f5c17d5c92e 6,11,15,226-240
+packages/api/src/router/assistant.ts
+  s_0ec53e873c6577::t_3f46f32a300ff5 748,753-759,764-766,771-777
+packages/api/src/router/board.ts
+  s_0ec53e873c6577::t_99cf86bb82ae4c 55,72-73,147-151,227,250,260-261,393,631,1697,1702,1711,1720,2298-2299,2376-2381,2446-2447,2869-2885,2889-2892
+packages/api/src/router/board/board-access.ts
+  s_0ec53e873c6577::t_9a9c9a280fd9b3 66-79
+packages/api/src/router/custom-widget/definition-update.ts
+  s_0ec53e873c6577::t_7539a0adc280bf 121,181
+packages/api/src/router/custom-widget/management-queries.ts
+  s_0ec53e873c6577::t_a2b2fe925b3aa3 38,63,84,125
+packages/api/src/router/custom-widget/management-query-mappers.ts
+  s_0ec53e873c6577::t_0740d7bad25aab 20-22
+packages/api/src/router/custom-widget/preview-base-procedures.ts
+  s_0ec53e873c6577::t_38c364996ac7a5 99,153,179
+packages/api/src/router/custom-widget/preview-query-procedures.ts
+  s_0ec53e873c6577::t_8b1738dcd3735c 41
+packages/api/src/router/custom-widget/request-executor.ts
+  s_0ec53e873c6577::t_25a9fd23b30645 1-5,28,68-76
+packages/api/src/router/custom-widget/secret-persistence.ts
+  s_0ec53e873c6577::t_496c272181f038 19
+packages/api/src/router/custom-widget/secret-policy.ts
+  s_0ec53e873c6577::t_5ca661e608c481 6-7,9,11-12,18,29-30,32,35-40
+packages/api/src/router/custom-widget/secret-procedures.ts
+  s_0ec53e873c6577::t_da5d0f5ae9da33 9,96,111,195,217
+packages/api/src/router/custom-widget/source-resolver.ts
+  s_0ec53e873c6577::t_bd2c7addf9576b 15-16,22,24,26,34-56,59-103,108-110
+packages/api/src/router/custom-widget/transfer-procedures.ts
+  s_0ec53e873c6577::t_72f4febdf2d0a1 99
+packages/api/src/router/custom-widget/workshop-procedures.ts
+  s_0ec53e873c6577::t_11e19383e90df2 78
+packages/api/src/router/docker/docker-router.ts
+  s_0ec53e873c6577::t_05601c0058b4d0 5-6,89-98,306
+packages/api/src/router/icons.ts
+  s_0ec53e873c6577::t_520fc43a6d1854 2,4-5,7,61-76
+packages/api/src/router/integration/integration-access.ts
+  s_0ec53e873c6577::t_a15f746c3a7fdb 7,38-46
+packages/api/src/router/integration/integration-http.ts
+  s_0ec53e873c6577::t_2702670bb5e165 15,26-34,43,77
+packages/api/src/router/integration/integration-router.ts
+  s_0ec53e873c6577::t_2b86fdc59d6b41 5,21-26,36,56-60,135,220,237,284,345-347,369,627,682,750-757,775,780-783,790-791,817,840,851,853,860
+packages/api/src/router/integration/integration-test-connection.ts
+  s_0ec53e873c6577::t_4758d8e557927e 11
+packages/api/src/router/integration/integration-test-stored-connection.ts
+  s_0ec53e873c6577::t_f5bb6e3dbd2009 14,31-41
+packages/api/src/router/integration/map-test-connection-error.ts
+  s_0ec53e873c6577::t_6c200ea3cb5276 60-64,68-69,71,73-74,76,81-87,94,102
+packages/api/src/router/invite.ts
+  s_0ec53e873c6577::t_6d1d169bf5ec19 62
+packages/api/src/router/medias/media-router.ts
+  s_0ec53e873c6577::t_0136c8351777be 8-13,87-92,95,108
+packages/api/src/router/onboard/onboard-router.ts
+  s_0ec53e873c6577::t_c2b5b01a55600b 449,755,846,852,892
+packages/api/src/router/search-engine/search-engine-router.ts
+  s_0ec53e873c6577::t_f395a472bdd635 117-120
+packages/api/src/router/test/app.spec.ts
+  s_0ec53e873c6577::t_15c8055b82dd93 9,17-26,395-459
+packages/api/src/router/test/custom-widget/definition-persistence.spec.ts
+  s_0ec53e873c6577::t_f0c80f6fa88544 884-889
+packages/api/src/router/test/icons.spec.ts
+  s_0ec53e873c6577::t_ae83201a764d93 3,5-6,9-10,14-43
+packages/api/src/router/test/media.spec.ts
+  s_0ec53e873c6577::t_cda14b748d0f75 1-62
+packages/api/src/router/test/onboard.spec.ts
+  s_0ec53e873c6577::t_119c67f56b3885 286-305
+packages/api/src/router/test/widgets/partial-integration-failures.spec.ts
+  s_0ec53e873c6577::t_12c9683a87d84d 14,19,35,209-215,238-243,346-354,366,371
+packages/api/src/router/test/widgets/rssFeed.spec.ts
+  s_0ec53e873c6577::t_21dac7c2441172 254,279
+packages/api/src/router/user-item-state.ts
+  s_0ec53e873c6577::t_0f0d149a66f161 1,4-45,47-76
+packages/api/src/router/widgets/__tests__/coolify.spec.ts
+  s_0ec53e873c6577::t_e04e851b7bb2f3 1-30
+packages/api/src/router/widgets/calendar.ts
+  s_0ec53e873c6577::t_55ac25b1b1cf38 16
+packages/api/src/router/widgets/coolify.ts
+  s_0ec53e873c6577::t_3000eb0c4c4224 1,14,20-32,40-41,47,60,70
+packages/api/src/router/widgets/downloads.ts
+  s_0ec53e873c6577::t_a6e587e544ef66 55,62-87,98
+packages/api/src/router/widgets/index.ts
+  s_0ec53e873c6577::t_87b8126b0f8d70 13
+packages/api/src/router/widgets/indexer-manager.ts
+  s_0ec53e873c6577::t_249216e1e9b7c7 1,40-42,44-53,57
+packages/api/src/router/widgets/media-organizer.ts
+  s_0ec53e873c6577::t_2784cab9f9c462 15
+packages/api/src/router/widgets/releases.ts
+  s_0ec53e873c6577::t_dd07a424c9948b 9-11,13-14,16,22-26,45,49,56,65,72,102-105,110-112,120-122,157,163-193
+packages/api/src/router/widgets/rssFeed.ts
+  s_0ec53e873c6577::t_ab571a98296ac4 9,15,34,37,42,138-141,145-162,164
+packages/api/src/router/widgets/thingport.ts
+  s_0ec53e873c6577::t_f75f290f14ab02 1-68
+packages/api/src/router/widgets/timetable.ts
+  s_0ec53e873c6577::t_f53710626d4d89 268
+packages/api/src/router/widgets/uptime-kuma.ts
+  s_0ec53e873c6577::t_fff69bd77bf19f 1-2,5,12,14-15,24,29-32,39,49
+packages/api/src/router/widgets/wazuh.ts
+  s_0ec53e873c6577::t_832748d670fca6 43,45,85,94,103,121,133,151,170,189,208,213
+packages/api/src/test/nzbget-privacy.spec.ts
+  s_0ec53e873c6577::t_7112469ac073d5 1-178
+packages/api/src/test/query-cache.spec.ts
+  s_0ec53e873c6577::t_c98a3a1e6bbf04 6,115-144
+packages/api/src/test/read-only-credentials.spec.ts
+  s_0ec53e873c6577::t_3c918174771e42 1-114
+packages/api/src/trpc.ts
+  s_0ec53e873c6577::t_c865a2ba9e978d 21,24-25,81,90,130-137,161,185
+packages/auth/api-key/get-api-key-session.ts
+  s_0ec53e873c6577::t_5d8c7accb4b95b 45-46,77-81
+packages/auth/api-key/test/get-api-key-session.spec.ts
+  s_0ec53e873c6577::t_3e4784861599ee 27-34,117,134
+packages/auth/callbacks.ts
+  s_0ec53e873c6577::t_f35e447475e2ff 51,55-57
+packages/auth/env.ts
+  s_0ec53e873c6577::t_fef0aefdfed3ea 58-59,74-77
+packages/auth/index.ts
+  s_0ec53e873c6577::t_2d65c8ad6659f7 12-15
+packages/auth/permissions/integration-query-permissions.ts
+  s_0ec53e873c6577::t_d89c33cb863cb6 3,6,31-33,35-46,48-79,82-96
+packages/auth/providers/credentials/authorization/basic-authorization.ts
+  s_0ec53e873c6577::t_f2f1094d86c775 16,23,31
+packages/auth/providers/credentials/authorization/ldap-authorization.ts
+  s_0ec53e873c6577::t_e982d7ef97e32a 21,25-111,113-135,148,157,178-186
+packages/auth/providers/credentials/credentials-provider.ts
+  s_0ec53e873c6577::t_6c2f158153e67c 3,18,20,22,32,34-35
+packages/auth/providers/oidc/profile.ts
+  s_0ec53e873c6577::t_321b94fa8fa955 6-9
+packages/auth/providers/oidc/test/profile.spec.ts
+  s_0ec53e873c6577::t_976d96b5747771 19,31-34
+packages/auth/providers/test/basic-authorization.spec.ts
+  s_0ec53e873c6577::t_36c3c03fe51dee 1,10-17,19,32-39,55-62,66,79-86,90,102-109
+packages/auth/providers/test/ldap-authorization.spec.ts
+  s_0ec53e873c6577::t_8c655958fe3d2f 29-38,58-62,89-96,114-121,125,147-154,182-189,194,217-224,265-272,323-330,386-393
+packages/auth/providers/test/ldap-env.spec.ts
+  s_0ec53e873c6577::t_d4012620f85ada 1-35
+packages/auth/providers/test/ldap-sign-in.spec.ts
+  s_0ec53e873c6577::t_b605fc33b4485b 1-116
+packages/auth/server.ts
+  s_0ec53e873c6577::t_1edba7c3b3500a 1-4
+packages/boards/package.json
+  s_0ec53e873c6577::t_40d3ce20b6bfed 20-21
+packages/boards/src/context.spec.tsx
+  s_0ec53e873c6577::t_6e8c424bb2d40c 1-89
+packages/boards/src/context.tsx
+  s_0ec53e873c6577::t_812145156e3bb0 10,74,83-85,100-107
+packages/boards/src/layout-data.ts
+  s_0ec53e873c6577::t_ff56645d14d23a 1-107
+packages/boards/src/layout-preview.ts
+  s_0ec53e873c6577::t_e5fc32601d7ec2 35
+packages/boards/src/scale.ts
+  s_0ec53e873c6577::t_045bb2d9f2ae4a 4
+packages/common/package.json
+  s_0ec53e873c6577::t_9ff70e335a73dc 18
+packages/common/src/errors/http/credential-url.ts
+  s_0ec53e873c6577::t_63ab499f736810 1-43
+packages/common/src/errors/http/handlers/http-error-handler.ts
+  s_0ec53e873c6577::t_e4a5272b0ee0f2 6,20
+packages/common/src/errors/http/response-error.ts
+  s_0ec53e873c6577::t_6612695cd53a9e 1-2,12
+packages/common/src/grid-algorithm.ts
+  s_0ec53e873c6577::t_466c0764e197a4 28-37,40-47,53-55,65
+packages/common/src/string.ts
+  s_0ec53e873c6577::t_d47fa29c565982 18-31
+packages/common/src/test/response-error-privacy.spec.ts
+  s_0ec53e873c6577::t_872642a05d7664 1-82
+packages/core/package.json
+  s_0ec53e873c6577::t_702b14b1e31735 29-30
+packages/core/src/infrastructure/dns/env.ts
+  s_0ec53e873c6577::t_ae28db05d60557 5
+packages/core/src/infrastructure/http/guarded-fetch.ts
+  s_0ec53e873c6577::t_d42d011afd1d19 1-238
+packages/core/src/infrastructure/http/http-agent.ts
+  s_0ec53e873c6577::t_6da952b9294ec6 10,12,17,22,31-38
+packages/core/src/infrastructure/http/index.ts
+  s_0ec53e873c6577::t_bff1f1d88b8d8c 9
+packages/core/src/infrastructure/http/request.ts
+  s_0ec53e873c6577::t_0119c3ed7564a5 8,18,67-68
+packages/core/src/test/infrastructure/dns/init.spec.ts
+  s_0ec53e873c6577::t_a7416701ac27b2 29-30,50-51
+packages/core/src/test/infrastructure/http/guarded-fetch.spec.ts
+  s_0ec53e873c6577::t_41401029cd1fe7 1-369
+packages/cron-jobs/src/jobs/icons-updater.ts
+  s_0ec53e873c6577::t_2a46671484d82e 34-36
+packages/custom-widgets/package.json
+  s_0ec53e873c6577::t_8f897c955c622a 24,74
+packages/custom-widgets/scripts/ai-evaluation-cases.ts
+  s_0ec53e873c6577::t_3109175bdf0e52 55
+packages/custom-widgets/scripts/ai-evaluation.ts
+  s_0ec53e873c6577::t_fde29ee00bfc7b 284
+packages/custom-widgets/scripts/check-architecture.mjs
+  s_0ec53e873c6577::t_d254a854ad37eb 88-89,91-110
+packages/custom-widgets/scripts/generate-component-metadata.ts
+  s_0ec53e873c6577::t_e8f3f848639320 155-169,173
+packages/custom-widgets/src/core/authoring-catalog.ts
+  s_0ec53e873c6577::t_f83f7c64d3b972 3,7,10,43-58,63-68,70-74,108,110-121,145-153,178,186,189-190,193-195
+packages/custom-widgets/src/core/bundled-widgets.ts
+  s_0ec53e873c6577::t_c8950e228edd96 17,67,85,145
+packages/custom-widgets/src/core/component-catalog.runtime.generated.json
+  s_0ec53e873c6577::t_c9d7cb091a7fb4 1
+packages/custom-widgets/src/core/component-registry.ts
+  s_0ec53e873c6577::t_0d4aa81b9c5911 1-2,4,6-21,23-26,44-45,54-59,68,81,84
+packages/custom-widgets/src/core/custom-jsx-schema.ts
+  s_0ec53e873c6577::t_b47cb2c9486dae 14-20,27-30,63-85,89,221
+packages/custom-widgets/src/core/examples.ts
+  s_0ec53e873c6577::t_77da03dd846475 19,34
+packages/custom-widgets/src/core/request-header-policy.ts
+  s_0ec53e873c6577::t_3b692345214465 1-2,4-23,25-28,31-34
+packages/custom-widgets/src/core/request-schema.ts
+  s_0ec53e873c6577::t_efe8973e00e92e 5-10,23-58,64,97-98,149,191-197
+packages/custom-widgets/src/core/schema-types.ts
+  s_0ec53e873c6577::t_93f3837835aa61 1,8-22
+packages/custom-widgets/src/core/secret-requirements.ts
+  s_0ec53e873c6577::t_a9d56a1052e6fd 2-4,9,14-20,22,31-42,47
+packages/custom-widgets/src/core/source-setup.ts
+  s_0ec53e873c6577::t_b1ddbf3fc52244 2,4,21,46,58-64,68-73,108
+packages/custom-widgets/src/core/tabler-icons.ts
+  s_0ec53e873c6577::t_e4ce6a4ba1e909 1-8,11-14,16-17
+packages/custom-widgets/src/core/url-policy.ts
+  s_0ec53e873c6577::t_09d44b6462af29 11
+packages/custom-widgets/src/jsx/analyzer-jsx.ts
+  s_0ec53e873c6577::t_95f1388e04ebbf 4,214-216
+packages/custom-widgets/src/jsx/analyzer-language.ts
+  s_0ec53e873c6577::t_7bfb4f1b5f2fa4 62-63,66-68,71
+packages/custom-widgets/src/jsx/analyzer.ts
+  s_0ec53e873c6577::t_0fc03941d94c3a 89-99
+packages/custom-widgets/src/jsx/bindings.ts
+  s_0ec53e873c6577::t_f4b99bf50c5171 99-101,103-113,116-124,148-166,178
+packages/custom-widgets/src/jsx/interpreter.tsx
+  s_0ec53e873c6577::t_41730065e5249d 4,35,44-52,129,133,318,332,350-364
+packages/custom-widgets/src/runtime/custom-jsx-renderer.tsx
+  s_0ec53e873c6577::t_01820c9ce09121 6,188-195,198-199,201,213
+packages/custom-widgets/src/server/network-policy.ts
+  s_0ec53e873c6577::t_4062f8005247fa 4,36,42,44
+packages/custom-widgets/src/server/preview-sessions.ts
+  s_0ec53e873c6577::t_b44cdd827cbdad 7,9-10,12-13,31,60,102,218,221,246,259,310-333
+packages/custom-widgets/src/server/request-dispatcher-lifecycle.ts
+  s_0ec53e873c6577::t_10e50b0f7fa95a 1,5,33
+packages/custom-widgets/src/server/request-executor.ts
+  s_0ec53e873c6577::t_368e79cb4e9502 3,12,16-17,19,31,38-39,51,53-54,65,105,128-131,133,135-137,245,257-260,263,267,269-271,286,290,297-331
+packages/custom-widgets/src/server/request-types.ts
+  s_0ec53e873c6577::t_508dead60e5ee5 4,10,34
+packages/custom-widgets/src/server/response.ts
+  s_0ec53e873c6577::t_d63671794a50a7 3,17-23,55,93-104,106
+packages/custom-widgets/src/test/authoring-resources.spec.ts
+  s_0ec53e873c6577::t_a7b8328bb9aa91 25,91
+packages/custom-widgets/src/test/jsx-policy.spec.ts
+  s_0ec53e873c6577::t_8dca708c87d9e8 94,97-106
+packages/custom-widgets/src/test/request-deadline.spec.ts
+  s_0ec53e873c6577::t_684beb11cc8de5 7,12,15,27,37,73,133
+packages/custom-widgets/src/test/schema.spec.ts
+  s_0ec53e873c6577::t_11a1c546b4d63f 367,385
+packages/custom-widgets/src/test/server-policy.spec.ts
+  s_0ec53e873c6577::t_f6d83e0c5936ef 16
+packages/custom-widgets/src/workbench/code-editor.tsx
+  s_0ec53e873c6577::t_b5e186cd4f8586 104-107
+packages/custom-widgets/src/workbench/code-language.ts
+  s_0ec53e873c6577::t_a59845d02ddba1 95
+packages/custom-widgets/src/workbench/component-reference.tsx
+  s_0ec53e873c6577::t_43192b34684993 18-40,56-102,105-119,121-126
+packages/custom-widgets/src/workbench/preview-response-panel.tsx
+  s_0ec53e873c6577::t_b6b3bf1c5cdf26 46-49
+packages/custom-widgets/src/workbench/source-setup.tsx
+  s_0ec53e873c6577::t_d000955426d7a5 2,7,11,32,167-169,173
+packages/db/migrations/custom/0005_releases_widget_options.ts
+  s_0ec53e873c6577::t_13723ca5a8c85f 1-79
+packages/db/migrations/custom/0006_app_widget_open_in.ts
+  s_0ec53e873c6577::t_4c3116ca1dd005 1-33
+packages/db/migrations/custom/0007_wazuh_dashboard_url.ts
+  s_0ec53e873c6577::t_ab3237414cd6bb 1-32
+packages/db/migrations/custom/index.ts
+  s_0ec53e873c6577::t_0cb7691221a5b3 7-9,17-19
+packages/db/migrations/postgresql/0019_sturdy_power_pack.sql
+  s_0ec53e873c6577::t_e83c7142324be8 1-10
+packages/db/migrations/postgresql/0020_add_integration_external_url.sql
+  s_0ec53e873c6577::t_b0deb70dd9be9d 1
+packages/db/migrations/postgresql/0021_add_api_key_read_only.sql
+  s_0ec53e873c6577::t_549d0226d49251 1
+packages/db/migrations/postgresql/meta/0019_snapshot.json
+  s_0ec53e873c6577::t_db767257d3a967 1-2775
+packages/db/migrations/postgresql/meta/0020_snapshot.json
+  s_0ec53e873c6577::t_414071eae86ba9 1-2781
+packages/db/migrations/postgresql/meta/0021_snapshot.json
+  s_0ec53e873c6577::t_3f347bbf3539f1 1-2788
+packages/db/migrations/seed.ts
+  s_0ec53e873c6577::t_768da967d027f7 429,831,934
+packages/db/migrations/sqlite/0050_typical_madelyne_pryor.sql
+  s_0ec53e873c6577::t_4cad220be0dfe1 1-9
+packages/db/migrations/sqlite/0051_add_integration_external_url.sql
+  s_0ec53e873c6577::t_9eba3a38bba152 1
+packages/db/migrations/sqlite/0052_add_api_key_read_only.sql
+  s_0ec53e873c6577::t_d3c93110a39f57 1
+packages/db/migrations/sqlite/meta/0050_snapshot.json
+  s_0ec53e873c6577::t_a9e38589fcba94 1-2812
+packages/db/migrations/sqlite/meta/0051_snapshot.json
+  s_0ec53e873c6577::t_9055647272d4f4 1-2819
+packages/db/migrations/sqlite/meta/0052_snapshot.json
+  s_0ec53e873c6577::t_8939a4e6a1fffd 1-2827
+packages/db/queries/widget-placement.ts
+  s_0ec53e873c6577::t_d5daa0db702021 148
+packages/db/schema/index.ts
+  s_0ec53e873c6577::t_a01554a4ce58d3 45
+packages/db/test/app-widget-open-in-migration.spec.ts
+  s_0ec53e873c6577::t_ba6f528ba31c99 1-65
+packages/db/test/releases-widget-options-migration.spec.ts
+  s_0ec53e873c6577::t_f45868b2173b76 1-278
+packages/definitions/src/board.ts
+  s_0ec53e873c6577::t_ed7ec85e9fdcd0 4-6
+packages/definitions/src/docs/homarr-docs-sitemap.ts
+  s_0ec53e873c6577::t_12ce5318549485 179,186,275-278,288
+packages/definitions/src/docs/sitemap-paths.json
+  s_0ec53e873c6577::t_ff9e762536f3e1 182,271-274
+packages/definitions/src/docs/widget-doc-slugs.ts
+  s_0ec53e873c6577::t_87d51d44734fe4 46-49,69
+packages/definitions/src/integration.ts
+  s_0ec53e873c6577::t_726509506e3687 31,179,465,471-480,486,497,507,517,527,650,834-844,1010,1019,1021,1025,1030,1063,1218
+packages/definitions/src/release-provider.ts
+  s_0ec53e873c6577::t_d862304be90381 60-61,63,65,73-117
+packages/definitions/src/test/api-key-url.spec.ts
+  s_0ec53e873c6577::t_de71d6d8299bb2 45
+packages/definitions/src/test/docker-integration-match.spec.ts
+  s_0ec53e873c6577::t_8a8565d788e80c 119-127
+packages/definitions/src/test/widget-integration-map.spec.ts
+  s_0ec53e873c6577::t_95adbb597b66af 36,44-47,56
+packages/definitions/src/widget.ts
+  s_0ec53e873c6577::t_537efe12aab254 44-47,67,86-89,97
+packages/docker/src/discovery/index.ts
+  s_0ec53e873c6577::t_4f661c08e602ed 2-7
+packages/docker/src/discovery/parse-container-labels.ts
+  s_0ec53e873c6577::t_019c6636c25585 43-44
+packages/forms-collection/package.json
+  s_0ec53e873c6577::t_9ad57d49a84cc5 15-17,29,37
+packages/forms-collection/src/access/access-picker.tsx
+  s_0ec53e873c6577::t_d8b58012ba2487 23,25,36,38,46,52,59-65,67-70,126,130
+packages/forms-collection/src/access/access-settings.tsx
+  s_0ec53e873c6577::t_a85f8e7166aa87 1-2,85,127-137,160-172,176-182
+packages/forms-collection/src/access/access-table-rows.tsx
+  s_0ec53e873c6577::t_5fb3ac64f5854d 22,46
+packages/forms-collection/src/access/context.tsx
+  s_0ec53e873c6577::t_2956a8eb5083e7 10,22,49
+packages/forms-collection/src/access/group-access-form.tsx
+  s_0ec53e873c6577::t_f99193e1c106cc 24,27,79
+packages/forms-collection/src/access/group-select.tsx
+  s_0ec53e873c6577::t_aefc964d142db9 3,33-47,64,66,72-73
+packages/forms-collection/src/access/index.ts
+  s_0ec53e873c6577::t_7f896e765e4269 1-4
+packages/forms-collection/src/access/user-access-form.tsx
+  s_0ec53e873c6577::t_3e4532a0ccc0ec 40,43,100
+packages/forms-collection/src/access/user-select.tsx
+  s_0ec53e873c6577::t_0e0c5888a57d2c 3,34-51,69,71,76-89
+packages/forms-collection/src/board-appearance/board-appearance-fields.tsx
+  s_0ec53e873c6577::t_11203718426c4f 1-106
+packages/forms-collection/src/custom-widgets/code-editor.tsx
+  s_0ec53e873c6577::t_cc6e56ecf1d3ea 1-15
+packages/forms-collection/src/custom-widgets/index.ts
+  s_0ec53e873c6577::t_a34bfd39815bb3 1-3
+packages/forms-collection/src/custom-widgets/use-custom-widget-editor-messages.ts
+  s_0ec53e873c6577::t_9a21556cc2f7bc 5,9,12,25,37-43,45,47
+packages/forms-collection/src/icon-picker/icon-picker.spec.ts
+  s_0ec53e873c6577::t_64cc3046900a0f 9,11,29,40-45,116,139,142,144,161-166,308-392
+packages/forms-collection/src/icon-picker/icon-picker.tsx
+  s_0ec53e873c6577::t_9298781e049e3a 33,42,55-56,73,78-82,92,99-115,129-138,140-153,160,190,193-201,218,220,225,236-260,299,304,309,403,442,485
+packages/forms-collection/src/icon-picker/icon-picker.utils.ts
+  s_0ec53e873c6577::t_e58587cff169b3 49,58-59
+packages/forms-collection/src/index.tsx
+  s_0ec53e873c6577::t_c560b10a616fb2 3,7-8
+packages/forms-collection/src/new-app/_form.tsx
+  s_0ec53e873c6577::t_0c33ca0cdea53c 16,142,146,151
+packages/forms-collection/src/new-app/_url-label.tsx
+  s_0ec53e873c6577::t_951e9decac6104 1-48
+packages/forms-collection/src/upload-media/upload-media.tsx
+  s_0ec53e873c6577::t_8391e2b95b658d 8,13,18-24,27-28,38-43,61
+packages/forms-collection/src/user-create/user-create-password-fields.tsx
+  s_0ec53e873c6577::t_d15c116078e77d 4,13,20,25
+packages/icons/index.ts
+  s_0ec53e873c6577::t_e4a3007caaa610 4
+packages/icons/package.json
+  s_0ec53e873c6577::t_f42af6a8fc2e9c 16-17
+packages/icons/src/favicon-fetcher.ts
+  s_0ec53e873c6577::t_fc6bc3eb8120b5 1-270
+packages/icons/src/local-media-url.ts
+  s_0ec53e873c6577::t_c255bc270ea4b9 1-2
+packages/icons/src/local.ts
+  s_0ec53e873c6577::t_1952bb15b57364 1-2
+packages/icons/src/repositories/github.icon-repository.ts
+  s_0ec53e873c6577::t_06bca41bcff7cb 6,50-56
+packages/icons/src/repositories/icon-repository.ts
+  s_0ec53e873c6577::t_85d166f3136237 1-2,7,39-54
+packages/icons/src/repositories/jsdelivr.icon-repository.ts
+  s_0ec53e873c6577::t_c8fbaa820a37b7 5,27-31,33
+packages/icons/src/repositories/local.icon-repository.ts
+  s_0ec53e873c6577::t_78a172ccba193c 4,7,18
+packages/icons/src/test/favicon-fetcher.spec.ts
+  s_0ec53e873c6577::t_32acbcf3fed6de 1-410
+packages/image-proxy/src/test/index.spec.ts
+  s_0ec53e873c6577::t_d78971e8ee4f64 1-180
+packages/integrations/index.ts
+  s_0ec53e873c6577::t_198c4d00a2f91c 2-3
+packages/integrations/package.json
+  s_0ec53e873c6577::t_7778a74a46962a 45
+packages/integrations/src/adguard-home/adguard-home-integration.ts
+  s_0ec53e873c6577::t_f66a56d3af7e26 74-83,88
+packages/integrations/src/adguard-home/adguard-home-types.ts
+  s_0ec53e873c6577::t_6250759703caaf 32-43
+packages/integrations/src/adguard-home/test/adguard-home-integration.spec.ts
+  s_0ec53e873c6577::t_bed640b6f5fa01 14,55,60-120,125-139
+packages/integrations/src/audiobookshelf/audiobookshelf-integration.ts
+  s_0ec53e873c6577::t_32290d0ea9fb33 54-64,80
+packages/integrations/src/base/creator.ts
+  s_0ec53e873c6577::t_67b4274ca20393 2,6,263-264,330-331,411-421
+packages/integrations/src/base/errors/http/integration-request-error.ts
+  s_0ec53e873c6577::t_c8bd408ff3a11e 11-18,21-25
+packages/integrations/src/base/servarr-service-version.ts
+  s_0ec53e873c6577::t_ece165c84fc7a5 3-4,6,8-20
+packages/integrations/src/base/test-connection/test-connection-error.ts
+  s_0ec53e873c6577::t_ea86c4ee4b22be 10-11,57,63,71-80,134-137,139-141,153-157,180-185,187-188,203-204
+packages/integrations/src/base/test-connection/test-connection-service.ts
+  s_0ec53e873c6577::t_25cfcb002dc45d 2,41,77,84,92-102,107-115,118,120,123-124,130-132,140-142,152
+packages/integrations/src/download-client/deluge/deluge-integration.ts
+  s_0ec53e873c6577::t_fed68dcd67906e 14-17,21,62-65,86-111,124,132-140
+packages/integrations/src/download-client/nzbget/nzbget-integration.ts
+  s_0ec53e873c6577::t_6e7e79ebf8459b 118-122,124
+packages/integrations/src/download-client/nzbget/test/nzbget-integration.spec.ts
+  s_0ec53e873c6577::t_ea1d9e5c3eb6dd 14,76-103
+packages/integrations/src/download-client/qbittorrent/qbittorrent-integration.ts
+  s_0ec53e873c6577::t_5d530bf2aaea77 14-17,33-36,39,70-172
+packages/integrations/src/download-client/select-torrents.ts
+  s_0ec53e873c6577::t_53b4b8302d4a73 1-50
+packages/integrations/src/download-client/transmission/transmission-integration.ts
+  s_0ec53e873c6577::t_1b25d2c3601a23 13-16,19,31-34,46-71,85,93-101
+packages/integrations/src/emby/emby-integration.ts
+  s_0ec53e873c6577::t_8f10df1f208946 83
+packages/integrations/src/factory.ts
+  s_0ec53e873c6577::t_1c36165dea2737 2
+packages/integrations/src/gluetun/gluetun-integration.ts
+  s_0ec53e873c6577::t_461b18f14396c7 10-11,30
+packages/integrations/src/gluetun/gluetun-types.ts
+  s_0ec53e873c6577::t_66b4e97b1fe24b 4,10-17
+packages/integrations/src/gluetun/test/gluetun-integration.spec.ts
+  s_0ec53e873c6577::t_36889f10fb8168 10,93,106,116-117,243-244
+packages/integrations/src/gluetun/test/gluetun-privacy.spec.ts
+  s_0ec53e873c6577::t_4000d229a814d0 1-2,4-8,12,16-24,26-34,37,39,41,44-59,61-65,70-79,81-83
+packages/integrations/src/ical/ical-integration.ts
+  s_0ec53e873c6577::t_c5225339ac7e37 19-23,30,78-79,101,104-105,135-136
+packages/integrations/src/index.ts
+  s_0ec53e873c6577::t_4942aab7bdaf9b 23,36,53,81-91,106
+packages/integrations/src/interfaces/calendar/calendar-types.ts
+  s_0ec53e873c6577::t_1f8e5db5a56758 36
+packages/integrations/src/interfaces/downloads/download-client-data.ts
+  s_0ec53e873c6577::t_59c09fea84f1a5 7-8
+packages/integrations/src/interfaces/downloads/download-client-integration.ts
+  s_0ec53e873c6577::t_2414def067381f 4-12,15-18
+packages/integrations/src/interfaces/service-version/service-version-integration.ts
+  s_0ec53e873c6577::t_3e5cf0ba6695d9 1-5
+packages/integrations/src/interfaces/service-version/service-version-types.ts
+  s_0ec53e873c6577::t_52dd33cd73f623 1-3
+packages/integrations/src/interfaces/vpn-summary/vpn-summary-types.ts
+  s_0ec53e873c6577::t_81830be6406a9c 8,10-12
+packages/integrations/src/jackett/jackett-indexer-test-error.ts
+  s_0ec53e873c6577::t_cffc9ad0e25af2 1-8
+packages/integrations/src/jackett/jackett-integration.ts
+  s_0ec53e873c6577::t_30d55ab9c549e5 4,7-9,16-18,68-77,80-81,83-98,102-104
+packages/integrations/src/jellyfin/jellyfin-integration.spec.ts
+  s_0ec53e873c6577::t_39f28c4cc118b8 3,66-115
+packages/integrations/src/jellyfin/jellyfin-integration.ts
+  s_0ec53e873c6577::t_5ac0bb79fdeff4 4,68-86,262-319
+packages/integrations/src/llama-cpp/llamacpp-integration.ts
+  s_0ec53e873c6577::t_aead1398800aed 49,61-76,82
+packages/integrations/src/llama-cpp/test/llamacpp-integration.spec.ts
+  s_0ec53e873c6577::t_914ccc24214f2f 345-350
+packages/integrations/src/media-organizer/bindery/bindery-integration.ts
+  s_0ec53e873c6577::t_ec7f7a838db83c 9,12-13,21,95-100
+packages/integrations/src/media-organizer/lidarr/lidarr-integration.ts
+  s_0ec53e873c6577::t_0b639ebc23f638 12,15-16,21,35-41
+packages/integrations/src/media-organizer/radarr/radarr-integration.ts
+  s_0ec53e873c6577::t_af1097edc6fb5a 12,18-19,24-27,223-229
+packages/integrations/src/media-organizer/readarr/readarr-integration.ts
+  s_0ec53e873c6577::t_c43e6fe0052b83 12,15-16,21,35-41
+packages/integrations/src/media-organizer/sonarr/sonarr-integration.ts
+  s_0ec53e873c6577::t_702ff3432d9d99 12,17-18,23-26,80,86-87,96,107-149,152-154,160,173-174,184,207,224-225,267-268,274-280,293,300,318,350,356,365-372
+packages/integrations/src/media-organizer/sportarr/sportarr-integration.ts
+  s_0ec53e873c6577::t_e38e21acb5e0ba 1-46
+packages/integrations/src/mock/data/service-version.ts
+  s_0ec53e873c6577::t_8a14082c485ace 1-8
+packages/integrations/src/mock/mock-integration.ts
+  s_0ec53e873c6577::t_0492b38b87d0bc 19,36,55-56,74,148-150
+packages/integrations/src/mock/widget-data.ts
+  s_0ec53e873c6577::t_f9ae389466bc74 10-17,21,189-212,352,406-462
+packages/integrations/src/openmediavault/openmediavault-integration.ts
+  s_0ec53e873c6577::t_4cc9b6e5b8aa75 3,17-18,105-111,210,226-251,254,275-288,307-311
+packages/integrations/src/openmediavault/openmediavault-totp-error.ts
+  s_0ec53e873c6577::t_44d5bbcc1e05a4 1-25
+packages/integrations/src/openmediavault/totp.ts
+  s_0ec53e873c6577::t_e612971d7f5245 1-39
+packages/integrations/src/overseerr/overseerr-integration.ts
+  s_0ec53e873c6577::t_b883c1c4b5eee1 181-182
+packages/integrations/src/pi-hole/v6/pi-hole-integration-v6.spec.ts
+  s_0ec53e873c6577::t_e4c722b742cf3b 1-93
+packages/integrations/src/pi-hole/v6/pi-hole-integration-v6.ts
+  s_0ec53e873c6577::t_96f5c5731d4c63 30-43
+packages/integrations/src/plex/plex-integration.ts
+  s_0ec53e873c6577::t_e18734d0270ee5 374
+packages/integrations/src/prowlarr/prowlarr-integration.ts
+  s_0ec53e873c6577::t_abbf81ba68fb00 11,14-15,18,80,93-99
+packages/integrations/src/stats/existing.ts
+  s_0ec53e873c6577::t_dc4b8ff15bcea1 8,53-68,205,211-214,227-230,293,321-323,326-338,456-482
+packages/integrations/src/stats/frigate-auth.spec.ts
+  s_0ec53e873c6577::t_8666677953afd5 12-14,16,25,28,63-106,124,130,172-175,183,193,202,246-296
+packages/integrations/src/stats/frigate-authentication-error.ts
+  s_0ec53e873c6577::t_a460d7fbe61913 1-20
+packages/integrations/src/stats/providers/frigate.ts
+  s_0ec53e873c6577::t_317723b9469e89 3-4,32-39,49-72,74
+packages/integrations/src/stats/providers/homebox.ts
+  s_0ec53e873c6577::t_ec3ae051c7faa2 61-65
+packages/integrations/src/stats/stats-integration.ts
+  s_0ec53e873c6577::t_3ca0ac7c7c8d62 3,16-26,42,47,65,80-81,84,87-89,93,96,98,108,111,131-139,144,149-157
+packages/integrations/src/stats/types.ts
+  s_0ec53e873c6577::t_4486420ebe6fea 5,30
+packages/integrations/src/synology/synology-client.ts
+  s_0ec53e873c6577::t_c47ee85163f03b 317-319
+packages/integrations/src/synology/test/synology-integration.spec.ts
+  s_0ec53e873c6577::t_0656950266cdf7 185-191,218,220-222,576,578-580,608-610
+packages/integrations/src/thingport/thingport-integration.ts
+  s_0ec53e873c6577::t_0ae7bbec296a76 1-245
+packages/integrations/src/thingport/thingport-types.ts
+  s_0ec53e873c6577::t_0129d527a97d0e 1-131
+packages/integrations/src/truenas/test/truenas-integration.spec.ts
+  s_0ec53e873c6577::t_971ade410773ce 141,159,176-178,186-194,257,275-404,541
+packages/integrations/src/truenas/truenas-integration.ts
+  s_0ec53e873c6577::t_2e3d9bff2cf3f3 4,18-21,62-64,66-87,90-91,264,312,338-342,348-360,410,418
+packages/integrations/src/types.ts
+  s_0ec53e873c6577::t_02d807d9c2c6f4 9,24,28
+packages/integrations/src/uptime-kuma/test/uptime-kuma-integration.spec.ts
+  s_0ec53e873c6577::t_0f71f2292bf717 1-2,4-10,27-28,32-37,39,41,43,45-48,50-51,54-56,58-90,93-104,106,108-169,172-202,204-221,224-255,257,259-265,268-274,277-278,280-282
+packages/integrations/src/uptime-kuma/uptime-kuma-integration.ts
+  s_0ec53e873c6577::t_90379447fd0d25 9,11-12,15-32,36,48,63-64,66-67,72-79,83-100,104-105,112-113,116-117,122,128-233
+packages/integrations/src/uptime-kuma/uptime-kuma-mock.ts
+  s_0ec53e873c6577::t_411673ebef200b 1-137
+packages/integrations/src/uptime-kuma/uptime-kuma-summary.ts
+  s_0ec53e873c6577::t_4331948116f431 1-58
+packages/integrations/src/uptime-kuma/uptime-kuma-types.ts
+  s_0ec53e873c6577::t_b1ac45cc775729 3-11,14-26,29-33,36,39,42-54,57-62,66-69,73-87,91-100,103-105,109-130
+packages/integrations/src/wazuh/test/wazuh-integration.spec.ts
+  s_0ec53e873c6577::t_d9a86c4f5cee49 1-300
+packages/integrations/src/wazuh/wazuh-errors.ts
+  s_0ec53e873c6577::t_454e3bac15d8be 7,9-12,55-60
+packages/integrations/src/wazuh/wazuh-integration.ts
+  s_0ec53e873c6577::t_9f7d1e1151740b 2,9,15-16,23-24,73-76,98-99,103,426-445,950,954-958
+packages/integrations/src/wazuh/wazuh-queries.ts
+  s_0ec53e873c6577::t_5ffbf0e188147a 3,152-185
+packages/integrations/src/wud/test/wud-integration.spec.ts
+  s_0ec53e873c6577::t_ba10c784001577 25,81-83,205-238,308-319
+packages/integrations/src/wud/wud-integration.ts
+  s_0ec53e873c6577::t_7d4292dc1db303 54-57
+packages/integrations/test/base.spec.ts
+  s_0ec53e873c6577::t_a021774f78c450 1-3,5,8,33-48,50-91
+packages/integrations/test/servarr-service-version.spec.ts
+  s_0ec53e873c6577::t_8eebc9314448c4 1-100
+packages/integrations/test/sportarr-unit.spec.ts
+  s_0ec53e873c6577::t_15c3a10b1e3baf 1-135
+packages/modals-collection/package.json
+  s_0ec53e873c6577::t_1021ec551a5ed9 25
+packages/modals-collection/src/apps/app-select-modal.tsx
+  s_0ec53e873c6577::t_423a21cedf1885 59-61,63-68
+packages/modals-collection/src/search-engines/request-media-modal.tsx
+  s_0ec53e873c6577::t_9ec8969e29b6cd 58
+packages/onboarding/src/confetti.ts
+  s_0ec53e873c6577::t_ddbc645f55afea 1-9
+packages/onboarding/src/discovery-selection.ts
+  s_0ec53e873c6577::t_fbaff5a9dcf4d6 12-17,36-38
+packages/onboarding/src/finish.tsx
+  s_0ec53e873c6577::t_231282ccd720ea 11,46
+packages/onboarding/src/interactive-wordmark.tsx
+  s_0ec53e873c6577::t_10ad6453f06ec3 1-62
+packages/onboarding/src/onboarding-auth-shell.tsx
+  s_0ec53e873c6577::t_f8e9efb71b1d62 24,45,67
+packages/onboarding/src/onboarding-studio.tsx
+  s_0ec53e873c6577::t_499dcb14dd07cf 4,12-20,107,122-134
+packages/onboarding/src/onboarding-wordmark.tsx
+  s_0ec53e873c6577::t_1077087e8bd8f6 3,6-9,32,61-72
+packages/onboarding/src/service-url-template.tsx
+  s_0ec53e873c6577::t_73ba26190aa26c 5-6,9,12,73,82,85-87,90-107,109-118,124-128
+packages/onboarding/src/setup-studio.tsx
+  s_0ec53e873c6577::t_5cd4c2c9e772a3 5,72,167-168,172-177,184-185,227-240,242,341-349,352,371-374,394-397,517-521,523-534,604-620,719,721-722,736-737,749,753-754,789-792,858,863,865,895-916,923-936,938-942,944,1123-1124,1498,1619,1623-1643,1738,1802,1829,1928,1949-1952
+packages/onboarding/src/welcome.tsx
+  s_0ec53e873c6577::t_c053d5ac194d09 138
+packages/ping/src/index.ts
+  s_0ec53e873c6577::t_1f11db4269c9d7 16-20,26
+packages/redis/src/lib/channel.ts
+  s_0ec53e873c6577::t_085a3e8ee2f87d 68,70,72
+packages/request-handler/src/docker-log-decode.ts
+  s_0ec53e873c6577::t_a9184fc3536594 50-52,55-75,77-78,82,84-85,89,97-99,103-110
+packages/request-handler/src/docker.ts
+  s_0ec53e873c6577::t_5e50174c8ca24c 12,500-503
+packages/request-handler/src/downloads.ts
+  s_0ec53e873c6577::t_1db696c0f6f266 2,12
+packages/request-handler/src/lib/request-handler.ts
+  s_0ec53e873c6577::t_b04762668ca223 4,32-36,263,267-269,340,347-348,350
+packages/request-handler/src/release-providers/codeberg.ts
+  s_0ec53e873c6577::t_91ba43db92a53d 1,3-7,9-18,20-29,31,33-39,41-97
+packages/request-handler/src/release-providers/docker-hub.ts
+  s_0ec53e873c6577::t_8d687f0308a607 1-123
+packages/request-handler/src/release-providers/errors.ts
+  s_0ec53e873c6577::t_b4340ff463aa4a 1-50
+packages/request-handler/src/release-providers/github-container-registry.ts
+  s_0ec53e873c6577::t_a33222a795960e 1-172
+packages/request-handler/src/release-providers/github.ts
+  s_0ec53e873c6577::t_62b7f3022db6f7 1-115
+packages/request-handler/src/release-providers/gitlab.ts
+  s_0ec53e873c6577::t_7a3d71dca76a48 1-73
+packages/request-handler/src/release-providers/http.ts
+  s_0ec53e873c6577::t_f8fefae0727135 1-75
+packages/request-handler/src/release-providers/identifier.ts
+  s_0ec53e873c6577::t_94d1e343da6df1 1,3-4,8,10-14,16-19,21-22,24-29
+packages/request-handler/src/release-providers/index.ts
+  s_0ec53e873c6577::t_aee3f1e157749e 1-56
+packages/request-handler/src/release-providers/linuxserver.ts
+  s_0ec53e873c6577::t_2561ff6b41e046 1-77
+packages/request-handler/src/release-providers/npm.ts
+  s_0ec53e873c6577::t_50a8eef787ce49 1-44
+packages/request-handler/src/release-providers/oci-registry.ts
+  s_0ec53e873c6577::t_4bc26487151f30 1-137
+packages/request-handler/src/release-providers/quay.ts
+  s_0ec53e873c6577::t_bdf60e82d6738b 1-39
+packages/request-handler/src/release-providers/registry-tags.ts
+  s_0ec53e873c6577::t_447707e3f8d2ae 1-94
+packages/request-handler/src/release-providers/types.ts
+  s_0ec53e873c6577::t_b42f09090723b8 8,13,24,27,33,35-41,43-46,48,50-57,59
+packages/request-handler/src/release-providers/versions.ts
+  s_0ec53e873c6577::t_dfe8176e26f650 1-77
+packages/request-handler/src/releases.ts
+  s_0ec53e873c6577::t_7151c3ff2d986a 1-3,7-26,28-33,35-39
+packages/request-handler/src/rss-feeds.ts
+  s_0ec53e873c6577::t_6529bd77882766 59
+packages/request-handler/src/service-version.ts
+  s_0ec53e873c6577::t_af288cab1cb938 1-17
+packages/request-handler/src/test/release-providers/codeberg.spec.ts
+  s_0ec53e873c6577::t_82fa319e8b4b66 1-157
+packages/request-handler/src/test/release-providers/dispatcher.spec.ts
+  s_0ec53e873c6577::t_5cb23edf48d8af 1-45
+packages/request-handler/src/test/release-providers/docker-hub.spec.ts
+  s_0ec53e873c6577::t_35f38ab838fed0 1-368
+packages/request-handler/src/test/release-providers/github-container-registry.spec.ts
+  s_0ec53e873c6577::t_aa171ef8ad941c 1-484
+packages/request-handler/src/test/release-providers/github.spec.ts
+  s_0ec53e873c6577::t_3639f1b7f8f87e 1-304
+packages/request-handler/src/test/release-providers/gitlab.spec.ts
+  s_0ec53e873c6577::t_f11ecb944eba4b 1-164
+packages/request-handler/src/test/release-providers/linuxserver.spec.ts
+  s_0ec53e873c6577::t_e423a2c14ea634 3-19,21-23,25-34,36-41,44-46,49-50,52-54,57-65,67,70-71,73,75-76,79-80,83-93,96,102-107,111-112,114,117,120,123-124,126,129,132,135-136,138,140,143-146,148,150-154,156
+packages/request-handler/src/test/release-providers/npm.spec.ts
+  s_0ec53e873c6577::t_5d81df19708235 1-115
+packages/request-handler/src/test/release-providers/oci-registry-server.ts
+  s_0ec53e873c6577::t_2c47e61a38b9ec 1-87
+packages/request-handler/src/test/release-providers/provider-server.ts
+  s_0ec53e873c6577::t_059578b4520f94 1-76
+packages/request-handler/src/test/release-providers/quay.spec.ts
+  s_0ec53e873c6577::t_95eb4edc46d769 1-116
+packages/request-handler/src/test/releases.spec.ts
+  s_0ec53e873c6577::t_bc698d125c471c 1-121
+packages/request-handler/src/thingport.ts
+  s_0ec53e873c6577::t_d7ebfa46948ce2 1-61
+packages/request-handler/src/uptime-kuma.ts
+  s_0ec53e873c6577::t_313b3a17f8ca31 2,7,9,11-14,16
+packages/server-settings/src/index.ts
+  s_0ec53e873c6577::t_19fac160c0e545 2,19-20,53,55,71
+packages/settings/src/context.tsx
+  s_0ec53e873c6577::t_a59f4695eaeb96 4,16-18
+packages/spotlight/src/components/actions/items/children-action-item.tsx
+  s_0ec53e873c6577::t_2ff638355f9a04 3,20,24
+packages/spotlight/src/components/actions/items/group-action-item.tsx
+  s_0ec53e873c6577::t_9103204c379875 3,36,40
+packages/spotlight/src/components/spotlight.tsx
+  s_0ec53e873c6577::t_6d4143faaf0bb2 320
+packages/spotlight/src/lib/catalog.ts
+  s_0ec53e873c6577::t_3d4592aeb3bbb2 80-101
+packages/spotlight/src/modes/external/search-engines-search-group.tsx
+  s_0ec53e873c6577::t_3d2d1479ba6d57 22-23,77
+packages/spotlight/src/modes/home/context.tsx
+  s_0ec53e873c6577::t_cd16874a32848b 2,42-48,52-54,56-60,62-63,65-67
+packages/translation/src/lang/ca.json
+  s_0ec53e873c6577::t_26190d975521f8 104-105,130-131,147,245-327,804-807,809,909,911,1008,1396,1448-1450,1500-1501,1547,1815,1885,1893-1894,1896,1900-1902,1906-1907,1921,2041-2052,2070-2078,2116,2140,2279,2309-2317,3230-3236,3245-3260,3413-3417,3940-3955,3960-3961,3983-4085,4426,4429,4432,4439,4441-4442,4448,4458-4459,4461,4467,4656,4737-4761,4764-4773,4777-4785,4787-4789,4813-4815,4820-4823,4865-4954,4957,4959-4964,4966-4968,5140-5146,5148-5171,5173-5175,5177-5178,5180-5181,5183-5185,5188-5208,5210-5235,5239-5249,5472-5474,5489-5494,5862-5863,5884-5891,5915-5917,5925-5948,5950-5956,5958-6050,6053-6056,6058,6061,6064,6067,6070,6073-6074,6077,6080,6082-6083,6085-6086,6089-6102,6104,6107,6110,6113,6116,6118-6119,6121-6122,6125,6127-6128,6131-6152,6172-6183,6397,6770-6794,7023-7026,7029,7185,7278,7330-7335,7337-7338,7348-7383,7904-7910,7937,8048,8478,8547,8760-8767,8817,8888-8890,8905-8906,9088
+packages/translation/src/lang/cn.json
+  s_0ec53e873c6577::t_b2243e010235f3 5,27,41,66-67,104-105,130-131,140,143-144,147,180,205,211-212,245-327,463,478-479,482-483,497,518,531,534,538,543,547,560,636,728,732,804-807,809,824,909,911,930,933-934,937-938,942,967,1008,1067,1073,1085,1089,1160,1165-1166,1354,1383,1386,1396,1448-1450,1463,1498,1500-1501,1547,1559,1605,1613,1803,1806,1815,1885,1893-1894,1896,1900-1902,1906-1907,1916,1921-1922,1924,1934-1935,1986,1989,1991-1992,2007,2020-2021,2038,2041-2052,2059,2061,2070-2078,2104-2105,2116,2140,2158,2172,2191,2252,2257,2265,2279,2304,2309-2317,2358,2443-2446,2527,2530,2535,2634-2638,2641-2644,2704,2711-2712,2787,2865,2912,2938,2981,3219,3230-3236,3242,3245-3260,3376,3413-3417,3451,3475,3498,3540,3550,3636,3756,3821,3856,3874,3889,3940-3955,3960-3961,3978,3983-4085,4426,4429,4432,4439,4441-4442,4448,4458-4459,4461,4467,4478,4523,4594,4619,4629,4633,4638,4656,4670,4709,4737-4743,4745-4752,4754-4756,4758-4773,4775-4785,4787-4789,4805,4813-4815,4818,4820-4823,4865-4954,4957,4959-4964,4966-4968,4978,4983,4986-4987,4989,5089-5090,5140-5158,5160-5171,5173-5175,5177-5178,5180-5181,5183-5185,5188-5229,5231-5235,5239-5249,5289-5290,5410,5472-5474,5489-5494,5723,5725,5735,5755,5809,5862-5863,5867,5884-5891,5915-5917,5925-5948,5950-5956,5958-6050,6053-6056,6061,6073-6074,6077,6080,6082-6083,6085-6086,6090-6102,6116,6118,6121-6122,6127-6128,6131-6152,6172-6183,6248-6249,6252-6253,6256-6257,6267,6270,6284,6312-6313,6334,6354,6364,6380-6381,6383-6384,6389,6396-6397,6401,6405,6408,6424,6438,6475,6478,6487,6490-6491,6495,6497-6498,6506-6507,6510-6511,6516,6518-6519,6530-6531,6534-6536,6540,6542-6544,6547-6549,6552-6554,6636,6639,6643,6647,6650,6653,6662,6666,6669,6674,6679-6680,6687,6746-6747,6761,6770-6794,6797,6809,6840,6843,6880,6926,6946-6948,6986,7000,7007,7023-7026,7029,7072,7090,7185,7195,7278,7330-7335,7337-7338,7348-7383,7409,7452,7458,7497,7554,7616,7634,7648,7732,7786,7806,7870,7904-7910,7937,7981,8029,8048,8056,8077,8080,8083,8090,8119,8226,8229,8234,8237,8295,8297,8308,8382,8424,8478,8547,8567,8570,8579,8601,8674,8677-8678,8681-8682,8686,8690,8702,8711-8712,8719-8720,8723-8724,8728,8760-8767,8817,8888-8890,8894-8895,8905-8906,8969,8989,9088
+packages/translation/src/lang/cr.json
+  s_0ec53e873c6577::t_06575ab08e739b 62,104-105,130-131,147,245-327,804-807,809,909,911,1396,1442,1448-1450,1500-1501,1547,1815,1885,1893-1894,1896,1900-1902,1906-1907,1921,2041-2052,2070-2078,2116,2140,2279,2309-2317,3230-3236,3245-3260,3413-3417,3940-3955,3960-3961,3983-4085,4426,4429,4432,4439,4441-4442,4448,4458-4459,4461,4467,4656,4670,4735,4737-4743,4745-4752,4754-4756,4758-4760,4762-4773,4775-4789,4813-4815,4820-4823,4865-4954,4957-4964,4966-4968,5138,5140-5146,5148-5150,5152-5154,5156-5158,5160-5162,5164-5185,5191-5249,5472-5474,5489-5494,5862-5863,5882-5890,5915-5917,5925-5948,5950-5956,5958-6050,6053-6056,6058,6061,6064,6067,6070,6073-6074,6077,6080,6082-6083,6085-6086,6089-6102,6104,6107,6110,6113,6116,6118-6119,6121-6122,6125,6127-6128,6131-6152,6172-6183,6309-6310,6312-6313,6351,6355,6359,6397,6702,6715,6725,6770-6794,7023-7026,7029,7185,7212,7278,7330-7335,7337-7338,7348-7383,7399,7405-7407,7409,7904-7910,7937,8048,8478,8547,8760-8767,8789,8805,8817,8888-8890,8905-8911,9088
+packages/translation/src/lang/cs.json
+  s_0ec53e873c6577::t_8e20aa176aa458 79,104-105,130-131,147,151,159,166,170,180,201,231,245-327,623,804-807,809,847,884,909,911,919,936,938,943,967,998,1067,1089,1160,1162,1251,1277,1290,1396,1448-1450,1498,1500-1501,1547,1806,1815,1885,1893-1894,1896,1900-1902,1906-1907,1921,1986,2041-2052,2070-2078,2116,2140,2196,2234,2279,2309-2317,2446,2458,2626,2629,2634-2638,2641-2644,2662,2693,2703-2704,2711-2712,2715,2719,2722,2735-2737,2788,2797,2804,2838,2841,2849,2853,3006,3075,3230-3236,3245-3260,3340,3344,3357,3413-3417,3569,3587-3588,3602-3603,3939-3955,3960-3961,3983-4085,4370,4426,4429,4432,4439,4441-4442,4448,4458-4459,4461,4467,4656,4737-4761,4764-4773,4777-4785,4787-4789,4813-4815,4820-4823,4865-4954,4957,4959-4964,4966-4968,4975,4986,4988-4989,5069,5089-5090,5140-5142,5144-5146,5148-5150,5152-5154,5156-5158,5160-5185,5188-5208,5210-5235,5239-5249,5284,5286,5380,5410,5472-5474,5489-5494,5637,5639,5708,5710,5713,5719,5723,5725,5753-5756,5809,5815,5862-5863,5867,5882-5890,5915-5917,5921-5923,5925-5948,5950-5956,5958-5985,5987-6050,6053-6056,6067,6077,6082-6083,6085-6086,6090-6102,6118,6121-6122,6127-6128,6132-6150,6152,6172-6183,6221,6397,6438,6443,6572,6574,6740,6744,6770-6794,6986,7000,7023-7026,7029,7044,7051,7185,7278,7330-7335,7337-7338,7348-7383,7599,7601,7779-7780,7812,7904-7910,7937,7949,8047-8048,8478,8547,8760-8767,8817,8843,8888-8890,8905-8906,8920,8944,8956,9049,9056-9057,9081,9088
+packages/translation/src/lang/da.json
+  s_0ec53e873c6577::t_eed62c4e6c9d67 77,104-105,116,130-131,147,151,170,180,201,214,245-327,369,623,804-807,809,859,909,911,919,936,938,943,967,998,1016,1067,1073,1089,1091,1162-1163,1171,1261,1276-1278,1290,1317,1396,1448-1450,1498,1500-1501,1547,1806,1815,1885,1893-1894,1896,1900-1902,1906-1907,1921,1986,2041-2052,2070-2078,2096,2116,2140,2173,2215-2216,2230,2234,2279,2309-2317,2446,2458,2462,2626,2629,2634-2638,2641-2644,2650,2662,2666,2703-2704,2711-2712,2715,2719,2722,2735-2737,2788,2797,2803-2804,2830,2837-2838,2841,2844,2849,2853,3006,3075,3230-3236,3245-3260,3340,3344,3357,3413-3417,3564,3569,3602-3603,3636,3939-3955,3960-3961,3983-4085,4370,4426,4429,4432,4439,4441-4442,4448,4458-4459,4461,4467,4656,4737-4761,4764-4773,4777-4785,4787-4789,4813-4815,4820-4823,4865-4954,4957,4959-4964,4966-4968,4984,4986-4987,4989,5069,5071,5089-5090,5140-5142,5144-5145,5148,5152,5156-5173,5177-5183,5188-5218,5220-5235,5239-5249,5284,5286,5380,5410,5472-5474,5489-5494,5638-5639,5670,5709,5713,5716,5719,5723,5725,5740,5753-5756,5815,5862-5863,5865,5867,5882-5890,5915-5917,5922-5923,5925-5948,5950-5956,5958-5985,5987-6050,6053-6056,6067,6077,6082-6083,6085-6086,6090-6102,6118,6121-6122,6127-6128,6132-6150,6152,6172-6183,6221,6397,6438,6443,6572,6574,6744,6770-6794,6986,7000,7018,7023-7026,7029,7044,7051,7148,7183,7185-7186,7278,7330-7335,7337-7338,7348-7383,7405-7407,7601,7779-7780,7812,7904-7910,7937,8029,8047-8048,8478,8547,8746,8760-8767,8810,8817,8820,8828,8871,8888-8890,8899,8905-8906,8914,8920-8921,8938,8940,8944,8954,8956-8957,9049,9056-9057,9081,9088
+packages/translation/src/lang/de-CH.json
+  s_0ec53e873c6577::t_bc216f405c7e95 104-105,130-131,147,245-327,804-807,809,909,911,1008,1396,1448-1450,1500-1501,1547,1815,1885,1893-1894,1896,1900-1902,1906-1907,1921,2041-2052,2070-2078,2116,2140,2279,2309-2317,3230-3236,3245-3260,3413-3417,3940-3955,3960-3961,3983-4085,4426,4429,4432,4439,4441-4442,4448,4458-4459,4461,4467,4656,4737-4761,4764-4773,4777-4785,4787-4789,4813-4815,4820-4823,4865-4954,4957,4959-4964,4966-4968,5140-5154,5156-5158,5160-5162,5164-5175,5177-5178,5180-5185,5188-5218,5220-5235,5239-5249,5472-5474,5489-5494,5862-5863,5884-5891,5915-5917,5925-5948,5950-5956,5958-6050,6053-6056,6058,6061,6064,6067,6070,6073-6074,6077,6080,6082-6083,6085-6086,6089-6102,6104,6107,6110,6113,6116,6118-6119,6121-6122,6125,6127-6128,6131-6152,6172-6183,6397,6770-6794,7023-7026,7029,7185,7278,7330-7335,7337-7338,7348-7383,7904-7910,7937,8048,8478,8547,8760-8767,8817,8888-8890,8905-8906,9088
+packages/translation/src/lang/de.json
+  s_0ec53e873c6577::t_0c05c8a90c22bf 4,6,8,12-14,104-105,130-131,147,151,170,201,245-327,804-807,809,847,909,911,918-919,936,1014,1290,1396,1448-1450,1500-1501,1547,1815,1885,1893-1894,1896,1900-1902,1906-1907,1921,1986,2041-2052,2070-2078,2116,2140,2196,2234,2279,2309-2317,2367,2446,2629,2703,2715,2719,2724,2735,2742,2788,2797,2803-2804,2830,2837-2838,2841,2849,2853,3075,3230-3236,3245-3260,3340,3344,3357,3413-3417,3569,3602-3603,3637,3939-3955,3960-3961,3983-4085,4189,4370,4426,4429,4432,4439,4441-4442,4448,4458-4459,4461,4467,4656,4679,4737-4761,4764-4773,4777-4785,4787-4789,4813-4815,4820-4823,4860,4865-4954,4957,4959-4964,4966-4968,4986-4987,4989,5069,5071,5089-5090,5140-5142,5144-5150,5152-5154,5156-5158,5160-5162,5164-5185,5188-5221,5223-5235,5239-5249,5284-5286,5380,5410,5472-5474,5489-5494,5520,5583,5588,5634-5637,5723,5725,5753-5756,5815,5862-5863,5867,5882-5890,5915-5917,5920-5921,5925-5948,5950-5956,5958-6050,6053-6056,6077,6082-6083,6085-6086,6090-6102,6118,6121-6122,6127-6128,6132-6150,6152,6172-6183,6221,6397,6438,6443,6572,6574,6704,6744,6770-6794,6796-6798,6986,7000,7023-7026,7029,7044,7051,7185,7278,7330-7335,7337-7338,7348-7383,7388,7405-7407,7498,7506,7601,7779-7780,7812,7904-7910,7937,8029,8047-8048,8148,8206,8234,8478,8547,8734,8760-8767,8817,8820,8871,8888-8890,8905-8906,8925,8938,8944,9022,9049,9056-9057,9081,9088
+packages/translation/src/lang/el.json
+  s_0ec53e873c6577::t_8f9f39f05f9513 79,96,104-105,130-131,147,151,170,180,201,245-327,804-807,809,909,911,919,936,938,967,998,1014,1067,1089,1160,1162,1277,1290,1396,1448-1450,1498,1500-1501,1547,1806,1815,1885,1893-1894,1896,1900-1902,1906-1907,1921,1986,2041-2052,2070-2078,2116,2140,2230,2234,2279,2309-2317,2446,2626,2629,2634-2638,2641-2644,2666,2703-2704,2712,2715,2719,2788,2797,2804,2838,2841,2849,2853,3075,3230-3236,3245-3260,3333,3340,3357,3413-3417,3569,3602,3939-3955,3960-3961,3980,3983-4085,4370,4426,4429,4432,4439,4441-4442,4448,4458-4459,4461,4467,4656,4737-4761,4764-4773,4777-4785,4787-4789,4813-4815,4820-4823,4865-4954,4957,4959-4964,4966-4968,4984,4986,4988-4989,5089-5090,5140-5142,5144-5150,5152-5158,5160-5162,5164-5171,5173-5185,5188-5233,5235,5239-5249,5284,5380,5472-5474,5489-5494,5708,5723,5725,5755,5809,5815,5862-5863,5867,5882-5890,5915-5917,5925-5956,5958-5985,5987-6023,6025-6027,6029-6050,6053-6055,6077,6082-6083,6085-6086,6090-6102,6118,6121-6122,6127-6128,6132-6150,6152,6172-6183,6221,6397,6438,6443,6572,6574,6770-6794,6986,7000,7018,7023-7026,7029,7044,7185,7278,7330-7335,7337-7338,7348-7383,7599,7601,7779-7780,7812,7904-7910,7937,8047-8048,8478,8547,8760-8767,8817,8888-8890,8905-8906,8920,8927,8944,8956,9049,9056-9057,9081,9088
+packages/translation/src/lang/en-gb.json
+  s_0ec53e873c6577::t_26f2cd84267ab3 104-105,130-131,147,245-327,804-807,809,909,911,1396,1448-1450,1500-1501,1547,1815,1885,1893-1894,1896,1900-1902,1906-1907,1921,2041-2052,2070-2078,2116,2140,2279,2309-2317,3230-3236,3245-3260,3413-3417,3940-3955,3960-3961,3983-4085,4426,4429,4432,4439,4441-4442,4448,4458-4459,4461,4467,4656,4737-4745,4747-4752,4754,4758,4762-4773,4775-4785,4787,4813-4815,4820-4823,4865-4954,4957,4959-4964,4966-4968,5140-5142,5144-5171,5173-5175,5177-5178,5180-5181,5183-5185,5188-5208,5210-5235,5239-5249,5472-5474,5489-5494,5862-5863,5884-5891,5915-5917,5925-5943,5945-5948,5950-5956,5958-6023,6025-6050,6053-6056,6058,6061,6064,6067,6070,6073-6074,6077,6080,6082-6083,6085-6086,6089-6102,6104,6107,6110,6113,6116,6118-6119,6121-6122,6125,6127-6128,6131-6152,6172-6183,6397,6770-6794,7023-7026,7029,7185,7278,7330-7335,7337-7338,7348-7383,7904-7910,7937,8048,8052,8478,8547,8760-8767,8817,8888-8890,8905-8906,9088
+packages/translation/src/lang/es.json
+  s_0ec53e873c6577::t_6b826a61065a46 104-105,115,130-131,147,151,170,201,245-327,369,623,804-807,809,909,911,919,936,938,943,967,998,1014,1036,1067,1089,1162,1277,1290,1317-1318,1396,1448-1450,1498,1500-1501,1547,1806,1815,1885,1893-1894,1896,1900-1902,1906-1907,1921,1986,2041-2052,2070-2078,2116,2140,2279,2309-2317,2446,2626,2629,2634-2638,2641-2644,2665,2703-2704,2711-2712,2715,2719,2722,2735-2737,2788,2797,2804,2838,2841,2849,2853,3006,3075,3230-3236,3245-3260,3340,3344,3357,3413-3417,3569,3591,3602-3603,3637,3940-3955,3960-3961,3983-4085,4370,4426,4429,4432,4439,4441-4442,4448,4458-4459,4461,4467,4656,4737-4761,4764-4773,4777-4785,4787-4789,4813-4815,4820-4823,4865-4954,4957,4959-4964,4966-4968,4986-4987,4989,5069,5071,5089-5090,5140-5144,5148,5152,5156,5160,5164-5183,5188-5218,5220-5235,5239-5249,5380,5410,5472-5474,5489-5494,5636-5637,5639,5723,5725,5753-5756,5815,5862-5863,5867,5882-5890,5915-5917,5921-5923,5925-5948,5950-5956,5958-5985,5987-6050,6053-6056,6077,6082-6083,6085-6086,6090-6102,6118,6121-6122,6127-6128,6132-6150,6152,6172-6183,6221,6397,6425,6438,6443,6572,6574,6701,6744,6770-6794,6986,7000,7023-7026,7029,7044,7051,7185,7278,7330-7335,7337-7338,7348-7383,7405-7407,7506,7601,7779-7780,7812,7904-7910,7937,8029,8047-8048,8478,8547,8760-8767,8817,8888-8890,8895,8905-8906,8940,8944,9049,9056-9057,9081,9088
+packages/translation/src/lang/et.json
+  s_0ec53e873c6577::t_3b4245ebe315a1 104-105,130-131,147,245-327,804-807,809,909,911,1008,1396,1448-1450,1500-1501,1547,1815,1885,1893-1894,1896,1900-1902,1906-1907,1921,2041-2052,2070-2078,2116,2140,2279,2309-2317,3230-3236,3245-3260,3413-3417,3940-3955,3960-3961,3983-4085,4426,4429,4432,4439,4441-4442,4448,4458-4459,4461,4467,4656,4737-4761,4764-4773,4777-4785,4787-4789,4813-4815,4820-4823,4865-4954,4957,4959-4964,4966-4968,5140-5150,5152-5171,5173-5175,5177-5178,5180-5181,5183-5185,5188-5218,5220-5235,5239-5249,5472-5474,5489-5494,5862-5863,5884-5891,5915-5917,5925-5948,5950-5956,5958-6023,6025-6050,6053-6056,6058,6061,6064,6067,6070,6073-6074,6077,6080,6082-6083,6085-6086,6089-6102,6104,6107,6110,6113,6116,6118-6119,6121-6122,6125,6127-6128,6131-6152,6172-6183,6397,6770-6794,7023-7026,7029,7185,7278,7330-7335,7337-7338,7348-7383,7904-7910,7937,8048,8478,8547,8760-8767,8817,8888-8890,8905-8906,9088
+packages/translation/src/lang/fi.json
+  s_0ec53e873c6577::t_75ab2ea3a2a90b 22,96,104-105,130-131,147,151,170,180,201,245-327,804-807,809,909,911,919,936,938,943,967,998,1067,1089,1153,1160,1277,1290,1396,1448-1450,1498,1500-1501,1547,1806,1815,1867,1875,1885,1893-1894,1896,1900-1902,1906-1907,1921,1986,2041-2052,2070-2078,2116,2140,2173,2230,2234,2279,2309-2317,2446,2629,2634-2638,2641-2644,2666,2703-2704,2712,2715,2719,2722,2724,2788,2797,2804,2838,2841,2849,2853,2901,3075,3230-3236,3245-3260,3357,3413-3417,3563,3569,3602,3940-3955,3960-3961,3983-4085,4370,4426,4429,4432,4439,4441-4442,4448,4458-4459,4461,4467,4656,4737-4745,4747-4752,4754,4758,4762-4773,4775-4785,4787,4789,4813-4815,4820-4823,4865-4954,4957-4964,4966-4968,4984,4986,4988-4989,5089-5090,5140-5150,5152-5171,5173-5175,5177-5178,5180-5181,5183-5185,5188-5229,5231-5235,5239-5249,5410,5472-5474,5489-5494,5636-5638,5708,5710,5723,5725,5753-5756,5815,5847,5862-5863,5866-5867,5882-5890,5915-5917,5921,5925-5943,5945-5948,5950-5956,5958-5978,5980-5985,5987-6050,6053-6056,6077,6082-6083,6085-6086,6090-6102,6118,6121-6122,6127-6128,6132-6150,6152,6172-6183,6221,6397,6438,6443,6572,6574,6702,6715,6725,6744,6770-6794,6986,7000,7018,7023-7026,7029,7044,7051,7148,7185,7278,7330-7335,7337-7338,7348-7383,7405-7407,7437,7779-7780,7812,7904-7910,7937,8047-8048,8478,8547,8760-8767,8817,8888-8890,8905-8906,8920,8944,8956,9049,9056-9057,9081,9088
+packages/translation/src/lang/fr.json
+  s_0ec53e873c6577::t_459993a4c0f81f 104-105,130-131,147,151,158,170,201,203,245-327,804-807,809,833,847,909,911,919,936,938,967,998,1017,1039-1040,1067,1089,1142,1160,1162,1167,1170-1171,1277,1290,1317,1396,1448-1450,1498,1500-1501,1547,1806,1815,1885,1893-1894,1896,1900-1902,1906-1907,1921,1984,1986,2041-2052,2070-2078,2116,2140,2196,2215-2216,2234,2279,2309-2317,2446,2629,2634-2638,2641-2644,2703-2704,2712-2713,2715,2719,2722-2723,2735-2737,2788,2797,2801,2804,2838,2841,2849,2853,3075,3127-3128,3230-3236,3245-3260,3340,3344,3357,3413-3417,3563,3568-3569,3602-3603,3939-3955,3960-3961,3978,3983-4085,4180,4370,4373,4426,4429,4432,4439,4441-4442,4448,4458-4459,4461,4467,4656,4737-4761,4764-4773,4777-4785,4787-4789,4813-4815,4820-4823,4865-4954,4957,4959-4964,4966-4968,4975,4986-4987,4989,5089-5090,5140-5144,5148,5152,5154,5156,5160,5164-5183,5188-5225,5227-5235,5239-5249,5285-5286,5380,5410,5455,5472-5474,5489-5494,5635-5637,5643,5650,5723,5725,5754-5755,5815,5836,5862-5863,5867,5882-5890,5915-5917,5920-5921,5925-5948,5950-5956,5958-5985,5987-6050,6053-6056,6077,6082-6083,6085-6086,6090-6102,6118,6121-6122,6127-6128,6132-6150,6152,6172-6183,6221,6397,6425,6438,6443,6572,6574,6630,6744,6748,6770-6794,6986,7023-7026,7029,7044,7051,7065,7185,7278,7330-7335,7337-7338,7348-7383,7405-7407,7601,7779-7780,7812,7904-7910,7937,8000,8025,8029,8047-8048,8478,8547,8737,8756,8760-8767,8817,8820,8888-8890,8895,8905-8906,8970,9022,9049,9056-9057,9081,9088
+packages/translation/src/lang/he.json
+  s_0ec53e873c6577::t_6d42ba4b620b3a 104-105,130-131,147,245-327,804-807,809,909,911,1396,1448-1450,1500-1501,1547,1815,1885,1893-1894,1896,1900-1902,1906-1907,1921,2041-2052,2070-2078,2116,2140,2279,2309-2317,3230-3236,3245-3260,3413-3417,3940-3955,3960-3961,3983-4085,4426,4429,4432,4439,4441-4442,4448,4458-4459,4461,4467,4656,4737-4761,4764-4773,4777-4785,4787-4789,4813-4815,4820-4823,4865-4954,4957,4959-4964,4966-4968,5140,5144,5148,5152,5156,5160-5183,5188-5218,5220-5235,5239-5249,5472-5474,5489-5494,5862-5863,5884-5891,5915-5917,5925-5943,5945-5948,5950-5956,5958-6023,6025-6050,6053-6056,6058,6061,6064,6067,6070,6073-6074,6077,6080,6082-6083,6085-6086,6089-6102,6104,6107,6110,6113,6116,6118-6119,6121-6122,6125,6127-6128,6131-6152,6172-6183,6397,6770-6794,7023-7026,7029,7185,7278,7330-7335,7337-7338,7348-7383,7904-7910,7937,8048,8478,8547,8760-8767,8817,8888-8890,8905-8906,9088
+packages/translation/src/lang/hr.json
+  s_0ec53e873c6577::t_b23537d52dac65 104-105,130-131,147,245-327,804-807,809,909,911,1396,1448-1450,1500-1501,1547,1815,1885,1893-1894,1896,1900-1902,1906-1907,1921,2041-2052,2070-2078,2116,2140,2279,2309-2317,3230-3236,3245-3260,3413-3417,3940-3955,3960-3961,3983-4085,4426,4429,4432,4439,4441-4442,4448,4458-4459,4461,4467,4656,4737-4761,4764-4773,4777-4785,4787-4789,4813-4815,4820-4823,4865-4954,4957,4959-4964,4966-4968,5140-5142,5144-5146,5148-5150,5152-5154,5156-5171,5173-5185,5188-5229,5231-5235,5239-5249,5472-5474,5489-5494,5862-5863,5884-5891,5915-5917,5925-5948,5950-5956,5958-6050,6053-6056,6058,6061,6064,6067,6070,6073-6074,6077,6080,6082-6083,6085-6086,6089-6102,6104,6107,6110,6113,6116,6118-6119,6121-6122,6125,6127-6128,6131-6152,6172-6183,6397,6770-6794,7023-7026,7029,7185,7278,7330-7335,7337-7338,7348-7383,7904-7910,7937,8048,8478,8547,8760-8767,8817,8888-8890,8905-8906,9088
+packages/translation/src/lang/hu.json
+  s_0ec53e873c6577::t_48509493409a2e 104-105,130-131,147,245-327,804-807,809,909,911,1008,1396,1448-1450,1500-1501,1547,1815,1885,1893-1894,1896,1900-1902,1906-1907,1921,2041-2052,2070-2078,2116,2140,2279,2309-2317,3230-3236,3245-3260,3413-3417,3940-3955,3960-3961,3983-4085,4426,4429,4432,4439,4441-4442,4448,4458-4459,4461,4467,4656,4737-4761,4764-4773,4777-4785,4787-4789,4813-4815,4820-4823,4865-4954,4957,4959-4964,4966-4968,5140-5142,5144-5146,5148-5150,5152-5154,5156-5171,5173-5185,5188-5208,5210-5235,5239-5249,5472-5474,5489-5494,5862-5863,5884-5891,5915-5917,5925-5948,5950-5956,5958-6050,6053-6056,6058,6061,6064,6067,6073-6074,6077,6080,6082-6083,6085-6086,6089-6102,6104,6107,6110,6113,6116,6118,6121-6122,6125,6127-6128,6131-6152,6172-6183,6397,6770-6794,7023-7026,7029,7185,7278,7330-7335,7337-7338,7348-7383,7904-7910,7937,8048,8478,8547,8760-8767,8817,8888-8890,8905-8906,9088
+packages/translation/src/lang/it.json
+  s_0ec53e873c6577::t_c2e885d1e5ee8f 104-105,130-131,147,151,159,166,170,180,201,231,245-327,804-807,809,847,884,909,911,919,936,938,1089,1160,1175,1251,1259,1277-1278,1290,1311,1396,1448-1450,1500-1501,1547,1815,1885,1893-1894,1896,1900-1902,1906-1907,1921,2041-2052,2070-2078,2116,2140,2196,2279,2309-2317,2446,2458,2626,2629,2666,2703-2704,2715,2719,2723-2724,2735,2788,2797,2803,2831,2841,2849,2853-2854,3074-3075,3230-3236,3245-3260,3340,3344,3357,3413-3417,3569,3602,3940-3955,3960-3961,3983-4085,4370,4426,4429,4432,4439,4441-4442,4448,4458-4459,4461,4467,4656,4737-4761,4764-4773,4777-4785,4787-4789,4813-4815,4820-4823,4865-4954,4957,4959-4964,4966-4968,5069,5090,5140-5154,5156-5158,5160-5162,5164-5178,5180-5181,5183-5185,5188-5233,5235,5239-5249,5380,5419,5472-5474,5489-5494,5512,5634,5636,5639,5815,5862-5863,5882-5890,5915-5917,5923,5925-5948,5950-5956,5958-6050,6053-6056,6077,6082-6083,6085-6086,6090-6102,6118,6121-6122,6127-6128,6132-6150,6152,6172-6183,6221,6397,6425,6438,6443,6572,6574,6770-6794,6986,7023-7026,7029,7044,7054,7148,7185,7278,7330-7335,7337-7338,7348-7383,7779-7780,7812,7904-7910,7937,7949,8047-8048,8478,8547,8760-8767,8817,8819,8888-8890,8905-8906,8925-8926,8940,9049,9056-9057,9081,9088
+packages/translation/src/lang/ja.json
+  s_0ec53e873c6577::t_22980f920e9fc6 23,104-105,130-131,147,151,170-171,180,201,245-327,804-807,809,828,870,909,911,919-920,936,938,943,967,998,1013,1017,1041,1067,1089,1160,1219,1277-1278,1290,1396,1448-1450,1463,1498,1500-1501,1547,1806,1815,1885,1893-1894,1896,1900-1902,1906-1907,1921,1986,2041-2052,2070-2078,2116,2140,2165,2192,2230,2234,2279,2309-2317,2361,2384,2446,2458,2484,2486,2626,2629,2634-2638,2641-2644,2648,2689,2703-2704,2711-2712,2715,2719,2735-2737,2742,2788,2797,2804,2838,2841,2849,2853,3075,3230-3236,3245-3260,3333,3335,3340,3344,3353-3354,3357,3413-3417,3569,3602-3603,3787,3939-3955,3960-3961,3978,3983-4085,4370,4426,4429,4432,4439,4441-4442,4448,4458-4459,4461,4467,4656,4737-4761,4764-4773,4777-4785,4787-4789,4813-4815,4820-4823,4865-4954,4957,4959-4964,4966-4968,4983-4984,4986,4989,5069,5073,5089-5090,5140-5144,5148,5152,5156,5160,5164-5183,5188-5208,5210-5235,5239-5249,5284,5380,5410,5456,5472-5474,5489-5494,5715-5716,5723,5725,5735,5750,5754-5756,5791-5793,5815,5842,5862-5863,5865-5867,5873,5882-5890,5902,5909,5915-5917,5922,5925-5948,5950-5956,5958-5985,5987-6050,6053-6056,6077,6082-6083,6085-6086,6090-6102,6118,6121-6122,6127-6128,6132-6150,6152,6172-6183,6221,6243,6397,6425,6438,6443,6572,6574,6770-6794,6984,6986,7000,7018,7023-7026,7029,7044,7185,7278,7330-7335,7337-7338,7348-7383,7405-7407,7506,7779-7780,7812,7904-7910,7937,8047-8048,8478,8547,8760-8767,8817,8888-8890,8905-8906,8920,8925,8931,8944,8956,8969,9022,9049,9056-9057,9069,9081,9088
+packages/translation/src/lang/ko.json
+  s_0ec53e873c6577::t_5506c052819dfe 104-105,130-131,147,245-327,804-807,809,834-835,909,911,1354,1396,1448-1450,1500-1501,1547,1815,1885,1893-1894,1896,1900-1902,1906-1907,1921,2041-2052,2070-2078,2116,2140,2279,2309-2317,2440,2443-2446,3230-3236,3245-3260,3413-3417,3940-3955,3960-3961,3983-4085,4426,4429,4432,4439,4441-4442,4448,4458-4459,4461,4467,4656,4737-4761,4764-4773,4777-4785,4787-4789,4813-4815,4820-4823,4865-4954,4957,4959-4964,4966-4968,5140-5142,5144-5146,5148-5150,5152-5154,5156-5158,5160-5185,5188-5233,5235,5239-5249,5472-5474,5489-5494,5862-5863,5884-5891,5915-5917,5925-5948,5950-5956,5958-6050,6053-6056,6058,6061,6064,6067,6070,6073-6074,6077,6080,6082-6083,6085-6086,6089-6102,6104,6107,6110,6113,6116,6118-6119,6121-6122,6125,6127-6128,6131-6152,6172-6183,6397,6448,6770-6794,7023-7026,7029,7185,7278,7330-7335,7337-7338,7348-7383,7904-7910,7937,8048,8478,8547,8760-8767,8817,8888-8890,8905-8906,9088
+packages/translation/src/lang/lt.json
+  s_0ec53e873c6577::t_4a404e578abb63 104-105,130-131,147,245-327,804-807,809,909,911,1008,1396,1448-1450,1500-1501,1547,1815,1885,1893-1894,1896,1900-1902,1906-1907,1921,2041-2052,2070-2078,2116,2140,2279,2309-2317,3230-3236,3245-3260,3413-3417,3940-3955,3960-3961,3983-4085,4426,4429,4432,4439,4441-4442,4448,4458-4459,4461,4467,4656,4737-4761,4764-4773,4777-4785,4787-4789,4813-4815,4820-4823,4865-4954,4957,4959-4964,4966-4968,5140-5154,5156-5162,5164-5175,5177-5178,5180-5181,5183-5185,5188-5218,5220-5235,5239-5249,5472-5474,5489-5494,5862-5863,5884-5891,5915-5917,5925-5943,5945-5948,5950-5956,5958-6023,6025-6050,6053-6056,6058,6061,6064,6067,6070,6073-6074,6077,6080,6082-6083,6085-6086,6089-6102,6104,6107,6110,6113,6116,6118-6119,6121-6122,6125,6127-6128,6131-6152,6172-6183,6397,6770-6794,7023-7026,7029,7185,7278,7330-7335,7337-7338,7348-7383,7904-7910,7937,8048,8478,8547,8760-8767,8817,8888-8890,8905-8906,9088
+packages/translation/src/lang/lv.json
+  s_0ec53e873c6577::t_f2165c514a3543 104-105,130-131,147,245-327,804-807,809,909,911,1396,1448-1450,1500-1501,1547,1815,1885,1893-1894,1896,1900-1902,1906-1907,1921,2041-2052,2070-2078,2116,2140,2279,2309-2317,3230-3236,3245-3260,3413-3417,3940-3955,3960-3961,3983-4085,4426,4429,4432,4439,4441-4442,4448,4458-4459,4461,4467,4656,4737-4761,4764-4773,4777-4785,4787-4789,4813-4815,4820-4823,4865-4954,4957,4959-4964,4966-4968,5140-5150,5152-5154,5156-5158,5160-5162,5164-5171,5173-5185,5188-5218,5220-5235,5239-5249,5472-5474,5489-5494,5862-5863,5884-5891,5915-5917,5925-5948,5950-5956,5958-6023,6025-6050,6053-6056,6058,6061,6064,6067,6070,6073-6074,6077,6080,6082-6083,6085-6086,6089-6102,6104,6107,6110,6113,6116,6118-6119,6121-6122,6125,6127-6128,6131-6152,6172-6183,6397,6770-6794,7023-7026,7029,7185,7278,7330-7335,7337-7338,7348-7383,7904-7910,7937,8048,8478,8547,8760-8767,8817,8888-8890,8905-8906,9088
+packages/translation/src/lang/nl.json
+  s_0ec53e873c6577::t_578a429a68c79f 22,77,104-105,116,130-131,147,151,170,180,201,245-327,804-807,809,859,909,911,919,921,936,938,943,967,998,1039-1040,1067,1083,1089,1160,1162,1261,1276-1277,1290,1317,1396,1448-1450,1498,1500-1501,1547,1806,1815,1848,1885,1893-1894,1896,1900-1902,1906-1907,1921,1986,2041-2052,2070-2078,2116,2140,2230,2279,2309-2317,2446,2458-2459,2626,2629,2634-2638,2641-2644,2648,2693,2703-2704,2711-2712,2715-2716,2719,2724,2735-2737,2788,2797,2803-2804,2830-2831,2838,2841,2849,2853-2854,3075,3127-3128,3230-3236,3245-3260,3340,3344,3347,3356-3357,3413-3417,3569,3575-3576,3602-3603,3636,3939-3955,3960-3961,3983-4085,4370,4426,4429,4432,4439,4441-4442,4448,4458-4459,4461,4467,4656,4737-4761,4764-4773,4777-4785,4787-4789,4813-4815,4820-4823,4865-4954,4957,4959-4964,4966-4968,4975,4984,4986,4989,5069,5089-5090,5140-5145,5148,5152,5156,5160,5164-5183,5188-5221,5223-5235,5239-5249,5284,5286,5380,5472-5474,5489-5494,5670,5709,5719,5723,5725,5737,5739-5740,5753-5755,5815,5862-5863,5865-5867,5882-5890,5915-5917,5925-5948,5950-5956,5958-5985,5987-6050,6053-6056,6067,6077,6082-6083,6085-6086,6090-6102,6118,6121-6122,6127-6128,6132-6150,6152,6172-6183,6221-6222,6290,6293,6397,6438,6443,6572,6574,6744,6770-6794,6982,6986,7000,7023-7026,7029,7044,7051,7183,7185-7186,7202,7278,7330-7335,7337-7338,7348-7383,7405-7407,7601-7602,7772,7779-7780,7812,7904-7910,7937,8047-8048,8478,8547,8734,8760-8767,8810,8817,8871,8888-8891,8895,8899,8905-8906,8914,8920,8956,9049,9056-9057,9081,9088
+packages/translation/src/lang/no.json
+  s_0ec53e873c6577::t_d17a7bfc51c07e 69,104-105,130-131,147,151,170,180,201,214,245-327,640,804-807,809,891,909,911,919,936,938,943,967,998,1014,1039,1067,1089,1160,1163,1187,1277,1290,1396,1448-1450,1453,1469,1476-1477,1495,1498,1500-1501,1547,1806-1807,1815,1885,1893-1894,1896,1900-1902,1906-1907,1921,1986,2041-2052,2070-2078,2116,2140,2279,2309-2317,2446,2458,2584,2626,2629,2634-2638,2641-2644,2662,2665,2703-2704,2711-2712,2715,2719,2724,2735-2737,2788,2797,2804,2838,2841,2849,2853,3075,3127,3230-3236,3245-3260,3340,3344,3357,3413-3417,3569,3596,3602-3603,3630,3939-3955,3960-3961,3983-4085,4142-4143,4271,4370,4426,4429,4432,4439,4441-4442,4448,4458-4459,4461,4467,4656,4688,4737-4761,4764-4773,4777-4785,4787-4789,4813-4815,4820-4823,4865-4954,4957,4959-4964,4966-4968,4984,4986,4989,5069,5089-5090,5140-5154,5156-5158,5160-5162,5164-5178,5180-5181,5183-5185,5191-5249,5259,5380,5472-5474,5488-5494,5497,5520,5639,5670,5713,5719,5723,5725,5753-5756,5815,5862-5863,5865,5867,5882-5890,5915-5917,5922-5923,5925-5948,5950-5956,5958-5985,5987-6050,6053-6056,6077,6082-6083,6085-6086,6090-6102,6118,6121-6122,6127-6128,6132-6150,6152,6172-6183,6221,6397,6438,6443,6572,6574,6600,6744,6770-6794,6800,6986,7000,7018,7023-7026,7029,7044,7051,7185,7278,7330-7335,7337-7338,7348-7383,7388,7419,7636-7637,7779-7780,7812,7904-7910,7937,8047-8048,8478,8547,8760-8767,8817,8888-8890,8905-8906,8920,8956,9049,9056-9057,9081,9088
+packages/translation/src/lang/pl.json
+  s_0ec53e873c6577::t_4d9049146675b4 104-105,130-131,147,151,170,180,201,245-327,804-807,809,847,909,911,919,936,938,943,967,998,1067,1089,1160,1277,1290,1317,1396,1448-1450,1498,1500-1501,1547,1806,1815,1885,1893-1894,1896,1900-1902,1906-1907,1921,1986,2041-2052,2070-2078,2116,2140,2196,2234,2279,2309-2317,2446,2626,2629,2634-2638,2641-2644,2703-2704,2712,2715,2719,2735-2737,2788,2797,2803-2804,2830,2838,2841,2849,2853,3075,3230-3236,3245-3260,3340,3344,3357,3413-3417,3569,3602-3603,3939-3955,3960-3961,3983-4085,4370,4426,4429,4432,4439,4441-4442,4448,4458-4459,4461,4467,4656,4737-4761,4764-4773,4777-4785,4787-4789,4813-4815,4820-4823,4865-4954,4957,4959-4964,4966-4968,4986-4987,4989,5069,5089-5090,5140-5158,5160-5162,5164-5171,5173-5178,5180-5181,5183-5185,5188-5208,5210-5235,5239-5249,5380,5410,5472-5474,5489-5494,5635-5637,5639,5723,5725,5753-5756,5815,5862-5863,5867,5882-5890,5916-5917,5919-5923,5925-5948,5950-5956,5958-5985,5987-6050,6053-6056,6077,6082-6083,6085-6086,6090-6102,6118,6121-6122,6127-6128,6132-6150,6152,6172-6183,6221,6397,6438,6443,6572,6574,6744,6770-6794,6986,7000,7023-7026,7029,7044,7051,7185,7278,7330-7335,7337-7338,7348-7383,7779-7780,7812,7904-7910,7937,8029,8047-8048,8478,8547,8760-8767,8817,8888-8890,8905-8906,8940,9049,9056-9057,9081,9088
+packages/translation/src/lang/pt-br.json
+  s_0ec53e873c6577::t_a9456aa2037432 104-105,130-131,147,151,170,201,245-327,804-807,809,909,911,919,936,938,967,998,1014,1067,1089,1160,1162,1277,1290,1317,1334,1396,1448-1450,1498,1500-1501,1547,1806,1815,1885,1893-1894,1896,1900-1902,1906-1907,1921,1986,2041-2052,2070-2078,2116,2140,2279,2309-2317,2446,2458,2626,2629,2634-2638,2641-2644,2703,2712,2715,2719,2722,2733,2788,2797,2804,2838,2841,2849,2853,3075,3230-3236,3245-3260,3344,3357,3413-3417,3569,3602-3603,3940-3955,3960-3961,3983-4085,4370,4418,4426,4429,4432,4439,4441-4442,4448,4458-4459,4461,4467,4656,4737-4761,4764-4773,4777-4785,4787-4789,4813-4815,4820-4823,4865-4954,4957,4959-4964,4966-4968,4984,4986-4987,4989,5069,5089-5090,5140-5146,5148-5150,5152-5154,5156-5158,5160-5162,5164-5185,5188-5233,5235,5239-5249,5380,5455,5472-5474,5489-5494,5635-5637,5639,5723,5725,5753-5756,5815,5862-5863,5867,5882-5890,5915-5917,5920-5921,5923,5925-5948,5950-5956,5958-5985,5987-6050,6053-6056,6077,6082-6083,6085-6086,6090-6102,6118,6121-6122,6127-6128,6132-6150,6152,6172-6183,6221,6397,6425,6438,6443,6572,6574,6770-6794,6986,7000,7023-7026,7029,7044,7185,7278,7330-7335,7337-7338,7348-7383,7601,7779-7780,7812,7904-7910,7937,8029,8047-8048,8478,8547,8760-8767,8817,8888-8890,8905-8906,8914,8940,8944,8970,9049,9056-9057,9081,9088
+packages/translation/src/lang/pt.json
+  s_0ec53e873c6577::t_8f16be4b179000 79,104-105,130-131,147,151,170,201,245-327,804-807,809,909,911,919,936,938,967,998,1014,1067,1089,1160,1162,1277,1290,1317,1334,1396,1448-1450,1498,1500-1501,1547,1806,1815,1885,1893-1894,1896,1900-1902,1906-1907,1921,1986,2041-2052,2070-2078,2116,2140,2279,2309-2317,2446,2458,2626,2629,2634-2638,2641-2644,2703,2712,2715,2719,2722,2733,2788,2797,2804,2838,2841,2849,2853,3075,3230-3236,3245-3260,3344,3357,3413-3417,3569,3602-3603,3845-3846,3940-3955,3960-3961,3983-4085,4370,4426,4429,4432,4439,4441-4442,4448,4458-4459,4461,4467,4656,4737-4761,4764-4773,4777-4785,4787,4789,4813-4815,4820-4823,4865-4954,4957,4959-4964,4966-4968,4984,4986-4989,5069,5089-5090,5140-5154,5156-5158,5160-5162,5164-5178,5180-5181,5183-5185,5188-5218,5220-5235,5239-5249,5380,5455,5472-5474,5489-5494,5635-5637,5639,5708,5723,5725,5753-5756,5815,5862-5863,5867,5882-5890,5915-5917,5920-5921,5923,5925-5948,5950-5956,5958-5985,5987-6050,6053-6056,6077,6082-6083,6085-6086,6090-6102,6118,6121-6122,6127-6128,6132-6150,6152,6172-6183,6221,6397,6425,6438,6443,6572,6574,6770-6794,6986,7000,7023-7026,7029,7044,7185,7278,7330-7335,7337-7338,7348-7383,7599,7601,7779-7780,7812,7904-7910,7937,8029,8047-8048,8478,8547,8760-8767,8817,8888-8890,8905-8906,8914,8920,8940,8944,8956,8970,9049,9056-9057,9081,9088
+packages/translation/src/lang/ro.json
+  s_0ec53e873c6577::t_a14c25ef2befd7 79,104-105,115,130-131,147,151,170,180,201,245-327,362,413,449,467,491,517,525,573,623,769,780,791,804-807,809,819-820,824,847,891,909,911,918-919,921,936,938,967,998,1036,1067,1089,1160,1162,1170-1171,1175,1277,1290,1317,1396,1415,1438,1448-1450,1495,1498,1500-1501,1519,1547,1771,1806,1811-1812,1815,1857,1862,1885,1893-1894,1896,1900-1902,1906-1907,1921,1935,1986,1993,1997,2031,2038,2041-2052,2066,2070-2078,2116,2140,2173,2196,2279,2303,2309-2317,2336,2342,2412,2446,2540-2541,2584,2626,2629,2634-2638,2641-2644,2650,2703,2712,2715,2719,2722,2724,2735-2737,2788,2797,2804,2838,2841,2849,2853,2876-2877,3006,3075,3208,3230-3236,3245-3260,3283,3296,3340,3344,3357,3411-3416,3435,3460,3463,3475-3476,3479,3562,3569,3587-3588,3596,3602-3603,3636,3668,3708,3819,3896,3926,3930-3931,3940-3955,3960-3961,3964,3972,3983-4085,4095,4143,4252-4254,4271,4321,4329,4348,4370,4426,4429,4432,4439,4441-4442,4448,4458-4459,4461,4467,4477,4480,4532,4547,4591,4625,4656,4737-4761,4764-4773,4777-4785,4787-4789,4813-4815,4817,4820-4823,4828,4833,4837,4865-4944,4946-4957,4959-4964,4966-4968,4975,4984,4986-4989,5004,5008,5018,5069,5089-5090,5121,5124,5140-5158,5160-5162,5164-5171,5173-5178,5180-5181,5183-5185,5188-5208,5210-5235,5239-5249,5259,5265,5286,5376-5377,5380,5385,5410,5472-5474,5489-5494,5634-5637,5639,5708,5710,5715,5719,5723,5725,5737,5740,5753-5755,5809,5815,5820,5836,5839,5862-5863,5867,5882-5890,5916-5917,5919-5923,5925-5948,5950-5956,5958-6050,6053-6056,6067,6077,6082-6083,6085-6086,6090-6102,6118,6121-6122,6127-6128,6132-6150,6152,6172-6183,6221,6374,6397,6438,6443,6465,6565,6572,6574,6594,6614-6615,6701,6740,6744,6770-6794,6874,6986,7000,7018,7023-7026,7029,7044,7051,7183,7185,7278,7330-7335,7337-7338,7348-7383,7388,7419,7599,7601,7636-7637,7779-7780,7795,7800,7805,7812,7904-7910,7937,7963,7978,8029,8033,8047-8048,8062,8065,8316,8320,8324,8332,8385,8440,8478,8521,8547,8564,8576,8593,8660-8661,8760-8767,8810,8817,8888-8891,8905-8906,8920,8944-8945,8956,9049,9056-9057,9081,9088
+packages/translation/src/lang/ru.json
+  s_0ec53e873c6577::t_97256410a4df0f 4,6,8,11-14,16-19,23-26,31,35-37,41-43,45-49,52-55,57-58,61-62,65,68-72,75-76,80-91,95-98,102-113,115,117-118,120-124,126-131,134-139,141-142,146-151,153,157-159,162-163,166-167,170-177,180-188,191,195-199,201,205-207,210,213-214,216-219,221-222,226-228,230-234,243-326,331-332,346,362,366,368-369,374,380,383,391,413,501,504-505,526,568,580-581,585,611,617-618,621-622,624-626,631,634,636-637,639-640,642,686,732,743,759-760,762-765,804-807,809,812,828-829,831,847,852-855,857,861,869-871,873-875,878-879,883-884,890,892-893,896,899,901-904,907-909,911,918-919,930,933-934,936-937,944-950,953,957-958,960-961,976,978,980,984-985,990,993,996-999,1003-1004,1006,1008-1012,1014,1017,1020-1023,1027-1029,1034,1036,1038,1042-1047,1049,1054-1055,1059,1066,1068-1070,1076-1078,1083-1085,1087-1088,1095,1099-1100,1103-1106,1109-1110,1113-1115,1117-1120,1124-1125,1129,1132-1133,1136-1140,1143,1146-1153,1155-1156,1158-1159,1165-1166,1175,1185-1187,1193-1194,1196-1204,1206,1208,1210-1212,1214,1217-1222,1224-1226,1229,1231,1234-1235,1238-1239,1244,1247,1251-1252,1255,1257,1259-1270,1272-1279,1281,1283-1285,1287-1290,1292-1296,1299-1305,1307-1313,1315-1316,1318-1319,1323-1331,1333-1334,1336-1340,1342-1344,1350-1352,1354-1355,1357-1358,1360-1361,1370,1372-1375,1396,1446,1448-1450,1460,1463,1465-1466,1481,1496,1500-1501,1511,1516,1547,1619,1623,1641,1645,1649,1669,1688-1689,1718,1763-1764,1768,1771-1772,1775-1776,1788,1801-1803,1807,1814-1815,1844,1847,1852,1867,1881,1885,1893-1894,1896,1900-1902,1905-1908,1915-1917,1921,1923,1927-1928,1981-1985,2039,2041-2052,2055,2070-2078,2084-2085,2088-2089,2092-2093,2097,2101,2116,2125,2131,2140,2146,2150-2151,2163-2165,2173,2175-2176,2181-2182,2185-2186,2191-2194,2196-2201,2204-2209,2215-2216,2219-2222,2226,2230,2234,2247-2248,2252,2255-2256,2259,2261,2264-2265,2279,2281,2289,2294,2300,2307-2316,2319,2326-2327,2349,2352,2361,2364,2378,2389,2392,2404,2409,2415,2421,2432,2434,2438,2444-2446,2451,2454,2458,2460-2461,2470-2471,2484-2488,2493,2496-2497,2535,2540,2546,2554,2573,2576-2577,2581,2587-2588,2591-2592,2595,2601-2602,2607,2609,2613-2614,2617,2622,2624,2627,2629-2632,2650,2656,2659,2664,2670,2676,2680-2684,2686-2690,2693,2696,2699-2700,2703,2705,2708,2711-2712,2715-2716,2719-2724,2727,2730-2731,2733-2734,2736-2738,2742-2743,2747,2750,2753-2754,2761-2762,2765,2767,2772-2774,2777-2778,2784,2787-2788,2793,2797-2798,2804,2808,2811,2814,2817,2820,2838,2841-2842,2846,2849-2850,2853,2856-2857,2860,2869,2887-2888,2896-2897,2900,2933-2935,2956-2957,2980-2981,2991,3002,3007,3010,3051-3052,3073,3075,3079-3080,3088-3089,3107,3113,3117,3126,3168,3202-3203,3215,3230-3236,3242,3245-3260,3271,3274,3283,3310,3312,3322,3324-3325,3330-3334,3338,3342-3343,3345-3350,3352,3355-3357,3360,3374,3377,3381,3386,3402,3413-3417,3419,3438,3443-3446,3463,3466,3475,3502-3503,3513-3514,3530,3563,3565,3569,3576,3584,3589,3591-3592,3602,3611,3614,3617,3628,3633,3637,3647,3650,3653,3656,3691,3698,3700-3705,3708-3712,3716-3717,3729,3731,3743,3751,3756,3765-3766,3771,3781-3782,3787,3795,3837,3860,3893,3913,3916-3917,3920-3921,3925,3931,3938-3955,3960-3961,3978-3980,3983-4085,4093,4098-4099,4102-4103,4106-4107,4114-4115,4119,4123,4134-4136,4138,4141-4142,4147-4148,4151,4155,4159-4160,4163-4164,4167-4168,4171,4175,4179-4180,4184,4189,4193-4194,4197,4200,4203-4204,4207,4210,4213-4214,4217,4220,4223-4224,4227-4228,4231,4235-4236,4239,4242,4245-4246,4249,4259-4260,4263-4264,4268,4289-4292,4296-4297,4300-4301,4304,4308-4309,4322,4325-4326,4329-4330,4333-4334,4348-4349,4356,4361,4364-4365,4370,4378,4390-4391,4394-4395,4418,4423,4426,4429,4432,4436,4439,4441-4442,4445,4448,4451-4452,4455-4456,4458-4459,4461,4464,4467,4484,4505-4506,4515,4517,4519,4523,4543,4552,4554-4555,4562,4565,4591,4597-4598,4656,4669-4670,4673,4676,4683,4693,4696,4700,4703,4706,4713,4719,4722,4726,4729-4730,4735,4737-4743,4745-4752,4754-4756,4758-4773,4775-4785,4787-4789,4813-4815,4820-4823,4861,4865-4954,4957-4964,4966-4968,4983,5052,5059,5066,5071-5073,5082,5094,5097,5100,5104,5107,5110,5113,5118,5122-5123,5125-5126,5129,5138,5140-5142,5144-5146,5148-5150,5152-5154,5156-5158,5160-5185,5188-5208,5210-5215,5217-5249,5253,5256,5259,5262,5268,5272-5273,5277-5278,5286,5302-5303,5306-5307,5310-5311,5314-5315,5318-5319,5322-5323,5326-5327,5330-5331,5335,5345,5352,5410-5411,5416,5418-5421,5425,5428-5429,5432,5445,5447-5450,5452,5455-5456,5458,5460,5469-5470,5472-5474,5483-5484,5488-5494,5498,5501,5504,5509,5511-5512,5516,5521,5525,5531,5534,5537,5540,5543,5546,5549,5552,5555,5558,5561,5569-5570,5572-5573,5577,5582,5584,5588-5589,5592-5595,5599,5609-5610,5614,5617-5618,5621,5629,5635,5638-5639,5643-5644,5646-5647,5650-5652,5654-5655,5657-5658,5670,5673,5676,5679,5682,5685,5688,5691,5694,5703,5714-5717,5724,5727,5735,5744-5747,5750,5760,5763,5766,5769,5772,5775,5778,5781,5785-5786,5789-5794,5799-5800,5802-5803,5806,5808,5810,5815-5817,5824,5830,5833,5836,5839,5842,5850,5853-5857,5859,5862-5863,5865-5866,5871,5877-5878,5881-5890,5893-5894,5897-5898,5902,5905-5906,5909-5910,5913-5917,5920,5922-5923,5925-5948,5950-5956,5958-5985,5987-6050,6053-6056,6061,6064,6074,6077,6080,6082-6083,6085-6086,6089-6102,6104,6107,6110,6116,6118,6121-6122,6125,6127-6128,6131-6152,6166-6167,6172-6183,6185-6190,6193-6194,6197-6198,6202-6204,6209-6211,6213,6215,6217-6219,6221,6223,6226-6227,6229,6234,6238-6239,6242-6243,6262-6263,6273-6274,6290-6293,6309-6310,6312-6313,6351,6354-6355,6359,6365,6371,6395,6397,6418,6424-6425,6432,6435,6441,6443-6444,6448-6449,6453-6454,6516,6529,6543,6553,6566,6570,6572-6574,6578,6585,6595,6599-6600,6615,6630,6643,6666,6669,6683,6688,6692,6700-6702,6704,6708-6710,6713-6715,6717,6720-6721,6725-6727,6729-6730,6733,6736,6748,6750-6751,6754-6755,6770-6794,6797,6892,6896,6916,6920-6921,6953,6982,6984,6986,6990,6993,7000,7004,7010,7013-7014,7017,7021-7025,7028-7029,7033,7036-7037,7043-7045,7049-7050,7053,7064-7066,7068,7071,7079,7083-7084,7086-7087,7093,7095,7099,7102,7105,7108,7111,7114,7117,7120,7123,7126,7132,7138-7139,7143-7144,7149,7152-7158,7160-7164,7169,7171,7175-7176,7178-7180,7184-7185,7188-7191,7193-7199,7205-7207,7211-7212,7214,7217-7219,7222-7223,7226,7235,7252-7254,7257-7259,7278,7281,7330-7335,7337-7338,7343,7348-7383,7388,7390-7392,7399,7401-7402,7405-7407,7409,7415,7417,7422,7425-7426,7432,7436-7438,7440-7441,7452,7458-7459,7464,7469,7477,7484-7488,7503,7507,7512,7532,7536,7544,7558-7561,7572-7578,7586-7589,7607,7611-7612,7616-7621,7624-7625,7634-7635,7681,7694,7707,7715-7716,7724,7731-7732,7751-7752,7756,7765-7766,7772,7774-7775,7779-7780,7782-7783,7792,7812,7818,7823,7836,7852,7865,7870,7875,7897,7904-7910,7914,7916,7919,7934,7937,7949,7952,8000,8005,8010,8014,8025-8026,8030,8034-8035,8041-8042,8045,8047-8048,8083,8097,8107-8108,8148,8167,8171,8206,8263,8273,8275-8277,8293,8295,8297-8299,8311,8356-8357,8478,8484-8485,8487-8488,8504,8534,8547,8590,8603,8610,8613-8614,8617-8618,8627-8628,8645,8654-8655,8674,8678,8682,8686,8690,8694,8698,8702,8706,8712,8716,8720,8723-8724,8728,8733-8734,8737-8741,8744-8745,8750-8768,8771-8774,8777-8785,8788-8789,8792-8793,8797,8800-8801,8804-8805,8808,8811,8814-8815,8817,8820,8822,8827,8829-8835,8837-8841,8844-8845,8855,8857-8858,8860-8861,8863-8865,8867,8872-8873,8876-8877,8879-8880,8884,8888-8890,8900-8901,8904-8911,8914-8916,8918,8920,8924-8926,8928-8933,8935,8938-8949,8951,8954,8956,8959-8960,8968-8970,8973-8974,8977-8978,8982,8987-8990,8993,8997-9000,9002,9004-9009,9014,9018,9027-9028,9030,9032,9035-9042,9044-9046,9049,9054,9056-9059,9062,9064,9067-9071,9073,9077,9080-9082,9084-9088,9090-9097
+packages/translation/src/lang/sk.json
+  s_0ec53e873c6577::t_12a70badc68b92 104-105,130-131,147,245-327,804-807,809,909,911,1008,1396,1448-1450,1500-1501,1547,1815,1885,1893-1894,1896,1900-1902,1906-1907,1921,2041-2052,2070-2078,2116,2140,2279,2309-2317,3230-3236,3245-3260,3413-3417,3940-3955,3960-3961,3983-4085,4426,4429,4432,4439,4441-4442,4448,4458-4459,4461,4467,4656,4737-4761,4764-4773,4777-4785,4787-4789,4813-4815,4820-4823,4865-4954,4957,4959-4964,4966-4968,5140-5158,5160-5162,5164-5171,5173-5175,5177-5178,5180-5185,5188-5229,5231-5235,5239-5249,5472-5474,5489-5494,5862-5863,5884-5891,5915-5917,5925-5943,5945-5948,5950-5956,5958-6023,6025-6050,6053-6056,6058,6061,6064,6067,6070,6073-6074,6077,6080,6082-6083,6085-6086,6089-6102,6104,6107,6110,6113,6116,6118-6119,6121-6122,6125,6127-6128,6131-6152,6172-6183,6397,6770-6794,7023-7026,7029,7185,7278,7330-7335,7337-7338,7348-7383,7904-7910,7937,8048,8478,8547,8760-8767,8817,8888-8890,8905-8906,9088
+packages/translation/src/lang/sl.json
+  s_0ec53e873c6577::t_fd28638bd21d9d 104-105,130-131,147,245-327,804-807,809,909,911,1008,1396,1448-1450,1500-1501,1547,1815,1885,1893-1894,1896,1900-1902,1906-1907,1921,2041-2052,2070-2078,2116,2140,2279,2309-2317,3230-3236,3245-3260,3413-3417,3940-3955,3959-3961,3983-4085,4426,4429,4432,4439,4441-4442,4448,4458-4459,4461,4467,4656,4737-4761,4764-4773,4777-4785,4787-4789,4813-4815,4820-4823,4865-4954,4957,4959-4964,4966-4968,5140-5142,5144-5146,5148-5150,5152-5158,5160-5162,5164-5185,5188-5229,5231-5235,5239-5249,5472-5474,5489-5494,5862-5863,5884-5891,5915-5917,5925-5948,5950-5956,5958-6023,6025-6050,6053-6056,6058,6061,6064,6067,6070,6073-6074,6077,6080,6082-6083,6085-6086,6089-6102,6104,6107,6110,6113,6116,6118-6119,6121-6122,6125,6127-6128,6131-6152,6172-6183,6397,6770-6794,7023-7026,7029,7185,7278,7330-7335,7337-7338,7348-7383,7904-7910,7937,8048,8478,8547,8760-8767,8817,8888-8890,8905-8906,9088
+packages/translation/src/lang/sv.json
+  s_0ec53e873c6577::t_47eb2819993971 65,79,104-105,130-131,147,151,170,180,201,245-327,369,804-807,809,847,859,909,911,919,921,936,938,943,967,998,1016,1067,1089,1160,1162-1163,1171,1175,1277,1290,1317,1396,1448-1450,1498,1500-1501,1547,1806,1815,1885,1893-1894,1896,1900-1902,1906-1907,1921,1986,2041-2052,2066,2070-2078,2116,2140,2173,2196,2215-2216,2230,2234,2279,2309-2317,2446,2462,2626,2629,2632,2634-2638,2641-2644,2662,2666,2703-2704,2711-2712,2715,2719,2724,2735-2737,2788,2797,2803-2804,2830,2838,2841,2849,2853,3075,3230-3236,3245-3260,3340,3344,3357,3413-3417,3563,3569,3587-3588,3602-3603,3843,3939-3955,3960-3961,3983-4085,4370,4426,4429,4432,4439,4441-4442,4448,4458-4459,4461,4467,4656,4737-4761,4764-4773,4777-4785,4787-4789,4813-4815,4820-4823,4865-4954,4957,4959-4964,4966-4968,4975,4984,4986,4988-4989,5069,5071,5089-5090,5140-5146,5148-5171,5173-5175,5177-5178,5180-5181,5183-5185,5188-5215,5217-5235,5239-5249,5284,5286,5380,5410,5472-5474,5489-5494,5634,5638-5639,5707-5708,5710,5716,5723,5725,5753-5756,5804,5809,5815,5820,5862-5863,5865,5867,5882-5890,5915-5917,5922-5923,5925-5948,5950-5956,5958-6050,6053-6056,6077,6082-6083,6085-6086,6090-6102,6118,6121-6122,6127-6128,6132-6150,6152,6172-6183,6221,6397,6438,6443,6572,6574,6770-6794,6986,7000,7018,7023-7026,7029,7044,7185,7278,7330-7335,7337-7338,7348-7383,7597,7600-7601,7779-7780,7812,7904-7910,7937,8033,8047-8048,8478,8493,8547,8760-8767,8817,8820,8888-8890,8899,8905-8906,8914,8920,8954,8956,9049,9056-9057,9081,9088
+packages/translation/src/lang/tr.json
+  s_0ec53e873c6577::t_25833a346a79c0 104-105,130-131,147,245-327,804-807,809,909,911,1396,1448-1450,1500-1501,1547,1815,1885,1893-1894,1896,1900-1902,1906-1907,1921,2041-2052,2070-2078,2116,2140,2279,2309-2317,3230-3236,3245-3260,3413-3417,3940-3955,3960-3961,3983-4085,4426,4429,4432,4439,4441-4442,4448,4458-4459,4461,4467,4656,4737-4761,4764-4773,4777-4785,4787-4789,4813-4815,4820-4823,4865-4954,4957,4959-4964,4966-4968,5140-5142,5144-5171,5173-5175,5177-5178,5180-5181,5183-5185,5188-5229,5231-5235,5239-5249,5472-5474,5489-5494,5862-5863,5884-5891,5915-5917,5925-5948,5950-5956,5958-6050,6053-6056,6058,6061,6064,6067,6073-6074,6077,6080,6082-6083,6085-6086,6089-6102,6104,6107,6110,6113,6116,6118,6121-6122,6125,6127-6128,6131-6152,6172-6183,6397,6770-6794,7023-7026,7029,7185,7278,7330-7335,7337-7338,7348-7383,7904-7910,7937,8048,8478,8547,8760-8767,8817,8888-8890,8905-8906,9088
+packages/translation/src/lang/uk.json
+  s_0ec53e873c6577::t_1b505874bbfcae 24,31,35,62,104-105,130-131,147,151,170,201,245-327,804-807,809,909,911,919,1089,1160,1277,1290,1396,1448-1450,1498,1500-1501,1547,1806,1815,1885,1893-1894,1896,1900-1902,1906-1907,1921,1986,2041-2052,2070-2078,2116,2140,2279,2309-2317,2446,2458,2554-2555,2562,2626,2629,2634-2638,2641-2644,2703,2715,2719,2735,2788,2797,2804,2838,2841,2849,2853,3075,3230-3236,3245-3260,3340,3357,3413-3417,3569,3602-3603,3940-3955,3960-3961,3983-4085,4370,4426,4429,4432,4439,4441-4442,4448,4458-4459,4461,4467,4551,4602,4656,4737-4761,4764-4773,4777-4785,4787-4789,4813-4815,4820-4823,4865-4954,4957,4959-4964,4966-4968,4986,4989,5089,5140-5146,5148-5150,5152-5154,5156-5158,5160-5162,5164-5185,5188-5233,5235,5239-5249,5380,5472-5474,5489-5494,5723,5725,5755,5815,5862-5863,5867,5882-5890,5915-5917,5925-5948,5950-5956,5958-5985,5987-6050,6053-6056,6077,6082-6083,6085-6086,6090-6102,6118,6121-6122,6127-6128,6132-6150,6152,6172-6183,6221,6397,6438,6443,6572,6574,6770-6794,6986,7000,7023-7026,7029,7044,7185,7278,7330-7335,7337-7338,7348-7383,7779-7780,7812,7904-7910,7937,8047-8048,8478,8547,8760-8767,8817,8888-8890,8905-8906,9049,9056-9057,9081,9088
+packages/translation/src/lang/vi.json
+  s_0ec53e873c6577::t_e7d3afee01e417 104-105,130-131,147,245-327,804-807,809,909,911,1396,1448-1450,1500-1501,1547,1815,1885,1893-1894,1896,1900-1902,1906-1907,1921,2041-2052,2070-2078,2116,2140,2279,2309-2317,3230-3236,3245-3260,3413-3417,3940-3955,3960-3961,3983-4085,4426,4429,4432,4439,4441-4442,4448,4458-4459,4461,4467,4656,4737-4761,4764-4773,4777-4785,4787-4789,4813-4815,4820-4823,4865-4954,4957,4959-4964,4966-4968,5140-5142,5144-5146,5148-5150,5152-5154,5156-5158,5160-5185,5188-5233,5235,5239-5249,5472-5474,5489-5494,5862-5863,5884-5891,5915-5917,5925-5948,5950-5956,5958-6050,6053-6056,6058,6061,6064,6067,6070,6073-6074,6077,6080,6082-6083,6085-6086,6089-6102,6104,6107,6110,6113,6116,6118-6119,6121-6122,6125,6127-6128,6131-6152,6172-6183,6397,6770-6794,7023-7026,7029,7185,7278,7330-7335,7337-7338,7348-7383,7904-7910,7937,8048,8478,8547,8760-8767,8817,8888-8890,8905-8906,9088
+packages/translation/src/lang/zh.json
+  s_0ec53e873c6577::t_51e5e4d9b6cdf9 94,104-105,130-131,147,168,204,245-327,804-807,809,909,911,1396,1448-1450,1500-1501,1547,1815,1885,1893-1894,1896,1900-1902,1906-1907,1914,1921,2041-2052,2063,2065,2070-2078,2116,2140,2279,2309-2317,3230-3236,3245-3260,3413-3417,3940-3955,3960-3961,3983-4085,4426,4429,4432,4439,4441-4442,4448,4458-4459,4461,4467,4656,4737-4761,4764-4773,4777-4785,4787-4789,4813-4815,4820-4823,4865-4954,4957,4959-4964,4966-4968,5140-5142,5144-5154,5156-5175,5177-5178,5180-5181,5183-5185,5188-5215,5217-5235,5239-5249,5472-5474,5489-5494,5862-5863,5884-5891,5915-5917,5925-5948,5950-5956,5958-6050,6053-6056,6058,6061,6064,6067,6070,6073-6074,6077,6080,6082-6083,6085-6086,6089-6102,6104,6107,6110,6113,6116,6118-6119,6121-6122,6125,6127-6128,6131-6152,6172-6183,6249,6374,6380-6381,6384,6397,6491,6770-6794,7023-7026,7029,7185,7278,7330-7335,7337-7338,7348-7383,7904-7910,7937,8048,8478,8547,8760-8767,8817,8888-8890,8905-8906,9088
+packages/ui/package.json
+  s_0ec53e873c6577::t_6e707019a86720 42
+packages/ui/src/components/color-scheme-combobox.tsx
+  s_0ec53e873c6577::t_d0c32cfdef0766 3,5,12,18-24,28-29,32-42,44-47,52-53,55,60,62,66-67,70-78,80-87,95
+packages/ui/src/components/corner-style-picker.tsx
+  s_0ec53e873c6577::t_183ad1b70840e8 3-4,7-9,11,13-14,21-26,35-40,43-50,54-69,75,87,96,101-105
+packages/ui/src/components/index.tsx
+  s_0ec53e873c6577::t_2edb9f8332d97f 41-42
+packages/ui/src/components/language-combobox.tsx
+  s_0ec53e873c6577::t_0846b1f97075b8 61
+packages/ui/src/components/masked-or-normal-image.tsx
+  s_0ec53e873c6577::t_7ead2ec6ee14e7 52-54
+packages/ui/src/components/no-results.tsx
+  s_0ec53e873c6577::t_d431744312a4f9 4
+packages/ui/src/components/section-card.tsx
+  s_0ec53e873c6577::t_4034aabf1a29e3 11
+packages/ui/src/components/select-with-custom-items.tsx
+  s_0ec53e873c6577::t_85c93d1b06521d 68-72,75
+packages/ui/src/components/user-avatar.tsx
+  s_0ec53e873c6577::t_f5695dd59e9c24 5,30
+packages/ui/src/hooks/index.ts
+  s_0ec53e873c6577::t_505099eaf19344 2
+packages/ui/src/hooks/use-deferred-element-size.ts
+  s_0ec53e873c6577::t_ef814d69e18710 1-22
+packages/ui/src/icons/index.ts
+  s_0ec53e873c6577::t_a61a2a9b828581 1,3-8
+packages/ui/src/integration-select-grid/integration-grid-shared.ts
+  s_0ec53e873c6577::t_e952e82af1c077 39
+packages/ui/src/widget-icons.ts
+  s_0ec53e873c6577::t_8adb9fca30c8c9 18,25-26,44,109-112,131
+packages/validation/src/app.ts
+  s_0ec53e873c6577::t_b1abff3d941204 33-44
+packages/validation/src/board-layout-bounds-error.ts
+  s_0ec53e873c6577::t_ae766a3a544cc2 1
+packages/validation/src/board-layout-bounds.ts
+  s_0ec53e873c6577::t_9c3e9786604f7a 1-82
+packages/validation/src/board.ts
+  s_0ec53e873c6577::t_4963af4fa8b949 8,73
+packages/validation/src/icons.ts
+  s_0ec53e873c6577::t_14c8ac60b97bac 7-14
+packages/validation/src/integration.ts
+  s_0ec53e873c6577::t_c2b3af450d23ea 9-15,22,44
+packages/validation/src/media.ts
+  s_0ec53e873c6577::t_ddc22f93a7dcba 6-43,48,61,66,72-83
+packages/validation/src/onboarding.ts
+  s_0ec53e873c6577::t_ab6e7b0e319f71 5,84
+packages/validation/src/uptime-kuma.ts
+  s_0ec53e873c6577::t_3e1c6d80ac42eb 1-8
+packages/widgets/package.json
+  s_0ec53e873c6577::t_d5beb6f6cc0a4d 75,100,105,114,120
+packages/widgets/src/_inputs/widget-date-time-event-list-input.tsx
+  s_0ec53e873c6577::t_9c698df0273adf 175
+packages/widgets/src/_inputs/widget-location-input.tsx
+  s_0ec53e873c6577::t_15765aed9036ad 228
+packages/widgets/src/_inputs/widget-multiReleasesRepositories-input.tsx
+  s_0ec53e873c6577::t_1f3e7cdd9b21ea 14,31-32,48-50,60-61,83-89,110,113,157,188,190,198,247,442-445,456,461-462,465-474,520-524,555,579-587,648-664,686,695-696,705-706,709,711-716,779-790,797,799,805,808-811,823-826,833,835-836,838,844-871,875,879,882-883,887-888,890-892,901,908-928,930-947,951,953-962,965-993,997-1026,1032-1036
+packages/widgets/src/_inputs/widget-select-input.tsx
+  s_0ec53e873c6577::t_4037e0c952e463 77
+packages/widgets/src/_inputs/widget-stats-entries-input.tsx
+  s_0ec53e873c6577::t_75f1bdc5fa29bb 85
+packages/widgets/src/_inputs/widget-timezone-list-input.tsx
+  s_0ec53e873c6577::t_0df551b20aeb3b 188
+packages/widgets/src/air-quality/component.tsx
+  s_0ec53e873c6577::t_b29aa02d391cf7 218,268,285,301,330
+packages/widgets/src/app/_app-link.spec.tsx
+  s_0ec53e873c6577::t_811c8bf050b088 1-177
+packages/widgets/src/app/_app-link.tsx
+  s_0ec53e873c6577::t_467b3e23eebcd2 4,6-7,9-13,15-49,51-52,55-57
+packages/widgets/src/app/component.tsx
+  s_0ec53e873c6577::t_28e945daea826d 5,19,36,63
+packages/widgets/src/app/index.ts
+  s_0ec53e873c6577::t_852feb0dd9d27c 24-42
+packages/widgets/src/app/ping/ping-indicator.tsx
+  s_0ec53e873c6577::t_cd728511f238c3 20
+packages/widgets/src/assistant/index.ts
+  s_0ec53e873c6577::t_209426a8844cfc 7
+packages/widgets/src/beszel-system-grid/component.tsx
+  s_0ec53e873c6577::t_d22e475f430885 185,286-293,298,426,431
+packages/widgets/src/beszel-system-table/component.tsx
+  s_0ec53e873c6577::t_4a3c6c049feba2 219,367,419,421,461
+packages/widgets/src/beszel/_shared/chart-style.ts
+  s_0ec53e873c6577::t_ad836789e6b3d3 1-8
+packages/widgets/src/beszel/_shared/colors.ts
+  s_0ec53e873c6577::t_08127217f69027 4-5
+packages/widgets/src/beszel/_shared/interactive-chart.tsx
+  s_0ec53e873c6577::t_47d50bfcf4b800 1-88
+packages/widgets/src/beszel/_shared/stats-view.tsx
+  s_0ec53e873c6577::t_ce6c45dfe25f37 22,40,141-147,161,174-179,182,188,194,196,232,237,242,246-256,451,467,483
+packages/widgets/src/bookmarks/bookmarks-widget.tsx
+  s_0ec53e873c6577::t_a77f17727f389a 4,7,22-23,31,101-122,129,156-158,162,184,234,260,275,277,299-300,322,338,350,367,429-465,481,485-488,508,527-573,614-617
+packages/widgets/src/bookmarks/index.tsx
+  s_0ec53e873c6577::t_7efd1e58f81bfb 59
+packages/widgets/src/bookmarks/layout.ts
+  s_0ec53e873c6577::t_0280e1014ec3ba 200,208,252-256,260-261,264
+packages/widgets/src/calendar/calendar-display.tsx
+  s_0ec53e873c6577::t_95e31e30bc096d 1-337
+packages/widgets/src/calendar/calendar-event-list.tsx
+  s_0ec53e873c6577::t_3a9722a1beb27b 2,9,24,33-57,181
+packages/widgets/src/calendar/calendar-events.ts
+  s_0ec53e873c6577::t_b261342bad58da 7-17
+packages/widgets/src/calendar/calendar-schedule-events.ts
+  s_0ec53e873c6577::t_6a459c301241e0 1-58
+packages/widgets/src/calendar/calendar-view.ts
+  s_0ec53e873c6577::t_88ca06bb57187f 1-2
+packages/widgets/src/calendar/calender-day.tsx
+  s_0ec53e873c6577::t_36cdcfdc5cf84e 1,5-6,14-25,28,31-35
+packages/widgets/src/calendar/component.module.css
+  s_0ec53e873c6577::t_f0d7fca1829ee5 1-2,5-7,9-12,15-71,73-220
+packages/widgets/src/calendar/component.tsx
+  s_0ec53e873c6577::t_edbba2f16a6413 8,11,14-15,21,54-55,74,88,98,106,111-118
+packages/widgets/src/calendar/index.ts
+  s_0ec53e873c6577::t_9a8a710a92db46 9,12,19-29
+packages/widgets/src/clock/advanced-view.tsx
+  s_0ec53e873c6577::t_d4434d35327c5b 102,129,198,287,304
+packages/widgets/src/common/application-url.spec.ts
+  s_0ec53e873c6577::t_78c514f5124274 3
+packages/widgets/src/common/application-url.ts
+  s_0ec53e873c6577::t_32783fc05dae95 1
+packages/widgets/src/common/empty-state.tsx
+  s_0ec53e873c6577::t_f9cd2af6a96fdf 1,6-10,16
+packages/widgets/src/common/homarr-data-table.tsx
+  s_0ec53e873c6577::t_d654f1883dc7a6 11-12,31-34,42-44,49-53,60-62,95-96,100-136,139-140,142-143,147-148,150,152-160,167-171,177-186,206-218,227-234,240-247,250,263,267-293
+packages/widgets/src/common/locale.ts
+  s_0ec53e873c6577::t_d20e6b6637a18f 4-5,34-44
+packages/widgets/src/common/use-persisted-table-layout.spec.ts
+  s_0ec53e873c6577::t_a125742d480be4 29,38,74
+packages/widgets/src/common/use-persisted-table-layout.ts
+  s_0ec53e873c6577::t_92a73b2fc4fbbd 3,14-15,17,58,62,66,123-133,135-142,144-150,152,157-159,162,167,170-171,173,176,179-201,209,215-221,223-236,238-240
+packages/widgets/src/coolify/instance-card.tsx
+  s_0ec53e873c6577::t_c0bdcd729620bb 45
+packages/widgets/src/coolify/single-instance-layout.tsx
+  s_0ec53e873c6577::t_e3d956cdb067ae 44
+packages/widgets/src/coolify/types.ts
+  s_0ec53e873c6577::t_e0dd1672c76f1b 12
+packages/widgets/src/countdown/component.tsx
+  s_0ec53e873c6577::t_bf08d0bfe3eed9 164,298,337
+packages/widgets/src/custom-api/custom-jsx-display.tsx
+  s_0ec53e873c6577::t_4f9f395affb99e 16,29,71-82,86-88
+packages/widgets/src/custom-api/index.ts
+  s_0ec53e873c6577::t_127a52186799a9 8
+packages/widgets/src/custom-api/jsx-icon-adapter.tsx
+  s_0ec53e873c6577::t_caad3a7ca3204c 1,3-4,11-44
+packages/widgets/src/definition.ts
+  s_0ec53e873c6577::t_d987f2ef56c0fc 114-115
+packages/widgets/src/docker/component.tsx
+  s_0ec53e873c6577::t_eedd14b384aeab 47,148-149,156,168,182,386-387,395,435-437,448,470,525,537
+packages/widgets/src/docker/index.ts
+  s_0ec53e873c6577::t_eacb50eba48bc6 22,25,67-70
+packages/widgets/src/docker/layout.spec.ts
+  s_0ec53e873c6577::t_65aec939b83d2d 8-9,12-15,19-20,31
+packages/widgets/src/docker/layout.ts
+  s_0ec53e873c6577::t_00a3d696b37835 8
+packages/widgets/src/docker/styles.css
+  s_0ec53e873c6577::t_cf467953549b0e 6-23
+packages/widgets/src/downloads/component.tsx
+  s_0ec53e873c6577::t_a71b32c46755fd 32,329,444,511,518,577,617,689,698-719,722,724,733,810-812,820,870,875-876,880,883,886,889,893,918,956,961,969,976,978,983,985-986,1257,1300,1330
+packages/widgets/src/downloads/helpers.ts
+  s_0ec53e873c6577::t_2d20ffb85ca7f9 21,33
+packages/widgets/src/health-monitoring/cluster/resource-table.tsx
+  s_0ec53e873c6577::t_d9feea265b0144 28,34
+packages/widgets/src/indexer-manager/component.tsx
+  s_0ec53e873c6577::t_4db5d2b9728239 3,64-66,68-78,86-90
+packages/widgets/src/manifest.ts
+  s_0ec53e873c6577::t_de692307a1e9f0 7,10,68-73,154-159
+packages/widgets/src/media-missing/component.tsx
+  s_0ec53e873c6577::t_a0a219c9c280a1 104,164,175
+packages/widgets/src/media-releases/component.tsx
+  s_0ec53e873c6577::t_a1c9e1ec54d3b9 154-160
+packages/widgets/src/media-requests/list/component.tsx
+  s_0ec53e873c6577::t_aac2c379602432 141-143,162-164
+packages/widgets/src/media-server/component.spec.tsx
+  s_0ec53e873c6577::t_357518c0a7f0f1 13-16,110-191
+packages/widgets/src/media-server/component.tsx
+  s_0ec53e873c6577::t_39f64bb27db797 35,185,304,570,575,589,596-659,662-691,693-717,720-727,729-738,741-754,756-758,760-800
+packages/widgets/src/media-transcoding/component.tsx
+  s_0ec53e873c6577::t_3760d9b221075e 269
+packages/widgets/src/media-transcoding/index.ts
+  s_0ec53e873c6577::t_22174bd1877216 14,20
+packages/widgets/src/media-transcoding/panels/panel-table.tsx
+  s_0ec53e873c6577::t_ce1a1d339011d6 1-45
+packages/widgets/src/media-transcoding/panels/queue.panel.tsx
+  s_0ec53e873c6577::t_cc9fded561f1ac 1,8-9,18,22-45,47-54
+packages/widgets/src/media-transcoding/panels/workers.panel.tsx
+  s_0ec53e873c6577::t_d89c2dcdff4789 1,7-8,19-71,73-75
+packages/widgets/src/modals/widget-edit-modal.tsx
+  s_0ec53e873c6577::t_336b5f4a30bb18 718
+packages/widgets/src/notebook/canonical-task.ts
+  s_0ec53e873c6577::t_93252f5d3450ff 1-13
+packages/widgets/src/notebook/component.tsx
+  s_0ec53e873c6577::t_89c21c64d80abe 3-5,8-9,11-14,17-55
+packages/widgets/src/notebook/notebook.css
+  s_0ec53e873c6577::t_7d96d8dbb02a82 47,63,135-179
+packages/widgets/src/notebook/notebook.tsx
+  s_0ec53e873c6577::t_b72ffd5c62b422 62-63,84-101,112-113,123,185,337-342,356,548,585
+packages/widgets/src/notebook/read-mode.tsx
+  s_0ec53e873c6577::t_34c127de78d839 1-254
+packages/widgets/src/notebook/sanitize-content.spec.ts
+  s_0ec53e873c6577::t_da697f47f4df66 1-15
+packages/widgets/src/notebook/sanitize-content.ts
+  s_0ec53e873c6577::t_ab465373d75182 1-222
+packages/widgets/src/notebook/surface.tsx
+  s_0ec53e873c6577::t_097a0049de43e0 1-80
+packages/widgets/src/option-translation.ts
+  s_0ec53e873c6577::t_e226a87af8243c 49-52,57-60
+packages/widgets/src/options.ts
+  s_0ec53e873c6577::t_408dc1a57f1d87 62,204
+packages/widgets/src/refetch-intervals.ts
+  s_0ec53e873c6577::t_7e8448720d8192 27,32,36-39,41
+packages/widgets/src/registry.ts
+  s_0ec53e873c6577::t_7e349aa3ef1822 43-46,66,117-120,138,186-189,207,262-265,283
+packages/widgets/src/releases/component.module.css
+  s_0ec53e873c6577::t_b331e50e03d90f 1-882
+packages/widgets/src/releases/component.tsx
+  s_0ec53e873c6577::t_cde558941bf5c7 3-6,8,10-13,15,18-19,21,23,26-28,30-56,59-62,64,66-69,71-74,76-80,82-88,90-96,98-133,136-138,141-160,164-182,185-204,207-383,385-394,396-399,401-454,456-464,466-504,506-522,526-528,531,533,536-542,544-565,567-583,585-625,627-690,692-694,698-704,707-711,714-748
+packages/widgets/src/releases/display.spec.ts
+  s_0ec53e873c6577::t_b96f64f90f931c 1-166,168-179,181-279,282-295,297-358,360
+packages/widgets/src/releases/display.ts
+  s_0ec53e873c6577::t_708aa66afb5ae3 1-20,23-25,28-72,74-99,101-121
+packages/widgets/src/releases/index.ts
+  s_0ec53e873c6577::t_6d222977efdf04 5,7,9-16,19,22-26,28,31-32,34-37,39-40,42-45,47,49,51-57,59-67,69-78,81,98,109
+packages/widgets/src/releases/integration-version.spec.ts
+  s_0ec53e873c6577::t_2525e5c9944c22 1-138
+packages/widgets/src/releases/integration-version.ts
+  s_0ec53e873c6577::t_2f466608cac5ba 1-94
+packages/widgets/src/releases/release-detail.tsx
+  s_0ec53e873c6577::t_5b3c91b1fad60d 1-336
+packages/widgets/src/releases/release-entry.ts
+  s_0ec53e873c6577::t_351a38d578098e 1-46
+packages/widgets/src/releases/release-options.ts
+  s_0ec53e873c6577::t_c2fa670141b2d8 1-11
+packages/widgets/src/releases/releases-repository.ts
+  s_0ec53e873c6577::t_af680f0bf56aac 1,15,18,21-27
+packages/widgets/src/releases/use-release-entries.ts
+  s_0ec53e873c6577::t_e3925e6bb3d8a1 1-179
+packages/widgets/src/releases/use-viewed-releases.ts
+  s_0ec53e873c6577::t_585044b5173f67 1-88
+packages/widgets/src/rssFeed/component.tsx
+  s_0ec53e873c6577::t_788a9a075d0a59 50
+packages/widgets/src/server-prefetch.ts
+  s_0ec53e873c6577::t_5f71a2c6cac62d 248
+packages/widgets/src/smart-home/entity-state/component.tsx
+  s_0ec53e873c6577::t_508095198a43ee 5,78,91,98
+packages/widgets/src/smart-home/execute-automation/component.tsx
+  s_0ec53e873c6577::t_77d0e19d648dcc 15,65,81,88-96
+packages/widgets/src/speedtest-tracker/latest-result.tsx
+  s_0ec53e873c6577::t_bd09cb34165c25 23,69
+packages/widgets/src/speedtest-tracker/recent-results.tsx
+  s_0ec53e873c6577::t_8fe27116d2dd24 14,55,57-59,89-94,117-127,140-143,149-150
+packages/widgets/src/stats/component.tsx
+  s_0ec53e873c6577::t_1cf8255ac3db3a 4,64-71,73,75,166-167,178-212,214,313
+packages/widgets/src/thingport/activity-heatmap/calendar.spec.ts
+  s_0ec53e873c6577::t_24bd3d3fffc479 1-34
+packages/widgets/src/thingport/activity-heatmap/calendar.ts
+  s_0ec53e873c6577::t_9ed3a68bf43444 1-74
+packages/widgets/src/thingport/activity-heatmap/component.module.css
+  s_0ec53e873c6577::t_fb7ea1a68833f8 1-131
+packages/widgets/src/thingport/activity-heatmap/component.tsx
+  s_0ec53e873c6577::t_dd4e24bfce69f0 1-260
+packages/widgets/src/thingport/activity-heatmap/index.ts
+  s_0ec53e873c6577::t_26f026f97404ef 1,5-6,8-14,17-18,20-29,31-32
+packages/widgets/src/thingport/common/rendered-size.ts
+  s_0ec53e873c6577::t_875d9816c8a781 1-16
+packages/widgets/src/thingport/common/widget-header.tsx
+  s_0ec53e873c6577::t_569524170773a6 1-39
+packages/widgets/src/thingport/featured-model/component.module.css
+  s_0ec53e873c6577::t_748cc463b73935 1-7,10-15,18-20,23-29,32-33
+packages/widgets/src/thingport/featured-model/component.tsx
+  s_0ec53e873c6577::t_70def0da39d119 1-137
+packages/widgets/src/thingport/featured-model/index.ts
+  s_0ec53e873c6577::t_e27c7066236045 1,5-6,8-15,18-21
+packages/widgets/src/thingport/featured-model/model-viewer.tsx
+  s_0ec53e873c6577::t_167a9dcb6adef5 1-250
+packages/widgets/src/thingport/library-stats/component.module.css
+  s_0ec53e873c6577::t_73078580cddd6c 1-102
+packages/widgets/src/thingport/library-stats/component.tsx
+  s_0ec53e873c6577::t_549bc2142196d9 1-74
+packages/widgets/src/thingport/library-stats/index.ts
+  s_0ec53e873c6577::t_574d8fde335b6a 1,5-6,8-14,17-22
+packages/widgets/src/thingport/models/component.module.css
+  s_0ec53e873c6577::t_17638ae4ac5def 1-19
+packages/widgets/src/thingport/models/component.tsx
+  s_0ec53e873c6577::t_b2d50c24ba6ac6 1-167
+packages/widgets/src/thingport/models/index.ts
+  s_0ec53e873c6577::t_810db06f4f249c 1,6-7,9-15,18-19,21-37,39-41,43-44
+packages/widgets/src/timer/component.tsx
+  s_0ec53e873c6577::t_dd7d65650be61f 409,420,553
+packages/widgets/src/umami/component.tsx
+  s_0ec53e873c6577::t_3865fb907275d8 8,101
+packages/widgets/src/umami/umami-content.tsx
+  s_0ec53e873c6577::t_c8f3cace4df26f 17,77
+packages/widgets/src/umami/umami-events-content.tsx
+  s_0ec53e873c6577::t_be4c1610fe8180 9,31
+packages/widgets/src/umami/umami-utils.ts
+  s_0ec53e873c6577::t_d126175ff18213 3,18-23,28
+packages/widgets/src/uptime-kuma/component.module.css
+  s_0ec53e873c6577::t_29c951257a176f 1-2,7-44,46-49,52-55,57-66,69-76,78-79,82-93,95-96,99-107,110,112-114,116-117,120-122,125-137,139,142-146,150-160,162-171,174-184,189-243,245-263,265-277,279-298,301-302,305-328,330-338,341-344,348,350-351,354-357,360-363,365-415,417,422-430,432-445,447-540
+packages/widgets/src/uptime-kuma/component.tsx
+  s_0ec53e873c6577::t_c2a66d316e9627 3-6,9-12,14,18-20,23-52,72,80,83,92,96-101,103,105-106,108-124,127,129-131,135,137-139,144-154,158-160,163-196,199-203,205-230,233-289,291-320,322-438
+packages/widgets/src/uptime-kuma/heartbeat-bar.tsx
+  s_0ec53e873c6577::t_edb752d3750f8c 1-64
+packages/widgets/src/uptime-kuma/index.ts
+  s_0ec53e873c6577::t_2df5ec837fa8ad 4,14-16,19-31,33-36
+packages/widgets/src/uptime-kuma/layout.ts
+  s_0ec53e873c6577::t_a038bce68ee65d 1-58
+packages/widgets/src/uptime-kuma/monitor-row.tsx
+  s_0ec53e873c6577::t_afce940936eb1e 1-158
+packages/widgets/src/uptime-kuma/monitors.ts
+  s_0ec53e873c6577::t_1fed3916541429 1-90
+packages/widgets/src/uptime-kuma/notices.tsx
+  s_0ec53e873c6577::t_b39c9e5e09e434 1-124
+packages/widgets/src/uptime-kuma/status.ts
+  s_0ec53e873c6577::t_d9d288bd04b877 1-104
+packages/widgets/src/uptime-kuma/summary.tsx
+  s_0ec53e873c6577::t_90aab759907985 1-160
+packages/widgets/src/vpn/vpn-card.spec.tsx
+  s_0ec53e873c6577::t_ac1fad62c7793e 1-75
+packages/widgets/src/vpn/vpn-card.tsx
+  s_0ec53e873c6577::t_959c5d1c2354d2 10,47-48,88,111,153-156,183,197,199-210,214
+packages/widgets/src/wazuh/_shared/error-state.tsx
+  s_0ec53e873c6577::t_241922a66d30f8 20-21
+packages/widgets/src/wazuh/_shared/options.ts
+  s_0ec53e873c6577::t_7b9f72b192d804 7-11
+packages/widgets/src/wazuh/component.module.css
+  s_0ec53e873c6577::t_7e2b0cb84d9a1d 1-43
+packages/widgets/src/wazuh/component.tsx
+  s_0ec53e873c6577::t_13deeaa008ca8a 1-138
+packages/widgets/src/wazuh/index.ts
+  s_0ec53e873c6577::t_82cb214746a41b 1,8-10,12-16,18-158,160-164
+packages/widgets/src/wazuh/view-props.ts
+  s_0ec53e873c6577::t_05c7370135bef6 1-7
+packages/widgets/src/wazuh/views.spec.ts
+  s_0ec53e873c6577::t_ec577e0d32d55f 1-32
+packages/widgets/src/wazuh/views.ts
+  s_0ec53e873c6577::t_d94e80cbbd9ccd 1-32
+packages/widgets/src/wazuh/views/agents.tsx
+  s_0ec53e873c6577::t_f861e4784f7019 4,16,19-21,26-36,39,98,106,111-116,127-131,150-313,388-389,411-425
+packages/widgets/src/wazuh/views/alerts.tsx
+  s_0ec53e873c6577::t_e5277d3c0b8327 9-18,20-21,23,25,31,57
+packages/widgets/src/wazuh/views/auth-failures.tsx
+  s_0ec53e873c6577::t_b734b682bb2d55 10-19,24-25,28,30,36,54,151
+packages/widgets/src/wazuh/views/fim.tsx
+  s_0ec53e873c6577::t_df2b582389de64 18-26,41-42,50-51
+packages/widgets/src/wazuh/views/overview.tsx
+  s_0ec53e873c6577::t_a9db114278d3bd 11-15,22-24,37,70-71
+packages/widgets/src/wazuh/views/timeline.tsx
+  s_0ec53e873c6577::t_8fdd94b068bd2b 11-17,47-48
+packages/widgets/src/wazuh/views/top.tsx
+  s_0ec53e873c6577::t_27228d3550a462 11-20,57-58,63,69-70,74,85,87,91,99,111,118,121,134-136,152,154,177
+packages/widgets/src/wazuh/views/vulnerabilities.tsx
+  s_0ec53e873c6577::t_d84b9726bbd76b 10-18,35,102,155-156
+packages/widgets/src/weather/advanced.tsx
+  s_0ec53e873c6577::t_785882c7ead3ff 69
+packages/workshop/src/backend.ts
+  s_0ec53e873c6577::t_f4034f205b9ba4 269,301-314,316-318,408-413,421-430,546-553
+plugins/homarr-mantine/mcp.json
+  s_0ec53e873c6577::t_db87c67df1dc0f 2,5,7-8
+plugins/homarr-mantine/plugin.json
+  s_0ec53e873c6577::t_65bb00fc6d6e04 1-18
+plugins/homarr-mantine/skills/mantine-ui/SKILL.md
+  s_0ec53e873c6577::t_7f134ea8d59cf7 1-42
+plugins/homarr-mantine/skills/mantine-ui/agents/openai.yaml
+  s_0ec53e873c6577::t_d256296647e480 1-4
+scripts/entrypoint.sh
+  s_0ec53e873c6577::t_545b8d88723535 33,51-52
+scripts/run-turbo.mjs
+  s_0ec53e873c6577::t_7e4e4bfa172bb8 1-28
+static-data/contributors.json
+  s_0ec53e873c6577::t_4650f8215bb58b 1
+static-data/opencollective-contributors.json
+  s_0ec53e873c6577::t_834353aa97c2fe 1
+static-data/translators.json
+  s_0ec53e873c6577::t_8ba8b2cad55036 1
+tooling/github/setup/action.yml
+  s_0ec53e873c6577::t_c3a284485afefa 21,23,25,27,42,45,47,54,63,74,83
+tools/assistant-benchmark/README.md
+  s_0ec53e873c6577::t_6530933508f4e4 21-22
+tools/brand-art/bun.lock
+  s_0ec53e873c6577::t_d2cc579c1dddbd 13,24
+tools/brand-art/package.json
+  s_0ec53e873c6577::t_eddda99642c15f 14
+tools/homarr-dev/go.mod
+  s_0ec53e873c6577::t_f7106d6b8221b0 3,6-8,10,17,24-25,29-31
+tools/homarr-dev/go.sum
+  s_0ec53e873c6577::t_2c9a409f05d327 1-8,17-20,36-39,49-50,54-57
+tools/homarr-dev/internal/tui/sidebar.go
+  s_0ec53e873c6577::t_ff8319a6d499b2 49,66-68,80-83
+tools/mysql-to-sqlite/Dockerfile
+  s_0ec53e873c6577::t_680aaeff691265 1,3,9
+tools/mysql-to-sqlite/bun.lock
+  s_0ec53e873c6577::t_5105ca3134e2fe 8,27
+tools/mysql-to-sqlite/package.json
+  s_0ec53e873c6577::t_194886956bed95 11,14
+tools/v2-showreel/bun.lock
+  s_0ec53e873c6577::t_417834d837b653 11-12,15-17,24,26,28,30,32,34,36,38,40,42,44,46,48,50,52,54,56,58,60,62,64,66,68,70,72,74,82,88,92,96,98,100
+tools/v2-showreel/package.json
+  s_0ec53e873c6577::t_b578a9b1bcc84e 13-14,17-19
+turbo.json
+  s_0ec53e873c6577::t_2fd00d18393970 6,14,45-46,53,57
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "ee301cb0143d338495f540482150f41c99f98724",
+  "prompts": {},
+  "sessions": {
+    "s_0ec53e873c6577": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "c7be1e01-4627-4bf7-8db7-dbdc91188528",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
