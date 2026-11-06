@@ -1,0 +1,16 @@
+packages/integrations/src/stats/frigate-auth.spec.ts
+  h_d6e478ca18e517 16,77-107
+packages/integrations/src/stats/stats-integration.ts
+  h_d6e478ca18e517 134-138
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "a8fd3a62c6e0f2bc3325e195f43b3b188c67cdfe",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
