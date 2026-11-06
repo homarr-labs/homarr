@@ -129,6 +129,10 @@ export class TestConnectionError<TType extends TestConnectionErrorType> extends 
     return this.Parse(cause).toResult();
   }
 
+  public static OpenMediaVaultResult(reason: OpenMediaVaultConnectionFailureReason, cause: Error) {
+    return new TestConnectionError("openmediavault", { reason }, { cause }).toResult();
+  }
+
   static FromIntegrationError(error: IntegrationError): AnyTestConnectionError {
     if (error instanceof IntegrationUnknownError) {
       return this.Unknown(error.cause);
@@ -163,7 +167,14 @@ const statusCodeMap = {
   504: "gatewayTimeout",
 } as const;
 
+export type OpenMediaVaultConnectionFailureReason =
+  | "totpSecretRequired"
+  | "totpSecretInvalid"
+  | "totpVerificationFailed"
+  | "unsupportedChallenge";
+
 interface TestConnectionErrorMap {
+  openmediavault: { reason: OpenMediaVaultConnectionFailureReason };
   unknown: undefined;
   parse: undefined;
   authorization: {

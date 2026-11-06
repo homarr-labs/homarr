@@ -27,7 +27,20 @@ export class PiHoleIntegrationV6 extends Integration implements DnsHoleSummaryIn
 
   public override async getHttpAuthenticationAsync(): Promise<IntegrationHttpAuthentication> {
     if (!this.hasSecretValue("apiKey")) return { headers: {} };
-    const sessionId = await this.getSessionAsync();
+
+    // Reuse the stored session instead of logging in on every request, which would exhaust Pi-hole's
+    // limited API seats (webserver.api.max_sessions). GET /api/auth answers 401 for an expired session,
+    // so withAuthAsync only creates (and stores) a new one when needed.
+    let sessionId = null as string | null;
+    const response = await this.withAuthAsync(async (sid) => {
+      sessionId = sid;
+      return await fetchWithTrustedCertificatesAsync(this.url("/api/auth"), {
+        headers: { sid: sid ?? undefined },
+      });
+    });
+
+    if (!response.ok) throw new ResponseError(response);
+    await response.body?.cancel();
     if (!sessionId) throw new Error("Pi-hole did not return an authenticated session");
     return { headers: { sid: sessionId }, redactValues: [sessionId] };
   }
