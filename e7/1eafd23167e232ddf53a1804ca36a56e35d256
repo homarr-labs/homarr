@@ -1,0 +1,21 @@
+packages/api/src/router/widgets/indexer-manager.ts
+  s_f779bb6dbff52f::t_3b504baa017cdd 47
+packages/integrations/src/jackett/jackett-integration.ts
+  s_f779bb6dbff52f::t_67efaec0b28974 61-70,72-77,81-91
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "e71eafd23167e232ddf53a1804ca36a56e35d256",
+  "prompts": {},
+  "sessions": {
+    "s_f779bb6dbff52f": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "d40044b0-c2d1-4f09-b2cf-e64a89045010",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
