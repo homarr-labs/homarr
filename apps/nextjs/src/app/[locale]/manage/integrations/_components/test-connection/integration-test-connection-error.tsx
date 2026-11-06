@@ -25,8 +25,17 @@ export const IntegrationTestConnectionError = ({ error, url }: IntegrationTestCo
             {tIntegration(`testConnection.error.${error.type}.title` as never)}
           </Text>
 
-          {error.type !== "request" && error.type !== "certificate" && error.type !== "statusCode" ? (
+          {error.type !== "request" &&
+          error.type !== "certificate" &&
+          error.type !== "statusCode" &&
+          error.type !== "openmediavault" ? (
             <Text size="md">{tIntegration(`testConnection.error.${error.type}.description` as never)}</Text>
+          ) : null}
+
+          {error.type === "openmediavault" ? (
+            <Text size="md">
+              {tIntegration(`testConnection.error.openmediavault.description.${error.data.reason}` as never)}
+            </Text>
           ) : null}
 
           {error.type === "request" ? (
