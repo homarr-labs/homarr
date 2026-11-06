@@ -312,6 +312,7 @@ describe("TrueNasIntegration", () => {
       data: [
         [4000, 1, 999, 0, 1000],
         [4000, 6000, 1000, 0, 1000],
+        [0, 0, 1005, 0, 0],
       ],
       used: 6000 * 1024 * 1024,
     },
@@ -323,7 +324,14 @@ describe("TrueNasIntegration", () => {
       ],
       used: 10_000_000_000,
     },
-    { legend: ["time", "available"], data: [[1000, 0]], used: 16_000_000_000 },
+    {
+      legend: ["time", "available"],
+      data: [
+        [999, 6_000_000_000],
+        [1000, 0],
+      ],
+      used: 16_000_000_000,
+    },
     { legend: ["time", "available"], data: [[1000, 17_000_000_000]], used: 0 },
     {
       legend: ["time", "free", "used", "cached", "buffers"],
@@ -357,33 +365,82 @@ describe("TrueNasIntegration", () => {
   });
 
   test.each([
-    { legend: ["time", "system", "user", "idle", "softirq", "nice", "iowait"], data: [[1000, 4, 8, 87, 0, 0, 1]] },
-    { legend: ["cpu1", "cpu", "time", "cpu0"], data: [[100, 12, 1000, 0]] },
+    {
+      legend: ["time", "system", "user", "idle", "softirq", "nice", "iowait"],
+      data: [[1000, 4, 8, 87, 0, 0, 1]],
+      utilization: 12,
+    },
+    { legend: ["cpu1", "cpu", "time", "cpu0"], data: [[100, 12, 1000, 0]], utilization: 12 },
     {
       legend: ["time", "system", "user", "idle", "softirq", "nice", "iowait"],
       data: [
         [1000, 4, 8, 87, 0, 0, 1],
         [1005, 0, 0, 0, 0, 0, 0],
       ],
+      utilization: 12,
+    },
+    {
+      legend: ["time", "cpu"],
+      data: [
+        [1000, 12],
+        [1005, 0],
+      ],
+      utilization: 0,
+    },
+    {
+      legend: ["time", "system", "user"],
+      data: [
+        [1000, 4, 8],
+        [1005, 0, 0],
+      ],
+      utilization: 0,
+    },
+    {
+      legend: ["time", "user", "idle"],
+      data: [
+        [1000, 12, 88],
+        [1005, 0, 100],
+      ],
+      utilization: 0,
+    },
+    {
+      legend: ["time", "user", "idle"],
+      data: [
+        [1000, 0, 0],
+        [1005, 0, 0],
+      ],
+      utilization: 0,
     },
   ])(
     "reads CPU utilization without averaging timestamps, idle time or duplicate core totals: $legend",
-    async ({ legend, data }) => {
+    async ({ legend, data, utilization }) => {
       ws.setResponder(reportingResponder("cpu", legend, data));
 
       const result = await createIntegration(credentials).getSystemInfoAsync();
 
-      expect(result.cpuUtilization).toBe(12);
+      expect(result.cpuUtilization).toBe(utilization);
     },
   );
 
-  test("excludes the named timestamp from CPU temperatures even when reordered", async () => {
-    ws.setResponder(reportingResponder("cputemp", ["cpu0", "time", "cpu1"], [[45, 1000, 46]]));
+  test.each([
+    { data: [[45, 1000, 46]], temperature: 46 },
+    {
+      data: [
+        [45, 1000, 46],
+        [0, 1005, 0],
+      ],
+      temperature: 0,
+    },
+  ])(
+    "excludes the named timestamp from CPU temperatures even when reordered: $temperature",
+    async ({ data, temperature }) => {
+      ws.setResponder(reportingResponder("cputemp", ["cpu0", "time", "cpu1"], data));
 
-    const result = await createIntegration(credentials).getSystemInfoAsync();
+      const result = await createIntegration(credentials).getSystemInfoAsync();
 
-    expect(result.cpuTemp).toBe(46);
-  });
+      expect(result.cpuTemp).toBe(temperature);
+    },
+  );
 
   test("sums the latest named network columns across interfaces in bytes per second", async () => {
     ws.setResponder((method) => {
@@ -399,6 +456,15 @@ describe("TrueNasIntegration", () => {
             ],
           },
           { name: "interface", identifier: "eth1", legend: ["time", "received", "sent"], data: [[1000, 300, 400]] },
+          {
+            name: "interface",
+            identifier: "eth2",
+            legend: ["sent", "time", "received"],
+            data: [
+              [200, 1000, 100],
+              [0, 1005, 0],
+            ],
+          },
         ];
       }
       return happyResponder(method);
