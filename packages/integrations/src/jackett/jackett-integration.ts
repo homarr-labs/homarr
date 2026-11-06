@@ -1,8 +1,12 @@
 import { z } from "zod/v4";
 import { parseStringPromise } from "xml2js";
 
+import { ResponseError } from "@homarr/common/server";
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 
+import { IntegrationRequestError } from "../base/errors/http/integration-request-error";
+import { IntegrationResponseError } from "../base/errors/http/integration-response-error";
+import { IntegrationParseError } from "../base/errors/parse/integration-parse-error";
 import type { IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
 import { TestConnectionError } from "../base/test-connection/test-connection-error";
@@ -66,7 +70,7 @@ export class JackettIntegration extends Integration implements IIndexerManagerIn
       signal: AbortSignal.timeout(30_000),
       redirect: "error",
     });
-    if (!response.ok) throw new Error(`status ${response.status}`);
+    if (!response.ok) throw new ResponseError(response);
     // A Torznab <error> can use HTTP 200; only a valid RSS result is success.
     searchSchema.parse(await parseStringPromise(await response.text(), { explicitArray: true }));
   }
@@ -79,8 +83,18 @@ export class JackettIntegration extends Integration implements IIndexerManagerIn
         indexers.slice(offset, offset + indexerTestConcurrency).map(async (indexer) => {
           try {
             await this.testIndexerAsync(indexer);
-          } catch {
-            failures.push(indexer.title[0] ?? indexer.$.id);
+          } catch (error: unknown) {
+            let reason = "Test failed";
+            if (error instanceof IntegrationResponseError) reason = `HTTP ${error.cause.statusCode}`;
+            if (error instanceof IntegrationParseError) reason = "Invalid Torznab response";
+            if (error instanceof IntegrationRequestError) {
+              reason = "Request failed";
+              if (error.cause.type === "timeout") reason = "Request timed out";
+              if (error.cause.type === "certificate") reason = "Certificate error";
+              if (error.cause.type === "dns") reason = "DNS error";
+              if (error.cause.type === "connection") reason = "Connection failed";
+            }
+            failures.push(`${indexer.title[0] ?? indexer.$.id} (${indexer.$.id}): ${reason}`);
           }
         }),
       );
