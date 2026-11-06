@@ -1,0 +1,94 @@
+.out-of-scope/beszel-custom-thresholds.md
+  h_d6e478ca18e517 1-13
+.out-of-scope/custom-widget-viewer-identity.md
+  h_d6e478ca18e517 1-15
+.out-of-scope/single-layout-boards.md
+  h_d6e478ca18e517 1-15
+Dockerfile
+  h_d6e478ca18e517 41,45
+apps/docs/docs/advanced/single-sign-on/index.mdx
+  h_d6e478ca18e517 192-206
+apps/docs/docs/integrations/open-media-vault/index.mdx
+  h_d6e478ca18e517 55-60
+apps/docs/public/api/open-api-schema.json
+  h_d6e478ca18e517 7544-7545
+apps/nextjs/src/app/[locale]/_client-providers/trpc.tsx
+  h_d6e478ca18e517 220-235
+apps/nextjs/src/app/[locale]/manage/integrations/_components/secrets/integration-secret-card.tsx
+  h_d6e478ca18e517 25,28,72-76
+apps/nextjs/src/app/[locale]/manage/integrations/_components/secrets/integration-secret-icons.ts
+  h_d6e478ca18e517 8,39
+apps/nextjs/src/app/[locale]/manage/integrations/_components/secrets/integration-secret-inputs.tsx
+  h_d6e478ca18e517 81
+apps/nextjs/src/app/[locale]/manage/integrations/_components/test-connection/integration-test-connection-error.tsx
+  h_d6e478ca18e517 28-31,35-40
+apps/nextjs/src/app/[locale]/manage/integrations/edit/[id]/_integration-edit-form.tsx
+  h_d6e478ca18e517 13,18,113,143,145-153,174,186-187,215,217,291-327
+apps/nextjs/src/app/api/trpc/[trpc]/route.ts
+  h_d6e478ca18e517 51
+nginx.conf
+  h_d6e478ca18e517 1
+packages/api/src/router/integration/integration-router.ts
+  h_d6e478ca18e517 345-347
+packages/api/src/router/integration/integration-test-stored-connection.ts
+  h_d6e478ca18e517 31-40
+packages/api/src/router/integration/map-test-connection-error.ts
+  h_d6e478ca18e517 60-64,68-69,71,73-74,76,81-87,94
+packages/auth/providers/oidc/profile.ts
+  h_d6e478ca18e517 6-9
+packages/auth/providers/oidc/test/profile.spec.ts
+  h_d6e478ca18e517 19,31-34
+packages/definitions/src/integration.ts
+  h_d6e478ca18e517 31,650
+packages/definitions/src/release-provider.ts
+  h_d6e478ca18e517 60-61,63,65,73-77,80-82,112-117
+packages/integrations/src/base/test-connection/test-connection-error.ts
+  h_d6e478ca18e517 132-135,170-175,177
+packages/integrations/src/openmediavault/openmediavault-integration.ts
+  h_d6e478ca18e517 3,17-18,105-111,210,226-251,254,275-288,307-311
+packages/integrations/src/openmediavault/openmediavault-totp-error.ts
+  h_d6e478ca18e517 1-25
+packages/integrations/src/openmediavault/totp.ts
+  h_d6e478ca18e517 1-39
+packages/integrations/src/pi-hole/v6/pi-hole-integration-v6.spec.ts
+  h_d6e478ca18e517 1-93
+packages/integrations/src/pi-hole/v6/pi-hole-integration-v6.ts
+  h_d6e478ca18e517 30-43
+packages/request-handler/src/release-providers/docker-hub.ts
+  h_d6e478ca18e517 3-4,6,16-21,24,38,50,52,56-61,63-86,117-120
+packages/request-handler/src/release-providers/github-container-registry.ts
+  h_d6e478ca18e517 2-3,117-122,124-138,165,170
+packages/request-handler/src/release-providers/index.ts
+  h_d6e478ca18e517 2,30,32-37,42
+packages/request-handler/src/release-providers/registry-tags.ts
+  h_d6e478ca18e517 2,55,77,82-88
+packages/request-handler/src/release-providers/types.ts
+  h_d6e478ca18e517 51
+packages/request-handler/src/release-providers/versions.ts
+  h_d6e478ca18e517 2
+packages/request-handler/src/rss-feeds.ts
+  h_d6e478ca18e517 59
+packages/translation/src/lang/en.json
+  h_d6e478ca18e517 1518-1526,1726-1730,1811-1814,2435-2438,2461-2463,4843
+packages/widgets/src/_inputs/widget-multiReleasesRepositories-input.tsx
+  h_d6e478ca18e517 49-50,442-445,520-524,836
+packages/widgets/src/bookmarks/bookmarks-widget.tsx
+  h_d6e478ca18e517 4,7,22-23,184,322,338,367,429-465,481,485-488,508,527-573
+packages/widgets/src/bookmarks/index.tsx
+  h_d6e478ca18e517 59
+packages/widgets/src/releases/use-release-entries.ts
+  h_d6e478ca18e517 65,98-102,123-126,158
+scripts/run.sh
+  h_d6e478ca18e517 84-88
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "030f1ec6019ace0eae7019d3d2f672978166e801",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
