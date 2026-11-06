@@ -280,6 +280,13 @@
           "title": "Voller Administrator-Zugriff",
           "description": "Du kannst Homarr und verbundene Dienste verwalten, einschließlich destruktiver Aktionen."
         },
+        "mode": {
+          "label": "",
+          "readOnly": "",
+          "readWrite": "",
+          "readOnlyDescription": "",
+          "readWriteDescription": ""
+        },
         "credential": {
           "title": "Anmeldedatenbereich und -dauer",
           "breadth": "Funktioniert mit Homarr's HTTP API und MCP, einschließlich außerhalb dieses Clients.",
@@ -1386,11 +1393,7 @@
               "label": "Vorhandene App auswählen"
             },
             "new": {
-              "title": "Neu",
-              "url": {
-                "label": "App URL",
-                "description": "Die URL, welche die App öffnet, sobald sie vom Dashboard aus aufgerufen wird"
-              }
+              "title": "Neu"
             }
           }
         }
@@ -1442,8 +1445,9 @@
         "label": "Eine existierende App verknüpfen",
         "description": "Verbinden Sie diese Integration mit einer App, die Sie bereits verwenden können."
       },
-      "appHref": {
-        "placeholder": "Benutzerdefinierte App URL"
+      "externalUrl": {
+        "label": "",
+        "description": ""
       },
       "apiKeySettings": {
         "label": "API-Schlüssel holen"
@@ -1790,10 +1794,6 @@
         "wazuhIndexerPassword": {
           "label": "Indexer-Passwort",
           "newLabel": "Neues Indexer-Passwort"
-        },
-        "wazuhDashboardUrl": {
-          "label": "Dashboard-URL (optional)",
-          "newLabel": "Neue Dashboard-URL"
         }
       }
     },
@@ -2038,7 +2038,7 @@
     "total": "Gesamt",
     "filesystemUsage": "{count, plural, one {Zeige Nutzung für # Dateisystem} other {Zeige Nutzung für # Dateisysteme}}",
     "field": {
-      "name": "Name",
+      "name": "Job Name",
       "state": "Status",
       "size": "Größe",
       "actions": "Aktionen",
@@ -7327,6 +7327,12 @@
             "apiKey": {
               "label": "Authentifizierung",
               "title": "API Schlüssel",
+              "access": {
+                "label": "",
+                "readOnly": "",
+                "readWrite": "",
+                "description": ""
+              },
               "button": {
                 "createApiToken": "API Token erstellen",
                 "confirmDeletion": "Löschen bestätigen"
@@ -8808,6 +8814,7 @@
       "imageInput": "Bildeingabe akzeptieren",
       "thinking": "Denkmodus",
       "reasoning": {
+        "default": "Standard",
         "auto": "Auto",
         "none": "Aus",
         "minimal": "",

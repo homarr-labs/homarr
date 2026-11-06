@@ -280,6 +280,13 @@
           "title": "Acces complet la administrator",
           "description": "Poți gestiona servicii de homarr și conectate, inclusiv acțiuni distructive."
         },
+        "mode": {
+          "label": "",
+          "readOnly": "",
+          "readWrite": "",
+          "readOnlyDescription": "",
+          "readWriteDescription": ""
+        },
         "credential": {
           "title": "Domeniul de aplicare și durata de viață",
           "breadth": "Funcționează cu HTTP API și MCP Homarr, inclusiv în afara acestui client.",
@@ -1386,11 +1393,7 @@
               "label": "Selectaţi aplicaţia existentă"
             },
             "new": {
-              "title": "Nou",
-              "url": {
-                "label": "Url aplicație",
-                "description": "Url-ul aplicației se va deschide când este accesat din tabloul de bord"
-              }
+              "title": "Nou"
             }
           }
         }
@@ -1442,8 +1445,9 @@
         "label": "Conectați o aplicație existentă",
         "description": "Conectați această integrare la o aplicație pe care o puteți folosi deja."
       },
-      "appHref": {
-        "placeholder": ""
+      "externalUrl": {
+        "label": "",
+        "description": ""
       },
       "apiKeySettings": {
         "label": "Obține cheia API"
@@ -1790,10 +1794,6 @@
         "wazuhIndexerPassword": {
           "label": "Parola indexului",
           "newLabel": "Parola de indexare nouă"
-        },
-        "wazuhDashboardUrl": {
-          "label": "URL Panou de control (opțional)",
-          "newLabel": "URL nou dashboard"
         }
       }
     },
@@ -2038,7 +2038,7 @@
     "total": "",
     "filesystemUsage": "{count, plural, one {Arată utilizarea pentru # fișiere} other {Arată utilizarea pentru # de fișiere}}",
     "field": {
-      "name": "Nume",
+      "name": "Numele postului",
       "state": "Stare",
       "size": "Mărime",
       "actions": "Acțiuni",
@@ -2047,7 +2047,7 @@
       "description": "Descriere",
       "created": "Creat",
       "namespace": "Numespace",
-      "status": "Status",
+      "status": "",
       "architecture": "Arhitectură",
       "type": "Tip"
     },
@@ -7327,6 +7327,12 @@
             "apiKey": {
               "label": "Autentificare",
               "title": "Chei API",
+              "access": {
+                "label": "",
+                "readOnly": "",
+                "readWrite": "",
+                "description": ""
+              },
               "button": {
                 "createApiToken": "Creare simbol API",
                 "confirmDeletion": "Confirmă ștergerea"
@@ -8808,6 +8814,7 @@
       "imageInput": "Acceptă introducerea de imagini",
       "thinking": "Mod gândire",
       "reasoning": {
+        "default": "Implicit",
         "auto": "Automat",
         "none": "Dezactivat",
         "minimal": "Minimă",

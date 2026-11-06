@@ -280,6 +280,13 @@
           "title": "Täysi järjestelmänvalvojan käyttöoikeus",
           "description": "Voi hallita Homarr ja liitetyt palvelut, mukaan lukien tuhoisat toimet."
         },
+        "mode": {
+          "label": "",
+          "readOnly": "",
+          "readWrite": "",
+          "readOnlyDescription": "",
+          "readWriteDescription": ""
+        },
         "credential": {
           "title": "Tekijän soveltamisala ja käyttöikä",
           "breadth": "Toimii Homarr's HTTP API ja MCP, mukaan lukien tämän asiakkaan ulkopuolella.",
@@ -1386,11 +1393,7 @@
               "label": "Valitse olemassa oleva sovellus"
             },
             "new": {
-              "title": "Uusi",
-              "url": {
-                "label": "Sovelluksen URL-osoite",
-                "description": "Sovelluksen URL-osoite avautuu, kun se avataan hallintapaneelista"
-              }
+              "title": "Uusi"
             }
           }
         }
@@ -1442,8 +1445,9 @@
         "label": "Linkitä olemassa oleva sovellus",
         "description": "Yhdistä tämä integraatio sovellukseen, jota voit jo käyttää."
       },
-      "appHref": {
-        "placeholder": "Mukautettu sovelluksen URL-osoite"
+      "externalUrl": {
+        "label": "",
+        "description": ""
       },
       "apiKeySettings": {
         "label": "Nouda rajapinnan avain"
@@ -1790,10 +1794,6 @@
         "wazuhIndexerPassword": {
           "label": "Indeksoijan salasana",
           "newLabel": "Uusi indeksoijan salasana"
-        },
-        "wazuhDashboardUrl": {
-          "label": "Dashboardin URL (valinnainen)",
-          "newLabel": "Uusi dashboardin URL"
         }
       }
     },
@@ -2038,7 +2038,7 @@
     "total": "Yhteensä",
     "filesystemUsage": "{count, plural, one {Näytä käyttö # tiedostojärjestelmälle} other {Näytä käyttö # tiedostojärjestelmälle}}",
     "field": {
-      "name": "Nimi",
+      "name": "Työn nimi",
       "state": "Tila",
       "size": "Koko",
       "actions": "Toiminnot",
@@ -7327,6 +7327,12 @@
             "apiKey": {
               "label": "Tunnistautuminen",
               "title": "",
+              "access": {
+                "label": "",
+                "readOnly": "",
+                "readWrite": "",
+                "description": ""
+              },
               "button": {
                 "createApiToken": "",
                 "confirmDeletion": "Vahvista poisto"
@@ -8808,6 +8814,7 @@
       "imageInput": "Hyväksy kuvan syöte",
       "thinking": "Ajattelutila",
       "reasoning": {
+        "default": "Oletus",
         "auto": "Automaattinen",
         "none": "Pois",
         "minimal": "Minimaali",

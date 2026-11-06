@@ -280,6 +280,13 @@
           "title": "Úplný přístup administrátora",
           "description": "Může spravovat Homarr a připojené služby, včetně destruktivních akcí."
         },
+        "mode": {
+          "label": "",
+          "readOnly": "",
+          "readWrite": "",
+          "readOnlyDescription": "",
+          "readWriteDescription": ""
+        },
         "credential": {
           "title": "Rozsah a životnost pověření",
           "breadth": "Funguje s HTTP API a MCP Homarru, včetně mimo tohoto klienta.",
@@ -1386,11 +1393,7 @@
               "label": "Vybrat existující aplikaci"
             },
             "new": {
-              "title": "Nová",
-              "url": {
-                "label": "URL aplikace",
-                "description": "URL, kterou aplikace otevře při přístupu z panelu"
-              }
+              "title": "Nová"
             }
           }
         }
@@ -1442,8 +1445,9 @@
         "label": "Propojit existující aplikaci",
         "description": "Připojte tuto integraci k aplikaci, kterou již můžete použít."
       },
-      "appHref": {
-        "placeholder": "Vlastní URL aplikace"
+      "externalUrl": {
+        "label": "",
+        "description": ""
       },
       "apiKeySettings": {
         "label": "Získat API klíč"
@@ -1790,10 +1794,6 @@
         "wazuhIndexerPassword": {
           "label": "Indexové heslo",
           "newLabel": "Nové heslo pro indexování"
-        },
-        "wazuhDashboardUrl": {
-          "label": "Adresa URL hlavního panelu (volitelné)",
-          "newLabel": "Nová URL adresa hlavního panelu"
         }
       }
     },
@@ -2038,7 +2038,7 @@
     "total": "Celkem",
     "filesystemUsage": "{count, plural, one {Zobrazit použití pro # souborový systém} other {Zobrazit použití pro # souborových systémů}}",
     "field": {
-      "name": "Název",
+      "name": "Název úlohy",
       "state": "Status",
       "size": "Velikost",
       "actions": "Akce",
@@ -7327,6 +7327,12 @@
             "apiKey": {
               "label": "Ověřování",
               "title": "Klíče API",
+              "access": {
+                "label": "",
+                "readOnly": "",
+                "readWrite": "",
+                "description": ""
+              },
               "button": {
                 "createApiToken": "Vytvořit token API",
                 "confirmDeletion": "Potvrdit odstranění"
@@ -8808,6 +8814,7 @@
       "imageInput": "Přijmout vstup obrázku",
       "thinking": "Režim myšlení",
       "reasoning": {
+        "default": "Výchozí",
         "auto": "Automaticky",
         "none": "Vypnuto",
         "minimal": "Minimální",

@@ -7,6 +7,8 @@ import { IntegrationResponseError } from "../errors/http/integration-response-er
 import type { IntegrationError } from "../errors/integration-error";
 import { IntegrationUnknownError } from "../errors/integration-unknown-error";
 import { IntegrationParseError } from "../errors/parse/integration-parse-error";
+import { FrigateAuthenticationError } from "../../stats/frigate-authentication-error";
+import type { FrigateAuthenticationFailureReason } from "../../stats/frigate-authentication-error";
 
 export type TestConnectionErrorType = keyof TestConnectionErrorMap;
 export type AnyTestConnectionError = {
@@ -129,7 +131,14 @@ export class TestConnectionError<TType extends TestConnectionErrorType> extends 
     return this.Parse(cause).toResult();
   }
 
+  public static OpenMediaVaultResult(reason: OpenMediaVaultConnectionFailureReason, cause: Error) {
+    return new TestConnectionError("openmediavault", { reason }, { cause }).toResult();
+  }
+
   static FromIntegrationError(error: IntegrationError): AnyTestConnectionError {
+    if (error instanceof FrigateAuthenticationError) {
+      return new TestConnectionError("frigate", { reason: error.reason }, { cause: error });
+    }
     if (error instanceof IntegrationUnknownError) {
       return this.Unknown(error.cause);
     }
@@ -141,6 +150,11 @@ export class TestConnectionError<TType extends TestConnectionErrorType> extends 
       return this.Request(error.cause);
     }
     if (error instanceof IntegrationResponseError) {
+      if (error.cause.cause instanceof FrigateAuthenticationError) {
+        let reason = error.cause.cause.reason;
+        if (error.cause.statusCode >= 300 && error.cause.statusCode < 400) reason = "redirect";
+        return new TestConnectionError("frigate", { reason, statusCode: error.cause.statusCode }, { cause: error });
+      }
       return this.Status({
         status: error.cause.statusCode,
         url: error.cause.url ?? "?",
@@ -163,7 +177,15 @@ const statusCodeMap = {
   504: "gatewayTimeout",
 } as const;
 
+export type OpenMediaVaultConnectionFailureReason =
+  | "totpSecretRequired"
+  | "totpSecretInvalid"
+  | "totpVerificationFailed"
+  | "unsupportedChallenge";
+
 interface TestConnectionErrorMap {
+  frigate: { reason: FrigateAuthenticationFailureReason; statusCode?: number };
+  openmediavault: { reason: OpenMediaVaultConnectionFailureReason };
   unknown: undefined;
   parse: undefined;
   authorization: {

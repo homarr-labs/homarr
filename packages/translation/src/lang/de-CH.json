@@ -280,6 +280,13 @@
           "title": "",
           "description": ""
         },
+        "mode": {
+          "label": "",
+          "readOnly": "",
+          "readWrite": "",
+          "readOnlyDescription": "",
+          "readWriteDescription": ""
+        },
         "credential": {
           "title": "",
           "breadth": "",
@@ -1386,11 +1393,7 @@
               "label": "Vorhandene App auswählen"
             },
             "new": {
-              "title": "Neu",
-              "url": {
-                "label": "App-URL",
-                "description": "Die URL, die die App öffnet, wenn sie über das Dashboard aufgerufen wird"
-              }
+              "title": "Neu"
             }
           }
         }
@@ -1442,8 +1445,9 @@
         "label": "Bestehende App verknüpfen",
         "description": "Verbinde diese Integration mit einer App, die du bereits verwenden kannst."
       },
-      "appHref": {
-        "placeholder": "Benutzerdefinierti App URL"
+      "externalUrl": {
+        "label": "",
+        "description": ""
       },
       "apiKeySettings": {
         "label": "API-Schlüssel abrufen"
@@ -1790,10 +1794,6 @@
         "wazuhIndexerPassword": {
           "label": "Indexer-Passwort",
           "newLabel": "Neues Indexer-Passwort"
-        },
-        "wazuhDashboardUrl": {
-          "label": "Dashboard-URL (optional)",
-          "newLabel": "Neue Dashboard-URL"
         }
       }
     },
@@ -1872,7 +1872,7 @@
       "cancel": "Abbrechen",
       "delete": "Löschen",
       "discard": "Verwerfen",
-      "close": "Schliessen",
+      "close": "",
       "confirm": "Bestätigen",
       "continue": "Fortfahren",
       "previous": "Zurück",
@@ -2038,7 +2038,7 @@
     "total": "Gesamt",
     "filesystemUsage": "{count, plural, one {Nutzung für # Dateisystem anzeigen} other {Nutzung für # Dateisysteme anzeigen}}",
     "field": {
-      "name": "Name",
+      "name": "Job Name",
       "state": "Zustand",
       "size": "Größe",
       "actions": "Aktionen",
@@ -2047,7 +2047,7 @@
       "description": "Beschreibung",
       "created": "Erstellt",
       "namespace": "Namensraum",
-      "status": "Status",
+      "status": "",
       "architecture": "Architektur",
       "type": "Typ"
     },
@@ -7327,6 +7327,12 @@
             "apiKey": {
               "label": "Authentifizierung",
               "title": "API Schlüssel",
+              "access": {
+                "label": "",
+                "readOnly": "",
+                "readWrite": "",
+                "description": ""
+              },
               "button": {
                 "createApiToken": "API Token erstellen",
                 "confirmDeletion": ""
@@ -8808,6 +8814,7 @@
       "imageInput": "Akzeptiert Bildeingaben",
       "thinking": "Denkmodus",
       "reasoning": {
+        "default": "",
         "auto": "Automatisch",
         "none": "Aus",
         "minimal": "Schlicht",

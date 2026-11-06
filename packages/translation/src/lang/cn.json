@@ -280,6 +280,13 @@
           "title": "完全管理员权限",
           "description": "可以管理 Homarr 和连接的服务，包括破坏性操作。"
         },
+        "mode": {
+          "label": "",
+          "readOnly": "",
+          "readWrite": "",
+          "readOnlyDescription": "",
+          "readWriteDescription": ""
+        },
         "credential": {
           "title": "凭据范围和寿命",
           "breadth": "适用于 Homarr's HTTP API 和 MCP, 包括在此客户端之外。",
@@ -1386,11 +1393,7 @@
               "label": "选择现有应用"
             },
             "new": {
-              "title": "新建",
-              "url": {
-                "label": "应用网址",
-                "description": "当从看板访问时应用将打开的网址"
-              }
+              "title": "新建"
             }
           }
         }
@@ -1442,8 +1445,9 @@
         "label": "链接已存在的应用",
         "description": "将此集成连接到您已能使用的应用。"
       },
-      "appHref": {
-        "placeholder": "自定义应用URL"
+      "externalUrl": {
+        "label": "",
+        "description": ""
       },
       "apiKeySettings": {
         "label": "获取 API 密钥"
@@ -1790,10 +1794,6 @@
         "wazuhIndexerPassword": {
           "label": "索引器密码",
           "newLabel": "新索引器密码"
-        },
-        "wazuhDashboardUrl": {
-          "label": "仪表盘 URL（可选）",
-          "newLabel": "新仪表盘 URL"
         }
       }
     },
@@ -7327,6 +7327,12 @@
             "apiKey": {
               "label": "认证",
               "title": "API 密钥",
+              "access": {
+                "label": "",
+                "readOnly": "",
+                "readWrite": "",
+                "description": ""
+              },
               "button": {
                 "createApiToken": "创建 API 令牌",
                 "confirmDeletion": "确认删除"
@@ -8808,6 +8814,7 @@
       "imageInput": "接受图像输入",
       "thinking": "思考模式",
       "reasoning": {
+        "default": "默认值",
         "auto": "自动",
         "none": "关闭",
         "minimal": "最小",

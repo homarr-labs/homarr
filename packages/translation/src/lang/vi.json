@@ -280,6 +280,13 @@
           "title": "",
           "description": ""
         },
+        "mode": {
+          "label": "",
+          "readOnly": "",
+          "readWrite": "",
+          "readOnlyDescription": "",
+          "readWriteDescription": ""
+        },
         "credential": {
           "title": "",
           "breadth": "",
@@ -1386,11 +1393,7 @@
               "label": "Chọn ứng dụng hiện có"
             },
             "new": {
-              "title": "Mới",
-              "url": {
-                "label": "URL ứng dụng",
-                "description": "URL ứng dụng sẽ mở khi truy cập từ bảng điều khiển"
-              }
+              "title": "Mới"
             }
           }
         }
@@ -1442,8 +1445,9 @@
         "label": "Liên kết ứng dụng hiện có",
         "description": "Kết nối tích hợp này với một ứng dụng bạn đã có thể sử dụng."
       },
-      "appHref": {
-        "placeholder": "URL ứng dụng tùy chỉnh"
+      "externalUrl": {
+        "label": "",
+        "description": ""
       },
       "apiKeySettings": {
         "label": "Lấy khóa API"
@@ -1790,10 +1794,6 @@
         "wazuhIndexerPassword": {
           "label": "Mật khẩu trình lập chỉ mục",
           "newLabel": "Mật khẩu trình lập chỉ mục mới"
-        },
-        "wazuhDashboardUrl": {
-          "label": "URL bảng điều khiển (tùy chọn)",
-          "newLabel": "URL bảng điều khiển mới"
         }
       }
     },
@@ -2038,7 +2038,7 @@
     "total": "Tổng cộng",
     "filesystemUsage": "{count, plural, other {Hiển thị mức sử dụng cho {count, number} hệ thống tệp}}",
     "field": {
-      "name": "Tên",
+      "name": "Tên công việc",
       "state": "Trạng thái",
       "size": "Kích cỡ",
       "actions": "Thao tác",
@@ -7327,6 +7327,12 @@
             "apiKey": {
               "label": "Xác thực",
               "title": "Khóa API",
+              "access": {
+                "label": "",
+                "readOnly": "",
+                "readWrite": "",
+                "description": ""
+              },
               "button": {
                 "createApiToken": "Tạo mã thông báo API",
                 "confirmDeletion": ""
@@ -8808,6 +8814,7 @@
       "imageInput": "Hỗ trợ đầu vào hình ảnh",
       "thinking": "Chế độ suy nghĩ",
       "reasoning": {
+        "default": "",
         "auto": "Tự động",
         "none": "Tắt",
         "minimal": "Tối thiểu",

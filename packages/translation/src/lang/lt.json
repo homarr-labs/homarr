@@ -280,6 +280,13 @@
           "title": "",
           "description": ""
         },
+        "mode": {
+          "label": "",
+          "readOnly": "",
+          "readWrite": "",
+          "readOnlyDescription": "",
+          "readWriteDescription": ""
+        },
         "credential": {
           "title": "",
           "breadth": "",
@@ -1386,11 +1393,7 @@
               "label": "Pasirinkite esamą programėlę"
             },
             "new": {
-              "title": "Nauja",
-              "url": {
-                "label": "",
-                "description": "URL, kurį programėlė atidarys pasiekus ją iš skydelio"
-              }
+              "title": "Nauja"
             }
           }
         }
@@ -1442,8 +1445,9 @@
         "label": "Susieti esamą programą",
         "description": "Prijunkite šią integraciją prie programos, kurią jau galite naudoti."
       },
-      "appHref": {
-        "placeholder": ""
+      "externalUrl": {
+        "label": "",
+        "description": ""
       },
       "apiKeySettings": {
         "label": "Gauti API raktą"
@@ -1790,10 +1794,6 @@
         "wazuhIndexerPassword": {
           "label": "Indeksavimo slaptažodis",
           "newLabel": "Naujas indeksavimo slaptažodis"
-        },
-        "wazuhDashboardUrl": {
-          "label": "Valdymo skydelio URL (pasirinktinai)",
-          "newLabel": "Naujas valdymo skydelio URL"
         }
       }
     },
@@ -2038,7 +2038,7 @@
     "total": "Iš viso",
     "filesystemUsage": "{count, plural, one {Rodyti # failų sistemos naudojimą} few {Rodyti # failų sistemų naudojimą} many {Rodyti # failų sistemų naudojimą} other {Rodyti # failų sistemų naudojimą}}",
     "field": {
-      "name": "Vardas",
+      "name": "Užduoties pavadinimas",
       "state": "Būsena",
       "size": "Dydis",
       "actions": "Veiksmai",
@@ -7327,6 +7327,12 @@
             "apiKey": {
               "label": "Autentifikavimas",
               "title": "API raktai",
+              "access": {
+                "label": "",
+                "readOnly": "",
+                "readWrite": "",
+                "description": ""
+              },
               "button": {
                 "createApiToken": "Sukurti API prieigos raktą",
                 "confirmDeletion": ""
@@ -8808,6 +8814,7 @@
       "imageInput": "Priima vaizdo įvestį",
       "thinking": "Mąstymo režimas",
       "reasoning": {
+        "default": "",
         "auto": "Automatinis",
         "none": "Išjungta",
         "minimal": "Minimalus",

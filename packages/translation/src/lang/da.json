@@ -280,6 +280,13 @@
           "title": "Fuld administrator adgang",
           "description": "Kan administrere Homarr og forbundne tjenester, herunder destruktive handlinger."
         },
+        "mode": {
+          "label": "",
+          "readOnly": "",
+          "readWrite": "",
+          "readOnlyDescription": "",
+          "readWriteDescription": ""
+        },
         "credential": {
           "title": "Credential scope og levetid",
           "breadth": "Arbejder med Homarr's HTTP API og MCP, herunder uden for denne klient.",
@@ -1386,11 +1393,7 @@
               "label": "Vælg eksisterende app"
             },
             "new": {
-              "title": "Ny",
-              "url": {
-                "label": "App url",
-                "description": "Webadressen som app'en vil åbne, når den tilgås fra betjeningspanelet"
-              }
+              "title": "Ny"
             }
           }
         }
@@ -1442,8 +1445,9 @@
         "label": "Link en eksisterende app",
         "description": "Tilslut denne integration til en app, du allerede kan bruge."
       },
-      "appHref": {
-        "placeholder": "Brugerdefineret app URL"
+      "externalUrl": {
+        "label": "",
+        "description": ""
       },
       "apiKeySettings": {
         "label": "Hent API-nøgle"
@@ -1790,10 +1794,6 @@
         "wazuhIndexerPassword": {
           "label": "Indekser adgangskode",
           "newLabel": "Ny indekseringsadgangskode"
-        },
-        "wazuhDashboardUrl": {
-          "label": "Kontrolpanel URL (valgfri)",
-          "newLabel": "Nyt dashboard URL"
         }
       }
     },
@@ -2038,7 +2038,7 @@
     "total": "Total",
     "filesystemUsage": "{count, plural, one {Vis brug for # filsystem} other {Vis brug for # filsystemer}}",
     "field": {
-      "name": "Navn",
+      "name": "Jobnavn",
       "state": "Tilstand",
       "size": "Størrelse",
       "actions": "Handlinger",
@@ -2049,7 +2049,7 @@
       "namespace": "Navnerum",
       "status": "Status",
       "architecture": "Arkitektur",
-      "type": "Type"
+      "type": "Download klienttype"
     },
     "label": {
       "new": "Ny"
@@ -7327,6 +7327,12 @@
             "apiKey": {
               "label": "Autorisering",
               "title": "API Nøgler",
+              "access": {
+                "label": "",
+                "readOnly": "",
+                "readWrite": "",
+                "description": ""
+              },
               "button": {
                 "createApiToken": "Opret API token",
                 "confirmDeletion": "Bekræft sletning"
@@ -8808,6 +8814,7 @@
       "imageInput": "Accepterer billede input",
       "thinking": "Tænker tilstand",
       "reasoning": {
+        "default": "Standard",
         "auto": "Automatisk",
         "none": "Fra",
         "minimal": "",

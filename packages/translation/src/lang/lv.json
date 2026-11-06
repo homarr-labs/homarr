@@ -280,6 +280,13 @@
           "title": "",
           "description": ""
         },
+        "mode": {
+          "label": "",
+          "readOnly": "",
+          "readWrite": "",
+          "readOnlyDescription": "",
+          "readWriteDescription": ""
+        },
         "credential": {
           "title": "",
           "breadth": "",
@@ -1386,11 +1393,7 @@
               "label": "Atlasīt esošu lietotni"
             },
             "new": {
-              "title": "Jauna",
-              "url": {
-                "label": "",
-                "description": "URL, kuru lietotne atvērs, kad tai piekļūs no informācijas paneļa"
-              }
+              "title": "Jauna"
             }
           }
         }
@@ -1442,8 +1445,9 @@
         "label": "Saistīt esošu lietotni",
         "description": "Savienojiet šo integrāciju ar lietotni, kuru jau varat izmantot."
       },
-      "appHref": {
-        "placeholder": "Pielāgots lietotnes URL"
+      "externalUrl": {
+        "label": "",
+        "description": ""
       },
       "apiKeySettings": {
         "label": "Iegūt API atslēgu"
@@ -1790,10 +1794,6 @@
         "wazuhIndexerPassword": {
           "label": "Indeksētāja parole",
           "newLabel": "Jauna indeksētāja parole"
-        },
-        "wazuhDashboardUrl": {
-          "label": "Informācijas paneļa URL (neobligāts)",
-          "newLabel": "Jauns informācijas paneļa URL"
         }
       }
     },
@@ -2038,7 +2038,7 @@
     "total": "Kopā",
     "filesystemUsage": "{count, plural, zero {Rādīt lietojumu # failu sistēmai} one {Rādīt lietojumu # failu sistēmai} other {Rādīt lietojumu # failu sistēmām}}",
     "field": {
-      "name": "Vārds",
+      "name": "Darba vārds",
       "state": "Stāvoklis",
       "size": "Lielums",
       "actions": "Darbības",
@@ -4423,7 +4423,7 @@
           "columnTitle": "Vadīklas"
         },
         "added": {
-          "columnTitle": "Pievienošanas datums"
+          "columnTitle": ""
         },
         "category": {
           "columnTitle": "Papildu"
@@ -7327,6 +7327,12 @@
             "apiKey": {
               "label": "Autentifikācija",
               "title": "API atslēgas",
+              "access": {
+                "label": "",
+                "readOnly": "",
+                "readWrite": "",
+                "description": ""
+              },
               "button": {
                 "createApiToken": "Izveidot API pilnvaru",
                 "confirmDeletion": ""
@@ -8808,6 +8814,7 @@
       "imageInput": "Atbalsta attēlu ievadi",
       "thinking": "Domāšanas režīms",
       "reasoning": {
+        "default": "",
         "auto": "Automātiski",
         "none": "Izslēgts",
         "minimal": "Minimāls",
