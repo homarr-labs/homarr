@@ -57,7 +57,7 @@ const mapCertificate = (certificate: X509Certificate, code: RequestErrorCode): M
   pem: certificate.toString(),
 });
 
-type MappedData<TType extends TestConnectionErrorType> = TType extends "openmediavault"
+type MappedData<TType extends TestConnectionErrorType> = TType extends "openmediavault" | "frigate"
   ? TestConnectionErrorDataOfType<TType>
   : TType extends "unknown" | "parse"
     ? undefined
@@ -91,7 +91,7 @@ type AnyMappedData = {
 }[TestConnectionErrorType];
 
 const mapData = (error: AnyTestConnectionError): AnyMappedData => {
-  if (error.type === "openmediavault") return error.data;
+  if (error.type === "openmediavault" || error.type === "frigate") return error.data;
   if (error.type === "unknown") return undefined;
   if (error.type === "parse") return undefined;
   if (error.type === "certificate") {

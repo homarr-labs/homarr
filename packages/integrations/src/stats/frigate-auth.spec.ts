@@ -9,7 +9,11 @@ import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/h
 import { integrationDefs } from "@homarr/definitions";
 
 import type { IntegrationInput, IntegrationTestingInput } from "../base/integration";
+import { IntegrationRequestError } from "../base/errors/http/integration-request-error";
+import { IntegrationResponseError } from "../base/errors/http/integration-response-error";
+import { TestConnectionService } from "../base/test-connection/test-connection-service";
 import { frigateStatsProvider } from "./providers/frigate";
+import { autobrrStatsProvider } from "./providers/autobrr";
 import { StatsIntegration } from "./stats-integration";
 
 const logger = vi.hoisted(() => ({ debug: vi.fn(), info: vi.fn(), warn: vi.fn(), error: vi.fn() }));
@@ -18,8 +22,10 @@ vi.mock("@homarr/core/infrastructure/http", () => ({
   fetchWithTrustedCertificatesAsync: vi.fn(),
   createAxiosCertificateInstanceAsync: vi.fn(),
   createCertificateAgentAsync: vi.fn(),
+  createCustomCheckServerIdentity: vi.fn().mockReturnValue(vi.fn()),
 }));
 vi.mock("@homarr/core/infrastructure/certificates", () => ({
+  getAllTrustedCertificatesAsync: vi.fn().mockResolvedValue([]),
   getTrustedCertificateHostnamesAsync: vi.fn().mockResolvedValue([]),
 }));
 vi.mock("@homarr/core/infrastructure/logs", () => ({
@@ -54,7 +60,50 @@ const profileResponse = (username = "operator", role = "admin") =>
   Response.json({ username, role, allowed_cameras: [] });
 const statsResponse = () => Response.json({ cameras: { front: {} }, service: { uptime: 42, version: "0.18.0" } });
 
-beforeEach(() => fetchAsync.mockReset());
+beforeEach(() => {
+  fetchAsync.mockReset();
+  logger.warn.mockClear();
+});
+
+const connectionFailureAsync = async () => {
+  const result = await new TestConnectionService(new URL("https://frigate.test:8971")).handleAsync(async () => {
+    await createIntegration().getStatsAsync();
+    return { success: true };
+  });
+  if (result.success) throw new Error("Expected connection failure");
+  return result.error;
+};
+
+test("returns a redacted structured error for a query-authenticated stats provider returning HTTP 500", async () => {
+  const apiKey = "private-query-api-key";
+  const integration = new StatsIntegration(
+    {
+      id: "query-auth-test",
+      kind: "autobrr",
+      name: "Query-auth stats",
+      url: "https://stats.test",
+      externalUrl: null,
+      decryptedSecrets: [{ kind: "apiKey", value: apiKey }],
+    },
+    autobrrStatsProvider,
+  );
+  fetchAsync.mockResolvedValue(new Response(null, { status: 500 }));
+  const result = await new TestConnectionService(new URL("https://stats.test")).handleAsync(async () => {
+    await integration.getStatsAsync();
+    return { success: true };
+  });
+  expect(new URL(String(fetchAsync.mock.calls[0]?.[0])).searchParams.get("apikey")).toBe(apiKey);
+  expect(result).toMatchObject({
+    success: false,
+    error: {
+      type: "statusCode",
+      data: { statusCode: 500, url: "https://stats.test/api/release/stats" },
+    },
+  });
+  expect(inspect(result, { depth: 10 })).not.toContain(apiKey);
+  expect(inspect(result, { depth: 10 })).not.toContain("apikey");
+  expect(inspect(logger.warn.mock.calls, { depth: 10 })).not.toContain(apiKey);
+});
 
 describe("authenticated Frigate", () => {
   test("uses a bodyless cookie login and the same verified session for native stats", async () => {
@@ -72,13 +121,13 @@ describe("authenticated Frigate", () => {
     expect(login).toMatchObject({
       method: "POST",
       body: JSON.stringify({ user: "operator", password: credentials[1]?.value }),
-      redirect: "error",
+      redirect: "manual",
     });
     expect(new Headers(login?.headers).get("origin")).toBeNull();
     expect(login?.signal).toBeInstanceOf(AbortSignal);
     for (const [, init] of fetchAsync.mock.calls.slice(1)) {
       expect(new Headers(init?.headers).get("authorization")).toBe(`Bearer ${token}`);
-      expect(init?.redirect).toBe("error");
+      expect(init?.redirect).toBe("manual");
     }
   });
 
@@ -120,7 +169,10 @@ describe("authenticated Frigate", () => {
 
   test.each([401, 403, 404, 302])("rejects login status %i before profile or stats", async (status) => {
     fetchAsync.mockResolvedValueOnce(new Response("private login error", { status }));
-    await expect(createIntegration().getStatsAsync()).rejects.toThrow();
+    expect(await connectionFailureAsync()).toMatchObject({
+      type: "frigate",
+      data: { reason: status === 302 ? "redirect" : "login", statusCode: status },
+    });
     expect(fetchAsync).toHaveBeenCalledTimes(1);
   });
 
@@ -128,7 +180,7 @@ describe("authenticated Frigate", () => {
     "rejects missing or invalid cookies",
     async (cookie) => {
       fetchAsync.mockResolvedValueOnce(loginResponse(cookie));
-      await expect(createIntegration().getHttpAuthenticationAsync()).rejects.toThrow();
+      expect(await connectionFailureAsync()).toMatchObject({ type: "frigate", data: { reason: "cookie" } });
       expect(fetchAsync).toHaveBeenCalledTimes(1);
     },
   );
@@ -138,7 +190,7 @@ describe("authenticated Frigate", () => {
     headers.append("set-cookie", `frigate_token=${token}; Path=/`);
     headers.append("set-cookie", `frigate_token=${token}; Path=/api`);
     fetchAsync.mockResolvedValueOnce(new Response(null, { headers }));
-    await expect(createIntegration().getStatsAsync()).rejects.toThrow();
+    expect(await connectionFailureAsync()).toMatchObject({ type: "frigate", data: { reason: "cookie" } });
     expect(fetchAsync).toHaveBeenCalledTimes(1);
   });
 
@@ -147,7 +199,7 @@ describe("authenticated Frigate", () => {
     ["another-admin", "admin"],
   ])("rejects a profile for %s with role %s before stats", async (username, role) => {
     fetchAsync.mockResolvedValueOnce(loginResponse()).mockResolvedValueOnce(profileResponse(username, role));
-    await expect(createIntegration().getStatsAsync()).rejects.toThrow();
+    expect(await connectionFailureAsync()).toMatchObject({ type: "frigate", data: { reason: "profileMismatch" } });
     expect(fetchAsync).toHaveBeenCalledTimes(2);
   });
 
@@ -189,6 +241,57 @@ describe("authenticated Frigate", () => {
     expect(inspect(failure, { depth: 10 })).not.toContain(credentials[1]?.value);
     expect(inspect(logger.warn.mock.calls, { depth: 10 })).not.toContain(token);
     expect(inspect(logger.warn.mock.calls, { depth: 10 })).not.toContain(credentials[1]?.value);
+  });
+
+  test.each(
+    ["login", "profile", "stats"].flatMap((stage) => [
+      { stage, code: "ERR_TLS_CERT_ALTNAME_INVALID", reason: "hostnameMismatch" },
+      { stage, code: "DEPTH_ZERO_SELF_SIGNED_CERT", reason: "untrusted" },
+    ]),
+  )("surfaces $reason certificate errors from $stage as a typed request error", async ({ stage, code, reason }) => {
+    if (stage !== "login") fetchAsync.mockResolvedValueOnce(loginResponse());
+    if (stage === "stats") fetchAsync.mockResolvedValueOnce(profileResponse());
+    const certificateError = new TypeError("fetch failed", {
+      cause: Object.assign(new Error("certificate for redirect.example is invalid"), { code }),
+    });
+    fetchAsync.mockRejectedValueOnce(certificateError);
+    const failure: unknown = await createIntegration()
+      .getStatsAsync()
+      .catch((error: unknown) => error);
+    expect(failure).toBeInstanceOf(IntegrationRequestError);
+    expect(failure).toMatchObject({ cause: { type: "certificate", reason } });
+    expect(logger.warn).toHaveBeenCalledOnce();
+    expect(inspect(logger.warn.mock.calls, { depth: 10 })).toContain(`Frigate${stage}Error`);
+  });
+
+  test("reports login rejection as a response error with the status", async () => {
+    fetchAsync.mockResolvedValueOnce(new Response("nope", { status: 401 }));
+    const failure: unknown = await createIntegration()
+      .getStatsAsync()
+      .catch((error: unknown) => error);
+    expect(failure).toBeInstanceOf(IntegrationResponseError);
+    expect(failure).toMatchObject({ cause: { statusCode: 401, url: "https://frigate.test:8971/api/login" } });
+  });
+
+  test.each(["login", "profile", "stats"])("reports a redirect from %s without following it", async (stage) => {
+    if (stage !== "login") fetchAsync.mockResolvedValueOnce(loginResponse());
+    if (stage === "stats") fetchAsync.mockResolvedValueOnce(profileResponse());
+    fetchAsync.mockResolvedValueOnce(new Response(null, { status: 307, headers: { location: "https://other.test" } }));
+    expect(await connectionFailureAsync()).toMatchObject({
+      type: "frigate",
+      data: { reason: "redirect", statusCode: 307 },
+    });
+    expect(fetchAsync.mock.calls.every(([, init]) => init?.redirect === "manual")).toBe(true);
+    expect(logger.warn).toHaveBeenCalledOnce();
+    expect(inspect(logger.warn.mock.calls, { depth: 10 })).toContain(`Frigate${stage}Error`);
+  });
+
+  test("identifies a failed profile request and its HTTP status", async () => {
+    fetchAsync.mockResolvedValueOnce(loginResponse()).mockResolvedValueOnce(new Response(null, { status: 403 }));
+    expect(await connectionFailureAsync()).toMatchObject({
+      type: "frigate",
+      data: { reason: "profile", statusCode: 403 },
+    });
   });
 
   test("rejects HTTP integration URLs without transmitting credentials", async () => {
