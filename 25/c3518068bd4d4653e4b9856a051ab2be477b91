@@ -1,0 +1,18 @@
+.out-of-scope/beszel-custom-thresholds.md
+  h_d6e478ca18e517 1-13
+.out-of-scope/custom-widget-viewer-identity.md
+  h_d6e478ca18e517 1-15
+.out-of-scope/single-layout-boards.md
+  h_d6e478ca18e517 1-15
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "25c3518068bd4d4653e4b9856a051ab2be477b91",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
