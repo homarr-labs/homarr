@@ -1,0 +1,19 @@
+scripts/run.sh
+  s_0ec53e873c6577::t_f00cabb0e229c5 85
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "4fcd3a100abee0c24ecf68a3703d6eeb4b3cb345",
+  "prompts": {},
+  "sessions": {
+    "s_0ec53e873c6577": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "c7be1e01-4627-4bf7-8db7-dbdc91188528",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
