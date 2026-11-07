@@ -199,6 +199,7 @@ export type HomarrDocumentationPath =
   | "/docs/integrations/whats-up-docker"
   | "/docs/integrations/xteve"
   | "/docs/integrations/your-spotify"
+  | "/docs/integrations/yuvomi"
   | "/docs/management"
   | "/docs/management/api"
   | "/docs/management/apps"
