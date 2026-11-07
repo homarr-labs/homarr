@@ -1,12 +1,13 @@
 "use client";
 
 import type { PropsWithChildren } from "react";
-import { Box, Paper, px, Stack, Text, useMantineTheme } from "@mantine/core";
+import { Paper, px, Stack, Tabs, Text, useMantineTheme, VisuallyHidden } from "@mantine/core";
 import { IconBulb } from "@tabler/icons-react";
 
 import { useCurrentLayout, useInitialViewportWidth, useLayoutOverride, useRequiredBoard } from "@homarr/boards/context";
 import { useEditMode } from "@homarr/boards/edit-mode";
 import { getRepresentativeLayoutWidth } from "@homarr/boards/layout-preview";
+import { useBoardTabs, useSyncBoardTabSearchParam } from "@homarr/boards/tabs";
 import { useI18n } from "@homarr/translation/client";
 import { FloatingTip } from "@homarr/ui";
 
@@ -31,6 +32,9 @@ import { BoardSectionCollapseProvider } from "~/components/board/sections/sectio
 import { BoardBackgroundVideo } from "~/components/layout/background";
 import { BoardSelectionProvider } from "~/components/board/selection/board-selection-context";
 import { BoardSelectionToolbar } from "~/components/board/selection/board-selection-toolbar";
+import { useBoardTabHotkeys } from "~/components/board/tabs/board-tabs";
+import { usePreparedBoardTabs } from "~/components/board/tabs/use-prepared-board-tabs";
+import { useBoardTabLabel } from "~/components/board/tabs/use-board-tab-label";
 import classes from "./_client.module.css";
 
 const BoardSelectionGridProvider = ({ children }: PropsWithChildren) => (
@@ -49,10 +53,16 @@ export const ClientBoard = () => {
   const initialViewportWidth = useInitialViewportWidth();
   const layoutOverrideId = useLayoutOverride();
   const theme = useMantineTheme();
+  const { tabs, activeTab, selectTab } = useBoardTabs();
+  const hasTabs = tabs.length > 1;
+  const preparedTabIds = usePreparedBoardTabs();
+  const getTabLabel = useBoardTabLabel();
+  useBoardTabHotkeys();
+  useSyncBoardTabSearchParam();
   const currentLayout = board.layouts.find((layout) => layout.id === currentLayoutId) ?? board.layouts.at(0);
   if (!currentLayout) throw new Error("Expected the board to contain a layout");
 
-  const mainSection = getRootSectionForLane(board, "main");
+  const mainSection = activeTab ?? getRootSectionForLane(board, "main");
   const leftSection = getRootSectionForLane(board, "left");
   const rightSection = getRootSectionForLane(board, "right");
   if (!mainSection) throw new Error("Expected the board to contain a main canvas section");
@@ -65,7 +75,7 @@ export const ClientBoard = () => {
     .map(getLogicalGridSize);
   const logicalWidth =
     laneWidths.reduce((total, width) => total + width, 0) + (laneWidths.length - 1) * LOGICAL_GRID_GAP;
-  const initialLogicalHeight = getInitialBoardLogicalHeight(board, currentLayoutId);
+  const initialLogicalHeight = getInitialBoardLogicalHeight(board, currentLayoutId, mainSection.id);
   const representativeWidth = layoutOverrideId ? getRepresentativeLayoutWidth(currentLayout, board.layouts) : null;
   const shellPadding = Number(px(theme.spacing.xs));
   const belowSmallViewport = initialViewportWidth > 0 && initialViewportWidth < Number(px(theme.breakpoints.sm));
@@ -88,7 +98,12 @@ export const ClientBoard = () => {
   const content = (
     <BoardSelectionGridProvider>
       <BoardAdvancedFocusProvider>
-        <Box
+        <Tabs
+          id="board-tabs"
+          value={mainSection.id}
+          onChange={(value) => value && selectTab(value)}
+          keepMounted
+          keepMountedMode="activity"
           h="100%"
           pos="relative"
           className={classes.board}
@@ -130,12 +145,24 @@ export const ClientBoard = () => {
                     )}
 
                     <section className={classes.lane} aria-label={t("canvas")}>
-                      <BoardEmptySection
-                        key={`${currentLayoutId}-${mainSection.id}`}
-                        section={mainSection}
-                        columnCount={mainColumnCount}
-                        requestedRowCount={0}
-                      />
+                      {tabs.map((tab) => (
+                        <Tabs.Panel
+                          key={tab.id}
+                          value={tab.id}
+                          role={hasTabs ? "tabpanel" : "group"}
+                          aria-labelledby={`board-tab-label-${tab.id}`}
+                        >
+                          <VisuallyHidden id={`board-tab-label-${tab.id}`}>{getTabLabel(tab)}</VisuallyHidden>
+                          {(tab.id === mainSection.id || preparedTabIds.has(tab.id)) && (
+                            <BoardEmptySection
+                              key={`${currentLayoutId}-${tab.id}`}
+                              section={tab}
+                              columnCount={mainColumnCount}
+                              requestedRowCount={0}
+                            />
+                          )}
+                        </Tabs.Panel>
+                      ))}
                     </section>
 
                     {rightColumnCount > 0 && rightSection && (
@@ -170,7 +197,7 @@ export const ClientBoard = () => {
           >
             {tTips("multiSelectApps")}
           </FloatingTip>
-        </Box>
+        </Tabs>
       </BoardAdvancedFocusProvider>
     </BoardSelectionGridProvider>
   );

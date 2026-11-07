@@ -47,11 +47,14 @@ export const commonItemSchema = z
   })
   .and(sharedItemSchema);
 
+export const boardTabNameSchema = z.string().trim().max(32);
+
 const emptySectionSchema = z.object({
   id: z.string(),
   kind: z.literal("empty"),
   yOffset: z.number().int(),
   xOffset: z.number().int(),
+  name: boardTabNameSchema.nullish(),
 });
 
 export const containerSectionOptionsDefaults = {

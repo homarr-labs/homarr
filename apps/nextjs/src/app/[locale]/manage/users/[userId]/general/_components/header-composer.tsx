@@ -29,6 +29,7 @@ import {
   IconGripVertical,
   IconHome,
   IconLayoutDashboard,
+  IconLayoutNavbar,
   IconPencil,
   IconPlus,
   IconReplace,
@@ -235,7 +236,7 @@ export const HeaderComposer = ({ value, onChange, boards, homeBoardId }: HeaderC
         </Group>
 
         <Box className={classes.stage} data-visible={value.visible}>
-          <Paper className={classes.device} radius="lg" withBorder>
+          <Paper className={classes.device} radius="lg" withBorder w="100%" miw={0}>
             {value.visible ? (
               <DragDropProvider
                 onDragStart={({ operation }) => setDraggedItemKey(operation.source?.id.toString() ?? null)}
@@ -254,6 +255,7 @@ export const HeaderComposer = ({ value, onChange, boards, homeBoardId }: HeaderC
                             label={itemLabel(item)}
                             searchDisplay={value.searchDisplay}
                             logoDisplay={value.logoDisplay}
+                            tabsDisplay={value.tabsDisplay}
                             logoTitle={branding.appName}
                             boardLogo={
                               item.type === "board" ? (boardsById.get(item.boardId)?.logoImageUrl ?? null) : null
@@ -276,6 +278,7 @@ export const HeaderComposer = ({ value, onChange, boards, homeBoardId }: HeaderC
                       compact={false}
                       searchDisplay={value.searchDisplay}
                       logoDisplay={value.logoDisplay}
+                      tabsDisplay={value.tabsDisplay}
                       logoTitle={branding.appName}
                       boardLogo={
                         draggedItem.type === "board" ? boardsById.get(draggedItem.boardId)?.logoImageUrl : null
@@ -341,6 +344,19 @@ export const HeaderComposer = ({ value, onChange, boards, homeBoardId }: HeaderC
                       ]}
                     />
                   ) : null}
+                  {selectedItem.type === "builtin" && selectedItem.id === "boardTabs" && (
+                    <SegmentedControl<HeaderPreferences["tabsDisplay"]>
+                      size="xs"
+                      value={value.tabsDisplay}
+                      aria-label={t("items.boardTabs")}
+                      onChange={(tabsDisplay) => onChange({ ...value, tabsDisplay })}
+                      data={[
+                        { value: "wide", label: t("configuration.tabsDisplay.wide") },
+                        { value: "compact", label: t("configuration.tabsDisplay.compact") },
+                        { value: "indicator", label: t("configuration.tabsDisplay.indicator") },
+                      ]}
+                    />
+                  )}
                   {!isRequiredHeaderItem(selectedItem) ? (
                     <Button
                       size="xs"
@@ -458,6 +474,7 @@ interface SortableHeaderItemProps {
   label: string;
   searchDisplay: HeaderPreferences["searchDisplay"];
   logoDisplay: HeaderPreferences["logoDisplay"];
+  tabsDisplay: HeaderPreferences["tabsDisplay"];
   logoTitle: string;
   boardLogo: string | null;
   configureLabel: string;
@@ -473,6 +490,7 @@ const SortableHeaderItem = ({
   label,
   searchDisplay,
   logoDisplay,
+  tabsDisplay,
   logoTitle,
   boardLogo,
   configureLabel,
@@ -507,7 +525,8 @@ const SortableHeaderItem = ({
         data-wide={
           (item.type === "builtin" &&
             ((item.id === "search" && searchDisplay === "input") ||
-              (item.id === "logo" && logoDisplay === "logoAndText"))) ||
+              (item.id === "logo" && logoDisplay === "logoAndText") ||
+              (item.id === "boardTabs" && tabsDisplay !== "indicator"))) ||
           undefined
         }
         aria-label={configureLabel}
@@ -524,6 +543,7 @@ const SortableHeaderItem = ({
           compact={false}
           searchDisplay={searchDisplay}
           logoDisplay={logoDisplay}
+          tabsDisplay={tabsDisplay}
           logoTitle={logoTitle}
           boardLogo={boardLogo}
         />
@@ -552,6 +572,7 @@ const HeaderItemPreview = ({
   compact,
   searchDisplay,
   logoDisplay,
+  tabsDisplay,
   logoTitle,
   boardLogo,
   overlay = false,
@@ -561,6 +582,7 @@ const HeaderItemPreview = ({
   compact: boolean;
   searchDisplay: HeaderPreferences["searchDisplay"];
   logoDisplay: HeaderPreferences["logoDisplay"];
+  tabsDisplay: HeaderPreferences["tabsDisplay"];
   logoTitle: string;
   boardLogo: string | null | undefined;
   overlay?: boolean;
@@ -572,6 +594,7 @@ const HeaderItemPreview = ({
       compact={compact}
       searchDisplay={searchDisplay}
       logoDisplay={logoDisplay}
+      tabsDisplay={tabsDisplay}
       logoTitle={logoTitle}
       boardLogo={boardLogo}
     />
@@ -586,7 +609,8 @@ const HeaderItemPreview = ({
         (item.type === "builtin" &&
           !compact &&
           ((item.id === "search" && searchDisplay === "input") ||
-            (item.id === "logo" && logoDisplay === "logoAndText"))) ||
+            (item.id === "logo" && logoDisplay === "logoAndText") ||
+            (item.id === "boardTabs" && tabsDisplay !== "indicator"))) ||
         undefined
       }
     >
@@ -601,6 +625,7 @@ const PreviewItem = ({
   compact,
   searchDisplay,
   logoDisplay,
+  tabsDisplay,
   logoTitle,
   boardLogo,
 }: {
@@ -609,9 +634,11 @@ const PreviewItem = ({
   compact: boolean;
   searchDisplay: HeaderPreferences["searchDisplay"];
   logoDisplay: HeaderPreferences["logoDisplay"];
+  tabsDisplay: HeaderPreferences["tabsDisplay"];
   logoTitle: string;
   boardLogo: string | null | undefined;
 }) => {
+  const tTabs = useI18n("board.tabs");
   if (item.type === "board") {
     return (
       <Avatar src={boardLogo} size={22} radius="sm">
@@ -636,6 +663,24 @@ const PreviewItem = ({
         <IconSearch size={18} />
         {showInput ? <span>{label}…</span> : null}
       </div>
+    );
+  }
+
+  if (item.id === "boardTabs") {
+    if (tabsDisplay === "indicator")
+      return (
+        <Text span inherit textWrap="nowrap">
+          2/3
+        </Text>
+      );
+    return (
+      <Group component="span" gap={4} wrap="nowrap">
+        {[1, 2, 3].map((index) => (
+          <Box component="span" key={index} px={4} c={index === 1 ? "primaryColor" : "dimmed"}>
+            {tabsDisplay === "compact" ? index : tTabs("untitled", { index })}
+          </Box>
+        ))}
+      </Group>
     );
   }
 
@@ -678,6 +723,7 @@ const getBuiltinItemIcon = (itemId: HeaderBuiltinItemId) => {
   if (itemId === "search") return IconSearch;
   if (itemId === "home") return IconHome;
   if (itemId === "boardSwitcher") return IconReplace;
+  if (itemId === "boardTabs") return IconLayoutNavbar;
   if (itemId === "assistant") return IconRobot;
   if (itemId === "docker") return IconBrandDocker;
   if (itemId === "boardEdit") return IconPencil;

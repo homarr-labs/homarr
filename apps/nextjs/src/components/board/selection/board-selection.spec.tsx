@@ -28,6 +28,7 @@ let mockUpdateBoard: (updater: (prev: Board) => Board) => void;
 
 vi.mock("@homarr/boards/context", () => ({
   useRequiredBoard: () => currentBoardState,
+  useOptionalBoard: () => currentBoardState,
   useCurrentLayout: () => "layout-1",
 }));
 

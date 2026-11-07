@@ -18,7 +18,8 @@
     "./updater": "./src/updater.ts",
     "./edit-mode": "./src/edit-mode.tsx",
     "./scale": "./src/scale.ts",
-    "./layout-data": "./src/layout-data.ts"
+    "./layout-data": "./src/layout-data.ts",
+    "./tabs": "./src/tabs.tsx"
   },
   "scripts": {
     "clean": "rm -rf .turbo node_modules",
