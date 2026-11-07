@@ -1515,6 +1515,27 @@
           "title": "Onbekende fout",
           "description": "Er is een onbekende fout opgetreden, open de reden hieronder om meer details te zien"
         },
+        "frigate": {
+          "title": "",
+          "status": "",
+          "description": {
+            "cookie": "",
+            "profileMismatch": "",
+            "redirect": "",
+            "login": "",
+            "profile": "",
+            "stats": ""
+          }
+        },
+        "openmediavault": {
+          "title": "",
+          "description": {
+            "totpSecretRequired": "",
+            "totpSecretInvalid": "",
+            "totpVerificationFailed": "",
+            "unsupportedChallenge": ""
+          }
+        },
         "parse": {
           "title": "Parser fout",
           "description": "Het antwoord kon niet worden verwerkt. Controleer of de URL verwijst naar de basis-URL van de service."
@@ -1714,6 +1735,11 @@
         "title": "Geheim resetten",
         "message": "Weet je zeker dat je dit geheim wilt resetten?"
       },
+      "totpNotice": "",
+      "remove": {
+        "title": "",
+        "message": ""
+      },
       "noSecretsRequired": {
         "segmentTitle": "Geen geheimen",
         "text": "Geen geheimen nodig voor deze integratie"
@@ -1794,6 +1820,10 @@
         "wazuhIndexerPassword": {
           "label": "Indexer wachtwoord",
           "newLabel": "Nieuw indexer wachtwoord"
+        },
+        "totpSecret": {
+          "label": "",
+          "newLabel": ""
         }
       }
     },
@@ -2335,7 +2365,29 @@
             "tooltip": "Als tooltip",
             "hidden": "Verborgen"
           }
+        },
+        "dockerContainer": {
+          "label": "",
+          "description": "",
+          "placeholder": "",
+          "disabled": "",
+          "unavailable": ""
         }
+      },
+      "docker": {
+        "action": {
+          "start": "",
+          "stop": ""
+        },
+        "notification": {
+          "startFailed": "",
+          "stopFailed": ""
+        },
+        "switch": {
+          "start": "",
+          "stop": ""
+        },
+        "stopped": ""
       },
       "error": {
         "notFound": {
@@ -2414,6 +2466,10 @@
         "hideHostname": {
           "label": "Hostnamen verbergen"
         },
+        "showFullUrls": {
+          "label": "",
+          "description": ""
+        },
         "withBorder": {
           "label": "Rand weergeven"
         },
@@ -2436,6 +2492,9 @@
         }
       },
       "empty": "Een URL of app toevoegen in de widget-instellingen",
+      "copyUrl": "URL kopiëren",
+      "copied": "Gekoppeld",
+      "copyFailed": "",
       "groups": {
         "label": "Categoriechar@@0n",
         "placeholder": "Nieuwe categorie",
@@ -3535,6 +3594,34 @@
     },
     "coolify": {
       "description": "Overzicht van je Coolify-instantie met servers en applicaties",
+      "summary": {
+        "needsAttention": "{count} heeft uw aandacht nodig",
+        "inProgress": "",
+        "unknown": "",
+        "healthy": "",
+        "empty": "",
+        "healthyDetail": "",
+        "more": "",
+        "moreInstances": ""
+      },
+      "details": {
+        "tabs": "",
+        "overview": "",
+        "search": "",
+        "serviceApplications": ""
+      },
+      "overview": {
+        "projects": "",
+        "resources": "",
+        "attention": "Heeft aandacht nodig",
+        "ready": "Gereed",
+        "noProjects": "",
+        "projectsUnavailable": "",
+        "moreProjects": "",
+        "running": "Actief",
+        "resourceCount": "",
+        "environmentCount": ""
+      },
       "option": {
         "showServers": {
           "label": "Servers weergeven"
@@ -3566,7 +3653,13 @@
       },
       "source": {
         "url": "Bron: {url}",
-        "unavailable": ""
+        "unavailable": "",
+        "unavailableCount": ""
+      },
+      "kind": {
+        "server": "",
+        "application": "Applicatie",
+        "service": "Diensten"
       },
       "instances": {
         "title": "Instanties"
@@ -3583,6 +3676,7 @@
         "exited": "Beëindigd",
         "starting": "Starten",
         "restarting": "Herstarten",
+        "unhealthy": "Niet-gezond",
         "unknown": "Onbekend",
         "online": "Online",
         "offline": "Offline",
@@ -4815,6 +4909,7 @@
           },
           "identifier": {
             "label": "Identificator",
+            "containerPlaceholder": "",
             "placeholder": "Naam of Eigenaar/naam"
           },
           "name": {},

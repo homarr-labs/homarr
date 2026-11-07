@@ -1515,6 +1515,27 @@
           "title": "Unknown error",
           "description": "An unknown error occurred, open the cause below to see more details"
         },
+        "frigate": {
+          "title": "",
+          "status": "",
+          "description": {
+            "cookie": "",
+            "profileMismatch": "",
+            "redirect": "",
+            "login": "",
+            "profile": "",
+            "stats": ""
+          }
+        },
+        "openmediavault": {
+          "title": "",
+          "description": {
+            "totpSecretRequired": "",
+            "totpSecretInvalid": "",
+            "totpVerificationFailed": "",
+            "unsupportedChallenge": ""
+          }
+        },
         "parse": {
           "title": "Parse error",
           "description": "The response could not be parsed. Please verify that the URL is pointing to the base URL of the service."
@@ -1714,6 +1735,11 @@
         "title": "Reset secret",
         "message": "Are you certain that you want to reset the secret?"
       },
+      "totpNotice": "",
+      "remove": {
+        "title": "",
+        "message": ""
+      },
       "noSecretsRequired": {
         "segmentTitle": "No secrets",
         "text": "There are no secrets required for this integration to work"
@@ -1794,6 +1820,10 @@
         "wazuhIndexerPassword": {
           "label": "Indexer password",
           "newLabel": "New indexer password"
+        },
+        "totpSecret": {
+          "label": "",
+          "newLabel": ""
         }
       }
     },
@@ -2335,7 +2365,29 @@
             "tooltip": "As tooltip",
             "hidden": "Hidden"
           }
+        },
+        "dockerContainer": {
+          "label": "",
+          "description": "",
+          "placeholder": "",
+          "disabled": "",
+          "unavailable": ""
         }
+      },
+      "docker": {
+        "action": {
+          "start": "",
+          "stop": ""
+        },
+        "notification": {
+          "startFailed": "",
+          "stopFailed": ""
+        },
+        "switch": {
+          "start": "",
+          "stop": ""
+        },
+        "stopped": ""
       },
       "error": {
         "notFound": {
@@ -2414,6 +2466,10 @@
         "hideHostname": {
           "label": "Hide hostnames"
         },
+        "showFullUrls": {
+          "label": "",
+          "description": ""
+        },
         "withBorder": {
           "label": "Show border"
         },
@@ -2436,6 +2492,9 @@
         }
       },
       "empty": "Add a URL or app in the widget settings",
+      "copyUrl": "Copy URL",
+      "copied": "",
+      "copyFailed": "",
       "groups": {
         "label": "",
         "placeholder": "New category",
@@ -3535,6 +3594,34 @@
     },
     "coolify": {
       "description": "Overview of your Coolify instance with servers and applications",
+      "summary": {
+        "needsAttention": "",
+        "inProgress": "",
+        "unknown": "",
+        "healthy": "",
+        "empty": "",
+        "healthyDetail": "",
+        "more": "",
+        "moreInstances": ""
+      },
+      "details": {
+        "tabs": "",
+        "overview": "",
+        "search": "",
+        "serviceApplications": ""
+      },
+      "overview": {
+        "projects": "",
+        "resources": "",
+        "attention": "",
+        "ready": "",
+        "noProjects": "",
+        "projectsUnavailable": "",
+        "moreProjects": "",
+        "running": "Running",
+        "resourceCount": "",
+        "environmentCount": ""
+      },
       "option": {
         "showServers": {
           "label": "Show servers"
@@ -3566,7 +3653,13 @@
       },
       "source": {
         "url": "Source: {url}",
-        "unavailable": "{source}: unavailable"
+        "unavailable": "{source}: unavailable",
+        "unavailableCount": ""
+      },
+      "kind": {
+        "server": "",
+        "application": "",
+        "service": ""
       },
       "instances": {
         "title": "Instances"
@@ -3583,6 +3676,7 @@
         "exited": "Exited",
         "starting": "Starting",
         "restarting": "Restarting",
+        "unhealthy": "",
         "unknown": "Unknown",
         "online": "Online",
         "offline": "Offline",
@@ -4815,6 +4909,7 @@
           },
           "identifier": {
             "label": "",
+            "containerPlaceholder": "",
             "placeholder": ""
           },
           "name": {},

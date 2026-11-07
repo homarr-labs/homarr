@@ -1515,6 +1515,27 @@
           "title": "Nezināma kļūda",
           "description": "Radās nezināma kļūda. Atveriet tālāk norādīto cēloni, lai skatītu plašāku informāciju"
         },
+        "frigate": {
+          "title": "",
+          "status": "",
+          "description": {
+            "cookie": "",
+            "profileMismatch": "",
+            "redirect": "",
+            "login": "",
+            "profile": "",
+            "stats": ""
+          }
+        },
+        "openmediavault": {
+          "title": "",
+          "description": {
+            "totpSecretRequired": "",
+            "totpSecretInvalid": "",
+            "totpVerificationFailed": "",
+            "unsupportedChallenge": ""
+          }
+        },
         "parse": {
           "title": "Parsēšanas kļūda",
           "description": "Atbildi nevarēja parsēt. Lūdzu, pārbaudiet, vai URL norāda uz pakalpojuma pamata URL."
@@ -1714,6 +1735,11 @@
         "title": "Atiestatīt noslēpumu",
         "message": "Vai esat pārliecināts, ka vēlaties atiestatīt šo noslēpumu?"
       },
+      "totpNotice": "",
+      "remove": {
+        "title": "",
+        "message": ""
+      },
       "noSecretsRequired": {
         "segmentTitle": "Nav noslēpumu",
         "text": "Šai integrācijai nav nepieciešami noslēpumi"
@@ -1794,6 +1820,10 @@
         "wazuhIndexerPassword": {
           "label": "Indeksētāja parole",
           "newLabel": "Jauna indeksētāja parole"
+        },
+        "totpSecret": {
+          "label": "",
+          "newLabel": ""
         }
       }
     },
@@ -2335,7 +2365,29 @@
             "tooltip": "Kā rīka padomu",
             "hidden": "Paslēpts"
           }
+        },
+        "dockerContainer": {
+          "label": "",
+          "description": "",
+          "placeholder": "",
+          "disabled": "",
+          "unavailable": ""
         }
+      },
+      "docker": {
+        "action": {
+          "start": "",
+          "stop": ""
+        },
+        "notification": {
+          "startFailed": "",
+          "stopFailed": ""
+        },
+        "switch": {
+          "start": "",
+          "stop": ""
+        },
+        "stopped": ""
       },
       "error": {
         "notFound": {
@@ -2414,6 +2466,10 @@
         "hideHostname": {
           "label": "Slēpt resursdatorus"
         },
+        "showFullUrls": {
+          "label": "",
+          "description": ""
+        },
         "withBorder": {
           "label": "Rādīt apmali"
         },
@@ -2436,6 +2492,9 @@
         }
       },
       "empty": "Logrīka iestatījumos pievienojiet URL vai lietotni",
+      "copyUrl": "",
+      "copied": "",
+      "copyFailed": "",
       "groups": {
         "label": "",
         "placeholder": "",
@@ -3535,6 +3594,34 @@
     },
     "coolify": {
       "description": "Jūsu Coolify instances pārskats ar serveriem un lietotnēm",
+      "summary": {
+        "needsAttention": "",
+        "inProgress": "",
+        "unknown": "",
+        "healthy": "",
+        "empty": "",
+        "healthyDetail": "",
+        "more": "",
+        "moreInstances": ""
+      },
+      "details": {
+        "tabs": "",
+        "overview": "",
+        "search": "",
+        "serviceApplications": ""
+      },
+      "overview": {
+        "projects": "",
+        "resources": "",
+        "attention": "",
+        "ready": "",
+        "noProjects": "",
+        "projectsUnavailable": "",
+        "moreProjects": "",
+        "running": "Darbojas",
+        "resourceCount": "",
+        "environmentCount": ""
+      },
       "option": {
         "showServers": {
           "label": "Rādīt serverus"
@@ -3566,7 +3653,13 @@
       },
       "source": {
         "url": "Avots: {url}",
-        "unavailable": "{source}: nav pieejams"
+        "unavailable": "{source}: nav pieejams",
+        "unavailableCount": ""
+      },
+      "kind": {
+        "server": "",
+        "application": "",
+        "service": ""
       },
       "instances": {
         "title": "Instances"
@@ -3583,6 +3676,7 @@
         "exited": "Iziets",
         "starting": "Tiek palaists",
         "restarting": "Restartējas",
+        "unhealthy": "",
         "unknown": "Nezināms",
         "online": "Tiešsaistē",
         "offline": "Bezsaistē",
@@ -4815,6 +4909,7 @@
           },
           "identifier": {
             "label": "Identifikators",
+            "containerPlaceholder": "",
             "placeholder": "Vārds vai īpašnieks/vārds"
           },
           "name": {},
