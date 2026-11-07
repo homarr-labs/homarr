@@ -1,5 +1,5 @@
 import type { PointerEvent, MouseEvent } from "react";
-import { createContext, useContext, useRef } from "react";
+import { createContext, useContext, useId, useRef } from "react";
 import dynamic from "next/dynamic";
 import { ActionIcon, Badge, Box, Button, Card } from "@mantine/core";
 import { IconChevronDown, IconChevronUp, IconExternalLink } from "@tabler/icons-react";
@@ -17,6 +17,7 @@ import { useSectionCollapse } from "./section-collapse";
 import { useSectionContext } from "./section-context";
 import { useOpenSectionApps } from "./use-open-section-apps";
 import classes from "./item.module.css";
+import { SmartContainerSurface, SmartContainerToolbar } from "./smart-container/smart-container-surface";
 
 const BoardContainerMenu = dynamic(
   () => import("./container/container-menu").then((module) => module.BoardContainerMenu),
@@ -49,6 +50,9 @@ export const BoardContainerSection = ({ section }: Props) => {
   const t = useI18n("section.container");
   const tSection = useI18n("section");
   const options = section.options;
+  const isSmart = Boolean(options.smart?.enabled && options.smart.states.length > 0);
+  let bodyHeight = "100%";
+  if (isSmart) bodyHeight = "calc(100% - 44px * var(--board-canvas-ui-scale, 1))";
   const hasHeader = options.collapsible && options.showLabel;
   const { open: openAllInNewTabs, isLoading: areAppsLoading } = useOpenSectionApps(
     section.id,
@@ -59,7 +63,7 @@ export const BoardContainerSection = ({ section }: Props) => {
     collapsible: options.collapsible,
   });
   const label = options.title.trim() || t("untitled");
-  const contentId = `board-container-${section.id}-content`;
+  const contentId = useId();
   let menuTop = getBoundedMenuOffset(menuTopOffset);
   if (hasHeader) {
     menuTop = "calc(var(--container-header-height) / 2 - 12px * var(--mantine-scale))";
@@ -119,7 +123,7 @@ export const BoardContainerSection = ({ section }: Props) => {
     headerActionInset = `calc(${menuPosition.right} + 28px * var(--mantine-scale))`;
   }
 
-  return (
+  const content = (
     <Box
       className="board-grid-item-content"
       data-grid-item-content
@@ -191,7 +195,7 @@ export const BoardContainerSection = ({ section }: Props) => {
             {toggleIcon}
           </Button>
         )}
-        {!isVisuallyCollapsed && !options.collapsible && options.showLabel && options.title && (
+        {!isSmart && !isVisuallyCollapsed && !options.collapsible && options.showLabel && options.title && (
           <Badge
             className={classes.containerLabel}
             pos="absolute"
@@ -229,10 +233,11 @@ export const BoardContainerSection = ({ section }: Props) => {
             <IconExternalLink size="var(--mantine-font-size-md)" />
           </ActionIcon>
         )}
+        {isSmart && !isVisuallyCollapsed && <SmartContainerToolbar section={section} />}
         <Box
           id={contentId}
           className={classes.containerBody}
-          h="100%"
+          h={bodyHeight}
           data-board-container-body
           data-collapsed={isVisuallyCollapsed ? "true" : "false"}
           aria-hidden={isVisuallyCollapsed}
@@ -252,5 +257,10 @@ export const BoardContainerSection = ({ section }: Props) => {
         {isEditMode && <BoardContainerMenu section={section} position={menuPosition} />}
       </Card>
     </Box>
+  );
+  return (
+    <SmartContainerSurface section={section} collapsed={isVisuallyCollapsed}>
+      {content}
+    </SmartContainerSurface>
   );
 };

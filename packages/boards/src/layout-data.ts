@@ -77,7 +77,8 @@ export const getContainerMinimumSizes = (board: Board, layoutId: string): Readon
     visiting.add(sectionId);
 
     const section = data.sectionsById.get(sectionId);
-    const isScrollable = section?.kind === "container" && section.options.scrollable;
+    const isScrollable =
+      section?.kind === "container" && (section.options.scrollable || section.options.smart?.enabled);
     let width = 1;
     let height = 1;
     for (const item of data.itemsBySectionId.get(sectionId) ?? []) {
