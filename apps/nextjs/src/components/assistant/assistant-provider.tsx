@@ -24,6 +24,7 @@ import {
 } from "@assistant-ui/react";
 import { useChat } from "@ai-sdk/react";
 import { AssistantChatTransport, useAISDKRuntime } from "@assistant-ui/react-ai-sdk";
+import { useCallbackRef } from "@mantine/hooks";
 import { createAssistantStream } from "assistant-stream";
 
 import { clientApi, fetchApi } from "@homarr/api/client";
@@ -206,12 +207,12 @@ const AssistantPreferencesProvider = ({ children, active }: PropsWithChildren<{ 
           }),
     };
   }, []);
-  const getRequestHeaders = useCallback((): Record<string, string> => {
+  const getRequestHeaders = useCallbackRef((): Record<string, string> => {
     if (data?.provider !== "homarr") return {};
     const token = workshopClient.authToken;
     return token ? { [assistantHomarrProviderTokenHeader]: token } : {};
-  }, [data?.provider, workshopClient]);
-  const refreshQuota = useCallback(async () => {
+  });
+  const refreshQuota = useCallbackRef(async () => {
     if (!active) return;
     quotaRequestRef.current?.abort();
     if (data?.provider !== "homarr" || !workshopClient.authToken) {
@@ -238,7 +239,7 @@ const AssistantPreferencesProvider = ({ children, active }: PropsWithChildren<{ 
         setQuotaLoading(false);
       }
     }
-  }, [active, data?.provider, t, workshopClient]);
+  });
   const signInToProvider = useCallback(async () => {
     setQuotaLoading(true);
     setQuotaError(null);
@@ -928,9 +929,9 @@ const EnabledAssistantProvider = ({
 
   useEffect(() => {
     if (pendingPrompt === null || isLoading || preferences.isLoading) return;
-    sendPrompt(pendingPrompt);
+    if (!sendPrompt(pendingPrompt)) open();
     onPromptHandled();
-  }, [isLoading, onPromptHandled, pendingPrompt, preferences.isLoading, sendPrompt]);
+  }, [isLoading, onPromptHandled, open, pendingPrompt, preferences.isLoading, sendPrompt]);
 
   useEffect(() => {
     if (assistantIsRunning) setActivityDismissed(false);
@@ -989,6 +990,8 @@ const EnabledAssistantProvider = ({
     });
   }, [conversationId, isLoading, refreshCurrentView, successfulMutationIds, t]);
 
+  // Spotlight can retain its previous item while a registration transition is pending.
+  const sendSpotlightPrompt = useCallbackRef(sendPrompt);
   const spotlightItem = useMemo(() => {
     const canSend =
       !historyLoadFailed && !providerUnavailable && !assistantIsRunning && latestStatus?.type !== "requires-action";
@@ -1006,13 +1009,13 @@ const EnabledAssistantProvider = ({
       placement: "fallback" as const,
       interaction: (query: string) =>
         createAssistantPromptInteraction({
-          sendPrompt,
+          sendPrompt: sendSpotlightPrompt,
           onPromptAccepted: closeSpotlight,
           prompt: query,
           canSend,
         }),
     };
-  }, [assistantIsRunning, historyLoadFailed, latestStatus?.type, providerUnavailable, sendPrompt, t]);
+  }, [assistantIsRunning, historyLoadFailed, latestStatus?.type, providerUnavailable, sendSpotlightPrompt, t]);
   useRegisterSpotlightContextResults("homarr-assistant", [spotlightItem], [spotlightItem]);
 
   const activeWidgetId = visibleWidgetIds.values().next().value ?? null;

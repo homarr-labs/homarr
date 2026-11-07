@@ -24,33 +24,33 @@ interface SecretsTableComponentProps {
 
 const createColumns = (
   t: ScopedTranslationFunction<"kubernetes.secrets">,
-  tField: ScopedTranslationFunction<"kubernetes.field">,
+  tField: ScopedTranslationFunction<"common.field">,
 ): MRT_ColumnDef<KubernetesSecret>[] => [
   {
     accessorKey: "name",
-    header: tField("name.label"),
+    header: tField("name"),
     enableClickToCopy: true,
   },
   {
     accessorKey: "namespace",
-    header: tField("namespace.label"),
+    header: tField("namespace"),
     enableClickToCopy: true,
   },
   {
     accessorKey: "type",
-    header: tField("type.label"),
+    header: tField("type"),
     enableClickToCopy: true,
   },
   {
     accessorKey: "creationTimestamp",
-    header: tField("creationTimestamp.label"),
+    header: tField("created"),
     Cell: ({ row }) => dayjs(row.original.creationTimestamp).fromNow(false),
   },
 ];
 
 export function SecretsTable({ contextId, initialSecrets }: SecretsTableComponentProps) {
   const tSecrets = useI18n("kubernetes.secrets");
-  const tField = useI18n("kubernetes.field");
+  const tField = useI18n("common.field");
 
   const { data } = clientApi.kubernetes.secrets.getSecrets.useQuery(
     { contextId },

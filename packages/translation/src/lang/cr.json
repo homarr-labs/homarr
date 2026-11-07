@@ -59,13 +59,12 @@
       },
       "essentials": {
         "title": "crwdns6337:0crwdne6337:0",
-        "description": "crwdns6339:0crwdne6339:0",
+        "description": "crwdns12011:0crwdne12011:0",
         "language": "crwdns6341:0crwdne6341:0",
         "theme": "crwdns6343:0crwdne6343:0",
         "themeAuto": "crwdns6345:0crwdne6345:0",
         "themeLight": "crwdns6347:0crwdne6347:0",
         "themeDark": "crwdns6349:0crwdne6349:0",
-        "serverOriginHelp": "crwdns6351:0crwdne6351:0",
         "serverDescription": "crwdns6353:0crwdne6353:0",
         "serverOrigin": "crwdns6355:0crwdne6355:0",
         "serverOriginDescription": "crwdns6357:0crwdne6357:0",
@@ -102,6 +101,8 @@
       "connect": {
         "title": "crwdns6409:0crwdne6409:0",
         "description": "crwdns6411:0crwdne6411:0",
+        "confirmServerAddress": "crwdns12013:0crwdne12013:0",
+        "serverAddressReviewed": "crwdns12015:0crwdne12015:0",
         "discoveredIntegrations": "crwdns6413:0{count}crwdne6413:0",
         "detectedIntegrationLabel": "crwdns6415:0{name}crwdnd6415:0{kind}crwdne6415:0",
         "detectedAppLabel": "crwdns6417:0{name}crwdne6417:0",
@@ -126,7 +127,8 @@
         "needsConfiguration": "crwdns6455:0crwdne6455:0",
         "tested": "crwdns6457:0crwdne6457:0",
         "testFailed": "crwdns6459:0crwdne6459:0",
-        "incompleteConfirmation": "crwdns6461:0crwdne6461:0"
+        "incompleteConfirmation": "crwdns12017:0crwdne12017:0",
+        "skipIncomplete": "crwdns12019:0crwdne12019:0"
       },
       "board": {
         "title": "crwdns6463:0crwdne6463:0",
@@ -142,13 +144,7 @@
         "secondaryColor": "crwdns6483:0crwdne6483:0",
         "resetColors": "crwdns6485:0crwdne6485:0",
         "radius": "crwdns6487:0crwdne6487:0",
-        "radiusOptions": {
-          "xs": "crwdns6489:0crwdne6489:0",
-          "sm": "crwdns6491:0crwdne6491:0",
-          "md": "crwdns6493:0crwdne6493:0",
-          "lg": "crwdns6495:0crwdne6495:0",
-          "xl": "crwdns6497:0crwdne6497:0"
-        },
+        "radiusOptions": {},
         "columns": "crwdns6499:0crwdne6499:0",
         "columnsDescription": "crwdns6501:0crwdne6501:0",
         "columnCount": "crwdns6503:0count={count}crwdne6503:0",
@@ -192,7 +188,6 @@
           "loginRequired": "crwdns6565:0crwdne6565:0",
           "configuration": "crwdns6567:0crwdne6567:0",
           "copy": "crwdns6569:0crwdne6569:0",
-          "copied": "crwdns6571:0crwdne6571:0",
           "advanced": "crwdns6573:0crwdne6573:0"
         }
       },
@@ -276,14 +271,21 @@
           "destinationHint": "crwdns10985:0crwdne10985:0"
         },
         "access": {
-          "title": "crwdns10987:0crwdne10987:0",
-          "description": "crwdns10989:0crwdne10989:0",
+          "title": "crwdns12033:0crwdne12033:0",
+          "description": "crwdns12035:0crwdne12035:0",
           "details": "crwdns10991:0{count}crwdne10991:0",
           "noGlobalPermissions": "crwdns10993:0crwdne10993:0"
         },
         "admin": {
-          "title": "crwdns10995:0crwdne10995:0",
-          "description": "crwdns10997:0crwdne10997:0"
+          "title": "crwdns12037:0crwdne12037:0",
+          "description": "crwdns12039:0crwdne12039:0"
+        },
+        "mode": {
+          "label": "crwdns12041:0crwdne12041:0",
+          "readOnly": "crwdns12043:0crwdne12043:0",
+          "readWrite": "crwdns12045:0crwdne12045:0",
+          "readOnlyDescription": "crwdns12047:0crwdne12047:0",
+          "readWriteDescription": "crwdns12049:0crwdne12049:0"
         },
         "credential": {
           "title": "crwdns10999:0crwdne10999:0",
@@ -804,9 +806,7 @@
         "examples": "crwdns11971:0crwdne11971:0",
         "requiresHandler": "crwdns11973:0crwdne11973:0"
       },
-      "description": {
-        "label": "crwdns326:0crwdne326:0"
-      },
+      "description": {},
       "useDifferentUrlForPing": {
         "checkbox": {
           "label": "crwdns2816:0crwdne2816:0",
@@ -858,7 +858,6 @@
       "source": "crwdns6759:0{name}crwdne6759:0",
       "baseUrl": "crwdns6761:0crwdne6761:0",
       "networkScope": "crwdns6763:0crwdne6763:0",
-      "save": "crwdns6765:0crwdne6765:0",
       "expires": "crwdns6767:0{time}crwdne6767:0"
     },
     "page": {
@@ -889,13 +888,11 @@
       "pasteImportHint": "crwdns6795:0crwdne6795:0",
       "delete": "crwdns5301:0crwdne5301:0",
       "deleteConfirm": "crwdns5303:0{name}crwdne5303:0",
-      "export": "crwdns5305:0crwdne5305:0",
       "duplicate": "crwdns5323:0crwdne5323:0",
       "aiPrompt": "crwdns6797:0crwdne6797:0",
       "copyAiPrompt": "crwdns5325:0crwdne5325:0",
       "enable": "crwdns5327:0crwdne5327:0",
       "disable": "crwdns5329:0crwdne5329:0",
-      "menu": "crwdns5331:0crwdne5331:0",
       "downloadSkill": "crwdns6799:0crwdne6799:0",
       "publishWorkshop": "crwdns6801:0crwdne6801:0",
       "migrate": "crwdns6803:0crwdne6803:0",
@@ -909,12 +906,9 @@
     "sourceSetupDialog": {
       "title": "crwdns6817:0crwdne6817:0",
       "description": "crwdns6819:0crwdne6819:0",
-      "credentialsRequired": "crwdns6821:0crwdne6821:0",
-      "save": "crwdns6823:0crwdne6823:0"
+      "credentialsRequired": "crwdns6821:0crwdne6821:0"
     },
-    "field": {
-      "description": "crwdns5335:0crwdne5335:0"
-    },
+    "field": {},
     "editor": {
       "errorBoundary": {
         "title": "crwdns6825:0crwdne6825:0"
@@ -924,7 +918,6 @@
         "format": "crwdns6829:0crwdne6829:0",
         "insertStarter": "crwdns6831:0crwdne6831:0",
         "redo": "crwdns6833:0crwdne6833:0",
-        "copied": "crwdns6835:0crwdne6835:0",
         "schema": "crwdns6837:0crwdne6837:0"
       },
       "reference": {
@@ -1005,7 +998,6 @@
         "manifestFilename": "crwdns6943:0crwdne6943:0",
         "request": "crwdns6945:0count={count}crwdne6945:0",
         "requestId": "crwdns6947:0crwdne6947:0",
-        "type": "crwdns6949:0crwdne6949:0",
         "method": "crwdns6951:0crwdne6951:0",
         "source": "crwdns6953:0crwdne6953:0",
         "run": "crwdns6955:0crwdne6955:0",
@@ -1042,7 +1034,6 @@
         "optionName": "crwdns7017:0crwdne7017:0",
         "label": "crwdns7019:0crwdne7019:0",
         "control": "crwdns7021:0crwdne7021:0",
-        "description": "crwdns7023:0crwdne7023:0",
         "default": "crwdns7025:0crwdne7025:0",
         "optionDetails": "crwdns7027:0crwdne7027:0",
         "minimum": "crwdns7029:0crwdne7029:0",
@@ -1079,7 +1070,6 @@
         "credentialRemovedDescription": "crwdns7083:0crwdne7083:0",
         "primary": "crwdns7085:0crwdne7085:0",
         "id": "crwdns7087:0crwdne7087:0",
-        "name": "crwdns7089:0crwdne7089:0",
         "baseUrl": "crwdns7091:0crwdne7091:0",
         "baseUrlError": {
           "invalid": "crwdns7093:0crwdne7093:0",
@@ -1096,7 +1086,6 @@
         "remove": "crwdns7113:0crwdne7113:0",
         "advanced": "crwdns7115:0crwdne7115:0",
         "add": "crwdns7117:0crwdne7117:0",
-        "sourceType": "crwdns7119:0crwdne7119:0",
         "manualSource": "crwdns7121:0crwdne7121:0",
         "existingIntegration": "crwdns7123:0crwdne7123:0",
         "integrationType": "crwdns7125:0crwdne7125:0",
@@ -1230,7 +1219,6 @@
       "migrationTitle": "crwdns7285:0crwdne7285:0",
       "migrationDescription": "crwdns7287:0crwdne7287:0",
       "fileLabel": "crwdns7289:0crwdne7289:0",
-      "name": "crwdns7291:0crwdne7291:0",
       "origin": "crwdns7293:0crwdne7293:0",
       "authentication": "crwdns7295:0crwdne7295:0",
       "networkScope": "crwdns7297:0crwdne7297:0",
@@ -1250,8 +1238,6 @@
         "title": "crwdns7319:0crwdne7319:0",
         "description": "crwdns7321:0crwdne7321:0"
       },
-      "cancel": "crwdns7323:0crwdne7323:0",
-      "confirm": "crwdns7325:0crwdne7325:0",
       "confirmMigration": "crwdns7327:0crwdne7327:0"
     },
     "secret": {
@@ -1315,7 +1301,6 @@
     "closeScreenshotViewer": "crwdns7431:0crwdne7431:0",
     "technicalDetails": "crwdns7433:0crwdne7433:0",
     "sourceCode": "crwdns7435:0crwdne7435:0",
-    "export": "crwdns7437:0crwdne7437:0",
     "report": "crwdns7439:0crwdne7439:0",
     "reportTitle": "crwdns7441:0crwdne7441:0",
     "reportReason": "crwdns7443:0crwdne7443:0",
@@ -1346,8 +1331,6 @@
       "viewSubmission": "crwdns7487:0crwdne7487:0",
       "done": "crwdns7489:0crwdne7489:0",
       "signInHint": "crwdns7491:0crwdne7491:0",
-      "titleField": "crwdns7493:0crwdne7493:0",
-      "descriptionField": "crwdns7495:0crwdne7495:0",
       "screenshots": "crwdns7497:0crwdne7497:0",
       "screenshotsDescription": "crwdns7499:0crwdne7499:0",
       "screenshotsPlaceholder": "crwdns7501:0crwdne7501:0",
@@ -1410,11 +1393,7 @@
               "label": "crwdns3788:0crwdne3788:0"
             },
             "new": {
-              "title": "crwdns3790:0crwdne3790:0",
-              "url": {
-                "label": "crwdns3792:0crwdne3792:0",
-                "description": "crwdns3794:0crwdne3794:0"
-              }
+              "title": "crwdns3790:0crwdne3790:0"
             }
           }
         }
@@ -1460,14 +1439,15 @@
       },
       "createApp": {
         "label": "crwdns3050:0crwdne3050:0",
-        "description": "crwdns3052:0crwdne3052:0"
+        "description": "crwdns12027:0crwdne12027:0"
       },
       "linkApp": {
         "label": "crwdns7559:0crwdne7559:0",
         "description": "crwdns7561:0crwdne7561:0"
       },
-      "appHref": {
-        "placeholder": "crwdns3054:0crwdne3054:0"
+      "externalUrl": {
+        "label": "crwdns12029:0crwdne12029:0",
+        "description": "crwdns12031:0crwdne12031:0"
       },
       "apiKeySettings": {
         "label": "crwdns4421:0crwdne4421:0"
@@ -1613,11 +1593,9 @@
             },
             "notification": {
               "success": {
-                "title": "crwdns3348:0crwdne3348:0",
                 "message": "crwdns3350:0crwdne3350:0"
               },
               "error": {
-                "title": "crwdns3352:0crwdne3352:0",
                 "message": "crwdns3354:0crwdne3354:0"
               }
             }
@@ -1816,10 +1794,6 @@
         "wazuhIndexerPassword": {
           "label": "crwdns7585:0crwdne7585:0",
           "newLabel": "crwdns7587:0crwdne7587:0"
-        },
-        "wazuhDashboardUrl": {
-          "label": "crwdns7589:0crwdne7589:0",
-          "newLabel": "crwdns7591:0crwdne7591:0"
         }
       }
     },
@@ -1838,9 +1812,7 @@
     "search": "crwdns482:0crwdne482:0",
     "field": {
       "preview": "crwdns7597:0crwdne7597:0",
-      "size": "crwdns486:0crwdne486:0",
-      "creator": "crwdns488:0crwdne488:0",
-      "actions": "crwdns7599:0crwdne7599:0"
+      "creator": "crwdns488:0crwdne488:0"
     },
     "action": {
       "upload": {
@@ -1918,7 +1890,8 @@
       "clearSearch": "crwdns7611:0crwdne7611:0",
       "copy": "crwdns7613:0crwdne7613:0",
       "copied": "crwdns7615:0crwdne7615:0",
-      "refresh": "crwdns7617:0crwdne7617:0"
+      "refresh": "crwdns7617:0crwdne7617:0",
+      "export": "crwdns12063:0crwdne12063:0"
     },
     "hidden": "crwdns11433:0crwdne11433:0",
     "pagination": {
@@ -1930,6 +1903,8 @@
     "here": "crwdns552:0crwdne552:0",
     "serviceUrlTemplate": {
       "serverTitle": "crwdns7621:0crwdne7621:0",
+      "description": "crwdns12021:0crwdne12021:0",
+      "example": "crwdns12023:0{url}crwdne12023:0",
       "urlModeLabel": "crwdns7623:0crwdne7623:0",
       "hostPort": "crwdns7625:0crwdne7625:0",
       "subdomain": "crwdns7627:0crwdne7627:0",
@@ -2063,7 +2038,18 @@
     "total": "crwdns7641:0crwdne7641:0",
     "filesystemUsage": "crwdns7643:0count={count}crwdne7643:0",
     "field": {
-      "name": "crwdns7645:0crwdne7645:0"
+      "name": "crwdns7645:0crwdne7645:0",
+      "state": "crwdns12065:0crwdne12065:0",
+      "size": "crwdns12067:0crwdne12067:0",
+      "actions": "crwdns12069:0crwdne12069:0",
+      "source": "crwdns12071:0crwdne12071:0",
+      "title": "crwdns12073:0crwdne12073:0",
+      "description": "crwdns12075:0crwdne12075:0",
+      "created": "crwdns12077:0crwdne12077:0",
+      "namespace": "crwdns12079:0crwdne12079:0",
+      "status": "crwdns12081:0crwdne12081:0",
+      "architecture": "crwdns12083:0crwdne12083:0",
+      "type": "crwdns12085:0crwdne12085:0"
     },
     "label": {
       "new": "crwdns7647:0crwdne7647:0"
@@ -2081,6 +2067,15 @@
       "searchEngines": "crwdns7667:0crwdne7667:0",
       "tasks": "crwdns7669:0crwdne7669:0",
       "users": "crwdns7671:0crwdne7671:0"
+    },
+    "cornerStyle": {
+      "options": {
+        "md": "crwdns12087:0crwdne12087:0",
+        "lg": "crwdns12089:0crwdne12089:0",
+        "xs": "crwdns12091:0crwdne12091:0",
+        "sm": "crwdns12093:0crwdne12093:0",
+        "xl": "crwdns12095:0crwdne12095:0"
+      }
     }
   },
   "section": {
@@ -2118,9 +2113,7 @@
         "collapse": "crwdns7703:0crwdne7703:0"
       },
       "option": {
-        "title": {
-          "label": "crwdns7705:0crwdne7705:0"
-        },
+        "title": {},
         "customCssClasses": {
           "label": "crwdns7707:0crwdne7707:0"
         },
@@ -2144,8 +2137,7 @@
       "label": {
         "settings": "crwdns702:0crwdne702:0",
         "settingsFor": "crwdns7713:0{name}crwdne7713:0",
-        "options": "crwdns5709:0crwdne5709:0",
-        "actions": "crwdns5711:0crwdne5711:0"
+        "options": "crwdns5709:0crwdne5709:0"
       },
       "status": {
         "success": "crwdns6049:0crwdne6049:0",
@@ -2198,7 +2190,6 @@
     "selection": {
       "summary": "crwdns7755:0count={count}crwdne7755:0",
       "selected": "crwdns7757:0count={count}crwdne7757:0",
-      "copy": "crwdns7759:0crwdne7759:0",
       "copied": "crwdns7761:0count={count}crwdne7761:0",
       "copyError": "crwdns7763:0crwdne7763:0",
       "paste": "crwdns7765:0crwdne7765:0",
@@ -2210,7 +2201,6 @@
       "removed": "crwdns7777:0count={count}crwdne7777:0",
       "move": "crwdns7779:0crwdne7779:0",
       "moveTo": "crwdns7781:0crwdne7781:0",
-      "delete": "crwdns7783:0crwdne7783:0",
       "clear": "crwdns7785:0crwdne7785:0",
       "clearShortcut": "crwdns7787:0crwdne7787:0",
       "saveErrorTitle": "crwdns7789:0crwdne7789:0",
@@ -2286,9 +2276,7 @@
           "label": "crwdns724:0crwdne724:0",
           "removeLabel": "crwdns7839:0{name}crwdne7839:0"
         },
-        "title": {
-          "label": "crwdns3180:0crwdne3180:0"
-        },
+        "title": {},
         "customCssClasses": {
           "label": "crwdns726:0crwdne726:0"
         },
@@ -3501,7 +3489,6 @@
         },
         "table": {
           "header": {
-            "name": "crwdns2672:0crwdne2672:0",
             "node": "crwdns2678:0crwdne2678:0"
           }
         }
@@ -3531,8 +3518,6 @@
         },
         "defaultSort": {
           "option": {
-            "name": "crwdns3812:0crwdne3812:0",
-            "state": "crwdns3814:0crwdne3814:0",
             "cpuUsage": "crwdns3816:0crwdne3816:0",
             "memoryUsage": "crwdns3818:0crwdne3818:0"
           }
@@ -3943,9 +3928,7 @@
       "items": {
         "currentlyPlaying": "crwdns2847:0crwdne2847:0",
         "user": "crwdns2476:0crwdne2476:0",
-        "name": "crwdns2478:0crwdne2478:0",
         "id": "crwdns2480:0crwdne2480:0",
-        "status": "crwdns6085:0crwdne6085:0",
         "directPlay": "crwdns6087:0crwdne6087:0",
         "directStream": "crwdns6187:0crwdne6187:0",
         "transcodeVideo": "crwdns6189:0crwdne6189:0",
@@ -4440,38 +4423,29 @@
           "columnTitle": "crwdns8691:0crwdne8691:0"
         },
         "added": {
-          "columnTitle": "crwdns1200:0crwdne1200:0",
-          "detailsTitle": "crwdns8693:0crwdne8693:0"
+          "columnTitle": "crwdns1200:0crwdne1200:0"
         },
         "category": {
-          "columnTitle": "crwdns8695:0crwdne8695:0",
-          "detailsTitle": "crwdns8697:0crwdne8697:0"
+          "columnTitle": "crwdns8695:0crwdne8695:0"
         },
         "downSpeed": {
-          "columnTitle": "crwdns1208:0crwdne1208:0",
-          "detailsTitle": "crwdns8699:0crwdne8699:0"
+          "columnTitle": "crwdns1208:0crwdne1208:0"
         },
         "index": {
           "columnTitle": "crwdns1212:0crwdne1212:0",
           "detailsTitle": "crwdns8701:0crwdne8701:0"
         },
         "id": {
-          "columnTitle": "crwdns8703:0crwdne8703:0",
-          "detailsTitle": "crwdns8705:0crwdne8705:0"
+          "columnTitle": "crwdns8703:0crwdne8703:0"
         },
-        "integration": {
-          "columnTitle": "crwdns8707:0crwdne8707:0"
-        },
-        "name": {
-          "columnTitle": "crwdns8709:0crwdne8709:0"
-        },
+        "integration": {},
+        "name": {},
         "progress": {
           "columnTitle": "crwdns1222:0crwdne1222:0",
           "detailsTitle": "crwdns8711:0crwdne8711:0"
         },
         "ratio": {
-          "columnTitle": "crwdns1226:0crwdne1226:0",
-          "detailsTitle": "crwdns8713:0crwdne8713:0"
+          "columnTitle": "crwdns1226:0crwdne1226:0"
         },
         "received": {
           "columnTitle": "crwdns8715:0crwdne8715:0",
@@ -4481,26 +4455,16 @@
           "columnTitle": "crwdns8719:0crwdne8719:0",
           "detailsTitle": "crwdns8721:0crwdne8721:0"
         },
-        "size": {
-          "columnTitle": "crwdns8723:0crwdne8723:0",
-          "detailsTitle": "crwdns8725:0crwdne8725:0"
-        },
-        "state": {
-          "columnTitle": "crwdns1242:0crwdne1242:0",
-          "detailsTitle": "crwdns8727:0crwdne8727:0"
-        },
+        "size": {},
+        "state": {},
         "time": {
-          "columnTitle": "crwdns8729:0crwdne8729:0",
-          "detailsTitle": "crwdns8731:0crwdne8731:0",
-          "eta": "crwdns6133:0crwdne6133:0"
+          "columnTitle": "crwdns8729:0crwdne8729:0"
         },
         "type": {
-          "columnTitle": "crwdns1250:0crwdne1250:0",
           "detailsTitle": "crwdns8733:0crwdne8733:0"
         },
         "upSpeed": {
-          "columnTitle": "crwdns1254:0crwdne1254:0",
-          "detailsTitle": "crwdns8735:0crwdne8735:0"
+          "columnTitle": "crwdns1254:0crwdne1254:0"
         }
       },
       "states": {
@@ -4689,9 +4653,7 @@
           }
         },
         "queue": {
-          "table": {
-            "size": "crwdns2430:0crwdne2430:0"
-          }
+          "table": {}
         },
         "common": {
           "empty": "crwdns8749:0crwdne8749:0",
@@ -4797,10 +4759,6 @@
           "label": "crwdns11753:0crwdne11753:0",
           "description": "crwdns11755:0crwdne11755:0"
         },
-        "collapsedSections": {
-          "label": "crwdns11757:0crwdne11757:0",
-          "description": "crwdns11759:0crwdne11759:0"
-        },
         "newReleaseWithin": {
           "label": "crwdns11761:0crwdne11761:0",
           "description": "crwdns11763:0crwdne11763:0",
@@ -4859,9 +4817,7 @@
             "label": "crwdns3206:0crwdne3206:0",
             "placeholder": "crwdns3208:0crwdne3208:0"
           },
-          "name": {
-            "label": "crwdns3270:0crwdne3270:0"
-          },
+          "name": {},
           "excludePrereleases": {
             "label": "crwdns11995:0crwdne11995:0",
             "description": "crwdns11997:0crwdne11997:0"
@@ -5005,7 +4961,11 @@
       "runningVersions": "crwdns11131:0crwdne11131:0",
       "upToDate": "crwdns11133:0crwdne11133:0",
       "updateAvailable": "crwdns11135:0crwdne11135:0",
-      "unknownStatus": "crwdns11137:0crwdne11137:0"
+      "unknownStatus": "crwdns11137:0crwdne11137:0",
+      "error": {
+        "collapsedSaveTitle": "crwdns12003:0crwdne12003:0",
+        "collapsedSaveMessage": "crwdns12005:0crwdne12005:0"
+      }
     },
     "networkControllerSummary": {
       "advanced": {
@@ -5162,7 +5122,6 @@
       "download": "crwdns4038:0crwdne4038:0",
       "upload": "crwdns4040:0crwdne4040:0",
       "ping": "crwdns4042:0crwdne4042:0",
-      "status": "crwdns4044:0crwdne4044:0",
       "avgDownload": "crwdns4046:0crwdne4046:0",
       "avgUpload": "crwdns4048:0crwdne4048:0",
       "avgPing": "crwdns4050:0crwdne4050:0",
@@ -5470,7 +5429,6 @@
         "actionsDisabledEditMode": "crwdns8887:0crwdne8887:0",
         "widgetItemUnavailable": "crwdns8889:0crwdne8889:0",
         "toggle": "crwdns8891:0crwdne8891:0",
-        "copied": "crwdns8893:0crwdne8893:0",
         "confirmDelete": "crwdns8895:0crwdne8895:0"
       },
       "option": {
@@ -5511,6 +5469,9 @@
       "name": "crwdns4779:0crwdne4779:0",
       "description": "crwdns4781:0crwdne4781:0",
       "option": {
+        "fahrenheit": {
+          "label": "crwdns11999:0crwdne11999:0"
+        },
         "sortBy": {
           "label": "crwdns4785:0crwdne4785:0"
         },
@@ -5525,7 +5486,12 @@
     },
     "beszelSystemGrid": {
       "name": "crwdns4837:0crwdne4837:0",
-      "description": "crwdns4839:0crwdne4839:0"
+      "description": "crwdns4839:0crwdne4839:0",
+      "option": {
+        "fahrenheit": {
+          "label": "crwdns12001:0crwdne12001:0"
+        }
+      }
     },
     "beszelAlerts": {
       "name": "crwdns4887:0crwdne4887:0",
@@ -5739,7 +5705,6 @@
       },
       "metric": {
         "system": "crwdns9013:0crwdne9013:0",
-        "source": "crwdns9015:0crwdne9015:0",
         "hostname": "crwdns9017:0crwdne9017:0",
         "cpuModel": "crwdns9019:0crwdne9019:0",
         "cores": "crwdns9021:0crwdne9021:0",
@@ -6429,13 +6394,7 @@
       "itemRadius": {
         "label": "crwdns2792:0crwdne2792:0",
         "description": "crwdns2794:0crwdne2794:0",
-        "option": {
-          "xs": "crwdns2796:0crwdne2796:0",
-          "sm": "crwdns2798:0crwdne2798:0",
-          "md": "crwdns2800:0crwdne2800:0",
-          "lg": "crwdns2802:0crwdne2802:0",
-          "xl": "crwdns2804:0crwdne2804:0"
-        }
+        "option": {}
       },
       "isPublic": {
         "label": "crwdns1494:0crwdne1494:0",
@@ -7067,13 +7026,7 @@
             },
             "defaultRadius": {
               "label": "crwdns9819:0crwdne9819:0",
-              "options": {
-                "xs": "crwdns9821:0crwdne9821:0",
-                "sm": "crwdns9823:0crwdne9823:0",
-                "md": "crwdns9825:0crwdne9825:0",
-                "lg": "crwdns9827:0crwdne9827:0",
-                "xl": "crwdns9829:0crwdne9829:0"
-              }
+              "options": {}
             },
             "customCss": {
               "label": "crwdns9831:0crwdne9831:0",
@@ -7095,7 +7048,6 @@
               "greetingDefault": "crwdns9855:0crwdne9855:0",
               "boardColorLocked": "crwdns9857:0crwdne9857:0",
               "boardColorFlexible": "crwdns9859:0crwdne9859:0",
-              "appName": "crwdns9861:0crwdne9861:0",
               "logo": "crwdns9863:0crwdne9863:0",
               "greeting": "crwdns9865:0crwdne9865:0",
               "on": "crwdns9867:0crwdne9867:0",
@@ -7230,6 +7182,7 @@
             "model": {
               "title": "crwdns10003:0crwdne10003:0",
               "description": "crwdns10005:0crwdne10005:0",
+              "save": "crwdns12007:0crwdne12007:0",
               "placeholder": "crwdns10007:0crwdne10007:0",
               "refresh": "crwdns10009:0crwdne10009:0",
               "chooseModel": "crwdns10011:0crwdne10011:0",
@@ -7256,7 +7209,7 @@
             },
             "enabled": {
               "label": "crwdns10045:0crwdne10045:0",
-              "description": "crwdns10047:0crwdne10047:0"
+              "description": "crwdns12009:0crwdne12009:0"
             },
             "save": "crwdns10049:0crwdne10049:0",
             "notification": {
@@ -7322,9 +7275,7 @@
             "lastExecution": {
               "label": "crwdns3630:0crwdne3630:0"
             },
-            "actions": {
-              "label": "crwdns3632:0crwdne3632:0"
-            }
+            "actions": {}
           },
           "table": {
             "search": "crwdns3634:0{count}crwdne3634:0"
@@ -7376,6 +7327,12 @@
             "apiKey": {
               "label": "crwdns1866:0crwdne1866:0",
               "title": "crwdns1868:0crwdne1868:0",
+              "access": {
+                "label": "crwdns12051:0crwdne12051:0",
+                "readOnly": "crwdns12053:0crwdne12053:0",
+                "readWrite": "crwdns12055:0crwdne12055:0",
+                "description": "crwdns12057:0crwdne12057:0"
+              },
               "button": {
                 "createApiToken": "crwdns1870:0crwdne1870:0",
                 "confirmDeletion": "crwdns11075:0crwdne11075:0"
@@ -7388,9 +7345,7 @@
               },
               "table": {
                 "header": {
-                  "createdBy": "crwdns1874:0crwdne1874:0",
-                  "source": "crwdns11077:0crwdne11077:0",
-                  "actions": "crwdns2740:0crwdne2740:0"
+                  "createdBy": "crwdns1874:0crwdne1874:0"
                 }
               },
               "provenance": {
@@ -7441,7 +7396,7 @@
               },
               "authentication": {
                 "title": "crwdns5187:0crwdne5187:0",
-                "intro": "crwdns5189:0crwdne5189:0",
+                "intro": "crwdns12059:0crwdne12059:0",
                 "apiKey": {
                   "title": "crwdns5191:0crwdne5191:0",
                   "description": "crwdns5193:0crwdne5193:0"
@@ -7451,7 +7406,7 @@
                   "description": "crwdns11123:0crwdne11123:0",
                   "hint": "crwdns11125:0crwdne11125:0"
                 },
-                "permissions": "crwdns5201:0crwdne5201:0"
+                "permissions": "crwdns12061:0crwdne12061:0"
               },
               "clientConfig": {
                 "title": "crwdns5203:0crwdne5203:0",
@@ -7683,7 +7638,6 @@
     },
     "field": {
       "state": {
-        "label": "crwdns1902:0crwdne1902:0",
         "option": {
           "created": "crwdns1904:0crwdne1904:0",
           "running": "crwdns1906:0crwdne1906:0",
@@ -7710,7 +7664,6 @@
       }
     },
     "action": {
-      "title": "crwdns3440:0crwdne3440:0",
       "logs": {
         "label": "crwdns4595:0crwdne4595:0",
         "page": {
@@ -7948,27 +7901,13 @@
       "internalServerError": "crwdns3029:0crwdne3029:0"
     },
     "field": {
-      "name": {
-        "label": "crwdns10209:0crwdne10209:0"
-      },
-      "namespace": {
-        "label": "crwdns10211:0crwdne10211:0"
-      },
-      "creationTimestamp": {
-        "label": "crwdns10213:0crwdne10213:0"
-      },
-      "state": {
-        "label": "crwdns10215:0crwdne10215:0"
-      },
-      "status": {
-        "label": "crwdns10217:0crwdne10217:0"
-      },
-      "type": {
-        "label": "crwdns10219:0crwdne10219:0"
-      },
-      "architecture": {
-        "label": "crwdns10221:0crwdne10221:0"
-      }
+      "name": {},
+      "namespace": {},
+      "creationTimestamp": {},
+      "state": {},
+      "status": {},
+      "type": {},
+      "architecture": {}
     }
   },
   "permission": {
@@ -7995,10 +7934,7 @@
         "label": "crwdns1988:0crwdne1988:0"
       }
     },
-    "action": {
-      "saveUser": "crwdns1990:0crwdne1990:0",
-      "saveGroup": "crwdns1992:0crwdne1992:0"
-    }
+    "action": {}
   },
   "navigationStructure": {
     "manage": {
@@ -8109,8 +8045,7 @@
       "resultsAriaLabel": "crwdns10271:0{mode}crwdne10271:0",
       "footer": {
         "navigate": "crwdns10273:0crwdne10273:0",
-        "open": "crwdns10275:0crwdne10275:0",
-        "close": "crwdns10277:0crwdne10277:0"
+        "open": "crwdns10275:0crwdne10275:0"
       }
     },
     "error": {
@@ -8540,9 +8475,7 @@
         "urlTemplate": {
           "label": "crwdns2200:0crwdne2200:0"
         },
-        "description": {
-          "label": "crwdns2202:0crwdne2202:0"
-        }
+        "description": {}
       },
       "page": {
         "list": {
@@ -8611,8 +8544,7 @@
             "table": {
               "header": {
                 "season": "crwdns2506:0crwdne2506:0",
-                "episodes": "crwdns2508:0crwdne2508:0",
-                "status": "crwdns4303:0crwdne4303:0"
+                "episodes": "crwdns2508:0crwdne2508:0"
               },
               "status": {
                 "requested": "crwdns4305:0crwdne4305:0"
@@ -8882,6 +8814,7 @@
       "imageInput": "crwdns10407:0crwdne10407:0",
       "thinking": "crwdns10409:0crwdne10409:0",
       "reasoning": {
+        "default": "crwdns12025:0crwdne12025:0",
         "auto": "crwdns10411:0crwdne10411:0",
         "none": "crwdns10413:0crwdne10413:0",
         "minimal": "crwdns10415:0crwdne10415:0",
@@ -9121,7 +9054,6 @@
       "cssDescription": "crwdns10779:0crwdne10779:0",
       "cssCharacters": "crwdns10781:0{count}crwdne10781:0",
       "copyCss": "crwdns10783:0crwdne10783:0",
-      "copied": "crwdns10785:0crwdne10785:0",
       "restoreCss": "crwdns10787:0crwdne10787:0",
       "remoteCssTitle": "crwdns10789:0crwdne10789:0",
       "remoteCssDescription": "crwdns10791:0crwdne10791:0"

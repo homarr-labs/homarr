@@ -38,6 +38,7 @@ interface ModalProps {
 export const ContainerEditModal = createModal<ModalProps>(({ actions, innerProps }) => {
   const t = useI18n();
   const tSection = useI18n("section");
+  const tCommon = useI18n("common");
   const theme = useMantineTheme();
   const { items } = useSectionItems(innerProps.sectionId);
   const [activityCapableKinds, setActivityCapableKinds] = useState<ReadonlySet<WidgetKind>>(() => new Set());
@@ -70,7 +71,7 @@ export const ContainerEditModal = createModal<ModalProps>(({ actions, innerProps
       })}
     >
       <Stack>
-        <TextInput label={tSection("container.option.title.label")} data-autofocus {...form.getInputProps("title")} />
+        <TextInput label={tCommon("field.title")} data-autofocus {...form.getInputProps("title")} />
         <Switch
           label={tSection("option.showLabel.label")}
           description={tSection("option.showLabel.description")}

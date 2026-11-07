@@ -21,7 +21,7 @@ export const BoardEmptyState = () => {
 
   return (
     <div className={classes.root}>
-      <Paper className={classes.panel} withBorder radius="md" p="lg">
+      <Paper className={classes.panel} radius="md" p="lg">
         <Stack align="center" gap="sm">
           <ThemeIcon variant="light" size="xl" radius="md">
             <IconLayoutDashboard size={24} />

@@ -190,6 +190,7 @@ export default function MediaServerWidget({
   );
 
   const t = useI18n("widget.mediaServer");
+  const tCommon = useI18n("common");
   const tSearch = useI18n("search");
   const isAdvanced = displayMode === "advanced";
   const showLocation = isAdvanced || options.showLocation;
@@ -321,7 +322,7 @@ export default function MediaServerWidget({
               {columnVisibility.status && (
                 <StreamTableHeader
                   column="status"
-                  label={t("items.status")}
+                  label={tCommon("field.status")}
                   sortable={isAdvanced}
                   sort={sort}
                   onSort={toggleSort}

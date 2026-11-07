@@ -1,4 +1,15 @@
-import { constants, copyFileSync, cpSync, existsSync, lstatSync, mkdirSync, readdirSync, readFileSync } from "node:fs";
+import { createHash } from "node:crypto";
+import {
+  constants,
+  copyFileSync,
+  cpSync,
+  existsSync,
+  lstatSync,
+  mkdirSync,
+  readdirSync,
+  readFileSync,
+  readlinkSync,
+} from "node:fs";
 import { dirname, join, relative, resolve, sep } from "node:path";
 
 export const compiled = resolve(".next");
@@ -6,6 +17,7 @@ export const root = resolve("../..");
 export const appDirectory = relative(root, process.cwd());
 export const dependencies = resolve(".output/dependencies");
 export const standalone = resolve(".output/standalone");
+export const dependencyManifest = join(compiled, "standalone-dependencies.json");
 
 function isOutside(path) {
   return path === ".." || path.startsWith(`..${sep}`);
@@ -59,6 +71,22 @@ export function collectFiles() {
 
 export function isCompiledFile(file) {
   return !isOutside(relative(compiled, file));
+}
+
+// Key the large dependency artifact by its traced contents, independently of
+// application chunks. Paths and symlink kinds/targets also affect restoration.
+export function createDependencyManifest(files) {
+  return [...files].sort().map((file) => {
+    const symbolicLink = lstatSync(file).isSymbolicLink();
+    const hash = createHash("sha256");
+    if (symbolicLink) hash.update(readlinkSync(file));
+    else hash.update(readFileSync(file));
+    return {
+      path: relative(root, file),
+      symbolicLink,
+      hash: hash.digest("hex"),
+    };
+  });
 }
 
 export function copyFiles(files, destinationRoot) {

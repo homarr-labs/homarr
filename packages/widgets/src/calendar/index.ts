@@ -9,6 +9,7 @@ import { optionsBuilder } from "../options";
 import { calendarViews } from "./calendar-view";
 
 export const { definition, componentLoader } = createWidgetDefinition("calendar", {
+  deferUntilVisible: true,
   icon: IconCalendar,
   supportsAdvancedFocus: true,
   queryKey: [["widget", "calendar", "findAllEvents"]],

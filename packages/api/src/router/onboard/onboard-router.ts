@@ -446,7 +446,7 @@ export const onboardRouter = createTRPCRouter({
             url: integration.url,
             kind: integration.kind,
             appId,
-          } satisfies typeof integrations.$inferSelect,
+          } satisfies Omit<typeof integrations.$inferSelect, "externalUrl">,
           appRow: {
             id: appId,
             name: integration.name,

@@ -77,6 +77,7 @@ apps/nextjs/public/tabler-icons/
 .opencode
 .agents/*
 !.agents/skills/
+!.agents/plugins/
 skills-lock.json
 
 # docusaurus

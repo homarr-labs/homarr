@@ -5,7 +5,6 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import {
   Badge,
   Box,
-  Center,
   Group,
   Image,
   Paper,
@@ -102,14 +101,7 @@ export default function MediaMissingWidget({
 
   if (!data) return <WidgetEmptyState />;
   if (data.length === 0) throw new NoIntegrationDataError();
-  if (!showMissing && !showQueued)
-    return (
-      <Center h="100%" p="sm">
-        <Text c="dimmed" size="sm" ta="center">
-          {t("empty.noTabsEnabled")}
-        </Text>
-      </Center>
-    );
+  if (!showMissing && !showQueued) return <WidgetEmptyState message={t("empty.noTabsEnabled")} />;
 
   const missing = data.flatMap((entry) => entry.missing.map((item) => ({ item, integrationId: entry.integrationId })));
   const queued = data.flatMap((entry) => entry.queued.map((item) => ({ item, integrationId: entry.integrationId })));
@@ -169,7 +161,7 @@ export default function MediaMissingWidget({
         {partialFailures}
         <SimpleGrid cols={enabledPanelCount} spacing="sm" p="sm" style={{ flex: 1, minHeight: 0 }}>
           {showMissing && (
-            <Paper withBorder radius="sm" style={{ minHeight: 0, overflow: "hidden" }}>
+            <Paper radius="sm" style={{ minHeight: 0, overflow: "hidden" }}>
               <Group p="xs" gap="xs">
                 <IconQuestionMark size="var(--mantine-font-size-md)" />
                 <Text size="sm" fw={600}>
@@ -180,7 +172,7 @@ export default function MediaMissingWidget({
             </Paper>
           )}
           {showQueued && (
-            <Paper withBorder radius="sm" style={{ minHeight: 0, overflow: "hidden" }}>
+            <Paper radius="sm" style={{ minHeight: 0, overflow: "hidden" }}>
               <Group p="xs" gap="xs">
                 <IconDownload size="var(--mantine-font-size-md)" />
                 <Text size="sm" fw={600}>

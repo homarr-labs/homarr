@@ -65,7 +65,6 @@
         "themeAuto": "מערכת",
         "themeLight": "בהיר",
         "themeDark": "כהה",
-        "serverOriginHelp": "Homarr משתמש בכתובת הזו כדי למלא מראש כתובות URL של שירותים שזוהו. עדיין ניתן לערוך כל שירות בנפרד.",
         "serverDescription": "זהו קיצור דרך, לא הגבלה. כל שירות שזוהה עדיין ניתן לעריכה.",
         "serverOrigin": "דומיין, כתובת IP או נתיב של פרוקסי הפוך",
         "serverOriginDescription": "דוגמאות: home.lan, 192.168.1.10 או https://home.example.com/services. בחר כיצד לצרף כל שירות בהמשך.",
@@ -102,6 +101,8 @@
       "connect": {
         "title": "חבר את מה שהופך את הלוח לשימושי",
         "description": "בחר כמה שירותים בו-זמנית. תוויות Docker מקבלות עדיפות, התאמת תמונות משלימה פערים, וכל כתובת URL ופרטי התחברות ניתנים לבדיקה.",
+        "confirmServerAddress": "",
+        "serverAddressReviewed": "",
         "discoveredIntegrations": "מופעי אינטגרציות שזוהו ({count})",
         "detectedIntegrationLabel": "ייבא את {name}, שזוהה בתור {kind}",
         "detectedAppLabel": "ייבא את האפליקציה שזוהתה {name}",
@@ -126,7 +127,8 @@
         "needsConfiguration": "נדרשת הגדרה",
         "tested": "בדיקת החיבור הושלמה",
         "testFailed": "בדיקת החיבור נכשלה",
-        "incompleteConfirmation": "על אינטגרציות שלא הושלמו יידלגו. להמשיך בלעדיהן?"
+        "incompleteConfirmation": "על אינטגרציות שלא הושלמו יידלגו. להמשיך בלעדיהן?",
+        "skipIncomplete": ""
       },
       "board": {
         "title": "עצבו את הלוח לפני בנייתו",
@@ -142,13 +144,7 @@
         "secondaryColor": "צבע משני",
         "resetColors": "איפוס צבעים",
         "radius": "רדיוס פינות היישומונים",
-        "radiusOptions": {
-          "xs": "הדוק",
-          "sm": "עדין",
-          "md": "מאוזן",
-          "lg": "מעוגל",
-          "xl": "רך"
-        },
+        "radiusOptions": {},
         "columns": "עמודות הלוח",
         "columnsDescription": "העמודות מגדירות את הרשת האופקית המשמשת לקביעת הגודל והמיקום של פריטים. 12 עמודות מספיקות לרוב המשתמשים.",
         "columnCount": "{count, plural, one {# עמודה} two {# עמודות} other {# עמודות}}",
@@ -192,7 +188,6 @@
           "loginRequired": "התחבר כמנהל מערכת לאחר ההגדרה כדי ליצור מפתח API.",
           "configuration": "תצורת לקוח",
           "copy": "העתקת תצורה",
-          "copied": "הועתק",
           "advanced": "פתיחת כלי MCP, הרשאות ופרטי הגדרה"
         }
       },
@@ -284,6 +279,13 @@
         "admin": {
           "title": "",
           "description": ""
+        },
+        "mode": {
+          "label": "",
+          "readOnly": "",
+          "readWrite": "",
+          "readOnlyDescription": "",
+          "readWriteDescription": ""
         },
         "credential": {
           "title": "",
@@ -804,9 +806,7 @@
         "examples": "דוגמאות לקישורים נתמכים",
         "requiresHandler": "פרוטוקולים מותאמים אישית דורשים אפליקציה משויכת במכשיר שלכם."
       },
-      "description": {
-        "label": "תיאור"
-      },
+      "description": {},
       "useDifferentUrlForPing": {
         "checkbox": {
           "label": "השתמש בקישור שונה עבור פינג",
@@ -858,7 +858,6 @@
       "source": "מקור API: {name}",
       "baseUrl": "כתובת שרת",
       "networkScope": "גישה לרשת",
-      "save": "שמירת תצורת API",
       "expires": "בקשה חד-פעמית זו תפוג ב-{time}."
     },
     "page": {
@@ -889,13 +888,11 @@
       "pasteImportHint": "הדביקו JSON מלא של יישומון מותאם אישית באמצעות Ctrl+V או Command+V",
       "delete": "",
       "deleteConfirm": "",
-      "export": "",
       "duplicate": "",
       "aiPrompt": "עיצוב באמצעות AI",
       "copyAiPrompt": "",
       "enable": "",
       "disable": "",
-      "menu": "",
       "downloadSkill": "הצגת היכולת של היישומון המותאם אישית",
       "publishWorkshop": "פרסום ב-Workshop",
       "migrate": "הגירת יישומון מותאם אישית",
@@ -909,12 +906,9 @@
     "sourceSetupDialog": {
       "title": "הגדרת מקורות היישומון",
       "description": "בדקו לאן היישומון הזה מתחבר והוסיפו או החליפו את פרטי ההתחברות המוצפנים שלו.",
-      "credentialsRequired": "הבקשות ייכשלו עד להוספת פרטי ההתחברות הנדרשים.",
-      "save": "שמירת תצורה"
+      "credentialsRequired": "הבקשות ייכשלו עד להוספת פרטי ההתחברות הנדרשים."
     },
-    "field": {
-      "description": ""
-    },
+    "field": {},
     "editor": {
       "errorBoundary": {
         "title": "משהו השתבש"
@@ -924,7 +918,6 @@
         "format": "עיצוב",
         "insertStarter": "הוספת תבנית התחלתית",
         "redo": "ביצוע מחדש",
-        "copied": "הועתק",
         "schema": "סכמה"
       },
       "reference": {
@@ -1005,7 +998,6 @@
         "manifestFilename": "קובץ widget.json",
         "request": "בקשה {count, number}",
         "requestId": "מזהה בקשה",
-        "type": "סוג",
         "method": "שיטה",
         "source": "מקור API",
         "run": "הרצה",
@@ -1042,7 +1034,6 @@
         "optionName": "שם אפשרות",
         "label": "תווית",
         "control": "בקר",
-        "description": "תיאור",
         "default": "ברירת מחדל",
         "optionDetails": "אילוצים ובחירות דינמיות",
         "minimum": "מינימום",
@@ -1079,7 +1070,6 @@
         "credentialRemovedDescription": "הערך המאוחסן נמחק.",
         "primary": "API ראשי",
         "id": "מזהה מקור",
-        "name": "שם",
         "baseUrl": "כתובת URL בסיסית",
         "baseUrlError": {
           "invalid": "הזינו כתובת URL מלאה.",
@@ -1096,7 +1086,6 @@
         "remove": "הסרת המקור והבקשות שלו",
         "advanced": "מתקדם",
         "add": "הוספת מקור API נוסף",
-        "sourceType": "אינטגרציה",
         "manualSource": "API של HTTP",
         "existingIntegration": "אינטגרציה קיימת",
         "integrationType": "סוג אינטגרציה",
@@ -1230,7 +1219,6 @@
       "migrationTitle": "סקירת תחליף v2 שהועבר",
       "migrationDescription": "בדקו ואשרו את הגדרת ה-v2 שנוצרה. האישור מחליף באופן אטומי את רשומת ה-v1 שנשמרה, תוך שמירה על הקישור של מיקומי הלוח הקיימים לאותו מזהה ווידג׳ט.",
       "fileLabel": "בחירת קובץ JSON של ווידג׳ט מותאם אישית",
-      "name": "שם המשימה",
       "origin": "מקור בסיס",
       "authentication": "אימות",
       "networkScope": "טווח רשת",
@@ -1250,8 +1238,6 @@
         "title": "ווידג׳ט זה יכול לשנות נתונים מרוחקים",
         "description": "בדקו כל פעולה בשם, כל פרטי כניסה שעברו בירושה וכל אישור לפעולה הרסנית לאחר הייבוא. סודות אינם כלולים בקובץ."
       },
-      "cancel": "ביטול הייבוא",
-      "confirm": "ייבוא ווידג׳ט",
       "confirmMigration": "אישור תחליף v2"
     },
     "secret": {
@@ -1315,7 +1301,6 @@
     "closeScreenshotViewer": "סגירת מציג צילומי המסך",
     "technicalDetails": "פרטים טכניים",
     "sourceCode": "רשומה בסדנה",
-    "export": "ייצוא",
     "report": "דיווח",
     "reportTitle": "דיווח על שליחה",
     "reportReason": "סיבה",
@@ -1346,8 +1331,6 @@
       "viewSubmission": "הצגה וניהול של השליחה",
       "done": "סיום",
       "signInHint": "התחברו כדי לפרסם בזהות הסדנה שלכם.",
-      "titleField": "כותרת",
-      "descriptionField": "תיאור",
       "screenshots": "צילומי מסך",
       "screenshotsDescription": "עד חמישה קובצי תמונה מסוג PNG, JPEG או WebP",
       "screenshotsPlaceholder": "בחירת צילומי מסך",
@@ -1410,11 +1393,7 @@
               "label": "בחירת אפליקציה קיימת"
             },
             "new": {
-              "title": "חדש",
-              "url": {
-                "label": "כתובת אתר של אפליקציה",
-                "description": "כתובת האתר שהאפליקציה תפתח בעת גישה אליה מלוח המחוונים"
-              }
+              "title": "חדש"
             }
           }
         }
@@ -1466,8 +1445,9 @@
         "label": "קישור אפליקציה קיימת",
         "description": "חברו את האינטגרציה הזו לאפליקציה שכבר ניתן להשתמש בה."
       },
-      "appHref": {
-        "placeholder": "כתובת אתר מותאמת אישית של אפליקציה"
+      "externalUrl": {
+        "label": "",
+        "description": ""
       },
       "apiKeySettings": {
         "label": ""
@@ -1613,11 +1593,9 @@
             },
             "notification": {
               "success": {
-                "title": "תעודה מהימנה",
                 "message": "נוסף שם מארח לרשימת האישורים המהימנים"
               },
               "error": {
-                "title": "נכשל בהוספת תעודת אבטחה",
                 "message": "נכשל בהוספת האישור לרשימת האישורים המהימנים"
               }
             }
@@ -1816,10 +1794,6 @@
         "wazuhIndexerPassword": {
           "label": "סיסמת אינדקס",
           "newLabel": "סיסמת אינדקס חדשה"
-        },
-        "wazuhDashboardUrl": {
-          "label": "כתובת URL של לוח המחוונים (אופציונלי)",
-          "newLabel": "כתובת URL חדשה של לוח המחוונים"
         }
       }
     },
@@ -1838,9 +1812,7 @@
     "search": "מצא מדיה",
     "field": {
       "preview": "תצוגה מקדימה",
-      "size": "גודל",
-      "creator": "יוצר",
-      "actions": "פקדים"
+      "creator": "יוצר"
     },
     "action": {
       "upload": {
@@ -1918,7 +1890,8 @@
       "clearSearch": "ניקוי החיפוש",
       "copy": "העתקה",
       "copied": "הועתק",
-      "refresh": "רענן"
+      "refresh": "רענן",
+      "export": "ייצוא"
     },
     "hidden": "מוסתר",
     "pagination": {
@@ -1930,6 +1903,8 @@
     "here": "כאן",
     "serviceUrlTemplate": {
       "serverTitle": "כתובת שרת רגילה",
+      "description": "",
+      "example": "",
       "urlModeLabel": "תבנית כתובת השירות",
       "hostPort": "אותו מארח, יציאות שונות",
       "subdomain": "תת-דומיין אחד לכל שירות",
@@ -2063,7 +2038,18 @@
     "total": "סך הכל",
     "filesystemUsage": "{count, plural, one {הצגת שימוש במערכת קבצים אחת} two {הצגת שימוש בשתי מערכות קבצים} other {הצגת שימוש ב-# מערכות קבצים}}",
     "field": {
-      "name": "שם המשימה"
+      "name": "שם המשימה",
+      "state": "מצב",
+      "size": "גודל",
+      "actions": "פעולות",
+      "source": "מקור",
+      "title": "כותרת",
+      "description": "תיאור",
+      "created": "נוצר",
+      "namespace": "מרחב שמות",
+      "status": "מצב",
+      "architecture": "ארכיטקטורה",
+      "type": "סוּג"
     },
     "label": {
       "new": "חדש"
@@ -2081,6 +2067,15 @@
       "searchEngines": "מנועי חיפוש",
       "tasks": "משימות",
       "users": "משתמשים"
+    },
+    "cornerStyle": {
+      "options": {
+        "md": "מאוזן",
+        "lg": "מעוגל",
+        "xs": "הדוק",
+        "sm": "עדין",
+        "xl": "רך"
+      }
     }
   },
   "section": {
@@ -2118,9 +2113,7 @@
         "collapse": "כיווץ"
       },
       "option": {
-        "title": {
-          "label": "כותרת"
-        },
+        "title": {},
         "customCssClasses": {
           "label": "מחלקות עיצוב מותאמות אישית"
         },
@@ -2144,8 +2137,7 @@
       "label": {
         "settings": "הגדרות",
         "settingsFor": "הגדרות עבור {name}",
-        "options": "",
-        "actions": ""
+        "options": ""
       },
       "status": {
         "success": "",
@@ -2198,7 +2190,6 @@
     "selection": {
       "summary": "{count, plural, one {פריט אחד נבחר} two {שני פריטים נבחרו} other {# פריטים נבחרו}}",
       "selected": "{count, plural, one {אחד נבחר} two {שניים נבחרו} other {# נבחרו}}",
-      "copy": "העתקה",
       "copied": "{count, plural, one {פריט אחד הועתק ללוח} two {שני פריטים הועתקו ללוח} other {# פריטים הועתקו ללוח}}",
       "copyError": "לא ניתן היה להעתיק את הפריטים שנבחרו. ייתכן שהדפדפן שלכם אינו מאפשר גישה ללוח.",
       "paste": "הדבקה",
@@ -2210,7 +2201,6 @@
       "removed": "{count, plural, one {פריט אחד הוסר} two {שני פריטים הוסרו} other {# פריטים הוסרו}}",
       "move": "העברה",
       "moveTo": "העברת הפריטים שנבחרו",
-      "delete": "מחיקה",
       "clear": "ניקוי הבחירה",
       "clearShortcut": "ניקוי הבחירה (Escape)",
       "saveErrorTitle": "לא ניתן לעדכן פריטים",
@@ -2286,9 +2276,7 @@
           "label": "אינטגרציות",
           "removeLabel": "הסרת אינטגרציית {name}"
         },
-        "title": {
-          "label": "כותרת"
-        },
+        "title": {},
         "customCssClasses": {
           "label": "מחלקות עיצוב מותאמות אישית"
         },
@@ -3501,7 +3489,6 @@
         },
         "table": {
           "header": {
-            "name": "שם",
             "node": "צומת"
           }
         }
@@ -3531,8 +3518,6 @@
         },
         "defaultSort": {
           "option": {
-            "name": "שם",
-            "state": "מצב",
             "cpuUsage": "ניצול מעבד",
             "memoryUsage": "ניצול זיכרון"
           }
@@ -3943,9 +3928,7 @@
       "items": {
         "currentlyPlaying": "מתנגן כרגע",
         "user": "משתמש",
-        "name": "שם",
         "id": "מזהה",
-        "status": "",
         "directPlay": "",
         "directStream": "",
         "transcodeVideo": "",
@@ -4440,38 +4423,29 @@
           "columnTitle": "פקדים"
         },
         "added": {
-          "columnTitle": "נוסף",
-          "detailsTitle": "נוסף בתאריך"
+          "columnTitle": "נוסף"
         },
         "category": {
-          "columnTitle": "תוספות",
-          "detailsTitle": "קטגוריות (או מידע נוסף)"
+          "columnTitle": "תוספות"
         },
         "downSpeed": {
-          "columnTitle": "הורדה",
-          "detailsTitle": "מהירות הורדה"
+          "columnTitle": "הורדה"
         },
         "index": {
           "columnTitle": "#",
           "detailsTitle": "מדד נוכחי בתוך הלקוח"
         },
         "id": {
-          "columnTitle": "מזהה",
-          "detailsTitle": "מזהה"
+          "columnTitle": "מזהה"
         },
-        "integration": {
-          "columnTitle": "אינטגרציה"
-        },
-        "name": {
-          "columnTitle": "שם המשימה"
-        },
+        "integration": {},
+        "name": {},
         "progress": {
           "columnTitle": "התקדמות",
           "detailsTitle": "התקדמות ההורדה"
         },
         "ratio": {
-          "columnTitle": "יחס",
-          "detailsTitle": "יחס טורנט (התקבל/נשלח)"
+          "columnTitle": "יחס"
         },
         "received": {
           "columnTitle": "סך הכל הורדה",
@@ -4481,26 +4455,16 @@
           "columnTitle": "סך הכל העלאה",
           "detailsTitle": "העלאה כוללת"
         },
-        "size": {
-          "columnTitle": "גודל קובץ",
-          "detailsTitle": "גודל כולל של בחירה/קבצים"
-        },
-        "state": {
-          "columnTitle": "מצב",
-          "detailsTitle": "מצב המשימה"
-        },
+        "size": {},
+        "state": {},
         "time": {
-          "columnTitle": "זמן סיום",
-          "detailsTitle": "זמן מאז/עד סיום",
-          "eta": ""
+          "columnTitle": "זמן סיום"
         },
         "type": {
-          "columnTitle": "סוּג",
           "detailsTitle": "סוג לקוח הורדה"
         },
         "upSpeed": {
-          "columnTitle": "העלאה",
-          "detailsTitle": "קצב העלאה"
+          "columnTitle": "העלאה"
         }
       },
       "states": {
@@ -4689,9 +4653,7 @@
           }
         },
         "queue": {
-          "table": {
-            "size": "גודל"
-          }
+          "table": {}
         },
         "common": {
           "empty": "ריק",
@@ -4797,10 +4759,6 @@
           "label": "",
           "description": ""
         },
-        "collapsedSections": {
-          "label": "",
-          "description": ""
-        },
         "newReleaseWithin": {
           "label": "מהדורה חדשה בתוך",
           "description": "דוגמת שימוש: שבוע אחד (1), חודש אחד (10 חודשים). סוגי יחידות מקובלים: h (שעות), d (ימים), w (שבועות), M (חודשים), y (שנים). השאר ריק כדי לא להדגיש מהדורות חדשות.",
@@ -4859,9 +4817,7 @@
             "label": "מזהה",
             "placeholder": "שם או בעלים/שם"
           },
-          "name": {
-            "label": "שם"
-          },
+          "name": {},
           "excludePrereleases": {
             "label": "",
             "description": ""
@@ -5005,7 +4961,11 @@
       "runningVersions": "",
       "upToDate": "",
       "updateAvailable": "",
-      "unknownStatus": "לא ידוע"
+      "unknownStatus": "לא ידוע",
+      "error": {
+        "collapsedSaveTitle": "",
+        "collapsedSaveMessage": ""
+      }
     },
     "networkControllerSummary": {
       "advanced": {
@@ -5162,7 +5122,6 @@
       "download": "הורדה",
       "upload": "העלאה",
       "ping": "פינג",
-      "status": "מצב",
       "avgDownload": "הורדה ממוצעת",
       "avgUpload": "העלאה ממוצעת",
       "avgPing": "פינג ממוצע",
@@ -5470,7 +5429,6 @@
         "actionsDisabledEditMode": "הפעולות מושבתות כאשר הלוח במצב עריכה.",
         "widgetItemUnavailable": "פריט הווידג׳ט הזה אינו זמין.",
         "toggle": "החלף מצב",
-        "copied": "הועתק",
         "confirmDelete": "אשר פעולה הרסנית זו."
       },
       "option": {
@@ -5511,6 +5469,9 @@
       "name": "",
       "description": "",
       "option": {
+        "fahrenheit": {
+          "label": "טמפרטורה בפרנהייט"
+        },
         "sortBy": {
           "label": ""
         },
@@ -5525,7 +5486,12 @@
     },
     "beszelSystemGrid": {
       "name": "",
-      "description": ""
+      "description": "",
+      "option": {
+        "fahrenheit": {
+          "label": "טמפרטורה בפרנהייט"
+        }
+      }
     },
     "beszelAlerts": {
       "name": "",
@@ -5739,7 +5705,6 @@
       },
       "metric": {
         "system": "מערכת",
-        "source": "אינטגרציה",
         "hostname": "שם מארח",
         "cpuModel": "דגם מעבד",
         "cores": "ליבות",
@@ -6429,13 +6394,7 @@
       "itemRadius": {
         "label": "רדיוס פריט",
         "description": "משנה את העגלגלות של האריחים על הלוח שלך",
-        "option": {
-          "xs": "קטן מאוד",
-          "sm": "קטן",
-          "md": "בינוני",
-          "lg": "גדול",
-          "xl": "גדול מאוד"
-        }
+        "option": {}
       },
       "isPublic": {
         "label": "ציבורי",
@@ -7067,13 +7026,7 @@
             },
             "defaultRadius": {
               "label": "סגנון פינות",
-              "options": {
-                "xs": "הדוק",
-                "sm": "עדין",
-                "md": "מאוזן",
-                "lg": "מעוגל",
-                "xl": "רך"
-              }
+              "options": {}
             },
             "customCss": {
               "label": "CSS גלובלי מותאם אישית",
@@ -7095,7 +7048,6 @@
               "greetingDefault": "ברכת ברירת מחדל",
               "boardColorLocked": "צבע הלוח נעול",
               "boardColorFlexible": "צבעי לוח מותרים",
-              "appName": "שם המשימה",
               "logo": "לוגו",
               "greeting": "ברכה",
               "on": "פעיל",
@@ -7230,6 +7182,7 @@
             "model": {
               "title": "מודל",
               "description": "בחר מודל שהתגלה או הזן מזהה מודל מדויק של נקודת הקצה.",
+              "save": "",
               "placeholder": "מזהה מודל",
               "refresh": "רענן מודלים",
               "chooseModel": "בחר את המודל שישמש לשיחות חדשות.",
@@ -7322,9 +7275,7 @@
             "lastExecution": {
               "label": "הרצה אחרונה"
             },
-            "actions": {
-              "label": "פעולות"
-            }
+            "actions": {}
           },
           "table": {
             "search": "חפש {count} משימות..."
@@ -7376,6 +7327,12 @@
             "apiKey": {
               "label": "אימות",
               "title": "מפתח API",
+              "access": {
+                "label": "",
+                "readOnly": "",
+                "readWrite": "",
+                "description": ""
+              },
               "button": {
                 "createApiToken": "יצירת מפתח  API",
                 "confirmDeletion": ""
@@ -7388,9 +7345,7 @@
               },
               "table": {
                 "header": {
-                  "createdBy": "נוצר על ידי",
-                  "source": "אינטגרציה",
-                  "actions": "פעולות"
+                  "createdBy": "נוצר על ידי"
                 }
               },
               "provenance": {
@@ -7683,7 +7638,6 @@
     },
     "field": {
       "state": {
-        "label": "מצב",
         "option": {
           "created": "נוצר",
           "running": "פועל",
@@ -7710,7 +7664,6 @@
       }
     },
     "action": {
-      "title": "פעולות",
       "logs": {
         "label": "",
         "page": {
@@ -7948,27 +7901,13 @@
       "internalServerError": "אחזור נתוני Kubernetes נכשל"
     },
     "field": {
-      "name": {
-        "label": "שם המשימה"
-      },
-      "namespace": {
-        "label": "מרחב שמות"
-      },
-      "creationTimestamp": {
-        "label": "נוצר"
-      },
-      "state": {
-        "label": "מצב המשימה"
-      },
-      "status": {
-        "label": "מצב"
-      },
-      "type": {
-        "label": "סוג לקוח הורדה"
-      },
-      "architecture": {
-        "label": "ארכיטקטורה"
-      }
+      "name": {},
+      "namespace": {},
+      "creationTimestamp": {},
+      "state": {},
+      "status": {},
+      "type": {},
+      "architecture": {}
     }
   },
   "permission": {
@@ -7995,10 +7934,7 @@
         "label": "הרשאה"
       }
     },
-    "action": {
-      "saveUser": "שמירת הרשאות משתמש",
-      "saveGroup": "שמירת הרשאת קבוצה"
-    }
+    "action": {}
   },
   "navigationStructure": {
     "manage": {
@@ -8109,8 +8045,7 @@
       "resultsAriaLabel": "תוצאות {mode}",
       "footer": {
         "navigate": "ניווט",
-        "open": "פתיחה",
-        "close": "סגור"
+        "open": "פתיחה"
       }
     },
     "error": {
@@ -8540,9 +8475,7 @@
         "urlTemplate": {
           "label": "תבנית חיפוש קישור אינטרנט"
         },
-        "description": {
-          "label": "תיאור"
-        }
+        "description": {}
       },
       "page": {
         "list": {
@@ -8611,8 +8544,7 @@
             "table": {
               "header": {
                 "season": "עונה",
-                "episodes": "פרקים",
-                "status": ""
+                "episodes": "פרקים"
               },
               "status": {
                 "requested": ""
@@ -8882,6 +8814,7 @@
       "imageInput": "מקבל קלט תמונה",
       "thinking": "מצב חשיבה",
       "reasoning": {
+        "default": "",
         "auto": "אוטומטי",
         "none": "כבוי",
         "minimal": "מינימלי",
@@ -9121,7 +9054,6 @@
       "cssDescription": "ערוך את גיליון הסגנונות המלא. כללים קיימים נשמרים אלא אם הוסרו כאן.",
       "cssCharacters": "{count} מתוך 16384 תווים",
       "copyCss": "העתק CSS",
-      "copied": "הועתק",
       "restoreCss": "שחזר CSS נוכחי",
       "remoteCssTitle": "CSS זה טוען משאב מרוחק",
       "remoteCssDescription": "גיליונות סגנון מיובאים וכתובות URL מרוחקות יוצרים קשר עם שרת אחר בעת טעינת הלוח. בדוק אותם לפני ההמשך."

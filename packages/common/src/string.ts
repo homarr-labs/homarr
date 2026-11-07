@@ -15,18 +15,20 @@ export const bestMatch = <TItem extends Record<string, unknown>>(
 
   const normalizedSearch = search.toLowerCase().trim();
 
-  return options.reduce<TItem | null>((best, current) => {
-    const currentMatchIndex = by(current).toLowerCase().indexOf(normalizedSearch);
-
-    if (currentMatchIndex === -1) return best;
-    if (best === null) return current;
-
-    const bestMatchIndex = by(best).toLowerCase().indexOf(normalizedSearch);
-
-    if (currentMatchIndex < bestMatchIndex) return current;
-    if (by(current).length < by(best).length && currentMatchIndex === bestMatchIndex) return current;
-    return best;
-  }, null);
+  let best: TItem | null = null;
+  let bestMatchIndex = Infinity;
+  let bestLength = Infinity;
+  for (const current of options) {
+    const value = by(current);
+    const currentMatchIndex = value.toLowerCase().indexOf(normalizedSearch);
+    if (currentMatchIndex === -1) continue;
+    if (currentMatchIndex < bestMatchIndex || (currentMatchIndex === bestMatchIndex && value.length < bestLength)) {
+      best = current;
+      bestMatchIndex = currentMatchIndex;
+      bestLength = value.length;
+    }
+  }
+  return best;
 };
 
 export const normalizeImageName = (value: string) => {

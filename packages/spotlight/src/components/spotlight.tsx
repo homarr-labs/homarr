@@ -317,7 +317,7 @@ const SpotlightWithActiveMode = ({ mode, setMode, query, setQuery, activeMode }:
           <Group gap={4} wrap="nowrap" className={classes.footerSecondary}>
             <Kbd size="xs">esc</Kbd>
             <Text size="xs" className={classes.footerHint}>
-              {t("search.modePicker.footer.close")}
+              {t("common.action.close")}
             </Text>
           </Group>
         </Group>
