@@ -1,0 +1,72 @@
+.root {
+  display: flex;
+  align-items: center;
+  gap: var(--mantine-spacing-sm);
+  padding: var(--mantine-spacing-xs) var(--mantine-spacing-sm);
+  border-radius: var(--mantine-radius-md);
+  border: 1px solid transparent;
+  cursor: pointer;
+
+  &[data-combobox-selected] {
+    background-color: light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-5));
+    border-color: light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
+  }
+
+  @mixin hover {
+    background-color: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-6));
+  }
+}
+
+.icon {
+  position: relative;
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--catalog-option-icon-size);
+  height: var(--catalog-option-icon-size);
+  border-radius: var(--mantine-radius-md);
+  background-color: light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-6));
+  color: light-dark(var(--mantine-color-gray-7), var(--mantine-color-dark-1));
+  overflow: hidden;
+}
+
+.body {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.name {
+  font-size: var(--mantine-font-size-sm);
+  font-weight: 600;
+  line-height: 1.25;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.description {
+  font-size: var(--mantine-font-size-xs);
+  color: var(--mantine-color-dimmed);
+  line-height: 1.3;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.side {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+.size {
+  font-size: var(--mantine-font-size-xs);
+  font-variant-numeric: tabular-nums;
+  color: var(--mantine-color-dimmed);
+}

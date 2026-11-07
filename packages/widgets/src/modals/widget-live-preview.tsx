@@ -7,13 +7,14 @@ import { useElementSize } from "@mantine/hooks";
 import { QueryErrorResetBoundary } from "@tanstack/react-query";
 import { ErrorBoundary } from "react-error-boundary";
 
-import { IntegrationProvider } from "@homarr/auth/client";
+import { IntegrationProvider, useSession } from "@homarr/auth/client";
 import { useOptionalBoard } from "@homarr/boards/context";
 import type { WidgetKind } from "@homarr/definitions";
 import { SpotlightProvider } from "@homarr/spotlight";
 import type { BoardItemAdvancedOptions } from "@homarr/validation/shared";
 
 import type { WidgetComponentProps, WidgetDefinition } from "../definition";
+import { CustomWidgetEditorPreview } from "../custom-api/editor-preview";
 import { WidgetError } from "../errors/component";
 import type { IntegrationSelectOption } from "../widget-integration-select";
 import { WidgetCardShell, WidgetTitleBadge } from "../widget-card-shell";
@@ -67,6 +68,8 @@ export const WidgetLivePreview = ({
   shellStyle,
 }: WidgetLivePreviewProps) => {
   const board = useOptionalBoard();
+  const { data: session } = useSession();
+  const canPreviewCustomWidget = kind === "customApi" && session?.user.permissions.includes("admin");
   const { ref, width, height } = useElementSize<HTMLDivElement>();
   const previewOpacity = (board?.opacity ?? 100) / 100;
   const previewIntegrations = integrationData
@@ -106,18 +109,22 @@ export const WidgetLivePreview = ({
               <SpotlightProvider>
                 <IntegrationProvider integrations={previewIntegrations}>
                   <div className={classes.previewContent} inert>
-                    <Component
-                      options={options as never}
-                      integrationIds={integrationIds}
-                      width={width || fallbackWidth}
-                      height={height || fallbackHeight}
-                      displayScale={displayScale}
-                      isEditMode={isEditMode}
-                      displayMode="compact"
-                      boardId={boardId}
-                      itemId={itemId}
-                      setOptions={({ newOptions }) => onChangeOptions(newOptions as Record<string, unknown>)}
-                    />
+                    {canPreviewCustomWidget ? (
+                      <CustomWidgetEditorPreview options={options as WidgetComponentProps<"customApi">["options"]} />
+                    ) : (
+                      <Component
+                        options={options as never}
+                        integrationIds={integrationIds}
+                        width={width || fallbackWidth}
+                        height={height || fallbackHeight}
+                        displayScale={displayScale}
+                        isEditMode={isEditMode}
+                        displayMode="compact"
+                        boardId={boardId}
+                        itemId={itemId}
+                        setOptions={({ newOptions }) => onChangeOptions(newOptions as Record<string, unknown>)}
+                      />
+                    )}
                   </div>
                 </IntegrationProvider>
               </SpotlightProvider>

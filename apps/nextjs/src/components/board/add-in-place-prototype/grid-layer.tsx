@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo } from "react";
+import { useEffect, useLayoutEffect, useMemo, useState } from "react";
 
 import { AreaOverlay } from "./area-overlay";
 import { EmptyCellLayer } from "./empty-cell-layer";
@@ -14,6 +14,7 @@ interface AddInPlaceGridLayerProps {
   maxRowCount: number | null;
   placements: readonly OccupancyPlacement[];
   entryElements: ReadonlyMap<string, HTMLElement>;
+  onRowCountChange: (rowCount: number) => void;
 }
 
 export const AddInPlaceGridLayer = ({
@@ -23,24 +24,36 @@ export const AddInPlaceGridLayer = ({
   maxRowCount,
   placements,
   entryElements,
+  onRowCountChange,
 }: AddInPlaceGridLayerProps) => {
   const { session } = useAddInPlaceState();
+  const [dragRowCount, setDragRowCount] = useState(0);
+  let renderedRowCount = rowCount;
+  if (maxRowCount === null) {
+    renderedRowCount = Math.max(rowCount, dragRowCount);
+    if (session?.sectionId === sectionId) {
+      renderedRowCount = Math.max(renderedRowCount, session.area.y + session.area.h + 1);
+    }
+  }
+  useLayoutEffect(() => {
+    onRowCountChange(renderedRowCount);
+  }, [onRowCountChange, renderedRowCount]);
   const occupancy = useMemo<SectionOccupancy>(
     () => ({
       sectionId,
       columnCount,
-      rowCount,
+      rowCount: renderedRowCount,
       maxRowCount,
       placements: placements.map(({ id, x, y, w, h }) => ({ id, x, y, w, h })),
     }),
-    [columnCount, maxRowCount, placements, rowCount, sectionId],
+    [columnCount, maxRowCount, placements, renderedRowCount, sectionId],
   );
 
   useEffect(() => registerSection(occupancy), [occupancy]);
 
   return (
     <>
-      {!session && <EmptyCellLayer occupancy={occupancy} />}
+      {!session && <EmptyCellLayer occupancy={occupancy} onRowCountChange={setDragRowCount} />}
       <AreaOverlay occupancy={occupancy} entryElements={entryElements} />
     </>
   );

@@ -4,9 +4,10 @@ import { addInPlaceActions, useAddInPlaceStep } from "./store";
 
 interface DimLayerProps {
   anchorRect: DOMRect | null;
+  zIndex?: number;
 }
 
-export const DimLayer = ({ anchorRect }: DimLayerProps) => {
+export const DimLayer = ({ anchorRect, zIndex = 1099 }: DimLayerProps) => {
   const step = useAddInPlaceStep();
   if (step === "idle") return null;
 
@@ -16,7 +17,7 @@ export const DimLayer = ({ anchorRect }: DimLayerProps) => {
     <>
       <div
         data-add-in-place-blocker=""
-        style={{ position: "fixed", inset: 0, zIndex: 250 }}
+        style={{ position: "fixed", inset: 0, zIndex }}
         onPointerDown={() => {
           if (step === "pick") addInPlaceActions.cancel();
         }}
@@ -30,7 +31,7 @@ export const DimLayer = ({ anchorRect }: DimLayerProps) => {
             top: anchorRect.top,
             width: anchorRect.width,
             height: anchorRect.height,
-            zIndex: 250,
+            zIndex,
             pointerEvents: "none",
             borderRadius: "var(--mantine-radius-md)",
             boxShadow: "0 0 0 100vmax color-mix(in srgb, #000 55%, transparent)",

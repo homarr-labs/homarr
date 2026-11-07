@@ -118,6 +118,7 @@ interface WidgetEditorFieldsProps {
   boardId?: string;
   formId?: string;
   canConfigureWidget?: boolean;
+  showSettingsHeading?: boolean;
   onOpenNewIntegration?: (onCreated?: (id: string) => void) => void;
   onSubmit: (event: FormEvent<HTMLFormElement>) => void;
 }
@@ -133,6 +134,7 @@ export const WidgetEditorFields = ({
   boardId,
   formId,
   canConfigureWidget = true,
+  showSettingsHeading = true,
   onOpenNewIntegration,
   onSubmit,
 }: WidgetEditorFieldsProps) => {
@@ -175,12 +177,14 @@ export const WidgetEditorFields = ({
       <Stack className={classes.settingsPanel} gap="sm">
         {hasWidgetSettings && (
           <>
-            <Group gap="xs" wrap="nowrap">
-              <IconSettings size={16} />
-              <Text fw={600} size="sm">
-                {tItem("settings.label")}
-              </Text>
-            </Group>
+            {showSettingsHeading && (
+              <Group gap="xs" wrap="nowrap">
+                <IconSettings size={16} />
+                <Text fw={600} size="sm">
+                  {tItem("settings.label")}
+                </Text>
+              </Group>
+            )}
             {canConfigureWidget && integrationSupport && (
               <Box className={classes.fullWidthField}>
                 <WidgetIntegrationSelect
@@ -196,7 +200,7 @@ export const WidgetEditorFields = ({
             {canConfigureWidget && (
               <Stack gap="sm">
                 {switchOptions.length > 0 && (
-                  <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="sm" verticalSpacing="sm">
+                  <SimpleGrid type="container" cols={{ base: 1, "34rem": 2 }} spacing="xs" verticalSpacing="xs">
                     {switchOptions.map(([key, value]) => {
                       const Input = getInputForType(value.type);
                       if (!Input) {
@@ -253,7 +257,7 @@ export const WidgetEditorFields = ({
         )}
         <Accordion variant="contained">
           <Accordion.Item value="advanced-options">
-            <Accordion.Control>{tItem("advancedOptions.label")}</Accordion.Control>
+            <Accordion.Control data-widget-advanced-options>{tItem("advancedOptions.label")}</Accordion.Control>
             <Accordion.Panel>
               <Stack gap="sm">
                 <TextInput
@@ -304,6 +308,7 @@ export interface WidgetEditorFormProps {
   boardId?: string;
   formId?: string;
   canConfigureWidget?: boolean;
+  showSettingsHeading?: boolean;
   onOpenNewIntegration?: (onCreated?: (id: string) => void) => void;
   onChange?: (draft: WidgetEditModalState) => void;
   onSubmit: (draft: WidgetEditModalState) => void;
@@ -320,6 +325,7 @@ export const WidgetEditorForm = ({
   boardId,
   formId,
   canConfigureWidget,
+  showSettingsHeading,
   onOpenNewIntegration,
   onChange,
   onSubmit,
@@ -331,7 +337,25 @@ export const WidgetEditorForm = ({
     // oxlint-disable-next-line react-hooks/exhaustive-deps
   }, [form.values]);
 
-  const handleSubmit = form.onSubmit((values) => onSubmit(normalizeWidgetEditorState(values)));
+  const handleSubmit = form.onSubmit(
+    (values) => onSubmit(normalizeWidgetEditorState(values)),
+    (errors, _values, event) => {
+      const element = event?.currentTarget;
+      const firstError = Object.keys(errors)[0];
+      if (!firstError) return;
+      requestAnimationFrame(() => {
+        if (firstError.startsWith("advancedOptions.")) {
+          element?.querySelector<HTMLButtonElement>('[data-widget-advanced-options][aria-expanded="false"]')?.click();
+        }
+        requestAnimationFrame(() => {
+          const field = form.getInputNode(firstError) ?? element?.querySelector<HTMLElement>("[aria-invalid=true]");
+          const input = field?.querySelector<HTMLElement>("input, textarea, select, [contenteditable=true]") ?? field;
+          input?.focus();
+          input?.scrollIntoView({ block: "nearest", inline: "nearest" });
+        });
+      });
+    },
+  );
 
   return (
     <FormProvider form={form}>
@@ -346,6 +370,7 @@ export const WidgetEditorForm = ({
         boardId={boardId}
         formId={formId}
         canConfigureWidget={canConfigureWidget}
+        showSettingsHeading={showSettingsHeading}
         onOpenNewIntegration={onOpenNewIntegration}
         onSubmit={(event) => handleSubmit(event)}
       />

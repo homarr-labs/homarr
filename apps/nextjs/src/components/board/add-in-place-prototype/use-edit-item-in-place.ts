@@ -23,17 +23,17 @@ export const useEditItemInPlace = (item: SectionItem, onEdited?: () => void) => 
           integrationIds: item.integrationIds,
           advancedOptions: item.advancedOptions,
         },
-        onCommit: ({ options, integrationIds, advancedOptions }, size) => {
+        onCommit: ({ options, integrationIds, advancedOptions }, area) => {
           updateItemOptions({ itemId: item.id, newOptions: options });
           updateItemAdvancedOptions({ itemId: item.id, newAdvancedOptions: advancedOptions });
           updateItemIntegrations({ itemId: item.id, newIntegrations: integrationIds });
-          if (size) {
+          if (area) {
             moveAndResizeItem({
               itemId: item.id,
-              xOffset: item.xOffset,
-              yOffset: item.yOffset,
-              width: size.width,
-              height: size.height,
+              xOffset: area.x,
+              yOffset: area.y,
+              width: area.w,
+              height: area.h,
             });
           }
           onEdited?.();

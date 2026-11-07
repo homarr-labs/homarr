@@ -15,8 +15,9 @@ export interface AddInPlacePanelProps {
   actions: AddInPlaceActions;
   BoundEditorForm: ComponentType;
   editorFormId: string;
-  AreaSizeInputs: ComponentType;
+  AreaSizeInputs: ComponentType<{ compact?: boolean }>;
   CreateAppForm: ComponentType;
+  canCreateApp: boolean;
   onKeyDown: (event: KeyboardEvent) => void;
   panelProps: { "data-add-in-place-inside": "" };
 }

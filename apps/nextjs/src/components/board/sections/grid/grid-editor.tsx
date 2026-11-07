@@ -740,6 +740,8 @@ export default function GridEditor({
   const { registerGrid, getDepth, isDropTargetEligible } = useBoardGridEditorActions();
   const interactionStore = useBoardGridEditorInteractionStore();
   const gridRef = useRef<HTMLDivElement>(null);
+  const [addInPlaceRowCount, setAddInPlaceRowCount] = useState(0);
+  const renderedRowCount = Math.max(rowCount, addInPlaceRowCount);
   const entryElements = useSyncExternalStore(
     entryElementStore.subscribe,
     entryElementStore.getSnapshot,
@@ -794,17 +796,29 @@ export default function GridEditor({
     });
   }, [columnCount, depth, maxRowCount, ownerPlacementId, parentGridId, registerGrid, sectionId, transactionPlacements]);
 
+  useLayoutEffect(() => {
+    const viewport = gridRef.current?.parentElement;
+    if (!viewport || maxRowCount !== null || renderedRowCount <= rowCount) return;
+    viewport.style.setProperty(
+      "--board-grid-drag-height",
+      `calc(${getLogicalGridSize(renderedRowCount)}px * var(--board-grid-row-scale, 1))`,
+    );
+    return () => {
+      viewport.style.removeProperty("--board-grid-drag-height");
+    };
+  }, [maxRowCount, renderedRowCount, rowCount]);
+
   return (
     <div
       ref={setGridRef}
       className={className}
       data-grid-section-id={sectionId}
       data-grid-depth={depth}
-      data-grid-row-count={rowCount}
+      data-grid-row-count={renderedRowCount}
       style={
         {
           width: getLogicalGridSize(columnCount),
-          height: `calc(${getLogicalGridSize(rowCount)}px * var(--board-grid-row-scale, 1))`,
+          height: `calc(${getLogicalGridSize(renderedRowCount)}px * var(--board-grid-row-scale, 1))`,
           "--board-grid-pitch": `${LOGICAL_GRID_PITCH}px`,
         } as CSSProperties
       }
@@ -838,6 +852,7 @@ export default function GridEditor({
         maxRowCount={maxRowCount}
         placements={placements}
         entryElements={entryElements}
+        onRowCountChange={setAddInPlaceRowCount}
       />
       <span
         data-grid-runtime="homarr-dnd-kit-v1"

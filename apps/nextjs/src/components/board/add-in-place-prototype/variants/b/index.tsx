@@ -1,5 +1,3 @@
-import { BaselinePanel } from "../baseline-panel";
+export { Panel } from "./panel";
 
-export const name = "B · Docked sidebar";
-
-export const Panel = BaselinePanel;
+export const name = "B · Docked inspector";

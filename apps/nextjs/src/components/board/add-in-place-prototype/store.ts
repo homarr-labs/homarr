@@ -1,7 +1,6 @@
 import { useSyncExternalStore } from "react";
 
 import type { WidgetKind } from "@homarr/definitions";
-import { widgetDefaultSizes } from "@homarr/definitions";
 import type { WidgetEditModalState } from "@homarr/widgets/modals";
 
 import { buildOccupiedCells, fits } from "./occupancy";
@@ -63,7 +62,7 @@ export const getTargetKind = (target: PickTarget): WidgetKind => {
 
 const areaFits = (session: AddInPlaceSession, area: AreaRect) => {
   const section = sections.get(session.sectionId);
-  if (!section) return area.x + area.w <= 12 && area.w >= 1 && area.h >= 1;
+  if (!section) return area.x >= 0 && area.y >= 0 && area.x + area.w <= 12 && area.w >= 1 && area.h >= 1;
   return fits(section, buildOccupiedCells(section.placements, session.editItemId), area);
 };
 
@@ -76,25 +75,12 @@ const resolveArea = (session: AddInPlaceSession, width: number, height: number):
   return area;
 };
 
-const growToDefault = (session: AddInPlaceSession, target: PickTarget): AreaRect => {
-  if (session.mode === "edit" || target.type === "existing") return session.area;
-  const size = widgetDefaultSizes[getTargetKind(target)] ?? { width: 1, height: 1 };
-  const base = session.baseArea;
-  const w = Math.max(base.w, size.width);
-  const h = Math.max(base.h, size.height);
-  const candidates: AreaRect[] = [{ ...base, w, h }, { ...base, w, h: base.h }, { ...base, w: base.w, h }, base];
-  return candidates.find((candidate) => areaFits(session, candidate)) ?? base;
-};
-
 const serialize = (value: unknown) => JSON.stringify(value);
 
 const computeDirty = (session: AddInPlaceSession) => {
-  if (!session.baseline || !session.draft || !session.baselineArea) return false;
-  return (
-    serialize(session.draft) !== serialize(session.baseline) ||
-    session.area.w !== session.baselineArea.w ||
-    session.area.h !== session.baselineArea.h
-  );
+  if (session.baselineArea && serialize(session.area) !== serialize(session.baselineArea)) return true;
+  if (!session.baseline || !session.draft) return false;
+  return serialize(session.draft) !== serialize(session.baseline);
 };
 
 export const addInPlaceActions = {
@@ -137,7 +123,6 @@ export const addInPlaceActions = {
     updateSession((session) => ({
       ...session,
       highlighted: target,
-      area: target ? growToDefault(session, target) : session.baseArea,
     }));
   },
   pick(target: PickTarget) {
@@ -146,17 +131,19 @@ export const addInPlaceActions = {
         ...session,
         picked: target,
         highlighted: target,
-        area: growToDefault(session, target),
         draft: undefined,
         baseline: undefined,
-        baselineArea: undefined,
+        baselineArea: session.area,
         dirty: false,
       }),
       "configure",
     );
   },
-  openCreateApp() {
-    updateSession((session) => ({ ...session, highlighted: undefined, area: session.baseArea }), "createApp");
+  openCreateApp(name?: string) {
+    updateSession(
+      (session) => ({ ...session, createAppName: name?.trim(), highlighted: undefined, area: session.baseArea }),
+      "createApp",
+    );
   },
   back() {
     const { session, step } = state;
@@ -197,10 +184,20 @@ export const addInPlaceActions = {
     if (!session) return;
     addInPlaceActions.resizeTo(session.area.w + deltaWidth, session.area.h + deltaHeight);
   },
+  moveBy(deltaX: number, deltaY: number) {
+    updateSession((session) => {
+      const area = { ...session.area, x: session.area.x + deltaX, y: session.area.y + deltaY };
+      if (!areaFits(session, area)) return session;
+      const baseArea = { ...session.baseArea, x: area.x, y: area.y };
+      const next = { ...session, area, baseArea };
+      return { ...next, dirty: computeDirty(next) };
+    });
+  },
   setDraft(draft: WidgetEditModalState) {
     updateSession((session) => {
       if (!session.baseline) {
-        return { ...session, draft, baseline: draft, baselineArea: session.area, dirty: false };
+        const next = { ...session, draft, baseline: draft, baselineArea: session.baselineArea ?? session.area };
+        return { ...next, dirty: computeDirty(next) };
       }
       const next = { ...session, draft };
       return { ...next, dirty: computeDirty(next) };
@@ -213,8 +210,8 @@ export const addInPlaceActions = {
     if (!draft) return;
     const size = { width: session.area.w, height: session.area.h };
     if (session.mode === "edit") {
-      const changedSize = session.baselineArea?.w !== session.area.w || session.baselineArea.h !== session.area.h;
-      session.onCommit?.(draft, changedSize ? size : undefined);
+      const changedArea = serialize(session.baselineArea) !== serialize(session.area);
+      session.onCommit?.(draft, changedArea ? session.area : undefined);
     } else {
       commitBridge?.create(session, draft, size);
     }

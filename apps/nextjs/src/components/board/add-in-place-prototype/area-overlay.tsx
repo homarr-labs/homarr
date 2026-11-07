@@ -14,7 +14,7 @@ import { getLogicalItemStyle } from "~/components/board/layout";
 import classes from "./area-overlay.module.css";
 import type { SectionOccupancy } from "./occupancy";
 import { useTargetResources } from "./resources";
-import { addInPlaceActions, useAddInPlaceState } from "./store";
+import { addInPlaceActions, getAddInPlaceState, useAddInPlaceState } from "./store";
 
 const rowScale = "var(--board-grid-row-scale, 1)";
 const highlightDelay = 120;
@@ -38,6 +38,7 @@ export const AreaOverlay = ({ occupancy, entryElements }: AreaOverlayProps) => {
   const t = useI18n();
   const board = useOptionalBoard();
   const layerRef = useRef<HTMLDivElement>(null);
+  const resizeControllerRef = useRef<AbortController | null>(null);
   const active = session?.sectionId === occupancy.sectionId;
   const editItemId = active ? session.editItemId : undefined;
 
@@ -57,6 +58,14 @@ export const AreaOverlay = ({ occupancy, entryElements }: AreaOverlayProps) => {
     };
   }, [editItemId, entryElements]);
 
+  useEffect(
+    () => () => {
+      resizeControllerRef.current?.abort();
+      resizeControllerRef.current = null;
+    },
+    [active, editItemId, occupancy.sectionId],
+  );
+
   if (!active || !session) return null;
 
   const draft = step === "pick" ? undefined : session.draft;
@@ -71,25 +80,42 @@ export const AreaOverlay = ({ occupancy, entryElements }: AreaOverlayProps) => {
       : null;
 
   const handleResizePointerDown = (event: React.PointerEvent<HTMLSpanElement>) => {
+    if (event.button !== 0 || !event.isPrimary) return;
     event.preventDefault();
     event.stopPropagation();
     const grid = layerRef.current?.parentElement;
     if (!grid) return;
+    const bounds = grid.getBoundingClientRect();
+    if (bounds.width === 0 || bounds.height === 0) return;
+    resizeControllerRef.current?.abort();
+    const controller = new AbortController();
+    resizeControllerRef.current = controller;
+    const pointerId = event.pointerId;
+    const rowPitch = bounds.height / (occupancy.maxRowCount ?? occupancy.rowCount);
+    let expectedSession = session;
     const move = (moveEvent: PointerEvent) => {
+      if (moveEvent.pointerId !== pointerId) return;
+      if (getAddInPlaceState().session !== expectedSession) {
+        controller.abort();
+        return;
+      }
       const rect = grid.getBoundingClientRect();
       if (rect.width === 0 || rect.height === 0) return;
-      const rows = occupancy.maxRowCount ?? occupancy.rowCount;
       const x = Math.floor(((moveEvent.clientX - rect.left) / rect.width) * occupancy.columnCount);
-      const y = Math.floor(((moveEvent.clientY - rect.top) / rect.height) * rows);
+      const y = Math.floor((moveEvent.clientY - rect.top) / rowPitch);
       const current = session.area;
       addInPlaceActions.resizeTo(Math.max(1, x - current.x + 1), Math.max(1, y - current.y + 1));
+      const nextSession = getAddInPlaceState().session;
+      if (nextSession) expectedSession = nextSession;
     };
-    const up = () => {
-      window.removeEventListener("pointermove", move);
-      window.removeEventListener("pointerup", up);
+    const stop = (stopEvent: PointerEvent) => {
+      if (stopEvent.pointerId !== pointerId) return;
+      controller.abort();
     };
-    window.addEventListener("pointermove", move);
-    window.addEventListener("pointerup", up);
+    window.addEventListener("pointermove", move, { signal: controller.signal });
+    window.addEventListener("pointerup", stop, { signal: controller.signal });
+    window.addEventListener("pointercancel", stop, { signal: controller.signal });
+    window.addEventListener("blur", () => controller.abort(), { signal: controller.signal });
   };
 
   const label = resources.kind ? getWidgetName(resources.kind, t) : "";

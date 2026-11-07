@@ -6,7 +6,6 @@ import { useCurrentLayout, useRequiredBoard } from "@homarr/boards/context";
 import { useEditMode } from "@homarr/boards/edit-mode";
 import { getRootSectionLane } from "@homarr/definitions";
 import type { WidgetKind } from "@homarr/definitions";
-import { useIsMobile } from "@homarr/ui/hooks";
 import type { WidgetEditModalState } from "@homarr/widgets/modals";
 
 import { getFirstEmptyPosition } from "~/components/board/items/actions/empty-position";
@@ -30,6 +29,10 @@ const scrollAreaIntoView = () => {
   const tick = () => {
     const element = document.querySelector("[data-add-in-place-area]");
     if (element) {
+      if (window.innerWidth < 768) {
+        window.scrollBy({ top: element.getBoundingClientRect().top - 76, behavior: "smooth" });
+        return;
+      }
       element.scrollIntoView({ block: "center", inline: "nearest", behavior: "smooth" });
       return;
     }
@@ -43,7 +46,6 @@ export const useAddInPlaceEntry = () => {
   const board = useRequiredBoard();
   const layoutId = useCurrentLayout();
   const [isEditMode, { open }] = useEditMode();
-  const isMobile = useIsMobile();
 
   const addWidgetInPlace = useCallback(() => {
     const mainSection = board.sections
@@ -69,13 +71,12 @@ export const useAddInPlaceEntry = () => {
 
   const editInPlace = useCallback(
     (input: EditInPlaceInput) => {
-      if (isMobile) return false;
       if (!isEditMode) open();
       addInPlaceActions.startEdit(input);
       scrollAreaIntoView();
       return true;
     },
-    [isEditMode, isMobile, open],
+    [isEditMode, open],
   );
 
   return { addWidgetInPlace, editInPlace };

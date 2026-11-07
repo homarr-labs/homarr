@@ -1,5 +1,3 @@
-import { BaselinePanel } from "../baseline-panel";
+export { Panel } from "./panel";
 
-export const name = "A · Floating popover";
-
-export const Panel = BaselinePanel;
+export const name = "A · Anchored panel";

@@ -40,18 +40,10 @@ export interface AddInPlaceCatalog {
   total: number;
 }
 
-const maxRows = 10;
-const minAppRows = 3;
 const defaultSize = { width: 1, height: 1 };
 
 const getFit = (area: Pick<AreaRect, "w" | "h">, size: { width: number; height: number }) =>
   Math.abs(area.w - size.width) + Math.abs(area.h - size.height);
-
-const markBestFit = <T extends CatalogEntryBase>(entries: T[]) => {
-  const best = Math.min(...entries.map((entry) => entry.fit));
-  if (!Number.isFinite(best)) return entries;
-  return entries.map((entry) => ({ ...entry, bestFit: entry.fit === best }));
-};
 
 export const useAddInPlaceCatalog = (search: string, area: Pick<AreaRect, "w" | "h">): AddInPlaceCatalog => {
   const t = useI18n();
@@ -154,30 +146,19 @@ export const useAddInPlaceCatalog = (search: string, area: Pick<AreaRect, "w" | 
       bestFit: false,
     });
 
-    const widgetGroup = markBestFit(
-      [...widgetEntries, ...customEntries]
-        .filter((entry) => matchesQuery(entry.name, entry.supportedIntegrations))
-        .map(withFit)
-        .toSorted((entryA, entryB) => entryA.fit - entryB.fit || entryA.name.localeCompare(entryB.name)),
-    ) as CatalogEntry[];
+    const widgetGroup = [...widgetEntries, ...customEntries]
+      .filter((entry) => matchesQuery(entry.name, entry.supportedIntegrations))
+      .map(withFit)
+      .map((entry) => ({ ...entry, bestFit: entry.fit === 0 }))
+      .toSorted((entryA, entryB) => entryA.fit - entryB.fit || entryA.name.localeCompare(entryB.name));
     const appGroup = appEntries
       .filter((entry) => matchesQuery(entry.name, []))
       .map(withFit)
       .toSorted((entryA, entryB) => entryA.name.localeCompare(entryB.name)) as CatalogEntry[];
 
-    const total = widgetGroup.length + appGroup.length;
-    let widgetRows = Math.min(widgetGroup.length, maxRows);
-    let appRows = Math.min(appGroup.length, maxRows - widgetRows);
-    if (appGroup.length > 0 && widgetGroup.length > 0) {
-      const reserved = Math.min(appGroup.length, minAppRows);
-      if (appRows < reserved) {
-        appRows = reserved;
-        widgetRows = maxRows - appRows;
-      }
-    }
     return {
-      entries: [...widgetGroup.slice(0, widgetRows), ...appGroup.slice(0, appRows)],
-      total,
+      entries: [...widgetGroup, ...appGroup],
+      total: widgetGroup.length + appGroup.length,
     };
   }, [appEntries, area, customEntries, search, widgetEntries]);
 };

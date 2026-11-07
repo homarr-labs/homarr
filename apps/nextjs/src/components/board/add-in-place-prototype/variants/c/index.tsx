@@ -1,5 +1,5 @@
-import { BaselinePanel } from "../baseline-panel";
+import { GalleryPanel } from "./panel";
 
-export const name = "C · Preview-first";
+export const name = "C · Size-first gallery";
 
-export const Panel = BaselinePanel;
+export const Panel = GalleryPanel;

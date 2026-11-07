@@ -21,7 +21,7 @@ export interface AreaSize {
   height: number;
 }
 
-export type CommitHandler = (value: WidgetEditModalState, size?: AreaSize) => void;
+export type CommitHandler = (value: WidgetEditModalState, area?: AreaRect) => void;
 
 export interface AddInPlaceSession {
   mode: "create" | "edit";
@@ -35,6 +35,7 @@ export interface AddInPlaceSession {
   baselineArea?: AreaRect;
   dirty: boolean;
   editItemId?: string;
+  createAppName?: string;
   onCommit?: CommitHandler;
 }
 

@@ -1,6 +1,7 @@
 "use client";
 
 import type { KeyboardEvent } from "react";
+import { useEffect, useRef } from "react";
 import { Center, Loader, Text } from "@mantine/core";
 
 import { useSettings } from "@homarr/settings";
@@ -12,8 +13,15 @@ import { addInPlaceActions, useAddInPlaceSession } from "./store";
 export const editorFormId = "add-in-place-editor-form";
 
 const submitOnModEnter = (event: KeyboardEvent) => {
-  if (event.key !== "Enter" || !(event.ctrlKey || event.metaKey)) return;
+  if (
+    event.key !== "Enter" ||
+    !(event.ctrlKey || event.metaKey) ||
+    event.defaultPrevented ||
+    event.nativeEvent.isComposing
+  )
+    return;
   event.preventDefault();
+  event.stopPropagation();
   document.querySelector<HTMLFormElement>(`#${editorFormId}`)?.requestSubmit();
 };
 
@@ -21,6 +29,13 @@ export const BoundEditorForm = () => {
   const session = useAddInPlaceSession();
   const settings = useSettings();
   const resources = useTargetResources(session?.picked);
+  const pendingSubmitRef = useRef(false);
+
+  useEffect(() => {
+    if (resources.status !== "ready" || !pendingSubmitRef.current) return;
+    pendingSubmitRef.current = false;
+    document.getElementById(editorFormId)?.closest("form")?.requestSubmit();
+  }, [resources.status]);
 
   if (!session?.picked) return null;
   if (resources.status === "error") {
@@ -32,9 +47,17 @@ export const BoundEditorForm = () => {
   }
   if (resources.status !== "ready" || !resources.definition || !resources.kind || !resources.baseValue) {
     return (
-      <Center py="md">
-        <Loader size="sm" />
-      </Center>
+      <form
+        id={editorFormId}
+        onSubmit={(event) => {
+          event.preventDefault();
+          pendingSubmitRef.current = true;
+        }}
+      >
+        <Center py="md">
+          <Loader size="sm" />
+        </Center>
+      </form>
     );
   }
 
@@ -50,6 +73,7 @@ export const BoundEditorForm = () => {
         settings={settings}
         itemId={session.editItemId}
         formId={editorFormId}
+        showSettingsHeading={false}
         onChange={addInPlaceActions.setDraft}
         onSubmit={(draft) => addInPlaceActions.commit(draft)}
       />

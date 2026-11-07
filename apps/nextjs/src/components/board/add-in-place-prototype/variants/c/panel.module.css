@@ -1,0 +1,225 @@
+.panel {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: 22px;
+  background: light-dark(rgb(255 255 255 / 92%), rgb(30 30 34 / 90%));
+  backdrop-filter: blur(18px) saturate(1.4);
+  box-shadow:
+    0 24px 60px -12px rgb(0 0 0 / 38%),
+    0 0 0 1px light-dark(rgb(0 0 0 / 8%), rgb(255 255 255 / 10%));
+
+  &[data-presentation="sheet"] {
+    border-radius: 22px 22px 0 0;
+    box-shadow: none;
+    max-height: 85dvh;
+  }
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--mantine-spacing-sm);
+  padding: var(--mantine-spacing-md);
+  min-height: 0;
+}
+
+.sizeRow {
+  display: flex;
+  align-items: center;
+  gap: var(--mantine-spacing-sm);
+}
+
+.sizeLabel {
+  flex: 0 0 auto;
+  font-size: var(--mantine-font-size-xs);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--mantine-color-dimmed);
+}
+
+.chips {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: 1;
+  min-width: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding: 2px;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex: 0 0 auto;
+  padding: 5px 12px 5px 8px;
+  border-radius: 999px;
+  font-size: var(--mantine-font-size-sm);
+  font-weight: 600;
+  color: var(--mantine-color-text);
+  background: light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-5));
+  transition:
+    background-color 140ms ease,
+    color 140ms ease;
+
+  &:hover {
+    background: light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-4));
+  }
+
+  &[data-active] {
+    background: var(--mantine-primary-color-filled);
+    color: var(--mantine-primary-color-contrast);
+  }
+}
+
+.glyphBox {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+}
+
+.glyph {
+  border-radius: 3px;
+  background: currentcolor;
+  opacity: 0.55;
+}
+
+.gallery {
+  display: flex;
+  gap: var(--mantine-spacing-xs);
+  overflow-x: auto;
+  padding: 6px 2px 8px;
+  margin: 0 -2px;
+  scroll-snap-type: x proximity;
+  scroll-padding: 0 var(--mantine-spacing-md);
+  scrollbar-width: thin;
+
+  &[data-presentation="sheet"] {
+    flex-direction: column;
+    overflow-x: hidden;
+    overflow-y: auto;
+    max-height: 38dvh;
+    scroll-snap-type: y proximity;
+  }
+}
+
+.group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 0 0 auto;
+
+  &[data-presentation="sheet"] {
+    flex: none;
+  }
+}
+
+.groupLabel {
+  padding-left: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--mantine-color-dimmed);
+}
+
+.groupCards {
+  display: flex;
+  gap: var(--mantine-spacing-xs);
+  flex: 1;
+
+  [data-presentation="sheet"] > & {
+    flex-direction: column;
+  }
+}
+
+.empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 160px;
+  font-size: var(--mantine-font-size-sm);
+  color: var(--mantine-color-dimmed);
+}
+
+.hints {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--mantine-spacing-md);
+  font-size: 11px;
+  color: var(--mantine-color-dimmed);
+}
+
+.kbd {
+  display: inline-block;
+  margin-right: 4px;
+  padding: 0 5px;
+  border-radius: 5px;
+  font-family: var(--mantine-font-family-monospace);
+  font-size: 10px;
+  background: light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-5));
+}
+
+.configHeader {
+  display: flex;
+  align-items: center;
+  gap: var(--mantine-spacing-md);
+  padding: var(--mantine-spacing-md) var(--mantine-spacing-lg);
+  border-bottom: 1px solid light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-4));
+}
+
+.configTile {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background: var(--mantine-primary-color-light);
+  color: var(--mantine-primary-color-light-color);
+}
+
+.configTitle {
+  font-size: var(--mantine-font-size-xl);
+  font-weight: 700;
+  line-height: 1.15;
+}
+
+.configBody {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: var(--mantine-spacing-md) var(--mantine-spacing-lg);
+}
+
+.configColumns {
+  &[data-presentation="floating"][data-wide] {
+    column-count: 2;
+    column-gap: var(--mantine-spacing-xl);
+  }
+
+  &[data-presentation="floating"][data-wide] > * > * {
+    break-inside: avoid;
+  }
+}
+
+.configFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--mantine-spacing-sm);
+  padding: var(--mantine-spacing-sm) var(--mantine-spacing-lg);
+  border-top: 1px solid light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-4));
+}
+
+.primary {
+  border-radius: 999px;
+  padding-inline: var(--mantine-spacing-xl);
+  font-weight: 700;
+}

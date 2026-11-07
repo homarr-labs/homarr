@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import type { ReactNode } from "react";
 import { ActionIcon, Menu } from "@mantine/core";
 import { IconCopy, IconDotsVertical, IconLayoutKanban, IconPencil, IconTrash } from "@tabler/icons-react";
 
@@ -16,6 +17,7 @@ import type { SectionItem } from "~/app/[locale]/boards/_types";
 import { useEditItemInPlace } from "~/components/board/add-in-place-prototype/use-edit-item-in-place";
 import { useSectionContext } from "../sections/section-context";
 import { useItemActions } from "./item-actions";
+import { ItemMenuDropdown } from "./item-menu-dropdown";
 import itemContentClasses from "./item-content.module.css";
 import { useOpenItemMoveModal } from "./item-move-modal";
 import { LazyWidgetEditModal, preloadWidgetEditModal } from "./lazy-widget-edit-modal";
@@ -34,7 +36,21 @@ export const BoardItemMenu = (props: BoardItemMenuProps) => {
 
   return <BoardItemMenuInner {...props} />;
 };
-const BoardItemMenuInner = ({ item, definition, previewDimensions, resetErrorBoundary }: BoardItemMenuProps) => {
+interface BoardItemContextMenuProps extends BoardItemMenuProps {
+  children: ReactNode;
+  disabled?: boolean;
+}
+
+export const BoardItemContextMenu = (props: BoardItemContextMenuProps) => <BoardItemMenuInner {...props} />;
+
+const BoardItemMenuInner = ({
+  item,
+  definition,
+  previewDimensions,
+  resetErrorBoundary,
+  children,
+  disabled,
+}: BoardItemMenuProps & { children?: ReactNode; disabled?: boolean }) => {
   const { data: session } = useSession();
   const canDuplicate = item.kind !== "customApi" || (session?.user.permissions.includes("admin") ?? false);
   const refResetErrorBoundaryOnNextRender = useRef(false);
@@ -62,6 +78,7 @@ const BoardItemMenuInner = ({ item, definition, previewDimensions, resetErrorBou
   });
 
   useEffect(() => {
+    if (children) return;
     const entry = document.querySelector(`[data-item-id="${CSS.escape(item.id)}"]`)?.closest(".board-grid-entry");
     if (!entry) return;
     const handleDoubleClick = (event: Event) => {
@@ -70,7 +87,7 @@ const BoardItemMenuInner = ({ item, definition, previewDimensions, resetErrorBou
     };
     entry.addEventListener("dblclick", handleDoubleClick);
     return () => entry.removeEventListener("dblclick", handleDoubleClick);
-  }, [editInPlace, item.id]);
+  }, [children, editInPlace, item.id]);
 
   const openEditModal = () => {
     if (editInPlace()) return;
@@ -119,56 +136,70 @@ const BoardItemMenuInner = ({ item, definition, previewDimensions, resetErrorBou
     );
   };
 
+  const menuItems = (
+    <>
+      <Menu.Item
+        leftSection={<IconPencil size={16} />}
+        onClick={openEditModal}
+        onFocus={preloadWidgetEditModal}
+        onPointerEnter={preloadWidgetEditModal}
+      >
+        {tItem("action.edit")}
+      </Menu.Item>
+      <Menu.Item
+        leftSection={<IconLayoutKanban size={16} />}
+        onClick={() => {
+          openMoveModal({
+            entry: item,
+            sourceSectionId: section.id,
+          });
+        }}
+      >
+        {tItem("action.moveResize")}
+      </Menu.Item>
+      {canDuplicate && (
+        <Menu.Item leftSection={<IconCopy size={16} />} onClick={() => duplicateItem({ itemId: item.id })}>
+          {tItem("action.duplicate")}
+        </Menu.Item>
+      )}
+      <Menu.Divider />
+      <InlineConfirmMenuItem
+        color="red"
+        confirmLabel={tItem("remove.message")}
+        leftSection={<IconTrash size={16} />}
+        onConfirm={() => removeItem({ itemId: item.id })}
+      >
+        {tItem("action.remove")}
+      </InlineConfirmMenuItem>
+    </>
+  );
+
   return (
     <Menu withinPortal position="right-start" arrowPosition="center" opened={isMenuOpen} onChange={setIsMenuOpen}>
-      <Menu.Target>
-        <ActionIcon
-          variant="default"
-          size={24}
-          radius="sm"
-          className={itemContentClasses.settingsButton}
-          data-menu-open={isMenuOpen || undefined}
-          data-board-widget-settings
-          aria-label={tItem("menu.label.settingsFor", { name: label })}
-        >
-          <IconDotsVertical size="1rem" />
-        </ActionIcon>
-      </Menu.Target>
-      <Menu.Dropdown miw={128}>
-        <Menu.Item
-          leftSection={<IconPencil size={16} />}
-          onClick={openEditModal}
-          onFocus={preloadWidgetEditModal}
-          onPointerEnter={preloadWidgetEditModal}
-        >
-          {tItem("action.edit")}
-        </Menu.Item>
-        <Menu.Item
-          leftSection={<IconLayoutKanban size={16} />}
-          onClick={() => {
-            openMoveModal({
-              entry: item,
-              sourceSectionId: section.id,
-            });
-          }}
-        >
-          {tItem("action.moveResize")}
-        </Menu.Item>
-        {canDuplicate && (
-          <Menu.Item leftSection={<IconCopy size={16} />} onClick={() => duplicateItem({ itemId: item.id })}>
-            {tItem("action.duplicate")}
-          </Menu.Item>
-        )}
-        <Menu.Divider />
-        <InlineConfirmMenuItem
-          color="red"
-          confirmLabel={tItem("remove.message")}
-          leftSection={<IconTrash size={16} />}
-          onConfirm={() => removeItem({ itemId: item.id })}
-        >
-          {tItem("action.remove")}
-        </InlineConfirmMenuItem>
-      </Menu.Dropdown>
+      {children ? (
+        <Menu.ContextMenu disabled={disabled}>{children}</Menu.ContextMenu>
+      ) : (
+        <Menu.Target>
+          <ActionIcon
+            variant="default"
+            size={24}
+            radius="sm"
+            className={itemContentClasses.settingsButton}
+            data-menu-open={isMenuOpen || undefined}
+            data-board-widget-settings
+            aria-label={tItem("menu.label.settingsFor", { name: label })}
+          >
+            <IconDotsVertical size="1rem" />
+          </ActionIcon>
+        </Menu.Target>
+      )}
+      {children ? (
+        <ItemMenuDropdown opened={isMenuOpen} onClose={() => setIsMenuOpen(false)} title={label}>
+          {menuItems}
+        </ItemMenuDropdown>
+      ) : (
+        <Menu.Dropdown miw={128}>{menuItems}</Menu.Dropdown>
+      )}
     </Menu>
   );
 };

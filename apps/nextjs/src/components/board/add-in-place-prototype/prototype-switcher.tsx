@@ -14,7 +14,14 @@ interface PrototypeSwitcherProps {
 
 const isTypingTarget = (target: EventTarget | null) => {
   if (!(target instanceof HTMLElement)) return false;
-  return target.isContentEditable || target.tagName === "INPUT" || target.tagName === "TEXTAREA";
+  return (
+    target.isContentEditable ||
+    Boolean(
+      target.closest(
+        "input, textarea, select, button, a, [role=combobox], [role=listbox], [role=slider], [role=menu], [role=tablist], [data-add-in-place-inside], [data-grid-item-id], [data-grid-item-content]",
+      ),
+    )
+  );
 };
 
 export const PrototypeSwitcher = ({ variants, activeKey }: PrototypeSwitcherProps) => {
@@ -39,7 +46,8 @@ export const PrototypeSwitcher = ({ variants, activeKey }: PrototypeSwitcherProp
   useEffect(() => {
     if (!enabled) return;
     const handle = (event: KeyboardEvent) => {
-      if (isTypingTarget(event.target) || event.metaKey || event.ctrlKey || event.altKey) return;
+      if (event.defaultPrevented || isTypingTarget(event.target) || event.metaKey || event.ctrlKey || event.altKey)
+        return;
       if (event.key === "ArrowLeft") cycle(-1);
       if (event.key === "ArrowRight") cycle(1);
     };
