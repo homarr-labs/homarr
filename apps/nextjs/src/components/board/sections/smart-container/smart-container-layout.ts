@@ -24,6 +24,7 @@ interface ProjectStateInput {
   rowBudget: number;
   options: SmartContainerOptions;
   authored: boolean;
+  expandedItemId: string | null;
   activities: WidgetActivities;
   now?: number;
 }
@@ -55,6 +56,7 @@ export const projectSmartContainerState = ({
   rowBudget,
   options,
   authored,
+  expandedItemId,
   activities,
   now = Date.now(),
 }: ProjectStateInput) => {
@@ -73,7 +75,11 @@ export const projectSmartContainerState = ({
     const rowCount = Math.max(1, ...selectedItems.map((item) => item.yOffset + item.height));
     return { placements, itemIds, rowCount };
   }
-  const demands = selectedItems.map((item) => getItemDemand(item, options, activities, now));
+  const demands = selectedItems.map((item) => {
+    if (item.id !== expandedItemId) return getItemDemand(item, options, activities, now);
+    const rows = Math.max(2, item.height);
+    return { min: rows, max: rows, authoredWidth: false };
+  });
   const heights = demands.map((demand) => demand.min);
   const weights = demands.map((demand) => demand.max - demand.min);
   const totalWeight = weights.reduce((sum, weight) => sum + weight, 0);

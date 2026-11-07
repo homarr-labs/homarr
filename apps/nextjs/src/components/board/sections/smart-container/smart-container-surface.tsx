@@ -27,7 +27,6 @@ import { LazyContainerEditModal } from "../container/lazy-container-edit-modal";
 import { projectSmartContainerState } from "./smart-container-layout";
 import {
   SmartContainerProjectionProvider,
-  useSmartContainerLayout,
   useSmartContainerPreviewState,
   useSmartContainerProjection,
 } from "./smart-container-context";
@@ -61,7 +60,6 @@ const ReelSurface = ({ section, options, children, collapsed }: SurfaceProps & {
   const preview = useSmartContainerPreviewState();
   const previewStateId = preview?.stateId;
   const { items, innerSections } = useSectionItems(section.id);
-  const layoutRegistry = useSmartContainerLayout();
   const runtime = useSmartContainerRuntime({
     options,
     items,
@@ -71,6 +69,7 @@ const ReelSurface = ({ section, options, children, collapsed }: SurfaceProps & {
     previewStateId,
   });
   const { selectedState, selectedStateId, states } = runtime;
+  const [expandedItemId, setExpandedItemId] = useState<string | null>(null);
   const original = board.sections.find((entry) => entry.id === section.id);
   let savedRows = section.height;
   if (original?.kind === "container")
@@ -84,10 +83,21 @@ const ReelSurface = ({ section, options, children, collapsed }: SurfaceProps & {
         rowBudget: savedRows,
         options,
         authored: isEditMode,
+        expandedItemId,
         activities: runtime.activities,
         now: runtime.now,
       }),
-    [selectedState, items, section.width, savedRows, options, isEditMode, runtime.activities, runtime.now],
+    [
+      selectedState,
+      items,
+      section.width,
+      savedRows,
+      options,
+      isEditMode,
+      expandedItemId,
+      runtime.activities,
+      runtime.now,
+    ],
   );
   const [focusedItemId, setFocusedItemId] = useState<string | null>(null);
   const [focusedProjection, setFocusedProjection] = useState<typeof liveProjection | null>(null);
@@ -100,17 +110,6 @@ const ReelSurface = ({ section, options, children, collapsed }: SurfaceProps & {
   const t = useI18n("section.container.smart");
   const surfaceRef = useRef<HTMLElement>(null);
   const priorStateId = useRef(selectedStateId);
-  const setRows = layoutRegistry?.setRows;
-  const displayRows = Math.max(Math.min(3, savedRows), Math.min(savedRows, projection.rowCount));
-
-  useEffect(() => {
-    if (!setRows) return;
-    let rows: number | null = null;
-    if (options.reclaimSpace && !isEditMode && !previewStateId && innerSections.length === 0) rows = displayRows;
-    setRows(section.id, rows);
-    return () => setRows(section.id, null);
-  }, [setRows, section.id, displayRows, options.reclaimSpace, isEditMode, previewStateId, innerSections.length]);
-
   useEffect(() => {
     if (priorStateId.current === selectedStateId) return;
     const direction = states.findIndex((state) => state.id === priorStateId.current) < selectedIndex ? 1 : -1;
@@ -139,7 +138,15 @@ const ReelSurface = ({ section, options, children, collapsed }: SurfaceProps & {
     sectionId: section.id,
     projection,
     now: runtime.now,
+    savedRows,
     compactQuiet: options.compactQuiet && !isEditMode,
+    expandedItemId,
+    toggleCompactWidget: (itemId: string) => {
+      runtime.holdForFocus();
+      setFocusedProjection(null);
+      setFocusedItemId(null);
+      setExpandedItemId((current) => (current === itemId ? null : itemId));
+    },
     focusedItemId,
     runtime: { ...runtime, selectState: preview?.onSelectState ?? runtime.selectState, previousState, nextState },
   };
@@ -164,10 +171,11 @@ const ReelSurface = ({ section, options, children, collapsed }: SurfaceProps & {
         }}
         onFocusCapture={(event) => {
           if (!(event.target instanceof Element) || !event.target.closest('[data-grid-item-type="item"]')) return;
+          runtime.holdForFocus();
+          if (event.target.closest("[data-smart-compact-control]")) return;
           setFocusedItemId(
             event.target.closest<HTMLElement>('[data-grid-item-type="item"]')?.dataset.gridItemId ?? null,
           );
-          runtime.holdForFocus();
           setFocusedProjection((current) => current ?? liveProjection);
         }}
         onBlurCapture={(event) => {
@@ -204,7 +212,7 @@ const ReelSurface = ({ section, options, children, collapsed }: SurfaceProps & {
         )}
         <div className={classes.content}>
           {children}
-          {projection.itemIds.length === 0 && innerSections.length === 0 && (
+          {projection.itemIds.length === 0 && innerSections.length === 0 && (!isEditMode || items.length === 0) && (
             <div className={classes.empty}>
               <Text size="sm" c="dimmed">
                 {t("empty")}
@@ -290,7 +298,7 @@ export const SmartContainerToolbar = ({ section }: { section: ContainerSectionIt
                 </Text>
                 <Text component="span" size="xs" c="dimmed" className={classes.position} truncate>
                   {containerTitle && <span className={classes.containerName}>{containerTitle} · </span>}
-                  {position}
+                  {isEditMode ? t("allStatesInEdit") : position}
                 </Text>
               </span>
               <IconChevronDown size={14} aria-hidden />
@@ -327,7 +335,7 @@ export const SmartContainerToolbar = ({ section }: { section: ContainerSectionIt
           {runtime.remainingSeconds}s
         </Text>
       )}
-      {!isEditMode && !preview && section.options.smart?.mode !== "manual" && (
+      {!isEditMode && !preview?.stateId && section.options.smart?.mode !== "manual" && (
         <ActionIcon
           variant="subtle"
           style={zoomCompensatedSize(44)}

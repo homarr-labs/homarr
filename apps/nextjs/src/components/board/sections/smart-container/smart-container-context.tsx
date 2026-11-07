@@ -14,9 +14,12 @@ interface SmartContainerContextValue {
   sectionId: string;
   projection: Projection;
   now: number;
+  savedRows: number;
   runtime: ReturnType<typeof useSmartContainerRuntime>;
   focusedItemId: string | null;
   compactQuiet: boolean;
+  expandedItemId: string | null;
+  toggleCompactWidget: (itemId: string) => void;
 }
 
 const SmartContainerContext = createContext<SmartContainerContextValue | null>(null);
@@ -24,10 +27,12 @@ export const SmartContainerProjectionProvider = SmartContainerContext.Provider;
 export const useSmartContainerProjection = () => useContext(SmartContainerContext);
 
 const emptyRows: ReadonlyMap<string, number> = new Map();
-const LayoutContext = createContext<{
+interface LayoutContextValue {
   rows: ReadonlyMap<string, number>;
   setRows: (sectionId: string, rows: number | null) => void;
-} | null>(null);
+}
+const emptyLayout: LayoutContextValue = { rows: emptyRows, setRows: () => undefined };
+const LayoutContext = createContext<LayoutContextValue>(emptyLayout);
 
 /** Display heights belong to the current view, never the board's saved geometry. */
 export const SmartContainerLayoutProvider = ({ children }: PropsWithChildren) => {
@@ -64,7 +69,6 @@ export const SmartContainerLayoutProvider = ({ children }: PropsWithChildren) =>
 };
 
 export const useSmartContainerLayout = () => useContext(LayoutContext);
-export const useSmartContainerDisplayRows = () => useSmartContainerLayout()?.rows ?? emptyRows;
 
 const PreviewContext = createContext<{ stateId?: string; onSelectState?: (id: string) => void } | undefined>(undefined);
 export const SmartContainerPreviewStateProvider = PreviewContext.Provider;

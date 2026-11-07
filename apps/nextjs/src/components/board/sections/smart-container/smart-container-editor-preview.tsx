@@ -125,6 +125,7 @@ export const SmartContainerEditorPreview = ({
                             initialLogicalHeight={getLogicalGridSize(preview.section.height)}
                             initialAvailableWidth={500}
                             label={preview.section.options.title}
+                            fitBeforeHydration={false}
                           >
                             <BoardGridEditorBoundary>
                               <BoardEmptySection

@@ -70,6 +70,7 @@ export type SmartContainerOptions = z.infer<typeof smartContainerOptionsSchema>;
 export const resolveSmartContainerMembership = (
   states: readonly SmartContainerState[],
   availableIds: ReadonlySet<string>,
+  assignUnassigned = true,
 ): SmartContainerState[] => {
   const assignedIds = new Set<string>();
   const resolved = states.map((state) => {
@@ -81,12 +82,17 @@ export const resolveSmartContainerMembership = (
     if (itemIds.length === state.itemIds.length) return state;
     return { ...state, itemIds };
   });
-  const firstState = resolved[0];
-  if (firstState) {
-    const unassignedIds = [...availableIds].filter((itemId) => !assignedIds.has(itemId));
-    if (unassignedIds.length > 0) resolved[0] = { ...firstState, itemIds: [...firstState.itemIds, ...unassignedIds] };
-  }
-  return resolved;
+  if (!assignUnassigned) return resolved;
+  const unassignedIds = [...availableIds].filter((itemId) => !assignedIds.has(itemId));
+  let nextUnassignedIndex = 0;
+  return resolved.map((state) => {
+    if (!state.enabled || nextUnassignedIndex >= unassignedIds.length) return state;
+    const capacity = smartContainerStateItemLimit - state.itemIds.length;
+    if (capacity <= 0) return state;
+    const additional = unassignedIds.slice(nextUnassignedIndex, nextUnassignedIndex + capacity);
+    nextUnassignedIndex += additional.length;
+    return { ...state, itemIds: [...state.itemIds, ...additional] };
+  });
 };
 
 interface SmartContainerSection {
@@ -109,7 +115,7 @@ export const reconcileSmartContainerStates = <TSection extends SmartContainerSec
   let membershipChanged = false;
   const reconciledSections = sections.map((section) => {
     const smart = section.options?.smart;
-    if (section.kind !== "container" || !smart?.enabled) return section;
+    if (section.kind !== "container" || !smart || smart.states.length === 0) return section;
 
     const containerLayoutIds = new Set(section.layouts?.map((layout) => layout.layoutId));
     const memberIds = [
@@ -121,7 +127,7 @@ export const reconcileSmartContainerStates = <TSection extends SmartContainerSec
           .map((item) => item.id),
       ),
     ];
-    const states = resolveSmartContainerMembership(smart.states, new Set(memberIds));
+    const states = resolveSmartContainerMembership(smart.states, new Set(memberIds), smart.enabled);
     if (states.every((state, index) => state === smart.states[index])) return section;
     membershipChanged = true;
     return { ...section, options: { ...section.options, smart: { ...smart, states } } };

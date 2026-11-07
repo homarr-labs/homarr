@@ -61,8 +61,9 @@ export const FixedGridItem = ({
     [entryElementStore, item.id],
   );
 
-  const isSmartHidden =
-    smart?.sectionId === section.id && item.type === "item" && !smart.projection.itemIds.includes(item.id);
+  const isSmartMember = smart?.sectionId === section.id && item.type === "item";
+  const isInSelectedState = isSmartMember && smart.projection.itemIds.includes(item.id);
+  const isSmartHidden = !isEditMode && isSmartMember && !isInSelectedState;
 
   const handleClickCapture = (event: React.MouseEvent) => {
     if (!isEditorActive || item.type !== "item" || (!event.metaKey && !event.ctrlKey)) return;
@@ -206,6 +207,7 @@ export const FixedGridItem = ({
       {...semantics}
       onClickCapture={handleClickCapture}
       data-board-item-selected={selected ? "true" : undefined}
+      data-smart-state-active={(isEditMode && isInSelectedState) || undefined}
       className={combineClasses(
         classes.staticItem,
         isEditorActive && "board-grid-entry",

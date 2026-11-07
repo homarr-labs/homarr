@@ -67,6 +67,7 @@ import {
   boardSaveSchema,
   boardSettingsSchema,
   boardSummarySchema,
+  reconciledBoardSaveSchema,
   updateBoardItemLayoutSchema,
 } from "@homarr/validation/board";
 import {
@@ -79,7 +80,11 @@ import { byIdSchema } from "@homarr/validation/common";
 import { zodUnionFromArray } from "@homarr/validation/enums";
 import type { BoardItemAdvancedOptions } from "@homarr/validation/shared";
 import { containerSectionOptionsSchema, sectionSchema, sharedItemSchema } from "@homarr/validation/shared";
-import { reconcileSmartContainerStates, remapSmartContainerItems } from "@homarr/validation/smart-container";
+import {
+  reconcileSmartContainerStates,
+  remapSmartContainerItems,
+  smartContainerStateItemLimit,
+} from "@homarr/validation/smart-container";
 
 import { createTRPCRouter, permissionRequiredProcedure, protectedProcedure, publicProcedure } from "../trpc";
 import { throwIfActionForbiddenAsync } from "./board/board-access";
@@ -1307,6 +1312,7 @@ export const boardRouter = createTRPCRouter({
       },
     })
     .input(boardSaveLayoutsSchema)
+    .use(({ input, next }) => serializeBoardItemPlacementAsync(input.id, () => next()))
     .output(boardSaveLayoutsSchema.shape.layouts)
     .mutation(async ({ ctx, input }) => {
       await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.id), "modify");
@@ -1594,6 +1600,7 @@ export const boardRouter = createTRPCRouter({
       },
     })
     .input(boardResetLayoutSchema)
+    .use(({ input, next }) => serializeBoardItemPlacementAsync(input.boardId, () => next()))
     .output(z.void())
     .mutation(async ({ ctx, input }) => {
       await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.boardId), "modify");
@@ -1728,22 +1735,21 @@ export const boardRouter = createTRPCRouter({
     })
     .input(boardSaveSchema)
     .output(z.void())
+    .use(({ input, next }) => serializeBoardItemPlacementAsync(input.id, () => next()))
     .mutation(async ({ input, ctx }) => {
       await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.id), "modify");
 
       const dbBoard = await getFullBoardWithWhereAsync(ctx.db, eq(boards.id, input.id), ctx.session.user.id);
       const reconciledSections = reconcileSmartContainerStates(input.sections, input.items);
-      if (reconciledSections !== input.sections) {
-        const reconciledBoard = boardSaveSchema.safeParse({ ...input, sections: reconciledSections });
-        if (!reconciledBoard.success) {
-          throw new TRPCError({
-            code: "BAD_REQUEST",
-            message: "Smart container state membership exceeds its configured limits",
-            cause: reconciledBoard.error,
-          });
-        }
-        input.sections = reconciledBoard.data.sections;
+      const reconciledBoard = reconciledBoardSaveSchema.safeParse({ ...input, sections: reconciledSections });
+      if (!reconciledBoard.success) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: reconciledBoard.error.issues[0]?.message ?? "Invalid Smart Reel state membership",
+          cause: reconciledBoard.error,
+        });
       }
+      input.sections = reconciledBoard.data.sections;
       throwIfBoardLayoutBoundsInvalid(getBoardLayoutBoundsIssue({ ...input, layouts: dbBoard.layouts }));
       await validateWidgetConfigurationsAsync(ctx, input.items, dbBoard.items);
       throwIfCustomWidgetPlacementChangeForbidden({
@@ -2323,7 +2329,7 @@ export const boardRouter = createTRPCRouter({
         enabled: true,
         effect: "additive",
         description:
-          "Add a widget or app without replacing board content. By default it goes in the main canvas. For a Smart Reel state, set smartContainerTarget {sectionId,stateId} using board_getBoardByName: find a container with options.smart.enabled and its state in options.smart.states. Requires board modify permission, use access to linked integrations, and admin access for Custom Widgets. If configure_widget is available, use its reviewed result. Optional size {width,height} sets grid dimensions. For a formatted note use kind 'notebook' and options {content: Tiptap-compatible HTML, showToolbar: boolean, allowReadOnlyCheck: boolean}. Returns {itemId}.",
+          "Add a widget or app without replacing board content. By default it goes in the main canvas. For a Smart Reel state, set smartContainerTarget {sectionId,stateId} using board_getBoardByName: find a container with options.smart.enabled and its state in options.smart.states. Requires board modify permission, use access to linked integrations, and admin access for Custom Widgets. If configure_widget is available, use its reviewed result. Optional size {width,height} sets grid dimensions; width is capped by the target's columns in each layout. For a formatted note use kind 'notebook' and options {content: Tiptap-compatible HTML, showToolbar: boolean, allowReadOnlyCheck: boolean}. Returns {itemId}.",
       },
     })
     .input(addItemToBoardSchema)
@@ -2383,10 +2389,14 @@ export const boardRouter = createTRPCRouter({
           const storedOptions = targetSection.options;
           const options = containerSectionOptionsSchema.parse(storedOptions && parse(storedOptions));
           const smart = options?.smart;
-          if (!storedOptions || !smart?.enabled || !smart.states.some((state) => state.id === target.stateId)) {
+          const targetState = smart?.states.find((state) => state.id === target.stateId);
+          if (!storedOptions || !smart?.enabled || !targetState) {
             throw new TRPCError({ code: "BAD_REQUEST", message: "Smart Reel state not found on this board" });
           }
-          const nextOptions = containerSectionOptionsSchema.safeParse({
+          if (targetState.itemIds.length >= smartContainerStateItemLimit) {
+            throw new TRPCError({ code: "BAD_REQUEST", message: "This Smart Reel state cannot accept more widgets" });
+          }
+          const nextOptions = {
             ...options,
             smart: {
               ...smart,
@@ -2395,11 +2405,8 @@ export const boardRouter = createTRPCRouter({
                 return { ...state, itemIds: [...state.itemIds, itemId] };
               }),
             },
-          });
-          if (!nextOptions.success) {
-            throw new TRPCError({ code: "BAD_REQUEST", message: "This Smart Reel state cannot accept more widgets" });
-          }
-          membershipUpdate = { previous: storedOptions, next: stringify(nextOptions.data) };
+          };
+          membershipUpdate = { previous: storedOptions, next: stringify(nextOptions) };
         }
 
         const placementLayouts = target

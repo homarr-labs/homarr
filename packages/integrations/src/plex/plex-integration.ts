@@ -166,7 +166,7 @@ export class PlexIntegration extends Integration implements IMediaServerIntegrat
       },
     });
     if (!response.ok) {
-      await response.body?.cancel();
+      await response.body?.cancel().catch(() => undefined);
       throw new ResponseError(response);
     }
     const body = await response.text();

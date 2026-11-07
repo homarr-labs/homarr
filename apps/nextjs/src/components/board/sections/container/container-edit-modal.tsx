@@ -269,6 +269,7 @@ export const ContainerEditModal = createModal<ModalProps>(({ actions, innerProps
             </Button>
           )}
           <SmartContainerEditorPreview
+            key={isPlayingPreview && smart.mode !== "manual" ? "automatic" : "arrangement"}
             board={previewBoard}
             containerId={innerProps.containerId}
             selectedStateId={isPlayingPreview && smart.mode !== "manual" ? undefined : selectedStateId}

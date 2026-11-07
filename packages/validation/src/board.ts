@@ -138,36 +138,49 @@ export const boardResetLayoutSchema = z.object({
   layoutId: z.string(),
 });
 
-export const boardSaveSchema = z
-  .object({
-    id: z.string(),
-    sections: z.array(sectionSchema),
-    items: z.array(commonItemSchema),
-  })
-  .superRefine((board, ctx) => {
-    const itemsById = new Map(board.items.map((item) => [item.id, item]));
-    board.sections.forEach((section, sectionIndex) => {
-      if (section.kind !== "container" || !section.options.smart) return;
+export const boardSaveSchema = z.object({
+  id: z.string(),
+  sections: z.array(sectionSchema),
+  items: z.array(commonItemSchema),
+});
 
-      const containerLayoutIds = new Set(section.layouts.map((layout) => layout.layoutId));
-      section.options.smart.states.forEach((state, stateIndex) => {
-        state.itemIds.forEach((itemId, itemIndex) => {
-          const item = itemsById.get(itemId);
-          if (
-            item?.layouts.some((layout) => layout.sectionId === section.id && containerLayoutIds.has(layout.layoutId))
-          ) {
-            return;
-          }
+/** Validate board membership after removing stale references and assigning new widgets. */
+export const reconciledBoardSaveSchema = boardSaveSchema.superRefine((board, ctx) => {
+  board.sections.forEach((section, sectionIndex) => {
+    if (section.kind !== "container" || !section.options.smart) return;
 
-          ctx.addIssue({
-            code: "custom",
-            message: "Smart state widgets must belong to this container on the submitted board",
-            path: ["sections", sectionIndex, "options", "smart", "states", stateIndex, "itemIds", itemIndex],
-          });
+    const containerLayoutIds = new Set(section.layouts.map((layout) => layout.layoutId));
+    const availableIds = new Set(
+      board.items
+        .filter((item) =>
+          item.layouts.some((layout) => layout.sectionId === section.id && containerLayoutIds.has(layout.layoutId)),
+        )
+        .map((item) => item.id),
+    );
+    const assignedIds = new Set<string>();
+    section.options.smart.states.forEach((state, stateIndex) => {
+      state.itemIds.forEach((itemId, itemIndex) => {
+        if (availableIds.has(itemId)) {
+          assignedIds.add(itemId);
+          return;
+        }
+
+        ctx.addIssue({
+          code: "custom",
+          message: "Smart state widgets must belong to this container on the submitted board",
+          path: ["sections", sectionIndex, "options", "smart", "states", stateIndex, "itemIds", itemIndex],
         });
       });
     });
+    if (section.options.smart.enabled && assignedIds.size < availableIds.size) {
+      ctx.addIssue({
+        code: "custom",
+        message: "Smart Reel states are full. Add a state or move widgets out of the container.",
+        path: ["sections", sectionIndex, "options", "smart", "states"],
+      });
+    }
   });
+});
 
 export const boardCreateSchema = z.object({
   name: boardNameSchema,

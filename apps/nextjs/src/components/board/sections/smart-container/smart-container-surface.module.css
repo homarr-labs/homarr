@@ -91,6 +91,20 @@
 .position {
   font-variant-numeric: tabular-nums;
 }
+.widgetBody,
+.nativeBody {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+}
+.widgetBody[data-expanded] {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+}
+.widgetBody[data-expanded] > .compact {
+  padding-block: 0;
+  border-bottom: 0;
+}
 @container (max-width: 245px) {
   .countdown,
   .containerName {
@@ -125,6 +139,9 @@
 }
 .compact > :first-child {
   min-width: 0;
+}
+.compactControl {
+  min-height: calc(44px * var(--board-canvas-ui-scale, 1));
 }
 .empty {
   position: absolute;

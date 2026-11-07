@@ -147,12 +147,14 @@ export const ContainerAppearanceSettings = ({
         description={tSection("option.showOpenAll.description")}
         {...form.getInputProps("showOpenAll", { type: "checkbox" })}
       />
-      <Switch
-        styles={editorSwitchStyles}
-        label={tSection("option.scrollable.label")}
-        description={tSection("option.scrollable.description")}
-        {...form.getInputProps("scrollable", { type: "checkbox" })}
-      />
+      {!smart.enabled && (
+        <Switch
+          styles={editorSwitchStyles}
+          label={tSection("option.scrollable.label")}
+          description={tSection("option.scrollable.description")}
+          {...form.getInputProps("scrollable", { type: "checkbox" })}
+        />
+      )}
       <Accordion variant="contained">
         <Accordion.Item value="advanced">
           <Accordion.Control>{translate("item.edit.advancedOptions.label")}</Accordion.Control>
