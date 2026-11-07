@@ -200,7 +200,7 @@ export const WidgetEditorFields = ({
             {canConfigureWidget && (
               <Stack gap="sm">
                 {switchOptions.length > 0 && (
-                  <SimpleGrid type="container" cols={{ base: 1, "34rem": 2 }} spacing="xs" verticalSpacing="xs">
+                  <SimpleGrid type="container" cols={{ base: 1, "32rem": 2 }} spacing="xs" verticalSpacing="xs">
                     {switchOptions.map(([key, value]) => {
                       const Input = getInputForType(value.type);
                       if (!Input) {
