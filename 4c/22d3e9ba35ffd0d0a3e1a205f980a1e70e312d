@@ -1,0 +1,18 @@
+apps/nextjs/src/components/board/tabs/board-tabs.tsx
+  h_d6e478ca18e517 5-17,56,60,69-76,90-91,98,102-103,105,114,121
+apps/nextjs/src/components/board/tabs/header-board-tabs.tsx
+  h_d6e478ca18e517 40-54,59-112,114-115,117-122
+apps/nextjs/src/components/board/tabs/tab-actions.ts
+  h_d6e478ca18e517 1,7-12,64-67,77-79,82,85-89,91-137
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "4c22d3e9ba35ffd0d0a3e1a205f980a1e70e312d",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
