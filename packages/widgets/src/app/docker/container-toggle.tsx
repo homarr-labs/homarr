@@ -1,6 +1,7 @@
 "use client";
 
-import { Box, rem, Tooltip, UnstyledButton } from "@mantine/core";
+import type { ComponentProps } from "react";
+import { Box, rem, Tooltip, UnstyledButton, VisuallyHidden } from "@mantine/core";
 import { IconCheck, IconMinus, IconPlayerPlayFilled, IconPlayerStopFilled, IconX } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
@@ -13,6 +14,15 @@ import { PingDot } from "../ping/ping-dot";
 import type { LinkedDockerContainer } from "./container-option";
 
 const activeStates: ContainerState[] = ["running", "restarting", "paused"];
+
+const ContainerStatusIndicator = ({ tooltip, ...props }: ComponentProps<typeof PingDot>) => (
+  <>
+    <PingDot tooltip={tooltip} {...props} />
+    <VisuallyHidden>
+      <output>{tooltip}</output>
+    </VisuallyHidden>
+  </>
+);
 
 const useToggleAction = (action: "start" | "stop", name: string) => {
   const t = useI18n();
@@ -53,7 +63,7 @@ export const DockerContainerToggle = ({ container: linked, showStatus, isEditMod
     if (error) tooltip = t("widget.app.option.dockerContainer.unavailable");
     else if (data) tooltip = t("widget.app.docker.notFound");
     if (!showStatus) return null;
-    return <PingDot icon={IconMinus} color="gray" tooltip={tooltip} />;
+    return <ContainerStatusIndicator icon={IconMinus} color="gray" tooltip={`${linked.name}: ${tooltip}`} />;
   }
 
   const canControl =
@@ -69,7 +79,7 @@ export const DockerContainerToggle = ({ container: linked, showStatus, isEditMod
   return (
     <>
       {showStatus && (
-        <PingDot
+        <ContainerStatusIndicator
           icon={isRunning ? IconCheck : IconX}
           color={isRunning ? "green" : "red"}
           tooltip={`${linked.name}: ${stateLabel}`}

@@ -1,7 +1,7 @@
 "use client";
 
 import type { PropsWithChildren } from "react";
-import { Fragment, Suspense } from "react";
+import { Fragment, Suspense, useRef } from "react";
 import { Box, Flex, rem, Stack, Text, Tooltip } from "@mantine/core";
 import { IconMinus } from "@tabler/icons-react";
 import combineClasses from "clsx";
@@ -35,6 +35,7 @@ export default function AppWidget({
   const settings = useSettings();
   const board = useRequiredBoard();
   const { data: session } = useSession();
+  const revealControlsOnClick = useRef(false);
   const appQuery = clientApi.app.byId.useQuery({ id: options.appId }, { enabled: Boolean(options.appId) });
   const app = getUsableWidgetQueryData(appQuery);
   const href = app?.href ?? undefined;
@@ -71,7 +72,30 @@ export default function AppWidget({
   const showPing = showStatus && !linkedContainer && Boolean(app.pingUrl ?? app.href);
 
   return (
-    <Box className={classes.root} h="100%" w="100%" pos="relative" style={{ "--mantine-scale": 1 / layoutScale }}>
+    <Box
+      className={classes.root}
+      h="100%"
+      w="100%"
+      pos="relative"
+      tabIndex={linkedContainer && !isEditMode ? -1 : undefined}
+      style={{ "--mantine-scale": 1 / layoutScale }}
+      onPointerDownCapture={(event) => {
+        revealControlsOnClick.current =
+          Boolean(linkedContainer) &&
+          !isEditMode &&
+          event.pointerType === "touch" &&
+          !event.currentTarget.contains(event.currentTarget.ownerDocument.activeElement);
+      }}
+      onPointerCancelCapture={() => {
+        revealControlsOnClick.current = false;
+      }}
+      onClickCapture={(event) => {
+        if (!revealControlsOnClick.current) return;
+        revealControlsOnClick.current = false;
+        event.preventDefault();
+        event.currentTarget.focus({ preventScroll: true });
+      }}
+    >
       <AppLink href={href} openIn={options.openIn} enabled={Boolean(href) && !isEditMode}>
         <AppDescriptionTooltip
           description={app.description}

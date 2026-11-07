@@ -2368,7 +2368,7 @@
         },
         "dockerContainer": {
           "label": "Docker container",
-          "description": "Uses the container state for the status indicator. Hover or focus the app to reveal its start/stop button. Only admins see these Docker controls.",
+          "description": "Uses the container state for the status indicator. Hover or focus the app to reveal its start/stop button. On touch screens, tap once to reveal controls and again to open the app. Only admins see these Docker controls.",
           "placeholder": "Pick a container",
           "disabled": "Set ENABLE_DOCKER to pick a container.",
           "unavailable": "The Docker containers could not be loaded."
