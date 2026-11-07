@@ -1,0 +1,28 @@
+apps/nextjs/src/app/[locale]/boards/(content)/_client.tsx
+  h_d6e478ca18e517 169
+apps/nextjs/src/components/board/in-place-editor/bound-editor-form.tsx
+  h_d6e478ca18e517 7,31,79-81
+apps/nextjs/src/components/board/in-place-editor/catalog.ts
+  h_d6e478ca18e517 14,87
+apps/nextjs/src/components/board/in-place-editor/empty-cell-layer.tsx
+  h_d6e478ca18e517 6-7,29,172-178
+apps/nextjs/src/components/board/in-place-editor/host.tsx
+  h_d6e478ca18e517 24-31,62,67-78,121
+apps/nextjs/src/components/board/in-place-editor/panel/panel.tsx
+  h_d6e478ca18e517 11,187-190,195,244
+apps/nextjs/src/components/board/in-place-editor/panel/placement.ts
+  h_d6e478ca18e517 44-51
+apps/nextjs/src/components/board/in-place-editor/resources.ts
+  h_d6e478ca18e517 92-95
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "d0ec77e05a97e86b2ae212c48c08b85426659ce9",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
