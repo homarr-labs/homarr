@@ -18,7 +18,7 @@ import { IconCheck, IconClipboard, IconCopy, IconFolderShare, IconFolderSymlink,
 import { clientApi } from "@homarr/api/client";
 import { useCurrentLayout, useRequiredBoard } from "@homarr/boards/context";
 import { useEditMode } from "@homarr/boards/edit-mode";
-import { useBoardTabs } from "@homarr/boards/tabs";
+import { getBoardTabForSection, useBoardTabs } from "@homarr/boards/tabs";
 import { getBoardLaneColumnCount, getRootSectionLane, getWidgetName } from "@homarr/definitions";
 import { useI18n } from "@homarr/translation/client";
 import { widgetCatalogIcons } from "@homarr/ui/widget-icons";
@@ -119,7 +119,9 @@ export const BoardSelectionToolbar = () => {
     }),
     ...board.sections
       .filter((section) => section.kind === "container")
-      .filter((section) => registeredGridEditors.has(section.id))
+      .filter(
+        (section) => registeredGridEditors.has(section.id) || getBoardTabForSection(board, currentLayoutId, section.id),
+      )
       .map((section) => ({
         value: section.id,
         label: section.options.title.trim() || t("section.container.untitled"),

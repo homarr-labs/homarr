@@ -2573,7 +2573,14 @@ const getStoredSectionName = (section: SubmittedSection) => {
 };
 
 const throwIfBoardTabsInvalid = (submittedSections: readonly SubmittedSection[]) => {
-  if (getBoardTabSections(submittedSections).length <= maxBoardTabs) return;
+  const tabCount = getBoardTabSections(submittedSections).length;
+  if (tabCount === 0) {
+    throw new TRPCError({
+      code: "BAD_REQUEST",
+      message: "This board requires at least one main canvas tab",
+    });
+  }
+  if (tabCount <= maxBoardTabs) return;
 
   throw new TRPCError({
     code: "BAD_REQUEST",

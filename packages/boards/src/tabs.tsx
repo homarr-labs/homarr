@@ -74,9 +74,15 @@ export const BoardTabsProvider = ({ children, initialTabKey }: PropsWithChildren
   const board = useOptionalBoard();
   const sections = board?.sections;
   const tabs = useMemo(() => (sections ? getBoardTabs({ sections }) : []), [sections]);
-  const [requestedTabId, setRequestedTabId] = useState(() => findBoardTab(tabs, initialTabKey)?.id ?? null);
-  const activeTab = tabs.find((tab) => tab.id === requestedTabId) ?? tabs[0];
-  const selectTab = useCallback((tabId: string) => setRequestedTabId(tabId), []);
+  const [selection, setSelection] = useState(() => ({
+    navigationKey: initialTabKey,
+    tabId: findBoardTab(tabs, initialTabKey)?.id ?? null,
+  }));
+  if (selection.navigationKey !== initialTabKey) {
+    setSelection({ navigationKey: initialTabKey, tabId: findBoardTab(tabs, initialTabKey)?.id ?? null });
+  }
+  const activeTab = tabs.find((tab) => tab.id === selection.tabId) ?? tabs[0];
+  const selectTab = useCallback((tabId: string) => setSelection((previous) => ({ ...previous, tabId })), []);
 
   const value = useMemo(() => ({ tabs, activeTab, selectTab }), [activeTab, selectTab, tabs]);
 

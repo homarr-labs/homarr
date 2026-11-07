@@ -3,6 +3,7 @@ import { Grid, NumberInput, Select, Stack } from "@mantine/core";
 import { z } from "zod/v4";
 
 import { useCurrentLayout, useRequiredBoard } from "@homarr/boards/context";
+import { getBoardTabForSection } from "@homarr/boards/tabs";
 import { getBoardTabSections, getRootSectionLane } from "@homarr/definitions";
 import { useZodForm } from "@homarr/form";
 import { createModal, ModalFormFooter, modalSizeForm, useModalAction } from "@homarr/modals";
@@ -275,7 +276,8 @@ export const getMoveTargets = (
     if (
       getBoardTabSections(board.sections).length > 1 &&
       registeredGridEditors &&
-      !registeredGridEditors.has(section.id)
+      !registeredGridEditors.has(section.id) &&
+      !getBoardTabForSection(board, layoutId, section.id)
     )
       return [];
     if (section.kind === "empty") {

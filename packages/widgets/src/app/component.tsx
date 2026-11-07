@@ -14,6 +14,7 @@ import { useI18n } from "@homarr/translation/client";
 import { MaskedOrNormalImage } from "@homarr/ui";
 
 import { WidgetEmptyState } from "../common/empty-state";
+import { WidgetQueryLoadingState } from "../common/query-state-indicator";
 import type { WidgetComponentProps } from "../definition";
 import { AppLink } from "./_app-link";
 import classes from "./app.module.css";
@@ -25,7 +26,11 @@ import { PingIndicator } from "./ping/ping-indicator";
 
 export default function AppWidget(props: WidgetComponentProps<"app">) {
   if (!props.options.appId) return <WidgetEmptyState />;
-  return <ConfiguredAppWidget {...props} />;
+  return (
+    <Suspense fallback={<WidgetQueryLoadingState />}>
+      <ConfiguredAppWidget {...props} />
+    </Suspense>
+  );
 }
 
 function ConfiguredAppWidget({ options, isEditMode, height, width, displayScale = 1 }: WidgetComponentProps<"app">) {
