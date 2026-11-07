@@ -37,61 +37,88 @@ export const HeaderBoardTabs = ({ display }: { display: HeaderTabsDisplay }) => 
     close();
   };
 
-  if (display !== "indicator") {
-    return (
-      <Tabs value={activeTab.id} onChange={select} variant="pills" radius="md" miw={0} maw="100%" flex="0 1 auto">
-        <BoardTabBar compact={display === "compact"} />
-      </Tabs>
-    );
-  }
+  const tabStrip = (
+    <Tabs
+      value={activeTab.id}
+      onChange={select}
+      variant="pills"
+      radius="md"
+      miw={0}
+      maw="100%"
+      flex="0 1 auto"
+      visibleFrom={display === "wide" ? "lg" : undefined}
+    >
+      <BoardTabBar compact={display === "compact"} fit={display === "wide"} />
+    </Tabs>
+  );
+  if (display === "compact") return tabStrip;
 
   const activeIndex = tabs.findIndex((tab) => tab.id === activeTab.id);
 
   return (
-    <Popover opened={opened} onChange={setOpened} position="bottom-end" withArrow withinPortal shadow="md">
-      <Popover.Target>
-        <HeaderButton
-          aria-label={t("indicator", { index: activeIndex + 1, count: tabs.length, name: getTabLabel(activeTab) })}
-          onClick={reveal}
-          onPointerEnter={reveal}
-          onPointerLeave={hideSoon}
-          onFocus={reveal}
-          onBlur={hideSoon}
-          onKeyDown={(event) => {
-            if (event.key !== "ArrowDown") return;
-            event.preventDefault();
-            reveal();
-            window.requestAnimationFrame(() =>
-              dropdownRef.current?.querySelector<HTMLElement>('[role="tab"][aria-selected="true"]')?.focus(),
-            );
-          }}
-        >
-          <Stack component="span" align="center" gap={3} aria-hidden>
-            <Text component="span" className={classes.number} fz="0.8rem" fw={600} lh={1}>
-              {activeIndex + 1}
-            </Text>
-            <Group component="span" gap={2} wrap="nowrap">
-              {tabs.map((tab) => (
-                <span key={tab.id} className={classes.dot} data-active={tab.id === activeTab.id || undefined} />
-              ))}
-            </Group>
-          </Stack>
-        </HeaderButton>
-      </Popover.Target>
-      <Popover.Dropdown
-        ref={dropdownRef}
-        data-board-tab-picker
-        maw="calc(100vw - 1rem)"
-        p={4}
-        onPointerEnter={cancelClose}
-        onPointerLeave={hideSoon}
-        onFocusCapture={cancelClose}
-        onBlurCapture={hideSoon}
+    <>
+      {display === "wide" && tabStrip}
+      <Popover
+        opened={opened}
+        onChange={setOpened}
+        onDismiss={close}
+        position="bottom-end"
+        withArrow
+        withinPortal
+        shadow="md"
+        returnFocus
       >
-        <Tabs value={activeTab.id} onChange={select} variant="pills" radius="md">
-          <BoardTabBar menuWithinPortal={false} />
-        </Tabs>
-      </Popover.Dropdown>
-    </Popover>
+        <Popover.Target>
+          <HeaderButton
+            hiddenFrom={display === "wide" ? "lg" : undefined}
+            aria-label={t("indicator", { index: activeIndex + 1, count: tabs.length, name: getTabLabel(activeTab) })}
+            onClick={reveal}
+            onPointerEnter={reveal}
+            onPointerLeave={hideSoon}
+            onBlur={hideSoon}
+            onKeyDown={(event) => {
+              if (event.key === "Escape" && opened) {
+                event.preventDefault();
+                event.stopPropagation();
+                cancelClose();
+                close();
+                return;
+              }
+              if (event.key !== "ArrowDown") return;
+              event.preventDefault();
+              reveal();
+              window.requestAnimationFrame(() =>
+                dropdownRef.current?.querySelector<HTMLElement>('[role="tab"][aria-selected="true"]')?.focus(),
+              );
+            }}
+          >
+            <Stack component="span" align="center" gap={3} aria-hidden>
+              <Text component="span" className={classes.number} fz="0.8rem" fw={600} lh={1}>
+                {activeIndex + 1}
+              </Text>
+              <Group component="span" gap={2} wrap="nowrap">
+                {tabs.map((tab) => (
+                  <span key={tab.id} className={classes.dot} data-active={tab.id === activeTab.id || undefined} />
+                ))}
+              </Group>
+            </Stack>
+          </HeaderButton>
+        </Popover.Target>
+        <Popover.Dropdown
+          ref={dropdownRef}
+          data-board-tab-picker
+          maw="calc(100vw - 1rem)"
+          p={4}
+          onPointerEnter={cancelClose}
+          onPointerLeave={hideSoon}
+          onFocusCapture={cancelClose}
+          onBlurCapture={hideSoon}
+        >
+          <Tabs value={activeTab.id} onChange={select} variant="pills" radius="md">
+            <BoardTabBar menuWithinPortal={false} />
+          </Tabs>
+        </Popover.Dropdown>
+      </Popover>
+    </>
   );
 };

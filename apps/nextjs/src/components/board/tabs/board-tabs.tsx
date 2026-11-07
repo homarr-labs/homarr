@@ -2,7 +2,19 @@
 
 import type { KeyboardEvent } from "react";
 import { useEffect, useRef, useState } from "react";
-import { ActionIcon, Group, Kbd, Menu, Tabs, Text, TextInput, Tooltip } from "@mantine/core";
+import {
+  ActionIcon,
+  getContrastColor,
+  Group,
+  Kbd,
+  Menu,
+  Tabs,
+  Text,
+  TextInput,
+  Tooltip,
+  useComputedColorScheme,
+  useMantineTheme,
+} from "@mantine/core";
 import { useHotkeys } from "@mantine/hooks";
 import type { HotkeyItem } from "@mantine/hooks";
 import { IconArrowLeft, IconArrowRight, IconDotsVertical, IconHome, IconPencil, IconPlus } from "@tabler/icons-react";
@@ -41,9 +53,11 @@ export const useBoardTabHotkeys = () => {
 
 export const BoardTabBar = ({
   compact = false,
+  fit = false,
   menuWithinPortal = true,
 }: {
   compact?: boolean;
+  fit?: boolean;
   menuWithinPortal?: boolean;
 }) => {
   const { tabs, activeTab } = useBoardTabs();
@@ -52,6 +66,14 @@ export const BoardTabBar = ({
   const listRef = useRef<HTMLDivElement>(null);
   const getTabLabel = useBoardTabLabel();
   const t = useI18n("board.tabs");
+  const theme = useMantineTheme();
+  const colorScheme = useComputedColorScheme("light", { getInitialValueInEffect: true });
+  const activeColor = getContrastColor({
+    color: theme.primaryColor,
+    colorScheme,
+    theme: { ...theme, luminanceThreshold: 0.179 },
+    autoContrast: true,
+  });
 
   useEffect(() => {
     const list = listRef.current;
@@ -65,19 +87,22 @@ export const BoardTabBar = ({
   }, [activeTab?.id, activeTab?.name]);
 
   return (
-    <Group gap={4} wrap="nowrap" w="fit-content" maw="100%" p={2}>
-      <Tabs.List ref={listRef} className={classes.list} aria-label={t("label")}>
+    <Group gap={4} wrap="nowrap" w={fit ? "100%" : "fit-content"} maw="100%" p={2}>
+      <Tabs.List ref={listRef} className={classes.list} aria-label={t("label")} grow={fit} flex={fit ? 1 : undefined}>
         {tabs.map((tab, index) => {
           if (isEditMode && renamingTabId === tab.id) {
             return <BoardTabRenameInput key={tab.id} tab={tab} onDone={() => setRenamingTabId(null)} />;
           }
 
           return (
-            <Tooltip key={tab.id} label={getTabLabel(tab)} disabled={!compact} withArrow>
+            <Tooltip key={tab.id} label={getTabLabel(tab)} withArrow>
               <Tabs.Tab
                 value={tab.id}
                 className={classes.tab}
+                styles={{ tabLabel: { minWidth: 0 } }}
+                c={tab.id === activeTab?.id ? activeColor : undefined}
                 miw={28}
+                flex={fit ? "1 1 0" : "0 0 auto"}
                 px={compact ? 8 : 10}
                 py={7}
                 aria-label={getTabLabel(tab)}
@@ -86,14 +111,14 @@ export const BoardTabBar = ({
                 leftSection={index === 0 && isEditMode && !compact ? <IconHome size={14} stroke={1.75} /> : undefined}
                 rightSection={
                   !compact && (
-                    <Kbd size="xs" className={classes.hint} aria-hidden>
+                    <Kbd size="xs" className={classes.hint} visibleFrom={fit ? "xl" : "lg"} aria-hidden>
                       {index + 1}
                     </Kbd>
                   )
                 }
                 onDoubleClick={isEditMode ? () => setRenamingTabId(tab.id) : undefined}
               >
-                <Text component="span" inherit truncate="end" maw="7rem">
+                <Text component="span" inherit truncate="end" display="block" maw="7rem">
                   {compact ? index + 1 : getTabLabel(tab)}
                 </Text>
               </Tabs.Tab>
