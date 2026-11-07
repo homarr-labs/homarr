@@ -495,6 +495,86 @@ export const userRouter = createTRPCRouter({
 
       return user;
     }),
+  getSignInInformation: protectedProcedure
+    .input(z.object({ userId: z.string() }))
+    .output(
+      z.object({
+        provider: z.enum(supportedAuthProviders),
+        email: z.string().nullable(),
+        subject: z.string().nullable(),
+        homarrGroups: z.array(
+          z.object({
+            id: z.string(),
+            name: z.string(),
+          }),
+        ),
+      }),
+    )
+    .meta({
+      openapi: {
+        method: "GET",
+        path: "/api/users/{userId}/sign-in-information",
+        tags: ["users"],
+        protect: true,
+        summary: "Get sign-in information",
+        description:
+          "Return the authentication provider, subject, email, and Homarr groups for a user. Users can read themselves; reading another user requires admin permission. Tokens are never returned.",
+      },
+    })
+    .query(async ({ input, ctx }) => {
+      if (ctx.session.user.id !== input.userId && !ctx.session.user.permissions.includes("admin")) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "You are not allowed to view other users details",
+        });
+      }
+
+      const user = await ctx.db.query.users.findFirst({
+        columns: {
+          email: true,
+          provider: true,
+        },
+        with: {
+          accounts: {
+            columns: {
+              provider: true,
+              providerAccountId: true,
+            },
+          },
+          groups: {
+            with: {
+              group: {
+                columns: {
+                  id: true,
+                  name: true,
+                },
+              },
+            },
+          },
+        },
+        where: eq(users.id, input.userId),
+      });
+
+      if (!user) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "User not found",
+        });
+      }
+
+      const account =
+        user.accounts.find((entry) => entry.provider === "oidc") ??
+        user.accounts.find((entry) => entry.provider === user.provider) ??
+        user.accounts[0] ??
+        null;
+
+      return {
+        provider: user.provider,
+        email: user.email,
+        subject: account?.providerAccountId ?? null,
+        homarrGroups: user.groups.map(({ group }) => group).sort((left, right) => left.name.localeCompare(right.name)),
+      };
+    }),
   editProfile: protectedProcedure
     .input(userEditProfileSchema)
     .output(z.void())
