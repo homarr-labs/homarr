@@ -22,6 +22,7 @@ import type {
   WorkshopSubmissionType,
   WorkshopUser,
   WorkshopVote,
+  WorkshopWidgetCatalogEntry,
 } from "./schema";
 import {
   WORKSHOP_API_URL,
@@ -38,6 +39,7 @@ import {
   workshopScreenshotsSchema,
   workshopUserSchema,
   workshopVoteSchema,
+  workshopWidgetCatalogEntrySchema,
 } from "./schema";
 
 export interface WorkshopListOptions {
@@ -395,6 +397,24 @@ export class WorkshopBackend {
       }
     } catch (error) {
       throw workshopError(error, "Failed to load Workshop submissions");
+    }
+  }
+
+  public async listWidgetCatalog(signal?: AbortSignal): Promise<WorkshopWidgetCatalogEntry[]> {
+    try {
+      const { items } = await this.pocketBase.collection("workshop_widget_catalog").getList(1, 100, {
+        fields: "id,title,description,integrationKinds",
+        sort: "-score,-created,id",
+        skipTotal: true,
+        signal: requestSignal(signal),
+      });
+      return items.flatMap((item) => {
+        const result = workshopWidgetCatalogEntrySchema.safeParse(item);
+        if (!result.success) return [];
+        return [result.data];
+      });
+    } catch (error) {
+      throw workshopError(error, "Failed to load the Workshop widget catalog");
     }
   }
 
@@ -782,6 +802,16 @@ export const workshopDeleteCommentMutationOptions = (backend: WorkshopBackend) =
 
 export function useWorkshopQuery(backend: WorkshopBackend, options: WorkshopListOptions = {}) {
   return useQuery(workshopListQueryOptions(backend, options));
+}
+
+export function useWorkshopWidgetCatalogQuery(backend: WorkshopBackend, enabled: boolean) {
+  return useQuery({
+    queryKey: [...workshopQueryKeys.lists(backend.baseUrl), "widget-catalog"],
+    queryFn: ({ signal }) => backend.listWidgetCatalog(signal),
+    enabled,
+    staleTime: 5 * 60 * 1000,
+    retry: false,
+  });
 }
 
 export function useWorkshopSubmissionQuery(backend: WorkshopBackend, id: string) {
