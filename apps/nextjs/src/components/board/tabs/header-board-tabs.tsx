@@ -33,7 +33,7 @@ export const HeaderBoardTabs = ({ display }: { display: HeaderTabsDisplay }) => 
     if (!isEditMode) closeSoon();
   };
   const hideAfterPointerLeave = (event: PointerEvent<HTMLElement>) => {
-    if (event.pointerType !== "touch") hideSoon();
+    if (event.pointerType === "mouse") hideSoon();
   };
   const select = (value: string | null) => {
     if (!value) return;
@@ -81,7 +81,7 @@ export const HeaderBoardTabs = ({ display }: { display: HeaderTabsDisplay }) => 
               toggle();
             }}
             onPointerEnter={(event: PointerEvent<HTMLElement>) => {
-              if (event.pointerType !== "touch") reveal();
+              if (event.pointerType === "mouse") reveal();
             }}
             onPointerLeave={hideAfterPointerLeave}
             onBlur={hideSoon}
