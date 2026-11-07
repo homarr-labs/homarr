@@ -1,0 +1,18 @@
+packages/translation/src/lang/en.json
+  h_d6e478ca18e517 2371
+packages/widgets/src/app/component.tsx
+  h_d6e478ca18e517 4,38,75-98
+packages/widgets/src/app/docker/container-toggle.tsx
+  h_d6e478ca18e517 3-4,18-26,66,82
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "67e0ef5496c085230dd0f418305a47a72b89b239",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
