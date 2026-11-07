@@ -1,0 +1,22 @@
+packages/translation/src/lang/en.json
+  h_d6e478ca18e517 2371,2390-2391
+packages/widgets/src/app/app.module.css
+  h_d6e478ca18e517 1-11
+packages/widgets/src/app/component.tsx
+  h_d6e478ca18e517 4,70-71,74,140,145
+packages/widgets/src/app/docker/container-toggle.tsx
+  h_d6e478ca18e517 4,12,38,42,44,51-57,67,70-97
+packages/widgets/src/app/ping/ping-indicator.tsx
+  h_d6e478ca18e517 1,12
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "901f15b9da678c5a20ffb79ff337c2512d7eeb5a",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
