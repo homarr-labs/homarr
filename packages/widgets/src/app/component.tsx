@@ -92,6 +92,7 @@ export default function AppWidget({
       onClickCapture={(event) => {
         if (!revealControlsOnClick.current) return;
         revealControlsOnClick.current = false;
+        if (!event.currentTarget.querySelector(`.${classes.containerControls}`)) return;
         event.preventDefault();
         event.currentTarget.focus({ preventScroll: true });
       }}

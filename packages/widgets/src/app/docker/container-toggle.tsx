@@ -54,20 +54,21 @@ export const DockerContainerToggle = ({ container: linked, showStatus, isEditMod
   const { data, error } = clientApi.docker.getContainers.useQuery({ endpointIds: [linked.endpointId] });
   const start = useToggleAction("start", linked.name);
   const stop = useToggleAction("stop", linked.name);
+  const endpoint = data?.endpoints.find(({ id }) => id === linked.endpointId);
+  const isUnavailable = Boolean(error) || endpoint?.status === "unavailable";
 
   const container = data?.containers.find(
     ({ endpointId, name }) => endpointId === linked.endpointId && name === linked.name,
   );
-  if (error || !container) {
+  if (isUnavailable || !container) {
     let tooltip = `${t("common.action.loading")}…`;
-    if (error) tooltip = t("widget.app.option.dockerContainer.unavailable");
+    if (isUnavailable) tooltip = t("widget.app.option.dockerContainer.unavailable");
     else if (data) tooltip = t("widget.app.docker.notFound");
     if (!showStatus) return null;
     return <ContainerStatusIndicator icon={IconMinus} color="gray" tooltip={`${linked.name}: ${tooltip}`} />;
   }
 
-  const canControl =
-    data?.endpoints.find(({ id }) => id === linked.endpointId)?.capabilities.includes("lifecycle") ?? false;
+  const canControl = endpoint?.capabilities.includes("lifecycle") ?? false;
   const isActive = activeStates.includes(container.state);
   const isPending = start.isPending || stop.isPending;
   const isEnabled = canControl && !isEditMode && !isPending;
