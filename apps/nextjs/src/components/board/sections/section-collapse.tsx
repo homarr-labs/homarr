@@ -22,6 +22,27 @@ interface SectionCollapseContextValue {
 
 const SectionCollapseContext = createContext<SectionCollapseContextValue | null>(null);
 
+interface VisuallyCollapsedInput {
+  collapsedSectionIds: ReadonlySet<string>;
+  idleCollapsedSectionIds: ReadonlySet<string>;
+  autoExpandedSectionIds: ReadonlySet<string>;
+  temporarilyExpandedIds: ReadonlySet<string>;
+  isEditMode: boolean;
+}
+
+export const getVisuallyCollapsedSectionIds = ({
+  collapsedSectionIds,
+  idleCollapsedSectionIds,
+  autoExpandedSectionIds,
+  temporarilyExpandedIds,
+  isEditMode,
+}: VisuallyCollapsedInput): ReadonlySet<string> =>
+  new Set(
+    [...collapsedSectionIds, ...idleCollapsedSectionIds].filter(
+      (sectionId) => (!isEditMode || !temporarilyExpandedIds.has(sectionId)) && !autoExpandedSectionIds.has(sectionId),
+    ),
+  );
+
 export const BoardSectionCollapseProvider = ({ children }: PropsWithChildren) => {
   const board = useRequiredBoard();
   const [isEditMode] = useEditMode();
@@ -35,6 +56,7 @@ export const BoardSectionCollapseProvider = ({ children }: PropsWithChildren) =>
   const collapsedByIdRef = useRef(collapsedById);
   const [temporarilyExpandedIds, setTemporarilyExpandedIds] = useState<ReadonlySet<string>>(() => new Set());
   const [activeBySectionId, setActiveBySectionId] = useState<Record<string, boolean>>({});
+  const [openedWhileIdleIds, setOpenedWhileIdleIds] = useState<ReadonlySet<string>>(() => new Set());
   collapsedByIdRef.current = collapsedById;
 
   const autoExpandTargets = useMemo(() => {
@@ -44,6 +66,7 @@ export const BoardSectionCollapseProvider = ({ children }: PropsWithChildren) =>
       kind: (typeof board.items)[number]["kind"];
       options: Record<string, unknown>;
       integrationIds: string[];
+      inactiveDisplay: "collapsed" | "hidden";
     }[] = [];
     for (const section of board.sections) {
       if (section.kind !== "container" || !section.options.autoExpand.enabled || !section.options.autoExpand.itemId) {
@@ -57,6 +80,7 @@ export const BoardSectionCollapseProvider = ({ children }: PropsWithChildren) =>
         kind: item.kind,
         options: item.options,
         integrationIds: item.integrationIds,
+        inactiveDisplay: section.options.autoExpand.inactiveDisplay,
       });
     }
     return targets;
@@ -66,6 +90,13 @@ export const BoardSectionCollapseProvider = ({ children }: PropsWithChildren) =>
     setActiveBySectionId((previous) =>
       previous[sectionId] === active ? previous : { ...previous, [sectionId]: active },
     );
+    if (!active) return;
+    setOpenedWhileIdleIds((current) => {
+      if (!current.has(sectionId)) return current;
+      const next = new Set(current);
+      next.delete(sectionId);
+      return next;
+    });
   }, []);
 
   useEffect(() => {
@@ -105,6 +136,13 @@ export const BoardSectionCollapseProvider = ({ children }: PropsWithChildren) =>
         if (!current.has(sectionId)) return current;
         const next = new Set(current);
         next.delete(sectionId);
+        return next;
+      });
+      setOpenedWhileIdleIds((current) => {
+        if (current.has(sectionId) === !collapsed) return current;
+        const next = new Set(current);
+        if (collapsed) next.delete(sectionId);
+        else next.add(sectionId);
         return next;
       });
 
@@ -150,14 +188,25 @@ export const BoardSectionCollapseProvider = ({ children }: PropsWithChildren) =>
         .filter(([sectionId, active]) => active && autoExpandTargetSectionIds.has(sectionId))
         .map(([sectionId]) => sectionId),
     );
+    const idleCollapsedSectionIds = new Set(
+      autoExpandTargets
+        .filter(
+          (target) =>
+            target.inactiveDisplay === "collapsed" &&
+            !autoExpandedSectionIds.has(target.sectionId) &&
+            !openedWhileIdleIds.has(target.sectionId),
+        )
+        .map((target) => target.sectionId),
+    );
     return {
       collapsedSectionIds,
-      visuallyCollapsedSectionIds: new Set(
-        [...collapsedSectionIds].filter(
-          (sectionId) =>
-            (!isEditMode || !temporarilyExpandedIds.has(sectionId)) && !autoExpandedSectionIds.has(sectionId),
-        ),
-      ),
+      visuallyCollapsedSectionIds: getVisuallyCollapsedSectionIds({
+        collapsedSectionIds,
+        idleCollapsedSectionIds,
+        autoExpandedSectionIds,
+        temporarilyExpandedIds,
+        isEditMode,
+      }),
       autoExpandedSectionIds,
       autoExpandTargetSectionIds,
       setCollapsed,
@@ -169,6 +218,7 @@ export const BoardSectionCollapseProvider = ({ children }: PropsWithChildren) =>
     collapsedById,
     expandForEditing,
     isEditMode,
+    openedWhileIdleIds,
     setCollapsed,
     temporarilyExpandedIds,
   ]);

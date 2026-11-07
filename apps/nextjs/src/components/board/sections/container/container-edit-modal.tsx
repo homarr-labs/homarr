@@ -95,7 +95,7 @@ export const ContainerEditModal = createModal<ModalProps>(({ actions, innerProps
         <Switch
           label={tSection("option.autoExpand.label")}
           description={tSection("option.autoExpand.description")}
-          disabled={activityCapableItems.length === 0}
+          disabled={activityCapableItems.length === 0 && !form.values.autoExpand.enabled}
           {...form.getInputProps("autoExpand.enabled", { type: "checkbox" })}
           onChange={(event) => {
             const enabled = event.currentTarget.checked;
