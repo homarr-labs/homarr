@@ -128,6 +128,37 @@ export class TransmissionIntegration extends Integration implements IDownloadCli
     await client.removeTorrent(id, fromDisk);
   }
 
+  public async getCategoriesAsync(): Promise<string[] | null> {
+    const client = await this.getClientAsync();
+    if (!(await this.supportsLabelsAsync(client))) return null;
+
+    // Fetch labels from the whole client, independent of the widget's filters and limit.
+    const { _data: response } = await client.request<{
+      result: string;
+      arguments: { torrents: { labels: string[] }[] };
+    }>("torrent-get", { fields: ["labels"] });
+    if (response?.result !== "success") throw new Error("Unable to load Transmission labels");
+    return [...new Set(response.arguments.torrents.flatMap((torrent) => torrent.labels))].toSorted(
+      (first, second) => first.localeCompare(second),
+    );
+  }
+
+  public async setItemLabelsAsync(id: string, labels: string[]): Promise<void> {
+    const client = await this.getClientAsync();
+    if (!(await this.supportsLabelsAsync(client))) {
+      throw new Error("Transmission 3.0 or later is required to change labels");
+    }
+
+    const response = await client.setTorrent(id, { labels });
+    if (response.result !== "success") throw new Error("Unable to change Transmission labels");
+  }
+
+  private async supportsLabelsAsync(client: Transmission): Promise<boolean> {
+    const response = await client.getSession();
+    if (response.result !== "success") throw new Error("Unable to load the Transmission session");
+    return response.arguments["rpc-version"] >= 16;
+  }
+
   private async getClientAsync(dispatcher?: Dispatcher) {
     return new Transmission({
       baseUrl: this.url("/").toString(),

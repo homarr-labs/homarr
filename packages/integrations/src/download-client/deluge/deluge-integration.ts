@@ -175,6 +175,31 @@ export class DelugeIntegration extends Integration implements IDownloadClientInt
     await client.removeTorrent(id, fromDisk);
   }
 
+  public async getCategoriesAsync(): Promise<string[] | null> {
+    const client = await this.getClientAsync();
+    if (!(await this.isLabelPluginEnabledAsync(client))) return null;
+
+    const response = await client.getLabels();
+    if (response.error) throw new Error("Unable to load Deluge labels", { cause: response.error });
+    return response.result;
+  }
+
+  public async setItemCategoryAsync(id: string, category: string): Promise<void> {
+    const client = await this.getClientAsync();
+    if (!(await this.isLabelPluginEnabledAsync(client))) {
+      throw new Error("The Deluge Label plugin must be enabled to change categories");
+    }
+
+    const response = await client.setTorrentLabel(id, category);
+    if (response.error) throw new Error("Unable to change the Deluge label", { cause: response.error });
+  }
+
+  private async isLabelPluginEnabledAsync(client: Deluge): Promise<boolean> {
+    const response = await client.getPlugins();
+    if (response.error) throw new Error("Unable to load Deluge plugins", { cause: response.error });
+    return response.result.enabled_plugins.includes("Label");
+  }
+
   private async getClientAsync(dispatcher?: Dispatcher) {
     return new Deluge({
       baseUrl: this.url("/").toString(),
