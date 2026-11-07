@@ -1,0 +1,14 @@
+packages/widgets/src/modals/widget-editor-form.tsx
+  h_d6e478ca18e517 203
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "f2be52d486f7a1225faeb348e363d6fc8ff6250d",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
