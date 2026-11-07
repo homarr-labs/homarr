@@ -426,6 +426,7 @@ export default function DownloadClientsWidget({
   useReportWidgetActivity({
     itemId,
     query: downloadsQuery,
+    recordsPerRow: 3,
     // Local client/status filters must not make an active widget disappear.
     count: availableItems.reduce(
       (count, pair) =>

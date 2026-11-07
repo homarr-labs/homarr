@@ -1,5 +1,5 @@
 import { TRPCError } from "@trpc/server";
-import superjson from "superjson";
+import superjson, { parse, stringify } from "superjson";
 import { z } from "zod/v4";
 
 import type { Session } from "@homarr/auth";
@@ -69,7 +69,11 @@ import {
   boardSummarySchema,
   updateBoardItemLayoutSchema,
 } from "@homarr/validation/board";
-import { getBoardLayoutBoundsIssue, getBoardPlacementBoundsIssue } from "@homarr/validation/board-layout-bounds";
+import {
+  getBoardLayoutBoundsIssue,
+  getBoardPlacementBoundsIssue,
+  getBoardSectionColumnCount,
+} from "@homarr/validation/board-layout-bounds";
 import { BoardLayoutBoundsError } from "@homarr/validation/board-layout-bounds-error";
 import { byIdSchema } from "@homarr/validation/common";
 import { zodUnionFromArray } from "@homarr/validation/enums";
@@ -148,6 +152,11 @@ const doBoardItemPlacementsOverlap = (left: BoardItemPlacementRectangle, right: 
 const throwIfBoardLayoutBoundsInvalid = (issue: string | null) => {
   if (!issue) return;
   throw new TRPCError({ code: "BAD_REQUEST", message: issue, cause: new BoardLayoutBoundsError(issue) });
+};
+
+const assertSmartReelMembershipUpdated = (updated: { id: string }[]) => {
+  if (updated.length > 0) return;
+  throw new TRPCError({ code: "CONFLICT", message: "Smart Reel changed. Read the board again before adding." });
 };
 
 interface WidgetConfiguration {
@@ -1212,7 +1221,7 @@ export const boardRouter = createTRPCRouter({
       mcp: {
         enabled: true,
         description:
-          "Read a dashboard by name, including current sections, items, widget options and layout IDs used by board_saveBoard and board_saveLayouts. Only accessible boards are returned; obtain names from board_getAllBoards.",
+          "Read an accessible dashboard by name, including sections, items, widget options and layout IDs. Obtain names from board_getAllBoards. Smart Reel targets for board_addItem are container section IDs and state IDs from options.smart.states.",
       },
     })
     .input(boardByNameSchema)
@@ -2308,13 +2317,13 @@ export const boardRouter = createTRPCRouter({
         protect: true,
         summary: "Add an item to a board",
         description:
-          "Add a widget or app to the first available position in the main canvas of each layout and return its item ID. Requires modify access to the board and use access to linked integrations. Widget configurations must be valid; placing Custom Widgets requires admin permission.",
+          "Add a widget or app to the main canvas or a Smart Reel state. Requires board modify access and use access to linked integrations. Placing Custom Widgets requires admin permission.",
       },
       mcp: {
         enabled: true,
         effect: "additive",
         description:
-          "Add a widget/app item to a board after configure_widget has reviewed it. Automatically places it in the main canvas at the first free grid position without overlapping items or containers. Use the configure_widget result's boardId, kind, options, and integrationIds exactly. Optional size {width,height} sets grid dimensions; width is capped by each layout's available columns. Integration IDs must be accessible to the current user. To create a formatted dashboard note, configure kind 'notebook' with options { content: Tiptap-compatible HTML, showToolbar: boolean, allowReadOnlyCheck: boolean }. Returns { itemId }",
+          "Add a widget or app without replacing board content. By default it goes in the main canvas. For a Smart Reel state, set smartContainerTarget {sectionId,stateId} using board_getBoardByName: find a container with options.smart.enabled and its state in options.smart.states. Requires board modify permission, use access to linked integrations, and admin access for Custom Widgets. If configure_widget is available, use its reviewed result. Optional size {width,height} sets grid dimensions. For a formatted note use kind 'notebook' and options {content: Tiptap-compatible HTML, showToolbar: boolean, allowReadOnlyCheck: boolean}. Returns {itemId}.",
       },
     })
     .input(addItemToBoardSchema)
@@ -2351,31 +2360,70 @@ export const boardRouter = createTRPCRouter({
           throw new TRPCError({ code: "NOT_FOUND", message: "Board not found" });
         }
 
-        const emptySection = board.sections
+        const mainSection = board.sections
           .filter((section) => section.kind === "empty" && getRootSectionLane(section.xOffset) === "main")
           .toSorted(
             (sectionA, sectionB) =>
               (sectionA.yOffset ?? 0) - (sectionB.yOffset ?? 0) || sectionA.id.localeCompare(sectionB.id),
           )[0];
 
-        if (!emptySection) {
-          throw new TRPCError({ code: "BAD_REQUEST", message: "Board has no main section to place items in" });
+        const itemId = createId();
+        const target = input.smartContainerTarget;
+        const targetSection = target
+          ? board.sections.find((section) => section.id === target.sectionId && section.kind === "container")
+          : mainSection;
+        if (!targetSection) {
+          let message = "Board has no main section to place items in";
+          if (target) message = "Smart Reel container not found on this board";
+          throw new TRPCError({ code: "BAD_REQUEST", message });
         }
 
-        const itemId = createId();
+        let membershipUpdate: { previous: string; next: string } | undefined;
+        if (target) {
+          const storedOptions = targetSection.options;
+          const options = containerSectionOptionsSchema.parse(storedOptions && parse(storedOptions));
+          const smart = options?.smart;
+          if (!storedOptions || !smart?.enabled || !smart.states.some((state) => state.id === target.stateId)) {
+            throw new TRPCError({ code: "BAD_REQUEST", message: "Smart Reel state not found on this board" });
+          }
+          const nextOptions = containerSectionOptionsSchema.safeParse({
+            ...options,
+            smart: {
+              ...smart,
+              states: smart.states.map((state) => {
+                if (state.id !== target.stateId) return state;
+                return { ...state, itemIds: [...state.itemIds, itemId] };
+              }),
+            },
+          });
+          if (!nextOptions.success) {
+            throw new TRPCError({ code: "BAD_REQUEST", message: "This Smart Reel state cannot accept more widgets" });
+          }
+          membershipUpdate = { previous: storedOptions, next: stringify(nextOptions.data) };
+        }
+
+        const placementLayouts = target
+          ? board.layouts.filter((layout) => targetSection.layouts.some((entry) => entry.layoutId === layout.id))
+          : board.layouts;
+        if (target && placementLayouts.length === 0) {
+          throw new TRPCError({ code: "BAD_REQUEST", message: "Smart Reel has no board layouts to place items in" });
+        }
         const defaultSize = input.size ?? widgetDefaultSizes[input.kind as WidgetKind] ?? { width: 1, height: 1 };
-        const layoutRows: (typeof itemLayouts.$inferInsert)[] = board.layouts.map((layout) => {
-          const columnCount = getBoardLaneColumnCount(layout, getRootSectionLane(emptySection.xOffset));
+        const layoutRows: (typeof itemLayouts.$inferInsert)[] = placementLayouts.map((layout) => {
+          const columnCount = getBoardSectionColumnCount(board, layout.id, targetSection.id);
+          if (!columnCount) {
+            throw new TRPCError({ code: "BAD_REQUEST", message: "Target section has no available columns" });
+          }
           const size = { ...defaultSize, width: Math.min(columnCount, defaultSize.width) };
           const itemPlacements = board.items
             .flatMap((item) => item.layouts)
-            .filter((itemLayout) => itemLayout.sectionId === emptySection.id && itemLayout.layoutId === layout.id);
+            .filter((itemLayout) => itemLayout.sectionId === targetSection.id && itemLayout.layoutId === layout.id);
           const containerPlacements = board.sections
             .filter((section) => section.kind === "container")
             .flatMap((section) => section.layouts)
             .filter(
               (sectionLayout) =>
-                sectionLayout.parentSectionId === emptySection.id && sectionLayout.layoutId === layout.id,
+                sectionLayout.parentSectionId === targetSection.id && sectionLayout.layoutId === layout.id,
             );
           const position = findFirstAvailableBoardItemPosition(
             [...itemPlacements, ...containerPlacements],
@@ -2392,7 +2440,7 @@ export const boardRouter = createTRPCRouter({
 
           return {
             itemId,
-            sectionId: emptySection.id,
+            sectionId: targetSection.id,
             layoutId: layout.id,
             ...position,
             width: size.width,
@@ -2406,19 +2454,53 @@ export const boardRouter = createTRPCRouter({
           );
         }
 
-        await ctx.db.insert(items).values({
+        const item = {
           id: itemId,
           boardId: input.boardId,
           kind: input.kind,
-          options: superjson.stringify(input.options),
+          options: stringify(input.options),
           advancedOptions: emptySuperJSON,
+        };
+        const linkedIntegrations = input.integrationIds.map((integrationId) => ({ itemId, integrationId }));
+        await handleTransactionsAsync(ctx.db, {
+          async handleAsync(db, schema) {
+            await db.transaction(async (transaction) => {
+              if (membershipUpdate) {
+                const updated = await transaction
+                  .update(schema.sections)
+                  .set({ options: membershipUpdate.next })
+                  .where(
+                    and(
+                      eq(schema.sections.id, targetSection.id),
+                      eq(schema.sections.options, membershipUpdate.previous),
+                    ),
+                  )
+                  .returning({ id: schema.sections.id });
+                assertSmartReelMembershipUpdated(updated);
+              }
+              await transaction.insert(schema.items).values(item);
+              if (layoutRows.length > 0) await transaction.insert(schema.itemLayouts).values(layoutRows);
+              if (linkedIntegrations.length > 0)
+                await transaction.insert(schema.integrationItems).values(linkedIntegrations);
+            });
+          },
+          handleSync(db) {
+            db.transaction((transaction) => {
+              if (membershipUpdate) {
+                const updated = transaction
+                  .update(sections)
+                  .set({ options: membershipUpdate.next })
+                  .where(and(eq(sections.id, targetSection.id), eq(sections.options, membershipUpdate.previous)))
+                  .returning({ id: sections.id })
+                  .all();
+                assertSmartReelMembershipUpdated(updated);
+              }
+              transaction.insert(items).values(item).run();
+              if (layoutRows.length > 0) transaction.insert(itemLayouts).values(layoutRows).run();
+              if (linkedIntegrations.length > 0) transaction.insert(integrationItems).values(linkedIntegrations).run();
+            });
+          },
         });
-        if (layoutRows.length > 0) await ctx.db.insert(itemLayouts).values(layoutRows);
-        if (input.integrationIds.length > 0) {
-          await ctx.db
-            .insert(integrationItems)
-            .values(input.integrationIds.map((integrationId) => ({ itemId, integrationId })));
-        }
 
         return { itemId };
       });

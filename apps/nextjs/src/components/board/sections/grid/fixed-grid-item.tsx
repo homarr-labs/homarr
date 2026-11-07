@@ -25,7 +25,7 @@ import { useGridEditorRuntimeStatus } from "./grid-editor-runtime";
 import type { SectionGridPlacement } from "./use-grid-layout-actions";
 import { useGridLayoutActions } from "./use-grid-layout-actions";
 import classes from "./section-grid.module.css";
-import { useSmartContainerProjection } from "../smart-container/smart-container-context";
+import { useSmartContainerPreviewState, useSmartContainerProjection } from "../smart-container/smart-container-context";
 
 interface FixedGridItemProps {
   item: ContainerSectionItem | SectionItem;
@@ -46,6 +46,7 @@ export const FixedGridItem = ({
 }: PropsWithChildren<FixedGridItemProps>) => {
   const [isEditMode] = useEditMode();
   const smart = useSmartContainerProjection();
+  const preview = useSmartContainerPreviewState();
   const runtimeStatus = useGridEditorRuntimeStatus();
   const currentLayoutId = useCurrentLayout();
   const t = useI18n();
@@ -200,7 +201,7 @@ export const FixedGridItem = ({
     <Box
       ref={registerElement}
       hidden={isSmartHidden}
-      inert={isSmartHidden}
+      inert={isSmartHidden || (Boolean(preview) && item.type === "item")}
       aria-hidden={isSmartHidden || undefined}
       {...semantics}
       onClickCapture={handleClickCapture}

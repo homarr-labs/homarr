@@ -1,5 +1,17 @@
 import type { ReactNode } from "react";
-import { ActionIcon, Badge, Button, Group, NumberInput, Select, Stack, Text, TextInput, Tooltip } from "@mantine/core";
+import {
+  ActionIcon,
+  Badge,
+  Button,
+  Group,
+  NumberInput,
+  Select,
+  Stack,
+  Switch,
+  Text,
+  TextInput,
+  Tooltip,
+} from "@mantine/core";
 import {
   IconArrowDown,
   IconArrowUp,
@@ -13,10 +25,12 @@ import {
 import { getWidgetName } from "@homarr/definitions";
 import { useI18n } from "@homarr/translation/client";
 import type { SmartContainerOptions, SmartContainerState } from "@homarr/validation/shared";
+import { smartContainerStateLimit } from "@homarr/validation/smart-container";
 import { widgetCatalogIcons } from "@homarr/ui/widget-icons";
 
 import type { Item } from "~/app/[locale]/boards/_types";
 import classes from "./container-editor.module.css";
+import { editorSwitchStyles } from "./container-option-fields";
 
 interface StateEditorProps {
   smart: SmartContainerOptions;
@@ -42,6 +56,8 @@ export const ContainerStateSettings = ({
   const changeSelected = (patch: Partial<SmartContainerState>) =>
     onChange({
       ...smart,
+      fallbackStateId:
+        patch.enabled === false && smart.fallbackStateId === selected.id ? undefined : smart.fallbackStateId,
       states: smart.states.map((state) => {
         if (state.id !== selected.id) return state;
         return { ...state, ...patch };
@@ -66,6 +82,7 @@ export const ContainerStateSettings = ({
         {smart.states.map((state, index) => (
           <Button
             key={state.id}
+            aria-pressed={state.id === selected.id}
             className={classes.stateButton}
             variant={state.id === selected.id ? "light" : "default"}
             onClick={() => onSelectState(state.id)}
@@ -102,6 +119,14 @@ export const ContainerStateSettings = ({
           if (typeof value === "number") changeSelected({ priority: value });
         }}
       />
+      <Switch
+        styles={editorSwitchStyles}
+        label={t("includeInRotation")}
+        description={t("includeInRotationDescription")}
+        checked={selected.enabled}
+        disabled={selected.enabled && smart.states.filter((state) => state.enabled).length === 1}
+        onChange={(event) => changeSelected({ enabled: event.currentTarget.checked })}
+      />
       <Group gap="xs" grow>
         <Button
           variant="default"
@@ -127,7 +152,7 @@ export const ContainerStateSettings = ({
           variant="light"
           mih={44}
           leftSection={<IconPlus size={16} />}
-          disabled={smart.states.length >= 32}
+          disabled={smart.states.length >= smartContainerStateLimit}
           onClick={() => onAddState(0)}
         >
           {t("addStateAbove")}
@@ -136,7 +161,7 @@ export const ContainerStateSettings = ({
           variant="light"
           mih={44}
           leftSection={<IconPlus size={16} />}
-          disabled={smart.states.length >= 32}
+          disabled={smart.states.length >= smartContainerStateLimit}
           onClick={() => onAddState(1)}
         >
           {t("addStateBelow")}

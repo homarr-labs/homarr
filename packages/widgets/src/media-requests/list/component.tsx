@@ -50,6 +50,7 @@ export default function MediaServerWidget({
   useReportWidgetActivity({
     itemId,
     query: mediaRequestQuery,
+    recordsPerRow: 2,
     count: mediaRequestQuery.data?.requests.length ?? 0,
     complete: mediaRequestQuery.data?.failedIntegrations.length === 0,
     configured: integrationIds.length > 0,

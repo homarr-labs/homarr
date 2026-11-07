@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef } from "react";
+import { useMemo } from "react";
 
 import { clientApi } from "@homarr/api/client";
 import { IntegrationProvider } from "@homarr/auth/client";
@@ -24,7 +24,7 @@ import classes from "./smart-container-editor-preview.module.css";
 interface Props {
   board: Board;
   containerId: string;
-  selectedStateId: string;
+  selectedStateId?: string;
   layoutId?: string;
   onSelectState?: (id: string) => void;
 }
@@ -37,7 +37,6 @@ export const SmartContainerEditorPreview = ({
   layoutId,
   onSelectState,
 }: Props) => {
-  const previewRef = useRef<HTMLDivElement>(null);
   const { data: integrations = [] } = clientApi.integration.all.useQuery();
   const preview = useMemo(() => {
     const container = board.sections.find((section) => section.id === containerId);
@@ -106,11 +105,6 @@ export const SmartContainerEditorPreview = ({
       root: rootSection,
     };
   }, [board, containerId, layoutId]);
-  useEffect(() => {
-    previewRef.current?.querySelectorAll<HTMLElement>('[data-grid-item-type="item"]').forEach((item) => {
-      item.inert = true;
-    });
-  }, [preview, selectedStateId]);
   if (!preview) return null;
   return (
     <IntegrationProvider integrations={integrations}>
@@ -122,8 +116,10 @@ export const SmartContainerEditorPreview = ({
                 <BoardAdvancedFocusProvider>
                   <BoardSectionCollapseProvider>
                     <BoardGridPortalHost>
-                      <SmartContainerPreviewStateProvider value={{ stateId: selectedStateId, onSelectState }}>
-                        <div ref={previewRef} className={classes.preview} data-smart-container-editor-preview>
+                      <SmartContainerPreviewStateProvider
+                        value={{ stateId: selectedStateId, onSelectState: selectedStateId ? onSelectState : undefined }}
+                      >
+                        <div className={classes.preview} data-smart-container-editor-preview>
                           <ScaledBoardCanvas
                             logicalWidth={getLogicalGridSize(preview.section.width)}
                             initialLogicalHeight={getLogicalGridSize(preview.section.height)}

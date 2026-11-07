@@ -2,12 +2,13 @@
 
 import type { PropsWithChildren } from "react";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { ActionIcon, Box, Button, Group, Text, UnstyledButton } from "@mantine/core";
+import { ActionIcon, Box, Button, Group, Menu, Text, UnstyledButton } from "@mantine/core";
 import {
   IconChevronDown,
   IconChevronLeft,
   IconChevronRight,
   IconChevronUp,
+  IconCheck,
   IconPencil,
   IconPlayerPause,
   IconPlayerPlay,
@@ -59,9 +60,16 @@ const ReelSurface = ({ section, options, children, collapsed }: SurfaceProps & {
   const [isEditMode] = useEditMode();
   const preview = useSmartContainerPreviewState();
   const previewStateId = preview?.stateId;
-  const { items } = useSectionItems(section.id);
+  const { items, innerSections } = useSectionItems(section.id);
   const layoutRegistry = useSmartContainerLayout();
-  const runtime = useSmartContainerRuntime({ options, items, isEditMode, isCollapsed: collapsed, previewStateId });
+  const runtime = useSmartContainerRuntime({
+    options,
+    items,
+    isEditMode,
+    isCollapsed: collapsed,
+    isPreview: Boolean(preview),
+    previewStateId,
+  });
   const { selectedState, selectedStateId, states } = runtime;
   const original = board.sections.find((entry) => entry.id === section.id);
   let savedRows = section.height;
@@ -70,21 +78,22 @@ const ReelSurface = ({ section, options, children, collapsed }: SurfaceProps & {
   const liveProjection = useMemo(
     () =>
       projectSmartContainerState({
-        state: selectedState ?? { id: "", title: "", priority: 0, itemIds: [] },
+        state: selectedState,
         items,
         columnCount: section.width,
         rowBudget: savedRows,
-        reclaimSpace: options.reclaimSpace,
+        options,
+        authored: isEditMode,
         activities: runtime.activities,
         now: runtime.now,
       }),
-    [selectedState, items, section.width, savedRows, options.reclaimSpace, runtime.activities, runtime.now],
+    [selectedState, items, section.width, savedRows, options, isEditMode, runtime.activities, runtime.now],
   );
   const [focusedItemId, setFocusedItemId] = useState<string | null>(null);
   const [focusedProjection, setFocusedProjection] = useState<typeof liveProjection | null>(null);
-  const projection = focusedProjection ?? liveProjection;
+  const projection = (!isEditMode && focusedProjection) || liveProjection;
   const selectedIndex = states.findIndex((state) => state.id === selectedStateId);
-  const showPeeks = states.length > 1 && section.height >= 3;
+  const showPeeks = options.appearance === "reel" && states.length > 1 && section.height >= 3;
   const previous = states[(selectedIndex - 1 + states.length) % states.length];
   const next = states[(selectedIndex + 1) % states.length];
   const openEditor = useOpenContainerEditor(section);
@@ -97,10 +106,10 @@ const ReelSurface = ({ section, options, children, collapsed }: SurfaceProps & {
   useEffect(() => {
     if (!setRows) return;
     let rows: number | null = null;
-    if (options.reclaimSpace && !isEditMode && !previewStateId) rows = displayRows;
+    if (options.reclaimSpace && !isEditMode && !previewStateId && innerSections.length === 0) rows = displayRows;
     setRows(section.id, rows);
     return () => setRows(section.id, null);
-  }, [setRows, section.id, displayRows, options.reclaimSpace, isEditMode, previewStateId]);
+  }, [setRows, section.id, displayRows, options.reclaimSpace, isEditMode, previewStateId, innerSections.length]);
 
   useEffect(() => {
     if (priorStateId.current === selectedStateId) return;
@@ -130,8 +139,9 @@ const ReelSurface = ({ section, options, children, collapsed }: SurfaceProps & {
     sectionId: section.id,
     projection,
     now: runtime.now,
+    compactQuiet: options.compactQuiet && !isEditMode,
     focusedItemId,
-    runtime: { ...runtime, previousState, nextState },
+    runtime: { ...runtime, selectState: preview?.onSelectState ?? runtime.selectState, previousState, nextState },
   };
   if (collapsed) return <SmartContainerProjectionProvider value={value}>{children}</SmartContainerProjectionProvider>;
 
@@ -194,7 +204,7 @@ const ReelSurface = ({ section, options, children, collapsed }: SurfaceProps & {
         )}
         <div className={classes.content}>
           {children}
-          {projection.itemIds.length === 0 && (
+          {projection.itemIds.length === 0 && innerSections.length === 0 && (
             <div className={classes.empty}>
               <Text size="sm" c="dimmed">
                 {t("empty")}
@@ -240,6 +250,9 @@ export const SmartContainerToolbar = ({ section }: { section: ContainerSectionIt
   if (!context || context.sectionId !== section.id) return null;
   const { runtime } = context;
   const selectedIndex = runtime.states.findIndex((state) => state.id === runtime.selectedStateId);
+  const stateName = runtime.selectedState?.title || t("state");
+  const position = t("position", { current: selectedIndex + 1, total: runtime.states.length });
+  const containerTitle = section.options.showLabel && !section.options.collapsible && section.options.title;
   let pauseLabel = t("pause");
   let pauseIcon = <IconPlayerPause style={iconSizes.sm} />;
   if (runtime.pauseReason === "manual" || runtime.pauseReason === "focus" || runtime.pauseReason === "paused") {
@@ -249,9 +262,17 @@ export const SmartContainerToolbar = ({ section }: { section: ContainerSectionIt
   const isTimer =
     runtime.canRotate && (section.options.smart?.mode === "hybrid" || section.options.smart?.mode === "timed");
   return (
-    <Group className={classes.toolbar} gap={3} wrap="nowrap" data-grid-no-drag data-editing={isEditMode || undefined}>
+    <Group
+      className={classes.toolbar}
+      gap={3}
+      wrap="nowrap"
+      data-grid-no-drag
+      data-editing={isEditMode || undefined}
+      data-narrow={section.width === 1 || undefined}
+    >
       <Group className={classes.navigation} gap={2} wrap="nowrap">
         <ActionIcon
+          className={classes.step}
           variant="default"
           style={zoomCompensatedSize(44)}
           aria-label={t("previousState")}
@@ -260,15 +281,38 @@ export const SmartContainerToolbar = ({ section }: { section: ContainerSectionIt
         >
           <IconChevronLeft style={iconSizes.md} />
         </ActionIcon>
-        <div className={classes.stateTitle}>
-          <Text size="xs" fw={600}>
-            {runtime.selectedState?.title || t("state")}
-          </Text>
-          <Text size="xs" c="dimmed" className={classes.position}>
-            {t("position", { current: selectedIndex + 1, total: runtime.states.length })}
-          </Text>
-        </div>
+        <Menu position="bottom-start" shadow="md" returnFocus>
+          <Menu.Target>
+            <UnstyledButton className={classes.statePicker} aria-label={t("chooseState", { stateName, position })}>
+              <span className={classes.stateTitle}>
+                <Text component="span" size="sm" fw={650} truncate>
+                  {stateName}
+                </Text>
+                <Text component="span" size="xs" c="dimmed" className={classes.position} truncate>
+                  {containerTitle && <span className={classes.containerName}>{containerTitle} · </span>}
+                  {position}
+                </Text>
+              </span>
+              <IconChevronDown size={14} aria-hidden />
+            </UnstyledButton>
+          </Menu.Target>
+          <Menu.Dropdown mah="min(60dvh, 20rem)" maw="min(24rem, calc(100vw - 2rem))" style={{ overflowY: "auto" }}>
+            <Menu.Label>{t("states")}</Menu.Label>
+            {runtime.states.map((state, index) => (
+              <Menu.Item
+                key={state.id}
+                mih={44}
+                aria-current={state.id === runtime.selectedStateId || undefined}
+                rightSection={state.id === runtime.selectedStateId ? <IconCheck size={16} /> : null}
+                onClick={() => runtime.selectState(state.id)}
+              >
+                {state.title || `${t("state")} ${index + 1}`}
+              </Menu.Item>
+            ))}
+          </Menu.Dropdown>
+        </Menu>
         <ActionIcon
+          className={classes.step}
           variant="default"
           style={zoomCompensatedSize(44)}
           aria-label={t("nextState")}
@@ -279,7 +323,7 @@ export const SmartContainerToolbar = ({ section }: { section: ContainerSectionIt
         </ActionIcon>
       </Group>
       {isTimer && !runtime.isPaused && (
-        <Text size="xs" c="dimmed">
+        <Text size="xs" c="dimmed" className={classes.countdown}>
           {runtime.remainingSeconds}s
         </Text>
       )}
@@ -299,7 +343,13 @@ export const SmartContainerToolbar = ({ section }: { section: ContainerSectionIt
         </ActionIcon>
       )}
       {isEditMode && (
-        <ActionIcon variant="light" style={zoomCompensatedSize(44)} aria-label={t("edit")} onClick={openEditor}>
+        <ActionIcon
+          className={classes.edit}
+          variant="light"
+          style={zoomCompensatedSize(44)}
+          aria-label={t("edit")}
+          onClick={openEditor}
+        >
           <IconPencil style={iconSizes.sm} />
         </ActionIcon>
       )}

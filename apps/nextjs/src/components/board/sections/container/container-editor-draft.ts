@@ -1,6 +1,10 @@
 import { createId } from "@homarr/common";
 import type { ContainerSectionOptions, SmartContainerOptions } from "@homarr/validation/shared";
-import { smartContainerOptionsSchema } from "@homarr/validation/smart-container";
+import {
+  smartContainerOptionsSchema,
+  smartContainerStateItemLimit,
+  smartContainerStateLimit,
+} from "@homarr/validation/smart-container";
 
 import type { Board, Item } from "~/app/[locale]/boards/_types";
 import { createItemCallback } from "../../items/actions/create-item";
@@ -10,21 +14,23 @@ export const getContainerEditorSmartOptions = (
   options: ContainerSectionOptions,
   items: Item[],
   containerId: string,
-  title: string,
+  stateLabel: string,
 ): SmartContainerOptions => {
   if (options.smart?.states.length) return structuredClone(options.smart);
+  const itemIds = items
+    .filter((item) => item.layouts.some((layout) => layout.sectionId === containerId))
+    .map((item) => item.id);
+  const stateCount = Math.min(
+    smartContainerStateLimit,
+    Math.max(1, Math.ceil(itemIds.length / smartContainerStateItemLimit)),
+  );
   return smartContainerOptionsSchema.parse({
     ...options.smart,
-    states: [
-      {
-        id: createId(),
-        title,
-        priority: 50,
-        itemIds: items
-          .filter((item) => item.layouts.some((layout) => layout.sectionId === containerId))
-          .map((item) => item.id),
-      },
-    ],
+    states: Array.from({ length: stateCount }, (_, index) => ({
+      id: createId(),
+      title: `${stateLabel} ${index + 1}`,
+      itemIds: itemIds.slice(index * smartContainerStateItemLimit, (index + 1) * smartContainerStateItemLimit),
+    })),
   });
 };
 

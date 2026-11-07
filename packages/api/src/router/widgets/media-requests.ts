@@ -39,11 +39,13 @@ export const mediaRequestsRouter = createTRPCRouter({
       const results: IntegrationQueryResult<MediaRequest[]>[] = await settleIntegrationQueries(
         ctx.integrations,
         async (integration) => {
-          const { data, timestamp } = await mediaRequestListRequestHandler.handler(integration, input).getDataAsync();
+          const { data, timestamp, expiresAt } = await mediaRequestListRequestHandler
+            .handler(integration, input)
+            .getDataAsync();
           return {
             integration: { id: integration.id, name: integration.name, kind: integration.kind },
             data,
-            error: undefined,
+            error: expiresAt <= Date.now() ? PUBLIC_INTEGRATION_ERROR : undefined,
             updatedAt: timestamp,
           };
         },

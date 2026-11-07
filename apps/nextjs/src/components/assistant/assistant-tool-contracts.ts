@@ -93,7 +93,7 @@ export const browserToolContracts = {
   },
   configure_widget: {
     description:
-      "Open Homarr's native widget editor with inferred options and integrations preselected. Use this before board_addItem for every dashboard widget, including app and notebook widgets. The editor applies widget defaults, validates supported options, and only offers compatible integrations the user can access. Use the returned boardId, kind, options, and integrationIds directly with board_addItem.",
+      "Open Homarr's native widget editor with inferred options and integrations preselected. Use this before board_addItem. For a Smart Reel destination, name the container and state in the summary; board_addItem takes the destination separately. Use the returned boardId, kind, options, and integrationIds directly with board_addItem.",
     parameters: z.object({
       boardId: z.string().trim().min(1).max(64),
       boardName: z.string().trim().min(1).max(255),

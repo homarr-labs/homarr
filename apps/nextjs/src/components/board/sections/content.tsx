@@ -52,6 +52,7 @@ export const SectionContentItem = ({ item, integrations }: ItemProps) => {
   if (item.type === "section") return <ContainerSectionContentItem item={item} />;
   const compact =
     smart?.sectionId === section.id &&
+    smart.compactQuiet &&
     smart.focusedItemId !== item.id &&
     getWidgetActivity(smart.runtime.activities[item.id], smart.now) === "quiet";
 

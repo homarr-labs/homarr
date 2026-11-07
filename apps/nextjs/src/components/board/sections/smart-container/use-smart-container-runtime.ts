@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import type { SmartContainerOptions, SmartContainerState } from "@homarr/validation/smart-container";
+import { resolveSmartContainerMembership } from "@homarr/validation/smart-container";
 import { getWidgetActivity, useWidgetActivities } from "@homarr/widgets/activity";
 import type { WidgetActivities } from "@homarr/widgets/activity";
 
@@ -15,8 +16,8 @@ interface RuntimeInput {
   options: SmartContainerOptions;
   items: readonly { id: string }[];
   isEditMode: boolean;
-  isEditorOpen?: boolean;
   isCollapsed?: boolean;
+  isPreview?: boolean;
   previewStateId?: string;
 }
 
@@ -26,11 +27,8 @@ const resolveStates = (
   activities: WidgetActivities,
   now: number,
 ): ResolvedSmartContainerState[] => {
-  const assignedIds = new Set(states.flatMap((state) => state.itemIds));
-  const unassignedIds = Array.from(itemIds).filter((id) => !assignedIds.has(id));
-  return states.map((state, index) => {
-    const members = state.itemIds.filter((id) => itemIds.has(id));
-    if (index === 0) members.push(...unassignedIds);
+  return resolveSmartContainerMembership(states, itemIds).map((state) => {
+    const members = state.itemIds;
     const statuses = members.map((id) => getWidgetActivity(activities[id], now));
     let activity: ResolvedSmartContainerState["activity"] = "unknown";
     if (members.length === 0) activity = "quiet";
@@ -63,13 +61,15 @@ export const useSmartContainerRuntime = ({
   options,
   items,
   isEditMode,
-  isEditorOpen = false,
   isCollapsed = false,
+  isPreview = false,
   previewStateId,
 }: RuntimeInput) => {
   const activities = useWidgetActivities();
   const [now, setNow] = useState(() => Date.now());
-  const [selectedId, setSelectedId] = useState<string | undefined>(() => options.states[0]?.id);
+  const [selectedId, setSelectedId] = useState(
+    () => options.fallbackStateId ?? options.states.find((state) => state.enabled)?.id,
+  );
   const [hold, setHold] = useState<"manual" | "focus" | "paused" | null>(null);
   const [isHovered, setHovered] = useState(false);
   const [isDocumentHidden, setDocumentHidden] = useState(false);
@@ -85,15 +85,19 @@ export const useSmartContainerRuntime = ({
   let selectedState = currentState;
   if (previewStateId) selectedState = states.find((state) => state.id === previewStateId) ?? currentState;
   const selectedStateId = selectedState?.id;
-  const eventKey = states.map((state) => `${state.id}:${state.priority}:${state.activity}:${state.count}`).join("|");
+  const eventKey = states
+    .map((state) => `${state.id}:${state.enabled}:${state.priority}:${state.activity}:${state.count}`)
+    .join("|");
   const automaticStates = useMemo(() => {
-    if (!options.skipInactive) return states;
-    return states.filter((state) => state.activity !== "quiet");
+    return states.filter((state) => state.enabled && (!options.skipInactive || state.activity !== "quiet"));
   }, [options.skipInactive, states]);
+  const fallback =
+    states.find((state) => state.enabled && state.id === options.fallbackStateId) ??
+    states.find((state) => state.enabled);
   const canRotate = automaticStates.some((state) => state.id !== currentState?.id);
 
   let pauseReason: "manual" | "focus" | "paused" | "editing" | "hidden" | "hover" | "collapsed" | null = hold;
-  if (isEditMode || isEditorOpen || previewStateId) pauseReason = "editing";
+  if (isEditMode || previewStateId) pauseReason = "editing";
   else if (isDocumentHidden) pauseReason = "hidden";
   else if (isCollapsed) pauseReason = "collapsed";
   else if (options.pauseOnHover && isHovered && !hold) pauseReason = "hover";
@@ -105,6 +109,17 @@ export const useSmartContainerRuntime = ({
     document.addEventListener("visibilitychange", updateVisibility);
     return () => document.removeEventListener("visibilitychange", updateVisibility);
   }, []);
+
+  useEffect(() => {
+    if (isPreview) return;
+    const motion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const pauseForReducedMotion = () => {
+      if (motion.matches) setHold((current) => current ?? "paused");
+    };
+    pauseForReducedMotion();
+    motion.addEventListener("change", pauseForReducedMotion);
+    return () => motion.removeEventListener("change", pauseForReducedMotion);
+  }, [isPreview]);
 
   useEffect(() => {
     const timeout = window.setInterval(() => setNow(Date.now()), 1_000);
@@ -152,7 +167,7 @@ export const useSmartContainerRuntime = ({
 
   useEffect(() => {
     lastReconciledEvent.current = "";
-  }, [options.mode, options.skipInactive, options.enabled]);
+  }, [options.mode, options.skipInactive, options.enabled, options.fallbackStateId]);
 
   useEffect(() => {
     if (isPaused || !canRotate || (options.mode !== "timed" && options.mode !== "hybrid")) return;
@@ -168,7 +183,10 @@ export const useSmartContainerRuntime = ({
     if (isPaused) return;
     const usesRelevance = options.mode === "smart" || options.mode === "hybrid";
     if (usesRelevance && lastReconciledEvent.current !== eventKey && now - lastSelectionAt.current >= 5_000) {
-      const best = chooseRelevantState(automaticStates, currentState?.id);
+      const activeStates = automaticStates.filter((state) => state.activity === "active");
+      const relevant = chooseRelevantState(activeStates, currentState?.id);
+      const preserveUnknown = !options.fallbackStateId && currentState?.enabled && currentState.activity === "unknown";
+      const best = relevant ?? (preserveUnknown ? currentState : fallback);
       lastReconciledEvent.current = eventKey;
       if (best && best.id !== currentState?.id) {
         changeState(best.id);
@@ -187,10 +205,12 @@ export const useSmartContainerRuntime = ({
     elapsedSeconds,
     options.mode,
     options.intervalSeconds,
+    options.fallbackStateId,
     automaticStates,
     canRotate,
     currentState?.id,
     eventKey,
+    fallback,
     now,
     changeState,
   ]);

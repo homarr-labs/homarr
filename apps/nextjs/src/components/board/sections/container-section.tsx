@@ -1,5 +1,5 @@
 import type { PointerEvent, MouseEvent } from "react";
-import { createContext, useContext, useRef } from "react";
+import { createContext, useContext, useId, useRef } from "react";
 import dynamic from "next/dynamic";
 import { ActionIcon, Badge, Box, Button, Card } from "@mantine/core";
 import { IconChevronDown, IconChevronUp, IconExternalLink } from "@tabler/icons-react";
@@ -63,7 +63,7 @@ export const BoardContainerSection = ({ section }: Props) => {
     collapsible: options.collapsible,
   });
   const label = options.title.trim() || t("untitled");
-  const contentId = `board-container-${section.id}-content`;
+  const contentId = useId();
   let menuTop = getBoundedMenuOffset(menuTopOffset);
   if (hasHeader) {
     menuTop = "calc(var(--container-header-height) / 2 - 12px * var(--mantine-scale))";
@@ -195,7 +195,7 @@ export const BoardContainerSection = ({ section }: Props) => {
             {toggleIcon}
           </Button>
         )}
-        {!isVisuallyCollapsed && !options.collapsible && options.showLabel && options.title && (
+        {!isSmart && !isVisuallyCollapsed && !options.collapsible && options.showLabel && options.title && (
           <Badge
             className={classes.containerLabel}
             pos="absolute"

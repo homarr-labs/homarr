@@ -51,6 +51,7 @@
   inset-block: calc(48px * var(--board-canvas-ui-scale, 1));
 }
 .toolbar {
+  container-type: inline-size;
   height: calc(44px * var(--board-canvas-ui-scale, 1));
   min-width: 0;
   padding-inline: calc(5px * var(--board-canvas-ui-scale, 1));
@@ -64,18 +65,51 @@
   min-width: 0;
   flex: 1;
 }
+.statePicker {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  align-self: stretch;
+  flex: 1;
+  gap: 4px;
+  padding-inline: var(--mantine-spacing-xs);
+  min-width: 0;
+  border-radius: var(--mantine-radius-sm);
+}
+.statePicker:hover {
+  background: var(--mantine-color-default-hover);
+}
+.statePicker svg {
+  flex: none;
+  color: var(--mantine-color-dimmed);
+}
 .stateTitle {
+  display: grid;
   min-width: 0;
   flex: 1;
-  text-align: center;
-}
-.stateTitle > * {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 .position {
   font-variant-numeric: tabular-nums;
+}
+@container (max-width: 245px) {
+  .countdown,
+  .containerName {
+    display: none;
+  }
+}
+@container (max-width: 170px) {
+  .step,
+  .edit {
+    display: none;
+  }
+  .statePicker {
+    padding-inline: 3px;
+  }
+}
+.toolbar[data-narrow] .step,
+.toolbar[data-narrow] .countdown,
+.toolbar[data-narrow] .edit {
+  display: none;
 }
 .compact {
   height: 100%;

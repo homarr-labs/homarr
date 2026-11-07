@@ -1,10 +1,14 @@
 import { z } from "zod/v4";
 
+export const smartContainerStateLimit = 32;
+export const smartContainerStateItemLimit = 128;
+
 export const smartContainerStateSchema = z.object({
   id: z.string().min(1).max(128),
   title: z.string().trim().max(64).default(""),
   priority: z.number().int().min(0).max(100).default(50),
-  itemIds: z.array(z.string().min(1).max(128)).max(128).default([]),
+  enabled: z.boolean().default(true),
+  itemIds: z.array(z.string().min(1).max(128)).max(smartContainerStateItemLimit).default([]),
 });
 
 export const smartContainerOptionsSchema = z
@@ -15,11 +19,29 @@ export const smartContainerOptionsSchema = z
     skipInactive: z.boolean().default(true),
     pauseOnHover: z.boolean().default(true),
     reclaimSpace: z.boolean().default(true),
-    states: z.array(smartContainerStateSchema).max(32).default([]),
+    compactQuiet: z.boolean().default(true),
+    minActiveRows: z.number().int().min(1).max(24).default(1),
+    maxActiveRows: z.number().int().min(1).max(24).default(12),
+    appearance: z.enum(["reel", "compact"]).default("reel"),
+    fallbackStateId: z.string().min(1).max(128).optional(),
+    states: z.array(smartContainerStateSchema).max(smartContainerStateLimit).default([]),
   })
   .superRefine((options, ctx) => {
-    if (options.enabled && options.states.length === 0) {
-      ctx.addIssue({ code: "custom", message: "Smart containers require at least one state", path: ["states"] });
+    if (options.enabled && !options.states.some((state) => state.enabled)) {
+      ctx.addIssue({
+        code: "custom",
+        message: "Smart containers require at least one automatic state",
+        path: ["states"],
+      });
+    }
+    if (
+      options.fallbackStateId &&
+      !options.states.some((state) => state.enabled && state.id === options.fallbackStateId)
+    ) {
+      ctx.addIssue({ code: "custom", message: "Fallback must refer to an enabled state", path: ["fallbackStateId"] });
+    }
+    if (options.minActiveRows > options.maxActiveRows) {
+      ctx.addIssue({ code: "custom", message: "Minimum rows cannot exceed maximum rows", path: ["maxActiveRows"] });
     }
 
     const stateIds = new Set<string>();
@@ -45,6 +67,28 @@ export const smartContainerOptionsSchema = z
 export type SmartContainerState = z.infer<typeof smartContainerStateSchema>;
 export type SmartContainerOptions = z.infer<typeof smartContainerOptionsSchema>;
 
+export const resolveSmartContainerMembership = (
+  states: readonly SmartContainerState[],
+  availableIds: ReadonlySet<string>,
+): SmartContainerState[] => {
+  const assignedIds = new Set<string>();
+  const resolved = states.map((state) => {
+    const itemIds = state.itemIds.filter((itemId) => {
+      if (!availableIds.has(itemId) || assignedIds.has(itemId)) return false;
+      assignedIds.add(itemId);
+      return true;
+    });
+    if (itemIds.length === state.itemIds.length) return state;
+    return { ...state, itemIds };
+  });
+  const firstState = resolved[0];
+  if (firstState) {
+    const unassignedIds = [...availableIds].filter((itemId) => !assignedIds.has(itemId));
+    if (unassignedIds.length > 0) resolved[0] = { ...firstState, itemIds: [...firstState.itemIds, ...unassignedIds] };
+  }
+  return resolved;
+};
+
 interface SmartContainerSection {
   id: string;
   kind: string;
@@ -65,7 +109,7 @@ export const reconcileSmartContainerStates = <TSection extends SmartContainerSec
   let membershipChanged = false;
   const reconciledSections = sections.map((section) => {
     const smart = section.options?.smart;
-    if (section.kind !== "container" || !smart || smart.states.length === 0) return section;
+    if (section.kind !== "container" || !smart?.enabled) return section;
 
     const containerLayoutIds = new Set(section.layouts?.map((layout) => layout.layoutId));
     const memberIds = [
@@ -77,27 +121,8 @@ export const reconcileSmartContainerStates = <TSection extends SmartContainerSec
           .map((item) => item.id),
       ),
     ];
-    const availableIds = new Set(memberIds);
-    const assignedIds = new Set<string>();
-    let sectionChanged = false;
-    const states = smart.states.map((state) => {
-      const itemIds = state.itemIds.filter((itemId) => {
-        if (!availableIds.has(itemId) || assignedIds.has(itemId)) return false;
-        assignedIds.add(itemId);
-        return true;
-      });
-      if (itemIds.length === state.itemIds.length) return state;
-      sectionChanged = true;
-      return { ...state, itemIds };
-    });
-    const unassignedIds = memberIds.filter((itemId) => !assignedIds.has(itemId));
-    const firstState = states[0];
-    if (firstState && unassignedIds.length > 0) {
-      states[0] = { ...firstState, itemIds: [...firstState.itemIds, ...unassignedIds] };
-      sectionChanged = true;
-    }
-
-    if (!sectionChanged) return section;
+    const states = resolveSmartContainerMembership(smart.states, new Set(memberIds));
+    if (states.every((state, index) => state === smart.states[index])) return section;
     membershipChanged = true;
     return { ...section, options: { ...section.options, smart: { ...smart, states } } };
   });

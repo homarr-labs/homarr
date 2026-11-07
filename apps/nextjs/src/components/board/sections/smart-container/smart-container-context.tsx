@@ -16,6 +16,7 @@ interface SmartContainerContextValue {
   now: number;
   runtime: ReturnType<typeof useSmartContainerRuntime>;
   focusedItemId: string | null;
+  compactQuiet: boolean;
 }
 
 const SmartContainerContext = createContext<SmartContainerContextValue | null>(null);
@@ -65,6 +66,6 @@ export const SmartContainerLayoutProvider = ({ children }: PropsWithChildren) =>
 export const useSmartContainerLayout = () => useContext(LayoutContext);
 export const useSmartContainerDisplayRows = () => useSmartContainerLayout()?.rows ?? emptyRows;
 
-const PreviewContext = createContext<{ stateId: string; onSelectState?: (id: string) => void } | undefined>(undefined);
+const PreviewContext = createContext<{ stateId?: string; onSelectState?: (id: string) => void } | undefined>(undefined);
 export const SmartContainerPreviewStateProvider = PreviewContext.Provider;
 export const useSmartContainerPreviewState = () => useContext(PreviewContext);

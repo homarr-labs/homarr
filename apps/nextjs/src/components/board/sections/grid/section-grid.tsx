@@ -99,7 +99,8 @@ export const SectionGrid = ({
     () =>
       [...items, ...innerSections].map((item): SectionGridPlacement => {
         const minimum = item.type === "section" ? minimumBySectionId.get(item.id) : undefined;
-        const isNonScrollableContainer = item.type === "section" && !item.options.scrollable;
+        const isNonScrollableContainer =
+          item.type === "section" && !item.options.scrollable && (isEditMode || !item.options.smart?.enabled);
         const height = isNonScrollableContainer && minimum ? Math.max(item.height, minimum.height) : item.height;
         return normalizeGridPlacement(
           {
@@ -115,7 +116,7 @@ export const SectionGrid = ({
           columnCount,
         );
       }),
-    [columnCount, innerSections, items, minimumBySectionId],
+    [columnCount, innerSections, isEditMode, items, minimumBySectionId],
   );
   const collapsibleSectionIds = useMemo(
     () =>
@@ -148,6 +149,7 @@ export const SectionGrid = ({
         .map((placement) => {
           const statePlacement = smartProjection.projection.placements.get(placement.id);
           if (statePlacement) return { ...placement, ...statePlacement };
+          if (isEditMode) return placement;
           return { ...placement, y: placement.y + smartProjection.projection.rowCount };
         });
     }
@@ -212,10 +214,13 @@ export const SectionGrid = ({
   const isRail = railPlacement !== "main";
   const railLogicalHeight = useRailLogicalHeight(viewportRef, isRail, canvasScale);
   const minimumViewportRowCount = useMinimumViewportRowCount(section.kind === "empty" && isEditMode, canvasScale);
-  const contentRowCount = Math.max(1, getLayoutRowCount(displayPlacements));
+  const contentRowCount = Math.max(
+    1,
+    getLayoutRowCount(isEditMode && smartProjection ? placements : displayPlacements),
+  );
   const railViewportRowCount = getGridRowCountForVisualHeight(railLogicalHeight, 1);
   let rowCount = Math.max(contentRowCount, requestedRowCount, minimumViewportRowCount);
-  if (smartProjection) rowCount = contentRowCount;
+  if (smartProjection && !isEditMode) rowCount = contentRowCount;
   if (isRail) {
     rowCount = Math.max(railViewportRowCount, contentRowCount);
   }
@@ -240,7 +245,9 @@ export const SectionGrid = ({
   const fullGridWidth = getLogicalGridSize(columnCount);
   const fullGridHeight = getLogicalGridSize(rowCount);
   let fullViewportHeight = getLogicalGridSize(viewportRowCount);
-  if (smartProjection) fullViewportHeight = getLogicalGridSize(Math.min(rowCount, viewportRowCount));
+  if (smartProjection && !isEditMode && section.kind === "container" && section.options.smart?.reclaimSpace) {
+    fullViewportHeight = getLogicalGridSize(Math.min(rowCount, viewportRowCount));
+  }
   let allocatedViewportHeight = fullViewportHeight;
   if (smartProjection) allocatedViewportHeight = getLogicalGridSize(viewportRowCount);
   if (isRail && railLogicalHeight > 0) {
@@ -256,8 +263,7 @@ export const SectionGrid = ({
   }
   if (smartProjection && section.kind === "container")
     headerInset +=
-      (getSmartContainerChromeHeight(section.options.smart?.states.length ?? 0, requestedRowCount) *
-        calculateBoardUiScale(canvasScale)) /
+      (getSmartContainerChromeHeight(section.options.smart, requestedRowCount) * calculateBoardUiScale(canvasScale)) /
       parentContentScale;
   let nestedHeaderInset = 0;
   if (
@@ -302,8 +308,7 @@ export const SectionGrid = ({
   }, [effectiveContentScale, hasLabeledCollapsibleChildren, rowScale]);
   // A collapsed container's compact coordinates are display-only. Its own
   // nested grid stays inactive until an explicit edit interaction expands it.
-  const isInteractionDisabled =
-    Boolean(smartProjection) || (section.kind === "container" && collapsedSectionIds.has(section.id));
+  const isInteractionDisabled = section.kind === "container" && collapsedSectionIds.has(section.id);
   const canvasAttributes =
     isEditMode && !isInteractionDisabled
       ? getEditableCanvasAttributes({ label, columnCount, rowCount })
@@ -381,7 +386,7 @@ export const SectionGrid = ({
         integrations,
         columnCount,
         maxRowCount,
-        placements: displayPlacements,
+        placements: isEditMode && smartProjection ? placements : displayPlacements,
         interactionDisabled: isInteractionDisabled,
         announce,
         entryElementStore,

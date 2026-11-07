@@ -257,7 +257,7 @@ export const createRequestHandler = <TData, TInput extends Record<string, unknow
       expiryTimerAt = undefined;
     },
     handler: (input: TInput) => ({
-      async getDataAsync(): Promise<{ data: TData; timestamp: Date }> {
+      async getDataAsync(): Promise<Pick<CacheEntry<TData>, "data" | "timestamp" | "expiresAt">> {
         const deadlineAt = Date.now() + requestTimeoutMs;
         const ttl = options.cacheTtlMs ?? DEFAULT_TTL_MS;
         const isCacheEnabled = typeof ttl === "function" || ttl > 0;

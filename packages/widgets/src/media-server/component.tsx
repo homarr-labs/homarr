@@ -184,6 +184,7 @@ export default function MediaServerWidget({
   useReportWidgetActivity({
     itemId,
     query: currentStreamsQuery,
+    recordsPerRow: 2,
     count: currentStreamsQuery.data?.reduce((count, result) => count + result.sessions.length, 0) ?? 0,
     complete:
       currentStreamsQuery.data?.length === integrationIds.length &&

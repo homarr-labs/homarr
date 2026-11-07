@@ -2,10 +2,6 @@
   min-width: 0;
 }
 
-.mobileTabs {
-  display: none;
-}
-
 .preview {
   position: sticky;
   top: 0;
@@ -56,11 +52,6 @@
   min-width: 0;
 }
 
-.settings :global(.mantine-Switch-body) {
-  min-height: 44px;
-  align-items: center;
-}
-
 @media (max-width: 68em) {
   .preview {
     position: static;
@@ -69,10 +60,6 @@
 }
 
 @media (max-width: 36em) {
-  .mobileTabs {
-    display: flex;
-  }
-
   .tabsList {
     overflow-x: auto;
   }
@@ -81,10 +68,5 @@
     flex-shrink: 0;
     padding-inline: 6px;
     font-size: var(--mantine-font-size-sm);
-  }
-}
-@media (min-width: 36.001em) {
-  .editorPanel {
-    display: block !important;
   }
 }

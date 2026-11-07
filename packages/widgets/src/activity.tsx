@@ -6,6 +6,7 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useRef, use
 export interface WidgetActivity {
   status: "ready" | "unknown";
   count: number;
+  requestedRows: number;
   updatedAt: number;
   freshForMs: number;
 }
@@ -41,6 +42,7 @@ export const WidgetActivityProvider = ({
       if (
         existing?.status === activity.status &&
         existing.count === activity.count &&
+        existing.requestedRows === activity.requestedRows &&
         existing.updatedAt === activity.updatedAt &&
         existing.freshForMs === activity.freshForMs
       ) {
@@ -91,6 +93,7 @@ interface QueryActivityInput {
   itemId?: string;
   query: WidgetActivityQuery;
   count: number;
+  recordsPerRow: number;
   complete: boolean;
   configured: boolean;
   freshForMs?: number;
@@ -102,6 +105,7 @@ export const useReportWidgetActivity = ({
   itemId,
   query,
   count,
+  recordsPerRow,
   complete,
   configured,
   freshForMs = 65_000,
@@ -117,11 +121,12 @@ export const useReportWidgetActivity = ({
   if (sourceUpdatedAt !== undefined) updatedAt = Math.min(dataUpdatedAt, sourceUpdatedAt);
   let status: WidgetActivity["status"] = "unknown";
   if (configured && complete && isSuccess && !isError && fetchStatus !== "paused") status = "ready";
+  const requestedRows = 1 + Math.ceil(count / recordsPerRow);
 
   useEffect(() => {
     if (!itemId || !report || !watched) return;
-    report(itemId, reporter, { status, count, updatedAt, freshForMs });
-  }, [itemId, report, reporter, status, count, updatedAt, freshForMs, watched]);
+    report(itemId, reporter, { status, count, requestedRows, updatedAt, freshForMs });
+  }, [itemId, report, reporter, status, count, requestedRows, updatedAt, freshForMs, watched]);
 
   useEffect(() => {
     if (!itemId || !remove || !watched) return;

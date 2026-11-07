@@ -199,11 +199,17 @@ export const boardSummarySchema = z.object({
   groupPermissions: z.array(boardPermissionEntrySchema),
 });
 
+export const smartContainerTargetSchema = z.object({
+  sectionId: z.string().min(1).max(128).describe("Container section ID from board_getBoardByName"),
+  stateId: z.string().min(1).max(128).describe("State ID from that section's options.smart.states"),
+});
+
 export const addItemToBoardSchema = z.object({
   boardId: z.string(),
   kind: zodEnumFromArray(widgetKinds),
   options: z.record(z.string(), z.unknown()).default({}),
   size: z.object({ width: z.number().int().min(1).max(24), height: z.number().int().min(1).max(24) }).optional(),
+  smartContainerTarget: smartContainerTargetSchema.optional(),
   integrationIds: z
     .array(z.string())
     .max(32)
