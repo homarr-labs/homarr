@@ -1,3 +1,4 @@
+import dynamic from "next/dynamic";
 import { useMemo, useRef, useState } from "react";
 import {
   Avatar,
@@ -9,6 +10,7 @@ import {
   Group,
   Image,
   Input,
+  Loader,
   Select,
   SimpleGrid,
   Stack,
@@ -30,6 +32,8 @@ import {
   getIntegrationName,
   getWidgetName,
   getRootSectionLane,
+  integrationKinds,
+  isHttpIntegrationKind,
   widgetDefaultSizes,
   widgetIntegrationSupport,
   widgetKinds,
@@ -44,9 +48,11 @@ import { SelectableCard } from "@homarr/ui";
 import type { TablerIcon } from "@homarr/ui";
 import { widgetCatalogIcons } from "@homarr/ui/widget-icons";
 import { loadWidgetDefinition, reduceWidgetOptionsWithDefinition } from "@homarr/widgets/manifest";
+import { useWorkshopWidgetCatalogQuery } from "@homarr/workshop/backend";
 
 import type { EmptySection } from "~/app/[locale]/boards/_types";
 import { IntegrationSelectModal } from "~/components/integration/integration-select-modal";
+import { createWorkshopClient } from "~/components/workshop/workshop-client";
 import { getSectionGridColumnCount } from "../sections/grid/section-grid-placements";
 import { useItemActions } from "./item-actions";
 import type { WidgetConnectionStatus } from "./item-select-data";
@@ -79,6 +85,25 @@ export interface WidgetItemData {
 const selectGridCols = { base: 1, xs: 2, sm: 2, md: 3, lg: 4 };
 const defaultWidgetSize = { width: 1, height: 1 };
 const maximumWidgetHeight = 64;
+const matchesIntegrationSearch = (kind: IntegrationKind, query: string) =>
+  kind.toLowerCase().includes(query) || getIntegrationName(kind).toLowerCase().includes(query);
+const integrationFilterOptions = integrationKinds
+  .filter((kind) => kind !== "mock")
+  .map((kind) => ({ value: kind, label: getIntegrationName(kind) }))
+  .toSorted((left, right) => left.label.localeCompare(right.label));
+const filterKindsByValue = new Map<string, IntegrationKind>(
+  integrationFilterOptions.map(({ value }) => [value, value]),
+);
+const WorkshopWidgetReview = dynamic(
+  () => import("./workshop-widget-review").then((module) => module.WorkshopWidgetReview),
+  {
+    loading: () => (
+      <Center py="xl">
+        <Loader size="sm" />
+      </Center>
+    ),
+  },
+);
 
 const ItemSelectModalContent = ({
   actions,
@@ -90,7 +115,10 @@ const ItemSelectModalContent = ({
   initialSearch = "",
 }: ItemSelectModalContentProps) => {
   const [search, setSearch] = useState(initialSearch);
+  const [integrationFilter, setIntegrationFilter] = useState<IntegrationKind | null>(null);
+  const [workshopSelection, setWorkshopSelection] = useState<string | null>(null);
   const t = useI18n();
+  const utils = clientApi.useUtils();
   const board = useRequiredBoard();
   const currentLayoutId = useCurrentLayout();
   const currentLayout = board.layouts.find((layout) => layout.id === currentLayoutId);
@@ -144,9 +172,38 @@ const ItemSelectModalContent = ({
   const settings = useSettings();
 
   const availableKinds = useMemo(
-    () => new Set((integrationData ?? []).filter(({ permissions }) => permissions.hasUseAccess).map((i) => i.kind)),
+    () =>
+      new Set((integrationData ?? []).filter(({ permissions }) => permissions.hasUseAccess).map(({ kind }) => kind)),
     [integrationData],
   );
+  const workshopAvailableKinds = useMemo(
+    () =>
+      new Set((integrationData ?? []).filter(({ permissions }) => permissions.hasFullAccess).map(({ kind }) => kind)),
+    [integrationData],
+  );
+  const workshop = useWorkshopWidgetCatalogQuery(createWorkshopClient(), isAdmin);
+  const searchQuery = search.trim().toLowerCase();
+  const isFiltering = Boolean(searchQuery || integrationFilter);
+
+  const workshopItems = useMemo(() => {
+    return (workshop.data ?? [])
+      .flatMap((item) => {
+        const supportedIntegrations = item.integrationKinds.filter(isHttpIntegrationKind);
+        // An older Homarr version cannot bind a source type it does not know.
+        if (supportedIntegrations.length !== item.integrationKinds.length) return [];
+        if (integrationFilter && !supportedIntegrations.some((kind) => kind === integrationFilter)) return [];
+        if (
+          searchQuery &&
+          !`${item.title}\n${item.description}`.toLowerCase().includes(searchQuery) &&
+          !supportedIntegrations.some((kind) => matchesIntegrationSearch(kind, searchQuery))
+        )
+          return [];
+        const isCompatible = supportedIntegrations.every((kind) => workshopAvailableKinds.has(kind));
+        if (!isFiltering && !isCompatible) return [];
+        return [{ ...item, supportedIntegrations, isCompatible }];
+      })
+      .toSorted((left, right) => Number(right.isCompatible) - Number(left.isCompatible));
+  }, [integrationFilter, isFiltering, searchQuery, workshop.data, workshopAvailableKinds]);
 
   const items = useMemo<WidgetItemData[]>(
     () =>
@@ -175,29 +232,32 @@ const ItemSelectModalContent = ({
             description,
           };
         })
-        .sort((itemA, itemB) => {
-          if (itemA.kind === "app") return -1;
-          if (itemB.kind === "app") return 1;
-
-          return itemA.name.localeCompare(itemB.name);
-        }),
+        .sort((itemA, itemB) => itemA.name.localeCompare(itemB.name)),
     [t],
   );
 
   const filteredItems = useMemo(() => {
-    const query = search.toLowerCase().trim();
-    if (!query) return items;
-    return items.filter(
-      (item) =>
-        item.name.toLowerCase().includes(query) ||
-        item.supportedIntegrations.some((kind) => getIntegrationName(kind).toLowerCase().includes(query)),
-    );
-  }, [items, search]);
+    return items.flatMap((item) => {
+      if (integrationFilter && !item.supportedIntegrations.includes(integrationFilter)) return [];
+      if (
+        searchQuery &&
+        !item.name.toLowerCase().includes(searchQuery) &&
+        !item.supportedIntegrations.some((kind) => matchesIntegrationSearch(kind, searchQuery))
+      )
+        return [];
+      const connectionStatus = getWidgetConnectionStatus({
+        supportedIntegrations: item.supportedIntegrations,
+        availableKinds,
+        connectionOptional: widgetKindsWithOptionalIntegrations.has(item.kind),
+      });
+      return [{ ...item, connectionStatus }];
+    });
+  }, [availableKinds, integrationFilter, items, searchQuery]);
 
-  const filteredCustomWidgets = useMemo(
-    () => (customWidgetDefs ?? []).filter((def) => def.name.toLowerCase().includes(search.toLowerCase())),
-    [customWidgetDefs, search],
-  );
+  const filteredCustomWidgets = useMemo(() => {
+    if (integrationFilter) return [];
+    return (customWidgetDefs ?? []).filter((def) => def.name.toLowerCase().includes(searchQuery));
+  }, [customWidgetDefs, integrationFilter, searchQuery]);
 
   const notifyDefinitionLoadError = (error: unknown) => {
     showErrorNotification({
@@ -304,6 +364,19 @@ const ItemSelectModalContent = ({
     }
   };
 
+  const handleWorkshopInstalled = async (definitionId: string) => {
+    try {
+      const definitions = await utils.customWidget.available.fetch({ boardId: board.id, currentId: definitionId });
+      const installed = definitions.find(({ id }) => id === definitionId);
+      if (!installed) throw new Error(t("item.create.notification.error.message"));
+      await handleAddCustomWidget(installed);
+    } catch (error) {
+      notifyDefinitionLoadError(error);
+    } finally {
+      setWorkshopSelection(null);
+    }
+  };
+
   const handleAdd = async (kind: WidgetKind) => {
     if (!tryLockSelection(selectionLock)) return;
     setLoadingSelection(kind);
@@ -396,6 +469,36 @@ const ItemSelectModalContent = ({
     }
   };
 
+  const renderItem = (item: WidgetItemData & { connectionStatus: WidgetConnectionStatus }) => {
+    const preload = () => {
+      void loadWidgetDefinition(item.kind).catch(() => undefined);
+      preloadWidgetEditModal();
+    };
+    return (
+      <WidgetItem
+        key={item.kind}
+        item={item}
+        onSelect={() => void handleAdd(item.kind)}
+        onFocus={preload}
+        onPointerEnter={preload}
+        disabled={loadingSelection !== null}
+        loading={loadingSelection === item.kind}
+        connectionStatus={item.connectionStatus}
+        availableKinds={integrationData && availableKinds}
+      />
+    );
+  };
+
+  if (workshopSelection) {
+    return (
+      <WorkshopWidgetReview
+        submissionId={workshopSelection}
+        onBack={() => setWorkshopSelection(null)}
+        onImported={(definitionId) => void handleWorkshopInstalled(definitionId)}
+      />
+    );
+  }
+
   return (
     <Stack gap="md">
       {/* Top Search & Destination Selector */}
@@ -413,13 +516,37 @@ const ItemSelectModalContent = ({
                 event.key === "Enter" &&
                 loadingSelection === null &&
                 filteredItems.length === 1 &&
-                filteredItems[0]
+                filteredItems[0] &&
+                filteredCustomWidgets.length === 0 &&
+                (!isAdmin || (!workshop.isPending && workshopItems.length === 0))
               ) {
                 void handleAdd(filteredItems[0].kind);
               }
             }}
           />
         </Box>
+
+        <Select
+          size="xs"
+          placeholder={t("item.create.integrationFilter")}
+          aria-label={t("item.create.integrationFilter")}
+          searchable
+          clearable
+          data={integrationFilterOptions}
+          value={integrationFilter}
+          onChange={(value) => setIntegrationFilter(filterKindsByValue.get(value ?? "") ?? null)}
+          renderOption={({ option }) => {
+            const kind = filterKindsByValue.get(option.value);
+            if (!integrationData || (kind && availableKinds.has(kind))) {
+              return <Text size="sm">{option.label}</Text>;
+            }
+            return (
+              <Text size="sm" c="dimmed">
+                {t("item.create.integrationNotConnected", { name: option.label })}
+              </Text>
+            );
+          }}
+        />
 
         {placementOptions.length > 1 && (
           <Box style={{ flex: "0 1 280px", minWidth: 200 }}>
@@ -437,30 +564,9 @@ const ItemSelectModalContent = ({
 
       {/* Grid of Widgets */}
       <SimpleGrid cols={selectGridCols} spacing="sm">
-        {filteredItems.map((item) => (
-          <WidgetItem
-            key={item.kind}
-            item={item}
-            onSelect={() => void handleAdd(item.kind)}
-            onFocus={() => {
-              void loadWidgetDefinition(item.kind).catch(() => undefined);
-              preloadWidgetEditModal();
-            }}
-            onPointerEnter={() => {
-              void loadWidgetDefinition(item.kind).catch(() => undefined);
-              preloadWidgetEditModal();
-            }}
-            disabled={loadingSelection !== null}
-            loading={loadingSelection === item.kind}
-            connectionStatus={getWidgetConnectionStatus({
-              supportedIntegrations: item.supportedIntegrations,
-              availableKinds,
-              connectionOptional: widgetKindsWithOptionalIntegrations.has(item.kind),
-            })}
-          />
-        ))}
+        {filteredItems.filter(({ connectionStatus }) => connectionStatus !== "needsSetup").map(renderItem)}
 
-        {isAdmin && (
+        {isAdmin && filteredCustomWidgets.length > 0 && (
           <>
             <Divider
               label={
@@ -498,24 +604,72 @@ const ItemSelectModalContent = ({
                 }
               />
             ))}
-            <Box mt="xs" style={{ gridColumn: "1 / -1" }}>
+          </>
+        )}
+        {isAdmin && (
+          <>
+            <Group justify="space-between" mt="sm" style={{ gridColumn: "1 / -1" }}>
+              <Group gap="xs">
+                <IconBuildingStore size={16} />
+                <Text component="h3" size="sm" fw={600}>
+                  {t("item.create.workshop.title")}
+                </Text>
+              </Group>
               <Button
                 component="a"
                 href="/manage/custom-widgets/workshop"
                 target="_blank"
                 rel="noopener noreferrer"
-                variant="default"
-                fullWidth
-                leftSection={<IconBuildingStore size={16} />}
+                variant="subtle"
+                size="compact-sm"
               >
                 {t("workshop.browseWorkshop")}
               </Button>
-            </Box>
+            </Group>
+            {workshop.isPending && (
+              <Center py="sm" style={{ gridColumn: "1 / -1" }}>
+                <Loader size="sm" />
+              </Center>
+            )}
+            {workshopItems.length === 0 && !workshop.isPending && (
+              <Text size="sm" c="dimmed" style={{ gridColumn: "1 / -1" }}>
+                {workshop.isError && t("workshop.unavailableTitle")}
+                {!workshop.isError && isFiltering && t("item.create.workshop.noMatches")}
+                {!workshop.isError && !isFiltering && t("item.create.workshop.empty")}
+              </Text>
+            )}
+            {workshopItems.map((item) => (
+              <SelectableCard
+                key={item.id}
+                onClick={() => setWorkshopSelection(item.id)}
+                disabled={loadingSelection !== null}
+                aria-label={item.title}
+                icon={
+                  <ThemeIcon size={34} radius="md" variant="light">
+                    <IconBuildingStore size={20} />
+                  </ThemeIcon>
+                }
+                title={item.title}
+                description={item.description}
+                topRight={
+                  item.supportedIntegrations.length > 0 && (
+                    <ConnectionStatusBadge status={item.isCompatible ? "ready" : "needsSetup"} />
+                  )
+                }
+                footerLeft={
+                  <SupportedIntegrations
+                    integrations={item.supportedIntegrations}
+                    availableKinds={workshopAvailableKinds}
+                  />
+                }
+              />
+            ))}
           </>
         )}
+        {filteredItems.filter(({ connectionStatus }) => connectionStatus === "needsSetup").map(renderItem)}
       </SimpleGrid>
 
-      {filteredItems.length === 0 && (!isAdmin || filteredCustomWidgets.length === 0) && (
+      {!isAdmin && filteredItems.length === 0 && (
         <Center p="xl">
           <Text c="dimmed">{t("common.noResults")}</Text>
         </Center>
@@ -535,6 +689,7 @@ export const WidgetItem = ({
   disabled,
   loading,
   connectionStatus,
+  availableKinds,
 }: {
   item: WidgetItemData;
   onSelect: () => void;
@@ -543,6 +698,7 @@ export const WidgetItem = ({
   disabled: boolean;
   loading: boolean;
   connectionStatus: WidgetConnectionStatus;
+  availableKinds?: ReadonlySet<IntegrationKind>;
 }) => {
   return (
     <SelectableCard
@@ -560,7 +716,7 @@ export const WidgetItem = ({
       title={item.name}
       topRight={<ConnectionStatusBadge status={connectionStatus} />}
       description={item.description}
-      footerLeft={<SupportedIntegrations integrations={item.supportedIntegrations} />}
+      footerLeft={<SupportedIntegrations integrations={item.supportedIntegrations} availableKinds={availableKinds} />}
     />
   );
 };
@@ -577,7 +733,13 @@ export const ConnectionStatusBadge = ({ status }: { status: WidgetConnectionStat
   );
 };
 
-export const SupportedIntegrations = ({ integrations }: { integrations: IntegrationKind[] }) => {
+export const SupportedIntegrations = ({
+  integrations,
+  availableKinds,
+}: {
+  integrations: IntegrationKind[];
+  availableKinds?: ReadonlySet<IntegrationKind>;
+}) => {
   const t = useI18n();
 
   if (integrations.length === 0) {
@@ -588,16 +750,34 @@ export const SupportedIntegrations = ({ integrations }: { integrations: Integrat
     );
   }
 
+  const orderedIntegrations = integrations.toSorted(
+    (left, right) => Number(availableKinds?.has(right) ?? false) - Number(availableKinds?.has(left) ?? false),
+  );
   const countToShow = integrations.length >= 6 ? 4 : 5;
   const moreCount = integrations.length - countToShow;
+  const getLabel = (kind: IntegrationKind) => {
+    const name = getIntegrationName(kind);
+    if (!availableKinds || availableKinds.has(kind)) return name;
+    return t("item.create.integrationNotConnected", { name });
+  };
 
   return (
     <Group gap={2}>
       <Tooltip.Group closeDelay={100}>
         <Group gap={2}>
-          {integrations.slice(0, countToShow).map((integration) => (
-            <Tooltip key={integration} label={getIntegrationName(integration)} withArrow>
-              <Avatar src={getIconUrl(integration)} size="xs" radius="xl" />
+          {orderedIntegrations.slice(0, countToShow).map((integration) => (
+            <Tooltip key={integration} label={getLabel(integration)} withArrow>
+              <Avatar
+                src={getIconUrl(integration)}
+                alt={getLabel(integration)}
+                size="xs"
+                radius="xl"
+                style={
+                  availableKinds && !availableKinds.has(integration)
+                    ? { filter: "grayscale(1)", opacity: 0.55 }
+                    : undefined
+                }
+              />
             </Tooltip>
           ))}
           {moreCount > 0 && (
@@ -605,9 +785,9 @@ export const SupportedIntegrations = ({ integrations }: { integrations: Integrat
               withArrow
               label={
                 <Stack gap={2}>
-                  {integrations.slice(countToShow).map((integration) => (
+                  {orderedIntegrations.slice(countToShow).map((integration) => (
                     <Text key={integration} size="xs">
-                      {getIntegrationName(integration)}
+                      {getLabel(integration)}
                     </Text>
                   ))}
                 </Stack>
