@@ -9,7 +9,7 @@ import { createModal, ModalFormFooter, modalSizeForm, useModalAction } from "@ho
 import { useI18n } from "@homarr/translation/client";
 
 import type { Board, ContainerSectionItem, SectionItem } from "~/app/[locale]/boards/_types";
-import { getLayoutRowCount } from "../layout";
+import { doGridPlacementsOverlap, getLayoutRowCount } from "../layout";
 import { resolvePinnedGridCollisions } from "../sections/grid/dnd";
 import type { RegisteredGridEditor } from "../sections/grid/grid-editor-registry";
 import { useRegisteredGridEditors } from "../sections/grid/grid-editor-registry";
@@ -130,6 +130,21 @@ export const ItemMoveModal = createModal<InnerProps>(({ actions, innerProps }) =
         registeredGridEditors.get(target.id)?.transactionPlacements ??
         getSectionGridPlacements(board, currentLayoutId, target.id)
       ).filter((placement) => placement.id !== entry.id);
+      const isResizeOnly =
+        target.id === sourceSectionId &&
+        values.xOffset === entry.xOffset &&
+        values.yOffset === entry.yOffset &&
+        (values.width !== entry.width || values.height !== entry.height);
+      if (
+        isResizeOnly &&
+        targetPlacements.some(
+          (placement) => placement.type === "section" && doGridPlacementsOverlap(nextPlacement, placement),
+        )
+      ) {
+        form.setFieldError(values.width !== entry.width ? "width" : "height", tMoveResize("sizeOverlap"));
+        return;
+      }
+
       const resolvedTarget = resolvePinnedGridCollisions(
         [...targetPlacements, nextPlacement],
         nextPlacement,
