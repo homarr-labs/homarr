@@ -1,0 +1,14 @@
+apps/nextjs/src/components/board/tabs/header-board-tabs.tsx
+  h_d6e478ca18e517 36,84
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "d35552ccf707fbb10cdda7c5f1f72a4f763e7099",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
