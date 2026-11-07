@@ -175,7 +175,7 @@ export const reconciledBoardSaveSchema = boardSaveSchema.superRefine((board, ctx
     if (section.options.smart.enabled && assignedIds.size < availableIds.size) {
       ctx.addIssue({
         code: "custom",
-        message: "Smart Reel states are full. Add a state or move widgets out of the container.",
+        message: "Smart Container states are full. Add a state or move widgets out of the container.",
         path: ["sections", sectionIndex, "options", "smart", "states"],
       });
     }

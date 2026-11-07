@@ -159,9 +159,9 @@ const throwIfBoardLayoutBoundsInvalid = (issue: string | null) => {
   throw new TRPCError({ code: "BAD_REQUEST", message: issue, cause: new BoardLayoutBoundsError(issue) });
 };
 
-const assertSmartReelMembershipUpdated = (updated: { id: string }[]) => {
+const assertSmartContainerMembershipUpdated = (updated: { id: string }[]) => {
   if (updated.length > 0) return;
-  throw new TRPCError({ code: "CONFLICT", message: "Smart Reel changed. Read the board again before adding." });
+  throw new TRPCError({ code: "CONFLICT", message: "Smart container changed. Read the board again before adding." });
 };
 
 interface WidgetConfiguration {
@@ -1226,7 +1226,7 @@ export const boardRouter = createTRPCRouter({
       mcp: {
         enabled: true,
         description:
-          "Read an accessible dashboard by name, including sections, items, widget options and layout IDs. Obtain names from board_getAllBoards. Smart Reel targets for board_addItem are container section IDs and state IDs from options.smart.states.",
+          "Read an accessible dashboard by name, including sections, items, widget options and layout IDs. Obtain names from board_getAllBoards. Smart Container targets for board_addItem are container section IDs and state IDs from options.smart.states.",
       },
     })
     .input(boardByNameSchema)
@@ -1745,7 +1745,7 @@ export const boardRouter = createTRPCRouter({
       if (!reconciledBoard.success) {
         throw new TRPCError({
           code: "BAD_REQUEST",
-          message: reconciledBoard.error.issues[0]?.message ?? "Invalid Smart Reel state membership",
+          message: reconciledBoard.error.issues[0]?.message ?? "Invalid Smart Container state membership",
           cause: reconciledBoard.error,
         });
       }
@@ -2323,13 +2323,13 @@ export const boardRouter = createTRPCRouter({
         protect: true,
         summary: "Add an item to a board",
         description:
-          "Add a widget or app to the main canvas or a Smart Reel state. Requires board modify access and use access to linked integrations. Placing Custom Widgets requires admin permission.",
+          "Add a widget or app to the main canvas or a Smart Container state. Requires board modify access and use access to linked integrations. Placing Custom Widgets requires admin permission.",
       },
       mcp: {
         enabled: true,
         effect: "additive",
         description:
-          "Add a widget or app without replacing board content. By default it goes in the main canvas. For a Smart Reel state, set smartContainerTarget {sectionId,stateId} using board_getBoardByName: find a container with options.smart.enabled and its state in options.smart.states. Requires board modify permission, use access to linked integrations, and admin access for Custom Widgets. If configure_widget is available, use its reviewed result. Optional size {width,height} sets grid dimensions; width is capped by the target's columns in each layout. For a formatted note use kind 'notebook' and options {content: Tiptap-compatible HTML, showToolbar: boolean, allowReadOnlyCheck: boolean}. Returns {itemId}.",
+          "Add a widget or app without replacing board content. By default it goes in the main canvas. For a Smart Container state, set smartContainerTarget {sectionId,stateId} using board_getBoardByName: find a container with options.smart.enabled and its state in options.smart.states. Requires board modify permission, use access to linked integrations, and admin access for Custom Widgets. If configure_widget is available, use its reviewed result. Optional size {width,height} sets grid dimensions; width is capped by the target's columns in each layout. For a formatted note use kind 'notebook' and options {content: Tiptap-compatible HTML, showToolbar: boolean, allowReadOnlyCheck: boolean}. Returns {itemId}.",
       },
     })
     .input(addItemToBoardSchema)
@@ -2380,7 +2380,7 @@ export const boardRouter = createTRPCRouter({
           : mainSection;
         if (!targetSection) {
           let message = "Board has no main section to place items in";
-          if (target) message = "Smart Reel container not found on this board";
+          if (target) message = "Smart container not found on this board";
           throw new TRPCError({ code: "BAD_REQUEST", message });
         }
 
@@ -2391,10 +2391,13 @@ export const boardRouter = createTRPCRouter({
           const smart = options?.smart;
           const targetState = smart?.states.find((state) => state.id === target.stateId);
           if (!storedOptions || !smart?.enabled || !targetState) {
-            throw new TRPCError({ code: "BAD_REQUEST", message: "Smart Reel state not found on this board" });
+            throw new TRPCError({ code: "BAD_REQUEST", message: "Smart Container state not found on this board" });
           }
           if (targetState.itemIds.length >= smartContainerStateItemLimit) {
-            throw new TRPCError({ code: "BAD_REQUEST", message: "This Smart Reel state cannot accept more widgets" });
+            throw new TRPCError({
+              code: "BAD_REQUEST",
+              message: "This Smart Container state cannot accept more widgets",
+            });
           }
           const nextOptions = {
             ...options,
@@ -2413,7 +2416,10 @@ export const boardRouter = createTRPCRouter({
           ? board.layouts.filter((layout) => targetSection.layouts.some((entry) => entry.layoutId === layout.id))
           : board.layouts;
         if (target && placementLayouts.length === 0) {
-          throw new TRPCError({ code: "BAD_REQUEST", message: "Smart Reel has no board layouts to place items in" });
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: "Smart Container has no board layouts to place items in",
+          });
         }
         const defaultSize = input.size ?? widgetDefaultSizes[input.kind as WidgetKind] ?? { width: 1, height: 1 };
         const layoutRows: (typeof itemLayouts.$inferInsert)[] = placementLayouts.map((layout) => {
@@ -2483,7 +2489,7 @@ export const boardRouter = createTRPCRouter({
                     ),
                   )
                   .returning({ id: schema.sections.id });
-                assertSmartReelMembershipUpdated(updated);
+                assertSmartContainerMembershipUpdated(updated);
               }
               await transaction.insert(schema.items).values(item);
               if (layoutRows.length > 0) await transaction.insert(schema.itemLayouts).values(layoutRows);
@@ -2500,7 +2506,7 @@ export const boardRouter = createTRPCRouter({
                   .where(and(eq(sections.id, targetSection.id), eq(sections.options, membershipUpdate.previous)))
                   .returning({ id: sections.id })
                   .all();
-                assertSmartReelMembershipUpdated(updated);
+                assertSmartContainerMembershipUpdated(updated);
               }
               transaction.insert(items).values(item).run();
               if (layoutRows.length > 0) transaction.insert(itemLayouts).values(layoutRows).run();

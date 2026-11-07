@@ -3398,7 +3398,7 @@
       "post": {
         "operationId": "boardRouter-addItem",
         "summary": "Add an item to a board",
-        "description": "Add a widget or app to the main canvas or a Smart Reel state. Requires board modify access and use access to linked integrations. Placing Custom Widgets requires admin permission.",
+        "description": "Add a widget or app to the main canvas or a Smart Container state. Requires board modify access and use access to linked integrations. Placing Custom Widgets requires admin permission.",
         "tags": [
           "boards"
         ],
