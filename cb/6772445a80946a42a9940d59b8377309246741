@@ -1,0 +1,16 @@
+apps/nextjs/src/components/board/tabs/header-board-tabs.tsx
+  h_d6e478ca18e517 3,20,35-37,79-86,122
+apps/nextjs/src/components/layout/header/button.tsx
+  h_d6e478ca18e517 24
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "cb6772445a80946a42a9940d59b8377309246741",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
