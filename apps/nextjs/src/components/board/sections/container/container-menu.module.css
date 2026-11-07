@@ -1,0 +1,74 @@
+.anchor {
+  --ui-scale: var(--board-canvas-ui-scale, 1);
+  position: absolute;
+  z-index: 210;
+  display: flex;
+  min-width: 0;
+  max-width: calc(100% - 16px * var(--ui-scale));
+}
+
+.borderAnchor {
+  top: calc(-13px * var(--ui-scale));
+  left: calc(8px * var(--ui-scale));
+}
+
+.headerAnchor {
+  top: calc(var(--container-header-height) / 2 - 13px * var(--ui-scale));
+  right: calc(8px * var(--ui-scale));
+}
+
+.bar {
+  @mixin dark {
+    --bar-background: rgb(from var(--mantine-color-dark-7) r g b / 0.96);
+    --bar-border: rgb(from var(--mantine-color-dark-4) r g b / 0.9);
+  }
+  @mixin light {
+    --bar-background: rgb(from var(--mantine-color-white) r g b / 0.96);
+    --bar-border: rgb(from var(--mantine-color-gray-3) r g b / 0.9);
+  }
+  display: flex;
+  align-items: center;
+  gap: calc(6px * var(--ui-scale));
+  min-width: 0;
+  height: calc(26px * var(--ui-scale));
+  padding: 0 calc(3px * var(--ui-scale)) 0 calc(8px * var(--ui-scale));
+  border: calc(1px * var(--ui-scale)) solid var(--bar-border);
+  border-radius: var(--mantine-radius-md);
+  background-color: var(--bar-background);
+  box-shadow: 0 calc(4px * var(--ui-scale)) calc(16px * var(--ui-scale)) rgb(0 0 0 / 0.12);
+  backdrop-filter: blur(8px);
+}
+
+.name {
+  display: flex;
+  align-items: center;
+  gap: calc(6px * var(--ui-scale));
+  min-width: 0;
+}
+
+.nameIcon {
+  flex-shrink: 0;
+  color: var(--mantine-color-dimmed);
+}
+
+.nameText {
+  overflow: hidden;
+  font-size: var(--mantine-font-size-xs);
+  font-weight: 600;
+  line-height: 1.2;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.editButton {
+  flex-shrink: 0;
+}
+
+@media (forced-colors: active) {
+  .bar {
+    border-color: CanvasText;
+    background: Canvas;
+    box-shadow: none;
+    backdrop-filter: none;
+  }
+}

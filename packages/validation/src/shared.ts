@@ -54,6 +54,24 @@ const emptySectionSchema = z.object({
   xOffset: z.number().int(),
 });
 
+export const containerAutoExpandOptionsDefaults = {
+  enabled: false,
+  itemId: null as string | null,
+  inactiveDisplay: "collapsed" as "collapsed" | "hidden",
+  fitToContent: false,
+} as const;
+
+export const containerAutoExpandOptionsSchema = z
+  .object({
+    enabled: z.boolean().default(containerAutoExpandOptionsDefaults.enabled),
+    itemId: z.string().nullable().default(containerAutoExpandOptionsDefaults.itemId),
+    inactiveDisplay: z.enum(["collapsed", "hidden"]).default(containerAutoExpandOptionsDefaults.inactiveDisplay),
+    fitToContent: z.boolean().default(containerAutoExpandOptionsDefaults.fitToContent),
+  })
+  .default(containerAutoExpandOptionsDefaults);
+
+export type ContainerAutoExpandOptions = z.infer<typeof containerAutoExpandOptionsSchema>;
+
 export const containerSectionOptionsDefaults = {
   title: "",
   customCssClasses: [] as string[],
@@ -62,6 +80,7 @@ export const containerSectionOptionsDefaults = {
   collapsible: false,
   showOpenAll: false,
   scrollable: false,
+  autoExpand: containerAutoExpandOptionsDefaults,
 } as const;
 
 export const containerSectionOptionsSchema = z
@@ -73,6 +92,7 @@ export const containerSectionOptionsSchema = z
     collapsible: z.boolean().default(containerSectionOptionsDefaults.collapsible),
     showOpenAll: z.boolean().default(containerSectionOptionsDefaults.showOpenAll),
     scrollable: z.boolean().default(containerSectionOptionsDefaults.scrollable),
+    autoExpand: containerAutoExpandOptionsSchema,
   })
   .default(containerSectionOptionsDefaults);
 

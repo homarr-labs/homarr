@@ -48,6 +48,25 @@ describe("dashboard layout reflow", () => {
     ]);
   });
 
+  test("fully closes the gap below a container hidden at zero rows", () => {
+    const result = getCollapsedDisplayLayout(
+      [
+        { id: "section", x: 0, y: 0, w: 2, h: 3 },
+        { id: "below", x: 0, y: 3, w: 2, h: 1 },
+      ],
+      {
+        columnCount: 2,
+        collapsedItemIds: new Set(["section"]),
+        collapsedRowCountById: new Map([["section", 0]]),
+      },
+    );
+
+    expect(result).toEqual([
+      { id: "section", x: 0, y: 0, w: 2, h: 0 },
+      { id: "below", x: 0, y: 0, w: 2, h: 1 },
+    ]);
+  });
+
   test("preserves intentional gaps below a collapsed container", () => {
     const result = getCollapsedDisplayLayout(
       [
