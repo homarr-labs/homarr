@@ -1,0 +1,22 @@
+apps/nextjs/src/components/board/items/item-move-modal.tsx
+  h_d6e478ca18e517 6,279-280
+apps/nextjs/src/components/board/selection/board-selection-toolbar.tsx
+  h_d6e478ca18e517 21,122-124
+packages/api/src/router/board.ts
+  h_d6e478ca18e517 2576-2583
+packages/boards/src/tabs.tsx
+  h_d6e478ca18e517 77-85
+packages/widgets/src/app/component.tsx
+  h_d6e478ca18e517 17,29-33
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "e7126da118ac2f721908b8dd48ac6631a7173773",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
