@@ -1,0 +1,22 @@
+apps/nextjs/src/components/board/items/actions/move-entry-across-tabs.ts
+  h_d6e478ca18e517 1-108
+apps/nextjs/src/components/board/items/item-move-modal.tsx
+  h_d6e478ca18e517 20,160-172
+apps/nextjs/src/components/board/sections/grid/use-grid-layout-actions.ts
+  h_d6e478ca18e517 7,27-98,106-108
+apps/nextjs/src/components/board/selection/board-selection-context.tsx
+  h_d6e478ca18e517 20-21,329,340-355
+packages/boards/src/tabs.tsx
+  h_d6e478ca18e517 53
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "70b466a26695d141ef6c991119f2412d378fcaf4",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
