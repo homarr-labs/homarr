@@ -1,5 +1,6 @@
 "use client";
 
+import type { PointerEvent } from "react";
 import { useRef } from "react";
 import { Group, Popover, Stack, Tabs, Text } from "@mantine/core";
 import { useDisclosure, useTimeout } from "@mantine/hooks";
@@ -16,7 +17,7 @@ import classes from "./header-board-tabs.module.css";
 
 export const HeaderBoardTabs = ({ display }: { display: HeaderTabsDisplay }) => {
   const { tabs, activeTab, selectTab } = useBoardTabs();
-  const [opened, { open, close, set: setOpened }] = useDisclosure(false);
+  const [opened, { open, close, toggle, set: setOpened }] = useDisclosure(false);
   const [isEditMode] = useEditMode();
   const { start: closeSoon, clear: cancelClose } = useTimeout(close, 150);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -30,6 +31,9 @@ export const HeaderBoardTabs = ({ display }: { display: HeaderTabsDisplay }) => 
   };
   const hideSoon = () => {
     if (!isEditMode) closeSoon();
+  };
+  const hideAfterPointerLeave = (event: PointerEvent<HTMLElement>) => {
+    if (event.pointerType !== "touch") hideSoon();
   };
   const select = (value: string | null) => {
     if (!value) return;
@@ -72,9 +76,14 @@ export const HeaderBoardTabs = ({ display }: { display: HeaderTabsDisplay }) => 
           <HeaderButton
             hiddenFrom={display === "wide" ? "lg" : undefined}
             aria-label={t("indicator", { index: activeIndex + 1, count: tabs.length, name: getTabLabel(activeTab) })}
-            onClick={reveal}
-            onPointerEnter={reveal}
-            onPointerLeave={hideSoon}
+            onClick={() => {
+              cancelClose();
+              toggle();
+            }}
+            onPointerEnter={(event: PointerEvent<HTMLElement>) => {
+              if (event.pointerType !== "touch") reveal();
+            }}
+            onPointerLeave={hideAfterPointerLeave}
             onBlur={hideSoon}
             onKeyDown={(event) => {
               if (event.key === "Escape" && opened) {
@@ -110,7 +119,7 @@ export const HeaderBoardTabs = ({ display }: { display: HeaderTabsDisplay }) => 
           maw="calc(100vw - 1rem)"
           p={4}
           onPointerEnter={cancelClose}
-          onPointerLeave={hideSoon}
+          onPointerLeave={hideAfterPointerLeave}
           onFocusCapture={cancelClose}
           onBlurCapture={hideSoon}
         >
