@@ -11,7 +11,7 @@ import { useModalAction } from "@homarr/modals";
 import { AppSelectModal } from "@homarr/modals-collection";
 import { useI18n } from "@homarr/translation/client";
 
-import { useAddInPlaceEntry } from "~/components/board/add-in-place-prototype/use-add-in-place-entry";
+import { useAddInPlaceEntry } from "~/components/board/in-place-editor/use-add-in-place-entry";
 import { useItemActions } from "~/components/board/items/item-actions";
 import { ItemSelectModal } from "~/components/board/items/item-select-modal";
 import { useContainerActions } from "~/components/board/sections/container/container-actions";

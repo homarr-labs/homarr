@@ -7,7 +7,7 @@ import { useRequiredBoard } from "@homarr/boards/context";
 import { useModalAction } from "@homarr/modals";
 import { AppSelectModal } from "@homarr/modals-collection";
 
-import { useAddInPlaceEntry } from "./add-in-place-prototype/use-add-in-place-entry";
+import { useAddInPlaceEntry } from "./in-place-editor/use-add-in-place-entry";
 import { IntegrationSelectModal } from "~/components/integration/integration-select-modal";
 import { useItemActions } from "./items/item-actions";
 import { ItemSelectModal } from "./items/item-select-modal";

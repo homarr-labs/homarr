@@ -8,9 +8,9 @@ import { getWidgetName } from "@homarr/definitions";
 import { useI18n } from "@homarr/translation/client";
 import { widgetCatalogIcons } from "@homarr/ui/widget-icons";
 
-import { getTargetKind } from "../../store";
-import type { PickTarget } from "../../types";
-import type { AddInPlacePanelProps } from "../contract";
+import { getTargetKind } from "../store";
+import type { PickTarget } from "../types";
+import type { InPlaceEditorPanelProps } from "./types";
 import classes from "./panel.module.css";
 import { KeyboardHints } from "./keyboard-hints";
 
@@ -55,7 +55,7 @@ const CardHeader = ({ icon, title, subtitle, onBack, onClose }: CardHeaderProps)
   </Group>
 );
 
-const useTargetIdentity = (target: PickTarget | undefined, useCatalog: AddInPlacePanelProps["useCatalog"]) => {
+const useTargetIdentity = (target: PickTarget | undefined, useCatalog: InPlaceEditorPanelProps["useCatalog"]) => {
   const t = useI18n();
   const catalog = useCatalog("");
   if (!target) return { name: "Widget", icon: <IconWand size={20} stroke={1.5} /> };
@@ -74,7 +74,7 @@ const useTargetIdentity = (target: PickTarget | undefined, useCatalog: AddInPlac
 };
 
 type ConfigureStepProps = Pick<
-  AddInPlacePanelProps,
+  InPlaceEditorPanelProps,
   "session" | "actions" | "useCatalog" | "BoundEditorForm" | "AreaSizeInputs" | "editorFormId"
 >;
 
@@ -126,7 +126,7 @@ export const ConfigureStep = ({
   );
 };
 
-type CreateAppStepProps = Pick<AddInPlacePanelProps, "actions" | "CreateAppForm">;
+type CreateAppStepProps = Pick<InPlaceEditorPanelProps, "actions" | "CreateAppForm">;
 
 export const CreateAppStep = ({ actions, CreateAppForm }: CreateAppStepProps) => (
   <>

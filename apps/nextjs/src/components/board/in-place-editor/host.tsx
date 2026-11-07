@@ -1,9 +1,7 @@
 "use client";
 
 import { useEffect, useLayoutEffect, useMemo, useRef } from "react";
-import type { ComponentType } from "react";
-import { useSearchParams } from "next/navigation";
-import { Drawer, Portal } from "@mantine/core";
+import { Portal } from "@mantine/core";
 
 import { useCurrentLayout } from "@homarr/boards/context";
 import { useSession } from "@homarr/auth/client";
@@ -22,19 +20,8 @@ import { useAddInPlaceCatalog } from "./catalog";
 import { CreateAppForm } from "./create-app";
 import { DimLayer } from "./dim-layer";
 import { handleAreaShortcut, useAreaKeyboard } from "./keyboard";
-import { PrototypeSwitcher } from "./prototype-switcher";
-import { useTargetResources } from "./resources";
+import { InPlaceEditorPanel } from "./panel/panel";
 import { addInPlaceActions, getTargetKind, setCommitBridge, useAddInPlaceSession, useAddInPlaceStep } from "./store";
-import * as variantA from "./variants/a";
-import * as variantB from "./variants/b";
-import * as variantC from "./variants/c";
-import type { AddInPlacePanelProps, AddInPlaceVariant } from "./variants/contract";
-
-export const variants: Record<string, AddInPlaceVariant> = {
-  A: variantA,
-  B: variantB,
-  C: variantC,
-};
 
 const useBoundCatalog = (search: string) => {
   const session = useAddInPlaceSession();
@@ -43,7 +30,7 @@ const useBoundCatalog = (search: string) => {
 
 const panelProps = { "data-add-in-place-inside": "" } as const;
 
-export const AddInPlaceHost = () => {
+export const InPlaceEditorHost = () => {
   const t = useI18n();
   const step = useAddInPlaceStep();
   const session = useAddInPlaceSession();
@@ -62,15 +49,12 @@ export const AddInPlaceHost = () => {
   const layoutId = useCurrentLayout();
   const { createItem } = useItemActions();
   const isMobile = useIsMobile();
-  const searchParams = useSearchParams();
   const anchorRect = useAreaAnchorRect();
   const onKeyDown = useAreaKeyboard();
   const wasEditMode = useRef(isEditMode);
   const returnFocusRef = useRef<HTMLElement | null>(null);
   const returnLocationRef = useRef<{ sectionId: string; x: number; y: number; itemId?: string } | null>(null);
   const active = isEditMode && step !== "idle";
-  const variantKey = (searchParams.get("variant") ?? "A").toUpperCase();
-  const variant = variants[variantKey] ?? variantA;
 
   useEffect(() => {
     if (!active) return;
@@ -176,19 +160,16 @@ export const AddInPlaceHost = () => {
     if (step === "createApp" && !canCreateApp) addInPlaceActions.back();
   }, [canCreateApp, step]);
 
-  if (!isEditMode || step === "idle" || !session)
-    return <PrototypeSwitcher variants={variants} activeKey={variantKey} />;
+  if (!isEditMode || step === "idle" || !session) return null;
 
-  const Panel = variant.Panel as ComponentType<AddInPlacePanelProps>;
   const presentation = isMobile ? "sheet" : "floating";
   const panel = (
-    <Panel
+    <InPlaceEditorPanel
       step={step === "createApp" && !canCreateApp ? "pick" : step}
       session={session}
       anchorRect={anchorRect}
       presentation={presentation}
       useCatalog={useBoundCatalog}
-      useTargetResources={useTargetResources}
       actions={actions}
       BoundEditorForm={BoundEditorForm}
       editorFormId={editorFormId}
@@ -202,26 +183,8 @@ export const AddInPlaceHost = () => {
 
   return (
     <Portal>
-      <DimLayer anchorRect={anchorRect} zIndex={variant === variantA ? 1099 : 250} />
-      {isMobile && variant !== variantA ? (
-        <Drawer
-          opened
-          position="bottom"
-          size="auto"
-          withOverlay={false}
-          lockScroll={false}
-          trapFocus={false}
-          closeOnClickOutside={false}
-          withCloseButton={false}
-          zIndex={251}
-          onClose={() => addInPlaceActions.cancel()}
-          styles={{ body: { padding: 0 } }}
-        >
-          {panel}
-        </Drawer>
-      ) : (
-        panel
-      )}
+      <DimLayer anchorRect={anchorRect} zIndex={1099} />
+      {panel}
     </Portal>
   );
 };

@@ -34,8 +34,8 @@ import { BoardSelectionProvider } from "~/components/board/selection/board-selec
 import { BoardSelectionToolbar } from "~/components/board/selection/board-selection-toolbar";
 import classes from "./_client.module.css";
 
-const AddInPlaceHost = dynamic(
-  () => import("~/components/board/add-in-place-prototype/host").then((module) => module.AddInPlaceHost),
+const InPlaceEditorHost = dynamic(
+  () => import("~/components/board/in-place-editor/host").then((module) => module.InPlaceEditorHost),
   { ssr: false },
 );
 
@@ -166,7 +166,7 @@ export const ClientBoard = () => {
             </BoardGridPortalHost>
           </BoardSectionCollapseProvider>
           <BoardSelectionToolbar />
-          <AddInPlaceHost />
+          <InPlaceEditorHost />
           <FloatingTip
             opened={isEditMode}
             showDelay={2_000}

@@ -7,14 +7,14 @@ import { IconPlus, IconSearch } from "@tabler/icons-react";
 
 import { useSession } from "@homarr/auth/client";
 
-import type { CatalogEntry } from "../../catalog";
+import type { CatalogEntry } from "../catalog";
 import { CatalogOption } from "./catalog-option";
-import type { AddInPlacePanelProps } from "../contract";
+import type { InPlaceEditorPanelProps } from "./types";
 import classes from "./panel.module.css";
 import { KeyboardHints } from "./keyboard-hints";
 
 type PickStepProps = Pick<
-  AddInPlacePanelProps,
+  InPlaceEditorPanelProps,
   "useCatalog" | "actions" | "AreaSizeInputs" | "onKeyDown" | "canCreateApp"
 > & {
   flipped: boolean;

@@ -6,21 +6,18 @@ import { IconCopy, IconDotsVertical, IconLayoutKanban, IconPencil, IconTrash } f
 import { useSession } from "@homarr/auth/client";
 import { useEditMode } from "@homarr/boards/edit-mode";
 import { getWidgetName } from "@homarr/definitions";
-import { useModalAction } from "@homarr/modals";
-import { useSettings } from "@homarr/settings";
 import { useI18n } from "@homarr/translation/client";
 import { InlineConfirmMenuItem } from "@homarr/ui";
 import type { WidgetDefinition } from "@homarr/widgets/definition";
 import type { WidgetPreviewDimensions } from "@homarr/widgets/modals";
 
 import type { SectionItem } from "~/app/[locale]/boards/_types";
-import { useEditItemInPlace } from "~/components/board/add-in-place-prototype/use-edit-item-in-place";
+import { useEditItemInPlace } from "~/components/board/in-place-editor/use-edit-item-in-place";
 import { useSectionContext } from "../sections/section-context";
 import { useItemActions } from "./item-actions";
 import { ItemMenuDropdown } from "./item-menu-dropdown";
 import itemContentClasses from "./item-content.module.css";
 import { useOpenItemMoveModal } from "./item-move-modal";
-import { LazyWidgetEditModal, preloadWidgetEditModal } from "./lazy-widget-edit-modal";
 
 interface BoardItemMenuProps {
   item: SectionItem;
@@ -45,8 +42,6 @@ export const BoardItemContextMenu = (props: BoardItemContextMenuProps) => <Board
 
 const BoardItemMenuInner = ({
   item,
-  definition,
-  previewDimensions,
   resetErrorBoundary,
   children,
   disabled,
@@ -56,13 +51,10 @@ const BoardItemMenuInner = ({
   const refResetErrorBoundaryOnNextRender = useRef(false);
   const tItem = useI18n("item");
   const t = useI18n();
-  const { openModal } = useModalAction(LazyWidgetEditModal);
   const openMoveModal = useOpenItemMoveModal();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { updateItemOptions, updateItemAdvancedOptions, updateItemIntegrations, duplicateItem, removeItem } =
-    useItemActions();
-  const { integrations: integrationData, section } = useSectionContext();
-  const settings = useSettings();
+  const { duplicateItem, removeItem } = useItemActions();
+  const { section } = useSectionContext();
   const label = item.advancedOptions.title?.trim() || getWidgetName(item.kind, t);
 
   // Reset error boundary on next render if item has been edited
@@ -89,61 +81,9 @@ const BoardItemMenuInner = ({
     return () => entry.removeEventListener("dblclick", handleDoubleClick);
   }, [children, editInPlace, item.id]);
 
-  const openEditModal = () => {
-    if (editInPlace()) return;
-    openModal(
-      {
-        kind: item.kind,
-        definition,
-        value: {
-          advancedOptions: item.advancedOptions,
-          options: item.options,
-          integrationIds: item.integrationIds,
-        },
-        onSuccessfulEdit: ({ options, integrationIds, advancedOptions }) => {
-          updateItemOptions({
-            itemId: item.id,
-            newOptions: options,
-          });
-          updateItemAdvancedOptions({
-            itemId: item.id,
-            newAdvancedOptions: advancedOptions,
-          });
-          updateItemIntegrations({
-            itemId: item.id,
-            newIntegrations: integrationIds,
-          });
-          refResetErrorBoundaryOnNextRender.current = true;
-        },
-        onIntegrationSaved: resetErrorBoundary,
-        integrationData: (integrationData ?? []).filter(
-          (integration) =>
-            integration.permissions.hasUseAccess &&
-            "supportedIntegrations" in definition &&
-            (definition.supportedIntegrations as string[]).some((kind) => kind === integration.kind),
-        ),
-        integrationSupport: "supportedIntegrations" in definition,
-        settings,
-        itemId: item.id,
-        previewDimensions,
-        appId: item.kind === "app" ? (item.options.appId as string | undefined) : undefined,
-      },
-      {
-        title(translate) {
-          return `${translate("item.edit.title")} - ${getWidgetName(item.kind, translate)}`;
-        },
-      },
-    );
-  };
-
   const menuItems = (
     <>
-      <Menu.Item
-        leftSection={<IconPencil size={16} />}
-        onClick={openEditModal}
-        onFocus={preloadWidgetEditModal}
-        onPointerEnter={preloadWidgetEditModal}
-      >
+      <Menu.Item leftSection={<IconPencil size={16} />} onClick={editInPlace}>
         {tItem("action.edit")}
       </Menu.Item>
       <Menu.Item

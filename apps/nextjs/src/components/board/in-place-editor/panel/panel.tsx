@@ -4,7 +4,7 @@ import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import type { CSSProperties, KeyboardEvent, ReactNode } from "react";
 import { Box, FocusTrap, MantineThemeProvider, Paper, Portal, Transition } from "@mantine/core";
 
-import type { AddInPlacePanelProps } from "../contract";
+import type { InPlaceEditorPanelProps } from "./types";
 import { ConfigureStep, CreateAppStep } from "./card-steps";
 import classes from "./panel.module.css";
 import { PickStep } from "./pick-step";
@@ -90,7 +90,7 @@ const StepTransition = ({ mounted, children }: StepTransitionProps) => (
   </Transition>
 );
 
-export const Panel = (props: AddInPlacePanelProps) => {
+export const InPlaceEditorPanel = (props: InPlaceEditorPanelProps) => {
   const { step, session, anchorRect, presentation, actions, panelProps } = props;
   const isSheet = presentation === "sheet";
   const isPick = step === "pick";

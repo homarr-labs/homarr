@@ -4,7 +4,7 @@ import { Badge, Box, factory, Image, useProps, useStyles } from "@mantine/core";
 import type { BoxProps, ElementProps, Factory, StylesApiProps } from "@mantine/core";
 import { IconApps } from "@tabler/icons-react";
 
-import type { CatalogEntry } from "../../catalog";
+import type { CatalogEntry } from "../catalog";
 import classes from "./catalog-option.module.css";
 
 export type CatalogOptionStylesNames = "root" | "icon" | "body" | "name" | "description" | "meta" | "size";

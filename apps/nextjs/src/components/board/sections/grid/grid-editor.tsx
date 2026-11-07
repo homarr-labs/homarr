@@ -39,7 +39,7 @@ import { useCurrentLayout, useRequiredBoard } from "@homarr/boards/context";
 import { getWidgetName } from "@homarr/definitions";
 import { useI18n } from "@homarr/translation/client";
 
-import { AddInPlaceGridLayer } from "~/components/board/add-in-place-prototype/grid-layer";
+import { AddInPlaceGridLayer } from "~/components/board/in-place-editor/grid-layer";
 import { getLogicalGridSize, LOGICAL_GRID_PITCH } from "~/components/board/layout";
 import {
   beginGridTransaction,
