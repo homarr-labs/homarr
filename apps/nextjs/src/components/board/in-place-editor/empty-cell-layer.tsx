@@ -3,6 +3,8 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { IconPlus } from "@tabler/icons-react";
 
+import { useI18n } from "@homarr/translation/client";
+
 import { getLogicalItemStyle } from "~/components/board/layout";
 import classes from "./empty-cell-layer.module.css";
 import { buildOccupiedCells, getFreeRect, isCellFree } from "./occupancy";
@@ -24,6 +26,7 @@ interface DragState {
 }
 
 export const EmptyCellLayer = ({ occupancy, onRowCountChange }: EmptyCellLayerProps) => {
+  const t = useI18n();
   const { sectionId, columnCount, rowCount, maxRowCount, placements } = occupancy;
   const layerRef = useRef<HTMLDivElement>(null);
   const [drag, setDrag] = useState<DragState | null>(null);
@@ -166,7 +169,13 @@ export const EmptyCellLayer = ({ occupancy, onRowCountChange }: EmptyCellLayerPr
           type="button"
           key={`${cell.x},${cell.y}`}
           className={classes.cell}
-          aria-label={`Add widget at column ${cell.x + 1}, row ${cell.y + 1}`}
+          aria-label={t("item.moveResize.entryLabel", {
+            name: t("board.emptyState.addWidget"),
+            column: cell.x + 1,
+            row: cell.y + 1,
+          })}
+          data-add-cell-x={cell.x}
+          data-add-cell-y={cell.y}
           style={getLogicalItemStyle({ x: cell.x, y: cell.y, w: 1, h: 1 }, rowScale)}
           onPointerDown={(event) => handlePointerDown(event, cell)}
           onClick={(event) => {

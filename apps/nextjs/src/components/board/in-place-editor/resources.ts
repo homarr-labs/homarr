@@ -89,7 +89,10 @@ export const useTargetResources = (target: PickTarget | undefined): TargetResour
         kind,
         definition,
         Component,
-        baseValue: target.value,
+        baseValue: {
+          ...target.value,
+          options: reduceWidgetOptionsWithDefinition(definition, settings, target.value.options),
+        },
         integrationData,
         integrationSupport,
         missingIntegration: false,

@@ -11,6 +11,7 @@ import {
   widgetDefaultSizes,
   widgetIntegrationSupport,
   widgetKinds,
+  widgetKindsWithOptionalIntegrations,
 } from "@homarr/definitions";
 import { useI18n } from "@homarr/translation/client";
 import { widgetCatalogIcons } from "@homarr/ui/widget-icons";
@@ -83,7 +84,7 @@ export const useAddInPlaceCatalog = (search: string, area: Pick<AreaRect, "w" | 
             connectionStatus: getWidgetConnectionStatus({
               supportedIntegrations,
               availableKinds,
-              connectionOptional: false,
+              connectionOptional: widgetKindsWithOptionalIntegrations.has(kind),
             }),
             target: { type: "widget" as const, kind },
           };

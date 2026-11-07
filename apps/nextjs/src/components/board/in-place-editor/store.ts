@@ -109,8 +109,6 @@ export const addInPlaceActions = {
         baseArea: input.area,
         picked,
         highlighted: picked,
-        draft: input.value,
-        baseline: input.value,
         baselineArea: input.area,
         dirty: false,
         editItemId: input.itemId,

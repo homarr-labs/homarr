@@ -8,7 +8,7 @@ import type { InPlaceEditorPanelProps } from "./types";
 import { ConfigureStep, CreateAppStep } from "./card-steps";
 import classes from "./panel.module.css";
 import { PickStep } from "./pick-step";
-import { getPlacement } from "./placement";
+import { getConfigureWidth, getPlacement } from "./placement";
 import type { Placement, RectLike, ViewportSize } from "./placement";
 
 const pickWidth = 360;
@@ -184,11 +184,15 @@ export const InPlaceEditorPanel = (props: InPlaceEditorPanelProps) => {
     props.onKeyDown(event);
   };
 
+  let width = cardWidth;
+  if (isPick) width = pickWidth;
+  if (step === "configure" && rect) width = getConfigureWidth(rect, viewport);
+
   let placement =
     rect &&
     getPlacement({
       rect,
-      width: isPick ? pickWidth : cardWidth,
+      width,
       contentHeight: contentHeight + borderSize,
       viewport,
       isPick,
@@ -237,7 +241,7 @@ export const InPlaceEditorPanel = (props: InPlaceEditorPanelProps) => {
   const maxHeight = isSheet ? sheetHeight : placement?.maxHeight;
   const style: CSSProperties = isSheet
     ? { bottom: keyboardInset, maxHeight }
-    : { left: placement?.left, top: placement?.top, width: isPick ? pickWidth : cardWidth, maxHeight };
+    : { left: placement?.left, top: placement?.top, width, maxHeight };
 
   return (
     <>

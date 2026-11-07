@@ -41,6 +41,14 @@ interface PlacementInput {
 
 const clamp = (value: number, min: number, max: number) => Math.min(Math.max(value, min), Math.max(min, max));
 
+export const getConfigureWidth = (rect: RectLike, viewport: ViewportSize) => {
+  const adjacentWidth = Math.max(
+    rect.left - anchorGap - viewportMargin,
+    viewport.width - rect.right - anchorGap - viewportMargin,
+  );
+  return Math.min(640, Math.max(404, adjacentWidth), viewport.width - viewportMargin * 2);
+};
+
 const getHorizontal = (rect: RectLike, width: number, viewport: ViewportSize) => {
   const rightLeft = rect.right + anchorGap;
   if (rightLeft + width + viewportMargin <= viewport.width) return { side: "right" as const, left: rightLeft };

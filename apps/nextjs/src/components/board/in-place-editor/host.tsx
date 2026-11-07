@@ -21,7 +21,14 @@ import { CreateAppForm } from "./create-app";
 import { DimLayer } from "./dim-layer";
 import { handleAreaShortcut, useAreaKeyboard } from "./keyboard";
 import { InPlaceEditorPanel } from "./panel/panel";
-import { addInPlaceActions, getTargetKind, setCommitBridge, useAddInPlaceSession, useAddInPlaceStep } from "./store";
+import {
+  addInPlaceActions,
+  getAddInPlaceState,
+  getTargetKind,
+  setCommitBridge,
+  useAddInPlaceSession,
+  useAddInPlaceStep,
+} from "./store";
 
 const useBoundCatalog = (search: string) => {
   const session = useAddInPlaceSession();
@@ -52,9 +59,22 @@ export const InPlaceEditorHost = () => {
   const anchorRect = useAreaAnchorRect();
   const onKeyDown = useAreaKeyboard();
   const wasEditMode = useRef(isEditMode);
+  const lifecycleRef = useRef(0);
   const returnFocusRef = useRef<HTMLElement | null>(null);
   const returnLocationRef = useRef<{ sectionId: string; x: number; y: number; itemId?: string } | null>(null);
   const active = isEditMode && step !== "idle";
+
+  useEffect(() => {
+    const generation = ++lifecycleRef.current;
+    return () => {
+      const leavingSession = getAddInPlaceState().session;
+      queueMicrotask(() => {
+        if (lifecycleRef.current === generation && getAddInPlaceState().session === leavingSession) {
+          addInPlaceActions.cancel();
+        }
+      });
+    };
+  }, []);
 
   useEffect(() => {
     if (!active) return;
@@ -98,7 +118,7 @@ export const InPlaceEditorHost = () => {
         const cell =
           location &&
           section?.querySelector<HTMLElement>(
-            `button[aria-label="Add widget at column ${location.x + 1}, row ${location.y + 1}"]`,
+            `button[data-add-cell-x="${location.x}"][data-add-cell-y="${location.y}"]`,
           );
         const placed =
           location &&

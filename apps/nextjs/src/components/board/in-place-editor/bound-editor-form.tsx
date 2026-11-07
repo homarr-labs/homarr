@@ -4,6 +4,7 @@ import type { KeyboardEvent } from "react";
 import { useEffect, useRef } from "react";
 import { Center, Loader, Text } from "@mantine/core";
 
+import { useSession } from "@homarr/auth/client";
 import { useSettings } from "@homarr/settings";
 import { WidgetEditorForm } from "@homarr/widgets/modals";
 
@@ -27,6 +28,7 @@ const submitOnModEnter = (event: KeyboardEvent) => {
 
 export const BoundEditorForm = () => {
   const session = useAddInPlaceSession();
+  const { data: authSession } = useSession();
   const settings = useSettings();
   const resources = useTargetResources(session?.picked);
   const pendingSubmitRef = useRef(false);
@@ -74,6 +76,9 @@ export const BoundEditorForm = () => {
         itemId={session.editItemId}
         formId={editorFormId}
         showSettingsHeading={false}
+        canConfigureWidget={
+          resources.kind !== "customApi" || (authSession?.user.permissions.includes("admin") ?? false)
+        }
         onChange={addInPlaceActions.setDraft}
         onSubmit={(draft) => addInPlaceActions.commit(draft)}
       />

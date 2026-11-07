@@ -166,7 +166,7 @@ export const ClientBoard = () => {
             </BoardGridPortalHost>
           </BoardSectionCollapseProvider>
           <BoardSelectionToolbar />
-          <InPlaceEditorHost />
+          <InPlaceEditorHost key={board.id} />
           <FloatingTip
             opened={isEditMode}
             showDelay={2_000}
