@@ -1,8 +1,7 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
 import { Box, rem, Tooltip, UnstyledButton } from "@mantine/core";
-import { IconPlayerPlayFilled, IconPlayerStopFilled } from "@tabler/icons-react";
+import { IconCheck, IconMinus, IconPlayerPlayFilled, IconPlayerStopFilled, IconX } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
 import type { ContainerState } from "@homarr/docker";
@@ -10,13 +9,10 @@ import { showErrorNotification } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
 
 import classes from "../app.module.css";
+import { PingDot } from "../ping/ping-dot";
 import type { LinkedDockerContainer } from "./container-option";
 
 const activeStates: ContainerState[] = ["running", "restarting", "paused"];
-
-// An app usually needs a while after its container starts before it answers, so the ping is repeated until it does.
-const pingRetryInterval = 3_000;
-const pingRetryLimit = 90_000;
 
 const useToggleAction = (action: "start" | "stop", name: string) => {
   const t = useI18n();
@@ -37,66 +33,28 @@ const useToggleAction = (action: "start" | "stop", name: string) => {
   });
 };
 
-const useAppStartWait = (appId: string | null, onAnswered: () => void) => {
-  const [startedAt, setStartedAt] = useState<number | null>(null);
-  const { data, dataUpdatedAt } = clientApi.widget.app.ping.useQuery(
-    { id: appId ?? "" },
-    { enabled: appId !== null, refetchOnMount: false, refetchInterval: startedAt !== null && pingRetryInterval },
-  );
-
-  useEffect(() => {
-    if (startedAt === null) return;
-    const timeout = setTimeout(
-      () => {
-        setStartedAt(null);
-        onAnswered();
-      },
-      Math.max(0, startedAt + pingRetryLimit - Date.now()),
-    );
-    return () => clearTimeout(timeout);
-  }, [startedAt, onAnswered]);
-
-  useEffect(() => {
-    if (startedAt === null || !data || dataUpdatedAt <= startedAt) return;
-    const isUp = !("error" in data) && data.statusCode < 500;
-    if (!isUp) return;
-    setStartedAt(null);
-    onAnswered();
-  }, [startedAt, data, dataUpdatedAt, onAnswered]);
-
-  return () => {
-    if (appId === null) onAnswered();
-    else setStartedAt(Date.now());
-  };
-};
-
-export type ContainerSwitch = "start" | "stop";
-
 interface DockerContainerToggleProps {
   container: LinkedDockerContainer;
-  pingAppId: string | null;
+  showStatus: boolean;
   isEditMode: boolean;
-  onSwitchChange: (action: ContainerSwitch | null) => void;
 }
 
-export const DockerContainerToggle = ({
-  container: linked,
-  pingAppId,
-  isEditMode,
-  onSwitchChange,
-}: DockerContainerToggleProps) => {
+export const DockerContainerToggle = ({ container: linked, showStatus, isEditMode }: DockerContainerToggleProps) => {
   const t = useI18n();
-  const utils = clientApi.useUtils();
-  const { data } = clientApi.docker.getContainers.useQuery({ endpointIds: [linked.endpointId] });
+  const { data, error } = clientApi.docker.getContainers.useQuery({ endpointIds: [linked.endpointId] });
   const start = useToggleAction("start", linked.name);
   const stop = useToggleAction("stop", linked.name);
-  const endSwitch = useCallback(() => onSwitchChange(null), [onSwitchChange]);
-  const awaitAppStart = useAppStartWait(pingAppId, endSwitch);
 
   const container = data?.containers.find(
     ({ endpointId, name }) => endpointId === linked.endpointId && name === linked.name,
   );
-  if (!container) return null;
+  if (error || !container) {
+    let tooltip = `${t("common.action.loading")}…`;
+    if (error) tooltip = t("widget.app.option.dockerContainer.unavailable");
+    else if (data) tooltip = t("widget.app.docker.notFound");
+    if (!showStatus) return null;
+    return <PingDot icon={IconMinus} color="gray" tooltip={tooltip} />;
+  }
 
   const canControl =
     data?.endpoints.find(({ id }) => id === linked.endpointId)?.capabilities.includes("lifecycle") ?? false;
@@ -106,45 +64,36 @@ export const DockerContainerToggle = ({
   const stateLabel = t(`docker.field.state.option.${container.state}`);
   const actionLabel = t(`widget.app.docker.action.${isActive ? "stop" : "start"}`, { name: container.name });
   const Icon = isActive ? IconPlayerStopFilled : IconPlayerPlayFilled;
+  const isRunning = container.state === "running";
 
   return (
-    // Sits left of the ping dot, or in its place when pinging is off.
-    <Box pos="absolute" bottom={3} right={pingAppId ? 20 : 4} display="flex">
-      <Tooltip label={isEnabled ? `${stateLabel} · ${actionLabel}` : `${container.name}: ${stateLabel}`}>
-        <UnstyledButton
-          className={classes.containerToggle}
-          display="flex"
-          p={6}
-          opacity={isPending ? 0.5 : 1}
-          aria-label={actionLabel}
-          data-disabled={!isEnabled || undefined}
-          aria-disabled={!isEnabled}
-          onClick={() => {
-            if (!isEnabled) return;
-            onSwitchChange(isActive ? "stop" : "start");
-            (isActive ? stop : start).mutate(
-              { targets: [{ endpointId: container.endpointId, id: container.id }] },
-              {
-                onSuccess([result]) {
-                  if (!result?.success) return endSwitch();
-                  if (!isActive) return awaitAppStart();
-                  // A stopped container cannot answer, so the ping would only run into its timeout.
-                  if (pingAppId !== null) {
-                    utils.widget.app.ping.setData(
-                      { id: pingAppId },
-                      (previous) => previous && { url: previous.url, error: t("widget.app.docker.stopped") },
-                    );
-                  }
-                  endSwitch();
-                },
-                onError: endSwitch,
-              },
-            );
-          }}
-        >
-          <Icon style={{ width: rem(12), height: rem(12) }} />
-        </UnstyledButton>
-      </Tooltip>
-    </Box>
+    <>
+      {showStatus && (
+        <PingDot
+          icon={isRunning ? IconCheck : IconX}
+          color={isRunning ? "green" : "red"}
+          tooltip={`${linked.name}: ${stateLabel}`}
+        />
+      )}
+      <Box className={classes.containerControls} pos="absolute" bottom={3} right={showStatus ? 20 : 4} display="flex">
+        <Tooltip label={isEnabled ? `${stateLabel} · ${actionLabel}` : `${container.name}: ${stateLabel}`}>
+          <UnstyledButton
+            className={classes.containerToggle}
+            display="flex"
+            p={6}
+            opacity={isPending ? 0.5 : 1}
+            aria-label={actionLabel}
+            data-disabled={!isEnabled || undefined}
+            aria-disabled={!isEnabled}
+            onClick={() => {
+              if (!isEnabled) return;
+              (isActive ? stop : start).mutate({ targets: [{ endpointId: container.endpointId, id: container.id }] });
+            }}
+          >
+            <Icon style={{ width: rem(12), height: rem(12) }} />
+          </UnstyledButton>
+        </Tooltip>
+      </Box>
+    </>
   );
 };
