@@ -1515,6 +1515,27 @@
           "title": "שגיאה לא ידועה",
           "description": "אירעה שגיאה לא ידועה, פתח את הסיבה למטה כדי לראות פרטים נוספים"
         },
+        "frigate": {
+          "title": "",
+          "status": "",
+          "description": {
+            "cookie": "",
+            "profileMismatch": "",
+            "redirect": "",
+            "login": "",
+            "profile": "",
+            "stats": ""
+          }
+        },
+        "openmediavault": {
+          "title": "",
+          "description": {
+            "totpSecretRequired": "",
+            "totpSecretInvalid": "",
+            "totpVerificationFailed": "",
+            "unsupportedChallenge": ""
+          }
+        },
         "parse": {
           "title": "שגיאת ניתוח",
           "description": "לא ניתן היה לנתח את התגובה. אנא ודא שכתובת האתר מפנה לכתובת האתר הבסיסית של השירות."
@@ -1714,6 +1735,11 @@
         "title": "איפוס נתון גישה",
         "message": "האם את/ה בטוח/ה שברצונך למחוק את נתון הגישה הזה?"
       },
+      "totpNotice": "",
+      "remove": {
+        "title": "",
+        "message": ""
+      },
       "noSecretsRequired": {
         "segmentTitle": "אין נתוני גישה",
         "text": "לא נדרשים נתוני גישה לאינטגרציה זו"
@@ -1794,6 +1820,10 @@
         "wazuhIndexerPassword": {
           "label": "סיסמת אינדקס",
           "newLabel": "סיסמת אינדקס חדשה"
+        },
+        "totpSecret": {
+          "label": "",
+          "newLabel": ""
         }
       }
     },
@@ -2335,7 +2365,29 @@
             "tooltip": "כתיאור כלים",
             "hidden": "מוסתר"
           }
+        },
+        "dockerContainer": {
+          "label": "",
+          "description": "",
+          "placeholder": "",
+          "disabled": "",
+          "unavailable": ""
         }
+      },
+      "docker": {
+        "action": {
+          "start": "",
+          "stop": ""
+        },
+        "notification": {
+          "startFailed": "",
+          "stopFailed": ""
+        },
+        "switch": {
+          "start": "",
+          "stop": ""
+        },
+        "stopped": ""
       },
       "error": {
         "notFound": {
@@ -2414,6 +2466,10 @@
         "hideHostname": {
           "label": "הסתרת כתובת רשת"
         },
+        "showFullUrls": {
+          "label": "",
+          "description": ""
+        },
         "withBorder": {
           "label": ""
         },
@@ -2436,6 +2492,9 @@
         }
       },
       "empty": "הוסף כתובת URL או אפליקציה בהגדרות הווידג'ט",
+      "copyUrl": "העתק קישור",
+      "copied": "",
+      "copyFailed": "",
       "groups": {
         "label": "",
         "placeholder": "קטגוריה חדשה",
@@ -3535,6 +3594,34 @@
     },
     "coolify": {
       "description": "סקירה של מופע Coolify שלך עם שרתים ואפליקציות",
+      "summary": {
+        "needsAttention": "",
+        "inProgress": "",
+        "unknown": "",
+        "healthy": "",
+        "empty": "",
+        "healthyDetail": "",
+        "more": "",
+        "moreInstances": ""
+      },
+      "details": {
+        "tabs": "",
+        "overview": "",
+        "search": "",
+        "serviceApplications": ""
+      },
+      "overview": {
+        "projects": "",
+        "resources": "",
+        "attention": "",
+        "ready": "מוכן",
+        "noProjects": "",
+        "projectsUnavailable": "",
+        "moreProjects": "",
+        "running": "פועל",
+        "resourceCount": "",
+        "environmentCount": ""
+      },
       "option": {
         "showServers": {
           "label": "הצג שרתים"
@@ -3566,7 +3653,13 @@
       },
       "source": {
         "url": "מקור: {url}",
-        "unavailable": "{source}: לא זמין"
+        "unavailable": "{source}: לא זמין",
+        "unavailableCount": ""
+      },
+      "kind": {
+        "server": "",
+        "application": "",
+        "service": ""
       },
       "instances": {
         "title": "מופעים"
@@ -3583,6 +3676,7 @@
         "exited": "נסגר",
         "starting": "מופעל",
         "restarting": "מפעיל מחדש",
+        "unhealthy": "לא בריא",
         "unknown": "לא ידוע",
         "online": "מקוון",
         "offline": "לא מקוון",
@@ -4815,6 +4909,7 @@
           },
           "identifier": {
             "label": "מזהה",
+            "containerPlaceholder": "",
             "placeholder": "שם או בעלים/שם"
           },
           "name": {},

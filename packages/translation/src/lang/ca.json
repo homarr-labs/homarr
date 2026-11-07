@@ -1515,6 +1515,27 @@
           "title": "Error desconegut",
           "description": "S'ha produït un error desconegut; obre la causa següent per veure'n més detalls"
         },
+        "frigate": {
+          "title": "",
+          "status": "",
+          "description": {
+            "cookie": "",
+            "profileMismatch": "",
+            "redirect": "",
+            "login": "",
+            "profile": "",
+            "stats": ""
+          }
+        },
+        "openmediavault": {
+          "title": "",
+          "description": {
+            "totpSecretRequired": "",
+            "totpSecretInvalid": "",
+            "totpVerificationFailed": "",
+            "unsupportedChallenge": ""
+          }
+        },
         "parse": {
           "title": "Error d'anàlisi",
           "description": "No s'ha pogut analitzar la resposta. Verifica que l'URL apunti a l'URL base del servei."
@@ -1714,6 +1735,11 @@
         "title": "Restablir secret",
         "message": "Esteu segur que voleu restablir aquest secret?"
       },
+      "totpNotice": "",
+      "remove": {
+        "title": "",
+        "message": ""
+      },
       "noSecretsRequired": {
         "segmentTitle": "Sense secrets",
         "text": "No es requereixen secrets per a aquesta integració"
@@ -1794,6 +1820,10 @@
         "wazuhIndexerPassword": {
           "label": "Contrasenya de l'indexador",
           "newLabel": "Contrasenya nova de l'indexador"
+        },
+        "totpSecret": {
+          "label": "",
+          "newLabel": ""
         }
       }
     },
@@ -2335,7 +2365,29 @@
             "tooltip": "Com a tooltip",
             "hidden": "Ocult"
           }
+        },
+        "dockerContainer": {
+          "label": "",
+          "description": "",
+          "placeholder": "",
+          "disabled": "",
+          "unavailable": ""
         }
+      },
+      "docker": {
+        "action": {
+          "start": "",
+          "stop": ""
+        },
+        "notification": {
+          "startFailed": "",
+          "stopFailed": ""
+        },
+        "switch": {
+          "start": "",
+          "stop": ""
+        },
+        "stopped": ""
       },
       "error": {
         "notFound": {
@@ -2414,6 +2466,10 @@
         "hideHostname": {
           "label": "Amaga noms d'amfitrió"
         },
+        "showFullUrls": {
+          "label": "",
+          "description": ""
+        },
         "withBorder": {
           "label": "Mostra la vora"
         },
@@ -2436,6 +2492,9 @@
         }
       },
       "empty": "Afegeix una URL o una aplicació a la configuració del giny",
+      "copyUrl": "",
+      "copied": "",
+      "copyFailed": "",
       "groups": {
         "label": "",
         "placeholder": "",
@@ -3535,6 +3594,34 @@
     },
     "coolify": {
       "description": "Visió general de la teva instància de Coolify amb servidors i aplicacions",
+      "summary": {
+        "needsAttention": "",
+        "inProgress": "",
+        "unknown": "",
+        "healthy": "",
+        "empty": "",
+        "healthyDetail": "",
+        "more": "",
+        "moreInstances": ""
+      },
+      "details": {
+        "tabs": "",
+        "overview": "",
+        "search": "",
+        "serviceApplications": ""
+      },
+      "overview": {
+        "projects": "",
+        "resources": "",
+        "attention": "",
+        "ready": "",
+        "noProjects": "",
+        "projectsUnavailable": "",
+        "moreProjects": "",
+        "running": "",
+        "resourceCount": "",
+        "environmentCount": ""
+      },
       "option": {
         "showServers": {
           "label": "Mostra els servidors"
@@ -3566,7 +3653,13 @@
       },
       "source": {
         "url": "Origen: {url}",
-        "unavailable": "{source}: no disponible"
+        "unavailable": "{source}: no disponible",
+        "unavailableCount": ""
+      },
+      "kind": {
+        "server": "",
+        "application": "",
+        "service": ""
       },
       "instances": {
         "title": "Instàncies"
@@ -3583,6 +3676,7 @@
         "exited": "Finalitzat",
         "starting": "S'està iniciant",
         "restarting": "S'està reiniciant",
+        "unhealthy": "",
         "unknown": "Desconegut",
         "online": "En línia",
         "offline": "Fora de línia",
@@ -4815,6 +4909,7 @@
           },
           "identifier": {
             "label": "Identificador",
+            "containerPlaceholder": "",
             "placeholder": "Nom o propietari/nom"
           },
           "name": {},

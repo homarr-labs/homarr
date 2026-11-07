@@ -1515,6 +1515,27 @@
           "title": "Tuntematon virhe",
           "description": "Tapahtui tuntematon virhe, avaa syy alta nähdäksesi lisätietoja"
         },
+        "frigate": {
+          "title": "",
+          "status": "",
+          "description": {
+            "cookie": "",
+            "profileMismatch": "",
+            "redirect": "",
+            "login": "",
+            "profile": "",
+            "stats": ""
+          }
+        },
+        "openmediavault": {
+          "title": "",
+          "description": {
+            "totpSecretRequired": "",
+            "totpSecretInvalid": "",
+            "totpVerificationFailed": "",
+            "unsupportedChallenge": ""
+          }
+        },
         "parse": {
           "title": "Jäsennysvirhe",
           "description": "Vastausta ei voitu jäsentää. Tarkista, että URL-osoite osoittaa palvelun perusosoitteeseen."
@@ -1714,6 +1735,11 @@
         "title": "Poista salaisuus",
         "message": "Haluatko varmasti poistaa salaisuuden?"
       },
+      "totpNotice": "",
+      "remove": {
+        "title": "",
+        "message": ""
+      },
       "noSecretsRequired": {
         "segmentTitle": "Ei salaisuuksia",
         "text": "Tämä integraatio ei tarvitse salaisuuksia"
@@ -1794,6 +1820,10 @@
         "wazuhIndexerPassword": {
           "label": "Indeksoijan salasana",
           "newLabel": "Uusi indeksoijan salasana"
+        },
+        "totpSecret": {
+          "label": "",
+          "newLabel": ""
         }
       }
     },
@@ -2335,7 +2365,29 @@
             "tooltip": "Työkaluvihjeenä",
             "hidden": "Piilotettu"
           }
+        },
+        "dockerContainer": {
+          "label": "",
+          "description": "",
+          "placeholder": "",
+          "disabled": "",
+          "unavailable": ""
         }
+      },
+      "docker": {
+        "action": {
+          "start": "",
+          "stop": ""
+        },
+        "notification": {
+          "startFailed": "",
+          "stopFailed": ""
+        },
+        "switch": {
+          "start": "",
+          "stop": ""
+        },
+        "stopped": ""
       },
       "error": {
         "notFound": {
@@ -2414,6 +2466,10 @@
         "hideHostname": {
           "label": ""
         },
+        "showFullUrls": {
+          "label": "",
+          "description": ""
+        },
         "withBorder": {
           "label": "Näytä reunus"
         },
@@ -2436,6 +2492,9 @@
         }
       },
       "empty": "Lisää URL tai sovellus widgetin asetuksiin",
+      "copyUrl": "",
+      "copied": "Kopioitu",
+      "copyFailed": "",
       "groups": {
         "label": "Kategoriat",
         "placeholder": "Uusi kategoria",
@@ -3535,6 +3594,34 @@
     },
     "coolify": {
       "description": "",
+      "summary": {
+        "needsAttention": "{count} tarvitsee huomiota",
+        "inProgress": "",
+        "unknown": "",
+        "healthy": "",
+        "empty": "",
+        "healthyDetail": "",
+        "more": "",
+        "moreInstances": ""
+      },
+      "details": {
+        "tabs": "",
+        "overview": "",
+        "search": "",
+        "serviceApplications": ""
+      },
+      "overview": {
+        "projects": "",
+        "resources": "",
+        "attention": "Tarvitsee huomiota",
+        "ready": "Valmis",
+        "noProjects": "",
+        "projectsUnavailable": "",
+        "moreProjects": "",
+        "running": "Käynnissä",
+        "resourceCount": "",
+        "environmentCount": ""
+      },
       "option": {
         "showServers": {
           "label": ""
@@ -3566,7 +3653,13 @@
       },
       "source": {
         "url": "Lähde: {url}",
-        "unavailable": ""
+        "unavailable": "",
+        "unavailableCount": ""
+      },
+      "kind": {
+        "server": "",
+        "application": "Sovellus",
+        "service": "Palvelu"
       },
       "instances": {
         "title": ""
@@ -3583,6 +3676,7 @@
         "exited": "Suljettu",
         "starting": "Aloitetaan",
         "restarting": "Käynnistetään Uudelleen",
+        "unhealthy": "Epäterveellistä",
         "unknown": "Tuntematon",
         "online": "Paikalla",
         "offline": "Offline-tilassa",
@@ -4815,6 +4909,7 @@
           },
           "identifier": {
             "label": "",
+            "containerPlaceholder": "",
             "placeholder": ""
           },
           "name": {},

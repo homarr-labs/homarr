@@ -1515,6 +1515,27 @@
           "title": "未知错误",
           "description": "发生未知错误，打开下面的原因以查看更多详情"
         },
+        "frigate": {
+          "title": "",
+          "status": "",
+          "description": {
+            "cookie": "",
+            "profileMismatch": "",
+            "redirect": "",
+            "login": "",
+            "profile": "",
+            "stats": ""
+          }
+        },
+        "openmediavault": {
+          "title": "",
+          "description": {
+            "totpSecretRequired": "",
+            "totpSecretInvalid": "",
+            "totpVerificationFailed": "",
+            "unsupportedChallenge": ""
+          }
+        },
         "parse": {
           "title": "解析错误",
           "description": "无法解析该响应。请确认URL指向服务的基本URL。"
@@ -1714,6 +1735,11 @@
         "title": "重置密钥",
         "message": "您确定要重置此秘钥吗？"
       },
+      "totpNotice": "",
+      "remove": {
+        "title": "",
+        "message": ""
+      },
       "noSecretsRequired": {
         "segmentTitle": "没有密钥",
         "text": "此集成不需要密钥"
@@ -1794,6 +1820,10 @@
         "wazuhIndexerPassword": {
           "label": "索引器密码",
           "newLabel": "新索引器密码"
+        },
+        "totpSecret": {
+          "label": "",
+          "newLabel": ""
         }
       }
     },
@@ -2335,7 +2365,29 @@
             "tooltip": "在工具提示中显示",
             "hidden": "隐藏"
           }
+        },
+        "dockerContainer": {
+          "label": "Docker 容器",
+          "description": "",
+          "placeholder": "",
+          "disabled": "",
+          "unavailable": ""
         }
+      },
+      "docker": {
+        "action": {
+          "start": "",
+          "stop": ""
+        },
+        "notification": {
+          "startFailed": "",
+          "stopFailed": ""
+        },
+        "switch": {
+          "start": "",
+          "stop": ""
+        },
+        "stopped": ""
       },
       "error": {
         "notFound": {
@@ -2414,6 +2466,10 @@
         "hideHostname": {
           "label": "隐藏主机名"
         },
+        "showFullUrls": {
+          "label": "",
+          "description": ""
+        },
         "withBorder": {
           "label": "显示边框"
         },
@@ -2436,6 +2492,9 @@
         }
       },
       "empty": "在小部件设置中添加 URL 或应用程序",
+      "copyUrl": "复制 URL",
+      "copied": "已复制",
+      "copyFailed": "",
       "groups": {
         "label": "类别管理",
         "placeholder": "新建分类",
@@ -3535,6 +3594,34 @@
     },
     "coolify": {
       "description": "您的 Coolify 实例及其服务器和应用一览",
+      "summary": {
+        "needsAttention": "",
+        "inProgress": "",
+        "unknown": "",
+        "healthy": "",
+        "empty": "",
+        "healthyDetail": "",
+        "more": "",
+        "moreInstances": ""
+      },
+      "details": {
+        "tabs": "",
+        "overview": "",
+        "search": "",
+        "serviceApplications": ""
+      },
+      "overview": {
+        "projects": "",
+        "resources": "",
+        "attention": "需要关注",
+        "ready": "就绪",
+        "noProjects": "",
+        "projectsUnavailable": "",
+        "moreProjects": "",
+        "running": "运行中",
+        "resourceCount": "",
+        "environmentCount": ""
+      },
       "option": {
         "showServers": {
           "label": "显示服务器"
@@ -3566,7 +3653,13 @@
       },
       "source": {
         "url": "来源：{url}",
-        "unavailable": "{source}：不可用"
+        "unavailable": "{source}：不可用",
+        "unavailableCount": ""
+      },
+      "kind": {
+        "server": "",
+        "application": "应用",
+        "service": "服务"
       },
       "instances": {
         "title": "实例"
@@ -3583,6 +3676,7 @@
         "exited": "已退出",
         "starting": "正在启动",
         "restarting": "正在重启",
+        "unhealthy": "不健康",
         "unknown": "未知",
         "online": "在线",
         "offline": "离线",
@@ -4815,6 +4909,7 @@
           },
           "identifier": {
             "label": "标识符",
+            "containerPlaceholder": "",
             "placeholder": "名称或所有者/名称"
           },
           "name": {},
