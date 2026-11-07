@@ -9,6 +9,7 @@ import localeData from "dayjs/plugin/localeData";
 import { useSession } from "@homarr/auth/client";
 import type { ByteUnitSystem } from "@homarr/common";
 import type { ColorScheme } from "@homarr/definitions";
+import { isThemeId, themeNames } from "@homarr/definitions";
 import { visiblePreferenceDefinitions } from "@homarr/settings";
 import { localeConfigurations } from "@homarr/translation";
 import { useI18n } from "@homarr/translation/client";
@@ -87,7 +88,13 @@ export const useSettingsActions = (_: Record<string, unknown>, query: string): S
     binary: `${tByteUnit("binary")} (KiB, MiB, GiB)`,
   };
 
+  const tTheme = useI18n("common.customTheme");
   const valueLabelResolvers: Record<string, () => string> = {
+    themeId: () => {
+      const value = preferences.getPreference("themeId").value;
+      if (isThemeId(value)) return themeNames[value];
+      return tTheme("serverDefault");
+    },
     colorScheme: () => tColorScheme(preferences.getPreference("colorScheme").value as ColorScheme),
     locale: () => {
       const val = preferences.getPreference("locale").value;

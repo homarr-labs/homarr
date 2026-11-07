@@ -1,5 +1,12 @@
 export const userPreferenceDefinitions = [
   {
+    key: "themeId",
+    kind: "select",
+    guest: false,
+    mutationGroup: "themeId",
+    aliases: ["theme", "appearance", "customization", "preset", "colors"],
+  },
+  {
     key: "colorScheme",
     kind: "select",
     guest: true,

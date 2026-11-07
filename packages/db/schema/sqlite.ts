@@ -17,6 +17,7 @@ import type {
   BackgroundImageSize,
   BoardPermission,
   ColorScheme,
+  ThemeId,
   GroupPermissionKey,
   IntegrationKind,
   IntegrationPermission,
@@ -70,6 +71,7 @@ export const users = sqliteTable("user", {
   openSearchInNewTab: int({ mode: "boolean" }).default(true).notNull(),
   ddgBangs: int({ mode: "boolean" }).default(true).notNull(),
   colorScheme: text().$type<ColorScheme>().default("dark").notNull(),
+  themeId: text().$type<ThemeId>(),
   byteUnitSystem: text().$type<ByteUnitSystem>().default(defaultByteUnitSystem).notNull(),
   firstDayOfWeek: int().$type<DayOfWeek>().default(1).notNull(), // Defaults to Monday
   pingIconsEnabled: int({ mode: "boolean" }).default(false).notNull(),

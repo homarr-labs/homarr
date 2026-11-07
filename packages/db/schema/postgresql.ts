@@ -29,6 +29,7 @@ import type {
   BackgroundImageSize,
   BoardPermission,
   ColorScheme,
+  ThemeId,
   GroupPermissionKey,
   IntegrationKind,
   IntegrationPermission,
@@ -88,6 +89,7 @@ export const users = pgTable("user", {
   openSearchInNewTab: boolean().default(true).notNull(),
   ddgBangs: boolean().default(true).notNull(),
   colorScheme: varchar({ length: 5 }).$type<ColorScheme>().default("dark").notNull(),
+  themeId: text().$type<ThemeId>(),
   byteUnitSystem: varchar({ length: 7 }).$type<ByteUnitSystem>().default(defaultByteUnitSystem).notNull(),
   firstDayOfWeek: smallint().$type<DayOfWeek>().default(1).notNull(), // Defaults to Monday
   pingIconsEnabled: boolean().default(false).notNull(),
