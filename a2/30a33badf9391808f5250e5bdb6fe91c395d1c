@@ -1,0 +1,16 @@
+packages/widgets/src/app/component.tsx
+  h_d6e478ca18e517 95
+packages/widgets/src/app/docker/container-toggle.tsx
+  h_d6e478ca18e517 57-58,63,65,71
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "a230a33badf9391808f5250e5bdb6fe91c395d1c",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
