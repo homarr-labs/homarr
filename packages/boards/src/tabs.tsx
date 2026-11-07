@@ -50,7 +50,7 @@ export const getBoardTabKey = (tabs: readonly BoardTab[], tab: BoardTab) => {
   const isUnique = tabs.every(
     (candidate) => candidate.id === tab.id || !candidate.name || normalizeTabKey(candidate.name) !== normalizedName,
   );
-  if (!isUnique) return tab.id;
+  if (!isUnique || findBoardTab(tabs, name)?.id !== tab.id) return tab.id;
   return name;
 };
 

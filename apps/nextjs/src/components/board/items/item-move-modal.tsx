@@ -17,6 +17,7 @@ import { useRegisteredGridEditors } from "../sections/grid/grid-editor-registry"
 import { getSectionGridColumnCount, getSectionGridPlacements } from "../sections/grid/section-grid-placements";
 import type { CommitSectionGridInput, SectionGridPlacement } from "../sections/grid/use-grid-layout-actions";
 import { useGridLayoutActions } from "../sections/grid/use-grid-layout-actions";
+import { getCrossTabMoveSnapshots, getEntryMinimumSize, isSameOrDescendant } from "./actions/move-entry-across-tabs";
 
 export type MovableEntry = Pick<
   SectionItem | ContainerSectionItem,
@@ -156,7 +157,19 @@ export const ItemMoveModal = createModal<InnerProps>(({ actions, innerProps }) =
               { layoutId: currentLayoutId, sectionId: target.id, placements: resolvedTarget },
             ];
 
-      commitSectionGrids(snapshots);
+      const crossTabSnapshots = getCrossTabMoveSnapshots({
+        board,
+        currentLayoutId,
+        entry,
+        sourceSectionId,
+        targetSectionId: target.id,
+      });
+      if (!crossTabSnapshots) {
+        form.setFieldError("sectionId", tMoveResize("keyboard.boundary"));
+        return;
+      }
+
+      commitSectionGrids([...snapshots, ...crossTabSnapshots]);
       actions.closeModal();
       focusMovedEntry(entry.id, target.id);
     },
@@ -343,28 +356,6 @@ const getSectionMaxRowCount = (board: Board, layoutId: string, sectionId: string
     return section.layouts.find((candidate) => candidate.layoutId === layoutId)?.height ?? null;
   }
   return null;
-};
-
-const getEntryMinimumSize = (board: Board, layoutId: string, entry: MovableEntry) => {
-  if (entry.type === "item") return { width: 1, height: 1 };
-  const children = getSectionGridPlacements(board, layoutId, entry.id);
-  return {
-    width: entry.minW ?? Math.max(1, ...children.map((child) => child.x + child.w)),
-    height: entry.minH ?? Math.max(1, ...children.map((child) => child.y + child.h)),
-  };
-};
-
-const isSameOrDescendant = (board: Board, layoutId: string, candidateId: string, ancestorId: string) => {
-  let current: string | undefined = candidateId;
-  const visited = new Set<string>();
-  while (current && !visited.has(current)) {
-    if (current === ancestorId) return true;
-    visited.add(current);
-    const section = board.sections.find((candidate) => candidate.id === current && candidate.kind === "container");
-    if (!section || section.kind !== "container") return false;
-    current = section.layouts.find((layout) => layout.layoutId === layoutId)?.parentSectionId;
-  }
-  return false;
 };
 
 const focusMovedEntry = (entryId: string, sectionId: string) => {

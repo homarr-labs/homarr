@@ -17,6 +17,8 @@ import { useI18n } from "@homarr/translation/client";
 import type { ContainerSection, ItemLayout } from "~/app/[locale]/boards/_types";
 import { createItemCallback } from "~/components/board/items/actions/create-item";
 import { getFirstEmptyPosition } from "~/components/board/items/actions/empty-position";
+import { getCrossTabMoveSnapshots } from "~/components/board/items/actions/move-entry-across-tabs";
+import { commitSectionGridsCallback } from "~/components/board/sections/grid/use-grid-layout-actions";
 import { moveItemsToTabCallback } from "~/components/board/tabs/tab-actions";
 import { playPopSound, playTrashSound } from "../audio/board-sounds";
 import {
@@ -324,8 +326,7 @@ export const BoardSelectionProvider = ({ children }: PropsWithChildren) => {
         }
 
         if (movedLayouts.size !== idsToMove.size) return previous;
-        didMoveAll = true;
-        return {
+        let next = {
           ...previous,
           items: previous.items.map((item) => {
             const movedLayout = movedLayouts.get(item.id);
@@ -336,6 +337,22 @@ export const BoardSelectionProvider = ({ children }: PropsWithChildren) => {
             };
           }),
         };
+        for (const item of previous.items) {
+          if (!idsToMove.has(item.id)) continue;
+          const sourceLayout = item.layouts.find((layout) => layout.layoutId === currentLayoutId);
+          if (!sourceLayout) return previous;
+          const snapshots = getCrossTabMoveSnapshots({
+            board: next,
+            currentLayoutId,
+            entry: { ...sourceLayout, id: item.id, type: "item" },
+            sourceSectionId: sourceLayout.sectionId,
+            targetSectionId,
+          });
+          if (!snapshots) return previous;
+          next = commitSectionGridsCallback(snapshots)(next);
+        }
+        didMoveAll = true;
+        return next;
       });
 
       if (didMoveAll) {
