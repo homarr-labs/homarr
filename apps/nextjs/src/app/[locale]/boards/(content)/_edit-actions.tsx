@@ -11,6 +11,7 @@ import { useModalAction } from "@homarr/modals";
 import { AppSelectModal } from "@homarr/modals-collection";
 import { useI18n } from "@homarr/translation/client";
 
+import { useAddInPlaceEntry } from "~/components/board/in-place-editor/use-add-in-place-entry";
 import { useItemActions } from "~/components/board/items/item-actions";
 import { ItemSelectModal } from "~/components/board/items/item-select-modal";
 import { useContainerActions } from "~/components/board/sections/container/container-actions";
@@ -29,6 +30,7 @@ const AddMenu = () => {
   const { openModal: openIntegrationSelectModal } = useModalAction(IntegrationSelectModal);
   const { addContainer } = useContainerActions();
   const { createItem } = useItemActions();
+  const { addWidgetInPlace } = useAddInPlaceEntry();
   const tBoard = useI18n("board");
   const tIntegration = useI18n("integration");
   const tContainer = useI18n("section.container");
@@ -40,15 +42,16 @@ const AddMenu = () => {
   useEffect(() => {
     if (handledInitialAdd.current || searchParams.get("add") !== "true") return;
     handledInitialAdd.current = true;
-    openItemSelectModal({ boardId: board.id });
+    if (!addWidgetInPlace()) openItemSelectModal({ boardId: board.id });
 
     const nextSearchParams = new URLSearchParams(searchParams.toString());
     nextSearchParams.delete("add");
     const query = nextSearchParams.toString();
     router.replace(query ? `${pathname}?${query}` : pathname, { scroll: false });
-  }, [board.id, openItemSelectModal, pathname, router, searchParams]);
+  }, [addWidgetInPlace, board.id, openItemSelectModal, pathname, router, searchParams]);
 
   const handleSelectItem = () => {
+    if (addWidgetInPlace()) return;
     openItemSelectModal({ boardId: board.id });
   };
 
