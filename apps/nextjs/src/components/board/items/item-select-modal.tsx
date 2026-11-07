@@ -1,8 +1,6 @@
 import dynamic from "next/dynamic";
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
-  Avatar,
-  Badge,
   Box,
   Button,
   Center,
@@ -16,10 +14,9 @@ import {
   Stack,
   Text,
   ThemeIcon,
-  Tooltip,
 } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
-import { IconApi, IconBuildingStore, IconSearch } from "@tabler/icons-react";
+import { IconApi, IconSearch } from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
@@ -28,12 +25,10 @@ import { useCurrentLayout, useRequiredBoard } from "@homarr/boards/context";
 import { createId } from "@homarr/common";
 import {
   getBoardLaneColumnCount,
-  getIconUrl,
   getIntegrationName,
   getWidgetName,
   getRootSectionLane,
   integrationKinds,
-  isHttpIntegrationKind,
   widgetDefaultSizes,
   widgetIntegrationSupport,
   widgetKinds,
@@ -48,25 +43,29 @@ import { SelectableCard } from "@homarr/ui";
 import type { TablerIcon } from "@homarr/ui";
 import { widgetCatalogIcons } from "@homarr/ui/widget-icons";
 import { loadWidgetDefinition, reduceWidgetOptionsWithDefinition } from "@homarr/widgets/manifest";
-import { useWorkshopWidgetCatalogQuery } from "@homarr/workshop/backend";
 
 import type { EmptySection } from "~/app/[locale]/boards/_types";
 import { IntegrationSelectModal } from "~/components/integration/integration-select-modal";
-import { createWorkshopClient } from "~/components/workshop/workshop-client";
 import { getSectionGridColumnCount } from "../sections/grid/section-grid-placements";
 import { useItemActions } from "./item-actions";
 import type { WidgetConnectionStatus } from "./item-select-data";
 import {
   getWidgetConnectionStatus,
+  matchesIntegrationSearch,
   resolveMatchingIntegrationsAsync,
   tryLockSelection,
   unlockSelection,
 } from "./item-select-data";
 import { LazyWidgetEditModal, preloadWidgetEditModal } from "./lazy-widget-edit-modal";
+import { ConnectionStatusBadge, SupportedIntegrations } from "./widget-card-connection";
+import { WorkshopWidgetSection, useFilteredWorkshopCatalog } from "./workshop-widget-section";
+
+export { ConnectionStatusBadge, SupportedIntegrations } from "./widget-card-connection";
 
 interface ItemSelectModalContentProps {
   actions: { closeModal: () => void };
   integrationData: RouterOutputs["integration"]["all"] | undefined;
+  integrationError: boolean;
   customWidgetDefs: RouterOutputs["customWidget"]["available"] | undefined;
   ensureIntegrationDataAsync: () => Promise<RouterOutputs["integration"]["all"]>;
   isAdmin: boolean;
@@ -85,8 +84,6 @@ export interface WidgetItemData {
 const selectGridCols = { base: 1, xs: 2, sm: 2, md: 3, lg: 4 };
 const defaultWidgetSize = { width: 1, height: 1 };
 const maximumWidgetHeight = 64;
-const matchesIntegrationSearch = (kind: IntegrationKind, query: string) =>
-  kind.toLowerCase().includes(query) || getIntegrationName(kind).toLowerCase().includes(query);
 const integrationFilterOptions = integrationKinds
   .filter((kind) => kind !== "mock")
   .map((kind) => ({ value: kind, label: getIntegrationName(kind) }))
@@ -108,6 +105,7 @@ const WorkshopWidgetReview = dynamic(
 const ItemSelectModalContent = ({
   actions,
   integrationData,
+  integrationError,
   customWidgetDefs,
   ensureIntegrationDataAsync,
   isAdmin,
@@ -165,6 +163,13 @@ const ItemSelectModalContent = ({
 
   const [loadingSelection, setLoadingSelection] = useState<string | null>(null);
   const selectionLock = useRef(false);
+  const pickerOpen = useRef(true);
+  useEffect(() => {
+    pickerOpen.current = true;
+    return () => {
+      pickerOpen.current = false;
+    };
+  }, []);
   const { createItem, removeItem } = useItemActions();
 
   const { openModal: openEditModal } = useModalAction(LazyWidgetEditModal);
@@ -176,34 +181,17 @@ const ItemSelectModalContent = ({
       new Set((integrationData ?? []).filter(({ permissions }) => permissions.hasUseAccess).map(({ kind }) => kind)),
     [integrationData],
   );
-  const workshopAvailableKinds = useMemo(
-    () =>
-      new Set((integrationData ?? []).filter(({ permissions }) => permissions.hasFullAccess).map(({ kind }) => kind)),
-    [integrationData],
-  );
-  const workshop = useWorkshopWidgetCatalogQuery(createWorkshopClient(), isAdmin);
+  const workshopAvailableKinds = useMemo(() => {
+    if (!integrationData) return undefined;
+    return new Set(integrationData.filter(({ permissions }) => permissions.hasFullAccess).map(({ kind }) => kind));
+  }, [integrationData]);
   const searchQuery = search.trim().toLowerCase();
-  const isFiltering = Boolean(searchQuery || integrationFilter);
-
-  const workshopItems = useMemo(() => {
-    return (workshop.data ?? [])
-      .flatMap((item) => {
-        const supportedIntegrations = item.integrationKinds.filter(isHttpIntegrationKind);
-        // An older Homarr version cannot bind a source type it does not know.
-        if (supportedIntegrations.length !== item.integrationKinds.length) return [];
-        if (integrationFilter && !supportedIntegrations.some((kind) => kind === integrationFilter)) return [];
-        if (
-          searchQuery &&
-          !`${item.title}\n${item.description}`.toLowerCase().includes(searchQuery) &&
-          !supportedIntegrations.some((kind) => matchesIntegrationSearch(kind, searchQuery))
-        )
-          return [];
-        const isCompatible = supportedIntegrations.every((kind) => workshopAvailableKinds.has(kind));
-        if (!isFiltering && !isCompatible) return [];
-        return [{ ...item, supportedIntegrations, isCompatible }];
-      })
-      .toSorted((left, right) => Number(right.isCompatible) - Number(left.isCompatible));
-  }, [integrationFilter, isFiltering, searchQuery, workshop.data, workshopAvailableKinds]);
+  const workshop = useFilteredWorkshopCatalog({
+    enabled: isAdmin,
+    searchQuery,
+    integrationFilter,
+    availableKinds: workshopAvailableKinds,
+  });
 
   const items = useMemo<WidgetItemData[]>(
     () =>
@@ -245,18 +233,26 @@ const ItemSelectModalContent = ({
         !item.supportedIntegrations.some((kind) => matchesIntegrationSearch(kind, searchQuery))
       )
         return [];
-      const connectionStatus = getWidgetConnectionStatus({
-        supportedIntegrations: item.supportedIntegrations,
-        availableKinds,
-        connectionOptional: widgetKindsWithOptionalIntegrations.has(item.kind),
-      });
+      let connectionStatus: WidgetConnectionStatus = "noConnectionRequired";
+      if (integrationData) {
+        connectionStatus = getWidgetConnectionStatus({
+          supportedIntegrations: item.supportedIntegrations,
+          availableKinds,
+          connectionOptional: widgetKindsWithOptionalIntegrations.has(item.kind),
+        });
+      }
       return [{ ...item, connectionStatus }];
     });
-  }, [availableKinds, integrationFilter, items, searchQuery]);
+  }, [availableKinds, integrationData, integrationFilter, items, searchQuery]);
 
   const filteredCustomWidgets = useMemo(() => {
-    if (integrationFilter) return [];
-    return (customWidgetDefs ?? []).filter((def) => def.name.toLowerCase().includes(searchQuery));
+    return (customWidgetDefs ?? []).filter((definition) => {
+      if (integrationFilter && !definition.integrationKinds.some((kind) => kind === integrationFilter)) return false;
+      return (
+        definition.name.toLowerCase().includes(searchQuery) ||
+        definition.integrationKinds.some((kind) => matchesIntegrationSearch(kind, searchQuery))
+      );
+    });
   }, [customWidgetDefs, integrationFilter, searchQuery]);
 
   const notifyDefinitionLoadError = (error: unknown) => {
@@ -315,6 +311,7 @@ const ItemSelectModalContent = ({
     preloadWidgetEditModal();
     try {
       const definition = await loadWidgetDefinition("customApi");
+      if (!pickerOpen.current) return;
       const itemId = createId();
       const initialSize = widgetDefaultSizes.customApi ?? defaultWidgetSize;
       const defaultOptions = reduceWidgetOptionsWithDefinition(definition, settings);
@@ -365,15 +362,17 @@ const ItemSelectModalContent = ({
   };
 
   const handleWorkshopInstalled = async (definitionId: string) => {
+    if (!pickerOpen.current) return;
     try {
-      const definitions = await utils.customWidget.available.fetch({ boardId: board.id, currentId: definitionId });
+      const definitions = await utils.customWidget.available.fetch({ boardId: board.id });
+      if (!pickerOpen.current) return;
       const installed = definitions.find(({ id }) => id === definitionId);
       if (!installed) throw new Error(t("item.create.notification.error.message"));
       await handleAddCustomWidget(installed);
     } catch (error) {
-      notifyDefinitionLoadError(error);
+      if (pickerOpen.current) notifyDefinitionLoadError(error);
     } finally {
-      setWorkshopSelection(null);
+      if (pickerOpen.current) setWorkshopSelection(null);
     }
   };
 
@@ -518,7 +517,7 @@ const ItemSelectModalContent = ({
                 filteredItems.length === 1 &&
                 filteredItems[0] &&
                 filteredCustomWidgets.length === 0 &&
-                (!isAdmin || (!workshop.isPending && workshopItems.length === 0))
+                (!isAdmin || (!workshop.isPending && workshop.items.length === 0))
               ) {
                 void handleAdd(filteredItems[0].kind);
               }
@@ -597,7 +596,16 @@ const ItemSelectModalContent = ({
                 }
                 title={def.name}
                 description={def.description ?? ""}
+                disabled={loadingSelection !== null}
                 footerLeft={
+                  def.integrationKinds.length > 0 && (
+                    <SupportedIntegrations
+                      integrations={def.integrationKinds}
+                      availableKinds={workshopAvailableKinds}
+                    />
+                  )
+                }
+                footerRight={
                   <Text size="xs" c="dimmed">
                     {t("item.create.customWidget")}
                   </Text>
@@ -607,64 +615,15 @@ const ItemSelectModalContent = ({
           </>
         )}
         {isAdmin && (
-          <>
-            <Group justify="space-between" mt="sm" style={{ gridColumn: "1 / -1" }}>
-              <Group gap="xs">
-                <IconBuildingStore size={16} />
-                <Text component="h3" size="sm" fw={600}>
-                  {t("item.create.workshop.title")}
-                </Text>
-              </Group>
-              <Button
-                component="a"
-                href="/manage/custom-widgets/workshop"
-                target="_blank"
-                rel="noopener noreferrer"
-                variant="subtle"
-                size="compact-sm"
-              >
-                {t("workshop.browseWorkshop")}
-              </Button>
-            </Group>
-            {workshop.isPending && (
-              <Center py="sm" style={{ gridColumn: "1 / -1" }}>
-                <Loader size="sm" />
-              </Center>
-            )}
-            {workshopItems.length === 0 && !workshop.isPending && (
-              <Text size="sm" c="dimmed" style={{ gridColumn: "1 / -1" }}>
-                {workshop.isError && t("workshop.unavailableTitle")}
-                {!workshop.isError && isFiltering && t("item.create.workshop.noMatches")}
-                {!workshop.isError && !isFiltering && t("item.create.workshop.empty")}
-              </Text>
-            )}
-            {workshopItems.map((item) => (
-              <SelectableCard
-                key={item.id}
-                onClick={() => setWorkshopSelection(item.id)}
-                disabled={loadingSelection !== null}
-                aria-label={item.title}
-                icon={
-                  <ThemeIcon size={34} radius="md" variant="light">
-                    <IconBuildingStore size={20} />
-                  </ThemeIcon>
-                }
-                title={item.title}
-                description={item.description}
-                topRight={
-                  item.supportedIntegrations.length > 0 && (
-                    <ConnectionStatusBadge status={item.isCompatible ? "ready" : "needsSetup"} />
-                  )
-                }
-                footerLeft={
-                  <SupportedIntegrations
-                    integrations={item.supportedIntegrations}
-                    availableKinds={workshopAvailableKinds}
-                  />
-                }
-              />
-            ))}
-          </>
+          <WorkshopWidgetSection
+            catalog={workshop}
+            availableKinds={workshopAvailableKinds}
+            integrationError={integrationError}
+            search={search.trim()}
+            integrationFilter={integrationFilter}
+            disabled={loadingSelection !== null}
+            onSelect={setWorkshopSelection}
+          />
         )}
         {filteredItems.filter(({ connectionStatus }) => connectionStatus === "needsSetup").map(renderItem)}
       </SimpleGrid>
@@ -721,89 +680,6 @@ export const WidgetItem = ({
   );
 };
 
-export const ConnectionStatusBadge = ({ status }: { status: WidgetConnectionStatus }) => {
-  const t = useI18n();
-  if (status === "noConnectionRequired") return null;
-  const color = status === "ready" ? "green" : status === "needsSetup" ? "yellow" : "gray";
-
-  return (
-    <Badge variant="dot" color={color} size="xs" tt="none" w="fit-content" maw="100%">
-      {t(`item.create.connectionStatus.${status}`)}
-    </Badge>
-  );
-};
-
-export const SupportedIntegrations = ({
-  integrations,
-  availableKinds,
-}: {
-  integrations: IntegrationKind[];
-  availableKinds?: ReadonlySet<IntegrationKind>;
-}) => {
-  const t = useI18n();
-
-  if (integrations.length === 0) {
-    return (
-      <Text size="xs" c="dimmed" fs="italic">
-        {t("item.create.standalone")}
-      </Text>
-    );
-  }
-
-  const orderedIntegrations = integrations.toSorted(
-    (left, right) => Number(availableKinds?.has(right) ?? false) - Number(availableKinds?.has(left) ?? false),
-  );
-  const countToShow = integrations.length >= 6 ? 4 : 5;
-  const moreCount = integrations.length - countToShow;
-  const getLabel = (kind: IntegrationKind) => {
-    const name = getIntegrationName(kind);
-    if (!availableKinds || availableKinds.has(kind)) return name;
-    return t("item.create.integrationNotConnected", { name });
-  };
-
-  return (
-    <Group gap={2}>
-      <Tooltip.Group closeDelay={100}>
-        <Group gap={2}>
-          {orderedIntegrations.slice(0, countToShow).map((integration) => (
-            <Tooltip key={integration} label={getLabel(integration)} withArrow>
-              <Avatar
-                src={getIconUrl(integration)}
-                alt={getLabel(integration)}
-                size="xs"
-                radius="xl"
-                style={
-                  availableKinds && !availableKinds.has(integration)
-                    ? { filter: "grayscale(1)", opacity: 0.55 }
-                    : undefined
-                }
-              />
-            </Tooltip>
-          ))}
-          {moreCount > 0 && (
-            <Tooltip
-              withArrow
-              label={
-                <Stack gap={2}>
-                  {orderedIntegrations.slice(countToShow).map((integration) => (
-                    <Text key={integration} size="xs">
-                      {getLabel(integration)}
-                    </Text>
-                  ))}
-                </Stack>
-              }
-            >
-              <Avatar radius="xl" size="xs">
-                +{moreCount}
-              </Avatar>
-            </Tooltip>
-          )}
-        </Group>
-      </Tooltip.Group>
-    </Group>
-  );
-};
-
 const ItemSelectModalFrame = ({
   actions,
   innerProps,
@@ -816,7 +692,7 @@ const ItemSelectModalFrame = ({
   const isAdmin = session?.user.permissions.includes("admin") ?? false;
   const canCreateIntegration = session?.user.permissions.includes("integration-create") ?? false;
   const t = useI18n();
-  const { data: integrationData } = clientApi.integration.all.useQuery();
+  const integrationQuery = clientApi.integration.all.useQuery();
   const { data: customWidgetDefs } = clientApi.customWidget.available.useQuery(
     { boardId: innerProps.boardId },
     { enabled: isAdmin },
@@ -825,7 +701,8 @@ const ItemSelectModalFrame = ({
   return (
     <ItemSelectModalContent
       actions={actions}
-      integrationData={integrationData}
+      integrationData={integrationQuery.data}
+      integrationError={integrationQuery.isError && integrationQuery.data === undefined}
       customWidgetDefs={customWidgetDefs}
       ensureIntegrationDataAsync={() => utils.integration.all.ensureData()}
       isAdmin={isAdmin}

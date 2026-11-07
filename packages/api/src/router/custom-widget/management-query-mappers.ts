@@ -112,6 +112,14 @@ export function mapAvailableCustomWidget(definition: StoredDefinition) {
       options: widget.options,
       defaultOptions: getCustomWidgetDefaultOptions(widget.options),
       template: widget.template,
+      integrationKinds: [
+        ...new Set(
+          Object.values(widget.sources).flatMap((source) => {
+            if (source.type === "integration") return [source.integrationKind];
+            return [];
+          }),
+        ),
+      ],
       sources: Object.entries(widget.sources).map(([id, source]) => ({
         id,
         name: source.name,
@@ -146,6 +154,7 @@ export function mapLegacyAvailableCustomWidget(definition: LegacyDefinition) {
     options: {},
     defaultOptions: {},
     template: "",
+    integrationKinds: [],
     sources: [],
     requestCapabilities: [],
     optionRequests: [],

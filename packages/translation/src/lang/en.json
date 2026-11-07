@@ -2207,7 +2207,10 @@
         "title": "Workshop widgets",
         "back": "Back to widgets",
         "empty": "No Workshop widgets to show. Browse the Workshop for more.",
-        "noMatches": "No Workshop widgets match your filters.",
+        "noMatches": "No matches in the featured Workshop widgets.",
+        "loading": "Loading Workshop recommendations",
+        "integrationError": "Could not load your integrations. You can still search for Workshop widgets.",
+        "searchMore": "Search Workshop",
         "installAndAdd": "Install and add to board"
       },
       "missingIntegration": {

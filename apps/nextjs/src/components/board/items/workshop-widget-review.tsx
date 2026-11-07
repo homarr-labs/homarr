@@ -1,17 +1,12 @@
 "use client";
 
-import { useMemo } from "react";
 import { Alert, Button, Group, Skeleton, Stack, Text } from "@mantine/core";
 
-import { CUSTOM_WIDGET_SCHEMA } from "@homarr/custom-widgets/core";
-import { ImportReviewContent } from "@homarr/custom-widgets/workbench";
-import { SourceSetupPanel } from "@homarr/forms-collection/custom-widgets";
 import { useI18n } from "@homarr/translation/client";
 import { useWorkshopSubmissionQuery } from "@homarr/workshop/backend";
-import { validateWorkshopWidget } from "@homarr/workshop/schema";
 
-import { useCustomWidgetImport } from "~/components/custom-widgets/use-custom-widget-import";
 import { createWorkshopClient } from "~/components/workshop/workshop-client";
+import { WorkshopInstallReview, useWorkshopWidgetImport } from "~/components/workshop/workshop-install-review";
 
 export interface WorkshopWidgetReviewProps {
   submissionId: string;
@@ -23,17 +18,8 @@ export function WorkshopWidgetReview({ submissionId, onBack, onImported }: Works
   const t = useI18n();
   const detail = useWorkshopSubmissionQuery(createWorkshopClient(), submissionId);
   const submission = detail.data;
-  const { content, type, widgetSchema } = submission ?? {};
-  const widget = useMemo(() => {
-    if (!content || type !== "customWidget" || widgetSchema !== CUSTOM_WIDGET_SCHEMA) {
-      return null;
-    }
-    const validation = validateWorkshopWidget(content);
-    if (!validation.success) return null;
-    return validation.data;
-  }, [content, type, widgetSchema]);
-
-  const importer = useCustomWidgetImport({ widget, onImported: ({ id }) => onImported(id) });
+  const importer = useWorkshopWidgetImport(submission, ({ id }) => onImported(id));
+  const compatible = importer.validation?.success === true;
 
   return (
     <Stack gap="md">
@@ -41,34 +27,32 @@ export function WorkshopWidgetReview({ submissionId, onBack, onImported }: Works
       {detail.isError && <Alert color="red">{t("workshop.loadError")}</Alert>}
       {submission && !detail.isError && (
         <>
-          <Stack gap={4}>
-            <Text fw={700} size="lg">
-              {submission.title}
-            </Text>
-            <Text size="sm" c="dimmed">
-              {t("workshop.author", { name: submission.authorName || t("workshop.communityMember") })}
-            </Text>
-          </Stack>
+          <Group justify="space-between">
+            <Stack gap={4}>
+              <Text fw={700} size="lg">
+                {submission.title}
+              </Text>
+              <Text size="sm" c="dimmed">
+                {t("workshop.author", { name: submission.authorName || t("workshop.communityMember") })}
+              </Text>
+            </Stack>
+            <Button
+              component="a"
+              href={`/manage/custom-widgets/workshop/${encodeURIComponent(submission.id)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              variant="subtle"
+              size="compact-sm"
+            >
+              {t("workshop.technicalDetails")}
+            </Button>
+          </Group>
           {submission.outdated && <Alert color="yellow">{t("workshop.outdatedWarning")}</Alert>}
           {submission.reportCount > 0 && (
-            <Alert color="yellow">{t("workshop.reportWarning", { count: submission.reportCount })}</Alert>
+            <Alert color="red">{t("workshop.reportWarning", { count: submission.reportCount })}</Alert>
           )}
-          {!widget && <Alert color="red">{t("workshop.installErrorDescription")}</Alert>}
-          {importer.review && (
-            <>
-              <Text size="sm" c="dimmed">
-                {t("workshop.securityNotice")}
-              </Text>
-              <ImportReviewContent review={importer.review} messages={importer.reviewMessages}>
-                <SourceSetupPanel
-                  setups={importer.setups}
-                  values={importer.values}
-                  onChange={importer.setValue}
-                  messages={importer.setupMessages}
-                />
-              </ImportReviewContent>
-            </>
-          )}
+          {!compatible && <Alert color="red">{t("workshop.installErrorDescription")}</Alert>}
+          <WorkshopInstallReview importer={importer} />
         </>
       )}
       <Group justify="space-between">
@@ -77,7 +61,7 @@ export function WorkshopWidgetReview({ submissionId, onBack, onImported }: Works
         </Button>
         <Button
           loading={importer.pending || importer.succeeded}
-          disabled={detail.isError || !widget || !importer.ready || importer.succeeded}
+          disabled={detail.isError || !compatible || !importer.ready || importer.succeeded}
           onClick={importer.importWidget}
         >
           {t("item.create.workshop.installAndAdd")}
