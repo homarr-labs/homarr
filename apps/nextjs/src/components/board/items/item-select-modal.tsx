@@ -376,7 +376,7 @@ const ItemSelectModalContent = ({
     } catch (error) {
       if (pickerOpen.current) notifyDefinitionLoadError(error);
     } finally {
-      if (pickerOpen.current) setWorkshopSelection(null);
+      setWorkshopSelection(null);
     }
   };
 
