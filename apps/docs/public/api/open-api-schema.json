@@ -4811,6 +4811,1157 @@
                     "type": "string",
                     "minLength": 1
                   },
+                  "themeId": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "enum": [
+                          "default",
+                          "absolutely",
+                          "ayu",
+                          "cappuccin",
+                          "dracula",
+                          "everforest",
+                          "github",
+                          "gruvbox",
+                          "linear",
+                          "lobster",
+                          "material",
+                          "matrix",
+                          "monokai",
+                          "night-owl",
+                          "nord",
+                          "notion",
+                          "og",
+                          "one",
+                          "oscurange",
+                          "raycast",
+                          "rose-pine",
+                          "sentry",
+                          "shadcn",
+                          "solarized",
+                          "temple",
+                          "tokyo-night",
+                          "vercel",
+                          "vscode-plus",
+                          "xcode",
+                          "custom"
+                        ]
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "customTheme": {
+                    "anyOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "preset": {
+                            "type": "string",
+                            "enum": [
+                              "default",
+                              "absolutely",
+                              "ayu",
+                              "cappuccin",
+                              "dracula",
+                              "everforest",
+                              "github",
+                              "gruvbox",
+                              "linear",
+                              "lobster",
+                              "material",
+                              "matrix",
+                              "monokai",
+                              "night-owl",
+                              "nord",
+                              "notion",
+                              "og",
+                              "one",
+                              "oscurange",
+                              "raycast",
+                              "rose-pine",
+                              "sentry",
+                              "shadcn",
+                              "solarized",
+                              "temple",
+                              "tokyo-night",
+                              "vercel",
+                              "vscode-plus",
+                              "xcode"
+                            ]
+                          },
+                          "theme": {
+                            "type": "object",
+                            "properties": {
+                              "focusRing": {
+                                "type": "string",
+                                "enum": [
+                                  "auto",
+                                  "always",
+                                  "never"
+                                ]
+                              },
+                              "scale": {
+                                "type": "number",
+                                "minimum": 0.5,
+                                "maximum": 3
+                              },
+                              "fontSmoothing": {
+                                "type": "boolean"
+                              },
+                              "white": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 300,
+                                "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                              },
+                              "black": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 300,
+                                "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                              },
+                              "colors": {
+                                "type": "object",
+                                "propertyNames": {
+                                  "type": "string",
+                                  "pattern": "^[A-Za-z][A-Za-z\\d-]{0,47}$"
+                                },
+                                "additionalProperties": {
+                                  "type": "array",
+                                  "prefixItems": [
+                                    {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 300,
+                                      "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                    },
+                                    {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 300,
+                                      "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                    },
+                                    {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 300,
+                                      "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                    },
+                                    {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 300,
+                                      "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                    },
+                                    {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 300,
+                                      "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                    },
+                                    {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 300,
+                                      "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                    },
+                                    {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 300,
+                                      "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                    },
+                                    {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 300,
+                                      "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                    },
+                                    {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 300,
+                                      "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                    },
+                                    {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 300,
+                                      "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                    }
+                                  ],
+                                  "items": {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "maxLength": 300,
+                                    "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                  },
+                                  "minItems": 10
+                                }
+                              },
+                              "primaryColor": {
+                                "type": "string",
+                                "pattern": "^[A-Za-z][A-Za-z\\d-]{0,47}$"
+                              },
+                              "primaryShade": {
+                                "anyOf": [
+                                  {
+                                    "type": "number",
+                                    "enum": [
+                                      0,
+                                      1,
+                                      2,
+                                      3,
+                                      4,
+                                      5,
+                                      6,
+                                      7,
+                                      8,
+                                      9
+                                    ]
+                                  },
+                                  {
+                                    "type": "object",
+                                    "properties": {
+                                      "light": {
+                                        "type": "number",
+                                        "enum": [
+                                          0,
+                                          1,
+                                          2,
+                                          3,
+                                          4,
+                                          5,
+                                          6,
+                                          7,
+                                          8,
+                                          9
+                                        ]
+                                      },
+                                      "dark": {
+                                        "type": "number",
+                                        "enum": [
+                                          0,
+                                          1,
+                                          2,
+                                          3,
+                                          4,
+                                          5,
+                                          6,
+                                          7,
+                                          8,
+                                          9
+                                        ]
+                                      }
+                                    },
+                                    "additionalProperties": false
+                                  }
+                                ]
+                              },
+                              "autoContrast": {
+                                "type": "boolean"
+                              },
+                              "luminanceThreshold": {
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 1
+                              },
+                              "fontFamily": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 300,
+                                "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                              },
+                              "fontFamilyMonospace": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 300,
+                                "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                              },
+                              "headings": {
+                                "type": "object",
+                                "properties": {
+                                  "fontFamily": {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "maxLength": 300,
+                                    "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                  },
+                                  "fontWeight": {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "maxLength": 300,
+                                    "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                  },
+                                  "textWrap": {
+                                    "type": "string",
+                                    "enum": [
+                                      "wrap",
+                                      "nowrap",
+                                      "balance",
+                                      "pretty",
+                                      "stable"
+                                    ]
+                                  },
+                                  "sizes": {
+                                    "type": "object",
+                                    "properties": {
+                                      "h1": {
+                                        "type": "object",
+                                        "properties": {
+                                          "fontSize": {
+                                            "type": "string",
+                                            "minLength": 1,
+                                            "maxLength": 300,
+                                            "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                          },
+                                          "fontWeight": {
+                                            "type": "string",
+                                            "minLength": 1,
+                                            "maxLength": 300,
+                                            "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                          },
+                                          "lineHeight": {
+                                            "type": "string",
+                                            "minLength": 1,
+                                            "maxLength": 300,
+                                            "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                          }
+                                        },
+                                        "additionalProperties": false
+                                      },
+                                      "h2": {
+                                        "type": "object",
+                                        "properties": {
+                                          "fontSize": {
+                                            "type": "string",
+                                            "minLength": 1,
+                                            "maxLength": 300,
+                                            "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                          },
+                                          "fontWeight": {
+                                            "type": "string",
+                                            "minLength": 1,
+                                            "maxLength": 300,
+                                            "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                          },
+                                          "lineHeight": {
+                                            "type": "string",
+                                            "minLength": 1,
+                                            "maxLength": 300,
+                                            "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                          }
+                                        },
+                                        "additionalProperties": false
+                                      },
+                                      "h3": {
+                                        "type": "object",
+                                        "properties": {
+                                          "fontSize": {
+                                            "type": "string",
+                                            "minLength": 1,
+                                            "maxLength": 300,
+                                            "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                          },
+                                          "fontWeight": {
+                                            "type": "string",
+                                            "minLength": 1,
+                                            "maxLength": 300,
+                                            "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                          },
+                                          "lineHeight": {
+                                            "type": "string",
+                                            "minLength": 1,
+                                            "maxLength": 300,
+                                            "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                          }
+                                        },
+                                        "additionalProperties": false
+                                      },
+                                      "h4": {
+                                        "type": "object",
+                                        "properties": {
+                                          "fontSize": {
+                                            "type": "string",
+                                            "minLength": 1,
+                                            "maxLength": 300,
+                                            "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                          },
+                                          "fontWeight": {
+                                            "type": "string",
+                                            "minLength": 1,
+                                            "maxLength": 300,
+                                            "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                          },
+                                          "lineHeight": {
+                                            "type": "string",
+                                            "minLength": 1,
+                                            "maxLength": 300,
+                                            "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                          }
+                                        },
+                                        "additionalProperties": false
+                                      },
+                                      "h5": {
+                                        "type": "object",
+                                        "properties": {
+                                          "fontSize": {
+                                            "type": "string",
+                                            "minLength": 1,
+                                            "maxLength": 300,
+                                            "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                          },
+                                          "fontWeight": {
+                                            "type": "string",
+                                            "minLength": 1,
+                                            "maxLength": 300,
+                                            "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                          },
+                                          "lineHeight": {
+                                            "type": "string",
+                                            "minLength": 1,
+                                            "maxLength": 300,
+                                            "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                          }
+                                        },
+                                        "additionalProperties": false
+                                      },
+                                      "h6": {
+                                        "type": "object",
+                                        "properties": {
+                                          "fontSize": {
+                                            "type": "string",
+                                            "minLength": 1,
+                                            "maxLength": 300,
+                                            "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                          },
+                                          "fontWeight": {
+                                            "type": "string",
+                                            "minLength": 1,
+                                            "maxLength": 300,
+                                            "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                          },
+                                          "lineHeight": {
+                                            "type": "string",
+                                            "minLength": 1,
+                                            "maxLength": 300,
+                                            "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                          }
+                                        },
+                                        "additionalProperties": false
+                                      }
+                                    },
+                                    "additionalProperties": false
+                                  }
+                                },
+                                "additionalProperties": false
+                              },
+                              "radius": {
+                                "type": "object",
+                                "propertyNames": {
+                                  "type": "string",
+                                  "pattern": "^[A-Za-z][A-Za-z\\d-]{0,47}$"
+                                },
+                                "additionalProperties": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 300,
+                                  "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                }
+                              },
+                              "defaultRadius": {
+                                "anyOf": [
+                                  {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "maxLength": 300,
+                                    "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                  },
+                                  {
+                                    "type": "number",
+                                    "minimum": 0,
+                                    "maximum": 256
+                                  }
+                                ]
+                              },
+                              "spacing": {
+                                "type": "object",
+                                "propertyNames": {
+                                  "type": "string",
+                                  "pattern": "^[A-Za-z][A-Za-z\\d-]{0,47}$"
+                                },
+                                "additionalProperties": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 300,
+                                  "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                }
+                              },
+                              "fontSizes": {
+                                "type": "object",
+                                "propertyNames": {
+                                  "type": "string",
+                                  "pattern": "^[A-Za-z][A-Za-z\\d-]{0,47}$"
+                                },
+                                "additionalProperties": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 300,
+                                  "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                }
+                              },
+                              "lineHeights": {
+                                "type": "object",
+                                "propertyNames": {
+                                  "type": "string",
+                                  "pattern": "^[A-Za-z][A-Za-z\\d-]{0,47}$"
+                                },
+                                "additionalProperties": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 300,
+                                  "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                }
+                              },
+                              "fontWeights": {
+                                "type": "object",
+                                "propertyNames": {
+                                  "type": "string",
+                                  "pattern": "^[A-Za-z][A-Za-z\\d-]{0,47}$"
+                                },
+                                "additionalProperties": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 300,
+                                  "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                }
+                              },
+                              "breakpoints": {
+                                "type": "object",
+                                "properties": {
+                                  "xs": {
+                                    "type": "string",
+                                    "pattern": "^\\d{1,3}(?:\\.\\d{1,3})?em$"
+                                  },
+                                  "sm": {
+                                    "type": "string",
+                                    "pattern": "^\\d{1,3}(?:\\.\\d{1,3})?em$"
+                                  },
+                                  "md": {
+                                    "type": "string",
+                                    "pattern": "^\\d{1,3}(?:\\.\\d{1,3})?em$"
+                                  },
+                                  "lg": {
+                                    "type": "string",
+                                    "pattern": "^\\d{1,3}(?:\\.\\d{1,3})?em$"
+                                  },
+                                  "xl": {
+                                    "type": "string",
+                                    "pattern": "^\\d{1,3}(?:\\.\\d{1,3})?em$"
+                                  }
+                                },
+                                "additionalProperties": false
+                              },
+                              "shadows": {
+                                "type": "object",
+                                "propertyNames": {
+                                  "type": "string",
+                                  "pattern": "^[A-Za-z][A-Za-z\\d-]{0,47}$"
+                                },
+                                "additionalProperties": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 300,
+                                  "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                }
+                              },
+                              "respectReducedMotion": {
+                                "type": "boolean"
+                              },
+                              "cursorType": {
+                                "type": "string",
+                                "enum": [
+                                  "default",
+                                  "pointer"
+                                ]
+                              },
+                              "defaultGradient": {
+                                "type": "object",
+                                "properties": {
+                                  "from": {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "maxLength": 300,
+                                    "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                  },
+                                  "to": {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "maxLength": 300,
+                                    "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                  },
+                                  "deg": {
+                                    "type": "number",
+                                    "minimum": -360,
+                                    "maximum": 360
+                                  }
+                                },
+                                "additionalProperties": false
+                              },
+                              "activeClassName": {
+                                "type": "string",
+                                "maxLength": 160,
+                                "pattern": "^[\\w -]*$"
+                              },
+                              "focusClassName": {
+                                "type": "string",
+                                "maxLength": 160,
+                                "pattern": "^[\\w -]*$"
+                              },
+                              "components": {
+                                "type": "object",
+                                "propertyNames": {
+                                  "type": "string",
+                                  "pattern": "^[A-Za-z][A-Za-z\\d-]{0,47}$"
+                                },
+                                "additionalProperties": {
+                                  "type": "object",
+                                  "properties": {
+                                    "vars": {
+                                      "type": "object",
+                                      "propertyNames": {
+                                        "type": "string",
+                                        "pattern": "^[A-Za-z][A-Za-z\\d-]{0,47}$"
+                                      },
+                                      "additionalProperties": {
+                                        "type": "object",
+                                        "propertyNames": {
+                                          "type": "string",
+                                          "pattern": "^--[a-z][a-z\\d-]{0,63}$"
+                                        },
+                                        "additionalProperties": {
+                                          "anyOf": [
+                                            {
+                                              "type": "string",
+                                              "minLength": 1,
+                                              "maxLength": 300,
+                                              "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                            },
+                                            {
+                                              "type": "number"
+                                            }
+                                          ]
+                                        }
+                                      }
+                                    },
+                                    "classNames": {
+                                      "type": "object",
+                                      "propertyNames": {
+                                        "type": "string",
+                                        "pattern": "^[A-Za-z][A-Za-z\\d-]{0,47}$"
+                                      },
+                                      "additionalProperties": {
+                                        "type": "string",
+                                        "maxLength": 160,
+                                        "pattern": "^[\\w -]*$"
+                                      }
+                                    },
+                                    "styles": {
+                                      "type": "object",
+                                      "propertyNames": {
+                                        "type": "string",
+                                        "pattern": "^[A-Za-z][A-Za-z\\d-]{0,47}$"
+                                      },
+                                      "additionalProperties": {
+                                        "type": "object",
+                                        "properties": {
+                                          "background": {
+                                            "type": "string",
+                                            "minLength": 1,
+                                            "maxLength": 300,
+                                            "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                          },
+                                          "backgroundImage": {
+                                            "type": "string",
+                                            "minLength": 1,
+                                            "maxLength": 300,
+                                            "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                          },
+                                          "backgroundColor": {
+                                            "type": "string",
+                                            "minLength": 1,
+                                            "maxLength": 300,
+                                            "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                          },
+                                          "backdropFilter": {
+                                            "type": "string",
+                                            "minLength": 1,
+                                            "maxLength": 300,
+                                            "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                          },
+                                          "color": {
+                                            "type": "string",
+                                            "minLength": 1,
+                                            "maxLength": 300,
+                                            "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                          },
+                                          "border": {
+                                            "type": "string",
+                                            "minLength": 1,
+                                            "maxLength": 300,
+                                            "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                          },
+                                          "borderColor": {
+                                            "type": "string",
+                                            "minLength": 1,
+                                            "maxLength": 300,
+                                            "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                          },
+                                          "borderRadius": {
+                                            "anyOf": [
+                                              {
+                                                "type": "string",
+                                                "minLength": 1,
+                                                "maxLength": 300,
+                                                "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                              },
+                                              {
+                                                "type": "number"
+                                              }
+                                            ]
+                                          },
+                                          "borderWidth": {
+                                            "anyOf": [
+                                              {
+                                                "type": "string",
+                                                "minLength": 1,
+                                                "maxLength": 300,
+                                                "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                              },
+                                              {
+                                                "type": "number"
+                                              }
+                                            ]
+                                          },
+                                          "borderStyle": {
+                                            "type": "string",
+                                            "minLength": 1,
+                                            "maxLength": 300,
+                                            "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                          },
+                                          "boxShadow": {
+                                            "type": "string",
+                                            "minLength": 1,
+                                            "maxLength": 300,
+                                            "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                          },
+                                          "fontFamily": {
+                                            "type": "string",
+                                            "minLength": 1,
+                                            "maxLength": 300,
+                                            "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                          },
+                                          "fontSize": {
+                                            "anyOf": [
+                                              {
+                                                "type": "string",
+                                                "minLength": 1,
+                                                "maxLength": 300,
+                                                "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                              },
+                                              {
+                                                "type": "number"
+                                              }
+                                            ]
+                                          },
+                                          "fontStyle": {
+                                            "type": "string",
+                                            "minLength": 1,
+                                            "maxLength": 300,
+                                            "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                          },
+                                          "fontWeight": {
+                                            "anyOf": [
+                                              {
+                                                "type": "string",
+                                                "minLength": 1,
+                                                "maxLength": 300,
+                                                "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                              },
+                                              {
+                                                "type": "number"
+                                              }
+                                            ]
+                                          },
+                                          "letterSpacing": {
+                                            "anyOf": [
+                                              {
+                                                "type": "string",
+                                                "minLength": 1,
+                                                "maxLength": 300,
+                                                "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                              },
+                                              {
+                                                "type": "number"
+                                              }
+                                            ]
+                                          },
+                                          "lineHeight": {
+                                            "anyOf": [
+                                              {
+                                                "type": "string",
+                                                "minLength": 1,
+                                                "maxLength": 300,
+                                                "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                              },
+                                              {
+                                                "type": "number"
+                                              }
+                                            ]
+                                          },
+                                          "margin": {
+                                            "anyOf": [
+                                              {
+                                                "type": "string",
+                                                "minLength": 1,
+                                                "maxLength": 300,
+                                                "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                              },
+                                              {
+                                                "type": "number"
+                                              }
+                                            ]
+                                          },
+                                          "padding": {
+                                            "anyOf": [
+                                              {
+                                                "type": "string",
+                                                "minLength": 1,
+                                                "maxLength": 300,
+                                                "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                              },
+                                              {
+                                                "type": "number"
+                                              }
+                                            ]
+                                          },
+                                          "paddingBlock": {
+                                            "anyOf": [
+                                              {
+                                                "type": "string",
+                                                "minLength": 1,
+                                                "maxLength": 300,
+                                                "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                              },
+                                              {
+                                                "type": "number"
+                                              }
+                                            ]
+                                          },
+                                          "paddingInline": {
+                                            "anyOf": [
+                                              {
+                                                "type": "string",
+                                                "minLength": 1,
+                                                "maxLength": 300,
+                                                "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                              },
+                                              {
+                                                "type": "number"
+                                              }
+                                            ]
+                                          },
+                                          "gap": {
+                                            "anyOf": [
+                                              {
+                                                "type": "string",
+                                                "minLength": 1,
+                                                "maxLength": 300,
+                                                "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                              },
+                                              {
+                                                "type": "number"
+                                              }
+                                            ]
+                                          },
+                                          "opacity": {
+                                            "type": "number",
+                                            "minimum": 0,
+                                            "maximum": 1
+                                          },
+                                          "textDecoration": {
+                                            "type": "string",
+                                            "minLength": 1,
+                                            "maxLength": 300,
+                                            "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                          },
+                                          "textTransform": {
+                                            "type": "string",
+                                            "enum": [
+                                              "none",
+                                              "uppercase",
+                                              "lowercase",
+                                              "capitalize"
+                                            ]
+                                          }
+                                        },
+                                        "additionalProperties": false
+                                      }
+                                    },
+                                    "defaultProps": {
+                                      "type": "object",
+                                      "properties": {
+                                        "autoContrast": {
+                                          "type": "boolean"
+                                        },
+                                        "color": {
+                                          "type": "string",
+                                          "minLength": 1,
+                                          "maxLength": 300,
+                                          "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                        },
+                                        "radius": {
+                                          "anyOf": [
+                                            {
+                                              "type": "string",
+                                              "minLength": 1,
+                                              "maxLength": 300,
+                                              "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                            },
+                                            {
+                                              "type": "number",
+                                              "minimum": 0,
+                                              "maximum": 256
+                                            }
+                                          ]
+                                        },
+                                        "size": {
+                                          "anyOf": [
+                                            {
+                                              "type": "string",
+                                              "minLength": 1,
+                                              "maxLength": 300,
+                                              "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                            },
+                                            {
+                                              "type": "number",
+                                              "minimum": 0,
+                                              "maximum": 256
+                                            }
+                                          ]
+                                        },
+                                        "shadow": {
+                                          "type": "string",
+                                          "minLength": 1,
+                                          "maxLength": 300,
+                                          "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                        },
+                                        "variant": {
+                                          "type": "string",
+                                          "pattern": "^[A-Za-z][A-Za-z\\d-]{0,47}$"
+                                        },
+                                        "withBorder": {
+                                          "type": "boolean"
+                                        },
+                                        "padding": {
+                                          "anyOf": [
+                                            {
+                                              "type": "string",
+                                              "minLength": 1,
+                                              "maxLength": 300,
+                                              "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                            },
+                                            {
+                                              "type": "number",
+                                              "minimum": 0,
+                                              "maximum": 256
+                                            }
+                                          ]
+                                        },
+                                        "blur": {
+                                          "type": "number",
+                                          "minimum": 0,
+                                          "maximum": 40
+                                        },
+                                        "backgroundOpacity": {
+                                          "type": "number",
+                                          "minimum": 0,
+                                          "maximum": 1
+                                        },
+                                        "overlayProps": {
+                                          "type": "object",
+                                          "properties": {
+                                            "blur": {
+                                              "type": "number",
+                                              "minimum": 0,
+                                              "maximum": 40
+                                            },
+                                            "backgroundOpacity": {
+                                              "type": "number",
+                                              "minimum": 0,
+                                              "maximum": 1
+                                            },
+                                            "color": {
+                                              "type": "string",
+                                              "minLength": 1,
+                                              "maxLength": 300,
+                                              "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                            }
+                                          },
+                                          "additionalProperties": false
+                                        },
+                                        "transitionProps": {
+                                          "type": "object",
+                                          "properties": {
+                                            "duration": {
+                                              "type": "number",
+                                              "minimum": 0,
+                                              "maximum": 1500
+                                            },
+                                            "transition": {
+                                              "type": "string",
+                                              "enum": [
+                                                "fade",
+                                                "pop",
+                                                "scale",
+                                                "fade-up",
+                                                "fade-down",
+                                                "slide-up",
+                                                "slide-down",
+                                                "slide-left",
+                                                "slide-right"
+                                              ]
+                                            }
+                                          },
+                                          "additionalProperties": false
+                                        }
+                                      },
+                                      "additionalProperties": false
+                                    }
+                                  },
+                                  "additionalProperties": false
+                                }
+                              },
+                              "other": {
+                                "type": "object",
+                                "propertyNames": {
+                                  "type": "string",
+                                  "pattern": "^[A-Za-z][A-Za-z\\d-]{0,47}$"
+                                },
+                                "additionalProperties": {
+                                  "anyOf": [
+                                    {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 300,
+                                      "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                    },
+                                    {
+                                      "type": "number"
+                                    },
+                                    {
+                                      "type": "boolean"
+                                    },
+                                    {
+                                      "type": "null"
+                                    }
+                                  ]
+                                }
+                              }
+                            },
+                            "additionalProperties": false
+                          },
+                          "light": {
+                            "type": "object",
+                            "properties": {
+                              "body": {
+                                "type": "string",
+                                "pattern": "^#[\\da-f]{6}$"
+                              },
+                              "surface": {
+                                "type": "string",
+                                "pattern": "^#[\\da-f]{6}$"
+                              },
+                              "hover": {
+                                "type": "string",
+                                "pattern": "^#[\\da-f]{6}$"
+                              },
+                              "border": {
+                                "type": "string",
+                                "pattern": "^#[\\da-f]{6}$"
+                              },
+                              "text": {
+                                "type": "string",
+                                "pattern": "^#[\\da-f]{6}$"
+                              },
+                              "dimmed": {
+                                "type": "string",
+                                "pattern": "^#[\\da-f]{6}$"
+                              },
+                              "primary": {
+                                "type": "string",
+                                "pattern": "^#[\\da-f]{6}$"
+                              },
+                              "secondary": {
+                                "type": "string",
+                                "pattern": "^#[\\da-f]{6}$"
+                              }
+                            },
+                            "additionalProperties": false
+                          },
+                          "dark": {
+                            "type": "object",
+                            "properties": {
+                              "body": {
+                                "type": "string",
+                                "pattern": "^#[\\da-f]{6}$"
+                              },
+                              "surface": {
+                                "type": "string",
+                                "pattern": "^#[\\da-f]{6}$"
+                              },
+                              "hover": {
+                                "type": "string",
+                                "pattern": "^#[\\da-f]{6}$"
+                              },
+                              "border": {
+                                "type": "string",
+                                "pattern": "^#[\\da-f]{6}$"
+                              },
+                              "text": {
+                                "type": "string",
+                                "pattern": "^#[\\da-f]{6}$"
+                              },
+                              "dimmed": {
+                                "type": "string",
+                                "pattern": "^#[\\da-f]{6}$"
+                              },
+                              "primary": {
+                                "type": "string",
+                                "pattern": "^#[\\da-f]{6}$"
+                              },
+                              "secondary": {
+                                "type": "string",
+                                "pattern": "^#[\\da-f]{6}$"
+                              }
+                            },
+                            "additionalProperties": false
+                          }
+                        },
+                        "required": [
+                          "preset",
+                          "theme"
+                        ],
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
                   "colorScheme": {
                     "type": "string",
                     "enum": [
@@ -5233,6 +6384,1157 @@
                     "colorScheme": {
                       "type": "string"
                     },
+                    "themeId": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "enum": [
+                            "default",
+                            "absolutely",
+                            "ayu",
+                            "cappuccin",
+                            "dracula",
+                            "everforest",
+                            "github",
+                            "gruvbox",
+                            "linear",
+                            "lobster",
+                            "material",
+                            "matrix",
+                            "monokai",
+                            "night-owl",
+                            "nord",
+                            "notion",
+                            "og",
+                            "one",
+                            "oscurange",
+                            "raycast",
+                            "rose-pine",
+                            "sentry",
+                            "shadcn",
+                            "solarized",
+                            "temple",
+                            "tokyo-night",
+                            "vercel",
+                            "vscode-plus",
+                            "xcode",
+                            "custom"
+                          ]
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "customTheme": {
+                      "anyOf": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "preset": {
+                              "type": "string",
+                              "enum": [
+                                "default",
+                                "absolutely",
+                                "ayu",
+                                "cappuccin",
+                                "dracula",
+                                "everforest",
+                                "github",
+                                "gruvbox",
+                                "linear",
+                                "lobster",
+                                "material",
+                                "matrix",
+                                "monokai",
+                                "night-owl",
+                                "nord",
+                                "notion",
+                                "og",
+                                "one",
+                                "oscurange",
+                                "raycast",
+                                "rose-pine",
+                                "sentry",
+                                "shadcn",
+                                "solarized",
+                                "temple",
+                                "tokyo-night",
+                                "vercel",
+                                "vscode-plus",
+                                "xcode"
+                              ]
+                            },
+                            "theme": {
+                              "type": "object",
+                              "properties": {
+                                "focusRing": {
+                                  "type": "string",
+                                  "enum": [
+                                    "auto",
+                                    "always",
+                                    "never"
+                                  ]
+                                },
+                                "scale": {
+                                  "type": "number",
+                                  "minimum": 0.5,
+                                  "maximum": 3
+                                },
+                                "fontSmoothing": {
+                                  "type": "boolean"
+                                },
+                                "white": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 300,
+                                  "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                },
+                                "black": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 300,
+                                  "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                },
+                                "colors": {
+                                  "type": "object",
+                                  "propertyNames": {
+                                    "type": "string",
+                                    "pattern": "^[A-Za-z][A-Za-z\\d-]{0,47}$"
+                                  },
+                                  "additionalProperties": {
+                                    "type": "array",
+                                    "prefixItems": [
+                                      {
+                                        "type": "string",
+                                        "minLength": 1,
+                                        "maxLength": 300,
+                                        "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                      },
+                                      {
+                                        "type": "string",
+                                        "minLength": 1,
+                                        "maxLength": 300,
+                                        "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                      },
+                                      {
+                                        "type": "string",
+                                        "minLength": 1,
+                                        "maxLength": 300,
+                                        "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                      },
+                                      {
+                                        "type": "string",
+                                        "minLength": 1,
+                                        "maxLength": 300,
+                                        "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                      },
+                                      {
+                                        "type": "string",
+                                        "minLength": 1,
+                                        "maxLength": 300,
+                                        "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                      },
+                                      {
+                                        "type": "string",
+                                        "minLength": 1,
+                                        "maxLength": 300,
+                                        "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                      },
+                                      {
+                                        "type": "string",
+                                        "minLength": 1,
+                                        "maxLength": 300,
+                                        "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                      },
+                                      {
+                                        "type": "string",
+                                        "minLength": 1,
+                                        "maxLength": 300,
+                                        "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                      },
+                                      {
+                                        "type": "string",
+                                        "minLength": 1,
+                                        "maxLength": 300,
+                                        "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                      },
+                                      {
+                                        "type": "string",
+                                        "minLength": 1,
+                                        "maxLength": 300,
+                                        "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                      }
+                                    ],
+                                    "items": {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 300,
+                                      "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                    },
+                                    "minItems": 10
+                                  }
+                                },
+                                "primaryColor": {
+                                  "type": "string",
+                                  "pattern": "^[A-Za-z][A-Za-z\\d-]{0,47}$"
+                                },
+                                "primaryShade": {
+                                  "anyOf": [
+                                    {
+                                      "type": "number",
+                                      "enum": [
+                                        0,
+                                        1,
+                                        2,
+                                        3,
+                                        4,
+                                        5,
+                                        6,
+                                        7,
+                                        8,
+                                        9
+                                      ]
+                                    },
+                                    {
+                                      "type": "object",
+                                      "properties": {
+                                        "light": {
+                                          "type": "number",
+                                          "enum": [
+                                            0,
+                                            1,
+                                            2,
+                                            3,
+                                            4,
+                                            5,
+                                            6,
+                                            7,
+                                            8,
+                                            9
+                                          ]
+                                        },
+                                        "dark": {
+                                          "type": "number",
+                                          "enum": [
+                                            0,
+                                            1,
+                                            2,
+                                            3,
+                                            4,
+                                            5,
+                                            6,
+                                            7,
+                                            8,
+                                            9
+                                          ]
+                                        }
+                                      },
+                                      "additionalProperties": false
+                                    }
+                                  ]
+                                },
+                                "autoContrast": {
+                                  "type": "boolean"
+                                },
+                                "luminanceThreshold": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "fontFamily": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 300,
+                                  "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                },
+                                "fontFamilyMonospace": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 300,
+                                  "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                },
+                                "headings": {
+                                  "type": "object",
+                                  "properties": {
+                                    "fontFamily": {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 300,
+                                      "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                    },
+                                    "fontWeight": {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 300,
+                                      "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                    },
+                                    "textWrap": {
+                                      "type": "string",
+                                      "enum": [
+                                        "wrap",
+                                        "nowrap",
+                                        "balance",
+                                        "pretty",
+                                        "stable"
+                                      ]
+                                    },
+                                    "sizes": {
+                                      "type": "object",
+                                      "properties": {
+                                        "h1": {
+                                          "type": "object",
+                                          "properties": {
+                                            "fontSize": {
+                                              "type": "string",
+                                              "minLength": 1,
+                                              "maxLength": 300,
+                                              "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                            },
+                                            "fontWeight": {
+                                              "type": "string",
+                                              "minLength": 1,
+                                              "maxLength": 300,
+                                              "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                            },
+                                            "lineHeight": {
+                                              "type": "string",
+                                              "minLength": 1,
+                                              "maxLength": 300,
+                                              "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                            }
+                                          },
+                                          "additionalProperties": false
+                                        },
+                                        "h2": {
+                                          "type": "object",
+                                          "properties": {
+                                            "fontSize": {
+                                              "type": "string",
+                                              "minLength": 1,
+                                              "maxLength": 300,
+                                              "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                            },
+                                            "fontWeight": {
+                                              "type": "string",
+                                              "minLength": 1,
+                                              "maxLength": 300,
+                                              "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                            },
+                                            "lineHeight": {
+                                              "type": "string",
+                                              "minLength": 1,
+                                              "maxLength": 300,
+                                              "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                            }
+                                          },
+                                          "additionalProperties": false
+                                        },
+                                        "h3": {
+                                          "type": "object",
+                                          "properties": {
+                                            "fontSize": {
+                                              "type": "string",
+                                              "minLength": 1,
+                                              "maxLength": 300,
+                                              "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                            },
+                                            "fontWeight": {
+                                              "type": "string",
+                                              "minLength": 1,
+                                              "maxLength": 300,
+                                              "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                            },
+                                            "lineHeight": {
+                                              "type": "string",
+                                              "minLength": 1,
+                                              "maxLength": 300,
+                                              "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                            }
+                                          },
+                                          "additionalProperties": false
+                                        },
+                                        "h4": {
+                                          "type": "object",
+                                          "properties": {
+                                            "fontSize": {
+                                              "type": "string",
+                                              "minLength": 1,
+                                              "maxLength": 300,
+                                              "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                            },
+                                            "fontWeight": {
+                                              "type": "string",
+                                              "minLength": 1,
+                                              "maxLength": 300,
+                                              "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                            },
+                                            "lineHeight": {
+                                              "type": "string",
+                                              "minLength": 1,
+                                              "maxLength": 300,
+                                              "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                            }
+                                          },
+                                          "additionalProperties": false
+                                        },
+                                        "h5": {
+                                          "type": "object",
+                                          "properties": {
+                                            "fontSize": {
+                                              "type": "string",
+                                              "minLength": 1,
+                                              "maxLength": 300,
+                                              "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                            },
+                                            "fontWeight": {
+                                              "type": "string",
+                                              "minLength": 1,
+                                              "maxLength": 300,
+                                              "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                            },
+                                            "lineHeight": {
+                                              "type": "string",
+                                              "minLength": 1,
+                                              "maxLength": 300,
+                                              "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                            }
+                                          },
+                                          "additionalProperties": false
+                                        },
+                                        "h6": {
+                                          "type": "object",
+                                          "properties": {
+                                            "fontSize": {
+                                              "type": "string",
+                                              "minLength": 1,
+                                              "maxLength": 300,
+                                              "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                            },
+                                            "fontWeight": {
+                                              "type": "string",
+                                              "minLength": 1,
+                                              "maxLength": 300,
+                                              "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                            },
+                                            "lineHeight": {
+                                              "type": "string",
+                                              "minLength": 1,
+                                              "maxLength": 300,
+                                              "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                            }
+                                          },
+                                          "additionalProperties": false
+                                        }
+                                      },
+                                      "additionalProperties": false
+                                    }
+                                  },
+                                  "additionalProperties": false
+                                },
+                                "radius": {
+                                  "type": "object",
+                                  "propertyNames": {
+                                    "type": "string",
+                                    "pattern": "^[A-Za-z][A-Za-z\\d-]{0,47}$"
+                                  },
+                                  "additionalProperties": {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "maxLength": 300,
+                                    "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                  }
+                                },
+                                "defaultRadius": {
+                                  "anyOf": [
+                                    {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 300,
+                                      "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                    },
+                                    {
+                                      "type": "number",
+                                      "minimum": 0,
+                                      "maximum": 256
+                                    }
+                                  ]
+                                },
+                                "spacing": {
+                                  "type": "object",
+                                  "propertyNames": {
+                                    "type": "string",
+                                    "pattern": "^[A-Za-z][A-Za-z\\d-]{0,47}$"
+                                  },
+                                  "additionalProperties": {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "maxLength": 300,
+                                    "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                  }
+                                },
+                                "fontSizes": {
+                                  "type": "object",
+                                  "propertyNames": {
+                                    "type": "string",
+                                    "pattern": "^[A-Za-z][A-Za-z\\d-]{0,47}$"
+                                  },
+                                  "additionalProperties": {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "maxLength": 300,
+                                    "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                  }
+                                },
+                                "lineHeights": {
+                                  "type": "object",
+                                  "propertyNames": {
+                                    "type": "string",
+                                    "pattern": "^[A-Za-z][A-Za-z\\d-]{0,47}$"
+                                  },
+                                  "additionalProperties": {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "maxLength": 300,
+                                    "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                  }
+                                },
+                                "fontWeights": {
+                                  "type": "object",
+                                  "propertyNames": {
+                                    "type": "string",
+                                    "pattern": "^[A-Za-z][A-Za-z\\d-]{0,47}$"
+                                  },
+                                  "additionalProperties": {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "maxLength": 300,
+                                    "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                  }
+                                },
+                                "breakpoints": {
+                                  "type": "object",
+                                  "properties": {
+                                    "xs": {
+                                      "type": "string",
+                                      "pattern": "^\\d{1,3}(?:\\.\\d{1,3})?em$"
+                                    },
+                                    "sm": {
+                                      "type": "string",
+                                      "pattern": "^\\d{1,3}(?:\\.\\d{1,3})?em$"
+                                    },
+                                    "md": {
+                                      "type": "string",
+                                      "pattern": "^\\d{1,3}(?:\\.\\d{1,3})?em$"
+                                    },
+                                    "lg": {
+                                      "type": "string",
+                                      "pattern": "^\\d{1,3}(?:\\.\\d{1,3})?em$"
+                                    },
+                                    "xl": {
+                                      "type": "string",
+                                      "pattern": "^\\d{1,3}(?:\\.\\d{1,3})?em$"
+                                    }
+                                  },
+                                  "additionalProperties": false
+                                },
+                                "shadows": {
+                                  "type": "object",
+                                  "propertyNames": {
+                                    "type": "string",
+                                    "pattern": "^[A-Za-z][A-Za-z\\d-]{0,47}$"
+                                  },
+                                  "additionalProperties": {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "maxLength": 300,
+                                    "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                  }
+                                },
+                                "respectReducedMotion": {
+                                  "type": "boolean"
+                                },
+                                "cursorType": {
+                                  "type": "string",
+                                  "enum": [
+                                    "default",
+                                    "pointer"
+                                  ]
+                                },
+                                "defaultGradient": {
+                                  "type": "object",
+                                  "properties": {
+                                    "from": {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 300,
+                                      "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                    },
+                                    "to": {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 300,
+                                      "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                    },
+                                    "deg": {
+                                      "type": "number",
+                                      "minimum": -360,
+                                      "maximum": 360
+                                    }
+                                  },
+                                  "additionalProperties": false
+                                },
+                                "activeClassName": {
+                                  "type": "string",
+                                  "maxLength": 160,
+                                  "pattern": "^[\\w -]*$"
+                                },
+                                "focusClassName": {
+                                  "type": "string",
+                                  "maxLength": 160,
+                                  "pattern": "^[\\w -]*$"
+                                },
+                                "components": {
+                                  "type": "object",
+                                  "propertyNames": {
+                                    "type": "string",
+                                    "pattern": "^[A-Za-z][A-Za-z\\d-]{0,47}$"
+                                  },
+                                  "additionalProperties": {
+                                    "type": "object",
+                                    "properties": {
+                                      "vars": {
+                                        "type": "object",
+                                        "propertyNames": {
+                                          "type": "string",
+                                          "pattern": "^[A-Za-z][A-Za-z\\d-]{0,47}$"
+                                        },
+                                        "additionalProperties": {
+                                          "type": "object",
+                                          "propertyNames": {
+                                            "type": "string",
+                                            "pattern": "^--[a-z][a-z\\d-]{0,63}$"
+                                          },
+                                          "additionalProperties": {
+                                            "anyOf": [
+                                              {
+                                                "type": "string",
+                                                "minLength": 1,
+                                                "maxLength": 300,
+                                                "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                              },
+                                              {
+                                                "type": "number"
+                                              }
+                                            ]
+                                          }
+                                        }
+                                      },
+                                      "classNames": {
+                                        "type": "object",
+                                        "propertyNames": {
+                                          "type": "string",
+                                          "pattern": "^[A-Za-z][A-Za-z\\d-]{0,47}$"
+                                        },
+                                        "additionalProperties": {
+                                          "type": "string",
+                                          "maxLength": 160,
+                                          "pattern": "^[\\w -]*$"
+                                        }
+                                      },
+                                      "styles": {
+                                        "type": "object",
+                                        "propertyNames": {
+                                          "type": "string",
+                                          "pattern": "^[A-Za-z][A-Za-z\\d-]{0,47}$"
+                                        },
+                                        "additionalProperties": {
+                                          "type": "object",
+                                          "properties": {
+                                            "background": {
+                                              "type": "string",
+                                              "minLength": 1,
+                                              "maxLength": 300,
+                                              "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                            },
+                                            "backgroundImage": {
+                                              "type": "string",
+                                              "minLength": 1,
+                                              "maxLength": 300,
+                                              "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                            },
+                                            "backgroundColor": {
+                                              "type": "string",
+                                              "minLength": 1,
+                                              "maxLength": 300,
+                                              "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                            },
+                                            "backdropFilter": {
+                                              "type": "string",
+                                              "minLength": 1,
+                                              "maxLength": 300,
+                                              "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                            },
+                                            "color": {
+                                              "type": "string",
+                                              "minLength": 1,
+                                              "maxLength": 300,
+                                              "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                            },
+                                            "border": {
+                                              "type": "string",
+                                              "minLength": 1,
+                                              "maxLength": 300,
+                                              "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                            },
+                                            "borderColor": {
+                                              "type": "string",
+                                              "minLength": 1,
+                                              "maxLength": 300,
+                                              "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                            },
+                                            "borderRadius": {
+                                              "anyOf": [
+                                                {
+                                                  "type": "string",
+                                                  "minLength": 1,
+                                                  "maxLength": 300,
+                                                  "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                                },
+                                                {
+                                                  "type": "number"
+                                                }
+                                              ]
+                                            },
+                                            "borderWidth": {
+                                              "anyOf": [
+                                                {
+                                                  "type": "string",
+                                                  "minLength": 1,
+                                                  "maxLength": 300,
+                                                  "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                                },
+                                                {
+                                                  "type": "number"
+                                                }
+                                              ]
+                                            },
+                                            "borderStyle": {
+                                              "type": "string",
+                                              "minLength": 1,
+                                              "maxLength": 300,
+                                              "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                            },
+                                            "boxShadow": {
+                                              "type": "string",
+                                              "minLength": 1,
+                                              "maxLength": 300,
+                                              "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                            },
+                                            "fontFamily": {
+                                              "type": "string",
+                                              "minLength": 1,
+                                              "maxLength": 300,
+                                              "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                            },
+                                            "fontSize": {
+                                              "anyOf": [
+                                                {
+                                                  "type": "string",
+                                                  "minLength": 1,
+                                                  "maxLength": 300,
+                                                  "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                                },
+                                                {
+                                                  "type": "number"
+                                                }
+                                              ]
+                                            },
+                                            "fontStyle": {
+                                              "type": "string",
+                                              "minLength": 1,
+                                              "maxLength": 300,
+                                              "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                            },
+                                            "fontWeight": {
+                                              "anyOf": [
+                                                {
+                                                  "type": "string",
+                                                  "minLength": 1,
+                                                  "maxLength": 300,
+                                                  "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                                },
+                                                {
+                                                  "type": "number"
+                                                }
+                                              ]
+                                            },
+                                            "letterSpacing": {
+                                              "anyOf": [
+                                                {
+                                                  "type": "string",
+                                                  "minLength": 1,
+                                                  "maxLength": 300,
+                                                  "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                                },
+                                                {
+                                                  "type": "number"
+                                                }
+                                              ]
+                                            },
+                                            "lineHeight": {
+                                              "anyOf": [
+                                                {
+                                                  "type": "string",
+                                                  "minLength": 1,
+                                                  "maxLength": 300,
+                                                  "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                                },
+                                                {
+                                                  "type": "number"
+                                                }
+                                              ]
+                                            },
+                                            "margin": {
+                                              "anyOf": [
+                                                {
+                                                  "type": "string",
+                                                  "minLength": 1,
+                                                  "maxLength": 300,
+                                                  "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                                },
+                                                {
+                                                  "type": "number"
+                                                }
+                                              ]
+                                            },
+                                            "padding": {
+                                              "anyOf": [
+                                                {
+                                                  "type": "string",
+                                                  "minLength": 1,
+                                                  "maxLength": 300,
+                                                  "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                                },
+                                                {
+                                                  "type": "number"
+                                                }
+                                              ]
+                                            },
+                                            "paddingBlock": {
+                                              "anyOf": [
+                                                {
+                                                  "type": "string",
+                                                  "minLength": 1,
+                                                  "maxLength": 300,
+                                                  "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                                },
+                                                {
+                                                  "type": "number"
+                                                }
+                                              ]
+                                            },
+                                            "paddingInline": {
+                                              "anyOf": [
+                                                {
+                                                  "type": "string",
+                                                  "minLength": 1,
+                                                  "maxLength": 300,
+                                                  "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                                },
+                                                {
+                                                  "type": "number"
+                                                }
+                                              ]
+                                            },
+                                            "gap": {
+                                              "anyOf": [
+                                                {
+                                                  "type": "string",
+                                                  "minLength": 1,
+                                                  "maxLength": 300,
+                                                  "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                                },
+                                                {
+                                                  "type": "number"
+                                                }
+                                              ]
+                                            },
+                                            "opacity": {
+                                              "type": "number",
+                                              "minimum": 0,
+                                              "maximum": 1
+                                            },
+                                            "textDecoration": {
+                                              "type": "string",
+                                              "minLength": 1,
+                                              "maxLength": 300,
+                                              "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                            },
+                                            "textTransform": {
+                                              "type": "string",
+                                              "enum": [
+                                                "none",
+                                                "uppercase",
+                                                "lowercase",
+                                                "capitalize"
+                                              ]
+                                            }
+                                          },
+                                          "additionalProperties": false
+                                        }
+                                      },
+                                      "defaultProps": {
+                                        "type": "object",
+                                        "properties": {
+                                          "autoContrast": {
+                                            "type": "boolean"
+                                          },
+                                          "color": {
+                                            "type": "string",
+                                            "minLength": 1,
+                                            "maxLength": 300,
+                                            "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                          },
+                                          "radius": {
+                                            "anyOf": [
+                                              {
+                                                "type": "string",
+                                                "minLength": 1,
+                                                "maxLength": 300,
+                                                "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                              },
+                                              {
+                                                "type": "number",
+                                                "minimum": 0,
+                                                "maximum": 256
+                                              }
+                                            ]
+                                          },
+                                          "size": {
+                                            "anyOf": [
+                                              {
+                                                "type": "string",
+                                                "minLength": 1,
+                                                "maxLength": 300,
+                                                "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                              },
+                                              {
+                                                "type": "number",
+                                                "minimum": 0,
+                                                "maximum": 256
+                                              }
+                                            ]
+                                          },
+                                          "shadow": {
+                                            "type": "string",
+                                            "minLength": 1,
+                                            "maxLength": 300,
+                                            "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                          },
+                                          "variant": {
+                                            "type": "string",
+                                            "pattern": "^[A-Za-z][A-Za-z\\d-]{0,47}$"
+                                          },
+                                          "withBorder": {
+                                            "type": "boolean"
+                                          },
+                                          "padding": {
+                                            "anyOf": [
+                                              {
+                                                "type": "string",
+                                                "minLength": 1,
+                                                "maxLength": 300,
+                                                "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                              },
+                                              {
+                                                "type": "number",
+                                                "minimum": 0,
+                                                "maximum": 256
+                                              }
+                                            ]
+                                          },
+                                          "blur": {
+                                            "type": "number",
+                                            "minimum": 0,
+                                            "maximum": 40
+                                          },
+                                          "backgroundOpacity": {
+                                            "type": "number",
+                                            "minimum": 0,
+                                            "maximum": 1
+                                          },
+                                          "overlayProps": {
+                                            "type": "object",
+                                            "properties": {
+                                              "blur": {
+                                                "type": "number",
+                                                "minimum": 0,
+                                                "maximum": 40
+                                              },
+                                              "backgroundOpacity": {
+                                                "type": "number",
+                                                "minimum": 0,
+                                                "maximum": 1
+                                              },
+                                              "color": {
+                                                "type": "string",
+                                                "minLength": 1,
+                                                "maxLength": 300,
+                                                "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                              }
+                                            },
+                                            "additionalProperties": false
+                                          },
+                                          "transitionProps": {
+                                            "type": "object",
+                                            "properties": {
+                                              "duration": {
+                                                "type": "number",
+                                                "minimum": 0,
+                                                "maximum": 1500
+                                              },
+                                              "transition": {
+                                                "type": "string",
+                                                "enum": [
+                                                  "fade",
+                                                  "pop",
+                                                  "scale",
+                                                  "fade-up",
+                                                  "fade-down",
+                                                  "slide-up",
+                                                  "slide-down",
+                                                  "slide-left",
+                                                  "slide-right"
+                                                ]
+                                              }
+                                            },
+                                            "additionalProperties": false
+                                          }
+                                        },
+                                        "additionalProperties": false
+                                      }
+                                    },
+                                    "additionalProperties": false
+                                  }
+                                },
+                                "other": {
+                                  "type": "object",
+                                  "propertyNames": {
+                                    "type": "string",
+                                    "pattern": "^[A-Za-z][A-Za-z\\d-]{0,47}$"
+                                  },
+                                  "additionalProperties": {
+                                    "anyOf": [
+                                      {
+                                        "type": "string",
+                                        "minLength": 1,
+                                        "maxLength": 300,
+                                        "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                      },
+                                      {
+                                        "type": "number"
+                                      },
+                                      {
+                                        "type": "boolean"
+                                      },
+                                      {
+                                        "type": "null"
+                                      }
+                                    ]
+                                  }
+                                }
+                              },
+                              "additionalProperties": false
+                            },
+                            "light": {
+                              "type": "object",
+                              "properties": {
+                                "body": {
+                                  "type": "string",
+                                  "pattern": "^#[\\da-f]{6}$"
+                                },
+                                "surface": {
+                                  "type": "string",
+                                  "pattern": "^#[\\da-f]{6}$"
+                                },
+                                "hover": {
+                                  "type": "string",
+                                  "pattern": "^#[\\da-f]{6}$"
+                                },
+                                "border": {
+                                  "type": "string",
+                                  "pattern": "^#[\\da-f]{6}$"
+                                },
+                                "text": {
+                                  "type": "string",
+                                  "pattern": "^#[\\da-f]{6}$"
+                                },
+                                "dimmed": {
+                                  "type": "string",
+                                  "pattern": "^#[\\da-f]{6}$"
+                                },
+                                "primary": {
+                                  "type": "string",
+                                  "pattern": "^#[\\da-f]{6}$"
+                                },
+                                "secondary": {
+                                  "type": "string",
+                                  "pattern": "^#[\\da-f]{6}$"
+                                }
+                              },
+                              "additionalProperties": false
+                            },
+                            "dark": {
+                              "type": "object",
+                              "properties": {
+                                "body": {
+                                  "type": "string",
+                                  "pattern": "^#[\\da-f]{6}$"
+                                },
+                                "surface": {
+                                  "type": "string",
+                                  "pattern": "^#[\\da-f]{6}$"
+                                },
+                                "hover": {
+                                  "type": "string",
+                                  "pattern": "^#[\\da-f]{6}$"
+                                },
+                                "border": {
+                                  "type": "string",
+                                  "pattern": "^#[\\da-f]{6}$"
+                                },
+                                "text": {
+                                  "type": "string",
+                                  "pattern": "^#[\\da-f]{6}$"
+                                },
+                                "dimmed": {
+                                  "type": "string",
+                                  "pattern": "^#[\\da-f]{6}$"
+                                },
+                                "primary": {
+                                  "type": "string",
+                                  "pattern": "^#[\\da-f]{6}$"
+                                },
+                                "secondary": {
+                                  "type": "string",
+                                  "pattern": "^#[\\da-f]{6}$"
+                                }
+                              },
+                              "additionalProperties": false
+                            }
+                          },
+                          "required": [
+                            "preset",
+                            "theme"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
                     "byteUnitSystem": {
                       "type": "string",
                       "enum": [
@@ -5283,6 +7585,8 @@
                     "homeBoardId",
                     "mobileHomeBoardId",
                     "colorScheme",
+                    "themeId",
+                    "customTheme",
                     "byteUnitSystem",
                     "firstDayOfWeek",
                     "pingIconsEnabled",
@@ -7867,6 +10171,1157 @@
       "UserPreferences": {
         "type": "object",
         "properties": {
+          "themeId": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "default",
+                  "absolutely",
+                  "ayu",
+                  "cappuccin",
+                  "dracula",
+                  "everforest",
+                  "github",
+                  "gruvbox",
+                  "linear",
+                  "lobster",
+                  "material",
+                  "matrix",
+                  "monokai",
+                  "night-owl",
+                  "nord",
+                  "notion",
+                  "og",
+                  "one",
+                  "oscurange",
+                  "raycast",
+                  "rose-pine",
+                  "sentry",
+                  "shadcn",
+                  "solarized",
+                  "temple",
+                  "tokyo-night",
+                  "vercel",
+                  "vscode-plus",
+                  "xcode",
+                  "custom"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "customTheme": {
+            "anyOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "preset": {
+                    "type": "string",
+                    "enum": [
+                      "default",
+                      "absolutely",
+                      "ayu",
+                      "cappuccin",
+                      "dracula",
+                      "everforest",
+                      "github",
+                      "gruvbox",
+                      "linear",
+                      "lobster",
+                      "material",
+                      "matrix",
+                      "monokai",
+                      "night-owl",
+                      "nord",
+                      "notion",
+                      "og",
+                      "one",
+                      "oscurange",
+                      "raycast",
+                      "rose-pine",
+                      "sentry",
+                      "shadcn",
+                      "solarized",
+                      "temple",
+                      "tokyo-night",
+                      "vercel",
+                      "vscode-plus",
+                      "xcode"
+                    ]
+                  },
+                  "theme": {
+                    "type": "object",
+                    "properties": {
+                      "focusRing": {
+                        "type": "string",
+                        "enum": [
+                          "auto",
+                          "always",
+                          "never"
+                        ]
+                      },
+                      "scale": {
+                        "type": "number",
+                        "minimum": 0.5,
+                        "maximum": 3
+                      },
+                      "fontSmoothing": {
+                        "type": "boolean"
+                      },
+                      "white": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 300,
+                        "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                      },
+                      "black": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 300,
+                        "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                      },
+                      "colors": {
+                        "type": "object",
+                        "propertyNames": {
+                          "type": "string",
+                          "pattern": "^[A-Za-z][A-Za-z\\d-]{0,47}$"
+                        },
+                        "additionalProperties": {
+                          "type": "array",
+                          "prefixItems": [
+                            {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 300,
+                              "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                            },
+                            {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 300,
+                              "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                            },
+                            {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 300,
+                              "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                            },
+                            {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 300,
+                              "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                            },
+                            {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 300,
+                              "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                            },
+                            {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 300,
+                              "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                            },
+                            {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 300,
+                              "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                            },
+                            {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 300,
+                              "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                            },
+                            {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 300,
+                              "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                            },
+                            {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 300,
+                              "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                            }
+                          ],
+                          "items": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 300,
+                            "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                          },
+                          "minItems": 10
+                        }
+                      },
+                      "primaryColor": {
+                        "type": "string",
+                        "pattern": "^[A-Za-z][A-Za-z\\d-]{0,47}$"
+                      },
+                      "primaryShade": {
+                        "anyOf": [
+                          {
+                            "type": "number",
+                            "enum": [
+                              0,
+                              1,
+                              2,
+                              3,
+                              4,
+                              5,
+                              6,
+                              7,
+                              8,
+                              9
+                            ]
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "light": {
+                                "type": "number",
+                                "enum": [
+                                  0,
+                                  1,
+                                  2,
+                                  3,
+                                  4,
+                                  5,
+                                  6,
+                                  7,
+                                  8,
+                                  9
+                                ]
+                              },
+                              "dark": {
+                                "type": "number",
+                                "enum": [
+                                  0,
+                                  1,
+                                  2,
+                                  3,
+                                  4,
+                                  5,
+                                  6,
+                                  7,
+                                  8,
+                                  9
+                                ]
+                              }
+                            },
+                            "additionalProperties": false
+                          }
+                        ]
+                      },
+                      "autoContrast": {
+                        "type": "boolean"
+                      },
+                      "luminanceThreshold": {
+                        "type": "number",
+                        "minimum": 0,
+                        "maximum": 1
+                      },
+                      "fontFamily": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 300,
+                        "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                      },
+                      "fontFamilyMonospace": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 300,
+                        "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                      },
+                      "headings": {
+                        "type": "object",
+                        "properties": {
+                          "fontFamily": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 300,
+                            "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                          },
+                          "fontWeight": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 300,
+                            "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                          },
+                          "textWrap": {
+                            "type": "string",
+                            "enum": [
+                              "wrap",
+                              "nowrap",
+                              "balance",
+                              "pretty",
+                              "stable"
+                            ]
+                          },
+                          "sizes": {
+                            "type": "object",
+                            "properties": {
+                              "h1": {
+                                "type": "object",
+                                "properties": {
+                                  "fontSize": {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "maxLength": 300,
+                                    "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                  },
+                                  "fontWeight": {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "maxLength": 300,
+                                    "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                  },
+                                  "lineHeight": {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "maxLength": 300,
+                                    "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                  }
+                                },
+                                "additionalProperties": false
+                              },
+                              "h2": {
+                                "type": "object",
+                                "properties": {
+                                  "fontSize": {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "maxLength": 300,
+                                    "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                  },
+                                  "fontWeight": {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "maxLength": 300,
+                                    "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                  },
+                                  "lineHeight": {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "maxLength": 300,
+                                    "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                  }
+                                },
+                                "additionalProperties": false
+                              },
+                              "h3": {
+                                "type": "object",
+                                "properties": {
+                                  "fontSize": {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "maxLength": 300,
+                                    "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                  },
+                                  "fontWeight": {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "maxLength": 300,
+                                    "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                  },
+                                  "lineHeight": {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "maxLength": 300,
+                                    "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                  }
+                                },
+                                "additionalProperties": false
+                              },
+                              "h4": {
+                                "type": "object",
+                                "properties": {
+                                  "fontSize": {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "maxLength": 300,
+                                    "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                  },
+                                  "fontWeight": {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "maxLength": 300,
+                                    "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                  },
+                                  "lineHeight": {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "maxLength": 300,
+                                    "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                  }
+                                },
+                                "additionalProperties": false
+                              },
+                              "h5": {
+                                "type": "object",
+                                "properties": {
+                                  "fontSize": {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "maxLength": 300,
+                                    "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                  },
+                                  "fontWeight": {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "maxLength": 300,
+                                    "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                  },
+                                  "lineHeight": {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "maxLength": 300,
+                                    "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                  }
+                                },
+                                "additionalProperties": false
+                              },
+                              "h6": {
+                                "type": "object",
+                                "properties": {
+                                  "fontSize": {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "maxLength": 300,
+                                    "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                  },
+                                  "fontWeight": {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "maxLength": 300,
+                                    "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                  },
+                                  "lineHeight": {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "maxLength": 300,
+                                    "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                  }
+                                },
+                                "additionalProperties": false
+                              }
+                            },
+                            "additionalProperties": false
+                          }
+                        },
+                        "additionalProperties": false
+                      },
+                      "radius": {
+                        "type": "object",
+                        "propertyNames": {
+                          "type": "string",
+                          "pattern": "^[A-Za-z][A-Za-z\\d-]{0,47}$"
+                        },
+                        "additionalProperties": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 300,
+                          "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                        }
+                      },
+                      "defaultRadius": {
+                        "anyOf": [
+                          {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 300,
+                            "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                          },
+                          {
+                            "type": "number",
+                            "minimum": 0,
+                            "maximum": 256
+                          }
+                        ]
+                      },
+                      "spacing": {
+                        "type": "object",
+                        "propertyNames": {
+                          "type": "string",
+                          "pattern": "^[A-Za-z][A-Za-z\\d-]{0,47}$"
+                        },
+                        "additionalProperties": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 300,
+                          "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                        }
+                      },
+                      "fontSizes": {
+                        "type": "object",
+                        "propertyNames": {
+                          "type": "string",
+                          "pattern": "^[A-Za-z][A-Za-z\\d-]{0,47}$"
+                        },
+                        "additionalProperties": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 300,
+                          "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                        }
+                      },
+                      "lineHeights": {
+                        "type": "object",
+                        "propertyNames": {
+                          "type": "string",
+                          "pattern": "^[A-Za-z][A-Za-z\\d-]{0,47}$"
+                        },
+                        "additionalProperties": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 300,
+                          "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                        }
+                      },
+                      "fontWeights": {
+                        "type": "object",
+                        "propertyNames": {
+                          "type": "string",
+                          "pattern": "^[A-Za-z][A-Za-z\\d-]{0,47}$"
+                        },
+                        "additionalProperties": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 300,
+                          "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                        }
+                      },
+                      "breakpoints": {
+                        "type": "object",
+                        "properties": {
+                          "xs": {
+                            "type": "string",
+                            "pattern": "^\\d{1,3}(?:\\.\\d{1,3})?em$"
+                          },
+                          "sm": {
+                            "type": "string",
+                            "pattern": "^\\d{1,3}(?:\\.\\d{1,3})?em$"
+                          },
+                          "md": {
+                            "type": "string",
+                            "pattern": "^\\d{1,3}(?:\\.\\d{1,3})?em$"
+                          },
+                          "lg": {
+                            "type": "string",
+                            "pattern": "^\\d{1,3}(?:\\.\\d{1,3})?em$"
+                          },
+                          "xl": {
+                            "type": "string",
+                            "pattern": "^\\d{1,3}(?:\\.\\d{1,3})?em$"
+                          }
+                        },
+                        "additionalProperties": false
+                      },
+                      "shadows": {
+                        "type": "object",
+                        "propertyNames": {
+                          "type": "string",
+                          "pattern": "^[A-Za-z][A-Za-z\\d-]{0,47}$"
+                        },
+                        "additionalProperties": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 300,
+                          "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                        }
+                      },
+                      "respectReducedMotion": {
+                        "type": "boolean"
+                      },
+                      "cursorType": {
+                        "type": "string",
+                        "enum": [
+                          "default",
+                          "pointer"
+                        ]
+                      },
+                      "defaultGradient": {
+                        "type": "object",
+                        "properties": {
+                          "from": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 300,
+                            "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                          },
+                          "to": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 300,
+                            "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                          },
+                          "deg": {
+                            "type": "number",
+                            "minimum": -360,
+                            "maximum": 360
+                          }
+                        },
+                        "additionalProperties": false
+                      },
+                      "activeClassName": {
+                        "type": "string",
+                        "maxLength": 160,
+                        "pattern": "^[\\w -]*$"
+                      },
+                      "focusClassName": {
+                        "type": "string",
+                        "maxLength": 160,
+                        "pattern": "^[\\w -]*$"
+                      },
+                      "components": {
+                        "type": "object",
+                        "propertyNames": {
+                          "type": "string",
+                          "pattern": "^[A-Za-z][A-Za-z\\d-]{0,47}$"
+                        },
+                        "additionalProperties": {
+                          "type": "object",
+                          "properties": {
+                            "vars": {
+                              "type": "object",
+                              "propertyNames": {
+                                "type": "string",
+                                "pattern": "^[A-Za-z][A-Za-z\\d-]{0,47}$"
+                              },
+                              "additionalProperties": {
+                                "type": "object",
+                                "propertyNames": {
+                                  "type": "string",
+                                  "pattern": "^--[a-z][a-z\\d-]{0,63}$"
+                                },
+                                "additionalProperties": {
+                                  "anyOf": [
+                                    {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 300,
+                                      "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                    },
+                                    {
+                                      "type": "number"
+                                    }
+                                  ]
+                                }
+                              }
+                            },
+                            "classNames": {
+                              "type": "object",
+                              "propertyNames": {
+                                "type": "string",
+                                "pattern": "^[A-Za-z][A-Za-z\\d-]{0,47}$"
+                              },
+                              "additionalProperties": {
+                                "type": "string",
+                                "maxLength": 160,
+                                "pattern": "^[\\w -]*$"
+                              }
+                            },
+                            "styles": {
+                              "type": "object",
+                              "propertyNames": {
+                                "type": "string",
+                                "pattern": "^[A-Za-z][A-Za-z\\d-]{0,47}$"
+                              },
+                              "additionalProperties": {
+                                "type": "object",
+                                "properties": {
+                                  "background": {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "maxLength": 300,
+                                    "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                  },
+                                  "backgroundImage": {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "maxLength": 300,
+                                    "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                  },
+                                  "backgroundColor": {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "maxLength": 300,
+                                    "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                  },
+                                  "backdropFilter": {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "maxLength": 300,
+                                    "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                  },
+                                  "color": {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "maxLength": 300,
+                                    "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                  },
+                                  "border": {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "maxLength": 300,
+                                    "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                  },
+                                  "borderColor": {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "maxLength": 300,
+                                    "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                  },
+                                  "borderRadius": {
+                                    "anyOf": [
+                                      {
+                                        "type": "string",
+                                        "minLength": 1,
+                                        "maxLength": 300,
+                                        "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                      },
+                                      {
+                                        "type": "number"
+                                      }
+                                    ]
+                                  },
+                                  "borderWidth": {
+                                    "anyOf": [
+                                      {
+                                        "type": "string",
+                                        "minLength": 1,
+                                        "maxLength": 300,
+                                        "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                      },
+                                      {
+                                        "type": "number"
+                                      }
+                                    ]
+                                  },
+                                  "borderStyle": {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "maxLength": 300,
+                                    "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                  },
+                                  "boxShadow": {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "maxLength": 300,
+                                    "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                  },
+                                  "fontFamily": {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "maxLength": 300,
+                                    "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                  },
+                                  "fontSize": {
+                                    "anyOf": [
+                                      {
+                                        "type": "string",
+                                        "minLength": 1,
+                                        "maxLength": 300,
+                                        "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                      },
+                                      {
+                                        "type": "number"
+                                      }
+                                    ]
+                                  },
+                                  "fontStyle": {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "maxLength": 300,
+                                    "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                  },
+                                  "fontWeight": {
+                                    "anyOf": [
+                                      {
+                                        "type": "string",
+                                        "minLength": 1,
+                                        "maxLength": 300,
+                                        "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                      },
+                                      {
+                                        "type": "number"
+                                      }
+                                    ]
+                                  },
+                                  "letterSpacing": {
+                                    "anyOf": [
+                                      {
+                                        "type": "string",
+                                        "minLength": 1,
+                                        "maxLength": 300,
+                                        "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                      },
+                                      {
+                                        "type": "number"
+                                      }
+                                    ]
+                                  },
+                                  "lineHeight": {
+                                    "anyOf": [
+                                      {
+                                        "type": "string",
+                                        "minLength": 1,
+                                        "maxLength": 300,
+                                        "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                      },
+                                      {
+                                        "type": "number"
+                                      }
+                                    ]
+                                  },
+                                  "margin": {
+                                    "anyOf": [
+                                      {
+                                        "type": "string",
+                                        "minLength": 1,
+                                        "maxLength": 300,
+                                        "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                      },
+                                      {
+                                        "type": "number"
+                                      }
+                                    ]
+                                  },
+                                  "padding": {
+                                    "anyOf": [
+                                      {
+                                        "type": "string",
+                                        "minLength": 1,
+                                        "maxLength": 300,
+                                        "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                      },
+                                      {
+                                        "type": "number"
+                                      }
+                                    ]
+                                  },
+                                  "paddingBlock": {
+                                    "anyOf": [
+                                      {
+                                        "type": "string",
+                                        "minLength": 1,
+                                        "maxLength": 300,
+                                        "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                      },
+                                      {
+                                        "type": "number"
+                                      }
+                                    ]
+                                  },
+                                  "paddingInline": {
+                                    "anyOf": [
+                                      {
+                                        "type": "string",
+                                        "minLength": 1,
+                                        "maxLength": 300,
+                                        "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                      },
+                                      {
+                                        "type": "number"
+                                      }
+                                    ]
+                                  },
+                                  "gap": {
+                                    "anyOf": [
+                                      {
+                                        "type": "string",
+                                        "minLength": 1,
+                                        "maxLength": 300,
+                                        "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                      },
+                                      {
+                                        "type": "number"
+                                      }
+                                    ]
+                                  },
+                                  "opacity": {
+                                    "type": "number",
+                                    "minimum": 0,
+                                    "maximum": 1
+                                  },
+                                  "textDecoration": {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "maxLength": 300,
+                                    "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                  },
+                                  "textTransform": {
+                                    "type": "string",
+                                    "enum": [
+                                      "none",
+                                      "uppercase",
+                                      "lowercase",
+                                      "capitalize"
+                                    ]
+                                  }
+                                },
+                                "additionalProperties": false
+                              }
+                            },
+                            "defaultProps": {
+                              "type": "object",
+                              "properties": {
+                                "autoContrast": {
+                                  "type": "boolean"
+                                },
+                                "color": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 300,
+                                  "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                },
+                                "radius": {
+                                  "anyOf": [
+                                    {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 300,
+                                      "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                    },
+                                    {
+                                      "type": "number",
+                                      "minimum": 0,
+                                      "maximum": 256
+                                    }
+                                  ]
+                                },
+                                "size": {
+                                  "anyOf": [
+                                    {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 300,
+                                      "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                    },
+                                    {
+                                      "type": "number",
+                                      "minimum": 0,
+                                      "maximum": 256
+                                    }
+                                  ]
+                                },
+                                "shadow": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 300,
+                                  "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                },
+                                "variant": {
+                                  "type": "string",
+                                  "pattern": "^[A-Za-z][A-Za-z\\d-]{0,47}$"
+                                },
+                                "withBorder": {
+                                  "type": "boolean"
+                                },
+                                "padding": {
+                                  "anyOf": [
+                                    {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 300,
+                                      "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                    },
+                                    {
+                                      "type": "number",
+                                      "minimum": 0,
+                                      "maximum": 256
+                                    }
+                                  ]
+                                },
+                                "blur": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 40
+                                },
+                                "backgroundOpacity": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "overlayProps": {
+                                  "type": "object",
+                                  "properties": {
+                                    "blur": {
+                                      "type": "number",
+                                      "minimum": 0,
+                                      "maximum": 40
+                                    },
+                                    "backgroundOpacity": {
+                                      "type": "number",
+                                      "minimum": 0,
+                                      "maximum": 1
+                                    },
+                                    "color": {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 300,
+                                      "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                                    }
+                                  },
+                                  "additionalProperties": false
+                                },
+                                "transitionProps": {
+                                  "type": "object",
+                                  "properties": {
+                                    "duration": {
+                                      "type": "number",
+                                      "minimum": 0,
+                                      "maximum": 1500
+                                    },
+                                    "transition": {
+                                      "type": "string",
+                                      "enum": [
+                                        "fade",
+                                        "pop",
+                                        "scale",
+                                        "fade-up",
+                                        "fade-down",
+                                        "slide-up",
+                                        "slide-down",
+                                        "slide-left",
+                                        "slide-right"
+                                      ]
+                                    }
+                                  },
+                                  "additionalProperties": false
+                                }
+                              },
+                              "additionalProperties": false
+                            }
+                          },
+                          "additionalProperties": false
+                        }
+                      },
+                      "other": {
+                        "type": "object",
+                        "propertyNames": {
+                          "type": "string",
+                          "pattern": "^[A-Za-z][A-Za-z\\d-]{0,47}$"
+                        },
+                        "additionalProperties": {
+                          "anyOf": [
+                            {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 300,
+                              "pattern": "^[\\p{L}\\p{M}\\p{N}_ .,%#()*+/'\"-]+$"
+                            },
+                            {
+                              "type": "number"
+                            },
+                            {
+                              "type": "boolean"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    "additionalProperties": false
+                  },
+                  "light": {
+                    "type": "object",
+                    "properties": {
+                      "body": {
+                        "type": "string",
+                        "pattern": "^#[\\da-f]{6}$"
+                      },
+                      "surface": {
+                        "type": "string",
+                        "pattern": "^#[\\da-f]{6}$"
+                      },
+                      "hover": {
+                        "type": "string",
+                        "pattern": "^#[\\da-f]{6}$"
+                      },
+                      "border": {
+                        "type": "string",
+                        "pattern": "^#[\\da-f]{6}$"
+                      },
+                      "text": {
+                        "type": "string",
+                        "pattern": "^#[\\da-f]{6}$"
+                      },
+                      "dimmed": {
+                        "type": "string",
+                        "pattern": "^#[\\da-f]{6}$"
+                      },
+                      "primary": {
+                        "type": "string",
+                        "pattern": "^#[\\da-f]{6}$"
+                      },
+                      "secondary": {
+                        "type": "string",
+                        "pattern": "^#[\\da-f]{6}$"
+                      }
+                    },
+                    "additionalProperties": false
+                  },
+                  "dark": {
+                    "type": "object",
+                    "properties": {
+                      "body": {
+                        "type": "string",
+                        "pattern": "^#[\\da-f]{6}$"
+                      },
+                      "surface": {
+                        "type": "string",
+                        "pattern": "^#[\\da-f]{6}$"
+                      },
+                      "hover": {
+                        "type": "string",
+                        "pattern": "^#[\\da-f]{6}$"
+                      },
+                      "border": {
+                        "type": "string",
+                        "pattern": "^#[\\da-f]{6}$"
+                      },
+                      "text": {
+                        "type": "string",
+                        "pattern": "^#[\\da-f]{6}$"
+                      },
+                      "dimmed": {
+                        "type": "string",
+                        "pattern": "^#[\\da-f]{6}$"
+                      },
+                      "primary": {
+                        "type": "string",
+                        "pattern": "^#[\\da-f]{6}$"
+                      },
+                      "secondary": {
+                        "type": "string",
+                        "pattern": "^#[\\da-f]{6}$"
+                      }
+                    },
+                    "additionalProperties": false
+                  }
+                },
+                "required": [
+                  "preset",
+                  "theme"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "colorScheme": {
             "type": "string",
             "enum": [
@@ -8154,6 +11609,8 @@
           }
         },
         "required": [
+          "themeId",
+          "customTheme",
           "colorScheme",
           "byteUnitSystem",
           "firstDayOfWeek",
@@ -8171,6 +11628,8 @@
         "example": {
           "userId": "example-user",
           "colorScheme": "light",
+          "themeId": null,
+          "customTheme": null,
           "byteUnitSystem": "binary",
           "firstDayOfWeek": 0,
           "pingIconsEnabled": true,
