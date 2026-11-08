@@ -7,6 +7,7 @@ import type { UseFormReturnType } from "@homarr/form";
 import { useI18n } from "@homarr/translation/client";
 import { SectionCard } from "@homarr/ui";
 
+import { AppearanceSettingsForm } from "./appearance-settings-form";
 import type { FormValues } from "./settings-form";
 
 interface BrandingSettingsFormProps {
@@ -23,6 +24,7 @@ export const BrandingSettingsForm = ({ form }: BrandingSettingsFormProps) => {
   return (
     <SectionCard title={t("title")}>
       <Stack gap="md">
+        <AppearanceSettingsForm form={form} />
         <Fieldset legend={t("groups.identity")} p="sm">
           <Stack gap="sm">
             <SimpleGrid cols={{ base: 1, md: 3 }} spacing="sm" verticalSpacing="sm">

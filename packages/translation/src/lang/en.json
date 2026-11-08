@@ -2082,7 +2082,7 @@
       "label": "Theme",
       "nothingFound": "No themes found",
       "custom": "Custom",
-      "customize": "Open theme editor",
+      "customize": "Edit theme",
       "editor": {
         "title": "Customize theme",
         "basedOn": "Starting preset: {preset}",

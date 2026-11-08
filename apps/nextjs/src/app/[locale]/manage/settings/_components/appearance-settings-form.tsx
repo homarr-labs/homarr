@@ -1,10 +1,10 @@
 "use client";
 
-import { SimpleGrid, Stack, Switch } from "@mantine/core";
+import { Fieldset, SimpleGrid, Stack, Switch } from "@mantine/core";
 
 import type { UseFormReturnType } from "@homarr/form";
 import { useI18n } from "@homarr/translation/client";
-import { BoardColorInput, ColorSchemeCombobox, CornerStylePicker, SectionCard } from "@homarr/ui";
+import { BoardColorInput, ColorSchemeCombobox, CornerStylePicker } from "@homarr/ui";
 
 import { AdvancedSettings } from "~/components/manage/advanced-settings";
 import { ThemeSettings } from "~/components/theme/theme-settings";
@@ -23,7 +23,7 @@ export const AppearanceSettingsForm = ({ form }: AppearanceSettingsFormProps) =>
   const branding = form.values.branding;
 
   return (
-    <SectionCard title={tAppearance("title")}>
+    <Fieldset legend={tAppearance("title")} p="md">
       <Stack gap="md">
         <ThemeSettings editorHref="/manage/settings/theme" themeId={branding.themeId} />
         <ColorSchemeCombobox
@@ -71,6 +71,6 @@ export const AppearanceSettingsForm = ({ form }: AppearanceSettingsFormProps) =>
           </Stack>
         </AdvancedSettings>
       </Stack>
-    </SectionCard>
+    </Fieldset>
   );
 };

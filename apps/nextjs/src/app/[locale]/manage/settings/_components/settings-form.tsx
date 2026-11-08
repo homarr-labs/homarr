@@ -19,7 +19,6 @@ import { useI18n } from "@homarr/translation/client";
 import { UnsavedChangesBar } from "~/components/manage/unsaved-changes-bar";
 import { useUnsavedChangesGuard } from "~/components/manage/use-unsaved-changes-guard";
 import { AnalyticsSettings } from "./analytics.settings";
-import { AppearanceSettingsForm } from "./appearance-settings-form";
 import { BoardSettingsForm } from "./board-settings-form";
 import { BrandingSettingsForm } from "./branding-settings-form";
 import { CrawlingAndIndexingSettings } from "./crawling-and-indexing.settings";
@@ -191,7 +190,6 @@ export const SettingsForm = ({ initialData, selectableBoards, selectableSearchEn
         <BoardSettingsForm form={form} selectableBoards={selectableBoards} />
         <UserSettingsForm form={form} />
         <SearchSettingsForm form={form} selectableSearchEngines={selectableSearchEngines} />
-        <AppearanceSettingsForm form={form} />
         <BrandingSettingsForm form={form} />
         <CultureSettingsForm form={form} />
         <AnalyticsSettings form={form} />
