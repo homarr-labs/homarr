@@ -2,7 +2,7 @@
 
 import { useContext, useMemo, useState } from "react";
 import type { ReactNode } from "react";
-import { Modal } from "@mantine/core";
+import { Box, Modal } from "@mantine/core";
 import {
   IconAirConditioning,
   IconAlertTriangle,
@@ -1380,7 +1380,7 @@ function SelectControl({ entity, width, height }: ControlProps) {
         }
       />
       {tier === "full" || height >= WIDE_CHIPS_MIN_HEIGHT ? (
-        <div
+        <Box
           className={classes.chipsStage}
           data-tier={tier}
           role="group"
@@ -1400,7 +1400,7 @@ function SelectControl({ entity, width, height }: ControlProps) {
               {option}
             </button>
           ))}
-        </div>
+        </Box>
       ) : null}
     </Tile>
   );
