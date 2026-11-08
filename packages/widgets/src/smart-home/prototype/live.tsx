@@ -536,8 +536,8 @@ class SharedActionStore {
     return promise;
   }
 
-  private async send(entityId: string, step: Step) {
-    step.base = Math.max(step.base, this.confirmed.get(entityId)?.lastUpdated ?? 0);
+  private async send(entityId: string, step: Step, confirmedBase?: number) {
+    step.base = confirmedBase ?? Math.max(step.base, this.confirmed.get(entityId)?.lastUpdated ?? 0);
     step.status = "sent";
     this.executing.add(entityId);
     step.timer = setTimeout(() => this.expire(entityId, step), SETTLE_TIMEOUT_MS);
@@ -549,20 +549,9 @@ class SharedActionStore {
       failure = { error };
     }
 
-    const confirmed = this.confirmed.get(entityId);
-    if (
-      confirmed &&
-      (!step.requiresFresh || changedSince(confirmed, step.base)) &&
-      step.intent.matches(confirmed, step.base, step.contextId)
-    ) {
-      // Returning to an already-confirmed command need not produce another state change.
-      for (const queued of this.steps.get(entityId) ?? []) {
-        if (queued.status === "queued" && sameTarget(queued.command, step.command)) queued.requiresFresh = false;
-      }
-    }
     this.executing.delete(entityId);
     if (!this.steps.get(entityId)?.includes(step)) {
-      this.sendNext(entityId);
+      this.sendNext(entityId, step);
       return;
     }
     if (step.superseded) {
@@ -578,15 +567,29 @@ class SharedActionStore {
       this.reconcile(entityId);
     }
     this.emit();
-    this.sendNext(entityId);
+    this.sendNext(entityId, step);
   }
 
-  private sendNext(entityId: string) {
+  private sendNext(entityId: string, previous?: Step) {
     if (this.executing.has(entityId)) return;
     const steps = this.steps.get(entityId);
     const next = steps?.find((candidate) => candidate.status === "queued");
     if (!next) return;
-    void this.send(entityId, next);
+    const confirmed = this.confirmed.get(entityId);
+    let confirmedBase: number | undefined;
+    if (
+      previous &&
+      confirmed &&
+      sameTarget(next.command, previous.command) &&
+      (!previous.requiresFresh || changedSince(confirmed, previous.base)) &&
+      previous.intent.matches(confirmed, previous.base, previous.contextId) &&
+      next.intent.matches(confirmed, previous.base)
+    ) {
+      // Reuse accepted tolerance evidence only when it does not depend on the prior receipt.
+      confirmedBase = previous.base;
+      next.requiresFresh = false;
+    }
+    void this.send(entityId, next, confirmedBase);
   }
 
   private expire(entityId: string, step: Step) {
