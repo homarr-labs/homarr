@@ -9,7 +9,7 @@ export interface GrantContext {
   state: string | null;
   resource: string | null;
   canonicalResources: readonly string[];
-  scope: "mcp:tools";
+  scope: "mcp:tools" | "mcp:tools:read";
   clientExpiresAt: number;
 }
 
@@ -165,14 +165,24 @@ export function reconcileBindings(bindings: readonly { pendingId: string; value:
   return bindings.filter(({ pendingId }) => !retained.has(pendingId)).map(({ pendingId }) => pendingId);
 }
 
-export function decidePending(id: string, pending: PendingGrant, decision: "approve" | "deny", userId: string) {
+export function decidePending(
+  id: string,
+  pending: PendingGrant,
+  decision: "approve" | "deny",
+  userId: string,
+  scope: GrantContext["scope"],
+) {
   if (store.pending.get(id) !== pending) return { ok: false } as const;
   store.pending.delete(id);
   if (decision === "deny") return { ok: true, code: null } as const;
   cleanup();
   if (store.codes.size >= 5000) return { ok: false } as const;
   const code = randomBytes(32).toString("hex");
-  store.codes.set(code, { context: pending.context, userId, expiresAt: Date.now() + CODE_TTL_MS });
+  store.codes.set(code, {
+    context: Object.freeze({ ...pending.context, scope }),
+    userId,
+    expiresAt: Date.now() + CODE_TTL_MS,
+  });
   return { ok: true, code } as const;
 }
 

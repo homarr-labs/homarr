@@ -56,7 +56,7 @@ const getImageFromStringAsFallback = (feedUrl: string, content: string) => {
   console.debug(
     `Falling back to regex image search for '${feedUrl}'. Found ${result.length} matches in content: ${content}`,
   );
-  return result[0];
+  return result[0].replaceAll("&amp;", "&");
 };
 
 const mediaProperties = ["enclosure", "media:content", "media:thumbnail"] as const;

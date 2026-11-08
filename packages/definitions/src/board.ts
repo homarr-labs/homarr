@@ -1,6 +1,9 @@
 import type { inferDefinitionType } from "./_definition";
 import { createDefinition } from "./_definition";
 
+export const cornerStyleValues = ["xs", "sm", "md", "lg", "xl"] as const;
+export type CornerStyle = (typeof cornerStyleValues)[number];
+
 export const backgroundImageAttachments = createDefinition(["fixed", "scroll"], { defaultValue: "fixed" });
 export const backgroundImageRepeats = createDefinition(["repeat", "repeat-x", "repeat-y", "no-repeat"], {
   defaultValue: "no-repeat",

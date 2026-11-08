@@ -445,13 +445,14 @@ export async function POST(request: Request) {
   }
   const incomingMessages = parsed.data.messages as UIMessage[];
 
-  const configuration = await db.query.assistantConfigurations.findFirst({
-    where: eq(assistantConfigurations.id, "default"),
-  });
-
-  const thread = await db.query.assistantThreads.findFirst({
-    where: and(eq(assistantThreads.id, parsed.data.id), eq(assistantThreads.userId, session.user.id)),
-  });
+  const [configuration, thread] = await Promise.all([
+    db.query.assistantConfigurations.findFirst({
+      where: eq(assistantConfigurations.id, "default"),
+    }),
+    db.query.assistantThreads.findFirst({
+      where: and(eq(assistantThreads.id, parsed.data.id), eq(assistantThreads.userId, session.user.id)),
+    }),
+  ]);
   if (!thread) {
     return Response.json({ error: "Conversation not found." }, { status: 404 });
   }
