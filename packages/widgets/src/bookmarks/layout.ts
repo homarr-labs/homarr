@@ -198,6 +198,7 @@ export const getBookmarkDisplayPlan = ({
   gap = 0,
   height,
   hideHostname = false,
+  showFullUrls = false,
   itemCount,
   layout,
   width,
@@ -206,6 +207,7 @@ export const getBookmarkDisplayPlan = ({
   gap?: number;
   height: number;
   hideHostname?: boolean;
+  showFullUrls?: boolean;
   itemCount: number;
   layout: BookmarkLayout;
   width: number;
@@ -252,7 +254,7 @@ export const getBookmarkDisplayPlan = ({
     const itemGap = Math.min(gap, 4);
     const availableItemHeight = (normalizedHeight - Math.max(0, count - 1) * itemGap) / count;
     let itemHeight = 32;
-    if (!hideHostname && widthSettings.showTitle && availableItemHeight >= 48) itemHeight = 48;
+    if ((!hideHostname || showFullUrls) && widthSettings.showTitle && availableItemHeight >= 48) itemHeight = 48;
 
     return {
       columns: 1,

@@ -155,11 +155,21 @@ export default function BookmarksWidget({
         gap: bookmarkSpacingPixels[options.spacing],
         height: layoutHeight,
         hideHostname: options.hideHostname,
+        showFullUrls: options.showFullUrls,
         itemCount: layoutItemCount,
         layout: options.layout,
         width: layoutWidth,
       }),
-    [advanced, layoutHeight, layoutItemCount, layoutWidth, options.hideHostname, options.layout, options.spacing],
+    [
+      advanced,
+      layoutHeight,
+      layoutItemCount,
+      layoutWidth,
+      options.hideHostname,
+      options.showFullUrls,
+      options.layout,
+      options.spacing,
+    ],
   );
 
   const cardDisplay = getBookmarkCardDisplay({
