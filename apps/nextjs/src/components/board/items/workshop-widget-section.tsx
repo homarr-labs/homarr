@@ -1,9 +1,9 @@
 import { useMemo } from "react";
-import { Button, Center, Group, Loader, Text, ThemeIcon } from "@mantine/core";
+import { Anchor, Center, Divider, Group, Loader, Text, ThemeIcon } from "@mantine/core";
 import { IconBuildingStore } from "@tabler/icons-react";
 
 import type { IntegrationKind } from "@homarr/definitions";
-import { getIntegrationName, isHttpIntegrationKind } from "@homarr/definitions";
+import { isHttpIntegrationKind } from "@homarr/definitions";
 import { useI18n } from "@homarr/translation/client";
 import { SelectableCard } from "@homarr/ui";
 import { useWorkshopWidgetCatalogQuery } from "@homarr/workshop/backend";
@@ -71,36 +71,30 @@ export function WorkshopWidgetSection({
 }: WorkshopWidgetSectionProps) {
   const t = useI18n();
   const { items, isPending, isError } = catalog;
-  const browseHref = "/manage/custom-widgets/workshop";
   const fullWidth = { gridColumn: "1 / -1" };
-  let browseSearch = search;
-  if (!browseSearch && integrationFilter) browseSearch = getIntegrationName(integrationFilter);
-  let href = browseHref;
-  let linkLabel = t("workshop.browseWorkshop");
-  if (browseSearch) {
-    href += `?${new URLSearchParams({ search: browseSearch })}`;
-    linkLabel = t("item.create.workshop.searchMore");
-  }
+  const hasSearch = Boolean(search || integrationFilter);
   let emptyMessage = t("item.create.workshop.empty");
-  if (browseSearch) emptyMessage = t("item.create.workshop.noMatches");
+  if (hasSearch) emptyMessage = t("item.create.workshop.noMatches");
   if (isError) emptyMessage = t("workshop.unavailableTitle");
-  const waitingForIntegrations = !browseSearch && availableKinds === undefined && !integrationError && !isError;
+  const waitingForIntegrations = !hasSearch && availableKinds === undefined && !integrationError && !isError;
   const loading = isPending || waitingForIntegrations;
-  const showEmpty = items.length === 0 && !loading && (Boolean(browseSearch) || isError || !integrationError);
+  const showEmpty = items.length === 0 && !loading && (hasSearch || isError || !integrationError);
 
   return (
     <>
-      <Group justify="space-between" mt="sm" style={fullWidth}>
-        <Group gap="xs">
-          <IconBuildingStore size={16} />
-          <Text component="h3" size="sm" fw={600}>
-            {t("item.create.workshop.title")}
-          </Text>
-        </Group>
-        <Button component="a" href={href} target="_blank" rel="noopener noreferrer" variant="subtle" size="compact-sm">
-          {linkLabel}
-        </Button>
-      </Group>
+      <Divider
+        label={
+          <Group gap="xs">
+            <IconBuildingStore size={14} />
+            <Text size="xs" fw={600}>
+              {t("item.create.workshop.title")}
+            </Text>
+          </Group>
+        }
+        labelPosition="center"
+        my="sm"
+        style={fullWidth}
+      />
       {integrationError && (
         <Text size="sm" c="dimmed" style={fullWidth}>
           {t("item.create.workshop.integrationError")}
@@ -140,6 +134,16 @@ export function WorkshopWidgetSection({
           }
         />
       ))}
+      <Anchor
+        href="/manage/custom-widgets/workshop"
+        target="_blank"
+        rel="noopener noreferrer"
+        size="xs"
+        ta="right"
+        style={fullWidth}
+      >
+        {t("workshop.browseWorkshop")}
+      </Anchor>
     </>
   );
 }
