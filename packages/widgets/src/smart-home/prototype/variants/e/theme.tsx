@@ -1,13 +1,13 @@
 "use client";
 
-import { useContext } from "react";
+import { createContext, useContext } from "react";
 import type { CSSProperties, MouseEvent, ReactNode } from "react";
 
 import type { TablerIcon } from "@homarr/ui";
 
 import { getEntityIcon, getStateColor, isEntityActive, isUnavailable } from "../../semantics";
 import { usePrototypeEntityError } from "../../store";
-import type { HaEntity } from "../../types";
+import type { HaEntity, PrototypeControlPalette } from "../../types";
 import { TileEntityContext, useDetailOpener, useDeviceControlDisabled } from "./hooks";
 import classes from "./styles.module.css";
 
@@ -16,8 +16,10 @@ const darkOnColors = new Set(["yellow", "orange", "lime", "cyan", "teal"]);
 const untintedDomains = new Set(["sensor", "weather", "scene", "button", "input_select", "sun", "update"]);
 
 export interface EntityTheme {
+  palette: PrototypeControlPalette;
   accent: string;
   onAccent: string;
+  swatch: string | null;
   active: boolean;
   tinted: boolean;
   unavailable: boolean;
@@ -27,25 +29,49 @@ export interface EntityTheme {
 const luminance = ([red, green, blue]: [number, number, number]) =>
   (0.2126 * red + 0.7152 * green + 0.0722 * blue) / 255;
 
-export const getTheme = (entity: HaEntity): EntityTheme => {
-  const colorName = getStateColor(entity);
+const PaletteContext = createContext<PrototypeControlPalette>("boring");
+
+export const PaletteProvider = PaletteContext.Provider;
+export const usePalette = () => useContext(PaletteContext);
+
+export const getTheme = (entity: HaEntity, palette: PrototypeControlPalette): EntityTheme => {
   const active = isEntityActive(entity);
   const unavailable = isUnavailable(entity);
   const rgb = entity.domain === "light" && entity.state === "on" ? entity.attributes.rgbColor : undefined;
-  const accent = rgb ? `rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})` : `var(--mantine-color-${colorName}-filled)`;
+  const lightColor = rgb ? `rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})` : null;
+  const shared = { palette, active, unavailable, Icon: getEntityIcon(entity) };
+
+  if (palette === "boring") {
+    return {
+      ...shared,
+      accent: "var(--mantine-primary-color-filled)",
+      onAccent: "var(--mantine-primary-color-contrast)",
+      swatch: lightColor,
+      tinted: false,
+    };
+  }
+
+  const colorName = getStateColor(entity);
   const dark = rgb ? luminance(rgb) > 0.55 : darkOnColors.has(colorName);
   return {
-    accent,
+    ...shared,
+    accent: lightColor ?? `var(--mantine-color-${colorName}-filled)`,
     onAccent: dark ? darkInk : "#fff",
-    active,
+    swatch: null,
     tinted: active && !untintedDomains.has(entity.domain),
-    unavailable,
-    Icon: getEntityIcon(entity),
   };
 };
 
+export const useEntityTheme = (entity: HaEntity) => getTheme(entity, usePalette());
+
 export const accentVars = (accent: string, onAccent: string) =>
   ({ "--accent": accent, "--on-accent": onAccent }) as CSSProperties;
+
+const tileStyle = (theme: EntityTheme, media: boolean | undefined) => {
+  const accent = media ? accentVars("#fff", darkInk) : accentVars(theme.accent, theme.onAccent);
+  if (!theme.swatch) return accent;
+  return { ...accent, "--swatch": theme.swatch } as CSSProperties;
+};
 
 interface TileProps {
   theme: EntityTheme;
@@ -58,16 +84,18 @@ interface TileProps {
 }
 
 export function Tile({ theme, children, bare, media, className, onClick, label }: TileProps) {
-  const style = media ? accentVars("#fff", darkInk) : accentVars(theme.accent, theme.onAccent);
   const error = usePrototypeEntityError(useContext(TileEntityContext) ?? "");
   const disabled = useDeviceControlDisabled(theme.unavailable);
   const openDetail = useDetailOpener();
   const common = {
     className: `${classes.tile} ${className ?? ""}`,
-    style,
+    style: tileStyle(theme, media),
     title: error?.message,
     "data-error": error?.kind,
+    "data-palette": theme.palette,
+    "data-swatch": theme.swatch !== null,
     "data-active": theme.tinted,
+    "data-on": theme.active,
     "data-unavailable": theme.unavailable,
     "data-bare": bare ?? false,
     "data-media": media ?? false,

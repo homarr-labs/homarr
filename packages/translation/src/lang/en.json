@@ -3140,6 +3140,13 @@
             "compact": "Compact",
             "large": "Large"
           }
+        },
+        "palette": {
+          "label": "Colors",
+          "option": {
+            "boring": "Boring",
+            "colorful": "Colorful"
+          }
         }
       },
       "domain": {

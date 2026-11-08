@@ -186,6 +186,9 @@ export type PrototypePresentation = (typeof prototypePresentations)[number];
 export const prototypeControlSizes = ["auto", "compact", "large"] as const;
 export type PrototypeControlSize = (typeof prototypeControlSizes)[number];
 
+export const prototypeControlPalettes = ["boring", "colorful"] as const;
+export type PrototypeControlPalette = (typeof prototypeControlPalettes)[number];
+
 export type PrototypeBlock =
   | { kind: "entity"; id: string; source: string | null; entityId: string }
   | { kind: "areas"; id: string; source: string | null; areaIds: string[] };
@@ -199,6 +202,7 @@ export interface PrototypeConfiguration {
   excludedEntityIds: readonly string[];
   showSummary: boolean;
   controlSize: PrototypeControlSize;
+  palette: PrototypeControlPalette;
   readOnly: boolean;
   advanced: boolean;
 }

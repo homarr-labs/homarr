@@ -6,7 +6,7 @@ import { createWidgetDefinition } from "../../definition";
 import { optionsBuilder } from "../../options";
 import { BlockAddButton, BlockListItem, useBlockListData, useCatalogEntityOptions } from "./configuration";
 import type { PrototypeBlockListItem } from "./configuration";
-import { haDomains, prototypeControlSizes, prototypePresentations } from "./types";
+import { haDomains, prototypeControlPalettes, prototypeControlSizes, prototypePresentations } from "./types";
 
 const noBlocks: string[] = [];
 
@@ -57,10 +57,20 @@ export const { definition, componentLoader } = createWidgetDefinition("smartHome
           })),
           defaultValue: "auto",
         }),
+        palette: factory.select({
+          options: prototypeControlPalettes.map((value) => ({
+            value,
+            label: (t) => t(`widget.smartHome-prototype.option.palette.option.${value}`),
+          })),
+          defaultValue: "boring",
+        }),
       }),
       {
         showSummary: { shouldHide: (options) => options.presentation !== "entities" },
         controlSize: {
+          shouldHide: (options) => options.presentation !== "controlPanel",
+        },
+        palette: {
           shouldHide: (options) => options.presentation !== "controlPanel",
         },
       },

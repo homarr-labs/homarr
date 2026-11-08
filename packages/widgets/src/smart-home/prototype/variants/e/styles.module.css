@@ -407,7 +407,7 @@ button:focus-visible,
   transition: width 0.5s var(--ease);
 }
 
-.tile:not([data-active="true"]) > .levelLine {
+.tile:not([data-on="true"]) > .levelLine {
   background: var(--track-strong);
 }
 
@@ -2059,4 +2059,62 @@ button:focus-visible,
     border-color: var(--accent);
     opacity: 0.6;
   }
+}
+
+[data-palette="boring"] .pillTrack {
+  background: var(--track);
+}
+
+[data-palette="boring"] .pillFill,
+[data-palette="boring"] .pill[data-axis="horizontal"] .pillFill {
+  background: var(--accent);
+}
+
+[data-palette="boring"] .round[data-active="true"],
+[data-palette="boring"] .bigRound[data-active],
+[data-palette="boring"] .hold[data-active="true"] {
+  box-shadow: none;
+}
+
+[data-palette="boring"] .dialValue {
+  filter: none;
+}
+
+[data-palette="boring"] .holdRingTrack {
+  stroke: var(--track-strong);
+}
+
+[data-palette="boring"] .weatherIcon {
+  color: var(--secondary-ink);
+}
+
+[data-palette="boring"] .avatar {
+  background: var(--track);
+  border-color: var(--track-strong);
+}
+
+[data-palette="boring"] .avatar[data-home="true"] {
+  border-color: var(--accent);
+}
+
+[data-palette="boring"] .statusPill {
+  color: var(--secondary-ink);
+  background: var(--track);
+}
+
+[data-palette="boring"] .statusPill[data-home="true"] {
+  color: var(--mantine-primary-color-light-color);
+  background: var(--mantine-primary-color-light);
+}
+
+.tile[data-swatch="true"] .state::before {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  margin-right: 5px;
+  vertical-align: 0;
+  content: "";
+  background: var(--swatch);
+  border-radius: 50%;
+  box-shadow: 0 0 0 1px var(--tile-border);
 }

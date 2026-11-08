@@ -22,7 +22,7 @@ import { LightColorControls } from "./color-controls";
 import { useDeviceControlDisabled, useRunner } from "./hooks";
 import { getHistoryValues } from "./history";
 import classes from "./styles.module.css";
-import { accentVars, getTheme } from "./theme";
+import { accentVars, useEntityTheme } from "./theme";
 
 type Fact = [label: string, value: string | undefined];
 
@@ -131,9 +131,9 @@ function DetailSection({ title, children }: { title: string; children: ReactNode
 function PresetChips({ entity }: { entity: HaEntity }) {
   const { run, pending } = useRunner(entity);
   const disabled = useDeviceControlDisabled(entity.readOnly);
+  const theme = useEntityTheme(entity);
   const presets = entity.attributes.presetModes ?? [];
   if (presets.length < 2) return null;
-  const theme = getTheme(entity);
 
   return (
     <DetailSection title="Preset">
@@ -163,10 +163,10 @@ function PresetChips({ entity }: { entity: HaEntity }) {
 }
 
 function HistorySummary({ entity }: { entity: HaEntity }) {
+  const theme = useEntityTheme(entity);
   const history = entity.history;
   const numeric = getHistoryValues(history ?? []);
   if (!history || numeric.length === 0) return null;
-  const theme = getTheme(entity);
   const unit = entity.unit ?? "";
   const value = (number: number) => `${formatNumber(number)}${unit === "%" ? "%" : ` ${unit}`}`.trim();
   const average = numeric.reduce((total, point) => total + point, 0) / numeric.length;
@@ -214,7 +214,7 @@ function FactList({ facts }: { facts: Fact[] }) {
 }
 
 function RelatedRow({ entity, onOpen }: { entity: HaEntity; onOpen: (entityId: string) => void }) {
-  const theme = getTheme(entity);
+  const theme = useEntityTheme(entity);
   const { run, pending } = useRunner(entity);
   const action = getPrimaryAction(entity);
   const state = formatEntityState(entity);
@@ -254,7 +254,7 @@ interface RelatedActionProps {
 }
 
 function RelatedAction({ entity, action, run, pending }: RelatedActionProps) {
-  const theme = getTheme(entity);
+  const theme = useEntityTheme(entity);
   const ActionIcon = actionIcons[action.type] ?? IconPower;
   return (
     <RoundButton

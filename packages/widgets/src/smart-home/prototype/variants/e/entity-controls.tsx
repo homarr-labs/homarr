@@ -83,7 +83,7 @@ import {
   useRunner,
 } from "./hooks";
 import classes from "./styles.module.css";
-import { getTheme, Head, Tile } from "./theme";
+import { Head, Tile, useEntityTheme } from "./theme";
 import type { EntityTheme } from "./theme";
 
 export interface ControlProps {
@@ -299,7 +299,7 @@ function SliderControl({ entity, width, height, spec, theme, extras }: SliderCon
 
 function LightControl(props: ControlProps) {
   const { entity } = props;
-  const theme = getTheme(entity);
+  const theme = useEntityTheme(entity);
   const attributes = entity.attributes;
   const on = entity.state === "on";
   const spec: SliderSpec = {
@@ -318,7 +318,7 @@ function LightControl(props: ControlProps) {
 
 function FanControl(props: ControlProps) {
   const { entity } = props;
-  const theme = getTheme(entity);
+  const theme = useEntityTheme(entity);
   const spec: SliderSpec = {
     value: entity.state === "on" ? (entity.attributes.percentage ?? 0) : 0,
     caption: "Speed",
@@ -331,7 +331,7 @@ function FanControl(props: ControlProps) {
 
 function HumidifierControl(props: ControlProps) {
   const { entity } = props;
-  const theme = getTheme(entity);
+  const theme = useEntityTheme(entity);
   const min = entity.attributes.minHumidity ?? 0;
   const max = entity.attributes.maxHumidity ?? 100;
   const target = entity.attributes.targetHumidity;
@@ -375,7 +375,7 @@ const holdLabel = (gate: CodeGate, hold: boolean, actionLabel: string, name: str
 };
 
 function HoldControl({ entity, width, height, action, actionLabel, icon: Icon, hint }: HoldControlProps) {
-  const theme = getTheme(entity);
+  const theme = useEntityTheme(entity);
   const { run, pending, done } = useRunner(entity);
   const tier = getTier(width, height);
   const hold = requiresConfirmation(entity, action);
@@ -462,7 +462,7 @@ function LockControl(props: ControlProps) {
 function CoverControl(props: ControlProps) {
   const { entity } = props;
   const { run } = useRunner(entity);
-  const theme = getTheme(entity);
+  const theme = useEntityTheme(entity);
 
   if (entity.deviceClass === "garage") {
     const closed = entity.state === "closed";
@@ -520,7 +520,7 @@ function CoverControl(props: ControlProps) {
 }
 
 function ToggleControl({ entity, width, height }: ControlProps) {
-  const theme = getTheme(entity);
+  const theme = useEntityTheme(entity);
   const { run, pending, done } = useRunner(entity);
   const tier = getTier(width, height);
   const action = getPrimaryAction(entity);
@@ -593,7 +593,7 @@ function LaunchControl({ entity, width, height }: ControlProps) {
 }
 
 function ClimateControl({ entity, width, height }: ControlProps) {
-  const theme = getTheme(entity);
+  const theme = useEntityTheme(entity);
   const { run, pending } = useRunner(entity);
   const tier = getTier(width, height);
   const attributes = entity.attributes;
@@ -749,7 +749,7 @@ function ClimateControl({ entity, width, height }: ControlProps) {
 }
 
 function MediaControl({ entity, width, height }: ControlProps) {
-  const theme = getTheme(entity);
+  const theme = useEntityTheme(entity);
   const { run, pending } = useRunner(entity);
   const tier = getTier(width, height);
   const attributes = entity.attributes;
@@ -939,7 +939,7 @@ function MediaControl({ entity, width, height }: ControlProps) {
 }
 
 function CameraControl({ entity, width, height }: ControlProps) {
-  const theme = getTheme(entity);
+  const theme = useEntityTheme(entity);
   const image = entity.attributes.snapshotUrl ?? entity.attributes.pictureUrl;
   const live = entity.state === "recording" || entity.state === "streaming";
   const Icon = theme.Icon;
@@ -978,7 +978,7 @@ const alarmModes: { mode: "home" | "away" | "night"; label: string; icon: Tabler
 ];
 
 function AlarmControl({ entity, width, height }: ControlProps) {
-  const theme = getTheme(entity);
+  const theme = useEntityTheme(entity);
   const { run, pending } = useRunner(entity);
   const gateFor = useCodeGate(entity);
   const tier = getTier(width, height);
@@ -1073,7 +1073,7 @@ function AlarmControl({ entity, width, height }: ControlProps) {
 }
 
 function SensorControl({ entity, width, height }: ControlProps) {
-  const theme = getTheme(entity);
+  const theme = useEntityTheme(entity);
   const tier = getTier(width, height);
   const Icon = theme.Icon;
   const value = formatEntityState(entity);
@@ -1115,7 +1115,7 @@ function SensorControl({ entity, width, height }: ControlProps) {
 }
 
 function WeatherControl({ entity, width, height }: ControlProps) {
-  const theme = getTheme(entity);
+  const theme = useEntityTheme(entity);
   const tier = getTier(width, height);
   const attributes = entity.attributes;
   const Icon = theme.Icon;
@@ -1191,7 +1191,7 @@ function WeatherControl({ entity, width, height }: ControlProps) {
 }
 
 function VacuumControl({ entity, width, height }: ControlProps) {
-  const theme = getTheme(entity);
+  const theme = useEntityTheme(entity);
   const { run, pending, done } = useRunner(entity);
   const tier = getTier(width, height);
   const Icon = theme.Icon;
@@ -1287,7 +1287,7 @@ function VacuumControl({ entity, width, height }: ControlProps) {
 }
 
 function PersonControl({ entity, width, height }: ControlProps) {
-  const theme = getTheme(entity);
+  const theme = useEntityTheme(entity);
   const tier = getTier(width, height);
   const home = entity.state === "home";
   const state = formatEntityState(entity);
@@ -1341,7 +1341,7 @@ function PersonControl({ entity, width, height }: ControlProps) {
 }
 
 function SelectControl({ entity, width, height }: ControlProps) {
-  const theme = getTheme(entity);
+  const theme = useEntityTheme(entity);
   const disabled = useDeviceControlDisabled(theme.unavailable);
   const { run, pending } = useRunner(entity);
   const tier = getTier(width, height);
@@ -1407,7 +1407,7 @@ function SelectControl({ entity, width, height }: ControlProps) {
 }
 
 function InfoControl({ entity, width, height }: ControlProps) {
-  const theme = getTheme(entity);
+  const theme = useEntityTheme(entity);
   const disabled = useDeviceControlDisabled(theme.unavailable);
   const { run, pending } = useRunner(entity);
   const tier = getTier(width, height);

@@ -18,7 +18,13 @@ import { PrototypeLiveProvider, usePrototypeLiveStatus } from "./live";
 import { isUnavailable } from "./semantics";
 import { PrototypeEntitiesProvider, PrototypeInteractionProvider, usePrototypeEntities } from "./store";
 import { haDomains } from "./types";
-import type { HaEntity, PrototypeConfiguration, PrototypeControlSize, PrototypeOptionsPatch } from "./types";
+import type {
+  HaEntity,
+  PrototypeConfiguration,
+  PrototypeControlPalette,
+  PrototypeControlSize,
+  PrototypeOptionsPatch,
+} from "./types";
 import { getColumnCount, getLevel, getOverviewTier } from "./variants/c/layout";
 import { ChipButton } from "./variants/c/list";
 import type { ChipDef } from "./variants/c/list";
@@ -27,7 +33,7 @@ import { ControlListRoot } from "./variants/c/root";
 import { EntityRow } from "./variants/c/row";
 import cClasses from "./variants/c/styles.module.css";
 import { EntityTile, StatCells } from "./variants/c/tile";
-import { DetailProvider, EntityControl, EntityDetail } from "./variants/e/details";
+import { DetailProvider, EntityControl, EntityDetail, PaletteProvider } from "./variants/e/details";
 import eClasses from "./variants/e/styles.module.css";
 
 const getSourceAreaId = (entity: HaEntity) => entity.sourceAreaId ?? entity.areaId;
@@ -418,10 +424,12 @@ function ControlPanelPresentation({ entities, configuration, width, height }: Pr
 function ControlPanelRoot({
   isEditMode,
   single,
+  palette,
   children,
 }: {
   isEditMode: boolean;
   single: boolean;
+  palette: PrototypeControlPalette;
   children: ReactNode;
 }) {
   const [detailId, setDetailId] = useState<string | null>(null);
@@ -431,17 +439,20 @@ function ControlPanelRoot({
   }, [isEditMode]);
 
   return (
-    <DetailProvider value={detail}>
-      <div
-        className={eClasses.root}
-        data-edit={isEditMode}
-        data-preset={single ? "entity" : undefined}
-        inert={isEditMode}
-      >
-        {children}
-      </div>
-      <EntityDetail entityId={detail && detailId} onClose={() => setDetailId(null)} onOpen={setDetailId} />
-    </DetailProvider>
+    <PaletteProvider value={palette}>
+      <DetailProvider value={detail}>
+        <div
+          className={eClasses.root}
+          data-edit={isEditMode}
+          data-preset={single ? "entity" : undefined}
+          data-palette={palette}
+          inert={isEditMode}
+        >
+          {children}
+        </div>
+        <EntityDetail entityId={detail && detailId} onClose={() => setDetailId(null)} onOpen={setDetailId} />
+      </DetailProvider>
+    </PaletteProvider>
   );
 }
 
@@ -519,7 +530,7 @@ function ConfiguredPreview({ configuration, width, height, isEditMode }: Preview
     <PrototypeEntitiesProvider entityIds={entityIds}>
       {!panel && <ControlListRoot isEditMode={isEditMode}>{content}</ControlListRoot>}
       {panel && (
-        <ControlPanelRoot isEditMode={isEditMode} single={single}>
+        <ControlPanelRoot isEditMode={isEditMode} single={single} palette={configuration.palette}>
           {content}
         </ControlPanelRoot>
       )}
@@ -598,6 +609,7 @@ export default function SmartHomePrototypeWidget({
       excludedEntityIds: options.excludedEntityIds,
       showSummary: options.showSummary,
       controlSize: options.controlSize,
+      palette: options.palette,
       readOnly: options.readOnly,
     }),
     [
@@ -610,6 +622,7 @@ export default function SmartHomePrototypeWidget({
       options.excludedEntityIds,
       options.showSummary,
       options.controlSize,
+      options.palette,
       options.readOnly,
     ],
   );
