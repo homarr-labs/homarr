@@ -1891,7 +1891,8 @@
       "copy": "Copy",
       "copied": "Copied",
       "refresh": "Refresh",
-      "export": "Export"
+      "export": "Export",
+      "advanced": "Advanced"
     },
     "hidden": "Hidden",
     "pagination": {
@@ -2078,11 +2079,7 @@
       }
     },
     "customTheme": {
-      "appearance": "Appearance",
       "label": "Theme",
-      "serverDescription": "Default theme for this server. Users can choose their own theme.",
-      "userDescription": "Choose your theme or inherit the server default.",
-      "serverDefault": "Server default",
       "nothingFound": "No themes found",
       "custom": "Custom",
       "customize": "Open theme editor",
@@ -2135,18 +2132,11 @@
       },
       "studio": {
         "title": "Theme editor",
-        "description": "Start from a preset, adjust individual settings, and test them before saving. Reset any field to inherit its starting value.",
-        "serverTheme": "Server theme",
-        "userTheme": "Personal theme",
-        "useServer": "Use server theme",
-        "inheritingServer": "Using the server theme",
         "saveTheme": "Save theme",
         "searchControls": "Search settings",
         "component": "Component",
         "inheritedValue": "Inherited",
         "resetControl": "Reset {control}",
-        "breakpointHint": "Use em, for example 48em.",
-        "dimensionHint": "Use ↑/↓ to adjust, Shift for larger steps, or Alt+↓ to choose a value.",
         "decreaseControl": "Decrease {control}",
         "increaseControl": "Increase {control}",
         "chooseControl": "Choose {control}",
@@ -2176,50 +2166,7 @@
         "responsive": "Responsive",
         "tablet": "Tablet",
         "mobile": "Mobile",
-        "boardReadOnly": "This board uses your normal access permissions and is read-only in the preview.",
         "includeCustomCss": "Include server custom CSS",
-        "sampleSettings": "Settings",
-        "openModal": "Open modal",
-        "openDrawer": "Open drawer",
-        "sampleSearch": "Search apps and services",
-        "sampleOnline": "Online",
-        "sampleHealthy": "Healthy",
-        "sampleUpdating": "Updating",
-        "sampleOffline": "Offline",
-        "sampleHealth": "System health",
-        "sampleCpu": "CPU",
-        "sampleDisk": "Storage",
-        "sampleActivity": "Services",
-        "sampleService": "Service",
-        "sampleStatus": "Status",
-        "sampleHeading": "Heading",
-        "sampleText": "Everything in its place. Make your dashboard feel like home.",
-        "sampleMuted": "Muted text for descriptions and secondary information.",
-        "buttons": "Buttons & badges",
-        "previewTooltip": "Preview tooltip",
-        "sampleTooltip": "Tooltip preview",
-        "notification": "Notification",
-        "lightVariant": "Light",
-        "outlineVariant": "Outline",
-        "disabled": "Disabled",
-        "loading": "Loading",
-        "openMenu": "Open menu",
-        "badge": "Badge",
-        "error": "Error",
-        "inputs": "Inputs",
-        "inputDefault": "Default input",
-        "inputError": "Input with error",
-        "sampleError": "Check this value and try again.",
-        "select": "Select",
-        "textarea": "Text area",
-        "checkbox": "Checkbox",
-        "switch": "Switch",
-        "tabs": "Tabs",
-        "secondTab": "Second tab",
-        "sampleNotice": "Your theme applies to alerts, menus, forms, and other surfaces.",
-        "sampleModal": "Modal preview",
-        "sampleDrawer": "Drawer preview",
-        "modalHint": "Change the backdrop blur, opacity, shadow, or roundness in the editor while this panel is open.",
         "groups": {
           "layout": "Layout & spacing",
           "typography": "Typography",
@@ -6659,7 +6606,7 @@
           "title": "Background"
         },
         "appearance": {
-          "title": "Appearance"
+          "title": "Board colors"
         },
         "customCss": {
           "title": "Custom css"
@@ -8454,14 +8401,6 @@
               },
               "fullPreferencesPage": {
                 "label": "Open full preferences page"
-              },
-              "themeId": {
-                "label": "Theme",
-                "children": {
-                  "detail": {
-                    "title": "Choose a theme"
-                  }
-                }
               }
             }
           }

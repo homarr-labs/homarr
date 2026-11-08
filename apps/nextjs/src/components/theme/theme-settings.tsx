@@ -9,15 +9,13 @@ import { useI18n } from "@homarr/translation/client";
 
 import type { ThemeSelection } from "~/theme/branding";
 
-interface ThemeSettingsProps extends ThemeSelection {
+interface ThemeSettingsProps extends Pick<ThemeSelection, "themeId"> {
   editorHref: string;
-  inherit?: boolean;
-  onChange: (selection: ThemeSelection) => void;
 }
 
-export const ThemeSettings = ({ themeId, customTheme, editorHref, inherit, onChange }: ThemeSettingsProps) => {
+export const ThemeSettings = ({ themeId, editorHref }: ThemeSettingsProps) => {
   const t = useI18n("common.customTheme");
-  let label = t("serverDefault");
+  let label = themeNames.default;
   if (themeId === "custom") label = t("custom");
   else if (themeId) label = themeNames[themeId];
   return (
@@ -39,11 +37,6 @@ export const ThemeSettings = ({ themeId, customTheme, editorHref, inherit, onCha
         >
           {t("customize")}
         </Button>
-        {inherit && themeId !== null && (
-          <Button variant="subtle" size="xs" onClick={() => onChange({ themeId: null, customTheme })}>
-            {t("studio.useServer")}
-          </Button>
-        )}
       </Group>
     </Stack>
   );

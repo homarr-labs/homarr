@@ -13,26 +13,16 @@ import {
   updateThemeDraft,
 } from "@homarr/validation/theme-controls";
 
-import { createTRPCRouter, protectedProcedure } from "../trpc";
-import { getUserPreferencesAsync, updateUserPreferencesAsync } from "./user/preferences";
-
-const targetSchema = z.strictObject({
-  target: z.enum(["user", "server"]).default("user"),
-  userId: z.string().min(1).max(128).optional(),
-});
-
-const assertServerAdmin = (permissions: readonly string[]) => {
-  if (!permissions.includes("admin"))
-    throw new TRPCError({ code: "FORBIDDEN", message: "Server themes require admin permission" });
-};
+import { createTRPCRouter, permissionRequiredProcedure } from "../trpc";
+const adminProcedure = permissionRequiredProcedure.requiresPermission("admin");
 
 export const themeRouter = createTRPCRouter({
-  getControls: protectedProcedure
+  getControls: adminProcedure
     .meta({
       mcp: {
         enabled: true,
         description:
-          "Discover a page of theme editor controls with allowed paths, types, bounds, and presets. Filter by group or component, or page using nextOffset until null. These are the controls used by the editor page. Use theme_get to read the active document and theme_update to edit controls. value null resets an override. No theme is changed.",
+          "Discover a page of global theme editor controls with allowed paths, types, bounds, and presets. Requires admin permission. Filter by group or component, or page using nextOffset until null. These are the controls used by the editor page. Use theme_get to read the active document and theme_update to edit controls. value null resets an override. No theme is changed.",
       },
     })
     .input(
@@ -59,49 +49,39 @@ export const themeRouter = createTRPCRouter({
         groups: themeControlGroups,
         components: [...new Set(themeControls.flatMap((control) => (control.component ? [control.component] : [])))],
         presets: themeIds.map((id) => ({ id, name: themeNames[id] })),
-        userDefault: null,
+        scope: "server",
       };
     }),
-  get: protectedProcedure
+  get: adminProcedure
     .meta({
       mcp: {
         enabled: true,
         description:
-          "Read a user or server theme, its saved custom overrides, and the active starting document for editing. Users inherit the server theme when themeId is null. Omit userId for yourself; reading another user or target server requires admin permission. Control paths are listed by theme_getControls.",
+          "Read the global server theme, saved custom overrides, and active starting document for editing. Requires admin permission. Control paths are listed by theme_getControls.",
       },
     })
-    .input(targetSchema)
-    .query(async ({ ctx, input }) => {
-      if (input.target === "server") assertServerAdmin(ctx.session.user.permissions);
+    .input(z.strictObject({}).optional())
+    .query(async ({ ctx }) => {
       const branding = parseBrandingSettings(await getServerSettingByKeyAsync(ctx.db, "branding"));
-      let selection: ThemeSelection = branding;
-      let userId: string | undefined;
-      if (input.target === "user") {
-        userId = input.userId ?? ctx.session.user.id;
-        const preferences = await getUserPreferencesAsync(ctx, userId);
-        selection = { themeId: preferences.themeId, customTheme: preferences.customTheme };
-      }
       return {
-        target: input.target,
-        userId,
-        ...selection,
-        inherited: selection.themeId === null,
-        activeDocument: resolveThemeSelection(branding, selection).document,
+        themeId: branding.themeId,
+        customTheme: branding.customTheme,
+        activeDocument: resolveThemeSelection(branding).document,
         branding,
       };
     }),
-  update: protectedProcedure
+  update: adminProcedure
     .meta({
       mcp: {
         enabled: true,
         description:
-          "Save theme settings for yourself or a server. Use changes with paths from theme_getControls to edit individual settings; changes merge into the active theme and select Custom. With changes, themeId chooses the starting preset (or null for the server theme); the result is Custom. value null resets that setting. customTheme can replace the full validated document. Without changes, themeId selects a preset, saved custom, or null to return a user to the server theme. Omitted theme data is preserved. Read theme_get first. target server and editing another user require admin permission. Does not execute CSS resources, JavaScript, or component handlers.",
+          "Save the global server theme for all users. Requires admin permission. Use changes with paths from theme_getControls to edit individual settings; changes merge into the active theme and select Custom. With changes, themeId chooses the starting preset. value null resets that setting. customTheme can replace the full validated document. Without changes, themeId selects a preset or saved custom. Omitted theme data is preserved. Read theme_get first. Does not execute CSS resources, JavaScript, or component handlers.",
       },
     })
     .input(
-      targetSchema
-        .extend({
-          themeId: themeSelectionSchema.nullable().optional(),
+      z
+        .strictObject({
+          themeId: themeSelectionSchema.optional(),
           customTheme: customThemeSchema.nullable().optional(),
           changes: z.array(themeControlChangeSchema).min(1).max(256).optional(),
         })
@@ -111,16 +91,8 @@ export const themeRouter = createTRPCRouter({
         ),
     )
     .mutation(async ({ ctx, input }) => {
-      if (input.target === "server") assertServerAdmin(ctx.session.user.permissions);
-      if (input.target === "server" && input.themeId === null)
-        throw new TRPCError({ code: "BAD_REQUEST", message: "Choose a server theme" });
       const branding = parseBrandingSettings(await getServerSettingByKeyAsync(ctx.db, "branding"));
-      let current: ThemeSelection = branding;
-      const userId = input.userId ?? ctx.session.user.id;
-      if (input.target === "user") {
-        const preferences = await getUserPreferencesAsync(ctx, userId);
-        current = { themeId: preferences.themeId, customTheme: preferences.customTheme };
-      }
+      const current: ThemeSelection = branding;
       let customTheme = current.customTheme;
       if (input.customTheme !== undefined) customTheme = input.customTheme;
       let themeId = current.themeId;
@@ -138,16 +110,11 @@ export const themeRouter = createTRPCRouter({
       }
       if (themeId === "custom" && !customTheme)
         throw new TRPCError({ code: "BAD_REQUEST", message: "Save a custom theme before selecting it" });
-      if (input.target === "server") {
-        if (themeId === null) throw new TRPCError({ code: "BAD_REQUEST", message: "Choose a server theme" });
-        await updateServerSettingByKeyAsync(
-          ctx.db,
-          "branding",
-          brandingServerSettingsSchema.parse({ ...branding, themeId, customTheme }),
-        );
-      } else {
-        await updateUserPreferencesAsync(ctx, userId, { themeId, customTheme });
-      }
-      return { target: input.target, themeId, customTheme, inherited: themeId === null };
+      await updateServerSettingByKeyAsync(
+        ctx.db,
+        "branding",
+        brandingServerSettingsSchema.parse({ ...branding, themeId, customTheme }),
+      );
+      return { themeId, customTheme };
     }),
 });

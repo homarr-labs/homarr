@@ -8,8 +8,6 @@ import { users } from "@homarr/db/schema";
 export const getRscUserSettingsAsync = cache(async (userId: string) =>
   db.query.users.findFirst({
     columns: {
-      themeId: true,
-      customTheme: true,
       homeBoardId: true,
       mobileHomeBoardId: true,
       byteUnitSystem: true,

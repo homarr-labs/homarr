@@ -11,7 +11,7 @@ import { customThemeSchema, themeSelectionSchema } from "@homarr/validation/them
 export const themePreviewMessageSchema = z.strictObject({
   type: z.literal("homarr-theme-preview"),
   branding: brandingServerSettingsSchema,
-  themeId: themeSelectionSchema.nullable(),
+  themeId: themeSelectionSchema,
   customTheme: customThemeSchema.nullable(),
   scheme: z.enum(["light", "dark"]),
   surface: z.enum(["board", "components", "overlays", "typography", "liveBoard"]),

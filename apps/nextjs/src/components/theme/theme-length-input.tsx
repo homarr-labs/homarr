@@ -1,12 +1,13 @@
 "use client";
 
+import { useRef } from "react";
 import type { ElementProps, InputBaseProps } from "@mantine/core";
-import { ActionIcon, Combobox, Group, InputBase, useCombobox } from "@mantine/core";
+import { ActionIcon, Combobox, Group, InputBase, Stack, useCombobox } from "@mantine/core";
 import { IconChevronDown, IconMinus, IconPlus } from "@tabler/icons-react";
 
 import { useI18n } from "@homarr/translation/client";
 
-import { parseThemeLength } from "./theme-length";
+import { parseThemeLength, themeLengthPixels } from "./theme-length";
 
 interface ThemeLengthInputProps
   extends
@@ -16,6 +17,7 @@ interface ThemeLengthInputProps
   onChange: (value: string) => void;
   unit?: "rem" | "em";
   options?: string[];
+  defaultValue?: string;
   name: string;
   "aria-label": string;
 }
@@ -24,10 +26,13 @@ export const ThemeLengthInput = ({
   value,
   onChange,
   onBlur,
+  onKeyDown,
+  defaultValue,
   unit = "rem",
   options,
   ...props
 }: ThemeLengthInputProps) => {
+  const initialValue = useRef(value);
   const t = useI18n("common.customTheme.studio");
   const combobox = useCombobox({
     onDropdownClose: () => combobox.resetSelectedOption(),
@@ -37,24 +42,43 @@ export const ThemeLengthInput = ({
   });
   const length = parseThemeLength(value);
   const currentUnit = length?.unit || unit;
-  let suggestions = [0, 0.125, 0.25, 0.5, 0.75, 1, 1.5, 2].map((number) => `${number}${currentUnit}`);
-  if (currentUnit === "px") suggestions = [0, 2, 4, 8, 12, 16, 24, 32].map((number) => `${number}px`);
-  if (currentUnit === "em") suggestions = [20, 36, 48, 62, 75, 88, 100].map((number) => `${number}em`);
-  if (options) suggestions = options;
-  const canStep = Boolean(length || options?.includes(value) || value === "");
-
-  const step = (direction: number, multiplier = 1) => {
-    if (props.disabled) return;
-    const index = options?.indexOf(value) ?? -1;
-    if (options && index !== -1) {
-      onChange(options[Math.max(0, Math.min(options.length - 1, index + direction))] ?? value);
-      return;
+  let numbers = [0, 0.125, 0.25, 0.375, 0.5, 0.625, 0.75, 1, 1.25, 1.5, 2, 2.5, 3, 4];
+  if (currentUnit === "px") numbers = [0, 2, 4, 6, 8, 10, 12, 16, 20, 24, 32, 40, 48, 64];
+  if (currentUnit === "em") numbers = [20, 36, 48, 62, 75, 88, 100];
+  let suggestions = numbers.map((number) => `${number}${currentUnit}`);
+  if (options) suggestions = [...options];
+  for (const fallback of [defaultValue, initialValue.current]) {
+    if (!fallback) continue;
+    let option = fallback;
+    if (!options) {
+      const parsed = parseThemeLength(fallback);
+      if (!parsed) continue;
+      let number = parsed.number;
+      if (parsed.unit !== currentUnit) {
+        const pixels = themeLengthPixels(fallback);
+        if (pixels === null || currentUnit === "%") continue;
+        number = pixels;
+        if (currentUnit === "rem" || currentUnit === "em") number /= 16;
+      }
+      option = `${number}${currentUnit}`;
     }
-    if (!length && value !== "") return;
-    let increment = 0.0625;
-    if (currentUnit !== "rem") increment = 1;
-    const next = Math.max(0, (length?.number ?? 0) + direction * increment * multiplier);
-    onChange(`${Number(next.toFixed(4))}${currentUnit}`);
+    if (!suggestions.includes(option)) suggestions.push(option);
+  }
+  if (!options) suggestions.sort((a, b) => Number.parseFloat(a) - Number.parseFloat(b));
+
+  const nextValue = (direction: number) => {
+    const index = suggestions.indexOf(value);
+    if (index !== -1) return suggestions[Math.max(0, Math.min(suggestions.length - 1, index + direction))];
+    if (!options && length) {
+      if (direction > 0) return suggestions.find((item) => Number.parseFloat(item) > length.number);
+      return suggestions.findLast((item) => Number.parseFloat(item) < length.number);
+    }
+    if (direction > 0) return suggestions[0];
+    return suggestions.at(-1);
+  };
+  const step = (direction: number) => {
+    const next = nextValue(direction);
+    if (!props.disabled && next !== undefined) onChange(next);
   };
 
   return (
@@ -71,14 +95,14 @@ export const ThemeLengthInput = ({
           {...props}
           value={value}
           maxLength={300}
-          title={t("dimensionHint")}
           onChange={(event) => onChange(event.currentTarget.value)}
           onBlur={(event) => {
             combobox.closeDropdown();
             onBlur?.(event);
           }}
           onKeyDown={(event) => {
-            if (event.nativeEvent.isComposing) return;
+            onKeyDown?.(event);
+            if (event.defaultPrevented || event.nativeEvent.isComposing) return;
             if (event.altKey && event.key === "ArrowDown") {
               event.preventDefault();
               combobox.openDropdown();
@@ -92,39 +116,42 @@ export const ThemeLengthInput = ({
             if (event.key === "ArrowUp" || event.key === "ArrowDown") {
               event.preventDefault();
               let direction = 1;
-              let multiplier = 1;
               if (event.key === "ArrowDown") direction = -1;
-              if (event.shiftKey) multiplier = 10;
-              step(direction, multiplier);
+              step(direction);
             }
           }}
-          rightSectionWidth={84}
+          rightSectionWidth={48}
           rightSectionPointerEvents="all"
           rightSection={
             <Group gap={0} wrap="nowrap">
+              <Stack gap={0}>
+                <ActionIcon
+                  variant="subtle"
+                  size={16}
+                  tabIndex={-1}
+                  disabled={props.disabled || nextValue(1) === undefined || nextValue(1) === value}
+                  aria-label={t("increaseControl", { control: props["aria-label"] })}
+                  onMouseDown={(event) => event.preventDefault()}
+                  onClick={() => step(1)}
+                >
+                  <IconPlus size={12} />
+                </ActionIcon>
+                <ActionIcon
+                  variant="subtle"
+                  size={16}
+                  tabIndex={-1}
+                  disabled={props.disabled || nextValue(-1) === undefined || nextValue(-1) === value}
+                  aria-label={t("decreaseControl", { control: props["aria-label"] })}
+                  onMouseDown={(event) => event.preventDefault()}
+                  onClick={() => step(-1)}
+                >
+                  <IconMinus size={12} />
+                </ActionIcon>
+              </Stack>
               <ActionIcon
                 variant="subtle"
                 size="sm"
-                disabled={props.disabled || !canStep}
-                aria-label={t("decreaseControl", { control: props["aria-label"] })}
-                onMouseDown={(event) => event.preventDefault()}
-                onClick={() => step(-1)}
-              >
-                <IconMinus size={14} />
-              </ActionIcon>
-              <ActionIcon
-                variant="subtle"
-                size="sm"
-                disabled={props.disabled || !canStep}
-                aria-label={t("increaseControl", { control: props["aria-label"] })}
-                onMouseDown={(event) => event.preventDefault()}
-                onClick={() => step(1)}
-              >
-                <IconPlus size={14} />
-              </ActionIcon>
-              <ActionIcon
-                variant="subtle"
-                size="sm"
+                tabIndex={-1}
                 disabled={props.disabled}
                 aria-label={t("chooseControl", { control: props["aria-label"] })}
                 onMouseDown={(event) => event.preventDefault()}

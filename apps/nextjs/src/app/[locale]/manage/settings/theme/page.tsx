@@ -11,7 +11,7 @@ export default async function ServerThemePage() {
   const session = await auth();
   if (!session?.user.permissions.includes("admin")) notFound();
   const [initialData, boards, t] = await Promise.all([
-    api.theme.get({ target: "server" }),
+    api.theme.get(),
     api.board.getManageOverview({ fullPreview: false }),
     getI18n("common.customTheme.studio"),
   ]);

@@ -2,13 +2,12 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import type { ReactNode } from "react";
+import type { KeyboardEvent, ReactNode } from "react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
   Accordion,
   ActionIcon,
   Alert,
-  Badge,
   Box,
   Button,
   ColorInput,
@@ -75,11 +74,7 @@ export const ThemeEditor = ({
   const common = useI18n("common");
   const router = useRouter();
   const utils = clientApi.useUtils();
-  const queryInput = useMemo(
-    () => ({ target: initialData.target, userId: initialData.userId }),
-    [initialData.target, initialData.userId],
-  );
-  const query = clientApi.theme.get.useQuery(queryInput, { initialData });
+  const query = clientApi.theme.get.useQuery(undefined, { initialData });
   const data = query.data;
   const [selection, setSelection] = useState<ThemeSelection>({
     themeId: initialData.themeId,
@@ -113,8 +108,8 @@ export const ThemeEditor = ({
     if (previousIncomingKey.current === incomingKey) return;
     previousIncomingKey.current = incomingKey;
     // Router refreshes (including Cmd+K) supply fresh props; initialData never updates an existing query.
-    utils.theme.get.setData(queryInput, initialData);
-  }, [incomingKey, initialData, queryInput, utils]);
+    utils.theme.get.setData(undefined, initialData);
+  }, [incomingKey, initialData, utils]);
 
   useEffect(() => {
     if (previousServerKey.current === serverKey) return;
@@ -138,6 +133,14 @@ export const ThemeEditor = ({
     [data.branding, previewSelection],
   );
   const effective = useMemo(() => mergeMantineTheme(DEFAULT_THEME, appearance.theme), [appearance.theme]);
+  const presetTheme = useMemo(
+    () =>
+      mergeMantineTheme(
+        DEFAULT_THEME,
+        createAppearanceTheme(data.branding, { themeId: document.preset, customTheme: null }).theme,
+      ),
+    [data.branding, document.preset],
+  );
   const active = resolveActiveTheme(data.branding, previewSelection);
   const inheritedDocument = useMemo(() => {
     return {
@@ -195,7 +198,7 @@ export const ThemeEditor = ({
     if (mutation.isPending) return;
     const submittedRevision = draftRevision.current;
     try {
-      const result = await mutation.mutateAsync({ target: data.target, userId: data.userId, ...next });
+      const result = await mutation.mutateAsync(next);
       const savedSelection = { themeId: result.themeId, customTheme: result.customTheme };
       setSaved(savedSelection);
       if (draftRevision.current === submittedRevision) updateSelection(savedSelection);
@@ -245,7 +248,19 @@ export const ThemeEditor = ({
       data.branding.lockPrimaryColor &&
       (/^(light|dark)\.primary$/u.test(control.path) || control.path.startsWith("theme.primaryShade"));
     const disabled = locked || Boolean(jsonError);
-    const baseProps = { label, name: control.path, "aria-label": label, disabled };
+    const baseProps = {
+      label,
+      name: control.path,
+      "aria-label": label,
+      disabled,
+      onKeyDown: (event: KeyboardEvent<HTMLInputElement>) => {
+        if (event.altKey && event.key === "Backspace") {
+          event.preventDefault();
+          setEditingControl(null);
+          updateControl(control.path, null);
+        }
+      },
+    };
     const shared = {
       ...baseProps,
       styles: { wrapper: { marginTop: 0, marginBottom: 0 } },
@@ -253,10 +268,12 @@ export const ThemeEditor = ({
     const reset = (
       <ActionIcon
         size="input-sm"
+        tabIndex={-1}
         variant="subtle"
         disabled={own === undefined || disabled}
         aria-label={t("studio.resetControl", { control: label })}
         title={t("studio.resetControl", { control: label })}
+        aria-keyshortcuts="Alt+Backspace"
         onClick={() => {
           setEditingControl(null);
           updateControl(control.path, null);
@@ -265,10 +282,8 @@ export const ThemeEditor = ({
         <IconArrowBackUp size={16} />
       </ActionIcon>
     );
-    let inputMarginTop = 0;
-    if (control.labelKey === "breakpoint") inputMarginTop = 5;
     const inputContainer = (children: ReactNode) => (
-      <Group gap="xs" wrap="nowrap" align="center" mt={inputMarginTop}>
+      <Group gap="xs" wrap="nowrap" align="center">
         <Box flex={1} miw={0}>
           {children}
         </Box>
@@ -348,13 +363,16 @@ export const ThemeEditor = ({
     } else if (control.type === "length") {
       input = (
         <ThemeLengthInput
+          key={document.preset}
           {...shared}
           {...editingProps}
           inputContainer={inputContainer}
           value={String(editingValue ?? textValue)}
           unit={control.unit}
           options={control.options}
-          description={control.labelKey === "breakpoint" ? t("studio.breakpointHint") : undefined}
+          defaultValue={String(
+            getThemeControlValue({ theme: presetTheme }, control.path) ?? control.defaultValue ?? "",
+          )}
           onChange={updateText}
         />
       );
@@ -367,7 +385,6 @@ export const ThemeEditor = ({
           value={editingValue ?? textValue}
           placeholder={t("studio.inheritedValue")}
           maxLength={300}
-          description={control.labelKey === "breakpoint" ? t("studio.breakpointHint") : undefined}
           onChange={(event) => updateText(event.currentTarget.value)}
         />
       );
@@ -406,23 +423,8 @@ export const ThemeEditor = ({
           <Button component={Link} href={returnHref} variant="subtle" leftSection={<IconArrowLeft size={16} />}>
             {common("action.backToOverview")}
           </Button>
-          <Badge variant="light">{t(data.target === "server" ? "studio.serverTheme" : "studio.userTheme")}</Badge>
-          {selection.themeId === null && (
-            <Text size="sm" c="dimmed">
-              {t("studio.inheritingServer")}
-            </Text>
-          )}
         </Group>
         <Group>
-          {data.target === "user" && (
-            <Button
-              variant="default"
-              disabled={mutation.isPending || (saved.themeId === null && !dirty)}
-              onClick={() => void save({ themeId: null, customTheme: saved.customTheme })}
-            >
-              {t("studio.useServer")}
-            </Button>
-          )}
           <Button variant="default" disabled={!dirty && !jsonError} onClick={() => updateSelection(saved)}>
             {common("action.discard")}
           </Button>
@@ -436,9 +438,6 @@ export const ThemeEditor = ({
           </Button>
         </Group>
       </Group>
-      <Text size="sm" c="dimmed">
-        {t("studio.description")}
-      </Text>
       {validationMessage && (
         <Alert color="red" role="alert">
           {validationMessage}
@@ -450,7 +449,6 @@ export const ThemeEditor = ({
             <Stack>
               <ThemeSelect
                 value={selection.themeId}
-                inherit={data.target === "user"}
                 hasCustomTheme={Boolean(selection.customTheme)}
                 onChange={(themeId) => {
                   let customTheme = selection.customTheme;
@@ -522,7 +520,6 @@ export const ThemeEditor = ({
                         <Stack>
                           <Textarea
                             label={t("editor.json")}
-                            description={t("editor.jsonHint")}
                             value={jsonText ?? JSON.stringify(document, null, 2)}
                             onChange={(event) => updateJson(event.currentTarget.value)}
                             error={Boolean(jsonError)}
@@ -606,9 +603,6 @@ export const ThemeEditor = ({
                     allowDeselect={false}
                     onChange={setBoardName}
                   />
-                  <Text size="xs" c="dimmed">
-                    {t("studio.boardReadOnly")}
-                  </Text>
                 </>
               )}
               <Switch

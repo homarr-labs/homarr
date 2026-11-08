@@ -4,6 +4,7 @@ import {
   IconCategoryPlus,
   IconMailForward,
   IconPlug,
+  IconPalette,
   IconUserPlus,
   IconUsersGroup,
 } from "@tabler/icons-react";
@@ -16,6 +17,7 @@ import { createGroup } from "../../lib/group";
 import type { inferSearchInteractionDefinition, SearchInteraction } from "../../lib/interaction";
 import { interaction } from "../../lib/interaction";
 import { newIntegrationChildrenOptions } from "./children/new-integration";
+import { themeChildrenOptions } from "./children/theme";
 
 // This has to be type so it can be interpreted as Record<string, unknown>.
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
@@ -45,9 +47,17 @@ export const globalCommandGroup = createGroup<Command>({
   },
   useOptions() {
     const tOption = useI18n("search.mode.command.group.globalCommand.option");
+    const tTheme = useI18n("common.customTheme");
     const { data: session } = useSession();
 
     const commands: (Command & { hidden?: boolean })[] = [
+      {
+        commandKey: "theme",
+        icon: IconPalette,
+        name: tTheme("label"),
+        useInteraction: interaction.children(themeChildrenOptions),
+        hidden: !session?.user.permissions.includes("admin"),
+      },
       {
         commandKey: "newBoard",
         icon: IconCategoryPlus,

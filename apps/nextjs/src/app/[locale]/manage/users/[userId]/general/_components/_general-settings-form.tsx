@@ -1,7 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { useEffect, useMemo, useRef } from "react";
+import { useMemo, useRef } from "react";
 import { useRouter } from "next/navigation";
 import {
   Box,
@@ -41,10 +41,8 @@ import {
   userEnableRightClickOnWidgetsSchema,
   userFirstDayOfWeekSchema,
   userPingIconsEnabledSchema,
-  userPreferencesSchema,
 } from "@homarr/validation/user";
 
-import { ThemeSettings } from "~/components/theme/theme-settings";
 import { BoardSelect } from "~/components/board/board-select";
 import { CurrentLanguageCombobox } from "~/components/language/current-language-combobox";
 import { useUnsavedChangesGuard } from "~/components/manage/use-unsaved-changes-guard";
@@ -53,8 +51,6 @@ import { HeaderComposer } from "./header-composer";
 dayjs.extend(localeData);
 
 const userGeneralSettingsSchema = z.object({
-  themeId: userPreferencesSchema.shape.themeId,
-  customTheme: userPreferencesSchema.shape.customTheme,
   name: userEditProfileSchema.shape.name,
   email: userEditProfileSchema.shape.email,
   homeBoardId: userChangeHomeBoardsSchema.shape.homeBoardId,
@@ -86,8 +82,6 @@ interface UserGeneralSettingsFormProps {
 }
 
 const buildInitialValues = (user: RouterOutputs["user"]["getById"]): FormValues => ({
-  themeId: user.themeId,
-  customTheme: user.customTheme,
   name: user.name ?? "",
   email: user.email ?? "",
   homeBoardId: user.homeBoardId,
@@ -124,7 +118,6 @@ export const UserGeneralSettingsForm = ({
   const changePingIconsEnabledMutation = clientApi.user.changePingIconsEnabled.useMutation();
   const changeEnableRightClickOnWidgetsMutation = clientApi.user.changeEnableRightClickOnWidgets.useMutation();
   const changeHeaderPreferencesMutation = clientApi.user.changeHeaderPreferences.useMutation();
-  const changeThemeMutation = clientApi.user.updatePreferences.useMutation();
 
   const initialValues = buildInitialValues(user);
   const initialValuesRef = useRef(initialValues);
@@ -132,35 +125,12 @@ export const UserGeneralSettingsForm = ({
   const form = useZodForm(userGeneralSettingsSchema, {
     initialValues,
   });
-  const storedThemeKey = JSON.stringify([user.themeId, user.customTheme]);
-  const lastStoredThemeKey = useRef(storedThemeKey);
-
-  useEffect(() => {
-    if (lastStoredThemeKey.current === storedThemeKey) return;
-    lastStoredThemeKey.current = storedThemeKey;
-
-    // Cmd+K can save a theme while this form is open. Refresh its baseline and keep any local draft.
-    const theme = { themeId: user.themeId, customTheme: user.customTheme };
-    const draft = form.getValues();
-    const dirtyTheme = form.isDirty("themeId");
-    const dirtyCustomTheme = form.isDirty("customTheme");
-    initialValuesRef.current = { ...initialValuesRef.current, ...theme };
-    form.setInitialValues(initialValuesRef.current);
-    if (!dirtyTheme) form.setFieldValue("themeId", theme.themeId);
-    if (!dirtyCustomTheme) form.setFieldValue("customTheme", theme.customTheme);
-    form.setDirty({
-      ...form.getDirty(),
-      themeId: dirtyTheme && draft.themeId !== theme.themeId,
-      customTheme: dirtyCustomTheme && JSON.stringify(draft.customTheme) !== JSON.stringify(theme.customTheme),
-    });
-  }, [form, storedThemeKey, user.themeId, user.customTheme]);
 
   useUnsavedChangesGuard(form.isDirty(), { guardBeforeUnload: env.NODE_ENV !== "development" });
 
   const weekDays = useMemo(() => dayjs.weekdays(false), []);
 
   const mutations = [
-    changeThemeMutation,
     editProfileMutation,
     changeHomeBoardsMutation,
     changeSearchPreferencesMutation,
@@ -181,15 +151,6 @@ export const UserGeneralSettingsForm = ({
       fields.some((f) => (f === "email" ? (values[f] || null) !== (defaults[f] || null) : values[f] !== defaults[f]));
 
     const saveActions: { when: boolean; action: () => Promise<unknown> }[] = [
-      {
-        when: form.isDirty("themeId") || form.isDirty("customTheme"),
-        action: () =>
-          changeThemeMutation.mutateAsync({
-            userId: user.id,
-            themeId: parsed.data.themeId,
-            ...(form.isDirty("customTheme") && { customTheme: parsed.data.customTheme }),
-          }),
-      },
       {
         when: isCredentialsUser && changed("name", "email"),
         action: () =>
@@ -371,20 +332,6 @@ export const UserGeneralSettingsForm = ({
                 </Card>
 
                 <Card bg="transparent">
-                  <Stack gap="md">
-                    <Title order={3}>{tCommon("customTheme.appearance")}</Title>
-                    <Divider />
-                    <ThemeSettings
-                      inherit
-                      editorHref={`/manage/themes/${user.id}`}
-                      themeId={form.values.themeId}
-                      customTheme={form.values.customTheme}
-                      onChange={(selection) => form.setValues(selection)}
-                    />
-                  </Stack>
-                </Card>
-
-                <Card withBorder bg="transparent">
                   <Stack gap="md">
                     <Stack gap={2}>
                       <Title order={3}>{tGeneral("item.language")}</Title>

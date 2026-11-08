@@ -10,42 +10,28 @@ import type { ThemeSelectionId } from "@homarr/validation/theme";
 import { getThemePreset } from "./registry";
 
 interface ThemeSelectProps extends Omit<SelectProps, "data" | "value" | "onChange"> {
-  value: ThemeSelectionId | null;
-  onChange: (value: ThemeSelectionId | null) => void;
-  inherit?: boolean;
+  value: ThemeSelectionId;
+  onChange: (value: ThemeSelectionId) => void;
   hasCustomTheme?: boolean;
 }
 
-export const ThemeSelect = ({
-  value,
-  onChange,
-  inherit = false,
-  hasCustomTheme = false,
-  ...props
-}: ThemeSelectProps) => {
+export const ThemeSelect = ({ value, onChange, hasCustomTheme = false, ...props }: ThemeSelectProps) => {
   const t = useI18n("common.customTheme");
   const data: { value: string; label: string }[] = themeIds.map((id) => ({ value: id, label: themeNames[id] }));
   if (hasCustomTheme) data.unshift({ value: "custom", label: t("custom") });
-  let description = t("serverDescription");
-  if (inherit) {
-    data.unshift({ value: "server", label: t("serverDefault") });
-    description = t("userDescription");
-  }
 
   return (
     <Select
       label={t("label")}
-      description={description}
       searchable
       allowDeselect={false}
       nothingFoundMessage={t("nothingFound")}
       comboboxProps={{ withinPortal: true }}
       {...props}
       data={data}
-      value={value ?? "server"}
+      value={value}
       onChange={(next) => {
-        if (next === "server") onChange(null);
-        else if ((next === "custom" && hasCustomTheme) || isThemeId(next)) onChange(next);
+        if ((next === "custom" && hasCustomTheme) || isThemeId(next)) onChange(next);
       }}
       renderOption={({ option }) => {
         const preset = getThemePreset(isThemeId(option.value) ? option.value : "default");

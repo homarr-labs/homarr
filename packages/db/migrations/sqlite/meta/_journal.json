@@ -372,20 +372,6 @@
       "when": 1793804202724,
       "tag": "0052_add_api_key_read_only",
       "breakpoints": true
-    },
-    {
-      "idx": 53,
-      "version": "6",
-      "when": 1793811680391,
-      "tag": "0053_add_user_theme",
-      "breakpoints": true
-    },
-    {
-      "idx": 54,
-      "version": "6",
-      "when": 1794014603298,
-      "tag": "0054_add_custom_theme",
-      "breakpoints": true
     }
   ]
 }

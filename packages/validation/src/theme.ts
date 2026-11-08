@@ -342,7 +342,7 @@ export const customThemeSchema = z
 export type CustomTheme = z.infer<typeof customThemeSchema>;
 
 export interface ThemeSelection {
-  themeId: ThemeSelectionId | null;
+  themeId: ThemeSelectionId;
   customTheme: CustomTheme | null;
 }
 
@@ -373,13 +373,4 @@ export const parseStoredCustomTheme = (value: unknown): CustomTheme | null => {
   } catch {
     return null;
   }
-};
-
-export const parseStoredThemeSelection = (
-  value: { themeId?: unknown; customTheme?: unknown } | null | undefined,
-): ThemeSelection => {
-  const customTheme = parseStoredCustomTheme(value?.customTheme);
-  let themeId = themeSelectionSchema.safeParse(value?.themeId).data ?? null;
-  if (themeId === "custom" && !customTheme) themeId = null;
-  return { themeId, customTheme };
 };

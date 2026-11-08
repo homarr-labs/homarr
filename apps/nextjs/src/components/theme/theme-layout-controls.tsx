@@ -127,9 +127,6 @@ export const ThemeLayoutControls = ({
       </Button>
       <Collapse expanded={advanced}>
         <Stack id="theme-layout-advanced" gap="sm">
-          <Text size="xs" c="dimmed">
-            {t("dimensionHint")}
-          </Text>
           {controls.filter((control) => control.path !== "theme.scale").map(renderControl)}
         </Stack>
       </Collapse>

@@ -1,7 +1,5 @@
 import { z } from "zod/v4";
 
-import { customThemeSchema, themeSelectionSchema } from "./theme";
-
 import { colorSchemes } from "@homarr/definitions";
 import type { TranslationObject } from "@homarr/translation";
 
@@ -177,8 +175,6 @@ export const userDdgBangsSchema = z.object({
 });
 
 export const userPreferencesSchema = z.strictObject({
-  themeId: themeSelectionSchema.nullable(),
-  customTheme: customThemeSchema.nullable(),
   ...userChangeColorSchemeSchema.shape,
   ...userByteUnitSystemSchema.shape,
   ...userFirstDayOfWeekSchema.shape,

@@ -25,10 +25,9 @@ export const CustomMantineProvider = ({
   const settings = useSettings();
   const preview = useThemePreview();
   const configuredBranding = preview?.branding ?? branding ?? settings.branding;
-  const selection = preview ?? settings;
   const { theme, cssVariablesResolver } = useMemo(
-    () => createAppearanceTheme(configuredBranding, { themeId: selection.themeId, customTheme: selection.customTheme }),
-    [configuredBranding, selection.themeId, selection.customTheme],
+    () => createAppearanceTheme(configuredBranding, preview ?? undefined),
+    [configuredBranding, preview],
   );
   return (
     <DirectionProvider>

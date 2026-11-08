@@ -5,7 +5,6 @@ import type { Session } from "@homarr/auth";
 import type { Database, InferInsertModel } from "@homarr/db";
 import { eq } from "@homarr/db";
 import { boards, searchEngines, users } from "@homarr/db/schema";
-import { parseStoredThemeSelection } from "@homarr/validation/theme";
 import { userPreferencesPatchSchema, userPreferencesSchema } from "@homarr/validation/user";
 import {
   getHeaderItems,
@@ -30,8 +29,6 @@ export async function getUserPreferencesAsync(ctx: PreferencesContext, userId: s
   const row = await ctx.db.query.users.findFirst({
     where: eq(users.id, userId),
     columns: {
-      themeId: true,
-      customTheme: true,
       colorScheme: true,
       byteUnitSystem: true,
       firstDayOfWeek: true,
@@ -46,12 +43,7 @@ export async function getUserPreferencesAsync(ctx: PreferencesContext, userId: s
     },
   });
   if (!row) throw new TRPCError({ code: "NOT_FOUND", message: "User not found" });
-  return {
-    userId,
-    ...row,
-    ...parseStoredThemeSelection(row),
-    headerPreferences: parseHeaderPreferences(row.headerPreferences),
-  };
+  return { userId, ...row, headerPreferences: parseHeaderPreferences(row.headerPreferences) };
 }
 
 export async function updateUserPreferencesAsync(
@@ -63,25 +55,17 @@ export async function updateUserPreferencesAsync(
   const parsed = userPreferencesPatchSchema.safeParse(definedFields(input));
   if (!parsed.success) throw new TRPCError({ code: "BAD_REQUEST", message: parsed.error.message, cause: parsed.error });
   const patch = parsed.data;
-  const { headerPreferences, customTheme, ...fields } = patch;
+  const { headerPreferences, ...fields } = patch;
   const mergedHeader = {
     ...current.headerPreferences,
     ...definedFields(headerPreferences ?? {}),
     zones: { ...current.headerPreferences.zones, ...definedFields(headerPreferences?.zones ?? {}) },
   };
   const { userId: _userId, ...preferences } = current;
-  const mergedResult = userPreferencesSchema.safeParse({
-    ...preferences,
-    ...fields,
-    ...(customTheme !== undefined && { customTheme }),
-    headerPreferences: mergedHeader,
-  });
+  const mergedResult = userPreferencesSchema.safeParse({ ...preferences, ...fields, headerPreferences: mergedHeader });
   if (!mergedResult.success)
     throw new TRPCError({ code: "BAD_REQUEST", message: mergedResult.error.message, cause: mergedResult.error });
   const merged = mergedResult.data;
-  if (merged.themeId === "custom" && !merged.customTheme) {
-    throw new TRPCError({ code: "BAD_REQUEST", message: "Save a custom theme before selecting it" });
-  }
 
   for (const boardId of [fields.homeBoardId, fields.mobileHomeBoardId]) {
     if (boardId) await throwIfActionForbiddenAsync(ctx, eq(boards.id, boardId), "view");
@@ -113,10 +97,6 @@ export async function updateUserPreferencesAsync(
 
   // All references and the merged header are validated before the single preference write.
   const values: Partial<InferInsertModel<typeof users>> = { ...fields };
-  if (customTheme !== undefined) {
-    values.customTheme = null;
-    if (customTheme) values.customTheme = JSON.stringify(customTheme);
-  }
   if (headerPreferences) values.headerPreferences = serializeHeaderPreferences(merged.headerPreferences);
   await ctx.db.update(users).set(values).where(eq(users.id, userId));
   return { userId, ...merged };
