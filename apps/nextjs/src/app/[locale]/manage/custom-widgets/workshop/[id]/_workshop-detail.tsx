@@ -65,6 +65,7 @@ export function WorkshopDetail({ id }: { id: string }) {
 
   const importer = useCustomWidgetImport({
     widget: compatible ? widget : null,
+    workshop: detail.data ? { submissionId: id, revision: detail.data.revision } : undefined,
     // Straight back to the installed list: the edit form is heavy to load and the
     // widget is usable as-is once its sources are configured here.
     onImported: () => router.push(installedHref),

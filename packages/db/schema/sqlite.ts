@@ -654,6 +654,7 @@ export const customWidgetDefinitions = sqliteTable("custom_widget_v2_definition"
   requests: text().notNull(),
   options: text().notNull(),
   template: text().notNull(),
+  workshop: text(),
   enabled: int({ mode: "boolean" }).notNull().default(true),
   createdAt: int({ mode: "timestamp" })
     .notNull()
