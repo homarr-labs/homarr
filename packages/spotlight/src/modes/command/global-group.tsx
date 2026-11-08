@@ -10,6 +10,7 @@ import {
 } from "@tabler/icons-react";
 
 import { useSession } from "@homarr/auth/client";
+import { themeNames } from "@homarr/definitions";
 import { useI18n } from "@homarr/translation/client";
 import type { TablerIcon } from "@homarr/ui";
 
@@ -25,6 +26,7 @@ type Command<TSearchInteraction extends SearchInteraction = SearchInteraction> =
   commandKey: string;
   icon: TablerIcon;
   name: string;
+  searchTerms?: string[];
   useInteraction: (
     _c: Command<TSearchInteraction>,
     query: string,
@@ -43,7 +45,9 @@ export const globalCommandGroup = createGroup<Command>({
     </Group>
   ),
   filter(query, option) {
-    return option.name.toLowerCase().includes(query.toLowerCase());
+    return [option.name, ...(option.searchTerms ?? [])].some((term) =>
+      term.toLowerCase().includes(query.toLowerCase()),
+    );
   },
   useOptions() {
     const tOption = useI18n("search.mode.command.group.globalCommand.option");
@@ -55,6 +59,7 @@ export const globalCommandGroup = createGroup<Command>({
         commandKey: "theme",
         icon: IconPalette,
         name: tTheme("label"),
+        searchTerms: Object.values(themeNames),
         useInteraction: interaction.children(themeChildrenOptions),
         hidden: !session?.user.permissions.includes("admin"),
       },

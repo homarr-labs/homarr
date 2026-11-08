@@ -107,7 +107,16 @@ export const createAppearanceTheme = (branding: Branding, selection?: ThemeSelec
     const components: NonNullable<MantineThemeOverride["components"]> = {};
     for (const [name, component] of Object.entries(override.components ?? {})) {
       const inheritedStyles = theme.components?.[name]?.styles;
-      const styles = component.styles;
+      let styles = component.styles;
+      const padding = styles?.root?.padding;
+      if (
+        (name === "Paper" || name === "Card") &&
+        typeof padding === "string" &&
+        ["xs", "sm", "md", "lg", "xl"].includes(padding)
+      ) {
+        styles = { ...styles, root: { ...styles?.root, padding: `var(--mantine-spacing-${padding})` } };
+        components[name] = { styles };
+      }
       if (typeof inheritedStyles === "function" && styles)
         components[name] = {
           styles: (...args: unknown[]) => {
