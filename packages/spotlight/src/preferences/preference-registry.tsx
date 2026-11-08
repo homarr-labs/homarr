@@ -22,6 +22,7 @@ import localeData from "dayjs/plugin/localeData";
 import { clientApi } from "@homarr/api/client";
 import { colorSchemes, themeIds, themeNames } from "@homarr/definitions";
 import type { UserPreferenceKey } from "@homarr/settings";
+import { useSettings } from "@homarr/settings";
 import { useI18n } from "@homarr/translation/client";
 import type { TablerIcon } from "@homarr/ui";
 
@@ -133,8 +134,10 @@ export const preferenceChildrenOptionsByKey: Partial<Record<UserPreferenceKey, C
     "themeId",
     () => {
       const t = useI18n("common.customTheme");
+      const { customTheme } = useSettings();
       return [
         { key: "server", label: t("serverDefault"), value: null },
+        ...(customTheme ? [{ key: "custom", label: t("custom"), value: "custom" }] : []),
         ...themeIds.map((id) => ({ key: id, label: themeNames[id], value: id })),
       ];
     },

@@ -92,6 +92,7 @@ export const useSettingsActions = (_: Record<string, unknown>, query: string): S
   const valueLabelResolvers: Record<string, () => string> = {
     themeId: () => {
       const value = preferences.getPreference("themeId").value;
+      if (value === "custom") return tTheme("custom");
       if (isThemeId(value)) return themeNames[value];
       return tTheme("serverDefault");
     },

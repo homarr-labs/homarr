@@ -13,6 +13,7 @@ import { selectUserSchema } from "@homarr/db/validationSchemas";
 import type { SupportedAuthProvider } from "@homarr/definitions";
 import { credentialsAdminGroup, supportedAuthProviders } from "@homarr/definitions";
 import { byIdSchema } from "@homarr/validation/common";
+import { customThemeSchema, parseStoredThemeSelection } from "@homarr/validation/theme";
 import type { userBaseCreateSchema } from "@homarr/validation/user";
 import {
   defaultHeaderPreferences,
@@ -54,6 +55,7 @@ const userPreferencesResponseSchema = userPreferencesSchema.extend({ userId: z.s
     userId: "example-user",
     colorScheme: "light",
     themeId: null,
+    customTheme: null,
     byteUnitSystem: "binary",
     firstDayOfWeek: 0,
     pingIconsEnabled: true,
@@ -420,28 +422,31 @@ export const userRouter = createTRPCRouter({
   getById: protectedProcedure
     .input(z.object({ userId: z.string() }))
     .output(
-      selectUserSchema.pick({
-        id: true,
-        name: true,
-        email: true,
-        emailVerified: true,
-        image: true,
-        provider: true,
-        homeBoardId: true,
-        mobileHomeBoardId: true,
-        colorScheme: true,
-        themeId: true,
-        byteUnitSystem: true,
-        firstDayOfWeek: true,
-        pingIconsEnabled: true,
-        enableRightClickOnWidgets: true,
-        headerPreferences: true,
-        defaultSearchEngineId: true,
-        openSearchInNewTab: true,
-        ddgBangs: true,
-        completedManageTour: true,
-        completedBoardTour: true,
-      }),
+      selectUserSchema
+        .pick({
+          id: true,
+          name: true,
+          email: true,
+          emailVerified: true,
+          image: true,
+          provider: true,
+          homeBoardId: true,
+          mobileHomeBoardId: true,
+          colorScheme: true,
+          themeId: true,
+          customTheme: true,
+          byteUnitSystem: true,
+          firstDayOfWeek: true,
+          pingIconsEnabled: true,
+          enableRightClickOnWidgets: true,
+          headerPreferences: true,
+          defaultSearchEngineId: true,
+          openSearchInNewTab: true,
+          ddgBangs: true,
+          completedManageTour: true,
+          completedBoardTour: true,
+        })
+        .extend({ customTheme: customThemeSchema.nullable() }),
     )
     .meta({
       openapi: {
@@ -475,6 +480,7 @@ export const userRouter = createTRPCRouter({
           mobileHomeBoardId: true,
           colorScheme: true,
           themeId: true,
+          customTheme: true,
           byteUnitSystem: true,
           firstDayOfWeek: true,
           pingIconsEnabled: true,
@@ -496,7 +502,7 @@ export const userRouter = createTRPCRouter({
         });
       }
 
-      return user;
+      return { ...user, ...parseStoredThemeSelection(user) };
     }),
   editProfile: protectedProcedure
     .input(userEditProfileSchema)
@@ -688,7 +694,7 @@ export const userRouter = createTRPCRouter({
       mcp: {
         enabled: true,
         description:
-          "Patch one or more user preferences and return the complete result. Read current values with user_getPreferences. All preference fields are optional; supply at least one. Omitted fields remain unchanged; null clears home-board/search-engine references or restores the server theme. themeId selects a built-in theme independently of colorScheme. Header fields and zones merge; supplied zone arrays replace their zone and must preserve unique items and account access. Optional userId defaults to yourself; changing another user requires admin permission.",
+          "Patch one or more user preferences and return the complete result. Read current values with user_getPreferences. All preference fields are optional; supply at least one. Omitted fields remain unchanged; null clears home-board/search-engine references or restores the server theme. themeId selects a preset or custom independently of colorScheme. To create a custom theme, supply customTheme (preset, theme, and optional light/dark colors) and themeId custom together. Header fields and zones merge; supplied zone arrays replace their zone and must preserve unique items and account access. Optional userId defaults to yourself; changing another user requires admin permission.",
       },
     })
     .input(

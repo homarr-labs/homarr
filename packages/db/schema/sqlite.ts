@@ -17,7 +17,6 @@ import type {
   BackgroundImageSize,
   BoardPermission,
   ColorScheme,
-  ThemeId,
   GroupPermissionKey,
   IntegrationKind,
   IntegrationPermission,
@@ -32,6 +31,7 @@ import type {
 import { defaultByteUnitSystem } from "@homarr/common";
 import type { ByteUnitSystem } from "@homarr/common";
 import type { CustomWidgetSecretKind } from "@homarr/custom-widgets/core";
+import type { ThemeSelectionId } from "@homarr/validation/theme";
 import { defaultHeaderPreferencesSerialized } from "@homarr/validation/header-preferences";
 
 export * from "@homarr/core/infrastructure/certificates/hostnames/db/sqlite";
@@ -71,7 +71,8 @@ export const users = sqliteTable("user", {
   openSearchInNewTab: int({ mode: "boolean" }).default(true).notNull(),
   ddgBangs: int({ mode: "boolean" }).default(true).notNull(),
   colorScheme: text().$type<ColorScheme>().default("dark").notNull(),
-  themeId: text().$type<ThemeId>(),
+  themeId: text().$type<ThemeSelectionId>(),
+  customTheme: text(),
   byteUnitSystem: text().$type<ByteUnitSystem>().default(defaultByteUnitSystem).notNull(),
   firstDayOfWeek: int().$type<DayOfWeek>().default(1).notNull(), // Defaults to Monday
   pingIconsEnabled: int({ mode: "boolean" }).default(false).notNull(),

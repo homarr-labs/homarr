@@ -1,6 +1,7 @@
 import type { ColorScheme } from "@homarr/definitions";
-import { cornerStyleValues, themeIds } from "@homarr/definitions";
+import { cornerStyleValues } from "@homarr/definitions";
 import type { SupportedLanguage } from "@homarr/translation";
+import { customThemeSchema, parseStoredCustomTheme, themeSelectionSchema } from "@homarr/validation/theme";
 import { z } from "zod/v4";
 
 export const defaultServerSettingsKeys = [
@@ -41,7 +42,8 @@ const brandingImageUrlSchema = z
   .nullable();
 
 export const brandingServerSettingsSchema = z.object({
-  themeId: z.enum(themeIds).default("default"),
+  themeId: themeSelectionSchema,
+  customTheme: customThemeSchema.nullable(),
   appName: z.string().trim().min(1).max(80),
   greeting: z.string().trim().max(160),
   logoImageUrl: brandingImageUrlSchema,
@@ -61,6 +63,7 @@ export type BrandingSettings = z.infer<typeof brandingServerSettingsSchema>;
 
 export const defaultBrandingSettings: BrandingSettings = {
   themeId: "default",
+  customTheme: null,
   appName: "Homarr",
   greeting: "",
   logoImageUrl: null,
@@ -119,10 +122,16 @@ export const parseBrandingSettings = (value: unknown): BrandingSettings => {
   }
   if (partialAuthBranding.success) Object.assign(authBranding, partialAuthBranding.data);
 
+  const customTheme = parseStoredCustomTheme(partialValue.data.customTheme);
+  let themeId = themeSelectionSchema.safeParse(partialValue.data.themeId).data ?? "default";
+  if (themeId === "custom" && !customTheme) themeId = "default";
+
   const result = brandingServerSettingsSchema.safeParse({
     ...defaultBrandingSettings,
     ...partialValue.data,
     authBranding,
+    themeId,
+    customTheme,
   });
   if (!result.success) return defaultBrandingSettings;
 

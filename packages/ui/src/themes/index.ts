@@ -9,6 +9,7 @@ import {
 } from "@mantine/core";
 
 import type { ThemeId } from "@homarr/definitions";
+import type { CustomTheme } from "@homarr/validation/theme";
 
 import { getThemePreset } from "./registry";
 import type { ThemePalette } from "./types";
@@ -16,43 +17,77 @@ import type { ThemePalette } from "./types";
 export { getThemePreset } from "./registry";
 export type { ThemePalette, ThemePreset } from "./types";
 
-export const createThemeColorScale = (color: string): MantineColorsTuple => [
-  lighten(color, 0.94),
-  lighten(color, 0.85),
-  lighten(color, 0.7),
-  lighten(color, 0.5),
-  lighten(color, 0.3),
-  lighten(color, 0.12),
-  color,
-  darken(color, 0.15),
-  darken(color, 0.3),
-  darken(color, 0.45),
-];
+export const getThemePalette = (
+  id: ThemeId,
+  scheme: "light" | "dark",
+  customTheme?: CustomTheme | null,
+): Partial<ThemePalette> => {
+  const palette: Partial<ThemePalette> = { ...getThemePreset(id)?.[scheme] };
+  const override = customTheme?.theme;
+  if (scheme === "light") {
+    if (override?.white) {
+      delete palette.body;
+      delete palette.surface;
+    }
+    if (override?.black) delete palette.text;
+    if (override?.colors?.gray) {
+      delete palette.hover;
+      delete palette.border;
+      delete palette.dimmed;
+    }
+  } else if (override?.colors?.dark) {
+    for (const key of ["body", "surface", "hover", "border", "text", "dimmed"] as const) delete palette[key];
+  }
+  return { ...palette, ...customTheme?.[scheme] };
+};
 
-export const createPresetTheme = (id: ThemeId, lockedPrimaryColor?: string): MantineThemeOverride => {
+export const createThemeColorScale = (color: string, shade = 6): MantineColorsTuple => {
+  const scale: MantineColorsTuple = [
+    lighten(color, 0.94),
+    lighten(color, 0.85),
+    lighten(color, 0.7),
+    lighten(color, 0.5),
+    lighten(color, 0.3),
+    lighten(color, 0.12),
+    color,
+    darken(color, 0.15),
+    darken(color, 0.3),
+    darken(color, 0.45),
+  ];
+  if (shade === 6) return scale;
+  return scale.map((_, index) => scale[Math.max(0, Math.min(9, index - shade + 6))]) as unknown as MantineColorsTuple;
+};
+
+export const createPresetTheme = (
+  id: ThemeId,
+  lockedPrimaryColor?: string,
+  customTheme?: CustomTheme | null,
+): MantineThemeOverride => {
   const preset = getThemePreset(id);
   if (!preset) return {};
   const radius = preset.theme?.defaultRadius ?? "md";
+  const light = { ...preset.light, ...customTheme?.light };
+  const dark = { ...preset.dark, ...customTheme?.dark };
 
   return mergeThemeOverrides(
     {
       colors: {
         gray: [
-          preset.light.body,
-          preset.light.hover,
-          preset.light.border,
-          preset.light.border,
-          preset.light.dimmed,
-          preset.light.dimmed,
-          preset.light.dimmed,
-          preset.light.text,
-          preset.light.text,
-          preset.light.text,
+          light.body,
+          light.hover,
+          light.border,
+          light.border,
+          light.dimmed,
+          light.dimmed,
+          light.dimmed,
+          light.text,
+          light.text,
+          light.text,
         ],
-        presetPrimaryLight: createThemeColorScale(lockedPrimaryColor ?? preset.light.primary),
-        presetPrimaryDark: createThemeColorScale(lockedPrimaryColor ?? preset.dark.primary),
-        presetSecondaryLight: createThemeColorScale(preset.light.secondary),
-        presetSecondaryDark: createThemeColorScale(preset.dark.secondary),
+        presetPrimaryLight: createThemeColorScale(lockedPrimaryColor ?? light.primary),
+        presetPrimaryDark: createThemeColorScale(lockedPrimaryColor ?? dark.primary),
+        presetSecondaryLight: createThemeColorScale(light.secondary),
+        presetSecondaryDark: createThemeColorScale(dark.secondary),
         primaryColor: virtualColor({ name: "primaryColor", light: "presetPrimaryLight", dark: "presetPrimaryDark" }),
         secondaryColor: virtualColor({
           name: "secondaryColor",
@@ -60,16 +95,16 @@ export const createPresetTheme = (id: ThemeId, lockedPrimaryColor?: string): Man
           dark: "presetSecondaryDark",
         }),
         dark: [
-          preset.dark.text,
-          preset.dark.dimmed,
-          preset.dark.dimmed,
-          preset.dark.border,
-          preset.dark.hover,
-          preset.dark.hover,
-          preset.dark.surface,
-          preset.dark.body,
-          darken(preset.dark.body, 0.15),
-          darken(preset.dark.body, 0.3),
+          dark.text,
+          dark.dimmed,
+          dark.dimmed,
+          dark.border,
+          dark.hover,
+          dark.hover,
+          dark.surface,
+          dark.body,
+          darken(dark.body, 0.15),
+          darken(dark.body, 0.3),
         ],
       },
       primaryColor: "primaryColor",
@@ -87,34 +122,60 @@ export const createPresetTheme = (id: ThemeId, lockedPrimaryColor?: string): Man
 
 /** Keep v8 light variants while adding the preset's semantic and scheme-specific tokens. */
 export const createThemeVariablesResolver =
-  (id: ThemeId, lockedPrimaryColor?: string): CSSVariablesResolver =>
+  (id: ThemeId, lockedPrimaryColor?: string, customTheme?: CustomTheme | null): CSSVariablesResolver =>
   (theme) => {
     const base = v8CssVariablesResolver(theme);
     const preset = getThemePreset(id);
-    if (!preset) return base;
+    if (!preset && !customTheme) return base;
 
-    const variables = (palette: ThemePalette): Record<string, string> => {
-      const result: Record<string, string> = {
-        "--mantine-color-body": palette.body,
-        "--mantine-color-text": palette.text,
-        "--mantine-color-bright": palette.text,
-        "--mantine-color-dimmed": palette.dimmed,
-        "--mantine-color-default": palette.surface,
-        "--mantine-color-default-color": palette.text,
-        "--mantine-color-default-hover": palette.hover,
-        "--mantine-color-default-border": palette.border,
-        "--mantine-color-disabled": palette.hover,
-        "--mantine-color-disabled-color": palette.dimmed,
-        "--mantine-color-disabled-border": palette.border,
-        "--mantine-color-placeholder": palette.dimmed,
-        "--mantine-color-anchor": palette.primary,
-        "--mantine-primary-color-contrast": "var(--mantine-color-primaryColor-contrast)",
-      };
+    const variables = (palette: Partial<ThemePalette>): Record<string, string> => {
+      const result: Record<string, string> = {};
+      if (palette.body) result["--mantine-color-body"] = palette.body;
+      if (palette.text) {
+        result["--mantine-color-text"] = palette.text;
+        result["--mantine-color-bright"] = palette.text;
+        result["--mantine-color-default-color"] = palette.text;
+      }
+      if (palette.dimmed) {
+        result["--mantine-color-dimmed"] = palette.dimmed;
+        result["--mantine-color-disabled-color"] = palette.dimmed;
+        result["--mantine-color-placeholder"] = palette.dimmed;
+      }
+      if (palette.surface) result["--mantine-color-default"] = palette.surface;
+      if (palette.hover) {
+        result["--mantine-color-default-hover"] = palette.hover;
+        result["--mantine-color-disabled"] = palette.hover;
+      }
+      if (palette.border) {
+        result["--mantine-color-default-border"] = palette.border;
+        result["--mantine-color-disabled-border"] = palette.border;
+      }
+      if (!palette.primary || !palette.secondary) return result;
+      const override = customTheme?.theme;
+      const usePresetPrimary =
+        lockedPrimaryColor ||
+        (override?.primaryShade === undefined &&
+          !override?.colors?.primaryColor &&
+          !override?.colors?.presetPrimaryLight &&
+          !override?.colors?.presetPrimaryDark);
+      if (usePresetPrimary && theme.primaryColor === "primaryColor") {
+        result["--mantine-color-anchor"] = lockedPrimaryColor ?? palette.primary;
+        result["--mantine-primary-color-contrast"] = "var(--mantine-color-primaryColor-contrast)";
+      }
 
       for (const [name, color] of [
         ["primaryColor", lockedPrimaryColor ?? palette.primary],
         ["secondaryColor", palette.secondary],
       ] as const) {
+        if (name === "primaryColor" && !usePresetPrimary) continue;
+        if (
+          name === "secondaryColor" &&
+          (override?.primaryShade !== undefined ||
+            override?.colors?.secondaryColor ||
+            override?.colors?.presetSecondaryLight ||
+            override?.colors?.presetSecondaryDark)
+        )
+          continue;
         const scale = createThemeColorScale(color);
         scale.forEach((shade, index) => {
           result[`--mantine-color-${name}-${index}`] = shade;
@@ -122,7 +183,7 @@ export const createThemeVariablesResolver =
         Object.assign(result, {
           [`--mantine-color-${name}-filled`]: color,
           [`--mantine-color-${name}-filled-hover`]: darken(color, 0.1),
-          [`--mantine-color-${name}-contrast`]: getContrastColor({ color, theme, autoContrast: true }),
+          [`--mantine-color-${name}-contrast`]: getContrastColor({ color, theme, autoContrast: theme.autoContrast }),
           [`--mantine-color-${name}-light`]: `color-mix(in srgb, ${color} 12%, transparent)`,
           [`--mantine-color-${name}-light-hover`]: `color-mix(in srgb, ${color} 18%, transparent)`,
           [`--mantine-color-${name}-light-color`]: color,
@@ -136,7 +197,7 @@ export const createThemeVariablesResolver =
 
     return {
       variables: base.variables,
-      light: { ...base.light, ...variables(preset.light) },
-      dark: { ...base.dark, ...variables(preset.dark) },
+      light: { ...base.light, ...variables(getThemePalette(id, "light", customTheme)) },
+      dark: { ...base.dark, ...variables(getThemePalette(id, "dark", customTheme)) },
     };
   };

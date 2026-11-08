@@ -11,10 +11,10 @@ import { useSession } from "@homarr/auth/client";
 import { parseCookies, setClientCookie } from "@homarr/common";
 import { colorSchemeCookieKey } from "@homarr/definitions";
 import { useSettings } from "@homarr/settings";
-import { createThemeVariablesResolver } from "@homarr/ui/themes";
 import type { ServerSettings } from "@homarr/server-settings";
 
-import { createBrandTheme } from "~/theme/branding";
+import { createAppearanceTheme } from "~/theme/branding";
+import { previewColorSchemeManager, useThemePreview } from "~/components/theme/theme-preview-context";
 
 export const CustomMantineProvider = ({
   children,
@@ -23,24 +23,21 @@ export const CustomMantineProvider = ({
 }: PropsWithChildren<{ defaultColorScheme: MantineColorScheme; branding?: ServerSettings["branding"] }>) => {
   const manager = useColorSchemeManager();
   const settings = useSettings();
-  const configuredBranding = branding ?? settings.branding;
-  const themeId = settings.themeId ?? configuredBranding.themeId;
-  const configuredTheme = useMemo(() => createBrandTheme(configuredBranding, themeId), [configuredBranding, themeId]);
-  const resolver = useMemo(
-    () =>
-      createThemeVariablesResolver(
-        themeId,
-        configuredBranding.lockPrimaryColor ? configuredBranding.primaryColor : undefined,
-      ),
-    [themeId, configuredBranding.lockPrimaryColor, configuredBranding.primaryColor],
+  const preview = useThemePreview();
+  const configuredBranding = preview?.branding ?? branding ?? settings.branding;
+  const selection = preview ?? settings;
+  const { theme, cssVariablesResolver } = useMemo(
+    () => createAppearanceTheme(configuredBranding, { themeId: selection.themeId, customTheme: selection.customTheme }),
+    [configuredBranding, selection.themeId, selection.customTheme],
   );
   return (
     <DirectionProvider>
       <MantineProvider
         defaultColorScheme={defaultColorScheme}
-        colorSchemeManager={manager}
-        theme={configuredTheme}
-        cssVariablesResolver={resolver}
+        colorSchemeManager={preview ? previewColorSchemeManager : manager}
+        forceColorScheme={preview?.scheme}
+        theme={theme}
+        cssVariablesResolver={cssVariablesResolver}
       >
         {children}
       </MantineProvider>

@@ -8,12 +8,13 @@ import type { DayOfWeek } from "@mantine/dates";
 import { clientApi } from "@homarr/api/client";
 import { useSession } from "@homarr/auth/client";
 import type { ByteUnitSystem } from "@homarr/common";
-import type { ColorScheme, ThemeId } from "@homarr/definitions";
+import type { ColorScheme } from "@homarr/definitions";
 import { showErrorNotification } from "@homarr/notifications";
 import type { SettingsContextProps } from "@homarr/settings/creator";
 import { userPreferenceDefinitions, userPreferenceDefinitionByKey } from "@homarr/settings";
 import type { UserPreferenceKey } from "@homarr/settings";
 import { useSettings } from "@homarr/settings";
+import type { ThemeSelectionId } from "@homarr/validation/theme";
 import { useChangeLocale, useCurrentLocale, useI18n } from "@homarr/translation/client";
 
 // --- Optimistic store (module-level, shared across all hook instances) ---
@@ -105,7 +106,8 @@ export const useUserPreferences = () => {
     field === changedKey ? value : getEffective(field);
 
   const groupDispatchers: Record<string, (uid: string, key: UserPreferenceKey, value: unknown) => Promise<unknown>> = {
-    themeId: (uid, _key, value) => themeMutation.mutateAsync({ userId: uid, themeId: value as ThemeId | null }),
+    themeId: (uid, _key, value) =>
+      themeMutation.mutateAsync({ userId: uid, themeId: value as ThemeSelectionId | null }),
     searchPreferences: (uid, key, value) =>
       searchMutation.mutateAsync({
         userId: uid,

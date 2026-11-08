@@ -3,21 +3,29 @@
 import type { SelectProps } from "@mantine/core";
 import { Group, Select, Text } from "@mantine/core";
 
-import type { ThemeId } from "@homarr/definitions";
 import { isThemeId, themeIds, themeNames } from "@homarr/definitions";
 import { useI18n } from "@homarr/translation/client";
+import type { ThemeSelectionId } from "@homarr/validation/theme";
 
 import { getThemePreset } from "./registry";
 
 interface ThemeSelectProps extends Omit<SelectProps, "data" | "value" | "onChange"> {
-  value: ThemeId | null;
-  onChange: (value: ThemeId | null) => void;
+  value: ThemeSelectionId | null;
+  onChange: (value: ThemeSelectionId | null) => void;
   inherit?: boolean;
+  hasCustomTheme?: boolean;
 }
 
-export const ThemeSelect = ({ value, onChange, inherit = false, ...props }: ThemeSelectProps) => {
+export const ThemeSelect = ({
+  value,
+  onChange,
+  inherit = false,
+  hasCustomTheme = false,
+  ...props
+}: ThemeSelectProps) => {
   const t = useI18n("common.customTheme");
   const data: { value: string; label: string }[] = themeIds.map((id) => ({ value: id, label: themeNames[id] }));
+  if (hasCustomTheme) data.unshift({ value: "custom", label: t("custom") });
   let description = t("serverDescription");
   if (inherit) {
     data.unshift({ value: "server", label: t("serverDefault") });
@@ -37,10 +45,10 @@ export const ThemeSelect = ({ value, onChange, inherit = false, ...props }: Them
       value={value ?? "server"}
       onChange={(next) => {
         if (next === "server") onChange(null);
-        else if (isThemeId(next)) onChange(next);
+        else if ((next === "custom" && hasCustomTheme) || isThemeId(next)) onChange(next);
       }}
       renderOption={({ option }) => {
-        const preset = getThemePreset(option.value as ThemeId);
+        const preset = getThemePreset(isThemeId(option.value) ? option.value : "default");
         let background = "var(--mantine-color-default-hover)";
         let color = "var(--mantine-color-text)";
         if (preset) {

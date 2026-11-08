@@ -1,6 +1,7 @@
 import type { User } from "@homarr/db/schema";
 import { defaultByteUnitSystem } from "@homarr/common";
-import { isThemeId } from "@homarr/definitions";
+import type { CustomTheme } from "@homarr/validation/theme";
+import { parseStoredThemeSelection } from "@homarr/validation/theme";
 import type { ServerSettings } from "@homarr/server-settings";
 import { parseBrandingSettings } from "@homarr/server-settings";
 import type { HeaderPreferences } from "@homarr/validation/user";
@@ -22,7 +23,7 @@ export type SettingsContextProps = Omit<
     | "headerPreferences"
   >,
   "headerPreferences"
-> & { headerPreferences: HeaderPreferences } & Pick<
+> & { headerPreferences: HeaderPreferences; customTheme: CustomTheme | null } & Pick<
     ServerSettings["board"],
     "enableStatusByDefault" | "forceDisableStatus"
   > &
@@ -44,6 +45,7 @@ export type UserSettings = Pick<
   User,
   | "firstDayOfWeek"
   | "themeId"
+  | "customTheme"
   | "defaultSearchEngineId"
   | "homeBoardId"
   | "mobileHomeBoardId"
@@ -61,20 +63,22 @@ export const createSettings = ({
 }: {
   user: UserSettings | null;
   serverSettings: PublicServerSettings;
-}) => ({
-  themeId: isThemeId(user?.themeId) ? user.themeId : null,
-  defaultSearchEngineId: user?.defaultSearchEngineId ?? serverSettings.search.defaultSearchEngineId,
-  openSearchInNewTab: user?.openSearchInNewTab ?? true,
-  ddgBangs: user?.ddgBangs ?? true,
-  byteUnitSystem: user?.byteUnitSystem ?? defaultByteUnitSystem,
-  firstDayOfWeek: user?.firstDayOfWeek ?? (1 as const),
-  homeBoardId: user?.homeBoardId ?? serverSettings.board.homeBoardId,
-  mobileHomeBoardId: user?.mobileHomeBoardId ?? serverSettings.board.mobileHomeBoardId,
-  pingIconsEnabled: user?.pingIconsEnabled ?? false,
-  enableRightClickOnWidgets: user?.enableRightClickOnWidgets ?? true,
-  headerPreferences: parseHeaderPreferences(user?.headerPreferences),
-  enableStatusByDefault: serverSettings.board.enableStatusByDefault,
-  forceDisableStatus: serverSettings.board.forceDisableStatus,
-  enableGravatar: serverSettings.user.enableGravatar,
-  branding: parseBrandingSettings(serverSettings.branding),
-});
+}) => {
+  return {
+    ...parseStoredThemeSelection(user),
+    defaultSearchEngineId: user?.defaultSearchEngineId ?? serverSettings.search.defaultSearchEngineId,
+    openSearchInNewTab: user?.openSearchInNewTab ?? true,
+    ddgBangs: user?.ddgBangs ?? true,
+    byteUnitSystem: user?.byteUnitSystem ?? defaultByteUnitSystem,
+    firstDayOfWeek: user?.firstDayOfWeek ?? (1 as const),
+    homeBoardId: user?.homeBoardId ?? serverSettings.board.homeBoardId,
+    mobileHomeBoardId: user?.mobileHomeBoardId ?? serverSettings.board.mobileHomeBoardId,
+    pingIconsEnabled: user?.pingIconsEnabled ?? false,
+    enableRightClickOnWidgets: user?.enableRightClickOnWidgets ?? true,
+    headerPreferences: parseHeaderPreferences(user?.headerPreferences),
+    enableStatusByDefault: serverSettings.board.enableStatusByDefault,
+    forceDisableStatus: serverSettings.board.forceDisableStatus,
+    enableGravatar: serverSettings.user.enableGravatar,
+    branding: parseBrandingSettings(serverSettings.branding),
+  } satisfies SettingsContextProps;
+};

@@ -379,6 +379,13 @@
       "when": 1793811680391,
       "tag": "0053_add_user_theme",
       "breakpoints": true
+    },
+    {
+      "idx": 54,
+      "version": "6",
+      "when": 1794014603298,
+      "tag": "0054_add_custom_theme",
+      "breakpoints": true
     }
   ]
 }

@@ -34,6 +34,7 @@ import { resolveHomarrUrlConfig } from "@homarr/workshop/schema";
 import { AssistantGate } from "~/components/assistant/assistant-gate";
 import { CrowdinLiveTranslation } from "~/components/layout/crowdin-live-translation";
 import { env } from "~/env";
+import { ThemePreviewProvider } from "~/components/theme/theme-preview-context";
 
 import { SearchEngineOptimization } from "~/components/layout/search-engine-optimization";
 import { ServiceWorkerRegistration } from "~/components/layout/service-worker-registration";
@@ -172,6 +173,7 @@ export default async function Layout(props: {
     (innerProps) => <TRPCReactProvider demoReadOnly={env.DEMO_MODE && env.DEMO_READ_ONLY} {...innerProps} />,
     (innerProps) => <DayJsLoader {...innerProps} />,
     (innerProps) => <NextIntlClientProvider {...innerProps} />,
+    (innerProps) => <ThemePreviewProvider {...innerProps} />,
     (innerProps) => (
       <CustomMantineProvider {...innerProps} defaultColorScheme={colorScheme} branding={serverSettings.branding} />
     ),

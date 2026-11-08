@@ -1,7 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { useRouter } from "next/navigation";
 import {
   Box,
@@ -31,7 +31,6 @@ import { env } from "@homarr/common/env";
 import { useZodForm } from "@homarr/form";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
-import { ThemeSelect } from "@homarr/ui/theme-select";
 import {
   headerPreferencesSchema,
   parseHeaderPreferences,
@@ -45,6 +44,7 @@ import {
   userPreferencesSchema,
 } from "@homarr/validation/user";
 
+import { ThemeSettings } from "~/components/theme/theme-settings";
 import { BoardSelect } from "~/components/board/board-select";
 import { CurrentLanguageCombobox } from "~/components/language/current-language-combobox";
 import { useUnsavedChangesGuard } from "~/components/manage/use-unsaved-changes-guard";
@@ -54,6 +54,7 @@ dayjs.extend(localeData);
 
 const userGeneralSettingsSchema = z.object({
   themeId: userPreferencesSchema.shape.themeId,
+  customTheme: userPreferencesSchema.shape.customTheme,
   name: userEditProfileSchema.shape.name,
   email: userEditProfileSchema.shape.email,
   homeBoardId: userChangeHomeBoardsSchema.shape.homeBoardId,
@@ -86,6 +87,7 @@ interface UserGeneralSettingsFormProps {
 
 const buildInitialValues = (user: RouterOutputs["user"]["getById"]): FormValues => ({
   themeId: user.themeId,
+  customTheme: user.customTheme,
   name: user.name ?? "",
   email: user.email ?? "",
   homeBoardId: user.homeBoardId,
@@ -130,6 +132,28 @@ export const UserGeneralSettingsForm = ({
   const form = useZodForm(userGeneralSettingsSchema, {
     initialValues,
   });
+  const storedThemeKey = JSON.stringify([user.themeId, user.customTheme]);
+  const lastStoredThemeKey = useRef(storedThemeKey);
+
+  useEffect(() => {
+    if (lastStoredThemeKey.current === storedThemeKey) return;
+    lastStoredThemeKey.current = storedThemeKey;
+
+    // Cmd+K can save a theme while this form is open. Refresh its baseline and keep any local draft.
+    const theme = { themeId: user.themeId, customTheme: user.customTheme };
+    const draft = form.getValues();
+    const dirtyTheme = form.isDirty("themeId");
+    const dirtyCustomTheme = form.isDirty("customTheme");
+    initialValuesRef.current = { ...initialValuesRef.current, ...theme };
+    form.setInitialValues(initialValuesRef.current);
+    if (!dirtyTheme) form.setFieldValue("themeId", theme.themeId);
+    if (!dirtyCustomTheme) form.setFieldValue("customTheme", theme.customTheme);
+    form.setDirty({
+      ...form.getDirty(),
+      themeId: dirtyTheme && draft.themeId !== theme.themeId,
+      customTheme: dirtyCustomTheme && JSON.stringify(draft.customTheme) !== JSON.stringify(theme.customTheme),
+    });
+  }, [form, storedThemeKey, user.themeId, user.customTheme]);
 
   useUnsavedChangesGuard(form.isDirty(), { guardBeforeUnload: env.NODE_ENV !== "development" });
 
@@ -158,8 +182,13 @@ export const UserGeneralSettingsForm = ({
 
     const saveActions: { when: boolean; action: () => Promise<unknown> }[] = [
       {
-        when: changed("themeId"),
-        action: () => changeThemeMutation.mutateAsync({ userId: user.id, themeId: parsed.data.themeId }),
+        when: form.isDirty("themeId") || form.isDirty("customTheme"),
+        action: () =>
+          changeThemeMutation.mutateAsync({
+            userId: user.id,
+            themeId: parsed.data.themeId,
+            ...(form.isDirty("customTheme") && { customTheme: parsed.data.customTheme }),
+          }),
       },
       {
         when: isCredentialsUser && changed("name", "email"),
@@ -345,11 +374,12 @@ export const UserGeneralSettingsForm = ({
                   <Stack gap="md">
                     <Title order={3}>{tCommon("customTheme.appearance")}</Title>
                     <Divider />
-                    <ThemeSelect
+                    <ThemeSettings
                       inherit
-                      {...form.getInputProps("themeId")}
-                      value={form.values.themeId}
-                      onChange={(themeId) => form.setFieldValue("themeId", themeId)}
+                      editorHref={`/manage/themes/${user.id}`}
+                      themeId={form.values.themeId}
+                      customTheme={form.values.customTheme}
+                      onChange={(selection) => form.setValues(selection)}
                     />
                   </Stack>
                 </Card>
