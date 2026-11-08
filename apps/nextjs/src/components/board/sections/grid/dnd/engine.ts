@@ -356,12 +356,15 @@ const clampResizeAroundContainers = <TPlacement extends GridPlacement>(
   placements: readonly TPlacement[],
   constraints: ResolvedResizeConstraints,
 ): TPlacement | null => {
-  if (requested.w < constraints.minWidth || requested.h < constraints.minHeight) return null;
   const obstacles = placements.filter((placement) => placement.id !== active.id && isContainerPlacement(placement));
   const collides = (candidate: TPlacement) =>
     obstacles.some((obstacle) => doGridPlacementsOverlap(candidate, obstacle));
   if (!collides(requested)) return requested;
 
+  // resizePlacement constrains changed axes; preserve an undersized unchanged
+  // axis when clipping growth around containers as well.
+  const minWidth = Math.min(requested.w, constraints.minWidth);
+  const minHeight = Math.min(requested.h, constraints.minHeight);
   const growsWest = Math.max(0, active.x - requested.x);
   const growsEast = Math.max(0, requested.x + requested.w - (active.x + active.w));
   const growsNorth = Math.max(0, active.y - requested.y);
@@ -396,7 +399,7 @@ const clampResizeAroundContainers = <TPlacement extends GridPlacement>(
         w: requested.w - cutWest - cutEast,
         h: requested.h - cutNorth - cutSouth,
       };
-      if (candidate.w < constraints.minWidth || candidate.h < constraints.minHeight || collides(candidate)) continue;
+      if (candidate.w < minWidth || candidate.h < minHeight || collides(candidate)) continue;
       if (!best || candidate.w * candidate.h > best.w * best.h) best = candidate;
       break;
     }
