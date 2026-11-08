@@ -1,7 +1,22 @@
-import type { EntityStateResult } from "./smart-home-types";
+import type {
+  SmartHomeAction,
+  SmartHomeCatalog,
+  SmartHomeEntityPatch,
+  SmartHomeEntitySelection,
+  SmartHomeForecastDay,
+  SmartHomeHistorySeries,
+  SmartHomeSnapshot,
+} from "./smart-home-types";
 
 export interface ISmartHomeIntegration {
-  getEntityStateAsync(entityId: string): Promise<EntityStateResult>;
-  triggerAutomationAsync(entityId: string): Promise<boolean>;
-  triggerToggleAsync(entityId: string): Promise<boolean>;
+  getSnapshotAsync(selection: SmartHomeEntitySelection): Promise<SmartHomeSnapshot>;
+  getCatalogAsync(): Promise<SmartHomeCatalog>;
+  getHistoryAsync(entityIds: string[], hours: number, samples: number): Promise<SmartHomeHistorySeries[]>;
+  getForecastAsync(entityId: string, type: "daily" | "hourly"): Promise<SmartHomeForecastDay[]>;
+  executeActionAsync(entityId: string, action: SmartHomeAction): Promise<void>;
+  subscribeEntitiesAsync(
+    selection: SmartHomeEntitySelection,
+    onPatch: (patch: SmartHomeEntityPatch) => void,
+    signal: AbortSignal,
+  ): Promise<void>;
 }

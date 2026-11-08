@@ -79,6 +79,7 @@ export const widgetCatalogIcons: Record<WidgetKind, TablerIcon> = {
   dnsHoleControls: IconDeviceGamepad,
   "smartHome-entityState": IconBinaryTree,
   "smartHome-executeAutomation": IconBinaryTree,
+  "smartHome-prototype": IconBinaryTree,
   stockPrice: IconBuildingBank,
   mediaServer: IconVideo,
   calendar: IconCalendar,
