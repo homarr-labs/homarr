@@ -139,7 +139,13 @@ export const addInPlaceActions = {
   },
   openCreateApp(name?: string) {
     updateSession(
-      (session) => ({ ...session, createAppName: name?.trim(), highlighted: undefined, area: session.baseArea }),
+      (session) => ({
+        ...session,
+        createAppName: name?.trim(),
+        createAppAttempt: Symbol(),
+        highlighted: undefined,
+        area: session.baseArea,
+      }),
       "createApp",
     );
   },

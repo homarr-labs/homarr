@@ -12,7 +12,7 @@ import { AppForm } from "@homarr/forms-collection";
 import type { appManageSchema } from "@homarr/validation/app";
 import { loadWidgetDefinition, reduceWidgetOptionsWithDefinition } from "@homarr/widgets/manifest";
 
-import { addInPlaceActions, useAddInPlaceSession } from "./store";
+import { addInPlaceActions, getAddInPlaceState, useAddInPlaceSession } from "./store";
 
 export const useCreateAppAndPlace = () => {
   const { data: session } = useSession();
@@ -33,10 +33,15 @@ export const useCreateAppAndPlace = () => {
   const submit = useCallback(
     async (values: z.infer<typeof appManageSchema>) => {
       if (!canCreateApp) return;
+      const origin = getAddInPlaceState();
+      const attempt = origin.session?.createAppAttempt;
+      if (origin.step !== "createApp" || !attempt) return;
       const created = await mutateAsync(values).catch(() => null);
       if (!created) return;
       void utils.app.invalidate();
       const definition = await loadWidgetDefinition("app");
+      const current = getAddInPlaceState();
+      if (current.step !== "createApp" || current.session?.createAppAttempt !== attempt) return;
       const options = { ...reduceWidgetOptionsWithDefinition(definition, settings), appId: created.appId };
       addInPlaceActions.pick({ type: "app", appId: created.appId, name: values.name });
       addInPlaceActions.commit({

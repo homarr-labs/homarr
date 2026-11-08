@@ -36,6 +36,7 @@ export interface AddInPlaceSession {
   dirty: boolean;
   editItemId?: string;
   createAppName?: string;
+  createAppAttempt?: symbol;
   onCommit?: CommitHandler;
 }
 

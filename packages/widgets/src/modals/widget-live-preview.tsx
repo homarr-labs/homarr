@@ -2,6 +2,7 @@
 
 /* eslint-disable react/no-unstable-nested-components -- Widget fallbacks are definition-bound. */
 
+import { useId } from "react";
 import type { ComponentType, CSSProperties, PropsWithChildren } from "react";
 import { useElementSize } from "@mantine/hooks";
 import { QueryErrorResetBoundary } from "@tanstack/react-query";
@@ -68,6 +69,11 @@ export const WidgetLivePreview = ({
   shellStyle,
 }: WidgetLivePreviewProps) => {
   const board = useOptionalBoard();
+  const previewId = useId();
+  let componentItemId = itemId;
+  if (kind === "assistant" || kind === "timer") {
+    componentItemId = `widget-preview-${previewId}`;
+  }
   const { data: session } = useSession();
   const canPreviewCustomWidget = kind === "customApi" && session?.user.permissions.includes("admin");
   const { ref, width, height } = useElementSize<HTMLDivElement>();
@@ -121,7 +127,7 @@ export const WidgetLivePreview = ({
                         isEditMode={isEditMode}
                         displayMode="compact"
                         boardId={boardId}
-                        itemId={itemId}
+                        itemId={componentItemId}
                         setOptions={({ newOptions }) => onChangeOptions(newOptions as Record<string, unknown>)}
                       />
                     )}
