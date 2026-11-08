@@ -364,7 +364,8 @@ const ItemSelectModalContent = ({
   const handleWorkshopInstalled = async (definitionId: string) => {
     if (!pickerOpen.current) return;
     try {
-      const definitions = await utils.customWidget.available.fetch({ boardId: board.id });
+      // The picker may still have a pre-import query in flight; start a fresh request for the imported definition.
+      const definitions = await utils.client.customWidget.available.query({ boardId: board.id });
       if (!pickerOpen.current) return;
       const installed = definitions.find(({ id }) => id === definitionId);
       if (!installed) throw new Error(t("item.create.notification.error.message"));
