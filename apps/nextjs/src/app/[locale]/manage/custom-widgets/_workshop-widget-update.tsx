@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
-import { Alert, Button, Checkbox, Group, Stack, Text } from "@mantine/core";
+import { ActionIcon, Alert, Button, Checkbox, Group, Stack, Text, Tooltip } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { IconAlertTriangle, IconRefresh } from "@tabler/icons-react";
 
@@ -127,12 +127,25 @@ export function WorkshopWidgetUpdate({ definitionId }: { definitionId: string })
       <Button
         variant="light"
         size="sm"
+        visibleFrom="sm"
         leftSection={<IconRefresh size={16} />}
         loading={update.isFetching}
         onClick={() => void openReview()}
       >
         {t("available")}
       </Button>
+      <Tooltip label={t("available")}>
+        <ActionIcon
+          hiddenFrom="sm"
+          variant="light"
+          size="input-sm"
+          aria-label={t("available")}
+          loading={update.isFetching}
+          onClick={() => void openReview()}
+        >
+          <IconRefresh size={16} />
+        </ActionIcon>
+      </Tooltip>
       <ImportReviewDialog
         opened={opened}
         onClose={controls.close}
