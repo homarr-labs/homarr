@@ -44,7 +44,7 @@ export const healthMonitoringRouter = createTRPCRouter({
             healthInfo: null,
             error: PUBLIC_INTEGRATION_ERROR,
           }),
-          throwOnAllFailures: true,
+          throwOnAllFailures: false,
         },
       );
     }),

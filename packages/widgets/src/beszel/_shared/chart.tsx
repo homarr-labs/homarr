@@ -1,12 +1,7 @@
 "use client";
 
-import { memo, useDeferredValue, useEffect, useMemo, useRef, useState } from "react";
-import { Box, Group, Stack, Text } from "@mantine/core";
-import type { AreaChartProps } from "@mantine/charts";
-import dynamic from "next/dynamic";
+import { useMemo, useRef } from "react";
 
-import type { BeszelAreaChartProps } from "./interactive-chart";
-import { useInViewport } from "@mantine/hooks";
 import dayjs from "dayjs";
 
 import type { BeszelTimePeriod } from "@homarr/definitions/beszel";
@@ -14,17 +9,9 @@ import { defaultBeszelTimePeriod } from "@homarr/definitions/beszel";
 import type { BeszelContainerStatsRecord, BeszelGPUData, BeszelSystemStatsRecord } from "@homarr/integrations/types";
 
 import { formatLocalizedDate } from "../../common/locale";
-import { WidgetQueryLoadingState } from "../../common/query-state-indicator";
 import { containerChartColor } from "./colors";
-import classes from "./chart.module.css";
-import { chartStyle } from "./chart-style";
 
 export type { BeszelTimePeriod } from "@homarr/definitions/beszel";
-
-const BeszelAreaChart = dynamic(() => import("./interactive-chart"), {
-  ssr: false,
-  loading: () => <BeszelChartPlaceholder height={180} />,
-});
 
 const timeFormatOptions: Record<BeszelTimePeriod, Intl.DateTimeFormatOptions> = {
   "1m": { hour: "numeric", minute: "2-digit", second: "2-digit" },
@@ -135,67 +122,8 @@ export function padLiveTimeGrid(data: Record<string, unknown>[], pointCount = 60
   });
 }
 
-const panelStyle = { minWidth: 0 } as const;
-const chartContainerStyle = {
-  minWidth: 0,
-  minHeight: 1,
-  display: "flex",
-  flexDirection: "column",
-  flexGrow: 1,
-  flexShrink: 0,
-} as const;
+export { MonitoringChartPanel as BeszelChartPanel } from "../../common/monitoring-chart";
 export const CPU_Y_AXIS_DOMAIN: [number, string] = [0, "auto"];
-
-interface BeszelChartPanelProps {
-  title: string;
-  subtitle?: string;
-  chartProps: BeszelAreaChartProps;
-}
-
-export const BeszelChartPanel = memo(({ title, subtitle, chartProps }: BeszelChartPanelProps) => {
-  const { ref, inViewport } = useInViewport<HTMLDivElement>();
-  const [hasBeenVisible, setHasBeenVisible] = useState(false);
-  const isVisible = inViewport || typeof IntersectionObserver === "undefined";
-
-  useEffect(() => {
-    if (isVisible) setHasBeenVisible(true);
-  }, [isVisible]);
-
-  return (
-    <Stack gap={4} style={panelStyle}>
-      <Group gap="xs" wrap="nowrap">
-        <Text size="sm" fw={600} style={{ flexShrink: 0 }}>
-          {title}
-        </Text>
-        {subtitle && (
-          <Text size="xs" c="dimmed" truncate style={{ minWidth: 0 }}>
-            {subtitle}
-          </Text>
-        )}
-      </Group>
-      <Box ref={ref} style={chartContainerStyle}>
-        {(inViewport || hasBeenVisible) && <DeferredBeszelChart chartProps={chartProps} isVisible={isVisible} />}
-        {!inViewport && !hasBeenVisible && <BeszelChartPlaceholder height={chartProps.h} />}
-      </Box>
-    </Stack>
-  );
-});
-
-const BeszelChartPlaceholder = ({ height }: { height: AreaChartProps["h"] }) => (
-  <Box h={height} className={classes.chart} style={chartStyle}>
-    <WidgetQueryLoadingState />
-  </Box>
-);
-
-const DeferredBeszelChart = memo(
-  ({ chartProps }: { chartProps: BeszelAreaChartProps; isVisible: boolean }) => {
-    // Render the first visible chart promptly; defer subsequent data updates.
-    const deferredChartProps = useDeferredValue(chartProps);
-    return <BeszelAreaChart {...deferredChartProps} />;
-  },
-  // Retain mounted charts while offscreen; apply the latest data when they re-enter view.
-  (previous, next) => !next.isVisible || previous.chartProps === next.chartProps,
-);
 
 export const useSystemChartData = (
   records: BeszelChartRecords<BeszelSystemStatsRecord> | undefined,

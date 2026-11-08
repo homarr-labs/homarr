@@ -1,241 +1,269 @@
-import { Accordion, Center, Flex, Group, RingProgress, Stack, Text } from "@mantine/core";
+"use client";
+
+import { Badge, Box, Group, Progress, SegmentedControl, Select, Stack, Text } from "@mantine/core";
 import { useLocalStorage } from "@mantine/hooks";
-import { IconBrain, IconCpu, IconCube, IconDatabase, IconDeviceLaptop, IconServer } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
+import { isTrpcForbiddenError } from "@homarr/api/query-cache";
 import { useSession } from "@homarr/auth/client";
-import { invariantTechnicalLabels } from "@homarr/definitions";
-import type { Resource } from "@homarr/integrations/types";
+import type { ClusterHealthMonitoring as ClusterData, Resource } from "@homarr/integrations/types";
+import { useByteFormatter } from "@homarr/settings";
 import { useI18n } from "@homarr/translation/client";
-import { zoomCompensatedSize } from "@homarr/ui";
 
-import { WidgetEmptyState } from "../../common/empty-state";
-import { getUsableWidgetQueryData } from "../../common/query-state";
+import { thresholdColor } from "../../beszel/_shared/colors";
+import { formatPercent } from "../../beszel/_shared/format";
+import { isInitialWidgetQueryPending } from "../../common/query-state";
+import { WidgetQueryLoadingState } from "../../common/query-state-indicator";
 import type { WidgetComponentProps } from "../../definition";
-import { formatUptime } from "../system-health";
-import { getClusterAccordionDefault, getClusterVisibleSections } from "./accordion-state";
-import { ResourceAccordionItem } from "./resource-accordion-item";
+import { uptime } from "../display";
+import { getClusterVisibleSections } from "./accordion-state";
 import { ResourceTable } from "./resource-table";
+import { ClusterAdvanced } from "./cluster-advanced";
 
-const addBadgeColor = ({
-  activeCount,
-  totalCount,
-  sectionIndicatorRequirement,
-}: {
-  activeCount: number;
-  totalCount: number;
-  sectionIndicatorRequirement: WidgetComponentProps<"healthMonitoring">["options"]["sectionIndicatorRequirement"];
-}) => ({
-  color: activeCount === totalCount || (sectionIndicatorRequirement === "any" && activeCount >= 1) ? "green" : "orange",
-  activeCount,
-  totalCount,
-});
+type Section = Resource["type"];
 
-const running = (total: number, current: Resource) => {
-  return current.isRunning ? total + 1 : total;
-};
-
-export const ClusterHealthMonitoring = ({
-  integrationId,
-  boardId,
-  itemId,
-  options,
-  width,
-  displayMode,
-}: WidgetComponentProps<"healthMonitoring"> & { integrationId: string }) => {
+export function ClusterHealthMonitoring(
+  props: WidgetComponentProps<"healthMonitoring"> & { integrationId: string; integrationName?: string },
+) {
   const t = useI18n("widget.healthMonitoring");
-  const healthQuery = clientApi.widget.healthMonitoring.getClusterHealthStatus.useQuery({ integrationId });
-  const healthData = getUsableWidgetQueryData(healthQuery);
-  const visibleSections = getClusterVisibleSections(displayMode, options.visibleClusterSections);
-  const accordionScope = `${displayMode}:${visibleSections.join(",")}`;
-  const accordionDefault = getClusterAccordionDefault(displayMode, visibleSections);
+  const tr = useI18n("widget.healthMonitoring.rework");
   const { data: session } = useSession();
-  const [accordionValues, setAccordionValues] = useLocalStorage<Record<string, string[]>>({
-    key: `homarr-${session?.user.id ?? "anonymous"}-${boardId ?? "preview"}-${itemId}-${integrationId}-health-accordion`,
-    defaultValue: {},
+  const query = clientApi.widget.healthMonitoring.getClusterHealthStatus.useQuery({
+    integrationId: props.integrationId,
   });
-  const savedValue = accordionValues?.[accordionScope];
-  let accordionValue = accordionDefault;
-  if (Array.isArray(savedValue)) {
-    accordionValue = savedValue.filter((value) => visibleSections.some((section) => section === value));
+  const sections = getClusterVisibleSections(props.displayMode, props.options.visibleClusterSections);
+  const [savedSection, setSection] = useLocalStorage<string>({
+    key:
+      "health-resource-section-" +
+      (session?.user.id ?? "anonymous") +
+      "-" +
+      props.boardId +
+      "-" +
+      props.itemId +
+      "-" +
+      props.integrationId,
+    defaultValue: "node",
+  });
+  let selected = sections[0];
+  if (sections.some((section) => section === savedSection)) selected = savedSection as Section;
+  let scale = 1;
+  if (props.displayMode !== "advanced" && Number.isFinite(props.displayScale) && (props.displayScale ?? 0) > 0)
+    scale = props.displayScale ?? 1;
+  const width = props.width * scale;
+  const height = props.height * scale;
+  const showCapacity = height >= 290 && (props.displayMode === "advanced" || props.options.cpu || props.options.memory);
+  const short = height < 150;
+  let padding = 10;
+  let gap = 8;
+  if (height < 110) {
+    padding = 6;
+    gap = 6;
   }
-
-  if (!healthData) return <WidgetEmptyState />;
-
-  const activeNodes = healthData.nodes.reduce(running, 0);
-  const activeVMs = healthData.vms.reduce(running, 0);
-  const activeLXCs = healthData.lxcs.reduce(running, 0);
-  const activeStorage = healthData.storages.reduce(running, 0);
-
-  const usedMem = healthData.nodes.reduce((sum, item) => (item.isRunning ? item.memory.used + sum : sum), 0);
-  const maxMem = healthData.nodes.reduce((sum, item) => (item.isRunning ? item.memory.total + sum : sum), 0);
-  const maxCpu = healthData.nodes.reduce((sum, item) => (item.isRunning ? item.cpu.cores + sum : sum), 0);
-  const usedCpu = healthData.nodes.reduce(
-    (sum, item) => (item.isRunning ? item.cpu.utilization * item.cpu.cores + sum : sum),
-    0,
-  );
-  const uptime = healthData.nodes.reduce((sum, { uptime: nodeUptime }) => (sum > nodeUptime ? sum : nodeUptime), 0);
-
-  const cpuPercent = maxCpu ? (usedCpu / maxCpu) * 100 : 0;
-  const memPercent = maxMem ? (usedMem / maxMem) * 100 : 0;
-  const isAdvanced = displayMode === "advanced";
-  const isTiny = displayMode !== "advanced" && width < 256;
+  let headerHeight = 22;
+  if (short) headerHeight = 0;
+  const categoryHeight = 30;
+  let reservedHeight = padding * 2 + headerHeight + categoryHeight + gap;
+  if (!short) reservedHeight += gap;
+  if (showCapacity) reservedHeight += 54;
+  if (query.isError) reservedHeight += 22;
+  const bodyHeight = Math.max(20, height - reservedHeight);
+  if (isInitialWidgetQueryPending(query)) return <WidgetQueryLoadingState />;
+  let data = query.data;
+  if (isTrpcForbiddenError(query.error)) data = undefined;
+  if (!data)
+    return (
+      <Stack gap="xs" p={padding} h="100%" justify="center">
+        <Text size="sm" fw={600}>
+          {props.integrationName ?? "Proxmox"}
+        </Text>
+        <Text component="output" size="xs" aria-live="polite">
+          {tr("clusterUnavailable")}
+        </Text>
+      </Stack>
+    );
+  if (props.displayMode === "advanced")
+    return (
+      <ClusterAdvanced data={data} width={width} height={height} refreshFailed={query.isError} widgetProps={props} />
+    );
+  const records: Record<Section, Resource[]> = {
+    node: data.nodes,
+    qemu: data.vms,
+    lxc: data.lxcs,
+    storage: data.storages,
+  };
+  const uptimes = data.nodes
+    .filter((node) => node.isRunning && Number.isFinite(node.uptime) && node.uptime >= 0)
+    .map((node) => node.uptime);
+  let longestUptime;
+  if (uptimes.length > 0 && props.options.showUptime) longestUptime = uptime(Math.max(...uptimes), tr);
+  const choices = sections.map((section) => {
+    const active = records[section].filter((resource) => resource.isRunning).length;
+    return {
+      value: section,
+      label: t(`cluster.resource.${section}.name`),
+      active,
+      total: records[section].length,
+    };
+  });
   return (
-    <Stack h={isAdvanced ? "auto" : "100%"} p="xs" gap={isTiny ? "xs" : "md"} pos="relative">
-      {(isAdvanced || options.showUptime) && !isTiny && (
-        <Group justify="center" wrap="nowrap">
-          <Text fz="xs" fw={700} c="dimmed" ta="center">
-            {formatUptime(uptime, t)}
+    <Stack gap={gap} p={padding} h="100%" miw={0} mih={0} style={{ overflow: "hidden" }}>
+      {!short && (
+        <Group justify="space-between" wrap="nowrap" gap="xs" h={headerHeight} style={{ flexShrink: 0 }}>
+          <Text size="sm" fw={650} truncate>
+            {props.integrationName ?? "Proxmox"}
           </Text>
+          <Group gap="sm" wrap="nowrap" style={{ flexShrink: 0 }}>
+            {longestUptime && (
+              <Text size="xs" c="dimmed" title={tr("nodeUptime")}>
+                {tr("uptime")} {longestUptime}
+              </Text>
+            )}
+            <Text size="xs" c="dimmed">
+              {tr("clusterActive", {
+                active: data.nodes.filter((node) => node.isRunning).length,
+                total: data.nodes.length,
+              })}
+            </Text>
+          </Group>
         </Group>
       )}
-      <SummaryHeader
-        cpu={{
-          value: cpuPercent,
-          hidden: !isAdvanced && !options.cpu,
-        }}
-        memory={{
-          value: memPercent,
-          hidden: !isAdvanced && !options.memory,
-        }}
-        isTiny={isTiny}
-      />
-      {visibleSections.length >= 1 && (
-        <Accordion
-          variant="contained"
-          chevronPosition="right"
-          multiple
-          value={accordionValue}
-          onChange={(value) => setAccordionValues((current) => ({ ...current, [accordionScope]: value }))}
-        >
-          {visibleSections.includes("node") && (
-            <ResourceAccordionItem
-              value="node"
-              title={t("cluster.resource.node.name")}
-              icon={IconServer}
-              badge={addBadgeColor({
-                activeCount: activeNodes,
-                totalCount: healthData.nodes.length,
-                sectionIndicatorRequirement: options.sectionIndicatorRequirement,
-              })}
-              isTiny={isTiny}
-            >
-              <ResourceTable type="node" data={healthData.nodes} isTiny={isTiny} />
-            </ResourceAccordionItem>
+      {query.isError && (
+        <Text component="output" size="xs" aria-live="polite">
+          {tr("refreshFailed")}
+        </Text>
+      )}
+      {showCapacity && <ClusterCapacity data={data} options={props.options} advanced={false} />}
+      {selected && (
+        <>
+          {(width < 520 || short) && (
+            <Select
+              size="xs"
+              value={selected}
+              onChange={(value) => {
+                if (value) setSection(value);
+              }}
+              data={choices.map((choice) => ({
+                value: choice.value,
+                label: choice.label + " · " + choice.active + "/" + choice.total,
+              }))}
+              aria-label={tr("clusterResources")}
+              disabled={props.isEditMode}
+              allowDeselect={false}
+              styles={{ root: { flexShrink: 0 } }}
+            />
           )}
-
-          {visibleSections.includes("qemu") && (
-            <ResourceAccordionItem
-              value="qemu"
-              title={t("cluster.resource.qemu.name")}
-              icon={IconDeviceLaptop}
-              badge={addBadgeColor({
-                activeCount: activeVMs,
-                totalCount: healthData.vms.length,
-                sectionIndicatorRequirement: options.sectionIndicatorRequirement,
+          {width >= 520 && !short && (
+            <SegmentedControl
+              fullWidth
+              size="xs"
+              value={selected}
+              aria-label={tr("clusterResources")}
+              disabled={props.isEditMode}
+              onChange={setSection}
+              transitionDuration={0}
+              style={{ flexShrink: 0 }}
+              data={choices.map((choice) => {
+                let color = "gray";
+                if (choice.total > 0) color = "orange";
+                if (
+                  choice.total > 0 &&
+                  (choice.active === choice.total ||
+                    (props.options.sectionIndicatorRequirement === "any" && choice.active > 0))
+                )
+                  color = "teal";
+                return {
+                  value: choice.value,
+                  label: (
+                    <Group gap={5} justify="center" wrap="nowrap">
+                      <Text size="xs">{choice.label}</Text>
+                      <Badge
+                        size="xs"
+                        variant="light"
+                        color={color}
+                        c="var(--mantine-color-text)"
+                        px={4}
+                        style={{ flexShrink: 0 }}
+                      >
+                        {choice.active}/{choice.total}
+                      </Badge>
+                    </Group>
+                  ),
+                };
               })}
-              isTiny={isTiny}
-            >
-              <ResourceTable type="qemu" data={healthData.vms} isTiny={isTiny} />
-            </ResourceAccordionItem>
+            />
           )}
-
-          {visibleSections.includes("lxc") && (
-            <ResourceAccordionItem
-              value="lxc"
-              title={t("cluster.resource.lxc.name")}
-              icon={IconCube}
-              badge={addBadgeColor({
-                activeCount: activeLXCs,
-                totalCount: healthData.lxcs.length,
-                sectionIndicatorRequirement: options.sectionIndicatorRequirement,
-              })}
-              isTiny={isTiny}
-            >
-              <ResourceTable type="lxc" data={healthData.lxcs} isTiny={isTiny} />
-            </ResourceAccordionItem>
-          )}
-
-          {visibleSections.includes("storage") && (
-            <ResourceAccordionItem
-              value="storage"
-              title={t("cluster.resource.storage.name")}
-              icon={IconDatabase}
-              badge={addBadgeColor({
-                activeCount: activeStorage,
-                totalCount: healthData.storages.length,
-                sectionIndicatorRequirement: options.sectionIndicatorRequirement,
-              })}
-              isTiny={isTiny}
-            >
-              <ResourceTable type="storage" data={healthData.storages} isTiny={isTiny} />
-            </ResourceAccordionItem>
-          )}
-        </Accordion>
+          <Box flex={1} mih={0} miw={0} style={{ overflow: "hidden" }}>
+            <ResourceTable
+              type={selected}
+              data={records[selected]}
+              widgetProps={{ ...props, width: width - padding * 2, height: bodyHeight, displayScale: 1 }}
+            />
+          </Box>
+        </>
       )}
     </Stack>
   );
-};
-
-interface SummaryHeaderProps {
-  cpu: { value: number; hidden: boolean };
-  memory: { value: number; hidden: boolean };
-  isTiny: boolean;
 }
 
-const SummaryHeader = ({ cpu, memory, isTiny }: SummaryHeaderProps) => {
-  if (cpu.hidden && memory.hidden) return null;
-
+function ClusterCapacity({
+  data,
+  options,
+  advanced,
+}: {
+  data: ClusterData;
+  options: WidgetComponentProps<"healthMonitoring">["options"];
+  advanced: boolean;
+}) {
+  const t = useI18n("widget.healthMonitoring.rework");
+  const { formatBytesPair } = useByteFormatter();
+  const online = data.nodes.filter((node) => node.isRunning);
+  const cores = online.reduce((sum, node) => sum + node.cpu.cores, 0);
+  const usedCores = online.reduce((sum, node) => sum + node.cpu.cores * node.cpu.utilization, 0);
+  const totalMemory = online.reduce((sum, node) => sum + node.memory.total, 0);
+  const usedMemory = online.reduce((sum, node) => sum + node.memory.used, 0);
+  let cpu: number | null = null;
+  let ram: number | null = null;
+  if (cores > 0 && Number.isFinite(cores) && Number.isFinite(usedCores)) cpu = (usedCores / cores) * 100;
+  if (totalMemory > 0 && Number.isFinite(totalMemory) && Number.isFinite(usedMemory))
+    ram = (usedMemory / totalMemory) * 100;
+  let cpuContext = t("unknown");
+  let memoryContext = t("unknown");
+  if (cpu !== null) cpuContext = t("clusterCores", { count: cores });
+  if (ram !== null) {
+    const memory = formatBytesPair(usedMemory, totalMemory);
+    memoryContext = memory.used + " / " + memory.total;
+  }
   return (
-    <Center>
-      <Group wrap="wrap" justify="center" gap="xs">
-        {!cpu.hidden && (
-          <Flex direction="row">
-            <RingProgress
-              roundCaps
-              size={isTiny ? 32 : 48}
-              thickness={isTiny ? 2 : 4}
-              label={
-                <Center>
-                  <IconCpu style={zoomCompensatedSize(isTiny ? 12 : 20)} />
-                </Center>
-              }
-              sections={[{ value: cpu.value, color: cpu.value > 75 ? "orange" : "green" }]}
-            />
-            <Stack align="center" justify="center" gap={0}>
-              {!isTiny && (
-                <Text fw={500} size="sm">
-                  {invariantTechnicalLabels.cpu}
-                </Text>
-              )}
-              <Text size="xs">{cpu.value.toFixed(1)}%</Text>
-            </Stack>
-          </Flex>
-        )}
-        {!memory.hidden && (
-          <Flex>
-            <RingProgress
-              roundCaps
-              size={isTiny ? 32 : 48}
-              thickness={isTiny ? 2 : 4}
-              label={
-                <Center>
-                  <IconBrain style={zoomCompensatedSize(isTiny ? 12 : 20)} />
-                </Center>
-              }
-              sections={[{ value: memory.value, color: memory.value > 75 ? "orange" : "green" }]}
-            />
-            <Stack align="center" justify="center" gap={0}>
-              {!isTiny && (
-                <Text size="sm" fw={500}>
-                  {invariantTechnicalLabels.ram}
-                </Text>
-              )}
-              <Text size="xs">{memory.value.toFixed(1)}%</Text>
-            </Stack>
-          </Flex>
-        )}
-      </Group>
-    </Center>
+    <Group grow gap="lg" wrap="nowrap" align="flex-start" style={{ flexShrink: 0 }}>
+      {(advanced || options.cpu) && <Capacity label={t("cpu")} value={cpu} context={cpuContext} />}
+      {(advanced || options.memory) && <Capacity label={t("memory")} value={ram} context={memoryContext} />}
+    </Group>
   );
-};
+}
+
+function Capacity({ label, value, context }: { label: string; value: number | null; context: string }) {
+  let formatted = "—";
+  let color = "gray";
+  let percentage = 0;
+  if (value !== null && Number.isFinite(value)) {
+    formatted = formatPercent(value);
+    color = thresholdColor(value);
+    percentage = Math.max(0, Math.min(100, value));
+  }
+  return (
+    <Stack gap={3} miw={0}>
+      <Group justify="space-between" gap={6} wrap="nowrap">
+        <Text size="xs" c="dimmed">
+          {label}
+        </Text>
+        <Text size="sm" fw={650} style={{ fontVariantNumeric: "tabular-nums" }}>
+          {formatted}
+        </Text>
+      </Group>
+      <Progress value={percentage} size={4} color={color} aria-label={label + ": " + formatted} />
+      <Text size="xs" c="dimmed" truncate>
+        {context}
+      </Text>
+    </Stack>
+  );
+}

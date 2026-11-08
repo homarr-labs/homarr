@@ -34,6 +34,21 @@ export const { definition, componentLoader } = createWidgetDefinition("healthMon
         showUptime: factory.switch({
           defaultValue: true,
         }),
+        selectedSystem: factory.text({ defaultValue: "" }),
+        historyWindow: factory.select({
+          defaultValue: "5m",
+          options: [
+            { value: "5m", label: "5m" },
+            { value: "15m", label: "15m" },
+          ] as const,
+        }),
+        healthFilter: factory.select({
+          defaultValue: "all",
+          options: [
+            { value: "all", label: "All" },
+            { value: "attention", label: "Needs attention" },
+          ] as const,
+        }),
         fileSystem: factory.switch({
           defaultValue: true,
         }),
@@ -82,16 +97,19 @@ export const { definition, componentLoader } = createWidgetDefinition("healthMon
         }),
       }),
       {
+        selectedSystem: { shouldHide: () => true },
+        historyWindow: { shouldHide: () => true },
+        healthFilter: { shouldHide: () => true },
         fahrenheit: {
           shouldHide(_, integrationKinds) {
             // File system is only shown on system health tab
-            return integrationKinds.every((kind) => kind === "proxmox") || integrationKinds.length === 0;
+            return integrationKinds.every((kind) => kind === "proxmox");
           },
         },
         fileSystem: {
           shouldHide(_, integrationKinds) {
             // File system is only shown on system health tab
-            return integrationKinds.every((kind) => kind === "proxmox") || integrationKinds.length === 0;
+            return integrationKinds.every((kind) => kind === "proxmox");
           },
         },
         visibleStorageVolumes: {
@@ -101,8 +119,7 @@ export const { definition, componentLoader } = createWidgetDefinition("healthMon
         },
         showUptime: {
           shouldHide(_, integrationKinds) {
-            // Uptime is only shown on cluster health tab
-            return !integrationKinds.includes("proxmox");
+            return integrationKinds.length === 0;
           },
         },
         sectionIndicatorRequirement: {
