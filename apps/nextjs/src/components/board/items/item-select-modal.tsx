@@ -354,7 +354,7 @@ const ItemSelectModalContent = ({
         },
       );
     } catch (error) {
-      notifyDefinitionLoadError(error);
+      if (pickerOpen.current) notifyDefinitionLoadError(error);
     } finally {
       unlockSelection(selectionLock);
       setLoadingSelection(null);
@@ -362,15 +362,14 @@ const ItemSelectModalContent = ({
   };
 
   const handleWorkshopInstalled = async (definitionId: string) => {
-    if (!pickerOpen.current) return;
+    const input = { boardId: board.id };
     try {
-      // The picker may still have a pre-import query in flight; start a fresh request for the imported definition.
-      const definitions = await utils.client.customWidget.available.query({ boardId: board.id });
+      // Refresh the shared cache even after closing; leave failed lookups stale so reopening can retry.
+      await utils.customWidget.available.cancel(input);
+      await utils.customWidget.available.invalidate(input, { refetchType: "none" });
+      const definitions = await utils.client.customWidget.available.query(input);
+      utils.customWidget.available.setData(input, definitions);
       if (!pickerOpen.current) return;
-      // Keep an older response from replacing the fresh list when the picker reopens.
-      await utils.customWidget.available.cancel({ boardId: board.id });
-      if (!pickerOpen.current) return;
-      utils.customWidget.available.setData({ boardId: board.id }, definitions);
       const installed = definitions.find(({ id }) => id === definitionId);
       if (!installed) throw new Error(t("item.create.notification.error.message"));
       await handleAddCustomWidget(installed);
