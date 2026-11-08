@@ -17,9 +17,12 @@ export const applySmartHomeAction = (entity: SmartHomeEntity, action: SmartHomeA
     case "toggle":
       return toggleEntity(entity, next);
     case "turnOn":
-      return entity.state === "on" ? entity : toggleEntity(entity, next);
+      if (entity.state !== "off") return entity;
+      return toggleEntity(entity, next);
     case "turnOff":
-      return entity.state === "off" ? entity : toggleEntity(entity, next);
+      if (entity.state === "off") return entity;
+      if (entity.domain === "media_player") return next({ state: "off" });
+      return toggleEntity(entity, next);
     case "setBrightness": {
       const value = clamp(Math.round(action.value), 0, 100);
       return next({ state: value > 0 ? "on" : "off", attributes: { brightness: value } });

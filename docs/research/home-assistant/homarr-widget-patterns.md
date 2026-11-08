@@ -18,6 +18,7 @@ Paths relative to repo root. Read-only audit; nothing modified.
 - Card inset `--board-grid-item-inset = spacing-xs/2`. `board.opacity` default 100, `board.itemRadius` "lg" (`packages/db/schema/sqlite.ts:289,292`).
 
 ### Breakpoints in existing widgets
+
 - Uptime-kuma (`uptime-kuma/layout.ts:1-23`): `compactBreakpoint=230`; narrow w<230, short h<230. advanced→"board"; summaryOnly&&!short→"tile"; narrow&&short→"tile"; short→"strip"; narrow→"column"; else "board". Columns `min(3,floor(width/430))`; tags ≥600. Text width estimate 6.2px/char (small), 8.2 (headline).
 - Releases: micro if w<240 or h<230 (`component.tsx:71`); split pane w≥620&&h≥300.
 - Weather (`weather/layout.ts:12-17`): roomy ≥500x280, standard ≥280x180, compact ≥160x120, micro below. Advanced dailyColumns 1-4 at 320/480/700.

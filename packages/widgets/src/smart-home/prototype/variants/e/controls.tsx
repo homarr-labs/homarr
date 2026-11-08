@@ -300,7 +300,10 @@ export function Dial({
     if (bounded === min || bounded === max) return bounded;
     return clamp(Math.round((min + Math.round((bounded - min) / step) * step) * 100) / 100, min, max);
   };
-  const fractionOf = (input: number) => clamp((input - min) / (max - min), 0, 1);
+  const fractionOf = (input: number) => {
+    if (max <= min) return 0;
+    return clamp((input - min) / (max - min), 0, 1);
+  };
 
   const read = (event: PointerEvent<HTMLDivElement>) => {
     const rect = ref.current?.getBoundingClientRect();

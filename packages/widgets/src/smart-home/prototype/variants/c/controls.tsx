@@ -197,7 +197,8 @@ function TemperatureStepper({
 
   const change = (delta: number) => {
     if (disabled) return;
-    const next = Math.min(max, Math.max(min, Math.round((draft.value + delta) / step) * step));
+    const stepped = Math.round(Math.round((draft.value + delta) / step) * step * 100) / 100;
+    const next = Math.min(max, Math.max(min, stepped));
     if (next === draft.value) return;
     draft.settle(next);
     if (bound === "low" && attributes.targetTemperatureHigh !== undefined) {
@@ -361,6 +362,11 @@ export function AlarmControl({ entity, run, level, fill }: ControlProps & { fill
         disabled={run.locked}
         onChange={(event) => run.request(alarmActionFor(event.target.value))}
       >
+        {!options.some((option) => option.value === entity.state) && (
+          <option value={entity.state} disabled>
+            {capitalize(entity.state.replace(/_/g, " "))}
+          </option>
+        )}
         {options.map((option) => (
           <option key={option.value} value={option.value} disabled={option.disabled}>
             {option.label}

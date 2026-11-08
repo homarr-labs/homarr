@@ -7,7 +7,7 @@ Verified against a throwaway container: HA Core **2026.11.0** (`config.version`)
 1. **`subscribe_entities` result is `null`; the first event is `{"a":{...}}` only** (no `c`/`r`). Diffs follow as `{"c":{id:{"+":{...},"-":{...}}}}`, removals as `{"r":[ids]}`. An `entity_ids` filter works; **non-existent ids are silently omitted** (no error). The initial event for a filter with only unknown ids is `{"a":{}}`.
 2. **`entity_ids: []` means "all entities"** (it subscribed to everything, not nothing), and a bare string `entity_ids:"light.x"` is **accepted** (coerced to a list). Don't rely on either; always send a non-empty array.
 3. **Context in compressed states is polymorphic**: `"c"` is a plain context-id **string** when the context has no user/parent, and an object `{id,parent_id,user_id}` otherwise (initial `a` payload and diffs both). Parser must accept both. Timestamps (`lc`, `lu`) are epoch **seconds (float)**; `lu` is omitted when equal to `lc`, and diffs carry `lc` (state change) or `lu` (attribute-only change).
-4. **Attribute diffs**: `+.a` is a shallow merge; *attributes removed in the same update appear in `"-":{"a":["key"]}`*. Light turning off does **not** remove keys; it sets them to `null` (`"brightness":null`) – so treat `null` as "absent" for light.
+4. **Attribute diffs**: `+.a` is a shallow merge; _attributes removed in the same update appear in `"-":{"a":["key"]}`_. Light turning off does **not** remove keys; it sets them to `null` (`"brightness":null`) – so treat `null` as "absent" for light.
 5. **`unsubscribe_events {subscription:<id>}`** works for `subscribe_entities`, `history/stream`, `logbook/event_stream`, `render_template`; returns `{"success":true,"result":null}`; no more events afterwards.
 6. **Sparklines: use WS `history/history_during_period` with `minimal_response:true, no_attributes:true`** (or `history/stream` for live append). Result is `{entity_id:[{s,lu}...]}` with only the first item carrying `a` when `no_attributes:false`. REST `/api/history/period` has full ISO objects and **returns a list of lists**; the first entry per entity is a full state, the rest `{state,last_changed}` only. History is raw state changes (not bucketed) and contains `"unavailable"`/`"unknown"` strings that must be filtered. For long ranges prefer `recorder/statistics_during_period` (5minute/hour buckets with `mean/min/max`).
 7. **Statistics**: `recorder/statistics_during_period` requires `statistic_ids` (no "all") and returns `{id:[{start,end,mean,min,max,state,sum,change,last_reset}]}` with **epoch-millisecond** `start/end`. Only entities with `state_class` appear in `recorder/list_statistic_ids`; REST-injected virtual states did **not**. `period:"hour"` returned `{}` until the first hourly compile (unverified with data, see §3).
@@ -24,33 +24,101 @@ Verified against a throwaway container: HA Core **2026.11.0** (`config.version`)
 ## 1. `subscribe_entities`
 
 Request / result:
+
 ```json
 {"id":1,"type":"subscribe_entities"}
 {"id":1,"type":"result","success":true,"result":null}
 ```
+
 First event (unfiltered: 135 entities in `a`):
+
 ```json
-{"id":1,"type":"event","event":{"a":{
- "light.ceiling_lights":{"s":"on","a":{"min_color_temp_kelvin":2000,"max_color_temp_kelvin":6535,"supported_color_modes":["color_temp","hs"],"color_mode":"color_temp","brightness":180,"color_temp_kelvin":2631,"hs_color":[28.55,67.974],"rgb_color":[255,164,82],"xy_color":[0.532,0.388],"friendly_name":"Ceiling Lights","supported_features":0},"c":"01M6RQFS8BCJXAAHKNCN8NSR17","lc":1793978787.0830731},
- "person.test":{"s":"unknown","a":{"editable":true,"id":"test","device_trackers":[],"in_zones":[],"user_id":"c962…","friendly_name":"test"},"c":"01M6…","lc":1793978786.8688314}}}}
+{
+  "id": 1,
+  "type": "event",
+  "event": {
+    "a": {
+      "light.ceiling_lights": {
+        "s": "on",
+        "a": {
+          "min_color_temp_kelvin": 2000,
+          "max_color_temp_kelvin": 6535,
+          "supported_color_modes": ["color_temp", "hs"],
+          "color_mode": "color_temp",
+          "brightness": 180,
+          "color_temp_kelvin": 2631,
+          "hs_color": [28.55, 67.974],
+          "rgb_color": [255, 164, 82],
+          "xy_color": [0.532, 0.388],
+          "friendly_name": "Ceiling Lights",
+          "supported_features": 0
+        },
+        "c": "01M6RQFS8BCJXAAHKNCN8NSR17",
+        "lc": 1793978787.0830731
+      },
+      "person.test": {
+        "s": "unknown",
+        "a": {
+          "editable": true,
+          "id": "test",
+          "device_trackers": [],
+          "in_zones": [],
+          "user_id": "c962…",
+          "friendly_name": "test"
+        },
+        "c": "01M6…",
+        "lc": 1793978786.8688314
+      }
+    }
+  }
+}
 ```
+
 Change (`light.toggle` from REST by a user → `c` is object in the diff):
+
 ```json
-{"id":1,"type":"event","event":{"c":{"light.ceiling_lights":{"+":{"s":"off","lc":1793978962.81,"c":{"user_id":"c962…","id":"01M6RQN4VTFXXX6C03XJNKVPD4"},"a":{"color_mode":null,"brightness":null,"color_temp_kelvin":null,"hs_color":null,"rgb_color":null,"xy_color":null}}}}}}
+{
+  "id": 1,
+  "type": "event",
+  "event": {
+    "c": {
+      "light.ceiling_lights": {
+        "+": {
+          "s": "off",
+          "lc": 1793978962.81,
+          "c": { "user_id": "c962…", "id": "01M6RQN4VTFXXX6C03XJNKVPD4" },
+          "a": {
+            "color_mode": null,
+            "brightness": null,
+            "color_temp_kelvin": null,
+            "hs_color": null,
+            "rgb_color": null,
+            "xy_color": null
+          }
+        }
+      }
+    }
+  }
+}
 ```
+
 Subsequent: `"c":"01M6…"` (string) when no user. Attribute-only change (brightness 255→153): `{"+":{"s":"on","lc":…,"c":"…","a":{"brightness":153,…}}}` (state was same-string but change had `s`; pure attr changes on other entities send only `lu`).
 
 Removal / attribute-removal diffs (virtual entity via `POST /api/states/sensor.zz_test`):
+
 ```json
 {"c":{"sensor.zz_test":{"+":{"s":"2","lc":1793978968.47,"c":"01M6…"},"-":{"a":["b"]}}}}   // attrs {a,b} -> {a}
 {"c":{"sensor.zz_test":{"+":{"lu":1793978968.78,"c":"01M6…","a":{"c":[1]}}}}}              // attr-only add, state unchanged
 {"r":["sensor.zz_test"]}                                                                     // DELETE /api/states/...
 ```
+
 Filtered:
+
 ```json
 {"id":3,"type":"subscribe_entities","entity_ids":["light.ceiling_lights","sensor.outside_temperature","light.nonexistent"]}
 → result null; first event "a" contains only the two existing entities.
 ```
+
 Changes to other entities (light.kitchen_lights toggled) are **not** delivered; ceiling_lights ones are.
 
 Edge cases: `entity_ids:[]` → success, behaves like unfiltered (received `zz_test` events). `entity_ids:"light.x"` → success (string accepted). Filter with only non-existing id → first event `{"a":{}}`.
@@ -59,10 +127,20 @@ Unsubscribe: `{"id":2,"type":"unsubscribe_events","subscription":1}` → `{"id":
 ## 2. History
 
 WS request (24h window, both entities):
+
 ```json
-{"type":"history/history_during_period","start_time":"2026-11-05T15:29:49.869Z","end_time":"2026-11-06T15:29:49.869Z","entity_ids":["sensor.outside_temperature","light.ceiling_lights"],"minimal_response":true,"no_attributes":true}
+{
+  "type": "history/history_during_period",
+  "start_time": "2026-11-05T15:29:49.869Z",
+  "end_time": "2026-11-06T15:29:49.869Z",
+  "entity_ids": ["sensor.outside_temperature", "light.ceiling_lights"],
+  "minimal_response": true,
+  "no_attributes": true
+}
 ```
+
 Shapes (`lu` = epoch seconds float; `lc` appears only when `lc != lu`, i.e. attribute-only updates):
+
 ```jsonc
 // default (full attrs repeated on every item)
 {"sensor.outside_temperature":[{"s":"15.6","a":{"state_class":"measurement","unit_of_measurement":"°C","device_class":"temperature","friendly_name":"Outside Temperature"},"lu":1793978787.085}], "light.ceiling_lights":[{"s":"on","a":{"friendly_name":"Ceiling Lights"},"lu":…},{"s":"off","a":{…},"lu":…}]}
@@ -71,60 +149,91 @@ Shapes (`lu` = epoch seconds float; `lc` appears only when `lc != lu`, i.e. attr
 // no_attributes:true      -> "a":{} on every item
 // minimal_response + no_attributes -> only {"s","lu"} (first item too). Smallest.
 ```
-- History attrs are the *recorder-filtered* subset (light history shows only `friendly_name`).
+
+- History attrs are the _recorder-filtered_ subset (light history shows only `friendly_name`).
 - `significant_changes_only` true vs false: identical for the test sensor (attribute-only change `15→15 foo:attrchange` was dropped with `no_attributes`; with `minimal_response:false,no_attributes:false` it appears as `{"s":"15","a":{…foo…},"lu":…,"lc":<earlier>}`). Unavailable appears as an item: `{"s":"unavailable","lu":…}`.
 - `include_start_time_state:false`: same output here (no state older than window to include).
 - Errors: missing `entity_ids` → `{"success":false,"error":{"code":"invalid_format","message":"required key not provided at 'entity_ids'. Got None"}}`; bad `start_time` → `code:"invalid_start_time"`; unknown entity → `result:{}` (key absent).
 
 REST: `GET /api/history/period/<start>?filter_entity_id=a,b&end_time=<iso>&minimal_response&no_attributes[&significant_changes_only=0]` → `200`, **list of lists**, one inner list per entity that has data:
+
 ```json
-[[{"entity_id":"sensor.outside_temperature","state":"15.6","attributes":{},"last_changed":"2026-11-06T15:26:27.085227+00:00","last_updated":"…"}],
- [{"entity_id":"light.ceiling_lights","state":"on","attributes":{},"last_changed":"…","last_updated":"…"},{"state":"off","last_changed":"2026-11-06T15:29:22.812042+00:00"},{"state":"on","last_changed":"…"}]]
+[
+  [
+    {
+      "entity_id": "sensor.outside_temperature",
+      "state": "15.6",
+      "attributes": {},
+      "last_changed": "2026-11-06T15:26:27.085227+00:00",
+      "last_updated": "…"
+    }
+  ],
+  [
+    { "entity_id": "light.ceiling_lights", "state": "on", "attributes": {}, "last_changed": "…", "last_updated": "…" },
+    { "state": "off", "last_changed": "2026-11-06T15:29:22.812042+00:00" },
+    { "state": "on", "last_changed": "…" }
+  ]
+]
 ```
+
 Quirks: with `minimal_response` the first entry keeps `entity_id`/`attributes`, later ones only `state` + `last_changed` (no `last_updated`). Without `filter_entity_id` the response was 41 bytes (`[]`-like; HA returns little/none for unfiltered with no end) – always filter. Unknown entity → `200 []`; bad timestamp → `400 {"message":"Invalid datetime"}`. REST sizes (2 entities): full 2087 B, minimal+noattr 869 B.
 
 **Recommendation for 24h sparklines**: WS `history/history_during_period` minimal+no_attributes (compact, epoch floats, one round trip, auth already on the socket). Filter `s` to numeric (drop `unavailable`/`unknown`), prepend value at `start`, step-hold to bucket client-side. For multiple tiles batch all `entity_ids` in one call. For >7 days use statistics instead.
 
 `history/stream` (supported):
+
 ```json
 {"id":9,"type":"history/stream","start_time":"…","end_time":"…","entity_ids":["sensor.outside_temperature","light.ceiling_lights"],"minimal_response":true,"no_attributes":true}
 → {"id":9,"type":"result","success":true,"result":null}
 → {"id":9,"type":"event","event":{"states":{"sensor.outside_temperature":[{"s":"15.6","lu":1793978787.085}],"light.ceiling_lights":[{"s":"on","lu":…},…]},"start_time":1793892589.869,"end_time":1793978967.862385}}
 ```
+
 Without `end_time` (live): initial event identical (includes `start_time`/`end_time`), then incremental events as state changes:
+
 ```json
-{"id":10,"type":"event","event":{"states":{"light.ceiling_lights":[{"s":"off","lu":1793978991.2336469}]}}}
+{
+  "id": 10,
+  "type": "event",
+  "event": { "states": { "light.ceiling_lights": [{ "s": "off", "lu": 1793978991.2336469 }] } }
+}
 ```
+
 (Our live toggle was delivered ~immediately; no explicit end marker seen for the closed-window case.)
 
 ## 3. Statistics
 
 `recorder/list_statistic_ids` (all, 12 ids in demo; only `state_class` sensors):
+
 ```json
 {"statistic_id":"sensor.outside_temperature","display_unit_of_measurement":"°C","has_mean":true,"mean_type":1,"has_sum":false,"name":null,"source":"recorder","statistics_unit_of_measurement":"°C","unit_class":"temperature"}
 {"statistic_id":"sensor.total_energy_kwh","display_unit_of_measurement":"kWh","has_mean":false,"mean_type":0,"has_sum":true,…,"unit_class":"energy"}
 ```
+
 `{"statistic_type":"sum"}` filters to total/total_increasing. `recorder/get_statistics_metadata {statistic_ids:[…]}` returns the same objects (array). `mean_type` 0/1 (0 none, 1 arithmetic).
 
 `recorder/statistics_during_period` (`start_time`, `end_time?`, `statistic_ids` **required**, `period` ∈ `5minute|hour|day|week|month|year`, `types?`, `units?`):
+
 ```json
 {"type":"recorder/statistics_during_period","start_time":"…","statistic_ids":["sensor.outside_temperature","sensor.total_energy_kwh"],"period":"5minute","types":["mean","min","max","state","sum","last_reset","change"]}
 → {"result":{
  "sensor.outside_temperature":[{"start":1793978700000,"end":1793979000000,"state":null,"last_reset":null,"sum":null,"mean":15.6,"max":15.6,"min":15.6,"change":null}],
  "sensor.total_energy_kwh":[{"start":1793978700000,"end":1793979000000,"state":0,"last_reset":null,"sum":0,"mean":null,"max":null,"min":null,"change":0}]}}
 ```
+
 `start`/`end` are epoch **ms**. Fields not in the requested `types` are omitted (not verified in this run; default returned all). Errors: missing `statistic_ids` → `invalid_format … required key not provided at 'statistic_ids'`; bad period → `expected '5minute' or 'hour' or 'day' or 'week' or 'month' or 'year' at 'period'`; unknown id → `result:{}`.
 **Not verified**: `hour`/`day`/`week`/`month` with data (container started 15:26 UTC; first hourly compile at 16:00; returned `{}` at 15:33), `units` conversion output (returned `{}` for same reason), `recorder/statistics_during_period` for virtual entities (no output). `recorder/info` → `{"backlog":0,"recording":true,"thread_running":true,…}`.
 
 ## 4. Logbook
 
 `logbook/get_events {start_time,end_time?,entity_ids?}` (`start_time` required, else `invalid_format`). Entries (epoch seconds `when`; keys omitted when null):
+
 ```json
 {"state":"off","entity_id":"light.ceiling_lights","when":1793978962.8120422,"context_user_id":"c962…","context_domain":"light","context_service":"toggle","context_event_type":"call_service"}
 {"name":"Home Assistant","message":"started","icon":"mdi:home-assistant","domain":"homeassistant","when":1793978789.61}
 {"name":"Notify when garage left open","message":"triggered","source":null,"entity_id":"automation.notify_when_garage_left_open","context_id":"01M6…","item_id":"1700000000002","run_id":"750e…","domain":"automation","when":1793979026.65,"context_user_id":"c962…"}
 {"name":"Good morning","message":"started","entity_id":"script.good_morning","context_id":"…","item_id":"good_morning","run_id":"…","domain":"script","when":…,…}
 ```
+
 Notes: state entries have **no `name`** in WS (REST adds `"name":"Ceiling Lights"` and ISO `when`). No `entity_ids` → all entries (15 in the window). Automation/script events are distinguished by `message`/`domain`. `entity_ids` filter with no matching rows → `[]`. Logbook recorder commit delay: needed ~5 s after the action before rows were visible.
 `logbook/event_stream {start_time,entity_ids}` → result `null`; first event `{"events":[…]}` (history), then live `{"events":[{…one entry…}]}` (delivered within 1.5 s). Unsubscribe via `unsubscribe_events`.
 REST `GET /api/logbook/<start>?entity=light.ceiling_lights&end_time=…` → 200 list with ISO `when` and `name`.
@@ -133,48 +242,50 @@ REST `GET /api/logbook/<start>?entity=light.ceiling_lights&end_time=…` → 200
 
 Success: `200 application/json` **list of changed states**, full state objects (`entity_id,state,attributes,last_changed,last_reported,last_updated,context{id,parent_id,user_id}`). Services with transitional states return several (e.g. `lock.unlock` → `unlocking` then `unlocked`; `scene.turn_on` returns scene + affected light).
 
-| Call | Status | Body excerpt |
-|---|---|---|
-| `light/turn_on {entity_id:"light.bed_light",brightness_pct:40}` | 200 | `[{"entity_id":"light.bed_light","state":"on","attributes":{"brightness":102,…}}]` |
-| `climate/set_temperature {entity_id:"climate.hvac",temperature:21}` | 200 | `[]` when value unchanged; else state list |
-| `climate/set_temperature {entity_id:"climate.ecobee",target_temp_low:19,target_temp_high:24}` | 200 | state with `target_temp_low/high` |
-| `media_player/media_play_pause` | 200 | `state:"paused"` (+ `entity_picture`, `media_position`) |
-| `cover/set_cover_position {position:50}` | 200 | `state:"closing"`, `current_position:70` (transitional) |
-| `lock/unlock` | 200 | `[{state:"unlocking"},{state:"unlocked"}]` |
-| `scene/turn_on` | 200 | scene state = timestamp, + changed lights |
-| `script/turn_on` | 200 | `state:"on"`, `attributes.current:1` (returns immediately) |
-| `automation/trigger` | 200 | `[]` (state unchanged) |
-| `button/press` | 200 | state = ISO timestamp |
-| `input_number/set_value {value:55}` | 200 | `state:"55.0"` |
-| `input_select/select_option {option:"Away"}` | 200 | `state:"Away"` |
-| `vacuum/start` | 200 | `state:"cleaning"` |
-| `fan/set_percentage {percentage:50}` | 200 | `state:"on","percentage":50` |
-| `alarm_control_panel/alarm_arm_away` (no code) | **400** | `{"message":"Arming requires a code but none was given for alarm_control_panel.security"}` |
-| same with `code:"1234"` | 200 | `state:"arming"`, `next_state:"armed_away"` |
-| `alarm_disarm code:"0000"` (wrong) | **400** | `{"message":"invalid_code"}` (demo valid code `1234`) |
+| Call                                                                                          | Status  | Body excerpt                                                                               |
+| --------------------------------------------------------------------------------------------- | ------- | ------------------------------------------------------------------------------------------ |
+| `light/turn_on {entity_id:"light.bed_light",brightness_pct:40}`                               | 200     | `[{"entity_id":"light.bed_light","state":"on","attributes":{"brightness":102,…}}]`         |
+| `climate/set_temperature {entity_id:"climate.hvac",temperature:21}`                           | 200     | `[]` when value unchanged; else state list                                                 |
+| `climate/set_temperature {entity_id:"climate.ecobee",target_temp_low:19,target_temp_high:24}` | 200     | state with `target_temp_low/high`                                                          |
+| `media_player/media_play_pause`                                                               | 200     | `state:"paused"` (+ `entity_picture`, `media_position`)                                    |
+| `cover/set_cover_position {position:50}`                                                      | 200     | `state:"closing"`, `current_position:70` (transitional)                                    |
+| `lock/unlock`                                                                                 | 200     | `[{state:"unlocking"},{state:"unlocked"}]`                                                 |
+| `scene/turn_on`                                                                               | 200     | scene state = timestamp, + changed lights                                                  |
+| `script/turn_on`                                                                              | 200     | `state:"on"`, `attributes.current:1` (returns immediately)                                 |
+| `automation/trigger`                                                                          | 200     | `[]` (state unchanged)                                                                     |
+| `button/press`                                                                                | 200     | state = ISO timestamp                                                                      |
+| `input_number/set_value {value:55}`                                                           | 200     | `state:"55.0"`                                                                             |
+| `input_select/select_option {option:"Away"}`                                                  | 200     | `state:"Away"`                                                                             |
+| `vacuum/start`                                                                                | 200     | `state:"cleaning"`                                                                         |
+| `fan/set_percentage {percentage:50}`                                                          | 200     | `state:"on","percentage":50`                                                               |
+| `alarm_control_panel/alarm_arm_away` (no code)                                                | **400** | `{"message":"Arming requires a code but none was given for alarm_control_panel.security"}` |
+| same with `code:"1234"`                                                                       | 200     | `state:"arming"`, `next_state:"armed_away"`                                                |
+| `alarm_disarm code:"0000"` (wrong)                                                            | **400** | `{"message":"invalid_code"}` (demo valid code `1234`)                                      |
 
 Errors:
-| Case | Status | Body |
-|---|---|---|
-| Unknown service `fan/nope` | 400 | `400: Bad Request` (text/plain) |
-| Unknown domain `nodomain/turn_on` | 400 | `400: Bad Request` (text/plain) |
-| Unknown entity `light.does_not_exist` | **200** | `[]` |
-| Entity of wrong domain `switch.ac` for `light.turn_on` | **200** | `[]` |
-| No `entity_id` (`light/turn_on {}`) | 400 | `400: Bad Request` |
-| `brightness_pct:500` / `"abc"` | 400 | `400: Bad Request` |
-| Unknown field `bogus_field` | 400 | `400: Bad Request` |
-| `climate/set_temperature` missing temp | 400 | `400: Bad Request` |
-| `temperature:999` | 400 | `{"message":"Provided temperature 999.0 is not valid. Accepted range is 7 to 35"}` |
-| `input_select option:"Nope"` | 400 | `{"message":"Option Nope is not valid for input_select.house_mode. Valid options are: Home, Away, Night, Party"}` |
-| `input_number value:9999` | 400 | `400: Bad Request` |
-| Unsupported feature `cover/set_cover_position` on `cover.garage_door` | 400 | `{"message":"Entity cover.garage_door does not support action cover.set_cover_position"}` |
-| Malformed JSON | 400 | `{"message":"Data should be valid JSON."}` |
-| No body | 400 | `400: Bad Request` |
-| `?return_response` on normal service | 400 | `{"message":"Service does not support responses. Remove return_response from request."}` |
-| `entity_id:"all"` | 200 | affects all lights |
-| `entity_id` list | 200 | all matched entities' states |
+
+| Case                                                                  | Status  | Body                                                                                                              |
+| --------------------------------------------------------------------- | ------- | ----------------------------------------------------------------------------------------------------------------- |
+| Unknown service `fan/nope`                                            | 400     | `400: Bad Request` (text/plain)                                                                                   |
+| Unknown domain `nodomain/turn_on`                                     | 400     | `400: Bad Request` (text/plain)                                                                                   |
+| Unknown entity `light.does_not_exist`                                 | **200** | `[]`                                                                                                              |
+| Entity of wrong domain `switch.ac` for `light.turn_on`                | **200** | `[]`                                                                                                              |
+| No `entity_id` (`light/turn_on {}`)                                   | 400     | `400: Bad Request`                                                                                                |
+| `brightness_pct:500` / `"abc"`                                        | 400     | `400: Bad Request`                                                                                                |
+| Unknown field `bogus_field`                                           | 400     | `400: Bad Request`                                                                                                |
+| `climate/set_temperature` missing temp                                | 400     | `400: Bad Request`                                                                                                |
+| `temperature:999`                                                     | 400     | `{"message":"Provided temperature 999.0 is not valid. Accepted range is 7 to 35"}`                                |
+| `input_select option:"Nope"`                                          | 400     | `{"message":"Option Nope is not valid for input_select.house_mode. Valid options are: Home, Away, Night, Party"}` |
+| `input_number value:9999`                                             | 400     | `400: Bad Request`                                                                                                |
+| Unsupported feature `cover/set_cover_position` on `cover.garage_door` | 400     | `{"message":"Entity cover.garage_door does not support action cover.set_cover_position"}`                         |
+| Malformed JSON                                                        | 400     | `{"message":"Data should be valid JSON."}`                                                                        |
+| No body                                                               | 400     | `400: Bad Request`                                                                                                |
+| `?return_response` on normal service                                  | 400     | `{"message":"Service does not support responses. Remove return_response from request."}`                          |
+| `entity_id:"all"`                                                     | 200     | affects all lights                                                                                                |
+| `entity_id` list                                                      | 200     | all matched entities' states                                                                                      |
 
 WS `call_service` (same HA, `target:{entity_id}`, `service_data`, `return_response?`). Success `{"result":{"context":{"id","parent_id","user_id"}}}` (+ `"response":{…}` when asked). Errors are structured:
+
 ```json
 {"code":"not_found","message":"Service light.nope not found.","translation_key":"service_not_found","translation_placeholders":{"domain":"light","service":"nope"}}
 {"code":"invalid_format","message":"expected a percentage between 0 and 100 at 'brightness_pct'"}
@@ -182,6 +293,7 @@ WS `call_service` (same HA, `target:{entity_id}`, `service_data`, `return_respon
 {"code":"service_validation_error","message":"Validation error: Arming requires a code but none was given for alarm_control_panel.security","translation_key":"code_arm_required"}
 {"code":"service_validation_error","message":"Validation error: The action requires responses and must be called with return_response=True","translation_key":"service_lacks_response_request"}
 ```
+
 Unknown entity over WS → still `success:true` (silent no-op, same as REST).
 
 ## 6. `return_response`
@@ -191,6 +303,7 @@ POST /api/services/weather/get_forecasts?return_response   {"entity_id":"weather
 → 200 {"changed_states":[],"service_response":{"weather.demo_weather_south":{"forecast":[
   {"datetime":"2026-11-06T16:00:13.269873+01:00","condition":"rainy","precipitation":1,"temperature":22,"templow":15,"precipitation_probability":60}, … 7 entries]}}}
 ```
+
 - `type:"twice_daily"` (north) adds `"is_daytime":true|false` per entry; temperatures are in the unit system of `/api/config`/entity (`-23.3` for north in °C).
 - `type:"hourly"` on south → `400 {"message":"Weather entity weather.demo_weather_south does not support the hourly forecast type"}`; `hourly` on north (`supported_features:7`) works: 1-hour steps `{"datetime":"2026-11-06T16:00:45.97+01:00","condition":"sunny","precipitation":2,"temperature":-23.3,"templow":-26.1,"precipitation_probability":60}` (hourly entries also carry `templow` in the demo).
 - Multiple entities → both keyed in `service_response`.
@@ -203,12 +316,14 @@ POST /api/services/calendar/get_events?return_response   {"entity_id":["calendar
   "calendar.calendar_1":{"events":[{"start":"2026-11-06T16:56:27.080073+01:00","end":"2026-11-06T17:56:27.080073+01:00","summary":"Future Event","description":"Future Description","location":"Future Location"}]},
   "calendar.calendar_2":{"events":[{"start":"2026-11-06T15:56:27.080183+01:00","end":"2026-11-06T16:56:27.080183+01:00","summary":"Current Event"}]}}}
 ```
+
 `end_date_time` instead of `duration` works too. Datetimes are plain ISO strings in local TZ; absent fields are omitted (no `uid`/`rrule` for demo). Compare REST `/api/calendars/<id>?start=&end=`: `{"start":{"dateTime":"…"},"end":{"dateTime":"…"},"summary","description","location","uid":null,"recurrence_id":null,"rrule":null,"status":null}` and `GET /api/calendars` → `[{"name":"Calendar 1","entity_id":"calendar.calendar_1"}]`. Calendar entity attributes carry the next event in **local naive** strings (`"start_time":"2026-11-06 16:56:27"`).
 
 ```http
 POST /api/services/todo/get_items?return_response   {"entity_id":"todo.shopping_list"}
 → {"changed_states":[],"service_response":{"todo.shopping_list":{"items":[{"summary":"Milk","uid":"6f09…","status":"needs_action"},{"summary":"Eggs","uid":"a0cb…","status":"needs_action"}]}}}
 ```
+
 - `status:"completed"` filters; `status:["needs_action","completed"]` returns all. **No `status` returns ALL items** (verified with one `needs_action` + one `completed`: both returned), despite the services.yaml `default: needs_action`.
 - `due`/`description` omitted when empty. State of todo entity = count of `needs_action`.
 - WS `todo/item/list {entity_id}` → `{"items":[{"summary","uid","status"}]}`.
@@ -264,12 +379,14 @@ geo_location.waterspout 10.3 {"source":"demo","latitude":…,"longitude":…,"un
 air_quality.demo_air_quality_home 14 {"particulate_matter_2_5":14,"particulate_matter_10":23,"nitrogen_oxide":100,"unit_of_measurement":"μg/m³"}
 media_player.living_room playing {"volume_level":1,"is_volume_muted":false,"media_content_id":"…","media_content_type":"movie","media_duration":300,"media_position":309,"media_title":"…","app_name":"YouTube","sound_mode":"Music","sound_mode_list":[…],"shuffle":false,"entity_picture":"/api/media_player_proxy/…?token=…&cache=…","supported_features":119695}
 ```
+
 Sensors: `sensor.outside_temperature` `15.6` `{"state_class":"measurement","unit_of_measurement":"°C","device_class":"temperature"}`; `sensor.total_energy_kwh` `0.5` (`state_class:"total"`); timestamp sensors (`sensor.sun_next_dawn` `2026-11-07T06:09:59+00:00`, `device_class:"timestamp"`); enum sensors (`sensor.thermostat` `eco`, `device_class:"enum"`, `options`); `unknown` for never-set values. Binary sensors: `moisture`, `motion`, `battery_charging`. `/api/config.unit_system`: `{"length":"km","accumulated_precipitation":"mm","area":"m²","mass":"g","pressure":"Pa","temperature":"°C","volume":"L","wind_speed":"m/s"}`.
 Not present in demo: `humidifier` action variety, `alert`, `image`, `input_datetime/text/button`, `schedule`, `plant`, no active timer (so timer running-state attributes unverified). Lawn mower states other than `docked`, vacuum `battery_level` (absent here) unverified.
 
 ## 9. `get_services` and `render_template`
 
 `GET /api/services` (57 556 B, 64 domains) → `[{"domain":"light","services":{"turn_on":{"fields":{…},"target":{…}}}}]`; WS `get_services` (55 963 B) → `{domain:{service:{fields,target,response?}}}`. **No `name`/`description`** at either (also `fields[*]` has no name/description). Excerpts:
+
 ```json
 "light.turn_on":{"fields":{
   "transition":{"filter":{"supported_features":[32]},"selector":{"number":{"min":0,"max":300,"unit_of_measurement":"seconds","step":1,"mode":"slider"}}},
@@ -285,9 +402,11 @@ Not present in demo: `humidifier` action variety, `alert`, `image`, `input_datet
 "todo.get_items":{"fields":{"status":{"example":"needs_action","default":"needs_action","selector":{"select":{"options":["needs_action","completed"],"multiple":true}}}},"target":{…},"response":{"optional":false}}
 "lock.unlock":{"fields":{"code":{"example":1234,"selector":{"text":{"multiline":false,"multiple":false}}}},"target":{"entity":[{"domain":["lock"]}]}}
 ```
+
 Field keys: `required, selector, example, default, filter, collapsed, fields` (groups). Selector kinds: `entity,number,config_entry,text,select,theme,boolean,object,datetime,statistic,state,media,conversation_agent,color_rgb,color_temp,area,icon,duration,date,time`. `response.optional:false` (response-only) services: `weather.get_forecasts, calendar.get_events, todo.get_items, recorder.get_statistics, media_player.browse_media/search_media, schedule.get_schedule, file.read_file, assist_satellite.ask_question, ai_task.*`; `optional:true`: `script.<id>`, `conversation.process`. `target.entity[].supported_features` lists alternative feature bits (any-of).
 
 `render_template` (WS, any user):
+
 ```json
 {"id":2,"type":"render_template","template":"{{ states('sensor.outside_temperature') }}","timeout":3}
 → {"id":2,"type":"result","success":true,"result":null}
@@ -296,18 +415,21 @@ Field keys: `required, selector, example, default, filter, collapsed, fields` (g
 // template with domain-wide access: "listeners":{"all":false,"entities":[],"domains":["light"],"time":false}, result "5 lights on; {'a': 1}"
 // syntax error with report_errors:true: result null, events {"error":"TemplateSyntaxError: unexpected 'end of print statement'","level":"ERROR"} (emitted twice)
 ```
+
 `result` is a typed value (`15.6`, `41`) when the output parses as a literal, else string. Supports `variables`, `timeout`, `strict`, `report_errors`. REST `POST /api/template` → `200 text/plain` rendered string. The **render_template-based single-value tile** is a cheap alternative to `subscribe_entities` for derived values.
 `unsubscribe_events` works for it.
 
 ## 10. Registries / area mapping
 
 `config/entity_registry/list_for_display` → `{"entity_categories":{"0":"config","1":"diagnostic"},"entities":[…]}` with 99 entities (states has 135; **entities without unique_id are not here**, e.g. REST-set virtual ones). Keys: `ei` entity_id, `pl` platform, `lb` label ids, `di` device_id, `np` name-part kind (`"device"`/`"area"`; `np:"area"` = the entity name is its own, not device-derived), `tk` translation_key, `ec` entity_category index, `en` entity name (**only when it has its own name**, e.g. `person.test`→`"test"`), `ai` entity-own area_id, `dp` display precision, `hb` hidden (`true` only when hidden; disabled entities are excluded).
+
 ```json
 {"ei":"sensor.outside_temperature","pl":"demo","lb":[],"di":"418cf47b…","np":"device","dp":1}
 {"ei":"person.test","pl":"person","lb":[],"en":"test"}
 {"ei":"light.bed_light","pl":"demo","lb":[],"di":"2f87…","np":"device","tk":"bed_light","hb":true}           // after hidden_by=user
 {"ei":"light.ceiling_lights","pl":"demo","ai":"kitchen","lb":[],"di":"c1b3…","np":"area","en":"Zed"}      // after name="Zed", area_id=kitchen (device in living_room)
 ```
+
 Pristine demo: 3 areas (`bedroom`, `kitchen`, `living_room`; keys `aliases,area_id,floor_id,humidity_entity_id,icon,labels,name,picture,temperature_entity_id,created_at,modified_at`), 0 floors, **no entity and no device assigned to an area**, 62 devices. So any tile "area" grouping must handle "unassigned".
 Device registry entry (excerpt): `{"id":"c1b3…","area_id":"living_room","name":"Ceiling Lights","name_by_user":null,"manufacturer":null,"model":null,"disabled_by":null,"entry_type":null,"identifiers":[["demo","light_2"]],"config_entries":[…],"primary_config_entry":"…","via_device_id":null,"parent_device_id":null,"next_name_part":"area",…}`.
 Mapping rule verified: `effective_area = entity.ai ?? device(entity.di).area_id`. After setting device `c1b3…` → `living_room` and the entity override → `kitchen`, display list shows `ai:"kitchen"` while the device list shows `living_room`. Setting `area_id` on a nameless entity: `{"code":"invalid_info","message":"An entity without a name of its own cannot have an area of its own, set the area on its device instead"}`.
@@ -327,6 +449,7 @@ WS: ← {"type":"auth_required","ha_version":"2026.11.0"}
 WS non-auth first: → {"id":1,"type":"get_states"}
     ← {"type":"auth_invalid","message":"Auth message incorrectly formatted: not a valid option at 'id'. Got 1\nnot a valid value at 'type'. Got 'get_states'"}   (closed 1000)
 ```
+
 Note: the version (`ha_version`) is exposed pre-auth in `auth_required`. A good token yields `{"type":"auth_ok","ha_version":…}` (the script resolved on that).
 
 ## 12. Not verified / caveats

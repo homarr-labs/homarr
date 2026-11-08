@@ -379,8 +379,10 @@ export const smartHomeRouter = createTRPCRouter({
           },
         );
 
+        let announced = false;
         for await (const _ of queue) {
-          if (pendingChanged.size === 0 && pendingRemoved.size === 0) continue;
+          if (announced && pendingChanged.size === 0 && pendingRemoved.size === 0) continue;
+          announced = true;
           const patch: SmartHomeEntityPatch = { changed: [...pendingChanged.values()], removed: [...pendingRemoved] };
           pendingChanged.clear();
           pendingRemoved.clear();

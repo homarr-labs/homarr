@@ -262,6 +262,7 @@ export class HomeAssistantIntegration extends Integration implements ISmartHomeI
         for (const id of selection.entityIds ?? []) {
           if (!states.has(id)) pendingRemoved.add(id);
         }
+        if (pendingChanged.size === 0 && pendingRemoved.size === 0) onPatch({ changed: [], removed: [] });
         scheduleDrain();
       }
     } catch (error) {

@@ -84,9 +84,11 @@ export const useSmartHomeSnapshot = (
     if (!data || (patched.current.size === 0 && removed.current.size === 0)) return;
     const pendingRemoved = [...removed.current];
     if (!query.isFetching) removed.current.clear();
-    for (const entity of data.entities) {
-      const seen = patched.current.get(entity.id);
-      if (seen && seen.lastUpdated < entity.lastUpdated) patched.current.delete(entity.id);
+    const current = new Map(data.entities.map((entity) => [entity.id, entity]));
+    for (const [id, seen] of patched.current) {
+      const entity = current.get(id);
+      if (entity && seen.lastUpdated <= entity.lastUpdated) patched.current.delete(id);
+      if (!entity && !query.isFetching && seen.lastUpdated < data.updatedAt) patched.current.delete(id);
     }
     if (patched.current.size === 0 && pendingRemoved.length === 0) return;
     const merged = mergeSmartHomePatch(data, {

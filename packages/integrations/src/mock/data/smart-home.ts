@@ -105,7 +105,7 @@ export class SmartHomeMockService implements ISmartHomeIntegration {
     this.listeners.add(listener);
     this.startLive();
     const missing = (selection.entityIds ?? []).filter((id) => !this.entities.has(id));
-    if (initial.length > 0 || missing.length > 0) onPatch({ changed: initial, removed: missing });
+    onPatch({ changed: initial, removed: missing });
     await new Promise<void>((resolve) => {
       const stop = () => {
         this.listeners.delete(listener);
