@@ -6,11 +6,21 @@ export const ntfyEventSchema = z.object({
 
 // There are more properties, see: https://docs.ntfy.sh/subscribe/api/#json-message-format
 // Not all properties are required for this use case.
-export const ntfyNotificationSchema = z.object({
+const ntfySequenceSchema = z.object({
   id: z.string(),
   time: z.number(),
-  event: z.string(), // we only care about "message"
   topic: z.string(),
+  sequence_id: z.optional(z.string()),
+});
+
+export const ntfyNotificationSchema = ntfySequenceSchema.extend({
+  event: z.literal("message"),
   title: z.optional(z.string()),
   message: z.string(),
 });
+
+export const ntfyDeletionSchema = ntfySequenceSchema.extend({
+  event: z.literal("message_delete"),
+});
+
+export type NtfyNotification = z.infer<typeof ntfyNotificationSchema>;
