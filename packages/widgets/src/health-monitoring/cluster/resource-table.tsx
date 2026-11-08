@@ -50,11 +50,12 @@ export function ResourceTable({ type, data, widgetProps, order = "name" }: Resou
     () =>
       data.toSorted((left, right) => {
         if (order === "storage-risk") {
-          const a = resourcePercentage(left, "storage");
-          const b = resourcePercentage(right, "storage");
-          if (a === null && b !== null) return 1;
-          if (b === null && a !== null) return -1;
-          if (a !== null && b !== null && a !== b) return b - a;
+          const leftPercent = resourcePercentage(left, "storage");
+          const rightPercent = resourcePercentage(right, "storage");
+          if (leftPercent === null && rightPercent !== null) return 1;
+          if (rightPercent === null && leftPercent !== null) return -1;
+          if (leftPercent !== null && rightPercent !== null && leftPercent !== rightPercent)
+            return rightPercent - leftPercent;
         }
         return left.name.localeCompare(right.name);
       }),

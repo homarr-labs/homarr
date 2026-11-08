@@ -41,7 +41,7 @@ const MonitoringTooltipContent = ({ active, label, payload, formatter, showTotal
       });
     }
   }
-  const sorted = [...deduped.values()].toSorted((a, b) => b.value - a.value);
+  const sorted = [...deduped.values()].toSorted((left, right) => right.value - left.value);
   if (!sorted.length) return null;
 
   const rawTime = sorted[0]?.payload?.rawTime;

@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { BarChart } from "@mantine/charts";
 import { ActionIcon, Badge, Box, Group, SegmentedControl, Select, SimpleGrid, Stack, Text } from "@mantine/core";
 import { IconChevronLeft, IconChevronRight } from "@tabler/icons-react";
 
@@ -10,15 +9,13 @@ import { useByteFormatter } from "@homarr/settings";
 import { useI18n } from "@homarr/translation/client";
 import { zoomCompensatedSize } from "@homarr/ui";
 
+import { MonitoringComparisonChart } from "../../common/monitoring-comparison-chart";
 import { monitoringChartColors } from "../../common/monitoring-chart-colors";
 import type { WidgetComponentProps } from "../../definition";
 import { percentage } from "../display";
 import { useHealthBounds } from "../use-health-bounds";
 import { resourcePercentage } from "./resource-data";
 import { ResourceDialog, ResourceTable } from "./resource-table";
-import classes from "./cluster-advanced.module.css";
-
-const formatPercent = (value: number) => value.toFixed(1) + "%";
 
 type AdvancedView = "overview" | "workloads" | "storage";
 interface ClusterAdvancedProps {
@@ -163,8 +160,10 @@ function ClusterOverview({
   if (cpu !== null) cpuContext = t("clusterCores", { count: cores });
   let columns = 4;
   if (width < 600 && height >= 400) columns = 2;
-  const chartHeight = Math.max(80, chart.height || height - 180);
-  const capacity = Math.max(1, Math.floor((chartHeight - 50) / 56));
+  const compact = height < 250;
+  const chartHeight = Math.max(1, Math.floor(chart.height || height - 180));
+  let capacity = Math.max(1, Math.floor((chartHeight - 50) / 56));
+  if (chartHeight < 140) capacity = Math.max(1, Math.floor(chartHeight / 38));
   const pages = Math.max(1, Math.ceil(data.nodes.length / capacity));
   const currentPage = Math.min(page, pages - 1);
   const visible = data.nodes.slice(currentPage * capacity, (currentPage + 1) * capacity);
@@ -175,23 +174,27 @@ function ClusterOverview({
     return { name, cpu: resourcePercentage(node, "cpu"), memory: resourcePercentage(node, "memory") };
   });
   let labelWidth = 120;
+  let labelMaxLength = 22;
+  if (width < 500) labelMaxLength = 13;
   if (width < 500) labelWidth = 84;
   return (
-    <Stack gap={12} h="100%" miw={0} mih={0} style={{ overflow: "hidden" }}>
+    <Stack gap={8} h="100%" miw={0} mih={0} style={{ overflow: "hidden" }}>
       <SimpleGrid cols={columns} spacing="md" verticalSpacing="sm" style={{ flexShrink: 0 }}>
         <Summary
           label={tc("resource.node.name")}
           value={online.length + " / " + data.nodes.length}
           context={nodeContext}
           contextColor={nodeContextColor}
+          compact={compact}
         />
         <Summary
           label={t("clusterWorkloads")}
           value={running + " / " + workloads.length}
           context={t("clusterWorkloadCount", { active: running, total: workloads.length })}
+          compact={compact}
         />
-        <Summary label={t("cpu")} value={percentage(cpu)} context={cpuContext} />
-        <Summary label={t("memoryUsed")} value={memoryValue} context={memoryContext} />
+        <Summary label={t("cpu")} value={percentage(cpu)} context={cpuContext} compact={compact} />
+        <Summary label={t("memoryUsed")} value={memoryValue} context={memoryContext} compact={compact} />
       </SimpleGrid>
       <Group gap={8} justify="space-between" wrap="nowrap" style={{ flexShrink: 0 }}>
         <Text size="xs" fw={600} truncate>
@@ -238,48 +241,20 @@ function ClusterOverview({
       </Group>
       <Box ref={chart.ref} flex={1} miw={0} mih={0} style={{ overflow: "hidden" }}>
         {chartData.length > 0 && (
-          <BarChart
+          <MonitoringComparisonChart
             h={chartHeight}
             data={chartData}
-            dataKey="name"
-            orientation="vertical"
             series={[
               { name: "cpu", label: t("cpu"), color: monitoringChartColors.cpu },
               { name: "memory", label: t("memory"), color: monitoringChartColors.memory },
             ]}
-            withLegend
-            maxBarWidth={12}
-            fillOpacity={0.85}
-            className={classes.chart}
-            valueFormatter={formatPercent}
             withBarValueLabel={width >= 600}
-            valueLabelProps={{ position: "right", fontSize: 11, fill: "var(--mantine-color-text)" }}
-            xAxisProps={{
-              domain: [0, 100],
-              tickFormatter: formatPercent,
-              tick: { fontSize: 11, fill: "var(--mantine-color-dimmed)" },
-            }}
-            yAxisProps={{
-              width: labelWidth,
-              tick: { fontSize: 11, fill: "var(--mantine-color-dimmed)" },
-              tickFormatter: (value: string) => {
-                let length = 22;
-                if (width < 500) length = 13;
-                if (value.length > length) return value.slice(0, length - 1) + "…";
-                return value;
-              },
-            }}
-            textColor="var(--mantine-color-dimmed)"
-            gridColor="var(--mantine-color-default-border)"
-            gridAxis="x"
-            tickLine="none"
-            barChartProps={{
-              margin: { left: 0, right: 30, top: 0, bottom: 0 },
-              onClick: (state) => {
-                if (isEditMode || state.activeTooltipIndex === undefined || state.activeTooltipIndex === null) return;
-                const node = visible[Number(state.activeTooltipIndex)];
-                if (node) setSelectedId(node.id);
-              },
+            labelWidth={labelWidth}
+            labelMaxLength={labelMaxLength}
+            disabled={isEditMode}
+            onSelect={(index) => {
+              const node = visible[index];
+              if (node) setSelectedId(node.id);
             }}
           />
         )}
@@ -344,23 +319,29 @@ function Summary({
   value,
   context,
   contextColor = "dimmed",
+  compact = false,
 }: {
   label: string;
   value: string;
   context: string;
   contextColor?: string;
+  compact?: boolean;
 }) {
+  let valueSize = "xl";
+  if (compact) valueSize = "sm";
   return (
-    <Stack gap={3} miw={0}>
-      <Text size="xs" c="dimmed" truncate>
+    <Stack gap={3} miw={0} title={context}>
+      <Text size="xs" c={contextColor} truncate>
         {label}
       </Text>
-      <Text size="xl" fw={650} truncate style={{ fontVariantNumeric: "tabular-nums" }}>
+      <Text size={valueSize} fw={650} truncate style={{ fontVariantNumeric: "tabular-nums" }}>
         {value}
       </Text>
-      <Text size="xs" c={contextColor} truncate title={context}>
-        {context}
-      </Text>
+      {!compact && (
+        <Text size="xs" c={contextColor} truncate>
+          {context}
+        </Text>
+      )}
     </Stack>
   );
 }

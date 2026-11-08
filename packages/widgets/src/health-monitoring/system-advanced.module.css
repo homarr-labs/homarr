@@ -3,12 +3,6 @@
   overflow: hidden;
 }
 
-.chart {
-  --mantine-scale: 1;
-  min-width: 0;
-  zoom: var(--board-canvas-inverse-scale, 1);
-}
-
 .legendButton {
   display: inline-flex;
   align-items: center;

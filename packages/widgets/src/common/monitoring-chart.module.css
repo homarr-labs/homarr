@@ -77,3 +77,9 @@
   padding-top: 4px;
   padding-inline-start: 12px;
 }
+
+.comparisonChart {
+  --mantine-scale: 1;
+  min-width: 0;
+  zoom: var(--board-canvas-inverse-scale, 1);
+}

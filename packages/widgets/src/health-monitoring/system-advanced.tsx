@@ -1,7 +1,6 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { BarChart } from "@mantine/charts";
 import {
   ActionIcon,
   Badge,
@@ -22,6 +21,7 @@ import { useByteFormatter } from "@homarr/settings";
 import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";
 
 import { makeTooltipProps, MonitoringChartPanel, monitoringChartColors } from "../common/monitoring-chart";
+import { MonitoringComparisonChart } from "../common/monitoring-comparison-chart";
 import { useWidgetNow } from "../common/use-widget-now";
 import { percentage, pressureColor, temperature } from "./display";
 import type { HealthOptions } from "./display";
@@ -146,11 +146,14 @@ function Compare({
   const [inspectId, setInspectId] = useState("");
   let ordered = snapshots;
   if (attentionOnly) ordered = ordered.filter((snapshot) => needsAttention(snapshot, now));
-  if (sort === "cpu") ordered = ordered.toSorted((a, b) => (b.cpuPercent ?? -1) - (a.cpuPercent ?? -1));
-  if (sort === "memory") ordered = ordered.toSorted((a, b) => (b.memory?.percent ?? -1) - (a.memory?.percent ?? -1));
+  if (sort === "cpu") ordered = ordered.toSorted((left, right) => (right.cpuPercent ?? -1) - (left.cpuPercent ?? -1));
+  if (sort === "memory")
+    ordered = ordered.toSorted((left, right) => (right.memory?.percent ?? -1) - (left.memory?.percent ?? -1));
   if (sort === "attention")
-    ordered = ordered.toSorted((a, b) => Number(needsAttention(b, now)) - Number(needsAttention(a, now)));
-  const capacity = Math.max(1, Math.floor((height - 118) / 44));
+    ordered = ordered.toSorted((left, right) => Number(needsAttention(right, now)) - Number(needsAttention(left, now)));
+  const graphHeight = Math.max(1, Math.floor(height - 76));
+  let capacity = Math.max(1, Math.floor((height - 118) / 44));
+  if (graphHeight < 140) capacity = Math.max(1, Math.floor(graphHeight / 38));
   const pages = Math.max(1, Math.ceil(ordered.length / capacity));
   const currentPage = Math.min(page, pages - 1);
   const visible = ordered.slice(currentPage * capacity, (currentPage + 1) * capacity);
@@ -166,8 +169,11 @@ function Compare({
     series.push({ name: "memory", label: t("memory"), color: monitoringChartColors.memory });
   const inspect = visible.find((snapshot) => snapshot.system.id === inspectId) ?? visible[0];
   let labelWidth = 140;
-  if (width < 500) labelWidth = 104;
-  const graphHeight = Math.max(48, Math.floor(height - 88));
+  let labelMaxLength = 22;
+  if (width < 500) {
+    labelWidth = 104;
+    labelMaxLength = 15;
+  }
   return (
     <Stack h="100%" gap={8} miw={0} mih={0}>
       <Group gap={8} justify="space-between" wrap="nowrap">
@@ -208,45 +214,17 @@ function Compare({
         </Button>
       </Group>
       {visible.length > 0 && (
-        <BarChart
+        <MonitoringComparisonChart
           h={graphHeight}
           data={chartData}
-          dataKey="name"
-          orientation="vertical"
           series={series}
-          withLegend
-          maxBarWidth={12}
-          fillOpacity={0.8}
-          className={classes.chart}
           withBarValueLabel={width >= 600}
-          valueFormatter={percent}
-          valueLabelProps={{ position: "right", fontSize: 11, fill: "var(--mantine-color-text)" }}
-          xAxisProps={{
-            domain: [0, 100],
-            tickFormatter: percent,
-            tick: { fontSize: 11, fill: "var(--mantine-color-dimmed)" },
-          }}
-          yAxisProps={{
-            width: labelWidth,
-            tick: { fontSize: 11, fill: "var(--mantine-color-dimmed)" },
-            tickFormatter: (value: string) => {
-              let maximum = 22;
-              if (width < 500) maximum = 15;
-              if (value.length > maximum) return value.slice(0, maximum - 1) + "…";
-              return value;
-            },
-          }}
-          textColor="var(--mantine-color-dimmed)"
-          gridColor="var(--mantine-color-default-border)"
-          gridAxis="x"
-          tickLine="none"
-          barChartProps={{
-            margin: { left: 0, right: 32, top: 0, bottom: 0 },
-            onClick: (state) => {
-              if (isEditMode || state.activeTooltipIndex === undefined || state.activeTooltipIndex === null) return;
-              const snapshot = visible[Number(state.activeTooltipIndex)];
-              if (snapshot) onInspect(snapshot.system.id);
-            },
+          labelWidth={labelWidth}
+          labelMaxLength={labelMaxLength}
+          disabled={isEditMode}
+          onSelect={(index) => {
+            const snapshot = visible[index];
+            if (snapshot) onInspect(snapshot.system.id);
           }}
         />
       )}
@@ -458,10 +436,10 @@ function Storage({
   const [attentionOnly, setAttentionOnly] = useState(false);
   const all = snapshots
     .flatMap((snapshot) => snapshot.volumes.map((volume) => ({ snapshot, volume })))
-    .toSorted((a, b) => {
-      const healthDifference = Number(b.volume.health === "attention") - Number(a.volume.health === "attention");
+    .toSorted((left, right) => {
+      const healthDifference = Number(right.volume.health === "attention") - Number(left.volume.health === "attention");
       if (healthDifference !== 0) return healthDifference;
-      return (b.volume.percent ?? -1) - (a.volume.percent ?? -1);
+      return (right.volume.percent ?? -1) - (left.volume.percent ?? -1);
     });
   let rows = all;
   if (attentionOnly) rows = rows.filter(({ volume }) => volume.health === "attention" || (volume.percent ?? 0) >= 90);
@@ -674,7 +652,7 @@ function comparisonHistory(
       pointAt(time)[snapshot.system.id] = value;
     }
   }
-  return [...points.entries()].toSorted(([a], [b]) => a - b).map(([, point]) => point);
+  return [...points.entries()].toSorted(([leftTime], [rightTime]) => leftTime - rightTime).map(([, point]) => point);
 }
 
 function verdictColor(volume: HealthVolume) {
