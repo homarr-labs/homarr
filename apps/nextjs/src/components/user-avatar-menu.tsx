@@ -133,6 +133,12 @@ export const UserAvatarMenu = ({ children, availableUpdates, isDockerEnabled, bo
             <Menu.Item
               component={Link}
               href={`/manage/users/${session.data?.user.id}/general#header-customization`}
+              onNavigate={() => {
+                if (!window.location.pathname.endsWith(`/manage/users/${session.data?.user.id}/general`)) return;
+                requestAnimationFrame(() => {
+                  document.getElementById("header-customization")?.focus({ preventScroll: true });
+                });
+              }}
               leftSection={<IconLayoutNavbar size="1rem" />}
             >
               {t("customizeHeader")}

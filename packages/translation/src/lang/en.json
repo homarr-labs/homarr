@@ -6795,7 +6795,7 @@
             "header": {
               "title": "Header studio",
               "badge": "Personal",
-              "description": "Make the header your own. Select a control to change its appearance, position, or order. Changes apply only to your account.",
+              "description": "Customize the header for this user. Select a control to change its appearance, position, or order.",
               "device": {
                 "desktop": "Desktop",
                 "mobile": "Mobile"
