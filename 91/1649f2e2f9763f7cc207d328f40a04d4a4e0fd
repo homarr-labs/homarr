@@ -1,0 +1,78 @@
+apps/nextjs/src/app/[locale]/_client-providers/trpc.tsx
+  h_d6e478ca18e517 189-197
+packages/api/src/router/widgets/smart-home.ts
+  h_d6e478ca18e517 6-11,34-35,103-107,154-155,158,161,165-166,168,170,237,239,241-247,256,263-270,331,335-340
+packages/integrations/package.json
+  h_d6e478ca18e517 19
+packages/integrations/src/homeassistant/homeassistant-connection.ts
+  h_d6e478ca18e517 12,15-16,33,40,43,107-110,117,137,321,344,354,373-377,382,388,392-435,470-474,479,482,488,492,504-505,508,511-513,518-522
+packages/integrations/src/homeassistant/homeassistant-errors.ts
+  h_d6e478ca18e517 1-31
+packages/integrations/src/homeassistant/homeassistant-history.ts
+  h_d6e478ca18e517 18-24,26,37-38,40-45,53
+packages/integrations/src/homeassistant/homeassistant-integration.ts
+  h_d6e478ca18e517 3,5-6,19,29,33,48-49,67,153,165,172-173,185,230,236,240-243,256-257,332,335,339-354,423,429,435,444-445,449-459
+packages/integrations/src/homeassistant/homeassistant-normalize.ts
+  h_d6e478ca18e517 75-76,220
+packages/integrations/src/homeassistant/homeassistant-types.ts
+  h_d6e478ca18e517 27-35,42,50,60,150
+packages/integrations/src/interfaces/smart-home/smart-home-capabilities.ts
+  h_d6e478ca18e517 7,11-14,50-56
+packages/integrations/src/interfaces/smart-home/smart-home-integration.ts
+  h_d6e478ca18e517 3,17
+packages/integrations/src/interfaces/smart-home/smart-home-types.ts
+  h_d6e478ca18e517 107,111-114,151-163,174
+packages/integrations/src/mock/data/smart-home.ts
+  h_d6e478ca18e517 12,100,131,137,142-144
+packages/request-handler/src/smart-home.ts
+  h_d6e478ca18e517 17
+packages/translation/src/lang/en.json
+  h_d6e478ca18e517 3226
+packages/widgets/src/smart-home/_shared/use-smart-home.ts
+  h_d6e478ca18e517 70,79,84-86,91-95,97,112-119
+packages/widgets/src/smart-home/prototype/component.tsx
+  h_d6e478ca18e517 56,462,552-558
+packages/widgets/src/smart-home/prototype/configuration.tsx
+  h_d6e478ca18e517 341-345,353,362,374,425
+packages/widgets/src/smart-home/prototype/live.tsx
+  h_d6e478ca18e517 9,11,15,23,29-37,73-74,110,164,180-184,204,207,213-215,248,253-256,290,292,298,311-314,316,324-327,365-414,447-451,467-471,481-502,506-509,513,518-537,545-546,551-555,565-566,568-577,583-587,589,603-606,608-611,660-661,665-669,672-673,717-727,732-734,753-757,778,780,782-786,812,821-827,835-846,848-851,856-908,921-922,938-944,955,966-970,974-975,978-993,1001-1002,1006-1013,1015-1039,1042-1044,1048,1053
+packages/widgets/src/smart-home/prototype/semantics.ts
+  h_d6e478ca18e517 337-354,426,432
+packages/widgets/src/smart-home/prototype/store.ts
+  h_d6e478ca18e517 6-7,59-67
+packages/widgets/src/smart-home/prototype/types.ts
+  h_d6e478ca18e517 43,45-48,74-75,90,120
+packages/widgets/src/smart-home/prototype/variants/c/controls.tsx
+  h_d6e478ca18e517 3,63,124,134,155,214,221,227,234,250-252,262,291,303,321,324-325,327
+packages/widgets/src/smart-home/prototype/variants/c/detail.tsx
+  h_d6e478ca18e517 6,9,34,37,39,41,44,147-157,159,162-164,171,195-197,201-202,206
+packages/widgets/src/smart-home/prototype/variants/c/spark.tsx
+  h_d6e478ca18e517 1-2,4,13-16,19-26,36-52
+packages/widgets/src/smart-home/prototype/variants/c/styles.module.css
+  h_d6e478ca18e517 709-717,778-787
+packages/widgets/src/smart-home/prototype/variants/c/tile.tsx
+  h_d6e478ca18e517 4,43-47
+packages/widgets/src/smart-home/prototype/variants/e/controls.tsx
+  h_d6e478ca18e517 5,7,13-14,47-48,62,69-70,85,93-94,96,142-144,147,159,161,175,179-180,192-195,232-236,276,298-302,328-332,334-343,369-371,375-376,380-381,550,563,582,608,626,639,644,650-653,655-667,677
+packages/widgets/src/smart-home/prototype/variants/e/detail-panel.tsx
+  h_d6e478ca18e517 23,167-168,172,181,183
+packages/widgets/src/smart-home/prototype/variants/e/detail-trigger.tsx
+  h_d6e478ca18e517 5,104-111
+packages/widgets/src/smart-home/prototype/variants/e/entity-controls.tsx
+  h_d6e478ca18e517 53,73,128-131,172-178,182,185-187,191,213,239-244,335-339,341-344,346,1081-1083,1123,1125,1129,1131,1133-1135,1159-1164,1174,1183-1188,1383-1389
+packages/widgets/src/smart-home/prototype/variants/e/history.ts
+  h_d6e478ca18e517 1-22
+packages/widgets/src/smart-home/prototype/variants/e/styles.module.css
+  h_d6e478ca18e517 255-259,1653,1656,1665-1669
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "911649f2e2f9763f7cc207d328f40a04d4a4e0fd",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
