@@ -4,7 +4,7 @@ export const parseThemeLength = (value: unknown) => {
   if (!match) return null;
   const number = Number(match[1]);
   if (!Number.isFinite(number)) return null;
-  return { number, unit: match[2] ?? "" };
+  return { number, unit: (match[2] ?? "").toLowerCase() };
 };
 
 export const themeLengthPixels = (value: unknown) => {
