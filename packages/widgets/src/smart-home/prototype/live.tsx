@@ -549,6 +549,17 @@ class SharedActionStore {
       failure = { error };
     }
 
+    const confirmed = this.confirmed.get(entityId);
+    if (
+      confirmed &&
+      (!step.requiresFresh || changedSince(confirmed, step.base)) &&
+      step.intent.matches(confirmed, step.base, step.contextId)
+    ) {
+      // Returning to an already-confirmed command need not produce another state change.
+      for (const queued of this.steps.get(entityId) ?? []) {
+        if (queued.status === "queued" && sameTarget(queued.command, step.command)) queued.requiresFresh = false;
+      }
+    }
     this.executing.delete(entityId);
     if (!this.steps.get(entityId)?.includes(step)) {
       this.sendNext(entityId);
