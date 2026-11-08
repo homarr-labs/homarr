@@ -1,5 +1,5 @@
 import { useCallback, useMemo } from "react";
-import { Grid, NumberInput, Select, Stack } from "@mantine/core";
+import { Grid, Input, NumberInput, Select, Stack } from "@mantine/core";
 import { z } from "zod/v4";
 
 import { useCurrentLayout, useRequiredBoard } from "@homarr/boards/context";
@@ -135,13 +135,19 @@ export const ItemMoveModal = createModal<InnerProps>(({ actions, innerProps }) =
         values.xOffset === entry.xOffset &&
         values.yOffset === entry.yOffset &&
         (values.width !== entry.width || values.height !== entry.height);
-      if (
-        isResizeOnly &&
-        targetPlacements.some(
-          (placement) => placement.type === "section" && doGridPlacementsOverlap(nextPlacement, placement),
-        )
-      ) {
-        form.setFieldError(values.width !== entry.width ? "width" : "height", tMoveResize("sizeOverlap"));
+      const overlappingContainers = targetPlacements.filter(
+        (placement) => placement.type === "section" && doGridPlacementsOverlap(nextPlacement, placement),
+      );
+      if (isResizeOnly && overlappingContainers.length > 0) {
+        const widthCausesOverlap = overlappingContainers.some(
+          (placement) => placement.x >= entry.xOffset + entry.width || placement.x + placement.w <= entry.xOffset,
+        );
+        const heightCausesOverlap = overlappingContainers.some(
+          (placement) => placement.y >= entry.yOffset + entry.height || placement.y + placement.h <= entry.yOffset,
+        );
+        if (widthCausesOverlap) form.setFieldError("width", tMoveResize("sizeOverlap"));
+        if (heightCausesOverlap) form.setFieldError("height", tMoveResize("sizeOverlap"));
+        if (!widthCausesOverlap && !heightCausesOverlap) form.setFieldError("size", tMoveResize("sizeOverlap"));
         return;
       }
 
@@ -241,6 +247,7 @@ export const ItemMoveModal = createModal<InnerProps>(({ actions, innerProps }) =
             />
           </Grid.Col>
         </Grid>
+        {form.errors.size && <Input.Error role="alert">{form.errors.size}</Input.Error>}
         <ModalFormFooter onCancel={actions.closeModal} />
       </Stack>
     </form>

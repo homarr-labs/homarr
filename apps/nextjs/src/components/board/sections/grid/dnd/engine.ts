@@ -116,7 +116,8 @@ export const previewGridResize = <TPlacement extends GridPlacement>(
   const constraints = getResizeConstraints(input, grid);
   const requested = resizePlacement(active, input.direction, input, constraints, grid);
   if (!requested) return rejected(transaction, { code: "resize-constraints" });
-  const resized = clampResizeAroundContainers(active, requested, grid.placements);
+  const resized = clampResizeAroundContainers(active, requested, grid.placements, constraints);
+  if (!resized) return rejected(transaction, { code: "resize-constraints" });
 
   const preview = cloneGridState(transaction.snapshot);
   const previewGrid = getGrid(preview, grid.id);
@@ -353,7 +354,9 @@ const clampResizeAroundContainers = <TPlacement extends GridPlacement>(
   active: TPlacement,
   requested: TPlacement,
   placements: readonly TPlacement[],
-): TPlacement => {
+  constraints: ResolvedResizeConstraints,
+): TPlacement | null => {
+  if (requested.w < constraints.minWidth || requested.h < constraints.minHeight) return null;
   const obstacles = placements.filter((placement) => placement.id !== active.id && isContainerPlacement(placement));
   const collides = (candidate: TPlacement) =>
     obstacles.some((obstacle) => doGridPlacementsOverlap(candidate, obstacle));
@@ -366,9 +369,22 @@ const clampResizeAroundContainers = <TPlacement extends GridPlacement>(
   const horizontalGrowth = growsWest + growsEast;
   const verticalGrowth = growsNorth + growsSouth;
 
+  // Only obstacle edges can improve the largest non-overlapping candidate.
+  // Keep the search independent of the distance travelled by the pointer.
+  const columnCuts = new Set([0, horizontalGrowth]);
+  const rowCuts = new Set([0, verticalGrowth]);
+  for (const obstacle of obstacles) {
+    if (growsWest > 0) columnCuts.add(clamp(obstacle.x + obstacle.w - requested.x, 0, horizontalGrowth));
+    if (growsEast > 0) columnCuts.add(clamp(requested.x + requested.w - obstacle.x, 0, horizontalGrowth));
+    if (growsNorth > 0) rowCuts.add(clamp(obstacle.y + obstacle.h - requested.y, 0, verticalGrowth));
+    if (growsSouth > 0) rowCuts.add(clamp(requested.y + requested.h - obstacle.y, 0, verticalGrowth));
+  }
+
+  const sortedColumnCuts = [...columnCuts].toSorted((first, second) => first - second);
+  const sortedRowCuts = [...rowCuts].toSorted((first, second) => first - second);
   let best: TPlacement | null = null;
-  for (let cutRows = 0; cutRows <= verticalGrowth; cutRows += 1) {
-    for (let cutColumns = 0; cutColumns <= horizontalGrowth; cutColumns += 1) {
+  for (const cutRows of sortedRowCuts) {
+    for (const cutColumns of sortedColumnCuts) {
       const cutWest = Math.min(growsWest, cutColumns);
       const cutEast = Math.min(growsEast, cutColumns);
       const cutNorth = Math.min(growsNorth, cutRows);
@@ -380,12 +396,12 @@ const clampResizeAroundContainers = <TPlacement extends GridPlacement>(
         w: requested.w - cutWest - cutEast,
         h: requested.h - cutNorth - cutSouth,
       };
-      if (collides(candidate)) continue;
+      if (candidate.w < constraints.minWidth || candidate.h < constraints.minHeight || collides(candidate)) continue;
       if (!best || candidate.w * candidate.h > best.w * best.h) best = candidate;
       break;
     }
   }
-  return best ?? requested;
+  return best;
 };
 
 const evaluateMoveGuards = <TPlacement extends GridPlacement>(
