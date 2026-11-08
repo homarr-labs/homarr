@@ -1,0 +1,185 @@
+docs/research/home-assistant/domains.md
+  s_0ec53e873c6577::t_28ca63e6ac223a 1-474
+docs/research/home-assistant/homarr-widget-patterns.md
+  s_09aacd6deb8474::t_7f71859135b1bd 1-104
+docs/research/home-assistant/live-verification.md
+  s_0d5ebe04df8230::t_9baea497455adb 1-339
+docs/research/home-assistant/tooling.md
+  s_5053138a613c4a::t_c7a8eaf503d67b 1-90
+docs/research/home-assistant/ux-and-demand.md
+  s_ebf6b3a1878100::t_493416ba3f007d 1-153
+docs/research/home-assistant/visual-references.md
+  s_0d5ebe04df8230::t_75f458887b4e3b 1-176
+packages/api/src/test/mcp.spec.ts
+  s_76d62b5979a5eb::t_863be6cbf72249 83,86-88,136
+packages/definitions/src/widget-integration-map.ts
+  s_7f0b7ec7fe7632::t_a04cfd09a17b30 138-142
+packages/integrations/src/homeassistant/homeassistant-actions.ts
+  s_e7dfcafb71636b::t_65ab9086d9be43 1-203
+packages/integrations/src/homeassistant/homeassistant-connection.ts
+  s_76d62b5979a5eb::t_b49a48231eb7cb 1-526
+packages/integrations/src/homeassistant/homeassistant-types.ts
+  s_e7dfcafb71636b::t_3631a7cbfcf0cd 26-145
+packages/integrations/src/mock/data/smart-home.ts
+  s_76d62b5979a5eb::t_9e29b2d1090278 2-20,23-30,32-118,121-144,146-175
+packages/integrations/src/mock/mock-integration.ts
+  s_79e0b5a62c2cad::t_ca75064a6d4c3d 141-146
+packages/integrations/test/home-assistant-normalize.spec.ts
+  s_5835f68b3e8471::t_043ff4e1c4b8c0 1,3,5-21,23-24,26-40
+packages/request-handler/src/smart-home.ts
+  s_76d62b5979a5eb::t_c9622411fae787 3-8,12,14-26,28-41,43-46,48-50,52-55,57-67
+packages/translation/src/lang/en.json
+  s_2ddeb5cd489adf::t_d6db1a836b9b2c 3092-3236
+packages/widgets/src/definition.ts
+  s_d54f583ea498ba::t_0766c57e2acc7d 114
+packages/widgets/src/smart-home/_inputs/catalog-index.ts
+  s_76d62b5979a5eb::t_9b78c3ea676574 1-203
+packages/widgets/src/smart-home/_inputs/index.ts
+  s_76d62b5979a5eb::t_c3da02a02a8ada 1-29
+packages/widgets/src/smart-home/_inputs/picker-shared.tsx
+  s_76d62b5979a5eb::t_72c0937a03d20e 1-116
+packages/widgets/src/smart-home/_inputs/smart-home-area-picker.tsx
+  s_76d62b5979a5eb::t_39632c83dd75c7 1-112
+packages/widgets/src/smart-home/_inputs/smart-home-entity-picker.tsx
+  s_76d62b5979a5eb::t_ada3e050afd213 1-230
+packages/widgets/src/smart-home/_inputs/use-smart-home-catalog.ts
+  s_76d62b5979a5eb::t_72cfdda6a826ab 1-29
+packages/widgets/src/smart-home/_inputs/use-smart-home-choices.ts
+  s_76d62b5979a5eb::t_4f4777ad0e0e50 1-36
+packages/widgets/src/smart-home/prototype/configuration.tsx
+  s_a914801abe2ec7::t_b9194968c07e43 1-431
+packages/widgets/src/smart-home/prototype/inline-editor.tsx
+  s_a914801abe2ec7::t_5807f5d85175f6 1-202
+packages/widgets/src/smart-home/prototype/variants/c/index.tsx
+  s_2502f32c0fd443::t_e42fc29f8706f3 1-340
+packages/widgets/src/smart-home/prototype/variants/c/layout.ts
+  s_2502f32c0fd443::t_43fba4d8c27fcb 1-25
+packages/widgets/src/smart-home/prototype/variants/c/list.tsx
+  s_2502f32c0fd443::t_b9997b24aaa4c1 1-127
+packages/widgets/src/smart-home/prototype/variants/c/spark.tsx
+  s_2502f32c0fd443::t_9115a89eae7175 1-44
+packages/widgets/src/smart-home/prototype/variants/e/detail-trigger.tsx
+  s_76d62b5979a5eb::t_90d4549c10823d 1-107
+packages/widgets/src/smart-home/prototype/variants/e/index.tsx
+  s_d54f583ea498ba::t_bf6d37a4e44b35 1-39
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "c750a472b2fb4d5e008b3f1d2e1c629c5b684c53",
+  "prompts": {},
+  "sessions": {
+    "s_09aacd6deb8474": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "c9d89d4f-df18-4de1-88cb-43ebeb4b285b",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_0d5ebe04df8230": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "2da7a1c8-5cd2-4994-97c5-77261a80d30a",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_0ec53e873c6577": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "c7be1e01-4627-4bf7-8db7-dbdc91188528",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_2502f32c0fd443": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "83788e58-a169-473a-9f7d-988ab2215e38",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_2ddeb5cd489adf": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "c570c9e4-d292-40fb-997f-fda26c043ad0",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_5053138a613c4a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "45e21b6b-5882-4605-985c-266d161699b0",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_5835f68b3e8471": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "7600bf01-950e-4c0f-af17-b0e96e4c9476",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_76d62b5979a5eb": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "a8ab8331-e803-4d17-a224-4724e87b0896",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_79e0b5a62c2cad": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "769f1931-85af-4890-80d9-f54b51786eb0",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_7f0b7ec7fe7632": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "d3613b15-5d5c-43cc-b94c-2c694452d1e8",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_a914801abe2ec7": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b2f67ca3-e9ca-4d10-993c-593aea7200bd",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_d54f583ea498ba": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "9ae07aa3-96ba-4ff2-8ab2-79a0afb537ea",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_e7dfcafb71636b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "29be408c-5ba1-400c-850a-844a20fb19b4",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_ebf6b3a1878100": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "065489b7-6f77-4dfe-84b7-b0cca63dbda1",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
