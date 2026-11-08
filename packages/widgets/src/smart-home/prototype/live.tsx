@@ -324,7 +324,6 @@ interface Step {
   command: SmartHomeAction;
   contextId?: string;
   observations: Map<string, SmartHomeEntity>;
-  deadline: number;
   intent: Intent;
   base: number;
   requiresFresh: boolean;
@@ -414,6 +413,8 @@ const isTransition = (entity: SmartHomeEntity, command: SmartHomeAction) => {
 
 class SharedActionStore {
   private steps = new Map<string, Step[]>();
+  // Display expiry must not release an unresolved service request.
+  private executing = new Set<string>();
   private confirmed = new Map<string, SmartHomeEntity>();
   private errors = new Map<string, TrackedError>();
   private overlays = new Map<string, CachedOverlay>();
@@ -520,7 +521,6 @@ class SharedActionStore {
       action,
       command,
       observations: new Map(),
-      deadline: Date.now() + SETTLE_TIMEOUT_MS,
       intent,
       base: this.confirmed.get(entityId)?.lastUpdated ?? base.lastUpdated,
       requiresFresh,
@@ -531,7 +531,6 @@ class SharedActionStore {
       resolve,
     };
     this.setSteps(entityId, [...remaining, step]);
-    step.timer = setTimeout(() => this.expire(entityId, step), SETTLE_TIMEOUT_MS);
     this.emit();
     this.sendNext(entityId);
     return promise;
@@ -540,6 +539,8 @@ class SharedActionStore {
   private async send(entityId: string, step: Step) {
     step.base = Math.max(step.base, this.confirmed.get(entityId)?.lastUpdated ?? 0);
     step.status = "sent";
+    this.executing.add(entityId);
+    step.timer = setTimeout(() => this.expire(entityId, step), SETTLE_TIMEOUT_MS);
     let failure: { error: unknown } | null = null;
     try {
       const receipt = await step.context.execute(entityId, step.command);
@@ -548,7 +549,11 @@ class SharedActionStore {
       failure = { error };
     }
 
-    if (!this.steps.get(entityId)?.includes(step)) return;
+    this.executing.delete(entityId);
+    if (!this.steps.get(entityId)?.includes(step)) {
+      this.sendNext(entityId);
+      return;
+    }
     if (step.superseded) {
       this.removeStep(entityId, step);
       this.settle(step, "superseded");
@@ -566,14 +571,10 @@ class SharedActionStore {
   }
 
   private sendNext(entityId: string) {
+    if (this.executing.has(entityId)) return;
     const steps = this.steps.get(entityId);
-    if (steps?.some((candidate) => candidate.status === "sent")) return;
     const next = steps?.find((candidate) => candidate.status === "queued");
     if (!next) return;
-    if (Date.now() >= next.deadline) {
-      this.expire(entityId, next);
-      return;
-    }
     void this.send(entityId, next);
   }
 

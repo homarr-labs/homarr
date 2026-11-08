@@ -184,6 +184,8 @@ export class HomeAssistantIntegration extends Integration implements ISmartHomeI
     const pendingRemoved = new Set<string>();
     const present = new Set<string>();
     let watched: ReadonlySet<string> | null = null;
+    let states: ReadonlyMap<string, RawEntityState> | null = null;
+    let areas: SmartHomeArea[] = [];
     let lookup = createRegistryLookup(null);
     let draining = false;
     let settled = false;
@@ -224,7 +226,13 @@ export class HomeAssistantIntegration extends Integration implements ISmartHomeI
 
     const unsubscribe = connection.subscribeStates({
       onChange: (change) => {
-        if (!watched) return;
+        if (!watched || !states || settled) return;
+        try {
+          watched = new Set([...resolveSnapshotIds(states, lookup, areas, selection), ...(selection.entityIds ?? [])]);
+        } catch (error) {
+          settle(error);
+          return;
+        }
         for (const raw of change.changed) {
           if (!watched.has(raw.entityId)) continue;
           present.add(raw.entityId);
@@ -232,7 +240,7 @@ export class HomeAssistantIntegration extends Integration implements ISmartHomeI
           pendingRemoved.delete(raw.entityId);
         }
         for (const id of change.removed) {
-          if (!watched.has(id)) continue;
+          if (!present.has(id) && !watched.has(id)) continue;
           present.delete(id);
           pendingChanged.delete(id);
           pendingRemoved.add(id);
@@ -249,10 +257,12 @@ export class HomeAssistantIntegration extends Integration implements ISmartHomeI
     signal.addEventListener("abort", onAbort, { once: true });
 
     try {
-      const [states, registry] = await Promise.all([connection.getStatesAsync(), connection.getRegistryAsync()]);
+      const [initialStates, registry] = await Promise.all([connection.getStatesAsync(), connection.getRegistryAsync()]);
       if (!settled) {
+        states = initialStates;
         lookup = createRegistryLookup(registry);
-        const ids = resolveSnapshotIds(states, lookup, normalizeAreas(registry), selection);
+        areas = normalizeAreas(registry);
+        const ids = resolveSnapshotIds(states, lookup, areas, selection);
         watched = new Set([...ids, ...(selection.entityIds ?? [])]);
         ids.forEach((id) => present.add(id));
         for (const id of ids) {
