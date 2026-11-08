@@ -333,6 +333,51 @@ jobs:
         run: |
           gh release edit --repo "$GITHUB_REPOSITORY" "$NEXT_VERSION" --draft=false
 
+      - name: Publish major and minor version aliases
+        if: env.DEPLOY_LATEST == 'true'
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          stable_version='^v(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$'
+          if [[ ! "$NEXT_VERSION" =~ $stable_version ]]; then
+            echo "Skipping version aliases for non-stable version ${NEXT_VERSION}." >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          major="${BASH_REMATCH[1]}"
+          minor="${BASH_REMATCH[2]}"
+
+          published_versions="$(gh api --paginate "repos/${GITHUB_REPOSITORY}/releases?per_page=100" \
+            --jq '.[] | select(.draft == false and .prerelease == false) | .tag_name')"
+          if ! grep --fixed-strings --line-regexp --quiet -- "$NEXT_VERSION" <<< "$published_versions"; then
+            echo "Skipping version aliases until ${NEXT_VERSION} is a published stable release." >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+
+          image_tags=()
+          for alias in "v${major}" "v${major}.${minor}"; do
+            newest="$NEXT_VERSION"
+            while IFS= read -r published_version; do
+              if [[ ! "$published_version" =~ $stable_version ]]; then
+                continue
+              fi
+              if [[ "$alias" != "v${BASH_REMATCH[1]}" && "$alias" != "v${BASH_REMATCH[1]}.${BASH_REMATCH[2]}" ]]; then
+                continue
+              fi
+              newest="$(printf '%s\n' "$newest" "$published_version" | LC_ALL=C sort --version-sort | tail -n 1)"
+            done <<< "$published_versions"
+
+            if [[ "$newest" == "$NEXT_VERSION" ]]; then
+              image_tags+=(-t "${GHCR_REPO}:${alias}")
+            else
+              echo "Preserving ${alias}: a newer stable release ${newest} is already published." >> "$GITHUB_STEP_SUMMARY"
+            fi
+          done
+
+          if (( ${#image_tags[@]} > 0 )); then
+            docker buildx imagetools create "${image_tags[@]}" "${GHCR_REPO}:${NEXT_VERSION}"
+          fi
+
       - name: Verify dev / next synchronization
         if: needs.release.outputs.skipped == 'false' && needs.release.outputs.upstream_sync != 'success'
         run: |
