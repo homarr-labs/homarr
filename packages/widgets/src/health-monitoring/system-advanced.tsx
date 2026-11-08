@@ -250,6 +250,7 @@ function Compare({
         <Button
           size="compact-xs"
           variant="light"
+          c="var(--mantine-color-text)"
           disabled={isEditMode || !inspect}
           onClick={() => {
             if (inspect) onInspect(inspect.system.id);

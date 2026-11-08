@@ -19,6 +19,7 @@ import { useLocalStorage } from "@mantine/hooks";
 import { IconArrowDown, IconArrowUp, IconArrowsMaximize, IconSettings } from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";
+import { useCurrentLocale } from "@homarr/translation/client";
 
 import { toScopedStorageVolumeValue } from "../../filter-storage-volumes";
 import { WidgetCardShell } from "../../widget-card-shell";
@@ -33,6 +34,7 @@ export function HealthMonitoringPreview({
   initialScenario?: string;
   baselineBoard: RouterOutputs["board"]["getBoardByName"];
 }) {
+  const locale = useCurrentLocale();
   const [scenario, setScenario] = useState(initialScenario);
   const [size, setSize] = useState("1100");
   const [height, setHeight] = useState("520");
@@ -112,6 +114,9 @@ export function HealthMonitoringPreview({
             samples.
           </Text>
         </Stack>
+        <Button component="a" href={`/${locale}/boards/dashboard.preview`} size="xs" variant="default">
+          Open fixture dashboard
+        </Button>
       </Group>
       <Group gap="md" align="flex-end">
         <Select

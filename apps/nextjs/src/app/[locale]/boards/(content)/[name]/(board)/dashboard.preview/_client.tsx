@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import type { ReactNode } from "react";
 import { QueryClient, QueryClientProvider, hashKey } from "@tanstack/react-query";
 import { TRPCClientError } from "@trpc/client";
 import type { TRPCLink } from "@trpc/client";
@@ -11,6 +12,7 @@ import type { AppRouter, RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { IntegrationProvider } from "@homarr/auth/client";
 import { BoardProvider } from "@homarr/boards/context";
+import { DemoReadOnlyProvider } from "@homarr/widgets/demo-read-only";
 import { getHealthPreviewData } from "@homarr/widgets/health-monitoring/rework/fixtures";
 import { seedFixtureQueries } from "@homarr/widgets/health-monitoring/rework/runtime";
 
@@ -56,15 +58,7 @@ function createFixtureLink(cache: QueryClient): TRPCLink<AppRouter> {
       });
 }
 
-export function HealthDashboardClient({
-  board,
-  layoutId,
-  viewportWidth,
-}: {
-  board: Board;
-  layoutId: string;
-  viewportWidth: number;
-}) {
+export function HealthDashboardFixtureProvider({ board, children }: { board: Board; children: ReactNode }) {
   const [startedAt] = useState(Date.now);
   const [reading, setReading] = useState(0);
   const [cache] = useState(() => {
@@ -96,11 +90,27 @@ export function HealthDashboardClient({
     <QueryClientProvider client={cache}>
       <clientApi.Provider client={client} queryClient={cache}>
         <IntegrationProvider integrations={permissions}>
-          <BoardProvider initialBoard={board} initialLayoutId={layoutId} initialViewportWidth={viewportWidth}>
-            <ClientBoard />
-          </BoardProvider>
+          <DemoReadOnlyProvider value>{children}</DemoReadOnlyProvider>
         </IntegrationProvider>
       </clientApi.Provider>
     </QueryClientProvider>
+  );
+}
+
+export function HealthDashboardClient({
+  board,
+  layoutId,
+  viewportWidth,
+}: {
+  board: Board;
+  layoutId: string;
+  viewportWidth: number;
+}) {
+  return (
+    <HealthDashboardFixtureProvider board={board}>
+      <BoardProvider initialBoard={board} initialLayoutId={layoutId} initialViewportWidth={viewportWidth}>
+        <ClientBoard />
+      </BoardProvider>
+    </HealthDashboardFixtureProvider>
   );
 }
