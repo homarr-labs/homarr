@@ -12,6 +12,7 @@ import {
 } from "@homarr/custom-widgets/core";
 
 import { permissionRequiredProcedure } from "../../trpc";
+import { parseCustomWidgetAuthoringInput } from "./authoring-validation";
 import { getCustomWidgetDefinitionStateFingerprint, updateCustomWidgetDefinition } from "./definition-update";
 import { assertSecretSources, hasSameSecretBinding } from "./secret-policy";
 import { assertCustomWidgetIntegrationBindings } from "./source-resolver";
@@ -45,10 +46,12 @@ async function getWorkshopUpdate(db: Database, input: z.infer<typeof updateInput
   const unknownSource = Object.keys(input.sources).find((id) => !upstream.sources[id]);
   if (unknownSource) throw new TRPCError({ code: "BAD_REQUEST", message: `Unknown widget source '${unknownSource}'` });
   const preserved = preserveWorkshopSourceBindings(current, upstream);
-  const widget = customWidgetDefinitionSchema.parse({
-    ...preserved,
-    sources: applyCustomWidgetSourceSetup(preserved.sources, input.sources),
-  });
+  const widget = parseCustomWidgetAuthoringInput(() =>
+    customWidgetDefinitionSchema.parse({
+      ...preserved,
+      sources: applyCustomWidgetSourceSetup(preserved.sources, input.sources),
+    }),
+  );
   const stateFingerprint = getCustomWidgetDefinitionStateFingerprint(stored, stored.secrets);
   // Bind approval to the exact publisher content and local definition/credential state.
   // Source overrides are explicit administrator configuration, never publisher-controlled bindings.
