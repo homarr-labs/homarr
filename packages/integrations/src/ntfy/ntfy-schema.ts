@@ -1,5 +1,9 @@
 import { z } from "zod/v4";
 
+export const ntfyEventSchema = z.object({
+  event: z.string(),
+});
+
 // There are more properties, see: https://docs.ntfy.sh/subscribe/api/#json-message-format
 // Not all properties are required for this use case.
 export const ntfyNotificationSchema = z.object({

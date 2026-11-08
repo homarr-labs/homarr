@@ -6,7 +6,7 @@ import type { IntegrationTestingInput } from "../base/integration";
 import type { TestingResult } from "../base/test-connection/test-connection-service";
 import type { Notification } from "../interfaces/notifications/notification-types";
 import type { INotificationsIntegration } from "../interfaces/notifications/notifications-integration";
-import { ntfyNotificationSchema } from "./ntfy-schema";
+import { ntfyEventSchema, ntfyNotificationSchema } from "./ntfy-schema";
 
 export class NTFYIntegration extends Integration implements INotificationsIntegration {
   public async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
@@ -44,10 +44,10 @@ export class NTFYIntegration extends Integration implements INotificationsIntegr
           if (line.length === 0) return null;
 
           const json = JSON.parse(line) as unknown;
-          const parsed = await ntfyNotificationSchema.parseAsync(json);
-          if (parsed.event === "message") return parsed;
-          // ignore non-event messages
-          else return null;
+          const { event } = await ntfyEventSchema.parseAsync(json);
+          if (event !== "message") return null;
+
+          return await ntfyNotificationSchema.parseAsync(json);
         }),
     );
 
