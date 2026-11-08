@@ -3223,6 +3223,7 @@
         "actionFailed": "Could not control {name}",
         "actionUnconfirmed": "{name} did not confirm the change",
         "unconfirmed": "Not confirmed; showing latest Home Assistant state",
+        "selectionLimit": "This selection is too large. Select at most 200 individual entities, 50 rooms and 400 exclusions per widget.",
         "unknownError": "Home Assistant did not accept the action"
       },
       "inline": {

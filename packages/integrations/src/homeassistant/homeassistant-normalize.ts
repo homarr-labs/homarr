@@ -72,6 +72,8 @@ const domainAttributes = (domain: string, attributes: Record<string, unknown>): 
         fanModes: texts(attributes.fan_modes),
         currentHumidity: number(attributes.current_humidity),
         targetHumidity: number(attributes.humidity),
+        minHumidity: number(attributes.min_humidity),
+        maxHumidity: number(attributes.max_humidity),
       };
     case "water_heater":
       return {
@@ -215,6 +217,7 @@ export const normalizeEntity = (
     unit: text(attributes.unit_of_measurement) ?? null,
     lastChanged: raw.lastChanged,
     lastUpdated: raw.lastUpdated,
+    contextId: raw.contextId,
     attributes: compact({
       supportedFeatures: number(attributes.supported_features),
       batteryLevel: number(attributes.battery_level),

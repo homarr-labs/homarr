@@ -3,6 +3,12 @@ import { TRPCError } from "@trpc/server";
 
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import { createIntegrationAsync } from "@homarr/integrations/factory";
+import {
+  HomeAssistantCommandError,
+  SmartHomeActionNotSupportedError,
+  SmartHomeEntityNotFoundError,
+} from "@homarr/integrations/home-assistant/errors";
+import { SmartHomeSelectionLimitError } from "@homarr/integrations/types";
 import type { SmartHomeAction, SmartHomeEntity, SmartHomeEntityPatch } from "@homarr/integrations/types";
 import {
   smartHomeCatalogRequestHandler,
@@ -25,7 +31,8 @@ const entityIdSchema = z
 const selectionSchema = z.object({
   entityIds: z.array(entityIdSchema).max(200).default([]),
   areaIds: z.array(z.string().max(255)).max(50).default([]),
-  domains: z.array(z.string().max(64)).max(50).default([]),
+  domains: z.array(z.string().max(64)).max(400).default([]),
+  excludedEntityIds: z.array(entityIdSchema).max(400).default([]),
 });
 
 const actionTypes = [
@@ -93,6 +100,11 @@ const actionInputSchema = z.object({
   code: z.string().max(32).optional(),
 });
 
+const protectedActionInputSchema = actionInputSchema.extend({
+  action: z.enum(["lock", "unlock", "openLatch", "alarmArm", "alarmDisarm"]),
+  code: z.string().min(1).max(32),
+});
+
 type ActionInput = z.infer<typeof actionInputSchema>;
 
 const requireField = <TValue>(value: TValue | undefined, field: string): TValue => {
@@ -139,21 +151,23 @@ const toAction = (input: ActionInput): SmartHomeAction => {
   }
 };
 
-const findCause = (error: unknown, name: string): Error | undefined => {
+const getCauses = (error: unknown): Error[] => {
+  const causes: Error[] = [];
   let current: unknown = error;
   for (let depth = 0; depth < 6 && current instanceof Error; depth++) {
-    if (current.name === name) return current;
+    causes.push(current);
     current = current.cause;
   }
-  return undefined;
+  return causes;
 };
 
 const toActionError = (error: unknown) => {
-  const unsupported = findCause(error, "SmartHomeActionNotSupportedError");
+  const causes = getCauses(error);
+  const unsupported = causes.find((cause) => cause instanceof SmartHomeActionNotSupportedError);
   if (unsupported) return new TRPCError({ code: "BAD_REQUEST", message: unsupported.message });
-  const notFound = findCause(error, "SmartHomeEntityNotFoundError");
+  const notFound = causes.find((cause) => cause instanceof SmartHomeEntityNotFoundError);
   if (notFound) return new TRPCError({ code: "NOT_FOUND", message: notFound.message });
-  const rejected = findCause(error, "HomeAssistantCommandError");
+  const rejected = causes.find((cause) => cause instanceof HomeAssistantCommandError);
   if (rejected) return new TRPCError({ code: "BAD_REQUEST", message: rejected.message, cause: error });
   return new TRPCError({ code: "BAD_GATEWAY", message: "Home Assistant did not run the action", cause: error });
 };
@@ -220,12 +234,17 @@ const runCheckedActionAsync = async (
   if (entity.state === "unavailable") {
     throw new TRPCError({ code: "CONFLICT", message: `Entity ${entityId} is unavailable` });
   }
-  try {
-    await instance.executeActionAsync(entityId, action);
-  } catch (error) {
+  const receipt = await instance.executeActionAsync(entityId, action).catch((error: unknown) => {
     throw toActionError(error);
-  }
+  });
   await smartHomeSnapshotRequestHandler.invalidateCacheAsync([integration.id]);
+  return receipt;
+};
+
+const executeActionAsync = async (integration: SmartHomeIntegrationContext, input: ActionInput) => {
+  const action = toAction(input);
+  const receipt = await runCheckedActionAsync(integration, input.entityId, action);
+  return { entityId: input.entityId, action: action.type, contextId: receipt?.contextId };
 };
 
 export const smartHomeRouter = createTRPCRouter({
@@ -234,15 +253,21 @@ export const smartHomeRouter = createTRPCRouter({
       mcp: {
         enabled: true,
         description:
-          "Get normalized Home Assistant entities (state, unit, device class, area, and safe domain attributes such as brightness, temperatures, media info, cover position) plus their areas. REQUIRED: integrationId (Home Assistant integration ID from integration_all). Select with entityIds (e.g. 'light.living_room'), areaIds (from smartHome_catalog) and/or domains (e.g. 'light'); with no selection, all visible entities are returned (max 400)",
+          "Get normalized Home Assistant entities (state, unit, device class, area, and safe domain attributes such as brightness, temperatures, media info, cover position) plus their areas. REQUIRED: integrationId (Home Assistant integration ID from integration_all). Select with entityIds (e.g. 'light.living_room'), areaIds (from smartHome_catalog), domains (e.g. 'light') and excludedEntityIds. Domain/exclusion filters apply to room or implicit selections, not explicit entityIds. Returns at most 400 entities; narrow an overly broad selection rather than receiving silently truncated data",
       },
     })
     .concat(createOneWidgetIntegrationMiddleware("query", "smartHome-entityState"))
     .input(selectionSchema)
     .query(async ({ ctx: { integration }, input }) => {
       const handler = smartHomeSnapshotRequestHandler.handler(integration, input);
-      const { data } = await handler.getDataAsync();
-      return data;
+      try {
+        const { data } = await handler.getDataAsync();
+        return data;
+      } catch (error) {
+        const limit = getCauses(error).find((cause) => cause instanceof SmartHomeSelectionLimitError);
+        if (limit) throw new TRPCError({ code: "BAD_REQUEST", message: limit.message });
+        throw error;
+      }
     }),
   catalog: publicProcedure
     .meta({
@@ -303,16 +328,16 @@ export const smartHomeRouter = createTRPCRouter({
       mcp: {
         enabled: true,
         description:
-          "Control one Home Assistant entity, for example toggle a light, set brightness (value 0-100), set a thermostat (setTemperature value, setHvacMode option), set cover position (value 0-100), lock/unlock, run a scene/script/automation/button (trigger), control media (mediaPlayPause, setVolume value 0-1) or arm/disarm an alarm (alarmMode, optional code). Fails for unavailable entities. Requires interact access to the integration. REQUIRED: integrationId (from integration_all), entityId (from smartHome_catalog), action",
+          "Control one Home Assistant entity, for example toggle a light, set brightness (value 0-100), set a thermostat (setTemperature value, setTemperatureRange low/high, setHvacMode option), set cover position (value 0-100), lock/unlock, run a scene/script/automation/button (trigger), control media (mediaPlayPause, setVolume value 0-1) or arm/disarm an alarm (alarmMode). Actions requiring a security code must use the native widget controls; never request or send codes through this tool. Fails for unavailable entities. Requires interact access to the integration. REQUIRED: integrationId (from integration_all), entityId (from smartHome_catalog), action",
       },
     })
     .concat(createOneWidgetIntegrationMiddleware("interact", "smartHome-entityState"))
-    .input(actionInputSchema)
-    .mutation(async ({ ctx: { integration }, input }) => {
-      const action = toAction(input);
-      await runCheckedActionAsync(integration, input.entityId, action);
-      return { entityId: input.entityId, action: action.type };
-    }),
+    .input(actionInputSchema.omit({ code: true }))
+    .mutation(({ ctx: { integration }, input }) => executeActionAsync(integration, input)),
+  executeProtectedAction: protectedProcedure
+    .concat(createOneWidgetIntegrationMiddleware("interact", "smartHome-entityState"))
+    .input(protectedActionInputSchema)
+    .mutation(({ ctx: { integration }, input }) => executeActionAsync(integration, input)),
   subscribeEntities: publicProcedure
     .concat(createOneWidgetIntegrationMiddleware("query", "smartHome-entityState"))
     .input(selectionSchema)

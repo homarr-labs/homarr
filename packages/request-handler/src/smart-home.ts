@@ -14,7 +14,7 @@ type SmartHomeIntegrationKind = IntegrationKindByCategory<"smartHomeServer">;
 export const smartHomeSnapshotRequestHandler = createIntegrationRequestHandler<
   SmartHomeSnapshot,
   SmartHomeIntegrationKind,
-  { entityIds: string[]; areaIds: string[]; domains: string[] }
+  { entityIds: string[]; areaIds: string[]; domains: string[]; excludedEntityIds?: string[] }
 >({
   cacheNamespace: "smart-home:snapshot",
   cacheVersion: "v2",

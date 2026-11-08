@@ -1,7 +1,9 @@
 import z from "zod";
 
-import { createKeyedFingerprint, ResponseError } from "@homarr/common/server";
+import { createKeyedFingerprint, decryptSecret, ResponseError } from "@homarr/common/server";
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
+import { db, eq } from "@homarr/db";
+import { integrations, integrationSecrets } from "@homarr/db/schema";
 import { ImageProxy } from "@homarr/image-proxy";
 
 import type { IntegrationTestingInput } from "../base/integration";
@@ -14,6 +16,7 @@ import type { ISmartHomeIntegration } from "../interfaces/smart-home/smart-home-
 import { supportsSmartHomeAction } from "../interfaces/smart-home/smart-home-capabilities";
 import type {
   SmartHomeAction,
+  SmartHomeActionReceipt,
   SmartHomeArea,
   SmartHomeCatalog,
   SmartHomeEntity,
@@ -23,9 +26,11 @@ import type {
   SmartHomeHistorySeries,
   SmartHomeSnapshot,
 } from "../interfaces/smart-home/smart-home-types";
+import { SMART_HOME_ENTITY_LIMIT, SmartHomeSelectionLimitError } from "../interfaces/smart-home/smart-home-types";
 import type { CalendarEvent } from "../types";
 import { toServiceCall } from "./homeassistant-actions";
 import { HomeAssistantConnection } from "./homeassistant-connection";
+import { SmartHomeActionNotSupportedError, SmartHomeEntityNotFoundError } from "./homeassistant-errors";
 import { bucketHistory } from "./homeassistant-history";
 import {
   createCatalog,
@@ -38,8 +43,9 @@ import type { EntityRegistryContext } from "./homeassistant-normalize";
 import type { RawEntityState } from "./homeassistant-types";
 import { calendarEventSchema, calendarsSchema, historyResultSchema } from "./homeassistant-types";
 
-const MAX_SNAPSHOT_ENTITIES = 400;
 const CAMERA_REFRESH_MS = 10_000;
+
+const actionResultSchema = z.object({ context: z.object({ id: z.string().min(1) }) });
 
 const forecastResultSchema = z.object({
   response: z.record(
@@ -58,19 +64,7 @@ const forecastResultSchema = z.object({
   ),
 });
 
-export class SmartHomeActionNotSupportedError extends Error {
-  public constructor(entityId: string, actionType: string) {
-    super(`Action ${actionType} is not supported for ${entityId}`);
-    this.name = "SmartHomeActionNotSupportedError";
-  }
-}
-
-export class SmartHomeEntityNotFoundError extends Error {
-  public constructor(entityId: string) {
-    super(`Entity ${entityId} was not found`);
-    this.name = "SmartHomeEntityNotFoundError";
-  }
-}
+export { SmartHomeActionNotSupportedError, SmartHomeEntityNotFoundError } from "./homeassistant-errors";
 
 export class HomeAssistantIntegration extends Integration implements ISmartHomeIntegration, ICalendarIntegration {
   public async getHttpAuthenticationAsync(): Promise<IntegrationHttpAuthentication> {
@@ -156,7 +150,7 @@ export class HomeAssistantIntegration extends Integration implements ISmartHomeI
     }));
   }
 
-  public async executeActionAsync(entityId: string, action: SmartHomeAction): Promise<void> {
+  public async executeActionAsync(entityId: string, action: SmartHomeAction): Promise<SmartHomeActionReceipt | void> {
     const connection = this.getConnection();
     const current = (await connection.getStatesAsync()).get(entityId);
     if (!current) throw new SmartHomeEntityNotFoundError(entityId);
@@ -168,13 +162,15 @@ export class HomeAssistantIntegration extends Integration implements ISmartHomeI
     const serviceCall = toServiceCall(entityId, resolved);
     if (!serviceCall) throw new SmartHomeActionNotSupportedError(entityId, action.type);
 
-    await connection.sendAsync({
+    const result = await connection.sendAsync({
       type: "call_service",
       domain: serviceCall.domain,
       service: serviceCall.service,
       service_data: serviceCall.data,
       target: { entity_id: entityId },
     });
+    const receipt = actionResultSchema.safeParse(result);
+    if (receipt.success) return { contextId: receipt.data.context.id };
   }
 
   public async subscribeEntitiesAsync(
@@ -186,6 +182,7 @@ export class HomeAssistantIntegration extends Integration implements ISmartHomeI
     const connection = this.getConnection();
     const pendingChanged = new Map<string, RawEntityState>();
     const pendingRemoved = new Set<string>();
+    const present = new Set<string>();
     let watched: ReadonlySet<string> | null = null;
     let lookup = createRegistryLookup(null);
     let draining = false;
@@ -230,13 +227,19 @@ export class HomeAssistantIntegration extends Integration implements ISmartHomeI
         if (!watched) return;
         for (const raw of change.changed) {
           if (!watched.has(raw.entityId)) continue;
+          present.add(raw.entityId);
           pendingChanged.set(raw.entityId, raw);
           pendingRemoved.delete(raw.entityId);
         }
         for (const id of change.removed) {
           if (!watched.has(id)) continue;
+          present.delete(id);
           pendingChanged.delete(id);
           pendingRemoved.add(id);
+        }
+        if (present.size > SMART_HOME_ENTITY_LIMIT) {
+          settle(new SmartHomeSelectionLimitError(present.size));
+          return;
         }
         scheduleDrain();
       },
@@ -250,7 +253,8 @@ export class HomeAssistantIntegration extends Integration implements ISmartHomeI
       if (!settled) {
         lookup = createRegistryLookup(registry);
         const ids = resolveSnapshotIds(states, lookup, normalizeAreas(registry), selection);
-        watched = new Set(ids);
+        watched = new Set([...ids, ...(selection.entityIds ?? [])]);
+        ids.forEach((id) => present.add(id));
         for (const id of ids) {
           const raw = states.get(id);
           if (raw) pendingChanged.set(id, raw);
@@ -325,9 +329,27 @@ export class HomeAssistantIntegration extends Integration implements ISmartHomeI
     const token = this.getSecretValue("apiKey");
     return HomeAssistantConnection.acquire({
       key: `${this.integration.id}:${createKeyedFingerprint(`${url.toString()}\n${token}`)}`,
+      integrationId: this.integration.id,
       url,
       token,
+      isConfigurationCurrentAsync: async () => await this.isConfigurationCurrentAsync(),
     });
+  }
+
+  private async isConfigurationCurrentAsync() {
+    const current = await db.query.integrations.findFirst({
+      where: eq(integrations.id, this.integration.id),
+      columns: { url: true, kind: true },
+      with: {
+        secrets: {
+          where: eq(integrationSecrets.kind, "apiKey"),
+          columns: { value: true },
+        },
+      },
+    });
+    if (!current || current.kind !== "homeAssistant" || current.url !== this.integration.url) return false;
+    const token = current.secrets[0]?.value;
+    return token !== undefined && decryptSecret(token) === this.getSecretValue("apiKey");
   }
 
   private async toEntitiesAsync(
@@ -398,17 +420,19 @@ const resolveSelection = (
   const explicit = (selection.entityIds ?? []).filter((id) => states.has(id));
   const domains = selection.domains && selection.domains.length > 0 ? new Set(selection.domains) : null;
   const areaIds = selection.areaIds && selection.areaIds.length > 0 ? new Set(selection.areaIds) : null;
+  const excludedIds = new Set(selection.excludedEntityIds ?? []);
   const includeAll = explicit.length === 0 && !areaIds && (selection.entityIds ?? []).length === 0;
 
   const implicit = [...states.keys()].filter((id) => {
     const context = lookup(id);
     if (context.hidden) return false;
+    if (excludedIds.has(id)) return false;
     if (domains && !domains.has(getEntityDomain(id))) return false;
     if (areaIds) return context.areaId !== null && areaIds.has(context.areaId);
     return includeAll;
   });
 
-  return [...new Set([...explicit, ...implicit])].slice(0, MAX_SNAPSHOT_ENTITIES);
+  return [...new Set([...explicit, ...implicit])];
 };
 
 const resolveSnapshotIds = (
@@ -417,9 +441,20 @@ const resolveSnapshotIds = (
   areas: SmartHomeArea[],
   selection: SmartHomeEntitySelection,
 ) => {
+  const excludedIds = new Set(selection.excludedEntityIds ?? []);
+  const domains = new Set(selection.domains ?? []);
   const ambientIds = areas
     .filter((area) => selection.areaIds?.includes(area.id))
     .flatMap((area) => [area.temperatureEntityId, area.humidityEntityId])
-    .filter((id): id is string => id !== null && states.has(id) && !lookup(id).hidden);
-  return [...new Set([...resolveSelection(states, lookup, selection), ...ambientIds])];
+    .filter(
+      (id): id is string =>
+        id !== null &&
+        states.has(id) &&
+        !lookup(id).hidden &&
+        !excludedIds.has(id) &&
+        (domains.size === 0 || domains.has(getEntityDomain(id))),
+    );
+  const ids = [...new Set([...resolveSelection(states, lookup, selection), ...ambientIds])];
+  if (ids.length > SMART_HOME_ENTITY_LIMIT) throw new SmartHomeSelectionLimitError(ids.length);
+  return ids;
 };

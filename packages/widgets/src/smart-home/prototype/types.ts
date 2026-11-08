@@ -40,11 +40,12 @@ export const toPrototypeDomain = (domain: string): { domain: HaDomain; readOnly:
 };
 
 export interface HaForecastDay {
+  time?: number;
   day: string;
-  condition: string;
-  high: number;
-  low: number;
-  precipitationProbability: number;
+  condition: string | null;
+  high: number | null;
+  low: number | null;
+  precipitationProbability: number | null;
 }
 
 export interface HaAttributes {
@@ -70,6 +71,8 @@ export interface HaAttributes {
   presetModes?: string[];
   currentHumidity?: number;
   targetHumidity?: number;
+  minHumidity?: number;
+  maxHumidity?: number;
   position?: number;
   percentage?: number;
   mediaTitle?: string;
@@ -84,6 +87,7 @@ export interface HaAttributes {
   batteryLevel?: number;
   options?: string[];
   forecast?: HaForecastDay[];
+  forecastStatus?: "loading" | "ready" | "unsupported" | "error";
   humidity?: number;
   windSpeed?: number;
   windSpeedUnit?: string;
@@ -113,7 +117,7 @@ export interface HaEntity {
   unit: string | null;
   lastChanged: number;
   attributes: HaAttributes;
-  history: number[] | null;
+  history: (number | null)[] | null;
   sourceDomain?: string;
   sourceAreaId?: string | null;
   readOnly?: boolean;

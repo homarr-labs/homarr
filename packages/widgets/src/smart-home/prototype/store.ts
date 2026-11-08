@@ -3,7 +3,8 @@
 import { createContext, createElement, useCallback, useContext, useMemo, useSyncExternalStore } from "react";
 import type { ReactNode } from "react";
 import { useTiks } from "@rexa-developer/tiks/react";
-import { supportsSmartHomeAction } from "@homarr/integrations/types";
+import { applySmartHomeAction, supportsSmartHomeAction } from "@homarr/integrations/types";
+import type { SmartHomeEntity } from "@homarr/integrations/types";
 
 import { prototypeAreas, prototypeEntities } from "./fixtures";
 import type {
@@ -54,122 +55,16 @@ const subscribe = (listener: () => void) => {
   return () => listeners.delete(listener);
 };
 
-const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value));
-
-const toggleState = (entity: HaEntity): Partial<HaEntity> => {
-  if (entity.domain === "cover" || entity.domain === "valve") {
-    const opening = entity.state === "closed";
-    return { state: opening ? "open" : "closed", attributes: { ...entity.attributes, position: opening ? 100 : 0 } };
-  }
-  if (entity.domain === "lock") return { state: entity.state === "locked" ? "unlocked" : "locked" };
-  if (entity.domain === "media_player") return { state: entity.state === "playing" ? "paused" : "playing" };
-  if (entity.domain === "climate") {
-    return { state: entity.state === "off" ? (entity.attributes.hvacModes?.[1] ?? "heat") : "off" };
-  }
-  const turningOn = entity.state !== "on";
-  if (entity.domain === "light") {
-    return {
-      state: turningOn ? "on" : "off",
-      attributes: { ...entity.attributes, brightness: turningOn ? entity.attributes.brightness || 80 : 0 },
-    };
-  }
-  if (entity.domain === "fan") {
-    return { state: turningOn ? "on" : "off", attributes: { ...entity.attributes, percentage: turningOn ? 50 : 0 } };
-  }
-  return { state: turningOn ? "on" : "off" };
-};
-
-const reduce = (entity: HaEntity, action: HaAction): Partial<HaEntity> => {
-  const attributes = entity.attributes;
-  switch (action.type) {
-    case "toggle":
-      return toggleState(entity);
-    case "turnOn":
-      return entity.state === "on" ? {} : toggleState(entity);
-    case "turnOff":
-      return entity.state === "off" ? {} : toggleState(entity);
-    case "setBrightness": {
-      const value = clamp(Math.round(action.value), 0, 100);
-      return { state: value > 0 ? "on" : "off", attributes: { ...attributes, brightness: value } };
-    }
-    case "setColorTemp":
-      return {
-        state: "on",
-        attributes: { ...attributes, colorTempKelvin: action.value, rgbColor: undefined, colorMode: "color_temp" },
-      };
-    case "setRgbColor":
-      return {
-        state: "on",
-        attributes: { ...attributes, rgbColor: action.value, colorTempKelvin: undefined, colorMode: "rgb" },
-      };
-    case "setTemperature":
-      return {
-        attributes: {
-          ...attributes,
-          targetTemperature: action.value,
-        },
-      };
-    case "setTemperatureRange":
-      return { attributes: { ...attributes, targetTemperatureLow: action.low, targetTemperatureHigh: action.high } };
-    case "setHvacMode":
-      return {
-        state: action.value,
-        attributes: { ...attributes, hvacAction: action.value === "off" ? "off" : "idle" },
-      };
-    case "setPresetMode":
-      return { attributes: { ...attributes, presetMode: action.value } };
-    case "setHumidity":
-      return { attributes: { ...attributes, targetHumidity: clamp(action.value, 0, 100) } };
-    case "setPosition": {
-      const value = clamp(Math.round(action.value), 0, 100);
-      return { state: value > 0 ? "open" : "closed", attributes: { ...attributes, position: value } };
-    }
-    case "open":
-      return { state: "open", attributes: { ...attributes, position: 100 } };
-    case "close":
-      return { state: "closed", attributes: { ...attributes, position: 0 } };
-    case "stop":
-      return {};
-    case "lock":
-      return { state: "locked" };
-    case "unlock":
-      return { state: "unlocked" };
-    case "mediaPlayPause":
-      return { state: entity.state === "playing" ? "paused" : "playing" };
-    case "mediaNext":
-    case "mediaPrevious":
-      return { attributes: { ...attributes, mediaPosition: 0 } };
-    case "setVolume":
-      return { attributes: { ...attributes, volume: clamp(action.value, 0, 1) } };
-    case "trigger":
-      if (entity.domain === "automation" || entity.domain === "script") {
-        return { attributes: { ...attributes, lastTriggered: Date.now() } };
-      }
-      return { state: new Date().toISOString() };
-    case "selectOption":
-      return { state: action.value };
-    case "setFanPercentage": {
-      const value = clamp(Math.round(action.value), 0, 100);
-      return { state: value > 0 ? "on" : "off", attributes: { ...attributes, percentage: value } };
-    }
-    case "vacuumStart":
-      return { state: "cleaning", attributes: { ...attributes, status: "Cleaning" } };
-    case "vacuumReturn":
-      return { state: "returning", attributes: { ...attributes, status: "Returning to dock" } };
-    case "alarmArm":
-      return { state: `armed_${action.mode}` };
-    case "alarmDisarm":
-      return { state: "disarmed" };
-    case "install":
-      return { state: "off", attributes: { ...attributes, installedVersion: attributes.latestVersion } };
-  }
-};
-
 const applyOptimistic = (entity: HaEntity, action: HaAction): HaEntity => {
-  const patch = reduce(entity, action);
-  if (Object.keys(patch).length === 0) return entity;
-  const stateChanged = patch.state !== undefined && patch.state !== entity.state;
-  return { ...entity, ...patch, lastChanged: stateChanged ? Date.now() : entity.lastChanged };
+  const current: SmartHomeEntity = { ...entity, stateClass: null, lastUpdated: entity.lastChanged };
+  const next = applySmartHomeAction(current, action);
+  if (next === current) return entity;
+  return {
+    ...entity,
+    state: next.state,
+    attributes: { ...entity.attributes, ...next.attributes },
+    lastChanged: next.lastChanged,
+  };
 };
 
 const withoutKey = (record: Record<string, boolean>, key: string) =>

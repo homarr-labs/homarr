@@ -706,6 +706,15 @@
   max-width: none;
 }
 
+.tileWide .temperatureRange {
+  flex-direction: column;
+  gap: 4px;
+}
+
+.tileWide .temperatureRange .stepper {
+  flex: none;
+}
+
 .tileSpark {
   color: var(--c);
 }
@@ -762,6 +771,16 @@
   }
 
   .tileFallback {
+    display: block;
+  }
+}
+
+@container (height < 128px) {
+  .tileFrame[data-range] .tile {
+    display: none;
+  }
+
+  .tileFrame[data-range] .tileFallback {
     display: block;
   }
 }

@@ -3,9 +3,10 @@
 import { IconBattery2, IconDroplet, IconTemperature } from "@tabler/icons-react";
 import { getLightCapabilities } from "@homarr/integrations/types";
 
-import { formatNumber, getStateColor, isUnavailable } from "../../semantics";
+import { formatNumber, getForecastMessage, getStateColor, isUnavailable } from "../../semantics";
 import type { HaEntity } from "../../types";
 import { LightColorControls } from "../e/color-controls";
+import { getHistoryValues } from "../e/history";
 import { AlarmControl, CoverButtons, HvacModes, InlineSlider, MediaTransport, Segmented, Stepper } from "./controls";
 import { ActionButton } from "./controls";
 import type { Level } from "./layout";
@@ -30,15 +31,17 @@ function Labeled({ label, value, children }: { label: string; value?: string; ch
 
 function Forecast({ entity }: { entity: HaEntity }) {
   const days = entity.attributes.forecast ?? [];
+  const message = getForecastMessage(entity);
   return (
     <div className={classes.forecast}>
+      {message && <output>{message}</output>}
       {days.map((day) => (
-        <div key={day.day} className={classes.forecastRow}>
+        <div key={day.time ?? day.day} className={classes.forecastRow}>
           <span className={classes.forecastDay}>{day.day}</span>
-          <span className={classes.forecastCondition}>{day.condition.replace(/_/g, " ")}</span>
+          <span className={classes.forecastCondition}>{day.condition?.replace(/_/g, " ") ?? "—"}</span>
           <span className={classes.forecastRain}>
             <IconDroplet size={11} />
-            {day.precipitationProbability}%
+            {formatNumber(day.precipitationProbability)}%
           </span>
           <b>{formatNumber(day.high, 0)}°</b>
           <span className={classes.dim}>{formatNumber(day.low, 0)}°</span>
@@ -141,18 +144,31 @@ function DetailControls({ entity, run }: { entity: HaEntity; run: EntityRun }) {
           />
         </Labeled>
       );
-    case "humidifier":
+    case "humidifier": {
+      const min = a.minHumidity ?? 0;
+      const max = a.maxHumidity ?? 100;
+      const target = a.targetHumidity;
+      if (target === undefined || target < min || target > max || min >= max) {
+        return (
+          <Labeled label="Target humidity" value={`${formatNumber(target)}%`}>
+            No adjustable target reported
+          </Labeled>
+        );
+      }
       return (
-        <Labeled label="Target humidity" value={`${a.targetHumidity ?? 0}%`}>
+        <Labeled label="Target humidity" value={`${formatNumber(target)}%`}>
           <InlineSlider
             label="Target humidity"
-            value={a.targetHumidity ?? 0}
+            value={target}
+            min={min}
+            max={max}
             width="100%"
             color="blue"
             onCommit={(value) => run.request({ type: "setHumidity", value })}
           />
         </Labeled>
       );
+    }
     case "alarm_control_panel":
       return (
         <Labeled label="Mode">
@@ -176,16 +192,18 @@ function DetailControls({ entity, run }: { entity: HaEntity; run: EntityRun }) {
       return a.snapshotUrl ? <img className={classes.snapshot} src={a.snapshotUrl} alt={entity.name} /> : null;
     case "weather":
       return <Forecast entity={entity} />;
-    case "sensor":
-      return entity.history ? (
+    case "sensor": {
+      const history = getHistoryValues(entity.history ?? []);
+      return entity.history && history.length > 0 ? (
         <div className={classes.bigSpark}>
           <Spark data={entity.history} width={300} height={48} strokeWidth={2} />
           <div className={classes.sparkRange}>
-            <span>24h min {formatNumber(Math.min(...entity.history))}</span>
-            <span>max {formatNumber(Math.max(...entity.history))}</span>
+            <span>24h min {formatNumber(Math.min(...history))}</span>
+            <span>max {formatNumber(Math.max(...history))}</span>
           </div>
         </div>
       ) : null;
+    }
     case "vacuum":
       return (
         <div className={classes.cluster}>

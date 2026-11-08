@@ -9,8 +9,11 @@ import {
 } from "@homarr/core/infrastructure/certificates";
 import { createCustomCheckServerIdentity } from "@homarr/core/infrastructure/http";
 import { createLogger } from "@homarr/core/infrastructure/logs";
+import { getIntegrationCacheGenerationAsync } from "@homarr/redis";
 
 import type { IntegrationTestingInput } from "../base/integration";
+import { HomeAssistantCommandError, HomeAssistantConfigurationChangedError } from "./homeassistant-errors";
+export { HomeAssistantCommandError, HomeAssistantConfigurationChangedError } from "./homeassistant-errors";
 import type { HomeAssistantRegistry, RawEntityState } from "./homeassistant-types";
 import {
   areaRegistrySchema,
@@ -27,14 +30,17 @@ const CONNECT_TIMEOUT_MS = 10_000;
 const STATES_INIT_TIMEOUT_MS = 10_000;
 const IDLE_TIMEOUT_MS = 5 * 60_000;
 const REGISTRY_TTL_MS = 60_000;
+const CONFIGURATION_CHECK_MS = 2_000;
 const UNSUPPORTED_REGISTRY_CODES = new Set(["unknown_command", "unauthorized"]);
 
 type CertificateOptions = IntegrationTestingInput["options"];
 
 export interface HomeAssistantConnectionOptions {
   key: string;
+  integrationId: string;
   url: URL;
   token: string;
+  isConfigurationCurrentAsync: () => Promise<boolean>;
 }
 
 export interface HomeAssistantStateChange {
@@ -64,17 +70,6 @@ interface PendingCommand {
   resolve: (value: unknown) => void;
   reject: (reason: unknown) => void;
   timeout: NodeJS.Timeout;
-}
-
-export class HomeAssistantCommandError extends Error {
-  public constructor(
-    public readonly code: string,
-    message: string,
-    public readonly translationKey?: string,
-  ) {
-    super(message);
-    this.name = "HomeAssistantCommandError";
-  }
 }
 
 export class HomeAssistantConnection {
@@ -109,12 +104,17 @@ export class HomeAssistantConnection {
   private registry: { value: Promise<HomeAssistantRegistry | null>; fetchedAt: number } | undefined;
   private lastRegistry: HomeAssistantRegistry | undefined;
   private idleTimer: NodeJS.Timeout | undefined;
+  private configurationTimer: NodeJS.Timeout | undefined;
+  private configurationGeneration: string | undefined;
+  private configurationCheck: Promise<void> | undefined;
+  private closed = false;
 
   private constructor(private readonly options: HomeAssistantConnectionOptions) {}
 
   public async sendAsync<T = unknown>(message: { type: string } & Record<string, unknown>): Promise<T> {
     this.touch();
     const socket = await this.getSocketAsync();
+    if (this.closed) throw connectionClosedError();
     const id = this.nextId++;
     return await new Promise<T>((resolve, reject) => {
       const timeout = setTimeout(() => {
@@ -134,6 +134,7 @@ export class HomeAssistantConnection {
   public async getStatesAsync(): Promise<ReadonlyMap<string, RawEntityState>> {
     this.touch();
     await this.ensureStatesAsync();
+    if (this.closed) throw connectionClosedError();
     return this.states;
   }
 
@@ -317,6 +318,7 @@ export class HomeAssistantConnection {
         attributes: compressed.a,
         lastChanged,
         lastUpdated: compressed.lu === undefined ? lastChanged : compressed.lu * 1000,
+        contextId: getContextId(compressed.c),
       };
       this.states.set(entityId, state);
       changed.set(entityId, state);
@@ -339,6 +341,7 @@ export class HomeAssistantConnection {
         attributes,
         lastChanged,
         lastUpdated: lastUpdated === undefined ? current.lastUpdated : lastUpdated * 1000,
+        contextId: getContextId(diff["+"]?.c) ?? current.contextId,
       };
       this.states.set(entityId, next);
       changed.set(entityId, next);
@@ -348,6 +351,7 @@ export class HomeAssistantConnection {
   }
 
   private getSocketAsync() {
+    if (this.closed) return Promise.reject(connectionClosedError());
     if (this.socket) return this.socket;
 
     const socket = this.connectAsync();
@@ -366,16 +370,67 @@ export class HomeAssistantConnection {
   }
 
   private async connectAsync() {
+    await this.validateConfigurationAsync(true);
+    for (const connection of HomeAssistantConnection.pool.values()) {
+      if (connection === this || connection.options.integrationId !== this.options.integrationId) continue;
+      connection.close(new HomeAssistantConfigurationChangedError());
+    }
     const url = new URL(this.options.url);
     const socket = await openSocketAsync(url, await resolveCertificateOptionsAsync());
     try {
       await authenticateAsync(socket, this.options.token);
+      if (this.closed) throw connectionClosedError();
     } catch (error) {
       socket.close();
       throw error;
     }
     logger.debug("Connected to Home Assistant websocket", { key: this.options.key });
+    this.scheduleConfigurationCheck();
     return socket;
+  }
+
+  private async validateConfigurationAsync(force = false) {
+    if (this.closed) throw connectionClosedError();
+    if (this.configurationCheck) return await this.configurationCheck;
+    const check = this.checkConfigurationAsync(force);
+    this.configurationCheck = check;
+    try {
+      await check;
+    } finally {
+      if (this.configurationCheck === check) this.configurationCheck = undefined;
+    }
+  }
+
+  private async checkConfigurationAsync(force: boolean) {
+    const generation = await getIntegrationCacheGenerationAsync(this.options.integrationId);
+    if (force || !generation.isShared || this.configurationGeneration !== generation.value) {
+      if (!(await this.options.isConfigurationCurrentAsync())) {
+        const error = new HomeAssistantConfigurationChangedError();
+        this.close(error);
+        throw error;
+      }
+      this.configurationGeneration = generation.value;
+    }
+    if (this.closed) throw connectionClosedError();
+  }
+
+  private scheduleConfigurationCheck() {
+    clearTimeout(this.configurationTimer);
+    if (this.closed || !this.socket) return;
+    this.configurationTimer = setTimeout(() => {
+      this.configurationTimer = undefined;
+      void this.validateConfigurationAsync().then(
+        () => this.scheduleConfigurationCheck(),
+        (error: unknown) => {
+          logger.warn("Home Assistant configuration check failed, closing the connection", {
+            key: this.options.key,
+            reason: describeFailure(error),
+          });
+          this.close(error);
+        },
+      );
+    }, CONFIGURATION_CHECK_MS);
+    this.configurationTimer.unref();
   }
 
   private handleMessage(raw: RawData) {
@@ -412,23 +467,29 @@ export class HomeAssistantConnection {
 
   private handleClose(socket: Promise<WebSocket>) {
     if (this.socket !== socket) return;
+    this.clearConnection(connectionClosedError());
+  }
+
+  private clearConnection(error: unknown) {
+    clearTimeout(this.configurationTimer);
     this.socket = undefined;
     this.statesReady = undefined;
     this.states.clear();
     this.eventHandlers.clear();
-    this.rejectStatesInit?.(connectionClosedError());
+    this.rejectStatesInit?.(error);
     for (const pending of this.pending.values()) {
       clearTimeout(pending.timeout);
-      pending.reject(connectionClosedError());
+      pending.reject(error);
     }
     this.pending.clear();
     const listeners = [...this.stateListeners];
     this.stateListeners.clear();
     logger.debug("Home Assistant websocket closed", { key: this.options.key, listeners: listeners.length });
-    for (const listener of listeners) listener.onError(connectionClosedError());
+    for (const listener of listeners) listener.onError(error);
   }
 
   private touch() {
+    if (this.closed) return;
     clearTimeout(this.idleTimer);
     this.idleTimer = setTimeout(() => {
       if (this.stateListeners.size > 0) {
@@ -440,20 +501,24 @@ export class HomeAssistantConnection {
     this.idleTimer.unref();
   }
 
-  private close() {
+  private close(error: unknown = connectionClosedError()) {
+    this.closed = true;
     clearTimeout(this.idleTimer);
     const socket = this.socket;
-    this.socket = undefined;
-    this.statesReady = undefined;
-    this.rejectStatesInit?.(connectionClosedError());
-    this.states.clear();
-    this.eventHandlers.clear();
+    this.clearConnection(error);
     this.registry = undefined;
     this.lastRegistry = undefined;
-    HomeAssistantConnection.pool.delete(this.options.key);
+    if (HomeAssistantConnection.pool.get(this.options.key) === this) {
+      HomeAssistantConnection.pool.delete(this.options.key);
+    }
     void socket?.then((webSocket) => webSocket.close()).catch(() => undefined);
   }
 }
+
+const getContextId = (context: string | { id?: string } | undefined) => {
+  if (typeof context === "string") return context;
+  return context?.id;
+};
 
 const openSocketAsync = async (url: URL, certificate: CertificateOptions) =>
   await new Promise<WebSocket>((resolve, reject) => {

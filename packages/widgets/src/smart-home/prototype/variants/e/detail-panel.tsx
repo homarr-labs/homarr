@@ -20,6 +20,7 @@ import { entityNeedsCode, formatTargetRange, getTargetRange, needsCode } from ".
 import { RoundButton, Sparkline } from "./controls";
 import { LightColorControls } from "./color-controls";
 import { useDeviceControlDisabled, useRunner } from "./hooks";
+import { getHistoryValues } from "./history";
 import classes from "./styles.module.css";
 import { accentVars, getTheme } from "./theme";
 
@@ -163,11 +164,12 @@ function PresetChips({ entity }: { entity: HaEntity }) {
 
 function HistorySummary({ entity }: { entity: HaEntity }) {
   const history = entity.history;
-  if (!history || history.length < 2) return null;
+  const numeric = getHistoryValues(history ?? []);
+  if (!history || numeric.length === 0) return null;
   const theme = getTheme(entity);
   const unit = entity.unit ?? "";
   const value = (number: number) => `${formatNumber(number)}${unit === "%" ? "%" : ` ${unit}`}`.trim();
-  const average = history.reduce((total, point) => total + point, 0) / history.length;
+  const average = numeric.reduce((total, point) => total + point, 0) / numeric.length;
 
   return (
     <DetailSection title="History">
@@ -176,9 +178,9 @@ function HistorySummary({ entity }: { entity: HaEntity }) {
       </div>
       <FactList
         facts={[
-          ["Low", value(Math.min(...history))],
+          ["Low", value(Math.min(...numeric))],
           ["Average", value(average)],
-          ["High", value(Math.max(...history))],
+          ["High", value(Math.max(...numeric))],
         ]}
       />
     </DetailSection>

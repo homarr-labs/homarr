@@ -50,6 +50,7 @@ import {
   formatEntityState,
   formatNumber,
   formatRelativeTime,
+  getForecastMessage,
   getPrimaryAction,
   requiresConfirmation,
 } from "../../semantics";
@@ -69,6 +70,7 @@ import { CodePrompt } from "./code-prompt";
 import { LightColorPresets } from "./color-controls";
 import { DetailMeta, DetailPanel } from "./detail-panel";
 import { DetailTrigger } from "./detail-trigger";
+import { getHistoryValues } from "./history";
 import {
   clamp,
   DetailContext,
@@ -123,7 +125,10 @@ const formatClock = (seconds: number) => {
 };
 
 interface SliderSpec {
-  value: number;
+  value: number | null;
+  min?: number;
+  max?: number;
+  tapToToggle?: boolean;
   caption: string;
   zeroLabel: string;
   toAction: (value: number) => HaAction;
@@ -164,18 +169,26 @@ function SliderControl({ entity, width, height, spec, theme, extras }: SliderCon
   const [preview, setPreview] = useState<number | null>(null);
   const tier = getTier(width, height);
   const Icon = theme.Icon;
-  const text = (shown: number) => (shown === 0 ? spec.zeroLabel : `${shown}%`);
+  const min = spec.min ?? 0;
+  const max = spec.max ?? 100;
+  const text = (shown: number) => {
+    if (spec.value === null) return "—";
+    if (shown === 0) return spec.zeroLabel;
+    return `${shown}%`;
+  };
   const tapAction = spec.tapAction;
   const tap = tapAction ? () => void run(tapAction) : undefined;
   const commit = (value: number) => void run(spec.toAction(value));
-  const shownValue = preview ?? spec.value;
+  const shownValue = preview ?? spec.value ?? min;
   const valueText = text(shownValue);
   const slider = {
-    value: spec.value,
+    value: spec.value ?? min,
+    min,
+    max,
     label: `${entity.name} ${spec.caption.toLowerCase()}`,
     valueText: text,
     pending,
-    disabled: theme.unavailable,
+    disabled: theme.unavailable || spec.value === null || min >= max,
     onCommit: commit,
   };
   const toggle = (size: "sm" | "md") => (
@@ -197,7 +210,7 @@ function SliderControl({ entity, width, height, spec, theme, extras }: SliderCon
         <PillSlider
           {...slider}
           axis="vertical"
-          onTap={tap}
+          onTap={spec.tapToToggle === false ? undefined : tap}
           className={classes.fillSlider}
           renderFooter={(shown) => (
             <span className={classes.miniText}>
@@ -223,8 +236,12 @@ function SliderControl({ entity, width, height, spec, theme, extras }: SliderCon
   if (tier === "wide" && height < WIDE_SLIDER_MIN_HEIGHT) {
     return (
       <Tile theme={theme} className={classes.rowTile}>
-        <Head name={entity.name} state={text(spec.value)} leading={toggle("md")} />
-        <span className={classes.levelLine} style={{ width: `${spec.value}%` }} aria-hidden />
+        <Head name={entity.name} state={text(spec.value ?? min)} leading={toggle("md")} />
+        <span
+          className={classes.levelLine}
+          style={{ width: `${spec.value === null || min >= max ? 0 : ((spec.value - min) / (max - min)) * 100}%` }}
+          aria-hidden
+        />
       </Tile>
     );
   }
@@ -315,10 +332,18 @@ function FanControl(props: ControlProps) {
 function HumidifierControl(props: ControlProps) {
   const { entity } = props;
   const theme = getTheme(entity);
+  const min = entity.attributes.minHumidity ?? 0;
+  const max = entity.attributes.maxHumidity ?? 100;
+  const target = entity.attributes.targetHumidity;
+  let targetValue: number | null = null;
+  if (target !== undefined && target >= min && target <= max) targetValue = target;
   const spec: SliderSpec = {
-    value: entity.state === "on" ? (entity.attributes.targetHumidity ?? 0) : 0,
+    value: targetValue,
+    min,
+    max,
+    tapToToggle: false,
     caption: "Target humidity",
-    zeroLabel: "Off",
+    zeroLabel: "0%",
     toAction: (value) => ({ type: "setHumidity", value }),
     tapAction: { type: "toggle" },
   };
@@ -1053,7 +1078,9 @@ function SensorControl({ entity, width, height }: ControlProps) {
   const Icon = theme.Icon;
   const value = formatEntityState(entity);
   const history = entity.history;
-  const range = history ? { min: Math.min(...history), max: Math.max(...history) } : null;
+  const numericHistory = getHistoryValues(history ?? []);
+  const range =
+    numericHistory.length > 0 ? { min: Math.min(...numericHistory), max: Math.max(...numericHistory) } : null;
   const numeric = Number(entity.state);
   const unit = entity.unit && entity.unit !== "%" ? ` ${entity.unit}` : (entity.unit ?? "");
   const display = Number.isNaN(numeric) ? value : formatNumber(numeric);
@@ -1093,18 +1120,19 @@ function WeatherControl({ entity, width, height }: ControlProps) {
   const attributes = entity.attributes;
   const Icon = theme.Icon;
   const forecast = attributes.forecast ?? [];
-  const temperature = `${formatNumber(attributes.currentTemperature ?? 0)}°`;
+  const temperature = `${formatNumber(attributes.currentTemperature)}°`;
   const condition = formatEntityState(entity).split("· ")[1] ?? entity.state;
+  const forecastMessage = getForecastMessage(entity);
 
   const days = (count: number) =>
     forecast.slice(0, count).map((day) => {
-      const DayIcon = conditionIcons[day.condition] ?? IconCloud;
+      const DayIcon = day.condition ? conditionIcons[day.condition] : undefined;
       return (
-        <div key={day.day} className={classes.day}>
+        <div key={day.time ?? day.day} className={classes.day}>
           <span className={classes.dayName}>{day.day}</span>
-          <DayIcon size={20} stroke={1.6} />
-          <span className={classes.dayTemp}>{Math.round(day.high)}°</span>
-          <span className={classes.dayLow}>{Math.round(day.low)}°</span>
+          {DayIcon ? <DayIcon size={20} stroke={1.6} aria-label={day.condition ?? undefined} /> : <span>—</span>}
+          <span className={classes.dayTemp}>{formatNumber(day.high, 0)}°</span>
+          <span className={classes.dayLow}>{formatNumber(day.low, 0)}°</span>
         </div>
       );
     });
@@ -1128,7 +1156,12 @@ function WeatherControl({ entity, width, height }: ControlProps) {
           <span className={classes.weatherTemp}>{temperature}</span>
           <span className={classes.state}>{condition}</span>
         </div>
-        {count > 0 ? <div className={classes.forecast}>{days(count)}</div> : null}
+        {count > 0 ? (
+          <div className={classes.forecast}>
+            {forecastMessage && <output className={classes.state}>{forecastMessage}</output>}
+            {days(count)}
+          </div>
+        ) : null}
       </Tile>
     );
   }
@@ -1138,7 +1171,7 @@ function WeatherControl({ entity, width, height }: ControlProps) {
     <Tile theme={theme}>
       <Head
         name={entity.name}
-        state={`Humidity ${attributes.humidity ?? 0}% · ${attributes.windSpeed ?? 0} ${attributes.windSpeedUnit ?? ""}`}
+        state={`Humidity ${formatNumber(attributes.humidity)}% · Wind ${formatNumber(attributes.windSpeed)} ${attributes.windSpeedUnit ?? ""}`}
       />
       <div className={classes.weatherHero}>
         <Icon size={clamp(height * 0.22, 40, 72)} stroke={1.3} className={classes.weatherIcon} />
@@ -1147,7 +1180,12 @@ function WeatherControl({ entity, width, height }: ControlProps) {
           <span className={classes.state}>{condition}</span>
         </div>
       </div>
-      {height >= 190 ? <div className={classes.forecast}>{days(count)}</div> : null}
+      {height >= 190 ? (
+        <div className={classes.forecast}>
+          {forecastMessage && <output className={classes.state}>{forecastMessage}</output>}
+          {days(count)}
+        </div>
+      ) : null}
     </Tile>
   );
 }
@@ -1342,7 +1380,13 @@ function SelectControl({ entity, width, height }: ControlProps) {
         }
       />
       {tier === "full" || height >= WIDE_CHIPS_MIN_HEIGHT ? (
-        <div className={classes.chipsStage} data-tier={tier} role="group" aria-label={`${entity.name} options`}>
+        <div
+          className={classes.chipsStage}
+          data-tier={tier}
+          role="group"
+          tabIndex={0}
+          aria-label={`${entity.name} options`}
+        >
           {options.map((option) => (
             <button
               key={option}

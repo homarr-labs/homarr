@@ -252,6 +252,11 @@
   display: contents;
 }
 
+.detailShortcut:focus-visible + * {
+  outline: 2px solid var(--mantine-primary-color-filled);
+  outline-offset: -2px;
+}
+
 .measured {
   width: 100%;
   height: 100%;
@@ -1645,15 +1650,21 @@ button:focus-visible,
   flex: 1;
   flex-wrap: wrap;
   gap: 6px;
-  align-content: center;
+  align-content: start;
   min-height: 0;
   margin-top: 8px;
+  overflow-y: auto;
 }
 
 .chipsStage[data-tier="wide"] {
   flex-wrap: nowrap;
   overflow-x: auto;
   scrollbar-width: none;
+}
+
+.chipsStage:focus-visible {
+  outline: 2px solid var(--mantine-primary-color-filled);
+  outline-offset: -2px;
 }
 
 .chip {

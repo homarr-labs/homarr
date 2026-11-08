@@ -1,5 +1,6 @@
 import type {
   SmartHomeAction,
+  SmartHomeActionReceipt,
   SmartHomeCatalog,
   SmartHomeEntityPatch,
   SmartHomeEntitySelection,
@@ -13,7 +14,7 @@ export interface ISmartHomeIntegration {
   getCatalogAsync(): Promise<SmartHomeCatalog>;
   getHistoryAsync(entityIds: string[], hours: number, samples: number): Promise<SmartHomeHistorySeries[]>;
   getForecastAsync(entityId: string, type: "daily" | "hourly"): Promise<SmartHomeForecastDay[]>;
-  executeActionAsync(entityId: string, action: SmartHomeAction): Promise<void>;
+  executeActionAsync(entityId: string, action: SmartHomeAction): Promise<SmartHomeActionReceipt | void>;
   subscribeEntitiesAsync(
     selection: SmartHomeEntitySelection,
     onPatch: (patch: SmartHomeEntityPatch) => void,

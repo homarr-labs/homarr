@@ -2,6 +2,7 @@
 
 import { useContext, useEffect, useRef } from "react";
 import type { ReactNode } from "react";
+import { UnstyledButton, VisuallyHidden } from "@mantine/core";
 
 import { DetailContext, DetailEntityContext, useDetailsEnabled } from "./hooks";
 import classes from "./styles.module.css";
@@ -100,6 +101,14 @@ export function DetailTrigger({ entityId, name, children }: DetailTriggerProps) 
   return (
     <DetailEntityContext.Provider value={entityId}>
       <div ref={ref} className={classes.detailHost} role="group" aria-label={name} aria-keyshortcuts="Shift+F10">
+        <VisuallyHidden
+          component={UnstyledButton}
+          className={classes.detailShortcut}
+          aria-haspopup="dialog"
+          onClick={() => detail.open(entityId)}
+        >
+          {name}, show details
+        </VisuallyHidden>
         {children}
       </div>
     </DetailEntityContext.Provider>

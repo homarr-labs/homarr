@@ -4,12 +4,14 @@ type CapabilityEntity = Pick<SmartHomeEntity, "domain" | "state" | "attributes">
 
 export const getClimateTemperatureMode = (entity: CapabilityEntity): "single" | "range" | null => {
   if (entity.domain !== "climate") return null;
-  if (["auto", "dry", "fan_only", "unknown", "unavailable"].includes(entity.state)) return null;
+  if (["dry", "fan_only", "unknown", "unavailable"].includes(entity.state)) return null;
   const features = entity.attributes.supportedFeatures ?? 0;
   const single = (features & 1) !== 0;
   const range = (features & 2) !== 0;
-  if (range && (entity.state === "heat_cool" || !single)) return "range";
-  if (single && entity.state !== "heat_cool") return "single";
+  const reportedRange =
+    entity.attributes.targetTemperatureLow !== undefined && entity.attributes.targetTemperatureHigh !== undefined;
+  if (range && (entity.state === "heat_cool" || !single || (entity.state === "auto" && reportedRange))) return "range";
+  if (single) return "single";
   return null;
 };
 
@@ -45,6 +47,13 @@ export const supportsSmartHomeAction = (entity: CapabilityEntity, action: SmartH
       );
     case "setHvacMode":
       return entity.domain === "climate" && attributes.hvacModes?.includes(action.value) === true;
+    case "setHumidity":
+      return (
+        (entity.domain === "humidifier" ||
+          (entity.domain === "climate" && ((attributes.supportedFeatures ?? 0) & 4) !== 0)) &&
+        Number.isInteger(action.value) &&
+        within(action.value, attributes.minHumidity ?? 0, attributes.maxHumidity ?? 100)
+      );
     case "setBrightness":
       return entity.domain === "light" && getLightCapabilities(attributes).brightness;
     case "setRgbColor":

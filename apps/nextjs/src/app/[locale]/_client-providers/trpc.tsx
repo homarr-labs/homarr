@@ -186,9 +186,15 @@ const ScopedTRPCReactProvider = ({ children, demoReadOnly }: PropsWithChildren<{
   const trpcClient = useMemo(() => {
     return clientApi.createClient({
       links: [
-        loggerLink({
-          enabled: (opts) => opts.direction === "down" && opts.result instanceof Error,
-        }),
+        (runtime) => {
+          const log = loggerLink<AppRouter>({
+            enabled: (opts) => opts.direction === "down" && opts.result instanceof Error,
+          })(runtime);
+          return (options) => {
+            if (options.op.path === "widget.smartHome.executeProtectedAction") return options.next(options.op);
+            return log(options);
+          };
+        },
         splitLink({
           condition: ({ type }) => type === "subscription",
           true: splitLink({

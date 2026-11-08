@@ -1,6 +1,7 @@
 "use client";
 
 import { Popover } from "@mantine/core";
+import { getClimateTemperatureMode } from "@homarr/integrations/types";
 
 import type { TablerIcon } from "@homarr/ui";
 
@@ -39,7 +40,11 @@ export function EntityTile({ entity }: { entity: HaEntity }) {
 
   return (
     <DetailTrigger entityId={entity.id} name={entity.name}>
-      <div className={classes.tileFrame} style={getColorVars(entity)}>
+      <div
+        className={classes.tileFrame}
+        style={getColorVars(entity)}
+        data-range={getClimateTemperatureMode(entity) === "range" || undefined}
+      >
         <div
           className={classes.tile}
           data-active={active || undefined}

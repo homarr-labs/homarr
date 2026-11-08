@@ -104,7 +104,12 @@ export interface SmartHomeEntity {
   unit: string | null;
   lastChanged: number;
   lastUpdated: number;
+  contextId?: string;
   attributes: SmartHomeEntityAttributes;
+}
+
+export interface SmartHomeActionReceipt {
+  contextId: string;
 }
 
 export interface SmartHomeArea {
@@ -143,6 +148,19 @@ export interface SmartHomeEntitySelection {
   entityIds?: string[];
   areaIds?: string[];
   domains?: string[];
+  excludedEntityIds?: string[];
+}
+
+export const SMART_HOME_ENTITY_LIMIT = 400;
+
+export class SmartHomeSelectionLimitError extends Error {
+  public constructor(
+    public readonly count: number,
+    public readonly limit = SMART_HOME_ENTITY_LIMIT,
+  ) {
+    super(`Selected ${count} Home Assistant entities; the maximum is ${limit}. Narrow the selection.`);
+    this.name = "SmartHomeSelectionLimitError";
+  }
 }
 
 export interface SmartHomeSnapshot {
@@ -153,7 +171,7 @@ export interface SmartHomeSnapshot {
 
 export interface SmartHomeHistoryPoint {
   time: number;
-  value: number;
+  value: number | null;
 }
 
 export interface SmartHomeHistorySeries {

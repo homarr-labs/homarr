@@ -2,12 +2,16 @@
 
 import { useEffect, useId, useRef, useState } from "react";
 import type { CSSProperties, KeyboardEvent, PointerEvent, ReactNode } from "react";
+import { UnstyledButton } from "@mantine/core";
 
+import { getHistorySegments, getHistoryValues } from "./history";
 import { clamp, useDeviceControlDisabled, useHold } from "./hooks";
 import classes from "./styles.module.css";
 
 interface PillSliderProps {
   value: number;
+  min?: number;
+  max?: number;
   label: string;
   axis: "vertical" | "horizontal";
   onCommit: (value: number) => void;
@@ -38,10 +42,10 @@ const sliderKeySteps: Record<string, number> = {
   PageDown: -20,
 };
 
-const sliderEdges: Record<string, number> = { Home: 0, End: 100 };
-
 export function PillSlider({
   value,
+  min = 0,
+  max = 100,
   label,
   axis,
   onCommit,
@@ -55,14 +59,15 @@ export function PillSlider({
   children,
   renderFooter,
 }: PillSliderProps) {
-  const disabled = useDeviceControlDisabled(disabledProp);
+  const disabled = useDeviceControlDisabled(disabledProp || min >= max);
   const ref = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
   const gesture = useRef<{ x: number; y: number; moved: boolean } | null>(null);
   const previewRef = useRef(onPreview);
   const [local, setLocal] = useState<number | null>(null);
   const [dragging, setDragging] = useState(false);
-  const shown = disabled ? value : (local ?? value);
+  const shown = clamp(disabled ? value : (local ?? value), min, max);
+  const fraction = min < max ? ((shown - min) / (max - min)) * 100 : 0;
 
   useEffect(() => {
     if (!disabled) return;
@@ -77,7 +82,7 @@ export function PillSlider({
 
   useEffect(() => {
     if (!pending && !gesture.current) setLocal(null);
-  }, [pending, value]);
+  }, [pending, value, min, max]);
 
   useEffect(() => {
     previewRef.current?.(local);
@@ -85,10 +90,10 @@ export function PillSlider({
 
   const read = (event: PointerEvent<HTMLDivElement>) => {
     const rect = trackRef.current?.getBoundingClientRect();
-    if (!rect) return 0;
-    const fraction =
+    if (!rect || rect.width <= 0 || rect.height <= 0) return shown;
+    const position =
       axis === "vertical" ? 1 - (event.clientY - rect.top) / rect.height : (event.clientX - rect.left) / rect.width;
-    return clamp(Math.round(fraction * 100), 0, 100);
+    return clamp(Math.round(min + position * (max - min)), min, max);
   };
 
   const onPointerDown = (event: PointerEvent<HTMLDivElement>) => {
@@ -134,10 +139,12 @@ export function PillSlider({
   const onKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
     if (disabled) return;
     const step = sliderKeySteps[event.key];
-    const edge = sliderEdges[event.key];
+    let edge: number | undefined;
+    if (event.key === "Home") edge = min;
+    if (event.key === "End") edge = max;
     if (step !== undefined || edge !== undefined) {
       event.preventDefault();
-      const next = edge ?? clamp(shown + (step ?? 0), 0, 100);
+      const next = edge ?? clamp(shown + (step ?? 0), min, max);
       if (next === shown) return;
       setLocal(next);
       onCommit(next);
@@ -149,9 +156,9 @@ export function PillSlider({
     }
   };
 
-  const fillStyle = axis === "vertical" ? { height: `${shown}%` } : { width: `${shown}%` };
+  const fillStyle = axis === "vertical" ? { height: `${fraction}%` } : { width: `${fraction}%` };
 
-  const clips = splitClips(axis, shown);
+  const clips = splitClips(axis, fraction);
   const trackStyle = track === undefined ? undefined : ({ "--track-size": `${track}px` } as CSSProperties);
 
   return (
@@ -165,12 +172,12 @@ export function PillSlider({
       data-dragging={dragging}
       data-pending={pending ?? false}
       data-disabled={disabled ?? false}
-      data-high={shown >= 50}
+      data-high={fraction >= 50}
       role="slider"
       tabIndex={disabled ? -1 : 0}
       aria-label={label}
-      aria-valuemin={0}
-      aria-valuemax={100}
+      aria-valuemin={min}
+      aria-valuemax={max}
       aria-valuenow={shown}
       aria-valuetext={valueText?.(shown)}
       aria-disabled={disabled}
@@ -182,7 +189,10 @@ export function PillSlider({
         release();
         setLocal(null);
       }}
-      onLostPointerCapture={release}
+      onLostPointerCapture={() => {
+        if (gesture.current) setLocal(null);
+        release();
+      }}
       onKeyDown={onKeyDown}
     >
       <div ref={trackRef} className={classes.pillTrack}>
@@ -218,6 +228,11 @@ interface DialRange {
 }
 
 type DialHandle = "value" | "low" | "high";
+
+interface DialGesture {
+  handle: DialHandle;
+  coincident: number | null;
+}
 
 interface DialProps {
   value: number | null;
@@ -258,7 +273,7 @@ export function Dial({
 }: DialProps) {
   const disabled = useDeviceControlDisabled(disabledProp);
   const ref = useRef<HTMLDivElement>(null);
-  const dragRef = useRef<DialHandle | null>(null);
+  const dragRef = useRef<DialGesture | null>(null);
   const [local, setLocal] = useState<number | null>(null);
   const [localRange, setLocalRange] = useState<DialRange | null>(null);
   const [dragging, setDragging] = useState(false);
@@ -280,7 +295,11 @@ export function Dial({
   }, [pending, value, range?.low, range?.high]);
 
   const interactive = !disabled && min < max && (shown !== null || Boolean(shownRange && onRangeCommit));
-  const snap = (raw: number) => clamp(Math.round((min + Math.round((raw - min) / step) * step) * 100) / 100, min, max);
+  const snap = (raw: number) => {
+    const bounded = clamp(Math.round(raw * 100) / 100, min, max);
+    if (bounded === min || bounded === max) return bounded;
+    return clamp(Math.round((min + Math.round((bounded - min) / step) * step) * 100) / 100, min, max);
+  };
   const fractionOf = (input: number) => clamp((input - min) / (max - min), 0, 1);
 
   const read = (event: PointerEvent<HTMLDivElement>) => {
@@ -306,9 +325,22 @@ export function Dial({
       event.currentTarget.querySelector<HTMLElement>(`[data-dial-handle="${handle}"]`)?.focus({ preventScroll: true });
     }
     event.currentTarget.setPointerCapture(event.pointerId);
-    dragRef.current = handle;
+    const gesture = {
+      handle,
+      coincident: shownRange && shownRange.low === shownRange.high ? shownRange.low : null,
+    };
+    dragRef.current = gesture;
     setDragging(true);
-    preview(handle, next);
+    preview(resolveHandle(gesture, next), next);
+  };
+
+  const resolveHandle = (gesture: DialGesture, next: number) => {
+    if (gesture.coincident !== null && next !== gesture.coincident) {
+      gesture.handle = next < gesture.coincident ? "low" : "high";
+      gesture.coincident = null;
+      ref.current?.querySelector<HTMLElement>(`[data-dial-handle="${gesture.handle}"]`)?.focus({ preventScroll: true });
+    }
+    return gesture.handle;
   };
 
   const rangeAt = (handle: DialHandle, next: number): DialRange | null => {
@@ -334,16 +366,19 @@ export function Dial({
   };
 
   const onPointerMove = (event: PointerEvent<HTMLDivElement>) => {
-    if (interactive && dragRef.current) preview(dragRef.current, read(event));
+    if (!interactive || !dragRef.current) return;
+    const next = read(event);
+    preview(resolveHandle(dragRef.current, next), next);
   };
 
   const onPointerUp = (event: PointerEvent<HTMLDivElement>) => {
-    const handle = dragRef.current;
-    if (!handle) return;
+    const gesture = dragRef.current;
+    if (!gesture) return;
     dragRef.current = null;
     setDragging(false);
     if (!interactive) return;
-    commit(handle, read(event));
+    const next = read(event);
+    commit(resolveHandle(gesture, next), next);
   };
 
   const onKeyDown = (event: KeyboardEvent<HTMLElement>, handle: DialHandle) => {
@@ -512,7 +547,7 @@ interface RoundButtonProps {
 export function RoundButton({ label, size = "md", active, pending, disabled, onClick, children }: RoundButtonProps) {
   const controlDisabled = useDeviceControlDisabled(disabled);
   return (
-    <button
+    <UnstyledButton
       type="button"
       className={classes.round}
       data-size={size}
@@ -525,7 +560,7 @@ export function RoundButton({ label, size = "md", active, pending, disabled, onC
       onClick={onClick}
     >
       {children}
-    </button>
+    </UnstyledButton>
   );
 }
 
@@ -544,7 +579,7 @@ export function HoldButton({ label, hold, size, active, pending, disabled, onCon
   const controlDisabled = useDeviceControlDisabled(disabled);
   const { holding, bind, onHoldEnd } = useHold(onConfirm, hold, controlDisabled);
   return (
-    <button
+    <UnstyledButton
       type="button"
       className={classes.hold}
       style={{ width: size, height: size }}
@@ -570,7 +605,7 @@ export function HoldButton({ label, hold, size, active, pending, disabled, onCon
         />
       </svg>
       {children}
-    </button>
+    </UnstyledButton>
   );
 }
 
@@ -588,7 +623,7 @@ export function KeyButton({ label, hold, active, disabled, compact, onConfirm, c
   const controlDisabled = useDeviceControlDisabled(disabled);
   const { holding, bind, onHoldEnd } = useHold(onConfirm, hold, controlDisabled);
   return (
-    <button
+    <UnstyledButton
       type="button"
       className={classes.key}
       data-active={active ?? false}
@@ -601,26 +636,35 @@ export function KeyButton({ label, hold, active, disabled, compact, onConfirm, c
     >
       {holding ? <span className={classes.keyHold} onAnimationEnd={onHoldEnd} /> : null}
       {children}
-    </button>
+    </UnstyledButton>
   );
 }
 
 interface SparklineProps {
-  values: number[];
+  values: (number | null)[];
   color: string;
 }
 
 export function Sparkline({ values, color }: SparklineProps) {
   const id = useId().replace(/:/g, "");
-  const min = Math.min(...values);
-  const max = Math.max(...values);
+  const numeric = getHistoryValues(values);
+  if (numeric.length === 0) return null;
+  const min = Math.min(...numeric);
+  const max = Math.max(...numeric);
   const range = max - min || 1;
-  const points = values.map((point, index) => {
-    const x = (index / Math.max(values.length - 1, 1)) * 100;
-    const y = 36 - ((point - min) / range) * 30;
-    return `${x.toFixed(2)},${y.toFixed(2)}`;
-  });
-  const line = `M${points.join(" L")}`;
+  const segments = getHistorySegments(values).map((segment) =>
+    segment.map(({ value, index }) => {
+      const x = (index / Math.max(values.length - 1, 1)) * 100;
+      const y = 36 - ((value - min) / range) * 30;
+      return { x: x.toFixed(2), y: y.toFixed(2) };
+    }),
+  );
+  const line = segments.map((points) => `M${points.map(({ x, y }) => `${x},${y}`).join(" L")}`).join(" ");
+  const area = segments
+    .map(
+      (points) => `M${points.map(({ x, y }) => `${x},${y}`).join(" L")} L${points.at(-1)?.x},40 L${points[0]?.x},40 Z`,
+    )
+    .join(" ");
 
   return (
     <svg viewBox="0 0 100 40" preserveAspectRatio="none" className={classes.spark} aria-hidden>
@@ -630,7 +674,7 @@ export function Sparkline({ values, color }: SparklineProps) {
           <stop offset="1" stopColor={color} stopOpacity="0" />
         </linearGradient>
       </defs>
-      <path d={`${line} L100,40 L0,40 Z`} fill={`url(#${id})`} />
+      <path d={area} fill={`url(#${id})`} />
       <path
         d={line}
         fill="none"

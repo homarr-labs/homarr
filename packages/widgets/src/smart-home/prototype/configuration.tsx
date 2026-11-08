@@ -338,7 +338,11 @@ interface BlockAdderProps {
 
 const toAreaSetKey = (areaIds: readonly string[]) => areaIds.toSorted().join(",");
 
-export function BlockAdder({ catalog, values, onAdd }: BlockAdderProps) {
+export function BlockAdder(props: BlockAdderProps) {
+  return <SourceBlockAdder key={props.catalog.integrationId ?? "fixture"} {...props} />;
+}
+
+function SourceBlockAdder({ catalog, values, onAdd }: BlockAdderProps) {
   const t = useI18n("widget.smartHome-prototype.block");
   const [mode, setMode] = useState<AddMode>("rooms");
   const [areaIds, setAreaIds] = useState<string[]>([]);
@@ -346,6 +350,7 @@ export function BlockAdder({ catalog, values, onAdd }: BlockAdderProps) {
   const [entityPickerKey, setEntityPickerKey] = useState(0);
   const [notice, setNotice] = useState<"duplicate" | "covered" | null>(null);
   const source = catalog.integrationId;
+  const ready = catalog.state.status === "ready";
   const existing = parseSourceBlocks(values, source);
   const explicitEntityIds = new Set(existing.flatMap((block) => (block.kind === "entity" ? [block.entityId] : [])));
   const existingAreaSets = new Set(
@@ -354,6 +359,7 @@ export function BlockAdder({ catalog, values, onAdd }: BlockAdderProps) {
   const coveredAreaIds = new Set(existing.flatMap((block) => (block.kind === "areas" ? block.areaIds : [])));
 
   const addEntity = (entityId: string | null) => {
+    if (!ready) return;
     setEntityPickerKey((key) => key + 1);
     if (!entityId) return;
     if (explicitEntityIds.has(entityId)) {
@@ -365,6 +371,7 @@ export function BlockAdder({ catalog, values, onAdd }: BlockAdderProps) {
   };
 
   const addRooms = () => {
+    if (!ready) return;
     const groups = merge ? [areaIds] : areaIds.map((areaId) => [areaId]);
     const fresh = groups.filter(
       (group) => !existingAreaSets.has(toAreaSetKey(group)) && group.some((areaId) => !coveredAreaIds.has(areaId)),
@@ -415,7 +422,7 @@ export function BlockAdder({ catalog, values, onAdd }: BlockAdderProps) {
               onChange={(event) => setMerge(event.currentTarget.checked)}
               disabled={areaIds.length < 2}
             />
-            <Button size="xs" onClick={addRooms} disabled={areaIds.length === 0}>
+            <Button size="xs" onClick={addRooms} disabled={!ready || areaIds.length === 0}>
               {t("add.submit")}
             </Button>
           </Group>

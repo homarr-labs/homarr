@@ -53,7 +53,7 @@ const resolveEntities = (configuration: PrototypeConfiguration, entities: Record
       .filter((entity) => areaRank(entity) !== -1)
       .filter((entity) => configuration.roomDomains.length === 0 || configuration.roomDomains.includes(entity.domain))
       .filter((entity) => !claimed.has(entity.id) && !placed.has(entity.id) && !excluded.has(entity.id))
-      .toSorted((a, b) => domainRank(a) - domainRank(b) || areaRank(a) - areaRank(b));
+      .toSorted((a, b) => domainRank(a) - domainRank(b) || areaRank(a) - areaRank(b) || a.id.localeCompare(b.id, "en"));
     members.forEach((entity) => placed.add(entity.id));
     return members;
   });
@@ -459,7 +459,7 @@ function LiveState({ children }: { children: ReactNode }) {
   if (status?.status === "error") {
     return (
       <div className={classes.empty}>
-        {t("error")}
+        {status.message ?? t("error")}
         <Button size="compact-xs" variant="light" onClick={status.retry}>
           {t("retry")}
         </Button>
@@ -549,7 +549,13 @@ function ConfigurableContent({
     <PrototypeInteractionProvider blocked={blocked}>
       <div className={classes.frame}>
         {integrationId && (
-          <PrototypeLiveProvider key={integrationId} integrationId={integrationId} blockIds={configuration.blockIds}>
+          <PrototypeLiveProvider
+            key={integrationId}
+            integrationId={integrationId}
+            blockIds={configuration.blockIds}
+            roomDomains={configuration.roomDomains}
+            excludedEntityIds={configuration.excludedEntityIds}
+          >
             <LiveState>{preview}</LiveState>
           </PrototypeLiveProvider>
         )}

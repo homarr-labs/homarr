@@ -9,6 +9,7 @@ import type {
   SmartHomeHistorySeries,
   SmartHomeSnapshot,
 } from "../../interfaces/smart-home/smart-home-types";
+import { SMART_HOME_ENTITY_LIMIT, SmartHomeSelectionLimitError } from "../../interfaces/smart-home/smart-home-types";
 import {
   mockSmartHomeAreas,
   mockSmartHomeEntities,
@@ -96,7 +97,7 @@ export class SmartHomeMockService implements ISmartHomeIntegration {
   ): Promise<void> {
     if (signal.aborted) return;
     const initial = this.select(selection);
-    const watched = new Set(initial.map((entity) => entity.id));
+    const watched = new Set([...initial.map((entity) => entity.id), ...(selection.entityIds ?? [])]);
     const listener = (patch: SmartHomeEntityPatch) => {
       const changed = patch.changed.filter((entity) => watched.has(entity.id));
       if (changed.length > 0) onPatch({ changed, removed: [] });
@@ -127,16 +128,20 @@ export class SmartHomeMockService implements ISmartHomeIntegration {
     });
     const domains = selection.domains?.length ? new Set(selection.domains) : null;
     const areaIds = selection.areaIds?.length ? new Set(selection.areaIds) : null;
+    const excludedIds = new Set(selection.excludedEntityIds ?? []);
     const includeAll = !areaIds && (selection.entityIds ?? []).length === 0;
     const ambientIds = mockSmartHomeAreas
       .filter((area) => areaIds?.has(area.id))
       .flatMap((area) => [area.temperatureEntityId, area.humidityEntityId]);
     const implicit = all.filter((entity) => {
+      if (excludedIds.has(entity.id)) return false;
       if (domains && !domains.has(entity.domain)) return false;
       if (areaIds) return (entity.areaId !== null && areaIds.has(entity.areaId)) || ambientIds.includes(entity.id);
       return includeAll;
     });
-    return [...new Map([...explicit, ...implicit].map((entity) => [entity.id, entity])).values()];
+    const selected = [...new Map([...explicit, ...implicit].map((entity) => [entity.id, entity])).values()];
+    if (selected.length > SMART_HOME_ENTITY_LIMIT) throw new SmartHomeSelectionLimitError(selected.length);
+    return selected;
   }
 
   private update(entity: SmartHomeEntity) {

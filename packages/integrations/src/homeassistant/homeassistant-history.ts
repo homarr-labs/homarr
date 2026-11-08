@@ -15,11 +15,15 @@ export const bucketHistory = (
   states: HistoryState[],
   { start, end, samples }: BucketOptions,
 ): SmartHomeHistoryPoint[] => {
-  const numeric = states
-    .map((item) => ({ time: Math.max(item.time, start), value: Number.parseFloat(item.state) }))
-    .filter((item) => Number.isFinite(item.value))
+  const observations = states
+    .map((item) => {
+      const parsed = Number(item.state);
+      let value: number | null = null;
+      if (item.state.trim().length > 0 && Number.isFinite(parsed)) value = parsed;
+      return { time: Math.max(item.time, start), value };
+    })
     .toSorted((left, right) => left.time - right.time);
-  if (numeric.length === 0 || samples < 2) return [];
+  if (observations.length === 0 || samples < 2) return [];
 
   const step = (end - start) / (samples - 1);
   const points: SmartHomeHistoryPoint[] = [];
@@ -30,18 +34,23 @@ export const bucketHistory = (
     const time = Math.round(start + step * index);
     let sum = 0;
     let count = 0;
-    while (cursor < numeric.length && (numeric[cursor]?.time ?? Number.POSITIVE_INFINITY) <= time) {
-      const value = numeric[cursor]?.value ?? 0;
+    while (cursor < observations.length && (observations[cursor]?.time ?? Number.POSITIVE_INFINITY) <= time) {
+      const value = observations[cursor]?.value ?? null;
       current = value;
+      cursor++;
+      if (value === null) {
+        sum = 0;
+        count = 0;
+        continue;
+      }
       sum += value;
       count++;
-      cursor++;
     }
     if (count > 0) {
       points.push({ time, value: Math.round((sum / count) * 100) / 100 });
       continue;
     }
-    if (current !== null) points.push({ time, value: current });
+    points.push({ time, value: current });
   }
   return points;
 };

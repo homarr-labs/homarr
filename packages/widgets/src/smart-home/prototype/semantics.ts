@@ -334,8 +334,24 @@ const binaryLabels: Record<string, [string, string]> = {
   smoke: ["Smoke", "Clear"],
 };
 
-export const formatNumber = (value: number, maximumFractionDigits = 1) =>
-  new Intl.NumberFormat(undefined, { maximumFractionDigits }).format(value);
+export const formatNumber = (value: number | null | undefined, maximumFractionDigits = 1) => {
+  if (value === null || value === undefined || !Number.isFinite(value)) return "—";
+  return new Intl.NumberFormat(undefined, { maximumFractionDigits }).format(value);
+};
+
+export const getForecastMessage = (entity: HaEntity) => {
+  switch (entity.attributes.forecastStatus) {
+    case "loading":
+      return "Loading forecast…";
+    case "error":
+      return "Forecast unavailable";
+    case "unsupported":
+      return "Forecast not supported";
+    default:
+      if (!entity.attributes.forecast?.length) return "No forecast data reported";
+      return null;
+  }
+};
 
 export const formatRelativeTime = (timestamp: number) => {
   const seconds = Math.round((timestamp - Date.now()) / 1000);
@@ -407,13 +423,13 @@ export const formatEntityState = (entity: HaEntity): string => {
       if (entity.domain === "automation" && entity.state === "off") return "Disabled";
       return attributes.lastTriggered ? `Ran ${formatRelativeTime(attributes.lastTriggered)}` : "Never ran";
     case "weather":
-      return `${formatNumber(attributes.currentTemperature ?? 0)}° · ${stateLabels[entity.state] ?? entity.state}`;
+      return `${formatNumber(attributes.currentTemperature)}° · ${stateLabels[entity.state] ?? entity.state}`;
     case "update":
       return entity.state === "on" ? `${attributes.latestVersion} available` : "Up to date";
     case "vacuum":
       return attributes.status ?? stateLabels[entity.state] ?? entity.state;
     case "humidifier":
-      return entity.state === "on" ? `Target ${attributes.targetHumidity ?? 0}%` : "Off";
+      return entity.state === "on" ? `Target ${formatNumber(attributes.targetHumidity)}%` : "Off";
     case "input_select":
       return entity.state;
     default:

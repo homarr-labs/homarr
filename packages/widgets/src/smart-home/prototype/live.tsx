@@ -6,10 +6,13 @@ import type { ReactNode } from "react";
 import { clientApi } from "@homarr/api/client";
 import { applySmartHomeAction, supportsSmartHomeAction } from "@homarr/integrations/types";
 import type {
+  SmartHomeAction,
   SmartHomeArea,
+  SmartHomeCatalogEntity,
   SmartHomeEntity,
   SmartHomeEntityAttributes,
   SmartHomeEntitySelection,
+  SmartHomeForecastDay,
   SmartHomeHistorySeries,
   SmartHomeSnapshot,
 } from "@homarr/integrations/types";
@@ -17,12 +20,21 @@ import { showErrorNotification, showWarningNotification } from "@homarr/notifica
 import { useI18n } from "@homarr/translation/client";
 
 import { toSmartHomeActionInput, useSmartHomeSnapshot } from "../_shared/use-smart-home";
+import { useSmartHomeCatalog } from "../_inputs/use-smart-home-catalog";
 import { parseBlockId } from "./configuration";
 import { registerAreas } from "./semantics";
 import { PrototypeSourceProvider } from "./store";
 import type { PrototypeEntityMap, PrototypeEntitySource } from "./store";
 import { toPrototypeDomain } from "./types";
-import type { HaAction, HaArea, HaAttributes, HaEntity, PrototypeActionResult, PrototypeEntityError } from "./types";
+import type {
+  HaAction,
+  HaArea,
+  HaAttributes,
+  HaEntity,
+  HaForecastDay,
+  PrototypeActionResult,
+  PrototypeEntityError,
+} from "./types";
 
 const SETTLE_TIMEOUT_MS = 8_000;
 const HISTORY_LIMIT = 20;
@@ -58,6 +70,8 @@ const toAttributes = (domain: string, attributes: SmartHomeEntityAttributes): Ha
   presetModes: attributes.presetModes,
   currentHumidity: attributes.currentHumidity,
   targetHumidity: attributes.targetHumidity,
+  minHumidity: attributes.minHumidity,
+  maxHumidity: attributes.maxHumidity,
   position: attributes.position,
   percentage: attributes.percentage,
   mediaTitle: attributes.mediaTitle,
@@ -93,7 +107,7 @@ const toAreaKey = (integrationId: string, areaId: string | null) => {
   return createAreaKey(integrationId, areaId);
 };
 
-const toPrototypeEntity = (integrationId: string, entity: SmartHomeEntity, history: number[] | null): HaEntity => {
+const toPrototypeEntity = (integrationId: string, entity: SmartHomeEntity, history: HaEntity["history"]): HaEntity => {
   const { domain, readOnly } = toPrototypeDomain(entity.domain);
   return {
     id: entity.id,
@@ -147,7 +161,7 @@ type IntentKey =
 
 interface Intent {
   keys: IntentKey[];
-  matches: (confirmed: SmartHomeEntity, base: number) => boolean;
+  matches: (confirmed: SmartHomeEntity, base: number, contextId?: string) => boolean;
 }
 
 const near = (value: number | undefined, target: number, tolerance: number) =>
@@ -161,23 +175,12 @@ const normalizeRgb = (color: [number, number, number]) => {
   });
 };
 
-const isActive = (entity: SmartHomeEntity) => {
-  switch (entity.domain) {
-    case "cover":
-    case "valve":
-      return entity.state !== "closed" && entity.state !== "closing";
-    case "lock":
-      return entity.state !== "locked" && entity.state !== "locking";
-    case "media_player":
-      return entity.state === "playing";
-    case "climate":
-      return entity.state !== "off";
-    default:
-      return entity.state === "on";
-  }
-};
-
 const changedSince = (confirmed: SmartHomeEntity, base: number) => confirmed.lastUpdated > base;
+
+const isNativeColor = (entity: SmartHomeEntity) =>
+  entity.state === "on" &&
+  entity.attributes.rgbColor !== undefined &&
+  (entity.attributes.colorMode === "hs" || entity.attributes.colorMode === "xy");
 
 const stateIn =
   (...states: string[]) =>
@@ -198,16 +201,18 @@ const createIntent = (action: HaAction, optimistic: SmartHomeEntity): Intent => 
     case "turnOn":
     case "turnOff":
     case "mediaPlayPause":
-      return { keys: ["state"], matches: (confirmed) => isActive(confirmed) === isActive(optimistic) };
+      return { keys: ["state"], matches: stateIn(optimistic.state) };
     case "open":
     case "close":
-      return { keys: ["state", "position"], matches: (confirmed) => isActive(confirmed) === isActive(optimistic) };
+      return { keys: ["state", "position"], matches: stateIn(optimistic.state) };
     case "stop":
       return { keys: ["state", "position"], matches: changedSince };
     case "setPosition":
       return {
         keys: ["state", "position"],
-        matches: reaches((entity) => entity.attributes.position, action.value, 1),
+        matches: (confirmed, base) =>
+          confirmed.state === optimistic.state &&
+          reaches((entity) => entity.attributes.position, action.value, 1)(confirmed, base),
       };
     case "setBrightness": {
       if (action.value <= 0) return { keys: ["state", "brightness"], matches: stateIn("off") };
@@ -240,14 +245,17 @@ const createIntent = (action: HaAction, optimistic: SmartHomeEntity): Intent => 
     case "setRgbColor":
       return {
         keys: ["state", "color"],
-        matches: (entity, base) => {
+        matches: (entity, base, contextId) => {
           const rgb = entity.attributes.rgbColor;
           if (entity.state !== "on" || !rgb) return false;
           const colorMode = entity.attributes.colorMode;
           if (colorMode && !["rgb", "hs", "xy", "rgbw", "rgbww"].includes(colorMode)) return false;
+          if (rgb.every((channel, index) => channel === action.value[index])) return true;
+          if (isNativeColor(entity)) {
+            return changedSince(entity, base) && contextId !== undefined && entity.contextId === contextId;
+          }
           const actual = normalizeRgb(rgb);
           const target = normalizeRgb(action.value);
-          if (rgb.every((channel, index) => channel === action.value[index])) return true;
           return (
             changedSince(entity, base) &&
             actual.every((channel, index) => Math.abs(channel - (target[index] ?? 0)) <= 0.06)
@@ -279,15 +287,15 @@ const createIntent = (action: HaAction, optimistic: SmartHomeEntity): Intent => 
     case "setPresetMode":
       return { keys: ["presetMode"], matches: (confirmed) => confirmed.attributes.presetMode === action.value };
     case "lock":
-      return { keys: ["state"], matches: stateIn("locked", "locking") };
+      return { keys: ["state"], matches: stateIn("locked") };
     case "unlock":
-      return { keys: ["state"], matches: stateIn("unlocked", "unlocking", "open", "opening") };
+      return { keys: ["state"], matches: stateIn("unlocked") };
     case "vacuumStart":
       return { keys: ["state"], matches: stateIn("cleaning") };
     case "vacuumReturn":
       return { keys: ["state"], matches: stateIn("returning", "docked") };
     case "alarmArm":
-      return { keys: ["state"], matches: stateIn(`armed_${action.mode}`, "arming") };
+      return { keys: ["state"], matches: stateIn(`armed_${action.mode}`) };
     case "alarmDisarm":
       return { keys: ["state"], matches: stateIn("disarmed") };
     case "mediaNext":
@@ -300,8 +308,12 @@ const createIntent = (action: HaAction, optimistic: SmartHomeEntity): Intent => 
   }
 };
 
+interface ActionReceipt {
+  contextId?: string;
+}
+
 interface ActionContext {
-  execute: (entityId: string, action: HaAction) => Promise<unknown>;
+  execute: (entityId: string, action: SmartHomeAction) => Promise<ActionReceipt | void>;
   refresh: () => void;
   notify: (entityName: string, error: PrototypeEntityError) => void;
   messages: Record<PrototypeEntityError["kind"], string>;
@@ -309,6 +321,10 @@ interface ActionContext {
 
 interface Step {
   action: HaAction;
+  command: SmartHomeAction;
+  contextId?: string;
+  observations: Map<string, SmartHomeEntity>;
+  deadline: number;
   intent: Intent;
   base: number;
   requiresFresh: boolean;
@@ -346,6 +362,56 @@ const createProjection = (action: HaAction, previous: SmartHomeEntity, optimisti
   });
 };
 
+const resolveCommand = (action: HaAction, optimistic: SmartHomeEntity): SmartHomeAction => {
+  if (action.type === "mediaPlayPause" || (action.type === "toggle" && optimistic.domain === "media_player")) {
+    if (optimistic.state === "playing") return { type: "mediaPlay" };
+    return { type: "mediaPause" };
+  }
+  if (action.type !== "toggle") return action;
+  switch (optimistic.domain) {
+    case "cover":
+    case "valve":
+      if (optimistic.state === "closed") return { type: "close" };
+      return { type: "open" };
+    case "climate":
+      return { type: "setHvacMode", value: optimistic.state };
+    case "lock":
+      if (optimistic.state === "locked") return { type: "lock" };
+      return { type: "unlock" };
+    case "scene":
+    case "button":
+    case "input_button":
+      return { type: "trigger" };
+    default:
+      if (optimistic.state === "on") return { type: "turnOn" };
+      return { type: "turnOff" };
+  }
+};
+
+const sameTarget = (left: SmartHomeAction, right: SmartHomeAction) => {
+  if (["trigger", "mediaNext", "mediaPrevious", "stop", "install"].includes(left.type)) return false;
+  return JSON.stringify(left) === JSON.stringify(right);
+};
+
+const isTransition = (entity: SmartHomeEntity, command: SmartHomeAction) => {
+  switch (command.type) {
+    case "lock":
+      return entity.state === "locking";
+    case "unlock":
+      return entity.state === "unlocking";
+    case "alarmArm":
+      return entity.state === "arming";
+    case "open":
+      return entity.state === "opening";
+    case "close":
+      return entity.state === "closing";
+    case "setPosition":
+      return entity.state === "opening" || entity.state === "closing";
+    default:
+      return false;
+  }
+};
+
 class SharedActionStore {
   private steps = new Map<string, Step[]>();
   private confirmed = new Map<string, SmartHomeEntity>();
@@ -378,6 +444,11 @@ class SharedActionStore {
       const current = this.confirmed.get(entity.id);
       const next = newest(current, entity);
       if (next !== current) this.confirmed.set(entity.id, next);
+      for (const step of this.steps.get(entity.id) ?? []) {
+        if (step.command.type !== "setRgbColor" || !entity.contextId) continue;
+        if (step.status === "queued" || !changedSince(entity, step.base) || !isNativeColor(entity)) continue;
+        step.observations.set(entity.contextId, entity);
+      }
       const tracked = this.errors.get(entity.id);
       if (tracked && next.lastUpdated > tracked.base) {
         this.errors.delete(entity.id);
@@ -393,7 +464,11 @@ class SharedActionStore {
     if (!steps) return base;
     const cached = this.overlays.get(base.id);
     if (cached?.base === base && cached.steps === steps) return cached.value;
-    const value = steps.reduce((entity, step) => step.project(entity), base);
+    let value = steps.reduce((entity, step) => step.project(entity), base);
+    const latest = steps.findLast((step) => !step.superseded);
+    if (latest && latest.status !== "queued" && changedSince(base, latest.base) && isTransition(base, latest.command)) {
+      value = { ...value, state: base.state };
+    }
     this.overlays.set(base.id, { base, steps, value });
     return value;
   }
@@ -403,37 +478,63 @@ class SharedActionStore {
     const previous = this.display(base);
     const optimistic = applySmartHomeAction(previous, action);
     const intent = createIntent(action, optimistic);
+    const command = resolveCommand(action, optimistic);
+    const overlaps = (step: Step) => step.intent.keys.some((key) => intent.keys.includes(key));
+    const existing = this.steps.get(entityId) ?? [];
+    const latest = existing.findLast(overlaps);
+    let reusable = existing.find((step) => step.status === "sent" && sameTarget(step.command, command));
+    if (latest && !latest.superseded && sameTarget(latest.command, command)) reusable = latest;
+    if (reusable) {
+      reusable.resolve("superseded");
+      const { promise, resolve } = Promise.withResolvers<PrototypeActionResult>();
+      reusable.resolve = resolve;
+      reusable.superseded = false;
+      const remaining = existing.filter((step) => {
+        if (step === reusable || step.status === "sent" || !overlaps(step)) return true;
+        this.settle(step, "superseded");
+        return false;
+      });
+      this.setSteps(entityId, remaining);
+      this.errors.delete(entityId);
+      this.emit();
+      this.sendNext(entityId);
+      return promise;
+    }
     let requiresFresh = false;
 
     const remaining: Step[] = [];
-    for (const step of this.steps.get(entityId) ?? []) {
-      const overlaps = step.intent.keys.some((key) => intent.keys.includes(key));
-      if (overlaps && (step.status !== "queued" || step.requiresFresh)) requiresFresh = true;
-      if (overlaps && step.status !== "sent") {
+    for (const step of existing) {
+      const overlapping = overlaps(step);
+      if (overlapping && (step.status !== "queued" || step.requiresFresh)) requiresFresh = true;
+      if (overlapping && step.status !== "sent") {
         this.settle(step, "superseded");
         continue;
       }
-      if (overlaps) step.superseded = true;
+      if (overlapping) step.superseded = true;
       remaining.push(step);
     }
 
     this.errors.delete(entityId);
-    return new Promise((resolve) => {
-      const step: Step = {
-        action,
-        intent,
-        base: this.confirmed.get(entityId)?.lastUpdated ?? base.lastUpdated,
-        requiresFresh,
-        project: createProjection(action, previous, optimistic),
-        status: "queued",
-        superseded: false,
-        context,
-        resolve,
-      };
-      this.setSteps(entityId, [...remaining, step]);
-      this.emit();
-      if (!remaining.some((candidate) => candidate.status !== "acknowledged")) void this.send(entityId, step);
-    });
+    const { promise, resolve } = Promise.withResolvers<PrototypeActionResult>();
+    const step: Step = {
+      action,
+      command,
+      observations: new Map(),
+      deadline: Date.now() + SETTLE_TIMEOUT_MS,
+      intent,
+      base: this.confirmed.get(entityId)?.lastUpdated ?? base.lastUpdated,
+      requiresFresh,
+      project: createProjection(action, previous, optimistic),
+      status: "queued",
+      superseded: false,
+      context,
+      resolve,
+    };
+    this.setSteps(entityId, [...remaining, step]);
+    step.timer = setTimeout(() => this.expire(entityId, step), SETTLE_TIMEOUT_MS);
+    this.emit();
+    this.sendNext(entityId);
+    return promise;
   }
 
   private async send(entityId: string, step: Step) {
@@ -441,36 +542,51 @@ class SharedActionStore {
     step.status = "sent";
     let failure: { error: unknown } | null = null;
     try {
-      await step.context.execute(entityId, step.action);
+      const receipt = await step.context.execute(entityId, step.command);
+      if (receipt) step.contextId = receipt.contextId;
     } catch (error) {
       failure = { error };
     }
 
-    if (failure) {
+    if (!this.steps.get(entityId)?.includes(step)) return;
+    if (step.superseded) {
+      this.removeStep(entityId, step);
+      this.settle(step, "superseded");
+    } else if (failure) {
       this.removeStep(entityId, step);
       const message = getErrorMessage(failure.error) ?? step.context.messages.failed;
       this.reject(entityId, step, { kind: "failed", action: step.action.type, message, at: Date.now() });
-    } else if (step.superseded) {
-      this.removeStep(entityId, step);
-      this.settle(step, "superseded");
     } else {
       step.status = "acknowledged";
-      step.timer = setTimeout(() => this.expire(entityId, step), SETTLE_TIMEOUT_MS);
       step.context.refresh();
       this.reconcile(entityId);
     }
     this.emit();
+    this.sendNext(entityId);
+  }
 
-    const next = this.steps.get(entityId)?.find((candidate) => candidate.status === "queued");
-    if (next) void this.send(entityId, next);
+  private sendNext(entityId: string) {
+    const steps = this.steps.get(entityId);
+    if (steps?.some((candidate) => candidate.status === "sent")) return;
+    const next = steps?.find((candidate) => candidate.status === "queued");
+    if (!next) return;
+    if (Date.now() >= next.deadline) {
+      this.expire(entityId, next);
+      return;
+    }
+    void this.send(entityId, next);
   }
 
   private expire(entityId: string, step: Step) {
     if (!this.steps.get(entityId)?.includes(step)) return;
     this.removeStep(entityId, step);
-    const message = step.context.messages.unconfirmed;
-    this.reject(entityId, step, { kind: "unconfirmed", action: step.action.type, message, at: Date.now() });
+    if (step.superseded) this.settle(step, "superseded");
+    else {
+      const message = step.context.messages.unconfirmed;
+      this.reject(entityId, step, { kind: "unconfirmed", action: step.action.type, message, at: Date.now() });
+    }
     this.emit();
+    this.sendNext(entityId);
   }
 
   private reject(entityId: string, step: Step, error: PrototypeEntityError) {
@@ -484,12 +600,15 @@ class SharedActionStore {
     const steps = this.steps.get(entityId);
     const confirmed = this.confirmed.get(entityId);
     if (!steps || !confirmed) return false;
-    const matched = steps.filter(
-      (step) =>
+    const matched = steps.filter((step) => {
+      const observed = step.contextId && step.observations.get(step.contextId);
+      const confirmation = observed || confirmed;
+      return (
         step.status === "acknowledged" &&
-        (!step.requiresFresh || changedSince(confirmed, step.base)) &&
-        step.intent.matches(confirmed, step.base),
-    );
+        (!step.requiresFresh || changedSince(confirmation, step.base)) &&
+        step.intent.matches(confirmation, step.base, step.contextId)
+      );
+    });
     if (matched.length === 0) return false;
     this.setSteps(
       entityId,
@@ -538,13 +657,20 @@ const getActionStore = (integrationId: string) => {
 
 interface CachedEntity {
   source: SmartHomeEntity;
-  history: number[] | undefined;
+  history: HaEntity["history"] | undefined;
+  forecast: EntityForecast | undefined;
   value: HaEntity;
+}
+
+interface EntityForecast {
+  status: NonNullable<HaAttributes["forecastStatus"]>;
+  days: HaForecastDay[] | undefined;
 }
 
 class LivePrototypeSource implements PrototypeEntitySource {
   private confirmed = new Map<string, SmartHomeEntity>();
-  private history = new Map<string, number[]>();
+  private history = new Map<string, NonNullable<HaEntity["history"]>>();
+  private forecasts = new Map<string, EntityForecast>();
   private cache = new Map<string, CachedEntity>();
   private listeners = new Set<() => void>();
   private entities: PrototypeEntityMap = {};
@@ -588,10 +714,24 @@ class LivePrototypeSource implements PrototypeEntitySource {
     this.context = context;
   }
 
+  clear() {
+    this.context = null;
+    this.confirmed.clear();
+    this.history.clear();
+    this.forecasts.clear();
+    this.cache.clear();
+    this.areas = [];
+    this.areaSource = null;
+    this.publish();
+  }
+
   sync(snapshot: SmartHomeSnapshot) {
     const next = new Map<string, SmartHomeEntity>();
     for (const entity of snapshot.entities) next.set(entity.id, newest(this.confirmed.get(entity.id), entity));
     this.confirmed = next;
+    for (const entityId of this.forecasts.keys()) {
+      if (!next.has(entityId)) this.forecasts.delete(entityId);
+    }
     if (snapshot.areas !== this.areaSource) {
       this.areaSource = snapshot.areas;
       this.areas = snapshot.areas.map((area) => toPrototypeArea(this.integrationId, area));
@@ -607,6 +747,11 @@ class LivePrototypeSource implements PrototypeEntitySource {
         .filter((entry) => entry.points.length > 1)
         .map((entry) => [entry.entityId, entry.points.map((point) => point.value)]),
     );
+    this.publish();
+  }
+
+  setForecast(entityId: string, forecast: EntityForecast) {
+    this.forecasts.set(entityId, forecast);
     this.publish();
   }
 
@@ -630,10 +775,15 @@ class LivePrototypeSource implements PrototypeEntitySource {
 
   private toEntity(source: SmartHomeEntity) {
     const history = this.history.get(source.id);
+    const forecast = this.forecasts.get(source.id);
     const cached = this.cache.get(source.id);
-    if (cached?.source === source && cached.history === history) return cached.value;
+    if (cached?.source === source && cached.history === history && cached.forecast === forecast) return cached.value;
     const value = toPrototypeEntity(this.integrationId, source, history ?? null);
-    this.cache.set(source.id, { source, history, value });
+    if (forecast) {
+      value.attributes.forecast = forecast.days;
+      value.attributes.forecastStatus = forecast.status;
+    }
+    this.cache.set(source.id, { source, history, forecast, value });
     return value;
   }
 
@@ -659,6 +809,7 @@ export interface PrototypeLiveStatus {
   status: "loading" | "error" | "ready";
   isLive: boolean;
   retry: () => void;
+  message?: string;
 }
 
 const LiveStatusContext = createContext<PrototypeLiveStatus | null>(null);
@@ -667,7 +818,13 @@ export const usePrototypeLiveStatus = () => useContext(LiveStatusContext);
 
 type LiveSelection = Required<SmartHomeEntitySelection>;
 
-const toSelection = (integrationId: string, blockIds: readonly string[]): LiveSelection => {
+const toSelection = (
+  integrationId: string,
+  blockIds: readonly string[],
+  roomDomains: readonly string[],
+  excludedEntityIds: readonly string[],
+  catalogEntities: readonly SmartHomeCatalogEntity[] = [],
+): LiveSelection | null => {
   const entityIds = new Set<string>();
   const areaIds = new Set<string>();
   const blocks = blockIds.flatMap((id) => parseBlockId(id) ?? []).filter((block) => block.source === integrationId);
@@ -675,15 +832,80 @@ const toSelection = (integrationId: string, blockIds: readonly string[]): LiveSe
     if (block.kind === "entity" && ENTITY_ID_PATTERN.test(block.entityId)) entityIds.add(block.entityId);
     if (block.kind === "areas") block.areaIds.forEach((areaId) => areaIds.add(areaId));
   }
+  const exclusions = [...new Set(excludedEntityIds)].toSorted();
+  if (entityIds.size > 200 || areaIds.size > 50 || exclusions.length > 400) return null;
+  const domains = new Set(roomDomains);
+  if (domains.has("input_select")) domains.add("select");
+  if (domains.has("button")) domains.add("input_button");
+  if (domains.has("sensor")) {
+    for (const entity of catalogEntities) {
+      if (entity.areaId === null || !areaIds.has(entity.areaId)) continue;
+      if (toPrototypeDomain(entity.domain).domain === "sensor") domains.add(entity.domain);
+    }
+  }
+  if (domains.size > 400) return null;
   return {
-    entityIds: [...entityIds].toSorted().slice(0, 200),
-    areaIds: [...areaIds].toSorted().slice(0, 50),
-    domains: [],
+    entityIds: [...entityIds].toSorted(),
+    areaIds: [...areaIds].toSorted(),
+    domains: [...domains].toSorted(),
+    excludedEntityIds: exclusions,
   };
 };
 
 const isHistoryCandidate = (entity: SmartHomeEntity) =>
-  entity.domain === "sensor" && entity.stateClass === "measurement" && Number.isFinite(Number(entity.state));
+  entity.domain === "sensor" && entity.stateClass === "measurement";
+
+const toForecastDay = (day: SmartHomeForecastDay, type: "daily" | "hourly"): HaForecastDay => {
+  const time = new Date(day.time);
+  let label = time.toLocaleDateString(undefined, { weekday: "short" });
+  if (type === "hourly") label = time.toLocaleTimeString(undefined, { hour: "numeric" });
+  return {
+    time: day.time,
+    day: label,
+    condition: day.condition ?? null,
+    high: day.temperatureHigh,
+    low: day.temperatureLow,
+    precipitationProbability: day.precipitationProbability,
+  };
+};
+
+interface LiveForecastProps {
+  integrationId: string;
+  entityId: string;
+  supportedFeatures: number | undefined;
+  source: LivePrototypeSource;
+}
+
+function LiveForecast({ integrationId, entityId, supportedFeatures, source }: LiveForecastProps) {
+  const features = supportedFeatures ?? 0;
+  let type: "daily" | "hourly" | null = null;
+  if ((features & 1) !== 0) type = "daily";
+  else if ((features & 2) !== 0) type = "hourly";
+  const { data, error } = clientApi.widget.smartHome.forecast.useQuery(
+    { integrationId, entityId, type: type ?? "daily" },
+    {
+      enabled: type !== null,
+      staleTime: 300_000,
+      refetchInterval: 300_000,
+      refetchOnWindowFocus: false,
+      retry: false,
+    },
+  );
+  let status: EntityForecast["status"] = "loading";
+  if (type === null) status = "unsupported";
+  else if (error) status = "error";
+  else if (data) status = "ready";
+  const days = useMemo(() => {
+    if (type === null) return undefined;
+    return data?.map((day) => toForecastDay(day, type));
+  }, [data, type]);
+
+  useEffect(() => {
+    source.setForecast(entityId, { status, days });
+  }, [source, entityId, status, days]);
+
+  return null;
+}
 
 interface LiveSnapshotProps {
   integrationId: string;
@@ -696,6 +918,8 @@ function LiveSnapshot({ integrationId, selection, source, children }: LiveSnapsh
   const t = useI18n("widget.smartHome-prototype.live");
   const utils = clientApi.useUtils();
   const { mutateAsync } = clientApi.widget.smartHome.executeAction.useMutation();
+  const { mutateAsync: mutateProtectedAsync, reset: resetProtected } =
+    clientApi.widget.smartHome.executeProtectedAction.useMutation({ gcTime: 0 });
   const snapshot = useSmartHomeSnapshot(integrationId, selection, { live: true });
   const historyKey = (snapshot.data?.entities ?? [])
     .filter(isHistoryCandidate)
@@ -711,7 +935,13 @@ function LiveSnapshot({ integrationId, selection, source, children }: LiveSnapsh
 
   useEffect(() => {
     source.setContext({
-      execute: (entityId, action) => mutateAsync({ integrationId, entityId, ...toSmartHomeActionInput(action) }),
+      execute: (entityId, action) => {
+        const input = { integrationId, entityId, ...toSmartHomeActionInput(action) };
+        if ("code" in input && input.code) {
+          return mutateProtectedAsync({ ...input, code: input.code }).finally(resetProtected);
+        }
+        return mutateAsync(input);
+      },
       refresh: () => void utils.widget.smartHome.snapshot.invalidate({ integrationId }),
       notify: (name, error) => {
         if (error.kind === "unconfirmed") {
@@ -722,7 +952,7 @@ function LiveSnapshot({ integrationId, selection, source, children }: LiveSnapsh
       },
       messages: { failed: t("unknownError"), unconfirmed: t("unconfirmed") },
     });
-  }, [source, mutateAsync, integrationId, utils, t]);
+  }, [source, mutateAsync, mutateProtectedAsync, resetProtected, integrationId, utils, t]);
 
   useEffect(() => {
     if (snapshot.data) source.sync(snapshot.data);
@@ -733,15 +963,34 @@ function LiveSnapshot({ integrationId, selection, source, children }: LiveSnapsh
   }, [history.data, source]);
 
   let status: PrototypeLiveStatus["status"] = "loading";
-  if (snapshot.data) status = "ready";
+  let message: string | undefined;
+  if (snapshot.error?.data?.code === "BAD_REQUEST") {
+    status = "error";
+    message = snapshot.error.message;
+  } else if (snapshot.data) status = "ready";
   else if (snapshot.error) status = "error";
   const { refetch } = snapshot;
   const value = useMemo<PrototypeLiveStatus>(
-    () => ({ status, isLive: snapshot.isLive, retry: () => void refetch() }),
-    [status, snapshot.isLive, refetch],
+    () => ({ status, message, isLive: snapshot.isLive, retry: () => void refetch() }),
+    [status, message, snapshot.isLive, refetch],
   );
 
-  return <LiveStatusContext.Provider value={value}>{children}</LiveStatusContext.Provider>;
+  return (
+    <LiveStatusContext.Provider value={value}>
+      {(snapshot.data?.entities ?? [])
+        .filter((entity) => entity.domain === "weather")
+        .map((entity) => (
+          <LiveForecast
+            key={entity.id}
+            integrationId={integrationId}
+            entityId={entity.id}
+            supportedFeatures={entity.attributes.supportedFeatures}
+            source={source}
+          />
+        ))}
+      {children}
+    </LiveStatusContext.Provider>
+  );
 }
 
 const emptyStatus: PrototypeLiveStatus = { status: "ready", isLive: false, retry: () => undefined };
@@ -749,24 +998,59 @@ const emptyStatus: PrototypeLiveStatus = { status: "ready", isLive: false, retry
 interface PrototypeLiveProviderProps {
   integrationId: string;
   blockIds: readonly string[];
+  roomDomains: readonly string[];
+  excludedEntityIds: readonly string[];
   children: ReactNode;
 }
 
-export function PrototypeLiveProvider({ integrationId, blockIds, children }: PrototypeLiveProviderProps) {
+export function PrototypeLiveProvider({
+  integrationId,
+  blockIds,
+  roomDomains,
+  excludedEntityIds,
+  children,
+}: PrototypeLiveProviderProps) {
+  const t = useI18n("widget.smartHome-prototype.live");
   const [source] = useState(() => new LivePrototypeSource(integrationId));
-  const selection = useMemo(() => toSelection(integrationId, blockIds), [integrationId, blockIds]);
-  const hasSelection = selection.entityIds.length > 0 || selection.areaIds.length > 0;
+  const needsCatalog =
+    roomDomains.includes("sensor") &&
+    blockIds.some((id) => {
+      const block = parseBlockId(id);
+      return block?.source === integrationId && block.kind === "areas";
+    });
+  const catalog = useSmartHomeCatalog(needsCatalog ? integrationId : undefined);
+  const catalogIndex = catalog.status === "ready" ? catalog.index : null;
+  const catalogEntities = useMemo(() => [...(catalogIndex?.entitiesById.values() ?? [])], [catalogIndex]);
+  const catalogReady = !needsCatalog || catalog.status === "ready";
+  const selection = useMemo(
+    () => toSelection(integrationId, blockIds, roomDomains, excludedEntityIds, catalogEntities),
+    [integrationId, blockIds, roomDomains, excludedEntityIds, catalogEntities],
+  );
+  const hasSelection =
+    catalogReady && selection !== null && (selection.entityIds.length > 0 || selection.areaIds.length > 0);
+  const inactiveStatus = useMemo<PrototypeLiveStatus>(() => {
+    if (!catalogReady) {
+      if (catalog.status === "error")
+        return { ...emptyStatus, status: "error", message: t("error"), retry: catalog.retry };
+      return { ...emptyStatus, status: "loading" };
+    }
+    if (selection) return emptyStatus;
+    return { ...emptyStatus, status: "error", message: t("selectionLimit") };
+  }, [catalogReady, catalog, selection, t]);
 
   useEffect(() => source.attach(), [source]);
+  useEffect(() => {
+    if (!hasSelection) source.clear();
+  }, [source, hasSelection]);
 
   return (
     <PrototypeSourceProvider source={source}>
-      {hasSelection && (
+      {hasSelection && selection && (
         <LiveSnapshot integrationId={integrationId} selection={selection} source={source}>
           {children}
         </LiveSnapshot>
       )}
-      {!hasSelection && <LiveStatusContext.Provider value={emptyStatus}>{children}</LiveStatusContext.Provider>}
+      {!hasSelection && <LiveStatusContext.Provider value={inactiveStatus}>{children}</LiveStatusContext.Provider>}
     </PrototypeSourceProvider>
   );
 }

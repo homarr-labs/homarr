@@ -1,6 +1,6 @@
 "use client";
 
-import { Loader, Slider, Switch } from "@mantine/core";
+import { ActionIcon, Loader, Slider, Switch, UnstyledButton } from "@mantine/core";
 import { getClimateTemperatureMode } from "@homarr/integrations/types";
 import {
   IconCheck,
@@ -60,7 +60,7 @@ export function InlineSlider({
       thumbLabel={label}
       thumbValueText={(current) => `${current}${unit}`}
       data-gesture="true"
-      disabled={locked}
+      disabled={locked || min >= max}
       className={classes.slider}
       style={{ width, flex: typeof width === "string" ? "1 1 auto" : "none" }}
       vars={() => ({ root: { "--slider-size": "4px", "--slider-thumb-size": "14px", "--slider-radius": "999px" } })}
@@ -121,7 +121,7 @@ export function Segmented({ label, options, value, onChange, color, fill = false
       }
     >
       {options.map((option) => (
-        <button
+        <UnstyledButton
           key={option.value}
           type="button"
           aria-pressed={option.value === value}
@@ -131,7 +131,7 @@ export function Segmented({ label, options, value, onChange, color, fill = false
           onClick={() => onChange(option.value)}
         >
           {option.label}
-        </button>
+        </UnstyledButton>
       ))}
     </div>
   );
@@ -152,7 +152,7 @@ export function Stepper({ entity, run, large = false }: StepperProps) {
     attributes.targetTemperatureHigh !== undefined
   ) {
     return (
-      <div className={classes.cluster}>
+      <div className={`${classes.cluster} ${classes.temperatureRange}`}>
         <TemperatureStepper
           entity={entity}
           run={run}
@@ -211,27 +211,27 @@ function TemperatureStepper({
 
   return (
     <div className={classes.stepper} data-large={large || undefined}>
-      <button
+      <UnstyledButton
         type="button"
         aria-label={`Decrease ${label.toLowerCase()}`}
         onClick={() => change(-step)}
         disabled={disabled || draft.value <= min}
       >
         <IconMinus size={13} stroke={2.4} />
-      </button>
+      </UnstyledButton>
       <output aria-label={label}>
         {bound === "low" && "Low "}
         {bound === "high" && "High "}
         {formatNumber(draft.value)}°
       </output>
-      <button
+      <UnstyledButton
         type="button"
         aria-label={`Increase ${label.toLowerCase()}`}
         onClick={() => change(step)}
         disabled={disabled || draft.value >= max}
       >
         <IconPlus size={13} stroke={2.4} />
-      </button>
+      </UnstyledButton>
     </div>
   );
 }
@@ -247,7 +247,9 @@ interface IconButtonProps {
 export function IconButton({ label, onClick, children, disabled, strong }: IconButtonProps) {
   const locked = useActionsLocked();
   return (
-    <button
+    <ActionIcon
+      unstyled
+      styles={{ icon: { display: "contents" } }}
       type="button"
       className={classes.iconButton}
       data-strong={strong || undefined}
@@ -257,7 +259,7 @@ export function IconButton({ label, onClick, children, disabled, strong }: IconB
       disabled={disabled || locked}
     >
       {children}
-    </button>
+    </ActionIcon>
   );
 }
 
@@ -286,7 +288,7 @@ export function ActionButton({
   if (run.pending) content = <Loader color="currentColor" vars={() => ({ root: { "--loader-size": "12px" } })} />;
   if (run.flash && !run.pending) content = <IconCheck size={13} stroke={2.6} />;
   return (
-    <button
+    <UnstyledButton
       type="button"
       className={classes.actionButton}
       data-tone={tone}
@@ -298,7 +300,7 @@ export function ActionButton({
     >
       {content}
       <span>{run.flash && !run.pending ? "Done" : label}</span>
-    </button>
+    </UnstyledButton>
   );
 }
 
@@ -316,13 +318,13 @@ export function ConfirmInline({ run, level }: { run: EntityRun; level: Level }) 
   return (
     <div className={classes.confirm} role="alertdialog" aria-label={`${label}?`}>
       {level > 0 && <span>{label}?</span>}
-      <button type="button" data-yes onClick={run.accept} disabled={run.locked} aria-label={`Confirm ${label}`}>
+      <UnstyledButton type="button" data-yes onClick={run.accept} disabled={run.locked} aria-label={`Confirm ${label}`}>
         <IconCheck size={13} stroke={2.6} />
         {level === 0 && <span>Yes</span>}
-      </button>
-      <button type="button" onClick={run.cancel} aria-label="Cancel">
+      </UnstyledButton>
+      <UnstyledButton type="button" onClick={run.cancel} aria-label="Cancel">
         <IconX size={13} stroke={2.4} />
-      </button>
+      </UnstyledButton>
     </div>
   );
 }

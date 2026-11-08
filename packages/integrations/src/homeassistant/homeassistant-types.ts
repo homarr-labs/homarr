@@ -24,12 +24,22 @@ export const calendarEventSchema = z.object({
   location: z.string().nullable(),
 });
 
+const compressedContextSchema = z.union([
+  z.string(),
+  z.object({
+    id: z.string().optional(),
+    parent_id: z.string().nullable().optional(),
+    user_id: z.string().nullable().optional(),
+  }),
+]);
+
 export const restStateSchema = z.object({
   entity_id: z.string(),
   state: z.string(),
   attributes: z.record(z.string(), z.unknown()),
   last_changed: z.string(),
   last_updated: z.string(),
+  context: z.object({ id: z.string() }).optional(),
 });
 
 const compressedStateSchema = z.object({
@@ -37,6 +47,7 @@ const compressedStateSchema = z.object({
   a: z.record(z.string(), z.unknown()).default({}),
   lc: z.number(),
   lu: z.number().optional(),
+  c: compressedContextSchema.optional(),
 });
 
 const compressedDiffSchema = z.object({
@@ -46,6 +57,7 @@ const compressedDiffSchema = z.object({
       a: z.record(z.string(), z.unknown()).optional(),
       lc: z.number().optional(),
       lu: z.number().optional(),
+      c: compressedContextSchema.optional(),
     })
     .optional(),
   "-": z.object({ a: z.array(z.string()).optional() }).optional(),
@@ -135,6 +147,7 @@ export interface RawEntityState {
   attributes: Record<string, unknown>;
   lastChanged: number;
   lastUpdated: number;
+  contextId?: string;
 }
 
 export interface HomeAssistantRegistry {
