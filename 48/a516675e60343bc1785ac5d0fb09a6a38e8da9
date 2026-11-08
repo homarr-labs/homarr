@@ -1,0 +1,21 @@
+apps/nextjs/src/app/[locale]/boards/(content)/_edit-actions.tsx
+  s_416635525e5346::t_e2bd81257d457e 43,49
+apps/nextjs/src/components/board/use-board-add-actions.ts
+  s_416635525e5346::t_685014e18fb66f 26-27
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "48a516675e60343bc1785ac5d0fb09a6a38e8da9",
+  "prompts": {},
+  "sessions": {
+    "s_416635525e5346": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "37d7399f-b99f-444f-8da8-32e486111300",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
