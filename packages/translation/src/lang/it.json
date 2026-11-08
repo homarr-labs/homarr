@@ -1515,6 +1515,27 @@
           "title": "Errore sconosciuto",
           "description": "Si è verificato un errore sconosciuto, apri la causa sottostante per vedere maggiori dettagli"
         },
+        "frigate": {
+          "title": "",
+          "status": "",
+          "description": {
+            "cookie": "",
+            "profileMismatch": "",
+            "redirect": "",
+            "login": "",
+            "profile": "",
+            "stats": ""
+          }
+        },
+        "openmediavault": {
+          "title": "",
+          "description": {
+            "totpSecretRequired": "",
+            "totpSecretInvalid": "",
+            "totpVerificationFailed": "",
+            "unsupportedChallenge": ""
+          }
+        },
         "parse": {
           "title": "Errore di analisi",
           "description": "La risposta non può essere analizzata. Si prega di verificare che l'URL stia puntando all'URL di base del servizio."
@@ -1714,6 +1735,11 @@
         "title": "Resetta segreto",
         "message": "Sei sicuro di voler resettare questo segreto?"
       },
+      "totpNotice": "",
+      "remove": {
+        "title": "",
+        "message": ""
+      },
       "noSecretsRequired": {
         "segmentTitle": "Nessun segreto",
         "text": "Nessun segreto richiesto per questa integrazione"
@@ -1794,6 +1820,10 @@
         "wazuhIndexerPassword": {
           "label": "Password indicizzatore",
           "newLabel": "Nuova password indicizzatore"
+        },
+        "totpSecret": {
+          "label": "",
+          "newLabel": ""
         }
       }
     },
@@ -2335,7 +2365,29 @@
             "tooltip": "Come suggerimento",
             "hidden": "Nascosto"
           }
+        },
+        "dockerContainer": {
+          "label": "Docker container",
+          "description": "",
+          "placeholder": "",
+          "disabled": "",
+          "unavailable": ""
         }
+      },
+      "docker": {
+        "action": {
+          "start": "",
+          "stop": ""
+        },
+        "notification": {
+          "startFailed": "",
+          "stopFailed": ""
+        },
+        "switch": {
+          "start": "",
+          "stop": ""
+        },
+        "stopped": ""
       },
       "error": {
         "notFound": {
@@ -2414,6 +2466,10 @@
         "hideHostname": {
           "label": "Nascondi nomi host"
         },
+        "showFullUrls": {
+          "label": "",
+          "description": ""
+        },
         "withBorder": {
           "label": "Mostra bordo"
         },
@@ -2436,6 +2492,9 @@
         }
       },
       "empty": "Aggiungi un URL o un'app nelle impostazioni del widget",
+      "copyUrl": "Copia URL",
+      "copied": "Copiato",
+      "copyFailed": "",
       "groups": {
         "label": "Categorie",
         "placeholder": "Nuova categoria",
@@ -3535,6 +3594,34 @@
     },
     "coolify": {
       "description": "Panoramica della tua istanza Coolify con server e applicazioni",
+      "summary": {
+        "needsAttention": "{count} ha bisogno di attenzione",
+        "inProgress": "",
+        "unknown": "",
+        "healthy": "",
+        "empty": "",
+        "healthyDetail": "",
+        "more": "",
+        "moreInstances": ""
+      },
+      "details": {
+        "tabs": "",
+        "overview": "",
+        "search": "",
+        "serviceApplications": ""
+      },
+      "overview": {
+        "projects": "",
+        "resources": "",
+        "attention": "Richiede attenzione",
+        "ready": "Pronto",
+        "noProjects": "",
+        "projectsUnavailable": "",
+        "moreProjects": "",
+        "running": "In esecuzione",
+        "resourceCount": "",
+        "environmentCount": ""
+      },
       "option": {
         "showServers": {
           "label": "Mostra server"
@@ -3566,7 +3653,13 @@
       },
       "source": {
         "url": "Fonte: {url}",
-        "unavailable": ""
+        "unavailable": "",
+        "unavailableCount": ""
+      },
+      "kind": {
+        "server": "",
+        "application": "Applicazione",
+        "service": "Servizio"
       },
       "instances": {
         "title": "Istanze"
@@ -3583,6 +3676,7 @@
         "exited": "Uscito",
         "starting": "Avvio",
         "restarting": "Riavvio in corso",
+        "unhealthy": "Compromesso",
         "unknown": "Sconosciuto",
         "online": "Online",
         "offline": "Offline",
@@ -4815,6 +4909,7 @@
           },
           "identifier": {
             "label": "Identificatore",
+            "containerPlaceholder": "",
             "placeholder": "Nome o Proprietario/Nome"
           },
           "name": {},
