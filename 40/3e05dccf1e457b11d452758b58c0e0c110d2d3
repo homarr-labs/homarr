@@ -1,0 +1,35 @@
+packages/translation/src/lang/en.json
+  s_416635525e5346::t_07c9c313f4e807 3143-3149
+packages/widgets/src/smart-home/prototype/component.tsx
+  s_416635525e5346::t_61f75ad7b57970 21-27,36,427,432,442-455,533,612,625
+packages/widgets/src/smart-home/prototype/index.ts
+  s_416635525e5346::t_c4ea56d60a3783 9,60-66,73-75
+packages/widgets/src/smart-home/prototype/types.ts
+  s_416635525e5346::t_41530f212d2992 189-191,205
+packages/widgets/src/smart-home/prototype/variants/e/detail-panel.tsx
+  s_416635525e5346::t_0aa7643f8c3579 25,134,166,217,257
+packages/widgets/src/smart-home/prototype/variants/e/details.ts
+  s_416635525e5346::t_a2bc325c75cf45 6
+packages/widgets/src/smart-home/prototype/variants/e/entity-controls.tsx
+  s_416635525e5346::t_57f58f7bd4996e 86,302,321,334,378,465,523,596,752,942,981,1076,1118,1194,1290,1344,1410
+packages/widgets/src/smart-home/prototype/variants/e/styles.module.css
+  s_416635525e5346::t_0efd5265dcc8ed 410,2063-2120
+packages/widgets/src/smart-home/prototype/variants/e/theme.tsx
+  s_416635525e5346::t_67b892500baac7 3,10,19,22,32-37,41-54,57-58,60,65-66,70-75,92,95-96,98
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "403e05dccf1e457b11d452758b58c0e0c110d2d3",
+  "prompts": {},
+  "sessions": {
+    "s_416635525e5346": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "37d7399f-b99f-444f-8da8-32e486111300",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
