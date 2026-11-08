@@ -43,16 +43,20 @@ export function seedFixtureQueries(cache: QueryClient, data: HealthPreviewData, 
     id: system.id,
     kind: system.kind,
   }));
+  const clusters: RouterOutputs["widget"]["healthMonitoring"]["getClusterIntegrationNames"] = [];
   for (const system of data.systems) {
-    if (system.kind === "mock")
+    if (system.kind === "mock") {
+      clusters.push({ integrationId: system.id, integrationName: system.name });
       cache.setQueryData(
         getQueryKey(clientApi.widget.healthMonitoring.getClusterHealthStatus, { integrationId: system.id }, "query"),
         { nodes: [], vms: [], lxcs: [], storages: [] },
       );
+    }
   }
   if (data.cluster) {
     integrationIds.push("fixture-proxmox");
     integrations.push({ id: "fixture-proxmox", kind: "proxmox" });
+    clusters.push({ integrationId: "fixture-proxmox", integrationName: "Virtualization" });
     cache.setQueryData(
       getQueryKey(
         clientApi.widget.healthMonitoring.getClusterHealthStatus,
@@ -63,6 +67,14 @@ export function seedFixtureQueries(cache: QueryClient, data: HealthPreviewData, 
     );
   }
   if (data.loading) return;
+  cache.setQueryData(
+    getQueryKey(
+      clientApi.widget.healthMonitoring.getClusterIntegrationNames,
+      { integrationIds: clusters.map((cluster) => cluster.integrationId) },
+      "query",
+    ),
+    clusters,
+  );
   cache.setQueryData(getQueryKey(clientApi.integration.byIds, integrationIds, "query"), integrations);
   cache.setQueryData(
     getQueryKey(
@@ -86,14 +98,15 @@ export function useWidgetFixtureRuntime(data: HealthPreviewData) {
   const settings = useSettings();
   const [startedAt] = useState(Date.now);
   const [reading, setReading] = useState(0);
-  const [cache] = useState(
-    () =>
-      new QueryClient({
-        defaultOptions: {
-          queries: { enabled: false, staleTime: Infinity, retry: false, refetchOnWindowFocus: false },
-        },
-      }),
-  );
+  const [cache] = useState(() => {
+    const next = new QueryClient({
+      defaultOptions: {
+        queries: { enabled: false, staleTime: Infinity, retry: false, refetchOnWindowFocus: false },
+      },
+    });
+    seedFixtureQueries(next, data, reading, startedAt);
+    return next;
+  });
   // Keep the transport disconnected even if a component explicitly enables or
   // refreshes a query. Mutations cannot leave this disposable preview either.
   const [client] = useState(() => clientApi.createClient({ links: [] }));

@@ -5,6 +5,7 @@ import { Box, Select, Stack, Tabs } from "@mantine/core";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
+import { isTrpcForbiddenError } from "@homarr/api/query-cache";
 import { useI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
@@ -99,6 +100,12 @@ function ClusterPanels(props: Props) {
   const [selected, setSelected] = useState("");
   const t = useI18n("widget.healthMonitoring.rework");
   const bounds = useHealthBounds();
+  const namesQuery = clientApi.widget.healthMonitoring.getClusterIntegrationNames.useQuery({
+    integrationIds: props.integrationIds,
+  });
+  let names = namesQuery.data ?? [];
+  if (isTrpcForbiddenError(namesQuery.error)) names = [];
+  const namesById = new Map(names.map((integration) => [integration.integrationId, integration.integrationName]));
   const id = props.integrationIds.find((entry) => entry === selected) ?? props.integrationIds[0];
   if (!id) return null;
   return (
@@ -112,7 +119,7 @@ function ClusterPanels(props: Props) {
           aria-label={t("clusterResources")}
           data={props.integrationIds.map((integrationId, index) => ({
             value: integrationId,
-            label: "Proxmox " + (index + 1),
+            label: namesById.get(integrationId) ?? "Proxmox " + (index + 1),
           }))}
           onChange={(value) => {
             if (value) setSelected(value);
@@ -125,6 +132,7 @@ function ClusterPanels(props: Props) {
         <ClusterHealthMonitoring
           {...props}
           integrationId={id}
+          integrationName={namesById.get(id)}
           width={bounds.width || props.width}
           height={bounds.height || props.height}
           displayScale={1}

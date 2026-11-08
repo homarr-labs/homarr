@@ -4,6 +4,13 @@ import type { HealthAlert } from "./model";
 
 export type HealthOptions = WidgetComponentProps<"healthMonitoring">["options"];
 
+const staleAfterMs = 60_000;
+
+export function isStaleReading(updatedAt: number | undefined, now: number | undefined): updatedAt is number {
+  if (now === undefined || updatedAt === undefined) return false;
+  return now - updatedAt > staleAfterMs;
+}
+
 export function healthAlertLabel(alert: HealthAlert, t: ScopedTranslationFunction<"widget.healthMonitoring.rework">) {
   if (alert.type === "reboot") return t("reboot");
   if (alert.type === "updates") return t("updates", { count: alert.count });

@@ -9,6 +9,7 @@ import { useI18n } from "@homarr/translation/client";
 import { useWidgetNow } from "../common/use-widget-now";
 import { WidgetEmptyState } from "../common/empty-state";
 import type { HealthOptions } from "./display";
+import { isStaleReading } from "./display";
 import { projectHealthSystem } from "./model";
 import type { HealthSystem } from "./model";
 import { SystemDetail } from "./system-detail";
@@ -84,7 +85,7 @@ export function SystemHealthView({
         options={options}
         isEditMode={isEditMode}
         onInspect={() => inspect(selected.system.id)}
-        stale={now !== undefined && selected.system.updatedAt !== undefined && now - selected.system.updatedAt > 60_000}
+        stale={isStaleReading(selected.system.updatedAt, now)}
         standalone
       />
     );

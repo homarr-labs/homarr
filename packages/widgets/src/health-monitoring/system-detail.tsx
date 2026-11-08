@@ -20,7 +20,7 @@ import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";
 
 import { useWidgetNow } from "../common/use-widget-now";
 
-import { healthAlertLabel, percentage, pressureColor, temperature, uptime } from "./display";
+import { healthAlertLabel, isStaleReading, percentage, pressureColor, temperature, uptime } from "./display";
 import type { HealthOptions } from "./display";
 import type { HealthSystemSnapshot, HealthVolume } from "./model";
 import { finiteReading } from "./model";
@@ -69,7 +69,7 @@ export function SystemDetail({
   if (!snapshot.available) {
     statusMessage = t("unavailable");
     if (hasHistory) statusMessage = t("unavailableHistory");
-  } else if (now !== undefined && snapshot.system.updatedAt !== undefined && now - snapshot.system.updatedAt > 60_000) {
+  } else if (isStaleReading(snapshot.system.updatedAt, now)) {
     statusMessage = t("stale", {
       time: new Date(snapshot.system.updatedAt).toLocaleTimeString(locale, { hour: "numeric", minute: "2-digit" }),
     });

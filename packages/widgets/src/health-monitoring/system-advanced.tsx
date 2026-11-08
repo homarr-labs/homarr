@@ -23,7 +23,7 @@ import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";
 import { makeTooltipProps, MonitoringChartPanel, monitoringChartColors } from "../common/monitoring-chart";
 import { MonitoringComparisonChart } from "../common/monitoring-comparison-chart";
 import { useWidgetNow } from "../common/use-widget-now";
-import { percentage, pressureColor, temperature } from "./display";
+import { isStaleReading, percentage, pressureColor, temperature } from "./display";
 import type { HealthOptions } from "./display";
 import { finiteReading } from "./model";
 import type { HealthSample, HealthSystemSnapshot, HealthVolume } from "./model";
@@ -602,8 +602,7 @@ function needsAttention(snapshot: HealthSystemSnapshot, now?: number) {
 }
 
 function stale(snapshot: HealthSystemSnapshot, now?: number) {
-  if (now === undefined || snapshot.system.updatedAt === undefined) return false;
-  return now - snapshot.system.updatedAt > 60_000;
+  return isStaleReading(snapshot.system.updatedAt, now);
 }
 
 function currentReading(snapshot: HealthSystemSnapshot, metric: HistoryMetric) {

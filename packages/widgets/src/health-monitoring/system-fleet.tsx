@@ -11,7 +11,7 @@ import { useI18n } from "@homarr/translation/client";
 import { zoomCompensatedSize } from "@homarr/ui";
 
 import { useWidgetNow } from "../common/use-widget-now";
-import { healthAlertLabel, percentage, pressureColor, temperature, uptime } from "./display";
+import { healthAlertLabel, isStaleReading, percentage, pressureColor, temperature, uptime } from "./display";
 import type { HealthOptions } from "./display";
 import type { HealthSystemSnapshot } from "./model";
 import classes from "./system-view.module.css";
@@ -38,8 +38,7 @@ export function SystemFleet({ snapshots, width, height, options, isEditMode, onI
   const { formatBytes, formatBytesPair, formatByteRate } = useByteFormatter();
   const [page, setPage] = useState(0);
   const now = useWidgetNow()?.getTime();
-  const isStale = (snapshot: HealthSystemSnapshot) =>
-    now !== undefined && snapshot.system.updatedAt !== undefined && now - snapshot.system.updatedAt > 60_000;
+  const isStale = (snapshot: HealthSystemSnapshot) => isStaleReading(snapshot.system.updatedAt, now);
   const needsAttention = (snapshot: HealthSystemSnapshot) =>
     !snapshot.available || snapshot.alerts.length > 0 || isStale(snapshot);
   const attention = snapshots.filter(needsAttention).length;
