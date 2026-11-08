@@ -18,7 +18,7 @@ export const UpdateIndicator = ({ children, availableUpdates, disabled }: Update
   }
 
   return (
-    <Indicator disabled={availableUpdates.length === 0} size={15} processing withBorder>
+    <Indicator disabled={availableUpdates.length === 0} size={15} color="gray" withBorder>
       {children}
     </Indicator>
   );
