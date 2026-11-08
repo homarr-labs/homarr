@@ -12,7 +12,8 @@ export interface ThemeControl {
   labelKey: string;
   suffix?: string;
   component?: string;
-  type: "text" | "number" | "boolean" | "color" | "select";
+  type: "text" | "length" | "number" | "boolean" | "color" | "select";
+  unit?: "rem" | "em";
   min?: number;
   max?: number;
   step?: number;
@@ -29,18 +30,28 @@ const control = (
 ): ThemeControl => ({ path, group, labelKey, label, type: "text", ...extra });
 
 export const themeControls: ThemeControl[] = [
-  control("theme.defaultRadius", "layout", "defaultRadius", "Default roundness"),
+  control("theme.defaultRadius", "layout", "defaultRadius", "Default roundness", {
+    type: "length",
+    options: ["0", ...sizes],
+  }),
   control("theme.scale", "layout", "scale", "UI scale", { type: "number", min: 0.5, max: 3, step: 0.05 }),
   ...sizes.flatMap((size) => [
     control(`theme.spacing.${size}`, "layout", "spacing", `Spacing ${size.toUpperCase()}`, {
       suffix: size.toUpperCase(),
+      type: "length",
     }),
-    control(`theme.radius.${size}`, "layout", "radius", `Radius ${size.toUpperCase()}`, { suffix: size.toUpperCase() }),
+    control(`theme.radius.${size}`, "layout", "radius", `Radius ${size.toUpperCase()}`, {
+      suffix: size.toUpperCase(),
+      type: "length",
+    }),
     control(`theme.breakpoints.${size}`, "layout", "breakpoint", `Breakpoint ${size.toUpperCase()}`, {
       suffix: size.toUpperCase(),
+      type: "length",
+      unit: "em",
     }),
     control(`theme.fontSizes.${size}`, "typography", "fontSizes", `Font size ${size.toUpperCase()}`, {
       suffix: size.toUpperCase(),
+      type: "length",
     }),
     control(`theme.lineHeights.${size}`, "typography", "lineHeight", `Line height ${size.toUpperCase()}`, {
       suffix: size.toUpperCase(),
@@ -57,6 +68,7 @@ export const themeControls: ThemeControl[] = [
   ...(["h1", "h2", "h3", "h4", "h5", "h6"] as const).flatMap((heading) => [
     control(`theme.headings.sizes.${heading}.fontSize`, "typography", "headingSize", `${heading.toUpperCase()} size`, {
       suffix: heading.toUpperCase(),
+      type: "length",
     }),
     control(
       `theme.headings.sizes.${heading}.fontWeight`,
@@ -123,6 +135,8 @@ export const themeControls: ThemeControl[] = [
     const fields = [
       control(`theme.components.${name}.defaultProps.radius`, "surfaces", "componentRadius", `${name} radius`, {
         component: name,
+        type: "length",
+        options: ["0", ...sizes],
       }),
       control(
         `theme.components.${name}.styles.${selector}.borderWidth`,
@@ -131,6 +145,7 @@ export const themeControls: ThemeControl[] = [
         `${name} border width`,
         {
           component: name,
+          type: "length",
         },
       ),
       control(
@@ -183,6 +198,8 @@ export const themeControls: ThemeControl[] = [
       fields.push(
         control(`theme.components.${name}.styles.root.padding`, "surfaces", "componentPadding", `${name} padding`, {
           component: name,
+          type: "length",
+          options: ["0", ...sizes],
         }),
       );
     }
@@ -190,6 +207,8 @@ export const themeControls: ThemeControl[] = [
       fields.push(
         control(`theme.components.${name}.defaultProps.size`, "surfaces", "componentSize", `${name} size`, {
           component: name,
+          type: "length",
+          options: [...sizes],
         }),
       );
     }
@@ -248,12 +267,16 @@ export const themeControls: ThemeControl[] = [
     ),
     control(`theme.components.${name}.defaultProps.radius`, "overlays", "componentRadius", `${name} radius`, {
       component: name,
+      type: "length",
+      options: ["0", ...sizes],
     }),
     control(`theme.components.${name}.defaultProps.shadow`, "overlays", "componentShadow", `${name} shadow`, {
       component: name,
     }),
     control(`theme.components.${name}.defaultProps.padding`, "overlays", "componentPadding", `${name} padding`, {
       component: name,
+      type: "length",
+      options: ["0", ...sizes],
     }),
     control(
       `theme.components.${name}.defaultProps.transitionProps.duration`,

@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import type { ReactNode } from "react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
   Accordion,
@@ -52,6 +53,8 @@ import type { ThemeSelection } from "~/theme/branding";
 import { createAppearanceTheme, resolveActiveTheme } from "~/theme/branding";
 import type { ThemePreviewMessage } from "./theme-preview-context";
 import { ThemePreviewFrame } from "./theme-preview-frame";
+import { ThemeLengthInput } from "./theme-length-input";
+import { ThemeLayoutControls } from "./theme-layout-controls";
 
 type ThemeData = RouterOutputs["theme"]["get"];
 
@@ -177,6 +180,12 @@ export const ThemeEditor = ({
     }
   };
 
+  const updateControls = (changes: { path: string; value: string | number | boolean | null }[]) => {
+    setEditingControl(null);
+    const next = updateThemeDraft(document, changes);
+    updateSelection({ themeId: "custom", customTheme: next });
+  };
+
   const updateControl = (path: string, value: string | number | boolean | null) => {
     const next = updateThemeDraft(document, [{ path, value }]);
     updateSelection({ themeId: "custom", customTheme: next });
@@ -236,7 +245,36 @@ export const ThemeEditor = ({
       data.branding.lockPrimaryColor &&
       (/^(light|dark)\.primary$/u.test(control.path) || control.path.startsWith("theme.primaryShade"));
     const disabled = locked || Boolean(jsonError);
-    const shared = { label, name: control.path, "aria-label": label, disabled };
+    const baseProps = { label, name: control.path, "aria-label": label, disabled };
+    const shared = {
+      ...baseProps,
+      styles: { wrapper: { marginTop: 0, marginBottom: 0 } },
+    };
+    const reset = (
+      <ActionIcon
+        size="input-sm"
+        variant="subtle"
+        disabled={own === undefined || disabled}
+        aria-label={t("studio.resetControl", { control: label })}
+        title={t("studio.resetControl", { control: label })}
+        onClick={() => {
+          setEditingControl(null);
+          updateControl(control.path, null);
+        }}
+      >
+        <IconArrowBackUp size={16} />
+      </ActionIcon>
+    );
+    let inputMarginTop = 0;
+    if (control.labelKey === "breakpoint") inputMarginTop = 5;
+    const inputContainer = (children: ReactNode) => (
+      <Group gap="xs" wrap="nowrap" align="center" mt={inputMarginTop}>
+        <Box flex={1} miw={0}>
+          {children}
+        </Box>
+        {reset}
+      </Group>
+    );
     let editingValue: string | number | undefined;
     if (editingControl?.path === control.path) editingValue = editingControl.value;
     const editingProps = {
@@ -262,6 +300,7 @@ export const ThemeEditor = ({
         <NumberInput
           {...shared}
           {...editingProps}
+          inputContainer={inputContainer}
           min={control.min}
           max={control.max}
           step={control.step ?? 1}
@@ -275,17 +314,18 @@ export const ThemeEditor = ({
         />
       );
     } else if (control.type === "boolean") {
-      input = (
+      input = inputContainer(
         <Switch
-          {...shared}
+          {...baseProps}
           checked={value === true}
           onChange={(event) => updateControl(control.path, event.currentTarget.checked)}
-        />
+        />,
       );
     } else if (control.type === "select") {
       input = (
         <Select
           {...shared}
+          inputContainer={inputContainer}
           data={control.options}
           value={textValue}
           allowDeselect={false}
@@ -297,10 +337,24 @@ export const ThemeEditor = ({
         <ColorInput
           {...shared}
           {...editingProps}
+          inputContainer={inputContainer}
           format="hex"
           maxLength={300}
           value={String(editingValue ?? textValue)}
           eyeDropperButtonProps={{ "aria-label": t("editor.pickColor", { color: label }) }}
+          onChange={updateText}
+        />
+      );
+    } else if (control.type === "length") {
+      input = (
+        <ThemeLengthInput
+          {...shared}
+          {...editingProps}
+          inputContainer={inputContainer}
+          value={String(editingValue ?? textValue)}
+          unit={control.unit}
+          options={control.options}
+          description={control.labelKey === "breakpoint" ? t("studio.breakpointHint") : undefined}
           onChange={updateText}
         />
       );
@@ -309,6 +363,7 @@ export const ThemeEditor = ({
         <TextInput
           {...shared}
           {...editingProps}
+          inputContainer={inputContainer}
           value={editingValue ?? textValue}
           placeholder={t("studio.inheritedValue")}
           maxLength={300}
@@ -318,23 +373,9 @@ export const ThemeEditor = ({
       );
     }
     return (
-      <Group key={control.path} wrap="nowrap" align="end" gap="xs" data-theme-control={control.path}>
-        <Box flex={1} miw={0}>
-          {input}
-        </Box>
-        <ActionIcon
-          variant="subtle"
-          disabled={own === undefined || disabled}
-          aria-label={t("studio.resetControl", { control: label })}
-          title={t("studio.resetControl", { control: label })}
-          onClick={() => {
-            setEditingControl(null);
-            updateControl(control.path, null);
-          }}
-        >
-          <IconArrowBackUp size={16} />
-        </ActionIcon>
-      </Group>
+      <Box key={control.path} data-theme-control={control.path}>
+        {input}
+      </Box>
     );
   };
 
@@ -458,7 +499,17 @@ export const ThemeEditor = ({
                                 allowDeselect={false}
                               />
                             )}
-                            {visibleControls.filter((item) => item.group === group).map(renderControl)}
+                            {group === "layout" && (
+                              <ThemeLayoutControls
+                                document={document}
+                                effective={effective}
+                                disabled={Boolean(jsonError)}
+                                onChange={updateControls}
+                                renderControl={renderControl}
+                              />
+                            )}
+                            {group !== "layout" &&
+                              visibleControls.filter((item) => item.group === group).map(renderControl)}
                           </Stack>
                         )}
                       </Accordion.Panel>
