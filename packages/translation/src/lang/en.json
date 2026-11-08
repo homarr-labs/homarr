@@ -2013,7 +2013,8 @@
         "updateAvailable": "{countUpdates} updates available: {tag}",
         "assistant": "Assistant",
         "assistantThinking": "Thinking",
-        "modifier": "Mod"
+        "modifier": "Mod",
+        "customizeHeader": "Customize header"
       }
     },
     "dangerZone": "Danger zone",
@@ -6794,7 +6795,7 @@
             "header": {
               "title": "Header studio",
               "badge": "Personal",
-              "description": "Configure controls with their buttons. Use the drag handles to reorder them within Left, Center, or Right.",
+              "description": "Make the header your own. Select a control to change its appearance, position, or order. Changes apply only to your account.",
               "device": {
                 "desktop": "Desktop",
                 "mobile": "Mobile"
@@ -6809,7 +6810,9 @@
                 "show": "Show the header",
                 "configure": "Configure {item}",
                 "remove": "Remove {item}",
-                "dropIntoZone": "Move into the {zone} section"
+                "dropIntoZone": "Move into the {zone} section",
+                "moveEarlier": "Move earlier",
+                "moveLater": "Move later"
               },
               "preview": {
                 "board": "Dashboard preview for {name}",
@@ -6817,7 +6820,7 @@
               },
               "available": {
                 "title": "Available controls",
-                "description": "Add a control, then use its drag handle to position it above.",
+                "description": "Add a control with one click. Select it above to position it, or drag its handle.",
                 "requiredAlways": "This control is required, but you can move it anywhere in the header.",
                 "allAdded": "Every built-in control is already in your header.",
                 "add": "Add {item}",
@@ -6825,7 +6828,7 @@
                 "chooseBoard": "Choose a board"
               },
               "configuration": {
-                "description": "This control stays the same size as it does in the live header.",
+                "description": "Choose a position or change the order without dragging. Center and Right share the right side on mobile.",
                 "searchDisplay": {
                   "input": "Search bar",
                   "icon": "Icon only"
@@ -6833,7 +6836,9 @@
                 "logoDisplay": {
                   "logo": "Logo only",
                   "logoAndText": "Logo + text"
-                }
+                },
+                "position": "Position",
+                "placement": "{item}: {zone}, position {position} of {count}"
               },
               "items": {
                 "logo": "Logo",

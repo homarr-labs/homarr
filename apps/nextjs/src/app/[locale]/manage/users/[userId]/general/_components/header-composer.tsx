@@ -15,6 +15,7 @@ import {
   Card,
   Group,
   Menu,
+  NativeSelect,
   Paper,
   SegmentedControl,
   Stack,
@@ -66,6 +67,7 @@ import { HomarrLogo } from "~/components/layout/logo/homarr-logo";
 import classes from "./header-composer.module.css";
 
 interface HeaderComposerProps {
+  actions?: ReactNode;
   value: HeaderPreferences;
   onChange: (value: HeaderPreferences) => void;
   boards: { id: string; name: string; logoImageUrl: string | null; preview: BoardPreviewData | null }[];
@@ -100,11 +102,12 @@ const headerSortableGroup = "header-composer";
 const headerSortablePlugins = [SortableKeyboardPlugin];
 const headerGuideZones = ["left", "center", "right"] as const;
 
-export const HeaderComposer = ({ value, onChange, boards, homeBoardId }: HeaderComposerProps) => {
+export const HeaderComposer = ({ value, onChange, boards, homeBoardId, actions }: HeaderComposerProps) => {
   const [draggedItemKey, setDraggedItemKey] = useState<string | null>(null);
   const [selectedItemKey, setSelectedItemKey] = useState<string | null>(null);
   const zoneTableRef = useRef<HTMLDivElement>(null);
   const pendingFocusItemKey = useRef<string | null>(null);
+  const composerRef = useRef<HTMLElement>(null);
   const { branding } = useSettings();
   const t = useI18n("management.page.user.setting.general.header");
   const tSelection = useI18n("item.selection");
@@ -115,10 +118,17 @@ export const HeaderComposer = ({ value, onChange, boards, homeBoardId }: HeaderC
     const itemKey = pendingFocusItemKey.current;
     if (itemKey === null) return;
     pendingFocusItemKey.current = null;
-    zoneTableRef.current
-      ?.querySelector<HTMLButtonElement>(`[data-header-drag-handle="${CSS.escape(itemKey)}"]`)
-      ?.focus({ preventScroll: true });
+    const target = zoneTableRef.current?.querySelector<HTMLButtonElement>(
+      `[data-header-composer-item][data-entry-id="${CSS.escape(itemKey)}"] button`,
+    );
+    (target ?? composerRef.current)?.focus({ preventScroll: true });
   }, [value.zones]);
+
+  useEffect(() => {
+    if (window.location.hash === "#header-customization") {
+      composerRef.current?.focus({ preventScroll: true });
+    }
+  }, []);
 
   useEffect(() => {
     const zoneTable = zoneTableRef.current;
@@ -143,6 +153,11 @@ export const HeaderComposer = ({ value, onChange, boards, homeBoardId }: HeaderC
   );
   const draggedItem = findHeaderItem(activeItems, draggedItemKey);
   const selectedItem = findHeaderItem(activeItems, selectedItemKey);
+  const selectedZone = selectedItem && getHeaderItemZone(value.zones, selectedItem);
+  let selectedIndex = -1;
+  if (selectedZone) {
+    selectedIndex = value.zones[selectedZone].findIndex((item) => getHeaderItemKey(item) === selectedItemKey);
+  }
   const previewBoard = boardsById.get(homeBoardId ?? "") ?? boards.at(0);
 
   const toggleSelectedItem = (itemKey: string) => {
@@ -164,6 +179,8 @@ export const HeaderComposer = ({ value, onChange, boards, homeBoardId }: HeaderC
     const zone = getHeaderItemZone(value.zones, item);
     if (!zone) return;
     const itemKey = getHeaderItemKey(item);
+    const nextItem = activeItems.find((candidate) => getHeaderItemKey(candidate) !== itemKey);
+    if (nextItem) pendingFocusItemKey.current = getHeaderItemKey(nextItem);
     updateZones({
       ...value.zones,
       [zone]: value.zones[zone].filter((candidate) => getHeaderItemKey(candidate) !== itemKey),
@@ -177,6 +194,12 @@ export const HeaderComposer = ({ value, onChange, boards, homeBoardId }: HeaderC
     const zone = getDefaultHeaderZone(item);
     updateZones({ ...value.zones, [zone]: [...value.zones[zone], item] });
     setSelectedItemKey(itemKey);
+    pendingFocusItemKey.current = itemKey;
+  };
+
+  const moveSelectedItem = (zone: HeaderZoneId, index: number) => {
+    if (!selectedItemKey) return;
+    updateZones(moveHeaderItem(value.zones, selectedItemKey, zone, index));
   };
 
   const handleDragEnd = ({ canceled, operation }: DragEndEvent) => {
@@ -204,7 +227,17 @@ export const HeaderComposer = ({ value, onChange, boards, homeBoardId }: HeaderC
   };
 
   return (
-    <Card className={classes.composer} padding={0} radius="lg">
+    <Card
+      component="section"
+      ref={composerRef}
+      id="header-customization"
+      tabIndex={-1}
+      aria-labelledby="header-customization-title"
+      className={classes.composer}
+      padding={0}
+      radius="lg"
+      style={{ scrollMarginTop: "5rem" }}
+    >
       <Stack gap={0}>
         <Group className={classes.heading} justify="space-between" align="flex-start" wrap="wrap">
           <Stack gap={4}>
@@ -212,25 +245,21 @@ export const HeaderComposer = ({ value, onChange, boards, homeBoardId }: HeaderC
               <ThemeIcon variant="light" radius="md" size="lg">
                 <IconLayoutDashboard size={18} />
               </ThemeIcon>
-              <Text fw={700} size="lg">
+              <Text id="header-customization-title" component="h2" m={0} fw={700} size="lg">
                 {t("title")}
               </Text>
             </Group>
-            <Text c="dimmed" size="sm">
-              {t("description")}
-            </Text>
+            <Text size="sm">{t("description")}</Text>
           </Stack>
           <Group gap="xs">
-            <Tooltip label={value.visible ? t("action.hide") : t("action.show")}>
-              <ActionIcon
-                size="lg"
-                variant={value.visible ? "default" : "filled"}
-                aria-label={value.visible ? t("action.hide") : t("action.show")}
-                onClick={() => onChange({ ...value, visible: !value.visible })}
-              >
-                {value.visible ? <IconEye size={18} /> : <IconEyeOff size={18} />}
-              </ActionIcon>
-            </Tooltip>
+            <Button
+              variant="default"
+              leftSection={value.visible ? <IconEye size={18} /> : <IconEyeOff size={18} />}
+              onClick={() => onChange({ ...value, visible: !value.visible })}
+            >
+              {value.visible ? t("action.hide") : t("action.show")}
+            </Button>
+            {actions}
           </Group>
         </Group>
 
@@ -310,9 +339,7 @@ export const HeaderComposer = ({ value, onChange, boards, homeBoardId }: HeaderC
                   <Text fw={650} size="sm">
                     {itemLabel(selectedItem)}
                   </Text>
-                  <Text c="dimmed" size="xs">
-                    {t("configuration.description")}
-                  </Text>
+                  <Text size="xs">{t("configuration.description")}</Text>
                 </Stack>
                 <Group gap="xs">
                   {selectedItem.type === "builtin" && selectedItem.id === "search" ? (
@@ -352,12 +379,48 @@ export const HeaderComposer = ({ value, onChange, boards, homeBoardId }: HeaderC
                       {t("action.remove", { item: itemLabel(selectedItem) })}
                     </Button>
                   ) : (
-                    <Text c="dimmed" size="xs">
-                      {t("available.requiredAlways")}
-                    </Text>
+                    <Text size="xs">{t("available.requiredAlways")}</Text>
                   )}
                 </Group>
               </Group>
+              {selectedZone && (
+                <Stack gap="xs" mt="sm">
+                  <Group gap="xs" align="flex-end">
+                    <NativeSelect
+                      label={t("configuration.position")}
+                      value={selectedZone}
+                      data={headerGuideZones.map((zone) => ({ value: zone, label: t(`zones.${zone}`) }))}
+                      onChange={(event) => {
+                        const zone = event.currentTarget.value as HeaderZoneId;
+                        if (zone === selectedZone) return;
+                        moveSelectedItem(zone, value.zones[zone].length);
+                      }}
+                    />
+                    <Button
+                      variant="default"
+                      disabled={selectedIndex <= 0}
+                      onClick={() => moveSelectedItem(selectedZone, selectedIndex - 1)}
+                    >
+                      {t("action.moveEarlier")}
+                    </Button>
+                    <Button
+                      variant="default"
+                      disabled={selectedIndex === value.zones[selectedZone].length - 1}
+                      onClick={() => moveSelectedItem(selectedZone, selectedIndex + 1)}
+                    >
+                      {t("action.moveLater")}
+                    </Button>
+                  </Group>
+                  <Text component="output" size="xs">
+                    {t("configuration.placement", {
+                      item: itemLabel(selectedItem),
+                      zone: t(`zones.${selectedZone}`),
+                      position: selectedIndex + 1,
+                      count: value.zones[selectedZone].length,
+                    })}
+                  </Text>
+                </Stack>
+              )}
             </Paper>
           ) : null}
 
@@ -366,9 +429,7 @@ export const HeaderComposer = ({ value, onChange, boards, homeBoardId }: HeaderC
               <Text fw={650} size="sm">
                 {t("available.title")}
               </Text>
-              <Text c="dimmed" size="xs">
-                {t("available.description")}
-              </Text>
+              <Text size="xs">{t("available.description")}</Text>
             </Stack>
             <Menu position="bottom-end" withinPortal>
               <Menu.Target>
@@ -401,24 +462,21 @@ export const HeaderComposer = ({ value, onChange, boards, homeBoardId }: HeaderC
           </Group>
           <Group gap="xs">
             {inactiveBuiltinIds.length === 0 ? (
-              <Text c="dimmed" size="sm">
-                {t("available.allAdded")}
-              </Text>
+              <Text size="sm">{t("available.allAdded")}</Text>
             ) : (
               inactiveBuiltinIds.map((itemId) => {
                 const item = createBuiltinHeaderItem(itemId);
                 const Icon = getBuiltinItemIcon(itemId);
                 return (
-                  <Tooltip key={itemId} label={t("available.add", { item: itemLabel(item) })}>
-                    <ActionIcon
-                      size="lg"
-                      variant="default"
-                      aria-label={t("available.add", { item: itemLabel(item) })}
-                      onClick={() => addItem(item)}
-                    >
-                      <Icon size={19} stroke={1.7} />
-                    </ActionIcon>
-                  </Tooltip>
+                  <Button
+                    key={itemId}
+                    variant="default"
+                    leftSection={<Icon size={19} stroke={1.7} />}
+                    aria-label={t("available.add", { item: itemLabel(item) })}
+                    onClick={() => addItem(item)}
+                  >
+                    {itemLabel(item)}
+                  </Button>
                 );
               })
             )}
@@ -443,7 +501,7 @@ const HeaderZoneColumn = ({ zone, label, children }: HeaderZoneColumnProps) => {
 
   return (
     <section ref={ref} className={classes.zoneColumn} data-drop-target={isDropTarget || undefined}>
-      <Text className={classes.zoneColumnHeader} component="h4">
+      <Text className={classes.zoneColumnHeader} component="h3">
         {label}
       </Text>
       <div className={classes.zoneItems}>{children}</div>

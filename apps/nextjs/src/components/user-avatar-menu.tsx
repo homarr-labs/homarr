@@ -9,6 +9,7 @@ import {
   IconLayoutDashboard,
   IconLogin,
   IconLogout,
+  IconLayoutNavbar,
   IconReplace,
   IconSettings,
   IconRobot,
@@ -129,6 +130,13 @@ export const UserAvatarMenu = ({ children, availableUpdates, isDockerEnabled, bo
                 {t("assistant")}
               </Menu.Item>
             )}
+            <Menu.Item
+              component={Link}
+              href={`/manage/users/${session.data?.user.id}/general#header-customization`}
+              leftSection={<IconLayoutNavbar size="1rem" />}
+            >
+              {t("customizeHeader")}
+            </Menu.Item>
             <Menu.Item
               component={Link}
               href={`/manage/users/${session.data?.user.id}/general`}

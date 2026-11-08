@@ -79,9 +79,9 @@
   place-items: center;
   height: 1.75rem;
   margin: 0;
-  color: var(--mantine-color-dimmed);
+  color: var(--mantine-color-text);
   border-bottom: 1px solid var(--mantine-color-default-border);
-  font-size: 0.55rem;
+  font-size: var(--mantine-font-size-xs);
   font-weight: 700;
   line-height: 1;
   letter-spacing: 0.06em;
@@ -233,7 +233,7 @@
   width: 100%;
   min-width: 0;
   overflow: hidden;
-  color: var(--mantine-color-dimmed);
+  color: var(--mantine-color-text);
   text-overflow: ellipsis;
   white-space: nowrap;
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { useMemo, useRef } from "react";
+import { useId, useMemo, useRef } from "react";
 import { useRouter } from "next/navigation";
 import {
   Box,
@@ -103,6 +103,7 @@ export const UserGeneralSettingsForm = ({
   showLanguageSelector = false,
   profileAvatar,
 }: UserGeneralSettingsFormProps) => {
+  const formId = useId();
   const tUser = useI18n("user");
   const tCommon = useI18n("common");
   const tUserManagement = useI18n("management.page.user");
@@ -251,10 +252,25 @@ export const UserGeneralSettingsForm = ({
         boards={boardsData}
         homeBoardId={form.values.homeBoardId}
         mobileHomeBoardId={form.values.mobileHomeBoardId}
+        actions={
+          form.isDirty() && (
+            <Group gap="xs">
+              <Text component="output" size="sm">
+                {tCommon("unsavedChanges")}
+              </Text>
+              <Button disabled={isPending} variant="default" onClick={handleDiscard}>
+                {tCommon("action.discard")}
+              </Button>
+              <Button form={formId} loading={isPending} type="submit" disabled={!form.isValid()}>
+                {tCommon("action.saveChanges")}
+              </Button>
+            </Group>
+          )
+        }
       />
       <Group gap="xl" align="flex-start" wrap="wrap">
         <Box flex={1} miw={{ base: "100%", md: 540 }}>
-          <form onSubmit={form.onSubmit(handleSubmitAsync)}>
+          <form id={formId} onSubmit={form.onSubmit(handleSubmitAsync)}>
             <Stack gap="lg">
               <SimpleGrid cols={{ base: 1, md: 2 }} spacing="lg" verticalSpacing="lg">
                 <Card bg="transparent">
