@@ -17,6 +17,7 @@ import {
 } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import { IconApi, IconSearch } from "@tabler/icons-react";
+import { CancelledError } from "@tanstack/react-query";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
@@ -365,16 +366,16 @@ const ItemSelectModalContent = ({
     const input = { boardId: board.id };
     try {
       // Refresh the shared cache even after closing; leave failed lookups stale so reopening can retry.
-      await utils.customWidget.available.cancel(input);
+      // A superseded request must reject instead of returning its previous cached list.
+      await utils.customWidget.available.cancel(input, { revert: false });
       await utils.customWidget.available.invalidate(input, { refetchType: "none" });
-      const definitions = await utils.client.customWidget.available.query(input);
-      utils.customWidget.available.setData(input, definitions);
+      const definitions = await utils.customWidget.available.fetch(input, { retry: false });
       if (!pickerOpen.current) return;
       const installed = definitions.find(({ id }) => id === definitionId);
       if (!installed) throw new Error(t("item.create.notification.error.message"));
       await handleAddCustomWidget(installed);
     } catch (error) {
-      if (pickerOpen.current) notifyDefinitionLoadError(error);
+      if (pickerOpen.current && !(error instanceof CancelledError)) notifyDefinitionLoadError(error);
     } finally {
       setWorkshopSelection(null);
     }
