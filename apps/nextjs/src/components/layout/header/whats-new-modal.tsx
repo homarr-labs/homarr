@@ -61,8 +61,8 @@ const WhatsNewContent = ({ scope, onDismiss }: WhatsNewContentProps) => {
         </Text>
       )}
       {releases.length > 0 && (
-        <ScrollArea.Autosize mah="60dvh" type="auto" scrollbars="y" offsetScrollbars="present">
-          <Accordion variant="separated" order={3} keepMounted={false} defaultValue={releases[0]?.tagName}>
+        <ScrollArea.Autosize mah="calc(100dvh - 14rem)" type="auto" scrollbars="y" offsetScrollbars="present">
+          <Accordion order={3} keepMounted={false} defaultValue={releases[0]?.tagName}>
             {releases.map((release) => {
               const { title, body } = splitTitle(release);
               return (

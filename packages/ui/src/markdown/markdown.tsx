@@ -1,6 +1,6 @@
 "use client";
 
-import type { ComponentProps } from "react";
+import type { ComponentProps, ReactNode } from "react";
 import { Typography } from "@mantine/core";
 import ReactMarkdown from "react-markdown";
 import type { Components, ExtraProps, Options } from "react-markdown";
@@ -22,10 +22,22 @@ const ExternalLink = ({ href, children }: LinkProps) => (
   </a>
 );
 
+const githubReferencePattern = /^https:\/\/github\.com\/([\w.-]+\/[\w.-]+)\/(?:pull|issues)\/(\d+)\/?$/;
+const homarrRepository = "homarr-labs/homarr";
+
+const shortenGithubReference = (href: string | undefined, children: ReactNode) => {
+  if (typeof children !== "string" || children !== href) return children;
+  const match = githubReferencePattern.exec(children);
+  if (!match) return children;
+  const [, repository, number] = match;
+  if (repository === homarrRepository) return `#${number}`;
+  return `${repository}#${number}`;
+};
+
 const ExternalLinkOrMention = ({ href, children }: LinkProps) => {
   const login = getMentionLogin(href, children);
   if (login) return <GithubMention login={login} />;
-  return <ExternalLink href={href}>{children}</ExternalLink>;
+  return <ExternalLink href={href}>{shortenGithubReference(href, children)}</ExternalLink>;
 };
 
 const components: Components = { a: ExternalLink, blockquote: AlertBlockquote };

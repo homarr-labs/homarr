@@ -2013,8 +2013,7 @@
         "updateAvailable": "{countUpdates} updates available: {tag}",
         "assistant": "Assistant",
         "assistantThinking": "Thinking",
-        "modifier": "Mod",
-        "whatsNew": "What's new"
+        "modifier": "Mod"
       }
     },
     "markdown": {
@@ -6728,7 +6727,8 @@
             "documentation": "Documentation",
             "submitIssue": "Submit an issue",
             "discord": "Community Discord",
-            "sourceCode": "Source Code"
+            "sourceCode": "Source Code",
+            "changelog": "Changelog"
           }
         },
         "about": "About",
