@@ -101,6 +101,7 @@ export default function BookmarksWidget({
   const isTight = responsiveHeight < 120;
   let contentPadding = 12;
   if (isTight) contentPadding = 6;
+  const fillAvailableHeight = !advanced && options.layout === "grid" && sections.length === 0;
   let layoutHeight = contentHeight;
   let layoutItemCount = data.length;
   if (!advanced && options.layout === "column") {
@@ -176,6 +177,7 @@ export default function BookmarksWidget({
         key={bookmark.id}
         bookmark={bookmark}
         advanced={advanced}
+        fillHeight={fillAvailableHeight}
         orientation={cardDisplay.orientation}
         showHostname={cardDisplay.showHostname}
         showIcon={cardDisplay.showIcon}
@@ -200,16 +202,28 @@ export default function BookmarksWidget({
       );
     if (options.grow)
       return (
-        <Grid grow columns={plan.columns} gap={plan.itemGap}>
+        <Grid
+          grow
+          columns={plan.columns}
+          gap={plan.itemGap}
+          h={fillAvailableHeight ? "100%" : undefined}
+          styles={fillAvailableHeight ? { inner: { height: "100%", alignContent: "stretch" } } : undefined}
+        >
           {cards.map((card) => (
-            <Grid.Col key={card.key} span={1}>
+            <Grid.Col key={card.key} span={1} mih={fillAvailableHeight ? 0 : undefined}>
               {card}
             </Grid.Col>
           ))}
         </Grid>
       );
     return (
-      <SimpleGrid cols={plan.columns} spacing={plan.itemGap} verticalSpacing={plan.itemGap}>
+      <SimpleGrid
+        cols={plan.columns}
+        spacing={plan.itemGap}
+        verticalSpacing={plan.itemGap}
+        h={fillAvailableHeight ? "100%" : undefined}
+        autoRows={fillAvailableHeight ? "minmax(0, 1fr)" : undefined}
+      >
         {cards}
       </SimpleGrid>
     );
@@ -317,6 +331,7 @@ export default function BookmarksWidget({
 interface BookmarkCardProps {
   advanced: boolean;
   bookmark: BookmarkItem;
+  fillHeight: boolean;
   height: number;
   openNewTab: boolean;
   showFullUrls: boolean;
@@ -332,6 +347,7 @@ interface BookmarkCardProps {
 
 const BookmarkCard = ({
   advanced,
+  fillHeight,
   bookmark,
   height,
   openNewTab,
@@ -490,7 +506,7 @@ const BookmarkCard = ({
         radius={radius}
         withBorder={withBorder || variant === "outline"}
         p={padding}
-        h={height}
+        h={fillHeight ? "100%" : height}
         w={width}
         miw={width}
         onMouseEnter={() => setActive(true)}
