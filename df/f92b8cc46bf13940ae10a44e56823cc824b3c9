@@ -1,0 +1,19 @@
+packages/widgets/src/smart-home/controls/semantics.ts
+  s_416635525e5346::t_1270cbee06f339 67,485
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "dff92b8cc46bf13940ae10a44e56823cc824b3c9",
+  "prompts": {},
+  "sessions": {
+    "s_416635525e5346": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "37d7399f-b99f-444f-8da8-32e486111300",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
