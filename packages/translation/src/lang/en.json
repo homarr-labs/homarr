@@ -5455,6 +5455,14 @@
             "combined": "Combined (e.g., 1.5 TB / 2.0 TB (76%))"
           }
         },
+        "resourceLayout": {
+          "label": "Resource Layout",
+          "description": "Arrange CPU, memory, disks and network groups in compact view. Expanded view uses an adaptive grid."
+        },
+        "subresourceLayout": {
+          "label": "Subresource Layout",
+          "description": "Arrange individual disks and network directions within each group. Grid wraps to fit; Horizontal keeps a scrollable row. Applies in both compact and expanded views."
+        },
         "hasShadow": {
           "label": "Enable chart shading"
         },

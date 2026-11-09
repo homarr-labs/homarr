@@ -10,7 +10,7 @@ import { IntegrationErrorIndicator } from "../common/integration-error-indicator
 import { WidgetQueryLoadingState } from "../common/query-state-indicator";
 import type { WidgetComponentProps } from "../definition";
 import { getUsableWidgetQueryData } from "../common/query-state";
-import { CombinedNetworkTrafficChart } from "./chart/combined-network-traffic";
+import { ChartLayout } from "./chart-layout";
 import { SystemResourceCPUChart } from "./chart/cpu-chart";
 import { SystemResourceDiskChart } from "./chart/disk-chart";
 import type { DiskSample } from "./chart/disk-chart";
@@ -250,7 +250,7 @@ const SystemCharts = ({
   const showNetwork = visibleCharts.includes("network");
   const labelDisplayMode = isAdvanced ? "textWithIcon" : options.labelDisplayMode;
   const chartCount = visibleCharts.length;
-  const chartColumns = useMemo(() => (isAdvanced ? getAdvancedChartColumns(width) : 1), [isAdvanced, width]);
+  const chartColumns = isAdvanced ? getAdvancedChartColumns(width) : undefined;
   const chartGap = isAdvanced ? "xs" : 8;
 
   return (
@@ -266,93 +266,93 @@ const SystemCharts = ({
           {integrationName}
         </Text>
       )}
-      {/* Divide the available height evenly across however many rows chartColumns wraps the
-          charts into via CSS grid-auto-rows: 1fr, rather than computing a per-chart pixel height
-          in JS - keeps every chart's own sizing untouched (still h="100%" of its grid cell) and
-          needs no board-zoom-aware math of its own. */}
-      <SimpleGrid cols={chartColumns} spacing={chartGap} style={{ flex: 1, minHeight: 0, gridAutoRows: "1fr" }}>
-        {chartCount === 0 && (
-          <Center h="100%">
-            <Text size="sm" c="dimmed">
-              —
-            </Text>
-          </Center>
-        )}
-        {visibleCharts.includes("cpu") && (
-          <Box h="100%">
-            <SystemResourceCPUChart
-              cpuUsageOverTime={items.map((item) => item.cpu)}
-              hasShadow={options.hasShadow}
-              labelDisplayMode={labelDisplayMode}
-              advanced={isAdvanced}
-            />
-          </Box>
-        )}
-        {visibleCharts.includes("memory") && (
-          <Box h="100%">
-            <SystemResourceMemoryChart
-              memoryUsageOverTime={items.map((item) => item.memory)}
-              totalCapacityInBytes={memoryCapacityInBytes}
-              hasShadow={options.hasShadow}
-              labelDisplayMode={labelDisplayMode}
-              advanced={isAdvanced}
-            />
-          </Box>
-        )}
-        {visibleCharts.includes("gpu") && (
-          <Box h="100%">
-            <SystemResourceGPUChart
-              gpuUsageOverTime={items.map((item) => item.gpu)}
-              hasShadow={options.hasShadow}
-              labelDisplayMode={labelDisplayMode}
-              advanced={isAdvanced}
-            />
-          </Box>
-        )}
-        {visibleCharts.includes("disk") &&
-          disks.map((disk) => (
-            <Box key={disk.deviceName} h="100%">
-              <SystemResourceDiskChart
-                deviceName={disk.deviceName}
-                displayMode={options.diskDisplayMode}
-                samples={items.map(
-                  (item) => item.disks.find((sample) => sample.deviceName === disk.deviceName) ?? null,
-                )}
-                hasShadow={options.hasShadow}
-                labelDisplayMode={labelDisplayMode}
-                advanced={isAdvanced}
-              />
-            </Box>
-          ))}
-        {showNetwork &&
-          (width >= 300 ? (
-            <Group h="100%" gap="xs" grow wrap="nowrap">
-              <NetworkTrafficChart
-                usageOverTime={networkItems.map((network) => network.down)}
-                isUp={false}
-                hasShadow={options.hasShadow}
-                labelDisplayMode={labelDisplayMode}
-                advanced={isAdvanced}
-              />
-              <NetworkTrafficChart
-                usageOverTime={networkItems.map((network) => network.up)}
-                isUp
-                hasShadow={options.hasShadow}
-                labelDisplayMode={labelDisplayMode}
-                advanced={isAdvanced}
-              />
-            </Group>
-          ) : (
+      <Box style={{ flex: 1, minHeight: 0 }} miw={0}>
+        <ChartLayout
+          layout={isAdvanced ? "grid" : options.resourceLayout}
+          columns={chartColumns}
+          minimumColumnWidth={240}
+          gap={chartGap}
+        >
+          {chartCount === 0 && (
+            <Center h="100%">
+              <Text size="sm" c="dimmed">
+                —
+              </Text>
+            </Center>
+          )}
+          {visibleCharts.includes("cpu") && (
             <Box h="100%">
-              <CombinedNetworkTrafficChart
-                usageOverTime={networkItems}
+              <SystemResourceCPUChart
+                cpuUsageOverTime={items.map((item) => item.cpu)}
                 hasShadow={options.hasShadow}
                 labelDisplayMode={labelDisplayMode}
                 advanced={isAdvanced}
               />
             </Box>
-          ))}
-      </SimpleGrid>
+          )}
+          {visibleCharts.includes("memory") && (
+            <Box h="100%">
+              <SystemResourceMemoryChart
+                memoryUsageOverTime={items.map((item) => item.memory)}
+                totalCapacityInBytes={memoryCapacityInBytes}
+                hasShadow={options.hasShadow}
+                labelDisplayMode={labelDisplayMode}
+                advanced={isAdvanced}
+              />
+            </Box>
+          )}
+          {visibleCharts.includes("gpu") && (
+            <Box h="100%">
+              <SystemResourceGPUChart
+                gpuUsageOverTime={items.map((item) => item.gpu)}
+                hasShadow={options.hasShadow}
+                labelDisplayMode={labelDisplayMode}
+                advanced={isAdvanced}
+              />
+            </Box>
+          )}
+          {visibleCharts.includes("disk") && (
+            <ChartLayout layout={options.subresourceLayout} minimumColumnWidth={150} gap={chartGap}>
+              {disks.map((disk) => (
+                <Box key={disk.deviceName} h="100%">
+                  <SystemResourceDiskChart
+                    deviceName={disk.deviceName}
+                    displayMode={options.diskDisplayMode}
+                    samples={items.map(
+                      (item) => item.disks.find((sample) => sample.deviceName === disk.deviceName) ?? null,
+                    )}
+                    hasShadow={options.hasShadow}
+                    labelDisplayMode={labelDisplayMode}
+                    advanced={isAdvanced}
+                  />
+                </Box>
+              ))}
+            </ChartLayout>
+          )}
+          {showNetwork && (
+            <ChartLayout layout={options.subresourceLayout} minimumColumnWidth={150} gap={chartGap}>
+              <Box h="100%" miw={0}>
+                <NetworkTrafficChart
+                  usageOverTime={networkItems.map((network) => network.down)}
+                  isUp={false}
+                  hasShadow={options.hasShadow}
+                  labelDisplayMode={labelDisplayMode}
+                  advanced={isAdvanced}
+                />
+              </Box>
+              <Box h="100%" miw={0}>
+                <NetworkTrafficChart
+                  usageOverTime={networkItems.map((network) => network.up)}
+                  isUp
+                  hasShadow={options.hasShadow}
+                  labelDisplayMode={labelDisplayMode}
+                  advanced={isAdvanced}
+                />
+              </Box>
+            </ChartLayout>
+          )}
+        </ChartLayout>
+      </Box>
     </Stack>
   );
 };

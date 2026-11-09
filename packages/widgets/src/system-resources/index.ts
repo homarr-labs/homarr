@@ -29,6 +29,22 @@ export const { definition, componentLoader } = createWidgetDefinition("systemRes
   createOptions() {
     return optionsBuilder.from((factory) => ({
       hasShadow: factory.switch({ defaultValue: true }),
+      resourceLayout: factory.select({
+        options: (["vertical", "horizontal", "grid"] as const).map((value) => ({
+          value,
+          label: (t) => t(`widget.common.layout.option.${value}`),
+        })),
+        defaultValue: "vertical",
+        withDescription: true,
+      }),
+      subresourceLayout: factory.select({
+        options: (["vertical", "horizontal", "grid"] as const).map((value) => ({
+          value,
+          label: (t) => t(`widget.common.layout.option.${value}`),
+        })),
+        defaultValue: "grid",
+        withDescription: true,
+      }),
       visibleCharts: factory.multiSelect({
         options: (["cpu", "memory", "gpu", "network", "disk"] as const).map((key) => ({
           value: key,
