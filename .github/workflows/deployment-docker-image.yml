@@ -340,14 +340,16 @@ jobs:
             "${GHCR_REPO}@${ARM64_DIGEST}"
 
       - name: Publish release
+        id: publish-release
         if: needs.release.outputs.skipped == 'false'
         env:
           GITHUB_TOKEN: ${{ steps.obtainToken.outputs.token }}
         run: |
+          echo "was_draft=$(gh release view --repo "$GITHUB_REPOSITORY" "$NEXT_VERSION" --json isDraft --jq .isDraft)" >> "$GITHUB_OUTPUT"
           gh release edit --repo "$GITHUB_REPOSITORY" "$NEXT_VERSION" --draft=false
 
       - name: Announce release on Discord
-        if: needs.release.outputs.skipped == 'false' && github.ref_name == 'main'
+        if: steps.publish-release.outputs.was_draft == 'true' && github.ref_name == 'main'
         continue-on-error: true
         env:
           DISCORD_RELEASES_WEBHOOK: ${{ secrets.DISCORD_RELEASES_WEBHOOK }}

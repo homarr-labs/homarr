@@ -122,7 +122,7 @@ bun .agents/skills/release-notes/scripts/collect-release-input.ts --from v2.11.1
 
 It needs `gh` authenticated and prints the JSON document described above on stdout. Use `--to` with the new tag, or the branch head for an unreleased draft. Then write the notes following this skill, check every PR number and author against the JSON, and show the result to the maintainer. Leave the `{{RELEASE_ART}}` placeholder in drafts: the release pipeline replaces it with the generated image.
 
-Do not edit or publish a GitHub release unless the maintainer explicitly tells you to. To regenerate a released version end to end, point them at `bun scripts/release-notes/regenerate.mjs --tag vX.Y.Z --dry-run`. To rewrite several releases in order, write each result to `<dir>/<tag>.md` with `--out` and pass `--context-dir <dir>`, so each release compares itself with the rewritten notes of the previous ones.
+Do not edit or publish a GitHub release unless the maintainer explicitly tells you to. To regenerate a released version end to end, point them at `bun scripts/release-notes/regenerate.mjs --tag vX.Y.Z --dry-run`. To rewrite several releases in order, run each with `--dry-run --out <dir>/<tag>.md --context-dir <dir>`, so each release compares itself with the rewritten notes of the previous ones. Publish the rewritten notes only after the maintainer has approved them.
 
 ## Documentation
 
