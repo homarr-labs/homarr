@@ -41,7 +41,12 @@ export const mergeSmartHomePatch = (
     const next = changed.get(entity.id);
     if (!next) return [entity];
     changed.delete(entity.id);
-    if (next.lastUpdated <= entity.lastUpdated) return [entity];
+    if (next.lastUpdated < entity.lastUpdated) return [entity];
+    if (next.lastUpdated === entity.lastUpdated) {
+      if (next.name === entity.name && next.areaId === entity.areaId && next.icon === entity.icon) return [entity];
+      touched = true;
+      return [{ ...entity, name: next.name, areaId: next.areaId, icon: next.icon }];
+    }
     touched = true;
     return [next];
   });
@@ -67,6 +72,7 @@ export const useSmartHomeSnapshot = (
   const input = useMemo(() => ({ integrationId, ...selection }), [integrationId, selection]);
   const subscriptionEnabled = live && pageVisible;
   const patched = useRef(new Map<string, SmartHomeEntity>());
+  const patchedDuringFetch = useRef(new Set<string>());
   const removed = useRef(new Set<string>());
 
   const query = clientApi.widget.smartHome.snapshot.useQuery(input, {
@@ -76,6 +82,7 @@ export const useSmartHomeSnapshot = (
 
   useEffect(() => {
     patched.current = new Map();
+    patchedDuringFetch.current = new Set();
     removed.current = new Set();
   }, [input]);
 
@@ -87,7 +94,17 @@ export const useSmartHomeSnapshot = (
     const current = new Map(data.entities.map((entity) => [entity.id, entity]));
     for (const [id, seen] of patched.current) {
       const entity = current.get(id);
-      if (entity && seen.lastUpdated <= entity.lastUpdated) patched.current.delete(id);
+      if (!query.isFetching && patchedDuringFetch.current.delete(id)) continue;
+      if (
+        entity &&
+        !query.isFetching &&
+        (seen.lastUpdated < entity.lastUpdated ||
+          (seen.lastUpdated === entity.lastUpdated &&
+            seen.name === entity.name &&
+            seen.areaId === entity.areaId &&
+            seen.icon === entity.icon))
+      )
+        patched.current.delete(id);
       if (!entity && !query.isFetching && seen.lastUpdated < data.updatedAt) patched.current.delete(id);
     }
     if (patched.current.size === 0 && pendingRemoved.length === 0) return;
@@ -110,6 +127,7 @@ export const useSmartHomeSnapshot = (
         setLiveError(null);
         setAttempt(0);
         for (const entity of patch.changed) {
+          if (query.isFetching) patchedDuringFetch.current.add(entity.id);
           const seen = patched.current.get(entity.id);
           if (!seen || seen.lastUpdated <= entity.lastUpdated) {
             patched.current.set(entity.id, entity);
@@ -118,6 +136,7 @@ export const useSmartHomeSnapshot = (
         }
         for (const entityId of patch.removed) {
           patched.current.delete(entityId);
+          patchedDuringFetch.current.delete(entityId);
           removed.current.add(entityId);
         }
         utils.widget.smartHome.snapshot.setData(input, (previous) => mergeSmartHomePatch(previous, patch));

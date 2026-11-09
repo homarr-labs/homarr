@@ -51,6 +51,7 @@ export interface HomeAssistantStateChange {
 export interface HomeAssistantStateListener {
   onChange: (change: HomeAssistantStateChange) => void;
   onError: (error: unknown) => void;
+  onRegistryChange?: () => void;
 }
 
 const connectionClosedError = () =>
@@ -103,6 +104,9 @@ export class HomeAssistantConnection {
   private readonly stateListeners = new Set<HomeAssistantStateListener>();
   private registry: { value: Promise<HomeAssistantRegistry | null>; fetchedAt: number } | undefined;
   private lastRegistry: HomeAssistantRegistry | undefined;
+  private registryEvents: Promise<number[]> | undefined;
+  private registryPollTimer: NodeJS.Timeout | undefined;
+  private registryChangeTimer: NodeJS.Timeout | undefined;
   private idleTimer: NodeJS.Timeout | undefined;
   private configurationTimer: NodeJS.Timeout | undefined;
   private configurationGeneration: string | undefined;
@@ -145,19 +149,32 @@ export class HomeAssistantConnection {
       if (!this.stateListeners.delete(listener)) return;
       listener.onError(error);
     });
+    if (listener.onRegistryChange) {
+      void this.ensureRegistryEventsAsync().catch((error: unknown) => {
+        if (!this.stateListeners.delete(listener)) return;
+        listener.onError(error);
+      });
+    }
     return () => {
       this.stateListeners.delete(listener);
+      if (![...this.stateListeners].some((current) => current.onRegistryChange)) this.stopRegistryEvents();
       this.touch();
     };
   }
 
   public async getRegistryAsync(): Promise<HomeAssistantRegistry | null> {
     this.touch();
-    if (this.registry && Date.now() - this.registry.fetchedAt < REGISTRY_TTL_MS) return await this.registry.value;
+    if (this.registryEvents) await this.registryEvents;
+    if (this.registry && Date.now() - this.registry.fetchedAt < REGISTRY_TTL_MS) {
+      const current = this.registry;
+      const registry = await current.value;
+      if (this.registry !== current) return await this.getRegistryAsync();
+      return registry;
+    }
 
     const value = this.fetchRegistryAsync().then(
       (registry) => {
-        this.lastRegistry = registry;
+        if (this.registry?.value === value) this.lastRegistry = registry;
         return registry;
       },
       (error: unknown) => this.recoverRegistry(error),
@@ -166,7 +183,60 @@ export class HomeAssistantConnection {
     value.catch(() => {
       if (this.registry?.value === value) this.registry = undefined;
     });
-    return await value;
+    const registry = await value;
+    if (this.registry?.value !== value) return await this.getRegistryAsync();
+    return registry;
+  }
+
+  private ensureRegistryEventsAsync() {
+    if (this.registryEvents) return this.registryEvents;
+    const ready = Promise.allSettled(
+      ["entity_registry_updated", "device_registry_updated", "area_registry_updated"].map((eventType) =>
+        this.subscribeAsync({ type: "subscribe_events", event_type: eventType }, () => {
+          if (this.registryEvents === ready) this.invalidateRegistry();
+        }),
+      ),
+    ).then((results) => {
+      const ids = results.flatMap((result) => (result.status === "fulfilled" ? [result.value] : []));
+      const failure = results.find((result) => result.status === "rejected");
+      if (failure || this.registryEvents !== ready) ids.forEach((id) => this.dropSubscription(id));
+      if (this.registryEvents !== ready) return [];
+      if (
+        failure &&
+        (!(failure.reason instanceof HomeAssistantCommandError) || !UNSUPPORTED_REGISTRY_CODES.has(failure.reason.code))
+      ) {
+        throw failure.reason;
+      }
+      // Refresh after listeners are installed, including changes during subscription setup.
+      this.registry = undefined;
+      this.registryPollTimer = setInterval(() => this.invalidateRegistry(), REGISTRY_TTL_MS);
+      this.registryPollTimer.unref();
+      if (failure) return [];
+      return ids;
+    });
+    this.registryEvents = ready;
+    ready.catch(() => {
+      if (this.registryEvents === ready) this.registryEvents = undefined;
+    });
+    return ready;
+  }
+
+  private invalidateRegistry() {
+    this.registry = undefined;
+    clearTimeout(this.registryChangeTimer);
+    this.registryChangeTimer = setTimeout(() => {
+      this.registryChangeTimer = undefined;
+      for (const listener of this.stateListeners) listener.onRegistryChange?.();
+    }, 100);
+    this.registryChangeTimer.unref();
+  }
+
+  private stopRegistryEvents() {
+    clearTimeout(this.registryChangeTimer);
+    clearInterval(this.registryPollTimer);
+    const ready = this.registryEvents;
+    this.registryEvents = undefined;
+    void ready?.then((ids) => ids.forEach((id) => this.dropSubscription(id))).catch(() => undefined);
   }
 
   private recoverRegistry(error: unknown): HomeAssistantRegistry | null {
@@ -475,6 +545,9 @@ export class HomeAssistantConnection {
     this.socket = undefined;
     this.statesReady = undefined;
     this.states.clear();
+    this.stopRegistryEvents();
+    this.registry = undefined;
+    this.lastRegistry = undefined;
     this.eventHandlers.clear();
     this.rejectStatesInit?.(error);
     for (const pending of this.pending.values()) {

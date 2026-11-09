@@ -187,8 +187,12 @@ export class HomeAssistantIntegration extends Integration implements ISmartHomeI
     let states: ReadonlyMap<string, RawEntityState> | null = null;
     let areas: SmartHomeArea[] = [];
     let lookup = createRegistryLookup(null);
+    let lookupRevision = 0;
+    let registryDirty = false;
+    let refreshing = false;
     let draining = false;
     let settled = false;
+    let announced = false;
     const done = Promise.withResolvers<void>();
     const settle = (error?: unknown) => {
       if (settled) return;
@@ -199,18 +203,28 @@ export class HomeAssistantIntegration extends Integration implements ISmartHomeI
 
     const drainAsync = async () => {
       while (pendingChanged.size > 0 || pendingRemoved.size > 0) {
-        if (settled) return;
-        const raws = [...pendingChanged.values()];
+        if (settled || refreshing) return;
+        const revision = lookupRevision;
+        const entries = [...pendingChanged];
         const removed = [...pendingRemoved];
-        pendingChanged.clear();
-        pendingRemoved.clear();
-        const changed = await this.toEntitiesAsync(raws, lookup);
+        const changed = await this.toEntitiesAsync(
+          entries.map(([, raw]) => raw),
+          lookup,
+        );
         if (settled) return;
-        onPatch({ changed, removed });
+        if (revision !== lookupRevision || refreshing) continue;
+        const stillRemoved = removed.filter((id) => pendingRemoved.has(id));
+        const stillChanged = changed.filter((entity) => !pendingRemoved.has(entity.id));
+        for (const [id, raw] of entries) {
+          if (pendingChanged.get(id) === raw) pendingChanged.delete(id);
+        }
+        stillRemoved.forEach((id) => pendingRemoved.delete(id));
+        announced = true;
+        onPatch({ changed: stillChanged, removed: stillRemoved });
       }
     };
     const scheduleDrain = () => {
-      if (draining || settled || !watched) return;
+      if (draining || settled || !watched || refreshing) return;
       draining = true;
       drainAsync().then(
         () => {
@@ -223,58 +237,91 @@ export class HomeAssistantIntegration extends Integration implements ISmartHomeI
         },
       );
     };
+    const reconcileSelection = (metadataChanged: boolean) => {
+      if (!states) return;
+      const ids = resolveSnapshotIds(states, lookup, areas, selection);
+      const selected = new Set(ids);
+      watched = new Set([...ids, ...(selection.entityIds ?? [])]);
+      for (const id of present) {
+        if (selected.has(id)) continue;
+        pendingChanged.delete(id);
+        pendingRemoved.add(id);
+      }
+      for (const id of ids) {
+        const raw = states.get(id);
+        if (raw && (metadataChanged || !present.has(id))) pendingChanged.set(id, raw);
+        pendingRemoved.delete(id);
+      }
+      present.clear();
+      ids.forEach((id) => present.add(id));
+      if (metadataChanged) {
+        for (const id of selection.entityIds ?? []) {
+          if (!states.has(id)) pendingRemoved.add(id);
+        }
+      }
+    };
+    const refreshRegistry = () => {
+      registryDirty = true;
+      if (!states || refreshing || settled) return;
+      refreshing = true;
+      const refreshAsync = async () => {
+        while (registryDirty) {
+          if (settled) return;
+          registryDirty = false;
+          const registry = await connection.getRegistryAsync();
+          if (settled) return;
+          if (registryDirty) continue;
+          lookup = createRegistryLookup(registry);
+          areas = normalizeAreas(registry);
+          lookupRevision++;
+          reconcileSelection(true);
+          if (!announced && pendingChanged.size === 0 && pendingRemoved.size === 0) {
+            announced = true;
+            onPatch({ changed: [], removed: [] });
+          }
+        }
+      };
+      void refreshAsync().then(
+        () => {
+          refreshing = false;
+          scheduleDrain();
+        },
+        (error: unknown) => {
+          refreshing = false;
+          settle(error);
+        },
+      );
+    };
 
     const unsubscribe = connection.subscribeStates({
       onChange: (change) => {
         if (!watched || !states || settled) return;
         try {
-          watched = new Set([...resolveSnapshotIds(states, lookup, areas, selection), ...(selection.entityIds ?? [])]);
+          reconcileSelection(false);
+          for (const raw of change.changed) {
+            if (!watched.has(raw.entityId)) continue;
+            pendingChanged.set(raw.entityId, raw);
+            pendingRemoved.delete(raw.entityId);
+          }
+          for (const id of change.removed) {
+            if (!watched.has(id)) continue;
+            pendingChanged.delete(id);
+            pendingRemoved.add(id);
+          }
+          scheduleDrain();
         } catch (error) {
           settle(error);
-          return;
         }
-        for (const raw of change.changed) {
-          if (!watched.has(raw.entityId)) continue;
-          present.add(raw.entityId);
-          pendingChanged.set(raw.entityId, raw);
-          pendingRemoved.delete(raw.entityId);
-        }
-        for (const id of change.removed) {
-          if (!present.has(id) && !watched.has(id)) continue;
-          present.delete(id);
-          pendingChanged.delete(id);
-          pendingRemoved.add(id);
-        }
-        if (present.size > SMART_HOME_ENTITY_LIMIT) {
-          settle(new SmartHomeSelectionLimitError(present.size));
-          return;
-        }
-        scheduleDrain();
       },
+      onRegistryChange: refreshRegistry,
       onError: (error) => settle(error),
     });
     const onAbort = () => settle();
     signal.addEventListener("abort", onAbort, { once: true });
 
     try {
-      const [initialStates, registry] = await Promise.all([connection.getStatesAsync(), connection.getRegistryAsync()]);
-      if (!settled) {
-        states = initialStates;
-        lookup = createRegistryLookup(registry);
-        areas = normalizeAreas(registry);
-        const ids = resolveSnapshotIds(states, lookup, areas, selection);
-        watched = new Set([...ids, ...(selection.entityIds ?? [])]);
-        ids.forEach((id) => present.add(id));
-        for (const id of ids) {
-          const raw = states.get(id);
-          if (raw) pendingChanged.set(id, raw);
-        }
-        for (const id of selection.entityIds ?? []) {
-          if (!states.has(id)) pendingRemoved.add(id);
-        }
-        if (pendingChanged.size === 0 && pendingRemoved.size === 0) onPatch({ changed: [], removed: [] });
-        scheduleDrain();
-      }
+      states = await connection.getStatesAsync();
+      if (!settled) refreshRegistry();
     } catch (error) {
       settle(error);
     }
