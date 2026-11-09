@@ -1,0 +1,51 @@
+.agents/skills/release-notes/SKILL.md
+  s_e83c2ae1a2ab60::t_f8df801ac66612 31-33,35,42-45,65
+.agents/skills/release-notes/references/example.md
+  s_e83c2ae1a2ab60::t_20e343fab5c2db 73-75,79-87,91,106
+.agents/skills/release-notes/scripts/collect-release-input.ts
+  s_e83c2ae1a2ab60::t_4bf6883e398413 6-8,198,223-230
+.github/workflows/deployment-docker-image.yml
+  s_277a0982c60da2::t_58f2e1778619cc 38
+scripts/release-notes.mjs
+  s_e83c2ae1a2ab60::t_46635f50b69ac6 1,3,8-9,12-32,35,45,49,61-70,73-76
+scripts/release-notes/ai-notes.mjs
+  s_e83c2ae1a2ab60::t_e9443bc008f916 4,8,12-13,43-56,59,61-65,70,81,84-112,125,131,134,148-162,164
+scripts/release-notes/openrouter.mjs
+  s_e83c2ae1a2ab60::t_558d697372a93c 81-84,87-88,92
+scripts/release-notes/paths.mjs
+  s_d989140452be3d::t_6fbf56f42974e8 1-4
+scripts/release-notes/regenerate.mjs
+  s_e83c2ae1a2ab60::t_d1bb2874888147 4,9,15,19-22,26,77,82,86,96,99,127
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "d3103a04a05286fccf56c76f9a111c2136e9e347",
+  "prompts": {},
+  "sessions": {
+    "s_277a0982c60da2": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ba39910a-d82a-4d5b-9b17-6708763f6418",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_d989140452be3d": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "480426f3-d668-4739-b7d5-7d8474027ee2",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_e83c2ae1a2ab60": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3d09fec7-61a2-431f-954a-ba7e7f4cbe42",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
