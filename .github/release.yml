@@ -1,0 +1,28 @@
+changelog:
+  exclude:
+    authors:
+      - homarr-renovate[bot]
+      - homarr-renovate
+      - homarr-crowdin[bot]
+      - homarr-crowdin
+      - homarr-releases[bot]
+      - homarr-releases
+      - homarr-charts-docs-sync[bot]
+      - homarr-charts-docs-sync
+      - homarr-update-contributors[bot]
+      - homarr-update-contributors
+      - github-actions[bot]
+      - github-actions
+  categories:
+    - title: New
+      labels:
+        - enhancement
+    - title: Improved
+      labels:
+        - ux
+    - title: Fixed
+      labels:
+        - bug
+    - title: Other changes
+      labels:
+        - "*"
