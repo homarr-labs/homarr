@@ -6733,9 +6733,23 @@
           "authentication": "Authentication",
           "authorization": "Authorization"
         },
-        "heroBanner": {
-          "title": "Welcome back to your",
-          "subtitle": "{app} Board"
+        "hero": {
+          "greeting": "Welcome back,",
+          "fallbackName": "there",
+          "description": "Everything you manage in {app}, in one place."
+        },
+        "lobster": {
+          "label": "Poke the lobster",
+          "prompt": "Poke me!",
+          "pokeCount": "{count, plural, one {# poke} other {# pokes}}",
+          "reaction": {
+            "hey": "Hey!",
+            "ow": "Ow!",
+            "snip": "Snip snip!",
+            "careful": "Careful, claws!",
+            "stillHere": "Still here.",
+            "okay": "Okay, okay!"
+          }
         }
       },
       "board": {
