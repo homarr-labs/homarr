@@ -1,13 +1,24 @@
 import { z } from "zod/v4";
 
 import { createLogger } from "@homarr/core/infrastructure/logs";
+import type { Database } from "@homarr/db";
+import { eq } from "@homarr/db";
 import { getServerSettingByKeyAsync, updateServerSettingByKeyAsync } from "@homarr/db/queries";
+import { users } from "@homarr/db/schema";
 import { selectUnseenReleases, updateCheckerRequestHandler } from "@homarr/request-handler/update-checker";
 
 import packageJson from "../../../../package.json";
 import { createTRPCRouter, permissionRequiredProcedure } from "../trpc";
 
 const logger = createLogger({ module: "updateCheckerRouter" });
+
+const hasCompletedBoardTourAsync = async (db: Database, userId: string) => {
+  const user = await db.query.users.findFirst({
+    where: eq(users.id, userId),
+    columns: { completedBoardTour: true },
+  });
+  return user?.completedBoardTour === true;
+};
 
 const readUpdateCheckAsync = async () => {
   try {
@@ -32,6 +43,9 @@ export const updateCheckerRouter = createTRPCRouter({
       const currentVersion = packageJson.version;
       const settings = await getServerSettingByKeyAsync(ctx.db, "whatsNew");
       if (input.scope === "unseen" && !settings.enabled) return { currentVersion, releases: [] };
+      if (input.scope === "unseen" && !(await hasCompletedBoardTourAsync(ctx.db, ctx.session.user.id))) {
+        return { currentVersion, releases: [] };
+      }
 
       const { recentReleases } = await readUpdateCheckAsync();
       let releases = recentReleases;
