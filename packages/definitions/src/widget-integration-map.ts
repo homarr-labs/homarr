@@ -135,9 +135,8 @@ export const widgetIntegrationConfigs = {
     supportedIntegrations: getIntegrationKindsByCategory("smartHomeServer"),
     maxIntegrations: 1,
   },
-  "smartHome-prototype": {
+  "smartHome-controls": {
     supportedIntegrations: getIntegrationKindsByCategory("smartHomeServer"),
-    integrationsRequired: false,
     maxIntegrations: 1,
   },
   mediaServer: { supportedIntegrations: getIntegrationKindsByCategory("mediaService") },

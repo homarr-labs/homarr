@@ -33,15 +33,6 @@ const compressedContextSchema = z.union([
   }),
 ]);
 
-export const restStateSchema = z.object({
-  entity_id: z.string(),
-  state: z.string(),
-  attributes: z.record(z.string(), z.unknown()),
-  last_changed: z.string(),
-  last_updated: z.string(),
-  context: z.object({ id: z.string() }).optional(),
-});
-
 const compressedStateSchema = z.object({
   s: z.string(),
   a: z.record(z.string(), z.unknown()).default({}),
@@ -123,23 +114,6 @@ export const historyResultSchema = z.record(
     }),
   ),
 );
-
-export const forecastResponseSchema = z.object({
-  service_response: z.record(
-    z.string(),
-    z.object({
-      forecast: z.array(
-        z.object({
-          datetime: z.string(),
-          condition: z.string().nullish(),
-          temperature: z.number().nullish(),
-          templow: z.number().nullish(),
-          precipitation_probability: z.number().nullish(),
-        }),
-      ),
-    }),
-  ),
-});
 
 export interface RawEntityState {
   entityId: string;

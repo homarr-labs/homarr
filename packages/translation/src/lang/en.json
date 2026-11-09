@@ -3089,19 +3089,10 @@
         "toggleFailed": "Unable to update entity"
       }
     },
-    "smartHome-prototype": {
-      "name": "Home Assistant prototype",
-      "description": "Throwaway design prototype for the Home Assistant widgets",
+    "smartHome-controls": {
+      "name": "Home Assistant controls",
+      "description": "Monitor and control Home Assistant rooms and entities",
       "option": {
-        "preset": {
-          "label": "Preset"
-        },
-        "areaId": {
-          "label": "Area"
-        },
-        "entityId": {
-          "label": "Entity"
-        },
         "presentation": {
           "label": "Style",
           "option": {
@@ -3176,10 +3167,6 @@
         "update": "Updates"
       },
       "block": {
-        "source": {
-          "fixture": "Demo data: no Home Assistant integration is selected, so these rooms and entities are prototype fixtures",
-          "live": "Rooms and entities from the selected Home Assistant integration"
-        },
         "add": {
           "rooms": "Rooms",
           "entity": "Entity",
@@ -3202,13 +3189,11 @@
         "noArea": "No room",
         "issue": {
           "missing": "Not found",
-          "otherSource": "Other source",
+          "otherSource": "Other integration",
           "empty": "Already shown above"
         }
       },
       "preview": {
-        "home": "Home",
-        "entities": "Entities",
         "empty": "Add rooms or entities to this widget",
         "noMatches": "Nothing matches this filter",
         "summary": {
@@ -3218,10 +3203,7 @@
           "sensors": "sensors",
           "offline": "offline"
         },
-        "demo": "Demo data",
-        "readOnly": "Read-only",
-        "noPermission": "View only",
-        "otherSource": "These blocks belong to demo data or another integration. Choose rooms from the selected source."
+        "otherSource": "These blocks belong to another integration. Choose rooms from the selected integration."
       },
       "live": {
         "loading": "Loading Home Assistant states",

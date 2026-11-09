@@ -50,10 +50,7 @@ export class SmartHomeMockService implements ISmartHomeIntegration {
         }))
         .toSorted((left, right) => left.name.localeCompare(right.name)),
       areas: mockSmartHomeAreas,
-      floors: [
-        { id: "ground", name: "Ground floor", level: 0, icon: null },
-        { id: "first", name: "First floor", level: 1, icon: null },
-      ],
+      floors: [{ id: "ground", name: "Ground floor", level: 0, icon: null }],
     });
   }
 
@@ -163,15 +160,11 @@ export class SmartHomeMockService implements ISmartHomeIntegration {
   private simulate() {
     this.tick++;
     const now = Date.now();
-    const drift = (entityId: string, amount: number, digits: number) => {
-      const entity = this.entities.get(entityId);
-      if (!entity) return;
-      const value = Number(entity.state) + Math.sin(this.tick / 3) * amount;
-      this.update({ ...entity, state: value.toFixed(digits), lastUpdated: now, lastChanged: now });
-    };
-    drift("sensor.office_power", 14, 0);
-    drift("sensor.solar_power", 0.05, 2);
-    drift("sensor.outside_temperature", 0.05, 1);
+    const outside = this.entities.get("sensor.outside_temperature");
+    if (outside) {
+      const value = Number(outside.state) + Math.sin(this.tick / 3) * 0.05;
+      this.update({ ...outside, state: value.toFixed(1), lastUpdated: now, lastChanged: now });
+    }
 
     const tv = this.entities.get("media_player.living_room_tv");
     if (tv?.state === "playing") {

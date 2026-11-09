@@ -16,7 +16,7 @@ export const widgetDocSlugs = {
   dnsHoleControls: "dns-hole-controls",
   "smartHome-entityState": "smart-home-entity-state",
   "smartHome-executeAutomation": "smart-home-execute-automation",
-  "smartHome-prototype": null,
+  "smartHome-controls": null,
   stockPrice: "stock-price",
   mediaServer: "media-server",
   calendar: "calendar",

@@ -233,5 +233,3 @@ export type SmartHomeAction =
   | { type: "timerStart" }
   | { type: "timerPause" }
   | { type: "timerCancel" };
-
-export type SmartHomeActionType = SmartHomeAction["type"];

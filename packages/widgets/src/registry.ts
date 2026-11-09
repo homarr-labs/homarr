@@ -49,7 +49,7 @@ import type * as releases from "./releases";
 import type * as rssFeed from "./rssFeed";
 import type * as smartHomeEntityState from "./smart-home/entity-state";
 import type * as smartHomeExecuteAutomation from "./smart-home/execute-automation";
-import type * as smartHomePrototype from "./smart-home/prototype";
+import type * as smartHomeControls from "./smart-home/controls";
 import type * as speedtestTracker from "./speedtest-tracker";
 import type * as stockPrice from "./stocks";
 import type * as systemDisks from "./system-disks";
@@ -86,7 +86,7 @@ export const widgetModuleLoaders = {
   dnsHoleControls: () => import("./dns-hole/controls"),
   "smartHome-entityState": () => import("./smart-home/entity-state"),
   "smartHome-executeAutomation": () => import("./smart-home/execute-automation"),
-  "smartHome-prototype": () => import("./smart-home/prototype"),
+  "smartHome-controls": () => import("./smart-home/controls"),
   stockPrice: () => import("./stocks"),
   mediaServer: () => import("./media-server"),
   calendar: () => import("./calendar"),
@@ -156,7 +156,7 @@ export type WidgetImports = {
   dnsHoleControls: typeof dnsHoleControls;
   "smartHome-entityState": typeof smartHomeEntityState;
   "smartHome-executeAutomation": typeof smartHomeExecuteAutomation;
-  "smartHome-prototype": typeof smartHomePrototype;
+  "smartHome-controls": typeof smartHomeControls;
   stockPrice: typeof stockPrice;
   mediaServer: typeof mediaServer;
   calendar: typeof calendar;
@@ -233,7 +233,7 @@ export const widgetComponentLoaders = {
   dnsHoleControls: () => import("./dns-hole/controls/component"),
   "smartHome-entityState": () => import("./smart-home/entity-state/component"),
   "smartHome-executeAutomation": () => import("./smart-home/execute-automation/component"),
-  "smartHome-prototype": () => import("./smart-home/prototype/component"),
+  "smartHome-controls": () => import("./smart-home/controls/component"),
   stockPrice: () => import("./stocks/component"),
   mediaServer: () => import("./media-server/component"),
   calendar: () => import("./calendar/component"),
