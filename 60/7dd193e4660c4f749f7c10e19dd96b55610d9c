@@ -1,0 +1,45 @@
+scripts/release-art/assets.ts
+  s_173263db5f65ec::t_6642cd2fe4a92a 2,4,16-25,28-46,50,53,56-57,64-66,73-74,76-77,79,86,112-113,119,124-126,128,136,139,141,144-145,147,152,154,156,178-183,186,191-202
+scripts/release-art/board.ts
+  s_173263db5f65ec::t_583f313462558a 1-3,5-6,15-25,27,30-72,75-76,78-87,124-139,141-144,148,150,157-164,166-167,171,176,182-183,187-189,195,199-200,206,213-220,222,227,231-232
+scripts/release-art/cli.ts
+  s_0847132e4fda53::t_b2585ed389c0cc 2,13,23,33-35,46-48
+scripts/release-art/detect.ts
+  s_0847132e4fda53::t_ccdf7d30337c5a 1,4,6,12-194,197,206,209-219,222-225,228-233,235,238-245,248-260,264-270,281-282,287-288,291,297,300-303,308-317,319-321,325-337,341-343,345-346,350-352,359
+scripts/release-art/items.ts
+  s_173263db5f65ec::t_bb674596c40207 1-12,16,39-42,52-56
+scripts/release-art/layout.ts
+  s_173263db5f65ec::t_1cb425886ea8f7 1,12,42-46,55,90,98,100-109,112-115,118-119,123-124,127,132
+scripts/release-art/render.ts
+  s_0847132e4fda53::t_b8d0c5bdacc765 1,3-4,6-8,10-11,14,17,19,27-34,36-49,51,56-57,79-80,83-93
+scripts/release-art/svg.ts
+  s_173263db5f65ec::t_faefb4f8e726a8 1-15,17-24,28,35,42-43,62
+scripts/release-art/text.ts
+  s_173263db5f65ec::t_42378d5998f9ec 4,7,18,20,28-29,41,44,50,53-54,61-63,67-68,72,89-90
+scripts/release-art/tiles.ts
+  s_173263db5f65ec::t_578eeed5faedf6 2-4,23-26,28,30-31,33,35,41,43,48,51,57,63,66,69,72,75,80,86,88-89,94,96,106-110,112,115-118,129,135,137,143
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "607dd193e4660c4f749f7c10e19dd96b55610d9c",
+  "prompts": {},
+  "sessions": {
+    "s_0847132e4fda53": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "856a5c1e-7d34-43cd-b05a-3f3fc0880175",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_173263db5f65ec": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "24f8c71a-b379-4ec4-aab2-832a307b5cf3",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
