@@ -98,6 +98,7 @@ export class HomeAssistantConnection {
   private nextId = 1;
   private readonly pending = new Map<number, PendingCommand>();
   private readonly eventHandlers = new Map<number, (event: unknown) => void>();
+  private readonly subscriptionSockets = new Map<number, WebSocket>();
   private readonly states = new Map<string, RawEntityState>();
   private statesReady: Promise<void> | undefined;
   private rejectStatesInit: ((error: unknown) => void) | undefined;
@@ -345,24 +346,33 @@ export class HomeAssistantConnection {
   }
 
   private dropSubscription(id: number) {
-    if (!this.eventHandlers.delete(id)) return;
-    void this.sendAsync({ type: "unsubscribe_events", subscription: id }).catch(() => undefined);
+    const socket = this.subscriptionSockets.get(id);
+    this.subscriptionSockets.delete(id);
+    this.eventHandlers.delete(id);
+    if (!socket || socket.readyState !== WebSocket.OPEN) return;
+    try {
+      socket.send(JSON.stringify({ id: this.nextId++, type: "unsubscribe_events", subscription: id }));
+    } catch (error) {
+      logger.debug("Home Assistant subscription cleanup failed", { reason: describeFailure(error) });
+    }
   }
 
   private async subscribeAsync(message: { type: string } & Record<string, unknown>, onEvent: (event: unknown) => void) {
     const socket = await this.getSocketAsync();
     const id = this.nextId++;
     this.eventHandlers.set(id, onEvent);
+    this.subscriptionSockets.set(id, socket);
     await new Promise<void>((resolve, reject) => {
       const timeout = setTimeout(() => {
         this.pending.delete(id);
-        this.eventHandlers.delete(id);
+        this.dropSubscription(id);
         reject(new Error(`Home Assistant subscription ${message.type} timed out`));
       }, COMMAND_TIMEOUT_MS);
       this.pending.set(id, {
         resolve: () => resolve(),
         reject: (error) => {
           this.eventHandlers.delete(id);
+          this.subscriptionSockets.delete(id);
           reject(error);
         },
         timeout,
@@ -545,6 +555,7 @@ export class HomeAssistantConnection {
     this.socket = undefined;
     this.statesReady = undefined;
     this.states.clear();
+    this.subscriptionSockets.clear();
     this.stopRegistryEvents();
     this.registry = undefined;
     this.lastRegistry = undefined;

@@ -182,6 +182,7 @@ export interface SmartHomeHistorySeries {
 export interface SmartHomeEntityPatch {
   changed: SmartHomeEntity[];
   removed: string[];
+  areas?: SmartHomeArea[];
 }
 
 export type SmartHomeAction =

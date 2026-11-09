@@ -346,6 +346,7 @@ export const smartHomeRouter = createTRPCRouter({
       const controller = new AbortController();
       const pendingChanged = new Map<string, SmartHomeEntity>();
       const pendingRemoved = new Set<string>();
+      let pendingAreas: SmartHomeEntityPatch["areas"];
       const stop = () => {
         controller.abort();
         void queue.return();
@@ -354,6 +355,7 @@ export const smartHomeRouter = createTRPCRouter({
       signal?.addEventListener("abort", stop, { once: true });
 
       const collect = (patch: SmartHomeEntityPatch) => {
+        if (patch.areas !== undefined) pendingAreas = patch.areas;
         for (const entity of patch.changed) {
           pendingChanged.set(entity.id, entity);
           pendingRemoved.delete(entity.id);
@@ -381,11 +383,17 @@ export const smartHomeRouter = createTRPCRouter({
 
         let announced = false;
         for await (const _ of queue) {
-          if (announced && pendingChanged.size === 0 && pendingRemoved.size === 0) continue;
+          if (announced && pendingChanged.size === 0 && pendingRemoved.size === 0 && pendingAreas === undefined)
+            continue;
           announced = true;
-          const patch: SmartHomeEntityPatch = { changed: [...pendingChanged.values()], removed: [...pendingRemoved] };
+          const patch: SmartHomeEntityPatch = {
+            changed: [...pendingChanged.values()],
+            removed: [...pendingRemoved],
+            areas: pendingAreas,
+          };
           pendingChanged.clear();
           pendingRemoved.clear();
+          pendingAreas = undefined;
           yield patch;
         }
       } finally {

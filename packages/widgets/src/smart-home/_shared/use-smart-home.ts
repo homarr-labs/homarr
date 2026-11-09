@@ -6,6 +6,7 @@ import { skipToken } from "@tanstack/react-query";
 import { clientApi } from "@homarr/api/client";
 import type {
   SmartHomeAction,
+  SmartHomeArea,
   SmartHomeEntity,
   SmartHomeEntityPatch,
   SmartHomeEntitySelection,
@@ -51,9 +52,10 @@ export const mergeSmartHomePatch = (
     return [next];
   });
   const added = [...changed.values()].filter((entity) => !removed.has(entity.id));
-  if (!touched && added.length === 0) return snapshot;
+  const areasChanged = patch.areas !== undefined && JSON.stringify(patch.areas) !== JSON.stringify(snapshot.areas);
+  if (!touched && added.length === 0 && !areasChanged) return snapshot;
   entities.push(...added);
-  return { ...snapshot, entities, updatedAt: Date.now() };
+  return { ...snapshot, entities, areas: patch.areas ?? snapshot.areas, updatedAt: Date.now() };
 };
 
 interface UseSmartHomeSnapshotOptions {
@@ -73,6 +75,7 @@ export const useSmartHomeSnapshot = (
   const subscriptionEnabled = live && pageVisible;
   const patched = useRef(new Map<string, SmartHomeEntity>());
   const patchedDuringFetch = useRef(new Set<string>());
+  const patchedAreas = useRef<SmartHomeArea[] | undefined>(undefined);
   const removed = useRef(new Set<string>());
 
   const query = clientApi.widget.smartHome.snapshot.useQuery(input, {
@@ -83,12 +86,14 @@ export const useSmartHomeSnapshot = (
   useEffect(() => {
     patched.current = new Map();
     patchedDuringFetch.current = new Set();
+    patchedAreas.current = undefined;
     removed.current = new Set();
   }, [input]);
 
   const { data } = query;
   useEffect(() => {
-    if (!data || (patched.current.size === 0 && removed.current.size === 0)) return;
+    if (!data || (patched.current.size === 0 && removed.current.size === 0 && patchedAreas.current === undefined))
+      return;
     const pendingRemoved = [...removed.current];
     if (!query.isFetching) removed.current.clear();
     const current = new Map(data.entities.map((entity) => [entity.id, entity]));
@@ -107,10 +112,14 @@ export const useSmartHomeSnapshot = (
         patched.current.delete(id);
       if (!entity && !query.isFetching && seen.lastUpdated < data.updatedAt) patched.current.delete(id);
     }
-    if (patched.current.size === 0 && pendingRemoved.length === 0) return;
+    if (!query.isFetching && JSON.stringify(patchedAreas.current) === JSON.stringify(data.areas)) {
+      patchedAreas.current = undefined;
+    }
+    if (patched.current.size === 0 && pendingRemoved.length === 0 && patchedAreas.current === undefined) return;
     const merged = mergeSmartHomePatch(data, {
       changed: [...patched.current.values()],
       removed: pendingRemoved,
+      areas: patchedAreas.current,
     });
     if (merged !== data) utils.widget.smartHome.snapshot.setData(input, merged);
   }, [data, input, utils, query.isFetching]);
@@ -126,6 +135,7 @@ export const useSmartHomeSnapshot = (
         setIsLive(true);
         setLiveError(null);
         setAttempt(0);
+        if (patch.areas !== undefined) patchedAreas.current = patch.areas;
         for (const entity of patch.changed) {
           if (query.isFetching) patchedDuringFetch.current.add(entity.id);
           const seen = patched.current.get(entity.id);

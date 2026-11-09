@@ -183,6 +183,7 @@ export class HomeAssistantIntegration extends Integration implements ISmartHomeI
     const pendingChanged = new Map<string, RawEntityState>();
     const pendingRemoved = new Set<string>();
     const present = new Set<string>();
+    let pendingAreas: SmartHomeArea[] | undefined;
     let watched: ReadonlySet<string> | null = null;
     let states: ReadonlyMap<string, RawEntityState> | null = null;
     let areas: SmartHomeArea[] = [];
@@ -192,7 +193,6 @@ export class HomeAssistantIntegration extends Integration implements ISmartHomeI
     let refreshing = false;
     let draining = false;
     let settled = false;
-    let announced = false;
     const done = Promise.withResolvers<void>();
     const settle = (error?: unknown) => {
       if (settled) return;
@@ -202,11 +202,12 @@ export class HomeAssistantIntegration extends Integration implements ISmartHomeI
     };
 
     const drainAsync = async () => {
-      while (pendingChanged.size > 0 || pendingRemoved.size > 0) {
+      while (pendingChanged.size > 0 || pendingRemoved.size > 0 || pendingAreas !== undefined) {
         if (settled || refreshing) return;
         const revision = lookupRevision;
         const entries = [...pendingChanged];
         const removed = [...pendingRemoved];
+        const changedAreas = pendingAreas;
         const changed = await this.toEntitiesAsync(
           entries.map(([, raw]) => raw),
           lookup,
@@ -219,8 +220,8 @@ export class HomeAssistantIntegration extends Integration implements ISmartHomeI
           if (pendingChanged.get(id) === raw) pendingChanged.delete(id);
         }
         stillRemoved.forEach((id) => pendingRemoved.delete(id));
-        announced = true;
-        onPatch({ changed: stillChanged, removed: stillRemoved });
+        if (pendingAreas === changedAreas) pendingAreas = undefined;
+        onPatch({ changed: stillChanged, removed: stillRemoved, areas: changedAreas });
       }
     };
     const scheduleDrain = () => {
@@ -229,7 +230,7 @@ export class HomeAssistantIntegration extends Integration implements ISmartHomeI
       drainAsync().then(
         () => {
           draining = false;
-          if (pendingChanged.size > 0 || pendingRemoved.size > 0) scheduleDrain();
+          if (pendingChanged.size > 0 || pendingRemoved.size > 0 || pendingAreas !== undefined) scheduleDrain();
         },
         (error: unknown) => {
           draining = false;
@@ -242,18 +243,25 @@ export class HomeAssistantIntegration extends Integration implements ISmartHomeI
       const ids = resolveSnapshotIds(states, lookup, areas, selection);
       const selected = new Set(ids);
       watched = new Set([...ids, ...(selection.entityIds ?? [])]);
+      let membershipChanged = false;
       for (const id of present) {
         if (selected.has(id)) continue;
+        membershipChanged = true;
         pendingChanged.delete(id);
         pendingRemoved.add(id);
       }
       for (const id of ids) {
         const raw = states.get(id);
         if (raw && (metadataChanged || !present.has(id))) pendingChanged.set(id, raw);
+        if (!present.has(id)) membershipChanged = true;
         pendingRemoved.delete(id);
       }
       present.clear();
       ids.forEach((id) => present.add(id));
+      if (metadataChanged || membershipChanged) {
+        const usedAreas = new Set([...ids.map((id) => lookup(id).areaId), ...(selection.areaIds ?? [])]);
+        pendingAreas = areas.filter((area) => usedAreas.has(area.id));
+      }
       if (metadataChanged) {
         for (const id of selection.entityIds ?? []) {
           if (!states.has(id)) pendingRemoved.add(id);
@@ -275,10 +283,6 @@ export class HomeAssistantIntegration extends Integration implements ISmartHomeI
           areas = normalizeAreas(registry);
           lookupRevision++;
           reconcileSelection(true);
-          if (!announced && pendingChanged.size === 0 && pendingRemoved.size === 0) {
-            announced = true;
-            onPatch({ changed: [], removed: [] });
-          }
         }
       };
       void refreshAsync().then(
