@@ -112,13 +112,14 @@ export const PlayableLobster = ({
   };
 
   const keyDown = (event: KeyboardEvent<HTMLButtonElement>) => {
+    if (event.ctrlKey || event.metaKey || event.altKey) return;
     const model = scene.current;
     if (!model) return;
     const actions: Partial<Record<string, () => void>> = {
       ArrowLeft: () => model.release(-6),
       ArrowRight: () => model.release(6),
-      ArrowUp: () => model.spin(0, -0.15),
-      ArrowDown: () => model.spin(0, 0.15),
+      ArrowUp: () => model.spin(0, -0.15, false),
+      ArrowDown: () => model.spin(0, 0.15, false),
       r: () => model.reset(),
     };
     const action = actions[event.key];

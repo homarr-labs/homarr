@@ -109,7 +109,12 @@ export const ManagementHero = ({ appName, userName }: ManagementHeroProps) => {
       <Seabed />
       <Box className={classes.copy} py={{ base: 0, md: "lg" }}>
         <Title order={1} className={classes.title}>
-          {t("hero.greeting")} <span className={classes.name}>{userName ?? t("hero.fallbackName")}</span>
+          {userName === null && t("hero.greetingWithoutName")}
+          {userName !== null && (
+            <>
+              {t("hero.greeting")} <span className={classes.name}>{userName}</span>
+            </>
+          )}
         </Title>
         <Text c="dimmed" size="lg" mt="sm" maw={420}>
           {t("hero.description", { app: appName })}

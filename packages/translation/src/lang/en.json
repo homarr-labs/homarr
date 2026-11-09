@@ -6735,7 +6735,7 @@
         },
         "hero": {
           "greeting": "Welcome back,",
-          "fallbackName": "there",
+          "greetingWithoutName": "Welcome back",
           "description": "Everything you manage in {app}, in one place."
         },
         "lobster": {

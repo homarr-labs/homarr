@@ -3,7 +3,7 @@ import * as THREE from "three";
 import { createLobsterModel } from "./rig";
 
 export interface LobsterScene {
-  spin: (dx: number, dy: number) => void;
+  spin: (dx: number, dy: number, hold?: boolean) => void;
   release: (velocity: number) => void;
   look: (x: number, y: number) => void;
   setHovered: (hovered: boolean) => void;
@@ -156,8 +156,8 @@ export const createLobsterScene = (host: HTMLElement, svg: string, options: Lobs
   wake();
 
   return {
-    spin(dx, dy) {
-      dragging = true;
+    spin(dx, dy, hold = true) {
+      if (hold) dragging = true;
       yaw += dx;
       pitch = THREE.MathUtils.clamp(pitch + dy, -0.9, 0.9);
       wake();
@@ -210,6 +210,7 @@ export const createLobsterScene = (host: HTMLElement, svg: string, options: Lobs
       });
       material.dispose();
       renderer.dispose();
+      renderer.forceContextLoss();
       renderer.domElement.remove();
     },
   };
