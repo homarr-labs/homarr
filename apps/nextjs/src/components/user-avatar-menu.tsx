@@ -12,6 +12,7 @@ import {
   IconReplace,
   IconSettings,
   IconRobot,
+  IconSparkles,
   IconTool,
 } from "@tabler/icons-react";
 
@@ -31,10 +32,12 @@ import { CurrentColorSchemeCombobox } from "./color-scheme/current-color-scheme-
 import { CurrentLanguageCombobox } from "./language/current-language-combobox";
 import { DockerQuickAccessModal } from "./layout/header/docker-quick-access-modal";
 import { AvailableUpdatesMenuItem } from "./layout/header/update";
+import { WhatsNewModal } from "./layout/header/whats-new-modal";
 
 interface UserAvatarMenuProps {
   children: ReactNode;
   availableUpdates?: RouterOutputs["updateChecker"]["getAvailableUpdates"];
+  isAdmin?: boolean;
   isDockerEnabled?: boolean;
   boardSwitcher: BoardSwitcherControls;
 }
@@ -45,7 +48,13 @@ const formatHotkeyLabel = (hotkey: string, modifierLabel: string) =>
     .map((key) => (key === "mod" ? modifierLabel : `${key.charAt(0).toUpperCase()}${key.slice(1)}`))
     .join(" + ");
 
-export const UserAvatarMenu = ({ children, availableUpdates, isDockerEnabled, boardSwitcher }: UserAvatarMenuProps) => {
+export const UserAvatarMenu = ({
+  children,
+  availableUpdates,
+  isAdmin,
+  isDockerEnabled,
+  boardSwitcher,
+}: UserAvatarMenuProps) => {
   const t = useI18n("common.userAvatar.menu");
   const tBoard = useI18n("board");
   const session = useSession();
@@ -54,6 +63,7 @@ export const UserAvatarMenu = ({ children, availableUpdates, isDockerEnabled, bo
 
   const { logoutUrl, logoutRedirectInProgress } = useAuthContext();
   const { openModal: openDockerModal } = useModalAction(DockerQuickAccessModal);
+  const { openModal: openWhatsNewModal } = useModalAction(WhatsNewModal);
   const assistant = useOptionalHomarrAssistant();
 
   const handleSignout = useCallback(async () => {
@@ -143,6 +153,14 @@ export const UserAvatarMenu = ({ children, availableUpdates, isDockerEnabled, bo
             {isDockerEnabled && (
               <Menu.Item leftSection={<IconBrandDocker size="1rem" />} onClick={() => openDockerModal()}>
                 {invariantTechnicalLabels.docker}
+              </Menu.Item>
+            )}
+            {isAdmin && (
+              <Menu.Item
+                leftSection={<IconSparkles size="1rem" />}
+                onClick={() => openWhatsNewModal({ scope: "recent" })}
+              >
+                {t("whatsNew")}
               </Menu.Item>
             )}
           </>

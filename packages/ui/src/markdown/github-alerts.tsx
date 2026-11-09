@@ -4,6 +4,8 @@ import { IconAlertOctagon, IconAlertTriangle, IconBulb, IconInfoCircle, IconMess
 import type { ExtraProps } from "react-markdown";
 import type rehypeSanitize from "rehype-sanitize";
 
+import { useI18n } from "@homarr/translation/client";
+
 import classes from "./markdown.module.css";
 
 type HastRoot = Parameters<ReturnType<typeof rehypeSanitize>>[0];
@@ -11,17 +13,16 @@ type HastNode = HastRoot["children"][number];
 type HastElement = Extract<HastNode, { type: "element" }>;
 
 const alerts = {
-  note: { color: "blue", title: "Note", icon: IconInfoCircle },
-  tip: { color: "green", title: "Tip", icon: IconBulb },
-  important: { color: "violet", title: "Important", icon: IconMessageReport },
-  warning: { color: "yellow", title: "Warning", icon: IconAlertTriangle },
-  caution: { color: "red", title: "Caution", icon: IconAlertOctagon },
+  note: { color: "blue", icon: IconInfoCircle },
+  tip: { color: "green", icon: IconBulb },
+  important: { color: "violet", icon: IconMessageReport },
+  warning: { color: "yellow", icon: IconAlertTriangle },
+  caution: { color: "red", icon: IconAlertOctagon },
 } as const;
 
 type AlertKind = keyof typeof alerts;
 
 const markerRegex = /^\[!(note|tip|important|warning|caution)\](?=\s|$)/i;
-const iconStyle = { width: "100%", height: "100%" };
 
 const isAlertKind = (value: unknown): value is AlertKind =>
   typeof value === "string" && Object.keys(alerts).includes(value);
@@ -72,12 +73,13 @@ export const rehypeGithubAlerts = () => (tree: HastRoot) => {
 };
 
 export const AlertBlockquote = ({ node, children, ...props }: ComponentProps<"blockquote"> & ExtraProps) => {
+  const t = useI18n("common.markdown.alert");
   const kind = node?.properties.dataAlert;
   if (!isAlertKind(kind)) return <blockquote {...props}>{children}</blockquote>;
 
-  const { color, title, icon: Icon } = alerts[kind];
+  const { color, icon: Icon } = alerts[kind];
   return (
-    <Alert color={color} title={title} icon={<Icon style={iconStyle} />} className={classes.alert}>
+    <Alert color={color} title={t(kind)} icon={<Icon size="100%" />} className={classes.alert}>
       {children}
     </Alert>
   );

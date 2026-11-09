@@ -1,3 +1,5 @@
+"use client";
+
 import type { ComponentProps } from "react";
 import { Typography } from "@mantine/core";
 import ReactMarkdown from "react-markdown";

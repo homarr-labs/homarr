@@ -2013,7 +2013,17 @@
         "updateAvailable": "{countUpdates} updates available: {tag}",
         "assistant": "Assistant",
         "assistantThinking": "Thinking",
-        "modifier": "Mod"
+        "modifier": "Mod",
+        "whatsNew": "What's new"
+      }
+    },
+    "markdown": {
+      "alert": {
+        "note": "Note",
+        "tip": "Tip",
+        "important": "Important",
+        "warning": "Warning",
+        "caution": "Caution"
       }
     },
     "dangerZone": "Danger zone",
@@ -7071,6 +7081,10 @@
             "title": "Appearance",
             "defaultColorScheme": {
               "label": "Default color scheme"
+            },
+            "whatsNew": {
+              "label": "Show what's new after updates",
+              "description": "Shows administrators the release notes in a dialog the first time they open Homarr after an update"
             }
           },
           "branding": {
@@ -8823,6 +8837,12 @@
         "description": "Change your color scheme, language, home board, and preferences. You can also jump to the management area from here."
       }
     }
+  },
+  "whatsNew": {
+    "title": "What's new",
+    "empty": "Release notes are not available right now.",
+    "allReleases": "All releases on GitHub",
+    "dismiss": "Got it"
   },
   "metadata": {
     "description": "A self-hosted dashboard for the *arr stack and your entire homelab. Integrates with 50+ services, real-time widgets, no config files.",
