@@ -2324,6 +2324,7 @@
       "label": "{widget} advanced view"
     },
     "inPlace": {
+      "widgetLoadError": "Could not load this widget.",
       "search": "Search widgets and apps",
       "bestFit": "Best fit · matching default size",
       "moreWidgets": "More widgets",
