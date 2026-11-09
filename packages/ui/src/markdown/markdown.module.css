@@ -1,0 +1,52 @@
+.root {
+  overflow-wrap: anywhere;
+
+  & > :first-child {
+    margin-top: 0;
+  }
+
+  & > :last-child {
+    margin-bottom: 0;
+  }
+
+  & img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  & pre {
+    white-space: pre-wrap;
+  }
+
+  & table {
+    display: block;
+    width: max-content;
+    max-width: 100%;
+    overflow-x: auto;
+  }
+
+  & :is(ul, ol):global(.contains-task-list) {
+    list-style: none;
+    padding-inline-start: 0;
+  }
+
+  & :global(.task-list-item) :is(ul, ol) {
+    padding-inline-start: var(--mantine-spacing-xl);
+  }
+
+  & :global(.task-list-item) > input {
+    margin-inline: 0 var(--mantine-spacing-xs);
+    accent-color: var(--mantine-primary-color-filled);
+  }
+}
+
+.alert {
+  margin-block: var(--mantine-spacing-md);
+}
+
+.mention {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25em;
+  vertical-align: bottom;
+}

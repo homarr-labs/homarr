@@ -17,7 +17,8 @@
     "./widget-icons": "./src/widget-icons.ts",
     "./styles.css": "./src/styles.css",
     "./hooks": "./src/hooks/index.ts",
-    "./icons": "./src/icons/index.ts"
+    "./icons": "./src/icons/index.ts",
+    "./markdown": "./src/markdown/index.ts"
   },
   "scripts": {
     "clean": "rm -rf .turbo node_modules",
