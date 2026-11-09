@@ -213,7 +213,7 @@
   height: 100%;
   padding: var(--mantine-spacing-lg);
   border: 1px solid var(--mantine-color-default-border);
-  border-radius: var(--mantine-radius-lg);
+  border-radius: var(--mantine-radius-default);
   text-decoration: none;
   color: inherit;
   transition:
@@ -377,7 +377,7 @@
 
   .speech {
     left: auto;
-    right: -45%;
+    right: -20%;
   }
 }
 
