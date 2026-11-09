@@ -26,7 +26,7 @@ export const AreaSizeInputs = ({ compact = false }: { compact?: boolean }) => {
     >
       {compact && (
         <Text size="xs" c="dimmed">
-          {t("item.edit.preview.size")}
+          {t("common.field.size")}
         </Text>
       )}
       <NumberInput
