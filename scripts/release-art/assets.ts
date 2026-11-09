@@ -1,83 +1,89 @@
 import type { Page } from "playwright-core";
-import { monogramLetter } from "./copy";
+import type { RenderItem } from "./items";
 import type { Rect } from "./layout";
-import { warn } from "./runtime";
-import { C } from "./theme";
-import type { RenderItem } from "./types";
-
-export interface Quality {
-  iconPx: number;
-  svgKeepBytes: number;
-  shotScale: number;
-  shotQuality: number;
-}
-
-export const QUALITY_STEPS: Quality[] = [
-  { iconPx: 96, svgKeepBytes: 6000, shotScale: 2, shotQuality: 0.82 },
-  { iconPx: 72, svgKeepBytes: 2500, shotScale: 1.5, shotQuality: 0.7 },
-  { iconPx: 56, svgKeepBytes: 0, shotScale: 1, shotQuality: 0.6 },
-];
+import { COLOR } from "./svg";
 
 export type IconModel =
   | { type: "image"; uri: string; plate: boolean }
   | { type: "monogram"; letter: string }
   | { type: "glyph" };
 
-const DARK_PLATE_BELOW = 0.36;
-const SHOT_MAX_WIDTH = 1600;
-const FETCH_TIMEOUT_MS = 20_000;
-
 interface Download {
   bytes: Buffer;
   type: string;
 }
 
+const ICON_PX = 96;
+const KEEP_SVG_BYTES = 6000;
+const SHOT_SCALE = 2;
+const SHOT_QUALITY = 0.82;
+const SHOT_MAX_WIDTH = 1600;
+const DARK_PLATE_BELOW = 0.36;
+const FETCH_TIMEOUT_MS = 20_000;
+const MAX_DOWNLOAD_BYTES = 5 * 1024 * 1024;
+const IMAGE_MIME = /^image\/[\w.+-]+$/;
+
 const downloads = new Map<string, Promise<Download | null>>();
 
-const load = async (url: string): Promise<Download> => {
+const readCapped = async (res: Response) => {
+  if (Number(res.headers.get("content-length")) > MAX_DOWNLOAD_BYTES) throw new Error("response too large");
+  const reader = res.body?.getReader();
+  if (!reader) throw new Error("empty response");
+  const chunks: Uint8Array[] = [];
+  let size = 0;
+  for (;;) {
+    const { done, value } = await reader.read();
+    if (done) return Buffer.concat(chunks);
+    size += value.length;
+    if (size > MAX_DOWNLOAD_BYTES) {
+      await reader.cancel();
+      throw new Error("response too large");
+    }
+    chunks.push(value);
+  }
+};
+
+const fetchImage = async (url: string): Promise<Download> => {
   if (!/^https?:\/\//.test(url)) throw new Error("unsupported URL scheme");
   const res = await fetch(url, { signal: AbortSignal.timeout(FETCH_TIMEOUT_MS), redirect: "follow" });
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
-  return { bytes: Buffer.from(await res.arrayBuffer()), type: res.headers.get("content-type") ?? "" };
+  return { bytes: await readCapped(res), type: res.headers.get("content-type") ?? "" };
 };
 
-const settled = (url: string, label: string) => {
+const download = (url: string, label: string) => {
   const cached = downloads.get(url);
   if (cached) return cached;
-  const task = load(url).catch((error: unknown) => {
-    const reason = error instanceof Error ? error.message : String(error);
-    warn(`release-art: ${label} ${url} unavailable (${reason})`);
+  const task = fetchImage(url).catch((error: unknown) => {
+    console.error(`release-art: ${label} ${url} unavailable (${error})`);
     return null;
   });
   downloads.set(url, task);
   return task;
 };
 
-const sniffMime = (file: Download, url: string) => {
-  if (file.type.startsWith("image/")) return file.type.split(";")[0] ?? "image/png";
+const mimeFor = (file: Download, url: string) => {
+  const declared = file.type.split(";")[0]?.trim().toLowerCase() ?? "";
+  if (IMAGE_MIME.test(declared)) return declared;
   if (/\.svg(\?|$)/.test(url)) return "image/svg+xml";
   if (/\.jpe?g(\?|$)/.test(url)) return "image/jpeg";
   if (/\.webp(\?|$)/.test(url)) return "image/webp";
   return "image/png";
 };
 
-const dataUri = (mime: string, bytes: Buffer | string) => {
-  const buffer = Buffer.from(bytes);
-  return `data:${mime};base64,${buffer.toString("base64")}`;
-};
+const dataUri = (mime: string, bytes: Buffer | string) =>
+  `data:${mime};base64,${Buffer.from(bytes).toString("base64")}`;
 
-const rasterize = async (page: Page, mime: string, bytes: Buffer, px: number) => {
-  const isSvg = mime === "image/svg+xml";
-  await page.setViewportSize({ width: px, height: px });
+const rasterize = async (page: Page, mime: string, bytes: Buffer) => {
+  await page.setViewportSize({ width: ICON_PX, height: ICON_PX });
   await page.setContent(
-    `<style>html,body{margin:0;background:transparent}img{width:${px}px;height:${px}px;object-fit:contain;display:block}</style><img id="i" src="${dataUri(mime, bytes)}">`,
+    `<style>html,body{margin:0;background:transparent}img{width:${ICON_PX}px;height:${ICON_PX}px;object-fit:contain;display:block}</style><img id="i" src="${dataUri(mime, bytes)}">`,
   );
   await page.waitForFunction(
     (svg) => {
       const el = document.getElementById("i");
       return el instanceof HTMLImageElement && el.complete && (svg || el.naturalWidth > 0);
     },
-    isSvg,
+    mime === "image/svg+xml",
     { timeout: 10_000 },
   );
   const png = await page.locator("#i").screenshot({ omitBackground: true, type: "png" });
@@ -103,24 +109,23 @@ const luminance = (page: Page, uri: string) =>
       sum += alpha * (0.2126 * (data[i] ?? 0) + 0.7152 * (data[i + 1] ?? 0) + 0.0722 * (data[i + 2] ?? 0));
       weight += alpha;
     }
-    return weight ? sum / weight / 255 : 0.5;
+    if (!weight) return 0.5;
+    return sum / weight / 255;
   }, uri);
-
-const isTabler = (url: string) => url.includes("/@tabler/icons");
 
 const tablerIcon = (file: Download): IconModel => {
   const svg = file.bytes
     .toString("utf8")
-    .replace(/currentColor/g, C.red)
+    .replace(/currentColor/g, COLOR.red)
     .replace(/stroke-width="2"/, 'stroke-width="1.75"');
   return { type: "image", uri: dataUri("image/svg+xml", svg), plate: false };
 };
 
-const rasterIcon = async (page: Page, file: Download, url: string, q: Quality): Promise<IconModel> => {
-  const mime = sniffMime(file, url);
-  const raster = await rasterize(page, mime, file.bytes, q.iconPx);
+const rasterIcon = async (page: Page, file: Download, url: string): Promise<IconModel> => {
+  const mime = mimeFor(file, url);
+  const raster = await rasterize(page, mime, file.bytes);
   const plate = (await luminance(page, raster)) < DARK_PLATE_BELOW;
-  if (mime === "image/svg+xml" && file.bytes.length <= q.svgKeepBytes) {
+  if (mime === "image/svg+xml" && file.bytes.length <= KEEP_SVG_BYTES) {
     return { type: "image", uri: dataUri(mime, file.bytes), plate };
   }
   return { type: "image", uri: raster, plate };
@@ -128,28 +133,27 @@ const rasterIcon = async (page: Page, file: Download, url: string, q: Quality): 
 
 const fallbackIcon = (item: RenderItem): IconModel => {
   if (item.kind === "widget") return { type: "glyph" };
-  return { type: "monogram", letter: monogramLetter(item.name) };
+  return { type: "monogram", letter: /[\p{L}\p{N}]/u.exec(item.name)?.[0]?.toUpperCase() ?? "?" };
 };
 
-export const prepareIcon = async (page: Page, item: RenderItem, q: Quality): Promise<IconModel> => {
+export const prepareIcon = async (page: Page, item: RenderItem): Promise<IconModel> => {
   if (!item.iconUrl) return fallbackIcon(item);
-  const file = await settled(item.iconUrl, `icon for ${item.name}`);
+  const file = await download(item.iconUrl, `icon for ${item.name}`);
   if (!file) return fallbackIcon(item);
   try {
-    if (isTabler(item.iconUrl)) return tablerIcon(file);
-    return await rasterIcon(page, file, item.iconUrl, q);
+    if (item.iconUrl.includes("/@tabler/icons")) return tablerIcon(file);
+    return await rasterIcon(page, file, item.iconUrl);
   } catch (error) {
-    const reason = error instanceof Error ? error.message : String(error);
-    warn(`release-art: icon for ${item.name} could not be decoded (${reason})`);
+    console.error(`release-art: icon for ${item.name} could not be decoded (${error})`);
     return fallbackIcon(item);
   }
 };
 
-export const prepareShot = async (page: Page, item: RenderItem, rect: Rect, q: Quality): Promise<string | null> => {
+export const prepareShot = async (page: Page, item: RenderItem, rect: Rect): Promise<string | null> => {
   if (!item.screenshotUrl) return null;
-  const file = await settled(item.screenshotUrl, `screenshot for ${item.name}`);
+  const file = await download(item.screenshotUrl, `screenshot for ${item.name}`);
   if (!file) return null;
-  const scale = Math.min(q.shotScale, SHOT_MAX_WIDTH / rect.w);
+  const scale = Math.min(SHOT_SCALE, SHOT_MAX_WIDTH / rect.w);
   const size = { w: Math.round(rect.w * scale), h: Math.round(rect.h * scale) };
   try {
     return await page.evaluate(
@@ -171,26 +175,28 @@ export const prepareShot = async (page: Page, item: RenderItem, rect: Rect, q: Q
         ctx.drawImage(img, (args.w - dw) / 2, (args.h - dh) / 2, dw, dh);
         return canvas.toDataURL("image/jpeg", args.quality);
       },
-      { uri: dataUri(sniffMime(file, item.screenshotUrl), file.bytes), ...size, quality: q.shotQuality, bg: C.panel },
+      {
+        uri: dataUri(mimeFor(file, item.screenshotUrl), file.bytes),
+        ...size,
+        quality: SHOT_QUALITY,
+        bg: COLOR.panel,
+      },
     );
   } catch (error) {
-    const reason = error instanceof Error ? error.message : String(error);
-    warn(`release-art: screenshot for ${item.name} could not be decoded (${reason})`);
+    console.error(`release-art: screenshot for ${item.name} could not be decoded (${error})`);
     return null;
   }
 };
 
-export const prefetch = async (items: RenderItem[]) => {
-  const jobs = items.flatMap((item) => {
-    const pending: Array<Promise<Download | null>> = [];
-    if (item.iconUrl) pending.push(settled(item.iconUrl, `icon for ${item.name}`));
-    if (item.screenshotUrl) pending.push(settled(item.screenshotUrl, `screenshot for ${item.name}`));
-    return pending;
-  });
-  await Promise.all(jobs);
-  const usable = new Set<string>();
-  for (const [url, task] of downloads) {
-    if (await task) usable.add(url);
-  }
-  return usable;
-};
+export const prefetch = (items: RenderItem[]) =>
+  Promise.all(
+    items.map(async (item): Promise<RenderItem> => {
+      const { iconUrl, screenshotUrl } = item;
+      const [, shot] = await Promise.all([
+        iconUrl && download(iconUrl, `icon for ${item.name}`),
+        screenshotUrl && download(screenshotUrl, `screenshot for ${item.name}`),
+      ]);
+      if (item.kind === "widget" && shot) return item;
+      return { ...item, screenshotUrl: undefined };
+    }),
+  );

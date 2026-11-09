@@ -1,21 +1,22 @@
+import { execFileSync } from "node:child_process";
 import { mkdirSync, writeFileSync } from "node:fs";
-import { join } from "node:path";
+import { createRequire } from "node:module";
+import { dirname, join } from "node:path";
 import { pathToFileURL } from "node:url";
-import type { Browser, Page } from "playwright-core";
-import { prefetch, prepareIcon, prepareShot, QUALITY_STEPS } from "./assets";
-import type { Quality } from "./assets";
+import { chromium } from "playwright-core";
+import type { Browser, LaunchOptions, Page } from "playwright-core";
+import { prefetch, prepareIcon, prepareShot } from "./assets";
 import { buildSvg } from "./board";
-import { launchBrowser } from "./browser";
-import { tileText } from "./copy";
+import type { RenderItem } from "./items";
+import { tileText } from "./items";
 import { planLayout } from "./layout";
 import type { Layout } from "./layout";
-import { warn } from "./runtime";
-import { H, W } from "./theme";
+import { H, W } from "./svg";
 import type { TileContent } from "./tiles";
-import type { RenderItem } from "./types";
 
-const SVG_BUDGET_BYTES = 480_000;
+const SVG_BUDGET_BYTES = 500_000;
 const PNG_SETTLE_MS = 200;
+const INSTALL_TIMEOUT_MS = 300_000;
 
 interface RenderOptions {
   version: string;
@@ -23,41 +24,40 @@ interface RenderOptions {
   outDir: string;
 }
 
-export interface RenderResult {
-  svg: string;
-  png: string;
-}
+const tryLaunch = async (options: LaunchOptions) => {
+  try {
+    return await chromium.launch(options);
+  } catch (error) {
+    console.error(`release-art: browser launch failed (${String(error).split("\n")[0]})`);
+    return null;
+  }
+};
 
-const prepareContents = async (page: Page, layout: Layout, items: RenderItem[], quality: Quality) => {
+const installChromium = () => {
+  const cli = join(dirname(createRequire(import.meta.url).resolve("playwright-core/package.json")), "cli.js");
+  console.error("release-art: installing Playwright Chromium");
+  execFileSync("node", [cli, "install", "chromium"], { stdio: ["ignore", 2, 2], timeout: INSTALL_TIMEOUT_MS });
+};
+
+const launchBrowser = async () => {
+  const browser = (await tryLaunch({ channel: "chrome" })) ?? (await tryLaunch({}));
+  if (browser) return browser;
+  installChromium();
+  return chromium.launch();
+};
+
+const prepareContents = async (page: Page, layout: Layout) => {
   const contents: Array<TileContent | null> = [];
-  for (const plan of layout.tiles) {
-    const item = plan.item === null ? undefined : items[plan.item];
+  for (const { item, rect } of layout.tiles) {
     if (!item) {
       contents.push(null);
       continue;
     }
-    const icon = await prepareIcon(page, item, quality);
-    const shot = await prepareShot(page, item, plan.rect, quality);
+    const icon = await prepareIcon(page, item);
+    const shot = await prepareShot(page, item, rect);
     contents.push({ item, text: tileText(item), icon, shot });
   }
   return contents;
-};
-
-const buildWithinBudget = async (browser: Browser, version: string, items: RenderItem[]) => {
-  const layout = planLayout(items);
-  const page = await browser.newPage();
-  try {
-    let svg = "";
-    for (const quality of QUALITY_STEPS) {
-      const contents = await prepareContents(page, layout, items, quality);
-      svg = buildSvg({ version, items, layout, contents });
-      if (Buffer.byteLength(svg) <= SVG_BUDGET_BYTES) return svg;
-    }
-    warn(`release-art: SVG is ${Math.round(Buffer.byteLength(svg) / 1024)} KB, over the budget at the lowest quality`);
-    return svg;
-  } finally {
-    await page.close();
-  }
 };
 
 const screenshotSvg = async (browser: Browser, svgPath: string, pngPath: string) => {
@@ -76,23 +76,21 @@ const screenshotSvg = async (browser: Browser, svgPath: string, pngPath: string)
   }
 };
 
-const withUsableShots = (items: RenderItem[], usable: Set<string>) =>
-  items.map((item): RenderItem => {
-    const url = item.screenshotUrl;
-    if (item.kind === "widget" && url && usable.has(url)) return item;
-    return { ...item, screenshotUrl: undefined };
-  });
-
-export const render = async (options: RenderOptions): Promise<RenderResult> => {
-  if (options.items.length === 0) throw new Error("no items to render");
+export const render = async ({ version, items, outDir }: RenderOptions) => {
+  if (items.length === 0) throw new Error("no items to render");
   const browser = await launchBrowser();
   try {
-    const usable = await prefetch(options.items);
-    const items = withUsableShots(options.items, usable);
-    const svg = await buildWithinBudget(browser, options.version, items);
-    mkdirSync(options.outDir, { recursive: true });
-    const svgPath = join(options.outDir, "whats-new.svg");
-    const pngPath = join(options.outDir, "whats-new.png");
+    const ready = await prefetch(items);
+    const layout = planLayout(ready);
+    const contents = await prepareContents(await browser.newPage(), layout);
+    const svg = buildSvg({ version, items: ready, layout, contents });
+    const bytes = Buffer.byteLength(svg);
+    if (bytes > SVG_BUDGET_BYTES) {
+      console.error(`release-art: SVG is ${Math.round(bytes / 1024)} KB, over the ${SVG_BUDGET_BYTES} byte budget`);
+    }
+    mkdirSync(outDir, { recursive: true });
+    const svgPath = join(outDir, "whats-new.svg");
+    const pngPath = join(outDir, "whats-new.png");
     writeFileSync(svgPath, svg);
     await screenshotSvg(browser, svgPath, pngPath);
     return { svg: svgPath, png: pngPath };

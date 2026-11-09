@@ -1,8 +1,19 @@
-import type { RenderItem } from "./types";
+export interface Item {
+  kind: "integration" | "widget";
+  slug: string;
+  name: string;
+  description: string;
+  iconUrl: string | null;
+}
+
+export interface RenderItem extends Item {
+  oneLiner?: string;
+  screenshotUrl?: string;
+}
 
 const isRecord = (value: unknown): value is Record<string, unknown> => typeof value === "object" && value !== null;
 
-const text = (record: Record<string, unknown>, field: string, index: number) => {
+const requiredText = (record: Record<string, unknown>, field: string, index: number) => {
   const value = record[field];
   if (typeof value !== "string" || value.trim() === "") {
     throw new Error(`items[${index}].${field} must be a non-empty string`);
@@ -23,14 +34,12 @@ const parseItem = (raw: unknown, index: number): RenderItem => {
   if (kind !== "integration" && kind !== "widget") {
     throw new Error(`items[${index}].kind must be "integration" or "widget"`);
   }
-  const iconUrl = optionalText(raw, "iconUrl", index) ?? null;
-  const description = optionalText(raw, "description", index) ?? "";
   return {
     kind,
-    slug: text(raw, "slug", index),
-    name: text(raw, "name", index),
-    description,
-    iconUrl,
+    slug: requiredText(raw, "slug", index),
+    name: requiredText(raw, "name", index),
+    description: optionalText(raw, "description", index) ?? "",
+    iconUrl: optionalText(raw, "iconUrl", index) ?? null,
     oneLiner: optionalText(raw, "oneLiner", index),
     screenshotUrl: optionalText(raw, "screenshotUrl", index),
   };
@@ -39,4 +48,9 @@ const parseItem = (raw: unknown, index: number): RenderItem => {
 export const parseItems = (raw: unknown): RenderItem[] => {
   if (!Array.isArray(raw)) throw new Error("items file must contain a JSON array");
   return raw.map(parseItem);
+};
+
+export const tileText = (item: RenderItem) => {
+  const flat = item.description.replace(/\s+/g, " ").trim();
+  return item.oneLiner || /^.+?[.!?](?=\s|$)/.exec(flat)?.[0] || flat;
 };
