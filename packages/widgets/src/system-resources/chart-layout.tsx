@@ -26,7 +26,7 @@ export const ChartLayout = ({
       h="100%"
       miw={0}
       type="auto"
-      scrollbars="x"
+      scrollbars="xy"
       offsetScrollbars="present"
       scrollbarSize={6}
       styles={{ content: { height: "100%", display: "block" } }}
@@ -36,7 +36,7 @@ export const ChartLayout = ({
         cols={horizontal ? count : (columns ?? 1)}
         minColWidth={layout === "grid" && columns === undefined ? `min(${minimumColumnWidth}px, 100%)` : undefined}
         autoFlow="auto-fit"
-        autoRows="minmax(0, 1fr)"
+        autoRows="minmax(20px, 1fr)"
         spacing={gap}
         style={{
           // Keep explicit pixels in sync with board coordinates; numeric Mantine
