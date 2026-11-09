@@ -32,33 +32,37 @@ interface CardHeaderProps {
   onClose: () => void;
 }
 
-const CardHeader = ({ icon, title, subtitle, onBack, onClose }: CardHeaderProps) => (
-  <Group className={classes.header} gap="sm" wrap="nowrap">
-    <Box className={classes.headerIcon}>{icon}</Box>
-    <Box className={classes.headerText}>
-      <Text fw={600} size="sm" lh={1.25} truncate>
-        {title}
-      </Text>
-      <Text size="xs" lh={1.3} truncate>
-        {subtitle}
-      </Text>
-    </Box>
-    {onBack && (
-      <UnstyledButton className={classes.backButton} onClick={onBack}>
-        <IconArrowLeft size={14} />
-        Back
+const CardHeader = ({ icon, title, subtitle, onBack, onClose }: CardHeaderProps) => {
+  const t = useI18n("common.action");
+
+  return (
+    <Group className={classes.header} gap="sm" wrap="nowrap">
+      <Box className={classes.headerIcon}>{icon}</Box>
+      <Box className={classes.headerText}>
+        <Text fw={600} size="sm" lh={1.25} truncate>
+          {title}
+        </Text>
+        <Text size="xs" lh={1.3} truncate>
+          {subtitle}
+        </Text>
+      </Box>
+      {onBack && (
+        <UnstyledButton className={classes.backButton} onClick={onBack}>
+          <IconArrowLeft size={14} />
+          {t("previous")}
+        </UnstyledButton>
+      )}
+      <UnstyledButton className={classes.closeButton} onClick={onClose} aria-label={t("close")}>
+        <IconX size={15} />
       </UnstyledButton>
-    )}
-    <UnstyledButton className={classes.closeButton} onClick={onClose} aria-label="Close">
-      <IconX size={15} />
-    </UnstyledButton>
-  </Group>
-);
+    </Group>
+  );
+};
 
 const useTargetIdentity = (target: PickTarget | undefined, useCatalog: InPlaceEditorPanelProps["useCatalog"]) => {
   const t = useI18n();
   const catalog = useCatalog("");
-  if (!target) return { name: "Widget", icon: <IconWand size={20} stroke={1.5} /> };
+  if (!target) return { name: t("item.edit.tab.widget"), icon: <IconWand size={20} stroke={1.5} /> };
 
   const kind = getTargetKind(target);
   const Icon = widgetCatalogIcons[kind];
@@ -86,6 +90,7 @@ export const ConfigureStep = ({
   AreaSizeInputs,
   editorFormId,
 }: ConfigureStepProps) => {
+  const t = useI18n();
   const isEdit = session.mode === "edit";
   const identity = useTargetIdentity(session.picked, useCatalog);
 
@@ -94,7 +99,7 @@ export const ConfigureStep = ({
       <CardHeader
         icon={identity.icon}
         title={identity.name}
-        subtitle={isEdit ? "Editing widget" : "Configure widget"}
+        subtitle={t("item.edit.settings.label")}
         onBack={isEdit ? undefined : actions.back}
         onClose={() => actions.cancel()}
       />
@@ -105,7 +110,7 @@ export const ConfigureStep = ({
         <AreaSizeInputs compact />
         <Group gap="xs" wrap="nowrap">
           <Button variant="default" size="sm" px="sm" onClick={() => actions.cancel()}>
-            Cancel
+            {t("common.action.cancel")}
           </Button>
           <Button
             ref={focusConfirm}
@@ -117,7 +122,7 @@ export const ConfigureStep = ({
             form={editorFormId}
             vars={submitVariables}
           >
-            {isEdit ? "Save" : "Add"}
+            {isEdit ? t("common.action.save") : t("common.action.add")}
           </Button>
         </Group>
         <KeyboardHints configuring />
@@ -128,17 +133,21 @@ export const ConfigureStep = ({
 
 type CreateAppStepProps = Pick<InPlaceEditorPanelProps, "actions" | "CreateAppForm">;
 
-export const CreateAppStep = ({ actions, CreateAppForm }: CreateAppStepProps) => (
-  <>
-    <CardHeader
-      icon={<IconApps size={20} stroke={1.5} />}
-      title="Create app"
-      subtitle="Saved to your apps and placed here"
-      onBack={() => actions.back()}
-      onClose={() => actions.cancel()}
-    />
-    <Box className={classes.body}>
-      <CreateAppForm />
-    </Box>
-  </>
-);
+export const CreateAppStep = ({ actions, CreateAppForm }: CreateAppStepProps) => {
+  const t = useI18n();
+
+  return (
+    <>
+      <CardHeader
+        icon={<IconApps size={20} stroke={1.5} />}
+        title={t("widget.common.app.create")}
+        subtitle={t("item.inPlace.createAppDescription")}
+        onBack={() => actions.back()}
+        onClose={() => actions.cancel()}
+      />
+      <Box className={classes.body}>
+        <CreateAppForm />
+      </Box>
+    </>
+  );
+};

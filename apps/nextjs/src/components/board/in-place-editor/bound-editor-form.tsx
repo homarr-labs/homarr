@@ -6,6 +6,7 @@ import { Center, Loader, Text } from "@mantine/core";
 
 import { useSession } from "@homarr/auth/client";
 import { useSettings } from "@homarr/settings";
+import { useI18n } from "@homarr/translation/client";
 import { WidgetEditorForm } from "@homarr/widgets/modals";
 
 import { getTargetKey, useTargetResources } from "./resources";
@@ -27,6 +28,7 @@ const submitOnModEnter = (event: KeyboardEvent) => {
 };
 
 export const BoundEditorForm = () => {
+  const t = useI18n("item.inPlace");
   const session = useAddInPlaceSession();
   const { data: authSession } = useSession();
   const settings = useSettings();
@@ -43,7 +45,7 @@ export const BoundEditorForm = () => {
   if (resources.status === "error") {
     return (
       <Text size="sm" c="red">
-        Could not load this widget.
+        {t("widgetLoadError")}
       </Text>
     );
   }

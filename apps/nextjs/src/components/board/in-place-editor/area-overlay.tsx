@@ -158,14 +158,14 @@ export const AreaOverlay = ({ occupancy, entryElements }: AreaOverlayProps) => {
                 {label}
               </Text>
               <Text size="xs" c="dimmed" ta="center">
-                Needs setup
+                {t("item.create.connectionStatus.needsSetup")}
               </Text>
             </div>
           )}
           {!renderable && !needsSetup && shownTarget && resources.status !== "ready" && (
             <div className={classes.ghost}>
               <Text size="xs" c="dimmed">
-                {resources.status === "error" ? "Could not load preview" : "Loading preview"}
+                {t(`item.inPlace.preview.${resources.status === "error" ? "error" : "loading"}`)}
               </Text>
             </div>
           )}

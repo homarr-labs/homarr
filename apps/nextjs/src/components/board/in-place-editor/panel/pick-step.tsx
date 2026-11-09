@@ -6,6 +6,7 @@ import { Box, Combobox, Group, Loader, Text, TextInput, useCombobox } from "@man
 import { IconPlus, IconSearch } from "@tabler/icons-react";
 
 import { useSession } from "@homarr/auth/client";
+import type { TranslationFunction } from "@homarr/translation";
 import { useI18n } from "@homarr/translation/client";
 
 import type { CatalogEntry } from "../catalog";
@@ -30,7 +31,7 @@ interface OptionGroup {
 const createAppKey = "create:app";
 const createWidgetKey = "create:widget";
 
-const groupEntries = (entries: CatalogEntry[]): OptionGroup[] => {
+const groupEntries = (entries: CatalogEntry[], t: TranslationFunction): OptionGroup[] => {
   const indexed = entries.map((entry, index) => ({ entry, index }));
   const local = indexed.filter(({ entry }) => entry.type !== "app" && entry.type !== "workshop");
   const bestFit = local.filter(({ entry }) => entry.bestFit && entry.connectionStatus !== "needsSetup");
@@ -39,13 +40,18 @@ const groupEntries = (entries: CatalogEntry[]): OptionGroup[] => {
   const needsSetup = local.filter(({ entry }) => entry.connectionStatus === "needsSetup");
   const apps = indexed.filter(({ entry }) => entry.type === "app");
   const groups: OptionGroup[] = [];
-  if (bestFit.length > 0) groups.push({ key: "best-fit", label: "Best fit · matching default size", entries: bestFit });
+  if (bestFit.length > 0) groups.push({ key: "best-fit", label: t("item.inPlace.bestFit"), entries: bestFit });
   if (widgets.length > 0) {
-    groups.push({ key: "widgets", label: bestFit.length > 0 ? "More widgets" : "Widgets", entries: widgets });
+    groups.push({
+      key: "widgets",
+      label: t(bestFit.length > 0 ? "item.inPlace.moreWidgets" : "item.inPlace.widgets"),
+      entries: widgets,
+    });
   }
-  if (needsSetup.length > 0) groups.push({ key: "needs-setup", label: "Needs setup", entries: needsSetup });
-  if (workshop.length > 0) groups.push({ key: "workshop", label: "Workshop", entries: workshop });
-  if (apps.length > 0) groups.push({ key: "apps", label: "Your apps", entries: apps });
+  if (needsSetup.length > 0)
+    groups.push({ key: "needs-setup", label: t("item.create.connectionStatus.needsSetup"), entries: needsSetup });
+  if (workshop.length > 0) groups.push({ key: "workshop", label: t("workshop.title"), entries: workshop });
+  if (apps.length > 0) groups.push({ key: "apps", label: t("item.inPlace.yourApps"), entries: apps });
   let index = 0;
   return groups.map((group) => ({
     ...group,
@@ -54,11 +60,11 @@ const groupEntries = (entries: CatalogEntry[]): OptionGroup[] => {
 };
 
 export const PickStep = ({ useCatalog, actions, AreaSizeInputs, onKeyDown, flipped, canCreateApp }: PickStepProps) => {
+  const t = useI18n();
   const [search, setSearch] = useState("");
   const listRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const catalog = useCatalog(search);
-  const t = useI18n();
   const { data: session } = useSession();
   const canCreateWidget = session?.user.permissions.includes("admin") ?? false;
   const combobox = useCombobox({ opened: true });
@@ -66,17 +72,21 @@ export const PickStep = ({ useCatalog, actions, AreaSizeInputs, onKeyDown, flipp
   const creationOptions = [];
   if (query && catalog.entries.length === 0 && !catalog.workshop.isPending) {
     if (canCreateApp)
-      creationOptions.push({ key: createAppKey, label: `Create “${query}” app`, description: "Add an app link" });
+      creationOptions.push({
+        key: createAppKey,
+        label: t("item.inPlace.createApp", { name: query }),
+        description: t("item.inPlace.addAppLink"),
+      });
     if (canCreateWidget) {
       creationOptions.push({
         key: createWidgetKey,
-        label: `Create “${query}” widget`,
-        description: "Open the custom widget editor in a new tab",
+        label: t("item.inPlace.createWidget", { name: query }),
+        description: t("item.inPlace.createWidgetDescription"),
       });
     }
   }
   const entriesKey = [...catalog.entries, ...creationOptions].map((entry) => entry.key).join("|");
-  const groups = groupEntries(catalog.entries);
+  const groups = groupEntries(catalog.entries, t);
 
   useEffect(() => {
     inputRef.current?.focus({ preventScroll: true });
@@ -148,10 +158,10 @@ export const PickStep = ({ useCatalog, actions, AreaSizeInputs, onKeyDown, flipp
               ref={inputRef}
               data-autofocus
               data-area-resize-shortcuts
-              aria-label="Search widgets and apps"
+              aria-label={t("item.inPlace.search")}
               size="md"
               radius="md"
-              placeholder="Search widgets and apps"
+              placeholder={t("item.inPlace.search")}
               leftSection={<IconSearch size={16} />}
               value={search}
               onChange={(event) => setSearch(event.currentTarget.value)}
@@ -169,7 +179,7 @@ export const PickStep = ({ useCatalog, actions, AreaSizeInputs, onKeyDown, flipp
         >
           <Combobox.Options>
             {catalog.entries.length === 0 && creationOptions.length === 0 && !catalog.workshop.isPending && (
-              <Combobox.Empty>Nothing found</Combobox.Empty>
+              <Combobox.Empty>{t("search.nothingFound")}</Combobox.Empty>
             )}
             {groups.map((group) => (
               <Combobox.Group key={group.key} label={group.label} classNames={{ groupLabel: classes.groupLabel }}>

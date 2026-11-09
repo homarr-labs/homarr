@@ -5,6 +5,8 @@ import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import type { CSSProperties, KeyboardEvent, ReactNode } from "react";
 import { Box, FocusTrap, MantineThemeProvider, Paper, Portal, Transition } from "@mantine/core";
 
+import { useI18n } from "@homarr/translation/client";
+
 import type { InPlaceEditorPanelProps } from "./types";
 import { ConfigureStep, CreateAppStep } from "./card-steps";
 import classes from "./panel.module.css";
@@ -93,6 +95,7 @@ const StepTransition = ({ mounted, children }: StepTransitionProps) => (
 );
 
 export const InPlaceEditorPanel = (props: InPlaceEditorPanelProps) => {
+  const t = useI18n();
   const { step, session, anchorRect, presentation, actions, panelProps } = props;
   const isSheet = presentation === "sheet";
   const isPick = step === "pick";
@@ -260,7 +263,7 @@ export const InPlaceEditorPanel = (props: InPlaceEditorPanelProps) => {
           {...panelProps}
           tabIndex={-1}
           aria-modal="true"
-          aria-label={isPick ? "Add widget" : "Widget editor"}
+          aria-label={isPick ? t("board.emptyState.addWidget") : t("item.edit.title")}
           className={isSheet ? classes.sheetRoot : classes.root}
           style={style}
           data-docked={placement?.side === "overlap" || undefined}
