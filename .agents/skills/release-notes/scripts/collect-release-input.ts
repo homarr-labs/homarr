@@ -4,6 +4,7 @@ import { resolve } from "node:path";
 import { parseArgs, promisify } from "node:util";
 import sharp from "sharp";
 
+import { readCapped } from "../../../../scripts/release-art/read-capped";
 import { generateGithubNotes } from "../../../../scripts/release-notes/github-notes.mjs";
 import { repositoryRoot } from "../../../../scripts/release-notes/paths.mjs";
 
@@ -16,6 +17,7 @@ const maxImagesPerPullRequest = 6;
 const maxImageWidth = 600;
 const maxImageHeight = 450;
 const imageTimeoutMilliseconds = 15_000;
+const maxImageBytes = 10 * 1024 * 1024;
 const recentReleaseCount = 3;
 const maxRecentReleaseLength = 6000;
 
@@ -253,7 +255,7 @@ const measureImageAsync = async (image: ImageReference): Promise<ImageReference>
   try {
     const response = await fetch(image.url, { signal: AbortSignal.timeout(imageTimeoutMilliseconds) });
     if (!response.ok) return image;
-    const { width, height } = await sharp(Buffer.from(await response.arrayBuffer())).metadata();
+    const { width, height } = await sharp(await readCapped(response, maxImageBytes)).metadata();
     if (!width || !height) return image;
     return { ...image, displayWidth: Math.min(maxImageWidth, width, Math.round((maxImageHeight * width) / height)) };
   } catch {
@@ -342,6 +344,21 @@ const main = async () => {
   const bodyLimit = Math.max(500, Math.min(maxBodyLength, Math.floor(bodyBudget / Math.max(included.length, 1))));
   const includedNumbers = new Set(included.map((pullRequest) => pullRequest.number));
 
+  const pullRequestInputs: PullRequestInput[] = [];
+  for (const pullRequest of included) {
+    pullRequestInputs.push({
+      number: pullRequest.number,
+      url: pullRequest.url,
+      title: pullRequest.title,
+      author: pullRequest.author?.login ?? "ghost",
+      labels: pullRequest.labels.nodes.map((label) => label.name),
+      mergedAt: pullRequest.mergedAt,
+      body: cleanBody(pullRequest.body, bodyLimit),
+      images: await Promise.all(extractImages(pullRequest.body).map(measureImageAsync)),
+      closes: pullRequest.closingIssuesReferences.nodes,
+    });
+  }
+
   const input = {
     repository,
     version,
@@ -353,21 +370,7 @@ const main = async () => {
     firstTimeContributors: firstTimeContributorsFromNotes(notes).filter((contributor) =>
       includedNumbers.has(contributor.pullRequest),
     ),
-    pullRequests: await Promise.all(
-      included.map(
-        async (pullRequest): Promise<PullRequestInput> => ({
-          number: pullRequest.number,
-          url: pullRequest.url,
-          title: pullRequest.title,
-          author: pullRequest.author?.login ?? "ghost",
-          labels: pullRequest.labels.nodes.map((label) => label.name),
-          mergedAt: pullRequest.mergedAt,
-          body: cleanBody(pullRequest.body, bodyLimit),
-          images: await Promise.all(extractImages(pullRequest.body).map(measureImageAsync)),
-          closes: pullRequest.closingIssuesReferences.nodes,
-        }),
-      ),
-    ),
+    pullRequests: pullRequestInputs,
     recentReleases,
   };
 

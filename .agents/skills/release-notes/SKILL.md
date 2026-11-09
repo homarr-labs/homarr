@@ -86,7 +86,7 @@ A PR with a `!` before the colon (`feat(api)!:`) or `BREAKING CHANGE` in its bod
 
 The `closes` array lists issues the PR fixes. Use the issue title to understand the user's problem ("can't start podman container since v2.11.0") and phrase the fix from that angle instead of repeating the code-level PR title. Do not add the issue number to the bullet unless the PR number is missing.
 
-PR bodies often contain Before and After tables. Use only the "after" screenshots; a before image next to an after image doubles the length and tells the reader nothing new. Images come pre-extracted in each PR's `images` array with their alt text; pick the one whose alt describes the result. Reuse the URL as is, never re-host or alter it. Put an image in a highlight only when it shows the feature clearly. Write it on its own line as `<img src="URL" alt="ALT" width="WIDTH">` with the image's `displayWidth` (600 when it is missing), never as `![ALT](URL)`: a full-width screenshot fills the whole release page and the app's What's new dialog.
+PR bodies often contain Before and After tables. Use only the "after" screenshots; a before image next to an after image doubles the length and tells the reader nothing new. Images come pre-extracted in each PR's `images` array with their alt text; pick the one whose alt describes the result. Reuse the URL as is, never re-host or alter it. Put an image in a highlight only when it shows the feature clearly. Write it on its own line as `<img src="URL" alt="ALT" width="WIDTH">` with the image's `displayWidth`, never as `![ALT](URL)`. Skip images without a `displayWidth`: they could not be loaded: a full-width screenshot fills the whole release page and the app's What's new dialog.
 
 ## Input
 
@@ -95,7 +95,7 @@ CI passes one JSON document:
 - `version`, `tag`, `previousTag`, `releaseType` (`major`, `minor` or `patch`), `compareUrl`
 - `newItems`: integrations and widgets added in this release, each with `kind`, `slug`, `name`, `description`, `iconUrl`
 - `firstTimeContributors`: `{ login, pullRequest }` for people whose first merged PR is in this release
-- `pullRequests`: bots are already removed. Each has `number`, `url`, `title`, `author`, `labels`, `mergedAt`, `body` (cleaned and truncated), `images` (`url`, `alt`, `displayWidth`: the width to write, at most 600 and never larger than the image) and `closes` (`number`, `title`, `url`)
+- `pullRequests`: bots are already removed. Each has `number`, `url`, `title`, `author`, `labels`, `mergedAt`, `body` (cleaned and truncated), `images` (`url`, `alt`, `displayWidth`: the width to write, at most 600 and never larger than the image, missing when the image could not be loaded) and `closes` (`number`, `title`, `url`)
 - `recentReleases`: `{ tag, name, body }` for the three previous published releases, see [Match the previous releases](#match-the-previous-releases)
 
 ## Output (structured)
