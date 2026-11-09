@@ -27,7 +27,22 @@ const createContext = ({ env = process.env, runGh, post = fetch } = {}) => {
   };
   const api = async (args) => JSON.parse(await gh(["api", ...args]));
   const readRelease = async () => {
-    const release = await api([`repos/${repository}/releases/tags/${tag}`]);
+    // The tag endpoint only finds published releases; authenticated listings include drafts.
+    const output = await gh([
+      "api",
+      "--paginate",
+      `repos/${repository}/releases?per_page=100`,
+      "--jq",
+      `[.[] | select(.tag_name == ${JSON.stringify(tag)}) | {id,tag_name,draft,prerelease}] | @json`,
+    ]);
+    const pages = output
+      .split("\n")
+      .filter(Boolean)
+      .map((page) => JSON.parse(page));
+    if (!pages.every(Array.isArray)) throw new Error("Unexpected GitHub release-list response");
+    const matches = pages.flat().filter((candidate) => candidate?.tag_name === tag);
+    if (matches.length !== 1) throw new Error("Expected one GitHub release matching NEXT_VERSION");
+    const [release] = matches;
     if (
       !Number.isSafeInteger(release.id) ||
       release.id <= 0 ||
