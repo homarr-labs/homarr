@@ -121,6 +121,12 @@ export default function BookmarksWidget({
       layoutHeight = Math.max(0, layoutHeight);
     }
   }
+  let preferredLayoutHeight = layoutHeight;
+  let availableLayoutHeight: number | undefined;
+  if (fillAvailableHeight) {
+    preferredLayoutHeight = contentHeight;
+    availableLayoutHeight = layoutHeight;
+  }
   let layoutWidth = responsiveWidth;
   if (options.layout === "gridHorizontal") layoutWidth = width;
 
@@ -153,14 +159,24 @@ export default function BookmarksWidget({
     () =>
       getBookmarkDisplayPlan({
         advanced,
+        availableHeight: availableLayoutHeight,
         gap: bookmarkSpacingPixels[options.spacing],
-        height: layoutHeight,
+        height: preferredLayoutHeight,
         hideHostname: options.hideHostname,
         itemCount: layoutItemCount,
         layout: options.layout,
         width: layoutWidth,
       }),
-    [advanced, layoutHeight, layoutItemCount, layoutWidth, options.hideHostname, options.layout, options.spacing],
+    [
+      advanced,
+      availableLayoutHeight,
+      layoutItemCount,
+      layoutWidth,
+      options.hideHostname,
+      options.layout,
+      options.spacing,
+      preferredLayoutHeight,
+    ],
   );
 
   const cardDisplay = getBookmarkCardDisplay({
