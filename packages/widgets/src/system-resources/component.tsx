@@ -12,13 +12,15 @@ import type { WidgetComponentProps } from "../definition";
 import { getUsableWidgetQueryData } from "../common/query-state";
 import { CombinedNetworkTrafficChart } from "./chart/combined-network-traffic";
 import { SystemResourceCPUChart } from "./chart/cpu-chart";
+import { SystemResourceDiskChart } from "./chart/disk-chart";
+import type { DiskSample } from "./chart/disk-chart";
 import { SystemResourceGPUChart } from "./chart/gpu-chart";
 import { SystemResourceMemoryChart } from "./chart/memory-chart";
 import { NetworkTrafficChart } from "./chart/network-traffic";
 
 const COMPACT_HISTORY_SIZE = 15;
 const ADVANCED_HISTORY_SIZE = 60;
-const ALL_SYSTEM_CHARTS = ["cpu", "memory", "gpu", "network"] as const;
+const ALL_SYSTEM_CHARTS = ["cpu", "memory", "gpu", "network", "disk"] as const;
 
 const ADVANCED_CHART_COLUMN_BREAKPOINTS = [
   { minWidth: 1100, columns: 4 },
@@ -36,6 +38,7 @@ type ChartItem = {
   memory: number;
   gpu: number;
   network: { up: number; down: number } | null;
+  disks: DiskSample[];
 };
 
 export const toChartItem = (healthInfo: {
@@ -43,6 +46,7 @@ export const toChartItem = (healthInfo: {
   memUsedInBytes: number;
   gpu: { processorUtilization: number }[];
   network: { up: number; down: number } | null;
+  fileSystem?: DiskSample[];
 }): ChartItem => ({
   cpu: healthInfo.cpuUtilization,
   memory: healthInfo.memUsedInBytes,
@@ -51,6 +55,13 @@ export const toChartItem = (healthInfo: {
       ? healthInfo.gpu.reduce((acc, gpu) => acc + gpu.processorUtilization, 0) / healthInfo.gpu.length
       : 0,
   network: healthInfo.network,
+  disks: [
+    ...new Map(
+      (healthInfo.fileSystem ?? [])
+        .filter((disk) => Number.isFinite(disk.percentage))
+        .map((disk) => [disk.deviceName, disk] as const),
+    ).values(),
+  ],
 });
 
 export const appendBoundedHistory = (history: ChartItem[], item: ChartItem, limit: number): ChartItem[] =>
@@ -69,18 +80,23 @@ export const getVisibleSystemCharts = ({
   configuredCharts,
   hasGpu,
   hasNetwork,
+  hasDisks = false,
   height: _height,
   isAdvanced,
 }: {
   configuredCharts: readonly SystemChart[];
   hasGpu: boolean;
   hasNetwork: boolean;
+  hasDisks?: boolean;
   height: number;
   isAdvanced: boolean;
 }): SystemChart[] => {
   const selectedCharts = isAdvanced ? ALL_SYSTEM_CHARTS : configuredCharts;
   const availableCharts = selectedCharts.filter(
-    (chart) => (chart !== "gpu" || !isAdvanced || hasGpu) && (chart !== "network" || hasNetwork),
+    (chart) =>
+      (chart !== "gpu" || !isAdvanced || hasGpu) &&
+      (chart !== "network" || hasNetwork) &&
+      (chart !== "disk" || hasDisks),
   );
   return [...availableCharts];
 };
@@ -222,10 +238,12 @@ const SystemCharts = ({
   showTitle,
 }: SystemChartsProps) => {
   const networkItems = getNetworkHistory(items);
+  const disks = items.at(-1)?.disks ?? [];
   const visibleCharts = getVisibleSystemCharts({
     configuredCharts: options.visibleCharts,
     hasGpu,
     hasNetwork: networkItems.length > 0,
+    hasDisks: disks.length > 0,
     height,
     isAdvanced,
   });
@@ -291,6 +309,21 @@ const SystemCharts = ({
             />
           </Box>
         )}
+        {visibleCharts.includes("disk") &&
+          disks.map((disk) => (
+            <Box key={disk.deviceName} h="100%">
+              <SystemResourceDiskChart
+                deviceName={disk.deviceName}
+                displayMode={options.diskDisplayMode}
+                samples={items.map(
+                  (item) => item.disks.find((sample) => sample.deviceName === disk.deviceName) ?? null,
+                )}
+                hasShadow={options.hasShadow}
+                labelDisplayMode={labelDisplayMode}
+                advanced={isAdvanced}
+              />
+            </Box>
+          ))}
         {showNetwork &&
           (width >= 300 ? (
             <Group h="100%" gap="xs" grow wrap="nowrap">

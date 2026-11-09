@@ -5446,6 +5446,15 @@
       "name": "System resources",
       "description": "CPU, Memory, Disk and other hardware usage of your system",
       "option": {
+        "diskDisplayMode": {
+          "label": "Disk capacity display",
+          "option": {
+            "percentage": "Percentage (e.g., 76%)",
+            "free": "Free space percentage (e.g., 24%)",
+            "absolute": "Absolute values (e.g., 1.5 TB / 2.0 TB)",
+            "combined": "Combined (e.g., 1.5 TB / 2.0 TB (76%))"
+          }
+        },
         "hasShadow": {
           "label": "Enable chart shading"
         },

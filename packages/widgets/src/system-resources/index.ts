@@ -13,9 +13,10 @@ const labelDisplayModeOptions = {
   hidden: IconEyeOff,
 } as const;
 
-const getChartOptionLabel = (key: "cpu" | "memory" | "gpu" | "network", t: (key: never) => string) => {
+const getChartOptionLabel = (key: "cpu" | "memory" | "gpu" | "network" | "disk", t: (key: never) => string) => {
   if (key === "cpu") return invariantTechnicalLabels.cpu;
   if (key === "gpu") return invariantTechnicalLabels.gpu;
+  if (key === "disk") return t("widget.systemDisks.name" as never);
   return t(`widget.systemResources.option.visibleCharts.option.${key}` as never);
 };
 
@@ -29,7 +30,7 @@ export const { definition, componentLoader } = createWidgetDefinition("systemRes
     return optionsBuilder.from((factory) => ({
       hasShadow: factory.switch({ defaultValue: true }),
       visibleCharts: factory.multiSelect({
-        options: (["cpu", "memory", "gpu", "network"] as const).map((key) => ({
+        options: (["cpu", "memory", "gpu", "network", "disk"] as const).map((key) => ({
           value: key,
           label: (t) => getChartOptionLabel(key, t),
         })),
@@ -44,6 +45,13 @@ export const { definition, componentLoader } = createWidgetDefinition("systemRes
         })),
         defaultValue: "textWithIcon",
       }),
+      diskDisplayMode: factory.select({
+        options: (["percentage", "free", "absolute", "combined"] as const).map((value) => ({
+          value,
+          label: (t) => t(`widget.systemResources.option.diskDisplayMode.option.${value}`),
+        })),
+        defaultValue: "percentage",
+      }),
     }));
   },
 }).withDynamicImport(() => import("./component"));
@@ -51,3 +59,7 @@ export const { definition, componentLoader } = createWidgetDefinition("systemRes
 export type LabelDisplayModeOption = ReturnType<
   (typeof definition)["createOptions"]
 >["labelDisplayMode"]["options"][number]["value"];
+
+export type DiskDisplayModeOption = ReturnType<
+  (typeof definition)["createOptions"]
+>["diskDisplayMode"]["options"][number]["value"];
