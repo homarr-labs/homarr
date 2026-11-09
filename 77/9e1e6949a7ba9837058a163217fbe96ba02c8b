@@ -1,0 +1,33 @@
+.agents/skills/release-notes/SKILL.md
+  s_6b84297f6331ac::t_4f9d0a524cdbc8 89,98
+.agents/skills/release-notes/references/example.md
+  s_6b84297f6331ac::t_384e6823004bcf 63
+.agents/skills/release-notes/scripts/collect-release-input.ts
+  s_6b84297f6331ac::t_7b237efc09472f 5,16-18,37,252-263,356-369
+bun.lock
+  s_6b84297f6331ac::t_a96699ab961a54 34,1075,1514,1727,5829-5830
+package.json
+  s_6b84297f6331ac::t_d1c6ba4b46226d 243,354
+packages/ui/src/markdown/markdown.tsx
+  s_6b84297f6331ac::t_acade885343be7 53,56-62,77
+packages/widgets/src/releases/release-detail.tsx
+  s_6b84297f6331ac::t_05e3f89d3edf4b 21,42,45-47,225,227
+scripts/release-notes/ai-notes.mjs
+  s_6b84297f6331ac::t_37e8c7cdf411f7 110-111
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "779e1e6949a7ba9837058a163217fbe96ba02c8b",
+  "prompts": {},
+  "sessions": {
+    "s_6b84297f6331ac": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "590f9297-ade8-451c-8f7f-6672298271ba",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
