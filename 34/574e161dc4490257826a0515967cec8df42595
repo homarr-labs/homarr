@@ -1,0 +1,61 @@
+scripts/release-art/assets.ts
+  s_277a0982c60da2::t_f2c697ccf9624a 1-196
+scripts/release-art/brand.ts
+  s_543d1f6b217828::t_0ef15bb2620c2d 1-33
+scripts/release-art/cli.ts
+  s_543d1f6b217828::t_68e4fae5b13969 1-51
+scripts/release-art/copy.ts
+  s_543d1f6b217828::t_3f01d2c46792ff 1-71
+scripts/release-art/detect.ts
+  s_543d1f6b217828::t_994d4f193a66b8 1-207
+scripts/release-art/fonts/LICENSE-inter-tight
+  s_8c17ce0fc460f2::t_aa7b4164f48db6 1-93
+scripts/release-art/fonts/LICENSE-jetbrains-mono
+  s_8c17ce0fc460f2::t_0c46a35c36bade 1-93
+scripts/release-art/git.ts
+  s_543d1f6b217828::t_3bc4766bb7cf18 1-27
+scripts/release-art/items.ts
+  s_543d1f6b217828::t_b9e9e80d4bfc76 1-42
+scripts/release-art/layout.ts
+  s_543d1f6b217828::t_0b065de13d4262 1-150
+scripts/release-art/runtime.ts
+  s_543d1f6b217828::t_b4e1d35f7871c6 1-9
+scripts/release-art/svg.ts
+  s_543d1f6b217828::t_ce8af6ee001e2b 1-45
+scripts/release-art/theme.ts
+  s_543d1f6b217828::t_8be39f88fb2f3b 1-15
+scripts/release-art/types.ts
+  s_543d1f6b217828::t_315ab6fa0c8619 1-14
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "34574e161dc4490257826a0515967cec8df42595",
+  "prompts": {},
+  "sessions": {
+    "s_277a0982c60da2": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ba39910a-d82a-4d5b-9b17-6708763f6418",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_543d1f6b217828": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "15021d71-26ef-4c42-bb8a-f74d9e19a587",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_8c17ce0fc460f2": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "60d34c10-529e-4d0a-bc93-bd389a89d1f2",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
