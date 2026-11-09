@@ -1,0 +1,25 @@
+.agents/skills/release-notes/SKILL.md
+  s_6b84297f6331ac::t_2adcee816bcc11 89
+.agents/skills/release-notes/references/example.md
+  s_6b84297f6331ac::t_0c902d377fc121 63,72
+CHANGELOG.md
+  s_6b84297f6331ac::t_e284b6bc95d4fd 11,20,26,82,91,97,152,158,167,229,235,244,319,366,372,378,454,516,568,574,580
+scripts/release-notes/ai-notes.mjs
+  s_6b84297f6331ac::t_92037fa636261f 110
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "3e9211f4b51f6dc8c4c95750f9b15f4c719fb583",
+  "prompts": {},
+  "sessions": {
+    "s_6b84297f6331ac": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "590f9297-ade8-451c-8f7f-6672298271ba",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
