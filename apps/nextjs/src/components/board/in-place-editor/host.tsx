@@ -59,10 +59,16 @@ export const InPlaceEditorHost = () => {
   const anchorRect = useAreaAnchorRect();
   const onKeyDown = useAreaKeyboard();
   const wasEditMode = useRef(isEditMode);
+  const previousLayoutId = useRef(layoutId);
   const lifecycleRef = useRef(0);
   const returnFocusRef = useRef<HTMLElement | null>(null);
   const returnLocationRef = useRef<{ sectionId: string; x: number; y: number; itemId?: string } | null>(null);
   const active = isEditMode && step !== "idle";
+
+  useLayoutEffect(() => {
+    if (previousLayoutId.current !== layoutId) addInPlaceActions.cancel();
+    previousLayoutId.current = layoutId;
+  }, [layoutId]);
 
   useEffect(() => {
     const generation = ++lifecycleRef.current;

@@ -2322,6 +2322,35 @@
       "open": "Open advanced view",
       "close": "Close advanced view",
       "label": "{widget} advanced view"
+    },
+    "inPlace": {
+      "search": "Search widgets and apps",
+      "bestFit": "Best fit · matching default size",
+      "moreWidgets": "More widgets",
+      "widgets": "Widgets",
+      "yourApps": "Your apps",
+      "createApp": "Create “{name}” app",
+      "addAppLink": "Add an app link",
+      "createWidget": "Create “{name}” widget",
+      "createWidgetDescription": "Open the custom widget editor in a new tab",
+      "createAppDescription": "Saved to your apps and placed here",
+      "defaultFit": "Default fit",
+      "defaultFitDescription": "The default widget size matches the selected area",
+      "defaultSize": "Default {width}×{height}",
+      "defaultSizeDescription": "Default size; widgets can be resized",
+      "emptyCells": "Empty board cells. Use arrow keys to choose a cell, then Enter or Space to add a widget.",
+      "preview": {
+        "error": "Could not load preview",
+        "loading": "Loading preview"
+      },
+      "keyboard": {
+        "move": "move",
+        "resize": "resize",
+        "pick": "pick",
+        "browse": "Arrow keys to browse",
+        "moveDescription": "Alt/Option + any arrow key to move",
+        "resizeDescription": "Alt/Option + Shift + any arrow key to resize"
+      }
     }
   },
   "widget": {

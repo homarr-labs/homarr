@@ -2,10 +2,13 @@
 
 import { Group, NumberInput, Text } from "@mantine/core";
 
+import { useI18n } from "@homarr/translation/client";
+
 import { useAreaKeyboard } from "./keyboard";
 import { addInPlaceActions, useAddInPlaceSession } from "./store";
 
 export const AreaSizeInputs = ({ compact = false }: { compact?: boolean }) => {
+  const t = useI18n();
   const session = useAddInPlaceSession();
   const onKeyDown = useAreaKeyboard();
   if (!session) return null;
@@ -23,7 +26,7 @@ export const AreaSizeInputs = ({ compact = false }: { compact?: boolean }) => {
     >
       {compact && (
         <Text size="xs" c="dimmed">
-          Size
+          {t("item.edit.preview.size")}
         </Text>
       )}
       <NumberInput
@@ -35,7 +38,7 @@ export const AreaSizeInputs = ({ compact = false }: { compact?: boolean }) => {
         allowDecimal={false}
         allowNegative={false}
         clampBehavior="strict"
-        aria-label="Width"
+        aria-label={t("item.moveResize.field.width.label")}
         data-area-resize-shortcuts
         data-area-move-shortcuts
         inputMode="numeric"
@@ -60,7 +63,7 @@ export const AreaSizeInputs = ({ compact = false }: { compact?: boolean }) => {
         allowDecimal={false}
         allowNegative={false}
         clampBehavior="strict"
-        aria-label="Height"
+        aria-label={t("item.moveResize.field.height.label")}
         data-area-resize-shortcuts
         data-area-move-shortcuts
         inputMode="numeric"

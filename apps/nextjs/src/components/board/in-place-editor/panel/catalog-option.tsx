@@ -4,6 +4,8 @@ import { Badge, Box, factory, Image, useProps, useStyles } from "@mantine/core";
 import type { BoxProps, ElementProps, Factory, StylesApiProps } from "@mantine/core";
 import { IconApps } from "@tabler/icons-react";
 
+import { useI18n } from "@homarr/translation/client";
+
 import type { CatalogEntry } from "../catalog";
 import classes from "./catalog-option.module.css";
 
@@ -32,6 +34,7 @@ const EntryIcon = ({ entry }: { entry: CatalogEntry }) => {
 };
 
 export const CatalogOption = factory<CatalogOptionFactory>((_props) => {
+  const t = useI18n();
   const props = useProps("CatalogOption", defaultProps, _props);
   const { classNames, className, style, styles, unstyled, vars, attributes, entry, ...others } = props;
 
@@ -48,7 +51,7 @@ export const CatalogOption = factory<CatalogOptionFactory>((_props) => {
     attributes,
   });
 
-  const description = entry.description || (entry.type === "app" ? "App" : "");
+  const description = entry.description || (entry.type === "app" ? t("widget.app.name") : "");
   const needsSetup = entry.connectionStatus === "needsSetup";
   const showBestFit = entry.bestFit && entry.type !== "app";
 
@@ -63,17 +66,17 @@ export const CatalogOption = factory<CatalogOptionFactory>((_props) => {
       </Box>
       <Box {...getStyles("meta")}>
         {showBestFit && (
-          <Badge size="xs" variant="light" title="The default widget size matches the selected area">
-            Default fit
+          <Badge size="xs" variant="light" title={t("item.inPlace.defaultFitDescription")}>
+            {t("item.inPlace.defaultFit")}
           </Badge>
         )}
         {needsSetup && (
           <Badge size="xs" variant="light" color="gray">
-            Needs setup
+            {t("item.create.connectionStatus.needsSetup")}
           </Badge>
         )}
-        <Box {...getStyles("size")} title="Default size; widgets can be resized">
-          Default {entry.defaultSize.width}×{entry.defaultSize.height}
+        <Box {...getStyles("size")} title={t("item.inPlace.defaultSizeDescription")}>
+          {t("item.inPlace.defaultSize", { width: entry.defaultSize.width, height: entry.defaultSize.height })}
         </Box>
       </Box>
     </Box>

@@ -1,6 +1,9 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import type { KeyboardEventHandler } from "react";
+import { Box } from "@mantine/core";
+import { useRovingIndex } from "@mantine/hooks";
 import { IconPlus } from "@tabler/icons-react";
 
 import { useI18n } from "@homarr/translation/client";
@@ -28,7 +31,7 @@ interface DragState {
 export const EmptyCellLayer = ({ occupancy, onRowCountChange }: EmptyCellLayerProps) => {
   const t = useI18n();
   const { sectionId, columnCount, rowCount, maxRowCount, placements } = occupancy;
-  const layerRef = useRef<HTMLDivElement>(null);
+  const layerRef = useRef<HTMLFieldSetElement>(null);
   const [drag, setDrag] = useState<DragState | null>(null);
   const dragRef = useRef<DragState | null>(null);
   const cleanupRef = useRef<(() => void) | null>(null);
@@ -45,6 +48,44 @@ export const EmptyCellLayer = ({ occupancy, onRowCountChange }: EmptyCellLayerPr
     }
     return cells;
   }, [cellRowCount, columnCount, occupied]);
+  const { getItemProps, setFocusedIndex } = useRovingIndex({
+    total: freeCells.length,
+    orientation: "horizontal",
+    loop: false,
+  });
+
+  const handleCellKeyDown = (
+    event: React.KeyboardEvent<HTMLButtonElement>,
+    cell: CellPoint,
+    onKeyDown: KeyboardEventHandler,
+  ) => {
+    if (event.nativeEvent.isComposing || event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;
+    if (event.key !== "ArrowUp" && event.key !== "ArrowDown") {
+      onKeyDown(event);
+      return;
+    }
+    event.preventDefault();
+    event.stopPropagation();
+    let direction = 1;
+    if (event.key === "ArrowUp") direction = -1;
+    let next: CellPoint | undefined;
+    for (const candidate of freeCells) {
+      const distance = (candidate.y - cell.y) * direction;
+      if (distance <= 0) continue;
+      if (
+        !next ||
+        distance < (next.y - cell.y) * direction ||
+        (candidate.y === next.y && Math.abs(candidate.x - cell.x) < Math.abs(next.x - cell.x))
+      ) {
+        next = candidate;
+      }
+    }
+    if (next) {
+      layerRef.current
+        ?.querySelector<HTMLButtonElement>(`button[data-add-cell-x="${next.x}"][data-add-cell-y="${next.y}"]`)
+        ?.focus();
+    }
+  };
 
   useEffect(
     () => () => {
@@ -158,36 +199,50 @@ export const EmptyCellLayer = ({ occupancy, onRowCountChange }: EmptyCellLayerPr
   };
 
   return (
-    <div
+    <Box
+      component="fieldset"
       ref={layerRef}
       className={classes.layer}
+      bd={0}
+      m={0}
+      p={0}
+      miw={0}
+      aria-label={t("item.inPlace.emptyCells")}
       data-add-in-place-cells={sectionId}
       data-dragging={drag ? "" : undefined}
     >
-      {freeCells.map((cell) => (
-        <button
-          type="button"
-          key={`${cell.x},${cell.y}`}
-          className={classes.cell}
-          aria-label={t("item.moveResize.entryLabel", {
-            name: t("board.emptyState.addWidget"),
-            column: cell.x + 1,
-            row: cell.y + 1,
-          })}
-          data-add-cell-x={cell.x}
-          data-add-cell-y={cell.y}
-          style={getLogicalItemStyle({ x: cell.x, y: cell.y, w: 1, h: 1 }, rowScale)}
-          onPointerDown={(event) => handlePointerDown(event, cell)}
-          onClick={(event) => {
+      {freeCells.map((cell, index) => {
+        const itemProps = getItemProps({
+          index,
+          onClick: (event) => {
             if (event.detail === 0) addInPlaceActions.startCreate(sectionId, { x: cell.x, y: cell.y, w: 1, h: 1 });
-          }}
-        >
-          <span className={classes.plus}>
-            <IconPlus size={36} stroke={1.75} />
-          </span>
-        </button>
-      ))}
+          },
+        });
+        return (
+          <button
+            {...itemProps}
+            type="button"
+            key={`${cell.x},${cell.y}`}
+            className={classes.cell}
+            aria-label={t("item.moveResize.entryLabel", {
+              name: t("board.emptyState.addWidget"),
+              column: cell.x + 1,
+              row: cell.y + 1,
+            })}
+            data-add-cell-x={cell.x}
+            data-add-cell-y={cell.y}
+            style={getLogicalItemStyle({ x: cell.x, y: cell.y, w: 1, h: 1 }, rowScale)}
+            onPointerDown={(event) => handlePointerDown(event, cell)}
+            onFocus={() => setFocusedIndex(index)}
+            onKeyDown={(event) => handleCellKeyDown(event, cell, itemProps.onKeyDown)}
+          >
+            <span className={classes.plus}>
+              <IconPlus size={36} stroke={1.75} />
+            </span>
+          </button>
+        );
+      })}
       {drag && <div className={classes.selection} style={getLogicalItemStyle(drag.rect, rowScale)} />}
-    </div>
+    </Box>
   );
 };
