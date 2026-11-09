@@ -1,0 +1,108 @@
+apps/nextjs/src/app/[locale]/boards/(content)/_client.tsx
+  h_d6e478ca18e517 4,37-41,169
+apps/nextjs/src/app/[locale]/manage/custom-widgets/new/page.tsx
+  h_d6e478ca18e517 11-15,21-22,36
+apps/nextjs/src/components/board/in-place-editor/anchor.ts
+  h_d6e478ca18e517 1-37
+apps/nextjs/src/components/board/in-place-editor/area-overlay.module.css
+  h_d6e478ca18e517 1-91
+apps/nextjs/src/components/board/in-place-editor/area-overlay.tsx
+  h_d6e478ca18e517 1-178
+apps/nextjs/src/components/board/in-place-editor/area-size-inputs.tsx
+  h_d6e478ca18e517 1-78
+apps/nextjs/src/components/board/in-place-editor/bound-editor-form.tsx
+  h_d6e478ca18e517 1-87
+apps/nextjs/src/components/board/in-place-editor/catalog.ts
+  h_d6e478ca18e517 1-222
+apps/nextjs/src/components/board/in-place-editor/create-app.tsx
+  h_d6e478ca18e517 1-78
+apps/nextjs/src/components/board/in-place-editor/dim-layer.tsx
+  h_d6e478ca18e517 1-43
+apps/nextjs/src/components/board/in-place-editor/empty-cell-layer.module.css
+  h_d6e478ca18e517 1-81
+apps/nextjs/src/components/board/in-place-editor/empty-cell-layer.tsx
+  h_d6e478ca18e517 1-193
+apps/nextjs/src/components/board/in-place-editor/grid-layer.tsx
+  h_d6e478ca18e517 1-60
+apps/nextjs/src/components/board/in-place-editor/host.tsx
+  h_d6e478ca18e517 1-218
+apps/nextjs/src/components/board/in-place-editor/keyboard.ts
+  h_d6e478ca18e517 1-33
+apps/nextjs/src/components/board/in-place-editor/occupancy.ts
+  h_d6e478ca18e517 1-118
+apps/nextjs/src/components/board/in-place-editor/panel/card-steps.tsx
+  h_d6e478ca18e517 1-144
+apps/nextjs/src/components/board/in-place-editor/panel/catalog-option.module.css
+  h_d6e478ca18e517 1-66
+apps/nextjs/src/components/board/in-place-editor/panel/catalog-option.tsx
+  h_d6e478ca18e517 1-90
+apps/nextjs/src/components/board/in-place-editor/panel/keyboard-hints.tsx
+  h_d6e478ca18e517 1-49
+apps/nextjs/src/components/board/in-place-editor/panel/panel.module.css
+  h_d6e478ca18e517 1-239
+apps/nextjs/src/components/board/in-place-editor/panel/panel.tsx
+  h_d6e478ca18e517 1-300
+apps/nextjs/src/components/board/in-place-editor/panel/pick-step.tsx
+  h_d6e478ca18e517 1-250
+apps/nextjs/src/components/board/in-place-editor/panel/placement.ts
+  h_d6e478ca18e517 1-120
+apps/nextjs/src/components/board/in-place-editor/panel/types.ts
+  h_d6e478ca18e517 1-21
+apps/nextjs/src/components/board/in-place-editor/resources.ts
+  h_d6e478ca18e517 1-140
+apps/nextjs/src/components/board/in-place-editor/store.ts
+  h_d6e478ca18e517 1-257
+apps/nextjs/src/components/board/in-place-editor/types.ts
+  h_d6e478ca18e517 1-47
+apps/nextjs/src/components/board/in-place-editor/use-add-in-place-entry.ts
+  h_d6e478ca18e517 1-83
+apps/nextjs/src/components/board/in-place-editor/use-edit-item-in-place.ts
+  h_d6e478ca18e517 1-52
+apps/nextjs/src/components/board/in-place-editor/workshop-step.tsx
+  h_d6e478ca18e517 1-77
+apps/nextjs/src/components/board/items/actions/create-item.ts
+  h_d6e478ca18e517 22,26-35,54,57,102,123-138
+apps/nextjs/src/components/board/items/item-menu-dropdown.tsx
+  h_d6e478ca18e517 1-59
+apps/nextjs/src/components/board/items/item-menu.tsx
+  h_d6e478ca18e517 2,15,18,36-48,56-57,68-94,96-115,119-142
+apps/nextjs/src/components/board/items/lazy-widget-edit-modal.tsx
+  h_d6e478ca18e517 34
+apps/nextjs/src/components/board/items/widget-context-menu.tsx
+  h_d6e478ca18e517 4-5,38-39,61-64,294,337
+apps/nextjs/src/components/board/sections/grid/grid-editor.tsx
+  h_d6e478ca18e517 42,743-744,799-810,817,821,848-856
+apps/nextjs/src/components/board/sections/grid/section-grid.tsx
+  h_d6e478ca18e517 182-184
+apps/nextjs/src/components/board/use-board-add-actions.ts
+  h_d6e478ca18e517 25-27
+packages/widgets/src/_inputs/widget-slider-input.tsx
+  h_d6e478ca18e517 20
+packages/widgets/src/custom-api/component.tsx
+  h_d6e478ca18e517 16,20-28
+packages/widgets/src/custom-api/editor-preview.tsx
+  h_d6e478ca18e517 1-114
+packages/widgets/src/modals/index.ts
+  h_d6e478ca18e517 2-3
+packages/widgets/src/modals/widget-edit-modal.module.css
+  h_d6e478ca18e517 94,105,107
+packages/widgets/src/modals/widget-edit-modal.tsx
+  h_d6e478ca18e517 22,24,31-32,34,39-40,289,291-294,296-305,310,344-348,431,486-499
+packages/widgets/src/modals/widget-editor-form.tsx
+  h_d6e478ca18e517 1-379
+packages/widgets/src/modals/widget-live-preview.tsx
+  h_d6e478ca18e517 1-143
+packages/widgets/src/widget-integration-select.tsx
+  h_d6e478ca18e517 117,138-144,150-156,238
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "80b9a97460699fc529ff71cd732fcf61a8125247",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
