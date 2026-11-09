@@ -86,7 +86,7 @@ A PR with a `!` before the colon (`feat(api)!:`) or `BREAKING CHANGE` in its bod
 
 The `closes` array lists issues the PR fixes. Use the issue title to understand the user's problem ("can't start podman container since v2.11.0") and phrase the fix from that angle instead of repeating the code-level PR title. Do not add the issue number to the bullet unless the PR number is missing.
 
-PR bodies often contain Before and After tables. Use only the "after" screenshots; a before image next to an after image doubles the length and tells the reader nothing new. Images come pre-extracted in each PR's `images` array with their alt text; pick the one whose alt describes the result. Reuse the URL as is, never re-host or alter it. Put an image in a highlight only when it shows the feature clearly.
+PR bodies often contain Before and After tables. Use only the "after" screenshots; a before image next to an after image doubles the length and tells the reader nothing new. Images come pre-extracted in each PR's `images` array with their alt text; pick the one whose alt describes the result. Reuse the URL as is, never re-host or alter it. Put an image in a highlight only when it shows the feature clearly. Write it on its own line as `<img src="URL" alt="ALT" width="600">`, never as `![ALT](URL)`: a full-width screenshot fills the whole release page and the app's What's new dialog.
 
 ## Input
 
