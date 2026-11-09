@@ -2,6 +2,16 @@ import type { SmartHomeAction, SmartHomeEntity } from "./smart-home-types";
 
 const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value));
 
+export const getSmartHomeMediaPosition = (entity: Pick<SmartHomeEntity, "state" | "attributes">, now = Date.now()) => {
+  const { mediaPosition, mediaPositionUpdatedAt, mediaDuration } = entity.attributes;
+  let position = mediaPosition ?? 0;
+  if (entity.state === "playing" && mediaPositionUpdatedAt !== undefined) {
+    position += Math.max(0, (now - mediaPositionUpdatedAt) / 1000);
+  }
+  if (mediaDuration !== undefined) return clamp(position, 0, Math.max(0, mediaDuration));
+  return Math.max(0, position);
+};
+
 export const applySmartHomeAction = (entity: SmartHomeEntity, action: SmartHomeAction): SmartHomeEntity => {
   const now = Date.now();
   const next = (patch: Partial<SmartHomeEntity>): SmartHomeEntity => ({
@@ -12,6 +22,11 @@ export const applySmartHomeAction = (entity: SmartHomeEntity, action: SmartHomeA
     lastChanged: patch.state && patch.state !== entity.state ? now : entity.lastChanged,
   });
   const attributes = entity.attributes;
+  const playback = (state: string) =>
+    next({
+      state,
+      attributes: { mediaPosition: getSmartHomeMediaPosition(entity, now), mediaPositionUpdatedAt: now },
+    });
 
   switch (action.type) {
     case "toggle":
@@ -64,14 +79,14 @@ export const applySmartHomeAction = (entity: SmartHomeEntity, action: SmartHomeA
     case "unlock":
       return next({ state: "unlocked" });
     case "mediaPlayPause":
-      return next({ state: entity.state === "playing" ? "paused" : "playing" });
+      return playback(entity.state === "playing" ? "paused" : "playing");
     case "mediaPlay":
-      return next({ state: "playing" });
+      return playback("playing");
     case "mediaPause":
-      return next({ state: "paused" });
+      return playback("paused");
     case "mediaNext":
     case "mediaPrevious":
-      return next({ attributes: { mediaPosition: 0 } });
+      return next({ attributes: { mediaPosition: 0, mediaPositionUpdatedAt: now } });
     case "setVolume":
       return next({ attributes: { volume: clamp(action.value, 0, 1) } });
     case "setMuted":

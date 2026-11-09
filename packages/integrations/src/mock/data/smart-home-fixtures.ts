@@ -127,12 +127,14 @@ export const mockSmartHomeEntities: SmartHomeEntity[] = [
     deviceClass: "tv",
     changedMinutesAgo: 51,
     attributes: {
+      supportedFeatures: 1 | 4 | 8 | 16 | 32 | 16384,
       mediaTitle: "Big Buck Bunny",
       mediaSource: "Jellyfin",
       volume: 0.32,
       isMuted: false,
       mediaDuration: 596,
       mediaPosition: 120,
+      mediaPositionUpdatedAt: Date.now(),
     },
   }),
   entity({
@@ -171,7 +173,7 @@ export const mockSmartHomeEntities: SmartHomeEntity[] = [
     state: "open",
     deviceClass: "blind",
     changedMinutesAgo: 480,
-    attributes: { position: 70 },
+    attributes: { supportedFeatures: 1 | 2 | 4 | 8, position: 70 },
   }),
   entity({
     id: "scene.movie_night",
@@ -214,6 +216,7 @@ export const mockSmartHomeEntities: SmartHomeEntity[] = [
     unit: "°C",
     changedMinutesAgo: 10,
     attributes: {
+      supportedFeatures: 1,
       currentTemperature: 14.2,
       humidity: 72,
       windSpeed: 12,

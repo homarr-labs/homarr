@@ -9,7 +9,7 @@ import {
   IconHome,
   IconPalette,
 } from "@tabler/icons-react";
-import { getLightCapabilities } from "@homarr/integrations/types";
+import { getLightCapabilities, supportsSmartHomeAction } from "@homarr/integrations/types";
 import type { KeyboardEvent } from "react";
 
 import { formatEntityState, getEntityIcon, getPrimaryAction, getStateColor, isUnavailable } from "../semantics";
@@ -101,7 +101,7 @@ export function RowControl({ entity, run, level }: ControlProps) {
     case "fan":
       return (
         <div className={classes.cluster}>
-          {level > 0 && (
+          {level > 0 && supportsSmartHomeAction(entity, { type: "setFanPercentage", value: 0 }) && (
             <InlineSlider
               label={`${entity.name} speed`}
               value={attributes.percentage ?? 0}
@@ -116,15 +116,17 @@ export function RowControl({ entity, run, level }: ControlProps) {
     case "cover":
       return (
         <div className={classes.cluster}>
-          {level > 0 && attributes.position !== undefined && (
-            <InlineSlider
-              label={`${entity.name} position`}
-              value={attributes.position}
-              color={color === "gray" ? "violet" : color}
-              width={sliderWidth(level)}
-              onCommit={(value) => run.request({ type: "setPosition", value })}
-            />
-          )}
+          {level > 0 &&
+            attributes.position !== undefined &&
+            supportsSmartHomeAction(entity, { type: "setPosition", value: attributes.position }) && (
+              <InlineSlider
+                label={`${entity.name} position`}
+                value={attributes.position}
+                color={color === "gray" ? "violet" : color}
+                width={sliderWidth(level)}
+                onCommit={(value) => run.request({ type: "setPosition", value })}
+              />
+            )}
           <CoverButtons entity={entity} run={run} />
         </div>
       );
@@ -138,15 +140,17 @@ export function RowControl({ entity, run, level }: ControlProps) {
     case "media_player":
       return (
         <div className={classes.cluster}>
-          {level === 2 && attributes.volume !== undefined && (
-            <InlineSlider
-              label={`${entity.name} volume`}
-              value={Math.round(attributes.volume * 100)}
-              color="grape"
-              width={84}
-              onCommit={(value) => run.request({ type: "setVolume", value: value / 100 })}
-            />
-          )}
+          {level === 2 &&
+            attributes.volume !== undefined &&
+            supportsSmartHomeAction(entity, { type: "setVolume", value: attributes.volume }) && (
+              <InlineSlider
+                label={`${entity.name} volume`}
+                value={Math.round(attributes.volume * 100)}
+                color="grape"
+                width={84}
+                onCommit={(value) => run.request({ type: "setVolume", value: value / 100 })}
+              />
+            )}
           <MediaTransport entity={entity} run={run} level={level} />
         </div>
       );

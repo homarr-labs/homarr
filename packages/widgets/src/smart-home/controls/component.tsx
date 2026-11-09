@@ -237,7 +237,7 @@ const summaryStyles: Record<SummaryKey, { color: string; icon: TablerIcon }> = {
 };
 
 const getSummaryGroups = (entities: HaEntity[]): Record<SummaryKey, HaEntity[]> => ({
-  lights: entities.filter((entity) => entity.domain === "light"),
+  lights: entities.filter((entity) => entity.domain === "light" && isOn(entity)),
   on: entities.filter(isOn),
   off: entities.filter((entity) => !isPassive(entity) && !isOn(entity) && !isUnavailable(entity)),
   sensors: entities.filter(isSensorLike),
@@ -275,12 +275,18 @@ function EntitiesPresentation({ entities, configuration, width, height }: Presen
   const [pageIndex, setPageIndex] = useState(0);
   const groups = getSummaryGroups(entities);
   const summary = summaryKeys
-    .filter((key) => key === "on" || key === "off" || groups[key].length > 0)
+    .filter(
+      (key) =>
+        key === "on" ||
+        key === "off" ||
+        (key === "lights" && entities.some((entity) => entity.domain === "light")) ||
+        groups[key].length > 0,
+    )
     .map((key) => ({
       chip: {
         key,
         label: t(`summary.${key}`),
-        count: key === "lights" ? groups.lights.filter(isOn).length : groups[key].length,
+        count: groups[key].length,
         ...summaryStyles[key],
       } satisfies ChipDef,
       entities: groups[key],

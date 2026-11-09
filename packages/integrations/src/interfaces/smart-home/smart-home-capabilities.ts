@@ -27,12 +27,69 @@ export const getLightCapabilities = (attributes: SmartHomeEntityAttributes) => {
   };
 };
 
+// Home Assistant optional entity feature flags.
+const coverFeatures = { open: 1, close: 2, setPosition: 4, stop: 8, setTiltPosition: 128 };
+const mediaFeatures = { pause: 1, volume: 4, mute: 8, previous: 16, next: 32, source: 2048, play: 16384 };
+const alarmFeatures = { home: 1, away: 2, night: 4, custom_bypass: 16, vacation: 32 };
+
+const hasFeature = (attributes: SmartHomeEntityAttributes, feature: number) =>
+  ((attributes.supportedFeatures ?? 0) & feature) !== 0;
+
 const within = (value: number, min: number | undefined, max: number | undefined) =>
   Number.isFinite(value) && (min === undefined || value >= min) && (max === undefined || value <= max);
 
 export const supportsSmartHomeAction = (entity: CapabilityEntity, action: SmartHomeAction) => {
   const attributes = entity.attributes;
   switch (action.type) {
+    case "toggle":
+      if (entity.domain === "cover") {
+        return hasFeature(attributes, coverFeatures[entity.state === "closed" ? "open" : "close"]);
+      }
+      return true;
+    case "setFanPercentage":
+      return entity.domain === "fan" && hasFeature(attributes, 1) && within(action.value, 0, 100);
+    case "setOscillating":
+      return entity.domain === "fan" && hasFeature(attributes, 2);
+    case "setPosition":
+    case "setTiltPosition":
+      if (entity.domain === "valve") return action.type === "setPosition";
+      return (
+        entity.domain === "cover" && hasFeature(attributes, coverFeatures[action.type]) && within(action.value, 0, 100)
+      );
+    case "open":
+    case "close":
+    case "stop":
+      if (entity.domain === "valve") return true;
+      return entity.domain === "cover" && hasFeature(attributes, coverFeatures[action.type]);
+    case "mediaPlayPause":
+      return (
+        entity.domain === "media_player" &&
+        hasFeature(attributes, mediaFeatures[entity.state === "playing" ? "pause" : "play"])
+      );
+    case "mediaPlay":
+      return entity.domain === "media_player" && hasFeature(attributes, mediaFeatures.play);
+    case "mediaPause":
+      return entity.domain === "media_player" && hasFeature(attributes, mediaFeatures.pause);
+    case "mediaNext":
+      return entity.domain === "media_player" && hasFeature(attributes, mediaFeatures.next);
+    case "mediaPrevious":
+      return entity.domain === "media_player" && hasFeature(attributes, mediaFeatures.previous);
+    case "setVolume":
+      return (
+        entity.domain === "media_player" && hasFeature(attributes, mediaFeatures.volume) && within(action.value, 0, 1)
+      );
+    case "setMuted":
+      return entity.domain === "media_player" && hasFeature(attributes, mediaFeatures.mute);
+    case "selectSource":
+      return (
+        entity.domain === "media_player" &&
+        hasFeature(attributes, mediaFeatures.source) &&
+        attributes.sources?.includes(action.value) === true
+      );
+    case "alarmArm":
+      return entity.domain === "alarm_control_panel" && hasFeature(attributes, alarmFeatures[action.mode]);
+    case "alarmDisarm":
+      return entity.domain === "alarm_control_panel";
     case "setTemperature":
       return (
         (entity.domain === "water_heater" || getClimateTemperatureMode(entity) === "single") &&

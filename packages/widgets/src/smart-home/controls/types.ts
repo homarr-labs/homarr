@@ -84,6 +84,7 @@ export interface HaAttributes {
   isMuted?: boolean;
   mediaDuration?: number;
   mediaPosition?: number;
+  mediaPositionUpdatedAt?: number;
   batteryLevel?: number;
   options?: string[];
   forecast?: HaForecastDay[];

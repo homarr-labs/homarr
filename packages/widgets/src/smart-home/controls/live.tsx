@@ -82,6 +82,7 @@ const toAttributes = (domain: string, attributes: SmartHomeEntityAttributes): Ha
   isMuted: attributes.isMuted,
   mediaDuration: attributes.mediaDuration,
   mediaPosition: attributes.mediaPosition,
+  mediaPositionUpdatedAt: attributes.mediaPositionUpdatedAt,
   batteryLevel: attributes.batteryLevel,
   options: attributes.options,
   humidity: attributes.humidity,

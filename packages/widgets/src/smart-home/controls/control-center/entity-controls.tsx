@@ -1,8 +1,9 @@
 "use client";
 
-import { useContext, useMemo, useState } from "react";
+import { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import type { ReactNode } from "react";
-import { Box, Modal } from "@mantine/core";
+import { Box, Group, Modal } from "@mantine/core";
+import { useInterval } from "@mantine/hooks";
 import {
   IconAirConditioning,
   IconAlertTriangle,
@@ -44,7 +45,12 @@ import {
 
 import { useI18n } from "@homarr/translation/client";
 import type { TablerIcon } from "@homarr/ui";
-import { getClimateTemperatureMode, getLightCapabilities } from "@homarr/integrations/types";
+import {
+  getClimateTemperatureMode,
+  getLightCapabilities,
+  getSmartHomeMediaPosition,
+  supportsSmartHomeAction,
+} from "@homarr/integrations/types";
 
 import {
   formatEntityState,
@@ -320,7 +326,7 @@ function FanControl(props: ControlProps) {
   const { entity } = props;
   const theme = useEntityTheme(entity);
   const spec: SliderSpec = {
-    value: entity.state === "on" ? (entity.attributes.percentage ?? 0) : 0,
+    value: entity.state === "on" ? (entity.attributes.percentage ?? null) : 0,
     caption: "Speed",
     zeroLabel: "Off",
     toAction: (value) => ({ type: "setFanPercentage", value }),
@@ -459,6 +465,49 @@ function LockControl(props: ControlProps) {
   );
 }
 
+function CoverButtonControl({ entity, width, height }: ControlProps) {
+  const theme = useEntityTheme(entity);
+  const { run, pending } = useRunner(entity);
+  const tier = getTier(width, height);
+  const actions = [
+    { type: "open", label: "Open", Icon: IconChevronUp },
+    { type: "stop", label: "Stop", Icon: IconPlayerStop },
+    { type: "close", label: "Close", Icon: IconChevronDown },
+  ] as const;
+  const supported = actions.filter(({ type }) => supportsSmartHomeAction(entity, { type }));
+  if (tier === "mini" || supported.length === 0) return <ToggleControl entity={entity} width={width} height={height} />;
+  const controls = (
+    <Group gap={BUTTON_GAP} wrap="nowrap" justify="center">
+      {supported.map(({ type, label, Icon }) => (
+        <RoundButton
+          key={type}
+          size="sm"
+          label={`${label} ${entity.name}`}
+          pending={pending}
+          disabled={theme.unavailable}
+          onClick={() => void run({ type })}
+        >
+          <Icon size={18} />
+        </RoundButton>
+      ))}
+    </Group>
+  );
+  if (tier === "wide") {
+    return (
+      <Tile theme={theme} className={classes.rowTile}>
+        <Head name={entity.name} state={formatEntityState(entity)} />
+        {controls}
+      </Tile>
+    );
+  }
+  return (
+    <Tile theme={theme}>
+      <Head name={entity.name} state={formatEntityState(entity)} />
+      <div className={classes.holdStage}>{controls}</div>
+    </Tile>
+  );
+}
+
 function CoverControl(props: ControlProps) {
   const { entity } = props;
   const { run } = useRunner(entity);
@@ -466,6 +515,7 @@ function CoverControl(props: ControlProps) {
 
   if (entity.deviceClass === "garage") {
     const closed = entity.state === "closed";
+    if (!supportsSmartHomeAction(entity, { type: closed ? "open" : "close" })) return <InfoControl {...props} />;
     return (
       <HoldControl
         {...props}
@@ -477,7 +527,9 @@ function CoverControl(props: ControlProps) {
     );
   }
 
-  const position = entity.attributes.position ?? (entity.state === "closed" ? 0 : 100);
+  if (!supportsSmartHomeAction(entity, { type: "setPosition", value: 0 })) return <CoverButtonControl {...props} />;
+
+  const position = entity.attributes.position ?? null;
   const spec: SliderSpec = {
     value: position,
     caption: "Position",
@@ -492,7 +544,7 @@ function CoverControl(props: ControlProps) {
         <RoundButton
           size="sm"
           label={`Open ${entity.name}`}
-          disabled={theme.unavailable}
+          disabled={theme.unavailable || !supportsSmartHomeAction(entity, { type: "open" })}
           onClick={() => void run({ type: "open" })}
         >
           <IconChevronUp size={18} />
@@ -500,7 +552,7 @@ function CoverControl(props: ControlProps) {
         <RoundButton
           size="sm"
           label={`Stop ${entity.name}`}
-          disabled={theme.unavailable}
+          disabled={theme.unavailable || !supportsSmartHomeAction(entity, { type: "stop" })}
           onClick={() => void run({ type: "stop" })}
         >
           <IconPlayerStop size={16} />
@@ -508,7 +560,7 @@ function CoverControl(props: ControlProps) {
         <RoundButton
           size="sm"
           label={`Close ${entity.name}`}
-          disabled={theme.unavailable}
+          disabled={theme.unavailable || !supportsSmartHomeAction(entity, { type: "close" })}
           onClick={() => void run({ type: "close" })}
         >
           <IconChevronDown size={18} />
@@ -748,6 +800,35 @@ function ClimateControl({ entity, width, height }: ControlProps) {
   );
 }
 
+function MediaProgress({ entity }: { entity: HaEntity }) {
+  const [now, setNow] = useState(0);
+  const tick = useCallback(() => setNow(Date.now()), []);
+  const { start, stop } = useInterval(tick, 1000);
+  const duration = entity.attributes.mediaDuration ?? 0;
+  const position = getSmartHomeMediaPosition(entity, now);
+  const updatedAt = entity.attributes.mediaPositionUpdatedAt;
+  const advancing = entity.state === "playing" && updatedAt !== undefined && position < duration;
+
+  useEffect(() => {
+    tick();
+    if (advancing) start();
+    return stop;
+  }, [advancing, updatedAt, start, stop, tick]);
+
+  const progress = duration > 0 ? clamp((position / duration) * 100, 0, 100) : 0;
+  return (
+    <div className={classes.progress}>
+      <div className={classes.progressBar}>
+        <div className={classes.progressFill} style={{ width: `${progress}%` }} />
+      </div>
+      <div className={classes.progressTimes}>
+        <span>{formatClock(position)}</span>
+        <span>{formatClock(duration)}</span>
+      </div>
+    </div>
+  );
+}
+
 function MediaControl({ entity, width, height }: ControlProps) {
   const theme = useEntityTheme(entity);
   const { run, pending } = useRunner(entity);
@@ -757,8 +838,10 @@ function MediaControl({ entity, width, height }: ControlProps) {
   const idle = !(playing || entity.state === "paused");
   const volume = Math.round((attributes.volume ?? 0) * 100);
   const duration = attributes.mediaDuration ?? 0;
-  const position = attributes.mediaPosition ?? 0;
-  const progress = duration > 0 ? clamp((position / duration) * 100, 0, 100) : 0;
+  const canPlayPause = supportsSmartHomeAction(entity, { type: "mediaPlayPause" });
+  const canPrevious = supportsSmartHomeAction(entity, { type: "mediaPrevious" });
+  const canNext = supportsSmartHomeAction(entity, { type: "mediaNext" });
+  const canSetVolume = supportsSmartHomeAction(entity, { type: "setVolume", value: 0 });
   const title = idle ? entity.name : (attributes.mediaTitle ?? entity.name);
   const subtitle = idle ? formatEntityState(entity) : (attributes.mediaArtist ?? attributes.mediaSource ?? "");
   const Icon = theme.Icon;
@@ -797,7 +880,7 @@ function MediaControl({ entity, width, height }: ControlProps) {
             size="lg"
             label={playing ? `Pause ${entity.name}` : `Play ${entity.name}`}
             pending={pending}
-            disabled={theme.unavailable}
+            disabled={theme.unavailable || !canPlayPause}
             onClick={toggle}
           >
             {playGlyph}
@@ -823,7 +906,7 @@ function MediaControl({ entity, width, height }: ControlProps) {
             <span className={classes.state}>{subtitle}</span>
           </div>
           <div className={classes.transport}>
-            {width >= 360 ? (
+            {width >= 360 && canPrevious ? (
               <RoundButton
                 size="sm"
                 label={`Previous track on ${entity.name}`}
@@ -837,12 +920,12 @@ function MediaControl({ entity, width, height }: ControlProps) {
               size="lg"
               label={playing ? `Pause ${entity.name}` : `Play ${entity.name}`}
               pending={pending}
-              disabled={theme.unavailable}
+              disabled={theme.unavailable || !canPlayPause}
               onClick={toggle}
             >
               {playGlyph}
             </RoundButton>
-            {width >= 360 ? (
+            {width >= 360 && canNext ? (
               <RoundButton
                 size="sm"
                 label={`Next track on ${entity.name}`}
@@ -860,7 +943,7 @@ function MediaControl({ entity, width, height }: ControlProps) {
 
   const hero = height >= 320;
   const showProgress = height >= 205 && duration > 0 && !idle;
-  const showVolume = height >= 228;
+  const showVolume = height >= 228 && canSetVolume && attributes.volume !== undefined;
   const roomyTransport = height >= (showVolume ? 248 : 180);
   const artSize = hero ? Math.min(width - 48, 130) : 58;
 
@@ -877,43 +960,37 @@ function MediaControl({ entity, width, height }: ControlProps) {
             <span className={classes.state}>{subtitle}</span>
           </div>
         </div>
-        {showProgress ? (
-          <div className={classes.progress}>
-            <div className={classes.progressBar}>
-              <div className={classes.progressFill} style={{ width: `${progress}%` }} />
-            </div>
-            <div className={classes.progressTimes}>
-              <span>{formatClock(position)}</span>
-              <span>{formatClock(duration)}</span>
-            </div>
-          </div>
-        ) : null}
+        {showProgress && <MediaProgress entity={entity} />}
         <div className={classes.transportBig}>
-          <RoundButton
-            size={roomyTransport ? "md" : "sm"}
-            label={`Previous track on ${entity.name}`}
-            disabled={theme.unavailable}
-            onClick={() => void run({ type: "mediaPrevious" })}
-          >
-            <IconPlayerSkipBack size={20} fill="currentColor" />
-          </RoundButton>
+          {canPrevious && (
+            <RoundButton
+              size={roomyTransport ? "md" : "sm"}
+              label={`Previous track on ${entity.name}`}
+              disabled={theme.unavailable}
+              onClick={() => void run({ type: "mediaPrevious" })}
+            >
+              <IconPlayerSkipBack size={20} fill="currentColor" />
+            </RoundButton>
+          )}
           <RoundButton
             size={roomyTransport ? "xl" : "lg"}
             label={playing ? `Pause ${entity.name}` : `Play ${entity.name}`}
             pending={pending}
-            disabled={theme.unavailable}
+            disabled={theme.unavailable || !canPlayPause}
             onClick={toggle}
           >
             {playGlyph}
           </RoundButton>
-          <RoundButton
-            size={roomyTransport ? "md" : "sm"}
-            label={`Next track on ${entity.name}`}
-            disabled={theme.unavailable}
-            onClick={() => void run({ type: "mediaNext" })}
-          >
-            <IconPlayerSkipForward size={20} fill="currentColor" />
-          </RoundButton>
+          {canNext && (
+            <RoundButton
+              size={roomyTransport ? "md" : "sm"}
+              label={`Next track on ${entity.name}`}
+              disabled={theme.unavailable}
+              onClick={() => void run({ type: "mediaNext" })}
+            >
+              <IconPlayerSkipForward size={20} fill="currentColor" />
+            </RoundButton>
+          )}
         </div>
         {showVolume ? (
           <div className={classes.volume}>
@@ -994,23 +1071,25 @@ function AlarmControl({ entity, width, height }: ControlProps) {
 
   const keys = (compact: boolean) => (
     <div className={classes.keypad} data-compact={compact} role="group" aria-label="Alarm mode">
-      {alarmModes.map(({ mode, label, icon: ModeIcon }) => {
-        const gate = gateFor({ type: "alarmArm", mode });
-        return (
-          <KeyButton
-            key={mode}
-            label={holdLabel(gate, false, `Arm ${label}`, entity.name)}
-            hold={false}
-            compact={compact}
-            active={entity.state === `armed_${mode}`}
-            disabled={theme.unavailable || isGateBlocked(gate)}
-            onConfirm={() => runCodeGate(gate, run)}
-          >
-            <ModeIcon size={compact ? 20 : 22} stroke={1.8} />
-            {compact ? null : <span>{label}</span>}
-          </KeyButton>
-        );
-      })}
+      {alarmModes
+        .filter(({ mode }) => supportsSmartHomeAction(entity, { type: "alarmArm", mode }))
+        .map(({ mode, label, icon: ModeIcon }) => {
+          const gate = gateFor({ type: "alarmArm", mode });
+          return (
+            <KeyButton
+              key={mode}
+              label={holdLabel(gate, false, `Arm ${label}`, entity.name)}
+              hold={false}
+              compact={compact}
+              active={entity.state === `armed_${mode}`}
+              disabled={theme.unavailable || isGateBlocked(gate)}
+              onConfirm={() => runCodeGate(gate, run)}
+            >
+              <ModeIcon size={compact ? 20 : 22} stroke={1.8} />
+              {compact ? null : <span>{label}</span>}
+            </KeyButton>
+          );
+        })}
       <KeyButton
         label={disarmLabel}
         hold={guarded && disarmGate.kind === "run"}
@@ -1588,7 +1667,8 @@ function renderControl(props: ControlProps) {
         <ToggleControl {...props} />
       );
     case "fan":
-      return <FanControl {...props} />;
+      if (supportsSmartHomeAction(entity, { type: "setFanPercentage", value: 0 })) return <FanControl {...props} />;
+      return <ToggleControl {...props} />;
     case "humidifier":
       return <HumidifierControl {...props} />;
     case "cover":

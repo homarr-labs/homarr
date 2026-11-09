@@ -62,7 +62,7 @@ import {
 } from "@tabler/icons-react";
 
 import type { TablerIcon } from "@homarr/ui";
-import { getClimateTemperatureMode } from "@homarr/integrations/types";
+import { getClimateTemperatureMode, supportsSmartHomeAction } from "@homarr/integrations/types";
 
 import type { HaAction, HaArea, HaEntity } from "./types";
 
@@ -390,7 +390,8 @@ export const formatEntityState = (entity: HaEntity): string => {
       }
       return stateLabels[entity.state] ?? entity.state;
     case "fan":
-      return entity.state === "on" ? `${attributes.percentage ?? 0}%` : "Off";
+      if (entity.state === "on" && attributes.percentage !== undefined) return `${attributes.percentage}%`;
+      return stateLabels[entity.state] ?? entity.state;
     case "climate": {
       const action = attributes.hvacAction;
       if (entity.state === "off") return "Off";
@@ -445,9 +446,13 @@ export const getPrimaryAction = (entity: HaEntity): HaAction | null => {
     case "input_boolean":
     case "humidifier":
     case "automation":
-    case "cover":
     case "valve":
       return { type: "toggle" };
+    case "cover":
+      if (["opening", "closing"].includes(entity.state) && supportsSmartHomeAction(entity, { type: "stop" }))
+        return { type: "stop" };
+      if (supportsSmartHomeAction(entity, { type: "toggle" })) return { type: "toggle" };
+      return null;
     case "climate": {
       const modes = entity.attributes.hvacModes ?? [];
       if (entity.state === "off" && modes.some((mode) => mode !== "off")) return { type: "toggle" };
@@ -457,7 +462,8 @@ export const getPrimaryAction = (entity: HaEntity): HaAction | null => {
     case "lock":
       return entity.state === "locked" ? { type: "unlock" } : { type: "lock" };
     case "media_player":
-      return { type: "mediaPlayPause" };
+      if (supportsSmartHomeAction(entity, { type: "mediaPlayPause" })) return { type: "mediaPlayPause" };
+      return null;
     case "scene":
     case "script":
     case "button":

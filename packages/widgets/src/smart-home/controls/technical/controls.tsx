@@ -1,7 +1,7 @@
 "use client";
 
 import { ActionIcon, Loader, Slider, Switch, UnstyledButton } from "@mantine/core";
-import { getClimateTemperatureMode } from "@homarr/integrations/types";
+import { getClimateTemperatureMode, supportsSmartHomeAction } from "@homarr/integrations/types";
 import {
   IconCheck,
   IconChevronDown,
@@ -16,7 +16,7 @@ import {
   IconX,
 } from "@tabler/icons-react";
 
-import { formatNumber, getStateColor } from "../semantics";
+import { formatNumber, getPrimaryAction, getStateColor } from "../semantics";
 import type { HaAction, HaEntity } from "../types";
 import { needsCode, useEntityDetailOpener } from "../control-center/details";
 import classes from "./styles.module.css";
@@ -346,10 +346,12 @@ export const alarmActionFor = (value: string): HaAction => {
 export function AlarmControl({ entity, run, level, fill }: ControlProps & { fill?: boolean }) {
   const color = getStateColor(entity);
   const openDetails = useEntityDetailOpener(entity.id);
-  const options = alarmOptions.map((option) => ({
-    ...option,
-    ...getCodeControlProps(entity, alarmActionFor(option.value), openDetails !== null),
-  }));
+  const options = alarmOptions
+    .filter((option) => supportsSmartHomeAction(entity, alarmActionFor(option.value)))
+    .map((option) => ({
+      ...option,
+      ...getCodeControlProps(entity, alarmActionFor(option.value), openDetails !== null),
+    }));
   const hint = options.find((option) => option.hint)?.hint;
   if (level === 0 && !fill) {
     return (
@@ -454,7 +456,7 @@ export function MediaTransport({ entity, run, level }: ControlProps) {
   const playing = entity.state === "playing";
   return (
     <div className={classes.cluster}>
-      {level > 0 && (
+      {level > 0 && supportsSmartHomeAction(entity, { type: "mediaPrevious" }) && (
         <IconButton label="Previous" disabled={run.pending} onClick={() => run.request({ type: "mediaPrevious" })}>
           <IconPlayerSkipBack size={14} />
         </IconButton>
@@ -462,12 +464,12 @@ export function MediaTransport({ entity, run, level }: ControlProps) {
       <IconButton
         label={playing ? "Pause" : "Play"}
         strong
-        disabled={run.pending}
+        disabled={run.pending || !supportsSmartHomeAction(entity, { type: "mediaPlayPause" })}
         onClick={() => run.request({ type: "mediaPlayPause" })}
       >
         {playing ? <IconPlayerPause size={14} /> : <IconPlayerPlay size={14} />}
       </IconButton>
-      {level > 0 && (
+      {level > 0 && supportsSmartHomeAction(entity, { type: "mediaNext" }) && (
         <IconButton label="Next" disabled={run.pending} onClick={() => run.request({ type: "mediaNext" })}>
           <IconPlayerSkipForward size={14} />
         </IconButton>
@@ -479,26 +481,41 @@ export function MediaTransport({ entity, run, level }: ControlProps) {
 export function CoverButtons({ entity, run, full }: Pick<ControlProps, "entity" | "run"> & { full?: boolean }) {
   const closed = entity.state === "closed";
   if (!full) {
+    const action = getPrimaryAction(entity);
+    if (!action) return null;
+    let label = "Close";
+    let Icon = IconChevronDown;
+    if (closed) {
+      label = "Open";
+      Icon = IconChevronUp;
+    }
+    if (action.type === "stop") {
+      label = "Stop";
+      Icon = IconPlayerStop;
+    }
     return (
-      <IconButton
-        label={closed ? "Open" : "Close"}
-        onClick={() => run.request(closed ? { type: "open" } : { type: "close" })}
-      >
-        {closed ? <IconChevronUp size={15} /> : <IconChevronDown size={15} />}
+      <IconButton label={label} onClick={() => run.request(action)}>
+        <Icon size={15} />
       </IconButton>
     );
   }
   return (
     <div className={classes.cluster}>
-      <IconButton label="Open" onClick={() => run.request({ type: "open" })}>
-        <IconChevronUp size={15} />
-      </IconButton>
-      <IconButton label="Stop" onClick={() => run.request({ type: "stop" })}>
-        <IconPlayerStop size={13} />
-      </IconButton>
-      <IconButton label="Close" onClick={() => run.request({ type: "close" })}>
-        <IconChevronDown size={15} />
-      </IconButton>
+      {supportsSmartHomeAction(entity, { type: "open" }) && (
+        <IconButton label="Open" onClick={() => run.request({ type: "open" })}>
+          <IconChevronUp size={15} />
+        </IconButton>
+      )}
+      {supportsSmartHomeAction(entity, { type: "stop" }) && (
+        <IconButton label="Stop" onClick={() => run.request({ type: "stop" })}>
+          <IconPlayerStop size={13} />
+        </IconButton>
+      )}
+      {supportsSmartHomeAction(entity, { type: "close" }) && (
+        <IconButton label="Close" onClick={() => run.request({ type: "close" })}>
+          <IconChevronDown size={15} />
+        </IconButton>
+      )}
     </div>
   );
 }

@@ -1,3 +1,7 @@
+import { toServiceCall } from "../../homeassistant/homeassistant-actions";
+import { SmartHomeActionNotSupportedError } from "../../homeassistant/homeassistant-errors";
+import { supportsSmartHomeAction } from "../../interfaces/smart-home/smart-home-capabilities";
+
 import type { ISmartHomeIntegration } from "../../interfaces/smart-home/smart-home-integration";
 import type {
   SmartHomeAction,
@@ -83,6 +87,9 @@ export class SmartHomeMockService implements ISmartHomeIntegration {
   public async executeActionAsync(entityId: string, action: SmartHomeAction): Promise<void> {
     const entity = this.entities.get(entityId);
     if (!entity) throw new Error(`Entity ${entityId} was not found`);
+    if (!toServiceCall(entityId, action) || !supportsSmartHomeAction(entity, action)) {
+      throw new SmartHomeActionNotSupportedError(entityId, action.type);
+    }
     this.update(applySmartHomeAction(entity, action));
     return await Promise.resolve();
   }
