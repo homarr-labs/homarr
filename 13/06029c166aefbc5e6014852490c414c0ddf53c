@@ -1,0 +1,53 @@
+apps/nextjs/src/app/[locale]/layout.tsx
+  s_bd47bff7e5e7a0::t_9d57adac867dc7 41,211
+apps/nextjs/src/app/[locale]/manage/settings/_components/appearance-settings-form.tsx
+  s_bd47bff7e5e7a0::t_744263808c2cf7 3-4,27-31
+apps/nextjs/src/app/[locale]/manage/settings/_components/settings-form.tsx
+  s_bd47bff7e5e7a0::t_775242209073c1 44,64,139
+apps/nextjs/src/components/layout/header/user-client.tsx
+  s_543d1f6b217828::t_6d2111b71c6db9 52-57
+apps/nextjs/src/components/layout/header/whats-new-modal.tsx
+  s_543d1f6b217828::t_946cb2adc738fd 1-91
+apps/nextjs/src/components/layout/whats-new-auto-open.tsx
+  s_bd47bff7e5e7a0::t_e3ebc3196d1cba 1-58
+apps/nextjs/src/components/user-avatar-menu.tsx
+  s_543d1f6b217828::t_1daf984ec0877e 15,35,40,51-57,66,158-165
+packages/translation/src/lang/en.json
+  s_bd47bff7e5e7a0::t_26ba0349b58723 2016-2026,7084-7087,8841-8846
+packages/ui/src/markdown/github-alerts.tsx
+  s_543d1f6b217828::t_44f3fd377ac83e 7-8,16-20,76,80,82
+packages/ui/src/markdown/markdown.tsx
+  s_6b84297f6331ac::t_2d022d964dd402 1-2
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "1306029c166aefbc5e6014852490c414c0ddf53c",
+  "prompts": {},
+  "sessions": {
+    "s_543d1f6b217828": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "15021d71-26ef-4c42-bb8a-f74d9e19a587",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_6b84297f6331ac": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "590f9297-ade8-451c-8f7f-6672298271ba",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_bd47bff7e5e7a0": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "77d8f9a6-3f6f-4564-ab2c-239b97c430eb",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
