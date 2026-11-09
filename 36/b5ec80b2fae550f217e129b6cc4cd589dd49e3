@@ -1,0 +1,21 @@
+packages/api/src/router/update-checker.ts
+  s_6b84297f6331ac::t_e4a54388648fca 12,16,19,25-26,31,36,44-49
+packages/request-handler/src/update-checker.ts
+  s_6b84297f6331ac::t_50a175d651e86b 24,53,115,132-136,139,142-149,159,170,233,248-249
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "36b5ec80b2fae550f217e129b6cc4cd589dd49e3",
+  "prompts": {},
+  "sessions": {
+    "s_6b84297f6331ac": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "590f9297-ade8-451c-8f7f-6672298271ba",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
