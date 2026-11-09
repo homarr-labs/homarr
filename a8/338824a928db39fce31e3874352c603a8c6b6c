@@ -1,0 +1,67 @@
+.agents/skills/release-notes/evals/feature-release-v2-10-0/case.yaml
+  s_0847132e4fda53::t_a5a8748e197a48 1-6
+.agents/skills/release-notes/evals/feature-release-v2-10-0/graders/01-title-names-version-and-theme.md
+  s_0847132e4fda53::t_1e00b4b7f37bb8 1-7
+.agents/skills/release-notes/evals/feature-release-v2-10-0/graders/02-ends-with-full-changelog-link.md
+  s_0847132e4fda53::t_e3cc5ddc0f3ad7 1-7
+.agents/skills/release-notes/evals/feature-release-v2-10-0/graders/03-links-only-real-prs.md
+  s_0847132e4fda53::t_2219b01df158f0 1-7
+.agents/skills/release-notes/evals/feature-release-v2-10-0/graders/04-drops-bot-and-chore-noise.md
+  s_0847132e4fda53::t_3a710fe47a294d 1-7
+.agents/skills/release-notes/evals/feature-release-v2-10-0/graders/05-bullets-credit-author-and-link-pr.md
+  s_0847132e4fda53::t_8b17f85e1dbc64 1-7
+.agents/skills/release-notes/evals/feature-release-v2-10-0/graders/06-two-to-four-highlights.md
+  s_0847132e4fda53::t_e12d3bc828a3fb 1-7
+.agents/skills/release-notes/evals/feature-release-v2-10-0/prompt.md
+  s_0847132e4fda53::t_21107782cf5923 1-8
+.agents/skills/release-notes/evals/feature-release-v2-9-0/case.yaml
+  s_0847132e4fda53::t_29ebb449e54a15 1-6
+.agents/skills/release-notes/evals/feature-release-v2-9-0/graders/01-title-names-version-and-theme.md
+  s_0847132e4fda53::t_e63cdf252122bb 1-7
+.agents/skills/release-notes/evals/feature-release-v2-9-0/graders/02-ends-with-full-changelog-link.md
+  s_0847132e4fda53::t_f06837f3abfcd1 1-7
+.agents/skills/release-notes/evals/feature-release-v2-9-0/graders/03-links-only-real-prs.md
+  s_0847132e4fda53::t_916ad6c85d4d4f 1-7
+.agents/skills/release-notes/evals/feature-release-v2-9-0/graders/04-drops-bot-and-chore-noise.md
+  s_0847132e4fda53::t_fa1ac1b89d14b4 1-7
+.agents/skills/release-notes/evals/feature-release-v2-9-0/graders/05-bullets-credit-author-and-link-pr.md
+  s_0847132e4fda53::t_efef659a2d9f60 1-7
+.agents/skills/release-notes/evals/feature-release-v2-9-0/graders/06-two-to-four-highlights.md
+  s_0847132e4fda53::t_6adfa63f9934e2 1-7
+.agents/skills/release-notes/evals/feature-release-v2-9-0/prompt.md
+  s_0847132e4fda53::t_8e57cc6ee0ea5b 1-8
+.agents/skills/release-notes/evals/new-contributor-release-v2-12-0/case.yaml
+  s_0847132e4fda53::t_1cb44fe9d22723 1-6
+.agents/skills/release-notes/evals/new-contributor-release-v2-12-0/graders/01-title-names-version-and-theme.md
+  s_0847132e4fda53::t_030a4a25f066fd 1-7
+.agents/skills/release-notes/evals/new-contributor-release-v2-12-0/graders/02-ends-with-full-changelog-link.md
+  s_0847132e4fda53::t_cae56639518bf7 1-7
+.agents/skills/release-notes/evals/new-contributor-release-v2-12-0/graders/03-links-only-real-prs.md
+  s_0847132e4fda53::t_ce3a483594deb5 1-7
+.agents/skills/release-notes/evals/new-contributor-release-v2-12-0/graders/04-drops-bot-and-chore-noise.md
+  s_0847132e4fda53::t_4b143653a55db7 1-7
+.agents/skills/release-notes/evals/new-contributor-release-v2-12-0/graders/05-bullets-credit-author-and-link-pr.md
+  s_0847132e4fda53::t_09bbe0216ab481 1-7
+.agents/skills/release-notes/evals/new-contributor-release-v2-12-0/graders/06-two-to-four-highlights.md
+  s_0847132e4fda53::t_c3c193f003369f 1-7
+.agents/skills/release-notes/evals/new-contributor-release-v2-12-0/graders/07-thanks-first-time-contributor.md
+  s_0847132e4fda53::t_3c517fa1df6d80 1-7
+.agents/skills/release-notes/evals/new-contributor-release-v2-12-0/prompt.md
+  s_0847132e4fda53::t_091dece55970dc 1-8
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "a8338824a928db39fce31e3874352c603a8c6b6c",
+  "prompts": {},
+  "sessions": {
+    "s_0847132e4fda53": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "856a5c1e-7d34-43cd-b05a-3f3fc0880175",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
