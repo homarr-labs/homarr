@@ -485,7 +485,7 @@ export function CoverButtons({ entity, run, full }: Pick<ControlProps, "entity" 
     if (!action) return null;
     let label = "Close";
     let Icon = IconChevronDown;
-    if (closed) {
+    if (closed || action.type === "open") {
       label = "Open";
       Icon = IconChevronUp;
     }

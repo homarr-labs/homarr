@@ -448,11 +448,14 @@ export const getPrimaryAction = (entity: HaEntity): HaAction | null => {
     case "automation":
     case "valve":
       return { type: "toggle" };
-    case "cover":
+    case "cover": {
       if (["opening", "closing"].includes(entity.state) && supportsSmartHomeAction(entity, { type: "stop" }))
         return { type: "stop" };
-      if (supportsSmartHomeAction(entity, { type: "toggle" })) return { type: "toggle" };
+      let action: HaAction = { type: "close" };
+      if (entity.state === "closed" || entity.state === "closing") action = { type: "open" };
+      if (supportsSmartHomeAction(entity, action)) return action;
       return null;
+    }
     case "climate": {
       const modes = entity.attributes.hvacModes ?? [];
       if (entity.state === "off" && modes.some((mode) => mode !== "off")) return { type: "toggle" };

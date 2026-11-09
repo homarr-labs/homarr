@@ -43,7 +43,13 @@ export const supportsSmartHomeAction = (entity: CapabilityEntity, action: SmartH
   switch (action.type) {
     case "toggle":
       if (entity.domain === "cover") {
-        return hasFeature(attributes, coverFeatures[entity.state === "closed" ? "open" : "close"]);
+        const moving = entity.state === "opening" || entity.state === "closing";
+        if (moving && hasFeature(attributes, coverFeatures.stop)) return true;
+        if (entity.state === "closed" || entity.state === "closing") return hasFeature(attributes, coverFeatures.open);
+        if (entity.state === "opening" || attributes.position === 100)
+          return hasFeature(attributes, coverFeatures.close);
+        // Native toggle can reverse a partly open cover's remembered direction, which HA does not expose.
+        return hasFeature(attributes, coverFeatures.open) || hasFeature(attributes, coverFeatures.close);
       }
       return true;
     case "setFanPercentage":

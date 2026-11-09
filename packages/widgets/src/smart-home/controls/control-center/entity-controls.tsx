@@ -535,7 +535,7 @@ function CoverControl(props: ControlProps) {
     caption: "Position",
     zeroLabel: "Closed",
     toAction: (value) => ({ type: "setPosition", value }),
-    tapAction: { type: "toggle" },
+    tapAction: getPrimaryAction(entity),
   };
   const extras = (sideWidth: number, bodyHeight: number) => {
     if (sideWidth < rowWidth(3, ROUND_SM, BUTTON_GAP) || bodyHeight < 110) return null;
