@@ -29,7 +29,7 @@
     [
       "@semantic-release/git",
       {
-        "assets": ["package.json", "bun.lock", "CHANGELOG.md"],
+        "assets": ["package.json", "bun.lock", "CHANGELOG.md", "docs/img/releases/**"],
         "message": "chore(release): ${nextRelease.version} [skip ci]"
       }
     ],
