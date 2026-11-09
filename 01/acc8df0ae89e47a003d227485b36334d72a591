@@ -1,0 +1,23 @@
+bun.lock
+  s_6b84297f6331ac::t_9abe188ff6a690 20,28,934,938-941,1397,1474,1483,2588,2590,2592,2594,2596,2598,2778,2780,2782,2784,2846-2847,2880-2885,3080-3081,3824,4356,4606-4607,5112-5113,5202-5203,5302,5314,5532-5533,5894,5896,5898,5900,5902,5904,6338-6340,6378-6383,6494,6496,6498,6500,6780-6781
+package.json
+  s_6b84297f6331ac::t_ad9684edce93ae 126,203,212,337,344
+packages/ui/package.json
+  s_6b84297f6331ac::t_1bcf2350fe3486 40,43-47
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "01acc8df0ae89e47a003d227485b36334d72a591",
+  "prompts": {},
+  "sessions": {
+    "s_6b84297f6331ac": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "590f9297-ade8-451c-8f7f-6672298271ba",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
