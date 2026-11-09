@@ -1,0 +1,19 @@
+.agents/skills/release-notes/SKILL.md
+  s_e83c2ae1a2ab60::t_e12e81aec44236 19-25,35-58,62,68-75,99,107,112,123,125
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "b9ca3cbce519a78ab2618ad2940abe091923b5a0",
+  "prompts": {},
+  "sessions": {
+    "s_e83c2ae1a2ab60": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3d09fec7-61a2-431f-954a-ba7e7f4cbe42",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
