@@ -104,7 +104,7 @@ export default function BookmarksWidget({
   const fillAvailableHeight = !advanced && options.layout === "grid" && sections.length === 0;
   let layoutHeight = contentHeight;
   let layoutItemCount = data.length;
-  if (!advanced && options.layout === "column") {
+  if (!advanced && (options.layout === "column" || fillAvailableHeight)) {
     layoutHeight = Math.max(0, responsiveHeight - contentPadding * 2 - 2);
     if (showTitle) layoutHeight = Math.max(0, layoutHeight - options.titleSize * 1.2 - contentPadding);
     if (sections.length > 0) {
