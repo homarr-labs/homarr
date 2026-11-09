@@ -1,16 +1,16 @@
 import { execFile } from "node:child_process";
 import { access, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
-import { join, resolve } from "node:path";
+import { join } from "node:path";
 import { promisify } from "node:util";
 
 import { defaultReleaseNotesModel, requestReleaseNotes } from "./openrouter.mjs";
+import { skillDirectory } from "./paths.mjs";
 
 const execFileAsync = promisify(execFile);
 
-const repositoryRoot = resolve(import.meta.dirname, "../..");
-const skillDirectory = resolve(repositoryRoot, ".agents/skills/release-notes");
-const releaseArtPlaceholder = "{{RELEASE_ART}}";
+const placeholderLine = /^[ \t]*\{\{RELEASE_ART\}\}[ \t]*(?:\n[ \t]*(?=\n))*\n?/m;
+const titleLine = /^# .*$/m;
 
 const loadInstructions = async () => {
   const [skill, example] = await Promise.all([
@@ -40,25 +40,34 @@ const collectInput = async ({ cwd, env, repository, version, target, previousTag
   return JSON.parse(stdout);
 };
 
-const artFiles = (cwd, version) => {
-  const directory = join(cwd, "docs/img/releases", version);
-  return { svg: join(directory, "whats-new.svg"), png: join(directory, "whats-new.png") };
+const artDirectory = (version) => `docs/img/releases/${version}`;
+
+const artUrls = ({ repository, ref, version }) => {
+  const base = `https://raw.githubusercontent.com/${repository}/${ref}/${artDirectory(version)}`;
+  return { svg: `${base}/whats-new.svg`, png: `${base}/whats-new.png` };
 };
 
-const renderArt = async ({ cwd, env, version, items, art, signal }) => {
+const existsAtRef = async (cwd, ref, path) => {
+  try {
+    await execFileAsync("git", ["cat-file", "-e", `${ref}:${path}`], { cwd });
+    return true;
+  } catch {
+    return false;
+  }
+};
+
+const renderArt = async ({ cwd, env, version, newItems, art, signal }) => {
   const oneLiners = new Map(art.map((entry) => [entry.slug, entry]));
-  const payload = {
-    items: items.map((item) => ({
-      ...item,
-      oneLiner: oneLiners.get(item.slug)?.oneLiner || item.description,
-      screenshotUrl: oneLiners.get(item.slug)?.screenshotUrl ?? null,
-    })),
-  };
+  const items = newItems.map((item) => ({
+    ...item,
+    oneLiner: oneLiners.get(item.slug)?.oneLiner || item.description,
+    screenshotUrl: oneLiners.get(item.slug)?.screenshotUrl ?? null,
+  }));
 
   const directory = await mkdtemp(join(tmpdir(), "homarr-release-art-"));
   try {
     const itemsFile = join(directory, "items.json");
-    await writeFile(itemsFile, JSON.stringify(payload));
+    await writeFile(itemsFile, JSON.stringify(items));
     await execFileAsync("bun", ["scripts/release-art/cli.ts", "render", "--version", version, "--items", itemsFile], {
       cwd,
       env,
@@ -69,18 +78,38 @@ const renderArt = async ({ cwd, env, version, items, art, signal }) => {
     await rm(directory, { recursive: true, force: true });
   }
 
-  const files = artFiles(cwd, version);
-  await Promise.all([access(files.svg), access(files.png)]);
+  await Promise.all(["whats-new.svg", "whats-new.png"].map((file) => access(join(cwd, artDirectory(version), file))));
 };
 
-const applyArt = (body, imageMarkdown) => {
-  const wholeLine = new RegExp(`^[ \\t]*${releaseArtPlaceholder.replace(/[{}]/g, "\\$&")}[ \\t]*$`, "m");
-  const replaced = body.replace(wholeLine, imageMarkdown);
-  return replaced
-    .split(releaseArtPlaceholder)
-    .join("")
-    .replace(/\n{3,}/g, "\n\n")
-    .trim();
+const resolveArt = async ({ cwd, env, logger, repository, version, artRef, input, notes, renderArtFiles, signal }) => {
+  if (input.releaseType === "patch" || input.newItems.length === 0) return null;
+
+  try {
+    if (renderArtFiles) {
+      await renderArt({ cwd, env, version, newItems: input.newItems, art: notes.art, signal });
+    } else {
+      const files = ["whats-new.svg", "whats-new.png"].map((file) => `${artDirectory(version)}/${file}`);
+      const present = await Promise.all(files.map((file) => existsAtRef(cwd, artRef, file)));
+      if (!present.every(Boolean)) return null;
+    }
+    return artUrls({ repository, ref: artRef, version });
+  } catch (error) {
+    logger.warn("Rendering release art failed, continuing without it", error);
+    return null;
+  }
+};
+
+const placeArt = (body, image) => {
+  if (!image) return body.replace(placeholderLine, "");
+  if (placeholderLine.test(body)) return body.replace(placeholderLine, () => `${image}\n\n`);
+  if (titleLine.test(body)) return body.replace(titleLine, (title) => `${title}\n\n${image}`);
+  return `${image}\n\n${body}`;
+};
+
+const firstHighlightImage = (body) => {
+  const afterHeading = body.split(/^## Highlights[^\n]*\n/m)[1] ?? "";
+  const highlights = afterHeading.split(/^## /m)[0] ?? "";
+  return /!\[[^\]]*\]\((https:\/\/[^)\s]+)/.exec(highlights)?.[1];
 };
 
 export async function generateAiNotes({
@@ -93,15 +122,16 @@ export async function generateAiNotes({
   target,
   previousTag,
   artRef,
-  withArt,
+  renderArtFiles,
   signal,
 }) {
   const instructions = await loadInstructions();
   const input = await collectInput({ cwd, env, repository, version, target, previousTag, signal });
   logger.log(
-    "Collected %d pull requests and %d new items for the release notes",
+    "Collected %d pull requests and %d new items for the %s release notes",
     input.pullRequests.length,
     input.newItems.length,
+    input.releaseType,
   );
 
   const model = env.RELEASE_NOTES_MODEL || defaultReleaseNotesModel;
@@ -115,24 +145,21 @@ export async function generateAiNotes({
   });
   logger.log("Generated release notes with %s (usage: %s)", model, JSON.stringify(usage));
 
-  let imageMarkdown = "";
-  let imageUrl = "";
-  if (withArt && input.newItems.length > 0) {
-    try {
-      await renderArt({ cwd, env, version, items: input.newItems, art: notes.art, signal });
-      const base = `https://raw.githubusercontent.com/${repository}/${artRef}/docs/img/releases/${version}`;
-      imageMarkdown = `![What's new in ${tag}](${base}/whats-new.svg)`;
-      imageUrl = `${base}/whats-new.png`;
-    } catch (error) {
-      logger.warn(
-        "Rendering release art failed, continuing without it: %s",
-        error instanceof Error ? error.message : error,
-      );
-    }
-  }
+  const art = await resolveArt({
+    cwd,
+    env,
+    logger,
+    repository,
+    version,
+    artRef,
+    input,
+    notes,
+    renderArtFiles,
+    signal,
+  });
 
-  return {
-    body: applyArt(notes.body, imageMarkdown),
-    discord: { ...notes.discord, imageUrl },
-  };
+  const body = placeArt(notes.body, art && `![What's new in ${tag}](${art.svg})`);
+  const imageUrl = art?.png ?? firstHighlightImage(body);
+
+  return { body, discord: { ...notes.discord, imageUrl } };
 }

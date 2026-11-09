@@ -70,25 +70,25 @@ The compact card now shows project, running resource and available server counts
 
 ## New
 
-- Start and stop a linked Docker container from an app tile by @junkerderprovinz in #7428
-- Redesigned Coolify widget that keeps its status when a project errors by @Rhiz3K in #7463
-- OpenMediaVault TOTP, explicit container tracks, optional bookmark URLs and copy button by @ajnart in #7462
+- Start and stop a linked Docker container from an app tile by @junkerderprovinz in [#7428](https://github.com/homarr-labs/homarr/pull/7428)
+- Redesigned Coolify widget that keeps its status when a project errors by @Rhiz3K in [#7463](https://github.com/homarr-labs/homarr/pull/7463)
+- OpenMediaVault TOTP, explicit container tracks, optional bookmark URLs and copy button by @ajnart in [#7462](https://github.com/homarr-labs/homarr/pull/7462)
 
 ## Fixed
 
-- Podman containers failing to start since v2.11.0 because nginx workers ran as an unmapped user by @ajnart in #7487
-- Containers using a `wget` health check reporting `wget: not found` since the move to Debian by @ajnart in #7475
-- OIDC claims with dots in their name, like `https://domain.com/roles`, now work for groups and name by @ajnart in #7482
-- Pi-hole v6 custom widgets opened a new session on every request and used up all API seats; they now reuse one by @Epoustouflant in #7481
-- Board wobbling at some window sizes because the scrollbar kept resizing the layout by @ajnart in #7485
-- Releases widgets with many repositories hitting the URL length limit and showing providers as unresponsive by @ajnart in #7425
-- Jackett test connection stopping at "All indexers"; each indexer is now tested on its own and failures are named by @ajnart in #7484
-- Frigate test connection now says which authentication step failed by @ajnart in #7486
-- Dropping a URL on a board now picks a matching icon from the icon library before falling back to the site's own favicon by @mawcs in #7392
+- Podman containers failing to start since v2.11.0 because nginx workers ran as an unmapped user by @ajnart in [#7487](https://github.com/homarr-labs/homarr/pull/7487)
+- Containers using a `wget` health check reporting `wget: not found` since the move to Debian by @ajnart in [#7475](https://github.com/homarr-labs/homarr/pull/7475)
+- OIDC claims with dots in their name, like `https://domain.com/roles`, now work for groups and name by @ajnart in [#7482](https://github.com/homarr-labs/homarr/pull/7482)
+- Pi-hole v6 custom widgets opened a new session on every request and used up all API seats; they now reuse one by @Epoustouflant in [#7481](https://github.com/homarr-labs/homarr/pull/7481)
+- Board wobbling at some window sizes because the scrollbar kept resizing the layout by @ajnart in [#7485](https://github.com/homarr-labs/homarr/pull/7485)
+- Releases widgets with many repositories hitting the URL length limit and showing providers as unresponsive by @ajnart in [#7425](https://github.com/homarr-labs/homarr/pull/7425)
+- Jackett test connection stopping at "All indexers"; each indexer is now tested on its own and failures are named by @ajnart in [#7484](https://github.com/homarr-labs/homarr/pull/7484)
+- Frigate test connection now says which authentication step failed by @ajnart in [#7486](https://github.com/homarr-labs/homarr/pull/7486)
+- Dropping a URL on a board now picks a matching icon from the icon library before falling back to the site's own favicon by @mawcs in [#7392](https://github.com/homarr-labs/homarr/pull/7392)
 
 ## Thanks
 
-Welcome to @Epoustouflant, whose first contribution landed in #7481.
+Welcome to @Epoustouflant, whose first contribution landed in [#7481](https://github.com/homarr-labs/homarr/pull/7481).
 
 **Full Changelog**: https://github.com/homarr-labs/homarr/compare/v2.11.1...v2.12.0
 ```
@@ -103,7 +103,7 @@ Welcome to @Epoustouflant, whose first contribution landed in #7481.
 
 ## Fixed
 
-- <what was broken, in the user's words> by @author in #123
+- <what was broken, in the user's words> by @author in [#123](<pr url>)
 
 **Full Changelog**: <compareUrl>
 ```

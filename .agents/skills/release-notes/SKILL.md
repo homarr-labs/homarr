@@ -28,16 +28,20 @@ The body is markdown. Use this order and drop any section that has nothing to sa
 
 1. `# Homarr vX.Y.Z: <theme>`. The theme is two to five words naming the biggest user-facing thing ("Docker control from your tiles"), not "Weekly release".
 2. `> [!IMPORTANT]` alert, only when something is breaking or the user must act on upgrade (renamed env var, removed feature, migration). One or two sentences. Skip it otherwise; an alert that is always there gets ignored.
-3. **Highlights**: two to four items that matter most. Each gets a short `###` heading, two or three sentences on what it does and why you would want it, and the PR's "after" screenshot when one exists. Use `> [!TIP]` once if there is a setting or trick users would otherwise miss. Highlights are for features and notable improvements, not for bug fixes.
-4. **New integrations and widgets**: only when the input has `newItems`. Put the line `{{RELEASE_ART}}` alone on the line directly above a markdown table with the columns icon, name, what it does. Use each item's `iconUrl` as `<img src="..." width="24" height="24">` (or an empty cell when `iconUrl` is null) and one plain sentence for what it does. The placeholder is replaced by a generated image after you answer, so write it exactly like that, once, and nowhere else.
-5. **New**, **Improved**, **Fixed**: bullet lists. One line per PR, past tense or plain description, ending with `by @author in #123`. Keep the same shape for every bullet so the list scans.
+3. `## Highlights`: two to four items that matter most. Each gets a short `###` heading, two or three sentences on what it does and why you would want it, and the PR's "after" screenshot when one exists. Use `> [!TIP]` once if there is a setting or trick users would otherwise miss. Highlights are for features and notable improvements, not for bug fixes. The first image in Highlights is also the Discord announcement image when no generated art exists, so lead with the most telling screenshot.
+4. `## New integrations and widgets`: only when the input has `newItems`. Put the line `{{RELEASE_ART}}` alone on its own line, followed by a blank line and a markdown table with the columns icon, name, what it does. Use each item's `iconUrl` as `<img src="..." width="24" height="24">` (or an empty cell when `iconUrl` is null) and one plain sentence for what it does. The placeholder is replaced by a generated image after you answer, so write it exactly like that, once, and nowhere else.
+5. `## New`, `## Improved`, `## Fixed`: bullet lists. One line per PR, past tense or plain description, ending with `by @author in [#123](<pr url>)`. Keep the same shape for every bullet so the list scans. Write `@author` plain and the PR as an explicit markdown link using that PR's `url`, because the in-app renderer does not turn a bare `#123` into a link.
 6. `<details><summary>All changes</summary>` holding the long tail: smaller or internal-sounding PRs that are still user-relevant. Same bullet shape. Omit the block when there is no tail.
-7. A short thank-you naming first-time contributors from `firstTimeContributors`, with a link to their PR. One sentence. Skip it when the list is empty.
+7. A short `## Thanks` naming first-time contributors from `firstTimeContributors`, with the PR as a `[#123](<pr url>)` link. One sentence. Skip it when the list is empty.
 8. Last line, always: `**Full Changelog**: <compareUrl>` using the `compareUrl` from the input.
 
 ## Patch releases
 
 When `releaseType` is `patch`, the release exists because something was broken. Write the title, an `> [!IMPORTANT]` alert only if needed, a **Fixed** list, and the Full Changelog line. No highlights, no art, no table, no theme. Users read patch notes to find out whether their bug is gone.
+
+## Major releases
+
+When `releaseType` is `major`, write it like a minor release with one change: the `> [!IMPORTANT]` alert is mandatory and lists the migration steps (removed features, renamed settings, anything to do before or after upgrading) taken from the breaking PRs. The maintainer usually hand-writes major notes, so expect yours to be a draft that gets edited.
 
 ## Classifying PRs
 
@@ -58,7 +62,7 @@ PR bodies often contain Before and After tables. Use only the "after" screenshot
 
 CI passes one JSON document:
 
-- `version`, `tag`, `previousTag`, `releaseType` (`minor` or `patch`), `compareUrl`
+- `version`, `tag`, `previousTag`, `releaseType` (`major`, `minor` or `patch`), `compareUrl`
 - `newItems`: integrations and widgets added in this release, each with `kind`, `slug`, `name`, `description`, `iconUrl`
 - `firstTimeContributors`: `{ login, pullRequest }` for people whose first merged PR is in this release
 - `pullRequests`: bots are already removed. Each has `number`, `url`, `title`, `author`, `labels`, `mergedAt`, `body` (cleaned and truncated), `images` (`url`, `alt`) and `closes` (`number`, `title`, `url`)

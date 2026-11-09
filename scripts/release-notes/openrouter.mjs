@@ -78,27 +78,16 @@ export async function requestReleaseNotes({ apiKey, model, instructions, input, 
   }
 
   const data = JSON.parse(responseText);
-  if (data.status && data.status !== "completed") {
-    const detail = JSON.stringify(data.error ?? data.incomplete_details ?? null);
-    throw new Error(`OpenRouter response ended as ${data.status}: ${detail}`);
+  if (data.status !== "completed") {
+    throw new Error(
+      `OpenRouter response ended as ${data.status}: ${JSON.stringify(data.error ?? data.incomplete_details)}`,
+    );
   }
 
-  const parsed = JSON.parse(extractOutputText(data));
-  if (typeof parsed.body !== "string" || parsed.body.trim() === "") {
+  const notes = JSON.parse(extractOutputText(data));
+  if (!notes.body?.trim()) {
     throw new Error("OpenRouter response had an empty body");
   }
 
-  return {
-    model: data.model ?? model,
-    usage: data.usage ?? null,
-    notes: {
-      body: parsed.body.trim(),
-      discord: {
-        title: String(parsed.discord?.title ?? ""),
-        summary: String(parsed.discord?.summary ?? ""),
-        highlights: (parsed.discord?.highlights ?? []).filter((highlight) => typeof highlight === "string"),
-      },
-      art: Array.isArray(parsed.art) ? parsed.art : [],
-    },
-  };
+  return { usage: data.usage, notes };
 }

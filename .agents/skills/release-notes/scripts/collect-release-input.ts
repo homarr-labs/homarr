@@ -3,9 +3,11 @@ import { readFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import { parseArgs, promisify } from "node:util";
 
+import { generateGithubNotes } from "../../../../scripts/release-notes/github-notes.mjs";
+import { repositoryRoot } from "../../../../scripts/release-notes/paths.mjs";
+
 const execFileAsync = promisify(execFile);
 
-const repositoryRoot = resolve(import.meta.dirname, "../../../..");
 const graphqlChunkSize = 25;
 const maxBodyLength = 3000;
 const bodyBudget = 150_000;
@@ -91,23 +93,6 @@ const detectReleaseType = (previousTag: string, version: string): ReleaseType =>
   if (next.major !== previous.major) return "major";
   if (next.minor !== previous.minor) return "minor";
   return "patch";
-};
-
-const generateNotes = async (repository: string, tag: string, target: string, previousTag: string) => {
-  return gh([
-    "api",
-    "--method",
-    "POST",
-    `repos/${repository}/releases/generate-notes`,
-    "-f",
-    `tag_name=${tag}`,
-    "-f",
-    `target_commitish=${target}`,
-    "-f",
-    `previous_tag_name=${previousTag}`,
-    "--jq",
-    ".body",
-  ]);
 };
 
 const pullRequestNumbersFromNotes = (notes: string, repository: string) => {
@@ -210,8 +195,7 @@ const detectReleaseItems = async (from: string, to: string): Promise<ReleaseItem
     const parsed = JSON.parse(stdout) as { items?: ReleaseItem[] };
     return parsed.items ?? [];
   } catch (error) {
-    const reason = error instanceof Error ? error.message.split("\n")[0] : String(error);
-    console.error(`New integration and widget detection failed, continuing without items: ${reason}`);
+    console.error("New integration and widget detection failed, continuing without items", error);
     return [];
   }
 };
@@ -236,7 +220,14 @@ const main = async () => {
   const version = (values.version ?? values.to).replace(/^v/, "");
   const tag = `v${version}`;
 
-  const notes = await generateNotes(repository, tag, values.to, values.from).catch((error: unknown) => {
+  const notes: string = await generateGithubNotes({
+    cwd: repositoryRoot,
+    env: process.env,
+    repository,
+    tag,
+    target: values.to,
+    previousTag: values.from,
+  }).catch((error: unknown) => {
     console.error("generate-notes failed, falling back to compare commits", error);
     return "";
   });

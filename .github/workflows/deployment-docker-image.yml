@@ -35,6 +35,7 @@ jobs:
     timeout-minutes: 15
     env:
       SKIP_RELEASE: ${{ github.event_name == 'workflow_dispatch' || github.ref_name == 'dev' || github.ref_name == 'next' }}
+      RELEASE_DISCORD_FILE: /tmp/release-discord.json
     outputs:
       version: ${{ steps.read-semver.outputs.version || steps.version-fallback.outputs.version }}
       git_ref: ${{ steps.read-git-ref.outputs.ref || steps.read-semver.outputs.version || github.ref }}
@@ -101,15 +102,12 @@ jobs:
           GIT_COMMITTER_EMAIL: "175486441+homarr-releases[bot]@users.noreply.github.com"
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
           RELEASE_NOTES_MODEL: ${{ vars.RELEASE_NOTES_MODEL }}
-          RELEASE_DISCORD_FILE: ${{ runner.temp }}/release-discord.json
         run: |
           bun run release
       - name: Read Discord announcement
         id: read-discord-release
         if: env.SKIP_RELEASE == 'false' && github.ref_name == 'main'
         continue-on-error: true
-        env:
-          RELEASE_DISCORD_FILE: ${{ runner.temp }}/release-discord.json
         run: |
           if [ -s "$RELEASE_DISCORD_FILE" ]; then
             echo "announcement=$(jq --compact-output '.' "$RELEASE_DISCORD_FILE")" >> "$GITHUB_OUTPUT"

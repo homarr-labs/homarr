@@ -1,17 +1,38 @@
+import { execFile } from "node:child_process";
 import { rm, writeFile } from "node:fs/promises";
+import { promisify } from "node:util";
 
 import { generateAiNotes } from "./release-notes/ai-notes.mjs";
 import { generateGithubNotes } from "./release-notes/github-notes.mjs";
 
+const execFileAsync = promisify(execFile);
+
 const aiTimeoutMilliseconds = 8 * 60 * 1000;
-const notesByTag = new Map();
 
-const shouldUseAi = ({ branch, env, lastRelease }) =>
-  branch.name === "main" && !branch.prerelease && Boolean(env.OPENROUTER_API_KEY) && Boolean(lastRelease.gitTag);
-
-const generateAiBody = async ({ cwd, env, logger, lastRelease, nextRelease }) => {
+const tagExists = async (cwd, tag) => {
   try {
-    const { body, discord } = await generateAiNotes({
+    await execFileAsync("git", ["rev-parse", "--verify", "--quiet", `refs/tags/${tag}`], { cwd });
+    return true;
+  } catch {
+    return false;
+  }
+};
+
+const shouldUseAi = async ({ branch, cwd, env, lastRelease, nextRelease }) => {
+  if (branch.name !== "main" || branch.prerelease || !env.OPENROUTER_API_KEY || !lastRelease.gitTag) return false;
+  return !(await tagExists(cwd, nextRelease.gitTag));
+};
+
+const tryAiNotes = async (context) => {
+  const { cwd, env, logger, lastRelease, nextRelease } = context;
+
+  if (!(await shouldUseAi(context))) {
+    logger.log("Skipping AI release notes: needs a new release on main, OPENROUTER_API_KEY and a previous release");
+    return null;
+  }
+
+  try {
+    return await generateAiNotes({
       cwd,
       env,
       logger,
@@ -21,18 +42,11 @@ const generateAiBody = async ({ cwd, env, logger, lastRelease, nextRelease }) =>
       target: nextRelease.gitHead,
       previousTag: lastRelease.gitTag,
       artRef: nextRelease.gitTag,
-      withArt: true,
+      renderArtFiles: true,
       signal: AbortSignal.timeout(aiTimeoutMilliseconds),
     });
-    if (env.RELEASE_DISCORD_FILE) {
-      await writeFile(env.RELEASE_DISCORD_FILE, JSON.stringify(discord));
-    }
-    return body;
   } catch (error) {
-    logger.warn(
-      "AI release notes failed, using GitHub generated notes: %s",
-      error instanceof Error ? error.message : error,
-    );
+    logger.warn("AI release notes failed, using GitHub generated notes", error);
     return null;
   }
 };
@@ -40,29 +54,24 @@ const generateAiBody = async ({ cwd, env, logger, lastRelease, nextRelease }) =>
 export async function generateNotes(_pluginConfig, context) {
   const { cwd, env, lastRelease, nextRelease } = context;
 
-  const cached = notesByTag.get(nextRelease.gitTag);
-  if (cached) return cached;
-
   if (env.RELEASE_DISCORD_FILE) {
     await rm(env.RELEASE_DISCORD_FILE, { force: true });
   }
 
-  const githubNotes = await generateGithubNotes({
-    cwd,
-    env,
-    repository: env.GITHUB_REPOSITORY,
-    tag: nextRelease.gitTag,
-    target: nextRelease.gitHead,
-    previousTag: lastRelease.gitTag,
-  });
-
-  let notes = githubNotes;
-  if (shouldUseAi(context)) {
-    notes = (await generateAiBody(context)) ?? githubNotes;
-  } else {
-    context.logger.log("Skipping AI release notes: needs the main branch, OPENROUTER_API_KEY and a previous release");
+  const aiNotes = await tryAiNotes(context);
+  if (!aiNotes) {
+    return generateGithubNotes({
+      cwd,
+      env,
+      repository: env.GITHUB_REPOSITORY,
+      tag: nextRelease.gitTag,
+      target: nextRelease.gitHead,
+      previousTag: lastRelease.gitTag,
+    });
   }
 
-  notesByTag.set(nextRelease.gitTag, notes);
-  return notes;
+  if (env.RELEASE_DISCORD_FILE) {
+    await writeFile(env.RELEASE_DISCORD_FILE, JSON.stringify(aiNotes.discord));
+  }
+  return aiNotes.body;
 }
