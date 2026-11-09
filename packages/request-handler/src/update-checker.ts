@@ -21,7 +21,7 @@ const maxRecentReleases = 10;
 
 type UpdateCheckCacheEntry = {
   availableUpdates: Update[];
-  recentReleases: Update[];
+  recentReleases: Release[];
   attemptedAt: number;
   checkedAt: number | null;
 };
@@ -50,7 +50,7 @@ const waitForConcurrentUpdateCheckAsync = async () => {
   return await staleUpdateCheckChannel.getAsync();
 };
 
-const getCachedAvailableUpdatesAsync = async (): Promise<UpdateCheckCacheEntry> => {
+const getCachedUpdateCheckAsync = async (): Promise<UpdateCheckCacheEntry> => {
   if (env.NO_EXTERNAL_CONNECTION) {
     return {
       availableUpdates: [],
@@ -112,7 +112,7 @@ const getCachedAvailableUpdatesAsync = async (): Promise<UpdateCheckCacheEntry> 
 export const updateCheckerRequestHandler = {
   handler: (_input: Record<string, never>) => ({
     getDataAsync: async () => {
-      const result = await getCachedAvailableUpdatesAsync();
+      const result = await getCachedUpdateCheckAsync();
       return {
         data: { availableUpdates: result.availableUpdates, recentReleases: result.recentReleases },
         timestamp: new Date(result.checkedAt ?? result.attemptedAt),
@@ -124,17 +124,28 @@ export const updateCheckerRequestHandler = {
 interface Update {
   name: string | null;
   contentHtml?: string;
-  body: string;
-  publishedAt: Date;
   url: string;
   tagName: string;
   isPrerelease: boolean;
 }
 
+interface Release extends Update {
+  body: string;
+  publishedAt: Date;
+}
+
 interface ReleaseSummary {
   availableUpdates: Update[];
-  recentReleases: Update[];
+  recentReleases: Release[];
 }
+
+const toUpdate = ({ name, contentHtml, url, tagName, isPrerelease }: Release): Update => ({
+  name,
+  contentHtml,
+  url,
+  tagName,
+  isPrerelease,
+});
 
 const isPrereleaseTag = (tagName: string) => {
   try {
@@ -145,7 +156,7 @@ const isPrereleaseTag = (tagName: string) => {
   }
 };
 
-const selectRecentReleases = (releases: Update[], currentVersion: string) => {
+const selectRecentReleases = (releases: Release[], currentVersion: string) => {
   if (isPrereleaseTag(currentVersion)) return [];
 
   return releases
@@ -156,7 +167,7 @@ const selectRecentReleases = (releases: Update[], currentVersion: string) => {
 };
 
 export const selectUnseenReleases = (
-  recentReleases: Update[],
+  recentReleases: Release[],
   currentVersion: string,
   lastSeenVersion: string | null,
 ) => {
@@ -219,7 +230,7 @@ const getReleaseSummaryAsync = async (currentVersion: string): Promise<ReleaseSu
         prev.semanticReleases.push(curr);
         return prev;
       },
-      { semanticReleases: [] as Update[], skippedTags: [] as string[] },
+      { semanticReleases: [] as Release[], skippedTags: [] as string[] },
     );
 
   if (skippedTags.length > 0) {
@@ -234,7 +245,8 @@ const getReleaseSummaryAsync = async (currentVersion: string): Promise<ReleaseSu
   const availableUpdates = semanticReleases
     .filter((release) => isCurrentPrerelease || !release.isPrerelease)
     .filter((release) => compareSemVer(release.tagName, currentVersion) > 0)
-    .toSorted((releaseA, releaseB) => compareSemVer(releaseB.tagName, releaseA.tagName));
+    .toSorted((releaseA, releaseB) => compareSemVer(releaseB.tagName, releaseA.tagName))
+    .map(toUpdate);
 
   const recentReleases = selectRecentReleases(semanticReleases, currentVersion);
 

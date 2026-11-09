@@ -9,50 +9,31 @@ import { createTRPCRouter, permissionRequiredProcedure } from "../trpc";
 
 const logger = createLogger({ module: "updateCheckerRouter" });
 
-interface WhatsNewRelease {
-  tagName: string;
-  name: string | null;
-  publishedAt: Date;
-  url: string;
-  body: string;
-}
-
-interface WhatsNewResult {
-  currentVersion: string;
-  releases: WhatsNewRelease[];
-}
-
-const readRecentReleasesAsync = async () => {
+const readUpdateCheckAsync = async () => {
   try {
     const handler = updateCheckerRequestHandler.handler({});
     const data = await handler.getDataAsync();
-    return data.data.recentReleases;
+    return data.data;
   } catch (error) {
     logger.error(new Error("Failed to read the cached update check", { cause: error }));
-    return [];
+    return { availableUpdates: [], recentReleases: [] };
   }
 };
 
 export const updateCheckerRouter = createTRPCRouter({
   getAvailableUpdates: permissionRequiredProcedure.requiresPermission("admin").query(async () => {
-    try {
-      const handler = updateCheckerRequestHandler.handler({});
-      const data = await handler.getDataAsync();
-      return data.data.availableUpdates;
-    } catch (error) {
-      logger.error(new Error("Failed to read the cached update check", { cause: error }));
-      return []; // An empty list hides the indicator without violating TanStack Query's data contract.
-    }
+    const { availableUpdates } = await readUpdateCheckAsync();
+    return availableUpdates;
   }),
   getWhatsNew: permissionRequiredProcedure
     .requiresPermission("admin")
     .input(z.object({ scope: z.enum(["unseen", "recent"]) }))
-    .query(async ({ ctx, input }): Promise<WhatsNewResult> => {
+    .query(async ({ ctx, input }) => {
       const currentVersion = packageJson.version;
       const settings = await getServerSettingByKeyAsync(ctx.db, "whatsNew");
       if (input.scope === "unseen" && !settings.enabled) return { currentVersion, releases: [] };
 
-      const recentReleases = await readRecentReleasesAsync();
+      const { recentReleases } = await readUpdateCheckAsync();
       let releases = recentReleases;
       if (input.scope === "unseen") {
         releases = selectUnseenReleases(recentReleases, currentVersion, settings.lastSeenVersion);
@@ -60,12 +41,12 @@ export const updateCheckerRouter = createTRPCRouter({
 
       return {
         currentVersion,
-        releases: releases.map((release) => ({
-          tagName: release.tagName,
-          name: release.name,
-          publishedAt: release.publishedAt,
-          url: release.url,
-          body: release.body,
+        releases: releases.map(({ tagName, name, publishedAt, url, body }) => ({
+          tagName,
+          name,
+          publishedAt,
+          url,
+          body,
         })),
       };
     }),
