@@ -60,7 +60,7 @@ App tiles can now start and stop the Docker container they are linked to, and th
 
 An app tile linked to a Docker container shows a play or stop button next to the status dot. The dot turns orange while the container changes state and red right after you stop it, and Homarr keeps pinging until the app answers again. Only admins see the button, and it is inactive in edit mode.
 
-<img src="https://github.com/junkerderprovinz/homarr/raw/de37a249cd586ae4e5f9927b2dc72d2820835551/app-docker-toggle/tile-after.png" alt="Tile with a stop button next to the status dot" width="600">
+<img src="https://github.com/junkerderprovinz/homarr/raw/de37a249cd586ae4e5f9927b2dc72d2820835551/app-docker-toggle/tile-after.png" alt="Tile with a stop button next to the status dot" width="220">
 
 > [!TIP]
 > The new "Docker container" field sits right below "Choose app" in the tile settings. Picking an app links the container with the same name, or the subdomain of the app URL, when there is one.

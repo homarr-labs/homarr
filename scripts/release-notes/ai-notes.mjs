@@ -107,7 +107,8 @@ const placeArt = (body, image) => {
 const firstHighlightImage = (body) => {
   const afterHeading = body.split(/^## Highlights[^\n]*\n/m)[1] ?? "";
   const highlights = afterHeading.split(/^## /m)[0] ?? "";
-  return /(?:!\[[^\]]*\]\(|<img\s[^>]*?src=")(https:\/\/[^)"\s]+)/.exec(highlights)?.[1];
+  const match = /!\[[^\]]*\]\((https:\/\/[^)\s]+)\)|<img\s[^>]*?src="(https:\/\/[^"\s]+)"/.exec(highlights);
+  return match?.[1] ?? match?.[2];
 };
 
 export async function generateAiNotes({
