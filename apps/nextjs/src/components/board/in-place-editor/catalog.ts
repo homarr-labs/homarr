@@ -54,6 +54,15 @@ const defaultSize = { width: 1, height: 1 };
 const getFit = (area: Pick<AreaRect, "w" | "h">, size: { width: number; height: number }) =>
   Math.abs(area.w - size.width) + Math.abs(area.h - size.height);
 
+const getCustomWidgetConnectionStatus = (
+  requiredKinds: readonly IntegrationKind[],
+  availableKinds: ReadonlySet<IntegrationKind> | undefined,
+): WidgetConnectionStatus => {
+  if (requiredKinds.length === 0) return "noConnectionRequired";
+  if (requiredKinds.every((kind) => availableKinds?.has(kind))) return "ready";
+  return "needsSetup";
+};
+
 export const useAddInPlaceCatalog = (search: string, area: Pick<AreaRect, "w" | "h">): AddInPlaceCatalog => {
   const t = useI18n();
   const { data: session } = useSession();
@@ -124,11 +133,7 @@ export const useAddInPlaceCatalog = (search: string, area: Pick<AreaRect, "w" | 
             description: definition.description ?? "",
             defaultSize: widgetDefaultSizes.customApi ?? defaultSize,
             supportedIntegrations: definition.integrationKinds,
-            connectionStatus: getWidgetConnectionStatus({
-              supportedIntegrations: definition.integrationKinds,
-              availableKinds: workshopAvailableKinds ?? new Set<IntegrationKind>(),
-              connectionOptional: false,
-            }),
+            connectionStatus: getCustomWidgetConnectionStatus(definition.integrationKinds, workshopAvailableKinds),
             target: {
               type: "custom" as const,
               id: definition.id,
