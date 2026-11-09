@@ -33,7 +33,11 @@ export const ChartLayout = ({
       scrollbars="xy"
       offsetScrollbars={horizontal ? "x" : "y"}
       scrollbarSize={6}
-      styles={{ content: { minHeight: "100%", minWidth: minimumContentWidth, display: "grid" } }}
+      styles={{
+        // Nested charts must scroll within their allocated group, not size its parent tracks.
+        root: { contain: "size" },
+        content: { minHeight: "100%", minWidth: minimumContentWidth, display: "grid" },
+      }}
     >
       <SimpleGrid
         miw={0}
