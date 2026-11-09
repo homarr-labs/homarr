@@ -1,0 +1,31 @@
+apps/nextjs/src/components/layout/header/whats-new-modal.tsx
+  s_6b84297f6331ac::t_5e5ca6f19e39a0 6,11,105,111-120
+apps/nextjs/src/components/layout/navigation-link.tsx
+  s_6b84297f6331ac::t_1524bafdc3e55e 13,67,76
+apps/nextjs/src/components/layout/whats-new-auto-open.tsx
+  s_6b84297f6331ac::t_aea611b8894b28 10,18,35-36
+apps/nextjs/src/components/onboarding/board-tour.tsx
+  s_6b84297f6331ac::t_86d6486e644350 22-25
+packages/ui/src/markdown/github-alerts.tsx
+  s_6b84297f6331ac::t_bef57680e3e04c 80
+packages/ui/src/markdown/github-mentions.tsx
+  s_6b84297f6331ac::t_3f1378dc46ecff 1,41-52
+scripts/release-art/detect.ts
+  s_6b84297f6331ac::t_cd86f0eb1765ee 4-6,21-25,27-53,55,57-67,69-70,130-133,196,202,208
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "63c766978b04c15ba2bcf03a2af8b3c2b93fca75",
+  "prompts": {},
+  "sessions": {
+    "s_6b84297f6331ac": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "590f9297-ade8-451c-8f7f-6672298271ba",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
