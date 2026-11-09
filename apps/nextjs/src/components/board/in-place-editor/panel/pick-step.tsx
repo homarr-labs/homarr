@@ -43,8 +43,8 @@ const groupEntries = (entries: CatalogEntry[]): OptionGroup[] => {
   if (widgets.length > 0) {
     groups.push({ key: "widgets", label: bestFit.length > 0 ? "More widgets" : "Widgets", entries: widgets });
   }
-  if (workshop.length > 0) groups.push({ key: "workshop", label: "Workshop", entries: workshop });
   if (needsSetup.length > 0) groups.push({ key: "needs-setup", label: "Needs setup", entries: needsSetup });
+  if (workshop.length > 0) groups.push({ key: "workshop", label: "Workshop", entries: workshop });
   if (apps.length > 0) groups.push({ key: "apps", label: "Your apps", entries: apps });
   let index = 0;
   return groups.map((group) => ({

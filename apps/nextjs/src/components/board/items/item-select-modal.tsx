@@ -570,6 +570,22 @@ const ItemSelectModalContent = ({
       <SimpleGrid cols={selectGridCols} spacing="sm">
         {filteredItems.filter(({ connectionStatus }) => connectionStatus !== "needsSetup").map(renderItem)}
 
+        {filteredItems.some(({ connectionStatus }) => connectionStatus === "needsSetup") && (
+          <>
+            <Divider
+              label={
+                <Text size="xs" fw={600}>
+                  {t("item.create.connectionStatus.needsSetup")}
+                </Text>
+              }
+              labelPosition="center"
+              my="sm"
+              style={{ gridColumn: "1 / -1" }}
+            />
+            {filteredItems.filter(({ connectionStatus }) => connectionStatus === "needsSetup").map(renderItem)}
+          </>
+        )}
+
         {isAdmin && filteredCustomWidgets.length > 0 && (
           <>
             <Divider
@@ -630,7 +646,6 @@ const ItemSelectModalContent = ({
             onSelect={setWorkshopSelection}
           />
         )}
-        {filteredItems.filter(({ connectionStatus }) => connectionStatus === "needsSetup").map(renderItem)}
       </SimpleGrid>
 
       {!isAdmin && filteredItems.length === 0 && (
