@@ -24,7 +24,7 @@ const usage = `Usage: node scripts/release-notes/regenerate.mjs --tag <vX.Y.Z> [
                     so a backfill with --out <dir>/<tag>.md lets each release see the rewritten one before it
 
 Needs an authenticated gh. OPENROUTER_API_KEY enables the AI notes and RELEASE_NOTES_MODEL picks the model.
-Without a key, a dry run prints the GitHub generated notes and a real run refuses to edit the release.
+Without a key, a dry run prints the GitHub generated notes; a real run or a --context-dir batch stops instead.
 Rendered art lands in docs/img/releases/<version>/ and has to be committed before the art ref can serve it.`;
 
 const logger = {
@@ -93,8 +93,10 @@ const main = async () => {
     logger.warn("OPENROUTER_API_KEY is not set");
   }
 
-  if (!aiNotes && !values["dry-run"]) {
-    throw new Error("No AI notes were produced, leaving the release untouched. Use --dry-run to inspect the fallback.");
+  if (!aiNotes && (!values["dry-run"] || values["context-dir"])) {
+    throw new Error(
+      "No AI notes were produced, so nothing was written. Use --dry-run without --context-dir to inspect the fallback.",
+    );
   }
 
   let body = aiNotes?.body;

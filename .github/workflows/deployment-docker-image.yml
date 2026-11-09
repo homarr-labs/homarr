@@ -345,7 +345,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ steps.obtainToken.outputs.token }}
         run: |
-          echo "was_draft=$(gh release view --repo "$GITHUB_REPOSITORY" "$NEXT_VERSION" --json isDraft --jq .isDraft)" >> "$GITHUB_OUTPUT"
+          was_draft="$(gh release view --repo "$GITHUB_REPOSITORY" "$NEXT_VERSION" --json isDraft --jq .isDraft)"
+          echo "was_draft=$was_draft" >> "$GITHUB_OUTPUT"
           gh release edit --repo "$GITHUB_REPOSITORY" "$NEXT_VERSION" --draft=false
 
       - name: Announce release on Discord
