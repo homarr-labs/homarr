@@ -1515,6 +1515,27 @@
           "title": "Ukjent feil",
           "description": "En ukjent feil oppstod, åpne årsaken nedenfor for å se flere detaljer"
         },
+        "frigate": {
+          "title": "",
+          "status": "",
+          "description": {
+            "cookie": "",
+            "profileMismatch": "",
+            "redirect": "",
+            "login": "",
+            "profile": "",
+            "stats": ""
+          }
+        },
+        "openmediavault": {
+          "title": "",
+          "description": {
+            "totpSecretRequired": "",
+            "totpSecretInvalid": "",
+            "totpVerificationFailed": "",
+            "unsupportedChallenge": ""
+          }
+        },
         "parse": {
           "title": "Parse-feil",
           "description": "Responsen kunne ikke tolkes. Vennligst kontroller at URL-en peker til tjenestens basis-URL."
@@ -1714,6 +1735,11 @@
         "title": "Tilbakestill hemmelighet",
         "message": "Er du sikker på at du vil tilbakestille denne hemmeligheten?"
       },
+      "totpNotice": "",
+      "remove": {
+        "title": "",
+        "message": ""
+      },
       "noSecretsRequired": {
         "segmentTitle": "Ingen hemmeligheter",
         "text": "Ingen hemmeligheter kreves for denne integrasjonen"
@@ -1794,6 +1820,10 @@
         "wazuhIndexerPassword": {
           "label": "Indekserer passord",
           "newLabel": "Nytt indekserer-passord"
+        },
+        "totpSecret": {
+          "label": "",
+          "newLabel": ""
         }
       }
     },
@@ -2335,7 +2365,29 @@
             "tooltip": "Som verktøytips",
             "hidden": "Skjult"
           }
+        },
+        "dockerContainer": {
+          "label": "",
+          "description": "",
+          "placeholder": "",
+          "disabled": "",
+          "unavailable": ""
         }
+      },
+      "docker": {
+        "action": {
+          "start": "",
+          "stop": ""
+        },
+        "notification": {
+          "startFailed": "",
+          "stopFailed": ""
+        },
+        "switch": {
+          "start": "",
+          "stop": ""
+        },
+        "stopped": ""
       },
       "error": {
         "notFound": {
@@ -2414,6 +2466,10 @@
         "hideHostname": {
           "label": "Skjul vertsnavn"
         },
+        "showFullUrls": {
+          "label": "",
+          "description": ""
+        },
         "withBorder": {
           "label": "Vis kantlinje"
         },
@@ -2436,6 +2492,9 @@
         }
       },
       "empty": "Legg til en URL eller app i widget-innstillingene",
+      "copyUrl": "Kopier URL",
+      "copied": "Kopiert",
+      "copyFailed": "",
       "groups": {
         "label": "Kategorier",
         "placeholder": "Ny kategori",
@@ -3535,6 +3594,34 @@
     },
     "coolify": {
       "description": "Oversikt over din Coolify-instans med servere og apper",
+      "summary": {
+        "needsAttention": "{count} bør håndteres",
+        "inProgress": "",
+        "unknown": "",
+        "healthy": "",
+        "empty": "",
+        "healthyDetail": "",
+        "more": "",
+        "moreInstances": ""
+      },
+      "details": {
+        "tabs": "",
+        "overview": "",
+        "search": "",
+        "serviceApplications": ""
+      },
+      "overview": {
+        "projects": "",
+        "resources": "",
+        "attention": "Trenger oppmerksomhet",
+        "ready": "Klar",
+        "noProjects": "",
+        "projectsUnavailable": "",
+        "moreProjects": "",
+        "running": "Kjører",
+        "resourceCount": "",
+        "environmentCount": ""
+      },
       "option": {
         "showServers": {
           "label": "Vis servere"
@@ -3566,7 +3653,13 @@
       },
       "source": {
         "url": "Kilde: {url}",
-        "unavailable": ""
+        "unavailable": "",
+        "unavailableCount": ""
+      },
+      "kind": {
+        "server": "",
+        "application": "Applikasjon",
+        "service": "Tjeneste"
       },
       "instances": {
         "title": "Instanser"
@@ -3583,6 +3676,7 @@
         "exited": "Avsluttet",
         "starting": "Starter",
         "restarting": "Starter på nytt",
+        "unhealthy": "Usunn",
         "unknown": "Ukjent",
         "online": "Online",
         "offline": "Offline",
@@ -4815,6 +4909,7 @@
           },
           "identifier": {
             "label": "Identifikator",
+            "containerPlaceholder": "",
             "placeholder": "Navn eller Eier/Navn"
           },
           "name": {},

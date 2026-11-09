@@ -1515,6 +1515,27 @@
           "title": "Tundmatu viga",
           "description": "Tekkis tundmatu viga. Lisateabe vaatamiseks ava allolev põhjus"
         },
+        "frigate": {
+          "title": "",
+          "status": "",
+          "description": {
+            "cookie": "",
+            "profileMismatch": "",
+            "redirect": "",
+            "login": "",
+            "profile": "",
+            "stats": ""
+          }
+        },
+        "openmediavault": {
+          "title": "",
+          "description": {
+            "totpSecretRequired": "",
+            "totpSecretInvalid": "",
+            "totpVerificationFailed": "",
+            "unsupportedChallenge": ""
+          }
+        },
         "parse": {
           "title": "Sõelumisviga",
           "description": "Vastust ei saanud sõeluda. Kontrolli, et URL viitaks teenuse baas-URL-ile."
@@ -1714,6 +1735,11 @@
         "title": "Lähtesta saladus",
         "message": "Kas oled kindel, et soovid selle saladuse lähtestada?"
       },
+      "totpNotice": "",
+      "remove": {
+        "title": "",
+        "message": ""
+      },
       "noSecretsRequired": {
         "segmentTitle": "Saladusi pole",
         "text": "Selle integratsiooni jaoks pole saladusi vaja"
@@ -1794,6 +1820,10 @@
         "wazuhIndexerPassword": {
           "label": "Indekseerija parool",
           "newLabel": "Uus indekseerija parool"
+        },
+        "totpSecret": {
+          "label": "",
+          "newLabel": ""
         }
       }
     },
@@ -2335,7 +2365,29 @@
             "tooltip": "Kohtspikrina",
             "hidden": "Peidetud"
           }
+        },
+        "dockerContainer": {
+          "label": "",
+          "description": "",
+          "placeholder": "",
+          "disabled": "",
+          "unavailable": ""
         }
+      },
+      "docker": {
+        "action": {
+          "start": "",
+          "stop": ""
+        },
+        "notification": {
+          "startFailed": "",
+          "stopFailed": ""
+        },
+        "switch": {
+          "start": "",
+          "stop": ""
+        },
+        "stopped": ""
       },
       "error": {
         "notFound": {
@@ -2414,6 +2466,10 @@
         "hideHostname": {
           "label": "Peida hostinimed"
         },
+        "showFullUrls": {
+          "label": "",
+          "description": ""
+        },
         "withBorder": {
           "label": "Kuva ääris"
         },
@@ -2436,6 +2492,9 @@
         }
       },
       "empty": "Lisa vidina seadetes URL või rakendus",
+      "copyUrl": "",
+      "copied": "",
+      "copyFailed": "",
       "groups": {
         "label": "",
         "placeholder": "",
@@ -3535,6 +3594,34 @@
     },
     "coolify": {
       "description": "Ülevaade sinu Coolify eksemplari serveritest ja rakendustest",
+      "summary": {
+        "needsAttention": "",
+        "inProgress": "",
+        "unknown": "",
+        "healthy": "",
+        "empty": "",
+        "healthyDetail": "",
+        "more": "",
+        "moreInstances": ""
+      },
+      "details": {
+        "tabs": "",
+        "overview": "",
+        "search": "",
+        "serviceApplications": ""
+      },
+      "overview": {
+        "projects": "",
+        "resources": "",
+        "attention": "",
+        "ready": "",
+        "noProjects": "",
+        "projectsUnavailable": "",
+        "moreProjects": "",
+        "running": "",
+        "resourceCount": "",
+        "environmentCount": ""
+      },
       "option": {
         "showServers": {
           "label": "Näita servereid"
@@ -3566,7 +3653,13 @@
       },
       "source": {
         "url": "Allikas: {url}",
-        "unavailable": "{source}: pole saadaval"
+        "unavailable": "{source}: pole saadaval",
+        "unavailableCount": ""
+      },
+      "kind": {
+        "server": "",
+        "application": "",
+        "service": ""
       },
       "instances": {
         "title": "Eksemplarid"
@@ -3583,6 +3676,7 @@
         "exited": "Väljunud",
         "starting": "Käivitub",
         "restarting": "Taaskäivitub",
+        "unhealthy": "",
         "unknown": "Teadmata",
         "online": "Võrgus",
         "offline": "Võrgust väljas",
@@ -4815,6 +4909,7 @@
           },
           "identifier": {
             "label": "Identifikaator",
+            "containerPlaceholder": "",
             "placeholder": "Nimi või omanik/nimi"
           },
           "name": {},

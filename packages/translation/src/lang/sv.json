@@ -1515,6 +1515,27 @@
           "title": "Okänt fel",
           "description": "Ett okänt fel inträffade, öppna orsaken nedan för att se mer detaljer"
         },
+        "frigate": {
+          "title": "",
+          "status": "",
+          "description": {
+            "cookie": "",
+            "profileMismatch": "",
+            "redirect": "",
+            "login": "",
+            "profile": "",
+            "stats": ""
+          }
+        },
+        "openmediavault": {
+          "title": "",
+          "description": {
+            "totpSecretRequired": "",
+            "totpSecretInvalid": "",
+            "totpVerificationFailed": "",
+            "unsupportedChallenge": ""
+          }
+        },
         "parse": {
           "title": "Parsningsfel",
           "description": "Svaret kunde inte analyseras. Verifiera att URL pekar på bas-URL för tjänsten."
@@ -1714,6 +1735,11 @@
         "title": "Återställ hemlighet",
         "message": "Är du säker på att du vill återställa denna hemlighet?"
       },
+      "totpNotice": "",
+      "remove": {
+        "title": "",
+        "message": ""
+      },
       "noSecretsRequired": {
         "segmentTitle": "Inga hemligheter",
         "text": "Ingen hemlighet krävs för den här integrationen"
@@ -1794,6 +1820,10 @@
         "wazuhIndexerPassword": {
           "label": "Indexerare lösenord",
           "newLabel": "Nytt lösenord för indexerare"
+        },
+        "totpSecret": {
+          "label": "",
+          "newLabel": ""
         }
       }
     },
@@ -2335,7 +2365,29 @@
             "tooltip": "Som verktygstips",
             "hidden": "Dold"
           }
+        },
+        "dockerContainer": {
+          "label": "",
+          "description": "",
+          "placeholder": "",
+          "disabled": "",
+          "unavailable": ""
         }
+      },
+      "docker": {
+        "action": {
+          "start": "",
+          "stop": ""
+        },
+        "notification": {
+          "startFailed": "",
+          "stopFailed": ""
+        },
+        "switch": {
+          "start": "",
+          "stop": ""
+        },
+        "stopped": ""
       },
       "error": {
         "notFound": {
@@ -2414,6 +2466,10 @@
         "hideHostname": {
           "label": "Dölj värdnamn"
         },
+        "showFullUrls": {
+          "label": "",
+          "description": ""
+        },
         "withBorder": {
           "label": "Visa kantlinje"
         },
@@ -2436,6 +2492,9 @@
         }
       },
       "empty": "Lägg till en URL eller app i widgetinställningarna",
+      "copyUrl": "",
+      "copied": "Kopierad",
+      "copyFailed": "",
       "groups": {
         "label": "Kategorier",
         "placeholder": "Ny kategori",
@@ -3535,6 +3594,34 @@
     },
     "coolify": {
       "description": "Översikt över din Coolify-instans med servrar och applikationer",
+      "summary": {
+        "needsAttention": "{count} behöver uppmärksamhet",
+        "inProgress": "",
+        "unknown": "",
+        "healthy": "",
+        "empty": "",
+        "healthyDetail": "",
+        "more": "",
+        "moreInstances": ""
+      },
+      "details": {
+        "tabs": "",
+        "overview": "",
+        "search": "",
+        "serviceApplications": ""
+      },
+      "overview": {
+        "projects": "",
+        "resources": "",
+        "attention": "Behöver uppmärksamhet",
+        "ready": "Redo",
+        "noProjects": "",
+        "projectsUnavailable": "",
+        "moreProjects": "",
+        "running": "Körs",
+        "resourceCount": "",
+        "environmentCount": ""
+      },
       "option": {
         "showServers": {
           "label": "Visa servrar"
@@ -3566,7 +3653,13 @@
       },
       "source": {
         "url": "Källa: {url}",
-        "unavailable": ""
+        "unavailable": "",
+        "unavailableCount": ""
+      },
+      "kind": {
+        "server": "",
+        "application": "Applikation",
+        "service": "Tjänst"
       },
       "instances": {
         "title": "Instanser"
@@ -3583,6 +3676,7 @@
         "exited": "Avslutad",
         "starting": "Startar",
         "restarting": "Startar om",
+        "unhealthy": "Ej hälsosam",
         "unknown": "Okänt",
         "online": "",
         "offline": "",
@@ -4815,6 +4909,7 @@
           },
           "identifier": {
             "label": "Identifierare",
+            "containerPlaceholder": "",
             "placeholder": "Namn eller Ägare/Namn"
           },
           "name": {},

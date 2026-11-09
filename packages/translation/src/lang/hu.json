@@ -1515,6 +1515,27 @@
           "title": "Ismeretlen hiba",
           "description": "Ismeretlen hiba történt. További információért nyisd meg alább a részleteket."
         },
+        "frigate": {
+          "title": "",
+          "status": "",
+          "description": {
+            "cookie": "",
+            "profileMismatch": "",
+            "redirect": "",
+            "login": "",
+            "profile": "",
+            "stats": ""
+          }
+        },
+        "openmediavault": {
+          "title": "",
+          "description": {
+            "totpSecretRequired": "",
+            "totpSecretInvalid": "",
+            "totpVerificationFailed": "",
+            "unsupportedChallenge": ""
+          }
+        },
         "parse": {
           "title": "Elemzési hiba",
           "description": "A válasz nem értelmezhető. Ellenőrizd, hogy az URL a szolgáltatás alap-URL-jére mutat-e."
@@ -1714,6 +1735,11 @@
         "title": "Titok visszaállítása",
         "message": "Biztosan alaphelyzetbe szeretnéd állítani ezt a titkos értéket?"
       },
+      "totpNotice": "",
+      "remove": {
+        "title": "",
+        "message": ""
+      },
       "noSecretsRequired": {
         "segmentTitle": "Nincsenek titkok",
         "text": "Ehhez az integrációhoz nincs szükség titkokra"
@@ -1794,6 +1820,10 @@
         "wazuhIndexerPassword": {
           "label": "Indexer-jelszó",
           "newLabel": "Új indexer-jelszó"
+        },
+        "totpSecret": {
+          "label": "",
+          "newLabel": ""
         }
       }
     },
@@ -2335,7 +2365,29 @@
             "tooltip": "Eszköztippként",
             "hidden": "Rejtett"
           }
+        },
+        "dockerContainer": {
+          "label": "",
+          "description": "",
+          "placeholder": "",
+          "disabled": "",
+          "unavailable": ""
         }
+      },
+      "docker": {
+        "action": {
+          "start": "",
+          "stop": ""
+        },
+        "notification": {
+          "startFailed": "",
+          "stopFailed": ""
+        },
+        "switch": {
+          "start": "",
+          "stop": ""
+        },
+        "stopped": ""
       },
       "error": {
         "notFound": {
@@ -2414,6 +2466,10 @@
         "hideHostname": {
           "label": "A gazdagépnevek elrejtése"
         },
+        "showFullUrls": {
+          "label": "",
+          "description": ""
+        },
         "withBorder": {
           "label": "Szegély mutatása"
         },
@@ -2436,6 +2492,9 @@
         }
       },
       "empty": "Adjon hozzá egy URL-t vagy alkalmazást a widget beállításaiban",
+      "copyUrl": "URL másolása",
+      "copied": "",
+      "copyFailed": "",
       "groups": {
         "label": "",
         "placeholder": "Új kategória",
@@ -3535,6 +3594,34 @@
     },
     "coolify": {
       "description": "A Coolify-példány áttekintése a szerverekkel és alkalmazásokkal",
+      "summary": {
+        "needsAttention": "",
+        "inProgress": "",
+        "unknown": "",
+        "healthy": "",
+        "empty": "",
+        "healthyDetail": "",
+        "more": "",
+        "moreInstances": ""
+      },
+      "details": {
+        "tabs": "",
+        "overview": "",
+        "search": "",
+        "serviceApplications": ""
+      },
+      "overview": {
+        "projects": "",
+        "resources": "",
+        "attention": "",
+        "ready": "",
+        "noProjects": "",
+        "projectsUnavailable": "",
+        "moreProjects": "",
+        "running": "Fut",
+        "resourceCount": "",
+        "environmentCount": ""
+      },
       "option": {
         "showServers": {
           "label": "Kiszolgálók megjelenítése"
@@ -3566,7 +3653,13 @@
       },
       "source": {
         "url": "Forrás: {url}",
-        "unavailable": "{source}: nem érhető el"
+        "unavailable": "{source}: nem érhető el",
+        "unavailableCount": ""
+      },
+      "kind": {
+        "server": "",
+        "application": "",
+        "service": ""
       },
       "instances": {
         "title": "Példányok"
@@ -3583,6 +3676,7 @@
         "exited": "Kilépett",
         "starting": "Indítás",
         "restarting": "Újraindítás",
+        "unhealthy": "Hibás",
         "unknown": "Ismeretlen",
         "online": "Elérhető",
         "offline": "Nem elérhető",
@@ -4815,6 +4909,7 @@
           },
           "identifier": {
             "label": "Azonosító",
+            "containerPlaceholder": "",
             "placeholder": "Név vagy tulajdonos/név"
           },
           "name": {},
