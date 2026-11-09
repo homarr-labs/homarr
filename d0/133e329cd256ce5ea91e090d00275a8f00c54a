@@ -1,0 +1,23 @@
+.agents/skills/release-notes/SKILL.md
+  s_6b84297f6331ac::t_5c2eead71c3e06 125
+.github/workflows/deployment-docker-image.yml
+  s_6b84297f6331ac::t_272b8097bffb96 343,348,352
+packages/db/queries/server-setting.ts
+  s_6b84297f6331ac::t_0321e086e62969 58,60-62
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "d0133e329cd256ce5ea91e090d00275a8f00c54a",
+  "prompts": {},
+  "sessions": {
+    "s_6b84297f6331ac": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "590f9297-ade8-451c-8f7f-6672298271ba",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
