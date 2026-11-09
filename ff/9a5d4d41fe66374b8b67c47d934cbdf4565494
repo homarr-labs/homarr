@@ -1,0 +1,18 @@
+apps/nextjs/src/components/board/in-place-editor/panel/pick-step.tsx
+  h_d6e478ca18e517 47
+apps/nextjs/src/components/board/items/item-select-modal.tsx
+  h_d6e478ca18e517 573-588
+packages/workshop/src/backend.ts
+  h_d6e478ca18e517 12,44,407-422,428-453
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "ff9a5d4d41fe66374b8b67c47d934cbdf4565494",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
