@@ -222,7 +222,7 @@ export default function BookmarksWidget({
         spacing={plan.itemGap}
         verticalSpacing={plan.itemGap}
         h={fillAvailableHeight ? "100%" : undefined}
-        autoRows={fillAvailableHeight ? "minmax(0, 1fr)" : undefined}
+        autoRows={fillAvailableHeight ? `minmax(${rem(plan.itemHeight)}, 1fr)` : undefined}
       >
         {cards}
       </SimpleGrid>
