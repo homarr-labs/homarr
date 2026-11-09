@@ -1,0 +1,106 @@
+docs/research/release-notes/01-release-pipeline.md
+  h_d6e478ca18e517 1-172
+docs/research/release-notes/02-app-building-blocks.md
+  h_d6e478ca18e517 1-115
+docs/research/release-notes/03-agent-runtime.md
+  h_d6e478ca18e517 1-93
+docs/research/release-notes/04-writing-and-ux.md
+  h_d6e478ca18e517 1-84
+docs/research/release-notes/05-self-host-images.md
+  h_d6e478ca18e517 1-87
+scripts/release-art-prototype/README.md
+  h_d6e478ca18e517 1-60
+scripts/release-art-prototype/bun.lock
+  h_d6e478ca18e517 1-19
+scripts/release-art-prototype/fonts/LICENSE-inter-tight
+  h_d6e478ca18e517 1-93
+scripts/release-art-prototype/icons/svg_autobrr.svg
+  h_d6e478ca18e517 1
+scripts/release-art-prototype/icons/svg_beszel.svg
+  h_d6e478ca18e517 1-9
+scripts/release-art-prototype/icons/svg_caddy.svg
+  h_d6e478ca18e517 1
+scripts/release-art-prototype/icons/svg_changedetection.svg
+  h_d6e478ca18e517 1
+scripts/release-art-prototype/icons/svg_fileflows.svg
+  h_d6e478ca18e517 1
+scripts/release-art-prototype/icons/svg_frigate.svg
+  h_d6e478ca18e517 1
+scripts/release-art-prototype/icons/svg_gatus.svg
+  h_d6e478ca18e517 1
+scripts/release-art-prototype/icons/svg_healthchecks.svg
+  h_d6e478ca18e517 1
+scripts/release-art-prototype/icons/svg_homebox.svg
+  h_d6e478ca18e517 1-11
+scripts/release-art-prototype/icons/svg_jellystat.svg
+  h_d6e478ca18e517 1-6
+scripts/release-art-prototype/icons/svg_karakeep.svg
+  h_d6e478ca18e517 1
+scripts/release-art-prototype/icons/svg_komga.svg
+  h_d6e478ca18e517 1
+scripts/release-art-prototype/icons/svg_maintainerr.svg
+  h_d6e478ca18e517 1-16
+scripts/release-art-prototype/icons/svg_mealie.svg
+  h_d6e478ca18e517 1
+scripts/release-art-prototype/icons/svg_miniflux.svg
+  h_d6e478ca18e517 1
+scripts/release-art-prototype/icons/svg_netalertx.svg
+  h_d6e478ca18e517 1
+scripts/release-art-prototype/icons/svg_netdata.svg
+  h_d6e478ca18e517 1
+scripts/release-art-prototype/icons/svg_prometheus.svg
+  h_d6e478ca18e517 1
+scripts/release-art-prototype/icons/svg_romm.svg
+  h_d6e478ca18e517 1
+scripts/release-art-prototype/icons/svg_scrutiny.svg
+  h_d6e478ca18e517 1
+scripts/release-art-prototype/icons/svg_spoolman.svg
+  h_d6e478ca18e517 1
+scripts/release-art-prototype/icons/svg_stash.svg
+  h_d6e478ca18e517 1
+scripts/release-art-prototype/icons/svg_syncthing.svg
+  h_d6e478ca18e517 1
+scripts/release-art-prototype/icons/svg_tandoor-recipes.svg
+  h_d6e478ca18e517 1
+scripts/release-art-prototype/icons/svg_trilium.svg
+  h_d6e478ca18e517 1
+scripts/release-art-prototype/icons/svg_wazuh.svg
+  h_d6e478ca18e517 1
+scripts/release-art-prototype/icons/svg_whats-up-docker.svg
+  h_d6e478ca18e517 1-212
+scripts/release-art-prototype/icons/svg_your-spotify.svg
+  h_d6e478ca18e517 1
+scripts/release-art-prototype/lib/data.ts
+  h_d6e478ca18e517 1-125
+scripts/release-art-prototype/lib/gallery.ts
+  h_d6e478ca18e517 1-112
+scripts/release-art-prototype/lib/kit.ts
+  h_d6e478ca18e517 1-349
+scripts/release-art-prototype/package.json
+  h_d6e478ca18e517 1-8
+scripts/release-art-prototype/render.ts
+  h_d6e478ca18e517 1-90
+scripts/release-art-prototype/shoot.ts
+  h_d6e478ca18e517 1-75
+scripts/release-art-prototype/variants/board.ts
+  h_d6e478ca18e517 1-301
+scripts/release-art-prototype/variants/cards.ts
+  h_d6e478ca18e517 1-202
+scripts/release-art-prototype/variants/hub.ts
+  h_d6e478ca18e517 1-290
+scripts/release-art-prototype/variants/orbit.ts
+  h_d6e478ca18e517 1-312
+scripts/release-art-prototype/variants/terminal.ts
+  h_d6e478ca18e517 1-222
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "9160a5ae160dfa0996da89ab0a6ae5e22bbdb7fe",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
