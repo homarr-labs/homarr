@@ -1,7 +1,7 @@
 import { execFile } from "node:child_process";
 import { mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { join, resolve } from "node:path";
 import { parseArgs, promisify } from "node:util";
 
 import { generateAiNotes } from "./ai-notes.mjs";
@@ -20,6 +20,8 @@ const usage = `Usage: node scripts/release-notes/regenerate.mjs --tag <vX.Y.Z> [
   --out <file>      Write the notes to this file (dry runs print to stdout otherwise)
   --no-art          Do not render the what's-new image, link the one already committed at the art ref
   --art-ref <ref>   Git ref the what's-new image is read from and linked at (default: the tag)
+  --context-dir <dir>  Read <dir>/<tag>.md as the body of a previous release instead of its published notes,
+                    so a backfill with --out <dir>/<tag>.md lets each release see the rewritten one before it
 
 Needs an authenticated gh. OPENROUTER_API_KEY enables the AI notes and RELEASE_NOTES_MODEL picks the model.
 Without a key, a dry run prints the GitHub generated notes and a real run refuses to edit the release.
@@ -52,6 +54,7 @@ const main = async () => {
       out: { type: "string" },
       "no-art": { type: "boolean", default: false },
       "art-ref": { type: "string" },
+      "context-dir": { type: "string" },
     },
   });
 
@@ -80,6 +83,7 @@ const main = async () => {
         previousTag,
         artRef: values["art-ref"] ?? tag,
         renderArtFiles: !values["no-art"],
+        contextDirectory: values["context-dir"] && resolve(values["context-dir"]),
         signal: AbortSignal.timeout(aiTimeoutMilliseconds),
       });
     } catch (error) {

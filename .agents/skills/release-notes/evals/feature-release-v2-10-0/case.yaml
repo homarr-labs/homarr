@@ -2,5 +2,7 @@ schema_version: "1.1"
 name: feature-release-v2-10-0
 expected_outcome: |
   notes.md holds user-facing release notes for Homarr v2.10.0 built only from the merged PRs between v2.9.1 and v2.10.0:
-  a "# Homarr v2.10.0: <theme>" title, 2 to 4 highlights, New / Improved / Fixed bullets ending with
-  "by @login in [#N](url)", no bot, chore, ci, docs or test noise, and the Full Changelog compare link as the last line.
+  a "# Homarr v2.10.0: ..." title naming the main change in plain words (not a slogan), a one or two sentence summary,
+  2 to 4 highlights, New / Improved / Fixed bullets that start with a bold lead and end with
+  "by @login in [#N](url)", no bot, chore, ci, docs or test noise, no emojis,
+  and the Full Changelog compare link as the last line.

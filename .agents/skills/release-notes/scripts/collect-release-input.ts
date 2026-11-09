@@ -12,6 +12,20 @@ const graphqlChunkSize = 25;
 const maxBodyLength = 3000;
 const bodyBudget = 150_000;
 const maxImagesPerPullRequest = 6;
+const recentReleaseCount = 3;
+const maxRecentReleaseLength = 6000;
+
+interface Version {
+  major: number;
+  minor: number;
+  patch: number;
+}
+
+interface RecentRelease {
+  tag: string;
+  name: string;
+  body: string;
+}
 
 interface ImageReference {
   url: string;
@@ -80,10 +94,69 @@ const readExcludedAuthors = async () => {
   }
 };
 
-const parseVersion = (value: string) => {
+const parseVersion = (value: string): Version | null => {
   const match = /^v?(\d+)\.(\d+)\.(\d+)/.exec(value);
   if (!match) return null;
   return { major: Number(match[1]), minor: Number(match[2]), patch: Number(match[3]) };
+};
+
+const compareVersions = (a: Version, b: Version) => a.major - b.major || a.minor - b.minor || a.patch - b.patch;
+
+const truncate = (text: string, limit: number) => {
+  if (text.length <= limit) return text;
+  return `${text.slice(0, limit)}…`;
+};
+
+const readRecentRelease = async (
+  repository: string,
+  tag: string,
+  contextDirectory: string | undefined,
+): Promise<RecentRelease> => {
+  if (contextDirectory) {
+    const file = Bun.file(resolve(contextDirectory, `${tag}.md`));
+    if (await file.exists()) {
+      return { tag, name: tag, body: truncate((await file.text()).replace(/\r/g, "").trim(), maxRecentReleaseLength) };
+    }
+  }
+  const stdout = await gh(["api", `repos/${repository}/releases/tags/${tag}`, "--jq", "{name, body}"]);
+  const release = JSON.parse(stdout) as { name: string | null; body: string | null };
+  return {
+    tag,
+    name: release.name || tag,
+    body: truncate((release.body ?? "").replace(/\r/g, "").trim(), maxRecentReleaseLength),
+  };
+};
+
+const fetchRecentReleases = async (
+  repository: string,
+  version: string,
+  contextDirectory: string | undefined,
+): Promise<RecentRelease[]> => {
+  const current = parseVersion(version);
+  if (!current) return [];
+  try {
+    const stdout = await gh([
+      "api",
+      "--paginate",
+      `repos/${repository}/releases?per_page=100`,
+      "--jq",
+      ".[] | select(.draft == false and .prerelease == false) | .tag_name",
+    ]);
+    const older = stdout
+      .split("\n")
+      .flatMap((line) => {
+        const tag = line.trim();
+        const parsed = parseVersion(tag);
+        if (!parsed || compareVersions(parsed, current) >= 0) return [];
+        return [{ tag, parsed }];
+      })
+      .toSorted((a, b) => compareVersions(b.parsed, a.parsed))
+      .slice(0, recentReleaseCount);
+    return await Promise.all(older.map(({ tag }) => readRecentRelease(repository, tag, contextDirectory)));
+  } catch (error) {
+    console.error("Could not fetch recent releases, continuing without them", error);
+    return [];
+  }
 };
 
 const detectReleaseType = (previousTag: string, version: string): ReleaseType => {
@@ -181,8 +254,7 @@ const cleanBody = (body: string, limit: number) => {
     .replace(/\r/g, "")
     .replace(/\n{3,}/g, "\n\n")
     .trim();
-  if (cleaned.length <= limit) return cleaned;
-  return `${cleaned.slice(0, limit)}…`;
+  return truncate(cleaned, limit);
 };
 
 const detectReleaseItems = async (from: string, to: string): Promise<ReleaseItem[]> => {
@@ -207,12 +279,13 @@ const main = async () => {
       to: { type: "string" },
       version: { type: "string" },
       repo: { type: "string" },
+      "context-dir": { type: "string" },
     },
   });
 
   if (!values.from || !values.to) {
     throw new Error(
-      "Usage: collect-release-input.ts --from <tag> --to <ref> [--version <x.y.z>] [--repo <owner/name>]",
+      "Usage: collect-release-input.ts --from <tag> --to <ref> [--version <x.y.z>] [--repo <owner/name>] [--context-dir <dir>]",
     );
   }
 
@@ -236,13 +309,14 @@ const main = async () => {
     for (const number of await pullRequestNumbersFromCommits(repository, values.from, values.to)) numbers.add(number);
   }
 
-  const [excludedAuthors, pullRequests, newItems] = await Promise.all([
+  const [excludedAuthors, pullRequests, newItems, recentReleases] = await Promise.all([
     readExcludedAuthors(),
     fetchPullRequests(
       repository,
       [...numbers].toSorted((a, b) => a - b),
     ),
     detectReleaseItems(values.from, values.to),
+    fetchRecentReleases(repository, version, values["context-dir"]),
   ]);
 
   const included = pullRequests
@@ -275,6 +349,7 @@ const main = async () => {
         closes: pullRequest.closingIssuesReferences.nodes,
       }),
     ),
+    recentReleases,
   };
 
   process.stdout.write(`${JSON.stringify(input, null, 2)}\n`);

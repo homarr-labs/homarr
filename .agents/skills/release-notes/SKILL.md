@@ -16,7 +16,13 @@ This skill runs in two places:
 
 The reader runs Homarr at home or in a small team. They care about what they can now do, what stopped being broken, and whether they must do something on upgrade. They do not care about which package was refactored.
 
-Write like the v2.0.0 notes: direct, casual, a little humor when it is earned. Be tighter than v2.0.0 because this is a weekly release, not a rewrite. Plain verbs, short sentences, no marketing words ("seamless", "powerful", "revolutionary"). English only, even if PRs are in another language.
+Write neutral, informative notes:
+
+- Plain factual sentences that say what changed for the user and, where it helps, why they would want it.
+- No jokes, wordplay, slogans or taglines, and no exclamation marks. A title or heading names the change, it never advertises it. "Release widget controls and Homebox API keys" is a title. "Release lists your way", "A steadier dashboard" and "Drop links, add apps" are slogans.
+- No marketing or mood words ("seamless", "powerful", "revolutionary", "steadier", "smoother", "supercharged").
+- No emojis or emoji-like symbols anywhere: not in the title, headings, bullets, alerts or the Discord text.
+- English only, even if PRs are in another language.
 
 ## Never invent
 
@@ -26,22 +32,46 @@ Every claim must come from the input: PR titles, bodies, linked issues, labels. 
 
 The body is markdown. Use this order and drop any section that has nothing to say:
 
-1. `# Homarr vX.Y.Z: <theme>`. The theme is two to five words naming the biggest user-facing thing ("Docker control from your tiles"), not "Weekly release".
-2. `> [!IMPORTANT]` alert, only when something is breaking or the user must act on upgrade (renamed env var, removed feature, migration). One or two sentences. Skip it otherwise; an alert that is always there gets ignored.
-3. `## Highlights`: two to four items that matter most. Each gets a short `###` heading, two or three sentences on what it does and why you would want it, and the PR's "after" screenshot when one exists. Use `> [!TIP]` once if there is a setting or trick users would otherwise miss. Highlights are for features and notable improvements, not for bug fixes. The first image in Highlights is also the Discord announcement image when no generated art exists, so lead with the most telling screenshot.
-4. `## New integrations and widgets`: only when the input has `newItems`. Put the line `{{RELEASE_ART}}` alone on its own line, followed by a blank line and a markdown table with the columns icon, name, what it does. Use each item's `iconUrl` as `<img src="..." width="24" height="24">` (or an empty cell when `iconUrl` is null) and one plain sentence for what it does. The placeholder is replaced by a generated image after you answer, so write it exactly like that, once, and nowhere else.
-5. `## New`, `## Improved`, `## Fixed`: bullet lists. One line per PR, past tense or plain description, ending with `by @author in [#123](<pr url>)`. Keep the same shape for every bullet so the list scans. Write `@author` plain and the PR as an explicit markdown link using that PR's `url`, because the in-app renderer does not turn a bare `#123` into a link.
-6. `<details><summary>All changes</summary>` holding the long tail: smaller or internal-sounding PRs that are still user-relevant. Same bullet shape. Omit the block when there is no tail.
-7. A short `## Thanks` naming first-time contributors from `firstTimeContributors`, with the PR as a `[#123](<pr url>)` link. One sentence. Skip it when the list is empty.
-8. Last line, always: `**Full Changelog**: <compareUrl>` using the `compareUrl` from the input.
+1. `# Homarr vX.Y.Z: <the one or two biggest user-facing changes, named plainly>`, for example `# Homarr v2.12.0: Docker container control on app tiles and a redesigned Coolify widget`. A factual description of the change, never a slogan and never a generic label like "Weekly release".
+2. A summary paragraph of one or two plain sentences directly under the title: what the release brings at a glance.
+3. `> [!IMPORTANT]` alert, only when something is breaking or the user must act on upgrade (renamed env var, removed feature, migration). One or two sentences. Skip it otherwise; an alert that is always there gets ignored.
+4. `## Highlights`: two to four items that matter most. Each gets a short `###` heading that is a plain feature name ("Docker container control on app tiles"), two or three sentences on what it does and why you would want it, and the PR's "after" screenshot when one exists. Highlights are for features and notable improvements, not for bug fixes. A highlighted PR also gets its one-line bullet in New or Improved, so every PR stays credited. The first image in Highlights is also the Discord announcement image when no generated art exists, so lead with the most telling screenshot.
+5. `## New integrations and widgets`: only when the input has `newItems`. Put the line `{{RELEASE_ART}}` alone on its own line, followed by a blank line and a markdown table with the columns icon, name, what it does. Use each item's `iconUrl` as `<img src="..." width="24" height="24">` (or an empty cell when `iconUrl` is null) and one plain sentence for what it does. The placeholder is replaced by a generated image after you answer, so write it exactly like that, once, and nowhere else.
+6. `## New`, `## Improved`, `## Fixed`: bullet lists with one bullet per PR in this shape:
+
+   `- **Short lead:** what changed for the user. by @login in [#123](<pr url>)`
+
+   The lead is two to five words naming the feature or area ("Docker control", "Podman", "OIDC claims"). The sentence is past tense or plain description. Write `@login` plain and the PR as an explicit markdown link using that PR's `url`, because the in-app renderer does not turn a bare `#123` into a link. Keep the same shape for every bullet so the list scans.
+
+7. `<details><summary>All changes</summary>` holding the long tail: smaller or internal-sounding PRs that are still user-relevant. Keep the main lists to what a user would notice, and move the rest here under `###` New, Improved or Fixed headings with the same bullet shape. Put a blank line after `</summary>` and before `</details>`. Omit the block when there is no tail.
+8. `## Thanks`: a short sentence naming first-time contributors from `firstTimeContributors`, with the PR as a `[#123](<pr url>)` link. Skip it when the list is empty.
+9. Last line, always: `**Full Changelog**: <compareUrl>` using the `compareUrl` from the input.
+
+## Use the format fully
+
+The GitHub-flavored elements and the generated art are part of the format. The maintainer expects every one of them whenever the input warrants it, and a release that leaves one out when it applies is incomplete:
+
+- `> [!IMPORTANT]` when any PR is breaking or needs action on upgrade.
+- `> [!TIP]` at most once, for a setting or trick users would otherwise miss.
+- `{{RELEASE_ART}}` and the table whenever `newItems` is not empty and the release is not a patch. The image is generated from `newItems` after you answer. Do not describe it, link it or write your own.
+- Screenshots from the PRs' `images` in highlights, when they show the feature.
+- The `<details>` block for the long tail, the `## Thanks` line for first-time contributors and the Full Changelog line.
 
 ## Patch releases
 
-When `releaseType` is `patch`, the release exists because something was broken. Write the title, an `> [!IMPORTANT]` alert only if needed, a **Fixed** list, and the Full Changelog line. No highlights, no art, no table, no theme. Users read patch notes to find out whether their bug is gone.
+When `releaseType` is `patch`, the release exists because something was broken. Write the title (`# Homarr vX.Y.Z`, with `: <the main fix in plain words>` added when one fix clearly dominates), a one-sentence summary, an `> [!IMPORTANT]` alert only if needed, a **Fixed** list in the bullet shape above, and the Full Changelog line. No highlights, no art, no table. Users read patch notes to find out whether their bug is gone.
 
 ## Major releases
 
 When `releaseType` is `major`, write it like a minor release with one change: the `> [!IMPORTANT]` alert is mandatory and lists the migration steps (removed features, renamed settings, anything to do before or after upgrading) taken from the breaking PRs. The maintainer usually hand-writes major notes, so expect yours to be a draft that gets edited.
+
+## Match the previous releases
+
+`recentReleases` holds the last three published releases before this one, newest first, each with `tag`, `name` and `body`.
+
+- A body that starts with `# Homarr v` already follows this skill. Match its structure, section headings, level of detail, length and tone, so consecutive releases read as one series.
+- A body that is a raw "What's Changed" list of PR titles predates this skill. Ignore it for style.
+- Never copy content from any of them. Sentences, PRs, authors and screenshots come only from this release's input.
 
 ## Classifying PRs
 
@@ -66,6 +96,7 @@ CI passes one JSON document:
 - `newItems`: integrations and widgets added in this release, each with `kind`, `slug`, `name`, `description`, `iconUrl`
 - `firstTimeContributors`: `{ login, pullRequest }` for people whose first merged PR is in this release
 - `pullRequests`: bots are already removed. Each has `number`, `url`, `title`, `author`, `labels`, `mergedAt`, `body` (cleaned and truncated), `images` (`url`, `alt`) and `closes` (`number`, `title`, `url`)
+- `recentReleases`: `{ tag, name, body }` for the three previous published releases, see [Match the previous releases](#match-the-previous-releases)
 
 ## Output (structured)
 
@@ -73,12 +104,12 @@ CI asks for a JSON object with exactly these fields:
 
 - `body`: the full release notes markdown described above.
 - `discord`: the announcement shown in Discord.
-  - `title`: plain text, about 100 characters at most. Usually the same theme as the notes title.
+  - `title`: plain text, about 100 characters at most. The same as the notes title without the leading `# `.
   - `summary`: one or two plain sentences, no markdown, no tables, no HTML.
   - `highlights`: two to four short strings, each one line. Write them without a leading bullet marker, the poster adds it.
 - `art`: one entry per item in `newItems`, none when `newItems` is empty.
   - `slug`: the item's slug exactly as given.
-  - `oneLiner`: a short phrase, five to ten words, saying what the item does. It is printed on the generated image.
+  - `oneLiner`: a plain phrase, five to ten words, saying what the item does. It is printed on the generated image.
   - `screenshotUrl`: an image URL taken from a PR's `images` that clearly shows this item, or `null`. Never guess one.
 
 ## Interactive use
@@ -89,9 +120,9 @@ When a maintainer asks for notes, collect the input first:
 bun .agents/skills/release-notes/scripts/collect-release-input.ts --from v2.11.1 --to v2.12.0 --version 2.12.0
 ```
 
-It needs `gh` authenticated and prints the JSON document described above on stdout. Use `--to` with the new tag, or the branch head for an unreleased draft. Then write the notes following this skill, check every PR number and author against the JSON, and show the result to the maintainer.
+It needs `gh` authenticated and prints the JSON document described above on stdout. Use `--to` with the new tag, or the branch head for an unreleased draft. Then write the notes following this skill, check every PR number and author against the JSON, and show the result to the maintainer. Leave the `{{RELEASE_ART}}` placeholder in drafts: the release pipeline replaces it with the generated image.
 
-Do not edit or publish a GitHub release unless the maintainer explicitly tells you to. To regenerate a released version end to end, point them at `bun scripts/release-notes/regenerate.mjs --tag vX.Y.Z --dry-run`.
+Do not edit or publish a GitHub release unless the maintainer explicitly tells you to. To regenerate a released version end to end, point them at `bun scripts/release-notes/regenerate.mjs --tag vX.Y.Z --dry-run`. To rewrite several releases in order, write each result to `<dir>/<tag>.md` with `--out` and pass `--context-dir <dir>`, so each release compares itself with the rewritten notes of the previous ones.
 
 ## Documentation
 

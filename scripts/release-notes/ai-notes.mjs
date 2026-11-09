@@ -21,22 +21,20 @@ const loadInstructions = async () => {
   return `${skillBody}\n\n---\n\n${example.trim()}`;
 };
 
-const collectInput = async ({ cwd, env, repository, version, target, previousTag, signal }) => {
-  const { stdout } = await execFileAsync(
-    "bun",
-    [
-      join(skillDirectory, "scripts/collect-release-input.ts"),
-      "--from",
-      previousTag,
-      "--to",
-      target,
-      "--version",
-      version,
-      "--repo",
-      repository,
-    ],
-    { cwd, env, maxBuffer: 64 * 1024 * 1024, signal },
-  );
+const collectInput = async ({ cwd, env, repository, version, target, previousTag, contextDirectory, signal }) => {
+  const args = [
+    join(skillDirectory, "scripts/collect-release-input.ts"),
+    "--from",
+    previousTag,
+    "--to",
+    target,
+    "--version",
+    version,
+    "--repo",
+    repository,
+  ];
+  if (contextDirectory) args.push("--context-dir", contextDirectory);
+  const { stdout } = await execFileAsync("bun", args, { cwd, env, maxBuffer: 64 * 1024 * 1024, signal });
   return JSON.parse(stdout);
 };
 
@@ -123,10 +121,11 @@ export async function generateAiNotes({
   previousTag,
   artRef,
   renderArtFiles,
+  contextDirectory,
   signal,
 }) {
   const instructions = await loadInstructions();
-  const input = await collectInput({ cwd, env, repository, version, target, previousTag, signal });
+  const input = await collectInput({ cwd, env, repository, version, target, previousTag, contextDirectory, signal });
   logger.log(
     "Collected %d pull requests and %d new items for the %s release notes",
     input.pullRequests.length,
