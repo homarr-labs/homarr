@@ -25,6 +25,8 @@ export interface SystemHealthMonitoring {
     deviceName: string;
     used: string;
     available: string;
+    /** Total capacity in bytes, when the provider reports it separately. */
+    size?: number;
     percentage: number;
   }[];
   smart: {

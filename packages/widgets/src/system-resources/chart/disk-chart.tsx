@@ -10,6 +10,7 @@ export interface DiskSample {
   deviceName: string;
   used: string;
   available: string;
+  size?: number;
   percentage: number;
 }
 
@@ -47,7 +48,11 @@ export const SystemResourceDiskChart = ({
     if (!Number.isFinite(used) || !Number.isFinite(available) || used < 0 || available < 0) {
       return `${percent}%`;
     }
-    const sizes = formatBytesPair(Math.round(used), Math.round(used + available));
+    let total = used + available;
+    if (sample.size !== undefined && Number.isFinite(sample.size) && sample.size >= total) {
+      total = sample.size;
+    }
+    const sizes = formatBytesPair(Math.round(used), Math.round(total));
     if (mode === "absolute") return `${sizes.used} / ${sizes.total}`;
     return t("memoryTooltip", { used: sizes.used, available: sizes.total, percent });
   };
