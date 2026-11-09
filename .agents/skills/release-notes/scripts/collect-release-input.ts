@@ -14,6 +14,7 @@ const graphqlChunkSize = 25;
 const maxBodyLength = 3000;
 const bodyBudget = 150_000;
 const maxImagesPerPullRequest = 6;
+const maxConcurrentImageMeasurements = 6;
 const maxImageWidth = 600;
 const maxImageHeight = 450;
 const imageTimeoutMilliseconds = 15_000;
@@ -263,6 +264,19 @@ const measureImageAsync = async (image: ImageReference): Promise<ImageReference>
   }
 };
 
+const measurePullRequestImagesAsync = async (pullRequests: PullRequestInput[]) => {
+  const jobs = pullRequests.flatMap(({ images }) => images.map((image, index) => ({ image, images, index })));
+  let nextJob = 0;
+  const worker = async () => {
+    while (true) {
+      const job = jobs[nextJob++];
+      if (!job) return;
+      job.images[job.index] = await measureImageAsync(job.image);
+    }
+  };
+  await Promise.all(Array.from({ length: Math.min(maxConcurrentImageMeasurements, jobs.length) }, worker));
+};
+
 const cleanBody = (body: string, limit: number) => {
   const cleaned = body
     .replace(/<!--[\s\S]*?-->/g, "")
@@ -344,20 +358,18 @@ const main = async () => {
   const bodyLimit = Math.max(500, Math.min(maxBodyLength, Math.floor(bodyBudget / Math.max(included.length, 1))));
   const includedNumbers = new Set(included.map((pullRequest) => pullRequest.number));
 
-  const pullRequestInputs: PullRequestInput[] = [];
-  for (const pullRequest of included) {
-    pullRequestInputs.push({
-      number: pullRequest.number,
-      url: pullRequest.url,
-      title: pullRequest.title,
-      author: pullRequest.author?.login ?? "ghost",
-      labels: pullRequest.labels.nodes.map((label) => label.name),
-      mergedAt: pullRequest.mergedAt,
-      body: cleanBody(pullRequest.body, bodyLimit),
-      images: await Promise.all(extractImages(pullRequest.body).map(measureImageAsync)),
-      closes: pullRequest.closingIssuesReferences.nodes,
-    });
-  }
+  const pullRequestInputs: PullRequestInput[] = included.map((pullRequest) => ({
+    number: pullRequest.number,
+    url: pullRequest.url,
+    title: pullRequest.title,
+    author: pullRequest.author?.login ?? "ghost",
+    labels: pullRequest.labels.nodes.map((label) => label.name),
+    mergedAt: pullRequest.mergedAt,
+    body: cleanBody(pullRequest.body, bodyLimit),
+    images: extractImages(pullRequest.body),
+    closes: pullRequest.closingIssuesReferences.nodes,
+  }));
+  await measurePullRequestImagesAsync(pullRequestInputs);
 
   const input = {
     repository,
