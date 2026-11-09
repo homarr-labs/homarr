@@ -43,6 +43,7 @@ export class GlancesIntegration extends Integration implements ISystemHealthMoni
 
     return {
       cpuUtilization: stats.cpu.total,
+      cpuCores: stats.percpu.map((core) => ({ id: core.cpu_number, utilization: core.total })),
       memUsedInBytes: stats.mem.used,
       memAvailableInBytes: stats.mem.total - stats.mem.used,
       network: {
@@ -155,6 +156,10 @@ export class GlancesIntegration extends Integration implements ISystemHealthMoni
 const regex = /^(?:(?<days>\d+) days?, )?(?<hours>\d+):(?<minutes>\d+):(?<seconds>\d+)$/m;
 
 const allSchema = z.object({
+  percpu: z
+    .array(z.object({ cpu_number: z.number().int().min(0), total: z.number().min(0).max(100) }))
+    .catch([])
+    .default([]),
   cpu: z.object({
     total: z.number().min(0).max(100),
   }),

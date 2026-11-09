@@ -5461,15 +5461,16 @@
         },
         "subresourceLayout": {
           "label": "Subresource Layout",
-          "description": "Arrange individual disks and network directions within each group. Grid wraps to fit; Horizontal keeps a scrollable row. Applies in both compact and expanded views."
+          "description": "Arrange individual CPU cores, disks and network directions within each group. Grid wraps to fit; Horizontal keeps a scrollable row. Applies in both compact and expanded views."
         },
         "hasShadow": {
           "label": "Enable chart shading"
         },
         "visibleCharts": {
           "label": "Visible charts",
-          "description": "Select the charts you want to be visible.",
+          "description": "Select the charts you want to be visible. CPU cores shows logical CPUs when available, otherwise overall CPU usage.",
           "option": {
+            "cpuCores": "CPU cores",
             "memory": "Memory",
             "network": "Network"
           }

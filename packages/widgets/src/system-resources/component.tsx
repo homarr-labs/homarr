@@ -4,6 +4,8 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Box, Center, Group, ScrollArea, SimpleGrid, Stack, Text } from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
+import { invariantTechnicalLabels } from "@homarr/definitions";
+import type { SystemHealthMonitoring } from "@homarr/integrations";
 
 import { WidgetEmptyState } from "../common/empty-state";
 import { IntegrationErrorIndicator } from "../common/integration-error-indicator";
@@ -20,7 +22,7 @@ import { NetworkTrafficChart } from "./chart/network-traffic";
 
 const COMPACT_HISTORY_SIZE = 15;
 const ADVANCED_HISTORY_SIZE = 60;
-const ALL_SYSTEM_CHARTS = ["cpu", "memory", "gpu", "network", "disk"] as const;
+const ALL_SYSTEM_CHARTS = ["cpu", "cpuCores", "memory", "gpu", "network", "disk"] as const;
 
 const ADVANCED_CHART_COLUMN_BREAKPOINTS = [
   { minWidth: 1100, columns: 4 },
@@ -35,6 +37,7 @@ type SystemChart = WidgetComponentProps<"systemResources">["options"]["visibleCh
 
 type ChartItem = {
   cpu: number;
+  cpuCores: NonNullable<SystemHealthMonitoring["cpuCores"]>;
   memory: number;
   gpu: number;
   network: { up: number; down: number } | null;
@@ -43,12 +46,16 @@ type ChartItem = {
 
 export const toChartItem = (healthInfo: {
   cpuUtilization: number;
+  cpuCores?: SystemHealthMonitoring["cpuCores"];
   memUsedInBytes: number;
   gpu: { processorUtilization: number }[];
   network: { up: number; down: number } | null;
   fileSystem?: DiskSample[];
 }): ChartItem => ({
   cpu: healthInfo.cpuUtilization,
+  cpuCores: (healthInfo.cpuCores ?? [])
+    .filter((core) => Number.isFinite(core.utilization))
+    .map((core) => ({ ...core, utilization: Math.min(100, Math.max(0, core.utilization)) })),
   memory: healthInfo.memUsedInBytes,
   gpu:
     healthInfo.gpu.length > 0
@@ -81,6 +88,7 @@ export const getVisibleSystemCharts = ({
   hasGpu,
   hasNetwork,
   hasDisks = false,
+  hasCpuCores = false,
   height: _height,
   isAdvanced,
 }: {
@@ -88,6 +96,7 @@ export const getVisibleSystemCharts = ({
   hasGpu: boolean;
   hasNetwork: boolean;
   hasDisks?: boolean;
+  hasCpuCores?: boolean;
   height: number;
   isAdvanced: boolean;
 }): SystemChart[] => {
@@ -96,8 +105,12 @@ export const getVisibleSystemCharts = ({
     (chart) =>
       (chart !== "gpu" || !isAdvanced || hasGpu) &&
       (chart !== "network" || hasNetwork) &&
-      (chart !== "disk" || hasDisks),
+      (chart !== "disk" || hasDisks) &&
+      (chart !== "cpuCores" || hasCpuCores),
   );
+  if (selectedCharts.includes("cpuCores") && !hasCpuCores && !availableCharts.includes("cpu")) {
+    return ["cpu", ...availableCharts];
+  }
   return [...availableCharts];
 };
 
@@ -239,11 +252,13 @@ const SystemCharts = ({
 }: SystemChartsProps) => {
   const networkItems = getNetworkHistory(items);
   const disks = items.at(-1)?.disks ?? [];
+  const cpuCores = items.at(-1)?.cpuCores ?? [];
   const visibleCharts = getVisibleSystemCharts({
     configuredCharts: options.visibleCharts,
     hasGpu,
     hasNetwork: networkItems.length > 0,
     hasDisks: disks.length > 0,
+    hasCpuCores: cpuCores.length > 0,
     height,
     isAdvanced,
   });
@@ -289,6 +304,23 @@ const SystemCharts = ({
                 advanced={isAdvanced}
               />
             </Box>
+          )}
+          {visibleCharts.includes("cpuCores") && (
+            <ChartLayout layout={options.subresourceLayout} minimumColumnWidth={150} gap={chartGap}>
+              {cpuCores.map((core) => (
+                <Box key={core.id} h="100%" miw={0}>
+                  <SystemResourceCPUChart
+                    title={`${invariantTechnicalLabels.cpu} ${core.id}`}
+                    cpuUsageOverTime={items.map(
+                      (item) => item.cpuCores.find((sample) => sample.id === core.id)?.utilization ?? null,
+                    )}
+                    hasShadow={options.hasShadow}
+                    labelDisplayMode={labelDisplayMode}
+                    advanced={isAdvanced}
+                  />
+                </Box>
+              ))}
+            </ChartLayout>
           )}
           {visibleCharts.includes("memory") && (
             <Box h="100%">

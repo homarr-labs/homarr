@@ -39,6 +39,7 @@ export class DashDotIntegration extends Integration implements ISystemHealthMoni
 
     return {
       cpuUtilization: cpuLoad.sumLoad,
+      cpuCores: cpuLoad.cores,
       memUsedInBytes: memoryLoad.loadInBytes,
       memAvailableInBytes: info.maxAvailableMemoryBytes - memoryLoad.loadInBytes,
       network: networkLoad,
@@ -101,6 +102,7 @@ export class DashDotIntegration extends Integration implements ISystemHealthMoni
     if (result.length === 0) {
       return {
         sumLoad: 0,
+        cores: [],
         averageTemperature: 0,
       };
     }
@@ -109,6 +111,7 @@ export class DashDotIntegration extends Integration implements ISystemHealthMoni
     await channel.pushAsync(data);
     return {
       sumLoad: this.getAverageOfCpu(data),
+      cores: data.map((core, id) => ({ id, utilization: core.load })),
       averageTemperature: data.reduce((acc, current) => acc + current.temp, 0) / data.length,
     };
   }

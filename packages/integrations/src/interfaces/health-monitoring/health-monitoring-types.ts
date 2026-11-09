@@ -4,6 +4,8 @@ export interface SystemHealthMonitoring {
   version: string;
   cpuModelName: string;
   cpuUtilization: number;
+  /** Usage per logical CPU, when the integration provides it. */
+  cpuCores?: { id: number; utilization: number }[];
   memUsedInBytes: number;
   memAvailableInBytes: number;
   uptime: number;

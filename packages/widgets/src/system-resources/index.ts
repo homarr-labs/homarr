@@ -13,7 +13,10 @@ const labelDisplayModeOptions = {
   hidden: IconEyeOff,
 } as const;
 
-const getChartOptionLabel = (key: "cpu" | "memory" | "gpu" | "network" | "disk", t: (key: never) => string) => {
+const getChartOptionLabel = (
+  key: "cpu" | "cpuCores" | "memory" | "gpu" | "network" | "disk",
+  t: (key: never) => string,
+) => {
   if (key === "cpu") return invariantTechnicalLabels.cpu;
   if (key === "gpu") return invariantTechnicalLabels.gpu;
   if (key === "disk") return t("widget.systemDisks.name" as never);
@@ -46,7 +49,7 @@ export const { definition, componentLoader } = createWidgetDefinition("systemRes
         withDescription: true,
       }),
       visibleCharts: factory.multiSelect({
-        options: (["cpu", "memory", "gpu", "network", "disk"] as const).map((key) => ({
+        options: (["cpu", "cpuCores", "memory", "gpu", "network", "disk"] as const).map((key) => ({
           value: key,
           label: (t) => getChartOptionLabel(key, t),
         })),
