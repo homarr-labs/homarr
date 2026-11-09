@@ -1,6 +1,9 @@
 import { execFileSync } from "node:child_process";
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
+import { parse } from "@babel/parser";
+import type { ParserPlugin } from "@babel/parser";
+import type { Node } from "@babel/types";
 import type { Item } from "./items";
 
 const REPO_ROOT = join(import.meta.dirname, "../..");
@@ -15,167 +18,56 @@ class Identifier {
 
 type Value = string | Value[] | Map<string, Value> | Identifier | null;
 
-const QUOTE = /["'`]/;
-const OPENER = /[([{]/;
-const CLOSER = /[)\]}]/;
-const TERMINATOR = /[,}\]]/;
-const IDENTIFIER = /[\w$]+/y;
-const TRIVIA = /(?:\s+|\/\/[^\n]*|\/\*[\s\S]*?(?:\*\/|$))+/y;
-const ESCAPE = /\\(u\{[0-9a-fA-F]+\}|u[0-9a-fA-F]{4}|x[0-9a-fA-F]{2}|\r?\n|[\s\S])/g;
-const SIMPLE_ESCAPES: Record<string, string> = { n: "\n", t: "\t", r: "\r", b: "\b", f: "\f", v: "\v", "0": "\0" };
+const propertyKey = (key: Node) => {
+  if (key.type === "Identifier") return key.name;
+  if (key.type === "StringLiteral") return key.value;
+  return null;
+};
 
-const unescape = (raw: string) =>
-  raw.replace(ESCAPE, (_, escape: string) => {
-    if (escape.startsWith("u{")) return String.fromCodePoint(Number.parseInt(escape.slice(2, -1), 16));
-    if (escape.length > 1 && /^[ux]/.test(escape)) return String.fromCharCode(Number.parseInt(escape.slice(1), 16));
-    if (/^\r?\n$/.test(escape)) return "";
-    return SIMPLE_ESCAPES[escape] ?? escape;
+const toValue = (node: Node | null | undefined): Value => {
+  switch (node?.type) {
+    case "TSAsExpression":
+    case "TSSatisfiesExpression":
+    case "TSNonNullExpression":
+    case "TSTypeAssertion":
+      return toValue(node.expression);
+    case "StringLiteral":
+      return node.value;
+    case "TemplateLiteral":
+      if (node.expressions.length > 0) return null;
+      return node.quasis.map((quasi) => quasi.value.cooked ?? "").join("");
+    case "Identifier":
+      return new Identifier(node.name);
+    case "ArrayExpression":
+      return node.elements.map(toValue);
+    case "ObjectExpression":
+      return new Map(
+        node.properties.flatMap((property): [string, Value][] => {
+          if (property.type !== "ObjectProperty" || property.computed) return [];
+          const key = propertyKey(property.key);
+          if (key === null) return [];
+          return [[key, toValue(property.value)]];
+        }),
+      );
+    default:
+      return null;
+  }
+};
+
+const parseDeclarations = (src: string, jsx = false) => {
+  const plugins: ParserPlugin[] = ["typescript"];
+  if (jsx) plugins.push("jsx");
+  return parse(src, { sourceType: "module", plugins }).program.body.flatMap((statement) => {
+    if (statement.type !== "ExportNamedDeclaration" || statement.declaration?.type !== "VariableDeclaration") return [];
+    return statement.declaration.declarations.flatMap((declaration) => {
+      if (declaration.id.type !== "Identifier") return [];
+      return [{ name: declaration.id.name, value: toValue(declaration.init) }];
+    });
   });
+};
 
-class Parser {
-  constructor(
-    private readonly src: string,
-    private i: number,
-  ) {}
-
-  value(): Value {
-    this.skip();
-    const ch = this.src[this.i];
-    if (ch === undefined) return null;
-    if (QUOTE.test(ch)) return this.string();
-    if (ch === "[") return this.array();
-    if (ch === "{") return this.object();
-    const word = this.word();
-    if (word === null || word === "null") return null;
-    return new Identifier(word);
-  }
-
-  private skip() {
-    TRIVIA.lastIndex = this.i;
-    const match = TRIVIA.exec(this.src);
-    if (match) this.i += match[0].length;
-  }
-
-  private word() {
-    IDENTIFIER.lastIndex = this.i;
-    const found = IDENTIFIER.exec(this.src)?.[0];
-    if (found === undefined) return null;
-    this.i += found.length;
-    return found;
-  }
-
-  private string() {
-    const quote = this.src.charAt(this.i);
-    this.i++;
-    const start = this.i;
-    while (this.i < this.src.length) {
-      const ch = this.src.charAt(this.i);
-      if (ch === "\\") {
-        this.i += 2;
-        continue;
-      }
-      if (ch === quote || (ch === "\n" && quote !== "`")) break;
-      this.i++;
-    }
-    const raw = this.src.slice(start, this.i);
-    this.i++;
-    if (quote === "`" && raw.includes("${")) return null;
-    return unescape(raw);
-  }
-
-  private key() {
-    if (QUOTE.test(this.src.charAt(this.i))) return this.string();
-    return this.word();
-  }
-
-  private member(): Value {
-    const result = this.value();
-    this.skip();
-    const next = this.src[this.i];
-    if (next === undefined || TERMINATOR.test(next)) return result;
-    this.skipExpression();
-    return null;
-  }
-
-  private skipExpression() {
-    let depth = 0;
-    for (;;) {
-      this.skip();
-      const ch = this.src[this.i];
-      if (ch === undefined) return;
-      if (QUOTE.test(ch)) {
-        this.string();
-        continue;
-      }
-      if (OPENER.test(ch)) depth++;
-      if (CLOSER.test(ch)) {
-        if (depth === 0) return;
-        depth--;
-      }
-      if (ch === "," && depth === 0) return;
-      this.i++;
-    }
-  }
-
-  private array() {
-    const items: Value[] = [];
-    this.i++;
-    for (;;) {
-      this.skip();
-      const ch = this.src[this.i];
-      if (ch === undefined) return items;
-      if (ch === "]") {
-        this.i++;
-        return items;
-      }
-      if (ch === ",") {
-        this.i++;
-        continue;
-      }
-      const start = this.i;
-      items.push(this.member());
-      if (this.i === start) this.i++;
-    }
-  }
-
-  private object() {
-    const entries = new Map<string, Value>();
-    this.i++;
-    for (;;) {
-      this.skip();
-      const ch = this.src[this.i];
-      if (ch === undefined) return entries;
-      if (ch === "}") {
-        this.i++;
-        return entries;
-      }
-      if (ch === ",") {
-        this.i++;
-        continue;
-      }
-      const start = this.i;
-      const key = this.key();
-      this.skip();
-      const next = this.src.charAt(this.i);
-      if (key !== null && next === ":") {
-        this.i++;
-        entries.set(key, this.member());
-      } else if (key !== null && /[,}]/.test(next)) {
-        entries.set(key, new Identifier(key));
-      } else {
-        this.skipExpression();
-      }
-      if (this.i === start) this.i++;
-    }
-  }
-}
-
-const parseDeclarations = (src: string, name = "[\\w$]+") =>
-  [...src.matchAll(new RegExp(`^export const ${name}\\b[^=]*=(?![=>])`, "gm"))].map((match) =>
-    new Parser(src, match.index + match[0].length).value(),
-  );
-
-const parseDeclaration = (src: string, name: string): Value => parseDeclarations(src, name)[0] ?? null;
+const parseDeclaration = (src: string, name: string): Value =>
+  parseDeclarations(src).find((declaration) => declaration.name === name)?.value ?? null;
 
 const field = (value: Value | undefined, key: string) => {
   if (value instanceof Map) return value.get(key);
@@ -235,8 +127,10 @@ const parseWidgetSlugs = (src: string | null) => {
   return slugs;
 };
 
-const parseDocs = (src: string): DocsMeta => {
-  const doc = parseDeclarations(src).find((value) => field(value, "name") !== undefined);
+const parseDocs = (src: string, jsx: boolean): DocsMeta => {
+  const doc = parseDeclarations(src, jsx)
+    .map((declaration) => declaration.value)
+    .find((value) => field(value, "name") !== undefined);
   return {
     name: text(field(doc, "name")),
     description: text(field(doc, "description")),
@@ -299,19 +193,19 @@ const readDocs = (ref: string, area: "integrations" | "widgets", slugs: Array<st
     if (!slug) continue;
     for (const file of ["index.ts", "index.tsx"]) {
       const src = gitShow(ref, `apps/docs/docs/${area}/${slug}/${file}`);
-      if (src !== null) return { slug, meta: parseDocs(src) };
+      if (src !== null) return { slug, meta: parseDocs(src, file.endsWith(".tsx")) };
     }
   }
   return null;
 };
 
-const readDefinitions = <T>(ref: string, file: string, parse: (src: string) => T[]) => {
+const readDefinitions = <T>(ref: string, file: string, parseFile: (src: string) => T[]) => {
   const src = gitShow(ref, file);
   if (src === null) {
     console.error(`detect: ${file} not found at ${ref}; skipping`);
     return null;
   }
-  const parsed = parse(src);
+  const parsed = parseFile(src);
   if (parsed.length === 0) throw new Error(`no definitions parsed from ${file} at ${ref}`);
   return parsed;
 };

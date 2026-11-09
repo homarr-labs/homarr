@@ -39,14 +39,3 @@
     accent-color: var(--mantine-primary-color-filled);
   }
 }
-
-.alert {
-  margin-block: var(--mantine-spacing-md);
-}
-
-.mention {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.25em;
-  vertical-align: bottom;
-}

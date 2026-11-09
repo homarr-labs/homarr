@@ -1,9 +1,7 @@
-import { Anchor, Avatar } from "@mantine/core";
+import { Anchor, Avatar, Group } from "@mantine/core";
 import { findAndReplace } from "mdast-util-find-and-replace";
 
 import { SAFE_NEW_TAB_REL } from "@homarr/common";
-
-import classes from "./markdown.module.css";
 
 type MdastTree = Parameters<typeof findAndReplace>[0];
 
@@ -40,15 +38,17 @@ export const getMentionLogin = (href: string | undefined, text: unknown) => {
 };
 
 export const GithubMention = ({ login }: { login: string }) => (
-  <Anchor href={`${GITHUB_URL}${login}`} target="_blank" rel={SAFE_NEW_TAB_REL} className={classes.mention}>
-    <Avatar
-      component="span"
-      src={`${GITHUB_URL}${login}.png?size=40`}
-      name={login}
-      alt={login}
-      size="1.25em"
-      radius="xl"
-    />
-    {`@${login}`}
+  <Anchor href={`${GITHUB_URL}${login}`} target="_blank" rel={SAFE_NEW_TAB_REL}>
+    <Group component="span" display="inline-flex" gap="0.25em" wrap="nowrap" style={{ verticalAlign: "bottom" }}>
+      <Avatar
+        component="span"
+        src={`${GITHUB_URL}${login}.png?size=40`}
+        name={login}
+        alt={login}
+        size="1.25em"
+        radius="xl"
+      />
+      {`@${login}`}
+    </Group>
   </Anchor>
 );

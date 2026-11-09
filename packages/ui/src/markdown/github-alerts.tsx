@@ -6,8 +6,6 @@ import type rehypeSanitize from "rehype-sanitize";
 
 import { useI18n } from "@homarr/translation/client";
 
-import classes from "./markdown.module.css";
-
 type HastRoot = Parameters<ReturnType<typeof rehypeSanitize>>[0];
 type HastNode = HastRoot["children"][number];
 type HastElement = Extract<HastNode, { type: "element" }>;
@@ -79,7 +77,7 @@ export const AlertBlockquote = ({ node, children, ...props }: ComponentProps<"bl
 
   const { color, icon: Icon } = alerts[kind];
   return (
-    <Alert color={color} title={t(kind)} icon={<Icon size="100%" />} className={classes.alert}>
+    <Alert color={color} title={t(kind)} icon={<Icon size="100%" />} my="md">
       {children}
     </Alert>
   );

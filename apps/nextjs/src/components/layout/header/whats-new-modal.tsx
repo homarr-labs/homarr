@@ -3,11 +3,12 @@
 import { Accordion, Anchor, Button, Center, Flex, Group, Loader, ScrollArea, Stack, Text } from "@mantine/core";
 import { IconExternalLink } from "@tabler/icons-react";
 import dynamic from "next/dynamic";
+import { useCallback } from "react";
 
 import { clientApi } from "@homarr/api/client";
 import type { RouterOutputs } from "@homarr/api";
 import { SAFE_NEW_TAB_REL } from "@homarr/common";
-import { createModal, modalSizeSelect } from "@homarr/modals";
+import { createModal, modalSizeSelect, useModalAction } from "@homarr/modals";
 import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";
 
 const Markdown = dynamic(() => import("@homarr/ui/markdown").then((module) => module.Markdown));
@@ -101,9 +102,19 @@ const WhatsNewContent = ({ scope, onDismiss }: WhatsNewContentProps) => {
   );
 };
 
-export const WhatsNewModal = createModal<WhatsNewModalProps>(({ actions, innerProps }) => (
+const WhatsNewModal = createModal<WhatsNewModalProps>(({ actions, innerProps }) => (
   <WhatsNewContent scope={innerProps.scope} onDismiss={actions.closeModal} />
 )).withOptions({
   defaultTitle: (t) => t("whatsNew.title"),
   size: modalSizeSelect,
 });
+
+export const useOpenWhatsNew = () => {
+  const { openModal } = useModalAction(WhatsNewModal);
+  const { mutate: markSeen } = clientApi.updateChecker.markWhatsNewSeen.useMutation();
+
+  return useCallback(
+    (scope: WhatsNewModalProps["scope"]) => openModal({ scope }, { onClose: () => markSeen() }),
+    [openModal, markSeen],
+  );
+};

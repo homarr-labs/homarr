@@ -6,12 +6,11 @@ import { usePathname } from "next/navigation";
 import { NavLink } from "@mantine/core";
 import { useSetAtom } from "jotai";
 
-import { useModalAction } from "@homarr/modals";
 import { Link } from "@homarr/ui";
 
 import { navigationCollapsedAtom } from "./header/burger";
 import { TourTarget } from "./header/tour-target";
-import { WhatsNewModal } from "./header/whats-new-modal";
+import { useOpenWhatsNew } from "./header/whats-new-modal";
 
 export const CommonNavLink = (props: ClientNavigationLink) =>
   "href" in props ? <NavLinkHref {...props} /> : <NavLinkWithItems {...props} />;
@@ -65,7 +64,7 @@ const NavLinkHref = (props: NavigationLinkHref) => {
 
 const NavLinkChangelog = ({ label, icon }: NavigationLinkChangelog) => {
   const setNavigationCollapsed = useSetAtom(navigationCollapsedAtom);
-  const { openModal } = useModalAction(WhatsNewModal);
+  const openWhatsNew = useOpenWhatsNew();
 
   return (
     <NavLink
@@ -74,7 +73,7 @@ const NavLinkChangelog = ({ label, icon }: NavigationLinkChangelog) => {
       leftSection={icon}
       onClick={() => {
         setNavigationCollapsed(true);
-        openModal({ scope: "recent" });
+        openWhatsNew("recent");
       }}
     />
   );
