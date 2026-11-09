@@ -1,0 +1,21 @@
+apps/nextjs/src/components/layout/header/whats-new-modal.tsx
+  s_6b84297f6331ac::t_da06506b506c39 5,8,12-13,16,24-31,58,62-63,66-87,93-96
+apps/nextjs/src/components/layout/whats-new-auto-open.tsx
+  s_6b84297f6331ac::t_5d5e7b3310f89d 9,18,24-25,29,31
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "3a6588fc3ab95e77afb64a28cdf003d149cfcc3d",
+  "prompts": {},
+  "sessions": {
+    "s_6b84297f6331ac": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "590f9297-ade8-451c-8f7f-6672298271ba",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
