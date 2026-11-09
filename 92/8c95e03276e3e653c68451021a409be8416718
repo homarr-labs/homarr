@@ -1,0 +1,35 @@
+packages/api/src/router/onboard/onboard-router.ts
+  s_a347fba92c8551::t_8fc720d1c8f14a 46,989-996,1009
+packages/api/src/router/update-checker.ts
+  s_f2fb41a708e29b::t_a6f3a93075b0af 1-2,4-5,7,12-35,47-78
+packages/request-handler/src/test/update-checker.spec.ts
+  s_f2fb41a708e29b::t_a9ba4e30af99ae 50,75
+packages/request-handler/src/update-checker.ts
+  s_f2fb41a708e29b::t_d8cf1f852bb35e 19-21,24,29,57,77,80,91,117,127-128,134-138,148-172,174-179,199,206-207,239-240,243,252
+packages/server-settings/src/index.ts
+  s_f2fb41a708e29b::t_16401b56d21074 15,162-165
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "928c95e03276e3e653c68451021a409be8416718",
+  "prompts": {},
+  "sessions": {
+    "s_a347fba92c8551": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ba9447a3-34b2-44ab-8936-51c824ba019e",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_f2fb41a708e29b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "0ce1f696-5b93-4394-816f-bfa10a7cb6fc",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
