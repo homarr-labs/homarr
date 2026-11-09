@@ -1,7 +1,7 @@
 import type { ComponentProps } from "react";
 import { Typography } from "@mantine/core";
 import ReactMarkdown from "react-markdown";
-import type { Components, ExtraProps } from "react-markdown";
+import type { Components, ExtraProps, Options } from "react-markdown";
 import rehypeRaw from "rehype-raw";
 import rehypeSanitize from "rehype-sanitize";
 import remarkGfm from "remark-gfm";
@@ -11,11 +11,6 @@ import { SAFE_NEW_TAB_REL } from "@homarr/common";
 import { AlertBlockquote, rehypeGithubAlerts } from "./github-alerts";
 import { getMentionLogin, GithubMention, remarkGithubMentions } from "./github-mentions";
 import classes from "./markdown.module.css";
-
-const remarkPlugins = [remarkGfm];
-const remarkPluginsWithMentions = [remarkGfm, remarkGithubMentions];
-const rehypePlugins = [rehypeSanitize, rehypeGithubAlerts];
-const rehypePluginsWithHtml = [rehypeRaw, rehypeSanitize, rehypeGithubAlerts];
 
 type LinkProps = ComponentProps<"a"> & ExtraProps;
 
@@ -34,6 +29,8 @@ const ExternalLinkOrMention = ({ href, children }: LinkProps) => {
 const components: Components = { a: ExternalLink, blockquote: AlertBlockquote };
 const componentsWithMentions: Components = { ...components, a: ExternalLinkOrMention };
 
+type PluginList = NonNullable<Options["remarkPlugins"]>;
+
 export interface MarkdownProps {
   children: string;
   allowHtml?: boolean;
@@ -42,18 +39,26 @@ export interface MarkdownProps {
 }
 
 export const Markdown = ({ children, allowHtml = false, githubMentions = false, typography = true }: MarkdownProps) => {
-  const Root = typography ? Typography : "div";
+  const remarkPlugins: PluginList = [remarkGfm];
+  const rehypePlugins: PluginList = [rehypeSanitize, rehypeGithubAlerts];
+  let markdownComponents = components;
+  if (githubMentions) {
+    remarkPlugins.push(remarkGithubMentions);
+    markdownComponents = componentsWithMentions;
+  }
+  if (allowHtml) rehypePlugins.unshift(rehypeRaw);
 
-  return (
-    <Root className={classes.root}>
-      <ReactMarkdown
-        remarkPlugins={githubMentions ? remarkPluginsWithMentions : remarkPlugins}
-        rehypePlugins={allowHtml ? rehypePluginsWithHtml : rehypePlugins}
-        skipHtml={!allowHtml}
-        components={githubMentions ? componentsWithMentions : components}
-      >
-        {children}
-      </ReactMarkdown>
-    </Root>
+  const content = (
+    <ReactMarkdown
+      remarkPlugins={remarkPlugins}
+      rehypePlugins={rehypePlugins}
+      skipHtml={!allowHtml}
+      components={markdownComponents}
+    >
+      {children}
+    </ReactMarkdown>
   );
+
+  if (!typography) return <div className={classes.root}>{content}</div>;
+  return <Typography className={classes.root}>{content}</Typography>;
 };
