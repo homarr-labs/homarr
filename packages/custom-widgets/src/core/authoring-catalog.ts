@@ -1,8 +1,10 @@
 import {
   customJsxAuthoringCatalog,
+  customJsxCatalogComponentByName,
   customJsxCatalogGlobalPropByName,
   resolveCustomJsxPropDescriptor,
 } from "./component-catalog";
+import type { CustomJsxComponentApi } from "./component-catalog";
 import { BUNDLED_CUSTOM_WIDGETS } from "./bundled-widgets";
 import { customJsxExamples } from "./examples";
 import { customJsxTablerIconExamples, customJsxTablerIconNames } from "./tabler-icons";
@@ -38,23 +40,38 @@ const normalizeComponentSearchText = (value: string) =>
     .replaceAll(/[^a-z\d]+/gu, " ")
     .trim();
 
+const createComponentSearchIndex = () =>
+  customJsxAuthoringCatalog.components.map((component) => {
+    const name = normalizeComponentSearchText(component.name);
+    const category = normalizeComponentSearchText(component.category ?? "");
+    const description = normalizeComponentSearchText(component.description ?? "");
+    return {
+      component,
+      name,
+      nameTerms: new Set(name.split(" ")),
+      categoryTerms: new Set(category.split(" ")),
+      description,
+      descriptionTerms: new Set(description.split(" ")),
+    };
+  });
+let componentSearchIndex: ReturnType<typeof createComponentSearchIndex> | undefined;
+
 export function findCustomWidgetComponents(query: string, limit = 16) {
   const normalizedQuery = normalizeComponentSearchText(query);
   const terms = [...new Set(normalizedQuery.split(" ").filter((term) => term.length > 1))];
   const boundedLimit = Math.min(Math.max(Math.trunc(limit), 1), 16);
-  const components = customJsxAuthoringCatalog.components
-    .map((component) => {
-      const normalizedName = normalizeComponentSearchText(component.name);
-      const normalizedCategory = normalizeComponentSearchText(component.category ?? "");
-      const normalizedDescription = normalizeComponentSearchText(component.description ?? "");
-      let score = normalizedName === normalizedQuery ? 1_000 : 0;
-      if (` ${normalizedQuery} `.includes(` ${normalizedName} `)) score += 500;
+  componentSearchIndex ??= createComponentSearchIndex();
+  const components = componentSearchIndex
+    .map(({ component, name, nameTerms, categoryTerms, description, descriptionTerms }) => {
+      let score = 0;
+      if (name === normalizedQuery) score = 1_000;
+      if (` ${normalizedQuery} `.includes(` ${name} `)) score += 500;
       for (const term of terms) {
-        if (normalizedName.split(" ").includes(term)) score += 100;
-        else if (normalizedName.includes(term)) score += 60;
-        if (normalizedCategory.split(" ").includes(term)) score += 20;
-        if (normalizedDescription.split(" ").includes(term)) score += 8;
-        else if (normalizedDescription.includes(term)) score += 2;
+        if (nameTerms.has(term)) score += 100;
+        else if (name.includes(term)) score += 60;
+        if (categoryTerms.has(term)) score += 20;
+        if (descriptionTerms.has(term)) score += 8;
+        else if (description.includes(term)) score += 2;
       }
       return { component, score };
     })
@@ -88,9 +105,20 @@ export function getCustomWidgetExampleCatalog() {
 }
 
 export function getCustomWidgetComponent(name: string) {
-  const canonicalName = name === "Icon" ? "TablerIcon" : name;
-  const component = customJsxAuthoringCatalog.components.find((candidate) => candidate.name === canonicalName);
+  const component = findComponent(name);
   if (!component) return null;
+  return {
+    ...getComponentMetadata(component),
+    props: component.props.map((prop) => resolveCustomJsxPropDescriptor(prop)),
+  };
+}
+
+function findComponent(name: string) {
+  if (name === "Icon") return customJsxCatalogComponentByName.get("TablerIcon");
+  return customJsxCatalogComponentByName.get(name);
+}
+
+function getComponentMetadata(component: CustomJsxComponentApi) {
   return {
     schemaVersion: customJsxAuthoringCatalog.schemaVersion,
     mantineVersion: customJsxAuthoringCatalog.mantineVersion,
@@ -100,7 +128,6 @@ export function getCustomWidgetComponent(name: string) {
     category: component.category,
     safety: component.safety,
     description: component.description,
-    props: component.props.map((prop) => resolveCustomJsxPropDescriptor(prop)),
     blockedProps: component.blockedProps,
     bind: component.bind,
     subcomponents: component.subcomponents,
@@ -148,23 +175,24 @@ export function getCustomWidgetComponents(names: readonly string[]) {
 }
 
 function getCustomWidgetComponentBatchSummary(name: string) {
-  const component = getCustomWidgetComponent(name);
+  const component = findComponent(name);
   if (!component) return null;
   const {
     schemaVersion: _schemaVersion,
     mantineVersion: _mantineVersion,
     customWidgetVersion: _customWidgetVersion,
     knownValues: _knownValues,
-    props,
     ...metadata
-  } = component;
+  } = getComponentMetadata(component);
   const summary = {
     ...metadata,
-    propNames: props.map((prop) => prop.name),
-    requiredProps: props.filter((prop) => prop.required),
+    propNames: component.props.map((prop) => prop.name),
+    requiredProps: component.props.filter((prop) => prop.required).map((prop) => resolveCustomJsxPropDescriptor(prop)),
     fullDetailsTool: "customWidget_getComponent" as const,
   };
-  if (component.package === "@homarr/widgets") return { ...summary, props };
+  if (component.package === "@homarr/widgets") {
+    return { ...summary, props: component.props.map((prop) => resolveCustomJsxPropDescriptor(prop)) };
+  }
   return summary;
 }
 

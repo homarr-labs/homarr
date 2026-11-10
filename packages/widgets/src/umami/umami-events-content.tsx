@@ -6,6 +6,7 @@ import { Box, Group, Stack, Text } from "@mantine/core";
 import type { UmamiEventSeries } from "@homarr/integrations/types";
 import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";
 
+import { WidgetEmptyState } from "../common/empty-state";
 import { EVENT_COLORS, formatXLabel } from "./umami-utils";
 
 interface UmamiEventsContentProps {
@@ -27,15 +28,7 @@ export function UmamiEventsContent({
   const locale = useCurrentIntlLocale();
   const tickColor = "var(--mantine-color-dimmed)";
 
-  if (!hasSelectedEvents) {
-    return (
-      <Stack align="center" justify="center" h="100%">
-        <Text c="dimmed" size="sm">
-          {t("events.selectPrompt")}
-        </Text>
-      </Stack>
-    );
-  }
+  if (!hasSelectedEvents) return <WidgetEmptyState message={t("events.selectPrompt")} />;
 
   // Collect all unique timestamps across all series
   const allTimestamps = Array.from(

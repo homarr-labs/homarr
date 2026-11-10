@@ -7541,7 +7541,9 @@
                             "request",
                             "statusCode",
                             "parse",
-                            "unknown"
+                            "unknown",
+                            "openmediavault",
+                            "frigate"
                           ]
                         }
                       },

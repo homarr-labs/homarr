@@ -15,6 +15,10 @@ import type {
 vi.mock("@homarr/core/infrastructure/http", () => ({
   fetchWithTrustedCertificatesAsync: vi.fn(),
 }));
+vi.mock("@homarr/core/infrastructure/certificates", () => ({
+  getAllTrustedCertificatesAsync: vi.fn(),
+  getTrustedCertificateHostnamesAsync: vi.fn(),
+}));
 
 const TEST_API_KEY = "test-api-key-12345";
 const TEST_URL = "https://coolify.example.com";
@@ -206,6 +210,40 @@ describe("CoolifyIntegration", () => {
   });
 
   describe("getInstanceInfoAsync", () => {
+    test("limits concurrent project detail requests while retaining all projects", async () => {
+      let activeProjects = 0;
+      let peakProjects = 0;
+      const projects = Array.from({ length: 10 }, (_, index) => ({
+        id: index + 1,
+        uuid: `proj-${index + 1}`,
+        name: `Project ${index + 1}`,
+      }));
+
+      mockFetchWithTrustedCertificates.mockImplementation(async (url) => {
+        const path = new URL(url.toString()).pathname;
+        if (path.startsWith("/api/v1/projects/")) {
+          activeProjects++;
+          peakProjects = Math.max(peakProjects, activeProjects);
+          await new Promise((resolve) => setTimeout(resolve, 1));
+          activeProjects--;
+          const project = projects.find((item) => `/api/v1/projects/${item.uuid}` === path);
+          return new Response(JSON.stringify({ ...project, environments: [] })) as unknown as Awaited<
+            ReturnType<typeof fetchWithTrustedCertificatesAsync>
+          >;
+        }
+
+        const data = path === "/api/v1/version" ? "4.0.0" : path === "/api/v1/projects" ? projects : [];
+        return new Response(typeof data === "string" ? data : JSON.stringify(data)) as unknown as Awaited<
+          ReturnType<typeof fetchWithTrustedCertificatesAsync>
+        >;
+      });
+
+      const result = await createCoolifyIntegration().getInstanceInfoAsync();
+
+      expect(result.projects).toHaveLength(projects.length);
+      expect(peakProjects).toBe(4);
+    });
+
     test("should aggregate all instance data with project context", async () => {
       const projectWithEnvs: CoolifyProjectWithEnvironments = {
         id: 1,
@@ -232,6 +270,13 @@ describe("CoolifyIntegration", () => {
             environment_id: 1,
             updated_at: "2024-01-01T00:00:00Z",
           },
+          {
+            id: 2,
+            uuid: "app-uuid-2",
+            name: "other-app",
+            status: "stopped",
+            environment_id: 2,
+          },
         ],
         "/api/v1/services": [
           {
@@ -247,6 +292,12 @@ describe("CoolifyIntegration", () => {
             id: 1,
             uuid: "proj-uuid-1",
             name: "Production",
+            description: "Main workloads",
+          },
+          {
+            id: 2,
+            uuid: "proj-uuid-2",
+            name: "Unavailable project",
           },
         ],
         "/api/v1/servers": [
@@ -267,11 +318,33 @@ describe("CoolifyIntegration", () => {
       const result = await integration.getInstanceInfoAsync();
 
       expect(result.version).toBe("4.0.0-beta.460");
-      expect(result.applications).toHaveLength(1);
+      expect(result.applications).toHaveLength(2);
       expect(result.services).toHaveLength(1);
       expect(result.servers).toHaveLength(1);
+      expect(result.projects).toHaveLength(2);
+      expect(result.projects?.[0]?.description).toBe("Main workloads");
+      expect(result.projects?.[1]?.environments).toBeUndefined();
       expect(result.applications[0]?.projectName).toBe("Production");
       expect(result.applications[0]?.environmentName).toBe("production");
+      expect(result.applications[1]?.status).toBe("stopped");
+      expect(result.applications[1]?.projectName).toBeUndefined();
+    });
+
+    test("should retain resource statuses when project listing fails", async () => {
+      setupMockFetch({
+        "/api/v1/version": "4.0.0-beta.460",
+        "/api/v1/applications": [{ uuid: "app-uuid-1", name: "my-app", status: "running" }],
+        "/api/v1/services": [{ uuid: "service-uuid-1", name: "postgres", status: "stopped" }],
+        "/api/v1/servers": [{ uuid: "server-uuid-1", name: "Server 1", is_reachable: true }],
+      });
+
+      const result = await createCoolifyIntegration().getInstanceInfoAsync();
+
+      expect(result.applications[0]?.status).toBe("running");
+      expect(result.services[0]?.status).toBe("stopped");
+      expect(result.servers[0]?.is_reachable).toBe(true);
+      expect(result.projects).toBeNull();
+      expect(result.applications[0]?.projectName).toBeUndefined();
     });
   });
 

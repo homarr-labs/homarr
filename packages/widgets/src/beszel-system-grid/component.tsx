@@ -423,7 +423,7 @@ const SystemCard = ({
             label={t("metric.memoryTotal")}
             value={system.memoryTotal > 0 ? formatBytes(system.memoryTotal) : "—"}
           />
-          <SystemMetadata label={t("metric.source")} value={integrationName} />
+          <SystemMetadata label={tCommon("field.source")} value={integrationName} />
         </SimpleGrid>
       )}
 

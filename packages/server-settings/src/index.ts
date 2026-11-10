@@ -1,4 +1,5 @@
 import type { ColorScheme } from "@homarr/definitions";
+import { cornerStyleValues } from "@homarr/definitions";
 import type { SupportedLanguage } from "@homarr/translation";
 import { z } from "zod/v4";
 
@@ -11,12 +12,13 @@ export const defaultServerSettingsKeys = [
   "branding",
   "culture",
   "search",
+  "whatsNew",
 ] as const;
 
 export type ServerSettingsRecord = Record<(typeof defaultServerSettingsKeys)[number], Record<string, unknown>>;
 
-export const brandingRadiusOptions = ["xs", "sm", "md", "lg", "xl"] as const;
-export type BrandingRadius = (typeof brandingRadiusOptions)[number];
+export { cornerStyleValues as brandingRadiusOptions } from "@homarr/definitions";
+export type { CornerStyle as BrandingRadius } from "@homarr/definitions";
 
 export const authBrandingSchema = z.object({
   showAppName: z.boolean(),
@@ -51,7 +53,7 @@ export const brandingServerSettingsSchema = z.object({
   signInBackgroundOverlay: z.number().min(0).max(0.9),
   showSignInMarquee: z.boolean(),
   authBranding: authBrandingSchema,
-  defaultRadius: z.enum(brandingRadiusOptions),
+  defaultRadius: z.enum(cornerStyleValues),
   customCss: z.string().max(16_384),
 });
 
@@ -156,6 +158,10 @@ export const defaultServerSettings = {
   },
   search: {
     defaultSearchEngineId: null as string | null,
+  },
+  whatsNew: {
+    enabled: true,
+    lastSeenVersion: null as string | null,
   },
 } satisfies ServerSettingsRecord;
 

@@ -5,6 +5,7 @@ import {
   IconLink,
   IconMessage,
   IconPassword,
+  IconShieldLock,
   IconPasswordUser,
   IconPlug,
   IconServer,
@@ -35,5 +36,5 @@ export const integrationSecretIcons = {
   wazuhIndexerUrl: IconLink,
   wazuhIndexerUsername: IconUser,
   wazuhIndexerPassword: IconPassword,
-  wazuhDashboardUrl: IconLink,
+  totpSecret: IconShieldLock,
 } satisfies Record<IntegrationSecretKind, TablerIcon>;

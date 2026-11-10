@@ -38,6 +38,7 @@ export * from "@homarr/core/infrastructure/certificates/hostnames/db/sqlite";
 export const apiKeys = sqliteTable("apiKey", {
   id: text().notNull().primaryKey(),
   apiKey: text().notNull(),
+  readOnly: int({ mode: "boolean" }).notNull().default(false),
   oauthClientId: text(),
   oauthClientName: text(),
   oauthRedirectUri: text(),
@@ -199,6 +200,7 @@ export const integrations = sqliteTable(
     id: text().notNull().primaryKey(),
     name: text().notNull(),
     url: text().notNull(),
+    externalUrl: text(),
     kind: text().$type<IntegrationKind>().notNull(),
     appId: text().references(() => apps.id, { onDelete: "set null" }),
   },

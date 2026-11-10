@@ -11,6 +11,7 @@ import { formatBitRate } from "@homarr/common";
 import type { SpeedtestTrackerResult } from "@homarr/integrations/types";
 import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";
 
+import { formatLocalizedDate } from "../common/locale";
 import { SectionLabel } from "./section-label";
 
 const formatChartBitRate = (value: number) => formatBitRate(value);
@@ -51,9 +52,11 @@ function buildXAxisTicks(data: { ts: number }[]): XAxisTicks {
 function makeXTickRenderer(midnightTs: number | null, locale: string) {
   return ({ x, y, payload }: { x: number | string; y: number | string; payload: { value: number } }) => {
     const date = new Date(payload.value);
-    const timeStr = date.toLocaleTimeString(locale, { hour: "2-digit", minute: "2-digit" });
+    const timeStr = formatLocalizedDate(date, locale, { hour: "2-digit", minute: "2-digit" }, "Invalid Date");
     const isMidnight = midnightTs !== null && payload.value === midnightTs;
-    const dateStr = isMidnight ? date.toLocaleDateString(locale, { month: "short", day: "numeric" }) : null;
+    const dateStr = isMidnight
+      ? formatLocalizedDate(date, locale, { month: "short", day: "numeric" }, "Invalid Date")
+      : null;
 
     return (
       <g transform={`translate(${x},${y})`}>
@@ -83,7 +86,12 @@ function makeTopDateTickRenderer(locale: string) {
     index: number;
   }) => {
     const date = new Date(payload.value);
-    const dateStr = date.toLocaleDateString(locale, { weekday: "short", month: "short", day: "numeric" });
+    const dateStr = formatLocalizedDate(
+      date,
+      locale,
+      { weekday: "short", month: "short", day: "numeric" },
+      "Invalid Date",
+    );
     const anchor = index === 0 ? "start" : "middle";
     return (
       <g transform={`translate(${x},${y})`}>
@@ -106,12 +114,17 @@ function buildYAxisConfig(maxVal: number, stepOptions: { threshold: number; step
 function formatTooltipDate(label: number | string | undefined, locale: string): string {
   const timestamp = typeof label === "number" ? label : Number(label);
   if (Number.isNaN(timestamp)) return "";
-  return new Date(timestamp).toLocaleString(locale, {
-    month: "short",
-    day: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
+  return formatLocalizedDate(
+    timestamp,
+    locale,
+    {
+      month: "short",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    },
+    "Invalid Date",
+  );
 }
 
 export function RecentResultsSection({
@@ -124,13 +137,17 @@ export function RecentResultsSection({
   uppercaseLabels?: boolean;
 }) {
   const t = useI18n("widget.speedtestTracker");
+  const orderedResults = useMemo(
+    () => results.toSorted((a, b) => a.created_at.getTime() - b.created_at.getTime()),
+    [results],
+  );
 
   return (
     <Stack gap={4} h="100%" style={{ minHeight: 0 }}>
       <SectionLabel uppercase={uppercaseLabels}>{t("recentResults")}</SectionLabel>
       <div style={{ flex: 1, minHeight: 0, display: "flex", flexDirection: "column", gap: 4 }}>
-        <SpeedSubChart results={results} showLabel={showPingGraph} uppercaseLabels={uppercaseLabels} />
-        {showPingGraph && <PingSubChart results={results} uppercaseLabels={uppercaseLabels} />}
+        <SpeedSubChart results={orderedResults} showLabel={showPingGraph} uppercaseLabels={uppercaseLabels} />
+        {showPingGraph && <PingSubChart results={orderedResults} uppercaseLabels={uppercaseLabels} />}
       </div>
     </Stack>
   );
@@ -181,7 +198,6 @@ function SpeedHistoryChart({ results, height }: { results: SpeedtestTrackerResul
   const data = useMemo(
     () =>
       results
-        .toSorted((resultA, resultB) => resultA.created_at.getTime() - resultB.created_at.getTime())
         .filter((result) => (result.download_bits ?? 0) > 0)
         .map((result) => ({
           ts: result.created_at.getTime(),
@@ -289,7 +305,6 @@ function PingHistoryChart({ results, height }: { results: SpeedtestTrackerResult
   const data = useMemo(
     () =>
       results
-        .toSorted((resultA, resultB) => resultA.created_at.getTime() - resultB.created_at.getTime())
         .map((result) =>
           result.ping === null
             ? null

@@ -75,8 +75,11 @@ interface NavigationLinkHref extends CommonNavigationLinkProps {
   external?: boolean;
   exact?: boolean;
 }
+interface NavigationLinkChangelog extends CommonNavigationLinkProps {
+  action: "changelog";
+}
 interface NavigationLinkWithItems extends CommonNavigationLinkProps {
-  items: NavigationLinkHref[];
+  items: (NavigationLinkHref | NavigationLinkChangelog)[];
 }
 
 export type NavigationLink = NavigationLinkHref | NavigationLinkWithItems;

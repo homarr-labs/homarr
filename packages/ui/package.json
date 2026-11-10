@@ -17,7 +17,8 @@
     "./widget-icons": "./src/widget-icons.ts",
     "./styles.css": "./src/styles.css",
     "./hooks": "./src/hooks/index.ts",
-    "./icons": "./src/icons/index.ts"
+    "./icons": "./src/icons/index.ts",
+    "./markdown": "./src/markdown/index.ts"
   },
   "scripts": {
     "clean": "rm -rf .turbo node_modules",
@@ -37,10 +38,14 @@
     "@tabler/icons-react": "catalog:",
     "crypto-js": "catalog:",
     "mantine-react-table": "catalog:",
+    "mdast-util-find-and-replace": "catalog:",
     "next": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
-    "svgson": "catalog:"
+    "react-markdown": "catalog:",
+    "rehype-raw": "catalog:",
+    "rehype-sanitize": "catalog:",
+    "remark-gfm": "catalog:"
   },
   "devDependencies": {
     "@homarr/tsconfig": "workspace:^0.1.0",

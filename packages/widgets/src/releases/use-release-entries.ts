@@ -62,7 +62,7 @@ export const useReleaseEntries = ({
             provider,
             identifier: repository.identifier,
             versionFilter: repository.versionFilter,
-            excludePrereleases: repository.excludePrereleases,
+            excludePrereleases: repository.excludePrereleases ?? false,
             providerUrl: repository.providerUrl,
           })),
         },
@@ -95,6 +95,11 @@ export const useReleaseEntries = ({
 
   const entries = useMemo(() => {
     const resultById = new Map(results.map((result) => [result.id, result]));
+    const failedRepositoryIds = new Set<string>();
+    for (const [index, batch] of batches.entries()) {
+      if (!queries[index]?.isError) continue;
+      for (const repository of batch.repositories) failedRepositoryIds.add(repository.id);
+    }
 
     return repositories.map((repository): ReleaseEntry => {
       const base = {
@@ -115,7 +120,10 @@ export const useReleaseEntries = ({
 
       if (!repository.provider) return errorEntry("noProviderSelected");
       const result = resultById.get(repository.id);
-      if (!result) return errorEntry("noProviderResponse");
+      if (!result) {
+        if (failedRepositoryIds.has(repository.id)) return errorEntry("unexpected");
+        return errorEntry("noProviderResponse");
+      }
       if (!result.success) return errorEntry(result.error.code);
 
       const { data } = result;
@@ -147,7 +155,7 @@ export const useReleaseEntries = ({
         integrations,
       };
     });
-  }, [integrationIds, options, repositories, results, serviceVersions, viewedVersions]);
+  }, [batches, integrationIds, options, queries, repositories, results, serviceVersions, viewedVersions]);
 
   const markViewed = useCallback(
     (entry: ReleaseEntry) => {

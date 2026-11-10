@@ -1,8 +1,7 @@
-import { db } from "@homarr/db";
-import { getServerSettingByKeyAsync } from "@homarr/db/queries";
+import { getRscServerSettingsAsync } from "@homarr/api/server-settings-server";
 
 export const SearchEngineOptimization = async () => {
-  const crawlingAndIndexingSetting = await getServerSettingByKeyAsync(db, "crawlingAndIndexing");
+  const { crawlingAndIndexing: crawlingAndIndexingSetting } = await getRscServerSettingsAsync();
 
   const robotsAttributes: string[] = [];
 

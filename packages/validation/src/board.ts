@@ -5,6 +5,7 @@ import {
   backgroundImageRepeats,
   backgroundImageSizes,
   boardPermissions,
+  cornerStyleValues,
   layoutRoles,
   widgetKinds,
 } from "@homarr/definitions";
@@ -69,7 +70,7 @@ export const boardSavePartialSettingsSchema = z
     opacity: z.number().min(0).max(100),
     customCss: z.string().max(16384),
     iconColor: hexColorNullableSchema,
-    itemRadius: z.union([z.literal("xs"), z.literal("sm"), z.literal("md"), z.literal("lg"), z.literal("xl")]),
+    itemRadius: z.union(cornerStyleValues.map((value) => z.literal(value))),
     disableStatus: z.boolean(),
   })
   .partial();

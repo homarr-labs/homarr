@@ -144,13 +144,7 @@
         "secondaryColor": "Màu thứ cấp",
         "resetColors": "Đặt lại màu sắc",
         "radius": "Bán kính góc tiện ích",
-        "radiusOptions": {
-          "xs": "Sát",
-          "sm": "Tinh tế",
-          "md": "Cân bằng",
-          "lg": "Bo tròn",
-          "xl": "Mềm mại"
-        },
+        "radiusOptions": {},
         "columns": "Cột bảng",
         "columnsDescription": "Các cột xác định lưới ngang dùng để định kích thước và vị trí các mục. 12 cột là đủ cho hầu hết mọi người.",
         "columnCount": "{count, plural, other {# cột}}",
@@ -194,7 +188,6 @@
           "loginRequired": "Đăng nhập với tư cách quản trị viên sau khi thiết lập để tạo khóa API.",
           "configuration": "Cấu hình ứng dụng khách",
           "copy": "Sao chép cấu hình",
-          "copied": "Đã sao chép",
           "advanced": "Mở các công cụ, quyền và chi tiết thiết lập MCP"
         }
       },
@@ -286,6 +279,13 @@
         "admin": {
           "title": "",
           "description": ""
+        },
+        "mode": {
+          "label": "",
+          "readOnly": "",
+          "readWrite": "",
+          "readOnlyDescription": "",
+          "readWriteDescription": ""
         },
         "credential": {
           "title": "",
@@ -806,9 +806,7 @@
         "examples": "Ví dụ về liên kết được hỗ trợ",
         "requiresHandler": "Giao thức tùy chỉnh yêu cầu một ứng dụng được liên kết trên thiết bị của bạn."
       },
-      "description": {
-        "label": "Mô tả"
-      },
+      "description": {},
       "useDifferentUrlForPing": {
         "checkbox": {
           "label": "Sử dụng URL khác để ping",
@@ -860,7 +858,6 @@
       "source": "Nguồn API: {name}",
       "baseUrl": "URL máy chủ",
       "networkScope": "Quyền truy cập mạng",
-      "save": "Lưu cấu hình API",
       "expires": "Yêu cầu dùng một lần này hết hạn lúc {time}."
     },
     "page": {
@@ -891,13 +888,11 @@
       "pasteImportHint": "Dán toàn bộ JSON tiện ích tùy chỉnh bằng Ctrl+V hoặc Command+V",
       "delete": "Xóa tiện ích tùy chỉnh",
       "deleteConfirm": "Bạn có chắc muốn xóa \"{name}\" không? Không thể hoàn tác thao tác này.",
-      "export": "Xuất",
       "duplicate": "Nhân bản",
       "aiPrompt": "Thiết kế bằng AI",
       "copyAiPrompt": "Sao chép lời nhắc AI",
       "enable": "Bật",
       "disable": "Tắt",
-      "menu": "Thao tác",
       "downloadSkill": "Xem Kỹ năng tiện ích tùy chỉnh",
       "publishWorkshop": "Xuất bản lên Workshop",
       "migrate": "Di chuyển tiện ích tùy chỉnh",
@@ -911,12 +906,9 @@
     "sourceSetupDialog": {
       "title": "Cấu hình nguồn tiện ích",
       "description": "Xem lại nơi tiện ích này kết nối và thêm hoặc thay thế thông tin xác thực được mã hóa.",
-      "credentialsRequired": "Yêu cầu sẽ thất bại cho đến khi thêm thông tin xác thực bắt buộc.",
-      "save": "Lưu cấu hình"
+      "credentialsRequired": "Yêu cầu sẽ thất bại cho đến khi thêm thông tin xác thực bắt buộc."
     },
-    "field": {
-      "description": "Mô tả"
-    },
+    "field": {},
     "editor": {
       "errorBoundary": {
         "title": "Đã xảy ra lỗi"
@@ -926,7 +918,6 @@
         "format": "Định dạng",
         "insertStarter": "Chèn mẫu khởi đầu",
         "redo": "Làm lại",
-        "copied": "Đã sao chép",
         "schema": "Lược đồ"
       },
       "reference": {
@@ -1007,7 +998,6 @@
         "manifestFilename": "widget.json",
         "request": "Yêu cầu {count, number}",
         "requestId": "ID yêu cầu",
-        "type": "Loại Trình tải xuống",
         "method": "Phương thức",
         "source": "Nguồn API",
         "run": "Chạy",
@@ -1044,7 +1034,6 @@
         "optionName": "Tên tùy chọn",
         "label": "Nhãn",
         "control": "Điều khiển",
-        "description": "Mô tả",
         "default": "Mặc định",
         "optionDetails": "Ràng buộc và lựa chọn động",
         "minimum": "Tối thiểu",
@@ -1081,7 +1070,6 @@
         "credentialRemovedDescription": "Giá trị đã lưu đã bị xóa.",
         "primary": "API chính",
         "id": "ID nguồn",
-        "name": "Tên công việc",
         "baseUrl": "URL cơ sở",
         "baseUrlError": {
           "invalid": "Nhập URL đầy đủ.",
@@ -1098,7 +1086,6 @@
         "remove": "Xóa nguồn và các yêu cầu của nguồn",
         "advanced": "Nâng cao",
         "add": "Thêm nguồn API khác",
-        "sourceType": "Tích hợp",
         "manualSource": "API HTTP",
         "existingIntegration": "Tích hợp hiện có",
         "integrationType": "Loại tích hợp",
@@ -1232,7 +1219,6 @@
       "migrationTitle": "Xem lại bản thay thế v2 đã di chuyển",
       "migrationDescription": "Xem lại và xác nhận định nghĩa v2 được tạo này. Việc xác nhận sẽ thay thế nguyên tử bản ghi v1 được bảo lưu, đồng thời giữ các vị trí bảng hiện có liên kết với cùng ID tiện ích.",
       "fileLabel": "Chọn tệp JSON tiện ích tùy chỉnh",
-      "name": "Tên công việc",
       "origin": "Nguồn gốc cơ sở",
       "authentication": "Xác thực",
       "networkScope": "Phạm vi mạng",
@@ -1252,8 +1238,6 @@
         "title": "Tiện ích này có thể thay đổi dữ liệu từ xa",
         "description": "Xem lại mọi hành động được đặt tên, thông tin xác thực kế thừa và xác nhận phá hoại sau khi nhập. Bí mật không được bao gồm trong tệp."
       },
-      "cancel": "Hủy nhập",
-      "confirm": "Nhập tiện ích",
       "confirmMigration": "Xác nhận thay thế v2"
     },
     "secret": {
@@ -1317,7 +1301,6 @@
     "closeScreenshotViewer": "Đóng trình xem ảnh chụp màn hình",
     "technicalDetails": "Chi tiết kỹ thuật",
     "sourceCode": "Mục Workshop",
-    "export": "Xuất",
     "report": "Báo cáo",
     "reportTitle": "Báo cáo nội dung gửi",
     "reportReason": "Lý do",
@@ -1348,8 +1331,6 @@
       "viewSubmission": "Xem và quản lý nội dung gửi",
       "done": "Xong",
       "signInHint": "Đăng nhập để đăng dưới danh tính Workshop của bạn.",
-      "titleField": "Tiêu đề",
-      "descriptionField": "Mô tả",
       "screenshots": "Ảnh chụp màn hình",
       "screenshotsDescription": "Tối đa năm ảnh PNG, JPEG hoặc WebP",
       "screenshotsPlaceholder": "Chọn ảnh chụp màn hình",
@@ -1412,11 +1393,7 @@
               "label": "Chọn ứng dụng hiện có"
             },
             "new": {
-              "title": "Mới",
-              "url": {
-                "label": "URL ứng dụng",
-                "description": "URL ứng dụng sẽ mở khi truy cập từ bảng điều khiển"
-              }
+              "title": "Mới"
             }
           }
         }
@@ -1468,8 +1445,9 @@
         "label": "Liên kết ứng dụng hiện có",
         "description": "Kết nối tích hợp này với một ứng dụng bạn đã có thể sử dụng."
       },
-      "appHref": {
-        "placeholder": "URL ứng dụng tùy chỉnh"
+      "externalUrl": {
+        "label": "",
+        "description": ""
       },
       "apiKeySettings": {
         "label": "Lấy khóa API"
@@ -1536,6 +1514,27 @@
         "unknown": {
           "title": "Lỗi không xác định",
           "description": "Đã xảy ra lỗi không xác định, hãy mở nguyên nhân bên dưới để xem thêm chi tiết"
+        },
+        "frigate": {
+          "title": "",
+          "status": "",
+          "description": {
+            "cookie": "",
+            "profileMismatch": "",
+            "redirect": "",
+            "login": "",
+            "profile": "",
+            "stats": ""
+          }
+        },
+        "openmediavault": {
+          "title": "",
+          "description": {
+            "totpSecretRequired": "",
+            "totpSecretInvalid": "",
+            "totpVerificationFailed": "",
+            "unsupportedChallenge": ""
+          }
         },
         "parse": {
           "title": "Lỗi cú pháp",
@@ -1615,11 +1614,9 @@
             },
             "notification": {
               "success": {
-                "title": "Đã tin cậy chứng chỉ",
                 "message": "Đã thêm chứng chỉ vào danh sách chứng chỉ đáng tin cậy"
               },
               "error": {
-                "title": "Không thể tin cậy chứng chỉ",
                 "message": "Không thể thêm chứng chỉ vào danh sách chứng chỉ đáng tin cậy"
               }
             }
@@ -1738,6 +1735,11 @@
         "title": "Đặt lại bí mật",
         "message": "Bạn có chắc chắn muốn đặt lại bí mật này không?"
       },
+      "totpNotice": "",
+      "remove": {
+        "title": "",
+        "message": ""
+      },
       "noSecretsRequired": {
         "segmentTitle": "Không có bí mật",
         "text": "Tích hợp này không yêu cầu bí mật"
@@ -1819,9 +1821,9 @@
           "label": "Mật khẩu trình lập chỉ mục",
           "newLabel": "Mật khẩu trình lập chỉ mục mới"
         },
-        "wazuhDashboardUrl": {
-          "label": "URL bảng điều khiển (tùy chọn)",
-          "newLabel": "URL bảng điều khiển mới"
+        "totpSecret": {
+          "label": "",
+          "newLabel": ""
         }
       }
     },
@@ -1840,9 +1842,7 @@
     "search": "Tìm media",
     "field": {
       "preview": "Xem trước",
-      "size": "Kích cỡ",
-      "creator": "Người sáng tạo",
-      "actions": "Điều khiển"
+      "creator": "Người sáng tạo"
     },
     "action": {
       "upload": {
@@ -1920,7 +1920,8 @@
       "clearSearch": "Xóa tìm kiếm",
       "copy": "Sao chép",
       "copied": "Đã sao chép",
-      "refresh": "Làm mới"
+      "refresh": "Làm mới",
+      "export": "Xuất"
     },
     "hidden": "",
     "pagination": {
@@ -2015,6 +2016,15 @@
         "modifier": "Bộ sửa đổi"
       }
     },
+    "markdown": {
+      "alert": {
+        "note": "",
+        "tip": "",
+        "important": "",
+        "warning": "",
+        "caution": ""
+      }
+    },
     "dangerZone": "Khu vực nguy hiểm",
     "noResults": "Không có kết quả",
     "unsavedChanges": "Bạn có thay đổi chưa lưu!",
@@ -2067,7 +2077,18 @@
     "total": "Tổng cộng",
     "filesystemUsage": "{count, plural, other {Hiển thị mức sử dụng cho {count, number} hệ thống tệp}}",
     "field": {
-      "name": "Tên công việc"
+      "name": "Tên công việc",
+      "state": "Trạng thái",
+      "size": "Kích cỡ",
+      "actions": "Thao tác",
+      "source": "Nguồn",
+      "title": "Tiêu đề",
+      "description": "Mô tả",
+      "created": "Đã tạo",
+      "namespace": "Không gian tên",
+      "status": "Trạng thái",
+      "architecture": "Kiến trúc",
+      "type": "Loại"
     },
     "label": {
       "new": "Mới"
@@ -2085,6 +2106,15 @@
       "searchEngines": "Công cụ tìm kiếm",
       "tasks": "Tác vụ",
       "users": "Người dùng"
+    },
+    "cornerStyle": {
+      "options": {
+        "md": "Cân bằng",
+        "lg": "Bo tròn",
+        "xs": "Hẹp",
+        "sm": "Tinh tế",
+        "xl": "Mềm"
+      }
     }
   },
   "section": {
@@ -2122,9 +2152,7 @@
         "collapse": "Thu gọn"
       },
       "option": {
-        "title": {
-          "label": "Tiêu đề"
-        },
+        "title": {},
         "customCssClasses": {
           "label": "Các lớp CSS tùy chỉnh"
         },
@@ -2148,8 +2176,7 @@
       "label": {
         "settings": "Cài đặt",
         "settingsFor": "Cài đặt cho {name}",
-        "options": "Tùy chọn",
-        "actions": "Thao tác"
+        "options": "Tùy chọn"
       },
       "status": {
         "success": "OK",
@@ -2202,7 +2229,6 @@
     "selection": {
       "summary": "{count, plural, other {Đã chọn {count, number} mục}}",
       "selected": "{count, plural, other {Đã chọn {count, number}}}",
-      "copy": "Sao chép",
       "copied": "{count, plural, other {Đã sao chép {count, number} mục vào bảng nhớ tạm}}",
       "copyError": "Không thể sao chép các mục đã chọn. Trình duyệt của bạn có thể không cho phép truy cập bảng nhớ tạm.",
       "paste": "Dán",
@@ -2214,7 +2240,6 @@
       "removed": "{count, plural, other {Đã xóa {count, number} mục}}",
       "move": "Di chuyển",
       "moveTo": "Di chuyển các mục đã chọn",
-      "delete": "Xóa",
       "clear": "Xóa lựa chọn",
       "clearShortcut": "Xóa lựa chọn (Escape)",
       "saveErrorTitle": "Không thể cập nhật các mục",
@@ -2290,9 +2315,7 @@
           "label": "Tích hợp",
           "removeLabel": "Xóa tích hợp {name}"
         },
-        "title": {
-          "label": "Tiêu đề"
-        },
+        "title": {},
         "customCssClasses": {
           "label": "Lớp css tùy chỉnh"
         },
@@ -2351,7 +2374,29 @@
             "tooltip": "Dạng chú giải",
             "hidden": "Ẩn"
           }
+        },
+        "dockerContainer": {
+          "label": "",
+          "description": "",
+          "placeholder": "",
+          "disabled": "",
+          "unavailable": ""
         }
+      },
+      "docker": {
+        "action": {
+          "start": "",
+          "stop": ""
+        },
+        "notification": {
+          "startFailed": "",
+          "stopFailed": ""
+        },
+        "switch": {
+          "start": "",
+          "stop": ""
+        },
+        "stopped": ""
       },
       "error": {
         "notFound": {
@@ -2430,6 +2475,10 @@
         "hideHostname": {
           "label": "Ẩn tên máy chủ"
         },
+        "showFullUrls": {
+          "label": "",
+          "description": ""
+        },
         "withBorder": {
           "label": "Hiển thị viền"
         },
@@ -2452,6 +2501,9 @@
         }
       },
       "empty": "Thêm URL hoặc Ứng dụng trong cài đặt tiện ích",
+      "copyUrl": "",
+      "copied": "",
+      "copyFailed": "",
       "groups": {
         "label": "",
         "placeholder": "",
@@ -3505,7 +3557,6 @@
         },
         "table": {
           "header": {
-            "name": "Tên",
             "node": "Node"
           }
         }
@@ -3535,8 +3586,6 @@
         },
         "defaultSort": {
           "option": {
-            "name": "Tên",
-            "state": "",
             "cpuUsage": "Mức sử dụng CPU",
             "memoryUsage": "Mức sử dụng bộ nhớ"
           }
@@ -3554,6 +3603,34 @@
     },
     "coolify": {
       "description": "Tổng quan về phiên bản Coolify của bạn với các máy chủ và ứng dụng",
+      "summary": {
+        "needsAttention": "",
+        "inProgress": "",
+        "unknown": "",
+        "healthy": "",
+        "empty": "",
+        "healthyDetail": "",
+        "more": "",
+        "moreInstances": ""
+      },
+      "details": {
+        "tabs": "",
+        "overview": "",
+        "search": "",
+        "serviceApplications": ""
+      },
+      "overview": {
+        "projects": "",
+        "resources": "",
+        "attention": "",
+        "ready": "",
+        "noProjects": "",
+        "projectsUnavailable": "",
+        "moreProjects": "",
+        "running": "Đang chạy",
+        "resourceCount": "",
+        "environmentCount": ""
+      },
       "option": {
         "showServers": {
           "label": "Hiển thị máy chủ"
@@ -3585,7 +3662,13 @@
       },
       "source": {
         "url": "Nguồn: {url}",
-        "unavailable": "{source}: không khả dụng"
+        "unavailable": "{source}: không khả dụng",
+        "unavailableCount": ""
+      },
+      "kind": {
+        "server": "",
+        "application": "",
+        "service": ""
       },
       "instances": {
         "title": "Các phiên bản"
@@ -3602,6 +3685,7 @@
         "exited": "Đã thoát",
         "starting": "Đang khởi động",
         "restarting": "Đang khởi động lại",
+        "unhealthy": "",
         "unknown": "Không rõ",
         "online": "Trực tuyến",
         "offline": "Ngoại tuyến",
@@ -3947,9 +4031,7 @@
       "items": {
         "currentlyPlaying": "Đang phát",
         "user": "User",
-        "name": "Tên",
         "id": "ID",
-        "status": "Trạng thái",
         "directPlay": "Phát trực tiếp",
         "directStream": "Luồng trực tiếp",
         "transcodeVideo": "Chuyển mã video",
@@ -4444,38 +4526,29 @@
           "columnTitle": "Điều khiển"
         },
         "added": {
-          "columnTitle": "Đã thêm",
-          "detailsTitle": "Ngày thêm"
+          "columnTitle": "Đã thêm"
         },
         "category": {
-          "columnTitle": "Bổ sung",
-          "detailsTitle": "Danh mục (Hoặc thông tin bổ sung)"
+          "columnTitle": "Bổ sung"
         },
         "downSpeed": {
-          "columnTitle": "Tải xuống",
-          "detailsTitle": "Tốc độ tải"
+          "columnTitle": "Tải xuống"
         },
         "index": {
           "columnTitle": "STT",
           "detailsTitle": "Chỉ mục hiện tại trong client"
         },
         "id": {
-          "columnTitle": "ID mục",
-          "detailsTitle": "ID mục"
+          "columnTitle": "ID mục"
         },
-        "integration": {
-          "columnTitle": "Tích hợp"
-        },
-        "name": {
-          "columnTitle": "Tên công việc"
-        },
+        "integration": {},
+        "name": {},
         "progress": {
           "columnTitle": "Tiến độ",
           "detailsTitle": "Tiến độ tải xuống"
         },
         "ratio": {
-          "columnTitle": "Tỉ lệ",
-          "detailsTitle": "Tỷ lệ torrent (nhận/gửi)"
+          "columnTitle": "Tỉ lệ"
         },
         "received": {
           "columnTitle": "Tổng tải xuống",
@@ -4485,26 +4558,16 @@
           "columnTitle": "Tổng tải lên",
           "detailsTitle": "Tổng dung lượng đã tải lên"
         },
-        "size": {
-          "columnTitle": "Kích thước tệp",
-          "detailsTitle": "Tổng kích thước lựa chọn/tệp"
-        },
-        "state": {
-          "columnTitle": "Trạng thái",
-          "detailsTitle": "Trạng thái công việc"
-        },
+        "size": {},
+        "state": {},
         "time": {
-          "columnTitle": "Thời gian hoàn thành",
-          "detailsTitle": "Thời gian từ/đến khi hoàn thành",
-          "eta": "Thời gian dự kiến"
+          "columnTitle": "Thời gian hoàn thành"
         },
         "type": {
-          "columnTitle": "Loại",
           "detailsTitle": "Loại Trình tải xuống"
         },
         "upSpeed": {
-          "columnTitle": "Tải lên",
-          "detailsTitle": "Tốc độ tải lên"
+          "columnTitle": "Tải lên"
         }
       },
       "states": {
@@ -4693,9 +4756,7 @@
           }
         },
         "queue": {
-          "table": {
-            "size": "Kích cỡ"
-          }
+          "table": {}
         },
         "common": {
           "empty": "Trống",
@@ -4857,11 +4918,10 @@
           },
           "identifier": {
             "label": "Mã định danh",
+            "containerPlaceholder": "",
             "placeholder": "Tên hoặc Chủ sở hữu/Tên"
           },
-          "name": {
-            "label": "Tên"
-          },
+          "name": {},
           "excludePrereleases": {
             "label": "",
             "description": ""
@@ -5166,7 +5226,6 @@
       "download": "Tải xuống",
       "upload": "Tải lên",
       "ping": "Ping",
-      "status": "Trạng thái",
       "avgDownload": "Tải xuống trung bình",
       "avgUpload": "Tải lên trung bình",
       "avgPing": "Ping trung bình",
@@ -5474,7 +5533,6 @@
         "actionsDisabledEditMode": "Các tác vụ bị tắt khi bảng ở chế độ chỉnh sửa.",
         "widgetItemUnavailable": "Mục tiện ích này không khả dụng.",
         "toggle": "Bật/tắt",
-        "copied": "Đã sao chép",
         "confirmDelete": "Xác nhận tác vụ có tính phá hủy này."
       },
       "option": {
@@ -5751,7 +5809,6 @@
       },
       "metric": {
         "system": "Hệ thống",
-        "source": "Tích hợp",
         "hostname": "Tên máy chủ",
         "cpuModel": "Mẫu CPU",
         "cores": "Lõi",
@@ -6441,13 +6498,7 @@
       "itemRadius": {
         "label": "Bán kính mục",
         "description": "Thay đổi độ bo tròn của các ô trên bảng",
-        "option": {
-          "xs": "Rất nhỏ",
-          "sm": "Bé nhỏ",
-          "md": "Trung bình",
-          "lg": "Lớn",
-          "xl": "Rất lớn"
-        }
+        "option": {}
       },
       "isPublic": {
         "label": "Công khai",
@@ -6676,7 +6727,8 @@
             "documentation": "Tài liệu",
             "submitIssue": "Gửi báo cáo sự cố",
             "discord": "Discord",
-            "sourceCode": "Mã nguồn"
+            "sourceCode": "Mã nguồn",
+            "changelog": ""
           }
         },
         "about": "Về chúng tôi",
@@ -7029,6 +7081,10 @@
             "title": "Hiển thị",
             "defaultColorScheme": {
               "label": "Bảng màu mặc định"
+            },
+            "whatsNew": {
+              "label": "",
+              "description": ""
             }
           },
           "branding": {
@@ -7079,13 +7135,7 @@
             },
             "defaultRadius": {
               "label": "Kiểu góc",
-              "options": {
-                "xs": "Hẹp",
-                "sm": "Tinh tế",
-                "md": "Cân bằng",
-                "lg": "Bo tròn",
-                "xl": "Mềm"
-              }
+              "options": {}
             },
             "customCss": {
               "label": "CSS tùy chỉnh toàn cục",
@@ -7107,7 +7157,6 @@
               "greetingDefault": "Lời chào mặc định",
               "boardColorLocked": "Đã khóa màu bảng",
               "boardColorFlexible": "Cho phép màu bảng",
-              "appName": "Tên công việc",
               "logo": "Biểu trưng",
               "greeting": "Lời chào",
               "on": "Bật",
@@ -7335,9 +7384,7 @@
             "lastExecution": {
               "label": "Lần thực thi gần nhất"
             },
-            "actions": {
-              "label": "Thao tác"
-            }
+            "actions": {}
           },
           "table": {
             "search": "Tìm kiếm {count} tác vụ..."
@@ -7389,6 +7436,12 @@
             "apiKey": {
               "label": "Xác thực",
               "title": "Khóa API",
+              "access": {
+                "label": "",
+                "readOnly": "",
+                "readWrite": "",
+                "description": ""
+              },
               "button": {
                 "createApiToken": "Tạo mã thông báo API",
                 "confirmDeletion": ""
@@ -7401,9 +7454,7 @@
               },
               "table": {
                 "header": {
-                  "createdBy": "Người tạo",
-                  "source": "Tích hợp",
-                  "actions": "Thao tác"
+                  "createdBy": "Người tạo"
                 }
               },
               "provenance": {
@@ -7696,7 +7747,6 @@
     },
     "field": {
       "state": {
-        "label": "Trạng thái",
         "option": {
           "created": "Đã tạo",
           "running": "Đang chạy",
@@ -7723,7 +7773,6 @@
       }
     },
     "action": {
-      "title": "Thao tác",
       "logs": {
         "label": "Xem nhật ký",
         "page": {
@@ -7961,27 +8010,13 @@
       "internalServerError": "Không thể tải dữ liệu Kubernetes"
     },
     "field": {
-      "name": {
-        "label": "Tên công việc"
-      },
-      "namespace": {
-        "label": "Không gian tên"
-      },
-      "creationTimestamp": {
-        "label": "Đã tạo"
-      },
-      "state": {
-        "label": "Trạng thái công việc"
-      },
-      "status": {
-        "label": "Trạng thái"
-      },
-      "type": {
-        "label": "Loại Trình tải xuống"
-      },
-      "architecture": {
-        "label": "Kiến trúc"
-      }
+      "name": {},
+      "namespace": {},
+      "creationTimestamp": {},
+      "state": {},
+      "status": {},
+      "type": {},
+      "architecture": {}
     }
   },
   "permission": {
@@ -8008,10 +8043,7 @@
         "label": "Quyền"
       }
     },
-    "action": {
-      "saveUser": "Lưu quyền người dùng",
-      "saveGroup": "Lưu quyền nhóm"
-    }
+    "action": {}
   },
   "navigationStructure": {
     "manage": {
@@ -8122,8 +8154,7 @@
       "resultsAriaLabel": "Kết quả {mode}",
       "footer": {
         "navigate": "Điều hướng",
-        "open": "Mở",
-        "close": "Đóng"
+        "open": "Mở"
       }
     },
     "error": {
@@ -8553,9 +8584,7 @@
         "urlTemplate": {
           "label": "Mẫu URL tìm kiếm"
         },
-        "description": {
-          "label": "Mô tả"
-        }
+        "description": {}
       },
       "page": {
         "list": {
@@ -8624,8 +8653,7 @@
             "table": {
               "header": {
                 "season": "Mùa",
-                "episodes": "Tập",
-                "status": "Trạng thái"
+                "episodes": "Tập"
               },
               "status": {
                 "requested": "Đã yêu cầu"
@@ -8810,6 +8838,12 @@
       }
     }
   },
+  "whatsNew": {
+    "title": "",
+    "empty": "",
+    "allReleases": "",
+    "dismiss": ""
+  },
   "metadata": {
     "description": "Bảng điều khiển tự lưu trữ cho hệ thống *arr và toàn bộ homelab của bạn. Tích hợp hơn 50 dịch vụ, tiện ích theo thời gian thực, không cần tệp cấu hình.",
     "dashboardTitle": "Bảng điều khiển {appName}"
@@ -8895,6 +8929,7 @@
       "imageInput": "Hỗ trợ đầu vào hình ảnh",
       "thinking": "Chế độ suy nghĩ",
       "reasoning": {
+        "default": "",
         "auto": "Tự động",
         "none": "Tắt",
         "minimal": "Tối thiểu",
@@ -9134,7 +9169,6 @@
       "cssDescription": "Chỉnh sửa toàn bộ biểu định kiểu. Các quy tắc hiện có sẽ được giữ lại trừ khi bị xóa tại đây.",
       "cssCharacters": "{count} trên 16384 ký tự",
       "copyCss": "Sao chép CSS",
-      "copied": "Đã sao chép",
       "restoreCss": "Khôi phục CSS hiện tại",
       "remoteCssTitle": "CSS này tải một tài nguyên từ xa",
       "remoteCssDescription": "Các biểu định kiểu đã nhập và URL từ xa sẽ liên hệ với máy chủ khác khi bảng tải. Hãy xem xét chúng trước khi tiếp tục."
