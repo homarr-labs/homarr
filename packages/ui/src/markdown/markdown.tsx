@@ -50,9 +50,16 @@ export interface MarkdownProps {
   allowHtml?: boolean;
   githubMentions?: boolean;
   typography?: boolean;
+  components?: Components;
 }
 
-export const Markdown = ({ children, allowHtml = false, githubMentions = false, typography = true }: MarkdownProps) => {
+export const Markdown = ({
+  children,
+  allowHtml = false,
+  githubMentions = false,
+  typography = true,
+  components: overrides,
+}: MarkdownProps) => {
   const remarkPlugins: PluginList = [remarkGfm];
   const rehypePlugins: PluginList = [rehypeSanitize, rehypeGithubAlerts];
   let markdownComponents = components;
@@ -67,7 +74,7 @@ export const Markdown = ({ children, allowHtml = false, githubMentions = false, 
       remarkPlugins={remarkPlugins}
       rehypePlugins={rehypePlugins}
       skipHtml={!allowHtml}
-      components={markdownComponents}
+      components={{ ...markdownComponents, ...overrides }}
     >
       {children}
     </ReactMarkdown>

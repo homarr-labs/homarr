@@ -8,7 +8,7 @@ Admins can now start and stop linked Docker containers from app tiles, and the C
 
 App tiles can show a start or stop button beside the status dot for a linked Docker container. The dot turns orange during the action and red after stopping; after starting, Homarr repeats its checks until the app responds. Only admins see the control, and it is disabled in edit mode or on endpoints without lifecycle access.
 
-![App tile with a stop button beside the status dot](https://github.com/junkerderprovinz/homarr/raw/de37a249cd586ae4e5f9927b2dc72d2820835551/app-docker-toggle/tile-after.png)
+<img src="https://github.com/junkerderprovinz/homarr/raw/de37a249cd586ae4e5f9927b2dc72d2820835551/app-docker-toggle/tile-after.png" alt="App tile with a stop button beside the status dot" width="220">
 
 > [!TIP]
 > Look for the "Docker container" field below "Choose app" in the tile settings. Selecting an app automatically links a container with a matching name or URL subdomain when one is found.
@@ -17,13 +17,13 @@ App tiles can show a start or stop button beside the status dot for a linked Doc
 
 Compact cards now show project, running resource and available server counts, while larger cards list resources needing attention or projects when everything is healthy. The expanded view combines projects, resource issues and servers in a searchable overview. Available application, service and server statuses remain visible when project metadata requests fail, with affected counts shown as unknown rather than zero.
 
-![Redesigned compact Coolify widget](https://github.com/user-attachments/assets/53e53b7c-583f-455d-99d8-6559cf2b9e67)
+<img src="https://github.com/user-attachments/assets/53e53b7c-583f-455d-99d8-6559cf2b9e67" alt="Redesigned compact Coolify widget" width="600">
 
 ### OpenMediaVault TOTP, container tracks and bookmark URLs
 
 OpenMediaVault integrations accept an optional encrypted TOTP secret for two-factor authentication. Docker Hub, GHCR and Quay release lookups support explicit non-version tracks such as `:nightly`, including after saving and reloading. Bookmarks can display full URLs and a copy control; both options are off by default.
 
-![OpenMediaVault integration with an encrypted TOTP secret and External URL](https://github.com/user-attachments/assets/f5746aa8-065d-4560-b8a8-36a469dee111)
+<img src="https://github.com/user-attachments/assets/f5746aa8-065d-4560-b8a8-36a469dee111" alt="OpenMediaVault integration with an encrypted TOTP secret and External URL" width="600">
 
 ## New
 
@@ -79,7 +79,7 @@ Integrations now have an External URL for widget links, and API keys and MCP gra
 
 Integrations have an optional External URL field for widget and media links, including Plex detail links. Links use this address first, then fall back to the linked app URL and finally the integration URL.
 
-![Integration form with the External URL field](https://github.com/user-attachments/assets/706b4600-383b-4033-a17d-ff304a563d87)
+<img src="https://github.com/user-attachments/assets/706b4600-383b-4033-a17d-ff304a563d87" alt="Integration form with the External URL field" width="524">
 
 > [!TIP]
 > Creating an app from an integration uses the External URL, or the integration URL when it is empty. The app URL and External URL remain independent afterward.
@@ -88,13 +88,13 @@ Integrations have an optional External URL field for widget and media links, inc
 
 API keys and MCP OAuth grants can now restrict access to read-only while still respecting the owner's permissions. New UI-created keys and MCP consent default to read-only; existing keys and creation requests that omit the access option retain writable access. Read-only access blocks mutations, service actions, arbitrary upstream requests and Custom Widget API execution, and MCP hides disallowed tools.
 
-![API keys with read-only access controls](https://github.com/user-attachments/assets/5bd366fa-af2c-4cde-a6aa-397cbf5e06dd)
+<img src="https://github.com/user-attachments/assets/5bd366fa-af2c-4cde-a6aa-397cbf5e06dd" alt="API keys with read-only access controls" width="589">
 
 ### Docker widget icon labels
 
 The Docker stats widget now uses container icon labels: `homarr.icon` first, then `homepage.icon`. Containers without either label keep their existing image-name icon matching.
 
-![Labeled container uses its custom icon; Sonarr is unchanged](https://github.com/user-attachments/assets/7f42dcde-b852-45d2-b78f-1c2db94184e1)
+<img src="https://github.com/user-attachments/assets/7f42dcde-b852-45d2-b78f-1c2db94184e1" alt="Labeled container uses its custom icon; Sonarr is unchanged" width="600">
 
 ## New
 
@@ -149,13 +149,13 @@ The Releases widget can now exclude pre-releases, show an ungrouped list and rem
 
 Each GitHub or Codeberg repository can exclude pre-releases, and the widget can display one continuous list instead of grouping releases by status. When grouping is enabled, section expand/collapse choices now survive reloads for users with change access. Viewed-state tracking and visibility filters still apply when grouping is off.
 
-![Continuous stable-only release list alongside the default grouped layout](https://github.com/user-attachments/assets/28321bbe-b881-4f7e-bf87-da2160d98975)
+<img src="https://github.com/user-attachments/assets/28321bbe-b881-4f7e-bf87-da2160d98975" alt="Continuous stable-only release list alongside the default grouped layout" width="600">
 
 ### Homebox and WUD authentication
 
 Homebox accepts an API key instead of email and password, including for OIDC-only accounts. WUD now supports personal API tokens while retaining username/password and unauthenticated modes for existing setups. Existing integrations require no changes.
 
-![Homebox API-key authentication option](https://github.com/user-attachments/assets/262e7723-eb02-4813-84b7-fe4fc6285fa3)
+<img src="https://github.com/user-attachments/assets/262e7723-eb02-4813-84b7-fe4fc6285fa3" alt="Homebox API-key authentication option" width="600">
 
 > [!TIP]
 > For WUD, create a token under My Profile → Personal API Tokens with the `read` scope. The integration form links to your WUD profile page.
@@ -164,7 +164,7 @@ Homebox accepts an API key instead of email and password, including for OIDC-onl
 
 The dashboard no longer shows a full-page loading spinner, widget placement shifts less during loading, and content remains visible during refresh. Notebook content, RSS content and charts appeared earlier in normal-CPU tests. Under CPU throttling, Notebook content did not load earlier and the first browser widget refresh started later.
 
-![Dashboard with loading and layout improvements](https://github.com/user-attachments/assets/e2eb5aee-6db7-4d12-b055-abf13a0880ec)
+<img src="https://github.com/user-attachments/assets/e2eb5aee-6db7-4d12-b055-abf13a0880ec" alt="Dashboard with loading and layout improvements" width="600">
 
 ## New
 
@@ -226,13 +226,13 @@ The Releases widget has a new layout, resolves container version tags and syncs 
 
 The rebuilt widget puts new releases first until you mark them as viewed. Container images tracked with `latest`, `release` or `stable` resolve to version tags where available, and failed refreshes keep the last release visible for up to 24 hours. Signed-in users' viewed marks sync across devices when the page regains focus; anonymous viewers keep browser-local marks.
 
-![Redesigned Releases widget](https://github.com/user-attachments/assets/7064f8c8-f81d-42f5-a048-49b6748f5d01)
+<img src="https://github.com/user-attachments/assets/7064f8c8-f81d-42f5-a048-49b6748f5d01" alt="Redesigned Releases widget" width="600">
 
 ### Add apps by dropping URLs
 
 Dropping an HTTP(S) link onto a board in edit mode creates and places an app. Homarr uses the page title and site icon, with fallbacks when either is unavailable.
 
-![Adding an app by dropping a URL onto the board](https://github.com/user-attachments/assets/097e11fe-325a-44a6-8407-039a0a8f084f)
+<img src="https://github.com/user-attachments/assets/097e11fe-325a-44a6-8407-039a0a8f084f" alt="Adding an app by dropping a URL onto the board" width="600">
 
 > [!TIP]
 > You can drag a link directly from your browser's address bar. Drops into text fields insert the URL instead of creating an app.
@@ -241,7 +241,7 @@ Dropping an HTTP(S) link onto a board in edit mode creates and places an app. Ho
 
 You can upload and preview MP4 or WebM videos for use as muted, looping board backgrounds within the existing 32 MiB upload limit. Video backgrounds respect cover/contain, attachment and reduced-motion settings, and external video URLs with query strings also work.
 
-![Uploaded MP4 playing behind the board](https://github.com/user-attachments/assets/5ba8e393-41d9-4874-9039-7cebf0c480e3)
+<img src="https://github.com/user-attachments/assets/5ba8e393-41d9-4874-9039-7cebf0c480e3" alt="Uploaded MP4 playing behind the board" width="600">
 
 ## New
 
@@ -316,7 +316,7 @@ Uptime Kuma widgets can show only the overall status and select a status page pe
 
 The new General status only option hides individual monitor rows and chips at any widget size, while keeping monitor details available in the expanded view. Each widget can also select its own status page without duplicating the integration. Small summary tiles use a smaller status ring and omit secondary text to avoid clipping.
 
-![Uptime Kuma summaries and a selected status page](https://github.com/user-attachments/assets/241085b9-9957-4351-9c64-798f7aa620be)
+<img src="https://github.com/user-attachments/assets/241085b9-9957-4351-9c64-798f7aa620be" alt="Uptime Kuma summaries and a selected status page" width="600">
 
 > [!TIP]
 > Leave Status page slug blank to keep each integration's configured page. When filled in, the override applies to every integration selected on that widget.
@@ -363,19 +363,19 @@ Thingport is now supported with four widgets, and calendar viewers can switch be
 
 Connect your Thingport library with an API token to display library totals, recently added and popular models, a daily model spinning in 3D, and an activity heatmap. You can also search models, collections and tags through an integration-backed search engine.
 
-![Thingport widgets on the Homarr demo board](https://github.com/TautvydasDerzinskas/homarr/raw/pr-assets/thingport/demo-board-dark.png)
+<img src="https://github.com/TautvydasDerzinskas/homarr/raw/pr-assets/thingport/demo-board-dark.png" alt="Thingport widgets on the Homarr demo board" width="554">
 
 ### Saved calendar views
 
 The calendar offers Compact month, Month, Week, Day and Agenda views. Viewers can switch without Change access, and their browser-local choices survive reloads without changing the shared default. The expanded view keeps its own selection.
 
-![Week view with visible pinned all-day events](https://github.com/user-attachments/assets/cf1a1a58-35de-489b-a047-8c4ac1ec5444)
+<img src="https://github.com/user-attachments/assets/cf1a1a58-35de-489b-a047-8c4ac1ec5444" alt="Week view with visible pinned all-day events" width="600">
 
 ### Uptime Kuma status-page monitoring
 
 The redesigned widget uses public status-page heartbeats to show per-monitor uptime, response times, groups, tags, certificate warnings, incidents and maintenance. Layouts range from a compact summary to detailed monitor rows. Stale heartbeats show “No recent data,” and missing or stale checks are excluded from uptime averages.
 
-![Uptime Kuma summaries with stale and missing data](https://github.com/user-attachments/assets/b00bb0a5-e6c0-4c2a-a2e4-742f6089afc1)
+<img src="https://github.com/user-attachments/assets/b00bb0a5-e6c0-4c2a-a2e4-742f6089afc1" alt="Uptime Kuma summaries with stale and missing data" width="471">
 
 ## New integrations and widgets
 
@@ -451,7 +451,7 @@ The Releases widget can compare linked services' running versions with the lates
 
 Repositories in the Releases widget can now show the running versions of linked services alongside the latest release. An update icon marks older versions, and expanding a repository shows each linked service as up to date, update available or unknown when versions cannot be compared.
 
-![Releases widget showing running versions from linked integrations](https://github.com/user-attachments/assets/6633d1a4-8fdf-48f0-ab8d-b472ff426038)
+<img src="https://github.com/user-attachments/assets/6633d1a4-8fdf-48f0-ab8d-b472ff426038" alt="Releases widget showing running versions from linked integrations" width="600">
 
 > [!TIP]
 > Attach supported integrations to the Releases widget, then link them to each repository to enable version comparisons. Supported services are Sonarr, Radarr, Lidarr, Readarr, Prowlarr and Bindery.
@@ -513,7 +513,7 @@ System Health Monitoring tabs can be reordered, and dashboard saves and renderin
 
 Compact System Health Monitoring tabs can show System or Cluster first when both integration types are selected. System-first remains the default, and the order is independent of which tab opens by default. The choice is saved across reloads.
 
-![System Health Monitoring with Cluster shown first](https://github.com/user-attachments/assets/4eaf93d5-3619-4378-bb87-54de1ce53bc1)
+<img src="https://github.com/user-attachments/assets/4eaf93d5-3619-4378-bb87-54de1ce53bc1" alt="System Health Monitoring with Cluster shown first" width="600">
 
 ### Dashboard performance
 
@@ -565,19 +565,19 @@ This release adds bookmark categories, Docker filter matching controls and board
 
 Bookmarks can be organized into named, collapsible categories; existing ungrouped widgets keep their layout. The app picker searches by name or URL, supports multiple selections and lets you create several apps using the standard Add App form. App drafts stay open across tabs, and invalid or failed saves keep them available to correct and retry.
 
-![Bookmarks organized into collapsible categories](https://github.com/user-attachments/assets/746a1312-e302-42ca-9f84-124449342ac7)
+<img src="https://github.com/user-attachments/assets/746a1312-e302-42ca-9f84-124449342ac7" alt="Bookmarks organized into collapsible categories" width="600">
 
 ### Docker name filter controls
 
 The Docker widget now has "Allow wildcards" and "Case sensitive" controls for container-name filters. Enable wildcards to use `*` for zero or more characters, or turn off case sensitivity to match names regardless of case. Existing filters remain exact and case-sensitive by default.
 
-![Docker name filter settings with wildcard matching](https://github.com/user-attachments/assets/6b04f510-3da5-4465-a550-030d7ed771a4)
+<img src="https://github.com/user-attachments/assets/6b04f510-3da5-4465-a550-030d7ed771a4" alt="Docker name filter settings with wildcard matching" width="540">
 
 ### Board snapshots for bug reports
 
 Use "Take snapshot of board state" in CMD+K to capture layout and widget state for a bug report. Snapshots anonymize private text and identifiers and redact credentials, private URLs and external media. The opt-in playground replays the captured state with actions and live connections disabled, without writing to the board database.
 
-![Board snapshot playground with the captured viewport](https://github.com/user-attachments/assets/329dc711-4f9e-4849-aba4-fceccd199213)
+<img src="https://github.com/user-attachments/assets/329dc711-4f9e-4849-aba4-fceccd199213" alt="Board snapshot playground with the captured viewport" width="600">
 
 > [!TIP]
 > Set `ENABLE_BOARD_DEBUG=true` to enable the playground at `/debug/board`, where you can load a captured board JSON file.

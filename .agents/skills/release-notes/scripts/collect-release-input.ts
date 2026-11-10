@@ -2,7 +2,9 @@ import { execFile } from "node:child_process";
 import { readFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import { parseArgs, promisify } from "node:util";
+import sharp from "sharp";
 
+import { readCapped } from "../../../../scripts/release-art/read-capped";
 import { generateGithubNotes } from "../../../../scripts/release-notes/github-notes.mjs";
 import { repositoryRoot } from "../../../../scripts/release-notes/paths.mjs";
 
@@ -12,6 +14,11 @@ const graphqlChunkSize = 25;
 const maxBodyLength = 3000;
 const bodyBudget = 150_000;
 const maxImagesPerPullRequest = 6;
+const maxConcurrentImageMeasurements = 6;
+const maxImageWidth = 600;
+const maxImageHeight = 450;
+const imageTimeoutMilliseconds = 15_000;
+const maxImageBytes = 10 * 1024 * 1024;
 const recentReleaseCount = 3;
 const maxRecentReleaseLength = 6000;
 
@@ -30,6 +37,7 @@ interface RecentRelease {
 interface ImageReference {
   url: string;
   alt: string;
+  displayWidth?: number;
 }
 
 interface LinkedIssue {
@@ -244,6 +252,31 @@ const extractImages = (body: string): ImageReference[] => {
   return images.slice(0, maxImagesPerPullRequest);
 };
 
+const measureImageAsync = async (image: ImageReference): Promise<ImageReference> => {
+  try {
+    const response = await fetch(image.url, { signal: AbortSignal.timeout(imageTimeoutMilliseconds) });
+    if (!response.ok) return image;
+    const { width, height } = await sharp(await readCapped(response, maxImageBytes)).metadata();
+    if (!width || !height) return image;
+    return { ...image, displayWidth: Math.min(maxImageWidth, width, Math.round((maxImageHeight * width) / height)) };
+  } catch {
+    return image;
+  }
+};
+
+const measurePullRequestImagesAsync = async (pullRequests: PullRequestInput[]) => {
+  const jobs = pullRequests.flatMap(({ images }) => images.map((image, index) => ({ image, images, index })));
+  let nextJob = 0;
+  const worker = async () => {
+    while (true) {
+      const job = jobs[nextJob++];
+      if (!job) return;
+      job.images[job.index] = await measureImageAsync(job.image);
+    }
+  };
+  await Promise.all(Array.from({ length: Math.min(maxConcurrentImageMeasurements, jobs.length) }, worker));
+};
+
 const cleanBody = (body: string, limit: number) => {
   const cleaned = body
     .replace(/<!--[\s\S]*?-->/g, "")
@@ -325,6 +358,19 @@ const main = async () => {
   const bodyLimit = Math.max(500, Math.min(maxBodyLength, Math.floor(bodyBudget / Math.max(included.length, 1))));
   const includedNumbers = new Set(included.map((pullRequest) => pullRequest.number));
 
+  const pullRequestInputs: PullRequestInput[] = included.map((pullRequest) => ({
+    number: pullRequest.number,
+    url: pullRequest.url,
+    title: pullRequest.title,
+    author: pullRequest.author?.login ?? "ghost",
+    labels: pullRequest.labels.nodes.map((label) => label.name),
+    mergedAt: pullRequest.mergedAt,
+    body: cleanBody(pullRequest.body, bodyLimit),
+    images: extractImages(pullRequest.body),
+    closes: pullRequest.closingIssuesReferences.nodes,
+  }));
+  await measurePullRequestImagesAsync(pullRequestInputs);
+
   const input = {
     repository,
     version,
@@ -336,19 +382,7 @@ const main = async () => {
     firstTimeContributors: firstTimeContributorsFromNotes(notes).filter((contributor) =>
       includedNumbers.has(contributor.pullRequest),
     ),
-    pullRequests: included.map(
-      (pullRequest): PullRequestInput => ({
-        number: pullRequest.number,
-        url: pullRequest.url,
-        title: pullRequest.title,
-        author: pullRequest.author?.login ?? "ghost",
-        labels: pullRequest.labels.nodes.map((label) => label.name),
-        mergedAt: pullRequest.mergedAt,
-        body: cleanBody(pullRequest.body, bodyLimit),
-        images: extractImages(pullRequest.body),
-        closes: pullRequest.closingIssuesReferences.nodes,
-      }),
-    ),
+    pullRequests: pullRequestInputs,
     recentReleases,
   };
 
