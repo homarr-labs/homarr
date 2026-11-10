@@ -2016,6 +2016,15 @@
         "modifier": "Mod"
       }
     },
+    "markdown": {
+      "alert": {
+        "note": "",
+        "tip": "",
+        "important": "",
+        "warning": "",
+        "caution": ""
+      }
+    },
     "dangerZone": "Zona de perill",
     "noResults": "No s'han trobat resultats",
     "unsavedChanges": "Tens canvis sense desar!",
@@ -6718,7 +6727,8 @@
             "documentation": "Documentació",
             "submitIssue": "Envieu un problema",
             "discord": "Discord de la comunitat",
-            "sourceCode": "Codi font"
+            "sourceCode": "Codi font",
+            "changelog": ""
           }
         },
         "about": "Quant a",
@@ -7071,6 +7081,10 @@
             "title": "Aparença",
             "defaultColorScheme": {
               "label": "Esquema de color per defecte"
+            },
+            "whatsNew": {
+              "label": "",
+              "description": ""
             }
           },
           "branding": {
@@ -8823,6 +8837,12 @@
         "description": "Canvia l'esquema de colors, l'idioma, el tauler d'inici i les preferències. També pots anar a l'àrea de gestió des d'aquí."
       }
     }
+  },
+  "whatsNew": {
+    "title": "",
+    "empty": "",
+    "allReleases": "",
+    "dismiss": ""
   },
   "metadata": {
     "description": "Un tauler autoallotjat per a la pila *arr i tot el teu homelab. S'integra amb més de 50 serveis, ginys en temps real i no necessita fitxers de configuració.",

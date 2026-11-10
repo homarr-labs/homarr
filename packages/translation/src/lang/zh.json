@@ -2016,6 +2016,15 @@
         "modifier": "修改器"
       }
     },
+    "markdown": {
+      "alert": {
+        "note": "筆記",
+        "tip": "",
+        "important": "",
+        "warning": "",
+        "caution": ""
+      }
+    },
     "dangerZone": "危險區域",
     "noResults": "未找到結果",
     "unsavedChanges": "尚未儲存變更",
@@ -6718,7 +6727,8 @@
             "documentation": "說明書",
             "submitIssue": "提交問題",
             "discord": "Discord 社群",
-            "sourceCode": "源碼"
+            "sourceCode": "源碼",
+            "changelog": ""
           }
         },
         "about": "關於",
@@ -7071,6 +7081,10 @@
             "title": "外觀",
             "defaultColorScheme": {
               "label": "預設配色方案"
+            },
+            "whatsNew": {
+              "label": "",
+              "description": ""
             }
           },
           "branding": {
@@ -8823,6 +8837,12 @@
         "description": "變更你的色彩方案、語言、首頁面板和偏好設定。你也可以從這裡跳轉到管理區域。"
       }
     }
+  },
+  "whatsNew": {
+    "title": "",
+    "empty": "",
+    "allReleases": "",
+    "dismiss": ""
   },
   "metadata": {
     "description": "適用於 *arr 堆疊與完整家庭實驗室的自架儀表板。整合 50 多項服務、即時小工具，無需設定檔。",

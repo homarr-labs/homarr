@@ -2016,6 +2016,15 @@
         "modifier": ""
       }
     },
+    "markdown": {
+      "alert": {
+        "note": "",
+        "tip": "",
+        "important": "",
+        "warning": "Avertissement",
+        "caution": ""
+      }
+    },
     "dangerZone": "Zone de danger",
     "noResults": "Aucun résultat trouvé",
     "unsavedChanges": "Vous avez des modifications non enregistrées !",
@@ -4958,9 +4967,9 @@
         }
       },
       "summary": {
-        "newReleases": "",
+        "newReleases": "{count, plural, one {nouvelle version} other {nouvelles versions}}",
         "newShort": "nouveau",
-        "tracked": "",
+        "tracked": "sur {count} suivis",
         "caughtUp": "",
         "outdated": "",
         "outdatedShort": "mis à jour",
@@ -5038,15 +5047,15 @@
         }
       },
       "markViewed": "Marquer comme vu(s)",
-      "markAllViewed": "",
-      "markEntryViewed": "",
+      "markAllViewed": "Tout marquer comme vu",
+      "markEntryViewed": "Marquer {name} {version} comme vu",
       "viewed": "",
       "copyVersion": "",
       "copied": "Copié",
       "published": "",
       "whatChanged": "",
       "noNotes": "",
-      "changes": "",
+      "changes": "{count, plural, one {# modification} other {# modifications}}",
       "starsCount": "Étoiles",
       "forksCount": "Forks",
       "openIssues": "",
@@ -6718,7 +6727,8 @@
             "documentation": "Documentation",
             "submitIssue": "Signaler un problème",
             "discord": "Communauté Discord",
-            "sourceCode": "Code source"
+            "sourceCode": "Code source",
+            "changelog": ""
           }
         },
         "about": "À propos",
@@ -7071,6 +7081,10 @@
             "title": "Apparence",
             "defaultColorScheme": {
               "label": "Schéma de couleurs par défaut"
+            },
+            "whatsNew": {
+              "label": "",
+              "description": ""
             }
           },
           "branding": {
@@ -8823,6 +8837,12 @@
         "description": "Changez votre thème de couleurs, votre langue, votre tableau d'accueil et vos préférences. Vous pouvez également accéder à la zone de gestion depuis ici."
       }
     }
+  },
+  "whatsNew": {
+    "title": "",
+    "empty": "",
+    "allReleases": "",
+    "dismiss": ""
   },
   "metadata": {
     "description": "Un tableau de bord auto-hébergé pour la pile *arr et votre maison entière. Intègre avec plus de 50 services, des widgets en temps réel, pas de fichiers de configuration.",

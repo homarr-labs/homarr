@@ -2016,6 +2016,15 @@
         "modifier": ""
       }
     },
+    "markdown": {
+      "alert": {
+        "note": "笔记",
+        "tip": "",
+        "important": "",
+        "warning": "警告",
+        "caution": ""
+      }
+    },
     "dangerZone": "危险区域",
     "noResults": "未找到结果",
     "unsavedChanges": "你有未保存的更改！",
@@ -6718,7 +6727,8 @@
             "documentation": "帮助文档",
             "submitIssue": "提交问题",
             "discord": "Discord 社区",
-            "sourceCode": "源码仓库"
+            "sourceCode": "源码仓库",
+            "changelog": ""
           }
         },
         "about": "关于",
@@ -7071,6 +7081,10 @@
             "title": "外观",
             "defaultColorScheme": {
               "label": "默认配色方案"
+            },
+            "whatsNew": {
+              "label": "",
+              "description": ""
             }
           },
           "branding": {
@@ -8823,6 +8837,12 @@
         "description": "更改您的配色方案、语言、默认看板和偏好设置。您也可以从这里跳转到管理区域。"
       }
     }
+  },
+  "whatsNew": {
+    "title": "",
+    "empty": "",
+    "allReleases": "",
+    "dismiss": ""
   },
   "metadata": {
     "description": "一个面向 *arr 套件和整个家庭实验室的自托管仪表板。集成 50 多个服务、实时小部件，无需配置文件。",

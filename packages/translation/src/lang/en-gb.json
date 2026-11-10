@@ -2016,6 +2016,15 @@
         "modifier": "Mod"
       }
     },
+    "markdown": {
+      "alert": {
+        "note": "Note",
+        "tip": "",
+        "important": "",
+        "warning": "",
+        "caution": ""
+      }
+    },
     "dangerZone": "Danger zone",
     "noResults": "No results have been found",
     "unsavedChanges": "You have unsaved changes!",
@@ -4677,7 +4686,7 @@
       "status": {
         "pending": "",
         "approved": "Approved",
-        "declined": "",
+        "declined": "Declined",
         "failed": "",
         "completed": ""
       },
@@ -4704,7 +4713,7 @@
         },
         "users": {
           "main": "",
-          "requests": ""
+          "requests": "Requests"
         }
       }
     },
@@ -4794,26 +4803,26 @@
       "description": "",
       "option": {
         "feedUrls": {
-          "label": ""
+          "label": "Feed URLs"
         },
         "enableRtl": {
-          "label": ""
+          "label": "Enable RTL"
         },
         "textLinesClamp": {
-          "label": ""
+          "label": "Description line clamp"
         },
         "descriptionMaxLength": {
           "label": "",
           "description": ""
         },
         "maximumAmountPosts": {
-          "label": ""
+          "label": "Amount posts limit"
         },
         "hideDescription": {
-          "label": ""
+          "label": "Hide description"
         },
         "showPosterImage": {
-          "label": ""
+          "label": "Show poster image"
         }
       },
       "error": {
@@ -4825,7 +4834,7 @@
       }
     },
     "releases": {
-      "name": "",
+      "name": "Releases",
       "description": "",
       "option": {
         "layout": {
@@ -4925,7 +4934,7 @@
             "precision": {
               "label": "",
               "options": {
-                "none": ""
+                "none": "None"
               }
             },
             "suffix": {
@@ -5169,7 +5178,7 @@
       }
     },
     "notifications": {
-      "name": "",
+      "name": "Notifications",
       "description": "",
       "noItems": "",
       "option": {
@@ -6503,7 +6512,7 @@
       "title": "",
       "section": {
         "general": {
-          "title": "",
+          "title": "General",
           "unrecognizedLink": ""
         },
         "layout": {
@@ -6620,7 +6629,7 @@
     },
     "error": {
       "noBoard": {
-        "title": "",
+        "title": "Welcome to Homarr",
         "description": "",
         "link": "",
         "notice": ""
@@ -6628,7 +6637,7 @@
       "notFound": {
         "title": "",
         "description": "",
-        "link": "",
+        "link": "View all boards",
         "notice": ""
       },
       "homeBoard": {
@@ -6686,7 +6695,7 @@
     "metaTitle": "",
     "notFound": {
       "title": "",
-      "text": "",
+      "text": "Could not find requested resource",
       "backToHome": "Return to management home"
     },
     "error": {
@@ -6699,7 +6708,7 @@
         "home": "Home",
         "users": {
           "items": {
-            "manage": ""
+            "manage": "Manage"
           }
         },
         "tools": {
@@ -6715,10 +6724,11 @@
         "help": {
           "label": "Help",
           "items": {
-            "documentation": "",
-            "submitIssue": "",
-            "discord": "",
-            "sourceCode": ""
+            "documentation": "Documentation",
+            "submitIssue": "Submit an issue",
+            "discord": "Community Discord",
+            "sourceCode": "",
+            "changelog": ""
           }
         },
         "about": "About",
@@ -6729,20 +6739,20 @@
       "home": {
         "statisticLabel": {
           "boards": "",
-          "resources": "",
-          "authentication": "",
-          "authorization": ""
+          "resources": "Resources",
+          "authentication": "Authentication",
+          "authorization": "Authorisation"
         },
         "heroBanner": {
-          "title": "",
+          "title": "Welcome back to your",
           "subtitle": ""
         }
       },
       "board": {
-        "title": "",
+        "title": "Your boards",
         "action": {
           "new": {
-            "label": ""
+            "label": "New board"
           },
           "open": {
             "label": ""
@@ -6760,7 +6770,7 @@
           "setMobileHomeBoard": {
             "label": "",
             "badge": {
-              "label": "",
+              "label": "Mobile",
               "tooltip": ""
             }
           },
@@ -6784,7 +6794,7 @@
         }
       },
       "media": {
-        "includeFromAllUsers": ""
+        "includeFromAllUsers": "Include media from all users"
       },
       "user": {
         "fieldsDisabledExternalProvider": "",
@@ -6851,7 +6861,7 @@
               }
             },
             "item": {
-              "language": "",
+              "language": "Language & Region",
               "board": {
                 "title": "",
                 "type": {
@@ -6860,7 +6870,7 @@
                 }
               },
               "search": "",
-              "firstDayOfWeek": "",
+              "firstDayOfWeek": "First day of the week",
               "accessibility": "",
               "oauthConnections": {
                 "title": "",
@@ -6918,13 +6928,13 @@
         },
         "create": {
           "metaTitle": "",
-          "title": "",
+          "title": "Create new user",
           "step": {
             "personalInformation": {
-              "label": ""
+              "label": "Personal information"
             },
             "security": {
-              "label": ""
+              "label": "Security"
             },
             "groups": {
               "label": "",
@@ -6932,7 +6942,7 @@
               "description": ""
             },
             "review": {
-              "label": ""
+              "label": "Review"
             },
             "completed": {
               "title": ""
@@ -6978,7 +6988,7 @@
         }
       },
       "group": {
-        "back": "",
+        "back": "Back to groups",
         "setting": {
           "general": {
             "title": "",
@@ -6988,15 +6998,15 @@
           },
           "setting": {
             "title": "",
-            "alert": ""
+            "alert": "Group settings are prioritised by the order of groups in the list. The top settings overwrite the bottom settings."
           },
           "members": {
-            "title": "",
+            "title": "Members",
             "search": "",
             "notFound": ""
           },
           "permissions": {
-            "title": ""
+            "title": "Permissions"
           }
         }
       },
@@ -7010,7 +7020,7 @@
         "section": {
           "analyticsDocumentation": "See exactly which analytics data Homarr collects",
           "analytics": {
-            "title": "",
+            "title": "Analytics",
             "general": {
               "title": "Help us improve Homarr",
               "text": "This helps us figure out what people actually use so we know where to spend our time. We see stuff like how many widgets or integrations you have, your Homarr version, and what database you're on. That's it — no personal info, no URLs, no names, nothing that could identify you or your setup."
@@ -7071,6 +7081,10 @@
             "title": "",
             "defaultColorScheme": {
               "label": "Default colour scheme"
+            },
+            "whatsNew": {
+              "label": "",
+              "description": ""
             }
           },
           "branding": {
@@ -7334,7 +7348,7 @@
           },
           "job": {
             "iconsUpdater": {
-              "label": ""
+              "label": "Icons Updater"
             },
             "analytics": {
               "label": ""
@@ -7353,7 +7367,7 @@
             "minutes": "",
             "hours": "",
             "midnight": "",
-            "weeklyMonday": "",
+            "weeklyMonday": "Every week on Monday",
             "update": {
               "success": {
                 "message": ""
@@ -7365,15 +7379,15 @@
           },
           "field": {
             "interval": {
-              "label": ""
+              "label": "Schedule interval"
             },
             "lastExecution": {
-              "label": ""
+              "label": "Last Execution"
             },
             "actions": {}
           },
           "table": {
-            "search": ""
+            "search": "Search {count} tasks..."
           },
           "refresh": {
             "success": {
@@ -7421,7 +7435,7 @@
             },
             "apiKey": {
               "label": "",
-              "title": "",
+              "title": "API Keys",
               "access": {
                 "label": "",
                 "readOnly": "",
@@ -7429,7 +7443,7 @@
                 "description": ""
               },
               "button": {
-                "createApiToken": "",
+                "createApiToken": "Create API token",
                 "confirmDeletion": ""
               },
               "modal": {
@@ -7620,27 +7634,27 @@
       },
       "about": {
         "version": "",
-        "text": "",
+        "text": "Homarr is a community driven open source project that is being maintained by volunteers. Thanks to these people, Homarr has been a growing project since 2021. Our team is working completely remote from many different countries on Homarr in their leisure time for no compensation.",
         "accordion": {
           "contributors": {
-            "title": "",
-            "subtitle": ""
+            "title": "Contributors",
+            "subtitle": "{count} maintaining code & Homarr"
           },
           "translators": {
-            "title": "",
-            "subtitle": ""
+            "title": "Translators",
+            "subtitle": "{count} contributing translations in many languages"
           },
           "sponsors": {
-            "title": "",
-            "subtitle": ""
+            "title": "Sponsors",
+            "subtitle": "{count} supporting the project financially"
           },
           "libraries": {
-            "title": "",
-            "subtitle": ""
+            "title": "Libraries",
+            "subtitle": "{count} used in the Code of Homarr"
           },
           "hotkeys": {
-            "title": "",
-            "subtitle": "",
+            "title": "Hotkeys",
+            "subtitle": "Keyboard shortcuts to enhance your workflow",
             "field": {
               "shortcut": "",
               "action": ""
@@ -7725,9 +7739,9 @@
       "refresh": {
         "lastUpdated": "Last refresh {when}"
       },
-      "search": "",
+      "search": "Seach {count} containers",
       "selected": "",
-      "footer": "",
+      "footer": "Total {count} containers",
       "totalCpu": "Total CPU: {cpu}%",
       "totalMemory": "Total Mem: {memory}"
     },
@@ -8016,7 +8030,7 @@
     "tab": {
       "user": "",
       "group": "",
-      "inherited": ""
+      "inherited": "Inherited groups"
     },
     "field": {
       "user": {
@@ -8026,7 +8040,7 @@
         "label": ""
       },
       "permission": {
-        "label": ""
+        "label": "Permission"
       }
     },
     "action": {}
@@ -8148,7 +8162,7 @@
     },
     "mode": {
       "appIntegrationBoard": {
-        "help": "",
+        "help": "Search for apps, integrations or boards",
         "group": {
           "app": {
             "children": {
@@ -8169,7 +8183,7 @@
             "children": {
               "action": {
                 "open": {
-                  "label": ""
+                  "label": "Open board"
                 },
                 "homeBoard": {
                   "label": ""
@@ -8178,7 +8192,7 @@
                   "label": ""
                 },
                 "settings": {
-                  "label": ""
+                  "label": "Open settings"
                 }
               },
               "detail": {
@@ -8189,7 +8203,7 @@
         }
       },
       "command": {
-        "help": "",
+        "help": "Activate command mode",
         "group": {
           "localCommand": {
             "title": "Local commands"
@@ -8823,6 +8837,12 @@
         "description": "Change your colour scheme, language, home board, and preferences. You can also jump to the management area from here."
       }
     }
+  },
+  "whatsNew": {
+    "title": "",
+    "empty": "",
+    "allReleases": "",
+    "dismiss": ""
   },
   "metadata": {
     "description": "A self-hosted dashboard for the *arr stack and your entire homelab. Integrates with 50+ services, real-time widgets, no config files.",
