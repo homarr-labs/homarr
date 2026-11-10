@@ -2016,6 +2016,15 @@
         "modifier": "crwdns7637:0crwdne7637:0"
       }
     },
+    "markdown": {
+      "alert": {
+        "note": "crwdns12225:0crwdne12225:0",
+        "tip": "crwdns12227:0crwdne12227:0",
+        "important": "crwdns12229:0crwdne12229:0",
+        "warning": "crwdns12231:0crwdne12231:0",
+        "caution": "crwdns12233:0crwdne12233:0"
+      }
+    },
     "dangerZone": "crwdns610:0crwdne610:0",
     "noResults": "crwdns612:0crwdne612:0",
     "unsavedChanges": "crwdns2784:0crwdne2784:0",
@@ -6718,7 +6727,8 @@
             "documentation": "crwdns1606:0crwdne1606:0",
             "submitIssue": "crwdns1608:0crwdne1608:0",
             "discord": "crwdns1610:0crwdne1610:0",
-            "sourceCode": "crwdns1612:0crwdne1612:0"
+            "sourceCode": "crwdns1612:0crwdne1612:0",
+            "changelog": "crwdns12235:0crwdne12235:0"
           }
         },
         "about": "crwdns1614:0crwdne1614:0",
@@ -7071,6 +7081,10 @@
             "title": "crwdns1808:0crwdne1808:0",
             "defaultColorScheme": {
               "label": "crwdns1810:0crwdne1810:0"
+            },
+            "whatsNew": {
+              "label": "crwdns12237:0crwdne12237:0",
+              "description": "crwdns12239:0crwdne12239:0"
             }
           },
           "branding": {
@@ -8823,6 +8837,12 @@
         "description": "crwdns4593:0crwdne4593:0"
       }
     }
+  },
+  "whatsNew": {
+    "title": "crwdns12241:0crwdne12241:0",
+    "empty": "crwdns12243:0crwdne12243:0",
+    "allReleases": "crwdns12245:0crwdne12245:0",
+    "dismiss": "crwdns12247:0crwdne12247:0"
   },
   "metadata": {
     "description": "crwdns10307:0crwdne10307:0",

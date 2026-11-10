@@ -2016,6 +2016,15 @@
         "modifier": ""
       }
     },
+    "markdown": {
+      "alert": {
+        "note": "",
+        "tip": "",
+        "important": "",
+        "warning": "Varning",
+        "caution": ""
+      }
+    },
     "dangerZone": "Kritiska inställningar",
     "noResults": "Hittade inga resultat",
     "unsavedChanges": "Du har osparade ändringar!",
@@ -6718,7 +6727,8 @@
             "documentation": "Dokumentation",
             "submitIssue": "Skicka in ett ärende",
             "discord": "Community Discord",
-            "sourceCode": "Källkod"
+            "sourceCode": "Källkod",
+            "changelog": ""
           }
         },
         "about": "Om",
@@ -7071,6 +7081,10 @@
             "title": "Utseende",
             "defaultColorScheme": {
               "label": "Standardfärgschema"
+            },
+            "whatsNew": {
+              "label": "",
+              "description": ""
             }
           },
           "branding": {
@@ -8823,6 +8837,12 @@
         "description": "Ändra ditt färgschema, språk, starttavla och inställningar. Du kan också hoppa till administrationsområdet härifrån."
       }
     }
+  },
+  "whatsNew": {
+    "title": "",
+    "empty": "",
+    "allReleases": "",
+    "dismiss": ""
   },
   "metadata": {
     "description": "En egen instrumentbräda för *arr stack och hela ditt hem. Integrerar med 50 + tjänster, realtids-widgets, inga konfigurationsfiler.",

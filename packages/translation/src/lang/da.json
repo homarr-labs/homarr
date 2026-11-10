@@ -2016,6 +2016,15 @@
         "modifier": ""
       }
     },
+    "markdown": {
+      "alert": {
+        "note": "Note",
+        "tip": "",
+        "important": "",
+        "warning": "Advarsel",
+        "caution": ""
+      }
+    },
     "dangerZone": "Farezone",
     "noResults": "Ingen resultater fundet",
     "unsavedChanges": "Du har ikke gemte ændringer!",
@@ -6718,7 +6727,8 @@
             "documentation": "Dokumentation",
             "submitIssue": "Indsend et problem",
             "discord": "Discordfællesskab",
-            "sourceCode": "Kildekode"
+            "sourceCode": "Kildekode",
+            "changelog": ""
           }
         },
         "about": "Om",
@@ -7071,6 +7081,10 @@
             "title": "Udseende",
             "defaultColorScheme": {
               "label": "Standard farvetema"
+            },
+            "whatsNew": {
+              "label": "",
+              "description": ""
             }
           },
           "branding": {
@@ -8823,6 +8837,12 @@
         "description": "Skift dit farveskema, sprog, hjemmetavle og præferencer. Du kan også gå til administrationsområdet herfra."
       }
     }
+  },
+  "whatsNew": {
+    "title": "",
+    "empty": "",
+    "allReleases": "",
+    "dismiss": ""
   },
   "metadata": {
     "description": "Et selv-hosted dashboard til * arr stakken og hele dit hjemland. Integrerer med 50 + tjenester, real-time widgets, ingen config filer.",
