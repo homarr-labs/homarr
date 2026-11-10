@@ -406,7 +406,7 @@ const BookmarkCard = ({
           </Text>
         ) : null}
         {showHostname ? (
-          <Text fz={9} c="dimmed" ta="center" truncate w="100%">
+          <Text size="xxs" fw={500} lh={1.2} c="dimmed" ta="center" truncate w="100%">
             {hostname}
           </Text>
         ) : null}
@@ -429,7 +429,7 @@ const BookmarkCard = ({
               </Text>
             ) : null}
             {showHostname ? (
-              <Text fz={advanced ? 10 : 9} c="dimmed" truncate>
+              <Text size="xxs" fw={500} lh={1.2} c="dimmed" truncate>
                 {hostname}
               </Text>
             ) : null}
@@ -480,7 +480,7 @@ const BookmarkCard = ({
                 {bookmark.name}
               </Text>
             ) : null}
-            <Text fz={9} lh={1.2} c="dimmed" truncate title={href}>
+            <Text size="xxs" fw={500} lh={1.2} c="dimmed" truncate title={href}>
               {href}
             </Text>
             {advanced && bookmark.description ? (
