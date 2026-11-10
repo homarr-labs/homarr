@@ -99,7 +99,66 @@ for (const manifestPath of manifestPaths) {
   let compressedBytes = 0;
   for (const file of files) {
     const chunkPath = await resolveChunk(file);
-    if (!chunkPath) throw new Error(`Custom JSX chunk ${file} referenced by a route manifest is missing.`);
+    if (!chunkPath) {
+      try {
+        const routeEntry = relative(join(nextRoot, "server"), manifestPath)
+          .replaceAll("\\", "/")
+          .replace(/\/react-loadable-manifest\.json$/u, ".js");
+        let activeRoute = null;
+        try {
+          const appPaths = JSON.parse(await readFile(join(nextRoot, "server/app-paths-manifest.json"), "utf8"));
+          activeRoute = Object.values(appPaths).includes(routeEntry);
+        } catch {
+          // The route index is optional diagnostic metadata.
+        }
+        const presentIds = [...moduleIds].filter((id) => manifest[id]).toSorted();
+        const matchingIds = presentIds.filter((id) => (manifest[id].files ?? []).includes(file));
+        const selectedIds = [...new Set([...matchingIds, ...presentIds])].slice(0, 8);
+        const entries = [];
+        for (const id of selectedIds) {
+          const entryFiles = (manifest[id].files ?? []).filter((name) => name.endsWith(".js"));
+          const references = [];
+          for (const reference of [...new Set([file, ...entryFiles])]
+            .filter((name) => entryFiles.includes(name))
+            .slice(0, 8)) {
+            const path = await resolveChunk(reference);
+            if (!path) {
+              references.push({ file: reference.slice(0, 256), exists: false });
+              continue;
+            }
+            const { size } = await stat(path);
+            let runtimeMarker = null;
+            if (size <= 2 * 1024 * 1024) {
+              runtimeMarker = (await readFile(path, "utf8")).includes("RUNTIME_RENDER_ERROR");
+            }
+            references.push({ file: reference.slice(0, 256), exists: true, bytes: size, runtimeMarker });
+          }
+          entries.push({ id: id.slice(0, 256), totalFiles: entryFiles.length, files: references });
+        }
+        const emittedChunks = (await readdir(join(nextRoot, "static/chunks")).catch(() => [])).toSorted();
+        console.error(
+          "[DEBUG-bundle-ci-20261110]",
+          JSON.stringify({
+            manifest: relative(nextRoot, manifestPath).slice(0, 512),
+            activeRoute,
+            markerReadLimitBytes: 2 * 1024 * 1024,
+            totalModuleIds: moduleIds.size,
+            matchingModuleIds: matchingIds.slice(0, 8).map((id) => id.slice(0, 256)),
+            selectedEntries: entries,
+            totalServerChunks: serverChunks.length,
+            serverChunks: serverChunks
+              .map((path) => basename(path))
+              .toSorted()
+              .slice(0, 8),
+            totalEmittedChunks: emittedChunks.length,
+            emittedChunks: emittedChunks.slice(0, 40),
+          }),
+        );
+      } catch {
+        console.error("[DEBUG-bundle-ci-20261110] Missing-chunk diagnostic metadata unavailable.");
+      }
+      throw new Error(`Custom JSX chunk ${file} referenced by a route manifest is missing.`);
+    }
     const source = await readFile(chunkPath);
     rawBytes += source.byteLength;
     compressedBytes += gzipSync(source).byteLength;
