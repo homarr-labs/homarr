@@ -1,3 +1,4 @@
+import { getContainerMinimumSizes } from "@homarr/boards/layout-data";
 import { getBoardTabForSection } from "@homarr/boards/tabs";
 
 import type { Board, ContainerSection } from "~/app/[locale]/boards/_types";
@@ -8,10 +9,10 @@ import { getFirstEmptyPosition } from "./empty-position";
 
 export const getEntryMinimumSize = (board: Board, layoutId: string, entry: MovableEntry) => {
   if (entry.type === "item") return { width: 1, height: 1 };
-  const children = getSectionGridPlacements(board, layoutId, entry.id);
+  const minimum = getContainerMinimumSizes(board, layoutId).get(entry.id);
   return {
-    width: entry.minW ?? Math.max(1, ...children.map((child) => child.x + child.w)),
-    height: entry.minH ?? Math.max(1, ...children.map((child) => child.y + child.h)),
+    width: entry.minW ?? minimum?.width ?? 1,
+    height: entry.minH ?? minimum?.height ?? 1,
   };
 };
 
