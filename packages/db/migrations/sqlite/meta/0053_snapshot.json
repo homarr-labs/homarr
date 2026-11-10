@@ -1,7 +1,7 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "50e37d9d-9086-45f6-b475-b61aa728579f",
+  "id": "1f4995cd-ae7f-4e10-a969-0cbc5f892ddc",
   "prevId": "c979ade1-9ac5-4f93-9307-968983bc307f",
   "tables": {
     "account": {
@@ -673,15 +673,17 @@
           "name": "primary_color",
           "type": "text",
           "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
+          "notNull": true,
+          "autoincrement": false,
+          "default": "'#fa5252'"
         },
         "secondary_color": {
           "name": "secondary_color",
           "type": "text",
           "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
+          "notNull": true,
+          "autoincrement": false,
+          "default": "'#fd7e14'"
         },
         "opacity": {
           "name": "opacity",
@@ -709,8 +711,9 @@
           "name": "item_radius",
           "type": "text",
           "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
+          "notNull": true,
+          "autoincrement": false,
+          "default": "'lg'"
         },
         "disable_status": {
           "name": "disable_status",
@@ -832,6 +835,13 @@
           "type": "text",
           "primaryKey": false,
           "notNull": true,
+          "autoincrement": false
+        },
+        "workshop": {
+          "name": "workshop",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
           "autoincrement": false
         },
         "enabled": {

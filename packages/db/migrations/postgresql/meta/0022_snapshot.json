@@ -1,5 +1,5 @@
 {
-  "id": "61682c3c-cf0f-4be1-8767-5fa83d1d04c6",
+  "id": "d5d7dec5-0e72-4437-b603-5a5daa949d08",
   "prevId": "970520f4-c4b6-46b4-a9ed-c2265a392ac5",
   "version": "7",
   "dialect": "postgresql",
@@ -675,13 +675,15 @@
           "name": "primary_color",
           "type": "text",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true,
+          "default": "'#fa5252'"
         },
         "secondary_color": {
           "name": "secondary_color",
           "type": "text",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true,
+          "default": "'#fd7e14'"
         },
         "opacity": {
           "name": "opacity",
@@ -706,7 +708,8 @@
           "name": "item_radius",
           "type": "text",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true,
+          "default": "'lg'"
         },
         "disable_status": {
           "name": "disable_status",
@@ -823,6 +826,12 @@
           "type": "text",
           "primaryKey": false,
           "notNull": true
+        },
+        "workshop": {
+          "name": "workshop",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
         },
         "enabled": {
           "name": "enabled",

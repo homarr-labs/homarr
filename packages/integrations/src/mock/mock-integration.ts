@@ -138,9 +138,12 @@ export class MockIntegration
   getNotificationsAsync = MockIntegration.notifications.getNotificationsAsync.bind(MockIntegration.notifications);
 
   // SmartHomeIntegration
-  getEntityStateAsync = MockIntegration.smartHome.getEntityStateAsync.bind(MockIntegration.smartHome);
-  triggerAutomationAsync = MockIntegration.smartHome.triggerAutomationAsync.bind(MockIntegration.smartHome);
-  triggerToggleAsync = MockIntegration.smartHome.triggerToggleAsync.bind(MockIntegration.smartHome);
+  getSnapshotAsync = MockIntegration.smartHome.getSnapshotAsync.bind(MockIntegration.smartHome);
+  getCatalogAsync = MockIntegration.smartHome.getCatalogAsync.bind(MockIntegration.smartHome);
+  getHistoryAsync = MockIntegration.smartHome.getHistoryAsync.bind(MockIntegration.smartHome);
+  getForecastAsync = MockIntegration.smartHome.getForecastAsync.bind(MockIntegration.smartHome);
+  executeActionAsync = MockIntegration.smartHome.executeActionAsync.bind(MockIntegration.smartHome);
+  subscribeEntitiesAsync = MockIntegration.smartHome.subscribeEntitiesAsync.bind(MockIntegration.smartHome);
 
   // UpsSummaryIntegration
   getUpsSummariesAsync = MockIntegration.upsSummary.getUpsSummariesAsync.bind(MockIntegration.upsSummary);

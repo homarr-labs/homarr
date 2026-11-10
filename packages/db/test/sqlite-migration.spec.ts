@@ -32,7 +32,7 @@ test("board theme migration preserves explicit appearance overrides", () => {
     ) as { entries: { tag: string }[] };
     connection.exec("BEGIN");
     for (const entry of journal.entries) {
-      if (entry.tag === "0053_board_theme_inheritance") break;
+      if (entry.tag === "0054_board_theme_inheritance") break;
       applyMigration(connection, `${entry.tag}.sql`);
     }
     connection.exec("COMMIT");
@@ -44,7 +44,7 @@ test("board theme migration preserves explicit appearance overrides", () => {
         VALUES ('existing-layout', 'Base', 'chosen-defaults', 12);
     `);
 
-    applyMigration(connection, "0053_board_theme_inheritance.sql");
+    applyMigration(connection, "0054_board_theme_inheritance.sql");
 
     expect(
       connection.prepare("SELECT id, primary_color, secondary_color, item_radius FROM board ORDER BY id").all(),

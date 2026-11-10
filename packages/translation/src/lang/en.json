@@ -1245,6 +1245,20 @@
       "username": "Username",
       "password": "Password",
       "savedPlaceholder": "••••••• (saved, leave empty to keep)"
+    },
+    "workshopUpdate": {
+      "title": "Update Workshop widget",
+      "apply": "Apply update",
+      "available": "Update available",
+      "check": "Check for updates",
+      "description": "Update revision {installed} to {latest}. Your name, board placements and compatible configuration are kept.",
+      "approvePermissions": "I approve the changed requests and source permissions shown above",
+      "pendingDescription": "Your installed revision keeps running until you apply this update.",
+      "overwriteLocalChanges": "Replace my local widget edits with this Workshop revision",
+      "installSeparate": "View code or install a separate copy",
+      "communityWarning": "This revision is marked outdated or has community reports. Review its Workshop page before updating.",
+      "updated": "Workshop widget updated. Existing board placements use the new revision.",
+      "changedBeforeInstall": "The Workshop revision changed. Reload and review it before installing."
     }
   },
   "workshop": {
@@ -2402,6 +2416,7 @@
     },
     "moveResize": {
       "title": "Move / resize item",
+      "sizeOverlap": "This size overlaps another container. Reduce the size or change the position to make room.",
       "entryLabel": "{name}, column {column}, row {row}",
       "target": {
         "numbered": "{name}, destination {index}",
@@ -3308,6 +3323,141 @@
       "error": {
         "loadFailed": "Unable to load entity",
         "toggleFailed": "Unable to update entity"
+      }
+    },
+    "smartHome-controls": {
+      "name": "Home Assistant controls",
+      "description": "Monitor and control Home Assistant rooms and entities",
+      "option": {
+        "presentation": {
+          "label": "Style",
+          "option": {
+            "entities": "Technical list",
+            "controlPanel": "Control center"
+          }
+        },
+        "title": {
+          "label": "Title",
+          "description": "Leave empty to use the room name"
+        },
+        "blocks": {
+          "label": "Blocks",
+          "remove": "Remove block"
+        },
+        "roomDomains": {
+          "label": "Entity types in room blocks",
+          "description": "Leave empty to include every type"
+        },
+        "excludedEntityIds": {
+          "label": "Hidden entities",
+          "description": "Never shown inside room blocks",
+          "placeholder": "Search entities"
+        },
+        "showSummary": {
+          "label": "Show summary"
+        },
+        "readOnly": {
+          "label": "Read-only",
+          "description": "Show states without allowing anyone to control devices from this widget"
+        },
+        "controlSize": {
+          "label": "Control size",
+          "option": {
+            "auto": "Automatic",
+            "compact": "Compact",
+            "large": "Large"
+          }
+        },
+        "palette": {
+          "label": "Colors",
+          "option": {
+            "boring": "Boring",
+            "colorful": "Colorful"
+          }
+        }
+      },
+      "domain": {
+        "light": "Lights",
+        "switch": "Switches",
+        "fan": "Fans",
+        "climate": "Climate",
+        "humidifier": "Humidifiers",
+        "cover": "Covers",
+        "valve": "Valves",
+        "lock": "Locks",
+        "alarm_control_panel": "Alarm panels",
+        "media_player": "Media players",
+        "camera": "Cameras",
+        "vacuum": "Vacuums",
+        "scene": "Scenes",
+        "script": "Scripts",
+        "automation": "Automations",
+        "button": "Buttons",
+        "input_boolean": "Toggle helpers",
+        "input_select": "Dropdown helpers",
+        "person": "People",
+        "binary_sensor": "Binary sensors",
+        "sensor": "Sensors",
+        "weather": "Weather",
+        "sun": "Sun",
+        "update": "Updates"
+      },
+      "block": {
+        "add": {
+          "rooms": "Rooms",
+          "entity": "Entity",
+          "roomsLabel": "Rooms to add",
+          "roomsPlaceholder": "Search rooms or floors",
+          "entityLabel": "Entity to add",
+          "entityPlaceholder": "Search by name, entity ID, type or room",
+          "merge": "Merge selected rooms into one block",
+          "submit": "Add",
+          "duplicate": "This entity is already a block",
+          "covered": "Those rooms are already shown by another block"
+        },
+        "kind": {
+          "entity": "Entity",
+          "room": "Room",
+          "mergedRooms": "Merged rooms",
+          "unknown": "Unknown block"
+        },
+        "entityCount": "{count} entities",
+        "noArea": "No room",
+        "issue": {
+          "missing": "Not found",
+          "otherSource": "Other integration",
+          "empty": "Already shown above"
+        }
+      },
+      "preview": {
+        "empty": "Add rooms or entities to this widget",
+        "noMatches": "Nothing matches this filter",
+        "summary": {
+          "lights": "lights on",
+          "on": "on",
+          "off": "off",
+          "sensors": "sensors",
+          "offline": "offline"
+        },
+        "otherSource": "These blocks belong to another integration. Choose rooms from the selected integration."
+      },
+      "live": {
+        "loading": "Loading Home Assistant states",
+        "error": "Could not load Home Assistant states",
+        "retry": "Retry",
+        "actionFailed": "Could not control {name}",
+        "actionUnconfirmed": "{name} did not confirm the change",
+        "unconfirmed": "Not confirmed; showing latest Home Assistant state",
+        "selectionLimit": "This selection is too large. Select at most 200 individual entities, 50 rooms and 400 exclusions per widget.",
+        "unknownError": "Home Assistant did not accept the action"
+      },
+      "inline": {
+        "open": "Blocks ({count})",
+        "title": "Edit blocks",
+        "handle": "Drag to reorder",
+        "empty": "No blocks yet",
+        "add": "Add block",
+        "close": "Close block editor"
       }
     },
     "smartHome-executeAutomation": {
@@ -5608,13 +5758,31 @@
       "name": "System resources",
       "description": "CPU, Memory, Disk and other hardware usage of your system",
       "option": {
+        "diskDisplayMode": {
+          "label": "Disk capacity display",
+          "option": {
+            "percentage": "Percentage (e.g., 76%)",
+            "free": "Free space percentage (e.g., 24%)",
+            "absolute": "Absolute values (e.g., 1.5 TB / 2.0 TB)",
+            "combined": "Combined (e.g., 1.5 TB / 2.0 TB (76%))"
+          }
+        },
+        "resourceLayout": {
+          "label": "Resource Layout",
+          "description": "Arrange CPU, memory, disks and network groups in compact view. Expanded view uses an adaptive grid."
+        },
+        "subresourceLayout": {
+          "label": "Subresource Layout",
+          "description": "Arrange individual CPU cores, disks and network directions within each group. Grid wraps to fit; Horizontal keeps a scrollable row. Applies in both compact and expanded views."
+        },
         "hasShadow": {
           "label": "Enable chart shading"
         },
         "visibleCharts": {
           "label": "Visible charts",
-          "description": "Select the charts you want to be visible.",
+          "description": "Select the charts you want to be visible. CPU cores shows logical CPUs when available, otherwise overall CPU usage.",
           "option": {
+            "cpuCores": "CPU cores",
             "memory": "Memory",
             "network": "Network"
           }
@@ -6885,6 +7053,7 @@
           }
         },
         "about": "About",
+        "updateAvailable": "Update available",
         "assistant": "Assistant"
       }
     },
@@ -6896,9 +7065,23 @@
           "authentication": "Authentication",
           "authorization": "Authorization"
         },
-        "heroBanner": {
-          "title": "Welcome back to your",
-          "subtitle": "{app} Board"
+        "hero": {
+          "greeting": "Welcome back,",
+          "greetingWithoutName": "Welcome back",
+          "description": "Everything you manage in {app}, in one place."
+        },
+        "lobster": {
+          "label": "Poke the lobster",
+          "prompt": "Poke me!",
+          "pokeCount": "{count, plural, one {# poke} other {# pokes}}",
+          "reaction": {
+            "hey": "Hey!",
+            "ow": "Ow!",
+            "snip": "Snip snip!",
+            "careful": "Careful, claws!",
+            "stillHere": "Still here.",
+            "okay": "Okay, okay!"
+          }
         }
       },
       "board": {

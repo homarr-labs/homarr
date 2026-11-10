@@ -86,7 +86,7 @@ A PR with a `!` before the colon (`feat(api)!:`) or `BREAKING CHANGE` in its bod
 
 The `closes` array lists issues the PR fixes. Use the issue title to understand the user's problem ("can't start podman container since v2.11.0") and phrase the fix from that angle instead of repeating the code-level PR title. Do not add the issue number to the bullet unless the PR number is missing.
 
-PR bodies often contain Before and After tables. Use only the "after" screenshots; a before image next to an after image doubles the length and tells the reader nothing new. Images come pre-extracted in each PR's `images` array with their alt text; pick the one whose alt describes the result. Reuse the URL as is, never re-host or alter it. Put an image in a highlight only when it shows the feature clearly.
+PR bodies often contain Before and After tables. Use only the "after" screenshots; a before image next to an after image doubles the length and tells the reader nothing new. Images come pre-extracted in each PR's `images` array with their alt text; pick the one whose alt describes the result. Reuse the URL as is, never re-host or alter it. Put an image in a highlight only when it shows the feature clearly. Write it on its own line as `<img src="URL" alt="ALT" width="WIDTH">` with the image's `displayWidth`, never as `![ALT](URL)`. Skip images without a `displayWidth`: they could not be loaded: a full-width screenshot fills the whole release page and the app's What's new dialog.
 
 ## Input
 
@@ -95,7 +95,7 @@ CI passes one JSON document:
 - `version`, `tag`, `previousTag`, `releaseType` (`major`, `minor` or `patch`), `compareUrl`
 - `newItems`: integrations and widgets added in this release, each with `kind`, `slug`, `name`, `description`, `iconUrl`
 - `firstTimeContributors`: `{ login, pullRequest }` for people whose first merged PR is in this release
-- `pullRequests`: bots are already removed. Each has `number`, `url`, `title`, `author`, `labels`, `mergedAt`, `body` (cleaned and truncated), `images` (`url`, `alt`) and `closes` (`number`, `title`, `url`)
+- `pullRequests`: bots are already removed. Each has `number`, `url`, `title`, `author`, `labels`, `mergedAt`, `body` (cleaned and truncated), `images` (`url`, `alt`, `displayWidth`: the width to write, at most 600 and never larger than the image, missing when the image could not be loaded) and `closes` (`number`, `title`, `url`)
 - `recentReleases`: `{ tag, name, body }` for the three previous published releases, see [Match the previous releases](#match-the-previous-releases)
 
 ## Output (structured)
@@ -122,7 +122,7 @@ bun .agents/skills/release-notes/scripts/collect-release-input.ts --from v2.11.1
 
 It needs `gh` authenticated and prints the JSON document described above on stdout. Use `--to` with the new tag, or the branch head for an unreleased draft. Then write the notes following this skill, check every PR number and author against the JSON, and show the result to the maintainer. Leave the `{{RELEASE_ART}}` placeholder in drafts: the release pipeline replaces it with the generated image.
 
-Do not edit or publish a GitHub release unless the maintainer explicitly tells you to. To regenerate a released version end to end, point them at `bun scripts/release-notes/regenerate.mjs --tag vX.Y.Z --dry-run`. To rewrite several releases in order, run each with `--dry-run --out <dir>/<tag>.md --context-dir <dir>`, so each release compares itself with the rewritten notes of the previous ones; a run that cannot produce AI notes stops instead of writing GitHub's notes. Old tags do not contain new art, so pass `--art-ref dev` and commit the rendered `docs/img/releases/<version>/` files before the notes are published. Publish the rewritten notes only after the maintainer has approved them.
+Do not edit or publish a GitHub release unless the maintainer explicitly tells you to. To regenerate a released version end to end, choose a separate published staging branch for `<draft-art-ref>` when artwork will be generated (non-patch releases with `newItems`), then run `bun scripts/release-notes/regenerate.mjs --tag vX.Y.Z --dry-run --art-ref <draft-art-ref>`; omit `--art-ref` when no artwork will be generated. Keep that same art ref in every later or batch run, preserving currently published images during review. To rewrite several releases in order, run each with `--dry-run --out <dir>/<tag>.md --context-dir <dir>`, so each release compares itself with the rewritten notes of the previous ones; a run that cannot produce AI notes stops instead of writing GitHub's notes. When the draft contains generated artwork, commit and push the rendered `docs/img/releases/<version>/` files to that staging branch and verify that the draft SVG and corresponding PNG URLs load before asking for approval. Publish the rewritten notes only after the maintainer has approved them. Keep the approved art ref stable and reachable while published notes link to it.
 
 ## Documentation
 

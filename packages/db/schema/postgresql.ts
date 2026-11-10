@@ -657,6 +657,7 @@ export const customWidgetDefinitions = pgTable("custom_widget_v2_definition", {
   requests: text().notNull(),
   options: text().notNull(),
   template: text().notNull(),
+  workshop: text(),
   enabled: boolean().notNull().default(true),
   createdAt: timestamp({ mode: "date" }).notNull().defaultNow(),
   updatedAt: timestamp({ mode: "date" }).notNull().defaultNow(),
