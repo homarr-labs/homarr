@@ -40,6 +40,7 @@ const settingsFormSchema = z.object({
   defaultSearchEngineId: z.string().nullable(),
   defaultColorScheme: z.enum(colorSchemes),
   defaultLocale: z.string(),
+  whatsNewEnabled: z.boolean(),
   branding: brandingServerSettingsSchema,
 });
 
@@ -59,6 +60,7 @@ const buildInitialValues = (initialData: ServerSettings): FormValues => ({
   defaultSearchEngineId: initialData.search.defaultSearchEngineId,
   defaultColorScheme: initialData.appearance.defaultColorScheme,
   defaultLocale: initialData.culture.defaultLocale,
+  whatsNewEnabled: initialData.whatsNew.enabled,
   branding: initialData.branding,
 });
 
@@ -146,6 +148,7 @@ export const SettingsForm = ({ initialData, selectableBoards, selectableSearchEn
         value: { defaultColorScheme: values.defaultColorScheme },
       },
       { settingsKey: "culture", when: changed("defaultLocale"), value: { defaultLocale: values.defaultLocale } },
+      { settingsKey: "whatsNew", when: changed("whatsNewEnabled"), value: { enabled: values.whatsNewEnabled } },
       {
         settingsKey: "branding",
         when: changed("branding"),

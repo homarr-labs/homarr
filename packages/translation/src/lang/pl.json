@@ -101,15 +101,15 @@
       "connect": {
         "title": "Połącz co sprawia, że tablica jest przydatna",
         "description": "Wybierz kilka usług jednocześnie. Etykiety dokujące przyjmują priorytet, obrazki pasujące do luk wypełniają luki, a każdy adres URL i dane logowania pozostają sprawdzalne.",
-        "confirmServerAddress": "",
-        "serverAddressReviewed": "",
+        "confirmServerAddress": "Wszystko się zgadza",
+        "serverAddressReviewed": "Adres serwera został sprawdzony. Nadal możesz edytować adresy URL poszczególnych usług poniżej.",
         "discoveredIntegrations": "Wykryte instancje integracji ({count})",
         "detectedIntegrationLabel": "Importuj {name}, wykryto jako {kind}",
         "detectedAppLabel": "Importuj aplikację {name}",
         "otherIntegrations": "Dodaj kolejną integrację",
         "configureIntegrations": "Konfiguruj integracje",
         "discoveredApps": "Wykryte aplikacje ({count})",
-        "appAddressRequired": "Dodaj adres dla {name}lub usuń go z wyboru.",
+        "appAddressRequired": "Dodaj adres dla {name} lub usuń tę pozycję z wyboru.",
         "empty": "Nie wybrano integracji. Homarr nadal stworzy użyteczną tablicę startową z ogólnymi widżetami.",
         "dockerSource": "Docker",
         "manualSource": "Ręcznie",
@@ -127,19 +127,19 @@
         "needsConfiguration": "Wymagana konfiguracja",
         "tested": "Połączenie przetestowane",
         "testFailed": "Test połączenia nie powiódł się",
-        "incompleteConfirmation": "Nieukończone integracje zostaną pominięte. Kontynuować bez nich?",
-        "skipIncomplete": ""
+        "incompleteConfirmation": "Aplikacje bez adresu URL oraz integracje bez adresu URL lub danych uwierzytelniających zostaną odznaczone i pominięte. Kontynuować bez nich?",
+        "skipIncomplete": "Pomiń niedokończone połączenia"
       },
       "board": {
-        "title": "Kształtuj płytkę przed jej budową",
+        "title": "Dostosuj tablicę przed jej utworzeniem",
         "description": "Homarr tworzy chronione układy mobilne i bazowe, a następnie umieszcza aplikacje i kompatybilne widżety z usług, które wybrałeś.",
-        "target": "Tablica, aby skonfigurować",
-        "targetDescription": "Wybierz dokładnie istniejący dział, który ta konfiguracja powinna zaktualizować.",
+        "target": "Tablica do skonfigurowania",
+        "targetDescription": "Wybierz istniejącą tablicę, którą ma zaktualizować ta konfiguracja.",
         "targetPlaceholder": "Wybierz tablicę",
-        "targetRequired": "Wybierz dział, aby skonfigurować przed kontynuowaniem.",
+        "targetRequired": "Przed kontynuowaniem wybierz tablicę do skonfigurowania.",
         "name": "Nazwa tablicy",
         "nameDescription": "Używane tylko w adresie URL; litery, cyfry, myślniki i podkreślenia.",
-        "nameRequired": "Przed kontynuowaniem wprowadź nazwę działu.",
+        "nameRequired": "Przed kontynuowaniem wprowadź nazwę tablicy.",
         "primaryColor": "Kolor podstawowy",
         "secondaryColor": "Kolor akcentowy",
         "resetColors": "Resetuj kolory",
@@ -147,8 +147,8 @@
         "radiusOptions": {},
         "columns": "Kolumny tablicy",
         "columnsDescription": "Kolumny definiują siatkę poziomą używaną do rozmiaru i pozycji pozycji. 12 jest dla większości ludzi.",
-        "columnCount": "{count, plural, one {# kolumna} other {# kolumny}}",
-        "leftSidebar": "",
+        "columnCount": "{count, plural, one {# kolumna} few {# kolumny} many {# kolumn} other {# kolumny}}",
+        "leftSidebar": "Lewy pasek boczny",
         "rightSidebar": "Prawy pasek boczny",
         "previewLabel": "Podgląd na żywo pierwszego układu tablicy"
       },
@@ -167,7 +167,7 @@
           "description": "Przeglądaj niestandardowe widżety, sprawdź wymagane możliwości, zainstaluj je i opublikuj własną pracę bez kopiowania kodu pomiędzy serwerami.",
           "available": "Dostępne",
           "checking": "Sprawdzanie…",
-          "unavailable": "",
+          "unavailable": "Niedostępne",
           "discoverTitle": "Odkryj",
           "discoverDescription": "Znajdź widżety zbudowane dla prawdziwych własnych procesów pracy.",
           "installTitle": "Przejrzyj i zainstaluj",
@@ -177,7 +177,7 @@
           "browse": "Przeglądaj warsztaty"
         },
         "mcpSetup": {
-          "title": "",
+          "title": "Homarr MCP",
           "description": "Połącz Claude, Codex, lub inny klient MCP z narzędziami Homarra. Klucze API zachowują dostęp jawny i odwołalny.",
           "endpoint": "Streamowalny punkt końcowy HTTP",
           "keyTitle": "Skopiuj ten klucz teraz",
@@ -192,19 +192,19 @@
         }
       },
       "review": {
-        "title": "Jedna płytka, zbudowana wokół Twoich usług",
+        "title": "Jedna tablica dostosowana do Twoich usług",
         "description": "Homarr testuje niezapisane połączenia, importuje wybrane aplikacje, stosuje wygląd i układy, a następnie otwiera dokładnie skonfigurowany dział.",
         "board": "Pierwsza tablica",
         "columns": "Kolumny tablicy",
-        "columnsValue": "{count, plural, one {# kolumna} other {# kolumny}}",
+        "columnsValue": "{count, plural, one {# kolumna} few {# kolumny} many {# kolumn} other {# kolumny}}",
         "sidebars": "Paski boczne",
-        "sidebarsValue": "",
+        "sidebarsValue": "{count, plural, =0 {Brak} one {# pasek boczny} few {# paski boczne} many {# pasków bocznych} other {# paska bocznego}}",
         "layouts": "Responsywne układy",
         "layoutsValue": "Telefon komórkowy + baza",
         "integrations": "Integracje",
-        "integrationsValue": "{count, plural, =0 {Nie wybrano} one {# integracja} other {# integracje}}",
+        "integrationsValue": "{count, plural, =0 {Nie wybrano} one {# integracja} few {# integracje} many {# integracji} other {# integracji}}",
         "apps": "Kafelki aplikacji",
-        "appsValue": "{count, plural, =0 {Rozpocznij aplikacje tylko} one {# kafelek aplikacji} other {# kafelek aplikacji}}",
+        "appsValue": "{count, plural, =0 {Tylko aplikacje startowe} one {# kafelek aplikacji} few {# kafelki aplikacji} many {# kafelków aplikacji} other {# kafelka aplikacji}}",
         "language": "Język",
         "theme": "Motyw",
         "themeAuto": "Preferencje systemu",
@@ -215,7 +215,7 @@
         "automaticTitle": "Co będzie tworzyć Homarr",
         "automaticDescription": "Kompatybilne widżety, ikony, linki do aplikacji, relacje integracji i położenie responsywne pochodzą z udostępnionego katalogu Homarr. Możesz edytować każdy wynik później.",
         "dockerWarningTitle": "Niektóre etykiety dokującego zostały zmienione podczas konfiguracji",
-        "dockerWarningDescription": "{count, plural, one {# wybrany wynik Docker nie może zostać zastosowany, ponieważ jego usługa została zmieniona, ukierunkowana na inny dział lub widżet był niekompatybilny} other {# wybrane wyniki Dockera nie mogą zostać zastosowane, ponieważ usługi zmienione, zostały skierowane na inny dział lub ich widżety były niezgodne}}",
+        "dockerWarningDescription": "{count, plural, one {Nie udało się zastosować # wybranego wyniku Dockera} few {Nie udało się zastosować # wybranych wyników Dockera} many {Nie udało się zastosować # wybranych wyników Dockera} other {Nie udało się zastosować # wybranego wyniku Dockera}}: przyczyną była zmiana powiązanej usługi, wskazanie innego pulpitu lub niezgodność widżetu.",
         "errorTitle": "Nie można zbudować tablicy",
         "progress": {
           "applying": "Testowanie połączeń i budowanie twojej tablicy",
@@ -250,7 +250,7 @@
         "loading": "Wczytywanie żądania dostępu",
         "allow": "Zezwalaj na dostęp",
         "deny": "Odmowa dostępu",
-        "decisionHint": "Zezwalaj na dostęp tylko wtedy, gdy ufasz temu klientowi i oddzwanianiu.",
+        "decisionHint": "Zezwól na dostęp tylko wtedy, gdy ufasz temu klientowi i adresowi wywołania zwrotnego.",
         "requestExpires": "Żądanie wygasa (UTC):",
         "details": "Szczegóły techniczne",
         "returnHome": "Powrót do Homarr",
@@ -264,21 +264,28 @@
           "name": "Klient",
           "nameNotSupplied": "Nie podano nazwy klienta",
           "id": "Identyfikator klienta",
-          "callbackHost": "Oddzwonienie hosta",
+          "callbackHost": "Host adresu wywołania zwrotnego",
           "callbackUrl": "Pełny adres URL wywołania zwrotnego",
-          "hostUnavailable": "Oddzwonienie hosta jest niedostępne",
+          "hostUnavailable": "Host adresu wywołania zwrotnego jest niedostępny",
           "unverifiedHint": "Nazwy klientów są raportowane, nie weryfikowane przez Homarr.",
-          "destinationHint": "Twoja decyzja powróci do tego wywołania. Jeśli zezwolisz na dostęp, klient może wymienić kod autoryzacji dla uwierzytelnienia API."
+          "destinationHint": "Po zatwierdzeniu decyzja zostanie przekazana pod ten adres URL wywołania zwrotnego. Jeśli zezwolisz na dostęp, klient będzie mógł wymienić kod autoryzacyjny na poświadczenie API."
         },
         "access": {
           "title": "Dostęp do konta",
-          "description": "Używa aktualnych uprawnień, w tym współdzielonych zasobów.",
+          "description": "Są to maksymalne uprawnienia Twojego konta, również do zasobów współdzielonych. Dostęp tylko do odczytu dodatkowo ogranicza te uprawnienia.",
           "details": "Zobacz uprawnienia ({count})",
           "noGlobalPermissions": "Używa Twojego konta i dostępu do współdzielonych zasobów, bez uprawnień globalnych."
         },
         "admin": {
           "title": "Pełny dostęp administratora",
-          "description": "Może zarządzać Homarrem i połączonymi usługami, w tym działaniami destrukcyjnymi."
+          "description": "Dostęp tylko do odczytu umożliwia administratorowi przeglądanie danych, ale nie wprowadzanie zmian. Odczyt i zapis pozwalają zarządzać Homarr i połączonymi usługami, również wykonywać operacje nieodwracalne."
+        },
+        "mode": {
+          "label": "Dostęp do danych uwierzytelniających",
+          "readOnly": "Tylko do odczytu (zalecane)",
+          "readWrite": "Odczyt i zapis",
+          "readOnlyDescription": "Tryb tylko do odczytu blokuje wprowadzanie zmian, wykonywanie działań w usługach, wysyłanie dowolnych żądań do integracji oraz wywoływanie API niestandardowych widżetów. Nadal obowiązują dotychczasowe uprawnienia do zasobów.",
+          "readWriteDescription": "Wybierz tryb odczytu i zapisu tylko wtedy, gdy ten klient musi wprowadzać zmiany lub sterować połączonymi usługami."
         },
         "credential": {
           "title": "Zakres poświadczeń i okres użytkowania",
@@ -818,8 +825,8 @@
         "toggle": "Kliknij, aby wybrać",
         "selected": "Wybrane",
         "multiple": "Dodaj {count}",
-        "selectedCount": "{count, plural, one {# wybrany} other {# wybrany}}",
-        "appsSelected": "{count, plural, one {# aplikacja wybrana} other {# aplikacji wybranych}}",
+        "selectedCount": "{count, plural, one {# wybrany} few {# wybrane} many {# wybranych} other {# wybranego}}",
+        "appsSelected": "{count, plural, one {# wybrana aplikacja} few {# wybrane aplikacje} many {# wybranych aplikacji} other {# wybranej aplikacji}}",
         "selectMultiple": "Wybierz wiele",
         "cancelMultiple": "Wyjdź z wielokrotnego wyboru",
         "customApplication": "Własna aplikacja",
@@ -860,11 +867,11 @@
         "enabled": "Aktywny",
         "disabled": "Nieaktywny",
         "disabledDescription": "Ten widżet pozostaje skonfigurowany, ale nie załaduje się na żadnej płytce.",
-        "requestCount": "{count, plural, one {# żądanie} other {# żądań}}",
+        "requestCount": "{count, plural, one {# żądanie} few {# żądania} many {# żądań} other {# żądania}}",
         "invalidDefinition": "Nieprawidłowa definicja",
         "migrationRequired": "Wymagana migracja",
         "migrationInstructions": "Otwórz akcje, aby skopiować lub wyeksportować oryginalną definicję v1 dla ręcznego utworzenia. Możesz również użyć monitu migracji z LLM. Istniejące miejsca na płytce nadal pracują po migracji.",
-        "missingCredentials": "{count, plural, one {Brakuje poświadczenia} other {Brakuje poświadczenia}}",
+        "missingCredentials": "{count, plural, one {Brakuje poświadczenia} few {Brakuje # poświadczeń} many {Brakuje # poświadczeń} other {Brakuje # poświadczenia}}",
         "missingCredentialsDescription": "{count, plural, one {Ten widżet nadal potrzebuje jednego poświadczenia.} other {Ten widżet nadal potrzebuje # poświadczeń.}} Wybierz tę odznakę, aby skonfigurować adres URL i zaszyfrowane wartości."
       },
       "create": {
@@ -909,7 +916,7 @@
       "action": {
         "components": "Składniki",
         "format": "Formatowanie",
-        "insertStarter": "",
+        "insertStarter": "Wstaw szablon startowy",
         "redo": "Ponów",
         "schema": "Schemat"
       },
@@ -926,14 +933,14 @@
         "errors": "{count, number} błędy",
         "warnings": "{count, number} ostrzeżenia",
         "ready": "Nie znaleziono problemów",
-        "position": "",
+        "position": "Wiersz {line, number}, kol. {column, number}",
         "characters": "{count, number} znaki",
-        "charactersWithLimit": ""
+        "charactersWithLimit": "{count, number} / {limit, number}"
       },
       "diagnostics": {
         "title": "Diagnostyka szablonów",
         "line": "Wiersz {line, number}",
-        "ast": "",
+        "ast": "{value}",
         "bindingTypeConflict": "Wejście \"{value}\" jest współdzielone przez urządzenia sterujące niekompatybilnymi typami wartości.",
         "runtimeBindingTypeConflict": "Dane wejściowe \"{value}\" są powiązane zarówno {firstType} , jak i {secondType}.",
         "dynamicRequestId": "Wymagane jest dosłowne ID żądania. Dynamiczne ID żądania nie są akceptowane.",
@@ -957,7 +964,7 @@
         "sources": "Źródła API",
         "requests": "Zapytania",
         "options": "Opcje",
-        "jsx": "",
+        "jsx": "JSX",
         "preview": "Podgląd"
       },
       "status": {
@@ -988,7 +995,7 @@
       "builder": {
         "advancedManifest": "Zaawansowany manifest surowy",
         "advancedJson": "Zaawansowany manifest JSON",
-        "manifestFilename": "",
+        "manifestFilename": "widget.json",
         "request": "Żądaj {count, number}",
         "requestId": "Żądanie ID",
         "method": "Metoda",
@@ -1057,7 +1064,7 @@
       },
       "sources": {
         "title": "Źródła i dane logowania API",
-        "newName": "",
+        "newName": "API {count, number}",
         "duplicateSourceId": "Identyfikatory źródła API muszą być unikalne.",
         "credentialRemoved": "Usunięto poświadczenia",
         "credentialRemovedDescription": "Zapisana wartość została usunięta.",
@@ -1079,7 +1086,7 @@
         "remove": "Usuń źródło i jego żądania",
         "advanced": "Zaawansowane",
         "add": "Dodaj kolejne źródło API",
-        "manualSource": "",
+        "manualSource": "HTTP API",
         "existingIntegration": "Istniejąca integracja",
         "integrationType": "Typ integracji",
         "selectIntegration": "Konfigurowana integracja",
@@ -1119,7 +1126,7 @@
           },
           "success": {
             "title": "Podgląd gotowy",
-            "description": "{succeeded, plural, =0 {Ten widżet nie ma żadnych żądań.} one {# żądanie załadowania powiodło się.} other {# żądania załadowania zakończone.}} Otwórz dane, aby sprawdzić odpowiedź."
+            "description": "{succeeded, plural, =0 {Ten widżet nie ma żądań wczytywania.} one {# żądanie wczytywania zakończyło się powodzeniem.} few {# żądania wczytywania zakończyły się powodzeniem.} many {# żądań wczytywania zakończyło się powodzeniem.} other {# żądania wczytywania zakończyło się powodzeniem.}} Otwórz „Dane”, aby sprawdzić odpowiedź."
           },
           "error": {
             "title": "Podgląd zakończony z błędami żądania",
@@ -1150,7 +1157,7 @@
         "runAction": "Uruchom akcję",
         "deleteConfirmation": "To działanie podglądu zmienia zdalne dane za pomocą skonfigurowanego API.",
         "simulated": "Akcja symulowana",
-        "httpStatus": "",
+        "httpStatus": "HTTP {status, number}",
         "tab": {
           "widget": "Widżet",
           "data": "Dane",
@@ -1267,7 +1274,7 @@
     "outdated": "Nieaktualny",
     "outdatedWarning": "Autor oznaczył to zgłoszenie jako przestarzałe. Przejrzyj je uważnie przed importowaniem.",
     "score": "Wynik: {count, number}",
-    "upvote": "",
+    "upvote": "Głosuj za",
     "downvote": "Głosuj na dół",
     "voteError": "Nie można zapisać głosu.",
     "signIn": "Zaloguj się przez GitHub",
@@ -1280,7 +1287,7 @@
     "installReviewTitle": "Przejrzyj przed instalacją",
     "installError": "Ten widżet nie może być zainstalowany",
     "installErrorDescription": "Zgłoszenie warsztatu nie jest poprawnym widgetem niestandardowym JSX v2.",
-    "useCss": "",
+    "useCss": "Importuj CSS",
     "importCss": "Importuj CSS z Warsztatu",
     "importCssConfirm": "Zastąpić bieżący niestandardowy CSS \"{title}\"? Nic nie zostanie zapisane dopóki nie zapiszesz ustawień forum.",
     "screenshotAlt": "{title} zrzut ekranu {count, number}",
@@ -1301,13 +1308,13 @@
     "reportSend": "Wyślij raport",
     "reportSent": "Raport wysłany",
     "reportSentDescription": "Moderatorzy warsztatów mogą teraz przejrzeć to zgłoszenie.",
-    "reportCount": "{count, plural, one {# zgłoś} other {# zgłoszenia}}",
-    "reportWarning": "{count, plural, one {To zgłoszenie ma # otwarte zgłoszenie społeczności} other {To zgłoszenie ma # otwarte zgłoszenia społeczności.}} Pozostaje zainstalowany, ale najpierw powinieneś przejrzeć jego zawartość.",
+    "reportCount": "{count, plural, one {# zgłoszenie} few {# zgłoszenia} many {# zgłoszeń} other {# zgłoszenia}}",
+    "reportWarning": "{count, plural, one {Ta pozycja ma # otwarte zgłoszenie społeczności.} few {Ta pozycja ma # otwarte zgłoszenia społeczności.} many {Ta pozycja ma # otwartych zgłoszeń społeczności.} other {Ta pozycja ma # otwartego zgłoszenia społeczności.}} Nadal można ją zainstalować, ale najpierw sprawdź jej zawartość.",
     "reportVisibility": "Szczegóły raportu są widoczne tylko dla autora tego zgłoszenia i administratorów warsztatów.",
     "reportCategory": {
       "outdated": "Przestarzałe lub już niepracujące",
       "malicious": "Złośliwy",
-      "spam": "",
+      "spam": "Spam",
       "copyright": "Prawa autorskie",
       "inappropriate": "Niewłaściwe",
       "other": "Inne"
@@ -1344,7 +1351,7 @@
       "description": "Połączenie przeszło test połączenia. Wybierz co wyświetlić na tym dziale.",
       "connectionReady": "Połączenie serwisowe jest gotowe",
       "appReady": "Skrót aplikacji jest gotowy",
-      "compatibleWidgets": "{count, plural, =0 {Brak kompatybilnych widżetów} one {# kompatybilnego widżetu} other {# kompatybilnych widżetów}} Dostępne",
+      "compatibleWidgets": "{count, plural, =0 {Brak dostępnych zgodnych widżetów} one {Dostępny # zgodny widżet} few {Dostępne # zgodne widżety} many {Dostępnych # zgodnych widżetów} other {Dostępnego # zgodnego widżetu}}",
       "chooseWidget": "Wybierz widżet",
       "recipes": {
         "title": "Zalecane dla tej tablicy",
@@ -1386,11 +1393,7 @@
               "label": "Wybierz istniejącą aplikację"
             },
             "new": {
-              "title": "Nowa",
-              "url": {
-                "label": "Adres URL aplikacji",
-                "description": "Adres URL, który zostanie otwarty po kliknięciu aplikacji na tablicy"
-              }
+              "title": "Nowa"
             }
           }
         }
@@ -1442,8 +1445,9 @@
         "label": "Połącz istniejącą aplikację",
         "description": "Połącz tę integrację z aplikacją, którą możesz już użyć."
       },
-      "appHref": {
-        "placeholder": "Niestandardowy adres URL aplikacji"
+      "externalUrl": {
+        "label": "Zewnętrzny adres URL",
+        "description": "Adres otwierany w przeglądarce po kliknięciu łącza w widżecie. Pozostaw to pole puste, aby użyć adresu URL powiązanej aplikacji lub integracji."
       },
       "apiKeySettings": {
         "label": "Uzyskaj klucz API"
@@ -1491,7 +1495,7 @@
       "vpn": "VPN",
       "mediaLibrary": "Biblioteka Multimediów",
       "uptimeMonitoring": "Monitorowanie Czasu Pracy",
-      "beszel": "",
+      "beszel": "Beszel",
       "systemMonitoring": "Monitorowanie systemu",
       "security": "Bezpieczeństwo",
       "serviceVersion": "Wersja"
@@ -1510,6 +1514,27 @@
         "unknown": {
           "title": "Nieznany błąd",
           "description": "Wystąpił nieznany błąd, otwórz przyczynę poniżej, aby zobaczyć więcej szczegółów"
+        },
+        "frigate": {
+          "title": "Uwierzytelnianie Frigate",
+          "status": "(HTTP {statusCode})",
+          "description": {
+            "cookie": "Logowanie do Frigate nie zwróciło prawidłowego ciasteczka sesyjnego frigate_token. Sprawdź konfigurację uwierzytelniania Frigate oraz serwera proxy odwrotnego.",
+            "profileMismatch": "Frigate zwrócił profil bez uprawnień administratora lub z nazwą użytkownika inną niż skonfigurowana.",
+            "redirect": "Frigate zwrócił przekierowanie, którego Homarr nie wykonał w celu ochrony danych uwierzytelniających. Użyj bezpośredniego adresu URL Frigate wymagającego uwierzytelnienia.",
+            "login": "Żądanie logowania do Frigate zakończyło się niepowodzeniem. Sprawdź dane uwierzytelniające, adres URL integracji oraz połączenie.",
+            "profile": "Żądanie pobrania profilu Frigate zakończyło się niepowodzeniem. Sprawdź punkt końcowy wymagający uwierzytelnienia oraz konfigurację serwera proxy odwrotnego.",
+            "stats": "Żądanie pobrania statystyk Frigate zakończyło się niepowodzeniem po uwierzytelnieniu. Sprawdź punkt końcowy statystyk oraz połączenie."
+          }
+        },
+        "openmediavault": {
+          "title": "Uwierzytelnianie OpenMediaVault",
+          "description": {
+            "totpSecretRequired": "Wprowadź sekret TOTP w formacie Base32 z OpenMediaVault lub użyj osobnego konta administratora bez TOTP.",
+            "totpSecretInvalid": "Użyj współdzielonego sekretu Base32 uzyskanego podczas konfiguracji uwierzytelniania dwuskładnikowego w OpenMediaVault, a nie 6-cyfrowego kodu.",
+            "totpVerificationFailed": "OpenMediaVault odrzucił kod TOTP. Sprawdź sekret i zsynchronizuj zegary obu serwerów.",
+            "unsupportedChallenge": "Homarr obsługuje wyłącznie uwierzytelnianie TOTP w OpenMediaVault."
+          }
         },
         "parse": {
           "title": "Błąd przetwarzania",
@@ -1540,7 +1565,7 @@
             "untrusted": "Certyfikat nie jest zaufany",
             "hostnameMismatch": "Nazwa hosta certyfikatu nie jest zgodna z adresem URL"
           },
-          "secondaryUrl": "",
+          "secondaryUrl": "Ten certyfikat został przedstawiony przez {url}, dodatkowy punkt końcowy skonfigurowany w tej integracji.",
           "alert": {
             "permission": {
               "title": "Brak wymaganych uprawnień",
@@ -1710,6 +1735,11 @@
         "title": "Resetuj sekret",
         "message": "Czy na pewno chcesz zresetować ten sekret?"
       },
+      "totpNotice": "Przechowywane w postaci zaszyfrowanej. Przechowywanie sekretu TOTP i hasła razem eliminuje rozdzielenie składników uwierzytelniania w Homarr.",
+      "remove": {
+        "title": "Usuń sekret",
+        "message": "Czy na pewno chcesz usunąć zapisany sekret?"
+      },
       "noSecretsRequired": {
         "segmentTitle": "Brak sekretów",
         "text": "Dla tej integracji nie są wymagane żadne sekrety"
@@ -1791,9 +1821,9 @@
           "label": "Hasło indeksatora",
           "newLabel": "Nowe hasło indeksatora"
         },
-        "wazuhDashboardUrl": {
-          "label": "Adres URL panelu ustawień (opcjonalnie)",
-          "newLabel": "Adres URL nowego panelu ustawień"
+        "totpSecret": {
+          "label": "Sekret TOTP (opcjonalnie)",
+          "newLabel": "Nowy sekret TOTP"
         }
       }
     },
@@ -1803,7 +1833,7 @@
       "full": "Pełny dostęp do integracji"
     },
     "llamacpp": {
-      "name": "",
+      "name": "llama.cpp",
       "description": "Monitoruj lokalny serwer llama.cpp: zdrowie, model i wskaźniki generowania"
     }
   },
@@ -1882,7 +1912,7 @@
       "tryAgain": "Spróbuj ponownie",
       "loading": "Ładowanie",
       "show": "Pokaż",
-      "showAll": "",
+      "showAll": "Pokaż wszystkie",
       "hide": "Ukryj",
       "undo": "Cofnij",
       "editNamed": "Edytuj {name}",
@@ -1903,8 +1933,8 @@
     "here": "tutaj",
     "serviceUrlTemplate": {
       "serverTitle": "Zwykły adres serwera",
-      "description": "",
-      "example": "",
+      "description": "Użyj swojego standardowego adresu i wzorca URL, aby automatycznie uzupełnić poniższe usługi. Indywidualne zmiany adresów URL zostaną zachowane.",
+      "example": "Przykład: {url}",
       "urlModeLabel": "Wzorzec adresu usługi",
       "hostPort": "Ten sam host, różne porty",
       "subdomain": "Jedna subdomena na usługę",
@@ -1918,7 +1948,7 @@
       "clear": "Wyczyść obraz",
       "uploadImage": "Prześlij obraz",
       "results": "Wyniki wyszukiwania obrazów",
-      "websiteIcon": "",
+      "websiteIcon": "Ikona strony internetowej",
       "localImages": "Twoje obrazy",
       "svgIcons": "Ikony SVG",
       "otherImages": "Inne obrazy",
@@ -1983,7 +2013,16 @@
         "updateAvailable": "Dostępne aktualizacje {countUpdates} : {tag}",
         "assistant": "Asystent",
         "assistantThinking": "Myślenie",
-        "modifier": ""
+        "modifier": "Moderator"
+      }
+    },
+    "markdown": {
+      "alert": {
+        "note": "Notatka",
+        "tip": "",
+        "important": "",
+        "warning": "Ostrzeżenie",
+        "caution": ""
       }
     },
     "dangerZone": "Strefa zagrożenia",
@@ -2038,7 +2077,7 @@
     "total": "Razem",
     "filesystemUsage": "{count, plural, one {Pokaż użycie systemu plików #} other {Pokaż użycie # systemów plików}}",
     "field": {
-      "name": "Nazwa",
+      "name": "Nazwa zlecenia",
       "state": "Status",
       "size": "Rozmiar",
       "actions": "Akcje",
@@ -2072,7 +2111,7 @@
       "options": {
         "md": "Zrównoważony",
         "lg": "Zaokrąglone",
-        "xs": "Mocno",
+        "xs": "Minimalne zaokrąglenie",
         "sm": "Subtelny",
         "xl": "Miękki"
       }
@@ -2188,17 +2227,17 @@
       }
     },
     "selection": {
-      "summary": "{count, plural, one {# wybrany przedmiot} other {# wybrane przedmioty}}",
-      "selected": "{count, plural, one {# wybrany} other {# wybrany}}",
-      "copied": "{count, plural, one {# element skopiowany do schowka} other {# elementy skopiowane do schowka}}",
+      "summary": "{count, plural, one {# wybrany element} few {# wybrane elementy} many {# wybranych elementów} other {# wybranego elementu}}",
+      "selected": "{count, plural, one {# wybrany} few {# wybrane} many {# wybranych} other {# wybranego}}",
+      "copied": "{count, plural, one {# element skopiowany do schowka} few {# elementy skopiowane do schowka} many {# elementów skopiowanych do schowka} other {# elementu skopiowanego do schowka}}",
       "copyError": "Wybrane elementy nie mogą zostać skopiowane. Twoja przeglądarka może nie zezwolić na dostęp do schowka.",
       "paste": "Wklej",
       "pasteShortcut": "Wklej tutaj skopiowane elementy (Ctrl / ⌘ + V)",
-      "pasted": "{count, plural, one {# przedmiot wklejony} other {# przedmiotów wklejonych}}",
+      "pasted": "{count, plural, one {# wklejony element} few {# wklejone elementy} many {# wklejonych elementów} other {# wklejonego elementu}}",
       "pasteError": "Nie można odczytać schowka. Twoja przeglądarka może nie zezwolić na dostęp do schowka.",
       "pasteInvalid": "Schowek nie zawiera prawidłowych elementów tablicy Homarr.",
       "pasteUnavailable": "Skopiowane elementy nie pasują do tego działu.",
-      "removed": "{count, plural, one {# przedmiot został usunięty} other {# przedmiotów usunięty}}",
+      "removed": "{count, plural, one {# element usunięty} few {# elementy usunięte} many {# elementów usuniętych} other {# elementu usuniętego}}",
       "move": "Przenieś",
       "moveTo": "Przenieś wybrane elementy",
       "clear": "Wyczyść zaznaczenie",
@@ -2231,7 +2270,7 @@
         },
         "height": {
           "label": "Wysokość",
-          "shortLabel": ""
+          "shortLabel": "W"
         },
         "xOffset": {
           "label": "Przesunięcie X"
@@ -2335,7 +2374,29 @@
             "tooltip": "Jako podpowiedź",
             "hidden": "Ukryty"
           }
+        },
+        "dockerContainer": {
+          "label": "Kontener Docker",
+          "description": "Dodaje do kafelka przycisk umożliwiający uruchomienie zatrzymanego kontenera lub zatrzymanie działającego kontenera. Przycisk jest widoczny tylko dla administratorów.",
+          "placeholder": "Wybierz kontener",
+          "disabled": "Ustaw ENABLE_DOCKER, aby móc wybrać kontener.",
+          "unavailable": "Nie udało się załadować kontenerów Docker."
         }
+      },
+      "docker": {
+        "action": {
+          "start": "Uruchom {name}",
+          "stop": "Zatrzymaj {name}"
+        },
+        "notification": {
+          "startFailed": "Nie udało się uruchomić {name}",
+          "stopFailed": "Nie udało się zatrzymać {name}"
+        },
+        "switch": {
+          "start": "Uruchamianie kontenera...",
+          "stop": "Zatrzymywanie kontenera..."
+        },
+        "stopped": "Kontener jest zatrzymany"
       },
       "error": {
         "notFound": {
@@ -2414,6 +2475,10 @@
         "hideHostname": {
           "label": "Ukryj nazwy hostów"
         },
+        "showFullUrls": {
+          "label": "Pokaż pełne adresy URL",
+          "description": "Wyświetlaj i umożliwiaj kopiowanie pełnych adresów zakładek, nawet gdy nazwy hostów są ukryte. W bardzo zagęszczonym układzie wierszy wyświetlany jest adres zamiast tytułu, a w układzie zawierającym tylko ikony adresy są pomijane."
+        },
         "withBorder": {
           "label": "Pokaż obramowanie"
         },
@@ -2436,6 +2501,9 @@
         }
       },
       "empty": "Dodaj adres URL lub aplikację w ustawieniach widżetu",
+      "copyUrl": "Kopiuj adres URL",
+      "copied": "Skopiowano",
+      "copyFailed": "Nie udało się skopiować. Spróbuj użyć HTTPS lub wybierz w przeglądarce opcję „Kopiuj adres odnośnika”.",
       "groups": {
         "label": "Kategorie",
         "placeholder": "Nowa kategoria",
@@ -2443,7 +2511,7 @@
         "remove": "Usuń kategorię {name}",
         "rename": "Nazwa kategorii dla {name}",
         "assign": "Kategoria dla {name}",
-        "ungrouped": ""
+        "ungrouped": "Bez grupy"
       }
     },
     "archiveTeamWarrior": {
@@ -2485,7 +2553,7 @@
       "description": "Pokaż, ile oglądanych kontenerów ma dostępne aktualizacje.",
       "title": "What's Up Docker",
       "monitored": "Monitorowane",
-      "updatesAvailable": "{count, plural, one {# dostępna aktualizacja} other {# dostępne aktualizacje}}",
+      "updatesAvailable": "{count, plural, one {# dostępna aktualizacja} few {# dostępne aktualizacje} many {# dostępnych aktualizacji} other {# dostępnej aktualizacji}}",
       "updateAvailable": "Dostępna aktualizacja",
       "openReleaseNotes": "Otwórz notatki o wydaniu",
       "option": {
@@ -2532,7 +2600,7 @@
       },
       "error": {
         "internalServerError": "Nie udało się kontrolować funkcji DNS Hole",
-        "bulkActionsFailed": "{count, plural, one {# akcja nie powiodła się} other {# akcji nie powiodło się}}"
+        "bulkActionsFailed": "{count, plural, one {# działanie zakończyło się niepowodzeniem} few {# działania zakończyły się niepowodzeniem} many {# działań zakończyło się niepowodzeniem} other {# działania zakończyło się niepowodzeniem}}"
       },
       "controls": {
         "enableAll": "Włącz wszystkie",
@@ -2570,11 +2638,11 @@
         },
         "dateFormat": {
           "label": "Format daty",
-          "description": "Jak powinna wyglądać data"
+          "description": "Wybierz gotowy format Day.js. Każda opcja pokazuje podgląd na żywo oraz używane symbole formatu."
         },
         "customTimeFormat": {
           "label": "Własny format czasu",
-          "description": "Użyj ISO 8601 do formatu czasu (spowoduje nadpisanie innych opcji)"
+          "description": "Wybierz gotowy format Day.js. Wybrany format określa sposób wyświetlania czasu w systemie 12- lub 24-godzinnym oraz to, czy zegar jest aktualizowany co sekundę."
         },
         "showWeather": {
           "label": "Pokaż pogodę",
@@ -2623,25 +2691,25 @@
         "unsupportedPrimaryTitle": "Podstawowa strefa czasowa jest niedostępna",
         "unsupportedPrimary": "{timeZone} nie jest obsługiwany w tej przeglądarce. Wyświetlanie UTC jako wyraźnie zaznaczonego spadku.",
         "unsupportedTimeZone": "Nieobsługiwana strefa czasowa: {timeZone}",
-        "accessibleTime": "",
+        "accessibleTime": "{city}: {time}, {date}, {timeZone}",
         "advancedLabel": "Zaawansowany zegar świata",
         "cities": "Zegary światowe",
-        "cityCount": "",
+        "cityCount": "{count} stref czasowych",
         "timeBarLabel": "24-godzinny czas dnia dla {city}",
         "dayProgress": "{percent}% upłynęło · {hours}h {minutes}m pozostało",
         "phaseLegend": "Legenda z godziny dnia",
         "tick": {
-          "midnight": "",
-          "morning": "",
-          "noon": "",
-          "evening": "",
-          "end": ""
+          "midnight": "00",
+          "morning": "06",
+          "noon": "12",
+          "evening": "18",
+          "end": "24"
         },
         "phaseRange": {
-          "night": "",
-          "dawn": "",
-          "day": "",
-          "dusk": ""
+          "night": "00–05 · 21–24",
+          "dawn": "05–08",
+          "day": "08–18",
+          "dusk": "18–21"
         },
         "phase": {
           "night": "Noc",
@@ -2700,8 +2768,8 @@
           "unknown": "Brak czytania"
         }
       },
-      "dominantPollutant": "",
-      "aqiLabel": "",
+      "dominantPollutant": "Dominujące zanieczyszczenie",
+      "aqiLabel": "AQI",
       "strongestPollen": "Najwyższy pyłek",
       "unit": {
         "concentration": "{value} μg/m3",
@@ -2709,14 +2777,14 @@
       },
       "pollutant": {
         "pm2_5": "PM2,5",
-        "pm10": "",
+        "pm10": "PM10",
         "ozone": "Ozon",
         "nitrogenDioxide": "Dwutlenek azotu",
-        "sulphurDioxide": "",
+        "sulphurDioxide": "Dwutlenek siarki",
         "carbonMonoxide": "Tlenek węgla"
       },
       "pollen": {
-        "alder": "",
+        "alder": "Olcha",
         "birch": "Brzozowy",
         "grass": "Trawa",
         "mugwort": "Bakłażan",
@@ -2732,9 +2800,9 @@
         "pollutants": "Stężenia zanieczyszczeń",
         "pollen": "Stężenie pyłu",
         "sevenDayForecast": "Maksymalna prognoza na 7 dni",
-        "aqiValue": "",
-        "uvValue": "",
-        "uvShort": "",
+        "aqiValue": "AQI {value}",
+        "uvValue": "UV {value}",
+        "uvShort": "UV {value}",
         "noForecast": "Brak dostępnych danych prognoz"
       }
     },
@@ -2784,8 +2852,8 @@
       "completedEvents": "Zakończone wydarzenia",
       "invalid": {
         "title": "Niektóre wydarzenia nie mogą być wyświetlane",
-        "description": "{count, plural, one {Jedno zdarzenie ma nieprawidłową datę lub nieobsługiwaną strefę czasową.} other {# zdarzenia mają nieprawidłową datę lub nieobsługiwaną strefę czasową.}}",
-        "value": ""
+        "description": "{count, plural, one {Jedno wydarzenie ma nieprawidłową datę lub nieobsługiwaną strefę czasową.} few {# wydarzenia mają nieprawidłową datę lub nieobsługiwaną strefę czasową.} many {# wydarzeń ma nieprawidłową datę lub nieobsługiwaną strefę czasową.} other {# wydarzenia ma nieprawidłową datę lub nieobsługiwaną strefę czasową.}}",
+        "value": "Niedostępne"
       },
       "alert": {
         "notifications": "Powiadomienia przeglądarki",
@@ -2794,14 +2862,14 @@
       }
     },
     "timer": {
-      "name": "",
+      "name": "Minutnik / Pomodoro",
       "description": "Uruchamia prosty zegar lub konfigurowalną sekwencję Pomodoro.",
       "option": {
         "mode": {
           "label": "Tryb",
           "options": {
-            "timer": "",
-            "pomodoro": ""
+            "timer": "Minutnik",
+            "pomodoro": "Pomodoro"
           }
         },
         "timerMinutes": {
@@ -2827,7 +2895,7 @@
         }
       },
       "phase": {
-        "timer": "",
+        "timer": "Minutnik",
         "focus": "Skupienie się",
         "shortBreak": "Krótka przerwa",
         "longBreak": "Długa przerwa"
@@ -2835,22 +2903,22 @@
       "action": {
         "start": "Uruchom",
         "pause": "Wstrzymaj",
-        "reset": ""
+        "reset": "Resetuj"
       },
       "attention": {
-        "timerComplete": "",
+        "timerComplete": "Odliczanie zakończone",
         "phaseReady": "{phase} gotowy"
       },
       "progress": "Postęp timera: {progress}%",
       "compact": {
-        "completedFocus": "{count, plural, =0 {Nie ukończono żadnych sesji skupienia} one {# sesja ogniskowa zakończona} other {# sesje ogniskowe zakończono}}"
+        "completedFocus": "{count, plural, =0 {Nie ukończono żadnych sesji skupienia} one {Ukończono # sesję skupienia} few {Ukończono # sesje skupienia} many {Ukończono # sesji skupienia} other {Ukończono # sesji skupienia}}"
       },
       "alert": {
-        "title": "",
+        "title": "Odliczanie zakończone",
         "completed": "Ukończono {phase}."
       },
       "advanced": {
-        "sequence": "",
+        "sequence": "Sekwencja Pomodoro",
         "focusSession": "Skupienie {session}",
         "settings": "Stałe ustawienia",
         "settingsHint": "Użyj menu kontekstowego widżetu do edycji tych ustawień.",
@@ -2978,7 +3046,7 @@
         }
       },
       "saveFailed": "Nie można zapisać notatki",
-      "documentStats": "{words, plural, one {# słowo} other {# słowa}} · {characters, plural, one {# znaków} other {# znaków}}"
+      "documentStats": "{words, plural, one {# słowo} few {# słowa} many {# słów} other {# słowa}} · {characters, plural, one {# znak} few {# znaki} many {# znaków} other {# znaku}}"
     },
     "anchorNote": {
       "name": "Notatka z Anchor",
@@ -3072,7 +3140,7 @@
       "state": {
         "on": "Włączone",
         "off": "Wyłączony",
-        "unavailable": "",
+        "unavailable": "Niedostępne",
         "unknown": "Nieznany"
       },
       "advanced": {
@@ -3232,14 +3300,14 @@
           "label": "Widok"
         },
         "hideHeader": {
-          "label": "",
-          "description": ""
+          "label": "Ukryj nagłówek",
+          "description": "Ukryj nawigację po datach. W widżetach o zbyt małej wysokości nawigacja jest zawsze ukryta."
         }
       },
       "advanced": {
         "previousMonth": "Pokaż poprzedni miesiąc",
         "nextMonth": "Pokaż następny miesiąc",
-        "eventCount": "{count, plural, one {# wydarzenie} other {# wydarzeń}}",
+        "eventCount": "{count, plural, one {# wydarzenie} few {# wydarzenia} many {# wydarzeń} other {# wydarzenia}}",
         "loading": "Ładowanie wydarzeń kalendarza...",
         "noEvents": "Brak wydarzeń w tym miesiącu"
       },
@@ -3255,7 +3323,7 @@
         "previous": "Poprzedni okres",
         "next": "Następny okres",
         "noEvents": "Brak wydarzeń w tym okresie",
-        "more": "",
+        "more": "Jeszcze {count}",
         "timeSlot": "Przedział czasowy",
         "weekday": "Dzień tygodnia"
       }
@@ -3337,11 +3405,11 @@
         "currentHumidity": "Obecna wilgotność",
         "wind": "Wiatr / Pusty ({unit})",
         "currentWind": "Bieżący wiatr / podpórki",
-        "windValue": "",
+        "windValue": "{speed} / {gusts} {unit}",
         "windDetail": "Maksymalny wiatr / bandy: {speed} / {gusts} {unit}",
         "nextHourPrecipitation": "Opady w następnej godzinie",
         "precipitationChance": "Szansa na opady",
-        "precipitationValue": "",
+        "precipitationValue": "{probability}% · {amount} mm",
         "precipitationDetail": "Wytrącanie: {probability}% · {amount} mm",
         "todayUv": "Dzisiejszy maksymalny indeks UV",
         "uvIndex": "Maksymalny indeks UV: {value}",
@@ -3354,7 +3422,7 @@
           "humidity": "Średnia wilgotność",
           "wind": "Maksymalny wiatr / podpórki",
           "uv": "Maksymalny indeks UV",
-          "daylight": ""
+          "daylight": "Światło dzienne"
         },
         "sun": "Wschód / Zachód słońca",
         "noForecast": "Brak dostępnych danych prognoz"
@@ -3411,7 +3479,7 @@
           "label": "Domyślna karta"
         },
         "tabOrder": {
-          "label": "",
+          "label": "Kolejność zakładek",
           "systemFirst": "System a następnie klaster",
           "clusterFirst": "Klaster a system"
         },
@@ -3435,7 +3503,7 @@
         "used": "Używane",
         "available": "Dostępne",
         "lastSeen": "Ostatnia aktualizacja statusu: {lastSeen}",
-        "updatesAvailable": "{count, plural, one {# dostępna aktualizacja} other {# dostępne aktualizacje}}",
+        "updatesAvailable": "{count, plural, one {# dostępna aktualizacja} few {# dostępne aktualizacje} many {# dostępnych aktualizacji} other {# dostępnej aktualizacji}}",
         "rebootRequired": "Wymagane ponowne uruchomienie",
         "rebootNotRequired": "Nie jest wymagane ponowne uruchomienie"
       },
@@ -3526,7 +3594,7 @@
       "error": {
         "internalServerError": "Nie udało się pobrać statystyk kontenerów",
         "endpointsUnavailable": "Punkty końcowe dokowania są niedostępne",
-        "layoutSaveTitle": "Nie zapisano układu tabeli",
+        "layoutSaveTitle": "Nie udało się zapisać układu tabeli",
         "layoutSaveMessage": "Nie można zapisać układu tabeli Dockera. Spróbuj ponownie przesunąć lub zmienić rozmiar kolumny."
       },
       "empty": {
@@ -3535,6 +3603,34 @@
     },
     "coolify": {
       "description": "Przegląd instancji Coolify z serwerami i aplikacjami",
+      "summary": {
+        "needsAttention": "Wymagające uwagi: {count}",
+        "inProgress": "{count} w toku",
+        "unknown": "{count} o nieznanym stanie",
+        "healthy": "Brak problemów",
+        "empty": "Brak zasobów",
+        "healthyDetail": "Żadne zasoby nie wymagają uwagi",
+        "more": "Więcej zasobów: +{count}",
+        "moreInstances": "Więcej instancji w widoku zaawansowanym: +{count}"
+      },
+      "details": {
+        "tabs": "Szczegóły Coolify",
+        "overview": "Przegląd",
+        "search": "Filtruj zasoby",
+        "serviceApplications": "Aplikacje w {name}"
+      },
+      "overview": {
+        "projects": "Projekty",
+        "resources": "Działające zasoby",
+        "attention": "Wymaga uwagi",
+        "ready": "Gotowe",
+        "noProjects": "Nie znaleziono projektów",
+        "projectsUnavailable": "Projekty niedostępne",
+        "moreProjects": "+{count, plural, one {# dodatkowy projekt} few {# dodatkowe projekty} many {# dodatkowych projektów} other {# dodatkowego projektu}}",
+        "running": "Uruchomione",
+        "resourceCount": "{count, plural, one {# zasób} few {# zasoby} many {# zasobów} other {# zasobu}}",
+        "environmentCount": "{count, plural, one {# środowisko} few {# środowiska} many {# środowisk} other {# środowiska}}"
+      },
       "option": {
         "showServers": {
           "label": "Pokaż serwery"
@@ -3560,13 +3656,19 @@
       },
       "server": {
         "buildServer": "Build",
-        "resourceCounts": "{applications, plural, one {# aplikacja} other {# aplikacje}} / {services, plural, one {# usługa} other {# usługi}}",
+        "resourceCounts": "{applications, plural, one {# aplikacja} few {# aplikacje} many {# aplikacji} other {# aplikacji}} / {services, plural, one {# usługa} few {# usługi} many {# usług} other {# usługi}}",
         "reachability": "Osiągalność",
         "usability": "Użyteczność"
       },
       "source": {
         "url": "Źródło: {url}",
-        "unavailable": ""
+        "unavailable": "{source}: niedostępne",
+        "unavailableCount": "{count, plural, one {# niedostępne źródło} few {# niedostępne źródła} many {# niedostępnych źródeł} other {# niedostępnego źródła}}"
+      },
+      "kind": {
+        "server": "Serwer",
+        "application": "Aplikacja",
+        "service": "Usługa"
       },
       "instances": {
         "title": "Instancje"
@@ -3583,6 +3685,7 @@
         "exited": "Zakończony",
         "starting": "Rozpoczęcie",
         "restarting": "Restartowanie",
+        "unhealthy": "Nieprawidłowy stan",
         "unknown": "Nieznany",
         "online": "Online",
         "offline": "Niedostępny",
@@ -3599,8 +3702,8 @@
       "status": {
         "running": "Uruchomione",
         "notRunning": "Nieuruchomiony",
-        "unavailable": "",
-        "vpn": ""
+        "unavailable": "Niedostępne",
+        "vpn": "VPN: {status}"
       }
     },
     "ups": {
@@ -3934,31 +4037,31 @@
         "transcodeVideo": "Transkodowanie wideo",
         "transcodeAudio": "Transkodowanie audio",
         "transcoding": "Transkodowanie",
-        "paused": "Zatrzymane",
-        "remaining": "{minutes} min pozostało",
-        "seasonEpisode": "",
+        "paused": "Wstrzymane",
+        "remaining": "Pozostało {minutes} min",
+        "seasonEpisode": "S{season} E{episode}",
         "state": {
-          "playing": "",
-          "buffering": ""
+          "playing": "Odtwarzanie",
+          "buffering": "Buforowanie"
         },
         "details": {
           "device": "Urządzenie",
-          "location": "",
-          "sessionId": "",
-          "bitrate": "",
-          "audioHandling": "",
+          "location": "Lokalizacja",
+          "sessionId": "Identyfikator sesji",
+          "bitrate": "Bitrate",
+          "audioHandling": "Przetwarzanie dźwięku",
           "direct": "Bezpośrednio",
-          "transcode": "",
-          "containerChanged": "",
-          "position": "",
-          "unknown": ""
+          "transcode": "Transkodowanie do {target}",
+          "containerChanged": "{container} (remultipleksowanie)",
+          "position": "{position} / {duration}",
+          "unknown": "Nieznany format"
         },
         "metadata": {
           "title": "Statystyki dla nerdów",
           "video": {
             "title": "Wideo",
             "resolution": "Rozdzielczość",
-            "frameRate": ""
+            "frameRate": "Liczba klatek na sekundę"
           },
           "audio": {
             "title": "Dźwięk",
@@ -3975,113 +4078,113 @@
         "unknownUser": "Nieznany użytkownik"
       },
       "summary": {
-        "sessions": "{count, plural, one {# sesja} other {# sesje}}",
+        "sessions": "{count, plural, one {# sesja} few {# sesje} many {# sesji} other {# sesji}}",
         "playing": "{count} gra",
         "transcoding": "{count} transkodowanie"
       }
     },
     "thingport-libraryStats": {
-      "name": "",
-      "description": "",
-      "title": "",
+      "name": "Statystyki biblioteki Thingport",
+      "description": "Statystyki biblioteki modeli 3D w Thingport",
+      "title": "Biblioteka",
       "option": {
         "showModels": {
-          "label": ""
+          "label": "Pokaż modele"
         },
         "showCollections": {
-          "label": ""
+          "label": "Pokaż kolekcje"
         },
         "showCategories": {
-          "label": ""
+          "label": "Pokaż kategorie"
         },
         "showAuthors": {
-          "label": ""
+          "label": "Pokaż autorów"
         }
       },
-      "models": "",
-      "collections": "",
+      "models": "Modele",
+      "collections": "Kolekcje",
       "categories": "Kategorie",
-      "authors": ""
+      "authors": "Autorzy"
     },
     "thingport-featuredModel": {
-      "name": "",
-      "description": "",
+      "name": "Wyróżniony model Thingport",
+      "description": "Codziennie jeden model z Twojej biblioteki Thingport, obracający się w 3D",
       "option": {
         "autoRotate": {
-          "label": ""
+          "label": "Automatycznie obracaj model"
         },
         "showDetails": {
-          "label": ""
+          "label": "Pokaż szczegóły modelu"
         }
       },
-      "title": "",
-      "empty": "",
-      "hint": "",
-      "noPreview": "",
-      "views": "",
-      "prints": ""
+      "title": "Wyróżniony model",
+      "empty": "Nie ma jeszcze modeli 3D do wyróżnienia",
+      "hint": "Przeciągnij, aby obrócić, kliknij, aby otworzyć",
+      "noPreview": "Podgląd 3D tego modelu nie jest jeszcze dostępny",
+      "views": "{count, plural, one {# wyświetlenie} few {# wyświetlenia} many {# wyświetleń} other {# wyświetlenia}}",
+      "prints": "{count, plural, one {# wydruk} few {# wydruki} many {# wydruków} other {# wydruku}}"
     },
     "thingport-activityHeatmap": {
-      "name": "",
-      "description": "",
-      "title": "",
+      "name": "Mapa cieplna aktywności Thingport",
+      "description": "Roczna historia importów, pobrań i otwarć modeli w slicerze z Twojego profilu Thingport",
+      "title": "Aktywność",
       "option": {
         "weekStart": {
           "label": "Pierwszy dzień tygodnia",
           "option": {
-            "sunday": "",
-            "monday": ""
+            "sunday": "Niedziela",
+            "monday": "Poniedziałek"
           }
         },
         "showTotal": {
-          "label": ""
+          "label": "Pokaż łączną liczbę"
         },
         "showLegend": {
-          "label": ""
+          "label": "Pokaż legendę"
         }
       },
-      "lastYear": "",
-      "totalLastYear": "",
-      "totalInYear": "",
-      "dayTotal": "",
-      "dayEmpty": "",
+      "lastYear": "Ostatnie 12 miesięcy",
+      "totalLastYear": "{count, plural, one {# aktywność w ostatnim roku} few {# aktywności w ostatnim roku} many {# aktywności w ostatnim roku} other {# aktywności w ostatnim roku}}",
+      "totalInYear": "{count, plural, one {# aktywność w {year} roku} few {# aktywności w {year} roku} many {# aktywności w {year} roku} other {# aktywności w {year} roku}}",
+      "dayTotal": "{count, plural, one {# aktywność w dniu {date}} few {# aktywności w dniu {date}} many {# aktywności w dniu {date}} other {# aktywności w dniu {date}}}",
+      "dayEmpty": "Brak aktywności w dniu {date}",
       "kinds": {
-        "import": "",
-        "upload": "Łącznie wysłano",
-        "download": "Łącznie pobrano",
-        "slicer": "",
-        "delete": "Usunięty"
+        "import": "Zaimportowano",
+        "upload": "Przesłano",
+        "download": "Pobrano",
+        "slicer": "Otworzono w slicerze",
+        "delete": "Usunięto"
       },
-      "less": "",
-      "more": ""
+      "less": "Mniej",
+      "more": "Więcej"
     },
     "thingport-models": {
-      "name": "",
-      "description": "",
-      "title": "",
+      "name": "Modele Thingport",
+      "description": "Ostatnio dodane, najczęściej wyświetlane i najczęściej drukowane modele z Thingport",
+      "title": "Modele",
       "option": {
         "defaultTab": {
-          "label": "Domyślna karta"
+          "label": "Domyślna zakładka"
         },
         "itemCount": {
-          "label": ""
+          "label": "Liczba modeli"
         },
         "showThumbnails": {
-          "label": ""
+          "label": "Pokaż miniatury"
         }
       },
       "tab": {
-        "recentlyAdded": "",
-        "topViewed": "",
-        "topPrinted": ""
+        "recentlyAdded": "Ostatnio dodane",
+        "topViewed": "Najczęściej wyświetlane",
+        "topPrinted": "Najczęściej drukowane"
       },
       "empty": {
-        "recentlyAdded": "",
-        "topViewed": "",
-        "topPrinted": ""
+        "recentlyAdded": "Nie masz jeszcze żadnych modeli w bibliotece",
+        "topViewed": "Brak dotychczas wyświetlanych modeli",
+        "topPrinted": "Brak dotychczas drukowanych modeli"
       },
-      "views": "",
-      "prints": ""
+      "views": "{count, plural, one {# wyświetlenie} few {# wyświetlenia} many {# wyświetleń} other {# wyświetlenia}}",
+      "prints": "{count, plural, one {# wydruk} few {# wydruki} many {# wydruków} other {# wydruku}}"
     },
     "paperlessNgx": {
       "description": "Przegląd Twojego archiwum dokumentów Paperless-ngx",
@@ -4138,7 +4241,7 @@
       "recentUpdates24h": "Aktualizacje (24h)",
       "totalOutdatedPackages": "Nieaktualne pakiety",
       "totalRepos": "Repozytoria",
-      "osDistribution": "Dystrybucja systemu",
+      "osDistribution": "Podział według systemu operacyjnego",
       "compliance": "Zgodność poprawek",
       "complianceRatio": "{upToDate} / {total}",
       "lastUpdated": "Zaktualizowano {time}",
@@ -4285,19 +4388,19 @@
       }
     },
     "bazarr": {
-      "description": "Przegląd brakujących napisów i stanu zdrowia z instancji Bazarr",
-      "episodes": "Brakujące odcinki",
-      "movies": "Brakujące filmy",
-      "providers": "Problemy dostawców",
-      "status": "Problemy ze stanem",
+      "description": "Przegląd brakujących napisów oraz stanu działania instancji Bazarr",
+      "episodes": "Odcinki bez napisów",
+      "movies": "Filmy bez napisów",
+      "providers": "Problemy z dostawcami napisów",
+      "status": "Problemy z działaniem",
       "announcements": "Ogłoszenia",
       "option": {
         "showMissingEpisodes": {
-          "label": "Pokaż brakujące odcinki",
+          "label": "Pokaż odcinki bez wymaganych napisów",
           "description": "Wyświetla liczbę odcinków z brakującymi napisami"
         },
         "showMissingMovies": {
-          "label": "Pokaż brakujące filmy",
+          "label": "Pokaż filmy bez wymaganych napisów",
           "description": "Wyświetla liczbę filmów z brakującymi napisami"
         },
         "showProviderIssues": {
@@ -4305,8 +4408,8 @@
           "description": "Wyświetla liczbę dostawców napisów z problemami"
         },
         "showHealthIssues": {
-          "label": "Pokaż problemy ze stanem",
-          "description": "Wyświetla liczbę problemów ze stanem Bazarr"
+          "label": "Pokaż problemy z działaniem",
+          "description": "Wyświetla liczbę wykrytych problemów z działaniem Bazarr"
         }
       },
       "error": {
@@ -4346,7 +4449,7 @@
       "option": {
         "albumId": {
           "label": "ID albumu",
-          "description": "To unikalny identyfikator odnoszący się do Twojego albumu w Immich. Możesz go znaleźć, otwierając album i kopiując unikalny ciąg znaków z adresu URL, np. „a21aca09-9f05-47dc-b1a1-7b53c547226e”."
+          "description": "Wybierz album Immich lub „Wszystkie zdjęcia”. Brak wyboru również powoduje wyświetlanie losowych zdjęć z całej biblioteki."
         },
         "rotationIntervalSeconds": {
           "label": "Interwał w sekundach",
@@ -4367,7 +4470,7 @@
       "actions": {
         "previousPhoto": "Poprzednie zdjęcie",
         "nextPhoto": "Następne zdjęcie",
-        "pauseSlideshow": "",
+        "pauseSlideshow": "Wstrzymaj pokaz slajdów",
         "resumeSlideshow": "Wznów pokaz slajdów",
         "toggleSlideshow": "Wstrzymaj lub wznawiaj pokaz slajdów",
         "photo": "Zdjęcie {number}"
@@ -4507,14 +4610,14 @@
         "clearFilters": "Wyczyść filtry"
       },
       "footer": {
-        "filter": "Filtruj pobierania"
+        "filter": "Filtruj pobierane pliki"
       },
       "stats": {
         "show": "Pokaż globalne statystyki",
         "hide": "Ukryj globalne statystyki",
         "overallProgress": "Ogólny postęp kolejki",
         "totalSize": "Całkowity rozmiar kolejki",
-        "clients": "{count, plural, one {# klient} few {# klientów} many {# klientów} other {# klientów}}"
+        "clients": "{count, plural, one {# klient} few {# klientów} many {# klientów} other {# klienta}}"
       },
       "disconnected": "(rozłączono)"
     },
@@ -4640,7 +4743,7 @@
       },
       "panel": {
         "statistics": {
-          "filesCount": "Pliki: {value}",
+          "filesCount": "Pliki",
           "savedSpace": "Zaoszczędzona przestrzeń",
           "videoCodecs": "Kodeki",
           "videoContainers": "Kontenery",
@@ -4667,7 +4770,7 @@
     },
     "mediaMissing": {
       "name": "Brakujące i oczekujące media",
-      "description": "Pokazuje brakujące i oczekujące filmy i odcinki z Radarr i Sonarr",
+      "description": "Wyświetla brakujące i oczekujące filmy, odcinki, wydarzenia i książki z {radarr}, {sonarr}, {sportarr} i {bindery}.",
       "option": {
         "showMissing": {
           "label": "Pokaż brakujące elementy"
@@ -4726,7 +4829,7 @@
         "allFeedsFailed": "Nie można załadować kanałów RSS. Sprawdź adresy URL kanału i spróbuj ponownie."
       },
       "warning": {
-        "partial": "{count, plural, one {# kanał RSS nie mógł zostać załadowany} other {# kanały RSS nie mogły zostać załadowane}}",
+        "partial": "{count, plural, one {Nie udało się załadować # kanału RSS} few {Nie udało się załadować # kanałów RSS} many {Nie udało się załadować # kanałów RSS} other {Nie udało się załadować # kanału RSS}}",
         "stale": "Nie można odświeżyć kanału RSS. Wyświetlono poprzednio załadowane wpisy."
       }
     },
@@ -4736,57 +4839,57 @@
       "option": {
         "layout": {
           "label": "Układ",
-          "description": "",
+          "description": "Widok kompaktowy wyświetla każde repozytorium w jednym wierszu.",
           "option": {
-            "comfortable": "Komfortowalne",
+            "comfortable": "Wygodny",
             "compact": "Kompaktowy"
           }
         },
         "summary": {
-          "label": "",
-          "description": "",
+          "label": "Podsumowanie",
+          "description": "Wybierz, co ma być wyświetlane nad listą. Pasek stanu dodaje osobny segment dla każdego repozytorium. Kliknięcie segmentu przenosi do odpowiedniego repozytorium.",
           "option": {
-            "detailed": "",
-            "count": "",
+            "detailed": "Liczba i pasek stanu",
+            "count": "Tylko liczba",
             "hidden": "Ukryty"
           }
         },
         "groupReleases": {
-          "label": "",
-          "description": ""
+          "label": "Grupuj wydania według stanu",
+          "description": "Wyłącz tę opcję, aby wyświetlać ciągłą listę bez nagłówków sekcji. Ustawienia zwinięcia sekcji będą ignorowane."
         },
         "sections": {
-          "label": "",
-          "description": ""
+          "label": "Sekcje",
+          "description": "Grupy repozytoriów do wyświetlenia. Ukryte grupy nie będą w ogóle widoczne na liście."
         },
         "newReleaseWithin": {
-          "label": "Nowe wydanie w ciągu",
-          "description": "Przykład użycia: 1w (1 tydzień), 10M (10 miesięcy). Obsługiwane jednostki: h (godziny), d (dni), w (tygodnie), M (miesiące), y (lata). Pozostaw puste, aby nie wyróżniać nowych wydań.",
+          "label": "Wyróżniaj nowe wydania przez",
+          "description": "Wydania opublikowane w tym okresie są wyświetlane w sekcji „Nowe”, dopóki nie oznaczysz ich jako przeglądane.",
           "option": {
-            "never": "",
-            "1d": "1 dni",
+            "never": "Nigdy",
+            "1d": "1 dzień",
             "3d": "3 dni",
             "1w": "1 tydzień",
-            "2w": "",
+            "2w": "2 tygodnie",
             "1M": "1 miesiąc",
-            "3M": "3 miesięcy"
+            "3M": "3 miesiące"
           }
         },
         "staleReleaseWithin": {
-          "label": "Nieaktualne wydanie w ciągu",
-          "description": "Przykład użycia: 1w (1 tydzień), 10M (10 miesięcy). Obsługiwane jednostki: h (godziny), d (dni), w (tygodnie), M (miesiące), y (lata). Pozostaw puste, aby nie wyróżniać nieaktualnych wydań.",
+          "label": "Przenieś do sekcji „Brak nowych wydań” po",
+          "description": "Repozytoria, w których przez wskazany okres nie pojawiło się żadne wydanie, są wyświetlane w sekcji „Brak nowych wydań”.",
           "option": {
-            "never": "",
+            "never": "Nigdy",
             "1M": "1 miesiąc",
-            "3M": "3 miesięcy",
+            "3M": "3 miesiące",
             "6M": "6 miesięcy",
             "1y": "1 rok",
-            "2y": "2 lat"
+            "2y": "2 lata"
           }
         },
         "showChangelogPreview": {
-          "label": "",
-          "description": ""
+          "label": "Pokaż podgląd listy zmian",
+          "description": "Wyświetlaj podgląd informacji o zmianach pod każdym wydaniem."
         },
         "repositories": {
           "label": "Repozytoria",
@@ -4815,12 +4918,13 @@
           },
           "identifier": {
             "label": "Identyfikator",
+            "containerPlaceholder": "Nazwa lub Właściciel/Nazwa:kanał",
             "placeholder": "Nazwa lub Właściciel/Nazwa"
           },
           "name": {},
           "excludePrereleases": {
-            "label": "",
-            "description": ""
+            "label": "Wyklucz wersje przedpremierowe",
+            "description": "Wyświetlaj najnowsze wydanie, które nie zostało oznaczone przez dostawcę jako wersja przedpremierowa."
           },
           "versionFilter": {
             "label": "Filtr wersji",
@@ -4863,108 +4967,108 @@
         }
       },
       "summary": {
-        "newReleases": "",
-        "newShort": "nowa",
-        "tracked": "",
-        "caughtUp": "",
-        "outdated": "",
-        "outdatedShort": "nieaktualny",
-        "failing": "",
-        "failingShort": "",
-        "latest": "",
-        "issues": ""
+        "newReleases": "{count, plural, one {nowe wydanie} few {nowe wydania} many {nowych wydań} other {nowego wydania}}",
+        "newShort": "nowe",
+        "tracked": "z {count} monitorowanych",
+        "caughtUp": "Jesteś na bieżąco",
+        "outdated": "{count, plural, one {uruchomiona starsza wersja} few {uruchomione starsze wersje} many {uruchomione starsze wersje} other {uruchomione starsze wersje}}",
+        "outdatedShort": "nieaktualne",
+        "failing": "Nie udało się sprawdzić",
+        "failingShort": "Z błędem",
+        "latest": "Najnowsze wydanie: {name} {version}, {time}",
+        "issues": "{count, plural, one {Nie udało się sprawdzić # repozytorium} few {Nie udało się sprawdzić # repozytoriów} many {Nie udało się sprawdzić # repozytoriów} other {Nie udało się sprawdzić # repozytorium}}"
       },
       "section": {
         "new": {
-          "label": "Nowa",
-          "description": ""
+          "label": "Nowe",
+          "description": "Nowe wydania, których jeszcze nie przeglądano"
         },
         "attention": {
-          "label": "Potrzebne uwagi",
-          "description": ""
+          "label": "Wymaga uwagi",
+          "description": "Integracje korzystające ze starszych wersji oraz repozytoria, których nie udało się sprawdzić"
         },
         "upToDate": {
           "label": "Na bieżąco",
-          "description": ""
+          "description": "Brak nowych informacji do wyświetlenia"
         },
         "quiet": {
-          "label": "",
-          "description": ""
+          "label": "Brak nowych wydań",
+          "description": "Od dłuższego czasu brak nowych wydań"
         }
       },
       "status": {
-        "new": "",
-        "outdated": "",
-        "error": "",
+        "new": "Nowe, nieprzeglądane",
+        "outdated": "Uruchomiona starsza wersja",
+        "error": "Nie udało się sprawdzić",
         "upToDate": "na bieżąco",
-        "quiet": ""
+        "quiet": "Brak nowych wydań"
       },
       "tag": {
-        "new": "Nowa",
-        "preRelease": "",
-        "resolvedFrom": "",
-        "quiet": "",
+        "new": "Nowe",
+        "preRelease": "Wersja przedpremierowa",
+        "resolvedFrom": "z: {tag}",
+        "quiet": "Brak nowych wydań",
         "archived": "Archiwalny",
-        "fork": ""
+        "fork": "Fork"
       },
       "issue": {
-        "affected": "",
+        "affected": "{count, plural, one {# repozytorium dotknięte problemem} few {# repozytoria dotknięte problemem} many {# repozytoriów dotkniętych problemem} other {# repozytorium dotkniętego problemem}}",
         "rateLimited": {
-          "title": "",
-          "hint": ""
+          "title": "Dostawca {provider} ograniczył liczbę żądań",
+          "hint": "Dodaj token dostępu w ustawieniach widżetu, aby zwiększyć limit, lub poczekaj na jego zresetowanie."
         },
         "notFound": {
-          "title": "",
-          "hint": ""
+          "title": "Nie znaleziono repozytorium lub obrazu",
+          "hint": "Sprawdź identyfikator i dostawcę w ustawieniach widżetu. Projekty prywatne wymagają tokena dostępu."
         },
         "noMatchingVersion": {
-          "title": "",
-          "hint": ""
+          "title": "Żadna wersja nie pasuje do filtra",
+          "hint": "Złagodź ograniczenia dotyczące prefiksu, sufiksu lub dokładności w filtrze wersji tych repozytoriów."
         },
         "noReleasesFound": {
-          "title": "",
-          "hint": ""
+          "title": "Nie opublikowano jeszcze żadnych wydań",
+          "hint": "Dostawca nie udostępnia jeszcze żadnych wydań ani tagów dla tego projektu."
         },
         "invalidIdentifier": {
           "title": "Nieprawidłowy identyfikator",
-          "hint": ""
+          "hint": "Użyj formatu wymaganego przez dostawcę, np. owner/name dla GitHub lub pełnej ścieżki obrazu dla rejestrów."
         },
         "noProviderSelected": {
           "title": "Nie wybrano dostawcy",
-          "hint": ""
+          "hint": "Wybierz dostawcę dla tych repozytoriów w ustawieniach widżetu."
         },
         "noProviderResponse": {
-          "title": "",
-          "hint": ""
+          "title": "Brak odpowiedzi od dostawcy {provider}",
+          "hint": "Dostawca nie zwrócił żadnych danych dla tych repozytoriów. Zostaną one ponownie sprawdzone podczas następnego odświeżenia."
         },
         "unexpected": {
-          "title": "",
-          "hint": ""
+          "title": "Nieoczekiwany błąd dostawcy {provider}",
+          "hint": "Podczas sprawdzania wystąpił błąd. Spróbuj ponownie później lub sprawdź logi serwera."
         }
       },
       "markViewed": "Oznacz jako przeczytane",
-      "markAllViewed": "",
-      "markEntryViewed": "",
-      "viewed": "",
-      "copyVersion": "",
+      "markAllViewed": "Oznacz wszystkie jako przeglądane",
+      "markEntryViewed": "Oznacz {name} {version} jako przeglądane",
+      "viewed": "Przeglądane",
+      "copyVersion": "Kopiuj wersję",
       "copied": "Skopiowano",
-      "published": "",
-      "whatChanged": "",
-      "noNotes": "",
-      "changes": "",
+      "published": "Opublikowano {time}",
+      "whatChanged": "Co się zmieniło",
+      "noNotes": "Dostawca {provider} nie publikuje informacji o zmianach dla tego źródła.",
+      "changes": "{count, plural, one {# zmiana} few {# zmiany} many {# zmian} other {# zmiany}}",
       "starsCount": "Gwiazdki",
       "forksCount": "Forki",
-      "openIssues": "",
-      "created": "Utworzony",
-      "releasePage": "",
-      "projectPage": "",
+      "openIssues": "{count, plural, one {# otwarte zgłoszenie} few {# otwarte zgłoszenia} many {# otwartych zgłoszeń} other {# otwartego zgłoszenia}}",
+      "created": "Utworzono {time}",
+      "releasePage": "Wydanie",
+      "projectPage": "Projekt",
       "runningVersions": "Uruchamianie wersji",
       "upToDate": "Na bieżąco",
       "updateAvailable": "Dostępna aktualizacja",
       "unknownStatus": "Nieznany",
       "error": {
-        "collapsedSaveTitle": "",
-        "collapsedSaveMessage": ""
+        "collapsedSaveTitle": "Nie udało się zapisać zwiniętych sekcji",
+        "collapsedSaveMessage": "Nie udało się zaktualizować sekcji. Spróbuj ponownie."
       }
     },
     "networkControllerSummary": {
@@ -4983,10 +5087,10 @@
           "countConnected": "{count, plural, one {# połączono} other {# połączono}}",
           "label": "VPN"
         },
-        "wan": "",
-        "web": "",
+        "wan": "WAN",
+        "web": "Internet",
         "wifi": "Wi-Fi",
-        "lan": ""
+        "lan": "LAN"
       },
       "error": {
         "unknownContentOption": "Nieznana opcja zawartości dla widżetu podsumowania kontrolera sieci: "
@@ -5066,7 +5170,7 @@
         "noInterfaces": "Brak danych interfejsu sieciowego"
       },
       "versionUnknown": "Nieznana wersja",
-      "metricAccessible": "",
+      "metricAccessible": "{metric}: {value}%, {status}",
       "status": {
         "normal": "Normalny",
         "warning": "Ostrzeżenie",
@@ -5079,15 +5183,15 @@
       "noItems": "Brak powiadomień do wyświetlenia.",
       "option": {
         "hideLogos": {
-          "label": "Ukryj loga"
+          "label": "Ukryj logo"
         },
         "messageFormat": {
           "label": "Format wiadomości",
           "option": {
             "auto": "Automatyczne",
             "plain": "Zwykły tekst",
-            "markdown": "",
-            "html": ""
+            "markdown": "Markdown",
+            "html": "HTML"
           }
         }
       },
@@ -5139,114 +5243,114 @@
       "option": {
         "statusPageSlug": {
           "label": "Slug strony statusu",
-          "description": ""
+          "description": "Fragment adresu URL strony po /status/, np. homelab. Pozostaw pole puste, aby użyć strony skonfigurowanej dla każdej integracji."
         },
         "summaryOnly": {
-          "label": "",
-          "description": ""
+          "label": "Tylko ogólny stan",
+          "description": "Ukryj wiersze monitorów i znaczniki statusu. To ustawienie ma pierwszeństwo przed opcją „Pokaż podsumowanie”. Pełne szczegóły pozostają dostępne w widoku zaawansowanym."
         },
         "showSummary": {
-          "label": "",
-          "description": ""
+          "label": "Pokaż podsumowanie",
+          "description": "Ogólny stan, liczby i wartości średnie"
         },
         "showIncidents": {
-          "label": "",
-          "description": ""
+          "label": "Pokaż incydenty",
+          "description": "Incydenty i trwające prace konserwacyjne"
         },
         "groupByStatusPageGroup": {
-          "label": "",
-          "description": ""
+          "label": "Grupuj monitory",
+          "description": "Użyj grup zdefiniowanych na stronie statusu"
         },
         "showOnlyProblems": {
-          "label": "",
-          "description": ""
+          "label": "Pokaż tylko problemy",
+          "description": "Ukryj działające monitory, z wyjątkiem widoku zaawansowanego"
         },
         "sortBy": {
-          "label": "",
+          "label": "Sortuj monitory według",
           "option": {
-            "status": "",
-            "statusPage": "",
-            "name": "Nazwa zlecenia",
-            "uptime": ""
+            "status": "Według stanu, najpierw problemy",
+            "statusPage": "Kolejność na stronie statusu",
+            "name": "Nazwa",
+            "uptime": "Dostępność, od najniższej"
           }
         },
         "showHeartbeatBar": {
-          "label": "",
-          "description": ""
+          "label": "Pokaż pasek historii monitorowania",
+          "description": "Ostatnie kontrole przedstawione jako kolorowe słupki, z najnowszymi po prawej stronie"
         },
         "showUptime": {
-          "label": ""
+          "label": "Pokaż dostępność z ostatnich 24 godzin"
         },
         "showResponseTime": {
-          "label": ""
+          "label": "Pokaż czas odpowiedzi"
         },
         "showCertificateExpiry": {
-          "label": "",
-          "description": ""
+          "label": "Ostrzeżenia dotyczące certyfikatów",
+          "description": "Oznaczaj certyfikaty, których ważność wygasa w ciągu 14 dni"
         }
       },
       "status": {
         "up": "Prędkość wysyłania",
         "down": "Prędkość pobierania",
         "pending": "Oczekujące",
-        "maintenance": "",
-        "stale": "",
-        "unknown": ""
+        "maintenance": "Prace serwisowe",
+        "stale": "Brak aktualnych danych",
+        "unknown": "Brak danych"
       },
       "overall": {
-        "operational": "",
-        "degraded": "",
-        "outage": "",
-        "maintenance": "",
-        "unknown": ""
+        "operational": "Wszystkie systemy działają prawidłowo",
+        "degraded": "Częściowe zakłócenia działania usług",
+        "outage": "Poważna awaria",
+        "maintenance": "Trwają prace serwisowe",
+        "unknown": "Oczekiwanie na pierwsze kontrole"
       },
       "short": {
-        "operational": "",
-        "down": "",
-        "pending": "{count} oczekujące",
-        "maintenance": "",
-        "unknown": ""
+        "operational": "Wszystkie działają",
+        "down": "Niedostępnych: {count}",
+        "pending": "Oczekujące: {count}",
+        "maintenance": "Prace serwisowe",
+        "unknown": "Brak danych"
       },
       "summary": {
-        "upRatio": "",
-        "upRatioShort": "",
-        "averageUptime": "",
-        "uptimeShort": "",
-        "statusCount": ""
+        "upRatio": "Działające monitory: {up} z {total}",
+        "upRatioShort": "Dostępnych: {up}/{total}",
+        "averageUptime": "Dostępność w ciągu 24 godzin",
+        "uptimeShort": "Dostępność: {value}",
+        "statusCount": "{count} {status}"
       },
       "unit": {
-        "milliseconds": ""
+        "milliseconds": "{value} ms"
       },
       "heartbeatBar": {
-        "label": ""
+        "label": "{count, plural, one {# ostatnia kontrola} few {# ostatnie kontrole} many {# ostatnich kontroli} other {# ostatniej kontroli}}, nieudanych: {down}"
       },
       "detail": {
-        "checked": "",
-        "certificate": ""
+        "checked": "Sprawdzono {time}",
+        "certificate": "{count, plural, one {Certyfikat wygasa za # dzień} few {Certyfikat wygasa za # dni} many {Certyfikat wygasa za # dni} other {Certyfikat wygasa za # dnia}}"
       },
       "notice": {
-        "label": "",
+        "label": "{count, plural, one {# incydent lub praca serwisowa} few {# incydenty lub prace serwisowe} many {# incydentów lub prac serwisowych} other {# incydentu lub prac serwisowych}}",
         "untitled": "Bez tytułu"
       },
       "empty": {
-        "title": "",
-        "description": ""
+        "title": "Brak monitorów",
+        "description": "Dodaj monitory do strony statusu, aby wyświetlały się tutaj"
       },
-      "allClear": "",
+      "allClear": "{count, plural, one {Monitor jest dostępny} few {Wszystkie monitory są dostępne (łącznie: #)} many {Wszystkie monitory są dostępne (łącznie: #)} other {Wszystkie monitory są dostępne (łącznie: #)}}",
       "error": {
         "internalServerError": "Nie udało się pobrać danych czasu pracy"
       },
       "monitorType": {
-        "http": "",
-        "keyword": "",
-        "jsonQuery": "",
-        "port": "",
+        "http": "HTTP",
+        "keyword": "Słowo kluczowe HTTP",
+        "jsonQuery": "Zapytanie JSON przez HTTP",
+        "port": "Port TCP",
         "ping": "Ping",
         "dns": "DNS",
-        "docker": "",
-        "push": "",
+        "docker": "Kontener Docker",
+        "push": "Push",
         "group": "Grupa",
-        "realBrowser": ""
+        "realBrowser": "Przeglądarka"
       }
     },
     "traefik": {
@@ -5273,9 +5377,9 @@
         "middlewares": "Middleware"
       },
       "status": {
-        "healthy": "Dobry",
-        "errors": "{count, plural, one {<b>#</b> błąd} few {<b>#</b> błędy} many {<b>#</b> błędów} other {<b>#</b> błędów}}",
-        "warnings": "{count, plural, one {<b>#</b> ostrzeżenie} few {<b>#</b> ostrzeżenia} many {<b>#</b> ostrzeżeń} other {<b>#</b> ostrzeżeń}}"
+        "healthy": "Działa prawidłowo",
+        "errors": "{count, plural, one {# błąd} few {# błędy} many {# błędów} other {# błędu}}",
+        "warnings": "{count, plural, one {# ostrzeżenie} few {# ostrzeżenia} many {# ostrzeżeń} other {# ostrzeżenia}}"
       },
       "error": {
         "internalServerError": "Nie udało się pobrać danych Traefik"
@@ -5377,7 +5481,7 @@
         "network": "Sieć",
         "up": "Aktywny",
         "down": "Nieaktywny",
-        "memoryTooltip": ""
+        "memoryTooltip": "{used} / {available} ({percent}%)"
       }
     },
     "systemDisks": {
@@ -5407,7 +5511,7 @@
       },
       "status": {
         "unhealthy": "Zły",
-        "smart": "",
+        "smart": "SMART",
         "free": "{percentage}% wolnego miejsca"
       }
     },
@@ -5452,8 +5556,8 @@
         "group": "Własne widżety JSX",
         "empty": "Nie znaleziono widżetów niestandardowych",
         "preview": "Podgląd",
-        "sources": "{count, plural, one {# źródło} other {# źródła}}",
-        "requests": "{count, plural, one {# żądanie} other {# żądań}}",
+        "sources": "{count, plural, one {# źródło} few {# źródła} many {# źródeł} other {# źródła}}",
+        "requests": "{count, plural, one {# żądanie} few {# żądania} many {# żądań} other {# żądania}}",
         "migrationRequired": "Wymagana migracja",
         "migrationDescription": "Nie można jeszcze uruchomić widżetu v1. Skopiuj jego poprawioną prośbę do LLM, a następnie wklej pojedynczą odpowiedź JSON do Homarr.",
         "manageMigration": "Otwórz zarządzanie widżetami niestandardowymi",
@@ -5470,7 +5574,7 @@
       "description": "Widok tabeli wszystkich systemów monitorowanych przez Beszel z sortowalnymi kolumnami i wskaźnikami statusu",
       "option": {
         "fahrenheit": {
-          "label": "Temperatura w Fahrenheit"
+          "label": "Temperatura w stopniach Fahrenheita"
         },
         "sortBy": {
           "label": "Sortuj według"
@@ -5489,7 +5593,7 @@
       "description": "Widok siatki wszystkich systemów monitorowanych przez Beszel z miernikami w czasie rzeczywistym",
       "option": {
         "fahrenheit": {
-          "label": "Temperatura w Fahrenheit"
+          "label": "Temperatura w stopniach Fahrenheita"
         }
       }
     },
@@ -5595,9 +5699,9 @@
           "write": "Zapis"
         },
         "storage": {
-          "title": "Pamięć",
+          "title": "Pamięć masowa",
           "subtitle": "Użycie dysku według systemu plików",
-          "series": "Używane"
+          "series": "Wykorzystane"
         },
         "network": {
           "title": "Przepustowość",
@@ -5632,11 +5736,11 @@
       },
       "period": {
         "live": "Żywe",
-        "oneHour": "",
-        "twelveHours": "",
-        "oneDay": "",
+        "oneHour": "1 godz.",
+        "twelveHours": "12 godz.",
+        "oneDay": "24 godz.",
         "oneWeek": "1 tydzień",
-        "thirtyDays": ""
+        "thirtyDays": "30 dni"
       }
     },
     "assistant": {
@@ -5720,9 +5824,9 @@
       }
     },
     "llamacpp": {
-      "name": "",
+      "name": "llama.cpp",
       "description": "Pokaż zdrowie, załadowany model i prędkość generowania lokalnego serwera llama.cpp.",
-      "title": "",
+      "title": "llama.cpp",
       "status": {
         "unhealthy": "Niezdrowe ({status})"
       },
@@ -5732,7 +5836,7 @@
         "average": "Średnia prędkość wytwarzania od uruchomienia",
         "request": "Średnia prędkość od rozpoczęcia tego żądania"
       },
-      "busy": "{count, plural, one {# żądanie uruchamiane} other {# żądania uruchamiane}}",
+      "busy": "{count, plural, one {# wykonywane żądanie} few {# wykonywane żądania} many {# wykonywanych żądań} other {# wykonywanego żądania}}",
       "modelInfo": {
         "context": "Kontekst",
         "size": "Rozmiar pliku",
@@ -5750,10 +5854,10 @@
         "unreachable": "serwer llama-jest nieosiągalny"
       },
       "unit": {
-        "speed": "",
-        "parameters": "",
-        "none": "",
-        "speedShort": ""
+        "speed": "{value} t/s",
+        "parameters": "{value}B",
+        "none": "—",
+        "speedShort": "t/s"
       },
       "option": {
         "showTitle": {
@@ -5812,7 +5916,7 @@
       "moveDown": "Przenieś w dół",
       "remove": "Usuń metrykę",
       "loading": "Ładowanie…",
-      "unavailable": "",
+      "unavailable": "Niedostępne",
       "refreshFailed": "Odświeżanie nie powiodło się — pokazuje zapisane dane",
       "stale": "Zapisane dane — odśwież aby zaktualizować",
       "table": {
@@ -5859,18 +5963,18 @@
       "allHidden": "Wszystkie metryki są ukryte w tym widoku. Użyj Dostosuj ten widok, aby je przywrócić."
     },
     "wazuh": {
-      "name": "",
-      "description": "",
+      "name": "Wazuh",
+      "description": "Przegląd bezpieczeństwa Wazuh z zakładkami dla poziomów ważności alertów, alertów, osi czasu, rankingów, agentów, podatności, integralności plików i nieudanych prób uwierzytelnienia.",
       "target": {
         "api": "API serwera Wazuh",
-        "indexer": "Indeks Wazuh",
-        "wazuh": ""
+        "indexer": "Indeksator Wazuh",
+        "wazuh": "Wazuh"
       },
       "severity": {
         "low": "Niski",
         "medium": "Średni",
-        "high": "Wysoka",
-        "critical": "Krytyczne"
+        "high": "Wysoki",
+        "critical": "Krytyczny"
       },
       "error": {
         "unauthorized": {
@@ -5879,22 +5983,22 @@
         },
         "certificate": {
           "title": "Certyfikat {target} nie jest zaufany",
-          "description": ""
+          "description": "Wazuh domyślnie korzysta z certyfikatów samopodpisanych, a serwer API i indeksator używają różnych certyfikatów. Uruchom opcję „Testuj połączenie” w ustawieniach integracji i zaufaj każdemu certyfikatowi lub dodaj główny certyfikat CA Wazuh w sekcji Zarządzanie → Narzędzia → Certyfikaty."
         },
         "certificateHostname": {
-          "title": "",
-          "description": ""
+          "title": "Certyfikat {target} nie odpowiada podanemu adresowi URL",
+          "description": "Certyfikat nie został wystawiony dla hosta wskazanego w adresie URL integracji. Użyj nazwy hosta lub adresu IP wymienionego w certyfikacie, wystaw ponownie certyfikat z odpowiednią nazwą lub oznacz nazwę hosta jako zaufaną za pomocą opcji „Testuj połączenie”."
         },
         "certificateExpired": {
-          "title": "",
-          "description": ""
+          "title": "Certyfikat {target} wygasł lub nie jest jeszcze ważny",
+          "description": "Odnów certyfikat Wazuh i sprawdź, czy zegary hostów Homarr i Wazuh są prawidłowo ustawione."
         },
         "unreachable": {
           "title": "Nie można osiągnąć {target}",
-          "description": "Host odmówił połączenia lub go usunął. Sprawdź adres URL, port i zaporę. Indekser słucha tylko na localhost w domyślnej instalacji."
+          "description": "Host odrzucił połączenie lub je zerwał. Sprawdź adres URL, port i zaporę sieciową. W domyślnej instalacji typu „wszystko w jednym” indeksator nasłuchuje tylko na localhost."
         },
         "timeout": {
-          "title": "Upłynął limit czasu {target}",
+          "title": "Przekroczono limit czasu połączenia z {target}",
           "description": "Brak odpowiedzi w ciągu 15 sekund. Usługa może być przeciążona lub adres może być nieprawidłowy."
         },
         "status": {
@@ -5913,47 +6017,47 @@
           "title": "Nie można załadować danych z {target}",
           "description": "Sprawdź logi Homarr po więcej informacji."
         },
-        "viewSaveTitle": "",
-        "viewSaveMessage": ""
+        "viewSaveTitle": "Nie udało się zapisać wybranej zakładki",
+        "viewSaveMessage": "Zakładka jest obecnie wyświetlana, ale po ponownym załadowaniu pulpitu wybór zostanie zresetowany."
       },
       "range": {
-        "1h": "",
-        "24h": "",
-        "7d": "",
-        "30d": ""
+        "1h": "1 godz.",
+        "24h": "24 godz.",
+        "7d": "7 dni",
+        "30d": "30 dni"
       },
       "levelTooltip": "Poziom reguły {level} ({severity})",
       "summary": {
-        "title": "Alarm dotkliwości · {range}",
-        "alerts": "ostrzeżenia",
+        "title": "Poziomy ważności alertów · {range}",
+        "alerts": "alerty",
         "none": "Brak alertów",
         "trend": {
-          "new": "nowa",
+          "new": "nowe",
           "tooltip": "Poprzedni okres: {previous}"
         },
-        "previous": "Poprzedni {range}: {count}",
+        "previous": "Poprzedni okres ({range}): {count}",
         "maxLevel": "Maksymalny poziom {level}",
-        "health": "Indekser zdrowia: {status}",
+        "health": "Stan indeksatora: {status}",
         "manager": "Menedżer {version}"
       },
       "alerts": {
         "title": "Alerty · poziom {level}+ · {hours}h",
-        "empty": "Brak alertów na tym poziomie. Wszystko cicho.",
+        "empty": "Brak alertów na tym poziomie. Nie wykryto problemów.",
         "rule": "Reguła {id}",
-        "openInDashboard": "Otwórz ten alarm w panelu Wazuh"
+        "openInDashboard": "Otwórz ten alert w panelu Wazuh"
       },
       "timeline": {
-        "title": "",
-        "total": "Alerty {count}",
-        "interval": "za {interval}"
+        "title": "Oś czasu alertów · {range}",
+        "total": "Liczba alertów: {count}",
+        "interval": "na {interval}"
       },
       "top": {
         "title": {
-          "rules": "Najlepsze reguły · {range}",
-          "agents": "Najlepsi agenci · {range}",
-          "sourceIps": "Najlepsze źródłowe adresy IP · {range}",
-          "mitreTactics": "Taktyka MITRE · {range}",
-          "mitreTechniques": ""
+          "rules": "Najczęstsze reguły · {range}",
+          "agents": "Agenci z największą liczbą alertów · {range}",
+          "sourceIps": "Najczęstsze źródłowe adresy IP · {range}",
+          "mitreTactics": "Taktyki MITRE · {range}",
+          "mitreTechniques": "Techniki MITRE · {range}"
         },
         "empty": {
           "rules": "Brak alertów w tym okresie",
@@ -5962,64 +6066,64 @@
           "mitreTactics": "Brak alertów mapowanych na MITRE ATT&CK w tym okresie",
           "mitreTechniques": "Brak alertów mapowanych na MITRE ATT&CK w tym okresie"
         },
-        "totalTooltip": "{count} pasujące alerty",
-        "private": "",
-        "public": "Publiczna",
-        "agents": "Widziane na agentach {count}",
-        "others": "{count} więcej alertów w innych wpisach"
+        "totalTooltip": "Pasujące alerty: {count}",
+        "private": "LAN",
+        "public": "Publiczny",
+        "agents": "Zaobserwowano u {count} agentów",
+        "others": "Dodatkowe alerty w pozostałych pozycjach: {count}"
       },
       "agents": {
         "title": "Agenci",
-        "total": "Agenci {count}",
+        "total": "Liczba agentów: {count}",
         "status": {
           "active": "Aktywny",
-          "disconnected": "Rozłączono",
-          "neverConnected": "Nigdy nie podłączony",
-          "pending": "Oczekujące"
+          "disconnected": "Rozłączony",
+          "neverConnected": "Nigdy nie był połączony",
+          "pending": "Oczekujący"
         },
         "statusLabel": {
           "active": "Aktywny",
-          "disconnected": "Rozłączono",
-          "never_connected": "Nigdy nie podłączony",
-          "pending": "Oczekujące",
+          "disconnected": "Rozłączony",
+          "never_connected": "Nigdy nie był połączony",
+          "pending": "Oczekujący",
           "unknown": "Nieznany"
         },
-        "live": "Żywe",
-        "snapshot": "Zrzut stanu {age} stary",
-        "snapshotHint": "Przeczytaj z pulpitu nawigacyjnego Wazuh (monitorowanie wazuh) pobranego w {time}. Dodaj dane logowania do serwera dla danych na żywo.",
-        "staleSnapshot": "Snapshot agenta z {time} jest przestarzały. Sprawdź, czy zadanie monitorowania panelu Wazuh jest uruchomione, lub dodaj dane API serwera.",
+        "live": "Na żywo",
+        "snapshot": "Migawka sprzed {age}",
+        "snapshotHint": "Dane pochodzą z migawki agentów w panelu Wazuh (wazuh-monitoring), wykonanej {time}. Dodaj poświadczenia API serwera, aby uzyskać dane na żywo.",
+        "staleSnapshot": "Migawka agentów z {time} jest nieaktualna. Sprawdź, czy działa zadanie monitorowania w panelu Wazuh, lub dodaj poświadczenia API serwera.",
         "noDisconnected": "Wszyscy agenci są połączeni",
         "empty": "Żaden agent nie pasuje do tego filtru",
         "column": {
           "status": "Status",
-          "name": "Nazwa zlecenia",
-          "ip": "",
+          "name": "Nazwa",
+          "ip": "IP",
           "os": "System operacyjny",
           "version": "Wersja",
-          "lastKeepAlive": "Cykloalkanowe, cykloalkeny i cykloterpeny",
+          "lastKeepAlive": "Keepalive",
           "groups": "Grupy"
         },
-        "outdated": "Starsza niż najnowsza wersja konsultanta ({version})"
+        "outdated": "Starsza niż najnowsza wersja agenta ({version})"
       },
       "vulnerabilities": {
-        "title": "podatności na zagrożenia",
-        "topCves": "Najlepsze CVE",
+        "title": "Podatności",
+        "topCves": "Najczęściej wykrywane CVE",
         "score": "Wynik",
         "agentsShort": "Agenci",
-        "topAgents": "Najbardziej wrażliwi agenci",
-        "criticalHigh": "Krytyka / Wysoka",
-        "totalTooltip": "{count} odkrycia agentów {agents}",
-        "affected": "Agenci {count}",
+        "topAgents": "Agenci z największą liczbą podatności",
+        "criticalHigh": "Krytyczne / Wysokie",
+        "totalTooltip": "{count} wykrytych podatności u {agents} agentów",
+        "affected": "Liczba agentów: {count}",
         "empty": "Nie wykryto podatności",
-        "distribution": "Rozkład dotkliwości. Wyniki {unscored} bez wyniku nie są wyświetlane.",
-        "worst": "Najgorsze: {id} ({score}) na agentów {agents}"
+        "distribution": "Rozkład poziomów ważności. Nie pokazano {unscored} wyników bez przypisanej oceny punktowej.",
+        "worst": "Najpoważniejsza: {id} ({score}) u {agents} agentów"
       },
       "fim": {
-        "title": "Integralność pliku · {range}",
+        "title": "Integralność plików · {range}",
         "event": {
-          "added": "Data dodania",
-          "modified": "Zmodyfikowane",
-          "deleted": "Usunięty",
+          "added": "Dodano",
+          "modified": "Zmodyfikowano",
+          "deleted": "Usunięto",
           "unknown": "Zmieniono"
         },
         "empty": "Brak zdarzeń integralności plików w tym okresie",
@@ -6027,32 +6131,32 @@
         "registry": "Rejestr"
       },
       "authFailures": {
-        "title": "Niepowodzenie uwierzytelniania · {hours}h",
+        "title": "Nieudane uwierzytelnienia · {hours}h",
         "seriesTooltip": "Wszyscy agenci w ciągu ostatnich {hours}h",
-        "peak": "Szczyt {count}/wiadro",
+        "peak": "Maksimum: {count} na przedział czasu",
         "empty": "Brak nieudanych logowań w tym okresie",
-        "failed": "Nieudane logowanie",
-        "failedHint": "Pojedyncze błędy uwierzytelniania (sshd, PAM, Windows logon, nieprawidłowy użytkownik)",
-        "bruteForce": "Siła szczotkowa",
-        "bruteForceHint": "Skojarzone zasady brute-force (wielokrotne awarie w krótkim okresie, MITRE T1110)",
+        "failed": "Nieudane logowania",
+        "failedHint": "Pojedyncze nieudane próby uwierzytelnienia (sshd, PAM, logowanie Windows, nieprawidłowe nazwy użytkowników)",
+        "bruteForce": "Atak siłowy (brute force)",
+        "bruteForceHint": "Powiązane reguły wykrywania ataków siłowych (wiele nieudanych prób w krótkim czasie, MITRE T1110)",
         "sourceIps": "Źródłowe adresy IP",
-        "ipTooltip": "{ip}: {count} porażki",
-        "bruteForceCount": "Siła {count}"
+        "ipTooltip": "{ip}: {count} nieudanych prób",
+        "bruteForceCount": "Ataki siłowe: {count}"
       },
       "view": {
-        "overview": "",
-        "alerts": "",
-        "timeline": "",
-        "top": "",
+        "overview": "Poziom ważności",
+        "alerts": "Alerty",
+        "timeline": "Oś czasu",
+        "top": "Rankingi",
         "agents": "Agenci",
-        "vulnerabilities": "podatności na zagrożenia",
-        "fim": "",
-        "authFailures": ""
+        "vulnerabilities": "Podatności",
+        "fim": "Integralność plików",
+        "authFailures": "Nieudane próby uwierzytelnienia"
       },
       "option": {
         "visibleViews": {
-          "label": "",
-          "description": ""
+          "label": "Widoczne zakładki",
+          "description": "W przełączniku zakładek dostępne są tylko wybrane zakładki. Jeśli wybrano tylko jedną zakładkę, przełącznik jest ukryty."
         },
         "range": {
           "label": "Zakres czasowy"
@@ -6071,19 +6175,19 @@
         },
         "yScale": {
           "label": "Skala osi Y",
-          "description": "Korzeń kwadratu utrzymuje wysokie i krytyczne alarmy widoczne obok tysięcy nisko"
+          "description": "Skala pierwiastkowa pozwala wyświetlać alerty o wysokim i krytycznym poziomie ważności obok tysięcy alertów o niskim poziomie."
         },
         "minLevel": {
-          "label": ""
+          "label": "Minimalny poziom reguły (oś czasu i rankingi)"
         },
         "showLegend": {
           "label": "Pokaż legendę z sumami"
         },
         "topKind": {
-          "label": "Ranga"
+          "label": "Ranking"
         },
         "topLimit": {
-          "label": ""
+          "label": "Liczba pozycji w rankingach"
         },
         "showBars": {
           "label": "Pokaż paski"
@@ -6095,16 +6199,16 @@
           "label": "Sortuj według"
         },
         "showVersion": {
-          "label": ""
+          "label": "Agenci: pokaż kolumnę wersji Wazuh"
         },
         "showGroups": {
-          "label": ""
+          "label": "Agenci: pokaż kolumnę grup"
         },
         "cveOrder": {
-          "label": "Ranking CVE wg"
+          "label": "Sortuj CVE według"
         },
         "minSeverity": {
-          "label": "Intensywność CVE"
+          "label": "Poziom ważności CVE"
         },
         "cveLimit": {
           "label": "Liczba CVE"
@@ -6113,32 +6217,32 @@
           "label": "Liczba agentów"
         },
         "showAgents": {
-          "label": "Pokaż najbardziej wrażliwych agentów"
+          "label": "Pokaż agentów z największą liczbą podatności"
         },
         "fimEvent": {
           "label": "Zdarzenia"
         },
         "fimLimit": {
-          "label": ""
+          "label": "Zdarzenia dotyczące integralności plików"
         },
         "includeRegistry": {
           "label": "Dołącz zdarzenia rejestru Windows"
         },
         "authLimit": {
-          "label": ""
+          "label": "Agenci z nieudanymi próbami uwierzytelnienia"
         },
         "showSourceIps": {
-          "label": "Pokaż najlepsze źródłowe adresy IP"
+          "label": "Pokaż najczęstsze źródłowe adresy IP"
         },
         "alertsMinLevel": {
-          "label": "",
-          "description": "Poziomy wahań: 0-6 niskie, 7-11 średnie, 12-14 wysokie, 15+ krytyczne"
+          "label": "Alerty: minimalny poziom reguły",
+          "description": "Poziomy reguł Wazuh: 0–6 niskie, 7–11 średnie, 12–14 wysokie, 15+ krytyczne"
         },
         "alertsLimit": {
-          "label": ""
+          "label": "Alerty: liczba alertów"
         },
         "showMitre": {
-          "label": ""
+          "label": "Pokaż techniki MITRE ATT&CK"
         },
         "showAgent": {
           "label": "Pokaż agenta"
@@ -6170,14 +6274,14 @@
       "connectService": "Połącz usługę"
     },
     "urlDrop": {
-      "hint": "",
-      "resolving": "",
+      "hint": "Upuść, aby dodać jako aplikację",
+      "resolving": "Dodawanie aplikacji...",
       "notification": {
         "success": {
-          "message": ""
+          "message": "Dodano {name} do pulpitu"
         },
         "full": {
-          "message": ""
+          "message": "Na pulpicie nie ma już miejsca"
         }
       }
     },
@@ -6218,7 +6322,7 @@
         "preview": "Podgląd {name} z artykułami {count}",
         "currentHidden": "Bieżący dział: {name}",
         "keyboard": {
-          "navigate": "",
+          "navigate": "Nawiguj",
           "open": "Otwórz",
           "instructions": "Wpisz aby filtrować płyty. Użyj klawiszy strzałek, aby przenieść wyniki i Wejdź, aby otworzyć płytę."
         },
@@ -6377,7 +6481,7 @@
         "label": "Usuń kolor"
       },
       "customCss": {
-        "label": "Niestandardowy CSS dla tej tablicy”",
+        "label": "Niestandardowy CSS dla tej tablicy",
         "description": "Jeszcze bardziej dostosuj swój pulpit za pomocą CSS, zalecane tylko dla doświadczonych użytkowników",
         "customClassesAlert": {
           "title": "Niestandardowe klasy",
@@ -6435,12 +6539,12 @@
             "columns": "kolumny",
             "empty": "Ten układ jest pusty",
             "dynamicSection": "Sekcja dynamiczna",
-            "editorWidthLabel": ""
+            "editorWidthLabel": "{layoutName} · {width} px"
           },
           "reset": {
             "action": "Resetuj z bazy",
             "confirm": {
-              "title": "",
+              "title": "Zresetować układ {layoutName}?",
               "message": "To zastępuje każdą zapisaną pozycję i rozmiar w tym układzie nowym układem wygenerowanym z Bazy. Tego nie można cofnąć."
             }
           },
@@ -6569,9 +6673,9 @@
         "label": "Stałe paski boczne",
         "description": "Zarezerwuj do trzech kolumn tablicy rozdzielczej po obu stronach. Pozostałe płótno automatycznie powraca.",
         "left": {
-          "label": "",
+          "label": "Lewy pasek boczny",
           "description": "Pozostaw ten obszar widoczny podczas przewijania tablicy rozdzielczej.",
-          "thumbLabel": ""
+          "thumbLabel": "Szerokość lewego paska bocznego"
         },
         "right": {
           "label": "Prawy pasek boczny",
@@ -6623,7 +6727,8 @@
             "documentation": "Dokumentacja",
             "submitIssue": "Zgłoś problem",
             "discord": "Discord społeczności",
-            "sourceCode": "Kod źródłowy"
+            "sourceCode": "Kod źródłowy",
+            "changelog": ""
           }
         },
         "about": "O programie",
@@ -6741,7 +6846,7 @@
                 }
               },
               "items": {
-                "logo": "",
+                "logo": "Logo",
                 "search": "Szukaj",
                 "home": "Tablica główna",
                 "boardSwitcher": "Tablice",
@@ -6976,6 +7081,10 @@
             "title": "Wygląd",
             "defaultColorScheme": {
               "label": "Domyślny schemat kolorów"
+            },
+            "whatsNew": {
+              "label": "",
+              "description": ""
             }
           },
           "branding": {
@@ -6983,7 +7092,7 @@
             "groups": {
               "identity": "Tożsamość",
               "appearance": "Wygląd",
-              "customCss": "",
+              "customCss": "Niestandardowy CSS",
               "authentication": "Authentication"
             },
             "identity": {
@@ -6997,7 +7106,7 @@
             },
             "logo": {
               "label": "Logo aplikacji",
-              "placeholder": ""
+              "placeholder": "/logo/logo.png"
             },
             "favicon": {
               "label": "Ikona przeglądarki (favicon)",
@@ -7011,7 +7120,7 @@
             },
             "lockPrimaryColor": {
               "label": "Zachowaj ten kolor na każdej płytce",
-              "description": "Zapobiega zastępowaniu kolorów działu."
+              "description": "Zapobiega zastępowaniu koloru akcentowego aplikacji kolorami tablicy."
             },
             "signInBackground": {
               "label": "Tło uwierzytelniania",
@@ -7021,8 +7130,8 @@
               "label": "Nakładka w tle"
             },
             "signInMarquee": {
-              "label": "",
-              "description": ""
+              "label": "Pokaż animowane ikony aplikacji w tle",
+              "description": "Wyświetlaj unoszące się ikony aplikacji na stronach uwierzytelniania."
             },
             "defaultRadius": {
               "label": "Styl narożnika",
@@ -7041,14 +7150,14 @@
             "summary": {
               "title": "Bieżąca marka",
               "cornerStyle": "Styl narożnika",
-              "palette": "",
+              "palette": "Paleta kolorów",
               "backgroundConfigured": "Własne tło · {overlay}% nakładka",
               "backgroundDefault": "Domyślne tło",
               "greetingConfigured": "Własne powitanie",
               "greetingDefault": "Domyślne powitanie",
               "boardColorLocked": "Kolor tablicy zablokowany",
               "boardColorFlexible": "Kolor tablicy dozwolony",
-              "logo": "",
+              "logo": "Logo",
               "greeting": "Powitanie",
               "on": "Włączone",
               "off": "Wyłączony"
@@ -7099,7 +7208,7 @@
                   "description": "Ograniczona liczba zastosowań asystenta jest codziennie darmowa, opłacana przez zespół Homarr. Zaloguj się za pomocą Warsztatu Społeczności, aby skorzystać ze swojego dodatku."
                 },
                 "openrouter": {
-                  "description": "Hosted model routing z dużym katalogiem modeli."
+                  "description": "Hostowane kierowanie żądań do modeli z dużego katalogu modeli obsługujących narzędzia."
                 },
                 "openai": {
                   "description": "Kompletności czatu OpenAI przez oficjalny punkt końcowy API."
@@ -7182,7 +7291,7 @@
             "model": {
               "title": "Wzór",
               "description": "Wybierz odkryty model lub wprowadź dokładny identyfikator modelu punktu końcowego.",
-              "save": "",
+              "save": "Zapisz ustawienia modelu",
               "placeholder": "Identyfikator modelu",
               "refresh": "Odśwież modele",
               "chooseModel": "Wybierz model używany do nowych konwersacji.",
@@ -7192,7 +7301,7 @@
               "manualFallback": "Odkrycie jest niedostępne. Nadal możesz wprowadzić identyfikator modelu ręcznie.",
               "saveConnectionFirst": "Zapisz połączenie z dostawcą przed wybraniem modelu.",
               "discovering": "Odświeżanie modeli dostępnych od tego dostawcy…",
-              "discovered": "{count, plural, one {Znaleziono # model. Obsługa narzędzi zależy od wybranego punktu końcowego i modelu.} other {Odkryto # modele. Obsługa narzędzi zależy od wybranego punktu końcowego i modelu.}}",
+              "discovered": "{count, plural, one {Wykryto # model. Obsługa narzędzi zależy od wybranego punktu końcowego i modelu.} few {Wykryto # modele. Obsługa narzędzi zależy od wybranego punktu końcowego i modelu.} many {Wykryto # modeli. Obsługa narzędzi zależy od wybranego punktu końcowego i modelu.} other {Wykryto # modelu. Obsługa narzędzi zależy od wybranego punktu końcowego i modelu.}}",
               "discoveryFailed": "Odkrycie modelu nie zostało ukończone",
               "context": "Okno kontekstowe {count}",
               "toolsConfirmed": "Narzędzia reklamowane",
@@ -7254,9 +7363,9 @@
             "disable": "Wyłącz {name}"
           },
           "interval": {
-            "seconds": "Co {interval, plural, =1 {sekundę} other {# sekundy}}",
-            "minutes": "Co {interval, plural, =1 {minutę} other {# minuty}}”",
-            "hours": "Co {interval, plural, =1 {godzinę} other {# godziny}}",
+            "seconds": "Co {interval, plural, =1 {sekundę} one {# sekund} few {# sekundy} many {# sekund} other {# sekundy}}",
+            "minutes": "Co {interval, plural, =1 {minutę} one {# minut} few {# minuty} many {# minut} other {# minuty}}",
+            "hours": "Co {interval, plural, =1 {godzinę} one {# godzin} few {# godziny} many {# godzin} other {# godziny}}",
             "midnight": "Codziennie o północy",
             "weeklyMonday": "Co tydzień w poniedziałek",
             "update": {
@@ -7327,6 +7436,12 @@
             "apiKey": {
               "label": "Uwierzytelnianie",
               "title": "Klucze API",
+              "access": {
+                "label": "Dostęp",
+                "readOnly": "Tylko do odczytu",
+                "readWrite": "Odczyt i zapis",
+                "description": "Blokuje wprowadzanie zmian, wykonywanie działań w usługach oraz wysyłanie dowolnych żądań do usług zewnętrznych."
+              },
               "button": {
                 "createApiToken": "Utwórz token API",
                 "confirmDeletion": "Potwierdź usunięcie"
@@ -7343,7 +7458,7 @@
                 }
               },
               "provenance": {
-                "oauth": "",
+                "oauth": "OAuth",
                 "unattributed": "Ręczny lub starszy klucz API",
                 "unnamedClient": "Nazwa klienta nie została zapisana",
                 "clientNameHint": "Nazwy klientów są raportowane samodzielnie i nie są weryfikowane.",
@@ -7390,17 +7505,17 @@
               },
               "authentication": {
                 "title": "Authentication",
-                "intro": "Możesz uwierzytelnić się z serwerem MCP przy użyciu klucza API lub OAuth. Obie metody zapewniają taki sam poziom dostępu.",
+                "intro": "Uwierzytelnij się kluczem API lub przez OAuth. Obie metody obsługują poświadczenia tylko do odczytu oraz do odczytu i zapisu.",
                 "apiKey": {
                   "title": "API Key (manual)",
                   "description": "W nagłówku ApiKey przekaż pełny klucz API w konfiguracji klienta MCP."
                 },
                 "oauth": {
-                  "title": "OAuth (browser login)",
-                  "description": "Klienci obsługujący OAuth (tacy jak Claude Code, opencode lub Cursor) mogą uwierzytelniać się poprzez otwarcie okna przeglądarki. Uruchom polecenie authi w swoim kliencie, zaloguj się do Homarr w przeglądarce i jesteś połączony — klucz API jest tworzony automatycznie.",
-                  "hint": "Tokeny OAuth pokazują się jako zwykłe klucze API w zakładce Uwierzytelniania. Możesz je cofnąć w każdej chwili."
+                  "title": "OAuth (logowanie w przeglądarce i zgoda na dostęp)",
+                  "description": "Rozpocznij autoryzację w kliencie OAuth i w razie potrzeby zaloguj się do Homarr. Sprawdź klienta, adres przekierowania i dostęp do konta. Wybierz „Zezwól na dostęp” tylko wtedy, gdy ufasz klientowi. Poświadczenie API zostanie utworzone dopiero po zatwierdzeniu i pomyślnej wymianie kodu.",
+                  "hint": "Cofnij zarejestrowane połączenia OAuth we własnych ustawieniach ogólnych. Administratorzy mogą również unieważniać poświadczenia na karcie „Uwierzytelnianie”. Działają one z interfejsami HTTP API i MCP Homarr, nie wygasają automatycznie i pozostają ważne po wylogowaniu."
                 },
-                "permissions": "Klucz API określa uprawnienia dostępne dla AI — działa z takim samym poziomem dostępu, jak właściciel klucza."
+                "permissions": "Poświadczenia nie mogą zapewniać większych uprawnień niż aktualne uprawnienia właściciela. Poświadczenia tylko do odczytu blokują również zmiany, działania w usługach i dowolne żądania do usług docelowych."
               },
               "clientConfig": {
                 "title": "Konfiguracja klienta",
@@ -7539,7 +7654,7 @@
           },
           "hotkeys": {
             "title": "Skróty klawiszowe",
-            "subtitle": "Skróty klawiaturowe ułatwiające pracę”",
+            "subtitle": "Skróty klawiaturowe ułatwiające pracę",
             "field": {
               "shortcut": "Skrót",
               "action": "Akcja"
@@ -7564,7 +7679,7 @@
     "title": "Kontenery",
     "reconciliation": {
       "title": "Pomocna konfiguracja dokera",
-      "suggestions": "{count, plural, =0 {Brak sugestii} one {# sugestie} other {# sugestie}}",
+      "suggestions": "{count, plural, =0 {Brak sugestii} one {# sugestia} few {# sugestie} many {# sugestii} other {# sugestii}}",
       "attention": "{count} wymaga uwagi",
       "endpointUnavailable": "Niektóre usługi nie mogą zostać sprawdzone, ponieważ te punkty końcowe są niedostępne: {names}",
       "empty": "Nie znaleziono żadnych widocznych usług dokujących.",
@@ -7601,7 +7716,7 @@
           "linked": "Powiązane",
           "missing": "Brakujące",
           "changed": "Zmieniono",
-          "unused": "„Technologia”, zgodnie z uwagą ogólną do technologii, służąca do „rozwoju”, „produkcji” lub „użytkowania” sprzętu lub „oprogramowania” wyszczególnionego w pozycjach 2B004, 2B005, 2B006.a, 2B006.b, 2B006.c, 2B006.c, 2B006.c, 2B006.c, 2B006.c, 2B006.c, 2B006.c, 2B006.c, 2B006.c, 2B006.c, 2B006.c, 2B006.c, 2B006.c, 2B006.c, 2B006.c, 2B006.c, 2B006.c, 2B006.c, 2B006.c, 2B006.c, 2B006.c, 2B006.c, 2B006.c, 2B006.c, 2B006.c, 2B006.c, 2B006.c, 2B006.c, 2B006.c, 2B006.c, 2B006.c, 2B006.c, 2B006.c, 2B006.c, 2B006.c, 2B006.c, 2B006.c, 2B006.c,",
+          "unused": "Nieużywane",
           "notApplicable": "Nie dotyczy",
           "notObserved": "Nieobserwowane"
         }
@@ -7706,8 +7821,8 @@
       "remove": {
         "confirm": "Kliknij ponownie, aby trwale usunąć",
         "confirmation": {
-          "title": "{count, plural, one {Usunąć # kontenerów?} other {Usunąć # kontenerów?}}",
-          "message": "{count, plural, one {To trwale usuwa # kontenerów: {names}} other {To trwale usuwa # kontenerów: {names}}}"
+          "title": "{count, plural, one {Usunąć # kontener?} few {Usunąć # kontenery?} many {Usunąć # kontenerów?} other {Usunąć # kontenera?}}",
+          "message": "{count, plural, one {Spowoduje to trwałe usunięcie # kontenera: {names}} few {Spowoduje to trwałe usunięcie # kontenerów: {names}} many {Spowoduje to trwałe usunięcie # kontenerów: {names}} other {Spowoduje to trwałe usunięcie # kontenera: {names}}}"
         },
         "notification": {
           "success": {
@@ -7757,7 +7872,7 @@
     },
     "error": {
       "internalServerError": "Nie udało się pobrać kontenerów Dockera",
-      "endpointUnavailable": "{count, plural, one {# Koniec dokowania niedostępny: {names}} other {# Punkty końcowe są niedostępne: {names}}}",
+      "endpointUnavailable": "{count, plural, one {Niedostępny # punkt końcowy Docker: {names}} few {Niedostępne # punkty końcowe Docker: {names}} many {Niedostępnych # punktów końcowych Docker: {names}} other {Niedostępnego # punktu końcowego Docker: {names}}}",
       "noColumns": "Wybierz co najmniej jedną kolumnę w ustawieniach widżetu"
     }
   },
@@ -7770,8 +7885,8 @@
       },
       "status": {
         "available": "Dostępne",
-        "degraded": "",
-        "unavailable": ""
+        "degraded": "Metryki niedostępne",
+        "unavailable": "Niedostępne"
       },
       "unavailable": "Ten kontekst Kubernetes nie może zostać osiągnięty. Wybierz inny kontekst lub zweryfikuj jego poświadczenia i punkt końcowy.",
       "metricsUnavailable": "Ten kontekst jest osiągalny, ale Serwer Metrics jest niedostępny. Ekwipunek pozostaje dostępny bez użycia CPU i pamięci."
@@ -7803,7 +7918,7 @@
     },
     "nodes": {
       "field": {
-        "metricsUnavailable": "",
+        "metricsUnavailable": "Niedostępne",
         "kubernetesVersion": {
           "label": "Wersja Kubernetes"
         }
@@ -8020,7 +8135,7 @@
         "placeholder": "Zapytaj Asystenta"
       },
       "external": {
-        "label": "",
+        "label": "Internet",
         "placeholder": "Szukaj z zewnętrzną wyszukiwarką"
       },
       "media": {
@@ -8038,7 +8153,7 @@
       "modeAriaLabel": "Tryb {mode}",
       "resultsAriaLabel": "Wyniki {mode}",
       "footer": {
-        "navigate": "",
+        "navigate": "Nawiguj",
         "open": "Otwórz"
       }
     },
@@ -8723,6 +8838,12 @@
       }
     }
   },
+  "whatsNew": {
+    "title": "",
+    "empty": "",
+    "allReleases": "",
+    "dismiss": ""
+  },
   "metadata": {
     "description": "Samodzielny panel nawigacyjny dla *arr stosu arr i całej Twojej homelab. Integruje się z ponad 50 usługami, widżetami w czasie rzeczywistym, bez plików konfiguracyjnych.",
     "dashboardTitle": "Panel {appName}"
@@ -8752,12 +8873,12 @@
     "searchConversations": "Szukaj konwersacji",
     "noMatchingConversations": "Brak pasujących konwersacji",
     "historyError": {
-      "title": "",
-      "load": "",
-      "loadMessages": "",
-      "saveMessages": "",
-      "switch": "",
-      "retry": ""
+      "title": "Historia rozmów",
+      "load": "Nie udało się wczytać rozmów.",
+      "loadMessages": "Nie udało się wczytać wiadomości z tej rozmowy. Spróbuj ponownie, aby je przywrócić przed wysłaniem kolejnej wiadomości.",
+      "saveMessages": "Nie udało się zapisać ostatnich wiadomości. Mogą zniknąć po ponownym wczytaniu strony.",
+      "switch": "Nie udało się otworzyć tej rozmowy.",
+      "retry": "Spróbuj ponownie"
     },
     "moreActions": "Więcej działań",
     "renameConversation": {
@@ -8780,11 +8901,11 @@
     "suggestions": {
       "health": {
         "label": "Sprawdź zdrowie usługi",
-        "prompt": "Sprawdź moje integracje i podsumowaj wszystko, co wymaga uwagi."
+        "prompt": "Sprawdź stan usług i integracji, do których mam dostęp. Podsumuj problemy i zaproponuj kolejne kroki."
       },
       "explore": {
-        "label": "Przeglądaj mój homarca",
-        "prompt": "Pokaż mi, co mogę zobaczyć i zarządzać w tej instancji Homarr."
+        "label": "Przeglądaj mój Homarr",
+        "prompt": "Pokaż mi, co mogę przeglądać i czym mogę zarządzać w tej instancji Homarr."
       },
       "media": {
         "label": "Znajdź media do żądania",
@@ -8796,18 +8917,19 @@
       },
       "designWidget": {
         "label": "Zaprojektuj widżet",
-        "prompt": "Utwórz i zainstaluj niestandardowy widżet dla "
+        "prompt": "Pomóż mi zaprojektować niestandardowy widżet. Zapytaj, co ma wyświetlać i gdzie go dodać, a następnie wykorzystaj moje dostępne integracje."
       }
     },
     "composerPlaceholder": "Zapytaj Asystenta…",
     "runtime": {
-      "model": "Wzór",
+      "model": "Model",
       "searchModels": "Szukaj modeli",
       "noModels": "Brak dostępnych modeli",
       "otherModels": "Inne modele",
       "imageInput": "Akceptuje wprowadzanie obrazu",
       "thinking": "Tryb myślenia",
       "reasoning": {
+        "default": "Domyślny",
         "auto": "Auto",
         "none": "Wyłączony",
         "minimal": "Minimalny",
@@ -8878,9 +9000,9 @@
     },
     "mentions": {
       "menu": "Dodaj kontekst Homarr",
-      "back": "",
-      "loading": "",
-      "empty": "",
+      "back": "Wszystkie kategorie",
+      "loading": "Wczytywanie dostępnego kontekstu...",
+      "empty": "Nie znaleziono pasującego kontekstu.",
       "context": "Kontekst",
       "app": "Aplikacje",
       "integration": "Integracje",
@@ -8895,8 +9017,8 @@
     },
     "commands": {
       "menu": "Polecenia asystenta",
-      "hint": "",
-      "empty": "",
+      "hint": "Wybierz punkt wyjścia lub wpisz /, aby wyświetlić polecenia, albo @, aby dodać kontekst. Edytuj swoją wiadomość przed wysłaniem.",
+      "empty": "Nie znaleziono pasujących poleceń. Spróbuj użyć /health, /explore, /media, /style lub /design-widget.",
       "health": "Przygotuj ocenę usług i zdrowia",
       "explore": "Przygotuj przegląd tej instancji Homarr",
       "media": "Przygotuj wyszukiwanie mediów",
@@ -8930,7 +9052,7 @@
       "generationTime": "Czas generowania",
       "moderationLatency": "Moderacja",
       "providerThroughput": "Przepustowość dostawcy",
-      "fallbacks": "",
+      "fallbacks": "Opcje zapasowe",
       "fallbackLatency": "Opóźnienie zwrotne",
       "cacheDiscount": "Rabat pamięci podręcznej",
       "normalizedTokens": "OpenRouter znormalizowane wejście / wyjście",
@@ -8959,8 +9081,8 @@
     "webSearch": {
       "title": "Wyszukiwanie w Internecie",
       "completed": "OpenRouter przeszukał tę odpowiedź na żywo.",
-      "searches": "{count, plural, one {# szukaj} other {# szukaj}}",
-      "sources": "{count, plural, one {# źródło} other {# źródła}}"
+      "searches": "{count, plural, one {# wyszukiwanie} few {# wyszukiwania} many {# wyszukiwań} other {# wyszukiwania}}",
+      "sources": "{count, plural, one {# źródło} few {# źródła} many {# źródeł} other {# źródła}}"
     },
     "responseError": {
       "title": "Asystent nie mógł zakończyć",
@@ -9039,15 +9161,15 @@
       "automaticContinue": "Akceptowanie proponowanych zmian w dziale automatycznie",
       "resetAll": "Resetuj wszystkie zmiany",
       "tabs": {
-        "css": "",
+        "css": "Niestandardowy CSS",
         "appearance": "Wygląd",
         "background": "Tło",
         "general": "Ogólne"
       },
       "cssDescription": "Edytuj kompletny arkusz stylów. Istniejące zasady są zachowane, chyba że zostaną usunięte tutaj.",
       "cssCharacters": "{count} z 16384 znakami",
-      "copyCss": "",
-      "restoreCss": "",
+      "copyCss": "Kopiuj CSS",
+      "restoreCss": "Przywróć bieżący CSS",
       "remoteCssTitle": "Ten CSS ładuje zdalny zasób",
       "remoteCssDescription": "Zaimportowane arkusze stylów i zdalne adresy URL kontaktują się z innym serwerem, gdy płytka się ładuje. Przejrzyj je przed kontynuowaniem."
     },
@@ -9071,14 +9193,14 @@
       "errorDescription": "Model nie dostarczył pełnej konfiguracji widżetu. Nie dodano widżetu."
     },
     "approvalRequired": "Wymagane zatwierdzenie",
-    "complete": "",
+    "complete": "Zakończ",
     "denied": "Odmowa",
     "failed": "Niepowodzenie",
     "working": "Praca",
     "approvalDescription": "Przejrzyj tę zmianę przed jej uruchomieniem.",
     "approveAndRun": "Zatwierdź i uruchom",
     "deny": "Odmowa",
-    "approvalError": "",
+    "approvalError": "Nie udało się zapisać Twojej odpowiedzi. Spróbuj ponownie.",
     "autoApproval": {
       "label": "Zatwierdzenia automatyczne",
       "composerLabel": "Zatwierdź dla mnie",

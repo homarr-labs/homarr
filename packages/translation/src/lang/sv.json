@@ -280,6 +280,13 @@
           "title": "Fullständig administratörsåtkomst",
           "description": "Kan hantera Homarr och uppkopplade tjänster, inklusive destruktiva åtgärder."
         },
+        "mode": {
+          "label": "",
+          "readOnly": "",
+          "readWrite": "",
+          "readOnlyDescription": "",
+          "readWriteDescription": ""
+        },
         "credential": {
           "title": "Uppgiftens omfattning och livslängd",
           "breadth": "Fungerar med Homarr's HTTP API och MCP, inklusive utanför denna klient.",
@@ -1386,11 +1393,7 @@
               "label": "Välj befintlig app"
             },
             "new": {
-              "title": "Ny",
-              "url": {
-                "label": "App URL",
-                "description": "URL:en som appen kommer att öppna när den används från tavlan"
-              }
+              "title": "Ny"
             }
           }
         }
@@ -1442,8 +1445,9 @@
         "label": "Länka en befintlig app",
         "description": "Anslut integrationen till en app som du redan kan använda."
       },
-      "appHref": {
-        "placeholder": "Egen app-URL"
+      "externalUrl": {
+        "label": "",
+        "description": ""
       },
       "apiKeySettings": {
         "label": "Hämta API-nyckel"
@@ -1510,6 +1514,27 @@
         "unknown": {
           "title": "Okänt fel",
           "description": "Ett okänt fel inträffade, öppna orsaken nedan för att se mer detaljer"
+        },
+        "frigate": {
+          "title": "",
+          "status": "",
+          "description": {
+            "cookie": "",
+            "profileMismatch": "",
+            "redirect": "",
+            "login": "",
+            "profile": "",
+            "stats": ""
+          }
+        },
+        "openmediavault": {
+          "title": "",
+          "description": {
+            "totpSecretRequired": "",
+            "totpSecretInvalid": "",
+            "totpVerificationFailed": "",
+            "unsupportedChallenge": ""
+          }
         },
         "parse": {
           "title": "Parsningsfel",
@@ -1710,6 +1735,11 @@
         "title": "Återställ hemlighet",
         "message": "Är du säker på att du vill återställa denna hemlighet?"
       },
+      "totpNotice": "",
+      "remove": {
+        "title": "",
+        "message": ""
+      },
       "noSecretsRequired": {
         "segmentTitle": "Inga hemligheter",
         "text": "Ingen hemlighet krävs för den här integrationen"
@@ -1791,9 +1821,9 @@
           "label": "Indexerare lösenord",
           "newLabel": "Nytt lösenord för indexerare"
         },
-        "wazuhDashboardUrl": {
-          "label": "Dashboard URL (valfritt)",
-          "newLabel": "Ny URL för instrumentpanelen"
+        "totpSecret": {
+          "label": "",
+          "newLabel": ""
         }
       }
     },
@@ -1986,6 +2016,15 @@
         "modifier": ""
       }
     },
+    "markdown": {
+      "alert": {
+        "note": "",
+        "tip": "",
+        "important": "",
+        "warning": "Varning",
+        "caution": ""
+      }
+    },
     "dangerZone": "Kritiska inställningar",
     "noResults": "Hittade inga resultat",
     "unsavedChanges": "Du har osparade ändringar!",
@@ -2038,7 +2077,7 @@
     "total": "Totalt",
     "filesystemUsage": "{count, plural, one {Visa användning för # filsystem} other {Visa användning för # filsystem}}",
     "field": {
-      "name": "Namn",
+      "name": "Jobbnamn",
       "state": "Status",
       "size": "Storlek",
       "actions": "Åtgärder",
@@ -2047,7 +2086,7 @@
       "description": "Beskrivning",
       "created": "Adderad",
       "namespace": "Namnplats",
-      "status": "Status",
+      "status": "",
       "architecture": "Arkitektur",
       "type": "Typ"
     },
@@ -2335,7 +2374,29 @@
             "tooltip": "Som verktygstips",
             "hidden": "Dold"
           }
+        },
+        "dockerContainer": {
+          "label": "",
+          "description": "",
+          "placeholder": "",
+          "disabled": "",
+          "unavailable": ""
         }
+      },
+      "docker": {
+        "action": {
+          "start": "",
+          "stop": ""
+        },
+        "notification": {
+          "startFailed": "",
+          "stopFailed": ""
+        },
+        "switch": {
+          "start": "",
+          "stop": ""
+        },
+        "stopped": ""
       },
       "error": {
         "notFound": {
@@ -2414,6 +2475,10 @@
         "hideHostname": {
           "label": "Dölj värdnamn"
         },
+        "showFullUrls": {
+          "label": "",
+          "description": ""
+        },
         "withBorder": {
           "label": "Visa kantlinje"
         },
@@ -2436,6 +2501,9 @@
         }
       },
       "empty": "Lägg till en URL eller app i widgetinställningarna",
+      "copyUrl": "",
+      "copied": "Kopierad",
+      "copyFailed": "",
       "groups": {
         "label": "Kategorier",
         "placeholder": "Ny kategori",
@@ -3535,6 +3603,34 @@
     },
     "coolify": {
       "description": "Översikt över din Coolify-instans med servrar och applikationer",
+      "summary": {
+        "needsAttention": "{count} behöver uppmärksamhet",
+        "inProgress": "",
+        "unknown": "",
+        "healthy": "",
+        "empty": "",
+        "healthyDetail": "",
+        "more": "",
+        "moreInstances": ""
+      },
+      "details": {
+        "tabs": "",
+        "overview": "",
+        "search": "",
+        "serviceApplications": ""
+      },
+      "overview": {
+        "projects": "",
+        "resources": "",
+        "attention": "Behöver uppmärksamhet",
+        "ready": "Redo",
+        "noProjects": "",
+        "projectsUnavailable": "",
+        "moreProjects": "",
+        "running": "Körs",
+        "resourceCount": "",
+        "environmentCount": ""
+      },
       "option": {
         "showServers": {
           "label": "Visa servrar"
@@ -3566,7 +3662,13 @@
       },
       "source": {
         "url": "Källa: {url}",
-        "unavailable": ""
+        "unavailable": "",
+        "unavailableCount": ""
+      },
+      "kind": {
+        "server": "",
+        "application": "Applikation",
+        "service": "Tjänst"
       },
       "instances": {
         "title": "Instanser"
@@ -3583,6 +3685,7 @@
         "exited": "Avslutad",
         "starting": "Startar",
         "restarting": "Startar om",
+        "unhealthy": "Ej hälsosam",
         "unknown": "Okänt",
         "online": "",
         "offline": "",
@@ -4815,6 +4918,7 @@
           },
           "identifier": {
             "label": "Identifierare",
+            "containerPlaceholder": "",
             "placeholder": "Namn eller Ägare/Namn"
           },
           "name": {},
@@ -6623,7 +6727,8 @@
             "documentation": "Dokumentation",
             "submitIssue": "Skicka in ett ärende",
             "discord": "Community Discord",
-            "sourceCode": "Källkod"
+            "sourceCode": "Källkod",
+            "changelog": ""
           }
         },
         "about": "Om",
@@ -6976,6 +7081,10 @@
             "title": "Utseende",
             "defaultColorScheme": {
               "label": "Standardfärgschema"
+            },
+            "whatsNew": {
+              "label": "",
+              "description": ""
             }
           },
           "branding": {
@@ -7327,6 +7436,12 @@
             "apiKey": {
               "label": "Autentisering",
               "title": "API-nycklar",
+              "access": {
+                "label": "",
+                "readOnly": "",
+                "readWrite": "",
+                "description": ""
+              },
               "button": {
                 "createApiToken": "Skapa API-token",
                 "confirmDeletion": "Bekräfta radering"
@@ -8723,6 +8838,12 @@
       }
     }
   },
+  "whatsNew": {
+    "title": "",
+    "empty": "",
+    "allReleases": "",
+    "dismiss": ""
+  },
   "metadata": {
     "description": "En egen instrumentbräda för *arr stack och hela ditt hem. Integrerar med 50 + tjänster, realtids-widgets, inga konfigurationsfiler.",
     "dashboardTitle": "{appName} Översikt"
@@ -8808,6 +8929,7 @@
       "imageInput": "Accepterar bildinmatning",
       "thinking": "Tänker läge",
       "reasoning": {
+        "default": "Standard",
         "auto": "Automatiskt",
         "none": "Av",
         "minimal": "",

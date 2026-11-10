@@ -280,6 +280,13 @@
           "title": "",
           "description": ""
         },
+        "mode": {
+          "label": "",
+          "readOnly": "",
+          "readWrite": "",
+          "readOnlyDescription": "",
+          "readWriteDescription": ""
+        },
         "credential": {
           "title": "",
           "breadth": "",
@@ -1386,11 +1393,7 @@
               "label": "בחירת אפליקציה קיימת"
             },
             "new": {
-              "title": "חדש",
-              "url": {
-                "label": "כתובת אתר של אפליקציה",
-                "description": "כתובת האתר שהאפליקציה תפתח בעת גישה אליה מלוח המחוונים"
-              }
+              "title": "חדש"
             }
           }
         }
@@ -1442,8 +1445,9 @@
         "label": "קישור אפליקציה קיימת",
         "description": "חברו את האינטגרציה הזו לאפליקציה שכבר ניתן להשתמש בה."
       },
-      "appHref": {
-        "placeholder": "כתובת אתר מותאמת אישית של אפליקציה"
+      "externalUrl": {
+        "label": "",
+        "description": ""
       },
       "apiKeySettings": {
         "label": ""
@@ -1510,6 +1514,27 @@
         "unknown": {
           "title": "שגיאה לא ידועה",
           "description": "אירעה שגיאה לא ידועה, פתח את הסיבה למטה כדי לראות פרטים נוספים"
+        },
+        "frigate": {
+          "title": "",
+          "status": "",
+          "description": {
+            "cookie": "",
+            "profileMismatch": "",
+            "redirect": "",
+            "login": "",
+            "profile": "",
+            "stats": ""
+          }
+        },
+        "openmediavault": {
+          "title": "",
+          "description": {
+            "totpSecretRequired": "",
+            "totpSecretInvalid": "",
+            "totpVerificationFailed": "",
+            "unsupportedChallenge": ""
+          }
         },
         "parse": {
           "title": "שגיאת ניתוח",
@@ -1710,6 +1735,11 @@
         "title": "איפוס נתון גישה",
         "message": "האם את/ה בטוח/ה שברצונך למחוק את נתון הגישה הזה?"
       },
+      "totpNotice": "",
+      "remove": {
+        "title": "",
+        "message": ""
+      },
       "noSecretsRequired": {
         "segmentTitle": "אין נתוני גישה",
         "text": "לא נדרשים נתוני גישה לאינטגרציה זו"
@@ -1791,9 +1821,9 @@
           "label": "סיסמת אינדקס",
           "newLabel": "סיסמת אינדקס חדשה"
         },
-        "wazuhDashboardUrl": {
-          "label": "כתובת URL של לוח המחוונים (אופציונלי)",
-          "newLabel": "כתובת URL חדשה של לוח המחוונים"
+        "totpSecret": {
+          "label": "",
+          "newLabel": ""
         }
       }
     },
@@ -1986,6 +2016,15 @@
         "modifier": "משנה"
       }
     },
+    "markdown": {
+      "alert": {
+        "note": "",
+        "tip": "",
+        "important": "",
+        "warning": "",
+        "caution": ""
+      }
+    },
     "dangerZone": "אזור מסוכן",
     "noResults": "לא נמצאו תוצאות",
     "unsavedChanges": "ישנם שינויים שלא נשמרו!",
@@ -2038,7 +2077,7 @@
     "total": "סך הכל",
     "filesystemUsage": "{count, plural, one {הצגת שימוש במערכת קבצים אחת} two {הצגת שימוש בשתי מערכות קבצים} other {הצגת שימוש ב-# מערכות קבצים}}",
     "field": {
-      "name": "שם",
+      "name": "שם המשימה",
       "state": "מצב",
       "size": "גודל",
       "actions": "פעולות",
@@ -2335,7 +2374,29 @@
             "tooltip": "כתיאור כלים",
             "hidden": "מוסתר"
           }
+        },
+        "dockerContainer": {
+          "label": "",
+          "description": "",
+          "placeholder": "",
+          "disabled": "",
+          "unavailable": ""
         }
+      },
+      "docker": {
+        "action": {
+          "start": "",
+          "stop": ""
+        },
+        "notification": {
+          "startFailed": "",
+          "stopFailed": ""
+        },
+        "switch": {
+          "start": "",
+          "stop": ""
+        },
+        "stopped": ""
       },
       "error": {
         "notFound": {
@@ -2414,6 +2475,10 @@
         "hideHostname": {
           "label": "הסתרת כתובת רשת"
         },
+        "showFullUrls": {
+          "label": "",
+          "description": ""
+        },
         "withBorder": {
           "label": ""
         },
@@ -2436,6 +2501,9 @@
         }
       },
       "empty": "הוסף כתובת URL או אפליקציה בהגדרות הווידג'ט",
+      "copyUrl": "העתק קישור",
+      "copied": "",
+      "copyFailed": "",
       "groups": {
         "label": "",
         "placeholder": "קטגוריה חדשה",
@@ -3535,6 +3603,34 @@
     },
     "coolify": {
       "description": "סקירה של מופע Coolify שלך עם שרתים ואפליקציות",
+      "summary": {
+        "needsAttention": "",
+        "inProgress": "",
+        "unknown": "",
+        "healthy": "",
+        "empty": "",
+        "healthyDetail": "",
+        "more": "",
+        "moreInstances": ""
+      },
+      "details": {
+        "tabs": "",
+        "overview": "",
+        "search": "",
+        "serviceApplications": ""
+      },
+      "overview": {
+        "projects": "",
+        "resources": "",
+        "attention": "",
+        "ready": "מוכן",
+        "noProjects": "",
+        "projectsUnavailable": "",
+        "moreProjects": "",
+        "running": "פועל",
+        "resourceCount": "",
+        "environmentCount": ""
+      },
       "option": {
         "showServers": {
           "label": "הצג שרתים"
@@ -3566,7 +3662,13 @@
       },
       "source": {
         "url": "מקור: {url}",
-        "unavailable": "{source}: לא זמין"
+        "unavailable": "{source}: לא זמין",
+        "unavailableCount": ""
+      },
+      "kind": {
+        "server": "",
+        "application": "",
+        "service": ""
       },
       "instances": {
         "title": "מופעים"
@@ -3583,6 +3685,7 @@
         "exited": "נסגר",
         "starting": "מופעל",
         "restarting": "מפעיל מחדש",
+        "unhealthy": "לא בריא",
         "unknown": "לא ידוע",
         "online": "מקוון",
         "offline": "לא מקוון",
@@ -4815,6 +4918,7 @@
           },
           "identifier": {
             "label": "מזהה",
+            "containerPlaceholder": "",
             "placeholder": "שם או בעלים/שם"
           },
           "name": {},
@@ -6623,7 +6727,8 @@
             "documentation": "תיעוד",
             "submitIssue": "שלח בעיה",
             "discord": "קהילת דיסקורד",
-            "sourceCode": "קוד מקור"
+            "sourceCode": "קוד מקור",
+            "changelog": ""
           }
         },
         "about": "אודות",
@@ -6976,6 +7081,10 @@
             "title": "מראה",
             "defaultColorScheme": {
               "label": "סכמת צבעים ברירת מחדל"
+            },
+            "whatsNew": {
+              "label": "",
+              "description": ""
             }
           },
           "branding": {
@@ -7327,6 +7436,12 @@
             "apiKey": {
               "label": "אימות",
               "title": "מפתח API",
+              "access": {
+                "label": "",
+                "readOnly": "",
+                "readWrite": "",
+                "description": ""
+              },
               "button": {
                 "createApiToken": "יצירת מפתח  API",
                 "confirmDeletion": ""
@@ -8723,6 +8838,12 @@
       }
     }
   },
+  "whatsNew": {
+    "title": "",
+    "empty": "",
+    "allReleases": "",
+    "dismiss": ""
+  },
   "metadata": {
     "description": "לוח מחוונים באירוח עצמי עבור מחסנית *arr וכל מעבדת הבית שלך. משתלב עם יותר מ־50 שירותים, ווידג'טים בזמן אמת וללא קובצי תצורה.",
     "dashboardTitle": "לוח המחוונים של {appName}"
@@ -8808,6 +8929,7 @@
       "imageInput": "מקבל קלט תמונה",
       "thinking": "מצב חשיבה",
       "reasoning": {
+        "default": "",
         "auto": "אוטומטי",
         "none": "כבוי",
         "minimal": "מינימלי",

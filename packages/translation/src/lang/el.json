@@ -280,6 +280,13 @@
           "title": "Πλήρης πρόσβαση διαχειριστή",
           "description": "Μπορεί να διαχειριστεί Homarr και συνδεδεμένες υπηρεσίες, συμπεριλαμβανομένων καταστροφικών δράσεων."
         },
+        "mode": {
+          "label": "",
+          "readOnly": "",
+          "readWrite": "",
+          "readOnlyDescription": "",
+          "readWriteDescription": ""
+        },
         "credential": {
           "title": "Πεδίο εφαρμογής και διάρκεια ζωής",
           "breadth": "Λειτουργεί με HTTP API και MCP, συμπεριλαμβανομένου και εκτός αυτού του υπολογιστή-πελάτη.",
@@ -1386,11 +1393,7 @@
               "label": "Επιλέξτε υπάρχουσα εφαρμογή"
             },
             "new": {
-              "title": "Νέο",
-              "url": {
-                "label": "",
-                "description": "URL που ανοίγει η εφαρμογή από τον πίνακα"
-              }
+              "title": "Νέο"
             }
           }
         }
@@ -1442,8 +1445,9 @@
         "label": "Σύνδεση μιας υπάρχουσας εφαρμογής",
         "description": "Συνδέστε αυτήν την ενσωμάτωση σε μια εφαρμογή που μπορείτε ήδη να χρησιμοποιήσετε."
       },
-      "appHref": {
-        "placeholder": ""
+      "externalUrl": {
+        "label": "",
+        "description": ""
       },
       "apiKeySettings": {
         "label": "Λήψη κλειδιού API"
@@ -1510,6 +1514,27 @@
         "unknown": {
           "title": "Άγνωστο σφάλμα",
           "description": "Παρουσιάστηκε άγνωστο σφάλμα· ανοίξτε την παρακάτω αιτία για περισσότερες λεπτομέρειες"
+        },
+        "frigate": {
+          "title": "",
+          "status": "",
+          "description": {
+            "cookie": "",
+            "profileMismatch": "",
+            "redirect": "",
+            "login": "",
+            "profile": "",
+            "stats": ""
+          }
+        },
+        "openmediavault": {
+          "title": "",
+          "description": {
+            "totpSecretRequired": "",
+            "totpSecretInvalid": "",
+            "totpVerificationFailed": "",
+            "unsupportedChallenge": ""
+          }
         },
         "parse": {
           "title": "Σφάλμα ανάλυσης",
@@ -1710,6 +1735,11 @@
         "title": "Επαναφορά μυστικού",
         "message": "Είστε βέβαιοι ότι θέλετε να επαναφέρετε αυτό το μυστικό;"
       },
+      "totpNotice": "",
+      "remove": {
+        "title": "",
+        "message": ""
+      },
       "noSecretsRequired": {
         "segmentTitle": "Χωρίς μυστικά",
         "text": "Δεν απαιτούνται μυστικά για αυτήν την ενσωμάτωση"
@@ -1791,9 +1821,9 @@
           "label": "Κωδικός ευρετηρίου",
           "newLabel": "Νέος κωδικός ευρετηρίου"
         },
-        "wazuhDashboardUrl": {
-          "label": "Διεύθυνση URL Ταμπλό (Προαιρετικό)",
-          "newLabel": "Νέο dashboard URL"
+        "totpSecret": {
+          "label": "",
+          "newLabel": ""
         }
       }
     },
@@ -1986,6 +2016,15 @@
         "modifier": ""
       }
     },
+    "markdown": {
+      "alert": {
+        "note": "Σημείωση",
+        "tip": "",
+        "important": "",
+        "warning": "Προειδοποίηση",
+        "caution": ""
+      }
+    },
     "dangerZone": "Επικίνδυνη Περιοχή",
     "noResults": "Δεν βρέθηκαν αποτελέσματα",
     "unsavedChanges": "Έχετε μη αποθηκευμένες αλλαγές!",
@@ -2038,7 +2077,7 @@
     "total": "Σύνολο",
     "filesystemUsage": "{count, plural, one {Δείξε χρήση για # σύστημα αρχείων} other {Δείξε χρήση για # συστήματα αρχείων}}",
     "field": {
-      "name": "Όνομα",
+      "name": "Όνομα εργασίας",
       "state": "Κατάσταση",
       "size": "Μέγεθος",
       "actions": "Ενέργειες",
@@ -2335,7 +2374,29 @@
             "tooltip": "Ως tooltip",
             "hidden": "Κρυφό"
           }
+        },
+        "dockerContainer": {
+          "label": "",
+          "description": "",
+          "placeholder": "",
+          "disabled": "",
+          "unavailable": ""
         }
+      },
+      "docker": {
+        "action": {
+          "start": "",
+          "stop": ""
+        },
+        "notification": {
+          "startFailed": "",
+          "stopFailed": ""
+        },
+        "switch": {
+          "start": "",
+          "stop": ""
+        },
+        "stopped": ""
       },
       "error": {
         "notFound": {
@@ -2414,6 +2475,10 @@
         "hideHostname": {
           "label": "Απόκρυψη ονομάτων"
         },
+        "showFullUrls": {
+          "label": "",
+          "description": ""
+        },
         "withBorder": {
           "label": "Εμφάνιση περιγράμματος"
         },
@@ -2436,6 +2501,9 @@
         }
       },
       "empty": "Προσθέστε μια διεύθυνση URL ή εφαρμογή στις ρυθμίσεις widget",
+      "copyUrl": "Αντιγραφή URL",
+      "copied": "Αντιγράφηκε",
+      "copyFailed": "",
       "groups": {
         "label": "Κατηγορίες",
         "placeholder": "Νέα κατηγορία",
@@ -3535,6 +3603,34 @@
     },
     "coolify": {
       "description": "Επισκόπηση της παρουσίας σας στο Coolify με διακομιστές και εφαρμογές",
+      "summary": {
+        "needsAttention": "{count} χρειάζεται προσοχή",
+        "inProgress": "",
+        "unknown": "",
+        "healthy": "",
+        "empty": "",
+        "healthyDetail": "",
+        "more": "",
+        "moreInstances": ""
+      },
+      "details": {
+        "tabs": "",
+        "overview": "",
+        "search": "",
+        "serviceApplications": ""
+      },
+      "overview": {
+        "projects": "",
+        "resources": "",
+        "attention": "Χρειάζεται προσοχή",
+        "ready": "Έτοιμο",
+        "noProjects": "",
+        "projectsUnavailable": "",
+        "moreProjects": "",
+        "running": "Εκτελείται",
+        "resourceCount": "",
+        "environmentCount": ""
+      },
       "option": {
         "showServers": {
           "label": "Εμφάνιση διακομιστών"
@@ -3566,7 +3662,13 @@
       },
       "source": {
         "url": "Πηγή: {url}",
-        "unavailable": ""
+        "unavailable": "",
+        "unavailableCount": ""
+      },
+      "kind": {
+        "server": "",
+        "application": "Εφαρμογή",
+        "service": "Υπηρεσία"
       },
       "instances": {
         "title": "Παρουσίες"
@@ -3583,6 +3685,7 @@
         "exited": "Έξοδος",
         "starting": "Έναρξη",
         "restarting": "Γίνεται επανεκκίνηση",
+        "unhealthy": "Μη υγιές",
         "unknown": "Άγνωστο",
         "online": "Συνδεδεμένος",
         "offline": "Αποσυνδεδεμένος",
@@ -4423,7 +4526,7 @@
           "columnTitle": "Έλεγχοι"
         },
         "added": {
-          "columnTitle": "Ημερομηνία Προσθήκης"
+          "columnTitle": ""
         },
         "category": {
           "columnTitle": "Επιπλέον"
@@ -4815,6 +4918,7 @@
           },
           "identifier": {
             "label": "Αναγνωριστικό",
+            "containerPlaceholder": "",
             "placeholder": "Όνομα ή Κάτοχος/Όνομα"
           },
           "name": {},
@@ -6623,7 +6727,8 @@
             "documentation": "Τεκμηρίωση",
             "submitIssue": "Υποβολή ζητήματος",
             "discord": "Κοινότητα Discord",
-            "sourceCode": "Πηγαίος Κώδικας"
+            "sourceCode": "Πηγαίος Κώδικας",
+            "changelog": ""
           }
         },
         "about": "Σχετικά",
@@ -6976,6 +7081,10 @@
             "title": "Εμφάνιση",
             "defaultColorScheme": {
               "label": "Προεπιλεγμένος συνδυασμός χρωμάτων"
+            },
+            "whatsNew": {
+              "label": "",
+              "description": ""
             }
           },
           "branding": {
@@ -7327,6 +7436,12 @@
             "apiKey": {
               "label": "Έλεγχος ταυτότητας",
               "title": "Κλειδιά API",
+              "access": {
+                "label": "",
+                "readOnly": "",
+                "readWrite": "",
+                "description": ""
+              },
               "button": {
                 "createApiToken": "Δημιουργία διακριτικού API",
                 "confirmDeletion": "Επιβεβαίωση διαγραφής"
@@ -8723,6 +8838,12 @@
       }
     }
   },
+  "whatsNew": {
+    "title": "",
+    "empty": "",
+    "allReleases": "",
+    "dismiss": ""
+  },
   "metadata": {
     "description": "Ένας αυτόνομος πίνακας εργαλείων για τη στοίβα *arr και ολόκληρη την αρχική σας σελίδα. Ενσωματώνεται με υπηρεσίες 50+, γραφικά συστατικά, χωρίς αρχεία διαμόρφωσης.",
     "dashboardTitle": "Πίνακας ελέγχου {appName}"
@@ -8808,6 +8929,7 @@
       "imageInput": "Αποδέχεται την είσοδο εικόνας",
       "thinking": "Λειτουργία σκέψης",
       "reasoning": {
+        "default": "Προεπιλογή",
         "auto": "Αυτόματο",
         "none": "Ανενεργό",
         "minimal": "Ελάχιστα",

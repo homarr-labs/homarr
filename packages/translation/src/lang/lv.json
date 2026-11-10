@@ -280,6 +280,13 @@
           "title": "",
           "description": ""
         },
+        "mode": {
+          "label": "",
+          "readOnly": "",
+          "readWrite": "",
+          "readOnlyDescription": "",
+          "readWriteDescription": ""
+        },
         "credential": {
           "title": "",
           "breadth": "",
@@ -1386,11 +1393,7 @@
               "label": "Atlasīt esošu lietotni"
             },
             "new": {
-              "title": "Jauna",
-              "url": {
-                "label": "",
-                "description": "URL, kuru lietotne atvērs, kad tai piekļūs no informācijas paneļa"
-              }
+              "title": "Jauna"
             }
           }
         }
@@ -1442,8 +1445,9 @@
         "label": "Saistīt esošu lietotni",
         "description": "Savienojiet šo integrāciju ar lietotni, kuru jau varat izmantot."
       },
-      "appHref": {
-        "placeholder": "Pielāgots lietotnes URL"
+      "externalUrl": {
+        "label": "",
+        "description": ""
       },
       "apiKeySettings": {
         "label": "Iegūt API atslēgu"
@@ -1510,6 +1514,27 @@
         "unknown": {
           "title": "Nezināma kļūda",
           "description": "Radās nezināma kļūda. Atveriet tālāk norādīto cēloni, lai skatītu plašāku informāciju"
+        },
+        "frigate": {
+          "title": "",
+          "status": "",
+          "description": {
+            "cookie": "",
+            "profileMismatch": "",
+            "redirect": "",
+            "login": "",
+            "profile": "",
+            "stats": ""
+          }
+        },
+        "openmediavault": {
+          "title": "",
+          "description": {
+            "totpSecretRequired": "",
+            "totpSecretInvalid": "",
+            "totpVerificationFailed": "",
+            "unsupportedChallenge": ""
+          }
         },
         "parse": {
           "title": "Parsēšanas kļūda",
@@ -1710,6 +1735,11 @@
         "title": "Atiestatīt noslēpumu",
         "message": "Vai esat pārliecināts, ka vēlaties atiestatīt šo noslēpumu?"
       },
+      "totpNotice": "",
+      "remove": {
+        "title": "",
+        "message": ""
+      },
       "noSecretsRequired": {
         "segmentTitle": "Nav noslēpumu",
         "text": "Šai integrācijai nav nepieciešami noslēpumi"
@@ -1791,9 +1821,9 @@
           "label": "Indeksētāja parole",
           "newLabel": "Jauna indeksētāja parole"
         },
-        "wazuhDashboardUrl": {
-          "label": "Informācijas paneļa URL (neobligāts)",
-          "newLabel": "Jauns informācijas paneļa URL"
+        "totpSecret": {
+          "label": "",
+          "newLabel": ""
         }
       }
     },
@@ -1986,6 +2016,15 @@
         "modifier": "Moderators"
       }
     },
+    "markdown": {
+      "alert": {
+        "note": "",
+        "tip": "",
+        "important": "",
+        "warning": "",
+        "caution": ""
+      }
+    },
     "dangerZone": "Bīstamā zona",
     "noResults": "Nav atrasts neviens rezultāts",
     "unsavedChanges": "Jums ir nesaglabātas izmaiņas!",
@@ -2038,7 +2077,7 @@
     "total": "Kopā",
     "filesystemUsage": "{count, plural, zero {Rādīt lietojumu # failu sistēmai} one {Rādīt lietojumu # failu sistēmai} other {Rādīt lietojumu # failu sistēmām}}",
     "field": {
-      "name": "Vārds",
+      "name": "Darba vārds",
       "state": "Stāvoklis",
       "size": "Lielums",
       "actions": "Darbības",
@@ -2335,7 +2374,29 @@
             "tooltip": "Kā rīka padomu",
             "hidden": "Paslēpts"
           }
+        },
+        "dockerContainer": {
+          "label": "",
+          "description": "",
+          "placeholder": "",
+          "disabled": "",
+          "unavailable": ""
         }
+      },
+      "docker": {
+        "action": {
+          "start": "",
+          "stop": ""
+        },
+        "notification": {
+          "startFailed": "",
+          "stopFailed": ""
+        },
+        "switch": {
+          "start": "",
+          "stop": ""
+        },
+        "stopped": ""
       },
       "error": {
         "notFound": {
@@ -2414,6 +2475,10 @@
         "hideHostname": {
           "label": "Slēpt resursdatorus"
         },
+        "showFullUrls": {
+          "label": "",
+          "description": ""
+        },
         "withBorder": {
           "label": "Rādīt apmali"
         },
@@ -2436,6 +2501,9 @@
         }
       },
       "empty": "Logrīka iestatījumos pievienojiet URL vai lietotni",
+      "copyUrl": "",
+      "copied": "",
+      "copyFailed": "",
       "groups": {
         "label": "",
         "placeholder": "",
@@ -3535,6 +3603,34 @@
     },
     "coolify": {
       "description": "Jūsu Coolify instances pārskats ar serveriem un lietotnēm",
+      "summary": {
+        "needsAttention": "",
+        "inProgress": "",
+        "unknown": "",
+        "healthy": "",
+        "empty": "",
+        "healthyDetail": "",
+        "more": "",
+        "moreInstances": ""
+      },
+      "details": {
+        "tabs": "",
+        "overview": "",
+        "search": "",
+        "serviceApplications": ""
+      },
+      "overview": {
+        "projects": "",
+        "resources": "",
+        "attention": "",
+        "ready": "",
+        "noProjects": "",
+        "projectsUnavailable": "",
+        "moreProjects": "",
+        "running": "Darbojas",
+        "resourceCount": "",
+        "environmentCount": ""
+      },
       "option": {
         "showServers": {
           "label": "Rādīt serverus"
@@ -3566,7 +3662,13 @@
       },
       "source": {
         "url": "Avots: {url}",
-        "unavailable": "{source}: nav pieejams"
+        "unavailable": "{source}: nav pieejams",
+        "unavailableCount": ""
+      },
+      "kind": {
+        "server": "",
+        "application": "",
+        "service": ""
       },
       "instances": {
         "title": "Instances"
@@ -3583,6 +3685,7 @@
         "exited": "Iziets",
         "starting": "Tiek palaists",
         "restarting": "Restartējas",
+        "unhealthy": "",
         "unknown": "Nezināms",
         "online": "Tiešsaistē",
         "offline": "Bezsaistē",
@@ -4423,7 +4526,7 @@
           "columnTitle": "Vadīklas"
         },
         "added": {
-          "columnTitle": "Pievienošanas datums"
+          "columnTitle": ""
         },
         "category": {
           "columnTitle": "Papildu"
@@ -4815,6 +4918,7 @@
           },
           "identifier": {
             "label": "Identifikators",
+            "containerPlaceholder": "",
             "placeholder": "Vārds vai īpašnieks/vārds"
           },
           "name": {},
@@ -6623,7 +6727,8 @@
             "documentation": "Dokumentācija",
             "submitIssue": "Iesniegt problēmu",
             "discord": "Kopienas Discord",
-            "sourceCode": "Avota kods"
+            "sourceCode": "Avota kods",
+            "changelog": ""
           }
         },
         "about": "Par Programmu",
@@ -6976,6 +7081,10 @@
             "title": "Izskats",
             "defaultColorScheme": {
               "label": "Noklusējuma krāsu shēma"
+            },
+            "whatsNew": {
+              "label": "",
+              "description": ""
             }
           },
           "branding": {
@@ -7327,6 +7436,12 @@
             "apiKey": {
               "label": "Autentifikācija",
               "title": "API atslēgas",
+              "access": {
+                "label": "",
+                "readOnly": "",
+                "readWrite": "",
+                "description": ""
+              },
               "button": {
                 "createApiToken": "Izveidot API pilnvaru",
                 "confirmDeletion": ""
@@ -8723,6 +8838,12 @@
       }
     }
   },
+  "whatsNew": {
+    "title": "",
+    "empty": "",
+    "allReleases": "",
+    "dismiss": ""
+  },
   "metadata": {
     "description": "Paša mitināta informācijas panelis *arr stekam un visai jūsu mājas laboratorijai. Integrējas ar vairāk nekā 50 pakalpojumiem, logrīki reāllaikā, bez konfigurācijas failiem.",
     "dashboardTitle": "{appName} informācijas panelis"
@@ -8808,6 +8929,7 @@
       "imageInput": "Atbalsta attēlu ievadi",
       "thinking": "Domāšanas režīms",
       "reasoning": {
+        "default": "",
         "auto": "Automātiski",
         "none": "Izslēgts",
         "minimal": "Minimāls",

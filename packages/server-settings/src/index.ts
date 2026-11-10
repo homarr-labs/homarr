@@ -13,6 +13,7 @@ export const defaultServerSettingsKeys = [
   "branding",
   "culture",
   "search",
+  "whatsNew",
 ] as const;
 
 export type ServerSettingsRecord = Record<(typeof defaultServerSettingsKeys)[number], Record<string, unknown>>;
@@ -197,6 +198,10 @@ export const defaultServerSettings = {
   },
   search: {
     defaultSearchEngineId: null as string | null,
+  },
+  whatsNew: {
+    enabled: true,
+    lastSeenVersion: null as string | null,
   },
 } satisfies ServerSettingsRecord;
 

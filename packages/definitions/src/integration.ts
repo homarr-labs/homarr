@@ -28,6 +28,7 @@ export const integrationSecretKindObject = {
   wazuhIndexerUrl: { isPublic: true, multiline: false },
   wazuhIndexerUsername: { isPublic: true, multiline: false },
   wazuhIndexerPassword: { isPublic: false, multiline: false },
+  totpSecret: { isPublic: false, multiline: false },
 } satisfies Record<string, { isPublic: boolean; multiline: boolean }>;
 
 const isIntegrationSecretKind = (value: string): value is IntegrationSecretKind =>
@@ -646,6 +647,7 @@ export const integrationDefs = {
     httpAuth: { type: "adapter" },
     name: "OpenMediaVault",
     secretKinds: [["username", "password"]],
+    optionalSecretKinds: ["totpSecret"],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/openmediavault.svg",
     category: ["healthMonitoring"],
     documentationSlug: "open-media-vault",

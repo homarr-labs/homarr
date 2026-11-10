@@ -280,6 +280,13 @@
           "title": "",
           "description": ""
         },
+        "mode": {
+          "label": "",
+          "readOnly": "",
+          "readWrite": "",
+          "readOnlyDescription": "",
+          "readWriteDescription": ""
+        },
         "credential": {
           "title": "",
           "breadth": "",
@@ -1386,11 +1393,7 @@
               "label": "Selecciona una aplicació existent"
             },
             "new": {
-              "title": "Nou",
-              "url": {
-                "label": "App URL",
-                "description": "L'URL que obrirà l'aplicació en accedir-hi des del tauler"
-              }
+              "title": "Nou"
             }
           }
         }
@@ -1442,8 +1445,9 @@
         "label": "Enllaça una aplicació existent",
         "description": "Connecteu aquesta integració a una aplicació que ja pugueu utilitzar."
       },
-      "appHref": {
-        "placeholder": "URL d'app pròpia"
+      "externalUrl": {
+        "label": "",
+        "description": ""
       },
       "apiKeySettings": {
         "label": "Obtén la clau d'API"
@@ -1510,6 +1514,27 @@
         "unknown": {
           "title": "Error desconegut",
           "description": "S'ha produït un error desconegut; obre la causa següent per veure'n més detalls"
+        },
+        "frigate": {
+          "title": "",
+          "status": "",
+          "description": {
+            "cookie": "",
+            "profileMismatch": "",
+            "redirect": "",
+            "login": "",
+            "profile": "",
+            "stats": ""
+          }
+        },
+        "openmediavault": {
+          "title": "",
+          "description": {
+            "totpSecretRequired": "",
+            "totpSecretInvalid": "",
+            "totpVerificationFailed": "",
+            "unsupportedChallenge": ""
+          }
         },
         "parse": {
           "title": "Error d'anàlisi",
@@ -1710,6 +1735,11 @@
         "title": "Restablir secret",
         "message": "Esteu segur que voleu restablir aquest secret?"
       },
+      "totpNotice": "",
+      "remove": {
+        "title": "",
+        "message": ""
+      },
       "noSecretsRequired": {
         "segmentTitle": "Sense secrets",
         "text": "No es requereixen secrets per a aquesta integració"
@@ -1791,9 +1821,9 @@
           "label": "Contrasenya de l'indexador",
           "newLabel": "Contrasenya nova de l'indexador"
         },
-        "wazuhDashboardUrl": {
-          "label": "URL del tauler (opcional)",
-          "newLabel": "URL nou del tauler"
+        "totpSecret": {
+          "label": "",
+          "newLabel": ""
         }
       }
     },
@@ -1986,6 +2016,15 @@
         "modifier": "Mod"
       }
     },
+    "markdown": {
+      "alert": {
+        "note": "",
+        "tip": "",
+        "important": "",
+        "warning": "",
+        "caution": ""
+      }
+    },
     "dangerZone": "Zona de perill",
     "noResults": "No s'han trobat resultats",
     "unsavedChanges": "Tens canvis sense desar!",
@@ -2038,7 +2077,7 @@
     "total": "Total",
     "filesystemUsage": "{count, plural, one {Mostra l'ús de # sistema de fitxers} other {Mostra l'ús de # sistemes de fitxers}}",
     "field": {
-      "name": "Nom",
+      "name": "Nom de la feina",
       "state": "Estat",
       "size": "Mida",
       "actions": "Accions",
@@ -2335,7 +2374,29 @@
             "tooltip": "Com a tooltip",
             "hidden": "Ocult"
           }
+        },
+        "dockerContainer": {
+          "label": "",
+          "description": "",
+          "placeholder": "",
+          "disabled": "",
+          "unavailable": ""
         }
+      },
+      "docker": {
+        "action": {
+          "start": "",
+          "stop": ""
+        },
+        "notification": {
+          "startFailed": "",
+          "stopFailed": ""
+        },
+        "switch": {
+          "start": "",
+          "stop": ""
+        },
+        "stopped": ""
       },
       "error": {
         "notFound": {
@@ -2414,6 +2475,10 @@
         "hideHostname": {
           "label": "Amaga noms d'amfitrió"
         },
+        "showFullUrls": {
+          "label": "",
+          "description": ""
+        },
         "withBorder": {
           "label": "Mostra la vora"
         },
@@ -2436,6 +2501,9 @@
         }
       },
       "empty": "Afegeix una URL o una aplicació a la configuració del giny",
+      "copyUrl": "",
+      "copied": "",
+      "copyFailed": "",
       "groups": {
         "label": "",
         "placeholder": "",
@@ -3535,6 +3603,34 @@
     },
     "coolify": {
       "description": "Visió general de la teva instància de Coolify amb servidors i aplicacions",
+      "summary": {
+        "needsAttention": "",
+        "inProgress": "",
+        "unknown": "",
+        "healthy": "",
+        "empty": "",
+        "healthyDetail": "",
+        "more": "",
+        "moreInstances": ""
+      },
+      "details": {
+        "tabs": "",
+        "overview": "",
+        "search": "",
+        "serviceApplications": ""
+      },
+      "overview": {
+        "projects": "",
+        "resources": "",
+        "attention": "",
+        "ready": "",
+        "noProjects": "",
+        "projectsUnavailable": "",
+        "moreProjects": "",
+        "running": "",
+        "resourceCount": "",
+        "environmentCount": ""
+      },
       "option": {
         "showServers": {
           "label": "Mostra els servidors"
@@ -3566,7 +3662,13 @@
       },
       "source": {
         "url": "Origen: {url}",
-        "unavailable": "{source}: no disponible"
+        "unavailable": "{source}: no disponible",
+        "unavailableCount": ""
+      },
+      "kind": {
+        "server": "",
+        "application": "",
+        "service": ""
       },
       "instances": {
         "title": "Instàncies"
@@ -3583,6 +3685,7 @@
         "exited": "Finalitzat",
         "starting": "S'està iniciant",
         "restarting": "S'està reiniciant",
+        "unhealthy": "",
         "unknown": "Desconegut",
         "online": "En línia",
         "offline": "Fora de línia",
@@ -4815,6 +4918,7 @@
           },
           "identifier": {
             "label": "Identificador",
+            "containerPlaceholder": "",
             "placeholder": "Nom o propietari/nom"
           },
           "name": {},
@@ -6623,7 +6727,8 @@
             "documentation": "Documentació",
             "submitIssue": "Envieu un problema",
             "discord": "Discord de la comunitat",
-            "sourceCode": "Codi font"
+            "sourceCode": "Codi font",
+            "changelog": ""
           }
         },
         "about": "Quant a",
@@ -6976,6 +7081,10 @@
             "title": "Aparença",
             "defaultColorScheme": {
               "label": "Esquema de color per defecte"
+            },
+            "whatsNew": {
+              "label": "",
+              "description": ""
             }
           },
           "branding": {
@@ -7327,6 +7436,12 @@
             "apiKey": {
               "label": "Autenticació",
               "title": "Claus d'API",
+              "access": {
+                "label": "",
+                "readOnly": "",
+                "readWrite": "",
+                "description": ""
+              },
               "button": {
                 "createApiToken": "Crea un token d'API",
                 "confirmDeletion": ""
@@ -8723,6 +8838,12 @@
       }
     }
   },
+  "whatsNew": {
+    "title": "",
+    "empty": "",
+    "allReleases": "",
+    "dismiss": ""
+  },
   "metadata": {
     "description": "Un tauler autoallotjat per a la pila *arr i tot el teu homelab. S'integra amb més de 50 serveis, ginys en temps real i no necessita fitxers de configuració.",
     "dashboardTitle": "Tauler de {appName}"
@@ -8808,6 +8929,7 @@
       "imageInput": "Accepta entrada d'imatges",
       "thinking": "Mode de raonament",
       "reasoning": {
+        "default": "",
         "auto": "Automàtic",
         "none": "Desactivat",
         "minimal": "Mínim",

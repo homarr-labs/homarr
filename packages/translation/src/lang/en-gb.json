@@ -280,6 +280,13 @@
           "title": "",
           "description": ""
         },
+        "mode": {
+          "label": "",
+          "readOnly": "",
+          "readWrite": "",
+          "readOnlyDescription": "",
+          "readWriteDescription": ""
+        },
         "credential": {
           "title": "",
           "breadth": "",
@@ -1386,11 +1393,7 @@
               "label": "Select existing app"
             },
             "new": {
-              "title": "New",
-              "url": {
-                "label": "App URL",
-                "description": "The URL the app will open when accessed from the dashboard"
-              }
+              "title": "New"
             }
           }
         }
@@ -1442,8 +1445,9 @@
         "label": "Link an existing app",
         "description": "Connect this integration to an app you can already use."
       },
-      "appHref": {
-        "placeholder": "Custom application URL"
+      "externalUrl": {
+        "label": "",
+        "description": ""
       },
       "apiKeySettings": {
         "label": "Get API key"
@@ -1510,6 +1514,27 @@
         "unknown": {
           "title": "Unknown error",
           "description": "An unknown error occurred, open the cause below to see more details"
+        },
+        "frigate": {
+          "title": "",
+          "status": "",
+          "description": {
+            "cookie": "",
+            "profileMismatch": "",
+            "redirect": "",
+            "login": "",
+            "profile": "",
+            "stats": ""
+          }
+        },
+        "openmediavault": {
+          "title": "",
+          "description": {
+            "totpSecretRequired": "",
+            "totpSecretInvalid": "",
+            "totpVerificationFailed": "",
+            "unsupportedChallenge": ""
+          }
         },
         "parse": {
           "title": "Parse error",
@@ -1710,6 +1735,11 @@
         "title": "Reset secret",
         "message": "Are you certain that you want to reset the secret?"
       },
+      "totpNotice": "",
+      "remove": {
+        "title": "",
+        "message": ""
+      },
       "noSecretsRequired": {
         "segmentTitle": "No secrets",
         "text": "There are no secrets required for this integration to work"
@@ -1791,9 +1821,9 @@
           "label": "Indexer password",
           "newLabel": "New indexer password"
         },
-        "wazuhDashboardUrl": {
-          "label": "Dashboard URL (optional)",
-          "newLabel": "New dashboard URL"
+        "totpSecret": {
+          "label": "",
+          "newLabel": ""
         }
       }
     },
@@ -1986,6 +2016,15 @@
         "modifier": "Mod"
       }
     },
+    "markdown": {
+      "alert": {
+        "note": "Note",
+        "tip": "",
+        "important": "",
+        "warning": "",
+        "caution": ""
+      }
+    },
     "dangerZone": "Danger zone",
     "noResults": "No results have been found",
     "unsavedChanges": "You have unsaved changes!",
@@ -2038,18 +2077,18 @@
     "total": "Total",
     "filesystemUsage": "{count, plural, one {Show usage for # filesystem} other {Show usage for # filesystems}}",
     "field": {
-      "name": "Name",
+      "name": "Job name",
       "state": "State",
       "size": "Size",
       "actions": "Actions",
       "source": "Source",
       "title": "Title",
       "description": "Description",
-      "created": "Created",
-      "namespace": "Namespace",
+      "created": "",
+      "namespace": "",
       "status": "Status",
-      "architecture": "Architecture",
-      "type": "Type"
+      "architecture": "",
+      "type": ""
     },
     "label": {
       "new": "New"
@@ -2070,11 +2109,11 @@
     },
     "cornerStyle": {
       "options": {
-        "md": "Balanced",
+        "md": "",
         "lg": "Rounded corners",
-        "xs": "Tight",
-        "sm": "Subtle",
-        "xl": "Soft"
+        "xs": "",
+        "sm": "",
+        "xl": ""
       }
     }
   },
@@ -2335,7 +2374,29 @@
             "tooltip": "As tooltip",
             "hidden": "Hidden"
           }
+        },
+        "dockerContainer": {
+          "label": "",
+          "description": "",
+          "placeholder": "",
+          "disabled": "",
+          "unavailable": ""
         }
+      },
+      "docker": {
+        "action": {
+          "start": "",
+          "stop": ""
+        },
+        "notification": {
+          "startFailed": "",
+          "stopFailed": ""
+        },
+        "switch": {
+          "start": "",
+          "stop": ""
+        },
+        "stopped": ""
       },
       "error": {
         "notFound": {
@@ -2414,6 +2475,10 @@
         "hideHostname": {
           "label": "Hide hostnames"
         },
+        "showFullUrls": {
+          "label": "",
+          "description": ""
+        },
         "withBorder": {
           "label": "Show border"
         },
@@ -2436,6 +2501,9 @@
         }
       },
       "empty": "Add a URL or app in the widget settings",
+      "copyUrl": "Copy URL",
+      "copied": "",
+      "copyFailed": "",
       "groups": {
         "label": "",
         "placeholder": "New category",
@@ -3535,6 +3603,34 @@
     },
     "coolify": {
       "description": "Overview of your Coolify instance with servers and applications",
+      "summary": {
+        "needsAttention": "",
+        "inProgress": "",
+        "unknown": "",
+        "healthy": "",
+        "empty": "",
+        "healthyDetail": "",
+        "more": "",
+        "moreInstances": ""
+      },
+      "details": {
+        "tabs": "",
+        "overview": "",
+        "search": "",
+        "serviceApplications": ""
+      },
+      "overview": {
+        "projects": "",
+        "resources": "",
+        "attention": "",
+        "ready": "",
+        "noProjects": "",
+        "projectsUnavailable": "",
+        "moreProjects": "",
+        "running": "Running",
+        "resourceCount": "",
+        "environmentCount": ""
+      },
       "option": {
         "showServers": {
           "label": "Show servers"
@@ -3566,7 +3662,13 @@
       },
       "source": {
         "url": "Source: {url}",
-        "unavailable": "{source}: unavailable"
+        "unavailable": "{source}: unavailable",
+        "unavailableCount": ""
+      },
+      "kind": {
+        "server": "",
+        "application": "",
+        "service": ""
       },
       "instances": {
         "title": "Instances"
@@ -3583,6 +3685,7 @@
         "exited": "Exited",
         "starting": "Starting",
         "restarting": "Restarting",
+        "unhealthy": "",
         "unknown": "Unknown",
         "online": "Online",
         "offline": "Offline",
@@ -4423,7 +4526,7 @@
           "columnTitle": "Actions"
         },
         "added": {
-          "columnTitle": "Added"
+          "columnTitle": ""
         },
         "category": {
           "columnTitle": "Category"
@@ -4445,7 +4548,7 @@
           "detailsTitle": "Progress"
         },
         "ratio": {
-          "columnTitle": "Ratio"
+          "columnTitle": ""
         },
         "received": {
           "columnTitle": "Down",
@@ -4464,7 +4567,7 @@
           "detailsTitle": "Type"
         },
         "upSpeed": {
-          "columnTitle": "Up"
+          "columnTitle": ""
         }
       },
       "states": {
@@ -4583,7 +4686,7 @@
       "status": {
         "pending": "",
         "approved": "Approved",
-        "declined": "",
+        "declined": "Declined",
         "failed": "",
         "completed": ""
       },
@@ -4610,7 +4713,7 @@
         },
         "users": {
           "main": "",
-          "requests": ""
+          "requests": "Requests"
         }
       }
     },
@@ -4700,26 +4803,26 @@
       "description": "",
       "option": {
         "feedUrls": {
-          "label": ""
+          "label": "Feed URLs"
         },
         "enableRtl": {
-          "label": ""
+          "label": "Enable RTL"
         },
         "textLinesClamp": {
-          "label": ""
+          "label": "Description line clamp"
         },
         "descriptionMaxLength": {
           "label": "",
           "description": ""
         },
         "maximumAmountPosts": {
-          "label": ""
+          "label": "Amount posts limit"
         },
         "hideDescription": {
-          "label": ""
+          "label": "Hide description"
         },
         "showPosterImage": {
-          "label": ""
+          "label": "Show poster image"
         }
       },
       "error": {
@@ -4731,7 +4834,7 @@
       }
     },
     "releases": {
-      "name": "",
+      "name": "Releases",
       "description": "",
       "option": {
         "layout": {
@@ -4815,6 +4918,7 @@
           },
           "identifier": {
             "label": "",
+            "containerPlaceholder": "",
             "placeholder": ""
           },
           "name": {},
@@ -4830,7 +4934,7 @@
             "precision": {
               "label": "",
               "options": {
-                "none": ""
+                "none": "None"
               }
             },
             "suffix": {
@@ -5074,7 +5178,7 @@
       }
     },
     "notifications": {
-      "name": "",
+      "name": "Notifications",
       "description": "",
       "noItems": "",
       "option": {
@@ -6408,7 +6512,7 @@
       "title": "",
       "section": {
         "general": {
-          "title": "",
+          "title": "General",
           "unrecognizedLink": ""
         },
         "layout": {
@@ -6525,7 +6629,7 @@
     },
     "error": {
       "noBoard": {
-        "title": "",
+        "title": "Welcome to Homarr",
         "description": "",
         "link": "",
         "notice": ""
@@ -6533,7 +6637,7 @@
       "notFound": {
         "title": "",
         "description": "",
-        "link": "",
+        "link": "View all boards",
         "notice": ""
       },
       "homeBoard": {
@@ -6591,7 +6695,7 @@
     "metaTitle": "",
     "notFound": {
       "title": "",
-      "text": "",
+      "text": "Could not find requested resource",
       "backToHome": "Return to management home"
     },
     "error": {
@@ -6604,7 +6708,7 @@
         "home": "Home",
         "users": {
           "items": {
-            "manage": ""
+            "manage": "Manage"
           }
         },
         "tools": {
@@ -6620,10 +6724,11 @@
         "help": {
           "label": "Help",
           "items": {
-            "documentation": "",
-            "submitIssue": "",
-            "discord": "",
-            "sourceCode": ""
+            "documentation": "Documentation",
+            "submitIssue": "Submit an issue",
+            "discord": "Community Discord",
+            "sourceCode": "",
+            "changelog": ""
           }
         },
         "about": "About",
@@ -6634,20 +6739,20 @@
       "home": {
         "statisticLabel": {
           "boards": "",
-          "resources": "",
-          "authentication": "",
-          "authorization": ""
+          "resources": "Resources",
+          "authentication": "Authentication",
+          "authorization": "Authorisation"
         },
         "heroBanner": {
-          "title": "",
+          "title": "Welcome back to your",
           "subtitle": ""
         }
       },
       "board": {
-        "title": "",
+        "title": "Your boards",
         "action": {
           "new": {
-            "label": ""
+            "label": "New board"
           },
           "open": {
             "label": ""
@@ -6665,7 +6770,7 @@
           "setMobileHomeBoard": {
             "label": "",
             "badge": {
-              "label": "",
+              "label": "Mobile",
               "tooltip": ""
             }
           },
@@ -6689,7 +6794,7 @@
         }
       },
       "media": {
-        "includeFromAllUsers": ""
+        "includeFromAllUsers": "Include media from all users"
       },
       "user": {
         "fieldsDisabledExternalProvider": "",
@@ -6756,7 +6861,7 @@
               }
             },
             "item": {
-              "language": "",
+              "language": "Language & Region",
               "board": {
                 "title": "",
                 "type": {
@@ -6765,7 +6870,7 @@
                 }
               },
               "search": "",
-              "firstDayOfWeek": "",
+              "firstDayOfWeek": "First day of the week",
               "accessibility": "",
               "oauthConnections": {
                 "title": "",
@@ -6823,13 +6928,13 @@
         },
         "create": {
           "metaTitle": "",
-          "title": "",
+          "title": "Create new user",
           "step": {
             "personalInformation": {
-              "label": ""
+              "label": "Personal information"
             },
             "security": {
-              "label": ""
+              "label": "Security"
             },
             "groups": {
               "label": "",
@@ -6837,7 +6942,7 @@
               "description": ""
             },
             "review": {
-              "label": ""
+              "label": "Review"
             },
             "completed": {
               "title": ""
@@ -6883,7 +6988,7 @@
         }
       },
       "group": {
-        "back": "",
+        "back": "Back to groups",
         "setting": {
           "general": {
             "title": "",
@@ -6893,15 +6998,15 @@
           },
           "setting": {
             "title": "",
-            "alert": ""
+            "alert": "Group settings are prioritised by the order of groups in the list. The top settings overwrite the bottom settings."
           },
           "members": {
-            "title": "",
+            "title": "Members",
             "search": "",
             "notFound": ""
           },
           "permissions": {
-            "title": ""
+            "title": "Permissions"
           }
         }
       },
@@ -6915,7 +7020,7 @@
         "section": {
           "analyticsDocumentation": "See exactly which analytics data Homarr collects",
           "analytics": {
-            "title": "",
+            "title": "Analytics",
             "general": {
               "title": "Help us improve Homarr",
               "text": "This helps us figure out what people actually use so we know where to spend our time. We see stuff like how many widgets or integrations you have, your Homarr version, and what database you're on. That's it — no personal info, no URLs, no names, nothing that could identify you or your setup."
@@ -6976,6 +7081,10 @@
             "title": "",
             "defaultColorScheme": {
               "label": "Default colour scheme"
+            },
+            "whatsNew": {
+              "label": "",
+              "description": ""
             }
           },
           "branding": {
@@ -7239,7 +7348,7 @@
           },
           "job": {
             "iconsUpdater": {
-              "label": ""
+              "label": "Icons Updater"
             },
             "analytics": {
               "label": ""
@@ -7258,7 +7367,7 @@
             "minutes": "",
             "hours": "",
             "midnight": "",
-            "weeklyMonday": "",
+            "weeklyMonday": "Every week on Monday",
             "update": {
               "success": {
                 "message": ""
@@ -7270,15 +7379,15 @@
           },
           "field": {
             "interval": {
-              "label": ""
+              "label": "Schedule interval"
             },
             "lastExecution": {
-              "label": ""
+              "label": "Last Execution"
             },
             "actions": {}
           },
           "table": {
-            "search": ""
+            "search": "Search {count} tasks..."
           },
           "refresh": {
             "success": {
@@ -7326,9 +7435,15 @@
             },
             "apiKey": {
               "label": "",
-              "title": "",
+              "title": "API Keys",
+              "access": {
+                "label": "",
+                "readOnly": "",
+                "readWrite": "",
+                "description": ""
+              },
               "button": {
-                "createApiToken": "",
+                "createApiToken": "Create API token",
                 "confirmDeletion": ""
               },
               "modal": {
@@ -7519,27 +7634,27 @@
       },
       "about": {
         "version": "",
-        "text": "",
+        "text": "Homarr is a community driven open source project that is being maintained by volunteers. Thanks to these people, Homarr has been a growing project since 2021. Our team is working completely remote from many different countries on Homarr in their leisure time for no compensation.",
         "accordion": {
           "contributors": {
-            "title": "",
-            "subtitle": ""
+            "title": "Contributors",
+            "subtitle": "{count} maintaining code & Homarr"
           },
           "translators": {
-            "title": "",
-            "subtitle": ""
+            "title": "Translators",
+            "subtitle": "{count} contributing translations in many languages"
           },
           "sponsors": {
-            "title": "",
-            "subtitle": ""
+            "title": "Sponsors",
+            "subtitle": "{count} supporting the project financially"
           },
           "libraries": {
-            "title": "",
-            "subtitle": ""
+            "title": "Libraries",
+            "subtitle": "{count} used in the Code of Homarr"
           },
           "hotkeys": {
-            "title": "",
-            "subtitle": "",
+            "title": "Hotkeys",
+            "subtitle": "Keyboard shortcuts to enhance your workflow",
             "field": {
               "shortcut": "",
               "action": ""
@@ -7624,9 +7739,9 @@
       "refresh": {
         "lastUpdated": "Last refresh {when}"
       },
-      "search": "",
+      "search": "Seach {count} containers",
       "selected": "",
-      "footer": "",
+      "footer": "Total {count} containers",
       "totalCpu": "Total CPU: {cpu}%",
       "totalMemory": "Total Mem: {memory}"
     },
@@ -7915,7 +8030,7 @@
     "tab": {
       "user": "",
       "group": "",
-      "inherited": ""
+      "inherited": "Inherited groups"
     },
     "field": {
       "user": {
@@ -7925,7 +8040,7 @@
         "label": ""
       },
       "permission": {
-        "label": ""
+        "label": "Permission"
       }
     },
     "action": {}
@@ -8047,7 +8162,7 @@
     },
     "mode": {
       "appIntegrationBoard": {
-        "help": "",
+        "help": "Search for apps, integrations or boards",
         "group": {
           "app": {
             "children": {
@@ -8068,7 +8183,7 @@
             "children": {
               "action": {
                 "open": {
-                  "label": ""
+                  "label": "Open board"
                 },
                 "homeBoard": {
                   "label": ""
@@ -8077,7 +8192,7 @@
                   "label": ""
                 },
                 "settings": {
-                  "label": ""
+                  "label": "Open settings"
                 }
               },
               "detail": {
@@ -8088,7 +8203,7 @@
         }
       },
       "command": {
-        "help": "",
+        "help": "Activate command mode",
         "group": {
           "localCommand": {
             "title": "Local commands"
@@ -8723,6 +8838,12 @@
       }
     }
   },
+  "whatsNew": {
+    "title": "",
+    "empty": "",
+    "allReleases": "",
+    "dismiss": ""
+  },
   "metadata": {
     "description": "A self-hosted dashboard for the *arr stack and your entire homelab. Integrates with 50+ services, real-time widgets, no config files.",
     "dashboardTitle": "{appName} Dashboard"
@@ -8808,6 +8929,7 @@
       "imageInput": "Accepts image input",
       "thinking": "Thinking mode",
       "reasoning": {
+        "default": "",
         "auto": "Auto",
         "none": "Off",
         "minimal": "Minimal",

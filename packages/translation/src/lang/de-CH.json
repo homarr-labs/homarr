@@ -280,6 +280,13 @@
           "title": "",
           "description": ""
         },
+        "mode": {
+          "label": "",
+          "readOnly": "",
+          "readWrite": "",
+          "readOnlyDescription": "",
+          "readWriteDescription": ""
+        },
         "credential": {
           "title": "",
           "breadth": "",
@@ -1386,11 +1393,7 @@
               "label": "Vorhandene App auswählen"
             },
             "new": {
-              "title": "Neu",
-              "url": {
-                "label": "App-URL",
-                "description": "Die URL, die die App öffnet, wenn sie über das Dashboard aufgerufen wird"
-              }
+              "title": "Neu"
             }
           }
         }
@@ -1442,8 +1445,9 @@
         "label": "Bestehende App verknüpfen",
         "description": "Verbinde diese Integration mit einer App, die du bereits verwenden kannst."
       },
-      "appHref": {
-        "placeholder": "Benutzerdefinierti App URL"
+      "externalUrl": {
+        "label": "",
+        "description": ""
       },
       "apiKeySettings": {
         "label": "API-Schlüssel abrufen"
@@ -1510,6 +1514,27 @@
         "unknown": {
           "title": "Unbekannter Fehler",
           "description": "Ein unbekannter Fehler ist aufgetreten. Öffnen Sie unten die Ursache, um weitere Details anzuzeigen"
+        },
+        "frigate": {
+          "title": "",
+          "status": "",
+          "description": {
+            "cookie": "",
+            "profileMismatch": "",
+            "redirect": "",
+            "login": "",
+            "profile": "",
+            "stats": ""
+          }
+        },
+        "openmediavault": {
+          "title": "",
+          "description": {
+            "totpSecretRequired": "",
+            "totpSecretInvalid": "",
+            "totpVerificationFailed": "",
+            "unsupportedChallenge": ""
+          }
         },
         "parse": {
           "title": "Analysefehler",
@@ -1710,6 +1735,11 @@
         "title": "Secret zurücksetzen",
         "message": "Bisch sicher, dass du das Gheimnis wotsch lösche?"
       },
+      "totpNotice": "",
+      "remove": {
+        "title": "",
+        "message": ""
+      },
       "noSecretsRequired": {
         "segmentTitle": "Keni Gheimnis",
         "text": "Für die Integration bruchts keni Gheimniss"
@@ -1791,9 +1821,9 @@
           "label": "Indexer-Passwort",
           "newLabel": "Neues Indexer-Passwort"
         },
-        "wazuhDashboardUrl": {
-          "label": "Dashboard-URL (optional)",
-          "newLabel": "Neue Dashboard-URL"
+        "totpSecret": {
+          "label": "",
+          "newLabel": ""
         }
       }
     },
@@ -1872,7 +1902,7 @@
       "cancel": "Abbrechen",
       "delete": "Löschen",
       "discard": "Verwerfen",
-      "close": "Schliessen",
+      "close": "",
       "confirm": "Bestätigen",
       "continue": "Fortfahren",
       "previous": "Zurück",
@@ -1986,6 +2016,15 @@
         "modifier": "Moderator"
       }
     },
+    "markdown": {
+      "alert": {
+        "note": "",
+        "tip": "",
+        "important": "",
+        "warning": "",
+        "caution": ""
+      }
+    },
     "dangerZone": "Gefahrenbereich",
     "noResults": "Die Suche ergab keine Treffer",
     "unsavedChanges": "Sie haben ungespeicherte Änderungen!",
@@ -2038,7 +2077,7 @@
     "total": "Gesamt",
     "filesystemUsage": "{count, plural, one {Nutzung für # Dateisystem anzeigen} other {Nutzung für # Dateisysteme anzeigen}}",
     "field": {
-      "name": "Name",
+      "name": "Job Name",
       "state": "Zustand",
       "size": "Größe",
       "actions": "Aktionen",
@@ -2047,7 +2086,7 @@
       "description": "Beschreibung",
       "created": "Erstellt",
       "namespace": "Namensraum",
-      "status": "Status",
+      "status": "",
       "architecture": "Architektur",
       "type": "Typ"
     },
@@ -2335,7 +2374,29 @@
             "tooltip": "Als Tooltip",
             "hidden": "Versteckt"
           }
+        },
+        "dockerContainer": {
+          "label": "",
+          "description": "",
+          "placeholder": "",
+          "disabled": "",
+          "unavailable": ""
         }
+      },
+      "docker": {
+        "action": {
+          "start": "",
+          "stop": ""
+        },
+        "notification": {
+          "startFailed": "",
+          "stopFailed": ""
+        },
+        "switch": {
+          "start": "",
+          "stop": ""
+        },
+        "stopped": ""
       },
       "error": {
         "notFound": {
@@ -2414,6 +2475,10 @@
         "hideHostname": {
           "label": "Hostnamen ausblenden"
         },
+        "showFullUrls": {
+          "label": "",
+          "description": ""
+        },
         "withBorder": {
           "label": "Rahmen anzeigen"
         },
@@ -2436,6 +2501,9 @@
         }
       },
       "empty": "Füge eine URL oder App in den Widget-Einstellungen hinzu",
+      "copyUrl": "URL in Zwischenablage kopieren",
+      "copied": "",
+      "copyFailed": "",
       "groups": {
         "label": "",
         "placeholder": "Neue Kategorie",
@@ -3535,6 +3603,34 @@
     },
     "coolify": {
       "description": "Übersicht Ihrer Coolify-Instanz mit Servern und Anwendungen",
+      "summary": {
+        "needsAttention": "",
+        "inProgress": "",
+        "unknown": "",
+        "healthy": "",
+        "empty": "",
+        "healthyDetail": "",
+        "more": "",
+        "moreInstances": ""
+      },
+      "details": {
+        "tabs": "",
+        "overview": "",
+        "search": "",
+        "serviceApplications": ""
+      },
+      "overview": {
+        "projects": "",
+        "resources": "",
+        "attention": "",
+        "ready": "Bereit",
+        "noProjects": "",
+        "projectsUnavailable": "",
+        "moreProjects": "",
+        "running": "Wird ausgeführt",
+        "resourceCount": "",
+        "environmentCount": ""
+      },
       "option": {
         "showServers": {
           "label": "Server anzeigen"
@@ -3566,7 +3662,13 @@
       },
       "source": {
         "url": "Quelle: {url}",
-        "unavailable": "{source}: nicht verfügbar"
+        "unavailable": "{source}: nicht verfügbar",
+        "unavailableCount": ""
+      },
+      "kind": {
+        "server": "",
+        "application": "",
+        "service": ""
       },
       "instances": {
         "title": "Instanzen"
@@ -3583,6 +3685,7 @@
         "exited": "Beendet",
         "starting": "Wird gestartet",
         "restarting": "Startet neu",
+        "unhealthy": "Fehlerhaft",
         "unknown": "Unbekannt",
         "online": "Verfügbar",
         "offline": "Nicht verfügbar",
@@ -4815,6 +4918,7 @@
           },
           "identifier": {
             "label": "Kennung",
+            "containerPlaceholder": "",
             "placeholder": "Name oder Eigentümer/Name"
           },
           "name": {},
@@ -6623,7 +6727,8 @@
             "documentation": "Dokumentation",
             "submitIssue": "Ein Problem melden",
             "discord": "Community-Discord",
-            "sourceCode": "Quellcode"
+            "sourceCode": "Quellcode",
+            "changelog": ""
           }
         },
         "about": "Über",
@@ -6976,6 +7081,10 @@
             "title": "Aussehen",
             "defaultColorScheme": {
               "label": "Standard Farbschema"
+            },
+            "whatsNew": {
+              "label": "",
+              "description": ""
             }
           },
           "branding": {
@@ -7327,6 +7436,12 @@
             "apiKey": {
               "label": "Authentifizierung",
               "title": "API Schlüssel",
+              "access": {
+                "label": "",
+                "readOnly": "",
+                "readWrite": "",
+                "description": ""
+              },
               "button": {
                 "createApiToken": "API Token erstellen",
                 "confirmDeletion": ""
@@ -8723,6 +8838,12 @@
       }
     }
   },
+  "whatsNew": {
+    "title": "",
+    "empty": "",
+    "allReleases": "",
+    "dismiss": ""
+  },
   "metadata": {
     "description": "Ein selbst gehostetes Dashboard für den *arr-Stack und Ihr gesamtes Homelab. Integriert mehr als 50 Dienste, Echtzeit-Widgets und keine Konfigurationsdateien.",
     "dashboardTitle": "{appName}-Dashboard"
@@ -8808,6 +8929,7 @@
       "imageInput": "Akzeptiert Bildeingaben",
       "thinking": "Denkmodus",
       "reasoning": {
+        "default": "",
         "auto": "Automatisch",
         "none": "Aus",
         "minimal": "Schlicht",

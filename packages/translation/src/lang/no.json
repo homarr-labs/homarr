@@ -280,6 +280,13 @@
           "title": "Full administrator tilgang",
           "description": "Kan administrere Homarr og tilkoblede tjenester, inkludert destruktive handlinger."
         },
+        "mode": {
+          "label": "",
+          "readOnly": "",
+          "readWrite": "",
+          "readOnlyDescription": "",
+          "readWriteDescription": ""
+        },
         "credential": {
           "title": "Medisinsk omfang og levetid",
           "breadth": "Fungerer med Homarr's HTTP API og MCP, inkludert utenfor denne klienten.",
@@ -1386,11 +1393,7 @@
               "label": "Velg eksisterende app"
             },
             "new": {
-              "title": "Ny",
-              "url": {
-                "label": "App url",
-                "description": "URL-en appen åpnes med når den aksesseres fra dashbordet"
-              }
+              "title": "Ny"
             }
           }
         }
@@ -1442,8 +1445,9 @@
         "label": "Koble til en eksisterende app",
         "description": "Koble denne integrasjonen til en app som du allerede kan bruke."
       },
-      "appHref": {
-        "placeholder": "Egendefinert app-URL"
+      "externalUrl": {
+        "label": "",
+        "description": ""
       },
       "apiKeySettings": {
         "label": ""
@@ -1510,6 +1514,27 @@
         "unknown": {
           "title": "Ukjent feil",
           "description": "En ukjent feil oppstod, åpne årsaken nedenfor for å se flere detaljer"
+        },
+        "frigate": {
+          "title": "",
+          "status": "",
+          "description": {
+            "cookie": "",
+            "profileMismatch": "",
+            "redirect": "",
+            "login": "",
+            "profile": "",
+            "stats": ""
+          }
+        },
+        "openmediavault": {
+          "title": "",
+          "description": {
+            "totpSecretRequired": "",
+            "totpSecretInvalid": "",
+            "totpVerificationFailed": "",
+            "unsupportedChallenge": ""
+          }
         },
         "parse": {
           "title": "Parse-feil",
@@ -1710,6 +1735,11 @@
         "title": "Tilbakestill hemmelighet",
         "message": "Er du sikker på at du vil tilbakestille denne hemmeligheten?"
       },
+      "totpNotice": "",
+      "remove": {
+        "title": "",
+        "message": ""
+      },
       "noSecretsRequired": {
         "segmentTitle": "Ingen hemmeligheter",
         "text": "Ingen hemmeligheter kreves for denne integrasjonen"
@@ -1791,9 +1821,9 @@
           "label": "Indekserer passord",
           "newLabel": "Nytt indekserer-passord"
         },
-        "wazuhDashboardUrl": {
-          "label": "Dashboard URL (valgfritt)",
-          "newLabel": "Ny URL-adresse for dashbordet"
+        "totpSecret": {
+          "label": "",
+          "newLabel": ""
         }
       }
     },
@@ -1986,6 +2016,15 @@
         "modifier": ""
       }
     },
+    "markdown": {
+      "alert": {
+        "note": "Notat",
+        "tip": "",
+        "important": "",
+        "warning": "Advarsel",
+        "caution": ""
+      }
+    },
     "dangerZone": "Faresonen",
     "noResults": "Ingen resultater funnet",
     "unsavedChanges": "Du har ulagrede endringer!",
@@ -2038,7 +2077,7 @@
     "total": "Totalt",
     "filesystemUsage": "{count, plural, one {Vis bruk for # filsystem} other {Vis bruk for # filsystemer}}",
     "field": {
-      "name": "Navn",
+      "name": "Jobb navn",
       "state": "Status",
       "size": "Størrelse",
       "actions": "Handlinger",
@@ -2049,7 +2088,7 @@
       "namespace": "Navnerom",
       "status": "Status",
       "architecture": "Arkitektur",
-      "type": "Type"
+      "type": "Nedlastings-klient type"
     },
     "label": {
       "new": "Ny"
@@ -2335,7 +2374,29 @@
             "tooltip": "Som verktøytips",
             "hidden": "Skjult"
           }
+        },
+        "dockerContainer": {
+          "label": "",
+          "description": "",
+          "placeholder": "",
+          "disabled": "",
+          "unavailable": ""
         }
+      },
+      "docker": {
+        "action": {
+          "start": "",
+          "stop": ""
+        },
+        "notification": {
+          "startFailed": "",
+          "stopFailed": ""
+        },
+        "switch": {
+          "start": "",
+          "stop": ""
+        },
+        "stopped": ""
       },
       "error": {
         "notFound": {
@@ -2414,6 +2475,10 @@
         "hideHostname": {
           "label": "Skjul vertsnavn"
         },
+        "showFullUrls": {
+          "label": "",
+          "description": ""
+        },
         "withBorder": {
           "label": "Vis kantlinje"
         },
@@ -2436,6 +2501,9 @@
         }
       },
       "empty": "Legg til en URL eller app i widget-innstillingene",
+      "copyUrl": "Kopier URL",
+      "copied": "Kopiert",
+      "copyFailed": "",
       "groups": {
         "label": "Kategorier",
         "placeholder": "Ny kategori",
@@ -3535,6 +3603,34 @@
     },
     "coolify": {
       "description": "Oversikt over din Coolify-instans med servere og apper",
+      "summary": {
+        "needsAttention": "{count} bør håndteres",
+        "inProgress": "",
+        "unknown": "",
+        "healthy": "",
+        "empty": "",
+        "healthyDetail": "",
+        "more": "",
+        "moreInstances": ""
+      },
+      "details": {
+        "tabs": "",
+        "overview": "",
+        "search": "",
+        "serviceApplications": ""
+      },
+      "overview": {
+        "projects": "",
+        "resources": "",
+        "attention": "Trenger oppmerksomhet",
+        "ready": "Klar",
+        "noProjects": "",
+        "projectsUnavailable": "",
+        "moreProjects": "",
+        "running": "Kjører",
+        "resourceCount": "",
+        "environmentCount": ""
+      },
       "option": {
         "showServers": {
           "label": "Vis servere"
@@ -3566,7 +3662,13 @@
       },
       "source": {
         "url": "Kilde: {url}",
-        "unavailable": ""
+        "unavailable": "",
+        "unavailableCount": ""
+      },
+      "kind": {
+        "server": "",
+        "application": "Applikasjon",
+        "service": "Tjeneste"
       },
       "instances": {
         "title": "Instanser"
@@ -3583,6 +3685,7 @@
         "exited": "Avsluttet",
         "starting": "Starter",
         "restarting": "Starter på nytt",
+        "unhealthy": "Usunn",
         "unknown": "Ukjent",
         "online": "Online",
         "offline": "Offline",
@@ -4815,6 +4918,7 @@
           },
           "identifier": {
             "label": "Identifikator",
+            "containerPlaceholder": "",
             "placeholder": "Navn eller Eier/Navn"
           },
           "name": {},
@@ -6623,7 +6727,8 @@
             "documentation": "Dokumentasjon",
             "submitIssue": "Send inn en sak",
             "discord": "Discord",
-            "sourceCode": "Kildekode"
+            "sourceCode": "Kildekode",
+            "changelog": ""
           }
         },
         "about": "Info",
@@ -6976,6 +7081,10 @@
             "title": "Utseende",
             "defaultColorScheme": {
               "label": "Standard fargetema"
+            },
+            "whatsNew": {
+              "label": "",
+              "description": ""
             }
           },
           "branding": {
@@ -7327,6 +7436,12 @@
             "apiKey": {
               "label": "Autentisering",
               "title": "API nøkler",
+              "access": {
+                "label": "",
+                "readOnly": "",
+                "readWrite": "",
+                "description": ""
+              },
               "button": {
                 "createApiToken": "Opprett API token",
                 "confirmDeletion": "Bekreft sletting"
@@ -8723,6 +8838,12 @@
       }
     }
   },
+  "whatsNew": {
+    "title": "",
+    "empty": "",
+    "allReleases": "",
+    "dismiss": ""
+  },
   "metadata": {
     "description": "Et selvbetjent dashbord for *arr stack og hele hjemmelaget. Integrerer med mer enn 50 tjenester, sanntid widgets, ingen konfigurasjonsfiler.",
     "dashboardTitle": "{appName} Dashbord"
@@ -8808,6 +8929,7 @@
       "imageInput": "Godtar bildeinndata",
       "thinking": "Tenker modus",
       "reasoning": {
+        "default": "Standard",
         "auto": "Auto",
         "none": "Av",
         "minimal": "Minimalt",

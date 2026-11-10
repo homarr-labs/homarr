@@ -280,6 +280,13 @@
           "title": "",
           "description": ""
         },
+        "mode": {
+          "label": "",
+          "readOnly": "",
+          "readWrite": "",
+          "readOnlyDescription": "",
+          "readWriteDescription": ""
+        },
         "credential": {
           "title": "",
           "breadth": "",
@@ -1386,11 +1393,7 @@
               "label": "Izberi obstoječo aplikacijo"
             },
             "new": {
-              "title": "Nova",
-              "url": {
-                "label": "",
-                "description": "Url, ki ga bo aplikacija odprla ob dostopu z nadzorne plošče"
-              }
+              "title": "Nova"
             }
           }
         }
@@ -1442,8 +1445,9 @@
         "label": "Poveži obstoječo aplikacijo",
         "description": "To integracijo povežite z aplikacijo, ki jo že lahko uporabljate."
       },
-      "appHref": {
-        "placeholder": "URL aplikacije po meri"
+      "externalUrl": {
+        "label": "",
+        "description": ""
       },
       "apiKeySettings": {
         "label": "Pridobi API ključ"
@@ -1510,6 +1514,27 @@
         "unknown": {
           "title": "Neznana napaka",
           "description": "Prišlo je do neznane napake. Odprite spodnji vzrok za več podrobnosti"
+        },
+        "frigate": {
+          "title": "",
+          "status": "",
+          "description": {
+            "cookie": "",
+            "profileMismatch": "",
+            "redirect": "",
+            "login": "",
+            "profile": "",
+            "stats": ""
+          }
+        },
+        "openmediavault": {
+          "title": "",
+          "description": {
+            "totpSecretRequired": "",
+            "totpSecretInvalid": "",
+            "totpVerificationFailed": "",
+            "unsupportedChallenge": ""
+          }
         },
         "parse": {
           "title": "Napaka razčl.",
@@ -1710,6 +1735,11 @@
         "title": "Ponastavi skrivnost",
         "message": "Ali ste prepričani, da želite ponastaviti to skrivnost?"
       },
+      "totpNotice": "",
+      "remove": {
+        "title": "",
+        "message": ""
+      },
       "noSecretsRequired": {
         "segmentTitle": "Ni skrivnosti",
         "text": "Za to integracijo niso potrebne skrivnosti"
@@ -1791,9 +1821,9 @@
           "label": "Geslo indeksatorja",
           "newLabel": "Novo geslo indeksatorja"
         },
-        "wazuhDashboardUrl": {
-          "label": "URL nadzorne plošče (izbirno)",
-          "newLabel": "Nov URL nadzorne plošče"
+        "totpSecret": {
+          "label": "",
+          "newLabel": ""
         }
       }
     },
@@ -1986,6 +2016,15 @@
         "modifier": "Moderator"
       }
     },
+    "markdown": {
+      "alert": {
+        "note": "",
+        "tip": "",
+        "important": "",
+        "warning": "",
+        "caution": ""
+      }
+    },
     "dangerZone": "Nevarno območje",
     "noResults": "Ni rezultatov",
     "unsavedChanges": "Imate neshranjene spremembe!",
@@ -2038,7 +2077,7 @@
     "total": "Skupaj",
     "filesystemUsage": "{count, plural, one {Prikaži uporabo za # datotečni sistem} two {Prikaži uporabo za # datotečna sistema} few {Prikaži uporabo za # datotečne sisteme} other {Prikaži uporabo za # datotečnih sistemov}}",
     "field": {
-      "name": "Ime",
+      "name": "Ime opravila",
       "state": "Stanje",
       "size": "Velikost",
       "actions": "Dejanja",
@@ -2335,7 +2374,29 @@
             "tooltip": "Kot oblaček",
             "hidden": "Skrito"
           }
+        },
+        "dockerContainer": {
+          "label": "",
+          "description": "",
+          "placeholder": "",
+          "disabled": "",
+          "unavailable": ""
         }
+      },
+      "docker": {
+        "action": {
+          "start": "",
+          "stop": ""
+        },
+        "notification": {
+          "startFailed": "",
+          "stopFailed": ""
+        },
+        "switch": {
+          "start": "",
+          "stop": ""
+        },
+        "stopped": ""
       },
       "error": {
         "notFound": {
@@ -2414,6 +2475,10 @@
         "hideHostname": {
           "label": "Skrij imena gostiteljev"
         },
+        "showFullUrls": {
+          "label": "",
+          "description": ""
+        },
         "withBorder": {
           "label": "Pokaži obrobo"
         },
@@ -2436,6 +2501,9 @@
         }
       },
       "empty": "Dodaj URL ali aplikacijo v nastavitvah gradnika",
+      "copyUrl": "",
+      "copied": "",
+      "copyFailed": "",
       "groups": {
         "label": "",
         "placeholder": "Nova kategorija",
@@ -3535,6 +3603,34 @@
     },
     "coolify": {
       "description": "Pregled vaše instance Coolify s strežniki in aplikacijami",
+      "summary": {
+        "needsAttention": "",
+        "inProgress": "",
+        "unknown": "",
+        "healthy": "",
+        "empty": "",
+        "healthyDetail": "",
+        "more": "",
+        "moreInstances": ""
+      },
+      "details": {
+        "tabs": "",
+        "overview": "",
+        "search": "",
+        "serviceApplications": ""
+      },
+      "overview": {
+        "projects": "",
+        "resources": "",
+        "attention": "",
+        "ready": "",
+        "noProjects": "",
+        "projectsUnavailable": "",
+        "moreProjects": "",
+        "running": "Se izvaja",
+        "resourceCount": "",
+        "environmentCount": ""
+      },
       "option": {
         "showServers": {
           "label": "Prikaži strežnike"
@@ -3566,7 +3662,13 @@
       },
       "source": {
         "url": "Vir: {url}",
-        "unavailable": "{source}: ni na voljo"
+        "unavailable": "{source}: ni na voljo",
+        "unavailableCount": ""
+      },
+      "kind": {
+        "server": "",
+        "application": "",
+        "service": ""
       },
       "instances": {
         "title": "Instance"
@@ -3583,6 +3685,7 @@
         "exited": "Končano",
         "starting": "Zaganjanje",
         "restarting": "Ponovno zaganjam",
+        "unhealthy": "",
         "unknown": "Neznano",
         "online": "Vzpostavljeno",
         "offline": "Brez povezave",
@@ -4815,6 +4918,7 @@
           },
           "identifier": {
             "label": "Identifikator",
+            "containerPlaceholder": "",
             "placeholder": "Ime ali lastnik/ime"
           },
           "name": {},
@@ -6623,7 +6727,8 @@
             "documentation": "Dokumentacija",
             "submitIssue": "Pošlji prijavo težave",
             "discord": "Skupnost Discord",
-            "sourceCode": "Izvorna koda"
+            "sourceCode": "Izvorna koda",
+            "changelog": ""
           }
         },
         "about": "O programu",
@@ -6976,6 +7081,10 @@
             "title": "Videz",
             "defaultColorScheme": {
               "label": "Privzeta barvna shema"
+            },
+            "whatsNew": {
+              "label": "",
+              "description": ""
             }
           },
           "branding": {
@@ -7327,6 +7436,12 @@
             "apiKey": {
               "label": "Preverjanje pristnosti",
               "title": "Ključi API",
+              "access": {
+                "label": "",
+                "readOnly": "",
+                "readWrite": "",
+                "description": ""
+              },
               "button": {
                 "createApiToken": "Ustvari žeton API",
                 "confirmDeletion": ""
@@ -8723,6 +8838,12 @@
       }
     }
   },
+  "whatsNew": {
+    "title": "",
+    "empty": "",
+    "allReleases": "",
+    "dismiss": ""
+  },
   "metadata": {
     "description": "Nadzorna plošča za lastno gostovanje sklada *arr in celotnega domačega laboratorija. Vključuje več kot 50 storitev, gradnike v realnem času in ne zahteva konfiguracijskih datotek.",
     "dashboardTitle": "Nadzorna plošča {appName}"
@@ -8808,6 +8929,7 @@
       "imageInput": "Sprejema slikovni vnos",
       "thinking": "Način razmišljanja",
       "reasoning": {
+        "default": "",
         "auto": "Samodejno",
         "none": "Izklopljeno",
         "minimal": "Minimalno",

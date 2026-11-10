@@ -43,6 +43,7 @@ import {
 import type { IntegrationKind, OnboardingLayoutPreset, WidgetKind } from "@homarr/definitions";
 import { onboardingCompleteSetupSchema, onboardingIntegrationDraftSchema } from "@homarr/validation/onboarding";
 
+import packageJson from "../../../../../package.json";
 import { onboardingClaimSettingKey } from "../../onboarding-claim";
 import { env } from "../../env";
 import { createTRPCRouter, onboardingClaimedProcedure, onboardingProcedure, publicProcedure } from "../../trpc";
@@ -985,14 +986,21 @@ export const onboardRouter = createTRPCRouter({
         }
       }
 
-      const [currentAppearance, currentCulture, currentAnalytics, currentBoardSettings, currentBranding] =
-        await Promise.all([
-          getServerSettingByKeyAsync(ctx.db, "appearance"),
-          getServerSettingByKeyAsync(ctx.db, "culture"),
-          getServerSettingByKeyAsync(ctx.db, "analytics"),
-          getServerSettingByKeyAsync(ctx.db, "board"),
-          getServerSettingByKeyAsync(ctx.db, "branding"),
-        ]);
+      const [
+        currentAppearance,
+        currentCulture,
+        currentAnalytics,
+        currentBoardSettings,
+        currentBranding,
+        currentWhatsNew,
+      ] = await Promise.all([
+        getServerSettingByKeyAsync(ctx.db, "appearance"),
+        getServerSettingByKeyAsync(ctx.db, "culture"),
+        getServerSettingByKeyAsync(ctx.db, "analytics"),
+        getServerSettingByKeyAsync(ctx.db, "board"),
+        getServerSettingByKeyAsync(ctx.db, "branding"),
+        getServerSettingByKeyAsync(ctx.db, "whatsNew"),
+      ]);
       const settingValues = {
         appearance: SuperJSON.stringify({ ...currentAppearance, defaultColorScheme: input.server.defaultColorScheme }),
         branding: SuperJSON.stringify({ ...currentBranding, themeId: input.server.themeId }),
@@ -1006,6 +1014,7 @@ export const onboardRouter = createTRPCRouter({
           homeBoardId: targetBoard.id,
           mobileHomeBoardId: targetBoard.id,
         }),
+        whatsNew: SuperJSON.stringify({ ...currentWhatsNew, lastSeenVersion: packageJson.version }),
       };
 
       await handleTransactionsAsync(ctx.db, {

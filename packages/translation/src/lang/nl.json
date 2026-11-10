@@ -280,6 +280,13 @@
           "title": "Volledige administrator-toegang",
           "description": "Kan Homarr en verbonden diensten beheren, inclusief destructieve acties."
         },
+        "mode": {
+          "label": "",
+          "readOnly": "",
+          "readWrite": "",
+          "readOnlyDescription": "",
+          "readWriteDescription": ""
+        },
         "credential": {
           "title": "Geldige scope en levensduur",
           "breadth": "Werkt met Homarr HTTP API en MCP, ook buiten deze client.",
@@ -1386,11 +1393,7 @@
               "label": "Bestaande app selecteren"
             },
             "new": {
-              "title": "Nieuw",
-              "url": {
-                "label": "App URL",
-                "description": "De URL die de app opent als deze wordt geopend vanaf het dashboard"
-              }
+              "title": "Nieuw"
             }
           }
         }
@@ -1442,8 +1445,9 @@
         "label": "Koppel een bestaande app",
         "description": "Verbind deze integratie met een app die je al kunt gebruiken."
       },
-      "appHref": {
-        "placeholder": "Aangepaste app-URL"
+      "externalUrl": {
+        "label": "",
+        "description": ""
       },
       "apiKeySettings": {
         "label": "API-sleutel ophalen"
@@ -1510,6 +1514,27 @@
         "unknown": {
           "title": "Onbekende fout",
           "description": "Er is een onbekende fout opgetreden, open de reden hieronder om meer details te zien"
+        },
+        "frigate": {
+          "title": "",
+          "status": "",
+          "description": {
+            "cookie": "",
+            "profileMismatch": "",
+            "redirect": "",
+            "login": "",
+            "profile": "",
+            "stats": ""
+          }
+        },
+        "openmediavault": {
+          "title": "",
+          "description": {
+            "totpSecretRequired": "",
+            "totpSecretInvalid": "",
+            "totpVerificationFailed": "",
+            "unsupportedChallenge": ""
+          }
         },
         "parse": {
           "title": "Parser fout",
@@ -1710,6 +1735,11 @@
         "title": "Geheim resetten",
         "message": "Weet je zeker dat je dit geheim wilt resetten?"
       },
+      "totpNotice": "",
+      "remove": {
+        "title": "",
+        "message": ""
+      },
       "noSecretsRequired": {
         "segmentTitle": "Geen geheimen",
         "text": "Geen geheimen nodig voor deze integratie"
@@ -1791,9 +1821,9 @@
           "label": "Indexer wachtwoord",
           "newLabel": "Nieuw indexer wachtwoord"
         },
-        "wazuhDashboardUrl": {
-          "label": "Dashboard URL (optioneel)",
-          "newLabel": "Nieuwe dashboard URL"
+        "totpSecret": {
+          "label": "",
+          "newLabel": ""
         }
       }
     },
@@ -1986,6 +2016,15 @@
         "modifier": ""
       }
     },
+    "markdown": {
+      "alert": {
+        "note": "",
+        "tip": "",
+        "important": "",
+        "warning": "Waarschuwing",
+        "caution": ""
+      }
+    },
     "dangerZone": "Gevarenzone",
     "noResults": "Geen resultaten gevonden",
     "unsavedChanges": "Er zijn niet-opgeslagen wijzigingen!",
@@ -2038,7 +2077,7 @@
     "total": "Totaal",
     "filesystemUsage": "{count, plural, one {Toon gebruik voor # bestandssysteem} other {Toon gebruik voor # filesystemen}}",
     "field": {
-      "name": "Naam",
+      "name": "Taaknaam",
       "state": "Status",
       "size": "Grootte",
       "actions": "Acties",
@@ -2049,7 +2088,7 @@
       "namespace": "Namespace",
       "status": "Status",
       "architecture": "Architectuur",
-      "type": "Type"
+      "type": "Client type downloaden"
     },
     "label": {
       "new": "Nieuw"
@@ -2335,7 +2374,29 @@
             "tooltip": "Als tooltip",
             "hidden": "Verborgen"
           }
+        },
+        "dockerContainer": {
+          "label": "",
+          "description": "",
+          "placeholder": "",
+          "disabled": "",
+          "unavailable": ""
         }
+      },
+      "docker": {
+        "action": {
+          "start": "",
+          "stop": ""
+        },
+        "notification": {
+          "startFailed": "",
+          "stopFailed": ""
+        },
+        "switch": {
+          "start": "",
+          "stop": ""
+        },
+        "stopped": ""
       },
       "error": {
         "notFound": {
@@ -2414,6 +2475,10 @@
         "hideHostname": {
           "label": "Hostnamen verbergen"
         },
+        "showFullUrls": {
+          "label": "",
+          "description": ""
+        },
         "withBorder": {
           "label": "Rand weergeven"
         },
@@ -2436,6 +2501,9 @@
         }
       },
       "empty": "Een URL of app toevoegen in de widget-instellingen",
+      "copyUrl": "URL kopiëren",
+      "copied": "Gekoppeld",
+      "copyFailed": "",
       "groups": {
         "label": "Categoriechar@@0n",
         "placeholder": "Nieuwe categorie",
@@ -3535,6 +3603,34 @@
     },
     "coolify": {
       "description": "Overzicht van je Coolify-instantie met servers en applicaties",
+      "summary": {
+        "needsAttention": "{count} heeft uw aandacht nodig",
+        "inProgress": "",
+        "unknown": "",
+        "healthy": "",
+        "empty": "",
+        "healthyDetail": "",
+        "more": "",
+        "moreInstances": ""
+      },
+      "details": {
+        "tabs": "",
+        "overview": "",
+        "search": "",
+        "serviceApplications": ""
+      },
+      "overview": {
+        "projects": "",
+        "resources": "",
+        "attention": "Heeft aandacht nodig",
+        "ready": "Gereed",
+        "noProjects": "",
+        "projectsUnavailable": "",
+        "moreProjects": "",
+        "running": "Actief",
+        "resourceCount": "",
+        "environmentCount": ""
+      },
       "option": {
         "showServers": {
           "label": "Servers weergeven"
@@ -3566,7 +3662,13 @@
       },
       "source": {
         "url": "Bron: {url}",
-        "unavailable": ""
+        "unavailable": "",
+        "unavailableCount": ""
+      },
+      "kind": {
+        "server": "",
+        "application": "Applicatie",
+        "service": "Diensten"
       },
       "instances": {
         "title": "Instanties"
@@ -3583,6 +3685,7 @@
         "exited": "Beëindigd",
         "starting": "Starten",
         "restarting": "Herstarten",
+        "unhealthy": "Niet-gezond",
         "unknown": "Onbekend",
         "online": "Online",
         "offline": "Offline",
@@ -4815,6 +4918,7 @@
           },
           "identifier": {
             "label": "Identificator",
+            "containerPlaceholder": "",
             "placeholder": "Naam of Eigenaar/naam"
           },
           "name": {},
@@ -6623,7 +6727,8 @@
             "documentation": "Documentatie",
             "submitIssue": "Een probleem melden",
             "discord": "Community Discord",
-            "sourceCode": "Broncode"
+            "sourceCode": "Broncode",
+            "changelog": ""
           }
         },
         "about": "Over",
@@ -6976,6 +7081,10 @@
             "title": "Weergave",
             "defaultColorScheme": {
               "label": "Standaard kleurenschema"
+            },
+            "whatsNew": {
+              "label": "",
+              "description": ""
             }
           },
           "branding": {
@@ -7327,6 +7436,12 @@
             "apiKey": {
               "label": "Authenticatie",
               "title": "API-sleutels",
+              "access": {
+                "label": "",
+                "readOnly": "",
+                "readWrite": "",
+                "description": ""
+              },
               "button": {
                 "createApiToken": "API-token aanmaken",
                 "confirmDeletion": "Bevestig verwijdering"
@@ -8723,6 +8838,12 @@
       }
     }
   },
+  "whatsNew": {
+    "title": "",
+    "empty": "",
+    "allReleases": "",
+    "dismiss": ""
+  },
   "metadata": {
     "description": "Een zelfgehoste dashboard voor de *arr stack en je hele vaderland. Integreert met 50+ diensten, real-time widgets, geen configuratie bestanden.",
     "dashboardTitle": ""
@@ -8808,6 +8929,7 @@
       "imageInput": "Afbeeldinginvoer accepteren",
       "thinking": "Denken modus",
       "reasoning": {
+        "default": "Standaard",
         "auto": "Automatisch",
         "none": "UIT",
         "minimal": "Minimaal",

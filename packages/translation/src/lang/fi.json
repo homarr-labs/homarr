@@ -280,6 +280,13 @@
           "title": "Täysi järjestelmänvalvojan käyttöoikeus",
           "description": "Voi hallita Homarr ja liitetyt palvelut, mukaan lukien tuhoisat toimet."
         },
+        "mode": {
+          "label": "",
+          "readOnly": "",
+          "readWrite": "",
+          "readOnlyDescription": "",
+          "readWriteDescription": ""
+        },
         "credential": {
           "title": "Tekijän soveltamisala ja käyttöikä",
           "breadth": "Toimii Homarr's HTTP API ja MCP, mukaan lukien tämän asiakkaan ulkopuolella.",
@@ -1386,11 +1393,7 @@
               "label": "Valitse olemassa oleva sovellus"
             },
             "new": {
-              "title": "Uusi",
-              "url": {
-                "label": "Sovelluksen URL-osoite",
-                "description": "Sovelluksen URL-osoite avautuu, kun se avataan hallintapaneelista"
-              }
+              "title": "Uusi"
             }
           }
         }
@@ -1442,8 +1445,9 @@
         "label": "Linkitä olemassa oleva sovellus",
         "description": "Yhdistä tämä integraatio sovellukseen, jota voit jo käyttää."
       },
-      "appHref": {
-        "placeholder": "Mukautettu sovelluksen URL-osoite"
+      "externalUrl": {
+        "label": "",
+        "description": ""
       },
       "apiKeySettings": {
         "label": "Nouda rajapinnan avain"
@@ -1510,6 +1514,27 @@
         "unknown": {
           "title": "Tuntematon virhe",
           "description": "Tapahtui tuntematon virhe, avaa syy alta nähdäksesi lisätietoja"
+        },
+        "frigate": {
+          "title": "",
+          "status": "",
+          "description": {
+            "cookie": "",
+            "profileMismatch": "",
+            "redirect": "",
+            "login": "",
+            "profile": "",
+            "stats": ""
+          }
+        },
+        "openmediavault": {
+          "title": "",
+          "description": {
+            "totpSecretRequired": "",
+            "totpSecretInvalid": "",
+            "totpVerificationFailed": "",
+            "unsupportedChallenge": ""
+          }
         },
         "parse": {
           "title": "Jäsennysvirhe",
@@ -1710,6 +1735,11 @@
         "title": "Poista salaisuus",
         "message": "Haluatko varmasti poistaa salaisuuden?"
       },
+      "totpNotice": "",
+      "remove": {
+        "title": "",
+        "message": ""
+      },
       "noSecretsRequired": {
         "segmentTitle": "Ei salaisuuksia",
         "text": "Tämä integraatio ei tarvitse salaisuuksia"
@@ -1791,9 +1821,9 @@
           "label": "Indeksoijan salasana",
           "newLabel": "Uusi indeksoijan salasana"
         },
-        "wazuhDashboardUrl": {
-          "label": "Dashboardin URL (valinnainen)",
-          "newLabel": "Uusi dashboardin URL"
+        "totpSecret": {
+          "label": "",
+          "newLabel": ""
         }
       }
     },
@@ -1986,6 +2016,15 @@
         "modifier": ""
       }
     },
+    "markdown": {
+      "alert": {
+        "note": "",
+        "tip": "",
+        "important": "",
+        "warning": "Varoitus",
+        "caution": ""
+      }
+    },
     "dangerZone": "Vaaravyöhyke",
     "noResults": "",
     "unsavedChanges": "Muutoksia ei ole tallennettu!",
@@ -2038,7 +2077,7 @@
     "total": "Yhteensä",
     "filesystemUsage": "{count, plural, one {Näytä käyttö # tiedostojärjestelmälle} other {Näytä käyttö # tiedostojärjestelmälle}}",
     "field": {
-      "name": "Nimi",
+      "name": "Työn nimi",
       "state": "Tila",
       "size": "Koko",
       "actions": "Toiminnot",
@@ -2335,7 +2374,29 @@
             "tooltip": "Työkaluvihjeenä",
             "hidden": "Piilotettu"
           }
+        },
+        "dockerContainer": {
+          "label": "",
+          "description": "",
+          "placeholder": "",
+          "disabled": "",
+          "unavailable": ""
         }
+      },
+      "docker": {
+        "action": {
+          "start": "",
+          "stop": ""
+        },
+        "notification": {
+          "startFailed": "",
+          "stopFailed": ""
+        },
+        "switch": {
+          "start": "",
+          "stop": ""
+        },
+        "stopped": ""
       },
       "error": {
         "notFound": {
@@ -2414,6 +2475,10 @@
         "hideHostname": {
           "label": ""
         },
+        "showFullUrls": {
+          "label": "",
+          "description": ""
+        },
         "withBorder": {
           "label": "Näytä reunus"
         },
@@ -2436,6 +2501,9 @@
         }
       },
       "empty": "Lisää URL tai sovellus widgetin asetuksiin",
+      "copyUrl": "",
+      "copied": "Kopioitu",
+      "copyFailed": "",
       "groups": {
         "label": "Kategoriat",
         "placeholder": "Uusi kategoria",
@@ -3535,6 +3603,34 @@
     },
     "coolify": {
       "description": "",
+      "summary": {
+        "needsAttention": "{count} tarvitsee huomiota",
+        "inProgress": "",
+        "unknown": "",
+        "healthy": "",
+        "empty": "",
+        "healthyDetail": "",
+        "more": "",
+        "moreInstances": ""
+      },
+      "details": {
+        "tabs": "",
+        "overview": "",
+        "search": "",
+        "serviceApplications": ""
+      },
+      "overview": {
+        "projects": "",
+        "resources": "",
+        "attention": "Tarvitsee huomiota",
+        "ready": "Valmis",
+        "noProjects": "",
+        "projectsUnavailable": "",
+        "moreProjects": "",
+        "running": "Käynnissä",
+        "resourceCount": "",
+        "environmentCount": ""
+      },
       "option": {
         "showServers": {
           "label": ""
@@ -3566,7 +3662,13 @@
       },
       "source": {
         "url": "Lähde: {url}",
-        "unavailable": ""
+        "unavailable": "",
+        "unavailableCount": ""
+      },
+      "kind": {
+        "server": "",
+        "application": "Sovellus",
+        "service": "Palvelu"
       },
       "instances": {
         "title": ""
@@ -3583,6 +3685,7 @@
         "exited": "Suljettu",
         "starting": "Aloitetaan",
         "restarting": "Käynnistetään Uudelleen",
+        "unhealthy": "Epäterveellistä",
         "unknown": "Tuntematon",
         "online": "Paikalla",
         "offline": "Offline-tilassa",
@@ -4815,6 +4918,7 @@
           },
           "identifier": {
             "label": "",
+            "containerPlaceholder": "",
             "placeholder": ""
           },
           "name": {},
@@ -6623,7 +6727,8 @@
             "documentation": "Käyttöohjeet",
             "submitIssue": "Ilmoita ongelmasta",
             "discord": "Discord-yhteisö",
-            "sourceCode": "Lähdekoodi"
+            "sourceCode": "Lähdekoodi",
+            "changelog": ""
           }
         },
         "about": "Tietoja",
@@ -6976,6 +7081,10 @@
             "title": "Ulkoasu",
             "defaultColorScheme": {
               "label": "Oletusarvoinen väriteema"
+            },
+            "whatsNew": {
+              "label": "",
+              "description": ""
             }
           },
           "branding": {
@@ -7327,6 +7436,12 @@
             "apiKey": {
               "label": "Tunnistautuminen",
               "title": "",
+              "access": {
+                "label": "",
+                "readOnly": "",
+                "readWrite": "",
+                "description": ""
+              },
               "button": {
                 "createApiToken": "",
                 "confirmDeletion": "Vahvista poisto"
@@ -8723,6 +8838,12 @@
       }
     }
   },
+  "whatsNew": {
+    "title": "",
+    "empty": "",
+    "allReleases": "",
+    "dismiss": ""
+  },
   "metadata": {
     "description": "Itsestään isännöity kojelauta *arr pino ja koko kotona. Integroi 50+ palvelua, reaaliaikainen widgetit, ei config tiedostoja.",
     "dashboardTitle": "{appName} Kojelauta"
@@ -8808,6 +8929,7 @@
       "imageInput": "Hyväksy kuvan syöte",
       "thinking": "Ajattelutila",
       "reasoning": {
+        "default": "Oletus",
         "auto": "Automaattinen",
         "none": "Pois",
         "minimal": "Minimaali",

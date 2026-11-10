@@ -19,7 +19,10 @@ export const BoardTourProvider = ({ children }: PropsWithChildren) => {
   const board = useRequiredBoard();
   const { hasChangeAccess } = useBoardPermissions(board);
   const [started, setStarted] = useState(true);
-  const { mutate: completeTour } = clientApi.user.completeTour.useMutation();
+  const utils = clientApi.useUtils();
+  const { mutate: completeTour } = clientApi.user.completeTour.useMutation({
+    onSuccess: () => utils.updateChecker.getWhatsNew.invalidate({ scope: "unseen" }),
+  });
 
   const handleEnd = () => {
     setStarted(false);

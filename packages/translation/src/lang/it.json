@@ -280,6 +280,13 @@
           "title": "Accesso amministratore completo",
           "description": "Puoi gestire Homarr e i servizi connessi, comprese le azioni distruttive."
         },
+        "mode": {
+          "label": "",
+          "readOnly": "",
+          "readWrite": "",
+          "readOnlyDescription": "",
+          "readWriteDescription": ""
+        },
         "credential": {
           "title": "Ambito e durata delle credenziali",
           "breadth": "Funziona con l'API HTTP di Homar e MCP, anche al di fuori di questo client.",
@@ -1386,11 +1393,7 @@
               "label": "Seleziona app esistente"
             },
             "new": {
-              "title": "Nuovo",
-              "url": {
-                "label": "Url app",
-                "description": "L'Url che l'app aprirà quando vi si accede dalla dashboard"
-              }
+              "title": "Nuovo"
             }
           }
         }
@@ -1442,8 +1445,9 @@
         "label": "Collega un'app esistente",
         "description": "Collega questa integrazione ad un'app che puoi già utilizzare."
       },
-      "appHref": {
-        "placeholder": "URL app personalizzata"
+      "externalUrl": {
+        "label": "",
+        "description": ""
       },
       "apiKeySettings": {
         "label": "Ottieni la chiave API"
@@ -1510,6 +1514,27 @@
         "unknown": {
           "title": "Errore sconosciuto",
           "description": "Si è verificato un errore sconosciuto, apri la causa sottostante per vedere maggiori dettagli"
+        },
+        "frigate": {
+          "title": "",
+          "status": "",
+          "description": {
+            "cookie": "",
+            "profileMismatch": "",
+            "redirect": "",
+            "login": "",
+            "profile": "",
+            "stats": ""
+          }
+        },
+        "openmediavault": {
+          "title": "",
+          "description": {
+            "totpSecretRequired": "",
+            "totpSecretInvalid": "",
+            "totpVerificationFailed": "",
+            "unsupportedChallenge": ""
+          }
         },
         "parse": {
           "title": "Errore di analisi",
@@ -1710,6 +1735,11 @@
         "title": "Resetta segreto",
         "message": "Sei sicuro di voler resettare questo segreto?"
       },
+      "totpNotice": "",
+      "remove": {
+        "title": "",
+        "message": ""
+      },
       "noSecretsRequired": {
         "segmentTitle": "Nessun segreto",
         "text": "Nessun segreto richiesto per questa integrazione"
@@ -1791,9 +1821,9 @@
           "label": "Password indicizzatore",
           "newLabel": "Nuova password indicizzatore"
         },
-        "wazuhDashboardUrl": {
-          "label": "Url Dashboard (opzionale)",
-          "newLabel": "Nuovo URL dashboard"
+        "totpSecret": {
+          "label": "",
+          "newLabel": ""
         }
       }
     },
@@ -1986,6 +2016,15 @@
         "modifier": "Mod"
       }
     },
+    "markdown": {
+      "alert": {
+        "note": "Nota",
+        "tip": "",
+        "important": "",
+        "warning": "Attenzione",
+        "caution": ""
+      }
+    },
     "dangerZone": "Zona pericolosa",
     "noResults": "Nessun risultato trovato",
     "unsavedChanges": "Ci sono modifiche non salvate!",
@@ -2038,7 +2077,7 @@
     "total": "Totale",
     "filesystemUsage": "{count, plural, one {Mostra utilizzo per # filesystem} other {Mostra utilizzo per # filesystem}}",
     "field": {
-      "name": "Nome",
+      "name": "Nome del job",
       "state": "Stato",
       "size": "Dimensione",
       "actions": "Azioni",
@@ -2335,7 +2374,29 @@
             "tooltip": "Come suggerimento",
             "hidden": "Nascosto"
           }
+        },
+        "dockerContainer": {
+          "label": "Docker container",
+          "description": "",
+          "placeholder": "",
+          "disabled": "",
+          "unavailable": ""
         }
+      },
+      "docker": {
+        "action": {
+          "start": "",
+          "stop": ""
+        },
+        "notification": {
+          "startFailed": "",
+          "stopFailed": ""
+        },
+        "switch": {
+          "start": "",
+          "stop": ""
+        },
+        "stopped": ""
       },
       "error": {
         "notFound": {
@@ -2414,6 +2475,10 @@
         "hideHostname": {
           "label": "Nascondi nomi host"
         },
+        "showFullUrls": {
+          "label": "",
+          "description": ""
+        },
         "withBorder": {
           "label": "Mostra bordo"
         },
@@ -2436,6 +2501,9 @@
         }
       },
       "empty": "Aggiungi un URL o un'app nelle impostazioni del widget",
+      "copyUrl": "Copia URL",
+      "copied": "Copiato",
+      "copyFailed": "",
       "groups": {
         "label": "Categorie",
         "placeholder": "Nuova categoria",
@@ -3535,6 +3603,34 @@
     },
     "coolify": {
       "description": "Panoramica della tua istanza Coolify con server e applicazioni",
+      "summary": {
+        "needsAttention": "{count} ha bisogno di attenzione",
+        "inProgress": "",
+        "unknown": "",
+        "healthy": "",
+        "empty": "",
+        "healthyDetail": "",
+        "more": "",
+        "moreInstances": ""
+      },
+      "details": {
+        "tabs": "",
+        "overview": "",
+        "search": "",
+        "serviceApplications": ""
+      },
+      "overview": {
+        "projects": "",
+        "resources": "",
+        "attention": "Richiede attenzione",
+        "ready": "Pronto",
+        "noProjects": "",
+        "projectsUnavailable": "",
+        "moreProjects": "",
+        "running": "In esecuzione",
+        "resourceCount": "",
+        "environmentCount": ""
+      },
       "option": {
         "showServers": {
           "label": "Mostra server"
@@ -3566,7 +3662,13 @@
       },
       "source": {
         "url": "Fonte: {url}",
-        "unavailable": ""
+        "unavailable": "",
+        "unavailableCount": ""
+      },
+      "kind": {
+        "server": "",
+        "application": "Applicazione",
+        "service": "Servizio"
       },
       "instances": {
         "title": "Istanze"
@@ -3583,6 +3685,7 @@
         "exited": "Uscito",
         "starting": "Avvio",
         "restarting": "Riavvio in corso",
+        "unhealthy": "Compromesso",
         "unknown": "Sconosciuto",
         "online": "Online",
         "offline": "Offline",
@@ -4815,6 +4918,7 @@
           },
           "identifier": {
             "label": "Identificatore",
+            "containerPlaceholder": "",
             "placeholder": "Nome o Proprietario/Nome"
           },
           "name": {},
@@ -6623,7 +6727,8 @@
             "documentation": "Documentazione",
             "submitIssue": "Segnala un problema",
             "discord": "Community Discord",
-            "sourceCode": "Codice sorgente"
+            "sourceCode": "Codice sorgente",
+            "changelog": ""
           }
         },
         "about": "Info",
@@ -6976,6 +7081,10 @@
             "title": "Aspetto",
             "defaultColorScheme": {
               "label": "Schema colore predefinito"
+            },
+            "whatsNew": {
+              "label": "",
+              "description": ""
             }
           },
           "branding": {
@@ -7327,6 +7436,12 @@
             "apiKey": {
               "label": "Autenticazione",
               "title": "Chiavi API",
+              "access": {
+                "label": "",
+                "readOnly": "",
+                "readWrite": "",
+                "description": ""
+              },
               "button": {
                 "createApiToken": "Crea token API",
                 "confirmDeletion": "Conferma eliminazione"
@@ -8723,6 +8838,12 @@
       }
     }
   },
+  "whatsNew": {
+    "title": "",
+    "empty": "",
+    "allReleases": "",
+    "dismiss": ""
+  },
   "metadata": {
     "description": "Un cruscotto autoospitato per lo stack *arr e tutta la tua homelab. Si integra con oltre 50 servizi, widget in tempo reale, senza file di configurazione.",
     "dashboardTitle": "Dashboard {appName}"
@@ -8808,6 +8929,7 @@
       "imageInput": "Accetta input immagine",
       "thinking": "Modalità di pensiero",
       "reasoning": {
+        "default": "Predefinito",
         "auto": "Automatico",
         "none": "",
         "minimal": "Minimo",

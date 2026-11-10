@@ -280,6 +280,13 @@
           "title": "",
           "description": ""
         },
+        "mode": {
+          "label": "",
+          "readOnly": "",
+          "readWrite": "",
+          "readOnlyDescription": "",
+          "readWriteDescription": ""
+        },
         "credential": {
           "title": "",
           "breadth": "",
@@ -1386,11 +1393,7 @@
               "label": "Pasirinkite esamą programėlę"
             },
             "new": {
-              "title": "Nauja",
-              "url": {
-                "label": "",
-                "description": "URL, kurį programėlė atidarys pasiekus ją iš skydelio"
-              }
+              "title": "Nauja"
             }
           }
         }
@@ -1442,8 +1445,9 @@
         "label": "Susieti esamą programą",
         "description": "Prijunkite šią integraciją prie programos, kurią jau galite naudoti."
       },
-      "appHref": {
-        "placeholder": ""
+      "externalUrl": {
+        "label": "",
+        "description": ""
       },
       "apiKeySettings": {
         "label": "Gauti API raktą"
@@ -1510,6 +1514,27 @@
         "unknown": {
           "title": "Nežinoma klaida",
           "description": "Įvyko nežinoma klaida. Atidarykite toliau pateiktą priežastį, kad pamatytumėte daugiau informacijos"
+        },
+        "frigate": {
+          "title": "",
+          "status": "",
+          "description": {
+            "cookie": "",
+            "profileMismatch": "",
+            "redirect": "",
+            "login": "",
+            "profile": "",
+            "stats": ""
+          }
+        },
+        "openmediavault": {
+          "title": "",
+          "description": {
+            "totpSecretRequired": "",
+            "totpSecretInvalid": "",
+            "totpVerificationFailed": "",
+            "unsupportedChallenge": ""
+          }
         },
         "parse": {
           "title": "Analizės klaida",
@@ -1710,6 +1735,11 @@
         "title": "Atstatyti paslaptį",
         "message": "Ar tikrai norite atstatyti šią paslaptį?"
       },
+      "totpNotice": "",
+      "remove": {
+        "title": "",
+        "message": ""
+      },
       "noSecretsRequired": {
         "segmentTitle": "Nėra paslapčių",
         "text": "Šiai integracijai nereikia paslapčių"
@@ -1791,9 +1821,9 @@
           "label": "Indeksavimo slaptažodis",
           "newLabel": "Naujas indeksavimo slaptažodis"
         },
-        "wazuhDashboardUrl": {
-          "label": "Valdymo skydelio URL (pasirinktinai)",
-          "newLabel": "Naujas valdymo skydelio URL"
+        "totpSecret": {
+          "label": "",
+          "newLabel": ""
         }
       }
     },
@@ -1986,6 +2016,15 @@
         "modifier": "Modifikatorius"
       }
     },
+    "markdown": {
+      "alert": {
+        "note": "",
+        "tip": "",
+        "important": "",
+        "warning": "",
+        "caution": ""
+      }
+    },
     "dangerZone": "Pavojinga zona",
     "noResults": "Rezultatų nerasta",
     "unsavedChanges": "Turite neišsaugotų pakeitimų!",
@@ -2038,7 +2077,7 @@
     "total": "Iš viso",
     "filesystemUsage": "{count, plural, one {Rodyti # failų sistemos naudojimą} few {Rodyti # failų sistemų naudojimą} many {Rodyti # failų sistemų naudojimą} other {Rodyti # failų sistemų naudojimą}}",
     "field": {
-      "name": "Vardas",
+      "name": "Užduoties pavadinimas",
       "state": "Būsena",
       "size": "Dydis",
       "actions": "Veiksmai",
@@ -2335,7 +2374,29 @@
             "tooltip": "Kaip paaiškinimą",
             "hidden": "Paslėpta"
           }
+        },
+        "dockerContainer": {
+          "label": "",
+          "description": "",
+          "placeholder": "",
+          "disabled": "",
+          "unavailable": ""
         }
+      },
+      "docker": {
+        "action": {
+          "start": "",
+          "stop": ""
+        },
+        "notification": {
+          "startFailed": "",
+          "stopFailed": ""
+        },
+        "switch": {
+          "start": "",
+          "stop": ""
+        },
+        "stopped": ""
       },
       "error": {
         "notFound": {
@@ -2414,6 +2475,10 @@
         "hideHostname": {
           "label": "Slėpti serverių vardus"
         },
+        "showFullUrls": {
+          "label": "",
+          "description": ""
+        },
         "withBorder": {
           "label": "Rodyti rėmelį"
         },
@@ -2436,6 +2501,9 @@
         }
       },
       "empty": "Pridėkite URL arba programėlę valdiklio nustatymuose",
+      "copyUrl": "",
+      "copied": "",
+      "copyFailed": "",
       "groups": {
         "label": "",
         "placeholder": "",
@@ -3535,6 +3603,34 @@
     },
     "coolify": {
       "description": "Jūsų „Coolify“ egzemplioriaus serverių ir programėlių apžvalga",
+      "summary": {
+        "needsAttention": "",
+        "inProgress": "",
+        "unknown": "",
+        "healthy": "",
+        "empty": "",
+        "healthyDetail": "",
+        "more": "",
+        "moreInstances": ""
+      },
+      "details": {
+        "tabs": "",
+        "overview": "",
+        "search": "",
+        "serviceApplications": ""
+      },
+      "overview": {
+        "projects": "",
+        "resources": "",
+        "attention": "",
+        "ready": "",
+        "noProjects": "",
+        "projectsUnavailable": "",
+        "moreProjects": "",
+        "running": "Veikia",
+        "resourceCount": "",
+        "environmentCount": ""
+      },
       "option": {
         "showServers": {
           "label": "Rodyti serverius"
@@ -3566,7 +3662,13 @@
       },
       "source": {
         "url": "Šaltinis: {url}",
-        "unavailable": "{source}: nepasiekiamas"
+        "unavailable": "{source}: nepasiekiamas",
+        "unavailableCount": ""
+      },
+      "kind": {
+        "server": "",
+        "application": "",
+        "service": ""
       },
       "instances": {
         "title": "Egzemplioriai"
@@ -3583,6 +3685,7 @@
         "exited": "Baigė darbą",
         "starting": "Paleidžiama",
         "restarting": "Paleidžiama iš naujo",
+        "unhealthy": "",
         "unknown": "Nežinoma",
         "online": "Prisijungęs",
         "offline": "Atsijungęs",
@@ -4815,6 +4918,7 @@
           },
           "identifier": {
             "label": "Identifikatorius",
+            "containerPlaceholder": "",
             "placeholder": "Vardas arba savininkas / vardas"
           },
           "name": {},
@@ -6623,7 +6727,8 @@
             "documentation": "Dokumentacija",
             "submitIssue": "Pateikti problemą",
             "discord": "Bendruomenės Discord",
-            "sourceCode": "Pirminis kodas"
+            "sourceCode": "Pirminis kodas",
+            "changelog": ""
           }
         },
         "about": "Apie",
@@ -6976,6 +7081,10 @@
             "title": "Išvaizda",
             "defaultColorScheme": {
               "label": "Numatytoji spalvų schema"
+            },
+            "whatsNew": {
+              "label": "",
+              "description": ""
             }
           },
           "branding": {
@@ -7327,6 +7436,12 @@
             "apiKey": {
               "label": "Autentifikavimas",
               "title": "API raktai",
+              "access": {
+                "label": "",
+                "readOnly": "",
+                "readWrite": "",
+                "description": ""
+              },
               "button": {
                 "createApiToken": "Sukurti API prieigos raktą",
                 "confirmDeletion": ""
@@ -8723,6 +8838,12 @@
       }
     }
   },
+  "whatsNew": {
+    "title": "",
+    "empty": "",
+    "allReleases": "",
+    "dismiss": ""
+  },
   "metadata": {
     "description": "Savarankiškai priglobtas *arr rinkinio ir visos jūsų namų laboratorijos skydelis. Integruojamas su daugiau nei 50 paslaugų, realiojo laiko valdikliais, be konfigūracijos failų.",
     "dashboardTitle": "{appName} skydelis"
@@ -8808,6 +8929,7 @@
       "imageInput": "Priima vaizdo įvestį",
       "thinking": "Mąstymo režimas",
       "reasoning": {
+        "default": "",
         "auto": "Automatinis",
         "none": "Išjungta",
         "minimal": "Minimalus",

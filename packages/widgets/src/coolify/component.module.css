@@ -1,25 +1,737 @@
-.accordion {
-  --coolify-neutral-fill: rgb(from var(--mantine-color-default-hover) r g b / calc(var(--opacity, 1) * 0.12));
-  --coolify-neutral-border: rgb(from var(--mantine-color-default-border) r g b / calc(var(--opacity, 1) * 0.45));
+/*
+ * Coolify's interface language: hairline edges, bold names, grey context and
+ * neutral status pills that carry the state in a coloured dot. The card surface
+ * and text colours follow Homarr's board theme.
+ * Sizes use rem() so they follow the board canvas scale like Mantine's own spacing.
+ */
+.root {
+  --cf-raised: color-mix(in srgb, var(--mantine-color-text) 4%, transparent);
+  --cf-hover: color-mix(in srgb, var(--mantine-color-text) 7%, transparent);
+  --cf-active: color-mix(in srgb, var(--mantine-color-text) 11%, transparent);
+  --cf-line: rgb(from var(--mantine-color-default-border) r g b / calc(var(--opacity, 1) * 0.6));
+  --cf-line-strong: rgb(from var(--mantine-color-default-border) r g b / var(--opacity, 1));
+  --cf-text: var(--mantine-color-text);
+  --cf-muted: var(--mantine-color-dimmed);
+  --cf-positive: var(--mantine-color-green-6);
+  --cf-negative: var(--mantine-color-red-6);
+  --cf-warning: var(--mantine-color-yellow-6);
+  --cf-neutral: var(--mantine-color-gray-6);
+
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  color: var(--cf-text);
+  background: transparent;
 }
 
-.accordion :global(.mantine-Accordion-item) {
-  --item-border-color: var(--coolify-neutral-border);
-  --item-filled-color: var(--coolify-neutral-fill);
+/* The advanced surface pads its card; the Coolify panel runs to the card's edges instead. */
+.root[data-advanced] {
+  height: calc(100% + 2 * var(--card-padding, 0px));
+  margin: calc(-1 * var(--card-padding, 0px));
 }
 
-.accordion :global(.mantine-Accordion-control) {
-  background-color: transparent;
+.instances {
+  display: grid;
+  gap: rem(8px);
+  padding: rem(8px);
 }
 
-.accordion :global(.mantine-Accordion-control:not(:disabled, [data-disabled]):hover) {
-  background-color: var(--coolify-neutral-fill);
+.instances[data-single] {
+  padding: 0;
 }
 
-.neutralDividerBottom {
-  border-bottom: 1px solid var(--coolify-neutral-border);
+.instances[data-columns="2"] {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
-.neutralDividerTop {
-  border-top: 1px solid var(--coolify-neutral-border);
+.instance {
+  container-type: inline-size;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+  border: 1px solid var(--cf-line);
+  border-radius: rem(8px);
+  background: var(--cf-raised);
+}
+
+.instance[data-single] {
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+
+.moreInstances {
+  padding: 0 rem(10px) rem(8px);
+  color: var(--cf-muted);
+}
+
+/* Header: mark, instance name, version, state */
+.header {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: rem(8px);
+  min-width: 0;
+  padding: rem(9px) rem(10px) rem(4px);
+}
+
+.headerTitle {
+  display: flex;
+  align-items: baseline;
+  gap: rem(6px);
+  min-width: 0;
+  flex: 1;
+}
+
+.name {
+  min-width: 0;
+  overflow: hidden;
+  color: var(--cf-text);
+  font-weight: 600;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  text-decoration: none;
+}
+
+a.name:hover {
+  text-decoration: underline;
+  text-underline-offset: rem(3px);
+}
+
+.version {
+  flex: none;
+  color: var(--cf-muted);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.logo {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: rem(6px);
+}
+
+/* Status pill, as Coolify draws "● Ready" and "● Success" */
+.pill {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: rem(6px);
+  height: rem(20px);
+  padding: 0 rem(8px);
+  color: var(--cf-text);
+  font-size: rem(11px);
+  font-weight: 500;
+  line-height: 1;
+  white-space: nowrap;
+  border: 1px solid var(--cf-line-strong);
+  border-radius: 999px;
+  background: var(--cf-raised);
+  font-variant-numeric: tabular-nums;
+}
+
+.pill[data-size="lg"] {
+  height: rem(26px);
+  padding: 0 rem(10px);
+  font-size: rem(12px);
+}
+
+.dot {
+  flex: none;
+  width: rem(6px);
+  height: rem(6px);
+  border-radius: 50%;
+  background: var(--cf-neutral);
+}
+
+.dot[data-tone="positive"] {
+  background: var(--cf-positive);
+}
+
+.dot[data-tone="negative"] {
+  background: var(--cf-negative);
+}
+
+.dot[data-tone="warning"] {
+  background: var(--cf-warning);
+}
+
+/* Key and value strip, like Coolify's server overview */
+.stats {
+  display: grid;
+  flex: none;
+  grid-template-columns: repeat(var(--cf-stat-count, 3), minmax(0, 1fr));
+  gap: rem(8px);
+  margin: 0;
+  padding: rem(6px) rem(10px) rem(9px);
+}
+
+.stat {
+  min-width: 0;
+}
+
+/* Under 240px the three columns size to their words so no label is cut */
+.stats[data-narrow] {
+  display: flex;
+  justify-content: space-between;
+  gap: rem(6px);
+  padding-inline: rem(8px);
+}
+
+.stats[data-narrow] .stat {
+  flex: 0 1 auto;
+}
+
+.statLabel {
+  overflow: hidden;
+  margin: 0;
+  color: var(--cf-muted);
+  font-size: rem(11px);
+  line-height: 1.3;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.statValue {
+  margin: 0;
+  color: var(--cf-text);
+  font-size: rem(15px);
+  font-weight: 600;
+  line-height: 1.25;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.statTotal {
+  color: var(--cf-muted);
+  font-size: rem(12px);
+  font-weight: 400;
+}
+
+.tiny .header {
+  padding: rem(6px) rem(8px) rem(2px);
+}
+
+.tiny .stats {
+  padding: rem(2px) rem(8px) rem(6px);
+}
+
+.tiny .statValue {
+  font-size: rem(14px);
+}
+
+/* Compact body: the attention list, or the projects when nothing is wrong */
+.compactBody {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+  padding: 0 rem(10px) rem(6px);
+  border-top: 1px solid var(--cf-line);
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: rem(8px);
+  min-width: 0;
+  min-height: rem(24px);
+  border-bottom: 1px solid var(--cf-line);
+}
+
+.rowName {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  color: var(--cf-text);
+  font-size: rem(12px);
+  font-weight: 500;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  text-decoration: none;
+}
+
+a.rowName:hover {
+  text-decoration: underline;
+  text-underline-offset: rem(3px);
+}
+
+.rowMeta {
+  flex: 0 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  color: var(--cf-muted);
+  font-size: rem(11px);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-variant-numeric: tabular-nums;
+}
+
+.projectGlyph {
+  display: inline-flex;
+  flex: none;
+  color: var(--cf-muted);
+}
+
+.more {
+  padding-top: rem(4px);
+  color: var(--cf-muted);
+  font-size: rem(11px);
+}
+
+.calm {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  gap: rem(6px);
+  min-height: 0;
+  color: var(--cf-muted);
+  font-size: rem(12px);
+  text-align: center;
+}
+
+.footer {
+  flex: none;
+  overflow: hidden;
+  padding: rem(5px) rem(10px);
+  color: var(--cf-muted);
+  font-size: rem(11px);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  border-top: 1px solid var(--cf-line);
+}
+
+/* 1×n tiles: the mark, the state, and the three counts stacked */
+.mini {
+  align-items: center;
+  justify-content: flex-start;
+  gap: rem(4px);
+  padding: rem(6px) rem(4px);
+  text-align: center;
+}
+
+.mini[data-short] {
+  justify-content: center;
+}
+
+.miniStats {
+  display: flex;
+  flex-direction: column;
+  gap: rem(6px);
+  width: 100%;
+  margin: 0;
+}
+
+.miniStats .statLabel {
+  line-height: 1.15;
+}
+
+.miniStats .statValue {
+  font-size: rem(14px);
+  line-height: 1.15;
+}
+
+/* Advanced view */
+.advanced .header {
+  padding: rem(16px) rem(20px) rem(4px);
+  gap: rem(12px);
+}
+
+.headerText {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: rem(2px);
+  min-width: 0;
+}
+
+.subline {
+  overflow: hidden;
+  color: var(--cf-muted);
+  font-size: rem(12px);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.advanced .stats {
+  margin: rem(12px) rem(20px) 0;
+  padding: rem(12px) rem(16px);
+  gap: rem(16px);
+  border: 1px solid var(--cf-line);
+  border-radius: rem(8px);
+  background: var(--cf-raised);
+}
+
+.advanced .statLabel {
+  font-size: rem(12px);
+}
+
+.advanced .statValue {
+  font-size: rem(20px);
+}
+
+.advanced .statTotal {
+  font-size: rem(14px);
+}
+
+.details {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.tabList {
+  flex-wrap: nowrap;
+  gap: rem(4px);
+  padding: rem(14px) rem(20px) rem(2px);
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+
+.tabList::before {
+  display: none;
+}
+
+.tab {
+  flex: none;
+  height: rem(30px);
+  padding: 0 rem(12px);
+  color: var(--cf-muted);
+  font-size: rem(13px);
+  font-weight: 500;
+  border: 0;
+  border-radius: rem(6px);
+  background: transparent;
+}
+
+.tab:hover {
+  color: var(--cf-text);
+  background: var(--cf-raised);
+}
+
+.tab[data-active] {
+  color: var(--cf-text);
+  background: var(--cf-active);
+}
+
+.tab:focus-visible {
+  outline: 2px solid var(--mantine-primary-color-filled);
+  outline-offset: -2px;
+}
+
+.tabCount {
+  margin-left: rem(2px);
+  color: var(--cf-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Inactive panels are unmounted (keepMounted={false}), so the mounted one is always the active one. */
+.panel {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.listScroll {
+  flex: 1;
+  min-height: 0;
+}
+
+.panelBody {
+  display: flex;
+  flex-direction: column;
+  gap: rem(20px);
+  padding: rem(14px) rem(20px) rem(20px);
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: rem(8px);
+  padding: rem(14px) rem(20px) 0;
+}
+
+.toolbar > :first-child {
+  flex: 1;
+}
+
+.searchInput {
+  color: var(--cf-text);
+  border-color: var(--cf-line-strong);
+  background: var(--cf-raised);
+}
+
+.searchInput::placeholder {
+  color: var(--cf-muted);
+}
+
+.overviewGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+  align-items: start;
+  gap: rem(20px);
+  padding: rem(14px) rem(20px) rem(20px);
+}
+
+.overviewColumn {
+  display: flex;
+  flex-direction: column;
+  gap: rem(20px);
+  min-width: 0;
+}
+
+.section {
+  min-width: 0;
+}
+
+.sectionHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: rem(8px);
+  margin-bottom: rem(8px);
+}
+
+.sectionTitle {
+  margin: 0;
+  color: var(--cf-text);
+  font-size: rem(14px);
+  font-weight: 600;
+}
+
+.sectionNote {
+  color: var(--cf-muted);
+  font-size: rem(12px);
+}
+
+/* Bordered list, like Coolify's deployments table */
+.table {
+  overflow: hidden;
+  border: 1px solid var(--cf-line);
+  border-radius: rem(8px);
+  background: var(--cf-raised);
+}
+
+.tableRow {
+  display: flex;
+  align-items: center;
+  gap: rem(12px);
+  min-width: 0;
+  min-height: rem(48px);
+  padding: rem(7px) rem(14px);
+}
+
+.tableRow + .tableRow {
+  border-top: 1px solid var(--cf-line);
+}
+
+.tableMain {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: rem(2px);
+  min-width: 0;
+}
+
+.tableName {
+  overflow: hidden;
+  color: var(--cf-text);
+  font-size: rem(13px);
+  font-weight: 600;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  text-decoration: none;
+}
+
+a.tableName:hover {
+  text-decoration: underline;
+  text-underline-offset: rem(3px);
+}
+
+.tableMeta {
+  overflow: hidden;
+  color: var(--cf-muted);
+  font-size: rem(12px);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-variant-numeric: tabular-nums;
+}
+
+.tableAside {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: rem(6px);
+}
+
+/* The state keeps one column so the row actions beside it line up */
+.statusCell {
+  display: flex;
+  justify-content: flex-end;
+  width: rem(96px);
+}
+
+.iconAction {
+  color: var(--cf-muted);
+}
+
+.iconAction:hover {
+  color: var(--cf-text);
+}
+
+.nested {
+  display: flex;
+  margin: 0;
+  list-style: none;
+  flex-direction: column;
+  gap: rem(4px);
+  padding: 0 rem(14px) rem(10px) rem(34px);
+}
+
+.nestedRow {
+  display: flex;
+  align-items: center;
+  gap: rem(8px);
+  min-width: 0;
+  color: var(--cf-muted);
+  font-size: rem(12px);
+}
+
+.emptyRow {
+  padding: rem(14px);
+  color: var(--cf-muted);
+  font-size: rem(12px);
+}
+
+/* Project cards, as on Coolify's dashboard */
+.projectGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(rem(200px), 1fr));
+  gap: rem(10px);
+}
+
+.projectCard {
+  display: flex;
+  flex-direction: column;
+  gap: rem(10px);
+  min-width: 0;
+  padding: rem(12px);
+  color: inherit;
+  text-decoration: none;
+  border: 1px solid var(--cf-line);
+  border-radius: rem(8px);
+  background: var(--cf-raised);
+  transition:
+    background-color 120ms ease,
+    border-color 120ms ease;
+}
+
+a.projectCard:hover {
+  border-color: var(--cf-line-strong);
+  background: var(--cf-hover);
+}
+
+a.projectCard:focus-visible {
+  outline: 2px solid var(--mantine-primary-color-filled);
+  outline-offset: 2px;
+}
+
+.projectTop {
+  display: flex;
+  align-items: flex-start;
+  gap: rem(10px);
+  min-width: 0;
+}
+
+.projectGlyphLg {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: rem(32px);
+  height: rem(32px);
+  color: var(--cf-muted);
+  border: 1px solid var(--cf-line-strong);
+  border-radius: rem(6px);
+  background: var(--cf-raised);
+}
+
+.projectFoot {
+  display: flex;
+  gap: rem(10px);
+  color: var(--cf-muted);
+  font-size: rem(12px);
+  font-variant-numeric: tabular-nums;
+}
+
+.narrowOnly {
+  display: none;
+}
+
+@container (max-width: 640px) {
+  .overviewGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .wideOnly {
+    display: none;
+  }
+
+  .narrowOnly {
+    display: inline;
+  }
+
+  .advanced .header,
+  .tabList,
+  .toolbar {
+    padding-inline: rem(14px);
+  }
+
+  .advanced .stats {
+    margin-inline: rem(14px);
+    padding: rem(10px) rem(12px);
+  }
+
+  .overviewGrid,
+  .panelBody {
+    padding-inline: rem(14px);
+  }
+
+  .advanced .statValue {
+    font-size: rem(17px);
+  }
+}
+
+@container (max-width: 640px) {
+  /* On a phone the advanced view's close button sits over the top right corner */
+  .advanced .header {
+    flex-wrap: wrap;
+    row-gap: rem(8px);
+    padding-right: rem(60px);
+  }
+
+  /* The name keeps its width; the state moves under it, on the text's edge */
+  .advanced .headerText {
+    flex: 1 1 rem(200px);
+  }
+
+  .advanced .header > .pill {
+    margin-left: rem(40px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .projectCard {
+    transition: none;
+  }
 }

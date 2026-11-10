@@ -280,6 +280,13 @@
           "title": "Acces complet la administrator",
           "description": "Poți gestiona servicii de homarr și conectate, inclusiv acțiuni distructive."
         },
+        "mode": {
+          "label": "",
+          "readOnly": "",
+          "readWrite": "",
+          "readOnlyDescription": "",
+          "readWriteDescription": ""
+        },
         "credential": {
           "title": "Domeniul de aplicare și durata de viață",
           "breadth": "Funcționează cu HTTP API și MCP Homarr, inclusiv în afara acestui client.",
@@ -1386,11 +1393,7 @@
               "label": "Selectaţi aplicaţia existentă"
             },
             "new": {
-              "title": "Nou",
-              "url": {
-                "label": "Url aplicație",
-                "description": "Url-ul aplicației se va deschide când este accesat din tabloul de bord"
-              }
+              "title": "Nou"
             }
           }
         }
@@ -1442,8 +1445,9 @@
         "label": "Conectați o aplicație existentă",
         "description": "Conectați această integrare la o aplicație pe care o puteți folosi deja."
       },
-      "appHref": {
-        "placeholder": ""
+      "externalUrl": {
+        "label": "",
+        "description": ""
       },
       "apiKeySettings": {
         "label": "Obține cheia API"
@@ -1510,6 +1514,27 @@
         "unknown": {
           "title": "Eroare necunoscută",
           "description": "A apărut o eroare necunoscută, deschideți cauza de mai jos pentru a vedea mai multe detalii"
+        },
+        "frigate": {
+          "title": "",
+          "status": "",
+          "description": {
+            "cookie": "",
+            "profileMismatch": "",
+            "redirect": "",
+            "login": "",
+            "profile": "",
+            "stats": ""
+          }
+        },
+        "openmediavault": {
+          "title": "",
+          "description": {
+            "totpSecretRequired": "",
+            "totpSecretInvalid": "",
+            "totpVerificationFailed": "",
+            "unsupportedChallenge": ""
+          }
         },
         "parse": {
           "title": "",
@@ -1710,6 +1735,11 @@
         "title": "Resetare secret",
         "message": "Sunteţi sigur că doriţi să resetaţi acest secret?"
       },
+      "totpNotice": "",
+      "remove": {
+        "title": "",
+        "message": ""
+      },
       "noSecretsRequired": {
         "segmentTitle": "Fără secrete",
         "text": "Nu sunt necesare secrete pentru această integrare"
@@ -1791,9 +1821,9 @@
           "label": "Parola indexului",
           "newLabel": "Parola de indexare nouă"
         },
-        "wazuhDashboardUrl": {
-          "label": "URL Panou de control (opțional)",
-          "newLabel": "URL nou dashboard"
+        "totpSecret": {
+          "label": "",
+          "newLabel": ""
         }
       }
     },
@@ -1986,6 +2016,15 @@
         "modifier": ""
       }
     },
+    "markdown": {
+      "alert": {
+        "note": "Notă",
+        "tip": "",
+        "important": "",
+        "warning": "Avertizare",
+        "caution": ""
+      }
+    },
     "dangerZone": "Zonă periculoasă",
     "noResults": "Nici un rezultat găsit",
     "unsavedChanges": "Ai modificări nesalvate!",
@@ -2038,7 +2077,7 @@
     "total": "",
     "filesystemUsage": "{count, plural, one {Arată utilizarea pentru # fișiere} other {Arată utilizarea pentru # de fișiere}}",
     "field": {
-      "name": "Nume",
+      "name": "Numele postului",
       "state": "Stare",
       "size": "Mărime",
       "actions": "Acțiuni",
@@ -2047,7 +2086,7 @@
       "description": "Descriere",
       "created": "Creat",
       "namespace": "Numespace",
-      "status": "Status",
+      "status": "",
       "architecture": "Arhitectură",
       "type": "Tip"
     },
@@ -2335,7 +2374,29 @@
             "tooltip": "Ca pont de unelte",
             "hidden": ""
           }
+        },
+        "dockerContainer": {
+          "label": "",
+          "description": "",
+          "placeholder": "",
+          "disabled": "",
+          "unavailable": ""
         }
+      },
+      "docker": {
+        "action": {
+          "start": "",
+          "stop": ""
+        },
+        "notification": {
+          "startFailed": "",
+          "stopFailed": ""
+        },
+        "switch": {
+          "start": "",
+          "stop": ""
+        },
+        "stopped": ""
       },
       "error": {
         "notFound": {
@@ -2414,6 +2475,10 @@
         "hideHostname": {
           "label": "Ascunde numele gazdei"
         },
+        "showFullUrls": {
+          "label": "",
+          "description": ""
+        },
         "withBorder": {
           "label": "Arată chenarul"
         },
@@ -2436,6 +2501,9 @@
         }
       },
       "empty": "Adăugați un URL sau o aplicație în setările widget-ului",
+      "copyUrl": "Copiază URL-ul",
+      "copied": "Copiat",
+      "copyFailed": "",
       "groups": {
         "label": "Categorii",
         "placeholder": "Categorie nouă",
@@ -3535,6 +3603,34 @@
     },
     "coolify": {
       "description": "Prezentare generală a instanței tale Coolify cu servere și aplicații",
+      "summary": {
+        "needsAttention": "{count} are nevoie de atenție",
+        "inProgress": "",
+        "unknown": "",
+        "healthy": "",
+        "empty": "",
+        "healthyDetail": "",
+        "more": "",
+        "moreInstances": ""
+      },
+      "details": {
+        "tabs": "",
+        "overview": "",
+        "search": "",
+        "serviceApplications": ""
+      },
+      "overview": {
+        "projects": "",
+        "resources": "",
+        "attention": "Necesită atenție",
+        "ready": "Gata",
+        "noProjects": "",
+        "projectsUnavailable": "",
+        "moreProjects": "",
+        "running": "Rulează",
+        "resourceCount": "",
+        "environmentCount": ""
+      },
       "option": {
         "showServers": {
           "label": "Arată serverele"
@@ -3566,7 +3662,13 @@
       },
       "source": {
         "url": "Sursa: {url}",
-        "unavailable": ""
+        "unavailable": "",
+        "unavailableCount": ""
+      },
+      "kind": {
+        "server": "",
+        "application": "Cerere",
+        "service": "Serviciu"
       },
       "instances": {
         "title": "Instanțe"
@@ -3583,6 +3685,7 @@
         "exited": "Ieşit",
         "starting": "Pornire",
         "restarting": "Repornire",
+        "unhealthy": "nesănătoase",
         "unknown": "Necunoscut",
         "online": "",
         "offline": "",
@@ -4815,6 +4918,7 @@
           },
           "identifier": {
             "label": "",
+            "containerPlaceholder": "",
             "placeholder": "Nume sau proprietar/nume"
           },
           "name": {},
@@ -6623,7 +6727,8 @@
             "documentation": "Documentație",
             "submitIssue": "Trimite o problema",
             "discord": "Comunitatea Discord",
-            "sourceCode": "Cod sursă"
+            "sourceCode": "Cod sursă",
+            "changelog": ""
           }
         },
         "about": "Despre",
@@ -6976,6 +7081,10 @@
             "title": "Aspect",
             "defaultColorScheme": {
               "label": "Schema de culori implicită"
+            },
+            "whatsNew": {
+              "label": "",
+              "description": ""
             }
           },
           "branding": {
@@ -7327,6 +7436,12 @@
             "apiKey": {
               "label": "Autentificare",
               "title": "Chei API",
+              "access": {
+                "label": "",
+                "readOnly": "",
+                "readWrite": "",
+                "description": ""
+              },
               "button": {
                 "createApiToken": "Creare simbol API",
                 "confirmDeletion": "Confirmă ștergerea"
@@ -8723,6 +8838,12 @@
       }
     }
   },
+  "whatsNew": {
+    "title": "",
+    "empty": "",
+    "allReleases": "",
+    "dismiss": ""
+  },
   "metadata": {
     "description": "Un tablou de bord auto-găzduit pentru *stiva arr și întregul tău homelab. Integrate cu peste 50+ servicii, widget-uri în timp real, fără fișiere de configurare.",
     "dashboardTitle": "{appName} tablou de bord"
@@ -8808,6 +8929,7 @@
       "imageInput": "Acceptă introducerea de imagini",
       "thinking": "Mod gândire",
       "reasoning": {
+        "default": "Implicit",
         "auto": "Automat",
         "none": "Dezactivat",
         "minimal": "Minimă",

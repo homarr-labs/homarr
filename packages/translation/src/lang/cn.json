@@ -280,6 +280,13 @@
           "title": "完全管理员权限",
           "description": "可以管理 Homarr 和连接的服务，包括破坏性操作。"
         },
+        "mode": {
+          "label": "",
+          "readOnly": "",
+          "readWrite": "",
+          "readOnlyDescription": "",
+          "readWriteDescription": ""
+        },
         "credential": {
           "title": "凭据范围和寿命",
           "breadth": "适用于 Homarr's HTTP API 和 MCP, 包括在此客户端之外。",
@@ -1386,11 +1393,7 @@
               "label": "选择现有应用"
             },
             "new": {
-              "title": "新建",
-              "url": {
-                "label": "应用网址",
-                "description": "当从看板访问时应用将打开的网址"
-              }
+              "title": "新建"
             }
           }
         }
@@ -1442,8 +1445,9 @@
         "label": "链接已存在的应用",
         "description": "将此集成连接到您已能使用的应用。"
       },
-      "appHref": {
-        "placeholder": "自定义应用URL"
+      "externalUrl": {
+        "label": "",
+        "description": ""
       },
       "apiKeySettings": {
         "label": "获取 API 密钥"
@@ -1510,6 +1514,27 @@
         "unknown": {
           "title": "未知错误",
           "description": "发生未知错误，打开下面的原因以查看更多详情"
+        },
+        "frigate": {
+          "title": "",
+          "status": "",
+          "description": {
+            "cookie": "",
+            "profileMismatch": "",
+            "redirect": "",
+            "login": "",
+            "profile": "",
+            "stats": ""
+          }
+        },
+        "openmediavault": {
+          "title": "",
+          "description": {
+            "totpSecretRequired": "",
+            "totpSecretInvalid": "",
+            "totpVerificationFailed": "",
+            "unsupportedChallenge": ""
+          }
         },
         "parse": {
           "title": "解析错误",
@@ -1710,6 +1735,11 @@
         "title": "重置密钥",
         "message": "您确定要重置此秘钥吗？"
       },
+      "totpNotice": "",
+      "remove": {
+        "title": "",
+        "message": ""
+      },
       "noSecretsRequired": {
         "segmentTitle": "没有密钥",
         "text": "此集成不需要密钥"
@@ -1791,9 +1821,9 @@
           "label": "索引器密码",
           "newLabel": "新索引器密码"
         },
-        "wazuhDashboardUrl": {
-          "label": "仪表盘 URL（可选）",
-          "newLabel": "新仪表盘 URL"
+        "totpSecret": {
+          "label": "",
+          "newLabel": ""
         }
       }
     },
@@ -1984,6 +2014,15 @@
         "assistant": "助手",
         "assistantThinking": "思考中",
         "modifier": ""
+      }
+    },
+    "markdown": {
+      "alert": {
+        "note": "笔记",
+        "tip": "",
+        "important": "",
+        "warning": "警告",
+        "caution": ""
       }
     },
     "dangerZone": "危险区域",
@@ -2335,7 +2374,29 @@
             "tooltip": "在工具提示中显示",
             "hidden": "隐藏"
           }
+        },
+        "dockerContainer": {
+          "label": "Docker 容器",
+          "description": "",
+          "placeholder": "",
+          "disabled": "",
+          "unavailable": ""
         }
+      },
+      "docker": {
+        "action": {
+          "start": "",
+          "stop": ""
+        },
+        "notification": {
+          "startFailed": "",
+          "stopFailed": ""
+        },
+        "switch": {
+          "start": "",
+          "stop": ""
+        },
+        "stopped": ""
       },
       "error": {
         "notFound": {
@@ -2414,6 +2475,10 @@
         "hideHostname": {
           "label": "隐藏主机名"
         },
+        "showFullUrls": {
+          "label": "",
+          "description": ""
+        },
         "withBorder": {
           "label": "显示边框"
         },
@@ -2436,6 +2501,9 @@
         }
       },
       "empty": "在小部件设置中添加 URL 或应用程序",
+      "copyUrl": "复制 URL",
+      "copied": "已复制",
+      "copyFailed": "",
       "groups": {
         "label": "类别管理",
         "placeholder": "新建分类",
@@ -3535,6 +3603,34 @@
     },
     "coolify": {
       "description": "您的 Coolify 实例及其服务器和应用一览",
+      "summary": {
+        "needsAttention": "",
+        "inProgress": "",
+        "unknown": "",
+        "healthy": "",
+        "empty": "",
+        "healthyDetail": "",
+        "more": "",
+        "moreInstances": ""
+      },
+      "details": {
+        "tabs": "",
+        "overview": "",
+        "search": "",
+        "serviceApplications": ""
+      },
+      "overview": {
+        "projects": "",
+        "resources": "",
+        "attention": "需要关注",
+        "ready": "就绪",
+        "noProjects": "",
+        "projectsUnavailable": "",
+        "moreProjects": "",
+        "running": "运行中",
+        "resourceCount": "",
+        "environmentCount": ""
+      },
       "option": {
         "showServers": {
           "label": "显示服务器"
@@ -3566,7 +3662,13 @@
       },
       "source": {
         "url": "来源：{url}",
-        "unavailable": "{source}：不可用"
+        "unavailable": "{source}：不可用",
+        "unavailableCount": ""
+      },
+      "kind": {
+        "server": "",
+        "application": "应用",
+        "service": "服务"
       },
       "instances": {
         "title": "实例"
@@ -3583,6 +3685,7 @@
         "exited": "已退出",
         "starting": "正在启动",
         "restarting": "正在重启",
+        "unhealthy": "不健康",
         "unknown": "未知",
         "online": "在线",
         "offline": "离线",
@@ -4815,6 +4918,7 @@
           },
           "identifier": {
             "label": "标识符",
+            "containerPlaceholder": "",
             "placeholder": "名称或所有者/名称"
           },
           "name": {},
@@ -6623,7 +6727,8 @@
             "documentation": "帮助文档",
             "submitIssue": "提交问题",
             "discord": "Discord 社区",
-            "sourceCode": "源码仓库"
+            "sourceCode": "源码仓库",
+            "changelog": ""
           }
         },
         "about": "关于",
@@ -6976,6 +7081,10 @@
             "title": "外观",
             "defaultColorScheme": {
               "label": "默认配色方案"
+            },
+            "whatsNew": {
+              "label": "",
+              "description": ""
             }
           },
           "branding": {
@@ -7327,6 +7436,12 @@
             "apiKey": {
               "label": "认证",
               "title": "API 密钥",
+              "access": {
+                "label": "",
+                "readOnly": "",
+                "readWrite": "",
+                "description": ""
+              },
               "button": {
                 "createApiToken": "创建 API 令牌",
                 "confirmDeletion": "确认删除"
@@ -8723,6 +8838,12 @@
       }
     }
   },
+  "whatsNew": {
+    "title": "",
+    "empty": "",
+    "allReleases": "",
+    "dismiss": ""
+  },
   "metadata": {
     "description": "一个面向 *arr 套件和整个家庭实验室的自托管仪表板。集成 50 多个服务、实时小部件，无需配置文件。",
     "dashboardTitle": "{appName} 仪表板"
@@ -8808,6 +8929,7 @@
       "imageInput": "接受图像输入",
       "thinking": "思考模式",
       "reasoning": {
+        "default": "默认值",
         "auto": "自动",
         "none": "关闭",
         "minimal": "最小",
