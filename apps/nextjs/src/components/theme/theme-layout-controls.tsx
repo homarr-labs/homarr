@@ -1,10 +1,9 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { useState } from "react";
 import type { MantineTheme } from "@mantine/core";
-import { ActionIcon, Box, Button, Collapse, Group, SegmentedControl, Stack, Text } from "@mantine/core";
-import { IconArrowBackUp, IconChevronDown, IconChevronUp } from "@tabler/icons-react";
+import { ActionIcon, Box, Group, SegmentedControl, Stack, Text } from "@mantine/core";
+import { IconArrowBackUp } from "@tabler/icons-react";
 
 import { useI18n } from "@homarr/translation/client";
 import type { CustomTheme } from "@homarr/validation/theme";
@@ -32,15 +31,16 @@ export const ThemeLayoutControls = ({
   disabled,
   onChange,
   renderControl,
+  advanced = false,
 }: {
   document: CustomTheme;
   effective: MantineTheme;
   disabled: boolean;
   onChange: (changes: Change[]) => void;
   renderControl: (control: ThemeControl) => ReactNode;
+  advanced?: boolean;
 }) => {
   const t = useI18n("common.customTheme.studio");
-  const [advanced, setAdvanced] = useState(false);
   const hasOverride = (field: "spacing" | "radius") =>
     sizes.some((size) => getThemeControlValue(document, `theme.${field}.${size}`) !== undefined) ||
     (field === "radius" && document.theme.defaultRadius !== undefined);
@@ -107,29 +107,11 @@ export const ThemeLayoutControls = ({
     );
   };
   const controls = themeControls.filter((control) => control.group === "layout");
-  let chevron = <IconChevronDown size={16} />;
-  if (advanced) chevron = <IconChevronUp size={16} />;
+  if (advanced) return <Stack gap="sm">{controls.map(renderControl)}</Stack>;
   return (
     <Stack gap="sm">
       {renderProfile("spacing", spacingProfiles)}
       {renderProfile("radius", radiusProfiles)}
-      {controls.filter((control) => control.path === "theme.scale").map(renderControl)}
-      <Button
-        variant="subtle"
-        justify="space-between"
-        fullWidth
-        aria-expanded={advanced}
-        aria-controls="theme-layout-advanced"
-        rightSection={chevron}
-        onClick={() => setAdvanced((opened) => !opened)}
-      >
-        {t("layout.advanced")}
-      </Button>
-      <Collapse expanded={advanced}>
-        <Stack id="theme-layout-advanced" gap="sm">
-          {controls.filter((control) => control.path !== "theme.scale").map(renderControl)}
-        </Stack>
-      </Collapse>
     </Stack>
   );
 };

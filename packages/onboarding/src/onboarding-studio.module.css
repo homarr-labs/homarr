@@ -1,7 +1,7 @@
 .page {
   --studio-surface: color-mix(in srgb, var(--mantine-color-body) 92%, transparent);
   --studio-glow-color: var(--mantine-primary-color-filled);
-  --studio-secondary-glow-color: var(--mantine-color-orange-6);
+  --studio-secondary-glow-color: var(--mantine-color-secondaryColor-filled);
   min-height: 100dvh;
   overflow-x: clip;
   position: relative;

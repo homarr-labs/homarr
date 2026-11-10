@@ -61,7 +61,7 @@
         "title": "Start with familiar defaults",
         "description": "Set the language and appearance everyone sees first.",
         "language": "Default language",
-        "theme": "Default theme",
+        "theme": "Color scheme",
         "themeAuto": "System",
         "themeLight": "Light",
         "themeDark": "Dark",
@@ -206,7 +206,7 @@
         "apps": "App tiles",
         "appsValue": "{count, plural, =0 {Starter apps only} one {# app tile} other {# app tiles}}",
         "language": "Language",
-        "theme": "Theme",
+        "theme": "Color scheme",
         "themeAuto": "System preference",
         "themeLight": "Light",
         "themeDark": "Dark",
@@ -2117,7 +2117,7 @@
         "luminanceThreshold": "Contrast threshold",
         "jsonHint": "Edit or paste a Mantine theme object. Omitted settings inherit the starting preset. JavaScript and external resources are not supported.",
         "invalidJson": "Enter valid JSON.",
-        "tooLong": "Theme JSON must be 32 KB or less.",
+        "tooLong": "Theme bundle exceeds 48 KB",
         "copyJson": "Copy JSON",
         "copied": "Copied",
         "discardJson": "Discard JSON edits",
@@ -2166,14 +2166,15 @@
         "responsive": "Responsive",
         "tablet": "Tablet",
         "mobile": "Mobile",
-        "includeCustomCss": "Include server custom CSS",
+        "includeCustomCss": "Theme CSS",
         "groups": {
           "layout": "Layout & spacing",
           "typography": "Typography",
           "colors": "Colors & contrast",
           "surfaces": "Surfaces & components",
           "overlays": "Modals & drawers",
-          "accessibility": "Motion & accessibility"
+          "accessibility": "Motion & accessibility",
+          "css": "Custom CSS"
         },
         "controls": {
           "defaultRadius": "Default roundness",
@@ -2220,9 +2221,12 @@
           "headerBackground": "Header background",
           "respectReducedMotion": "Respect reduced motion",
           "focusRing": "Focus ring",
-          "cursorType": "Cursor"
+          "cursorType": "Cursor",
+          "customCss": "Custom CSS"
         }
-      }
+      },
+      "instanceDefault": "Instance default",
+      "useInstanceDefault": "Use instance default for {control}"
     }
   },
   "section": {
@@ -7126,7 +7130,7 @@
             }
           },
           "branding": {
-            "title": "Instance branding",
+            "title": "Appearance",
             "groups": {
               "identity": "Identity",
               "appearance": "Appearance",

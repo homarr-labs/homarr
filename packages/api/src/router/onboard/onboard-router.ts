@@ -382,12 +382,12 @@ export const onboardRouter = createTRPCRouter({
               backgroundImageAttachment: "fixed",
               backgroundImageRepeat: "no-repeat",
               backgroundImageSize: "cover",
-              primaryColor: input.board.primaryColor,
-              secondaryColor: input.board.secondaryColor,
+              primaryColor: null,
+              secondaryColor: null,
               opacity: 100,
               customCss: null,
               iconColor: null,
-              itemRadius: input.board.itemRadius,
+              itemRadius: null,
               disableStatus: false,
               sections: [],
               layouts: pendingLayouts,
@@ -985,14 +985,17 @@ export const onboardRouter = createTRPCRouter({
         }
       }
 
-      const [currentAppearance, currentCulture, currentAnalytics, currentBoardSettings] = await Promise.all([
-        getServerSettingByKeyAsync(ctx.db, "appearance"),
-        getServerSettingByKeyAsync(ctx.db, "culture"),
-        getServerSettingByKeyAsync(ctx.db, "analytics"),
-        getServerSettingByKeyAsync(ctx.db, "board"),
-      ]);
+      const [currentAppearance, currentCulture, currentAnalytics, currentBoardSettings, currentBranding] =
+        await Promise.all([
+          getServerSettingByKeyAsync(ctx.db, "appearance"),
+          getServerSettingByKeyAsync(ctx.db, "culture"),
+          getServerSettingByKeyAsync(ctx.db, "analytics"),
+          getServerSettingByKeyAsync(ctx.db, "board"),
+          getServerSettingByKeyAsync(ctx.db, "branding"),
+        ]);
       const settingValues = {
         appearance: SuperJSON.stringify({ ...currentAppearance, defaultColorScheme: input.server.defaultColorScheme }),
+        branding: SuperJSON.stringify({ ...currentBranding, themeId: input.server.themeId }),
         culture: SuperJSON.stringify({ ...currentCulture, defaultLocale: input.server.defaultLocale }),
         analytics: SuperJSON.stringify({
           ...currentAnalytics,
@@ -1038,9 +1041,6 @@ export const onboardRouter = createTRPCRouter({
             }
             const boardValues = {
               name: targetBoardName,
-              primaryColor: input.board.primaryColor,
-              secondaryColor: input.board.secondaryColor,
-              itemRadius: input.board.itemRadius,
             };
             if (pendingBoardRow) {
               await transaction.insert(schema.boards).values({ ...pendingBoardRow, ...boardValues });
@@ -1128,9 +1128,6 @@ export const onboardRouter = createTRPCRouter({
             }
             const boardValues = {
               name: targetBoardName,
-              primaryColor: input.board.primaryColor,
-              secondaryColor: input.board.secondaryColor,
-              itemRadius: input.board.itemRadius,
             };
             if (pendingBoardRow) {
               transaction

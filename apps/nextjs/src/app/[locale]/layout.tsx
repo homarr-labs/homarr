@@ -1,3 +1,4 @@
+import { getBrandingAppearance, getThemeCustomCss } from "~/theme/branding";
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono, Inter } from "next/font/google";
 
@@ -94,7 +95,7 @@ export const generateMetadata = async (): Promise<Metadata> => {
 
 export const generateViewport = async (): Promise<Viewport> => {
   const serverSettings = await getRscServerSettingsAsync();
-  return { themeColor: serverSettings.branding.primaryColor };
+  return { themeColor: getBrandingAppearance(serverSettings.branding).primaryColor };
 };
 
 export default async function Layout(props: {
@@ -205,7 +206,7 @@ export default async function Layout(props: {
         ) : null}
         <SearchEngineOptimization />
         <CrowdinLiveTranslation locale={locale} />
-        <style data-homarr-global-custom-css>{serverSettings.branding.customCss}</style>
+        <style data-homarr-global-custom-css>{getThemeCustomCss(serverSettings.branding)}</style>
       </head>
       <body suppressHydrationWarning>
         <ViewportHint />

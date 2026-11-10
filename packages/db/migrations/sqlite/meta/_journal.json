@@ -372,6 +372,13 @@
       "when": 1793804202724,
       "tag": "0052_add_api_key_read_only",
       "breakpoints": true
+    },
+    {
+      "idx": 53,
+      "version": "6",
+      "when": 1794297740661,
+      "tag": "0053_board_theme_inheritance",
+      "breakpoints": true
     }
   ]
 }

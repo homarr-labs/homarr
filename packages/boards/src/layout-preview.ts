@@ -32,7 +32,7 @@ interface BoardPreviewSectionLayout {
 }
 
 export interface BoardPreviewData {
-  primaryColor?: string;
+  primaryColor?: string | null;
   layouts: readonly BoardPreviewLayout[];
   sections: readonly BoardPreviewSection[];
   items: readonly {

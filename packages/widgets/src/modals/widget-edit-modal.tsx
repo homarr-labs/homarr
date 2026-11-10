@@ -330,7 +330,7 @@ const WidgetEditPreview = ({
               kind={kind}
               advancedOptions={state.advancedOptions}
               opacity={previewOpacity}
-              radius={board?.itemRadius}
+              radius={board?.itemRadius ?? undefined}
               p={0}
               data-grid-item-content
               style={{
@@ -342,7 +342,7 @@ const WidgetEditPreview = ({
               <WidgetTitleBadge
                 advancedOptions={state.advancedOptions}
                 opacity={previewOpacity}
-                radius={board?.itemRadius}
+                radius={board?.itemRadius ?? undefined}
               />
               <QueryErrorResetBoundary>
                 {({ reset }) => (

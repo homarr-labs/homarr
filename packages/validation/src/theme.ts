@@ -6,7 +6,8 @@ import { z } from "zod/v4";
 export const themeSelectionSchema = z.enum([...themeIds, "custom"]);
 export type ThemeSelectionId = z.infer<typeof themeSelectionSchema>;
 
-export const customThemeMaxLength = 32_768;
+export const customThemeMaxLength = 49_152;
+export const themeCustomCssSchema = z.string().max(16_384);
 
 const safeKey = z
   .string()
@@ -319,6 +320,7 @@ export const customThemeSchema = z
     theme: customMantineThemeSchema,
     light: paletteSchema.optional(),
     dark: paletteSchema.optional(),
+    customCss: themeCustomCssSchema.optional(),
   })
   .superRefine((value, context) => {
     const primary = value.theme.primaryColor;
@@ -334,8 +336,12 @@ export const customThemeSchema = z
         message: "Choose a color defined by Mantine or in colors",
       });
     }
+    const { customCss: _css, ...configuration } = value;
+    if (JSON.stringify(configuration).length > 32_768) {
+      context.addIssue({ code: "custom", message: "Theme configuration exceeds 32 KB" });
+    }
     if (JSON.stringify(value).length > customThemeMaxLength) {
-      context.addIssue({ code: "custom", message: "Theme exceeds 32 KB" });
+      context.addIssue({ code: "custom", message: "Theme bundle exceeds 48 KB" });
     }
   });
 

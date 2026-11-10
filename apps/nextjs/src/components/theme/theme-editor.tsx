@@ -22,7 +22,6 @@ import {
   Select,
   Stack,
   Switch,
-  Text,
   Textarea,
   TextInput,
   useComputedColorScheme,
@@ -47,6 +46,9 @@ import {
   updateThemeDraft,
 } from "@homarr/validation/theme-controls";
 
+import { AdvancedSettings } from "~/components/manage/advanced-settings";
+import { CustomCssEditor } from "~/components/custom-css/custom-css-editor";
+import { WorkshopCssImportButton } from "~/components/workshop/workshop-css-import-button";
 import { useUnsavedChangesGuard } from "~/components/manage/use-unsaved-changes-guard";
 import type { ThemeSelection } from "~/theme/branding";
 import { createAppearanceTheme, resolveActiveTheme } from "~/theme/branding";
@@ -94,7 +96,7 @@ export const ThemeEditor = ({
   const scheme = schemeOverride ?? appScheme;
   const [width, setWidth] = useState<string | null>("100%");
   const [boardName, setBoardName] = useState<string | null>(boards[0]?.name ?? null);
-  const [includeCustomCss, setIncludeCustomCss] = useState(false);
+  const [includeCustomCss, setIncludeCustomCss] = useState(true);
   const draftRevision = useRef(0);
   const mutation = clientApi.theme.update.useMutation();
   const dirty = JSON.stringify(selection) !== JSON.stringify(saved);
@@ -152,8 +154,8 @@ export const ThemeEditor = ({
         border: effective.colors.gray[4],
         text: effective.black,
         dimmed: effective.colors.gray[6],
-        primary: data.branding.primaryColor,
-        secondary: data.branding.secondaryColor,
+        primary: "#fa5252",
+        secondary: "#fd7e14",
         ...getThemePalette(active.preset, "light", active.customTheme),
       },
       dark: {
@@ -163,12 +165,12 @@ export const ThemeEditor = ({
         border: effective.colors.dark[4],
         text: effective.colors.dark[0],
         dimmed: effective.colors.dark[2],
-        primary: data.branding.primaryColor,
-        secondary: data.branding.secondaryColor,
+        primary: "#fa5252",
+        secondary: "#fd7e14",
         ...getThemePalette(active.preset, "dark", active.customTheme),
       },
     };
-  }, [effective, active.preset, active.customTheme, data.branding]);
+  }, [effective, active.preset, active.customTheme]);
 
   const updateSelection = (next: ThemeSelection) => {
     draftRevision.current += 1;
@@ -244,10 +246,7 @@ export const ThemeEditor = ({
     let label = t(`studio.controls.${control.labelKey}` as never);
     if (control.component) label = `${control.component} · ${label}`;
     if (control.suffix && !["light", "dark"].includes(control.suffix)) label = `${label} ${control.suffix}`;
-    const locked =
-      data.branding.lockPrimaryColor &&
-      (/^(light|dark)\.primary$/u.test(control.path) || control.path.startsWith("theme.primaryShade"));
-    const disabled = locked || Boolean(jsonError);
+    const disabled = Boolean(jsonError);
     const baseProps = {
       label,
       name: control.path,
@@ -308,6 +307,20 @@ export const ThemeEditor = ({
       updateControl(control.path, next || null);
     };
     let input;
+    if (control.path === "customCss") {
+      return (
+        <CustomCssEditor
+          key={control.path}
+          id="theme-custom-css"
+          label={label}
+          value={document.customCss ?? ""}
+          onChange={(css) => {
+            if (!disabled) updateControl("customCss", css);
+          }}
+          actions={<WorkshopCssImportButton size="compact-xs" onImport={(css) => updateControl("customCss", css)} />}
+        />
+      );
+    }
     if (control.type === "number") {
       let number: number | string = "";
       if (typeof value === "number") number = value;
@@ -456,101 +469,114 @@ export const ThemeEditor = ({
                   updateSelection({ themeId, customTheme });
                 }}
               />
-              <TextInput
-                label={t("studio.searchControls")}
-                value={search}
-                onChange={(event) => setSearch(event.currentTarget.value)}
+              <ThemeLayoutControls
+                document={document}
+                effective={effective}
+                disabled={Boolean(jsonError)}
+                onChange={updateControls}
+                renderControl={renderControl}
               />
-              {data.branding.lockPrimaryColor && (
-                <Text size="xs" c="dimmed">
-                  {t("editor.lockedPrimary")}
-                </Text>
-              )}
-              {search ? (
-                <Stack gap="sm">{visibleControls.map(renderControl)}</Stack>
-              ) : (
-                <Accordion
-                  value={panel}
-                  onChange={setPanel}
-                  variant="separated"
-                  mah="65vh"
-                  style={{ overflowY: "auto" }}
-                >
-                  {themeControlGroups.map((group) => (
-                    <Accordion.Item key={group} value={group}>
-                      <Accordion.Control>{t(`studio.groups.${group}`)}</Accordion.Control>
+              {themeControls
+                .filter((control) =>
+                  [`${scheme}.primary`, `${scheme}.secondary`, "theme.fontFamily", "theme.autoContrast"].includes(
+                    control.path,
+                  ),
+                )
+                .map(renderControl)}
+              <AdvancedSettings>
+                <TextInput
+                  label={t("studio.searchControls")}
+                  value={search}
+                  onChange={(event) => setSearch(event.currentTarget.value)}
+                  mb="md"
+                />
+                {search ? (
+                  <Stack gap="sm">{visibleControls.map(renderControl)}</Stack>
+                ) : (
+                  <Accordion
+                    value={panel}
+                    onChange={setPanel}
+                    variant="separated"
+                    mah="65vh"
+                    style={{ overflowY: "auto" }}
+                  >
+                    {themeControlGroups.map((group) => (
+                      <Accordion.Item key={group} value={group}>
+                        <Accordion.Control>{t(`studio.groups.${group}`)}</Accordion.Control>
+                        <Accordion.Panel>
+                          {panel === group && (
+                            <Stack gap="sm">
+                              {group === "surfaces" && (
+                                <Select
+                                  label={t("studio.component")}
+                                  data={[
+                                    ...new Set(
+                                      themeControls
+                                        .filter((item) => item.group === "surfaces")
+                                        .flatMap((item) => (item.component ? [item.component] : [])),
+                                    ),
+                                  ]}
+                                  value={component}
+                                  onChange={setComponent}
+                                  allowDeselect={false}
+                                />
+                              )}
+                              {group === "layout" && (
+                                <ThemeLayoutControls
+                                  advanced
+                                  document={document}
+                                  effective={effective}
+                                  disabled={Boolean(jsonError)}
+                                  onChange={updateControls}
+                                  renderControl={renderControl}
+                                />
+                              )}
+                              {group !== "layout" &&
+                                visibleControls.filter((item) => item.group === group).map(renderControl)}
+                            </Stack>
+                          )}
+                        </Accordion.Panel>
+                      </Accordion.Item>
+                    ))}
+                    <Accordion.Item value="json">
+                      <Accordion.Control>{t("editor.json")}</Accordion.Control>
                       <Accordion.Panel>
-                        {panel === group && (
-                          <Stack gap="sm">
-                            {group === "surfaces" && (
-                              <Select
-                                label={t("studio.component")}
-                                data={[
-                                  ...new Set(
-                                    themeControls
-                                      .filter((item) => item.group === "surfaces")
-                                      .flatMap((item) => (item.component ? [item.component] : [])),
-                                  ),
-                                ]}
-                                value={component}
-                                onChange={setComponent}
-                                allowDeselect={false}
-                              />
+                        {panel === "json" && (
+                          <Stack>
+                            <Textarea
+                              label={t("editor.json")}
+                              value={jsonText ?? JSON.stringify(document, null, 2)}
+                              onChange={(event) => updateJson(event.currentTarget.value)}
+                              error={Boolean(jsonError)}
+                              spellCheck={false}
+                              rows={20}
+                              styles={{ input: { fontFamily: "var(--mantine-font-family-monospace)" } }}
+                            />
+                            <CopyButton value={JSON.stringify(document, null, 2)}>
+                              {({ copied, copy }) => (
+                                <Button variant="default" onClick={copy}>
+                                  {t(copied ? "editor.copied" : "editor.copyJson")}
+                                </Button>
+                              )}
+                            </CopyButton>
+                            {jsonError && (
+                              <Button
+                                variant="subtle"
+                                onClick={() => {
+                                  setJsonText(null);
+                                  setJsonError(null);
+                                }}
+                              >
+                                {t("editor.discardJson")}
+                              </Button>
                             )}
-                            {group === "layout" && (
-                              <ThemeLayoutControls
-                                document={document}
-                                effective={effective}
-                                disabled={Boolean(jsonError)}
-                                onChange={updateControls}
-                                renderControl={renderControl}
-                              />
-                            )}
-                            {group !== "layout" &&
-                              visibleControls.filter((item) => item.group === group).map(renderControl)}
                           </Stack>
                         )}
                       </Accordion.Panel>
                     </Accordion.Item>
-                  ))}
-                  <Accordion.Item value="json">
-                    <Accordion.Control>{t("editor.json")}</Accordion.Control>
-                    <Accordion.Panel>
-                      {panel === "json" && (
-                        <Stack>
-                          <Textarea
-                            label={t("editor.json")}
-                            value={jsonText ?? JSON.stringify(document, null, 2)}
-                            onChange={(event) => updateJson(event.currentTarget.value)}
-                            error={Boolean(jsonError)}
-                            spellCheck={false}
-                            rows={20}
-                            styles={{ input: { fontFamily: "var(--mantine-font-family-monospace)" } }}
-                          />
-                          <CopyButton value={JSON.stringify(document, null, 2)}>
-                            {({ copied, copy }) => (
-                              <Button variant="default" onClick={copy}>
-                                {t(copied ? "editor.copied" : "editor.copyJson")}
-                              </Button>
-                            )}
-                          </CopyButton>
-                          {jsonError && (
-                            <Button
-                              variant="subtle"
-                              onClick={() => {
-                                setJsonText(null);
-                                setJsonError(null);
-                              }}
-                            >
-                              {t("editor.discardJson")}
-                            </Button>
-                          )}
-                        </Stack>
-                      )}
-                    </Accordion.Panel>
-                  </Accordion.Item>
-                </Accordion>
-              )}
+                  </Accordion>
+                )}
+              </AdvancedSettings>
             </Stack>
           </Paper>
         </Grid.Col>

@@ -67,7 +67,7 @@ const BoardItemCard = ({ item, innerRef, children }: BoardItemCardProps) => {
       w="100%"
       h="100%"
       data-grid-item-content
-      radius={board.itemRadius}
+      radius={board.itemRadius ?? "default"}
       p={0}
     >
       {children}
@@ -342,7 +342,7 @@ const ResolvedBoardItemContent = ({
       aria-label={isPreview ? advancedViewLabel : undefined}
       data-advanced-focus-surface={isPreview || undefined}
       data-grid-item-content
-      radius={board.itemRadius}
+      radius={board.itemRadius ?? "default"}
       p={isAdvanced ? undefined : 0}
       h={isManual ? "100%" : isAdvanced ? undefined : "100%"}
       w={isManual ? "100%" : isAdvanced ? undefined : "100%"}
@@ -444,7 +444,7 @@ const ResolvedBoardItemContent = ({
               rect={advancedRect}
               closePosition={closePosition}
               sourceRect={activeFocus.sourceRect}
-              radius={board.itemRadius}
+              radius={board.itemRadius ?? "default"}
               contentRef={setManualSurface}
               onClose={() => close()}
             >
@@ -457,7 +457,7 @@ const ResolvedBoardItemContent = ({
         <WidgetTitleBadge
           advancedOptions={item.advancedOptions}
           opacity={board.opacity / 100}
-          radius={board.itemRadius}
+          radius={board.itemRadius ?? "default"}
         />
       )}
     </>

@@ -168,7 +168,7 @@ interface SystemCardProps {
   tCommon: ReturnType<typeof useI18n<"common">>;
   size: SizeConfig;
   maxMetrics: number;
-  itemRadius: MantineSize;
+  itemRadius: MantineSize | "default";
   integrationName: string;
   isAdvanced: boolean;
   onClick?: () => void;
@@ -534,7 +534,7 @@ export default function BeszelSystemGridWidget({
               tCommon={tCommon}
               size={size}
               maxMetrics={maxMetrics}
-              itemRadius={board.itemRadius}
+              itemRadius={board.itemRadius ?? "default"}
               integrationName={integrationName}
               isAdvanced={isAdvanced}
               onClick={handleClick}

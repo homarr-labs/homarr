@@ -75,7 +75,7 @@ export const themeRouter = createTRPCRouter({
       mcp: {
         enabled: true,
         description:
-          "Save the global server theme for all users. Requires admin permission. Use changes with paths from theme_getControls to edit individual settings; changes merge into the active theme and select Custom. With changes, themeId chooses the starting preset. value null resets that setting. customTheme can replace the full validated document. Without changes, themeId selects a preset or saved custom. Omitted theme data is preserved. Read theme_get first. Does not execute CSS resources, JavaScript, or component handlers.",
+          "Save the global server theme for all users. Requires admin permission. Use changes with paths from theme_getControls to edit individual settings; changes merge into the active theme and select Custom. With changes, themeId chooses the starting preset. value null resets that setting. customTheme can replace the full validated document. Without changes, themeId selects a preset or saved custom. Omitted theme data is preserved. Read theme_get first. customTheme.customCss includes up to 16 KB of global CSS; selecting a preset replaces its active CSS too. CSS applies to the entire instance and can load external resources. Does not allow JavaScript callbacks or component handlers.",
       },
     })
     .input(

@@ -5,15 +5,19 @@ import { Box, Button, Group, Paper, SimpleGrid, Stack, Text, Title } from "@mant
 import { IconAdjustments, IconArrowRight } from "@tabler/icons-react";
 
 import { themeNames } from "@homarr/definitions";
+import { ThemeSelect } from "@homarr/ui/theme-select";
+import type { ThemeSelectionId } from "@homarr/validation/theme";
 import { useI18n } from "@homarr/translation/client";
 
 import type { ThemeSelection } from "~/theme/branding";
 
 interface ThemeSettingsProps extends Pick<ThemeSelection, "themeId"> {
   editorHref: string;
+  hasCustomTheme: boolean;
+  onChange: (themeId: ThemeSelectionId) => void;
 }
 
-export const ThemeSettings = ({ themeId, editorHref }: ThemeSettingsProps) => {
+export const ThemeSettings = ({ themeId, editorHref, hasCustomTheme, onChange }: ThemeSettingsProps) => {
   const t = useI18n("common.customTheme");
   let label = themeNames.default;
   if (themeId === "custom") label = t("custom");
@@ -30,6 +34,7 @@ export const ThemeSettings = ({ themeId, editorHref }: ThemeSettingsProps) => {
               {label}
             </Title>
           </Stack>
+          <ThemeSelect value={themeId} hasCustomTheme={hasCustomTheme} onChange={onChange} />
           <Button
             component={Link}
             href={editorHref}

@@ -11,7 +11,13 @@ import {
 
 import type { ServerSettings } from "@homarr/server-settings";
 import { theme as homarrTheme } from "@homarr/ui";
-import { createPresetTheme, createThemeColorScale, createThemeVariablesResolver } from "@homarr/ui/themes";
+import {
+  createPresetTheme,
+  createThemeColorScale,
+  createThemeVariablesResolver,
+  getThemePalette,
+  getThemePreset,
+} from "@homarr/ui/themes";
 import type { CustomTheme, ThemeSelection } from "@homarr/validation/theme";
 import { resolveThemeSelection } from "@homarr/validation/theme";
 
@@ -38,11 +44,8 @@ export const generateColorScale = (hex: string) => {
 
 type Branding = ServerSettings["branding"];
 
-export const resolveActiveTheme = (branding: Branding, selection?: ThemeSelection) => {
-  let lockedPrimaryColor: string | undefined;
-  if (branding.lockPrimaryColor) lockedPrimaryColor = branding.primaryColor;
-  return { ...resolveThemeSelection(branding, selection), lockedPrimaryColor };
-};
+export const resolveActiveTheme = (branding: Branding, selection?: ThemeSelection) =>
+  resolveThemeSelection(branding, selection);
 
 const radiusDefaults = (radius: MantineRadius): MantineThemeOverride => ({
   defaultRadius: radius,
@@ -54,21 +57,15 @@ const radiusDefaults = (radius: MantineRadius): MantineThemeOverride => ({
   },
 });
 
-export const createDefaultAccentColors = (
-  branding: Pick<Branding, "primaryColor" | "secondaryColor" | "lockPrimaryColor">,
-  customTheme?: CustomTheme | null,
-) => {
+export const createDefaultAccentColors = (customTheme?: CustomTheme | null) => {
   const colors: Record<string, MantineColorsTuple> = {};
   for (const key of ["primary", "secondary"] as const) {
     const name = `${key}Color` as const;
-    const fallback = branding[name];
+    let fallback = "#fa5252";
+    if (key === "secondary") fallback = "#fd7e14";
     const light = customTheme?.light?.[key];
     const dark = customTheme?.dark?.[key];
     const raw = customTheme?.theme.colors?.[name];
-    if (key === "primary" && branding.lockPrimaryColor) {
-      colors[name] = generateColorScale(fallback);
-      continue;
-    }
     if (raw || (!light && !dark)) {
       colors[name] = raw ?? generateColorScale(fallback);
       continue;
@@ -88,22 +85,16 @@ export const createDefaultAccentColors = (
 };
 
 export const createAppearanceTheme = (branding: Branding, selection?: ThemeSelection) => {
-  const { preset, customTheme, lockedPrimaryColor } = resolveActiveTheme(branding, selection);
+  const { preset, customTheme } = resolveActiveTheme(branding, selection);
   const base = createTheme({
-    colors: createDefaultAccentColors(branding, preset === "default" ? customTheme : null),
+    colors: createDefaultAccentColors(preset === "default" ? customTheme : null),
     primaryColor: "primaryColor",
   });
 
-  let theme = mergeThemeOverrides(
-    homarrTheme,
-    base,
-    createPresetTheme(preset, lockedPrimaryColor, customTheme),
-    radiusDefaults(branding.defaultRadius),
-  );
+  let theme = mergeThemeOverrides(homarrTheme, base, createPresetTheme(preset, undefined, customTheme));
 
   if (customTheme) {
     const override = customTheme.theme;
-    const inheritedPrimaryShade = theme.primaryShade ?? DEFAULT_THEME.primaryShade;
     const components: NonNullable<MantineThemeOverride["components"]> = {};
     for (const [name, component] of Object.entries(override.components ?? {})) {
       const inheritedStyles = theme.components?.[name]?.styles;
@@ -152,20 +143,23 @@ export const createAppearanceTheme = (branding: Branding, selection?: ThemeSelec
     if (override.defaultRadius !== undefined)
       theme = mergeThemeOverrides(theme, radiusDefaults(override.defaultRadius));
     theme = mergeThemeOverrides(theme, override, { components });
-    if (lockedPrimaryColor) {
-      const { primaryColor, presetPrimaryLight, presetPrimaryDark } =
-        createPresetTheme(preset, lockedPrimaryColor).colors ?? {};
-      theme = mergeThemeOverrides(theme, {
-        primaryColor: "primaryColor",
-        primaryShade: inheritedPrimaryShade,
-        colors: {
-          primaryColor: primaryColor ?? generateColorScale(lockedPrimaryColor),
-          ...(presetPrimaryLight && { presetPrimaryLight }),
-          ...(presetPrimaryDark && { presetPrimaryDark }),
-        },
-      });
-    }
   }
 
-  return { theme, cssVariablesResolver: createThemeVariablesResolver(preset, lockedPrimaryColor, customTheme) };
+  return { theme, cssVariablesResolver: createThemeVariablesResolver(preset, undefined, customTheme) };
 };
+
+export const getBrandingAppearance = (branding: Branding) => {
+  const active = resolveActiveTheme(branding);
+  const palette = getThemePalette(active.preset, "light", active.customTheme);
+  const override = active.customTheme?.theme;
+  let primaryColor = palette.primary ?? "#fa5252";
+  let secondaryColor = palette.secondary ?? "#fd7e14";
+  const primary = override?.colors?.[override.primaryColor ?? "primaryColor"];
+  const secondary = override?.colors?.secondaryColor;
+  if (primary) primaryColor = primary[6];
+  if (secondary) secondaryColor = secondary[6];
+  const radius = override?.defaultRadius ?? getThemePreset(active.preset)?.theme?.defaultRadius ?? "md";
+  return { primaryColor, secondaryColor, radius };
+};
+
+export const getThemeCustomCss = (branding: Branding) => resolveActiveTheme(branding).customTheme?.customCss ?? "";

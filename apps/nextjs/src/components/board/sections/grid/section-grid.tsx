@@ -347,7 +347,7 @@ export const SectionGrid = ({
             width: logicalWidth,
             marginTop: nestedHeaderInset,
             height: `var(--board-grid-drag-height, ${viewportHeight}px)`,
-            "--board-item-radius": `var(--mantine-radius-${board.itemRadius})`,
+            "--board-item-radius": `var(--mantine-radius-${board.itemRadius ?? "default"})`,
             "--board-grid-content-scale": containerContentScale,
             "--board-grid-row-scale": rowScale,
             "--board-container-inset": `${CONTAINER_CARD_INSET / effectiveContentScale}px`,

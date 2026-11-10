@@ -299,12 +299,12 @@ export const boards = pgTable("board", {
     .notNull(),
   backgroundImageRepeat: text().$type<BackgroundImageRepeat>().default(backgroundImageRepeats.defaultValue).notNull(),
   backgroundImageSize: text().$type<BackgroundImageSize>().default(backgroundImageSizes.defaultValue).notNull(),
-  primaryColor: text().default("#fa5252").notNull(),
-  secondaryColor: text().default("#fd7e14").notNull(),
+  primaryColor: text(),
+  secondaryColor: text(),
   opacity: integer().default(100).notNull(),
   customCss: text(),
   iconColor: text(),
-  itemRadius: text().$type<MantineSize>().default("lg").notNull(),
+  itemRadius: text().$type<MantineSize>(),
   disableStatus: boolean().default(false).notNull(),
 });
 

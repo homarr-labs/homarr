@@ -59,14 +59,12 @@ const completionInput = (boardId: string, name = "Configured-board"): Onboarding
   server: {
     defaultLocale: "en" as const,
     defaultColorScheme: "dark" as const,
+    themeId: "default",
     analyticsEnabled: false,
   },
   board: {
     id: boardId,
     name,
-    primaryColor: "#228BE6",
-    secondaryColor: "#15AABF",
-    itemRadius: "md" as const,
     layoutPreset: "balanced" as const,
     leftSidebar: false,
     rightSidebar: false,
@@ -207,9 +205,9 @@ describe("onboard.completeSetup", () => {
     });
     expect(await db.query.boards.findFirst({ where: eq(boards.id, "target") })).toMatchObject({
       name: "Configured-board",
-      primaryColor: "#228BE6",
-      secondaryColor: "#15AABF",
-      itemRadius: "md",
+      primaryColor: "#FA5252",
+      secondaryColor: "#FD7E14",
+      itemRadius: null,
     });
     expect(await db.query.boards.findFirst({ where: eq(boards.id, "other") })).toMatchObject({ name: "other" });
     expect(await db.query.items.findMany()).toEqual([
@@ -371,9 +369,9 @@ describe("onboard.completeSetup", () => {
       expect.objectContaining({
         id: result.boardId,
         name: "Recovered-board",
-        primaryColor: "#228BE6",
-        secondaryColor: "#15AABF",
-        itemRadius: "md",
+        primaryColor: null,
+        secondaryColor: null,
+        itemRadius: null,
       }),
     ]);
     expect(await db.query.layouts.findMany({ where: eq(layouts.boardId, result.boardId) })).toEqual(

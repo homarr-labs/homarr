@@ -2,7 +2,15 @@ import { z } from "zod/v4";
 
 import type { CustomTheme } from "./theme";
 
-export const themeControlGroups = ["layout", "typography", "colors", "surfaces", "overlays", "accessibility"] as const;
+export const themeControlGroups = [
+  "layout",
+  "typography",
+  "colors",
+  "surfaces",
+  "overlays",
+  "accessibility",
+  "css",
+] as const;
 const sizes = ["xs", "sm", "md", "lg", "xl"] as const;
 
 export interface ThemeControl {
@@ -19,6 +27,7 @@ export interface ThemeControl {
   step?: number;
   options?: string[];
   defaultValue?: string | number | boolean;
+  maxLength?: number;
 }
 
 const control = (
@@ -30,6 +39,7 @@ const control = (
 ): ThemeControl => ({ path, group, labelKey, label, type: "text", ...extra });
 
 export const themeControls: ThemeControl[] = [
+  control("customCss", "css", "customCss", "Custom CSS", { maxLength: 16_384 }),
   control("theme.defaultRadius", "layout", "defaultRadius", "Default roundness", {
     type: "length",
     options: ["0", ...sizes],
@@ -314,10 +324,15 @@ export const themeControls: ThemeControl[] = [
 ];
 
 const controlPathSchema = z.enum(themeControls.map(({ path }) => path) as [string, ...string[]]);
-export const themeControlChangeSchema = z.strictObject({
-  path: controlPathSchema.describe("A control path returned by theme_getControls. Use null to reset this override."),
-  value: z.union([z.string().max(300), z.number().finite(), z.boolean(), z.null()]),
-});
+export const themeControlChangeSchema = z
+  .strictObject({
+    path: controlPathSchema.describe("A control path returned by theme_getControls. Use null to reset this override."),
+    value: z.union([z.string().max(16_384), z.number().finite(), z.boolean(), z.null()]),
+  })
+  .refine(
+    (change) => change.path === "customCss" || typeof change.value !== "string" || change.value.length <= 300,
+    "Control value exceeds 300 characters",
+  );
 
 export const getThemeControlValue = (value: unknown, path: string): unknown => {
   let current = value;

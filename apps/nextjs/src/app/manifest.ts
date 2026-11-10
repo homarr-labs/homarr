@@ -2,6 +2,8 @@ import type { MetadataRoute } from "next";
 
 import { getRscServerSettingsAsync } from "@homarr/api/server-settings-server";
 
+import { getBrandingAppearance } from "~/theme/branding";
+
 export const dynamic = "force-dynamic";
 
 export default async function manifest(): Promise<MetadataRoute.Manifest> {
@@ -53,7 +55,7 @@ export default async function manifest(): Promise<MetadataRoute.Manifest> {
     start_url: "/",
     display: "standalone",
     background_color: "#fff",
-    theme_color: branding.primaryColor,
+    theme_color: getBrandingAppearance(branding).primaryColor,
     icons,
   };
 }

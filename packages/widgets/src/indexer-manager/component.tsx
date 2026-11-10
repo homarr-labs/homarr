@@ -148,7 +148,7 @@ export default function IndexerManagerWidget({
                 actionTargetClasses.root,
               )}
               size="sm"
-              radius={board.itemRadius}
+              radius={board.itemRadius ?? undefined}
               variant="light"
               color={testAllError ? "red" : undefined}
               loading={isPending}
@@ -168,7 +168,7 @@ export default function IndexerManagerWidget({
         className={combineClasses("indexer-manager-list-container", classes.card, isAdvanced && classes.advancedCard)}
         w="100%"
         p="xs"
-        radius={board.itemRadius}
+        radius={board.itemRadius ?? undefined}
         flex={1}
       >
         {isInitialPending ? (
@@ -252,7 +252,7 @@ export default function IndexerManagerWidget({
           className="indexer-manager-test-button"
           w="100%"
           size="xs"
-          radius={board.itemRadius}
+          radius={board.itemRadius ?? undefined}
           variant="light"
           color={testAllError ? "red" : undefined}
           leftSection={<IconTestPipe style={iconSizes.md} />}

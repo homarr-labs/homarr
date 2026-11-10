@@ -169,7 +169,7 @@ export default function DnsHoleControlsWidget({
               variant="light"
               color="green"
               bd={0}
-              radius={board.itemRadius}
+              radius={board.itemRadius ?? undefined}
               flex={1}
             >
               <IconPlayerPlay className="dns-hole-controls-enable-all-icon" size="var(--mantine-font-size-md)" />
@@ -188,7 +188,7 @@ export default function DnsHoleControlsWidget({
                   variant="light"
                   color="yellow"
                   bd={0}
-                  radius={board.itemRadius}
+                  radius={board.itemRadius ?? undefined}
                   flex={1}
                   onClick={onClick}
                 >
@@ -211,7 +211,7 @@ export default function DnsHoleControlsWidget({
               variant="light"
               color="red"
               bd={0}
-              radius={board.itemRadius}
+              radius={board.itemRadius ?? undefined}
               flex={1}
             >
               <IconPlayerStop className="dns-hole-controls-disable-all-icon" size="var(--mantine-font-size-md)" />
@@ -310,7 +310,7 @@ const ControlsCard: React.FC<ControlsCardProps> = ({
         key={data.integration.id}
         p="sm"
         py={8}
-        radius={board.itemRadius}
+        radius={board.itemRadius ?? undefined}
       >
         <Flex className="dns-hole-controls-item-container" gap="md" align="center" direction="row" w="100%">
           {layout === "md" && (
@@ -449,7 +449,7 @@ const ControlsCard: React.FC<ControlsCardProps> = ({
                   disabled={!controlEnabled || !isEnabled}
                   color="yellow"
                   size={30}
-                  radius={board.itemRadius}
+                  radius={board.itemRadius ?? undefined}
                   bd={0}
                   ms={"auto"}
                   variant="subtle"

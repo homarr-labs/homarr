@@ -6,7 +6,7 @@ import type { MantineColorSchemeManager } from "@mantine/core";
 import { z } from "zod/v4";
 
 import { brandingServerSettingsSchema } from "@homarr/server-settings";
-import { customThemeSchema, themeSelectionSchema } from "@homarr/validation/theme";
+import { customThemeSchema, themeSelectionSchema, resolveThemeSelection } from "@homarr/validation/theme";
 
 export const themePreviewMessageSchema = z.strictObject({
   type: z.literal("homarr-theme-preview"),
@@ -49,13 +49,18 @@ export const ThemePreviewProvider = ({ children }: PropsWithChildren) => {
   useEffect(() => {
     if (!preview) return;
     const style = document.querySelector<HTMLStyleElement>("style[data-homarr-global-custom-css]");
-    if (style?.sheet) style.sheet.disabled = !preview.includeCustomCss;
+    const previousCss = style?.textContent ?? "";
+    if (style) {
+      const active = resolveThemeSelection(preview.branding, preview);
+      style.textContent = "";
+      if (preview.includeCustomCss) style.textContent = active.customTheme?.customCss ?? "";
+    }
     const previousBackground = document.documentElement.style.backgroundColor;
     document.documentElement.style.backgroundColor = "var(--mantine-color-body)";
     document.body.inert = preview.surface === "liveBoard";
     window.parent.postMessage({ type: "homarr-theme-preview-applied" }, window.location.origin);
     return () => {
-      if (style?.sheet) style.sheet.disabled = false;
+      if (style) style.textContent = previousCss;
       document.documentElement.style.backgroundColor = previousBackground;
       document.body.inert = false;
     };
