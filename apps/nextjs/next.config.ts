@@ -73,6 +73,7 @@ const nextConfig: NextConfig = {
     turbopackFileSystemCacheForBuild: true,
     useTypeScriptCli: true,
     webpackBuildWorker: true,
+    webpackMemoryOptimizations: true,
   },
   turbopack: {
     root: path.resolve(import.meta.dirname, "../.."),
