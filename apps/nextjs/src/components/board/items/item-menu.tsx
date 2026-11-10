@@ -125,6 +125,7 @@ const BoardItemMenuInner = ({
             size={24}
             radius="sm"
             className={itemContentClasses.settingsButton}
+            classNames={{ icon: itemContentClasses.settingsButtonIcon }}
             data-menu-open={isMenuOpen || undefined}
             data-board-widget-settings
             aria-label={tItem("menu.label.settingsFor", { name: label })}
