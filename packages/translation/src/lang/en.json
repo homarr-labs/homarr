@@ -1245,6 +1245,20 @@
       "username": "Username",
       "password": "Password",
       "savedPlaceholder": "••••••• (saved, leave empty to keep)"
+    },
+    "workshopUpdate": {
+      "title": "Update Workshop widget",
+      "apply": "Apply update",
+      "available": "Update available",
+      "check": "Check for updates",
+      "description": "Update revision {installed} to {latest}. Your name, board placements and compatible configuration are kept.",
+      "approvePermissions": "I approve the changed requests and source permissions shown above",
+      "pendingDescription": "Your installed revision keeps running until you apply this update.",
+      "overwriteLocalChanges": "Replace my local widget edits with this Workshop revision",
+      "installSeparate": "View code or install a separate copy",
+      "communityWarning": "This revision is marked outdated or has community reports. Review its Workshop page before updating.",
+      "updated": "Workshop widget updated. Existing board placements use the new revision.",
+      "changedBeforeInstall": "The Workshop revision changed. Reload and review it before installing."
     }
   },
   "workshop": {
