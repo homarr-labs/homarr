@@ -1515,6 +1515,27 @@
           "title": "Unbekannter Fehler",
           "description": "Ein unbekannter Fehler ist aufgetreten, öffne die Ursache unten, um mehr Details zu sehen"
         },
+        "frigate": {
+          "title": "",
+          "status": "",
+          "description": {
+            "cookie": "",
+            "profileMismatch": "",
+            "redirect": "",
+            "login": "",
+            "profile": "",
+            "stats": ""
+          }
+        },
+        "openmediavault": {
+          "title": "",
+          "description": {
+            "totpSecretRequired": "",
+            "totpSecretInvalid": "",
+            "totpVerificationFailed": "",
+            "unsupportedChallenge": ""
+          }
+        },
         "parse": {
           "title": "Fehler beim Parsen",
           "description": "Die Antwort konnte nicht analysiert werden. Bitte stellen Sie sicher, dass die URL auf die Basis-URL des Dienstes zeigt."
@@ -1714,6 +1735,11 @@
         "title": "Secret zurücksetzen",
         "message": "Bist du sicher, dass du dieses Secret zurücksetzen möchtest?"
       },
+      "totpNotice": "",
+      "remove": {
+        "title": "",
+        "message": ""
+      },
       "noSecretsRequired": {
         "segmentTitle": "Keine Secrets",
         "text": "Kein Secret für diese Integration erforderlich"
@@ -1794,6 +1820,10 @@
         "wazuhIndexerPassword": {
           "label": "Indexer-Passwort",
           "newLabel": "Neues Indexer-Passwort"
+        },
+        "totpSecret": {
+          "label": "",
+          "newLabel": ""
         }
       }
     },
@@ -1984,6 +2014,15 @@
         "assistant": "Assistent",
         "assistantThinking": "Denken",
         "modifier": "Moderator"
+      }
+    },
+    "markdown": {
+      "alert": {
+        "note": "Notiz",
+        "tip": "",
+        "important": "",
+        "warning": "Warnung",
+        "caution": ""
       }
     },
     "dangerZone": "Gefahrenbereich",
@@ -2335,7 +2374,29 @@
             "tooltip": "Als Tooltip",
             "hidden": "Versteckt"
           }
+        },
+        "dockerContainer": {
+          "label": "",
+          "description": "",
+          "placeholder": "",
+          "disabled": "",
+          "unavailable": ""
         }
+      },
+      "docker": {
+        "action": {
+          "start": "",
+          "stop": ""
+        },
+        "notification": {
+          "startFailed": "",
+          "stopFailed": ""
+        },
+        "switch": {
+          "start": "",
+          "stop": ""
+        },
+        "stopped": ""
       },
       "error": {
         "notFound": {
@@ -2414,6 +2475,10 @@
         "hideHostname": {
           "label": "Hostnamen ausblenden"
         },
+        "showFullUrls": {
+          "label": "",
+          "description": ""
+        },
         "withBorder": {
           "label": "Rahmen anzeigen"
         },
@@ -2436,6 +2501,9 @@
         }
       },
       "empty": "URL oder App in den Widget-Einstellungen hinzufügen",
+      "copyUrl": "URL in Zwischenablage kopieren",
+      "copied": "Kopiert",
+      "copyFailed": "",
       "groups": {
         "label": "Kategorien",
         "placeholder": "Neue Kategorie",
@@ -3535,6 +3603,34 @@
     },
     "coolify": {
       "description": "Übersicht Ihrer Coolify-Instanz mit Servern und Anwendungen",
+      "summary": {
+        "needsAttention": "{count} benötigt Aufmerksamkeit",
+        "inProgress": "",
+        "unknown": "",
+        "healthy": "",
+        "empty": "",
+        "healthyDetail": "",
+        "more": "",
+        "moreInstances": ""
+      },
+      "details": {
+        "tabs": "",
+        "overview": "",
+        "search": "",
+        "serviceApplications": ""
+      },
+      "overview": {
+        "projects": "",
+        "resources": "",
+        "attention": "Benötigt Aufmerksamkeit",
+        "ready": "Bereit",
+        "noProjects": "",
+        "projectsUnavailable": "",
+        "moreProjects": "+{count, plural, one {# more project} other {# more projects}}",
+        "running": "Wird ausgeführt",
+        "resourceCount": "{count, plural, one {# resource} other {# resources}}",
+        "environmentCount": "{count, plural, one {# environment} other {# environments}}"
+      },
       "option": {
         "showServers": {
           "label": "Server anzeigen"
@@ -3566,7 +3662,13 @@
       },
       "source": {
         "url": "Quelle: {url}",
-        "unavailable": ""
+        "unavailable": "",
+        "unavailableCount": "{count, plural, one {# source unavailable} other {# sources unavailable}}"
+      },
+      "kind": {
+        "server": "",
+        "application": "Anwendung",
+        "service": ""
       },
       "instances": {
         "title": "Instanzen"
@@ -3583,6 +3685,7 @@
         "exited": "Beendet",
         "starting": "Start",
         "restarting": "Startet neu",
+        "unhealthy": "Fehlerhaft",
         "unknown": "Unbekannt",
         "online": "Online",
         "offline": "Offline",
@@ -4815,6 +4918,7 @@
           },
           "identifier": {
             "label": "Identifier",
+            "containerPlaceholder": "",
             "placeholder": "Name oder Eigentümer/Name"
           },
           "name": {},
@@ -6623,7 +6727,8 @@
             "documentation": "Dokumentation",
             "submitIssue": "Ein Problem melden",
             "discord": "Community Discord",
-            "sourceCode": "Quellcode"
+            "sourceCode": "Quellcode",
+            "changelog": ""
           }
         },
         "about": "Über",
@@ -6976,6 +7081,10 @@
             "title": "Aussehen",
             "defaultColorScheme": {
               "label": "Standard Farbschema"
+            },
+            "whatsNew": {
+              "label": "",
+              "description": ""
             }
           },
           "branding": {
@@ -8728,6 +8837,12 @@
         "description": ""
       }
     }
+  },
+  "whatsNew": {
+    "title": "",
+    "empty": "",
+    "allReleases": "",
+    "dismiss": ""
   },
   "metadata": {
     "description": "Ein selbst gehostetes Dashboard für den *arr-Stack und dein gesamtes Homelab. Integriert mit 50+ Diensten, Echtzeit-Widgets, keine Konfigurationsdateien.",

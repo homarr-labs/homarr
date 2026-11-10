@@ -1515,6 +1515,27 @@
           "title": "Άγνωστο σφάλμα",
           "description": "Παρουσιάστηκε άγνωστο σφάλμα· ανοίξτε την παρακάτω αιτία για περισσότερες λεπτομέρειες"
         },
+        "frigate": {
+          "title": "",
+          "status": "",
+          "description": {
+            "cookie": "",
+            "profileMismatch": "",
+            "redirect": "",
+            "login": "",
+            "profile": "",
+            "stats": ""
+          }
+        },
+        "openmediavault": {
+          "title": "",
+          "description": {
+            "totpSecretRequired": "",
+            "totpSecretInvalid": "",
+            "totpVerificationFailed": "",
+            "unsupportedChallenge": ""
+          }
+        },
         "parse": {
           "title": "Σφάλμα ανάλυσης",
           "description": "Δεν ήταν δυνατή η ανάλυση της απόκρισης. Βεβαιωθείτε ότι η URL δείχνει στη βασική URL της υπηρεσίας."
@@ -1714,6 +1735,11 @@
         "title": "Επαναφορά μυστικού",
         "message": "Είστε βέβαιοι ότι θέλετε να επαναφέρετε αυτό το μυστικό;"
       },
+      "totpNotice": "",
+      "remove": {
+        "title": "",
+        "message": ""
+      },
       "noSecretsRequired": {
         "segmentTitle": "Χωρίς μυστικά",
         "text": "Δεν απαιτούνται μυστικά για αυτήν την ενσωμάτωση"
@@ -1794,6 +1820,10 @@
         "wazuhIndexerPassword": {
           "label": "Κωδικός ευρετηρίου",
           "newLabel": "Νέος κωδικός ευρετηρίου"
+        },
+        "totpSecret": {
+          "label": "",
+          "newLabel": ""
         }
       }
     },
@@ -1984,6 +2014,15 @@
         "assistant": "Βοηθός",
         "assistantThinking": "Σκέψη",
         "modifier": ""
+      }
+    },
+    "markdown": {
+      "alert": {
+        "note": "Σημείωση",
+        "tip": "",
+        "important": "",
+        "warning": "Προειδοποίηση",
+        "caution": ""
       }
     },
     "dangerZone": "Επικίνδυνη Περιοχή",
@@ -2335,7 +2374,29 @@
             "tooltip": "Ως tooltip",
             "hidden": "Κρυφό"
           }
+        },
+        "dockerContainer": {
+          "label": "",
+          "description": "",
+          "placeholder": "",
+          "disabled": "",
+          "unavailable": ""
         }
+      },
+      "docker": {
+        "action": {
+          "start": "",
+          "stop": ""
+        },
+        "notification": {
+          "startFailed": "",
+          "stopFailed": ""
+        },
+        "switch": {
+          "start": "",
+          "stop": ""
+        },
+        "stopped": ""
       },
       "error": {
         "notFound": {
@@ -2414,6 +2475,10 @@
         "hideHostname": {
           "label": "Απόκρυψη ονομάτων"
         },
+        "showFullUrls": {
+          "label": "",
+          "description": ""
+        },
         "withBorder": {
           "label": "Εμφάνιση περιγράμματος"
         },
@@ -2436,6 +2501,9 @@
         }
       },
       "empty": "Προσθέστε μια διεύθυνση URL ή εφαρμογή στις ρυθμίσεις widget",
+      "copyUrl": "Αντιγραφή URL",
+      "copied": "Αντιγράφηκε",
+      "copyFailed": "",
       "groups": {
         "label": "Κατηγορίες",
         "placeholder": "Νέα κατηγορία",
@@ -3535,6 +3603,34 @@
     },
     "coolify": {
       "description": "Επισκόπηση της παρουσίας σας στο Coolify με διακομιστές και εφαρμογές",
+      "summary": {
+        "needsAttention": "{count} χρειάζεται προσοχή",
+        "inProgress": "",
+        "unknown": "",
+        "healthy": "",
+        "empty": "",
+        "healthyDetail": "",
+        "more": "",
+        "moreInstances": ""
+      },
+      "details": {
+        "tabs": "",
+        "overview": "",
+        "search": "",
+        "serviceApplications": ""
+      },
+      "overview": {
+        "projects": "",
+        "resources": "",
+        "attention": "Χρειάζεται προσοχή",
+        "ready": "Έτοιμο",
+        "noProjects": "",
+        "projectsUnavailable": "",
+        "moreProjects": "",
+        "running": "Εκτελείται",
+        "resourceCount": "",
+        "environmentCount": ""
+      },
       "option": {
         "showServers": {
           "label": "Εμφάνιση διακομιστών"
@@ -3566,7 +3662,13 @@
       },
       "source": {
         "url": "Πηγή: {url}",
-        "unavailable": ""
+        "unavailable": "",
+        "unavailableCount": ""
+      },
+      "kind": {
+        "server": "",
+        "application": "Εφαρμογή",
+        "service": "Υπηρεσία"
       },
       "instances": {
         "title": "Παρουσίες"
@@ -3583,6 +3685,7 @@
         "exited": "Έξοδος",
         "starting": "Έναρξη",
         "restarting": "Γίνεται επανεκκίνηση",
+        "unhealthy": "Μη υγιές",
         "unknown": "Άγνωστο",
         "online": "Συνδεδεμένος",
         "offline": "Αποσυνδεδεμένος",
@@ -4815,6 +4918,7 @@
           },
           "identifier": {
             "label": "Αναγνωριστικό",
+            "containerPlaceholder": "",
             "placeholder": "Όνομα ή Κάτοχος/Όνομα"
           },
           "name": {},
@@ -6623,7 +6727,8 @@
             "documentation": "Τεκμηρίωση",
             "submitIssue": "Υποβολή ζητήματος",
             "discord": "Κοινότητα Discord",
-            "sourceCode": "Πηγαίος Κώδικας"
+            "sourceCode": "Πηγαίος Κώδικας",
+            "changelog": ""
           }
         },
         "about": "Σχετικά",
@@ -6976,6 +7081,10 @@
             "title": "Εμφάνιση",
             "defaultColorScheme": {
               "label": "Προεπιλεγμένος συνδυασμός χρωμάτων"
+            },
+            "whatsNew": {
+              "label": "",
+              "description": ""
             }
           },
           "branding": {
@@ -8728,6 +8837,12 @@
         "description": "Αλλάξτε τον συνδυασμό χρωμάτων σας, τη γλώσσα, τον αρχικό πίνακα και τις προτιμήσεις σας. Μπορείτε επίσης να μεταβείτε στην περιοχή διαχείρισης από εδώ."
       }
     }
+  },
+  "whatsNew": {
+    "title": "",
+    "empty": "",
+    "allReleases": "",
+    "dismiss": ""
   },
   "metadata": {
     "description": "Ένας αυτόνομος πίνακας εργαλείων για τη στοίβα *arr και ολόκληρη την αρχική σας σελίδα. Ενσωματώνεται με υπηρεσίες 50+, γραφικά συστατικά, χωρίς αρχεία διαμόρφωσης.",

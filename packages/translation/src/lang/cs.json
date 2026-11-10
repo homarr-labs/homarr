@@ -1515,6 +1515,27 @@
           "title": "Neznámá chyba",
           "description": "Došlo k neznámé chybě. Otevřete níže uvedenou příčinu a zobrazte další podrobnosti"
         },
+        "frigate": {
+          "title": "",
+          "status": "",
+          "description": {
+            "cookie": "",
+            "profileMismatch": "",
+            "redirect": "",
+            "login": "",
+            "profile": "",
+            "stats": ""
+          }
+        },
+        "openmediavault": {
+          "title": "",
+          "description": {
+            "totpSecretRequired": "",
+            "totpSecretInvalid": "",
+            "totpVerificationFailed": "",
+            "unsupportedChallenge": ""
+          }
+        },
         "parse": {
           "title": "Chyba analýzy",
           "description": "Odpověď se nepodařilo analyzovat. Ověřte, že adresa URL směřuje na základní adresu URL služby."
@@ -1714,6 +1735,11 @@
         "title": "Resetovat tajný klíč",
         "message": "Jste si jisti, že chcete resetovat tento tajný klíč?"
       },
+      "totpNotice": "",
+      "remove": {
+        "title": "",
+        "message": ""
+      },
       "noSecretsRequired": {
         "segmentTitle": "Žádné tajné klíče",
         "text": "Pro tuto integraci nejsou vyžadovány žádné tajné klíče"
@@ -1794,6 +1820,10 @@
         "wazuhIndexerPassword": {
           "label": "Indexové heslo",
           "newLabel": "Nové heslo pro indexování"
+        },
+        "totpSecret": {
+          "label": "",
+          "newLabel": ""
         }
       }
     },
@@ -1984,6 +2014,15 @@
         "assistant": "Asistent",
         "assistantThinking": "Myšlenka",
         "modifier": ""
+      }
+    },
+    "markdown": {
+      "alert": {
+        "note": "",
+        "tip": "",
+        "important": "",
+        "warning": "Varování",
+        "caution": ""
       }
     },
     "dangerZone": "Nebezpečná zóna",
@@ -2335,7 +2374,29 @@
             "tooltip": "Jako nápověda",
             "hidden": "Skryté"
           }
+        },
+        "dockerContainer": {
+          "label": "",
+          "description": "",
+          "placeholder": "",
+          "disabled": "",
+          "unavailable": ""
         }
+      },
+      "docker": {
+        "action": {
+          "start": "",
+          "stop": ""
+        },
+        "notification": {
+          "startFailed": "",
+          "stopFailed": ""
+        },
+        "switch": {
+          "start": "",
+          "stop": ""
+        },
+        "stopped": ""
       },
       "error": {
         "notFound": {
@@ -2414,6 +2475,10 @@
         "hideHostname": {
           "label": "Skrýt názvy hostitelů"
         },
+        "showFullUrls": {
+          "label": "",
+          "description": ""
+        },
         "withBorder": {
           "label": "Zobrazit okraj"
         },
@@ -2436,6 +2501,9 @@
         }
       },
       "empty": "Přidat URL nebo aplikaci v nastavení widgetu",
+      "copyUrl": "Zkopírovat URL",
+      "copied": "Zkopírováno",
+      "copyFailed": "",
       "groups": {
         "label": "Kategorie",
         "placeholder": "Nová kategorie",
@@ -3535,6 +3603,34 @@
     },
     "coolify": {
       "description": "Přehled vaší instance Coolify se servery a aplikacemi",
+      "summary": {
+        "needsAttention": "{count} potřebuje pozornost",
+        "inProgress": "",
+        "unknown": "",
+        "healthy": "",
+        "empty": "",
+        "healthyDetail": "",
+        "more": "",
+        "moreInstances": ""
+      },
+      "details": {
+        "tabs": "",
+        "overview": "",
+        "search": "",
+        "serviceApplications": ""
+      },
+      "overview": {
+        "projects": "",
+        "resources": "",
+        "attention": "Potřebuje pozornost",
+        "ready": "Připraveno",
+        "noProjects": "",
+        "projectsUnavailable": "",
+        "moreProjects": "",
+        "running": "Běží",
+        "resourceCount": "",
+        "environmentCount": ""
+      },
       "option": {
         "showServers": {
           "label": "Zobrazit servery"
@@ -3566,7 +3662,13 @@
       },
       "source": {
         "url": "Zdroj: {url}",
-        "unavailable": ""
+        "unavailable": "",
+        "unavailableCount": ""
+      },
+      "kind": {
+        "server": "",
+        "application": "Žádost",
+        "service": "Servis"
       },
       "instances": {
         "title": "Instance"
@@ -3583,6 +3685,7 @@
         "exited": "Ukončeno",
         "starting": "Začíná",
         "restarting": "Restartování",
+        "unhealthy": "Nastal problém",
         "unknown": "Neznámý",
         "online": "",
         "offline": "",
@@ -4815,6 +4918,7 @@
           },
           "identifier": {
             "label": "Identifikátor",
+            "containerPlaceholder": "",
             "placeholder": "Název nebo Vlastník/Název"
           },
           "name": {},
@@ -6623,7 +6727,8 @@
             "documentation": "Dokumentace",
             "submitIssue": "Nahlásit problém",
             "discord": "Komunitní Discord",
-            "sourceCode": "Zdrojový kód"
+            "sourceCode": "Zdrojový kód",
+            "changelog": ""
           }
         },
         "about": "O aplikaci",
@@ -6976,6 +7081,10 @@
             "title": "Vzhled",
             "defaultColorScheme": {
               "label": "Výchozí barevné schéma"
+            },
+            "whatsNew": {
+              "label": "",
+              "description": ""
             }
           },
           "branding": {
@@ -8728,6 +8837,12 @@
         "description": "Změňte barevné schéma, jazyk, domovskou plochu a předvolby. Můžete také odtud přejít do správy."
       }
     }
+  },
+  "whatsNew": {
+    "title": "",
+    "empty": "",
+    "allReleases": "",
+    "dismiss": ""
   },
   "metadata": {
     "description": "Samostatně hostovaná nástěnka pro *arr stack a celou vaši domovskou elab. Integruje se s 50 + službami, widgety, bez konfiguračních souborů.",

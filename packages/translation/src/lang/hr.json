@@ -1515,6 +1515,27 @@
           "title": "Nepoznata pogreška",
           "description": "Došlo je do nepoznate pogreške; otvorite uzrok u nastavku za više pojedinosti"
         },
+        "frigate": {
+          "title": "",
+          "status": "",
+          "description": {
+            "cookie": "",
+            "profileMismatch": "",
+            "redirect": "",
+            "login": "",
+            "profile": "",
+            "stats": ""
+          }
+        },
+        "openmediavault": {
+          "title": "",
+          "description": {
+            "totpSecretRequired": "",
+            "totpSecretInvalid": "",
+            "totpVerificationFailed": "",
+            "unsupportedChallenge": ""
+          }
+        },
         "parse": {
           "title": "Greška pars.",
           "description": "Odgovor nije moguće raščlaniti. Provjerite pokazuje li URL na osnovni URL usluge."
@@ -1714,6 +1735,11 @@
         "title": "Poništi tajnu",
         "message": "Jeste li sigurni da želite poništiti ovu tajnu?"
       },
+      "totpNotice": "",
+      "remove": {
+        "title": "",
+        "message": ""
+      },
       "noSecretsRequired": {
         "segmentTitle": "Nema tajni",
         "text": "Za ovu integraciju nisu potrebne tajne"
@@ -1794,6 +1820,10 @@
         "wazuhIndexerPassword": {
           "label": "Lozinka indeksatora",
           "newLabel": "Nova lozinka indeksatora"
+        },
+        "totpSecret": {
+          "label": "",
+          "newLabel": ""
         }
       }
     },
@@ -1984,6 +2014,15 @@
         "assistant": "Pomoćnik",
         "assistantThinking": "Razmišljanje",
         "modifier": "Izmjena"
+      }
+    },
+    "markdown": {
+      "alert": {
+        "note": "",
+        "tip": "",
+        "important": "",
+        "warning": "",
+        "caution": ""
       }
     },
     "dangerZone": "Opasna zona",
@@ -2335,7 +2374,29 @@
             "tooltip": "Kao opis alata",
             "hidden": "Skriveno"
           }
+        },
+        "dockerContainer": {
+          "label": "",
+          "description": "",
+          "placeholder": "",
+          "disabled": "",
+          "unavailable": ""
         }
+      },
+      "docker": {
+        "action": {
+          "start": "",
+          "stop": ""
+        },
+        "notification": {
+          "startFailed": "",
+          "stopFailed": ""
+        },
+        "switch": {
+          "start": "",
+          "stop": ""
+        },
+        "stopped": ""
       },
       "error": {
         "notFound": {
@@ -2414,6 +2475,10 @@
         "hideHostname": {
           "label": "Sakrij nazive hostova"
         },
+        "showFullUrls": {
+          "label": "",
+          "description": ""
+        },
         "withBorder": {
           "label": "Prikaži obrub"
         },
@@ -2436,6 +2501,9 @@
         }
       },
       "empty": "Dodajte URL ili aplikaciju u postavkama widgeta",
+      "copyUrl": "",
+      "copied": "",
+      "copyFailed": "",
       "groups": {
         "label": "",
         "placeholder": "",
@@ -3535,6 +3603,34 @@
     },
     "coolify": {
       "description": "Pregled vaše instance Coolifyja s poslužiteljima i aplikacijama",
+      "summary": {
+        "needsAttention": "",
+        "inProgress": "",
+        "unknown": "",
+        "healthy": "",
+        "empty": "",
+        "healthyDetail": "",
+        "more": "",
+        "moreInstances": ""
+      },
+      "details": {
+        "tabs": "",
+        "overview": "",
+        "search": "",
+        "serviceApplications": ""
+      },
+      "overview": {
+        "projects": "",
+        "resources": "",
+        "attention": "",
+        "ready": "",
+        "noProjects": "",
+        "projectsUnavailable": "",
+        "moreProjects": "",
+        "running": "U radu",
+        "resourceCount": "",
+        "environmentCount": ""
+      },
       "option": {
         "showServers": {
           "label": "Prikaži poslužitelje"
@@ -3566,7 +3662,13 @@
       },
       "source": {
         "url": "Izvor: {url}",
-        "unavailable": "{source}: nedostupno"
+        "unavailable": "{source}: nedostupno",
+        "unavailableCount": ""
+      },
+      "kind": {
+        "server": "",
+        "application": "",
+        "service": ""
       },
       "instances": {
         "title": "Instance"
@@ -3583,6 +3685,7 @@
         "exited": "Izašlo",
         "starting": "Pokretanje",
         "restarting": "Ponovno pokretanje",
+        "unhealthy": "",
         "unknown": "Nepoznato",
         "online": "Na mreži",
         "offline": "Izvan mreže",
@@ -4815,6 +4918,7 @@
           },
           "identifier": {
             "label": "Identifikator",
+            "containerPlaceholder": "",
             "placeholder": "Naziv ili vlasnik/naziv"
           },
           "name": {},
@@ -6623,7 +6727,8 @@
             "documentation": "Dokumentacija",
             "submitIssue": "Pošaljite prijavu problema",
             "discord": "Nesloga u zajednici",
-            "sourceCode": "Izvorni kod"
+            "sourceCode": "Izvorni kod",
+            "changelog": ""
           }
         },
         "about": "O aplikaciji",
@@ -6976,6 +7081,10 @@
             "title": "Izgled",
             "defaultColorScheme": {
               "label": "Zadana shema boja"
+            },
+            "whatsNew": {
+              "label": "",
+              "description": ""
             }
           },
           "branding": {
@@ -8728,6 +8837,12 @@
         "description": "Promijenite shemu boja, jezik, početnu ploču i preferencije. Odavde također možete otići u upravljačko područje."
       }
     }
+  },
+  "whatsNew": {
+    "title": "",
+    "empty": "",
+    "allReleases": "",
+    "dismiss": ""
   },
   "metadata": {
     "description": "Nadzorna ploča na vlastitom poslužitelju za *arr skup i cijeli vaš kućni laboratorij. Integrira se s više od 50 usluga, widgetima u stvarnom vremenu i ne zahtijeva konfiguracijske datoteke.",

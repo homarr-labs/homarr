@@ -1515,6 +1515,27 @@
           "title": "Unbekannter Fehler",
           "description": "Ein unbekannter Fehler ist aufgetreten. Öffnen Sie unten die Ursache, um weitere Details anzuzeigen"
         },
+        "frigate": {
+          "title": "",
+          "status": "",
+          "description": {
+            "cookie": "",
+            "profileMismatch": "",
+            "redirect": "",
+            "login": "",
+            "profile": "",
+            "stats": ""
+          }
+        },
+        "openmediavault": {
+          "title": "",
+          "description": {
+            "totpSecretRequired": "",
+            "totpSecretInvalid": "",
+            "totpVerificationFailed": "",
+            "unsupportedChallenge": ""
+          }
+        },
         "parse": {
           "title": "Analysefehler",
           "description": "Die Antwort konnte nicht analysiert werden. Bitte stellen Sie sicher, dass die URL auf die Basis-URL des Dienstes zeigt."
@@ -1714,6 +1735,11 @@
         "title": "Secret zurücksetzen",
         "message": "Bisch sicher, dass du das Gheimnis wotsch lösche?"
       },
+      "totpNotice": "",
+      "remove": {
+        "title": "",
+        "message": ""
+      },
       "noSecretsRequired": {
         "segmentTitle": "Keni Gheimnis",
         "text": "Für die Integration bruchts keni Gheimniss"
@@ -1794,6 +1820,10 @@
         "wazuhIndexerPassword": {
           "label": "Indexer-Passwort",
           "newLabel": "Neues Indexer-Passwort"
+        },
+        "totpSecret": {
+          "label": "",
+          "newLabel": ""
         }
       }
     },
@@ -1984,6 +2014,15 @@
         "assistant": "Assistent",
         "assistantThinking": "Denken",
         "modifier": "Moderator"
+      }
+    },
+    "markdown": {
+      "alert": {
+        "note": "",
+        "tip": "",
+        "important": "",
+        "warning": "",
+        "caution": ""
       }
     },
     "dangerZone": "Gefahrenbereich",
@@ -2335,7 +2374,29 @@
             "tooltip": "Als Tooltip",
             "hidden": "Versteckt"
           }
+        },
+        "dockerContainer": {
+          "label": "",
+          "description": "",
+          "placeholder": "",
+          "disabled": "",
+          "unavailable": ""
         }
+      },
+      "docker": {
+        "action": {
+          "start": "",
+          "stop": ""
+        },
+        "notification": {
+          "startFailed": "",
+          "stopFailed": ""
+        },
+        "switch": {
+          "start": "",
+          "stop": ""
+        },
+        "stopped": ""
       },
       "error": {
         "notFound": {
@@ -2414,6 +2475,10 @@
         "hideHostname": {
           "label": "Hostnamen ausblenden"
         },
+        "showFullUrls": {
+          "label": "",
+          "description": ""
+        },
         "withBorder": {
           "label": "Rahmen anzeigen"
         },
@@ -2436,6 +2501,9 @@
         }
       },
       "empty": "Füge eine URL oder App in den Widget-Einstellungen hinzu",
+      "copyUrl": "URL in Zwischenablage kopieren",
+      "copied": "",
+      "copyFailed": "",
       "groups": {
         "label": "",
         "placeholder": "Neue Kategorie",
@@ -3535,6 +3603,34 @@
     },
     "coolify": {
       "description": "Übersicht Ihrer Coolify-Instanz mit Servern und Anwendungen",
+      "summary": {
+        "needsAttention": "",
+        "inProgress": "",
+        "unknown": "",
+        "healthy": "",
+        "empty": "",
+        "healthyDetail": "",
+        "more": "",
+        "moreInstances": ""
+      },
+      "details": {
+        "tabs": "",
+        "overview": "",
+        "search": "",
+        "serviceApplications": ""
+      },
+      "overview": {
+        "projects": "",
+        "resources": "",
+        "attention": "",
+        "ready": "Bereit",
+        "noProjects": "",
+        "projectsUnavailable": "",
+        "moreProjects": "",
+        "running": "Wird ausgeführt",
+        "resourceCount": "",
+        "environmentCount": ""
+      },
       "option": {
         "showServers": {
           "label": "Server anzeigen"
@@ -3566,7 +3662,13 @@
       },
       "source": {
         "url": "Quelle: {url}",
-        "unavailable": "{source}: nicht verfügbar"
+        "unavailable": "{source}: nicht verfügbar",
+        "unavailableCount": ""
+      },
+      "kind": {
+        "server": "",
+        "application": "",
+        "service": ""
       },
       "instances": {
         "title": "Instanzen"
@@ -3583,6 +3685,7 @@
         "exited": "Beendet",
         "starting": "Wird gestartet",
         "restarting": "Startet neu",
+        "unhealthy": "Fehlerhaft",
         "unknown": "Unbekannt",
         "online": "Verfügbar",
         "offline": "Nicht verfügbar",
@@ -4815,6 +4918,7 @@
           },
           "identifier": {
             "label": "Kennung",
+            "containerPlaceholder": "",
             "placeholder": "Name oder Eigentümer/Name"
           },
           "name": {},
@@ -6623,7 +6727,8 @@
             "documentation": "Dokumentation",
             "submitIssue": "Ein Problem melden",
             "discord": "Community-Discord",
-            "sourceCode": "Quellcode"
+            "sourceCode": "Quellcode",
+            "changelog": ""
           }
         },
         "about": "Über",
@@ -6976,6 +7081,10 @@
             "title": "Aussehen",
             "defaultColorScheme": {
               "label": "Standard Farbschema"
+            },
+            "whatsNew": {
+              "label": "",
+              "description": ""
             }
           },
           "branding": {
@@ -8728,6 +8837,12 @@
         "description": "Ändern Sie Ihr Farbschema, Ihre Sprache, Ihr Startboard und Ihre Einstellungen. Von hier aus können Sie auch zum Verwaltungsbereich wechseln."
       }
     }
+  },
+  "whatsNew": {
+    "title": "",
+    "empty": "",
+    "allReleases": "",
+    "dismiss": ""
   },
   "metadata": {
     "description": "Ein selbst gehostetes Dashboard für den *arr-Stack und Ihr gesamtes Homelab. Integriert mehr als 50 Dienste, Echtzeit-Widgets und keine Konfigurationsdateien.",

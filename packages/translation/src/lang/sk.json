@@ -1515,6 +1515,27 @@
           "title": "Neznáma chyba",
           "description": "Vyskytla sa neznáma chyba. Ak chcete zobraziť ďalšie podrobnosti, otvorte príčinu nižšie"
         },
+        "frigate": {
+          "title": "",
+          "status": "",
+          "description": {
+            "cookie": "",
+            "profileMismatch": "",
+            "redirect": "",
+            "login": "",
+            "profile": "",
+            "stats": ""
+          }
+        },
+        "openmediavault": {
+          "title": "",
+          "description": {
+            "totpSecretRequired": "",
+            "totpSecretInvalid": "",
+            "totpVerificationFailed": "",
+            "unsupportedChallenge": ""
+          }
+        },
         "parse": {
           "title": "Chyba analýzy",
           "description": "Odpoveď nebolo možné analyzovať. Skontrolujte, či adresa URL smeruje na základnú adresu URL služby."
@@ -1714,6 +1735,11 @@
         "title": "Obnoviť tajomstvo",
         "message": "Naozaj chcete obnoviť toto tajomstvo?"
       },
+      "totpNotice": "",
+      "remove": {
+        "title": "",
+        "message": ""
+      },
       "noSecretsRequired": {
         "segmentTitle": "Žiadne tajomstvá",
         "text": "Pre túto integráciu nie sú potrebné žiadne tajomstvá"
@@ -1794,6 +1820,10 @@
         "wazuhIndexerPassword": {
           "label": "Heslo indexera",
           "newLabel": "Nové heslo indexera"
+        },
+        "totpSecret": {
+          "label": "",
+          "newLabel": ""
         }
       }
     },
@@ -1984,6 +2014,15 @@
         "assistant": "Asistent",
         "assistantThinking": "Premýšľa sa",
         "modifier": "Modifikátor"
+      }
+    },
+    "markdown": {
+      "alert": {
+        "note": "",
+        "tip": "",
+        "important": "",
+        "warning": "",
+        "caution": ""
       }
     },
     "dangerZone": "Nebezpečná zóna",
@@ -2335,7 +2374,29 @@
             "tooltip": "",
             "hidden": ""
           }
+        },
+        "dockerContainer": {
+          "label": "",
+          "description": "",
+          "placeholder": "",
+          "disabled": "",
+          "unavailable": ""
         }
+      },
+      "docker": {
+        "action": {
+          "start": "",
+          "stop": ""
+        },
+        "notification": {
+          "startFailed": "",
+          "stopFailed": ""
+        },
+        "switch": {
+          "start": "",
+          "stop": ""
+        },
+        "stopped": ""
       },
       "error": {
         "notFound": {
@@ -2414,6 +2475,10 @@
         "hideHostname": {
           "label": "Skryť názvy hostiteľov"
         },
+        "showFullUrls": {
+          "label": "",
+          "description": ""
+        },
         "withBorder": {
           "label": "Zobraziť ohraničenie"
         },
@@ -2436,6 +2501,9 @@
         }
       },
       "empty": "Pridajte adresu URL alebo aplikáciu v nastaveniach widgetu",
+      "copyUrl": "Skopírovať URL",
+      "copied": "",
+      "copyFailed": "",
       "groups": {
         "label": "",
         "placeholder": "Nová kategória",
@@ -3535,6 +3603,34 @@
     },
     "coolify": {
       "description": "",
+      "summary": {
+        "needsAttention": "",
+        "inProgress": "",
+        "unknown": "",
+        "healthy": "",
+        "empty": "",
+        "healthyDetail": "",
+        "more": "",
+        "moreInstances": ""
+      },
+      "details": {
+        "tabs": "",
+        "overview": "",
+        "search": "",
+        "serviceApplications": ""
+      },
+      "overview": {
+        "projects": "",
+        "resources": "",
+        "attention": "",
+        "ready": "Pripravený",
+        "noProjects": "",
+        "projectsUnavailable": "",
+        "moreProjects": "",
+        "running": "Spustené",
+        "resourceCount": "",
+        "environmentCount": ""
+      },
       "option": {
         "showServers": {
           "label": ""
@@ -3566,7 +3662,13 @@
       },
       "source": {
         "url": "Zdroj: {url}",
-        "unavailable": "{source}: nedostupné"
+        "unavailable": "{source}: nedostupné",
+        "unavailableCount": ""
+      },
+      "kind": {
+        "server": "",
+        "application": "",
+        "service": ""
       },
       "instances": {
         "title": ""
@@ -3583,6 +3685,7 @@
         "exited": "Ukončené",
         "starting": "Spúšťa sa",
         "restarting": "Reštartovanie",
+        "unhealthy": "Nezdravý",
         "unknown": "Neznámy",
         "online": "Online",
         "offline": "Odpojené",
@@ -4815,6 +4918,7 @@
           },
           "identifier": {
             "label": "Identifikátor",
+            "containerPlaceholder": "",
             "placeholder": "Meno alebo vlastník/meno"
           },
           "name": {},
@@ -6623,7 +6727,8 @@
             "documentation": "Dokumentácia",
             "submitIssue": "Odoslať problém",
             "discord": "Diskord Spoločenstva",
-            "sourceCode": "Zdrojový kód"
+            "sourceCode": "Zdrojový kód",
+            "changelog": ""
           }
         },
         "about": "O aplikácii",
@@ -6976,6 +7081,10 @@
             "title": "Vzhľad",
             "defaultColorScheme": {
               "label": "Predvolená farebná schéma"
+            },
+            "whatsNew": {
+              "label": "",
+              "description": ""
             }
           },
           "branding": {
@@ -8728,6 +8837,12 @@
         "description": "Zmeňte farebnú schému, jazyk, domovskú dosku a preferencie. Odtiaľto môžete tiež prejsť do ovládacieho panela."
       }
     }
+  },
+  "whatsNew": {
+    "title": "",
+    "empty": "",
+    "allReleases": "",
+    "dismiss": ""
   },
   "metadata": {
     "description": "Samostatne hostovaný prehľad pre balík *arr a celý váš homelab. Integruje sa s viac ako 50 službami, widgety v reálnom čase, bez konfiguračných súborov.",

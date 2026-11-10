@@ -1515,6 +1515,27 @@
           "title": "Невідома помилка",
           "description": "Сталася невідома помилка, відкрийте причину нижче, щоб побачити більше деталей"
         },
+        "frigate": {
+          "title": "",
+          "status": "",
+          "description": {
+            "cookie": "",
+            "profileMismatch": "",
+            "redirect": "",
+            "login": "",
+            "profile": "",
+            "stats": ""
+          }
+        },
+        "openmediavault": {
+          "title": "",
+          "description": {
+            "totpSecretRequired": "",
+            "totpSecretInvalid": "",
+            "totpVerificationFailed": "",
+            "unsupportedChallenge": ""
+          }
+        },
         "parse": {
           "title": "Синтаксична помилка",
           "description": "Не вдалося проаналізувати відповідь. Перевірте, чи URL-адреса вказує на основний URL сервісу."
@@ -1714,6 +1735,11 @@
         "title": "Скинути секрет",
         "message": "Ви впевнені, що хочете скинути цей секрет?"
       },
+      "totpNotice": "",
+      "remove": {
+        "title": "",
+        "message": ""
+      },
       "noSecretsRequired": {
         "segmentTitle": "Немає секретів",
         "text": "Для цієї інтеграції не потрібні секрети"
@@ -1794,6 +1820,10 @@
         "wazuhIndexerPassword": {
           "label": "Пароль індексатора",
           "newLabel": "Новий пароль індексатора"
+        },
+        "totpSecret": {
+          "label": "",
+          "newLabel": ""
         }
       }
     },
@@ -1984,6 +2014,15 @@
         "assistant": "Помічник",
         "assistantThinking": "Мислення",
         "modifier": ""
+      }
+    },
+    "markdown": {
+      "alert": {
+        "note": "Нотатка",
+        "tip": "",
+        "important": "",
+        "warning": "Застереження",
+        "caution": ""
       }
     },
     "dangerZone": "Небезпечна зона",
@@ -2335,7 +2374,29 @@
             "tooltip": "Як підказка",
             "hidden": "Приховати"
           }
+        },
+        "dockerContainer": {
+          "label": "",
+          "description": "",
+          "placeholder": "",
+          "disabled": "",
+          "unavailable": ""
         }
+      },
+      "docker": {
+        "action": {
+          "start": "",
+          "stop": ""
+        },
+        "notification": {
+          "startFailed": "",
+          "stopFailed": ""
+        },
+        "switch": {
+          "start": "",
+          "stop": ""
+        },
+        "stopped": ""
       },
       "error": {
         "notFound": {
@@ -2414,6 +2475,10 @@
         "hideHostname": {
           "label": "Приховати імена хостів"
         },
+        "showFullUrls": {
+          "label": "",
+          "description": ""
+        },
         "withBorder": {
           "label": "Показати рамку"
         },
@@ -2436,6 +2501,9 @@
         }
       },
       "empty": "Додати URL-адресу або програму у налаштуваннях віджета",
+      "copyUrl": "",
+      "copied": "Скопійовано",
+      "copyFailed": "",
       "groups": {
         "label": "Категорії",
         "placeholder": "Нова категорія",
@@ -3535,6 +3603,34 @@
     },
     "coolify": {
       "description": "Огляд вашого Coolify екземпляра з серверами та додатками",
+      "summary": {
+        "needsAttention": "",
+        "inProgress": "",
+        "unknown": "",
+        "healthy": "",
+        "empty": "",
+        "healthyDetail": "",
+        "more": "",
+        "moreInstances": ""
+      },
+      "details": {
+        "tabs": "",
+        "overview": "",
+        "search": "",
+        "serviceApplications": ""
+      },
+      "overview": {
+        "projects": "",
+        "resources": "",
+        "attention": "Потребує уваги",
+        "ready": "Готово",
+        "noProjects": "",
+        "projectsUnavailable": "",
+        "moreProjects": "+{count, plural, one {# more project} other {# more projects}}",
+        "running": "Запущено",
+        "resourceCount": "{count, plural, one {# resource} other {# resources}}",
+        "environmentCount": "{count, plural, one {# environment} other {# environments}}"
+      },
       "option": {
         "showServers": {
           "label": "Показати сервери"
@@ -3566,7 +3662,13 @@
       },
       "source": {
         "url": "Джерело: {url}",
-        "unavailable": ""
+        "unavailable": "",
+        "unavailableCount": "{count, plural, one {# source unavailable} other {# sources unavailable}}"
+      },
+      "kind": {
+        "server": "",
+        "application": "Програма",
+        "service": "Послуга"
       },
       "instances": {
         "title": "Iнстанси"
@@ -3583,6 +3685,7 @@
         "exited": "Вийшов",
         "starting": "Запускається",
         "restarting": "Перезапуск",
+        "unhealthy": "Нездоровий",
         "unknown": "Невідомо",
         "online": "Онлайн",
         "offline": "Офлайн",
@@ -4815,6 +4918,7 @@
           },
           "identifier": {
             "label": "Ідентифікатор",
+            "containerPlaceholder": "",
             "placeholder": "Назва або Власник/Назва"
           },
           "name": {},
@@ -6623,7 +6727,8 @@
             "documentation": "Документація",
             "submitIssue": "Повідомити про проблему",
             "discord": "Discord",
-            "sourceCode": "Вихідний код"
+            "sourceCode": "Вихідний код",
+            "changelog": ""
           }
         },
         "about": "Про програму",
@@ -6976,6 +7081,10 @@
             "title": "Вигляд",
             "defaultColorScheme": {
               "label": "Стандартна кольорова тема"
+            },
+            "whatsNew": {
+              "label": "",
+              "description": ""
             }
           },
           "branding": {
@@ -8728,6 +8837,12 @@
         "description": "Змініть свою схему кольорів, мову, домашню дошку та налаштування. Ви також можете перейти до області керування звідси."
       }
     }
+  },
+  "whatsNew": {
+    "title": "",
+    "empty": "",
+    "allReleases": "",
+    "dismiss": ""
   },
   "metadata": {
     "description": "Панель самостійного хостингу для стеку * arr і всієї вашої батьківщини. Інтегрується з 50+ послугами, у реальному часі віджети, без конфігураційних файлів.",

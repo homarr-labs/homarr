@@ -1515,6 +1515,27 @@
           "title": "未知錯誤",
           "description": "發生未知錯誤，展開下方的原因以查看詳細資訊"
         },
+        "frigate": {
+          "title": "",
+          "status": "",
+          "description": {
+            "cookie": "",
+            "profileMismatch": "",
+            "redirect": "",
+            "login": "",
+            "profile": "",
+            "stats": ""
+          }
+        },
+        "openmediavault": {
+          "title": "",
+          "description": {
+            "totpSecretRequired": "",
+            "totpSecretInvalid": "",
+            "totpVerificationFailed": "",
+            "unsupportedChallenge": ""
+          }
+        },
         "parse": {
           "title": "解析錯誤",
           "description": "無法解析回應。請確認 URL 指向服務的基礎 URL。"
@@ -1714,6 +1735,11 @@
         "title": "重設密鑰",
         "message": "確認重設密鑰嗎？"
       },
+      "totpNotice": "",
+      "remove": {
+        "title": "",
+        "message": ""
+      },
       "noSecretsRequired": {
         "segmentTitle": "無密鑰",
         "text": "此集成無需密鑰"
@@ -1794,6 +1820,10 @@
         "wazuhIndexerPassword": {
           "label": "Indexer 密碼",
           "newLabel": "新的 Indexer 密碼"
+        },
+        "totpSecret": {
+          "label": "",
+          "newLabel": ""
         }
       }
     },
@@ -1984,6 +2014,15 @@
         "assistant": "助理",
         "assistantThinking": "思考中",
         "modifier": "修改器"
+      }
+    },
+    "markdown": {
+      "alert": {
+        "note": "筆記",
+        "tip": "",
+        "important": "",
+        "warning": "",
+        "caution": ""
       }
     },
     "dangerZone": "危險區域",
@@ -2335,7 +2374,29 @@
             "tooltip": "以提示顯示",
             "hidden": "隱藏"
           }
+        },
+        "dockerContainer": {
+          "label": "",
+          "description": "",
+          "placeholder": "",
+          "disabled": "",
+          "unavailable": ""
         }
+      },
+      "docker": {
+        "action": {
+          "start": "",
+          "stop": ""
+        },
+        "notification": {
+          "startFailed": "",
+          "stopFailed": ""
+        },
+        "switch": {
+          "start": "",
+          "stop": ""
+        },
+        "stopped": ""
       },
       "error": {
         "notFound": {
@@ -2414,6 +2475,10 @@
         "hideHostname": {
           "label": "隱藏 hostname"
         },
+        "showFullUrls": {
+          "label": "",
+          "description": ""
+        },
         "withBorder": {
           "label": "顯示邊框"
         },
@@ -2436,6 +2501,9 @@
         }
       },
       "empty": "在小工具設定中新增 URL 或應用程式",
+      "copyUrl": "複製網址",
+      "copied": "",
+      "copyFailed": "",
       "groups": {
         "label": "",
         "placeholder": "創建分類",
@@ -3535,6 +3603,34 @@
     },
     "coolify": {
       "description": "概覽您的 Coolify 執行個體及其伺服器與應用程式",
+      "summary": {
+        "needsAttention": "",
+        "inProgress": "",
+        "unknown": "",
+        "healthy": "",
+        "empty": "",
+        "healthyDetail": "",
+        "more": "",
+        "moreInstances": ""
+      },
+      "details": {
+        "tabs": "",
+        "overview": "",
+        "search": "",
+        "serviceApplications": ""
+      },
+      "overview": {
+        "projects": "",
+        "resources": "",
+        "attention": "",
+        "ready": "準備",
+        "noProjects": "",
+        "projectsUnavailable": "",
+        "moreProjects": "",
+        "running": "運行中",
+        "resourceCount": "",
+        "environmentCount": ""
+      },
       "option": {
         "showServers": {
           "label": "顯示伺服器"
@@ -3566,7 +3662,13 @@
       },
       "source": {
         "url": "來源：{url}",
-        "unavailable": "{source}：無法使用"
+        "unavailable": "{source}：無法使用",
+        "unavailableCount": ""
+      },
+      "kind": {
+        "server": "",
+        "application": "",
+        "service": ""
       },
       "instances": {
         "title": "執行個體"
@@ -3583,6 +3685,7 @@
         "exited": "已退出",
         "starting": "正在啟動",
         "restarting": "正在重啟",
+        "unhealthy": "狀況不良",
         "unknown": "未知",
         "online": "在線",
         "offline": "離線",
@@ -4815,6 +4918,7 @@
           },
           "identifier": {
             "label": "識別碼",
+            "containerPlaceholder": "",
             "placeholder": "名稱或擁有者/名稱"
           },
           "name": {},
@@ -6623,7 +6727,8 @@
             "documentation": "說明書",
             "submitIssue": "提交問題",
             "discord": "Discord 社群",
-            "sourceCode": "源碼"
+            "sourceCode": "源碼",
+            "changelog": ""
           }
         },
         "about": "關於",
@@ -6976,6 +7081,10 @@
             "title": "外觀",
             "defaultColorScheme": {
               "label": "預設配色方案"
+            },
+            "whatsNew": {
+              "label": "",
+              "description": ""
             }
           },
           "branding": {
@@ -8728,6 +8837,12 @@
         "description": "變更你的色彩方案、語言、首頁面板和偏好設定。你也可以從這裡跳轉到管理區域。"
       }
     }
+  },
+  "whatsNew": {
+    "title": "",
+    "empty": "",
+    "allReleases": "",
+    "dismiss": ""
   },
   "metadata": {
     "description": "適用於 *arr 堆疊與完整家庭實驗室的自架儀表板。整合 50 多項服務、即時小工具，無需設定檔。",

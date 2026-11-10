@@ -1515,6 +1515,27 @@
           "title": "Erreur inconnue",
           "description": "Une erreur inconnue s'est produite, ouvrez la cause ci-dessous pour voir plus de détails"
         },
+        "frigate": {
+          "title": "",
+          "status": "",
+          "description": {
+            "cookie": "",
+            "profileMismatch": "",
+            "redirect": "",
+            "login": "",
+            "profile": "",
+            "stats": ""
+          }
+        },
+        "openmediavault": {
+          "title": "",
+          "description": {
+            "totpSecretRequired": "",
+            "totpSecretInvalid": "",
+            "totpVerificationFailed": "",
+            "unsupportedChallenge": ""
+          }
+        },
         "parse": {
           "title": "Erreur d'analyse",
           "description": "La réponse n'a pas pu être analysée. Veuillez vérifier que l'URL pointe vers l'URL de base du service."
@@ -1714,6 +1735,11 @@
         "title": "Réinitialiser le secret",
         "message": "Souhaitez-vous vraiment réinitialiser ce secret ?"
       },
+      "totpNotice": "",
+      "remove": {
+        "title": "",
+        "message": ""
+      },
       "noSecretsRequired": {
         "segmentTitle": "Aucuns secrets",
         "text": "Aucun secret requis pour cette intégration"
@@ -1794,6 +1820,10 @@
         "wazuhIndexerPassword": {
           "label": "Mot de passe de l'indexeur",
           "newLabel": "Nouveau mot de passe de l'indexeur"
+        },
+        "totpSecret": {
+          "label": "",
+          "newLabel": ""
         }
       }
     },
@@ -1984,6 +2014,15 @@
         "assistant": "",
         "assistantThinking": "Penser",
         "modifier": ""
+      }
+    },
+    "markdown": {
+      "alert": {
+        "note": "",
+        "tip": "",
+        "important": "",
+        "warning": "Avertissement",
+        "caution": ""
       }
     },
     "dangerZone": "Zone de danger",
@@ -2335,7 +2374,29 @@
             "tooltip": "Comme infobulle",
             "hidden": "Masquer"
           }
+        },
+        "dockerContainer": {
+          "label": "",
+          "description": "",
+          "placeholder": "",
+          "disabled": "",
+          "unavailable": ""
         }
+      },
+      "docker": {
+        "action": {
+          "start": "",
+          "stop": ""
+        },
+        "notification": {
+          "startFailed": "",
+          "stopFailed": ""
+        },
+        "switch": {
+          "start": "",
+          "stop": ""
+        },
+        "stopped": ""
       },
       "error": {
         "notFound": {
@@ -2414,6 +2475,10 @@
         "hideHostname": {
           "label": "Masquer les noms d'hôtes"
         },
+        "showFullUrls": {
+          "label": "",
+          "description": ""
+        },
         "withBorder": {
           "label": "Afficher la bordure"
         },
@@ -2436,6 +2501,9 @@
         }
       },
       "empty": "Ajouter une URL ou une application dans les paramètres du widget",
+      "copyUrl": "Copier l'URL",
+      "copied": "Copié",
+      "copyFailed": "",
       "groups": {
         "label": "Catégories",
         "placeholder": "Nouvelle catégorie",
@@ -3535,6 +3603,34 @@
     },
     "coolify": {
       "description": "Aperçu de votre instance Coolify avec les serveurs et les applications",
+      "summary": {
+        "needsAttention": "{count} a besoin d'attention",
+        "inProgress": "",
+        "unknown": "",
+        "healthy": "",
+        "empty": "",
+        "healthyDetail": "",
+        "more": "",
+        "moreInstances": ""
+      },
+      "details": {
+        "tabs": "",
+        "overview": "",
+        "search": "",
+        "serviceApplications": ""
+      },
+      "overview": {
+        "projects": "",
+        "resources": "",
+        "attention": "A besoin d'attention",
+        "ready": "Prêt",
+        "noProjects": "",
+        "projectsUnavailable": "",
+        "moreProjects": "",
+        "running": "Exécution",
+        "resourceCount": "",
+        "environmentCount": ""
+      },
       "option": {
         "showServers": {
           "label": "Afficher les serveurs"
@@ -3566,7 +3662,13 @@
       },
       "source": {
         "url": "",
-        "unavailable": ""
+        "unavailable": "",
+        "unavailableCount": ""
+      },
+      "kind": {
+        "server": "",
+        "application": "",
+        "service": ""
       },
       "instances": {
         "title": "Instances"
@@ -3583,6 +3685,7 @@
         "exited": "Quitté",
         "starting": "Démarrage",
         "restarting": "Redémarrage en cours",
+        "unhealthy": "Dysfonctionnement",
         "unknown": "Inconnu",
         "online": "En ligne",
         "offline": "Hors ligne",
@@ -4815,6 +4918,7 @@
           },
           "identifier": {
             "label": "Identifiant",
+            "containerPlaceholder": "",
             "placeholder": "Nom ou Propriétaire / Nom"
           },
           "name": {},
@@ -4863,9 +4967,9 @@
         }
       },
       "summary": {
-        "newReleases": "",
+        "newReleases": "{count, plural, one {nouvelle version} other {nouvelles versions}}",
         "newShort": "nouveau",
-        "tracked": "",
+        "tracked": "sur {count} suivis",
         "caughtUp": "",
         "outdated": "",
         "outdatedShort": "mis à jour",
@@ -4943,15 +5047,15 @@
         }
       },
       "markViewed": "Marquer comme vu(s)",
-      "markAllViewed": "",
-      "markEntryViewed": "",
+      "markAllViewed": "Tout marquer comme vu",
+      "markEntryViewed": "Marquer {name} {version} comme vu",
       "viewed": "",
       "copyVersion": "",
       "copied": "Copié",
       "published": "",
       "whatChanged": "",
       "noNotes": "",
-      "changes": "",
+      "changes": "{count, plural, one {# modification} other {# modifications}}",
       "starsCount": "Étoiles",
       "forksCount": "Forks",
       "openIssues": "",
@@ -6623,7 +6727,8 @@
             "documentation": "Documentation",
             "submitIssue": "Signaler un problème",
             "discord": "Communauté Discord",
-            "sourceCode": "Code source"
+            "sourceCode": "Code source",
+            "changelog": ""
           }
         },
         "about": "À propos",
@@ -6976,6 +7081,10 @@
             "title": "Apparence",
             "defaultColorScheme": {
               "label": "Schéma de couleurs par défaut"
+            },
+            "whatsNew": {
+              "label": "",
+              "description": ""
             }
           },
           "branding": {
@@ -8728,6 +8837,12 @@
         "description": "Changez votre thème de couleurs, votre langue, votre tableau d'accueil et vos préférences. Vous pouvez également accéder à la zone de gestion depuis ici."
       }
     }
+  },
+  "whatsNew": {
+    "title": "",
+    "empty": "",
+    "allReleases": "",
+    "dismiss": ""
   },
   "metadata": {
     "description": "Un tableau de bord auto-hébergé pour la pile *arr et votre maison entière. Intègre avec plus de 50 services, des widgets en temps réel, pas de fichiers de configuration.",

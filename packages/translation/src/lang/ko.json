@@ -1515,6 +1515,27 @@
           "title": "알 수 없는 오류",
           "description": "알 수 없는 오류가 발생했습니다. 자세한 내용을 보려면 아래 원인을 펼치세요"
         },
+        "frigate": {
+          "title": "",
+          "status": "",
+          "description": {
+            "cookie": "",
+            "profileMismatch": "",
+            "redirect": "",
+            "login": "",
+            "profile": "",
+            "stats": ""
+          }
+        },
+        "openmediavault": {
+          "title": "",
+          "description": {
+            "totpSecretRequired": "",
+            "totpSecretInvalid": "",
+            "totpVerificationFailed": "",
+            "unsupportedChallenge": ""
+          }
+        },
         "parse": {
           "title": "파싱 오류",
           "description": "응답을 파싱할 수 없습니다. URL이 서비스의 기본 URL을 가리키는지 확인하세요."
@@ -1714,6 +1735,11 @@
         "title": "시크릿 값 초기화",
         "message": "이 시크릿 값을 초기화하시겠습니까?"
       },
+      "totpNotice": "",
+      "remove": {
+        "title": "",
+        "message": ""
+      },
       "noSecretsRequired": {
         "segmentTitle": "시크릿 값 없음",
         "text": "이 통합에는 시크릿이 필요하지 않습니다"
@@ -1794,6 +1820,10 @@
         "wazuhIndexerPassword": {
           "label": "인덱서 비밀번호",
           "newLabel": "새 인덱서 비밀번호"
+        },
+        "totpSecret": {
+          "label": "",
+          "newLabel": ""
         }
       }
     },
@@ -1984,6 +2014,15 @@
         "assistant": "어시스턴트",
         "assistantThinking": "생각 중",
         "modifier": "수정자"
+      }
+    },
+    "markdown": {
+      "alert": {
+        "note": "",
+        "tip": "",
+        "important": "",
+        "warning": "",
+        "caution": ""
       }
     },
     "dangerZone": "위험한 설정",
@@ -2335,7 +2374,29 @@
             "tooltip": "툴팁 사용",
             "hidden": "숨김"
           }
+        },
+        "dockerContainer": {
+          "label": "",
+          "description": "",
+          "placeholder": "",
+          "disabled": "",
+          "unavailable": ""
         }
+      },
+      "docker": {
+        "action": {
+          "start": "",
+          "stop": ""
+        },
+        "notification": {
+          "startFailed": "",
+          "stopFailed": ""
+        },
+        "switch": {
+          "start": "",
+          "stop": ""
+        },
+        "stopped": ""
       },
       "error": {
         "notFound": {
@@ -2414,6 +2475,10 @@
         "hideHostname": {
           "label": "호스트네임 숨기기"
         },
+        "showFullUrls": {
+          "label": "",
+          "description": ""
+        },
         "withBorder": {
           "label": "테두리 표시"
         },
@@ -2436,6 +2501,9 @@
         }
       },
       "empty": "위젯 설정에서 URL 또는 앱을 추가하세요",
+      "copyUrl": "",
+      "copied": "",
+      "copyFailed": "",
       "groups": {
         "label": "카테고리",
         "placeholder": "새 카테고리",
@@ -3535,6 +3603,34 @@
     },
     "coolify": {
       "description": "서버와 애플리케이션을 포함한 Coolify 인스턴스 개요",
+      "summary": {
+        "needsAttention": "",
+        "inProgress": "",
+        "unknown": "",
+        "healthy": "",
+        "empty": "",
+        "healthyDetail": "",
+        "more": "",
+        "moreInstances": ""
+      },
+      "details": {
+        "tabs": "",
+        "overview": "",
+        "search": "",
+        "serviceApplications": ""
+      },
+      "overview": {
+        "projects": "",
+        "resources": "",
+        "attention": "",
+        "ready": "",
+        "noProjects": "",
+        "projectsUnavailable": "",
+        "moreProjects": "",
+        "running": "실행 중",
+        "resourceCount": "",
+        "environmentCount": ""
+      },
       "option": {
         "showServers": {
           "label": "서버 표시"
@@ -3566,7 +3662,13 @@
       },
       "source": {
         "url": "소스: {url}",
-        "unavailable": "{source}: 사용할 수 없음"
+        "unavailable": "{source}: 사용할 수 없음",
+        "unavailableCount": ""
+      },
+      "kind": {
+        "server": "",
+        "application": "",
+        "service": ""
       },
       "instances": {
         "title": "인스턴스"
@@ -3583,6 +3685,7 @@
         "exited": "종료됨",
         "starting": "시작 중",
         "restarting": "다시 시작",
+        "unhealthy": "비정상",
         "unknown": "알 수 없음",
         "online": "온라인",
         "offline": "오프라인",
@@ -4815,6 +4918,7 @@
           },
           "identifier": {
             "label": "식별자",
+            "containerPlaceholder": "",
             "placeholder": "이름 또는 소유자/이름"
           },
           "name": {},
@@ -6623,7 +6727,8 @@
             "documentation": "문서",
             "submitIssue": "이슈 제출",
             "discord": "커뮤니티 불화",
-            "sourceCode": "소스 코드"
+            "sourceCode": "소스 코드",
+            "changelog": ""
           }
         },
         "about": "정보",
@@ -6976,6 +7081,10 @@
             "title": "모양",
             "defaultColorScheme": {
               "label": "기본 색상 구성표"
+            },
+            "whatsNew": {
+              "label": "",
+              "description": ""
             }
           },
           "branding": {
@@ -8728,6 +8837,12 @@
         "description": "색상 구성표, 언어, 홈 보드, 설정을 변경할 수 있습니다. 여기에서 관리 영역으로 이동할 수도 있습니다."
       }
     }
+  },
+  "whatsNew": {
+    "title": "",
+    "empty": "",
+    "allReleases": "",
+    "dismiss": ""
   },
   "metadata": {
     "description": "*arr 스택과 전체 홈랩을 위한 자체 호스팅 대시보드입니다. 50개 이상의 서비스, 실시간 위젯 및 구성 파일 없이 통합할 수 있습니다.",

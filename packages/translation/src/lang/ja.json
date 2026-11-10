@@ -1515,6 +1515,27 @@
           "title": "不明なエラー",
           "description": "不明なエラーが発生しました。詳細を確認するには以下の原因を開いてください"
         },
+        "frigate": {
+          "title": "",
+          "status": "",
+          "description": {
+            "cookie": "",
+            "profileMismatch": "",
+            "redirect": "",
+            "login": "",
+            "profile": "",
+            "stats": ""
+          }
+        },
+        "openmediavault": {
+          "title": "",
+          "description": {
+            "totpSecretRequired": "",
+            "totpSecretInvalid": "",
+            "totpVerificationFailed": "",
+            "unsupportedChallenge": ""
+          }
+        },
         "parse": {
           "title": "解析エラー",
           "description": "レスポンスを解析できませんでした。URLが、サービスのベースURLを指していることを確認してください。"
@@ -1714,6 +1735,11 @@
         "title": "シークレットをリセット",
         "message": "このシークレットをリセットしてもよろしいですか？"
       },
+      "totpNotice": "",
+      "remove": {
+        "title": "",
+        "message": ""
+      },
       "noSecretsRequired": {
         "segmentTitle": "シークレットなし",
         "text": "この連携機能に、シークレットは必要ありません"
@@ -1794,6 +1820,10 @@
         "wazuhIndexerPassword": {
           "label": "インデクサのパスワード",
           "newLabel": "新しいインデクサーのパスワード"
+        },
+        "totpSecret": {
+          "label": "",
+          "newLabel": ""
         }
       }
     },
@@ -1984,6 +2014,15 @@
         "assistant": "アシスタント",
         "assistantThinking": "考え",
         "modifier": ""
+      }
+    },
+    "markdown": {
+      "alert": {
+        "note": "ノート",
+        "tip": "",
+        "important": "",
+        "warning": "警告",
+        "caution": ""
       }
     },
     "dangerZone": "危険な操作",
@@ -2335,7 +2374,29 @@
             "tooltip": "ツールチップ",
             "hidden": "非表示"
           }
+        },
+        "dockerContainer": {
+          "label": "",
+          "description": "",
+          "placeholder": "",
+          "disabled": "",
+          "unavailable": ""
         }
+      },
+      "docker": {
+        "action": {
+          "start": "",
+          "stop": ""
+        },
+        "notification": {
+          "startFailed": "",
+          "stopFailed": ""
+        },
+        "switch": {
+          "start": "",
+          "stop": ""
+        },
+        "stopped": ""
       },
       "error": {
         "notFound": {
@@ -2414,6 +2475,10 @@
         "hideHostname": {
           "label": "ホスト名を非表示"
         },
+        "showFullUrls": {
+          "label": "",
+          "description": ""
+        },
         "withBorder": {
           "label": ""
         },
@@ -2436,6 +2501,9 @@
         }
       },
       "empty": "ウィジェットの設定で URL または App を追加する",
+      "copyUrl": "URL をコピーする",
+      "copied": "コピーしました",
+      "copyFailed": "",
       "groups": {
         "label": "カテゴリ",
         "placeholder": "新しいカテゴリー",
@@ -3535,6 +3603,34 @@
     },
     "coolify": {
       "description": "サーバーとアプリケーションを使用した Coolify インスタンスの概要",
+      "summary": {
+        "needsAttention": "{count} は注意が必要です",
+        "inProgress": "",
+        "unknown": "",
+        "healthy": "",
+        "empty": "",
+        "healthyDetail": "",
+        "more": "",
+        "moreInstances": ""
+      },
+      "details": {
+        "tabs": "",
+        "overview": "",
+        "search": "",
+        "serviceApplications": ""
+      },
+      "overview": {
+        "projects": "",
+        "resources": "",
+        "attention": "注意が必要です",
+        "ready": "準備完了",
+        "noProjects": "",
+        "projectsUnavailable": "",
+        "moreProjects": "",
+        "running": "実行中",
+        "resourceCount": "",
+        "environmentCount": ""
+      },
       "option": {
         "showServers": {
           "label": "サーバーを表示"
@@ -3566,7 +3662,13 @@
       },
       "source": {
         "url": "ソース: {url}",
-        "unavailable": ""
+        "unavailable": "",
+        "unavailableCount": ""
+      },
+      "kind": {
+        "server": "",
+        "application": "アプリケーション",
+        "service": "サービス"
       },
       "instances": {
         "title": "インスタンス"
@@ -3583,6 +3685,7 @@
         "exited": "終了",
         "starting": "開始",
         "restarting": "再起動中",
+        "unhealthy": "異常",
         "unknown": "不明",
         "online": "オンライン",
         "offline": "オフライン",
@@ -4815,6 +4918,7 @@
           },
           "identifier": {
             "label": "識別名",
+            "containerPlaceholder": "",
             "placeholder": "名前、または所有者名"
           },
           "name": {},
@@ -6623,7 +6727,8 @@
             "documentation": "ドキュメンテーション",
             "submitIssue": "問題を送信する",
             "discord": "コミュニティ・ディスコード",
-            "sourceCode": "ソースコード"
+            "sourceCode": "ソースコード",
+            "changelog": ""
           }
         },
         "about": "このアプリについて",
@@ -6976,6 +7081,10 @@
             "title": "外観",
             "defaultColorScheme": {
               "label": "既定の配色設定"
+            },
+            "whatsNew": {
+              "label": "",
+              "description": ""
             }
           },
           "branding": {
@@ -8728,6 +8837,12 @@
         "description": ""
       }
     }
+  },
+  "whatsNew": {
+    "title": "",
+    "empty": "",
+    "allReleases": "",
+    "dismiss": ""
   },
   "metadata": {
     "description": "*arrスタックとホームラブ全体のセルフホスト型ダッシュボード。50以上のサービス、リアルタイムウィジェット、設定ファイルなしと統合できます。",

@@ -1515,6 +1515,27 @@
           "title": "Eroare necunoscută",
           "description": "A apărut o eroare necunoscută, deschideți cauza de mai jos pentru a vedea mai multe detalii"
         },
+        "frigate": {
+          "title": "",
+          "status": "",
+          "description": {
+            "cookie": "",
+            "profileMismatch": "",
+            "redirect": "",
+            "login": "",
+            "profile": "",
+            "stats": ""
+          }
+        },
+        "openmediavault": {
+          "title": "",
+          "description": {
+            "totpSecretRequired": "",
+            "totpSecretInvalid": "",
+            "totpVerificationFailed": "",
+            "unsupportedChallenge": ""
+          }
+        },
         "parse": {
           "title": "",
           "description": "Răspunsul nu a putut fi analizat. Vă rugăm să verificaţi dacă URL-ul este îndreptat către URL-ul de bază al serviciului."
@@ -1714,6 +1735,11 @@
         "title": "Resetare secret",
         "message": "Sunteţi sigur că doriţi să resetaţi acest secret?"
       },
+      "totpNotice": "",
+      "remove": {
+        "title": "",
+        "message": ""
+      },
       "noSecretsRequired": {
         "segmentTitle": "Fără secrete",
         "text": "Nu sunt necesare secrete pentru această integrare"
@@ -1794,6 +1820,10 @@
         "wazuhIndexerPassword": {
           "label": "Parola indexului",
           "newLabel": "Parola de indexare nouă"
+        },
+        "totpSecret": {
+          "label": "",
+          "newLabel": ""
         }
       }
     },
@@ -1984,6 +2014,15 @@
         "assistant": "Asistent",
         "assistantThinking": "Gândire",
         "modifier": ""
+      }
+    },
+    "markdown": {
+      "alert": {
+        "note": "Notă",
+        "tip": "",
+        "important": "",
+        "warning": "Avertizare",
+        "caution": ""
       }
     },
     "dangerZone": "Zonă periculoasă",
@@ -2335,7 +2374,29 @@
             "tooltip": "Ca pont de unelte",
             "hidden": ""
           }
+        },
+        "dockerContainer": {
+          "label": "",
+          "description": "",
+          "placeholder": "",
+          "disabled": "",
+          "unavailable": ""
         }
+      },
+      "docker": {
+        "action": {
+          "start": "",
+          "stop": ""
+        },
+        "notification": {
+          "startFailed": "",
+          "stopFailed": ""
+        },
+        "switch": {
+          "start": "",
+          "stop": ""
+        },
+        "stopped": ""
       },
       "error": {
         "notFound": {
@@ -2414,6 +2475,10 @@
         "hideHostname": {
           "label": "Ascunde numele gazdei"
         },
+        "showFullUrls": {
+          "label": "",
+          "description": ""
+        },
         "withBorder": {
           "label": "Arată chenarul"
         },
@@ -2436,6 +2501,9 @@
         }
       },
       "empty": "Adăugați un URL sau o aplicație în setările widget-ului",
+      "copyUrl": "Copiază URL-ul",
+      "copied": "Copiat",
+      "copyFailed": "",
       "groups": {
         "label": "Categorii",
         "placeholder": "Categorie nouă",
@@ -3535,6 +3603,34 @@
     },
     "coolify": {
       "description": "Prezentare generală a instanței tale Coolify cu servere și aplicații",
+      "summary": {
+        "needsAttention": "{count} are nevoie de atenție",
+        "inProgress": "",
+        "unknown": "",
+        "healthy": "",
+        "empty": "",
+        "healthyDetail": "",
+        "more": "",
+        "moreInstances": ""
+      },
+      "details": {
+        "tabs": "",
+        "overview": "",
+        "search": "",
+        "serviceApplications": ""
+      },
+      "overview": {
+        "projects": "",
+        "resources": "",
+        "attention": "Necesită atenție",
+        "ready": "Gata",
+        "noProjects": "",
+        "projectsUnavailable": "",
+        "moreProjects": "",
+        "running": "Rulează",
+        "resourceCount": "",
+        "environmentCount": ""
+      },
       "option": {
         "showServers": {
           "label": "Arată serverele"
@@ -3566,7 +3662,13 @@
       },
       "source": {
         "url": "Sursa: {url}",
-        "unavailable": ""
+        "unavailable": "",
+        "unavailableCount": ""
+      },
+      "kind": {
+        "server": "",
+        "application": "Cerere",
+        "service": "Serviciu"
       },
       "instances": {
         "title": "Instanțe"
@@ -3583,6 +3685,7 @@
         "exited": "Ieşit",
         "starting": "Pornire",
         "restarting": "Repornire",
+        "unhealthy": "nesănătoase",
         "unknown": "Necunoscut",
         "online": "",
         "offline": "",
@@ -4815,6 +4918,7 @@
           },
           "identifier": {
             "label": "",
+            "containerPlaceholder": "",
             "placeholder": "Nume sau proprietar/nume"
           },
           "name": {},
@@ -6623,7 +6727,8 @@
             "documentation": "Documentație",
             "submitIssue": "Trimite o problema",
             "discord": "Comunitatea Discord",
-            "sourceCode": "Cod sursă"
+            "sourceCode": "Cod sursă",
+            "changelog": ""
           }
         },
         "about": "Despre",
@@ -6976,6 +7081,10 @@
             "title": "Aspect",
             "defaultColorScheme": {
               "label": "Schema de culori implicită"
+            },
+            "whatsNew": {
+              "label": "",
+              "description": ""
             }
           },
           "branding": {
@@ -8728,6 +8837,12 @@
         "description": "Schimbă schema de culori, limba, planșa principală și preferințele. Poți de asemenea să sari în zona de administrare de aici."
       }
     }
+  },
+  "whatsNew": {
+    "title": "",
+    "empty": "",
+    "allReleases": "",
+    "dismiss": ""
   },
   "metadata": {
     "description": "Un tablou de bord auto-găzduit pentru *stiva arr și întregul tău homelab. Integrate cu peste 50+ servicii, widget-uri în timp real, fără fișiere de configurare.",

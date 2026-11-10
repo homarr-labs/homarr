@@ -39,6 +39,7 @@ import { env } from "~/env";
 import { SearchEngineOptimization } from "~/components/layout/search-engine-optimization";
 import { ServiceWorkerRegistration } from "~/components/layout/service-worker-registration";
 import { ViewportHint } from "~/components/layout/viewport-hint";
+import { WhatsNewAutoOpen } from "~/components/layout/whats-new-auto-open";
 import { getCurrentColorSchemeAsync } from "~/theme/color-scheme";
 import { DayJsLoader } from "./_client-providers/dayjs-loader";
 import { JotaiProvider } from "./_client-providers/jotai";
@@ -209,6 +210,7 @@ export default async function Layout(props: {
         <StackedProvider>
           <Notifications pauseResetOnHover="notification" />
           <ServiceWorkerRegistration />
+          <WhatsNewAutoOpen />
           {props.children}
         </StackedProvider>
       </body>

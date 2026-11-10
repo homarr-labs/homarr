@@ -1515,6 +1515,27 @@
           "title": "Lỗi không xác định",
           "description": "Đã xảy ra lỗi không xác định, hãy mở nguyên nhân bên dưới để xem thêm chi tiết"
         },
+        "frigate": {
+          "title": "",
+          "status": "",
+          "description": {
+            "cookie": "",
+            "profileMismatch": "",
+            "redirect": "",
+            "login": "",
+            "profile": "",
+            "stats": ""
+          }
+        },
+        "openmediavault": {
+          "title": "",
+          "description": {
+            "totpSecretRequired": "",
+            "totpSecretInvalid": "",
+            "totpVerificationFailed": "",
+            "unsupportedChallenge": ""
+          }
+        },
         "parse": {
           "title": "Lỗi cú pháp",
           "description": "Không thể phân tích phản hồi. Vui lòng xác minh URL đang trỏ đến URL cơ sở của dịch vụ."
@@ -1714,6 +1735,11 @@
         "title": "Đặt lại bí mật",
         "message": "Bạn có chắc chắn muốn đặt lại bí mật này không?"
       },
+      "totpNotice": "",
+      "remove": {
+        "title": "",
+        "message": ""
+      },
       "noSecretsRequired": {
         "segmentTitle": "Không có bí mật",
         "text": "Tích hợp này không yêu cầu bí mật"
@@ -1794,6 +1820,10 @@
         "wazuhIndexerPassword": {
           "label": "Mật khẩu trình lập chỉ mục",
           "newLabel": "Mật khẩu trình lập chỉ mục mới"
+        },
+        "totpSecret": {
+          "label": "",
+          "newLabel": ""
         }
       }
     },
@@ -1984,6 +2014,15 @@
         "assistant": "Trợ lý",
         "assistantThinking": "Đang suy nghĩ",
         "modifier": "Bộ sửa đổi"
+      }
+    },
+    "markdown": {
+      "alert": {
+        "note": "",
+        "tip": "",
+        "important": "",
+        "warning": "",
+        "caution": ""
       }
     },
     "dangerZone": "Khu vực nguy hiểm",
@@ -2335,7 +2374,29 @@
             "tooltip": "Dạng chú giải",
             "hidden": "Ẩn"
           }
+        },
+        "dockerContainer": {
+          "label": "",
+          "description": "",
+          "placeholder": "",
+          "disabled": "",
+          "unavailable": ""
         }
+      },
+      "docker": {
+        "action": {
+          "start": "",
+          "stop": ""
+        },
+        "notification": {
+          "startFailed": "",
+          "stopFailed": ""
+        },
+        "switch": {
+          "start": "",
+          "stop": ""
+        },
+        "stopped": ""
       },
       "error": {
         "notFound": {
@@ -2414,6 +2475,10 @@
         "hideHostname": {
           "label": "Ẩn tên máy chủ"
         },
+        "showFullUrls": {
+          "label": "",
+          "description": ""
+        },
         "withBorder": {
           "label": "Hiển thị viền"
         },
@@ -2436,6 +2501,9 @@
         }
       },
       "empty": "Thêm URL hoặc Ứng dụng trong cài đặt tiện ích",
+      "copyUrl": "",
+      "copied": "",
+      "copyFailed": "",
       "groups": {
         "label": "",
         "placeholder": "",
@@ -3535,6 +3603,34 @@
     },
     "coolify": {
       "description": "Tổng quan về phiên bản Coolify của bạn với các máy chủ và ứng dụng",
+      "summary": {
+        "needsAttention": "",
+        "inProgress": "",
+        "unknown": "",
+        "healthy": "",
+        "empty": "",
+        "healthyDetail": "",
+        "more": "",
+        "moreInstances": ""
+      },
+      "details": {
+        "tabs": "",
+        "overview": "",
+        "search": "",
+        "serviceApplications": ""
+      },
+      "overview": {
+        "projects": "",
+        "resources": "",
+        "attention": "",
+        "ready": "",
+        "noProjects": "",
+        "projectsUnavailable": "",
+        "moreProjects": "",
+        "running": "Đang chạy",
+        "resourceCount": "",
+        "environmentCount": ""
+      },
       "option": {
         "showServers": {
           "label": "Hiển thị máy chủ"
@@ -3566,7 +3662,13 @@
       },
       "source": {
         "url": "Nguồn: {url}",
-        "unavailable": "{source}: không khả dụng"
+        "unavailable": "{source}: không khả dụng",
+        "unavailableCount": ""
+      },
+      "kind": {
+        "server": "",
+        "application": "",
+        "service": ""
       },
       "instances": {
         "title": "Các phiên bản"
@@ -3583,6 +3685,7 @@
         "exited": "Đã thoát",
         "starting": "Đang khởi động",
         "restarting": "Đang khởi động lại",
+        "unhealthy": "",
         "unknown": "Không rõ",
         "online": "Trực tuyến",
         "offline": "Ngoại tuyến",
@@ -4815,6 +4918,7 @@
           },
           "identifier": {
             "label": "Mã định danh",
+            "containerPlaceholder": "",
             "placeholder": "Tên hoặc Chủ sở hữu/Tên"
           },
           "name": {},
@@ -6623,7 +6727,8 @@
             "documentation": "Tài liệu",
             "submitIssue": "Gửi báo cáo sự cố",
             "discord": "Discord",
-            "sourceCode": "Mã nguồn"
+            "sourceCode": "Mã nguồn",
+            "changelog": ""
           }
         },
         "about": "Về chúng tôi",
@@ -6976,6 +7081,10 @@
             "title": "Hiển thị",
             "defaultColorScheme": {
               "label": "Bảng màu mặc định"
+            },
+            "whatsNew": {
+              "label": "",
+              "description": ""
             }
           },
           "branding": {
@@ -8728,6 +8837,12 @@
         "description": "Thay đổi bảng màu, ngôn ngữ, bảng chính và tùy chọn. Bạn cũng có thể chuyển đến khu vực quản lý từ đây."
       }
     }
+  },
+  "whatsNew": {
+    "title": "",
+    "empty": "",
+    "allReleases": "",
+    "dismiss": ""
   },
   "metadata": {
     "description": "Bảng điều khiển tự lưu trữ cho hệ thống *arr và toàn bộ homelab của bạn. Tích hợp hơn 50 dịch vụ, tiện ích theo thời gian thực, không cần tệp cấu hình.",

@@ -1515,6 +1515,27 @@
           "title": "Error desconocido",
           "description": "Se ha producido un error desconocido, abre la causa a continuación para ver más detalles"
         },
+        "frigate": {
+          "title": "",
+          "status": "",
+          "description": {
+            "cookie": "",
+            "profileMismatch": "",
+            "redirect": "",
+            "login": "",
+            "profile": "",
+            "stats": ""
+          }
+        },
+        "openmediavault": {
+          "title": "",
+          "description": {
+            "totpSecretRequired": "",
+            "totpSecretInvalid": "",
+            "totpVerificationFailed": "",
+            "unsupportedChallenge": ""
+          }
+        },
         "parse": {
           "title": "Error de análisis",
           "description": "La respuesta no pudo ser analizada. Por favor verifique que la URL apunta a la URL base del servicio."
@@ -1714,6 +1735,11 @@
         "title": "Restablecer credencial",
         "message": "¿Estás seguro de que deseas restablecer esta credencial?"
       },
+      "totpNotice": "",
+      "remove": {
+        "title": "",
+        "message": ""
+      },
       "noSecretsRequired": {
         "segmentTitle": "Sin credenciales",
         "text": "No se requieren credenciales para esta integración"
@@ -1794,6 +1820,10 @@
         "wazuhIndexerPassword": {
           "label": "Contraseña del indexador",
           "newLabel": "Nueva contraseña del indexador"
+        },
+        "totpSecret": {
+          "label": "",
+          "newLabel": ""
         }
       }
     },
@@ -1984,6 +2014,15 @@
         "assistant": "Asistente",
         "assistantThinking": "Pensando",
         "modifier": ""
+      }
+    },
+    "markdown": {
+      "alert": {
+        "note": "Nota",
+        "tip": "",
+        "important": "",
+        "warning": "Advertencia",
+        "caution": ""
       }
     },
     "dangerZone": "Zona de riesgo",
@@ -2335,7 +2374,29 @@
             "tooltip": "Como consejo",
             "hidden": "Oculto"
           }
+        },
+        "dockerContainer": {
+          "label": "",
+          "description": "",
+          "placeholder": "",
+          "disabled": "",
+          "unavailable": ""
         }
+      },
+      "docker": {
+        "action": {
+          "start": "",
+          "stop": ""
+        },
+        "notification": {
+          "startFailed": "",
+          "stopFailed": ""
+        },
+        "switch": {
+          "start": "",
+          "stop": ""
+        },
+        "stopped": ""
       },
       "error": {
         "notFound": {
@@ -2414,6 +2475,10 @@
         "hideHostname": {
           "label": "Ocultar nombres de host"
         },
+        "showFullUrls": {
+          "label": "",
+          "description": ""
+        },
         "withBorder": {
           "label": "Mostrar borde"
         },
@@ -2436,6 +2501,9 @@
         }
       },
       "empty": "Añadir una URL o aplicación en la configuración del widget",
+      "copyUrl": "Copiar URL",
+      "copied": "Copiado",
+      "copyFailed": "",
       "groups": {
         "label": "Categorías",
         "placeholder": "Nueva Categoría",
@@ -3535,6 +3603,34 @@
     },
     "coolify": {
       "description": "Resumen de su instancia de Coolify con servidores y aplicaciones",
+      "summary": {
+        "needsAttention": "{count} necesita atención",
+        "inProgress": "",
+        "unknown": "",
+        "healthy": "",
+        "empty": "",
+        "healthyDetail": "",
+        "more": "",
+        "moreInstances": ""
+      },
+      "details": {
+        "tabs": "",
+        "overview": "",
+        "search": "",
+        "serviceApplications": ""
+      },
+      "overview": {
+        "projects": "",
+        "resources": "",
+        "attention": "Necesita atención",
+        "ready": "Listo",
+        "noProjects": "",
+        "projectsUnavailable": "",
+        "moreProjects": "",
+        "running": "En ejecución",
+        "resourceCount": "",
+        "environmentCount": ""
+      },
       "option": {
         "showServers": {
           "label": "Mostrar servidores"
@@ -3566,7 +3662,13 @@
       },
       "source": {
         "url": "Fuente: {url}",
-        "unavailable": ""
+        "unavailable": "",
+        "unavailableCount": ""
+      },
+      "kind": {
+        "server": "",
+        "application": "Aplicación",
+        "service": "Servicio"
       },
       "instances": {
         "title": "Instancias"
@@ -3583,6 +3685,7 @@
         "exited": "Finalizado",
         "starting": "Iniciando",
         "restarting": "Reiniciando",
+        "unhealthy": "Mal estado",
         "unknown": "Desconocido",
         "online": "En línea",
         "offline": "Desconectado",
@@ -4815,6 +4918,7 @@
           },
           "identifier": {
             "label": "Identificador",
+            "containerPlaceholder": "",
             "placeholder": "Nombre o Propietario/Nombre"
           },
           "name": {},
@@ -6623,7 +6727,8 @@
             "documentation": "Documentación",
             "submitIssue": "Enviar una incidencia",
             "discord": "Comunidad de Discord",
-            "sourceCode": "Código Fuente"
+            "sourceCode": "Código Fuente",
+            "changelog": ""
           }
         },
         "about": "Acerca de",
@@ -6976,6 +7081,10 @@
             "title": "Apariencia",
             "defaultColorScheme": {
               "label": "Esquema de color predeterminado"
+            },
+            "whatsNew": {
+              "label": "",
+              "description": ""
             }
           },
           "branding": {
@@ -8728,6 +8837,12 @@
         "description": ""
       }
     }
+  },
+  "whatsNew": {
+    "title": "",
+    "empty": "",
+    "allReleases": "",
+    "dismiss": ""
   },
   "metadata": {
     "description": "Un panel de control autoalojado para la *pila de arr y todo tu homelab. Integra con más de 50 servicios, widgets en tiempo real, sin archivos de configuración.",

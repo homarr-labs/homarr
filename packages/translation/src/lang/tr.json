@@ -1515,6 +1515,27 @@
           "title": "Bilinmeyen hata",
           "description": "Bilinmeyen bir hata oluştu, daha fazla ayrıntı görmek için aşağıdaki nedeni açın"
         },
+        "frigate": {
+          "title": "",
+          "status": "",
+          "description": {
+            "cookie": "",
+            "profileMismatch": "",
+            "redirect": "",
+            "login": "",
+            "profile": "",
+            "stats": ""
+          }
+        },
+        "openmediavault": {
+          "title": "",
+          "description": {
+            "totpSecretRequired": "",
+            "totpSecretInvalid": "",
+            "totpVerificationFailed": "",
+            "unsupportedChallenge": ""
+          }
+        },
         "parse": {
           "title": "Ayrıştırma hatası",
           "description": "Yanıt ayrıştırılamadı. Lütfen URL'nin hizmetin temel URL’sine yönlendirildiğinden emin olun."
@@ -1714,6 +1735,11 @@
         "title": "Gizli anahtarı sıfırla",
         "message": "Gizli anahtarı sıfırlamak istediğinizden emin misiniz?"
       },
+      "totpNotice": "",
+      "remove": {
+        "title": "",
+        "message": ""
+      },
       "noSecretsRequired": {
         "segmentTitle": "Gizli Anahtar Yok",
         "text": "Bu entegrasyon için gizli anahtar gerekmiyor"
@@ -1794,6 +1820,10 @@
         "wazuhIndexerPassword": {
           "label": "İndeksleyici parolası",
           "newLabel": "Yeni indeksleyici parolası"
+        },
+        "totpSecret": {
+          "label": "",
+          "newLabel": ""
         }
       }
     },
@@ -1984,6 +2014,15 @@
         "assistant": "Asistan",
         "assistantThinking": "Düşünüyor",
         "modifier": "Değiştirici"
+      }
+    },
+    "markdown": {
+      "alert": {
+        "note": "Not",
+        "tip": "",
+        "important": "",
+        "warning": "",
+        "caution": ""
       }
     },
     "dangerZone": "Tehlikeli Bölge",
@@ -2335,7 +2374,29 @@
             "tooltip": "Araç ipucu olarak",
             "hidden": "Gizli"
           }
+        },
+        "dockerContainer": {
+          "label": "",
+          "description": "",
+          "placeholder": "",
+          "disabled": "",
+          "unavailable": ""
         }
+      },
+      "docker": {
+        "action": {
+          "start": "",
+          "stop": ""
+        },
+        "notification": {
+          "startFailed": "",
+          "stopFailed": ""
+        },
+        "switch": {
+          "start": "",
+          "stop": ""
+        },
+        "stopped": ""
       },
       "error": {
         "notFound": {
@@ -2414,6 +2475,10 @@
         "hideHostname": {
           "label": "Ana bilgisayar adlarını gizle"
         },
+        "showFullUrls": {
+          "label": "",
+          "description": ""
+        },
         "withBorder": {
           "label": "Kenarlık göster"
         },
@@ -2436,6 +2501,9 @@
         }
       },
       "empty": "Widget ayarlarından bir URL veya uygulama ekleyin",
+      "copyUrl": "URL'yi kopyala",
+      "copied": "Kopyalandı",
+      "copyFailed": "",
       "groups": {
         "label": "",
         "placeholder": "Yeni Kategori",
@@ -3535,6 +3603,34 @@
     },
     "coolify": {
       "description": "Sunucular ve uygulamalarla birlikte Coolify örneğinizin genel görünümü",
+      "summary": {
+        "needsAttention": "",
+        "inProgress": "",
+        "unknown": "",
+        "healthy": "",
+        "empty": "",
+        "healthyDetail": "",
+        "more": "",
+        "moreInstances": ""
+      },
+      "details": {
+        "tabs": "",
+        "overview": "",
+        "search": "",
+        "serviceApplications": ""
+      },
+      "overview": {
+        "projects": "",
+        "resources": "",
+        "attention": "",
+        "ready": "Hazır",
+        "noProjects": "",
+        "projectsUnavailable": "",
+        "moreProjects": "",
+        "running": "Çalışıyor",
+        "resourceCount": "",
+        "environmentCount": ""
+      },
       "option": {
         "showServers": {
           "label": "Sunucuları göster"
@@ -3566,7 +3662,13 @@
       },
       "source": {
         "url": "Kaynak: {url}",
-        "unavailable": "{source}: kullanılamıyor"
+        "unavailable": "{source}: kullanılamıyor",
+        "unavailableCount": ""
+      },
+      "kind": {
+        "server": "",
+        "application": "",
+        "service": ""
       },
       "instances": {
         "title": "Örnekler"
@@ -3583,6 +3685,7 @@
         "exited": "Durduruldu",
         "starting": "Başlatılıyor",
         "restarting": "Yeniden Başlatılıyor",
+        "unhealthy": "Sağlıksız",
         "unknown": "Bilinmeyen",
         "online": "Çevrimiçi",
         "offline": "Çevrimdışı",
@@ -4815,6 +4918,7 @@
           },
           "identifier": {
             "label": "Tanımlayıcı",
+            "containerPlaceholder": "",
             "placeholder": "Ad veya Sahip/Ad"
           },
           "name": {},
@@ -6623,7 +6727,8 @@
             "documentation": "Dokümantasyon",
             "submitIssue": "Bir Hata Gönder",
             "discord": "Discord Topluluğu",
-            "sourceCode": "Kaynak Kodu"
+            "sourceCode": "Kaynak Kodu",
+            "changelog": ""
           }
         },
         "about": "Hakkında",
@@ -6976,6 +7081,10 @@
             "title": "Görünüm",
             "defaultColorScheme": {
               "label": "Öntanımlı Renk Düzeni"
+            },
+            "whatsNew": {
+              "label": "",
+              "description": ""
             }
           },
           "branding": {
@@ -8728,6 +8837,12 @@
         "description": "Renk şemanızı, dilinizi, ana panelinizi ve tercihlerinizi değiştirin. Buradan yönetim alanına da geçebilirsiniz."
       }
     }
+  },
+  "whatsNew": {
+    "title": "",
+    "empty": "",
+    "allReleases": "",
+    "dismiss": ""
   },
   "metadata": {
     "description": "*arr yığını ve tüm homelab ortamınız için kendi barındırdığınız pano. 50'den fazla hizmet, gerçek zamanlı widget'lar ve yapılandırma dosyası yok.",
