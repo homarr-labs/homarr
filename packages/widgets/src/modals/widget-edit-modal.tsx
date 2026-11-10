@@ -247,6 +247,8 @@ const WidgetEditPreview = ({
   }
   const isPendingCustomWidget = kind === "customApi" && !itemId;
   const previewOpacity = (board?.opacity ?? 100) / 100;
+  let previewRadius: string | undefined;
+  if (board) previewRadius = board.itemRadius ?? "default";
   const handleResizeValue = (dimension: keyof WidgetEditModalSize, value: string | number) => {
     if (typeof value !== "number" || !Number.isFinite(value) || !resize) return;
     resize.onChange(
@@ -330,7 +332,7 @@ const WidgetEditPreview = ({
               kind={kind}
               advancedOptions={state.advancedOptions}
               opacity={previewOpacity}
-              radius={board?.itemRadius ?? undefined}
+              radius={previewRadius}
               p={0}
               data-grid-item-content
               style={{
@@ -342,7 +344,7 @@ const WidgetEditPreview = ({
               <WidgetTitleBadge
                 advancedOptions={state.advancedOptions}
                 opacity={previewOpacity}
-                radius={board?.itemRadius ?? undefined}
+                radius={previewRadius}
               />
               <QueryErrorResetBoundary>
                 {({ reset }) => (
