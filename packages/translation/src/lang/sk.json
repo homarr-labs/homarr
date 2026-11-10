@@ -2016,6 +2016,15 @@
         "modifier": "Modifikátor"
       }
     },
+    "markdown": {
+      "alert": {
+        "note": "",
+        "tip": "",
+        "important": "",
+        "warning": "",
+        "caution": ""
+      }
+    },
     "dangerZone": "Nebezpečná zóna",
     "noResults": "Nenašli sa žiadne výsledky",
     "unsavedChanges": "Máš neuložené zmeny!",
@@ -6718,7 +6727,8 @@
             "documentation": "Dokumentácia",
             "submitIssue": "Odoslať problém",
             "discord": "Diskord Spoločenstva",
-            "sourceCode": "Zdrojový kód"
+            "sourceCode": "Zdrojový kód",
+            "changelog": ""
           }
         },
         "about": "O aplikácii",
@@ -7071,6 +7081,10 @@
             "title": "Vzhľad",
             "defaultColorScheme": {
               "label": "Predvolená farebná schéma"
+            },
+            "whatsNew": {
+              "label": "",
+              "description": ""
             }
           },
           "branding": {
@@ -8823,6 +8837,12 @@
         "description": "Zmeňte farebnú schému, jazyk, domovskú dosku a preferencie. Odtiaľto môžete tiež prejsť do ovládacieho panela."
       }
     }
+  },
+  "whatsNew": {
+    "title": "",
+    "empty": "",
+    "allReleases": "",
+    "dismiss": ""
   },
   "metadata": {
     "description": "Samostatne hostovaný prehľad pre balík *arr a celý váš homelab. Integruje sa s viac ako 50 službami, widgety v reálnom čase, bez konfiguračných súborov.",

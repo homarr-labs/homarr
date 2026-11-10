@@ -2016,6 +2016,15 @@
         "modifier": "Moderator"
       }
     },
+    "markdown": {
+      "alert": {
+        "note": "Notatka",
+        "tip": "",
+        "important": "",
+        "warning": "Ostrzeżenie",
+        "caution": ""
+      }
+    },
     "dangerZone": "Strefa zagrożenia",
     "noResults": "Nie znaleziono żadnych wyników",
     "unsavedChanges": "Masz niezapisane zmiany!",
@@ -6718,7 +6727,8 @@
             "documentation": "Dokumentacja",
             "submitIssue": "Zgłoś problem",
             "discord": "Discord społeczności",
-            "sourceCode": "Kod źródłowy"
+            "sourceCode": "Kod źródłowy",
+            "changelog": ""
           }
         },
         "about": "O programie",
@@ -7071,6 +7081,10 @@
             "title": "Wygląd",
             "defaultColorScheme": {
               "label": "Domyślny schemat kolorów"
+            },
+            "whatsNew": {
+              "label": "",
+              "description": ""
             }
           },
           "branding": {
@@ -8823,6 +8837,12 @@
         "description": "Zmień swoją paletę kolorów, język, tablicę startową i preferencje. Możesz również przejść z tąd do obszaru zarządzania."
       }
     }
+  },
+  "whatsNew": {
+    "title": "",
+    "empty": "",
+    "allReleases": "",
+    "dismiss": ""
   },
   "metadata": {
     "description": "Samodzielny panel nawigacyjny dla *arr stosu arr i całej Twojej homelab. Integruje się z ponad 50 usługami, widżetami w czasie rzeczywistym, bez plików konfiguracyjnych.",

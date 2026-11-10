@@ -2016,6 +2016,15 @@
         "modifier": "Módosító"
       }
     },
+    "markdown": {
+      "alert": {
+        "note": "Jegyzet",
+        "tip": "",
+        "important": "",
+        "warning": "",
+        "caution": ""
+      }
+    },
     "dangerZone": "Veszélyzóna",
     "noResults": "Nincs eredmény",
     "unsavedChanges": "Nem mentett módosításai vannak!",
@@ -6718,7 +6727,8 @@
             "documentation": "Dokumentáció",
             "submitIssue": "Hiba bejelentése",
             "discord": "Discord-szerverünk",
-            "sourceCode": "Forráskód"
+            "sourceCode": "Forráskód",
+            "changelog": ""
           }
         },
         "about": "Névjegy",
@@ -7071,6 +7081,10 @@
             "title": "Megjelenés",
             "defaultColorScheme": {
               "label": "Alapértelmezett színséma"
+            },
+            "whatsNew": {
+              "label": "",
+              "description": ""
             }
           },
           "branding": {
@@ -8823,6 +8837,12 @@
         "description": "Itt válthatsz színsémát, nyelvet, kezdőlapot és preferenciákat. Innen a kezelőfelületre is ugorhatsz."
       }
     }
+  },
+  "whatsNew": {
+    "title": "",
+    "empty": "",
+    "allReleases": "",
+    "dismiss": ""
   },
   "metadata": {
     "description": "Önhosztolt irányítópult az *arr-csomaghoz és az egész otthoni laborhoz. Több mint 50 szolgáltatással, valós idejű widgetekkel és konfigurációs fájlok nélkül.",

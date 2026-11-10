@@ -2016,6 +2016,15 @@
         "modifier": "Mod"
       }
     },
+    "markdown": {
+      "alert": {
+        "note": "Note",
+        "tip": "Tip",
+        "important": "Important",
+        "warning": "Warning",
+        "caution": "Caution"
+      }
+    },
     "dangerZone": "Danger zone",
     "noResults": "No results found",
     "unsavedChanges": "You have unsaved changes!",
@@ -5446,13 +5455,31 @@
       "name": "System resources",
       "description": "CPU, Memory, Disk and other hardware usage of your system",
       "option": {
+        "diskDisplayMode": {
+          "label": "Disk capacity display",
+          "option": {
+            "percentage": "Percentage (e.g., 76%)",
+            "free": "Free space percentage (e.g., 24%)",
+            "absolute": "Absolute values (e.g., 1.5 TB / 2.0 TB)",
+            "combined": "Combined (e.g., 1.5 TB / 2.0 TB (76%))"
+          }
+        },
+        "resourceLayout": {
+          "label": "Resource Layout",
+          "description": "Arrange CPU, memory, disks and network groups in compact view. Expanded view uses an adaptive grid."
+        },
+        "subresourceLayout": {
+          "label": "Subresource Layout",
+          "description": "Arrange individual CPU cores, disks and network directions within each group. Grid wraps to fit; Horizontal keeps a scrollable row. Applies in both compact and expanded views."
+        },
         "hasShadow": {
           "label": "Enable chart shading"
         },
         "visibleCharts": {
           "label": "Visible charts",
-          "description": "Select the charts you want to be visible.",
+          "description": "Select the charts you want to be visible. CPU cores shows logical CPUs when available, otherwise overall CPU usage.",
           "option": {
+            "cpuCores": "CPU cores",
             "memory": "Memory",
             "network": "Network"
           }
@@ -6718,7 +6745,8 @@
             "documentation": "Documentation",
             "submitIssue": "Submit an issue",
             "discord": "Community Discord",
-            "sourceCode": "Source Code"
+            "sourceCode": "Source Code",
+            "changelog": "Changelog"
           }
         },
         "about": "About",
@@ -7071,6 +7099,10 @@
             "title": "Appearance",
             "defaultColorScheme": {
               "label": "Default color scheme"
+            },
+            "whatsNew": {
+              "label": "Show what's new after updates",
+              "description": "Shows administrators the release notes in a dialog the first time they open Homarr after an update"
             }
           },
           "branding": {
@@ -8823,6 +8855,12 @@
         "description": "Change your color scheme, language, home board, and preferences. You can also jump to the management area from here."
       }
     }
+  },
+  "whatsNew": {
+    "title": "What's new",
+    "empty": "Release notes are not available right now.",
+    "allReleases": "All releases on GitHub",
+    "dismiss": "Got it"
   },
   "metadata": {
     "description": "A self-hosted dashboard for the *arr stack and your entire homelab. Integrates with 50+ services, real-time widgets, no config files.",

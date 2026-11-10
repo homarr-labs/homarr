@@ -101,9 +101,10 @@ export default function BookmarksWidget({
   const isTight = responsiveHeight < 120;
   let contentPadding = 12;
   if (isTight) contentPadding = 6;
+  const fillAvailableHeight = !advanced && options.layout === "grid" && sections.length === 0;
   let layoutHeight = contentHeight;
   let layoutItemCount = data.length;
-  if (!advanced && options.layout === "column") {
+  if (!advanced && (options.layout === "column" || fillAvailableHeight)) {
     layoutHeight = Math.max(0, responsiveHeight - contentPadding * 2 - 2);
     if (showTitle) layoutHeight = Math.max(0, layoutHeight - options.titleSize * 1.2 - contentPadding);
     if (sections.length > 0) {
@@ -119,6 +120,12 @@ export default function BookmarksWidget({
       layoutHeight += Math.max(0, visibleListCount - 1) * Math.min(bookmarkSpacingPixels[options.spacing], 4);
       layoutHeight = Math.max(0, layoutHeight);
     }
+  }
+  let preferredLayoutHeight = layoutHeight;
+  let availableLayoutHeight: number | undefined;
+  if (fillAvailableHeight) {
+    preferredLayoutHeight = contentHeight;
+    availableLayoutHeight = layoutHeight;
   }
   let layoutWidth = responsiveWidth;
   if (options.layout === "gridHorizontal") layoutWidth = width;
@@ -152,8 +159,9 @@ export default function BookmarksWidget({
     () =>
       getBookmarkDisplayPlan({
         advanced,
+        availableHeight: availableLayoutHeight,
         gap: bookmarkSpacingPixels[options.spacing],
-        height: layoutHeight,
+        height: preferredLayoutHeight,
         hideHostname: options.hideHostname,
         showFullUrls: options.showFullUrls,
         itemCount: layoutItemCount,
@@ -162,13 +170,14 @@ export default function BookmarksWidget({
       }),
     [
       advanced,
-      layoutHeight,
+      availableLayoutHeight,
       layoutItemCount,
       layoutWidth,
       options.hideHostname,
       options.showFullUrls,
       options.layout,
       options.spacing,
+      preferredLayoutHeight,
     ],
   );
 
@@ -186,6 +195,7 @@ export default function BookmarksWidget({
         key={bookmark.id}
         bookmark={bookmark}
         advanced={advanced}
+        fillHeight={fillAvailableHeight}
         orientation={cardDisplay.orientation}
         showHostname={cardDisplay.showHostname}
         showIcon={cardDisplay.showIcon}
@@ -210,16 +220,28 @@ export default function BookmarksWidget({
       );
     if (options.grow)
       return (
-        <Grid grow columns={plan.columns} gap={plan.itemGap}>
+        <Grid
+          grow
+          columns={plan.columns}
+          gap={plan.itemGap}
+          h={fillAvailableHeight ? "100%" : undefined}
+          styles={fillAvailableHeight ? { inner: { height: "100%", alignContent: "stretch" } } : undefined}
+        >
           {cards.map((card) => (
-            <Grid.Col key={card.key} span={1}>
+            <Grid.Col key={card.key} span={1} mih={fillAvailableHeight ? 0 : undefined}>
               {card}
             </Grid.Col>
           ))}
         </Grid>
       );
     return (
-      <SimpleGrid cols={plan.columns} spacing={plan.itemGap} verticalSpacing={plan.itemGap}>
+      <SimpleGrid
+        cols={plan.columns}
+        spacing={plan.itemGap}
+        verticalSpacing={plan.itemGap}
+        h={fillAvailableHeight ? "100%" : undefined}
+        autoRows={fillAvailableHeight ? `minmax(${rem(plan.itemHeight)}, 1fr)` : undefined}
+      >
         {cards}
       </SimpleGrid>
     );
@@ -327,6 +349,7 @@ export default function BookmarksWidget({
 interface BookmarkCardProps {
   advanced: boolean;
   bookmark: BookmarkItem;
+  fillHeight: boolean;
   height: number;
   openNewTab: boolean;
   showFullUrls: boolean;
@@ -342,6 +365,7 @@ interface BookmarkCardProps {
 
 const BookmarkCard = ({
   advanced,
+  fillHeight,
   bookmark,
   height,
   openNewTab,
@@ -500,7 +524,7 @@ const BookmarkCard = ({
         radius={radius}
         withBorder={withBorder || variant === "outline"}
         p={padding}
-        h={height}
+        h={fillHeight ? "100%" : height}
         w={width}
         miw={width}
         onMouseEnter={() => setActive(true)}

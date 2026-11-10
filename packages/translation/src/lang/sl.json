@@ -2016,6 +2016,15 @@
         "modifier": "Moderator"
       }
     },
+    "markdown": {
+      "alert": {
+        "note": "",
+        "tip": "",
+        "important": "",
+        "warning": "",
+        "caution": ""
+      }
+    },
     "dangerZone": "Nevarno območje",
     "noResults": "Ni rezultatov",
     "unsavedChanges": "Imate neshranjene spremembe!",
@@ -6718,7 +6727,8 @@
             "documentation": "Dokumentacija",
             "submitIssue": "Pošlji prijavo težave",
             "discord": "Skupnost Discord",
-            "sourceCode": "Izvorna koda"
+            "sourceCode": "Izvorna koda",
+            "changelog": ""
           }
         },
         "about": "O programu",
@@ -7071,6 +7081,10 @@
             "title": "Videz",
             "defaultColorScheme": {
               "label": "Privzeta barvna shema"
+            },
+            "whatsNew": {
+              "label": "",
+              "description": ""
             }
           },
           "branding": {
@@ -8823,6 +8837,12 @@
         "description": "Spremenite barvno shemo, jezik, domačo tablo in nastavitve. Od tu lahko tudi skočite v upravljalno območje."
       }
     }
+  },
+  "whatsNew": {
+    "title": "",
+    "empty": "",
+    "allReleases": "",
+    "dismiss": ""
   },
   "metadata": {
     "description": "Nadzorna plošča za lastno gostovanje sklada *arr in celotnega domačega laboratorija. Vključuje več kot 50 storitev, gradnike v realnem času in ne zahteva konfiguracijskih datotek.",
