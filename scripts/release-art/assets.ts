@@ -1,6 +1,7 @@
 import type { Page } from "playwright-core";
 import type { RenderItem } from "./items";
 import type { Rect } from "./layout";
+import { readCapped } from "./read-capped";
 import { COLOR } from "./svg";
 
 export type IconModel =
@@ -25,29 +26,11 @@ const IMAGE_MIME = /^image\/[\w.+-]+$/;
 
 const downloads = new Map<string, Promise<Download | null>>();
 
-const readCapped = async (res: Response) => {
-  if (Number(res.headers.get("content-length")) > MAX_DOWNLOAD_BYTES) throw new Error("response too large");
-  const reader = res.body?.getReader();
-  if (!reader) throw new Error("empty response");
-  const chunks: Uint8Array[] = [];
-  let size = 0;
-  for (;;) {
-    const { done, value } = await reader.read();
-    if (done) return Buffer.concat(chunks);
-    size += value.length;
-    if (size > MAX_DOWNLOAD_BYTES) {
-      await reader.cancel();
-      throw new Error("response too large");
-    }
-    chunks.push(value);
-  }
-};
-
 const fetchImage = async (url: string): Promise<Download> => {
   if (!/^https?:\/\//.test(url)) throw new Error("unsupported URL scheme");
   const res = await fetch(url, { signal: AbortSignal.timeout(FETCH_TIMEOUT_MS), redirect: "follow" });
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
-  return { bytes: await readCapped(res), type: res.headers.get("content-type") ?? "" };
+  return { bytes: await readCapped(res, MAX_DOWNLOAD_BYTES), type: res.headers.get("content-type") ?? "" };
 };
 
 const download = (url: string, label: string) => {

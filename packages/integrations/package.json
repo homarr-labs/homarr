@@ -16,6 +16,7 @@
     "./anchor": "./src/anchor/anchor-types.ts",
     "./downloads": "./src/interfaces/downloads/download-client-items.ts",
     "./factory": "./src/factory.ts",
+    "./home-assistant/errors": "./src/homeassistant/homeassistant-errors.ts",
     "./response-contract": "./src/base/response-contract.ts",
     "./test-connection": "./src/base/test-connection/index.ts",
     "./types": "./src/types.ts",

@@ -39,13 +39,12 @@ import { useCurrentLayout, useRequiredBoard } from "@homarr/boards/context";
 import { getWidgetName } from "@homarr/definitions";
 import { useI18n } from "@homarr/translation/client";
 
+import { AddInPlaceGridLayer } from "~/components/board/in-place-editor/grid-layer";
 import { getLogicalGridSize, LOGICAL_GRID_PITCH } from "~/components/board/layout";
 import {
   beginGridTransaction,
   cancelGridTransaction,
   commitGridTransaction,
-  getContinuousGridDelta,
-  getContinuousResizePlacement,
   getGridTargetFallbackIds,
   getPreferredNestedExitTargetId,
   getPointerProjectedShape,
@@ -125,7 +124,7 @@ interface BoardGridEditorActionsContextValue {
   isDropTargetEligible: (source: AbstractDraggable, targetGridId: string) => boolean;
   canAcceptDrop: (source: AbstractDraggable, targetGridId: string) => boolean;
   beginResize: (input: ResizeStartInput) => boolean;
-  previewResize: (input: ResizePreviewInput) => boolean;
+  previewResize: (input: ResizePreviewInput) => SectionGridPlacement | null;
   completeResize: () => void;
   cancelResize: () => void;
 }
@@ -574,12 +573,20 @@ export const BoardGridEditorProvider = ({ children }: PropsWithChildren) => {
   const applyResizePreview = useCallback(
     (input: ResizePreviewInput) => {
       const active = activeRef.current;
-      if (!active) return false;
+      if (!active) return null;
       active.mode = "resize";
       active.targetGridId = active.transaction.sourceGridId;
 
       const key = `${input.direction}:${input.deltaColumns}:${input.deltaRows}:${input.minWidth}:${input.minHeight}`;
-      if (active.lastPreviewKey === key) return active.valid;
+      const getAcceptedPlacement = () => {
+        if (!active.valid) return null;
+        return (
+          active.transaction.preview.grids
+            .find((grid) => grid.id === active.transaction.sourceGridId)
+            ?.placements.find((placement) => placement.id === active.transaction.activeId) ?? null
+        );
+      };
+      if (active.lastPreviewKey === key) return getAcceptedPlacement();
       active.lastPreviewKey = key;
       const result = previewGridResize(active.transaction, input);
       active.valid = result.accepted;
@@ -595,7 +602,7 @@ export const BoardGridEditorProvider = ({ children }: PropsWithChildren) => {
           valid: false,
           previewRevision: active.previewRevision,
         });
-        return false;
+        return null;
       }
 
       active.transaction = result.transaction;
@@ -613,7 +620,7 @@ export const BoardGridEditorProvider = ({ children }: PropsWithChildren) => {
         valid: true,
         previewRevision: active.previewRevision,
       });
-      return true;
+      return getAcceptedPlacement();
     },
     [interactionStore],
   );
@@ -621,7 +628,7 @@ export const BoardGridEditorProvider = ({ children }: PropsWithChildren) => {
   const previewResize = useCallback(
     (input: ResizePreviewInput) => {
       const active = activeRef.current;
-      if (!active || active.mode !== "resize") return false;
+      if (!active || active.mode !== "resize") return null;
       return applyResizePreview(input);
     },
     [applyResizePreview],
@@ -739,6 +746,8 @@ export default function GridEditor({
   const { registerGrid, getDepth, isDropTargetEligible } = useBoardGridEditorActions();
   const interactionStore = useBoardGridEditorInteractionStore();
   const gridRef = useRef<HTMLDivElement>(null);
+  const [addInPlaceRowCount, setAddInPlaceRowCount] = useState(0);
+  const renderedRowCount = Math.max(rowCount, addInPlaceRowCount);
   const entryElements = useSyncExternalStore(
     entryElementStore.subscribe,
     entryElementStore.getSnapshot,
@@ -793,17 +802,29 @@ export default function GridEditor({
     });
   }, [columnCount, depth, maxRowCount, ownerPlacementId, parentGridId, registerGrid, sectionId, transactionPlacements]);
 
+  useLayoutEffect(() => {
+    const viewport = gridRef.current?.parentElement;
+    if (!viewport || maxRowCount !== null || renderedRowCount <= rowCount) return;
+    viewport.style.setProperty(
+      "--board-grid-drag-height",
+      `calc(${getLogicalGridSize(renderedRowCount)}px * var(--board-grid-row-scale, 1))`,
+    );
+    return () => {
+      viewport.style.removeProperty("--board-grid-drag-height");
+    };
+  }, [maxRowCount, renderedRowCount, rowCount]);
+
   return (
     <div
       ref={setGridRef}
       className={className}
       data-grid-section-id={sectionId}
       data-grid-depth={depth}
-      data-grid-row-count={rowCount}
+      data-grid-row-count={renderedRowCount}
       style={
         {
           width: getLogicalGridSize(columnCount),
-          height: `calc(${getLogicalGridSize(rowCount)}px * var(--board-grid-row-scale, 1))`,
+          height: `calc(${getLogicalGridSize(renderedRowCount)}px * var(--board-grid-row-scale, 1))`,
           "--board-grid-pitch": `${LOGICAL_GRID_PITCH}px`,
         } as CSSProperties
       }
@@ -830,6 +851,15 @@ export default function GridEditor({
         entryElements={entryElements}
         interactionStore={interactionStore}
       />
+      <AddInPlaceGridLayer
+        sectionId={sectionId}
+        columnCount={columnCount}
+        rowCount={rowCount}
+        maxRowCount={maxRowCount}
+        placements={placements}
+        entryElements={entryElements}
+        onRowCountChange={setAddInPlaceRowCount}
+      />
       <span
         data-grid-runtime="homarr-dnd-kit-v1"
         data-editor-section-id={sectionId}
@@ -840,14 +870,7 @@ export default function GridEditor({
   );
 }
 
-const DndGridEntryComponent = ({
-  sectionId,
-  placement,
-  label,
-  columnCount,
-  maxRowCount,
-  element,
-}: DndGridEntryProps) => {
+const DndGridEntryComponent = ({ sectionId, placement, label, element }: DndGridEntryProps) => {
   const { beginResize, previewResize, completeResize, cancelResize } = useBoardGridEditorActions();
   const placementRef = useRef(placement);
   placementRef.current = placement;
@@ -915,8 +938,6 @@ const DndGridEntryComponent = ({
         sectionId={sectionId}
         placement={placement}
         label={label}
-        columnCount={columnCount}
-        maxRowCount={maxRowCount}
         beginResize={beginResize}
         previewResize={previewResize}
         completeResize={completeResize}
@@ -935,8 +956,6 @@ interface GridResizeHandlesProps {
   sectionId: string;
   placement: SectionGridPlacement;
   label: string;
-  columnCount: number;
-  maxRowCount: number | null;
   beginResize: BoardGridEditorActionsContextValue["beginResize"];
   previewResize: BoardGridEditorActionsContextValue["previewResize"];
   completeResize: BoardGridEditorActionsContextValue["completeResize"];
@@ -950,8 +969,6 @@ const GridResizeHandles = ({
   sectionId,
   placement,
   label,
-  columnCount,
-  maxRowCount,
   beginResize,
   previewResize,
   completeResize,
@@ -1061,21 +1078,11 @@ const GridResizeHandles = ({
       visualScale: started.visualScale,
     };
     const snappedDelta = getSnappedGridDelta(input);
-    const continuousDelta = getContinuousGridDelta(input);
-    if (!snappedDelta || !continuousDelta) return;
-    const valid = update(started.direction, snappedDelta.x, snappedDelta.y);
+    if (!snappedDelta) return;
+    const acceptedPlacement = update(started.direction, snappedDelta.x, snappedDelta.y);
     scheduleResizeOutline({
-      placement: getContinuousResizePlacement({
-        placement: started.placement,
-        direction: started.direction,
-        deltaColumns: continuousDelta.x,
-        deltaRows: continuousDelta.y,
-        columnCount,
-        maxRowCount,
-        minWidth: started.placement.minW ?? 1,
-        minHeight: started.placement.minH ?? 1,
-      }),
-      valid,
+      placement: acceptedPlacement ?? started.placement,
+      valid: acceptedPlacement !== null,
     });
   };
 

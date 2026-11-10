@@ -39,6 +39,7 @@ import { env } from "@homarr/docker/env";
 import { getI18n } from "@homarr/translation/server";
 
 import { MainHeader } from "~/components/layout/header";
+import { ManagementUpdateNavLink } from "~/components/layout/header/update";
 import { homarrLogoPath } from "~/components/layout/logo/constants";
 import type { NavigationLink } from "~/components/layout/navigation";
 import { MainNavigation } from "~/components/layout/navigation";
@@ -261,7 +262,7 @@ export default async function ManageLayout({ children }: PropsWithChildren) {
   const shell = (
     <ClientShell hasNavigation>
       <MainHeader></MainHeader>
-      <MainNavigation links={navigationLinks}></MainNavigation>
+      <MainNavigation links={navigationLinks} afterLinks={<ManagementUpdateNavLink isAdmin={isAdmin} />} />
       <AppShellMain>{children}</AppShellMain>
     </ClientShell>
   );

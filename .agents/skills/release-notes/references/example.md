@@ -60,7 +60,7 @@ App tiles can now start and stop the Docker container they are linked to, and th
 
 An app tile linked to a Docker container shows a play or stop button next to the status dot. The dot turns orange while the container changes state and red right after you stop it, and Homarr keeps pinging until the app answers again. Only admins see the button, and it is inactive in edit mode.
 
-![Tile with a stop button next to the status dot](https://github.com/junkerderprovinz/homarr/raw/de37a249cd586ae4e5f9927b2dc72d2820835551/app-docker-toggle/tile-after.png)
+<img src="https://github.com/junkerderprovinz/homarr/raw/de37a249cd586ae4e5f9927b2dc72d2820835551/app-docker-toggle/tile-after.png" alt="Tile with a stop button next to the status dot" width="220">
 
 > [!TIP]
 > The new "Docker container" field sits right below "Choose app" in the tile settings. Picking an app links the container with the same name, or the subdomain of the app URL, when there is one.
@@ -69,7 +69,7 @@ An app tile linked to a Docker container shows a play or stop button next to the
 
 The compact card shows project, running resource and available server counts. Larger sizes list the resources that need attention, or your projects when everything is healthy, and the expanded view combines projects, issues and servers in one searchable overview. The widget keeps its last status when a project request fails instead of going blank.
 
-![Coolify widget, healthy](https://github.com/user-attachments/assets/53e53b7c-583f-455d-99d8-6559cf2b9e67)
+<img src="https://github.com/user-attachments/assets/53e53b7c-583f-455d-99d8-6559cf2b9e67" alt="Coolify widget, healthy" width="600">
 
 ### OpenMediaVault TOTP, container tracks and bookmark options
 
