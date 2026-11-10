@@ -12,7 +12,7 @@
     "start": "bun run with-env node ../../node_modules/next/dist/bin/next start",
     "typecheck": "tsc --noEmit",
     "with-env": "dotenv -e ../../.env --",
-    "build:compiled": "HOMARR_VERSION=$(node -p \"require('../../package.json').version\") bun run with-env node ../../node_modules/next/dist/bin/next build --webpack && node scripts/compile-standalone.mjs",
+    "build:compiled": "HOMARR_VERSION=$(node -p \"require('../../package.json').version\") bun run with-env node scripts/build-next.mjs && node scripts/compile-standalone.mjs",
     "build:dependencies": "node scripts/cache-standalone.mjs"
   },
   "dependencies": {
