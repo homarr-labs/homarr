@@ -17,13 +17,38 @@ export const rssFeedsRequestHandler = createWidgetRequestHandler({
       {
         descriptionMaxLen: input.descriptionMaxLength,
         getExtraEntryFields: (feedEntry) => {
+          const extraFields: Record<string, unknown> = {};
+
           const media = attemptGetImageFromEntry(input.url, feedEntry);
-          if (!media) {
-            return {};
+          if (media) {
+            extraFields.enclosure = media;
           }
-          return {
-            enclosure: media,
-          };
+
+          // Atom and YouTube feeds: prioritize <published> over feed-extractor's default <updated> fallback
+          const rawPublished = (feedEntry as Record<string, unknown>).published;
+          if (typeof rawPublished === "string" && rawPublished.trim().length > 0) {
+            extraFields.published = rawPublished.trim();
+          }
+
+          // YouTube RSS feeds put video descriptions in <media:group><media:description>
+          const mediaGroup = (feedEntry as Record<string, unknown>)["media:group"];
+          const mediaDescription =
+            typeof mediaGroup === "object" && mediaGroup !== null
+              ? (mediaGroup as Record<string, unknown>)["media:description"]
+              : undefined;
+          const directMediaDescription = (feedEntry as Record<string, unknown>)["media:description"];
+          const rawDescription =
+            typeof mediaDescription === "string"
+              ? mediaDescription
+              : typeof directMediaDescription === "string"
+                ? directMediaDescription
+                : undefined;
+
+          if (typeof rawDescription === "string" && rawDescription.trim().length > 0) {
+            extraFields.description = rawDescription.trim().slice(0, input.descriptionMaxLength);
+          }
+
+          return extraFields;
         },
       },
       { signal },
