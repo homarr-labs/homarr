@@ -33,6 +33,7 @@ import { getI18n } from "@homarr/translation/server";
 import { resolveHomarrUrlConfig } from "@homarr/workshop/schema";
 
 import { AssistantGate } from "~/components/assistant/assistant-gate";
+import { getBoardCanvasFittingScript } from "~/components/board/layout/board-canvas-fitting";
 import { CrowdinLiveTranslation } from "~/components/layout/crowdin-live-translation";
 import { env } from "~/env";
 import { ThemePreviewProvider } from "~/components/theme/theme-preview-context";
@@ -198,6 +199,7 @@ export default async function Layout(props: {
     >
       <head>
         <ColorSchemeScript defaultColorScheme={colorScheme} />
+        <script id="homarr-board-canvas-fitting" dangerouslySetInnerHTML={{ __html: getBoardCanvasFittingScript() }} />
         <meta name="homarr-website-url" content={publicUrls.homarrWebsiteUrl} />
         {session ? (
           <>

@@ -2424,7 +2424,9 @@
       "saveErrorTitle": "Unable to update items",
       "saveErrorMessage": "The changes could not be saved. The board was refreshed.",
       "moveUnavailableTitle": "Unable to move selected items",
-      "moveUnavailableMessage": "The destination does not have enough room for the entire selection."
+      "moveUnavailableMessage": "The destination does not have enough room for the entire selection.",
+      "moveToTab": "Move to tab",
+      "movedToTab": "{count, plural, one {# item moved} other {# items moved}}"
     },
     "moveResize": {
       "title": "Move / resize item",
@@ -6753,6 +6755,26 @@
         }
       }
     },
+    "tabs": {
+      "label": "Board tabs",
+      "indicator": "Tab {index} of {count}: {name}",
+      "home": "Home",
+      "untitled": "Tab {index}",
+      "add": "Add tab",
+      "actions": "Tab actions",
+      "rename": "Rename tab",
+      "namePlaceholder": "Tab name",
+      "moveLeft": "Move left",
+      "moveRight": "Move right",
+      "remove": {
+        "action": "Delete tab",
+        "confirm": "You sure?"
+      },
+      "limitReached": "A board can have up to {max} tabs",
+      "hotkeyHint": "Press {key} to open this tab",
+      "destination": "Tab: {name}",
+      "containerDestination": "{tab} / {container}"
+    },
     "landmark": {
       "canvas": "Dashboard canvas",
       "leftRail": "Left dashboard rail",
@@ -7221,6 +7243,11 @@
                 "logoDisplay": {
                   "logo": "Logo only",
                   "logoAndText": "Logo + text"
+                },
+                "tabsDisplay": {
+                  "wide": "Wide",
+                  "compact": "Compact",
+                  "indicator": "Indicator only"
                 }
               },
               "items": {
@@ -7228,6 +7255,7 @@
                 "search": "Search",
                 "home": "Home board",
                 "boardSwitcher": "Boards",
+                "boardTabs": "Board tabs",
                 "assistant": "Assistant",
                 "docker": "Docker",
                 "boardEdit": "Edit board",
@@ -8045,7 +8073,8 @@
               "openSpotlightApps": "Open app search",
               "openSpotlightAssistant": "Open Assistant mode",
               "openSpotlightPreferences": "Open preferences mode",
-              "openAssistant": "Open Assistant"
+              "openAssistant": "Open Assistant",
+              "switchBoardTab": "Switch board tab (boards with tabs only)"
             },
             "note": "Tip: Mod refers to both Ctrl key and ⌘ key on macOS"
           }

@@ -3,7 +3,8 @@ import { Grid, Input, NumberInput, Select, Stack } from "@mantine/core";
 import { z } from "zod/v4";
 
 import { useCurrentLayout, useRequiredBoard } from "@homarr/boards/context";
-import { getRootSectionLane } from "@homarr/definitions";
+import { getBoardTabForSection } from "@homarr/boards/tabs";
+import { getBoardTabSections, getRootSectionLane } from "@homarr/definitions";
 import { useZodForm } from "@homarr/form";
 import { createModal, ModalFormFooter, modalSizeForm, useModalAction } from "@homarr/modals";
 import { useI18n } from "@homarr/translation/client";
@@ -16,6 +17,7 @@ import { useRegisteredGridEditors } from "../sections/grid/grid-editor-registry"
 import { getSectionGridColumnCount, getSectionGridPlacements } from "../sections/grid/section-grid-placements";
 import type { CommitSectionGridInput, SectionGridPlacement } from "../sections/grid/use-grid-layout-actions";
 import { useGridLayoutActions } from "../sections/grid/use-grid-layout-actions";
+import { getCrossTabMoveSnapshots, getEntryMinimumSize, isSameOrDescendant } from "./actions/move-entry-across-tabs";
 
 export type MovableEntry = Pick<
   SectionItem | ContainerSectionItem,
@@ -176,7 +178,19 @@ export const ItemMoveModal = createModal<InnerProps>(({ actions, innerProps }) =
               { layoutId: currentLayoutId, sectionId: target.id, placements: resolvedTarget },
             ];
 
-      commitSectionGrids(snapshots);
+      const crossTabSnapshots = getCrossTabMoveSnapshots({
+        board,
+        currentLayoutId,
+        entry,
+        sourceSectionId,
+        targetSectionId: target.id,
+      });
+      if (!crossTabSnapshots) {
+        form.setFieldError("sectionId", tMoveResize("keyboard.boundary"));
+        return;
+      }
+
+      commitSectionGrids([...snapshots, ...crossTabSnapshots]);
       actions.closeModal();
       focusMovedEntry(entry.id, target.id);
     },
@@ -294,6 +308,13 @@ export const getMoveTargets = (
   const minimum = getEntryMinimumSize(board, layoutId, entry);
 
   const candidates = board.sections.flatMap((section): MoveTargetCandidate[] => {
+    if (
+      getBoardTabSections(board.sections).length > 1 &&
+      registeredGridEditors &&
+      !registeredGridEditors.has(section.id) &&
+      !getBoardTabForSection(board, layoutId, section.id)
+    )
+      return [];
     if (section.kind === "empty") {
       const columnCount = getSectionColumnCount(board, layoutId, section.id);
       const lane = getRootSectionLane(section.xOffset);
@@ -357,28 +378,6 @@ const getSectionMaxRowCount = (board: Board, layoutId: string, sectionId: string
     return section.layouts.find((candidate) => candidate.layoutId === layoutId)?.height ?? null;
   }
   return null;
-};
-
-const getEntryMinimumSize = (board: Board, layoutId: string, entry: MovableEntry) => {
-  if (entry.type === "item") return { width: 1, height: 1 };
-  const children = getSectionGridPlacements(board, layoutId, entry.id);
-  return {
-    width: entry.minW ?? Math.max(1, ...children.map((child) => child.x + child.w)),
-    height: entry.minH ?? Math.max(1, ...children.map((child) => child.y + child.h)),
-  };
-};
-
-const isSameOrDescendant = (board: Board, layoutId: string, candidateId: string, ancestorId: string) => {
-  let current: string | undefined = candidateId;
-  const visited = new Set<string>();
-  while (current && !visited.has(current)) {
-    if (current === ancestorId) return true;
-    visited.add(current);
-    const section = board.sections.find((candidate) => candidate.id === current && candidate.kind === "container");
-    if (!section || section.kind !== "container") return false;
-    current = section.layouts.find((layout) => layout.layoutId === layoutId)?.parentSectionId;
-  }
-  return false;
 };
 
 const focusMovedEntry = (entryId: string, sectionId: string) => {

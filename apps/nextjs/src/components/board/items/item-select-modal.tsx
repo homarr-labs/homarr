@@ -23,6 +23,7 @@ import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { useSession } from "@homarr/auth/client";
 import { useCurrentLayout, useRequiredBoard } from "@homarr/boards/context";
+import { getBoardTabForSection, useBoardTabs } from "@homarr/boards/tabs";
 import { createId } from "@homarr/common";
 import {
   getBoardLaneColumnCount,
@@ -45,7 +46,7 @@ import type { TablerIcon } from "@homarr/ui";
 import { widgetCatalogIcons } from "@homarr/ui/widget-icons";
 import { loadWidgetDefinition, reduceWidgetOptionsWithDefinition } from "@homarr/widgets/manifest";
 
-import type { EmptySection } from "~/app/[locale]/boards/_types";
+import { useBoardTabLabel } from "~/components/board/tabs/use-board-tab-label";
 import { IntegrationSelectModal } from "~/components/integration/integration-select-modal";
 import { getSectionGridColumnCount } from "../sections/grid/section-grid-placements";
 import { useItemActions } from "./item-actions";
@@ -121,15 +122,14 @@ const ItemSelectModalContent = ({
   const board = useRequiredBoard();
   const currentLayoutId = useCurrentLayout();
   const currentLayout = board.layouts.find((layout) => layout.id === currentLayoutId);
-  const mainCanvasSection = board.sections
-    .filter(
-      (section): section is EmptySection => section.kind === "empty" && getRootSectionLane(section.xOffset) === "main",
-    )
-    .toSorted((sectionA, sectionB) => sectionA.yOffset - sectionB.yOffset)
-    .at(0);
+  const { tabs, activeTab: mainCanvasSection } = useBoardTabs();
+  const getTabLabel = useBoardTabLabel();
   const placementOptions = useMemo(
     () => [
       ...(mainCanvasSection ? [{ value: mainCanvasSection.id, label: t("item.create.destination.mainCanvas") }] : []),
+      ...(tabs.length > 1 ? tabs : [])
+        .filter((tab) => tab.id !== mainCanvasSection?.id)
+        .map((tab) => ({ value: tab.id, label: t("board.tabs.destination", { name: getTabLabel(tab) }) })),
       ...board.sections.flatMap((section) => {
         if (section.kind !== "empty") return [];
         const lane = getRootSectionLane(section.xOffset);
@@ -143,12 +143,17 @@ const ItemSelectModalContent = ({
       }),
       ...board.sections
         .filter((section) => section.kind === "container")
-        .map((section) => ({
-          value: section.id,
-          label: section.options.title.trim() || t("section.container.untitled"),
-        })),
+        .map((section) => {
+          const container = section.options.title.trim() || t("section.container.untitled");
+          const tab = getBoardTabForSection(board, currentLayoutId, section.id);
+          let label = container;
+          if (tabs.length > 1 && tab) {
+            label = t("board.tabs.containerDestination", { tab: getTabLabel(tab), container });
+          }
+          return { value: section.id, label };
+        }),
     ],
-    [board.sections, currentLayout, mainCanvasSection, t],
+    [board, currentLayout, currentLayoutId, getTabLabel, mainCanvasSection, t, tabs],
   );
   const [targetSectionId, setTargetSectionId] = useState<string | null>(placementOptions[0]?.value ?? null);
   const effectiveSectionId = placementOptions.some(({ value }) => value === targetSectionId)
