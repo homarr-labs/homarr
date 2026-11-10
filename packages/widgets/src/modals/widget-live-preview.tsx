@@ -78,6 +78,8 @@ export const WidgetLivePreview = ({
   const canPreviewCustomWidget = kind === "customApi" && session?.user.permissions.includes("admin");
   const { ref, width, height } = useElementSize<HTMLDivElement>();
   const previewOpacity = (board?.opacity ?? 100) / 100;
+  let previewRadius: string | undefined;
+  if (board) previewRadius = board.itemRadius ?? "default";
   const previewIntegrations = integrationData
     .filter((integration) => integrationIds.includes(integration.id))
     .map((integration) => ({
@@ -96,12 +98,12 @@ export const WidgetLivePreview = ({
       kind={kind}
       advancedOptions={advancedOptions}
       opacity={previewOpacity}
-      radius={board?.itemRadius}
+      radius={previewRadius}
       p={0}
       data-grid-item-content
       style={shellStyle}
     >
-      <WidgetTitleBadge advancedOptions={advancedOptions} opacity={previewOpacity} radius={board?.itemRadius} />
+      <WidgetTitleBadge advancedOptions={advancedOptions} opacity={previewOpacity} radius={previewRadius} />
       <QueryErrorResetBoundary>
         {({ reset }) => (
           <ErrorBoundary

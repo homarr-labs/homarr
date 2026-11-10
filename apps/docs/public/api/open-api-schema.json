@@ -2012,12 +2012,28 @@
                       ]
                     },
                     "primaryColor": {
-                      "type": "string",
-                      "pattern": "^#[0-9A-Fa-f]{6}$"
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "pattern": "^#[0-9A-Fa-f]{6}$"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "description": "Board accent override; null inherits the instance theme"
                     },
                     "secondaryColor": {
-                      "type": "string",
-                      "pattern": "^#[0-9A-Fa-f]{6}$"
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "pattern": "^#[0-9A-Fa-f]{6}$"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "description": "Board secondary accent override; null inherits the instance theme"
                     },
                     "opacity": {
                       "type": "number",
@@ -2038,25 +2054,19 @@
                       "anyOf": [
                         {
                           "type": "string",
-                          "const": "xs"
+                          "enum": [
+                            "xs",
+                            "sm",
+                            "md",
+                            "lg",
+                            "xl"
+                          ]
                         },
                         {
-                          "type": "string",
-                          "const": "sm"
-                        },
-                        {
-                          "type": "string",
-                          "const": "md"
-                        },
-                        {
-                          "type": "string",
-                          "const": "lg"
-                        },
-                        {
-                          "type": "string",
-                          "const": "xl"
+                          "type": "null"
                         }
-                      ]
+                      ],
+                      "description": "Widget roundness override; null inherits the instance theme"
                     },
                     "disableStatus": {
                       "type": "boolean"
@@ -2227,12 +2237,28 @@
                     ]
                   },
                   "primaryColor": {
-                    "type": "string",
-                    "pattern": "^#[0-9A-Fa-f]{6}$"
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "pattern": "^#[0-9A-Fa-f]{6}$"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "description": "Board accent override; null inherits the instance theme"
                   },
                   "secondaryColor": {
-                    "type": "string",
-                    "pattern": "^#[0-9A-Fa-f]{6}$"
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "pattern": "^#[0-9A-Fa-f]{6}$"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "description": "Board secondary accent override; null inherits the instance theme"
                   },
                   "opacity": {
                     "type": "number",
@@ -2266,25 +2292,19 @@
                     "anyOf": [
                       {
                         "type": "string",
-                        "const": "xs"
+                        "enum": [
+                          "xs",
+                          "sm",
+                          "md",
+                          "lg",
+                          "xl"
+                        ]
                       },
                       {
-                        "type": "string",
-                        "const": "sm"
-                      },
-                      {
-                        "type": "string",
-                        "const": "md"
-                      },
-                      {
-                        "type": "string",
-                        "const": "lg"
-                      },
-                      {
-                        "type": "string",
-                        "const": "xl"
+                        "type": "null"
                       }
-                    ]
+                    ],
+                    "description": "Widget roundness override; null inherits the instance theme"
                   },
                   "disableStatus": {
                     "type": "boolean"

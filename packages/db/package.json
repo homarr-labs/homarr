@@ -30,7 +30,7 @@
     "migration:postgresql:run": "bun run with-env drizzle-kit migrate --config ./configs/postgresql.config.ts && bun run seed  && bun run migration:custom",
     "migration:sqlite:drop": "bun run with-env drizzle-kit drop --config ./configs/sqlite.config.ts",
     "migration:sqlite:generate": "bun run with-env drizzle-kit generate --config ./configs/sqlite.config.ts",
-    "migration:sqlite:run": "bun run with-env drizzle-kit migrate --config ./configs/sqlite.config.ts && bun run seed && bun run migration:custom",
+    "migration:sqlite:run": "bun run with-env tsx ./migrations/sqlite/migrate.ts ./migrations/sqlite",
     "push:postgresql": "bun run with-env drizzle-kit push --config ./configs/postgresql.config.ts",
     "push:sqlite": "bun run with-env drizzle-kit push --config ./configs/sqlite.config.ts",
     "seed": "bun run with-env tsx ./migrations/run-seed.ts",

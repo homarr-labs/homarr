@@ -88,6 +88,8 @@ const MCP_TOOL_ALLOWLIST = {
     "smartHome_snapshot",
     "stats_catalog",
     "stats_snapshot",
+    "theme_get",
+    "theme_getControls",
     "traefik_getDashboard",
     "user_getAll",
     "user_getById",
@@ -137,6 +139,7 @@ const MCP_TOOL_ALLOWLIST = {
     "smartHome_executeAutomation",
     "smartHome_switchEntity",
     "stats_refresh",
+    "theme_update",
     "user_updatePreferences",
     "user_delete",
   ],
@@ -456,6 +459,7 @@ test.each([false, true])(
     };
     const params: Record<string, unknown> = {};
     if (modern) {
+      headers["MCP-Protocol-Version"] = "2026-07-28";
       headers["Mcp-Method"] = "tools/list";
       headers["Mcp-Name"] = "homarr";
       params["_meta"] = {

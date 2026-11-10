@@ -15,11 +15,11 @@ export const theme = createTheme({
   respectReducedMotion: true,
   cursorType: "pointer",
 
-  fontFamily: "Inter, system-ui, -apple-system, sans-serif",
+  fontFamily: "var(--font-sans, Inter), system-ui, -apple-system, sans-serif",
   fontFamilyMonospace: "ui-monospace, 'Cascadia Code', 'Fira Code', monospace",
 
   headings: {
-    fontFamily: "Inter, system-ui, -apple-system, sans-serif",
+    fontFamily: "var(--font-sans, Inter), system-ui, -apple-system, sans-serif",
     fontWeight: "600",
     sizes: {
       h1: { fontSize: rem(36), lineHeight: "1.1", fontWeight: "700" },

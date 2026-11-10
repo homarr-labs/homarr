@@ -379,6 +379,13 @@
       "when": 1794168427407,
       "tag": "0053_add_workshop_widget_origin",
       "breakpoints": true
+    },
+    {
+      "idx": 54,
+      "version": "6",
+      "when": 1794297740661,
+      "tag": "0054_board_theme_inheritance",
+      "breakpoints": true
     }
   ]
 }

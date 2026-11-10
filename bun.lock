@@ -847,6 +847,7 @@
       "dependencies": {
         "@homarr/definitions": "workspace:^0.1.0",
         "@homarr/translation": "workspace:^0.1.0",
+        "@homarr/validation": "workspace:^0.1.0",
         "zod": "catalog:",
       },
       "devDependencies": {
@@ -960,6 +961,7 @@
         "@homarr/translation": "workspace:^0.1.0",
         "acorn": "catalog:",
         "acorn-jsx": "catalog:",
+        "color": "5.0.2",
         "zod": "catalog:",
         "zod-form-data": "catalog:",
       },
@@ -1080,6 +1082,7 @@
     "ssh2",
   ],
   "patchedDependencies": {
+    "@mantine/schedule@9.6.0": "patches/@mantine__schedule@9.6.0.patch",
     "dns-caching@0.2.9": "patches/dns-caching.patch",
     "@types/node-unifi@2.5.1": "patches/@types__node-unifi.patch",
     "trpc-to-openapi@3.3.0": "patches/trpc-to-openapi.patch",
