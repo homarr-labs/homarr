@@ -13,11 +13,11 @@ import {
   ColorInput,
   CopyButton,
   DEFAULT_THEME,
-  Grid,
+  Flex,
   Group,
   mergeMantineTheme,
   NumberInput,
-  Paper,
+  ScrollArea,
   SegmentedControl,
   Select,
   Stack,
@@ -26,7 +26,13 @@ import {
   TextInput,
   useComputedColorScheme,
 } from "@mantine/core";
-import { IconArrowBackUp, IconArrowLeft, IconDeviceFloppy } from "@tabler/icons-react";
+import {
+  IconArrowBackUp,
+  IconArrowLeft,
+  IconArrowsMaximize,
+  IconArrowsMinimize,
+  IconDeviceFloppy,
+} from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
@@ -97,6 +103,7 @@ export const ThemeEditor = ({
   const [width, setWidth] = useState<string | null>("100%");
   const [boardName, setBoardName] = useState<string | null>(boards[0]?.name ?? null);
   const [includeCustomCss, setIncludeCustomCss] = useState(true);
+  const [previewExpanded, setPreviewExpanded] = useState(false);
   const draftRevision = useRef(0);
   const mutation = clientApi.theme.update.useMutation();
   const dirty = JSON.stringify(selection) !== JSON.stringify(saved);
@@ -429,6 +436,13 @@ export const ThemeEditor = ({
     includeCustomCss,
   };
 
+  let previewToggleLabel = t("studio.expandPreview");
+  let PreviewToggleIcon = IconArrowsMaximize;
+  if (previewExpanded) {
+    previewToggleLabel = t("studio.showControls");
+    PreviewToggleIcon = IconArrowsMinimize;
+  }
+
   return (
     <Stack gap="md">
       <Group justify="space-between">
@@ -456,10 +470,22 @@ export const ThemeEditor = ({
           {validationMessage}
         </Alert>
       )}
-      <Grid gap="lg" align="start">
-        <Grid.Col span={{ base: 12, lg: 4 }}>
-          <Paper withBorder p="md">
-            <Stack>
+      <Flex
+        direction={{ base: "column", lg: "row" }}
+        gap="xl"
+        align="stretch"
+        h={{ lg: "calc(100dvh - var(--app-shell-header-height, 0px) - 13.5rem)" }}
+        mih={{ lg: 480 }}
+      >
+        <Box
+          id="theme-editor-controls"
+          hidden={previewExpanded}
+          w={{ base: "100%", lg: 320 }}
+          flex={{ lg: "0 0 20rem" }}
+          miw={0}
+        >
+          <ScrollArea.Autosize mah={{ lg: "100%" }} scrollbars="y" offsetScrollbars="y" scrollbarSize={6}>
+            <Stack gap="lg" pb="xs">
               <ThemeSelect
                 value={selection.themeId}
                 hasCustomTheme={Boolean(selection.customTheme)}
@@ -483,7 +509,10 @@ export const ThemeEditor = ({
                   ),
                 )
                 .map(renderControl)}
-              <AdvancedSettings>
+              <AdvancedSettings
+                variant="default"
+                styles={{ control: { paddingInline: 0 }, content: { paddingInline: 0 } }}
+              >
                 <TextInput
                   label={t("studio.searchControls")}
                   value={search}
@@ -496,9 +525,8 @@ export const ThemeEditor = ({
                   <Accordion
                     value={panel}
                     onChange={setPanel}
-                    variant="separated"
-                    mah="65vh"
-                    style={{ overflowY: "auto" }}
+                    variant="default"
+                    styles={{ control: { paddingInline: 0 }, content: { paddingInline: 0 } }}
                   >
                     {themeControlGroups.map((group) => (
                       <Accordion.Item key={group} value={group}>
@@ -578,69 +606,82 @@ export const ThemeEditor = ({
                 )}
               </AdvancedSettings>
             </Stack>
-          </Paper>
-        </Grid.Col>
-        <Grid.Col span={{ base: 12, lg: 8 }}>
-          <Box pos="sticky" top="calc(var(--app-shell-header-height, 0px) + var(--mantine-spacing-md))">
-            <Stack gap="sm">
-              <Group justify="space-between">
-                <Select
-                  label={t("studio.previewSurface")}
-                  value={surface}
-                  allowDeselect={false}
-                  onChange={(value) => {
-                    if (value) setSurface(value as typeof surface);
-                  }}
-                  data={[
-                    { value: "board", label: t("studio.sampleBoard") },
-                    { value: "components", label: t("studio.components") },
-                    { value: "overlays", label: t("studio.overlays") },
-                    { value: "typography", label: t("studio.typography") },
-                    ...(boards.length ? [{ value: "liveBoard", label: t("studio.liveBoard") }] : []),
-                  ]}
-                />
-                <Select
-                  label={t("studio.viewport")}
-                  value={width}
-                  allowDeselect={false}
-                  onChange={setWidth}
-                  data={[
-                    { value: "100%", label: t("studio.responsive") },
-                    { value: "768px", label: t("studio.tablet") },
-                    { value: "390px", label: t("studio.mobile") },
-                  ]}
-                />
-                <SegmentedControl
-                  aria-label={t("editor.previewColorScheme")}
-                  value={scheme}
-                  onChange={(value) => setSchemeOverride(value as "light" | "dark")}
-                  data={[
-                    { value: "light", label: common("colorScheme.options.light") },
-                    { value: "dark", label: common("colorScheme.options.dark") },
-                  ]}
-                />
-              </Group>
-              {surface === "liveBoard" && (
-                <>
-                  <Select
-                    label={t("studio.liveBoard")}
-                    data={boards.map(({ name }) => ({ value: name, label: name }))}
-                    value={boardName}
-                    allowDeselect={false}
-                    onChange={setBoardName}
-                  />
-                </>
-              )}
-              <Switch
-                label={t("studio.includeCustomCss")}
-                checked={includeCustomCss}
-                onChange={(event) => setIncludeCustomCss(event.currentTarget.checked)}
+          </ScrollArea.Autosize>
+        </Box>
+        <Stack gap="sm" flex={1} miw={0} w="100%">
+          <Group gap="sm" align="end">
+            <Select
+              label={t("studio.previewSurface")}
+              flex={1}
+              miw={150}
+              value={surface}
+              allowDeselect={false}
+              onChange={(value) => {
+                if (value) setSurface(value as typeof surface);
+              }}
+              data={[
+                { value: "board", label: t("studio.sampleBoard") },
+                { value: "components", label: t("studio.components") },
+                { value: "overlays", label: t("studio.overlays") },
+                { value: "typography", label: t("studio.typography") },
+                ...(boards.length ? [{ value: "liveBoard", label: t("studio.liveBoard") }] : []),
+              ]}
+            />
+            <Select
+              label={t("studio.viewport")}
+              flex={1}
+              miw={150}
+              value={width}
+              allowDeselect={false}
+              onChange={setWidth}
+              data={[
+                { value: "100%", label: t("studio.responsive") },
+                { value: "768px", label: t("studio.tablet") },
+                { value: "390px", label: t("studio.mobile") },
+              ]}
+            />
+            <SegmentedControl
+              aria-label={t("editor.previewColorScheme")}
+              value={scheme}
+              onChange={(value) => setSchemeOverride(value as "light" | "dark")}
+              data={[
+                { value: "light", label: common("colorScheme.options.light") },
+                { value: "dark", label: common("colorScheme.options.dark") },
+              ]}
+            />
+            <ActionIcon
+              size="input-sm"
+              variant="subtle"
+              aria-label={previewToggleLabel}
+              title={previewToggleLabel}
+              aria-pressed={previewExpanded}
+              aria-controls="theme-editor-controls"
+              onClick={() => setPreviewExpanded((expanded) => !expanded)}
+            >
+              <PreviewToggleIcon size={18} />
+            </ActionIcon>
+          </Group>
+          {surface === "liveBoard" && (
+            <>
+              <Select
+                label={t("studio.liveBoard")}
+                data={boards.map(({ name }) => ({ value: name, label: name }))}
+                value={boardName}
+                allowDeselect={false}
+                onChange={setBoardName}
               />
-              <ThemePreviewFrame message={message} boardName={boardName} width={width ?? "100%"} />
-            </Stack>
-          </Box>
-        </Grid.Col>
-      </Grid>
+            </>
+          )}
+          {document.customCss && (
+            <Switch
+              label={t("studio.includeCustomCss")}
+              checked={includeCustomCss}
+              onChange={(event) => setIncludeCustomCss(event.currentTarget.checked)}
+            />
+          )}
+          <ThemePreviewFrame message={message} boardName={boardName} width={width ?? "100%"} />
+        </Stack>
+      </Flex>
     </Stack>
   );
 };

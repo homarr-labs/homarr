@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import { Box } from "@mantine/core";
 
 import { api } from "@homarr/api/server";
 import { auth } from "@homarr/auth/next";
@@ -16,12 +17,14 @@ export default async function ServerThemePage() {
     getI18n("common.customTheme.studio"),
   ]);
   return (
-    <ManagePageLayout title={t("title")} size="xl">
-      <ThemeEditor
-        initialData={initialData}
-        boards={boards.map(({ name }) => ({ name }))}
-        returnHref="/manage/settings"
-      />
-    </ManagePageLayout>
+    <Box p={{ base: "md", md: "lg" }}>
+      <ManagePageLayout title={t("title")} container={false}>
+        <ThemeEditor
+          initialData={initialData}
+          boards={boards.map(({ name }) => ({ name }))}
+          returnHref="/manage/settings"
+        />
+      </ManagePageLayout>
+    </Box>
   );
 }

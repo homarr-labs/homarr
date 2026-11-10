@@ -2223,7 +2223,9 @@
           "focusRing": "Focus ring",
           "cursorType": "Cursor",
           "customCss": "Custom CSS"
-        }
+        },
+        "expandPreview": "Expand preview",
+        "showControls": "Show controls"
       },
       "instanceDefault": "Instance default",
       "useInstanceDefault": "Use instance default for {control}"

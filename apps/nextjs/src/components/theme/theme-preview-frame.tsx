@@ -55,7 +55,7 @@ export const ThemePreviewFrame = ({
   }, [draft]);
 
   return (
-    <Box>
+    <Box flex={1} mih={400}>
       {!ready && (
         <Text component="output" size="sm" c="dimmed" mb="xs">
           {t("loadingPreview")}
@@ -66,7 +66,7 @@ export const ThemePreviewFrame = ({
           {t("previewFailed")}
         </Alert>
       )}
-      <Box mx="auto" w={width} maw="100%">
+      <Box mx="auto" w={width} maw="100%" h="100%">
         <iframe
           ref={frame}
           title={t("previewFrame")}
@@ -75,11 +75,10 @@ export const ThemePreviewFrame = ({
           onLoad={() => frame.current?.contentWindow?.postMessage(latest.current, window.location.origin)}
           style={{
             display: "block",
-            border: "1px solid var(--mantine-color-default-border)",
-            borderRadius: "var(--mantine-radius-md)",
+            border: 0,
             width: "100%",
-            height: "min(80vh, 1000px)",
-            minHeight: 500,
+            height: "100%",
+            minHeight: 400,
           }}
         />
       </Box>
