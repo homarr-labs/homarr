@@ -295,7 +295,14 @@ export async function POST(req: Request) {
 
     tempDb = new BetterSqlite3(tempPath);
     const drizzleDb = drizzle(tempDb, { casing: DB_CASING, schema });
-    migrate(drizzleDb, { migrationsFolder });
+    const foreignKeys = tempDb.pragma("foreign_keys", { simple: true }) as number;
+    // Table rebuilds must not cascade-delete data; this pragma has no effect inside a transaction.
+    tempDb.pragma("foreign_keys = OFF");
+    try {
+      migrate(drizzleDb, { migrationsFolder });
+    } finally {
+      tempDb.pragma(`foreign_keys = ${foreignKeys}`);
+    }
     await applyCustomMigrationsAsync(drizzleDb as unknown as Database);
 
     const metadataEntry = zip.getEntry("metadata.json");
