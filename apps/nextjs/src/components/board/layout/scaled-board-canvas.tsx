@@ -130,6 +130,7 @@ interface ScaledBoardCanvasProps {
   initialLogicalHeight: number;
   initialAvailableWidth: number;
   label: string;
+  fitBeforeHydration?: boolean;
 }
 
 /**
@@ -142,6 +143,7 @@ export const ScaledBoardCanvas = ({
   initialLogicalHeight,
   initialAvailableWidth,
   label,
+  fitBeforeHydration = true,
   children,
 }: PropsWithChildren<ScaledBoardCanvasProps>) => {
   const { ref: viewportRef, width: availableWidth } = useDeferredElementSize<HTMLDivElement>();
@@ -200,7 +202,7 @@ export const ScaledBoardCanvas = ({
           </Box>
         </Box>
       </Box>
-      <script dangerouslySetInnerHTML={{ __html: fitBeforePaintScript }} />
+      {fitBeforeHydration && <script dangerouslySetInnerHTML={{ __html: fitBeforePaintScript }} />}
     </>
   );
 };

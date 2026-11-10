@@ -31,7 +31,7 @@ const getPreviewDimensions = (size: WidgetEditModalSize) => ({
   height: getLogicalGridSize(size.height),
 });
 
-const PreviewRuntimeWrapper = ({ children }: PropsWithChildren) => {
+export const WidgetPreviewRuntime = ({ children }: PropsWithChildren) => {
   const assistant = useOptionalHomarrAssistant();
   const previewAssistant = useMemo(() => {
     if (!assistant) return null;
@@ -172,7 +172,7 @@ const LazyWidgetEditModalContent = (props: LazyWidgetEditModalContentProps) => {
         previewComponent: PreviewComponent,
         previewDimensions,
         previewResize,
-        previewWrapper: PreviewRuntimeWrapper,
+        previewWrapper: WidgetPreviewRuntime,
         onOpenNewIntegration: supportedKinds.length > 0 ? handleOpenNewIntegration : undefined,
       }}
     />
