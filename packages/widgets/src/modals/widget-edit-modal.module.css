@@ -91,6 +91,7 @@
 }
 
 .settingsForm {
+  --mantine-color-dimmed: light-dark(var(--mantine-color-gray-7), var(--mantine-color-dark-1));
   min-width: 0;
 }
 
@@ -101,9 +102,9 @@
 .switchOption {
   display: flex;
   cursor: pointer;
-  height: 4.5rem;
+  min-height: 3rem;
   align-items: center;
-  padding: 0.625rem 0.75rem;
+  padding: 0.5rem 0.75rem;
   border: 1px solid var(--mantine-color-default-border);
   border-radius: var(--mantine-radius-sm);
   background: var(--mantine-color-body);
