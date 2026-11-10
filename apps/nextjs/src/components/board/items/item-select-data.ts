@@ -1,4 +1,8 @@
 import type { IntegrationKind } from "@homarr/definitions";
+import { getIntegrationName } from "@homarr/definitions";
+
+export const matchesIntegrationSearch = (kind: IntegrationKind, query: string) =>
+  kind.toLowerCase().includes(query) || getIntegrationName(kind).toLowerCase().includes(query);
 
 export type WidgetConnectionStatus = "ready" | "needsSetup" | "noConnectionRequired";
 

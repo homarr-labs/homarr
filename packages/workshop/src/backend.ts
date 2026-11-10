@@ -9,6 +9,7 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 
+import { CUSTOM_WIDGET_SCHEMA } from "@homarr/custom-widgets/core";
 import type { HomarrCustomWidgetV2 } from "@homarr/custom-widgets/core";
 
 import type {
@@ -22,6 +23,7 @@ import type {
   WorkshopSubmissionType,
   WorkshopUser,
   WorkshopVote,
+  WorkshopWidgetCatalogEntry,
 } from "./schema";
 import {
   WORKSHOP_API_URL,
@@ -38,6 +40,8 @@ import {
   workshopScreenshotsSchema,
   workshopUserSchema,
   workshopVoteSchema,
+  workshopWidgetCatalogEntrySchema,
+  validateWorkshopWidget,
 } from "./schema";
 
 export interface WorkshopListOptions {
@@ -396,6 +400,55 @@ export class WorkshopBackend {
     } catch (error) {
       throw workshopError(error, "Failed to load Workshop submissions");
     }
+  }
+
+  public async listWidgetCatalog(signal?: AbortSignal): Promise<WorkshopWidgetCatalogEntry[]> {
+    try {
+      try {
+        const { items } = await this.pocketBase.collection("workshop_widget_catalog").getList(1, 100, {
+          fields: "id,title,description,integrationKinds",
+          sort: "-score,-created,id",
+          skipTotal: true,
+          signal: requestSignal(signal),
+        });
+        return items.flatMap((item) => {
+          const result = workshopWidgetCatalogEntrySchema.safeParse(item);
+          if (!result.success) return [];
+          return [result.data];
+        });
+      } catch (error) {
+        if (!isViewCompatibilityError(error)) throw error;
+        return await this.loadWidgetCatalogFallback(signal);
+      }
+    } catch (error) {
+      throw workshopError(error, "Failed to load the Workshop widget catalog");
+    }
+  }
+
+  private async loadWidgetCatalogFallback(signal?: AbortSignal): Promise<WorkshopWidgetCatalogEntry[]> {
+    const { items } = await this.pocketBase.collection("submissions").getList(1, 100, {
+      fields: "id,title,description,content",
+      filter: this.pocketBase.filter("type = {:type} && widgetSchema = {:schema} && outdated = false", {
+        type: "customWidget",
+        schema: CUSTOM_WIDGET_SCHEMA,
+      }),
+      sort: "-created,id",
+      skipTotal: true,
+      signal: requestSignal(signal),
+    });
+    return items.flatMap((item) => {
+      const validation = validateWorkshopWidget(item.content);
+      if (!validation.success) return [];
+      const integrationKinds = Array.from(
+        new Set(
+          Object.values(validation.data.sources).flatMap((source) =>
+            source.type === "integration" ? [source.integrationKind] : [],
+          ),
+        ),
+      );
+      const result = workshopWidgetCatalogEntrySchema.safeParse({ ...item, integrationKinds });
+      return result.success ? [result.data] : [];
+    });
   }
 
   private async loadListingsFallback(signal?: AbortSignal) {
@@ -782,6 +835,16 @@ export const workshopDeleteCommentMutationOptions = (backend: WorkshopBackend) =
 
 export function useWorkshopQuery(backend: WorkshopBackend, options: WorkshopListOptions = {}) {
   return useQuery(workshopListQueryOptions(backend, options));
+}
+
+export function useWorkshopWidgetCatalogQuery(backend: WorkshopBackend, enabled: boolean) {
+  return useQuery({
+    queryKey: [...workshopQueryKeys.lists(backend.baseUrl), "widget-catalog"],
+    queryFn: ({ signal }) => backend.listWidgetCatalog(signal),
+    enabled,
+    staleTime: 5 * 60 * 1000,
+    retry: false,
+  });
 }
 
 export function useWorkshopSubmissionQuery(backend: WorkshopBackend, id: string) {

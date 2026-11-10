@@ -129,6 +129,7 @@ export const addInPlaceActions = {
         ...session,
         picked: target,
         highlighted: target,
+        workshopSelection: undefined,
         draft: undefined,
         baseline: undefined,
         baselineArea: session.area,
@@ -149,9 +150,24 @@ export const addInPlaceActions = {
       "createApp",
     );
   },
+  openWorkshop(submissionId: string) {
+    if (state.step !== "pick") return;
+    updateSession(
+      (session) => ({
+        ...session,
+        workshopSelection: { submissionId, attempt: Symbol() },
+        highlighted: undefined,
+      }),
+      "workshop",
+    );
+  },
   back() {
     const { session, step } = state;
     if (!session) return;
+    if (step === "workshop") {
+      updateSession((current) => ({ ...current, workshopSelection: undefined }), "pick");
+      return;
+    }
     if (step === "createApp") {
       updateSession((current) => ({ ...current }), "pick");
       return;

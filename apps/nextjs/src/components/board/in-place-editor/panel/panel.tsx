@@ -1,5 +1,6 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import type { CSSProperties, KeyboardEvent, ReactNode } from "react";
 import { Box, FocusTrap, MantineThemeProvider, Paper, Portal, Transition } from "@mantine/core";
@@ -16,6 +17,7 @@ import type { Placement, RectLike, ViewportSize } from "./placement";
 const pickWidth = 360;
 const cardWidth = 404;
 const borderSize = 2;
+const WorkshopStep = dynamic(() => import("../workshop-step").then((module) => module.WorkshopStep));
 
 const getViewport = (): ViewportSize => ({
   width: window.visualViewport?.width ?? window.innerWidth,
@@ -189,7 +191,7 @@ export const InPlaceEditorPanel = (props: InPlaceEditorPanelProps) => {
 
   let width = cardWidth;
   if (isPick) width = pickWidth;
-  if (step === "configure" && rect) width = getConfigureWidth(rect, viewport);
+  if ((step === "configure" || step === "workshop") && rect) width = getConfigureWidth(rect, viewport);
 
   let placement =
     rect &&
@@ -233,6 +235,11 @@ export const InPlaceEditorPanel = (props: InPlaceEditorPanelProps) => {
       </StepTransition>
       <StepTransition mounted={step === "createApp"}>
         <CreateAppStep actions={actions} CreateAppForm={props.CreateAppForm} />
+      </StepTransition>
+      <StepTransition mounted={step === "workshop"}>
+        <Box className={classes.body}>
+          <WorkshopStep />
+        </Box>
       </StepTransition>
     </>
   );
