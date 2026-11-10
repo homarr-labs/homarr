@@ -4,6 +4,7 @@ import { basename, join, relative, resolve } from "node:path";
 
 const repositoryRoot = resolve(import.meta.dirname, "..");
 const nextRoot = resolve(process.env.CUSTOM_WIDGET_NEXT_ROOT ?? join(repositoryRoot, "apps/nextjs/.next"));
+const webpackManifestPath = join(nextRoot, "react-loadable-manifest.json");
 const budgetBytes = Number(process.env.CUSTOM_WIDGET_CHUNK_BUDGET_BYTES ?? 768 * 1024);
 if (!Number.isSafeInteger(budgetBytes) || budgetBytes <= 0) {
   throw new Error("CUSTOM_WIDGET_CHUNK_BUDGET_BYTES must be a positive integer.");
@@ -33,6 +34,7 @@ async function resolveChunk(chunk) {
 }
 
 function isRuntimeOrWorkbenchRoute(manifestPath) {
+  if (manifestPath === webpackManifestPath) return true;
   const normalizedManifestPath = manifestPath.replaceAll("\\", "/");
   return (
     normalizedManifestPath.includes("/(board)/") ||
@@ -41,26 +43,43 @@ function isRuntimeOrWorkbenchRoute(manifestPath) {
   );
 }
 
-let serverChunks;
+function isWebpackCustomJsxImport(moduleId) {
+  const normalized = moduleId.replaceAll("\\", "/");
+  // Webpack keys name the importing file and request, including missing targets.
+  return normalized.includes("widgets/src/custom-api/") && normalized.endsWith(" -> ./custom-jsx-display");
+}
+
+let serverChunks = [];
 let manifestPaths;
+let webpackManifest;
 try {
-  [serverChunks, manifestPaths] = await Promise.all([
-    collect(join(nextRoot, "server/chunks/ssr"), (name) =>
+  manifestPaths = await collect(join(nextRoot, "server"), (name) => name === "react-loadable-manifest.json");
+  if (manifestPaths.length > 0) {
+    serverChunks = await collect(join(nextRoot, "server/chunks/ssr"), (name) =>
       /^packages_widgets_src_custom-api_component.*\.js$/u.test(name),
-    ),
-    // Canonical route manifests survive compiler-cache restoration; standalone is assembled separately.
-    collect(join(nextRoot, "server"), (name) => name === "react-loadable-manifest.json"),
-  ]);
+    );
+  } else {
+    webpackManifest = JSON.parse(await readFile(webpackManifestPath, "utf8"));
+    if (!webpackManifest || typeof webpackManifest !== "object" || Array.isArray(webpackManifest)) {
+      throw new Error("Invalid Webpack loadable manifest");
+    }
+    manifestPaths = [webpackManifestPath];
+  }
 } catch {
   throw new Error("Next.js build output is missing. Run the Next.js production build before the bundle check.");
 }
 
 const moduleIds = new Set();
+if (webpackManifest) {
+  for (const moduleId of Object.keys(webpackManifest)) {
+    if (isWebpackCustomJsxImport(moduleId)) moduleIds.add(moduleId);
+  }
+}
 for (const serverChunk of serverChunks) {
   const source = await readFile(serverChunk, "utf8");
   for (const match of source.matchAll(/loadableGenerated:\{modules:\[(\d+)\]\}/gu)) moduleIds.add(match[1]);
 }
-if (moduleIds.size === 0) {
+if (moduleIds.size === 0 || webpackManifest) {
   const hasRuntimeMarker = new Map();
   for (const manifestPath of manifestPaths) {
     if (!isRuntimeOrWorkbenchRoute(manifestPath)) continue;
@@ -81,6 +100,20 @@ if (moduleIds.size === 0) {
     }
   }
 }
+if (webpackManifest) {
+  const webpackIds = new Set();
+  for (const moduleId of moduleIds) {
+    const id = webpackManifest[moduleId]?.id;
+    if (id === undefined || id === null) {
+      throw new Error(`Custom JSX Webpack entry ${moduleId} is missing its module identifier.`);
+    }
+    webpackIds.add(String(id));
+  }
+  // Multiple import sites can name one module; validate every matching alias.
+  for (const [moduleId, entry] of Object.entries(webpackManifest)) {
+    if (entry?.id !== undefined && entry?.id !== null && webpackIds.has(String(entry.id))) moduleIds.add(moduleId);
+  }
+}
 if (moduleIds.size === 0) {
   throw new Error("The Custom JSX dynamic module was not found in the Next.js server build.");
 }
@@ -99,66 +132,7 @@ for (const manifestPath of manifestPaths) {
   let compressedBytes = 0;
   for (const file of files) {
     const chunkPath = await resolveChunk(file);
-    if (!chunkPath) {
-      try {
-        const routeEntry = relative(join(nextRoot, "server"), manifestPath)
-          .replaceAll("\\", "/")
-          .replace(/\/react-loadable-manifest\.json$/u, ".js");
-        let activeRoute = null;
-        try {
-          const appPaths = JSON.parse(await readFile(join(nextRoot, "server/app-paths-manifest.json"), "utf8"));
-          activeRoute = Object.values(appPaths).includes(routeEntry);
-        } catch {
-          // The route index is optional diagnostic metadata.
-        }
-        const presentIds = [...moduleIds].filter((id) => manifest[id]).toSorted();
-        const matchingIds = presentIds.filter((id) => (manifest[id].files ?? []).includes(file));
-        const selectedIds = [...new Set([...matchingIds, ...presentIds])].slice(0, 8);
-        const entries = [];
-        for (const id of selectedIds) {
-          const entryFiles = (manifest[id].files ?? []).filter((name) => name.endsWith(".js"));
-          const references = [];
-          for (const reference of [...new Set([file, ...entryFiles])]
-            .filter((name) => entryFiles.includes(name))
-            .slice(0, 8)) {
-            const path = await resolveChunk(reference);
-            if (!path) {
-              references.push({ file: reference.slice(0, 256), exists: false });
-              continue;
-            }
-            const { size } = await stat(path);
-            let runtimeMarker = null;
-            if (size <= 2 * 1024 * 1024) {
-              runtimeMarker = (await readFile(path, "utf8")).includes("RUNTIME_RENDER_ERROR");
-            }
-            references.push({ file: reference.slice(0, 256), exists: true, bytes: size, runtimeMarker });
-          }
-          entries.push({ id: id.slice(0, 256), totalFiles: entryFiles.length, files: references });
-        }
-        const emittedChunks = (await readdir(join(nextRoot, "static/chunks")).catch(() => [])).toSorted();
-        console.error(
-          "[DEBUG-bundle-ci-20261110]",
-          JSON.stringify({
-            manifest: relative(nextRoot, manifestPath).slice(0, 512),
-            activeRoute,
-            markerReadLimitBytes: 2 * 1024 * 1024,
-            totalModuleIds: moduleIds.size,
-            matchingModuleIds: matchingIds.slice(0, 8).map((id) => id.slice(0, 256)),
-            selectedEntries: entries,
-            totalServerChunks: serverChunks.length,
-            serverChunks: serverChunks
-              .map((path) => basename(path))
-              .toSorted()
-              .slice(0, 8),
-            totalEmittedChunks: emittedChunks.length,
-            emittedChunks: emittedChunks.slice(0, 40),
-          }),
-        );
-      } catch {
-        console.error("[DEBUG-bundle-ci-20261110] Missing-chunk diagnostic metadata unavailable.");
-      }
-      throw new Error(`Custom JSX chunk ${file} referenced by a route manifest is missing.`);
-    }
+    if (!chunkPath) throw new Error(`Custom JSX chunk ${file} referenced by a route manifest is missing.`);
     const source = await readFile(chunkPath);
     rawBytes += source.byteLength;
     compressedBytes += gzipSync(source).byteLength;
@@ -173,9 +147,9 @@ routePayloads.sort((left, right) => right.compressedBytes - left.compressedBytes
 const largest = routePayloads[0];
 if (largest.compressedBytes > budgetBytes) {
   throw new Error(
-    `The largest Custom JSX route payload is ${largest.compressedBytes} gzip bytes (${largest.rawBytes} raw), exceeding the ${budgetBytes} byte budget in ${relative(nextRoot, largest.manifestPath)}.`,
+    `The largest Custom JSX payload is ${largest.compressedBytes} gzip bytes (${largest.rawBytes} raw), exceeding the ${budgetBytes} byte budget in ${relative(nextRoot, largest.manifestPath)}.`,
   );
 }
 console.log(
-  `Custom JSX bundle check passed: ${routePayloads.length} routes, largest payload ${largest.compressedBytes} gzip bytes (${largest.rawBytes} raw across ${largest.files} chunks).`,
+  `Custom JSX bundle check passed: ${routePayloads.length} manifests, largest payload ${largest.compressedBytes} gzip bytes (${largest.rawBytes} raw across ${largest.files} chunks).`,
 );
