@@ -179,6 +179,9 @@ export const SectionGrid = ({
   if (isRail) {
     rowCount = Math.max(railViewportRowCount, contentRowCount);
   }
+  if (isEditMode && section.kind !== "container") {
+    rowCount = Math.max(rowCount, contentRowCount + 1);
+  }
   const maxRowCount = section.kind === "container" ? rowCount : null;
   const placementMaxRowCount = maxRowCount;
   // A scrollable container isn't forced to grow with its content - it scrolls internally instead
