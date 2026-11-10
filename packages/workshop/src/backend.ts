@@ -481,9 +481,9 @@ export class WorkshopBackend {
             throw error;
           }),
       ]);
-      return workshopSubmissionDetailSchema.parse(
-        enrichAuthor({ ...submission, ...listing, expand: submission.expand, content: submission.content }),
-      );
+      // The listing can reflect a newer revision. Keep content and all its revision
+      // metadata from the same submission snapshot; only enrich missing aggregate fields.
+      return workshopSubmissionDetailSchema.parse(enrichAuthor({ ...listing, ...submission }));
     } catch (error) {
       throw workshopError(error, "Submission not found");
     }

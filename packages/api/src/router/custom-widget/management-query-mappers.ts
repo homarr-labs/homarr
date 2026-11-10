@@ -10,6 +10,7 @@ import {
 } from "@homarr/custom-widgets/core";
 
 import { safeParseStoredCustomWidgetDefinition } from "./stored-definition";
+import { parseWorkshopOrigin } from "./workshop-origin";
 
 const logger = createLogger({ module: "custom-widget:management" });
 
@@ -42,6 +43,7 @@ export function mapCustomWidgetListItem(
       valid: false as const,
       migrationRequired: false as const,
       validationIssues: result.issues,
+      workshop: null,
     };
   }
 
@@ -69,6 +71,7 @@ export function mapCustomWidgetListItem(
     valid: true as const,
     migrationRequired: false as const,
     validationIssues: [],
+    workshop: parseWorkshopOrigin(definition.workshop),
   };
 }
 
@@ -88,6 +91,7 @@ export function mapLegacyCustomWidgetListItem(definition: LegacyDefinition) {
     valid: false as const,
     migrationRequired: true as const,
     validationIssues: [],
+    workshop: null,
   };
 }
 

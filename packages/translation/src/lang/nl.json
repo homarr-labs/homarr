@@ -2016,6 +2016,15 @@
         "modifier": ""
       }
     },
+    "markdown": {
+      "alert": {
+        "note": "",
+        "tip": "",
+        "important": "",
+        "warning": "Waarschuwing",
+        "caution": ""
+      }
+    },
     "dangerZone": "Gevarenzone",
     "noResults": "Geen resultaten gevonden",
     "unsavedChanges": "Er zijn niet-opgeslagen wijzigingen!",
@@ -6718,7 +6727,8 @@
             "documentation": "Documentatie",
             "submitIssue": "Een probleem melden",
             "discord": "Community Discord",
-            "sourceCode": "Broncode"
+            "sourceCode": "Broncode",
+            "changelog": ""
           }
         },
         "about": "Over",
@@ -7071,6 +7081,10 @@
             "title": "Weergave",
             "defaultColorScheme": {
               "label": "Standaard kleurenschema"
+            },
+            "whatsNew": {
+              "label": "",
+              "description": ""
             }
           },
           "branding": {
@@ -8823,6 +8837,12 @@
         "description": "Wijzig je kleurenschema, taal, home bord en voorkeuren. Je kunt ook vanuit hier naar de beheerpagina gaan."
       }
     }
+  },
+  "whatsNew": {
+    "title": "",
+    "empty": "",
+    "allReleases": "",
+    "dismiss": ""
   },
   "metadata": {
     "description": "Een zelfgehoste dashboard voor de *arr stack en je hele vaderland. Integreert met 50+ diensten, real-time widgets, geen configuratie bestanden.",

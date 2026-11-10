@@ -2016,6 +2016,15 @@
         "modifier": "Modifikaator"
       }
     },
+    "markdown": {
+      "alert": {
+        "note": "",
+        "tip": "",
+        "important": "",
+        "warning": "",
+        "caution": ""
+      }
+    },
     "dangerZone": "Ohtlike toimingute ala",
     "noResults": "Tulemusi ei leitud",
     "unsavedChanges": "Sul on salvestamata muudatusi!",
@@ -6718,7 +6727,8 @@
             "documentation": "Dokumentatsioon",
             "submitIssue": "Esita probleem",
             "discord": "Kogukonna Discord",
-            "sourceCode": "Lähtekood"
+            "sourceCode": "Lähtekood",
+            "changelog": ""
           }
         },
         "about": "Teave",
@@ -7071,6 +7081,10 @@
             "title": "Välimus",
             "defaultColorScheme": {
               "label": "Vaikimisi värviskeem"
+            },
+            "whatsNew": {
+              "label": "",
+              "description": ""
             }
           },
           "branding": {
@@ -8823,6 +8837,12 @@
         "description": "​Muuda oma värviteemat, keelt, kodupaneeli ja eelistusi. Siit saad ka otse haldusalasse liikuda."
       }
     }
+  },
+  "whatsNew": {
+    "title": "",
+    "empty": "",
+    "allReleases": "",
+    "dismiss": ""
   },
   "metadata": {
     "description": "Isehostitav juhtpaneel *arr-i virna ja kogu teie kodulabori jaoks. Integreerub enam kui 50 teenusega, reaalajas vidinad, konfiguratsioonifaile pole.",

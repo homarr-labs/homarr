@@ -2016,6 +2016,15 @@
         "modifier": "Izmjena"
       }
     },
+    "markdown": {
+      "alert": {
+        "note": "",
+        "tip": "",
+        "important": "",
+        "warning": "",
+        "caution": ""
+      }
+    },
     "dangerZone": "Opasna zona",
     "noResults": "Nije pronađen nijedan rezultat",
     "unsavedChanges": "Imate nespremljene promjene!",
@@ -6718,7 +6727,8 @@
             "documentation": "Dokumentacija",
             "submitIssue": "Pošaljite prijavu problema",
             "discord": "Nesloga u zajednici",
-            "sourceCode": "Izvorni kod"
+            "sourceCode": "Izvorni kod",
+            "changelog": ""
           }
         },
         "about": "O aplikaciji",
@@ -7071,6 +7081,10 @@
             "title": "Izgled",
             "defaultColorScheme": {
               "label": "Zadana shema boja"
+            },
+            "whatsNew": {
+              "label": "",
+              "description": ""
             }
           },
           "branding": {
@@ -8823,6 +8837,12 @@
         "description": "Promijenite shemu boja, jezik, početnu ploču i preferencije. Odavde također možete otići u upravljačko područje."
       }
     }
+  },
+  "whatsNew": {
+    "title": "",
+    "empty": "",
+    "allReleases": "",
+    "dismiss": ""
   },
   "metadata": {
     "description": "Nadzorna ploča na vlastitom poslužitelju za *arr skup i cijeli vaš kućni laboratorij. Integrira se s više od 50 usluga, widgetima u stvarnom vremenu i ne zahtijeva konfiguracijske datoteke.",

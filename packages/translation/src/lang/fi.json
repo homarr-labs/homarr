@@ -2016,6 +2016,15 @@
         "modifier": ""
       }
     },
+    "markdown": {
+      "alert": {
+        "note": "",
+        "tip": "",
+        "important": "",
+        "warning": "Varoitus",
+        "caution": ""
+      }
+    },
     "dangerZone": "Vaaravyöhyke",
     "noResults": "",
     "unsavedChanges": "Muutoksia ei ole tallennettu!",
@@ -6718,7 +6727,8 @@
             "documentation": "Käyttöohjeet",
             "submitIssue": "Ilmoita ongelmasta",
             "discord": "Discord-yhteisö",
-            "sourceCode": "Lähdekoodi"
+            "sourceCode": "Lähdekoodi",
+            "changelog": ""
           }
         },
         "about": "Tietoja",
@@ -7071,6 +7081,10 @@
             "title": "Ulkoasu",
             "defaultColorScheme": {
               "label": "Oletusarvoinen väriteema"
+            },
+            "whatsNew": {
+              "label": "",
+              "description": ""
             }
           },
           "branding": {
@@ -8823,6 +8837,12 @@
         "description": "Vaihda väriteemaa, kieltä, kotipaneelia ja asetuksia. Täältä pääset myös hallinta-alueelle."
       }
     }
+  },
+  "whatsNew": {
+    "title": "",
+    "empty": "",
+    "allReleases": "",
+    "dismiss": ""
   },
   "metadata": {
     "description": "Itsestään isännöity kojelauta *arr pino ja koko kotona. Integroi 50+ palvelua, reaaliaikainen widgetit, ei config tiedostoja.",

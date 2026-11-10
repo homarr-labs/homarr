@@ -2016,6 +2016,15 @@
         "modifier": ""
       }
     },
+    "markdown": {
+      "alert": {
+        "note": "Notă",
+        "tip": "",
+        "important": "",
+        "warning": "Avertizare",
+        "caution": ""
+      }
+    },
     "dangerZone": "Zonă periculoasă",
     "noResults": "Nici un rezultat găsit",
     "unsavedChanges": "Ai modificări nesalvate!",
@@ -6718,7 +6727,8 @@
             "documentation": "Documentație",
             "submitIssue": "Trimite o problema",
             "discord": "Comunitatea Discord",
-            "sourceCode": "Cod sursă"
+            "sourceCode": "Cod sursă",
+            "changelog": ""
           }
         },
         "about": "Despre",
@@ -7071,6 +7081,10 @@
             "title": "Aspect",
             "defaultColorScheme": {
               "label": "Schema de culori implicită"
+            },
+            "whatsNew": {
+              "label": "",
+              "description": ""
             }
           },
           "branding": {
@@ -8823,6 +8837,12 @@
         "description": "Schimbă schema de culori, limba, planșa principală și preferințele. Poți de asemenea să sari în zona de administrare de aici."
       }
     }
+  },
+  "whatsNew": {
+    "title": "",
+    "empty": "",
+    "allReleases": "",
+    "dismiss": ""
   },
   "metadata": {
     "description": "Un tablou de bord auto-găzduit pentru *stiva arr și întregul tău homelab. Integrate cu peste 50+ servicii, widget-uri în timp real, fără fișiere de configurare.",

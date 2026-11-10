@@ -2016,6 +2016,15 @@
         "modifier": "Mod"
       }
     },
+    "markdown": {
+      "alert": {
+        "note": "Note",
+        "tip": "",
+        "important": "",
+        "warning": "",
+        "caution": ""
+      }
+    },
     "dangerZone": "Danger zone",
     "noResults": "No results have been found",
     "unsavedChanges": "You have unsaved changes!",
@@ -6718,7 +6727,8 @@
             "documentation": "Documentation",
             "submitIssue": "Submit an issue",
             "discord": "Community Discord",
-            "sourceCode": ""
+            "sourceCode": "",
+            "changelog": ""
           }
         },
         "about": "About",
@@ -7071,6 +7081,10 @@
             "title": "",
             "defaultColorScheme": {
               "label": "Default colour scheme"
+            },
+            "whatsNew": {
+              "label": "",
+              "description": ""
             }
           },
           "branding": {
@@ -8823,6 +8837,12 @@
         "description": "Change your colour scheme, language, home board, and preferences. You can also jump to the management area from here."
       }
     }
+  },
+  "whatsNew": {
+    "title": "",
+    "empty": "",
+    "allReleases": "",
+    "dismiss": ""
   },
   "metadata": {
     "description": "A self-hosted dashboard for the *arr stack and your entire homelab. Integrates with 50+ services, real-time widgets, no config files.",

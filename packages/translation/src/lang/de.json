@@ -2016,6 +2016,15 @@
         "modifier": "Moderator"
       }
     },
+    "markdown": {
+      "alert": {
+        "note": "Notiz",
+        "tip": "",
+        "important": "",
+        "warning": "Warnung",
+        "caution": ""
+      }
+    },
     "dangerZone": "Gefahrenbereich",
     "noResults": "Die Suche ergab keine Treffer",
     "unsavedChanges": "Sie haben ungespeicherte Änderungen!",
@@ -6718,7 +6727,8 @@
             "documentation": "Dokumentation",
             "submitIssue": "Ein Problem melden",
             "discord": "Community Discord",
-            "sourceCode": "Quellcode"
+            "sourceCode": "Quellcode",
+            "changelog": ""
           }
         },
         "about": "Über",
@@ -7071,6 +7081,10 @@
             "title": "Aussehen",
             "defaultColorScheme": {
               "label": "Standard Farbschema"
+            },
+            "whatsNew": {
+              "label": "",
+              "description": ""
             }
           },
           "branding": {
@@ -8823,6 +8837,12 @@
         "description": ""
       }
     }
+  },
+  "whatsNew": {
+    "title": "",
+    "empty": "",
+    "allReleases": "",
+    "dismiss": ""
   },
   "metadata": {
     "description": "Ein selbst gehostetes Dashboard für den *arr-Stack und dein gesamtes Homelab. Integriert mit 50+ Diensten, Echtzeit-Widgets, keine Konfigurationsdateien.",

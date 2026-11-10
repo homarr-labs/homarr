@@ -1,5 +1,7 @@
 "use client";
 
+import { Switch } from "@mantine/core";
+
 import type { UseFormReturnType } from "@homarr/form";
 import { useI18n } from "@homarr/translation/client";
 import { ColorSchemeCombobox, SectionCard } from "@homarr/ui";
@@ -21,6 +23,11 @@ export const AppearanceSettingsForm = ({ form }: AppearanceSettingsFormProps) =>
         {...form.getInputProps("defaultColorScheme")}
         value={form.values.defaultColorScheme}
         withinPortal
+      />
+      <Switch
+        {...form.getInputProps("whatsNewEnabled", { type: "checkbox" })}
+        label={tAppearance("whatsNew.label")}
+        description={tAppearance("whatsNew.description")}
       />
     </SectionCard>
   );

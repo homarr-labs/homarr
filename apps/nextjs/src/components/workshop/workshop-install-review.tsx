@@ -22,7 +22,11 @@ export function useWorkshopWidgetImport(
     return validateWorkshopWidget(content);
   }, [content, type, widgetSchema]);
 
-  const importer = useCustomWidgetImport({ widget: validation?.success ? validation.data : null, onImported });
+  const importer = useCustomWidgetImport({
+    widget: validation?.success ? validation.data : null,
+    workshop: submission && { submissionId: submission.id, revision: submission.revision },
+    onImported,
+  });
   return { ...importer, validation };
 }
 
