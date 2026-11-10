@@ -31,7 +31,7 @@ const getPreviewDimensions = (size: WidgetEditModalSize) => ({
   height: getLogicalGridSize(size.height),
 });
 
-const PreviewRuntimeWrapper = ({ children }: PropsWithChildren) => {
+export const PreviewRuntimeWrapper = ({ children }: PropsWithChildren) => {
   const assistant = useOptionalHomarrAssistant();
   const previewAssistant = useMemo(() => {
     if (!assistant) return null;

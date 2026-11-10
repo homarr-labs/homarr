@@ -1,6 +1,7 @@
 "use client";
 
 import type { PropsWithChildren } from "react";
+import dynamic from "next/dynamic";
 import { Paper, px, Stack, Tabs, Text, useMantineTheme, VisuallyHidden } from "@mantine/core";
 import { IconBulb } from "@tabler/icons-react";
 
@@ -36,6 +37,11 @@ import { useBoardTabHotkeys } from "~/components/board/tabs/board-tabs";
 import { usePreparedBoardTabs } from "~/components/board/tabs/use-prepared-board-tabs";
 import { useBoardTabLabel } from "~/components/board/tabs/use-board-tab-label";
 import classes from "./_client.module.css";
+
+const InPlaceEditorHost = dynamic(
+  () => import("~/components/board/in-place-editor/host").then((module) => module.InPlaceEditorHost),
+  { ssr: false },
+);
 
 const BoardSelectionGridProvider = ({ children }: PropsWithChildren) => (
   <GridEditorRegistryProvider>
@@ -187,6 +193,7 @@ export const ClientBoard = () => {
             </BoardGridPortalHost>
           </BoardSectionCollapseProvider>
           <BoardSelectionToolbar />
+          <InPlaceEditorHost key={`${board.id}-${mainSection.id}`} />
           <FloatingTip
             opened={isEditMode}
             showDelay={2_000}
