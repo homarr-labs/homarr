@@ -36,7 +36,7 @@ function readCgroups() {
       .find((line) => line.startsWith("0::"))
       ?.slice(3);
     if (!membership?.startsWith("/") || membership.split("/").includes("..")) return { complete: false, levels };
-    let directory = join(cgroupRoot, membership);
+    let directory = resolve(join(cgroupRoot, membership));
     while (true) {
       const limitBytes = readBytes(join(directory, "memory.max"));
       const currentBytes = readBytes(join(directory, "memory.current"));
