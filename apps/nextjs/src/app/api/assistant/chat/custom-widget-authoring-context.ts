@@ -6,6 +6,7 @@ import { getCustomWidgetExampleCatalog } from "@homarr/custom-widgets/authoring-
 import {
   assistantIntegrationResearchToolName,
   getCustomWidgetPhaseToolNames,
+  getCustomWidgetPresentationRemovalIntent,
   getLatestLoadedCustomWidgetDefinition,
   getLatestPersistedCustomWidgetDefinitionId,
   hasCustomWidgetAuthoringContinuationIntent,
@@ -17,7 +18,7 @@ import {
   isSuccessfulCustomWidgetAuthoringAdvance,
   MAX_FOCUSED_COMPONENT_SEARCHES_PER_PHASE,
 } from "@homarr/custom-widgets/core";
-import type { CustomWidgetToolStep } from "@homarr/custom-widgets/core";
+import type { CustomWidgetPresentationRemovalIntent, CustomWidgetToolStep } from "@homarr/custom-widgets/core";
 import { getIntegrationName, integrationKinds, widgetKinds } from "@homarr/definitions";
 
 export { getCustomWidgetPhaseToolNames };
@@ -500,6 +501,7 @@ export interface CustomWidgetFollowUpEditContext {
   definitionId: string;
   preserveDataContract: boolean;
   allowSourceChanges: boolean;
+  requestedPresentationRemovals?: CustomWidgetPresentationRemovalIntent;
   loadedDefinition?: Record<string, unknown>;
 }
 
@@ -524,10 +526,12 @@ export const getCustomWidgetFollowUpEditContext = (
       .find((message) => message.role === "user" && !explicitCustomWidgetResumePattern.test(getUiMessageText(message)));
     if (previousRequest) followUpRequestText = getUiMessageText(previousRequest);
   }
+  const requestedPresentationRemovals = getCustomWidgetPresentationRemovalIntent(followUpRequestText);
   return {
     definitionId,
     preserveDataContract: hasCustomWidgetStyleOnlyFollowUpIntent(followUpRequestText),
     allowSourceChanges: hasExplicitCustomWidgetSourceChangeIntent(followUpRequestText),
+    ...(requestedPresentationRemovals ? { requestedPresentationRemovals } : {}),
     ...(matchingLoadedDefinition ? { loadedDefinition: matchingLoadedDefinition } : {}),
   };
 };

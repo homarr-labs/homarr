@@ -7,7 +7,7 @@ const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === "object" && value !== null && !Array.isArray(value);
 
 const customWidgetStyleIntentPattern =
-  /\b(?:align|black|blue|border|card|color|colour|compact|cyan|dark|dense|footer|font|gap|gray|green|grey|header|icon|layout|light|margin|orange|padding|pink|purple|red|responsive|shadow|spacing|style|teal|theme|truncate|typography|violet|visual|white|wrap|yellow)\b/iu;
+  /\b(?:align|black|blue|border|card|color|colour|compact|cyan|dark|dense|footer|font|gap|gray|green|grey|header|icons?|layout|light|margin|orange|padding|pink|purple|red|responsive|shadow|spacing|styles?|teal|theme|truncate|typography|violet|visual|white|wrap|yellow)\b/iu;
 const customWidgetDataContractIntentPattern =
   /\b(?:api|endpoint|field|filter|metric|parameter|query|request|response|sort)\b|\b(?:add|include|remove|show)\b[^\n]{0,50}\b(?:action|button|data|details?|items?|records?|rows?|status)\b|\b(?:show|use|display)\b[^\n]{0,30}\b(?:\d+|one|two|three|four|five|six|seven|eight|nine|ten)\s+(?:items?|records?|rows?)\b/iu;
 const customWidgetSourceChangeIntentPattern =
@@ -22,6 +22,46 @@ export const hasCustomWidgetStyleOnlyFollowUpIntent = (text: string) =>
 
 export const hasExplicitCustomWidgetSourceChangeIntent = (text: string) =>
   customWidgetSourceChangeIntentPattern.test(text);
+
+export interface CustomWidgetPresentationRemovalIntent {
+  icons: boolean;
+  inlineStyles: boolean;
+}
+
+const presentationRemovalNegationPattern =
+  /\b(?:do\s+not|don['’]?t|never|not|keep|preserve|cannot|can['’]?t|no\s+need(?:\s+to)?)\b/iu;
+const presentationRemovalPrefix =
+  "\\b(?:remove|hide|omit|drop|delete|replace|convert)\\s+(?:(?:the|a|an|its|this|these|those|my|our|all|any|existing|current|inline|decorative|header)\\s+)*";
+const presentationRemovalSuffix = "(?=\\s*(?:$|[.!?:]|\\b(?:from|on|in|of|with|by|to)\\b))";
+const iconRemovalPattern = new RegExp(`${presentationRemovalPrefix}icons?${presentationRemovalSuffix}`, "iu");
+const inlineStyleRemovalPattern = new RegExp(`${presentationRemovalPrefix}styles?${presentationRemovalSuffix}`, "iu");
+const coordinatedPresentationTargetPattern =
+  /^\s*(?:(?:the|all|inline)\s+)*(?:icons?|styles?)(?=\s*(?:$|\b(?:from|on|in|of|with|by|to)\b))/iu;
+
+export const getCustomWidgetPresentationRemovalIntent = (
+  text: string,
+): CustomWidgetPresentationRemovalIntent | undefined => {
+  const clauses = text.split(/[.!?;,\n]|\bbut\b/iu).flatMap((sentence) => {
+    const parts = sentence.split(/\band\b/iu);
+    return parts.map((clause, index) => {
+      const previousClause = parts[index - 1];
+      if (!previousClause || presentationRemovalNegationPattern.test(previousClause)) return clause;
+      if (!iconRemovalPattern.test(previousClause) && !inlineStyleRemovalPattern.test(previousClause)) return clause;
+      if (!coordinatedPresentationTargetPattern.test(clause)) return clause;
+      return `remove ${clause.trim()}`;
+    });
+  });
+  const preservedClauses = clauses.filter((clause) => presentationRemovalNegationPattern.test(clause));
+  const removalClauses = clauses.filter((clause) => !presentationRemovalNegationPattern.test(clause));
+  const icons =
+    !preservedClauses.some((clause) => /\bicons?\b/iu.test(clause)) &&
+    removalClauses.some((clause) => iconRemovalPattern.test(clause));
+  const inlineStyles =
+    !preservedClauses.some((clause) => /\bstyles?\b/iu.test(clause)) &&
+    removalClauses.some((clause) => inlineStyleRemovalPattern.test(clause));
+  if (!icons && !inlineStyles) return undefined;
+  return { icons, inlineStyles };
+};
 
 const hasSameValue = (left: unknown, right: unknown): boolean => {
   if (Object.is(left, right)) return true;
@@ -57,6 +97,7 @@ interface CustomWidgetFollowUpEditControllerOptions {
   definitionId: string;
   preserveDataContract: boolean;
   allowSourceChanges: boolean;
+  requestedPresentationRemovals?: CustomWidgetPresentationRemovalIntent;
   loadedDefinition?: unknown;
 }
 
@@ -94,6 +135,7 @@ export const createCustomWidgetFollowUpEditController = ({
   definitionId,
   preserveDataContract,
   allowSourceChanges,
+  requestedPresentationRemovals,
   loadedDefinition: initialLoadedDefinition,
 }: CustomWidgetFollowUpEditControllerOptions) => {
   let loadedDefinition = isRecord(initialLoadedDefinition) ? initialLoadedDefinition : null;
@@ -160,7 +202,16 @@ export const createCustomWidgetFollowUpEditController = ({
       if (preserveDataContract) {
         const saved = getPreservationDefinition(loadedDefinition);
         const next = getPreservationDefinition(candidate);
-        const removals = saved && next ? getCustomWidgetRemovals(saved, next) : [];
+        const removals = (saved && next ? getCustomWidgetRemovals(saved, next) : []).filter((removal) => {
+          if (
+            requestedPresentationRemovals?.icons &&
+            (removal === "component:Icon" || removal === "component:TablerIcon")
+          ) {
+            return false;
+          }
+          if (requestedPresentationRemovals?.inlineStyles && removal.startsWith("style:")) return false;
+          return true;
+        });
         if (removals.length > 0) {
           return {
             error: `A style-only follow-up must preserve the widget's existing UI and data bindings. Detected heuristic removals: ${JSON.stringify(removals)}.`,
