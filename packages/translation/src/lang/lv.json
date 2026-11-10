@@ -2016,6 +2016,15 @@
         "modifier": "Moderators"
       }
     },
+    "markdown": {
+      "alert": {
+        "note": "",
+        "tip": "",
+        "important": "",
+        "warning": "",
+        "caution": ""
+      }
+    },
     "dangerZone": "Bīstamā zona",
     "noResults": "Nav atrasts neviens rezultāts",
     "unsavedChanges": "Jums ir nesaglabātas izmaiņas!",
@@ -6718,7 +6727,8 @@
             "documentation": "Dokumentācija",
             "submitIssue": "Iesniegt problēmu",
             "discord": "Kopienas Discord",
-            "sourceCode": "Avota kods"
+            "sourceCode": "Avota kods",
+            "changelog": ""
           }
         },
         "about": "Par Programmu",
@@ -7071,6 +7081,10 @@
             "title": "Izskats",
             "defaultColorScheme": {
               "label": "Noklusējuma krāsu shēma"
+            },
+            "whatsNew": {
+              "label": "",
+              "description": ""
             }
           },
           "branding": {
@@ -8823,6 +8837,12 @@
         "description": "Mainiet savu krāsu shēmu, valodu, sākuma dēli un preferences. No šejienes varat arī pāriet uz pārvaldības apgabalu."
       }
     }
+  },
+  "whatsNew": {
+    "title": "",
+    "empty": "",
+    "allReleases": "",
+    "dismiss": ""
   },
   "metadata": {
     "description": "Paša mitināta informācijas panelis *arr stekam un visai jūsu mājas laboratorijai. Integrējas ar vairāk nekā 50 pakalpojumiem, logrīki reāllaikā, bez konfigurācijas failiem.",

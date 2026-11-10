@@ -2016,6 +2016,15 @@
         "modifier": ""
       }
     },
+    "markdown": {
+      "alert": {
+        "note": "Nota",
+        "tip": "",
+        "important": "",
+        "warning": "Advertencia",
+        "caution": ""
+      }
+    },
     "dangerZone": "Zona de riesgo",
     "noResults": "No se han encontrado resultados",
     "unsavedChanges": "¡Tienes cambios sin guardar!",
@@ -6718,7 +6727,8 @@
             "documentation": "Documentación",
             "submitIssue": "Enviar una incidencia",
             "discord": "Comunidad de Discord",
-            "sourceCode": "Código Fuente"
+            "sourceCode": "Código Fuente",
+            "changelog": ""
           }
         },
         "about": "Acerca de",
@@ -7071,6 +7081,10 @@
             "title": "Apariencia",
             "defaultColorScheme": {
               "label": "Esquema de color predeterminado"
+            },
+            "whatsNew": {
+              "label": "",
+              "description": ""
             }
           },
           "branding": {
@@ -8823,6 +8837,12 @@
         "description": ""
       }
     }
+  },
+  "whatsNew": {
+    "title": "",
+    "empty": "",
+    "allReleases": "",
+    "dismiss": ""
   },
   "metadata": {
     "description": "Un panel de control autoalojado para la *pila de arr y todo tu homelab. Integra con más de 50 servicios, widgets en tiempo real, sin archivos de configuración.",

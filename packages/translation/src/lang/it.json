@@ -2016,6 +2016,15 @@
         "modifier": "Mod"
       }
     },
+    "markdown": {
+      "alert": {
+        "note": "Nota",
+        "tip": "",
+        "important": "",
+        "warning": "Attenzione",
+        "caution": ""
+      }
+    },
     "dangerZone": "Zona pericolosa",
     "noResults": "Nessun risultato trovato",
     "unsavedChanges": "Ci sono modifiche non salvate!",
@@ -6718,7 +6727,8 @@
             "documentation": "Documentazione",
             "submitIssue": "Segnala un problema",
             "discord": "Community Discord",
-            "sourceCode": "Codice sorgente"
+            "sourceCode": "Codice sorgente",
+            "changelog": ""
           }
         },
         "about": "Info",
@@ -7071,6 +7081,10 @@
             "title": "Aspetto",
             "defaultColorScheme": {
               "label": "Schema colore predefinito"
+            },
+            "whatsNew": {
+              "label": "",
+              "description": ""
             }
           },
           "branding": {
@@ -8823,6 +8837,12 @@
         "description": "Cambia la combinazione di colori, la lingua, la bacheca principale e le tue preferenze. Da qui puoi anche passare all'area di gestione."
       }
     }
+  },
+  "whatsNew": {
+    "title": "",
+    "empty": "",
+    "allReleases": "",
+    "dismiss": ""
   },
   "metadata": {
     "description": "Un cruscotto autoospitato per lo stack *arr e tutta la tua homelab. Si integra con oltre 50 servizi, widget in tempo reale, senza file di configurazione.",

@@ -2016,6 +2016,15 @@
         "modifier": ""
       }
     },
+    "markdown": {
+      "alert": {
+        "note": "Nota",
+        "tip": "",
+        "important": "",
+        "warning": "ATENÇÃO",
+        "caution": ""
+      }
+    },
     "dangerZone": "Zona de risco",
     "noResults": "Nenhum resultado encontrado",
     "unsavedChanges": "Você tem alterações não salvas!",
@@ -6718,7 +6727,8 @@
             "documentation": "Documentação",
             "submitIssue": "Enviar um problema",
             "discord": "Discord da comunidade",
-            "sourceCode": "Código-fonte"
+            "sourceCode": "Código-fonte",
+            "changelog": ""
           }
         },
         "about": "Sobre",
@@ -7071,6 +7081,10 @@
             "title": "Aparência",
             "defaultColorScheme": {
               "label": "Esquema de cores padrão"
+            },
+            "whatsNew": {
+              "label": "",
+              "description": ""
             }
           },
           "branding": {
@@ -8823,6 +8837,12 @@
         "description": "Altere seu esquema de cores, idioma, quadro inicial e preferências. Você também pode acessar a área de gerenciamento a partir daqui."
       }
     }
+  },
+  "whatsNew": {
+    "title": "",
+    "empty": "",
+    "allReleases": "",
+    "dismiss": ""
   },
   "metadata": {
     "description": "Um painel auto-hospedado para a *pilha de arr e toda a sua pátria. Integra com mais de 50 serviços, widgets em tempo real, sem arquivos de configuração.",

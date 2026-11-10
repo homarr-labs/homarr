@@ -2016,6 +2016,15 @@
         "modifier": ""
       }
     },
+    "markdown": {
+      "alert": {
+        "note": "ノート",
+        "tip": "",
+        "important": "",
+        "warning": "警告",
+        "caution": ""
+      }
+    },
     "dangerZone": "危険な操作",
     "noResults": "結果が見つかりません",
     "unsavedChanges": "保存していない変更があります！",
@@ -6718,7 +6727,8 @@
             "documentation": "ドキュメンテーション",
             "submitIssue": "問題を送信する",
             "discord": "コミュニティ・ディスコード",
-            "sourceCode": "ソースコード"
+            "sourceCode": "ソースコード",
+            "changelog": ""
           }
         },
         "about": "このアプリについて",
@@ -7071,6 +7081,10 @@
             "title": "外観",
             "defaultColorScheme": {
               "label": "既定の配色設定"
+            },
+            "whatsNew": {
+              "label": "",
+              "description": ""
             }
           },
           "branding": {
@@ -8823,6 +8837,12 @@
         "description": ""
       }
     }
+  },
+  "whatsNew": {
+    "title": "",
+    "empty": "",
+    "allReleases": "",
+    "dismiss": ""
   },
   "metadata": {
     "description": "*arrスタックとホームラブ全体のセルフホスト型ダッシュボード。50以上のサービス、リアルタイムウィジェット、設定ファイルなしと統合できます。",

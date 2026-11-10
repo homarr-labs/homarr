@@ -2016,6 +2016,15 @@
         "modifier": ""
       }
     },
+    "markdown": {
+      "alert": {
+        "note": "",
+        "tip": "",
+        "important": "",
+        "warning": "Varování",
+        "caution": ""
+      }
+    },
     "dangerZone": "Nebezpečná zóna",
     "noResults": "Nebyly nalezeny žádné výsledky",
     "unsavedChanges": "Máte neuložené změny!",
@@ -6718,7 +6727,8 @@
             "documentation": "Dokumentace",
             "submitIssue": "Nahlásit problém",
             "discord": "Komunitní Discord",
-            "sourceCode": "Zdrojový kód"
+            "sourceCode": "Zdrojový kód",
+            "changelog": ""
           }
         },
         "about": "O aplikaci",
@@ -7071,6 +7081,10 @@
             "title": "Vzhled",
             "defaultColorScheme": {
               "label": "Výchozí barevné schéma"
+            },
+            "whatsNew": {
+              "label": "",
+              "description": ""
             }
           },
           "branding": {
@@ -8823,6 +8837,12 @@
         "description": "Změňte barevné schéma, jazyk, domovskou plochu a předvolby. Můžete také odtud přejít do správy."
       }
     }
+  },
+  "whatsNew": {
+    "title": "",
+    "empty": "",
+    "allReleases": "",
+    "dismiss": ""
   },
   "metadata": {
     "description": "Samostatně hostovaná nástěnka pro *arr stack a celou vaši domovskou elab. Integruje se s 50 + službami, widgety, bez konfiguračních souborů.",

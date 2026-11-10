@@ -2016,6 +2016,15 @@
         "modifier": ""
       }
     },
+    "markdown": {
+      "alert": {
+        "note": "Notat",
+        "tip": "",
+        "important": "",
+        "warning": "Advarsel",
+        "caution": ""
+      }
+    },
     "dangerZone": "Faresonen",
     "noResults": "Ingen resultater funnet",
     "unsavedChanges": "Du har ulagrede endringer!",
@@ -6718,7 +6727,8 @@
             "documentation": "Dokumentasjon",
             "submitIssue": "Send inn en sak",
             "discord": "Discord",
-            "sourceCode": "Kildekode"
+            "sourceCode": "Kildekode",
+            "changelog": ""
           }
         },
         "about": "Info",
@@ -7071,6 +7081,10 @@
             "title": "Utseende",
             "defaultColorScheme": {
               "label": "Standard fargetema"
+            },
+            "whatsNew": {
+              "label": "",
+              "description": ""
             }
           },
           "branding": {
@@ -8823,6 +8837,12 @@
         "description": "Endre fargetemaet, språket, tavlen og preferansene dine. Du kan også hoppe til området herfra."
       }
     }
+  },
+  "whatsNew": {
+    "title": "",
+    "empty": "",
+    "allReleases": "",
+    "dismiss": ""
   },
   "metadata": {
     "description": "Et selvbetjent dashbord for *arr stack og hele hjemmelaget. Integrerer med mer enn 50 tjenester, sanntid widgets, ingen konfigurasjonsfiler.",

@@ -2016,6 +2016,15 @@
         "modifier": "Değiştirici"
       }
     },
+    "markdown": {
+      "alert": {
+        "note": "Not",
+        "tip": "",
+        "important": "",
+        "warning": "",
+        "caution": ""
+      }
+    },
     "dangerZone": "Tehlikeli Bölge",
     "noResults": "Sonuç bulunamadı",
     "unsavedChanges": "Kaydedilmemiş değişiklikleriniz var!",
@@ -6718,7 +6727,8 @@
             "documentation": "Dokümantasyon",
             "submitIssue": "Bir Hata Gönder",
             "discord": "Discord Topluluğu",
-            "sourceCode": "Kaynak Kodu"
+            "sourceCode": "Kaynak Kodu",
+            "changelog": ""
           }
         },
         "about": "Hakkında",
@@ -7071,6 +7081,10 @@
             "title": "Görünüm",
             "defaultColorScheme": {
               "label": "Öntanımlı Renk Düzeni"
+            },
+            "whatsNew": {
+              "label": "",
+              "description": ""
             }
           },
           "branding": {
@@ -8823,6 +8837,12 @@
         "description": "Renk şemanızı, dilinizi, ana panelinizi ve tercihlerinizi değiştirin. Buradan yönetim alanına da geçebilirsiniz."
       }
     }
+  },
+  "whatsNew": {
+    "title": "",
+    "empty": "",
+    "allReleases": "",
+    "dismiss": ""
   },
   "metadata": {
     "description": "*arr yığını ve tüm homelab ortamınız için kendi barındırdığınız pano. 50'den fazla hizmet, gerçek zamanlı widget'lar ve yapılandırma dosyası yok.",

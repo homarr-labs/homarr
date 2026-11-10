@@ -2016,6 +2016,15 @@
         "modifier": "Bộ sửa đổi"
       }
     },
+    "markdown": {
+      "alert": {
+        "note": "",
+        "tip": "",
+        "important": "",
+        "warning": "",
+        "caution": ""
+      }
+    },
     "dangerZone": "Khu vực nguy hiểm",
     "noResults": "Không có kết quả",
     "unsavedChanges": "Bạn có thay đổi chưa lưu!",
@@ -6718,7 +6727,8 @@
             "documentation": "Tài liệu",
             "submitIssue": "Gửi báo cáo sự cố",
             "discord": "Discord",
-            "sourceCode": "Mã nguồn"
+            "sourceCode": "Mã nguồn",
+            "changelog": ""
           }
         },
         "about": "Về chúng tôi",
@@ -7071,6 +7081,10 @@
             "title": "Hiển thị",
             "defaultColorScheme": {
               "label": "Bảng màu mặc định"
+            },
+            "whatsNew": {
+              "label": "",
+              "description": ""
             }
           },
           "branding": {
@@ -8823,6 +8837,12 @@
         "description": "Thay đổi bảng màu, ngôn ngữ, bảng chính và tùy chọn. Bạn cũng có thể chuyển đến khu vực quản lý từ đây."
       }
     }
+  },
+  "whatsNew": {
+    "title": "",
+    "empty": "",
+    "allReleases": "",
+    "dismiss": ""
   },
   "metadata": {
     "description": "Bảng điều khiển tự lưu trữ cho hệ thống *arr và toàn bộ homelab của bạn. Tích hợp hơn 50 dịch vụ, tiện ích theo thời gian thực, không cần tệp cấu hình.",

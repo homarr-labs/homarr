@@ -2016,6 +2016,15 @@
         "modifier": "수정자"
       }
     },
+    "markdown": {
+      "alert": {
+        "note": "",
+        "tip": "",
+        "important": "",
+        "warning": "",
+        "caution": ""
+      }
+    },
     "dangerZone": "위험한 설정",
     "noResults": "결과를 찾을 수 없습니다.",
     "unsavedChanges": "저장하지 않은 변경 사항이 있습니다!",
@@ -6718,7 +6727,8 @@
             "documentation": "문서",
             "submitIssue": "이슈 제출",
             "discord": "커뮤니티 불화",
-            "sourceCode": "소스 코드"
+            "sourceCode": "소스 코드",
+            "changelog": ""
           }
         },
         "about": "정보",
@@ -7071,6 +7081,10 @@
             "title": "모양",
             "defaultColorScheme": {
               "label": "기본 색상 구성표"
+            },
+            "whatsNew": {
+              "label": "",
+              "description": ""
             }
           },
           "branding": {
@@ -8823,6 +8837,12 @@
         "description": "색상 구성표, 언어, 홈 보드, 설정을 변경할 수 있습니다. 여기에서 관리 영역으로 이동할 수도 있습니다."
       }
     }
+  },
+  "whatsNew": {
+    "title": "",
+    "empty": "",
+    "allReleases": "",
+    "dismiss": ""
   },
   "metadata": {
     "description": "*arr 스택과 전체 홈랩을 위한 자체 호스팅 대시보드입니다. 50개 이상의 서비스, 실시간 위젯 및 구성 파일 없이 통합할 수 있습니다.",
