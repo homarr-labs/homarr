@@ -195,6 +195,7 @@ const heightBreakpoints = [
 
 export const getBookmarkDisplayPlan = ({
   advanced,
+  availableHeight,
   gap = 0,
   height,
   hideHostname = false,
@@ -203,6 +204,7 @@ export const getBookmarkDisplayPlan = ({
   width,
 }: {
   advanced: boolean;
+  availableHeight?: number;
   gap?: number;
   height: number;
   hideHostname?: boolean;
@@ -213,6 +215,7 @@ export const getBookmarkDisplayPlan = ({
   const count = Math.max(1, itemCount);
   const normalizedWidth = Math.max(0, width);
   const normalizedHeight = Math.max(0, height);
+  const normalizedAvailableHeight = Math.max(0, availableHeight ?? height);
   const widthSettings = widthBreakpoints.find(({ minWidth }) => normalizedWidth >= minWidth);
   const heightSettings = heightBreakpoints.find(({ minHeight }) => normalizedHeight >= minHeight);
   if (!widthSettings || !heightSettings) throw new Error("Bookmark breakpoints must cover all widget sizes");
@@ -309,7 +312,7 @@ export const getBookmarkDisplayPlan = ({
   const densitySettings = getBookmarkDensitySettings({
     columns: visibleColumns,
     gap,
-    height: normalizedHeight,
+    height: normalizedAvailableHeight,
     heightProperty: "itemHeight",
     itemCount: count,
     preferredSettings: heightSettings,
