@@ -65,8 +65,13 @@ try {
     }
     manifestPaths = [webpackManifestPath];
   }
-} catch {
-  throw new Error("Next.js build output is missing. Run the Next.js production build before the bundle check.");
+} catch (error) {
+  throw new Error(
+    "Next.js build output is missing or invalid. Run the Next.js production build before the bundle check.",
+    {
+      cause: error,
+    },
+  );
 }
 
 const moduleIds = new Set();
