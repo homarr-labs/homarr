@@ -75,9 +75,15 @@ export const CatalogOption = factory<CatalogOptionFactory>((_props) => {
             {t("item.create.connectionStatus.needsSetup")}
           </Badge>
         )}
-        <Box {...getStyles("size")} title={t("item.inPlace.defaultSizeDescription")}>
-          {t("item.inPlace.defaultSize", { width: entry.defaultSize.width, height: entry.defaultSize.height })}
-        </Box>
+        {entry.type === "workshop" ? (
+          <Badge size="xs" variant="light">
+            {t("workshop.title")}
+          </Badge>
+        ) : (
+          <Box {...getStyles("size")} title={t("item.inPlace.defaultSizeDescription")}>
+            {t("item.inPlace.defaultSize", { width: entry.defaultSize.width, height: entry.defaultSize.height })}
+          </Box>
+        )}
       </Box>
     </Box>
   );

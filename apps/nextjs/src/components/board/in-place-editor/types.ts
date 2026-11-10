@@ -8,7 +8,7 @@ export interface AreaRect {
   h: number;
 }
 
-export type AddInPlaceStep = "idle" | "pick" | "configure" | "createApp";
+export type AddInPlaceStep = "idle" | "pick" | "configure" | "createApp" | "workshop";
 
 export type PickTarget =
   | { type: "widget"; kind: WidgetKind }
@@ -37,6 +37,7 @@ export interface AddInPlaceSession {
   editItemId?: string;
   createAppName?: string;
   createAppAttempt?: symbol;
+  workshopSelection?: { submissionId: string; attempt: symbol };
   onCommit?: CommitHandler;
 }
 

@@ -2224,6 +2224,18 @@
       },
       "customWidget": "Custom widget",
       "standalone": "Standalone",
+      "integrationFilter": "Filter by integration",
+      "integrationNotConnected": "{name} (not connected)",
+      "workshop": {
+        "title": "Workshop widgets",
+        "back": "Back to widgets",
+        "empty": "No Workshop widgets to show. Browse the Workshop for more.",
+        "noMatches": "No matches in the featured Workshop widgets.",
+        "loading": "Loading Workshop recommendations",
+        "integrationError": "Could not load your integrations. You can still search for Workshop widgets.",
+        "searchMore": "Search Workshop",
+        "installAndAdd": "Install and add to board"
+      },
       "missingIntegration": {
         "title": "Connect a service first",
         "noPermission": "This widget needs a compatible service connection. Ask an administrator to connect one, then try again."

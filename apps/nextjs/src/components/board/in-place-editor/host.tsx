@@ -44,14 +44,18 @@ export const InPlaceEditorHost = () => {
   const [isEditMode] = useEditMode();
   const { data: authSession } = useSession();
   const canCreateApp = authSession?.user.permissions.includes("app-create") ?? false;
+  const isAdmin = authSession?.user.permissions.includes("admin") ?? false;
   const actions = useMemo(
     () => ({
       ...addInPlaceActions,
       openCreateApp: (name?: string) => {
         if (canCreateApp) addInPlaceActions.openCreateApp(name);
       },
+      openWorkshop: (submissionId: string) => {
+        if (isAdmin) addInPlaceActions.openWorkshop(submissionId);
+      },
     }),
-    [canCreateApp],
+    [canCreateApp, isAdmin],
   );
   const layoutId = useCurrentLayout();
   const { createItem } = useItemActions();
@@ -185,6 +189,10 @@ export const InPlaceEditorHost = () => {
   useEffect(() => {
     if (step === "createApp" && !canCreateApp) addInPlaceActions.back();
   }, [canCreateApp, step]);
+
+  useEffect(() => {
+    if (step === "workshop" && !isAdmin) addInPlaceActions.back();
+  }, [isAdmin, step]);
 
   if (!isEditMode || step === "idle" || !session) return null;
 

@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import type { KeyboardEvent } from "react";
-import { Box, Combobox, Group, Text, TextInput, useCombobox } from "@mantine/core";
+import { Box, Combobox, Group, Loader, Text, TextInput, useCombobox } from "@mantine/core";
 import { IconPlus, IconSearch } from "@tabler/icons-react";
 
 import { useSession } from "@homarr/auth/client";
@@ -33,8 +33,11 @@ const createWidgetKey = "create:widget";
 
 const groupEntries = (entries: CatalogEntry[], t: TranslationFunction): OptionGroup[] => {
   const indexed = entries.map((entry, index) => ({ entry, index }));
-  const bestFit = indexed.filter(({ entry }) => entry.type !== "app" && entry.bestFit);
-  const widgets = indexed.filter(({ entry }) => entry.type !== "app" && !entry.bestFit);
+  const local = indexed.filter(({ entry }) => entry.type !== "app" && entry.type !== "workshop");
+  const bestFit = local.filter(({ entry }) => entry.bestFit && entry.connectionStatus !== "needsSetup");
+  const widgets = local.filter(({ entry }) => !entry.bestFit && entry.connectionStatus !== "needsSetup");
+  const workshop = indexed.filter(({ entry }) => entry.type === "workshop");
+  const needsSetup = local.filter(({ entry }) => entry.connectionStatus === "needsSetup");
   const apps = indexed.filter(({ entry }) => entry.type === "app");
   const groups: OptionGroup[] = [];
   if (bestFit.length > 0) groups.push({ key: "best-fit", label: t("item.inPlace.bestFit"), entries: bestFit });
@@ -45,8 +48,15 @@ const groupEntries = (entries: CatalogEntry[], t: TranslationFunction): OptionGr
       entries: widgets,
     });
   }
+  if (needsSetup.length > 0)
+    groups.push({ key: "needs-setup", label: t("item.create.connectionStatus.needsSetup"), entries: needsSetup });
+  if (workshop.length > 0) groups.push({ key: "workshop", label: t("workshop.title"), entries: workshop });
   if (apps.length > 0) groups.push({ key: "apps", label: t("item.inPlace.yourApps"), entries: apps });
-  return groups;
+  let index = 0;
+  return groups.map((group) => ({
+    ...group,
+    entries: group.entries.map(({ entry }) => ({ entry, index: index++ })),
+  }));
 };
 
 export const PickStep = ({ useCatalog, actions, AreaSizeInputs, onKeyDown, flipped, canCreateApp }: PickStepProps) => {
@@ -60,7 +70,7 @@ export const PickStep = ({ useCatalog, actions, AreaSizeInputs, onKeyDown, flipp
   const combobox = useCombobox({ opened: true });
   const query = search.trim();
   const creationOptions = [];
-  if (query && catalog.entries.length === 0) {
+  if (query && catalog.entries.length === 0 && !catalog.workshop.isPending) {
     if (canCreateApp)
       creationOptions.push({
         key: createAppKey,
@@ -86,7 +96,7 @@ export const PickStep = ({ useCatalog, actions, AreaSizeInputs, onKeyDown, flipp
     requestAnimationFrame(() => {
       const key = listRef.current?.querySelector("[data-combobox-selected]")?.getAttribute("data-entry-key");
       const entry = catalog.entries.find((candidate) => candidate.key === key);
-      actions.highlight(entry?.target);
+      actions.highlight(entry && entry.type !== "workshop" ? entry.target : undefined);
     });
   };
 
@@ -138,7 +148,8 @@ export const PickStep = ({ useCatalog, actions, AreaSizeInputs, onKeyDown, flipp
             return;
           }
           const entry = catalog.entries.find((candidate) => candidate.key === key);
-          if (entry) actions.pick(entry.target);
+          if (entry?.type === "workshop") actions.openWorkshop(entry.submissionId);
+          else if (entry) actions.pick(entry.target);
         }}
       >
         <Box className={classes.search}>
@@ -167,7 +178,7 @@ export const PickStep = ({ useCatalog, actions, AreaSizeInputs, onKeyDown, flipp
           onMouseLeave={() => actions.highlight(undefined)}
         >
           <Combobox.Options>
-            {catalog.entries.length === 0 && creationOptions.length === 0 && (
+            {catalog.entries.length === 0 && creationOptions.length === 0 && !catalog.workshop.isPending && (
               <Combobox.Empty>{t("search.nothingFound")}</Combobox.Empty>
             )}
             {groups.map((group) => (
@@ -180,7 +191,7 @@ export const PickStep = ({ useCatalog, actions, AreaSizeInputs, onKeyDown, flipp
                     data-entry-key={entry.key}
                     onMouseEnter={() => {
                       combobox.selectOption(index);
-                      actions.highlight(entry.target);
+                      actions.highlight(entry.type === "workshop" ? undefined : entry.target);
                     }}
                   >
                     <CatalogOption entry={entry} />
@@ -213,6 +224,28 @@ export const PickStep = ({ useCatalog, actions, AreaSizeInputs, onKeyDown, flipp
               </Combobox.Option>
             ))}
           </Combobox.Options>
+          {catalog.workshop.enabled && (
+            <Box px="xs" py="xs">
+              {catalog.workshop.isPending && (
+                <Group component="output" gap="xs">
+                  <Loader size="xs" />
+                  <Text size="xs" c="dimmed">
+                    {t("item.create.workshop.loading")}
+                  </Text>
+                </Group>
+              )}
+              {catalog.workshop.isError && (
+                <Text component="output" size="xs" c="dimmed">
+                  {t("workshop.unavailableTitle")}
+                </Text>
+              )}
+              {catalog.workshop.integrationError && (
+                <Text component="output" size="xs" c="dimmed">
+                  {t("item.create.workshop.integrationError")}
+                </Text>
+              )}
+            </Box>
+          )}
         </Box>
       </Combobox>
       <Box className={classes.pickFooter}>

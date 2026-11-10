@@ -1,7 +1,6 @@
-import { useMemo, useRef, useState } from "react";
+import dynamic from "next/dynamic";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
-  Avatar,
-  Badge,
   Box,
   Button,
   Center,
@@ -9,15 +8,16 @@ import {
   Group,
   Image,
   Input,
+  Loader,
   Select,
   SimpleGrid,
   Stack,
   Text,
   ThemeIcon,
-  Tooltip,
 } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
-import { IconApi, IconBuildingStore, IconSearch } from "@tabler/icons-react";
+import { IconApi, IconSearch } from "@tabler/icons-react";
+import { CancelledError } from "@tanstack/react-query";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
@@ -26,10 +26,10 @@ import { useCurrentLayout, useRequiredBoard } from "@homarr/boards/context";
 import { createId } from "@homarr/common";
 import {
   getBoardLaneColumnCount,
-  getIconUrl,
   getIntegrationName,
   getWidgetName,
   getRootSectionLane,
+  integrationKinds,
   widgetDefaultSizes,
   widgetIntegrationSupport,
   widgetKinds,
@@ -52,15 +52,21 @@ import { useItemActions } from "./item-actions";
 import type { WidgetConnectionStatus } from "./item-select-data";
 import {
   getWidgetConnectionStatus,
+  matchesIntegrationSearch,
   resolveMatchingIntegrationsAsync,
   tryLockSelection,
   unlockSelection,
 } from "./item-select-data";
 import { LazyWidgetEditModal, preloadWidgetEditModal } from "./lazy-widget-edit-modal";
+import { ConnectionStatusBadge, SupportedIntegrations } from "./widget-card-connection";
+import { WorkshopWidgetSection, useFilteredWorkshopCatalog } from "./workshop-widget-section";
+
+export { ConnectionStatusBadge, SupportedIntegrations } from "./widget-card-connection";
 
 interface ItemSelectModalContentProps {
   actions: { closeModal: () => void };
   integrationData: RouterOutputs["integration"]["all"] | undefined;
+  integrationError: boolean;
   customWidgetDefs: RouterOutputs["customWidget"]["available"] | undefined;
   ensureIntegrationDataAsync: () => Promise<RouterOutputs["integration"]["all"]>;
   isAdmin: boolean;
@@ -79,10 +85,28 @@ export interface WidgetItemData {
 const selectGridCols = { base: 1, xs: 2, sm: 2, md: 3, lg: 4 };
 const defaultWidgetSize = { width: 1, height: 1 };
 const maximumWidgetHeight = 64;
+const integrationFilterOptions = integrationKinds
+  .filter((kind) => kind !== "mock")
+  .map((kind) => ({ value: kind, label: getIntegrationName(kind) }))
+  .toSorted((left, right) => left.label.localeCompare(right.label));
+const filterKindsByValue = new Map<string, IntegrationKind>(
+  integrationFilterOptions.map(({ value }) => [value, value]),
+);
+const WorkshopWidgetReview = dynamic(
+  () => import("./workshop-widget-review").then((module) => module.WorkshopWidgetReview),
+  {
+    loading: () => (
+      <Center py="xl">
+        <Loader size="sm" />
+      </Center>
+    ),
+  },
+);
 
 const ItemSelectModalContent = ({
   actions,
   integrationData,
+  integrationError,
   customWidgetDefs,
   ensureIntegrationDataAsync,
   isAdmin,
@@ -90,7 +114,10 @@ const ItemSelectModalContent = ({
   initialSearch = "",
 }: ItemSelectModalContentProps) => {
   const [search, setSearch] = useState(initialSearch);
+  const [integrationFilter, setIntegrationFilter] = useState<IntegrationKind | null>(null);
+  const [workshopSelection, setWorkshopSelection] = useState<string | null>(null);
   const t = useI18n();
+  const utils = clientApi.useUtils();
   const board = useRequiredBoard();
   const currentLayoutId = useCurrentLayout();
   const currentLayout = board.layouts.find((layout) => layout.id === currentLayoutId);
@@ -137,6 +164,13 @@ const ItemSelectModalContent = ({
 
   const [loadingSelection, setLoadingSelection] = useState<string | null>(null);
   const selectionLock = useRef(false);
+  const pickerOpen = useRef(true);
+  useEffect(() => {
+    pickerOpen.current = true;
+    return () => {
+      pickerOpen.current = false;
+    };
+  }, []);
   const { createItem, removeItem } = useItemActions();
 
   const { openModal: openEditModal } = useModalAction(LazyWidgetEditModal);
@@ -144,9 +178,21 @@ const ItemSelectModalContent = ({
   const settings = useSettings();
 
   const availableKinds = useMemo(
-    () => new Set((integrationData ?? []).filter(({ permissions }) => permissions.hasUseAccess).map((i) => i.kind)),
+    () =>
+      new Set((integrationData ?? []).filter(({ permissions }) => permissions.hasUseAccess).map(({ kind }) => kind)),
     [integrationData],
   );
+  const workshopAvailableKinds = useMemo(() => {
+    if (!integrationData) return undefined;
+    return new Set(integrationData.filter(({ permissions }) => permissions.hasFullAccess).map(({ kind }) => kind));
+  }, [integrationData]);
+  const searchQuery = search.trim().toLowerCase();
+  const workshop = useFilteredWorkshopCatalog({
+    enabled: isAdmin,
+    searchQuery,
+    integrationFilter,
+    availableKinds: workshopAvailableKinds,
+  });
 
   const items = useMemo<WidgetItemData[]>(
     () =>
@@ -175,29 +221,40 @@ const ItemSelectModalContent = ({
             description,
           };
         })
-        .sort((itemA, itemB) => {
-          if (itemA.kind === "app") return -1;
-          if (itemB.kind === "app") return 1;
-
-          return itemA.name.localeCompare(itemB.name);
-        }),
+        .sort((itemA, itemB) => itemA.name.localeCompare(itemB.name)),
     [t],
   );
 
   const filteredItems = useMemo(() => {
-    const query = search.toLowerCase().trim();
-    if (!query) return items;
-    return items.filter(
-      (item) =>
-        item.name.toLowerCase().includes(query) ||
-        item.supportedIntegrations.some((kind) => getIntegrationName(kind).toLowerCase().includes(query)),
-    );
-  }, [items, search]);
+    return items.flatMap((item) => {
+      if (integrationFilter && !item.supportedIntegrations.includes(integrationFilter)) return [];
+      if (
+        searchQuery &&
+        !item.name.toLowerCase().includes(searchQuery) &&
+        !item.supportedIntegrations.some((kind) => matchesIntegrationSearch(kind, searchQuery))
+      )
+        return [];
+      let connectionStatus: WidgetConnectionStatus = "noConnectionRequired";
+      if (integrationData) {
+        connectionStatus = getWidgetConnectionStatus({
+          supportedIntegrations: item.supportedIntegrations,
+          availableKinds,
+          connectionOptional: widgetKindsWithOptionalIntegrations.has(item.kind),
+        });
+      }
+      return [{ ...item, connectionStatus }];
+    });
+  }, [availableKinds, integrationData, integrationFilter, items, searchQuery]);
 
-  const filteredCustomWidgets = useMemo(
-    () => (customWidgetDefs ?? []).filter((def) => def.name.toLowerCase().includes(search.toLowerCase())),
-    [customWidgetDefs, search],
-  );
+  const filteredCustomWidgets = useMemo(() => {
+    return (customWidgetDefs ?? []).filter((definition) => {
+      if (integrationFilter && !definition.integrationKinds.some((kind) => kind === integrationFilter)) return false;
+      return (
+        definition.name.toLowerCase().includes(searchQuery) ||
+        definition.integrationKinds.some((kind) => matchesIntegrationSearch(kind, searchQuery))
+      );
+    });
+  }, [customWidgetDefs, integrationFilter, searchQuery]);
 
   const notifyDefinitionLoadError = (error: unknown) => {
     showErrorNotification({
@@ -255,6 +312,7 @@ const ItemSelectModalContent = ({
     preloadWidgetEditModal();
     try {
       const definition = await loadWidgetDefinition("customApi");
+      if (!pickerOpen.current) return;
       const itemId = createId();
       const initialSize = widgetDefaultSizes.customApi ?? defaultWidgetSize;
       const defaultOptions = reduceWidgetOptionsWithDefinition(definition, settings);
@@ -297,10 +355,29 @@ const ItemSelectModalContent = ({
         },
       );
     } catch (error) {
-      notifyDefinitionLoadError(error);
+      if (pickerOpen.current) notifyDefinitionLoadError(error);
     } finally {
       unlockSelection(selectionLock);
       setLoadingSelection(null);
+    }
+  };
+
+  const handleWorkshopInstalled = async (definitionId: string) => {
+    const input = { boardId: board.id };
+    try {
+      // Refresh the shared cache even after closing; leave failed lookups stale so reopening can retry.
+      // A superseded request must reject instead of returning its previous cached list.
+      await utils.customWidget.available.cancel(input, { revert: false });
+      await utils.customWidget.available.invalidate(input, { refetchType: "none" });
+      const definitions = await utils.customWidget.available.fetch(input, { retry: false });
+      if (!pickerOpen.current) return;
+      const installed = definitions.find(({ id }) => id === definitionId);
+      if (!installed) throw new Error(t("item.create.notification.error.message"));
+      await handleAddCustomWidget(installed);
+    } catch (error) {
+      if (pickerOpen.current && !(error instanceof CancelledError)) notifyDefinitionLoadError(error);
+    } finally {
+      setWorkshopSelection(null);
     }
   };
 
@@ -396,6 +473,36 @@ const ItemSelectModalContent = ({
     }
   };
 
+  const renderItem = (item: WidgetItemData & { connectionStatus: WidgetConnectionStatus }) => {
+    const preload = () => {
+      void loadWidgetDefinition(item.kind).catch(() => undefined);
+      preloadWidgetEditModal();
+    };
+    return (
+      <WidgetItem
+        key={item.kind}
+        item={item}
+        onSelect={() => void handleAdd(item.kind)}
+        onFocus={preload}
+        onPointerEnter={preload}
+        disabled={loadingSelection !== null}
+        loading={loadingSelection === item.kind}
+        connectionStatus={item.connectionStatus}
+        availableKinds={integrationData && availableKinds}
+      />
+    );
+  };
+
+  if (workshopSelection) {
+    return (
+      <WorkshopWidgetReview
+        submissionId={workshopSelection}
+        onBack={() => setWorkshopSelection(null)}
+        onImported={(definitionId) => void handleWorkshopInstalled(definitionId)}
+      />
+    );
+  }
+
   return (
     <Stack gap="md">
       {/* Top Search & Destination Selector */}
@@ -413,13 +520,37 @@ const ItemSelectModalContent = ({
                 event.key === "Enter" &&
                 loadingSelection === null &&
                 filteredItems.length === 1 &&
-                filteredItems[0]
+                filteredItems[0] &&
+                filteredCustomWidgets.length === 0 &&
+                (!isAdmin || (!workshop.isPending && workshop.items.length === 0))
               ) {
                 void handleAdd(filteredItems[0].kind);
               }
             }}
           />
         </Box>
+
+        <Select
+          size="xs"
+          placeholder={t("item.create.integrationFilter")}
+          aria-label={t("item.create.integrationFilter")}
+          searchable
+          clearable
+          data={integrationFilterOptions}
+          value={integrationFilter}
+          onChange={(value) => setIntegrationFilter(filterKindsByValue.get(value ?? "") ?? null)}
+          renderOption={({ option }) => {
+            const kind = filterKindsByValue.get(option.value);
+            if (!integrationData || (kind && availableKinds.has(kind))) {
+              return <Text size="sm">{option.label}</Text>;
+            }
+            return (
+              <Text size="sm" c="dimmed">
+                {t("item.create.integrationNotConnected", { name: option.label })}
+              </Text>
+            );
+          }}
+        />
 
         {placementOptions.length > 1 && (
           <Box style={{ flex: "0 1 280px", minWidth: 200 }}>
@@ -437,30 +568,25 @@ const ItemSelectModalContent = ({
 
       {/* Grid of Widgets */}
       <SimpleGrid cols={selectGridCols} spacing="sm">
-        {filteredItems.map((item) => (
-          <WidgetItem
-            key={item.kind}
-            item={item}
-            onSelect={() => void handleAdd(item.kind)}
-            onFocus={() => {
-              void loadWidgetDefinition(item.kind).catch(() => undefined);
-              preloadWidgetEditModal();
-            }}
-            onPointerEnter={() => {
-              void loadWidgetDefinition(item.kind).catch(() => undefined);
-              preloadWidgetEditModal();
-            }}
-            disabled={loadingSelection !== null}
-            loading={loadingSelection === item.kind}
-            connectionStatus={getWidgetConnectionStatus({
-              supportedIntegrations: item.supportedIntegrations,
-              availableKinds,
-              connectionOptional: widgetKindsWithOptionalIntegrations.has(item.kind),
-            })}
-          />
-        ))}
+        {filteredItems.filter(({ connectionStatus }) => connectionStatus !== "needsSetup").map(renderItem)}
 
-        {isAdmin && (
+        {filteredItems.some(({ connectionStatus }) => connectionStatus === "needsSetup") && (
+          <>
+            <Divider
+              label={
+                <Text size="xs" fw={600}>
+                  {t("item.create.connectionStatus.needsSetup")}
+                </Text>
+              }
+              labelPosition="center"
+              my="sm"
+              style={{ gridColumn: "1 / -1" }}
+            />
+            {filteredItems.filter(({ connectionStatus }) => connectionStatus === "needsSetup").map(renderItem)}
+          </>
+        )}
+
+        {isAdmin && filteredCustomWidgets.length > 0 && (
           <>
             <Divider
               label={
@@ -491,31 +617,38 @@ const ItemSelectModalContent = ({
                 }
                 title={def.name}
                 description={def.description ?? ""}
+                disabled={loadingSelection !== null}
                 footerLeft={
+                  def.integrationKinds.length > 0 && (
+                    <SupportedIntegrations
+                      integrations={def.integrationKinds}
+                      availableKinds={workshopAvailableKinds}
+                    />
+                  )
+                }
+                footerRight={
                   <Text size="xs" c="dimmed">
                     {t("item.create.customWidget")}
                   </Text>
                 }
               />
             ))}
-            <Box mt="xs" style={{ gridColumn: "1 / -1" }}>
-              <Button
-                component="a"
-                href="/manage/custom-widgets/workshop"
-                target="_blank"
-                rel="noopener noreferrer"
-                variant="default"
-                fullWidth
-                leftSection={<IconBuildingStore size={16} />}
-              >
-                {t("workshop.browseWorkshop")}
-              </Button>
-            </Box>
           </>
+        )}
+        {isAdmin && (
+          <WorkshopWidgetSection
+            catalog={workshop}
+            availableKinds={workshopAvailableKinds}
+            integrationError={integrationError}
+            search={search.trim()}
+            integrationFilter={integrationFilter}
+            disabled={loadingSelection !== null}
+            onSelect={setWorkshopSelection}
+          />
         )}
       </SimpleGrid>
 
-      {filteredItems.length === 0 && (!isAdmin || filteredCustomWidgets.length === 0) && (
+      {!isAdmin && filteredItems.length === 0 && (
         <Center p="xl">
           <Text c="dimmed">{t("common.noResults")}</Text>
         </Center>
@@ -535,6 +668,7 @@ export const WidgetItem = ({
   disabled,
   loading,
   connectionStatus,
+  availableKinds,
 }: {
   item: WidgetItemData;
   onSelect: () => void;
@@ -543,6 +677,7 @@ export const WidgetItem = ({
   disabled: boolean;
   loading: boolean;
   connectionStatus: WidgetConnectionStatus;
+  availableKinds?: ReadonlySet<IntegrationKind>;
 }) => {
   return (
     <SelectableCard
@@ -560,67 +695,8 @@ export const WidgetItem = ({
       title={item.name}
       topRight={<ConnectionStatusBadge status={connectionStatus} />}
       description={item.description}
-      footerLeft={<SupportedIntegrations integrations={item.supportedIntegrations} />}
+      footerLeft={<SupportedIntegrations integrations={item.supportedIntegrations} availableKinds={availableKinds} />}
     />
-  );
-};
-
-export const ConnectionStatusBadge = ({ status }: { status: WidgetConnectionStatus }) => {
-  const t = useI18n();
-  if (status === "noConnectionRequired") return null;
-  const color = status === "ready" ? "green" : status === "needsSetup" ? "yellow" : "gray";
-
-  return (
-    <Badge variant="dot" color={color} size="xs" tt="none" w="fit-content" maw="100%">
-      {t(`item.create.connectionStatus.${status}`)}
-    </Badge>
-  );
-};
-
-export const SupportedIntegrations = ({ integrations }: { integrations: IntegrationKind[] }) => {
-  const t = useI18n();
-
-  if (integrations.length === 0) {
-    return (
-      <Text size="xs" c="dimmed" fs="italic">
-        {t("item.create.standalone")}
-      </Text>
-    );
-  }
-
-  const countToShow = integrations.length >= 6 ? 4 : 5;
-  const moreCount = integrations.length - countToShow;
-
-  return (
-    <Group gap={2}>
-      <Tooltip.Group closeDelay={100}>
-        <Group gap={2}>
-          {integrations.slice(0, countToShow).map((integration) => (
-            <Tooltip key={integration} label={getIntegrationName(integration)} withArrow>
-              <Avatar src={getIconUrl(integration)} size="xs" radius="xl" />
-            </Tooltip>
-          ))}
-          {moreCount > 0 && (
-            <Tooltip
-              withArrow
-              label={
-                <Stack gap={2}>
-                  {integrations.slice(countToShow).map((integration) => (
-                    <Text key={integration} size="xs">
-                      {getIntegrationName(integration)}
-                    </Text>
-                  ))}
-                </Stack>
-              }
-            >
-              <Avatar radius="xl" size="xs">
-                +{moreCount}
-              </Avatar>
-            </Tooltip>
-          )}
-        </Group>
-      </Tooltip.Group>
-    </Group>
   );
 };
 
@@ -636,7 +712,7 @@ const ItemSelectModalFrame = ({
   const isAdmin = session?.user.permissions.includes("admin") ?? false;
   const canCreateIntegration = session?.user.permissions.includes("integration-create") ?? false;
   const t = useI18n();
-  const { data: integrationData } = clientApi.integration.all.useQuery();
+  const integrationQuery = clientApi.integration.all.useQuery();
   const { data: customWidgetDefs } = clientApi.customWidget.available.useQuery(
     { boardId: innerProps.boardId },
     { enabled: isAdmin },
@@ -645,7 +721,8 @@ const ItemSelectModalFrame = ({
   return (
     <ItemSelectModalContent
       actions={actions}
-      integrationData={integrationData}
+      integrationData={integrationQuery.data}
+      integrationError={integrationQuery.isError && integrationQuery.data === undefined}
       customWidgetDefs={customWidgetDefs}
       ensureIntegrationDataAsync={() => utils.integration.all.ensureData()}
       isAdmin={isAdmin}
