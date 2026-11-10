@@ -3158,6 +3158,141 @@
         "toggleFailed": "Unable to update entity"
       }
     },
+    "smartHome-controls": {
+      "name": "Home Assistant controls",
+      "description": "Monitor and control Home Assistant rooms and entities",
+      "option": {
+        "presentation": {
+          "label": "Style",
+          "option": {
+            "entities": "Technical list",
+            "controlPanel": "Control center"
+          }
+        },
+        "title": {
+          "label": "Title",
+          "description": "Leave empty to use the room name"
+        },
+        "blocks": {
+          "label": "Blocks",
+          "remove": "Remove block"
+        },
+        "roomDomains": {
+          "label": "Entity types in room blocks",
+          "description": "Leave empty to include every type"
+        },
+        "excludedEntityIds": {
+          "label": "Hidden entities",
+          "description": "Never shown inside room blocks",
+          "placeholder": "Search entities"
+        },
+        "showSummary": {
+          "label": "Show summary"
+        },
+        "readOnly": {
+          "label": "Read-only",
+          "description": "Show states without allowing anyone to control devices from this widget"
+        },
+        "controlSize": {
+          "label": "Control size",
+          "option": {
+            "auto": "Automatic",
+            "compact": "Compact",
+            "large": "Large"
+          }
+        },
+        "palette": {
+          "label": "Colors",
+          "option": {
+            "boring": "Boring",
+            "colorful": "Colorful"
+          }
+        }
+      },
+      "domain": {
+        "light": "Lights",
+        "switch": "Switches",
+        "fan": "Fans",
+        "climate": "Climate",
+        "humidifier": "Humidifiers",
+        "cover": "Covers",
+        "valve": "Valves",
+        "lock": "Locks",
+        "alarm_control_panel": "Alarm panels",
+        "media_player": "Media players",
+        "camera": "Cameras",
+        "vacuum": "Vacuums",
+        "scene": "Scenes",
+        "script": "Scripts",
+        "automation": "Automations",
+        "button": "Buttons",
+        "input_boolean": "Toggle helpers",
+        "input_select": "Dropdown helpers",
+        "person": "People",
+        "binary_sensor": "Binary sensors",
+        "sensor": "Sensors",
+        "weather": "Weather",
+        "sun": "Sun",
+        "update": "Updates"
+      },
+      "block": {
+        "add": {
+          "rooms": "Rooms",
+          "entity": "Entity",
+          "roomsLabel": "Rooms to add",
+          "roomsPlaceholder": "Search rooms or floors",
+          "entityLabel": "Entity to add",
+          "entityPlaceholder": "Search by name, entity ID, type or room",
+          "merge": "Merge selected rooms into one block",
+          "submit": "Add",
+          "duplicate": "This entity is already a block",
+          "covered": "Those rooms are already shown by another block"
+        },
+        "kind": {
+          "entity": "Entity",
+          "room": "Room",
+          "mergedRooms": "Merged rooms",
+          "unknown": "Unknown block"
+        },
+        "entityCount": "{count} entities",
+        "noArea": "No room",
+        "issue": {
+          "missing": "Not found",
+          "otherSource": "Other integration",
+          "empty": "Already shown above"
+        }
+      },
+      "preview": {
+        "empty": "Add rooms or entities to this widget",
+        "noMatches": "Nothing matches this filter",
+        "summary": {
+          "lights": "lights on",
+          "on": "on",
+          "off": "off",
+          "sensors": "sensors",
+          "offline": "offline"
+        },
+        "otherSource": "These blocks belong to another integration. Choose rooms from the selected integration."
+      },
+      "live": {
+        "loading": "Loading Home Assistant states",
+        "error": "Could not load Home Assistant states",
+        "retry": "Retry",
+        "actionFailed": "Could not control {name}",
+        "actionUnconfirmed": "{name} did not confirm the change",
+        "unconfirmed": "Not confirmed; showing latest Home Assistant state",
+        "selectionLimit": "This selection is too large. Select at most 200 individual entities, 50 rooms and 400 exclusions per widget.",
+        "unknownError": "Home Assistant did not accept the action"
+      },
+      "inline": {
+        "open": "Blocks ({count})",
+        "title": "Edit blocks",
+        "handle": "Drag to reorder",
+        "empty": "No blocks yet",
+        "add": "Add block",
+        "close": "Close block editor"
+      }
+    },
     "smartHome-executeAutomation": {
       "name": "Execute Automation",
       "description": "Trigger an automation with one click",
