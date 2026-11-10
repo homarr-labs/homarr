@@ -39,18 +39,23 @@ export class DashDotIntegration extends Integration implements ISystemHealthMoni
 
     return {
       cpuUtilization: cpuLoad.sumLoad,
+      cpuCores: cpuLoad.cores,
       memUsedInBytes: memoryLoad.loadInBytes,
       memAvailableInBytes: info.maxAvailableMemoryBytes - memoryLoad.loadInBytes,
       network: networkLoad,
-      fileSystem: info.storage
-        .filter((_, index) => storageLoad[index] !== -1) // filter out undermoutned drives, they display as -1 in the load API
-        .map((storage, index) => ({
-          deviceName: `Storage ${index + 1}: (${storage.disks.map((disk) => disk.device).join(", ")})`,
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          used: `${storageLoad[index]!}`,
-          available: storageLoad[index] ? `${storage.size - storageLoad[index]}` : `${storage.size}`,
-          percentage: storageLoad[index] ? (storageLoad[index] / storage.size) * 100 : 0,
-        })),
+      fileSystem: info.storage.flatMap((storage, index) => {
+        const used = storageLoad[index];
+        // Keep the original index when skipping unmounted or unavailable drives.
+        if (used === undefined || !Number.isFinite(used) || used < 0 || storage.size <= 0) return [];
+        return [
+          {
+            deviceName: `Storage ${index + 1}: (${storage.disks.map((disk) => disk.device).join(", ")})`,
+            used: `${used}`,
+            available: `${Math.max(0, storage.size - used)}`,
+            percentage: (used / storage.size) * 100,
+          },
+        ];
+      }),
       cpuModelName: info.cpuModel === "" ? `Unknown Model (${info.cpuBrand})` : `${info.cpuModel} (${info.cpuBrand})`,
       cpuTemp: cpuLoad.averageTemperature,
       availablePkgUpdates: 0,
@@ -97,6 +102,7 @@ export class DashDotIntegration extends Integration implements ISystemHealthMoni
     if (result.length === 0) {
       return {
         sumLoad: 0,
+        cores: [],
         averageTemperature: 0,
       };
     }
@@ -105,6 +111,7 @@ export class DashDotIntegration extends Integration implements ISystemHealthMoni
     await channel.pushAsync(data);
     return {
       sumLoad: this.getAverageOfCpu(data),
+      cores: data.map((core, id) => ({ id, utilization: core.load })),
       averageTemperature: data.reduce((acc, current) => acc + current.temp, 0) / data.length,
     };
   }
