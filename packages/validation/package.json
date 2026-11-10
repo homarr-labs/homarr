@@ -25,7 +25,7 @@
     "@homarr/translation": "workspace:^0.1.0",
     "acorn": "catalog:",
     "acorn-jsx": "catalog:",
-    "color": "5.0.2",
+    "color": "5.0.3",
     "zod": "catalog:",
     "zod-form-data": "catalog:"
   },
