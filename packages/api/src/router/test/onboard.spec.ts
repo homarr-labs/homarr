@@ -42,7 +42,8 @@ vi.mock("@homarr/common", async (importOriginal) => ({
   ...(await importOriginal<typeof import("@homarr/common")>()),
   createId: createIdMock,
 }));
-vi.mock("@homarr/docker", () => ({
+vi.mock("@homarr/docker", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("@homarr/docker")>()),
   createDockerSourceId: (host: string, externalId: string) =>
     `docker:${encodeURIComponent(host)}:${encodeURIComponent(externalId)}`,
   dockerLabels: { hide: "homarr.hide" },
