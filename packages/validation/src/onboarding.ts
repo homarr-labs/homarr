@@ -2,10 +2,10 @@ import { z } from "zod/v4";
 
 import {
   colorSchemes,
-  cornerStyleValues,
   integrationKinds,
   integrationSecretKinds,
   onboardingLayoutPresets,
+  themeIds,
   widgetKinds,
 } from "@homarr/definitions";
 import { supportedLanguages } from "@homarr/translation/languages";
@@ -13,7 +13,6 @@ import { supportedLanguages } from "@homarr/translation/languages";
 import { boardNameSchema } from "./board";
 import { zodEnumFromArray } from "./enums";
 
-const hexColorSchema = z.string().regex(/^#[0-9A-Fa-f]{6}$/);
 const serviceAddressSchema = z.string().trim().min(1).max(2048);
 const uniqueIdsSchema = (maxLength = 255) =>
   z
@@ -74,14 +73,12 @@ export const onboardingCompleteSetupSchema = z
     server: z.object({
       defaultLocale: z.enum(supportedLanguages),
       defaultColorScheme: z.enum(colorSchemes),
+      themeId: z.enum(themeIds).default("default"),
       analyticsEnabled: z.boolean().optional(),
     }),
     board: z.object({
       id: z.string().trim().min(1).max(255).optional(),
       name: boardNameSchema,
-      primaryColor: hexColorSchema,
-      secondaryColor: hexColorSchema,
-      itemRadius: z.enum(cornerStyleValues),
       layoutPreset: z.enum(onboardingLayoutPresets).default("balanced"),
       columnCount: z.number().int().min(8).max(24).optional(),
       leftSidebar: z.boolean().default(false),

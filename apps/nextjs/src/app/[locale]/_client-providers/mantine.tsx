@@ -3,17 +3,18 @@
 import type { PropsWithChildren } from "react";
 import { useMemo } from "react";
 import type { MantineColorScheme, MantineColorSchemeManager } from "@mantine/core";
-import { DirectionProvider, MantineProvider, v8CssVariablesResolver } from "@mantine/core";
+import { DirectionProvider, MantineProvider } from "@mantine/core";
 import dayjs from "dayjs";
 
 import { clientApi } from "@homarr/api/client";
 import { useSession } from "@homarr/auth/client";
 import { parseCookies, setClientCookie } from "@homarr/common";
 import { colorSchemeCookieKey } from "@homarr/definitions";
-import { theme } from "@homarr/ui";
+import { useSettings } from "@homarr/settings";
 import type { ServerSettings } from "@homarr/server-settings";
 
-import { createBrandTheme } from "~/theme/branding";
+import { createAppearanceTheme } from "~/theme/branding";
+import { previewColorSchemeManager, useThemePreview } from "~/components/theme/theme-preview-context";
 
 export const CustomMantineProvider = ({
   children,
@@ -21,14 +22,21 @@ export const CustomMantineProvider = ({
   branding,
 }: PropsWithChildren<{ defaultColorScheme: MantineColorScheme; branding?: ServerSettings["branding"] }>) => {
   const manager = useColorSchemeManager();
-  const configuredTheme = useMemo(() => (branding ? createBrandTheme(branding) : theme), [branding]);
+  const settings = useSettings();
+  const preview = useThemePreview();
+  const configuredBranding = preview?.branding ?? branding ?? settings.branding;
+  const { theme, cssVariablesResolver } = useMemo(
+    () => createAppearanceTheme(configuredBranding, preview ?? undefined),
+    [configuredBranding, preview],
+  );
   return (
     <DirectionProvider>
       <MantineProvider
         defaultColorScheme={defaultColorScheme}
-        colorSchemeManager={manager}
-        theme={configuredTheme}
-        cssVariablesResolver={v8CssVariablesResolver}
+        colorSchemeManager={preview ? previewColorSchemeManager : manager}
+        forceColorScheme={preview?.scheme}
+        theme={theme}
+        cssVariablesResolver={cssVariablesResolver}
       >
         {children}
       </MantineProvider>

@@ -1,6 +1,7 @@
 import type { ColorScheme } from "@homarr/definitions";
-import { cornerStyleValues } from "@homarr/definitions";
 import type { SupportedLanguage } from "@homarr/translation";
+import type { CustomTheme } from "@homarr/validation/theme";
+import { customThemeSchema, parseStoredCustomTheme, themeSelectionSchema } from "@homarr/validation/theme";
 import { z } from "zod/v4";
 
 export const defaultServerSettingsKeys = [
@@ -42,31 +43,27 @@ const brandingImageUrlSchema = z
   .nullable();
 
 export const brandingServerSettingsSchema = z.object({
+  themeId: themeSelectionSchema,
+  customTheme: customThemeSchema.nullable(),
   appName: z.string().trim().min(1).max(80),
   greeting: z.string().trim().max(160),
   logoImageUrl: brandingImageUrlSchema,
   faviconImageUrl: brandingImageUrlSchema,
-  primaryColor: z.string().regex(/^#[\da-f]{6}$/iu, "Primary color must be a 6-digit hex color"),
-  secondaryColor: z.string().regex(/^#[\da-f]{6}$/iu, "Secondary color must be a 6-digit hex color"),
-  lockPrimaryColor: z.boolean(),
   signInBackgroundImageUrl: brandingImageUrlSchema,
   signInBackgroundOverlay: z.number().min(0).max(0.9),
   showSignInMarquee: z.boolean(),
   authBranding: authBrandingSchema,
-  defaultRadius: z.enum(cornerStyleValues),
-  customCss: z.string().max(16_384),
 });
 
 export type BrandingSettings = z.infer<typeof brandingServerSettingsSchema>;
 
 export const defaultBrandingSettings: BrandingSettings = {
+  themeId: "default",
+  customTheme: null,
   appName: "Homarr",
   greeting: "",
   logoImageUrl: null,
   faviconImageUrl: null,
-  primaryColor: "#fa5252",
-  secondaryColor: "#fd7e14",
-  lockPrimaryColor: false,
   signInBackgroundImageUrl: null,
   signInBackgroundOverlay: 0.55,
   showSignInMarquee: true,
@@ -75,22 +72,6 @@ export const defaultBrandingSettings: BrandingSettings = {
     showLogo: true,
     showGreeting: true,
   },
-  defaultRadius: "md",
-  customCss: "",
-};
-
-const hasDefaultBrandingColors = (branding: Pick<BrandingSettings, "primaryColor" | "secondaryColor">) =>
-  branding.primaryColor.toLowerCase() === defaultBrandingSettings.primaryColor &&
-  branding.secondaryColor.toLowerCase() === defaultBrandingSettings.secondaryColor;
-
-export const getBrandingColorOverrides = (
-  branding: Pick<BrandingSettings, "primaryColor" | "secondaryColor">,
-): Partial<Pick<BrandingSettings, "primaryColor" | "secondaryColor">> => {
-  if (hasDefaultBrandingColors(branding)) return {};
-  return {
-    primaryColor: branding.primaryColor,
-    secondaryColor: branding.secondaryColor,
-  };
 };
 
 const legacyLoginBrandingSchema = z.object({
@@ -118,10 +99,69 @@ export const parseBrandingSettings = (value: unknown): BrandingSettings => {
   }
   if (partialAuthBranding.success) Object.assign(authBranding, partialAuthBranding.data);
 
+  let customTheme = parseStoredCustomTheme(partialValue.data.customTheme);
+  let themeId = themeSelectionSchema.safeParse(partialValue.data.themeId).data ?? "default";
+  if (themeId === "custom" && !customTheme) themeId = "default";
+
+  // Fold legacy appearance settings into the portable theme once. Explicit theme
+  // values win, except for the old enforced primary color.
+  const legacy = partialValue.data;
+  let preset = themeId;
+  if (preset === "custom") preset = "default";
+  const document: CustomTheme = structuredClone(
+    themeId === "custom" && customTheme ? customTheme : { preset, theme: {} },
+  );
+  let migrated = false;
+  if (document.preset === "default" || legacy.lockPrimaryColor === true) {
+    for (const [key, fallback] of [
+      ["primary", "#fa5252"],
+      ["secondary", "#fd7e14"],
+    ] as const) {
+      const color = legacy[`${key}Color`];
+      if (typeof color !== "string" || !/^#[\da-f]{6}$/iu.test(color)) continue;
+      if (key === "secondary" && document.preset !== "default") continue;
+      if (color.toLowerCase() === fallback && legacy.lockPrimaryColor !== true) continue;
+      for (const scheme of ["light", "dark"] as const) {
+        if (document[scheme]?.[key] && legacy.lockPrimaryColor !== true) continue;
+        document[scheme] = { ...document[scheme], [key]: color };
+      }
+      if (key === "primary" && legacy.lockPrimaryColor === true) {
+        document.theme.primaryColor = "primaryColor";
+        if (document.theme.colors) {
+          delete document.theme.colors.primaryColor;
+          delete document.theme.colors.presetPrimaryLight;
+          delete document.theme.colors.presetPrimaryDark;
+        }
+      }
+      migrated = true;
+    }
+  }
+  if (
+    typeof legacy.defaultRadius === "string" &&
+    legacy.defaultRadius !== "md" &&
+    document.theme.defaultRadius === undefined
+  ) {
+    document.theme.defaultRadius = legacy.defaultRadius;
+    migrated = true;
+  }
+  if (typeof legacy.customCss === "string" && legacy.customCss && document.customCss === undefined) {
+    document.customCss = legacy.customCss;
+    migrated = true;
+  }
+  if (migrated) {
+    const parsed = customThemeSchema.safeParse(document);
+    if (parsed.success) {
+      customTheme = parsed.data;
+      themeId = "custom";
+    }
+  }
+
   const result = brandingServerSettingsSchema.safeParse({
     ...defaultBrandingSettings,
     ...partialValue.data,
     authBranding,
+    themeId,
+    customTheme,
   });
   if (!result.success) return defaultBrandingSettings;
 

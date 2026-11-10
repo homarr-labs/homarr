@@ -202,7 +202,7 @@ export default function BookmarksWidget({
         showFullUrls={options.showFullUrls && cardDisplay.orientation !== "icon"}
         variant={options.variant}
         withBorder={options.withBorder}
-        radius={board.itemRadius}
+        radius={board.itemRadius ?? "default"}
         height={plan.itemHeight}
         width={plan.horizontalScroll ? plan.itemWidth : undefined}
       />

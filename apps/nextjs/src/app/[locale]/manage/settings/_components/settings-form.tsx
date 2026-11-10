@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button, Stack } from "@mantine/core";
 import { z } from "zod/v4";
@@ -19,7 +19,6 @@ import { useI18n } from "@homarr/translation/client";
 import { UnsavedChangesBar } from "~/components/manage/unsaved-changes-bar";
 import { useUnsavedChangesGuard } from "~/components/manage/use-unsaved-changes-guard";
 import { AnalyticsSettings } from "./analytics.settings";
-import { AppearanceSettingsForm } from "./appearance-settings-form";
 import { BoardSettingsForm } from "./board-settings-form";
 import { BrandingSettingsForm } from "./branding-settings-form";
 import { CrawlingAndIndexingSettings } from "./crawling-and-indexing.settings";
@@ -82,6 +81,19 @@ export const SettingsForm = ({ initialData, selectableBoards, selectableSearchEn
   const form = useZodForm(settingsFormSchema, {
     initialValues,
   });
+  const themeKey = JSON.stringify([initialData.branding.themeId, initialData.branding.customTheme]);
+  const previousThemeKey = useRef(themeKey);
+  useEffect(() => {
+    if (previousThemeKey.current === themeKey) return;
+    previousThemeKey.current = themeKey;
+    const theme = { themeId: initialData.branding.themeId, customTheme: initialData.branding.customTheme };
+    initialValuesRef.current = {
+      ...initialValuesRef.current,
+      branding: { ...initialValuesRef.current.branding, ...theme },
+    };
+    form.setInitialValues(initialValuesRef.current);
+    form.setFieldValue("branding", { ...form.getValues().branding, ...theme });
+  }, [form, themeKey, initialData.branding.themeId, initialData.branding.customTheme]);
 
   useUnsavedChangesGuard(form.isDirty(), { guardBeforeUnload: env.NODE_ENV !== "development" });
 
@@ -181,7 +193,6 @@ export const SettingsForm = ({ initialData, selectableBoards, selectableSearchEn
         <BoardSettingsForm form={form} selectableBoards={selectableBoards} />
         <UserSettingsForm form={form} />
         <SearchSettingsForm form={form} selectableSearchEngines={selectableSearchEngines} />
-        <AppearanceSettingsForm form={form} />
         <BrandingSettingsForm form={form} />
         <CultureSettingsForm form={form} />
         <AnalyticsSettings form={form} />

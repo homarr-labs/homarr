@@ -6,7 +6,6 @@ import { IconLayoutGrid } from "@tabler/icons-react";
 import type { BoardPreviewData, BoardPreviewLayout } from "@homarr/boards/layout-preview";
 import { projectBoardLayout } from "@homarr/boards/layout-preview";
 import { boardLanes, compareRootSections, getBoardLaneColumnCount, getRootSectionLane } from "@homarr/definitions";
-import { useSettings } from "@homarr/settings";
 import { widgetCatalogIcons } from "@homarr/ui/widget-icons";
 
 import { generateColorScale } from "~/theme/branding";
@@ -35,10 +34,9 @@ export const BoardLayoutThumbnail = ({
 }: BoardLayoutThumbnailProps) => {
   const theme = useMantineTheme();
   const colorScheme = useComputedColorScheme("light");
-  const { branding } = useSettings();
   let colorVariables;
   if (preview?.primaryColor) {
-    const primaryColor = branding.lockPrimaryColor ? branding.primaryColor : preview.primaryColor;
+    const primaryColor = preview.primaryColor;
     const variables = v8CssVariablesResolver({
       ...theme,
       primaryColor: "boardPreview",

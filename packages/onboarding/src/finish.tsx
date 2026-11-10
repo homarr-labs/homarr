@@ -1,6 +1,6 @@
 "use client";
 
-import type { CSSProperties, MouseEvent as ReactMouseEvent } from "react";
+import type { MouseEvent as ReactMouseEvent } from "react";
 import { Button, Group, Paper, SimpleGrid, Stack, Text, ThemeIcon, Title } from "@mantine/core";
 import { IconArrowRight, IconBook2, IconSparkles, IconTool } from "@tabler/icons-react";
 
@@ -18,8 +18,6 @@ import classes from "./onboarding-studio.module.css";
 export const Finish = ({ environment }: OnboardingStudioProps) => {
   const t = useI18n("init.studio.finish");
   const sounds = useOnboardingSounds();
-  const primaryColor = environment.initialBoard?.primaryColor ?? "#fa5252";
-  const secondaryColor = environment.initialBoard?.secondaryColor ?? "#fd7e14";
   const board = environment.initialBoard ?? environment.availableBoards[0];
   let boardHref = "/manage/boards";
   if (board) {
@@ -56,22 +54,14 @@ export const Finish = ({ environment }: OnboardingStudioProps) => {
   };
 
   return (
-    <main
-      className={classes.page}
-      style={
-        {
-          "--studio-glow-color": primaryColor,
-          "--studio-secondary-glow-color": secondaryColor,
-        } as CSSProperties
-      }
-    >
+    <main className={classes.page}>
       <OnboardingBackdrop />
       <div className={classes.shell}>
         <Stack mih="calc(100dvh - 6rem)" justify="center" align="center">
           <div style={{ width: "100%", maxWidth: "52rem" }}>
             <Paper className={classes.studio} radius="lg" p={{ base: "lg", sm: "xl" }}>
               <Stack gap="xl" align="center">
-                <OnboardingWordmark primaryColor={primaryColor} secondaryColor={secondaryColor} />
+                <OnboardingWordmark />
                 <Stack gap="xs" align="center">
                   <Title ta="center">{t("title")}</Title>
                   <Text c="dimmed" ta="center" maw="42rem">

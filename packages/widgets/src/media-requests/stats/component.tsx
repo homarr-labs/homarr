@@ -138,7 +138,7 @@ export default function MediaServerWidget({
                 span={isTiny ? 6 : 3}
               >
                 <Tooltip label={stat.name === "total" ? tCommon("total") : t(`titles.stats.${stat.name}`)}>
-                  <Card p={0} radius={board.itemRadius} className={classes.card}>
+                  <Card p={0} radius={board.itemRadius ?? undefined} className={classes.card}>
                     <Group className="mediaRequests-stats-stat-stack" justify="center" align="center" gap="xs" w="100%">
                       <stat.icon className="mediaRequests-stats-stat-icon" size="var(--mantine-font-size-md)" />
                       <Text className="mediaRequests-stats-stat-value" size="md">
@@ -173,7 +173,7 @@ export default function MediaServerWidget({
                     )}
                     key={`${user.integration.id}:${user.id}`}
                     p="xs"
-                    radius={board.itemRadius}
+                    radius={board.itemRadius ?? undefined}
                   >
                     <Group
                       className="mediaRequests-stats-users-user-group"

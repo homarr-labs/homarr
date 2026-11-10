@@ -149,7 +149,7 @@ export const BoardContainerSection = ({ section }: Props) => {
             "--container-header-height": `calc(${CONTAINER_HEADER_HEIGHT}px * var(--board-canvas-ui-scale, 1))`,
           },
         }}
-        radius={board.itemRadius}
+        radius={board.itemRadius ?? undefined}
         p={0}
       >
         {hasHeader && (
