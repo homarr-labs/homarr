@@ -16,6 +16,14 @@ interface SystemHealthQueryResult {
 }
 
 export const healthMonitoringRouter = createTRPCRouter({
+  getClusterIntegrationNames: publicProcedure
+    .concat(createManyIntegrationMiddleware("query", ...healthMonitoringClusterIntegrationKinds))
+    .query(({ ctx }) =>
+      ctx.integrations.map((integration) => ({
+        integrationId: integration.id,
+        integrationName: integration.name,
+      })),
+    ),
   getSystemHealthStatus: publicProcedure
     .meta({
       mcp: {
@@ -44,7 +52,7 @@ export const healthMonitoringRouter = createTRPCRouter({
             healthInfo: null,
             error: PUBLIC_INTEGRATION_ERROR,
           }),
-          throwOnAllFailures: true,
+          throwOnAllFailures: false,
         },
       );
     }),

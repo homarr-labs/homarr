@@ -1,514 +1,90 @@
 "use client";
 
-import { useState } from "react";
-
-import {
-  ActionIcon,
-  Box,
-  Card,
-  Divider,
-  Flex,
-  Group,
-  Indicator,
-  List,
-  Modal,
-  Progress,
-  ScrollArea,
-  Stack,
-  Text,
-  Tooltip,
-  useMantineTheme,
-} from "@mantine/core";
-import {
-  IconBrain,
-  IconCircleCheckFilled,
-  IconCircleXFilled,
-  IconClock,
-  IconCpu,
-  IconCpu2,
-  IconInfoCircle,
-  IconPackages,
-  IconRefreshAlert,
-  IconServer,
-  IconTemperature,
-  IconVersions,
-} from "@tabler/icons-react";
-import combineClasses from "clsx";
-import dayjs from "dayjs";
-import duration from "dayjs/plugin/duration";
+import { Box, Stack, Text, Tooltip } from "@mantine/core";
 
 import type { RouterOutputs } from "@homarr/api";
-import type { SystemHealthMonitoring as HealthMonitoringData } from "@homarr/integrations/types";
 import { clientApi } from "@homarr/api/client";
-import { useRequiredBoard } from "@homarr/boards/context";
-import { useByteFormatter } from "@homarr/settings";
-import type { ScopedTranslationFunction } from "@homarr/translation";
 import { useI18n } from "@homarr/translation/client";
-import { zoomCompensatedSize } from "@homarr/ui";
 
-import { filterStorageVolumes, isSameStorageDevice, storageDeviceNamesMatch } from "../filter-storage-volumes";
-import { WidgetEmptyState } from "../common/empty-state";
-import { IntegrationErrorIndicator } from "../common/integration-error-indicator";
+import type { WidgetComponentProps } from "../definition";
 import { getUsableWidgetQueryData, isInitialWidgetQueryPending } from "../common/query-state";
 import { WidgetQueryLoadingState } from "../common/query-state-indicator";
-import type { WidgetComponentProps } from "../definition";
-import actionTargetClasses from "../common/action-target.module.css";
-import { CpuRing } from "./rings/cpu-ring";
-import { CpuTempRing } from "./rings/cpu-temp-ring";
-import { GpuRing } from "./rings/gpu-ring";
-import { formatMemoryUsage, MemoryRing } from "./rings/memory-ring";
-import classes from "./system-health.module.css";
+import type { HealthSystem } from "./model";
+import { SystemHealthView } from "./system-view";
+import { useHealthHistory } from "./use-health-history";
+import { useHealthPreferences } from "./use-health-preferences";
+import { useHealthBounds } from "./use-health-bounds";
 
-dayjs.extend(duration);
+export { formatUptime, matchFileSystemAndSmart, progressColor } from "./format";
 
-export const SystemHealthMonitoring = ({
-  options,
-  integrationIds,
-  width,
-  displayMode,
-  withScrollArea = true,
-}: WidgetComponentProps<"healthMonitoring"> & { withScrollArea?: boolean }) => {
-  const t = useI18n("widget.healthMonitoring");
-  const healthQuery = clientApi.widget.healthMonitoring.getSystemHealthStatus.useQuery({ integrationIds });
-  const healthResults = getUsableWidgetQueryData(healthQuery) ?? [];
-  const healthData = healthResults.filter(
-    (entry): entry is typeof entry & { healthInfo: NonNullable<typeof entry.healthInfo> } => entry.healthInfo !== null,
-  );
-  const [openedIntegrationId, setOpenedIntegrationId] = useState<string | null>(null);
-  const board = useRequiredBoard();
-  const { formatBytes, formatBytesPair } = useByteFormatter();
+const emptyResults: RouterOutputs["widget"]["healthMonitoring"]["getSystemHealthStatus"] = [];
 
-  const isAdvanced = displayMode === "advanced";
-  const isTiny = !isAdvanced && width < 256;
-  const showCpu = isAdvanced || options.cpu;
-  const showMemory = isAdvanced || options.memory;
-  const showGpu = isAdvanced || options.gpu;
-  const showFileSystem = isAdvanced || options.fileSystem;
-  const queryIndicators = (
-    <Group gap={0}>
-      <IntegrationErrorIndicator results={healthResults} />
-    </Group>
-  );
-
-  if (isInitialWidgetQueryPending(healthQuery)) return <WidgetQueryLoadingState />;
-  if (healthData.length === 0) {
-    return (
-      <Box h="100%" pos="relative">
-        <Box pos="absolute" top={4} right={8} style={{ zIndex: 2 }}>
-          {queryIndicators}
-        </Box>
-        <WidgetEmptyState />
-      </Box>
-    );
-  }
-
-  const Container = withScrollArea ? ScrollArea : Box;
-
-  return (
-    <Container h={withScrollArea ? "100%" : undefined} pos="relative">
-      <Box pos="absolute" top={4} right={8} style={{ zIndex: 2 }}>
-        {queryIndicators}
-      </Box>
-      <Stack mih="100%" gap="sm" className="health-monitoring">
-        {healthData.map(({ integrationId, integrationName, healthInfo }) => {
-          const filteredFileSystem = filterStorageVolumes(
-            healthInfo.fileSystem,
-            options.visibleStorageVolumes,
-            integrationId,
-          );
-          const filteredSmart = filterStorageVolumes(healthInfo.smart, options.visibleStorageVolumes, integrationId);
-          const disksData = matchFileSystemAndSmart(filteredFileSystem, filteredSmart);
-          const memoryUsage = formatMemoryUsage(
-            healthInfo.memAvailableInBytes,
-            healthInfo.memUsedInBytes,
-            formatBytes,
-            formatBytesPair,
-          );
-          const hasAttentionState = healthInfo.rebootRequired || healthInfo.availablePkgUpdates > 0;
-          return (
-            <Stack
-              gap="sm"
-              key={integrationId}
-              h={!isAdvanced && healthData.length === 1 ? "100%" : "auto"}
-              className={combineClasses(
-                `health-monitoring-information health-monitoring-${integrationName}`,
-                classes.systemPanel,
-              )}
-              p="sm"
-              pos="relative"
-            >
-              <Box
-                className={combineClasses(
-                  "health-monitoring-information-card-section",
-                  classes.infoAction,
-                  !isAdvanced && !hasAttentionState && classes.infoActionCompact,
-                )}
-                pos="absolute"
-                top={8}
-                right={8}
-              >
-                <Indicator
-                  className="health-monitoring-updates-reboot-indicator"
-                  inline
-                  processing
-                  styles={{ indicator: { pointerEvents: "none" } }}
-                  color={healthInfo.rebootRequired ? "red" : healthInfo.availablePkgUpdates > 0 ? "blue" : "gray"}
-                  position="top-end"
-                  size={16}
-                  label={healthInfo.availablePkgUpdates > 0 ? healthInfo.availablePkgUpdates : undefined}
-                  disabled={!healthInfo.rebootRequired && healthInfo.availablePkgUpdates === 0}
-                >
-                  <ActionIcon
-                    className={combineClasses("health-monitoring-information-icon-avatar", actionTargetClasses.root)}
-                    variant={"light"}
-                    color="var(--mantine-color-text)"
-                    size="sm"
-                    radius={board.itemRadius}
-                    onClick={() => setOpenedIntegrationId(integrationId)}
-                    aria-label={t("popover.information")}
-                  >
-                    <IconInfoCircle className="health-monitoring-information-icon" style={zoomCompensatedSize(30)} />
-                  </ActionIcon>
-                </Indicator>
-                <Modal
-                  opened={openedIntegrationId === integrationId}
-                  onClose={() => setOpenedIntegrationId(null)}
-                  size="auto"
-                  title={t("popover.information")}
-                  centered
-                >
-                  <Stack gap="10px" className="health-monitoring-modal-stack">
-                    <Divider />
-                    <SystemInformationList healthInfo={healthInfo} memoryUsage={memoryUsage} t={t} />
-                  </Stack>
-                </Modal>
-              </Box>
-              <Flex className="health-monitoring-information-card-elements" justify="center" align="center" wrap="wrap">
-                {showCpu && (
-                  <CpuRing cpuUtilization={healthInfo.cpuUtilization} isTiny={isTiny} ariaLabel={t("gauge.cpuUsage")} />
-                )}
-                {showCpu && (
-                  <CpuTempRing
-                    fahrenheit={options.fahrenheit}
-                    cpuTemp={healthInfo.cpuTemp}
-                    isTiny={isTiny}
-                    ariaLabel={t("gauge.cpuTemperature")}
-                  />
-                )}
-                {showMemory && (
-                  <MemoryRing
-                    available={healthInfo.memAvailableInBytes}
-                    used={healthInfo.memUsedInBytes}
-                    isTiny={isTiny}
-                    ariaLabel={t("gauge.memoryUsage")}
-                  />
-                )}
-                {showGpu &&
-                  healthInfo.gpu.map((gpu) => (
-                    <GpuRing
-                      key={gpu.gpuId}
-                      gpu={gpu}
-                      isTiny={isTiny}
-                      fahrenheit={options.fahrenheit}
-                      ariaLabel={t("gauge.gpuUsage", { name: gpu.name })}
-                    />
-                  ))}
-              </Flex>
-              {isAdvanced && (
-                <Card className={classes.card} radius={board.itemRadius} p="sm">
-                  <SystemInformationList healthInfo={healthInfo} memoryUsage={memoryUsage} t={t} compact />
-                </Card>
-              )}
-              {showFileSystem &&
-                disksData.map((disk) => {
-                  const sizes = formatFileSizePair(disk.used, disk.available, formatBytes, formatBytesPair);
-                  return (
-                    <Card
-                      className={combineClasses(
-                        `health-monitoring-disk-card health-monitoring-disk-card-${integrationName}`,
-                        classes.card,
-                      )}
-                      style={{ overflow: "visible" }}
-                      key={disk.deviceName}
-                      radius={board.itemRadius}
-                      p="xs"
-                    >
-                      <Stack gap="xs">
-                        <Group
-                          className="health-monitoring-disk-status"
-                          justify="space-between"
-                          align="center"
-                          wrap="wrap"
-                          gap={8}
-                        >
-                          <Group gap={4} wrap="nowrap">
-                            <IconServer className="health-monitoring-disk-icon" size="1rem" />
-                            <Text className="dihealth-monitoring-disk-name" size="xs">
-                              {disk.deviceName}
-                            </Text>
-                          </Group>
-                          <Group gap={8} wrap="nowrap">
-                            <DiskStatus
-                              healthy={disk.healthy}
-                              overallStatus={disk.overallStatus}
-                              statusReason={disk.statusReason}
-                            />
-                            {disk.temperature !== null && (
-                              <Group gap={4} wrap="nowrap">
-                                <IconTemperature className="health-monitoring-disk-temperature-icon" size="1rem" />
-                                <Text className="health-monitoring-disk-temperature-value" size="xs">
-                                  {options.fahrenheit
-                                    ? `${(disk.temperature * 1.8 + 32).toFixed(1)}°F`
-                                    : `${disk.temperature}°C`}
-                                </Text>
-                              </Group>
-                            )}
-                          </Group>
-                        </Group>
-                        <Progress.Root className="health-monitoring-disk-use" radius={board.itemRadius} size="lg">
-                          <Progress.Section
-                            value={disk.percentage}
-                            color={progressColor(disk.percentage)}
-                            className="health-monitoring-disk-use-percentage"
-                          />
-                          <Progress.Section
-                            className="health-monitoring-disk-available-percentage"
-                            value={100 - disk.percentage}
-                            color="default"
-                          />
-                        </Progress.Root>
-                        <Group justify="space-between" gap={8} wrap="nowrap">
-                          <Text className="health-monitoring-disk-use-value" size="xs" c="dimmed">
-                            {t("popover.used")} {sizes.used}
-                          </Text>
-                          <Text className="health-monitoring-disk-available-value" size="xs" c="dimmed">
-                            {sizes.available} {t("popover.available")}
-                          </Text>
-                        </Group>
-                      </Stack>
-                    </Card>
-                  );
-                })}
-            </Stack>
-          );
-        })}
-      </Stack>
-    </Container>
-  );
-};
-
-type HealthInfo = NonNullable<
-  RouterOutputs["widget"]["healthMonitoring"]["getSystemHealthStatus"][number]["healthInfo"]
->;
-
-const SystemInformationList = ({
-  healthInfo,
-  memoryUsage,
-  t,
-  compact = false,
-}: {
-  healthInfo: HealthInfo;
-  memoryUsage: ReturnType<typeof formatMemoryUsage>;
-  t: ScopedTranslationFunction<"widget.healthMonitoring">;
-  compact?: boolean;
-}) => {
-  // compact is only true for the inline on-board card; the non-compact usage renders inside a portaled Modal,
-  // which sits outside the zoomed canvas and must not be zoom-compensated.
-  const iconSize = compact ? 18 : 30;
-  const iconSizeProp = compact ? undefined : iconSize;
-  const iconStyle = compact ? zoomCompensatedSize(iconSize) : undefined;
-  return (
-    <List
-      className="health-monitoring-information-list"
-      center
-      spacing={compact ? 4 : "xs"}
-      size={compact ? "sm" : undefined}
-    >
-      <List.Item
-        className="health-monitoring-information-processor"
-        icon={<IconCpu2 size={iconSizeProp} style={iconStyle} />}
-      >
-        {t("popover.processor", { cpuModelName: healthInfo.cpuModelName })}
-      </List.Item>
-      <List.Item
-        className="health-monitoring-information-memory"
-        icon={<IconBrain size={iconSizeProp} style={iconStyle} />}
-      >
-        {t("popover.memory", { memory: memoryUsage.memTotal.formatted })}
-      </List.Item>
-      <List.Item
-        className="health-monitoring-information-memory"
-        icon={<IconBrain size={iconSizeProp} style={iconStyle} />}
-      >
-        {t("popover.memoryAvailable", {
-          memoryAvailable: memoryUsage.memFree.formatted,
-          percent: String(memoryUsage.memFree.percent),
-        })}
-      </List.Item>
-      <List.Item
-        className="health-monitoring-information-version"
-        icon={<IconVersions size={iconSizeProp} style={iconStyle} />}
-      >
-        {t("popover.version", { version: healthInfo.version })}
-      </List.Item>
-      <List.Item
-        className="health-monitoring-information-uptime"
-        icon={<IconClock size={iconSizeProp} style={iconStyle} />}
-      >
-        {formatUptime(healthInfo.uptime, t)}
-      </List.Item>
-      {healthInfo.loadAverage && (
-        <List.Item
-          className="health-monitoring-information-load-average"
-          icon={<IconCpu size={iconSizeProp} style={iconStyle} />}
-        >
-          {t("popover.loadAverage")}: {healthInfo.loadAverage["1min"]}% / {healthInfo.loadAverage["5min"]}% /{" "}
-          {healthInfo.loadAverage["15min"]}%
-        </List.Item>
-      )}
-      <List.Item
-        className="health-monitoring-information-updates"
-        icon={<IconPackages size={iconSizeProp} style={iconStyle} />}
-      >
-        {t("popover.updatesAvailable", { count: healthInfo.availablePkgUpdates })}
-      </List.Item>
-      <List.Item
-        className="health-monitoring-information-reboot"
-        icon={<IconRefreshAlert size={iconSizeProp} style={iconStyle} />}
-      >
-        {healthInfo.rebootRequired ? t("popover.rebootRequired") : t("popover.rebootNotRequired")}
-      </List.Item>
-    </List>
-  );
-};
-
-export const formatUptime = (uptimeInSeconds: number, t: ScopedTranslationFunction<"widget.healthMonitoring">) => {
-  const uptimeDuration = dayjs.duration(uptimeInSeconds, "seconds");
-  const months = uptimeDuration.months();
-  const days = uptimeDuration.days();
-  const hours = uptimeDuration.hours();
-  const minutes = uptimeDuration.minutes();
-
-  return t("popover.uptime", {
-    months: String(months),
-    days: String(days),
-    hours: String(hours),
-    minutes: String(minutes),
+export function SystemHealthMonitoring(
+  props: WidgetComponentProps<"healthMonitoring"> & {
+    integrations?: RouterOutputs["integration"]["byIds"];
+  },
+) {
+  const t = useI18n("widget.healthMonitoring.rework");
+  const healthQuery = clientApi.widget.healthMonitoring.getSystemHealthStatus.useQuery({
+    integrationIds: props.integrationIds,
   });
-};
-
-type SmartStatusReason = HealthMonitoringData["smart"][number]["statusReason"];
-
-// Green check or red cross from the SMART healthy flag. The tooltip says what the verdict is based on,
-// or shows the integration's raw status when it reports no reason.
-const DiskStatus = ({
-  healthy,
-  overallStatus,
-  statusReason,
-}: {
-  healthy?: boolean;
-  overallStatus: string;
-  statusReason?: SmartStatusReason;
-}) => {
-  const mantineTheme = useMantineTheme();
-  const t = useI18n("widget.healthMonitoring");
-
-  if (healthy === undefined) {
-    return (
-      <Text className="health-monitoring-disk-status-value" size="xs" c="dimmed">
-        N/A
-      </Text>
-    );
+  const results = getUsableWidgetQueryData(healthQuery) ?? emptyResults;
+  const histories = useHealthHistory(results, healthQuery.dataUpdatedAt, props.widgetStateRef);
+  const onPreferences = useHealthPreferences(props);
+  const bounds = useHealthBounds(props.displayScale);
+  const systems: HealthSystem[] = props.integrationIds.flatMap((id) => {
+    const result = results.find((entry) => entry.integrationId === id);
+    if (!result) return [];
+    const integration = props.integrations?.find((entry) => entry.id === id);
+    return [
+      {
+        id,
+        name: result.integrationName,
+        kind: integration?.kind ?? "mock",
+        health: result.healthInfo,
+        updatedAt: result.updatedAt?.getTime(),
+        error: result.error,
+        history: histories[id] ?? [],
+      },
+    ];
+  });
+  const selected = systems.find((system) => system.id === props.options.selectedSystem) ?? systems[0];
+  let layoutScale = 1;
+  if (props.displayMode !== "advanced" && Number.isFinite(props.displayScale) && (props.displayScale ?? 0) > 0) {
+    layoutScale = props.displayScale ?? 1;
   }
-
-  const Icon = healthy ? IconCircleCheckFilled : IconCircleXFilled;
-  const label = statusReason
-    ? statusReason.type === "attributesFailed"
-      ? t("smartStatus.attributesFailed", { attributes: statusReason.attributes.join(", ") })
-      : t(`smartStatus.${statusReason.type}`)
-    : overallStatus;
+  if (isInitialWidgetQueryPending(healthQuery)) return <WidgetQueryLoadingState />;
   return (
-    <Tooltip label={label} disabled={!label}>
-      <Icon
-        className="health-monitoring-disk-status-icon"
-        size="1rem"
-        color={healthy ? mantineTheme.colors.green[6] : mantineTheme.colors.red[6]}
-        aria-label={label}
-      />
-    </Tooltip>
+    <Stack h="100%" gap={0} mih={0} miw={0}>
+      {healthQuery.isError && (
+        <Tooltip label={t("refreshFailed")} withArrow events={{ hover: true, focus: true, touch: true }}>
+          <Text
+            component="output"
+            tabIndex={0}
+            size="xs"
+            c="var(--health-warning)"
+            px="sm"
+            py={3}
+            lineClamp={1}
+            style={{ flexShrink: 0 }}
+          >
+            {t("refreshFailed")}
+          </Text>
+        </Tooltip>
+      )}
+      <Box ref={bounds.ref} flex={1} mih={0} miw={0}>
+        <SystemHealthView
+          systems={systems}
+          selectedId={selected?.id ?? ""}
+          onSelect={(id) => onPreferences({ selectedSystem: id })}
+          onPreferences={onPreferences}
+          width={bounds.width || props.width * layoutScale}
+          height={bounds.height || props.height * layoutScale}
+          advanced={props.displayMode === "advanced"}
+          options={props.options}
+          isEditMode={props.isEditMode}
+        />
+      </Box>
+    </Stack>
   );
-};
-
-export const progressColor = (percentage: number) => {
-  if (percentage < 40) return "green";
-  else if (percentage < 60) return "yellow";
-  else if (percentage < 90) return "orange";
-  else return "red";
-};
-
-// Some integrations report file sizes as raw bytes (e.g. TrueNAS, Glances) while others pre-format
-// them (e.g. Unraid, dashdot). Format the former and pass the latter through untouched.
-const formatFileSize = (value: string, formatBytes: (bytes: number) => string) => {
-  const bytes = Number(value);
-  return Number.isFinite(bytes) ? formatBytes(Math.round(bytes)) : value;
-};
-
-const formatFileSizePair = (
-  usedValue: string,
-  availableValue: string,
-  formatBytes: (bytes: number) => string,
-  formatBytesPair: (used: number, total: number) => { used: string; total: string },
-) => {
-  const used = Number(usedValue);
-  const available = Number(availableValue);
-  if (!Number.isFinite(used) || !Number.isFinite(available)) {
-    return {
-      used: formatFileSize(usedValue, formatBytes),
-      available: formatFileSize(availableValue, formatBytes),
-    };
-  }
-
-  const total = Math.round(used + available);
-  return {
-    used: formatBytesPair(Math.round(used), total).used,
-    available: formatBytesPair(Math.round(available), total).used,
-  };
-};
-
-interface FileSystem {
-  deviceName: string;
-  used: string;
-  available: string;
-  percentage: number;
 }
-
-interface SmartData {
-  deviceName: string;
-  temperature: number | null;
-  overallStatus: string;
-  healthy?: boolean;
-  statusReason?: SmartStatusReason;
-}
-
-export const matchFileSystemAndSmart = (fileSystems: FileSystem[], smartData: SmartData[]) => {
-  return fileSystems
-    .map((fileSystem) => {
-      const smartDisk = smartData.find((smart) => storageDeviceNamesMatch(smart.deviceName, fileSystem.deviceName));
-
-      // Take the SMART name only for the same disk (sda1 -> sda). A controller-level match (nvme0 for
-      // nvme0n1 and nvme0n2) keeps the file system name, so namespaces stay distinct.
-      const isSameDisk = smartDisk !== undefined && isSameStorageDevice(smartDisk.deviceName, fileSystem.deviceName);
-
-      return {
-        deviceName: isSameDisk ? smartDisk.deviceName : fileSystem.deviceName,
-        used: fileSystem.used,
-        available: fileSystem.available,
-        percentage: fileSystem.percentage,
-        temperature: smartDisk?.temperature ?? null,
-        overallStatus: smartDisk?.overallStatus ?? "",
-        healthy: smartDisk?.healthy,
-        statusReason: smartDisk?.statusReason,
-      };
-    })
-    .toSorted((fileSystemA, fileSystemB) => fileSystemA.deviceName.localeCompare(fileSystemB.deviceName));
-};

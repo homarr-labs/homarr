@@ -1,0 +1,34 @@
+.workspace {
+  container-type: inline-size;
+  overflow: hidden;
+}
+
+.legendButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  max-width: 150px;
+  min-width: 0;
+}
+
+.legendButton:hover {
+  color: var(--mantine-primary-color-filled);
+}
+
+.storageRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
+  align-items: center;
+  gap: var(--mantine-spacing-sm);
+  border-bottom: 1px solid var(--mantine-color-default-border);
+}
+
+.storageRow:hover {
+  background: var(--mantine-color-default-hover);
+}
+
+@container (min-width: 500px) {
+  .storageRow {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr) minmax(95px, 0.7fr);
+  }
+}

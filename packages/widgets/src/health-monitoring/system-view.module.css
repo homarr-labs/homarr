@@ -1,0 +1,47 @@
+.root {
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+}
+
+.numeric {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.025em;
+  white-space: nowrap;
+}
+
+.tile {
+  display: block;
+  min-width: 0;
+  min-height: 0;
+  border: 1px solid var(--mantine-color-default-border);
+  border-radius: var(--mantine-radius-sm);
+  background: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-6));
+  transition: background-color 120ms ease;
+}
+
+.tile[data-standalone] {
+  border: 0;
+  border-radius: inherit;
+  background: transparent;
+}
+
+.tile:hover {
+  background: var(--mantine-color-default-hover);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tile {
+    transition: none;
+  }
+}
+
+.fleetRow {
+  min-width: 0;
+  border-bottom: 1px solid var(--mantine-color-default-border);
+}
+
+.fleetRow:hover,
+.fleetRow[data-selected] {
+  background: var(--mantine-color-default-hover);
+}
