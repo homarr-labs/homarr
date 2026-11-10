@@ -352,7 +352,7 @@ button.tile:not(:disabled):active {
 }
 
 .tile:focus-visible,
-button:focus-visible,
+:where(.root, .detailModal) button:focus-visible,
 .pill:focus-visible > .pillTrack,
 .dial:focus-visible {
   outline: 2px solid var(--mantine-primary-color-filled);
