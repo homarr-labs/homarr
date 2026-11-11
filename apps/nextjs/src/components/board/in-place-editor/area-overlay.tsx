@@ -15,6 +15,8 @@ import classes from "./area-overlay.module.css";
 import type { SectionOccupancy } from "./occupancy";
 import { useTargetResources } from "./resources";
 import { addInPlaceActions, getAddInPlaceState, useAddInPlaceState } from "./store";
+import { projectGridCoordinates } from "../sections/grid/grid-row-projection";
+import type { GridRowProjection } from "../sections/grid/grid-row-projection";
 
 const rowScale = "var(--board-grid-row-scale, 1)";
 const highlightDelay = 120;
@@ -31,9 +33,10 @@ const useDebounced = <T,>(value: T, delay: number) => {
 interface AreaOverlayProps {
   occupancy: SectionOccupancy;
   entryElements: ReadonlyMap<string, HTMLElement>;
+  rowProjection?: GridRowProjection;
 }
 
-export const AreaOverlay = ({ occupancy, entryElements }: AreaOverlayProps) => {
+export const AreaOverlay = ({ occupancy, entryElements, rowProjection }: AreaOverlayProps) => {
   const { step, session } = useAddInPlaceState();
   const t = useI18n();
   const board = useOptionalBoard();
@@ -91,7 +94,8 @@ export const AreaOverlay = ({ occupancy, entryElements }: AreaOverlayProps) => {
     const controller = new AbortController();
     resizeControllerRef.current = controller;
     const pointerId = event.pointerId;
-    const rowPitch = bounds.height / (occupancy.maxRowCount ?? occupancy.rowCount);
+    const effectiveRowScale = Number.parseFloat(getComputedStyle(grid).getPropertyValue("--board-grid-row-scale")) || 1;
+    const rowPitch = (bounds.width / occupancy.columnCount) * effectiveRowScale;
     let expectedSession = session;
     const move = (moveEvent: PointerEvent) => {
       if (moveEvent.pointerId !== pointerId) return;
@@ -102,7 +106,8 @@ export const AreaOverlay = ({ occupancy, entryElements }: AreaOverlayProps) => {
       const rect = grid.getBoundingClientRect();
       if (rect.width === 0 || rect.height === 0) return;
       const x = Math.floor(((moveEvent.clientX - rect.left) / rect.width) * occupancy.columnCount);
-      const y = Math.floor((moveEvent.clientY - rect.top) / rowPitch);
+      const displayRow = (moveEvent.clientY - rect.top) / rowPitch;
+      const y = Math.floor(rowProjection?.getLogicalRow(displayRow) ?? displayRow);
       const current = session.area;
       addInPlaceActions.resizeTo(Math.max(1, x - current.x + 1), Math.max(1, y - current.y + 1));
       const nextSession = getAddInPlaceState().session;
@@ -124,7 +129,7 @@ export const AreaOverlay = ({ occupancy, entryElements }: AreaOverlayProps) => {
     <div ref={layerRef} className={classes.layer}>
       <div
         className={classes.area}
-        style={getLogicalItemStyle(session.area, rowScale)}
+        style={getLogicalItemStyle(projectGridCoordinates(session.area, rowProjection), rowScale)}
         data-add-in-place-area=""
         data-area-step={step}
       >

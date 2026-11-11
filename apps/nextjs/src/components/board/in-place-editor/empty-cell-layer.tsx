@@ -14,12 +14,15 @@ import { buildOccupiedCells, getFreeRect, isCellFree } from "./occupancy";
 import type { CellPoint, SectionOccupancy } from "./occupancy";
 import { addInPlaceActions, getAddInPlaceState } from "./store";
 import type { AreaRect } from "./types";
+import { projectGridCoordinates } from "../sections/grid/grid-row-projection";
+import type { GridRowProjection } from "../sections/grid/grid-row-projection";
 
 const rowScale = "var(--board-grid-row-scale, 1)";
 
 interface EmptyCellLayerProps {
   occupancy: SectionOccupancy;
   onRowCountChange: (rowCount: number) => void;
+  rowProjection?: GridRowProjection;
 }
 
 interface DragState {
@@ -28,7 +31,7 @@ interface DragState {
   rowCount: number;
 }
 
-export const EmptyCellLayer = ({ occupancy, onRowCountChange }: EmptyCellLayerProps) => {
+export const EmptyCellLayer = ({ occupancy, onRowCountChange, rowProjection }: EmptyCellLayerProps) => {
   const t = useI18n();
   const { sectionId, columnCount, rowCount, maxRowCount, placements } = occupancy;
   const layerRef = useRef<HTMLFieldSetElement>(null);
@@ -105,7 +108,9 @@ export const EmptyCellLayer = ({ occupancy, onRowCountChange }: EmptyCellLayerPr
     event.currentTarget.focus({ preventScroll: true });
     cleanupRef.current?.();
     const pointerId = event.pointerId;
-    const rowPitch = bounds.height / rows;
+    const effectiveRowScale =
+      Number.parseFloat(getComputedStyle(layer).getPropertyValue("--board-grid-row-scale")) || 1;
+    const rowPitch = (bounds.width / columnCount) * effectiveRowScale;
     let clientX = event.clientX;
     let clientY = event.clientY;
     let frame = 0;
@@ -130,7 +135,13 @@ export const EmptyCellLayer = ({ occupancy, onRowCountChange }: EmptyCellLayerPr
           Math.max(0, Math.floor(((clientX - currentBounds.left) / currentBounds.width) * columnCount)),
           columnCount - 1,
         ),
-        y: Math.max(0, Math.floor((clientY - currentBounds.top) / rowPitch)),
+        y: Math.max(
+          0,
+          Math.floor(
+            rowProjection?.getLogicalRow((clientY - currentBounds.top) / rowPitch) ??
+              (clientY - currentBounds.top) / rowPitch,
+          ),
+        ),
       };
       if (maxRowCount !== null) pointer.y = Math.min(pointer.y, maxRowCount - 1);
       const rect = getFreeRect(occupancy, occupied, current.anchor, pointer);
@@ -231,7 +242,10 @@ export const EmptyCellLayer = ({ occupancy, onRowCountChange }: EmptyCellLayerPr
             })}
             data-add-cell-x={cell.x}
             data-add-cell-y={cell.y}
-            style={getLogicalItemStyle({ x: cell.x, y: cell.y, w: 1, h: 1 }, rowScale)}
+            style={getLogicalItemStyle(
+              projectGridCoordinates({ x: cell.x, y: cell.y, w: 1, h: 1 }, rowProjection),
+              rowScale,
+            )}
             onPointerDown={(event) => handlePointerDown(event, cell)}
             onFocus={() => setFocusedIndex(index)}
             onKeyDown={(event) => handleCellKeyDown(event, cell, itemProps.onKeyDown)}
@@ -242,7 +256,12 @@ export const EmptyCellLayer = ({ occupancy, onRowCountChange }: EmptyCellLayerPr
           </button>
         );
       })}
-      {drag && <div className={classes.selection} style={getLogicalItemStyle(drag.rect, rowScale)} />}
+      {drag && (
+        <div
+          className={classes.selection}
+          style={getLogicalItemStyle(projectGridCoordinates(drag.rect, rowProjection), rowScale)}
+        />
+      )}
     </Box>
   );
 };
