@@ -4,6 +4,8 @@ import type { PropsWithChildren } from "react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import type { OnboardingTourFocusRevealProps, OnboardingTourStep } from "@gfazioli/mantine-onboarding-tour";
+import { useMantineTheme } from "@mantine/core";
+import { useMediaQuery } from "@mantine/hooks";
 import {
   IconAffiliateFilled,
   IconAppsFilled,
@@ -15,7 +17,6 @@ import {
 import { clientApi } from "@homarr/api/client";
 import { createDocumentationLink } from "@homarr/definitions";
 import { useI18n } from "@homarr/translation/client";
-import { useIsMobile } from "@homarr/ui/hooks";
 
 import { TourTargetsProvider } from "~/components/layout/header/tour-target";
 import { TourShell } from "./tour-shell";
@@ -48,7 +49,9 @@ const usersStepFocusRevealProps: OnboardingTourFocusRevealProps = {
 export const ManageTourProvider = ({ children, isAdmin }: ManageTourProviderProps) => {
   const t = useI18n("onboardingTour.manage");
   const { mutate: completeTour } = clientApi.user.completeTour.useMutation();
-  const isMobile = useIsMobile();
+  const theme = useMantineTheme();
+  // Match AppShell's desktop navigation and wait for the client viewport before starting.
+  const isDesktop = useMediaQuery(`(min-width: ${theme.breakpoints.sm})`, false);
   const pathname = usePathname();
   const router = useRouter();
 
@@ -57,19 +60,17 @@ export const ManageTourProvider = ({ children, isAdmin }: ManageTourProviderProp
 
   const [tourActive, setTourActive] = useState(false);
   const [tourDismissed, setTourDismissed] = useState(false);
+  const started = tourActive && isDesktop && isManageSection;
 
   useEffect(() => {
-    if (tourDismissed) return;
-    if (isManageHome && !isMobile) {
+    if (!isDesktop || !isManageSection) {
+      setTourActive(false);
+      return;
+    }
+    if (isManageHome && !tourDismissed) {
       setTourActive(true);
     }
-  }, [isManageHome, isMobile, tourDismissed]);
-
-  useEffect(() => {
-    if (!isManageSection) {
-      setTourActive(false);
-    }
-  }, [isManageSection]);
+  }, [isDesktop, isManageHome, isManageSection, tourDismissed]);
 
   const handleEnd = useCallback(() => {
     setTourDismissed(true);
@@ -188,10 +189,10 @@ export const ManageTourProvider = ({ children, isAdmin }: ManageTourProviderProp
   }, [isAdmin, t]);
 
   return (
-    <TourTargetsProvider enabled={tourActive}>
+    <TourTargetsProvider enabled={started}>
       <TourShell
         steps={steps}
-        started={tourActive}
+        started={started}
         onEnd={handleEnd}
         stepRoutes={stepRoutes}
         position={{ base: "bottom", sm: "right" }}

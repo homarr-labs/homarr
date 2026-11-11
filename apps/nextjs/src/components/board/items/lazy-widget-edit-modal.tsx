@@ -13,6 +13,7 @@ import { createModal, modalSizeForm, useModalAction } from "@homarr/modals";
 import { WidgetError } from "@homarr/widgets/errors";
 import type * as WidgetModalsModule from "@homarr/widgets/modals";
 import type { WidgetEditModalProps, WidgetEditModalSize } from "@homarr/widgets/modals";
+import { widgetEditorModalStyles } from "@homarr/widgets/modals/styles";
 import { loadWidgetComponent } from "@homarr/widgets/manifest";
 import type { IntegrationSelectOption } from "@homarr/widgets/widget-integration-select";
 
@@ -215,6 +216,7 @@ export const LazyWidgetEditModal = createModal<WidgetEditModalProps<WidgetKind>>
     return t("item.edit.title");
   },
   size: "100rem",
+  styles: widgetEditorModalStyles,
   transitionProps: {
     transition: "pop",
     duration: 180,
@@ -240,5 +242,6 @@ export const LazyWidgetConfigurationModal = createModal<WidgetEditModalProps<Wid
     return t("item.edit.title");
   },
   size: modalSizeForm,
+  styles: widgetEditorModalStyles,
   closeOnClickOutside: false,
 });

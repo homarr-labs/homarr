@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Tooltip } from "@mantine/core";
@@ -23,6 +23,7 @@ import { normalizeBoardLayoutBounds } from "~/components/board/layout/normalize-
 import { loadGridEditorAsync, scheduleGridEditorWarmup } from "~/components/board/sections/grid/grid-editor-loader";
 import { HeaderButton } from "~/components/layout/header/button";
 import { TourTarget } from "~/components/layout/header/tour-target";
+import type { Board } from "../_types";
 import { registerBoardDirtyLeaveGuard } from "./board-dirty-leave-guard";
 import type * as EditActionsModule from "./_edit-actions";
 
@@ -197,7 +198,7 @@ const EditModeMenu = ({ demoReadOnly }: { demoReadOnly: boolean }) => {
   }, [board.name, close, openConfirmModal, router, tBoardSetting, tCommon, utils.board.getBoardByName]);
 
   useHotkeys([[hotkeys.toggleBoardEdit, () => void toggle()]]);
-  usePreventLeaveWithDirty(isEditMode);
+  usePreventLeaveWithUnsavedChanges(isEditMode, board);
 
   if (returnToLayoutSettings) {
     return (
@@ -250,7 +251,24 @@ const EditModeMenu = ({ demoReadOnly }: { demoReadOnly: boolean }) => {
   );
 };
 
-const usePreventLeaveWithDirty = (isDirty: boolean) => {
+const usePreventLeaveWithUnsavedChanges = (isEditMode: boolean, board: Board) => {
+  const contentSnapshot = useMemo(
+    () => JSON.stringify({ items: board.items, sections: board.sections }),
+    [board.items, board.sections],
+  );
+  const [editSession, setEditSession] = useState({
+    boardId: board.id,
+    isEditMode,
+    initialContent: contentSnapshot,
+  });
+
+  // Capture only at session boundaries so cancelling a staged dialog cannot
+  // clear changes made earlier in the same edit session.
+  if (editSession.boardId !== board.id || editSession.isEditMode !== isEditMode) {
+    setEditSession({ boardId: board.id, isEditMode, initialContent: contentSnapshot });
+  }
+
+  const isDirty = isEditMode && contentSnapshot !== editSession.initialContent;
   const tBoard = useI18n("board");
   const tCommon = useI18n("common");
   const { openConfirmModal } = useConfirmModal();

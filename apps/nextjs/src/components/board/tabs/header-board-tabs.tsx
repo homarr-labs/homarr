@@ -1,12 +1,10 @@
 "use client";
 
-import type { PointerEvent } from "react";
 import { useRef } from "react";
 import { Group, Popover, Stack, Tabs, Text } from "@mantine/core";
-import { useDisclosure, useTimeout } from "@mantine/hooks";
+import { useDisclosure } from "@mantine/hooks";
 
 import { useBoardTabs } from "@homarr/boards/tabs";
-import { useEditMode } from "@homarr/boards/edit-mode";
 import { useI18n } from "@homarr/translation/client";
 import type { HeaderTabsDisplay } from "@homarr/validation/user";
 
@@ -18,23 +16,11 @@ import classes from "./header-board-tabs.module.css";
 export const HeaderBoardTabs = ({ display }: { display: HeaderTabsDisplay }) => {
   const { tabs, activeTab, selectTab } = useBoardTabs();
   const [opened, { open, close, toggle, set: setOpened }] = useDisclosure(false);
-  const [isEditMode] = useEditMode();
-  const { start: closeSoon, clear: cancelClose } = useTimeout(close, 150);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const getTabLabel = useBoardTabLabel();
   const t = useI18n("board.tabs");
   if (tabs.length < 2 || !activeTab) return null;
 
-  const reveal = () => {
-    cancelClose();
-    open();
-  };
-  const hideSoon = () => {
-    if (!isEditMode) closeSoon();
-  };
-  const hideAfterPointerLeave = (event: PointerEvent<HTMLElement>) => {
-    if (event.pointerType === "mouse") hideSoon();
-  };
   const select = (value: string | null) => {
     if (!value) return;
     selectTab(value);
@@ -76,26 +62,17 @@ export const HeaderBoardTabs = ({ display }: { display: HeaderTabsDisplay }) => 
           <HeaderButton
             hiddenFrom={display === "wide" ? "lg" : undefined}
             aria-label={t("indicator", { index: activeIndex + 1, count: tabs.length, name: getTabLabel(activeTab) })}
-            onClick={() => {
-              cancelClose();
-              toggle();
-            }}
-            onPointerEnter={(event: PointerEvent<HTMLElement>) => {
-              if (event.pointerType === "mouse") reveal();
-            }}
-            onPointerLeave={hideAfterPointerLeave}
-            onBlur={hideSoon}
+            onClick={toggle}
             onKeyDown={(event) => {
               if (event.key === "Escape" && opened) {
                 event.preventDefault();
                 event.stopPropagation();
-                cancelClose();
                 close();
                 return;
               }
               if (event.key !== "ArrowDown") return;
               event.preventDefault();
-              reveal();
+              open();
               window.requestAnimationFrame(() =>
                 dropdownRef.current?.querySelector<HTMLElement>('[role="tab"][aria-selected="true"]')?.focus(),
               );
@@ -113,16 +90,7 @@ export const HeaderBoardTabs = ({ display }: { display: HeaderTabsDisplay }) => 
             </Stack>
           </HeaderButton>
         </Popover.Target>
-        <Popover.Dropdown
-          ref={dropdownRef}
-          data-board-tab-picker
-          maw="calc(100vw - 1rem)"
-          p={4}
-          onPointerEnter={cancelClose}
-          onPointerLeave={hideAfterPointerLeave}
-          onFocusCapture={cancelClose}
-          onBlurCapture={hideSoon}
-        >
+        <Popover.Dropdown ref={dropdownRef} data-board-tab-picker maw="calc(100vw - 1rem)" p={4}>
           <Tabs value={activeTab.id} onChange={select} variant="pills" radius="md">
             <BoardTabBar menuWithinPortal={false} />
           </Tabs>
