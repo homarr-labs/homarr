@@ -6,6 +6,7 @@ import { AreaOverlay } from "./area-overlay";
 import { EmptyCellLayer } from "./empty-cell-layer";
 import type { OccupancyPlacement, SectionOccupancy } from "./occupancy";
 import { registerSection, useAddInPlaceState } from "./store";
+import type { GridRowProjection } from "../sections/grid/grid-row-projection";
 
 interface AddInPlaceGridLayerProps {
   sectionId: string;
@@ -15,6 +16,7 @@ interface AddInPlaceGridLayerProps {
   placements: readonly OccupancyPlacement[];
   entryElements: ReadonlyMap<string, HTMLElement>;
   onRowCountChange: (rowCount: number) => void;
+  rowProjection?: GridRowProjection;
 }
 
 export const AddInPlaceGridLayer = ({
@@ -25,6 +27,7 @@ export const AddInPlaceGridLayer = ({
   placements,
   entryElements,
   onRowCountChange,
+  rowProjection,
 }: AddInPlaceGridLayerProps) => {
   const { session } = useAddInPlaceState();
   const [dragRowCount, setDragRowCount] = useState(0);
@@ -53,8 +56,10 @@ export const AddInPlaceGridLayer = ({
 
   return (
     <>
-      {!session && <EmptyCellLayer occupancy={occupancy} onRowCountChange={setDragRowCount} />}
-      <AreaOverlay occupancy={occupancy} entryElements={entryElements} />
+      {!session && (
+        <EmptyCellLayer occupancy={occupancy} onRowCountChange={setDragRowCount} rowProjection={rowProjection} />
+      )}
+      <AreaOverlay occupancy={occupancy} entryElements={entryElements} rowProjection={rowProjection} />
     </>
   );
 };

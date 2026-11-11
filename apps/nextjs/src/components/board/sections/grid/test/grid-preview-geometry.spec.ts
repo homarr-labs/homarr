@@ -31,7 +31,7 @@ describe("grid preview geometry", () => {
       `${-2 * LOGICAL_GRID_PITCH}px`,
     );
     expect(elements.get("displaced")?.style.getPropertyValue("--board-grid-preview-y")).toBe(
-      `${2 * LOGICAL_GRID_PITCH}px`,
+      `calc(${2 * LOGICAL_GRID_PITCH}px * var(--board-grid-row-scale, 1))`,
     );
     expect(elements.get("displaced")?.dataset.gridX).toBe("0");
     expect(elements.get("displaced")?.dataset.gridY).toBe("2");
@@ -64,9 +64,13 @@ describe("grid preview geometry", () => {
     const active = elements.get("active");
     expect(active?.getAttribute("data-grid-preview")).toBe("true");
     expect(active?.style.getPropertyValue("--board-grid-preview-x")).toBe(`${LOGICAL_GRID_PITCH}px`);
-    expect(active?.style.getPropertyValue("--board-grid-preview-y")).toBe(`${LOGICAL_GRID_PITCH}px`);
+    expect(active?.style.getPropertyValue("--board-grid-preview-y")).toBe(
+      `calc(${LOGICAL_GRID_PITCH}px * var(--board-grid-row-scale, 1))`,
+    );
     expect(active?.style.getPropertyValue("--board-grid-preview-width")).toBe(`${getLogicalGridSize(3)}px`);
-    expect(active?.style.getPropertyValue("--board-grid-preview-height")).toBe(`${getLogicalGridSize(4)}px`);
+    expect(active?.style.getPropertyValue("--board-grid-preview-height")).toBe(
+      `calc(${getLogicalGridSize(4)}px * var(--board-grid-row-scale, 1))`,
+    );
     expect(active?.dataset.gridW).toBe("3");
     expect(active?.dataset.gridH).toBe("4");
   });
