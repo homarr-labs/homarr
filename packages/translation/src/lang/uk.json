@@ -1245,6 +1245,20 @@
       "username": "Ім'я користувача",
       "password": "Пароль",
       "savedPlaceholder": "• • • • • • (збережено, залиште порожнім, щоб зберегти)"
+    },
+    "workshopUpdate": {
+      "title": "",
+      "apply": "",
+      "available": "Доступне оновлення",
+      "check": "",
+      "description": "",
+      "approvePermissions": "",
+      "pendingDescription": "",
+      "overwriteLocalChanges": "",
+      "installSeparate": "",
+      "communityWarning": "",
+      "updated": "",
+      "changedBeforeInstall": ""
     }
   },
   "workshop": {
@@ -1921,7 +1935,8 @@
       "copy": "Копіювати",
       "copied": "Скопійовано",
       "refresh": "Оновити",
-      "export": "Експорт"
+      "export": "Експорт",
+      "advanced": "Додатково"
     },
     "hidden": "Приховати",
     "pagination": {
@@ -2115,6 +2130,158 @@
         "sm": "Тонкий",
         "xl": "М'яко"
       }
+    },
+    "customTheme": {
+      "label": "Тема",
+      "nothingFound": "",
+      "custom": "Користувацька",
+      "customize": "",
+      "editor": {
+        "title": "",
+        "basedOn": "",
+        "preview": "",
+        "previewColorScheme": "",
+        "layout": "Макет",
+        "typography": "",
+        "colors": "Кольори",
+        "json": "",
+        "defaultRadius": "",
+        "radiusHint": "",
+        "scale": "",
+        "spacing": "Інтервал",
+        "radius": "",
+        "fontFamily": "",
+        "headingFont": "",
+        "monoFont": "",
+        "fontSizes": "",
+        "palette": {
+          "body": "",
+          "surface": "",
+          "hover": "",
+          "border": "",
+          "text": "",
+          "dimmed": "",
+          "primary": "",
+          "secondary": "Додатковий акцент"
+        },
+        "lockedPrimary": "",
+        "pickColor": "",
+        "autoContrast": "",
+        "luminanceThreshold": "",
+        "jsonHint": "",
+        "invalidJson": "",
+        "tooLong": "",
+        "copyJson": "",
+        "copied": "Скопійовано",
+        "discardJson": "",
+        "reset": "",
+        "apply": "",
+        "sampleTitle": "Панель керування",
+        "sampleBadge": "Попередній перегляд",
+        "sampleText": "",
+        "sampleInput": "Пошук",
+        "sampleValue": "Пошук додатків",
+        "sampleButton": "Відкриті"
+      },
+      "studio": {
+        "title": "",
+        "saveTheme": "",
+        "searchControls": "",
+        "component": "",
+        "inheritedValue": "",
+        "resetControl": "",
+        "decreaseControl": "",
+        "increaseControl": "",
+        "chooseControl": "",
+        "layout": {
+          "spacing": "Інтервал",
+          "radius": "",
+          "compact": "Компактний",
+          "normal": "Нормальний",
+          "roomy": "",
+          "preset": "",
+          "none": "Немає",
+          "rounded": "",
+          "full": "Повна",
+          "custom": "Користувацька",
+          "advanced": ""
+        },
+        "previewSurface": "Попередній перегляд",
+        "previewFrame": "",
+        "loadingPreview": "",
+        "previewFailed": "",
+        "sampleBoard": "",
+        "components": "Компоненти",
+        "overlays": "",
+        "typography": "",
+        "liveBoard": "",
+        "viewport": "",
+        "responsive": "",
+        "tablet": "",
+        "mobile": "Мобільна",
+        "includeCustomCss": "",
+        "groups": {
+          "layout": "",
+          "typography": "",
+          "colors": "",
+          "surfaces": "",
+          "overlays": "",
+          "accessibility": "",
+          "css": ""
+        },
+        "controls": {
+          "defaultRadius": "",
+          "scale": "",
+          "spacing": "Інтервал",
+          "radius": "",
+          "breakpoint": "Точка зупинки",
+          "fontSizes": "",
+          "lineHeight": "",
+          "shadow": "",
+          "fontFamily": "",
+          "headingFont": "",
+          "monoFont": "",
+          "headingWeight": "",
+          "headingSize": "",
+          "fontSmoothing": "",
+          "body": "",
+          "surface": "",
+          "hover": "",
+          "border": "",
+          "text": "",
+          "dimmed": "",
+          "primary": "",
+          "secondary": "Додатковий акцент",
+          "autoContrast": "",
+          "luminanceThreshold": "",
+          "primaryShade": "",
+          "componentRadius": "",
+          "borderWidth": "",
+          "surfaceBackground": "Фон",
+          "surfaceText": "",
+          "surfaceBorder": "Колір контура",
+          "hoverBackground": "",
+          "hoverText": "",
+          "componentShadow": "",
+          "componentBorder": "Показати рамку",
+          "componentPadding": "",
+          "componentSize": "Розмір файлу",
+          "componentVariant": "",
+          "overlayBlur": "",
+          "overlayOpacity": "",
+          "overlayColor": "",
+          "transitionDuration": "",
+          "headerBackground": "",
+          "respectReducedMotion": "",
+          "focusRing": "",
+          "cursorType": "",
+          "customCss": ""
+        },
+        "expandPreview": "",
+        "showControls": "Показати елементи керування"
+      },
+      "instanceDefault": "",
+      "useInstanceDefault": ""
     }
   },
   "section": {
@@ -2210,6 +2377,18 @@
       },
       "customWidget": "Користувацький віджет",
       "standalone": "Автономний",
+      "integrationFilter": "",
+      "integrationNotConnected": "",
+      "workshop": {
+        "title": "Віджети Майстерні",
+        "back": "",
+        "empty": "",
+        "noMatches": "",
+        "loading": "",
+        "integrationError": "",
+        "searchMore": "",
+        "installAndAdd": ""
+      },
       "missingIntegration": {
         "title": "Спочатку під'єднайте сервіс",
         "noPermission": "Для цього віджета потрібне сумісне підключення до сервісу. Попросіть адміністратора з'єднатися ще раз, а тоді спробуйте ще раз."
@@ -2245,10 +2424,13 @@
       "saveErrorTitle": "Не вдалося оновити елементи",
       "saveErrorMessage": "Зміни не вдалося зберегти. Дошка була оновлена.",
       "moveUnavailableTitle": "Не вдалося перемістити вибрані елементи",
-      "moveUnavailableMessage": "Призначення не має достатньо місця для усього виділення."
+      "moveUnavailableMessage": "Призначення не має достатньо місця для усього виділення.",
+      "moveToTab": "",
+      "movedToTab": ""
     },
     "moveResize": {
       "title": "Перемістити/змінити розмір",
+      "sizeOverlap": "",
       "entryLabel": "{name}, стовпець {column}, рядок {row}",
       "target": {
         "numbered": "{name}, призначення {index}",
@@ -2331,6 +2513,36 @@
       "open": "Відкрити розширений вигляд",
       "close": "Закрити розширений вигляд",
       "label": "Розширений вигляд {widget}"
+    },
+    "inPlace": {
+      "widgetLoadError": "",
+      "search": "",
+      "bestFit": "",
+      "moreWidgets": "",
+      "widgets": "Віджети",
+      "yourApps": "",
+      "createApp": "",
+      "addAppLink": "",
+      "createWidget": "",
+      "createWidgetDescription": "",
+      "createAppDescription": "",
+      "defaultFit": "",
+      "defaultFitDescription": "",
+      "defaultSize": "",
+      "defaultSizeDescription": "",
+      "emptyCells": "",
+      "preview": {
+        "error": "",
+        "loading": ""
+      },
+      "keyboard": {
+        "move": "пересунути",
+        "resize": "",
+        "pick": "",
+        "browse": "",
+        "moveDescription": "",
+        "resizeDescription": ""
+      }
     }
   },
   "widget": {
@@ -3155,6 +3367,141 @@
       "error": {
         "loadFailed": "Не вдалося завантажити об'єкт",
         "toggleFailed": "Неможливо оновити об'єкт"
+      }
+    },
+    "smartHome-controls": {
+      "name": "",
+      "description": "",
+      "option": {
+        "presentation": {
+          "label": "",
+          "option": {
+            "entities": "",
+            "controlPanel": ""
+          }
+        },
+        "title": {
+          "label": "Заголовок",
+          "description": ""
+        },
+        "blocks": {
+          "label": "",
+          "remove": ""
+        },
+        "roomDomains": {
+          "label": "",
+          "description": ""
+        },
+        "excludedEntityIds": {
+          "label": "",
+          "description": "",
+          "placeholder": ""
+        },
+        "showSummary": {
+          "label": ""
+        },
+        "readOnly": {
+          "label": "",
+          "description": ""
+        },
+        "controlSize": {
+          "label": "",
+          "option": {
+            "auto": "Автоматично",
+            "compact": "Компактний",
+            "large": "Великий"
+          }
+        },
+        "palette": {
+          "label": "Кольори",
+          "option": {
+            "boring": "",
+            "colorful": ""
+          }
+        }
+      },
+      "domain": {
+        "light": "",
+        "switch": "",
+        "fan": "",
+        "climate": "",
+        "humidifier": "",
+        "cover": "",
+        "valve": "",
+        "lock": "",
+        "alarm_control_panel": "",
+        "media_player": "",
+        "camera": "",
+        "vacuum": "",
+        "scene": "",
+        "script": "",
+        "automation": "",
+        "button": "",
+        "input_boolean": "",
+        "input_select": "",
+        "person": "Люди",
+        "binary_sensor": "",
+        "sensor": "",
+        "weather": "Погода",
+        "sun": "",
+        "update": ""
+      },
+      "block": {
+        "add": {
+          "rooms": "",
+          "entity": "Сутність",
+          "roomsLabel": "",
+          "roomsPlaceholder": "",
+          "entityLabel": "",
+          "entityPlaceholder": "",
+          "merge": "",
+          "submit": "Додати",
+          "duplicate": "",
+          "covered": ""
+        },
+        "kind": {
+          "entity": "Сутність",
+          "room": "",
+          "mergedRooms": "",
+          "unknown": ""
+        },
+        "entityCount": "",
+        "noArea": "",
+        "issue": {
+          "missing": "Не знайдено",
+          "otherSource": "",
+          "empty": ""
+        }
+      },
+      "preview": {
+        "empty": "",
+        "noMatches": "",
+        "summary": {
+          "lights": "",
+          "on": "увімк",
+          "off": "вимкнено",
+          "sensors": "",
+          "offline": "офлайн"
+        },
+        "otherSource": ""
+      },
+      "live": {
+        "loading": "",
+        "error": "",
+        "retry": "",
+        "actionFailed": "",
+        "actionUnconfirmed": "",
+        "unconfirmed": "",
+        "selectionLimit": "",
+        "unknownError": ""
+      },
+      "inline": {
+        "open": "",
+        "title": "",
+        "handle": "",
+        "empty": "",
+        "add": "",
+        "close": ""
       }
     },
     "smartHome-executeAutomation": {
@@ -5455,6 +5802,23 @@
       "name": "Системні ресурси",
       "description": "Процесор, пам'ять, диск та інше використання системи",
       "option": {
+        "diskDisplayMode": {
+          "label": "",
+          "option": {
+            "percentage": "Відсоток (напр., 76%)",
+            "free": "",
+            "absolute": "",
+            "combined": ""
+          }
+        },
+        "resourceLayout": {
+          "label": "",
+          "description": ""
+        },
+        "subresourceLayout": {
+          "label": "",
+          "description": ""
+        },
         "hasShadow": {
           "label": "Увімкнути затінення графіку"
         },
@@ -5462,6 +5826,7 @@
           "label": "Видимі графіки",
           "description": "Оберіть графіки, які хочете бачити.",
           "option": {
+            "cpuCores": "",
             "memory": "Оперативна Пам'ять",
             "network": "Мережа"
           }
@@ -6390,6 +6755,26 @@
         }
       }
     },
+    "tabs": {
+      "label": "",
+      "indicator": "",
+      "home": "Головна",
+      "untitled": "",
+      "add": "",
+      "actions": "",
+      "rename": "",
+      "namePlaceholder": "",
+      "moveLeft": "",
+      "moveRight": "",
+      "remove": {
+        "action": "",
+        "confirm": ""
+      },
+      "limitReached": "",
+      "hotkeyHint": "",
+      "destination": "",
+      "containerDestination": ""
+    },
     "landmark": {
       "canvas": "Полотно на панелі керування",
       "leftRail": "Панель навігації зліва",
@@ -6732,6 +7117,7 @@
           }
         },
         "about": "Про програму",
+        "updateAvailable": "Доступне оновлення",
         "assistant": "Помічник"
       }
     },
@@ -6743,9 +7129,23 @@
           "authentication": "Аутентифікація",
           "authorization": "Авторизація"
         },
-        "heroBanner": {
-          "title": "З поверненням до",
-          "subtitle": "{app} дошка"
+        "hero": {
+          "greeting": "",
+          "greetingWithoutName": "",
+          "description": ""
+        },
+        "lobster": {
+          "label": "",
+          "prompt": "",
+          "pokeCount": "",
+          "reaction": {
+            "hey": "",
+            "ow": "",
+            "snip": "",
+            "careful": "",
+            "stillHere": "",
+            "okay": ""
+          }
         }
       },
       "board": {
@@ -6843,6 +7243,11 @@
                 "logoDisplay": {
                   "logo": "Тільки логотип",
                   "logoAndText": "Логотип + текст"
+                },
+                "tabsDisplay": {
+                  "wide": "Широкий",
+                  "compact": "Компактний",
+                  "indicator": ""
                 }
               },
               "items": {
@@ -6850,6 +7255,7 @@
                 "search": "Пошук",
                 "home": "Домашня дошка",
                 "boardSwitcher": "Контури",
+                "boardTabs": "",
                 "assistant": "Помічник",
                 "docker": "Docker",
                 "boardEdit": "Редагувати дошку",
@@ -7667,7 +8073,8 @@
               "openSpotlightApps": "Відкрити пошук додатків",
               "openSpotlightAssistant": "Відкрити режим помічника",
               "openSpotlightPreferences": "Відкрийте режим налаштувань",
-              "openAssistant": "Відкрити помічника"
+              "openAssistant": "Відкрити помічника",
+              "switchBoardTab": ""
             },
             "note": "Порада: Mod стосується як клавіші Ctrl, так і клавіші ⌘ у macOS"
           }

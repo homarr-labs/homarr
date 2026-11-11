@@ -1245,6 +1245,20 @@
       "username": "Käyttäjätunnus",
       "password": "Salasana",
       "savedPlaceholder": "••••••• (tallennettu, jätä tyhjäksi säilyttääksesi)"
+    },
+    "workshopUpdate": {
+      "title": "",
+      "apply": "",
+      "available": "Päivitys saatavilla",
+      "check": "",
+      "description": "",
+      "approvePermissions": "",
+      "pendingDescription": "",
+      "overwriteLocalChanges": "",
+      "installSeparate": "",
+      "communityWarning": "",
+      "updated": "",
+      "changedBeforeInstall": ""
     }
   },
   "workshop": {
@@ -1921,7 +1935,8 @@
       "copy": "Kopioi",
       "copied": "Kopioitu",
       "refresh": "Päivitä",
-      "export": "Vie"
+      "export": "Vie",
+      "advanced": "Lisäasetukset"
     },
     "hidden": "Piilotettu",
     "pagination": {
@@ -2115,6 +2130,158 @@
         "sm": "Hieno",
         "xl": "Pehmeä"
       }
+    },
+    "customTheme": {
+      "label": "Teema",
+      "nothingFound": "",
+      "custom": "Mukautettu",
+      "customize": "",
+      "editor": {
+        "title": "",
+        "basedOn": "",
+        "preview": "",
+        "previewColorScheme": "",
+        "layout": "Asettelu",
+        "typography": "",
+        "colors": "",
+        "json": "",
+        "defaultRadius": "",
+        "radiusHint": "",
+        "scale": "",
+        "spacing": "Väli",
+        "radius": "",
+        "fontFamily": "",
+        "headingFont": "",
+        "monoFont": "",
+        "fontSizes": "",
+        "palette": {
+          "body": "",
+          "surface": "",
+          "hover": "",
+          "border": "",
+          "text": "",
+          "dimmed": "",
+          "primary": "",
+          "secondary": "Toissijainen aksentti"
+        },
+        "lockedPrimary": "",
+        "pickColor": "",
+        "autoContrast": "",
+        "luminanceThreshold": "",
+        "jsonHint": "",
+        "invalidJson": "",
+        "tooLong": "",
+        "copyJson": "",
+        "copied": "Kopioitu",
+        "discardJson": "",
+        "reset": "",
+        "apply": "",
+        "sampleTitle": "Hallintapaneeli",
+        "sampleBadge": "Esikatselu",
+        "sampleText": "",
+        "sampleInput": "Haku",
+        "sampleValue": "Suodata sovelluksia",
+        "sampleButton": "Avaa"
+      },
+      "studio": {
+        "title": "",
+        "saveTheme": "",
+        "searchControls": "",
+        "component": "",
+        "inheritedValue": "",
+        "resetControl": "",
+        "decreaseControl": "",
+        "increaseControl": "",
+        "chooseControl": "",
+        "layout": {
+          "spacing": "Väli",
+          "radius": "",
+          "compact": "Kompakti",
+          "normal": "Normaali",
+          "roomy": "",
+          "preset": "",
+          "none": "Ei mitään",
+          "rounded": "",
+          "full": "Täysi",
+          "custom": "Mukautettu",
+          "advanced": ""
+        },
+        "previewSurface": "Esikatselu",
+        "previewFrame": "",
+        "loadingPreview": "",
+        "previewFailed": "",
+        "sampleBoard": "",
+        "components": "Komponentit",
+        "overlays": "",
+        "typography": "",
+        "liveBoard": "",
+        "viewport": "",
+        "responsive": "",
+        "tablet": "",
+        "mobile": "Mobiili",
+        "includeCustomCss": "",
+        "groups": {
+          "layout": "",
+          "typography": "",
+          "colors": "",
+          "surfaces": "",
+          "overlays": "",
+          "accessibility": "",
+          "css": ""
+        },
+        "controls": {
+          "defaultRadius": "",
+          "scale": "",
+          "spacing": "Väli",
+          "radius": "",
+          "breakpoint": "Katkaisupiste",
+          "fontSizes": "",
+          "lineHeight": "",
+          "shadow": "",
+          "fontFamily": "",
+          "headingFont": "",
+          "monoFont": "",
+          "headingWeight": "",
+          "headingSize": "",
+          "fontSmoothing": "",
+          "body": "",
+          "surface": "",
+          "hover": "",
+          "border": "",
+          "text": "",
+          "dimmed": "",
+          "primary": "",
+          "secondary": "Toissijainen aksentti",
+          "autoContrast": "",
+          "luminanceThreshold": "",
+          "primaryShade": "",
+          "componentRadius": "",
+          "borderWidth": "",
+          "surfaceBackground": "Tausta",
+          "surfaceText": "",
+          "surfaceBorder": "Reunuksen väri",
+          "hoverBackground": "",
+          "hoverText": "",
+          "componentShadow": "",
+          "componentBorder": "",
+          "componentPadding": "",
+          "componentSize": "Tiedostokoko",
+          "componentVariant": "",
+          "overlayBlur": "",
+          "overlayOpacity": "",
+          "overlayColor": "",
+          "transitionDuration": "",
+          "headerBackground": "",
+          "respectReducedMotion": "",
+          "focusRing": "",
+          "cursorType": "",
+          "customCss": ""
+        },
+        "expandPreview": "",
+        "showControls": ""
+      },
+      "instanceDefault": "",
+      "useInstanceDefault": ""
     }
   },
   "section": {
@@ -2210,6 +2377,18 @@
       },
       "customWidget": "Mukautettu widget",
       "standalone": "",
+      "integrationFilter": "",
+      "integrationNotConnected": "",
+      "workshop": {
+        "title": "Huoltopisteen widgetit",
+        "back": "",
+        "empty": "",
+        "noMatches": "",
+        "loading": "",
+        "integrationError": "",
+        "searchMore": "",
+        "installAndAdd": ""
+      },
       "missingIntegration": {
         "title": "Yhdistä palvelu ensin",
         "noPermission": "Tämä widget tarvitsee yhteensopivan palveluyhteyden. Pyydä järjestelmänvalvojaa yhdistämään se ja yritä uudelleen."
@@ -2245,10 +2424,13 @@
       "saveErrorTitle": "Kohdetta ei voi päivittää",
       "saveErrorMessage": "Muutoksia ei voitu tallentaa. Lauta päivitettiin.",
       "moveUnavailableTitle": "Valittuja kohteita ei voi siirtää",
-      "moveUnavailableMessage": "Kohteessa ei ole tarpeeksi tilaa koko valinnalle."
+      "moveUnavailableMessage": "Kohteessa ei ole tarpeeksi tilaa koko valinnalle.",
+      "moveToTab": "",
+      "movedToTab": ""
     },
     "moveResize": {
       "title": "",
+      "sizeOverlap": "",
       "entryLabel": "{name}, sarake {column}, rivi {row}",
       "target": {
         "numbered": "{name}, kohde {index}",
@@ -2331,6 +2513,36 @@
       "open": "Avaa lisänäkymä",
       "close": "Sulje lisänäkymä",
       "label": "{widget} lisänäkymä"
+    },
+    "inPlace": {
+      "widgetLoadError": "",
+      "search": "",
+      "bestFit": "",
+      "moreWidgets": "",
+      "widgets": "Widgetit",
+      "yourApps": "",
+      "createApp": "",
+      "addAppLink": "",
+      "createWidget": "",
+      "createWidgetDescription": "",
+      "createAppDescription": "",
+      "defaultFit": "",
+      "defaultFitDescription": "",
+      "defaultSize": "",
+      "defaultSizeDescription": "",
+      "emptyCells": "",
+      "preview": {
+        "error": "",
+        "loading": ""
+      },
+      "keyboard": {
+        "move": "siirrä",
+        "resize": "",
+        "pick": "",
+        "browse": "",
+        "moveDescription": "",
+        "resizeDescription": ""
+      }
     }
   },
   "widget": {
@@ -3155,6 +3367,141 @@
       "error": {
         "loadFailed": "Ei voitu ladata entiteettiä",
         "toggleFailed": "Sisältöä ei voi päivittää"
+      }
+    },
+    "smartHome-controls": {
+      "name": "",
+      "description": "",
+      "option": {
+        "presentation": {
+          "label": "",
+          "option": {
+            "entities": "",
+            "controlPanel": ""
+          }
+        },
+        "title": {
+          "label": "Otsikko",
+          "description": ""
+        },
+        "blocks": {
+          "label": "",
+          "remove": ""
+        },
+        "roomDomains": {
+          "label": "",
+          "description": ""
+        },
+        "excludedEntityIds": {
+          "label": "",
+          "description": "",
+          "placeholder": ""
+        },
+        "showSummary": {
+          "label": ""
+        },
+        "readOnly": {
+          "label": "",
+          "description": ""
+        },
+        "controlSize": {
+          "label": "",
+          "option": {
+            "auto": "Automaattinen",
+            "compact": "Kompakti",
+            "large": "Suuri"
+          }
+        },
+        "palette": {
+          "label": "",
+          "option": {
+            "boring": "",
+            "colorful": ""
+          }
+        }
+      },
+      "domain": {
+        "light": "",
+        "switch": "",
+        "fan": "",
+        "climate": "",
+        "humidifier": "",
+        "cover": "",
+        "valve": "",
+        "lock": "",
+        "alarm_control_panel": "",
+        "media_player": "",
+        "camera": "",
+        "vacuum": "",
+        "scene": "",
+        "script": "",
+        "automation": "",
+        "button": "",
+        "input_boolean": "",
+        "input_select": "",
+        "person": "Ihmiset",
+        "binary_sensor": "",
+        "sensor": "",
+        "weather": "Sää",
+        "sun": "",
+        "update": ""
+      },
+      "block": {
+        "add": {
+          "rooms": "",
+          "entity": "",
+          "roomsLabel": "",
+          "roomsPlaceholder": "",
+          "entityLabel": "",
+          "entityPlaceholder": "",
+          "merge": "",
+          "submit": "Lisää",
+          "duplicate": "",
+          "covered": ""
+        },
+        "kind": {
+          "entity": "",
+          "room": "",
+          "mergedRooms": "",
+          "unknown": ""
+        },
+        "entityCount": "",
+        "noArea": "",
+        "issue": {
+          "missing": "Ei löytynyt",
+          "otherSource": "",
+          "empty": ""
+        }
+      },
+      "preview": {
+        "empty": "",
+        "noMatches": "",
+        "summary": {
+          "lights": "",
+          "on": "päällä",
+          "off": "pois",
+          "sensors": "",
+          "offline": "offline-tilassa"
+        },
+        "otherSource": ""
+      },
+      "live": {
+        "loading": "",
+        "error": "",
+        "retry": "",
+        "actionFailed": "",
+        "actionUnconfirmed": "",
+        "unconfirmed": "",
+        "selectionLimit": "",
+        "unknownError": ""
+      },
+      "inline": {
+        "open": "",
+        "title": "",
+        "handle": "",
+        "empty": "",
+        "add": "",
+        "close": ""
       }
     },
     "smartHome-executeAutomation": {
@@ -5455,6 +5802,23 @@
       "name": "",
       "description": "",
       "option": {
+        "diskDisplayMode": {
+          "label": "",
+          "option": {
+            "percentage": "",
+            "free": "",
+            "absolute": "",
+            "combined": ""
+          }
+        },
+        "resourceLayout": {
+          "label": "",
+          "description": ""
+        },
+        "subresourceLayout": {
+          "label": "",
+          "description": ""
+        },
         "hasShadow": {
           "label": ""
         },
@@ -5462,6 +5826,7 @@
           "label": "",
           "description": "Valitse näytettävät kartat.",
           "option": {
+            "cpuCores": "",
             "memory": "",
             "network": "Verkko"
           }
@@ -6390,6 +6755,26 @@
         }
       }
     },
+    "tabs": {
+      "label": "",
+      "indicator": "",
+      "home": "Aloitus",
+      "untitled": "",
+      "add": "",
+      "actions": "",
+      "rename": "",
+      "namePlaceholder": "",
+      "moveLeft": "",
+      "moveRight": "",
+      "remove": {
+        "action": "",
+        "confirm": ""
+      },
+      "limitReached": "",
+      "hotkeyHint": "",
+      "destination": "",
+      "containerDestination": ""
+    },
     "landmark": {
       "canvas": "Kojelaudan kangas",
       "leftRail": "Vasemman kojelaudan kisko",
@@ -6732,6 +7117,7 @@
           }
         },
         "about": "Tietoja",
+        "updateAvailable": "Päivitys saatavilla",
         "assistant": "Avustaja"
       }
     },
@@ -6743,9 +7129,23 @@
           "authentication": "Tunnistautuminen",
           "authorization": "Oikeudet"
         },
-        "heroBanner": {
-          "title": "Tervetuloa takaisin",
-          "subtitle": "{app} Paneeliisi"
+        "hero": {
+          "greeting": "",
+          "greetingWithoutName": "",
+          "description": ""
+        },
+        "lobster": {
+          "label": "",
+          "prompt": "",
+          "pokeCount": "",
+          "reaction": {
+            "hey": "",
+            "ow": "",
+            "snip": "",
+            "careful": "",
+            "stillHere": "",
+            "okay": ""
+          }
         }
       },
       "board": {
@@ -6843,6 +7243,11 @@
                 "logoDisplay": {
                   "logo": "Vain logo",
                   "logoAndText": "Logo + teksti"
+                },
+                "tabsDisplay": {
+                  "wide": "Laaja",
+                  "compact": "Kompakti",
+                  "indicator": ""
                 }
               },
               "items": {
@@ -6850,6 +7255,7 @@
                 "search": "Haku",
                 "home": "Kotipaneeli",
                 "boardSwitcher": "Paneelit",
+                "boardTabs": "",
                 "assistant": "Avustaja",
                 "docker": "Docker",
                 "boardEdit": "Muokkaa taulua",
@@ -7667,7 +8073,8 @@
               "openSpotlightApps": "Avaa sovellushaku",
               "openSpotlightAssistant": "Avaa avustava tila",
               "openSpotlightPreferences": "Avaa asetustila",
-              "openAssistant": "Avaa Avustaja"
+              "openAssistant": "Avaa Avustaja",
+              "switchBoardTab": ""
             },
             "note": "Vinkki: \"Mod\" viittaa Ctrl-painikkeeseeen ja Macin ⌘-painikkeeseen"
           }
