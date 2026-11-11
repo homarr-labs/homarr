@@ -402,7 +402,16 @@ export const BoardGridEditorProvider = ({ children }: PropsWithChildren) => {
         const rowScale =
           Number.parseFloat(getComputedStyle(candidate.element).getPropertyValue("--board-grid-row-scale")) || 1;
         const rowPitch = LOGICAL_GRID_PITCH * visualScale * rowScale;
-        const logicalY = candidate.rowProjection.getLogicalRow((shape.top - rectangle.top) / rowPitch);
+        const interaction = interactionStore.getGridSnapshot(candidate.id);
+        let rowProjection = candidate.rowProjection;
+        if (interaction) {
+          const previewGrid = interaction.state.grids.find((grid) => grid.id === candidate.id);
+          rowProjection = createGridRowProjection(
+            previewGrid?.placements ?? candidate.placements,
+            interaction.minimumDisplayHeights ?? candidate.minimumDisplayHeights,
+          );
+        }
+        const logicalY = rowProjection.getLogicalRow((shape.top - rectangle.top) / rowPitch);
         const coordinates = getSnappedGridCoordinates({
           dragShape: { ...shape, top: rectangle.top + logicalY * rowPitch },
           target: rectangle,
@@ -445,7 +454,7 @@ export const BoardGridEditorProvider = ({ children }: PropsWithChildren) => {
 
       showInvalidPreview(targetGrid.id, invalidPreviewKey);
     },
-    [canAcceptDrop, publishInteraction, isDropTargetEligible],
+    [canAcceptDrop, publishInteraction, isDropTargetEligible, interactionStore],
   );
 
   const commitActiveTransaction = useCallback(
@@ -948,6 +957,7 @@ export default function GridEditor({
         rowCount={rowCount}
         maxRowCount={maxRowCount}
         placements={placements}
+        logicalPlacements={transactionPlacements}
         minimumDisplayHeights={minimumDisplayHeights}
         gridRef={gridRef}
         entryElements={entryElements}

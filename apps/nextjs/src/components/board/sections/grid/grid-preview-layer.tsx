@@ -28,6 +28,7 @@ interface GridPreviewLayerProps {
   rowCount: number;
   maxRowCount: number | null;
   placements: readonly SectionGridPlacement[];
+  logicalPlacements: readonly SectionGridPlacement[];
   minimumDisplayHeights?: ReadonlyMap<string, number>;
   gridRef: RefObject<HTMLDivElement | null>;
   entryElements: ReadonlyMap<string, HTMLElement>;
@@ -39,6 +40,7 @@ export const GridPreviewLayer = ({
   rowCount,
   maxRowCount,
   placements,
+  logicalPlacements,
   minimumDisplayHeights,
   gridRef,
   entryElements,
@@ -64,7 +66,7 @@ export const GridPreviewLayer = ({
     [previewGrid?.placements, placements, minimumDisplayHeights, interaction?.minimumDisplayHeights],
   );
   const previewStateRef = useRef(createGridPreviewDomState());
-  const placementsRef = useRef(placements);
+  const logicalPlacementsRef = useRef(logicalPlacements);
 
   const isDragging = interaction?.mode === "drag";
   const isTargetGrid = isDragging && interaction.targetGridId === sectionId;
@@ -83,10 +85,10 @@ export const GridPreviewLayer = ({
   }
 
   useLayoutEffect(() => {
-    placementsRef.current = placements;
+    logicalPlacementsRef.current = logicalPlacements;
     previewStateRef.current = syncGridPreviewGeometry({
       elements: entryElements,
-      placements,
+      placements: logicalPlacements,
       previewPlacements: previewGrid?.placements ?? null,
       activeId: interaction?.activeId ?? null,
       mode: interaction?.mode ?? null,
@@ -133,6 +135,7 @@ export const GridPreviewLayer = ({
     isTargetGrid,
     maxRowCount,
     placements,
+    logicalPlacements,
     previewGrid?.placements,
     renderedRowCount,
     sectionId,
@@ -143,7 +146,7 @@ export const GridPreviewLayer = ({
 
   useLayoutEffect(
     () => () => {
-      clearGridPreviewGeometry(entryElements, placementsRef.current, previewStateRef.current);
+      clearGridPreviewGeometry(entryElements, logicalPlacementsRef.current, previewStateRef.current);
       const grid = gridRef.current;
       if (!grid) return;
       grid.removeAttribute("data-dnd-drop-target");
