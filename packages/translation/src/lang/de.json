@@ -1245,6 +1245,20 @@
       "username": "Benutzername",
       "password": "Passwort",
       "savedPlaceholder": "••••••• (gespeichert, leer lassen zum Behalten)"
+    },
+    "workshopUpdate": {
+      "title": "",
+      "apply": "Update anwenden",
+      "available": "Update verfügbar",
+      "check": "Nach Updates suchen",
+      "description": "Aktualisiere {installed} zu {latest}. Dein Name, Boardplatzierungen und kompatible Konfiguration bleiben erhalten.",
+      "approvePermissions": "",
+      "pendingDescription": "",
+      "overwriteLocalChanges": "",
+      "installSeparate": "",
+      "communityWarning": "",
+      "updated": "",
+      "changedBeforeInstall": ""
     }
   },
   "workshop": {
@@ -1921,7 +1935,8 @@
       "copy": "Kopieren",
       "copied": "Kopiert",
       "refresh": "Neu laden",
-      "export": "Exportieren"
+      "export": "Exportieren",
+      "advanced": "Erweitert"
     },
     "hidden": "Versteckt",
     "pagination": {
@@ -2020,9 +2035,9 @@
       "alert": {
         "note": "Notiz",
         "tip": "",
-        "important": "",
+        "important": "Wichtig",
         "warning": "Warnung",
-        "caution": ""
+        "caution": "Vorsicht"
       }
     },
     "dangerZone": "Gefahrenbereich",
@@ -2115,6 +2130,158 @@
         "sm": "Dezent",
         "xl": "Weich"
       }
+    },
+    "customTheme": {
+      "label": "Thema",
+      "nothingFound": "",
+      "custom": "Eigene",
+      "customize": "",
+      "editor": {
+        "title": "",
+        "basedOn": "",
+        "preview": "",
+        "previewColorScheme": "",
+        "layout": "Darstellung",
+        "typography": "",
+        "colors": "Farben",
+        "json": "",
+        "defaultRadius": "",
+        "radiusHint": "",
+        "scale": "",
+        "spacing": "Abstand",
+        "radius": "",
+        "fontFamily": "",
+        "headingFont": "",
+        "monoFont": "",
+        "fontSizes": "",
+        "palette": {
+          "body": "",
+          "surface": "",
+          "hover": "",
+          "border": "",
+          "text": "",
+          "dimmed": "",
+          "primary": "",
+          "secondary": "Sekundärer Akzent"
+        },
+        "lockedPrimary": "",
+        "pickColor": "",
+        "autoContrast": "",
+        "luminanceThreshold": "",
+        "jsonHint": "",
+        "invalidJson": "",
+        "tooLong": "",
+        "copyJson": "",
+        "copied": "Kopiert",
+        "discardJson": "",
+        "reset": "",
+        "apply": "",
+        "sampleTitle": "Dashboard",
+        "sampleBadge": "Vorschau",
+        "sampleText": "",
+        "sampleInput": "Suche",
+        "sampleValue": "App suchen",
+        "sampleButton": "Öffnen"
+      },
+      "studio": {
+        "title": "",
+        "saveTheme": "",
+        "searchControls": "",
+        "component": "",
+        "inheritedValue": "",
+        "resetControl": "",
+        "decreaseControl": "",
+        "increaseControl": "",
+        "chooseControl": "",
+        "layout": {
+          "spacing": "Abstand",
+          "radius": "",
+          "compact": "Kompakt",
+          "normal": "",
+          "roomy": "",
+          "preset": "",
+          "none": "Keine",
+          "rounded": "",
+          "full": "Voll",
+          "custom": "Eigene",
+          "advanced": ""
+        },
+        "previewSurface": "Vorschau",
+        "previewFrame": "",
+        "loadingPreview": "",
+        "previewFailed": "",
+        "sampleBoard": "",
+        "components": "Komponenten",
+        "overlays": "",
+        "typography": "",
+        "liveBoard": "",
+        "viewport": "",
+        "responsive": "",
+        "tablet": "",
+        "mobile": "Mobil",
+        "includeCustomCss": "",
+        "groups": {
+          "layout": "",
+          "typography": "",
+          "colors": "",
+          "surfaces": "",
+          "overlays": "",
+          "accessibility": "",
+          "css": ""
+        },
+        "controls": {
+          "defaultRadius": "",
+          "scale": "",
+          "spacing": "Abstand",
+          "radius": "",
+          "breakpoint": "Breakpoint",
+          "fontSizes": "",
+          "lineHeight": "",
+          "shadow": "",
+          "fontFamily": "",
+          "headingFont": "",
+          "monoFont": "",
+          "headingWeight": "",
+          "headingSize": "",
+          "fontSmoothing": "",
+          "body": "",
+          "surface": "",
+          "hover": "",
+          "border": "",
+          "text": "",
+          "dimmed": "",
+          "primary": "",
+          "secondary": "Sekundärer Akzent",
+          "autoContrast": "",
+          "luminanceThreshold": "",
+          "primaryShade": "",
+          "componentRadius": "",
+          "borderWidth": "",
+          "surfaceBackground": "Hintergrund",
+          "surfaceText": "",
+          "surfaceBorder": "Rahmenfarbe",
+          "hoverBackground": "",
+          "hoverText": "",
+          "componentShadow": "",
+          "componentBorder": "Rahmen anzeigen",
+          "componentPadding": "",
+          "componentSize": "Dateigröße",
+          "componentVariant": "",
+          "overlayBlur": "",
+          "overlayOpacity": "",
+          "overlayColor": "",
+          "transitionDuration": "",
+          "headerBackground": "",
+          "respectReducedMotion": "",
+          "focusRing": "",
+          "cursorType": "",
+          "customCss": ""
+        },
+        "expandPreview": "",
+        "showControls": "Steuerelemente anzeigen"
+      },
+      "instanceDefault": "",
+      "useInstanceDefault": ""
     }
   },
   "section": {
@@ -2210,6 +2377,18 @@
       },
       "customWidget": "Definitions ID",
       "standalone": "Eigenständig",
+      "integrationFilter": "",
+      "integrationNotConnected": "",
+      "workshop": {
+        "title": "Workshop-Widgets",
+        "back": "",
+        "empty": "",
+        "noMatches": "",
+        "loading": "",
+        "integrationError": "",
+        "searchMore": "",
+        "installAndAdd": ""
+      },
       "missingIntegration": {
         "title": "Zuerst einen Dienst verbinden",
         "noPermission": "Dieses Widget benötigt eine kompatible Service-Verbindung. Bitten Sie einen Administrator, einen zu verbinden, dann versuchen Sie es erneut."
@@ -2245,10 +2424,13 @@
       "saveErrorTitle": "Artikel konnten nicht aktualisiert werden",
       "saveErrorMessage": "Die Änderungen konnten nicht gespeichert werden. Das Board wurde aktualisiert.",
       "moveUnavailableTitle": "Ausgewählte Elemente können nicht verschoben werden",
-      "moveUnavailableMessage": "Das Ziel hat nicht genug Platz für die gesamte Auswahl."
+      "moveUnavailableMessage": "Das Ziel hat nicht genug Platz für die gesamte Auswahl.",
+      "moveToTab": "",
+      "movedToTab": ""
     },
     "moveResize": {
       "title": "Element verschieben/Größe ändern",
+      "sizeOverlap": "",
       "entryLabel": "{name}, Spalte {column}, Zeile {row}",
       "target": {
         "numbered": "{name}, Ziel {index}",
@@ -2331,6 +2513,36 @@
       "open": "Erweiterte Ansicht öffnen",
       "close": "Erweiterte Ansicht schließen",
       "label": "{widget} erweiterte Ansicht"
+    },
+    "inPlace": {
+      "widgetLoadError": "",
+      "search": "",
+      "bestFit": "",
+      "moreWidgets": "",
+      "widgets": "Widgets",
+      "yourApps": "",
+      "createApp": "",
+      "addAppLink": "",
+      "createWidget": "",
+      "createWidgetDescription": "",
+      "createAppDescription": "",
+      "defaultFit": "",
+      "defaultFitDescription": "",
+      "defaultSize": "",
+      "defaultSizeDescription": "",
+      "emptyCells": "",
+      "preview": {
+        "error": "",
+        "loading": ""
+      },
+      "keyboard": {
+        "move": "bewegen",
+        "resize": "",
+        "pick": "",
+        "browse": "",
+        "moveDescription": "",
+        "resizeDescription": ""
+      }
     }
   },
   "widget": {
@@ -3155,6 +3367,141 @@
       "error": {
         "loadFailed": "Konnte Entität nicht laden",
         "toggleFailed": "Unfähig die Entität zu aktualisieren"
+      }
+    },
+    "smartHome-controls": {
+      "name": "",
+      "description": "",
+      "option": {
+        "presentation": {
+          "label": "",
+          "option": {
+            "entities": "",
+            "controlPanel": ""
+          }
+        },
+        "title": {
+          "label": "Titel",
+          "description": ""
+        },
+        "blocks": {
+          "label": "",
+          "remove": ""
+        },
+        "roomDomains": {
+          "label": "",
+          "description": ""
+        },
+        "excludedEntityIds": {
+          "label": "",
+          "description": "",
+          "placeholder": ""
+        },
+        "showSummary": {
+          "label": ""
+        },
+        "readOnly": {
+          "label": "",
+          "description": ""
+        },
+        "controlSize": {
+          "label": "",
+          "option": {
+            "auto": "Automatisch",
+            "compact": "Kompakt",
+            "large": "Groß"
+          }
+        },
+        "palette": {
+          "label": "Farben",
+          "option": {
+            "boring": "",
+            "colorful": ""
+          }
+        }
+      },
+      "domain": {
+        "light": "",
+        "switch": "",
+        "fan": "",
+        "climate": "",
+        "humidifier": "",
+        "cover": "",
+        "valve": "",
+        "lock": "",
+        "alarm_control_panel": "",
+        "media_player": "",
+        "camera": "",
+        "vacuum": "",
+        "scene": "",
+        "script": "",
+        "automation": "",
+        "button": "",
+        "input_boolean": "",
+        "input_select": "",
+        "person": "Personen",
+        "binary_sensor": "",
+        "sensor": "",
+        "weather": "Wetter",
+        "sun": "",
+        "update": ""
+      },
+      "block": {
+        "add": {
+          "rooms": "",
+          "entity": "",
+          "roomsLabel": "",
+          "roomsPlaceholder": "",
+          "entityLabel": "",
+          "entityPlaceholder": "",
+          "merge": "",
+          "submit": "Hinzufügen",
+          "duplicate": "",
+          "covered": ""
+        },
+        "kind": {
+          "entity": "",
+          "room": "",
+          "mergedRooms": "",
+          "unknown": ""
+        },
+        "entityCount": "",
+        "noArea": "",
+        "issue": {
+          "missing": "Nicht gefunden",
+          "otherSource": "",
+          "empty": ""
+        }
+      },
+      "preview": {
+        "empty": "",
+        "noMatches": "",
+        "summary": {
+          "lights": "",
+          "on": "an",
+          "off": "aus",
+          "sensors": "",
+          "offline": "offline"
+        },
+        "otherSource": ""
+      },
+      "live": {
+        "loading": "",
+        "error": "",
+        "retry": "",
+        "actionFailed": "",
+        "actionUnconfirmed": "",
+        "unconfirmed": "",
+        "selectionLimit": "",
+        "unknownError": ""
+      },
+      "inline": {
+        "open": "",
+        "title": "",
+        "handle": "",
+        "empty": "",
+        "add": "",
+        "close": ""
       }
     },
     "smartHome-executeAutomation": {
@@ -5455,6 +5802,23 @@
       "name": "Systemressourcen",
       "description": "CPU, Arbeitsspeicher, Festplatte und andere Hardware-Nutzung Ihres Systems",
       "option": {
+        "diskDisplayMode": {
+          "label": "",
+          "option": {
+            "percentage": "Prozentsatz (z.B. 76%)",
+            "free": "",
+            "absolute": "",
+            "combined": ""
+          }
+        },
+        "resourceLayout": {
+          "label": "",
+          "description": ""
+        },
+        "subresourceLayout": {
+          "label": "",
+          "description": ""
+        },
         "hasShadow": {
           "label": "Schattierung der Diagramme aktivieren"
         },
@@ -5462,6 +5826,7 @@
           "label": "Sichtbare Diagramme",
           "description": "Wählen Sie die Diagramme aus, die angezeigt werden sollen.",
           "option": {
+            "cpuCores": "",
             "memory": "Speicher",
             "network": "Netzwerk"
           }
@@ -6390,6 +6755,26 @@
         }
       }
     },
+    "tabs": {
+      "label": "",
+      "indicator": "",
+      "home": "Startseite",
+      "untitled": "",
+      "add": "",
+      "actions": "",
+      "rename": "",
+      "namePlaceholder": "",
+      "moveLeft": "",
+      "moveRight": "",
+      "remove": {
+        "action": "",
+        "confirm": ""
+      },
+      "limitReached": "",
+      "hotkeyHint": "",
+      "destination": "",
+      "containerDestination": ""
+    },
     "landmark": {
       "canvas": "Dashboard Leinwand",
       "leftRail": "Linke Dashboard-Schiene",
@@ -6717,7 +7102,7 @@
             "docker": "Docker",
             "kubernetes": "Kubernetes",
             "api": "API & MCP",
-            "backup": ""
+            "backup": "Backup"
           }
         },
         "settings": "Einstellungen",
@@ -6732,6 +7117,7 @@
           }
         },
         "about": "Über",
+        "updateAvailable": "Update verfügbar",
         "assistant": "Assistent"
       }
     },
@@ -6743,9 +7129,23 @@
           "authentication": "Authentifizierung",
           "authorization": "Autorisierung"
         },
-        "heroBanner": {
-          "title": "Willkommen zurück zu Ihrem",
-          "subtitle": "{app} Board"
+        "hero": {
+          "greeting": "",
+          "greetingWithoutName": "",
+          "description": ""
+        },
+        "lobster": {
+          "label": "",
+          "prompt": "",
+          "pokeCount": "",
+          "reaction": {
+            "hey": "",
+            "ow": "",
+            "snip": "",
+            "careful": "",
+            "stillHere": "",
+            "okay": ""
+          }
         }
       },
       "board": {
@@ -6843,6 +7243,11 @@
                 "logoDisplay": {
                   "logo": "Nur Logo",
                   "logoAndText": "Logo + Text"
+                },
+                "tabsDisplay": {
+                  "wide": "Breit",
+                  "compact": "Kompakt",
+                  "indicator": ""
                 }
               },
               "items": {
@@ -6850,6 +7255,7 @@
                 "search": "Suchen",
                 "home": "Home Board",
                 "boardSwitcher": "Boards",
+                "boardTabs": "",
                 "assistant": "Assistent",
                 "docker": "Docker",
                 "boardEdit": "Board bearbeiten",
@@ -7022,7 +7428,7 @@
           "analytics": {
             "title": "Nutzungsdaten",
             "general": {
-              "title": "Anonymisierte Nutzungsdaten senden",
+              "title": "Hilf uns Homarr zu verbessern",
               "text": "Homarr sendet anonymisierte Analysen mit der Open-Source-Software Umami. Wenn aktiviert, sammeln wir die Homarr-Version, den Datenbanktyp (MySQL/PostgreSQL/SQLite), den Docker/Kubernetes Status, die Authentifizierungsmethoden und die Anzahl der einzelnen Features. Alle Daten sind anonym und aggregiert - es werden keine persönlichen Informationen, URLs, Namen oder identifizierbare Daten gesammelt. Dies hilft unserem Open-Source-Team, Nutzungsmuster zu verstehen und der Entwicklung Priorität einzuräumen."
             }
           },
@@ -7667,7 +8073,8 @@
               "openSpotlightApps": "App-Suche öffnen",
               "openSpotlightAssistant": "Assistentenmodus öffnen",
               "openSpotlightPreferences": "Einstellungen öffnen",
-              "openAssistant": "Offener Assistent"
+              "openAssistant": "Offener Assistent",
+              "switchBoardTab": ""
             },
             "note": "Tipp: Mod bezieht sich sowohl auf die Strg-Taste als auch auf die ⌘ Taste auf macOS"
           }

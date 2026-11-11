@@ -1245,6 +1245,20 @@
       "username": "Nazwa użytkownika",
       "password": "Hasło",
       "savedPlaceholder": "•••••• (zapisane, pozostaw puste aby zachować)"
+    },
+    "workshopUpdate": {
+      "title": "",
+      "apply": "",
+      "available": "Dostępna aktualizacja",
+      "check": "",
+      "description": "",
+      "approvePermissions": "",
+      "pendingDescription": "",
+      "overwriteLocalChanges": "",
+      "installSeparate": "",
+      "communityWarning": "",
+      "updated": "",
+      "changedBeforeInstall": ""
     }
   },
   "workshop": {
@@ -1921,7 +1935,8 @@
       "copy": "Kopiuj",
       "copied": "Skopiowano",
       "refresh": "Odśwież",
-      "export": "Eksportuj"
+      "export": "Eksportuj",
+      "advanced": "Zaawansowane"
     },
     "hidden": "Ukryty",
     "pagination": {
@@ -2115,6 +2130,158 @@
         "sm": "Subtelny",
         "xl": "Miękki"
       }
+    },
+    "customTheme": {
+      "label": "Motyw",
+      "nothingFound": "",
+      "custom": "Własny",
+      "customize": "",
+      "editor": {
+        "title": "",
+        "basedOn": "",
+        "preview": "",
+        "previewColorScheme": "",
+        "layout": "Układ",
+        "typography": "",
+        "colors": "",
+        "json": "",
+        "defaultRadius": "",
+        "radiusHint": "",
+        "scale": "",
+        "spacing": "Odstępy",
+        "radius": "",
+        "fontFamily": "",
+        "headingFont": "",
+        "monoFont": "",
+        "fontSizes": "",
+        "palette": {
+          "body": "",
+          "surface": "",
+          "hover": "",
+          "border": "",
+          "text": "",
+          "dimmed": "",
+          "primary": "",
+          "secondary": "Drugi akcent"
+        },
+        "lockedPrimary": "",
+        "pickColor": "",
+        "autoContrast": "",
+        "luminanceThreshold": "",
+        "jsonHint": "",
+        "invalidJson": "",
+        "tooLong": "",
+        "copyJson": "",
+        "copied": "Skopiowano",
+        "discardJson": "",
+        "reset": "",
+        "apply": "",
+        "sampleTitle": "Tablica",
+        "sampleBadge": "Podgląd",
+        "sampleText": "",
+        "sampleInput": "Szukaj",
+        "sampleValue": "Znajdź aplikację",
+        "sampleButton": "Otwórz"
+      },
+      "studio": {
+        "title": "",
+        "saveTheme": "",
+        "searchControls": "",
+        "component": "",
+        "inheritedValue": "",
+        "resetControl": "Zresetować układ {control}",
+        "decreaseControl": "",
+        "increaseControl": "",
+        "chooseControl": "",
+        "layout": {
+          "spacing": "Odstępy",
+          "radius": "",
+          "compact": "Kompaktowy",
+          "normal": "Normalny",
+          "roomy": "",
+          "preset": "",
+          "none": "None",
+          "rounded": "",
+          "full": "Pełna",
+          "custom": "Własny",
+          "advanced": ""
+        },
+        "previewSurface": "Podgląd",
+        "previewFrame": "",
+        "loadingPreview": "",
+        "previewFailed": "",
+        "sampleBoard": "",
+        "components": "Składniki",
+        "overlays": "",
+        "typography": "",
+        "liveBoard": "",
+        "viewport": "",
+        "responsive": "",
+        "tablet": "",
+        "mobile": "Mobilny",
+        "includeCustomCss": "",
+        "groups": {
+          "layout": "",
+          "typography": "",
+          "colors": "",
+          "surfaces": "",
+          "overlays": "",
+          "accessibility": "",
+          "css": "Niestandardowy CSS"
+        },
+        "controls": {
+          "defaultRadius": "",
+          "scale": "",
+          "spacing": "Odstępy",
+          "radius": "",
+          "breakpoint": "Punkt przerwania",
+          "fontSizes": "",
+          "lineHeight": "",
+          "shadow": "",
+          "fontFamily": "",
+          "headingFont": "",
+          "monoFont": "",
+          "headingWeight": "",
+          "headingSize": "",
+          "fontSmoothing": "",
+          "body": "",
+          "surface": "",
+          "hover": "",
+          "border": "",
+          "text": "",
+          "dimmed": "",
+          "primary": "",
+          "secondary": "Drugi akcent",
+          "autoContrast": "",
+          "luminanceThreshold": "",
+          "primaryShade": "",
+          "componentRadius": "",
+          "borderWidth": "",
+          "surfaceBackground": "Tło",
+          "surfaceText": "",
+          "surfaceBorder": "Kolor obramowania",
+          "hoverBackground": "",
+          "hoverText": "",
+          "componentShadow": "",
+          "componentBorder": "Pokaż obramowanie",
+          "componentPadding": "",
+          "componentSize": "Rozmiar pliku",
+          "componentVariant": "",
+          "overlayBlur": "",
+          "overlayOpacity": "",
+          "overlayColor": "",
+          "transitionDuration": "",
+          "headerBackground": "",
+          "respectReducedMotion": "",
+          "focusRing": "",
+          "cursorType": "",
+          "customCss": "Niestandardowy CSS"
+        },
+        "expandPreview": "",
+        "showControls": "Pokaż klawisze nawigacyjne"
+      },
+      "instanceDefault": "",
+      "useInstanceDefault": ""
     }
   },
   "section": {
@@ -2210,6 +2377,18 @@
       },
       "customWidget": "Niestandardowe API",
       "standalone": "Zwykły",
+      "integrationFilter": "",
+      "integrationNotConnected": "",
+      "workshop": {
+        "title": "Widżety warsztatowe",
+        "back": "",
+        "empty": "",
+        "noMatches": "",
+        "loading": "",
+        "integrationError": "",
+        "searchMore": "",
+        "installAndAdd": ""
+      },
       "missingIntegration": {
         "title": "Połącz najpierw usługę",
         "noPermission": "Ten widżet wymaga kompatybilnego połączenia z usługą. Poproś administratora o połączenie, a następnie spróbuj ponownie."
@@ -2245,10 +2424,13 @@
       "saveErrorTitle": "Nie można zaktualizować elementów",
       "saveErrorMessage": "Zmiany nie mogły zostać zapisane. Dział został odświeżony.",
       "moveUnavailableTitle": "Nie można przenieść zaznaczonych elementów",
-      "moveUnavailableMessage": "Miejsce docelowe nie ma wystarczającej ilości miejsca na cały wybór."
+      "moveUnavailableMessage": "Miejsce docelowe nie ma wystarczającej ilości miejsca na cały wybór.",
+      "moveToTab": "",
+      "movedToTab": ""
     },
     "moveResize": {
       "title": "Przenieś / zmień rozmiar elementu",
+      "sizeOverlap": "",
       "entryLabel": "{name}, kolumna {column}, wiersz {row}",
       "target": {
         "numbered": "{name}, cel {index}",
@@ -2331,6 +2513,36 @@
       "open": "Otwórz widok zaawansowany",
       "close": "Zamknij widok zaawansowany",
       "label": "Widok zaawansowany {widget}"
+    },
+    "inPlace": {
+      "widgetLoadError": "",
+      "search": "",
+      "bestFit": "",
+      "moreWidgets": "",
+      "widgets": "Widgety",
+      "yourApps": "",
+      "createApp": "",
+      "addAppLink": "",
+      "createWidget": "",
+      "createWidgetDescription": "",
+      "createAppDescription": "",
+      "defaultFit": "",
+      "defaultFitDescription": "",
+      "defaultSize": "",
+      "defaultSizeDescription": "",
+      "emptyCells": "",
+      "preview": {
+        "error": "",
+        "loading": ""
+      },
+      "keyboard": {
+        "move": "przenieś",
+        "resize": "",
+        "pick": "",
+        "browse": "",
+        "moveDescription": "",
+        "resizeDescription": ""
+      }
     }
   },
   "widget": {
@@ -3155,6 +3367,141 @@
       "error": {
         "loadFailed": "Nie można załadować obiektu",
         "toggleFailed": "Nie można zaktualizować obiektu"
+      }
+    },
+    "smartHome-controls": {
+      "name": "",
+      "description": "",
+      "option": {
+        "presentation": {
+          "label": "",
+          "option": {
+            "entities": "",
+            "controlPanel": ""
+          }
+        },
+        "title": {
+          "label": "Tytuł",
+          "description": ""
+        },
+        "blocks": {
+          "label": "",
+          "remove": ""
+        },
+        "roomDomains": {
+          "label": "",
+          "description": ""
+        },
+        "excludedEntityIds": {
+          "label": "",
+          "description": "",
+          "placeholder": ""
+        },
+        "showSummary": {
+          "label": "Pokaż podsumowanie"
+        },
+        "readOnly": {
+          "label": "Tylko do odczytu",
+          "description": ""
+        },
+        "controlSize": {
+          "label": "",
+          "option": {
+            "auto": "Automatyczne",
+            "compact": "Kompaktowy",
+            "large": "Duży"
+          }
+        },
+        "palette": {
+          "label": "",
+          "option": {
+            "boring": "",
+            "colorful": ""
+          }
+        }
+      },
+      "domain": {
+        "light": "",
+        "switch": "",
+        "fan": "",
+        "climate": "",
+        "humidifier": "",
+        "cover": "",
+        "valve": "",
+        "lock": "",
+        "alarm_control_panel": "",
+        "media_player": "",
+        "camera": "",
+        "vacuum": "",
+        "scene": "",
+        "script": "",
+        "automation": "",
+        "button": "",
+        "input_boolean": "",
+        "input_select": "",
+        "person": "Ludzie",
+        "binary_sensor": "",
+        "sensor": "",
+        "weather": "Pogoda",
+        "sun": "",
+        "update": ""
+      },
+      "block": {
+        "add": {
+          "rooms": "",
+          "entity": "Encja",
+          "roomsLabel": "",
+          "roomsPlaceholder": "",
+          "entityLabel": "",
+          "entityPlaceholder": "",
+          "merge": "",
+          "submit": "Dodaj",
+          "duplicate": "",
+          "covered": ""
+        },
+        "kind": {
+          "entity": "Encja",
+          "room": "",
+          "mergedRooms": "",
+          "unknown": ""
+        },
+        "entityCount": "",
+        "noArea": "",
+        "issue": {
+          "missing": "Nie znaleziono",
+          "otherSource": "",
+          "empty": ""
+        }
+      },
+      "preview": {
+        "empty": "",
+        "noMatches": "",
+        "summary": {
+          "lights": "",
+          "on": "włączone",
+          "off": "wyłączony",
+          "sensors": "",
+          "offline": "niedostępny"
+        },
+        "otherSource": ""
+      },
+      "live": {
+        "loading": "",
+        "error": "",
+        "retry": "Spróbuj ponownie",
+        "actionFailed": "",
+        "actionUnconfirmed": "",
+        "unconfirmed": "",
+        "selectionLimit": "",
+        "unknownError": ""
+      },
+      "inline": {
+        "open": "",
+        "title": "",
+        "handle": "",
+        "empty": "",
+        "add": "",
+        "close": ""
       }
     },
     "smartHome-executeAutomation": {
@@ -5455,6 +5802,23 @@
       "name": "Zasoby systemowe",
       "description": "Wykorzystanie CPU, pamięci, dysku i innych zasobów sprzętowych system",
       "option": {
+        "diskDisplayMode": {
+          "label": "",
+          "option": {
+            "percentage": "Procentowo (np. 76%)",
+            "free": "",
+            "absolute": "",
+            "combined": ""
+          }
+        },
+        "resourceLayout": {
+          "label": "",
+          "description": ""
+        },
+        "subresourceLayout": {
+          "label": "",
+          "description": ""
+        },
         "hasShadow": {
           "label": "Włącz cieniowanie wykresu"
         },
@@ -5462,6 +5826,7 @@
           "label": "Widoczne wykresy",
           "description": "Wybierz wykresy, które chcesz, aby były widoczne.",
           "option": {
+            "cpuCores": "",
             "memory": "Pamięć",
             "network": "Sieć"
           }
@@ -6390,6 +6755,26 @@
         }
       }
     },
+    "tabs": {
+      "label": "",
+      "indicator": "",
+      "home": "Strona główna",
+      "untitled": "",
+      "add": "",
+      "actions": "",
+      "rename": "",
+      "namePlaceholder": "",
+      "moveLeft": "",
+      "moveRight": "",
+      "remove": {
+        "action": "",
+        "confirm": ""
+      },
+      "limitReached": "",
+      "hotkeyHint": "",
+      "destination": "",
+      "containerDestination": ""
+    },
     "landmark": {
       "canvas": "Płótno panelu",
       "leftRail": "Kolej z lewej tablicy rozdzielczej",
@@ -6732,6 +7117,7 @@
           }
         },
         "about": "O programie",
+        "updateAvailable": "Dostępna aktualizacja",
         "assistant": "Asystent"
       }
     },
@@ -6743,9 +7129,23 @@
           "authentication": "Uwierzytelnianie",
           "authorization": "Autoryzacja"
         },
-        "heroBanner": {
-          "title": "Witaj z powrotem w swojej",
-          "subtitle": "{app} tablicy"
+        "hero": {
+          "greeting": "",
+          "greetingWithoutName": "",
+          "description": ""
+        },
+        "lobster": {
+          "label": "",
+          "prompt": "",
+          "pokeCount": "",
+          "reaction": {
+            "hey": "",
+            "ow": "",
+            "snip": "",
+            "careful": "",
+            "stillHere": "",
+            "okay": ""
+          }
         }
       },
       "board": {
@@ -6843,6 +7243,11 @@
                 "logoDisplay": {
                   "logo": "Tylko logo",
                   "logoAndText": "Logo + tekst"
+                },
+                "tabsDisplay": {
+                  "wide": "Szeroki",
+                  "compact": "Kompaktowy",
+                  "indicator": ""
                 }
               },
               "items": {
@@ -6850,6 +7255,7 @@
                 "search": "Szukaj",
                 "home": "Tablica główna",
                 "boardSwitcher": "Tablice",
+                "boardTabs": "",
                 "assistant": "Asystent",
                 "docker": "Docker",
                 "boardEdit": "Edytuj tablicę",
@@ -7667,7 +8073,8 @@
               "openSpotlightApps": "Otwórz wyszukiwanie aplikacji",
               "openSpotlightAssistant": "Otwórz tryb asystenta",
               "openSpotlightPreferences": "Otwórz tryb preferencji",
-              "openAssistant": "Otwórz Asystenta"
+              "openAssistant": "Otwórz Asystenta",
+              "switchBoardTab": ""
             },
             "note": "Wskazówka: Mod odnosi się zarówno do klawisza Ctrl, jak i ⌘ na macOS"
           }
