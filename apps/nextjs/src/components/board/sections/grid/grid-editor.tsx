@@ -207,7 +207,17 @@ export const BoardGridEditorProvider = ({ children }: PropsWithChildren) => {
         canvasScale,
         collapsedSectionIds,
       );
-      interactionStore.publish({ ...interaction, minimumDisplayHeights });
+      const affectedGridIds = new Set<string>();
+      for (const grid of gridsRef.current.values()) {
+        const hasChangedDisplayHeight = grid.placements.some(
+          (placement) =>
+            placement.type === "section" &&
+            grid.minimumDisplayHeights?.has(placement.id) &&
+            minimumDisplayHeights.get(placement.id) !== grid.minimumDisplayHeights?.get(placement.id),
+        );
+        if (hasChangedDisplayHeight) affectedGridIds.add(grid.id);
+      }
+      interactionStore.publish({ ...interaction, minimumDisplayHeights, affectedGridIds });
     },
     [board, currentLayoutId, collapsedSectionIds, interactionStore],
   );

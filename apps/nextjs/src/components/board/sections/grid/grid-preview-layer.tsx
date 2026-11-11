@@ -20,6 +20,7 @@ export interface GridInteraction {
   valid: boolean;
   previewRevision: number;
   minimumDisplayHeights?: ReadonlyMap<string, number>;
+  affectedGridIds?: ReadonlySet<string>;
 }
 
 interface GridPreviewLayerProps {
