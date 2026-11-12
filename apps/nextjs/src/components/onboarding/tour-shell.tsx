@@ -29,7 +29,7 @@ const stepAtOffset = (controller: TourController, offset: number) => {
   return controller.tour[index];
 };
 
-const waitForTourTarget = (targetId: string, callback: () => void) => {
+const waitForTourTarget = (targetId: string, callback: () => void, onTimeout: () => void) => {
   let stopped = false;
   const stop = () => {
     stopped = true;
@@ -43,7 +43,11 @@ const waitForTourTarget = (targetId: string, callback: () => void) => {
     callback();
   };
   const observer = new MutationObserver(checkForTarget);
-  const timeout = setTimeout(stop, 5000);
+  const timeout = setTimeout(() => {
+    if (stopped) return;
+    stop();
+    onTimeout();
+  }, 5000);
   observer.observe(document.body, {
     childList: true,
     subtree: true,
@@ -129,7 +133,10 @@ export const TourShell = ({
       }
 
       if (targetRoute !== currentRoute) router.push(targetRoute);
-      pendingTargetCleanupRef.current = waitForTourTarget(targetStepId, advance);
+      pendingTargetCleanupRef.current = waitForTourTarget(targetStepId, advance, () => {
+        pendingResumeIndexRef.current = undefined;
+        controllerRef.current?.endTour();
+      });
     },
     [currentRoute, router, stepRoutes],
   );
