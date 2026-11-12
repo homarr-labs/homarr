@@ -583,7 +583,7 @@
     min-width: 0;
   }
 
-  .primaryActions > :global(.mantine-Button-root):last-child {
+  .stickyActions .primaryActions > :global(.mantine-Button-root):last-child {
     flex: 1 1 0;
     min-width: 0;
     padding-inline: 0.25rem;

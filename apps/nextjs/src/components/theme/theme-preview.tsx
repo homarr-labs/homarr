@@ -122,7 +122,11 @@ export const ThemePreview = () => {
                 <Table.Tr>
                   <Table.Td>Plex</Table.Td>
                   <Table.Td>
-                    <Badge color="yellow" variant="light">
+                    <Badge
+                      color="yellow"
+                      variant="light"
+                      c="light-dark(var(--mantine-color-black), var(--badge-color))"
+                    >
                       {"Updating"}
                     </Badge>
                   </Table.Td>
@@ -130,7 +134,7 @@ export const ThemePreview = () => {
                 <Table.Tr>
                   <Table.Td>Sonarr</Table.Td>
                   <Table.Td>
-                    <Badge color="red" variant="light">
+                    <Badge color="red" variant="light" c="light-dark(var(--mantine-color-black), var(--badge-color))">
                       {"Offline"}
                     </Badge>
                   </Table.Td>

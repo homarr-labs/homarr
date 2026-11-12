@@ -7041,6 +7041,11 @@
           "description": "",
           "link": "",
           "notice": ""
+        },
+        "noAccess": {
+          "title": "No boards available",
+          "description": "You don’t have access to a board yet. Ask your administrator to share one with you or your group.",
+          "notice": "Once a board is shared with you, open Boards to choose it as your home board."
         }
       }
     }
@@ -7190,7 +7195,9 @@
         },
         "noResults": {
           "title": "No boards yet",
-          "description": "Create a board to organise your apps and widgets in one place."
+          "description": "Create a board to organise your apps and widgets in one place.",
+          "noAccessTitle": "No boards available",
+          "noAccessDescription": "Ask your administrator to share a board with you or your group. Once shared, it will appear here."
         }
       },
       "media": {
@@ -8146,7 +8153,7 @@
       "refresh": {
         "lastUpdated": "Last refresh {when}"
       },
-      "search": "Seach {count} containers",
+      "search": "Search {count} containers",
       "selected": "",
       "footer": "Total {count} containers",
       "totalCpu": "Total CPU: {cpu}%",

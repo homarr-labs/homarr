@@ -13,6 +13,7 @@
   },
   "exports": {
     "./context": "./src/context.tsx",
+    "./draft-changes": "./src/draft-changes.ts",
     "./layout-selection": "./src/layout-selection.ts",
     "./layout-preview": "./src/layout-preview.ts",
     "./updater": "./src/updater.ts",
