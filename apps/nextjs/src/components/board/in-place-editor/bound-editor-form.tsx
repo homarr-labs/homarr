@@ -5,6 +5,7 @@ import { useEffect, useRef } from "react";
 import { Center, Loader, Text } from "@mantine/core";
 
 import { useSession } from "@homarr/auth/client";
+import { useRequiredBoard } from "@homarr/boards/context";
 import { useSettings } from "@homarr/settings";
 import { useI18n } from "@homarr/translation/client";
 import { WidgetEditorForm } from "@homarr/widgets/modals";
@@ -28,6 +29,7 @@ const submitOnModEnter = (event: KeyboardEvent) => {
 };
 
 export const BoundEditorForm = () => {
+  const board = useRequiredBoard();
   const t = useI18n("item.inPlace");
   const session = useAddInPlaceSession();
   const { data: authSession } = useSession();
@@ -76,6 +78,7 @@ export const BoundEditorForm = () => {
         integrationSupport={resources.integrationSupport}
         settings={settings}
         itemId={session.editItemId}
+        boardId={board.id}
         formId={editorFormId}
         showSettingsHeading={false}
         canConfigureWidget={

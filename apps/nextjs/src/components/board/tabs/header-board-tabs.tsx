@@ -1,5 +1,6 @@
 "use client";
 
+import type { FocusEvent } from "react";
 import { useRef } from "react";
 import { Group, Popover, Stack, Tabs, Text } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
@@ -16,6 +17,7 @@ import classes from "./header-board-tabs.module.css";
 export const HeaderBoardTabs = ({ display }: { display: HeaderTabsDisplay }) => {
   const { tabs, activeTab, selectTab } = useBoardTabs();
   const [opened, { open, close, toggle, set: setOpened }] = useDisclosure(false);
+  const targetRef = useRef<HTMLButtonElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const getTabLabel = useBoardTabLabel();
   const t = useI18n("board.tabs");
@@ -24,6 +26,18 @@ export const HeaderBoardTabs = ({ display }: { display: HeaderTabsDisplay }) => 
   const select = (value: string | null) => {
     if (!value) return;
     selectTab(value);
+    if (opened) targetRef.current?.focus();
+    close();
+  };
+
+  const closeOnFocusLeave = (event: FocusEvent<HTMLElement>) => {
+    const nextTarget = event.relatedTarget;
+    if (
+      nextTarget instanceof Node &&
+      (targetRef.current?.contains(nextTarget) || dropdownRef.current?.contains(nextTarget))
+    ) {
+      return;
+    }
     close();
   };
 
@@ -56,13 +70,15 @@ export const HeaderBoardTabs = ({ display }: { display: HeaderTabsDisplay }) => 
         withArrow
         withinPortal
         shadow="md"
-        returnFocus
+        returnFocus={false}
       >
         <Popover.Target>
           <HeaderButton
+            ref={targetRef}
             hiddenFrom={display === "wide" ? "lg" : undefined}
             aria-label={t("indicator", { index: activeIndex + 1, count: tabs.length, name: getTabLabel(activeTab) })}
             onClick={toggle}
+            onBlur={closeOnFocusLeave}
             onKeyDown={(event) => {
               if (event.key === "Escape" && opened) {
                 event.preventDefault();
@@ -90,7 +106,13 @@ export const HeaderBoardTabs = ({ display }: { display: HeaderTabsDisplay }) => 
             </Stack>
           </HeaderButton>
         </Popover.Target>
-        <Popover.Dropdown ref={dropdownRef} data-board-tab-picker maw="calc(100vw - 1rem)" p={4}>
+        <Popover.Dropdown
+          ref={dropdownRef}
+          onBlur={closeOnFocusLeave}
+          data-board-tab-picker
+          maw="calc(100vw - 1rem)"
+          p={4}
+        >
           <Tabs value={activeTab.id} onChange={select} variant="pills" radius="md">
             <BoardTabBar menuWithinPortal={false} />
           </Tabs>

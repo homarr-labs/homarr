@@ -2,7 +2,7 @@
 
 import type { PropsWithChildren } from "react";
 import { Suspense, use, useCallback, useMemo, useState } from "react";
-import { Center, Loader } from "@mantine/core";
+import { Box, Center, Loader } from "@mantine/core";
 import { ErrorBoundary } from "react-error-boundary";
 import type { FallbackProps } from "react-error-boundary";
 
@@ -183,15 +183,17 @@ const LazyWidgetEditModalContent = (props: LazyWidgetEditModalContentProps) => {
 const WidgetEditModalLoadBoundary = ({ children }: PropsWithChildren) => (
   <ErrorBoundary
     fallbackRender={({ error, resetErrorBoundary }) => (
-      <Center py="xl">
-        <WidgetError
-          error={error}
-          resetErrorBoundary={() => {
-            widgetEditModalPromise = undefined;
-            resetErrorBoundary();
-          }}
-        />
-      </Center>
+      <Box mih={0} flex={1} style={{ overflowY: "auto" }}>
+        <Center py="xl">
+          <WidgetError
+            error={error}
+            resetErrorBoundary={() => {
+              widgetEditModalPromise = undefined;
+              resetErrorBoundary();
+            }}
+          />
+        </Center>
+      </Box>
     )}
   >
     <Suspense

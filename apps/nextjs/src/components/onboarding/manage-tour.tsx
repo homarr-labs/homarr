@@ -63,11 +63,11 @@ export const ManageTourProvider = ({ children, isAdmin }: ManageTourProviderProp
   const started = tourActive && isDesktop && isManageSection;
 
   useEffect(() => {
-    if (!isDesktop || !isManageSection) {
+    if (!isManageSection) {
       setTourActive(false);
       return;
     }
-    if (isManageHome && !tourDismissed) {
+    if (isDesktop && isManageHome && !tourDismissed) {
       setTourActive(true);
     }
   }, [isDesktop, isManageHome, isManageSection, tourDismissed]);
@@ -193,6 +193,7 @@ export const ManageTourProvider = ({ children, isAdmin }: ManageTourProviderProp
       <TourShell
         steps={steps}
         started={started}
+        resumeOnPause
         onEnd={handleEnd}
         stepRoutes={stepRoutes}
         position={{ base: "bottom", sm: "right" }}

@@ -21,6 +21,7 @@ import { z } from "zod/v4";
 
 import { objectEntries } from "@homarr/common";
 import { useOptionalBoard } from "@homarr/boards/context";
+import { useBoardDraftChanges } from "@homarr/boards/draft-changes";
 import type { WidgetKind } from "@homarr/definitions";
 import type { SettingsContextProps } from "@homarr/settings/creator";
 import { useI18n } from "@homarr/translation/client";
@@ -331,6 +332,7 @@ export const WidgetEditorForm = ({
   onSubmit,
 }: WidgetEditorFormProps) => {
   const form = useWidgetEditorForm({ definition, value, integrationSupport, settings });
+  useBoardDraftChanges(boardId, () => form.isDirty());
 
   useEffect(() => {
     onChange?.(form.values);

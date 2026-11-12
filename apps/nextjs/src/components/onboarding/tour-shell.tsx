@@ -14,6 +14,7 @@ import { useI18n } from "@homarr/translation/client";
 interface TourShellProps extends PropsWithChildren {
   steps: OnboardingTourStep[];
   started: boolean;
+  resumeOnPause?: boolean;
   onEnd: () => void;
   stepRoutes?: Record<string, string>;
   position?: FloatingPosition | Record<string, FloatingPosition>;
@@ -82,13 +83,30 @@ const TourDoneButton = ({ label, onClick }: TourDoneButtonProps) => {
   );
 };
 
-export const TourShell = ({ steps, started, onEnd, stepRoutes, position, children }: TourShellProps) => {
+export const TourShell = ({
+  steps,
+  started,
+  resumeOnPause = false,
+  onEnd,
+  stepRoutes,
+  position,
+  children,
+}: TourShellProps) => {
   const tCommon = useI18n("common.action");
   const tTour = useI18n("onboardingTour");
   const { branding } = useSettings();
   const router = useRouter();
   const forwardActionRef = useRef<(() => void) | null>(null);
   const pendingTargetCleanupRef = useRef<(() => void) | null>(null);
+  const controllerRef = useRef<TourController | null>(null);
+
+  const handleStart = useCallback(() => {
+    const controller = controllerRef.current;
+    if (!resumeOnPause || controller?.currentStepIndex === undefined) return;
+
+    // Starting resets the library to step 0; restore the index captured before that reset.
+    controller.setCurrentStepIndex(controller.currentStepIndex);
+  }, [resumeOnPause]);
 
   const navigateAndAdvance = useCallback(
     (currentStepId: string | undefined, targetStepId: string | undefined, advance: () => void) => {
@@ -144,6 +162,7 @@ export const TourShell = ({ steps, started, onEnd, stepRoutes, position, childre
     <OnboardingTour
       tour={steps}
       started={started}
+      onOnboardingTourStart={handleStart}
       onOnboardingTourEnd={onEnd}
       withStepper={false}
       header={(controller) => (
@@ -201,15 +220,18 @@ export const TourShell = ({ steps, started, onEnd, stepRoutes, position, childre
         </Button>
       )}
       withPrevButton
-      focusRevealProps={{
-        disableTargetInteraction: true,
-        popoverProps: {
-          position: position ?? { base: "bottom", md: "right" },
-          width: { base: "calc(100vw - 32px)", md: 420 },
-          shadow: "xl",
-          radius: "lg",
-          middlewares: { shift: { padding: 16 }, flip: true },
-        },
+      focusRevealProps={(controller) => {
+        controllerRef.current = controller;
+        return {
+          disableTargetInteraction: true,
+          popoverProps: {
+            position: position ?? { base: "bottom", md: "right" },
+            width: { base: "calc(100vw - 32px)", md: 420 },
+            shadow: "xl",
+            radius: "lg",
+            middlewares: { shift: { padding: 16 }, flip: true },
+          },
+        };
       }}
       cutoutPadding={12}
       cutoutRadius={12}

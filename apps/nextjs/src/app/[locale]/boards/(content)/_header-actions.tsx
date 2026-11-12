@@ -10,6 +10,7 @@ import { IconDeviceFloppy, IconPencil, IconPencilOff, IconSettings, IconX } from
 
 import { clientApi } from "@homarr/api/client";
 import { useRequiredBoard } from "@homarr/boards/context";
+import { hasUnsavedBoardDrafts } from "@homarr/boards/draft-changes";
 import { useEditMode } from "@homarr/boards/edit-mode";
 import { useUpdateBoard } from "@homarr/boards/updater";
 import { revalidatePathActionAsync } from "@homarr/common/client";
@@ -19,6 +20,7 @@ import { useConfirmModal } from "@homarr/modals";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
 import { useBoardPermissions } from "~/components/board/permissions/client";
+import { getAddInPlaceState } from "~/components/board/in-place-editor/store";
 import { normalizeBoardLayoutBounds } from "~/components/board/layout/normalize-board-layout-bounds";
 import { loadGridEditorAsync, scheduleGridEditorWarmup } from "~/components/board/sections/grid/grid-editor-loader";
 import { HeaderButton } from "~/components/layout/header/button";
@@ -268,17 +270,26 @@ const usePreventLeaveWithUnsavedChanges = (isEditMode: boolean, board: Board) =>
     setEditSession({ boardId: board.id, isEditMode, initialContent: contentSnapshot });
   }
 
-  const isDirty = isEditMode && contentSnapshot !== editSession.initialContent;
+  const utils = clientApi.useUtils();
   const tBoard = useI18n("board");
   const tCommon = useI18n("common");
   const { openConfirmModal } = useConfirmModal();
   const router = useRouter();
 
-  useEffect(() => {
-    if (!isDirty) return;
+  useLayoutEffect(() => {
+    if (!isEditMode) return;
 
     return registerBoardDirtyLeaveGuard({
       guardBeforeUnload: env.NODE_ENV !== "development",
+      isDirty() {
+        const currentBoard = utils.board.getBoardByName.getData({ name: board.name }) ?? board;
+        const session = getAddInPlaceState().session;
+        if (hasUnsavedBoardDrafts(board.id)) return true;
+        if (session?.dirty && currentBoard.sections.some((section) => section.id === session.sectionId)) return true;
+        return (
+          JSON.stringify({ items: currentBoard.items, sections: currentBoard.sections }) !== editSession.initialContent
+        );
+      },
       confirmLeave(href) {
         openConfirmModal({
           title: tBoard("action.edit.confirmLeave.title"),
@@ -292,5 +303,5 @@ const usePreventLeaveWithUnsavedChanges = (isEditMode: boolean, board: Board) =>
         });
       },
     });
-  }, [isDirty, openConfirmModal, router, tBoard, tCommon]);
+  }, [isEditMode, board, editSession.initialContent, utils, openConfirmModal, router, tBoard, tCommon]);
 };

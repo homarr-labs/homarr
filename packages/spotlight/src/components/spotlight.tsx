@@ -194,7 +194,10 @@ const SpotlightWithActiveMode = ({ mode, setMode, query, setQuery, activeMode }:
       onSpotlightOpen={() => {
         requestAnimationFrame(() => inputRef.current?.focus());
       }}
-      onSpotlightClose={clearChildrenStack}
+      onSpotlightClose={() => {
+        if (childrenStack.length > 0) setQuery("");
+        clearChildrenStack();
+      }}
       query={query}
       onQueryChange={(nextQuery) => {
         const sanitizedQuery = mode === "external" && nextQuery.startsWith("!") ? nextQuery.slice(1) : nextQuery;

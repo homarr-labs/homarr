@@ -23,6 +23,7 @@ import { IconArrowLeft, IconEye, IconPencil } from "@tabler/icons-react";
 
 import { useSession } from "@homarr/auth/client";
 import { useOptionalBoard } from "@homarr/boards/context";
+import { useBoardDraftChanges } from "@homarr/boards/draft-changes";
 import { calculateBoardUiScale } from "@homarr/boards/scale";
 import type { WidgetKind } from "@homarr/definitions";
 import { createModal, ModalFormFooter, modalSizeForm } from "@homarr/modals";
@@ -63,6 +64,7 @@ interface WidgetEditPreviewResizeOptions {
 }
 
 export interface EmbeddedIntegrationEditFormHandle {
+  isDirty: () => boolean;
   submitIfDirty: () => Promise<boolean>;
 }
 
@@ -347,6 +349,14 @@ export const WidgetEditModal = createModal<WidgetEditModalProps<WidgetKind>>(({ 
     value: innerProps.value,
     integrationSupport: innerProps.integrationSupport,
     settings: innerProps.settings,
+  });
+  useBoardDraftChanges(innerProps.boardId ?? board?.id, () => {
+    if (form.isDirty() || appEditRef.current?.isDirty()) return true;
+    if (Array.from(integrationEditHandles.current.values()).some((handle) => handle.isDirty())) return true;
+    const resize = innerProps.previewResize;
+    if (!resize || !previewSize) return false;
+    const initialSize = normalizePreviewSize(resize.initialSize, resize.maximumSize);
+    return initialSize.width !== previewSize.width || initialSize.height !== previewSize.height;
   });
 
   const canModifyApps = session?.user.permissions.includes("app-modify-all") ?? false;
