@@ -1245,6 +1245,20 @@
       "username": "Uživatelské jméno",
       "password": "Heslo",
       "savedPlaceholder": "••••••• (uloženo, ponechte prázdné pro zachování)"
+    },
+    "workshopUpdate": {
+      "title": "",
+      "apply": "",
+      "available": "K dispozici je aktualizace",
+      "check": "",
+      "description": "",
+      "approvePermissions": "",
+      "pendingDescription": "",
+      "overwriteLocalChanges": "",
+      "installSeparate": "",
+      "communityWarning": "",
+      "updated": "",
+      "changedBeforeInstall": ""
     }
   },
   "workshop": {
@@ -1515,6 +1529,27 @@
           "title": "Neznámá chyba",
           "description": "Došlo k neznámé chybě. Otevřete níže uvedenou příčinu a zobrazte další podrobnosti"
         },
+        "frigate": {
+          "title": "",
+          "status": "",
+          "description": {
+            "cookie": "",
+            "profileMismatch": "",
+            "redirect": "",
+            "login": "",
+            "profile": "",
+            "stats": ""
+          }
+        },
+        "openmediavault": {
+          "title": "",
+          "description": {
+            "totpSecretRequired": "",
+            "totpSecretInvalid": "",
+            "totpVerificationFailed": "",
+            "unsupportedChallenge": ""
+          }
+        },
         "parse": {
           "title": "Chyba analýzy",
           "description": "Odpověď se nepodařilo analyzovat. Ověřte, že adresa URL směřuje na základní adresu URL služby."
@@ -1714,6 +1749,11 @@
         "title": "Resetovat tajný klíč",
         "message": "Jste si jisti, že chcete resetovat tento tajný klíč?"
       },
+      "totpNotice": "",
+      "remove": {
+        "title": "",
+        "message": ""
+      },
       "noSecretsRequired": {
         "segmentTitle": "Žádné tajné klíče",
         "text": "Pro tuto integraci nejsou vyžadovány žádné tajné klíče"
@@ -1794,6 +1834,10 @@
         "wazuhIndexerPassword": {
           "label": "Indexové heslo",
           "newLabel": "Nové heslo pro indexování"
+        },
+        "totpSecret": {
+          "label": "",
+          "newLabel": ""
         }
       }
     },
@@ -1891,7 +1935,8 @@
       "copy": "Kopírovat",
       "copied": "Zkopírováno",
       "refresh": "Aktualizovat",
-      "export": "Export"
+      "export": "Export",
+      "advanced": "Rozšířené"
     },
     "hidden": "",
     "pagination": {
@@ -1986,6 +2031,15 @@
         "modifier": ""
       }
     },
+    "markdown": {
+      "alert": {
+        "note": "",
+        "tip": "",
+        "important": "",
+        "warning": "Varování",
+        "caution": ""
+      }
+    },
     "dangerZone": "Nebezpečná zóna",
     "noResults": "Nebyly nalezeny žádné výsledky",
     "unsavedChanges": "Máte neuložené změny!",
@@ -2076,6 +2130,158 @@
         "sm": "Jemný",
         "xl": "Měkké"
       }
+    },
+    "customTheme": {
+      "label": "Téma",
+      "nothingFound": "",
+      "custom": "Vlastní",
+      "customize": "",
+      "editor": {
+        "title": "",
+        "basedOn": "",
+        "preview": "",
+        "previewColorScheme": "",
+        "layout": "Rozložení",
+        "typography": "",
+        "colors": "",
+        "json": "",
+        "defaultRadius": "",
+        "radiusHint": "",
+        "scale": "",
+        "spacing": "Mezera",
+        "radius": "",
+        "fontFamily": "",
+        "headingFont": "",
+        "monoFont": "",
+        "fontSizes": "",
+        "palette": {
+          "body": "",
+          "surface": "",
+          "hover": "",
+          "border": "",
+          "text": "",
+          "dimmed": "",
+          "primary": "",
+          "secondary": "Sekundární zvýraznění"
+        },
+        "lockedPrimary": "",
+        "pickColor": "",
+        "autoContrast": "",
+        "luminanceThreshold": "",
+        "jsonHint": "",
+        "invalidJson": "",
+        "tooLong": "",
+        "copyJson": "",
+        "copied": "Zkopírováno",
+        "discardJson": "",
+        "reset": "",
+        "apply": "",
+        "sampleTitle": "",
+        "sampleBadge": "Náhled",
+        "sampleText": "",
+        "sampleInput": "Vyhledat",
+        "sampleValue": "Najít aplikaci",
+        "sampleButton": "Otevřít"
+      },
+      "studio": {
+        "title": "",
+        "saveTheme": "",
+        "searchControls": "",
+        "component": "",
+        "inheritedValue": "",
+        "resetControl": "",
+        "decreaseControl": "",
+        "increaseControl": "",
+        "chooseControl": "",
+        "layout": {
+          "spacing": "Mezera",
+          "radius": "",
+          "compact": "Kompaktní",
+          "normal": "Normální",
+          "roomy": "",
+          "preset": "",
+          "none": "",
+          "rounded": "",
+          "full": "Plné",
+          "custom": "Vlastní",
+          "advanced": ""
+        },
+        "previewSurface": "Náhled",
+        "previewFrame": "",
+        "loadingPreview": "",
+        "previewFailed": "",
+        "sampleBoard": "",
+        "components": "Součásti",
+        "overlays": "",
+        "typography": "",
+        "liveBoard": "",
+        "viewport": "",
+        "responsive": "",
+        "tablet": "",
+        "mobile": "Mobil",
+        "includeCustomCss": "",
+        "groups": {
+          "layout": "",
+          "typography": "",
+          "colors": "",
+          "surfaces": "",
+          "overlays": "",
+          "accessibility": "",
+          "css": ""
+        },
+        "controls": {
+          "defaultRadius": "",
+          "scale": "",
+          "spacing": "Mezera",
+          "radius": "",
+          "breakpoint": "",
+          "fontSizes": "",
+          "lineHeight": "",
+          "shadow": "",
+          "fontFamily": "",
+          "headingFont": "",
+          "monoFont": "",
+          "headingWeight": "",
+          "headingSize": "",
+          "fontSmoothing": "",
+          "body": "",
+          "surface": "",
+          "hover": "",
+          "border": "",
+          "text": "",
+          "dimmed": "",
+          "primary": "",
+          "secondary": "Sekundární zvýraznění",
+          "autoContrast": "",
+          "luminanceThreshold": "",
+          "primaryShade": "",
+          "componentRadius": "",
+          "borderWidth": "",
+          "surfaceBackground": "Pozadí",
+          "surfaceText": "",
+          "surfaceBorder": "Barva ohraničení",
+          "hoverBackground": "",
+          "hoverText": "",
+          "componentShadow": "",
+          "componentBorder": "",
+          "componentPadding": "",
+          "componentSize": "Velikost souboru",
+          "componentVariant": "",
+          "overlayBlur": "",
+          "overlayOpacity": "",
+          "overlayColor": "",
+          "transitionDuration": "",
+          "headerBackground": "",
+          "respectReducedMotion": "",
+          "focusRing": "",
+          "cursorType": "",
+          "customCss": ""
+        },
+        "expandPreview": "",
+        "showControls": ""
+      },
+      "instanceDefault": "",
+      "useInstanceDefault": ""
     }
   },
   "section": {
@@ -2171,6 +2377,18 @@
       },
       "customWidget": "Vlastní widget",
       "standalone": "Samostatné",
+      "integrationFilter": "",
+      "integrationNotConnected": "",
+      "workshop": {
+        "title": "Widgety Workshopu",
+        "back": "",
+        "empty": "",
+        "noMatches": "",
+        "loading": "",
+        "integrationError": "",
+        "searchMore": "",
+        "installAndAdd": ""
+      },
       "missingIntegration": {
         "title": "Nejdříve připojte službu",
         "noPermission": "Tento widget vyžaduje kompatibilní připojení k službě. Požádejte správce o připojení a zkuste to znovu."
@@ -2206,10 +2424,13 @@
       "saveErrorTitle": "Položky nelze aktualizovat",
       "saveErrorMessage": "Změny nelze uložit. Tabule byla obnovena.",
       "moveUnavailableTitle": "Nelze přesunout vybrané položky",
-      "moveUnavailableMessage": "Cíl nemá dostatek místa pro celý výběr."
+      "moveUnavailableMessage": "Cíl nemá dostatek místa pro celý výběr.",
+      "moveToTab": "",
+      "movedToTab": ""
     },
     "moveResize": {
       "title": "Přesunout / změnit velikost",
+      "sizeOverlap": "",
       "entryLabel": "{name}, sloupec {column}, řádek {row}",
       "target": {
         "numbered": "{name}, cíl {index}",
@@ -2292,6 +2513,36 @@
       "open": "Otevřít rozšířené zobrazení",
       "close": "Zavřít rozšířené zobrazení",
       "label": "{widget} pokročilý pohled"
+    },
+    "inPlace": {
+      "widgetLoadError": "",
+      "search": "",
+      "bestFit": "",
+      "moreWidgets": "",
+      "widgets": "Widgety",
+      "yourApps": "",
+      "createApp": "",
+      "addAppLink": "",
+      "createWidget": "",
+      "createWidgetDescription": "",
+      "createAppDescription": "",
+      "defaultFit": "",
+      "defaultFitDescription": "",
+      "defaultSize": "",
+      "defaultSizeDescription": "",
+      "emptyCells": "",
+      "preview": {
+        "error": "",
+        "loading": ""
+      },
+      "keyboard": {
+        "move": "přesunout",
+        "resize": "",
+        "pick": "",
+        "browse": "",
+        "moveDescription": "",
+        "resizeDescription": ""
+      }
     }
   },
   "widget": {
@@ -2335,7 +2586,29 @@
             "tooltip": "Jako nápověda",
             "hidden": "Skryté"
           }
+        },
+        "dockerContainer": {
+          "label": "",
+          "description": "",
+          "placeholder": "",
+          "disabled": "",
+          "unavailable": ""
         }
+      },
+      "docker": {
+        "action": {
+          "start": "",
+          "stop": ""
+        },
+        "notification": {
+          "startFailed": "",
+          "stopFailed": ""
+        },
+        "switch": {
+          "start": "",
+          "stop": ""
+        },
+        "stopped": ""
       },
       "error": {
         "notFound": {
@@ -2414,6 +2687,10 @@
         "hideHostname": {
           "label": "Skrýt názvy hostitelů"
         },
+        "showFullUrls": {
+          "label": "",
+          "description": ""
+        },
         "withBorder": {
           "label": "Zobrazit okraj"
         },
@@ -2436,6 +2713,9 @@
         }
       },
       "empty": "Přidat URL nebo aplikaci v nastavení widgetu",
+      "copyUrl": "Zkopírovat URL",
+      "copied": "Zkopírováno",
+      "copyFailed": "",
       "groups": {
         "label": "Kategorie",
         "placeholder": "Nová kategorie",
@@ -3089,6 +3369,141 @@
         "toggleFailed": "Nelze aktualizovat entitu"
       }
     },
+    "smartHome-controls": {
+      "name": "",
+      "description": "",
+      "option": {
+        "presentation": {
+          "label": "",
+          "option": {
+            "entities": "",
+            "controlPanel": ""
+          }
+        },
+        "title": {
+          "label": "Název",
+          "description": ""
+        },
+        "blocks": {
+          "label": "",
+          "remove": ""
+        },
+        "roomDomains": {
+          "label": "",
+          "description": ""
+        },
+        "excludedEntityIds": {
+          "label": "",
+          "description": "",
+          "placeholder": ""
+        },
+        "showSummary": {
+          "label": ""
+        },
+        "readOnly": {
+          "label": "",
+          "description": ""
+        },
+        "controlSize": {
+          "label": "",
+          "option": {
+            "auto": "Automaticky",
+            "compact": "Kompaktní",
+            "large": "Velké"
+          }
+        },
+        "palette": {
+          "label": "",
+          "option": {
+            "boring": "",
+            "colorful": ""
+          }
+        }
+      },
+      "domain": {
+        "light": "",
+        "switch": "",
+        "fan": "",
+        "climate": "",
+        "humidifier": "",
+        "cover": "",
+        "valve": "",
+        "lock": "",
+        "alarm_control_panel": "",
+        "media_player": "",
+        "camera": "",
+        "vacuum": "",
+        "scene": "",
+        "script": "",
+        "automation": "",
+        "button": "",
+        "input_boolean": "",
+        "input_select": "",
+        "person": "Lidi",
+        "binary_sensor": "",
+        "sensor": "",
+        "weather": "Počasí",
+        "sun": "",
+        "update": ""
+      },
+      "block": {
+        "add": {
+          "rooms": "",
+          "entity": "",
+          "roomsLabel": "",
+          "roomsPlaceholder": "",
+          "entityLabel": "",
+          "entityPlaceholder": "",
+          "merge": "",
+          "submit": "Přidat",
+          "duplicate": "",
+          "covered": ""
+        },
+        "kind": {
+          "entity": "",
+          "room": "",
+          "mergedRooms": "",
+          "unknown": ""
+        },
+        "entityCount": "",
+        "noArea": "",
+        "issue": {
+          "missing": "",
+          "otherSource": "",
+          "empty": ""
+        }
+      },
+      "preview": {
+        "empty": "",
+        "noMatches": "",
+        "summary": {
+          "lights": "",
+          "on": "zapnuto",
+          "off": "vypnuto",
+          "sensors": "",
+          "offline": ""
+        },
+        "otherSource": ""
+      },
+      "live": {
+        "loading": "",
+        "error": "",
+        "retry": "",
+        "actionFailed": "",
+        "actionUnconfirmed": "",
+        "unconfirmed": "",
+        "selectionLimit": "",
+        "unknownError": ""
+      },
+      "inline": {
+        "open": "",
+        "title": "",
+        "handle": "",
+        "empty": "",
+        "add": "",
+        "close": ""
+      }
+    },
     "smartHome-executeAutomation": {
       "name": "Spustit automatizaci",
       "description": "Spusťte automatizaci jedním kliknutím",
@@ -3535,6 +3950,34 @@
     },
     "coolify": {
       "description": "Přehled vaší instance Coolify se servery a aplikacemi",
+      "summary": {
+        "needsAttention": "{count} potřebuje pozornost",
+        "inProgress": "",
+        "unknown": "",
+        "healthy": "",
+        "empty": "",
+        "healthyDetail": "",
+        "more": "",
+        "moreInstances": ""
+      },
+      "details": {
+        "tabs": "",
+        "overview": "",
+        "search": "",
+        "serviceApplications": ""
+      },
+      "overview": {
+        "projects": "",
+        "resources": "",
+        "attention": "Potřebuje pozornost",
+        "ready": "Připraveno",
+        "noProjects": "",
+        "projectsUnavailable": "",
+        "moreProjects": "",
+        "running": "Běží",
+        "resourceCount": "",
+        "environmentCount": ""
+      },
       "option": {
         "showServers": {
           "label": "Zobrazit servery"
@@ -3566,7 +4009,13 @@
       },
       "source": {
         "url": "Zdroj: {url}",
-        "unavailable": ""
+        "unavailable": "",
+        "unavailableCount": ""
+      },
+      "kind": {
+        "server": "",
+        "application": "Žádost",
+        "service": "Servis"
       },
       "instances": {
         "title": "Instance"
@@ -3583,6 +4032,7 @@
         "exited": "Ukončeno",
         "starting": "Začíná",
         "restarting": "Restartování",
+        "unhealthy": "Nastal problém",
         "unknown": "Neznámý",
         "online": "",
         "offline": "",
@@ -4815,6 +5265,7 @@
           },
           "identifier": {
             "label": "Identifikátor",
+            "containerPlaceholder": "",
             "placeholder": "Název nebo Vlastník/Název"
           },
           "name": {},
@@ -5351,6 +5802,23 @@
       "name": "Systémové prostředky",
       "description": "Využití CPU, paměti, disku a dalšího hardwaru systému",
       "option": {
+        "diskDisplayMode": {
+          "label": "",
+          "option": {
+            "percentage": "",
+            "free": "",
+            "absolute": "",
+            "combined": ""
+          }
+        },
+        "resourceLayout": {
+          "label": "",
+          "description": ""
+        },
+        "subresourceLayout": {
+          "label": "",
+          "description": ""
+        },
         "hasShadow": {
           "label": "Povolit stínování grafu"
         },
@@ -5358,6 +5826,7 @@
           "label": "Viditelné grafy",
           "description": "Vyberte grafy, které chcete zobrazit.",
           "option": {
+            "cpuCores": "",
             "memory": "Paměť",
             "network": "Síť"
           }
@@ -6286,6 +6755,26 @@
         }
       }
     },
+    "tabs": {
+      "label": "",
+      "indicator": "",
+      "home": "Domovská stránka",
+      "untitled": "",
+      "add": "",
+      "actions": "",
+      "rename": "",
+      "namePlaceholder": "",
+      "moveLeft": "",
+      "moveRight": "",
+      "remove": {
+        "action": "",
+        "confirm": ""
+      },
+      "limitReached": "",
+      "hotkeyHint": "",
+      "destination": "",
+      "containerDestination": ""
+    },
     "landmark": {
       "canvas": "plátno hlavního panelu",
       "leftRail": "Kolejnice levého hlavního panelu",
@@ -6552,6 +7041,11 @@
           "description": "Správce serveru zatím nenastavil domovskou plochu.",
           "link": "Zobrazit veřejné plochy",
           "notice": "Chcete-li tuto stránku skrýt, požádejte správce serveru o nastavení domovské plochy pro server"
+        },
+        "noAccess": {
+          "title": "",
+          "description": "",
+          "notice": ""
         }
       }
     }
@@ -6623,10 +7117,12 @@
             "documentation": "Dokumentace",
             "submitIssue": "Nahlásit problém",
             "discord": "Komunitní Discord",
-            "sourceCode": "Zdrojový kód"
+            "sourceCode": "Zdrojový kód",
+            "changelog": ""
           }
         },
         "about": "O aplikaci",
+        "updateAvailable": "K dispozici je aktualizace",
         "assistant": "Asistent"
       }
     },
@@ -6638,9 +7134,23 @@
           "authentication": "Ověřování",
           "authorization": "Autorizace"
         },
-        "heroBanner": {
-          "title": "Vítejte zpět na své",
-          "subtitle": "Plocha {app}"
+        "hero": {
+          "greeting": "",
+          "greetingWithoutName": "",
+          "description": ""
+        },
+        "lobster": {
+          "label": "",
+          "prompt": "",
+          "pokeCount": "",
+          "reaction": {
+            "hey": "",
+            "ow": "",
+            "snip": "",
+            "careful": "",
+            "stillHere": "",
+            "okay": ""
+          }
         }
       },
       "board": {
@@ -6685,7 +7195,9 @@
         },
         "noResults": {
           "title": "Zatím žádné plochy",
-          "description": "Vytvořte desku pro uspořádání aplikací a widgetů na jednom místě."
+          "description": "Vytvořte desku pro uspořádání aplikací a widgetů na jednom místě.",
+          "noAccessTitle": "",
+          "noAccessDescription": ""
         }
       },
       "media": {
@@ -6738,6 +7250,11 @@
                 "logoDisplay": {
                   "logo": "Pouze logo",
                   "logoAndText": ""
+                },
+                "tabsDisplay": {
+                  "wide": "Široký",
+                  "compact": "Kompaktní",
+                  "indicator": ""
                 }
               },
               "items": {
@@ -6745,6 +7262,7 @@
                 "search": "Vyhledat",
                 "home": "Domovský panel",
                 "boardSwitcher": "Plochy",
+                "boardTabs": "",
                 "assistant": "Asistent",
                 "docker": "Dokovací modul",
                 "boardEdit": "Upravit desku",
@@ -6976,6 +7494,10 @@
             "title": "Vzhled",
             "defaultColorScheme": {
               "label": "Výchozí barevné schéma"
+            },
+            "whatsNew": {
+              "label": "",
+              "description": ""
             }
           },
           "branding": {
@@ -7558,7 +8080,8 @@
               "openSpotlightApps": "Otevřít vyhledávání aplikací",
               "openSpotlightAssistant": "Otevřený režim asistenta",
               "openSpotlightPreferences": "Otevřít režim předvoleb",
-              "openAssistant": "Otevřít asistenta"
+              "openAssistant": "Otevřít asistenta",
+              "switchBoardTab": ""
             },
             "note": "Tip: Mod označuje klávesu Ctrl i klávesu ⌘ v systému macOS"
           }
@@ -8728,6 +9251,12 @@
         "description": "Změňte barevné schéma, jazyk, domovskou plochu a předvolby. Můžete také odtud přejít do správy."
       }
     }
+  },
+  "whatsNew": {
+    "title": "",
+    "empty": "",
+    "allReleases": "",
+    "dismiss": ""
   },
   "metadata": {
     "description": "Samostatně hostovaná nástěnka pro *arr stack a celou vaši domovskou elab. Integruje se s 50 + službami, widgety, bez konfiguračních souborů.",

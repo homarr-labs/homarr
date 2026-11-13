@@ -16,7 +16,7 @@ import type { WidgetKind } from "@homarr/definitions";
 import { prepareIntegrationResponseCacheAsync } from "@homarr/redis";
 import { getI18n } from "@homarr/translation/server";
 import { prefetchForKind } from "@homarr/widgets/prefetch";
-import { getInitiallyVisibleWidgetKinds, prefetchInitialWidgetData } from "@homarr/widgets/server-prefetch";
+import { prefetchInitialWidgetData } from "@homarr/widgets/server-prefetch";
 
 import { env } from "~/env";
 import { createBoardLayout, getInitialViewportWidthAsync } from "../_layout-creator";
@@ -71,6 +71,7 @@ export const createBoardContentPage = <TParams extends Record<string, unknown>>(
       headerBoardSettingsAction: <BoardContentSettingsAction demoReadOnly={env.DEMO_MODE && env.DEMO_READ_ONLY} />,
       getInitialBoardAsync: getInitialBoard,
       withTour: true,
+      withBoardTabs: true,
     }),
     // eslint-disable-next-line no-restricted-syntax
     page: async ({ params }: { params: Promise<TParams> }) => {
@@ -152,7 +153,7 @@ export const createBoardContentPage = <TParams extends Record<string, unknown>>(
 
       return (
         <>
-          <WidgetResourcePreload kinds={getInitiallyVisibleWidgetKinds(board, layoutId)} />
+          <WidgetResourcePreload />
           <HydrationBoundary state={dehydrate(queryClient)}>
             {restoredRefreshes.length > 0 && (
               <CachedWidgetRefresh queryHashes={restoredRefreshes.map(({ queryHash }) => queryHash)} />

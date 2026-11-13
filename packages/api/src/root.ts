@@ -5,6 +5,7 @@ import { createTRPCRouter } from "./trpc";
 export const appRouter = createTRPCRouter({
   assistant: lazy(() => import("./router/assistant").then((mod) => mod.assistantRouter)),
   user: lazy(() => import("./router/user").then((mod) => mod.userRouter)),
+  theme: lazy(() => import("./router/theme").then((mod) => mod.themeRouter)),
   userItemState: lazy(() => import("./router/user-item-state").then((mod) => mod.userItemStateRouter)),
   group: lazy(() => import("./router/group").then((mod) => mod.groupRouter)),
   invite: lazy(() => import("./router/invite").then((mod) => mod.inviteRouter)),

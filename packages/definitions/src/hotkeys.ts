@@ -7,4 +7,5 @@ export const hotkeys = {
   openSpotlightAssistant: "mod+/",
   openSpotlightPreferences: "mod+shift+?",
   openAssistant: "shift+a",
+  switchBoardTab: "1-5",
 };

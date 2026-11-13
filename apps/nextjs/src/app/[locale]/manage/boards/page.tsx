@@ -16,11 +16,17 @@ export default async function ManageBoardsPage() {
   const session = await auth();
   const boards = await api.board.getManageOverview();
   const canCreateBoards = session?.user.permissions.includes("board-create") ?? false;
+  let emptyTitle = t("noResults.title");
+  let emptyDescription = t("noResults.description");
+  if (!canCreateBoards) {
+    emptyTitle = t("noResults.noAccessTitle");
+    emptyDescription = t("noResults.noAccessDescription");
+  }
 
   return (
     <BoardsPageContent title={t("title")} canCreateBoards={canCreateBoards}>
       {boards.length === 0 && (
-        <NoResults icon={IconLayoutDashboard} title={t("noResults.title")} description={t("noResults.description")} />
+        <NoResults icon={IconLayoutDashboard} title={emptyTitle} description={emptyDescription} />
       )}
       {boards.length > 0 && (
         <TourTarget id="manage-boards-list">

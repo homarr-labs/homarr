@@ -1245,6 +1245,20 @@
       "username": "Όνομα χρήστη",
       "password": "Κωδικός",
       "savedPlaceholder": "••••••• (αποθηκευμένο, αφήστε κενό για διατήρηση)"
+    },
+    "workshopUpdate": {
+      "title": "",
+      "apply": "",
+      "available": "Διαθέσιμη ενημέρωση",
+      "check": "",
+      "description": "",
+      "approvePermissions": "",
+      "pendingDescription": "",
+      "overwriteLocalChanges": "",
+      "installSeparate": "",
+      "communityWarning": "",
+      "updated": "",
+      "changedBeforeInstall": ""
     }
   },
   "workshop": {
@@ -1515,6 +1529,27 @@
           "title": "Άγνωστο σφάλμα",
           "description": "Παρουσιάστηκε άγνωστο σφάλμα· ανοίξτε την παρακάτω αιτία για περισσότερες λεπτομέρειες"
         },
+        "frigate": {
+          "title": "",
+          "status": "",
+          "description": {
+            "cookie": "",
+            "profileMismatch": "",
+            "redirect": "",
+            "login": "",
+            "profile": "",
+            "stats": ""
+          }
+        },
+        "openmediavault": {
+          "title": "",
+          "description": {
+            "totpSecretRequired": "",
+            "totpSecretInvalid": "",
+            "totpVerificationFailed": "",
+            "unsupportedChallenge": ""
+          }
+        },
         "parse": {
           "title": "Σφάλμα ανάλυσης",
           "description": "Δεν ήταν δυνατή η ανάλυση της απόκρισης. Βεβαιωθείτε ότι η URL δείχνει στη βασική URL της υπηρεσίας."
@@ -1714,6 +1749,11 @@
         "title": "Επαναφορά μυστικού",
         "message": "Είστε βέβαιοι ότι θέλετε να επαναφέρετε αυτό το μυστικό;"
       },
+      "totpNotice": "",
+      "remove": {
+        "title": "",
+        "message": ""
+      },
       "noSecretsRequired": {
         "segmentTitle": "Χωρίς μυστικά",
         "text": "Δεν απαιτούνται μυστικά για αυτήν την ενσωμάτωση"
@@ -1794,6 +1834,10 @@
         "wazuhIndexerPassword": {
           "label": "Κωδικός ευρετηρίου",
           "newLabel": "Νέος κωδικός ευρετηρίου"
+        },
+        "totpSecret": {
+          "label": "",
+          "newLabel": ""
         }
       }
     },
@@ -1891,7 +1935,8 @@
       "copy": "Αντιγραφή",
       "copied": "Αντιγράφηκε",
       "refresh": "Ανανέωση",
-      "export": "Εξαγωγή"
+      "export": "Εξαγωγή",
+      "advanced": "Προχωρημένα"
     },
     "hidden": "",
     "pagination": {
@@ -1986,6 +2031,15 @@
         "modifier": ""
       }
     },
+    "markdown": {
+      "alert": {
+        "note": "Σημείωση",
+        "tip": "",
+        "important": "",
+        "warning": "Προειδοποίηση",
+        "caution": ""
+      }
+    },
     "dangerZone": "Επικίνδυνη Περιοχή",
     "noResults": "Δεν βρέθηκαν αποτελέσματα",
     "unsavedChanges": "Έχετε μη αποθηκευμένες αλλαγές!",
@@ -2076,6 +2130,158 @@
         "sm": "Λεπτό",
         "xl": "Απαλό"
       }
+    },
+    "customTheme": {
+      "label": "Θέμα",
+      "nothingFound": "",
+      "custom": "Προσαρμοσμένο",
+      "customize": "",
+      "editor": {
+        "title": "",
+        "basedOn": "",
+        "preview": "",
+        "previewColorScheme": "",
+        "layout": "Διάταξη",
+        "typography": "",
+        "colors": "",
+        "json": "",
+        "defaultRadius": "",
+        "radiusHint": "",
+        "scale": "",
+        "spacing": "Απόσταση",
+        "radius": "",
+        "fontFamily": "",
+        "headingFont": "",
+        "monoFont": "",
+        "fontSizes": "",
+        "palette": {
+          "body": "",
+          "surface": "",
+          "hover": "",
+          "border": "",
+          "text": "",
+          "dimmed": "",
+          "primary": "",
+          "secondary": "Δευτερεύουσα έμφαση"
+        },
+        "lockedPrimary": "",
+        "pickColor": "",
+        "autoContrast": "",
+        "luminanceThreshold": "",
+        "jsonHint": "",
+        "invalidJson": "",
+        "tooLong": "",
+        "copyJson": "",
+        "copied": "Αντιγράφηκε",
+        "discardJson": "",
+        "reset": "",
+        "apply": "",
+        "sampleTitle": "",
+        "sampleBadge": "Προεπισκόπηση",
+        "sampleText": "",
+        "sampleInput": "Αναζήτηση",
+        "sampleValue": "",
+        "sampleButton": "Άνοιγμα"
+      },
+      "studio": {
+        "title": "",
+        "saveTheme": "",
+        "searchControls": "",
+        "component": "",
+        "inheritedValue": "",
+        "resetControl": "",
+        "decreaseControl": "",
+        "increaseControl": "",
+        "chooseControl": "",
+        "layout": {
+          "spacing": "Απόσταση",
+          "radius": "",
+          "compact": "Συμπαγής",
+          "normal": "Κανονικό",
+          "roomy": "",
+          "preset": "",
+          "none": "",
+          "rounded": "",
+          "full": "Πλήρης",
+          "custom": "Προσαρμοσμένο",
+          "advanced": ""
+        },
+        "previewSurface": "Προεπισκόπηση",
+        "previewFrame": "",
+        "loadingPreview": "",
+        "previewFailed": "",
+        "sampleBoard": "",
+        "components": "Συστατικά",
+        "overlays": "",
+        "typography": "",
+        "liveBoard": "",
+        "viewport": "",
+        "responsive": "",
+        "tablet": "",
+        "mobile": "Κινητό",
+        "includeCustomCss": "",
+        "groups": {
+          "layout": "",
+          "typography": "",
+          "colors": "",
+          "surfaces": "",
+          "overlays": "",
+          "accessibility": "",
+          "css": ""
+        },
+        "controls": {
+          "defaultRadius": "",
+          "scale": "",
+          "spacing": "Απόσταση",
+          "radius": "",
+          "breakpoint": "",
+          "fontSizes": "",
+          "lineHeight": "",
+          "shadow": "",
+          "fontFamily": "",
+          "headingFont": "",
+          "monoFont": "",
+          "headingWeight": "",
+          "headingSize": "",
+          "fontSmoothing": "",
+          "body": "",
+          "surface": "",
+          "hover": "",
+          "border": "",
+          "text": "",
+          "dimmed": "",
+          "primary": "",
+          "secondary": "Δευτερεύουσα έμφαση",
+          "autoContrast": "",
+          "luminanceThreshold": "",
+          "primaryShade": "",
+          "componentRadius": "",
+          "borderWidth": "",
+          "surfaceBackground": "Φόντο",
+          "surfaceText": "",
+          "surfaceBorder": "Χρώμα περιγράμματος",
+          "hoverBackground": "",
+          "hoverText": "",
+          "componentShadow": "",
+          "componentBorder": "",
+          "componentPadding": "",
+          "componentSize": "Μέγεθος Αρχείου",
+          "componentVariant": "",
+          "overlayBlur": "",
+          "overlayOpacity": "",
+          "overlayColor": "",
+          "transitionDuration": "",
+          "headerBackground": "",
+          "respectReducedMotion": "",
+          "focusRing": "",
+          "cursorType": "",
+          "customCss": ""
+        },
+        "expandPreview": "",
+        "showControls": ""
+      },
+      "instanceDefault": "",
+      "useInstanceDefault": ""
     }
   },
   "section": {
@@ -2171,6 +2377,18 @@
       },
       "customWidget": "Προσαρμοσμένο widget",
       "standalone": "Αυτόνομη",
+      "integrationFilter": "",
+      "integrationNotConnected": "",
+      "workshop": {
+        "title": "Γραφικά στοιχεία εργαστηρίου",
+        "back": "",
+        "empty": "",
+        "noMatches": "",
+        "loading": "",
+        "integrationError": "",
+        "searchMore": "",
+        "installAndAdd": ""
+      },
       "missingIntegration": {
         "title": "Συνδέστε πρώτα μια υπηρεσία",
         "noPermission": "Αυτό το widget χρειάζεται μια συμβατή σύνδεση υπηρεσίας. Ζητήστε από τον διαχειριστή να συνδεθεί και προσπαθήστε ξανά."
@@ -2206,10 +2424,13 @@
       "saveErrorTitle": "Δεν είναι δυνατή η ενημέρωση στοιχείων",
       "saveErrorMessage": "Δεν ήταν δυνατή η αποθήκευση των αλλαγών. Ο πίνακας ανανεώθηκε.",
       "moveUnavailableTitle": "Δεν είναι δυνατή η μετακίνηση των επιλεγμένων στοιχείων",
-      "moveUnavailableMessage": "Ο προορισμός δεν έχει αρκετό χώρο για ολόκληρη την επιλογή."
+      "moveUnavailableMessage": "Ο προορισμός δεν έχει αρκετό χώρο για ολόκληρη την επιλογή.",
+      "moveToTab": "",
+      "movedToTab": ""
     },
     "moveResize": {
       "title": "Μετακίνηση / αλλαγή μεγέθους",
+      "sizeOverlap": "",
       "entryLabel": "{name}, στήλη {column}, σειρά {row}",
       "target": {
         "numbered": "{name}, προορισμός {index}",
@@ -2292,6 +2513,36 @@
       "open": "Άνοιγμα προχωρημένης προβολής",
       "close": "Κλείσιμο προχωρημένης προβολής",
       "label": "Προχωρημένη προβολή {widget}"
+    },
+    "inPlace": {
+      "widgetLoadError": "",
+      "search": "",
+      "bestFit": "",
+      "moreWidgets": "",
+      "widgets": "Widget",
+      "yourApps": "",
+      "createApp": "",
+      "addAppLink": "",
+      "createWidget": "",
+      "createWidgetDescription": "",
+      "createAppDescription": "",
+      "defaultFit": "",
+      "defaultFitDescription": "",
+      "defaultSize": "",
+      "defaultSizeDescription": "",
+      "emptyCells": "",
+      "preview": {
+        "error": "",
+        "loading": ""
+      },
+      "keyboard": {
+        "move": "μετακίνηση",
+        "resize": "",
+        "pick": "",
+        "browse": "",
+        "moveDescription": "",
+        "resizeDescription": ""
+      }
     }
   },
   "widget": {
@@ -2335,7 +2586,29 @@
             "tooltip": "Ως tooltip",
             "hidden": "Κρυφό"
           }
+        },
+        "dockerContainer": {
+          "label": "",
+          "description": "",
+          "placeholder": "",
+          "disabled": "",
+          "unavailable": ""
         }
+      },
+      "docker": {
+        "action": {
+          "start": "",
+          "stop": ""
+        },
+        "notification": {
+          "startFailed": "",
+          "stopFailed": ""
+        },
+        "switch": {
+          "start": "",
+          "stop": ""
+        },
+        "stopped": ""
       },
       "error": {
         "notFound": {
@@ -2414,6 +2687,10 @@
         "hideHostname": {
           "label": "Απόκρυψη ονομάτων"
         },
+        "showFullUrls": {
+          "label": "",
+          "description": ""
+        },
         "withBorder": {
           "label": "Εμφάνιση περιγράμματος"
         },
@@ -2436,6 +2713,9 @@
         }
       },
       "empty": "Προσθέστε μια διεύθυνση URL ή εφαρμογή στις ρυθμίσεις widget",
+      "copyUrl": "Αντιγραφή URL",
+      "copied": "Αντιγράφηκε",
+      "copyFailed": "",
       "groups": {
         "label": "Κατηγορίες",
         "placeholder": "Νέα κατηγορία",
@@ -3089,6 +3369,141 @@
         "toggleFailed": "Δεν είναι δυνατή η ενημέρωση οντότητας"
       }
     },
+    "smartHome-controls": {
+      "name": "",
+      "description": "",
+      "option": {
+        "presentation": {
+          "label": "",
+          "option": {
+            "entities": "",
+            "controlPanel": ""
+          }
+        },
+        "title": {
+          "label": "Τίτλος",
+          "description": ""
+        },
+        "blocks": {
+          "label": "",
+          "remove": ""
+        },
+        "roomDomains": {
+          "label": "",
+          "description": ""
+        },
+        "excludedEntityIds": {
+          "label": "",
+          "description": "",
+          "placeholder": ""
+        },
+        "showSummary": {
+          "label": ""
+        },
+        "readOnly": {
+          "label": "",
+          "description": ""
+        },
+        "controlSize": {
+          "label": "",
+          "option": {
+            "auto": "Αυτόματο",
+            "compact": "Συμπαγής",
+            "large": "Μεγάλο"
+          }
+        },
+        "palette": {
+          "label": "",
+          "option": {
+            "boring": "",
+            "colorful": ""
+          }
+        }
+      },
+      "domain": {
+        "light": "",
+        "switch": "",
+        "fan": "",
+        "climate": "",
+        "humidifier": "",
+        "cover": "",
+        "valve": "",
+        "lock": "",
+        "alarm_control_panel": "",
+        "media_player": "",
+        "camera": "",
+        "vacuum": "",
+        "scene": "",
+        "script": "",
+        "automation": "",
+        "button": "",
+        "input_boolean": "",
+        "input_select": "",
+        "person": "Άτομα",
+        "binary_sensor": "",
+        "sensor": "",
+        "weather": "Καιρός",
+        "sun": "",
+        "update": ""
+      },
+      "block": {
+        "add": {
+          "rooms": "",
+          "entity": "",
+          "roomsLabel": "",
+          "roomsPlaceholder": "",
+          "entityLabel": "",
+          "entityPlaceholder": "",
+          "merge": "",
+          "submit": "Προσθήκη",
+          "duplicate": "",
+          "covered": ""
+        },
+        "kind": {
+          "entity": "",
+          "room": "",
+          "mergedRooms": "",
+          "unknown": ""
+        },
+        "entityCount": "",
+        "noArea": "",
+        "issue": {
+          "missing": "",
+          "otherSource": "",
+          "empty": ""
+        }
+      },
+      "preview": {
+        "empty": "",
+        "noMatches": "",
+        "summary": {
+          "lights": "",
+          "on": "ενεργό",
+          "off": "ανενεργό",
+          "sensors": "",
+          "offline": "αποσυνδεδεμένος"
+        },
+        "otherSource": ""
+      },
+      "live": {
+        "loading": "",
+        "error": "",
+        "retry": "",
+        "actionFailed": "",
+        "actionUnconfirmed": "",
+        "unconfirmed": "",
+        "selectionLimit": "",
+        "unknownError": ""
+      },
+      "inline": {
+        "open": "",
+        "title": "",
+        "handle": "",
+        "empty": "",
+        "add": "",
+        "close": ""
+      }
+    },
     "smartHome-executeAutomation": {
       "name": "Εκτέλεση Αυτοματισμού",
       "description": "Ενεργοποίηση αυτοματισμού με ένα κλικ",
@@ -3535,6 +3950,34 @@
     },
     "coolify": {
       "description": "Επισκόπηση της παρουσίας σας στο Coolify με διακομιστές και εφαρμογές",
+      "summary": {
+        "needsAttention": "{count} χρειάζεται προσοχή",
+        "inProgress": "",
+        "unknown": "",
+        "healthy": "",
+        "empty": "",
+        "healthyDetail": "",
+        "more": "",
+        "moreInstances": ""
+      },
+      "details": {
+        "tabs": "",
+        "overview": "",
+        "search": "",
+        "serviceApplications": ""
+      },
+      "overview": {
+        "projects": "",
+        "resources": "",
+        "attention": "Χρειάζεται προσοχή",
+        "ready": "Έτοιμο",
+        "noProjects": "",
+        "projectsUnavailable": "",
+        "moreProjects": "",
+        "running": "Εκτελείται",
+        "resourceCount": "",
+        "environmentCount": ""
+      },
       "option": {
         "showServers": {
           "label": "Εμφάνιση διακομιστών"
@@ -3566,7 +4009,13 @@
       },
       "source": {
         "url": "Πηγή: {url}",
-        "unavailable": ""
+        "unavailable": "",
+        "unavailableCount": ""
+      },
+      "kind": {
+        "server": "",
+        "application": "Εφαρμογή",
+        "service": "Υπηρεσία"
       },
       "instances": {
         "title": "Παρουσίες"
@@ -3583,6 +4032,7 @@
         "exited": "Έξοδος",
         "starting": "Έναρξη",
         "restarting": "Γίνεται επανεκκίνηση",
+        "unhealthy": "Μη υγιές",
         "unknown": "Άγνωστο",
         "online": "Συνδεδεμένος",
         "offline": "Αποσυνδεδεμένος",
@@ -4815,6 +5265,7 @@
           },
           "identifier": {
             "label": "Αναγνωριστικό",
+            "containerPlaceholder": "",
             "placeholder": "Όνομα ή Κάτοχος/Όνομα"
           },
           "name": {},
@@ -5351,6 +5802,23 @@
       "name": "Πόροι συστήματος",
       "description": "Χρήση CPU, μνήμης, δίσκου και άλλου υλικού του συστήματός σας",
       "option": {
+        "diskDisplayMode": {
+          "label": "",
+          "option": {
+            "percentage": "Ποσοστό (π.χ., 76%)",
+            "free": "",
+            "absolute": "",
+            "combined": ""
+          }
+        },
+        "resourceLayout": {
+          "label": "",
+          "description": ""
+        },
+        "subresourceLayout": {
+          "label": "",
+          "description": ""
+        },
         "hasShadow": {
           "label": "Ενεργοποίηση σκίασης γραφήματος"
         },
@@ -5358,6 +5826,7 @@
           "label": "Ορατά γραφήματα",
           "description": "Επιλέξτε τα γραφήματα που θέλετε να είναι ορατά.",
           "option": {
+            "cpuCores": "",
             "memory": "Μνήμη",
             "network": "Δίκτυο"
           }
@@ -6286,6 +6755,26 @@
         }
       }
     },
+    "tabs": {
+      "label": "",
+      "indicator": "",
+      "home": "Αρχική",
+      "untitled": "",
+      "add": "",
+      "actions": "",
+      "rename": "",
+      "namePlaceholder": "",
+      "moveLeft": "",
+      "moveRight": "",
+      "remove": {
+        "action": "",
+        "confirm": ""
+      },
+      "limitReached": "",
+      "hotkeyHint": "",
+      "destination": "",
+      "containerDestination": ""
+    },
     "landmark": {
       "canvas": "Καμβάς ταμπλό",
       "leftRail": "Αριστερή ράγα ταμπλό",
@@ -6552,6 +7041,11 @@
           "description": "Ο διαχειριστής του διακομιστή δεν έχει ορίσει ακόμη αρχικό πίνακα.",
           "link": "Προβολή δημόσιων πινάκων",
           "notice": "Για να εξαφανίσετε αυτή τη σελίδα, ζητήστε από τον διαχειριστή του διακομιστή να ορίσει αρχικό πίνακα για τον διακομιστή"
+        },
+        "noAccess": {
+          "title": "",
+          "description": "",
+          "notice": ""
         }
       }
     }
@@ -6623,10 +7117,12 @@
             "documentation": "Τεκμηρίωση",
             "submitIssue": "Υποβολή ζητήματος",
             "discord": "Κοινότητα Discord",
-            "sourceCode": "Πηγαίος Κώδικας"
+            "sourceCode": "Πηγαίος Κώδικας",
+            "changelog": ""
           }
         },
         "about": "Σχετικά",
+        "updateAvailable": "Διαθέσιμη ενημέρωση",
         "assistant": "Βοηθός"
       }
     },
@@ -6638,9 +7134,23 @@
           "authentication": "Έλεγχος ταυτότητας",
           "authorization": "Εξουσιοδότηση"
         },
-        "heroBanner": {
-          "title": "Καλώς επιστρέψατε στο",
-          "subtitle": "Πίνακας {app}"
+        "hero": {
+          "greeting": "",
+          "greetingWithoutName": "",
+          "description": ""
+        },
+        "lobster": {
+          "label": "",
+          "prompt": "",
+          "pokeCount": "",
+          "reaction": {
+            "hey": "",
+            "ow": "",
+            "snip": "",
+            "careful": "",
+            "stillHere": "",
+            "okay": ""
+          }
         }
       },
       "board": {
@@ -6685,7 +7195,9 @@
         },
         "noResults": {
           "title": "Δεν υπάρχουν πίνακες ακόμα",
-          "description": "Δημιουργήστε έναν πίνακα για να οργανώσετε τις εφαρμογές και τα widget σας σε ένα μέρος."
+          "description": "Δημιουργήστε έναν πίνακα για να οργανώσετε τις εφαρμογές και τα widget σας σε ένα μέρος.",
+          "noAccessTitle": "",
+          "noAccessDescription": ""
         }
       },
       "media": {
@@ -6738,6 +7250,11 @@
                 "logoDisplay": {
                   "logo": "Λογότυπο μόνο",
                   "logoAndText": "Λογότυπο + κείμενο"
+                },
+                "tabsDisplay": {
+                  "wide": "Ευρεία",
+                  "compact": "Συμπαγής",
+                  "indicator": ""
                 }
               },
               "items": {
@@ -6745,6 +7262,7 @@
                 "search": "Αναζήτηση",
                 "home": "Αρχική σελίδα",
                 "boardSwitcher": "Πίνακες",
+                "boardTabs": "",
                 "assistant": "Βοηθός",
                 "docker": "Προσάρτηση",
                 "boardEdit": "Επεξεργασία πίνακα",
@@ -6976,6 +7494,10 @@
             "title": "Εμφάνιση",
             "defaultColorScheme": {
               "label": "Προεπιλεγμένος συνδυασμός χρωμάτων"
+            },
+            "whatsNew": {
+              "label": "",
+              "description": ""
             }
           },
           "branding": {
@@ -7558,7 +8080,8 @@
               "openSpotlightApps": "Άνοιγμα αναζήτησης εφαρμογών",
               "openSpotlightAssistant": "Άνοιγμα βοηθητικής λειτουργίας",
               "openSpotlightPreferences": "Άνοιγμα λειτουργίας προτιμήσεων",
-              "openAssistant": "Άνοιγμα Βοηθού"
+              "openAssistant": "Άνοιγμα Βοηθού",
+              "switchBoardTab": ""
             },
             "note": "Συμβουλή: Το Mod αναφέρεται τόσο στο πλήκτρο Ctrl όσο και στο πλήκτρο ⌘ στο macOS"
           }
@@ -8728,6 +9251,12 @@
         "description": "Αλλάξτε τον συνδυασμό χρωμάτων σας, τη γλώσσα, τον αρχικό πίνακα και τις προτιμήσεις σας. Μπορείτε επίσης να μεταβείτε στην περιοχή διαχείρισης από εδώ."
       }
     }
+  },
+  "whatsNew": {
+    "title": "",
+    "empty": "",
+    "allReleases": "",
+    "dismiss": ""
   },
   "metadata": {
     "description": "Ένας αυτόνομος πίνακας εργαλείων για τη στοίβα *arr και ολόκληρη την αρχική σας σελίδα. Ενσωματώνεται με υπηρεσίες 50+, γραφικά συστατικά, χωρίς αρχεία διαμόρφωσης.",

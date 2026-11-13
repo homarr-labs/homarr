@@ -1245,6 +1245,20 @@
       "username": "Nom d'usuari",
       "password": "Contrasenya",
       "savedPlaceholder": "••••••• (desat, deixa-ho buit per conservar-ho)"
+    },
+    "workshopUpdate": {
+      "title": "",
+      "apply": "",
+      "available": "",
+      "check": "",
+      "description": "",
+      "approvePermissions": "",
+      "pendingDescription": "",
+      "overwriteLocalChanges": "",
+      "installSeparate": "",
+      "communityWarning": "",
+      "updated": "",
+      "changedBeforeInstall": ""
     }
   },
   "workshop": {
@@ -1515,6 +1529,27 @@
           "title": "Error desconegut",
           "description": "S'ha produït un error desconegut; obre la causa següent per veure'n més detalls"
         },
+        "frigate": {
+          "title": "",
+          "status": "",
+          "description": {
+            "cookie": "",
+            "profileMismatch": "",
+            "redirect": "",
+            "login": "",
+            "profile": "",
+            "stats": ""
+          }
+        },
+        "openmediavault": {
+          "title": "",
+          "description": {
+            "totpSecretRequired": "",
+            "totpSecretInvalid": "",
+            "totpVerificationFailed": "",
+            "unsupportedChallenge": ""
+          }
+        },
         "parse": {
           "title": "Error d'anàlisi",
           "description": "No s'ha pogut analitzar la resposta. Verifica que l'URL apunti a l'URL base del servei."
@@ -1714,6 +1749,11 @@
         "title": "Restablir secret",
         "message": "Esteu segur que voleu restablir aquest secret?"
       },
+      "totpNotice": "",
+      "remove": {
+        "title": "",
+        "message": ""
+      },
       "noSecretsRequired": {
         "segmentTitle": "Sense secrets",
         "text": "No es requereixen secrets per a aquesta integració"
@@ -1794,6 +1834,10 @@
         "wazuhIndexerPassword": {
           "label": "Contrasenya de l'indexador",
           "newLabel": "Contrasenya nova de l'indexador"
+        },
+        "totpSecret": {
+          "label": "",
+          "newLabel": ""
         }
       }
     },
@@ -1891,7 +1935,8 @@
       "copy": "Copia",
       "copied": "Copiat",
       "refresh": "Actualitza",
-      "export": "Exporta"
+      "export": "Exporta",
+      "advanced": ""
     },
     "hidden": "",
     "pagination": {
@@ -1986,6 +2031,15 @@
         "modifier": "Mod"
       }
     },
+    "markdown": {
+      "alert": {
+        "note": "",
+        "tip": "",
+        "important": "",
+        "warning": "",
+        "caution": ""
+      }
+    },
     "dangerZone": "Zona de perill",
     "noResults": "No s'han trobat resultats",
     "unsavedChanges": "Tens canvis sense desar!",
@@ -2076,6 +2130,158 @@
         "sm": "Subtil",
         "xl": "Suau"
       }
+    },
+    "customTheme": {
+      "label": "",
+      "nothingFound": "",
+      "custom": "",
+      "customize": "",
+      "editor": {
+        "title": "",
+        "basedOn": "",
+        "preview": "",
+        "previewColorScheme": "",
+        "layout": "",
+        "typography": "",
+        "colors": "",
+        "json": "",
+        "defaultRadius": "",
+        "radiusHint": "",
+        "scale": "",
+        "spacing": "",
+        "radius": "",
+        "fontFamily": "",
+        "headingFont": "",
+        "monoFont": "",
+        "fontSizes": "",
+        "palette": {
+          "body": "",
+          "surface": "",
+          "hover": "",
+          "border": "",
+          "text": "",
+          "dimmed": "",
+          "primary": "",
+          "secondary": ""
+        },
+        "lockedPrimary": "",
+        "pickColor": "",
+        "autoContrast": "",
+        "luminanceThreshold": "",
+        "jsonHint": "",
+        "invalidJson": "",
+        "tooLong": "",
+        "copyJson": "",
+        "copied": "",
+        "discardJson": "",
+        "reset": "",
+        "apply": "",
+        "sampleTitle": "",
+        "sampleBadge": "",
+        "sampleText": "",
+        "sampleInput": "",
+        "sampleValue": "",
+        "sampleButton": ""
+      },
+      "studio": {
+        "title": "",
+        "saveTheme": "",
+        "searchControls": "",
+        "component": "",
+        "inheritedValue": "",
+        "resetControl": "",
+        "decreaseControl": "",
+        "increaseControl": "",
+        "chooseControl": "",
+        "layout": {
+          "spacing": "",
+          "radius": "",
+          "compact": "",
+          "normal": "",
+          "roomy": "",
+          "preset": "",
+          "none": "",
+          "rounded": "",
+          "full": "",
+          "custom": "",
+          "advanced": ""
+        },
+        "previewSurface": "",
+        "previewFrame": "",
+        "loadingPreview": "",
+        "previewFailed": "",
+        "sampleBoard": "",
+        "components": "",
+        "overlays": "",
+        "typography": "",
+        "liveBoard": "",
+        "viewport": "",
+        "responsive": "",
+        "tablet": "",
+        "mobile": "",
+        "includeCustomCss": "",
+        "groups": {
+          "layout": "",
+          "typography": "",
+          "colors": "",
+          "surfaces": "",
+          "overlays": "",
+          "accessibility": "",
+          "css": ""
+        },
+        "controls": {
+          "defaultRadius": "",
+          "scale": "",
+          "spacing": "",
+          "radius": "",
+          "breakpoint": "",
+          "fontSizes": "",
+          "lineHeight": "",
+          "shadow": "",
+          "fontFamily": "",
+          "headingFont": "",
+          "monoFont": "",
+          "headingWeight": "",
+          "headingSize": "",
+          "fontSmoothing": "",
+          "body": "",
+          "surface": "",
+          "hover": "",
+          "border": "",
+          "text": "",
+          "dimmed": "",
+          "primary": "",
+          "secondary": "",
+          "autoContrast": "",
+          "luminanceThreshold": "",
+          "primaryShade": "",
+          "componentRadius": "",
+          "borderWidth": "",
+          "surfaceBackground": "",
+          "surfaceText": "",
+          "surfaceBorder": "",
+          "hoverBackground": "",
+          "hoverText": "",
+          "componentShadow": "",
+          "componentBorder": "",
+          "componentPadding": "",
+          "componentSize": "Mida",
+          "componentVariant": "",
+          "overlayBlur": "",
+          "overlayOpacity": "",
+          "overlayColor": "",
+          "transitionDuration": "",
+          "headerBackground": "",
+          "respectReducedMotion": "",
+          "focusRing": "",
+          "cursorType": "",
+          "customCss": ""
+        },
+        "expandPreview": "",
+        "showControls": ""
+      },
+      "instanceDefault": "",
+      "useInstanceDefault": ""
     }
   },
   "section": {
@@ -2171,6 +2377,18 @@
       },
       "customWidget": "Giny personalitzat",
       "standalone": "Independent",
+      "integrationFilter": "",
+      "integrationNotConnected": "",
+      "workshop": {
+        "title": "",
+        "back": "",
+        "empty": "",
+        "noMatches": "",
+        "loading": "",
+        "integrationError": "",
+        "searchMore": "",
+        "installAndAdd": ""
+      },
       "missingIntegration": {
         "title": "Connecteu primer un servei",
         "noPermission": "Aquest giny necessita una connexió de servei compatible. Demaneu a un administrador que en connecti una i torneu-ho a provar."
@@ -2206,10 +2424,13 @@
       "saveErrorTitle": "No s'han pogut actualitzar els elements",
       "saveErrorMessage": "No s'han pogut desar els canvis. S'ha actualitzat el tauler.",
       "moveUnavailableTitle": "No s'han pogut moure els elements seleccionats",
-      "moveUnavailableMessage": "La destinació no té prou espai per a tota la selecció."
+      "moveUnavailableMessage": "La destinació no té prou espai per a tota la selecció.",
+      "moveToTab": "",
+      "movedToTab": ""
     },
     "moveResize": {
       "title": "Mou / redimensiona element",
+      "sizeOverlap": "",
       "entryLabel": "{name}, columna {column}, fila {row}",
       "target": {
         "numbered": "{name}, destinació {index}",
@@ -2292,6 +2513,36 @@
       "open": "Obre la vista avançada",
       "close": "Tanca la vista avançada",
       "label": "Vista avançada de {widget}"
+    },
+    "inPlace": {
+      "widgetLoadError": "",
+      "search": "",
+      "bestFit": "",
+      "moreWidgets": "",
+      "widgets": "",
+      "yourApps": "",
+      "createApp": "",
+      "addAppLink": "",
+      "createWidget": "",
+      "createWidgetDescription": "",
+      "createAppDescription": "",
+      "defaultFit": "",
+      "defaultFitDescription": "",
+      "defaultSize": "",
+      "defaultSizeDescription": "",
+      "emptyCells": "",
+      "preview": {
+        "error": "",
+        "loading": ""
+      },
+      "keyboard": {
+        "move": "",
+        "resize": "",
+        "pick": "",
+        "browse": "",
+        "moveDescription": "",
+        "resizeDescription": ""
+      }
     }
   },
   "widget": {
@@ -2335,7 +2586,29 @@
             "tooltip": "Com a tooltip",
             "hidden": "Ocult"
           }
+        },
+        "dockerContainer": {
+          "label": "",
+          "description": "",
+          "placeholder": "",
+          "disabled": "",
+          "unavailable": ""
         }
+      },
+      "docker": {
+        "action": {
+          "start": "",
+          "stop": ""
+        },
+        "notification": {
+          "startFailed": "",
+          "stopFailed": ""
+        },
+        "switch": {
+          "start": "",
+          "stop": ""
+        },
+        "stopped": ""
       },
       "error": {
         "notFound": {
@@ -2414,6 +2687,10 @@
         "hideHostname": {
           "label": "Amaga noms d'amfitrió"
         },
+        "showFullUrls": {
+          "label": "",
+          "description": ""
+        },
         "withBorder": {
           "label": "Mostra la vora"
         },
@@ -2436,6 +2713,9 @@
         }
       },
       "empty": "Afegeix una URL o una aplicació a la configuració del giny",
+      "copyUrl": "",
+      "copied": "",
+      "copyFailed": "",
       "groups": {
         "label": "",
         "placeholder": "",
@@ -3089,6 +3369,141 @@
         "toggleFailed": "No s'ha pogut actualitzar l'entitat"
       }
     },
+    "smartHome-controls": {
+      "name": "",
+      "description": "",
+      "option": {
+        "presentation": {
+          "label": "",
+          "option": {
+            "entities": "",
+            "controlPanel": ""
+          }
+        },
+        "title": {
+          "label": "Títol",
+          "description": ""
+        },
+        "blocks": {
+          "label": "",
+          "remove": ""
+        },
+        "roomDomains": {
+          "label": "",
+          "description": ""
+        },
+        "excludedEntityIds": {
+          "label": "",
+          "description": "",
+          "placeholder": ""
+        },
+        "showSummary": {
+          "label": ""
+        },
+        "readOnly": {
+          "label": "",
+          "description": ""
+        },
+        "controlSize": {
+          "label": "",
+          "option": {
+            "auto": "",
+            "compact": "",
+            "large": ""
+          }
+        },
+        "palette": {
+          "label": "",
+          "option": {
+            "boring": "",
+            "colorful": ""
+          }
+        }
+      },
+      "domain": {
+        "light": "",
+        "switch": "",
+        "fan": "",
+        "climate": "",
+        "humidifier": "",
+        "cover": "",
+        "valve": "",
+        "lock": "",
+        "alarm_control_panel": "",
+        "media_player": "",
+        "camera": "",
+        "vacuum": "",
+        "scene": "",
+        "script": "",
+        "automation": "",
+        "button": "",
+        "input_boolean": "",
+        "input_select": "",
+        "person": "",
+        "binary_sensor": "",
+        "sensor": "",
+        "weather": "",
+        "sun": "",
+        "update": ""
+      },
+      "block": {
+        "add": {
+          "rooms": "",
+          "entity": "",
+          "roomsLabel": "",
+          "roomsPlaceholder": "",
+          "entityLabel": "",
+          "entityPlaceholder": "",
+          "merge": "",
+          "submit": "",
+          "duplicate": "",
+          "covered": ""
+        },
+        "kind": {
+          "entity": "",
+          "room": "",
+          "mergedRooms": "",
+          "unknown": ""
+        },
+        "entityCount": "",
+        "noArea": "",
+        "issue": {
+          "missing": "",
+          "otherSource": "",
+          "empty": ""
+        }
+      },
+      "preview": {
+        "empty": "",
+        "noMatches": "",
+        "summary": {
+          "lights": "",
+          "on": "",
+          "off": "",
+          "sensors": "",
+          "offline": ""
+        },
+        "otherSource": ""
+      },
+      "live": {
+        "loading": "",
+        "error": "",
+        "retry": "",
+        "actionFailed": "",
+        "actionUnconfirmed": "",
+        "unconfirmed": "",
+        "selectionLimit": "",
+        "unknownError": ""
+      },
+      "inline": {
+        "open": "",
+        "title": "",
+        "handle": "",
+        "empty": "",
+        "add": "",
+        "close": ""
+      }
+    },
     "smartHome-executeAutomation": {
       "name": "Executa automatització",
       "description": "Activa una automatització amb un sol clic",
@@ -3535,6 +3950,34 @@
     },
     "coolify": {
       "description": "Visió general de la teva instància de Coolify amb servidors i aplicacions",
+      "summary": {
+        "needsAttention": "",
+        "inProgress": "",
+        "unknown": "",
+        "healthy": "",
+        "empty": "",
+        "healthyDetail": "",
+        "more": "",
+        "moreInstances": ""
+      },
+      "details": {
+        "tabs": "",
+        "overview": "",
+        "search": "",
+        "serviceApplications": ""
+      },
+      "overview": {
+        "projects": "",
+        "resources": "",
+        "attention": "",
+        "ready": "",
+        "noProjects": "",
+        "projectsUnavailable": "",
+        "moreProjects": "",
+        "running": "",
+        "resourceCount": "",
+        "environmentCount": ""
+      },
       "option": {
         "showServers": {
           "label": "Mostra els servidors"
@@ -3566,7 +4009,13 @@
       },
       "source": {
         "url": "Origen: {url}",
-        "unavailable": "{source}: no disponible"
+        "unavailable": "{source}: no disponible",
+        "unavailableCount": ""
+      },
+      "kind": {
+        "server": "",
+        "application": "",
+        "service": ""
       },
       "instances": {
         "title": "Instàncies"
@@ -3583,6 +4032,7 @@
         "exited": "Finalitzat",
         "starting": "S'està iniciant",
         "restarting": "S'està reiniciant",
+        "unhealthy": "",
         "unknown": "Desconegut",
         "online": "En línia",
         "offline": "Fora de línia",
@@ -4815,6 +5265,7 @@
           },
           "identifier": {
             "label": "Identificador",
+            "containerPlaceholder": "",
             "placeholder": "Nom o propietari/nom"
           },
           "name": {},
@@ -5351,6 +5802,23 @@
       "name": "Recursos del sistema",
       "description": "Ús de la CPU, la memòria, el disc i altre maquinari del sistema",
       "option": {
+        "diskDisplayMode": {
+          "label": "",
+          "option": {
+            "percentage": "",
+            "free": "",
+            "absolute": "",
+            "combined": ""
+          }
+        },
+        "resourceLayout": {
+          "label": "",
+          "description": ""
+        },
+        "subresourceLayout": {
+          "label": "",
+          "description": ""
+        },
         "hasShadow": {
           "label": "Activa l'ombrejat dels gràfics"
         },
@@ -5358,6 +5826,7 @@
           "label": "Gràfics visibles",
           "description": "Selecciona els gràfics que vols que siguin visibles.",
           "option": {
+            "cpuCores": "",
             "memory": "Memòria",
             "network": "Xarxa"
           }
@@ -6286,6 +6755,26 @@
         }
       }
     },
+    "tabs": {
+      "label": "",
+      "indicator": "",
+      "home": "",
+      "untitled": "",
+      "add": "",
+      "actions": "",
+      "rename": "",
+      "namePlaceholder": "",
+      "moveLeft": "",
+      "moveRight": "",
+      "remove": {
+        "action": "",
+        "confirm": ""
+      },
+      "limitReached": "",
+      "hotkeyHint": "",
+      "destination": "",
+      "containerDestination": ""
+    },
     "landmark": {
       "canvas": "Àrea del tauler",
       "leftRail": "Barra lateral esquerra del tauler",
@@ -6552,6 +7041,11 @@
           "description": "L'administrador del servidor encara no ha establert un tauler d'inici.",
           "link": "Visualitzar taulers públics",
           "notice": "Per fer desaparèixer aquesta pàgina, demana a l'administrador del servidor que estableixi un tauler d'inici per al servidor"
+        },
+        "noAccess": {
+          "title": "",
+          "description": "",
+          "notice": ""
         }
       }
     }
@@ -6623,10 +7117,12 @@
             "documentation": "Documentació",
             "submitIssue": "Envieu un problema",
             "discord": "Discord de la comunitat",
-            "sourceCode": "Codi font"
+            "sourceCode": "Codi font",
+            "changelog": ""
           }
         },
         "about": "Quant a",
+        "updateAvailable": "",
         "assistant": "Assistent"
       }
     },
@@ -6638,9 +7134,23 @@
           "authentication": "Autenticació",
           "authorization": "Autorització"
         },
-        "heroBanner": {
-          "title": "Ben tornat al teu",
-          "subtitle": "Tauler de {app}"
+        "hero": {
+          "greeting": "",
+          "greetingWithoutName": "",
+          "description": ""
+        },
+        "lobster": {
+          "label": "",
+          "prompt": "",
+          "pokeCount": "",
+          "reaction": {
+            "hey": "",
+            "ow": "",
+            "snip": "",
+            "careful": "",
+            "stillHere": "",
+            "okay": ""
+          }
         }
       },
       "board": {
@@ -6685,7 +7195,9 @@
         },
         "noResults": {
           "title": "Encara no hi ha taulers",
-          "description": "Crea un tauler per organitzar les teves aplicacions i ginys en un sol lloc."
+          "description": "Crea un tauler per organitzar les teves aplicacions i ginys en un sol lloc.",
+          "noAccessTitle": "",
+          "noAccessDescription": ""
         }
       },
       "media": {
@@ -6738,6 +7250,11 @@
                 "logoDisplay": {
                   "logo": "Només el logotip",
                   "logoAndText": "Logotip + text"
+                },
+                "tabsDisplay": {
+                  "wide": "",
+                  "compact": "",
+                  "indicator": ""
                 }
               },
               "items": {
@@ -6745,6 +7262,7 @@
                 "search": "Cerca",
                 "home": "Panell d'inici",
                 "boardSwitcher": "Taulers",
+                "boardTabs": "",
                 "assistant": "Assistent",
                 "docker": "Docker",
                 "boardEdit": "Edita el tauler",
@@ -6976,6 +7494,10 @@
             "title": "Aparença",
             "defaultColorScheme": {
               "label": "Esquema de color per defecte"
+            },
+            "whatsNew": {
+              "label": "",
+              "description": ""
             }
           },
           "branding": {
@@ -7558,7 +8080,8 @@
               "openSpotlightApps": "Obre la cerca d'aplicacions",
               "openSpotlightAssistant": "Obre el mode Assistent",
               "openSpotlightPreferences": "Obre el mode de preferències",
-              "openAssistant": "Obre l'Assistent"
+              "openAssistant": "Obre l'Assistent",
+              "switchBoardTab": ""
             },
             "note": "Consell: Mod fa referència tant a la tecla Ctrl com a la tecla ⌘ de macOS"
           }
@@ -8728,6 +9251,12 @@
         "description": "Canvia l'esquema de colors, l'idioma, el tauler d'inici i les preferències. També pots anar a l'àrea de gestió des d'aquí."
       }
     }
+  },
+  "whatsNew": {
+    "title": "",
+    "empty": "",
+    "allReleases": "",
+    "dismiss": ""
   },
   "metadata": {
     "description": "Un tauler autoallotjat per a la pila *arr i tot el teu homelab. S'integra amb més de 50 serveis, ginys en temps real i no necessita fitxers de configuració.",

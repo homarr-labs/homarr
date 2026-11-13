@@ -14,6 +14,7 @@ interface Props {
   boardEditAction?: ReactNode;
   boardSettingsAction?: ReactNode;
   hasNavigation?: boolean;
+  withBoardTabs?: boolean;
 }
 
 export const MainHeader = async ({
@@ -23,6 +24,7 @@ export const MainHeader = async ({
   boardEditAction,
   boardSettingsAction,
   hasNavigation = true,
+  withBoardTabs = false,
 }: Props) => {
   const session = await auth();
   const isAdmin = Boolean(session?.user.permissions.includes("admin"));
@@ -37,6 +39,7 @@ export const MainHeader = async ({
       boardEditAction={boardEditAction}
       boardSettingsAction={boardSettingsAction}
       hasNavigation={hasNavigation}
+      withBoardTabs={withBoardTabs}
       avatar={<CurrentUserAvatar size="md" />}
       userId={session?.user.id ?? null}
       isAdmin={isAdmin}

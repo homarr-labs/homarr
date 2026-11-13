@@ -5,8 +5,12 @@ import type { SpotlightStore } from "@mantine/spotlight";
 import { createSpotlight } from "@mantine/spotlight";
 import { atom } from "jotai";
 
+import type { SpotlightMode } from "./open";
+
 export const [spotlightStore, spotlightActions] = createSpotlight();
 export const closeSpotlight = spotlightActions.close;
+
+export const spotlightSearchStateAtom = atom<{ mode: SpotlightMode; query: string }>({ mode: "search", query: "" });
 
 export interface MediaRequestSearchScope {
   integrationIds?: string[];
