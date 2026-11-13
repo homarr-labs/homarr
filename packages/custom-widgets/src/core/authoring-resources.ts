@@ -252,7 +252,7 @@ Numbers support \`n.toLocaleString("en-US", { maximumFractionDigits: 1, notation
 Guard scalar types and finite numbers, preserve 0/false, and use — for missing values. Convert numbers before relabeling units.
 Map cross-collection IDs to verified names or retain IDs. Follow documented rate semantics.
 
-Keep requested fields/collections reachable through summaries, tables/details, filters or pagination; never silently slice rows.
+Keep requested fields/collections reachable through summaries, tables/details, filters, pagination or a bounded ScrollArea; never silently slice rows.
 Label partial results/totals and verify pagination. Bounded response observations are not full schemas.
 
 ${CUSTOM_WIDGET_COMMON_CHART_GUIDANCE}
