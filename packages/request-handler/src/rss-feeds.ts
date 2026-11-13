@@ -27,8 +27,11 @@ export const rssFeedsRequestHandler = createWidgetRequestHandler({
 
           // Atom and YouTube feeds: prioritize <published> over feed-extractor's default <updated> fallback
           const rawPublished = (feedEntry as Record<string, unknown>).published;
-          if (typeof rawPublished === "string" && toValidDate(rawPublished.trim()) !== null) {
-            extraFields.published = rawPublished.trim();
+          if (typeof rawPublished === "string") {
+            const published = toValidDate(rawPublished.trim());
+            if (published !== null) {
+              extraFields.published = published.toISOString();
+            }
           }
 
           // YouTube RSS feeds put video descriptions in <media:group><media:description>

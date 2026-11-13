@@ -51,7 +51,7 @@ describe("rssFeedsRequestHandler", () => {
 
     expect(data.entries).toHaveLength(1);
     const firstEntry = data.entries?.[0];
-    expect(firstEntry?.published).toBe("2026-11-01T16:00:11+00:00");
+    expect(firstEntry?.published).toBe("2026-11-01T16:00:11.000Z");
     expect(firstEntry?.description).toBe("Testing the hottest hot sauce in the world.");
     expect(firstEntry?.enclosure).toBe("https://i2.ytimg.com/vi/j8bJN1UvHn0/hqdefault.jpg");
     expect(firstEntry?.feedUrl).toBe("https://www.youtube.com/feeds/videos.xml?channel_id=UC_pT_Iz6XjuM-eMTlXghdfw");
@@ -92,7 +92,7 @@ describe("rssFeedsRequestHandler", () => {
 
     expect(data.entries).toHaveLength(1);
     const firstEntry = data.entries?.[0];
-    expect(firstEntry?.published).toBe("2026-10-15T12:00:00Z");
+    expect(firstEntry?.published).toBe("2026-10-15T12:00:00.000Z");
     expect(firstEntry?.description).toBe("Default description");
     expect(firstEntry?.enclosure).toBeUndefined();
   });
