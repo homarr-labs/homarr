@@ -102,6 +102,7 @@ export default function RssFeed({ options, width, height, displayMode }: WidgetC
     isTiny,
     hideDescription: options.hideDescription,
     showPosterImage: options.showPosterImage,
+    hideFeedTitle: options.hideFeedTitle,
     descriptionLines,
   });
   const spacing = isRoomy ? "sm" : "xs";
@@ -124,6 +125,10 @@ export default function RssFeed({ options, width, height, displayMode }: WidgetC
         <SimpleGrid cols={columns} w="100%" spacing={spacing} verticalSpacing={spacing}>
           {feed.entries.map((feedEntry) => {
             const href = getSafeApplicationUrl(feedEntry.link, { baseUrl: feedEntry.feedUrl });
+            let source = entryDisplay.showSource ? getHostname(feedEntry.feedUrl) : undefined;
+            if (entryDisplay.showFeedTitle && feedEntry.feedTitle?.trim()) {
+              source = feedEntry.feedTitle.trim();
+            }
             return (
               <Card
                 key={feedEntry.id}
@@ -162,7 +167,7 @@ export default function RssFeed({ options, width, height, displayMode }: WidgetC
                     )}
 
                     <InfoDisplay
-                      source={entryDisplay.showSource ? getHostname(feedEntry.feedUrl) : undefined}
+                      source={source}
                       date={feedEntry.published ? dayjs(feedEntry.published).fromNow() : undefined}
                       timestamp={
                         feedEntry.published ? dayjs(feedEntry.published).format("YYYY-MM-DD HH:mm:ss Z") : undefined
@@ -216,6 +221,11 @@ export default function RssFeed({ options, width, height, displayMode }: WidgetC
                       </Text>
                     )}
                     {feedEntry.published && <InfoDisplay date={dayjs(feedEntry.published).fromNow()} />}
+                    {!options.hideFeedTitle && feedEntry.feedTitle && (
+                      <Text dir={languageDir} fz="sm" lh="sm" lineClamp={1} ta="end">
+                        {feedEntry.feedTitle}
+                      </Text>
+                    )}
                   </Flex>
                 </Group>
               </Card>
@@ -250,6 +260,7 @@ interface RssEntryDisplayInput {
   isDense: boolean;
   isTiny: boolean;
   hideDescription: boolean;
+  hideFeedTitle: boolean;
   showPosterImage: boolean;
   descriptionLines: number;
 }
@@ -259,10 +270,12 @@ export const getRssEntryDisplay = ({
   isDense,
   isTiny,
   hideDescription,
+  hideFeedTitle,
   showPosterImage,
   descriptionLines,
 }: RssEntryDisplayInput) => ({
   showDescription: isAdvanced || (!hideDescription && !isTiny),
+  showFeedTitle: !hideFeedTitle && (isAdvanced || !isTiny),
   showImage: isAdvanced || (showPosterImage && !isTiny),
   showSource: isAdvanced || !isDense,
   descriptionLineClamp: isAdvanced ? undefined : descriptionLines,
