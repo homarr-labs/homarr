@@ -64,6 +64,7 @@ export const BoardTabBar = ({
 }) => {
   const { tabs, activeTab } = useBoardTabs();
   const [isEditMode] = useEditMode();
+  const activeTabIndex = tabs.findIndex((tab) => tab.id === activeTab?.id);
   const [renamingTabId, setRenamingTabId] = useState<string | null>(null);
   const listRef = useRef<HTMLDivElement>(null);
   const [resizeRef, { width: listWidth }] = useResizeObserver<HTMLDivElement>();
@@ -88,7 +89,7 @@ export const BoardTabBar = ({
     const tabBounds = tab.getBoundingClientRect();
     if (tabBounds.left < bounds.left) list.scrollLeft += tabBounds.left - bounds.left;
     else if (tabBounds.right > bounds.right) list.scrollLeft += tabBounds.right - bounds.right;
-  }, [activeTab?.id, activeTab?.name, listWidth]);
+  }, [activeTab?.id, activeTab?.name, activeTabIndex, listWidth]);
 
   return (
     <Group gap={4} wrap="nowrap" w={fit ? "100%" : "fit-content"} maw="100%" p={2}>
