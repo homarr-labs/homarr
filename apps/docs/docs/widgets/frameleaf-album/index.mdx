@@ -1,0 +1,12 @@
+---
+title: "Frameleaf album"
+description: "Show private photos and a scoped count from a selected Frameleaf album."
+---
+
+First [connect Frameleaf](/docs/integrations/frameleaf), then add **Frameleaf album** to a private board and select an album. Save the widget before viewing photos; previews do not expose private media.
+
+Use **Previous** and **Next** to browse. **Play** advances every 30 seconds; **Pause** keeps the current photo. The widget checks access again while paused. **Open Library** opens the configured Library address. The photo count covers only the selected album’s currently readable images.
+
+Private boards require explicit viewer access. Public boards show an access message instead of photos. If access is removed or the Library becomes unavailable, the widget clears the image on its next check. Rate-limited requests wait for the Library’s retry interval.
+
+Only the displayed image is fetched. Images use authenticated, uncached requests; they are never registered in Homarr’s public image proxy. Reconnecting or narrowing the grant invalidates earlier image requests. The widget does not download the entire album, request original files or use public sharing links.

@@ -107,6 +107,7 @@ export const widgetCatalogIcons: Record<WidgetKind, TablerIcon> = {
   timetable: IconBusStop,
   "immich-serverStats": IconGraphFilled,
   "immich-albumCarousel": IconPhoto,
+  "frameleaf-albumCarousel": IconPhoto,
   paperlessNgx: IconFileText,
   "thingport-libraryStats": IconCube,
   "thingport-models": IconCube3dSphere,

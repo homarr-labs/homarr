@@ -1849,6 +1849,24 @@
     "llamacpp": {
       "name": "",
       "description": "Monitorear un servidor llama-server local llama.cpp: métricas de salud, modelo y generación"
+    },
+    "frameleaf": {
+      "help": "Elige los álbumes de Frameleaf que Homarr puede leer. Las fotos privadas solo están disponibles en paneles privados para las personas autorizadas explícitamente.",
+      "connected": "Conectado a Frameleaf",
+      "disconnected": "Sin conexión",
+      "pending": "Conexión en curso",
+      "reconnect": "Desconecta y vuelve a conectar para renovar el acceso.",
+      "origin": "Dirección de la biblioteca",
+      "originHelp": "Usa una dirección accesible tanto desde el servidor de Homarr como desde tu navegador.",
+      "clientId": "ID de cliente (opcional)",
+      "clientIdHelp": "Déjalo vacío para el registro automático o introduce el ID de cliente no secreto que te proporcione el administrador de tu biblioteca.",
+      "callback": "URL de retorno OAuth",
+      "configuration": "Configura BASE_URL de Homarr con su dirección HTTPS de confianza antes de conectar.",
+      "registration": "El registro automático no estaba disponible. Pide al administrador de tu biblioteca un ID de cliente registrado con la URL de retorno que se muestra aquí.",
+      "busy": "Hay otra operación de conexión en curso. Espera y vuelve a intentarlo.",
+      "failed": "No se pudo conectar. Comprueba la dirección, la confianza del certificado y los permisos, y vuelve a intentarlo.",
+      "connect": "Conectar Frameleaf",
+      "disconnect": "Desconectar"
     }
   },
   "media": {
@@ -6617,6 +6635,29 @@
         },
         "showRuleId": {
           "label": "Mostrar ID de regla"
+        }
+      }
+    },
+    "frameleaf-albumCarousel": {
+      "name": "Álbum de Frameleaf",
+      "description": "Fotos privadas de un álbum seleccionado de Frameleaf",
+      "chooseAlbum": "Guarda este widget en un panel privado y elige un álbum autorizado.",
+      "loading": "Cargando Frameleaf…",
+      "count": "Fotos en este álbum: {count}",
+      "imageAlt": "Foto de Frameleaf",
+      "empty": "Este álbum no tiene fotos disponibles.",
+      "previous": "Anterior",
+      "next": "Siguiente",
+      "play": "Iniciar",
+      "pause": "Pausar",
+      "openLibrary": "Abrir biblioteca",
+      "privateOnly": "Inicia sesión en un panel privado al que tengas acceso explícito. Los paneles públicos no pueden mostrar estas fotos.",
+      "unavailable": "Frameleaf no está disponible. Comprueba la conexión; el widget volverá a intentarlo.",
+      "rateLimit": "Frameleaf está limitando las solicitudes. El widget esperará antes de reintentarlo.",
+      "option": {
+        "albumId": {
+          "label": "Álbum",
+          "description": "Elige un álbum autorizado mediante Frameleaf Connect. Las fotos nunca están disponibles en paneles públicos."
         }
       }
     }

@@ -2971,6 +2971,7 @@
                         "kind": {
                           "type": "string",
                           "enum": [
+                            "frameleaf-albumCarousel",
                             "stats",
                             "clock",
                             "weather",
@@ -3235,6 +3236,7 @@
                   "kind": {
                     "type": "string",
                     "enum": [
+                      "frameleaf-albumCarousel",
                       "stats",
                       "clock",
                       "weather",
@@ -7414,6 +7416,7 @@
                     "description": "Integration type from integration_getKinds; first full-access match ordered by name then ID",
                     "type": "string",
                     "enum": [
+                      "frameleaf",
                       "autobrr",
                       "jellystat",
                       "scrutiny",
@@ -7591,6 +7594,7 @@
                         "kind": {
                           "type": "string",
                           "enum": [
+                            "frameleaf",
                             "autobrr",
                             "jellystat",
                             "scrutiny",

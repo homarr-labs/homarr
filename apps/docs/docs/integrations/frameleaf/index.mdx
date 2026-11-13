@@ -1,0 +1,29 @@
+---
+title: "Frameleaf"
+description: "Connect selected Frameleaf albums to private Homarr boards with OAuth."
+---
+
+Use Frameleaf Connect to show photos from selected albums on a private Homarr board.
+
+### Connect your Library
+
+1. Set Homarr’s `BASE_URL` to its HTTPS address. Open Homarr at that address and make sure your browser and the Library trust its certificate.
+2. In **Manage → Integrations**, add **Frameleaf**.
+3. Enter one Library address that both the Homarr server and your browser can reach. Keep the certificate valid for that hostname. Homarr’s trusted certificate store supports a private certificate authority; hostname verification stays enabled.
+4. Leave **Client ID** empty for automatic registration. If your Library administrator has disabled registration, ask them to register the exact **OAuth callback** shown in Homarr and enter the resulting non-secret client ID.
+5. Select **Connect Frameleaf**, sign in to the Library, and choose the readable albums. You can explicitly choose whole-library reading in Library consent. Homarr requests read access only.
+6. Add the [Frameleaf album widget](/docs/widgets/frameleaf-album) to a private board and select an authorized album.
+
+A trusted HTTPS callback is required even when the Library is on your local network. A separate dashboard tile address does not change where OAuth or media requests are sent. To use a different Library address, disconnect and create a new integration with that address.
+
+### Hosting
+
+A local Library or a customer-managed HTTPS connection does not require a Frameleaf Cloud subscription. Frameleaf relay access follows your Cloud plan. Both the Homarr server and your browser must be able to reach the configured Library address; a server-only container hostname is insufficient.
+
+### Access and reconnecting
+
+Grant board access explicitly to the intended viewers. Public boards never receive these photos, even when the requesting user owns the board. Counts and display images come from the selected authorized album. Homarr does not request original files, people, uploads or administration access.
+
+To expand album access, disconnect and connect again so the Library can show new consent. Removing an album, hiding a photo, moving it to Trash or revoking the grant prevents future reads. Refresh failures with an uncertain result require reconnection instead of risking reuse of a rotated token.
+
+Disconnecting revokes the Library grant before removing stored credentials. If the Library is offline, retry when it is reachable; you can also revoke access in the Library’s Connect settings. Keep Homarr’s encryption key when upgrading or restoring the installation; it protects stored connections. Previously viewed copies cannot be recalled from a browser or another application.

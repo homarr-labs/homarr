@@ -1,4 +1,5 @@
 export const widgetKinds = [
+  "frameleaf-albumCarousel",
   "stats",
   "clock",
   "weather",
@@ -71,6 +72,7 @@ export const widgetKinds = [
 export type WidgetKind = (typeof widgetKinds)[number];
 
 export const widgetDefaultSizes: Partial<Record<WidgetKind, { width: number; height: number }>> = {
+  "frameleaf-albumCarousel": { width: 4, height: 3 },
   clock: { width: 2, height: 1 },
   weather: { width: 2, height: 1 },
   airQuality: { width: 2, height: 1 },

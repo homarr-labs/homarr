@@ -124,6 +124,7 @@ export const statsIntegrationKinds = [
 ] as const satisfies readonly IntegrationKind[];
 
 export const widgetIntegrationConfigs = {
+  "frameleaf-albumCarousel": { supportedIntegrations: ["frameleaf"], maxIntegrations: 1 },
   stats: { supportedIntegrations: [...statsIntegrationKinds] },
   dnsHoleSummary: { supportedIntegrations: getIntegrationKindsByCategory("dnsHole") },
   dnsHoleControls: { supportedIntegrations: getIntegrationKindsByCategory("dnsHole") },

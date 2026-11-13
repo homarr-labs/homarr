@@ -10,7 +10,7 @@ import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { useSession } from "@homarr/auth/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
-import type { IntegrationSecretKind } from "@homarr/definitions";
+import type { IntegrationCredentialKind } from "@homarr/definitions";
 import {
   getAllSecretKindOptions,
   getDefaultSecretKinds,
@@ -26,6 +26,8 @@ import { showErrorNotification, showSuccessNotification } from "@homarr/notifica
 import { useI18n } from "@homarr/translation/client";
 import { Link } from "@homarr/ui";
 import { integrationUpdateSchema } from "@homarr/validation/integration";
+
+import { FrameleafConnectionForm } from "../../_components/frameleaf/frameleaf-connection-form";
 
 import { SecretCard } from "../../_components/secrets/integration-secret-card";
 import { IntegrationSecretInput } from "../../_components/secrets/integration-secret-inputs";
@@ -60,7 +62,14 @@ const formSchema = integrationUpdateSchema.omit({ id: true, appId: true, externa
   }),
 );
 
-export const EditIntegrationForm = ({
+export const EditIntegrationForm = (props: EditIntegrationFormProps) =>
+  props.integration.kind === "frameleaf" ? (
+    <FrameleafConnectionForm integration={props.integration} />
+  ) : (
+    <StandardEditIntegrationForm {...props} />
+  );
+
+const StandardEditIntegrationForm = ({
   integration,
   hideButtons = false,
   onSuccess,
@@ -110,7 +119,7 @@ export const EditIntegrationForm = ({
     },
   });
   const [error, setError] = useState<null | AnyMappedTestConnectionError>(null);
-  const [removedOptionalKinds, setRemovedOptionalKinds] = useState<IntegrationSecretKind[]>([]);
+  const [removedOptionalKinds, setRemovedOptionalKinds] = useState<IntegrationCredentialKind[]>([]);
   const errorRef = useRef<HTMLDivElement>(null);
 
   const secretsMap = new Map(integration.secrets.map((secret) => [secret.kind, secret]));
@@ -140,18 +149,20 @@ export const EditIntegrationForm = ({
             kind: secret.kind,
             value: secret.value === "" ? null : secret.value,
           })),
-          ...optionalSecretKinds.flatMap((optionalKind): { kind: IntegrationSecretKind; value: string | null }[] => {
-            const value = optionalSecrets.find((secret) => secret.kind === optionalKind)?.value.trim() ?? "";
-            if (value) return [{ kind: optionalKind, value }];
-            if (
-              !integrationSecretKindObject[optionalKind].isPublic &&
-              !removedOptionalKinds.includes(optionalKind) &&
-              integration.secrets.some((secret) => secret.kind === optionalKind)
-            ) {
-              return [{ kind: optionalKind, value: null }];
-            }
-            return [];
-          }),
+          ...optionalSecretKinds.flatMap(
+            (optionalKind): { kind: IntegrationCredentialKind; value: string | null }[] => {
+              const value = optionalSecrets.find((secret) => secret.kind === optionalKind)?.value.trim() ?? "";
+              if (value) return [{ kind: optionalKind, value }];
+              if (
+                !integrationSecretKindObject[optionalKind].isPublic &&
+                !removedOptionalKinds.includes(optionalKind) &&
+                integration.secrets.some((secret) => secret.kind === optionalKind)
+              ) {
+                return [{ kind: optionalKind, value: null }];
+              }
+              return [];
+            },
+          ),
         ],
         appId: app?.id ?? null,
       });

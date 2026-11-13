@@ -4,7 +4,7 @@ import type { ChangeEventHandler, FocusEventHandler } from "react";
 import { PasswordInput, Textarea, TextInput } from "@mantine/core";
 
 import { integrationSecretKindObject } from "@homarr/definitions";
-import type { IntegrationSecretKind } from "@homarr/definitions";
+import type { IntegrationCredentialKind } from "@homarr/definitions";
 import { useI18n } from "@homarr/translation/client";
 
 import { integrationSecretIcons } from "./integration-secret-icons";
@@ -12,7 +12,7 @@ import { integrationSecretIcons } from "./integration-secret-icons";
 interface IntegrationSecretInputProps {
   withAsterisk?: boolean;
   label?: string;
-  kind: IntegrationSecretKind;
+  kind: IntegrationCredentialKind;
   value?: string;
   onChange: ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement>;
   onFocus?: FocusEventHandler<HTMLInputElement | HTMLTextAreaElement>;

@@ -10,6 +10,8 @@ const logger = createLogger({ module: "integrationFactory" });
 
 // Keep each import path explicit so Node and Turbopack can discover every lazy integration chunk.
 const integrationCreators = {
+  frameleaf: async (input: IntegrationInput) =>
+    new (await import("../frameleaf/frameleaf-integration")).FrameleafIntegration(input),
   autobrr: async (input: IntegrationInput) => {
     const [{ StatsIntegration }, { autobrrStatsProvider }] = await Promise.all([
       import("../stats/stats-integration"),

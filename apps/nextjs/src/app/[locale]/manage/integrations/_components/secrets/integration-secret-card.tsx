@@ -8,7 +8,7 @@ import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 
 import type { RouterOutputs } from "@homarr/api";
-import type { IntegrationSecretKind } from "@homarr/definitions";
+import type { IntegrationCredentialKind } from "@homarr/definitions";
 import { integrationSecretKindObject } from "@homarr/definitions";
 import { useI18n } from "@homarr/translation/client";
 
@@ -19,7 +19,7 @@ dayjs.extend(relativeTime);
 interface SecretCardProps {
   secret:
     | RouterOutputs["integration"]["byId"]["secrets"][number]
-    | { kind: IntegrationSecretKind; value: null; updatedAt: null };
+    | { kind: IntegrationCredentialKind; value: null; updatedAt: null };
   children: React.ReactNode;
   onCancel: () => Promise<boolean>;
   onRemove?: () => void;

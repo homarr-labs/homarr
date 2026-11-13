@@ -13,7 +13,7 @@ import {
   IconUser,
 } from "@tabler/icons-react";
 
-import type { IntegrationSecretKind } from "@homarr/definitions";
+import type { IntegrationCredentialKind } from "@homarr/definitions";
 import type { TablerIcon } from "@homarr/ui";
 
 export const integrationSecretIcons = {
@@ -37,4 +37,4 @@ export const integrationSecretIcons = {
   wazuhIndexerUsername: IconUser,
   wazuhIndexerPassword: IconPassword,
   totpSecret: IconShieldLock,
-} satisfies Record<IntegrationSecretKind, TablerIcon>;
+} satisfies Record<IntegrationCredentialKind, TablerIcon>;
