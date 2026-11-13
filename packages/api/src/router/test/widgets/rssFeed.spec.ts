@@ -265,6 +265,7 @@ async function setupUrlRestrictionAsync(dbUrls: string[]) {
               feedUrls: [url],
               enableRtl: false,
               hideDescription: false,
+              hideFeedTitle: false,
               textLinesClamp: 3,
               descriptionMaxLength: 250,
               maximumAmountPosts: 5,

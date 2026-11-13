@@ -102,6 +102,7 @@ export default function RssFeed({ options, width, height, displayMode }: WidgetC
     isTiny,
     hideDescription: options.hideDescription,
     showPosterImage: options.showPosterImage,
+    hideFeedTitle: options.hideFeedTitle,
     descriptionLines,
   });
   const spacing = isRoomy ? "sm" : "xs";
@@ -216,6 +217,11 @@ export default function RssFeed({ options, width, height, displayMode }: WidgetC
                       </Text>
                     )}
                     {feedEntry.published && <InfoDisplay date={dayjs(feedEntry.published).fromNow()} />}
+                    {!options.hideFeedTitle && feedEntry.feedTitle && (
+                      <Text dir={languageDir} fz="sm" lh="sm" lineClamp={1} ta="end">
+                        {feedEntry.feedTitle}
+                      </Text>
+                    )}
                   </Flex>
                 </Group>
               </Card>
@@ -250,6 +256,7 @@ interface RssEntryDisplayInput {
   isDense: boolean;
   isTiny: boolean;
   hideDescription: boolean;
+  hideFeedTitle: boolean;
   showPosterImage: boolean;
   descriptionLines: number;
 }
@@ -259,10 +266,12 @@ export const getRssEntryDisplay = ({
   isDense,
   isTiny,
   hideDescription,
+  hideFeedTitle,
   showPosterImage,
   descriptionLines,
 }: RssEntryDisplayInput) => ({
   showDescription: isAdvanced || (!hideDescription && !isTiny),
+  showFeedTitle: isAdvanced || (!hideFeedTitle && !isTiny),
   showImage: isAdvanced || (showPosterImage && !isTiny),
   showSource: isAdvanced || !isDense,
   descriptionLineClamp: isAdvanced ? undefined : descriptionLines,

@@ -21,11 +21,13 @@ describe("RSS feed display helpers", () => {
         isDense: true,
         isTiny: true,
         hideDescription: true,
+        hideFeedTitle: true,
         showPosterImage: false,
         descriptionLines: 1,
       }),
     ).toEqual({
       showDescription: true,
+      showFeedTitle: true,
       showImage: true,
       showSource: true,
       descriptionLineClamp: undefined,
