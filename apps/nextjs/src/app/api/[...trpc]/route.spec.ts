@@ -47,6 +47,7 @@ describe("REST API browser access", () => {
   });
 
   it("marks the context as a REST request, which hides upstream error details", async () => {
+    sessionFromKey.mockResolvedValueOnce({ user: { id: "owner" } });
     handle.mockImplementationOnce(({ createContext }: { createContext: () => unknown }) => {
       createContext();
       return Response.json({});
