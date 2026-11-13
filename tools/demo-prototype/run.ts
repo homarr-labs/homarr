@@ -25,7 +25,15 @@ const run = (command: string, args: string[], env = process.env) => {
 const cleanup = () => {
   if (stopping) return;
   stopping = true;
-  for (const child of children) child.kill("SIGTERM");
+  for (const child of children) {
+    if (!child.pid) continue;
+    try {
+      if (process.platform === "win32") child.kill("SIGKILL");
+      else process.kill(-child.pid, "SIGKILL");
+    } catch {
+      // The child may already have exited before its sibling triggered cleanup.
+    }
+  }
   spawnSync("docker", ["rm", "-f", container], { stdio: "ignore" });
 };
 process.on("SIGINT", () => {
@@ -110,7 +118,12 @@ for (const [args, cwd] of [
     join(root, "apps/nextjs"),
   ],
 ] as const) {
-  const child = spawn(node, [...args], { cwd, env, stdio: "inherit" });
+  const child = spawn(node, [...args], {
+    cwd,
+    env,
+    stdio: "inherit",
+    detached: process.platform !== "win32",
+  });
   children.push(child);
   child.on("exit", (code, signal) => {
     if (stopping) return;
