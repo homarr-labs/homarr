@@ -187,13 +187,21 @@ export const mockWidgetData = {
     ],
   } satisfies CoolifyInstanceInfo,
   firewallCpu: { total: 23 } satisfies FirewallCpuSummary,
+  // Cumulative byte counters: the ten-second delta matches the mock traffic rates.
   firewallInterfaces: [
     {
       data: [
-        { name: "WAN", receive: 124_127_500, transmit: 14_517_100 },
-        { name: "LAN", receive: 14_517_100, transmit: 124_127_500 },
+        { name: "WAN", receive: 12_412_750_000, transmit: 1_451_710_000 },
+        { name: "LAN", receive: 1_451_710_000, transmit: 12_412_750_000 },
       ],
       timestamp: new Date(demoTimestamp),
+    },
+    {
+      data: [
+        { name: "WAN", receive: 11_171_475_000, transmit: 1_306_539_000 },
+        { name: "LAN", receive: 1_306_539_000, transmit: 11_171_475_000 },
+      ],
+      timestamp: new Date(demoNow - 10_000),
     },
   ] satisfies FirewallInterfacesSummary[],
   firewallMemory: { used: 3_220_000_000, total: 8_590_000_000, percent: 37.5 } satisfies FirewallMemorySummary,
