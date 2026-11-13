@@ -4,7 +4,7 @@ import { z } from "zod/v4";
 
 import type { Session } from "@homarr/auth";
 import { constructBoardPermissions } from "@homarr/auth/shared";
-import { createId, getLayoutResizeSource, serializeLayoutResizeSource } from "@homarr/common";
+import { createId, getLayoutResizeSource, isRecord, serializeLayoutResizeSource } from "@homarr/common";
 import type { GridAlgorithmItem } from "@homarr/common";
 import type { DeviceType } from "@homarr/common/server";
 import { createLogger } from "@homarr/core/infrastructure/logs";
@@ -857,14 +857,31 @@ export const boardRouter = createTRPCRouter({
         resizeSource: null,
       }));
 
+      const itemMap = new Map<string, string>(boardItems.map((item) => [item.id, createId()]));
       const sectionMap = new Map<string, string>(boardSections.map((section) => [section.id, createId()]));
       const sectionsToInsert: InferInsertModel<typeof sections>[] = boardSections.map(
-        ({ collapseStates: _, layouts: _layouts, ...section }) => ({
-          ...section,
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          id: sectionMap.get(section.id)!,
-          boardId: newBoardId,
-        }),
+        ({ collapseStates: _, layouts: _layouts, ...section }) => {
+          let options = section.options;
+          if (section.kind === "container" && options) {
+            const parsed: unknown = superjson.parse(options);
+            if (isRecord(parsed) && isRecord(parsed.autoExpand) && typeof parsed.autoExpand.itemId === "string") {
+              options = superjson.stringify({
+                ...parsed,
+                autoExpand: {
+                  ...parsed.autoExpand,
+                  itemId: itemMap.get(parsed.autoExpand.itemId) ?? null,
+                },
+              });
+            }
+          }
+          return {
+            ...section,
+            options,
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            id: sectionMap.get(section.id)!,
+            boardId: newBoardId,
+          };
+        },
       );
 
       const sectionLayoutsToInsert: InferInsertModel<typeof sectionLayouts>[] = boardSections
@@ -907,7 +924,6 @@ export const boardRouter = createTRPCRouter({
           ),
       );
 
-      const itemMap = new Map<string, string>(boardItems.map((item) => [item.id, createId()]));
       const itemsToInsert: InferInsertModel<typeof items>[] = boardItems.map(
         ({ integrations: _, layouts: _layouts, ...item }) => ({
           ...item,

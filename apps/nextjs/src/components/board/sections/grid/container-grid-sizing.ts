@@ -22,6 +22,7 @@ interface ContainerGridMetricsInput {
   inlineInsetCount?: number;
   blockInsetCount?: number;
   collapsed?: boolean;
+  hasHeader?: boolean;
 }
 
 export const getContainerGridMetrics = ({
@@ -32,12 +33,12 @@ export const getContainerGridMetrics = ({
   inlineInsetCount = 2,
   blockInsetCount = 2,
   collapsed = false,
+  hasHeader = section.options.collapsible && section.options.showLabel,
 }: ContainerGridMetricsInput) => {
   const effectiveScale = canvasScale * parentContentScale;
   const fullWidth = getLogicalGridSize(section.width);
   const logicalWidth = Math.max(1, fullWidth - (inlineInsetCount * CONTAINER_CARD_INSET) / effectiveScale);
   const contentScale = Math.max(0.01, Math.min(logicalWidth / fullWidth, 1));
-  const hasHeader = section.options.collapsible && section.options.showLabel;
   let headerInset = 0;
   if (hasHeader && !collapsed)
     headerInset = (CONTAINER_HEADER_HEIGHT * calculateBoardUiScale(canvasScale)) / parentContentScale;

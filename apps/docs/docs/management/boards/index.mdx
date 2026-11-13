@@ -58,6 +58,26 @@ will remain when released.
 Dragging an item onto another item of the same size swaps their positions. Displaced items snap directly to their
 previewed positions without a movement animation and stay there when you release the pointer.
 
+#### Auto-expand when active
+
+A Container can watch one widget inside it and only take up space while that widget has something to show. Turn on
+**Auto-expand when active** in the Container's settings and choose the **Widget to watch**. Only widgets that report
+activity can be watched; currently that is **Current media server streams**, which counts as active while a stream is
+playing or paused.
+
+While the watched widget is idle, the Container is either:
+
+- **Collapsed** to its header. This also turns on **Allow collapse**.
+- **Hidden** completely. Content below it moves up into the space.
+
+The Container returns as soon as the widget becomes active. If the watched widget fails to load, the Container stays
+visible so the error can be seen. When a Container is first loaded, it stays hidden or collapsed until the widget's
+first result arrives.
+
+**Shrink to fit content** makes an active Container only as tall as the watched widget needs, up to its saved height.
+Content below moves up into the freed space and moves back down when the widget needs more room. The saved size is never
+changed, and edit mode always shows the Container at its saved size so it can be resized.
+
 A **rail** reserves one to three columns at the left or right of a non-Mobile layout. Rails stay fixed while the page
 scrolls and store their contents separately for each layout. Layout settings and Manage Boards use the same preview,
 with enabled sidebars shown beside the main canvas.
@@ -71,6 +91,9 @@ Dismissing the setup checklist is remembered per board in the current browser, i
 Clearing browser site data restores it; dismissal does not sync across browsers.
 
 - Drag from an item's inactive content area; Containers use their grip.
+- A Container's name and **Edit** button sit on its top border, or at the right of its header when it has one, so
+  widgets inside it cannot cover them. **Edit** opens the Container's settings, **Move / resize item**, and
+  **Remove container**.
 - Hold `Ctrl` on Windows/Linux or `Cmd` on macOS to select several items.
 - Use **Move / resize item** for another canvas, rail, Container, or exact coordinates.
 - Keyboard users can focus a tile, press Enter or Space, then move with arrow keys or resize with Shift + arrow keys.
@@ -114,8 +137,6 @@ Any board access, including public access, also lets viewers read the data of th
 See [integration permissions](/docs/management/integrations#permissions).
 
 Renaming a board changes its URL without a redirect. Deleting a board is permanent.
-
-In edit mode, nested Container settings controls are staggered to reduce overlap where space allows.
 
 ## Home boards
 
