@@ -42,6 +42,7 @@ const releaseVersionFilterSchema = z.object({
 
 export const releasesRouter = createTRPCRouter({
   getLatest: publicProcedure
+    .meta({ readOnly: false })
     .input(
       z.object({
         itemId: z.string().optional(),

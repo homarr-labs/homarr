@@ -6,6 +6,7 @@ import { createWidgetDefinition, matchesWidgetRuntimeQuery } from "../../definit
 import { optionsBuilder } from "../../options";
 
 export const { definition, componentLoader } = createWidgetDefinition("thingport-featuredModel", {
+  deferUntilVisible: true,
   icon: IconRotate360,
   supportsAdvancedFocus: false,
   queryKey: [["widget", "thingport", "getFeaturedModel"]],

@@ -1,11 +1,11 @@
 "use client";
 
-import { CodeEditor } from "~/components/custom-widgets/code-editor";
+import { CodeEditor } from "@homarr/forms-collection/custom-widgets";
 
 interface CustomCssEditorProps {
   id: string;
   label: string;
-  description: string;
+  description?: string;
   value?: string;
   onChange: (value: string) => void;
   error?: React.ReactNode;

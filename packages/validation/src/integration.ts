@@ -12,6 +12,13 @@ import { appManageSchema } from "./app";
 import { zodEnumFromArray } from "./enums";
 import { createSavePermissionsSchema } from "./permissions";
 
+const externalUrlSchema = z
+  .string()
+  .trim()
+  .max(2048)
+  .transform((value) => value || null)
+  .nullish();
+
 const integrationUrlSchema = z
   .string()
   .url()
@@ -23,6 +30,7 @@ const hasUniqueSecretKinds = (secrets: { kind: string }[]) =>
 export const integrationCreateSchema = z.object({
   name: z.string().nonempty().max(127),
   url: integrationUrlSchema,
+  externalUrl: externalUrlSchema,
   kind: zodEnumFromArray(integrationKinds),
   secrets: z
     .array(
@@ -46,6 +54,7 @@ export const integrationUpdateSchema = z.object({
   id: z.string().nonempty(),
   name: z.string().nonempty().max(127),
   url: integrationUrlSchema,
+  externalUrl: externalUrlSchema,
   secrets: z
     .array(
       z.object({
@@ -84,6 +93,7 @@ export const integrationDetailsSchema = z.object({
   name: z.string(),
   kind: zodEnumFromArray(integrationKinds),
   url: z.string(),
+  externalUrl: z.string().nullable(),
   secrets: z.array(
     z.object({
       kind: zodEnumFromArray(integrationSecretKinds),

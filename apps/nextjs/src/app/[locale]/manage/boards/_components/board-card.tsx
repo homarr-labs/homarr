@@ -46,7 +46,7 @@ export const BoardCard = ({ board, isMenuVisible, labels }: BoardCardProps) => {
 
   return (
     <>
-      <Card padding={0} withBorder>
+      <Card padding={0}>
         <CardSection withBorder>
           <BoardLayoutThumbnail preview={board.preview} label={labels.preview} />
         </CardSection>
@@ -123,8 +123,8 @@ export const BoardCard = ({ board, isMenuVisible, labels }: BoardCardProps) => {
           </Group>
         </CardSection>
       </Card>
-      <Collapse expanded={isDuplicateOpen}>
-        <Card mt="sm" withBorder>
+      <Collapse expanded={isDuplicateOpen} keepMounted={false}>
+        <Card mt="sm">
           <DuplicateBoardForm key={duplicateFormKey} board={board} onCancel={() => setIsDuplicateOpen(false)} />
         </Card>
       </Collapse>

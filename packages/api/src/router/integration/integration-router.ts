@@ -2,7 +2,7 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod/v4";
 
 import type { Session } from "@homarr/auth";
-import { hasQueryAccessToIntegrationsAsync } from "@homarr/auth/server";
+import { filterIntegrationsWithQueryAccessAsync } from "@homarr/auth/server";
 import { constructIntegrationPermissions } from "@homarr/auth/shared";
 import { createId, objectEntries } from "@homarr/common";
 import { decryptSecret, encryptSecret } from "@homarr/common/server";
@@ -157,17 +157,10 @@ export const integrationRouter = createTRPCRouter({
       }),
     )
     .query(async ({ ctx, input }) => {
-      const groupsOfCurrentUser = await ctx.db.query.groupMembers.findMany({
-        where: eq(groupMembers.userId, ctx.session.user.id),
-      });
-
       const integrationsFromDb = await ctx.db.query.integrations.findMany({
         where: like(integrations.name, `%${input.query}%`),
         orderBy: asc(integrations.name),
-        with: getIntegrationAccessRelationsAsync(
-          ctx.session.user.id,
-          groupsOfCurrentUser.map((group) => group.groupId),
-        ),
+        with: getIntegrationAccessRelations(ctx.db, ctx.session.user.id),
       });
 
       return integrationsFromDb
@@ -262,6 +255,7 @@ export const integrationRouter = createTRPCRouter({
         name: integration.name,
         kind: integration.kind,
         url: integration.url,
+        externalUrl: integration.externalUrl,
         secrets: integration.secrets.map((secret) => ({
           kind: secret.kind,
           // Only return the value if the secret is public, so for example the username
@@ -287,7 +281,7 @@ export const integrationRouter = createTRPCRouter({
         enabled: true,
         effect: "additive",
         description:
-          "Create a new integration (connection to an external service). REQUIRED fields: name, url (http/https), kind, secrets. The 'secrets' field is REQUIRED and must be a non-empty array — call integration_getKinds first to see which secret kinds each integration type needs. Example for Radarr: secrets=[{kind:'apiKey', value:'your-radarr-api-key'}]. Example for Proxmox: secrets=[{kind:'tokenId', value:'...'}, {kind:'personalAccessToken', value:'...'}, {kind:'realm', value:'pam'}]. The connection is tested before saving — if it fails, nothing is saved and an error is returned. Leave skipConnectionTest unset unless the user explicitly asks to save an unreachable integration. The 'app' field is optional — pass {id:'...'} to link to an existing app, or omit it. Returns integration details and appId, which is null when no app is linked or created.",
+          "Create a new integration (connection to an external service). REQUIRED fields: name, url (http/https), kind, secrets. The 'secrets' field is REQUIRED and must be a non-empty array — call integration_getKinds first to see which secret kinds each integration type needs. Example for Radarr: secrets=[{kind:'apiKey', value:'your-radarr-api-key'}]. Example for Proxmox: secrets=[{kind:'tokenId', value:'...'}, {kind:'personalAccessToken', value:'...'}, {kind:'realm', value:'pam'}]. The connection is tested before saving — if it fails, nothing is saved and an error is returned. Leave skipConnectionTest unset unless the user explicitly asks to save an unreachable integration. The 'externalUrl' field is optional — the address browsers open from widget links; the linked app's URL, then url, is used when omitted. The 'app' field is optional — pass {id:'...'} to link to an existing app, or omit it. Returns integration details and appId, which is null when no app is linked or created.",
       },
     })
     .input(integrationCreateSchema)
@@ -330,6 +324,7 @@ export const integrationRouter = createTRPCRouter({
         id: integrationId,
         name: input.name,
         url: input.url,
+        externalUrl: input.externalUrl,
         kind: input.kind,
         appId,
       });
@@ -428,6 +423,7 @@ export const integrationRouter = createTRPCRouter({
         .set({
           name: input.name,
           url: input.url,
+          externalUrl: input.externalUrl,
           appId: input.appId,
         })
         .where(eq(integrations.id, input.id));
@@ -803,7 +799,7 @@ export const integrationRouter = createTRPCRouter({
             name: integration.name,
             url: integration.url,
             kind: integration.kind as (typeof mediaRequestSearchKinds)[number],
-            externalUrl: integration.app?.href ?? null,
+            externalUrl: integration.externalUrl ?? integration.app?.href ?? null,
             decryptedSecrets: integration.secrets.map((secret) => ({
               ...secret,
               value: decryptSecret(secret.value),
@@ -896,26 +892,23 @@ const hasIntegrationQueryAccess = (
   },
 ) => hasGlobalIntegrationAccess(session) || constructIntegrationPermissions(integration, session).hasUseAccess;
 
-const getIntegrationAccessRelationsAsync = (userId: string, groupIds: string[]) => ({
+const getIntegrationAccessRelations = (db: Database, userId: string) => ({
   userPermissions: {
     where: eq(integrationUserPermissions.userId, userId),
   },
   groupPermissions: {
-    where: inArray(integrationGroupPermissions.groupId, groupIds),
+    where: inArray(
+      integrationGroupPermissions.groupId,
+      db.select({ groupId: groupMembers.groupId }).from(groupMembers).where(eq(groupMembers.userId, userId)),
+    ),
   },
 });
 
 const getAccessibleIntegrationsAsync = async (ctx: { db: Database; session: Session }, where?: SQL) => {
-  const groupsOfCurrentUser = await ctx.db.query.groupMembers.findMany({
-    where: eq(groupMembers.userId, ctx.session.user.id),
-  });
-
   const integrationsFromDb = await ctx.db.query.integrations.findMany({
     where,
-    with: getIntegrationAccessRelationsAsync(
-      ctx.session.user.id,
-      groupsOfCurrentUser.map((group) => group.groupId),
-    ),
+    columns: { id: true, name: true, kind: true, url: true },
+    with: getIntegrationAccessRelations(ctx.db, ctx.session.user.id),
   });
 
   return integrationsFromDb
@@ -941,17 +934,13 @@ const getAccessibleIntegrationsAsync = async (ctx: { db: Database; session: Sess
 
 interface IntegrationRouterContext {
   db: Database;
-  session: Parameters<typeof hasQueryAccessToIntegrationsAsync>[2];
+  session: Session | null;
 }
 
 const getAccessibleMediaRequestSearchIntegrationsAsync = async (
   ctx: IntegrationRouterContext,
   integrationIds?: string[],
 ) => {
-  const groupsOfCurrentUser = await ctx.db.query.groupMembers.findMany({
-    where: eq(groupMembers.userId, ctx.session?.user.id ?? ""),
-  });
-
   const integrationsFromDb = await ctx.db.query.integrations.findMany({
     where:
       integrationIds && integrationIds.length > 0
@@ -968,15 +957,7 @@ const getAccessibleMediaRequestSearchIntegrationsAsync = async (
           },
         },
       },
-      userPermissions: {
-        where: eq(integrationUserPermissions.userId, ctx.session?.user.id ?? ""),
-      },
-      groupPermissions: {
-        where: inArray(
-          integrationGroupPermissions.groupId,
-          groupsOfCurrentUser.map((group) => group.groupId),
-        ),
-      },
+      ...getIntegrationAccessRelations(ctx.db, ctx.session?.user.id ?? ""),
     },
   });
 
@@ -987,21 +968,16 @@ const getAccessibleMediaRequestSearchIntegrationsAsync = async (
     });
   }
 
-  const integrationsWithAccess = await Promise.all(
-    integrationsFromDb.map(async (integration) => ({
-      integration,
-      hasAccess: await hasQueryAccessToIntegrationsAsync(ctx.db, [integration], ctx.session),
-    })),
-  );
+  const integrationsWithAccess = await filterIntegrationsWithQueryAccessAsync(ctx.db, integrationsFromDb, ctx.session);
 
-  if (integrationIds && integrationsWithAccess.some(({ hasAccess }) => !hasAccess)) {
+  if (integrationIds && integrationsWithAccess.length !== integrationsFromDb.length) {
     throw new TRPCError({
       code: "FORBIDDEN",
       message: "User does not have permission to query one or more media request search integrations",
     });
   }
 
-  return integrationsWithAccess.filter(({ hasAccess }) => hasAccess).map(({ integration }) => integration);
+  return integrationsWithAccess;
 };
 
 const throwIfConnectionTestFailedAsync = async (

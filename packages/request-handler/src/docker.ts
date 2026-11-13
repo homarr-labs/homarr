@@ -9,7 +9,13 @@ import { db, like, or } from "@homarr/db";
 import { icons } from "@homarr/db/schema";
 import { extractContainerImageName } from "@homarr/definitions";
 import type { ContainerState, DockerContainerTarget, DockerEndpointStatus, Port } from "@homarr/docker";
-import { dockerLabels, DockerSingleton } from "@homarr/docker";
+import {
+  dockerLabels,
+  DockerSingleton,
+  getContainerImageIconFallback,
+  getContainerImageIconNamePattern,
+  resolveContainerIcon,
+} from "@homarr/docker";
 
 import { createDockerLogStreamProcessor, decodeDockerLogs } from "./docker-log-decode";
 import { createWidgetRequestHandler } from "./lib/widget-request-handler";
@@ -445,6 +451,22 @@ export async function getContainersWithStatsAsync(
       : [];
 
   const degradedEndpointIds = new Set<string>();
+  const fallbackPatterns = new Set(
+    containers
+      .filter(
+        (container) =>
+          !resolveContainerIcon(container.Labels) && !bestMatch(extractImage(container), dbIcons, (icon) => icon.name),
+      )
+      .map((container) => getContainerImageIconNamePattern(extractImage(container)))
+      .filter(Boolean),
+  );
+  const fallbackIcons =
+    fallbackPatterns.size > 0
+      ? await db.query.icons.findMany({
+          columns: { name: true, url: true },
+          where: or(...[...fallbackPatterns].map((pattern) => like(icons.name, pattern))),
+        })
+      : [];
   const containerStatsPromises = containers.map(async (container) => {
     const instance = DockerSingleton.findInstance(container.endpointId)?.instance;
     if (!instance) return null;
@@ -497,7 +519,11 @@ export async function getContainersWithStatsAsync(
       name: container.Names[0]?.split("/")[1] ?? "Unknown",
       host: container.instance,
       state: container.State as ContainerState,
-      iconUrl: bestMatch(extractImage(container), dbIcons, (icon) => icon.name)?.url ?? null,
+      iconUrl:
+        resolveContainerIcon(container.Labels) ??
+        bestMatch(extractImage(container), dbIcons, (icon) => icon.name)?.url ??
+        getContainerImageIconFallback(extractImage(container), fallbackIcons)?.url ??
+        null,
       cpuUsage,
       memoryUsage,
       image: container.Image,

@@ -23,6 +23,7 @@ import {
   IconRobot,
   IconSearch,
   IconSettingsFilled,
+  IconSparkles,
   IconUserFilled,
   IconUsers,
   IconUsersGroup,
@@ -38,6 +39,7 @@ import { env } from "@homarr/docker/env";
 import { getI18n } from "@homarr/translation/server";
 
 import { MainHeader } from "~/components/layout/header";
+import { ManagementUpdateNavLink } from "~/components/layout/header/update";
 import { homarrLogoPath } from "~/components/layout/logo/constants";
 import type { NavigationLink } from "~/components/layout/navigation";
 import { MainNavigation } from "~/components/layout/navigation";
@@ -240,6 +242,12 @@ export default async function ManageLayout({ children }: PropsWithChildren) {
           href: "https://github.com/homarr-labs/homarr",
           external: true,
         },
+        {
+          label: t("items.help.items.changelog"),
+          icon: IconSparkles,
+          action: "changelog",
+          hidden: !session?.user.permissions.includes("admin"),
+        },
       ],
     },
     {
@@ -254,7 +262,7 @@ export default async function ManageLayout({ children }: PropsWithChildren) {
   const shell = (
     <ClientShell hasNavigation>
       <MainHeader></MainHeader>
-      <MainNavigation links={navigationLinks}></MainNavigation>
+      <MainNavigation links={navigationLinks} afterLinks={<ManagementUpdateNavLink isAdmin={isAdmin} />} />
       <AppShellMain>{children}</AppShellMain>
     </ClientShell>
   );

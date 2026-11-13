@@ -4,3 +4,8 @@ export const wazuhTimeRangeOptions = [
   { value: "7d", label: "Last 7 days" },
   { value: "30d", label: "Last 30 days" },
 ] as const;
+
+export const wazuhMinuteQueryOptions = {
+  staleTime: 60_000,
+  refetchInterval: 60_000,
+};

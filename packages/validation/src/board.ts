@@ -5,6 +5,7 @@ import {
   backgroundImageRepeats,
   backgroundImageSizes,
   boardPermissions,
+  cornerStyleValues,
   groupPermissionKeys,
   layoutRoles,
   widgetKinds,
@@ -72,12 +73,17 @@ export const boardSavePartialSettingsSchema = z
     backgroundImageAttachment: z.enum(backgroundImageAttachments.values),
     backgroundImageRepeat: z.enum(backgroundImageRepeats.values),
     backgroundImageSize: z.enum(backgroundImageSizes.values),
-    primaryColor: hexColorSchema,
-    secondaryColor: hexColorSchema,
+    primaryColor: hexColorSchema.nullable().describe("Board accent override; null inherits the instance theme"),
+    secondaryColor: hexColorSchema
+      .nullable()
+      .describe("Board secondary accent override; null inherits the instance theme"),
     opacity: z.number().min(0).max(100),
     customCss: z.string().max(16384),
     iconColor: hexColorNullableSchema,
-    itemRadius: z.union([z.literal("xs"), z.literal("sm"), z.literal("md"), z.literal("lg"), z.literal("xl")]),
+    itemRadius: z
+      .enum(cornerStyleValues)
+      .nullable()
+      .describe("Widget roundness override; null inherits the instance theme"),
     disableStatus: z.boolean(),
   })
   .partial();

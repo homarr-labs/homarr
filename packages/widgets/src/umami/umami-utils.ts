@@ -1,5 +1,6 @@
 import type { useI18n } from "@homarr/translation/client";
 import { useDemoReadOnly } from "../demo-read-only";
+import { formatLocalizedDate } from "../common/locale";
 
 import { timeFrameValues } from "./index";
 
@@ -14,12 +15,17 @@ export function formatXLabel(timestamp: string, timeFrame: string, locale: strin
   switch (timeFrame) {
     case "today":
     case "24h":
-      return date.toLocaleTimeString(locale, { hour: "2-digit", minute: "2-digit", hourCycle: "h23" });
+      return formatLocalizedDate(
+        date,
+        locale,
+        { hour: "2-digit", minute: "2-digit", hourCycle: "h23" },
+        "Invalid Date",
+      );
     case "7d":
     case "30d":
     case "month":
     case "lastMonth":
-      return date.toLocaleDateString(locale, { month: "short", day: "numeric" });
+      return formatLocalizedDate(date, locale, { month: "short", day: "numeric" }, "Invalid Date");
     default:
       return timestamp;
   }

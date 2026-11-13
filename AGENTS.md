@@ -55,6 +55,14 @@ homarr/
 └── Dockerfile           # Multi-stage production build
 ```
 
+## Integration contributions
+
+For a new integration, reuse Statistics or another existing widget when it covers the use case. For a service-specific
+view, prefer publishing a Custom Widget that uses the saved integration. Link its Workshop listing from the integration
+PR and setup guide when available. Add a built-in widget only when the use case cannot be served by existing widgets or
+Custom Widgets; explain the gap in the PR. See [the Yuvomi PR](https://github.com/homarr-labs/homarr/pull/7493#issuecomment-6699406618)
+for an example.
+
 ## Documentation
 
 Add documentation only when users need the information to set up, use, or troubleshoot Homarr and cannot reasonably discover it from the UI or generated API schema. If a user does not need to know it, do not document it. A code, UI, or API change alone is never a reason to add docs.
@@ -88,7 +96,7 @@ Only after this user-need test passes, use these locations:
 - Lint: oxlint (not ESLint)
 - Format: oxfmt (not Prettier)
 - UI: Mantine (not Tailwind) — Tailwind is only used in docs app
-- Mantine: use the `mantine` MCP server in `.mcp.json` for current v9 APIs before writing component code. Prefer built-in primitives (`Combobox`/`useCombobox`, the polymorphic `component` prop, `@mantine/hooks`) and check `packages/ui/` for existing conventions first.
+- Mantine: before creating, changing, or reviewing application UI, follow [mantine-ui](plugins/homarr-mantine/skills/mantine-ui/SKILL.md) for component discovery, mandatory `get_item_doc` lookups, and styling through built-in props and the Styles API.
 - Icons: @tabler/icons-react
 - Docs app can import from `@homarr/definitions` for shared types
 - Run `bun run dev:cli -- dev` to browse local `homarr:*` images and remote PR images.
@@ -112,13 +120,14 @@ These rules apply to every PR an agent prepares or opens, including contributor 
 
 ## MCP servers
 
-`.mcp.json` declares project-scoped MCP servers. Keep only keyless definitions there; credentials belong in local dotfiles. See [Mantine LLM tooling](https://mantine.dev/guides/llms/) for client-specific setup.
+The [Homarr Mantine plugin](plugins/homarr-mantine/plugin.json) bundles the UI skill and pinned documentation MCP server. `.agents/plugins/marketplace.json` exposes it through the project marketplace, and `.codex/config.toml` enables it for this repository. For clients requiring registration, run `codex plugin marketplace add .` from the repository root, then `codex plugin add homarr-mantine@homarr-local`. Keep shared definitions keyless; credentials belong in local dotfiles. See [Mantine LLM tooling](https://mantine.dev/guides/llms/) for documentation sources.
 
 ## Agent Skills
 
 Portable skills live in `.agents/skills/`. Read the relevant `SKILL.md` before working in that domain; detailed references are loaded only when needed. Claude-compatible discovery is provided through `.claude/skills`.
 
 - `codebase-context` — architecture, package boundaries, and shared utilities
+- `homarr-mantine:mantine-ui` — project plugin for Mantine component discovery, documentation, and built-in styling
 - `documentation-sync` — user-critical documentation only
 - `mcp-integration` — safe tRPC-to-MCP exposure
 - `homarr-custom-widget` — safe Custom JSX v2 authoring

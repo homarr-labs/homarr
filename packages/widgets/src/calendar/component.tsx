@@ -12,6 +12,7 @@ import { getUsableWidgetQueryData } from "../common/query-state";
 import { useWidgetRuntimeQueries } from "../runtime-hooks";
 import type { CalendarEventWithSource } from "./calendar-event-list";
 import { CalendarDisplay } from "./calendar-display";
+import { toLocalAllDayEvent } from "./calendar-events";
 
 export default function CalendarWidget(props: WidgetComponentProps<"calendar">) {
   const [month, setMonth] = useState(() => new Date());
@@ -70,7 +71,7 @@ const FetchCalendar = ({ month, setMonth, ...props }: FetchCalendarProps) => {
           ? []
           : integrationEvents.map(
               (event): CalendarEventWithSource => ({
-                ...event,
+                ...toLocalAllDayEvent(event),
                 source: { integrationId: integration.id, integrationName: integration.name },
               }),
             ),

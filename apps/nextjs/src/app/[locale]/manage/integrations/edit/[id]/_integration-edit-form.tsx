@@ -10,14 +10,17 @@ import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { useSession } from "@homarr/auth/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
+import type { IntegrationSecretKind } from "@homarr/definitions";
 import {
   getAllSecretKindOptions,
   getDefaultSecretKinds,
   getOptionalSecretKinds,
   integrationSecretKinds,
+  integrationSecretKindObject,
   invariantTechnicalLabels,
 } from "@homarr/definitions";
 import { useZodForm } from "@homarr/form";
+import { AppUrlLabel } from "@homarr/forms-collection";
 import { useConfirmModal, useModalAction } from "@homarr/modals";
 import { AppSelectModal } from "@homarr/modals-collection";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
@@ -44,20 +47,23 @@ export interface EditIntegrationFormHandle {
   isDirty: () => boolean;
 }
 
-const formSchema = integrationUpdateSchema.omit({ id: true, appId: true, secrets: true, skipConnectionTest: true }).and(
-  z.object({
-    secrets: z.array(z.object({ kind: zodEnumFromArray(integrationSecretKinds), value: z.string() })),
-    app: z
-      .object({
-        id: z.string(),
-        name: z.string(),
-        iconUrl: z.string(),
-        href: z.string().nullable(),
-      })
-      .nullable(),
-    optionalSecrets: z.array(z.object({ kind: z.string(), value: z.string() })),
-  }),
-);
+const formSchema = integrationUpdateSchema
+  .omit({ id: true, appId: true, secrets: true, skipConnectionTest: true, externalUrl: true })
+  .and(
+    z.object({
+      externalUrl: z.string(),
+      secrets: z.array(z.object({ kind: zodEnumFromArray(integrationSecretKinds), value: z.string() })),
+      app: z
+        .object({
+          id: z.string(),
+          name: z.string(),
+          iconUrl: z.string(),
+          href: z.string().nullable(),
+        })
+        .nullable(),
+      optionalSecrets: z.array(z.object({ kind: z.string(), value: z.string() })),
+    }),
+  );
 
 export const EditIntegrationForm = ({
   integration,
@@ -88,6 +94,7 @@ export const EditIntegrationForm = ({
     initialValues: {
       name: integration.name,
       url: integration.url,
+      externalUrl: integration.externalUrl ?? "",
       secrets: initialSecretsKinds.map((kind) => ({
         kind,
         value: integration.secrets.find((secret) => secret.kind === kind)?.value ?? "",
@@ -100,6 +107,7 @@ export const EditIntegrationForm = ({
     },
   });
   const [error, setError] = useState<null | AnyMappedTestConnectionError>(null);
+  const [removedOptionalKinds, setRemovedOptionalKinds] = useState<IntegrationSecretKind[]>([]);
   const errorRef = useRef<HTMLDivElement>(null);
   const { mutateAsync, isPending } = clientApi.integration.update.useMutation({
     onError(mutationError) {
@@ -143,9 +151,17 @@ export const EditIntegrationForm = ({
               kind: secret.kind,
               value: secret.value === "" ? null : secret.value,
             })),
-            ...optionalSecretKinds.flatMap((optionalKind) => {
+            ...optionalSecretKinds.flatMap((optionalKind): { kind: IntegrationSecretKind; value: string | null }[] => {
               const value = optionalSecrets.find((secret) => secret.kind === optionalKind)?.value.trim() ?? "";
-              return value.length > 0 ? [{ kind: optionalKind, value }] : [];
+              if (value) return [{ kind: optionalKind, value }];
+              if (
+                !integrationSecretKindObject[optionalKind].isPublic &&
+                !removedOptionalKinds.includes(optionalKind) &&
+                integration.secrets.some((secret) => secret.kind === optionalKind)
+              ) {
+                return [{ kind: optionalKind, value: null }];
+              }
+              return [];
             }),
           ],
           appId: app?.id ?? null,
@@ -158,6 +174,7 @@ export const EditIntegrationForm = ({
         title: tCommon("notification.update.success"),
         message: tIntegration("page.edit.notification.success.message"),
       });
+      setRemovedOptionalKinds([]);
       void Promise.allSettled([utils.integration.invalidate(), utils.widget.invalidate()]);
       onSuccess?.();
       if (!hideButtons) {
@@ -169,6 +186,8 @@ export const EditIntegrationForm = ({
       hasUrlSecret,
       hideButtons,
       integration.id,
+      integration.secrets,
+      removedOptionalKinds,
       optionalSecretKinds,
       mutateAsync,
       onSuccess,
@@ -196,9 +215,9 @@ export const EditIntegrationForm = ({
             () => resolve(false),
           )();
         }),
-      isDirty: () => form.isDirty(),
+      isDirty: () => form.isDirty() || removedOptionalKinds.length > 0,
     }),
-    [form, handleSubmitAsync],
+    [form, handleSubmitAsync, removedOptionalKinds],
   );
 
   const isInitialSecretKinds =
@@ -212,6 +231,13 @@ export const EditIntegrationForm = ({
       {hasUrlSecret ? null : (
         <TextInput withAsterisk label={invariantTechnicalLabels.url} {...form.getInputProps("url")} />
       )}
+
+      <TextInput
+        label={<AppUrlLabel label={tIntegration("field.externalUrl.label")} />}
+        aria-label={tIntegration("field.externalUrl.label")}
+        description={tIntegration("field.externalUrl.description")}
+        {...form.getInputProps("externalUrl")}
+      />
 
       <Fieldset legend={tIntegration("secrets.title")}>
         <Stack gap="sm">
@@ -265,13 +291,43 @@ export const EditIntegrationForm = ({
               <Text c={"blue"}>{tIntegration("secrets.noSecretsRequired.text")}</Text>
             </Alert>
           )}
-          {optionalSecretKinds.map((optionalKind, index) => (
-            <IntegrationSecretInput
-              key={optionalKind}
-              kind={optionalKind}
-              {...form.getInputProps(`optionalSecrets.${index}.value`)}
-            />
-          ))}
+          {optionalSecretKinds.map((kind, index) => {
+            const input = (
+              <IntegrationSecretInput
+                key={kind}
+                kind={kind}
+                {...form.getInputProps(`optionalSecrets.${index}.value`)}
+              />
+            );
+            if (integrationSecretKindObject[kind].isPublic) return input;
+            const stored = secretsMap.get(kind);
+            const removed = removedOptionalKinds.includes(kind);
+            return (
+              <SecretCard
+                key={kind}
+                secret={removed || !stored ? { kind, value: null, updatedAt: null } : stored}
+                onRemove={
+                  stored && !removed
+                    ? () =>
+                        openConfirmModal({
+                          title: tIntegration("secrets.remove.title"),
+                          children: tIntegration("secrets.remove.message"),
+                          onConfirm: () => {
+                            setRemovedOptionalKinds((kinds) => [...kinds, kind]);
+                            form.setFieldValue(`optionalSecrets.${index}.value`, "");
+                          },
+                        })
+                    : undefined
+                }
+                onCancel={async () => {
+                  form.setFieldValue(`optionalSecrets.${index}.value`, "");
+                  return true;
+                }}
+              >
+                {input}
+              </SecretCard>
+            );
+          })}
         </Stack>
       </Fieldset>
 

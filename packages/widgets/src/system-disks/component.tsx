@@ -166,7 +166,7 @@ const SystemDiskCard = ({
       withinPortal
     >
       <Card
-        radius={board.itemRadius}
+        radius={board.itemRadius ?? undefined}
         py="xs"
         withBorder={isAdvanced}
         bg={cardBackground}

@@ -21,6 +21,8 @@ import type { GroupPermissionKey, OnboardingStep } from "@homarr/definitions";
 import { BoardLayoutBoundsError } from "@homarr/validation/board-layout-bounds-error";
 
 import { env } from "./env";
+import { isReadOnlyProcedure } from "./credential-access";
+import type { CredentialAccessMeta } from "./credential-access";
 import { getOnboardingClaimTokenFromCookieHeader, isClaimOnlyOnboardingAccessAllowedAsync } from "./onboarding-claim";
 import { getOnboardingOrFallbackAsync } from "./router/onboard/onboard-queries";
 import type { McpMeta } from "./mcp-tools";
@@ -82,7 +84,7 @@ export const createTRPCContext = (opts: {
  */
 const t = initTRPC
   .context<typeof createTRPCContext>()
-  .meta<OpenApiMeta & McpMeta>()
+  .meta<OpenApiMeta & McpMeta & CredentialAccessMeta>()
   .create({
     transformer: superjson,
     errorFormatter: ({ shape, error }) => ({
@@ -131,7 +133,14 @@ const enforceDemoModeReadOnly = t.middleware(({ ctx, next, type }) => {
   return next({ ctx });
 });
 
-const baseProcedure = isDemoReadOnly ? t.procedure.use(enforceDemoModeReadOnly) : t.procedure;
+const credentialProcedure = t.procedure.use(({ ctx, type, meta, next }) => {
+  if (ctx.session?.apiKey?.readOnly && !isReadOnlyProcedure(type, meta)) {
+    throw new TRPCError({ code: "FORBIDDEN", message: "This credential only permits read-only operations" });
+  }
+  return next();
+});
+
+const baseProcedure = isDemoReadOnly ? credentialProcedure.use(enforceDemoModeReadOnly) : credentialProcedure;
 
 /**
  * Public (unauthed) procedure
@@ -155,7 +164,7 @@ const enforceOnboardingAccess = t.middleware(async ({ ctx, next }) => {
 
 export const onboardingClaimedProcedure = baseProcedure.use(enforceOnboardingAccess);
 
-export const internalProcedure = t.procedure;
+export const internalProcedure = credentialProcedure;
 
 const enforceUserIsAuthed = t.middleware(({ ctx, next }) => {
   if (!ctx.session?.user) {
@@ -179,7 +188,7 @@ const enforceUserIsAuthed = t.middleware(({ ctx, next }) => {
  */
 export const protectedProcedure = baseProcedure.use(enforceUserIsAuthed);
 
-export const demoWritableProtectedProcedure = t.procedure.use(enforceUserIsAuthed);
+export const demoWritableProtectedProcedure = credentialProcedure.use(enforceUserIsAuthed);
 
 /**
  * Procedure that requires a specific permission

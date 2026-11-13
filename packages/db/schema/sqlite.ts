@@ -38,6 +38,7 @@ export * from "@homarr/core/infrastructure/certificates/hostnames/db/sqlite";
 export const apiKeys = sqliteTable("apiKey", {
   id: text().notNull().primaryKey(),
   apiKey: text().notNull(),
+  readOnly: int({ mode: "boolean" }).notNull().default(false),
   oauthClientId: text(),
   oauthClientName: text(),
   oauthRedirectUri: text(),
@@ -199,6 +200,7 @@ export const integrations = sqliteTable(
     id: text().notNull().primaryKey(),
     name: text().notNull(),
     url: text().notNull(),
+    externalUrl: text(),
     kind: text().$type<IntegrationKind>().notNull(),
     appId: text().references(() => apps.id, { onDelete: "set null" }),
   },
@@ -282,12 +284,12 @@ export const boards = sqliteTable("board", {
     .notNull(),
   backgroundImageRepeat: text().$type<BackgroundImageRepeat>().default(backgroundImageRepeats.defaultValue).notNull(),
   backgroundImageSize: text().$type<BackgroundImageSize>().default(backgroundImageSizes.defaultValue).notNull(),
-  primaryColor: text().default("#fa5252").notNull(),
-  secondaryColor: text().default("#fd7e14").notNull(),
+  primaryColor: text(),
+  secondaryColor: text(),
   opacity: int().default(100).notNull(),
   customCss: text(),
   iconColor: text(),
-  itemRadius: text().$type<MantineSize>().default("lg").notNull(),
+  itemRadius: text().$type<MantineSize>(),
   disableStatus: int({ mode: "boolean" }).default(false).notNull(),
 });
 
@@ -652,6 +654,7 @@ export const customWidgetDefinitions = sqliteTable("custom_widget_v2_definition"
   requests: text().notNull(),
   options: text().notNull(),
   template: text().notNull(),
+  workshop: text(),
   enabled: int({ mode: "boolean" }).notNull().default(true),
   createdAt: int({ mode: "timestamp" })
     .notNull()

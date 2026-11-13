@@ -195,17 +195,25 @@ const heightBreakpoints = [
 
 export const getBookmarkDisplayPlan = ({
   advanced,
+  availableHeight,
   gap = 0,
   height,
   hideHostname = false,
+  hideIcon = false,
+  hideTitle = false,
+  showFullUrls = false,
   itemCount,
   layout,
   width,
 }: {
   advanced: boolean;
+  availableHeight?: number;
   gap?: number;
   height: number;
   hideHostname?: boolean;
+  hideIcon?: boolean;
+  hideTitle?: boolean;
+  showFullUrls?: boolean;
   itemCount: number;
   layout: BookmarkLayout;
   width: number;
@@ -213,6 +221,7 @@ export const getBookmarkDisplayPlan = ({
   const count = Math.max(1, itemCount);
   const normalizedWidth = Math.max(0, width);
   const normalizedHeight = Math.max(0, height);
+  const normalizedAvailableHeight = Math.max(0, availableHeight ?? height);
   const widthSettings = widthBreakpoints.find(({ minWidth }) => normalizedWidth >= minWidth);
   const heightSettings = heightBreakpoints.find(({ minHeight }) => normalizedHeight >= minHeight);
   if (!widthSettings || !heightSettings) throw new Error("Bookmark breakpoints must cover all widget sizes");
@@ -251,8 +260,10 @@ export const getBookmarkDisplayPlan = ({
   if (layout === "column") {
     const itemGap = Math.min(gap, 4);
     const availableItemHeight = (normalizedHeight - Math.max(0, count - 1) * itemGap) / count;
+    const showFullUrlTitle = showFullUrls && hideIcon && !hideTitle;
+    const showTitle = widthSettings.showTitle || showFullUrlTitle;
     let itemHeight = 32;
-    if (!hideHostname && widthSettings.showTitle && availableItemHeight >= 48) itemHeight = 48;
+    if ((!hideHostname || showFullUrls) && showTitle && availableItemHeight >= 48) itemHeight = 48;
 
     return {
       columns: 1,
@@ -309,7 +320,7 @@ export const getBookmarkDisplayPlan = ({
   const densitySettings = getBookmarkDensitySettings({
     columns: visibleColumns,
     gap,
-    height: normalizedHeight,
+    height: normalizedAvailableHeight,
     heightProperty: "itemHeight",
     itemCount: count,
     preferredSettings: heightSettings,

@@ -141,6 +141,34 @@
       "when": 1792837634114,
       "tag": "0019_sturdy_power_pack",
       "breakpoints": true
+    },
+    {
+      "idx": 20,
+      "version": "7",
+      "when": 1793784849527,
+      "tag": "0020_add_integration_external_url",
+      "breakpoints": true
+    },
+    {
+      "idx": 21,
+      "version": "7",
+      "when": 1793804202727,
+      "tag": "0021_add_api_key_read_only",
+      "breakpoints": true
+    },
+    {
+      "idx": 22,
+      "version": "7",
+      "when": 1794168454350,
+      "tag": "0022_add_workshop_widget_origin",
+      "breakpoints": true
+    },
+    {
+      "idx": 23,
+      "version": "7",
+      "when": 1794297781646,
+      "tag": "0023_board_theme_inheritance",
+      "breakpoints": true
     }
   ]
 }

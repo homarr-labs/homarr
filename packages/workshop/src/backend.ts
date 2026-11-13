@@ -9,6 +9,7 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 
+import { CUSTOM_WIDGET_SCHEMA } from "@homarr/custom-widgets/core";
 import type { HomarrCustomWidgetV2 } from "@homarr/custom-widgets/core";
 
 import type {
@@ -22,6 +23,7 @@ import type {
   WorkshopSubmissionType,
   WorkshopUser,
   WorkshopVote,
+  WorkshopWidgetCatalogEntry,
 } from "./schema";
 import {
   WORKSHOP_API_URL,
@@ -38,6 +40,8 @@ import {
   workshopScreenshotsSchema,
   workshopUserSchema,
   workshopVoteSchema,
+  workshopWidgetCatalogEntrySchema,
+  validateWorkshopWidget,
 } from "./schema";
 
 export interface WorkshopListOptions {
@@ -266,6 +270,7 @@ function workshopError(error: unknown, fallback: string) {
 
 export class WorkshopBackend {
   public readonly pocketBase: TypedWorkshopPocketBase;
+  private readonly pendingAuthRefreshes = new Map<string, Promise<WorkshopUser | null>>();
 
   public constructor(public readonly baseUrl = WORKSHOP_API_URL) {
     this.pocketBase = new PocketBase(baseUrl.replace(/\/$/u, "")) as TypedWorkshopPocketBase;
@@ -297,16 +302,24 @@ export class WorkshopBackend {
       this.pocketBase.authStore.clear();
       return null;
     }
-    try {
-      await this.pocketBase.collection("users").authRefresh();
-      return this.currentUser;
-    } catch (error) {
-      if (error instanceof ClientResponseError && (error.status === 401 || error.status === 403)) {
-        this.pocketBase.authStore.clear();
-        return null;
+    const token = this.pocketBase.authStore.token;
+    const pendingRefresh = this.pendingAuthRefreshes.get(token);
+    if (pendingRefresh) return pendingRefresh;
+
+    const refresh = (async () => {
+      try {
+        await this.pocketBase.collection("users").authRefresh();
+        return this.currentUser;
+      } catch (error) {
+        if (error instanceof ClientResponseError && (error.status === 401 || error.status === 403)) {
+          this.pocketBase.authStore.clear();
+          return null;
+        }
+        return this.currentUser;
       }
-      return this.currentUser;
-    }
+    })().finally(() => this.pendingAuthRefreshes.delete(token));
+    this.pendingAuthRefreshes.set(token, refresh);
+    return refresh;
   }
 
   public async signInWithGitHub() {
@@ -389,6 +402,55 @@ export class WorkshopBackend {
     }
   }
 
+  public async listWidgetCatalog(signal?: AbortSignal): Promise<WorkshopWidgetCatalogEntry[]> {
+    try {
+      try {
+        const { items } = await this.pocketBase.collection("workshop_widget_catalog").getList(1, 100, {
+          fields: "id,title,description,integrationKinds",
+          sort: "-score,-created,id",
+          skipTotal: true,
+          signal: requestSignal(signal),
+        });
+        return items.flatMap((item) => {
+          const result = workshopWidgetCatalogEntrySchema.safeParse(item);
+          if (!result.success) return [];
+          return [result.data];
+        });
+      } catch (error) {
+        if (!isViewCompatibilityError(error)) throw error;
+        return await this.loadWidgetCatalogFallback(signal);
+      }
+    } catch (error) {
+      throw workshopError(error, "Failed to load the Workshop widget catalog");
+    }
+  }
+
+  private async loadWidgetCatalogFallback(signal?: AbortSignal): Promise<WorkshopWidgetCatalogEntry[]> {
+    const { items } = await this.pocketBase.collection("submissions").getList(1, 100, {
+      fields: "id,title,description,content",
+      filter: this.pocketBase.filter("type = {:type} && widgetSchema = {:schema} && outdated = false", {
+        type: "customWidget",
+        schema: CUSTOM_WIDGET_SCHEMA,
+      }),
+      sort: "-created,id",
+      skipTotal: true,
+      signal: requestSignal(signal),
+    });
+    return items.flatMap((item) => {
+      const validation = validateWorkshopWidget(item.content);
+      if (!validation.success) return [];
+      const integrationKinds = Array.from(
+        new Set(
+          Object.values(validation.data.sources).flatMap((source) =>
+            source.type === "integration" ? [source.integrationKind] : [],
+          ),
+        ),
+      );
+      const result = workshopWidgetCatalogEntrySchema.safeParse({ ...item, integrationKinds });
+      return result.success ? [result.data] : [];
+    });
+  }
+
   private async loadListingsFallback(signal?: AbortSignal) {
     const options = { batch: 200, signal: requestSignal(signal) };
     const rows = await this.pocketBase
@@ -396,7 +458,12 @@ export class WorkshopBackend {
       .getFullList(options)
       .catch((error: unknown) => {
         if (isViewCompatibilityError(error))
-          return this.pocketBase.collection("submissions").getFullList({ ...options, expand: "author" });
+          return this.pocketBase.collection("submissions").getFullList({
+            ...options,
+            expand: "author",
+            fields:
+              "id,type,title,description,widgetSchema,screenshots,author,revision,changelog,outdated,created,updated,expand.author.name",
+          });
         throw error;
       });
     return parseListings(rows);
@@ -404,19 +471,19 @@ export class WorkshopBackend {
 
   public async get(id: string, signal?: AbortSignal): Promise<WorkshopSubmissionDetail> {
     try {
-      const submission = await this.pocketBase
-        .collection("submissions")
-        .getOne(id, { signal: requestSignal(signal), expand: "author" });
-      const listing = await this.pocketBase
-        .collection("workshop_listings")
-        .getOne(id, { signal: requestSignal(signal) })
-        .catch((error: unknown) => {
-          if (error instanceof ClientResponseError && (error.status === 400 || error.status === 404)) return {};
-          throw error;
-        });
-      return workshopSubmissionDetailSchema.parse(
-        enrichAuthor({ ...submission, ...listing, expand: submission.expand, content: submission.content }),
-      );
+      const [submission, listing] = await Promise.all([
+        this.pocketBase.collection("submissions").getOne(id, { signal: requestSignal(signal), expand: "author" }),
+        this.pocketBase
+          .collection("workshop_listings")
+          .getOne(id, { signal: requestSignal(signal) })
+          .catch((error: unknown) => {
+            if (error instanceof ClientResponseError && (error.status === 400 || error.status === 404)) return {};
+            throw error;
+          }),
+      ]);
+      // The listing can reflect a newer revision. Keep content and all its revision
+      // metadata from the same submission snapshot; only enrich missing aggregate fields.
+      return workshopSubmissionDetailSchema.parse(enrichAuthor({ ...listing, ...submission }));
     } catch (error) {
       throw workshopError(error, "Submission not found");
     }
@@ -529,9 +596,14 @@ export class WorkshopBackend {
 
   public async listReports(): Promise<WorkshopReport[]> {
     try {
-      const items = await this.pocketBase
-        .collection("reports")
-        .getFullList({ batch: 200, filter: "status = 'open'", sort: "-created", expand: "reporter,submission" });
+      const items = await this.pocketBase.collection("reports").getFullList({
+        batch: 200,
+        filter: "status = 'open'",
+        sort: "-created",
+        expand: "reporter,submission",
+        fields:
+          "id,submission,reporter,category,explanation,status,created,updated,expand.reporter.name,expand.submission.title",
+      });
       return items.map((item) =>
         workshopReportSchema.parse({
           ...item,
@@ -763,6 +835,16 @@ export const workshopDeleteCommentMutationOptions = (backend: WorkshopBackend) =
 
 export function useWorkshopQuery(backend: WorkshopBackend, options: WorkshopListOptions = {}) {
   return useQuery(workshopListQueryOptions(backend, options));
+}
+
+export function useWorkshopWidgetCatalogQuery(backend: WorkshopBackend, enabled: boolean) {
+  return useQuery({
+    queryKey: [...workshopQueryKeys.lists(backend.baseUrl), "widget-catalog"],
+    queryFn: ({ signal }) => backend.listWidgetCatalog(signal),
+    enabled,
+    staleTime: 5 * 60 * 1000,
+    retry: false,
+  });
 }
 
 export function useWorkshopSubmissionQuery(backend: WorkshopBackend, id: string) {
