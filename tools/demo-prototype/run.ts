@@ -74,7 +74,7 @@ const env = {
   AUTH_PROVIDERS: "credentials",
   AUTH_COOKIE_PREFIX: `prototype-${process.pid}`,
   BASE_URL: `http://localhost:${port}`,
-  DISABLE_REDIS_LOGS: "true",
+  DISABLE_REDIS_LOGS: undefined,
   NEXT_TELEMETRY_DISABLED: "1",
 };
 console.log(`Scratch data: ${scratch}\nThe comparison uses mock services. It does not contact Home Assistant.`);
