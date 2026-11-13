@@ -29,8 +29,6 @@ export const variantC = {
   },
   board: {
     pageTitle: "Media & home",
-    primaryColor: "#6BA7A0",
-    secondaryColor: "#6BA7A0",
     itemRadius: "md",
   },
   tabs: [
@@ -121,7 +119,7 @@ export const variantC = {
           xOffset: 7,
           yOffset: 5,
           width: 5,
-          height: 2,
+          height: 3,
           needsIntegration: true,
           options: {
             presentation: "controlPanel",

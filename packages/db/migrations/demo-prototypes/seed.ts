@@ -1,9 +1,9 @@
 import SuperJSON from "superjson";
 
-import { createId } from "@homarr/common";
+import { createId, generateResponsiveGridFor } from "@homarr/common";
 import { headerPreferencesSchema } from "@homarr/validation/user";
 
-import type { Database } from "../..";
+import type { Database, InferInsertModel } from "../..";
 import { eq } from "../..";
 import { boards, integrationItems, itemLayouts, items, layouts, sections, users } from "../../schema";
 import { getServerSettingByKeyAsync, updateServerSettingByKeyAsync } from "../../queries/server-setting";
@@ -47,14 +47,27 @@ export const seedDemoPrototypesAsync = async (db: Database) => {
     const boardId = createId();
     await db.insert(boards).values({ id: boardId, name, creatorId: demo.id, ...proposal.board, opacity: 100 });
     const layoutId = createId();
+    const responsiveLayouts: InferInsertModel<typeof layouts>[] = [];
+    let baseBreakpoint = 768;
+    if ("iteration" in proposal && proposal.iteration === 2) {
+      baseBreakpoint = 1200;
+      responsiveLayouts.push(
+        { id: createId(), boardId, name: "Mobile", role: "mobile", breakpoint: 0, columnCount: 3 },
+        { id: createId(), boardId, name: "Tablet", role: "custom", breakpoint: 600, columnCount: 6 },
+      );
+    }
     await db
       .insert(layouts)
-      .values({ id: layoutId, boardId, name: "Base", role: "base", breakpoint: 768, columnCount: 12 });
+      .values([
+        { id: layoutId, boardId, name: "Base", role: "base", breakpoint: baseBreakpoint, columnCount: 12 },
+        ...responsiveLayouts,
+      ]);
     for (const [position, tab] of proposal.tabs.entries()) {
       const sectionId = createId();
       await db
         .insert(sections)
         .values({ id: sectionId, boardId, kind: "empty", name: tab.name, xOffset: 0, yOffset: position });
+      const positions: Parameters<typeof generateResponsiveGridFor>[0]["items"] = [];
       for (const widget of tab.widgets) {
         const itemId = createId();
         await db.insert(items).values({
@@ -74,6 +87,35 @@ export const seedDemoPrototypesAsync = async (db: Database) => {
         });
         if (widget.needsIntegration)
           await db.insert(integrationItems).values({ itemId, integrationId: integration.id });
+        positions.push({
+          id: itemId,
+          type: "item",
+          sectionId,
+          xOffset: widget.xOffset,
+          yOffset: widget.yOffset,
+          width: widget.width,
+          height: widget.height,
+        });
+      }
+      for (const target of responsiveLayouts) {
+        const projected = generateResponsiveGridFor({
+          items: positions,
+          previousWidth: 12,
+          width: target.columnCount,
+          sectionId,
+        });
+        if (projected.items.length === 0) continue;
+        await db.insert(itemLayouts).values(
+          projected.items.map((item) => ({
+            itemId: item.id,
+            layoutId: target.id,
+            sectionId: item.sectionId,
+            xOffset: item.xOffset,
+            yOffset: item.yOffset,
+            width: item.width,
+            height: item.height,
+          })),
+        );
       }
     }
     console.log(`Created throwaway demo prototype ${proposal.key}: ${proposal.name}`);

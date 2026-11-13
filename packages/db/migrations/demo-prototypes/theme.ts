@@ -1,9 +1,24 @@
 import { customThemeSchema } from "@homarr/validation/theme";
 
+const accent = [
+  "#f0f8f6",
+  "#dcede9",
+  "#bddbd4",
+  "#94c1b7",
+  "#6ba7a0",
+  "#55968d",
+  "#43877e",
+  "#397a73",
+  "#2f655f",
+  "#244e49",
+];
+
 // A real, editable Homarr custom theme for the opt-in scratch comparison.
 export const demoPrototypeTheme = customThemeSchema.parse({
   preset: "default",
   theme: {
+    colors: { primaryColor: accent, secondaryColor: accent },
+    primaryShade: { light: 7, dark: 4 },
     fontFamily: "var(--font-geist), system-ui, sans-serif",
     fontFamilyMonospace: "var(--font-geist-mono), ui-monospace, monospace",
     headings: { fontFamily: "var(--font-geist), system-ui, sans-serif", fontWeight: "600" },

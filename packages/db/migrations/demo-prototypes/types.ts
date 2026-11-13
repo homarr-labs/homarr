@@ -11,8 +11,8 @@ export interface DemoPrototype {
   headerPreferences: HeaderPreferences;
   board: {
     pageTitle: string;
-    primaryColor: string;
-    secondaryColor: string;
+    primaryColor?: string;
+    secondaryColor?: string;
     itemRadius: "xs" | "sm" | "md" | "lg" | "xl";
     backgroundImageUrl?: string;
     customCss?: string;

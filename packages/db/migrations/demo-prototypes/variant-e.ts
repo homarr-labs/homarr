@@ -29,16 +29,8 @@ export const variantE = {
   },
   board: {
     pageTitle: "Homarr · Feature tour",
-    primaryColor: "#6BA7A0",
-    secondaryColor: "#6BA7A0",
     itemRadius: "lg",
     customCss: `
-      [data-kind="notebook"] .homarr-notebook-read-mode h2 {
-        font-size: calc(1.6rem * var(--board-canvas-ui-scale, 1));
-        line-height: 1.2;
-        letter-spacing: -0.025em;
-        margin: 0 0 var(--mantine-spacing-sm);
-      }
       [data-kind="notebook"] .homarr-notebook-read-mode h6 {
         font-size: calc(0.7rem * var(--board-canvas-ui-scale, 1));
         letter-spacing: 0.08em;
@@ -69,7 +61,7 @@ export const variantE = {
             showToolbar: false,
             allowReadOnlyCheck: false,
             content:
-              "<h6>01 / Home Assistant</h6><h2>Home controls.</h2><p>Living room controls, then kitchen controls and sensors. Toggle a light or open its details; changes stay in this demo.</p>",
+              "<h6>01 / Home Assistant</h6><p><strong>Home controls.</strong></p><p>Living room controls, then kitchen controls and sensors. Toggle a light or open its details; changes stay in this demo.</p>",
           },
         },
         {
@@ -127,7 +119,7 @@ export const variantE = {
             showToolbar: false,
             allowReadOnlyCheck: false,
             content:
-              "<h6>02 / Connected services</h6><h2>Sessions and systems.</h2><p>Current media sessions beside Beszel host metrics. Open a host for its detailed history; app tiles link to your services.</p>",
+              "<h6>02 / Connected services</h6><p><strong>Sessions and systems.</strong></p><p>Current media sessions beside Beszel host metrics. Open a host for its detailed history; app tiles link to your services.</p>",
           },
         },
         {
@@ -197,7 +189,7 @@ export const variantE = {
             showToolbar: false,
             allowReadOnlyCheck: false,
             content:
-              "<h6>03 / More rooms</h6><h2>Controls and readings.</h2><p>Office and bedroom controls with indoor and outdoor sensor history. Native tabs keep these related views on one board.</p>",
+              "<h6>03 / More rooms</h6><p><strong>Controls and readings.</strong></p><p>Office and bedroom controls with indoor and outdoor sensor history. Native tabs keep these related views on one board.</p>",
           },
         },
         {
@@ -228,7 +220,7 @@ export const variantE = {
             showToolbar: false,
             allowReadOnlyCheck: false,
             content:
-              "<h6>04 / Downloads</h6><h2>Queue status.</h2><p>Progress, speed and state from a populated queue. Open the widget's focus view when you need more space.</p>",
+              "<h6>04 / Downloads</h6><p><strong>Queue status.</strong></p><p>Progress, speed and state from a populated queue. Open the widget's focus view when you need more space.</p>",
           },
         },
         {
@@ -256,7 +248,7 @@ export const variantE = {
             showToolbar: false,
             allowReadOnlyCheck: false,
             content:
-              "<h6>05 / Customize</h6><h2>Edit in place.</h2><p>The header's pencil opens layout editing. Select a widget for its options, or edit the note beside this one.</p>",
+              "<h6>05 / Customize</h6><p><strong>Edit in place.</strong></p><p>The header's pencil opens layout editing. Select a widget for its options, or edit the note beside this one.</p>",
           },
         },
         {
@@ -270,7 +262,7 @@ export const variantE = {
             showToolbar: true,
             allowReadOnlyCheck: true,
             content:
-              '<h6>Notebook / Maintenance</h6><h2>Keep context nearby.</h2><ul data-type="taskList"><li data-type="taskItem" data-checked="true"><label><input type="checkbox" checked="checked"><span></span></label><div><p>Backup retention reviewed</p></div></li><li data-type="taskItem" data-checked="false"><label><input type="checkbox"><span></span></label><div><p>Replace office air filter</p></div></li></ul>',
+              '<h6>Notebook / Maintenance</h6><p><strong>Keep context nearby.</strong></p><ul data-type="taskList"><li data-type="taskItem" data-checked="true"><label><input type="checkbox" checked="checked"><span></span></label><div><p>Backup retention reviewed</p></div></li><li data-type="taskItem" data-checked="false"><label><input type="checkbox"><span></span></label><div><p>Replace office air filter</p></div></li></ul>',
           },
         },
       ],
