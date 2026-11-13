@@ -104,7 +104,7 @@ export const BoardTabBar = ({
                 styles={{ tabLabel: { minWidth: 0 } }}
                 c={tab.id === activeTab?.id ? activeColor : undefined}
                 miw={28}
-                flex={fit ? "1 1 0" : "0 0 auto"}
+                flex={fit ? "1 0 auto" : "0 0 auto"}
                 px={compact ? 8 : 10}
                 py={7}
                 aria-label={getTabLabel(tab)}
@@ -120,7 +120,7 @@ export const BoardTabBar = ({
                 }
                 onDoubleClick={isEditMode ? () => setRenamingTabId(tab.id) : undefined}
               >
-                <Text component="span" inherit truncate="end" display="block" maw="7rem">
+                <Text component="span" inherit display="block">
                   {compact ? index + 1 : getTabLabel(tab)}
                 </Text>
               </Tabs.Tab>
@@ -177,10 +177,8 @@ const BoardTabRenameInput = ({ tab, onDone }: { tab: BoardTab; onDone: () => voi
 
   return (
     <TextInput
-      w="8rem"
+      w={`${Math.max(initialLabel.current.length + 2, 16)}ch`}
       flex="none"
-      size="xs"
-      radius="xl"
       maxLength={32}
       defaultValue={initialLabel.current}
       aria-label={t("rename")}

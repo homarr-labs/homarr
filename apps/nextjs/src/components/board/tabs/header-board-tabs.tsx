@@ -49,7 +49,7 @@ export const HeaderBoardTabs = ({ display }: { display: HeaderTabsDisplay }) => 
       radius="md"
       miw={0}
       maw="100%"
-      flex="0 1 auto"
+      flex={display === "wide" ? "1 1 0" : "0 1 auto"}
       visibleFrom={display === "wide" ? "lg" : undefined}
     >
       <BoardTabBar compact={display === "compact"} fit={display === "wide"} />
