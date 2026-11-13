@@ -89,7 +89,7 @@ export const BoardTabBar = ({
     const tabBounds = tab.getBoundingClientRect();
     if (tabBounds.left < bounds.left) list.scrollLeft += tabBounds.left - bounds.left;
     else if (tabBounds.right > bounds.right) list.scrollLeft += tabBounds.right - bounds.right;
-  }, [activeTab?.id, activeTab?.name, activeTabIndex, listWidth]);
+  }, [activeTab?.id, activeTab?.name, activeTabIndex, listWidth, renamingTabId]);
 
   return (
     <Group gap={4} wrap="nowrap" w={fit ? "100%" : "fit-content"} maw="100%" p={2}>
