@@ -280,6 +280,13 @@
           "title": "",
           "description": ""
         },
+        "mode": {
+          "label": "",
+          "readOnly": "",
+          "readWrite": "",
+          "readOnlyDescription": "",
+          "readWriteDescription": ""
+        },
         "credential": {
           "title": "",
           "breadth": "",
@@ -1238,6 +1245,20 @@
       "username": "Kasutajanimi",
       "password": "Parool",
       "savedPlaceholder": "••••••• (salvestatud, jätmiseks tühjaks)"
+    },
+    "workshopUpdate": {
+      "title": "",
+      "apply": "",
+      "available": "",
+      "check": "",
+      "description": "",
+      "approvePermissions": "",
+      "pendingDescription": "",
+      "overwriteLocalChanges": "",
+      "installSeparate": "",
+      "communityWarning": "",
+      "updated": "",
+      "changedBeforeInstall": ""
     }
   },
   "workshop": {
@@ -1386,11 +1407,7 @@
               "label": "Vali olemasolev rakendus"
             },
             "new": {
-              "title": "Uus",
-              "url": {
-                "label": "Äpi URL",
-                "description": "Veebiaadress, mille rakendus juhtpaneelilt avab"
-              }
+              "title": "Uus"
             }
           }
         }
@@ -1442,8 +1459,9 @@
         "label": "Seo olemasolev rakendus",
         "description": "Ühenda see integratsioon rakendusega, mida saad juba kasutada."
       },
-      "appHref": {
-        "placeholder": "Kohandatud rakenduse URL"
+      "externalUrl": {
+        "label": "",
+        "description": ""
       },
       "apiKeySettings": {
         "label": "Hangi API võti"
@@ -1510,6 +1528,27 @@
         "unknown": {
           "title": "Tundmatu viga",
           "description": "Tekkis tundmatu viga. Lisateabe vaatamiseks ava allolev põhjus"
+        },
+        "frigate": {
+          "title": "",
+          "status": "",
+          "description": {
+            "cookie": "",
+            "profileMismatch": "",
+            "redirect": "",
+            "login": "",
+            "profile": "",
+            "stats": ""
+          }
+        },
+        "openmediavault": {
+          "title": "",
+          "description": {
+            "totpSecretRequired": "",
+            "totpSecretInvalid": "",
+            "totpVerificationFailed": "",
+            "unsupportedChallenge": ""
+          }
         },
         "parse": {
           "title": "Sõelumisviga",
@@ -1710,6 +1749,11 @@
         "title": "Lähtesta saladus",
         "message": "Kas oled kindel, et soovid selle saladuse lähtestada?"
       },
+      "totpNotice": "",
+      "remove": {
+        "title": "",
+        "message": ""
+      },
       "noSecretsRequired": {
         "segmentTitle": "Saladusi pole",
         "text": "Selle integratsiooni jaoks pole saladusi vaja"
@@ -1791,9 +1835,9 @@
           "label": "Indekseerija parool",
           "newLabel": "Uus indekseerija parool"
         },
-        "wazuhDashboardUrl": {
-          "label": "Armatuurlaua URL (valikuline)",
-          "newLabel": "Uus armatuurlaua URL"
+        "totpSecret": {
+          "label": "",
+          "newLabel": ""
         }
       }
     },
@@ -1891,7 +1935,8 @@
       "copy": "Kopeeri",
       "copied": "Kopeeritud",
       "refresh": "Värskenda",
-      "export": "Ekspordi"
+      "export": "Ekspordi",
+      "advanced": ""
     },
     "hidden": "",
     "pagination": {
@@ -1986,6 +2031,15 @@
         "modifier": "Modifikaator"
       }
     },
+    "markdown": {
+      "alert": {
+        "note": "",
+        "tip": "",
+        "important": "",
+        "warning": "",
+        "caution": ""
+      }
+    },
     "dangerZone": "Ohtlike toimingute ala",
     "noResults": "Tulemusi ei leitud",
     "unsavedChanges": "Sul on salvestamata muudatusi!",
@@ -2038,7 +2092,7 @@
     "total": "Kokku",
     "filesystemUsage": "{count, plural, one {Kuva # failisüsteemi kasutus} other {Kuva # failisüsteemi kasutus}}",
     "field": {
-      "name": "Nimi",
+      "name": "Töö nimetus",
       "state": "Olek",
       "size": "Suurus",
       "actions": "Toimingud",
@@ -2076,6 +2130,158 @@
         "sm": "Tagasihoidlik",
         "xl": "Pehme"
       }
+    },
+    "customTheme": {
+      "label": "",
+      "nothingFound": "",
+      "custom": "",
+      "customize": "",
+      "editor": {
+        "title": "",
+        "basedOn": "",
+        "preview": "",
+        "previewColorScheme": "",
+        "layout": "",
+        "typography": "",
+        "colors": "",
+        "json": "",
+        "defaultRadius": "",
+        "radiusHint": "",
+        "scale": "",
+        "spacing": "",
+        "radius": "",
+        "fontFamily": "",
+        "headingFont": "",
+        "monoFont": "",
+        "fontSizes": "",
+        "palette": {
+          "body": "",
+          "surface": "",
+          "hover": "",
+          "border": "",
+          "text": "",
+          "dimmed": "",
+          "primary": "",
+          "secondary": ""
+        },
+        "lockedPrimary": "",
+        "pickColor": "",
+        "autoContrast": "",
+        "luminanceThreshold": "",
+        "jsonHint": "",
+        "invalidJson": "",
+        "tooLong": "",
+        "copyJson": "",
+        "copied": "",
+        "discardJson": "",
+        "reset": "",
+        "apply": "",
+        "sampleTitle": "Juhtpaneel",
+        "sampleBadge": "",
+        "sampleText": "",
+        "sampleInput": "Otsing",
+        "sampleValue": "",
+        "sampleButton": ""
+      },
+      "studio": {
+        "title": "",
+        "saveTheme": "",
+        "searchControls": "",
+        "component": "",
+        "inheritedValue": "",
+        "resetControl": "",
+        "decreaseControl": "",
+        "increaseControl": "",
+        "chooseControl": "",
+        "layout": {
+          "spacing": "",
+          "radius": "",
+          "compact": "",
+          "normal": "",
+          "roomy": "",
+          "preset": "",
+          "none": "Pole",
+          "rounded": "",
+          "full": "",
+          "custom": "",
+          "advanced": ""
+        },
+        "previewSurface": "",
+        "previewFrame": "",
+        "loadingPreview": "",
+        "previewFailed": "",
+        "sampleBoard": "",
+        "components": "",
+        "overlays": "",
+        "typography": "",
+        "liveBoard": "",
+        "viewport": "",
+        "responsive": "",
+        "tablet": "",
+        "mobile": "Mobiilne",
+        "includeCustomCss": "",
+        "groups": {
+          "layout": "",
+          "typography": "",
+          "colors": "",
+          "surfaces": "",
+          "overlays": "",
+          "accessibility": "",
+          "css": ""
+        },
+        "controls": {
+          "defaultRadius": "",
+          "scale": "",
+          "spacing": "",
+          "radius": "",
+          "breakpoint": "",
+          "fontSizes": "",
+          "lineHeight": "",
+          "shadow": "",
+          "fontFamily": "",
+          "headingFont": "",
+          "monoFont": "",
+          "headingWeight": "",
+          "headingSize": "",
+          "fontSmoothing": "",
+          "body": "",
+          "surface": "",
+          "hover": "",
+          "border": "",
+          "text": "",
+          "dimmed": "",
+          "primary": "",
+          "secondary": "",
+          "autoContrast": "",
+          "luminanceThreshold": "",
+          "primaryShade": "",
+          "componentRadius": "",
+          "borderWidth": "",
+          "surfaceBackground": "",
+          "surfaceText": "",
+          "surfaceBorder": "",
+          "hoverBackground": "",
+          "hoverText": "",
+          "componentShadow": "",
+          "componentBorder": "",
+          "componentPadding": "",
+          "componentSize": "Suurus",
+          "componentVariant": "",
+          "overlayBlur": "",
+          "overlayOpacity": "",
+          "overlayColor": "",
+          "transitionDuration": "",
+          "headerBackground": "",
+          "respectReducedMotion": "",
+          "focusRing": "",
+          "cursorType": "",
+          "customCss": ""
+        },
+        "expandPreview": "",
+        "showControls": ""
+      },
+      "instanceDefault": "",
+      "useInstanceDefault": ""
     }
   },
   "section": {
@@ -2171,6 +2377,18 @@
       },
       "customWidget": "Kohandatud vidin",
       "standalone": "Eraldiseisev",
+      "integrationFilter": "",
+      "integrationNotConnected": "",
+      "workshop": {
+        "title": "",
+        "back": "",
+        "empty": "",
+        "noMatches": "",
+        "loading": "",
+        "integrationError": "",
+        "searchMore": "",
+        "installAndAdd": ""
+      },
       "missingIntegration": {
         "title": "Ühenda esmalt teenus",
         "noPermission": "See vidin vajab ühilduvat teenuseühendust. Palu administraatoril üks ühendada ja proovi siis uuesti."
@@ -2206,10 +2424,13 @@
       "saveErrorTitle": "Üksusi ei saanud uuendada",
       "saveErrorMessage": "Muudatusi ei saanud salvestada. Paneel värskendati.",
       "moveUnavailableTitle": "Valitud üksusi ei saanud liigutada",
-      "moveUnavailableMessage": "Sihtkohas pole kogu valiku jaoks piisavalt ruumi."
+      "moveUnavailableMessage": "Sihtkohas pole kogu valiku jaoks piisavalt ruumi.",
+      "moveToTab": "",
+      "movedToTab": ""
     },
     "moveResize": {
       "title": "Liiguta / muuda suurust",
+      "sizeOverlap": "",
       "entryLabel": "{name}, veerg {column}, rida {row}",
       "target": {
         "numbered": "{name}, sihtkoht {index}",
@@ -2292,6 +2513,36 @@
       "open": "Ava täpsem vaade",
       "close": "Sulge täpsem vaade",
       "label": "Vidina {widget} täpsem vaade"
+    },
+    "inPlace": {
+      "widgetLoadError": "",
+      "search": "",
+      "bestFit": "",
+      "moreWidgets": "",
+      "widgets": "",
+      "yourApps": "",
+      "createApp": "",
+      "addAppLink": "",
+      "createWidget": "",
+      "createWidgetDescription": "",
+      "createAppDescription": "",
+      "defaultFit": "",
+      "defaultFitDescription": "",
+      "defaultSize": "",
+      "defaultSizeDescription": "",
+      "emptyCells": "",
+      "preview": {
+        "error": "",
+        "loading": ""
+      },
+      "keyboard": {
+        "move": "",
+        "resize": "",
+        "pick": "",
+        "browse": "",
+        "moveDescription": "",
+        "resizeDescription": ""
+      }
     }
   },
   "widget": {
@@ -2335,7 +2586,29 @@
             "tooltip": "Kohtspikrina",
             "hidden": "Peidetud"
           }
+        },
+        "dockerContainer": {
+          "label": "",
+          "description": "",
+          "placeholder": "",
+          "disabled": "",
+          "unavailable": ""
         }
+      },
+      "docker": {
+        "action": {
+          "start": "",
+          "stop": ""
+        },
+        "notification": {
+          "startFailed": "",
+          "stopFailed": ""
+        },
+        "switch": {
+          "start": "",
+          "stop": ""
+        },
+        "stopped": ""
       },
       "error": {
         "notFound": {
@@ -2414,6 +2687,10 @@
         "hideHostname": {
           "label": "Peida hostinimed"
         },
+        "showFullUrls": {
+          "label": "",
+          "description": ""
+        },
         "withBorder": {
           "label": "Kuva ääris"
         },
@@ -2436,6 +2713,9 @@
         }
       },
       "empty": "Lisa vidina seadetes URL või rakendus",
+      "copyUrl": "",
+      "copied": "",
+      "copyFailed": "",
       "groups": {
         "label": "",
         "placeholder": "",
@@ -3089,6 +3369,141 @@
         "toggleFailed": "Olemuse värskendamine nurjus"
       }
     },
+    "smartHome-controls": {
+      "name": "",
+      "description": "",
+      "option": {
+        "presentation": {
+          "label": "",
+          "option": {
+            "entities": "",
+            "controlPanel": ""
+          }
+        },
+        "title": {
+          "label": "Pealkiri",
+          "description": ""
+        },
+        "blocks": {
+          "label": "",
+          "remove": ""
+        },
+        "roomDomains": {
+          "label": "",
+          "description": ""
+        },
+        "excludedEntityIds": {
+          "label": "",
+          "description": "",
+          "placeholder": ""
+        },
+        "showSummary": {
+          "label": ""
+        },
+        "readOnly": {
+          "label": "",
+          "description": ""
+        },
+        "controlSize": {
+          "label": "",
+          "option": {
+            "auto": "",
+            "compact": "",
+            "large": "Suur"
+          }
+        },
+        "palette": {
+          "label": "",
+          "option": {
+            "boring": "",
+            "colorful": ""
+          }
+        }
+      },
+      "domain": {
+        "light": "",
+        "switch": "",
+        "fan": "",
+        "climate": "",
+        "humidifier": "",
+        "cover": "",
+        "valve": "",
+        "lock": "",
+        "alarm_control_panel": "",
+        "media_player": "",
+        "camera": "",
+        "vacuum": "",
+        "scene": "",
+        "script": "",
+        "automation": "",
+        "button": "",
+        "input_boolean": "",
+        "input_select": "",
+        "person": "",
+        "binary_sensor": "",
+        "sensor": "",
+        "weather": "",
+        "sun": "",
+        "update": ""
+      },
+      "block": {
+        "add": {
+          "rooms": "",
+          "entity": "",
+          "roomsLabel": "",
+          "roomsPlaceholder": "",
+          "entityLabel": "",
+          "entityPlaceholder": "",
+          "merge": "",
+          "submit": "",
+          "duplicate": "",
+          "covered": ""
+        },
+        "kind": {
+          "entity": "",
+          "room": "",
+          "mergedRooms": "",
+          "unknown": ""
+        },
+        "entityCount": "",
+        "noArea": "",
+        "issue": {
+          "missing": "",
+          "otherSource": "",
+          "empty": ""
+        }
+      },
+      "preview": {
+        "empty": "",
+        "noMatches": "",
+        "summary": {
+          "lights": "",
+          "on": "",
+          "off": "",
+          "sensors": "",
+          "offline": ""
+        },
+        "otherSource": ""
+      },
+      "live": {
+        "loading": "",
+        "error": "",
+        "retry": "",
+        "actionFailed": "",
+        "actionUnconfirmed": "",
+        "unconfirmed": "",
+        "selectionLimit": "",
+        "unknownError": ""
+      },
+      "inline": {
+        "open": "",
+        "title": "",
+        "handle": "",
+        "empty": "",
+        "add": "",
+        "close": ""
+      }
+    },
     "smartHome-executeAutomation": {
       "name": "Käivita automatiseering",
       "description": "Käivita automatiseering ühe klõpsuga",
@@ -3535,6 +3950,34 @@
     },
     "coolify": {
       "description": "Ülevaade sinu Coolify eksemplari serveritest ja rakendustest",
+      "summary": {
+        "needsAttention": "",
+        "inProgress": "",
+        "unknown": "",
+        "healthy": "",
+        "empty": "",
+        "healthyDetail": "",
+        "more": "",
+        "moreInstances": ""
+      },
+      "details": {
+        "tabs": "",
+        "overview": "",
+        "search": "",
+        "serviceApplications": ""
+      },
+      "overview": {
+        "projects": "",
+        "resources": "",
+        "attention": "",
+        "ready": "",
+        "noProjects": "",
+        "projectsUnavailable": "",
+        "moreProjects": "",
+        "running": "",
+        "resourceCount": "",
+        "environmentCount": ""
+      },
       "option": {
         "showServers": {
           "label": "Näita servereid"
@@ -3566,7 +4009,13 @@
       },
       "source": {
         "url": "Allikas: {url}",
-        "unavailable": "{source}: pole saadaval"
+        "unavailable": "{source}: pole saadaval",
+        "unavailableCount": ""
+      },
+      "kind": {
+        "server": "",
+        "application": "",
+        "service": ""
       },
       "instances": {
         "title": "Eksemplarid"
@@ -3583,6 +4032,7 @@
         "exited": "Väljunud",
         "starting": "Käivitub",
         "restarting": "Taaskäivitub",
+        "unhealthy": "",
         "unknown": "Teadmata",
         "online": "Võrgus",
         "offline": "Võrgust väljas",
@@ -4815,6 +5265,7 @@
           },
           "identifier": {
             "label": "Identifikaator",
+            "containerPlaceholder": "",
             "placeholder": "Nimi või omanik/nimi"
           },
           "name": {},
@@ -5351,6 +5802,23 @@
       "name": "Süsteemi ressursid",
       "description": "Süsteemi CPU, mälu, ketta ja muu riistvara kasutus",
       "option": {
+        "diskDisplayMode": {
+          "label": "",
+          "option": {
+            "percentage": "",
+            "free": "",
+            "absolute": "",
+            "combined": ""
+          }
+        },
+        "resourceLayout": {
+          "label": "",
+          "description": ""
+        },
+        "subresourceLayout": {
+          "label": "",
+          "description": ""
+        },
         "hasShadow": {
           "label": "Luba diagrammi varjustus"
         },
@@ -5358,6 +5826,7 @@
           "label": "Nähtavad diagrammid",
           "description": "Vali diagrammid, mida soovid näha.",
           "option": {
+            "cpuCores": "",
             "memory": "Mälu",
             "network": "Võrk"
           }
@@ -6286,6 +6755,26 @@
         }
       }
     },
+    "tabs": {
+      "label": "",
+      "indicator": "",
+      "home": "Avaleht",
+      "untitled": "",
+      "add": "",
+      "actions": "",
+      "rename": "",
+      "namePlaceholder": "",
+      "moveLeft": "",
+      "moveRight": "",
+      "remove": {
+        "action": "",
+        "confirm": ""
+      },
+      "limitReached": "",
+      "hotkeyHint": "",
+      "destination": "",
+      "containerDestination": ""
+    },
     "landmark": {
       "canvas": "Juhtpaneeli lõuend",
       "leftRail": "Juhtpaneeli vasak külgriba",
@@ -6552,6 +7041,11 @@
           "description": "Serveri administraator pole veel kodupaneeli määranud.",
           "link": "Kuva avalikud paneelid",
           "notice": "Selle lehe eemaldamiseks palu administraatoril määrata serveriülene kodupaneel"
+        },
+        "noAccess": {
+          "title": "",
+          "description": "",
+          "notice": ""
         }
       }
     }
@@ -6623,10 +7117,12 @@
             "documentation": "Dokumentatsioon",
             "submitIssue": "Esita probleem",
             "discord": "Kogukonna Discord",
-            "sourceCode": "Lähtekood"
+            "sourceCode": "Lähtekood",
+            "changelog": ""
           }
         },
         "about": "Teave",
+        "updateAvailable": "",
         "assistant": "Assistent"
       }
     },
@@ -6638,9 +7134,23 @@
           "authentication": "Autentimine",
           "authorization": "Autoriseerimine"
         },
-        "heroBanner": {
-          "title": "Tere taas sinu",
-          "subtitle": "{app} paneel"
+        "hero": {
+          "greeting": "",
+          "greetingWithoutName": "",
+          "description": ""
+        },
+        "lobster": {
+          "label": "",
+          "prompt": "",
+          "pokeCount": "",
+          "reaction": {
+            "hey": "",
+            "ow": "",
+            "snip": "",
+            "careful": "",
+            "stillHere": "",
+            "okay": ""
+          }
         }
       },
       "board": {
@@ -6685,7 +7195,9 @@
         },
         "noResults": {
           "title": "Paneele pole veel",
-          "description": "Looge paneel, et paigutada rakendused ja vidinad ühte kohta."
+          "description": "Looge paneel, et paigutada rakendused ja vidinad ühte kohta.",
+          "noAccessTitle": "",
+          "noAccessDescription": ""
         }
       },
       "media": {
@@ -6738,6 +7250,11 @@
                 "logoDisplay": {
                   "logo": "Ainult logo",
                   "logoAndText": "Logo + tekst"
+                },
+                "tabsDisplay": {
+                  "wide": "",
+                  "compact": "",
+                  "indicator": ""
                 }
               },
               "items": {
@@ -6745,6 +7262,7 @@
                 "search": "Otsing",
                 "home": "Kodupaneel",
                 "boardSwitcher": "Paneelid",
+                "boardTabs": "",
                 "assistant": "Assistent",
                 "docker": "Docker",
                 "boardEdit": "Muuda paneeli",
@@ -6976,6 +7494,10 @@
             "title": "Välimus",
             "defaultColorScheme": {
               "label": "Vaikimisi värviskeem"
+            },
+            "whatsNew": {
+              "label": "",
+              "description": ""
             }
           },
           "branding": {
@@ -7327,6 +7849,12 @@
             "apiKey": {
               "label": "Autentimine",
               "title": "API-võtmed",
+              "access": {
+                "label": "",
+                "readOnly": "",
+                "readWrite": "",
+                "description": ""
+              },
               "button": {
                 "createApiToken": "Loo API-luba",
                 "confirmDeletion": ""
@@ -7552,7 +8080,8 @@
               "openSpotlightApps": "Ava rakenduste otsing",
               "openSpotlightAssistant": "Ava assistendi režiim",
               "openSpotlightPreferences": "Ava eelistuste režiim",
-              "openAssistant": "Ava assistent"
+              "openAssistant": "Ava assistent",
+              "switchBoardTab": ""
             },
             "note": "Nõuanne: Mod tähistab macOS-is nii Ctrl-klahvi kui ka ⌘-klahvi"
           }
@@ -8723,6 +9252,12 @@
       }
     }
   },
+  "whatsNew": {
+    "title": "",
+    "empty": "",
+    "allReleases": "",
+    "dismiss": ""
+  },
   "metadata": {
     "description": "Isehostitav juhtpaneel *arr-i virna ja kogu teie kodulabori jaoks. Integreerub enam kui 50 teenusega, reaalajas vidinad, konfiguratsioonifaile pole.",
     "dashboardTitle": "{appName} juhtpaneel"
@@ -8808,6 +9343,7 @@
       "imageInput": "Toetab pildisisendit",
       "thinking": "Mõtlemisrežiim",
       "reasoning": {
+        "default": "",
         "auto": "Automaatne",
         "none": "Väljas",
         "minimal": "Minimaalne",

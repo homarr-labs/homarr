@@ -4,6 +4,7 @@ import { basename, join, relative, resolve } from "node:path";
 
 const repositoryRoot = resolve(import.meta.dirname, "..");
 const nextRoot = resolve(process.env.CUSTOM_WIDGET_NEXT_ROOT ?? join(repositoryRoot, "apps/nextjs/.next"));
+const webpackManifestPath = join(nextRoot, "react-loadable-manifest.json");
 const budgetBytes = Number(process.env.CUSTOM_WIDGET_CHUNK_BUDGET_BYTES ?? 768 * 1024);
 if (!Number.isSafeInteger(budgetBytes) || budgetBytes <= 0) {
   throw new Error("CUSTOM_WIDGET_CHUNK_BUDGET_BYTES must be a positive integer.");
@@ -33,6 +34,7 @@ async function resolveChunk(chunk) {
 }
 
 function isRuntimeOrWorkbenchRoute(manifestPath) {
+  if (manifestPath === webpackManifestPath) return true;
   const normalizedManifestPath = manifestPath.replaceAll("\\", "/");
   return (
     normalizedManifestPath.includes("/(board)/") ||
@@ -41,26 +43,48 @@ function isRuntimeOrWorkbenchRoute(manifestPath) {
   );
 }
 
-let serverChunks;
+function isWebpackCustomJsxImport(moduleId) {
+  const normalized = moduleId.replaceAll("\\", "/");
+  // Webpack keys name the importing file and request, including missing targets.
+  return normalized.includes("widgets/src/custom-api/") && normalized.endsWith(" -> ./custom-jsx-display");
+}
+
+let serverChunks = [];
 let manifestPaths;
+let webpackManifest;
 try {
-  [serverChunks, manifestPaths] = await Promise.all([
-    collect(join(nextRoot, "server/chunks/ssr"), (name) =>
+  manifestPaths = await collect(join(nextRoot, "server"), (name) => name === "react-loadable-manifest.json");
+  if (manifestPaths.length > 0) {
+    serverChunks = await collect(join(nextRoot, "server/chunks/ssr"), (name) =>
       /^packages_widgets_src_custom-api_component.*\.js$/u.test(name),
-    ),
-    // Canonical route manifests survive compiler-cache restoration; standalone is assembled separately.
-    collect(join(nextRoot, "server"), (name) => name === "react-loadable-manifest.json"),
-  ]);
-} catch {
-  throw new Error("Next.js build output is missing. Run the Next.js production build before the bundle check.");
+    );
+  } else {
+    webpackManifest = JSON.parse(await readFile(webpackManifestPath, "utf8"));
+    if (!webpackManifest || typeof webpackManifest !== "object" || Array.isArray(webpackManifest)) {
+      throw new Error("Invalid Webpack loadable manifest");
+    }
+    manifestPaths = [webpackManifestPath];
+  }
+} catch (error) {
+  throw new Error(
+    "Next.js build output is missing or invalid. Run the Next.js production build before the bundle check.",
+    {
+      cause: error,
+    },
+  );
 }
 
 const moduleIds = new Set();
+if (webpackManifest) {
+  for (const moduleId of Object.keys(webpackManifest)) {
+    if (isWebpackCustomJsxImport(moduleId)) moduleIds.add(moduleId);
+  }
+}
 for (const serverChunk of serverChunks) {
   const source = await readFile(serverChunk, "utf8");
   for (const match of source.matchAll(/loadableGenerated:\{modules:\[(\d+)\]\}/gu)) moduleIds.add(match[1]);
 }
-if (moduleIds.size === 0) {
+if (moduleIds.size === 0 || webpackManifest) {
   const hasRuntimeMarker = new Map();
   for (const manifestPath of manifestPaths) {
     if (!isRuntimeOrWorkbenchRoute(manifestPath)) continue;
@@ -79,6 +103,20 @@ if (moduleIds.size === 0) {
         break;
       }
     }
+  }
+}
+if (webpackManifest) {
+  const webpackIds = new Set();
+  for (const moduleId of moduleIds) {
+    const id = webpackManifest[moduleId]?.id;
+    if (id === undefined || id === null) {
+      throw new Error(`Custom JSX Webpack entry ${moduleId} is missing its module identifier.`);
+    }
+    webpackIds.add(String(id));
+  }
+  // Multiple import sites can name one module; validate every matching alias.
+  for (const [moduleId, entry] of Object.entries(webpackManifest)) {
+    if (entry?.id !== undefined && entry?.id !== null && webpackIds.has(String(entry.id))) moduleIds.add(moduleId);
   }
 }
 if (moduleIds.size === 0) {
@@ -114,9 +152,9 @@ routePayloads.sort((left, right) => right.compressedBytes - left.compressedBytes
 const largest = routePayloads[0];
 if (largest.compressedBytes > budgetBytes) {
   throw new Error(
-    `The largest Custom JSX route payload is ${largest.compressedBytes} gzip bytes (${largest.rawBytes} raw), exceeding the ${budgetBytes} byte budget in ${relative(nextRoot, largest.manifestPath)}.`,
+    `The largest Custom JSX payload is ${largest.compressedBytes} gzip bytes (${largest.rawBytes} raw), exceeding the ${budgetBytes} byte budget in ${relative(nextRoot, largest.manifestPath)}.`,
   );
 }
 console.log(
-  `Custom JSX bundle check passed: ${routePayloads.length} routes, largest payload ${largest.compressedBytes} gzip bytes (${largest.rawBytes} raw across ${largest.files} chunks).`,
+  `Custom JSX bundle check passed: ${routePayloads.length} manifests, largest payload ${largest.compressedBytes} gzip bytes (${largest.rawBytes} raw across ${largest.files} chunks).`,
 );

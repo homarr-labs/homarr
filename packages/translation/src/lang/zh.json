@@ -280,6 +280,13 @@
           "title": "",
           "description": ""
         },
+        "mode": {
+          "label": "",
+          "readOnly": "",
+          "readWrite": "",
+          "readOnlyDescription": "",
+          "readWriteDescription": ""
+        },
         "credential": {
           "title": "",
           "breadth": "",
@@ -1238,6 +1245,20 @@
       "username": "使用者名稱",
       "password": "密碼",
       "savedPlaceholder": "••••••• (已儲存，留空則保持不變)"
+    },
+    "workshopUpdate": {
+      "title": "",
+      "apply": "",
+      "available": "",
+      "check": "",
+      "description": "",
+      "approvePermissions": "",
+      "pendingDescription": "",
+      "overwriteLocalChanges": "",
+      "installSeparate": "",
+      "communityWarning": "",
+      "updated": "",
+      "changedBeforeInstall": ""
     }
   },
   "workshop": {
@@ -1386,11 +1407,7 @@
               "label": "選擇現有應用程式"
             },
             "new": {
-              "title": "新增",
-              "url": {
-                "label": "應用程式網址",
-                "description": "從儀表板存取應用程式時所開啟的網址"
-              }
+              "title": "新增"
             }
           }
         }
@@ -1442,8 +1459,9 @@
         "label": "連結現有應用程式",
         "description": "將此整合連線至您已可使用的應用程式。"
       },
-      "appHref": {
-        "placeholder": "自訂應用程式網址"
+      "externalUrl": {
+        "label": "",
+        "description": ""
       },
       "apiKeySettings": {
         "label": "取得 API 金鑰"
@@ -1510,6 +1528,27 @@
         "unknown": {
           "title": "未知錯誤",
           "description": "發生未知錯誤，展開下方的原因以查看詳細資訊"
+        },
+        "frigate": {
+          "title": "",
+          "status": "",
+          "description": {
+            "cookie": "",
+            "profileMismatch": "",
+            "redirect": "",
+            "login": "",
+            "profile": "",
+            "stats": ""
+          }
+        },
+        "openmediavault": {
+          "title": "",
+          "description": {
+            "totpSecretRequired": "",
+            "totpSecretInvalid": "",
+            "totpVerificationFailed": "",
+            "unsupportedChallenge": ""
+          }
         },
         "parse": {
           "title": "解析錯誤",
@@ -1710,6 +1749,11 @@
         "title": "重設密鑰",
         "message": "確認重設密鑰嗎？"
       },
+      "totpNotice": "",
+      "remove": {
+        "title": "",
+        "message": ""
+      },
       "noSecretsRequired": {
         "segmentTitle": "無密鑰",
         "text": "此集成無需密鑰"
@@ -1791,9 +1835,9 @@
           "label": "Indexer 密碼",
           "newLabel": "新的 Indexer 密碼"
         },
-        "wazuhDashboardUrl": {
-          "label": "儀表板 URL（選填）",
-          "newLabel": "新的儀表板 URL"
+        "totpSecret": {
+          "label": "",
+          "newLabel": ""
         }
       }
     },
@@ -1891,7 +1935,8 @@
       "copy": "複製",
       "copied": "已複製",
       "refresh": "刷新",
-      "export": "匯出"
+      "export": "匯出",
+      "advanced": ""
     },
     "hidden": "隱藏",
     "pagination": {
@@ -1986,6 +2031,15 @@
         "modifier": "修改器"
       }
     },
+    "markdown": {
+      "alert": {
+        "note": "筆記",
+        "tip": "",
+        "important": "",
+        "warning": "",
+        "caution": ""
+      }
+    },
     "dangerZone": "危險區域",
     "noResults": "未找到結果",
     "unsavedChanges": "尚未儲存變更",
@@ -2038,7 +2092,7 @@
     "total": "總計",
     "filesystemUsage": "{count, plural, other {顯示 # 個檔案系統的使用量}}",
     "field": {
-      "name": "名稱",
+      "name": "工作名稱",
       "state": "狀態",
       "size": "大小",
       "actions": "動作",
@@ -2076,6 +2130,158 @@
         "sm": "細微",
         "xl": "柔和"
       }
+    },
+    "customTheme": {
+      "label": "",
+      "nothingFound": "",
+      "custom": "",
+      "customize": "",
+      "editor": {
+        "title": "",
+        "basedOn": "",
+        "preview": "",
+        "previewColorScheme": "",
+        "layout": "版面配置",
+        "typography": "",
+        "colors": "配色",
+        "json": "",
+        "defaultRadius": "",
+        "radiusHint": "",
+        "scale": "",
+        "spacing": "",
+        "radius": "",
+        "fontFamily": "",
+        "headingFont": "",
+        "monoFont": "",
+        "fontSizes": "",
+        "palette": {
+          "body": "",
+          "surface": "",
+          "hover": "",
+          "border": "",
+          "text": "",
+          "dimmed": "",
+          "primary": "",
+          "secondary": ""
+        },
+        "lockedPrimary": "",
+        "pickColor": "",
+        "autoContrast": "",
+        "luminanceThreshold": "",
+        "jsonHint": "",
+        "invalidJson": "",
+        "tooLong": "",
+        "copyJson": "",
+        "copied": "",
+        "discardJson": "",
+        "reset": "",
+        "apply": "",
+        "sampleTitle": "",
+        "sampleBadge": "",
+        "sampleText": "",
+        "sampleInput": "搜尋",
+        "sampleValue": "尋找應用程式",
+        "sampleButton": ""
+      },
+      "studio": {
+        "title": "",
+        "saveTheme": "",
+        "searchControls": "",
+        "component": "",
+        "inheritedValue": "",
+        "resetControl": "",
+        "decreaseControl": "",
+        "increaseControl": "",
+        "chooseControl": "",
+        "layout": {
+          "spacing": "",
+          "radius": "",
+          "compact": "",
+          "normal": "",
+          "roomy": "",
+          "preset": "",
+          "none": "無",
+          "rounded": "",
+          "full": "",
+          "custom": "",
+          "advanced": ""
+        },
+        "previewSurface": "",
+        "previewFrame": "",
+        "loadingPreview": "",
+        "previewFailed": "",
+        "sampleBoard": "",
+        "components": "",
+        "overlays": "",
+        "typography": "",
+        "liveBoard": "",
+        "viewport": "",
+        "responsive": "",
+        "tablet": "",
+        "mobile": "移動裝置",
+        "includeCustomCss": "",
+        "groups": {
+          "layout": "",
+          "typography": "",
+          "colors": "",
+          "surfaces": "",
+          "overlays": "",
+          "accessibility": "",
+          "css": ""
+        },
+        "controls": {
+          "defaultRadius": "",
+          "scale": "",
+          "spacing": "",
+          "radius": "",
+          "breakpoint": "斷點",
+          "fontSizes": "",
+          "lineHeight": "",
+          "shadow": "",
+          "fontFamily": "",
+          "headingFont": "",
+          "monoFont": "",
+          "headingWeight": "",
+          "headingSize": "",
+          "fontSmoothing": "",
+          "body": "",
+          "surface": "",
+          "hover": "",
+          "border": "",
+          "text": "",
+          "dimmed": "",
+          "primary": "",
+          "secondary": "",
+          "autoContrast": "",
+          "luminanceThreshold": "",
+          "primaryShade": "",
+          "componentRadius": "",
+          "borderWidth": "",
+          "surfaceBackground": "背景",
+          "surfaceText": "",
+          "surfaceBorder": "邊框顏色",
+          "hoverBackground": "",
+          "hoverText": "",
+          "componentShadow": "",
+          "componentBorder": "",
+          "componentPadding": "",
+          "componentSize": "檔案大小",
+          "componentVariant": "",
+          "overlayBlur": "",
+          "overlayOpacity": "",
+          "overlayColor": "",
+          "transitionDuration": "",
+          "headerBackground": "",
+          "respectReducedMotion": "",
+          "focusRing": "",
+          "cursorType": "",
+          "customCss": ""
+        },
+        "expandPreview": "",
+        "showControls": "顯示控制"
+      },
+      "instanceDefault": "",
+      "useInstanceDefault": ""
     }
   },
   "section": {
@@ -2171,6 +2377,18 @@
       },
       "customWidget": "自訂小工具",
       "standalone": "獨立",
+      "integrationFilter": "",
+      "integrationNotConnected": "",
+      "workshop": {
+        "title": "",
+        "back": "",
+        "empty": "",
+        "noMatches": "",
+        "loading": "",
+        "integrationError": "",
+        "searchMore": "",
+        "installAndAdd": ""
+      },
       "missingIntegration": {
         "title": "請先連線服務",
         "noPermission": "此小工具需要相容的服務連線。請管理員先連線服務，然後再試。"
@@ -2206,10 +2424,13 @@
       "saveErrorTitle": "無法更新項目",
       "saveErrorMessage": "無法儲存變更。面板已重新整理。",
       "moveUnavailableTitle": "無法移動所選項目",
-      "moveUnavailableMessage": "目的地沒有足夠空間容納整個選取範圍。"
+      "moveUnavailableMessage": "目的地沒有足夠空間容納整個選取範圍。",
+      "moveToTab": "",
+      "movedToTab": ""
     },
     "moveResize": {
       "title": "移動 / 調整大小項目",
+      "sizeOverlap": "",
       "entryLabel": "{name}，第 {column} 欄、第 {row} 列",
       "target": {
         "numbered": "{name}，目的地 {index}",
@@ -2292,6 +2513,36 @@
       "open": "開啟進階檢視",
       "close": "關閉進階檢視",
       "label": "{widget} 進階檢視"
+    },
+    "inPlace": {
+      "widgetLoadError": "",
+      "search": "",
+      "bestFit": "",
+      "moreWidgets": "",
+      "widgets": "",
+      "yourApps": "",
+      "createApp": "",
+      "addAppLink": "",
+      "createWidget": "",
+      "createWidgetDescription": "",
+      "createAppDescription": "",
+      "defaultFit": "",
+      "defaultFitDescription": "",
+      "defaultSize": "",
+      "defaultSizeDescription": "",
+      "emptyCells": "",
+      "preview": {
+        "error": "",
+        "loading": ""
+      },
+      "keyboard": {
+        "move": "",
+        "resize": "",
+        "pick": "",
+        "browse": "",
+        "moveDescription": "",
+        "resizeDescription": ""
+      }
     }
   },
   "widget": {
@@ -2335,7 +2586,29 @@
             "tooltip": "以提示顯示",
             "hidden": "隱藏"
           }
+        },
+        "dockerContainer": {
+          "label": "",
+          "description": "",
+          "placeholder": "",
+          "disabled": "",
+          "unavailable": ""
         }
+      },
+      "docker": {
+        "action": {
+          "start": "",
+          "stop": ""
+        },
+        "notification": {
+          "startFailed": "",
+          "stopFailed": ""
+        },
+        "switch": {
+          "start": "",
+          "stop": ""
+        },
+        "stopped": ""
       },
       "error": {
         "notFound": {
@@ -2414,6 +2687,10 @@
         "hideHostname": {
           "label": "隱藏 hostname"
         },
+        "showFullUrls": {
+          "label": "",
+          "description": ""
+        },
         "withBorder": {
           "label": "顯示邊框"
         },
@@ -2436,6 +2713,9 @@
         }
       },
       "empty": "在小工具設定中新增 URL 或應用程式",
+      "copyUrl": "複製網址",
+      "copied": "",
+      "copyFailed": "",
       "groups": {
         "label": "",
         "placeholder": "創建分類",
@@ -3089,6 +3369,141 @@
         "toggleFailed": "無法更新實體"
       }
     },
+    "smartHome-controls": {
+      "name": "",
+      "description": "",
+      "option": {
+        "presentation": {
+          "label": "",
+          "option": {
+            "entities": "",
+            "controlPanel": ""
+          }
+        },
+        "title": {
+          "label": "標題",
+          "description": ""
+        },
+        "blocks": {
+          "label": "",
+          "remove": ""
+        },
+        "roomDomains": {
+          "label": "",
+          "description": ""
+        },
+        "excludedEntityIds": {
+          "label": "",
+          "description": "",
+          "placeholder": ""
+        },
+        "showSummary": {
+          "label": ""
+        },
+        "readOnly": {
+          "label": "",
+          "description": ""
+        },
+        "controlSize": {
+          "label": "",
+          "option": {
+            "auto": "",
+            "compact": "",
+            "large": "大"
+          }
+        },
+        "palette": {
+          "label": "配色",
+          "option": {
+            "boring": "",
+            "colorful": ""
+          }
+        }
+      },
+      "domain": {
+        "light": "",
+        "switch": "",
+        "fan": "",
+        "climate": "",
+        "humidifier": "",
+        "cover": "",
+        "valve": "",
+        "lock": "",
+        "alarm_control_panel": "",
+        "media_player": "",
+        "camera": "",
+        "vacuum": "",
+        "scene": "",
+        "script": "",
+        "automation": "",
+        "button": "",
+        "input_boolean": "",
+        "input_select": "",
+        "person": "",
+        "binary_sensor": "",
+        "sensor": "",
+        "weather": "天氣",
+        "sun": "",
+        "update": ""
+      },
+      "block": {
+        "add": {
+          "rooms": "",
+          "entity": "",
+          "roomsLabel": "",
+          "roomsPlaceholder": "",
+          "entityLabel": "",
+          "entityPlaceholder": "",
+          "merge": "",
+          "submit": "新增",
+          "duplicate": "",
+          "covered": ""
+        },
+        "kind": {
+          "entity": "",
+          "room": "",
+          "mergedRooms": "",
+          "unknown": ""
+        },
+        "entityCount": "",
+        "noArea": "",
+        "issue": {
+          "missing": "找不到",
+          "otherSource": "",
+          "empty": ""
+        }
+      },
+      "preview": {
+        "empty": "",
+        "noMatches": "",
+        "summary": {
+          "lights": "",
+          "on": "",
+          "off": "",
+          "sensors": "",
+          "offline": "離線"
+        },
+        "otherSource": ""
+      },
+      "live": {
+        "loading": "",
+        "error": "",
+        "retry": "",
+        "actionFailed": "",
+        "actionUnconfirmed": "",
+        "unconfirmed": "",
+        "selectionLimit": "",
+        "unknownError": ""
+      },
+      "inline": {
+        "open": "",
+        "title": "",
+        "handle": "",
+        "empty": "",
+        "add": "",
+        "close": ""
+      }
+    },
     "smartHome-executeAutomation": {
       "name": "執行自動化",
       "description": "一鍵觸發自動化",
@@ -3535,6 +3950,34 @@
     },
     "coolify": {
       "description": "概覽您的 Coolify 執行個體及其伺服器與應用程式",
+      "summary": {
+        "needsAttention": "",
+        "inProgress": "",
+        "unknown": "",
+        "healthy": "",
+        "empty": "",
+        "healthyDetail": "",
+        "more": "",
+        "moreInstances": ""
+      },
+      "details": {
+        "tabs": "",
+        "overview": "",
+        "search": "",
+        "serviceApplications": ""
+      },
+      "overview": {
+        "projects": "",
+        "resources": "",
+        "attention": "",
+        "ready": "準備",
+        "noProjects": "",
+        "projectsUnavailable": "",
+        "moreProjects": "",
+        "running": "運行中",
+        "resourceCount": "",
+        "environmentCount": ""
+      },
       "option": {
         "showServers": {
           "label": "顯示伺服器"
@@ -3566,7 +4009,13 @@
       },
       "source": {
         "url": "來源：{url}",
-        "unavailable": "{source}：無法使用"
+        "unavailable": "{source}：無法使用",
+        "unavailableCount": ""
+      },
+      "kind": {
+        "server": "",
+        "application": "",
+        "service": ""
       },
       "instances": {
         "title": "執行個體"
@@ -3583,6 +4032,7 @@
         "exited": "已退出",
         "starting": "正在啟動",
         "restarting": "正在重啟",
+        "unhealthy": "狀況不良",
         "unknown": "未知",
         "online": "在線",
         "offline": "離線",
@@ -4815,6 +5265,7 @@
           },
           "identifier": {
             "label": "識別碼",
+            "containerPlaceholder": "",
             "placeholder": "名稱或擁有者/名稱"
           },
           "name": {},
@@ -5351,6 +5802,23 @@
       "name": "系統資源",
       "description": "您系統的 CPU、記憶體、磁碟及其他硬體使用情況",
       "option": {
+        "diskDisplayMode": {
+          "label": "",
+          "option": {
+            "percentage": "百分比（例如 76%）",
+            "free": "",
+            "absolute": "",
+            "combined": ""
+          }
+        },
+        "resourceLayout": {
+          "label": "",
+          "description": ""
+        },
+        "subresourceLayout": {
+          "label": "",
+          "description": ""
+        },
         "hasShadow": {
           "label": "啟用圖表陰影"
         },
@@ -5358,6 +5826,7 @@
           "label": "顯示的圖表",
           "description": "選擇您希望顯示的圖表。",
           "option": {
+            "cpuCores": "",
             "memory": "記憶體",
             "network": "網路"
           }
@@ -6286,6 +6755,26 @@
         }
       }
     },
+    "tabs": {
+      "label": "",
+      "indicator": "",
+      "home": "首頁",
+      "untitled": "",
+      "add": "",
+      "actions": "",
+      "rename": "",
+      "namePlaceholder": "",
+      "moveLeft": "",
+      "moveRight": "",
+      "remove": {
+        "action": "",
+        "confirm": ""
+      },
+      "limitReached": "",
+      "hotkeyHint": "",
+      "destination": "",
+      "containerDestination": ""
+    },
     "landmark": {
       "canvas": "儀表板畫布",
       "leftRail": "儀表板左側列",
@@ -6552,6 +7041,11 @@
           "description": "伺服器管理員尚未設定主面板",
           "link": "查看公開面板",
           "notice": "要讓這個頁面消失，請伺服器管理員為伺服器設定一個主面板"
+        },
+        "noAccess": {
+          "title": "",
+          "description": "",
+          "notice": ""
         }
       }
     }
@@ -6623,10 +7117,12 @@
             "documentation": "說明書",
             "submitIssue": "提交問題",
             "discord": "Discord 社群",
-            "sourceCode": "源碼"
+            "sourceCode": "源碼",
+            "changelog": ""
           }
         },
         "about": "關於",
+        "updateAvailable": "",
         "assistant": "助理"
       }
     },
@@ -6638,9 +7134,23 @@
           "authentication": "認證",
           "authorization": "認證"
         },
-        "heroBanner": {
-          "title": "歡迎回到您的",
-          "subtitle": "{app} 看板"
+        "hero": {
+          "greeting": "",
+          "greetingWithoutName": "",
+          "description": ""
+        },
+        "lobster": {
+          "label": "",
+          "prompt": "",
+          "pokeCount": "",
+          "reaction": {
+            "hey": "",
+            "ow": "",
+            "snip": "",
+            "careful": "",
+            "stillHere": "",
+            "okay": ""
+          }
         }
       },
       "board": {
@@ -6685,7 +7195,9 @@
         },
         "noResults": {
           "title": "尚無面板",
-          "description": "建立面板，將您的應用程式與小工具集中於一處。"
+          "description": "建立面板，將您的應用程式與小工具集中於一處。",
+          "noAccessTitle": "",
+          "noAccessDescription": ""
         }
       },
       "media": {
@@ -6738,6 +7250,11 @@
                 "logoDisplay": {
                   "logo": "僅標誌",
                   "logoAndText": "標誌 + 文字"
+                },
+                "tabsDisplay": {
+                  "wide": "",
+                  "compact": "",
+                  "indicator": ""
                 }
               },
               "items": {
@@ -6745,6 +7262,7 @@
                 "search": "搜尋",
                 "home": "主面板",
                 "boardSwitcher": "面板",
+                "boardTabs": "",
                 "assistant": "助理",
                 "docker": "Docker",
                 "boardEdit": "編輯面板",
@@ -6976,6 +7494,10 @@
             "title": "外觀",
             "defaultColorScheme": {
               "label": "預設配色方案"
+            },
+            "whatsNew": {
+              "label": "",
+              "description": ""
             }
           },
           "branding": {
@@ -7327,6 +7849,12 @@
             "apiKey": {
               "label": "認證",
               "title": "API 密鑰\n",
+              "access": {
+                "label": "",
+                "readOnly": "",
+                "readWrite": "",
+                "description": ""
+              },
               "button": {
                 "createApiToken": "創建 API 密鑰",
                 "confirmDeletion": ""
@@ -7552,7 +8080,8 @@
               "openSpotlightApps": "開啟應用程式搜尋",
               "openSpotlightAssistant": "開啟助理模式",
               "openSpotlightPreferences": "開啟偏好設定模式",
-              "openAssistant": "開啟助理"
+              "openAssistant": "開啟助理",
+              "switchBoardTab": ""
             },
             "note": "提示：Mod 鍵在 macOS 上同時指 Ctrl 鍵與 ⌘ 鍵"
           }
@@ -8723,6 +9252,12 @@
       }
     }
   },
+  "whatsNew": {
+    "title": "",
+    "empty": "",
+    "allReleases": "",
+    "dismiss": ""
+  },
   "metadata": {
     "description": "適用於 *arr 堆疊與完整家庭實驗室的自架儀表板。整合 50 多項服務、即時小工具，無需設定檔。",
     "dashboardTitle": "{appName} 儀表板"
@@ -8808,6 +9343,7 @@
       "imageInput": "接受影像輸入",
       "thinking": "思考模式",
       "reasoning": {
+        "default": "",
         "auto": "自動",
         "none": "關閉",
         "minimal": "最小",

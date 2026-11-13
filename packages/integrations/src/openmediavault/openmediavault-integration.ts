@@ -1,5 +1,6 @@
 import type { Headers, HeadersInit, fetch as undiciFetch, Response as UndiciResponse } from "undici";
 
+import { isRecord } from "@homarr/common";
 import { ResponseError } from "@homarr/common/server";
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 import { createLogger } from "@homarr/core/infrastructure/logs";
@@ -13,6 +14,8 @@ import type { TestingResult } from "../base/test-connection/test-connection-serv
 import type { ISystemHealthMonitoringIntegration } from "../interfaces/health-monitoring/health-monitoring-integration";
 import type { SystemHealthMonitoring } from "../types";
 import { cpuTempSchema, fileSystemSchema, smartSchema, systemInformationSchema } from "./openmediavault-types";
+import { OpenMediaVaultTotpError } from "./openmediavault-totp-error";
+import { generateTotpCode, InvalidTotpSecretError } from "./totp";
 
 const logger = createLogger({ module: "openMediaVaultIntegration" });
 
@@ -99,8 +102,13 @@ export class OpenMediaVaultIntegration extends Integration implements ISystemHea
   }
 
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
-    await this.getSessionAsync(input.fetchAsync);
-    return { success: true };
+    try {
+      await this.getSessionAsync(input.fetchAsync);
+      return { success: true };
+    } catch (error) {
+      if (error instanceof OpenMediaVaultTotpError) return error.toConnectionResult();
+      throw error;
+    }
   }
 
   private async getFileSystemsAsync(): Promise<SystemHealthMonitoring["fileSystem"]> {
@@ -199,6 +207,7 @@ export class OpenMediaVaultIntegration extends Integration implements ISystemHea
    * @returns The session details
    */
   private async getSessionAsync(fetchAsync?: typeof undiciFetch): Promise<SessionStoreValue> {
+    if (this.hasSecretValue("totpSecret")) this.getTotpCode();
     const response = await this.makeRpcCallWithCustomFetchAsync(
       "session",
       "login",
@@ -214,11 +223,35 @@ export class OpenMediaVaultIntegration extends Integration implements ISystemHea
       throw new ResponseError(response);
     }
 
-    const data = (await response.json()) as { response?: { sessionid?: string } };
-    if (data.response?.sessionid) {
+    const data = readAuthResponse(await response.json());
+    if (data.status === "challengeRequired" || isRecord(data.challenge)) {
+      if (isRecord(data.challenge) && data.challenge.kind !== undefined && data.challenge.kind !== "totp") {
+        throw new OpenMediaVaultTotpError(this.publicIntegration, "unsupportedChallenge");
+      }
+      const code = this.getTotpCode();
+      const cookie = response.headers
+        .getSetCookie()
+        .map((value) => value.split(";")[0])
+        .join("; ");
+      if (!cookie) throw new OpenMediaVaultTotpError(this.publicIntegration, "totpVerificationFailed");
+      const verified = await this.makeRpcCallWithCustomFetchAsync(
+        "session",
+        "verify",
+        { code },
+        { Cookie: cookie },
+        fetchAsync,
+      );
+      if (!verified.ok) throw new OpenMediaVaultTotpError(this.publicIntegration, "totpVerificationFailed");
+      const verifiedData = readAuthResponse(await verified.json());
+      if (typeof verifiedData.sessionid !== "string" || !verifiedData.sessionid) {
+        throw new OpenMediaVaultTotpError(this.publicIntegration, "totpVerificationFailed");
+      }
+      return { type: "header", sessionId: verifiedData.sessionid };
+    }
+    if (typeof data.sessionid === "string" && data.sessionid) {
       return {
         type: "header",
-        sessionId: data.response.sessionid,
+        sessionId: data.sessionid,
       };
     } else {
       const sessionId = OpenMediaVaultIntegration.extractSessionIdFromCookies(response.headers);
@@ -236,6 +269,20 @@ export class OpenMediaVaultIntegration extends Integration implements ISystemHea
         loginToken,
         sessionId,
       };
+    }
+  }
+
+  private getTotpCode(): string {
+    if (!this.hasSecretValue("totpSecret")) {
+      throw new OpenMediaVaultTotpError(this.publicIntegration, "totpSecretRequired");
+    }
+    try {
+      return generateTotpCode(this.getSecretValue("totpSecret"));
+    } catch (error) {
+      if (error instanceof InvalidTotpSecretError) {
+        throw new OpenMediaVaultTotpError(this.publicIntegration, "totpSecretInvalid");
+      }
+      throw error;
     }
   }
 
@@ -257,3 +304,8 @@ export class OpenMediaVaultIntegration extends Integration implements ISystemHea
     return loginToken ?? null;
   }
 }
+
+const readAuthResponse = (value: unknown): Record<string, unknown> => {
+  if (isRecord(value) && isRecord(value.response)) return value.response;
+  return {};
+};

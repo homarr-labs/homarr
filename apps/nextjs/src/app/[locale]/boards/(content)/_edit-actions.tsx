@@ -3,7 +3,15 @@
 import { useEffect, useRef } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Group, Menu } from "@mantine/core";
-import { IconBox, IconChevronDown, IconLayoutGridAdd, IconPlug, IconPlus, IconResize } from "@tabler/icons-react";
+import {
+  IconBox,
+  IconBrowserPlus,
+  IconChevronDown,
+  IconLayoutGridAdd,
+  IconPlug,
+  IconPlus,
+  IconResize,
+} from "@tabler/icons-react";
 
 import { useSession } from "@homarr/auth/client";
 import { useRequiredBoard } from "@homarr/boards/context";
@@ -14,6 +22,7 @@ import { useI18n } from "@homarr/translation/client";
 import { useItemActions } from "~/components/board/items/item-actions";
 import { ItemSelectModal } from "~/components/board/items/item-select-modal";
 import { useContainerActions } from "~/components/board/sections/container/container-actions";
+import { useBoardTabActions } from "~/components/board/tabs/use-board-tab-actions";
 import { IntegrationSelectModal } from "~/components/integration/integration-select-modal";
 import { HeaderButton } from "~/components/layout/header/button";
 
@@ -29,6 +38,7 @@ const AddMenu = () => {
   const { openModal: openIntegrationSelectModal } = useModalAction(IntegrationSelectModal);
   const { addContainer } = useContainerActions();
   const { createItem } = useItemActions();
+  const { canAddTab, addTab } = useBoardTabActions();
   const tBoard = useI18n("board");
   const tIntegration = useI18n("integration");
   const tContainer = useI18n("section.container");
@@ -101,6 +111,9 @@ const AddMenu = () => {
         <Menu.Divider />
         <Menu.Item leftSection={<IconLayoutGridAdd size={20} />} onClick={addContainer}>
           {tContainer("action.create")}
+        </Menu.Item>
+        <Menu.Item leftSection={<IconBrowserPlus size={20} />} disabled={!canAddTab} onClick={addTab}>
+          {tBoard("tabs.add")}
         </Menu.Item>
       </Menu.Dropdown>
     </Menu>

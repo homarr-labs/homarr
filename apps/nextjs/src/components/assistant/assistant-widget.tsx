@@ -95,7 +95,7 @@ const EnabledAssistantBoardWidget = ({
       aria-busy={isLoading || assistant.isRunning}
       style={
         {
-          "--assistant-widget-radius": `var(--mantine-radius-${board.itemRadius})`,
+          "--assistant-widget-radius": `var(--mantine-radius-${board.itemRadius ?? "default"})`,
           "--board-canvas-ui-scale": widgetUiScale,
           "--mantine-scale": widgetUiScale,
         } as CSSProperties

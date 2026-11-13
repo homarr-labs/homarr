@@ -1,7 +1,7 @@
 .page {
   --studio-surface: color-mix(in srgb, var(--mantine-color-body) 92%, transparent);
   --studio-glow-color: var(--mantine-primary-color-filled);
-  --studio-secondary-glow-color: var(--mantine-color-orange-6);
+  --studio-secondary-glow-color: var(--mantine-color-secondaryColor-filled);
   min-height: 100dvh;
   overflow-x: clip;
   position: relative;
@@ -583,7 +583,7 @@
     min-width: 0;
   }
 
-  .primaryActions > :global(.mantine-Button-root):last-child {
+  .stickyActions .primaryActions > :global(.mantine-Button-root):last-child {
     flex: 1 1 0;
     min-width: 0;
     padding-inline: 0.25rem;

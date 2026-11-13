@@ -56,6 +56,7 @@ export const { definition, componentLoader } = createWidgetDefinition("bookmarks
       hideTitle: factory.switch({ defaultValue: false }),
       hideIcon: factory.switch({ defaultValue: false }),
       hideHostname: factory.switch({ defaultValue: false }),
+      showFullUrls: factory.switch({ defaultValue: false, withDescription: true }),
       openNewTab: factory.switch({ defaultValue: true }),
       withBorder: factory.switch({ defaultValue: false }),
       grow: factory.switch({ defaultValue: false }),

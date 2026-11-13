@@ -130,7 +130,7 @@ export default function RssFeed({ options, width, height, displayMode }: WidgetC
                 className={classes.entry}
                 component={href ? "a" : "div"}
                 href={href}
-                radius={board.itemRadius}
+                radius={board.itemRadius ?? undefined}
                 target={href ? "_blank" : undefined}
                 rel={href ? SAFE_NEW_TAB_REL : undefined}
                 w="100%"
@@ -183,7 +183,7 @@ export default function RssFeed({ options, width, height, displayMode }: WidgetC
                 key={feedEntry.id}
                 component={href ? "a" : "div"}
                 href={href}
-                radius={board.itemRadius}
+                radius={board.itemRadius ?? undefined}
                 target={href ? "_blank" : undefined}
                 rel={href ? SAFE_NEW_TAB_REL : undefined}
                 w="100%"
