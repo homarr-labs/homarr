@@ -41,16 +41,13 @@ export class FrameleafReader {
       );
       if (response.status === 429) {
         const retry = response.headers.get("retry-after");
-        error.retryAfter = Math.min(
-          3600,
-          Math.max(
-            1,
-            retry && /^\d+$/.test(retry)
-              ? Number(retry)
-              : retry
-                ? Math.ceil((Date.parse(retry) - Date.now()) / 1000) || 60
-                : 60,
-          ),
+        error.retryAfter = Math.max(
+          1,
+          retry && /^\d+$/.test(retry)
+            ? Number(retry)
+            : retry
+              ? Math.ceil((Date.parse(retry) - Date.now()) / 1000) || 60
+              : 60,
         );
       }
       throw error;

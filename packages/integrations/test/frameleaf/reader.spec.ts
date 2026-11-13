@@ -1,5 +1,5 @@
 // @vitest-environment node
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 
 import type { FrameleafState, FrameleafStore } from "../../src/frameleaf/connection";
 import { FrameleafReader } from "../../src/frameleaf/reader";
@@ -79,8 +79,19 @@ describe("Frameleaf restricted media reads", () => {
     expect(calls).toBe(1);
     expect((await connectionStore.readAsync())?.status).toBe("uncertain");
   });
-  it("preserves the server retry delay without retrying a rate-limited request", async () => {
-    const reader = new FrameleafReader(store(), async () => json({}, 429, { "retry-after": "120" }));
-    await expect(reader.albumsAsync()).rejects.toMatchObject({ reason: "rateLimit", retryAfter: 120 });
+  it.each([120, 7200, 3000000])("preserves the full %s-second retry delay without retrying", async (seconds) => {
+    const reader = new FrameleafReader(store(), async () => json({}, 429, { "retry-after": String(seconds) }));
+    await expect(reader.albumsAsync()).rejects.toMatchObject({ reason: "rateLimit", retryAfter: seconds });
+  });
+  it("preserves a Retry-After HTTP date more than an hour away", async () => {
+    const clock = vi.spyOn(Date, "now").mockReturnValue(Date.parse("2026-11-13T12:00:00Z"));
+    try {
+      const reader = new FrameleafReader(store(), async () =>
+        json({}, 429, { "retry-after": "Fri, 13 Nov 2026 14:00:00 GMT" }),
+      );
+      await expect(reader.albumsAsync()).rejects.toMatchObject({ reason: "rateLimit", retryAfter: 7200 });
+    } finally {
+      clock.mockRestore();
+    }
   });
 });

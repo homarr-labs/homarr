@@ -41,7 +41,7 @@ const contentSecurityPolicy = `
   frame-ancestors *;
   frame-src *;
   form-action 'self';
-  img-src * data:;
+  img-src * data: blob:;
   font-src * data:;
   media-src * data: blob:;
 `
