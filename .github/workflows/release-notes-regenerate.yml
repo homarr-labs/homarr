@@ -1,60 +1,202 @@
-name: "[Release] Regenerate Notes"
+name: "[Release] Recover version aliases"
 
 on:
   workflow_dispatch:
     inputs:
-      tag:
-        type: string
-        required: true
-        description: Release tag to regenerate, for example v2.12.0
       dry-run:
         type: boolean
         required: false
         default: true
-        description: Upload the notes as an artifact instead of editing the release
+        description: Verify the published release and image without writing aliases
 
 permissions:
   contents: read
 
 concurrency:
-  group: ${{ github.workflow }}-${{ inputs.tag }}
+  group: release-alias-recovery-v2.13.0
 
 jobs:
-  regenerate:
-    name: Regenerate release notes
+  recover-aliases:
+    name: Recover v2.13.0 aliases
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 10
     permissions:
-      contents: write # required for the generate-notes API and to edit the release
-      pull-requests: read # required to read the merged pull requests
+      contents: read
+      packages: write
     env:
-      RELEASE_TAG: ${{ inputs.tag }}
       DRY_RUN: ${{ inputs['dry-run'] }}
+      GHCR_REPO: ghcr.io/${{ github.repository }}
+      RELEASE_TAG: v2.13.0
+      RELEASE_ID: "444223391"
+      RELEASE_COMMIT: aca9abbc4c29984ef01a27f4c74078e398e3cc49
+      SOURCE_DIGEST: sha256:70bf384fa6848d058322220597eb7baca62ea80039bfb3dfcc2bfef8991e7bfc
+      AMD64_DIGEST: sha256:2ad74123ba998bfaf18b5d744ecfa202407079b53f5a31741d94ca426a888729
+      ARM64_DIGEST: sha256:4dbee4b7a5a6d87b1a593fd8aaee6f34e2f53a8ec30d59465763e4b68528101d
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          fetch-depth: 0
-          persist-credentials: false
-      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
-        with:
-          bun-version: 1.4.4
-      - name: Install dependencies
-        run: bun install --frozen-lockfile
-      - name: Regenerate notes
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4.4.1
+
+      - name: Verify published release and pinned image
         env:
           GH_TOKEN: ${{ github.token }}
-          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
-          RELEASE_NOTES_MODEL: ${{ vars.RELEASE_NOTES_MODEL }}
+        shell: bash
         run: |
-          notes_file="${RUNNER_TEMP}/release-notes.md"
-          if [ "$DRY_RUN" = "true" ]; then
-            node scripts/release-notes/regenerate.mjs --tag "$RELEASE_TAG" --no-art --dry-run --out "$notes_file"
-          else
-            node scripts/release-notes/regenerate.mjs --tag "$RELEASE_TAG" --no-art --out "$notes_file"
+          set -euo pipefail
+
+          release="$(gh api "repos/${GITHUB_REPOSITORY}/releases/${RELEASE_ID}")"
+          jq -e --arg tag "$RELEASE_TAG" \
+            '.draft == false and .prerelease == false and .tag_name == $tag' \
+            <<< "$release" >/dev/null
+          published_versions="$(gh api --paginate "repos/${GITHUB_REPOSITORY}/releases?per_page=100" \
+            --jq '.[] | select(.draft == false and .prerelease == false) | .tag_name')"
+          latest_stable="$(grep -E '^v(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$' <<< "$published_versions" \
+            | LC_ALL=C sort --version-sort | tail -n 1)"
+          [[ "$latest_stable" == "$RELEASE_TAG" ]] || {
+            echo "Refusing aliases: latest stable release is ${latest_stable}, not ${RELEASE_TAG}." >&2
+            exit 1
+          }
+          tag_ref="$(gh api "repos/${GITHUB_REPOSITORY}/git/ref/tags/${RELEASE_TAG}")"
+          tag_commit="$(jq -r '.object.sha' <<< "$tag_ref")"
+          if [[ "$(jq -r '.object.type' <<< "$tag_ref")" == "tag" ]]; then
+            tag_commit="$(gh api "repos/${GITHUB_REPOSITORY}/git/tags/${tag_commit}" --jq '.object.sha')"
           fi
-      - name: Upload notes
-        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+          [[ "$tag_commit" == "$RELEASE_COMMIT" ]] || {
+            echo "Refusing aliases: ${RELEASE_TAG} resolves to an unexpected commit." >&2
+            exit 1
+          }
+
+          inspect_manifest() {
+            local ref="$1" file="$2" digest
+            docker buildx imagetools inspect --raw "$ref" > "$file"
+            digest="sha256:$(sha256sum "$file" | cut -d ' ' -f1)"
+            printf '%s\n' "$digest"
+          }
+          source_ref="${GHCR_REPO}@${SOURCE_DIGEST}"
+          actual_source="$(inspect_manifest "$source_ref" "${RUNNER_TEMP}/source.json")"
+          [[ "$actual_source" == "$SOURCE_DIGEST" ]] || {
+            echo "Refusing aliases: pinned source index digest does not match." >&2
+            exit 1
+          }
+          for platform in linux/amd64 linux/arm64; do
+            case "$platform" in
+              linux/amd64) expected="$AMD64_DIGEST" ;;
+              linux/arm64) expected="$ARM64_DIGEST" ;;
+            esac
+            actual="$(jq -r --arg os "${platform%/*}" --arg arch "${platform#*/}" \
+              '[.manifests[] | select(.platform.os == $os and .platform.architecture == $arch) | .digest] | unique | if length == 1 then .[0] else empty end' \
+              "${RUNNER_TEMP}/source.json")"
+            [[ "$actual" == "$expected" ]] || {
+              echo "Refusing aliases: ${platform} source digest does not match the validated archive." >&2
+              exit 1
+            }
+          done
+
+          actual_version="$(inspect_manifest "${GHCR_REPO}:${RELEASE_TAG}" "${RUNNER_TEMP}/version.json")"
+          [[ "$actual_version" == "$SOURCE_DIGEST" ]] || {
+            echo "Refusing aliases: the full-version tag no longer matches the pinned source index." >&2
+            exit 1
+          }
+
+          actual_latest="$(inspect_manifest "${GHCR_REPO}:latest" "${RUNNER_TEMP}/latest.json")"
+          [[ "$actual_latest" == "$SOURCE_DIGEST" ]] || {
+            echo "Refusing aliases: latest no longer matches the pinned release image." >&2
+            exit 1
+          }
+
+          for alias in v2 v2.13; do
+            alias_ref="${GHCR_REPO}:${alias}"
+            alias_file="${RUNNER_TEMP}/${alias}.json"
+            if docker buildx imagetools inspect --raw "$alias_ref" > "$alias_file" 2>"${alias_file}.err"; then
+              actual_alias="sha256:$(sha256sum "$alias_file" | cut -d ' ' -f1)"
+              [[ "$actual_alias" == "$SOURCE_DIGEST" ]] || {
+                echo "Refusing aliases: ${alias} already points to a different image." >&2
+                exit 1
+              }
+            elif grep --fixed-strings --quiet "${alias_ref}: not found" "${alias_file}.err"; then
+              echo "${alias} is absent and may be created."
+            else
+              cat "${alias_file}.err" >&2
+              echo "Refusing aliases: could not determine the current ${alias} state." >&2
+              exit 1
+            fi
+          done
+
+          if [[ "$DRY_RUN" == "true" ]]; then
+            echo "Dry run passed: ${RELEASE_TAG} and both platform digests match; aliases may be written." >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+
+      - name: Log in to GitHub Container Registry
+        if: inputs['dry-run'] == false
+        uses: docker/login-action@8aa5831fb8d48d8f76594c7ddde61ae58019f550 # v4.8.0
         with:
-          name: release-notes-${{ inputs.tag }}
-          path: ${{ runner.temp }}/release-notes.md
-          retention-days: 7
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Confirm Docker Buildx is available
+        if: inputs['dry-run'] == false
+        run: docker buildx version
+
+      - name: Write and verify version aliases
+        if: inputs['dry-run'] == false
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          release="$(gh api "repos/${GITHUB_REPOSITORY}/releases/${RELEASE_ID}")"
+          jq -e --arg tag "$RELEASE_TAG" \
+            '.draft == false and .prerelease == false and .tag_name == $tag' \
+            <<< "$release" >/dev/null
+          published_versions="$(gh api --paginate "repos/${GITHUB_REPOSITORY}/releases?per_page=100" \
+            --jq '.[] | select(.draft == false and .prerelease == false) | .tag_name')"
+          latest_stable="$(grep -E '^v(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$' <<< "$published_versions" \
+            | LC_ALL=C sort --version-sort | tail -n 1)"
+          [[ "$latest_stable" == "$RELEASE_TAG" ]] || {
+            echo "Refusing aliases: latest stable release changed to ${latest_stable}." >&2
+            exit 1
+          }
+          for alias in v2 v2.13; do
+            alias_file="${RUNNER_TEMP}/${alias}-before-write.json"
+            if docker buildx imagetools inspect --raw "${GHCR_REPO}:${alias}" > "$alias_file" 2>"${alias_file}.err"; then
+              actual_alias="sha256:$(sha256sum "$alias_file" | cut -d ' ' -f1)"
+              [[ "$actual_alias" == "$SOURCE_DIGEST" ]] || {
+                echo "Refusing aliases: ${alias} changed to a different image before write." >&2
+                exit 1
+              }
+            elif grep --fixed-strings --quiet "${GHCR_REPO}:${alias}: not found" "${alias_file}.err"; then
+              echo "${alias} is absent and will be created."
+            else
+              cat "${alias_file}.err" >&2
+              echo "Refusing aliases: could not determine the current ${alias} state." >&2
+              exit 1
+            fi
+          done
+          docker buildx imagetools create \
+            --tag "${GHCR_REPO}:v2" \
+            --tag "${GHCR_REPO}:v2.13" \
+            "${GHCR_REPO}@${SOURCE_DIGEST}"
+
+          for alias in v2 v2.13; do
+            docker buildx imagetools inspect --raw "${GHCR_REPO}:${alias}" > "${RUNNER_TEMP}/${alias}-after.json"
+            actual="sha256:$(sha256sum "${RUNNER_TEMP}/${alias}-after.json" | cut -d ' ' -f1)"
+            [[ "$actual" == "$SOURCE_DIGEST" ]] || {
+              echo "Alias ${alias} does not match the pinned source index after write." >&2
+              exit 1
+            }
+            for platform in linux/amd64 linux/arm64; do
+              case "$platform" in
+                linux/amd64) expected="$AMD64_DIGEST" ;;
+                linux/arm64) expected="$ARM64_DIGEST" ;;
+              esac
+              actual_platform="$(jq -r --arg os "${platform%/*}" --arg arch "${platform#*/}" \
+                '[.manifests[] | select(.platform.os == $os and .platform.architecture == $arch) | .digest] | unique | if length == 1 then .[0] else empty end' \
+                "${RUNNER_TEMP}/${alias}-after.json")"
+              [[ "$actual_platform" == "$expected" ]] || {
+                echo "Alias ${alias} has an unexpected ${platform} manifest after write." >&2
+                exit 1
+              }
+            done
+          done
+          echo "Created and verified v2 and v2.13 from ${RELEASE_TAG}; latest and ${RELEASE_TAG} were not changed." >> "$GITHUB_STEP_SUMMARY"
