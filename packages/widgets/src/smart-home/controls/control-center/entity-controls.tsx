@@ -149,6 +149,7 @@ interface SliderControlProps extends ControlProps {
 
 const TILE_PADDING = 12;
 const PILL_GAP = 14;
+const ROW_GAP = 12;
 const HIT = 44;
 const SLIDER_TRACK = 36;
 const VOLUME_TRACK = 30;
@@ -717,9 +718,12 @@ function ClimateControl({ entity, width, height }: ControlProps) {
   }
 
   if (tier === "wide" || height < CLIMATE_FULL_MIN_HEIGHT) {
+    const sideWidth = rowWidth(2, ROUND_SM, BUTTON_GAP);
+    const availableWidth = width - TILE_PADDING * 2 - ROW_GAP - sideWidth - 2;
+    const size = Math.min(height - TILE_PADDING * 2, clamp(availableWidth, HIT, 120));
     return (
       <Tile theme={theme} className={classes.rowTile}>
-        {dial(Math.min(height - TILE_PADDING * 2, 120))}
+        {dial(size)}
         <div className={classes.climateInfo}>
           <Head name={entity.name} state={state} />
           {!range && target !== undefined && height >= WIDE_STEPPER_MIN_HEIGHT ? (
