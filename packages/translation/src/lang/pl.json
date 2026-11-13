@@ -7041,6 +7041,11 @@
           "description": "Administrator serwera nie ustawił jeszcze tablicy głównej.",
           "link": "Pokaż tablice publiczne",
           "notice": "Aby ta strona zniknęła, poproś administratora serwera o ustawienie tablicy głównej dla serwera"
+        },
+        "noAccess": {
+          "title": "",
+          "description": "",
+          "notice": ""
         }
       }
     }
@@ -7190,7 +7195,9 @@
         },
         "noResults": {
           "title": "Brak tablic",
-          "description": "Utwórz dział, aby uporządkować swoje aplikacje i widżety w jednym miejscu."
+          "description": "Utwórz dział, aby uporządkować swoje aplikacje i widżety w jednym miejscu.",
+          "noAccessTitle": "",
+          "noAccessDescription": ""
         }
       },
       "media": {

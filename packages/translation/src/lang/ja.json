@@ -7041,6 +7041,11 @@
           "description": "サーバー管理者は、まだホームボードを設定していません。",
           "link": "公開ボードを表示",
           "notice": "このページを見えなくするためには、サーバーの管理者にサーバーのホームボードを設定するよう問い合わせてください"
+        },
+        "noAccess": {
+          "title": "",
+          "description": "",
+          "notice": ""
         }
       }
     }
@@ -7190,7 +7195,9 @@
         },
         "noResults": {
           "title": "",
-          "description": "アプリやウィジェットを一箇所に並べ替えるボードを作成します。"
+          "description": "アプリやウィジェットを一箇所に並べ替えるボードを作成します。",
+          "noAccessTitle": "",
+          "noAccessDescription": ""
         }
       },
       "media": {

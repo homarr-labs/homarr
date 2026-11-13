@@ -7041,6 +7041,11 @@
           "description": "Der Server-Administrator hat noch kein Home Board eingerichtet.",
           "link": "Öffentliche Boards anzeigen",
           "notice": "Um diese Seite verschwinden zu lassen, bitten sie den Server Administrator, ein Home Board für den Server festzulegen"
+        },
+        "noAccess": {
+          "title": "",
+          "description": "",
+          "notice": ""
         }
       }
     }
@@ -7190,7 +7195,9 @@
         },
         "noResults": {
           "title": "Noch keine Boards",
-          "description": "Erstellen Sie ein Board, um Ihre Apps und Widgets an einem Ort anzuordnen."
+          "description": "Erstellen Sie ein Board, um Ihre Apps und Widgets an einem Ort anzuordnen.",
+          "noAccessTitle": "",
+          "noAccessDescription": ""
         }
       },
       "media": {

@@ -7041,6 +7041,11 @@
           "description": "O administrador do servidor ainda não definiu um quadro inicial.",
           "link": "Visualizar painéis públicos",
           "notice": "Para fazer essa página desaparecer, peça ao administrador do servidor para definir um quadro inicial para o servidor"
+        },
+        "noAccess": {
+          "title": "",
+          "description": "",
+          "notice": ""
         }
       }
     }
@@ -7190,7 +7195,9 @@
         },
         "noResults": {
           "title": "Nenhum quadro ainda",
-          "description": "Crie um quadro para organizar os seus aplicativos e widgets em um só lugar."
+          "description": "Crie um quadro para organizar os seus aplicativos e widgets em um só lugar.",
+          "noAccessTitle": "",
+          "noAccessDescription": ""
         }
       },
       "media": {

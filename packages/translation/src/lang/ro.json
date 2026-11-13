@@ -7041,6 +7041,11 @@
           "description": "Administratorul serverului nu a setat încă o secţiune principală.",
           "link": "Vezi secţiunile publice",
           "notice": "Pentru a face această pagină să dispară, cereți administratorului serverului să seteze o tabelă de pornire pentru server"
+        },
+        "noAccess": {
+          "title": "",
+          "description": "",
+          "notice": ""
         }
       }
     }
@@ -7190,7 +7195,9 @@
         },
         "noResults": {
           "title": "Nicio planșă încă",
-          "description": "Creați o secţiune pentru a vă aranja aplicaţiile şi widget-urile într-un singur loc."
+          "description": "Creați o secţiune pentru a vă aranja aplicaţiile şi widget-urile într-un singur loc.",
+          "noAccessTitle": "",
+          "noAccessDescription": ""
         }
       },
       "media": {

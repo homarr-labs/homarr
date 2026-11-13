@@ -7041,6 +7041,11 @@
           "description": "Serveri administraator pole veel kodupaneeli määranud.",
           "link": "Kuva avalikud paneelid",
           "notice": "Selle lehe eemaldamiseks palu administraatoril määrata serveriülene kodupaneel"
+        },
+        "noAccess": {
+          "title": "",
+          "description": "",
+          "notice": ""
         }
       }
     }
@@ -7190,7 +7195,9 @@
         },
         "noResults": {
           "title": "Paneele pole veel",
-          "description": "Looge paneel, et paigutada rakendused ja vidinad ühte kohta."
+          "description": "Looge paneel, et paigutada rakendused ja vidinad ühte kohta.",
+          "noAccessTitle": "",
+          "noAccessDescription": ""
         }
       },
       "media": {

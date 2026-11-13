@@ -7041,6 +7041,11 @@
           "description": "伺服器管理員尚未設定主面板",
           "link": "查看公開面板",
           "notice": "要讓這個頁面消失，請伺服器管理員為伺服器設定一個主面板"
+        },
+        "noAccess": {
+          "title": "",
+          "description": "",
+          "notice": ""
         }
       }
     }
@@ -7190,7 +7195,9 @@
         },
         "noResults": {
           "title": "尚無面板",
-          "description": "建立面板，將您的應用程式與小工具集中於一處。"
+          "description": "建立面板，將您的應用程式與小工具集中於一處。",
+          "noAccessTitle": "",
+          "noAccessDescription": ""
         }
       },
       "media": {

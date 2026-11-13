@@ -7041,6 +7041,11 @@
           "description": "Sunucu yöneticiniz henüz öntanımlı panel belirlemedi.",
           "link": "Herkese açık panelleri görüntüle",
           "notice": "Bu sayfanın kaybolmasını sağlamak için sunucu yöneticisinden öntanımlı panel atamasını isteyin"
+        },
+        "noAccess": {
+          "title": "",
+          "description": "",
+          "notice": ""
         }
       }
     }
@@ -7190,7 +7195,9 @@
         },
         "noResults": {
           "title": "Henüz panel yok",
-          "description": "Uygulamalarınızı ve widget'larınızı tek bir yerde düzenlemek için bir pano oluşturun."
+          "description": "Uygulamalarınızı ve widget'larınızı tek bir yerde düzenlemek için bir pano oluşturun.",
+          "noAccessTitle": "",
+          "noAccessDescription": ""
         }
       },
       "media": {

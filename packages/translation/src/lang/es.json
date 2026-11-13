@@ -7041,6 +7041,11 @@
           "description": "El administrador del servidor aún no ha establecido un tablero de inicio.",
           "link": "Ver tableros públicos",
           "notice": "Para hacer que esta página desaparezca, pide al administrador del servidor que establezca un tablero de inicio para el servidor"
+        },
+        "noAccess": {
+          "title": "",
+          "description": "",
+          "notice": ""
         }
       }
     }
@@ -7190,7 +7195,9 @@
         },
         "noResults": {
           "title": "",
-          "description": "Crea un tablero para organizar tus aplicaciones y widgets en un solo lugar."
+          "description": "Crea un tablero para organizar tus aplicaciones y widgets en un solo lugar.",
+          "noAccessTitle": "",
+          "noAccessDescription": ""
         }
       },
       "media": {

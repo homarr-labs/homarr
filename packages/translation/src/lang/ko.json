@@ -7041,6 +7041,11 @@
           "description": "서버 관리자가 홈 보드를 아직 설정하지 않았습니다.",
           "link": "공개 보드 보기",
           "notice": "이 페이지를 사라지게 하려면 관리자에게 서버 홈 보드를 설정을 문의하십시오"
+        },
+        "noAccess": {
+          "title": "",
+          "description": "",
+          "notice": ""
         }
       }
     }
@@ -7190,7 +7195,9 @@
         },
         "noResults": {
           "title": "아직 보드가 없습니다",
-          "description": "앱과 위젯을 한곳에 배치할 보드를 만들어 보세요."
+          "description": "앱과 위젯을 한곳에 배치할 보드를 만들어 보세요.",
+          "noAccessTitle": "",
+          "noAccessDescription": ""
         }
       },
       "media": {

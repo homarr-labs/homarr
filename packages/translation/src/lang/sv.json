@@ -7041,6 +7041,11 @@
           "description": "Serveradministratören har inte angett någon startsida ännu.",
           "link": "Visa offentliga tavlor",
           "notice": "För att dölja den här sidan ber du serveradministratören ange en startsida för servern"
+        },
+        "noAccess": {
+          "title": "",
+          "description": "",
+          "notice": ""
         }
       }
     }
@@ -7190,7 +7195,9 @@
         },
         "noResults": {
           "title": "Inga tavlor än",
-          "description": "Skapa en tavla för att ordna dina appar och widgetar på ett ställe."
+          "description": "Skapa en tavla för att ordna dina appar och widgetar på ett ställe.",
+          "noAccessTitle": "",
+          "noAccessDescription": ""
         }
       },
       "media": {

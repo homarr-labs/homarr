@@ -7041,6 +7041,11 @@
           "description": "Palvelimen ylläpito ei ole vielä määrittänyt kotipaneelia.",
           "link": "",
           "notice": "Pyydä ylläpitoa määrittämään palvelimelle kotipaneeli piilottaaksesi tämän sivun"
+        },
+        "noAccess": {
+          "title": "",
+          "description": "",
+          "notice": ""
         }
       }
     }
@@ -7190,7 +7195,9 @@
         },
         "noResults": {
           "title": "Ei paneeleita vielä",
-          "description": "Luo taulu, joka järjestää sovelluksesi ja widgetit yhteen paikkaan."
+          "description": "Luo taulu, joka järjestää sovelluksesi ja widgetit yhteen paikkaan.",
+          "noAccessTitle": "",
+          "noAccessDescription": ""
         }
       },
       "media": {

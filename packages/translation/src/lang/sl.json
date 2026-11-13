@@ -7041,6 +7041,11 @@
           "description": "Skrbnik strežnika še ni nastavil domače table.",
           "link": "Prikaži javne table",
           "notice": "Če želite skriti to stran, prosite skrbnika strežnika, naj za strežnik nastavi domačo tablo"
+        },
+        "noAccess": {
+          "title": "",
+          "description": "",
+          "notice": ""
         }
       }
     }
@@ -7190,7 +7195,9 @@
         },
         "noResults": {
           "title": "Še ni tabel",
-          "description": "Ustvarite nadzorno ploščo za ureditev aplikacij in gradnikov na enem mestu."
+          "description": "Ustvarite nadzorno ploščo za ureditev aplikacij in gradnikov na enem mestu.",
+          "noAccessTitle": "",
+          "noAccessDescription": ""
         }
       },
       "media": {

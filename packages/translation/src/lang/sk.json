@@ -7041,6 +7041,11 @@
           "description": "Správca servera ešte nenastavil domácu nástenku.",
           "link": "Pozrite si verejné nástenky",
           "notice": "Ak chcete, aby táto stránka zmizla, požiadajte správcu servera o nastavenie domovskej dosky pre server"
+        },
+        "noAccess": {
+          "title": "",
+          "description": "",
+          "notice": ""
         }
       }
     }
@@ -7190,7 +7195,9 @@
         },
         "noResults": {
           "title": "Zatiaľ žiadne dosky",
-          "description": "Vytvorte dosku na usporiadanie aplikácií a widgetov na jednom mieste."
+          "description": "Vytvorte dosku na usporiadanie aplikácií a widgetov na jednom mieste.",
+          "noAccessTitle": "",
+          "noAccessDescription": ""
         }
       },
       "media": {

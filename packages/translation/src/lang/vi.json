@@ -7041,6 +7041,11 @@
           "description": "Quản trị viên máy chủ chưa đặt bảng chính.",
           "link": "Xem các bảng công khai",
           "notice": "Để ẩn trang này, hãy yêu cầu quản trị viên máy chủ đặt bảng chính cho máy chủ"
+        },
+        "noAccess": {
+          "title": "",
+          "description": "",
+          "notice": ""
         }
       }
     }
@@ -7190,7 +7195,9 @@
         },
         "noResults": {
           "title": "Chưa có bảng",
-          "description": "Tạo bảng để sắp xếp ứng dụng và tiện ích của bạn ở một nơi."
+          "description": "Tạo bảng để sắp xếp ứng dụng và tiện ích của bạn ở một nơi.",
+          "noAccessTitle": "",
+          "noAccessDescription": ""
         }
       },
       "media": {

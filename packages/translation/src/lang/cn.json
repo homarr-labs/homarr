@@ -7041,6 +7041,11 @@
           "description": "服务器管理员尚未设置主页看板。",
           "link": "查看公开看板",
           "notice": "要使此页面消失，请让服务器管理员为服务器设置主页看板。"
+        },
+        "noAccess": {
+          "title": "",
+          "description": "",
+          "notice": ""
         }
       }
     }
@@ -7190,7 +7195,9 @@
         },
         "noResults": {
           "title": "暂无看板",
-          "description": "创建一个看板，在一个地方整理您的应用和小部件。"
+          "description": "创建一个看板，在一个地方整理您的应用和小部件。",
+          "noAccessTitle": "",
+          "noAccessDescription": ""
         }
       },
       "media": {
