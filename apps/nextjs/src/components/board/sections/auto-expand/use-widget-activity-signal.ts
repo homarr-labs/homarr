@@ -65,7 +65,7 @@ export const useWidgetActivitySignal = ({
       const matches = (queryKey: QueryKey) =>
         matchesWidgetItemQuery(queryKey, widgetQueryKeys, scope, definition.queryMatcher);
 
-      const activityScope = { kind, ...scope, integrationIds: integrationIds.toSorted() };
+      const activityScope = { kind, ...scope };
       let terminalErrors = terminalErrorsRef.current;
       if (
         !terminalErrors ||
