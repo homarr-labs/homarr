@@ -15,6 +15,7 @@ if (!node) {
 }
 if (!node) node = "node";
 const port = process.env.PROTOTYPE_PORT ?? "3080";
+const baseUrl = process.env.PROTOTYPE_BASE_URL ?? `http://localhost:${port}`;
 const children: ReturnType<typeof spawn>[] = [];
 let stopping = false;
 const run = (command: string, args: string[], env = process.env) => {
@@ -102,7 +103,7 @@ const env = {
   AUTH_SECRET: randomBytes(32).toString("hex"),
   AUTH_PROVIDERS: "credentials",
   AUTH_COOKIE_PREFIX: `prototype-${process.pid}`,
-  BASE_URL: `http://localhost:${port}`,
+  BASE_URL: baseUrl,
   DISABLE_REDIS_LOGS: undefined,
   NEXT_TELEMETRY_DISABLED: "1",
 };
@@ -136,5 +137,5 @@ for (const [args, cwd] of [
   });
 }
 console.log(
-  `Compare: http://localhost:${port}/boards/demo-prototype?variant=A\nUse the demo sign-in button. Arrow keys switch proposals; the header tabs switch board sections.`,
+  `Compare: ${baseUrl}/boards/demo-prototype?variant=A\nUse the demo sign-in button. Arrow keys switch proposals; the header tabs switch board sections.`,
 );
