@@ -92,9 +92,7 @@ const validateSubmissionManifest = (record) => {
     const validSource =
       source.type === "integration"
         ? isKnownHttpIntegrationKind(source.integrationKind)
-        : (source.type === undefined || source.type === "http") &&
-          isManifestHttpUrl(source.baseUrl) &&
-          ["public", "private", "loopback"].includes(source.networkScope);
+        : (source.type === undefined || source.type === "http") && isManifestHttpUrl(source.baseUrl);
     if (!validSource) rejectRequest("Widget manifest has an invalid source declaration");
   }
 };
