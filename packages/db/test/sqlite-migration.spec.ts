@@ -112,76 +112,122 @@ test("SQLite migrations seed the intentional demo showcase", async () => {
     if (!board) throw new Error("Demo board was not seeded");
 
     expect(board).toMatchObject({
-      pageTitle: "Homarr demo",
-      backgroundImageUrl: "/images/demo-dashboard-background.svg",
+      name: "default",
+      pageTitle: "Homarr · Feature tour",
+      backgroundImageUrl: null,
+      primaryColor: null,
+      secondaryColor: null,
+      itemRadius: "lg",
     });
-    expect(board.layouts).toHaveLength(2);
+    expect(demoUser.mobileHomeBoardId).toBe(board.id);
+    expect(JSON.parse(demoUser.headerPreferences)).toMatchObject({
+      version: 4,
+      visible: true,
+      logoDisplay: "logoAndText",
+      tabsDisplay: "wide",
+    });
+    expect(board.layouts).toHaveLength(3);
     expect(board.layouts).toEqual(
       expect.arrayContaining([
-        expect.objectContaining({ columnCount: 13, rightGutterColumnCount: 1, role: "base" }),
-        expect.objectContaining({ columnCount: 3, rightGutterColumnCount: 0, role: "mobile" }),
+        expect.objectContaining({ name: "Base", columnCount: 12, breakpoint: 1200, role: "base" }),
+        expect.objectContaining({ name: "Tablet", columnCount: 6, breakpoint: 600, role: "custom" }),
+        expect.objectContaining({ name: "Mobile", columnCount: 3, breakpoint: 0, role: "mobile" }),
       ]),
     );
-    const baseLayout = board.layouts.find((layout) => layout.role === "base");
-    if (!baseLayout) throw new Error("Demo base layout was not seeded");
-
-    const mainSection = board.sections.find((section) => section.kind === "empty" && section.xOffset === 0);
-    const rightSection = board.sections.find((section) => section.kind === "empty" && section.xOffset === 1);
-    if (!mainSection || !rightSection) throw new Error("Demo board sections were not seeded");
-    expect(board.sections.some((section) => section.kind === "container")).toBe(false);
-
+    expect(
+      board.layouts.every((layout) => layout.leftGutterColumnCount === 0 && layout.rightGutterColumnCount === 0),
+    ).toBe(true);
+    expect(board.sections.toSorted((first, second) => first.yOffset - second.yOffset)).toEqual([
+      expect.objectContaining({ kind: "empty", name: "Overview", xOffset: 0, yOffset: 0 }),
+      expect.objectContaining({ kind: "empty", name: "Explore", xOffset: 0, yOffset: 1 }),
+    ]);
+    expect(board.items).toHaveLength(68);
+    expect(new Set(board.items.map(({ kind }) => kind))).toEqual(
+      new Set([
+        "anchorNote",
+        "app",
+        "archiveTeamWarrior",
+        "assistant",
+        "audioStats",
+        "bazarr",
+        "beszelAlerts",
+        "beszelSystemGrid",
+        "beszelSystemStats",
+        "beszelSystemTable",
+        "bookmarks",
+        "calendar",
+        "clock",
+        "coolify",
+        "countdown",
+        "customApi",
+        "dnsHoleControls",
+        "dnsHoleSummary",
+        "dockerContainers",
+        "downloads",
+        "firewall",
+        "healthMonitoring",
+        "immich-albumCarousel",
+        "immich-serverStats",
+        "indexerManager",
+        "mediaMissing",
+        "mediaReleases",
+        "mediaRequests-requestList",
+        "mediaRequests-requestStats",
+        "mediaServer",
+        "mediaTranscoding",
+        "networkControllerStatus",
+        "networkControllerSummary",
+        "notebook",
+        "notifications",
+        "paperlessNgx",
+        "patchmon",
+        "smartHome-controls",
+        "speedtestTracker",
+        "stats",
+        "timer",
+        "tracearr",
+        "traefik",
+        "umami",
+        "ups",
+        "uptimeKuma",
+        "vpn",
+        "wud",
+      ]),
+    );
+    const sectionIds = new Set(board.sections.map(({ id }) => id));
+    for (const item of board.items) {
+      expect(new Set(item.layouts.map(({ layoutId }) => layoutId))).toEqual(new Set(board.layouts.map(({ id }) => id)));
+      expect(new Set(item.layouts.map(({ sectionId }) => sectionId)).size).toBe(1);
+      for (const placement of item.layouts) {
+        const layout = board.layouts.find(({ id }) => id === placement.layoutId);
+        if (!layout) throw new Error("Demo item has an unknown layout");
+        expect(sectionIds.has(placement.sectionId)).toBe(true);
+        expect(placement.xOffset).toBeGreaterThanOrEqual(0);
+        expect(placement.yOffset).toBeGreaterThanOrEqual(0);
+        expect(placement.width).toBeGreaterThan(0);
+        expect(placement.height).toBeGreaterThan(0);
+        expect(placement.xOffset + placement.width).toBeLessThanOrEqual(layout.columnCount);
+      }
+    }
     const itemByKind = (kind: string) => board.items.find((item) => item.kind === kind);
-    const expectItemLayout = (
-      kind: string,
-      xOffset: number,
-      yOffset: number,
-      width: number,
-      height: number,
-      sectionId = mainSection.id,
-    ) => {
-      const layout = itemByKind(kind)?.layouts.find((candidate) => candidate.layoutId === baseLayout.id);
-      expect(layout).toMatchObject({ sectionId, xOffset, yOffset, width, height });
-    };
-    expectItemLayout("calendar", 0, 0, 2, 2);
-    expectItemLayout("weather", 2, 0, 2, 2);
-    expectItemLayout("clock", 4, 0, 1, 2);
-    expectItemLayout("timer", 5, 0, 2, 1);
-    expectItemLayout("airQuality", 5, 1, 2, 1);
-    expectItemLayout("downloads", 7, 0, 5, 2);
-    expectItemLayout("notebook", 0, 2, 5, 3);
-    expectItemLayout("beszelSystemGrid", 5, 2, 4, 3);
-    expectItemLayout("assistant", 9, 2, 3, 3);
-    expectItemLayout("mediaRequests-requestList", 0, 5, 3, 2);
-    expectItemLayout("mediaMissing", 9, 5, 3, 2);
-    expectItemLayout("mediaServer", 0, 7, 3, 2);
-    expectItemLayout("mediaRequests-requestStats", 9, 7, 3, 2);
-    expectItemLayout("rssFeed", 0, 9, 3, 2);
-    expectItemLayout("indexerManager", 9, 9, 3, 2);
-    expectItemLayout("dockerContainers", 0, 11, 4, 3);
-    expectItemLayout("mediaReleases", 4, 11, 4, 3);
-    expectItemLayout("customApi", 8, 11, 4, 3);
-
-    expectItemLayout("healthMonitoring", 3, 5, 6, 2);
-    expectItemLayout("dnsHoleSummary", 3, 7, 3, 2);
-    expectItemLayout("beszelSystemStats", 6, 7, 3, 2);
-    expectItemLayout("notifications", 3, 9, 2, 2);
-    expectItemLayout("beszelAlerts", 5, 9, 4, 2);
-    expectItemLayout("beszelSystemTable", 0, 14, 12, 3);
-    expectItemLayout("stats", 0, 33, 12, 5);
-
-    const removedKinds = [
-      "llamacpp",
-      "networkControllerSummary",
-      "mediaTranscoding",
-      "smartHome-entityState",
-      "smartHome-executeAutomation",
-      "dnsHoleControls",
-      "iframe",
-      "video",
-      "minecraftServerStatus",
-    ];
-    expect(board.items.filter((item) => removedKinds.includes(item.kind))).toEqual([]);
     expect(board.items.filter((item) => item.kind === "stats")).toHaveLength(1);
+
+    const branding = await database.query.serverSettings.findFirst({
+      where: (table, { eq }) => eq(table.settingKey, "branding"),
+    });
+    if (!branding) throw new Error("Demo branding was not seeded");
+    expect(SuperJSON.parse(branding.value)).toMatchObject({
+      themeId: "custom",
+      customTheme: {
+        theme: {
+          fontFamily: "var(--font-geist), system-ui, sans-serif",
+          fontFamilyMonospace: "var(--font-geist-mono), ui-monospace, monospace",
+          primaryShade: { light: 7, dark: 4 },
+        },
+        light: { body: "#f1f4f5", primary: "#397a73" },
+        dark: { body: "#14191f", primary: "#6ba7a0" },
+      },
+    });
 
     const mockIntegration = await database.query.integrations.findFirst({
       where: (table, { eq }) => eq(table.kind, "mock"),
@@ -212,84 +258,61 @@ test("SQLite migrations seed the intentional demo showcase", async () => {
       new Set(["sonarr", "radarr", "qBittorrent", "proxmox", "piHole", "immich", "karakeep", "mealie", "spoolman"]),
     );
 
-    for (const kind of ["weather", "airQuality"]) {
-      const item = itemByKind(kind);
-      if (!item?.options) throw new Error(`Demo ${kind} options were not seeded`);
-      expect(SuperJSON.parse<{ location: { name: string } }>(item.options).location.name).toBe("Paris");
-    }
-    const notebook = itemByKind("notebook");
-    if (!notebook?.options) throw new Error("Demo notebook options were not seeded");
-    expect(SuperJSON.parse<{ content: string }>(notebook.options).content).toContain("Hold Shift over any widget");
-
-    const expectFilledGrid = (
-      placements: { xOffset: number; yOffset: number; width: number; height: number }[],
-      columnCount: number,
-    ) => {
-      const rowCount = Math.max(...placements.map((placement) => placement.yOffset + placement.height));
-      const cells = Array.from({ length: rowCount }, () => Array<number>(columnCount).fill(0));
-      for (const placement of placements) {
-        for (let y = placement.yOffset; y < placement.yOffset + placement.height; y += 1) {
-          for (let x = placement.xOffset; x < placement.xOffset + placement.width; x += 1) {
-            const row = cells[y];
-            if (!row) throw new Error("Demo placement exceeds the grid height");
-            row[x] = (row[x] ?? 0) + 1;
-          }
-        }
-      }
-      expect(cells.every((row) => row.length === columnCount && row.every((cell) => cell === 1))).toBe(true);
-    };
-
-    const mainItemLayouts = board.items.flatMap((item) =>
-      item.layouts.filter((layout) => layout.layoutId === baseLayout.id && layout.sectionId === mainSection.id),
+    const appItems = board.items.filter((item) => item.kind === "app");
+    const apps = await database.query.apps.findMany();
+    expect(appItems).toHaveLength(12);
+    const appIds = new Set(appItems.map((item) => SuperJSON.parse<{ appId: string }>(item.options).appId));
+    expect(appIds.size).toBe(12);
+    expect(new Set(apps.filter(({ id }) => appIds.has(id)).map(({ name }) => name))).toEqual(
+      new Set([
+        "Sonarr",
+        "Radarr",
+        "Plex",
+        "Jellyfin",
+        "Proxmox",
+        "Pi-hole",
+        "Grafana",
+        "Portainer",
+        "Uptime Kuma",
+        "Nextcloud",
+        "qBittorrent",
+        "Overseerr",
+      ]),
     );
-    expectFilledGrid(mainItemLayouts, 12);
 
-    const rightRailItems = board.items.filter((item) =>
-      item.layouts.some((layout) => layout.layoutId === baseLayout.id && layout.sectionId === rightSection.id),
-    );
-    expect(rightRailItems).toHaveLength(12);
-    const rightRailLayouts = rightRailItems.flatMap((item) =>
-      item.layouts.filter((layout) => layout.layoutId === baseLayout.id && layout.sectionId === rightSection.id),
-    );
-    expect(
-      rightRailItems.every((item) => {
-        const layout = item.layouts.find((candidate) => candidate.layoutId === baseLayout.id);
-        return item.kind === "app" && layout?.width === 1 && layout.height === 1;
-      }),
-    ).toBe(true);
-    expect(
-      rightRailLayouts
-        .toSorted((first, second) => first.yOffset - second.yOffset)
-        .map(({ sectionId, xOffset, yOffset, width, height }) => ({
-          sectionId,
-          xOffset,
-          yOffset,
-          width,
-          height,
-        })),
-    ).toEqual(
-      Array.from({ length: 12 }, (_, yOffset) => ({
-        sectionId: rightSection.id,
-        xOffset: 0,
-        yOffset,
-        width: 1,
-        height: 1,
-      })),
-    );
-    expectFilledGrid(rightRailLayouts, 1);
-
-    const workshopDefinition = await database.query.customWidgetDefinitions.findFirst({
+    const customDefinition = await database.query.customWidgetDefinitions.findFirst({
       where: (table, { eq }) => eq(table.creatorId, demoUser.id),
     });
-    if (!workshopDefinition) throw new Error("Demo Workshop definition was not seeded");
-    expect(workshopDefinition.name).toBe("Community Workshop");
-    expect(SuperJSON.parse<Record<string, { baseUrl: string }>>(workshopDefinition.sources).default?.baseUrl).toBe(
-      "https://v2.preview.homarr.dev",
-    );
+    if (!customDefinition) throw new Error("Demo local Custom JSX definition was not seeded");
+    expect(customDefinition).toMatchObject({ name: "Maintenance checks", enabled: true });
+    expect(SuperJSON.parse(customDefinition.requests)).toEqual({});
+    expect(customDefinition.template).toContain("options.title");
+    const customItem = itemByKind("customApi");
+    if (!customItem) throw new Error("Demo Custom JSX item was not seeded");
+    expect(SuperJSON.parse<{ definitionId: string }>(customItem.options).definitionId).toBe(customDefinition.id);
 
-    const workshopItem = itemByKind("customApi");
-    if (!workshopItem) throw new Error("Demo Workshop item was not seeded");
-    expect(SuperJSON.parse<{ definitionId: string }>(workshopItem.options).definitionId).toBe(workshopDefinition.id);
+    const countsBeforeReseed = {
+      boards: await database.query.boards.findMany(),
+      apps,
+      integrations: await database.query.integrations.findMany(),
+      definitions: await database.query.customWidgetDefinitions.findMany(),
+      items: await database.query.items.findMany(),
+    };
+    connection.prepare("UPDATE board SET page_title = ? WHERE id = ?").run("Existing demo title", board.id);
+    await seedDataAsync(database as unknown as Database);
+    expect(await database.query.boards.findMany()).toEqual(
+      countsBeforeReseed.boards.map((existingBoard) => {
+        if (existingBoard.id === board.id) return { ...existingBoard, pageTitle: "Existing demo title" };
+        return existingBoard;
+      }),
+    );
+    expect(await database.query.apps.findMany()).toEqual(countsBeforeReseed.apps);
+    expect(await database.query.integrations.findMany()).toEqual(countsBeforeReseed.integrations);
+    expect(await database.query.customWidgetDefinitions.findMany()).toEqual(countsBeforeReseed.definitions);
+    expect(await database.query.items.findMany()).toEqual(countsBeforeReseed.items);
+    expect(await database.query.users.findFirst({ where: (table, { eq }) => eq(table.id, demoUser.id) })).toEqual(
+      demoUser,
+    );
   } finally {
     connection.close();
     if (previousDemoMode === undefined) delete process.env.DEMO_MODE;
