@@ -247,7 +247,9 @@ export const BoardContainerSection = ({ section }: Props) => {
             />
           </ContainerDepthContext>
         </Box>
-        {isEditMode && <BoardContainerEditBar section={section} placement={hasHeader ? "header" : "border"} />}
+        {isEditMode && (
+          <BoardContainerEditBar section={section} placement={hasHeader ? "header" : "border"} depth={containerDepth} />
+        )}
       </Card>
     </Box>
   );

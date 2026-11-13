@@ -8,7 +8,7 @@
 }
 
 .borderAnchor {
-  top: calc(-13px * var(--ui-scale));
+  top: calc((-13px + 32px * var(--container-edit-bar-depth, 0)) * var(--ui-scale));
   left: calc(8px * var(--ui-scale));
 }
 

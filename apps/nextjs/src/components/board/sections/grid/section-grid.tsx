@@ -184,8 +184,13 @@ export const SectionGrid = ({
   }, [autoExpandedSectionIds, innerSections, isEditMode]);
   const [fitRowCountById, setFitRowCountById] = useState<ReadonlyMap<string, number>>(() => new Map());
   const fittedRowCountById = useMemo(
-    () => new Map([...fitRowCountById].filter(([id]) => fitSectionIds.has(id))),
-    [fitRowCountById, fitSectionIds],
+    () =>
+      new Map(
+        placements
+          .filter(({ id }) => fitSectionIds.has(id) && fitRowCountById.has(id))
+          .map(({ id, h }) => [id, Math.min(fitRowCountById.get(id) ?? h, h)]),
+      ),
+    [fitRowCountById, fitSectionIds, placements],
   );
   const reportFitContentSlack = useCallback(
     (sectionId: string, slackPx: number) => {

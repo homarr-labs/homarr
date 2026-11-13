@@ -60,13 +60,22 @@ export const ContainerEditModal = createModal<ModalProps>(({ actions, innerProps
   const activityCapableItems = items.filter((item) => activityCapableKinds.has(item.kind));
   const form = useZodForm(containerEditFormSchema, {
     mode: "controlled",
-    initialValues: { ...innerProps.value },
+    initialValues: {
+      ...innerProps.value,
+      collapsible:
+        innerProps.value.collapsible ||
+        (innerProps.value.autoExpand.enabled && innerProps.value.autoExpand.inactiveDisplay === "collapsed"),
+    },
   });
 
   return (
     <form
       onSubmit={form.onSubmit((values) => {
-        innerProps.onSuccessfulEdit(values);
+        const newOptions = { ...values };
+        if (newOptions.autoExpand.enabled && newOptions.autoExpand.inactiveDisplay === "collapsed") {
+          newOptions.collapsible = true;
+        }
+        innerProps.onSuccessfulEdit(newOptions);
         actions.closeModal();
       })}
     >
@@ -81,6 +90,7 @@ export const ContainerEditModal = createModal<ModalProps>(({ actions, innerProps
           label={tSection("option.collapsible.label")}
           description={tSection("option.collapsible.description")}
           {...form.getInputProps("collapsible", { type: "checkbox" })}
+          disabled={form.values.autoExpand.enabled && form.values.autoExpand.inactiveDisplay === "collapsed"}
         />
         <Switch
           label={tSection("option.showOpenAll.label")}

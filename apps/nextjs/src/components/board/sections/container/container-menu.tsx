@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import { Button, Menu } from "@mantine/core";
 import { IconArrowsMove, IconLayoutKanban, IconPencil, IconTrash } from "@tabler/icons-react";
 import combineClasses from "clsx";
@@ -16,9 +17,10 @@ import classes from "./container-menu.module.css";
 interface ContainerEditBarProps {
   section: ContainerSectionItem;
   placement: "border" | "header";
+  depth: number;
 }
 
-export const BoardContainerEditBar = ({ section, placement }: ContainerEditBarProps) => {
+export const BoardContainerEditBar = ({ section, placement, depth }: ContainerEditBarProps) => {
   const tContainer = useI18n("section.container");
   const tItem = useI18n("item");
   const { openModal } = useModalAction(ContainerEditModal);
@@ -41,6 +43,7 @@ export const BoardContainerEditBar = ({ section, placement }: ContainerEditBarPr
   return (
     <div
       className={combineClasses(classes.anchor, placement === "header" ? classes.headerAnchor : classes.borderAnchor)}
+      style={{ "--container-edit-bar-depth": depth } as CSSProperties}
     >
       <div className={classes.bar} data-board-container-edit-bar data-grid-no-drag>
         {placement === "border" && (

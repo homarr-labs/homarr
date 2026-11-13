@@ -42,6 +42,16 @@ export const useWidgetActivitySignal = ({
         return;
       }
 
+      if (
+        "supportedIntegrations" in definition &&
+        (definition.supportedIntegrations?.length ?? 0) > 0 &&
+        (!("integrationsRequired" in definition) || definition.integrationsRequired !== false) &&
+        integrationIds.length === 0
+      ) {
+        setIsActive(true);
+        return;
+      }
+
       const widgetQueryKeys = getWidgetQueryKeys(definition, kind);
       const reducedOptions = reduceWidgetOptionsWithDefinition(definition, settings, options);
       const scope = { itemId, boardId, integrationIds, options: reducedOptions, runtimeQueries: [] };
