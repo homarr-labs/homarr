@@ -28,6 +28,7 @@ export const IntegrationTestConnectionError = ({ error, url }: IntegrationTestCo
           {error.type !== "request" &&
           error.type !== "certificate" &&
           error.type !== "statusCode" &&
+          error.type !== "frigate" &&
           error.type !== "openmediavault" ? (
             <Text size="md">{tIntegration(`testConnection.error.${error.type}.description` as never)}</Text>
           ) : null}
@@ -35,6 +36,14 @@ export const IntegrationTestConnectionError = ({ error, url }: IntegrationTestCo
           {error.type === "openmediavault" ? (
             <Text size="md">
               {tIntegration(`testConnection.error.openmediavault.description.${error.data.reason}` as never)}
+            </Text>
+          ) : null}
+
+          {error.type === "frigate" ? (
+            <Text size="md">
+              {tIntegration(`testConnection.error.frigate.description.${error.data.reason}`)}
+              {error.data.statusCode &&
+                tIntegration("testConnection.error.frigate.status", { statusCode: error.data.statusCode })}
             </Text>
           ) : null}
 

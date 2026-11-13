@@ -2,18 +2,19 @@
 
 import type { PropsWithChildren } from "react";
 import { useCallback, useEffect, useRef } from "react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import type { OnboardingTourController, OnboardingTourStep } from "@gfazioli/mantine-onboarding-tour";
 import { OnboardingTour } from "@gfazioli/mantine-onboarding-tour";
 import { Button, Center, Group, Image, Kbd, Text } from "@mantine/core";
 import type { FloatingPosition } from "@mantine/core";
 
 import { useSettings } from "@homarr/settings";
-import { useI18n } from "@homarr/translation/client";
+import { useCurrentLocale, useI18n } from "@homarr/translation/client";
 
 interface TourShellProps extends PropsWithChildren {
   steps: OnboardingTourStep[];
   started: boolean;
+  resumeOnPause?: boolean;
   onEnd: () => void;
   stepRoutes?: Record<string, string>;
   position?: FloatingPosition | Record<string, FloatingPosition>;
@@ -28,18 +29,25 @@ const stepAtOffset = (controller: TourController, offset: number) => {
   return controller.tour[index];
 };
 
-const waitForTourTarget = (targetId: string, callback: () => void) => {
+const waitForTourTarget = (targetId: string, callback: () => void, onTimeout: () => void) => {
+  let stopped = false;
   const stop = () => {
+    stopped = true;
     observer.disconnect();
     clearTimeout(timeout);
   };
   const checkForTarget = () => {
+    if (stopped) return;
     if (!document.querySelector(`[data-tour-target="${targetId}"]`)) return;
     stop();
     callback();
   };
   const observer = new MutationObserver(checkForTarget);
-  const timeout = setTimeout(stop, 5000);
+  const timeout = setTimeout(() => {
+    if (stopped) return;
+    stop();
+    onTimeout();
+  }, 5000);
   observer.observe(document.body, {
     childList: true,
     subtree: true,
@@ -82,16 +90,35 @@ const TourDoneButton = ({ label, onClick }: TourDoneButtonProps) => {
   );
 };
 
-export const TourShell = ({ steps, started, onEnd, stepRoutes, position, children }: TourShellProps) => {
+export const TourShell = ({
+  steps,
+  started,
+  resumeOnPause = false,
+  onEnd,
+  stepRoutes,
+  position,
+  children,
+}: TourShellProps) => {
   const tCommon = useI18n("common.action");
   const tTour = useI18n("onboardingTour");
   const { branding } = useSettings();
   const router = useRouter();
+  const pathname = usePathname();
+  const locale = useCurrentLocale();
+  let currentRoute = pathname;
+  const localePrefix = `/${locale}/`;
+  if (currentRoute.startsWith(localePrefix)) {
+    currentRoute = currentRoute.slice(localePrefix.length - 1);
+  }
+  currentRoute = currentRoute.replace(/\/$/, "");
+
   const forwardActionRef = useRef<(() => void) | null>(null);
   const pendingTargetCleanupRef = useRef<(() => void) | null>(null);
+  const controllerRef = useRef<TourController | null>(null);
+  const pendingResumeIndexRef = useRef<number | undefined>(undefined);
 
   const navigateAndAdvance = useCallback(
-    (currentStepId: string | undefined, targetStepId: string | undefined, advance: () => void) => {
+    (targetStepId: string | undefined, advance: () => void) => {
       pendingTargetCleanupRef.current?.();
       pendingTargetCleanupRef.current = null;
       if (!stepRoutes || !targetStepId) {
@@ -99,18 +126,50 @@ export const TourShell = ({ steps, started, onEnd, stepRoutes, position, childre
         return;
       }
 
-      const currentRoute = currentStepId ? stepRoutes[currentStepId] : undefined;
       const targetRoute = stepRoutes[targetStepId];
-
-      if (targetRoute && targetRoute !== currentRoute) {
-        router.push(targetRoute);
-        pendingTargetCleanupRef.current = waitForTourTarget(targetStepId, advance);
-      } else {
+      if (!targetRoute) {
         advance();
+        return;
+      }
+
+      if (targetRoute !== currentRoute) router.push(targetRoute);
+      pendingTargetCleanupRef.current = waitForTourTarget(targetStepId, advance, () => {
+        pendingResumeIndexRef.current = undefined;
+        controllerRef.current?.endTour();
+      });
+    },
+    [currentRoute, router, stepRoutes],
+  );
+
+  const handleStart = useCallback(() => {
+    const controller = controllerRef.current;
+    const index = pendingResumeIndexRef.current ?? controller?.currentStepIndex;
+    if (!resumeOnPause || !controller || index === undefined) return;
+
+    const step = controller.tour[index];
+    if (!step) return;
+
+    // Keep the snapshot through another pause while the library resets to step 0 and the route loads.
+    pendingResumeIndexRef.current = index;
+    navigateAndAdvance(step.id, () => controller.setCurrentStepIndex(index));
+  }, [navigateAndAdvance, resumeOnPause]);
+
+  const handleStepChange = useCallback(
+    (step: OnboardingTourStep) => {
+      const index = pendingResumeIndexRef.current;
+      if (index !== undefined && steps[index]?.id === step.id) {
+        pendingResumeIndexRef.current = undefined;
       }
     },
-    [router, stepRoutes],
+    [steps],
   );
+
+  const handleEnd = useCallback(() => {
+    pendingResumeIndexRef.current = undefined;
+    pendingTargetCleanupRef.current?.();
+    pendingTargetCleanupRef.current = null;
+    onEnd();
+  }, [onEnd]);
 
   const bindForwardAction = useCallback((controller: TourController, action: () => void) => {
     forwardActionRef.current = action;
@@ -144,7 +203,9 @@ export const TourShell = ({ steps, started, onEnd, stepRoutes, position, childre
     <OnboardingTour
       tour={steps}
       started={started}
-      onOnboardingTourEnd={onEnd}
+      onOnboardingTourStart={handleStart}
+      onOnboardingTourChange={handleStepChange}
+      onOnboardingTourEnd={handleEnd}
       withStepper={false}
       header={(controller) => (
         <>
@@ -175,7 +236,8 @@ export const TourShell = ({ steps, started, onEnd, stepRoutes, position, childre
       nextStepNavigation={(controller) => {
         const nextStep = stepAtOffset(controller, 1);
         const action = bindForwardAction(controller, () => {
-          navigateAndAdvance(controller.currentStep?.id, nextStep?.id, () => controller.nextStep());
+          pendingResumeIndexRef.current = undefined;
+          navigateAndAdvance(nextStep?.id, () => controller.nextStep());
         });
         return <TourForwardButton label={tCommon("next")} onClick={action} />;
       }}
@@ -188,8 +250,9 @@ export const TourShell = ({ steps, started, onEnd, stepRoutes, position, childre
           size="sm"
           variant="default"
           onClick={() => {
+            pendingResumeIndexRef.current = undefined;
             const prevStep = stepAtOffset(controller, -1);
-            navigateAndAdvance(controller.currentStep?.id, prevStep?.id, () => controller.prevStep());
+            navigateAndAdvance(prevStep?.id, () => controller.prevStep());
           }}
         >
           {tTour("prev")}
@@ -201,15 +264,18 @@ export const TourShell = ({ steps, started, onEnd, stepRoutes, position, childre
         </Button>
       )}
       withPrevButton
-      focusRevealProps={{
-        disableTargetInteraction: true,
-        popoverProps: {
-          position: position ?? { base: "bottom", md: "right" },
-          width: { base: "calc(100vw - 32px)", md: 420 },
-          shadow: "xl",
-          radius: "lg",
-          middlewares: { shift: { padding: 16 }, flip: true },
-        },
+      focusRevealProps={(controller) => {
+        controllerRef.current = controller;
+        return {
+          disableTargetInteraction: true,
+          popoverProps: {
+            position: position ?? { base: "bottom", md: "right" },
+            width: { base: "calc(100vw - 32px)", md: 420 },
+            shadow: "xl",
+            radius: "lg",
+            middlewares: { shift: { padding: 16 }, flip: true },
+          },
+        };
       }}
       cutoutPadding={12}
       cutoutRadius={12}

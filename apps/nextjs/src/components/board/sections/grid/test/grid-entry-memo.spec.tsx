@@ -104,6 +104,7 @@ describe("grid entry memoization", () => {
                 rowCount: 10,
                 maxRowCount: null,
                 placements: nextEntries.map((entry) => entry.placement),
+                logicalPlacements: nextEntries.map((entry) => entry.placement),
                 gridRef,
                 entryElements: elements,
                 interactionStore,

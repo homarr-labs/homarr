@@ -1245,6 +1245,20 @@
       "username": "Nome utente",
       "password": "Password",
       "savedPlaceholder": "••••••• (salvato, lascia vuoto per mantenere)"
+    },
+    "workshopUpdate": {
+      "title": "",
+      "apply": "",
+      "available": "Aggiornamento disponibile",
+      "check": "",
+      "description": "",
+      "approvePermissions": "",
+      "pendingDescription": "",
+      "overwriteLocalChanges": "",
+      "installSeparate": "",
+      "communityWarning": "",
+      "updated": "",
+      "changedBeforeInstall": ""
     }
   },
   "workshop": {
@@ -1515,6 +1529,27 @@
           "title": "Errore sconosciuto",
           "description": "Si è verificato un errore sconosciuto, apri la causa sottostante per vedere maggiori dettagli"
         },
+        "frigate": {
+          "title": "",
+          "status": "",
+          "description": {
+            "cookie": "",
+            "profileMismatch": "",
+            "redirect": "",
+            "login": "",
+            "profile": "",
+            "stats": ""
+          }
+        },
+        "openmediavault": {
+          "title": "",
+          "description": {
+            "totpSecretRequired": "",
+            "totpSecretInvalid": "",
+            "totpVerificationFailed": "",
+            "unsupportedChallenge": ""
+          }
+        },
         "parse": {
           "title": "Errore di analisi",
           "description": "La risposta non può essere analizzata. Si prega di verificare che l'URL stia puntando all'URL di base del servizio."
@@ -1714,6 +1749,11 @@
         "title": "Resetta segreto",
         "message": "Sei sicuro di voler resettare questo segreto?"
       },
+      "totpNotice": "",
+      "remove": {
+        "title": "",
+        "message": ""
+      },
       "noSecretsRequired": {
         "segmentTitle": "Nessun segreto",
         "text": "Nessun segreto richiesto per questa integrazione"
@@ -1794,6 +1834,10 @@
         "wazuhIndexerPassword": {
           "label": "Password indicizzatore",
           "newLabel": "Nuova password indicizzatore"
+        },
+        "totpSecret": {
+          "label": "",
+          "newLabel": ""
         }
       }
     },
@@ -1891,7 +1935,8 @@
       "copy": "Copia",
       "copied": "Copiato",
       "refresh": "Aggiorna",
-      "export": "Esporta"
+      "export": "Esporta",
+      "advanced": "Avanzate"
     },
     "hidden": "Nascosto",
     "pagination": {
@@ -1986,6 +2031,15 @@
         "modifier": "Mod"
       }
     },
+    "markdown": {
+      "alert": {
+        "note": "Nota",
+        "tip": "",
+        "important": "",
+        "warning": "Attenzione",
+        "caution": ""
+      }
+    },
     "dangerZone": "Zona pericolosa",
     "noResults": "Nessun risultato trovato",
     "unsavedChanges": "Ci sono modifiche non salvate!",
@@ -2076,6 +2130,158 @@
         "sm": "Tenue",
         "xl": "Morbido"
       }
+    },
+    "customTheme": {
+      "label": "Tema",
+      "nothingFound": "",
+      "custom": "Personalizzato",
+      "customize": "",
+      "editor": {
+        "title": "",
+        "basedOn": "",
+        "preview": "",
+        "previewColorScheme": "",
+        "layout": "Layout",
+        "typography": "",
+        "colors": "",
+        "json": "",
+        "defaultRadius": "",
+        "radiusHint": "",
+        "scale": "",
+        "spacing": "Spaziatura",
+        "radius": "",
+        "fontFamily": "",
+        "headingFont": "",
+        "monoFont": "",
+        "fontSizes": "",
+        "palette": {
+          "body": "",
+          "surface": "",
+          "hover": "",
+          "border": "",
+          "text": "",
+          "dimmed": "",
+          "primary": "",
+          "secondary": "Accento secondario"
+        },
+        "lockedPrimary": "",
+        "pickColor": "",
+        "autoContrast": "",
+        "luminanceThreshold": "",
+        "jsonHint": "",
+        "invalidJson": "",
+        "tooLong": "",
+        "copyJson": "",
+        "copied": "Copiato",
+        "discardJson": "",
+        "reset": "",
+        "apply": "",
+        "sampleTitle": "Dashboard",
+        "sampleBadge": "Anteprima",
+        "sampleText": "",
+        "sampleInput": "Cerca",
+        "sampleValue": "Trova un'app",
+        "sampleButton": "Apri"
+      },
+      "studio": {
+        "title": "",
+        "saveTheme": "",
+        "searchControls": "",
+        "component": "",
+        "inheritedValue": "",
+        "resetControl": "",
+        "decreaseControl": "",
+        "increaseControl": "",
+        "chooseControl": "",
+        "layout": {
+          "spacing": "Spaziatura",
+          "radius": "",
+          "compact": "Compatto",
+          "normal": "Normale",
+          "roomy": "",
+          "preset": "",
+          "none": "Nessuno",
+          "rounded": "",
+          "full": "Pieno",
+          "custom": "Personalizzato",
+          "advanced": ""
+        },
+        "previewSurface": "Anteprima",
+        "previewFrame": "",
+        "loadingPreview": "",
+        "previewFailed": "",
+        "sampleBoard": "",
+        "components": "Componenti",
+        "overlays": "",
+        "typography": "",
+        "liveBoard": "",
+        "viewport": "",
+        "responsive": "",
+        "tablet": "",
+        "mobile": "Mobile",
+        "includeCustomCss": "",
+        "groups": {
+          "layout": "",
+          "typography": "",
+          "colors": "",
+          "surfaces": "",
+          "overlays": "",
+          "accessibility": "",
+          "css": "CSS personalizzato"
+        },
+        "controls": {
+          "defaultRadius": "",
+          "scale": "",
+          "spacing": "Spaziatura",
+          "radius": "",
+          "breakpoint": "Breakpoint",
+          "fontSizes": "",
+          "lineHeight": "",
+          "shadow": "",
+          "fontFamily": "",
+          "headingFont": "",
+          "monoFont": "",
+          "headingWeight": "",
+          "headingSize": "",
+          "fontSmoothing": "",
+          "body": "",
+          "surface": "",
+          "hover": "",
+          "border": "",
+          "text": "",
+          "dimmed": "",
+          "primary": "",
+          "secondary": "Accento secondario",
+          "autoContrast": "",
+          "luminanceThreshold": "",
+          "primaryShade": "",
+          "componentRadius": "",
+          "borderWidth": "",
+          "surfaceBackground": "Background",
+          "surfaceText": "",
+          "surfaceBorder": "Colore del bordo",
+          "hoverBackground": "",
+          "hoverText": "",
+          "componentShadow": "",
+          "componentBorder": "Mostra bordo",
+          "componentPadding": "",
+          "componentSize": "Dimensione del file",
+          "componentVariant": "",
+          "overlayBlur": "",
+          "overlayOpacity": "",
+          "overlayColor": "",
+          "transitionDuration": "",
+          "headerBackground": "",
+          "respectReducedMotion": "",
+          "focusRing": "",
+          "cursorType": "",
+          "customCss": "CSS personalizzato"
+        },
+        "expandPreview": "",
+        "showControls": "Mostra i controlli"
+      },
+      "instanceDefault": "",
+      "useInstanceDefault": ""
     }
   },
   "section": {
@@ -2171,6 +2377,18 @@
       },
       "customWidget": "API Personalizzata",
       "standalone": "Standalone",
+      "integrationFilter": "",
+      "integrationNotConnected": "",
+      "workshop": {
+        "title": "Widget officina",
+        "back": "",
+        "empty": "",
+        "noMatches": "",
+        "loading": "",
+        "integrationError": "",
+        "searchMore": "",
+        "installAndAdd": ""
+      },
       "missingIntegration": {
         "title": "Prima connetti un servizio",
         "noPermission": "Questo widget ha bisogno di una connessione al servizio compatibile. Chiedi all'amministratore di connetterne una, quindi riprova."
@@ -2206,10 +2424,13 @@
       "saveErrorTitle": "Impossibile aggiornare gli elementi",
       "saveErrorMessage": "Le modifiche non possono essere salvate. La scheda è stata aggiornata.",
       "moveUnavailableTitle": "Impossibile spostare gli elementi selezionati",
-      "moveUnavailableMessage": "La destinazione non ha abbastanza spazio per tutta la selezione."
+      "moveUnavailableMessage": "La destinazione non ha abbastanza spazio per tutta la selezione.",
+      "moveToTab": "",
+      "movedToTab": ""
     },
     "moveResize": {
       "title": "Sposta / ridimensiona elemento",
+      "sizeOverlap": "",
       "entryLabel": "{name}, colonna {column}, riga {row}",
       "target": {
         "numbered": "{name}, destinazione {index}",
@@ -2292,6 +2513,36 @@
       "open": "Apri vista avanzata",
       "close": "Chiudi vista avanzata",
       "label": "{widget} vista avanzata"
+    },
+    "inPlace": {
+      "widgetLoadError": "",
+      "search": "",
+      "bestFit": "",
+      "moreWidgets": "",
+      "widgets": "Widget",
+      "yourApps": "",
+      "createApp": "",
+      "addAppLink": "",
+      "createWidget": "",
+      "createWidgetDescription": "",
+      "createAppDescription": "",
+      "defaultFit": "",
+      "defaultFitDescription": "",
+      "defaultSize": "",
+      "defaultSizeDescription": "",
+      "emptyCells": "",
+      "preview": {
+        "error": "",
+        "loading": ""
+      },
+      "keyboard": {
+        "move": "sposta",
+        "resize": "",
+        "pick": "",
+        "browse": "",
+        "moveDescription": "",
+        "resizeDescription": ""
+      }
     }
   },
   "widget": {
@@ -2335,7 +2586,29 @@
             "tooltip": "Come suggerimento",
             "hidden": "Nascosto"
           }
+        },
+        "dockerContainer": {
+          "label": "Docker container",
+          "description": "",
+          "placeholder": "",
+          "disabled": "",
+          "unavailable": ""
         }
+      },
+      "docker": {
+        "action": {
+          "start": "",
+          "stop": ""
+        },
+        "notification": {
+          "startFailed": "",
+          "stopFailed": ""
+        },
+        "switch": {
+          "start": "",
+          "stop": ""
+        },
+        "stopped": ""
       },
       "error": {
         "notFound": {
@@ -2414,6 +2687,10 @@
         "hideHostname": {
           "label": "Nascondi nomi host"
         },
+        "showFullUrls": {
+          "label": "",
+          "description": ""
+        },
         "withBorder": {
           "label": "Mostra bordo"
         },
@@ -2436,6 +2713,9 @@
         }
       },
       "empty": "Aggiungi un URL o un'app nelle impostazioni del widget",
+      "copyUrl": "Copia URL",
+      "copied": "Copiato",
+      "copyFailed": "",
       "groups": {
         "label": "Categorie",
         "placeholder": "Nuova categoria",
@@ -3089,6 +3369,141 @@
         "toggleFailed": "Impossibile aggiornare l'entità"
       }
     },
+    "smartHome-controls": {
+      "name": "",
+      "description": "",
+      "option": {
+        "presentation": {
+          "label": "",
+          "option": {
+            "entities": "",
+            "controlPanel": ""
+          }
+        },
+        "title": {
+          "label": "Titolo",
+          "description": ""
+        },
+        "blocks": {
+          "label": "",
+          "remove": ""
+        },
+        "roomDomains": {
+          "label": "",
+          "description": ""
+        },
+        "excludedEntityIds": {
+          "label": "",
+          "description": "",
+          "placeholder": ""
+        },
+        "showSummary": {
+          "label": ""
+        },
+        "readOnly": {
+          "label": "",
+          "description": ""
+        },
+        "controlSize": {
+          "label": "",
+          "option": {
+            "auto": "Automatico",
+            "compact": "Compatto",
+            "large": "Grande"
+          }
+        },
+        "palette": {
+          "label": "",
+          "option": {
+            "boring": "",
+            "colorful": ""
+          }
+        }
+      },
+      "domain": {
+        "light": "",
+        "switch": "",
+        "fan": "",
+        "climate": "",
+        "humidifier": "",
+        "cover": "",
+        "valve": "",
+        "lock": "",
+        "alarm_control_panel": "",
+        "media_player": "",
+        "camera": "",
+        "vacuum": "",
+        "scene": "",
+        "script": "",
+        "automation": "",
+        "button": "",
+        "input_boolean": "",
+        "input_select": "",
+        "person": "Persone",
+        "binary_sensor": "",
+        "sensor": "",
+        "weather": "Meteo",
+        "sun": "",
+        "update": ""
+      },
+      "block": {
+        "add": {
+          "rooms": "",
+          "entity": "Entità",
+          "roomsLabel": "",
+          "roomsPlaceholder": "",
+          "entityLabel": "",
+          "entityPlaceholder": "",
+          "merge": "",
+          "submit": "Aggiungi",
+          "duplicate": "",
+          "covered": ""
+        },
+        "kind": {
+          "entity": "Entità",
+          "room": "",
+          "mergedRooms": "",
+          "unknown": ""
+        },
+        "entityCount": "",
+        "noArea": "",
+        "issue": {
+          "missing": "Non trovato",
+          "otherSource": "",
+          "empty": ""
+        }
+      },
+      "preview": {
+        "empty": "",
+        "noMatches": "",
+        "summary": {
+          "lights": "",
+          "on": "acceso",
+          "off": "",
+          "sensors": "",
+          "offline": "offline"
+        },
+        "otherSource": ""
+      },
+      "live": {
+        "loading": "",
+        "error": "",
+        "retry": "Riprova",
+        "actionFailed": "",
+        "actionUnconfirmed": "",
+        "unconfirmed": "",
+        "selectionLimit": "",
+        "unknownError": ""
+      },
+      "inline": {
+        "open": "",
+        "title": "",
+        "handle": "",
+        "empty": "",
+        "add": "",
+        "close": ""
+      }
+    },
     "smartHome-executeAutomation": {
       "name": "Esegui Automazione",
       "description": "Attiva un'automazione con un clic",
@@ -3535,6 +3950,34 @@
     },
     "coolify": {
       "description": "Panoramica della tua istanza Coolify con server e applicazioni",
+      "summary": {
+        "needsAttention": "{count} ha bisogno di attenzione",
+        "inProgress": "",
+        "unknown": "",
+        "healthy": "",
+        "empty": "",
+        "healthyDetail": "",
+        "more": "",
+        "moreInstances": ""
+      },
+      "details": {
+        "tabs": "",
+        "overview": "",
+        "search": "",
+        "serviceApplications": ""
+      },
+      "overview": {
+        "projects": "",
+        "resources": "",
+        "attention": "Richiede attenzione",
+        "ready": "Pronto",
+        "noProjects": "",
+        "projectsUnavailable": "",
+        "moreProjects": "",
+        "running": "In esecuzione",
+        "resourceCount": "",
+        "environmentCount": ""
+      },
       "option": {
         "showServers": {
           "label": "Mostra server"
@@ -3566,7 +4009,13 @@
       },
       "source": {
         "url": "Fonte: {url}",
-        "unavailable": ""
+        "unavailable": "",
+        "unavailableCount": ""
+      },
+      "kind": {
+        "server": "",
+        "application": "Applicazione",
+        "service": "Servizio"
       },
       "instances": {
         "title": "Istanze"
@@ -3583,6 +4032,7 @@
         "exited": "Uscito",
         "starting": "Avvio",
         "restarting": "Riavvio in corso",
+        "unhealthy": "Compromesso",
         "unknown": "Sconosciuto",
         "online": "Online",
         "offline": "Offline",
@@ -4815,6 +5265,7 @@
           },
           "identifier": {
             "label": "Identificatore",
+            "containerPlaceholder": "",
             "placeholder": "Nome o Proprietario/Nome"
           },
           "name": {},
@@ -5351,6 +5802,23 @@
       "name": "Risorse di sistema",
       "description": "CPU, memoria, disco e altro utilizzo hardware del sistema",
       "option": {
+        "diskDisplayMode": {
+          "label": "",
+          "option": {
+            "percentage": "Percentuale (es. 76%)",
+            "free": "",
+            "absolute": "",
+            "combined": ""
+          }
+        },
+        "resourceLayout": {
+          "label": "",
+          "description": ""
+        },
+        "subresourceLayout": {
+          "label": "",
+          "description": ""
+        },
         "hasShadow": {
           "label": "Abilita l'ombreggiatura del grafico"
         },
@@ -5358,6 +5826,7 @@
           "label": "Grafici visibili",
           "description": "Seleziona i grafici che vuoi essere visibili.",
           "option": {
+            "cpuCores": "",
             "memory": "Memoria",
             "network": "Rete"
           }
@@ -6286,6 +6755,26 @@
         }
       }
     },
+    "tabs": {
+      "label": "",
+      "indicator": "",
+      "home": "Home",
+      "untitled": "",
+      "add": "",
+      "actions": "",
+      "rename": "",
+      "namePlaceholder": "",
+      "moveLeft": "",
+      "moveRight": "",
+      "remove": {
+        "action": "",
+        "confirm": ""
+      },
+      "limitReached": "",
+      "hotkeyHint": "",
+      "destination": "",
+      "containerDestination": ""
+    },
     "landmark": {
       "canvas": "Tela pannello impostazioni",
       "leftRail": "Banco dashboard sinistro",
@@ -6552,6 +7041,11 @@
           "description": "L'amministratore del server non ha ancora impostato una home board.",
           "link": "Visualizza board pubbliche",
           "notice": "Per far scomparire questa pagina, chiedi all'amministratore del server di impostare una home board per il server"
+        },
+        "noAccess": {
+          "title": "",
+          "description": "",
+          "notice": ""
         }
       }
     }
@@ -6623,10 +7117,12 @@
             "documentation": "Documentazione",
             "submitIssue": "Segnala un problema",
             "discord": "Community Discord",
-            "sourceCode": "Codice sorgente"
+            "sourceCode": "Codice sorgente",
+            "changelog": ""
           }
         },
         "about": "Info",
+        "updateAvailable": "Aggiornamento disponibile",
         "assistant": "Assistente"
       }
     },
@@ -6638,9 +7134,23 @@
           "authentication": "Autenticazione",
           "authorization": "Autorizzazione"
         },
-        "heroBanner": {
-          "title": "Bentornato sulla tua",
-          "subtitle": "{app} Board"
+        "hero": {
+          "greeting": "",
+          "greetingWithoutName": "",
+          "description": ""
+        },
+        "lobster": {
+          "label": "",
+          "prompt": "",
+          "pokeCount": "",
+          "reaction": {
+            "hey": "",
+            "ow": "",
+            "snip": "",
+            "careful": "",
+            "stillHere": "",
+            "okay": ""
+          }
         }
       },
       "board": {
@@ -6685,7 +7195,9 @@
         },
         "noResults": {
           "title": "Ancora nessuna board",
-          "description": "Crea una scheda per organizzare le tue app e widget in un unico posto."
+          "description": "Crea una scheda per organizzare le tue app e widget in un unico posto.",
+          "noAccessTitle": "",
+          "noAccessDescription": ""
         }
       },
       "media": {
@@ -6738,6 +7250,11 @@
                 "logoDisplay": {
                   "logo": "Solo logo",
                   "logoAndText": "Logo + testo"
+                },
+                "tabsDisplay": {
+                  "wide": "Ampia",
+                  "compact": "Compatto",
+                  "indicator": ""
                 }
               },
               "items": {
@@ -6745,6 +7262,7 @@
                 "search": "Cerca",
                 "home": "Home board",
                 "boardSwitcher": "Board",
+                "boardTabs": "",
                 "assistant": "Assistente",
                 "docker": "Docker",
                 "boardEdit": "Modifica scheda",
@@ -6976,6 +7494,10 @@
             "title": "Aspetto",
             "defaultColorScheme": {
               "label": "Schema colore predefinito"
+            },
+            "whatsNew": {
+              "label": "",
+              "description": ""
             }
           },
           "branding": {
@@ -7558,7 +8080,8 @@
               "openSpotlightApps": "Apri ricerca app",
               "openSpotlightAssistant": "Apri la modalità Assistente",
               "openSpotlightPreferences": "Apri modalità preferenze",
-              "openAssistant": "Apri Assistente"
+              "openAssistant": "Apri Assistente",
+              "switchBoardTab": ""
             },
             "note": "Suggerimento: 'Mod' si riferisce sia al tasto Ctrl che al tasto ⌘ su macOS"
           }
@@ -8728,6 +9251,12 @@
         "description": "Cambia la combinazione di colori, la lingua, la bacheca principale e le tue preferenze. Da qui puoi anche passare all'area di gestione."
       }
     }
+  },
+  "whatsNew": {
+    "title": "",
+    "empty": "",
+    "allReleases": "",
+    "dismiss": ""
   },
   "metadata": {
     "description": "Un cruscotto autoospitato per lo stack *arr e tutta la tua homelab. Si integra con oltre 50 servizi, widget in tempo reale, senza file di configurazione.",

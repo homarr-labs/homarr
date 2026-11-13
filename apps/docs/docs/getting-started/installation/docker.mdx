@@ -24,6 +24,10 @@ see [Managing integrations](/docs/management/integrations#configuration).
 
 ### Update
 
+Choose a published major tag such as `ghcr.io/homarr-labs/homarr:v2` to follow stable v2 releases, or a major/minor tag to follow only that minor line's patches.
+The `:latest` tag can move to a new major version; a full version such as `:v2.12.0` stays on that release.
+Moving version tags are added by stable deployments; check the [published image tags](https://github.com/homarr-labs/homarr/pkgs/container/homarr/versions) before switching to a new alias.
+
 <Alert type="warning">
 **Back up before upgrading from v1 to v2.** v2 migrates the existing database in place. For SQLite, this is
 `/appdata/db/db.sqlite` by default; v1 cannot use the upgraded database. Switching back to the v1 image alone is not a

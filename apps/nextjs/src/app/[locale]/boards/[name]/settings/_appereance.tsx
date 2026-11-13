@@ -16,7 +16,6 @@ import { useDisclosure } from "@mantine/hooks";
 import type { UseFormReturnType } from "@homarr/form";
 import { BoardAppearanceFields } from "@homarr/forms-collection";
 import { useI18n } from "@homarr/translation/client";
-import { useSettings } from "@homarr/settings";
 
 import { generateColorScale } from "~/theme/branding";
 import type { FormValues } from "./_settings-form";
@@ -31,25 +30,25 @@ export const ColorSettingsContent = ({ form }: Props) => {
   const [showPreview, { toggle }] = useDisclosure(false);
   const tBoard = useI18n("board");
   const tCommon = useI18n("common");
-  const { branding } = useSettings();
 
   return (
     <Fieldset legend={tBoard("setting.section.appearance.title")} p="sm">
       <BoardAppearanceFields
         form={form}
-        primaryColorLocked={branding.lockPrimaryColor}
         palettePreview={
-          <>
-            <Anchor onClick={toggle} size="sm" w="fit-content">
-              {showPreview ? tCommon("preview.hide") : tCommon("preview.show")}
-            </Anchor>
-            <Collapse expanded={showPreview}>
-              <Stack gap="xs">
-                <ColorsPreview previewColor={form.values.primaryColor} />
-                <ColorsPreview previewColor={form.values.secondaryColor} />
-              </Stack>
-            </Collapse>
-          </>
+          (form.values.primaryColor || form.values.secondaryColor) && (
+            <>
+              <Anchor onClick={toggle} size="sm" w="fit-content">
+                {showPreview ? tCommon("preview.hide") : tCommon("preview.show")}
+              </Anchor>
+              <Collapse expanded={showPreview}>
+                <Stack gap="xs">
+                  {form.values.primaryColor && <ColorsPreview previewColor={form.values.primaryColor} />}
+                  {form.values.secondaryColor && <ColorsPreview previewColor={form.values.secondaryColor} />}
+                </Stack>
+              </Collapse>
+            </>
+          )
         }
       />
     </Fieldset>
@@ -57,7 +56,7 @@ export const ColorSettingsContent = ({ form }: Props) => {
 };
 
 interface ColorsPreviewProps {
-  previewColor: string | undefined;
+  previewColor: string | null | undefined;
 }
 
 const ColorsPreview = ({ previewColor }: ColorsPreviewProps) => {

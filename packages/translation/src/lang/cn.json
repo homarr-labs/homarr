@@ -1245,6 +1245,20 @@
       "username": "用户名",
       "password": "密码",
       "savedPlaceholder": "•••••••（已保存，留空则保持不变）"
+    },
+    "workshopUpdate": {
+      "title": "",
+      "apply": "",
+      "available": "有可用更新",
+      "check": "",
+      "description": "",
+      "approvePermissions": "",
+      "pendingDescription": "",
+      "overwriteLocalChanges": "",
+      "installSeparate": "",
+      "communityWarning": "",
+      "updated": "",
+      "changedBeforeInstall": ""
     }
   },
   "workshop": {
@@ -1515,6 +1529,27 @@
           "title": "未知错误",
           "description": "发生未知错误，打开下面的原因以查看更多详情"
         },
+        "frigate": {
+          "title": "",
+          "status": "",
+          "description": {
+            "cookie": "",
+            "profileMismatch": "",
+            "redirect": "",
+            "login": "",
+            "profile": "",
+            "stats": ""
+          }
+        },
+        "openmediavault": {
+          "title": "",
+          "description": {
+            "totpSecretRequired": "",
+            "totpSecretInvalid": "",
+            "totpVerificationFailed": "",
+            "unsupportedChallenge": ""
+          }
+        },
         "parse": {
           "title": "解析错误",
           "description": "无法解析该响应。请确认URL指向服务的基本URL。"
@@ -1714,6 +1749,11 @@
         "title": "重置密钥",
         "message": "您确定要重置此秘钥吗？"
       },
+      "totpNotice": "",
+      "remove": {
+        "title": "",
+        "message": ""
+      },
       "noSecretsRequired": {
         "segmentTitle": "没有密钥",
         "text": "此集成不需要密钥"
@@ -1794,6 +1834,10 @@
         "wazuhIndexerPassword": {
           "label": "索引器密码",
           "newLabel": "新索引器密码"
+        },
+        "totpSecret": {
+          "label": "",
+          "newLabel": ""
         }
       }
     },
@@ -1891,7 +1935,8 @@
       "copy": "复制",
       "copied": "已复制",
       "refresh": "刷新",
-      "export": "导出"
+      "export": "导出",
+      "advanced": "高级"
     },
     "hidden": "已隐藏",
     "pagination": {
@@ -1986,6 +2031,15 @@
         "modifier": ""
       }
     },
+    "markdown": {
+      "alert": {
+        "note": "笔记",
+        "tip": "",
+        "important": "",
+        "warning": "警告",
+        "caution": ""
+      }
+    },
     "dangerZone": "危险区域",
     "noResults": "未找到结果",
     "unsavedChanges": "你有未保存的更改！",
@@ -2076,6 +2130,158 @@
         "sm": "淡雅",
         "xl": "柔和"
       }
+    },
+    "customTheme": {
+      "label": "主题",
+      "nothingFound": "",
+      "custom": "自定义",
+      "customize": "",
+      "editor": {
+        "title": "",
+        "basedOn": "",
+        "preview": "",
+        "previewColorScheme": "",
+        "layout": "布局",
+        "typography": "",
+        "colors": "配色",
+        "json": "",
+        "defaultRadius": "",
+        "radiusHint": "",
+        "scale": "",
+        "spacing": "间距",
+        "radius": "",
+        "fontFamily": "",
+        "headingFont": "",
+        "monoFont": "",
+        "fontSizes": "",
+        "palette": {
+          "body": "",
+          "surface": "",
+          "hover": "",
+          "border": "",
+          "text": "",
+          "dimmed": "",
+          "primary": "",
+          "secondary": "次要强调色"
+        },
+        "lockedPrimary": "",
+        "pickColor": "",
+        "autoContrast": "",
+        "luminanceThreshold": "",
+        "jsonHint": "",
+        "invalidJson": "",
+        "tooLong": "",
+        "copyJson": "",
+        "copied": "已复制",
+        "discardJson": "",
+        "reset": "",
+        "apply": "",
+        "sampleTitle": "仪表板",
+        "sampleBadge": "预览",
+        "sampleText": "",
+        "sampleInput": "搜索",
+        "sampleValue": "查找应用",
+        "sampleButton": "打开"
+      },
+      "studio": {
+        "title": "",
+        "saveTheme": "",
+        "searchControls": "",
+        "component": "",
+        "inheritedValue": "",
+        "resetControl": "",
+        "decreaseControl": "",
+        "increaseControl": "",
+        "chooseControl": "",
+        "layout": {
+          "spacing": "间距",
+          "radius": "",
+          "compact": "紧凑",
+          "normal": "正常",
+          "roomy": "",
+          "preset": "",
+          "none": "无",
+          "rounded": "",
+          "full": "完全",
+          "custom": "自定义",
+          "advanced": ""
+        },
+        "previewSurface": "预览",
+        "previewFrame": "",
+        "loadingPreview": "",
+        "previewFailed": "",
+        "sampleBoard": "",
+        "components": "组件",
+        "overlays": "",
+        "typography": "",
+        "liveBoard": "",
+        "viewport": "",
+        "responsive": "",
+        "tablet": "",
+        "mobile": "移动端",
+        "includeCustomCss": "",
+        "groups": {
+          "layout": "",
+          "typography": "",
+          "colors": "",
+          "surfaces": "",
+          "overlays": "",
+          "accessibility": "",
+          "css": "自定义 CSS"
+        },
+        "controls": {
+          "defaultRadius": "",
+          "scale": "",
+          "spacing": "间距",
+          "radius": "",
+          "breakpoint": "断点",
+          "fontSizes": "",
+          "lineHeight": "",
+          "shadow": "",
+          "fontFamily": "",
+          "headingFont": "",
+          "monoFont": "",
+          "headingWeight": "",
+          "headingSize": "",
+          "fontSmoothing": "",
+          "body": "",
+          "surface": "",
+          "hover": "",
+          "border": "",
+          "text": "",
+          "dimmed": "",
+          "primary": "",
+          "secondary": "次要强调色",
+          "autoContrast": "",
+          "luminanceThreshold": "",
+          "primaryShade": "",
+          "componentRadius": "",
+          "borderWidth": "",
+          "surfaceBackground": "背景",
+          "surfaceText": "",
+          "surfaceBorder": "边框颜色",
+          "hoverBackground": "",
+          "hoverText": "",
+          "componentShadow": "",
+          "componentBorder": "显示边框",
+          "componentPadding": "",
+          "componentSize": "尺寸",
+          "componentVariant": "",
+          "overlayBlur": "",
+          "overlayOpacity": "",
+          "overlayColor": "",
+          "transitionDuration": "",
+          "headerBackground": "",
+          "respectReducedMotion": "",
+          "focusRing": "",
+          "cursorType": "",
+          "customCss": "自定义 CSS"
+        },
+        "expandPreview": "",
+        "showControls": "显示控件"
+      },
+      "instanceDefault": "",
+      "useInstanceDefault": ""
     }
   },
   "section": {
@@ -2171,6 +2377,18 @@
       },
       "customWidget": "自定义小部件",
       "standalone": "独立的",
+      "integrationFilter": "",
+      "integrationNotConnected": "",
+      "workshop": {
+        "title": "工坊小部件",
+        "back": "",
+        "empty": "",
+        "noMatches": "",
+        "loading": "",
+        "integrationError": "",
+        "searchMore": "",
+        "installAndAdd": ""
+      },
       "missingIntegration": {
         "title": "先连接一个服务",
         "noPermission": "此小部件需要兼容的服务连接。请管理员连接一个，然后重试。"
@@ -2206,10 +2424,13 @@
       "saveErrorTitle": "无法更新项目",
       "saveErrorMessage": "无法保存更改。看板已刷新。",
       "moveUnavailableTitle": "无法移动选中的项目",
-      "moveUnavailableMessage": "目标位置没有足够空间容纳整个选择。"
+      "moveUnavailableMessage": "目标位置没有足够空间容纳整个选择。",
+      "moveToTab": "",
+      "movedToTab": ""
     },
     "moveResize": {
       "title": "移动/调整项目大小",
+      "sizeOverlap": "",
       "entryLabel": "{name}，第 {column} 列，第 {row} 行",
       "target": {
         "numbered": "{name}，目标 {index}",
@@ -2292,6 +2513,36 @@
       "open": "打开高级视图",
       "close": "关闭高级视图",
       "label": "{widget} 高级视图"
+    },
+    "inPlace": {
+      "widgetLoadError": "",
+      "search": "",
+      "bestFit": "",
+      "moreWidgets": "",
+      "widgets": "小部件",
+      "yourApps": "",
+      "createApp": "",
+      "addAppLink": "",
+      "createWidget": "",
+      "createWidgetDescription": "",
+      "createAppDescription": "",
+      "defaultFit": "",
+      "defaultFitDescription": "",
+      "defaultSize": "",
+      "defaultSizeDescription": "",
+      "emptyCells": "",
+      "preview": {
+        "error": "",
+        "loading": ""
+      },
+      "keyboard": {
+        "move": "移动",
+        "resize": "",
+        "pick": "",
+        "browse": "",
+        "moveDescription": "",
+        "resizeDescription": ""
+      }
     }
   },
   "widget": {
@@ -2335,7 +2586,29 @@
             "tooltip": "在工具提示中显示",
             "hidden": "隐藏"
           }
+        },
+        "dockerContainer": {
+          "label": "Docker 容器",
+          "description": "",
+          "placeholder": "",
+          "disabled": "",
+          "unavailable": ""
         }
+      },
+      "docker": {
+        "action": {
+          "start": "",
+          "stop": ""
+        },
+        "notification": {
+          "startFailed": "",
+          "stopFailed": ""
+        },
+        "switch": {
+          "start": "",
+          "stop": ""
+        },
+        "stopped": ""
       },
       "error": {
         "notFound": {
@@ -2414,6 +2687,10 @@
         "hideHostname": {
           "label": "隐藏主机名"
         },
+        "showFullUrls": {
+          "label": "",
+          "description": ""
+        },
         "withBorder": {
           "label": "显示边框"
         },
@@ -2436,6 +2713,9 @@
         }
       },
       "empty": "在小部件设置中添加 URL 或应用程序",
+      "copyUrl": "复制 URL",
+      "copied": "已复制",
+      "copyFailed": "",
       "groups": {
         "label": "类别管理",
         "placeholder": "新建分类",
@@ -3089,6 +3369,141 @@
         "toggleFailed": "无法更新实体"
       }
     },
+    "smartHome-controls": {
+      "name": "",
+      "description": "",
+      "option": {
+        "presentation": {
+          "label": "",
+          "option": {
+            "entities": "",
+            "controlPanel": ""
+          }
+        },
+        "title": {
+          "label": "标题",
+          "description": ""
+        },
+        "blocks": {
+          "label": "",
+          "remove": ""
+        },
+        "roomDomains": {
+          "label": "",
+          "description": ""
+        },
+        "excludedEntityIds": {
+          "label": "",
+          "description": "",
+          "placeholder": ""
+        },
+        "showSummary": {
+          "label": "显示摘要"
+        },
+        "readOnly": {
+          "label": "",
+          "description": ""
+        },
+        "controlSize": {
+          "label": "",
+          "option": {
+            "auto": "自动",
+            "compact": "紧凑",
+            "large": "大"
+          }
+        },
+        "palette": {
+          "label": "配色",
+          "option": {
+            "boring": "",
+            "colorful": ""
+          }
+        }
+      },
+      "domain": {
+        "light": "",
+        "switch": "",
+        "fan": "",
+        "climate": "",
+        "humidifier": "",
+        "cover": "",
+        "valve": "",
+        "lock": "",
+        "alarm_control_panel": "",
+        "media_player": "",
+        "camera": "",
+        "vacuum": "",
+        "scene": "",
+        "script": "",
+        "automation": "",
+        "button": "",
+        "input_boolean": "",
+        "input_select": "",
+        "person": "人员",
+        "binary_sensor": "",
+        "sensor": "",
+        "weather": "天气",
+        "sun": "",
+        "update": ""
+      },
+      "block": {
+        "add": {
+          "rooms": "",
+          "entity": "实体",
+          "roomsLabel": "",
+          "roomsPlaceholder": "",
+          "entityLabel": "",
+          "entityPlaceholder": "",
+          "merge": "",
+          "submit": "添加",
+          "duplicate": "",
+          "covered": ""
+        },
+        "kind": {
+          "entity": "实体",
+          "room": "",
+          "mergedRooms": "",
+          "unknown": ""
+        },
+        "entityCount": "",
+        "noArea": "",
+        "issue": {
+          "missing": "未找到",
+          "otherSource": "",
+          "empty": ""
+        }
+      },
+      "preview": {
+        "empty": "",
+        "noMatches": "",
+        "summary": {
+          "lights": "",
+          "on": "开启",
+          "off": "关闭",
+          "sensors": "",
+          "offline": "离线"
+        },
+        "otherSource": ""
+      },
+      "live": {
+        "loading": "",
+        "error": "",
+        "retry": "",
+        "actionFailed": "",
+        "actionUnconfirmed": "",
+        "unconfirmed": "",
+        "selectionLimit": "",
+        "unknownError": ""
+      },
+      "inline": {
+        "open": "",
+        "title": "",
+        "handle": "",
+        "empty": "",
+        "add": "",
+        "close": ""
+      }
+    },
     "smartHome-executeAutomation": {
       "name": "执行自动化",
       "description": "一键触发自动化操作",
@@ -3535,6 +3950,34 @@
     },
     "coolify": {
       "description": "您的 Coolify 实例及其服务器和应用一览",
+      "summary": {
+        "needsAttention": "",
+        "inProgress": "",
+        "unknown": "",
+        "healthy": "",
+        "empty": "",
+        "healthyDetail": "",
+        "more": "",
+        "moreInstances": ""
+      },
+      "details": {
+        "tabs": "",
+        "overview": "",
+        "search": "",
+        "serviceApplications": ""
+      },
+      "overview": {
+        "projects": "",
+        "resources": "",
+        "attention": "需要关注",
+        "ready": "就绪",
+        "noProjects": "",
+        "projectsUnavailable": "",
+        "moreProjects": "",
+        "running": "运行中",
+        "resourceCount": "",
+        "environmentCount": ""
+      },
       "option": {
         "showServers": {
           "label": "显示服务器"
@@ -3566,7 +4009,13 @@
       },
       "source": {
         "url": "来源：{url}",
-        "unavailable": "{source}：不可用"
+        "unavailable": "{source}：不可用",
+        "unavailableCount": ""
+      },
+      "kind": {
+        "server": "",
+        "application": "应用",
+        "service": "服务"
       },
       "instances": {
         "title": "实例"
@@ -3583,6 +4032,7 @@
         "exited": "已退出",
         "starting": "正在启动",
         "restarting": "正在重启",
+        "unhealthy": "不健康",
         "unknown": "未知",
         "online": "在线",
         "offline": "离线",
@@ -4815,6 +5265,7 @@
           },
           "identifier": {
             "label": "标识符",
+            "containerPlaceholder": "",
             "placeholder": "名称或所有者/名称"
           },
           "name": {},
@@ -5351,6 +5802,23 @@
       "name": "系统资源",
       "description": "您系统的 CPU、内存、磁盘及其他硬件使用情况",
       "option": {
+        "diskDisplayMode": {
+          "label": "",
+          "option": {
+            "percentage": "百分比 (例如76%)",
+            "free": "",
+            "absolute": "",
+            "combined": ""
+          }
+        },
+        "resourceLayout": {
+          "label": "",
+          "description": ""
+        },
+        "subresourceLayout": {
+          "label": "",
+          "description": ""
+        },
         "hasShadow": {
           "label": "启用图表阴影"
         },
@@ -5358,6 +5826,7 @@
           "label": "可见图表",
           "description": "选择您希望显示的图表。",
           "option": {
+            "cpuCores": "",
             "memory": "内存",
             "network": "网络"
           }
@@ -6286,6 +6755,26 @@
         }
       }
     },
+    "tabs": {
+      "label": "",
+      "indicator": "",
+      "home": "首页",
+      "untitled": "",
+      "add": "",
+      "actions": "",
+      "rename": "",
+      "namePlaceholder": "",
+      "moveLeft": "",
+      "moveRight": "",
+      "remove": {
+        "action": "",
+        "confirm": ""
+      },
+      "limitReached": "",
+      "hotkeyHint": "",
+      "destination": "",
+      "containerDestination": ""
+    },
     "landmark": {
       "canvas": "仪表盘画布",
       "leftRail": "仪表板左侧栏",
@@ -6552,6 +7041,11 @@
           "description": "服务器管理员尚未设置主页看板。",
           "link": "查看公开看板",
           "notice": "要使此页面消失，请让服务器管理员为服务器设置主页看板。"
+        },
+        "noAccess": {
+          "title": "",
+          "description": "",
+          "notice": ""
         }
       }
     }
@@ -6623,10 +7117,12 @@
             "documentation": "帮助文档",
             "submitIssue": "提交问题",
             "discord": "Discord 社区",
-            "sourceCode": "源码仓库"
+            "sourceCode": "源码仓库",
+            "changelog": ""
           }
         },
         "about": "关于",
+        "updateAvailable": "有可用更新",
         "assistant": "助手"
       }
     },
@@ -6638,9 +7134,23 @@
           "authentication": "认证",
           "authorization": "授权"
         },
-        "heroBanner": {
-          "title": "欢迎回到您的",
-          "subtitle": "{app} 看板"
+        "hero": {
+          "greeting": "",
+          "greetingWithoutName": "",
+          "description": ""
+        },
+        "lobster": {
+          "label": "",
+          "prompt": "",
+          "pokeCount": "",
+          "reaction": {
+            "hey": "",
+            "ow": "",
+            "snip": "",
+            "careful": "",
+            "stillHere": "",
+            "okay": ""
+          }
         }
       },
       "board": {
@@ -6685,7 +7195,9 @@
         },
         "noResults": {
           "title": "暂无看板",
-          "description": "创建一个看板，在一个地方整理您的应用和小部件。"
+          "description": "创建一个看板，在一个地方整理您的应用和小部件。",
+          "noAccessTitle": "",
+          "noAccessDescription": ""
         }
       },
       "media": {
@@ -6738,6 +7250,11 @@
                 "logoDisplay": {
                   "logo": "仅徽标",
                   "logoAndText": "徽标 + 文本"
+                },
+                "tabsDisplay": {
+                  "wide": "宽",
+                  "compact": "紧凑",
+                  "indicator": ""
                 }
               },
               "items": {
@@ -6745,6 +7262,7 @@
                 "search": "搜索",
                 "home": "默认看板",
                 "boardSwitcher": "看板",
+                "boardTabs": "",
                 "assistant": "助手",
                 "docker": "Docker",
                 "boardEdit": "编辑看板",
@@ -6976,6 +7494,10 @@
             "title": "外观",
             "defaultColorScheme": {
               "label": "默认配色方案"
+            },
+            "whatsNew": {
+              "label": "",
+              "description": ""
             }
           },
           "branding": {
@@ -7558,7 +8080,8 @@
               "openSpotlightApps": "打开应用搜索",
               "openSpotlightAssistant": "打开助手模式",
               "openSpotlightPreferences": "打开首选项模式",
-              "openAssistant": "打开助手"
+              "openAssistant": "打开助手",
+              "switchBoardTab": ""
             },
             "note": "提示：Mod 键在 macOS 上指 Ctrl 键和 ⌘ 键"
           }
@@ -8728,6 +9251,12 @@
         "description": "更改您的配色方案、语言、默认看板和偏好设置。您也可以从这里跳转到管理区域。"
       }
     }
+  },
+  "whatsNew": {
+    "title": "",
+    "empty": "",
+    "allReleases": "",
+    "dismiss": ""
   },
   "metadata": {
     "description": "一个面向 *arr 套件和整个家庭实验室的自托管仪表板。集成 50 多个服务、实时小部件，无需配置文件。",

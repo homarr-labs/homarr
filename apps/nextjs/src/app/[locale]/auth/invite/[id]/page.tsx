@@ -7,7 +7,8 @@ import { isProviderEnabled } from "@homarr/auth/server";
 import { and, db, eq } from "@homarr/db";
 import { invites } from "@homarr/db/schema";
 import { OnboardingAuthShell } from "@homarr/onboarding";
-import { defaultBrandingSettings, getBrandingColorOverrides } from "@homarr/server-settings";
+import { defaultBrandingSettings } from "@homarr/server-settings";
+import { getBrandingAppearance } from "~/theme/branding";
 import { getI18n } from "@homarr/translation/server";
 
 import { RegistrationForm } from "./_registration-form";
@@ -47,7 +48,7 @@ export default async function InviteUsagePage(props: InviteUsagePageProps) {
 
   const [t, serverSettings] = await Promise.all([getI18n("user.page.invite"), getRscServerSettingsAsync()]);
   const branding = serverSettings.branding;
-  const wordmarkColors = getBrandingColorOverrides(branding);
+  const appearance = getBrandingAppearance(branding);
   const showCustomAppName = branding.authBranding.showAppName && branding.appName !== defaultBrandingSettings.appName;
   const showCustomGreeting = branding.authBranding.showGreeting && branding.greeting.length > 0;
   const title = showCustomAppName ? t("titleWithAppName", { appName: branding.appName }) : t("title");
@@ -64,15 +65,15 @@ export default async function InviteUsagePage(props: InviteUsagePageProps) {
       appName={branding.appName}
       showAppName={branding.authBranding.showAppName}
       showAppLogo={branding.authBranding.showLogo}
-      primaryColor={branding.primaryColor}
-      secondaryColor={branding.secondaryColor}
-      wordmarkPrimaryColor={wordmarkColors.primaryColor}
-      wordmarkSecondaryColor={wordmarkColors.secondaryColor}
+      primaryColor={appearance.primaryColor}
+      secondaryColor={appearance.secondaryColor}
+      wordmarkPrimaryColor={appearance.primaryColor}
+      wordmarkSecondaryColor={appearance.secondaryColor}
       logoImageUrl={branding.logoImageUrl ?? undefined}
       backgroundImageUrl={branding.signInBackgroundImageUrl ?? undefined}
       backgroundOverlay={branding.signInBackgroundOverlay}
       showMarquee={branding.showSignInMarquee}
-      radius={branding.defaultRadius}
+      radius={appearance.radius}
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       footer={t("description", { username: invite.creator.name! })}
     >

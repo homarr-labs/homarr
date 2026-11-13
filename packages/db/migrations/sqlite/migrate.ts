@@ -12,7 +12,14 @@ const migrateAsync = async () => {
   const config = createSharedDbConfig(sqliteSchema);
   const db = createSqliteDb(config);
 
-  migrate(db, { migrationsFolder });
+  // SQLite cannot disable foreign keys inside Drizzle's migration transaction.
+  // Board table rebuilds must not cascade-delete their layouts and widgets.
+  db.$client.pragma("foreign_keys = OFF");
+  try {
+    migrate(db, { migrationsFolder });
+  } finally {
+    db.$client.pragma("foreign_keys = ON");
+  }
 
   await seedDataAsync(db);
   await applyCustomMigrationsAsync(db);

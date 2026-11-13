@@ -148,7 +148,12 @@ const WudWidgetContent = ({
       {showUpdateList && (
         <Stack gap={4} style={{ flex: 1, minHeight: 0, overflowY: "auto" }}>
           {stats.updates.map((update) => (
-            <UpdateCard key={update.id} update={update} radius={board.itemRadius} className={classes.card} />
+            <UpdateCard
+              key={update.id}
+              update={update}
+              radius={board.itemRadius ?? undefined}
+              className={classes.card}
+            />
           ))}
         </Stack>
       )}

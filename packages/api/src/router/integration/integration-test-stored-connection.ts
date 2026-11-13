@@ -37,6 +37,7 @@ export const integrationTestStoredConnectionProcedure = protectedProcedure
           "parse",
           "unknown",
           "openmediavault",
+          "frigate",
         ]),
       }),
     ]),

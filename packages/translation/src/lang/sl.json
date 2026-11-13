@@ -1245,6 +1245,20 @@
       "username": "Uporabniško ime",
       "password": "Geslo",
       "savedPlaceholder": "••••••• (shranjeno, pustite prazno, da ohranite)"
+    },
+    "workshopUpdate": {
+      "title": "",
+      "apply": "",
+      "available": "",
+      "check": "",
+      "description": "",
+      "approvePermissions": "",
+      "pendingDescription": "",
+      "overwriteLocalChanges": "",
+      "installSeparate": "",
+      "communityWarning": "",
+      "updated": "",
+      "changedBeforeInstall": ""
     }
   },
   "workshop": {
@@ -1515,6 +1529,27 @@
           "title": "Neznana napaka",
           "description": "Prišlo je do neznane napake. Odprite spodnji vzrok za več podrobnosti"
         },
+        "frigate": {
+          "title": "",
+          "status": "",
+          "description": {
+            "cookie": "",
+            "profileMismatch": "",
+            "redirect": "",
+            "login": "",
+            "profile": "",
+            "stats": ""
+          }
+        },
+        "openmediavault": {
+          "title": "",
+          "description": {
+            "totpSecretRequired": "",
+            "totpSecretInvalid": "",
+            "totpVerificationFailed": "",
+            "unsupportedChallenge": ""
+          }
+        },
         "parse": {
           "title": "Napaka razčl.",
           "description": "Odgovora ni bilo mogoče razčleniti. Preverite, ali URL kaže na osnovni URL storitve."
@@ -1714,6 +1749,11 @@
         "title": "Ponastavi skrivnost",
         "message": "Ali ste prepričani, da želite ponastaviti to skrivnost?"
       },
+      "totpNotice": "",
+      "remove": {
+        "title": "",
+        "message": ""
+      },
       "noSecretsRequired": {
         "segmentTitle": "Ni skrivnosti",
         "text": "Za to integracijo niso potrebne skrivnosti"
@@ -1794,6 +1834,10 @@
         "wazuhIndexerPassword": {
           "label": "Geslo indeksatorja",
           "newLabel": "Novo geslo indeksatorja"
+        },
+        "totpSecret": {
+          "label": "",
+          "newLabel": ""
         }
       }
     },
@@ -1891,7 +1935,8 @@
       "copy": "Kopiraj",
       "copied": "Kopirano",
       "refresh": "Osveži",
-      "export": "Izvozi"
+      "export": "Izvozi",
+      "advanced": ""
     },
     "hidden": "",
     "pagination": {
@@ -1986,6 +2031,15 @@
         "modifier": "Moderator"
       }
     },
+    "markdown": {
+      "alert": {
+        "note": "",
+        "tip": "",
+        "important": "",
+        "warning": "",
+        "caution": ""
+      }
+    },
     "dangerZone": "Nevarno območje",
     "noResults": "Ni rezultatov",
     "unsavedChanges": "Imate neshranjene spremembe!",
@@ -2076,6 +2130,158 @@
         "sm": "Neizrazito",
         "xl": "Mehko"
       }
+    },
+    "customTheme": {
+      "label": "",
+      "nothingFound": "",
+      "custom": "",
+      "customize": "",
+      "editor": {
+        "title": "",
+        "basedOn": "",
+        "preview": "",
+        "previewColorScheme": "",
+        "layout": "Postavitev",
+        "typography": "",
+        "colors": "",
+        "json": "",
+        "defaultRadius": "",
+        "radiusHint": "",
+        "scale": "",
+        "spacing": "",
+        "radius": "",
+        "fontFamily": "",
+        "headingFont": "",
+        "monoFont": "",
+        "fontSizes": "",
+        "palette": {
+          "body": "",
+          "surface": "",
+          "hover": "",
+          "border": "",
+          "text": "",
+          "dimmed": "",
+          "primary": "",
+          "secondary": ""
+        },
+        "lockedPrimary": "",
+        "pickColor": "",
+        "autoContrast": "",
+        "luminanceThreshold": "",
+        "jsonHint": "",
+        "invalidJson": "",
+        "tooLong": "",
+        "copyJson": "",
+        "copied": "",
+        "discardJson": "",
+        "reset": "",
+        "apply": "",
+        "sampleTitle": "",
+        "sampleBadge": "",
+        "sampleText": "",
+        "sampleInput": "Iskanje",
+        "sampleValue": "",
+        "sampleButton": ""
+      },
+      "studio": {
+        "title": "",
+        "saveTheme": "",
+        "searchControls": "",
+        "component": "",
+        "inheritedValue": "",
+        "resetControl": "",
+        "decreaseControl": "",
+        "increaseControl": "",
+        "chooseControl": "",
+        "layout": {
+          "spacing": "",
+          "radius": "",
+          "compact": "",
+          "normal": "",
+          "roomy": "",
+          "preset": "",
+          "none": "",
+          "rounded": "",
+          "full": "",
+          "custom": "",
+          "advanced": ""
+        },
+        "previewSurface": "",
+        "previewFrame": "",
+        "loadingPreview": "",
+        "previewFailed": "",
+        "sampleBoard": "",
+        "components": "",
+        "overlays": "",
+        "typography": "",
+        "liveBoard": "",
+        "viewport": "",
+        "responsive": "",
+        "tablet": "",
+        "mobile": "",
+        "includeCustomCss": "",
+        "groups": {
+          "layout": "",
+          "typography": "",
+          "colors": "",
+          "surfaces": "",
+          "overlays": "",
+          "accessibility": "",
+          "css": ""
+        },
+        "controls": {
+          "defaultRadius": "",
+          "scale": "",
+          "spacing": "",
+          "radius": "",
+          "breakpoint": "Prekinitvene točke",
+          "fontSizes": "",
+          "lineHeight": "",
+          "shadow": "",
+          "fontFamily": "",
+          "headingFont": "",
+          "monoFont": "",
+          "headingWeight": "",
+          "headingSize": "",
+          "fontSmoothing": "",
+          "body": "",
+          "surface": "",
+          "hover": "",
+          "border": "",
+          "text": "",
+          "dimmed": "",
+          "primary": "",
+          "secondary": "",
+          "autoContrast": "",
+          "luminanceThreshold": "",
+          "primaryShade": "",
+          "componentRadius": "",
+          "borderWidth": "",
+          "surfaceBackground": "Ozadje",
+          "surfaceText": "",
+          "surfaceBorder": "",
+          "hoverBackground": "",
+          "hoverText": "",
+          "componentShadow": "",
+          "componentBorder": "",
+          "componentPadding": "",
+          "componentSize": "Velikost datot.",
+          "componentVariant": "",
+          "overlayBlur": "",
+          "overlayOpacity": "",
+          "overlayColor": "",
+          "transitionDuration": "",
+          "headerBackground": "",
+          "respectReducedMotion": "",
+          "focusRing": "",
+          "cursorType": "",
+          "customCss": ""
+        },
+        "expandPreview": "",
+        "showControls": ""
+      },
+      "instanceDefault": "",
+      "useInstanceDefault": ""
     }
   },
   "section": {
@@ -2171,6 +2377,18 @@
       },
       "customWidget": "Gradnik po meri",
       "standalone": "Samostojno",
+      "integrationFilter": "",
+      "integrationNotConnected": "",
+      "workshop": {
+        "title": "",
+        "back": "",
+        "empty": "",
+        "noMatches": "",
+        "loading": "",
+        "integrationError": "",
+        "searchMore": "",
+        "installAndAdd": ""
+      },
       "missingIntegration": {
         "title": "Najprej povežite storitev",
         "noPermission": "Ta gradnik potrebuje združljivo povezavo s storitvijo. Prosite skrbnika, naj jo poveže, nato poskusite znova."
@@ -2206,10 +2424,13 @@
       "saveErrorTitle": "Elementov ni bilo mogoče posodobiti",
       "saveErrorMessage": "Sprememb ni bilo mogoče shraniti. Nadzorna plošča je bila osvežena.",
       "moveUnavailableTitle": "Izbranih elementov ni bilo mogoče premakniti",
-      "moveUnavailableMessage": "Na cilju ni dovolj prostora za celoten izbor."
+      "moveUnavailableMessage": "Na cilju ni dovolj prostora za celoten izbor.",
+      "moveToTab": "",
+      "movedToTab": ""
     },
     "moveResize": {
       "title": "Premakni / spremeni velikost elementa",
+      "sizeOverlap": "",
       "entryLabel": "{name}, stolpec {column}, vrstica {row}",
       "target": {
         "numbered": "{name}, cilj {index}",
@@ -2292,6 +2513,36 @@
       "open": "Odpri napredni pogled",
       "close": "Zapri napredni pogled",
       "label": "Napredni pogled gradnika {widget}"
+    },
+    "inPlace": {
+      "widgetLoadError": "",
+      "search": "",
+      "bestFit": "",
+      "moreWidgets": "",
+      "widgets": "",
+      "yourApps": "",
+      "createApp": "",
+      "addAppLink": "",
+      "createWidget": "",
+      "createWidgetDescription": "",
+      "createAppDescription": "",
+      "defaultFit": "",
+      "defaultFitDescription": "",
+      "defaultSize": "",
+      "defaultSizeDescription": "",
+      "emptyCells": "",
+      "preview": {
+        "error": "",
+        "loading": ""
+      },
+      "keyboard": {
+        "move": "",
+        "resize": "",
+        "pick": "",
+        "browse": "",
+        "moveDescription": "",
+        "resizeDescription": ""
+      }
     }
   },
   "widget": {
@@ -2335,7 +2586,29 @@
             "tooltip": "Kot oblaček",
             "hidden": "Skrito"
           }
+        },
+        "dockerContainer": {
+          "label": "",
+          "description": "",
+          "placeholder": "",
+          "disabled": "",
+          "unavailable": ""
         }
+      },
+      "docker": {
+        "action": {
+          "start": "",
+          "stop": ""
+        },
+        "notification": {
+          "startFailed": "",
+          "stopFailed": ""
+        },
+        "switch": {
+          "start": "",
+          "stop": ""
+        },
+        "stopped": ""
       },
       "error": {
         "notFound": {
@@ -2414,6 +2687,10 @@
         "hideHostname": {
           "label": "Skrij imena gostiteljev"
         },
+        "showFullUrls": {
+          "label": "",
+          "description": ""
+        },
         "withBorder": {
           "label": "Pokaži obrobo"
         },
@@ -2436,6 +2713,9 @@
         }
       },
       "empty": "Dodaj URL ali aplikacijo v nastavitvah gradnika",
+      "copyUrl": "",
+      "copied": "",
+      "copyFailed": "",
       "groups": {
         "label": "",
         "placeholder": "Nova kategorija",
@@ -3089,6 +3369,141 @@
         "toggleFailed": "Entitete ni mogoče posodobiti"
       }
     },
+    "smartHome-controls": {
+      "name": "",
+      "description": "",
+      "option": {
+        "presentation": {
+          "label": "",
+          "option": {
+            "entities": "",
+            "controlPanel": ""
+          }
+        },
+        "title": {
+          "label": "Naslov",
+          "description": ""
+        },
+        "blocks": {
+          "label": "",
+          "remove": ""
+        },
+        "roomDomains": {
+          "label": "",
+          "description": ""
+        },
+        "excludedEntityIds": {
+          "label": "",
+          "description": "",
+          "placeholder": ""
+        },
+        "showSummary": {
+          "label": ""
+        },
+        "readOnly": {
+          "label": "",
+          "description": ""
+        },
+        "controlSize": {
+          "label": "",
+          "option": {
+            "auto": "",
+            "compact": "",
+            "large": "Velika"
+          }
+        },
+        "palette": {
+          "label": "",
+          "option": {
+            "boring": "",
+            "colorful": ""
+          }
+        }
+      },
+      "domain": {
+        "light": "",
+        "switch": "",
+        "fan": "",
+        "climate": "",
+        "humidifier": "",
+        "cover": "",
+        "valve": "",
+        "lock": "",
+        "alarm_control_panel": "",
+        "media_player": "",
+        "camera": "",
+        "vacuum": "",
+        "scene": "",
+        "script": "",
+        "automation": "",
+        "button": "",
+        "input_boolean": "",
+        "input_select": "",
+        "person": "",
+        "binary_sensor": "",
+        "sensor": "",
+        "weather": "Vreme",
+        "sun": "",
+        "update": ""
+      },
+      "block": {
+        "add": {
+          "rooms": "",
+          "entity": "",
+          "roomsLabel": "",
+          "roomsPlaceholder": "",
+          "entityLabel": "",
+          "entityPlaceholder": "",
+          "merge": "",
+          "submit": "Dodaj",
+          "duplicate": "",
+          "covered": ""
+        },
+        "kind": {
+          "entity": "",
+          "room": "",
+          "mergedRooms": "",
+          "unknown": ""
+        },
+        "entityCount": "",
+        "noArea": "",
+        "issue": {
+          "missing": "",
+          "otherSource": "",
+          "empty": ""
+        }
+      },
+      "preview": {
+        "empty": "",
+        "noMatches": "",
+        "summary": {
+          "lights": "",
+          "on": "",
+          "off": "",
+          "sensors": "",
+          "offline": ""
+        },
+        "otherSource": ""
+      },
+      "live": {
+        "loading": "",
+        "error": "",
+        "retry": "",
+        "actionFailed": "",
+        "actionUnconfirmed": "",
+        "unconfirmed": "",
+        "selectionLimit": "",
+        "unknownError": ""
+      },
+      "inline": {
+        "open": "",
+        "title": "",
+        "handle": "",
+        "empty": "",
+        "add": "",
+        "close": ""
+      }
+    },
     "smartHome-executeAutomation": {
       "name": "Izvedi avtomatizacijo",
       "description": "Z enim klikom sprožite avtomatizacijo",
@@ -3535,6 +3950,34 @@
     },
     "coolify": {
       "description": "Pregled vaše instance Coolify s strežniki in aplikacijami",
+      "summary": {
+        "needsAttention": "",
+        "inProgress": "",
+        "unknown": "",
+        "healthy": "",
+        "empty": "",
+        "healthyDetail": "",
+        "more": "",
+        "moreInstances": ""
+      },
+      "details": {
+        "tabs": "",
+        "overview": "",
+        "search": "",
+        "serviceApplications": ""
+      },
+      "overview": {
+        "projects": "",
+        "resources": "",
+        "attention": "",
+        "ready": "",
+        "noProjects": "",
+        "projectsUnavailable": "",
+        "moreProjects": "",
+        "running": "Se izvaja",
+        "resourceCount": "",
+        "environmentCount": ""
+      },
       "option": {
         "showServers": {
           "label": "Prikaži strežnike"
@@ -3566,7 +4009,13 @@
       },
       "source": {
         "url": "Vir: {url}",
-        "unavailable": "{source}: ni na voljo"
+        "unavailable": "{source}: ni na voljo",
+        "unavailableCount": ""
+      },
+      "kind": {
+        "server": "",
+        "application": "",
+        "service": ""
       },
       "instances": {
         "title": "Instance"
@@ -3583,6 +4032,7 @@
         "exited": "Končano",
         "starting": "Zaganjanje",
         "restarting": "Ponovno zaganjam",
+        "unhealthy": "",
         "unknown": "Neznano",
         "online": "Vzpostavljeno",
         "offline": "Brez povezave",
@@ -4815,6 +5265,7 @@
           },
           "identifier": {
             "label": "Identifikator",
+            "containerPlaceholder": "",
             "placeholder": "Ime ali lastnik/ime"
           },
           "name": {},
@@ -5351,6 +5802,23 @@
       "name": "Sistemski viri",
       "description": "Uporaba CPE, pomnilnika, diska in druge strojne opreme vašega sistema",
       "option": {
+        "diskDisplayMode": {
+          "label": "",
+          "option": {
+            "percentage": "",
+            "free": "",
+            "absolute": "",
+            "combined": ""
+          }
+        },
+        "resourceLayout": {
+          "label": "",
+          "description": ""
+        },
+        "subresourceLayout": {
+          "label": "",
+          "description": ""
+        },
         "hasShadow": {
           "label": "Omogoči senčenje grafikona"
         },
@@ -5358,6 +5826,7 @@
           "label": "Vidni grafikoni",
           "description": "Izberite grafikone, ki naj bodo vidni.",
           "option": {
+            "cpuCores": "",
             "memory": "Pomnilnik",
             "network": "Omrežje"
           }
@@ -6286,6 +6755,26 @@
         }
       }
     },
+    "tabs": {
+      "label": "",
+      "indicator": "",
+      "home": "Domov",
+      "untitled": "",
+      "add": "",
+      "actions": "",
+      "rename": "",
+      "namePlaceholder": "",
+      "moveLeft": "",
+      "moveRight": "",
+      "remove": {
+        "action": "",
+        "confirm": ""
+      },
+      "limitReached": "",
+      "hotkeyHint": "",
+      "destination": "",
+      "containerDestination": ""
+    },
     "landmark": {
       "canvas": "Platno nadzorne plošče",
       "leftRail": "Levi rob nadzorne plošče",
@@ -6552,6 +7041,11 @@
           "description": "Skrbnik strežnika še ni nastavil domače table.",
           "link": "Prikaži javne table",
           "notice": "Če želite skriti to stran, prosite skrbnika strežnika, naj za strežnik nastavi domačo tablo"
+        },
+        "noAccess": {
+          "title": "",
+          "description": "",
+          "notice": ""
         }
       }
     }
@@ -6623,10 +7117,12 @@
             "documentation": "Dokumentacija",
             "submitIssue": "Pošlji prijavo težave",
             "discord": "Skupnost Discord",
-            "sourceCode": "Izvorna koda"
+            "sourceCode": "Izvorna koda",
+            "changelog": ""
           }
         },
         "about": "O programu",
+        "updateAvailable": "",
         "assistant": "Pomočnik"
       }
     },
@@ -6638,9 +7134,23 @@
           "authentication": "Preverjanje pristnosti",
           "authorization": "Pooblastitev"
         },
-        "heroBanner": {
-          "title": "Dobrodošli nazaj na vaši",
-          "subtitle": "Tabla {app}"
+        "hero": {
+          "greeting": "",
+          "greetingWithoutName": "",
+          "description": ""
+        },
+        "lobster": {
+          "label": "",
+          "prompt": "",
+          "pokeCount": "",
+          "reaction": {
+            "hey": "",
+            "ow": "",
+            "snip": "",
+            "careful": "",
+            "stillHere": "",
+            "okay": ""
+          }
         }
       },
       "board": {
@@ -6685,7 +7195,9 @@
         },
         "noResults": {
           "title": "Še ni tabel",
-          "description": "Ustvarite nadzorno ploščo za ureditev aplikacij in gradnikov na enem mestu."
+          "description": "Ustvarite nadzorno ploščo za ureditev aplikacij in gradnikov na enem mestu.",
+          "noAccessTitle": "",
+          "noAccessDescription": ""
         }
       },
       "media": {
@@ -6738,6 +7250,11 @@
                 "logoDisplay": {
                   "logo": "Samo logotip",
                   "logoAndText": "Logotip + besedilo"
+                },
+                "tabsDisplay": {
+                  "wide": "",
+                  "compact": "",
+                  "indicator": ""
                 }
               },
               "items": {
@@ -6745,6 +7262,7 @@
                 "search": "Iskanje",
                 "home": "Domača nadzorna plošča",
                 "boardSwitcher": "Deske",
+                "boardTabs": "",
                 "assistant": "Pomočnik",
                 "docker": "Docker",
                 "boardEdit": "Uredi nadzorno ploščo",
@@ -6976,6 +7494,10 @@
             "title": "Videz",
             "defaultColorScheme": {
               "label": "Privzeta barvna shema"
+            },
+            "whatsNew": {
+              "label": "",
+              "description": ""
             }
           },
           "branding": {
@@ -7558,7 +8080,8 @@
               "openSpotlightApps": "Odpri iskanje aplikacij",
               "openSpotlightAssistant": "Odpri način pomočnika",
               "openSpotlightPreferences": "Odpri način nastavitev",
-              "openAssistant": "Odpri pomočnika"
+              "openAssistant": "Odpri pomočnika",
+              "switchBoardTab": ""
             },
             "note": "Namig: Mod se nanaša tako na tipko Ctrl kot na tipko ⌘ v sistemu macOS"
           }
@@ -8728,6 +9251,12 @@
         "description": "Spremenite barvno shemo, jezik, domačo tablo in nastavitve. Od tu lahko tudi skočite v upravljalno območje."
       }
     }
+  },
+  "whatsNew": {
+    "title": "",
+    "empty": "",
+    "allReleases": "",
+    "dismiss": ""
   },
   "metadata": {
     "description": "Nadzorna plošča za lastno gostovanje sklada *arr in celotnega domačega laboratorija. Vključuje več kot 50 storitev, gradnike v realnem času in ne zahteva konfiguracijskih datotek.",
