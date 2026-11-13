@@ -5,14 +5,24 @@ import { headerPreferencesSchema } from "@homarr/validation/user";
 
 import type { Database } from "../..";
 import { eq } from "../..";
-import { boards, integrationItems, itemLayouts, items, layouts, sections } from "../../schema";
+import { boards, integrationItems, itemLayouts, items, layouts, sections, users } from "../../schema";
+import { getServerSettingByKeyAsync, updateServerSettingByKeyAsync } from "../../queries/server-setting";
 import { demoPrototypeBoardName, demoPrototypes } from ".";
+import { demoPrototypeTheme } from "./theme";
 
 // Opt-in scratch data only: never replace an existing user's demo boards.
 export const seedDemoPrototypesAsync = async (db: Database) => {
   const demo = await db.query.users.findFirst({ where: (row) => eq(row.name, "demo") });
   const integration = await db.query.integrations.findFirst({ where: (row) => eq(row.kind, "mock") });
   if (!demo || !integration) throw new Error("Prototype setup requires the normal demo seed first");
+  const branding = await getServerSettingByKeyAsync(db, "branding");
+  if (branding.themeId === "default" && branding.customTheme === null) {
+    await updateServerSettingByKeyAsync(db, "branding", {
+      ...branding,
+      themeId: "custom",
+      customTheme: demoPrototypeTheme,
+    });
+  }
   const apps = await db.query.apps.findMany();
   const replacements: Record<string, string> = { __MOCK__: integration.id };
   for (const app of apps) replacements[`__APP_${app.name.toUpperCase().replace(/[^A-Z0-9]/g, "")}__`] = app.id;
@@ -67,5 +77,14 @@ export const seedDemoPrototypesAsync = async (db: Database) => {
       }
     }
     console.log(`Created throwaway demo prototype ${proposal.key}: ${proposal.name}`);
+  }
+  const comparison = await db.query.boards.findFirst({
+    where: (row) => eq(row.name, demoPrototypeBoardName("A")),
+  });
+  if (comparison) {
+    await db
+      .update(users)
+      .set({ homeBoardId: comparison.id, mobileHomeBoardId: comparison.id })
+      .where(eq(users.id, demo.id));
   }
 };

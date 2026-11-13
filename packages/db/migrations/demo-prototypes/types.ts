@@ -4,6 +4,7 @@ import type { HeaderPreferences } from "@homarr/validation/user";
 // Throwaway native-board proposals. Human selection is required before promotion.
 export interface DemoPrototype {
   key: string;
+  iteration?: number;
   name: string;
   question: string;
   description: string;

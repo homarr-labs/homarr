@@ -19,7 +19,7 @@ export interface DemoPrototypeCandidate {
   proposal: Proposal;
 }
 
-// Five native demo boards, switchable on the existing /boards/demo-prototype route.
+// Two refined native demo boards; the original five proposals remain in the historical report.
 export const DemoPrototypeHost = ({
   children,
   candidates,
@@ -39,6 +39,13 @@ export const DemoPrototypeHost = ({
   const router = useRouter();
   const candidate = candidates?.find(({ proposal }) => proposal.key === searchParams.get("variant")) ?? candidates?.[0];
   const board = candidate?.board ?? initialBoard;
+  useEffect(() => {
+    if (!candidate || searchParams.get("variant") === candidate.proposal.key) return;
+    const params = new URLSearchParams(searchParams);
+    params.set("variant", candidate.proposal.key);
+    params.delete("tab");
+    router.replace(`${pathname}?${params}`, { scroll: false });
+  }, [candidate, pathname, router, searchParams]);
   const changeVariant = useCallback(
     (offset: number) => {
       if (!candidate || !candidates) return;
@@ -115,7 +122,7 @@ export const DemoPrototypeHost = ({
                 <Text ta="center" size="sm" fw={600} truncate aria-live="polite">
                   {candidate.proposal.key} · {candidate.proposal.name}
                   <Text component="span" display="block" size="xs" fw={400} c="dimmed">
-                    Prototype · 2 board tabs · ← / → compare
+                    Iteration 2 · unscored · ← / → compare
                   </Text>
                 </Text>
               </Tooltip>

@@ -137,5 +137,5 @@ for (const [args, cwd] of [
   });
 }
 console.log(
-  `Compare: ${baseUrl}/boards/demo-prototype?variant=A\nUse the demo sign-in button. Arrow keys switch proposals; the header tabs switch board sections.`,
+  `Compare: ${baseUrl}/boards/demo-prototype?variant=C\nUse the demo sign-in button. Arrow keys switch proposals; the header tabs switch board sections.`,
 );
