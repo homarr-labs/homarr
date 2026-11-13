@@ -2,6 +2,7 @@ import type { FeedData, FeedEntry } from "@extractus/feed-extractor";
 import { extract } from "@extractus/feed-extractor";
 import { z } from "zod/v4";
 
+import { toValidDate } from "@homarr/common";
 import type { Modify } from "@homarr/common/types";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 
@@ -26,7 +27,7 @@ export const rssFeedsRequestHandler = createWidgetRequestHandler({
 
           // Atom and YouTube feeds: prioritize <published> over feed-extractor's default <updated> fallback
           const rawPublished = (feedEntry as Record<string, unknown>).published;
-          if (typeof rawPublished === "string" && rawPublished.trim().length > 0) {
+          if (typeof rawPublished === "string" && toValidDate(rawPublished.trim()) !== null) {
             extraFields.published = rawPublished.trim();
           }
 
@@ -37,15 +38,13 @@ export const rssFeedsRequestHandler = createWidgetRequestHandler({
               ? (mediaGroup as Record<string, unknown>)["media:description"]
               : undefined;
           const directMediaDescription = (feedEntry as Record<string, unknown>)["media:description"];
-          const rawDescription =
-            typeof mediaDescription === "string"
-              ? mediaDescription
-              : typeof directMediaDescription === "string"
-                ? directMediaDescription
-                : undefined;
+          let rawDescription = mediaDescription;
+          if (typeof rawDescription !== "string" || rawDescription.trim().length === 0) {
+            rawDescription = directMediaDescription;
+          }
 
           if (typeof rawDescription === "string" && rawDescription.trim().length > 0) {
-            extraFields.description = rawDescription.trim().slice(0, input.descriptionMaxLength);
+            extraFields.mediaDescription = rawDescription.trim().slice(0, input.descriptionMaxLength);
           }
 
           return extraFields;
@@ -56,7 +55,16 @@ export const rssFeedsRequestHandler = createWidgetRequestHandler({
 
     return {
       ...result,
-      entries: result.entries?.map((entry) => ({ ...entry, feedUrl: input.url })).slice(0, input.count) ?? [],
+      entries:
+        result.entries
+          ?.map((entry) => {
+            const { mediaDescription, ...feedEntry } = entry as ExtendedFeedEntry & { mediaDescription?: string };
+            if (!feedEntry.description && mediaDescription) {
+              feedEntry.description = mediaDescription;
+            }
+            return { ...feedEntry, feedUrl: input.url };
+          })
+          .slice(0, input.count) ?? [],
     };
   },
 });
