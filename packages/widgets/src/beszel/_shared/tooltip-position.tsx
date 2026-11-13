@@ -64,7 +64,7 @@ function BeszelTooltipPosition({ active, chartRef, coordinate, children }: Besze
       void computePosition(reference, floating, {
         strategy: "fixed",
         placement: "right-start",
-        middleware: [offset(10), flip({ padding: 8 }), shift({ padding: 8 }), hide()],
+        middleware: [offset(10), flip({ padding: 8 }), shift({ padding: 8, crossAxis: true }), hide()],
       }).then(({ x: left, y: top, middlewareData }) => {
         if (disposed) return;
         Object.assign(floating.style, {
