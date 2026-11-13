@@ -313,16 +313,17 @@ export function Dial({
     const degrees = (Math.atan2(dy, dx) * 180) / Math.PI;
     let relative = (((degrees - START) % 360) + 360) % 360;
     if (relative > SWEEP) relative = relative - SWEEP < (360 - SWEEP) / 2 ? SWEEP : 0;
-    return snap(min + (relative / SWEEP) * (max - min));
+    return min + (relative / SWEEP) * (max - min);
   };
 
   const onPointerDown = (event: PointerEvent<HTMLDivElement>) => {
     if (event.button !== 0 || !interactive) return;
-    const next = read(event);
+    const raw = read(event);
+    const next = snap(raw);
     let handle: DialHandle = "value";
     if (shownRange) {
       event.preventDefault();
-      handle = Math.abs(next - shownRange.low) <= Math.abs(next - shownRange.high) ? "low" : "high";
+      handle = Math.abs(raw - shownRange.low) <= Math.abs(raw - shownRange.high) ? "low" : "high";
       event.currentTarget.querySelector<HTMLElement>(`[data-dial-handle="${handle}"]`)?.focus({ preventScroll: true });
     }
     event.currentTarget.setPointerCapture(event.pointerId);
@@ -368,7 +369,7 @@ export function Dial({
 
   const onPointerMove = (event: PointerEvent<HTMLDivElement>) => {
     if (!interactive || !dragRef.current) return;
-    const next = read(event);
+    const next = snap(read(event));
     preview(resolveHandle(dragRef.current, next), next);
   };
 
@@ -378,7 +379,7 @@ export function Dial({
     dragRef.current = null;
     setDragging(false);
     if (!interactive) return;
-    const next = read(event);
+    const next = snap(read(event));
     commit(resolveHandle(gesture, next), next);
   };
 
