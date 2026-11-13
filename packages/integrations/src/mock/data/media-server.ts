@@ -15,7 +15,7 @@ const directPlayMetadata = (width: number, height: number, bitrateKbps: number) 
   bitrateKbps,
 });
 
-const sessions: StreamSession[] = [
+export const mockMediaSessions: StreamSession[] = [
   {
     sessionId: "s-0",
     sessionName: "Living Room TV",
@@ -142,6 +142,6 @@ const sessions: StreamSession[] = [
 
 export class MediaServerMockService implements IMediaServerIntegration {
   public async getCurrentSessionsAsync(_options: CurrentSessionsInput): Promise<StreamSession[]> {
-    return await Promise.resolve(sessions);
+    return await Promise.resolve(mockMediaSessions);
   }
 }

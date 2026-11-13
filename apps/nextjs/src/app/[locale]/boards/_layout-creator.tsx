@@ -110,7 +110,7 @@ export const createBoardLayout = <TParams extends Params>({
     ) {
       prototypeCandidates = await Promise.all(
         demoPrototypes
-          .filter((proposal) => "iteration" in proposal && proposal.iteration === 2)
+          .filter((proposal) => proposal.key === "E")
           .map(async (proposal) => ({
             proposal,
             board: await getBoardByNameAsync(demoPrototypeBoardName(proposal.key)),

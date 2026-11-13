@@ -5,13 +5,24 @@ import { headerPreferencesSchema } from "@homarr/validation/user";
 
 import type { Database, InferInsertModel } from "../..";
 import { eq } from "../..";
-import { boards, integrationItems, itemLayouts, items, layouts, sections, users } from "../../schema";
+import {
+  boards,
+  customWidgetDefinitions,
+  integrationItems,
+  itemLayouts,
+  items,
+  layouts,
+  sections,
+  users,
+} from "../../schema";
 import { getServerSettingByKeyAsync, updateServerSettingByKeyAsync } from "../../queries/server-setting";
-import { demoPrototypeBoardName, demoPrototypes } from ".";
+import { demoPrototypes } from ".";
 import { demoPrototypeTheme } from "./theme";
+import { demoShowcaseCustomWidget } from "./custom-widget";
+import type { DemoPrototype } from "./types";
 
-// Opt-in scratch data only: never replace an existing user's demo boards.
-export const seedDemoPrototypesAsync = async (db: Database) => {
+// The normal demo seed calls this for fresh users; scratch previews use a separate board name.
+export const seedDemoShowcaseAsync = async (db: Database, boardName = "demo-prototype") => {
   const demo = await db.query.users.findFirst({ where: (row) => eq(row.name, "demo") });
   const integration = await db.query.integrations.findFirst({ where: (row) => eq(row.kind, "mock") });
   if (!demo || !integration) throw new Error("Prototype setup requires the normal demo seed first");
@@ -24,7 +35,33 @@ export const seedDemoPrototypesAsync = async (db: Database) => {
     });
   }
   const apps = await db.query.apps.findMany();
-  const replacements: Record<string, string> = { __MOCK__: integration.id };
+  let customWidget = await db.query.customWidgetDefinitions.findFirst({
+    where: (row, { and }) => and(eq(row.name, demoShowcaseCustomWidget.name), eq(row.creatorId, demo.id)),
+  });
+  if (!customWidget) {
+    const definitionId = createId();
+    await db.insert(customWidgetDefinitions).values({
+      id: definitionId,
+      name: demoShowcaseCustomWidget.name,
+      description: demoShowcaseCustomWidget.description ?? null,
+      sources: SuperJSON.stringify(demoShowcaseCustomWidget.sources),
+      requests: SuperJSON.stringify(demoShowcaseCustomWidget.requests),
+      options: SuperJSON.stringify(demoShowcaseCustomWidget.options),
+      template: demoShowcaseCustomWidget.template,
+      creatorId: demo.id,
+      enabled: true,
+    });
+    customWidget = await db.query.customWidgetDefinitions.findFirst({ where: (row) => eq(row.id, definitionId) });
+  }
+  if (!customWidget) throw new Error("Demo Custom JSX definition was not created");
+  const replacements: Record<string, string> = { __MOCK__: integration.id, __CUSTOM_WIDGET__: customWidget.id };
+  const statsIntegrations = await db.query.integrations.findMany({
+    where: (row) => eq(row.url, "https://demo.homarr.dev"),
+  });
+  for (const source of statsIntegrations) {
+    if (source.kind === "mock") continue;
+    replacements[`__STATS_${source.kind.toUpperCase().replace(/[^A-Z0-9]/g, "")}__`] = source.id;
+  }
   for (const app of apps) replacements[`__APP_${app.name.toUpperCase().replace(/[^A-Z0-9]/g, "")}__`] = app.id;
   const replace = (value: unknown): unknown => {
     if (typeof value === "string") {
@@ -38,10 +75,11 @@ export const seedDemoPrototypesAsync = async (db: Database) => {
       return Object.fromEntries(Object.entries(value).map(([key, child]) => [key, replace(child)]));
     return value;
   };
-  for (const proposal of demoPrototypes) {
+  const proposals: DemoPrototype[] = demoPrototypes;
+  for (const proposal of proposals) {
     headerPreferencesSchema.parse(proposal.headerPreferences);
     if (proposal.tabs.length !== 2) throw new Error(`Prototype ${proposal.key} needs exactly two tabs`);
-    const name = demoPrototypeBoardName(proposal.key);
+    const name = boardName;
     const exists = await db.query.boards.findFirst({ where: (row) => eq(row.name, name) });
     if (exists) continue;
     const boardId = createId();
@@ -49,7 +87,7 @@ export const seedDemoPrototypesAsync = async (db: Database) => {
     const layoutId = createId();
     const responsiveLayouts: InferInsertModel<typeof layouts>[] = [];
     let baseBreakpoint = 768;
-    if ("iteration" in proposal && proposal.iteration === 2) {
+    if ((proposal.iteration ?? 0) >= 2) {
       baseBreakpoint = 1200;
       responsiveLayouts.push(
         { id: createId(), boardId, name: "Mobile", role: "mobile", breakpoint: 0, columnCount: 3 },
@@ -68,8 +106,10 @@ export const seedDemoPrototypesAsync = async (db: Database) => {
         .insert(sections)
         .values({ id: sectionId, boardId, kind: "empty", name: tab.name, xOffset: 0, yOffset: position });
       const positions: Parameters<typeof generateResponsiveGridFor>[0]["items"] = [];
+      const smallScreenHeights = new Map<string, number>();
       for (const widget of tab.widgets) {
         const itemId = createId();
+        if (widget.smallScreenHeight !== undefined) smallScreenHeights.set(itemId, widget.smallScreenHeight);
         await db.insert(items).values({
           id: itemId,
           boardId,
@@ -85,8 +125,10 @@ export const seedDemoPrototypesAsync = async (db: Database) => {
           width: widget.width,
           height: widget.height,
         });
-        if (widget.needsIntegration)
-          await db.insert(integrationItems).values({ itemId, integrationId: integration.id });
+        const integrationIds = widget.integrationIds?.map((id) => replace(id) as string) ?? [];
+        if (widget.needsIntegration) integrationIds.push(integration.id);
+        if (integrationIds.length > 0)
+          await db.insert(integrationItems).values(integrationIds.map((integrationId) => ({ itemId, integrationId })));
         positions.push({
           id: itemId,
           type: "item",
@@ -99,7 +141,7 @@ export const seedDemoPrototypesAsync = async (db: Database) => {
       }
       for (const target of responsiveLayouts) {
         const projected = generateResponsiveGridFor({
-          items: positions,
+          items: positions.map((item) => ({ ...item, height: smallScreenHeights.get(item.id) ?? item.height })),
           previousWidth: 12,
           width: target.columnCount,
           sectionId,
@@ -118,15 +160,19 @@ export const seedDemoPrototypesAsync = async (db: Database) => {
         );
       }
     }
-    console.log(`Created throwaway demo prototype ${proposal.key}: ${proposal.name}`);
+    console.log(`Created demo showcase: ${proposal.name}`);
   }
   const comparison = await db.query.boards.findFirst({
-    where: (row) => eq(row.name, demoPrototypeBoardName("A")),
+    where: (row) => eq(row.name, boardName),
   });
   if (comparison) {
     await db
       .update(users)
-      .set({ homeBoardId: comparison.id, mobileHomeBoardId: comparison.id })
+      .set({
+        homeBoardId: comparison.id,
+        mobileHomeBoardId: comparison.id,
+        headerPreferences: JSON.stringify(demoPrototypes[0].headerPreferences),
+      })
       .where(eq(users.id, demo.id));
   }
 };

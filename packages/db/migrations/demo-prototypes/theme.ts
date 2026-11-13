@@ -13,7 +13,7 @@ const accent = [
   "#244e49",
 ];
 
-// A real, editable Homarr custom theme for the opt-in scratch comparison.
+// A real, editable Homarr custom theme for the selected demo board.
 export const demoPrototypeTheme = customThemeSchema.parse({
   preset: "default",
   theme: {

@@ -1,23 +1,19 @@
 import type { IIndexerManagerIntegration } from "../../interfaces/indexer-manager/indexer-manager-integration";
 import type { Indexer } from "../../types";
 
+const indexers: Indexer[] = [
+  { id: 1, name: "LinuxTracker", url: "https://linuxtracker.org", enabled: true, status: true },
+  { id: 2, name: "Internet Archive", url: "https://archive.org", enabled: true, status: true },
+  { id: 3, name: "Academic Torrents", url: "https://academictorrents.com", enabled: true, status: true },
+  { id: 4, name: "Private tracker", url: "https://example.com", enabled: false, status: false },
+];
+
 export class IndexerManagerMockService implements IIndexerManagerIntegration {
   public async getIndexersAsync(): Promise<Indexer[]> {
-    return await Promise.resolve(
-      Array.from({ length: 10 }, (_, index) => IndexerManagerMockService.createIndexer(index + 1)),
-    );
-  }
-  public async testAllAsync(): Promise<void> {
-    await Promise.resolve();
+    return indexers.map((indexer) => ({ ...indexer }));
   }
 
-  private static createIndexer(index: number): Indexer {
-    return {
-      id: index,
-      name: `Mock Indexer ${index}`,
-      url: `https://mock-indexer-${index}.com`,
-      enabled: Math.random() > 0.2, // 80% chance of being enabled
-      status: Math.random() > 0.2, // 80% chance of being active
-    };
+  public async testAllAsync(): Promise<void> {
+    await Promise.resolve();
   }
 }

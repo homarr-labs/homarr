@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000" role="img" aria-labelledby="title description">
+  <title id="title">Alpine lake illustration</title>
+  <desc id="description">Layered mountain peaks, pine trees and an alpine lake. Demo artwork, not a personal photograph.</desc>
+  <defs>
+    <linearGradient id="sky" x2="0" y2="1"><stop stop-color="#cddfdf"/><stop offset="1" stop-color="#e8ede2"/></linearGradient>
+    <linearGradient id="lake" x2="0" y2="1"><stop stop-color="#8caeac"/><stop offset="1" stop-color="#4f7d83"/></linearGradient>
+  </defs>
+  <path fill="url(#sky)" d="M0 0h1600v1000H0z"/>
+  <circle cx="1240" cy="180" r="68" fill="#f3e8cc"/>
+  <path fill="#a5bcb8" d="M0 580 240 290 420 465 700 160 1010 480 1230 260 1600 600v400H0z"/>
+  <path fill="#ecf0e8" d="m510 365 190-205 205 210-110-38-88-66-52 84-65-28zM1090 410l140-150 145 134-84-26-54-57-46 81z"/>
+  <path fill="#7e9e9c" d="m0 650 290-240 260 220 400-270 360 270 290-215v585H0z"/>
+  <path fill="#b4c6bf" d="m800 460 150-100 150 113-116-26-40-34-61 53z"/>
+  <path fill="url(#lake)" d="M180 665h1160l260 335H0z"/>
+  <path fill="#6b908a" d="m180 665 140 20 210 155-210-50-190 30zm1160 0-150 40-230 160 300-60 210 40z" opacity=".65"/>
+  <path fill="#768f79" d="M0 620q120 25 270 145l-45 95L0 930zm1600-10q-190 25-325 170l60 70 265 110z"/>
+  <g fill="#355f59"><path d="m85 480-80 185h48L0 785h175l-53-120h47zm155 125-68 155h42l-45 100h150l-48-100h42zm1200-145-95 220h58l-66 150h205l-62-150h55zm-150 150-65 145h38l-43 100h145l-45-100h38z"/></g>
+  <g fill="#54776a"><path d="m370 655-40 90h25l-28 65h90l-25-65h22zm850 7-42 90h25l-26 62h90l-27-62h24z"/></g>
+  <path fill="#d6d3b9" d="M0 925q225-90 450-20l-80 95H0zm1600 20q-180-115-385-40l55 95h330z"/>
+  <g fill="none" stroke="#d0ded3" stroke-linecap="round" opacity=".5"><path d="M490 760h240m100 50h230m-460 65h260m-50 65h330m-630 20h145" stroke-width="6"/><path d="M700 710h100m120 190h85" stroke-width="3"/></g>
+</svg>

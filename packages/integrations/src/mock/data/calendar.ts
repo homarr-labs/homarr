@@ -181,29 +181,34 @@ const eventTemplates: EventTemplate[] = [
 ];
 
 const buildEventsForRange = (start: Date, end: Date): CalendarEvent[] => {
-  const rangeStart = new Date(start);
-  rangeStart.setDate(rangeStart.getDate() - 3);
+  const monthCount = (end.getFullYear() - start.getFullYear()) * 12 + end.getMonth() - start.getMonth() + 1;
+  const months = Array.from(
+    { length: Math.min(24, Math.max(0, monthCount)) },
+    (_, offset) => new Date(start.getFullYear(), start.getMonth() + offset, 1),
+  );
 
-  return eventTemplates
-    .map((tpl) => {
-      const startDate = new Date(rangeStart);
-      startDate.setDate(startDate.getDate() + tpl.dayOffset);
-      startDate.setHours(tpl.hours, 0, 0, 0);
+  return months.flatMap((monthStart) =>
+    eventTemplates
+      .map((tpl) => {
+        const startDate = new Date(monthStart);
+        startDate.setDate(startDate.getDate() + tpl.dayOffset);
+        startDate.setHours(tpl.hours, 0, 0, 0);
 
-      return {
-        title: tpl.title,
-        subTitle: tpl.subTitle,
-        description: tpl.description,
-        startDate,
-        endDate: tpl.location ? new Date(startDate.getTime() + 2 * 60 * 60 * 1000) : null,
-        image: tpl.image,
-        location: tpl.location ?? null,
-        indicatorColor: tpl.indicatorColor,
-        links: tpl.links,
-        ...(tpl.metadata ? { metadata: tpl.metadata } : {}),
-      };
-    })
-    .filter((event) => event.startDate >= start && event.startDate <= end);
+        return {
+          title: tpl.title,
+          subTitle: tpl.subTitle,
+          description: tpl.description,
+          startDate,
+          endDate: tpl.location ? new Date(startDate.getTime() + 2 * 60 * 60 * 1000) : null,
+          image: tpl.image,
+          location: tpl.location ?? null,
+          indicatorColor: tpl.indicatorColor,
+          links: tpl.links,
+          ...(tpl.metadata ? { metadata: tpl.metadata } : {}),
+        };
+      })
+      .filter((event) => event.startDate >= start && event.startDate <= end),
+  );
 };
 
 export class CalendarMockService implements ICalendarIntegration {

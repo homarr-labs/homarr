@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000" role="img" aria-labelledby="title description">
+  <title id="title">River illustration</title>
+  <desc id="description">A calm illustrated river, stone bridge and city skyline. Demo artwork, not a personal photograph.</desc>
+  <defs>
+    <linearGradient id="sky" x2="0" y2="1"><stop stop-color="#d8e5e5"/><stop offset="1" stop-color="#f1eadc"/></linearGradient>
+    <linearGradient id="water" x2="0" y2="1"><stop stop-color="#86a7aa"/><stop offset="1" stop-color="#466e79"/></linearGradient>
+  </defs>
+  <path fill="url(#sky)" d="M0 0h1600v1000H0z"/>
+  <circle fill="#f5e7c6" cx="1180" cy="210" r="80"/>
+  <g fill="#f1f1e8" opacity=".65"><ellipse cx="250" cy="200" rx="210" ry="28"/><ellipse cx="670" cy="130" rx="180" ry="20"/></g>
+  <path fill="#acb8b0" d="M0 560V410h130v-50h95v75h105v-35h125v105h140v-60h140v115h865v90H0z"/>
+  <g fill="#bdae96"><path d="M0 610V480h140v130zm160 0V445h130v165zm160 0V490h155v120zm1050 0V465h130v145zm150 0V415h80v195z"/><path d="M135 445h180l-90-55zm1210 20h170l-85-55z"/></g>
+  <g fill="#697d7e"><path d="M905 575 1030 220l125 355h-45l-35-110h-90l-35 110zm92-150h66l-33-105z" fill-rule="evenodd"/><path d="M1019 205h22v-72h-22zm-94 375h210v17H925zm36-95h138v16H961zm35-113h68v12h-68z"/></g>
+  <path fill="url(#water)" d="M525 600h435l640 400H0z"/>
+  <path fill="#c4b79f" d="M0 575h525L0 1000zm960 0h640v425z"/>
+  <path fill="#dfd3ba" d="M0 605h515l-20 14H0zm976 0h624v14H995z"/>
+  <g fill="#a69f8a"><path d="M390 695h780v30H390z"/><path d="M410 725h90v75h-40v-35h-50zm150 0h90v35h-90zm150 0h90v35h-90zm150 0h90v35h-90zm150 0h90v80h-40v-40h-50z"/></g>
+  <path d="M405 695h750M450 660v35m100-35v35m100-35v35m100-35v35m100-35v35m100-35v35m100-35v35m-700-35h670" fill="none" stroke="#778987" stroke-width="9"/>
+  <g fill="#567970"><circle cx="90" cy="545" r="66"/><circle cx="210" cy="555" r="52"/><circle cx="1440" cy="555" r="72"/><circle cx="1540" cy="560" r="52"/></g>
+  <g stroke="#c5d4cc" stroke-linecap="round" fill="none" opacity=".5"><path d="M570 770h240m-330 45h180m80 45h310m-480 60h190m130 25h270" stroke-width="6"/><path d="M760 650h70m-280 215h85m20 100h120" stroke-width="3"/></g>
+  <path fill="#e3dbca" d="m1040 850 95 0-22 24h-53z"/>
+  <path fill="#879b96" d="M1060 833h45v17h-45z"/>
+</svg>

@@ -15,7 +15,7 @@ import type {
   ThingportModel,
   ThingportModelList,
 } from "../thingport/thingport-types";
-import type { TracearrDashboardData } from "../tracearr/tracearr-types";
+import type { TracearrDashboardData, TracearrStream } from "../tracearr/tracearr-types";
 import type { TraefikDashboardData } from "../traefik/traefik-types";
 import type { UmamiEventSeries, UmamiMetricItem, UmamiVisitorStats, UmamiWebsite } from "../umami/umami-types";
 import { createUptimeKumaMockStatusPage } from "../uptime-kuma/uptime-kuma-mock";
@@ -29,8 +29,20 @@ import type {
   FirewallVersionSummary,
 } from "../interfaces/firewall-summary/firewall-summary-types";
 import type { VpnSummary } from "../interfaces/vpn-summary/vpn-summary-types";
+import { mockMediaSessions } from "./data/media-server";
+import { mockMediaReleases } from "./data/media-releases";
 
-const demoTimestamp = "2026-08-24T12:00:00.000Z";
+const demoNow = Date.now();
+const demoTimestamp = new Date(demoNow).toISOString();
+const demoHoursAgo = (hours: number) => new Date(demoNow - hours * 3_600_000).toISOString();
+const demoSpeedtests = [2310, 2280, 2330, 2290, 2340, 2300, 2320, 2270].map((download, index) => ({
+  id: 42 - index,
+  ping: 8.4 + index * 0.2,
+  download_bits: download * 1_000_000,
+  upload_bits: (1880 - index * 10) * 1_000_000,
+  healthy: true,
+  created_at: new Date(demoHoursAgo(index * 3)),
+}));
 
 const anchorNote: AnchorNote = {
   id: "homarr-demo-note",
@@ -78,8 +90,14 @@ export const mockWidgetData = {
       session_id: "homarr-demo-session",
     },
     items: [
-      { id: "demo-1", name: "urls-20260824-01", status: "running", project: "urlteam2", startTime: 1_777_000_000 },
-      { id: "demo-2", name: "urls-20260824-00", status: "completed", project: "urlteam2" },
+      {
+        id: "demo-1",
+        name: "urls-current",
+        status: "running",
+        project: "urlteam2",
+        startTime: Math.floor(demoNow / 1000) - 900,
+      },
+      { id: "demo-2", name: "urls-previous", status: "completed", project: "urlteam2" },
     ],
     counts: { running: 1, completed: 284, failed: 2, canceled: 0 },
     updatedAt: demoTimestamp,
@@ -172,8 +190,8 @@ export const mockWidgetData = {
   firewallInterfaces: [
     {
       data: [
-        { name: "WAN", receive: 18_400_000, transmit: 4_200_000 },
-        { name: "LAN", receive: 46_700_000, transmit: 21_300_000 },
+        { name: "WAN", receive: 124_127_500, transmit: 14_517_100 },
+        { name: "LAN", receive: 14_517_100, transmit: 124_127_500 },
       ],
       timestamp: new Date(demoTimestamp),
     },
@@ -186,13 +204,10 @@ export const mockWidgetData = {
     videoCount: 2_418,
     totalLibraryUsageInBytes: 684_510_412_800,
   } satisfies ImmichServerStats,
-  immichAlbums: [
-    { id: "demo-paris", albumName: "Paris weekend", assetCount: 128 },
-    { id: "demo-mountains", albumName: "Alpine trails", assetCount: 84 },
-  ],
+  immichAlbums: [{ id: "demo-paris", albumName: "Demo gallery", assetCount: 2 }],
   immichAlbum: {
     id: "demo-paris",
-    albumName: "Paris weekend",
+    albumName: "Demo gallery",
     assets: [
       {
         id: "demo-photo-1",
@@ -201,7 +216,7 @@ export const mockWidgetData = {
         fileCreatedAt: demoTimestamp,
         updatedAt: demoTimestamp,
         type: "IMAGE",
-        publicLink: "https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=1200&q=80",
+        publicLink: "/images/mock/demo-river.svg",
       },
       {
         id: "demo-photo-2",
@@ -210,7 +225,7 @@ export const mockWidgetData = {
         fileCreatedAt: demoTimestamp,
         updatedAt: demoTimestamp,
         type: "IMAGE",
-        publicLink: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1200&q=80",
+        publicLink: "/images/mock/demo-alpine.svg",
       },
     ],
   } satisfies ImmichAlbum,
@@ -263,57 +278,16 @@ export const mockWidgetData = {
   } satisfies PatchMonStats,
   ...createWazuhMockData(demoTimestamp),
   speedtestTracker: {
-    latestResult: {
-      id: 42,
-      ping: 8.4,
-      download_bits: 936_000_000,
-      upload_bits: 487_000_000,
-      healthy: true,
-      created_at: new Date(demoTimestamp),
-    },
+    latestResult: demoSpeedtests[0] ?? null,
     stats: {
-      ping: { avg: 9.1, min: 6.8, max: 14.2 },
-      download: { avg: 901, avg_bits: 901_000_000, min: 822, max: 948 },
-      upload: { avg: 472, avg_bits: 472_000_000, min: 431, max: 495 },
-      total_results: 128,
+      ping: { avg: 9.1, min: 8.4, max: 9.8 },
+      download: { avg: 2305, avg_bits: 2_305_000_000, min: 2270, max: 2340 },
+      upload: { avg: 1845, avg_bits: 1_845_000_000, min: 1810, max: 1880 },
+      total_results: demoSpeedtests.length,
     },
-    recentResults: [
-      {
-        id: 42,
-        ping: 8.4,
-        download_bits: 936_000_000,
-        upload_bits: 487_000_000,
-        healthy: true,
-        created_at: new Date(demoTimestamp),
-      },
-    ],
+    recentResults: demoSpeedtests,
   } satisfies SpeedtestTrackerDashboardData,
-  tracearr: {
-    stats: { activeStreams: 2, totalUsers: 14, totalSessions: 1_248, recentViolations: 1, timestamp: demoTimestamp },
-    streams: {
-      data: [],
-      summary: {
-        total: 2,
-        transcodes: 1,
-        directStreams: 0,
-        directPlays: 1,
-        totalBitrate: "24.8 Mbps",
-        byServer: [
-          {
-            serverId: "demo",
-            serverName: "Homarr Media",
-            total: 2,
-            transcodes: 1,
-            directStreams: 0,
-            directPlays: 1,
-            totalBitrate: "24.8 Mbps",
-          },
-        ],
-      },
-    },
-    violations: { data: [], meta: { total: 1, page: 1, pageSize: 10 } },
-    recentActivity: { data: [], meta: { total: 1_248, page: 1, pageSize: 10 } },
-  } satisfies TracearrDashboardData,
+  tracearr: createTracearrMockData(),
   traefik: {
     version: "3.5.0",
     entryPoints: ["web", "websecure", "metrics"],
@@ -350,9 +324,9 @@ export const mockWidgetData = {
     avgDuration: 284,
     timeFrame: "24h",
     dataPoints: [
-      { timestamp: "2026-08-24T08:00:00.000Z", visitors: 280, events: 0 },
-      { timestamp: "2026-08-24T10:00:00.000Z", visitors: 410, events: 0 },
-      { timestamp: "2026-08-24T12:00:00.000Z", visitors: 536, events: 0 },
+      { timestamp: demoHoursAgo(4), visitors: 280, events: 0 },
+      { timestamp: demoHoursAgo(2), visitors: 410, events: 0 },
+      { timestamp: demoTimestamp, visitors: 536, events: 0 },
     ],
     eventCount: 0,
   } satisfies UmamiVisitorStats,
@@ -371,9 +345,9 @@ export const mockWidgetData = {
     {
       eventName: "dashboard_opened",
       dataPoints: [
-        { x: "2026-08-24T08:00:00.000Z", y: 92 },
-        { x: "2026-08-24T10:00:00.000Z", y: 134 },
-        { x: "2026-08-24T12:00:00.000Z", y: 188 },
+        { x: demoHoursAgo(4), y: 92 },
+        { x: demoHoursAgo(2), y: 134 },
+        { x: demoTimestamp, y: 188 },
       ],
     },
   ] satisfies UmamiEventSeries[],
@@ -393,8 +367,8 @@ export const mockWidgetData = {
       {
         id: "homarr",
         name: "Homarr",
-        currentVersion: "v1.35.0",
-        newVersion: "v1.36.0",
+        currentVersion: "v2.12.0",
+        newVersion: "v2.13.0",
         link: "https://github.com/homarr-labs/homarr",
       },
       { id: "postgres", name: "Postgres", currentVersion: "17.5", newVersion: "17.6", link: null },
@@ -486,5 +460,131 @@ export function createThingportMockActivity(from: string, to: string): Thingport
     ),
     years: [2026, 2025, 2024],
     profileUrl: "https://thingport.net/profile",
+  };
+}
+
+function createTracearrMockData(): TracearrDashboardData {
+  const streams = mockMediaSessions.flatMap((session): TracearrStream[] => {
+    const playing = session.currentlyPlaying;
+    if (!playing || playing.playback.state !== "playing") return [];
+    const metadata = playing.metadata;
+    let mediaType: TracearrStream["mediaType"] = "movie";
+    if (playing.type === "audio") mediaType = "track";
+    if (playing.type === "video" || playing.type === "tv") mediaType = "episode";
+    let videoDecision: TracearrStream["videoDecision"] = null;
+    if (metadata?.video.resolution) {
+      videoDecision = "directplay";
+      if (metadata.transcoding.isVideoDirect === false) videoDecision = "transcode";
+    }
+    let audioDecision: TracearrStream["audioDecision"] = "directplay";
+    if (metadata?.transcoding.isAudioDirect === false) audioDecision = "transcode";
+    const isTranscode = videoDecision === "transcode" || audioDecision === "transcode";
+    let containerDecision: "directplay" | "transcode" = "directplay";
+    if (isTranscode) containerDecision = "transcode";
+    let showTitle: string | null = null;
+    if (mediaType === "episode") showTitle = playing.name;
+    let resolution: string | null = null;
+    if (metadata?.video.resolution) resolution = `${metadata.video.resolution.height}p`;
+    const release = mockMediaReleases.find((item) => item.title === playing.name);
+    return [
+      {
+        id: session.sessionId,
+        serverId: "demo",
+        serverName: "Jellyfin",
+        username: session.user.username,
+        userThumb: session.user.profilePictureUrl,
+        userAvatarUrl: session.user.profilePictureUrl,
+        mediaTitle: playing.episodeName ?? playing.name,
+        mediaType,
+        showTitle,
+        seasonNumber: playing.seasonNumber ?? null,
+        episodeNumber: playing.episodeNumber ?? null,
+        year: null,
+        thumbPath: null,
+        posterUrl: release?.imageUrls.poster ?? null,
+        durationMs: playing.playback.durationMs,
+        state: "playing",
+        progressMs: playing.playback.positionMs ?? 0,
+        startedAt: new Date(demoNow - (playing.playback.positionMs ?? 0)).toISOString(),
+        isTranscode,
+        videoDecision,
+        audioDecision,
+        bitrate: metadata?.bitrateKbps ?? null,
+        sourceVideoCodec: metadata?.transcoding.target.videoCodec ?? null,
+        sourceAudioCodec: metadata?.audio.codec ?? null,
+        sourceAudioChannels: metadata?.audio.channelCount ?? null,
+        sourceVideoWidth: metadata?.video.resolution?.width ?? null,
+        sourceVideoHeight: metadata?.video.resolution?.height ?? null,
+        sourceVideoDetails: null,
+        sourceAudioDetails: null,
+        streamVideoCodec: metadata?.transcoding.target.videoCodec ?? null,
+        streamAudioCodec: metadata?.transcoding.target.audioCodec ?? null,
+        streamVideoDetails: null,
+        streamAudioDetails: null,
+        transcodeInfo: {
+          containerDecision,
+          sourceContainer: metadata?.transcoding.container ?? undefined,
+          streamContainer: metadata?.transcoding.container ?? undefined,
+        },
+        subtitleInfo: null,
+        resolution,
+        sourceVideoCodecDisplay: metadata?.transcoding.target.videoCodec ?? null,
+        sourceAudioCodecDisplay: metadata?.audio.codec ?? null,
+        audioChannelsDisplay: null,
+        streamVideoCodecDisplay: metadata?.transcoding.target.videoCodec ?? null,
+        streamAudioCodecDisplay: metadata?.transcoding.target.audioCodec ?? null,
+        device: session.sessionName,
+        player: "Jellyfin",
+        product: "Jellyfin",
+        platform: null,
+      },
+    ];
+  });
+  const transcodes = streams.filter((stream) => stream.isTranscode).length;
+  const totalBitrate = `${streams.reduce((total, stream) => total + (stream.bitrate ?? 0), 0) / 1000} Mbps`;
+  const history = streams.map((stream, index) => {
+    const stoppedAt = demoHoursAgo(index + 1);
+    const durationMs = stream.durationMs ?? 0;
+    return {
+      ...stream,
+      id: `history-${stream.id}`,
+      state: "stopped" as const,
+      durationMs,
+      progressMs: durationMs,
+      totalDurationMs: durationMs,
+      startedAt: new Date(Date.parse(stoppedAt) - durationMs).toISOString(),
+      stoppedAt,
+      watched: true,
+      segmentCount: 1,
+      isTranscode: stream.isTranscode ?? false,
+      user: {
+        id: stream.username,
+        username: stream.username,
+        thumbUrl: stream.userThumb,
+        avatarUrl: stream.userAvatarUrl,
+      },
+    };
+  });
+  const summary = {
+    total: streams.length,
+    transcodes,
+    directStreams: 0,
+    directPlays: streams.length - transcodes,
+    totalBitrate,
+  };
+  return {
+    stats: {
+      activeStreams: streams.length,
+      totalUsers: new Set(mockMediaSessions.map((session) => session.user.userId)).size,
+      totalSessions: streams.length + history.length,
+      recentViolations: 0,
+      timestamp: demoTimestamp,
+    },
+    streams: {
+      data: streams,
+      summary: { ...summary, byServer: [{ serverId: "demo", serverName: "Jellyfin", ...summary }] },
+    },
+    violations: { data: [], meta: { total: 0, page: 1, pageSize: 10 } },
+    recentActivity: { data: history, meta: { total: history.length, page: 1, pageSize: 10 } },
   };
 }

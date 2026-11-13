@@ -1,7 +1,7 @@
 import type { WidgetKind } from "@homarr/definitions";
 import type { HeaderPreferences } from "@homarr/validation/user";
 
-// Throwaway native-board proposals. Human selection is required before promotion.
+// Selected demo board data. Historical proposals are preserved at their earlier git heads.
 export interface DemoPrototype {
   key: string;
   iteration?: number;
@@ -26,7 +26,9 @@ export interface DemoPrototype {
       yOffset: number;
       width: number;
       height: number;
+      smallScreenHeight?: number;
       needsIntegration: boolean;
+      integrationIds?: string[];
       options?: Record<string, unknown>;
     }[];
   }[];
