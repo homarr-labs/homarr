@@ -63,6 +63,9 @@ const nextConfig: NextConfig = {
     HOMARR_VERSION: process.env.HOMARR_VERSION ?? "unknown",
   },
   output: "standalone",
+  outputFileTracingIncludes: {
+    "/*": ["../../node_modules/bcrypt/prebuilds/linux-*/*.node"],
+  },
   reactStrictMode: true,
   // react compiler breaks mantine-react-table, so disabled for now
   //reactCompiler: true,
