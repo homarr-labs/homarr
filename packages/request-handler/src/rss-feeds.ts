@@ -54,8 +54,10 @@ export const rssFeedsRequestHandler = createWidgetRequestHandler({
               ? (mediaGroup as Record<string, unknown>)["media:description"]
               : undefined;
           const directMediaDescription = (feedEntry as Record<string, unknown>)["media:description"];
-          const rawDescription =
-            extractDescriptionText(mediaDescription) ?? extractDescriptionText(directMediaDescription);
+          let rawDescription = extractDescriptionText(mediaDescription);
+          if (!rawDescription?.trim()) {
+            rawDescription = extractDescriptionText(directMediaDescription);
+          }
 
           if (rawDescription && rawDescription.trim().length > 0) {
             extraFields.mediaDescription = rawDescription.trim().slice(0, input.descriptionMaxLength);
