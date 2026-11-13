@@ -321,10 +321,8 @@ export function Dial({
     const next = read(event);
     let handle: DialHandle = "value";
     if (shownRange) {
-      const target = event.target instanceof Element ? event.target.closest("[data-dial-handle]") : null;
-      const requested = target?.getAttribute("data-dial-handle");
-      if (requested === "low" || requested === "high") handle = requested;
-      else handle = Math.abs(next - shownRange.low) <= Math.abs(next - shownRange.high) ? "low" : "high";
+      event.preventDefault();
+      handle = Math.abs(next - shownRange.low) <= Math.abs(next - shownRange.high) ? "low" : "high";
       event.currentTarget.querySelector<HTMLElement>(`[data-dial-handle="${handle}"]`)?.focus({ preventScroll: true });
     }
     event.currentTarget.setPointerCapture(event.pointerId);
