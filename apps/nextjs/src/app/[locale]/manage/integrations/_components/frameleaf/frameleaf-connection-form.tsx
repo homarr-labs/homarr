@@ -25,21 +25,34 @@ export function FrameleafConnectionForm({ integration, initialName, initialUrl }
   const [busy, setBusy] = useState(false);
   const integrationId = integration?.id;
   useEffect(() => {
-    const controller = new AbortController();
-    void fetch(`/api/integrations/frameleaf${integrationId ? `?id=${encodeURIComponent(integrationId)}` : ""}`, {
-      signal: controller.signal,
-      cache: "no-store",
-    })
-      .then(async (response) => {
-        if (!response.ok) throw new Error();
-        return (await response.json()) as Status;
-      })
-      .then(setStatus)
-      .catch(() => {
-        if (!controller.signal.aborted) setError("unavailable");
-      });
-    return () => controller.abort();
+    if (new URLSearchParams(window.location.search).get("frameleaf") === "consent") setError("consent");
   }, [integrationId]);
+  useEffect(() => {
+    if (busy) return;
+    const controller = new AbortController();
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    const readAsync = async () => {
+      try {
+        const response = await fetch(
+          `/api/integrations/frameleaf${integrationId ? `?id=${encodeURIComponent(integrationId)}` : ""}`,
+          { signal: controller.signal, cache: "no-store" },
+        );
+        if (!response.ok) throw new Error();
+        const value = (await response.json()) as Status;
+        if (controller.signal.aborted) return;
+        setStatus(value);
+        if (["pending", "exchanging", "verifying", "refreshing"].includes(value.status))
+          timer = setTimeout(() => void readAsync(), 1000);
+      } catch {
+        if (!controller.signal.aborted) setError("unavailable");
+      }
+    };
+    void readAsync();
+    return () => {
+      controller.abort();
+      clearTimeout(timer);
+    };
+  }, [integrationId, busy]);
   const connected = status?.status === "connected";
   const disconnected = status?.status === "disconnected";
   const pending = status && ["pending", "exchanging", "verifying", "refreshing"].includes(status.status);

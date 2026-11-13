@@ -189,7 +189,12 @@ export class FrameleafConnection {
     return url.href;
   }
 
-  async completeAsync(input: { state: string; code: string; userId: string; sessionId: string }) {
+  async completeAsync(
+    input: { state: string; callback: string; userId: string; sessionId: string } & (
+      | { code: string; denied?: false }
+      | { denied: true; code?: never }
+    ),
+  ) {
     const previous = await this.store.readAsync();
     if (
       !previous ||
@@ -197,20 +202,31 @@ export class FrameleafConnection {
       !("pending" in previous) ||
       previous.pending.expiresAt <= Date.now() ||
       previous.pending.userId !== input.userId ||
+      previous.pending.callback !== input.callback ||
       !matches(input.state, previous.pending.stateHash) ||
-      !matches(input.sessionId, previous.pending.sessionHash) ||
-      !input.code ||
-      input.code.length > 2048
+      !matches(input.sessionId, previous.pending.sessionHash)
     )
       throw new FrameleafConnectionError("consent");
+    if (input.denied) {
+      if (!(await this.store.replaceAsync(previous, null))) throw new FrameleafConnectionError("consent");
+      return false;
+    }
+    if (!input.code || input.code.length > 2048) throw new FrameleafConnectionError("consent");
     const claimed: FrameleafState = { ...previous, status: "exchanging" };
     if (!(await this.store.replaceAsync(previous, claimed))) throw new FrameleafConnectionError("consent");
-    const result = await this.exchangeAsync(previous, {
-      grant_type: "authorization_code",
-      code: input.code,
-      code_verifier: previous.pending.verifier,
-      redirect_uri: previous.pending.callback,
-    });
+    let result: z.infer<typeof tokens>;
+    try {
+      result = await this.exchangeAsync(previous, {
+        grant_type: "authorization_code",
+        code: input.code,
+        code_verifier: previous.pending.verifier,
+        redirect_uri: previous.pending.callback,
+      });
+    } catch (error) {
+      // The code may have been consumed. Discard only our claim; never restore or retry it.
+      await this.store.replaceAsync(claimed, null);
+      throw error;
+    }
     const verifying: FrameleafState = {
       version: 1,
       origin: previous.origin,
@@ -246,6 +262,7 @@ export class FrameleafConnection {
       await this.store.replaceAsync(verifying, { ...verifying, status: "uncertain" });
       throw new FrameleafConnectionError("consent");
     }
+    return true;
   }
 
   private async exchangeAsync(state: FrameleafState, parameters: Record<string, string>) {

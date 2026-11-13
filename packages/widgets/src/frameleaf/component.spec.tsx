@@ -164,3 +164,46 @@ test("an interrupted image download never creates a late object URL", async () =
   });
   expect(createObjectURL).not.toHaveBeenCalled();
 });
+
+test.each(["next", "poll"])("%s keeps keyboard focus while a replacement image is pending", async (action) => {
+  let finish: ((response: Response) => void) | undefined;
+  fetchAsync
+    .mockResolvedValueOnce(metadata())
+    .mockResolvedValueOnce(jpeg())
+    .mockImplementationOnce(
+      () =>
+        new Promise<Response>((resolve) => {
+          finish = resolve;
+        }),
+    )
+    .mockResolvedValue(jpeg());
+  await render();
+  const previousImage = host.querySelector("img")?.src;
+  const button = [...host.querySelectorAll("button")].find((element) => element.textContent === "next");
+  if (!button) throw new Error("Missing next button");
+  button.focus();
+  if (action === "next") await click("next");
+  else await advance(30000);
+  expect(document.activeElement).toBe(button);
+  expect(button.isConnected).toBe(true);
+  expect(host.querySelector("img")).toBeNull();
+  expect(revokeObjectURL).toHaveBeenCalledWith(previousImage);
+  await act(async () => finish?.(metadata()));
+  expect(document.activeElement).toBe(button);
+  expect(host.querySelector("img")?.src).toMatch(/^blob:/);
+});
+
+test("permission denial during replacement removes the previous photo, counts and controls", async () => {
+  fetchAsync
+    .mockResolvedValueOnce(metadata())
+    .mockResolvedValueOnce(jpeg())
+    .mockResolvedValueOnce(Response.json({ error: "consent" }, { status: 403 }));
+  await render();
+  const previousImage = host.querySelector("img")?.src;
+  await advance(30000);
+  expect(host.querySelector("img")).toBeNull();
+  expect(host.querySelector("button")).toBeNull();
+  expect(host.textContent).toContain("privateOnly");
+  expect(host.textContent).not.toContain("count");
+  expect(revokeObjectURL).toHaveBeenCalledWith(previousImage);
+});

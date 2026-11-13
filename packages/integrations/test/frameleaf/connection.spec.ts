@@ -31,11 +31,56 @@ const connected = (): Extract<FrameleafState, { tokens: unknown }> => ({
   tokens: { accessToken: "expired", refreshToken: "single-use", expiresAt: 0 },
   connection: { grantId: "grant", libraryUserId: "owner" },
 });
+const pending = (): FrameleafState => ({
+  version: 1,
+  status: "pending",
+  origin,
+  clientId: "client",
+  pending: {
+    stateHash: digest("state"),
+    sessionHash: digest("session"),
+    userId: "alice",
+    verifier: "verifier",
+    callback,
+    expiresAt: Date.now() + 300000,
+  },
+});
 
 const response = (body: unknown, status = 200) =>
   new Response(JSON.stringify(body), { status, headers: { "content-type": "application/json" } });
 
 describe("Frameleaf connection boundary", () => {
+  it.each(["network", "http", "invalid"])("clears only its failed %s code exchange claim", async (failure) => {
+    const store = new Store();
+    store.value = pending();
+    let exchanges = 0;
+    const client = new FrameleafConnection(store, async () => {
+      exchanges++;
+      if (failure === "network") throw new Error("lost response");
+      return response({}, failure === "http" ? 503 : 200);
+    });
+    const input = { state: "state", code: "code", userId: "alice", sessionId: "session", callback };
+    await expect(client.completeAsync(input)).rejects.toThrow();
+    expect(store.value).toBeNull();
+    await expect(client.completeAsync(input)).rejects.toThrow();
+    expect(exchanges).toBe(1);
+    await expect(client.disconnectAsync()).resolves.toBeUndefined();
+  });
+  it("failed exchange cleanup cannot erase a newer attempt", async () => {
+    const store = new Store();
+    store.value = pending();
+    const newer = pending();
+    if (!("pending" in newer)) throw new Error("Expected pending fixture");
+    newer.pending.stateHash = digest("new-state");
+    const client = new FrameleafConnection(store, async () => {
+      store.value = newer;
+      throw new Error("lost response");
+    });
+    await expect(
+      client.completeAsync({ state: "state", code: "code", userId: "alice", sessionId: "session", callback }),
+    ).rejects.toThrow();
+    expect(store.value).toEqual(newer);
+  });
   it("rejects credentials, paths, queries and non-HTTP origins", () => {
     for (const value of [
       "https://u:p@host.test",
@@ -99,7 +144,7 @@ describe("Frameleaf connection boundary", () => {
     );
     challenge = authorization.searchParams.get("code_challenge") ?? "";
     const state = authorization.searchParams.get("state") ?? "";
-    const request = { state, code: "code", userId: "alice", sessionId: "session-a" };
+    const request = { state, code: "code", userId: "alice", sessionId: "session-a", callback };
     await expect(client.completeAsync({ ...request, userId: "bob" })).rejects.toThrow();
     await expect(client.completeAsync({ ...request, sessionId: "session-b" })).rejects.toThrow();
     await expect(client.completeAsync({ ...request, state: "wrong" })).rejects.toThrow();
@@ -131,7 +176,7 @@ describe("Frameleaf connection boundary", () => {
         : response({}, 503),
     );
     await expect(
-      client.completeAsync({ state: "state", code: "code", userId: "alice", sessionId: "session" }),
+      client.completeAsync({ state: "state", code: "code", userId: "alice", sessionId: "session", callback }),
     ).rejects.toThrow();
     expect(store.value).toMatchObject({ status: "uncertain", tokens: { refreshToken: "refresh" } });
   });
@@ -158,7 +203,7 @@ describe("Frameleaf connection boundary", () => {
       return response({});
     });
     await expect(
-      client.completeAsync({ state: "state", code: "code", userId: "alice", sessionId: "session" }),
+      client.completeAsync({ state: "state", code: "code", userId: "alice", sessionId: "session", callback }),
     ).rejects.toThrow();
     expect(calls).toBe(0);
   });

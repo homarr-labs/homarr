@@ -81,7 +81,7 @@ export default function FrameleafWidget({ itemId, options }: WidgetComponentProp
       redirect: "error",
       signal: controller.signal,
     } as const;
-    setPhoto(null);
+    setPhoto((current) => (current ? { ...current, imageUrl: null } : null));
     void (async () => {
       const response = await fetch(
         `/api/integrations/frameleaf/widget?${new URLSearchParams({ itemId, page: String(page) })}`,
@@ -153,7 +153,7 @@ export default function FrameleafWidget({ itemId, options }: WidgetComponentProp
               }}
             />
           ) : (
-            <Text>{t("empty")}</Text>
+            <Text flex="1 1 0">{t(photo.total ? "loading" : "empty")}</Text>
           )}
           <Group gap="xs" justify="center" flex="0 0 auto">
             <Button
