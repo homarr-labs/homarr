@@ -1,3 +1,43 @@
+<!-- Release notes generated using configuration in .github/release.yml at a86ca09ec163e77159598f9f0f5e96aa360d1643 -->
+
+## What's Changed
+### New
+* feat(system-resources): add disk and CPU core charts with configurable layouts by @heathlarsen in https://github.com/homarr-labs/homarr/pull/7534
+* feat(docker): match container icons by base image name by @ajnart in https://github.com/homarr-labs/homarr/pull/7464
+* feat(home-assistant): add live configurable control panels by @ajnart in https://github.com/homarr-labs/homarr/pull/7521
+* feat(workshop): update installed widgets in place by @ajnart in https://github.com/homarr-labs/homarr/pull/7525
+* fix(bookmarks): improve address readability by @ajnart in https://github.com/homarr-labs/homarr/pull/7527
+* fix(header): move updates to management navigation by @ajnart in https://github.com/homarr-labs/homarr/pull/7528
+* feat(manage): rework management home page by @ajnart in https://github.com/homarr-labs/homarr/pull/7535
+* feat(board): add and edit widgets in place by @ajnart in https://github.com/homarr-labs/homarr/pull/7503
+* feat(release): add stable major and minor image tags by @ajnart in https://github.com/homarr-labs/homarr/pull/7526
+* feat(widgets): discover Workshop widgets in Add Widget by @ajnart in https://github.com/homarr-labs/homarr/pull/7500
+* feat: add global themes and theme editor by @ajnart in https://github.com/homarr-labs/homarr/pull/7468
+### Fixed
+* fix(bookmarks): fit grid cards to the available widget height by @Catif in https://github.com/homarr-labs/homarr/pull/7531
+* fix(jellyfin): preserve single episode release titles by @ajnart in https://github.com/homarr-labs/homarr/pull/7287
+* fix(release): retry unsent Discord announcements by @ajnart in https://github.com/homarr-labs/homarr/pull/7540
+* fix(release-notes): cap screenshot width in release notes by @ajnart in https://github.com/homarr-labs/homarr/pull/7539
+* fix(board): keep sections in place when resizing into containers by @ajnart in https://github.com/homarr-labs/homarr/pull/7461
+* fix(ntfy): replay notification sequence history by @ajnart in https://github.com/homarr-labs/homarr/pull/7517
+* fix(mcp): export blank literals without empty constants by @ajnart in https://github.com/homarr-labs/homarr/pull/7518
+* fix(ui): preserve typing during search navigation by @ajnart in https://github.com/homarr-labs/homarr/pull/7519
+* fix(synology): omit application login session by @ajnart in https://github.com/homarr-labs/homarr/pull/7520
+* fix(bookmarks): retain titles with full URLs by @ajnart in https://github.com/homarr-labs/homarr/pull/7522
+### Other changes
+* docs(helm): format synced installation page by @ajnart in https://github.com/homarr-labs/homarr/pull/7524
+* feat(whats-new): show release notes after updates and write them with AI by @ajnart in https://github.com/homarr-labs/homarr/pull/7538
+* feat(custom-widgets): balance authoring representation guidance by @ajnart in https://github.com/homarr-labs/homarr/pull/7455
+* feat(boards): add header tabs with deferred canvases by @ajnart in https://github.com/homarr-labs/homarr/pull/7497
+* fix(board): reserve exact space for category headers by @ajnart in https://github.com/homarr-labs/homarr/pull/7552
+* fix: resolve UI and UX audit findings by @ajnart in https://github.com/homarr-labs/homarr/pull/7554
+
+## New Contributors
+* @Catif made their first contribution in https://github.com/homarr-labs/homarr/pull/7531
+* @heathlarsen made their first contribution in https://github.com/homarr-labs/homarr/pull/7534
+
+**Full Changelog**: https://github.com/homarr-labs/homarr/compare/v2.12.0...v2.13.0
+
 # Homarr v2.12.0: Docker controls on app tiles and a redesigned Coolify widget
 
 Admins can now start and stop linked Docker containers from app tiles, and the Coolify widget has a redesigned overview. This release also adds OpenMediaVault TOTP support, container release tracks and bookmark options, and fixes Podman startup and existing health checks.
