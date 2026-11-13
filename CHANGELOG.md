@@ -1,28 +1,102 @@
+<!-- Release notes generated using configuration in .github/release.yml at a86ca09ec163e77159598f9f0f5e96aa360d1643 -->
+
 ## What's Changed
-* chore(lang): updated translations from crowdin by @homarr-crowdin[bot] in https://github.com/homarr-labs/homarr/pull/7470
-* fix(deps): update tailwindcss monorepo to ^4.3.4 by @homarr-renovate[bot] in https://github.com/homarr-labs/homarr/pull/7479
-* fix(docker): restore wget for existing health checks by @ajnart in https://github.com/homarr-labs/homarr/pull/7475
-* fix(docker): run nginx workers as www-data by @ajnart in https://github.com/homarr-labs/homarr/pull/7487
-* fix(releases): avoid URL limits for repository batches by @ajnart in https://github.com/homarr-labs/homarr/pull/7425
-* fix(auth): resolve namespaced OIDC claim names by @ajnart in https://github.com/homarr-labs/homarr/pull/7482
-* fix(pi-hole): reuse stored v6 session for custom widget requests by @Epoustouflant in https://github.com/homarr-labs/homarr/pull/7481
-* feat: salvage OMV TOTP, explicit container tracks, bookmark URLs and RSS fallback decoding by @ajnart in https://github.com/homarr-labs/homarr/pull/7462
-* docs(triage): record out-of-scope decisions by @ajnart in https://github.com/homarr-labs/homarr/pull/7489
-* ci(workshop): publish when dev moves without Workshop changes by @ajnart in https://github.com/homarr-labs/homarr/pull/7491
-* docs(triage): correct viewer identity rejection rationale by @ajnart in https://github.com/homarr-labs/homarr/pull/7492
-* fix(board): stop scrollbar resize loop by @ajnart in https://github.com/homarr-labs/homarr/pull/7485
-* fix(jackett): test indexers independently by @ajnart in https://github.com/homarr-labs/homarr/pull/7484
-* fix(frigate): report which authentication step failed by @ajnart in https://github.com/homarr-labs/homarr/pull/7486
-* chore(deps): update crowdin/github-action action to v3.5.1 by @homarr-renovate[bot] in https://github.com/homarr-labs/homarr/pull/7476
-* chore: update bug report template by @homarr-releases[bot] in https://github.com/homarr-labs/homarr/pull/7466
-* fix(icons): prefer a curated icon match over a dropped url's own favicon by @mawcs in https://github.com/homarr-labs/homarr/pull/7392
-* docs(helm): update chart installation page by @homarr-charts-docs-sync[bot] in https://github.com/homarr-labs/homarr/pull/7474
-* feat(coolify): redesign widget and retain status on project errors by @Rhiz3K in https://github.com/homarr-labs/homarr/pull/7463
-* feat(app-widget): start and stop a linked docker container from the tile by @junkerderprovinz in https://github.com/homarr-labs/homarr/pull/7428
-* chore(release): automatic release v2.12.0 by @github-actions[bot] in https://github.com/homarr-labs/homarr/pull/7495
+### New
+* feat(system-resources): add disk and CPU core charts with configurable layouts by @heathlarsen in https://github.com/homarr-labs/homarr/pull/7534
+* feat(docker): match container icons by base image name by @ajnart in https://github.com/homarr-labs/homarr/pull/7464
+* feat(home-assistant): add live configurable control panels by @ajnart in https://github.com/homarr-labs/homarr/pull/7521
+* feat(workshop): update installed widgets in place by @ajnart in https://github.com/homarr-labs/homarr/pull/7525
+* fix(bookmarks): improve address readability by @ajnart in https://github.com/homarr-labs/homarr/pull/7527
+* fix(header): move updates to management navigation by @ajnart in https://github.com/homarr-labs/homarr/pull/7528
+* feat(manage): rework management home page by @ajnart in https://github.com/homarr-labs/homarr/pull/7535
+* feat(board): add and edit widgets in place by @ajnart in https://github.com/homarr-labs/homarr/pull/7503
+* feat(release): add stable major and minor image tags by @ajnart in https://github.com/homarr-labs/homarr/pull/7526
+* feat(widgets): discover Workshop widgets in Add Widget by @ajnart in https://github.com/homarr-labs/homarr/pull/7500
+* feat: add global themes and theme editor by @ajnart in https://github.com/homarr-labs/homarr/pull/7468
+### Fixed
+* fix(bookmarks): fit grid cards to the available widget height by @Catif in https://github.com/homarr-labs/homarr/pull/7531
+* fix(jellyfin): preserve single episode release titles by @ajnart in https://github.com/homarr-labs/homarr/pull/7287
+* fix(release): retry unsent Discord announcements by @ajnart in https://github.com/homarr-labs/homarr/pull/7540
+* fix(release-notes): cap screenshot width in release notes by @ajnart in https://github.com/homarr-labs/homarr/pull/7539
+* fix(board): keep sections in place when resizing into containers by @ajnart in https://github.com/homarr-labs/homarr/pull/7461
+* fix(ntfy): replay notification sequence history by @ajnart in https://github.com/homarr-labs/homarr/pull/7517
+* fix(mcp): export blank literals without empty constants by @ajnart in https://github.com/homarr-labs/homarr/pull/7518
+* fix(ui): preserve typing during search navigation by @ajnart in https://github.com/homarr-labs/homarr/pull/7519
+* fix(synology): omit application login session by @ajnart in https://github.com/homarr-labs/homarr/pull/7520
+* fix(bookmarks): retain titles with full URLs by @ajnart in https://github.com/homarr-labs/homarr/pull/7522
+### Other changes
+* docs(helm): format synced installation page by @ajnart in https://github.com/homarr-labs/homarr/pull/7524
+* feat(whats-new): show release notes after updates and write them with AI by @ajnart in https://github.com/homarr-labs/homarr/pull/7538
+* feat(custom-widgets): balance authoring representation guidance by @ajnart in https://github.com/homarr-labs/homarr/pull/7455
+* feat(boards): add header tabs with deferred canvases by @ajnart in https://github.com/homarr-labs/homarr/pull/7497
+* fix(board): reserve exact space for category headers by @ajnart in https://github.com/homarr-labs/homarr/pull/7552
+* fix: resolve UI and UX audit findings by @ajnart in https://github.com/homarr-labs/homarr/pull/7554
 
 ## New Contributors
-* @Epoustouflant made their first contribution in https://github.com/homarr-labs/homarr/pull/7481
+* @Catif made their first contribution in https://github.com/homarr-labs/homarr/pull/7531
+* @heathlarsen made their first contribution in https://github.com/homarr-labs/homarr/pull/7534
+
+**Full Changelog**: https://github.com/homarr-labs/homarr/compare/v2.12.0...v2.13.0
+
+# Homarr v2.12.0: Docker controls on app tiles and a redesigned Coolify widget
+
+Admins can now start and stop linked Docker containers from app tiles, and the Coolify widget has a redesigned overview. This release also adds OpenMediaVault TOTP support, container release tracks and bookmark options, and fixes Podman startup and existing health checks.
+
+## Highlights
+
+### Docker controls on app tiles
+
+App tiles can show a start or stop button beside the status dot for a linked Docker container. The dot turns orange during the action and red after stopping; after starting, Homarr repeats its checks until the app responds. Only admins see the control, and it is disabled in edit mode or on endpoints without lifecycle access.
+
+<img src="https://github.com/junkerderprovinz/homarr/raw/de37a249cd586ae4e5f9927b2dc72d2820835551/app-docker-toggle/tile-after.png" alt="App tile with a stop button beside the status dot" width="220">
+
+> [!TIP]
+> Look for the "Docker container" field below "Choose app" in the tile settings. Selecting an app automatically links a container with a matching name or URL subdomain when one is found.
+
+### Coolify widget redesign
+
+Compact cards now show project, running resource and available server counts, while larger cards list resources needing attention or projects when everything is healthy. The expanded view combines projects, resource issues and servers in a searchable overview. Available application, service and server statuses remain visible when project metadata requests fail, with affected counts shown as unknown rather than zero.
+
+<img src="https://github.com/user-attachments/assets/53e53b7c-583f-455d-99d8-6559cf2b9e67" alt="Redesigned compact Coolify widget" width="600">
+
+### OpenMediaVault TOTP, container tracks and bookmark URLs
+
+OpenMediaVault integrations accept an optional encrypted TOTP secret for two-factor authentication. Docker Hub, GHCR and Quay release lookups support explicit non-version tracks such as `:nightly`, including after saving and reloading. Bookmarks can display full URLs and a copy control; both options are off by default.
+
+<img src="https://github.com/user-attachments/assets/f5746aa8-065d-4560-b8a8-36a469dee111" alt="OpenMediaVault integration with an encrypted TOTP secret and External URL" width="600">
+
+## New
+
+- **Docker tile controls:** added start and stop controls for a linked Docker container on app tiles. by @junkerderprovinz in [#7428](https://github.com/homarr-labs/homarr/pull/7428)
+- **TOTP and widget options:** added OpenMediaVault TOTP, explicit container tracks and optional bookmark URLs and copying; fixed escaped ampersands in RSS fallback image URLs. by @ajnart in [#7462](https://github.com/homarr-labs/homarr/pull/7462)
+
+## Improved
+
+- **Coolify widget:** redesigned compact and expanded views and preserved available resource statuses when project metadata requests fail. by @Rhiz3K in [#7463](https://github.com/homarr-labs/homarr/pull/7463)
+
+## Fixed
+
+- **Podman startup:** fixed containers failing to start since v2.11.0 when nginx used an unmapped worker user. by @ajnart in [#7487](https://github.com/homarr-labs/homarr/pull/7487)
+- **Existing health checks:** restored `wget` in the container image so existing probes no longer fail with `wget: not found`. by @ajnart in [#7475](https://github.com/homarr-labs/homarr/pull/7475)
+- **OIDC claim names:** group and name attributes now resolve full claim names containing dots, including namespaced URLs such as `https://domain.com/roles`. by @ajnart in [#7482](https://github.com/homarr-labs/homarr/pull/7482)
+- **Pi-hole v6 sessions:** Custom Widget requests now reuse a valid stored session instead of creating one on every request and exhausting API seats. by @Epoustouflant in [#7481](https://github.com/homarr-labs/homarr/pull/7481)
+
+<details>
+<summary>All changes</summary>
+
+### Fixed
+
+- **Dropped URL icons:** tiles created by dropping a URL now prefer an exact match from the icon library before using the site's favicon. by @mawcs in [#7392](https://github.com/homarr-labs/homarr/pull/7392)
+- **Board resizing:** fixed boards wobbling at some window sizes because scrollbar changes repeatedly resized the layout. by @ajnart in [#7485](https://github.com/homarr-labs/homarr/pull/7485)
+- **Releases widget requests:** repository batches no longer exceed the request URL limit and incorrectly report providers as unresponsive. by @ajnart in [#7425](https://github.com/homarr-labs/homarr/pull/7425)
+- **Jackett indexer tests:** checks now test each configured indexer, continue after failures and identify failed indexers in the results. by @ajnart in [#7484](https://github.com/homarr-labs/homarr/pull/7484)
+- **Frigate connection errors:** connection tests now identify the failed authentication step and include relevant HTTP status codes. by @ajnart in [#7486](https://github.com/homarr-labs/homarr/pull/7486)
+
+</details>
+
+## Thanks
+
+Thanks to @Epoustouflant for their first contribution in [#7481](https://github.com/homarr-labs/homarr/pull/7481).
 
 **Full Changelog**: https://github.com/homarr-labs/homarr/compare/v2.11.1...v2.12.0
 
@@ -32,35 +106,68 @@
 
 **Full Changelog**: https://github.com/homarr-labs/homarr/compare/v2.11.0...v2.11.1
 
-## What's Changed
-* chore(deps): update dependency @assistant-ui/core to v0.3.32 by @homarr-renovate[bot] in https://github.com/homarr-labs/homarr/pull/7423
-* chore(deps): update dependency assistant-cloud to v0.2.9 by @homarr-renovate[bot] in https://github.com/homarr-labs/homarr/pull/7424
-* chore(lang): updated translations from crowdin by @homarr-crowdin[bot] in https://github.com/homarr-labs/homarr/pull/7422
-* chore(deps): update node.js to v24.22.2 by @homarr-renovate[bot] in https://github.com/homarr-labs/homarr/pull/7431
-* fix(ci): regenerate Crowdin PRs from dev by @ajnart in https://github.com/homarr-labs/homarr/pull/7430
-* chore(lang): updated translations from crowdin by @homarr-crowdin[bot] in https://github.com/homarr-labs/homarr/pull/7433
-* i18n: monthly sync of the Chinese catalog (10 new keys) by @ApplesBear-X in https://github.com/homarr-labs/homarr/pull/7429
-* chore: update bug report template by @homarr-releases[bot] in https://github.com/homarr-labs/homarr/pull/7412
-* chore(lang): updated translations from crowdin by @homarr-crowdin[bot] in https://github.com/homarr-labs/homarr/pull/7434
-* fix(deps): update dependency three to ^0.187.0 by @homarr-renovate[bot] in https://github.com/homarr-labs/homarr/pull/7450
-* fix(deps): update module charm.land/bubbletea/v2 to v2.1.1 by @homarr-renovate[bot] in https://github.com/homarr-labs/homarr/pull/7449
-* chore(deps): update dependency @types/three to ^0.187.0 by @homarr-renovate[bot] in https://github.com/homarr-labs/homarr/pull/7453
-* fix(deps): update dependency swiper to ^14.4.0 by @homarr-renovate[bot] in https://github.com/homarr-labs/homarr/pull/7454
-* fix(assistant): send the Workshop token after runtime options load by @ajnart in https://github.com/homarr-labs/homarr/pull/7457
-* docs(helm): update chart installation page by @homarr-charts-docs-sync[bot] in https://github.com/homarr-labs/homarr/pull/7418
-* fix(board): show one discard dialog when leaving edit mode by @Anandumv in https://github.com/homarr-labs/homarr/pull/7426
-* feat(assistant): switch the Homarr model from GPT-6 Luna to GPT-6.1 Sol for smarter, less lazy and faster answers by @ajnart in https://github.com/homarr-labs/homarr/pull/7458
-* feat(integrations): add external URL field for widget links by @ajnart in https://github.com/homarr-labs/homarr/pull/7296
-* perf: apply 5 fixes to reduce RAM usage and optimize widget bundles by @ajnart in https://github.com/homarr-labs/homarr/pull/7160
-* chore(deps): update dependency node to v24.22.2 by @homarr-renovate[bot] in https://github.com/homarr-labs/homarr/pull/7432
-* feat(docker): honor icon labels in the Docker widget by @ajnart in https://github.com/homarr-labs/homarr/pull/7459
-* fix(calendar): preserve iCal all-day dates across timezones by @ajnart in https://github.com/homarr-labs/homarr/pull/7460
-* feat(auth): share read-only access across API keys and MCP by @ajnart in https://github.com/homarr-labs/homarr/pull/7297
-* perf: streamline widget runtime, builds and shared UI by @ajnart in https://github.com/homarr-labs/homarr/pull/7217
-* chore(release): automatic release v2.11.0 by @github-actions[bot] in https://github.com/homarr-labs/homarr/pull/7465
+# Homarr v2.11.0: External widget URLs and read-only API access
 
-## New Contributors
-* @Anandumv made their first contribution in https://github.com/homarr-labs/homarr/pull/7426
+Integrations now have an External URL for widget links, and API keys and MCP grants can be limited to read-only access. This release also adds Docker icon-label support, updates the Homarr assistant model and fixes Workshop sign-in errors and all-day calendar dates.
+
+> [!IMPORTANT]
+> If you run a Workshop deployment, redeploy it for the Homarr model change and leave `HOMARR_AI_OPENROUTER_MODEL` unset or set to `openai/gpt-6.1-sol`. Wazuh's Dashboard URL setting was replaced by External URL; saved addresses migrate automatically without re-entry.
+
+## Highlights
+
+### External URLs for widget links
+
+Integrations have an optional External URL field for widget and media links, including Plex detail links. Links use this address first, then fall back to the linked app URL and finally the integration URL.
+
+<img src="https://github.com/user-attachments/assets/706b4600-383b-4033-a17d-ff304a563d87" alt="Integration form with the External URL field" width="524">
+
+> [!TIP]
+> Creating an app from an integration uses the External URL, or the integration URL when it is empty. The app URL and External URL remain independent afterward.
+
+### Read-only API keys and MCP grants
+
+API keys and MCP OAuth grants can now restrict access to read-only while still respecting the owner's permissions. New UI-created keys and MCP consent default to read-only; existing keys and creation requests that omit the access option retain writable access. Read-only access blocks mutations, service actions, arbitrary upstream requests and Custom Widget API execution, and MCP hides disallowed tools.
+
+<img src="https://github.com/user-attachments/assets/5bd366fa-af2c-4cde-a6aa-397cbf5e06dd" alt="API keys with read-only access controls" width="589">
+
+### Docker widget icon labels
+
+The Docker stats widget now uses container icon labels: `homarr.icon` first, then `homepage.icon`. Containers without either label keep their existing image-name icon matching.
+
+<img src="https://github.com/user-attachments/assets/7f42dcde-b852-45d2-b78f-1c2db94184e1" alt="Labeled container uses its custom icon; Sonarr is unchanged" width="600">
+
+## New
+
+- **Integration link URLs:** added an optional External URL for widget and media links, replacing Wazuh's separate Dashboard URL setting. by @ajnart in [#7296](https://github.com/homarr-labs/homarr/pull/7296)
+- **Read-only API access:** API keys and MCP OAuth grants support read-only access across REST, tRPC and MCP. by @ajnart in [#7297](https://github.com/homarr-labs/homarr/pull/7297)
+
+## Improved
+
+- **Docker widget icons:** container icons now use `homarr.icon`, then `homepage.icon`, before falling back to image-name matching. by @ajnart in [#7459](https://github.com/homarr-labs/homarr/pull/7459)
+- **Homarr assistant model:** the Homarr provider now uses GPT-6.1 Sol with fixed Low reasoning; a Default badge replaces the thinking-mode selector. by @ajnart in [#7458](https://github.com/homarr-labs/homarr/pull/7458)
+
+## Fixed
+
+- **Workshop assistant:** fixed the Workshop sign-in error for signed-in users with available allowance, and restored allowance updates after a reply. by @ajnart in [#7457](https://github.com/homarr-labs/homarr/pull/7457)
+- **iCal all-day events:** date-only events now stay on their intended dates when server and browser time zones differ. by @ajnart in [#7460](https://github.com/homarr-labs/homarr/pull/7460)
+
+<details>
+<summary>All changes</summary>
+
+### Improved
+
+- **Widget resource use:** reduced Custom JSX rendering payloads, released expired cache responses, closed failed LDAP connections and unmounted closed board-duplication forms. by @ajnart in [#7160](https://github.com/homarr-labs/homarr/pull/7160)
+- **Widget runtime:** reused Custom Widget parsing and integration lookups and deferred hidden editor work; the production image moved to Debian/glibc. by @ajnart in [#7217](https://github.com/homarr-labs/homarr/pull/7217)
+
+### Fixed
+
+- **Board editing:** switching boards with unsaved edits now opens one discard dialog; Cancel keeps the edits and Discard navigates. by @Anandumv in [#7426](https://github.com/homarr-labs/homarr/pull/7426)
+
+</details>
+
+## Thanks
+
+Welcome to @Anandumv, whose first contribution landed in [#7426](https://github.com/homarr-labs/homarr/pull/7426).
 
 **Full Changelog**: https://github.com/homarr-labs/homarr/compare/v2.10.1...v2.11.0
 
@@ -72,40 +179,69 @@
 
 **Full Changelog**: https://github.com/homarr-labs/homarr/compare/v2.10.0...v2.10.1
 
-## What's Changed
-* chore(deps): update crowdin/github-action action to v3.5.0 by @homarr-renovate[bot] in https://github.com/homarr-labs/homarr/pull/7373
-* fix(widgets): repair download resizing and table column options by @ajnart in https://github.com/homarr-labs/homarr/pull/7374
-* docs(triage): require value and compatibility decisions by @ajnart in https://github.com/homarr-labs/homarr/pull/7365
-* chore: update bug report template by @homarr-releases[bot] in https://github.com/homarr-labs/homarr/pull/7357
-* chore(lang): updated translations from crowdin by @homarr-crowdin[bot] in https://github.com/homarr-labs/homarr/pull/7372
-* feat(branding): allow hiding authentication background marquee by @ajnart in https://github.com/homarr-labs/homarr/pull/7381
-* chore(security): audit and harden dependencies, images and CI by @ajnart in https://github.com/homarr-labs/homarr/pull/7343
-* feat(homebox): support API key authentication by @ajnart in https://github.com/homarr-labs/homarr/pull/7237
-* docs: note that board viewers can read placed integrations by @szw-dariusz in https://github.com/homarr-labs/homarr/pull/7371
-* feat: add release list controls and correct board preview colors by @ajnart in https://github.com/homarr-labs/homarr/pull/7383
-* fix(truenas): query completed reporting intervals by @ajnart in https://github.com/homarr-labs/homarr/pull/7386
-* chore(deps): update dependency assistant-cloud to v0.2.8 by @homarr-renovate[bot] in https://github.com/homarr-labs/homarr/pull/7389
-* chore(deps): update dependency @assistant-ui/core to v0.3.31 by @homarr-renovate[bot] in https://github.com/homarr-labs/homarr/pull/7388
-* fix(deps): update module github.com/pocketbase/pocketbase to v0.40.6 by @homarr-renovate[bot] in https://github.com/homarr-labs/homarr/pull/7403
-* chore(lang): updated translations from crowdin by @homarr-crowdin[bot] in https://github.com/homarr-labs/homarr/pull/7395
-* fix(deps): update dependency postcss to ^8.5.32 by @homarr-renovate[bot] in https://github.com/homarr-labs/homarr/pull/7409
-* chore(lang): updated translations from crowdin by @homarr-crowdin[bot] in https://github.com/homarr-labs/homarr/pull/7410
-* docs(helm): update chart installation page by @homarr-charts-docs-sync[bot] in https://github.com/homarr-labs/homarr/pull/7254
-* chore(deps): pin dependencies by @homarr-renovate[bot] in https://github.com/homarr-labs/homarr/pull/7387
-* feat(wud): support personal API tokens by @xfdzcoder in https://github.com/homarr-labs/homarr/pull/7275
-* feat(beszel): add Fahrenheit option to System Grid and Table by @Octopus-98 in https://github.com/homarr-labs/homarr/pull/7399
-* feat(releases): persist section collapse state by @Octopus-98 in https://github.com/homarr-labs/homarr/pull/7401
-* fix(board): paint image background before video HEAD resolves by @Octopus-98 in https://github.com/homarr-labs/homarr/pull/7400
-* fix: target llama.cpp stats to displayed model by @ajnart in https://github.com/homarr-labs/homarr/pull/7150
-* fix(assistant): make availability controls clear and immediate by @ajnart in https://github.com/homarr-labs/homarr/pull/7282
-* perf(dashboard): retain loading gains without prepared pages by @ajnart in https://github.com/homarr-labs/homarr/pull/7406
-* fix(onboarding): align address review and skipped connections by @ajnart in https://github.com/homarr-labs/homarr/pull/7391
-* chore(release): automatic release v2.10.0 by @github-actions[bot] in https://github.com/homarr-labs/homarr/pull/7411
+# Homarr v2.10.0: Release widget controls and Homebox API keys
 
-## New Contributors
-* @szw-dariusz made their first contribution in https://github.com/homarr-labs/homarr/pull/7371
-* @xfdzcoder made their first contribution in https://github.com/homarr-labs/homarr/pull/7275
-* @Octopus-98 made their first contribution in https://github.com/homarr-labs/homarr/pull/7399
+The Releases widget can now exclude pre-releases, show an ungrouped list and remember collapsed sections. Homebox API keys and WUD personal API tokens are supported, alongside dashboard loading improvements and fixes for table resizing, TrueNAS readings and board backgrounds.
+
+## Highlights
+
+### Release widget controls
+
+Each GitHub or Codeberg repository can exclude pre-releases, and the widget can display one continuous list instead of grouping releases by status. When grouping is enabled, section expand/collapse choices now survive reloads for users with change access. Viewed-state tracking and visibility filters still apply when grouping is off.
+
+<img src="https://github.com/user-attachments/assets/28321bbe-b881-4f7e-bf87-da2160d98975" alt="Continuous stable-only release list alongside the default grouped layout" width="600">
+
+### Homebox and WUD authentication
+
+Homebox accepts an API key instead of email and password, including for OIDC-only accounts. WUD now supports personal API tokens while retaining username/password and unauthenticated modes for existing setups. Existing integrations require no changes.
+
+<img src="https://github.com/user-attachments/assets/262e7723-eb02-4813-84b7-fe4fc6285fa3" alt="Homebox API-key authentication option" width="600">
+
+> [!TIP]
+> For WUD, create a token under My Profile → Personal API Tokens with the `read` scope. The integration form links to your WUD profile page.
+
+### Dashboard loading
+
+The dashboard no longer shows a full-page loading spinner, widget placement shifts less during loading, and content remains visible during refresh. Notebook content, RSS content and charts appeared earlier in normal-CPU tests. Under CPU throttling, Notebook content did not load earlier and the first browser widget refresh started later.
+
+<img src="https://github.com/user-attachments/assets/e2eb5aee-6db7-4d12-b055-abf13a0880ec" alt="Dashboard with loading and layout improvements" width="600">
+
+## New
+
+- **Homebox authentication:** added API-key authentication alongside the existing email/password option. by @ajnart in [#7237](https://github.com/homarr-labs/homarr/pull/7237)
+- **WUD authentication:** added personal API tokens for token-based and OIDC-only setups, while retaining Basic and unauthenticated modes. by @xfdzcoder in [#7275](https://github.com/homarr-labs/homarr/pull/7275)
+
+## Improved
+
+- **Release list controls:** added per-repository pre-release filtering for GitHub and Codeberg, optional grouping and consistent rows; board previews now use each board's primary color. by @ajnart in [#7383](https://github.com/homarr-labs/homarr/pull/7383)
+- **Release section state:** section expand/collapse choices now survive reloads when saved by a user with change access. by @Octopus-98 in [#7401](https://github.com/homarr-labs/homarr/pull/7401)
+- **Dashboard loading:** removed the full-page dashboard spinner, reduced layout shifts and kept content visible during refresh. by @ajnart in [#7406](https://github.com/homarr-labs/homarr/pull/7406)
+- **Beszel temperature units:** added a Fahrenheit option to the System Grid and System Table widgets; Celsius remains the default. by @Octopus-98 in [#7399](https://github.com/homarr-labs/homarr/pull/7399)
+
+## Fixed
+
+- **Table column controls:** download tables now retain resized column widths and offer an optional Actions column; Beszel gained a searchable column selector that preserves existing selections. by @ajnart in [#7374](https://github.com/homarr-labs/homarr/pull/7374)
+- **TrueNAS reporting:** unfinished reporting intervals no longer replace collected CPU, memory, temperature and network readings with zero-filled values. by @ajnart in [#7386](https://github.com/homarr-labs/homarr/pull/7386)
+- **Board backgrounds:** image backgrounds now appear while the media-type check is pending, fixing a delay introduced in v2.9.0; recognized video extensions skip the check. by @Octopus-98 in [#7400](https://github.com/homarr-labs/homarr/pull/7400)
+
+<details>
+<summary>All changes</summary>
+
+### Improved
+
+- **Authentication branding:** administrators can hide floating application icons on login, invitation and MCP authentication pages; they remain visible by default. by @ajnart in [#7381](https://github.com/homarr-labs/homarr/pull/7381)
+
+### Fixed
+
+- **llama.cpp statistics:** router-mode servers now receive metrics and slot requests for the displayed model, fixing empty speed, token and slot data. by @ajnart in [#7150](https://github.com/homarr-labs/homarr/pull/7150)
+- **Assistant availability:** availability changes save immediately and retain provider settings when disabled; provider changes clear stale model choices. by @ajnart in [#7282](https://github.com/homarr-labs/homarr/pull/7282)
+- **Onboarding connections:** service URL review now happens in Connect, and skipping unfinished connections deselects them so the recap and saved setup agree. by @ajnart in [#7391](https://github.com/homarr-labs/homarr/pull/7391)
+
+</details>
+
+## Thanks
+
+Welcome to first-time contributors @szw-dariusz ([#7371](https://github.com/homarr-labs/homarr/pull/7371)), @xfdzcoder ([#7275](https://github.com/homarr-labs/homarr/pull/7275)) and @Octopus-98 ([#7399](https://github.com/homarr-labs/homarr/pull/7399)).
 
 **Full Changelog**: https://github.com/homarr-labs/homarr/compare/v2.9.1...v2.10.0
 
@@ -120,69 +256,73 @@
 
 **Full Changelog**: https://github.com/homarr-labs/homarr/compare/v2.9.0...v2.9.1
 
-## What's Changed
-* chore(lang): updated translations from crowdin by @homarr-crowdin[bot] in https://github.com/homarr-labs/homarr/pull/7289
-* fix(board): preserve square tiles inside categories by @ajnart in https://github.com/homarr-labs/homarr/pull/7265
-* chore: update bug report template by @homarr-releases[bot] in https://github.com/homarr-labs/homarr/pull/7277
-* feat(board): add apps by dropping a URL onto the board in edit mode by @mawcs in https://github.com/homarr-labs/homarr/pull/7210
-* feat(releases): fix registry and rate-limit errors and rebuild the widget by @ajnart in https://github.com/homarr-labs/homarr/pull/7270
-* chore(renovate): re-enable automatic dependency update PRs by @ajnart in https://github.com/homarr-labs/homarr/pull/7303
-* docs(agents): scope the triage disclaimer ban to contributors by @ajnart in https://github.com/homarr-labs/homarr/pull/7304
-* perf(manage): prefetch navigation and align primary actions by @ajnart in https://github.com/homarr-labs/homarr/pull/7301
-* ci(bots): only auto-merge Renovate PRs it marks for automerge by @ajnart in https://github.com/homarr-labs/homarr/pull/7342
-* chore(deps): update ghcr.io/muchobien/pocketbase docker tag to v0.40.6 by @homarr-renovate[bot] in https://github.com/homarr-labs/homarr/pull/7322
-* chore(deps): update alpine docker tag to v3.24.3 by @homarr-renovate[bot] in https://github.com/homarr-labs/homarr/pull/7306
-* fix(deps): update module charm.land/bubbletea/v2 to v2.1.0 by @homarr-renovate[bot] in https://github.com/homarr-labs/homarr/pull/7332
-* chore(deps): update golang docker tag to v1.27.3 by @homarr-renovate[bot] in https://github.com/homarr-labs/homarr/pull/7324
-* fix(deps): update dependency @tabler/icons to ^3.49.0 by @homarr-renovate[bot] in https://github.com/homarr-labs/homarr/pull/7326
-* chore(deps): update docker/dockerfile docker tag to v1.28 by @homarr-renovate[bot] in https://github.com/homarr-labs/homarr/pull/7320
-* chore(deps): update dependency @assistant-ui/tap to v0.9.23 by @homarr-renovate[bot] in https://github.com/homarr-labs/homarr/pull/7309
-* chore(deps): update dependency playwright-core to ^1.64.1 by @homarr-renovate[bot] in https://github.com/homarr-labs/homarr/pull/7318
-* fix(deps): update module github.com/pocketbase/pocketbase to v0.40.5 by @homarr-renovate[bot] in https://github.com/homarr-labs/homarr/pull/7333
-* chore(deps): update docker/login-action action to v4.7.0 by @homarr-renovate[bot] in https://github.com/homarr-labs/homarr/pull/7321
-* fix(deps): update dependency postcss to ^8.5.31 by @homarr-renovate[bot] in https://github.com/homarr-labs/homarr/pull/7313
-* fix(deps): update dependency mysql2 to v3.24.6 by @homarr-renovate[bot] in https://github.com/homarr-labs/homarr/pull/7327
-* chore(deps): update oven/bun docker tag to v1.4.4 by @homarr-renovate[bot] in https://github.com/homarr-labs/homarr/pull/7312
-* chore(deps): update dependency assistant-cloud to v0.2.7 by @homarr-renovate[bot] in https://github.com/homarr-labs/homarr/pull/7316
-* chore(deps): update dependency typescript-compiler-api to v6.0.3 by @homarr-renovate[bot] in https://github.com/homarr-labs/homarr/pull/7311
-* fix(deps): update dependency tailwind-merge to ^3.7.0 by @homarr-renovate[bot] in https://github.com/homarr-labs/homarr/pull/7329
-* chore(deps): update dependency react-is to ^19.3.1 by @homarr-renovate[bot] in https://github.com/homarr-labs/homarr/pull/7319
-* chore(deps): update dependency @assistant-ui/store to v0.3.21 by @homarr-renovate[bot] in https://github.com/homarr-labs/homarr/pull/7308
-* fix(integrations): declare http-cookie-agent dependency to unbreak dev image build by @ajnart in https://github.com/homarr-labs/homarr/pull/7345
-* chore(deps): update go module directive to v1.27.3 by @homarr-renovate[bot] in https://github.com/homarr-labs/homarr/pull/7323
-* fix(deps): update module charm.land/lipgloss/v2 to v2.0.6 by @homarr-renovate[bot] in https://github.com/homarr-labs/homarr/pull/7314
-* fix(deps): update dependency three to ^0.186.1 by @homarr-renovate[bot] in https://github.com/homarr-labs/homarr/pull/7330
-* fix(deps): update tailwindcss monorepo to ^4.3.3 by @homarr-renovate[bot] in https://github.com/homarr-labs/homarr/pull/7315
-* fix(deps): update module charm.land/bubbles/v2 to v2.2.1 by @homarr-renovate[bot] in https://github.com/homarr-labs/homarr/pull/7331
-* fix(deps): update dependency swiper to ^14.3.0 by @homarr-renovate[bot] in https://github.com/homarr-labs/homarr/pull/7328
-* fix(truenas): normalize legacy memory and reporting columns by @ajnart in https://github.com/homarr-labs/homarr/pull/7298
-* chore(deps): update actions/cache action to v6 by @homarr-renovate[bot] in https://github.com/homarr-labs/homarr/pull/7334
-* chore(deps): update actions/github-script action to v9 by @homarr-renovate[bot] in https://github.com/homarr-labs/homarr/pull/7335
-* chore(deps): update actions/setup-node action to v7 by @homarr-renovate[bot] in https://github.com/homarr-labs/homarr/pull/7336
-* chore(deps): update crowdin/github-action action to v3 by @homarr-renovate[bot] in https://github.com/homarr-labs/homarr/pull/7337
-* chore(deps): update endbug/add-and-commit action to v11 by @homarr-renovate[bot] in https://github.com/homarr-labs/homarr/pull/7340
-* chore(deps): update dependency bun to v1.4.4 by @homarr-renovate[bot] in https://github.com/homarr-labs/homarr/pull/7310
-* fix(deps): update dependency @base-ui/react to ^1.9.0 by @homarr-renovate[bot] in https://github.com/homarr-labs/homarr/pull/7325
-* fix(bookmarks): show vertical hostnames when rows fit by @ajnart in https://github.com/homarr-labs/homarr/pull/7291
-* fix(downloads): filter Transmission and Deluge before limiting by @ajnart in https://github.com/homarr-labs/homarr/pull/7292
-* fix(header): add consistent account and board action feedback by @ajnart in https://github.com/homarr-labs/homarr/pull/7293
-* fix(board): isolate dropped icons and preserve editable drops by @ajnart in https://github.com/homarr-labs/homarr/pull/7300
-* fix(custom-widgets): exclude cache hits from query budgets by @ajnart in https://github.com/homarr-labs/homarr/pull/7305
-* feat(media): support mp4 and webm board backgrounds by @AmalkrishnaAS in https://github.com/homarr-labs/homarr/pull/7299
-* chore(deps): update dependency esbuild to ^0.28.2 by @homarr-renovate[bot] in https://github.com/homarr-labs/homarr/pull/7317
-* chore(deps): update dependency ubuntu to v26 by @homarr-renovate[bot] in https://github.com/homarr-labs/homarr/pull/7339
-* feat(assistant): modernize assistant-ui and preserve conversation state by @ajnart in https://github.com/homarr-labs/homarr/pull/7346
-* feat(custom-widgets): support multiple encrypted headers by @ajnart in https://github.com/homarr-labs/homarr/pull/7241
-* feat(app): add opening modes and URL format help by @DooSys in https://github.com/homarr-labs/homarr/pull/7196
-* fix(custom-widgets): use trusted certificates for HTTP sources by @ajnart in https://github.com/homarr-labs/homarr/pull/7349
-* fix(boards): validate item layout bounds and repair invalid layouts in the editor by @ajnart in https://github.com/homarr-labs/homarr/pull/7351
-* feat(releases): sync viewed versions across devices by @ajnart in https://github.com/homarr-labs/homarr/pull/7295
-* chore(release): automatic release v2.9.0 by @github-actions[bot] in https://github.com/homarr-labs/homarr/pull/7356
+# Homarr v2.9.0: Redesigned Releases widget and video backgrounds
 
-## New Contributors
-* @mawcs made their first contribution in https://github.com/homarr-labs/homarr/pull/7210
-* @AmalkrishnaAS made their first contribution in https://github.com/homarr-labs/homarr/pull/7299
-* @DooSys made their first contribution in https://github.com/homarr-labs/homarr/pull/7196
+The Releases widget has a new layout, resolves container version tags and syncs viewed releases across devices. You can also add apps by dropping links onto a board and upload MP4 or WebM backgrounds.
+
+## Highlights
+
+### Releases widget redesign and viewed-release sync
+
+The rebuilt widget puts new releases first until you mark them as viewed. Container images tracked with `latest`, `release` or `stable` resolve to version tags where available, and failed refreshes keep the last release visible for up to 24 hours. Signed-in users' viewed marks sync across devices when the page regains focus; anonymous viewers keep browser-local marks.
+
+<img src="https://github.com/user-attachments/assets/7064f8c8-f81d-42f5-a048-49b6748f5d01" alt="Redesigned Releases widget" width="600">
+
+### Add apps by dropping URLs
+
+Dropping an HTTP(S) link onto a board in edit mode creates and places an app. Homarr uses the page title and site icon, with fallbacks when either is unavailable.
+
+<img src="https://github.com/user-attachments/assets/097e11fe-325a-44a6-8407-039a0a8f084f" alt="Adding an app by dropping a URL onto the board" width="600">
+
+> [!TIP]
+> You can drag a link directly from your browser's address bar. Drops into text fields insert the URL instead of creating an app.
+
+### MP4 and WebM board backgrounds
+
+You can upload and preview MP4 or WebM videos for use as muted, looping board backgrounds within the existing 32 MiB upload limit. Video backgrounds respect cover/contain, attachment and reduced-motion settings, and external video URLs with query strings also work.
+
+<img src="https://github.com/user-attachments/assets/5ba8e393-41d9-4874-9039-7cebf0c480e3" alt="Uploaded MP4 playing behind the board" width="600">
+
+## New
+
+- **URL app creation:** dropping a link onto a board in edit mode creates an app using the page title and site icon when available. by @mawcs in [#7210](https://github.com/homarr-labs/homarr/pull/7210)
+- **Video board backgrounds:** added MP4 and WebM uploads, previews and playback as board backgrounds. by @AmalkrishnaAS in [#7299](https://github.com/homarr-labs/homarr/pull/7299)
+
+## Improved
+
+- **Releases widget:** rebuilt the layout, improved container version resolution and reduced GitHub requests; release checks now run at most every six hours. by @ajnart in [#7270](https://github.com/homarr-labs/homarr/pull/7270)
+- **Viewed release sync:** signed-in users' single and bulk viewed marks now sync across devices; existing browser-local marks import once. by @ajnart in [#7295](https://github.com/homarr-labs/homarr/pull/7295)
+- **App opening modes:** replaced the new-tab switch with Current tab, New tab and New window choices, and added URL format help. by @DooSys in [#7196](https://github.com/homarr-labs/homarr/pull/7196)
+- **Custom widget headers:** added Headers authentication with up to eight separately encrypted credential values per source; existing authentication modes remain compatible. by @ajnart in [#7241](https://github.com/homarr-labs/homarr/pull/7241)
+
+## Fixed
+
+- **Category tile sizing:** app tiles inside categories stay square instead of collapsing into short rows at some viewport sizes. by @ajnart in [#7265](https://github.com/homarr-labs/homarr/pull/7265)
+- **TrueNAS reporting:** fixed nearly 100% memory readings on TrueNAS 24.10 and corrected CPU, temperature and network value handling. by @ajnart in [#7298](https://github.com/homarr-labs/homarr/pull/7298)
+- **Download filtering:** Transmission and Deluge apply category and completion filters, then sorting, before the display limit so eligible downloads are not hidden. by @ajnart in [#7292](https://github.com/homarr-labs/homarr/pull/7292)
+- **Custom widget certificates:** HTTPS sources now use certificates and hostname settings configured in Homarr's trusted certificate store. by @ajnart in [#7349](https://github.com/homarr-labs/homarr/pull/7349)
+- **Board layout bounds:** out-of-bounds placements are rejected with a specific error; the editor repairs existing invalid positions and widths in the draft, applying them only on Save. by @ajnart in [#7351](https://github.com/homarr-labs/homarr/pull/7351)
+
+<details>
+<summary>All changes</summary>
+
+### Improved
+
+- **Management navigation:** prefetched sidebar destinations, preloaded management data and moved primary actions into shared page headers. by @ajnart in [#7301](https://github.com/homarr-labs/homarr/pull/7301)
+- **Assistant conversations:** added shared starting prompts and history-load retry, while preserving draft text, mentions and attachments when inserting commands. by @ajnart in [#7346](https://github.com/homarr-labs/homarr/pull/7346)
+
+### Fixed
+
+- **Vertical bookmark hostnames:** hostname lines appear when rows fit, with spacing recalculated when groups expand or collapse. by @ajnart in [#7291](https://github.com/homarr-labs/homarr/pull/7291)
+- **Header control feedback:** account and board controls gained hover/focus tooltips and consistent button feedback. by @ajnart in [#7293](https://github.com/homarr-labs/homarr/pull/7293)
+- **Dropped URLs and icons:** text-field drops no longer create unintended apps; detected icons load directly from their source rather than through Homarr's image proxy. by @ajnart in [#7300](https://github.com/homarr-labs/homarr/pull/7300)
+- **Custom widget caching:** cache hits and shared in-flight queries no longer consume query budgets. Successful responses cache for 30 seconds by default; `cacheSeconds: 0` disables caching. by @ajnart in [#7305](https://github.com/homarr-labs/homarr/pull/7305)
+
+</details>
+
+## Thanks
+
+Welcome to first-time contributors @AmalkrishnaAS ([#7299](https://github.com/homarr-labs/homarr/pull/7299)) and @DooSys ([#7196](https://github.com/homarr-labs/homarr/pull/7196)).
 
 **Full Changelog**: https://github.com/homarr-labs/homarr/compare/v2.8.2...v2.9.0
 
@@ -203,96 +343,191 @@
 
 **Full Changelog**: https://github.com/homarr-labs/homarr/compare/v2.8.0...v2.8.1
 
-## What's Changed
-* feat(ci): sync triage replies with GitHub Projects by @ajnart in https://github.com/homarr-labs/homarr/pull/7249
-* chore: update bug report template by @homarr-releases[bot] in https://github.com/homarr-labs/homarr/pull/7251
-* i18n(cn): complete the Simplified Chinese catalog (266 missing keys) by @ApplesBear-X in https://github.com/homarr-labs/homarr/pull/7252
-* fix: remove custom widget network filtering by @ajnart in https://github.com/homarr-labs/homarr/pull/7120
-* chore(deps): update node.js to v24.22.1 [security] by @RedwindA in https://github.com/homarr-labs/homarr/pull/7267
-* chore(deps): update oven/bun docker tag to v1.4.3 by @homarr-renovate[bot] in https://github.com/homarr-labs/homarr/pull/7269
-* chore(deps): update dependency bun to v1.4.3 by @homarr-renovate[bot] in https://github.com/homarr-labs/homarr/pull/7268
-* chore(lang): updated translations from crowdin by @homarr-crowdin[bot] in https://github.com/homarr-labs/homarr/pull/7259
-* fix(coolify): use linked app URL for widget links by @darbyjack in https://github.com/homarr-labs/homarr/pull/7261
-* feat(jellyfin): show series name on episode release tiles by @darbyjack in https://github.com/homarr-labs/homarr/pull/7260
-* feat(uptime-kuma): add summary-only mode and per-widget status pages by @ajnart in https://github.com/homarr-labs/homarr/pull/7264
-* docs(agents): add Homarr triage skill by @ajnart in https://github.com/homarr-labs/homarr/pull/7263
-* fix(calendar): make view a widget option only and use hover for details by @ajnart in https://github.com/homarr-labs/homarr/pull/7266
-* chore(release): automatic release v2.8.0 by @github-actions[bot] in https://github.com/homarr-labs/homarr/pull/7276
+# Homarr v2.8.0: Uptime Kuma summary mode and Jellyfin series names
 
-## New Contributors
-* @ApplesBear-X made their first contribution in https://github.com/homarr-labs/homarr/pull/7252
-* @RedwindA made their first contribution in https://github.com/homarr-labs/homarr/pull/7267
+Uptime Kuma widgets can show only the overall status and select a status page per widget, while Jellyfin episode tiles now include series names. This release also fixes small calendar layouts, custom widget network access and Coolify links.
+
+> [!IMPORTANT]
+> Custom widget network-scope restrictions were removed: HTTP sources can reach any address accessible to the Homarr server, and saved `networkScope` values no longer restrict requests. The calendar's in-widget view picker was also removed; choose the view in widget settings instead.
+
+## Highlights
+
+### Uptime Kuma summary mode and status pages
+
+The new General status only option hides individual monitor rows and chips at any widget size, while keeping monitor details available in the expanded view. Each widget can also select its own status page without duplicating the integration. Small summary tiles use a smaller status ring and omit secondary text to avoid clipping.
+
+<img src="https://github.com/user-attachments/assets/241085b9-9957-4351-9c64-798f7aa620be" alt="Uptime Kuma summaries and a selected status page" width="600">
+
+> [!TIP]
+> Leave Status page slug blank to keep each integration's configured page. When filled in, the override applies to every integration selected on that widget.
+
+### Jellyfin series names
+
+Jellyfin episode tiles in the Media Releases widget now use the series name as the title, with the season, episode number and episode name beneath it. Episodes without a series name keep the previous display.
+
+## Improved
+
+- **Uptime Kuma options:** added summary-only mode, per-widget status-page selection and layouts that fit smaller tiles. by @ajnart in [#7264](https://github.com/homarr-labs/homarr/pull/7264)
+- **Jellyfin episode titles:** episode tiles now show the series name above the season, episode number and episode name when series metadata is available. by @darbyjack in [#7260](https://github.com/homarr-labs/homarr/pull/7260)
+
+## Fixed
+
+- **Custom widget requests:** removed filtering that blocked link-local, Tailscale, private and loopback addresses. Authentication, permissions, credential destination binding and request limits remain enforced. by @ajnart in [#7120](https://github.com/homarr-labs/homarr/pull/7120)
+- **Calendar display:** restored event dots at small sizes, corrected compact layouts and switched event details to hover cards. View selection is now a widget setting, with a new Hide header option. by @ajnart in [#7266](https://github.com/homarr-labs/homarr/pull/7266)
+
+<details>
+<summary>All changes</summary>
+
+### Fixed
+
+- **Coolify widget links:** links now use the linked app's HTTP(S) URL instead of an internal integration address, falling back to the integration URL when no suitable app URL is available. by @darbyjack in [#7261](https://github.com/homarr-labs/homarr/pull/7261)
+
+</details>
+
+## Thanks
+
+Thanks to first-time contributor @RedwindA ([#7267](https://github.com/homarr-labs/homarr/pull/7267)).
 
 **Full Changelog**: https://github.com/homarr-labs/homarr/compare/v2.7.0...v2.8.0
 
-## What's Changed
-* chore(lang): updated translations from crowdin by @homarr-crowdin[bot] in https://github.com/homarr-labs/homarr/pull/7204
-* docs: clarify request limits, Kuma API checks, and JSX icons by @ajnart in https://github.com/homarr-labs/homarr/pull/7205
-* docs(helm): update chart installation page by @homarr-charts-docs-sync[bot] in https://github.com/homarr-labs/homarr/pull/7203
-* chore: update bug report template by @homarr-releases[bot] in https://github.com/homarr-labs/homarr/pull/7173
-* chore: update contributors by @homarr-update-contributors[bot] in https://github.com/homarr-labs/homarr/pull/7208
-* chore(lang): updated translations from crowdin by @homarr-crowdin[bot] in https://github.com/homarr-labs/homarr/pull/7212
-* feat(calendar): add saved calendar view switching by @ajnart in https://github.com/homarr-labs/homarr/pull/7125
-* fix: restore DNS behavior from 2.0.0 by @ajnart in https://github.com/homarr-labs/homarr/pull/7207
-* fix(auth): support anonymous LDAP service binds by @ajnart in https://github.com/homarr-labs/homarr/pull/7175
-* fix(downloads): select qBittorrent jobs before display limit by @ajnart in https://github.com/homarr-labs/homarr/pull/7107
-* fix(media-server): let page scrolling pass through the streams widget by @Bergasha in https://github.com/homarr-labs/homarr/pull/7227
-* docs(env): document ENABLE_DOCKER and ENABLE_KUBERNETES by @pcbeingused333 in https://github.com/homarr-labs/homarr/pull/7221
-* fix(ui): preserve profile theme selection by @ajnart in https://github.com/homarr-labs/homarr/pull/7218
-* fix(docker): retain configured columns and compact table widths by @ajnart in https://github.com/homarr-labs/homarr/pull/7101
-* docs(env): clarify Docker demo exception by @ajnart in https://github.com/homarr-labs/homarr/pull/7230
-* ci: pin the third-party actions, branch-scope the image caches and drop the checkout token where nothing pushes by @Totara-thib in https://github.com/homarr-labs/homarr/pull/7072
-* feat(integrations): add sportarr by @Sportarr in https://github.com/homarr-labs/homarr/pull/6518
-* chore: update integrations list readme by @homarr-update-contributors[bot] in https://github.com/homarr-labs/homarr/pull/7234
-* chore(lang): updated translations from crowdin by @homarr-crowdin[bot] in https://github.com/homarr-labs/homarr/pull/7222
-* fix(board): preserve collapsed container order by @ajnart in https://github.com/homarr-labs/homarr/pull/7200
-* fix(board): clip collapsed container overflow by @ajnart in https://github.com/homarr-labs/homarr/pull/7232
-* fix(apps): remove app URL validation by @ajnart in https://github.com/homarr-labs/homarr/pull/7238
-* fix(synology): submit login parameters in form body by @ajnart in https://github.com/homarr-labs/homarr/pull/7229
-* fix(releases): avoid long provider loading delays by @ajnart in https://github.com/homarr-labs/homarr/pull/7193
-* fix(beszel): align usage color thresholds with upstream by @ajnart in https://github.com/homarr-labs/homarr/pull/7244
-* feat(auth): log client IP on failed logins by @TameTheGame in https://github.com/homarr-labs/homarr/pull/7242
-* feat(media-server): redesign the session details popup by @Bergasha in https://github.com/homarr-labs/homarr/pull/7228
-* fix(integrations): make Emby RunTimeTicks optional for media releases by @pcbeingused333 in https://github.com/homarr-labs/homarr/pull/7220
-* fix(widgets): keep docker rows visible on wide cards by @ZikriBen in https://github.com/homarr-labs/homarr/pull/7168
-* feat(app-form): suggest the icon of the app website in the image picker by @junkerderprovinz in https://github.com/homarr-labs/homarr/pull/6562
-* chore(lang): updated translations from crowdin by @homarr-crowdin[bot] in https://github.com/homarr-labs/homarr/pull/7246
-* fix(security): harden session payload, integration grants, integration test, releases and RSS by @ajnart in https://github.com/homarr-labs/homarr/pull/7243
-* feat(uptime-kuma): rework integration and widget around status page heartbeats by @ajnart in https://github.com/homarr-labs/homarr/pull/7213
-* feat(integrations): add Thingport integration and widgets by @TautvydasDerzinskas in https://github.com/homarr-labs/homarr/pull/7223
-* feat(releases): hide Docker suggestions per item by @ajnart in https://github.com/homarr-labs/homarr/pull/7239
-* chore: update integrations list readme by @homarr-update-contributors[bot] in https://github.com/homarr-labs/homarr/pull/7248
-* fix(wazuh): consolidate views and indexer certificate handling by @Nerdy-Technician in https://github.com/homarr-labs/homarr/pull/7211
-* chore(release): automatic release v2.7.0 by @github-actions[bot] in https://github.com/homarr-labs/homarr/pull/7250
+# Homarr v2.7.0: Thingport widgets and saved calendar views
 
-## New Contributors
-* @pcbeingused333 made their first contribution in https://github.com/homarr-labs/homarr/pull/7221
-* @Totara-thib made their first contribution in https://github.com/homarr-labs/homarr/pull/7072
-* @Sportarr made their first contribution in https://github.com/homarr-labs/homarr/pull/6518
-* @TameTheGame made their first contribution in https://github.com/homarr-labs/homarr/pull/7242
-* @TautvydasDerzinskas made their first contribution in https://github.com/homarr-labs/homarr/pull/7223
+Thingport is now supported with four widgets, and calendar viewers can switch between five views. This release also reworks Uptime Kuma around status-page heartbeats and replaces Wazuh's eight widgets with one tabbed widget.
+
+> [!IMPORTANT]
+> Existing Wazuh widgets are removed without conversion; replace them manually with the new consolidated Wazuh widget. Uptime Kuma widget toggles are replaced by new defaults, so review their settings after upgrading.
+
+## Highlights
+
+### Thingport integration and widgets
+
+Connect your Thingport library with an API token to display library totals, recently added and popular models, a daily model spinning in 3D, and an activity heatmap. You can also search models, collections and tags through an integration-backed search engine.
+
+<img src="https://github.com/TautvydasDerzinskas/homarr/raw/pr-assets/thingport/demo-board-dark.png" alt="Thingport widgets on the Homarr demo board" width="554">
+
+### Saved calendar views
+
+The calendar offers Compact month, Month, Week, Day and Agenda views. Viewers can switch without Change access, and their browser-local choices survive reloads without changing the shared default. The expanded view keeps its own selection.
+
+<img src="https://github.com/user-attachments/assets/cf1a1a58-35de-489b-a047-8c4ac1ec5444" alt="Week view with visible pinned all-day events" width="600">
+
+### Uptime Kuma status-page monitoring
+
+The redesigned widget uses public status-page heartbeats to show per-monitor uptime, response times, groups, tags, certificate warnings, incidents and maintenance. Layouts range from a compact summary to detailed monitor rows. Stale heartbeats show “No recent data,” and missing or stale checks are excluded from uptime averages.
+
+<img src="https://github.com/user-attachments/assets/b00bb0a5-e6c0-4c2a-a2e4-742f6089afc1" alt="Uptime Kuma summaries with stale and missing data" width="471">
+
+## New integrations and widgets
+
+![What's new in v2.7.0](https://raw.githubusercontent.com/homarr-labs/homarr/dev/docs/img/releases/2.7.0/whats-new.svg)
+
+| Icon | Name | What it does |
+| --- | --- | --- |
+| <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/sportarr.svg" width="24" height="24"> | Sportarr | Connects Sportarr to calendar and media-missing widgets, with library statistics for leagues and downloaded events. |
+| <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/thingport.svg" width="24" height="24"> | Thingport | Connects your 3D printing model library and supports searches for models, collections and tags. |
+| <img src="https://cdn.jsdelivr.net/npm/@tabler/icons@3.44.0/icons/outline/cube.svg" width="24" height="24"> | Thingport Library Stats | Displays model, collection, category and author totals. |
+| <img src="https://cdn.jsdelivr.net/npm/@tabler/icons@3.44.0/icons/outline/cube-3d-sphere.svg" width="24" height="24"> | Thingport Models | Lists recently added, most viewed and most printed models with thumbnails. |
+| <img src="https://cdn.jsdelivr.net/npm/@tabler/icons@3.44.0/icons/outline/rotate-360.svg" width="24" height="24"> | Thingport Featured Model | Shows a daily library model spinning in 3D, with a thumbnail fallback for unsupported formats. |
+| <img src="https://cdn.jsdelivr.net/npm/@tabler/icons@3.44.0/icons/outline/calendar-stats.svg" width="24" height="24"> | Thingport Activity Heatmap | Displays a year of activity with daily details and a year picker. |
+| <img src="https://cdn.jsdelivr.net/npm/@tabler/icons@3.44.0/icons/filled/shield-half.svg" width="24" height="24"> | Wazuh | Combines security overviews, alerts, agents, vulnerabilities and other monitoring views in one tabbed widget. |
+
+## New
+
+- **Thingport integration:** added four widgets for library statistics, model lists, a daily 3D model and activity, plus integration-backed search. by @TautvydasDerzinskas in [#7223](https://github.com/homarr-labs/homarr/pull/7223)
+- **Sportarr integration:** added calendar events, media-missing support and library statistics for Sportarr. by @Sportarr in [#6518](https://github.com/homarr-labs/homarr/pull/6518)
+- **Failed login logging:** credentials and LDAP login failures now include the trusted client IP in warning logs, so fail2ban or CrowdSec can act on them. by @TameTheGame in [#7242](https://github.com/homarr-labs/homarr/pull/7242)
+
+## Improved
+
+- **Calendar view switching:** added five selectable views with browser-local persistence and a separate selection for the expanded view. by @ajnart in [#7125](https://github.com/homarr-labs/homarr/pull/7125)
+- **Uptime Kuma monitoring:** reworked the widget around status-page heartbeats, per-monitor metrics, incidents and maintenance, with explicit handling of stale data. by @ajnart in [#7213](https://github.com/homarr-labs/homarr/pull/7213)
+- **Website icon suggestions:** the app image picker offers the website's icon above library results when one is found, without selecting it automatically. by @junkerderprovinz in [#6562](https://github.com/homarr-labs/homarr/pull/6562)
+- **Media session details:** redesigned the popup as a compact grid that separates audio and video handling, omits missing values and fits short screens. by @Bergasha in [#7228](https://github.com/homarr-labs/homarr/pull/7228)
+- **Docker import suggestions:** Releases widgets can hide and restore suggestions independently, retain those choices when containers change, and exclude hidden suggestions from bulk import. by @ajnart in [#7239](https://github.com/homarr-labs/homarr/pull/7239)
+
+## Fixed
+
+- **Access and credentials:** restricted integration and RSS access to the caller's permissions, limited session response fields, and prevented saved secrets or tokens from being reused with changed URLs. by @ajnart in [#7243](https://github.com/homarr-labs/homarr/pull/7243)
+- **Wazuh widgets:** consolidated eight widgets into one tabbed widget, corrected indexer certificate handling, and added alerts to Notifications and metrics to Statistics. Legacy widgets require manual replacement. by @Nerdy-Technician in [#7211](https://github.com/homarr-labs/homarr/pull/7211)
+- **DNS resolution:** restored DNS caching as the application default for ping and integration connection checks, matching v2.0.0. by @ajnart in [#7207](https://github.com/homarr-labs/homarr/pull/7207)
+- **qBittorrent job selection:** supported sorting and completion/category filters now run before the display limit, so small limits no longer hide eligible jobs or sort only an arbitrary initial set. by @ajnart in [#7107](https://github.com/homarr-labs/homarr/pull/7107)
+- **Profile theme selection:** mouse and keyboard choices now apply and persist instead of closing the menu without saving. by @ajnart in [#7218](https://github.com/homarr-labs/homarr/pull/7218)
+- **Docker table columns:** kept configured columns reachable on narrow cards and prevented desktop Name widths from inflating phone layouts. by @ajnart in [#7101](https://github.com/homarr-labs/homarr/pull/7101)
+- **Collapsed container order:** collapsing containers whose contents outgrew their saved height no longer reorders later containers or leaves gaps. by @ajnart in [#7200](https://github.com/homarr-labs/homarr/pull/7200)
+- **Releases loading delays:** GitHub rate limits no longer trigger long automatic retries, and repository lookups stop after 10 seconds. by @ajnart in [#7193](https://github.com/homarr-labs/homarr/pull/7193)
+
+> [!TIP]
+> Set `ENABLE_DNS_CACHING=false` to use native DNS if your deployment relies on changing Docker service IPs or hosts-file overrides; the restored cache can retain old IPs or override hosts-file entries. Helm keeps its existing explicit `false` setting.
+
+<details>
+<summary>All changes</summary>
+
+### Fixed
+
+- **Anonymous LDAP binds:** directories allowing anonymous searches can now start with omitted or empty service-bind credentials; users still sign in with their own LDAP passwords. by @ajnart in [#7175](https://github.com/homarr-labs/homarr/pull/7175)
+- **Streams widget scrolling:** wheel input now scrolls the board when the streams table cannot scroll further. by @Bergasha in [#7227](https://github.com/homarr-labs/homarr/pull/7227)
+- **Collapsed container overflow:** hidden contents no longer extend the document below the board, removing excess blank space and uncovered footer areas. by @ajnart in [#7232](https://github.com/homarr-labs/homarr/pull/7232)
+- **App link handling:** non-empty app links are stored and used as entered, without custom navigation validation or normalization. by @ajnart in [#7238](https://github.com/homarr-labs/homarr/pull/7238)
+- **Synology DSM login:** all login parameters are now submitted in the form body to avoid DSM 6 authentication rejection. by @ajnart in [#7229](https://github.com/homarr-labs/homarr/pull/7229)
+- **Beszel usage colors:** CPU, memory, GPU and disk usage now turn yellow at 65% and red at 90%, matching Beszel's defaults. by @ajnart in [#7244](https://github.com/homarr-labs/homarr/pull/7244)
+- **Emby media releases:** missing or null runtime values no longer cause the entire latest-media response to be rejected. by @pcbeingused333 in [#7220](https://github.com/homarr-labs/homarr/pull/7220)
+- **Wide Docker cards:** fixed invisible rows on wide, short cards, including a Mac Chrome painting issue that left rows blank until scrolling. by @ZikriBen in [#7168](https://github.com/homarr-labs/homarr/pull/7168)
+
+</details>
+
+## Thanks
+
+Thanks to first-time contributors @pcbeingused333 ([#7221](https://github.com/homarr-labs/homarr/pull/7221)), @Totara-thib ([#7072](https://github.com/homarr-labs/homarr/pull/7072)), @Sportarr ([#6518](https://github.com/homarr-labs/homarr/pull/6518)), @TameTheGame ([#7242](https://github.com/homarr-labs/homarr/pull/7242)) and @TautvydasDerzinskas ([#7223](https://github.com/homarr-labs/homarr/pull/7223)).
 
 **Full Changelog**: https://github.com/homarr-labs/homarr/compare/v2.6.0...v2.7.0
 
-## What's Changed
-* chore: update bug report template by @homarr-releases[bot] in https://github.com/homarr-labs/homarr/pull/7169
-* feat(releases): show running versions from linked integrations by @hasier in https://github.com/homarr-labs/homarr/pull/7149
-* ci: don't fail integration list workflow when readme is unchanged by @ajnart in https://github.com/homarr-labs/homarr/pull/7171
-* chore(lang): updated translations from crowdin by @homarr-crowdin[bot] in https://github.com/homarr-labs/homarr/pull/7179
-* chore(lang): updated translations from crowdin by @homarr-crowdin[bot] in https://github.com/homarr-labs/homarr/pull/7190
-* revert: restore previous ping behavior by @ajnart in https://github.com/homarr-labs/homarr/pull/7189
-* docs(helm): update chart installation page by @homarr-charts-docs-sync[bot] in https://github.com/homarr-labs/homarr/pull/7184
-* fix(prowlarr): use POST to test all indexers by @bmarden in https://github.com/homarr-labs/homarr/pull/7183
-* fix(custom-widgets): support all Tabler icons with local SVG sprites by @ajnart in https://github.com/homarr-labs/homarr/pull/7198
-* fix(board): keep widget UI density consistent by @ajnart in https://github.com/homarr-labs/homarr/pull/7192
-* fix(board): avoid extra scrolling on short boards by @ajnart in https://github.com/homarr-labs/homarr/pull/7199
-* perf(dashboard): prioritize cached startup and parallel refreshes by @ajnart in https://github.com/homarr-labs/homarr/pull/7176
-* fix: group recent Jellyfin episode batches by series by @ajnart in https://github.com/homarr-labs/homarr/pull/7103
-* chore(release): automatic release v2.6.0 by @github-actions[bot] in https://github.com/homarr-labs/homarr/pull/7201
+# Homarr v2.6.0: Running versions in the Releases widget and cached dashboard startup
 
-## New Contributors
-* @hasier made their first contribution in https://github.com/homarr-labs/homarr/pull/7149
-* @bmarden made their first contribution in https://github.com/homarr-labs/homarr/pull/7183
+The Releases widget can compare linked services' running versions with the latest release, and dashboards show cached data without waiting for refreshes. This release also fixes widget text sizing, Prowlarr indexer tests and Jellyfin episode grouping.
+
+## Highlights
+
+### Running versions in the Releases widget
+
+Repositories in the Releases widget can now show the running versions of linked services alongside the latest release. An update icon marks older versions, and expanding a repository shows each linked service as up to date, update available or unknown when versions cannot be compared.
+
+<img src="https://github.com/user-attachments/assets/6633d1a4-8fdf-48f0-ab8d-b472ff426038" alt="Releases widget showing running versions from linked integrations" width="600">
+
+> [!TIP]
+> Attach supported integrations to the Releases widget, then link them to each repository to enable version comparisons. Supported services are Sonarr, Radarr, Lidarr, Readarr, Prowlarr and Bindery.
+
+### Cached dashboard startup
+
+Dashboards render cached widget data immediately and refresh it in parallel in the browser, rather than waiting for those refreshes during startup. The Assistant loads when used, while off-screen Beszel charts and media images are deferred to reduce startup work.
+
+## New
+
+- **Running service versions:** the Releases widget compares versions from linked integrations with the latest release and flags available updates. by @hasier in [#7149](https://github.com/homarr-labs/homarr/pull/7149)
+
+## Improved
+
+- **Cached dashboard startup:** cached widget data now renders before browser refreshes, with parallel refreshes and deferred Assistant, chart and image loading. by @ajnart in [#7176](https://github.com/homarr-labs/homarr/pull/7176)
+
+## Fixed
+
+- **Widget text sizing:** kept text, spacing and controls at their intended size when boards scale up. RSS text also responds to browser zoom again. by @ajnart in [#7192](https://github.com/homarr-labs/homarr/pull/7192)
+- **Service reachability checks:** restored GET requests, redirect following and the previous status-dot behavior after reports of NZBGet connection resets. by @ajnart in [#7189](https://github.com/homarr-labs/homarr/pull/7189)
+- **Prowlarr indexer tests:** fixed the indexer manager widget's failing “test all” button by using the request method Prowlarr expects. by @bmarden in [#7183](https://github.com/homarr-labs/homarr/pull/7183)
+- **Jellyfin episode grouping:** multiple recent episodes from the same series now share a series entry in Media Releases, while a single recent episode remains visible individually. by @ajnart in [#7103](https://github.com/homarr-labs/homarr/pull/7103)
+
+<details>
+<summary>All changes</summary>
+
+### Fixed
+
+- **Custom widget icons:** custom widgets now accept all icons in the bundled Tabler version, including brand and filled variants, without internet access. by @ajnart in [#7198](https://github.com/homarr-labs/homarr/pull/7198)
+- **Short board scrolling:** empty and short boards no longer reserve extra viewport rows outside edit mode, removing unnecessary scrolling. by @ajnart in [#7199](https://github.com/homarr-labs/homarr/pull/7199)
+
+</details>
+
+## Thanks
+
+Thanks to first-time contributors @hasier ([#7149](https://github.com/homarr-labs/homarr/pull/7149)) and @bmarden ([#7183](https://github.com/homarr-labs/homarr/pull/7183)).
 
 **Full Changelog**: https://github.com/homarr-labs/homarr/compare/v2.5.2...v2.6.0
 
@@ -308,45 +543,280 @@
 
 **Full Changelog**: https://github.com/homarr-labs/homarr/compare/v2.5.0...v2.5.1
 
-## What's Changed
-* fix: fit Beszel Y-axis labels by @ajnart in https://github.com/homarr-labs/homarr/pull/7137
-* chore(lang): updated translations from crowdin by @homarr-crowdin[bot] in https://github.com/homarr-labs/homarr/pull/7144
-* chore: update bug report template by @homarr-releases[bot] in https://github.com/homarr-labs/homarr/pull/7119
-* docs(helm): update chart installation page by @homarr-charts-docs-sync[bot] in https://github.com/homarr-labs/homarr/pull/7124
-* fix(release): generate changelogs with GitHub release notes by @ajnart in https://github.com/homarr-labs/homarr/pull/7121
-* fix: unify collapsible container headers and spacing by @ajnart in https://github.com/homarr-labs/homarr/pull/7153
-* perf: apply 57 performance and accessibility improvements across dashboards and services by @ajnart in https://github.com/homarr-labs/homarr/pull/7154
-* fix(ci): speed up checks and fix Workshop publication by @ajnart in https://github.com/homarr-labs/homarr/pull/7138
-* fix: match native Beszel chart colors and hover points by @ajnart in https://github.com/homarr-labs/homarr/pull/7159
-* docs(brand): add Homarr share images and their generator by @ajnart in https://github.com/homarr-labs/homarr/pull/7158
-* fix: honor container border color by @ajnart in https://github.com/homarr-labs/homarr/pull/7151
-* feat: allow health widget tab order by @ajnart in https://github.com/homarr-labs/homarr/pull/7152
-* fix(auth): synchronize singleton OIDC group claims by @Riccardo-Vecchi in https://github.com/homarr-labs/homarr/pull/7089
-* fix: enable assistant by default and preserve onboarding state by @ajnart in https://github.com/homarr-labs/homarr/pull/7135
-* feat(releases): use compact localized release ages by @ajnart in https://github.com/homarr-labs/homarr/pull/7155
-* fix: reveal resize grips on item hover and focus by @ajnart in https://github.com/homarr-labs/homarr/pull/7157
-* perf(plex): index proxied release images by @Riccardo-Vecchi in https://github.com/homarr-labs/homarr/pull/7100
-* fix(ping): treat every HTTP response as reachable by @ajnart in https://github.com/homarr-labs/homarr/pull/7133
-* chore(audit): security, runtime, widget and maintenance bundle by @ajnart in https://github.com/homarr-labs/homarr/pull/7146
-* chore(lang): updated translations from crowdin by @homarr-crowdin[bot] in https://github.com/homarr-labs/homarr/pull/7162
-* chore(release): prepare v2.5.0 by @ajnart in https://github.com/homarr-labs/homarr/pull/7167
+# Homarr v2.5.0: System Health tab order and dashboard performance improvements
 
+System Health Monitoring tabs can be reordered, and dashboard saves and rendering do less repeated work. This release also fixes Beszel charts, container layouts, assistant setup and OIDC group synchronization.
+
+## Highlights
+
+### System Health tab order
+
+Compact System Health Monitoring tabs can show System or Cluster first when both integration types are selected. System-first remains the default, and the order is independent of which tab opens by default. The choice is saved across reloads.
+
+<img src="https://github.com/user-attachments/assets/4eaf93d5-3619-4378-bb87-54de1ce53bc1" alt="System Health Monitoring with Cluster shown first" width="600">
+
+### Dashboard performance
+
+Board saves now avoid repeated scans through widgets and sections, and dashboard controls trigger fewer unnecessary renders. The changes also reduce hidden UI work and duplicate reads, alongside accessibility improvements.
+
+## Improved
+
+- **System Health tabs:** added a saved System-first or Cluster-first order without changing the default active tab. by @ajnart in [#7152](https://github.com/homarr-labs/homarr/pull/7152)
+- **Dashboard performance:** reduced repeated work in board saves, widget data handling and image streaming, with rendering and accessibility improvements. by @ajnart in [#7154](https://github.com/homarr-labs/homarr/pull/7154)
+- **Release ages:** latest-release headers now use the active locale's compact relative-time format, while expanded creation dates keep long formatting. by @ajnart in [#7155](https://github.com/homarr-labs/homarr/pull/7155)
+
+## Fixed
+
+- **Beszel charts:** matched native chart colors and usage ordering, restored hover points and removed the 15-container chart limit. by @ajnart in [#7159](https://github.com/homarr-labs/homarr/pull/7159)
+- **Collapsible containers:** integrated collapse controls into section headers and corrected header height and spacing without changing the saved expanded layout. by @ajnart in [#7153](https://github.com/homarr-labs/homarr/pull/7153)
+- **Assistant setup:** enabled the default Homarr assistant when no configuration exists, preserved saved providers and disabled settings, and stopped assistant saves from resetting onboarding drafts. by @ajnart in [#7135](https://github.com/homarr-labs/homarr/pull/7135)
+- **OIDC group synchronization:** providers returning a single group as a string now synchronize the matching Homarr membership. The string is treated as one complete group name. by @Riccardo-Vecchi in [#7089](https://github.com/homarr-labs/homarr/pull/7089)
+- **Service reachability checks:** any HTTP response now counts as reachable, including server errors, and redirects are not followed. Connection failures and timeouts still show red. by @ajnart in [#7133](https://github.com/homarr-labs/homarr/pull/7133)
+
+> [!TIP]
+> Admins can disable the assistant globally under Manage > Assistant.
+
+<details>
+<summary>All changes</summary>
+
+### Improved
+
+- **Plex release images:** reduced repeated image-matching work when assembling releases, without changing fetching, image proxying or the 100-release limit. by @Riccardo-Vecchi in [#7100](https://github.com/homarr-labs/homarr/pull/7100)
+
+### Fixed
+
+- **Beszel axis labels:** chart axes now size themselves to their formatted labels so longer byte-rate values are not clipped. by @ajnart in [#7137](https://github.com/homarr-labs/homarr/pull/7137)
+- **Container border colors:** containers and labels now display the saved border color after reload in light and dark themes. by @ajnart in [#7151](https://github.com/homarr-labs/homarr/pull/7151)
+- **Editor resize grips:** hovering an item or focusing its editor entry now reveals resize grips, making transparent widget bounds easier to find in edit mode. by @ajnart in [#7157](https://github.com/homarr-labs/homarr/pull/7157)
+
+</details>
 
 **Full Changelog**: https://github.com/homarr-labs/homarr/compare/v2.4.1...v2.5.0
 
 ## [2.4.1](https://github.com/homarr-labs/homarr/compare/v2.4.0...v2.4.1) (2026-10-10)
 
-## [2.4.0](https://github.com/homarr-labs/homarr/compare/v2.3.0...v2.4.0) (2026-10-09)
+# Homarr v2.4.0: Bookmark categories and Docker filter controls
 
-## [2.3.0](https://github.com/homarr-labs/homarr/compare/v2.2.0...v2.3.0) (2026-10-07)
+This release adds bookmark categories, Docker filter matching controls and board snapshots for bug reports. App selection and creation support batches, and browsers can reuse unchanged uploaded images on reload.
 
-## [2.2.0](https://github.com/homarr-labs/homarr/compare/v2.1.2...v2.2.0) (2026-10-05)
+## Highlights
+
+### Bookmark categories and app creation
+
+Bookmarks can be organized into named, collapsible categories; existing ungrouped widgets keep their layout. The app picker searches by name or URL, supports multiple selections and lets you create several apps using the standard Add App form. App drafts stay open across tabs, and invalid or failed saves keep them available to correct and retry.
+
+<img src="https://github.com/user-attachments/assets/746a1312-e302-42ca-9f84-124449342ac7" alt="Bookmarks organized into collapsible categories" width="600">
+
+### Docker name filter controls
+
+The Docker widget now has "Allow wildcards" and "Case sensitive" controls for container-name filters. Enable wildcards to use `*` for zero or more characters, or turn off case sensitivity to match names regardless of case. Existing filters remain exact and case-sensitive by default.
+
+<img src="https://github.com/user-attachments/assets/6b04f510-3da5-4465-a550-030d7ed771a4" alt="Docker name filter settings with wildcard matching" width="540">
+
+### Board snapshots for bug reports
+
+Use "Take snapshot of board state" in CMD+K to capture layout and widget state for a bug report. Snapshots anonymize private text and identifiers and redact credentials, private URLs and external media. The opt-in playground replays the captured state with actions and live connections disabled, without writing to the board database.
+
+<img src="https://github.com/user-attachments/assets/329dc711-4f9e-4849-aba4-fceccd199213" alt="Board snapshot playground with the captured viewport" width="600">
+
+> [!TIP]
+> Set `ENABLE_BOARD_DEBUG=true` to enable the playground at `/debug/board`, where you can load a captured board JSON file.
+
+## New
+
+- **Bookmarks and app creation:** added collapsible bookmark categories, multi-app selection and batch creation through the shared Add App form, while preserving app drafts across tabs. by @ajnart in [#7080](https://github.com/homarr-labs/homarr/pull/7080)
+- **Board snapshots:** added board-state capture, an opt-in replay playground and optional snapshot attachments for bug reports. by @ajnart in [#7112](https://github.com/homarr-labs/homarr/pull/7112)
+
+## Improved
+
+- **Docker name filters:** added optional wildcard matching and configurable case sensitivity, preserving exact, case-sensitive defaults. by @ajnart in [#7105](https://github.com/homarr-labs/homarr/pull/7105)
+- **Uploaded image caching:** browsers can reuse unchanged uploaded images on reload instead of downloading their contents again. by @darbyjack in [#7116](https://github.com/homarr-labs/homarr/pull/7116)
+
+## Fixed
+
+- **Debian startup:** restored compatible SQLite bindings in Debian release archives after v2.3.0 archives failed to start before migrations. by @ajnart in [#7098](https://github.com/homarr-labs/homarr/pull/7098)
+- **Aria2 downloads:** active, paused, seeding and queued jobs can now be removed correctly; this does not add disk-file deletion support. by @Riccardo-Vecchi in [#7088](https://github.com/homarr-labs/homarr/pull/7088)
+- **Compact Stocks quotes:** prevented overlapping text in scaled-down cards and truncated long values with full-text titles. by @ajnart in [#7079](https://github.com/homarr-labs/homarr/pull/7079)
+- **Mobile management navigation:** the menu now closes after selecting an internal link, including the current page or a submenu destination. by @ajnart in [#7102](https://github.com/homarr-labs/homarr/pull/7102)
+- **Cluster section choices:** System Health Monitoring now remembers expanded sections after reload, separately for each user, board, widget and integration in the same browser. by @ajnart in [#7104](https://github.com/homarr-labs/homarr/pull/7104)
+
+<details>
+<summary>All changes</summary>
+
+### Improved
+
+- **Transmission and Deluge:** limited download-row processing to the requested item count while preserving client-wide transfer rates and paused status. by @Riccardo-Vecchi in [#7095](https://github.com/homarr-labs/homarr/pull/7095)
+- **Request caching:** reduced unnecessary cache-expiry scans when inserting cache entries. by @darbyjack in [#7108](https://github.com/homarr-labs/homarr/pull/7108)
+- **iCal recurring events:** reduced processing work when matching recurring events with their exceptions, without changing recurrence expansion. by @Riccardo-Vecchi in [#7090](https://github.com/homarr-labs/homarr/pull/7090)
+
+### Fixed
+
+- **Onboarding navigation:** reverted the change that returned to the welcome screen before administrator creation. by @ajnart in [#7111](https://github.com/homarr-labs/homarr/pull/7111)
+
+</details>
+
+**Full Changelog**: https://github.com/homarr-labs/homarr/compare/v2.3.0...v2.4.0
+
+# Homarr v2.3.0: Dashboard API controls and configurable RSS descriptions
+
+Dashboard content, layouts and preferences can now be controlled through REST and MCP, and RSS description length is configurable. This release also fixes compact widget layouts, touch controls and sidebar editing.
+
+> [!IMPORTANT]
+> If you are upgrading from Homarr v1 with MySQL or MariaDB, migrate your data before moving to v2. Changing connection settings alone does not transfer data, and no MySQL-to-PostgreSQL converter is provided.
+
+## Highlights
+
+### Dashboard API controls
+
+REST and MCP now expose dashboard content saves, layout saves and resets, settings reads and user preferences, reusing the editor's existing permissions. Content saves replace the complete dashboard content, while preference updates leave omitted fields unchanged.
+
+### RSS description length
+
+The RSS Feed widget now lets you set the description limit from 1 to 5,000 characters instead of always truncating at 250. The default remains 250, so existing widgets keep their current limit.
+
+> [!TIP]
+> Increasing "Description line clamp" alone cannot reveal text already cut off by the description limit. Increase "Description max length" as well when you want longer excerpts.
+
+## New
+
+- **Dashboard API controls:** exposed dashboard content, layout, settings and preference controls through REST and MCP. by @rfdrew in [#6546](https://github.com/homarr-labs/homarr/pull/6546)
+
+## Improved
+
+- **RSS description length:** added a configurable limit from 1 to 5,000 characters, retaining the 250-character default. by @ZikriBen in [#7051](https://github.com/homarr-labs/homarr/pull/7051)
+
+## Fixed
+
+- **Docker and Downloads:** narrow tables now scroll horizontally instead of squeezing their visible columns to fit. by @ajnart in [#7067](https://github.com/homarr-labs/homarr/pull/7067)
+- **DNS Hole Summary:** restored statistic backgrounds in browsers without relative-color support and made values fit compact cards, including scaled 1×1 widgets. by @ajnart in [#7045](https://github.com/homarr-labs/homarr/pull/7045)
+- **Beszel touch controls:** replaced controls covering the charts on touch screens with a compact system and period menu. by @ajnart in [#7065](https://github.com/homarr-labs/homarr/pull/7065)
+- **Sidebar editing:** full sidebars now accept additional content, moves and resizing without a frozen row limit. by @ajnart in [#7061](https://github.com/homarr-labs/homarr/pull/7061)
+- **English UK labels:** restored English text where settings and other screens incorrectly displayed Arabic labels. by @ajnart in [#7050](https://github.com/homarr-labs/homarr/pull/7050)
+
+<details>
+<summary>All changes</summary>
+
+### Fixed
+
+- **Pi-hole discovery:** version detection now uses the public login-info endpoint instead of a protected endpoint that returned authentication errors. Reverse proxies restricting API paths must allow `/api/info/login` for v6 detection. by @ajnart in [#7032](https://github.com/homarr-labs/homarr/pull/7032)
+- **Board settings navigation:** the settings header now returns to the board being edited rather than the default board. by @ajnart in [#7059](https://github.com/homarr-labs/homarr/pull/7059)
+- **Board settings CSS:** dashboard custom CSS no longer affects the settings page, where it could make text unreadable. by @ajnart in [#7066](https://github.com/homarr-labs/homarr/pull/7066)
+- **Phone board spacing:** removed duplicate outer padding below 768px, giving widgets 20px more usable width. by @ajnart in [#7070](https://github.com/homarr-labs/homarr/pull/7070)
+- **Beszel chart sizing:** charts retain their existing height while rows require scrolling and share extra space once all rows fit. by @ajnart in [#7074](https://github.com/homarr-labs/homarr/pull/7074)
+- **Nested container headers:** separated overlapping parent and child labels without changing saved container positions or sizes. by @ajnart in [#7060](https://github.com/homarr-labs/homarr/pull/7060)
+- **Widget text and icons:** restored readable Uptime Kuma and Bazarr summary text and correctly sized notification action icons. by @ajnart in [#7068](https://github.com/homarr-labs/homarr/pull/7068)
+- **MySQL/MariaDB upgrade guidance:** unsupported database startup errors now link to migration guidance and warn that changing connection settings does not migrate data. by @ajnart in [#7063](https://github.com/homarr-labs/homarr/pull/7063)
+
+</details>
+
+## Thanks
+
+Welcome to @rfdrew, whose first contribution landed in [#6546](https://github.com/homarr-labs/homarr/pull/6546).
+
+**Full Changelog**: https://github.com/homarr-labs/homarr/compare/v2.2.0...v2.3.0
+
+# Homarr v2.2.0: Beszel GPU metrics and Unraid storage pools
+
+Beszel system statistics now include GPU charts, and System Health Monitoring supports Unraid storage pools. The Downloads widget can also show archived SABnzbd history.
+
+## Highlights
+
+### Beszel GPU metrics
+
+Beszel system statistics now include GPU utilization, used VRAM and power charts, with separate series for multiple GPUs. Each chart has its own visibility setting and appears when Beszel reports the relevant data.
+
+### Unraid storage pools
+
+System Health Monitoring now includes Unraid storage pools, including systems with no array disks. Pool and array storage can appear together, while members with missing statistics or zero-size filesystems are omitted to avoid duplicate capacity and invalid percentages.
+
+### SABnzbd archived history
+
+The Downloads widget can include jobs moved to SABnzbd's Archive, merged with active history without duplicate entries. Each widget can use its own history window, independently of its item limit and completed-entry setting.
+
+> [!TIP]
+> Archived history is off by default. With SABnzbd selected, enable it in the widget settings and choose a positive whole number of days; the default is seven.
+
+## New
+
+- **Beszel GPU metrics:** added GPU utilization, used VRAM and power charts with multi-GPU support and independent visibility settings. by @SmilingJoe in [#6645](https://github.com/homarr-labs/homarr/pull/6645)
+- **Unraid storage pools:** added storage pool monitoring alongside array disks, including support for pool-only systems. by @ajnart in [#7038](https://github.com/homarr-labs/homarr/pull/7038)
+- **SABnzbd archived history:** added optional archived downloads to the Downloads widget with a configurable history window per widget. by @Sobe1ac in [#6515](https://github.com/homarr-labs/homarr/pull/6515)
+
+## Fixed
+
+- **GitHub icon refreshes:** failed index refreshes now report HTTP status and available rate-limit details instead of an undefined-property error, while preserving cached icons. by @ajnart in [#7008](https://github.com/homarr-labs/homarr/pull/7008)
+
+<details>
+<summary>All changes</summary>
+
+### New
+
+- **Root certificate API:** added admin-only REST and tRPC endpoints to inspect public root CA metadata and add a named self-signed PEM CA without replacing existing files. by @ajnart in [#7033](https://github.com/homarr-labs/homarr/pull/7033)
+
+### Fixed
+
+- **Read-only demo polling:** disabled periodic widget and supporting-query refreshes in read-only demos while keeping initial fetches, explicit refreshes and Beszel's selected Live stream available. Normal installations and editable demos are unchanged. by @ajnart in [#6980](https://github.com/homarr-labs/homarr/pull/6980)
+
+</details>
+
+## Thanks
+
+Welcome to @Sobe1ac, whose first contribution landed in [#6515](https://github.com/homarr-labs/homarr/pull/6515), and @SmilingJoe, whose first contribution landed in [#6645](https://github.com/homarr-labs/homarr/pull/6645).
+
+**Full Changelog**: https://github.com/homarr-labs/homarr/compare/v2.1.2...v2.2.0
 
 ## [2.1.2](https://github.com/homarr-labs/homarr/compare/v2.1.1...v2.1.2) (2026-10-04)
 
 ## [2.1.1](https://github.com/homarr-labs/homarr/compare/v2.1.0...v2.1.1) (2026-10-03)
 
-## [2.1.0](https://github.com/homarr-labs/homarr/compare/v2.0.0...v2.1.0) (2026-10-03)
+# Homarr v2.1.0: Saved integration connection tests and dismissible setup checklists
+
+You can now test saved integrations through the API without resubmitting credentials and dismiss each board's setup checklist. This release also fixes board layout restoration, app icon sizing and several integration issues.
+
+> [!IMPORTANT]
+> For Frigate, replace unauthenticated port `5000` access with port `8971`, save admin credentials, use a trusted HTTPS certificate and ensure the default `frigate_token` cookie is configured. If `ENABLE_DNS_CACHING` is explicitly `true`, remove it or set it to `false` to use native DNS resolution.
+
+## Highlights
+
+### Saved integration connection tests
+
+Automation can test an existing integration through `GET /api/integrations/{id}/test-connection` using stored credentials, without changing its saved configuration. The endpoint requires authentication and full integration access, and returns success or a categorized failure without exposing credentials.
+
+### Setup checklist dismissal
+
+You can explicitly dismiss a board's setup checklist independently of its pinned apps. The choice is remembered per board in the current browser, including after reloading or adding and removing apps; it does not sync across browsers.
+
+## New
+
+- **Integration connection tests:** added an API endpoint to test saved integrations using stored credentials without updating their configuration. by @ajnart in [#7014](https://github.com/homarr-labs/homarr/pull/7014)
+
+## Fixed
+
+- **Board column changes:** changing column counts and then reverting now restores untouched layouts, including Container sizes. Earlier lost positions cannot be recovered automatically. by @ajnart in [#6979](https://github.com/homarr-labs/homarr/pull/6979)
+- **App icon sizing:** scaled-down boards use compact labels and padding, preserving icon space when names or descriptions are long. by @ajnart in [#6972](https://github.com/homarr-labs/homarr/pull/6972)
+- **Native DNS resolution:** DNS caching is now opt-in, avoiding stale addresses in Homarr's cache after Docker services are recreated. by @ajnart in [#6997](https://github.com/homarr-labs/homarr/pull/6997)
+- **Setup checklist dismissal:** explicitly dismissed checklists stay dismissed per board in the current browser, independently of pinned apps. by @ajnart in [#6992](https://github.com/homarr-labs/homarr/pull/6992)
+- **Jellyfin media releases:** recent movies are included across mixed libraries, and episodes and music tracks appear individually rather than grouped into seasons or albums. by @ajnart in [#6998](https://github.com/homarr-labs/homarr/pull/6998)
+- **UniFi VPN users:** counts now use active remote sessions across sites. Failed VPN session requests show Unknown without hiding WAN, WiFi or LAN metrics. by @ajnart in [#7013](https://github.com/homarr-labs/homarr/pull/7013)
+- **Frigate authentication:** statistics and HTTP requests now use verified admin sessions instead of unauthenticated API access. by @ajnart in [#7019](https://github.com/homarr-labs/homarr/pull/7019)
+
+> [!TIP]
+> To place widgets in a Container's right-hand columns, widen the Container before moving widgets there.
+
+<details>
+<summary>All changes</summary>
+
+### Fixed
+
+- **Plex music releases:** albums, artists and tracks now show the Music badge instead of Unknown in Media releases. by @ajnart in [#6977](https://github.com/homarr-labs/homarr/pull/6977)
+- **Integration settings updates:** existing nonempty integration IDs, including hyphenated IDs, are now accepted when saving settings. by @ajnart in [#6985](https://github.com/homarr-labs/homarr/pull/6985)
+- **Container header controls:** empty areas of collapsible Container headers now toggle the section, with Enter and Space support. App-opening actions and edit controls remain separate. by @ajnart in [#7006](https://github.com/homarr-labs/homarr/pull/7006)
+- **Onboarding back navigation:** Back returns to Welcome and the Restore backup option before an administrator is created, including after refreshing setup. by @ajnart in [#7012](https://github.com/homarr-labs/homarr/pull/7012)
+- **Homepage import icons:** new Docker-label imports resolve Homepage Dashboard Icons keys to icon URLs. Previously imported broken icons must be updated in app management. by @ajnart in [#7004](https://github.com/homarr-labs/homarr/pull/7004)
+
+</details>
+
+**Full Changelog**: https://github.com/homarr-labs/homarr/compare/v2.0.0...v2.1.0
 
 ## [2.0.0](https://github.com/homarr-labs/homarr/compare/v1.77.2...v2.0.0) (2026-10-02)
 

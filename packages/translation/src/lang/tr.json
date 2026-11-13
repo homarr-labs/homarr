@@ -1245,6 +1245,20 @@
       "username": "Kullanıcı adı",
       "password": "Parola",
       "savedPlaceholder": "••••••• (kaydedildi, korumak için boş bırakın)"
+    },
+    "workshopUpdate": {
+      "title": "",
+      "apply": "",
+      "available": "",
+      "check": "",
+      "description": "",
+      "approvePermissions": "",
+      "pendingDescription": "",
+      "overwriteLocalChanges": "",
+      "installSeparate": "",
+      "communityWarning": "",
+      "updated": "",
+      "changedBeforeInstall": ""
     }
   },
   "workshop": {
@@ -1515,6 +1529,27 @@
           "title": "Bilinmeyen hata",
           "description": "Bilinmeyen bir hata oluştu, daha fazla ayrıntı görmek için aşağıdaki nedeni açın"
         },
+        "frigate": {
+          "title": "",
+          "status": "",
+          "description": {
+            "cookie": "",
+            "profileMismatch": "",
+            "redirect": "",
+            "login": "",
+            "profile": "",
+            "stats": ""
+          }
+        },
+        "openmediavault": {
+          "title": "",
+          "description": {
+            "totpSecretRequired": "",
+            "totpSecretInvalid": "",
+            "totpVerificationFailed": "",
+            "unsupportedChallenge": ""
+          }
+        },
         "parse": {
           "title": "Ayrıştırma hatası",
           "description": "Yanıt ayrıştırılamadı. Lütfen URL'nin hizmetin temel URL’sine yönlendirildiğinden emin olun."
@@ -1714,6 +1749,11 @@
         "title": "Gizli anahtarı sıfırla",
         "message": "Gizli anahtarı sıfırlamak istediğinizden emin misiniz?"
       },
+      "totpNotice": "",
+      "remove": {
+        "title": "",
+        "message": ""
+      },
       "noSecretsRequired": {
         "segmentTitle": "Gizli Anahtar Yok",
         "text": "Bu entegrasyon için gizli anahtar gerekmiyor"
@@ -1794,6 +1834,10 @@
         "wazuhIndexerPassword": {
           "label": "İndeksleyici parolası",
           "newLabel": "Yeni indeksleyici parolası"
+        },
+        "totpSecret": {
+          "label": "",
+          "newLabel": ""
         }
       }
     },
@@ -1891,7 +1935,8 @@
       "copy": "Kopyala",
       "copied": "Kopyalandı",
       "refresh": "Yenile",
-      "export": "Dışa aktar"
+      "export": "Dışa aktar",
+      "advanced": ""
     },
     "hidden": "Gizli",
     "pagination": {
@@ -1986,6 +2031,15 @@
         "modifier": "Değiştirici"
       }
     },
+    "markdown": {
+      "alert": {
+        "note": "Not",
+        "tip": "",
+        "important": "",
+        "warning": "",
+        "caution": ""
+      }
+    },
     "dangerZone": "Tehlikeli Bölge",
     "noResults": "Sonuç bulunamadı",
     "unsavedChanges": "Kaydedilmemiş değişiklikleriniz var!",
@@ -2076,6 +2130,158 @@
         "sm": "Hafif",
         "xl": "Yumuşak"
       }
+    },
+    "customTheme": {
+      "label": "",
+      "nothingFound": "",
+      "custom": "",
+      "customize": "",
+      "editor": {
+        "title": "",
+        "basedOn": "",
+        "preview": "",
+        "previewColorScheme": "",
+        "layout": "Düzen",
+        "typography": "",
+        "colors": "Renkler",
+        "json": "",
+        "defaultRadius": "",
+        "radiusHint": "",
+        "scale": "",
+        "spacing": "",
+        "radius": "",
+        "fontFamily": "",
+        "headingFont": "",
+        "monoFont": "",
+        "fontSizes": "",
+        "palette": {
+          "body": "",
+          "surface": "",
+          "hover": "",
+          "border": "",
+          "text": "",
+          "dimmed": "",
+          "primary": "",
+          "secondary": ""
+        },
+        "lockedPrimary": "",
+        "pickColor": "",
+        "autoContrast": "",
+        "luminanceThreshold": "",
+        "jsonHint": "",
+        "invalidJson": "",
+        "tooLong": "",
+        "copyJson": "",
+        "copied": "Kopyalandı",
+        "discardJson": "",
+        "reset": "",
+        "apply": "",
+        "sampleTitle": "Panel",
+        "sampleBadge": "Önizleme",
+        "sampleText": "",
+        "sampleInput": "Arama",
+        "sampleValue": "Uygulama Bulun",
+        "sampleButton": ""
+      },
+      "studio": {
+        "title": "",
+        "saveTheme": "",
+        "searchControls": "",
+        "component": "",
+        "inheritedValue": "",
+        "resetControl": "",
+        "decreaseControl": "",
+        "increaseControl": "",
+        "chooseControl": "",
+        "layout": {
+          "spacing": "",
+          "radius": "",
+          "compact": "",
+          "normal": "",
+          "roomy": "",
+          "preset": "",
+          "none": "Yok",
+          "rounded": "",
+          "full": "",
+          "custom": "",
+          "advanced": ""
+        },
+        "previewSurface": "Önizleme",
+        "previewFrame": "",
+        "loadingPreview": "",
+        "previewFailed": "",
+        "sampleBoard": "",
+        "components": "",
+        "overlays": "",
+        "typography": "",
+        "liveBoard": "",
+        "viewport": "",
+        "responsive": "",
+        "tablet": "",
+        "mobile": "Mobil",
+        "includeCustomCss": "",
+        "groups": {
+          "layout": "",
+          "typography": "",
+          "colors": "",
+          "surfaces": "",
+          "overlays": "",
+          "accessibility": "",
+          "css": ""
+        },
+        "controls": {
+          "defaultRadius": "",
+          "scale": "",
+          "spacing": "",
+          "radius": "",
+          "breakpoint": "Kesme Noktası",
+          "fontSizes": "",
+          "lineHeight": "",
+          "shadow": "",
+          "fontFamily": "",
+          "headingFont": "",
+          "monoFont": "",
+          "headingWeight": "",
+          "headingSize": "",
+          "fontSmoothing": "",
+          "body": "",
+          "surface": "",
+          "hover": "",
+          "border": "",
+          "text": "",
+          "dimmed": "",
+          "primary": "",
+          "secondary": "",
+          "autoContrast": "",
+          "luminanceThreshold": "",
+          "primaryShade": "",
+          "componentRadius": "",
+          "borderWidth": "",
+          "surfaceBackground": "Arkaplan",
+          "surfaceText": "",
+          "surfaceBorder": "Kenarlık rengi",
+          "hoverBackground": "",
+          "hoverText": "",
+          "componentShadow": "",
+          "componentBorder": "Kenarlık göster",
+          "componentPadding": "",
+          "componentSize": "Dosya Boyutu",
+          "componentVariant": "",
+          "overlayBlur": "",
+          "overlayOpacity": "",
+          "overlayColor": "",
+          "transitionDuration": "",
+          "headerBackground": "",
+          "respectReducedMotion": "",
+          "focusRing": "",
+          "cursorType": "",
+          "customCss": ""
+        },
+        "expandPreview": "",
+        "showControls": "Kontrolleri göster"
+      },
+      "instanceDefault": "",
+      "useInstanceDefault": ""
     }
   },
   "section": {
@@ -2171,6 +2377,18 @@
       },
       "customWidget": "Özel widget",
       "standalone": "Bağımsız",
+      "integrationFilter": "",
+      "integrationNotConnected": "",
+      "workshop": {
+        "title": "",
+        "back": "",
+        "empty": "",
+        "noMatches": "",
+        "loading": "",
+        "integrationError": "",
+        "searchMore": "",
+        "installAndAdd": ""
+      },
       "missingIntegration": {
         "title": "Önce bir hizmet bağlayın",
         "noPermission": "Bu widget'ın uyumlu bir hizmet bağlantısına ihtiyacı var. Bir yöneticiden bağlantı kurmasını isteyin ve ardından tekrar deneyin."
@@ -2206,10 +2424,13 @@
       "saveErrorTitle": "Öğeler güncellenemiyor",
       "saveErrorMessage": "Değişiklikler kaydedilemedi. Panel yenilendi.",
       "moveUnavailableTitle": "Seçilen öğeler taşınamıyor",
-      "moveUnavailableMessage": "Hedefte seçimin tamamı için yeterli alan yok."
+      "moveUnavailableMessage": "Hedefte seçimin tamamı için yeterli alan yok.",
+      "moveToTab": "",
+      "movedToTab": ""
     },
     "moveResize": {
       "title": "Öğeyi Taşı / Yeniden Boyutlandır",
+      "sizeOverlap": "",
       "entryLabel": "{name}, sütun {column}, satır {row}",
       "target": {
         "numbered": "{name}, hedef {index}",
@@ -2292,6 +2513,36 @@
       "open": "Gelişmiş görünümü aç",
       "close": "Gelişmiş görünümü kapat",
       "label": "{widget} gelişmiş görünümü"
+    },
+    "inPlace": {
+      "widgetLoadError": "",
+      "search": "",
+      "bestFit": "",
+      "moreWidgets": "",
+      "widgets": "Widget'lar",
+      "yourApps": "",
+      "createApp": "",
+      "addAppLink": "",
+      "createWidget": "",
+      "createWidgetDescription": "",
+      "createAppDescription": "",
+      "defaultFit": "",
+      "defaultFitDescription": "",
+      "defaultSize": "",
+      "defaultSizeDescription": "",
+      "emptyCells": "",
+      "preview": {
+        "error": "",
+        "loading": ""
+      },
+      "keyboard": {
+        "move": "",
+        "resize": "",
+        "pick": "",
+        "browse": "",
+        "moveDescription": "",
+        "resizeDescription": ""
+      }
     }
   },
   "widget": {
@@ -2335,7 +2586,29 @@
             "tooltip": "Araç ipucu olarak",
             "hidden": "Gizli"
           }
+        },
+        "dockerContainer": {
+          "label": "",
+          "description": "",
+          "placeholder": "",
+          "disabled": "",
+          "unavailable": ""
         }
+      },
+      "docker": {
+        "action": {
+          "start": "",
+          "stop": ""
+        },
+        "notification": {
+          "startFailed": "",
+          "stopFailed": ""
+        },
+        "switch": {
+          "start": "",
+          "stop": ""
+        },
+        "stopped": ""
       },
       "error": {
         "notFound": {
@@ -2414,6 +2687,10 @@
         "hideHostname": {
           "label": "Ana bilgisayar adlarını gizle"
         },
+        "showFullUrls": {
+          "label": "",
+          "description": ""
+        },
         "withBorder": {
           "label": "Kenarlık göster"
         },
@@ -2436,6 +2713,9 @@
         }
       },
       "empty": "Widget ayarlarından bir URL veya uygulama ekleyin",
+      "copyUrl": "URL'yi kopyala",
+      "copied": "Kopyalandı",
+      "copyFailed": "",
       "groups": {
         "label": "",
         "placeholder": "Yeni Kategori",
@@ -3089,6 +3369,141 @@
         "toggleFailed": "Varlık güncellenemedi"
       }
     },
+    "smartHome-controls": {
+      "name": "",
+      "description": "",
+      "option": {
+        "presentation": {
+          "label": "",
+          "option": {
+            "entities": "",
+            "controlPanel": ""
+          }
+        },
+        "title": {
+          "label": "Başlık",
+          "description": ""
+        },
+        "blocks": {
+          "label": "",
+          "remove": ""
+        },
+        "roomDomains": {
+          "label": "",
+          "description": ""
+        },
+        "excludedEntityIds": {
+          "label": "",
+          "description": "",
+          "placeholder": ""
+        },
+        "showSummary": {
+          "label": ""
+        },
+        "readOnly": {
+          "label": "",
+          "description": ""
+        },
+        "controlSize": {
+          "label": "",
+          "option": {
+            "auto": "",
+            "compact": "",
+            "large": "Büyük"
+          }
+        },
+        "palette": {
+          "label": "Renkler",
+          "option": {
+            "boring": "",
+            "colorful": ""
+          }
+        }
+      },
+      "domain": {
+        "light": "",
+        "switch": "",
+        "fan": "",
+        "climate": "",
+        "humidifier": "",
+        "cover": "",
+        "valve": "",
+        "lock": "",
+        "alarm_control_panel": "",
+        "media_player": "",
+        "camera": "",
+        "vacuum": "",
+        "scene": "",
+        "script": "",
+        "automation": "",
+        "button": "",
+        "input_boolean": "",
+        "input_select": "",
+        "person": "",
+        "binary_sensor": "",
+        "sensor": "",
+        "weather": "Hava Durumu",
+        "sun": "",
+        "update": ""
+      },
+      "block": {
+        "add": {
+          "rooms": "",
+          "entity": "Varlık",
+          "roomsLabel": "",
+          "roomsPlaceholder": "",
+          "entityLabel": "",
+          "entityPlaceholder": "",
+          "merge": "",
+          "submit": "Ekle",
+          "duplicate": "",
+          "covered": ""
+        },
+        "kind": {
+          "entity": "Varlık",
+          "room": "",
+          "mergedRooms": "",
+          "unknown": ""
+        },
+        "entityCount": "",
+        "noArea": "",
+        "issue": {
+          "missing": "Bulunamadı",
+          "otherSource": "",
+          "empty": ""
+        }
+      },
+      "preview": {
+        "empty": "",
+        "noMatches": "",
+        "summary": {
+          "lights": "",
+          "on": "",
+          "off": "",
+          "sensors": "",
+          "offline": "çevrimdışı"
+        },
+        "otherSource": ""
+      },
+      "live": {
+        "loading": "",
+        "error": "",
+        "retry": "",
+        "actionFailed": "",
+        "actionUnconfirmed": "",
+        "unconfirmed": "",
+        "selectionLimit": "",
+        "unknownError": ""
+      },
+      "inline": {
+        "open": "",
+        "title": "",
+        "handle": "",
+        "empty": "",
+        "add": "",
+        "close": ""
+      }
+    },
     "smartHome-executeAutomation": {
       "name": "Otomasyon Yürüt",
       "description": "Tek tıklamayla otomasyonu tetikleyin",
@@ -3535,6 +3950,34 @@
     },
     "coolify": {
       "description": "Sunucular ve uygulamalarla birlikte Coolify örneğinizin genel görünümü",
+      "summary": {
+        "needsAttention": "",
+        "inProgress": "",
+        "unknown": "",
+        "healthy": "",
+        "empty": "",
+        "healthyDetail": "",
+        "more": "",
+        "moreInstances": ""
+      },
+      "details": {
+        "tabs": "",
+        "overview": "",
+        "search": "",
+        "serviceApplications": ""
+      },
+      "overview": {
+        "projects": "",
+        "resources": "",
+        "attention": "",
+        "ready": "Hazır",
+        "noProjects": "",
+        "projectsUnavailable": "",
+        "moreProjects": "",
+        "running": "Çalışıyor",
+        "resourceCount": "",
+        "environmentCount": ""
+      },
       "option": {
         "showServers": {
           "label": "Sunucuları göster"
@@ -3566,7 +4009,13 @@
       },
       "source": {
         "url": "Kaynak: {url}",
-        "unavailable": "{source}: kullanılamıyor"
+        "unavailable": "{source}: kullanılamıyor",
+        "unavailableCount": ""
+      },
+      "kind": {
+        "server": "",
+        "application": "",
+        "service": ""
       },
       "instances": {
         "title": "Örnekler"
@@ -3583,6 +4032,7 @@
         "exited": "Durduruldu",
         "starting": "Başlatılıyor",
         "restarting": "Yeniden Başlatılıyor",
+        "unhealthy": "Sağlıksız",
         "unknown": "Bilinmeyen",
         "online": "Çevrimiçi",
         "offline": "Çevrimdışı",
@@ -4815,6 +5265,7 @@
           },
           "identifier": {
             "label": "Tanımlayıcı",
+            "containerPlaceholder": "",
             "placeholder": "Ad veya Sahip/Ad"
           },
           "name": {},
@@ -5351,6 +5802,23 @@
       "name": "Sistem kaynakları",
       "description": "Sisteminizin CPU, Bellek, Disk ve diğer donanım kullanımları",
       "option": {
+        "diskDisplayMode": {
+          "label": "",
+          "option": {
+            "percentage": "Yüzde (ör. %76)",
+            "free": "",
+            "absolute": "",
+            "combined": ""
+          }
+        },
+        "resourceLayout": {
+          "label": "",
+          "description": ""
+        },
+        "subresourceLayout": {
+          "label": "",
+          "description": ""
+        },
         "hasShadow": {
           "label": "Grafik gölgelendirmesini etkinleştir"
         },
@@ -5358,6 +5826,7 @@
           "label": "Görünür grafikler",
           "description": "Görünür olmasını istediğiniz grafikleri seçin.",
           "option": {
+            "cpuCores": "",
             "memory": "Bellek",
             "network": "Ağ"
           }
@@ -6286,6 +6755,26 @@
         }
       }
     },
+    "tabs": {
+      "label": "",
+      "indicator": "",
+      "home": "Ana Sayfa",
+      "untitled": "",
+      "add": "",
+      "actions": "",
+      "rename": "",
+      "namePlaceholder": "",
+      "moveLeft": "",
+      "moveRight": "",
+      "remove": {
+        "action": "",
+        "confirm": ""
+      },
+      "limitReached": "",
+      "hotkeyHint": "",
+      "destination": "",
+      "containerDestination": ""
+    },
     "landmark": {
       "canvas": "Pano çalışma alanı",
       "leftRail": "Sol pano kenar çubuğu",
@@ -6552,6 +7041,11 @@
           "description": "Sunucu yöneticiniz henüz öntanımlı panel belirlemedi.",
           "link": "Herkese açık panelleri görüntüle",
           "notice": "Bu sayfanın kaybolmasını sağlamak için sunucu yöneticisinden öntanımlı panel atamasını isteyin"
+        },
+        "noAccess": {
+          "title": "",
+          "description": "",
+          "notice": ""
         }
       }
     }
@@ -6623,10 +7117,12 @@
             "documentation": "Dokümantasyon",
             "submitIssue": "Bir Hata Gönder",
             "discord": "Discord Topluluğu",
-            "sourceCode": "Kaynak Kodu"
+            "sourceCode": "Kaynak Kodu",
+            "changelog": ""
           }
         },
         "about": "Hakkında",
+        "updateAvailable": "",
         "assistant": "Asistan"
       }
     },
@@ -6638,9 +7134,23 @@
           "authentication": "Kimlik doğrulama",
           "authorization": "Yetkilendirme"
         },
-        "heroBanner": {
-          "title": "Tekrar hoş geldiniz",
-          "subtitle": "{app} Panosu"
+        "hero": {
+          "greeting": "",
+          "greetingWithoutName": "",
+          "description": ""
+        },
+        "lobster": {
+          "label": "",
+          "prompt": "",
+          "pokeCount": "",
+          "reaction": {
+            "hey": "",
+            "ow": "",
+            "snip": "",
+            "careful": "",
+            "stillHere": "",
+            "okay": ""
+          }
         }
       },
       "board": {
@@ -6685,7 +7195,9 @@
         },
         "noResults": {
           "title": "Henüz panel yok",
-          "description": "Uygulamalarınızı ve widget'larınızı tek bir yerde düzenlemek için bir pano oluşturun."
+          "description": "Uygulamalarınızı ve widget'larınızı tek bir yerde düzenlemek için bir pano oluşturun.",
+          "noAccessTitle": "",
+          "noAccessDescription": ""
         }
       },
       "media": {
@@ -6738,6 +7250,11 @@
                 "logoDisplay": {
                   "logo": "Yalnızca logo",
                   "logoAndText": "Logo + metin"
+                },
+                "tabsDisplay": {
+                  "wide": "",
+                  "compact": "",
+                  "indicator": ""
                 }
               },
               "items": {
@@ -6745,6 +7262,7 @@
                 "search": "Arama",
                 "home": "Ana Panel",
                 "boardSwitcher": "Paneller",
+                "boardTabs": "",
                 "assistant": "Asistan",
                 "docker": "Docker",
                 "boardEdit": "Panoyu düzenle",
@@ -6976,6 +7494,10 @@
             "title": "Görünüm",
             "defaultColorScheme": {
               "label": "Öntanımlı Renk Düzeni"
+            },
+            "whatsNew": {
+              "label": "",
+              "description": ""
             }
           },
           "branding": {
@@ -7558,7 +8080,8 @@
               "openSpotlightApps": "Uygulama aramasını aç",
               "openSpotlightAssistant": "Asistan modunu aç",
               "openSpotlightPreferences": "Tercihler modunu aç",
-              "openAssistant": "Asistanı aç"
+              "openAssistant": "Asistanı aç",
+              "switchBoardTab": ""
             },
             "note": "İpucu: Mod, macOS'ta hem Ctrl tuşunu hem de ⌘ tuşunu ifade eder"
           }
@@ -8728,6 +9251,12 @@
         "description": "Renk şemanızı, dilinizi, ana panelinizi ve tercihlerinizi değiştirin. Buradan yönetim alanına da geçebilirsiniz."
       }
     }
+  },
+  "whatsNew": {
+    "title": "",
+    "empty": "",
+    "allReleases": "",
+    "dismiss": ""
   },
   "metadata": {
     "description": "*arr yığını ve tüm homelab ortamınız için kendi barındırdığınız pano. 50'den fazla hizmet, gerçek zamanlı widget'lar ve yapılandırma dosyası yok.",

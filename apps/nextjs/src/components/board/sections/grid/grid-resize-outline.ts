@@ -9,6 +9,7 @@ interface ResizeOutlinePreview {
 export const createGridResizeOutlineController = (
   getShell: () => HTMLElement | null,
   getControlledPlacement: () => GridPlacement,
+  getDisplayedPlacement: (placement: GridPlacement) => GridPlacement = (placement) => placement,
 ) => {
   let frame = 0;
   let pending: ResizeOutlinePreview | null = null;
@@ -26,13 +27,15 @@ export const createGridResizeOutlineController = (
     const controlled = getControlledPlacement();
     const visualX = toFiniteNumber(shell.dataset.gridX, controlled.x);
     const visualY = toFiniteNumber(shell.dataset.gridY, controlled.y);
+    const displayedControlled = getDisplayedPlacement({ ...controlled, x: visualX, y: visualY });
+    const displayedPreview = getDisplayedPlacement(preview.placement);
     const outline =
       shell.querySelector<HTMLElement>(":scope > [data-grid-resize-outline]") ?? createResizeOutline(shell);
     outline.style.position = "absolute";
-    outline.style.left = `${(preview.placement.x - visualX) * LOGICAL_GRID_PITCH}px`;
-    outline.style.top = `calc(${(preview.placement.y - visualY) * LOGICAL_GRID_PITCH}px * var(--board-grid-row-scale, 1))`;
-    outline.style.width = `${getLogicalGridSize(preview.placement.w)}px`;
-    outline.style.height = `calc(${getLogicalGridSize(preview.placement.h)}px * var(--board-grid-row-scale, 1))`;
+    outline.style.left = `${(displayedPreview.x - displayedControlled.x) * LOGICAL_GRID_PITCH}px`;
+    outline.style.top = `calc(${(displayedPreview.y - displayedControlled.y) * LOGICAL_GRID_PITCH}px * var(--board-grid-row-scale, 1))`;
+    outline.style.width = `${getLogicalGridSize(displayedPreview.w)}px`;
+    outline.style.height = `calc(${getLogicalGridSize(displayedPreview.h)}px * var(--board-grid-row-scale, 1))`;
     outline.dataset.gridResizeValid = String(preview.valid);
   };
 

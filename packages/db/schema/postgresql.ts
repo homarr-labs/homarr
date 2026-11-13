@@ -299,12 +299,12 @@ export const boards = pgTable("board", {
     .notNull(),
   backgroundImageRepeat: text().$type<BackgroundImageRepeat>().default(backgroundImageRepeats.defaultValue).notNull(),
   backgroundImageSize: text().$type<BackgroundImageSize>().default(backgroundImageSizes.defaultValue).notNull(),
-  primaryColor: text().default("#fa5252").notNull(),
-  secondaryColor: text().default("#fd7e14").notNull(),
+  primaryColor: text(),
+  secondaryColor: text(),
   opacity: integer().default(100).notNull(),
   customCss: text(),
   iconColor: text(),
-  itemRadius: text().$type<MantineSize>().default("lg").notNull(),
+  itemRadius: text().$type<MantineSize>(),
   disableStatus: boolean().default(false).notNull(),
 });
 
@@ -657,6 +657,7 @@ export const customWidgetDefinitions = pgTable("custom_widget_v2_definition", {
   requests: text().notNull(),
   options: text().notNull(),
   template: text().notNull(),
+  workshop: text(),
   enabled: boolean().notNull().default(true),
   createdAt: timestamp({ mode: "date" }).notNull().defaultNow(),
   updatedAt: timestamp({ mode: "date" }).notNull().defaultNow(),

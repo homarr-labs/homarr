@@ -1245,6 +1245,20 @@
       "username": "Tên người dùng",
       "password": "Mật khẩu",
       "savedPlaceholder": "••••••• (đã lưu, để trống để giữ nguyên)"
+    },
+    "workshopUpdate": {
+      "title": "",
+      "apply": "",
+      "available": "",
+      "check": "",
+      "description": "",
+      "approvePermissions": "",
+      "pendingDescription": "",
+      "overwriteLocalChanges": "",
+      "installSeparate": "",
+      "communityWarning": "",
+      "updated": "",
+      "changedBeforeInstall": ""
     }
   },
   "workshop": {
@@ -1515,6 +1529,27 @@
           "title": "Lỗi không xác định",
           "description": "Đã xảy ra lỗi không xác định, hãy mở nguyên nhân bên dưới để xem thêm chi tiết"
         },
+        "frigate": {
+          "title": "",
+          "status": "",
+          "description": {
+            "cookie": "",
+            "profileMismatch": "",
+            "redirect": "",
+            "login": "",
+            "profile": "",
+            "stats": ""
+          }
+        },
+        "openmediavault": {
+          "title": "",
+          "description": {
+            "totpSecretRequired": "",
+            "totpSecretInvalid": "",
+            "totpVerificationFailed": "",
+            "unsupportedChallenge": ""
+          }
+        },
         "parse": {
           "title": "Lỗi cú pháp",
           "description": "Không thể phân tích phản hồi. Vui lòng xác minh URL đang trỏ đến URL cơ sở của dịch vụ."
@@ -1714,6 +1749,11 @@
         "title": "Đặt lại bí mật",
         "message": "Bạn có chắc chắn muốn đặt lại bí mật này không?"
       },
+      "totpNotice": "",
+      "remove": {
+        "title": "",
+        "message": ""
+      },
       "noSecretsRequired": {
         "segmentTitle": "Không có bí mật",
         "text": "Tích hợp này không yêu cầu bí mật"
@@ -1794,6 +1834,10 @@
         "wazuhIndexerPassword": {
           "label": "Mật khẩu trình lập chỉ mục",
           "newLabel": "Mật khẩu trình lập chỉ mục mới"
+        },
+        "totpSecret": {
+          "label": "",
+          "newLabel": ""
         }
       }
     },
@@ -1891,7 +1935,8 @@
       "copy": "Sao chép",
       "copied": "Đã sao chép",
       "refresh": "Làm mới",
-      "export": "Xuất"
+      "export": "Xuất",
+      "advanced": ""
     },
     "hidden": "",
     "pagination": {
@@ -1986,6 +2031,15 @@
         "modifier": "Bộ sửa đổi"
       }
     },
+    "markdown": {
+      "alert": {
+        "note": "",
+        "tip": "",
+        "important": "",
+        "warning": "",
+        "caution": ""
+      }
+    },
     "dangerZone": "Khu vực nguy hiểm",
     "noResults": "Không có kết quả",
     "unsavedChanges": "Bạn có thay đổi chưa lưu!",
@@ -2076,6 +2130,158 @@
         "sm": "Tinh tế",
         "xl": "Mềm"
       }
+    },
+    "customTheme": {
+      "label": "",
+      "nothingFound": "",
+      "custom": "",
+      "customize": "",
+      "editor": {
+        "title": "",
+        "basedOn": "",
+        "preview": "",
+        "previewColorScheme": "",
+        "layout": "Bố cục",
+        "typography": "",
+        "colors": "",
+        "json": "",
+        "defaultRadius": "",
+        "radiusHint": "",
+        "scale": "",
+        "spacing": "",
+        "radius": "",
+        "fontFamily": "",
+        "headingFont": "",
+        "monoFont": "",
+        "fontSizes": "",
+        "palette": {
+          "body": "",
+          "surface": "",
+          "hover": "",
+          "border": "",
+          "text": "",
+          "dimmed": "",
+          "primary": "",
+          "secondary": ""
+        },
+        "lockedPrimary": "",
+        "pickColor": "",
+        "autoContrast": "",
+        "luminanceThreshold": "",
+        "jsonHint": "",
+        "invalidJson": "",
+        "tooLong": "",
+        "copyJson": "",
+        "copied": "",
+        "discardJson": "",
+        "reset": "",
+        "apply": "",
+        "sampleTitle": "",
+        "sampleBadge": "",
+        "sampleText": "",
+        "sampleInput": "Tìm",
+        "sampleValue": "Tim một ứng dụng",
+        "sampleButton": ""
+      },
+      "studio": {
+        "title": "",
+        "saveTheme": "",
+        "searchControls": "",
+        "component": "",
+        "inheritedValue": "",
+        "resetControl": "",
+        "decreaseControl": "",
+        "increaseControl": "",
+        "chooseControl": "",
+        "layout": {
+          "spacing": "",
+          "radius": "",
+          "compact": "",
+          "normal": "",
+          "roomy": "",
+          "preset": "",
+          "none": "",
+          "rounded": "",
+          "full": "",
+          "custom": "",
+          "advanced": ""
+        },
+        "previewSurface": "",
+        "previewFrame": "",
+        "loadingPreview": "",
+        "previewFailed": "",
+        "sampleBoard": "",
+        "components": "",
+        "overlays": "",
+        "typography": "",
+        "liveBoard": "",
+        "viewport": "",
+        "responsive": "",
+        "tablet": "",
+        "mobile": "",
+        "includeCustomCss": "",
+        "groups": {
+          "layout": "",
+          "typography": "",
+          "colors": "",
+          "surfaces": "",
+          "overlays": "",
+          "accessibility": "",
+          "css": ""
+        },
+        "controls": {
+          "defaultRadius": "",
+          "scale": "",
+          "spacing": "",
+          "radius": "",
+          "breakpoint": "",
+          "fontSizes": "",
+          "lineHeight": "",
+          "shadow": "",
+          "fontFamily": "",
+          "headingFont": "",
+          "monoFont": "",
+          "headingWeight": "",
+          "headingSize": "",
+          "fontSmoothing": "",
+          "body": "",
+          "surface": "",
+          "hover": "",
+          "border": "",
+          "text": "",
+          "dimmed": "",
+          "primary": "",
+          "secondary": "",
+          "autoContrast": "",
+          "luminanceThreshold": "",
+          "primaryShade": "",
+          "componentRadius": "",
+          "borderWidth": "",
+          "surfaceBackground": "Hình nền",
+          "surfaceText": "",
+          "surfaceBorder": "",
+          "hoverBackground": "",
+          "hoverText": "",
+          "componentShadow": "",
+          "componentBorder": "",
+          "componentPadding": "",
+          "componentSize": "Kích thước tệp",
+          "componentVariant": "",
+          "overlayBlur": "",
+          "overlayOpacity": "",
+          "overlayColor": "",
+          "transitionDuration": "",
+          "headerBackground": "",
+          "respectReducedMotion": "",
+          "focusRing": "",
+          "cursorType": "",
+          "customCss": ""
+        },
+        "expandPreview": "",
+        "showControls": ""
+      },
+      "instanceDefault": "",
+      "useInstanceDefault": ""
     }
   },
   "section": {
@@ -2171,6 +2377,18 @@
       },
       "customWidget": "Tiện ích tùy chỉnh",
       "standalone": "Độc lập",
+      "integrationFilter": "",
+      "integrationNotConnected": "",
+      "workshop": {
+        "title": "",
+        "back": "",
+        "empty": "",
+        "noMatches": "",
+        "loading": "",
+        "integrationError": "",
+        "searchMore": "",
+        "installAndAdd": ""
+      },
       "missingIntegration": {
         "title": "Trước tiên hãy kết nối dịch vụ",
         "noPermission": "Tiện ích này cần kết nối dịch vụ tương thích. Hãy yêu cầu quản trị viên kết nối một dịch vụ rồi thử lại."
@@ -2206,10 +2424,13 @@
       "saveErrorTitle": "Không thể cập nhật các mục",
       "saveErrorMessage": "Không thể lưu thay đổi. Bảng đã được làm mới.",
       "moveUnavailableTitle": "Không thể di chuyển các mục đã chọn",
-      "moveUnavailableMessage": "Đích không đủ chỗ cho toàn bộ lựa chọn."
+      "moveUnavailableMessage": "Đích không đủ chỗ cho toàn bộ lựa chọn.",
+      "moveToTab": "",
+      "movedToTab": ""
     },
     "moveResize": {
       "title": "Di chuyển / đổi cỡ mục",
+      "sizeOverlap": "",
       "entryLabel": "{name}, cột {column}, hàng {row}",
       "target": {
         "numbered": "{name}, đích {index}",
@@ -2292,6 +2513,36 @@
       "open": "Mở chế độ xem nâng cao",
       "close": "Đóng chế độ xem nâng cao",
       "label": "Chế độ xem nâng cao của {widget}"
+    },
+    "inPlace": {
+      "widgetLoadError": "",
+      "search": "",
+      "bestFit": "",
+      "moreWidgets": "",
+      "widgets": "",
+      "yourApps": "",
+      "createApp": "",
+      "addAppLink": "",
+      "createWidget": "",
+      "createWidgetDescription": "",
+      "createAppDescription": "",
+      "defaultFit": "",
+      "defaultFitDescription": "",
+      "defaultSize": "",
+      "defaultSizeDescription": "",
+      "emptyCells": "",
+      "preview": {
+        "error": "",
+        "loading": ""
+      },
+      "keyboard": {
+        "move": "",
+        "resize": "",
+        "pick": "",
+        "browse": "",
+        "moveDescription": "",
+        "resizeDescription": ""
+      }
     }
   },
   "widget": {
@@ -2335,7 +2586,29 @@
             "tooltip": "Dạng chú giải",
             "hidden": "Ẩn"
           }
+        },
+        "dockerContainer": {
+          "label": "",
+          "description": "",
+          "placeholder": "",
+          "disabled": "",
+          "unavailable": ""
         }
+      },
+      "docker": {
+        "action": {
+          "start": "",
+          "stop": ""
+        },
+        "notification": {
+          "startFailed": "",
+          "stopFailed": ""
+        },
+        "switch": {
+          "start": "",
+          "stop": ""
+        },
+        "stopped": ""
       },
       "error": {
         "notFound": {
@@ -2414,6 +2687,10 @@
         "hideHostname": {
           "label": "Ẩn tên máy chủ"
         },
+        "showFullUrls": {
+          "label": "",
+          "description": ""
+        },
         "withBorder": {
           "label": "Hiển thị viền"
         },
@@ -2436,6 +2713,9 @@
         }
       },
       "empty": "Thêm URL hoặc Ứng dụng trong cài đặt tiện ích",
+      "copyUrl": "",
+      "copied": "",
+      "copyFailed": "",
       "groups": {
         "label": "",
         "placeholder": "",
@@ -3089,6 +3369,141 @@
         "toggleFailed": "Không thể cập nhật thực thể"
       }
     },
+    "smartHome-controls": {
+      "name": "",
+      "description": "",
+      "option": {
+        "presentation": {
+          "label": "",
+          "option": {
+            "entities": "",
+            "controlPanel": ""
+          }
+        },
+        "title": {
+          "label": "Tiêu đề",
+          "description": ""
+        },
+        "blocks": {
+          "label": "",
+          "remove": ""
+        },
+        "roomDomains": {
+          "label": "",
+          "description": ""
+        },
+        "excludedEntityIds": {
+          "label": "",
+          "description": "",
+          "placeholder": ""
+        },
+        "showSummary": {
+          "label": ""
+        },
+        "readOnly": {
+          "label": "",
+          "description": ""
+        },
+        "controlSize": {
+          "label": "",
+          "option": {
+            "auto": "",
+            "compact": "",
+            "large": "Lớn"
+          }
+        },
+        "palette": {
+          "label": "",
+          "option": {
+            "boring": "",
+            "colorful": ""
+          }
+        }
+      },
+      "domain": {
+        "light": "",
+        "switch": "",
+        "fan": "",
+        "climate": "",
+        "humidifier": "",
+        "cover": "",
+        "valve": "",
+        "lock": "",
+        "alarm_control_panel": "",
+        "media_player": "",
+        "camera": "",
+        "vacuum": "",
+        "scene": "",
+        "script": "",
+        "automation": "",
+        "button": "",
+        "input_boolean": "",
+        "input_select": "",
+        "person": "",
+        "binary_sensor": "",
+        "sensor": "",
+        "weather": "Thời tiết",
+        "sun": "",
+        "update": ""
+      },
+      "block": {
+        "add": {
+          "rooms": "",
+          "entity": "",
+          "roomsLabel": "",
+          "roomsPlaceholder": "",
+          "entityLabel": "",
+          "entityPlaceholder": "",
+          "merge": "",
+          "submit": "Thêm",
+          "duplicate": "",
+          "covered": ""
+        },
+        "kind": {
+          "entity": "",
+          "room": "",
+          "mergedRooms": "",
+          "unknown": ""
+        },
+        "entityCount": "",
+        "noArea": "",
+        "issue": {
+          "missing": "",
+          "otherSource": "",
+          "empty": ""
+        }
+      },
+      "preview": {
+        "empty": "",
+        "noMatches": "",
+        "summary": {
+          "lights": "",
+          "on": "",
+          "off": "",
+          "sensors": "",
+          "offline": ""
+        },
+        "otherSource": ""
+      },
+      "live": {
+        "loading": "",
+        "error": "",
+        "retry": "",
+        "actionFailed": "",
+        "actionUnconfirmed": "",
+        "unconfirmed": "",
+        "selectionLimit": "",
+        "unknownError": ""
+      },
+      "inline": {
+        "open": "",
+        "title": "",
+        "handle": "",
+        "empty": "",
+        "add": "",
+        "close": ""
+      }
+    },
     "smartHome-executeAutomation": {
       "name": "Thực thi Tự động hóa",
       "description": "Kích hoạt một tự động hóa chỉ với một cú nhấp",
@@ -3535,6 +3950,34 @@
     },
     "coolify": {
       "description": "Tổng quan về phiên bản Coolify của bạn với các máy chủ và ứng dụng",
+      "summary": {
+        "needsAttention": "",
+        "inProgress": "",
+        "unknown": "",
+        "healthy": "",
+        "empty": "",
+        "healthyDetail": "",
+        "more": "",
+        "moreInstances": ""
+      },
+      "details": {
+        "tabs": "",
+        "overview": "",
+        "search": "",
+        "serviceApplications": ""
+      },
+      "overview": {
+        "projects": "",
+        "resources": "",
+        "attention": "",
+        "ready": "",
+        "noProjects": "",
+        "projectsUnavailable": "",
+        "moreProjects": "",
+        "running": "Đang chạy",
+        "resourceCount": "",
+        "environmentCount": ""
+      },
       "option": {
         "showServers": {
           "label": "Hiển thị máy chủ"
@@ -3566,7 +4009,13 @@
       },
       "source": {
         "url": "Nguồn: {url}",
-        "unavailable": "{source}: không khả dụng"
+        "unavailable": "{source}: không khả dụng",
+        "unavailableCount": ""
+      },
+      "kind": {
+        "server": "",
+        "application": "",
+        "service": ""
       },
       "instances": {
         "title": "Các phiên bản"
@@ -3583,6 +4032,7 @@
         "exited": "Đã thoát",
         "starting": "Đang khởi động",
         "restarting": "Đang khởi động lại",
+        "unhealthy": "",
         "unknown": "Không rõ",
         "online": "Trực tuyến",
         "offline": "Ngoại tuyến",
@@ -4815,6 +5265,7 @@
           },
           "identifier": {
             "label": "Mã định danh",
+            "containerPlaceholder": "",
             "placeholder": "Tên hoặc Chủ sở hữu/Tên"
           },
           "name": {},
@@ -5351,6 +5802,23 @@
       "name": "Tài nguyên hệ thống",
       "description": "Mức sử dụng CPU, bộ nhớ, ổ đĩa và phần cứng khác của hệ thống",
       "option": {
+        "diskDisplayMode": {
+          "label": "",
+          "option": {
+            "percentage": "",
+            "free": "",
+            "absolute": "",
+            "combined": ""
+          }
+        },
+        "resourceLayout": {
+          "label": "",
+          "description": ""
+        },
+        "subresourceLayout": {
+          "label": "",
+          "description": ""
+        },
         "hasShadow": {
           "label": "Bật đổ bóng biểu đồ"
         },
@@ -5358,6 +5826,7 @@
           "label": "Biểu đồ hiển thị",
           "description": "Chọn các biểu đồ bạn muốn hiển thị.",
           "option": {
+            "cpuCores": "",
             "memory": "Bộ nhớ",
             "network": "Mạng"
           }
@@ -6286,6 +6755,26 @@
         }
       }
     },
+    "tabs": {
+      "label": "",
+      "indicator": "",
+      "home": "Trang chủ",
+      "untitled": "",
+      "add": "",
+      "actions": "",
+      "rename": "",
+      "namePlaceholder": "",
+      "moveLeft": "",
+      "moveRight": "",
+      "remove": {
+        "action": "",
+        "confirm": ""
+      },
+      "limitReached": "",
+      "hotkeyHint": "",
+      "destination": "",
+      "containerDestination": ""
+    },
     "landmark": {
       "canvas": "Khung bảng điều khiển",
       "leftRail": "Thanh bên trái của bảng điều khiển",
@@ -6552,6 +7041,11 @@
           "description": "Quản trị viên máy chủ chưa đặt bảng chính.",
           "link": "Xem các bảng công khai",
           "notice": "Để ẩn trang này, hãy yêu cầu quản trị viên máy chủ đặt bảng chính cho máy chủ"
+        },
+        "noAccess": {
+          "title": "",
+          "description": "",
+          "notice": ""
         }
       }
     }
@@ -6623,10 +7117,12 @@
             "documentation": "Tài liệu",
             "submitIssue": "Gửi báo cáo sự cố",
             "discord": "Discord",
-            "sourceCode": "Mã nguồn"
+            "sourceCode": "Mã nguồn",
+            "changelog": ""
           }
         },
         "about": "Về chúng tôi",
+        "updateAvailable": "",
         "assistant": "Trợ lý"
       }
     },
@@ -6638,9 +7134,23 @@
           "authentication": "Xác thực",
           "authorization": "Phân quyền"
         },
-        "heroBanner": {
-          "title": "Chào mừng bạn trở lại với",
-          "subtitle": "Bảng {app}"
+        "hero": {
+          "greeting": "",
+          "greetingWithoutName": "",
+          "description": ""
+        },
+        "lobster": {
+          "label": "",
+          "prompt": "",
+          "pokeCount": "",
+          "reaction": {
+            "hey": "",
+            "ow": "",
+            "snip": "",
+            "careful": "",
+            "stillHere": "",
+            "okay": ""
+          }
         }
       },
       "board": {
@@ -6685,7 +7195,9 @@
         },
         "noResults": {
           "title": "Chưa có bảng",
-          "description": "Tạo bảng để sắp xếp ứng dụng và tiện ích của bạn ở một nơi."
+          "description": "Tạo bảng để sắp xếp ứng dụng và tiện ích của bạn ở một nơi.",
+          "noAccessTitle": "",
+          "noAccessDescription": ""
         }
       },
       "media": {
@@ -6738,6 +7250,11 @@
                 "logoDisplay": {
                   "logo": "Chỉ logo",
                   "logoAndText": "Logo + văn bản"
+                },
+                "tabsDisplay": {
+                  "wide": "",
+                  "compact": "",
+                  "indicator": ""
                 }
               },
               "items": {
@@ -6745,6 +7262,7 @@
                 "search": "Tìm",
                 "home": "Bảng chính",
                 "boardSwitcher": "Bảng",
+                "boardTabs": "",
                 "assistant": "Trợ lý",
                 "docker": "Nền tảng Docker",
                 "boardEdit": "Chỉnh sửa bảng",
@@ -6976,6 +7494,10 @@
             "title": "Hiển thị",
             "defaultColorScheme": {
               "label": "Bảng màu mặc định"
+            },
+            "whatsNew": {
+              "label": "",
+              "description": ""
             }
           },
           "branding": {
@@ -7558,7 +8080,8 @@
               "openSpotlightApps": "Mở tìm kiếm ứng dụng",
               "openSpotlightAssistant": "Mở chế độ Trợ lý",
               "openSpotlightPreferences": "Mở chế độ tùy chọn",
-              "openAssistant": "Mở Trợ lý"
+              "openAssistant": "Mở Trợ lý",
+              "switchBoardTab": ""
             },
             "note": "Mẹo: Mod dùng cho cả phím Ctrl và phím ⌘ trên macOS"
           }
@@ -8728,6 +9251,12 @@
         "description": "Thay đổi bảng màu, ngôn ngữ, bảng chính và tùy chọn. Bạn cũng có thể chuyển đến khu vực quản lý từ đây."
       }
     }
+  },
+  "whatsNew": {
+    "title": "",
+    "empty": "",
+    "allReleases": "",
+    "dismiss": ""
   },
   "metadata": {
     "description": "Bảng điều khiển tự lưu trữ cho hệ thống *arr và toàn bộ homelab của bạn. Tích hợp hơn 50 dịch vụ, tiện ích theo thời gian thực, không cần tệp cấu hình.",

@@ -14,7 +14,6 @@ import { useI18n } from "@homarr/translation/client";
 import { MaskedOrNormalImage } from "@homarr/ui";
 
 import { WidgetEmptyState } from "../common/empty-state";
-import { getUsableWidgetQueryData, isInitialWidgetQueryPending } from "../common/query-state";
 import { WidgetQueryLoadingState } from "../common/query-state-indicator";
 import type { WidgetComponentProps } from "../definition";
 import { AppLink } from "./_app-link";
@@ -24,24 +23,24 @@ import { DockerContainerToggle } from "./docker/container-toggle";
 import { PingDot } from "./ping/ping-dot";
 import { PingIndicator } from "./ping/ping-indicator";
 
-export default function AppWidget({
-  options,
-  isEditMode,
-  height,
-  width,
-  displayScale = 1,
-}: WidgetComponentProps<"app">) {
+export default function AppWidget(props: WidgetComponentProps<"app">) {
+  if (!props.options.appId) return <WidgetEmptyState />;
+  return (
+    <Suspense fallback={<WidgetQueryLoadingState />}>
+      <ConfiguredAppWidget {...props} />
+    </Suspense>
+  );
+}
+
+function ConfiguredAppWidget({ options, isEditMode, height, width, displayScale = 1 }: WidgetComponentProps<"app">) {
   const tCommon = useI18n("common");
   const settings = useSettings();
   const board = useRequiredBoard();
   const { data: session } = useSession();
   const revealControlsOnClick = useRef(false);
-  const appQuery = clientApi.app.byId.useQuery({ id: options.appId }, { enabled: Boolean(options.appId) });
-  const app = getUsableWidgetQueryData(appQuery);
+  const [app] = clientApi.app.byId.useSuspenseQuery({ id: options.appId });
   const href = app?.href ?? undefined;
 
-  if (!options.appId) return <WidgetEmptyState />;
-  if (isInitialWidgetQueryPending(appQuery)) return <WidgetQueryLoadingState />;
   if (!app) return <WidgetEmptyState />;
 
   let layoutScale = displayScale;

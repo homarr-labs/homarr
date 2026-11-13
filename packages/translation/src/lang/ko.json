@@ -1245,6 +1245,20 @@
       "username": "사용자명",
       "password": "비밀번호",
       "savedPlaceholder": "••••••• (저장됨, 유지하려면 공백)"
+    },
+    "workshopUpdate": {
+      "title": "",
+      "apply": "",
+      "available": "",
+      "check": "",
+      "description": "",
+      "approvePermissions": "",
+      "pendingDescription": "",
+      "overwriteLocalChanges": "",
+      "installSeparate": "",
+      "communityWarning": "",
+      "updated": "",
+      "changedBeforeInstall": ""
     }
   },
   "workshop": {
@@ -1515,6 +1529,27 @@
           "title": "알 수 없는 오류",
           "description": "알 수 없는 오류가 발생했습니다. 자세한 내용을 보려면 아래 원인을 펼치세요"
         },
+        "frigate": {
+          "title": "",
+          "status": "",
+          "description": {
+            "cookie": "",
+            "profileMismatch": "",
+            "redirect": "",
+            "login": "",
+            "profile": "",
+            "stats": ""
+          }
+        },
+        "openmediavault": {
+          "title": "",
+          "description": {
+            "totpSecretRequired": "",
+            "totpSecretInvalid": "",
+            "totpVerificationFailed": "",
+            "unsupportedChallenge": ""
+          }
+        },
         "parse": {
           "title": "파싱 오류",
           "description": "응답을 파싱할 수 없습니다. URL이 서비스의 기본 URL을 가리키는지 확인하세요."
@@ -1714,6 +1749,11 @@
         "title": "시크릿 값 초기화",
         "message": "이 시크릿 값을 초기화하시겠습니까?"
       },
+      "totpNotice": "",
+      "remove": {
+        "title": "",
+        "message": ""
+      },
       "noSecretsRequired": {
         "segmentTitle": "시크릿 값 없음",
         "text": "이 통합에는 시크릿이 필요하지 않습니다"
@@ -1794,6 +1834,10 @@
         "wazuhIndexerPassword": {
           "label": "인덱서 비밀번호",
           "newLabel": "새 인덱서 비밀번호"
+        },
+        "totpSecret": {
+          "label": "",
+          "newLabel": ""
         }
       }
     },
@@ -1891,7 +1935,8 @@
       "copy": "복사",
       "copied": "복사됨",
       "refresh": "새로고침",
-      "export": "내보내기"
+      "export": "내보내기",
+      "advanced": ""
     },
     "hidden": "숨김",
     "pagination": {
@@ -1986,6 +2031,15 @@
         "modifier": "수정자"
       }
     },
+    "markdown": {
+      "alert": {
+        "note": "",
+        "tip": "",
+        "important": "",
+        "warning": "",
+        "caution": ""
+      }
+    },
     "dangerZone": "위험한 설정",
     "noResults": "결과를 찾을 수 없습니다.",
     "unsavedChanges": "저장하지 않은 변경 사항이 있습니다!",
@@ -2076,6 +2130,158 @@
         "sm": "미세하게",
         "xl": "부드럽게"
       }
+    },
+    "customTheme": {
+      "label": "",
+      "nothingFound": "",
+      "custom": "",
+      "customize": "",
+      "editor": {
+        "title": "",
+        "basedOn": "",
+        "preview": "",
+        "previewColorScheme": "",
+        "layout": "레이아웃",
+        "typography": "",
+        "colors": "",
+        "json": "",
+        "defaultRadius": "",
+        "radiusHint": "",
+        "scale": "",
+        "spacing": "",
+        "radius": "",
+        "fontFamily": "",
+        "headingFont": "",
+        "monoFont": "",
+        "fontSizes": "",
+        "palette": {
+          "body": "",
+          "surface": "",
+          "hover": "",
+          "border": "",
+          "text": "",
+          "dimmed": "",
+          "primary": "",
+          "secondary": ""
+        },
+        "lockedPrimary": "",
+        "pickColor": "",
+        "autoContrast": "",
+        "luminanceThreshold": "",
+        "jsonHint": "",
+        "invalidJson": "",
+        "tooLong": "",
+        "copyJson": "",
+        "copied": "",
+        "discardJson": "",
+        "reset": "",
+        "apply": "",
+        "sampleTitle": "대시보드",
+        "sampleBadge": "미리보기",
+        "sampleText": "",
+        "sampleInput": "검색",
+        "sampleValue": "앱 찾기",
+        "sampleButton": ""
+      },
+      "studio": {
+        "title": "",
+        "saveTheme": "",
+        "searchControls": "",
+        "component": "",
+        "inheritedValue": "",
+        "resetControl": "",
+        "decreaseControl": "",
+        "increaseControl": "",
+        "chooseControl": "",
+        "layout": {
+          "spacing": "",
+          "radius": "",
+          "compact": "",
+          "normal": "",
+          "roomy": "",
+          "preset": "",
+          "none": "없음",
+          "rounded": "",
+          "full": "",
+          "custom": "",
+          "advanced": ""
+        },
+        "previewSurface": "미리보기",
+        "previewFrame": "",
+        "loadingPreview": "",
+        "previewFailed": "",
+        "sampleBoard": "",
+        "components": "",
+        "overlays": "",
+        "typography": "",
+        "liveBoard": "",
+        "viewport": "",
+        "responsive": "",
+        "tablet": "",
+        "mobile": "모바일",
+        "includeCustomCss": "",
+        "groups": {
+          "layout": "",
+          "typography": "",
+          "colors": "",
+          "surfaces": "",
+          "overlays": "",
+          "accessibility": "",
+          "css": ""
+        },
+        "controls": {
+          "defaultRadius": "",
+          "scale": "",
+          "spacing": "",
+          "radius": "",
+          "breakpoint": "중단점",
+          "fontSizes": "",
+          "lineHeight": "",
+          "shadow": "",
+          "fontFamily": "",
+          "headingFont": "",
+          "monoFont": "",
+          "headingWeight": "",
+          "headingSize": "",
+          "fontSmoothing": "",
+          "body": "",
+          "surface": "",
+          "hover": "",
+          "border": "",
+          "text": "",
+          "dimmed": "",
+          "primary": "",
+          "secondary": "",
+          "autoContrast": "",
+          "luminanceThreshold": "",
+          "primaryShade": "",
+          "componentRadius": "",
+          "borderWidth": "",
+          "surfaceBackground": "배경",
+          "surfaceText": "",
+          "surfaceBorder": "테두리 색상",
+          "hoverBackground": "",
+          "hoverText": "",
+          "componentShadow": "",
+          "componentBorder": "테두리 표시",
+          "componentPadding": "",
+          "componentSize": "파일 크기",
+          "componentVariant": "",
+          "overlayBlur": "",
+          "overlayOpacity": "",
+          "overlayColor": "",
+          "transitionDuration": "",
+          "headerBackground": "",
+          "respectReducedMotion": "",
+          "focusRing": "",
+          "cursorType": "",
+          "customCss": ""
+        },
+        "expandPreview": "",
+        "showControls": ""
+      },
+      "instanceDefault": "",
+      "useInstanceDefault": ""
     }
   },
   "section": {
@@ -2171,6 +2377,18 @@
       },
       "customWidget": "사용자 지정 위젯",
       "standalone": "독립 실행형",
+      "integrationFilter": "",
+      "integrationNotConnected": "",
+      "workshop": {
+        "title": "",
+        "back": "",
+        "empty": "",
+        "noMatches": "",
+        "loading": "",
+        "integrationError": "",
+        "searchMore": "",
+        "installAndAdd": ""
+      },
       "missingIntegration": {
         "title": "먼저 서비스 연결",
         "noPermission": "이 위젯에는 호환되는 서비스 연결이 필요합니다. 관리자에게 연결을 요청한 후 다시 시도하세요."
@@ -2206,10 +2424,13 @@
       "saveErrorTitle": "항목을 업데이트할 수 없음",
       "saveErrorMessage": "변경 사항을 저장할 수 없습니다. 보드가 새로 고쳐졌습니다.",
       "moveUnavailableTitle": "선택한 항목을 이동할 수 없음",
-      "moveUnavailableMessage": "대상에 선택한 항목 전체를 배치할 공간이 부족합니다."
+      "moveUnavailableMessage": "대상에 선택한 항목 전체를 배치할 공간이 부족합니다.",
+      "moveToTab": "",
+      "movedToTab": ""
     },
     "moveResize": {
       "title": "항목 이동 / 크기변경",
+      "sizeOverlap": "",
       "entryLabel": "{name}, 열 {column}, 행 {row}",
       "target": {
         "numbered": "{name}, 대상 {index}",
@@ -2292,6 +2513,36 @@
       "open": "고급 보기 열기",
       "close": "고급 보기 닫기",
       "label": "{widget} 고급 보기"
+    },
+    "inPlace": {
+      "widgetLoadError": "",
+      "search": "",
+      "bestFit": "",
+      "moreWidgets": "",
+      "widgets": "위젯",
+      "yourApps": "",
+      "createApp": "",
+      "addAppLink": "",
+      "createWidget": "",
+      "createWidgetDescription": "",
+      "createAppDescription": "",
+      "defaultFit": "",
+      "defaultFitDescription": "",
+      "defaultSize": "",
+      "defaultSizeDescription": "",
+      "emptyCells": "",
+      "preview": {
+        "error": "",
+        "loading": ""
+      },
+      "keyboard": {
+        "move": "",
+        "resize": "",
+        "pick": "",
+        "browse": "",
+        "moveDescription": "",
+        "resizeDescription": ""
+      }
     }
   },
   "widget": {
@@ -2335,7 +2586,29 @@
             "tooltip": "툴팁 사용",
             "hidden": "숨김"
           }
+        },
+        "dockerContainer": {
+          "label": "",
+          "description": "",
+          "placeholder": "",
+          "disabled": "",
+          "unavailable": ""
         }
+      },
+      "docker": {
+        "action": {
+          "start": "",
+          "stop": ""
+        },
+        "notification": {
+          "startFailed": "",
+          "stopFailed": ""
+        },
+        "switch": {
+          "start": "",
+          "stop": ""
+        },
+        "stopped": ""
       },
       "error": {
         "notFound": {
@@ -2414,6 +2687,10 @@
         "hideHostname": {
           "label": "호스트네임 숨기기"
         },
+        "showFullUrls": {
+          "label": "",
+          "description": ""
+        },
         "withBorder": {
           "label": "테두리 표시"
         },
@@ -2436,6 +2713,9 @@
         }
       },
       "empty": "위젯 설정에서 URL 또는 앱을 추가하세요",
+      "copyUrl": "",
+      "copied": "",
+      "copyFailed": "",
       "groups": {
         "label": "카테고리",
         "placeholder": "새 카테고리",
@@ -3089,6 +3369,141 @@
         "toggleFailed": "엔터티를 업데이트할 수 없습니다"
       }
     },
+    "smartHome-controls": {
+      "name": "",
+      "description": "",
+      "option": {
+        "presentation": {
+          "label": "",
+          "option": {
+            "entities": "",
+            "controlPanel": ""
+          }
+        },
+        "title": {
+          "label": "제목",
+          "description": ""
+        },
+        "blocks": {
+          "label": "",
+          "remove": ""
+        },
+        "roomDomains": {
+          "label": "",
+          "description": ""
+        },
+        "excludedEntityIds": {
+          "label": "",
+          "description": "",
+          "placeholder": ""
+        },
+        "showSummary": {
+          "label": ""
+        },
+        "readOnly": {
+          "label": "",
+          "description": ""
+        },
+        "controlSize": {
+          "label": "",
+          "option": {
+            "auto": "",
+            "compact": "",
+            "large": "크게"
+          }
+        },
+        "palette": {
+          "label": "",
+          "option": {
+            "boring": "",
+            "colorful": ""
+          }
+        }
+      },
+      "domain": {
+        "light": "",
+        "switch": "",
+        "fan": "",
+        "climate": "",
+        "humidifier": "",
+        "cover": "",
+        "valve": "",
+        "lock": "",
+        "alarm_control_panel": "",
+        "media_player": "",
+        "camera": "",
+        "vacuum": "",
+        "scene": "",
+        "script": "",
+        "automation": "",
+        "button": "",
+        "input_boolean": "",
+        "input_select": "",
+        "person": "",
+        "binary_sensor": "",
+        "sensor": "",
+        "weather": "날씨",
+        "sun": "",
+        "update": ""
+      },
+      "block": {
+        "add": {
+          "rooms": "",
+          "entity": "엔티티",
+          "roomsLabel": "",
+          "roomsPlaceholder": "",
+          "entityLabel": "",
+          "entityPlaceholder": "",
+          "merge": "",
+          "submit": "추가",
+          "duplicate": "",
+          "covered": ""
+        },
+        "kind": {
+          "entity": "엔티티",
+          "room": "",
+          "mergedRooms": "",
+          "unknown": ""
+        },
+        "entityCount": "",
+        "noArea": "",
+        "issue": {
+          "missing": "찾을 수 없음",
+          "otherSource": "",
+          "empty": ""
+        }
+      },
+      "preview": {
+        "empty": "",
+        "noMatches": "",
+        "summary": {
+          "lights": "",
+          "on": "",
+          "off": "",
+          "sensors": "",
+          "offline": ""
+        },
+        "otherSource": ""
+      },
+      "live": {
+        "loading": "",
+        "error": "",
+        "retry": "",
+        "actionFailed": "",
+        "actionUnconfirmed": "",
+        "unconfirmed": "",
+        "selectionLimit": "",
+        "unknownError": ""
+      },
+      "inline": {
+        "open": "",
+        "title": "",
+        "handle": "",
+        "empty": "",
+        "add": "",
+        "close": ""
+      }
+    },
     "smartHome-executeAutomation": {
       "name": "자동화 실행",
       "description": "한 번의 클릭으로 자동화를 트리거합니다",
@@ -3535,6 +3950,34 @@
     },
     "coolify": {
       "description": "서버와 애플리케이션을 포함한 Coolify 인스턴스 개요",
+      "summary": {
+        "needsAttention": "",
+        "inProgress": "",
+        "unknown": "",
+        "healthy": "",
+        "empty": "",
+        "healthyDetail": "",
+        "more": "",
+        "moreInstances": ""
+      },
+      "details": {
+        "tabs": "",
+        "overview": "",
+        "search": "",
+        "serviceApplications": ""
+      },
+      "overview": {
+        "projects": "",
+        "resources": "",
+        "attention": "",
+        "ready": "",
+        "noProjects": "",
+        "projectsUnavailable": "",
+        "moreProjects": "",
+        "running": "실행 중",
+        "resourceCount": "",
+        "environmentCount": ""
+      },
       "option": {
         "showServers": {
           "label": "서버 표시"
@@ -3566,7 +4009,13 @@
       },
       "source": {
         "url": "소스: {url}",
-        "unavailable": "{source}: 사용할 수 없음"
+        "unavailable": "{source}: 사용할 수 없음",
+        "unavailableCount": ""
+      },
+      "kind": {
+        "server": "",
+        "application": "",
+        "service": ""
       },
       "instances": {
         "title": "인스턴스"
@@ -3583,6 +4032,7 @@
         "exited": "종료됨",
         "starting": "시작 중",
         "restarting": "다시 시작",
+        "unhealthy": "비정상",
         "unknown": "알 수 없음",
         "online": "온라인",
         "offline": "오프라인",
@@ -4815,6 +5265,7 @@
           },
           "identifier": {
             "label": "식별자",
+            "containerPlaceholder": "",
             "placeholder": "이름 또는 소유자/이름"
           },
           "name": {},
@@ -5351,6 +5802,23 @@
       "name": "시스템 리소스",
       "description": "시스템의 CPU, 메모리, 디스크 및 기타 하드웨어 사용량",
       "option": {
+        "diskDisplayMode": {
+          "label": "",
+          "option": {
+            "percentage": "퍼센트 (예: 76%)",
+            "free": "",
+            "absolute": "",
+            "combined": ""
+          }
+        },
+        "resourceLayout": {
+          "label": "",
+          "description": ""
+        },
+        "subresourceLayout": {
+          "label": "",
+          "description": ""
+        },
         "hasShadow": {
           "label": "차트 음영 사용"
         },
@@ -5358,6 +5826,7 @@
           "label": "표시할 차트",
           "description": "표시할 차트를 선택합니다.",
           "option": {
+            "cpuCores": "",
             "memory": "메모리",
             "network": "네트워크"
           }
@@ -6286,6 +6755,26 @@
         }
       }
     },
+    "tabs": {
+      "label": "",
+      "indicator": "",
+      "home": "홈",
+      "untitled": "",
+      "add": "",
+      "actions": "",
+      "rename": "",
+      "namePlaceholder": "",
+      "moveLeft": "",
+      "moveRight": "",
+      "remove": {
+        "action": "",
+        "confirm": ""
+      },
+      "limitReached": "",
+      "hotkeyHint": "",
+      "destination": "",
+      "containerDestination": ""
+    },
     "landmark": {
       "canvas": "대시보드 캔버스",
       "leftRail": "대시보드 왼쪽 레일",
@@ -6552,6 +7041,11 @@
           "description": "서버 관리자가 홈 보드를 아직 설정하지 않았습니다.",
           "link": "공개 보드 보기",
           "notice": "이 페이지를 사라지게 하려면 관리자에게 서버 홈 보드를 설정을 문의하십시오"
+        },
+        "noAccess": {
+          "title": "",
+          "description": "",
+          "notice": ""
         }
       }
     }
@@ -6623,10 +7117,12 @@
             "documentation": "문서",
             "submitIssue": "이슈 제출",
             "discord": "커뮤니티 불화",
-            "sourceCode": "소스 코드"
+            "sourceCode": "소스 코드",
+            "changelog": ""
           }
         },
         "about": "정보",
+        "updateAvailable": "",
         "assistant": "어시스턴트"
       }
     },
@@ -6638,9 +7134,23 @@
           "authentication": "인증",
           "authorization": "권한"
         },
-        "heroBanner": {
-          "title": "다시 오신 것을 환영합니다",
-          "subtitle": "{app} 보드"
+        "hero": {
+          "greeting": "",
+          "greetingWithoutName": "",
+          "description": ""
+        },
+        "lobster": {
+          "label": "",
+          "prompt": "",
+          "pokeCount": "",
+          "reaction": {
+            "hey": "",
+            "ow": "",
+            "snip": "",
+            "careful": "",
+            "stillHere": "",
+            "okay": ""
+          }
         }
       },
       "board": {
@@ -6685,7 +7195,9 @@
         },
         "noResults": {
           "title": "아직 보드가 없습니다",
-          "description": "앱과 위젯을 한곳에 배치할 보드를 만들어 보세요."
+          "description": "앱과 위젯을 한곳에 배치할 보드를 만들어 보세요.",
+          "noAccessTitle": "",
+          "noAccessDescription": ""
         }
       },
       "media": {
@@ -6738,6 +7250,11 @@
                 "logoDisplay": {
                   "logo": "로고만",
                   "logoAndText": "로고 + 텍스트"
+                },
+                "tabsDisplay": {
+                  "wide": "",
+                  "compact": "",
+                  "indicator": ""
                 }
               },
               "items": {
@@ -6745,6 +7262,7 @@
                 "search": "검색",
                 "home": "홈 보드",
                 "boardSwitcher": "보드",
+                "boardTabs": "",
                 "assistant": "어시스턴트",
                 "docker": "Docker",
                 "boardEdit": "보드 편집",
@@ -6976,6 +7494,10 @@
             "title": "모양",
             "defaultColorScheme": {
               "label": "기본 색상 구성표"
+            },
+            "whatsNew": {
+              "label": "",
+              "description": ""
             }
           },
           "branding": {
@@ -7558,7 +8080,8 @@
               "openSpotlightApps": "앱 검색 열기",
               "openSpotlightAssistant": "어시스턴트 모드 열기",
               "openSpotlightPreferences": "환경 설정 모드 열기",
-              "openAssistant": "어시스턴트 열기"
+              "openAssistant": "어시스턴트 열기",
+              "switchBoardTab": ""
             },
             "note": "팁: Mod는 Ctrl 키와 macOS의 ⌘ 키를 모두 의미합니다"
           }
@@ -8728,6 +9251,12 @@
         "description": "색상 구성표, 언어, 홈 보드, 설정을 변경할 수 있습니다. 여기에서 관리 영역으로 이동할 수도 있습니다."
       }
     }
+  },
+  "whatsNew": {
+    "title": "",
+    "empty": "",
+    "allReleases": "",
+    "dismiss": ""
   },
   "metadata": {
     "description": "*arr 스택과 전체 홈랩을 위한 자체 호스팅 대시보드입니다. 50개 이상의 서비스, 실시간 위젯 및 구성 파일 없이 통합할 수 있습니다.",
