@@ -65,7 +65,6 @@
         "themeAuto": "System",
         "themeLight": "Lys",
         "themeDark": "Mørk",
-        "serverOriginHelp": "Homarr bruger denne adresse til at forudfylde fundne tjeneste-URL'er. Du kan stadig redigere hver tjeneste individuelt.",
         "serverDescription": "Dette er en genvej, ikke en begrænsning. Hver registreret tjeneste forbliver redigerbare.",
         "serverOrigin": "Domæn, IP eller reverse-proxy sti",
         "serverOriginDescription": "Eksempler: home.lan, 192.168.1.10 eller https://home.example.com/services. Vælg hvordan hver tjeneste er tilføjet nedenfor.",
@@ -102,6 +101,8 @@
       "connect": {
         "title": "Tilslut hvad der gør tavlen nyttig",
         "description": "Vælg flere tjenester på én gang. Docker-etiketter prioriteres, billedmatchende fylder huller, og hver URL og legitimationsoplysninger forbliver vurderbar.",
+        "confirmServerAddress": "",
+        "serverAddressReviewed": "",
         "discoveredIntegrations": "Detekterede integrationsinstanser ({count})",
         "detectedIntegrationLabel": "Importer {name}, detekteret som {kind}",
         "detectedAppLabel": "Importer detekteret app {name}",
@@ -126,7 +127,8 @@
         "needsConfiguration": "Behøver konfiguration",
         "tested": "Forbindelse testet",
         "testFailed": "Forbindelsestest mislykkedes",
-        "incompleteConfirmation": "Ufærdige integrationer vil blive sprunget over. Fortsæt uden dem?"
+        "incompleteConfirmation": "Ufærdige integrationer vil blive sprunget over. Fortsæt uden dem?",
+        "skipIncomplete": ""
       },
       "board": {
         "title": "Form brættet, før det er bygget",
@@ -142,13 +144,7 @@
         "secondaryColor": "Sekundær farve",
         "resetColors": "Nulstil farver",
         "radius": "Widget hjørne radius",
-        "radiusOptions": {
-          "xs": "Tæt",
-          "sm": "Subtile",
-          "md": "Balanceret",
-          "lg": "Aundet",
-          "xl": "Blød"
-        },
+        "radiusOptions": {},
         "columns": "Bræt kolonner",
         "columnsDescription": "Kolonner definerer det vandrette gitter, der bruges til at størrelsen og positionere elementer. 12 er masser for de fleste mennesker.",
         "columnCount": "{count, plural, one {# kolonne} other {# kolonner}}",
@@ -192,7 +188,6 @@
           "loginRequired": "Log ind som administrator efter opsætning for at oprette en API-nøgle.",
           "configuration": "Klient konfiguration",
           "copy": "Kopier konfiguration",
-          "copied": "Kopieret",
           "advanced": "Åbn MCP-værktøjer, tilladelser og opsætningsdetaljer"
         }
       },
@@ -284,6 +279,13 @@
         "admin": {
           "title": "Fuld administrator adgang",
           "description": "Kan administrere Homarr og forbundne tjenester, herunder destruktive handlinger."
+        },
+        "mode": {
+          "label": "",
+          "readOnly": "",
+          "readWrite": "",
+          "readOnlyDescription": "",
+          "readWriteDescription": ""
         },
         "credential": {
           "title": "Credential scope og levetid",
@@ -804,9 +806,7 @@
         "examples": "Eksempler på understøttede links",
         "requiresHandler": "Brugerdefinerede protokoller kræver en tilknyttet app på din enhed."
       },
-      "description": {
-        "label": "Beskriveslse"
-      },
+      "description": {},
       "useDifferentUrlForPing": {
         "checkbox": {
           "label": "Brug anden URL til ping",
@@ -858,7 +858,6 @@
       "source": "API-kilde: {name}",
       "baseUrl": "",
       "networkScope": "Adgang til netværk",
-      "save": "Gem API-konfiguration",
       "expires": "Denne engangsanmodning udløber hos {time}."
     },
     "page": {
@@ -889,13 +888,11 @@
       "pasteImportHint": "Indsæt en fuld brugerdefineret widget JSON med Ctrl+V eller Kommando+V",
       "delete": "",
       "deleteConfirm": "",
-      "export": "",
       "duplicate": "",
       "aiPrompt": "Design med AI",
       "copyAiPrompt": "",
       "enable": "",
       "disable": "",
-      "menu": "",
       "downloadSkill": "Vis Brugerdefineret Widget Færdighed",
       "publishWorkshop": "Udgiv til værksted",
       "migrate": "Migrér Brugerdefineret Widget",
@@ -909,12 +906,9 @@
     "sourceSetupDialog": {
       "title": "Konfigurér widget-kilder",
       "description": "Gennemgå hvor denne widget forbinder og tilføje eller erstatte sine krypterede legitimationsoplysninger.",
-      "credentialsRequired": "Anmodninger vil mislykkes, indtil de krævede legitimationsoplysninger er tilføjet.",
-      "save": "Gem konfiguration"
+      "credentialsRequired": "Anmodninger vil mislykkes, indtil de krævede legitimationsoplysninger er tilføjet."
     },
-    "field": {
-      "description": ""
-    },
+    "field": {},
     "editor": {
       "errorBoundary": {
         "title": "Noget gik galt"
@@ -924,7 +918,6 @@
         "format": "Formatér",
         "insertStarter": "",
         "redo": "Gendan",
-        "copied": "Kopieret",
         "schema": "Skema"
       },
       "reference": {
@@ -1005,7 +998,6 @@
         "manifestFilename": "",
         "request": "Anmod Om {count, number}",
         "requestId": "Anmod Om ID",
-        "type": "Type",
         "method": "Metode",
         "source": "API kilde",
         "run": "Kør",
@@ -1042,7 +1034,6 @@
         "optionName": "Valgmulighed navn",
         "label": "Etiket",
         "control": "Kontrol",
-        "description": "Beskriveslse",
         "default": "Standard",
         "optionDetails": "Begrænsninger og dynamiske valg",
         "minimum": "Mindste",
@@ -1079,7 +1070,6 @@
         "credentialRemovedDescription": "Den gemte værdi blev slettet.",
         "primary": "Primær API",
         "id": "Kilde ID",
-        "name": "Navn",
         "baseUrl": "",
         "baseUrlError": {
           "invalid": "Angiv en komplet URL.",
@@ -1096,7 +1086,6 @@
         "remove": "Fjern kilde og dets anmodninger",
         "advanced": "Avanceret",
         "add": "Tilføj en anden API-kilde",
-        "sourceType": "Integration",
         "manualSource": "",
         "existingIntegration": "Eksisterende integration",
         "integrationType": "",
@@ -1230,7 +1219,6 @@
       "migrationTitle": "Gennemgå migreret v2 udskiftning",
       "migrationDescription": "Gennemgå og bekræfte denne genererede v2 definition. Bekræftelse atomisk erstatter den bevarede v1 post og samtidig holde eksisterende board placeringer knyttet til den samme widget ID.",
       "fileLabel": "Vælg en brugerdefineret widget JSON fil",
-      "name": "Jobnavn",
       "origin": "Basis oprindelse",
       "authentication": "Autorisering",
       "networkScope": "Netværk anvendelsesområde",
@@ -1250,8 +1238,6 @@
         "title": "Denne widget kan ændre fjerndata",
         "description": "Gennemgå alle navngivne handlinger, nedarvede legitimationsoplysninger og destruktiv bekræftelse efter import. Hemmeligheder er ikke inkluderet i filen."
       },
-      "cancel": "Annuller import",
-      "confirm": "Importér widget",
       "confirmMigration": "Bekræft udskiftning af v2"
     },
     "secret": {
@@ -1259,6 +1245,20 @@
       "username": "",
       "password": "",
       "savedPlaceholder": ""
+    },
+    "workshopUpdate": {
+      "title": "",
+      "apply": "",
+      "available": "Opdatering tilgængelig",
+      "check": "",
+      "description": "",
+      "approvePermissions": "",
+      "pendingDescription": "",
+      "overwriteLocalChanges": "",
+      "installSeparate": "",
+      "communityWarning": "",
+      "updated": "",
+      "changedBeforeInstall": ""
     }
   },
   "workshop": {
@@ -1315,7 +1315,6 @@
     "closeScreenshotViewer": "Luk screenshot fremviser",
     "technicalDetails": "Tekniske detaljer",
     "sourceCode": "Værkstedspost",
-    "export": "Eksporter",
     "report": "Rapport",
     "reportTitle": "Indsendelse af rapport",
     "reportReason": "Årsag",
@@ -1346,8 +1345,6 @@
       "viewSubmission": "Se og administrer indsendelse",
       "done": "Udført",
       "signInHint": "Log ind for at publicere under din værkstedsidentitet.",
-      "titleField": "Titel",
-      "descriptionField": "Beskriveslse",
       "screenshots": "Skærmbilleder",
       "screenshotsDescription": "Op til fem PNG, JPEG, eller WebP billeder",
       "screenshotsPlaceholder": "Vælg skærmfotos",
@@ -1410,11 +1407,7 @@
               "label": "Vælg eksisterende app"
             },
             "new": {
-              "title": "Ny",
-              "url": {
-                "label": "App url",
-                "description": "Webadressen som app'en vil åbne, når den tilgås fra betjeningspanelet"
-              }
+              "title": "Ny"
             }
           }
         }
@@ -1466,8 +1459,9 @@
         "label": "Link en eksisterende app",
         "description": "Tilslut denne integration til en app, du allerede kan bruge."
       },
-      "appHref": {
-        "placeholder": "Brugerdefineret app URL"
+      "externalUrl": {
+        "label": "",
+        "description": ""
       },
       "apiKeySettings": {
         "label": "Hent API-nøgle"
@@ -1534,6 +1528,27 @@
         "unknown": {
           "title": "Ukendt fejl",
           "description": "En ukendt fejl opstod, åbn årsagen nedenfor for at se flere detaljer"
+        },
+        "frigate": {
+          "title": "",
+          "status": "",
+          "description": {
+            "cookie": "",
+            "profileMismatch": "",
+            "redirect": "",
+            "login": "",
+            "profile": "",
+            "stats": ""
+          }
+        },
+        "openmediavault": {
+          "title": "",
+          "description": {
+            "totpSecretRequired": "",
+            "totpSecretInvalid": "",
+            "totpVerificationFailed": "",
+            "unsupportedChallenge": ""
+          }
         },
         "parse": {
           "title": "Parsingfejl",
@@ -1613,11 +1628,9 @@
             },
             "notification": {
               "success": {
-                "title": "Betroet certifikat",
                 "message": "Tilføjet certifikat til liste over betroede certifikater"
               },
               "error": {
-                "title": "Kunne ikke stole på certifikat",
                 "message": "Kunne ikke tilføje certifikat til listen over betroede certifikater"
               }
             }
@@ -1736,6 +1749,11 @@
         "title": "Nulstil hemmelighed",
         "message": "Er du sikker på, at du vil nulstille denne hemmelighed?"
       },
+      "totpNotice": "",
+      "remove": {
+        "title": "",
+        "message": ""
+      },
       "noSecretsRequired": {
         "segmentTitle": "Ingen hemmeligheder",
         "text": "Ingen hemmeligheder kræves for denne integration"
@@ -1817,9 +1835,9 @@
           "label": "Indekser adgangskode",
           "newLabel": "Ny indekseringsadgangskode"
         },
-        "wazuhDashboardUrl": {
-          "label": "Kontrolpanel URL (valgfri)",
-          "newLabel": "Nyt dashboard URL"
+        "totpSecret": {
+          "label": "",
+          "newLabel": ""
         }
       }
     },
@@ -1838,9 +1856,7 @@
     "search": "Find medie",
     "field": {
       "preview": "Eksempelvisning",
-      "size": "Størrelse",
-      "creator": "Skaber",
-      "actions": "Styring"
+      "creator": "Skaber"
     },
     "action": {
       "upload": {
@@ -1918,7 +1934,9 @@
       "clearSearch": "Ryd søgning",
       "copy": "Kopiér",
       "copied": "Kopieret",
-      "refresh": "Opdater"
+      "refresh": "Opdater",
+      "export": "Eksporter",
+      "advanced": "Avanceret"
     },
     "hidden": "Skjult",
     "pagination": {
@@ -1930,6 +1948,8 @@
     "here": "her",
     "serviceUrlTemplate": {
       "serverTitle": "Sædvanlig serveradresse",
+      "description": "",
+      "example": "",
       "urlModeLabel": "Mønster for tjenestens adresse",
       "hostPort": "Samme vært, forskellige porte",
       "subdomain": "Et underdomæne pr. tjeneste",
@@ -2011,6 +2031,15 @@
         "modifier": ""
       }
     },
+    "markdown": {
+      "alert": {
+        "note": "Note",
+        "tip": "",
+        "important": "",
+        "warning": "Advarsel",
+        "caution": ""
+      }
+    },
     "dangerZone": "Farezone",
     "noResults": "Ingen resultater fundet",
     "unsavedChanges": "Du har ikke gemte ændringer!",
@@ -2063,7 +2092,18 @@
     "total": "Total",
     "filesystemUsage": "{count, plural, one {Vis brug for # filsystem} other {Vis brug for # filsystemer}}",
     "field": {
-      "name": "Jobnavn"
+      "name": "Jobnavn",
+      "state": "Tilstand",
+      "size": "Størrelse",
+      "actions": "Handlinger",
+      "source": "Kilde",
+      "title": "Titel",
+      "description": "Beskriveslse",
+      "created": "Oprettet",
+      "namespace": "Navnerum",
+      "status": "Status",
+      "architecture": "Arkitektur",
+      "type": "Download klienttype"
     },
     "label": {
       "new": "Ny"
@@ -2081,6 +2121,167 @@
       "searchEngines": "Søgemaskiner",
       "tasks": "Opgaver",
       "users": "Brugere"
+    },
+    "cornerStyle": {
+      "options": {
+        "md": "Balanceret",
+        "lg": "Aundet",
+        "xs": "Tæt",
+        "sm": "Subtile",
+        "xl": "Blød"
+      }
+    },
+    "customTheme": {
+      "label": "Tema",
+      "nothingFound": "",
+      "custom": "Tilpasset",
+      "customize": "",
+      "editor": {
+        "title": "",
+        "basedOn": "",
+        "preview": "",
+        "previewColorScheme": "",
+        "layout": "Layout",
+        "typography": "",
+        "colors": "Farver",
+        "json": "",
+        "defaultRadius": "",
+        "radiusHint": "",
+        "scale": "",
+        "spacing": "Afstand",
+        "radius": "",
+        "fontFamily": "",
+        "headingFont": "",
+        "monoFont": "",
+        "fontSizes": "",
+        "palette": {
+          "body": "",
+          "surface": "",
+          "hover": "",
+          "border": "",
+          "text": "",
+          "dimmed": "",
+          "primary": "",
+          "secondary": "Sekundær accent"
+        },
+        "lockedPrimary": "",
+        "pickColor": "",
+        "autoContrast": "",
+        "luminanceThreshold": "",
+        "jsonHint": "",
+        "invalidJson": "",
+        "tooLong": "",
+        "copyJson": "",
+        "copied": "Kopieret",
+        "discardJson": "",
+        "reset": "",
+        "apply": "",
+        "sampleTitle": "",
+        "sampleBadge": "Eksempelvisning",
+        "sampleText": "",
+        "sampleInput": "Søg",
+        "sampleValue": "Find en app",
+        "sampleButton": "Åbn"
+      },
+      "studio": {
+        "title": "",
+        "saveTheme": "",
+        "searchControls": "",
+        "component": "",
+        "inheritedValue": "",
+        "resetControl": "",
+        "decreaseControl": "",
+        "increaseControl": "",
+        "chooseControl": "",
+        "layout": {
+          "spacing": "Afstand",
+          "radius": "",
+          "compact": "Kompakt",
+          "normal": "",
+          "roomy": "",
+          "preset": "",
+          "none": "Ingen",
+          "rounded": "",
+          "full": "Fuld",
+          "custom": "Tilpasset",
+          "advanced": ""
+        },
+        "previewSurface": "Eksempelvisning",
+        "previewFrame": "",
+        "loadingPreview": "",
+        "previewFailed": "",
+        "sampleBoard": "",
+        "components": "Komponenter",
+        "overlays": "",
+        "typography": "",
+        "liveBoard": "",
+        "viewport": "",
+        "responsive": "",
+        "tablet": "",
+        "mobile": "Mobil",
+        "includeCustomCss": "",
+        "groups": {
+          "layout": "",
+          "typography": "",
+          "colors": "",
+          "surfaces": "",
+          "overlays": "",
+          "accessibility": "",
+          "css": ""
+        },
+        "controls": {
+          "defaultRadius": "",
+          "scale": "",
+          "spacing": "Afstand",
+          "radius": "",
+          "breakpoint": "Brydningspunkt",
+          "fontSizes": "",
+          "lineHeight": "",
+          "shadow": "",
+          "fontFamily": "",
+          "headingFont": "",
+          "monoFont": "",
+          "headingWeight": "",
+          "headingSize": "",
+          "fontSmoothing": "",
+          "body": "",
+          "surface": "",
+          "hover": "",
+          "border": "",
+          "text": "",
+          "dimmed": "",
+          "primary": "",
+          "secondary": "Sekundær accent",
+          "autoContrast": "",
+          "luminanceThreshold": "",
+          "primaryShade": "",
+          "componentRadius": "",
+          "borderWidth": "",
+          "surfaceBackground": "Baggrund",
+          "surfaceText": "",
+          "surfaceBorder": "Kantfarve",
+          "hoverBackground": "",
+          "hoverText": "",
+          "componentShadow": "",
+          "componentBorder": "",
+          "componentPadding": "",
+          "componentSize": "Filstørrelse",
+          "componentVariant": "",
+          "overlayBlur": "",
+          "overlayOpacity": "",
+          "overlayColor": "",
+          "transitionDuration": "",
+          "headerBackground": "",
+          "respectReducedMotion": "",
+          "focusRing": "",
+          "cursorType": "",
+          "customCss": ""
+        },
+        "expandPreview": "",
+        "showControls": "Vis knapper"
+      },
+      "instanceDefault": "",
+      "useInstanceDefault": ""
     }
   },
   "section": {
@@ -2118,9 +2319,7 @@
         "collapse": "Sammenfold"
       },
       "option": {
-        "title": {
-          "label": "Titel"
-        },
+        "title": {},
         "customCssClasses": {
           "label": "Brugerdefinerede css-klasser"
         },
@@ -2144,8 +2343,7 @@
       "label": {
         "settings": "Indstillinger",
         "settingsFor": "Indstillinger for {name}",
-        "options": "",
-        "actions": ""
+        "options": ""
       },
       "status": {
         "success": "",
@@ -2179,6 +2377,18 @@
       },
       "customWidget": "Tilpasset widget",
       "standalone": "",
+      "integrationFilter": "",
+      "integrationNotConnected": "",
+      "workshop": {
+        "title": "",
+        "back": "",
+        "empty": "",
+        "noMatches": "",
+        "loading": "",
+        "integrationError": "",
+        "searchMore": "",
+        "installAndAdd": ""
+      },
       "missingIntegration": {
         "title": "Tilslut en tjeneste først",
         "noPermission": "Denne widget behøver en kompatibel serviceforbindelse. Bed en administrator om at forbinde en, og prøv igen."
@@ -2198,7 +2408,6 @@
     "selection": {
       "summary": "{count, plural, one {# valgt element} other {# valgte emner}}",
       "selected": "{count, plural, one {# valgt} other {# valgt}}",
-      "copy": "Kopiér",
       "copied": "{count, plural, one {# element kopieret til udklipsholderen} other {# elementer kopieret til udklipsholderen}}",
       "copyError": "De valgte elementer kunne ikke kopieres. Din browser tillader muligvis ikke adgang til udklipsholderen.",
       "paste": "Indsæt",
@@ -2210,16 +2419,18 @@
       "removed": "{count, plural, one {# element fjernet} other {# elementer fjernet}}",
       "move": "Flyt",
       "moveTo": "Flyt markerede elementer",
-      "delete": "Slet",
       "clear": "Ryd valg",
       "clearShortcut": "Ryd valg (Escape)",
       "saveErrorTitle": "Kan ikke opdatere elementer",
       "saveErrorMessage": "Ændringerne kunne ikke gemmes. Bestyrelsen blev genopfrisket.",
       "moveUnavailableTitle": "Kan ikke flytte valgte elementer",
-      "moveUnavailableMessage": "Destinationen har ikke nok plads til hele udvælgelsen."
+      "moveUnavailableMessage": "Destinationen har ikke nok plads til hele udvælgelsen.",
+      "moveToTab": "",
+      "movedToTab": ""
     },
     "moveResize": {
       "title": "Flyt / ændre størrelse af element",
+      "sizeOverlap": "",
       "entryLabel": "{name}, kolonne {column}, række {row}",
       "target": {
         "numbered": "",
@@ -2286,9 +2497,7 @@
           "label": "Integrationer",
           "removeLabel": "Fjern {name} integration"
         },
-        "title": {
-          "label": "Titel"
-        },
+        "title": {},
         "customCssClasses": {
           "label": "Brugerdefinerede CSS-klasser"
         },
@@ -2304,6 +2513,36 @@
       "open": "Åbn avanceret visning",
       "close": "Luk avanceret visning",
       "label": "{widget} avanceret visning"
+    },
+    "inPlace": {
+      "widgetLoadError": "",
+      "search": "",
+      "bestFit": "",
+      "moreWidgets": "",
+      "widgets": "Widgets",
+      "yourApps": "",
+      "createApp": "",
+      "addAppLink": "",
+      "createWidget": "",
+      "createWidgetDescription": "",
+      "createAppDescription": "",
+      "defaultFit": "",
+      "defaultFitDescription": "",
+      "defaultSize": "",
+      "defaultSizeDescription": "",
+      "emptyCells": "",
+      "preview": {
+        "error": "",
+        "loading": ""
+      },
+      "keyboard": {
+        "move": "flyt",
+        "resize": "",
+        "pick": "",
+        "browse": "",
+        "moveDescription": "",
+        "resizeDescription": ""
+      }
     }
   },
   "widget": {
@@ -2347,7 +2586,29 @@
             "tooltip": "Som værktøjstip",
             "hidden": "Skjult"
           }
+        },
+        "dockerContainer": {
+          "label": "",
+          "description": "",
+          "placeholder": "",
+          "disabled": "",
+          "unavailable": ""
         }
+      },
+      "docker": {
+        "action": {
+          "start": "",
+          "stop": ""
+        },
+        "notification": {
+          "startFailed": "",
+          "stopFailed": ""
+        },
+        "switch": {
+          "start": "",
+          "stop": ""
+        },
+        "stopped": ""
       },
       "error": {
         "notFound": {
@@ -2426,6 +2687,10 @@
         "hideHostname": {
           "label": "Skjul værtsnavne"
         },
+        "showFullUrls": {
+          "label": "",
+          "description": ""
+        },
         "withBorder": {
           "label": "Vis kant"
         },
@@ -2448,6 +2713,9 @@
         }
       },
       "empty": "Tilføj en URL eller app i widget-indstillingerne",
+      "copyUrl": "Kopiér URL",
+      "copied": "Kopieret",
+      "copyFailed": "",
       "groups": {
         "label": "Kategorier",
         "placeholder": "Ny kategori",
@@ -3101,6 +3369,141 @@
         "toggleFailed": "Kunne ikke opdatere enhed"
       }
     },
+    "smartHome-controls": {
+      "name": "",
+      "description": "",
+      "option": {
+        "presentation": {
+          "label": "",
+          "option": {
+            "entities": "",
+            "controlPanel": ""
+          }
+        },
+        "title": {
+          "label": "Titel",
+          "description": ""
+        },
+        "blocks": {
+          "label": "",
+          "remove": ""
+        },
+        "roomDomains": {
+          "label": "",
+          "description": ""
+        },
+        "excludedEntityIds": {
+          "label": "",
+          "description": "",
+          "placeholder": ""
+        },
+        "showSummary": {
+          "label": ""
+        },
+        "readOnly": {
+          "label": "",
+          "description": ""
+        },
+        "controlSize": {
+          "label": "",
+          "option": {
+            "auto": "Automatisk",
+            "compact": "Kompakt",
+            "large": "Stor"
+          }
+        },
+        "palette": {
+          "label": "Farver",
+          "option": {
+            "boring": "",
+            "colorful": ""
+          }
+        }
+      },
+      "domain": {
+        "light": "",
+        "switch": "",
+        "fan": "",
+        "climate": "",
+        "humidifier": "",
+        "cover": "",
+        "valve": "",
+        "lock": "",
+        "alarm_control_panel": "",
+        "media_player": "",
+        "camera": "",
+        "vacuum": "",
+        "scene": "",
+        "script": "",
+        "automation": "",
+        "button": "",
+        "input_boolean": "",
+        "input_select": "",
+        "person": "Personer",
+        "binary_sensor": "",
+        "sensor": "",
+        "weather": "Vejr",
+        "sun": "",
+        "update": ""
+      },
+      "block": {
+        "add": {
+          "rooms": "",
+          "entity": "",
+          "roomsLabel": "",
+          "roomsPlaceholder": "",
+          "entityLabel": "",
+          "entityPlaceholder": "",
+          "merge": "",
+          "submit": "Tilføj",
+          "duplicate": "",
+          "covered": ""
+        },
+        "kind": {
+          "entity": "",
+          "room": "",
+          "mergedRooms": "",
+          "unknown": ""
+        },
+        "entityCount": "",
+        "noArea": "",
+        "issue": {
+          "missing": "Ikke fundet",
+          "otherSource": "",
+          "empty": ""
+        }
+      },
+      "preview": {
+        "empty": "",
+        "noMatches": "",
+        "summary": {
+          "lights": "",
+          "on": "til",
+          "off": "fra",
+          "sensors": "",
+          "offline": "offline"
+        },
+        "otherSource": ""
+      },
+      "live": {
+        "loading": "",
+        "error": "",
+        "retry": "",
+        "actionFailed": "",
+        "actionUnconfirmed": "",
+        "unconfirmed": "",
+        "selectionLimit": "",
+        "unknownError": ""
+      },
+      "inline": {
+        "open": "",
+        "title": "",
+        "handle": "",
+        "empty": "",
+        "add": "",
+        "close": ""
+      }
+    },
     "smartHome-executeAutomation": {
       "name": "Udfør Automatisering",
       "description": "Udløs en automatisering med et enkelt klik",
@@ -3501,7 +3904,6 @@
         },
         "table": {
           "header": {
-            "name": "Navn",
             "node": "Node"
           }
         }
@@ -3531,8 +3933,6 @@
         },
         "defaultSort": {
           "option": {
-            "name": "Navn",
-            "state": "Tilstand",
             "cpuUsage": "CPU-forbrug",
             "memoryUsage": "Hukommelsesforbrug"
           }
@@ -3550,6 +3950,34 @@
     },
     "coolify": {
       "description": "Oversigt over din Coolify instans med servere og applikationer",
+      "summary": {
+        "needsAttention": "{count} kræver opmærksomhed",
+        "inProgress": "",
+        "unknown": "",
+        "healthy": "",
+        "empty": "",
+        "healthyDetail": "",
+        "more": "",
+        "moreInstances": ""
+      },
+      "details": {
+        "tabs": "",
+        "overview": "",
+        "search": "",
+        "serviceApplications": ""
+      },
+      "overview": {
+        "projects": "",
+        "resources": "",
+        "attention": "Behøver opmærksomhed",
+        "ready": "Klar",
+        "noProjects": "",
+        "projectsUnavailable": "",
+        "moreProjects": "",
+        "running": "Kører",
+        "resourceCount": "",
+        "environmentCount": ""
+      },
       "option": {
         "showServers": {
           "label": "Vis servere"
@@ -3581,7 +4009,13 @@
       },
       "source": {
         "url": "Kilde: {url}",
-        "unavailable": ""
+        "unavailable": "",
+        "unavailableCount": ""
+      },
+      "kind": {
+        "server": "",
+        "application": "Anvendelse",
+        "service": "Tjeneste"
       },
       "instances": {
         "title": "Instanser"
@@ -3598,6 +4032,7 @@
         "exited": "Afsluttet",
         "starting": "Starter",
         "restarting": "Genstarter",
+        "unhealthy": "Usund",
         "unknown": "Ukendt",
         "online": "Online",
         "offline": "Offline",
@@ -3943,9 +4378,7 @@
       "items": {
         "currentlyPlaying": "Afspiller lige nu",
         "user": "Bruger",
-        "name": "Navn",
         "id": "Id",
-        "status": "",
         "directPlay": "",
         "directStream": "",
         "transcodeVideo": "",
@@ -4440,38 +4873,29 @@
           "columnTitle": "Styring"
         },
         "added": {
-          "columnTitle": "Tilføjet",
-          "detailsTitle": "Dato tilføjet"
+          "columnTitle": "Tilføjet"
         },
         "category": {
-          "columnTitle": "Ekstra",
-          "detailsTitle": "Kategorier (ekstra information)"
+          "columnTitle": "Ekstra"
         },
         "downSpeed": {
-          "columnTitle": "Ned",
-          "detailsTitle": "Download hastighed"
+          "columnTitle": "Ned"
         },
         "index": {
           "columnTitle": "#",
           "detailsTitle": "Nuværende indeks i klienten"
         },
         "id": {
-          "columnTitle": "Id",
-          "detailsTitle": "Id"
+          "columnTitle": "Id"
         },
-        "integration": {
-          "columnTitle": "Integration"
-        },
-        "name": {
-          "columnTitle": "Jobnavn"
-        },
+        "integration": {},
+        "name": {},
         "progress": {
           "columnTitle": "Fremskridt",
           "detailsTitle": "Status på hentning"
         },
         "ratio": {
-          "columnTitle": "Delingsforhold",
-          "detailsTitle": "Torrent ratio (modtaget/sendt)"
+          "columnTitle": "Delingsforhold"
         },
         "received": {
           "columnTitle": "Total ned",
@@ -4481,26 +4905,16 @@
           "columnTitle": "Total op",
           "detailsTitle": "Total Uploadet"
         },
-        "size": {
-          "columnTitle": "Filstørrelse",
-          "detailsTitle": "Samlet størrelse af markering/filer"
-        },
-        "state": {
-          "columnTitle": "Tilstand",
-          "detailsTitle": "Job Status"
-        },
+        "size": {},
+        "state": {},
         "time": {
-          "columnTitle": "Slut tid",
-          "detailsTitle": "Tid siden/til færdiggørelse",
-          "eta": ""
+          "columnTitle": "Slut tid"
         },
         "type": {
-          "columnTitle": "Type",
           "detailsTitle": "Download klienttype"
         },
         "upSpeed": {
-          "columnTitle": "Op",
-          "detailsTitle": "Uploadhastighed"
+          "columnTitle": "Op"
         }
       },
       "states": {
@@ -4689,9 +5103,7 @@
           }
         },
         "queue": {
-          "table": {
-            "size": "Størrelse"
-          }
+          "table": {}
         },
         "common": {
           "empty": "Tom",
@@ -4797,10 +5209,6 @@
           "label": "",
           "description": ""
         },
-        "collapsedSections": {
-          "label": "",
-          "description": ""
-        },
         "newReleaseWithin": {
           "label": "Ny Udgivelse Inden",
           "description": "Anvendelseseksempel: 1w (1 uge), 10M (10 måneder). Accepterede enhedstyper h (timer), d (dage), w (uger), M (måneder), y (år). Lad være tom for ingen fremhævning af nye udgivelser.",
@@ -4857,11 +5265,10 @@
           },
           "identifier": {
             "label": "Identifikator",
+            "containerPlaceholder": "",
             "placeholder": "Navn eller ejer/navn"
           },
-          "name": {
-            "label": "Navn"
-          },
+          "name": {},
           "excludePrereleases": {
             "label": "",
             "description": ""
@@ -5005,7 +5412,11 @@
       "runningVersions": "Kørende Versioner",
       "upToDate": "Op til dato",
       "updateAvailable": "Opdatering tilgængelig",
-      "unknownStatus": "Ukendt"
+      "unknownStatus": "Ukendt",
+      "error": {
+        "collapsedSaveTitle": "",
+        "collapsedSaveMessage": ""
+      }
     },
     "networkControllerSummary": {
       "advanced": {
@@ -5162,7 +5573,6 @@
       "download": "Download",
       "upload": "Upload",
       "ping": "Ping",
-      "status": "Status",
       "avgDownload": "Gns Download",
       "avgUpload": "Gns Upload",
       "avgPing": "Gns Ping",
@@ -5392,6 +5802,23 @@
       "name": "Systemressourcer",
       "description": "CPU, Hukommelse, Disk og andet hardwareforbrug af dit system",
       "option": {
+        "diskDisplayMode": {
+          "label": "",
+          "option": {
+            "percentage": "Procentdel (f.eks. 76 %)",
+            "free": "",
+            "absolute": "",
+            "combined": ""
+          }
+        },
+        "resourceLayout": {
+          "label": "",
+          "description": ""
+        },
+        "subresourceLayout": {
+          "label": "",
+          "description": ""
+        },
         "hasShadow": {
           "label": "Aktiver diagramskygge"
         },
@@ -5399,6 +5826,7 @@
           "label": "Synlige diagrammer",
           "description": "Vælg de diagrammer, du ønsker at være synlige.",
           "option": {
+            "cpuCores": "",
             "memory": "Hukommelse",
             "network": "Netværk"
           }
@@ -5470,7 +5898,6 @@
         "actionsDisabledEditMode": "Handlinger er deaktiveret mens tavlen er i redigeringstilstand.",
         "widgetItemUnavailable": "Denne widget element er ikke tilgængelig.",
         "toggle": "Skift",
-        "copied": "Kopieret",
         "confirmDelete": "Bekræft denne destruktive handling."
       },
       "option": {
@@ -5511,6 +5938,9 @@
       "name": "Beszel-systemer (tabel)",
       "description": "Tabelvisning af alle Beszel-overvågede systemer med sorterbare kolonner og statusindikatorer",
       "option": {
+        "fahrenheit": {
+          "label": "Temperatur i Fahrenheit"
+        },
         "sortBy": {
           "label": "Sorter efter"
         },
@@ -5525,7 +5955,12 @@
     },
     "beszelSystemGrid": {
       "name": "Beszel-systemer (gitter)",
-      "description": "Kortgittervisning af alle Beszel-overvågede systemer med realtidsmålinger"
+      "description": "Kortgittervisning af alle Beszel-overvågede systemer med realtidsmålinger",
+      "option": {
+        "fahrenheit": {
+          "label": "Temperatur i Fahrenheit"
+        }
+      }
     },
     "beszelAlerts": {
       "name": "Beszel-advarsler",
@@ -5739,7 +6174,6 @@
       },
       "metric": {
         "system": "System",
-        "source": "Integration",
         "hostname": "Værtsnavn",
         "cpuModel": "",
         "cores": "Kerner",
@@ -6321,6 +6755,26 @@
         }
       }
     },
+    "tabs": {
+      "label": "",
+      "indicator": "",
+      "home": "Hjem",
+      "untitled": "",
+      "add": "",
+      "actions": "",
+      "rename": "",
+      "namePlaceholder": "",
+      "moveLeft": "",
+      "moveRight": "",
+      "remove": {
+        "action": "",
+        "confirm": ""
+      },
+      "limitReached": "",
+      "hotkeyHint": "",
+      "destination": "",
+      "containerDestination": ""
+    },
     "landmark": {
       "canvas": "Dashboard lærred",
       "leftRail": "Venstre dashboard jernbane",
@@ -6429,13 +6883,7 @@
       "itemRadius": {
         "label": "Element radius",
         "description": "Ændrer rundheden af fliser på din tavle",
-        "option": {
-          "xs": "Meget lille",
-          "sm": "Lille",
-          "md": "Medium",
-          "lg": "Stor",
-          "xl": "Meget stor"
-        }
+        "option": {}
       },
       "isPublic": {
         "label": "Offentlig",
@@ -6593,6 +7041,11 @@
           "description": "Serveradministratoren har endnu ikke sat en hjemmetavle.",
           "link": "Vis offentlige tavler",
           "notice": "For at få denne side til at forsvinde, skal du bede serveradministratoren om at indstille en hjemmetavle til serveren"
+        },
+        "noAccess": {
+          "title": "",
+          "description": "",
+          "notice": ""
         }
       }
     }
@@ -6664,10 +7117,12 @@
             "documentation": "Dokumentation",
             "submitIssue": "Indsend et problem",
             "discord": "Discordfællesskab",
-            "sourceCode": "Kildekode"
+            "sourceCode": "Kildekode",
+            "changelog": ""
           }
         },
         "about": "Om",
+        "updateAvailable": "Opdatering tilgængelig",
         "assistant": "Assistent"
       }
     },
@@ -6679,9 +7134,23 @@
           "authentication": "Autorisering",
           "authorization": "Autorisation"
         },
-        "heroBanner": {
-          "title": "Velkommen tilbage til din",
-          "subtitle": "{app} Tavle"
+        "hero": {
+          "greeting": "",
+          "greetingWithoutName": "",
+          "description": ""
+        },
+        "lobster": {
+          "label": "",
+          "prompt": "",
+          "pokeCount": "",
+          "reaction": {
+            "hey": "",
+            "ow": "",
+            "snip": "",
+            "careful": "",
+            "stillHere": "",
+            "okay": ""
+          }
         }
       },
       "board": {
@@ -6726,7 +7195,9 @@
         },
         "noResults": {
           "title": "Ingen tavler endnu",
-          "description": "Opret en tavle for at arrangere dine apps og widgets på ét sted."
+          "description": "Opret en tavle for at arrangere dine apps og widgets på ét sted.",
+          "noAccessTitle": "",
+          "noAccessDescription": ""
         }
       },
       "media": {
@@ -6779,6 +7250,11 @@
                 "logoDisplay": {
                   "logo": "Kun logo",
                   "logoAndText": "Logo + tekst"
+                },
+                "tabsDisplay": {
+                  "wide": "Bred",
+                  "compact": "Kompakt",
+                  "indicator": ""
                 }
               },
               "items": {
@@ -6786,6 +7262,7 @@
                 "search": "Søg",
                 "home": "Hjemme tavle",
                 "boardSwitcher": "Tavler",
+                "boardTabs": "",
                 "assistant": "Assistent",
                 "docker": "Docker",
                 "boardEdit": "Rediger tavle",
@@ -7017,6 +7494,10 @@
             "title": "Udseende",
             "defaultColorScheme": {
               "label": "Standard farvetema"
+            },
+            "whatsNew": {
+              "label": "",
+              "description": ""
             }
           },
           "branding": {
@@ -7067,13 +7548,7 @@
             },
             "defaultRadius": {
               "label": "Hjørne stil",
-              "options": {
-                "xs": "Tæt",
-                "sm": "Subtile",
-                "md": "Balanceret",
-                "lg": "Aundet",
-                "xl": "Blød"
-              }
+              "options": {}
             },
             "customCss": {
               "label": "Global brugerdefineret CSS",
@@ -7095,7 +7570,6 @@
               "greetingDefault": "Standard hilsen",
               "boardColorLocked": "Brætfarve låst",
               "boardColorFlexible": "Brætfarver tilladt",
-              "appName": "Jobnavn",
               "logo": "",
               "greeting": "Hilsen",
               "on": "Til",
@@ -7230,6 +7704,7 @@
             "model": {
               "title": "",
               "description": "Vælg en opdaget model eller indtast et eksakt endpoint, model ID.",
+              "save": "",
               "placeholder": "",
               "refresh": "Opdater modeller",
               "chooseModel": "Vælg den model, der bruges til nye samtaler.",
@@ -7322,9 +7797,7 @@
             "lastExecution": {
               "label": "Sidste kørsel"
             },
-            "actions": {
-              "label": "Handlinger"
-            }
+            "actions": {}
           },
           "table": {
             "search": "Søg efter {count} opgaver..."
@@ -7376,6 +7849,12 @@
             "apiKey": {
               "label": "Autorisering",
               "title": "API Nøgler",
+              "access": {
+                "label": "",
+                "readOnly": "",
+                "readWrite": "",
+                "description": ""
+              },
               "button": {
                 "createApiToken": "Opret API token",
                 "confirmDeletion": "Bekræft sletning"
@@ -7388,9 +7867,7 @@
               },
               "table": {
                 "header": {
-                  "createdBy": "Oprettet af",
-                  "source": "Integration",
-                  "actions": "Handlinger"
+                  "createdBy": "Oprettet af"
                 }
               },
               "provenance": {
@@ -7603,7 +8080,8 @@
               "openSpotlightApps": "Åbn app-søgning",
               "openSpotlightAssistant": "Åbn assistenttilstand",
               "openSpotlightPreferences": "Åbn præference-tilstand",
-              "openAssistant": "Åbn Assistent"
+              "openAssistant": "Åbn Assistent",
+              "switchBoardTab": ""
             },
             "note": "Tip: Mod refererer til både Ctrl-tasten og -tasten på macOS"
           }
@@ -7683,7 +8161,6 @@
     },
     "field": {
       "state": {
-        "label": "Tilstand",
         "option": {
           "created": "Oprettet",
           "running": "Kører",
@@ -7710,7 +8187,6 @@
       }
     },
     "action": {
-      "title": "Handlinger",
       "logs": {
         "label": "Vis logfiler",
         "page": {
@@ -7948,27 +8424,13 @@
       "internalServerError": "Kunne ikke hente Kubernetes-data"
     },
     "field": {
-      "name": {
-        "label": "Jobnavn"
-      },
-      "namespace": {
-        "label": "Navnerum"
-      },
-      "creationTimestamp": {
-        "label": "Oprettet"
-      },
-      "state": {
-        "label": "Job Status"
-      },
-      "status": {
-        "label": "Status"
-      },
-      "type": {
-        "label": "Download klienttype"
-      },
-      "architecture": {
-        "label": "Arkitektur"
-      }
+      "name": {},
+      "namespace": {},
+      "creationTimestamp": {},
+      "state": {},
+      "status": {},
+      "type": {},
+      "architecture": {}
     }
   },
   "permission": {
@@ -7995,10 +8457,7 @@
         "label": "Tilladelse"
       }
     },
-    "action": {
-      "saveUser": "Gem brugertilladelse",
-      "saveGroup": "Gem gruppetilladelse"
-    }
+    "action": {}
   },
   "navigationStructure": {
     "manage": {
@@ -8109,8 +8568,7 @@
       "resultsAriaLabel": "{mode} resultater",
       "footer": {
         "navigate": "",
-        "open": "Åbn",
-        "close": "Luk"
+        "open": "Åbn"
       }
     },
     "error": {
@@ -8540,9 +8998,7 @@
         "urlTemplate": {
           "label": "URL søgeskabelon"
         },
-        "description": {
-          "label": "Beskriveslse"
-        }
+        "description": {}
       },
       "page": {
         "list": {
@@ -8611,8 +9067,7 @@
             "table": {
               "header": {
                 "season": "Sæson",
-                "episodes": "Episoder",
-                "status": "Status"
+                "episodes": "Episoder"
               },
               "status": {
                 "requested": "Anmodet"
@@ -8797,6 +9252,12 @@
       }
     }
   },
+  "whatsNew": {
+    "title": "",
+    "empty": "",
+    "allReleases": "",
+    "dismiss": ""
+  },
   "metadata": {
     "description": "Et selv-hosted dashboard til * arr stakken og hele dit hjemland. Integrerer med 50 + tjenester, real-time widgets, ingen config filer.",
     "dashboardTitle": "{appName} Kontrolpanel"
@@ -8882,6 +9343,7 @@
       "imageInput": "Accepterer billede input",
       "thinking": "Tænker tilstand",
       "reasoning": {
+        "default": "Standard",
         "auto": "Automatisk",
         "none": "Fra",
         "minimal": "",
@@ -9121,7 +9583,6 @@
       "cssDescription": "Redigér hele stilarket. Eksisterende regler beholdes med mindre de fjernes her.",
       "cssCharacters": "{count} af 16384 tegn",
       "copyCss": "",
-      "copied": "Kopieret",
       "restoreCss": "",
       "remoteCssTitle": "Denne CSS indlæser en ekstern ressource",
       "remoteCssDescription": "Importerede stylesheets og eksterne URL'er kontakte en anden server, når tavlen indlæses. Gennemgå dem, før du fortsætter."

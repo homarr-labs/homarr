@@ -82,7 +82,7 @@ export const WidgetStatsEntriesInput = ({ property }: CommonWidgetInputProps<"st
         {t("add")}
       </Button>
       {entries.map((entry, index) => (
-        <Card key={entry.id} withBorder padding="sm">
+        <Card key={entry.id} padding="sm">
           <Stack gap="xs">
             <Text size="xs" c="dimmed">
               {catalogs[ids.indexOf(entry.integrationId)]?.data?.name} · {entry.metric}

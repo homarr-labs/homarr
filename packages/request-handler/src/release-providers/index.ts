@@ -1,5 +1,5 @@
 import type { ReleaseProviderKind } from "@homarr/definitions";
-import { getReleaseProviderDefaultUrl, normalizeReleaseProviderIdentifier } from "@homarr/definitions";
+import { getReleaseProviderDefaultUrl, splitReleaseProviderReference, isVersionLikeTag } from "@homarr/definitions";
 
 import { getCodebergReleaseAsync } from "./codeberg";
 import { getDockerHubReleaseAsync } from "./docker-hub";
@@ -27,12 +27,19 @@ const releaseProviders: Record<ReleaseProviderKind, ReleaseProvider> = {
 };
 
 const createLookup = (request: ReleasesRepositoryRequest): ReleaseLookup => {
-  const identifier = normalizeReleaseProviderIdentifier(request.provider, request.identifier);
+  const { identifier, tag } = splitReleaseProviderReference(request.provider, request.identifier);
   if (!identifier) throw new ReleaseLookupError("invalidIdentifier", "The identifier is empty");
+  if (request.provider === "linuxServerIO" && tag && tag !== "latest" && !isVersionLikeTag(tag)) {
+    throw new ReleaseLookupError(
+      "invalidIdentifier",
+      "LinuxServer.io does not support explicit tracks. Use Docker Hub or GHCR for tagged images.",
+    );
+  }
 
   return {
     baseUrl: (request.providerUrl ?? getReleaseProviderDefaultUrl(request.provider)).replace(/\/$/, ""),
     identifier,
+    tag: tag && !isVersionLikeTag(tag) ? tag : undefined,
     versionPattern: compileVersionPattern(request.versionRegex),
     excludePrereleases: request.excludePrereleases,
     token: request.token,

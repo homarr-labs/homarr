@@ -15,10 +15,10 @@ interface HeaderCardProps {
 
 export function HeaderCard(props: HeaderCardProps) {
   const tCluster = useI18n("kubernetes.cluster");
-  const tField = useI18n("kubernetes.field");
+  const tField = useI18n("common.field");
   const currentLocale = useCurrentLocale();
   const isRTL = isLocaleRTL(currentLocale);
-  const label = props.headerType === "architecture" ? tField("architecture.label") : tCluster(props.headerType);
+  const label = props.headerType === "architecture" ? tField("architecture") : tCluster(props.headerType);
 
   return (
     <Card className={classes.header}>

@@ -6,12 +6,13 @@ import { IconAlertTriangle, IconApi, IconPencil, IconSparkles } from "@tabler/ic
 
 import type { RouterOutputs } from "@homarr/api";
 import { useI18n } from "@homarr/translation/client";
-import { Link } from "@homarr/ui";
+import { Link, NoResults } from "@homarr/ui";
 
 import { CustomWidgetSourceSetupDialog } from "~/components/custom-widgets/custom-widget-source-setup-dialog";
 import { ManageCollectionItem, ManageCollectionList } from "~/components/manage/manage-collection";
-import { NoResults } from "~/components/no-results";
+
 import { CustomWidgetRowActions } from "./_custom-widget-actions";
+import { WorkshopWidgetUpdate } from "./_workshop-widget-update";
 
 interface CustomWidgetListProps {
   definitions: RouterOutputs["customWidget"]["list"];
@@ -89,6 +90,7 @@ function CustomWidgetRow({ widget }: { widget: WidgetDef }) {
         }
         actions={
           <Group gap="xs" wrap="nowrap">
+            {widget.valid && widget.workshop && <WorkshopWidgetUpdate definitionId={widget.id} />}
             {widget.valid && (
               <Button
                 component={Link}

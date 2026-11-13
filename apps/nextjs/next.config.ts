@@ -26,6 +26,11 @@ const getDevelopmentServiceAliases = () => {
   };
 };
 
+const getDevelopmentAllowedOrigins = () => {
+  if (process.env.NODE_ENV !== "development" || !process.env.BASE_URL) return undefined;
+  return [new URL(process.env.BASE_URL).hostname];
+};
+
 const contentSecurityPolicy = `
   default-src 'self';
   script-src * 'unsafe-inline' 'unsafe-eval';
@@ -50,6 +55,7 @@ const mcpConsentContentSecurityPolicy = mcpContentSecurityPolicy.replace(
 );
 
 const nextConfig: NextConfig = {
+  allowedDevOrigins: getDevelopmentAllowedOrigins(),
   // Next previews otherwise create agent instruction files in the application
   // directory during development.
   agentRules: false,
@@ -57,6 +63,9 @@ const nextConfig: NextConfig = {
     HOMARR_VERSION: process.env.HOMARR_VERSION ?? "unknown",
   },
   output: "standalone",
+  outputFileTracingIncludes: {
+    "/*": ["../../node_modules/bcrypt/prebuilds/linux-*/*.node"],
+  },
   reactStrictMode: true,
   // react compiler breaks mantine-react-table, so disabled for now
   //reactCompiler: true,
@@ -72,6 +81,8 @@ const nextConfig: NextConfig = {
     preloadEntriesOnStart: true,
     turbopackFileSystemCacheForBuild: true,
     useTypeScriptCli: true,
+    webpackBuildWorker: true,
+    webpackMemoryOptimizations: true,
   },
   turbopack: {
     root: path.resolve(import.meta.dirname, "../.."),

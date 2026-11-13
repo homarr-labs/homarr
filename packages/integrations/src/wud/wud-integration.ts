@@ -51,6 +51,10 @@ export class WudIntegration extends Integration {
   }
 
   private getAuthHeaders(): Record<string, string> | undefined {
+    if (this.hasSecretValue("personalAccessToken")) {
+      return { Authorization: `Bearer ${this.getSecretValue("personalAccessToken")}` };
+    }
+
     if (!this.hasSecretValue("username") || !this.hasSecretValue("password")) {
       return undefined;
     }

@@ -372,7 +372,6 @@ const AdvancedTimer = ({
     <ScrollArea h="100%" w="100%">
       <Stack gap="md" p="md">
         <Paper
-          withBorder
           p="lg"
           style={{
             ...attentionStyle,
@@ -407,7 +406,7 @@ const AdvancedTimer = ({
         {runtime.mode === "pomodoro" && <PomodoroSequence runtime={runtime} durations={durations} />}
 
         <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="md">
-          <Paper withBorder p="md">
+          <Paper p="md">
             <Group gap="xs" mb="sm">
               <IconSettings style={iconSizes.lg} aria-hidden />
               <Text fw={600}>{t("advanced.settings")}</Text>
@@ -418,7 +417,7 @@ const AdvancedTimer = ({
             </Text>
           </Paper>
 
-          <Paper withBorder p="md">
+          <Paper p="md">
             <Group gap="xs" mb="sm">
               <IconBell style={iconSizes.lg} aria-hidden />
               <Text fw={600}>{t("advanced.localAlerts")}</Text>
@@ -551,7 +550,7 @@ const getTimerAttentionStyle = ({
 const PomodoroSequence = ({ runtime, durations }: { runtime: TimerRuntimeState; durations: TimerDurations }) => {
   const t = useI18n("widget.timer");
   return (
-    <Paper withBorder p="md">
+    <Paper p="md">
       <Text fw={600} mb="xs">
         {t("advanced.sequence")}
       </Text>

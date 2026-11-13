@@ -1,0 +1,16 @@
+.number {
+  font-variant-numeric: tabular-nums;
+}
+
+.dot {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--mantine-color-dimmed);
+  opacity: 0.4;
+}
+
+.dot[data-active] {
+  background: var(--mantine-primary-color-filled);
+  opacity: 1;
+}

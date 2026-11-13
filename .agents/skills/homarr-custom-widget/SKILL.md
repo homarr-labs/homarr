@@ -1,57 +1,63 @@
 ---
 name: homarr-custom-widget
-description: Author, validate, preview, test, install, or configure API-backed Homarr Custom JSX v2 widgets.
+description: Author, repair, preview, install, or configure Homarr Custom JSX v2 widgets through tools or an importable definition.
 ---
 
 # Homarr Custom Widget
 
-Author requested widgets with release context; validate, test, persist, and return artifacts.
+Build from verified contracts/samples and matching shipped examples; research only missing/changed contracts.
+Preserve working repairs/migrations; keep credentials in Homarr.
 
-- Read primary API docs when missing/changed. Samples and successful previews are binding; load only needed schema, runtime,
-  security, or component context.
-- Batch unknown component searches/details. `contextAlreadyLoaded` reuses context; `phaseComplete` advances. Stop only for
-  genuine provider/model, lifecycle-service, or workbench-closure failure.
-- Community widgets use `customWidget_workshopSearch`, `customWidget_workshopGet`, and
-  `customWidget_workshopInstall`; configure and persist.
+## Context
 
-Return one fenced `json` block with the complete definition; keep evidence prose outside it. The definition has keyed
-`sources`, `requests`, `template`, and optional `options`; actions are requests with `kind: "action"`.
+Reuse supplied context; load only missing references:
 
-- `sources.default` is required. HTTP has `baseUrl` and credential-free `auth`. Saved sources use `type: "integration"`/`integrationKind`;
-  Homarr holds credentials.
-- Saved integrations: discover kinds/full-access entries with `integration_getKinds`/`integration_all`, bind `integrationId`
-  before preview, omit URL/auth, and keep non-GET requests as actions.
-- Paths are slash-prefixed: strings use `{option:name}`/`{param:name}`; query/body uses `{"$option":"name"}`/`{"$param":"name"}`.
-  Loads use `trigger: "load"`; manual helpers use `trigger: "manual"`.
-- Actions stay manual; preserve `confirmation`, `permission`, and `invalidates`; DELETE requires full permission/confirmation.
-  `$param` is manual-only; `$option` may drive loads.
-- Load data.requestId/status.requestId with RefreshButton; status.requestId?.ok === false is error. Manual SubFetch never
-  populates data/status; its child receives (result, metadata) and renders its fields.
-- Options have `label`, `control`, `default`; installation config is `options.name`, never `inputs`. Request-bound TextInput,
-  Select, NumberInput, Pagination use literal `bind` + default and manual `SubFetch params` map `inputs.<name>` to `$param`.
-  Dependent pagination uses `defaultValue={1}`/`resetKey={inputs.query}`. Remove controls without an option/request/helper; guard arrays/nested with `??`;
-  preserve documented timezone values; use UTC only when the contract says UTC.
-- Templates are one expression: no imports, hooks, refs, raw HTML/events, browser requests, eval, recursion, IIFEs,
-  statement blocks, or arbitrary functions. Use registered component names; `Icon` may alias `TablerIcon`. Keep hierarchy,
-  theme tokens, useful states, and narrow/wide layouts purposeful.
+- [schema](references/schema.md): new manifests, sources, requests, options, migration contracts.
+- [runtime](references/runtime.md): response paths, manual interactions, input bindings, safe formatters.
+- [security](references/security.md): auth, network access, mutations.
 
-## Bounded lifecycle
+Use registered components. Resolve unknown names with `customWidget_findComponents`; batch details with
+`customWidget_getComponents`. Full documents are only for unresolved props/diagnostics.
+Reuse `contextAlreadyLoaded`; `phaseComplete` advances to the visible next phase.
 
-1. Build a credential-free definition from request, verified context, and sample. Preserve a migration's API path, method,
-   body, options, and behavior; omit unknown requests rather than guessing.
-2. Send the coherent complete definition directly to `customWidget_previewCreate`; it validates both manifest and JSX.
-   Use `customWidget_validateTemplate` only for isolated JSX diagnostics, never as a preview prerequisite. Use
-   `customWidget_previewReviseTemplate` for JSX-only corrections after a preview exists. In the Assistant wrapper, multiline
-   JSX uses `templateLines` and preview creation receives the complete definition.
-3. Test every returned query/simulated action once, batching independent queries. On a concrete schema/preview error, fix only
-   that field and retry `customWidget_previewCreate` with the corrected definition; use `customWidget_previewReviseTemplate`
-   only for JSX errors after a preview exists. Stop only for genuine provider/model, lifecycle-service, or
-   workbench-closure failure.
-4. If `previewCreate` used `definitionId`, persist with `customWidget_updateFromPreview`; otherwise use
-   `customWidget_createFromPreview`. Follow create `nextAction` once. Configure credentials in Homarr; never repeat plaintext
-   secrets.
+## Working-app design
 
-## Delivery
+Use faithful numbers, rows, or charts; no quotas. Keep identities, units and missingness honest; unknown is not zero.
+Ground series/history/denominators in verified data. Discover needed registered charts/helpers; verify safe props/data
+grammar, not assumed callbacks/overlays. Quiet theme tokens; persistent config in options. Use supported accessible
+motion/disclosure, reduced motion and keyboard/touch access. Keep facts visible; verify hover and narrow/wide host fit or
+report missing evidence. Preserve repairs/migrations.
 
-Report actual lifecycle results. If unavailable, add one post-artifact `Unverified:` line naming missing validation, preview,
-renderer, or persistence. Never claim rendering/persistence from schema checks.
+https://impeccable.style/ and https://usehallmark.com/ are app references, not marketing pages, packages, catalogs,
+required tools, or API authority.
+
+## Author
+
+- Definition: `$schema: "homarr-custom-widget-v2"`, `name`, keyed `sources`/`requests`, one JSX `template`, optional `options`.
+  `sources.default` is always required, even static. HTTP: `baseUrl`, credential-free `auth`. Integrations:
+  `type: "integration"`/`integrationKind`; bind a matching full-access `integrationId` before preview.
+- Loads: `data.requestId`/`status.requestId`, RefreshButton, useful loading/error/empty/success states. Preserve envelopes;
+  guard nullable fields. Manual SubFetch renders its result in its child callback.
+- Config: `options.name`. Temporary controls: literal `bind`, default, `inputs.name` passed through manual request `params`.
+  Every control affects a request or visible selection.
+- JSX: one expression, registered names, concise callbacks, theme tokens, wrapping tiles. Imports, hooks, raw HTML/events,
+  browser requests, arbitrary functions, statements, IIFEs, and recursion are unavailable.
+
+## Preview and save
+
+With requested creation/editing and available lifecycle tools:
+
+1. Call `customWidget_previewCreate` with the complete candidate (validates manifest/JSX). Edits: `definitionId`;
+   multiline Assistant JSX: `templateLines`.
+2. Configure sources in Homarr. Test every returned query/simulated action once; batch independent reads. Match response
+   paths/params to JSX. Live mutations require an explicit request.
+3. Fix concrete diagnostics; preserve accepted behavior. Manifest changes: fresh `previewCreate`; JSX-only:
+   `customWidget_previewReviseTemplate` resets evidence. Retest.
+4. Save the exact tested preview: `customWidget_updateFromPreview` (edit) or `customWidget_createFromPreview` (new).
+   Follow `nextAction` once; briefly report the actual saved result.
+
+`customWidget_validateTemplate`: isolated JSX diagnostics only, never a preview prerequisite. Stop unavailable or repeatedly
+stalled paths. Workshop: search/get/install, then configure sources. Schema checks prove neither rendering nor persistence.
+
+Without tools or on an artifact request: one complete fenced `json` definition plus one `Unverified:` line naming missing
+preview/renderer/persistence evidence. Successful saves need no duplicate manifest.

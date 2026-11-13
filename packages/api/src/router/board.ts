@@ -4,12 +4,7 @@ import { z } from "zod/v4";
 
 import type { Session } from "@homarr/auth";
 import { constructBoardPermissions } from "@homarr/auth/shared";
-import {
-  createId,
-  generateResponsiveGridFor,
-  getLayoutResizeSource,
-  serializeLayoutResizeSource,
-} from "@homarr/common";
+import { createId, getLayoutResizeSource, serializeLayoutResizeSource } from "@homarr/common";
 import type { GridAlgorithmItem } from "@homarr/common";
 import type { DeviceType } from "@homarr/common/server";
 import { createLogger } from "@homarr/core/infrastructure/logs";
@@ -42,12 +37,15 @@ import {
   emptySuperJSON,
   everyoneGroup,
   getBoardLaneColumnCount,
+  getBoardTabSections,
   getRootSectionLane,
   getWidgetIntegrationIssue,
   getWidgetIntegrationIssueMessage,
   getPermissionsWithChildren,
   getPermissionsWithParents,
+  maxBoardTabs,
   normalizeBoardLayoutRoles,
+  projectRootSections,
   rootSectionOffsets,
   widgetDefaultSizes,
   widgetKinds,
@@ -224,32 +222,7 @@ const searchAccessibleBoardsAsync = async (
   limit?: number,
 ) => {
   const userId = ctx.session?.user.id;
-  const permissionsOfCurrentUserWhenPresent = await ctx.db.query.boardUserPermissions.findMany({
-    where: eq(boardUserPermissions.userId, userId ?? ""),
-  });
-
-  const permissionsOfCurrentUserGroupsWhenPresent = await ctx.db.query.groupMembers.findMany({
-    where: eq(groupMembers.userId, userId ?? ""),
-    with: {
-      group: {
-        with: {
-          boardPermissions: {},
-          permissions: {},
-        },
-      },
-    },
-  });
-  const boardIds = permissionsOfCurrentUserWhenPresent
-    .map((permission) => permission.boardId)
-    .concat(
-      permissionsOfCurrentUserGroupsWhenPresent
-        .map((groupMember) => groupMember.group.boardPermissions.map((permission) => permission.boardId))
-        .flat(),
-    );
-
-  const currentUserWhenPresent = await ctx.db.query.users.findFirst({
-    where: eq(users.id, userId ?? ""),
-  });
+  const { boardIds, currentUser, groupMemberships } = await getBoardAccessContextAsync(ctx.db, userId);
 
   const foundBoards = await ctx.db.query.boards.findMany({
     where: and(
@@ -272,7 +245,7 @@ const searchAccessibleBoardsAsync = async (
         where: eq(boardUserPermissions.userId, ctx.session?.user.id ?? ""),
       },
       groupPermissions: {
-        where: getBoardGroupPermissionWhere(permissionsOfCurrentUserGroupsWhenPresent),
+        where: getBoardGroupPermissionWhere(groupMemberships),
       },
     },
   });
@@ -282,8 +255,8 @@ const searchAccessibleBoardsAsync = async (
     name: board.name,
     logoImageUrl: board.logoImageUrl,
     permissions: constructBoardPermissions(board, ctx.session),
-    isHome: currentUserWhenPresent?.homeBoardId === board.id,
-    isMobileHome: currentUserWhenPresent?.mobileHomeBoardId === board.id,
+    isHome: currentUser?.homeBoardId === board.id,
+    isMobileHome: currentUser?.mobileHomeBoardId === board.id,
   }));
 };
 
@@ -453,9 +426,10 @@ export const boardRouter = createTRPCRouter({
             id: true,
             kind: true,
             xOffset: true,
+            yOffset: true,
           },
           where: eq(sections.kind, "empty"),
-          orderBy: (section, { asc }) => [asc(section.xOffset), asc(section.id)],
+          orderBy: (section, { asc }) => [asc(section.xOffset), asc(section.yOffset), asc(section.id)],
         },
       },
       where: getAccessibleBoardsWhere(canViewAllBoards, userId, boardIds),
@@ -1672,7 +1646,7 @@ export const boardRouter = createTRPCRouter({
       mcp: {
         enabled: true,
         description:
-          "Update visual and behavior settings for a board. Requires modify permission. REQUIRED: id (board ID). Optional fields include pageTitle, metaTitle, logoImageUrl, faviconImageUrl, backgroundImageUrl, colors, opacity, customCss, itemRadius, and disableStatus",
+          "Update visual and behavior settings for a board. Requires modify permission. REQUIRED: id (board ID). Optional fields include pageTitle, metaTitle, logoImageUrl, faviconImageUrl, backgroundImageUrl, colors, opacity, customCss, itemRadius, and disableStatus. Set primaryColor, secondaryColor, or itemRadius to null to inherit the instance theme.",
       },
     })
     .input(boardSavePartialSettingsSchema.extend({ id: z.string() }))
@@ -1724,7 +1698,7 @@ export const boardRouter = createTRPCRouter({
       mcp: {
         enabled: true,
         description:
-          "Save complete dashboard sections and items, including widget options and placements. Omitted entries are removed. Placements must fit their parent section's columns in each layout. Read current content with board_getBoardByName first. Requires modify access; Custom Widget placement changes require admin access.",
+          "Save complete dashboard sections and items, including widget options and placements. Omitted entries are removed. Placements must fit their parent section's columns in each layout. Read current content with board_getBoardByName first. Up to five empty main canvas roots (xOffset 0) represent tabs, ordered by yOffset, with optional name. Preserve all tabs and their items. Requires modify access; Custom Widget placement changes require admin access.",
       },
     })
     .input(boardSaveSchema)
@@ -1734,6 +1708,7 @@ export const boardRouter = createTRPCRouter({
 
       const dbBoard = await getFullBoardWithWhereAsync(ctx.db, eq(boards.id, input.id), ctx.session.user.id);
       throwIfBoardLayoutBoundsInvalid(getBoardLayoutBoundsIssue({ ...input, layouts: dbBoard.layouts }));
+      throwIfBoardTabsInvalid(input.sections);
       await validateWidgetConfigurationsAsync(ctx, input.items, dbBoard.items);
       throwIfCustomWidgetPlacementChangeForbidden({
         isAdmin: ctx.session.user.permissions.includes("admin"),
@@ -1772,7 +1747,7 @@ export const boardRouter = createTRPCRouter({
                   yOffset: section.kind === "empty" ? section.yOffset : null,
                   xOffset: section.kind === "empty" ? section.xOffset : null,
                   options: section.kind === "empty" ? emptySuperJSON : superjson.stringify(section.options),
-                  name: null,
+                  name: getStoredSectionName(section) ?? null,
                   boardId: dbBoard.id,
                 })),
               );
@@ -1891,7 +1866,7 @@ export const boardRouter = createTRPCRouter({
                   yOffset: section.kind === "empty" ? section.yOffset : null,
                   xOffset: section.kind === "empty" ? section.xOffset : null,
                   options: section.kind === "empty" ? emptySuperJSON : superjson.stringify(section.options),
-                  name: null,
+                  name: getStoredSectionName(section),
                 })
                 .where(eq(schema.sections.id, section.id));
 
@@ -1960,7 +1935,7 @@ export const boardRouter = createTRPCRouter({
                     yOffset: section.kind === "empty" ? section.yOffset : null,
                     xOffset: section.kind === "empty" ? section.xOffset : null,
                     options: section.kind === "empty" ? emptySuperJSON : superjson.stringify(section.options),
-                    name: null,
+                    name: getStoredSectionName(section) ?? null,
                     boardId: dbBoard.id,
                   })),
                 )
@@ -2086,7 +2061,7 @@ export const boardRouter = createTRPCRouter({
                   yOffset: section.kind === "empty" ? section.yOffset : null,
                   xOffset: section.kind === "empty" ? section.xOffset : null,
                   options: section.kind === "empty" ? emptySuperJSON : superjson.stringify(section.options),
-                  name: null,
+                  name: getStoredSectionName(section),
                 })
                 .where(eq(sections.id, section.id))
                 .run();
@@ -2590,6 +2565,29 @@ const noBoardWithSimilarNameAsync = async (db: Database, name: string, ignoredId
   }
 };
 
+type SubmittedSection = z.infer<typeof sectionSchema>;
+
+const getStoredSectionName = (section: SubmittedSection) => {
+  if (section.kind !== "empty") return null;
+  return section.name;
+};
+
+const throwIfBoardTabsInvalid = (submittedSections: readonly SubmittedSection[]) => {
+  const tabCount = getBoardTabSections(submittedSections).length;
+  if (tabCount === 0) {
+    throw new TRPCError({
+      code: "BAD_REQUEST",
+      message: "This board requires at least one main canvas tab",
+    });
+  }
+  if (tabCount <= maxBoardTabs) return;
+
+  throw new TRPCError({
+    code: "BAD_REQUEST",
+    message: `This board supports at most ${maxBoardTabs} main canvas tabs`,
+  });
+};
+
 const getResizeSourceUpdate = (sources: ReadonlyMap<string, string | null>, layoutId: string) => {
   if (!sources.has(layoutId)) return {};
   return { resizeSource: sources.get(layoutId) ?? null };
@@ -2638,63 +2636,13 @@ const getUpdatedBoardLayout = (
   if (options.previous.layoutId === options.current.layoutId) serializedSource = savedLayout?.resizeSource;
   const source = getLayoutResizeSource(options.previous, currentElements, serializedSource);
   const elements = source.elements;
-  const previousGeometry = { ...source.geometry, layoutId: options.previous.layoutId };
-  const emptyRoots = board.sections
-    .filter((section) => section.kind === "empty")
-    .toSorted((first, second) => (first.yOffset ?? 0) - (second.yOffset ?? 0) || first.id.localeCompare(second.id));
-  const rootByLane = new Map<BoardLane, (typeof emptyRoots)[number]>();
-  for (const root of emptyRoots) {
-    const lane = getRootSectionLane(root.xOffset);
-    if (!rootByLane.has(lane)) rootByLane.set(lane, root);
-  }
-  const mainRoot = rootByLane.get("main");
-  if (!mainRoot) throw new Error(`Board "${board.id}" has no main canvas root`);
-
-  const sourceRootById = new Map(
-    emptyRoots.map((section) => [section.id, getRootSectionLane(section.xOffset)] as const),
-  );
-  const targetLaneBySourceLane = new Map<BoardLane, BoardLane>(
-    boardLanes.map((lane) => [
-      lane,
-      lane !== "main" && getBoardLaneColumnCount(options.current, lane) === 0 ? "main" : lane,
-    ]),
-  );
-  const remappedElements = elements.map((element) => {
-    const sourceLane = sourceRootById.get(element.sectionId);
-    if (!sourceLane) return element;
-    const targetLane = targetLaneBySourceLane.get(sourceLane) ?? "main";
-    const targetRoot = rootByLane.get(targetLane) ?? mainRoot;
-    return {
-      ...element,
-      sectionId: targetRoot.id,
-    };
+  const updatedElements = projectRootSections({
+    sections: board.sections,
+    elements,
+    source: source.geometry,
+    target: options.current,
   });
-
-  const results = boardLanes.flatMap((lane) => {
-    const root = rootByLane.get(lane);
-    const width = getBoardLaneColumnCount(options.current, lane);
-    if (!root || width === 0) return [];
-    const sourceLanes = boardLanes.filter(
-      (sourceLane) =>
-        rootByLane.has(sourceLane) &&
-        getBoardLaneColumnCount(previousGeometry, sourceLane) > 0 &&
-        targetLaneBySourceLane.get(sourceLane) === lane,
-    );
-    const previousWidth =
-      sourceLanes.length === 1
-        ? getBoardLaneColumnCount(previousGeometry, sourceLanes[0] ?? "main")
-        : Number.MAX_SAFE_INTEGER;
-
-    return [
-      generateResponsiveGridFor({
-        items: remappedElements,
-        previousWidth,
-        width,
-        sectionId: root.id,
-      }),
-    ];
-  });
-  const updatedElements = results.flatMap((result) => result.items);
+  if (!updatedElements) throw new Error(`Board "${board.id}" has no main canvas root`);
   const updatedElementById = new Map(updatedElements.map((element) => [element.id, element]));
 
   const itemSectionLayoutsCollection = board.items.flatMap((item): InferInsertModel<typeof itemLayouts>[] => {
@@ -2891,29 +2839,30 @@ const getElementsForLayout = (board: BoardForLayoutProjection, layoutId: string)
 const protectedLayoutRepairPromises = new Map<string, Promise<void>>();
 
 const getBoardAccessContextAsync = async (db: Database, userId: string | undefined) => {
-  const [userPermissions, groupMemberships, currentUser] = await Promise.all([
-    db.query.boardUserPermissions.findMany({
-      where: eq(boardUserPermissions.userId, userId ?? ""),
-    }),
-    db.query.groupMembers.findMany({
-      where: eq(groupMembers.userId, userId ?? ""),
-      with: {
-        group: {
-          with: {
-            boardPermissions: {},
-            permissions: {},
+  const currentUser = await db.query.users.findFirst({
+    where: eq(users.id, userId ?? ""),
+    columns: {
+      homeBoardId: true,
+      mobileHomeBoardId: true,
+    },
+    with: {
+      boardPermissions: { columns: { boardId: true } },
+      groups: {
+        columns: { groupId: true },
+        with: {
+          group: {
+            columns: {},
+            with: {
+              boardPermissions: { columns: { boardId: true } },
+              permissions: { columns: { permission: true } },
+            },
           },
         },
       },
-    }),
-    db.query.users.findFirst({
-      where: eq(users.id, userId ?? ""),
-      columns: {
-        homeBoardId: true,
-        mobileHomeBoardId: true,
-      },
-    }),
-  ]);
+    },
+  });
+  const userPermissions = currentUser?.boardPermissions ?? [];
+  const groupMemberships = currentUser?.groups ?? [];
   const boardIds = userPermissions
     .map((permission) => permission.boardId)
     .concat(

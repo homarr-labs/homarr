@@ -56,16 +56,16 @@ export const AppSelectModal = createModal<AppSelectModalProps>(({ actions, inner
     return [...apps, ...createdApps.filter((createdApp) => !appIds.has(createdApp.id))];
   }, [apps, createdApps]);
 
-  const filteredApps = useMemo(
-    () =>
-      selectableApps
-        .filter((app) => {
-          const query = search.trim().toLowerCase();
-          return app.name.toLowerCase().includes(query) || Boolean(app.href?.toLowerCase().includes(query));
-        })
-        .sort((appA, appB) => appA.name.localeCompare(appB.name)),
-    [search, selectableApps],
+  const sortedApps = useMemo(
+    () => selectableApps.toSorted((appA, appB) => appA.name.localeCompare(appB.name)),
+    [selectableApps],
   );
+  const filteredApps = useMemo(() => {
+    const query = search.trim().toLowerCase();
+    return sortedApps.filter(
+      (app) => app.name.toLowerCase().includes(query) || Boolean(app.href?.toLowerCase().includes(query)),
+    );
+  }, [search, sortedApps]);
 
   const selectedApps = useMemo(
     () => selectableApps.filter((app) => selectedAppIds.has(app.id)),

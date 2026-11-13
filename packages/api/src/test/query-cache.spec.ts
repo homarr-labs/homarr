@@ -3,6 +3,7 @@ import { QueryClient } from "@tanstack/react-query";
 
 import {
   dashboardSupportingQueryPolicies,
+  getQueryCacheGcTime,
   isWidgetDataQueryKey,
   isWidgetDataTrpcPath,
   queryCacheDefaultRefetchIntervalMs,
@@ -109,5 +110,35 @@ describe("dashboard supporting query policies", () => {
         refetchOnReconnect: false,
       },
     ]);
+  });
+});
+
+describe("server query lifetime", () => {
+  test("keeps SSR data readable without a timer retaining the completed request", () => {
+    vi.useFakeTimers();
+    vi.stubGlobal("window", undefined);
+    const client = new QueryClient({ defaultOptions: { queries: { gcTime: getQueryCacheGcTime() } } });
+    try {
+      client.setQueryData(["dashboard"], { history: [1, 2, 3] });
+      expect(client.getQueryData(["dashboard"])).toEqual({ history: [1, 2, 3] });
+      expect(vi.getTimerCount()).toBe(0);
+    } finally {
+      client.clear();
+      vi.unstubAllGlobals();
+    }
+  });
+
+  test("still collects unused browser queries after five minutes", () => {
+    vi.useFakeTimers();
+    vi.stubGlobal("window", {});
+    const client = new QueryClient({ defaultOptions: { queries: { gcTime: getQueryCacheGcTime() } } });
+    try {
+      client.setQueryData(["dashboard"], { history: [1, 2, 3] });
+      vi.advanceTimersByTime(5 * 60_000);
+      expect(client.getQueryData(["dashboard"])).toBeUndefined();
+    } finally {
+      client.clear();
+      vi.unstubAllGlobals();
+    }
   });
 });

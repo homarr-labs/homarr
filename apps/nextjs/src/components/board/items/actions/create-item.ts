@@ -1,4 +1,5 @@
 import { getBoardLayouts } from "@homarr/boards/context";
+import { getBoardTabs } from "@homarr/boards/tabs";
 import { createId } from "@homarr/common";
 import type { Modify } from "@homarr/common/types";
 import { getRootSectionLane } from "@homarr/definitions";
@@ -19,18 +20,22 @@ export interface CreateItemInput {
   targetSectionId?: string;
   advancedOptions?: BoardItemAdvancedOptions;
   size?: { width: number; height: number };
+  position?: { layoutId: string; x: number; y: number };
 }
 
 export const createItemCallback =
-  ({ id, kind, options = {}, integrationIds = [], targetSectionId, advancedOptions, size }: CreateItemInput) =>
+  ({
+    id,
+    kind,
+    options = {},
+    integrationIds = [],
+    targetSectionId,
+    advancedOptions,
+    size,
+    position,
+  }: CreateItemInput) =>
   (previous: Board): Board => {
-    const firstCanvasSection = previous.sections
-      .filter(
-        (section): section is EmptySection =>
-          section.kind === "empty" && getRootSectionLane(section.xOffset) === "main",
-      )
-      .toSorted((sectionA, sectionB) => sectionA.yOffset - sectionB.yOffset)
-      .at(0);
+    const firstCanvasSection = getBoardTabs(previous).at(0);
     const requestedSection = targetSectionId
       ? previous.sections.find(
           (section): section is EmptySection | ContainerSection =>
@@ -41,10 +46,10 @@ export const createItemCallback =
 
     if (!targetSection) return previous;
 
-    let itemLayouts = createItemLayouts(previous, targetSection, kind, size);
+    let itemLayouts = createItemLayouts(previous, targetSection, kind, size, position);
     if (itemLayouts.length === 0 && firstCanvasSection && targetSection.id !== firstCanvasSection.id) {
       targetSection = firstCanvasSection;
-      itemLayouts = createItemLayouts(previous, targetSection, kind, size);
+      itemLayouts = createItemLayouts(previous, targetSection, kind, size, position);
     }
     if (itemLayouts.length === 0) return previous;
     const widget = {
@@ -89,6 +94,7 @@ const createItemLayouts = (
   currentSection: EmptySection | ContainerSection,
   kind: WidgetKind,
   requestedSize?: { width: number; height: number },
+  position?: { layoutId: string; x: number; y: number },
 ): ItemLayout[] => {
   const layouts = getBoardLayouts(board);
   const itemSize = requestedSize ?? getWidgetItemSize(kind);
@@ -109,9 +115,22 @@ const createItemLayouts = (
       height: itemSize.height,
     };
 
-    const emptyPosition = boardLayout
-      ? getFirstEmptyPosition(elements, columnCount, undefined, size)
-      : { xOffset: 0, yOffset: 0 };
+    const requestedPosition =
+      position?.layoutId === layoutId &&
+      position.x + size.width <= columnCount &&
+      !elements.some(
+        (element) =>
+          element.yOffset < position.y + size.height &&
+          element.yOffset + element.height > position.y &&
+          element.xOffset < position.x + size.width &&
+          element.xOffset + element.width > position.x,
+      )
+        ? { xOffset: position.x, yOffset: position.y }
+        : undefined;
+
+    const emptyPosition =
+      requestedPosition ??
+      (boardLayout ? getFirstEmptyPosition(elements, columnCount, undefined, size) : { xOffset: 0, yOffset: 0 });
 
     if (!emptyPosition) {
       throw new Error("Your board is full");

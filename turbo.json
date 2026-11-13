@@ -3,7 +3,7 @@
   "remoteCache": {
     "signature": true
   },
-  "globalEnv": ["CI", "NODE_ENV", "SKIP_ENV_VALIDATION"],
+  "globalEnv": ["CI", "NODE_ENV"],
   "ui": "stream",
   "futureFlags": {
     "affectedUsingTaskInputs": true
@@ -11,7 +11,7 @@
   "tasks": {
     "topo": {
       "dependsOn": ["^topo"],
-      "inputs": ["$TURBO_DEFAULT$"]
+      "inputs": ["$TURBO_DEFAULT$", "!**/*.md", "!**/*.mdx"]
     },
     "build": {
       "dependsOn": ["^build"],
@@ -42,18 +42,19 @@
     },
     "dev": {
       "persistent": true,
-      "cache": false
+      "cache": false,
+      "passThroughEnv": ["SKIP_ENV_VALIDATION"]
     },
     "format": {
       "inputs": ["$TURBO_DEFAULT$", "$TURBO_ROOT$/.oxfmtrc.json"],
       "outputLogs": "new-only"
     },
     "lint": {
-      "inputs": ["$TURBO_DEFAULT$", "$TURBO_ROOT$/.oxlintrc.json"]
+      "inputs": ["$TURBO_DEFAULT$", "!**/*.md", "!**/*.mdx", "$TURBO_ROOT$/.oxlintrc.json"]
     },
     "typecheck": {
       "dependsOn": ["^topo"],
-      "inputs": ["$TURBO_DEFAULT$"],
+      "inputs": ["$TURBO_DEFAULT$", "!**/*.md", "!**/*.mdx"],
       "outputs": ["node_modules/.cache/tsbuildinfo.json"]
     },
     "clean": {

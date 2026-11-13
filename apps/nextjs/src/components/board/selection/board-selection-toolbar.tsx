@@ -13,17 +13,18 @@ import {
   Tooltip,
   UnstyledButton,
 } from "@mantine/core";
-import { IconCheck, IconClipboard, IconCopy, IconFolderShare, IconTrash } from "@tabler/icons-react";
+import { IconCheck, IconClipboard, IconCopy, IconFolderShare, IconFolderSymlink, IconTrash } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
 import { useCurrentLayout, useRequiredBoard } from "@homarr/boards/context";
 import { useEditMode } from "@homarr/boards/edit-mode";
+import { getBoardTabForSection, useBoardTabs } from "@homarr/boards/tabs";
 import { getBoardLaneColumnCount, getRootSectionLane, getWidgetName } from "@homarr/definitions";
 import { useI18n } from "@homarr/translation/client";
 import { widgetCatalogIcons } from "@homarr/ui/widget-icons";
 
-import type { EmptySection } from "~/app/[locale]/boards/_types";
 import { useRegisteredGridEditors } from "~/components/board/sections/grid/grid-editor-registry";
+import { useBoardTabLabel } from "~/components/board/tabs/use-board-tab-label";
 import { useBoardSelection } from "./board-selection-context";
 
 const MAX_AVATARS_DISPLAYED = 5;
@@ -37,7 +38,10 @@ export const BoardSelectionToolbar = () => {
     pasteItems,
     removeSelectedItems,
     moveSelectedItemsToSection,
+    moveSelectedItemsToTab,
   } = useBoardSelection();
+  const { tabs, activeTab } = useBoardTabs();
+  const getTabLabel = useBoardTabLabel();
   const board = useRequiredBoard();
   const registeredGridEditors = useRegisteredGridEditors();
   const currentLayoutId = useCurrentLayout();
@@ -88,12 +92,8 @@ export const BoardSelectionToolbar = () => {
   const visibleItems = sortedSelectedItems.slice(0, MAX_AVATARS_DISPLAYED);
   const overflowCount = sortedSelectedItems.length - visibleItems.length;
 
-  const mainCanvasSection = board.sections
-    .filter(
-      (section): section is EmptySection => section.kind === "empty" && getRootSectionLane(section.xOffset) === "main",
-    )
-    .toSorted((sectionA, sectionB) => sectionA.yOffset - sectionB.yOffset)
-    .at(0);
+  const mainCanvasSection = activeTab;
+  const tabTargets = tabs.length > 1 ? tabs : [];
 
   const placementOptions = [
     ...(mainCanvasSection
@@ -119,6 +119,9 @@ export const BoardSelectionToolbar = () => {
     }),
     ...board.sections
       .filter((section) => section.kind === "container")
+      .filter(
+        (section) => registeredGridEditors.has(section.id) || getBoardTabForSection(board, currentLayoutId, section.id),
+      )
       .map((section) => ({
         value: section.id,
         label: section.options.title.trim() || t("section.container.untitled"),
@@ -234,7 +237,7 @@ export const BoardSelectionToolbar = () => {
             leftSection={<IconCopy size={15} />}
             onClick={() => void copySelectedItems()}
           >
-            {tSelection("copy")}
+            {t("common.action.copy")}
           </Button>
 
           <Tooltip label={tSelection("pasteShortcut")} withArrow>
@@ -249,7 +252,7 @@ export const BoardSelectionToolbar = () => {
             </Button>
           </Tooltip>
 
-          {placementOptions.length > 1 && (
+          {(placementOptions.length > 1 || tabTargets.length > 0) && (
             <Menu position="top" withArrow shadow="md">
               <Menu.Target>
                 <Button size="xs" variant="light" color="primaryColor" leftSection={<IconFolderShare size={15} />}>
@@ -267,6 +270,26 @@ export const BoardSelectionToolbar = () => {
                     {opt.label}
                   </Menu.Item>
                 ))}
+                {tabTargets.length > 0 && (
+                  <>
+                    <Menu.Divider />
+                    <Menu.Label>{tSelection("moveToTab")}</Menu.Label>
+                    {tabTargets.map((tab, index) => (
+                      <Menu.Item
+                        key={tab.id}
+                        leftSection={<IconFolderSymlink size={15} />}
+                        rightSection={
+                          <Text size="xs" c="dimmed">
+                            {index + 1}
+                          </Text>
+                        }
+                        onClick={() => moveSelectedItemsToTab(tab.id)}
+                      >
+                        {getTabLabel(tab)}
+                      </Menu.Item>
+                    ))}
+                  </>
+                )}
               </Menu.Dropdown>
             </Menu>
           )}
@@ -278,7 +301,7 @@ export const BoardSelectionToolbar = () => {
             leftSection={<IconTrash size={15} />}
             onClick={removeSelectedItems}
           >
-            {tSelection("delete")}
+            {t("common.action.delete")}
           </Button>
 
           <Tooltip label={tSelection("clearShortcut")} withArrow>
