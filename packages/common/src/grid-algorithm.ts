@@ -25,21 +25,34 @@ export const generateResponsiveGridFor = ({
   previousWidth,
   width,
   sectionId,
-}: GridAlgorithmInput): GridAlgorithmOutput =>
-  generateResponsiveGridForSection({ items, previousWidth, width, sectionId }, new Set());
+}: GridAlgorithmInput): GridAlgorithmOutput => {
+  const itemsBySection = new Map<string, GridAlgorithmItem[]>();
+  for (const item of items) {
+    const sectionItems = itemsBySection.get(item.sectionId);
+    if (sectionItems) sectionItems.push(item);
+    else itemsBySection.set(item.sectionId, [item]);
+  }
+
+  return generateResponsiveGridForSection({ itemsBySection, previousWidth, width, sectionId }, new Set());
+};
 
 const generateResponsiveGridForSection = (
-  { items, previousWidth, width, sectionId }: GridAlgorithmInput,
+  {
+    itemsBySection,
+    previousWidth,
+    width,
+    sectionId,
+  }: Omit<GridAlgorithmInput, "items"> & {
+    itemsBySection: ReadonlyMap<string, GridAlgorithmItem[]>;
+  },
   ancestorSectionIds: ReadonlySet<string>,
 ): GridAlgorithmOutput => {
   if (ancestorSectionIds.has(sectionId)) return { height: 0, items: [] };
 
   const nextAncestorSectionIds = new Set(ancestorSectionIds).add(sectionId);
-  const itemsOfCurrentSection = items
-    .filter((item) => item.sectionId === sectionId)
-    .toSorted((itemA, itemB) =>
-      itemA.yOffset === itemB.yOffset ? itemA.xOffset - itemB.xOffset : itemA.yOffset - itemB.yOffset,
-    );
+  const itemsOfCurrentSection = (itemsBySection.get(sectionId) ?? []).toSorted((itemA, itemB) =>
+    itemA.yOffset === itemB.yOffset ? itemA.xOffset - itemB.xOffset : itemA.yOffset - itemB.yOffset,
+  );
   const normalizedItems = normalizeItems(itemsOfCurrentSection, width);
 
   if (itemsOfCurrentSection.length === 0) return { height: 0, items: [] };
@@ -49,7 +62,7 @@ const generateResponsiveGridForSection = (
   for (const dynamicSection of normalizedItems.filter((item) => item.type === "section")) {
     const result = generateResponsiveGridForSection(
       {
-        items,
+        itemsBySection,
         previousWidth: dynamicSection.previousWidth,
         width: dynamicSection.width,
         sectionId: dynamicSection.id,

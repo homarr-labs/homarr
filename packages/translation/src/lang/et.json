@@ -65,7 +65,6 @@
         "themeAuto": "Süsteem",
         "themeLight": "Hele",
         "themeDark": "Tume",
-        "serverOriginHelp": "Homarr kasutab seda aadressi tuvastatud teenuste URL-ide eeltäitmiseks. Iga teenust saab endiselt eraldi muuta.",
         "serverDescription": "See on otsetee, mitte piirang. Iga tuvastatud teenust saab endiselt muuta.",
         "serverOrigin": "Domeen, IP või pöördpuhvri tee",
         "serverOriginDescription": "Näited: home.lan, 192.168.1.10 või https://home.example.com/services. Vali all, kuidas iga teenus lisatakse.",
@@ -102,6 +101,8 @@
       "connect": {
         "title": "Ühenda see, mis muudab paneeli kasulikuks",
         "description": "Vali korraga mitu teenust. Dockeri sildid on esmatähtsad, kujutiste sobitamine täidab lüngad ning iga URL ja mandaat jääb ülevaadatavaks.",
+        "confirmServerAddress": "",
+        "serverAddressReviewed": "",
         "discoveredIntegrations": "Tuvastatud integratsioonieksemplarid ({count})",
         "detectedIntegrationLabel": "Impordi {name}, tuvastatud liigina {kind}",
         "detectedAppLabel": "Impordi tuvastatud rakendus {name}",
@@ -126,7 +127,8 @@
         "needsConfiguration": "Vajab seadistamist",
         "tested": "Ühendust on testitud",
         "testFailed": "Ühenduse test nurjus",
-        "incompleteConfirmation": "Lõpetamata integratsioonid jäetakse vahele. Kas jätkata ilma nendeta?"
+        "incompleteConfirmation": "Lõpetamata integratsioonid jäetakse vahele. Kas jätkata ilma nendeta?",
+        "skipIncomplete": ""
       },
       "board": {
         "title": "Kujunda paneel enne selle loomist",
@@ -142,13 +144,7 @@
         "secondaryColor": "Sekundaarne värv",
         "resetColors": "Lähtesta värvid",
         "radius": "Vidina nurga raadius",
-        "radiusOptions": {
-          "xs": "Tihe",
-          "sm": "Tagasihoidlik",
-          "md": "Tasakaalustatud",
-          "lg": "Ümar",
-          "xl": "Pehme"
-        },
+        "radiusOptions": {},
         "columns": "Paneeli veerud",
         "columnsDescription": "Veerud määravad horisontaalse ruudustiku, mida kasutatakse elementide suuruse ja asukoha määramiseks. Enamiku kasutajate jaoks piisab 12-st.",
         "columnCount": "{count, plural, one {# veerg} other {# veergu}}",
@@ -192,7 +188,6 @@
           "loginRequired": "Pärast seadistamist logige administraatorina sisse, et luua API-võti.",
           "configuration": "Kliendi konfiguratsioon",
           "copy": "Kopeeri konfiguratsioon",
-          "copied": "Kopeeritud",
           "advanced": "Ava MCP tööriistad, õigused ja seadistuse üksikasjad"
         }
       },
@@ -284,6 +279,13 @@
         "admin": {
           "title": "",
           "description": ""
+        },
+        "mode": {
+          "label": "",
+          "readOnly": "",
+          "readWrite": "",
+          "readOnlyDescription": "",
+          "readWriteDescription": ""
         },
         "credential": {
           "title": "",
@@ -804,9 +806,7 @@
         "examples": "Toetatud linkide näited",
         "requiresHandler": "Kohandatud protokollid nõuavad sinu seadmes nendega seotud rakendust."
       },
-      "description": {
-        "label": "Kirjeldus"
-      },
+      "description": {},
       "useDifferentUrlForPing": {
         "checkbox": {
           "label": "Kasuta pingi jaoks teist URL-i",
@@ -858,7 +858,6 @@
       "source": "API allikas: {name}",
       "baseUrl": "Serveri URL",
       "networkScope": "Võrgule juurdepääs",
-      "save": "Salvesta API konfiguratsioon",
       "expires": "See ühekordne päring aegub ajal {time}."
     },
     "page": {
@@ -889,13 +888,11 @@
       "pasteImportHint": "Kleepige täielik kohandatud vidina JSON klahvikombinatsiooniga Ctrl+V või Command+V",
       "delete": "Kustuta kohandatud vidin",
       "deleteConfirm": "Kas oled kindel, et soovid „{name}“ kustutada? Seda toimingut ei saa tagasi võtta.",
-      "export": "Ekspordi",
       "duplicate": "Dubleeri",
       "aiPrompt": "Kujunda tehisintellekti abil",
       "copyAiPrompt": "Kopeeri tehisintellekti viip",
       "enable": "Luba",
       "disable": "Keela",
-      "menu": "Toimingud",
       "downloadSkill": "Vaata kohandatud vidina oskust",
       "publishWorkshop": "Avalda töötoas",
       "migrate": "Migreeri kohandatud vidin",
@@ -909,12 +906,9 @@
     "sourceSetupDialog": {
       "title": "Vidina allikate seadistamine",
       "description": "Vaata üle, millega see vidin ühendub, ning lisa või asenda selle krüptitud mandaadid.",
-      "credentialsRequired": "Päringud nurjuvad, kuni nõutud mandaadid on lisatud.",
-      "save": "Salvesta konfiguratsioon"
+      "credentialsRequired": "Päringud nurjuvad, kuni nõutud mandaadid on lisatud."
     },
-    "field": {
-      "description": "Kirjeldus"
-    },
+    "field": {},
     "editor": {
       "errorBoundary": {
         "title": "Midagi läks valesti"
@@ -924,7 +918,6 @@
         "format": "Vorminda",
         "insertStarter": "Lisa algmall",
         "redo": "Tee uuesti",
-        "copied": "Kopeeritud",
         "schema": "Skeem"
       },
       "reference": {
@@ -1005,7 +998,6 @@
         "manifestFilename": "widget.json",
         "request": "Päring {count, number}",
         "requestId": "Päringu ID",
-        "type": "Allalaadimishalduri tüüp",
         "method": "Meetod",
         "source": "API-allikas",
         "run": "Käivita",
@@ -1013,7 +1005,7 @@
         "runManual": "SubFetchist",
         "permission": "Õigus",
         "path": "Tee",
-        "pathDescription": "Kasuta vidina suvandite jaoks „{option:name}“ ja väljakutse väärtuste jaoks „{param:name}“.",
+        "pathDescription": "Kasuta vidina suvandite jaoks „'{option:name}'“ ja väljakutse väärtuste jaoks „'{param:name}'“.",
         "requestDetails": "Päring, keha ja käitumine",
         "queryValues": "Päringu väärtused",
         "queryKey": "Päringu võti",
@@ -1042,7 +1034,6 @@
         "optionName": "Suvandi nimi",
         "label": "Silt",
         "control": "Juhtelement",
-        "description": "Kirjeldus",
         "default": "Vaikeväärtus",
         "optionDetails": "Piirangud ja dünaamilised valikud",
         "minimum": "Miinimum",
@@ -1079,7 +1070,6 @@
         "credentialRemovedDescription": "Salvestatud väärtus kustutati.",
         "primary": "Esmane API",
         "id": "Allika ID",
-        "name": "Töö nimetus",
         "baseUrl": "Baas-URL",
         "baseUrlError": {
           "invalid": "Sisesta täielik URL.",
@@ -1096,7 +1086,6 @@
         "remove": "Eemalda allikas ja selle päringud",
         "advanced": "Täpsemad seaded",
         "add": "Lisa veel üks API-allikas",
-        "sourceType": "Integratsioon",
         "manualSource": "HTTP-liides",
         "existingIntegration": "Olemasolev integratsioon",
         "integrationType": "Integratsiooni tüüp",
@@ -1230,7 +1219,6 @@
       "migrationTitle": "Vaata üle migreeritud v2 asendus",
       "migrationDescription": "Vaata üle ja kinnita see loodud v2 määratlus. Kinnitamine asendab säilitatud v1 kirje aatomiliselt, jättes olemasolevad tahvlipaigutused sama vidina ID-ga seotuks.",
       "fileLabel": "Vali kohandatud vidina JSON-fail",
-      "name": "Töö nimetus",
       "origin": "Baaspäritolu",
       "authentication": "Autentimine",
       "networkScope": "Võrguskoop",
@@ -1250,8 +1238,6 @@
         "title": "See vidin võib muuta kaugandmeid",
         "description": "Vaata pärast importimist üle kõik nimega toimingud, päritud mandaadid ja hävitava toimingu kinnitused. Saladusi failis ei sisaldu."
       },
-      "cancel": "Tühista import",
-      "confirm": "Impordi vidin",
       "confirmMigration": "Kinnita v2 asendus"
     },
     "secret": {
@@ -1259,6 +1245,20 @@
       "username": "Kasutajanimi",
       "password": "Parool",
       "savedPlaceholder": "••••••• (salvestatud, jätmiseks tühjaks)"
+    },
+    "workshopUpdate": {
+      "title": "",
+      "apply": "",
+      "available": "",
+      "check": "",
+      "description": "",
+      "approvePermissions": "",
+      "pendingDescription": "",
+      "overwriteLocalChanges": "",
+      "installSeparate": "",
+      "communityWarning": "",
+      "updated": "",
+      "changedBeforeInstall": ""
     }
   },
   "workshop": {
@@ -1315,7 +1315,6 @@
     "closeScreenshotViewer": "Sulge ekraanipiltide vaatur",
     "technicalDetails": "Tehnilised üksikasjad",
     "sourceCode": "Töötoa kirje",
-    "export": "Ekspordi",
     "report": "Raporteeri",
     "reportTitle": "Raporteeri esildisest",
     "reportReason": "Põhjus",
@@ -1346,8 +1345,6 @@
       "viewSubmission": "Vaata ja halda esildist",
       "done": "Tehtud",
       "signInHint": "Avaldamiseks oma töötoa identiteediga logi sisse.",
-      "titleField": "Pealkiri",
-      "descriptionField": "Kirjeldus",
       "screenshots": "Ekraanipildid",
       "screenshotsDescription": "Kuni viis PNG-, JPEG- või WebP-pilti",
       "screenshotsPlaceholder": "Vali ekraanipildid",
@@ -1410,11 +1407,7 @@
               "label": "Vali olemasolev rakendus"
             },
             "new": {
-              "title": "Uus",
-              "url": {
-                "label": "Äpi URL",
-                "description": "Veebiaadress, mille rakendus juhtpaneelilt avab"
-              }
+              "title": "Uus"
             }
           }
         }
@@ -1466,8 +1459,9 @@
         "label": "Seo olemasolev rakendus",
         "description": "Ühenda see integratsioon rakendusega, mida saad juba kasutada."
       },
-      "appHref": {
-        "placeholder": "Kohandatud rakenduse URL"
+      "externalUrl": {
+        "label": "",
+        "description": ""
       },
       "apiKeySettings": {
         "label": "Hangi API võti"
@@ -1534,6 +1528,27 @@
         "unknown": {
           "title": "Tundmatu viga",
           "description": "Tekkis tundmatu viga. Lisateabe vaatamiseks ava allolev põhjus"
+        },
+        "frigate": {
+          "title": "",
+          "status": "",
+          "description": {
+            "cookie": "",
+            "profileMismatch": "",
+            "redirect": "",
+            "login": "",
+            "profile": "",
+            "stats": ""
+          }
+        },
+        "openmediavault": {
+          "title": "",
+          "description": {
+            "totpSecretRequired": "",
+            "totpSecretInvalid": "",
+            "totpVerificationFailed": "",
+            "unsupportedChallenge": ""
+          }
         },
         "parse": {
           "title": "Sõelumisviga",
@@ -1613,11 +1628,9 @@
             },
             "notification": {
               "success": {
-                "title": "Usaldatud sertifikaat",
                 "message": "Sertifikaat lisati usaldatud sertifikaatide loendisse"
               },
               "error": {
-                "title": "Sertifikaadi usaldamine ebaõnnestus",
                 "message": "Sertifikaadi lisamine usaldatud sertifikaatide loendisse ebaõnnestus"
               }
             }
@@ -1736,6 +1749,11 @@
         "title": "Lähtesta saladus",
         "message": "Kas oled kindel, et soovid selle saladuse lähtestada?"
       },
+      "totpNotice": "",
+      "remove": {
+        "title": "",
+        "message": ""
+      },
       "noSecretsRequired": {
         "segmentTitle": "Saladusi pole",
         "text": "Selle integratsiooni jaoks pole saladusi vaja"
@@ -1817,9 +1835,9 @@
           "label": "Indekseerija parool",
           "newLabel": "Uus indekseerija parool"
         },
-        "wazuhDashboardUrl": {
-          "label": "Armatuurlaua URL (valikuline)",
-          "newLabel": "Uus armatuurlaua URL"
+        "totpSecret": {
+          "label": "",
+          "newLabel": ""
         }
       }
     },
@@ -1838,9 +1856,7 @@
     "search": "Otsi meediat",
     "field": {
       "preview": "Eelvaade",
-      "size": "Suurus",
-      "creator": "Looja",
-      "actions": "Juhtelemendid"
+      "creator": "Looja"
     },
     "action": {
       "upload": {
@@ -1918,7 +1934,9 @@
       "clearSearch": "Tühjenda otsing",
       "copy": "Kopeeri",
       "copied": "Kopeeritud",
-      "refresh": "Värskenda"
+      "refresh": "Värskenda",
+      "export": "Ekspordi",
+      "advanced": ""
     },
     "hidden": "",
     "pagination": {
@@ -1930,6 +1948,8 @@
     "here": "siin",
     "serviceUrlTemplate": {
       "serverTitle": "Tavaline serveriaadress",
+      "description": "",
+      "example": "",
       "urlModeLabel": "Teenuse aadressi muster",
       "hostPort": "Sama host, erinevad pordid",
       "subdomain": "Üks alamdomeen teenuse kohta",
@@ -2011,6 +2031,15 @@
         "modifier": "Modifikaator"
       }
     },
+    "markdown": {
+      "alert": {
+        "note": "",
+        "tip": "",
+        "important": "",
+        "warning": "",
+        "caution": ""
+      }
+    },
     "dangerZone": "Ohtlike toimingute ala",
     "noResults": "Tulemusi ei leitud",
     "unsavedChanges": "Sul on salvestamata muudatusi!",
@@ -2063,7 +2092,18 @@
     "total": "Kokku",
     "filesystemUsage": "{count, plural, one {Kuva # failisüsteemi kasutus} other {Kuva # failisüsteemi kasutus}}",
     "field": {
-      "name": "Töö nimetus"
+      "name": "Töö nimetus",
+      "state": "Olek",
+      "size": "Suurus",
+      "actions": "Toimingud",
+      "source": "Allikas",
+      "title": "Pealkiri",
+      "description": "Kirjeldus",
+      "created": "Loodud",
+      "namespace": "Nimeruum",
+      "status": "Olek",
+      "architecture": "Arhitektuur",
+      "type": "Tüüp"
     },
     "label": {
       "new": "Uus"
@@ -2081,6 +2121,167 @@
       "searchEngines": "Otsingumootorid",
       "tasks": "Ülesanded",
       "users": "Kasutajad"
+    },
+    "cornerStyle": {
+      "options": {
+        "md": "Tasakaalus",
+        "lg": "Ümar",
+        "xs": "Tihe",
+        "sm": "Tagasihoidlik",
+        "xl": "Pehme"
+      }
+    },
+    "customTheme": {
+      "label": "",
+      "nothingFound": "",
+      "custom": "",
+      "customize": "",
+      "editor": {
+        "title": "",
+        "basedOn": "",
+        "preview": "",
+        "previewColorScheme": "",
+        "layout": "",
+        "typography": "",
+        "colors": "",
+        "json": "",
+        "defaultRadius": "",
+        "radiusHint": "",
+        "scale": "",
+        "spacing": "",
+        "radius": "",
+        "fontFamily": "",
+        "headingFont": "",
+        "monoFont": "",
+        "fontSizes": "",
+        "palette": {
+          "body": "",
+          "surface": "",
+          "hover": "",
+          "border": "",
+          "text": "",
+          "dimmed": "",
+          "primary": "",
+          "secondary": ""
+        },
+        "lockedPrimary": "",
+        "pickColor": "",
+        "autoContrast": "",
+        "luminanceThreshold": "",
+        "jsonHint": "",
+        "invalidJson": "",
+        "tooLong": "",
+        "copyJson": "",
+        "copied": "",
+        "discardJson": "",
+        "reset": "",
+        "apply": "",
+        "sampleTitle": "Juhtpaneel",
+        "sampleBadge": "",
+        "sampleText": "",
+        "sampleInput": "Otsing",
+        "sampleValue": "",
+        "sampleButton": ""
+      },
+      "studio": {
+        "title": "",
+        "saveTheme": "",
+        "searchControls": "",
+        "component": "",
+        "inheritedValue": "",
+        "resetControl": "",
+        "decreaseControl": "",
+        "increaseControl": "",
+        "chooseControl": "",
+        "layout": {
+          "spacing": "",
+          "radius": "",
+          "compact": "",
+          "normal": "",
+          "roomy": "",
+          "preset": "",
+          "none": "Pole",
+          "rounded": "",
+          "full": "",
+          "custom": "",
+          "advanced": ""
+        },
+        "previewSurface": "",
+        "previewFrame": "",
+        "loadingPreview": "",
+        "previewFailed": "",
+        "sampleBoard": "",
+        "components": "",
+        "overlays": "",
+        "typography": "",
+        "liveBoard": "",
+        "viewport": "",
+        "responsive": "",
+        "tablet": "",
+        "mobile": "Mobiilne",
+        "includeCustomCss": "",
+        "groups": {
+          "layout": "",
+          "typography": "",
+          "colors": "",
+          "surfaces": "",
+          "overlays": "",
+          "accessibility": "",
+          "css": ""
+        },
+        "controls": {
+          "defaultRadius": "",
+          "scale": "",
+          "spacing": "",
+          "radius": "",
+          "breakpoint": "",
+          "fontSizes": "",
+          "lineHeight": "",
+          "shadow": "",
+          "fontFamily": "",
+          "headingFont": "",
+          "monoFont": "",
+          "headingWeight": "",
+          "headingSize": "",
+          "fontSmoothing": "",
+          "body": "",
+          "surface": "",
+          "hover": "",
+          "border": "",
+          "text": "",
+          "dimmed": "",
+          "primary": "",
+          "secondary": "",
+          "autoContrast": "",
+          "luminanceThreshold": "",
+          "primaryShade": "",
+          "componentRadius": "",
+          "borderWidth": "",
+          "surfaceBackground": "",
+          "surfaceText": "",
+          "surfaceBorder": "",
+          "hoverBackground": "",
+          "hoverText": "",
+          "componentShadow": "",
+          "componentBorder": "",
+          "componentPadding": "",
+          "componentSize": "Suurus",
+          "componentVariant": "",
+          "overlayBlur": "",
+          "overlayOpacity": "",
+          "overlayColor": "",
+          "transitionDuration": "",
+          "headerBackground": "",
+          "respectReducedMotion": "",
+          "focusRing": "",
+          "cursorType": "",
+          "customCss": ""
+        },
+        "expandPreview": "",
+        "showControls": ""
+      },
+      "instanceDefault": "",
+      "useInstanceDefault": ""
     }
   },
   "section": {
@@ -2118,9 +2319,7 @@
         "collapse": "Ahenda"
       },
       "option": {
-        "title": {
-          "label": "Pealkiri"
-        },
+        "title": {},
         "customCssClasses": {
           "label": "Kohandatud css-klassid"
         },
@@ -2144,8 +2343,7 @@
       "label": {
         "settings": "Seaded",
         "settingsFor": "{name} seaded",
-        "options": "Suvandid",
-        "actions": "Toimingud"
+        "options": "Suvandid"
       },
       "status": {
         "success": "Korras",
@@ -2179,6 +2377,18 @@
       },
       "customWidget": "Kohandatud vidin",
       "standalone": "Eraldiseisev",
+      "integrationFilter": "",
+      "integrationNotConnected": "",
+      "workshop": {
+        "title": "",
+        "back": "",
+        "empty": "",
+        "noMatches": "",
+        "loading": "",
+        "integrationError": "",
+        "searchMore": "",
+        "installAndAdd": ""
+      },
       "missingIntegration": {
         "title": "Ühenda esmalt teenus",
         "noPermission": "See vidin vajab ühilduvat teenuseühendust. Palu administraatoril üks ühendada ja proovi siis uuesti."
@@ -2198,7 +2408,6 @@
     "selection": {
       "summary": "{count, plural, one {# valitud üksus} other {# valitud üksust}}",
       "selected": "{count, plural, one {# valitud} other {# valitud}}",
-      "copy": "Kopeeri",
       "copied": "{count, plural, one {# üksus kopeeriti lõikelauale} other {# üksust kopeeriti lõikelauale}}",
       "copyError": "Valitud üksusi ei saanud kopeerida. Sinu brauser ei pruugi lubada lõikelauale juurdepääsu.",
       "paste": "Kleebi",
@@ -2210,16 +2419,18 @@
       "removed": "{count, plural, one {# üksus eemaldati} other {# üksust eemaldati}}",
       "move": "Liiguta",
       "moveTo": "Liiguta valitud üksusi",
-      "delete": "Kustuta",
       "clear": "Tühjenda valik",
       "clearShortcut": "Tühjenda valik (Escape)",
       "saveErrorTitle": "Üksusi ei saanud uuendada",
       "saveErrorMessage": "Muudatusi ei saanud salvestada. Paneel värskendati.",
       "moveUnavailableTitle": "Valitud üksusi ei saanud liigutada",
-      "moveUnavailableMessage": "Sihtkohas pole kogu valiku jaoks piisavalt ruumi."
+      "moveUnavailableMessage": "Sihtkohas pole kogu valiku jaoks piisavalt ruumi.",
+      "moveToTab": "",
+      "movedToTab": ""
     },
     "moveResize": {
       "title": "Liiguta / muuda suurust",
+      "sizeOverlap": "",
       "entryLabel": "{name}, veerg {column}, rida {row}",
       "target": {
         "numbered": "{name}, sihtkoht {index}",
@@ -2286,9 +2497,7 @@
           "label": "Integratsioonid",
           "removeLabel": "Eemalda integratsioon {name}"
         },
-        "title": {
-          "label": "Pealkiri"
-        },
+        "title": {},
         "customCssClasses": {
           "label": "Kohandatud css klassid"
         },
@@ -2304,6 +2513,36 @@
       "open": "Ava täpsem vaade",
       "close": "Sulge täpsem vaade",
       "label": "Vidina {widget} täpsem vaade"
+    },
+    "inPlace": {
+      "widgetLoadError": "",
+      "search": "",
+      "bestFit": "",
+      "moreWidgets": "",
+      "widgets": "",
+      "yourApps": "",
+      "createApp": "",
+      "addAppLink": "",
+      "createWidget": "",
+      "createWidgetDescription": "",
+      "createAppDescription": "",
+      "defaultFit": "",
+      "defaultFitDescription": "",
+      "defaultSize": "",
+      "defaultSizeDescription": "",
+      "emptyCells": "",
+      "preview": {
+        "error": "",
+        "loading": ""
+      },
+      "keyboard": {
+        "move": "",
+        "resize": "",
+        "pick": "",
+        "browse": "",
+        "moveDescription": "",
+        "resizeDescription": ""
+      }
     }
   },
   "widget": {
@@ -2347,7 +2586,29 @@
             "tooltip": "Kohtspikrina",
             "hidden": "Peidetud"
           }
+        },
+        "dockerContainer": {
+          "label": "",
+          "description": "",
+          "placeholder": "",
+          "disabled": "",
+          "unavailable": ""
         }
+      },
+      "docker": {
+        "action": {
+          "start": "",
+          "stop": ""
+        },
+        "notification": {
+          "startFailed": "",
+          "stopFailed": ""
+        },
+        "switch": {
+          "start": "",
+          "stop": ""
+        },
+        "stopped": ""
       },
       "error": {
         "notFound": {
@@ -2426,6 +2687,10 @@
         "hideHostname": {
           "label": "Peida hostinimed"
         },
+        "showFullUrls": {
+          "label": "",
+          "description": ""
+        },
         "withBorder": {
           "label": "Kuva ääris"
         },
@@ -2448,6 +2713,9 @@
         }
       },
       "empty": "Lisa vidina seadetes URL või rakendus",
+      "copyUrl": "",
+      "copied": "",
+      "copyFailed": "",
       "groups": {
         "label": "",
         "placeholder": "",
@@ -3101,6 +3369,141 @@
         "toggleFailed": "Olemuse värskendamine nurjus"
       }
     },
+    "smartHome-controls": {
+      "name": "",
+      "description": "",
+      "option": {
+        "presentation": {
+          "label": "",
+          "option": {
+            "entities": "",
+            "controlPanel": ""
+          }
+        },
+        "title": {
+          "label": "Pealkiri",
+          "description": ""
+        },
+        "blocks": {
+          "label": "",
+          "remove": ""
+        },
+        "roomDomains": {
+          "label": "",
+          "description": ""
+        },
+        "excludedEntityIds": {
+          "label": "",
+          "description": "",
+          "placeholder": ""
+        },
+        "showSummary": {
+          "label": ""
+        },
+        "readOnly": {
+          "label": "",
+          "description": ""
+        },
+        "controlSize": {
+          "label": "",
+          "option": {
+            "auto": "",
+            "compact": "",
+            "large": "Suur"
+          }
+        },
+        "palette": {
+          "label": "",
+          "option": {
+            "boring": "",
+            "colorful": ""
+          }
+        }
+      },
+      "domain": {
+        "light": "",
+        "switch": "",
+        "fan": "",
+        "climate": "",
+        "humidifier": "",
+        "cover": "",
+        "valve": "",
+        "lock": "",
+        "alarm_control_panel": "",
+        "media_player": "",
+        "camera": "",
+        "vacuum": "",
+        "scene": "",
+        "script": "",
+        "automation": "",
+        "button": "",
+        "input_boolean": "",
+        "input_select": "",
+        "person": "",
+        "binary_sensor": "",
+        "sensor": "",
+        "weather": "",
+        "sun": "",
+        "update": ""
+      },
+      "block": {
+        "add": {
+          "rooms": "",
+          "entity": "",
+          "roomsLabel": "",
+          "roomsPlaceholder": "",
+          "entityLabel": "",
+          "entityPlaceholder": "",
+          "merge": "",
+          "submit": "",
+          "duplicate": "",
+          "covered": ""
+        },
+        "kind": {
+          "entity": "",
+          "room": "",
+          "mergedRooms": "",
+          "unknown": ""
+        },
+        "entityCount": "",
+        "noArea": "",
+        "issue": {
+          "missing": "",
+          "otherSource": "",
+          "empty": ""
+        }
+      },
+      "preview": {
+        "empty": "",
+        "noMatches": "",
+        "summary": {
+          "lights": "",
+          "on": "",
+          "off": "",
+          "sensors": "",
+          "offline": ""
+        },
+        "otherSource": ""
+      },
+      "live": {
+        "loading": "",
+        "error": "",
+        "retry": "",
+        "actionFailed": "",
+        "actionUnconfirmed": "",
+        "unconfirmed": "",
+        "selectionLimit": "",
+        "unknownError": ""
+      },
+      "inline": {
+        "open": "",
+        "title": "",
+        "handle": "",
+        "empty": "",
+        "add": "",
+        "close": ""
+      }
+    },
     "smartHome-executeAutomation": {
       "name": "Käivita automatiseering",
       "description": "Käivita automatiseering ühe klõpsuga",
@@ -3501,7 +3904,6 @@
         },
         "table": {
           "header": {
-            "name": "Nimi",
             "node": "Sõlm"
           }
         }
@@ -3531,8 +3933,6 @@
         },
         "defaultSort": {
           "option": {
-            "name": "Nimi",
-            "state": "Olek",
             "cpuUsage": "CPU kasutus",
             "memoryUsage": "Mälukasutus"
           }
@@ -3550,6 +3950,34 @@
     },
     "coolify": {
       "description": "Ülevaade sinu Coolify eksemplari serveritest ja rakendustest",
+      "summary": {
+        "needsAttention": "",
+        "inProgress": "",
+        "unknown": "",
+        "healthy": "",
+        "empty": "",
+        "healthyDetail": "",
+        "more": "",
+        "moreInstances": ""
+      },
+      "details": {
+        "tabs": "",
+        "overview": "",
+        "search": "",
+        "serviceApplications": ""
+      },
+      "overview": {
+        "projects": "",
+        "resources": "",
+        "attention": "",
+        "ready": "",
+        "noProjects": "",
+        "projectsUnavailable": "",
+        "moreProjects": "",
+        "running": "",
+        "resourceCount": "",
+        "environmentCount": ""
+      },
       "option": {
         "showServers": {
           "label": "Näita servereid"
@@ -3581,7 +4009,13 @@
       },
       "source": {
         "url": "Allikas: {url}",
-        "unavailable": "{source}: pole saadaval"
+        "unavailable": "{source}: pole saadaval",
+        "unavailableCount": ""
+      },
+      "kind": {
+        "server": "",
+        "application": "",
+        "service": ""
       },
       "instances": {
         "title": "Eksemplarid"
@@ -3598,6 +4032,7 @@
         "exited": "Väljunud",
         "starting": "Käivitub",
         "restarting": "Taaskäivitub",
+        "unhealthy": "",
         "unknown": "Teadmata",
         "online": "Võrgus",
         "offline": "Võrgust väljas",
@@ -3943,9 +4378,7 @@
       "items": {
         "currentlyPlaying": "Praegu esitatakse",
         "user": "",
-        "name": "Nimi",
         "id": "Id",
-        "status": "Olek",
         "directPlay": "Otseesitus",
         "directStream": "Otsevoog",
         "transcodeVideo": "Video transkodeerimine",
@@ -4440,38 +4873,29 @@
           "columnTitle": "Juhtelemendid"
         },
         "added": {
-          "columnTitle": "Lisatud",
-          "detailsTitle": "Lisamise kuupäev"
+          "columnTitle": "Lisatud"
         },
         "category": {
-          "columnTitle": "Lisad",
-          "detailsTitle": "Kategooriad (või lisateave)"
+          "columnTitle": "Lisad"
         },
         "downSpeed": {
-          "columnTitle": "Alla",
-          "detailsTitle": "Allalaadimiskiirus"
+          "columnTitle": "Alla"
         },
         "index": {
           "columnTitle": "#",
           "detailsTitle": "Praegune indeks kliendi sees"
         },
         "id": {
-          "columnTitle": "Üksuse ID",
-          "detailsTitle": "Üksuse ID"
+          "columnTitle": "Üksuse ID"
         },
-        "integration": {
-          "columnTitle": "Integratsioon"
-        },
-        "name": {
-          "columnTitle": "Töö nimetus"
-        },
+        "integration": {},
+        "name": {},
         "progress": {
           "columnTitle": "Edenemine",
           "detailsTitle": "Allalaadimise edenemine"
         },
         "ratio": {
-          "columnTitle": "Suhe",
-          "detailsTitle": "Torrenti suhe (vastuvõetud/saadetud)"
+          "columnTitle": "Suhe"
         },
         "received": {
           "columnTitle": "Kokku alla",
@@ -4481,26 +4905,16 @@
           "columnTitle": "Kokku üles",
           "detailsTitle": "Kokku üles laetud"
         },
-        "size": {
-          "columnTitle": "Faili suurus",
-          "detailsTitle": "Valiku/failide kogusuurus"
-        },
-        "state": {
-          "columnTitle": "Olek",
-          "detailsTitle": "Töö olek"
-        },
+        "size": {},
+        "state": {},
         "time": {
-          "columnTitle": "Lõpuaeg",
-          "detailsTitle": "Aeg lõpetamisest/kuni lõpetamiseni",
-          "eta": "Eeldatav aeg"
+          "columnTitle": "Lõpuaeg"
         },
         "type": {
-          "columnTitle": "Tüüp",
           "detailsTitle": "Allalaadimishalduri tüüp"
         },
         "upSpeed": {
-          "columnTitle": "Üles",
-          "detailsTitle": "Üleslaadimiskiirus"
+          "columnTitle": "Üles"
         }
       },
       "states": {
@@ -4689,9 +5103,7 @@
           }
         },
         "queue": {
-          "table": {
-            "size": "Suurus"
-          }
+          "table": {}
         },
         "common": {
           "empty": "Tühi",
@@ -4789,11 +5201,11 @@
             "hidden": ""
           }
         },
-        "sections": {
+        "groupReleases": {
           "label": "",
           "description": ""
         },
-        "collapsedSections": {
+        "sections": {
           "label": "",
           "description": ""
         },
@@ -4853,10 +5265,13 @@
           },
           "identifier": {
             "label": "Identifikaator",
+            "containerPlaceholder": "",
             "placeholder": "Nimi või omanik/nimi"
           },
-          "name": {
-            "label": "Nimi"
+          "name": {},
+          "excludePrereleases": {
+            "label": "",
+            "description": ""
           },
           "versionFilter": {
             "label": "Versioonifilter",
@@ -4997,7 +5412,11 @@
       "runningVersions": "",
       "upToDate": "",
       "updateAvailable": "",
-      "unknownStatus": ""
+      "unknownStatus": "",
+      "error": {
+        "collapsedSaveTitle": "",
+        "collapsedSaveMessage": ""
+      }
     },
     "networkControllerSummary": {
       "advanced": {
@@ -5154,7 +5573,6 @@
       "download": "Allalaadimine",
       "upload": "Üleslaadimine",
       "ping": "Ping",
-      "status": "Olek",
       "avgDownload": "Keskmine allalaadimine",
       "avgUpload": "Keskmine üleslaadimine",
       "avgPing": "Keskmine ping",
@@ -5384,6 +5802,23 @@
       "name": "Süsteemi ressursid",
       "description": "Süsteemi CPU, mälu, ketta ja muu riistvara kasutus",
       "option": {
+        "diskDisplayMode": {
+          "label": "",
+          "option": {
+            "percentage": "",
+            "free": "",
+            "absolute": "",
+            "combined": ""
+          }
+        },
+        "resourceLayout": {
+          "label": "",
+          "description": ""
+        },
+        "subresourceLayout": {
+          "label": "",
+          "description": ""
+        },
         "hasShadow": {
           "label": "Luba diagrammi varjustus"
         },
@@ -5391,6 +5826,7 @@
           "label": "Nähtavad diagrammid",
           "description": "Vali diagrammid, mida soovid näha.",
           "option": {
+            "cpuCores": "",
             "memory": "Mälu",
             "network": "Võrk"
           }
@@ -5462,7 +5898,6 @@
         "actionsDisabledEditMode": "Toimingud on tahvli redigeerimisrežiimis keelatud.",
         "widgetItemUnavailable": "See vidinaelement pole saadaval.",
         "toggle": "Lülita sisse/välja",
-        "copied": "Kopeeritud",
         "confirmDelete": "Kinnita see pöördumatu toiming."
       },
       "option": {
@@ -5503,6 +5938,9 @@
       "name": "Beszeli süsteemid (tabel)",
       "description": "Kõigi Beszeli jälgitavate süsteemide tabelivaade sorteeritavate veergude ja olekunäidikutega",
       "option": {
+        "fahrenheit": {
+          "label": ""
+        },
         "sortBy": {
           "label": "Sorteerimisalus"
         },
@@ -5517,7 +5955,12 @@
     },
     "beszelSystemGrid": {
       "name": "Beszeli süsteemid (ruudustik)",
-      "description": "Kaardiruudustiku vaade kõigist Beszeli jälgitavatest süsteemidest reaalajas mõõdikutega"
+      "description": "Kaardiruudustiku vaade kõigist Beszeli jälgitavatest süsteemidest reaalajas mõõdikutega",
+      "option": {
+        "fahrenheit": {
+          "label": ""
+        }
+      }
     },
     "beszelAlerts": {
       "name": "Beszeli hoiatused",
@@ -5731,7 +6174,6 @@
       },
       "metric": {
         "system": "Süsteem",
-        "source": "Integratsioon",
         "hostname": "Hostinimi",
         "cpuModel": "Protsessori mudel",
         "cores": "Tuuma",
@@ -6313,6 +6755,26 @@
         }
       }
     },
+    "tabs": {
+      "label": "",
+      "indicator": "",
+      "home": "Avaleht",
+      "untitled": "",
+      "add": "",
+      "actions": "",
+      "rename": "",
+      "namePlaceholder": "",
+      "moveLeft": "",
+      "moveRight": "",
+      "remove": {
+        "action": "",
+        "confirm": ""
+      },
+      "limitReached": "",
+      "hotkeyHint": "",
+      "destination": "",
+      "containerDestination": ""
+    },
     "landmark": {
       "canvas": "Juhtpaneeli lõuend",
       "leftRail": "Juhtpaneeli vasak külgriba",
@@ -6421,13 +6883,7 @@
       "itemRadius": {
         "label": "Elementide ümarus",
         "description": "Muudab paneelil olevate kaartide ümarust",
-        "option": {
-          "xs": "Väga väike",
-          "sm": "Väike",
-          "md": "Keskmine",
-          "lg": "Suur",
-          "xl": "Väga suur"
-        }
+        "option": {}
       },
       "isPublic": {
         "label": "Avalik",
@@ -6585,6 +7041,11 @@
           "description": "Serveri administraator pole veel kodupaneeli määranud.",
           "link": "Kuva avalikud paneelid",
           "notice": "Selle lehe eemaldamiseks palu administraatoril määrata serveriülene kodupaneel"
+        },
+        "noAccess": {
+          "title": "",
+          "description": "",
+          "notice": ""
         }
       }
     }
@@ -6656,10 +7117,12 @@
             "documentation": "Dokumentatsioon",
             "submitIssue": "Esita probleem",
             "discord": "Kogukonna Discord",
-            "sourceCode": "Lähtekood"
+            "sourceCode": "Lähtekood",
+            "changelog": ""
           }
         },
         "about": "Teave",
+        "updateAvailable": "",
         "assistant": "Assistent"
       }
     },
@@ -6671,9 +7134,23 @@
           "authentication": "Autentimine",
           "authorization": "Autoriseerimine"
         },
-        "heroBanner": {
-          "title": "Tere taas sinu",
-          "subtitle": "{app} paneel"
+        "hero": {
+          "greeting": "",
+          "greetingWithoutName": "",
+          "description": ""
+        },
+        "lobster": {
+          "label": "",
+          "prompt": "",
+          "pokeCount": "",
+          "reaction": {
+            "hey": "",
+            "ow": "",
+            "snip": "",
+            "careful": "",
+            "stillHere": "",
+            "okay": ""
+          }
         }
       },
       "board": {
@@ -6718,7 +7195,9 @@
         },
         "noResults": {
           "title": "Paneele pole veel",
-          "description": "Looge paneel, et paigutada rakendused ja vidinad ühte kohta."
+          "description": "Looge paneel, et paigutada rakendused ja vidinad ühte kohta.",
+          "noAccessTitle": "",
+          "noAccessDescription": ""
         }
       },
       "media": {
@@ -6771,6 +7250,11 @@
                 "logoDisplay": {
                   "logo": "Ainult logo",
                   "logoAndText": "Logo + tekst"
+                },
+                "tabsDisplay": {
+                  "wide": "",
+                  "compact": "",
+                  "indicator": ""
                 }
               },
               "items": {
@@ -6778,6 +7262,7 @@
                 "search": "Otsing",
                 "home": "Kodupaneel",
                 "boardSwitcher": "Paneelid",
+                "boardTabs": "",
                 "assistant": "Assistent",
                 "docker": "Docker",
                 "boardEdit": "Muuda paneeli",
@@ -7009,6 +7494,10 @@
             "title": "Välimus",
             "defaultColorScheme": {
               "label": "Vaikimisi värviskeem"
+            },
+            "whatsNew": {
+              "label": "",
+              "description": ""
             }
           },
           "branding": {
@@ -7053,15 +7542,13 @@
             "signInOverlay": {
               "label": "Tausta ülekate"
             },
+            "signInMarquee": {
+              "label": "",
+              "description": ""
+            },
             "defaultRadius": {
               "label": "Nurga stiil",
-              "options": {
-                "xs": "Tihe",
-                "sm": "Tagasihoidlik",
-                "md": "Tasakaalus",
-                "lg": "Ümar",
-                "xl": "Pehme"
-              }
+              "options": {}
             },
             "customCss": {
               "label": "Globaalne kohandatud CSS",
@@ -7083,7 +7570,6 @@
               "greetingDefault": "Vaiketervitus",
               "boardColorLocked": "Paneeli värv lukustatud",
               "boardColorFlexible": "Paneelivärvid lubatud",
-              "appName": "Töö nimetus",
               "logo": "Logotüüp",
               "greeting": "Tervitus",
               "on": "Sees",
@@ -7218,6 +7704,7 @@
             "model": {
               "title": "Mudel",
               "description": "Valige leitud mudel või sisestage lõpp-punkti täpne mudeli ID.",
+              "save": "",
               "placeholder": "Mudeli ID",
               "refresh": "Värskenda mudeleid",
               "chooseModel": "Valige uute vestluste jaoks kasutatav mudel.",
@@ -7310,9 +7797,7 @@
             "lastExecution": {
               "label": "Viimane käivitamine"
             },
-            "actions": {
-              "label": "Toimingud"
-            }
+            "actions": {}
           },
           "table": {
             "search": "Otsi {count} ülesannet..."
@@ -7364,6 +7849,12 @@
             "apiKey": {
               "label": "Autentimine",
               "title": "API-võtmed",
+              "access": {
+                "label": "",
+                "readOnly": "",
+                "readWrite": "",
+                "description": ""
+              },
               "button": {
                 "createApiToken": "Loo API-luba",
                 "confirmDeletion": ""
@@ -7376,9 +7867,7 @@
               },
               "table": {
                 "header": {
-                  "createdBy": "Looja",
-                  "source": "Integratsioon",
-                  "actions": "Toimingud"
+                  "createdBy": "Looja"
                 }
               },
               "provenance": {
@@ -7591,7 +8080,8 @@
               "openSpotlightApps": "Ava rakenduste otsing",
               "openSpotlightAssistant": "Ava assistendi režiim",
               "openSpotlightPreferences": "Ava eelistuste režiim",
-              "openAssistant": "Ava assistent"
+              "openAssistant": "Ava assistent",
+              "switchBoardTab": ""
             },
             "note": "Nõuanne: Mod tähistab macOS-is nii Ctrl-klahvi kui ka ⌘-klahvi"
           }
@@ -7671,7 +8161,6 @@
     },
     "field": {
       "state": {
-        "label": "Olek",
         "option": {
           "created": "Loodud",
           "running": "Töötab",
@@ -7698,7 +8187,6 @@
       }
     },
     "action": {
-      "title": "Toimingud",
       "logs": {
         "label": "Vaata logisid",
         "page": {
@@ -7936,27 +8424,13 @@
       "internalServerError": "Kubernetese andmete laadimine ebaõnnestus"
     },
     "field": {
-      "name": {
-        "label": "Töö nimetus"
-      },
-      "namespace": {
-        "label": "Nimeruum"
-      },
-      "creationTimestamp": {
-        "label": "Loodud"
-      },
-      "state": {
-        "label": "Töö olek"
-      },
-      "status": {
-        "label": "Olek"
-      },
-      "type": {
-        "label": "Allalaadimishalduri tüüp"
-      },
-      "architecture": {
-        "label": "Arhitektuur"
-      }
+      "name": {},
+      "namespace": {},
+      "creationTimestamp": {},
+      "state": {},
+      "status": {},
+      "type": {},
+      "architecture": {}
     }
   },
   "permission": {
@@ -7983,10 +8457,7 @@
         "label": "Õigus"
       }
     },
-    "action": {
-      "saveUser": "Salvesta kasutajaõigus",
-      "saveGroup": "Salvesta rühmaõigus"
-    }
+    "action": {}
   },
   "navigationStructure": {
     "manage": {
@@ -8097,8 +8568,7 @@
       "resultsAriaLabel": "Režiimi „{mode}“ tulemused",
       "footer": {
         "navigate": "Navigeeri",
-        "open": "Ava",
-        "close": "Sulge"
+        "open": "Ava"
       }
     },
     "error": {
@@ -8528,9 +8998,7 @@
         "urlTemplate": {
           "label": "URL-i otsingumall"
         },
-        "description": {
-          "label": "Kirjeldus"
-        }
+        "description": {}
       },
       "page": {
         "list": {
@@ -8599,8 +9067,7 @@
             "table": {
               "header": {
                 "season": "Hooaeg",
-                "episodes": "Osad",
-                "status": "Olek"
+                "episodes": "Osad"
               },
               "status": {
                 "requested": "Taotletud"
@@ -8785,6 +9252,12 @@
       }
     }
   },
+  "whatsNew": {
+    "title": "",
+    "empty": "",
+    "allReleases": "",
+    "dismiss": ""
+  },
   "metadata": {
     "description": "Isehostitav juhtpaneel *arr-i virna ja kogu teie kodulabori jaoks. Integreerub enam kui 50 teenusega, reaalajas vidinad, konfiguratsioonifaile pole.",
     "dashboardTitle": "{appName} juhtpaneel"
@@ -8870,6 +9343,7 @@
       "imageInput": "Toetab pildisisendit",
       "thinking": "Mõtlemisrežiim",
       "reasoning": {
+        "default": "",
         "auto": "Automaatne",
         "none": "Väljas",
         "minimal": "Minimaalne",
@@ -9109,7 +9583,6 @@
       "cssDescription": "Muutke kogu laaditabelit. Olemasolevad reeglid säilitatakse, kui neid siin ei eemaldata.",
       "cssCharacters": "{count} / 16384 märki",
       "copyCss": "Kopeeri CSS",
-      "copied": "Kopeeritud",
       "restoreCss": "Taasta praegune CSS",
       "remoteCssTitle": "See CSS laadib kaugressursi",
       "remoteCssDescription": "Imporditud laaditabelid ja kaug-URL-id võtavad armatuurlaua laadimisel ühendust teise serveriga. Vaadake need enne jätkamist üle."

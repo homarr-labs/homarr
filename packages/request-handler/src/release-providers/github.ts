@@ -32,7 +32,12 @@ const isReleaseHistoryCap = (error: unknown) =>
   error.status === 422 &&
   error.message.includes("Only the first 1000 results are available");
 
-const listReleasesAsync = async (api: Octokit, repository: OwnedName, versionPattern?: RegExp) => {
+const listReleasesAsync = async (
+  api: Octokit,
+  repository: OwnedName,
+  versionPattern?: RegExp,
+  excludePrereleases = false,
+) => {
   const releases: GithubRelease[] = [];
   try {
     for await (const page of api.paginate.iterator(api.rest.repos.listReleases, {
@@ -41,7 +46,16 @@ const listReleasesAsync = async (api: Octokit, repository: OwnedName, versionPat
       per_page: getReleasePageSize(versionPattern),
     })) {
       releases.push(...page.data);
-      if (page.data.some((release) => matchesVersionPattern(release.tag_name, versionPattern))) break;
+      if (
+        page.data.some(
+          (release) =>
+            release.published_at &&
+            !release.draft &&
+            (!excludePrereleases || !release.prerelease) &&
+            matchesVersionPattern(release.tag_name, versionPattern),
+        )
+      )
+        break;
     }
   } catch (error) {
     if (!isReleaseHistoryCap(error) || releases.length === 0) throw error;
@@ -54,7 +68,7 @@ const listReleasesAsync = async (api: Octokit, repository: OwnedName, versionPat
 };
 
 const toReleases = (release: GithubRelease): Release[] => {
-  if (!release.published_at) return [];
+  if (!release.published_at || release.draft) return [];
   return [
     {
       latestRelease: release.tag_name,
@@ -80,14 +94,20 @@ const getProjectDetailsAsync = async (api: Octokit, repository: OwnedName): Prom
   };
 };
 
-export const getGithubReleaseAsync: ReleaseProvider = async ({ baseUrl, identifier, versionPattern, token }) => {
+export const getGithubReleaseAsync: ReleaseProvider = async ({
+  baseUrl,
+  identifier,
+  versionPattern,
+  token,
+  excludePrereleases,
+}) => {
   const repository = parseOwnedName(identifier, "owner/repository");
   const api = createGithubClient(baseUrl, token);
 
-  const releases = await listReleasesAsync(api, repository, versionPattern);
+  const releases = await listReleasesAsync(api, repository, versionPattern, excludePrereleases);
   if (releases.length === 0) throw noReleasesFoundError(identifier);
 
-  const release = selectNewestRelease(releases.flatMap(toReleases), versionPattern);
+  const release = selectNewestRelease(releases.flatMap(toReleases), versionPattern, excludePrereleases);
   const details = await loadOptionalDetailsAsync({ baseUrl, identifier, token }, () =>
     getProjectDetailsAsync(api, repository),
   );

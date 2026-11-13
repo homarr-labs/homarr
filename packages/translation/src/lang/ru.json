@@ -59,13 +59,12 @@
       },
       "essentials": {
         "title": "Начните с привычных настроек по умолчанию",
-        "description": "Задайте язык и оформление, которые все увидят первыми, затем укажите Homarr шаблон адресов ваших сервисов.",
+        "description": "Задайте язык и оформление, которые все увидят первыми.",
         "language": "Язык по умолчанию",
         "theme": "Тема по умолчанию",
         "themeAuto": "Системная",
         "themeLight": "Светлая",
         "themeDark": "Тёмная",
-        "serverOriginHelp": "Homarr подставит этот адрес в URL найденных сервисов. Каждый сервис по-прежнему можно изменить отдельно.",
         "serverDescription": "Это подсказка, а не ограничение. Любой найденный сервис можно изменить.",
         "serverOrigin": "Домен, IP или путь обратного прокси",
         "serverOriginDescription": "Например: home.lan, 192.168.1.10 или https://home.example.com/services. Ниже выберите, как добавлять адрес каждого сервиса.",
@@ -102,6 +101,8 @@
       "connect": {
         "title": "Подключите то, что сделает панель полезной",
         "description": "Выбирайте сразу несколько сервисов. Приоритет у меток Docker, пробелы закрывает сопоставление по образам, а каждый URL и учётные данные можно проверить.",
+        "confirmServerAddress": "Всё верно",
+        "serverAddressReviewed": "Адрес сервера подтверждён. URL каждого сервиса ниже по-прежнему можно изменить.",
         "discoveredIntegrations": "Найденные интеграции ({count})",
         "detectedIntegrationLabel": "Импортировать {name}, тип: {kind}",
         "detectedAppLabel": "Импортировать найденное приложение {name}",
@@ -126,7 +127,8 @@
         "needsConfiguration": "Требуется настройка",
         "tested": "Подключение проверено",
         "testFailed": "Проверка подключения не удалась",
-        "incompleteConfirmation": "Незавершённые интеграции будут пропущены. Продолжить без них?"
+        "incompleteConfirmation": "Приложения без URL и интеграции без URL или учётных данных будут исключены из выбора и пропущены. Продолжить без них?",
+        "skipIncomplete": "Пропустить незавершённые подключения"
       },
       "board": {
         "title": "Настройте панель перед сборкой",
@@ -142,13 +144,7 @@
         "secondaryColor": "Дополнительный цвет",
         "resetColors": "Сбросить цвета",
         "radius": "Скругление углов виджетов",
-        "radiusOptions": {
-          "xs": "Строгое",
-          "sm": "Лёгкое",
-          "md": "Среднее",
-          "lg": "Сильное",
-          "xl": "Мягкое"
-        },
+        "radiusOptions": {},
         "columns": "Столбцы панели",
         "columnsDescription": "Столбцы задают горизонтальную сетку, по которой определяются размер и положение элементов. Большинству хватает 12.",
         "columnCount": "{count, plural, one {# столбец} few {# столбца} many {# столбцов} other {# столбца}}",
@@ -192,7 +188,6 @@
           "loginRequired": "Чтобы создать API-ключ, войдите как администратор после настройки.",
           "configuration": "Конфигурация клиента",
           "copy": "Копировать конфигурацию",
-          "copied": "Скопировано",
           "advanced": "Открыть инструменты MCP, разрешения и подробности настройки"
         }
       },
@@ -276,14 +271,21 @@
           "destinationHint": "Ваше решение будет передано на этот адрес обратного вызова. Если вы разрешите доступ, клиент сможет обменять код авторизации на учётные данные API."
         },
         "access": {
-          "title": "Доступ к учётной записи",
-          "description": "Используются ваши текущие разрешения, включая общие ресурсы.",
+          "title": "Максимальные разрешения учётной записи",
+          "description": "Это максимальные разрешения вашей учётной записи, включая общие ресурсы. Доступ только для чтения ограничивает их ещё сильнее.",
           "details": "Посмотреть разрешения ({count})",
           "noGlobalPermissions": "Используются ваша учётная запись и доступ к общим ресурсам, без глобальных разрешений."
         },
         "admin": {
-          "title": "Полный доступ администратора",
-          "description": "Может управлять Homarr и подключёнными сервисами, включая разрушительные действия."
+          "title": "Учётная запись администратора",
+          "description": "В режиме только для чтения можно просматривать административные данные, но не изменять их. Режим чтения и записи позволяет управлять Homarr и подключёнными сервисами, включая опасные действия."
+        },
+        "mode": {
+          "label": "Уровень доступа",
+          "readOnly": "Только чтение (рекомендуется)",
+          "readWrite": "Чтение и запись",
+          "readOnlyDescription": "Только чтение запрещает изменения, действия с сервисами, произвольные запросы к интеграциям и вызовы API пользовательских виджетов. Текущие разрешения на ресурсы по-прежнему действуют.",
+          "readWriteDescription": "Выбирайте чтение и запись, только если этому клиенту нужно вносить изменения или управлять подключёнными сервисами."
         },
         "credential": {
           "title": "Охват и срок действия учётных данных",
@@ -804,9 +806,7 @@
         "examples": "Примеры поддерживаемых ссылок",
         "requiresHandler": "Для пользовательских протоколов на вашем устройстве должно быть установлено связанное приложение."
       },
-      "description": {
-        "label": "Описание"
-      },
+      "description": {},
       "useDifferentUrlForPing": {
         "checkbox": {
           "label": "Отдельный URL для проверки доступности",
@@ -858,7 +858,6 @@
       "source": "Источник API: {name}",
       "baseUrl": "URL сервера",
       "networkScope": "Доступ к сети",
-      "save": "Сохранить конфигурацию API",
       "expires": "Этот одноразовый запрос действует до {time}."
     },
     "page": {
@@ -889,13 +888,11 @@
       "pasteImportHint": "Вставьте полный JSON пользовательского виджета с помощью Ctrl+V или Command+V",
       "delete": "Удалить пользовательский виджет",
       "deleteConfirm": "Вы уверены, что хотите удалить \"{name}\"? Это действие нельзя отменить.",
-      "export": "Экспорт",
       "duplicate": "Создать копию",
       "aiPrompt": "Создать с помощью ИИ",
       "copyAiPrompt": "Копировать промпт для ИИ",
       "enable": "Включить",
       "disable": "Выключить",
-      "menu": "Действия",
       "downloadSkill": "Skill для пользовательских виджетов",
       "publishWorkshop": "Опубликовать в Мастерской",
       "migrate": "Миграция пользовательского виджета",
@@ -909,12 +906,9 @@
     "sourceSetupDialog": {
       "title": "Настройка источников виджета",
       "description": "Проверьте, куда подключается этот виджет, и добавьте или замените его зашифрованные учётные данные.",
-      "credentialsRequired": "Запросы не будут работать, пока не добавлены необходимые учётные данные.",
-      "save": "Сохранить конфигурацию"
+      "credentialsRequired": "Запросы не будут работать, пока не добавлены необходимые учётные данные."
     },
-    "field": {
-      "description": "Описание"
-    },
+    "field": {},
     "editor": {
       "errorBoundary": {
         "title": "Что-то пошло не так"
@@ -924,7 +918,6 @@
         "format": "Форматировать",
         "insertStarter": "Вставить шаблон",
         "redo": "Повторить",
-        "copied": "Скопировано",
         "schema": "Схема"
       },
       "reference": {
@@ -1005,7 +998,6 @@
         "manifestFilename": "widget.json",
         "request": "Запрос {count, number}",
         "requestId": "ID запроса",
-        "type": "Тип",
         "method": "Метод",
         "source": "Источник API",
         "run": "Запуск",
@@ -1042,7 +1034,6 @@
         "optionName": "Имя опции",
         "label": "Метка",
         "control": "Тип поля",
-        "description": "Описание",
         "default": "По умолчанию",
         "optionDetails": "Ограничения и динамические варианты",
         "minimum": "Минимум",
@@ -1079,7 +1070,6 @@
         "credentialRemovedDescription": "Сохранённое значение удалено.",
         "primary": "Основной API",
         "id": "ID источника",
-        "name": "Имя",
         "baseUrl": "Базовый URL",
         "baseUrlError": {
           "invalid": "Введите полный URL.",
@@ -1096,7 +1086,6 @@
         "remove": "Удалить источник и его запросы",
         "advanced": "Дополнительно",
         "add": "Добавить ещё один источник API",
-        "sourceType": "Источник",
         "manualSource": "HTTP API",
         "existingIntegration": "Существующая интеграция",
         "integrationType": "Тип интеграции",
@@ -1230,7 +1219,6 @@
       "migrationTitle": "Проверка замены на v2",
       "migrationDescription": "Проверьте и подтвердите сгенерированное определение v2. Подтверждение одной операцией заменит сохранённую запись v1, а размещения на панелях останутся привязаны к тому же ID виджета.",
       "fileLabel": "Выберите JSON-файл пользовательского виджета",
-      "name": "Название",
       "origin": "Базовый адрес",
       "authentication": "Аутентификация",
       "networkScope": "Доступ к сети",
@@ -1250,8 +1238,6 @@
         "title": "Этот виджет может изменять данные на удалённом сервисе",
         "description": "После импорта проверьте все именованные действия, унаследованные учётные данные и подтверждения опасных действий. Секреты в файл не входят."
       },
-      "cancel": "Отменить импорт",
-      "confirm": "Импорт виджета",
       "confirmMigration": "Подтвердить замену v2"
     },
     "secret": {
@@ -1259,6 +1245,20 @@
       "username": "Имя пользователя",
       "password": "Пароль",
       "savedPlaceholder": "••••••• (сохранено; оставьте пустым, чтобы не менять)"
+    },
+    "workshopUpdate": {
+      "title": "",
+      "apply": "Установить обновление",
+      "available": "Доступно обновление",
+      "check": "Проверить обновления",
+      "description": "",
+      "approvePermissions": "",
+      "pendingDescription": "",
+      "overwriteLocalChanges": "",
+      "installSeparate": "",
+      "communityWarning": "",
+      "updated": "",
+      "changedBeforeInstall": ""
     }
   },
   "workshop": {
@@ -1315,7 +1315,6 @@
     "closeScreenshotViewer": "Закрыть просмотр скриншотов",
     "technicalDetails": "Технические подробности",
     "sourceCode": "Содержимое публикации",
-    "export": "Экспорт",
     "report": "Пожаловаться",
     "reportTitle": "Жалоба на публикацию",
     "reportReason": "Причина",
@@ -1346,8 +1345,6 @@
       "viewSubmission": "Управлять публикацией",
       "done": "Готово",
       "signInHint": "Войдите, чтобы публиковать от имени своей учётной записи Мастерской.",
-      "titleField": "Заголовок",
-      "descriptionField": "Описание",
       "screenshots": "Скриншоты",
       "screenshotsDescription": "До пяти изображений PNG, JPEG или WebP",
       "screenshotsPlaceholder": "Выберите скриншоты",
@@ -1410,11 +1407,7 @@
               "label": "Выберите существующее приложение"
             },
             "new": {
-              "title": "Новое",
-              "url": {
-                "label": "URL приложения",
-                "description": "URL, который откроется при переходе к приложению с панели"
-              }
+              "title": "Новое"
             }
           }
         }
@@ -1460,14 +1453,15 @@
       },
       "createApp": {
         "label": "Создать приложение",
-        "description": "Создать приложение с тем же названием и значком, что и у интеграции. Оставьте поле ниже пустым, чтобы использовать URL интеграции."
+        "description": "Создать приложение с тем же названием и значком, что и у интеграции."
       },
       "linkApp": {
         "label": "Привязать существующее приложение",
         "description": "Свяжите эту интеграцию с приложением, которое вам уже доступно."
       },
-      "appHref": {
-        "placeholder": "Свой URL приложения"
+      "externalUrl": {
+        "label": "Внешний URL",
+        "description": "Адрес, который браузер открывает по ссылкам из виджетов. Оставьте пустым, чтобы использовать URL связанного приложения или интеграции."
       },
       "apiKeySettings": {
         "label": "Получить API-ключ"
@@ -1534,6 +1528,27 @@
         "unknown": {
           "title": "Неизвестная ошибка",
           "description": "Произошла неизвестная ошибка. Раскройте причину ниже, чтобы узнать подробности"
+        },
+        "frigate": {
+          "title": "Аутентификация Frigate",
+          "status": " (HTTP {statusCode})",
+          "description": {
+            "cookie": "При входе Frigate не вернул действительный cookie сеанса frigate_token. Проверьте настройки аутентификации Frigate и обратного прокси.",
+            "profileMismatch": "Frigate вернул профиль без прав администратора или с именем пользователя, которое отличается от указанного в настройках.",
+            "redirect": "Frigate вернул перенаправление. Чтобы защитить ваши учётные данные, Homarr не стал по нему переходить. Укажите прямой URL Frigate с аутентификацией.",
+            "login": "Не удалось выполнить вход в Frigate. Проверьте учётные данные, URL интеграции и сетевое подключение.",
+            "profile": "Не удалось получить профиль Frigate. Проверьте конечную точку с аутентификацией и настройки обратного прокси.",
+            "stats": "После аутентификации не удалось получить статистику Frigate. Проверьте конечную точку статистики и сетевое подключение."
+          }
+        },
+        "openmediavault": {
+          "title": "Аутентификация OpenMediaVault",
+          "description": {
+            "totpSecretRequired": "Добавьте секретный ключ TOTP в формате Base32 из OpenMediaVault или используйте отдельную учётную запись администратора без TOTP.",
+            "totpSecretInvalid": "Укажите общий секретный ключ в формате Base32 из настройки двухфакторной аутентификации OpenMediaVault, а не 6-значный код.",
+            "totpVerificationFailed": "OpenMediaVault отклонил код TOTP. Проверьте секретный ключ и синхронизируйте часы на обоих серверах.",
+            "unsupportedChallenge": "Homarr поддерживает только проверку TOTP в OpenMediaVault."
+          }
         },
         "parse": {
           "title": "Ошибка разбора",
@@ -1613,11 +1628,9 @@
             },
             "notification": {
               "success": {
-                "title": "Сертификат добавлен в доверенные",
                 "message": "Сертификат добавлен в список доверенных сертификатов"
               },
               "error": {
-                "title": "Не удалось добавить сертификат в доверенные",
                 "message": "Не удалось добавить сертификат в список доверенных сертификатов"
               }
             }
@@ -1736,6 +1749,11 @@
         "title": "Сбросить данные авторизации",
         "message": "Вы уверены, что хотите сбросить эти данные авторизации?"
       },
+      "totpNotice": "Хранится в зашифрованном виде. Если хранить секретный ключ TOTP вместе с паролем, внутри Homarr оба фактора окажутся в одном месте.",
+      "remove": {
+        "title": "Удалить данные авторизации",
+        "message": "Вы уверены, что хотите удалить эти сохранённые данные авторизации?"
+      },
       "noSecretsRequired": {
         "segmentTitle": "Без авторизации",
         "text": "Для этой интеграции не требуются данные авторизации"
@@ -1817,9 +1835,9 @@
           "label": "Пароль индексатора",
           "newLabel": "Новый пароль индексатора"
         },
-        "wazuhDashboardUrl": {
-          "label": "URL панели Wazuh (необязательно)",
-          "newLabel": "Новый URL панели Wazuh"
+        "totpSecret": {
+          "label": "Секретный ключ TOTP (необязательно)",
+          "newLabel": "Новый секретный ключ TOTP"
         }
       }
     },
@@ -1838,9 +1856,7 @@
     "search": "Поиск медиафайлов",
     "field": {
       "preview": "Предпросмотр",
-      "size": "Размер",
-      "creator": "Создатель",
-      "actions": "Управление"
+      "creator": "Создатель"
     },
     "action": {
       "upload": {
@@ -1918,7 +1934,9 @@
       "clearSearch": "Очистить поиск",
       "copy": "Копировать",
       "copied": "Скопировано",
-      "refresh": "Обновить"
+      "refresh": "Обновить",
+      "export": "Экспорт",
+      "advanced": "Дополнительно"
     },
     "hidden": "Скрыто",
     "pagination": {
@@ -1930,6 +1948,8 @@
     "here": "здесь",
     "serviceUrlTemplate": {
       "serverTitle": "Основной адрес сервера",
+      "description": "Укажите основной адрес и шаблон URL, чтобы заполнить сервисы ниже. URL, изменённые вручную, сохранятся.",
+      "example": "Пример: {url}",
       "urlModeLabel": "Шаблон адресов сервисов",
       "hostPort": "Один хост, разные порты",
       "subdomain": "Один поддомен на сервис",
@@ -2011,6 +2031,15 @@
         "modifier": "Mod"
       }
     },
+    "markdown": {
+      "alert": {
+        "note": "Заметка",
+        "tip": "",
+        "important": "Важно",
+        "warning": "Предупреждение",
+        "caution": ""
+      }
+    },
     "dangerZone": "Опасная зона",
     "noResults": "Ничего не найдено",
     "unsavedChanges": "У вас есть несохранённые изменения!",
@@ -2063,7 +2092,18 @@
     "total": "Всего",
     "filesystemUsage": "{count, plural, one {Показать использование файловых систем: #} few {Показать использование файловых систем: #} many {Показать использование файловых систем: #} other {Показать использование файловых систем: #}}",
     "field": {
-      "name": "Название"
+      "name": "Название",
+      "state": "Состояние",
+      "size": "Размер",
+      "actions": "Действия",
+      "source": "Источник",
+      "title": "Заголовок",
+      "description": "Описание",
+      "created": "Создано",
+      "namespace": "Пространство имён",
+      "status": "Статус",
+      "architecture": "Архитектура",
+      "type": "Тип"
     },
     "label": {
       "new": "Создание"
@@ -2081,6 +2121,167 @@
       "searchEngines": "Поисковые системы",
       "tasks": "Задачи",
       "users": "Пользователи"
+    },
+    "cornerStyle": {
+      "options": {
+        "md": "Среднее",
+        "lg": "Сильное",
+        "xs": "Строгое",
+        "sm": "Лёгкое",
+        "xl": "Мягкое"
+      }
+    },
+    "customTheme": {
+      "label": "Тема",
+      "nothingFound": "Темы не найдены",
+      "custom": "Свой",
+      "customize": "Редактировать тему",
+      "editor": {
+        "title": "Настроить тему",
+        "basedOn": "",
+        "preview": "",
+        "previewColorScheme": "",
+        "layout": "Вид",
+        "typography": "",
+        "colors": "Цвета",
+        "json": "",
+        "defaultRadius": "",
+        "radiusHint": "",
+        "scale": "Масштаб интерфейса",
+        "spacing": "Интервалы",
+        "radius": "",
+        "fontFamily": "",
+        "headingFont": "",
+        "monoFont": "",
+        "fontSizes": "",
+        "palette": {
+          "body": "Фон страницы",
+          "surface": "",
+          "hover": "",
+          "border": "",
+          "text": "Текст",
+          "dimmed": "",
+          "primary": "",
+          "secondary": "Второй акцентный цвет"
+        },
+        "lockedPrimary": "",
+        "pickColor": "",
+        "autoContrast": "",
+        "luminanceThreshold": "",
+        "jsonHint": "",
+        "invalidJson": "",
+        "tooLong": "",
+        "copyJson": "Копировать JSON",
+        "copied": "Скопировано",
+        "discardJson": "",
+        "reset": "Сбросить изменения",
+        "apply": "",
+        "sampleTitle": "Панель",
+        "sampleBadge": "Предпросмотр",
+        "sampleText": "",
+        "sampleInput": "Поиск",
+        "sampleValue": "Поиск приложений",
+        "sampleButton": "Открыть"
+      },
+      "studio": {
+        "title": "Редактор тем",
+        "saveTheme": "",
+        "searchControls": "",
+        "component": "",
+        "inheritedValue": "",
+        "resetControl": "",
+        "decreaseControl": "",
+        "increaseControl": "",
+        "chooseControl": "",
+        "layout": {
+          "spacing": "Интервалы",
+          "radius": "",
+          "compact": "Компактно",
+          "normal": "Норма",
+          "roomy": "",
+          "preset": "",
+          "none": "Ничего",
+          "rounded": "",
+          "full": "Полный",
+          "custom": "Свой",
+          "advanced": ""
+        },
+        "previewSurface": "Предпросмотр",
+        "previewFrame": "",
+        "loadingPreview": "",
+        "previewFailed": "",
+        "sampleBoard": "",
+        "components": "Компоненты",
+        "overlays": "",
+        "typography": "",
+        "liveBoard": "",
+        "viewport": "",
+        "responsive": "",
+        "tablet": "",
+        "mobile": "Мобильный",
+        "includeCustomCss": "",
+        "groups": {
+          "layout": "",
+          "typography": "",
+          "colors": "",
+          "surfaces": "",
+          "overlays": "",
+          "accessibility": "",
+          "css": "Пользовательский CSS"
+        },
+        "controls": {
+          "defaultRadius": "",
+          "scale": "",
+          "spacing": "Интервалы",
+          "radius": "",
+          "breakpoint": "Точка перехода",
+          "fontSizes": "",
+          "lineHeight": "",
+          "shadow": "",
+          "fontFamily": "",
+          "headingFont": "",
+          "monoFont": "",
+          "headingWeight": "",
+          "headingSize": "",
+          "fontSmoothing": "",
+          "body": "",
+          "surface": "",
+          "hover": "",
+          "border": "",
+          "text": "",
+          "dimmed": "",
+          "primary": "",
+          "secondary": "Второй акцентный цвет",
+          "autoContrast": "",
+          "luminanceThreshold": "",
+          "primaryShade": "",
+          "componentRadius": "",
+          "borderWidth": "",
+          "surfaceBackground": "Фон",
+          "surfaceText": "",
+          "surfaceBorder": "Цвет границы",
+          "hoverBackground": "",
+          "hoverText": "",
+          "componentShadow": "",
+          "componentBorder": "Показывать рамку",
+          "componentPadding": "",
+          "componentSize": "Размер",
+          "componentVariant": "",
+          "overlayBlur": "",
+          "overlayOpacity": "",
+          "overlayColor": "",
+          "transitionDuration": "",
+          "headerBackground": "",
+          "respectReducedMotion": "",
+          "focusRing": "",
+          "cursorType": "",
+          "customCss": "Пользовательский CSS"
+        },
+        "expandPreview": "",
+        "showControls": "Показывать элементы управления"
+      },
+      "instanceDefault": "",
+      "useInstanceDefault": ""
     }
   },
   "section": {
@@ -2118,9 +2319,7 @@
         "collapse": "Свернуть"
       },
       "option": {
-        "title": {
-          "label": "Заголовок"
-        },
+        "title": {},
         "customCssClasses": {
           "label": "Пользовательские CSS классы"
         },
@@ -2144,8 +2343,7 @@
       "label": {
         "settings": "Настройки",
         "settingsFor": "Настройки для {name}",
-        "options": "Опции",
-        "actions": "Действия"
+        "options": "Опции"
       },
       "status": {
         "success": "ОК",
@@ -2179,6 +2377,18 @@
       },
       "customWidget": "Пользовательский виджет",
       "standalone": "Без интеграций",
+      "integrationFilter": "",
+      "integrationNotConnected": "",
+      "workshop": {
+        "title": "Виджеты Мастерской",
+        "back": "",
+        "empty": "",
+        "noMatches": "",
+        "loading": "",
+        "integrationError": "",
+        "searchMore": "",
+        "installAndAdd": ""
+      },
       "missingIntegration": {
         "title": "Сначала подключите сервис",
         "noPermission": "Этому виджету нужно подключение к совместимому сервису. Попросите администратора подключить его и повторите попытку."
@@ -2198,7 +2408,6 @@
     "selection": {
       "summary": "{count, plural, one {Выбрано элементов: #} few {Выбрано элементов: #} many {Выбрано элементов: #} other {Выбрано элементов: #}}",
       "selected": "{count, plural, one {Выбрано: #} few {Выбрано: #} many {Выбрано: #} other {Выбрано: #}}",
-      "copy": "Копировать",
       "copied": "{count, plural, one {В буфер обмена скопирован # элемент} few {В буфер обмена скопировано # элемента} many {В буфер обмена скопировано # элементов} other {В буфер обмена скопировано # элемента}}",
       "copyError": "Не удалось скопировать выбранные элементы. Возможно, браузер не разрешает доступ к буферу обмена.",
       "paste": "Вставить",
@@ -2210,16 +2419,18 @@
       "removed": "{count, plural, one {Удалён # элемент} few {Удалено # элемента} many {Удалено # элементов} other {Удалено # элемента}}",
       "move": "Переместить",
       "moveTo": "Переместить выбранные элементы",
-      "delete": "Удалить",
       "clear": "Снять выделение",
       "clearShortcut": "Снять выделение (Escape)",
       "saveErrorTitle": "Не удалось обновить элементы",
       "saveErrorMessage": "Не удалось сохранить изменения. Панель обновлена.",
       "moveUnavailableTitle": "Не удалось переместить выбранные элементы",
-      "moveUnavailableMessage": "Все выделенные элементы не помещаются в выбранное место."
+      "moveUnavailableMessage": "Все выделенные элементы не помещаются в выбранное место.",
+      "moveToTab": "",
+      "movedToTab": ""
     },
     "moveResize": {
       "title": "Переместить / изменить размер элемента",
+      "sizeOverlap": "",
       "entryLabel": "{name}, столбец {column}, ряд {row}",
       "target": {
         "numbered": "{name}, место {index}",
@@ -2286,9 +2497,7 @@
           "label": "Интеграции",
           "removeLabel": "Удалить интеграцию {name}"
         },
-        "title": {
-          "label": "Заголовок"
-        },
+        "title": {},
         "customCssClasses": {
           "label": "Пользовательские CSS-классы"
         },
@@ -2304,6 +2513,36 @@
       "open": "Открыть расширенный вид",
       "close": "Закрыть расширенный вид",
       "label": "Расширенный вид: {widget}"
+    },
+    "inPlace": {
+      "widgetLoadError": "",
+      "search": "",
+      "bestFit": "",
+      "moreWidgets": "",
+      "widgets": "Виджеты",
+      "yourApps": "",
+      "createApp": "",
+      "addAppLink": "",
+      "createWidget": "",
+      "createWidgetDescription": "",
+      "createAppDescription": "",
+      "defaultFit": "",
+      "defaultFitDescription": "",
+      "defaultSize": "",
+      "defaultSizeDescription": "",
+      "emptyCells": "",
+      "preview": {
+        "error": "",
+        "loading": ""
+      },
+      "keyboard": {
+        "move": "переместить",
+        "resize": "",
+        "pick": "",
+        "browse": "",
+        "moveDescription": "",
+        "resizeDescription": ""
+      }
     }
   },
   "widget": {
@@ -2347,7 +2586,29 @@
             "tooltip": "Как подсказка",
             "hidden": "Скрыто"
           }
+        },
+        "dockerContainer": {
+          "label": "Контейнер Docker",
+          "description": "Добавляет на плитку кнопку, которая запускает остановленный контейнер и останавливает работающий. Кнопку видят только администраторы.",
+          "placeholder": "Выберите контейнер",
+          "disabled": "Чтобы выбрать контейнер, задайте ENABLE_DOCKER.",
+          "unavailable": "Не удалось загрузить контейнеры Docker."
         }
+      },
+      "docker": {
+        "action": {
+          "start": "Запустить {name}",
+          "stop": "Остановить {name}"
+        },
+        "notification": {
+          "startFailed": "Не удалось запустить {name}",
+          "stopFailed": "Не удалось остановить {name}"
+        },
+        "switch": {
+          "start": "Запуск контейнера…",
+          "stop": "Остановка контейнера…"
+        },
+        "stopped": "Контейнер остановлен"
       },
       "error": {
         "notFound": {
@@ -2426,6 +2687,10 @@
         "hideHostname": {
           "label": "Скрывать имена хостов"
         },
+        "showFullUrls": {
+          "label": "Показывать полные URL",
+          "description": "Показывать и копировать полный адрес закладки, даже если имена хостов скрыты. В очень плотных строках вместо названия показывается адрес, а в раскладке «Иконки» адресов нет."
+        },
         "withBorder": {
           "label": "Показывать рамку"
         },
@@ -2448,6 +2713,9 @@
         }
       },
       "empty": "Добавьте URL или приложение в настройках виджета",
+      "copyUrl": "Копировать URL",
+      "copied": "Скопировано",
+      "copyFailed": "Не удалось скопировать. Откройте Homarr по HTTPS или воспользуйтесь командой браузера «Копировать адрес ссылки».",
       "groups": {
         "label": "Категории",
         "placeholder": "Новая категория",
@@ -3101,6 +3369,141 @@
         "toggleFailed": "Не удалось обновить объект"
       }
     },
+    "smartHome-controls": {
+      "name": "",
+      "description": "",
+      "option": {
+        "presentation": {
+          "label": "",
+          "option": {
+            "entities": "",
+            "controlPanel": ""
+          }
+        },
+        "title": {
+          "label": "Заголовок",
+          "description": ""
+        },
+        "blocks": {
+          "label": "",
+          "remove": ""
+        },
+        "roomDomains": {
+          "label": "",
+          "description": ""
+        },
+        "excludedEntityIds": {
+          "label": "",
+          "description": "",
+          "placeholder": ""
+        },
+        "showSummary": {
+          "label": "Показывать сводку"
+        },
+        "readOnly": {
+          "label": "Только чтение",
+          "description": ""
+        },
+        "controlSize": {
+          "label": "",
+          "option": {
+            "auto": "Автоматически",
+            "compact": "Компактно",
+            "large": "Большое"
+          }
+        },
+        "palette": {
+          "label": "Цвета",
+          "option": {
+            "boring": "",
+            "colorful": ""
+          }
+        }
+      },
+      "domain": {
+        "light": "",
+        "switch": "",
+        "fan": "",
+        "climate": "",
+        "humidifier": "",
+        "cover": "",
+        "valve": "",
+        "lock": "",
+        "alarm_control_panel": "",
+        "media_player": "",
+        "camera": "",
+        "vacuum": "",
+        "scene": "",
+        "script": "",
+        "automation": "",
+        "button": "",
+        "input_boolean": "",
+        "input_select": "",
+        "person": "Люди",
+        "binary_sensor": "",
+        "sensor": "",
+        "weather": "Погода",
+        "sun": "",
+        "update": ""
+      },
+      "block": {
+        "add": {
+          "rooms": "",
+          "entity": "Сущность",
+          "roomsLabel": "",
+          "roomsPlaceholder": "",
+          "entityLabel": "",
+          "entityPlaceholder": "",
+          "merge": "",
+          "submit": "Добавить",
+          "duplicate": "",
+          "covered": ""
+        },
+        "kind": {
+          "entity": "Сущность",
+          "room": "",
+          "mergedRooms": "",
+          "unknown": ""
+        },
+        "entityCount": "",
+        "noArea": "",
+        "issue": {
+          "missing": "Не найдено",
+          "otherSource": "",
+          "empty": ""
+        }
+      },
+      "preview": {
+        "empty": "",
+        "noMatches": "",
+        "summary": {
+          "lights": "",
+          "on": "вкл",
+          "off": "выкл",
+          "sensors": "",
+          "offline": "не в сети"
+        },
+        "otherSource": ""
+      },
+      "live": {
+        "loading": "",
+        "error": "",
+        "retry": "Повторить",
+        "actionFailed": "",
+        "actionUnconfirmed": "",
+        "unconfirmed": "",
+        "selectionLimit": "",
+        "unknownError": ""
+      },
+      "inline": {
+        "open": "",
+        "title": "",
+        "handle": "",
+        "empty": "",
+        "add": "",
+        "close": ""
+      }
+    },
     "smartHome-executeAutomation": {
       "name": "Запуск автоматизации",
       "description": "Запускает автоматизацию одним нажатием",
@@ -3244,8 +3647,8 @@
           "label": "Вид"
         },
         "hideHeader": {
-          "label": "",
-          "description": ""
+          "label": "Скрывать шапку",
+          "description": "Скрывает навигацию по датам. В слишком низких виджетах она скрыта всегда."
         }
       },
       "advanced": {
@@ -3501,7 +3904,6 @@
         },
         "table": {
           "header": {
-            "name": "Имя",
             "node": "Узел"
           }
         }
@@ -3531,8 +3933,6 @@
         },
         "defaultSort": {
           "option": {
-            "name": "Имя",
-            "state": "Состояние",
             "cpuUsage": "Использование ЦП",
             "memoryUsage": "Использование памяти"
           }
@@ -3549,7 +3949,35 @@
       }
     },
     "coolify": {
-      "description": "Обзор вашего экземпляра Coolify с серверами и приложениями",
+      "description": "Проекты, ресурсы и серверы Coolify на одном экране, подробности — в расширенном виде",
+      "summary": {
+        "needsAttention": "Требуют внимания: {count}",
+        "inProgress": "В процессе: {count}",
+        "unknown": "Неизвестно: {count}",
+        "healthy": "Проблем нет",
+        "empty": "Ресурсов нет",
+        "healthyDetail": "Нет ресурсов, требующих внимания",
+        "more": "Ещё ресурсов: {count}",
+        "moreInstances": "Ещё экземпляров: {count} — в расширенном виде"
+      },
+      "details": {
+        "tabs": "Подробности Coolify",
+        "overview": "Обзор",
+        "search": "Фильтр ресурсов",
+        "serviceApplications": "Приложения сервиса {name}"
+      },
+      "overview": {
+        "projects": "Проекты",
+        "resources": "Запущено ресурсов",
+        "attention": "Требует внимания",
+        "ready": "Готов",
+        "noProjects": "Проекты не найдены",
+        "projectsUnavailable": "Проекты недоступны",
+        "moreProjects": "+{count, plural, one {# проект} few {# проекта} many {# проектов} other {# проекта}}",
+        "running": "Запущено",
+        "resourceCount": "{count, plural, one {# ресурс} few {# ресурса} many {# ресурсов} other {# ресурса}}",
+        "environmentCount": "{count, plural, one {# окружение} few {# окружения} many {# окружений} other {# окружения}}"
+      },
       "option": {
         "showServers": {
           "label": "Показывать серверы"
@@ -3581,7 +4009,13 @@
       },
       "source": {
         "url": "Источник: {url}",
-        "unavailable": "{source}: недоступно"
+        "unavailable": "{source}: недоступно",
+        "unavailableCount": "{count, plural, one {# источник недоступен} few {# источника недоступны} many {# источников недоступны} other {# источника недоступны}}"
+      },
+      "kind": {
+        "server": "Сервер",
+        "application": "Приложение",
+        "service": "Сервис"
       },
       "instances": {
         "title": "Экземпляры"
@@ -3598,6 +4032,7 @@
         "exited": "Остановлен",
         "starting": "Запускается",
         "restarting": "Перезапускается",
+        "unhealthy": "Неисправно",
         "unknown": "Неизвестно",
         "online": "В сети",
         "offline": "Не в сети",
@@ -3943,9 +4378,7 @@
       "items": {
         "currentlyPlaying": "Сейчас воспроизводится",
         "user": "Пользователь",
-        "name": "Название",
         "id": "ID",
-        "status": "Статус",
         "directPlay": "Прямое воспроизведение",
         "directStream": "Прямой поток",
         "transcodeVideo": "Транскодирование видео",
@@ -4440,38 +4873,29 @@
           "columnTitle": "Действия"
         },
         "added": {
-          "columnTitle": "Добавлено",
-          "detailsTitle": "Добавлено"
+          "columnTitle": "Добавлено"
         },
         "category": {
-          "columnTitle": "Категория",
-          "detailsTitle": "Категория"
+          "columnTitle": "Категория"
         },
         "downSpeed": {
-          "columnTitle": "Загрузка",
-          "detailsTitle": "Скорость загрузки"
+          "columnTitle": "Загрузка"
         },
         "index": {
           "columnTitle": "#",
           "detailsTitle": "Индекс"
         },
         "id": {
-          "columnTitle": "ID",
-          "detailsTitle": "ID"
+          "columnTitle": "ID"
         },
-        "integration": {
-          "columnTitle": "Источник"
-        },
-        "name": {
-          "columnTitle": "Название"
-        },
+        "integration": {},
+        "name": {},
         "progress": {
           "columnTitle": "Прогресс",
           "detailsTitle": "Прогресс"
         },
         "ratio": {
-          "columnTitle": "Рейтинг",
-          "detailsTitle": "Рейтинг"
+          "columnTitle": "Рейтинг"
         },
         "received": {
           "columnTitle": "Скачано",
@@ -4481,26 +4905,16 @@
           "columnTitle": "Отдано",
           "detailsTitle": "Отдано"
         },
-        "size": {
-          "columnTitle": "Размер",
-          "detailsTitle": "Размер"
-        },
-        "state": {
-          "columnTitle": "Состояние",
-          "detailsTitle": "Состояние"
-        },
+        "size": {},
+        "state": {},
         "time": {
-          "columnTitle": "Осталось",
-          "detailsTitle": "Осталось",
-          "eta": "Осталось"
+          "columnTitle": "Осталось"
         },
         "type": {
-          "columnTitle": "Тип",
           "detailsTitle": "Тип"
         },
         "upSpeed": {
-          "columnTitle": "Отдача",
-          "detailsTitle": "Скорость отдачи"
+          "columnTitle": "Отдача"
         }
       },
       "states": {
@@ -4689,9 +5103,7 @@
           }
         },
         "queue": {
-          "table": {
-            "size": "Размер"
-          }
+          "table": {}
         },
         "common": {
           "empty": "Пусто",
@@ -4770,61 +5182,61 @@
     },
     "releases": {
       "name": "Релизы",
-      "description": "Отображает список текущих версий указанных репозиториев с заданным регулярным выражением версии.",
+      "description": "Отслеживает последние релизы репозиториев и образов контейнеров и показывает списки изменений.",
       "option": {
         "layout": {
-          "label": "Макет",
-          "description": "",
+          "label": "Вид",
+          "description": "В компактном виде каждый репозиторий занимает одну строку.",
           "option": {
-            "comfortable": "Удобно",
-            "compact": "Компактно"
+            "comfortable": "Свободный",
+            "compact": "Компактный"
           }
         },
         "summary": {
-          "label": "",
-          "description": "",
+          "label": "Сводка",
+          "description": "Что показывать над списком. Полоса статусов добавляет по сегменту на каждый репозиторий; нажатие на сегмент переходит к нему.",
           "option": {
-            "detailed": "",
-            "count": "",
+            "detailed": "Число и полоса статусов",
+            "count": "Только число",
             "hidden": "Скрыто"
           }
         },
-        "sections": {
-          "label": "",
-          "description": ""
+        "groupReleases": {
+          "label": "Группировать релизы по статусу",
+          "description": "Выключите, чтобы показывать сплошной список без заголовков разделов. Свёрнутые разделы при этом не учитываются."
         },
-        "collapsedSections": {
-          "label": "",
-          "description": ""
+        "sections": {
+          "label": "Разделы",
+          "description": "Группы репозиториев для показа. Скрытые группы не выводятся совсем."
         },
         "newReleaseWithin": {
-          "label": "Считать релиз новым в течение",
-          "description": "Пример: 1w (1 неделя), 10M (10 месяцев). Допустимые единицы: h (часы), d (дни), w (недели), M (месяцы), y (годы). Оставьте пустым, чтобы не выделять новые релизы.",
+          "label": "Срок выделения новых релизов",
+          "description": "Релизы, опубликованные за этот срок, попадают в раздел \"Новое\", пока вы не отметите их просмотренными.",
           "option": {
-            "never": "",
-            "1d": "1 дней",
-            "3d": "3 дней",
+            "never": "Никогда",
+            "1d": "1 день",
+            "3d": "3 дня",
             "1w": "1 неделя",
-            "2w": "",
+            "2w": "2 недели",
             "1M": "1 месяц",
-            "3M": "3 месяцев"
+            "3M": "3 месяца"
           }
         },
         "staleReleaseWithin": {
-          "label": "Считать релиз устаревшим через",
-          "description": "Пример: 1w (1 неделя), 10M (10 месяцев). Допустимые единицы: h (часы), d (дни), w (недели), M (месяцы), y (годы). Оставьте пустым, чтобы не выделять устаревшие релизы.",
+          "label": "Переносить в \"Затишье\" через",
+          "description": "Репозитории без релизов дольше этого срока попадают в раздел \"Затишье\".",
           "option": {
-            "never": "",
+            "never": "Никогда",
             "1M": "1 месяц",
-            "3M": "3 месяцев",
+            "3M": "3 месяца",
             "6M": "6 месяцев",
             "1y": "1 год",
-            "2y": "2 лет"
+            "2y": "2 года"
           }
         },
         "showChangelogPreview": {
-          "label": "",
-          "description": ""
+          "label": "Показывать предпросмотр списка изменений",
+          "description": "Показывает начало заметок к релизу под каждым релизом."
         },
         "repositories": {
           "label": "Репозитории",
@@ -4853,10 +5265,13 @@
           },
           "identifier": {
             "label": "Идентификатор",
+            "containerPlaceholder": "Имя или Владелец/Имя:тег",
             "placeholder": "Имя или Владелец/Имя"
           },
-          "name": {
-            "label": "Имя"
+          "name": {},
+          "excludePrereleases": {
+            "label": "Не учитывать предрелизы",
+            "description": "Показывать последний релиз, который провайдер не пометил как предрелиз."
           },
           "versionFilter": {
             "label": "Фильтр версий",
@@ -4899,105 +5314,109 @@
         }
       },
       "summary": {
-        "newReleases": "{count, plural, one {new release} other {new releases}}",
-        "newShort": "новые",
-        "tracked": "",
-        "caughtUp": "",
-        "outdated": "{count, plural, one {running an older version} other {running older versions}}",
-        "outdatedShort": "устарела",
-        "failing": "",
-        "failingShort": "",
-        "latest": "",
-        "issues": ""
+        "newReleases": "{count, plural, one {новый релиз} few {новых релиза} many {новых релизов} other {нового релиза}}",
+        "newShort": "новых",
+        "tracked": "Всего отслеживается: {count}",
+        "caughtUp": "Всё актуально",
+        "outdated": "{count, plural, one {работает на старой версии} few {работают на старых версиях} many {работают на старых версиях} other {работают на старой версии}}",
+        "outdatedShort": "устаревших",
+        "failing": "не удалось проверить",
+        "failingShort": "с ошибкой",
+        "latest": "Последний: {name} {version}, {time}",
+        "issues": "{count, plural, one {Не удалось проверить # репозиторий} few {Не удалось проверить # репозитория} many {Не удалось проверить # репозиториев} other {Не удалось проверить # репозитория}}"
       },
       "section": {
         "new": {
-          "label": "Создание",
-          "description": ""
+          "label": "Новое",
+          "description": "Новые релизы, которые вы ещё не просмотрели"
         },
         "attention": {
           "label": "Требует внимания",
-          "description": ""
+          "description": "Интеграции на старой версии и репозитории, которые не удалось проверить"
         },
         "upToDate": {
           "label": "Актуально",
-          "description": ""
+          "description": "Ничего нового"
         },
         "quiet": {
-          "label": "",
-          "description": ""
+          "label": "Затишье",
+          "description": "Давно не было релизов"
         }
       },
       "status": {
-        "new": "",
-        "outdated": "",
-        "error": "",
+        "new": "новый, не просмотрен",
+        "outdated": "на старой версии",
+        "error": "не удалось проверить",
         "upToDate": "актуально",
-        "quiet": ""
+        "quiet": "затишье"
       },
       "tag": {
-        "new": "Создание",
-        "preRelease": "",
-        "resolvedFrom": "",
-        "quiet": "",
+        "new": "Новый",
+        "preRelease": "Предрелиз",
+        "resolvedFrom": "из :{tag}",
+        "quiet": "Затишье",
         "archived": "В архиве",
-        "fork": ""
+        "fork": "Форк"
       },
       "issue": {
-        "affected": "{count, plural, one {# repository affected} other {# repositories affected}}",
+        "affected": "{count, plural, one {Затронут # репозиторий} few {Затронуто # репозитория} many {Затронуто # репозиториев} other {Затронуто # репозитория}}",
         "rateLimited": {
-          "title": "",
-          "hint": ""
+          "title": "{provider} ограничил число запросов",
+          "hint": "Добавьте токен доступа в настройках виджета, чтобы поднять лимит, или дождитесь его сброса."
         },
         "notFound": {
-          "title": "",
-          "hint": ""
+          "title": "Репозиторий или образ не найден",
+          "hint": "Проверьте идентификатор и провайдера в настройках виджета. Для приватных проектов нужен токен доступа."
         },
         "noMatchingVersion": {
-          "title": "",
-          "hint": ""
+          "title": "Ни одна версия не подходит под фильтр",
+          "hint": "Ослабьте префикс, суффикс или точность в фильтре версий этих репозиториев."
         },
         "noReleasesFound": {
-          "title": "",
-          "hint": ""
+          "title": "Релизов пока нет",
+          "hint": "У провайдера пока нет релизов или тегов этого проекта."
         },
         "invalidIdentifier": {
           "title": "Неверный идентификатор",
-          "hint": ""
+          "hint": "Используйте формат провайдера: например, owner/name для GitHub или полный путь к образу для реестров."
         },
         "noProviderSelected": {
           "title": "Провайдер не выбран",
-          "hint": ""
+          "hint": "Выберите провайдера для этих репозиториев в настройках виджета."
         },
         "noProviderResponse": {
-          "title": "",
-          "hint": ""
+          "title": "Нет ответа от {provider}",
+          "hint": "Провайдер ничего не вернул для этих репозиториев. Они будут проверены снова при следующем обновлении."
         },
         "unexpected": {
-          "title": "",
-          "hint": ""
+          "title": "Непредвиденная ошибка {provider}",
+          "hint": "При проверке что-то пошло не так. Повторите позже или посмотрите логи сервера."
         }
       },
       "markViewed": "Отметить как просмотренное",
-      "markAllViewed": "",
-      "markEntryViewed": "",
-      "viewed": "",
-      "copyVersion": "",
+      "markAllViewed": "Отметить все как просмотренные",
+      "markEntryViewed": "Отметить {name} {version} как просмотренное",
+      "viewed": "Просмотрено",
+      "copyVersion": "Копировать версию",
       "copied": "Скопировано",
-      "published": "",
-      "whatChanged": "",
-      "noNotes": "",
-      "changes": "{count, plural, one {# change} other {# changes}}",
+      "published": "Опубликован {time}",
+      "whatChanged": "Что изменилось",
+      "noNotes": "{provider} не публикует заметки к релизам для этого источника.",
+      "changes": "{count, plural, one {# изменение} few {# изменения} many {# изменений} other {# изменения}}",
       "starsCount": "Звёзды",
       "forksCount": "Форки",
-      "openIssues": "{count, plural, one {# open issue} other {# open issues}}",
-      "created": "Создано",
-      "releasePage": "",
-      "projectPage": "",
+      "openIssues": "{count, plural, one {# открытая задача} few {# открытые задачи} many {# открытых задач} other {# открытой задачи}}",
+      "created": "Создан {time}",
+      "releasePage": "Релиз",
+      "projectPage": "Проект",
       "runningVersions": "Запущенные версии",
       "upToDate": "Актуально",
       "updateAvailable": "Доступно обновление",
-      "unknownStatus": "Неизвестно"
+      "unknownStatus": "Неизвестно",
+      "error": {
+        "collapsedSaveTitle": "Свёрнутые разделы не сохранены",
+        "collapsedSaveMessage": "Не удалось обновить раздел. Попробуйте ещё раз."
+      }
     },
     "networkControllerSummary": {
       "advanced": {
@@ -5154,7 +5573,6 @@
       "download": "Скачивание",
       "upload": "Загрузка",
       "ping": "Пинг",
-      "status": "Статус",
       "avgDownload": "Среднее скачивание",
       "avgUpload": "Средняя загрузка",
       "avgPing": "Средний пинг",
@@ -5172,11 +5590,11 @@
       "option": {
         "statusPageSlug": {
           "label": "Slug страницы статуса",
-          "description": ""
+          "description": "Часть URL страницы после /status/, например homelab. Оставьте пустым, чтобы использовать страницу, заданную в каждой интеграции."
         },
         "summaryOnly": {
-          "label": "",
-          "description": ""
+          "label": "Только общий статус",
+          "description": "Скрывать строки и плашки мониторов. Перекрывает \"Показывать сводку\"; полные сведения остаются в расширенном виде."
         },
         "showSummary": {
           "label": "Показывать сводку",
@@ -5384,6 +5802,23 @@
       "name": "Системные ресурсы",
       "description": "Использование ЦП, памяти, дисков и другого оборудования вашей системы",
       "option": {
+        "diskDisplayMode": {
+          "label": "",
+          "option": {
+            "percentage": "В процентах (например, 76%)",
+            "free": "",
+            "absolute": "",
+            "combined": ""
+          }
+        },
+        "resourceLayout": {
+          "label": "",
+          "description": ""
+        },
+        "subresourceLayout": {
+          "label": "",
+          "description": ""
+        },
         "hasShadow": {
           "label": "Включить затенение графиков"
         },
@@ -5391,6 +5826,7 @@
           "label": "Видимые графики",
           "description": "Выберите графики, которые вы хотите отображать.",
           "option": {
+            "cpuCores": "",
             "memory": "Память",
             "network": "Сеть"
           }
@@ -5462,7 +5898,6 @@
         "actionsDisabledEditMode": "Действия недоступны, пока панель в режиме редактирования.",
         "widgetItemUnavailable": "Этот элемент виджета недоступен.",
         "toggle": "Переключить",
-        "copied": "Скопировано",
         "confirmDelete": "Подтвердите это необратимое действие."
       },
       "option": {
@@ -5503,6 +5938,9 @@
       "name": "Системы Beszel (таблица)",
       "description": "Таблица всех систем, отслеживаемых Beszel, с сортировкой по столбцам и индикаторами статуса",
       "option": {
+        "fahrenheit": {
+          "label": "Температура в градусах Фаренгейта"
+        },
         "sortBy": {
           "label": "Сортировать по"
         },
@@ -5517,7 +5955,12 @@
     },
     "beszelSystemGrid": {
       "name": "Системы Beszel (сетка)",
-      "description": "Сетка карточек всех систем, отслеживаемых Beszel, с метриками в реальном времени"
+      "description": "Сетка карточек всех систем, отслеживаемых Beszel, с метриками в реальном времени",
+      "option": {
+        "fahrenheit": {
+          "label": "Температура в градусах Фаренгейта"
+        }
+      }
     },
     "beszelAlerts": {
       "name": "Оповещения Beszel",
@@ -5731,7 +6174,6 @@
       },
       "metric": {
         "system": "Система",
-        "source": "Интеграция",
         "hostname": "Имя хоста",
         "cpuModel": "Модель ЦП",
         "cores": "Ядер",
@@ -6197,14 +6639,14 @@
       "connectService": "Подключить сервис"
     },
     "urlDrop": {
-      "hint": "",
-      "resolving": "",
+      "hint": "Отпустите, чтобы добавить как приложение",
+      "resolving": "Добавление приложения…",
       "notification": {
         "success": {
-          "message": ""
+          "message": "Приложение {name} добавлено на панель"
         },
         "full": {
-          "message": ""
+          "message": "На панели нет места"
         }
       }
     },
@@ -6313,6 +6755,26 @@
         }
       }
     },
+    "tabs": {
+      "label": "",
+      "indicator": "",
+      "home": "Главная",
+      "untitled": "",
+      "add": "",
+      "actions": "",
+      "rename": "",
+      "namePlaceholder": "",
+      "moveLeft": "",
+      "moveRight": "",
+      "remove": {
+        "action": "",
+        "confirm": ""
+      },
+      "limitReached": "",
+      "hotkeyHint": "",
+      "destination": "",
+      "containerDestination": ""
+    },
     "landmark": {
       "canvas": "Основная область панели",
       "leftRail": "Левая боковая панель",
@@ -6333,11 +6795,11 @@
         "label": "URL изображения favicon"
       },
       "backgroundImageUrl": {
-        "label": "URL фонового изображения",
-        "placeholder": "Начните вводить для поиска локальных изображений",
+        "label": "URL фонового изображения или видео",
+        "placeholder": "Начните вводить, чтобы найти локальные изображения и видео",
         "group": {
-          "your": "Ваши изображения",
-          "other": "Другие изображения"
+          "your": "Ваши медиа",
+          "other": "Другие медиа"
         }
       },
       "backgroundImageAttachment": {
@@ -6375,15 +6837,15 @@
         }
       },
       "backgroundImageSize": {
-        "label": "Размер фонового изображения",
+        "label": "Размер фона",
         "option": {
           "cover": {
             "label": "Заполнить",
-            "description": "Масштабирует изображение с сохранением пропорций так, чтобы оно целиком заполнило область, обрезая излишки."
+            "description": "Масштабирует фон до наименьшего размера, при котором он закрывает всё окно; лишнее обрезается."
           },
           "contain": {
             "label": "Уместить",
-            "description": "Масштабирует изображение с сохранением пропорций так, чтобы оно полностью поместилось в область без обрезки."
+            "description": "Масштабирует фон до наибольшего размера, при котором он помещается в контейнер без обрезки и растяжения."
           }
         }
       },
@@ -6421,13 +6883,7 @@
       "itemRadius": {
         "label": "Скругление углов",
         "description": "Изменяет скругление углов плиток на вашей панели",
-        "option": {
-          "xs": "Очень маленькое",
-          "sm": "Маленькое",
-          "md": "Среднее",
-          "lg": "Большое",
-          "xl": "Очень большое"
-        }
+        "option": {}
       },
       "isPublic": {
         "label": "Публичная",
@@ -6585,6 +7041,11 @@
           "description": "Администратор сервера ещё не установил домашнюю панель.",
           "link": "Посмотреть публичные панели",
           "notice": "Чтобы убрать эту страницу, попросите администратора сервера установить домашнюю панель"
+        },
+        "noAccess": {
+          "title": "",
+          "description": "",
+          "notice": ""
         }
       }
     }
@@ -6656,10 +7117,12 @@
             "documentation": "Документация",
             "submitIssue": "Сообщить о проблеме",
             "discord": "Сообщество Discord",
-            "sourceCode": "Исходный код"
+            "sourceCode": "Исходный код",
+            "changelog": ""
           }
         },
         "about": "О программе",
+        "updateAvailable": "Доступно обновление",
         "assistant": "Ассистент"
       }
     },
@@ -6671,9 +7134,23 @@
           "authentication": "Аутентификация",
           "authorization": "Авторизация"
         },
-        "heroBanner": {
-          "title": "С возвращением на вашу",
-          "subtitle": "Панель {app}"
+        "hero": {
+          "greeting": "",
+          "greetingWithoutName": "",
+          "description": ""
+        },
+        "lobster": {
+          "label": "",
+          "prompt": "",
+          "pokeCount": "",
+          "reaction": {
+            "hey": "",
+            "ow": "",
+            "snip": "",
+            "careful": "",
+            "stillHere": "",
+            "okay": ""
+          }
         }
       },
       "board": {
@@ -6718,7 +7195,9 @@
         },
         "noResults": {
           "title": "Панелей ещё нет",
-          "description": "Создайте панель, чтобы разместить приложения и виджеты в одном месте."
+          "description": "Создайте панель, чтобы разместить приложения и виджеты в одном месте.",
+          "noAccessTitle": "",
+          "noAccessDescription": ""
         }
       },
       "media": {
@@ -6771,6 +7250,11 @@
                 "logoDisplay": {
                   "logo": "Только логотип",
                   "logoAndText": "Логотип + текст"
+                },
+                "tabsDisplay": {
+                  "wide": "Широкий",
+                  "compact": "Компактно",
+                  "indicator": ""
                 }
               },
               "items": {
@@ -6778,6 +7262,7 @@
                 "search": "Поиск",
                 "home": "Домашняя панель",
                 "boardSwitcher": "Панели",
+                "boardTabs": "",
                 "assistant": "Ассистент",
                 "docker": "Docker",
                 "boardEdit": "Изменить панель",
@@ -7009,6 +7494,10 @@
             "title": "Внешний вид",
             "defaultColorScheme": {
               "label": "Цветовая схема по умолчанию"
+            },
+            "whatsNew": {
+              "label": "",
+              "description": ""
             }
           },
           "branding": {
@@ -7053,15 +7542,13 @@
             "signInOverlay": {
               "label": "Затемнение фона"
             },
+            "signInMarquee": {
+              "label": "Бегущие иконки на фоне",
+              "description": "Плывущие иконки приложений на страницах входа."
+            },
             "defaultRadius": {
               "label": "Скругление углов",
-              "options": {
-                "xs": "Строгое",
-                "sm": "Лёгкое",
-                "md": "Среднее",
-                "lg": "Сильное",
-                "xl": "Мягкое"
-              }
+              "options": {}
             },
             "customCss": {
               "label": "Глобальный пользовательский CSS",
@@ -7083,7 +7570,6 @@
               "greetingDefault": "Приветствие по умолчанию",
               "boardColorLocked": "Цвет панелей закреплён",
               "boardColorFlexible": "Цвета панелей разрешены",
-              "appName": "Название",
               "logo": "Логотип",
               "greeting": "Приветствие",
               "on": "Вкл",
@@ -7218,6 +7704,7 @@
             "model": {
               "title": "Модель",
               "description": "Выберите найденную модель или введите точный ID модели на конечной точке.",
+              "save": "Сохранить настройки модели",
               "placeholder": "ID модели",
               "refresh": "Обновить модели",
               "chooseModel": "Выберите модель для новых чатов.",
@@ -7244,7 +7731,7 @@
             },
             "enabled": {
               "label": "Включить Ассистента",
-              "description": "Ассистент станет доступен всем вошедшим пользователям. Разрешения Homarr по-прежнему действуют для каждого вызова встроенных инструментов."
+              "description": "Выключите, чтобы скрыть Ассистента от всех пользователей. Сохранённые настройки провайдера останутся на будущее."
             },
             "save": "Сохранить настройки Ассистента",
             "notification": {
@@ -7310,9 +7797,7 @@
             "lastExecution": {
               "label": "Последний запуск"
             },
-            "actions": {
-              "label": "Действия"
-            }
+            "actions": {}
           },
           "table": {
             "search": "Поиск по задачам ({count})..."
@@ -7364,6 +7849,12 @@
             "apiKey": {
               "label": "Аутентификация",
               "title": "API-ключи",
+              "access": {
+                "label": "Доступ",
+                "readOnly": "Только чтение",
+                "readWrite": "Чтение и запись",
+                "description": "Запрещает изменения, действия с сервисами и произвольные запросы к интеграциям."
+              },
               "button": {
                 "createApiToken": "Создать API-токен",
                 "confirmDeletion": "Подтвердить удаление"
@@ -7376,9 +7867,7 @@
               },
               "table": {
                 "header": {
-                  "createdBy": "Кем создан",
-                  "source": "Источник",
-                  "actions": "Действия"
+                  "createdBy": "Кем создан"
                 }
               },
               "provenance": {
@@ -7429,7 +7918,7 @@
               },
               "authentication": {
                 "title": "Аутентификация",
-                "intro": "Аутентифицироваться на MCP-сервере можно с помощью API-ключа или OAuth. Оба способа дают одинаковый уровень доступа.",
+                "intro": "Аутентифицироваться можно с помощью API-ключа или OAuth. Оба способа поддерживают учётные данные только для чтения или для чтения и записи.",
                 "apiKey": {
                   "title": "API-ключ (вручную)",
                   "description": "Передавайте в конфигурации MCP-клиента заголовок ApiKey с полным API-ключом."
@@ -7439,7 +7928,7 @@
                   "description": "Запустите авторизацию в OAuth-клиенте и при необходимости войдите в Homarr. Проверьте клиента, адрес обратного вызова и доступ к аккаунту, затем нажмите \"Разрешить доступ\", только если доверяете клиенту. Учётные данные API создаются только после одобрения и успешного обмена кода.",
                   "hint": "Записанные подключения OAuth можно отозвать в своих настройках на вкладке \"Общие\". Администраторы также могут отозвать учётные данные на вкладке \"Аутентификация\". Эти учётные данные работают с HTTP API Homarr и MCP, не истекают автоматически и остаются действительными после выхода."
                 },
-                "permissions": "API-ключ определяет, какие разрешения доступны ИИ: он работает с тем же уровнем доступа, что и владелец ключа."
+                "permissions": "Учётные данные не дают больше прав, чем сейчас есть у их владельца. Данные только для чтения к тому же запрещают изменения, действия с сервисами и произвольные запросы к интеграциям."
               },
               "clientConfig": {
                 "title": "Конфигурация клиента",
@@ -7591,7 +8080,8 @@
               "openSpotlightApps": "Открыть поиск приложений",
               "openSpotlightAssistant": "Открыть режим Ассистента",
               "openSpotlightPreferences": "Открыть режим настроек",
-              "openAssistant": "Открыть Ассистента"
+              "openAssistant": "Открыть Ассистента",
+              "switchBoardTab": ""
             },
             "note": "Подсказка: Mod — это клавиша Ctrl или ⌘ на macOS"
           }
@@ -7671,7 +8161,6 @@
     },
     "field": {
       "state": {
-        "label": "Состояние",
         "option": {
           "created": "Создан",
           "running": "Работает",
@@ -7698,7 +8187,6 @@
       }
     },
     "action": {
-      "title": "Действия",
       "logs": {
         "label": "Просмотреть логи",
         "page": {
@@ -7936,27 +8424,13 @@
       "internalServerError": "Не удалось получить данные Kubernetes"
     },
     "field": {
-      "name": {
-        "label": "Имя"
-      },
-      "namespace": {
-        "label": "Пространство имён"
-      },
-      "creationTimestamp": {
-        "label": "Создано"
-      },
-      "state": {
-        "label": "Состояние"
-      },
-      "status": {
-        "label": "Статус"
-      },
-      "type": {
-        "label": "Тип"
-      },
-      "architecture": {
-        "label": "Архитектура"
-      }
+      "name": {},
+      "namespace": {},
+      "creationTimestamp": {},
+      "state": {},
+      "status": {},
+      "type": {},
+      "architecture": {}
     }
   },
   "permission": {
@@ -7983,10 +8457,7 @@
         "label": "Разрешение"
       }
     },
-    "action": {
-      "saveUser": "Сохранить разрешения пользователя",
-      "saveGroup": "Сохранить разрешения группы"
-    }
+    "action": {}
   },
   "navigationStructure": {
     "manage": {
@@ -8097,8 +8568,7 @@
       "resultsAriaLabel": "Результаты: {mode}",
       "footer": {
         "navigate": "Навигация",
-        "open": "Открыть",
-        "close": "Закрыть"
+        "open": "Открыть"
       }
     },
     "error": {
@@ -8528,9 +8998,7 @@
         "urlTemplate": {
           "label": "Шаблон URL поиска"
         },
-        "description": {
-          "label": "Описание"
-        }
+        "description": {}
       },
       "page": {
         "list": {
@@ -8599,8 +9067,7 @@
             "table": {
               "header": {
                 "season": "Сезон",
-                "episodes": "Серии",
-                "status": "Статус"
+                "episodes": "Серии"
               },
               "status": {
                 "requested": "Запрошено"
@@ -8785,6 +9252,12 @@
       }
     }
   },
+  "whatsNew": {
+    "title": "",
+    "empty": "",
+    "allReleases": "",
+    "dismiss": ""
+  },
   "metadata": {
     "description": "Панель на вашем сервере для стека *arr и всей домашней инфраструктуры. Интеграция с 50+ сервисами, виджеты в реальном времени, без конфигурационных файлов.",
     "dashboardTitle": "Панель {appName}"
@@ -8814,12 +9287,12 @@
     "searchConversations": "Поиск по чатам",
     "noMatchingConversations": "Нет подходящих чатов",
     "historyError": {
-      "title": "",
-      "load": "",
-      "loadMessages": "",
-      "saveMessages": "",
-      "switch": "",
-      "retry": ""
+      "title": "История чатов",
+      "load": "Не удалось загрузить чаты.",
+      "loadMessages": "Не удалось загрузить сообщения этого чата. Повторите попытку, чтобы восстановить их перед отправкой.",
+      "saveMessages": "Не удалось сохранить последние сообщения — после перезагрузки их может не быть.",
+      "switch": "Не удалось открыть этот чат.",
+      "retry": "Повторить"
     },
     "moreActions": "Другие действия с ответом",
     "renameConversation": {
@@ -8842,7 +9315,7 @@
     "suggestions": {
       "health": {
         "label": "Проверить состояние сервисов",
-        "prompt": "Проверь мои интеграции и кратко перечисли всё, что требует внимания."
+        "prompt": "Проверь состояние сервисов и интеграций, к которым у меня есть доступ. Кратко опиши проблемы и предложи, что делать дальше."
       },
       "explore": {
         "label": "Изучить мой Homarr",
@@ -8858,7 +9331,7 @@
       },
       "designWidget": {
         "label": "Создать виджет",
-        "prompt": "Создай и установи пользовательский виджет для "
+        "prompt": "Помоги мне спроектировать пользовательский виджет. Спроси, что он должен показывать и куда его добавить, а затем используй мои доступные интеграции."
       }
     },
     "composerPlaceholder": "Спросить Ассистента…",
@@ -8870,6 +9343,7 @@
       "imageInput": "Принимает изображения",
       "thinking": "Режим рассуждения",
       "reasoning": {
+        "default": "По умолчанию",
         "auto": "Авто",
         "none": "Выкл",
         "minimal": "Минимум",
@@ -8940,9 +9414,9 @@
     },
     "mentions": {
       "menu": "Добавить контекст Homarr",
-      "back": "",
-      "loading": "",
-      "empty": "",
+      "back": "Все категории",
+      "loading": "Загрузка доступного контекста…",
+      "empty": "Подходящий контекст не найден.",
       "context": "Контекст",
       "app": "Приложения",
       "integration": "Интеграции",
@@ -8957,13 +9431,13 @@
     },
     "commands": {
       "menu": "Команды Ассистента",
-      "hint": "",
-      "empty": "",
-      "health": "Подготовить проверку состояния сервисов",
-      "explore": "Подготовить обзор этого экземпляра Homarr",
-      "media": "Подготовить поиск медиа",
-      "style": "Подготовить изменение внешнего вида или CSS панели",
-      "designWidget": "Подготовить создание пользовательского виджета одним запросом"
+      "hint": "Выберите, с чего начать, или введите / для команд и @ для контекста. Перед отправкой промпт можно изменить.",
+      "empty": "Подходящих команд нет. Попробуйте /health, /explore, /media, /style или /design-widget.",
+      "health": "Найти неисправные сервисы и способы исправления",
+      "explore": "Посмотреть приложения, панели и доступные действия",
+      "media": "Найти фильм или сериал для запроса",
+      "style": "Улучшить макет, внешний вид или CSS панели",
+      "designWidget": "Создать пользовательский виджет на основе ваших интеграций"
     },
     "usage": {
       "tokens": "токенов",
@@ -9109,7 +9583,6 @@
       "cssDescription": "Редактируется вся таблица стилей. Существующие правила сохранятся, если не удалить их здесь.",
       "cssCharacters": "{count} из 16384 символов",
       "copyCss": "Копировать CSS",
-      "copied": "Скопировано",
       "restoreCss": "Вернуть текущий CSS",
       "remoteCssTitle": "Этот CSS загружает внешний ресурс",
       "remoteCssDescription": "Импортированные таблицы стилей и внешние URL обращаются к другому серверу при загрузке панели. Проверьте их, прежде чем продолжить."
@@ -9141,7 +9614,7 @@
     "approvalDescription": "Проверьте это изменение перед выполнением.",
     "approveAndRun": "Одобрить и выполнить",
     "deny": "Отклонить",
-    "approvalError": "",
+    "approvalError": "Не удалось записать ваш ответ. Попробуйте ещё раз.",
     "autoApproval": {
       "label": "Автоматическое одобрение",
       "composerLabel": "Одобрять за меня",

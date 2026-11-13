@@ -215,7 +215,7 @@ const AdvancedAirQuality = ({ airQuality, options, width }: AirQualityViewProps 
         </SimpleGrid>
 
         <SimpleGrid cols={width >= 800 ? 2 : 1} spacing="md">
-          <Paper withBorder p="sm">
+          <Paper p="sm">
             <Text id={chartId} size="sm" fw={600} mb="xs">
               {t("advanced.next24Hours")}
             </Text>
@@ -265,7 +265,7 @@ const AdvancedAirQuality = ({ airQuality, options, width }: AirQualityViewProps 
 
           <Stack gap="md">
             {options.showPollutants && (
-              <Paper withBorder p="sm">
+              <Paper p="sm">
                 <Text size="sm" fw={600} mb="xs">
                   {t("advanced.pollutants")}
                 </Text>
@@ -282,7 +282,7 @@ const AdvancedAirQuality = ({ airQuality, options, width }: AirQualityViewProps 
             )}
 
             {options.showPollen && hasAvailableValue(airQuality.current.pollen) && (
-              <Paper withBorder p="sm">
+              <Paper p="sm">
                 <Text size="sm" fw={600} mb="xs">
                   {t("advanced.pollen")}
                 </Text>
@@ -298,7 +298,7 @@ const AdvancedAirQuality = ({ airQuality, options, width }: AirQualityViewProps 
           </Stack>
         </SimpleGrid>
 
-        <Paper withBorder p="sm">
+        <Paper p="sm">
           <Text size="sm" fw={600} mb="xs">
             {t("advanced.sevenDayForecast")}
           </Text>
@@ -327,7 +327,7 @@ const AdvancedAirQuality = ({ airQuality, options, width }: AirQualityViewProps 
 };
 
 const MetricCard = ({ label, value }: { label: string; value: string }) => (
-  <Paper withBorder p="xs">
+  <Paper p="xs">
     <Text size="xs" c="dimmed">
       {label}
     </Text>

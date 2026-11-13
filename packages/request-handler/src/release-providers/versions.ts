@@ -1,4 +1,5 @@
 import { ReleaseLookupError } from "./errors";
+export { isVersionLikeTag } from "@homarr/definitions";
 import type { Release } from "./types";
 
 export const floatingTagNames = ["latest", "release", "stable"];
@@ -19,8 +20,6 @@ export const byHighestVersion = (left: string, right: string) =>
 export const isPlainVersionTag = (tag: string) => /^v?\d{1,4}(?:\.\d+)*$/.test(tag);
 
 export const isVersionPrefixedTag = (tag: string) => /^v?\d+\.\d+/.test(tag);
-
-export const isVersionLikeTag = (tag: string) => isPlainVersionTag(tag) || /\d+\.\d+/.test(tag);
 
 export const byMostSpecificVersion = (left: string, right: string) =>
   Number(isPlainVersionTag(right)) - Number(isPlainVersionTag(left)) ||
@@ -56,11 +55,19 @@ export const noReleasesFoundError = (identifier: string) =>
 const byNewestRelease = (left: Release, right: Release) =>
   right.latestReleaseAt.getTime() - left.latestReleaseAt.getTime();
 
-export const selectNewestRelease = (releases: Release[], versionPattern?: RegExp): Release => {
+export const selectNewestRelease = (
+  releases: Release[],
+  versionPattern?: RegExp,
+  excludePrereleases = false,
+): Release => {
   const [newest] = releases
+    .filter((release) => !excludePrereleases || !release.isPreRelease)
     .filter((release) => matchesVersionPattern(release.latestRelease, versionPattern))
     .toSorted(byNewestRelease);
   if (!newest) {
+    if (excludePrereleases) {
+      throw new ReleaseLookupError("noMatchingVersion", "No stable release matches the configured version filter");
+    }
     throw noMatchingVersionError(
       releases.map((release) => release.latestRelease),
       versionPattern,

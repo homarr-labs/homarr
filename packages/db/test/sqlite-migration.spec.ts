@@ -24,6 +24,46 @@ const applyMigration = (connection: BetterSqlite3.Database, fileName: string) =>
   }
 };
 
+test("board theme migration preserves explicit appearance overrides", () => {
+  const connection = new BetterSqlite3(":memory:");
+  try {
+    const journal = JSON.parse(
+      readFileSync(path.join(__dirname, "..", "migrations", "sqlite", "meta", "_journal.json"), "utf8"),
+    ) as { entries: { tag: string }[] };
+    connection.exec("BEGIN");
+    for (const entry of journal.entries) {
+      if (entry.tag === "0054_board_theme_inheritance") break;
+      applyMigration(connection, `${entry.tag}.sql`);
+    }
+    connection.exec("COMMIT");
+    connection.exec(`
+      INSERT INTO board (id, name, primary_color, secondary_color, item_radius) VALUES
+        ('chosen-defaults', 'chosen-defaults', '#fa5252', '#fd7e14', 'lg'),
+        ('chosen-custom', 'chosen-custom', '#123456', '#abcdef', 'xs');
+      INSERT INTO layout (id, name, board_id, column_count)
+        VALUES ('existing-layout', 'Base', 'chosen-defaults', 12);
+    `);
+
+    applyMigration(connection, "0054_board_theme_inheritance.sql");
+
+    expect(
+      connection.prepare("SELECT id, primary_color, secondary_color, item_radius FROM board ORDER BY id").all(),
+    ).toEqual([
+      { id: "chosen-custom", primary_color: "#123456", secondary_color: "#abcdef", item_radius: "xs" },
+      { id: "chosen-defaults", primary_color: "#fa5252", secondary_color: "#fd7e14", item_radius: "lg" },
+    ]);
+    expect(connection.prepare("SELECT id FROM layout").all()).toEqual([{ id: "existing-layout" }]);
+    expect(connection.pragma("foreign_key_check")).toEqual([]);
+
+    connection.exec("INSERT INTO board (id, name) VALUES ('new-board', 'new-board')");
+    expect(
+      connection.prepare("SELECT primary_color, secondary_color, item_radius FROM board WHERE id = 'new-board'").get(),
+    ).toEqual({ primary_color: null, secondary_color: null, item_radius: null });
+  } finally {
+    connection.close();
+  }
+});
+
 test("SQLite migrations seed the disabled bundled custom widgets", async () => {
   const connection = new BetterSqlite3(":memory:");
   const database = drizzle(connection, { schema: sqliteSchema, casing: DB_CASING });

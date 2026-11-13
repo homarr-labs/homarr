@@ -60,22 +60,24 @@ export default async function Page({ params }: PageProps) {
       }}
       footer={footerItems ? { items: footerItems } : undefined}
     >
-      {!page.data.hide_title && (
-        <>
-          <DocsTitle id={bodyTitleId} className="homarr-docs-title">
-            {page.data.title}
-          </DocsTitle>
-          {page.data.description && (
-            <DocsDescription className="homarr-docs-description mb-0">{page.data.description}</DocsDescription>
+      <div className="homarr-docs-header">
+        <div className="homarr-docs-heading-row">
+          {!page.data.hide_title && (
+            <DocsTitle id={bodyTitleId} className="homarr-docs-title">
+              {page.data.title}
+            </DocsTitle>
           )}
-        </>
-      )}
-      <div className="homarr-page-actions" role="group" aria-label="Page actions">
-        <MarkdownCopyButton markdownUrl={markdownUrl} />
-        <ViewOptionsPopover
-          markdownUrl={markdownUrl}
-          githubUrl={`https://github.com/homarr-labs/homarr/blob/release/v2/${sourcePath}`}
-        />
+          <div className="homarr-page-actions" role="group" aria-label="Page actions">
+            <MarkdownCopyButton markdownUrl={markdownUrl} />
+            <ViewOptionsPopover
+              markdownUrl={markdownUrl}
+              githubUrl={`https://github.com/homarr-labs/homarr/blob/release/v2/${sourcePath}`}
+            />
+          </div>
+        </div>
+        {!page.data.hide_title && page.data.description && (
+          <DocsDescription className="homarr-docs-description mb-0">{page.data.description}</DocsDescription>
+        )}
       </div>
       <DocsBody>
         <MDX

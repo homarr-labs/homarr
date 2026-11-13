@@ -12,18 +12,17 @@ import {
 } from "@homarr/custom-widgets/core";
 import type { CustomWidgetSecretKind, HomarrCustomWidgetV2 } from "@homarr/custom-widgets/core";
 import { createCustomWidgetSourceSetupValues, isCustomWidgetSourceSetupReady } from "@homarr/custom-widgets/workbench";
-import type {
-  CustomWidgetSourceSetupMessages,
-  CustomWidgetSourceSetupValue,
-  ImportReviewContentMessages,
-} from "@homarr/custom-widgets/workbench";
+import type { CustomWidgetSourceSetupValue } from "@homarr/custom-widgets/workbench";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
+
+import { useCustomWidgetImportMessages } from "./use-custom-widget-import-messages";
 
 interface UseCustomWidgetImportOptions {
   widget: HomarrCustomWidgetV2 | null;
   /** Set when replacing an existing v1 widget instead of creating a new one. */
   legacyId?: string;
+  workshop?: { submissionId: string; revision: number };
   onImported?(result: { id: string }): void;
 }
 
@@ -32,7 +31,7 @@ interface UseCustomWidgetImportOptions {
  * source setup, security review and the mutation itself. Keeping it in one hook
  * means the Workshop page and the file/clipboard dialog can never drift apart.
  */
-export function useCustomWidgetImport({ widget, legacyId, onImported }: UseCustomWidgetImportOptions) {
+export function useCustomWidgetImport({ widget, legacyId, workshop, onImported }: UseCustomWidgetImportOptions) {
   const t = useI18n("customWidget");
   const tCommon = useI18n("common");
   const router = useRouter();
@@ -71,6 +70,7 @@ export function useCustomWidgetImport({ widget, legacyId, onImported }: UseCusto
   // A widget must only ever be imported once per visit: the mutation creates a new
   // record every call, so a second click would silently duplicate it.
   const [succeeded, setSucceeded] = useState(false);
+  const [checkingWorkshop, setCheckingWorkshop] = useState(false);
   useEffect(() => setSucceeded(false), [widget]);
 
   const onSuccess = (result: { id: string }) => {
@@ -102,17 +102,53 @@ export function useCustomWidgetImport({ widget, legacyId, onImported }: UseCusto
     onSuccess,
     onError,
   });
+  const workshopMutation = clientApi.customWidget.workshopInstall.useMutation({
+    onSuccess: (result) => onSuccess({ id: result.definitionId }),
+    onError,
+  });
 
-  const pending = importMutation.isPending || migrateMutation.isPending;
+  const pending =
+    importMutation.isPending || migrateMutation.isPending || workshopMutation.isPending || checkingWorkshop;
 
-  const importWidget = () => {
+  const importWidget = async () => {
     if (!configuredWidget || pending || succeeded) return;
     const secrets = Object.entries(values).flatMap(([sourceId, value]) =>
       Object.entries(value.secrets).flatMap(([kind, secret]) =>
         secret?.trim() ? [{ sourceId, kind: kind as CustomWidgetSecretKind, value: secret }] : [],
       ),
     );
-    if (legacyId)
+    if (workshop) {
+      setCheckingWorkshop(true);
+      try {
+        const verified = await utils.customWidget.workshopGet.fetch({ submissionId: workshop.submissionId });
+        if (
+          verified.submission.revision !== workshop.revision ||
+          JSON.stringify(verified.widget) !== JSON.stringify(widget)
+        ) {
+          throw new Error(t("workshopUpdate.changedBeforeInstall"));
+        }
+        workshopMutation.mutate({
+          submissionId: workshop.submissionId,
+          expectedRevision: workshop.revision,
+          expectedContentHash: verified.contentHash,
+          name: configuredWidget.name,
+          sources: Object.fromEntries(
+            Object.entries(values).map(([sourceId, value]) => [
+              sourceId,
+              {
+                baseUrl: value.baseUrl,
+                integrationId: value.integrationId,
+              },
+            ]),
+          ),
+          secrets,
+        });
+      } catch (error) {
+        onError({ message: error instanceof Error ? error.message : undefined });
+      } finally {
+        setCheckingWorkshop(false);
+      }
+    } else if (legacyId)
       migrateMutation.mutate({
         id: legacyId,
         widget: configuredWidget,
@@ -121,33 +157,8 @@ export function useCustomWidgetImport({ widget, legacyId, onImported }: UseCusto
     else importMutation.mutate({ widget: configuredWidget, secrets });
   };
 
-  const reviewMessages: ImportReviewContentMessages = {
-    description: legacyId ? t("importReview.migrationDescription") : t("importReview.description"),
-    name: t("importReview.name"),
-    origin: t("importReview.origin"),
-    authentication: t("importReview.authentication"),
-    methods: t("importReview.methods"),
-    permissions: t("importReview.permissions"),
-    actionWarningTitle: t("importReview.actionWarning.title"),
-    actionWarningDescription: t("importReview.actionWarning.description"),
-    permission: (permission) => t(`preview.request.permission.${permission}` as never),
-  };
-
-  const setupMessages: CustomWidgetSourceSetupMessages = {
-    title: t("importReview.sourceSetup.title"),
-    description: t("importReview.sourceSetup.description"),
-    suggestedUrl: t("importReview.sourceSetup.suggestedUrl"),
-    baseUrl: t("workbench.sources.baseUrl"),
-    authentication: t("workbench.sources.authentication"),
-    confirmUrl: t("importReview.sourceSetup.confirmUrl"),
-    ready: t("importReview.sourceSetup.ready"),
-    needsUrl: t("importReview.sourceSetup.needsUrl"),
-    credentialsMissing: t("importReview.sourceSetup.credentialsMissing"),
-    credentialsOptional: t("importReview.sourceSetup.credentialsOptional"),
-    configured: t("workbench.sources.configured"),
-    secret: (kind) => t(`secret.${kind}`),
-    urlError: (issue) => t(`workbench.sources.baseUrlError.${issue}`),
-  };
+  const { reviewMessages, setupMessages } = useCustomWidgetImportMessages();
+  if (legacyId) reviewMessages.description = t("importReview.migrationDescription");
 
   return {
     review,

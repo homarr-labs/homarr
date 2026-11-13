@@ -1,13 +1,14 @@
 "use client";
 
 import type { RefObject } from "react";
-import { useCallback, useLayoutEffect, useRef, useSyncExternalStore } from "react";
+import { useCallback, useLayoutEffect, useMemo, useRef, useSyncExternalStore } from "react";
 
 import { getLayoutRowCount, getLogicalItemStyle, getLogicalGridSize } from "~/components/board/layout";
 import type { TransactionalGridState } from "./dnd";
 import type { GridInteractionStore } from "./grid-interaction-store";
 import { clearGridPreviewGeometry, createGridPreviewDomState, syncGridPreviewGeometry } from "./grid-preview-geometry";
 import type { SectionGridPlacement } from "./use-grid-layout-actions";
+import { createGridRowProjection } from "./grid-row-projection";
 
 export interface GridInteraction {
   activeId: string;
@@ -18,6 +19,8 @@ export interface GridInteraction {
   mode: "drag" | "resize";
   valid: boolean;
   previewRevision: number;
+  minimumDisplayHeights?: ReadonlyMap<string, number>;
+  affectedGridIds?: ReadonlySet<string>;
 }
 
 interface GridPreviewLayerProps {
@@ -25,6 +28,8 @@ interface GridPreviewLayerProps {
   rowCount: number;
   maxRowCount: number | null;
   placements: readonly SectionGridPlacement[];
+  logicalPlacements: readonly SectionGridPlacement[];
+  minimumDisplayHeights?: ReadonlyMap<string, number>;
   gridRef: RefObject<HTMLDivElement | null>;
   entryElements: ReadonlyMap<string, HTMLElement>;
   interactionStore: GridInteractionStore<GridInteraction>;
@@ -35,6 +40,8 @@ export const GridPreviewLayer = ({
   rowCount,
   maxRowCount,
   placements,
+  logicalPlacements,
+  minimumDisplayHeights,
   gridRef,
   entryElements,
   interactionStore,
@@ -46,8 +53,20 @@ export const GridPreviewLayer = ({
   const getSnapshot = useCallback(() => interactionStore.getGridSnapshot(sectionId), [interactionStore, sectionId]);
   const interaction = useSyncExternalStore(subscribe, getSnapshot, getSnapshot);
   const previewGrid = interaction?.state.grids.find((grid) => grid.id === sectionId);
+  const controlledProjection = useMemo(
+    () => createGridRowProjection(placements, minimumDisplayHeights),
+    [placements, minimumDisplayHeights],
+  );
+  const previewProjection = useMemo(
+    () =>
+      createGridRowProjection(
+        previewGrid?.placements ?? placements,
+        interaction?.minimumDisplayHeights ?? minimumDisplayHeights,
+      ),
+    [previewGrid?.placements, placements, minimumDisplayHeights, interaction?.minimumDisplayHeights],
+  );
   const previewStateRef = useRef(createGridPreviewDomState());
-  const placementsRef = useRef(placements);
+  const logicalPlacementsRef = useRef(logicalPlacements);
 
   const isDragging = interaction?.mode === "drag";
   const isTargetGrid = isDragging && interaction.targetGridId === sectionId;
@@ -66,14 +85,16 @@ export const GridPreviewLayer = ({
   }
 
   useLayoutEffect(() => {
-    placementsRef.current = placements;
+    logicalPlacementsRef.current = logicalPlacements;
     previewStateRef.current = syncGridPreviewGeometry({
       elements: entryElements,
-      placements,
+      placements: logicalPlacements,
       previewPlacements: previewGrid?.placements ?? null,
       activeId: interaction?.activeId ?? null,
       mode: interaction?.mode ?? null,
       previous: previewStateRef.current,
+      displayedPlacements: controlledProjection.placements,
+      displayedPreviewPlacements: previewProjection.placements,
     });
 
     const grid = gridRef.current;
@@ -88,7 +109,7 @@ export const GridPreviewLayer = ({
       delete grid.dataset.dndPreviewRevision;
     }
     grid.dataset.gridRowCount = String(renderedRowCount);
-    grid.style.height = `calc(${getLogicalGridSize(renderedRowCount)}px * var(--board-grid-row-scale, 1))`;
+    grid.style.height = `calc(${getLogicalGridSize(previewProjection.getDisplayRow(renderedRowCount))}px * var(--board-grid-row-scale, 1))`;
 
     const viewport = grid.parentElement;
     if (viewport?.hasAttribute("data-section-id")) {
@@ -101,7 +122,7 @@ export const GridPreviewLayer = ({
       if (maxRowCount === null) {
         viewport.style.setProperty(
           "--board-grid-drag-height",
-          `calc(${getLogicalGridSize(renderedRowCount)}px * var(--board-grid-row-scale, 1) * var(--board-grid-content-scale, 1))`,
+          `calc(${getLogicalGridSize(previewProjection.getDisplayRow(renderedRowCount))}px * var(--board-grid-row-scale, 1) * var(--board-grid-content-scale, 1))`,
         );
       } else {
         viewport.style.removeProperty("--board-grid-drag-height");
@@ -114,15 +135,18 @@ export const GridPreviewLayer = ({
     isTargetGrid,
     maxRowCount,
     placements,
+    logicalPlacements,
     previewGrid?.placements,
     renderedRowCount,
     sectionId,
     targetPlacement,
+    controlledProjection,
+    previewProjection,
   ]);
 
   useLayoutEffect(
     () => () => {
-      clearGridPreviewGeometry(entryElements, placementsRef.current, previewStateRef.current);
+      clearGridPreviewGeometry(entryElements, logicalPlacementsRef.current, previewStateRef.current);
       const grid = gridRef.current;
       if (!grid) return;
       grid.removeAttribute("data-dnd-drop-target");
@@ -138,7 +162,10 @@ export const GridPreviewLayer = ({
   return (
     <div
       className="board-grid-placeholder"
-      style={getLogicalItemStyle(targetPlacement, "var(--board-grid-row-scale, 1)")}
+      style={getLogicalItemStyle(
+        previewProjection.placements.find((placement) => placement.id === targetPlacement.id) ?? targetPlacement,
+        "var(--board-grid-row-scale, 1)",
+      )}
       data-grid-placeholder-for={interaction?.activeId}
       data-grid-placeholder-mode={interaction?.mode}
       data-grid-placeholder-type={targetPlacement.type}

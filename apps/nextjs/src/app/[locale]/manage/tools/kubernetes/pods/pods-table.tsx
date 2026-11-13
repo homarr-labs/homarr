@@ -24,15 +24,15 @@ interface PodsTableComponentProps {
 
 const createColumns = (
   t: ScopedTranslationFunction<"kubernetes.pods">,
-  tField: ScopedTranslationFunction<"kubernetes.field">,
+  tField: ScopedTranslationFunction<"common.field">,
 ): MRT_ColumnDef<KubernetesPod>[] => [
   {
     accessorKey: "name",
-    header: tField("name.label"),
+    header: tField("name"),
   },
   {
     accessorKey: "namespace",
-    header: tField("namespace.label"),
+    header: tField("namespace"),
   },
   {
     accessorKey: "image",
@@ -44,18 +44,18 @@ const createColumns = (
   },
   {
     accessorKey: "status",
-    header: tField("status.label"),
+    header: tField("status"),
   },
   {
     accessorKey: "creationTimestamp",
-    header: tField("creationTimestamp.label"),
+    header: tField("created"),
     Cell: ({ row }) => dayjs(row.original.creationTimestamp).fromNow(false),
   },
 ];
 
 export function PodsTable({ contextId, initialPods }: PodsTableComponentProps) {
   const tPods = useI18n("kubernetes.pods");
-  const tField = useI18n("kubernetes.field");
+  const tField = useI18n("common.field");
 
   const { data } = clientApi.kubernetes.pods.getPods.useQuery(
     { contextId },

@@ -29,6 +29,7 @@ import {
   IconCopy,
   IconDatabase,
   IconDownload,
+  IconDots,
   IconFilter,
   IconFilterOff,
   IconInfoCircle,
@@ -328,6 +329,7 @@ export default function DownloadClientsWidget({
   const { isFetching } = downloadsQuery;
 
   const t = useI18n("widget.downloads");
+  const tCommon = useI18n("common");
   const queryIndicators = (
     <Group gap={0}>
       <IntegrationErrorIndicator results={currentItems ?? []} />
@@ -509,14 +511,14 @@ export default function DownloadClientsWidget({
       },
       includeColumn("name") && {
         accessor: "name",
-        title: t("items.name.columnTitle"),
+        title: tCommon("field.name"),
         sortable: true,
         ellipsis: true,
         width: 240,
         render: (record) => (
           <Tooltip
             key={displayMode}
-            label={buildHoverTooltip(record, t, formatBytesPair, formatByteRate)}
+            label={buildHoverTooltip(record, t, tCommon, formatBytesPair, formatByteRate)}
             multiline
             w={280}
             withArrow
@@ -575,7 +577,7 @@ export default function DownloadClientsWidget({
       },
       includeColumn("size") && {
         accessor: "size",
-        title: t("items.size.columnTitle"),
+        title: tCommon("field.size"),
         sortable: true,
         width: 80,
         noWrap: true,
@@ -615,7 +617,7 @@ export default function DownloadClientsWidget({
       },
       includeColumn("state") && {
         accessor: "state",
-        title: t("items.state.columnTitle"),
+        title: tCommon("field.state"),
         width: 90,
         render: (record) => (
           <Badge size="xs" variant="dot" color={stateColorMap[record.state]}>
@@ -687,7 +689,7 @@ export default function DownloadClientsWidget({
       },
       includeColumn("type") && {
         accessor: "type",
-        title: t("items.type.columnTitle"),
+        title: tCommon("field.type"),
         sortable: true,
         width: 70,
         render: (record) => (
@@ -696,11 +698,33 @@ export default function DownloadClientsWidget({
           </Text>
         ),
       },
+      includeColumn("actions") && {
+        accessor: "actions",
+        title: "",
+        width: 40,
+        textAlign: "right",
+        render: (record) => (
+          <Tooltip label={t("items.actions.columnTitle")} withArrow>
+            <ActionIcon
+              variant="subtle"
+              size="sm"
+              aria-label={t("items.actions.columnTitle")}
+              onClick={(event) => {
+                event.stopPropagation();
+                const { right, bottom } = event.currentTarget.getBoundingClientRect();
+                setContextMenu({ x: right, y: bottom, item: record });
+              }}
+            >
+              <IconDots size={size.iconSize} />
+            </ActionIcon>
+          </Tooltip>
+        ),
+      },
     ];
     return cols.filter(Boolean) as DataTableColumn<ExtendedDownloadClientItem>[];
-  }, [columnContext, displayMode, formatByteRate, formatBytes, formatBytesPair, progressColumnWidth, size, t]);
+  }, [columnContext, displayMode, formatByteRate, formatBytes, formatBytesPair, progressColumnWidth, size, t, tCommon]);
 
-  const { effectiveColumns, storeKey } = usePersistedTableLayout({
+  const { effectiveColumns, storeKey, onColumnLayoutChange, setMultipleColumnWidths } = usePersistedTableLayout({
     columns,
     columnAccessors: DOWNLOAD_COLUMN_ACCESSORS,
     columnOrder: options.columnOrder,
@@ -709,6 +733,7 @@ export default function DownloadClientsWidget({
     storeKeyPrefix: "downloads",
     onLayoutChange: persistOption,
   });
+  const fillColumnAccessor = columns.find(({ accessor }) => accessor === "name")?.accessor ?? columns[0]?.accessor;
 
   const handleContextMenu = useCallback(
     ({ record, event }: { record: ExtendedDownloadClientItem; event: React.MouseEvent }) => {
@@ -785,6 +810,9 @@ export default function DownloadClientsWidget({
         </Box>
         <HomarrDataTable
           preserveColumnWidths
+          fillColumnAccessor={fillColumnAccessor}
+          defaultColumnWidths={columns}
+          onColumnWidthsChange={setMultipleColumnWidths}
           isEditMode={isEditMode}
           cellPadding={`${size.cellPadding}px 8px`}
           fetching={isFetching && (currentItems?.length ?? 0) === 0}
@@ -792,6 +820,7 @@ export default function DownloadClientsWidget({
           records={sortedData}
           columns={effectiveColumns}
           storeColumnsKey={storeKey}
+          onColumnLayoutChange={onColumnLayoutChange}
           sortStatus={sortStatus}
           onSortStatusChange={setSortStatus}
           noRecordsText={t("errors.noItems")}
@@ -841,29 +870,30 @@ export default function DownloadClientsWidget({
 function buildHoverTooltip(
   record: ExtendedDownloadClientItem,
   t: DownloadsT,
+  tCommon: ReturnType<typeof useI18n<"common">>,
   formatBytesPair: (used: number, total: number) => { used: string; total: string },
   formatByteRate: (bytes: number) => string,
 ): React.ReactNode {
   const lines: { label: string; value: string }[] = [
-    { label: t("items.size.detailsTitle"), value: formatSizePair(record.received, record.size, formatBytesPair) },
-    { label: t("items.state.detailsTitle"), value: t(`states.${record.state}`) },
+    { label: tCommon("field.size"), value: formatSizePair(record.received, record.size, formatBytesPair) },
+    { label: tCommon("field.state"), value: t(`states.${record.state}`) },
   ];
 
   if (record.downSpeed) {
-    lines.push({ label: t("items.downSpeed.detailsTitle"), value: formatByteRate(record.downSpeed) });
+    lines.push({ label: t("items.downSpeed.columnTitle"), value: formatByteRate(record.downSpeed) });
   }
   if (record.upSpeed) {
-    lines.push({ label: t("items.upSpeed.detailsTitle"), value: formatByteRate(record.upSpeed) });
+    lines.push({ label: t("items.upSpeed.columnTitle"), value: formatByteRate(record.upSpeed) });
   }
   if (record.time !== 0) {
-    lines.push({ label: t("items.time.eta"), value: dayjs().add(record.time, "milliseconds").fromNow() });
+    lines.push({ label: t("items.time.columnTitle"), value: dayjs().add(record.time, "milliseconds").fromNow() });
   }
   if (record.ratio !== undefined) {
-    lines.push({ label: t("items.ratio.detailsTitle"), value: record.ratio.toFixed(2) });
+    lines.push({ label: t("items.ratio.columnTitle"), value: record.ratio.toFixed(2) });
   }
   const categoryDisplay = formatCategoryDisplay(record.category);
   if (categoryDisplay) {
-    lines.push({ label: t("items.category.detailsTitle"), value: categoryDisplay });
+    lines.push({ label: t("items.category.columnTitle"), value: categoryDisplay });
   }
 
   return (
@@ -888,6 +918,7 @@ function buildHoverTooltip(
 
 function ExpandedRow({ item, collapse }: { item: ExtendedDownloadClientItem; collapse: () => void }) {
   const t = useI18n("widget.downloads");
+  const tCommon = useI18n("common");
   const locale = useCurrentIntlLocale();
   const { formatByteRate, formatBytes, formatBytesPair } = useByteFormatter();
   const progressPercent = Math.floor(item.progress * 100);
@@ -925,12 +956,12 @@ function ExpandedRow({ item, collapse }: { item: ExtendedDownloadClientItem; col
 
           <SimpleGrid cols={3} spacing="xs" verticalSpacing={4} style={{ minWidth: 0 }}>
             <DetailPair
-              label={t("items.size.detailsTitle")}
+              label={tCommon("field.size")}
               value={formatSizePair(item.received, item.size, formatBytesPair)}
             />
             {item.downSpeed !== undefined && item.downSpeed > 0 && (
               <DetailPair
-                label={t("items.downSpeed.detailsTitle")}
+                label={t("items.downSpeed.columnTitle")}
                 value={formatByteRate(item.downSpeed)}
                 icon={<IconDownload size="var(--mantine-font-size-xs)" />}
                 color="blue"
@@ -938,24 +969,24 @@ function ExpandedRow({ item, collapse }: { item: ExtendedDownloadClientItem; col
             )}
             {item.upSpeed !== undefined && item.upSpeed > 0 && (
               <DetailPair
-                label={t("items.upSpeed.detailsTitle")}
+                label={t("items.upSpeed.columnTitle")}
                 value={formatByteRate(item.upSpeed)}
                 icon={<IconUpload size="var(--mantine-font-size-xs)" />}
                 color="green"
               />
             )}
             {item.ratio !== undefined && (
-              <DetailPair label={t("items.ratio.detailsTitle")} value={item.ratio.toFixed(2)} />
+              <DetailPair label={t("items.ratio.columnTitle")} value={item.ratio.toFixed(2)} />
             )}
-            <DetailPair label={t("items.time.detailsTitle")} value={timeDisplay} />
+            <DetailPair label={t("items.time.columnTitle")} value={timeDisplay} />
             {item.sent !== undefined && (
               <DetailPair label={t("items.sent.detailsTitle")} value={formatBytes(item.sent)} />
             )}
             {item.added !== undefined && (
-              <DetailPair label={t("items.added.detailsTitle")} value={formatLocalizedDateTime(item.added, locale)} />
+              <DetailPair label={t("items.added.columnTitle")} value={formatLocalizedDateTime(item.added, locale)} />
             )}
-            {categoryDisplay && <DetailPair label={t("items.category.detailsTitle")} value={categoryDisplay} />}
-            <DetailPair label={t("items.id.detailsTitle")} value={item.id} />
+            {categoryDisplay && <DetailPair label={t("items.category.columnTitle")} value={categoryDisplay} />}
+            <DetailPair label={t("items.id.columnTitle")} value={item.id} />
           </SimpleGrid>
         </Stack>
       </Group>
@@ -1251,6 +1282,7 @@ function WidgetFooter({
   toggleStats,
 }: WidgetFooterProps) {
   const t = useI18n("widget.downloads");
+  const tCommon = useI18n("common");
   const { formatByteRate } = useByteFormatter();
   const [filterOpen, { toggle: toggleFilter }] = useDisclosure(false);
   const someInteract = clients.some(({ interact }) => interact);
@@ -1293,7 +1325,7 @@ function WidgetFooter({
             {clients.length > 1 && (
               <Group gap={4}>
                 <Text size="xs" fw={600} style={{ flexShrink: 0 }}>
-                  {t("items.integration.columnTitle")}:
+                  {tCommon("field.source")}:
                 </Text>
                 <Group gap={4} wrap="wrap">
                   {clients.map(({ integration }) => {
@@ -1323,7 +1355,7 @@ function WidgetFooter({
             {availableStatuses.length > 1 && (
               <Group gap={4}>
                 <Text size="xs" fw={600} style={{ flexShrink: 0 }}>
-                  {t("items.state.columnTitle")}:
+                  {tCommon("field.state")}:
                 </Text>
                 <Group gap={4} wrap="wrap">
                   {availableStatuses.map((status) => {

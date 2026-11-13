@@ -17,6 +17,8 @@ const logger = createLogger({ module: "trueNasIntegration" });
 
 const NETWORK_MULTIPLIER = 1000 / 8;
 const MEBIBYTE = 1024 * 1024;
+// Allow Netdata to finish its collection interval before requesting the latest sample.
+const REPORTING_DELAY_SECONDS = 5;
 
 const ERROR_MESSAGE_LIMIT = 200;
 
@@ -259,7 +261,7 @@ export class TrueNasIntegration extends Integration implements ISystemHealthMoni
       {
         aggregate: true,
         start: dayjs().add(-5, "minutes").unix(),
-        end: dayjs().unix(),
+        end: dayjs().subtract(REPORTING_DELAY_SECONDS, "seconds").unix(),
       },
     ]);
     const result = await z.array(reportingItemSchema).parseAsync(response);
@@ -307,7 +309,7 @@ export class TrueNasIntegration extends Integration implements ISystemHealthMoni
       })),
       {
         start: dayjs().add(-5, "minutes").unix(),
-        end: dayjs().unix(),
+        end: dayjs().subtract(REPORTING_DELAY_SECONDS, "seconds").unix(),
       },
     ]);
     const result = await reportingNetDataSchema.parseAsync(response);

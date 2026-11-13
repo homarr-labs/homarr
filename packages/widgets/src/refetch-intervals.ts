@@ -24,6 +24,7 @@ export const widgetQueryRefetchIntervals = [
   },
   { queryKey: [["widget", "airQuality", "atLocation"]], intervalSeconds: 900 },
   { queryKey: [["widget", "immich", "getAlbum"]], intervalSeconds: null },
+  { queryKey: [["widget", "immich", "getAlbumPreview"]], intervalSeconds: null },
   { queryKey: [["widget", "immich", "getServerStats"]], intervalSeconds: null },
   { queryKey: [["widget", "immich", "getAlbums"]], intervalSeconds: null },
   { queryKey: [["widget", "indexerManager"]], intervalSeconds: null },

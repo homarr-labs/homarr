@@ -145,7 +145,7 @@ const createColumns = (
   },
   {
     accessor: "state",
-    title: t("field.state.label"),
+    title: tCommon("field.state"),
     width: 80,
     sortable: sortingEnabled,
     render: (container) => <ContainerStateBadge state={container.state} />,
@@ -392,7 +392,7 @@ export default function DockerWidget({
       ({ accessor }) => columnVisibility[String(accessor) as keyof typeof columnVisibility],
     );
   }, [actionHandlers, columnVisibility, formatBytes, isAdvanced, isEditMode, options.enableRowSorting, t, tCommon]);
-  const { effectiveColumns, storeKey, setMultipleColumnWidths } = usePersistedTableLayout({
+  const { effectiveColumns, storeKey, onColumnLayoutChange, setMultipleColumnWidths } = usePersistedTableLayout({
     columns,
     columnAccessors,
     columnOrder: options.columnOrder,
@@ -445,6 +445,7 @@ export default function DockerWidget({
           noRecordsText={tWidget("empty.noContainers")}
           columns={effectiveColumns}
           storeColumnsKey={storeKey}
+          onColumnLayoutChange={onColumnLayoutChange}
           sortStatus={sortStatus}
           onSortStatusChange={(isAdvanced || options.enableRowSorting) && !isEditMode ? setSortStatus : undefined}
           idAccessor="resourceId"
@@ -521,7 +522,7 @@ function ContainerMenuButton({
   container: DockerContainer;
   handlers: ContainerActionHandlers;
 }) {
-  const t = useI18n("docker.action");
+  const tCommon = useI18n("common");
   const [opened, setOpened] = useState(false);
   const close = () => setOpened(false);
 
@@ -533,7 +534,7 @@ function ContainerMenuButton({
           variant="subtle"
           color="gray"
           size={rowActionButtonSize}
-          aria-label={t("title")}
+          aria-label={tCommon("field.actions")}
           onClick={(event) => event.stopPropagation()}
           style={{ position: "relative", overflow: "visible" }}
         >

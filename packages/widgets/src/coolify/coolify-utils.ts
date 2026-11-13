@@ -3,16 +3,34 @@ import relativeTime from "dayjs/plugin/relativeTime";
 
 import type {
   CoolifyApplicationWithContext,
+  CoolifyInstanceInfo,
+  CoolifyProjectWithEnvironments,
   CoolifyServer,
   CoolifyServiceWithContext,
 } from "@homarr/integrations/types";
 
 dayjs.extend(relativeTime);
 
-export function parseStatus(status: string): string {
-  const firstPart = status.split(":")[0]?.toLowerCase();
-  if (!firstPart) return "unknown";
-  return firstPart;
+export type CoolifyStatus = "running" | "stopped" | "exited" | "starting" | "restarting" | "unhealthy" | "unknown";
+
+export function parseStatus(status: string): CoolifyStatus {
+  const [firstPart, health, ...qualifiers] = status.toLowerCase().split(":");
+  if (
+    health === "unhealthy" &&
+    (firstPart === "degraded" || (firstPart === "running" && !qualifiers.includes("excluded")))
+  ) {
+    return "unhealthy";
+  }
+  if (
+    firstPart === "running" ||
+    firstPart === "stopped" ||
+    firstPart === "exited" ||
+    firstPart === "starting" ||
+    firstPart === "restarting"
+  ) {
+    return firstPart;
+  }
+  return "unknown";
 }
 
 export function cleanFqdn(fqdn: string | undefined | null): string | undefined {
@@ -30,19 +48,16 @@ export function cleanFqdn(fqdn: string | undefined | null): string | undefined {
 export function getStatusColor(status: string): string {
   const colors: Record<string, string> = {
     running: "green",
+    online: "green",
     stopped: "red",
     exited: "red",
     starting: "yellow",
     restarting: "yellow",
+    unhealthy: "red",
+    offline: "red",
+    unusable: "red",
   };
   return colors[status] ?? "gray";
-}
-
-export function getBadgeColor(running: number, total: number): string {
-  if (total === 0) return "gray";
-  if (running === total) return "green";
-  if (running > 0) return "yellow";
-  return "red";
 }
 
 export function formatRelativeTime(dateString: string | null | undefined): string | undefined {
@@ -64,6 +79,10 @@ export function getResourceTimestamp(
   return formatRelativeTime(timestamp);
 }
 
+export function getCoolifyServerId(server: CoolifyServer): number | undefined {
+  return server.settings?.server_id ?? server.id ?? undefined;
+}
+
 export function buildServerResourceCounts(
   servers: CoolifyServer[],
   applications: CoolifyApplicationWithContext[],
@@ -72,7 +91,8 @@ export function buildServerResourceCounts(
   const serverResourceCounts = new Map<number, { apps: number; services: number }>();
 
   for (const server of servers) {
-    const serverId = server.settings?.server_id ?? server.id ?? 0;
+    const serverId = getCoolifyServerId(server);
+    if (serverId == null) continue;
     serverResourceCounts.set(serverId, { apps: 0, services: 0 });
   }
 
@@ -84,7 +104,11 @@ export function buildServerResourceCounts(
   }
 
   for (const app of applications) {
-    const serverId = app.server_id ?? destinationToServer.get(app.destination_id ?? 0) ?? app.destination_id ?? 0;
+    const serverId =
+      app.server_id ??
+      (app.destination_id == null ? undefined : destinationToServer.get(app.destination_id)) ??
+      app.destination_id;
+    if (serverId == null) continue;
     const counts = serverResourceCounts.get(serverId);
     if (counts) {
       counts.apps++;
@@ -92,7 +116,8 @@ export function buildServerResourceCounts(
   }
 
   for (const service of services) {
-    const serverId = service.server_id ?? service.destination_id ?? 0;
+    const serverId = service.server_id ?? service.destination_id;
+    if (serverId == null) continue;
     const counts = serverResourceCounts.get(serverId);
     if (counts) {
       counts.services++;
@@ -102,13 +127,24 @@ export function buildServerResourceCounts(
   return serverResourceCounts;
 }
 
-export function createWidgetKey(integrationIds: string[]): string {
-  return integrationIds.toSorted().join("-");
+export interface CoolifyProjectSummary {
+  project: CoolifyProjectWithEnvironments;
+  applications: number;
+  services: number;
+  contextAvailable: boolean;
 }
 
-export function createStorageKey(widgetKey: string, integrationId: string, type: "sections" | "show-ip"): string {
-  const cardKey = widgetKey.includes("-") ? `${widgetKey}-${integrationId}` : widgetKey;
-  return `coolify-${type}-${cardKey}`;
+export function getCoolifyProjectSummaries(info: CoolifyInstanceInfo): CoolifyProjectSummary[] {
+  if (!info.projects) return [];
+
+  return info.projects
+    .map((project) => ({
+      project,
+      applications: info.applications.filter((app) => app.projectUuid === project.uuid).length,
+      services: info.services.filter((service) => service.projectUuid === project.uuid).length,
+      contextAvailable: Array.isArray(project.environments),
+    }))
+    .toSorted((first, second) => first.project.name.localeCompare(second.project.name));
 }
 
 interface CoolifySectionOptions {
@@ -131,5 +167,96 @@ export function getCoolifyServerState(server: CoolifyServer, field: "is_reachabl
   return server[field] ?? server.settings?.[field] ?? undefined;
 }
 
+export function getCoolifyServerStatus(server: CoolifyServer): "online" | "offline" | "unusable" | "unknown" {
+  const reachability = getCoolifyServerState(server, "is_reachable");
+  if (reachability === false) return "offline";
+  if (getCoolifyServerState(server, "is_usable") === false) return "unusable";
+  return reachability === true ? "online" : "unknown";
+}
+
 export const isCoolifyServerOnline = (server: CoolifyServer): boolean =>
   getCoolifyServerState(server, "is_reachable") === true;
+
+export const isCoolifyServerHealthy = (server: CoolifyServer): boolean =>
+  isCoolifyServerOnline(server) && getCoolifyServerState(server, "is_usable") !== false;
+
+export interface CoolifyAttentionItem {
+  kind: "server" | "application" | "service";
+  uuid: string;
+  name: string;
+  status: Exclude<CoolifyStatus, "running"> | "offline" | "unusable";
+  projectUuid?: string;
+  environmentUuid?: string;
+  projectName?: string;
+  environmentName?: string;
+}
+
+export function getCoolifyAttentionSummary(
+  items: CoolifyAttentionItem[],
+  trackedCount: number,
+): { kind: "problem" | "transition" | "unknown" | "healthy" | "empty"; count: number } {
+  const problemCount = items.filter(
+    ({ status }) => status !== "starting" && status !== "restarting" && status !== "unknown",
+  ).length;
+  if (problemCount > 0) return { kind: "problem", count: problemCount };
+
+  const transitionCount = items.filter(({ status }) => status === "starting" || status === "restarting").length;
+  if (transitionCount > 0) return { kind: "transition", count: transitionCount };
+
+  if (items.length > 0) return { kind: "unknown", count: items.length };
+  return { kind: trackedCount > 0 ? "healthy" : "empty", count: 0 };
+}
+
+const attentionPriority: Record<string, number> = {
+  offline: 0,
+  unusable: 0,
+  unhealthy: 0,
+  exited: 0,
+  stopped: 0,
+  starting: 1,
+  restarting: 1,
+  unknown: 2,
+};
+
+export function getCoolifyAttentionItems(
+  info: CoolifyInstanceInfo,
+  options: CoolifySectionOptions,
+): CoolifyAttentionItem[] {
+  const items: CoolifyAttentionItem[] = [];
+  if (options.showServers) {
+    for (const server of info.servers) {
+      if (isCoolifyServerHealthy(server)) continue;
+      items.push({
+        kind: "server",
+        uuid: server.uuid,
+        name: server.name,
+        status:
+          getCoolifyServerState(server, "is_reachable") === false
+            ? "offline"
+            : getCoolifyServerState(server, "is_usable") === false
+              ? "unusable"
+              : "unknown",
+      });
+    }
+  }
+  for (const [kind, resources] of [
+    ["application", options.showApplications ? info.applications : []],
+    ["service", options.showServices ? info.services : []],
+  ] as const) {
+    for (const resource of resources) {
+      const status = parseStatus(resource.status ?? "");
+      if (status === "running") continue;
+      items.push({
+        kind,
+        uuid: resource.uuid,
+        name: resource.name,
+        status,
+        projectUuid: resource.projectUuid,
+        environmentUuid: resource.environmentUuid,
+        projectName: resource.projectName,
+        environmentName: resource.environmentName,
+      });
+    }
+  }
+  return items.toSorted((a, b) => (attentionPriority[a.status] ?? 2) - (attentionPriority[b.status] ?? 2));
+}

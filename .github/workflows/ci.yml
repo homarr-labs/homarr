@@ -49,13 +49,9 @@ env:
   PREVIEW_IMAGE: ghcr.io/homarr-labs/homarr-test
 
 jobs:
-  database-validation:
-    name: Database validation
-    if: github.event_name != 'pull_request_target' && (github.event_name != 'workflow_dispatch' || inputs.operation != 'cleanup')
-    uses: ./.github/workflows/database.yml
-
   validation-plan:
-    name: Plan affected checks
+    # Keep this required check name while sharing formatting and planning setup.
+    name: Check formatting
     if: github.event_name != 'pull_request_target' && (github.event_name != 'workflow_dispatch' || inputs.operation != 'cleanup')
     runs-on: ubuntu-latest
     timeout-minutes: 5
@@ -64,11 +60,12 @@ jobs:
       builds-app: ${{ steps.plan.outputs.builds-app }}
       typecheck-matrix: ${{ steps.plan.outputs.typecheck-matrix }}
       has-typechecks: ${{ steps.plan.outputs.has-typechecks }}
+      database: ${{ steps.select.outputs.migrations }}
     env:
       TURBO_SCM_BASE: ${{ github.event.pull_request.base.sha || github.event.merge_group.base_sha || github.event.before || 'HEAD~1' }}
       TURBO_SCM_HEAD: ${{ github.sha }}
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         if: "!env.ACT"
         with:
           fetch-depth: 0
@@ -82,8 +79,44 @@ jobs:
         run: |
           test -n "$PR_NUMBER" || { echo "pr_number is required for publish"; exit 1; }
           test -n "$BUILD_REF" || { echo "ref is required for publish"; exit 1; }
+      - name: Select database checks
+        id: select
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.merge_group.base_sha || github.event.before }}
+        shell: bash
+        run: |
+          migrations=false
+          if [[ "$EVENT_NAME" != pull_request && "$EVENT_NAME" != merge_group && "$EVENT_NAME" != push ]] ||
+             [[ -z "$BASE_SHA" || "$BASE_SHA" =~ ^0+$ ]] ||
+             ! git cat-file -e "$BASE_SHA^{commit}" 2>/dev/null; then
+            migrations=true
+          else
+            changed_files=$(mktemp)
+            trap 'rm -f "$changed_files"' EXIT
+            comparison="$BASE_SHA...HEAD"
+            if [[ "$EVENT_NAME" = push ]]; then comparison="$BASE_SHA..HEAD"; fi
+            git diff --name-only -z "$comparison" > "$changed_files"
+            while IFS= read -r -d '' file; do
+              case "$file" in
+                packages/db/*|packages/core/src/infrastructure/db/*|packages/core/src/infrastructure/certificates/*|packages/auth/*|packages/api/src/router/onboard*|packages/api/src/router/test/onboard*|packages/onboarding/*|apps/nextjs/src/app/api/backup/*|apps/nextjs/src/app/*/init/*|Dockerfile|scripts/run.sh|scripts/entrypoint.sh|deployments/*|package.json|packages/core/package.json|packages/common/package.json|packages/definitions/package.json|packages/server-settings/package.json|packages/validation/package.json|mise.toml|bun.lock|bunfig.toml|patches/*|vitest*|tooling/github/*|.github/workflows/ci.yml)
+                  migrations=true
+                  ;;
+              esac
+            done < "$changed_files"
+          fi
+          echo "migrations=$migrations" >> "$GITHUB_OUTPUT"
+
       - name: Setup
         uses: ./tooling/github/setup
+      - name: Check changed-file formatting
+        if: github.event_name == 'pull_request' || github.event_name == 'merge_group'
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.merge_group.base_sha }}
+        run: |
+          git diff --name-only --diff-filter=ACMR -z "$BASE_SHA...HEAD" -- \
+            '*.css' '*.js' '*.json' '*.jsonc' '*.jsx' '*.md' '*.mdx' '*.scss' '*.ts' '*.tsx' '*.yaml' '*.yml' \
+            | xargs -0 -r bun x oxfmt --check --no-error-on-unmatched-pattern --
       - name: Plan validation
         id: plan
         run: |
@@ -106,6 +139,33 @@ jobs:
             "has-typechecks=\($typechecks | length > 0)"
           ' "$RUNNER_TEMP/turbo-plan.json" >> "$GITHUB_OUTPUT"
 
+  database-checks:
+    name: Database checks
+    needs: validation-plan
+    if: needs.validation-plan.outputs.database == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      NODE_ENV: development
+      CI: "true"
+      BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.merge_group.base_sha }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        if: "!env.ACT"
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+          ref: ${{ github.event_name == 'workflow_dispatch' && inputs.ref || '' }}
+      - uses: ./tooling/github/setup
+      - name: Check affected database tests
+        run: |
+          scope=()
+          if [[ -n "$BASE_SHA" ]]; then scope=(--changed "$BASE_SHA" --passWithNoTests); fi
+          bun x vitest run --project dom --project db-node --project integration \
+            packages/core/src/infrastructure/db/env.spec.ts packages/db/test/migration-journal.spec.ts \
+            packages/db/test/sqlite-migration.spec.ts packages/db/test/postgresql-migration.spec.ts \
+            packages/db/proxy-reader.integration.spec.ts --maxWorkers 1 "${scope[@]}"
+
   workspace-checks:
     name: Lint and build
     needs: validation-plan
@@ -117,7 +177,7 @@ jobs:
       TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
       TURBO_REMOTE_CACHE_SIGNATURE_KEY: ${{ secrets.TURBO_REMOTE_CACHE_SIGNATURE_KEY }}
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         if: "!env.ACT"
         with:
           fetch-depth: 0
@@ -175,7 +235,7 @@ jobs:
       TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
       TURBO_REMOTE_CACHE_SIGNATURE_KEY: ${{ secrets.TURBO_REMOTE_CACHE_SIGNATURE_KEY }}
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         if: "!env.ACT"
         with:
           persist-credentials: false
@@ -196,22 +256,28 @@ jobs:
 
   fast-gate:
     name: Fast gate
-    needs: [database-validation, validation-plan, workspace-checks, typecheck]
+    needs: [validation-plan, database-checks, workspace-checks, typecheck]
     if: ${{ !cancelled() && github.event_name != 'pull_request_target' && (github.event_name != 'workflow_dispatch' || inputs.operation != 'cleanup') }}
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
       - name: Require all validation jobs
         env:
-          DATABASE_RESULT: ${{ needs.database-validation.result }}
+          DATABASE_RESULT: ${{ needs.database-checks.result }}
+          HAS_DATABASE_CHECKS: ${{ needs.validation-plan.outputs.database }}
           PLAN_RESULT: ${{ needs.validation-plan.result }}
           WORKSPACE_RESULT: ${{ needs.workspace-checks.result }}
           TYPECHECK_RESULT: ${{ needs.typecheck.result }}
           HAS_TYPECHECKS: ${{ needs.validation-plan.outputs.has-typechecks }}
         run: |
-          test "$DATABASE_RESULT" = success
           test "$PLAN_RESULT" = success
           test "$WORKSPACE_RESULT" = success
+          if [[ "$HAS_DATABASE_CHECKS" == true ]]; then
+            test "$DATABASE_RESULT" = success
+          else
+            test "$HAS_DATABASE_CHECKS" = false
+            test "$DATABASE_RESULT" = skipped
+          fi
           if [[ "$HAS_TYPECHECKS" == true ]]; then
             test "$TYPECHECK_RESULT" = success
           else
@@ -231,7 +297,7 @@ jobs:
       contents: read
       packages: read
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         if: "!env.ACT"
         with:
           persist-credentials: false
@@ -244,8 +310,10 @@ jobs:
         if: needs.preview-amd64.outputs.digest != '' && !env.ACT
         env:
           DIGEST: ${{ needs.preview-amd64.outputs.digest }}
+          GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GHCR_ACTOR: ${{ github.actor }}
         run: |
-          echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
+          echo "$GHCR_TOKEN" | docker login ghcr.io -u "$GHCR_ACTOR" --password-stdin
           docker pull "${PREVIEW_IMAGE}@${DIGEST}"
           docker tag "${PREVIEW_IMAGE}@${DIGEST}" homarr-e2e
 
@@ -269,11 +337,8 @@ jobs:
             org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
             org.opencontainers.image.revision=${{ github.sha }}
             org.opencontainers.image.ref.name=pr-${{ github.event.pull_request.number || inputs.pr_number || 'none' }}
-          # Scoped to the ref actually checked out (the dispatch input when
-          # set), so a cache written for one ref never seeds the image built
-          # for another.
-          cache-from: type=gha,scope=homarr-e2e-${{ github.event_name == 'workflow_dispatch' && inputs.ref || github.ref_name }}
-          cache-to: type=gha,scope=homarr-e2e-${{ github.event_name == 'workflow_dispatch' && inputs.ref || github.ref_name }},mode=max
+          cache-from: type=gha,scope=homarr-linux-amd64-glibc-${{ github.event_name == 'workflow_dispatch' && inputs.ref || github.ref_name }}
+          cache-to: type=gha,scope=homarr-linux-amd64-glibc-${{ github.event_name == 'workflow_dispatch' && inputs.ref || github.ref_name }},mode=max
           secrets: |
             TURBO_API=${{ secrets.TURBO_API }}
             TURBO_TEAM=${{ secrets.TURBO_TEAM }}
@@ -294,11 +359,9 @@ jobs:
       - name: Cache Playwright browsers
         if: "!env.ACT"
         id: playwright-cache
-        uses: actions/cache@v6
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: ~/.cache/ms-playwright
-          # Ref-scoped for the same reason as the build cache above, this
-          # job can push a preview image after the browsers run.
           key: playwright-${{ runner.os }}-${{ github.event_name == 'workflow_dispatch' && inputs.ref || github.ref_name }}-${{ hashFiles('bun.lock') }}
 
       - name: Install Playwright Chromium
@@ -320,7 +383,7 @@ jobs:
 
       - name: Upload E2E artifacts
         if: failure() && !env.ACT
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: playwright-report
           path: e2e/test-results/
@@ -343,7 +406,7 @@ jobs:
     outputs:
       digest: ${{ steps.preview-build.outputs.digest }}
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         if: "!env.ACT"
         with:
           persist-credentials: false
@@ -351,7 +414,7 @@ jobs:
 
       - name: Log in to GHCR
         if: "!env.ACT"
-        uses: docker/login-action@81c6f93d4bc991e510b342a00b419b3bb4efc5c6 # v4.7.0
+        uses: docker/login-action@8aa5831fb8d48d8f76594c7ddde61ae58019f550 # v4.8.0
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
@@ -370,8 +433,8 @@ jobs:
           network: host
           platforms: linux/amd64
           outputs: type=image,"name=${{ env.PREVIEW_IMAGE }}",push-by-digest=true,name-canonical=true,push=true
-          cache-from: type=gha,scope=homarr-linux-amd64-${{ github.event_name == 'workflow_dispatch' && inputs.ref || github.ref_name }}
-          cache-to: type=gha,scope=homarr-linux-amd64-${{ github.event_name == 'workflow_dispatch' && inputs.ref || github.ref_name }},mode=max
+          cache-from: type=gha,scope=homarr-linux-amd64-glibc-${{ github.event_name == 'workflow_dispatch' && inputs.ref || github.ref_name }}
+          cache-to: type=gha,scope=homarr-linux-amd64-glibc-${{ github.event_name == 'workflow_dispatch' && inputs.ref || github.ref_name }},mode=max
           secrets: |
             TURBO_API=${{ secrets.TURBO_API }}
             TURBO_TEAM=${{ secrets.TURBO_TEAM }}
@@ -395,7 +458,7 @@ jobs:
     outputs:
       digest: ${{ steps.preview-build.outputs.digest }}
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         if: "!env.ACT"
         with:
           persist-credentials: false
@@ -403,7 +466,7 @@ jobs:
 
       - name: Log in to GHCR
         if: "!env.ACT"
-        uses: docker/login-action@81c6f93d4bc991e510b342a00b419b3bb4efc5c6 # v4.7.0
+        uses: docker/login-action@8aa5831fb8d48d8f76594c7ddde61ae58019f550 # v4.8.0
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
@@ -422,8 +485,8 @@ jobs:
           network: host
           platforms: linux/arm64
           outputs: type=image,"name=${{ env.PREVIEW_IMAGE }}",push-by-digest=true,name-canonical=true,push=true
-          cache-from: type=gha,scope=homarr-linux-arm64-${{ github.event_name == 'workflow_dispatch' && inputs.ref || github.ref_name }}
-          cache-to: type=gha,scope=homarr-linux-arm64-${{ github.event_name == 'workflow_dispatch' && inputs.ref || github.ref_name }},mode=max
+          cache-from: type=gha,scope=homarr-linux-arm64-glibc-${{ github.event_name == 'workflow_dispatch' && inputs.ref || github.ref_name }}
+          cache-to: type=gha,scope=homarr-linux-arm64-glibc-${{ github.event_name == 'workflow_dispatch' && inputs.ref || github.ref_name }},mode=max
           secrets: |
             TURBO_API=${{ secrets.TURBO_API }}
             TURBO_TEAM=${{ secrets.TURBO_TEAM }}
@@ -454,7 +517,7 @@ jobs:
     steps:
       - name: Log in to GHCR
         if: "!env.ACT"
-        uses: docker/login-action@81c6f93d4bc991e510b342a00b419b3bb4efc5c6 # v4.7.0
+        uses: docker/login-action@8aa5831fb8d48d8f76594c7ddde61ae58019f550 # v4.8.0
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
@@ -466,7 +529,7 @@ jobs:
 
       - name: Verify PR head before publication
         if: github.event_name == 'pull_request'
-        uses: actions/github-script@v9
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
         env:
           EXPECTED_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
         with:
@@ -512,7 +575,7 @@ jobs:
 
       - name: Comment with preview image
         if: github.event_name == 'pull_request' && !env.ACT
-        uses: actions/github-script@v9
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
         with:
           script: |
             const marker = "<!-- homarr-preview-image -->";
@@ -561,7 +624,7 @@ jobs:
 
       - name: Delete GHCR package version
         if: "!env.ACT"
-        uses: actions/github-script@v9
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
         with:
           script: |
             const packageName = "homarr-test";

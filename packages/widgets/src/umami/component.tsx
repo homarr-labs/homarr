@@ -1,11 +1,11 @@
 "use client";
 
-import { Stack, Text } from "@mantine/core";
 import { getQueryKey } from "@trpc/react-query";
 
 import { clientApi } from "@homarr/api/client";
 import { useI18n } from "@homarr/translation/client";
 
+import { WidgetEmptyState } from "../common/empty-state";
 import type { WidgetComponentProps } from "../definition";
 import { useWidgetRuntimeQueries } from "../runtime-hooks";
 import { UmamiContent } from "./umami-content";
@@ -98,11 +98,5 @@ export default function UmamiWidget({
 
 function NoWebsiteConfigured() {
   const t = useI18n("widget.umami");
-  return (
-    <Stack align="center" justify="center" h="100%">
-      <Text c="dimmed" size="sm">
-        {t("error.noWebsite")}
-      </Text>
-    </Stack>
-  );
+  return <WidgetEmptyState message={t("error.noWebsite")} />;
 }

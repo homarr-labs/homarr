@@ -16,8 +16,7 @@ on:
         description: Send notifications when redeploying an existing release
 
 permissions:
-  contents: write # Required to update package.json version
-  packages: write # Required for pushing to GHCR
+  contents: read
 
 env:
   SKIP_ENV_VALIDATION: true
@@ -33,32 +32,35 @@ jobs:
   release:
     name: Create tag and release
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 15
     env:
       SKIP_RELEASE: ${{ github.event_name == 'workflow_dispatch' || github.ref_name == 'dev' || github.ref_name == 'next' }}
+      RELEASE_DISCORD_FILE: /tmp/release-discord.json
     outputs:
       version: ${{ steps.read-semver.outputs.version || steps.version-fallback.outputs.version }}
       git_ref: ${{ steps.read-git-ref.outputs.ref || steps.read-semver.outputs.version || github.ref }}
       skipped: ${{ env.SKIP_RELEASE }}
       upstream_sync: ${{ steps.update-upstream.outcome }}
+      discord_release: ${{ steps.read-discord-release.outputs.announcement }}
     steps:
       - run: echo "Manual dispatch redeploys the latest existing release without creating a new one"
         if: env.SKIP_RELEASE == 'true'
         # The below generated version fallback represents a normalized branch name, for example "feature/branch-name" -> "feature-branch-name"
-      - run: echo "version="$(echo ${{github.ref_name}} | sed 's/[^a-zA-Z0-9\-]/-/g') >> "$GITHUB_OUTPUT"
+      - run: echo "version=$(echo "$GITHUB_REF_NAME" | sed 's/[^a-zA-Z0-9\-]/-/g')" >> "$GITHUB_OUTPUT"
         id: version-fallback
         if: env.SKIP_RELEASE == 'true' && github.ref_name != 'main' && github.ref_name != 'beta'
 
       - name: Obtain token
         if: env.SKIP_RELEASE == 'false'
         id: obtainToken
-        uses: actions/create-github-app-token@v3
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
         with:
           private-key: ${{ secrets.RENOVATE_MERGE_PRIVATE_KEY }}
           client-id: ${{ vars.RENOVATE_MERGE_CLIENT_ID }}
           permission-contents: write # required to commit package.json & changelog changes, merge them to dev / next and publish the release
+          permission-pull-requests: read # required to read merged pull requests for the AI release notes
 
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         if: env.SKIP_RELEASE == 'false' || github.ref_name == 'main' || github.ref_name == 'beta'
         with:
           fetch-depth: 0
@@ -98,8 +100,18 @@ jobs:
           GIT_AUTHOR_EMAIL: "175486441+homarr-releases[bot]@users.noreply.github.com"
           GIT_COMMITTER_NAME: "Releases Homarr"
           GIT_COMMITTER_EMAIL: "175486441+homarr-releases[bot]@users.noreply.github.com"
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          RELEASE_NOTES_MODEL: ${{ vars.RELEASE_NOTES_MODEL }}
         run: |
           bun run release
+      - name: Read Discord announcement
+        id: read-discord-release
+        if: env.SKIP_RELEASE == 'false' && github.ref_name == 'main'
+        continue-on-error: true
+        run: |
+          if [ -s "$RELEASE_DISCORD_FILE" ]; then
+            echo "announcement=$(jq --compact-output '.' "$RELEASE_DISCORD_FILE")" >> "$GITHUB_OUTPUT"
+          fi
       - name: Read semver output
         # We read the last tag either from the created release or from the current branch, this is to rerun the deployment job for the currently released version when it failed
         if: env.SKIP_RELEASE == 'false' || github.ref_name == 'main' || github.ref_name == 'beta'
@@ -138,10 +150,13 @@ jobs:
     needs: release
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    permissions:
+      contents: read
+      packages: write
     outputs:
       digest: ${{ steps.build.outputs.digest }}
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
           ref: ${{ needs.release.outputs.git_ref }}
@@ -153,7 +168,7 @@ jobs:
           images: "${{ env.GHCR_REPO }}"
 
       - name: Log in to the Container registry
-        uses: docker/login-action@81c6f93d4bc991e510b342a00b419b3bb4efc5c6 # v4.7.0
+        uses: docker/login-action@8aa5831fb8d48d8f76594c7ddde61ae58019f550 # v4.8.0
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
@@ -183,10 +198,13 @@ jobs:
     needs: release
     runs-on: ubuntu-26.04-arm
     timeout-minutes: 20
+    permissions:
+      contents: read
+      packages: write
     outputs:
       digest: ${{ steps.build.outputs.digest }}
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
           ref: ${{ needs.release.outputs.git_ref }}
@@ -198,7 +216,7 @@ jobs:
           images: "${{ env.GHCR_REPO }}"
 
       - name: Log in to the Container registry
-        uses: docker/login-action@81c6f93d4bc991e510b342a00b419b3bb4efc5c6 # v4.7.0
+        uses: docker/login-action@8aa5831fb8d48d8f76594c7ddde61ae58019f550 # v4.8.0
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
@@ -228,8 +246,11 @@ jobs:
     needs: [release, build-amd64]
     runs-on: ubuntu-latest
     timeout-minutes: 5
+    permissions:
+      contents: write # Required to upload release assets
+      packages: read # Required to pull the built image
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         if: needs.release.outputs.skipped == 'false'
         with:
           ref: ${{ needs.release.outputs.git_ref }}
@@ -249,8 +270,11 @@ jobs:
     needs: [release, build-arm64]
     runs-on: ubuntu-26.04-arm
     timeout-minutes: 5
+    permissions:
+      contents: write # Required to upload release assets
+      packages: read # Required to pull the built image
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         if: needs.release.outputs.skipped == 'false'
         with:
           ref: ${{ needs.release.outputs.git_ref }}
@@ -269,22 +293,34 @@ jobs:
     needs: [release, build-amd64, build-arm64, extract-asset-amd64, extract-asset-arm64]
     runs-on: ubuntu-latest
     timeout-minutes: 5
+    permissions:
+      contents: read
+      packages: write
     env:
       NEXT_VERSION: ${{ needs.release.outputs.version }}
+      AMD64_DIGEST: ${{ needs.build-amd64.outputs.digest }}
+      ARM64_DIGEST: ${{ needs.build-arm64.outputs.digest }}
       DEPLOY_LATEST: ${{ github.ref_name == 'main' }}
       DEPLOY_BETA: ${{ github.ref_name == 'beta' }}
     steps:
+      - name: Check out release announcement code
+        if: needs.release.outputs.skipped == 'false'
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.workflow_sha }}
+          persist-credentials: false
+
       - name: Obtain token
         if: needs.release.outputs.skipped == 'false'
         id: obtainToken
-        uses: actions/create-github-app-token@v3
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
         with:
           private-key: ${{ secrets.RENOVATE_MERGE_PRIVATE_KEY }}
           client-id: ${{ vars.RENOVATE_MERGE_CLIENT_ID }}
           permission-contents: write # required to publish the release
 
       - name: Log in to the Container registry
-        uses: docker/login-action@81c6f93d4bc991e510b342a00b419b3bb4efc5c6 # v4.7.0
+        uses: docker/login-action@8aa5831fb8d48d8f76594c7ddde61ae58019f550 # v4.8.0
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
@@ -293,29 +329,83 @@ jobs:
       - name: Publish beta
         if: env.DEPLOY_BETA == 'true'
         run: |
-          docker buildx imagetools create -t ${{ env.GHCR_REPO }}:beta \
-            ${{ env.GHCR_REPO }}@${{ needs.build-amd64.outputs.digest }} \
-            ${{ env.GHCR_REPO }}@${{ needs.build-arm64.outputs.digest }}
+          docker buildx imagetools create -t "${GHCR_REPO}:beta" \
+            "${GHCR_REPO}@${AMD64_DIGEST}" \
+            "${GHCR_REPO}@${ARM64_DIGEST}"
 
       - name: Publish latest
         if: env.DEPLOY_LATEST == 'true'
         run: |
-          docker buildx imagetools create -t ${{ env.GHCR_REPO }}:latest \
-            ${{ env.GHCR_REPO }}@${{ needs.build-amd64.outputs.digest }} \
-            ${{ env.GHCR_REPO }}@${{ needs.build-arm64.outputs.digest }}
+          docker buildx imagetools create -t "${GHCR_REPO}:latest" \
+            "${GHCR_REPO}@${AMD64_DIGEST}" \
+            "${GHCR_REPO}@${ARM64_DIGEST}"
 
       - name: Publish version
         run: |
-          docker buildx imagetools create -t ${{ env.GHCR_REPO }}:${{ env.NEXT_VERSION }} \
-            ${{ env.GHCR_REPO }}@${{ needs.build-amd64.outputs.digest }} \
-            ${{ env.GHCR_REPO }}@${{ needs.build-arm64.outputs.digest }}
+          docker buildx imagetools create -t "${GHCR_REPO}:${NEXT_VERSION}" \
+            "${GHCR_REPO}@${AMD64_DIGEST}" \
+            "${GHCR_REPO}@${ARM64_DIGEST}"
 
       - name: Publish release
         if: needs.release.outputs.skipped == 'false'
         env:
           GITHUB_TOKEN: ${{ steps.obtainToken.outputs.token }}
+          DISCORD_RELEASES_WEBHOOK: ${{ secrets.DISCORD_RELEASES_WEBHOOK }}
+        run: node scripts/release-notes/announcement.mjs publish
+
+      - name: Announce release on Discord
+        if: needs.release.outputs.skipped == 'false' && github.ref_name == 'main'
+        continue-on-error: true
+        env:
+          GITHUB_TOKEN: ${{ steps.obtainToken.outputs.token }}
+          DISCORD_RELEASES_WEBHOOK: ${{ secrets.DISCORD_RELEASES_WEBHOOK }}
+          DISCORD_RELEASE: ${{ needs.release.outputs.discord_release }}
+        run: node scripts/release-notes/announcement.mjs announce
+
+      - name: Publish major and minor version aliases
+        if: env.DEPLOY_LATEST == 'true'
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
-          gh release edit --repo ${{ github.repository }} ${{ needs.release.outputs.version }} --draft=false
+          stable_version='^v(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$'
+          if [[ ! "$NEXT_VERSION" =~ $stable_version ]]; then
+            echo "Skipping version aliases for non-stable version ${NEXT_VERSION}." >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          major="${BASH_REMATCH[1]}"
+          minor="${BASH_REMATCH[2]}"
+
+          published_versions="$(gh api --paginate "repos/${GITHUB_REPOSITORY}/releases?per_page=100" \
+            --jq '.[] | select(.draft == false and .prerelease == false) | .tag_name')"
+          if ! grep --fixed-strings --line-regexp --quiet -- "$NEXT_VERSION" <<< "$published_versions"; then
+            echo "Skipping version aliases until ${NEXT_VERSION} is a published stable release." >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+
+          image_tags=()
+          for alias in "v${major}" "v${major}.${minor}"; do
+            newest="$NEXT_VERSION"
+            while IFS= read -r published_version; do
+              if [[ ! "$published_version" =~ $stable_version ]]; then
+                continue
+              fi
+              if [[ "$alias" != "v${BASH_REMATCH[1]}" && "$alias" != "v${BASH_REMATCH[1]}.${BASH_REMATCH[2]}" ]]; then
+                continue
+              fi
+              newest="$(printf '%s\n' "$newest" "$published_version" | LC_ALL=C sort --version-sort | tail -n 1)"
+            done <<< "$published_versions"
+
+            if [[ "$newest" == "$NEXT_VERSION" ]]; then
+              image_tags+=(-t "${GHCR_REPO}:${alias}")
+            else
+              echo "Preserving ${alias}: a newer stable release ${newest} is already published." >> "$GITHUB_STEP_SUMMARY"
+            fi
+          done
+
+          if (( ${#image_tags[@]} > 0 )); then
+            docker buildx imagetools create "${image_tags[@]}" "${GHCR_REPO}:${NEXT_VERSION}"
+          fi
 
       - name: Verify dev / next synchronization
         if: needs.release.outputs.skipped == 'false' && needs.release.outputs.upstream_sync != 'success'
@@ -337,6 +427,7 @@ jobs:
     needs: [release, build-amd64, build-arm64, extract-asset-amd64, extract-asset-arm64, publish]
     runs-on: ubuntu-latest
     timeout-minutes: 2
+    permissions: {}
     steps:
       - name: Discord failure notification
         env:

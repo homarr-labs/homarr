@@ -12,6 +12,7 @@ export interface ReleasesRepository {
   identifier: string;
   name?: string;
   versionFilter?: ReleasesVersionFilter;
+  excludePrereleases?: boolean;
   iconUrl?: string;
   providerUrl?: string;
   integrationIds?: string[];

@@ -125,7 +125,7 @@ const MediaRequestCard = ({ request, isTiny, showIntegrationSource, canInteract,
   return (
     <Card
       className={`mediaRequests-list-item-wrapper mediaRequests-list-item-${request.type} mediaRequests-list-item-${request.status}`}
-      radius={board.itemRadius}
+      radius={board.itemRadius ?? undefined}
       p="xs"
     >
       <Image

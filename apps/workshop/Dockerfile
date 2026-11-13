@@ -1,8 +1,8 @@
-# syntax=docker/dockerfile:1.28
+# syntax=docker/dockerfile:1.28@sha256:bb22d9815c728170f72750f4e5b0d672e06176142e1d602c7e66c050100b7e5b
 
 ARG POCKETBASE_IMAGE=ghcr.io/muchobien/pocketbase:0.40.6@sha256:9a0be68a80ca1348ba8d15f217b3f983be4c094b3c571a09b3ebdeb357259338
 
-FROM golang:1.27.3-alpine AS pocketbase-builder
+FROM golang:1.27.3-alpine@sha256:b8c9b82affbbb82a020bbcf998dad2ba9516944ac7e883524642a481a9505e9c AS pocketbase-builder
 WORKDIR /src
 COPY apps/workshop/go.mod apps/workshop/go.sum ./
 RUN --mount=type=cache,id=workshop-go-mod,target=/go/pkg/mod go mod download
@@ -13,9 +13,9 @@ RUN --mount=type=cache,id=workshop-go-mod,target=/go/pkg/mod \
 FROM pocketbase-builder AS pocketbase-test
 RUN --mount=type=cache,id=workshop-go-mod,target=/go/pkg/mod go test ./...
 
-FROM oven/bun:1.4.4-alpine AS bun-tool
+FROM oven/bun:1.4.4-alpine@sha256:4cf82f5686b196504fe119db3fcd9185b191f82ece82c40680e597228ec6070a AS bun-tool
 
-FROM node:24.22.1-alpine AS dependencies
+FROM node:24.22.1-alpine@sha256:06d7adf3e0ef61a13f1d28682726366f97a15aa1888c934d3ecec86c33918b53 AS dependencies
 COPY --from=bun-tool /usr/local/bin/bun /usr/local/bin/bun
 WORKDIR /app
 RUN apk add --no-cache libstdc++ python3 make g++
@@ -73,6 +73,7 @@ RUN --mount=type=secret,id=TURBO_API,env=TURBO_API \
 
 FROM ${POCKETBASE_IMAGE} AS pocketbase-runtime
 ENV PORT=8090
+RUN apk upgrade --no-cache
 COPY --from=pocketbase-builder /out/pocketbase /usr/local/bin/pocketbase
 RUN addgroup -S pocketbase && adduser -S -G pocketbase pocketbase
 COPY apps/workshop/entrypoint.sh /usr/local/bin/workshop-entrypoint

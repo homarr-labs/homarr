@@ -99,7 +99,7 @@ const PrimaryClock = ({ now, options, primary }: Pick<ModeProps, "now" | "option
   if (!primaryTime || primary.phase === null || primary.minuteOfDay === null) return null;
 
   return (
-    <Paper withBorder radius="md" p="md">
+    <Paper radius="md" p="md">
       <Group justify="space-between" align="flex-start" gap="lg" wrap="wrap">
         <Stack gap={5} miw={0}>
           <Group gap="xs" wrap="nowrap">
@@ -126,7 +126,7 @@ const PrimaryClock = ({ now, options, primary }: Pick<ModeProps, "now" | "option
           </Group>
         </Stack>
         {options.showWeather && (
-          <Paper withBorder radius="md" p="sm">
+          <Paper radius="md" p="sm">
             <ClockWeatherSummary
               latitude={options.weatherLocation.latitude}
               longitude={options.weatherLocation.longitude}
@@ -195,7 +195,7 @@ const WorldClockCard = ({ entry, now, options, primaryOffset }: ClockEntryProps)
   }
 
   return (
-    <Paper component="li" withBorder radius="md" p="md">
+    <Paper component="li" radius="md" p="md">
       <Stack gap="sm">
         <Stack gap={0} miw={0}>
           <Text fw={600} truncate>
@@ -284,7 +284,7 @@ const DayAndOffset = ({ entry, now, primaryOffset }: Pick<ClockEntryProps, "entr
 const InvalidTimeZone = ({ entry }: { entry: WorldClockTime }) => {
   const t = useI18n("widget.clock");
   return (
-    <Paper component="li" withBorder radius="md" p="md">
+    <Paper component="li" radius="md" p="md">
       <Group gap="xs" wrap="nowrap">
         <IconAlertTriangle color="var(--mantine-color-yellow-6)" aria-hidden />
         <Box>
@@ -301,7 +301,7 @@ const InvalidTimeZone = ({ entry }: { entry: WorldClockTime }) => {
 const EmptyCities = () => {
   const t = useI18n("widget.clock");
   return (
-    <Paper withBorder radius="md" p="xl">
+    <Paper radius="md" p="xl">
       <Text c="dimmed" ta="center">
         {t("worldClock.noSecondaryCities")}
       </Text>
