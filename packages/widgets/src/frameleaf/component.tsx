@@ -32,7 +32,7 @@ function rememberCooldown(itemId: string, header: string | null) {
   retryDeadlines.set(itemId, Math.max(cooldownUntil(itemId), Date.now() + delay));
 }
 
-export default function FrameleafWidget({ itemId, options, height }: WidgetComponentProps<"frameleaf-albumCarousel">) {
+export default function FrameleafWidget({ itemId, options }: WidgetComponentProps<"frameleaf-albumCarousel">) {
   const t = useI18n("widget.frameleaf-albumCarousel");
   const connection = useI18n("integration.frameleaf");
   const [page, setPage] = useState(1);
@@ -134,13 +134,15 @@ export default function FrameleafWidget({ itemId, options, height }: WidgetCompo
         <Text component="output">{t("loading")}</Text>
       ) : (
         <>
-          <Text size="xs" c="dimmed">
+          <Text size="xs" c="dimmed" flex="0 0 auto">
             {connection("connected")} · {t("count", { count: photo.total })}
           </Text>
           {photo.imageUrl ? (
             <Image
               key={photo.imageUrl}
-              h={Math.max(50, height - 115)}
+              h={0}
+              mih={0}
+              flex="1 1 0"
               fit="contain"
               src={photo.imageUrl}
               alt={photo.caption || t("imageAlt")}
@@ -153,7 +155,7 @@ export default function FrameleafWidget({ itemId, options, height }: WidgetCompo
           ) : (
             <Text>{t("empty")}</Text>
           )}
-          <Group gap="xs" justify="center">
+          <Group gap="xs" justify="center" flex="0 0 auto">
             <Button
               size="compact-xs"
               variant="default"
