@@ -55,12 +55,11 @@ export const updateServerSettingByKeyAsync = async <TKey extends keyof ServerSet
   key: TKey,
   value: ServerSettings[TKey],
 ) => {
+  const serialized = stringify(value);
   await db
-    .update(serverSettings)
-    .set({
-      value: stringify(value),
-    })
-    .where(eq(serverSettings.settingKey, key));
+    .insert(serverSettings)
+    .values({ settingKey: key, value: serialized })
+    .onConflictDoUpdate({ target: serverSettings.settingKey, set: { value: serialized } });
 };
 
 export const updateAnalyticsServerSettingAsync = async (

@@ -61,13 +61,19 @@ describe("board lanes", () => {
     expect(getBoardLaneColumnCount(layout, "right")).toBe(0);
   });
 
-  test("rejects ambiguous duplicate roots", () => {
+  test("orders main canvas tabs while rejecting duplicate shared rails", () => {
     const board = new BoardMockBuilder()
-      .addSection(new EmptySectionMockBuilder({ id: "main-a" }).build())
-      .addSection(new EmptySectionMockBuilder({ id: "main-b" }).build())
+      .addSection(new EmptySectionMockBuilder({ id: "main-a", yOffset: 2 }).build())
+      .addSection(new EmptySectionMockBuilder({ id: "main-b", yOffset: 1 }).build())
+      .addSection(new EmptySectionMockBuilder({ id: "left-a", xOffset: -1 }).build())
+      .addSection(new EmptySectionMockBuilder({ id: "left-b", xOffset: -1 }).build())
+      .addSection(new EmptySectionMockBuilder({ id: "right-a", xOffset: 1 }).build())
+      .addSection(new EmptySectionMockBuilder({ id: "right-b", xOffset: 1 }).build())
       .build();
 
-    expect(() => getRootSectionForLane(board, "main")).toThrow("multiple main canvas roots");
+    expect(getRootSectionForLane(board, "main")?.id).toBe("main-b");
+    expect(() => getRootSectionForLane(board, "left")).toThrow("multiple left canvas roots");
+    expect(() => getRootSectionForLane(board, "right")).toThrow("multiple right canvas roots");
   });
 
   test("calculates a stable server height from the tallest visible lane", () => {

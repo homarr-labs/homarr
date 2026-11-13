@@ -49,9 +49,9 @@ export const useWidgetActivitySignal = ({
         matchesWidgetItemQuery(queryKey, widgetQueryKeys, scope, definition.queryMatcher);
 
       const evaluate = () => {
-        const queries = queryClient
-          .getQueryCache()
-          .findAll({ type: "active", predicate: (query) => matches(query.queryKey) });
+        const queries = queryClient.getQueryCache().findAll({
+          predicate: (query) => matches(query.queryKey) && (query.isActive() || query.state.status === "error"),
+        });
         setIsActive(
           queries.some(
             (query) =>

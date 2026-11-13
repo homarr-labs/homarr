@@ -1245,6 +1245,20 @@
       "username": "Felhasználónév",
       "password": "Jelszó",
       "savedPlaceholder": "••••••• (mentve, üresen hagyva megtartja)"
+    },
+    "workshopUpdate": {
+      "title": "",
+      "apply": "",
+      "available": "",
+      "check": "",
+      "description": "",
+      "approvePermissions": "",
+      "pendingDescription": "",
+      "overwriteLocalChanges": "",
+      "installSeparate": "",
+      "communityWarning": "",
+      "updated": "",
+      "changedBeforeInstall": ""
     }
   },
   "workshop": {
@@ -1921,7 +1935,8 @@
       "copy": "Másolás",
       "copied": "Másolva",
       "refresh": "Frissítés",
-      "export": "Exportálás"
+      "export": "Exportálás",
+      "advanced": ""
     },
     "hidden": "Rejtett",
     "pagination": {
@@ -2016,6 +2031,15 @@
         "modifier": "Módosító"
       }
     },
+    "markdown": {
+      "alert": {
+        "note": "Jegyzet",
+        "tip": "",
+        "important": "",
+        "warning": "",
+        "caution": ""
+      }
+    },
     "dangerZone": "Veszélyzóna",
     "noResults": "Nincs eredmény",
     "unsavedChanges": "Nem mentett módosításai vannak!",
@@ -2106,6 +2130,158 @@
         "sm": "Finom",
         "xl": "Lágy"
       }
+    },
+    "customTheme": {
+      "label": "",
+      "nothingFound": "",
+      "custom": "",
+      "customize": "",
+      "editor": {
+        "title": "",
+        "basedOn": "",
+        "preview": "",
+        "previewColorScheme": "",
+        "layout": "Elrendezés",
+        "typography": "",
+        "colors": "",
+        "json": "",
+        "defaultRadius": "",
+        "radiusHint": "",
+        "scale": "",
+        "spacing": "",
+        "radius": "",
+        "fontFamily": "",
+        "headingFont": "",
+        "monoFont": "",
+        "fontSizes": "",
+        "palette": {
+          "body": "",
+          "surface": "",
+          "hover": "",
+          "border": "",
+          "text": "",
+          "dimmed": "",
+          "primary": "",
+          "secondary": ""
+        },
+        "lockedPrimary": "",
+        "pickColor": "",
+        "autoContrast": "",
+        "luminanceThreshold": "",
+        "jsonHint": "",
+        "invalidJson": "",
+        "tooLong": "",
+        "copyJson": "",
+        "copied": "",
+        "discardJson": "",
+        "reset": "",
+        "apply": "",
+        "sampleTitle": "",
+        "sampleBadge": "",
+        "sampleText": "",
+        "sampleInput": "Keresés",
+        "sampleValue": "Alkalmazás megtalálása",
+        "sampleButton": ""
+      },
+      "studio": {
+        "title": "",
+        "saveTheme": "",
+        "searchControls": "",
+        "component": "",
+        "inheritedValue": "",
+        "resetControl": "",
+        "decreaseControl": "",
+        "increaseControl": "",
+        "chooseControl": "",
+        "layout": {
+          "spacing": "",
+          "radius": "",
+          "compact": "",
+          "normal": "",
+          "roomy": "",
+          "preset": "",
+          "none": "Nem",
+          "rounded": "",
+          "full": "",
+          "custom": "",
+          "advanced": ""
+        },
+        "previewSurface": "",
+        "previewFrame": "",
+        "loadingPreview": "",
+        "previewFailed": "",
+        "sampleBoard": "",
+        "components": "",
+        "overlays": "",
+        "typography": "",
+        "liveBoard": "",
+        "viewport": "",
+        "responsive": "",
+        "tablet": "",
+        "mobile": "",
+        "includeCustomCss": "",
+        "groups": {
+          "layout": "",
+          "typography": "",
+          "colors": "",
+          "surfaces": "",
+          "overlays": "",
+          "accessibility": "",
+          "css": ""
+        },
+        "controls": {
+          "defaultRadius": "",
+          "scale": "",
+          "spacing": "",
+          "radius": "",
+          "breakpoint": "",
+          "fontSizes": "",
+          "lineHeight": "",
+          "shadow": "",
+          "fontFamily": "",
+          "headingFont": "",
+          "monoFont": "",
+          "headingWeight": "",
+          "headingSize": "",
+          "fontSmoothing": "",
+          "body": "",
+          "surface": "",
+          "hover": "",
+          "border": "",
+          "text": "",
+          "dimmed": "",
+          "primary": "",
+          "secondary": "",
+          "autoContrast": "",
+          "luminanceThreshold": "",
+          "primaryShade": "",
+          "componentRadius": "",
+          "borderWidth": "",
+          "surfaceBackground": "Háttér",
+          "surfaceText": "",
+          "surfaceBorder": "Határszín",
+          "hoverBackground": "",
+          "hoverText": "",
+          "componentShadow": "",
+          "componentBorder": "",
+          "componentPadding": "",
+          "componentSize": "Fájl mérete",
+          "componentVariant": "",
+          "overlayBlur": "",
+          "overlayOpacity": "",
+          "overlayColor": "",
+          "transitionDuration": "",
+          "headerBackground": "",
+          "respectReducedMotion": "",
+          "focusRing": "",
+          "cursorType": "",
+          "customCss": ""
+        },
+        "expandPreview": "",
+        "showControls": "Vezérlők megjelenítése"
+      },
+      "instanceDefault": "",
+      "useInstanceDefault": ""
     }
   },
   "section": {
@@ -2201,6 +2377,18 @@
       },
       "customWidget": "Egyéni widget",
       "standalone": "Önálló",
+      "integrationFilter": "",
+      "integrationNotConnected": "",
+      "workshop": {
+        "title": "",
+        "back": "",
+        "empty": "",
+        "noMatches": "",
+        "loading": "",
+        "integrationError": "",
+        "searchMore": "",
+        "installAndAdd": ""
+      },
       "missingIntegration": {
         "title": "Előbb csatlakoztass egy szolgáltatást",
         "noPermission": "Ehhez a widgethez kompatibilis szolgáltatáskapcsolat szükséges. Kérj meg egy rendszergazdát egy kapcsolat létrehozására, majd próbáld újra."
@@ -2236,10 +2424,13 @@
       "saveErrorTitle": "Nem sikerült frissíteni az elemeket",
       "saveErrorMessage": "A módosításokat nem sikerült menteni. A tábla frissítve lett.",
       "moveUnavailableTitle": "Nem sikerült áthelyezni a kiválasztott elemeket",
-      "moveUnavailableMessage": "A célterületen nincs elég hely a teljes kijelölés számára."
+      "moveUnavailableMessage": "A célterületen nincs elég hely a teljes kijelölés számára.",
+      "moveToTab": "",
+      "movedToTab": ""
     },
     "moveResize": {
       "title": "Elem áthelyezése / átméretezése",
+      "sizeOverlap": "",
       "entryLabel": "{name}, {column}. oszlop, {row}. sor",
       "target": {
         "numbered": "{name}, {index}. cél",
@@ -2322,6 +2513,36 @@
       "open": "Speciális nézet megnyitása",
       "close": "Speciális nézet bezárása",
       "label": "{widget} speciális nézete"
+    },
+    "inPlace": {
+      "widgetLoadError": "",
+      "search": "",
+      "bestFit": "",
+      "moreWidgets": "",
+      "widgets": "Widgetek",
+      "yourApps": "",
+      "createApp": "",
+      "addAppLink": "",
+      "createWidget": "",
+      "createWidgetDescription": "",
+      "createAppDescription": "",
+      "defaultFit": "",
+      "defaultFitDescription": "",
+      "defaultSize": "",
+      "defaultSizeDescription": "",
+      "emptyCells": "",
+      "preview": {
+        "error": "",
+        "loading": ""
+      },
+      "keyboard": {
+        "move": "",
+        "resize": "",
+        "pick": "",
+        "browse": "",
+        "moveDescription": "",
+        "resizeDescription": ""
+      }
     }
   },
   "widget": {
@@ -3146,6 +3367,141 @@
       "error": {
         "loadFailed": "Nem sikerült betölteni az egységet",
         "toggleFailed": "Nem sikerült frissíteni az egységet"
+      }
+    },
+    "smartHome-controls": {
+      "name": "",
+      "description": "",
+      "option": {
+        "presentation": {
+          "label": "",
+          "option": {
+            "entities": "",
+            "controlPanel": ""
+          }
+        },
+        "title": {
+          "label": "Cím",
+          "description": ""
+        },
+        "blocks": {
+          "label": "",
+          "remove": ""
+        },
+        "roomDomains": {
+          "label": "",
+          "description": ""
+        },
+        "excludedEntityIds": {
+          "label": "",
+          "description": "",
+          "placeholder": ""
+        },
+        "showSummary": {
+          "label": ""
+        },
+        "readOnly": {
+          "label": "",
+          "description": ""
+        },
+        "controlSize": {
+          "label": "",
+          "option": {
+            "auto": "",
+            "compact": "",
+            "large": "Nagy"
+          }
+        },
+        "palette": {
+          "label": "",
+          "option": {
+            "boring": "",
+            "colorful": ""
+          }
+        }
+      },
+      "domain": {
+        "light": "",
+        "switch": "",
+        "fan": "",
+        "climate": "",
+        "humidifier": "",
+        "cover": "",
+        "valve": "",
+        "lock": "",
+        "alarm_control_panel": "",
+        "media_player": "",
+        "camera": "",
+        "vacuum": "",
+        "scene": "",
+        "script": "",
+        "automation": "",
+        "button": "",
+        "input_boolean": "",
+        "input_select": "",
+        "person": "",
+        "binary_sensor": "",
+        "sensor": "",
+        "weather": "Időjárás",
+        "sun": "",
+        "update": ""
+      },
+      "block": {
+        "add": {
+          "rooms": "",
+          "entity": "",
+          "roomsLabel": "",
+          "roomsPlaceholder": "",
+          "entityLabel": "",
+          "entityPlaceholder": "",
+          "merge": "",
+          "submit": "Hozzáadás",
+          "duplicate": "",
+          "covered": ""
+        },
+        "kind": {
+          "entity": "",
+          "room": "",
+          "mergedRooms": "",
+          "unknown": ""
+        },
+        "entityCount": "",
+        "noArea": "",
+        "issue": {
+          "missing": "Nem található",
+          "otherSource": "",
+          "empty": ""
+        }
+      },
+      "preview": {
+        "empty": "",
+        "noMatches": "",
+        "summary": {
+          "lights": "",
+          "on": "",
+          "off": "",
+          "sensors": "",
+          "offline": "nem elérhető"
+        },
+        "otherSource": ""
+      },
+      "live": {
+        "loading": "",
+        "error": "",
+        "retry": "",
+        "actionFailed": "",
+        "actionUnconfirmed": "",
+        "unconfirmed": "",
+        "selectionLimit": "",
+        "unknownError": ""
+      },
+      "inline": {
+        "open": "",
+        "title": "",
+        "handle": "",
+        "empty": "",
+        "add": "",
+        "close": ""
       }
     },
     "smartHome-executeAutomation": {
@@ -5446,6 +5802,23 @@
       "name": "Rendszer erőforrások",
       "description": "A rendszer CPU-, memória-, lemez- és egyéb hardverhasználata",
       "option": {
+        "diskDisplayMode": {
+          "label": "",
+          "option": {
+            "percentage": "Százalék (pl: 76%)",
+            "free": "",
+            "absolute": "",
+            "combined": ""
+          }
+        },
+        "resourceLayout": {
+          "label": "",
+          "description": ""
+        },
+        "subresourceLayout": {
+          "label": "",
+          "description": ""
+        },
         "hasShadow": {
           "label": "Diagram árnyékolás engedélyezése"
         },
@@ -5453,6 +5826,7 @@
           "label": "Látható diagramok",
           "description": "Válaszd ki a megjelenítendő diagramokat.",
           "option": {
+            "cpuCores": "",
             "memory": "Memória",
             "network": "Hálózat"
           }
@@ -6381,6 +6755,26 @@
         }
       }
     },
+    "tabs": {
+      "label": "",
+      "indicator": "",
+      "home": "Nyitólap",
+      "untitled": "",
+      "add": "",
+      "actions": "",
+      "rename": "",
+      "namePlaceholder": "",
+      "moveLeft": "",
+      "moveRight": "",
+      "remove": {
+        "action": "",
+        "confirm": ""
+      },
+      "limitReached": "",
+      "hotkeyHint": "",
+      "destination": "",
+      "containerDestination": ""
+    },
     "landmark": {
       "canvas": "Műszerfal vászna",
       "leftRail": "Műszerfal bal oldali sávja",
@@ -6647,6 +7041,11 @@
           "description": "A szerver adminisztrátora még nem állított be kezdőlap táblát.",
           "link": "Nyilvános táblák megtekintése",
           "notice": "Az oldal eltüntetéséhez kérd meg a szerver adminisztrátorát, hogy állítson be egy kezdőlap táblát a szervernek"
+        },
+        "noAccess": {
+          "title": "",
+          "description": "",
+          "notice": ""
         }
       }
     }
@@ -6718,10 +7117,12 @@
             "documentation": "Dokumentáció",
             "submitIssue": "Hiba bejelentése",
             "discord": "Discord-szerverünk",
-            "sourceCode": "Forráskód"
+            "sourceCode": "Forráskód",
+            "changelog": ""
           }
         },
         "about": "Névjegy",
+        "updateAvailable": "",
         "assistant": "Asszisztens"
       }
     },
@@ -6733,9 +7134,23 @@
           "authentication": "Hitelesítés",
           "authorization": "Jogosultságkezelés"
         },
-        "heroBanner": {
-          "title": "Üdvözöljük újra a",
-          "subtitle": "{app} Tábla"
+        "hero": {
+          "greeting": "",
+          "greetingWithoutName": "",
+          "description": ""
+        },
+        "lobster": {
+          "label": "",
+          "prompt": "",
+          "pokeCount": "",
+          "reaction": {
+            "hey": "",
+            "ow": "",
+            "snip": "",
+            "careful": "",
+            "stillHere": "",
+            "okay": ""
+          }
         }
       },
       "board": {
@@ -6780,7 +7195,9 @@
         },
         "noResults": {
           "title": "Még nincsenek táblák",
-          "description": "Hozzon létre egy táblát, hogy alkalmazásait és widgetjeit egy helyen rendezhesse el."
+          "description": "Hozzon létre egy táblát, hogy alkalmazásait és widgetjeit egy helyen rendezhesse el.",
+          "noAccessTitle": "",
+          "noAccessDescription": ""
         }
       },
       "media": {
@@ -6833,6 +7250,11 @@
                 "logoDisplay": {
                   "logo": "Csak logó",
                   "logoAndText": "Logó + szöveg"
+                },
+                "tabsDisplay": {
+                  "wide": "",
+                  "compact": "",
+                  "indicator": ""
                 }
               },
               "items": {
@@ -6840,6 +7262,7 @@
                 "search": "Keresés",
                 "home": "Főoldal",
                 "boardSwitcher": "Táblák",
+                "boardTabs": "",
                 "assistant": "Asszisztens",
                 "docker": "Docker",
                 "boardEdit": "Tábla szerkesztése",
@@ -7071,6 +7494,10 @@
             "title": "Megjelenés",
             "defaultColorScheme": {
               "label": "Alapértelmezett színséma"
+            },
+            "whatsNew": {
+              "label": "",
+              "description": ""
             }
           },
           "branding": {
@@ -7653,7 +8080,8 @@
               "openSpotlightApps": "Alkalmazáskeresés megnyitása",
               "openSpotlightAssistant": "Asszisztens mód megnyitása",
               "openSpotlightPreferences": "Beállítási mód megnyitása",
-              "openAssistant": "Asszisztens megnyitása"
+              "openAssistant": "Asszisztens megnyitása",
+              "switchBoardTab": ""
             },
             "note": "Tipp: A Mod a Ctrl billentyűt és a macOS-en a ⌘ billentyűt jelenti"
           }
@@ -8823,6 +9251,12 @@
         "description": "Itt válthatsz színsémát, nyelvet, kezdőlapot és preferenciákat. Innen a kezelőfelületre is ugorhatsz."
       }
     }
+  },
+  "whatsNew": {
+    "title": "",
+    "empty": "",
+    "allReleases": "",
+    "dismiss": ""
   },
   "metadata": {
     "description": "Önhosztolt irányítópult az *arr-csomaghoz és az egész otthoni laborhoz. Több mint 50 szolgáltatással, valós idejű widgetekkel és konfigurációs fájlok nélkül.",

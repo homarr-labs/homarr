@@ -55,6 +55,14 @@ homarr/
 └── Dockerfile           # Multi-stage production build
 ```
 
+## Integration contributions
+
+For a new integration, reuse Statistics or another existing widget when it covers the use case. For a service-specific
+view, prefer publishing a Custom Widget that uses the saved integration. Link its Workshop listing from the integration
+PR and setup guide when available. Add a built-in widget only when the use case cannot be served by existing widgets or
+Custom Widgets; explain the gap in the PR. See [the Yuvomi PR](https://github.com/homarr-labs/homarr/pull/7493#issuecomment-6699406618)
+for an example.
+
 ## Documentation
 
 Add documentation only when users need the information to set up, use, or troubleshoot Homarr and cannot reasonably discover it from the UI or generated API schema. If a user does not need to know it, do not document it. A code, UI, or API change alone is never a reason to add docs.

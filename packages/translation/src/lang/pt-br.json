@@ -1245,6 +1245,20 @@
       "username": "Usuário",
       "password": "Senha",
       "savedPlaceholder": "••••••• (salvo, deixe em branco para manter)"
+    },
+    "workshopUpdate": {
+      "title": "",
+      "apply": "",
+      "available": "Atualização disponível",
+      "check": "",
+      "description": "",
+      "approvePermissions": "",
+      "pendingDescription": "",
+      "overwriteLocalChanges": "",
+      "installSeparate": "",
+      "communityWarning": "",
+      "updated": "",
+      "changedBeforeInstall": ""
     }
   },
   "workshop": {
@@ -1921,7 +1935,8 @@
       "copy": "copiar",
       "copied": "Copiado",
       "refresh": "Atualizar",
-      "export": "Exportar"
+      "export": "Exportar",
+      "advanced": "Avançado"
     },
     "hidden": "Oculto",
     "pagination": {
@@ -2016,6 +2031,15 @@
         "modifier": ""
       }
     },
+    "markdown": {
+      "alert": {
+        "note": "Nota",
+        "tip": "",
+        "important": "",
+        "warning": "ATENÇÃO",
+        "caution": ""
+      }
+    },
     "dangerZone": "Zona de risco",
     "noResults": "Nenhum resultado encontrado",
     "unsavedChanges": "Você tem alterações não salvas!",
@@ -2106,6 +2130,158 @@
         "sm": "Sutil",
         "xl": "Suave"
       }
+    },
+    "customTheme": {
+      "label": "Tema",
+      "nothingFound": "",
+      "custom": "Personalizado",
+      "customize": "",
+      "editor": {
+        "title": "",
+        "basedOn": "",
+        "preview": "",
+        "previewColorScheme": "",
+        "layout": "Layout",
+        "typography": "",
+        "colors": "",
+        "json": "",
+        "defaultRadius": "",
+        "radiusHint": "",
+        "scale": "",
+        "spacing": "Espaçamento",
+        "radius": "",
+        "fontFamily": "",
+        "headingFont": "",
+        "monoFont": "",
+        "fontSizes": "",
+        "palette": {
+          "body": "",
+          "surface": "",
+          "hover": "",
+          "border": "",
+          "text": "",
+          "dimmed": "",
+          "primary": "",
+          "secondary": "Realce secundário"
+        },
+        "lockedPrimary": "",
+        "pickColor": "",
+        "autoContrast": "",
+        "luminanceThreshold": "",
+        "jsonHint": "",
+        "invalidJson": "",
+        "tooLong": "",
+        "copyJson": "",
+        "copied": "Copiado",
+        "discardJson": "",
+        "reset": "",
+        "apply": "",
+        "sampleTitle": "",
+        "sampleBadge": "Pré-visualizar",
+        "sampleText": "",
+        "sampleInput": "Busca",
+        "sampleValue": "Encontre um aplicativo",
+        "sampleButton": "Abertas"
+      },
+      "studio": {
+        "title": "",
+        "saveTheme": "",
+        "searchControls": "",
+        "component": "",
+        "inheritedValue": "",
+        "resetControl": "",
+        "decreaseControl": "",
+        "increaseControl": "",
+        "chooseControl": "",
+        "layout": {
+          "spacing": "Espaçamento",
+          "radius": "",
+          "compact": "Compacta",
+          "normal": "normal",
+          "roomy": "",
+          "preset": "",
+          "none": "Nenhum(a)",
+          "rounded": "",
+          "full": "Completo",
+          "custom": "Personalizado",
+          "advanced": ""
+        },
+        "previewSurface": "Pré-visualizar",
+        "previewFrame": "",
+        "loadingPreview": "",
+        "previewFailed": "",
+        "sampleBoard": "",
+        "components": "Componentes",
+        "overlays": "",
+        "typography": "",
+        "liveBoard": "",
+        "viewport": "",
+        "responsive": "",
+        "tablet": "",
+        "mobile": "Dispositivos móveis",
+        "includeCustomCss": "",
+        "groups": {
+          "layout": "",
+          "typography": "",
+          "colors": "",
+          "surfaces": "",
+          "overlays": "",
+          "accessibility": "",
+          "css": ""
+        },
+        "controls": {
+          "defaultRadius": "",
+          "scale": "",
+          "spacing": "Espaçamento",
+          "radius": "",
+          "breakpoint": "Breakpoint",
+          "fontSizes": "",
+          "lineHeight": "",
+          "shadow": "",
+          "fontFamily": "",
+          "headingFont": "",
+          "monoFont": "",
+          "headingWeight": "",
+          "headingSize": "",
+          "fontSmoothing": "",
+          "body": "",
+          "surface": "",
+          "hover": "",
+          "border": "",
+          "text": "",
+          "dimmed": "",
+          "primary": "",
+          "secondary": "Realce secundário",
+          "autoContrast": "",
+          "luminanceThreshold": "",
+          "primaryShade": "",
+          "componentRadius": "",
+          "borderWidth": "",
+          "surfaceBackground": "Imagem de fundo",
+          "surfaceText": "",
+          "surfaceBorder": "Cor da borda",
+          "hoverBackground": "",
+          "hoverText": "",
+          "componentShadow": "",
+          "componentBorder": "Mostrar bordas",
+          "componentPadding": "",
+          "componentSize": "Tamanho do arquivo",
+          "componentVariant": "",
+          "overlayBlur": "",
+          "overlayOpacity": "",
+          "overlayColor": "",
+          "transitionDuration": "",
+          "headerBackground": "",
+          "respectReducedMotion": "",
+          "focusRing": "",
+          "cursorType": "",
+          "customCss": ""
+        },
+        "expandPreview": "",
+        "showControls": "Exibir controles"
+      },
+      "instanceDefault": "",
+      "useInstanceDefault": ""
     }
   },
   "section": {
@@ -2201,6 +2377,18 @@
       },
       "customWidget": "Widget personalizado",
       "standalone": "Autônomo",
+      "integrationFilter": "",
+      "integrationNotConnected": "",
+      "workshop": {
+        "title": "Widgets da oficina",
+        "back": "",
+        "empty": "",
+        "noMatches": "",
+        "loading": "",
+        "integrationError": "",
+        "searchMore": "",
+        "installAndAdd": ""
+      },
       "missingIntegration": {
         "title": "Conecte um serviço primeiro",
         "noPermission": "Este widget precisa de uma conexão de serviço compatível. Peça a um administrador para conectar um, e tente novamente."
@@ -2236,10 +2424,13 @@
       "saveErrorTitle": "Não é possível atualizar itens",
       "saveErrorMessage": "As alterações não puderam ser salvas. O board foi atualizado.",
       "moveUnavailableTitle": "Não é possível mover os itens selecionados",
-      "moveUnavailableMessage": "O destino não tem espaço suficiente para toda a seleção."
+      "moveUnavailableMessage": "O destino não tem espaço suficiente para toda a seleção.",
+      "moveToTab": "",
+      "movedToTab": ""
     },
     "moveResize": {
       "title": "Mover / redimensionar item",
+      "sizeOverlap": "",
       "entryLabel": "{name}, coluna {column}, linha {row}",
       "target": {
         "numbered": "{name}, destino {index}",
@@ -2322,6 +2513,36 @@
       "open": "Abrir visualização avançada",
       "close": "Fechar visualização avançada",
       "label": "{widget} visão avançada"
+    },
+    "inPlace": {
+      "widgetLoadError": "",
+      "search": "",
+      "bestFit": "",
+      "moreWidgets": "",
+      "widgets": "Widgets",
+      "yourApps": "",
+      "createApp": "",
+      "addAppLink": "",
+      "createWidget": "",
+      "createWidgetDescription": "",
+      "createAppDescription": "",
+      "defaultFit": "",
+      "defaultFitDescription": "",
+      "defaultSize": "",
+      "defaultSizeDescription": "",
+      "emptyCells": "",
+      "preview": {
+        "error": "",
+        "loading": ""
+      },
+      "keyboard": {
+        "move": "mover-se",
+        "resize": "",
+        "pick": "",
+        "browse": "",
+        "moveDescription": "",
+        "resizeDescription": ""
+      }
     }
   },
   "widget": {
@@ -3146,6 +3367,141 @@
       "error": {
         "loadFailed": "Não foi possível carregar a entidade",
         "toggleFailed": "Não foi possível atualizar a entidade"
+      }
+    },
+    "smartHome-controls": {
+      "name": "",
+      "description": "",
+      "option": {
+        "presentation": {
+          "label": "",
+          "option": {
+            "entities": "",
+            "controlPanel": ""
+          }
+        },
+        "title": {
+          "label": "Título",
+          "description": ""
+        },
+        "blocks": {
+          "label": "",
+          "remove": ""
+        },
+        "roomDomains": {
+          "label": "",
+          "description": ""
+        },
+        "excludedEntityIds": {
+          "label": "",
+          "description": "",
+          "placeholder": ""
+        },
+        "showSummary": {
+          "label": ""
+        },
+        "readOnly": {
+          "label": "",
+          "description": ""
+        },
+        "controlSize": {
+          "label": "",
+          "option": {
+            "auto": "Automático",
+            "compact": "Compacta",
+            "large": "Grande"
+          }
+        },
+        "palette": {
+          "label": "",
+          "option": {
+            "boring": "",
+            "colorful": ""
+          }
+        }
+      },
+      "domain": {
+        "light": "",
+        "switch": "",
+        "fan": "",
+        "climate": "",
+        "humidifier": "",
+        "cover": "",
+        "valve": "",
+        "lock": "",
+        "alarm_control_panel": "",
+        "media_player": "",
+        "camera": "",
+        "vacuum": "",
+        "scene": "",
+        "script": "",
+        "automation": "",
+        "button": "",
+        "input_boolean": "",
+        "input_select": "",
+        "person": "Pessoas",
+        "binary_sensor": "",
+        "sensor": "",
+        "weather": "Clima",
+        "sun": "",
+        "update": ""
+      },
+      "block": {
+        "add": {
+          "rooms": "",
+          "entity": "",
+          "roomsLabel": "",
+          "roomsPlaceholder": "",
+          "entityLabel": "",
+          "entityPlaceholder": "",
+          "merge": "",
+          "submit": "Adicionar",
+          "duplicate": "",
+          "covered": ""
+        },
+        "kind": {
+          "entity": "",
+          "room": "",
+          "mergedRooms": "",
+          "unknown": ""
+        },
+        "entityCount": "",
+        "noArea": "",
+        "issue": {
+          "missing": "Não encontrado",
+          "otherSource": "",
+          "empty": ""
+        }
+      },
+      "preview": {
+        "empty": "",
+        "noMatches": "",
+        "summary": {
+          "lights": "",
+          "on": "ligado",
+          "off": "desligado",
+          "sensors": "",
+          "offline": "offline"
+        },
+        "otherSource": ""
+      },
+      "live": {
+        "loading": "",
+        "error": "",
+        "retry": "",
+        "actionFailed": "",
+        "actionUnconfirmed": "",
+        "unconfirmed": "",
+        "selectionLimit": "",
+        "unknownError": ""
+      },
+      "inline": {
+        "open": "",
+        "title": "",
+        "handle": "",
+        "empty": "",
+        "add": "",
+        "close": ""
       }
     },
     "smartHome-executeAutomation": {
@@ -5446,6 +5802,23 @@
       "name": "Recursos do Sistema",
       "description": "Utilização da CPU, Memória, Disco e outro hardware do seu sistema",
       "option": {
+        "diskDisplayMode": {
+          "label": "",
+          "option": {
+            "percentage": "Porcentagem (ex: 76%)",
+            "free": "",
+            "absolute": "",
+            "combined": ""
+          }
+        },
+        "resourceLayout": {
+          "label": "",
+          "description": ""
+        },
+        "subresourceLayout": {
+          "label": "",
+          "description": ""
+        },
         "hasShadow": {
           "label": "Habilitar sombreamento do gráfico"
         },
@@ -5453,6 +5826,7 @@
           "label": "Gráficos visíveis",
           "description": "Selecione os gráficos que você deseja que estejam visíveis.",
           "option": {
+            "cpuCores": "",
             "memory": "Memória",
             "network": "Rede"
           }
@@ -6381,6 +6755,26 @@
         }
       }
     },
+    "tabs": {
+      "label": "",
+      "indicator": "",
+      "home": "Início",
+      "untitled": "",
+      "add": "",
+      "actions": "",
+      "rename": "",
+      "namePlaceholder": "",
+      "moveLeft": "",
+      "moveRight": "",
+      "remove": {
+        "action": "",
+        "confirm": ""
+      },
+      "limitReached": "",
+      "hotkeyHint": "",
+      "destination": "",
+      "containerDestination": ""
+    },
     "landmark": {
       "canvas": "Painel tela",
       "leftRail": "Trilho esquerdo",
@@ -6647,6 +7041,11 @@
           "description": "O administrador do servidor ainda não definiu um quadro inicial.",
           "link": "Visualizar painéis públicos",
           "notice": "Para fazer essa página desaparecer, peça ao administrador do servidor para definir um quadro inicial para o servidor"
+        },
+        "noAccess": {
+          "title": "",
+          "description": "",
+          "notice": ""
         }
       }
     }
@@ -6718,10 +7117,12 @@
             "documentation": "Documentação",
             "submitIssue": "Enviar um problema",
             "discord": "Discord da comunidade",
-            "sourceCode": "Código-fonte"
+            "sourceCode": "Código-fonte",
+            "changelog": ""
           }
         },
         "about": "Sobre",
+        "updateAvailable": "Atualização disponível",
         "assistant": "Assistente"
       }
     },
@@ -6733,9 +7134,23 @@
           "authentication": "Autenticação",
           "authorization": "Autorização"
         },
-        "heroBanner": {
-          "title": "Bem-vindo de volta ao seu",
-          "subtitle": "Quadro {app}"
+        "hero": {
+          "greeting": "",
+          "greetingWithoutName": "",
+          "description": ""
+        },
+        "lobster": {
+          "label": "",
+          "prompt": "",
+          "pokeCount": "",
+          "reaction": {
+            "hey": "",
+            "ow": "",
+            "snip": "",
+            "careful": "",
+            "stillHere": "",
+            "okay": ""
+          }
         }
       },
       "board": {
@@ -6780,7 +7195,9 @@
         },
         "noResults": {
           "title": "Nenhum painel ainda",
-          "description": "Crie um quadro para organizar os seus aplicativos e widgets em um só lugar."
+          "description": "Crie um quadro para organizar os seus aplicativos e widgets em um só lugar.",
+          "noAccessTitle": "",
+          "noAccessDescription": ""
         }
       },
       "media": {
@@ -6833,6 +7250,11 @@
                 "logoDisplay": {
                   "logo": "Logotipo apenas",
                   "logoAndText": "Logotipo + texto"
+                },
+                "tabsDisplay": {
+                  "wide": "Ampla",
+                  "compact": "Compacta",
+                  "indicator": ""
                 }
               },
               "items": {
@@ -6840,6 +7262,7 @@
                 "search": "Busca",
                 "home": "Quadro inicial",
                 "boardSwitcher": "Painéis",
+                "boardTabs": "",
                 "assistant": "Assistente",
                 "docker": "Docker",
                 "boardEdit": "Editar quadro",
@@ -7071,6 +7494,10 @@
             "title": "Aparência",
             "defaultColorScheme": {
               "label": "Esquema de cores padrão"
+            },
+            "whatsNew": {
+              "label": "",
+              "description": ""
             }
           },
           "branding": {
@@ -7653,7 +8080,8 @@
               "openSpotlightApps": "Abrir pesquisa de aplicativos",
               "openSpotlightAssistant": "Abrir modo assistente",
               "openSpotlightPreferences": "Abrir modo de preferências",
-              "openAssistant": "Abrir Assistente"
+              "openAssistant": "Abrir Assistente",
+              "switchBoardTab": ""
             },
             "note": "Dica: Mod refere-se tanto à tecla Ctrl quanto à tecla ⌘ no macOS"
           }
@@ -8823,6 +9251,12 @@
         "description": "Altere seu esquema de cores, idioma, quadro inicial e preferências. Você também pode acessar a área de gerenciamento a partir daqui."
       }
     }
+  },
+  "whatsNew": {
+    "title": "",
+    "empty": "",
+    "allReleases": "",
+    "dismiss": ""
   },
   "metadata": {
     "description": "Um painel auto-hospedado para a *pilha de arr e toda a sua pátria. Integra com mais de 50 serviços, widgets em tempo real, sem arquivos de configuração.",

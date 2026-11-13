@@ -5,57 +5,41 @@
 import { useEffect, useId, useRef, useState } from "react";
 import type { ComponentType, CSSProperties, FormEvent, PropsWithChildren } from "react";
 import {
-  Accordion,
   Alert,
   Badge,
   Box,
   Button,
   Center,
-  CloseButton,
-  ColorInput,
   Divider,
   Group,
-  Input as MantineInput,
   NumberInput,
-  SimpleGrid,
   Stack,
   Tabs,
   Text,
-  TextInput,
   Tooltip,
-  useMantineTheme,
 } from "@mantine/core";
-import { schemaResolver } from "@mantine/form";
 import { useElementSize } from "@mantine/hooks";
-import { IconArrowLeft, IconEye, IconPencil, IconSettings } from "@tabler/icons-react";
-import { QueryErrorResetBoundary } from "@tanstack/react-query";
-import { ErrorBoundary } from "react-error-boundary";
-import { z } from "zod/v4";
+import { IconArrowLeft, IconEye, IconPencil } from "@tabler/icons-react";
 
-import { objectEntries } from "@homarr/common";
-import { IntegrationProvider, useSession } from "@homarr/auth/client";
+import { useSession } from "@homarr/auth/client";
 import { useOptionalBoard } from "@homarr/boards/context";
+import { useBoardDraftChanges } from "@homarr/boards/draft-changes";
 import { calculateBoardUiScale } from "@homarr/boards/scale";
 import type { WidgetKind } from "@homarr/definitions";
 import { createModal, ModalFormFooter, modalSizeForm } from "@homarr/modals";
 import type { SettingsContextProps } from "@homarr/settings/creator";
-import { SpotlightProvider } from "@homarr/spotlight";
 import { useI18n } from "@homarr/translation/client";
-import { IntegrationAvatar, TextMultiSelect } from "@homarr/ui";
-import { zodErrorMap } from "@homarr/validation/form/i18n";
+import { IntegrationAvatar } from "@homarr/ui";
+import type { BoardItemAdvancedOptions } from "@homarr/validation/shared";
 
-import { getInputForType } from "../_inputs";
-import { FormProvider, useForm } from "../_inputs/form";
-import type { BoardItemAdvancedOptions } from "../../../validation/src/shared";
-import type { OptionsBuilderResult } from "../options";
+import { FormProvider } from "../_inputs/form";
 import type { WidgetComponentProps, WidgetDefinition } from "../definition";
-import { WidgetError } from "../errors/component";
-import { OPTIONS_SUPER_REFINE } from "../options";
 import type { IntegrationSelectOption } from "../widget-integration-select";
-import { WidgetIntegrationSelect } from "../widget-integration-select";
-import { WidgetCardShell, WidgetTitleBadge } from "../widget-card-shell";
 import type { EmbeddedAppEditFormHandle } from "./embedded-app-edit-form";
 import { EmbeddedAppEditForm } from "./embedded-app-edit-form";
+import { widgetEditorModalStyles } from "./styles";
+import { normalizeWidgetEditorState, useWidgetEditorForm, WidgetEditorFields } from "./widget-editor-form";
+import { WidgetLivePreview } from "./widget-live-preview";
 import classes from "./widget-edit-modal.module.css";
 
 export interface WidgetEditModalState {
@@ -80,6 +64,7 @@ interface WidgetEditPreviewResizeOptions {
 }
 
 export interface EmbeddedIntegrationEditFormHandle {
+  isDirty: () => boolean;
   submitIfDirty: () => Promise<boolean>;
 }
 
@@ -129,14 +114,6 @@ interface WidgetEditPreviewProps {
   PreviewWrapper?: ComponentType<PropsWithChildren>;
 }
 
-const PreviewRuntimeBoundary = ({
-  Wrapper,
-  children,
-}: PropsWithChildren<{ Wrapper?: ComponentType<PropsWithChildren> }>) => {
-  if (!Wrapper) return children;
-  return <Wrapper>{children}</Wrapper>;
-};
-
 const normalizePreviewSize = (size: WidgetEditModalSize, maximumSize: WidgetEditModalSize): WidgetEditModalSize => ({
   width: Math.max(1, Math.min(Math.round(size.width), maximumSize.width)),
   height: Math.max(1, Math.min(Math.round(size.height), maximumSize.height)),
@@ -161,7 +138,6 @@ const WidgetEditPreview = ({
   const board = useOptionalBoard();
   const generatedPreviewId = useId().replaceAll(":", "");
   const { ref, width: availableWidth, height: availableHeight } = useElementSize<HTMLDivElement>();
-  const { ref: cardRef, width: contentWidth, height: contentHeight } = useElementSize<HTMLDivElement>();
   const [boardAppearance, setBoardAppearance] = useState<{
     scale: number;
     width?: number;
@@ -231,22 +207,11 @@ const WidgetEditPreview = ({
   const hasIntegrationSupport = "supportedIntegrations" in definition;
   const integrationRequired = hasIntegrationSupport && definition.integrationsRequired !== false;
   const isMissingIntegration = integrationRequired && state.integrationIds.length === 0;
-  const previewIntegrations = integrationData
-    .filter((integration) => state.integrationIds.includes(integration.id))
-    .map((integration) => ({
-      id: integration.id,
-      permissions: integration.permissions ?? {
-        hasFullAccess: false,
-        hasInteractAccess: false,
-        hasUseAccess: false,
-      },
-    }));
   let componentItemId = itemId;
   if (kind === "assistant" || kind === "timer") {
     componentItemId = `widget-preview-${generatedPreviewId}`;
   }
   const isPendingCustomWidget = kind === "customApi" && !itemId;
-  const previewOpacity = (board?.opacity ?? 100) / 100;
   const handleResizeValue = (dimension: keyof WidgetEditModalSize, value: string | number) => {
     if (typeof value !== "number" || !Number.isFinite(value) || !resize) return;
     resize.onChange(
@@ -324,59 +289,28 @@ const WidgetEditPreview = ({
               height: previewHeight,
             }}
           >
-            <WidgetCardShell
-              innerRef={cardRef}
-              className={classes.previewWidget}
+            <WidgetLivePreview
               kind={kind}
+              Component={Component}
+              definition={definition}
+              options={state.options}
+              integrationIds={state.integrationIds}
               advancedOptions={state.advancedOptions}
-              opacity={previewOpacity}
-              radius={board?.itemRadius}
-              p={0}
-              data-grid-item-content
-              style={{
+              integrationData={integrationData}
+              fallbackWidth={dimensions.width}
+              fallbackHeight={dimensions.height}
+              displayScale={previewScale}
+              itemId={componentItemId}
+              boardId={boardId}
+              isEditMode={isPendingCustomWidget}
+              onChangeOptions={onChangeOptions}
+              PreviewWrapper={PreviewWrapper}
+              shellStyle={{
                 width: sourceWidth,
                 height: sourceHeight,
                 transform: `scale(${previewScale})`,
               }}
-            >
-              <WidgetTitleBadge
-                advancedOptions={state.advancedOptions}
-                opacity={previewOpacity}
-                radius={board?.itemRadius}
-              />
-              <QueryErrorResetBoundary>
-                {({ reset }) => (
-                  <ErrorBoundary
-                    onReset={reset}
-                    resetKeys={[state.options, state.integrationIds]}
-                    fallbackRender={({ resetErrorBoundary, error }) => (
-                      <WidgetError definition={definition} error={error} resetErrorBoundary={resetErrorBoundary} />
-                    )}
-                  >
-                    <PreviewRuntimeBoundary Wrapper={PreviewWrapper}>
-                      <SpotlightProvider>
-                        <IntegrationProvider integrations={previewIntegrations}>
-                          <div className={classes.previewContent} inert>
-                            <Component
-                              options={state.options as never}
-                              integrationIds={state.integrationIds}
-                              width={contentWidth || dimensions.width}
-                              height={contentHeight || dimensions.height}
-                              displayScale={previewScale}
-                              isEditMode={isPendingCustomWidget}
-                              displayMode="compact"
-                              boardId={boardId}
-                              itemId={componentItemId}
-                              setOptions={({ newOptions }) => onChangeOptions(newOptions as Record<string, unknown>)}
-                            />
-                          </div>
-                        </IntegrationProvider>
-                      </SpotlightProvider>
-                    </PreviewRuntimeBoundary>
-                  </ErrorBoundary>
-                )}
-              </QueryErrorResetBoundary>
-            </WidgetCardShell>
+            />
           </Box>
         )}
       </Center>
@@ -390,12 +324,10 @@ export const getSelectedWidgetIntegrations = (
 ) => integrationData.filter((integration) => selectedIds.includes(integration.id));
 
 export const WidgetEditModal = createModal<WidgetEditModalProps<WidgetKind>>(({ actions, innerProps }) => {
-  const t = useI18n();
   const tItem = useI18n("item.edit");
   const tCommon = useI18n("common");
   const board = useOptionalBoard();
   const { data: session } = useSession();
-  const theme = useMantineTheme();
   const appEditRef = useRef<EmbeddedAppEditFormHandle>(null);
   const integrationEditHandles = useRef(new Map<string, EmbeddedIntegrationEditFormHandle>());
   const integrationEditRefCallbacks = useRef(
@@ -411,53 +343,20 @@ export const WidgetEditModal = createModal<WidgetEditModalProps<WidgetKind>>(({ 
   });
   const widgetFormId = useId();
 
-  z.config({
-    customError: zodErrorMap(t),
-  });
   const { definition } = innerProps;
-  const integrationsRequired =
-    innerProps.integrationSupport &&
-    (!("integrationsRequired" in definition) || definition.integrationsRequired !== false);
-  const maxIntegrations = "maxIntegrations" in definition ? (definition.maxIntegrations ?? Infinity) : Infinity;
-  const options = definition.createOptions(innerProps.settings) as Record<string, OptionsBuilderResult[string]>;
-  const optionsSuperRefine = (options as Record<symbol, unknown>)[OPTIONS_SUPER_REFINE] as
-    | ((data: Record<string, unknown>, ctx: z.RefinementCtx) => void)
-    | undefined;
-  const optionsFieldSchema = objectEntries(options).reduce(
-    (acc, [key, value]: [string, { type: string; validate?: z.ZodType<unknown> }]) => {
-      if (value.validate) {
-        acc[key] = value.type === "multiText" ? z.array(value.validate).optional() : value.validate;
-      }
-
-      return acc;
-    },
-    {} as Record<string, z.ZodType<unknown>>,
-  );
-  const optionsSchema = optionsSuperRefine
-    ? z.object(optionsFieldSchema).superRefine(optionsSuperRefine)
-    : z.object(optionsFieldSchema);
-
-  let integrationIdsSchema = z.array(z.string());
-  if (integrationsRequired) integrationIdsSchema = integrationIdsSchema.min(1);
-  if (Number.isFinite(maxIntegrations)) integrationIdsSchema = integrationIdsSchema.max(maxIntegrations);
-
-  const form = useForm({
-    mode: "controlled",
-    initialValues: innerProps.value,
-    validate: schemaResolver(
-      z.object({
-        options: optionsSchema,
-        integrationIds: integrationIdsSchema,
-        advancedOptions: z.object({
-          title: z.string().max(64).nullable(),
-          customCssClasses: z.array(z.string()),
-          borderColor: z.string(),
-        }),
-      }),
-      { sync: true },
-    ),
-    validateInputOnBlur: true,
-    validateInputOnChange: true,
+  const form = useWidgetEditorForm({
+    definition,
+    value: innerProps.value,
+    integrationSupport: innerProps.integrationSupport,
+    settings: innerProps.settings,
+  });
+  useBoardDraftChanges(innerProps.boardId ?? board?.id, () => {
+    if (form.isDirty() || appEditRef.current?.isDirty()) return true;
+    if (Array.from(integrationEditHandles.current.values()).some((handle) => handle.isDirty())) return true;
+    const resize = innerProps.previewResize;
+    if (!resize || !previewSize) return false;
+    const initialSize = normalizePreviewSize(resize.initialSize, resize.maximumSize);
+    return initialSize.width !== previewSize.width || initialSize.height !== previewSize.height;
   });
 
   const canModifyApps = session?.user.permissions.includes("app-modify-all") ?? false;
@@ -540,16 +439,7 @@ export const WidgetEditModal = createModal<WidgetEditModalProps<WidgetKind>>(({ 
           }
         }
 
-        innerProps.onSuccessfulEdit(
-          {
-            ...values,
-            advancedOptions: {
-              ...values.advancedOptions,
-              title: values.advancedOptions.title?.trim() || null,
-            },
-          },
-          previewSize ?? undefined,
-        );
+        innerProps.onSuccessfulEdit(normalizeWidgetEditorState(values), previewSize ?? undefined);
         actions.closeModal();
       } finally {
         setIsSubmitting(false);
@@ -562,17 +452,6 @@ export const WidgetEditModal = createModal<WidgetEditModalProps<WidgetKind>>(({ 
     handleSubmit(event);
   };
 
-  const canCreateIntegration = maxIntegrations === 1 || form.values.integrationIds.length < maxIntegrations;
-  const handleOpenNewIntegration = innerProps.onOpenNewIntegration
-    ? () => {
-        innerProps.onOpenNewIntegration?.((newId) => {
-          if (newId) {
-            form.setFieldValue("integrationIds", [...(maxIntegrations > 1 ? form.values.integrationIds : []), newId]);
-          }
-        });
-      }
-    : undefined;
-
   const handlePreviewOptionsChange = (newOptions: Record<string, unknown>) => {
     form.setFieldValue("options", {
       ...form.values.options,
@@ -580,20 +459,6 @@ export const WidgetEditModal = createModal<WidgetEditModalProps<WidgetKind>>(({ 
     });
   };
 
-  const selectedIntegrationKinds = innerProps.integrationData
-    .filter(({ id }) => form.values.integrationIds.includes(id))
-    .map(({ kind }) => kind);
-  const visibleOptions = Object.entries(options).filter(([, value]) => {
-    const Input = getInputForType(value.type);
-    if (!Input) {
-      return false;
-    }
-
-    return !value.shouldHide?.(form.values.options as never, selectedIntegrationKinds);
-  });
-  const switchOptions = visibleOptions.filter(([, value]) => value.type === "switch");
-  const otherOptions = visibleOptions.filter(([, value]) => value.type !== "switch");
-  const hasWidgetSettings = canConfigureWidget && (innerProps.integrationSupport || visibleOptions.length > 0);
   const previewResize = innerProps.previewResize;
   let previewDimensions = innerProps.previewDimensions;
   let resizeControls: WidgetEditPreviewProps["resize"];
@@ -629,125 +494,20 @@ export const WidgetEditModal = createModal<WidgetEditModalProps<WidgetKind>>(({ 
         />
       )}
       {innerProps.previewComponent && <Divider orientation="vertical" className={classes.previewDivider} />}
-      <form id={widgetFormId} className={classes.settingsForm} onSubmit={onFormSubmit}>
-        <Stack className={classes.settingsPanel} gap="sm">
-          {hasWidgetSettings && (
-            <>
-              <Group gap="xs" wrap="nowrap">
-                <IconSettings size={16} />
-                <Text fw={600} size="sm">
-                  {tItem("settings.label")}
-                </Text>
-              </Group>
-              {canConfigureWidget && innerProps.integrationSupport && (
-                <Box className={classes.fullWidthField}>
-                  <WidgetIntegrationSelect
-                    label={tItem("field.integrations.label")}
-                    data={innerProps.integrationData}
-                    canSelectMultiple={maxIntegrations > 1}
-                    withAsterisk={integrationsRequired}
-                    onOpenNewIntegration={canCreateIntegration ? handleOpenNewIntegration : undefined}
-                    {...form.getInputProps("integrationIds")}
-                  />
-                </Box>
-              )}
-              {canConfigureWidget && (
-                <Stack gap="sm">
-                  {switchOptions.length > 0 && (
-                    <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="sm" verticalSpacing="sm">
-                      {switchOptions.map(([key, value]) => {
-                        const Input = getInputForType(value.type);
-                        if (!Input) {
-                          return null;
-                        }
-
-                        return (
-                          <Box
-                            key={key}
-                            className={classes.switchOption}
-                            data-option-type={value.type}
-                            onClick={(event) => {
-                              const target = event.target;
-                              if (target instanceof Element && target.closest("label, input")) return;
-                              const input = event.currentTarget.querySelector<HTMLInputElement>("input[type=checkbox]");
-                              if (!input?.disabled) input?.click();
-                            }}
-                          >
-                            <Input
-                              kind={innerProps.kind}
-                              property={key}
-                              options={value as never}
-                              initialOptions={innerProps.value.options}
-                              itemId={innerProps.itemId}
-                              boardId={innerProps.boardId ?? board?.id}
-                            />
-                          </Box>
-                        );
-                      })}
-                    </SimpleGrid>
-                  )}
-                  {otherOptions.map(([key, value]) => {
-                    const Input = getInputForType(value.type);
-                    if (!Input) {
-                      return null;
-                    }
-
-                    return (
-                      <Box key={key} data-option-type={value.type}>
-                        <Input
-                          kind={innerProps.kind}
-                          property={key}
-                          options={value as never}
-                          initialOptions={innerProps.value.options}
-                          itemId={innerProps.itemId}
-                          boardId={innerProps.boardId ?? board?.id}
-                        />
-                      </Box>
-                    );
-                  })}
-                </Stack>
-              )}
-            </>
-          )}
-          <Accordion variant="contained">
-            <Accordion.Item value="advanced-options">
-              <Accordion.Control>{tItem("advancedOptions.label")}</Accordion.Control>
-              <Accordion.Panel>
-                <Stack gap="sm">
-                  <TextInput
-                    label={tCommon("field.title")}
-                    rightSection={
-                      <MantineInput.ClearButton
-                        onClick={() => form.setFieldValue("advancedOptions.title", "")}
-                        disabled={!form.values.advancedOptions.title}
-                      />
-                    }
-                    {...form.getInputProps("advancedOptions.title")}
-                    value={form.values.advancedOptions.title ?? ""}
-                  />
-                  <TextMultiSelect
-                    label={tItem("field.customCssClasses.label")}
-                    {...form.getInputProps("advancedOptions.customCssClasses")}
-                  />
-                  <ColorInput
-                    label={tItem("field.borderColor.label")}
-                    format="hex"
-                    swatches={Object.values(theme.colors).map((color) => color[6])}
-                    rightSection={
-                      <CloseButton
-                        aria-label={tCommon("action.remove")}
-                        onClick={() => form.setFieldValue("advancedOptions.borderColor", "")}
-                        style={{ display: form.values.advancedOptions.borderColor ? undefined : "none" }}
-                      />
-                    }
-                    {...form.getInputProps("advancedOptions.borderColor")}
-                  />
-                </Stack>
-              </Accordion.Panel>
-            </Accordion.Item>
-          </Accordion>
-        </Stack>
-      </form>
+      <WidgetEditorFields
+        kind={innerProps.kind}
+        definition={definition}
+        initialOptions={innerProps.value.options}
+        integrationData={innerProps.integrationData}
+        integrationSupport={innerProps.integrationSupport}
+        settings={innerProps.settings}
+        itemId={innerProps.itemId}
+        boardId={innerProps.boardId ?? board?.id}
+        formId={widgetFormId}
+        canConfigureWidget={canConfigureWidget}
+        onOpenNewIntegration={innerProps.onOpenNewIntegration}
+        onSubmit={onFormSubmit}
+      />
     </Box>
   );
 
@@ -759,94 +519,96 @@ export const WidgetEditModal = createModal<WidgetEditModalProps<WidgetKind>>(({ 
 
   return (
     <FormProvider form={form}>
-      <Stack gap="sm">
-        {showResourceTabs ? (
-          <Tabs value={activeTab} onChange={setActiveTab} keepMounted keepMountedMode="display-none">
-            <Tabs.List grow>
-              <Tabs.Tab value="widget">{tItem("tab.widget")}</Tabs.Tab>
-              {showAppTab && <Tabs.Tab value="app">{tItem("tab.app")}</Tabs.Tab>}
-              {showIntegrationTab && <Tabs.Tab value="integration">{tItem("tab.integration")}</Tabs.Tab>}
-            </Tabs.List>
-            <Tabs.Panel value="widget" pt="sm">
-              {widgetFormContent}
-            </Tabs.Panel>
-            {showAppTab && (
-              <Tabs.Panel value="app" pt="sm">
-                {appId && <EmbeddedAppEditForm appId={appId} handleRef={appEditRef} />}
+      <Stack gap={0} mih={0} flex={1}>
+        <Box p="md" pt={0} mih={0} flex={1} style={{ overflowY: "auto" }}>
+          {showResourceTabs ? (
+            <Tabs value={activeTab} onChange={setActiveTab} keepMounted keepMountedMode="display-none">
+              <Tabs.List grow>
+                <Tabs.Tab value="widget">{tItem("tab.widget")}</Tabs.Tab>
+                {showAppTab && <Tabs.Tab value="app">{tItem("tab.app")}</Tabs.Tab>}
+                {showIntegrationTab && <Tabs.Tab value="integration">{tItem("tab.integration")}</Tabs.Tab>}
+              </Tabs.List>
+              <Tabs.Panel value="widget" pt="sm">
+                {widgetFormContent}
               </Tabs.Panel>
-            )}
-            {showIntegrationTab && (
-              <Tabs.Panel value="integration" pt="sm">
-                <Stack>
-                  {displayedIntegrationId === null && (
-                    <>
-                      <Text size="sm" c="dimmed">
-                        {tItem("integration.description")}
-                      </Text>
-                      {selectedIntegrations.map((integration) => {
-                        const canEdit = editableIntegrationIds.includes(integration.id);
-                        return (
-                          <Group key={integration.id} justify="space-between" wrap="nowrap" gap="sm">
-                            <Group gap="sm" wrap="nowrap" style={{ minWidth: 0 }}>
-                              <IntegrationAvatar kind={integration.kind} size="sm" />
-                              <Stack gap={0} style={{ minWidth: 0 }}>
-                                <Text fw={600} size="sm" truncate>
-                                  {integration.name}
+              {showAppTab && (
+                <Tabs.Panel value="app" pt="sm">
+                  {appId && <EmbeddedAppEditForm appId={appId} handleRef={appEditRef} />}
+                </Tabs.Panel>
+              )}
+              {showIntegrationTab && (
+                <Tabs.Panel value="integration" pt="sm">
+                  <Stack>
+                    {displayedIntegrationId === null && (
+                      <>
+                        <Text size="sm" c="dimmed">
+                          {tItem("integration.description")}
+                        </Text>
+                        {selectedIntegrations.map((integration) => {
+                          const canEdit = editableIntegrationIds.includes(integration.id);
+                          return (
+                            <Group key={integration.id} justify="space-between" wrap="nowrap" gap="sm">
+                              <Group gap="sm" wrap="nowrap" style={{ minWidth: 0 }}>
+                                <IntegrationAvatar kind={integration.kind} size="sm" />
+                                <Stack gap={0} style={{ minWidth: 0 }}>
+                                  <Text fw={600} size="sm" truncate>
+                                    {integration.name}
+                                  </Text>
+                                  <Text size="xs" c="dimmed" truncate>
+                                    {integration.url}
+                                  </Text>
+                                </Stack>
+                              </Group>
+                              {canEdit ? (
+                                <Button
+                                  type="button"
+                                  variant="light"
+                                  leftSection={<IconPencil size={16} />}
+                                  onClick={() => beginEditingIntegration(integration.id)}
+                                  aria-label={tItem("integration.editLabel", { name: integration.name })}
+                                >
+                                  {tItem("integration.action")}
+                                </Button>
+                              ) : (
+                                <Text size="xs" c="dimmed" ta="end">
+                                  {tItem("integration.fullAccessRequired")}
                                 </Text>
-                                <Text size="xs" c="dimmed" truncate>
-                                  {integration.url}
-                                </Text>
-                              </Stack>
+                              )}
                             </Group>
-                            {canEdit ? (
-                              <Button
-                                type="button"
-                                variant="light"
-                                leftSection={<IconPencil size={16} />}
-                                onClick={() => beginEditingIntegration(integration.id)}
-                                aria-label={tItem("integration.editLabel", { name: integration.name })}
-                              >
-                                {tItem("integration.action")}
-                              </Button>
-                            ) : (
-                              <Text size="xs" c="dimmed" ta="end">
-                                {tItem("integration.fullAccessRequired")}
-                              </Text>
-                            )}
-                          </Group>
-                        );
-                      })}
-                    </>
-                  )}
-                  {displayedIntegrationId !== null && selectedIntegrations.length > 1 && (
-                    <Button
-                      type="button"
-                      variant="subtle"
-                      leftSection={<IconArrowLeft size={16} />}
-                      onClick={() => setActiveIntegrationId(null)}
-                      style={{ alignSelf: "start" }}
-                    >
-                      {tCommon("action.previous")}
-                    </Button>
-                  )}
-                  {integrationIdsToRender.map((integrationId) => (
-                    <Box key={integrationId} hidden={displayedIntegrationId !== integrationId}>
-                      {IntegrationEditForm && (
-                        <IntegrationEditForm
-                          integrationId={integrationId}
-                          handleRef={getIntegrationEditRef(integrationId)}
-                          onSuccess={innerProps.onIntegrationSaved}
-                        />
-                      )}
-                    </Box>
-                  ))}
-                </Stack>
-              </Tabs.Panel>
-            )}
-          </Tabs>
-        ) : (
-          widgetFormContent
-        )}
+                          );
+                        })}
+                      </>
+                    )}
+                    {displayedIntegrationId !== null && selectedIntegrations.length > 1 && (
+                      <Button
+                        type="button"
+                        variant="subtle"
+                        leftSection={<IconArrowLeft size={16} />}
+                        onClick={() => setActiveIntegrationId(null)}
+                        style={{ alignSelf: "start" }}
+                      >
+                        {tCommon("action.previous")}
+                      </Button>
+                    )}
+                    {integrationIdsToRender.map((integrationId) => (
+                      <Box key={integrationId} hidden={displayedIntegrationId !== integrationId}>
+                        {IntegrationEditForm && (
+                          <IntegrationEditForm
+                            integrationId={integrationId}
+                            handleRef={getIntegrationEditRef(integrationId)}
+                            onSuccess={innerProps.onIntegrationSaved}
+                          />
+                        )}
+                      </Box>
+                    ))}
+                  </Stack>
+                </Tabs.Panel>
+              )}
+            </Tabs>
+          ) : (
+            widgetFormContent
+          )}
+        </Box>
         {footer}
       </Stack>
     </FormProvider>
@@ -857,5 +619,6 @@ export const WidgetEditModal = createModal<WidgetEditModalProps<WidgetKind>>(({ 
     return t("item.edit.title");
   },
   size: modalSizeForm,
+  styles: widgetEditorModalStyles,
   closeOnClickOutside: false,
 });

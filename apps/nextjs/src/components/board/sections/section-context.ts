@@ -14,6 +14,7 @@ interface SectionContextProps {
   columnCount: number;
   maxRowCount: number | null;
   placements: readonly SectionGridPlacement[];
+  displayPlacementById?: ReadonlyMap<string, SectionGridPlacement>;
   interactionDisabled: boolean;
   announce: (message: string) => void;
   entryElementStore: GridEntryElementStore;

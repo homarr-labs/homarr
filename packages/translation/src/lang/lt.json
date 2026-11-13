@@ -1245,6 +1245,20 @@
       "username": "Naudotojo vardas",
       "password": "Slaptažodis",
       "savedPlaceholder": "••••••• (išsaugota, palikite tuščią, kad išlaikytumėte)"
+    },
+    "workshopUpdate": {
+      "title": "",
+      "apply": "",
+      "available": "",
+      "check": "",
+      "description": "",
+      "approvePermissions": "",
+      "pendingDescription": "",
+      "overwriteLocalChanges": "",
+      "installSeparate": "",
+      "communityWarning": "",
+      "updated": "",
+      "changedBeforeInstall": ""
     }
   },
   "workshop": {
@@ -1921,7 +1935,8 @@
       "copy": "Kopijuoti",
       "copied": "Nukopijuota",
       "refresh": "Atnaujinti",
-      "export": "Eksportuoti"
+      "export": "Eksportuoti",
+      "advanced": ""
     },
     "hidden": "",
     "pagination": {
@@ -2016,6 +2031,15 @@
         "modifier": "Modifikatorius"
       }
     },
+    "markdown": {
+      "alert": {
+        "note": "",
+        "tip": "",
+        "important": "",
+        "warning": "",
+        "caution": ""
+      }
+    },
     "dangerZone": "Pavojinga zona",
     "noResults": "Rezultatų nerasta",
     "unsavedChanges": "Turite neišsaugotų pakeitimų!",
@@ -2106,6 +2130,158 @@
         "sm": "Subtilus",
         "xl": "Švelnus"
       }
+    },
+    "customTheme": {
+      "label": "",
+      "nothingFound": "",
+      "custom": "",
+      "customize": "",
+      "editor": {
+        "title": "",
+        "basedOn": "",
+        "preview": "",
+        "previewColorScheme": "",
+        "layout": "",
+        "typography": "",
+        "colors": "",
+        "json": "",
+        "defaultRadius": "",
+        "radiusHint": "",
+        "scale": "",
+        "spacing": "",
+        "radius": "",
+        "fontFamily": "",
+        "headingFont": "",
+        "monoFont": "",
+        "fontSizes": "",
+        "palette": {
+          "body": "",
+          "surface": "",
+          "hover": "",
+          "border": "",
+          "text": "",
+          "dimmed": "",
+          "primary": "",
+          "secondary": ""
+        },
+        "lockedPrimary": "",
+        "pickColor": "",
+        "autoContrast": "",
+        "luminanceThreshold": "",
+        "jsonHint": "",
+        "invalidJson": "",
+        "tooLong": "",
+        "copyJson": "",
+        "copied": "",
+        "discardJson": "",
+        "reset": "",
+        "apply": "",
+        "sampleTitle": "",
+        "sampleBadge": "",
+        "sampleText": "",
+        "sampleInput": "Ieškoti",
+        "sampleValue": "",
+        "sampleButton": ""
+      },
+      "studio": {
+        "title": "",
+        "saveTheme": "",
+        "searchControls": "",
+        "component": "",
+        "inheritedValue": "",
+        "resetControl": "",
+        "decreaseControl": "",
+        "increaseControl": "",
+        "chooseControl": "",
+        "layout": {
+          "spacing": "",
+          "radius": "",
+          "compact": "",
+          "normal": "",
+          "roomy": "",
+          "preset": "",
+          "none": "",
+          "rounded": "",
+          "full": "",
+          "custom": "",
+          "advanced": ""
+        },
+        "previewSurface": "",
+        "previewFrame": "",
+        "loadingPreview": "",
+        "previewFailed": "",
+        "sampleBoard": "",
+        "components": "",
+        "overlays": "",
+        "typography": "",
+        "liveBoard": "",
+        "viewport": "",
+        "responsive": "",
+        "tablet": "",
+        "mobile": "",
+        "includeCustomCss": "",
+        "groups": {
+          "layout": "",
+          "typography": "",
+          "colors": "",
+          "surfaces": "",
+          "overlays": "",
+          "accessibility": "",
+          "css": ""
+        },
+        "controls": {
+          "defaultRadius": "",
+          "scale": "",
+          "spacing": "",
+          "radius": "",
+          "breakpoint": "",
+          "fontSizes": "",
+          "lineHeight": "",
+          "shadow": "",
+          "fontFamily": "",
+          "headingFont": "",
+          "monoFont": "",
+          "headingWeight": "",
+          "headingSize": "",
+          "fontSmoothing": "",
+          "body": "",
+          "surface": "",
+          "hover": "",
+          "border": "",
+          "text": "",
+          "dimmed": "",
+          "primary": "",
+          "secondary": "",
+          "autoContrast": "",
+          "luminanceThreshold": "",
+          "primaryShade": "",
+          "componentRadius": "",
+          "borderWidth": "",
+          "surfaceBackground": "",
+          "surfaceText": "",
+          "surfaceBorder": "",
+          "hoverBackground": "",
+          "hoverText": "",
+          "componentShadow": "",
+          "componentBorder": "",
+          "componentPadding": "",
+          "componentSize": "Dydis",
+          "componentVariant": "",
+          "overlayBlur": "",
+          "overlayOpacity": "",
+          "overlayColor": "",
+          "transitionDuration": "",
+          "headerBackground": "",
+          "respectReducedMotion": "",
+          "focusRing": "",
+          "cursorType": "",
+          "customCss": ""
+        },
+        "expandPreview": "",
+        "showControls": ""
+      },
+      "instanceDefault": "",
+      "useInstanceDefault": ""
     }
   },
   "section": {
@@ -2201,6 +2377,18 @@
       },
       "customWidget": "Pasirinktinis valdiklis",
       "standalone": "Savarankiškas",
+      "integrationFilter": "",
+      "integrationNotConnected": "",
+      "workshop": {
+        "title": "",
+        "back": "",
+        "empty": "",
+        "noMatches": "",
+        "loading": "",
+        "integrationError": "",
+        "searchMore": "",
+        "installAndAdd": ""
+      },
       "missingIntegration": {
         "title": "Pirmiausia prijunkite paslaugą",
         "noPermission": "Šiam valdikliui reikalingas suderinamos paslaugos ryšys. Paprašykite administratoriaus jį prijungti ir bandykite dar kartą."
@@ -2236,10 +2424,13 @@
       "saveErrorTitle": "Nepavyko atnaujinti elementų",
       "saveErrorMessage": "Nepavyko išsaugoti pakeitimų. Lenta atnaujinta.",
       "moveUnavailableTitle": "Nepavyko perkelti pasirinktų elementų",
-      "moveUnavailableMessage": "Paskirties vietoje nepakanka vietos visam pasirinkimui."
+      "moveUnavailableMessage": "Paskirties vietoje nepakanka vietos visam pasirinkimui.",
+      "moveToTab": "",
+      "movedToTab": ""
     },
     "moveResize": {
       "title": "Perkelti / keisti dydį",
+      "sizeOverlap": "",
       "entryLabel": "{name}, stulpelis {column}, eilutė {row}",
       "target": {
         "numbered": "{name}, paskirties vieta {index}",
@@ -2322,6 +2513,36 @@
       "open": "Atidaryti išplėstinį rodinį",
       "close": "Uždaryti išplėstinį rodinį",
       "label": "Išplėstinis „{widget}“ rodinys"
+    },
+    "inPlace": {
+      "widgetLoadError": "",
+      "search": "",
+      "bestFit": "",
+      "moreWidgets": "",
+      "widgets": "",
+      "yourApps": "",
+      "createApp": "",
+      "addAppLink": "",
+      "createWidget": "",
+      "createWidgetDescription": "",
+      "createAppDescription": "",
+      "defaultFit": "",
+      "defaultFitDescription": "",
+      "defaultSize": "",
+      "defaultSizeDescription": "",
+      "emptyCells": "",
+      "preview": {
+        "error": "",
+        "loading": ""
+      },
+      "keyboard": {
+        "move": "",
+        "resize": "",
+        "pick": "",
+        "browse": "",
+        "moveDescription": "",
+        "resizeDescription": ""
+      }
     }
   },
   "widget": {
@@ -3146,6 +3367,141 @@
       "error": {
         "loadFailed": "Nepavyko įkelti objekto",
         "toggleFailed": "Nepavyko atnaujinti objekto"
+      }
+    },
+    "smartHome-controls": {
+      "name": "",
+      "description": "",
+      "option": {
+        "presentation": {
+          "label": "",
+          "option": {
+            "entities": "",
+            "controlPanel": ""
+          }
+        },
+        "title": {
+          "label": "Antraštė",
+          "description": ""
+        },
+        "blocks": {
+          "label": "",
+          "remove": ""
+        },
+        "roomDomains": {
+          "label": "",
+          "description": ""
+        },
+        "excludedEntityIds": {
+          "label": "",
+          "description": "",
+          "placeholder": ""
+        },
+        "showSummary": {
+          "label": ""
+        },
+        "readOnly": {
+          "label": "",
+          "description": ""
+        },
+        "controlSize": {
+          "label": "",
+          "option": {
+            "auto": "",
+            "compact": "",
+            "large": "Didelis"
+          }
+        },
+        "palette": {
+          "label": "",
+          "option": {
+            "boring": "",
+            "colorful": ""
+          }
+        }
+      },
+      "domain": {
+        "light": "",
+        "switch": "",
+        "fan": "",
+        "climate": "",
+        "humidifier": "",
+        "cover": "",
+        "valve": "",
+        "lock": "",
+        "alarm_control_panel": "",
+        "media_player": "",
+        "camera": "",
+        "vacuum": "",
+        "scene": "",
+        "script": "",
+        "automation": "",
+        "button": "",
+        "input_boolean": "",
+        "input_select": "",
+        "person": "",
+        "binary_sensor": "",
+        "sensor": "",
+        "weather": "",
+        "sun": "",
+        "update": ""
+      },
+      "block": {
+        "add": {
+          "rooms": "",
+          "entity": "",
+          "roomsLabel": "",
+          "roomsPlaceholder": "",
+          "entityLabel": "",
+          "entityPlaceholder": "",
+          "merge": "",
+          "submit": "",
+          "duplicate": "",
+          "covered": ""
+        },
+        "kind": {
+          "entity": "",
+          "room": "",
+          "mergedRooms": "",
+          "unknown": ""
+        },
+        "entityCount": "",
+        "noArea": "",
+        "issue": {
+          "missing": "",
+          "otherSource": "",
+          "empty": ""
+        }
+      },
+      "preview": {
+        "empty": "",
+        "noMatches": "",
+        "summary": {
+          "lights": "",
+          "on": "",
+          "off": "",
+          "sensors": "",
+          "offline": ""
+        },
+        "otherSource": ""
+      },
+      "live": {
+        "loading": "",
+        "error": "",
+        "retry": "",
+        "actionFailed": "",
+        "actionUnconfirmed": "",
+        "unconfirmed": "",
+        "selectionLimit": "",
+        "unknownError": ""
+      },
+      "inline": {
+        "open": "",
+        "title": "",
+        "handle": "",
+        "empty": "",
+        "add": "",
+        "close": ""
       }
     },
     "smartHome-executeAutomation": {
@@ -5446,6 +5802,23 @@
       "name": "Sistemos ištekliai",
       "description": "Jūsų sistemos CPU, atminties, disko ir kitos aparatinės įrangos naudojimas",
       "option": {
+        "diskDisplayMode": {
+          "label": "",
+          "option": {
+            "percentage": "",
+            "free": "",
+            "absolute": "",
+            "combined": ""
+          }
+        },
+        "resourceLayout": {
+          "label": "",
+          "description": ""
+        },
+        "subresourceLayout": {
+          "label": "",
+          "description": ""
+        },
         "hasShadow": {
           "label": "Įjungti diagramos šešėliavimą"
         },
@@ -5453,6 +5826,7 @@
           "label": "Matomos diagramos",
           "description": "Pasirinkite diagramas, kurias norite matyti.",
           "option": {
+            "cpuCores": "",
             "memory": "Atmintis",
             "network": "Tinklas"
           }
@@ -6381,6 +6755,26 @@
         }
       }
     },
+    "tabs": {
+      "label": "",
+      "indicator": "",
+      "home": "Pagrindinis",
+      "untitled": "",
+      "add": "",
+      "actions": "",
+      "rename": "",
+      "namePlaceholder": "",
+      "moveLeft": "",
+      "moveRight": "",
+      "remove": {
+        "action": "",
+        "confirm": ""
+      },
+      "limitReached": "",
+      "hotkeyHint": "",
+      "destination": "",
+      "containerDestination": ""
+    },
     "landmark": {
       "canvas": "Skydelio drobė",
       "leftRail": "Kairioji skydelio juosta",
@@ -6647,6 +7041,11 @@
           "description": "Serverio administratorius dar nenustatė pagrindinės suvestinės.",
           "link": "Peržiūrėti viešas suvestines",
           "notice": "Kad šis puslapis išnyktų, paprašykite serverio administratoriaus nustatyti serverio pagrindinę suvestinę"
+        },
+        "noAccess": {
+          "title": "",
+          "description": "",
+          "notice": ""
         }
       }
     }
@@ -6718,10 +7117,12 @@
             "documentation": "Dokumentacija",
             "submitIssue": "Pateikti problemą",
             "discord": "Bendruomenės Discord",
-            "sourceCode": "Pirminis kodas"
+            "sourceCode": "Pirminis kodas",
+            "changelog": ""
           }
         },
         "about": "Apie",
+        "updateAvailable": "",
         "assistant": "Asistentas"
       }
     },
@@ -6733,9 +7134,23 @@
           "authentication": "Autentifikacija",
           "authorization": "Autorizacija"
         },
-        "heroBanner": {
-          "title": "Sveiki sugrįžę į savo",
-          "subtitle": "{app} lentą"
+        "hero": {
+          "greeting": "",
+          "greetingWithoutName": "",
+          "description": ""
+        },
+        "lobster": {
+          "label": "",
+          "prompt": "",
+          "pokeCount": "",
+          "reaction": {
+            "hey": "",
+            "ow": "",
+            "snip": "",
+            "careful": "",
+            "stillHere": "",
+            "okay": ""
+          }
         }
       },
       "board": {
@@ -6780,7 +7195,9 @@
         },
         "noResults": {
           "title": "Dar nėra lentų",
-          "description": "Sukurkite lentą, kad vienoje vietoje išdėstytumėte savo programėles ir valdiklius."
+          "description": "Sukurkite lentą, kad vienoje vietoje išdėstytumėte savo programėles ir valdiklius.",
+          "noAccessTitle": "",
+          "noAccessDescription": ""
         }
       },
       "media": {
@@ -6833,6 +7250,11 @@
                 "logoDisplay": {
                   "logo": "Tik logotipas",
                   "logoAndText": "Logotipas + tekstas"
+                },
+                "tabsDisplay": {
+                  "wide": "",
+                  "compact": "",
+                  "indicator": ""
                 }
               },
               "items": {
@@ -6840,6 +7262,7 @@
                 "search": "Ieškoti",
                 "home": "Pradžios lenta",
                 "boardSwitcher": "Lentos",
+                "boardTabs": "",
                 "assistant": "Asistentas",
                 "docker": "Docker",
                 "boardEdit": "Redaguoti lentą",
@@ -7071,6 +7494,10 @@
             "title": "Išvaizda",
             "defaultColorScheme": {
               "label": "Numatytoji spalvų schema"
+            },
+            "whatsNew": {
+              "label": "",
+              "description": ""
             }
           },
           "branding": {
@@ -7653,7 +8080,8 @@
               "openSpotlightApps": "Atidaryti programėlių paiešką",
               "openSpotlightAssistant": "Atidaryti asistento režimą",
               "openSpotlightPreferences": "Atidaryti nuostatų režimą",
-              "openAssistant": "Atidaryti asistentą"
+              "openAssistant": "Atidaryti asistentą",
+              "switchBoardTab": ""
             },
             "note": "Patarimas: „Mod“ reiškia ir Ctrl, ir ⌘ klavišą sistemoje „macOS“"
           }
@@ -8823,6 +9251,12 @@
         "description": "Keiskite spalvų schemą, kalbą, pagrindinę lentą ir nuostatas. Taip pat galite pereiti į valdymo sritį iš čia."
       }
     }
+  },
+  "whatsNew": {
+    "title": "",
+    "empty": "",
+    "allReleases": "",
+    "dismiss": ""
   },
   "metadata": {
     "description": "Savarankiškai priglobtas *arr rinkinio ir visos jūsų namų laboratorijos skydelis. Integruojamas su daugiau nei 50 paslaugų, realiojo laiko valdikliais, be konfigūracijos failų.",

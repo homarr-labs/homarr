@@ -167,6 +167,9 @@ export const serverSettingsRouter = createTRPCRouter({
           ...parsedInput,
           authBranding,
         });
+        if (value.themeId === "custom" && !value.customTheme) {
+          throw new TRPCError({ code: "BAD_REQUEST", message: "Save a custom theme before selecting it" });
+        }
         await updateServerSettingByKeyAsync(ctx.db, "branding", value);
         return;
       }

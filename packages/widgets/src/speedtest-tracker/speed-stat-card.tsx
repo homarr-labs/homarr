@@ -40,7 +40,7 @@ export function SpeedStatCard({
       <Card
         ref={ref}
         p={compact ? "xs" : "sm"}
-        radius={board.itemRadius}
+        radius={board.itemRadius ?? undefined}
         withBorder={!legacySurface}
         bg={surfaceBackground}
         h="100%"

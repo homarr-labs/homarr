@@ -1,7 +1,7 @@
-import { generateResponsiveGridFor, getLayoutResizeSource } from "@homarr/common";
+import { getLayoutResizeSource } from "@homarr/common";
 import type { GridAlgorithmItem } from "@homarr/common";
-import type { BoardLane, LayoutRole, WidgetKind } from "@homarr/definitions";
-import { boardLanes, getBoardLaneColumnCount, getRootSectionLane } from "@homarr/definitions";
+import type { LayoutRole, WidgetKind } from "@homarr/definitions";
+import { projectRootSections } from "@homarr/definitions";
 
 export interface BoardPreviewLayout {
   id: string;
@@ -32,7 +32,7 @@ interface BoardPreviewSectionLayout {
 }
 
 export interface BoardPreviewData {
-  primaryColor?: string;
+  primaryColor?: string | null;
   layouts: readonly BoardPreviewLayout[];
   sections: readonly BoardPreviewSection[];
   items: readonly {
@@ -48,6 +48,7 @@ type BoardPreviewSection =
       id: string;
       kind: "empty";
       xOffset: number | null;
+      yOffset?: number | null;
       layouts?: readonly BoardPreviewSectionLayout[];
     }
   | {
@@ -96,57 +97,9 @@ export const projectBoardLayout = (
     return currentElements;
   }
 
-  const emptyRoots = board.sections
-    .filter((section) => section.kind === "empty")
-    .toSorted((first, second) => (first.xOffset ?? 0) - (second.xOffset ?? 0) || first.id.localeCompare(second.id));
-  const rootByLane = new Map<BoardLane, (typeof emptyRoots)[number]>();
-  for (const root of emptyRoots) {
-    const lane = getRootSectionLane(root.xOffset);
-    if (!rootByLane.has(lane)) rootByLane.set(lane, root);
-  }
-
-  const mainRoot = rootByLane.get("main");
-  if (!mainRoot) return [];
-
-  const sourceRootById = new Map(
-    emptyRoots.map((section) => [section.id, getRootSectionLane(section.xOffset)] as const),
+  return (
+    projectRootSections({ sections: board.sections, elements, source: source.geometry, target: targetLayout }) ?? []
   );
-  const targetLaneBySourceLane = new Map<BoardLane, BoardLane>(
-    boardLanes.map((lane) => [
-      lane,
-      lane !== "main" && getBoardLaneColumnCount(targetLayout, lane) === 0 ? "main" : lane,
-    ]),
-  );
-  const remappedElements = elements.map((element) => {
-    const sourceLane = sourceRootById.get(element.sectionId);
-    if (!sourceLane) return element;
-    const targetLane = targetLaneBySourceLane.get(sourceLane) ?? "main";
-    return { ...element, sectionId: (rootByLane.get(targetLane) ?? mainRoot).id };
-  });
-
-  return boardLanes.flatMap((lane) => {
-    const root = rootByLane.get(lane);
-    const width = getBoardLaneColumnCount(targetLayout, lane);
-    if (!root || width === 0) return [];
-
-    const sourceLanes = boardLanes.filter(
-      (sourceLane) =>
-        rootByLane.has(sourceLane) &&
-        getBoardLaneColumnCount(source.geometry, sourceLane) > 0 &&
-        targetLaneBySourceLane.get(sourceLane) === lane,
-    );
-    const previousWidth =
-      sourceLanes.length === 1
-        ? getBoardLaneColumnCount(source.geometry, sourceLanes[0] ?? "main")
-        : Number.MAX_SAFE_INTEGER;
-
-    return generateResponsiveGridFor({
-      items: remappedElements,
-      previousWidth,
-      width,
-      sectionId: root.id,
-    }).items;
-  });
 };
 
 const getElementsForLayout = (board: BoardPreviewData, layoutId: string): GridAlgorithmItem[] => [

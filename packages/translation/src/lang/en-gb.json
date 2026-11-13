@@ -1245,6 +1245,20 @@
       "username": "Username",
       "password": "Password",
       "savedPlaceholder": "••••••• (saved, leave empty to keep)"
+    },
+    "workshopUpdate": {
+      "title": "",
+      "apply": "",
+      "available": "",
+      "check": "",
+      "description": "",
+      "approvePermissions": "",
+      "pendingDescription": "",
+      "overwriteLocalChanges": "",
+      "installSeparate": "",
+      "communityWarning": "",
+      "updated": "",
+      "changedBeforeInstall": ""
     }
   },
   "workshop": {
@@ -1921,7 +1935,8 @@
       "copy": "Copy",
       "copied": "Copied",
       "refresh": "Refresh",
-      "export": "Export"
+      "export": "Export",
+      "advanced": ""
     },
     "hidden": "Hidden",
     "pagination": {
@@ -2016,6 +2031,15 @@
         "modifier": "Mod"
       }
     },
+    "markdown": {
+      "alert": {
+        "note": "Note",
+        "tip": "",
+        "important": "",
+        "warning": "",
+        "caution": ""
+      }
+    },
     "dangerZone": "Danger zone",
     "noResults": "No results have been found",
     "unsavedChanges": "You have unsaved changes!",
@@ -2106,6 +2130,158 @@
         "sm": "",
         "xl": ""
       }
+    },
+    "customTheme": {
+      "label": "",
+      "nothingFound": "",
+      "custom": "",
+      "customize": "",
+      "editor": {
+        "title": "",
+        "basedOn": "",
+        "preview": "",
+        "previewColorScheme": "",
+        "layout": "Layout",
+        "typography": "",
+        "colors": "",
+        "json": "",
+        "defaultRadius": "",
+        "radiusHint": "",
+        "scale": "",
+        "spacing": "",
+        "radius": "",
+        "fontFamily": "",
+        "headingFont": "",
+        "monoFont": "",
+        "fontSizes": "",
+        "palette": {
+          "body": "",
+          "surface": "",
+          "hover": "",
+          "border": "",
+          "text": "",
+          "dimmed": "",
+          "primary": "",
+          "secondary": ""
+        },
+        "lockedPrimary": "",
+        "pickColor": "",
+        "autoContrast": "",
+        "luminanceThreshold": "",
+        "jsonHint": "",
+        "invalidJson": "",
+        "tooLong": "",
+        "copyJson": "",
+        "copied": "",
+        "discardJson": "",
+        "reset": "",
+        "apply": "",
+        "sampleTitle": "",
+        "sampleBadge": "",
+        "sampleText": "",
+        "sampleInput": "Search",
+        "sampleValue": "Find an application",
+        "sampleButton": ""
+      },
+      "studio": {
+        "title": "",
+        "saveTheme": "",
+        "searchControls": "",
+        "component": "",
+        "inheritedValue": "",
+        "resetControl": "",
+        "decreaseControl": "",
+        "increaseControl": "",
+        "chooseControl": "",
+        "layout": {
+          "spacing": "",
+          "radius": "",
+          "compact": "",
+          "normal": "",
+          "roomy": "",
+          "preset": "",
+          "none": "None",
+          "rounded": "",
+          "full": "",
+          "custom": "",
+          "advanced": ""
+        },
+        "previewSurface": "",
+        "previewFrame": "",
+        "loadingPreview": "",
+        "previewFailed": "",
+        "sampleBoard": "",
+        "components": "",
+        "overlays": "",
+        "typography": "",
+        "liveBoard": "",
+        "viewport": "",
+        "responsive": "",
+        "tablet": "",
+        "mobile": "Mobile",
+        "includeCustomCss": "",
+        "groups": {
+          "layout": "",
+          "typography": "",
+          "colors": "",
+          "surfaces": "",
+          "overlays": "",
+          "accessibility": "",
+          "css": ""
+        },
+        "controls": {
+          "defaultRadius": "",
+          "scale": "",
+          "spacing": "",
+          "radius": "",
+          "breakpoint": "",
+          "fontSizes": "",
+          "lineHeight": "",
+          "shadow": "",
+          "fontFamily": "",
+          "headingFont": "",
+          "monoFont": "",
+          "headingWeight": "",
+          "headingSize": "",
+          "fontSmoothing": "",
+          "body": "",
+          "surface": "",
+          "hover": "",
+          "border": "",
+          "text": "",
+          "dimmed": "",
+          "primary": "",
+          "secondary": "",
+          "autoContrast": "",
+          "luminanceThreshold": "",
+          "primaryShade": "",
+          "componentRadius": "",
+          "borderWidth": "",
+          "surfaceBackground": "",
+          "surfaceText": "",
+          "surfaceBorder": "Border colour",
+          "hoverBackground": "",
+          "hoverText": "",
+          "componentShadow": "",
+          "componentBorder": "",
+          "componentPadding": "",
+          "componentSize": "Size",
+          "componentVariant": "",
+          "overlayBlur": "",
+          "overlayOpacity": "",
+          "overlayColor": "",
+          "transitionDuration": "",
+          "headerBackground": "",
+          "respectReducedMotion": "",
+          "focusRing": "",
+          "cursorType": "",
+          "customCss": ""
+        },
+        "expandPreview": "",
+        "showControls": "Show controls"
+      },
+      "instanceDefault": "",
+      "useInstanceDefault": ""
     }
   },
   "section": {
@@ -2201,6 +2377,18 @@
       },
       "customWidget": "Custom widget",
       "standalone": "Standalone",
+      "integrationFilter": "",
+      "integrationNotConnected": "",
+      "workshop": {
+        "title": "",
+        "back": "",
+        "empty": "",
+        "noMatches": "",
+        "loading": "",
+        "integrationError": "",
+        "searchMore": "",
+        "installAndAdd": ""
+      },
       "missingIntegration": {
         "title": "Connect a service first",
         "noPermission": "This widget needs a compatible service connection. Ask an administrator to connect one, then try again."
@@ -2236,10 +2424,13 @@
       "saveErrorTitle": "Unable to update items",
       "saveErrorMessage": "The changes could not be saved. The board was refreshed.",
       "moveUnavailableTitle": "Unable to move selected items",
-      "moveUnavailableMessage": "The destination does not have enough room for the entire selection."
+      "moveUnavailableMessage": "The destination does not have enough room for the entire selection.",
+      "moveToTab": "",
+      "movedToTab": ""
     },
     "moveResize": {
       "title": "Move / resize item",
+      "sizeOverlap": "",
       "entryLabel": "{name}, column {column}, row {row}",
       "target": {
         "numbered": "{name}, destination {index}",
@@ -2322,6 +2513,36 @@
       "open": "Open advanced view",
       "close": "Close advanced view",
       "label": "{widget} advanced view"
+    },
+    "inPlace": {
+      "widgetLoadError": "",
+      "search": "",
+      "bestFit": "",
+      "moreWidgets": "",
+      "widgets": "",
+      "yourApps": "",
+      "createApp": "",
+      "addAppLink": "",
+      "createWidget": "",
+      "createWidgetDescription": "",
+      "createAppDescription": "",
+      "defaultFit": "",
+      "defaultFitDescription": "",
+      "defaultSize": "",
+      "defaultSizeDescription": "",
+      "emptyCells": "",
+      "preview": {
+        "error": "",
+        "loading": ""
+      },
+      "keyboard": {
+        "move": "",
+        "resize": "",
+        "pick": "",
+        "browse": "",
+        "moveDescription": "",
+        "resizeDescription": ""
+      }
     }
   },
   "widget": {
@@ -3146,6 +3367,141 @@
       "error": {
         "loadFailed": "Unable to load entity",
         "toggleFailed": "Unable to update entity"
+      }
+    },
+    "smartHome-controls": {
+      "name": "",
+      "description": "",
+      "option": {
+        "presentation": {
+          "label": "",
+          "option": {
+            "entities": "",
+            "controlPanel": ""
+          }
+        },
+        "title": {
+          "label": "Title",
+          "description": ""
+        },
+        "blocks": {
+          "label": "",
+          "remove": ""
+        },
+        "roomDomains": {
+          "label": "",
+          "description": ""
+        },
+        "excludedEntityIds": {
+          "label": "",
+          "description": "",
+          "placeholder": ""
+        },
+        "showSummary": {
+          "label": ""
+        },
+        "readOnly": {
+          "label": "",
+          "description": ""
+        },
+        "controlSize": {
+          "label": "",
+          "option": {
+            "auto": "",
+            "compact": "",
+            "large": ""
+          }
+        },
+        "palette": {
+          "label": "",
+          "option": {
+            "boring": "",
+            "colorful": ""
+          }
+        }
+      },
+      "domain": {
+        "light": "",
+        "switch": "",
+        "fan": "",
+        "climate": "",
+        "humidifier": "",
+        "cover": "",
+        "valve": "",
+        "lock": "",
+        "alarm_control_panel": "",
+        "media_player": "",
+        "camera": "",
+        "vacuum": "",
+        "scene": "",
+        "script": "",
+        "automation": "",
+        "button": "",
+        "input_boolean": "",
+        "input_select": "",
+        "person": "",
+        "binary_sensor": "",
+        "sensor": "",
+        "weather": "Weather",
+        "sun": "",
+        "update": ""
+      },
+      "block": {
+        "add": {
+          "rooms": "",
+          "entity": "",
+          "roomsLabel": "",
+          "roomsPlaceholder": "",
+          "entityLabel": "",
+          "entityPlaceholder": "",
+          "merge": "",
+          "submit": "Add",
+          "duplicate": "",
+          "covered": ""
+        },
+        "kind": {
+          "entity": "",
+          "room": "",
+          "mergedRooms": "",
+          "unknown": ""
+        },
+        "entityCount": "",
+        "noArea": "",
+        "issue": {
+          "missing": "Not found",
+          "otherSource": "",
+          "empty": ""
+        }
+      },
+      "preview": {
+        "empty": "",
+        "noMatches": "",
+        "summary": {
+          "lights": "",
+          "on": "",
+          "off": "",
+          "sensors": "",
+          "offline": "offline"
+        },
+        "otherSource": ""
+      },
+      "live": {
+        "loading": "",
+        "error": "",
+        "retry": "",
+        "actionFailed": "",
+        "actionUnconfirmed": "",
+        "unconfirmed": "",
+        "selectionLimit": "",
+        "unknownError": ""
+      },
+      "inline": {
+        "open": "",
+        "title": "",
+        "handle": "",
+        "empty": "",
+        "add": "",
+        "close": ""
       }
     },
     "smartHome-executeAutomation": {
@@ -4677,7 +5033,7 @@
       "status": {
         "pending": "",
         "approved": "Approved",
-        "declined": "",
+        "declined": "Declined",
         "failed": "",
         "completed": ""
       },
@@ -4704,7 +5060,7 @@
         },
         "users": {
           "main": "",
-          "requests": ""
+          "requests": "Requests"
         }
       }
     },
@@ -4794,26 +5150,26 @@
       "description": "",
       "option": {
         "feedUrls": {
-          "label": ""
+          "label": "Feed URLs"
         },
         "enableRtl": {
-          "label": ""
+          "label": "Enable RTL"
         },
         "textLinesClamp": {
-          "label": ""
+          "label": "Description line clamp"
         },
         "descriptionMaxLength": {
           "label": "",
           "description": ""
         },
         "maximumAmountPosts": {
-          "label": ""
+          "label": "Amount posts limit"
         },
         "hideDescription": {
-          "label": ""
+          "label": "Hide description"
         },
         "showPosterImage": {
-          "label": ""
+          "label": "Show poster image"
         }
       },
       "error": {
@@ -4825,7 +5181,7 @@
       }
     },
     "releases": {
-      "name": "",
+      "name": "Releases",
       "description": "",
       "option": {
         "layout": {
@@ -4925,7 +5281,7 @@
             "precision": {
               "label": "",
               "options": {
-                "none": ""
+                "none": "None"
               }
             },
             "suffix": {
@@ -5169,7 +5525,7 @@
       }
     },
     "notifications": {
-      "name": "",
+      "name": "Notifications",
       "description": "",
       "noItems": "",
       "option": {
@@ -5446,6 +5802,23 @@
       "name": "",
       "description": "",
       "option": {
+        "diskDisplayMode": {
+          "label": "",
+          "option": {
+            "percentage": "",
+            "free": "",
+            "absolute": "",
+            "combined": ""
+          }
+        },
+        "resourceLayout": {
+          "label": "",
+          "description": ""
+        },
+        "subresourceLayout": {
+          "label": "",
+          "description": ""
+        },
         "hasShadow": {
           "label": ""
         },
@@ -5453,6 +5826,7 @@
           "label": "",
           "description": "",
           "option": {
+            "cpuCores": "",
             "memory": "",
             "network": ""
           }
@@ -6381,6 +6755,26 @@
         }
       }
     },
+    "tabs": {
+      "label": "",
+      "indicator": "",
+      "home": "Home",
+      "untitled": "",
+      "add": "",
+      "actions": "",
+      "rename": "",
+      "namePlaceholder": "",
+      "moveLeft": "",
+      "moveRight": "",
+      "remove": {
+        "action": "",
+        "confirm": ""
+      },
+      "limitReached": "",
+      "hotkeyHint": "",
+      "destination": "",
+      "containerDestination": ""
+    },
     "landmark": {
       "canvas": "Dashboard canvas",
       "leftRail": "Left dashboard rail",
@@ -6503,7 +6897,7 @@
       "title": "",
       "section": {
         "general": {
-          "title": "",
+          "title": "General",
           "unrecognizedLink": ""
         },
         "layout": {
@@ -6620,7 +7014,7 @@
     },
     "error": {
       "noBoard": {
-        "title": "",
+        "title": "Welcome to Homarr",
         "description": "",
         "link": "",
         "notice": ""
@@ -6628,7 +7022,7 @@
       "notFound": {
         "title": "",
         "description": "",
-        "link": "",
+        "link": "View all boards",
         "notice": ""
       },
       "homeBoard": {
@@ -6646,6 +7040,11 @@
         "anonymous": {
           "description": "",
           "link": "",
+          "notice": ""
+        },
+        "noAccess": {
+          "title": "",
+          "description": "",
           "notice": ""
         }
       }
@@ -6686,7 +7085,7 @@
     "metaTitle": "",
     "notFound": {
       "title": "",
-      "text": "",
+      "text": "Could not find requested resource",
       "backToHome": "Return to management home"
     },
     "error": {
@@ -6699,7 +7098,7 @@
         "home": "Home",
         "users": {
           "items": {
-            "manage": ""
+            "manage": "Manage"
           }
         },
         "tools": {
@@ -6715,13 +7114,15 @@
         "help": {
           "label": "Help",
           "items": {
-            "documentation": "",
-            "submitIssue": "",
-            "discord": "",
-            "sourceCode": ""
+            "documentation": "Documentation",
+            "submitIssue": "Submit an issue",
+            "discord": "Community Discord",
+            "sourceCode": "",
+            "changelog": ""
           }
         },
         "about": "About",
+        "updateAvailable": "",
         "assistant": "Assistant"
       }
     },
@@ -6729,20 +7130,34 @@
       "home": {
         "statisticLabel": {
           "boards": "",
-          "resources": "",
-          "authentication": "",
-          "authorization": ""
+          "resources": "Resources",
+          "authentication": "Authentication",
+          "authorization": "Authorisation"
         },
-        "heroBanner": {
-          "title": "",
-          "subtitle": ""
+        "hero": {
+          "greeting": "",
+          "greetingWithoutName": "",
+          "description": ""
+        },
+        "lobster": {
+          "label": "",
+          "prompt": "",
+          "pokeCount": "",
+          "reaction": {
+            "hey": "",
+            "ow": "",
+            "snip": "",
+            "careful": "",
+            "stillHere": "",
+            "okay": ""
+          }
         }
       },
       "board": {
-        "title": "",
+        "title": "Your boards",
         "action": {
           "new": {
-            "label": ""
+            "label": "New board"
           },
           "open": {
             "label": ""
@@ -6760,7 +7175,7 @@
           "setMobileHomeBoard": {
             "label": "",
             "badge": {
-              "label": "",
+              "label": "Mobile",
               "tooltip": ""
             }
           },
@@ -6780,11 +7195,13 @@
         },
         "noResults": {
           "title": "No boards yet",
-          "description": "Create a board to organise your apps and widgets in one place."
+          "description": "Create a board to organise your apps and widgets in one place.",
+          "noAccessTitle": "",
+          "noAccessDescription": ""
         }
       },
       "media": {
-        "includeFromAllUsers": ""
+        "includeFromAllUsers": "Include media from all users"
       },
       "user": {
         "fieldsDisabledExternalProvider": "",
@@ -6833,6 +7250,11 @@
                 "logoDisplay": {
                   "logo": "Logo only",
                   "logoAndText": "Logo + text"
+                },
+                "tabsDisplay": {
+                  "wide": "",
+                  "compact": "",
+                  "indicator": ""
                 }
               },
               "items": {
@@ -6840,6 +7262,7 @@
                 "search": "Search",
                 "home": "Home board",
                 "boardSwitcher": "Boards",
+                "boardTabs": "",
                 "assistant": "Assistant",
                 "docker": "Docker",
                 "boardEdit": "Edit board",
@@ -6851,7 +7274,7 @@
               }
             },
             "item": {
-              "language": "",
+              "language": "Language & Region",
               "board": {
                 "title": "",
                 "type": {
@@ -6860,7 +7283,7 @@
                 }
               },
               "search": "",
-              "firstDayOfWeek": "",
+              "firstDayOfWeek": "First day of the week",
               "accessibility": "",
               "oauthConnections": {
                 "title": "",
@@ -6918,13 +7341,13 @@
         },
         "create": {
           "metaTitle": "",
-          "title": "",
+          "title": "Create new user",
           "step": {
             "personalInformation": {
-              "label": ""
+              "label": "Personal information"
             },
             "security": {
-              "label": ""
+              "label": "Security"
             },
             "groups": {
               "label": "",
@@ -6932,7 +7355,7 @@
               "description": ""
             },
             "review": {
-              "label": ""
+              "label": "Review"
             },
             "completed": {
               "title": ""
@@ -6978,7 +7401,7 @@
         }
       },
       "group": {
-        "back": "",
+        "back": "Back to groups",
         "setting": {
           "general": {
             "title": "",
@@ -6988,15 +7411,15 @@
           },
           "setting": {
             "title": "",
-            "alert": ""
+            "alert": "Group settings are prioritised by the order of groups in the list. The top settings overwrite the bottom settings."
           },
           "members": {
-            "title": "",
+            "title": "Members",
             "search": "",
             "notFound": ""
           },
           "permissions": {
-            "title": ""
+            "title": "Permissions"
           }
         }
       },
@@ -7010,7 +7433,7 @@
         "section": {
           "analyticsDocumentation": "See exactly which analytics data Homarr collects",
           "analytics": {
-            "title": "",
+            "title": "Analytics",
             "general": {
               "title": "Help us improve Homarr",
               "text": "This helps us figure out what people actually use so we know where to spend our time. We see stuff like how many widgets or integrations you have, your Homarr version, and what database you're on. That's it — no personal info, no URLs, no names, nothing that could identify you or your setup."
@@ -7071,6 +7494,10 @@
             "title": "",
             "defaultColorScheme": {
               "label": "Default colour scheme"
+            },
+            "whatsNew": {
+              "label": "",
+              "description": ""
             }
           },
           "branding": {
@@ -7334,7 +7761,7 @@
           },
           "job": {
             "iconsUpdater": {
-              "label": ""
+              "label": "Icons Updater"
             },
             "analytics": {
               "label": ""
@@ -7353,7 +7780,7 @@
             "minutes": "",
             "hours": "",
             "midnight": "",
-            "weeklyMonday": "",
+            "weeklyMonday": "Every week on Monday",
             "update": {
               "success": {
                 "message": ""
@@ -7365,15 +7792,15 @@
           },
           "field": {
             "interval": {
-              "label": ""
+              "label": "Schedule interval"
             },
             "lastExecution": {
-              "label": ""
+              "label": "Last Execution"
             },
             "actions": {}
           },
           "table": {
-            "search": ""
+            "search": "Search {count} tasks..."
           },
           "refresh": {
             "success": {
@@ -7421,7 +7848,7 @@
             },
             "apiKey": {
               "label": "",
-              "title": "",
+              "title": "API Keys",
               "access": {
                 "label": "",
                 "readOnly": "",
@@ -7429,7 +7856,7 @@
                 "description": ""
               },
               "button": {
-                "createApiToken": "",
+                "createApiToken": "Create API token",
                 "confirmDeletion": ""
               },
               "modal": {
@@ -7620,27 +8047,27 @@
       },
       "about": {
         "version": "",
-        "text": "",
+        "text": "Homarr is a community driven open source project that is being maintained by volunteers. Thanks to these people, Homarr has been a growing project since 2021. Our team is working completely remote from many different countries on Homarr in their leisure time for no compensation.",
         "accordion": {
           "contributors": {
-            "title": "",
-            "subtitle": ""
+            "title": "Contributors",
+            "subtitle": "{count} maintaining code & Homarr"
           },
           "translators": {
-            "title": "",
-            "subtitle": ""
+            "title": "Translators",
+            "subtitle": "{count} contributing translations in many languages"
           },
           "sponsors": {
-            "title": "",
-            "subtitle": ""
+            "title": "Sponsors",
+            "subtitle": "{count} supporting the project financially"
           },
           "libraries": {
-            "title": "",
-            "subtitle": ""
+            "title": "Libraries",
+            "subtitle": "{count} used in the Code of Homarr"
           },
           "hotkeys": {
-            "title": "",
-            "subtitle": "",
+            "title": "Hotkeys",
+            "subtitle": "Keyboard shortcuts to enhance your workflow",
             "field": {
               "shortcut": "",
               "action": ""
@@ -7653,7 +8080,8 @@
               "openSpotlightApps": "Open app search",
               "openSpotlightAssistant": "Open Assistant mode",
               "openSpotlightPreferences": "Open preferences mode",
-              "openAssistant": "Open Assistant"
+              "openAssistant": "Open Assistant",
+              "switchBoardTab": ""
             },
             "note": ""
           }
@@ -7727,7 +8155,7 @@
       },
       "search": "",
       "selected": "",
-      "footer": "",
+      "footer": "Total {count} containers",
       "totalCpu": "Total CPU: {cpu}%",
       "totalMemory": "Total Mem: {memory}"
     },
@@ -8016,7 +8444,7 @@
     "tab": {
       "user": "",
       "group": "",
-      "inherited": ""
+      "inherited": "Inherited groups"
     },
     "field": {
       "user": {
@@ -8026,7 +8454,7 @@
         "label": ""
       },
       "permission": {
-        "label": ""
+        "label": "Permission"
       }
     },
     "action": {}
@@ -8148,7 +8576,7 @@
     },
     "mode": {
       "appIntegrationBoard": {
-        "help": "",
+        "help": "Search for apps, integrations or boards",
         "group": {
           "app": {
             "children": {
@@ -8169,7 +8597,7 @@
             "children": {
               "action": {
                 "open": {
-                  "label": ""
+                  "label": "Open board"
                 },
                 "homeBoard": {
                   "label": ""
@@ -8178,7 +8606,7 @@
                   "label": ""
                 },
                 "settings": {
-                  "label": ""
+                  "label": "Open settings"
                 }
               },
               "detail": {
@@ -8189,7 +8617,7 @@
         }
       },
       "command": {
-        "help": "",
+        "help": "Activate command mode",
         "group": {
           "localCommand": {
             "title": "Local commands"
@@ -8823,6 +9251,12 @@
         "description": "Change your colour scheme, language, home board, and preferences. You can also jump to the management area from here."
       }
     }
+  },
+  "whatsNew": {
+    "title": "",
+    "empty": "",
+    "allReleases": "",
+    "dismiss": ""
   },
   "metadata": {
     "description": "A self-hosted dashboard for the *arr stack and your entire homelab. Integrates with 50+ services, real-time widgets, no config files.",

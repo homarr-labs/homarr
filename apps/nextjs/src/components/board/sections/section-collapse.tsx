@@ -5,7 +5,8 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useRef, use
 
 import { clientApi } from "@homarr/api/client";
 import { useSession } from "@homarr/auth/client";
-import { useRequiredBoard } from "@homarr/boards/context";
+import { useCurrentLayout, useRequiredBoard } from "@homarr/boards/context";
+import { getBoardLayoutData } from "@homarr/boards/layout-data";
 import { useEditMode } from "@homarr/boards/edit-mode";
 
 import { AutoExpandWatcher } from "./auto-expand/auto-expand-watcher";
@@ -45,6 +46,7 @@ export const getVisuallyCollapsedSectionIds = ({
 
 export const BoardSectionCollapseProvider = ({ children }: PropsWithChildren) => {
   const board = useRequiredBoard();
+  const currentLayoutId = useCurrentLayout();
   const [isEditMode] = useEditMode();
   const { status } = useSession();
   const { mutate } = clientApi.section.changeCollapsed.useMutation();
@@ -68,11 +70,15 @@ export const BoardSectionCollapseProvider = ({ children }: PropsWithChildren) =>
       integrationIds: string[];
       inactiveDisplay: "collapsed" | "hidden";
     }[] = [];
+    const layout = getBoardLayoutData(board, currentLayoutId);
     for (const section of board.sections) {
       if (section.kind !== "container" || !section.options.autoExpand.enabled || !section.options.autoExpand.itemId) {
         continue;
       }
-      const item = board.items.find((candidate) => candidate.id === section.options.autoExpand.itemId);
+      if (!section.layouts.some((candidate) => candidate.layoutId === currentLayoutId)) continue;
+      const item = layout.itemsBySectionId
+        .get(section.id)
+        ?.find((candidate) => candidate.id === section.options.autoExpand.itemId);
       if (!item) continue;
       targets.push({
         sectionId: section.id,
@@ -84,7 +90,7 @@ export const BoardSectionCollapseProvider = ({ children }: PropsWithChildren) =>
       });
     }
     return targets;
-  }, [board.items, board.sections]);
+  }, [board, currentLayoutId]);
 
   const handleActiveChange = useCallback((sectionId: string, active: boolean) => {
     setActiveBySectionId((previous) =>

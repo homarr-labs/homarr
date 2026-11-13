@@ -22,12 +22,12 @@
   }
 }
 
-:global(.mediaMissing-wrapper) :global(.mantine-SimpleGrid-root) > :global(.mantine-Paper-root) {
+.root :global(.mantine-SimpleGrid-root) > :global(.mantine-Paper-root) {
   border-color: rgb(from var(--mantine-color-default-border) r g b / calc(var(--opacity, 1) * 0.45));
   background-color: transparent;
 }
 
-:global(.mediaMissing-wrapper) :global(.mantine-Tabs-list) {
+.root :global(.mantine-Tabs-list) {
   --tab-border-color: rgb(from var(--mantine-color-default-border) r g b / calc(var(--opacity, 1) * 0.45));
   --tab-hover-color: rgb(from var(--mantine-color-default-hover) r g b / calc(var(--opacity, 1) * 0.14));
 }

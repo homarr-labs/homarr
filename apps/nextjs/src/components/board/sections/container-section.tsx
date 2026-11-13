@@ -36,7 +36,9 @@ export const BoardContainerSection = ({ section }: Props) => {
   const containerDepth = useContext(ContainerDepthContext);
   const parent = useSectionContext();
   let containerInlineInsetCount = 2;
+  let containerBlockInsetCount = 2;
   if (parent.section.kind === "empty" && getRootSectionLane(parent.section.xOffset) !== "main") {
+    if (section.yOffset === 0) containerBlockInsetCount -= 1;
     if (section.xOffset === 0) containerInlineInsetCount -= 1;
     if (section.xOffset + section.width === parent.columnCount) containerInlineInsetCount -= 1;
   }
@@ -137,7 +139,7 @@ export const BoardContainerSection = ({ section }: Props) => {
             "--container-header-height": `calc(${CONTAINER_HEADER_HEIGHT}px * var(--board-canvas-ui-scale, 1))`,
           },
         }}
-        radius={board.itemRadius}
+        radius={board.itemRadius ?? undefined}
         p={0}
       >
         {hasHeader && (
@@ -237,9 +239,10 @@ export const BoardContainerSection = ({ section }: Props) => {
               section={section}
               columnCount={section.width}
               containerInlineInsetCount={containerInlineInsetCount}
+              containerBlockInsetCount={containerBlockInsetCount}
               requestedRowCount={section.height}
               viewportRowCountOverride={isVisuallyCollapsed ? section.height : isHiddenInactive ? 0 : undefined}
-              fittedViewportRowCount={fitsContent ? section.height : undefined}
+              fittedViewportRowCount={fitsContent ? parent.displayPlacementById?.get(section.id)?.h : undefined}
               label={label}
             />
           </ContainerDepthContext>

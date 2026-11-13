@@ -1245,6 +1245,20 @@
       "username": "Nom d'utilisateur",
       "password": "Mot de passe",
       "savedPlaceholder": "••••••• (sauvegardé, laisser vide pour garder)"
+    },
+    "workshopUpdate": {
+      "title": "",
+      "apply": "",
+      "available": "Mise à jour disponible",
+      "check": "",
+      "description": "",
+      "approvePermissions": "",
+      "pendingDescription": "",
+      "overwriteLocalChanges": "",
+      "installSeparate": "",
+      "communityWarning": "",
+      "updated": "",
+      "changedBeforeInstall": ""
     }
   },
   "workshop": {
@@ -1921,7 +1935,8 @@
       "copy": "Copie",
       "copied": "Copié",
       "refresh": "Rafraîchir",
-      "export": "Exporter"
+      "export": "Exporter",
+      "advanced": "Avancé"
     },
     "hidden": "Masquer",
     "pagination": {
@@ -2016,6 +2031,15 @@
         "modifier": ""
       }
     },
+    "markdown": {
+      "alert": {
+        "note": "",
+        "tip": "",
+        "important": "",
+        "warning": "Avertissement",
+        "caution": ""
+      }
+    },
     "dangerZone": "Zone de danger",
     "noResults": "Aucun résultat trouvé",
     "unsavedChanges": "Vous avez des modifications non enregistrées !",
@@ -2106,6 +2130,158 @@
         "sm": "Discret",
         "xl": "Douce"
       }
+    },
+    "customTheme": {
+      "label": "Thème",
+      "nothingFound": "",
+      "custom": "Personnalisé",
+      "customize": "",
+      "editor": {
+        "title": "",
+        "basedOn": "",
+        "preview": "",
+        "previewColorScheme": "",
+        "layout": "Mise en page",
+        "typography": "",
+        "colors": "",
+        "json": "",
+        "defaultRadius": "",
+        "radiusHint": "",
+        "scale": "",
+        "spacing": "Espacement",
+        "radius": "",
+        "fontFamily": "",
+        "headingFont": "",
+        "monoFont": "",
+        "fontSizes": "",
+        "palette": {
+          "body": "",
+          "surface": "",
+          "hover": "",
+          "border": "",
+          "text": "",
+          "dimmed": "",
+          "primary": "",
+          "secondary": "accent secondaire"
+        },
+        "lockedPrimary": "",
+        "pickColor": "",
+        "autoContrast": "",
+        "luminanceThreshold": "",
+        "jsonHint": "",
+        "invalidJson": "",
+        "tooLong": "",
+        "copyJson": "",
+        "copied": "Copié",
+        "discardJson": "",
+        "reset": "",
+        "apply": "",
+        "sampleTitle": "",
+        "sampleBadge": "Aperçu",
+        "sampleText": "",
+        "sampleInput": "Rechercher",
+        "sampleValue": "Trouver une app",
+        "sampleButton": "Ouvert"
+      },
+      "studio": {
+        "title": "",
+        "saveTheme": "",
+        "searchControls": "",
+        "component": "",
+        "inheritedValue": "",
+        "resetControl": "",
+        "decreaseControl": "",
+        "increaseControl": "",
+        "chooseControl": "",
+        "layout": {
+          "spacing": "Espacement",
+          "radius": "",
+          "compact": "",
+          "normal": "Normale",
+          "roomy": "",
+          "preset": "",
+          "none": "Aucun",
+          "rounded": "",
+          "full": "Plein",
+          "custom": "Personnalisé",
+          "advanced": ""
+        },
+        "previewSurface": "Aperçu",
+        "previewFrame": "",
+        "loadingPreview": "",
+        "previewFailed": "",
+        "sampleBoard": "",
+        "components": "Composants",
+        "overlays": "",
+        "typography": "",
+        "liveBoard": "",
+        "viewport": "",
+        "responsive": "",
+        "tablet": "",
+        "mobile": "Mobile",
+        "includeCustomCss": "",
+        "groups": {
+          "layout": "",
+          "typography": "",
+          "colors": "",
+          "surfaces": "",
+          "overlays": "",
+          "accessibility": "",
+          "css": ""
+        },
+        "controls": {
+          "defaultRadius": "",
+          "scale": "",
+          "spacing": "Espacement",
+          "radius": "",
+          "breakpoint": "Point de rupture",
+          "fontSizes": "",
+          "lineHeight": "",
+          "shadow": "",
+          "fontFamily": "",
+          "headingFont": "",
+          "monoFont": "",
+          "headingWeight": "",
+          "headingSize": "",
+          "fontSmoothing": "",
+          "body": "",
+          "surface": "",
+          "hover": "",
+          "border": "",
+          "text": "",
+          "dimmed": "",
+          "primary": "",
+          "secondary": "accent secondaire",
+          "autoContrast": "",
+          "luminanceThreshold": "",
+          "primaryShade": "",
+          "componentRadius": "",
+          "borderWidth": "",
+          "surfaceBackground": "Fond",
+          "surfaceText": "",
+          "surfaceBorder": "Couleur de la bordure",
+          "hoverBackground": "",
+          "hoverText": "",
+          "componentShadow": "",
+          "componentBorder": "Afficher la bordure",
+          "componentPadding": "",
+          "componentSize": "Taille du fichier",
+          "componentVariant": "",
+          "overlayBlur": "",
+          "overlayOpacity": "",
+          "overlayColor": "",
+          "transitionDuration": "",
+          "headerBackground": "",
+          "respectReducedMotion": "",
+          "focusRing": "",
+          "cursorType": "",
+          "customCss": ""
+        },
+        "expandPreview": "",
+        "showControls": "Afficher les contrôles"
+      },
+      "instanceDefault": "",
+      "useInstanceDefault": ""
     }
   },
   "section": {
@@ -2201,6 +2377,18 @@
       },
       "customWidget": "Widget personnalisé",
       "standalone": "Autonomie",
+      "integrationFilter": "",
+      "integrationNotConnected": "",
+      "workshop": {
+        "title": "Widgets de l'atelier",
+        "back": "",
+        "empty": "",
+        "noMatches": "",
+        "loading": "",
+        "integrationError": "",
+        "searchMore": "",
+        "installAndAdd": ""
+      },
       "missingIntegration": {
         "title": "Connectez d'abord un service",
         "noPermission": "Ce widget a besoin d'une connexion de service compatible. Demandez à un administrateur d'en connecter un, puis réessayez."
@@ -2236,10 +2424,13 @@
       "saveErrorTitle": "Impossible de mettre à jour les éléments",
       "saveErrorMessage": "Les modifications n'ont pas pu être enregistrées. Le tableau a été actualisé.",
       "moveUnavailableTitle": "Impossible de déplacer les éléments sélectionnés",
-      "moveUnavailableMessage": "La destination n'a pas assez de place pour toute la sélection."
+      "moveUnavailableMessage": "La destination n'a pas assez de place pour toute la sélection.",
+      "moveToTab": "",
+      "movedToTab": ""
     },
     "moveResize": {
       "title": "Déplacer / redimensionner l'élément",
+      "sizeOverlap": "",
       "entryLabel": "{name}, colonne {column}, ligne {row}",
       "target": {
         "numbered": "",
@@ -2322,6 +2513,36 @@
       "open": "Ouvrir la vue avancée",
       "close": "Fermer la vue avancée",
       "label": "Vue avancée {widget}"
+    },
+    "inPlace": {
+      "widgetLoadError": "",
+      "search": "",
+      "bestFit": "",
+      "moreWidgets": "",
+      "widgets": "",
+      "yourApps": "",
+      "createApp": "",
+      "addAppLink": "",
+      "createWidget": "",
+      "createWidgetDescription": "",
+      "createAppDescription": "",
+      "defaultFit": "",
+      "defaultFitDescription": "",
+      "defaultSize": "",
+      "defaultSizeDescription": "",
+      "emptyCells": "",
+      "preview": {
+        "error": "",
+        "loading": ""
+      },
+      "keyboard": {
+        "move": "déplacer",
+        "resize": "",
+        "pick": "",
+        "browse": "",
+        "moveDescription": "",
+        "resizeDescription": ""
+      }
     }
   },
   "widget": {
@@ -3146,6 +3367,141 @@
       "error": {
         "loadFailed": "Impossible de charger l'entité",
         "toggleFailed": "Impossible de mettre à jour l'entité"
+      }
+    },
+    "smartHome-controls": {
+      "name": "",
+      "description": "",
+      "option": {
+        "presentation": {
+          "label": "",
+          "option": {
+            "entities": "",
+            "controlPanel": ""
+          }
+        },
+        "title": {
+          "label": "Titre",
+          "description": ""
+        },
+        "blocks": {
+          "label": "",
+          "remove": ""
+        },
+        "roomDomains": {
+          "label": "",
+          "description": ""
+        },
+        "excludedEntityIds": {
+          "label": "",
+          "description": "",
+          "placeholder": ""
+        },
+        "showSummary": {
+          "label": ""
+        },
+        "readOnly": {
+          "label": "",
+          "description": ""
+        },
+        "controlSize": {
+          "label": "",
+          "option": {
+            "auto": "Automatique",
+            "compact": "",
+            "large": "Grand"
+          }
+        },
+        "palette": {
+          "label": "",
+          "option": {
+            "boring": "",
+            "colorful": ""
+          }
+        }
+      },
+      "domain": {
+        "light": "",
+        "switch": "",
+        "fan": "",
+        "climate": "",
+        "humidifier": "",
+        "cover": "",
+        "valve": "",
+        "lock": "",
+        "alarm_control_panel": "",
+        "media_player": "",
+        "camera": "",
+        "vacuum": "",
+        "scene": "",
+        "script": "",
+        "automation": "",
+        "button": "",
+        "input_boolean": "",
+        "input_select": "",
+        "person": "Personnes",
+        "binary_sensor": "",
+        "sensor": "",
+        "weather": "Météo",
+        "sun": "",
+        "update": ""
+      },
+      "block": {
+        "add": {
+          "rooms": "",
+          "entity": "",
+          "roomsLabel": "",
+          "roomsPlaceholder": "",
+          "entityLabel": "",
+          "entityPlaceholder": "",
+          "merge": "",
+          "submit": "Ajouter",
+          "duplicate": "",
+          "covered": ""
+        },
+        "kind": {
+          "entity": "",
+          "room": "",
+          "mergedRooms": "",
+          "unknown": ""
+        },
+        "entityCount": "",
+        "noArea": "",
+        "issue": {
+          "missing": "Non trouvé",
+          "otherSource": "",
+          "empty": ""
+        }
+      },
+      "preview": {
+        "empty": "",
+        "noMatches": "",
+        "summary": {
+          "lights": "",
+          "on": "activé",
+          "off": "désactivé",
+          "sensors": "",
+          "offline": "hors ligne"
+        },
+        "otherSource": ""
+      },
+      "live": {
+        "loading": "",
+        "error": "",
+        "retry": "",
+        "actionFailed": "",
+        "actionUnconfirmed": "",
+        "unconfirmed": "",
+        "selectionLimit": "",
+        "unknownError": ""
+      },
+      "inline": {
+        "open": "",
+        "title": "",
+        "handle": "",
+        "empty": "",
+        "add": "",
+        "close": ""
       }
     },
     "smartHome-executeAutomation": {
@@ -4958,9 +5314,9 @@
         }
       },
       "summary": {
-        "newReleases": "",
+        "newReleases": "{count, plural, one {nouvelle version} other {nouvelles versions}}",
         "newShort": "nouveau",
-        "tracked": "",
+        "tracked": "sur {count} suivis",
         "caughtUp": "",
         "outdated": "",
         "outdatedShort": "mis à jour",
@@ -5038,15 +5394,15 @@
         }
       },
       "markViewed": "Marquer comme vu(s)",
-      "markAllViewed": "",
-      "markEntryViewed": "",
+      "markAllViewed": "Tout marquer comme vu",
+      "markEntryViewed": "Marquer {name} {version} comme vu",
       "viewed": "",
       "copyVersion": "",
       "copied": "Copié",
       "published": "",
       "whatChanged": "",
       "noNotes": "",
-      "changes": "",
+      "changes": "{count, plural, one {# modification} other {# modifications}}",
       "starsCount": "Étoiles",
       "forksCount": "Forks",
       "openIssues": "",
@@ -5446,6 +5802,23 @@
       "name": "Ressources du système",
       "description": "CPU, Mémoire, Disque et autre utilisation matérielle de votre système",
       "option": {
+        "diskDisplayMode": {
+          "label": "",
+          "option": {
+            "percentage": "Pourcentage (ex : 76%)",
+            "free": "",
+            "absolute": "",
+            "combined": ""
+          }
+        },
+        "resourceLayout": {
+          "label": "",
+          "description": ""
+        },
+        "subresourceLayout": {
+          "label": "",
+          "description": ""
+        },
         "hasShadow": {
           "label": "Activer l'ombrage des cartes"
         },
@@ -5453,6 +5826,7 @@
           "label": "Graphiques visibles",
           "description": "Sélectionnez les graphiques à afficher.",
           "option": {
+            "cpuCores": "",
             "memory": "Mémoire",
             "network": "Réseau"
           }
@@ -6381,6 +6755,26 @@
         }
       }
     },
+    "tabs": {
+      "label": "",
+      "indicator": "",
+      "home": "Accueil",
+      "untitled": "",
+      "add": "",
+      "actions": "",
+      "rename": "",
+      "namePlaceholder": "",
+      "moveLeft": "",
+      "moveRight": "",
+      "remove": {
+        "action": "",
+        "confirm": ""
+      },
+      "limitReached": "",
+      "hotkeyHint": "",
+      "destination": "",
+      "containerDestination": ""
+    },
     "landmark": {
       "canvas": "Tableau de bord",
       "leftRail": "Rail du tableau de bord gauche",
@@ -6647,6 +7041,11 @@
           "description": "L'administrateur du serveur n'a pas encore défini de tableau d'accueil.",
           "link": "Voir les tableaux publics",
           "notice": "Pour faire disparaître cette page, demandez à l'administrateur du serveur de définir un tableau d'accueil pour le serveur"
+        },
+        "noAccess": {
+          "title": "",
+          "description": "",
+          "notice": ""
         }
       }
     }
@@ -6718,10 +7117,12 @@
             "documentation": "Documentation",
             "submitIssue": "Signaler un problème",
             "discord": "Communauté Discord",
-            "sourceCode": "Code source"
+            "sourceCode": "Code source",
+            "changelog": ""
           }
         },
         "about": "À propos",
+        "updateAvailable": "Mise à jour disponible",
         "assistant": ""
       }
     },
@@ -6733,9 +7134,23 @@
           "authentication": "Authentification",
           "authorization": "Autorisation"
         },
-        "heroBanner": {
-          "title": "Bienvenue sur votre",
-          "subtitle": "Tableau {app}"
+        "hero": {
+          "greeting": "",
+          "greetingWithoutName": "",
+          "description": ""
+        },
+        "lobster": {
+          "label": "",
+          "prompt": "",
+          "pokeCount": "",
+          "reaction": {
+            "hey": "",
+            "ow": "",
+            "snip": "",
+            "careful": "",
+            "stillHere": "",
+            "okay": ""
+          }
         }
       },
       "board": {
@@ -6780,7 +7195,9 @@
         },
         "noResults": {
           "title": "Aucun tableau de bord pour l'instant",
-          "description": "Créez un tableau pour organiser vos applications et widgets en un seul endroit."
+          "description": "Créez un tableau pour organiser vos applications et widgets en un seul endroit.",
+          "noAccessTitle": "",
+          "noAccessDescription": ""
         }
       },
       "media": {
@@ -6833,6 +7250,11 @@
                 "logoDisplay": {
                   "logo": "Logo uniquement",
                   "logoAndText": "Logo + texte"
+                },
+                "tabsDisplay": {
+                  "wide": "Large",
+                  "compact": "",
+                  "indicator": ""
                 }
               },
               "items": {
@@ -6840,6 +7262,7 @@
                 "search": "Rechercher",
                 "home": "Tableau de bord",
                 "boardSwitcher": "Tableaux de bord",
+                "boardTabs": "",
                 "assistant": "",
                 "docker": "Docker",
                 "boardEdit": "Modifier le tableau",
@@ -7071,6 +7494,10 @@
             "title": "Apparence",
             "defaultColorScheme": {
               "label": "Schéma de couleurs par défaut"
+            },
+            "whatsNew": {
+              "label": "",
+              "description": ""
             }
           },
           "branding": {
@@ -7653,7 +8080,8 @@
               "openSpotlightApps": "Ouvrir la recherche d'application",
               "openSpotlightAssistant": "Ouvrir le mode Assistant",
               "openSpotlightPreferences": "Ouvrir le mode de préférences",
-              "openAssistant": "Ouvrir l'assistant"
+              "openAssistant": "Ouvrir l'assistant",
+              "switchBoardTab": ""
             },
             "note": "Astuce : Mod correspond à la touche Ctrl ou ⌘ sur macOS"
           }
@@ -8823,6 +9251,12 @@
         "description": "Changez votre thème de couleurs, votre langue, votre tableau d'accueil et vos préférences. Vous pouvez également accéder à la zone de gestion depuis ici."
       }
     }
+  },
+  "whatsNew": {
+    "title": "",
+    "empty": "",
+    "allReleases": "",
+    "dismiss": ""
   },
   "metadata": {
     "description": "Un tableau de bord auto-hébergé pour la pile *arr et votre maison entière. Intègre avec plus de 50 services, des widgets en temps réel, pas de fichiers de configuration.",

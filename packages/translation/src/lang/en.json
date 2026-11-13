@@ -61,7 +61,7 @@
         "title": "Start with familiar defaults",
         "description": "Set the language and appearance everyone sees first.",
         "language": "Default language",
-        "theme": "Default theme",
+        "theme": "Color scheme",
         "themeAuto": "System",
         "themeLight": "Light",
         "themeDark": "Dark",
@@ -206,7 +206,7 @@
         "apps": "App tiles",
         "appsValue": "{count, plural, =0 {Starter apps only} one {# app tile} other {# app tiles}}",
         "language": "Language",
-        "theme": "Theme",
+        "theme": "Color scheme",
         "themeAuto": "System preference",
         "themeLight": "Light",
         "themeDark": "Dark",
@@ -1245,6 +1245,20 @@
       "username": "Username",
       "password": "Password",
       "savedPlaceholder": "••••••• (saved, leave empty to keep)"
+    },
+    "workshopUpdate": {
+      "title": "Update Workshop widget",
+      "apply": "Apply update",
+      "available": "Update available",
+      "check": "Check for updates",
+      "description": "Update revision {installed} to {latest}. Your name, board placements and compatible configuration are kept.",
+      "approvePermissions": "I approve the changed requests and source permissions shown above",
+      "pendingDescription": "Your installed revision keeps running until you apply this update.",
+      "overwriteLocalChanges": "Replace my local widget edits with this Workshop revision",
+      "installSeparate": "View code or install a separate copy",
+      "communityWarning": "This revision is marked outdated or has community reports. Review its Workshop page before updating.",
+      "updated": "Workshop widget updated. Existing board placements use the new revision.",
+      "changedBeforeInstall": "The Workshop revision changed. Reload and review it before installing."
     }
   },
   "workshop": {
@@ -1921,7 +1935,8 @@
       "copy": "Copy",
       "copied": "Copied",
       "refresh": "Refresh",
-      "export": "Export"
+      "export": "Export",
+      "advanced": "Advanced"
     },
     "hidden": "Hidden",
     "pagination": {
@@ -2016,6 +2031,15 @@
         "modifier": "Mod"
       }
     },
+    "markdown": {
+      "alert": {
+        "note": "Note",
+        "tip": "Tip",
+        "important": "Important",
+        "warning": "Warning",
+        "caution": "Caution"
+      }
+    },
     "dangerZone": "Danger zone",
     "noResults": "No results found",
     "unsavedChanges": "You have unsaved changes!",
@@ -2106,6 +2130,158 @@
         "sm": "Subtle",
         "xl": "Soft"
       }
+    },
+    "customTheme": {
+      "label": "Theme",
+      "nothingFound": "No themes found",
+      "custom": "Custom",
+      "customize": "Edit theme",
+      "editor": {
+        "title": "Customize theme",
+        "basedOn": "Starting preset: {preset}",
+        "preview": "Live preview",
+        "previewColorScheme": "Preview color scheme",
+        "layout": "Layout",
+        "typography": "Typography",
+        "colors": "Colors",
+        "json": "Theme JSON",
+        "defaultRadius": "Default roundness",
+        "radiusHint": "A size token such as md or a value such as 8px.",
+        "scale": "UI scale",
+        "spacing": "Spacing",
+        "radius": "Radius sizes",
+        "fontFamily": "Body font",
+        "headingFont": "Heading font",
+        "monoFont": "Monospace font",
+        "fontSizes": "Font sizes",
+        "palette": {
+          "body": "Page background",
+          "surface": "Surface",
+          "hover": "Hover",
+          "border": "Border",
+          "text": "Text",
+          "dimmed": "Muted text",
+          "primary": "Primary accent",
+          "secondary": "Secondary accent"
+        },
+        "lockedPrimary": "The server locks the primary accent.",
+        "pickColor": "Pick a color for {color}",
+        "autoContrast": "Adjust text contrast on filled controls",
+        "luminanceThreshold": "Contrast threshold",
+        "jsonHint": "Edit or paste a Mantine theme object. Omitted settings inherit the starting preset. JavaScript and external resources are not supported.",
+        "invalidJson": "Enter valid JSON.",
+        "tooLong": "Theme bundle exceeds 48 KB",
+        "copyJson": "Copy JSON",
+        "copied": "Copied",
+        "discardJson": "Discard JSON edits",
+        "reset": "Reset edits",
+        "apply": "Use custom theme",
+        "sampleTitle": "Dashboard",
+        "sampleBadge": "Preview",
+        "sampleText": "Your colors, type, spacing, and roundness in use.",
+        "sampleInput": "Search",
+        "sampleValue": "Find an app",
+        "sampleButton": "Open"
+      },
+      "studio": {
+        "title": "Theme editor",
+        "saveTheme": "Save theme",
+        "searchControls": "Search settings",
+        "component": "Component",
+        "inheritedValue": "Inherited",
+        "resetControl": "Reset {control}",
+        "decreaseControl": "Decrease {control}",
+        "increaseControl": "Increase {control}",
+        "chooseControl": "Choose {control}",
+        "layout": {
+          "spacing": "Spacing",
+          "radius": "Roundness",
+          "compact": "Compact",
+          "normal": "Normal",
+          "roomy": "Roomy",
+          "preset": "Preset",
+          "none": "None",
+          "rounded": "Round",
+          "full": "Full",
+          "custom": "Custom",
+          "advanced": "Advanced layout settings"
+        },
+        "previewSurface": "Preview",
+        "previewFrame": "Live theme preview",
+        "loadingPreview": "Loading preview…",
+        "previewFailed": "The preview could not load. Reload the page or choose a different board.",
+        "sampleBoard": "Sample board",
+        "components": "Components",
+        "overlays": "Modals & drawers",
+        "typography": "Typography",
+        "liveBoard": "Your board",
+        "viewport": "Viewport",
+        "responsive": "Responsive",
+        "tablet": "Tablet",
+        "mobile": "Mobile",
+        "includeCustomCss": "Theme CSS",
+        "groups": {
+          "layout": "Layout & spacing",
+          "typography": "Typography",
+          "colors": "Colors & contrast",
+          "surfaces": "Surfaces & components",
+          "overlays": "Modals & drawers",
+          "accessibility": "Motion & accessibility",
+          "css": "Custom CSS"
+        },
+        "controls": {
+          "defaultRadius": "Default roundness",
+          "scale": "UI scale",
+          "spacing": "Spacing",
+          "radius": "Radius",
+          "breakpoint": "Breakpoint",
+          "fontSizes": "Font size",
+          "lineHeight": "Line height",
+          "shadow": "Shadow",
+          "fontFamily": "Body font",
+          "headingFont": "Heading font",
+          "monoFont": "Monospace font",
+          "headingWeight": "Heading weight",
+          "headingSize": "Heading size",
+          "fontSmoothing": "Font smoothing",
+          "body": "Page background",
+          "surface": "Surface",
+          "hover": "Hover",
+          "border": "Border",
+          "text": "Text",
+          "dimmed": "Muted text",
+          "primary": "Primary accent",
+          "secondary": "Secondary accent",
+          "autoContrast": "Automatic contrast",
+          "luminanceThreshold": "Contrast threshold",
+          "primaryShade": "Primary shade",
+          "componentRadius": "Roundness",
+          "borderWidth": "Border width",
+          "surfaceBackground": "Background",
+          "surfaceText": "Text color",
+          "surfaceBorder": "Border color",
+          "hoverBackground": "Hover background",
+          "hoverText": "Hover text color",
+          "componentShadow": "Shadow",
+          "componentBorder": "Show border",
+          "componentPadding": "Padding",
+          "componentSize": "Size",
+          "componentVariant": "Variant",
+          "overlayBlur": "Backdrop blur",
+          "overlayOpacity": "Backdrop opacity",
+          "overlayColor": "Backdrop color",
+          "transitionDuration": "Transition duration (ms)",
+          "headerBackground": "Header background",
+          "respectReducedMotion": "Respect reduced motion",
+          "focusRing": "Focus ring",
+          "cursorType": "Cursor",
+          "customCss": "Custom CSS"
+        },
+        "expandPreview": "Expand preview",
+        "showControls": "Show controls"
+      },
+      "instanceDefault": "Instance default",
+      "useInstanceDefault": "Use instance default for {control}"
     }
   },
   "section": {
@@ -2222,6 +2398,18 @@
       },
       "customWidget": "Custom widget",
       "standalone": "Standalone",
+      "integrationFilter": "Filter by integration",
+      "integrationNotConnected": "{name} (not connected)",
+      "workshop": {
+        "title": "Workshop widgets",
+        "back": "Back to widgets",
+        "empty": "No Workshop widgets to show. Browse the Workshop for more.",
+        "noMatches": "No matches in the featured Workshop widgets.",
+        "loading": "Loading Workshop recommendations",
+        "integrationError": "Could not load your integrations. You can still search for Workshop widgets.",
+        "searchMore": "Search Workshop",
+        "installAndAdd": "Install and add to board"
+      },
       "missingIntegration": {
         "title": "Connect a service first",
         "noPermission": "This widget needs a compatible service connection. Ask an administrator to connect one, then try again."
@@ -2257,10 +2445,13 @@
       "saveErrorTitle": "Unable to update items",
       "saveErrorMessage": "The changes could not be saved. The board was refreshed.",
       "moveUnavailableTitle": "Unable to move selected items",
-      "moveUnavailableMessage": "The destination does not have enough room for the entire selection."
+      "moveUnavailableMessage": "The destination does not have enough room for the entire selection.",
+      "moveToTab": "Move to tab",
+      "movedToTab": "{count, plural, one {# item moved} other {# items moved}}"
     },
     "moveResize": {
       "title": "Move / resize item",
+      "sizeOverlap": "This size overlaps another container. Reduce the size or change the position to make room.",
       "entryLabel": "{name}, column {column}, row {row}",
       "target": {
         "numbered": "{name}, destination {index}",
@@ -2343,6 +2534,36 @@
       "open": "Open advanced view",
       "close": "Close advanced view",
       "label": "{widget} advanced view"
+    },
+    "inPlace": {
+      "widgetLoadError": "Could not load this widget.",
+      "search": "Search widgets and apps",
+      "bestFit": "Best fit · matching default size",
+      "moreWidgets": "More widgets",
+      "widgets": "Widgets",
+      "yourApps": "Your apps",
+      "createApp": "Create “{name}” app",
+      "addAppLink": "Add an app link",
+      "createWidget": "Create “{name}” widget",
+      "createWidgetDescription": "Open the custom widget editor in a new tab",
+      "createAppDescription": "Saved to your apps and placed here",
+      "defaultFit": "Default fit",
+      "defaultFitDescription": "The default widget size matches the selected area",
+      "defaultSize": "Default {width}×{height}",
+      "defaultSizeDescription": "Default size; widgets can be resized",
+      "emptyCells": "Empty board cells. Use arrow keys to choose a cell, then Enter or Space to add a widget.",
+      "preview": {
+        "error": "Could not load preview",
+        "loading": "Loading preview"
+      },
+      "keyboard": {
+        "move": "move",
+        "resize": "resize",
+        "pick": "pick",
+        "browse": "Arrow keys to browse",
+        "moveDescription": "Alt/Option + any arrow key to move",
+        "resizeDescription": "Alt/Option + Shift + any arrow key to resize"
+      }
     }
   },
   "widget": {
@@ -3167,6 +3388,141 @@
       "error": {
         "loadFailed": "Unable to load entity",
         "toggleFailed": "Unable to update entity"
+      }
+    },
+    "smartHome-controls": {
+      "name": "Home Assistant controls",
+      "description": "Monitor and control Home Assistant rooms and entities",
+      "option": {
+        "presentation": {
+          "label": "Style",
+          "option": {
+            "entities": "Technical list",
+            "controlPanel": "Control center"
+          }
+        },
+        "title": {
+          "label": "Title",
+          "description": "Leave empty to use the room name"
+        },
+        "blocks": {
+          "label": "Blocks",
+          "remove": "Remove block"
+        },
+        "roomDomains": {
+          "label": "Entity types in room blocks",
+          "description": "Leave empty to include every type"
+        },
+        "excludedEntityIds": {
+          "label": "Hidden entities",
+          "description": "Never shown inside room blocks",
+          "placeholder": "Search entities"
+        },
+        "showSummary": {
+          "label": "Show summary"
+        },
+        "readOnly": {
+          "label": "Read-only",
+          "description": "Show states without allowing anyone to control devices from this widget"
+        },
+        "controlSize": {
+          "label": "Control size",
+          "option": {
+            "auto": "Automatic",
+            "compact": "Compact",
+            "large": "Large"
+          }
+        },
+        "palette": {
+          "label": "Colors",
+          "option": {
+            "boring": "Boring",
+            "colorful": "Colorful"
+          }
+        }
+      },
+      "domain": {
+        "light": "Lights",
+        "switch": "Switches",
+        "fan": "Fans",
+        "climate": "Climate",
+        "humidifier": "Humidifiers",
+        "cover": "Covers",
+        "valve": "Valves",
+        "lock": "Locks",
+        "alarm_control_panel": "Alarm panels",
+        "media_player": "Media players",
+        "camera": "Cameras",
+        "vacuum": "Vacuums",
+        "scene": "Scenes",
+        "script": "Scripts",
+        "automation": "Automations",
+        "button": "Buttons",
+        "input_boolean": "Toggle helpers",
+        "input_select": "Dropdown helpers",
+        "person": "People",
+        "binary_sensor": "Binary sensors",
+        "sensor": "Sensors",
+        "weather": "Weather",
+        "sun": "Sun",
+        "update": "Updates"
+      },
+      "block": {
+        "add": {
+          "rooms": "Rooms",
+          "entity": "Entity",
+          "roomsLabel": "Rooms to add",
+          "roomsPlaceholder": "Search rooms or floors",
+          "entityLabel": "Entity to add",
+          "entityPlaceholder": "Search by name, entity ID, type or room",
+          "merge": "Merge selected rooms into one block",
+          "submit": "Add",
+          "duplicate": "This entity is already a block",
+          "covered": "Those rooms are already shown by another block"
+        },
+        "kind": {
+          "entity": "Entity",
+          "room": "Room",
+          "mergedRooms": "Merged rooms",
+          "unknown": "Unknown block"
+        },
+        "entityCount": "{count} entities",
+        "noArea": "No room",
+        "issue": {
+          "missing": "Not found",
+          "otherSource": "Other integration",
+          "empty": "Already shown above"
+        }
+      },
+      "preview": {
+        "empty": "Add rooms or entities to this widget",
+        "noMatches": "Nothing matches this filter",
+        "summary": {
+          "lights": "lights on",
+          "on": "on",
+          "off": "off",
+          "sensors": "sensors",
+          "offline": "offline"
+        },
+        "otherSource": "These blocks belong to another integration. Choose rooms from the selected integration."
+      },
+      "live": {
+        "loading": "Loading Home Assistant states",
+        "error": "Could not load Home Assistant states",
+        "retry": "Retry",
+        "actionFailed": "Could not control {name}",
+        "actionUnconfirmed": "{name} did not confirm the change",
+        "unconfirmed": "Not confirmed; showing latest Home Assistant state",
+        "selectionLimit": "This selection is too large. Select at most 200 individual entities, 50 rooms and 400 exclusions per widget.",
+        "unknownError": "Home Assistant did not accept the action"
+      },
+      "inline": {
+        "open": "Blocks ({count})",
+        "title": "Edit blocks",
+        "handle": "Drag to reorder",
+        "empty": "No blocks yet",
+        "add": "Add block",
+        "close": "Close block editor"
       }
     },
     "smartHome-executeAutomation": {
@@ -5475,13 +5831,31 @@
       "name": "System resources",
       "description": "CPU, Memory, Disk and other hardware usage of your system",
       "option": {
+        "diskDisplayMode": {
+          "label": "Disk capacity display",
+          "option": {
+            "percentage": "Percentage (e.g., 76%)",
+            "free": "Free space percentage (e.g., 24%)",
+            "absolute": "Absolute values (e.g., 1.5 TB / 2.0 TB)",
+            "combined": "Combined (e.g., 1.5 TB / 2.0 TB (76%))"
+          }
+        },
+        "resourceLayout": {
+          "label": "Resource Layout",
+          "description": "Arrange CPU, memory, disks and network groups in compact view. Expanded view uses an adaptive grid."
+        },
+        "subresourceLayout": {
+          "label": "Subresource Layout",
+          "description": "Arrange individual CPU cores, disks and network directions within each group. Grid wraps to fit; Horizontal keeps a scrollable row. Applies in both compact and expanded views."
+        },
         "hasShadow": {
           "label": "Enable chart shading"
         },
         "visibleCharts": {
           "label": "Visible charts",
-          "description": "Select the charts you want to be visible.",
+          "description": "Select the charts you want to be visible. CPU cores shows logical CPUs when available, otherwise overall CPU usage.",
           "option": {
+            "cpuCores": "CPU cores",
             "memory": "Memory",
             "network": "Network"
           }
@@ -6410,6 +6784,26 @@
         }
       }
     },
+    "tabs": {
+      "label": "Board tabs",
+      "indicator": "Tab {index} of {count}: {name}",
+      "home": "Home",
+      "untitled": "Tab {index}",
+      "add": "Add tab",
+      "actions": "Tab actions",
+      "rename": "Rename tab",
+      "namePlaceholder": "Tab name",
+      "moveLeft": "Move left",
+      "moveRight": "Move right",
+      "remove": {
+        "action": "Delete tab",
+        "confirm": "You sure?"
+      },
+      "limitReached": "A board can have up to {max} tabs",
+      "hotkeyHint": "Press {key} to open this tab",
+      "destination": "Tab: {name}",
+      "containerDestination": "{tab} / {container}"
+    },
     "landmark": {
       "canvas": "Dashboard canvas",
       "leftRail": "Left dashboard rail",
@@ -6583,7 +6977,7 @@
           "title": "Background"
         },
         "appearance": {
-          "title": "Appearance"
+          "title": "Board colors"
         },
         "customCss": {
           "title": "Custom css"
@@ -6676,6 +7070,11 @@
           "description": "The server administrator hasn't set a home board yet.",
           "link": "View public boards",
           "notice": "To make this page disappear, ask the server administrator to set a home board for the server"
+        },
+        "noAccess": {
+          "title": "No boards available",
+          "description": "You don’t have access to a board yet. Ask your administrator to share one with you or your group.",
+          "notice": "Once a board is shared with you, open Boards to choose it as your home board."
         }
       }
     }
@@ -6747,10 +7146,12 @@
             "documentation": "Documentation",
             "submitIssue": "Submit an issue",
             "discord": "Community Discord",
-            "sourceCode": "Source Code"
+            "sourceCode": "Source Code",
+            "changelog": "Changelog"
           }
         },
         "about": "About",
+        "updateAvailable": "Update available",
         "assistant": "Assistant"
       }
     },
@@ -6762,9 +7163,23 @@
           "authentication": "Authentication",
           "authorization": "Authorization"
         },
-        "heroBanner": {
-          "title": "Welcome back to your",
-          "subtitle": "{app} Board"
+        "hero": {
+          "greeting": "Welcome back,",
+          "greetingWithoutName": "Welcome back",
+          "description": "Everything you manage in {app}, in one place."
+        },
+        "lobster": {
+          "label": "Poke the lobster",
+          "prompt": "Poke me!",
+          "pokeCount": "{count, plural, one {# poke} other {# pokes}}",
+          "reaction": {
+            "hey": "Hey!",
+            "ow": "Ow!",
+            "snip": "Snip snip!",
+            "careful": "Careful, claws!",
+            "stillHere": "Still here.",
+            "okay": "Okay, okay!"
+          }
         }
       },
       "board": {
@@ -6809,7 +7224,9 @@
         },
         "noResults": {
           "title": "No boards yet",
-          "description": "Create a board to arrange your apps and widgets in one place."
+          "description": "Create a board to arrange your apps and widgets in one place.",
+          "noAccessTitle": "No boards available",
+          "noAccessDescription": "Ask your administrator to share a board with you or your group. Once shared, it will appear here."
         }
       },
       "media": {
@@ -6862,6 +7279,11 @@
                 "logoDisplay": {
                   "logo": "Logo only",
                   "logoAndText": "Logo + text"
+                },
+                "tabsDisplay": {
+                  "wide": "Wide",
+                  "compact": "Compact",
+                  "indicator": "Indicator only"
                 }
               },
               "items": {
@@ -6869,6 +7291,7 @@
                 "search": "Search",
                 "home": "Home board",
                 "boardSwitcher": "Boards",
+                "boardTabs": "Board tabs",
                 "assistant": "Assistant",
                 "docker": "Docker",
                 "boardEdit": "Edit board",
@@ -7100,10 +7523,14 @@
             "title": "Appearance",
             "defaultColorScheme": {
               "label": "Default color scheme"
+            },
+            "whatsNew": {
+              "label": "Show what's new after updates",
+              "description": "Shows administrators the release notes in a dialog the first time they open Homarr after an update"
             }
           },
           "branding": {
-            "title": "Instance branding",
+            "title": "Appearance",
             "groups": {
               "identity": "Identity",
               "appearance": "Appearance",
@@ -7682,7 +8109,8 @@
               "openSpotlightApps": "Open app search",
               "openSpotlightAssistant": "Open Assistant mode",
               "openSpotlightPreferences": "Open preferences mode",
-              "openAssistant": "Open Assistant"
+              "openAssistant": "Open Assistant",
+              "switchBoardTab": "Switch board tab (boards with tabs only)"
             },
             "note": "Tip: Mod refers to both Ctrl key and ⌘ key on macOS"
           }
@@ -7754,7 +8182,7 @@
       "refresh": {
         "lastUpdated": "Last refresh {when}"
       },
-      "search": "Seach {count} containers",
+      "search": "Search {count} containers",
       "selected": "{selectCount} of {totalCount} containers selected",
       "footer": "Total {count} containers",
       "totalCpu": "Total CPU: {cpu}%",
@@ -8852,6 +9280,12 @@
         "description": "Change your color scheme, language, home board, and preferences. You can also jump to the management area from here."
       }
     }
+  },
+  "whatsNew": {
+    "title": "What's new",
+    "empty": "Release notes are not available right now.",
+    "allReleases": "All releases on GitHub",
+    "dismiss": "Got it"
   },
   "metadata": {
     "description": "A self-hosted dashboard for the *arr stack and your entire homelab. Integrates with 50+ services, real-time widgets, no config files.",
