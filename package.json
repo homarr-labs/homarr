@@ -366,7 +366,7 @@
     "@assistant-ui/ai-sdk>@ai-sdk/react": "4.0.147",
     "@assistant-ui/ai-sdk>ai": "7.0.143",
     "@assistant-ui/ai-sdk>assistant-stream": "0.3.52",
-    "@assistant-ui/core": "0.3.33",
+    "@assistant-ui/core": "0.3.34",
     "@assistant-ui/store": "0.3.23",
     "@assistant-ui/tap": "0.9.25",
     "@babel/helpers@<7.26.10": "7.29.7",
