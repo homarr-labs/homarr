@@ -16,12 +16,15 @@ if (!node) {
 if (!node) node = "node";
 const port = process.env.PROTOTYPE_PORT ?? "3080";
 const children: ReturnType<typeof spawn>[] = [];
+let stopping = false;
 const run = (command: string, args: string[], env = process.env) => {
   const result = spawnSync(command, args, { cwd: root, env, encoding: "utf8" });
   if (result.status !== 0) throw new Error(result.stderr || result.stdout || `${command} failed`);
   return result.stdout.trim();
 };
 const cleanup = () => {
+  if (stopping) return;
+  stopping = true;
   for (const child of children) child.kill("SIGTERM");
   spawnSync("docker", ["rm", "-f", container], { stdio: "ignore" });
 };
@@ -91,8 +94,14 @@ for (const [args, cwd] of [
 ] as const) {
   const child = spawn(node, [...args], { cwd, env, stdio: "inherit" });
   children.push(child);
-  child.on("exit", (code) => {
-    if (code) process.exit(code);
+  child.on("exit", (code, signal) => {
+    if (stopping) return;
+    console.error(`Prototype service stopped (${signal ?? code}); stopping the comparison.`);
+    process.exit(code || 1);
+  });
+  child.on("error", (error) => {
+    console.error(error);
+    process.exit(1);
   });
 }
 console.log(
