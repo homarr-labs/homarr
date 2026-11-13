@@ -20,6 +20,7 @@ import {
 } from "@homarr/db/schema";
 import type {
   GroupPermissionKey,
+  IntegrationCredentialKind,
   IntegrationKindByCategory,
   IntegrationPermission,
   IntegrationSecretKind,
@@ -33,6 +34,7 @@ import {
   integrationSecretKindObject,
 } from "@homarr/definitions";
 import { createIntegrationAsync } from "@homarr/integrations/factory";
+import { FrameleafConnection, FrameleafDatabaseStore } from "@homarr/integrations/frameleaf";
 import type { IntegrationInstanceOfKind } from "@homarr/integrations/factory";
 import { invalidateIntegrationCacheAsync } from "@homarr/redis";
 import { mediaRequestListRequestHandler } from "@homarr/request-handler/media-request-list";
@@ -218,12 +220,17 @@ export const integrationRouter = createTRPCRouter({
         kind: integration.kind,
         url: integration.url,
         externalUrl: integration.externalUrl,
-        secrets: integration.secrets.map((secret) => ({
-          kind: secret.kind,
-          // Only return the value if the secret is public, so for example the username
-          value: integrationSecretKindObject[secret.kind].isPublic ? decryptSecret(secret.value) : null,
-          updatedAt: secret.updatedAt,
-        })),
+        secrets: integration.secrets
+          .filter(
+            (secret): secret is typeof secret & { kind: IntegrationCredentialKind } =>
+              secret.kind !== "frameleafConnection",
+          )
+          .map((secret) => ({
+            kind: secret.kind,
+            // Only return the value if the secret is public, so for example the username
+            value: integrationSecretKindObject[secret.kind].isPublic ? decryptSecret(secret.value) : null,
+            updatedAt: secret.updatedAt,
+          })),
         app: integration.app,
       };
     }),
@@ -251,6 +258,8 @@ export const integrationRouter = createTRPCRouter({
           message: "Permission denied",
         });
       }
+
+      if (input.kind === "frameleaf") throw new TRPCError({ code: "BAD_REQUEST" });
 
       const result = await testConnectionAsync({
         id: "new",
@@ -334,6 +343,15 @@ export const integrationRouter = createTRPCRouter({
       });
     }
 
+    if (integration.kind === "frameleaf") {
+      if (input.url !== integration.url || input.secrets.length > 0) throw new TRPCError({ code: "BAD_REQUEST" });
+      await ctx.db
+        .update(integrations)
+        .set({ name: input.name, externalUrl: input.externalUrl, appId: input.appId })
+        .where(eq(integrations.id, input.id));
+      return;
+    }
+
     const testResult = await testConnectionAsync(
       {
         id: input.id,
@@ -372,7 +390,7 @@ export const integrationRouter = createTRPCRouter({
       .where(eq(integrations.id, input.id));
 
     const changedSecrets = input.secrets.filter(
-      (secret): secret is { kind: IntegrationSecretKind; value: string } =>
+      (secret): secret is { kind: (typeof input.secrets)[number]["kind"]; value: string } =>
         secret.value !== null && // only update secrets that have a value
         !integration.secrets.find(
           // Checked above
@@ -444,6 +462,9 @@ export const integrationRouter = createTRPCRouter({
           message: "Integration not found",
         });
       }
+
+      if (integration.kind === "frameleaf")
+        await new FrameleafConnection(new FrameleafDatabaseStore(ctx.db, input.id)).disconnectAsync();
 
       await ctx.db.delete(integrations).where(eq(integrations.id, input.id));
 

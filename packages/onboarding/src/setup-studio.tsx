@@ -68,7 +68,7 @@ import { revalidatePathActionAsync } from "@homarr/common/client";
 import type {
   ColorScheme,
   IntegrationKind,
-  IntegrationSecretKind,
+  IntegrationCredentialKind,
   ThemeId,
   UrlTemplateMode,
   WidgetKind,
@@ -123,7 +123,7 @@ interface IntegrationDraft {
   urlOverridden: boolean;
   source: "manual" | "docker";
   secretOption: number;
-  secrets: { kind: IntegrationSecretKind; value: string }[];
+  secrets: { kind: IntegrationCredentialKind; value: string }[];
 }
 
 const isIntegrationDraftComplete = (draft: IntegrationDraft) =>
@@ -1394,7 +1394,7 @@ const IntegrationEditor = ({
   );
 };
 
-const formatSecretKind = (kind: IntegrationSecretKind) =>
+const formatSecretKind = (kind: IntegrationCredentialKind) =>
   kind.replace(/([A-Z])/g, " $1").replace(/^./, (letter) => letter.toUpperCase());
 
 const BoardBuilder = (props: StudioSectionProps) => {

@@ -1849,6 +1849,24 @@
     "llamacpp": {
       "name": "",
       "description": "Övervaka en lokal llama.cpp llama-server: hälso-, modell- och generationsmått"
+    },
+    "frameleaf": {
+      "help": "Välj vilka Frameleaf-album Homarr får läsa. Privata foton visas bara på privata tavlor för personer som uttryckligen har fått åtkomst.",
+      "connected": "Ansluten till Frameleaf",
+      "disconnected": "Inte ansluten",
+      "pending": "Anslutning pågår",
+      "reconnect": "Koppla från och anslut igen för att förnya åtkomsten.",
+      "origin": "Bibliotekets adress",
+      "originHelp": "Använd en adress som både Homarr-servern och webbläsaren kan nå.",
+      "clientId": "Klient-ID (valfritt)",
+      "clientIdHelp": "Lämna tomt för automatisk registrering eller ange det icke-hemliga klient-ID som bibliotekets administratör har gett dig.",
+      "callback": "OAuth-returadress",
+      "configuration": "Ställ in Homarrs BASE_URL på dess betrodda HTTPS-adress innan du ansluter.",
+      "registration": "Automatisk registrering var inte tillgänglig. Be bibliotekets administratör om ett klient-ID registrerat med returadressen som visas här.",
+      "busy": "En annan anslutningsåtgärd pågår. Vänta och försök igen.",
+      "failed": "Det gick inte att ansluta. Kontrollera adressen, certifikatets tillförlitlighet och behörigheterna och försök igen.",
+      "connect": "Anslut Frameleaf",
+      "disconnect": "Koppla från"
     }
   },
   "media": {
@@ -6617,6 +6635,29 @@
         },
         "showRuleId": {
           "label": "Visa regel-ID"
+        }
+      }
+    },
+    "frameleaf-albumCarousel": {
+      "name": "Frameleaf-album",
+      "description": "Privata foton från ett valt Frameleaf-album",
+      "chooseAlbum": "Spara widgeten på en privat tavla och välj ett tillåtet album.",
+      "loading": "Läser in Frameleaf…",
+      "count": "Foton i detta album: {count}",
+      "imageAlt": "Foto från Frameleaf",
+      "empty": "Albumet har inga tillgängliga foton.",
+      "previous": "Föregående",
+      "next": "Nästa",
+      "play": "Starta",
+      "pause": "Pausa",
+      "openLibrary": "Öppna biblioteket",
+      "privateOnly": "Logga in på en privat tavla där du uttryckligen har fått visningsåtkomst. Offentliga tavlor kan inte visa dessa foton.",
+      "unavailable": "Frameleaf är inte tillgängligt. Kontrollera anslutningen; widgeten försöker igen.",
+      "rateLimit": "Frameleaf begränsar förfrågningarna. Widgeten väntar innan den försöker igen.",
+      "option": {
+        "albumId": {
+          "label": "Album",
+          "description": "Välj ett album som har godkänts via Frameleaf Connect. Foton är aldrig tillgängliga på offentliga tavlor."
         }
       }
     }

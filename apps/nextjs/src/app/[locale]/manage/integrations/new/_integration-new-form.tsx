@@ -43,6 +43,8 @@ import { useI18n } from "@homarr/translation/client";
 import { Link } from "@homarr/ui";
 import { integrationCreateSchema } from "@homarr/validation/integration";
 
+import { FrameleafConnectionForm } from "../_components/frameleaf/frameleaf-connection-form";
+
 import { IntegrationSecretInput } from "../_components/secrets/integration-secret-inputs";
 import { SecretKindsSegmentedControl } from "../_components/secrets/integration-secret-segmented-control";
 import { IntegrationTestConnectionError } from "../_components/test-connection/integration-test-connection-error";
@@ -69,7 +71,14 @@ const formSchema = integrationCreateSchema.omit({ kind: true, app: true, externa
   }),
 );
 
-export const NewIntegrationForm = ({
+export const NewIntegrationForm = (props: NewIntegrationFormProps) =>
+  props.kind === "frameleaf" ? (
+    <FrameleafConnectionForm initialName={props.initialName} initialUrl={props.initialUrl} />
+  ) : (
+    <StandardNewIntegrationForm {...props} />
+  );
+
+const StandardNewIntegrationForm = ({
   kind,
   initialUrl,
   initialName,

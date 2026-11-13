@@ -1,17 +1,17 @@
 import { useCallback } from "react";
 import { SegmentedControl } from "@mantine/core";
 
-import type { IntegrationSecretKind } from "@homarr/definitions";
+import type { IntegrationCredentialKind } from "@homarr/definitions";
 import type { UseFormReturnType } from "@homarr/form";
 import { useI18n } from "@homarr/translation/client";
 
 interface FormType {
-  secrets: { kind: IntegrationSecretKind; value: string | null }[];
+  secrets: { kind: IntegrationCredentialKind; value: string | null }[];
 }
 
 interface SecretKindsSegmentedControlProps<TFormType extends FormType> {
-  defaultKinds?: IntegrationSecretKind[];
-  secretKinds: IntegrationSecretKind[][];
+  defaultKinds?: IntegrationCredentialKind[];
+  secretKinds: IntegrationCredentialKind[][];
   form: UseFormReturnType<TFormType, TFormType>;
 }
 
@@ -40,7 +40,7 @@ export const SecretKindsSegmentedControl = <TFormType extends FormType>({
         return;
       }
 
-      const kinds = value.split("-") as IntegrationSecretKind[];
+      const kinds = value.split("-") as IntegrationCredentialKind[];
       const secrets = kinds.map((kind) => ({
         kind,
         value: "",

@@ -26,15 +26,18 @@ describe("widget integration config", () => {
     }
   });
 
-  test("supports the mock integration for every integration-backed widget", () => {
-    for (const config of Object.values(widgetIntegrationConfigs)) {
-      expect(config.supportedIntegrations).toContain("mock");
+  test("reserves private Frameleaf photos for their native provider and supports other widget demos", () => {
+    for (const [kind, config] of Object.entries(widgetIntegrationConfigs)) {
+      if (kind === "frameleaf-albumCarousel") expect(config.supportedIntegrations).toEqual(["frameleaf"]);
+      else expect(config.supportedIntegrations).toContain("mock");
     }
   });
 
   test("derives optional connections and server selection limits", () => {
     expect(widgetKindsWithOptionalIntegrations).toEqual(new Set(["calendar", "releases"]));
     expect(widgetIntegrationLimits).toEqual({
+      "frameleaf-albumCarousel": 1,
+      "smartHome-controls": 1,
       "smartHome-entityState": 1,
       "smartHome-executeAutomation": 1,
       mediaTranscoding: 1,

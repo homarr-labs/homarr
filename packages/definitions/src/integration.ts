@@ -9,6 +9,7 @@ type IntegrationDocumentationSlug = IntegrationDocumentationPath extends `/docs/
   : never;
 
 export const integrationSecretKindObject = {
+  frameleafConnection: { isPublic: false, multiline: false },
   apiKey: { isPublic: false, multiline: false },
   username: { isPublic: true, multiline: false },
   password: { isPublic: false, multiline: false },
@@ -34,7 +35,9 @@ export const integrationSecretKindObject = {
 const isIntegrationSecretKind = (value: string): value is IntegrationSecretKind =>
   Object.hasOwn(integrationSecretKindObject, value);
 
-export const integrationSecretKinds = Object.keys(integrationSecretKindObject).filter(isIntegrationSecretKind);
+export const integrationSecretKinds = Object.keys(integrationSecretKindObject)
+  .filter(isIntegrationSecretKind)
+  .filter((kind) => kind !== "frameleafConnection");
 
 interface IntegrationFeatureMetadata {
   docker?: {
@@ -50,9 +53,9 @@ interface IntegrationFeatureMetadata {
 interface IntegrationDefinition {
   name: string;
   iconUrl: string;
-  secretKinds: readonly [readonly IntegrationSecretKind[], ...(readonly IntegrationSecretKind[])[]];
+  secretKinds: readonly [readonly IntegrationCredentialKind[], ...(readonly IntegrationCredentialKind[])[]];
   /** Secrets that can be added to any of the secret kind alternatives but are never required. */
-  optionalSecretKinds?: readonly IntegrationSecretKind[];
+  optionalSecretKinds?: readonly IntegrationCredentialKind[];
   category: readonly [IntegrationCategory, ...IntegrationCategory[]];
   documentationSlug: IntegrationDocumentationSlug | null;
   features?: IntegrationFeatureMetadata;
@@ -80,6 +83,15 @@ export type IntegrationHttpBodyAuth =
   | { type: "jsonArrayPrefix"; name: string; value: string };
 
 export const integrationDefs = {
+  frameleaf: {
+    httpAuth: { type: "adapter" },
+    name: "Frameleaf",
+    secretKinds: [[]],
+    iconUrl: "/images/integrations/frameleaf.svg",
+    category: ["miscellaneous"],
+    documentationSlug: "frameleaf",
+    features: { onboarding: { hidden: true } },
+  },
   autobrr: {
     httpAuth: { type: "apiKeyQuery", name: "apikey" },
     name: "Autobrr",
@@ -1084,16 +1096,16 @@ export const getIconUrl = (integration: IntegrationKind) => integrationDefs[inte
 
 export const getIntegrationName = (integration: IntegrationKind) => integrationDefs[integration].name;
 
-export const getDefaultSecretKinds = (integration: IntegrationKind): IntegrationSecretKind[] => [
+export const getDefaultSecretKinds = (integration: IntegrationKind): IntegrationCredentialKind[] => [
   ...integrationDefs[integration].secretKinds[0],
 ];
 
-export const getAllSecretKindOptions = (integration: IntegrationKind): AtLeastOneOf<IntegrationSecretKind[]> => {
+export const getAllSecretKindOptions = (integration: IntegrationKind): AtLeastOneOf<IntegrationCredentialKind[]> => {
   const [first, ...rest] = integrationDefs[integration].secretKinds;
   return [[...first], ...rest.map((secretKinds) => [...secretKinds])];
 };
 
-export const getOptionalSecretKinds = (integration: IntegrationKind): IntegrationSecretKind[] => {
+export const getOptionalSecretKinds = (integration: IntegrationKind): IntegrationCredentialKind[] => {
   const definition: IntegrationDefinition = integrationDefs[integration];
   return [...(definition.optionalSecretKinds ?? [])];
 };
@@ -1176,6 +1188,8 @@ export type IntegrationKindByCategory<TCategory extends IntegrationCategory> = {
   IntegrationKind;
 
 export type IntegrationSecretKind = keyof typeof integrationSecretKindObject;
+/** Credential fields users may configure; OAuth connection state is server-owned. */
+export type IntegrationCredentialKind = Exclude<IntegrationSecretKind, "frameleafConnection">;
 export type IntegrationKind = keyof typeof integrationDefs;
 
 export const integrationCategories = [
@@ -1222,6 +1236,7 @@ export type IntegrationCategory = (typeof integrationCategories)[number];
 
 /** These integrations have no arbitrary HTTP API that can reuse their saved connection. */
 export const integrationHttpUnavailableReasons = {
+  frameleaf: "Frameleaf connections are restricted to private photo widgets",
   ical: "iCalendar feeds use a saved calendar URL, not an arbitrary service API",
   truenas: "TrueNAS uses a WebSocket API; generic integration requests support HTTP only",
 } as const satisfies Partial<Record<IntegrationKind, string>>;

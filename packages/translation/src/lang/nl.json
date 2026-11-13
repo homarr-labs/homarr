@@ -1849,6 +1849,24 @@
     "llamacpp": {
       "name": "",
       "description": "Volg een lokale llama.cpp llama-server: gezondheid, model en generatie metrieken"
+    },
+    "frameleaf": {
+      "help": "Kies welke Frameleaf-albums Homarr mag lezen. Privéfoto’s zijn alleen beschikbaar op privéborden voor kijkers die uitdrukkelijk toegang hebben gekregen.",
+      "connected": "Verbonden met Frameleaf",
+      "disconnected": "Niet verbonden",
+      "pending": "Verbinding wordt gemaakt",
+      "reconnect": "Verbreek de verbinding en maak opnieuw verbinding om de toegang te vernieuwen.",
+      "origin": "Bibliotheekadres",
+      "originHelp": "Gebruik één adres dat bereikbaar is voor zowel de Homarr-server als je browser.",
+      "clientId": "Client-ID (optioneel)",
+      "clientIdHelp": "Laat leeg voor automatische registratie of voer de niet-geheime client-ID van je bibliotheekbeheerder in.",
+      "callback": "OAuth-callbackadres",
+      "configuration": "Stel BASE_URL van Homarr vóór het verbinden in op het vertrouwde HTTPS-adres.",
+      "registration": "Automatische registratie was niet beschikbaar. Vraag je bibliotheekbeheerder om een client-ID die is geregistreerd met het hier getoonde callbackadres.",
+      "busy": "Er is een andere verbindingsactie bezig. Wacht en probeer het opnieuw.",
+      "failed": "Verbinding mislukt. Controleer het adres, het certificaatvertrouwen en de rechten en probeer het opnieuw.",
+      "connect": "Frameleaf verbinden",
+      "disconnect": "Verbinding verbreken"
     }
   },
   "media": {
@@ -6617,6 +6635,29 @@
         },
         "showRuleId": {
           "label": "Toon regel-ID"
+        }
+      }
+    },
+    "frameleaf-albumCarousel": {
+      "name": "Frameleaf-album",
+      "description": "Privéfoto’s uit een gekozen Frameleaf-album",
+      "chooseAlbum": "Sla deze widget op een privébord op en kies een toegestaan album.",
+      "loading": "Frameleaf laden…",
+      "count": "Foto’s in dit album: {count}",
+      "imageAlt": "Foto uit Frameleaf",
+      "empty": "Dit album bevat geen beschikbare foto’s.",
+      "previous": "Vorige",
+      "next": "Volgende",
+      "play": "Afspelen",
+      "pause": "Pauzeren",
+      "openLibrary": "Bibliotheek openen",
+      "privateOnly": "Meld je aan bij een privébord waarvoor je uitdrukkelijk kijkrechten hebt. Openbare borden kunnen deze foto’s niet tonen.",
+      "unavailable": "Frameleaf is niet beschikbaar. Controleer de verbinding; de widget probeert het opnieuw.",
+      "rateLimit": "Frameleaf beperkt het aantal verzoeken. De widget wacht voordat hij het opnieuw probeert.",
+      "option": {
+        "albumId": {
+          "label": "Album",
+          "description": "Kies een album dat via Frameleaf Connect is toegestaan. Foto’s zijn nooit beschikbaar op openbare borden."
         }
       }
     }

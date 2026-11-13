@@ -158,6 +158,27 @@ export class ImageProxy {
     }
   }
 
+  /** Private media never enters the public URL registry or a shared cache. Authorization is rechecked after transfer. */
+  public async forwardPrivateImageAsync(input: {
+    authorizeAsync: () => Promise<void>;
+    fetchAsync: (signal: AbortSignal) => Promise<Response>;
+    signal: AbortSignal;
+  }): Promise<ForwardImageResult> {
+    const signal = AbortSignal.any([input.signal, AbortSignal.timeout(35000)]);
+    await input.authorizeAsync();
+    const response = await input.fetchAsync(signal);
+    if (!response.ok || response.headers.get("content-type")?.split(";")[0]?.trim() !== "image/jpeg") {
+      await response.body?.cancel();
+      return { error: "fetch-error" };
+    }
+    const bytes = await readBoundedResponseAsync(response, 5 * 1024 * 1024, "Private image", signal);
+    if (!bytes || bytes.length < 3 || bytes[0] !== 0xff || bytes[1] !== 0xd8 || bytes[2] !== 0xff)
+      return { error: "fetch-error" };
+    await input.authorizeAsync();
+    signal.throwIfAborted();
+    return { image: bytes.buffer, contentType: "image/jpeg" };
+  }
+
   private createImageUrl(id: string): string {
     return `/api/image-proxy/${id}`;
   }

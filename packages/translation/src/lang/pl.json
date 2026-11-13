@@ -1849,6 +1849,24 @@
     "llamacpp": {
       "name": "llama.cpp",
       "description": "Monitoruj lokalny serwer llama.cpp: zdrowie, model i wskaźniki generowania"
+    },
+    "frameleaf": {
+      "help": "Wybierz albumy Frameleaf, które Homarr może odczytywać. Prywatne zdjęcia są dostępne tylko na prywatnych tablicach dla osób z wyraźnie przyznanym dostępem.",
+      "connected": "Połączono z Frameleaf",
+      "disconnected": "Brak połączenia",
+      "pending": "Trwa łączenie",
+      "reconnect": "Rozłącz i połącz ponownie, aby odnowić dostęp.",
+      "origin": "Adres biblioteki",
+      "originHelp": "Użyj jednego adresu dostępnego zarówno dla serwera Homarr, jak i przeglądarki.",
+      "clientId": "Identyfikator klienta (opcjonalnie)",
+      "clientIdHelp": "Pozostaw puste, aby użyć automatycznej rejestracji, lub wpisz niepoufny identyfikator klienta otrzymany od administratora biblioteki.",
+      "callback": "Adres zwrotny OAuth",
+      "configuration": "Przed połączeniem ustaw BASE_URL Homarr na zaufany adres HTTPS.",
+      "registration": "Automatyczna rejestracja była niedostępna. Poproś administratora biblioteki o identyfikator klienta zarejestrowany z widocznym tutaj adresem zwrotnym.",
+      "busy": "Trwa inna operacja połączenia. Poczekaj i spróbuj ponownie.",
+      "failed": "Nie udało się połączyć. Sprawdź adres, zaufanie do certyfikatu i uprawnienia, a następnie spróbuj ponownie.",
+      "connect": "Połącz Frameleaf",
+      "disconnect": "Rozłącz"
     }
   },
   "media": {
@@ -6617,6 +6635,29 @@
         },
         "showRuleId": {
           "label": "Pokaż ID reguły"
+        }
+      }
+    },
+    "frameleaf-albumCarousel": {
+      "name": "Album Frameleaf",
+      "description": "Prywatne zdjęcia z wybranego albumu Frameleaf",
+      "chooseAlbum": "Zapisz ten widżet na prywatnej tablicy i wybierz dozwolony album.",
+      "loading": "Ładowanie Frameleaf…",
+      "count": "Zdjęcia w tym albumie: {count}",
+      "imageAlt": "Zdjęcie z Frameleaf",
+      "empty": "Ten album nie zawiera dostępnych zdjęć.",
+      "previous": "Poprzednie",
+      "next": "Następne",
+      "play": "Uruchom",
+      "pause": "Wstrzymaj",
+      "openLibrary": "Otwórz bibliotekę",
+      "privateOnly": "Zaloguj się do prywatnej tablicy, do której masz wyraźnie przyznany dostęp. Publiczne tablice nie mogą wyświetlać tych zdjęć.",
+      "unavailable": "Frameleaf jest niedostępne. Sprawdź połączenie; widżet spróbuje ponownie.",
+      "rateLimit": "Frameleaf ogranicza liczbę żądań. Widżet zaczeka przed ponowną próbą.",
+      "option": {
+        "albumId": {
+          "label": "Album",
+          "description": "Wybierz album udostępniony przez Frameleaf Connect. Zdjęcia nigdy nie są dostępne na publicznych tablicach."
         }
       }
     }

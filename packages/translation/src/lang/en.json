@@ -1849,6 +1849,24 @@
     "llamacpp": {
       "name": "llama.cpp",
       "description": "Monitor a local llama.cpp llama-server: health, model and generation metrics"
+    },
+    "frameleaf": {
+      "help": "Choose the Frameleaf albums Homarr can read. Private photos are available only on private boards to their explicitly permitted viewers.",
+      "connected": "Connected to Frameleaf",
+      "disconnected": "Not connected",
+      "pending": "Connection in progress",
+      "reconnect": "Disconnect, then connect again to renew access.",
+      "origin": "Library address",
+      "originHelp": "Use one address reachable by both the Homarr server and your browser.",
+      "clientId": "Client ID (optional)",
+      "clientIdHelp": "Leave blank for automatic registration, or enter the non-secret client ID provided by your Library administrator.",
+      "callback": "OAuth callback",
+      "configuration": "Set Homarr’s BASE_URL to its trusted HTTPS address before connecting.",
+      "registration": "Automatic registration was unavailable. Ask your Library administrator for a client ID registered with the callback shown here.",
+      "busy": "Another connection operation is in progress. Wait and try again.",
+      "failed": "Could not connect. Check the address, certificate trust and access, then try again.",
+      "connect": "Connect Frameleaf",
+      "disconnect": "Disconnect"
     }
   },
   "media": {
@@ -6617,6 +6635,29 @@
         },
         "showRuleId": {
           "label": "Show rule ID"
+        }
+      }
+    },
+    "frameleaf-albumCarousel": {
+      "name": "Frameleaf album",
+      "description": "Private photos from a selected Frameleaf album",
+      "chooseAlbum": "Save this widget on a private board and choose an authorized album.",
+      "loading": "Loading Frameleaf…",
+      "count": "Photos in this album: {count}",
+      "imageAlt": "Photo from Frameleaf",
+      "empty": "This album has no available photos.",
+      "previous": "Previous",
+      "next": "Next",
+      "play": "Play",
+      "pause": "Pause",
+      "openLibrary": "Open Library",
+      "privateOnly": "Sign in to a private board where you have explicit viewer access. Public boards cannot show these photos.",
+      "unavailable": "Frameleaf is unavailable. Check the connection; this widget will retry.",
+      "rateLimit": "Frameleaf is limiting requests. This widget will wait before retrying.",
+      "option": {
+        "albumId": {
+          "label": "Album",
+          "description": "Choose an album authorized through Frameleaf Connect. Photos are never available on public boards."
         }
       }
     }

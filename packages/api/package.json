@@ -9,6 +9,7 @@
   "exports": {
     ".": "./src/index.ts",
     "./client": "./src/client.ts",
+    "./frameleaf": "./src/frameleaf/index.ts",
     "./board-server": "./src/board-server.ts",
     "./query-cache": "./src/query-cache.ts",
     "./server-settings-server": "./src/server-settings-server.ts",

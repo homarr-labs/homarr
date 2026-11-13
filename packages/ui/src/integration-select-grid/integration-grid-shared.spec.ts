@@ -5,11 +5,13 @@ import { integrationKinds } from "@homarr/definitions";
 import { buildSortedIntegrations } from "./integration-grid-shared";
 
 describe("buildSortedIntegrations", () => {
-  it("keeps every real integration available during onboarding", () => {
+  it("keeps credential integrations in onboarding and reserves Frameleaf OAuth for signed-in setup", () => {
     const kinds = buildSortedIntegrations({ onboarding: true }).map((integration) => integration.kind);
 
-    expect(kinds).toHaveLength(integrationKinds.filter((kind) => kind !== "mock").length);
+    expect(kinds).toHaveLength(integrationKinds.filter((kind) => kind !== "mock" && kind !== "frameleaf").length);
     expect(kinds).not.toContain("mock");
+    expect(kinds).not.toContain("frameleaf");
+    expect(buildSortedIntegrations().map((integration) => integration.kind)).toContain("frameleaf");
   });
 
   it("limits the grid to the allowed integration kinds", () => {

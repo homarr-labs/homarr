@@ -4,15 +4,43 @@ import { httpIntegrationKinds, integrationDefs, integrationKinds } from "@homarr
 import { widgetIntegrationConfigs } from "@homarr/definitions";
 import { getIntegrationHttpAuthenticationAsync } from "@homarr/integrations/factory";
 import { getStatsMetrics } from "@homarr/integrations/stats";
+import { integrationCreateSchema, integrationUpdateSchema } from "@homarr/validation/integration";
 
 describe("reusable HTTP integration authentication", () => {
   test("every integration declares an authentication contract", () => {
     for (const kind of integrationKinds) expect(integrationDefs[kind].httpAuth).toBeDefined();
   });
 
-  test("only iCalendar feeds and TrueNAS are excluded from generic HTTP sources", () => {
+  test("private Frameleaf connections, iCalendar feeds and TrueNAS are excluded from generic HTTP sources", () => {
     const available = new Set<string>(httpIntegrationKinds);
-    expect(integrationKinds.filter((kind) => !available.has(kind))).toEqual(["ical", "truenas"]);
+    expect(integrationKinds.filter((kind) => !available.has(kind))).toEqual(["frameleaf", "ical", "truenas"]);
+  });
+
+  test("Frameleaf never supplies OAuth credentials to generic HTTP consumers", async () => {
+    await expect(
+      getIntegrationHttpAuthenticationAsync({
+        id: "frameleaf",
+        kind: "frameleaf",
+        name: "Frameleaf",
+        url: "https://library.example.test",
+        externalUrl: null,
+        decryptedSecrets: [{ kind: "frameleafConnection", value: "private-state" }],
+      }),
+    ).rejects.toThrow();
+  });
+
+  test("generic credential inputs cannot insert or alter server-owned OAuth state", () => {
+    const input = {
+      id: "test",
+      name: "Test",
+      kind: "frameleaf",
+      url: "https://library.example.test",
+      appId: null,
+      attemptSearchEngineCreation: false,
+      secrets: [{ kind: "frameleafConnection", value: "injected-state" }],
+    };
+    expect(integrationCreateSchema.safeParse(input).success).toBe(false);
+    expect(integrationUpdateSchema.safeParse(input).success).toBe(false);
   });
 
   test("iCalendar feeds remain available to Calendar but not Stats", () => {

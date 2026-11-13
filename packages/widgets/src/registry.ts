@@ -1,3 +1,4 @@
+import type * as frameleaf from "./frameleaf";
 import type * as stats from "./stats";
 import type { IntegrationKind, WidgetKind } from "@homarr/definitions";
 
@@ -71,6 +72,7 @@ import type * as llamacpp from "./llama-cpp";
 // Keep these imports explicit so Next.js and Turbopack can discover every widget
 // module without loading any widget definition or component eagerly.
 export const widgetModuleLoaders = {
+  "frameleaf-albumCarousel": () => import("./frameleaf"),
   clock: () => import("./clock"),
   airQuality: () => import("./air-quality"),
   countdown: () => import("./countdown"),
@@ -141,6 +143,7 @@ export const widgetModuleLoaders = {
 } satisfies { [TKind in WidgetKind]: () => Promise<WidgetImports[TKind]> };
 
 export type WidgetImports = {
+  "frameleaf-albumCarousel": typeof frameleaf;
   clock: typeof clock;
   airQuality: typeof airQuality;
   countdown: typeof countdown;
@@ -218,6 +221,7 @@ type WidgetComponentLoaders = {
 // manifest starts both chunk requests together on a cold widget load; resolving
 // this loader through the widget module would serialize those requests.
 export const widgetComponentLoaders = {
+  "frameleaf-albumCarousel": () => import("./frameleaf/component"),
   clock: () => import("./clock/component"),
   airQuality: () => import("./air-quality/component"),
   countdown: () => import("./countdown/component"),

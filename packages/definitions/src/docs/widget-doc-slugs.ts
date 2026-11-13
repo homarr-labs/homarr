@@ -1,6 +1,7 @@
 import type { WidgetKind } from "../widget";
 
 export const widgetDocSlugs = {
+  "frameleaf-albumCarousel": "frameleaf-album",
   stats: "stats",
   clock: "clock",
   weather: "weather",
