@@ -138,8 +138,8 @@ export class TransmissionIntegration extends Integration implements IDownloadCli
       arguments: { torrents: { labels: string[] }[] };
     }>("torrent-get", { fields: ["labels"] });
     if (response?.result !== "success") throw new Error("Unable to load Transmission labels");
-    return [...new Set(response.arguments.torrents.flatMap((torrent) => torrent.labels))].toSorted(
-      (first, second) => first.localeCompare(second),
+    return [...new Set(response.arguments.torrents.flatMap((torrent) => torrent.labels))].toSorted((first, second) =>
+      first.localeCompare(second),
     );
   }
 
