@@ -10,6 +10,19 @@ import { createWidgetRequestHandler } from "./lib/widget-request-handler";
 
 const logger = createLogger({ module: "rssFeedsRequestHandler" });
 
+const extractDescriptionText = (value: unknown): string | undefined => {
+  if (typeof value === "string") {
+    return value;
+  }
+  if (typeof value === "object" && value !== null && "#text" in value) {
+    const text = (value as Record<string, unknown>)["#text"];
+    if (typeof text === "string") {
+      return text;
+    }
+  }
+  return undefined;
+};
+
 export const rssFeedsRequestHandler = createWidgetRequestHandler({
   // Authorized editors can supply arbitrary URLs, so keep this cache process-local and bounded.
   async requestAsync(input: { url: string; count: number; descriptionMaxLength: number }, signal) {
@@ -41,12 +54,10 @@ export const rssFeedsRequestHandler = createWidgetRequestHandler({
               ? (mediaGroup as Record<string, unknown>)["media:description"]
               : undefined;
           const directMediaDescription = (feedEntry as Record<string, unknown>)["media:description"];
-          let rawDescription = mediaDescription;
-          if (typeof rawDescription !== "string" || rawDescription.trim().length === 0) {
-            rawDescription = directMediaDescription;
-          }
+          const rawDescription =
+            extractDescriptionText(mediaDescription) ?? extractDescriptionText(directMediaDescription);
 
-          if (typeof rawDescription === "string" && rawDescription.trim().length > 0) {
+          if (rawDescription && rawDescription.trim().length > 0) {
             extraFields.mediaDescription = rawDescription.trim().slice(0, input.descriptionMaxLength);
           }
 

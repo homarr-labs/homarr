@@ -83,7 +83,7 @@ describe("rssFeedsRequestHandler", () => {
     });
 
     const handler = rssFeedsRequestHandler.handler({
-      url: "https://example.com/feed.xml",
+      url: "https://example.com/standard-feed.xml",
       count: 5,
       descriptionMaxLength: 250,
     });
@@ -95,5 +95,43 @@ describe("rssFeedsRequestHandler", () => {
     expect(firstEntry?.published).toBe("2026-10-15T12:00:00.000Z");
     expect(firstEntry?.description).toBe("Default description");
     expect(firstEntry?.enclosure).toBeUndefined();
+  });
+
+  it("extracts text from attributed media descriptions", async () => {
+    mockExtract.mockImplementation(async (_url, options) => {
+      const rawEntry = {
+        title: "Attributed Video",
+        link: "https://example.com/video",
+        published: "2026-11-05T10:00:00Z",
+        "media:group": {
+          "media:description": { "#text": "Attributed description text.", "@_type": "plain" },
+        },
+      };
+
+      const extraFields = options?.getExtraEntryFields?.(rawEntry) ?? {};
+
+      return {
+        title: "Test Feed",
+        link: "https://example.com",
+        entries: [
+          {
+            title: rawEntry.title,
+            link: rawEntry.link,
+            published: rawEntry.published,
+            description: "",
+            ...extraFields,
+          },
+        ],
+      } as never;
+    });
+
+    const handler = rssFeedsRequestHandler.handler({
+      url: "https://example.com/attributed-feed.xml",
+      count: 5,
+      descriptionMaxLength: 250,
+    });
+
+    const { data } = await handler.getDataAsync();
+    expect(data.entries?.[0]?.description).toBe("Attributed description text.");
   });
 });
