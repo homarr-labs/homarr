@@ -82,6 +82,12 @@ export const seedDemoShowcaseAsync = async (db: Database, boardName = "demo-prot
     const name = boardName;
     const exists = await db.query.boards.findFirst({ where: (row) => eq(row.name, name) });
     if (exists) continue;
+    for (const tab of proposal.tabs) {
+      for (const widget of tab.widgets) {
+        replace(widget.options ?? {});
+        for (const id of widget.integrationIds ?? []) replace(id);
+      }
+    }
     const boardId = createId();
     await db.insert(boards).values({ id: boardId, name, creatorId: demo.id, ...proposal.board, opacity: 100 });
     const layoutId = createId();

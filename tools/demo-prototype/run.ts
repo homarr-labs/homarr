@@ -29,8 +29,11 @@ const cleanup = () => {
   for (const child of children) {
     if (!child.pid) continue;
     try {
-      if (process.platform === "win32") child.kill("SIGKILL");
-      else process.kill(-child.pid, "SIGKILL");
+      if (process.platform === "win32") {
+        spawnSync("taskkill", ["/pid", String(child.pid), "/T", "/F"], { stdio: "ignore" });
+      } else {
+        process.kill(-child.pid, "SIGKILL");
+      }
     } catch {
       // The child may already have exited before its sibling triggered cleanup.
     }

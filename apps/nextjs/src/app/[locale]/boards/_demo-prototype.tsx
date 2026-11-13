@@ -41,7 +41,6 @@ export const DemoPrototypeHost = ({
     if (!candidate || searchParams.get("variant") === candidate.proposal.key) return;
     const params = new URLSearchParams(searchParams);
     params.set("variant", candidate.proposal.key);
-    params.delete("tab");
     router.replace(`${pathname}?${params}`, { scroll: false });
   }, [candidate, pathname, router, searchParams]);
   return (
