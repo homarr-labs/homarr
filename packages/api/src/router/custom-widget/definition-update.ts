@@ -25,7 +25,7 @@ type StoredDefinitionState = Pick<
   | "enabled"
   | "creatorId"
   | "updatedAt"
->;
+> & { workshop?: string | null };
 type StoredSecretState = Pick<CustomWidgetSecret, "sourceId" | "kind" | "encryptedValue" | "updatedAt">;
 
 export function getCustomWidgetDefinitionStateFingerprint(
@@ -45,6 +45,7 @@ export function getCustomWidgetDefinitionStateFingerprint(
       enabled: definition.enabled,
       creatorId: definition.creatorId,
       updatedAt: definition.updatedAt.getTime(),
+      workshop: definition.workshop,
     },
     secrets: secrets
       .map((secret) => ({
@@ -65,10 +66,16 @@ export async function updateCustomWidgetDefinition(
     definition: HomarrCustomWidgetV2;
     secrets?: CustomWidgetCreateInput["secrets"];
     expectedStateFingerprint?: string;
+    workshop?: string;
+    updatedAt?: Date;
   },
 ) {
-  const updatedAt = new Date();
-  const definitionChanges = { ...serializeCustomWidgetDefinition(input.definition), updatedAt };
+  const updatedAt = input.updatedAt ?? new Date();
+  const definitionChanges = {
+    ...serializeCustomWidgetDefinition(input.definition),
+    updatedAt,
+    workshop: input.workshop,
+  };
   const secretRows = input.secrets?.map((secret) => ({
     definitionId: input.id,
     sourceId: secret.sourceId,

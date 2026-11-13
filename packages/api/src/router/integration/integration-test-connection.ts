@@ -8,7 +8,7 @@ import { createIntegrationAsync } from "@homarr/integrations/factory";
 
 const logger = createLogger({ module: "integrationTestConnection" });
 
-type FormIntegration = Omit<Integration, "appId"> & {
+type FormIntegration = Omit<Integration, "appId" | "externalUrl"> & {
   secrets: {
     kind: IntegrationSecretKind;
     value: string | null;

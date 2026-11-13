@@ -12,7 +12,7 @@
 
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   gap: rem(10px);
   width: 100%;
   height: 100%;
@@ -281,6 +281,10 @@
 
 .root[data-layout="compact"] .list {
   gap: rem(4px);
+}
+
+.list[data-grouped="false"] {
+  gap: rem(1px);
 }
 
 .body[data-split] .list {
@@ -851,11 +855,12 @@
   color: var(--releases-warn-text);
 }
 
-.floatingActions {
-  position: absolute;
-  top: rem(2px);
-  right: rem(2px);
-  z-index: 1;
+.listActions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: rem(6px);
+  flex: none;
 }
 
 @keyframes rise {

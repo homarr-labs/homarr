@@ -1,0 +1,21 @@
+.list {
+  flex-wrap: nowrap;
+  min-width: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.list::-webkit-scrollbar {
+  display: none;
+}
+
+.tab {
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+@media (hover: none) {
+  .hint {
+    display: none;
+  }
+}

@@ -121,7 +121,7 @@ export const CustomWidgetRowActions = ({ widget, onConfigureSources }: CustomWid
       const data = await utils.customWidget.export.fetch({ id: widget.id });
       downloadJson(data, `${widget.name}.json`);
     } catch {
-      showErrorNotification({ title: t("action.export"), message: t("notification.exportError") });
+      showErrorNotification({ title: tCommon("action.export"), message: t("notification.exportError") });
     }
   };
 
@@ -198,7 +198,7 @@ export const CustomWidgetRowActions = ({ widget, onConfigureSources }: CustomWid
     <>
       <Menu withinPortal position="bottom-end" shadow="md">
         <Menu.Target>
-          <ActionIcon variant="subtle" color="gray" aria-label={t("action.menu")}>
+          <ActionIcon variant="subtle" color="gray" aria-label={tCommon("field.actions")}>
             <IconDots {...iconProps} />
           </ActionIcon>
         </Menu.Target>
@@ -224,7 +224,7 @@ export const CustomWidgetRowActions = ({ widget, onConfigureSources }: CustomWid
                 {t("action.duplicate")}
               </Menu.Item>
               <Menu.Item onClick={() => void handleExport()} leftSection={<IconDownload {...iconProps} />}>
-                {t("action.export")}
+                {tCommon("action.export")}
               </Menu.Item>
               <Menu.Item
                 component={Link}

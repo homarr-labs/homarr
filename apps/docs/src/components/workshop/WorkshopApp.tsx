@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo, useState } from "react";
+import React, { lazy, Suspense, useMemo, useState } from "react";
 import {
   IconAlertCircle,
   IconBrandCss3,
@@ -37,13 +37,14 @@ import { Switch } from "@/components/ui/switch";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { cn } from "@/lib/utils";
 
-import { SubmitForm } from "./SubmitForm";
 import { WorkshopAccountMenu } from "./WorkshopAccountMenu";
 import { WorkshopIntegrationBadges } from "./WorkshopIntegrationBadges";
 import { WorkshopVoteControl } from "./WorkshopVoteControl";
 import { formatRelativeTime } from "./format";
 import type { SortKey, TypeFilter } from "./useWorkshop";
 import { useWorkshop } from "./useWorkshop";
+
+const SubmitForm = lazy(() => import("./SubmitForm").then((module) => ({ default: module.SubmitForm })));
 
 const typeDotColors: Record<SubmissionType, string> = { customCss: "bg-blue-500", customWidget: "bg-yellow-500" };
 const typeLabels: Record<SubmissionType, string> = { customCss: "CSS", customWidget: "Widget" };
@@ -334,12 +335,20 @@ export const WorkshopApp = ({ workshopUrl }: { workshopUrl: string }) => {
       </div>
 
       {showSubmit && (
-        <SubmitForm
-          onClose={() => setShowSubmit(false)}
-          onSubmit={async (input) => {
-            if (await workshop.submit(input)) setShowSubmit(false);
-          }}
-        />
+        <Suspense
+          fallback={
+            <output className="fixed bottom-4 right-4 z-50 rounded-lg border bg-card p-4 text-sm shadow-lg">
+              Loading submission form…
+            </output>
+          }
+        >
+          <SubmitForm
+            onClose={() => setShowSubmit(false)}
+            onSubmit={async (input) => {
+              if (await workshop.submit(input)) setShowSubmit(false);
+            }}
+          />
+        </Suspense>
       )}
     </div>
   );

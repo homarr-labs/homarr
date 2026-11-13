@@ -95,7 +95,7 @@ const ActiveModal = ({ modal, state, handleCloseModal }: ActiveModalProps) => {
     setTimeout(() => setOpened(true), 0);
   }, []);
 
-  const { defaultTitle: _ignored, presentation, ...otherModalProps } = modal.reference.modalProps;
+  const { defaultTitle: _ignored, presentation, styles: customStyles, ...otherModalProps } = modal.reference.modalProps;
   const presentationClassNames = getModalPresentationClassNames(presentation, {
     inner: presentationClasses.inspectorInner,
     content: presentationClasses.inspectorContent,
@@ -115,14 +115,23 @@ const ActiveModal = ({ modal, state, handleCloseModal }: ActiveModalProps) => {
       style={{
         userSelect: modal.id === state.current?.id ? undefined : "none",
       }}
-      styles={{
-        title: {
-          fontSize: "1.25rem",
-          fontWeight: 500,
-        },
-        inner: {
-          display: modal.id === state.current?.id ? undefined : "none",
-        },
+      styles={(theme, props, stylesContext) => {
+        let resolvedStyles = customStyles;
+        if (typeof resolvedStyles === "function") {
+          resolvedStyles = resolvedStyles(theme, props, stylesContext);
+        }
+        return {
+          ...resolvedStyles,
+          title: {
+            ...resolvedStyles?.title,
+            fontSize: "1.25rem",
+            fontWeight: 500,
+          },
+          inner: {
+            ...resolvedStyles?.inner,
+            display: modal.id === state.current?.id ? resolvedStyles?.inner?.display : "none",
+          },
+        };
       }}
       trapFocus={modal.id === state.current?.id}
       classNames={presentationClassNames}

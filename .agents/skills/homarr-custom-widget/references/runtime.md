@@ -1,57 +1,50 @@
 # Runtime
 
-Loads read `data.requestId`/`status.requestId` with RefreshButton `requestId` (never `request`); omit it to refresh all loads.
-Installation config is `options.name`;
-temporary controls use `inputs.name`. Manual SubFetch results stay in its child callback, never data/status.
-Status is `{ loading, ok, status, statusText, error }`; test `status.requestId?.ok === false` for errors.
+Load q with body B gives `data.q === B`; `q=events`/`B={"events":[...]}` gives `data.events.events`.
+Keep sibling states independent, guard optional arrays/nesting, and handle loading/error/empty/success.
+Status is `{ loading, ok, status, statusText, error }`; `status.q?.ok === false` means error.
+One RefreshButton per load stays outside its branches; `requestId`, never `request`. Omit it to refresh all loads.
 
-`bind` is temporary; manual request values go in `params` and map to `$param`:
+Options are installation config (`options.name`). Temporary controls use literal `bind`, defaults and `inputs.name`:
 
 ```jsx
-<TextInput bind="search" label="Search" />
-<NumberInput bind="page" label="Page" defaultValue={1} resetKey={inputs.search} min={1} />
-<SubFetch requestId="search" trigger="manual" params={{ query: inputs.search ?? "", page: inputs.page ?? 1 }}>
-  {(result) => <Stack>{(result.results ?? []).map(item => <Text key={item.id}>{item.name}</Text>)}</Stack>}
-</SubFetch>
+<Stack>
+  <TextInput bind="search" label="Search" defaultValue="" />
+  <NumberInput bind="page" label="Page" defaultValue={1} resetKey={inputs.search} min={1} />
+  <SubFetch requestId="search" trigger="manual" params={{ query: inputs.search ?? "", page: inputs.page ?? 1 }}>
+    {(result) => (
+      <Stack>
+        {(result.results ?? []).map((item) => (
+          <Text key={item.id}>{item.name}</Text>
+        ))}
+      </Stack>
+    )}
+  </SubFetch>
+</Stack>
 ```
 
-Manual queries require `trigger: "manual"` on request and SubFetch. `triggerContent` plus `triggerAriaLabel` makes a launcher
-already wrapped in a button: use non-interactive content, never Button/Anchor/controls. SubFetch owns loading/error/retry;
-its child receives success plus `{ ok, status, statusText, loading: false }`. Never author onClick/fetch callbacks.
+Manual queries set trigger manual on request and SubFetch. Their body stays local to the child `(result, meta)`, never global
+data/status. SubFetch owns loading/error/retry; meta has ok/status/statusText/loading=false. When ID, params or definition
+changes, the previous result hides until triggered again. RefreshButton inside success reruns captured params.
+SubFetch/ActionButton/ToggleSwitch require literal requestId. triggerContent/triggerAriaLabel is already a button: use
+non-interactive content. Actions run explicitly, publish local data/status until reload, and retain confirmation/permissions/invalidates.
 
-`SubFetch`, `ActionButton`, and `ToggleSwitch` need literal `requestId`; validation rejects missing/computed IDs.
+Params match exactly the request's $param/{param:name}: string/number/boolean, never undefined/null.
+Fixed values belong in query/body. Omitted optional values need verified request variants; empty strings need API support.
+Validate nonblank optional inputs, show field errors and block invalid requests. Every control changes a request/selection.
+Switch/Checkbox use defaultChecked; dependent pagination uses defaultValue={1}/resetKey={inputs.query}.
 
-`ActionButton`/`ToggleSwitch` publish responses to local data.requestId/status.requestId only after explicit invocation.
-Guard the initial state; responses are not persisted across reloads and actions never run automatically.
+Safe Date: toISOString/toLocaleString/toLocaleDateString/toLocaleTimeString/getTime/now. Guard timestamps; pass
+Date.toLocaleString(value, "en-US", documentedTimezone), otherwise omit timezone argument/label. UTC requires a UTC contract.
+Countdown milliseconds: Date.getTime(isoTimestamp) - Date.now(). No constructors, Date.parse or Intl.
+Numbers support `n.toLocaleString("en-US", { maximumFractionDigits: 1, notation: "compact" })`, percent/currency/unit/signDisplay.
+Guard scalar types and finite numbers, preserve 0/false, and use — for missing values. Convert numbers before relabeling units.
+Map cross-collection IDs to verified names or retain IDs. Follow documented rate semantics.
 
-SubFetch/ActionButton params must contain exactly the names referenced by $param or {param:name}, with valid primitive values,
-never undefined/null. Omitted optional query fields need separate verified request variants; empty strings require API support.
-Validate nonblank optional inputs against documented formats; show field-level feedback and block requests while invalid.
-Never silently omit or forward invalid values.
-Fixed query values belong in requests.<id>.query, not params. Test the same names/values the JSX supplies.
-When a manual SubFetch ID, params, or definition changes, Homarr hides the prior result and returns to the trigger; new params fetch only after triggering again.
-
-Load `q` with response body `B` -> `data.q === B`; `q=events`/`B={"events":[...]}` -> `data.events.events`.
-Manual SubFetch receives B as result. Preserve envelopes; compare paths with preview and revise/retest before persistence.
-
-Safe timestamps: `Date.toLocaleString(value, "en-US", documentedTimezone)`; omit the timezone argument/label if unknown.
-UTC needs a documented UTC contract. Also: Date.toISOString/toLocaleDateString/toLocaleTimeString. Countdowns:
-`Date.getTime(isoTimestamp) - Date.now()` in milliseconds; no new Date, Date.parse, or invented formatters.
-Numbers: `n.toLocaleString("en-US", { maximumFractionDigits: 1, notation: "compact" })`;
-style percent/currency/unit (with currency/unit) and signDisplay also work. Preserve units or convert numbers before relabeling.
-
-Guard actual scalar values/types/finite numbers before arithmetic/formatting, not object truthiness. Keep 0/false; empty/missing values show —/No data, never NaN/undefined units. Map cross-collection IDs to verified friendly names or original IDs. Use documented rate semantics (ratio/percent/per-time).
-
-Keep useful data reachable: summaries plus Table/details, working filters, pagination, or a bounded ScrollArea for collections.
-Cover requested fields and meaningful observed facts; never silently slice rows. Label partial results and shown/total counts.
-Use only verified pagination params/endpoints. Charts need real numeric/category/time series, never invented history/series.
-A bounded response-shape summary is not a full schema: inspect omitted
-fields when needed, preserve envelopes, and guard heterogeneous items. Keep loading/error/empty/success and narrow/wide states useful.
+Keep requested fields/collections reachable through summaries, tables/details, filters or pagination; never silently slice rows.
+Label partial results/totals and verify pagination. Bounded response observations are not full schemas.
 
 Verified Mantine 9.6.0: LineChart/AreaChart/BarChart require positive h, data: row[], dataKey: category/time key, series: [{name: actual numeric row key, color: MantineColor}]. Sparkline requires positive h and data: number[]. Use real fields/series; no invented history/formatter callbacks. Other props stay lazy.
 
-Switch/Checkbox defaults use defaultChecked. Dependent pagination uses `defaultValue={1}`/`resetKey={inputs.query}`.
-
-Callback parameters must not shadow the reserved roots `data`, `status`, `options`, or `inputs`. Never invent components such as `<IconFoo />`.
-
-Use expression callbacks for supported collections and trusted slots; regex is limited to safe string operations.
+Use registered names, Icon/TablerIcon with installed kebab-case names, concise expression callbacks and bounded regex.
+Callback parameters cannot shadow data/status/options/inputs. Never invent IconFoo components or raw browser callbacks.

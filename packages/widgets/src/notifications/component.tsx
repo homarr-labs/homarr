@@ -109,7 +109,7 @@ export default function NotificationsWidget({
                 <Card
                   key={notification.compositeKey}
                   className={isAdvanced ? (columns > 1 ? classes.card : classes.row) : undefined}
-                  radius={board.itemRadius}
+                  radius={board.itemRadius ?? undefined}
                   w="100%"
                   p={isDense ? 6 : "sm"}
                   style={{
@@ -123,7 +123,7 @@ export default function NotificationsWidget({
                         src={notification.source.iconUrl}
                         alt={notification.source.name}
                         size={isDense ? "xs" : "sm"}
-                        radius={board.itemRadius}
+                        radius={board.itemRadius ?? undefined}
                       />
                     )}
 

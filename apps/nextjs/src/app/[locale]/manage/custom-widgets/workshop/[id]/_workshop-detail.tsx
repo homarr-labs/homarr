@@ -1,13 +1,10 @@
 "use client";
 
-import { SourceSetupPanel } from "~/components/custom-widgets/integration-source-select";
 import { useRouter } from "next/navigation";
-import { useMemo } from "react";
 import {
   Accordion,
   Alert,
   Badge,
-  Box,
   Button,
   Card,
   Group,
@@ -21,22 +18,20 @@ import {
 import { useDisclosure } from "@mantine/hooks";
 import { IconAlertTriangle, IconArrowLeft, IconDownload, IconExternalLink, IconFlag } from "@tabler/icons-react";
 
-import { CUSTOM_WIDGET_SCHEMA, getCustomWidgetIntegrationKinds } from "@homarr/custom-widgets/core";
-import type { HomarrCustomWidgetV2 } from "@homarr/custom-widgets/core";
-import { ImportReviewContent } from "@homarr/custom-widgets/workbench";
+import { getCustomWidgetIntegrationKinds } from "@homarr/custom-widgets/core";
 import { useI18n } from "@homarr/translation/client";
 import { Link } from "@homarr/ui";
 import { useWorkshopReportSummariesQuery, useWorkshopSubmissionQuery } from "@homarr/workshop/backend";
 import type { WorkshopSubmissionDetail } from "@homarr/workshop/schema";
-import { validateWorkshopWidget, workshopExportFilename } from "@homarr/workshop/schema";
+import { workshopExportFilename } from "@homarr/workshop/schema";
 
-import { useCustomWidgetImport } from "~/components/custom-widgets/use-custom-widget-import";
 import { ManagePageLayout } from "~/components/manage/manage-page-layout";
 import { ManageStickyFooter } from "~/components/manage/manage-sticky-footer";
 import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
 import { WorkshopCodeViewer } from "~/components/workshop/workshop-code-viewer";
 import { WorkshopIntegrationBadges } from "~/components/workshop/workshop-integration-badges";
 import { getWorkshopWebUrl } from "~/components/workshop/workshop-client";
+import { WorkshopInstallReview, useWorkshopWidgetImport } from "~/components/workshop/workshop-install-review";
 import { WorkshopReportForm } from "~/components/workshop/workshop-report-form";
 import { WorkshopScreenshots } from "~/components/workshop/workshop-screenshots";
 import { useWorkshopSession } from "~/components/workshop/workshop-session";
@@ -47,6 +42,7 @@ const installedHref = "/manage/custom-widgets";
 
 export function WorkshopDetail({ id }: { id: string }) {
   const t = useI18n("workshop");
+  const tCommon = useI18n("common");
   const router = useRouter();
   const session = useWorkshopSession();
   const [reportOpened, reportControls] = useDisclosure(false);
@@ -54,21 +50,9 @@ export function WorkshopDetail({ id }: { id: string }) {
   const detail = useWorkshopSubmissionQuery(session.client, id);
   const reportSummaries = useWorkshopReportSummariesQuery(session.client, detail.data?.reportCount ? id : "");
 
-  const content = detail.data?.content;
-  const validation = useMemo(() => (content ? validateWorkshopWidget(content) : null), [content]);
-  const widget = useMemo<HomarrCustomWidgetV2 | null>(
-    () => (validation?.success && typeof validation.data !== "string" ? validation.data : null),
-    [validation],
-  );
-  const compatible =
-    detail.data?.type === "customWidget" && widget !== null && detail.data.widgetSchema === CUSTOM_WIDGET_SCHEMA;
-
-  const importer = useCustomWidgetImport({
-    widget: compatible ? widget : null,
-    // Straight back to the installed list: the edit form is heavy to load and the
-    // widget is usable as-is once its sources are configured here.
-    onImported: () => router.push(installedHref),
-  });
+  const importer = useWorkshopWidgetImport(detail.data, () => router.push(installedHref));
+  const { validation } = importer;
+  const compatible = validation?.success === true;
 
   const breadcrumb = (
     <DynamicBreadcrumb dynamicMappings={detail.data ? new Map([[id, detail.data.title]]) : undefined} />
@@ -104,6 +88,7 @@ export function WorkshopDetail({ id }: { id: string }) {
   }
 
   const submission = detail.data;
+  const widget = validation?.success ? validation.data : null;
   let integrationKinds = submission.integrationKinds;
   if (integrationKinds.length === 0 && widget) integrationKinds = getCustomWidgetIntegrationKinds(widget.sources);
 
@@ -152,7 +137,7 @@ export function WorkshopDetail({ id }: { id: string }) {
               {t("reportWarning", { count: submission.reportCount })}
             </Alert>
             {reportSummaries.data?.map((summary) => (
-              <Card key={summary.id} withBorder radius="md" p="sm">
+              <Card key={summary.id} radius="md" p="sm">
                 <Badge color="red" variant="light" mb="xs">
                   {t(`reportCategory.${summary.category}`)}
                 </Badge>
@@ -186,23 +171,8 @@ export function WorkshopDetail({ id }: { id: string }) {
         />
 
         {compatible && importer.review && (
-          <Paper withBorder radius="md" p="md">
-            <Stack gap="md">
-              <Box>
-                <Text fw={600}>{t("installReviewTitle")}</Text>
-                <Text size="sm" c="dimmed">
-                  {t("securityNotice")}
-                </Text>
-              </Box>
-              <ImportReviewContent review={importer.review} messages={importer.reviewMessages}>
-                <SourceSetupPanel
-                  setups={importer.setups}
-                  values={importer.values}
-                  onChange={importer.setValue}
-                  messages={importer.setupMessages}
-                />
-              </ImportReviewContent>
-            </Stack>
+          <Paper radius="md" p="md">
+            <WorkshopInstallReview importer={importer} />
           </Paper>
         )}
 
@@ -241,7 +211,7 @@ export function WorkshopDetail({ id }: { id: string }) {
                 leftSection={<IconDownload size={16} />}
                 onClick={() => downloadSubmission(submission)}
               >
-                {t("export")}
+                {tCommon("action.export")}
               </Button>
               {/* Wrapped: a tooltip on the disabled button itself would never fire. */}
               <Tooltip label={session.user ? t("report") : t("signInHint")}>

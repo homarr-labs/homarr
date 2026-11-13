@@ -26,7 +26,7 @@ import {
   dashboardSupportingQueryPolicies,
   isTrpcForbiddenError,
   isWidgetDataQueryKey,
-  queryCacheDefaultGcTimeMs,
+  getQueryCacheGcTime,
   queryCacheDefaultRefetchIntervalMs,
   queryCacheDefaultStaleTimeMs,
 } from "@homarr/api/query-cache";
@@ -131,7 +131,7 @@ const ScopedTRPCReactProvider = ({ children, demoReadOnly }: PropsWithChildren<{
       defaultOptions: {
         queries: {
           staleTime: queryCacheDefaultStaleTimeMs,
-          gcTime: queryCacheDefaultGcTimeMs,
+          gcTime: getQueryCacheGcTime(),
           retry: createQueryRetry(env.NODE_ENV === "development" ? 1 : 3),
         },
         mutations: {
@@ -186,9 +186,15 @@ const ScopedTRPCReactProvider = ({ children, demoReadOnly }: PropsWithChildren<{
   const trpcClient = useMemo(() => {
     return clientApi.createClient({
       links: [
-        loggerLink({
-          enabled: (opts) => opts.direction === "down" && opts.result instanceof Error,
-        }),
+        (runtime) => {
+          const log = loggerLink<AppRouter>({
+            enabled: (opts) => opts.direction === "down" && opts.result instanceof Error,
+          })(runtime);
+          return (options) => {
+            if (options.op.path === "widget.smartHome.executeProtectedAction") return options.next(options.op);
+            return log(options);
+          };
+        },
         splitLink({
           condition: ({ type }) => type === "subscription",
           true: splitLink({
@@ -225,11 +231,22 @@ const ScopedTRPCReactProvider = ({ children, demoReadOnly }: PropsWithChildren<{
                 url: getTrpcUrl(),
                 headers: createHeadersCallbackForSource("nextjs-react (form-data)"),
               }),
-              false: httpBatchStreamLink({
-                transformer: superjson,
-                url: getTrpcUrl(),
-                maxURLLength: 2083,
-                headers: createHeadersCallbackForSource("nextjs-react (json)"),
+              false: splitLink({
+                // Release batches can exceed the URL limit even as a single operation.
+                condition: ({ path }) => path === "widget.releases.getLatest",
+                true: httpBatchStreamLink({
+                  transformer: superjson,
+                  url: getTrpcUrl(),
+                  methodOverride: "POST",
+                  maxURLLength: 2083,
+                  headers: createHeadersCallbackForSource("nextjs-react (json)"),
+                }),
+                false: httpBatchStreamLink({
+                  transformer: superjson,
+                  url: getTrpcUrl(),
+                  maxURLLength: 2083,
+                  headers: createHeadersCallbackForSource("nextjs-react (json)"),
+                }),
               }),
             }),
           }),

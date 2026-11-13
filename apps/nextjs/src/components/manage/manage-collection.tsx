@@ -49,7 +49,7 @@ export const ManageCollectionItem = ({
   actions,
   actionsAlignment = "flex-start",
 }: ManageCollectionItemProps) => (
-  <Paper component="li" p="sm" withBorder radius="md">
+  <Paper component="li" p="sm" radius="md">
     <Group justify="space-between" align="flex-start" wrap="nowrap" gap="sm">
       {leading && <Box style={{ flexShrink: 0 }}>{leading}</Box>}
       <Stack gap={4} flex={1} miw={0}>

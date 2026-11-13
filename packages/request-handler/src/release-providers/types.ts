@@ -5,6 +5,7 @@ export interface ReleasesRepositoryRequest extends Record<string, unknown> {
   provider: ReleaseProviderKind;
   identifier: string;
   versionRegex?: string;
+  excludePrereleases?: boolean;
   providerUrl?: string;
   token?: string;
 }
@@ -47,9 +48,11 @@ export interface ReleaseError {
 export type ReleaseResponse = { success: true; data: ReleaseData } | { success: false; error: ReleaseError };
 
 export interface ReleaseLookup {
+  tag?: string;
   baseUrl: string;
   identifier: string;
   versionPattern?: RegExp;
+  excludePrereleases?: boolean;
   token?: string;
 }
 

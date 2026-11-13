@@ -63,7 +63,6 @@ export function CustomWidgetGeneralSection({
   formRevision: string;
   mode: "create" | "edit";
 }) {
-  const t = useI18n("customWidget");
   const tCommon = useI18n("common");
   const w = useI18n("customWidget.workbench");
   const [suggestedIconSearch, setSuggestedIconSearch] = useState(() => form.getValues().name);
@@ -84,7 +83,7 @@ export function CustomWidgetGeneralSection({
       />
       <Textarea
         key={form.key("description")}
-        label={t("field.description")}
+        label={tCommon("field.description")}
         autosize
         minRows={2}
         {...form.getInputProps("description")}

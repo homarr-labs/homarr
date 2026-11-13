@@ -108,7 +108,7 @@ export function WorkshopPublishForm({ widget, initialDefinition }: WorkshopPubli
   if (publishedSubmissionId) {
     return (
       <ManagePageLayout title={t("publish.successTitle")} breadcrumb={breadcrumb}>
-        <Paper withBorder radius="md" p="xl">
+        <Paper radius="md" p="xl">
           <Stack align="center" gap="lg">
             <ThemeIcon size={64} radius="xl" color="green" variant="light">
               <IconCheck size={32} stroke={2} />
@@ -162,7 +162,7 @@ export function WorkshopPublishForm({ widget, initialDefinition }: WorkshopPubli
       primaryAction={<WorkshopAccountButton session={session} />}
     >
       <Stack gap="md">
-        <Paper withBorder radius="md" p="md" bg="var(--mantine-color-default-hover)">
+        <Paper radius="md" p="md" bg="var(--mantine-color-default-hover)">
           <Group wrap="nowrap" align="flex-start">
             <ThemeIcon variant="light" radius="md" size="lg">
               <IconBuildingStore size={20} />
@@ -178,7 +178,7 @@ export function WorkshopPublishForm({ widget, initialDefinition }: WorkshopPubli
 
         {!session.user && <Alert color="blue">{t("publish.signInHint")}</Alert>}
 
-        <Paper withBorder radius="md" p="md">
+        <Paper radius="md" p="md">
           <Stack gap="md">
             <Box>
               <Text fw={600} size="sm">
@@ -189,7 +189,7 @@ export function WorkshopPublishForm({ widget, initialDefinition }: WorkshopPubli
               </Text>
             </Box>
             <TextInput
-              label={t("publish.titleField")}
+              label={tCommon("field.title")}
               value={title}
               onChange={(event) => setTitle(event.currentTarget.value)}
               minLength={3}
@@ -197,7 +197,7 @@ export function WorkshopPublishForm({ widget, initialDefinition }: WorkshopPubli
               required
             />
             <Textarea
-              label={t("publish.descriptionField")}
+              label={tCommon("field.description")}
               value={description}
               onChange={(event) => setDescription(event.currentTarget.value)}
               maxLength={2_000}

@@ -124,7 +124,7 @@ function CustomWidgetPreviewPanelContent(props: PreviewPanelProps) {
           : { title: "", description: "" };
 
   return (
-    <Card withBorder p="md">
+    <Card p="md">
       <Stack gap="md">
         <Group gap="xs" justify="space-between">
           <CustomWidgetPreviewSizeControl value={props.size} onChange={props.onSizeChange} />

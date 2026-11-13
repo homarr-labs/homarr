@@ -98,7 +98,7 @@ jobs:
   validate:
     if: |
       (github.event_name != 'release' || !github.event.release.prerelease) &&
-      (github.event_name != 'workflow_dispatch' || github.ref_name == 'main' || github.ref_name == 'dev')
+      (github.event_name != 'workflow_dispatch' || (startsWith(github.ref, 'refs/heads/') && (github.ref_name == 'main' || github.ref_name == 'dev')))
     runs-on: ubuntu-26.04
     timeout-minutes: 5
     outputs:
@@ -106,7 +106,7 @@ jobs:
       tags: ${{ steps.image.outputs.tags }}
       publish: ${{ !env.ACT && (github.event_name != 'pull_request' || (github.event.pull_request.head.repo.full_name == github.repository && !github.event.pull_request.draft)) }}
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         if: "!env.ACT"
         with:
           persist-credentials: false
@@ -144,14 +144,15 @@ jobs:
     runs-on: ${{ matrix.runner }}
     timeout-minutes: 30
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         if: "!env.ACT"
         with:
           persist-credentials: false
           ref: ${{ needs.validate.outputs.sha }}
-      - uses: actions/setup-node@v7
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
-          node-version: 24.22.1
+          node-version: 24.22.2
+          package-manager-cache: false
       - name: Set up Docker Buildx
         if: "!env.ACT"
         uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4.4.1
@@ -197,16 +198,17 @@ jobs:
     outputs:
       digest: ${{ steps.build.outputs.digest }}
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         if: "!env.ACT"
         with:
           persist-credentials: false
           ref: ${{ needs.validate.outputs.sha }}
-      - uses: actions/setup-node@v7
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
-          node-version: 24.22.1
+          node-version: 24.22.2
+          package-manager-cache: false
       - uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4.4.1
-      - uses: docker/login-action@81c6f93d4bc991e510b342a00b419b3bb4efc5c6 # v4.7.0
+      - uses: docker/login-action@8aa5831fb8d48d8f76594c7ddde61ae58019f550 # v4.8.0
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
@@ -243,16 +245,17 @@ jobs:
     outputs:
       digest: ${{ steps.build.outputs.digest }}
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         if: "!env.ACT"
         with:
           persist-credentials: false
           ref: ${{ needs.validate.outputs.sha }}
-      - uses: actions/setup-node@v7
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
-          node-version: 24.22.1
+          node-version: 24.22.2
+          package-manager-cache: false
       - uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4.4.1
-      - uses: docker/login-action@81c6f93d4bc991e510b342a00b419b3bb4efc5c6 # v4.7.0
+      - uses: docker/login-action@8aa5831fb8d48d8f76594c7ddde61ae58019f550 # v4.8.0
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
@@ -284,6 +287,7 @@ jobs:
     runs-on: ubuntu-26.04
     timeout-minutes: 5
     permissions:
+      actions: read
       contents: read
       packages: write
       pull-requests: write
@@ -291,34 +295,75 @@ jobs:
       WORKSHOP_IMAGE: ghcr.io/homarr-labs/workshop
     steps:
       - uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4.4.1
-      - uses: docker/login-action@81c6f93d4bc991e510b342a00b419b3bb4efc5c6 # v4.7.0
+      - uses: docker/login-action@8aa5831fb8d48d8f76594c7ddde61ae58019f550 # v4.8.0
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Verify source before publication
-        uses: actions/github-script@v9
+        id: source
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
         env:
           EXPECTED_SHA: ${{ needs.validate.outputs.sha }}
           EXPECTED_PR_HEAD: ${{ github.event.pull_request.head.sha }}
         with:
           script: |
+            const publish = () => core.setOutput("publish", "true");
+            const skip = (reason) => {
+              core.notice(`${reason} Skipping publication.`);
+              core.setOutput("publish", "false");
+            };
             if (context.eventName === "pull_request") {
               const { data: pull } = await github.rest.pulls.get({
                 ...context.repo, pull_number: context.payload.pull_request.number,
               });
               if (pull.state !== "open" || pull.draft || pull.head.sha !== process.env.EXPECTED_PR_HEAD) {
-                core.setFailed("PR closed, became a draft, or changed while building; refusing stale publication.");
+                return skip("PR closed, became a draft, or changed while building.");
               }
-              return;
+              return publish();
             }
-            let branchName = context.ref.replace("refs/heads/", "");
-            if (context.eventName === "release") branchName = "main";
+            const expected = process.env.EXPECTED_SHA;
+            const branchName = context.eventName === "release" ? "main" : context.ref.replace("refs/heads/", "");
             const { data: branch } = await github.rest.repos.getBranch({ ...context.repo, branch: branchName });
-            if (branch.commit.sha !== process.env.EXPECTED_SHA) {
-              core.setFailed("Branch changed while building; refusing stale publication.");
+            if (branch.commit.sha === expected) return publish();
+            if (branchName !== "dev") {
+              return core.setFailed(`${branchName} changed while building; refusing stale publication.`);
             }
+            const { data: comparison } = await github.rest.repos.compareCommitsWithBasehead({
+              ...context.repo, basehead: `${expected}...${branch.commit.sha}`,
+            });
+            if (comparison.status !== "ahead") {
+              return core.setFailed(`${branchName} was rewritten while building; refusing stale publication.`);
+            }
+            const files = comparison.files;
+            if (!files || files.length >= 300) return skip("Unable to verify every changed Workshop input.");
+            const inputFiles = new Set([
+              ".github/workflows/workshop.yml", ".dockerignore", "tooling/github/docker-build.sh",
+              "package.json", "bun.lock", "bunfig.toml", "turbo.json",
+            ]);
+            const inputDirectories = [
+              "apps/workshop/", "apps/docs/", "tools/motion-reel/three/", "tooling/typescript/", "patches/",
+              "packages/common/", "packages/core/", "packages/custom-widgets/", "packages/definitions/",
+              "packages/db/", "packages/server-settings/", "packages/settings/", "packages/translation/",
+              "packages/ui/", "packages/validation/", "packages/workshop/",
+            ];
+            const isWorkshopInput = (path) => {
+              if (path === "packages/db/migrations/seed.ts") return false;
+              if (path.startsWith("packages/") && (/\.(?:spec|test)\.tsx?$|\.md$/.test(path) || path.includes("/__tests__/"))) return false;
+              return inputFiles.has(path) || inputDirectories.some((directory) => path.startsWith(directory));
+            };
+            if (files.some((file) => isWorkshopInput(file.filename) || (file.previous_filename && isWorkshopInput(file.previous_filename)))) {
+              return skip(`${branchName} has newer Workshop inputs; only the newer build may publish.`);
+            }
+            const { data: runs } = await github.rest.actions.listWorkflowRuns({
+              ...context.repo, workflow_id: "workshop.yml", branch: branchName, per_page: 20,
+            });
+            const newerRun = runs.workflow_runs.find((run) => run.event !== "pull_request" && run.run_number > context.runNumber);
+            if (newerRun) return skip(`Workshop run #${newerRun.run_number} on ${branchName} publishes the newer commits.`);
+            core.notice(`${branchName} moved to ${branch.commit.sha.slice(0, 7)} without changing Workshop inputs; publishing this build.`);
+            return publish();
       - name: Publish multi-platform image
+        if: steps.source.outputs.publish == 'true'
         env:
           AMD64_DIGEST: ${{ needs.publish-amd64.outputs.digest }}
           ARM64_DIGEST: ${{ needs.publish-arm64.outputs.digest }}
@@ -330,6 +375,7 @@ jobs:
             "${WORKSHOP_IMAGE}@${AMD64_DIGEST}" \
             "${WORKSHOP_IMAGE}@${ARM64_DIGEST}"
       - name: Verify every published tag
+        if: steps.source.outputs.publish == 'true'
         env:
           IMAGE_TAGS: ${{ needs.validate.outputs.tags }}
         run: |
@@ -347,8 +393,8 @@ jobs:
           done
 
       - name: Comment with preview image
-        if: github.event_name == 'pull_request' && !env.ACT
-        uses: actions/github-script@v9
+        if: github.event_name == 'pull_request' && !env.ACT && steps.source.outputs.publish == 'true'
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
         with:
           script: |
             const marker = "<!-- workshop-preview-image -->";
