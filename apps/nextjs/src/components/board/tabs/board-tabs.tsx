@@ -15,7 +15,7 @@ import {
   useComputedColorScheme,
   useMantineTheme,
 } from "@mantine/core";
-import { useHotkeys } from "@mantine/hooks";
+import { useHotkeys, useMergedRef, useResizeObserver } from "@mantine/hooks";
 import type { HotkeyItem } from "@mantine/hooks";
 import { IconArrowLeft, IconArrowRight, IconDotsVertical, IconHome, IconPencil, IconPlus } from "@tabler/icons-react";
 
@@ -66,6 +66,8 @@ export const BoardTabBar = ({
   const [isEditMode] = useEditMode();
   const [renamingTabId, setRenamingTabId] = useState<string | null>(null);
   const listRef = useRef<HTMLDivElement>(null);
+  const [resizeRef, { width: listWidth }] = useResizeObserver<HTMLDivElement>();
+  const mergedListRef = useMergedRef(listRef, resizeRef);
   const getTabLabel = useBoardTabLabel();
   const t = useI18n("board.tabs");
   const theme = useMantineTheme();
@@ -86,11 +88,17 @@ export const BoardTabBar = ({
     const tabBounds = tab.getBoundingClientRect();
     if (tabBounds.left < bounds.left) list.scrollLeft += tabBounds.left - bounds.left;
     else if (tabBounds.right > bounds.right) list.scrollLeft += tabBounds.right - bounds.right;
-  }, [activeTab?.id, activeTab?.name]);
+  }, [activeTab?.id, activeTab?.name, listWidth]);
 
   return (
     <Group gap={4} wrap="nowrap" w={fit ? "100%" : "fit-content"} maw="100%" p={2}>
-      <Tabs.List ref={listRef} className={classes.list} aria-label={t("label")} grow={fit} flex={fit ? 1 : undefined}>
+      <Tabs.List
+        ref={mergedListRef}
+        className={classes.list}
+        aria-label={t("label")}
+        grow={fit}
+        flex={fit ? 1 : undefined}
+      >
         {tabs.map((tab, index) => {
           if (isEditMode && renamingTabId === tab.id) {
             return <BoardTabRenameInput key={tab.id} tab={tab} onDone={() => setRenamingTabId(null)} />;
