@@ -137,7 +137,7 @@ test("SQLite migrations seed the intentional demo showcase", async () => {
     expect(
       board.layouts.every((layout) => layout.leftGutterColumnCount === 0 && layout.rightGutterColumnCount === 0),
     ).toBe(true);
-    expect(board.sections.toSorted((first, second) => first.yOffset - second.yOffset)).toEqual([
+    expect(board.sections.toSorted((first, second) => (first.yOffset ?? 0) - (second.yOffset ?? 0))).toEqual([
       expect.objectContaining({ kind: "empty", name: "Overview", xOffset: 0, yOffset: 0 }),
       expect.objectContaining({ kind: "empty", name: "Explore", xOffset: 0, yOffset: 1 }),
     ]);
