@@ -195,6 +195,7 @@ test("SQLite migrations seed the intentional demo showcase", async () => {
       ]),
     );
     const sectionIds = new Set(board.sections.map(({ id }) => id));
+    const occupiedCellsBySectionLayout = new Map<string, Set<string>>();
     for (const item of board.items) {
       expect(new Set(item.layouts.map(({ layoutId }) => layoutId))).toEqual(new Set(board.layouts.map(({ id }) => id)));
       expect(new Set(item.layouts.map(({ sectionId }) => sectionId)).size).toBe(1);
@@ -207,6 +208,16 @@ test("SQLite migrations seed the intentional demo showcase", async () => {
         expect(placement.width).toBeGreaterThan(0);
         expect(placement.height).toBeGreaterThan(0);
         expect(placement.xOffset + placement.width).toBeLessThanOrEqual(layout.columnCount);
+        const sectionLayoutKey = `${placement.layoutId}:${placement.sectionId}`;
+        const occupiedCells = occupiedCellsBySectionLayout.get(sectionLayoutKey) ?? new Set<string>();
+        occupiedCellsBySectionLayout.set(sectionLayoutKey, occupiedCells);
+        for (let y = placement.yOffset; y < placement.yOffset + placement.height; y += 1) {
+          for (let x = placement.xOffset; x < placement.xOffset + placement.width; x += 1) {
+            const cell = `${x},${y}`;
+            expect(occupiedCells.has(cell), `Demo widgets overlap in ${layout.name} at ${cell}`).toBe(false);
+            occupiedCells.add(cell);
+          }
+        }
       }
     }
     const itemByKind = (kind: string) => board.items.find((item) => item.kind === kind);
