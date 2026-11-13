@@ -58,7 +58,7 @@ const anchorNote: AnchorNote = {
   isPinned: true,
   isArchived: false,
   tagIds: ["demo"],
-  permission: "editor",
+  permission: "viewer",
   background: null,
   userId: "demo",
 };

@@ -377,6 +377,9 @@ export const variantE = {
           width: 4,
           height: 3,
           needsIntegration: true,
+          options: {
+            statusFilter: ["approved", "completed", "declined", "failed"],
+          },
         },
         {
           kind: "mediaReleases",
@@ -788,6 +791,9 @@ export const variantE = {
           width: 4,
           height: 3,
           needsIntegration: false,
+          options: {
+            columns: ["name", "state", "cpuUsage", "memoryUsage"],
+          },
         },
         {
           kind: "traefik",
