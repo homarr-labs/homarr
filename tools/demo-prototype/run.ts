@@ -64,6 +64,17 @@ const env = {
   UNSAFE_ENABLE_MOCK_INTEGRATION: "true",
   ENABLE_DOCKER: "false",
   ENABLE_KUBERNETES: "false",
+  DOCKER_ENDPOINTS: JSON.stringify([
+    {
+      id: "prototype-disabled",
+      name: "Prototype only",
+      transport: { type: "socket", path: join(scratch, "disabled-docker.sock") },
+      capabilities: ["inventory"],
+    },
+  ]),
+  DOCKER_SOCKET_PATHS: undefined,
+  DOCKER_HOSTNAMES: undefined,
+  DOCKER_PORTS: undefined,
   HOMARR_DEMO_PROTOTYPE: "true",
   DB_DRIVER: "better-sqlite3",
   DB_URL: join(scratch, "PROTOTYPE.sqlite"),
