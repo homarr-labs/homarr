@@ -20,6 +20,8 @@ import type { HotkeyItem } from "@mantine/hooks";
 import { IconArrowLeft, IconArrowRight, IconDotsVertical, IconHome, IconPencil, IconPlus } from "@tabler/icons-react";
 
 import { useEditMode } from "@homarr/boards/edit-mode";
+import { useRequiredBoard } from "@homarr/boards/context";
+import { useBoardDraftChanges } from "@homarr/boards/draft-changes";
 import type { BoardTab } from "@homarr/boards/tabs";
 import { useBoardTabs } from "@homarr/boards/tabs";
 import { maxBoardTabs } from "@homarr/definitions";
@@ -138,12 +140,18 @@ export const BoardTabBar = ({
 };
 
 const BoardTabRenameInput = ({ tab, onDone }: { tab: BoardTab; onDone: () => void }) => {
+  const board = useRequiredBoard();
   const { renameTab } = useBoardTabActions();
   const getTabLabel = useBoardTabLabel();
   const t = useI18n("board.tabs");
   const inputRef = useRef<HTMLInputElement>(null);
   const finished = useRef(false);
   const initialLabel = useRef(getTabLabel(tab));
+  useBoardDraftChanges(board.id, () => {
+    if (finished.current || !inputRef.current) return false;
+    const value = inputRef.current.value.trim();
+    return value !== initialLabel.current && value !== (tab.name ?? "");
+  });
 
   useEffect(() => {
     inputRef.current?.focus();

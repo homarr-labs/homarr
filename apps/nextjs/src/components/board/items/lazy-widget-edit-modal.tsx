@@ -2,7 +2,7 @@
 
 import type { PropsWithChildren } from "react";
 import { Suspense, use, useCallback, useMemo, useState } from "react";
-import { Center, Loader } from "@mantine/core";
+import { Box, Center, Loader } from "@mantine/core";
 import { ErrorBoundary } from "react-error-boundary";
 import type { FallbackProps } from "react-error-boundary";
 
@@ -13,6 +13,7 @@ import { createModal, modalSizeForm, useModalAction } from "@homarr/modals";
 import { WidgetError } from "@homarr/widgets/errors";
 import type * as WidgetModalsModule from "@homarr/widgets/modals";
 import type { WidgetEditModalProps, WidgetEditModalSize } from "@homarr/widgets/modals";
+import { widgetEditorModalStyles } from "@homarr/widgets/modals/styles";
 import { loadWidgetComponent } from "@homarr/widgets/manifest";
 import type { IntegrationSelectOption } from "@homarr/widgets/widget-integration-select";
 
@@ -182,15 +183,17 @@ const LazyWidgetEditModalContent = (props: LazyWidgetEditModalContentProps) => {
 const WidgetEditModalLoadBoundary = ({ children }: PropsWithChildren) => (
   <ErrorBoundary
     fallbackRender={({ error, resetErrorBoundary }) => (
-      <Center py="xl">
-        <WidgetError
-          error={error}
-          resetErrorBoundary={() => {
-            widgetEditModalPromise = undefined;
-            resetErrorBoundary();
-          }}
-        />
-      </Center>
+      <Box mih={0} flex={1} style={{ overflowY: "auto" }}>
+        <Center py="xl">
+          <WidgetError
+            error={error}
+            resetErrorBoundary={() => {
+              widgetEditModalPromise = undefined;
+              resetErrorBoundary();
+            }}
+          />
+        </Center>
+      </Box>
     )}
   >
     <Suspense
@@ -215,6 +218,7 @@ export const LazyWidgetEditModal = createModal<WidgetEditModalProps<WidgetKind>>
     return t("item.edit.title");
   },
   size: "100rem",
+  styles: widgetEditorModalStyles,
   transitionProps: {
     transition: "pop",
     duration: 180,
@@ -240,5 +244,6 @@ export const LazyWidgetConfigurationModal = createModal<WidgetEditModalProps<Wid
     return t("item.edit.title");
   },
   size: modalSizeForm,
+  styles: widgetEditorModalStyles,
   closeOnClickOutside: false,
 });

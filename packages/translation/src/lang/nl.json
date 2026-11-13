@@ -1245,6 +1245,20 @@
       "username": "",
       "password": "",
       "savedPlaceholder": ""
+    },
+    "workshopUpdate": {
+      "title": "",
+      "apply": "",
+      "available": "Update beschikbaar",
+      "check": "",
+      "description": "",
+      "approvePermissions": "",
+      "pendingDescription": "",
+      "overwriteLocalChanges": "",
+      "installSeparate": "",
+      "communityWarning": "",
+      "updated": "",
+      "changedBeforeInstall": ""
     }
   },
   "workshop": {
@@ -1921,7 +1935,8 @@
       "copy": "Kopiëren",
       "copied": "Gekoppeld",
       "refresh": "Vernieuwen",
-      "export": "Exporteren"
+      "export": "Exporteren",
+      "advanced": "Geavanceerd"
     },
     "hidden": "Verborgen",
     "pagination": {
@@ -2115,6 +2130,158 @@
         "sm": "Subtiel",
         "xl": "Zacht"
       }
+    },
+    "customTheme": {
+      "label": "Thema",
+      "nothingFound": "",
+      "custom": "Aangepaste",
+      "customize": "",
+      "editor": {
+        "title": "",
+        "basedOn": "",
+        "preview": "",
+        "previewColorScheme": "",
+        "layout": "Lay-out",
+        "typography": "",
+        "colors": "Kleuren",
+        "json": "",
+        "defaultRadius": "",
+        "radiusHint": "",
+        "scale": "",
+        "spacing": "Afstand",
+        "radius": "",
+        "fontFamily": "",
+        "headingFont": "",
+        "monoFont": "",
+        "fontSizes": "",
+        "palette": {
+          "body": "",
+          "surface": "",
+          "hover": "",
+          "border": "",
+          "text": "",
+          "dimmed": "",
+          "primary": "",
+          "secondary": "Secundaire accenten"
+        },
+        "lockedPrimary": "",
+        "pickColor": "",
+        "autoContrast": "",
+        "luminanceThreshold": "",
+        "jsonHint": "",
+        "invalidJson": "",
+        "tooLong": "",
+        "copyJson": "",
+        "copied": "Gekoppeld",
+        "discardJson": "",
+        "reset": "",
+        "apply": "",
+        "sampleTitle": "",
+        "sampleBadge": "Voorvertoning",
+        "sampleText": "",
+        "sampleInput": "Zoeken",
+        "sampleValue": "Vind een app",
+        "sampleButton": ""
+      },
+      "studio": {
+        "title": "",
+        "saveTheme": "",
+        "searchControls": "",
+        "component": "",
+        "inheritedValue": "",
+        "resetControl": "",
+        "decreaseControl": "",
+        "increaseControl": "",
+        "chooseControl": "",
+        "layout": {
+          "spacing": "Afstand",
+          "radius": "",
+          "compact": "Compacte",
+          "normal": "normaal",
+          "roomy": "",
+          "preset": "",
+          "none": "Geen",
+          "rounded": "",
+          "full": "Volledig",
+          "custom": "Aangepaste",
+          "advanced": ""
+        },
+        "previewSurface": "Voorvertoning",
+        "previewFrame": "",
+        "loadingPreview": "",
+        "previewFailed": "",
+        "sampleBoard": "",
+        "components": "Onderdelen",
+        "overlays": "",
+        "typography": "",
+        "liveBoard": "",
+        "viewport": "",
+        "responsive": "",
+        "tablet": "",
+        "mobile": "Mobiel",
+        "includeCustomCss": "",
+        "groups": {
+          "layout": "",
+          "typography": "",
+          "colors": "",
+          "surfaces": "",
+          "overlays": "",
+          "accessibility": "",
+          "css": ""
+        },
+        "controls": {
+          "defaultRadius": "",
+          "scale": "",
+          "spacing": "Afstand",
+          "radius": "",
+          "breakpoint": "Breakpoint",
+          "fontSizes": "",
+          "lineHeight": "",
+          "shadow": "",
+          "fontFamily": "",
+          "headingFont": "",
+          "monoFont": "",
+          "headingWeight": "",
+          "headingSize": "",
+          "fontSmoothing": "",
+          "body": "",
+          "surface": "",
+          "hover": "",
+          "border": "",
+          "text": "",
+          "dimmed": "",
+          "primary": "",
+          "secondary": "Secundaire accenten",
+          "autoContrast": "",
+          "luminanceThreshold": "",
+          "primaryShade": "",
+          "componentRadius": "",
+          "borderWidth": "",
+          "surfaceBackground": "Achtergrond",
+          "surfaceText": "",
+          "surfaceBorder": "Randkleur",
+          "hoverBackground": "",
+          "hoverText": "",
+          "componentShadow": "",
+          "componentBorder": "",
+          "componentPadding": "",
+          "componentSize": "Bestandsgrootte",
+          "componentVariant": "",
+          "overlayBlur": "",
+          "overlayOpacity": "",
+          "overlayColor": "",
+          "transitionDuration": "",
+          "headerBackground": "",
+          "respectReducedMotion": "",
+          "focusRing": "",
+          "cursorType": "",
+          "customCss": ""
+        },
+        "expandPreview": "",
+        "showControls": "Besturingen weergeven"
+      },
+      "instanceDefault": "",
+      "useInstanceDefault": ""
     }
   },
   "section": {
@@ -2210,6 +2377,18 @@
       },
       "customWidget": "Aangepaste widget",
       "standalone": "Zelfstandig",
+      "integrationFilter": "",
+      "integrationNotConnected": "",
+      "workshop": {
+        "title": "",
+        "back": "",
+        "empty": "",
+        "noMatches": "",
+        "loading": "",
+        "integrationError": "",
+        "searchMore": "",
+        "installAndAdd": ""
+      },
       "missingIntegration": {
         "title": "Verbind eerst een service",
         "noPermission": "Deze widget heeft een compatibele serviceverbinding nodig. Vraag een beheerder om er een te verbinden en probeer het opnieuw."
@@ -2245,10 +2424,13 @@
       "saveErrorTitle": "Kan items niet bijwerken",
       "saveErrorMessage": "De wijzigingen konden niet worden opgeslagen. Het bord is vernieuwd.",
       "moveUnavailableTitle": "Kan geselecteerde items niet verplaatsen",
-      "moveUnavailableMessage": "De bestemming heeft niet genoeg ruimte voor de hele selectie."
+      "moveUnavailableMessage": "De bestemming heeft niet genoeg ruimte voor de hele selectie.",
+      "moveToTab": "",
+      "movedToTab": ""
     },
     "moveResize": {
       "title": "Item verplaatsen / formaat wijzigen",
+      "sizeOverlap": "",
       "entryLabel": "{name}, kolom {column}, rij {row}",
       "target": {
         "numbered": "{name}, bestemming {index}",
@@ -2331,6 +2513,36 @@
       "open": "Geavanceerde weergave openen",
       "close": "Sluit geavanceerde weergave",
       "label": "{widget} geavanceerde weergave"
+    },
+    "inPlace": {
+      "widgetLoadError": "",
+      "search": "",
+      "bestFit": "",
+      "moreWidgets": "",
+      "widgets": "",
+      "yourApps": "",
+      "createApp": "",
+      "addAppLink": "",
+      "createWidget": "",
+      "createWidgetDescription": "",
+      "createAppDescription": "",
+      "defaultFit": "",
+      "defaultFitDescription": "",
+      "defaultSize": "",
+      "defaultSizeDescription": "",
+      "emptyCells": "",
+      "preview": {
+        "error": "",
+        "loading": ""
+      },
+      "keyboard": {
+        "move": "verplaatsen",
+        "resize": "",
+        "pick": "",
+        "browse": "",
+        "moveDescription": "",
+        "resizeDescription": ""
+      }
     }
   },
   "widget": {
@@ -3155,6 +3367,141 @@
       "error": {
         "loadFailed": "Kan entiteit niet laden",
         "toggleFailed": "Kan entiteit niet bijwerken"
+      }
+    },
+    "smartHome-controls": {
+      "name": "",
+      "description": "",
+      "option": {
+        "presentation": {
+          "label": "",
+          "option": {
+            "entities": "",
+            "controlPanel": ""
+          }
+        },
+        "title": {
+          "label": "Titel",
+          "description": ""
+        },
+        "blocks": {
+          "label": "",
+          "remove": ""
+        },
+        "roomDomains": {
+          "label": "",
+          "description": ""
+        },
+        "excludedEntityIds": {
+          "label": "",
+          "description": "",
+          "placeholder": ""
+        },
+        "showSummary": {
+          "label": ""
+        },
+        "readOnly": {
+          "label": "",
+          "description": ""
+        },
+        "controlSize": {
+          "label": "",
+          "option": {
+            "auto": "Automatisch",
+            "compact": "Compacte",
+            "large": "Groot"
+          }
+        },
+        "palette": {
+          "label": "Kleuren",
+          "option": {
+            "boring": "",
+            "colorful": ""
+          }
+        }
+      },
+      "domain": {
+        "light": "",
+        "switch": "",
+        "fan": "",
+        "climate": "",
+        "humidifier": "",
+        "cover": "",
+        "valve": "",
+        "lock": "",
+        "alarm_control_panel": "",
+        "media_player": "",
+        "camera": "",
+        "vacuum": "",
+        "scene": "",
+        "script": "",
+        "automation": "",
+        "button": "",
+        "input_boolean": "",
+        "input_select": "",
+        "person": "Mensen",
+        "binary_sensor": "",
+        "sensor": "",
+        "weather": "Weer",
+        "sun": "",
+        "update": ""
+      },
+      "block": {
+        "add": {
+          "rooms": "",
+          "entity": "",
+          "roomsLabel": "",
+          "roomsPlaceholder": "",
+          "entityLabel": "",
+          "entityPlaceholder": "",
+          "merge": "",
+          "submit": "Toevoegen",
+          "duplicate": "",
+          "covered": ""
+        },
+        "kind": {
+          "entity": "",
+          "room": "",
+          "mergedRooms": "",
+          "unknown": ""
+        },
+        "entityCount": "",
+        "noArea": "",
+        "issue": {
+          "missing": "Niet gevonden",
+          "otherSource": "",
+          "empty": ""
+        }
+      },
+      "preview": {
+        "empty": "",
+        "noMatches": "",
+        "summary": {
+          "lights": "",
+          "on": "op",
+          "off": "uIT",
+          "sensors": "",
+          "offline": "offline"
+        },
+        "otherSource": ""
+      },
+      "live": {
+        "loading": "",
+        "error": "",
+        "retry": "",
+        "actionFailed": "",
+        "actionUnconfirmed": "",
+        "unconfirmed": "",
+        "selectionLimit": "",
+        "unknownError": ""
+      },
+      "inline": {
+        "open": "",
+        "title": "",
+        "handle": "",
+        "empty": "",
+        "add": "",
+        "close": ""
       }
     },
     "smartHome-executeAutomation": {
@@ -5455,6 +5802,23 @@
       "name": "Systeembronnen",
       "description": "CPU, geheugen, schijf en ander hardwaregebruik van je systeem",
       "option": {
+        "diskDisplayMode": {
+          "label": "",
+          "option": {
+            "percentage": "",
+            "free": "",
+            "absolute": "",
+            "combined": ""
+          }
+        },
+        "resourceLayout": {
+          "label": "",
+          "description": ""
+        },
+        "subresourceLayout": {
+          "label": "",
+          "description": ""
+        },
         "hasShadow": {
           "label": "Grafiekschaduw inschakelen"
         },
@@ -5462,6 +5826,7 @@
           "label": "Zichtbare grafieken",
           "description": "Selecteer de grafieken die je zichtbaar wilt maken.",
           "option": {
+            "cpuCores": "",
             "memory": "Geheugen",
             "network": "Netwerk"
           }
@@ -6390,6 +6755,26 @@
         }
       }
     },
+    "tabs": {
+      "label": "",
+      "indicator": "",
+      "home": "Home",
+      "untitled": "",
+      "add": "",
+      "actions": "",
+      "rename": "",
+      "namePlaceholder": "",
+      "moveLeft": "",
+      "moveRight": "",
+      "remove": {
+        "action": "",
+        "confirm": ""
+      },
+      "limitReached": "",
+      "hotkeyHint": "",
+      "destination": "",
+      "containerDestination": ""
+    },
     "landmark": {
       "canvas": "",
       "leftRail": "Links dashboard spoor",
@@ -6656,6 +7041,11 @@
           "description": "De serverbeheerder heeft nog geen home-bord ingesteld.",
           "link": "Openbare borden bekijken",
           "notice": "Om deze pagina te laten verdwijnen, vraag je de serverbeheerder om een home-bord in te stellen voor de server"
+        },
+        "noAccess": {
+          "title": "",
+          "description": "",
+          "notice": ""
         }
       }
     }
@@ -6732,6 +7122,7 @@
           }
         },
         "about": "Over",
+        "updateAvailable": "Update beschikbaar",
         "assistant": "Assistent"
       }
     },
@@ -6743,9 +7134,23 @@
           "authentication": "Authenticatie",
           "authorization": "Authorisatie"
         },
-        "heroBanner": {
-          "title": "Welkom terug bij je",
-          "subtitle": "{app} bord"
+        "hero": {
+          "greeting": "",
+          "greetingWithoutName": "",
+          "description": ""
+        },
+        "lobster": {
+          "label": "",
+          "prompt": "",
+          "pokeCount": "",
+          "reaction": {
+            "hey": "",
+            "ow": "",
+            "snip": "",
+            "careful": "",
+            "stillHere": "",
+            "okay": ""
+          }
         }
       },
       "board": {
@@ -6790,7 +7195,9 @@
         },
         "noResults": {
           "title": "Nog geen borden",
-          "description": "Maak een bord aan om uw apps en widgets op één plek te rangschikken."
+          "description": "Maak een bord aan om uw apps en widgets op één plek te rangschikken.",
+          "noAccessTitle": "",
+          "noAccessDescription": ""
         }
       },
       "media": {
@@ -6843,6 +7250,11 @@
                 "logoDisplay": {
                   "logo": "Alleen logo",
                   "logoAndText": "Logo + tekst"
+                },
+                "tabsDisplay": {
+                  "wide": "Breed",
+                  "compact": "Compacte",
+                  "indicator": ""
                 }
               },
               "items": {
@@ -6850,6 +7262,7 @@
                 "search": "Zoeken",
                 "home": "Home-bord",
                 "boardSwitcher": "Borden",
+                "boardTabs": "",
                 "assistant": "Assistent",
                 "docker": "Docker",
                 "boardEdit": "Bord bewerken",
@@ -7088,7 +7501,7 @@
             }
           },
           "branding": {
-            "title": "",
+            "title": "Weergave",
             "groups": {
               "identity": "Identiteit",
               "appearance": "Weergave",
@@ -7667,7 +8080,8 @@
               "openSpotlightApps": "App zoeken openen",
               "openSpotlightAssistant": "Open Assistent-modus",
               "openSpotlightPreferences": "Open voorkeursmodus",
-              "openAssistant": "Open assistent"
+              "openAssistant": "Open assistent",
+              "switchBoardTab": ""
             },
             "note": "Tip: Mod verwijst naar zowel de Ctrl-toets als de ⌘ toets op macOS"
           }
