@@ -7041,6 +7041,11 @@
           "description": "Servera administrators vēl nav iestatījis sākumlapas tāfeli.",
           "link": "Skatīt publiskās tāfeles",
           "notice": "Lai šī lapa pazustu, lūdziet servera administratoram iestatīt servera sākumlapas tāfeli"
+        },
+        "noAccess": {
+          "title": "",
+          "description": "",
+          "notice": ""
         }
       }
     }
@@ -7190,7 +7195,9 @@
         },
         "noResults": {
           "title": "Pagaidām nav dēļu",
-          "description": "Izveidojiet paneli, lai sakārtotu savas lietotnes un logrīkus vienuviet."
+          "description": "Izveidojiet paneli, lai sakārtotu savas lietotnes un logrīkus vienuviet.",
+          "noAccessTitle": "",
+          "noAccessDescription": ""
         }
       },
       "media": {

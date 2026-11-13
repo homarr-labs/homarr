@@ -7041,6 +7041,11 @@
           "description": "A szerver adminisztrátora még nem állított be kezdőlap táblát.",
           "link": "Nyilvános táblák megtekintése",
           "notice": "Az oldal eltüntetéséhez kérd meg a szerver adminisztrátorát, hogy állítson be egy kezdőlap táblát a szervernek"
+        },
+        "noAccess": {
+          "title": "",
+          "description": "",
+          "notice": ""
         }
       }
     }
@@ -7190,7 +7195,9 @@
         },
         "noResults": {
           "title": "Még nincsenek táblák",
-          "description": "Hozzon létre egy táblát, hogy alkalmazásait és widgetjeit egy helyen rendezhesse el."
+          "description": "Hozzon létre egy táblát, hogy alkalmazásait és widgetjeit egy helyen rendezhesse el.",
+          "noAccessTitle": "",
+          "noAccessDescription": ""
         }
       },
       "media": {

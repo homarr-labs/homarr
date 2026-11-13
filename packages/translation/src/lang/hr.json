@@ -7041,6 +7041,11 @@
           "description": "Administrator poslužitelja još nije postavio početnu ploču.",
           "link": "Prikaži javne ploče",
           "notice": "Da biste uklonili ovu stranicu, zamolite administratora poslužitelja da postavi početnu ploču za poslužitelj"
+        },
+        "noAccess": {
+          "title": "",
+          "description": "",
+          "notice": ""
         }
       }
     }
@@ -7190,7 +7195,9 @@
         },
         "noResults": {
           "title": "Još nema ploča",
-          "description": "Kreirajte ploču za organiziranje aplikacija i widgeta na jednom mjestu."
+          "description": "Kreirajte ploču za organiziranje aplikacija i widgeta na jednom mjestu.",
+          "noAccessTitle": "",
+          "noAccessDescription": ""
         }
       },
       "media": {

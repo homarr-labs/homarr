@@ -7041,6 +7041,11 @@
           "description": "Správce serveru zatím nenastavil domovskou plochu.",
           "link": "Zobrazit veřejné plochy",
           "notice": "Chcete-li tuto stránku skrýt, požádejte správce serveru o nastavení domovské plochy pro server"
+        },
+        "noAccess": {
+          "title": "",
+          "description": "",
+          "notice": ""
         }
       }
     }
@@ -7190,7 +7195,9 @@
         },
         "noResults": {
           "title": "Zatím žádné plochy",
-          "description": "Vytvořte desku pro uspořádání aplikací a widgetů na jednom místě."
+          "description": "Vytvořte desku pro uspořádání aplikací a widgetů na jednom místě.",
+          "noAccessTitle": "",
+          "noAccessDescription": ""
         }
       },
       "media": {

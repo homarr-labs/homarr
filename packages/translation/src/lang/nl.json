@@ -7041,6 +7041,11 @@
           "description": "De serverbeheerder heeft nog geen home-bord ingesteld.",
           "link": "Openbare borden bekijken",
           "notice": "Om deze pagina te laten verdwijnen, vraag je de serverbeheerder om een home-bord in te stellen voor de server"
+        },
+        "noAccess": {
+          "title": "",
+          "description": "",
+          "notice": ""
         }
       }
     }
@@ -7190,7 +7195,9 @@
         },
         "noResults": {
           "title": "Nog geen borden",
-          "description": "Maak een bord aan om uw apps en widgets op één plek te rangschikken."
+          "description": "Maak een bord aan om uw apps en widgets op één plek te rangschikken.",
+          "noAccessTitle": "",
+          "noAccessDescription": ""
         }
       },
       "media": {

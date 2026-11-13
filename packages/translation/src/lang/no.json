@@ -7041,6 +7041,11 @@
           "description": "Serveradministratoren har ikke angitt en hjemtavle enda.",
           "link": "Se offentlige tavler",
           "notice": "For at denne siden skal forsvinne for alle brukere, be server administratoren sette en hjem-tavle for serveren"
+        },
+        "noAccess": {
+          "title": "",
+          "description": "",
+          "notice": ""
         }
       }
     }
@@ -7190,7 +7195,9 @@
         },
         "noResults": {
           "title": "Ingen tavler ennå",
-          "description": "Opprett en tavle for å ordne apper og widgets på et sted."
+          "description": "Opprett en tavle for å ordne apper og widgets på et sted.",
+          "noAccessTitle": "",
+          "noAccessDescription": ""
         }
       },
       "media": {

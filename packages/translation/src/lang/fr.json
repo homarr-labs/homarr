@@ -7041,6 +7041,11 @@
           "description": "L'administrateur du serveur n'a pas encore défini de tableau d'accueil.",
           "link": "Voir les tableaux publics",
           "notice": "Pour faire disparaître cette page, demandez à l'administrateur du serveur de définir un tableau d'accueil pour le serveur"
+        },
+        "noAccess": {
+          "title": "",
+          "description": "",
+          "notice": ""
         }
       }
     }
@@ -7190,7 +7195,9 @@
         },
         "noResults": {
           "title": "Aucun tableau de bord pour l'instant",
-          "description": "Créez un tableau pour organiser vos applications et widgets en un seul endroit."
+          "description": "Créez un tableau pour organiser vos applications et widgets en un seul endroit.",
+          "noAccessTitle": "",
+          "noAccessDescription": ""
         }
       },
       "media": {

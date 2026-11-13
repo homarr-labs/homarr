@@ -7041,6 +7041,11 @@
           "description": "L'administrador del servidor encara no ha establert un tauler d'inici.",
           "link": "Visualitzar taulers públics",
           "notice": "Per fer desaparèixer aquesta pàgina, demana a l'administrador del servidor que estableixi un tauler d'inici per al servidor"
+        },
+        "noAccess": {
+          "title": "",
+          "description": "",
+          "notice": ""
         }
       }
     }
@@ -7190,7 +7195,9 @@
         },
         "noResults": {
           "title": "Encara no hi ha taulers",
-          "description": "Crea un tauler per organitzar les teves aplicacions i ginys en un sol lloc."
+          "description": "Crea un tauler per organitzar les teves aplicacions i ginys en un sol lloc.",
+          "noAccessTitle": "",
+          "noAccessDescription": ""
         }
       },
       "media": {

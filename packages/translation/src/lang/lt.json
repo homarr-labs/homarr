@@ -7041,6 +7041,11 @@
           "description": "Serverio administratorius dar nenustatė pagrindinės suvestinės.",
           "link": "Peržiūrėti viešas suvestines",
           "notice": "Kad šis puslapis išnyktų, paprašykite serverio administratoriaus nustatyti serverio pagrindinę suvestinę"
+        },
+        "noAccess": {
+          "title": "",
+          "description": "",
+          "notice": ""
         }
       }
     }
@@ -7190,7 +7195,9 @@
         },
         "noResults": {
           "title": "Dar nėra lentų",
-          "description": "Sukurkite lentą, kad vienoje vietoje išdėstytumėte savo programėles ir valdiklius."
+          "description": "Sukurkite lentą, kad vienoje vietoje išdėstytumėte savo programėles ir valdiklius.",
+          "noAccessTitle": "",
+          "noAccessDescription": ""
         }
       },
       "media": {

@@ -7041,6 +7041,11 @@
           "description": "L'amministratore del server non ha ancora impostato una home board.",
           "link": "Visualizza board pubbliche",
           "notice": "Per far scomparire questa pagina, chiedi all'amministratore del server di impostare una home board per il server"
+        },
+        "noAccess": {
+          "title": "",
+          "description": "",
+          "notice": ""
         }
       }
     }
@@ -7190,7 +7195,9 @@
         },
         "noResults": {
           "title": "Ancora nessuna board",
-          "description": "Crea una scheda per organizzare le tue app e widget in un unico posto."
+          "description": "Crea una scheda per organizzare le tue app e widget in un unico posto.",
+          "noAccessTitle": "",
+          "noAccessDescription": ""
         }
       },
       "media": {
