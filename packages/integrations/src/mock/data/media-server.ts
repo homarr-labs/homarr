@@ -1,6 +1,20 @@
 import type { IMediaServerIntegration } from "../../interfaces/media-server/media-server-integration";
 import type { CurrentSessionsInput, StreamSession } from "../../interfaces/media-server/media-server-types";
 
+const directPlayMetadata = (width: number, height: number, bitrateKbps: number) => ({
+  video: { resolution: { width, height }, frameRate: 24 },
+  audio: { channelCount: 6, codec: "AAC" },
+  transcoding: {
+    container: "mkv",
+    resolution: { width, height },
+    target: { audioCodec: "aac", videoCodec: "h264" },
+    isVideoDirect: true,
+    isAudioDirect: true,
+    containerChanged: false,
+  },
+  bitrateKbps,
+});
+
 const sessions: StreamSession[] = [
   {
     sessionId: "s-0",
@@ -8,14 +22,14 @@ const sessions: StreamSession[] = [
     user: { userId: "u-0", username: "thomas", profilePictureUrl: null },
     currentlyPlaying: {
       type: "movie",
-      name: "Interstellar",
+      name: "Big Buck Bunny",
       seasonName: undefined,
       episodeName: null,
       albumName: null,
       episodeCount: null,
-      playback: { state: null, positionMs: null, durationMs: null },
-      location: null,
-      metadata: null,
+      playback: { state: "playing", positionMs: 120_000, durationMs: 596_000 },
+      location: "lan",
+      metadata: directPlayMetadata(1920, 1080, 8000),
     },
   },
   {
@@ -31,9 +45,9 @@ const sessions: StreamSession[] = [
       episodeNumber: 14,
       albumName: null,
       episodeCount: null,
-      playback: { state: null, positionMs: null, durationMs: null },
-      location: null,
-      metadata: null,
+      playback: { state: "paused", positionMs: 1_284_000, durationMs: 2_820_000 },
+      location: "lan",
+      metadata: directPlayMetadata(1920, 1080, 6500),
     },
   },
   {
@@ -47,9 +61,9 @@ const sessions: StreamSession[] = [
       episodeName: null,
       albumName: null,
       episodeCount: null,
-      playback: { state: null, positionMs: null, durationMs: null },
-      location: null,
-      metadata: null,
+      playback: { state: "playing", positionMs: 2_340_000, durationMs: 9_120_000 },
+      location: "lan",
+      metadata: directPlayMetadata(3840, 2160, 24000),
     },
   },
   {
@@ -59,15 +73,25 @@ const sessions: StreamSession[] = [
     currentlyPlaying: {
       type: "video",
       name: "Severance",
-      seasonName: "Season 2",
-      seasonNumber: 2,
+      seasonName: "Season 1",
+      seasonNumber: 1,
       episodeName: "The We We Are",
-      episodeNumber: 10,
+      episodeNumber: 9,
       albumName: null,
       episodeCount: null,
-      playback: { state: null, positionMs: null, durationMs: null },
-      location: null,
-      metadata: null,
+      playback: { state: "playing", positionMs: 1_560_000, durationMs: 2_460_000 },
+      location: "wan",
+      metadata: {
+        ...directPlayMetadata(1920, 1080, 4000),
+        transcoding: {
+          container: "mp4",
+          resolution: { width: 1280, height: 720 },
+          target: { audioCodec: "aac", videoCodec: "h264" },
+          isVideoDirect: false,
+          isAudioDirect: true,
+          containerChanged: true,
+        },
+      },
     },
   },
   {
@@ -76,14 +100,26 @@ const sessions: StreamSession[] = [
     user: { userId: "u-4", username: "alex", profilePictureUrl: null },
     currentlyPlaying: {
       type: "audio",
-      name: "Daft Punk",
+      name: "Get Lucky",
       seasonName: undefined,
       episodeName: null,
       albumName: "Random Access Memories",
       episodeCount: null,
-      playback: { state: null, positionMs: null, durationMs: null },
-      location: null,
-      metadata: null,
+      playback: { state: "playing", positionMs: 96_000, durationMs: 369_000 },
+      location: "wan",
+      metadata: {
+        video: { resolution: null, frameRate: null },
+        audio: { channelCount: 2, codec: "FLAC" },
+        transcoding: {
+          container: "flac",
+          resolution: null,
+          target: { audioCodec: "flac", videoCodec: null },
+          isVideoDirect: true,
+          isAudioDirect: true,
+          containerChanged: false,
+        },
+        bitrateKbps: 950,
+      },
     },
   },
   {
@@ -97,9 +133,9 @@ const sessions: StreamSession[] = [
       episodeName: null,
       albumName: null,
       episodeCount: null,
-      playback: { state: null, positionMs: null, durationMs: null },
-      location: null,
-      metadata: null,
+      playback: { state: "paused", positionMs: 4_020_000, durationMs: 10_860_000 },
+      location: "lan",
+      metadata: directPlayMetadata(3840, 2160, 32000),
     },
   },
 ];

@@ -1,5 +1,7 @@
 import SuperJSON from "superjson";
 
+import { seedDemoPrototypesAsync } from "./demo-prototypes/seed";
+
 import { createId, generateResponsiveGridFor, objectKeys } from "@homarr/common";
 import { BUNDLED_CUSTOM_WIDGETS, customWidgetDefinitionSchema } from "@homarr/custom-widgets/core";
 import {
@@ -69,6 +71,9 @@ export const seedDataAsync = async (db: Database) => {
 
   if (isTruthyEnv(process.env.DEMO_MODE)) {
     await seedDemoUserAsync(db);
+    if (process.env.NODE_ENV !== "production" && isTruthyEnv(process.env.HOMARR_DEMO_PROTOTYPE)) {
+      await seedDemoPrototypesAsync(db);
+    }
   }
 
   await seedProtectedBoardLayoutsAsync(db);

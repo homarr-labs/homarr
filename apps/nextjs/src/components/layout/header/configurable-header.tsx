@@ -15,6 +15,7 @@ import type { HeaderItem, HeaderTabsDisplay } from "@homarr/validation/user";
 import { getHeaderItemKey, getHeaderItems } from "@homarr/validation/user";
 
 import { useOptionalHomarrAssistant } from "~/components/assistant/assistant-context";
+import { useDemoPrototype } from "~/components/board/demo-prototype-context";
 import { BoardSwitcher } from "~/components/board/board-switcher";
 import { HeaderBoardTabs } from "~/components/board/tabs/header-board-tabs";
 import type { BoardSwitcherControls } from "~/components/board/board-switcher";
@@ -60,7 +61,9 @@ export const ConfigurableHeader = ({
   isAdmin,
   isDockerEnabled,
 }: ConfigurableHeaderProps) => {
-  const { headerPreferences } = useSettings();
+  const settings = useSettings();
+  const prototype = useDemoPrototype();
+  const headerPreferences = prototype?.headerPreferences ?? settings.headerPreferences;
   const assistant = useOptionalHomarrAssistant();
   const { toggleColorScheme } = useMantineColorScheme();
   const { openModal: openDockerModal } = useModalAction(DockerQuickAccessModal);
