@@ -31,13 +31,9 @@ export class FrameleafReader {
     }
     if (!response.ok) {
       await response.body?.cancel();
-      if (response.status === 401 || response.status === 403) await this.connection.markRevokedAsync(token);
+      if (response.status === 401) await this.connection.markRevokedAsync(token);
       const error = new FrameleafConnectionError(
-        response.status === 429
-          ? "rateLimit"
-          : response.status === 401 || response.status === 403
-            ? "reconnect"
-            : "unavailable",
+        response.status === 429 ? "rateLimit" : response.status === 401 ? "reconnect" : "unavailable",
       );
       if (response.status === 429) {
         const retry = response.headers.get("retry-after");
