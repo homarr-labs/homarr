@@ -62,6 +62,8 @@ const env = {
   DEMO_MODE: "true",
   DEMO_READ_ONLY: "false",
   UNSAFE_ENABLE_MOCK_INTEGRATION: "true",
+  ENABLE_DOCKER: "false",
+  ENABLE_KUBERNETES: "false",
   HOMARR_DEMO_PROTOTYPE: "true",
   DB_DRIVER: "better-sqlite3",
   DB_URL: join(scratch, "PROTOTYPE.sqlite"),
