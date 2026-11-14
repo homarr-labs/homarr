@@ -58,6 +58,7 @@ export const { definition, componentLoader } = createWidgetDefinition("releases"
       }),
       // Saved from the widget itself, like the Beszel system switcher and Wazuh view.
       collapsedSections: factory.internal({ defaultValue: ["quiet"] as ReleaseSectionKey[] }),
+      expandedSections: factory.internal({ defaultValue: [] as ReleaseSectionKey[] }),
       newReleaseWithin: factory.select({
         defaultValue: "1w",
         withDescription: true,
