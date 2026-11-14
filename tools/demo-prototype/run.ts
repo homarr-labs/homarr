@@ -93,6 +93,8 @@ const env = {
   DOCKER_PATH_PREFIX: undefined,
   DOCKER_CLIENT_TIMEOUT: undefined,
   HOMARR_DEMO_PROTOTYPE: "true",
+  NEXT_PUBLIC_HOMARR_DEMO_PROTOTYPE: "true",
+  NEXT_PUBLIC_DEMO_PROTOTYPE_WEBSOCKET_PORT: process.env.PROTOTYPE_WEBSOCKET_PORT ?? "3001",
   DB_DRIVER: "better-sqlite3",
   DB_URL: join(scratch, "PROTOTYPE.sqlite"),
   REDIS_IS_EXTERNAL: "true",
@@ -140,5 +142,5 @@ for (const [args, cwd] of [
   });
 }
 console.log(
-  `Compare: ${baseUrl}/boards/demo-prototype?variant=E\nUse the demo sign-in button. The header tabs switch board sections.`,
+  `Compare: ${baseUrl}/boards/demo-prototype?variant=A\nUse the demo sign-in button. The header tabs switch board sections.`,
 );

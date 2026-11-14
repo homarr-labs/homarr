@@ -16,7 +16,7 @@ import {
   users,
 } from "../../schema";
 import { getServerSettingByKeyAsync, updateServerSettingByKeyAsync } from "../../queries/server-setting";
-import { demoPrototypes } from ".";
+import { demoPrototypeBoardName, demoPrototypes } from ".";
 import { demoPrototypeTheme } from "./theme";
 import { demoShowcaseCustomWidget } from "./custom-widget";
 import type { DemoPrototype } from "./types";
@@ -75,11 +75,12 @@ export const seedDemoShowcaseAsync = async (db: Database, boardName = "demo-prot
       return Object.fromEntries(Object.entries(value).map(([key, child]) => [key, replace(child)]));
     return value;
   };
-  const proposals: DemoPrototype[] = demoPrototypes;
+  let proposals: DemoPrototype[] = demoPrototypes;
+  if (boardName === "default") proposals = demoPrototypes.slice(0, 1);
   for (const proposal of proposals) {
     headerPreferencesSchema.parse(proposal.headerPreferences);
-    if (proposal.tabs.length !== 2) throw new Error(`Prototype ${proposal.key} needs exactly two tabs`);
-    const name = boardName;
+    let name = demoPrototypeBoardName(proposal.key);
+    if (boardName === "default") name = boardName;
     const exists = await db.query.boards.findFirst({ where: (row) => eq(row.name, name) });
     if (exists) continue;
     for (const tab of proposal.tabs) {
@@ -96,7 +97,7 @@ export const seedDemoShowcaseAsync = async (db: Database, boardName = "demo-prot
     if ((proposal.iteration ?? 0) >= 2) {
       baseBreakpoint = 1200;
       responsiveLayouts.push(
-        { id: createId(), boardId, name: "Mobile", role: "mobile", breakpoint: 0, columnCount: 3 },
+        { id: createId(), boardId, name: "Mobile", role: "mobile", breakpoint: 0, columnCount: 4 },
         { id: createId(), boardId, name: "Tablet", role: "custom", breakpoint: 600, columnCount: 6 },
       );
     }
@@ -146,12 +147,67 @@ export const seedDemoShowcaseAsync = async (db: Database, boardName = "demo-prot
         });
       }
       for (const target of responsiveLayouts) {
-        const projected = generateResponsiveGridFor({
+        let projected = generateResponsiveGridFor({
           items: positions.map((item) => ({ ...item, height: smallScreenHeights.get(item.id) ?? item.height })),
           previousWidth: 12,
           width: target.columnCount,
           sectionId,
         });
+        if (target.role === "mobile") {
+          // Full-width data cards and two-up utilities avoid the old skinny mobile columns.
+          const compactKinds = new Set([
+            "app",
+            "weather",
+            "clock",
+            "timer",
+            "airQuality",
+            "countdown",
+            "timetable",
+            "stockPrice",
+          ]);
+          let x = 0;
+          let y = 0;
+          let rowHeight = 0;
+          const widgetsById = new Map(positions.map((item, index) => [item.id, tab.widgets[index]]));
+          const mobileOrder = [
+            "calendar",
+            "weather",
+            "clock",
+            "timer",
+            "airQuality",
+            "bookmarks",
+            "smartHome-controls",
+            "assistant",
+          ];
+          const rank = (item: (typeof positions)[number]) => {
+            if (tab.name !== "Home") return item.yOffset * 12 + item.xOffset;
+            const kind = widgetsById.get(item.id)!.kind;
+            const index = mobileOrder.indexOf(kind);
+            if (index !== -1) return index;
+            return 100 + item.yOffset * 12 + item.xOffset;
+          };
+          const mobileItems = [...positions]
+            .sort((a, b) => rank(a) - rank(b))
+            .map((item) => {
+              const widget = widgetsById.get(item.id)!;
+              let width = 4;
+              if (compactKinds.has(widget.kind)) width = 2;
+              let height = smallScreenHeights.get(item.id) ?? item.height;
+              if (widget.kind === "clock") height = 2;
+              if (widget.kind === "timer" || widget.kind === "airQuality") height = 1;
+              if (widget.kind === "calendar") height = 3;
+              if (x + width > 4) {
+                y += rowHeight;
+                x = 0;
+                rowHeight = 0;
+              }
+              const placed = { ...item, xOffset: x, yOffset: y, width, height };
+              x += width;
+              rowHeight = Math.max(rowHeight, height);
+              return placed;
+            });
+          projected = { ...projected, items: mobileItems };
+        }
         if (projected.items.length === 0) continue;
         await db.insert(itemLayouts).values(
           projected.items.map((item) => ({

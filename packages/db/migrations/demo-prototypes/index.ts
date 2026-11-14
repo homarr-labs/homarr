@@ -1,8 +1,9 @@
 import type { DemoPrototype } from "./types";
-import { variantE } from "./variant-e";
+import { variantA } from "./variant-a";
+import { variantB } from "./variant-b";
 
-export const demoPrototypes = [variantE] satisfies [DemoPrototype];
+export const demoPrototypes = [variantA, variantB] satisfies [DemoPrototype, DemoPrototype];
 export const demoPrototypeBoardName = (key: string) => {
-  if (key === "E") return "demo-prototype";
+  if (key === "A") return "demo-prototype";
   return `demo-prototype-${key.toLowerCase()}`;
 };

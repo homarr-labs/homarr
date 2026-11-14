@@ -61,7 +61,11 @@ const constructWebsocketUrl = () => {
   }
 
   if (env.NODE_ENV === "development") {
-    return `${getWebSocketProtocol()}://${window.location.hostname}:3001/websockets`;
+    let port = "3001";
+    if (process.env.NEXT_PUBLIC_HOMARR_DEMO_PROTOTYPE === "true") {
+      port = process.env.NEXT_PUBLIC_DEMO_PROTOTYPE_WEBSOCKET_PORT ?? port;
+    }
+    return `${getWebSocketProtocol()}://${window.location.hostname}:${port}/websockets`;
   }
 
   return `${getWebSocketProtocol()}://${window.location.hostname}:${window.location.port}/websockets`;
