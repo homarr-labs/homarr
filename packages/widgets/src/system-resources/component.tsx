@@ -12,7 +12,7 @@ import { IntegrationErrorIndicator } from "../common/integration-error-indicator
 import { WidgetQueryLoadingState } from "../common/query-state-indicator";
 import type { WidgetComponentProps } from "../definition";
 import { getUsableWidgetQueryData } from "../common/query-state";
-import { ChartLayout } from "./chart-layout";
+import { CHART_SCROLLBAR_SIZE, ChartLayout } from "./chart-layout";
 import { SystemResourceCPUChart } from "./chart/cpu-chart";
 import { SystemResourceDiskChart } from "./chart/disk-chart";
 import type { DiskSample } from "./chart/disk-chart";
@@ -267,6 +267,14 @@ const SystemCharts = ({
   const chartCount = visibleCharts.length;
   const chartColumns = isAdvanced ? getAdvancedChartColumns(width) : undefined;
   const chartGap = isAdvanced ? "xs" : 8;
+  const hasNestedCharts = visibleCharts.some(
+    (chart) => chart === "cpuCores" || chart === "disk" || chart === "network",
+  );
+  // Match the gutter reserved by nested layouts so standalone charts share their edges.
+  const standaloneChartPadding =
+    options.subresourceLayout === "horizontal"
+      ? { pb: hasNestedCharts ? CHART_SCROLLBAR_SIZE : 0 }
+      : { pe: hasNestedCharts ? CHART_SCROLLBAR_SIZE : 0 };
 
   return (
     // style={{height}}, not h={height} or h={`${height}px`} - Mantine's h prop runs numbers
@@ -296,7 +304,7 @@ const SystemCharts = ({
             </Center>
           )}
           {visibleCharts.includes("cpu") && (
-            <Box h="100%">
+            <Box h="100%" {...standaloneChartPadding}>
               <SystemResourceCPUChart
                 cpuUsageOverTime={items.map((item) => item.cpu)}
                 hasShadow={options.hasShadow}
@@ -323,7 +331,7 @@ const SystemCharts = ({
             </ChartLayout>
           )}
           {visibleCharts.includes("memory") && (
-            <Box h="100%">
+            <Box h="100%" {...standaloneChartPadding}>
               <SystemResourceMemoryChart
                 memoryUsageOverTime={items.map((item) => item.memory)}
                 totalCapacityInBytes={memoryCapacityInBytes}
@@ -334,7 +342,7 @@ const SystemCharts = ({
             </Box>
           )}
           {visibleCharts.includes("gpu") && (
-            <Box h="100%">
+            <Box h="100%" {...standaloneChartPadding}>
               <SystemResourceGPUChart
                 gpuUsageOverTime={items.map((item) => item.gpu)}
                 hasShadow={options.hasShadow}
