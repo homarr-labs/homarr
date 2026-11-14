@@ -15,9 +15,7 @@ import {
   sections,
   users,
 } from "../../schema";
-import { getServerSettingByKeyAsync, updateServerSettingByKeyAsync } from "../../queries/server-setting";
 import { demoBoard } from "./board";
-import { demoTheme } from "./theme";
 import { demoCustomWidget } from "./custom-widget";
 
 // Called only when the demo user is first created. Existing dashboards remain unchanged.
@@ -27,14 +25,6 @@ export const seedDemoBoardAsync = async (db: Database) => {
   const demo = await db.query.users.findFirst({ where: (row) => eq(row.name, "demo") });
   const integration = await db.query.integrations.findFirst({ where: (row) => eq(row.kind, "mock") });
   if (!demo || !integration) throw new Error("Demo board setup requires the demo user and integration first");
-  const branding = await getServerSettingByKeyAsync(db, "branding");
-  if (branding.themeId === "default" && branding.customTheme === null) {
-    await updateServerSettingByKeyAsync(db, "branding", {
-      ...branding,
-      themeId: "custom",
-      customTheme: demoTheme,
-    });
-  }
   const apps = await db.query.apps.findMany();
   let customWidget = await db.query.customWidgetDefinitions.findFirst({
     where: (row, { and }) => and(eq(row.name, demoCustomWidget.name), eq(row.creatorId, demo.id)),

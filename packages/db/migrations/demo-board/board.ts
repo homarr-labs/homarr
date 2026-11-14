@@ -1,5 +1,5 @@
 import { place } from "./widgets";
-import { demoBoardPreferences, demoHeaderPreferences } from "./theme";
+import { demoBoardPreferences, demoHeaderPreferences } from "./preferences";
 import type { DemoBoardDefinition } from "./types";
 
 export const demoBoard = {

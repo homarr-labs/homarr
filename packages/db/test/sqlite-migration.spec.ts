@@ -8,6 +8,7 @@ import { expect, test } from "vitest";
 
 import { DB_CASING } from "@homarr/core/infrastructure/db/constants";
 import { widgetIntegrationSupport } from "@homarr/definitions";
+import { parseBrandingSettings } from "@homarr/server-settings";
 
 import type { Database } from "..";
 import { seedDataAsync } from "../migrations/seed";
@@ -117,7 +118,7 @@ test("SQLite migrations seed the intentional demo showcase", async () => {
       backgroundImageUrl: null,
       primaryColor: null,
       secondaryColor: null,
-      itemRadius: "lg",
+      itemRadius: null,
     });
     expect(demoUser.mobileHomeBoardId).toBe(board.id);
     expect(JSON.parse(demoUser.headerPreferences)).toMatchObject({
@@ -242,17 +243,9 @@ test("SQLite migrations seed the intentional demo showcase", async () => {
       where: (table, { eq }) => eq(table.settingKey, "branding"),
     });
     if (!branding) throw new Error("Demo branding was not seeded");
-    expect(SuperJSON.parse(branding.value)).toMatchObject({
-      themeId: "custom",
-      customTheme: {
-        theme: {
-          fontFamily: "var(--font-geist), system-ui, sans-serif",
-          fontFamilyMonospace: "var(--font-geist-mono), ui-monospace, monospace",
-          primaryShade: { light: 7, dark: 4 },
-        },
-        light: { body: "#f1f4f5", primary: "#397a73" },
-        dark: { body: "#14191f", primary: "#6ba7a0" },
-      },
+    expect(parseBrandingSettings(SuperJSON.parse(branding.value))).toMatchObject({
+      themeId: "default",
+      customTheme: null,
     });
 
     const mockIntegration = await database.query.integrations.findFirst({

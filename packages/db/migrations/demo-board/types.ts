@@ -7,7 +7,7 @@ export interface DemoBoardDefinition {
     pageTitle: string;
     primaryColor?: string;
     secondaryColor?: string;
-    itemRadius: "xs" | "sm" | "md" | "lg" | "xl";
+    itemRadius?: "xs" | "sm" | "md" | "lg" | "xl";
     backgroundImageUrl?: string;
     customCss?: string;
   };
