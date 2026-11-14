@@ -1,3 +1,7 @@
+import type { HeaderPreferences } from "@homarr/validation/user";
+
+import type { DemoBoardDefinition } from "./types";
+
 export const demoHeaderPreferences = {
   version: 4,
   visible: true,
@@ -15,8 +19,8 @@ export const demoHeaderPreferences = {
       { type: "builtin", id: "user" },
     ],
   },
-} satisfies import("@homarr/validation/user").HeaderPreferences;
+} satisfies HeaderPreferences;
 
 export const demoBoardPreferences = {
   pageTitle: "Homarr demo",
-} satisfies import("./types").DemoBoardDefinition["board"];
+} satisfies DemoBoardDefinition["board"];

@@ -1,4 +1,4 @@
-import SuperJSON from "superjson";
+import { stringify } from "superjson";
 
 import { createId, generateResponsiveGridFor } from "@homarr/common";
 import { headerPreferencesSchema } from "@homarr/validation/user";
@@ -35,9 +35,9 @@ export const seedDemoBoardAsync = async (db: Database) => {
       id: definitionId,
       name: demoCustomWidget.name,
       description: demoCustomWidget.description ?? null,
-      sources: SuperJSON.stringify(demoCustomWidget.sources),
-      requests: SuperJSON.stringify(demoCustomWidget.requests),
-      options: SuperJSON.stringify(demoCustomWidget.options),
+      sources: stringify(demoCustomWidget.sources),
+      requests: stringify(demoCustomWidget.requests),
+      options: stringify(demoCustomWidget.options),
       template: demoCustomWidget.template,
       creatorId: demo.id,
       enabled: true,
@@ -103,7 +103,7 @@ export const seedDemoBoardAsync = async (db: Database) => {
         id: itemId,
         boardId,
         kind: widget.kind,
-        options: SuperJSON.stringify(replace(widget.options ?? {})),
+        options: stringify(replace(widget.options ?? {})),
       });
       await db.insert(itemLayouts).values({
         itemId,
@@ -151,6 +151,11 @@ export const seedDemoBoardAsync = async (db: Database) => {
         let y = 0;
         let rowHeight = 0;
         const widgetsById = new Map(positions.map((item, index) => [item.id, tab.widgets[index]]));
+        const getWidgetForItem = (id: string) => {
+          const widget = widgetsById.get(id);
+          if (!widget) throw new Error(`Demo widget missing for item ${id}`);
+          return widget;
+        };
         const mobileOrder = [
           "calendar",
           "weather",
@@ -163,15 +168,15 @@ export const seedDemoBoardAsync = async (db: Database) => {
         ];
         const rank = (item: (typeof positions)[number]) => {
           if (tab.name !== "Home") return item.yOffset * 12 + item.xOffset;
-          const kind = widgetsById.get(item.id)!.kind;
+          const kind = getWidgetForItem(item.id).kind;
           const index = mobileOrder.indexOf(kind);
           if (index !== -1) return index;
           return 100 + item.yOffset * 12 + item.xOffset;
         };
-        const mobileItems = [...positions]
-          .sort((a, b) => rank(a) - rank(b))
+        const mobileItems = positions
+          .toSorted((a, b) => rank(a) - rank(b))
           .map((item) => {
-            const widget = widgetsById.get(item.id)!;
+            const widget = getWidgetForItem(item.id);
             let width = 4;
             if (compactKinds.has(widget.kind)) width = 2;
             let height = smallScreenHeights.get(item.id) ?? item.height;

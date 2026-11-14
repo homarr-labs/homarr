@@ -19,10 +19,12 @@ const demoStatsSources = [
   { kind: "spoolman", metrics: ["spools", "remainingWeight"] },
 ] as const satisfies readonly { kind: IntegrationKind; metrics: readonly string[] }[];
 
+type DemoStatsIntegrationKind = (typeof demoStatsSources)[number]["kind"];
+
 const buildDemoWidgets = (
   appIds: string[],
   customWidgetDefinitionId: string,
-  statsIntegrationIds: Record<string, string>,
+  statsIntegrationIds: Record<DemoStatsIntegrationKind, string>,
 ): DemoWidget[] => [
   // Daily focus
   { kind: "calendar", xOffset: 0, yOffset: 0, width: 2, height: 2, needsIntegration: true },
@@ -294,7 +296,7 @@ const buildDemoWidgets = (
     width: 12,
     height: 5,
     needsIntegration: false,
-    integrationIds: demoStatsSources.map(({ kind }) => statsIntegrationIds[kind]!),
+    integrationIds: demoStatsSources.map(({ kind }) => statsIntegrationIds[kind]),
     options: {
       table: false,
       rows: false,
@@ -342,7 +344,7 @@ const appNames = [
 ];
 const statsIntegrationIds = Object.fromEntries(
   demoStatsSources.map(({ kind }) => [kind, `__STATS_${kind.toUpperCase().replace(/[^A-Z0-9]/g, "")}__`]),
-);
+) as Record<DemoStatsIntegrationKind, string>;
 const currentWidgets = buildDemoWidgets(
   appNames.map((name) => `__APP_${name}__`),
   "__CUSTOM_WIDGET__",
@@ -357,6 +359,12 @@ export const demoWidgets: Record<string, DemoWidget> = Object.fromEntries(
     return [widget.kind, widget];
   }),
 );
+const getDemoWidget = (key: string) => {
+  const widget = demoWidgets[key];
+  if (!widget) throw new Error(`Unknown current demo widget: ${key}`);
+  return widget;
+};
+
 demoWidgets["smartHome-controls"] = {
   kind: "smartHome-controls",
   xOffset: 0,
@@ -387,7 +395,7 @@ demoWidgets["smartHome-controls"] = {
   },
 };
 // Show the useful measures without packing every Beszel capability into the overview.
-demoWidgets.beszelSystemGrid!.options = {
+getDemoWidget("beszelSystemGrid").options = {
   statusFilter: "up",
   fahrenheit: false,
   showCpu: true,
@@ -402,8 +410,8 @@ demoWidgets.beszelSystemGrid!.options = {
   showUptime: false,
   showAgent: false,
 };
-demoWidgets.dnsHoleSummary!.options = { layout: "grid", usePiHoleColors: false };
-demoWidgets.downloads!.options = {
+getDemoWidget("dnsHoleSummary").options = { layout: "grid", usePiHoleColors: false };
+getDemoWidget("downloads").options = {
   columns: ["name", "progress", "downSpeed", "state"],
   defaultSort: "progress",
   descendingDefaultSort: true,
@@ -417,7 +425,6 @@ export const place = (
   height: number,
   options?: Record<string, unknown>,
 ): DemoWidget => {
-  const original = demoWidgets[key];
-  if (!original) throw new Error(`Unknown current demo widget: ${key}`);
+  const original = getDemoWidget(key);
   return { ...original, xOffset, yOffset, width, height, options: { ...original.options, ...options } };
 };
