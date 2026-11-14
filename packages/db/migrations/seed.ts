@@ -1,6 +1,6 @@
 import SuperJSON from "superjson";
 
-import { seedDemoBoardAsync } from "./demo-board/seed";
+import { createDemoBoardWritePlanAsync } from "./demo-board/seed";
 
 import { createId, generateResponsiveGridFor, objectKeys } from "@homarr/common";
 import { BUNDLED_CUSTOM_WIDGETS, customWidgetDefinitionSchema } from "@homarr/custom-widgets/core";
@@ -19,8 +19,8 @@ import {
 import type { IntegrationKind } from "@homarr/definitions";
 import { defaultServerSettings, defaultServerSettingsKeys } from "@homarr/server-settings";
 
-import type { Database, InferInsertModel } from "..";
-import { eq, inArray } from "..";
+import type { Database, InferInsertModel, SQL } from "..";
+import { eq, executeWritePlanAsync, inArray } from "..";
 import { getMaxGroupPositionAsync, placeAllWidgetsAsync } from "../queries";
 import {
   getServerSettingByKeyAsync,
@@ -624,65 +624,95 @@ const seedDemoUserAsync = async (db: Database) => {
   }
 
   const userId = createId();
+  const plan: SQL[] = [];
 
-  await db.insert(users).values({
-    id: userId,
-    name: "demo",
-    email: "demo@example.com",
-    password: "$2b$10$odRXt5e95kSQV5Axmk/FeO6GVOxuRQQ8NnRcBA78Wg4V3kZxPY68u",
-  });
+  plan.push(
+    db
+      .insert(users)
+      .values({
+        id: userId,
+        name: "demo",
+        email: "demo@example.com",
+        password: "$2b$10$odRXt5e95kSQV5Axmk/FeO6GVOxuRQQ8NnRcBA78Wg4V3kZxPY68u",
+      })
+      .getSQL(),
+  );
 
   const maxPosition = await getMaxGroupPositionAsync(db);
   const groupId = createId();
-  await db.insert(groups).values({
-    id: groupId,
-    name: credentialsAdminGroup,
-    ownerId: userId,
-    position: maxPosition + 1,
-  });
-  await db.insert(groupPermissions).values({
-    groupId,
-    permission: "admin",
-  });
-  await db.insert(groupMembers).values({
-    groupId,
-    userId,
-  });
+  plan.push(
+    db
+      .insert(groups)
+      .values({
+        id: groupId,
+        name: credentialsAdminGroup,
+        ownerId: userId,
+        position: maxPosition + 1,
+      })
+      .getSQL(),
+  );
+  plan.push(
+    db
+      .insert(groupPermissions)
+      .values({
+        groupId,
+        permission: "admin",
+      })
+      .getSQL(),
+  );
+  plan.push(
+    db
+      .insert(groupMembers)
+      .values({
+        groupId,
+        userId,
+      })
+      .getSQL(),
+  );
 
-  await db.update(onboarding).set({
-    step: "finish",
-    previousStep: "setup",
-  });
+  plan.push(
+    db
+      .update(onboarding)
+      .set({
+        step: "finish",
+        previousStep: "setup",
+      })
+      .getSQL(),
+  );
 
   const integrationId = createId();
-  await db.insert(integrations).values({
-    id: integrationId,
-    name: "Demo Integration",
+  plan.push(
+    db
+      .insert(integrations)
+      .values({
+        id: integrationId,
+        name: "Demo Integration",
+        url: "https://demo.homarr.dev",
+        kind: "mock",
+        appId: null,
+      })
+      .getSQL(),
+  );
+
+  const statsIntegrationRows = demoStatsIntegrationKinds.map((kind) => ({
+    id: createId(),
+    name: getIntegrationName(kind),
     url: "https://demo.homarr.dev",
-    kind: "mock",
+    kind,
     appId: null,
-  });
-
-  for (const kind of demoStatsIntegrationKinds) {
-    await db.insert(integrations).values({
-      id: createId(),
-      name: getIntegrationName(kind),
-      url: "https://demo.homarr.dev",
-      kind,
-      appId: null,
-    });
-  }
-
-  for (const app of demoApps) {
-    await db.insert(apps).values({
-      id: createId(),
-      name: app.name,
-      iconUrl: app.iconUrl,
-      href: app.href,
-    });
-  }
-
-  await seedDemoBoardAsync(db);
+  }));
+  plan.push(db.insert(integrations).values(statsIntegrationRows).getSQL());
+  const appRows = demoApps.map((app) => ({ id: createId(), ...app }));
+  plan.push(db.insert(apps).values(appRows).getSQL());
+  plan.push(
+    ...(await createDemoBoardWritePlanAsync(db, {
+      userId,
+      mockIntegrationId: integrationId,
+      apps: appRows,
+      statsIntegrations: statsIntegrationRows,
+    })),
+  );
+  await executeWritePlanAsync(db, plan);
 
   console.log("Demo mode enabled: created demo user and showcase board. Disable by setting DEMO_MODE=false.");
 };

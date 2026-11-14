@@ -3,7 +3,7 @@ import { stringify } from "superjson";
 import { createId, generateResponsiveGridFor } from "@homarr/common";
 import { headerPreferencesSchema } from "@homarr/validation/user";
 
-import type { Database, InferInsertModel } from "../..";
+import type { Database, InferInsertModel, SQL } from "../..";
 import { eq } from "../..";
 import {
   boards,
@@ -18,37 +18,46 @@ import {
 import { demoBoard } from "./board";
 import { demoCustomWidget } from "./custom-widget";
 
-// Called only when the demo user is first created. Existing dashboards remain unchanged.
-export const seedDemoBoardAsync = async (db: Database) => {
-  const existing = await db.query.boards.findFirst({ where: (row) => eq(row.name, "default") });
-  if (existing) return;
-  const demo = await db.query.users.findFirst({ where: (row) => eq(row.name, "demo") });
-  const integration = await db.query.integrations.findFirst({ where: (row) => eq(row.kind, "mock") });
-  if (!demo || !integration) throw new Error("Demo board setup requires the demo user and integration first");
-  const apps = await db.query.apps.findMany();
-  let customWidget = await db.query.customWidgetDefinitions.findFirst({
-    where: (row, { and }) => and(eq(row.name, demoCustomWidget.name), eq(row.creatorId, demo.id)),
-  });
-  if (!customWidget) {
-    const definitionId = createId();
-    await db.insert(customWidgetDefinitions).values({
-      id: definitionId,
-      name: demoCustomWidget.name,
-      description: demoCustomWidget.description ?? null,
-      sources: stringify(demoCustomWidget.sources),
-      requests: stringify(demoCustomWidget.requests),
-      options: stringify(demoCustomWidget.options),
-      template: demoCustomWidget.template,
-      creatorId: demo.id,
-      enabled: true,
-    });
-    customWidget = await db.query.customWidgetDefinitions.findFirst({ where: (row) => eq(row.id, definitionId) });
+// The caller commits this plan together with the new demo user and fixtures.
+export const createDemoBoardWritePlanAsync = async (
+  db: Database,
+  seed: {
+    userId: string;
+    mockIntegrationId: string;
+    apps: { id: string; name: string }[];
+    statsIntegrations: { id: string; kind: string }[];
+  },
+): Promise<SQL[]> => {
+  const { userId, mockIntegrationId, apps, statsIntegrations } = seed;
+  const boardNames = new Set((await db.query.boards.findMany({ columns: { name: true } })).map(({ name }) => name));
+  let name = "default";
+  if (boardNames.has(name)) {
+    name = "demo";
+    let suffix = 2;
+    while (boardNames.has(name)) {
+      name = `demo-${suffix}`;
+      suffix += 1;
+    }
   }
-  if (!customWidget) throw new Error("Demo Custom JSX definition was not created");
-  const replacements: Record<string, string> = { __MOCK__: integration.id, __CUSTOM_WIDGET__: customWidget.id };
-  const statsIntegrations = await db.query.integrations.findMany({
-    where: (row) => eq(row.url, "https://demo.homarr.dev"),
-  });
+  const customWidgetId = createId();
+  const plan: SQL[] = [];
+  plan.push(
+    db
+      .insert(customWidgetDefinitions)
+      .values({
+        id: customWidgetId,
+        name: demoCustomWidget.name,
+        description: demoCustomWidget.description ?? null,
+        sources: stringify(demoCustomWidget.sources),
+        requests: stringify(demoCustomWidget.requests),
+        options: stringify(demoCustomWidget.options),
+        template: demoCustomWidget.template,
+        creatorId: userId,
+        enabled: true,
+      })
+      .getSQL(),
+  );
+  const replacements: Record<string, string> = { __MOCK__: mockIntegrationId, __CUSTOM_WIDGET__: customWidgetId };
   for (const source of statsIntegrations) {
     if (source.kind === "mock") continue;
     replacements[`__STATS_${source.kind.toUpperCase().replace(/[^A-Z0-9]/g, "")}__`] = source.id;
@@ -75,49 +84,73 @@ export const seedDemoBoardAsync = async (db: Database) => {
     }
   }
   const boardId = createId();
-  await db
-    .insert(boards)
-    .values({ id: boardId, name: "default", creatorId: demo.id, ...definition.board, opacity: 100 });
+  plan.push(
+    db
+      .insert(boards)
+      .values({ id: boardId, name, creatorId: userId, ...definition.board, opacity: 100 })
+      .getSQL(),
+  );
   const layoutId = createId();
   const responsiveLayouts: InferInsertModel<typeof layouts>[] = [
     { id: createId(), boardId, name: "Mobile", role: "mobile", breakpoint: 0, columnCount: 4 },
     { id: createId(), boardId, name: "Tablet", role: "custom", breakpoint: 600, columnCount: 6 },
   ];
-  await db
-    .insert(layouts)
-    .values([
-      { id: layoutId, boardId, name: "Base", role: "base", breakpoint: 1200, columnCount: 12 },
-      ...responsiveLayouts,
-    ]);
+  plan.push(
+    db
+      .insert(layouts)
+      .values([
+        { id: layoutId, boardId, name: "Base", role: "base", breakpoint: 1200, columnCount: 12 },
+        ...responsiveLayouts,
+      ])
+      .getSQL(),
+  );
   for (const [position, tab] of definition.tabs.entries()) {
     const sectionId = createId();
-    await db
-      .insert(sections)
-      .values({ id: sectionId, boardId, kind: "empty", name: tab.name, xOffset: 0, yOffset: position });
+    plan.push(
+      db
+        .insert(sections)
+        .values({ id: sectionId, boardId, kind: "empty", name: tab.name, xOffset: 0, yOffset: position })
+        .getSQL(),
+    );
     const positions: Parameters<typeof generateResponsiveGridFor>[0]["items"] = [];
     const smallScreenHeights = new Map<string, number>();
     for (const widget of tab.widgets) {
       const itemId = createId();
       if (widget.smallScreenHeight !== undefined) smallScreenHeights.set(itemId, widget.smallScreenHeight);
-      await db.insert(items).values({
-        id: itemId,
-        boardId,
-        kind: widget.kind,
-        options: stringify(replace(widget.options ?? {})),
-      });
-      await db.insert(itemLayouts).values({
-        itemId,
-        sectionId,
-        layoutId,
-        xOffset: widget.xOffset,
-        yOffset: widget.yOffset,
-        width: widget.width,
-        height: widget.height,
-      });
+      plan.push(
+        db
+          .insert(items)
+          .values({
+            id: itemId,
+            boardId,
+            kind: widget.kind,
+            options: stringify(replace(widget.options ?? {})),
+          })
+          .getSQL(),
+      );
+      plan.push(
+        db
+          .insert(itemLayouts)
+          .values({
+            itemId,
+            sectionId,
+            layoutId,
+            xOffset: widget.xOffset,
+            yOffset: widget.yOffset,
+            width: widget.width,
+            height: widget.height,
+          })
+          .getSQL(),
+      );
       const integrationIds = widget.integrationIds?.map((id) => replace(id) as string) ?? [];
-      if (widget.needsIntegration) integrationIds.push(integration.id);
+      if (widget.needsIntegration) integrationIds.push(mockIntegrationId);
       if (integrationIds.length > 0)
-        await db.insert(integrationItems).values(integrationIds.map((integrationId) => ({ itemId, integrationId })));
+        plan.push(
+          db
+            .insert(integrationItems)
+            .values(integrationIds.map((integrationId) => ({ itemId, integrationId })))
+            .getSQL(),
+        );
       positions.push({
         id: itemId,
         type: "item",
@@ -196,26 +229,34 @@ export const seedDemoBoardAsync = async (db: Database) => {
         projected = { ...projected, items: mobileItems };
       }
       if (projected.items.length === 0) continue;
-      await db.insert(itemLayouts).values(
-        projected.items.map((item) => ({
-          itemId: item.id,
-          layoutId: target.id,
-          sectionId: item.sectionId,
-          xOffset: item.xOffset,
-          yOffset: item.yOffset,
-          width: item.width,
-          height: item.height,
-        })),
+      plan.push(
+        db
+          .insert(itemLayouts)
+          .values(
+            projected.items.map((item) => ({
+              itemId: item.id,
+              layoutId: target.id,
+              sectionId: item.sectionId,
+              xOffset: item.xOffset,
+              yOffset: item.yOffset,
+              width: item.width,
+              height: item.height,
+            })),
+          )
+          .getSQL(),
       );
     }
   }
-  await db
-    .update(users)
-    .set({
-      homeBoardId: boardId,
-      mobileHomeBoardId: boardId,
-      headerPreferences: JSON.stringify(definition.headerPreferences),
-    })
-    .where(eq(users.id, demo.id));
-  console.log("Created demo board with Home, Media and Systems tabs");
+  plan.push(
+    db
+      .update(users)
+      .set({
+        homeBoardId: boardId,
+        mobileHomeBoardId: boardId,
+        headerPreferences: JSON.stringify(definition.headerPreferences),
+      })
+      .where(eq(users.id, userId))
+      .getSQL(),
+  );
+  return plan;
 };
