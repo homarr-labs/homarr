@@ -1,6 +1,6 @@
 {
   "name": "homarr",
-  "version": "2.13.0",
+  "version": "2.13.1",
   "private": true,
   "workspaces": {
     "packages": [
@@ -40,6 +40,7 @@
       "@dnd-kit/utilities": "3.2.2",
       "@drizzle-team/brocli": "0.12.0",
       "@extractus/feed-extractor": "7.2.1",
+      "@floating-ui/dom": "1.8.0",
       "@gfazioli/mantine-onboarding-tour": "4.0.8",
       "@gitbeaker/rest": "43.8.0",
       "@homarr/node-unifi": "2.6.0",
@@ -367,7 +368,7 @@
     "@assistant-ui/ai-sdk>@ai-sdk/react": "4.0.147",
     "@assistant-ui/ai-sdk>ai": "7.0.143",
     "@assistant-ui/ai-sdk>assistant-stream": "0.3.52",
-    "@assistant-ui/core": "0.3.34",
+    "@assistant-ui/core": "0.3.35",
     "@assistant-ui/store": "0.3.23",
     "@assistant-ui/tap": "0.9.25",
     "@babel/helpers@<7.26.10": "7.29.7",

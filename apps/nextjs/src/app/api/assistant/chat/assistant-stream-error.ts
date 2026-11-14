@@ -1,6 +1,27 @@
 import { isRecord } from "@homarr/common";
-import { NoSuchToolError } from "ai";
+import { APICallError, NoSuchToolError, RetryError } from "ai";
 import type { TextStreamPart, ToolSet } from "ai";
+
+interface AssistantProviderErrorLogMetadata {
+  providerHttpStatus?: number;
+  providerRequestAttempts?: number;
+}
+
+export const getAssistantProviderErrorLogMetadata = (error: unknown): AssistantProviderErrorLogMetadata => {
+  const metadata: AssistantProviderErrorLogMetadata = {};
+  let providerError = error;
+  if (RetryError.isInstance(error)) {
+    metadata.providerRequestAttempts = error.errors.length;
+    providerError = error.lastError;
+  }
+  if (!APICallError.isInstance(providerError)) return metadata;
+
+  const status = providerError.statusCode;
+  if (status !== undefined && Number.isInteger(status) && status >= 100 && status <= 599) {
+    metadata.providerHttpStatus = status;
+  }
+  return metadata;
+};
 
 export const createAssistantAbortErrorTransform =
   <TOOLS extends ToolSet>(clientSignal: AbortSignal) =>
