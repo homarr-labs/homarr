@@ -32,6 +32,7 @@ interface CreateBoardLayoutProps<TParams extends Params> {
   headerBoardEditAction?: JSX.Element;
   headerBoardSettingsAction?: JSX.Element;
   getInitialBoardAsync: (params: TParams) => Promise<Board>;
+  notFoundComponent?: () => Promise<JSX.Element>;
   withTour?: boolean;
   withCustomCss?: boolean;
   withBoardTabs?: boolean;
@@ -42,6 +43,7 @@ export const createBoardLayout = <TParams extends Params>({
   headerBoardEditAction,
   headerBoardSettingsAction,
   getInitialBoardAsync: getInitialBoard,
+  notFoundComponent: NotFoundComponent,
   withTour = false,
   withCustomCss = true,
   withBoardTabs = false,
@@ -85,6 +87,8 @@ export const createBoardLayout = <TParams extends Params>({
           logger.debug("No home board found for anonymous user, redirecting to login");
           redirect("/auth/login");
         }
+
+        if (NotFoundComponent) return <NotFoundComponent />;
 
         logger.warn(error);
         notFound();
