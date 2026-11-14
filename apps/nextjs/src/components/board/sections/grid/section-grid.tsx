@@ -76,6 +76,8 @@ export const SectionGrid = ({
   const editorHostRef = useRef<HTMLDivElement>(null);
   const [entryElementStore] = useState(createGridEntryElementStore);
   const board = useRequiredBoard();
+  const cardInset = (board.itemGap ?? CONTAINER_CARD_INSET * 2) / 2;
+  const collapsedBottomInset = (board.itemGap ?? 20) / 2;
   const currentLayoutId = useCurrentLayout();
   const { items, innerSections } = useSectionItems(section.id);
   const hasLabeledCollapsibleChildren = innerSections.some(
@@ -144,9 +146,9 @@ export const SectionGrid = ({
         innerSections
           .filter((child) => child.options.collapsible && child.options.showLabel)
           .map((child) => {
-            let topInset = CONTAINER_CARD_INSET;
+            let topInset = cardInset;
             if (railPlacement !== "main" && child.yOffset === 0) topInset = 0;
-            return [child.id, (headerHeight + topInset + 10) * collapsedRowsPerPixel];
+            return [child.id, (headerHeight + topInset + collapsedBottomInset) * collapsedRowsPerPixel];
           }),
       );
     }
@@ -155,7 +157,17 @@ export const SectionGrid = ({
       collapsedItemIds: directCollapsedIds,
       collapsedRowCountById,
     });
-  }, [canvasScale, columnCount, directCollapsedIds, innerSections, placements, collapsedRowsPerPixel, railPlacement]);
+  }, [
+    canvasScale,
+    cardInset,
+    collapsedBottomInset,
+    columnCount,
+    directCollapsedIds,
+    innerSections,
+    placements,
+    collapsedRowsPerPixel,
+    railPlacement,
+  ]);
 
   const displayHeights = useMemo(
     () =>
@@ -213,6 +225,7 @@ export const SectionGrid = ({
     const metrics = getContainerGridMetrics({
       section,
       innerSections,
+      cardInset,
       canvasScale,
       parentContentScale,
       inlineInsetCount: containerInlineInsetCount,
@@ -248,6 +261,10 @@ export const SectionGrid = ({
   // is a circular reference - CSS invalidates the whole group rather than using "the old value",
   // silently breaking every icon/text/custom-CSS size that compensates off it for descendants.
   const combinedUiScale = calculateBoardUiScale(canvasScale) / contentScale;
+  let itemGapInset: string | undefined;
+  if (board.itemGap !== null && board.itemGap !== undefined) {
+    itemGapInset = `${board.itemGap / (2 * effectiveContentScale)}px`;
+  }
   useLayoutEffect(() => {
     if (!hasLabeledCollapsibleChildren) return;
     // Convert the fixed header and visual insets into this grid's row units.
@@ -357,7 +374,9 @@ export const SectionGrid = ({
             "--board-item-radius": `var(--mantine-radius-${board.itemRadius ?? "default"})`,
             "--board-grid-content-scale": containerContentScale,
             "--board-grid-row-scale": rowScale,
-            "--board-container-inset": `${CONTAINER_CARD_INSET / effectiveContentScale}px`,
+            "--board-container-inset": `${cardInset / effectiveContentScale}px`,
+            "--board-item-gap-inset": itemGapInset,
+            "--board-grid-item-inset": itemGapInset,
           } as CSSProperties
         }
         data-section-id={section.id}

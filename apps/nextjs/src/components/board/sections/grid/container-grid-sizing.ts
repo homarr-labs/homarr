@@ -22,6 +22,7 @@ interface ContainerGridMetricsInput {
   inlineInsetCount?: number;
   blockInsetCount?: number;
   collapsed?: boolean;
+  cardInset?: number;
 }
 
 export const getContainerGridMetrics = ({
@@ -32,10 +33,11 @@ export const getContainerGridMetrics = ({
   inlineInsetCount = 2,
   blockInsetCount = 2,
   collapsed = false,
+  cardInset = CONTAINER_CARD_INSET,
 }: ContainerGridMetricsInput) => {
   const effectiveScale = canvasScale * parentContentScale;
   const fullWidth = getLogicalGridSize(section.width);
-  const logicalWidth = Math.max(1, fullWidth - (inlineInsetCount * CONTAINER_CARD_INSET) / effectiveScale);
+  const logicalWidth = Math.max(1, fullWidth - (inlineInsetCount * cardInset) / effectiveScale);
   const contentScale = Math.max(0.01, Math.min(logicalWidth / fullWidth, 1));
   const hasHeader = section.options.collapsible && section.options.showLabel;
   let headerInset = 0;
@@ -52,7 +54,7 @@ export const getContainerGridMetrics = ({
     )
   )
     nestedHeaderInset = (20 * calculateBoardUiScale(canvasScale)) / effectiveScale;
-  const overhead = (blockInsetCount * CONTAINER_CARD_INSET) / effectiveScale + headerInset + nestedHeaderInset;
+  const overhead = (blockInsetCount * cardInset) / effectiveScale + headerInset + nestedHeaderInset;
   return { logicalWidth, contentScale, nestedHeaderInset, overhead };
 };
 
@@ -71,6 +73,8 @@ export const getContainerGridMinimumHeights = (
   const cachedByLayout = minimumHeightsCache.get(board);
   const cached = cachedByLayout?.get(layoutId);
   if (cached?.canvasScale === canvasScale && cached.collapsedSectionIds === collapsedSectionIds) return cached.heights;
+  const cardInset = (board.itemGap ?? CONTAINER_CARD_INSET * 2) / 2;
+  const collapsedBottomInset = (board.itemGap ?? 20) / 2;
   const data = getBoardLayoutData(board, layoutId);
   const logicalMinimums = getContainerMinimumSizes(board, layoutId);
   const boardLayout = board.layouts.find((layout) => layout.id === layoutId);
@@ -86,6 +90,7 @@ export const getContainerGridMinimumHeights = (
     const metrics = getContainerGridMetrics({
       section,
       innerSections,
+      cardInset,
       canvasScale,
       parentContentScale,
       inlineInsetCount: insets.inline,
@@ -117,7 +122,7 @@ export const getContainerGridMinimumHeights = (
         .filter((child) => child.options.showLabel && collapsedIds.has(child.id))
         .map((child) => [
           child.id,
-          (CONTAINER_HEADER_HEIGHT + CONTAINER_CARD_INSET + 10) /
+          (CONTAINER_HEADER_HEIGHT + cardInset + collapsedBottomInset) /
             (canvasScale * parentContentScale * metrics.contentScale * LOGICAL_GRID_PITCH),
         ]),
     );

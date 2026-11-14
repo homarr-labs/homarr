@@ -386,6 +386,13 @@
       "when": 1794297740661,
       "tag": "0054_board_theme_inheritance",
       "breakpoints": true
+    },
+    {
+      "idx": 55,
+      "version": "6",
+      "when": 1794656153860,
+      "tag": "0055_board_item_gap",
+      "breakpoints": true
     }
   ]
 }
