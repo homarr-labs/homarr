@@ -1,0 +1,138 @@
+name: Latest peer images with current Homarr source adapters
+
+on:
+  schedule:
+    - cron: "23 5 * * 1"
+  workflow_dispatch:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+    paths:
+      - .github/workflows/weekly-live-integrations.yml
+      - vitest.weekly.config.mts
+      - tsconfig.weekly.json
+      - packages/integrations/weekly/**
+
+permissions:
+  contents: read
+
+concurrency:
+  group: latest-peer-adapters-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name != 'schedule' }}
+
+env:
+  SKIP_ENV_VALIDATION: "true"
+  TURBO_TELEMETRY_DISABLED: "1"
+
+jobs:
+  plan:
+    if: github.event_name != 'pull_request' || github.event.pull_request.draft == false
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      matrix: ${{ steps.profiles.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: ./tooling/github/setup
+      - id: profiles
+        run: echo "matrix=$(bun packages/integrations/weekly/plan.ts matrix)" >> "$GITHUB_OUTPUT"
+      - name: Registry checklist
+        if: always()
+        run: bun packages/integrations/weekly/plan.ts finalize
+      - name: Upload registry checklist
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+        with:
+          name: live-integration-registry
+          if-no-files-found: error
+          path: |
+            coverage/weekly-integrations/checklist.json
+            coverage/weekly-integrations/checklist.md
+            coverage/weekly-integrations/junit.xml
+          retention-days: 7
+
+  live:
+    if: github.event_name != 'pull_request' || github.event.pull_request.draft == false
+    needs: plan
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      max-parallel: 2
+      matrix: ${{ fromJSON(needs.plan.outputs.matrix) }}
+    env:
+      LIVE_PROFILE: ${{ matrix.profile }}
+      LIVE_REPORT_DIR: coverage/weekly-integrations
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: ./tooling/github/setup
+      - name: Initialize fail-closed checklist
+        run: bun packages/integrations/weekly/plan.ts initialize
+      - name: Setup self-host testkit
+        id: testkit
+        uses: ajnart/self-host/testkit@eb8569ec50a8c62d1406d55b19f6bfee218a4240
+      - name: Typecheck weekly suite against matching SDK declarations
+        run: bun run typecheck:weekly
+      - name: Native adapter assertions against fresh peer image
+        id: assertions
+        timeout-minutes: 14
+        run: timeout --signal=TERM --kill-after=30s 13m bun run test:weekly
+      - name: Cleanup fixture manifest
+        id: cleanup
+        if: always() && steps.testkit.outputs.binary-path != ''
+        timeout-minutes: 1
+        env:
+          TESTKIT_BINARY: ${{ steps.testkit.outputs.binary-path }}
+          TESTKIT_MANIFEST: ${{ steps.testkit.outputs.manifest-path }}
+        run: 'timeout --signal=TERM --kill-after=5s 50s "$TESTKIT_BINARY" --cleanup-manifest "$TESTKIT_MANIFEST"'
+      - name: Finalize sanitized checklist
+        if: always()
+        env:
+          LIVE_TEST_OUTCOME: ${{ steps.assertions.outcome }}
+          LIVE_CLEANUP_OUTCOME: ${{ steps.cleanup.outcome }}
+        run: bun packages/integrations/weekly/plan.ts finalize
+      - name: Upload sanitized checklist and image provenance
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+        with:
+          name: live-integration-${{ matrix.profile }}
+          if-no-files-found: error
+          path: |
+            coverage/weekly-integrations/checklist.json
+            coverage/weekly-integrations/checklist.md
+            coverage/weekly-integrations/junit.xml
+            coverage/weekly-integrations/outcomes.json
+          retention-days: 7
+
+  checklist:
+    if: always() && (github.event_name != 'pull_request' || github.event.pull_request.draft == false)
+    needs: [plan, live]
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: ./tooling/github/setup
+      - name: Collect sanitized profile outcomes
+        uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131
+        with:
+          pattern: live-integration-*
+          path: coverage/weekly-merged
+      - name: Complete registry checklist
+        if: always()
+        run: bun packages/integrations/weekly/plan.ts aggregate
+      - name: Upload complete sanitized checklist
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+        with:
+          name: live-integration-complete-checklist
+          if-no-files-found: error
+          path: |
+            coverage/weekly-integrations/checklist.json
+            coverage/weekly-integrations/checklist.md
+            coverage/weekly-integrations/junit.xml
+          retention-days: 7
