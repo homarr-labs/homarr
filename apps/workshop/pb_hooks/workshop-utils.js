@@ -67,7 +67,8 @@ const validateSubmissionManifest = (record) => {
   for (const source of Object.values(manifest.sources)) {
     const validSource =
       source.type === "integration"
-        ? isManifestString(source.integrationKind, 128)
+        ? isManifestString(source.integrationKind, 128) &&
+          (source.optional === undefined || typeof source.optional === "boolean")
         : (source.type === undefined || source.type === "http") &&
           isManifestHttpUrl(source.baseUrl) &&
           ["public", "private", "loopback"].includes(source.networkScope);

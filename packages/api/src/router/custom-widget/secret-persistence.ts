@@ -17,7 +17,7 @@ type ConfigureCustomWidgetSourceInput = {
   sourceId: string;
   baseUrl?: string;
   networkScope?: unknown;
-  integrationId?: string;
+  integrationId?: string | null;
   secrets: CustomWidgetCreateInput["secrets"];
   expectedSource?: CustomWidgetSource;
 };
@@ -223,7 +223,8 @@ function prepareSourceUpdate(
   }
   let configuration: unknown;
   if (previousSource.type === "integration") {
-    configuration = { ...previousSource, integrationId: input.integrationId };
+    if (input.integrationId === null && !previousSource.optional) throw new SourceConfigurationError("binding-changed");
+    configuration = { ...previousSource, integrationId: input.integrationId ?? undefined };
   } else {
     configuration = {
       ...previousSource,
