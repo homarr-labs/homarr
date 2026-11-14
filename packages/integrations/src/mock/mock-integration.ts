@@ -1,3 +1,6 @@
+import { createLogger } from "@homarr/core/infrastructure/logs";
+import { ErrorWithMetadata } from "@homarr/core/infrastructure/logs/error";
+
 import type { IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
 import type { TestingResult } from "../base/test-connection/test-connection-service";
@@ -31,6 +34,7 @@ import { MediaTranscodingMockService } from "./data/media-transcoding";
 import { NetworkControllerSummaryMockService } from "./data/network-controller-summary";
 import { NotificationsMockService } from "./data/notifications";
 import { SmartHomeMockService } from "./data/smart-home";
+import { createSmartHomeMockState } from "./data/smart-home-state";
 import { SystemHealthMonitoringMockService } from "./data/system-health-monitoring";
 import { BeszelMockService } from "./data/beszel";
 import { ServiceVersionMockService } from "./data/service-version";
@@ -68,7 +72,11 @@ export class MockIntegration
   private static readonly mediaTranscoding = new MediaTranscodingMockService();
   private static readonly networkController = new NetworkControllerSummaryMockService();
   private static readonly notifications = new NotificationsMockService();
-  private static readonly smartHome = new SmartHomeMockService();
+  private readonly smartHome = new SmartHomeMockService(createSmartHomeMockState(this.integration.id), (error) => {
+    createLogger({ module: "mockSmartHome", integrationId: this.integration.id }).warn(
+      new ErrorWithMetadata("Live mock update failed", {}, { cause: error }),
+    );
+  });
   private static readonly beszel = new BeszelMockService();
   private static readonly upsSummary = new UpsSummaryMockService();
   private static readonly serviceVersion = new ServiceVersionMockService();
@@ -138,12 +146,12 @@ export class MockIntegration
   getNotificationsAsync = MockIntegration.notifications.getNotificationsAsync.bind(MockIntegration.notifications);
 
   // SmartHomeIntegration
-  getSnapshotAsync = MockIntegration.smartHome.getSnapshotAsync.bind(MockIntegration.smartHome);
-  getCatalogAsync = MockIntegration.smartHome.getCatalogAsync.bind(MockIntegration.smartHome);
-  getHistoryAsync = MockIntegration.smartHome.getHistoryAsync.bind(MockIntegration.smartHome);
-  getForecastAsync = MockIntegration.smartHome.getForecastAsync.bind(MockIntegration.smartHome);
-  executeActionAsync = MockIntegration.smartHome.executeActionAsync.bind(MockIntegration.smartHome);
-  subscribeEntitiesAsync = MockIntegration.smartHome.subscribeEntitiesAsync.bind(MockIntegration.smartHome);
+  getSnapshotAsync = this.smartHome.getSnapshotAsync.bind(this.smartHome);
+  getCatalogAsync = this.smartHome.getCatalogAsync.bind(this.smartHome);
+  getHistoryAsync = this.smartHome.getHistoryAsync.bind(this.smartHome);
+  getForecastAsync = this.smartHome.getForecastAsync.bind(this.smartHome);
+  executeActionAsync = this.smartHome.executeActionAsync.bind(this.smartHome);
+  subscribeEntitiesAsync = this.smartHome.subscribeEntitiesAsync.bind(this.smartHome);
 
   // UpsSummaryIntegration
   getUpsSummariesAsync = MockIntegration.upsSummary.getUpsSummariesAsync.bind(MockIntegration.upsSummary);
