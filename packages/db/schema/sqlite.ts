@@ -290,6 +290,7 @@ export const boards = sqliteTable("board", {
   customCss: text(),
   iconColor: text(),
   itemRadius: text().$type<MantineSize>(),
+  itemGap: int(),
   disableStatus: int({ mode: "boolean" }).default(false).notNull(),
 });
 

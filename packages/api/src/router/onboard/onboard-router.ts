@@ -411,6 +411,7 @@ export const onboardRouter = createTRPCRouter({
               customCss: null,
               iconColor: null,
               itemRadius: null,
+              itemGap: null,
               disableStatus: false,
               sections: [],
               layouts: pendingLayouts,
