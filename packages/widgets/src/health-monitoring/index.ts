@@ -9,6 +9,7 @@ import {
 import { createWidgetDefinition } from "../definition";
 import { supportsStorageVolumeSelection } from "../filter-storage-volumes";
 import { optionsBuilder } from "../options";
+import { createWidgetRefreshIntervalOptions } from "../refresh-interval";
 import { createStorageVolumeMultiSelectOptions } from "../storage-volume-options";
 
 export const { definition, componentLoader } = createWidgetDefinition("healthMonitoring", {
@@ -19,6 +20,7 @@ export const { definition, componentLoader } = createWidgetDefinition("healthMon
   createOptions() {
     return optionsBuilder.from(
       (factory) => ({
+        ...createWidgetRefreshIntervalOptions(10),
         fahrenheit: factory.switch({
           defaultValue: false,
         }),

@@ -4238,6 +4238,15 @@
       }
     },
     "common": {
+      "refreshInterval": {
+        "label": "Refresh interval",
+        "description": "Shorter intervals increase load on Homarr and the integration.",
+        "custom": "Custom"
+      },
+      "customRefreshInterval": {
+        "label": "Custom refresh interval (seconds)",
+        "description": "Enter a whole number between 1 and 3600."
+      },
       "location": {
         "query": "City / Postal code",
         "latitude": "Latitude",

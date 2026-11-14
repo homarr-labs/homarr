@@ -257,9 +257,15 @@ export const createRequestHandler = <TData, TInput extends Record<string, unknow
       expiryTimerAt = undefined;
     },
     handler: (input: TInput) => ({
-      async getDataAsync(): Promise<{ data: TData; timestamp: Date }> {
+      async getDataAsync({ maxAgeMs = Infinity }: { maxAgeMs?: number } = {}): Promise<{
+        data: TData;
+        timestamp: Date;
+      }> {
         const deadlineAt = Date.now() + requestTimeoutMs;
         const ttl = options.cacheTtlMs ?? DEFAULT_TTL_MS;
+        // A caller can require fresher data while sharing the same cache and refresh lock.
+        const isFresh = (entry: CacheEntry<TData>) =>
+          Date.now() < Math.min(entry.expiresAt, entry.timestamp.getTime() + maxAgeMs);
         const isCacheEnabled = typeof ttl === "function" || ttl > 0;
         const baseKey = options.getCacheKey?.(input) ?? JSON.stringify(input);
         const requestGeneration = generation;
@@ -279,7 +285,7 @@ export const createRequestHandler = <TData, TInput extends Record<string, unknow
 
         let cached = getFromMemory(key);
         const now = Date.now();
-        if (cached && now < cached.expiresAt) return cached;
+        if (cached && isFresh(cached)) return cached;
         if (cached && now >= cached.staleUntil) {
           cache.delete(key);
           scheduleExpiry();
@@ -298,7 +304,7 @@ export const createRequestHandler = <TData, TInput extends Record<string, unknow
 
           if (sharedCache?.isShared) {
             const sharedEntry = await sharedCache.getAsync();
-            if (sharedEntry && Date.now() < sharedEntry.expiresAt) {
+            if (sharedEntry && isFresh(sharedEntry)) {
               storeInMemory(key, sharedEntry, requestGeneration);
               return sharedEntry;
             }
@@ -312,7 +318,7 @@ export const createRequestHandler = <TData, TInput extends Record<string, unknow
               while (lockToken === null && sharedCache.isShared) {
                 await delayAsync(SHARED_REFRESH_POLL_MS, waitDeadlineAt);
                 const refreshedEntry = await sharedCache.getAsync();
-                if (refreshedEntry && Date.now() < refreshedEntry.expiresAt) {
+                if (refreshedEntry && isFresh(refreshedEntry)) {
                   storeInMemory(key, refreshedEntry, requestGeneration);
                   return refreshedEntry;
                 }
