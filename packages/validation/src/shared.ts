@@ -49,7 +49,7 @@ export const commonItemSchema = z
 
 export const boardTabNameSchema = z.string().trim().max(32);
 
-const emptySectionSchema = z.object({
+export const emptySectionSchema = z.object({
   id: z.string(),
   kind: z.literal("empty"),
   yOffset: z.number().int(),
@@ -81,7 +81,7 @@ export const containerSectionOptionsSchema = z
 
 export type ContainerSectionOptions = z.infer<typeof containerSectionOptionsSchema>;
 
-const containerSectionSchema = z.object({
+export const containerSectionSchema = z.object({
   id: z.string(),
   kind: z.literal("container"),
   options: containerSectionOptionsSchema,

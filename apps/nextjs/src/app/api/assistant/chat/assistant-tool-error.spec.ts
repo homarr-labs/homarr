@@ -1,7 +1,11 @@
 import { TRPCError } from "@trpc/server";
 import { describe, expect, test } from "vitest";
 
-import { getCustomWidgetConfigurationStatusRecovery, getSafeAssistantToolError } from "./assistant-tool-error";
+import {
+  getConnectionTestFailureMessage,
+  getCustomWidgetConfigurationStatusRecovery,
+  getSafeAssistantToolError,
+} from "./assistant-tool-error";
 
 describe("getSafeAssistantToolError", () => {
   test("explains integration connection failures without leaking upstream details or inviting write retries", () => {
@@ -107,6 +111,21 @@ describe("getSafeAssistantToolError", () => {
         toolName: "integration_create",
       }),
     ).toBe("The tool input was not valid.");
+  });
+
+  test("names the failure category of a rejected integration connection test without upstream details", () => {
+    const error = new TRPCError({
+      code: "BAD_REQUEST",
+      message: "authorization",
+      cause: new Error("401 from https://private.test/api token=secret"),
+    });
+
+    const message = getSafeAssistantToolError(error, { toolName: "integration_create" });
+    expect(message).toContain("connection test failed (authorization)");
+    expect(message).not.toContain("private.test");
+    expect(message).not.toContain("token=");
+    // MCP clients get the same message
+    expect(getConnectionTestFailureMessage(error, "integration_create")).toBe(message);
   });
 
   test.each([
