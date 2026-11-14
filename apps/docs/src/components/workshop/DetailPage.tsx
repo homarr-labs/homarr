@@ -107,7 +107,10 @@ const sourceHost = (source: WidgetSource) => {
 };
 
 const sourceAuthLabel = (source: WidgetSource) => {
-  if (source.type === "integration") return "Requires a configured integration";
+  if (source.type === "integration") {
+    if (source.optional) return "Optional configured integration";
+    return "Requires a configured integration";
+  }
   const { auth } = source;
   if (auth === "none") return "No credentials";
   if (auth === "basic") return "Basic auth";
@@ -116,6 +119,12 @@ const sourceAuthLabel = (source: WidgetSource) => {
   if (auth.type === "apiKeyHeader") return `API key header · ${auth.name}`;
   return `API key query · ${auth.name}`;
 };
+
+function integrationRequirementSummary(sources: [string, WidgetSource][]) {
+  const optional = sources.filter(([, source]) => source.type === "integration" && source.optional).length;
+  if (!optional) return `${sources.length} required`;
+  return `${sources.length - optional} required, ${optional} optional`;
+}
 
 const sourceNeedsSecret = (source: WidgetSource) => source.type !== "integration" && source.auth !== "none";
 
@@ -178,7 +187,7 @@ const WidgetSafetySummary = ({ widget }: { widget: HomarrCustomWidgetV2 }) => {
           {integrationSources.length > 0 && (
             <>
               <dt className="mt-3 text-xs font-medium text-muted-foreground">Saved integrations</dt>
-              <dd className="mt-1.5 font-medium">{integrationSources.length} required</dd>
+              <dd className="mt-1.5 font-medium">{integrationRequirementSummary(integrationSources)}</dd>
             </>
           )}
         </div>
@@ -844,10 +853,7 @@ const MarketplaceDetail = ({ workshopUrl, submissionId }: { workshopUrl: string;
                     <h3 className="mb-2 flex items-center gap-2 text-sm font-medium">
                       <IconServer size={14} /> Saved integrations
                     </h3>
-                    <p className="text-sm">
-                      {integrationSources.length} configured integration{integrationSources.length !== 1 && "s"}{" "}
-                      required.
-                    </p>
+                    <p className="text-sm">{integrationRequirementSummary(integrationSources)}.</p>
                     <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
                       Select matching integrations in Homarr after import. Their connection settings are reused.
                     </p>

@@ -68,7 +68,7 @@ export function CustomWidgetSourceSetupDialog({ definitionId, opened, onClose }:
           await configureMutation.mutateAsync({
             definitionId,
             sourceId: setup.sourceId,
-            integrationId: value.integrationId,
+            integrationId: value.integrationId ?? null,
           });
           continue;
         }

@@ -102,6 +102,7 @@ export const customWidgetIntegrationSourceSchema = z.strictObject({
   type: z.literal("integration"),
   name: z.string().trim().min(1).max(128).optional(),
   integrationKind: z.enum(httpIntegrationKinds),
+  optional: z.boolean().optional(),
   integrationId: z.string().min(1).max(100).optional(),
   baseUrl: z.never().optional(),
   networkScope: z.never().optional(),

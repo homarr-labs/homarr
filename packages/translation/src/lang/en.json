@@ -1090,6 +1090,8 @@
         "existingIntegration": "Existing integration",
         "integrationType": "Integration type",
         "selectIntegration": "Configured integration",
+        "optionalIntegration": "Configured integration (optional)",
+        "optionalAtInstall": "Allow installation without linking this integration",
         "noIntegrations": "No matching integrations available",
         "integrationUnavailable": "The selected integration is no longer available. Select another integration.",
         "integrationDescription": "Uses the saved integration URL and credentials. Changes apply automatically. Full integration access is required to run requests."
