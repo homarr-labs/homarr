@@ -15,7 +15,7 @@ import {
   useComputedColorScheme,
   useMantineTheme,
 } from "@mantine/core";
-import { useHotkeys } from "@mantine/hooks";
+import { useHotkeys, useMergedRef, useResizeObserver } from "@mantine/hooks";
 import type { HotkeyItem } from "@mantine/hooks";
 import { IconArrowLeft, IconArrowRight, IconDotsVertical, IconHome, IconPencil, IconPlus } from "@tabler/icons-react";
 
@@ -64,8 +64,11 @@ export const BoardTabBar = ({
 }) => {
   const { tabs, activeTab } = useBoardTabs();
   const [isEditMode] = useEditMode();
+  const activeTabIndex = tabs.findIndex((tab) => tab.id === activeTab?.id);
   const [renamingTabId, setRenamingTabId] = useState<string | null>(null);
   const listRef = useRef<HTMLDivElement>(null);
+  const [resizeRef, { width: listWidth }] = useResizeObserver<HTMLDivElement>();
+  const mergedListRef = useMergedRef(listRef, resizeRef);
   const getTabLabel = useBoardTabLabel();
   const t = useI18n("board.tabs");
   const theme = useMantineTheme();
@@ -86,11 +89,17 @@ export const BoardTabBar = ({
     const tabBounds = tab.getBoundingClientRect();
     if (tabBounds.left < bounds.left) list.scrollLeft += tabBounds.left - bounds.left;
     else if (tabBounds.right > bounds.right) list.scrollLeft += tabBounds.right - bounds.right;
-  }, [activeTab?.id, activeTab?.name]);
+  }, [activeTab?.id, activeTab?.name, activeTabIndex, listWidth, renamingTabId]);
 
   return (
     <Group gap={4} wrap="nowrap" w={fit ? "100%" : "fit-content"} maw="100%" p={2}>
-      <Tabs.List ref={listRef} className={classes.list} aria-label={t("label")} grow={fit} flex={fit ? 1 : undefined}>
+      <Tabs.List
+        ref={mergedListRef}
+        className={classes.list}
+        aria-label={t("label")}
+        grow={fit}
+        flex={fit ? 1 : undefined}
+      >
         {tabs.map((tab, index) => {
           if (isEditMode && renamingTabId === tab.id) {
             return <BoardTabRenameInput key={tab.id} tab={tab} onDone={() => setRenamingTabId(null)} />;
@@ -104,7 +113,7 @@ export const BoardTabBar = ({
                 styles={{ tabLabel: { minWidth: 0 } }}
                 c={tab.id === activeTab?.id ? activeColor : undefined}
                 miw={28}
-                flex={fit ? "1 1 0" : "0 0 auto"}
+                flex={fit ? "1 0 auto" : "0 0 auto"}
                 px={compact ? 8 : 10}
                 py={7}
                 aria-label={getTabLabel(tab)}
@@ -120,7 +129,7 @@ export const BoardTabBar = ({
                 }
                 onDoubleClick={isEditMode ? () => setRenamingTabId(tab.id) : undefined}
               >
-                <Text component="span" inherit truncate="end" display="block" maw="7rem">
+                <Text component="span" inherit display="block">
                   {compact ? index + 1 : getTabLabel(tab)}
                 </Text>
               </Tabs.Tab>
@@ -177,10 +186,8 @@ const BoardTabRenameInput = ({ tab, onDone }: { tab: BoardTab; onDone: () => voi
 
   return (
     <TextInput
-      w="8rem"
+      w={`${Math.max(initialLabel.current.length + 2, 16)}ch`}
       flex="none"
-      size="xs"
-      radius="xl"
       maxLength={32}
       defaultValue={initialLabel.current}
       aria-label={t("rename")}
