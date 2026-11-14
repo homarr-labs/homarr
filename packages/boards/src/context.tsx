@@ -9,7 +9,6 @@ import { clientApi } from "@homarr/api/client";
 
 import { useEditMode } from "./edit-mode";
 import { boardViewportWidthCookieName, getLayoutIdForViewportWidth } from "./layout-selection";
-import { updateBoardName } from "./updater";
 
 type Board = RouterOutputs["board"]["getBoardByName"];
 
@@ -90,9 +89,6 @@ export const BoardProvider = ({
     () => getCurrentLayout(data, layoutOverrideId),
     () => layoutOverrideId ?? initialLayoutId,
   );
-
-  // Update the board name so it can be used within updateBoard method
-  updateBoardName(initialBoard.name);
 
   const pathname = usePathname();
   const utils = clientApi.useUtils();
