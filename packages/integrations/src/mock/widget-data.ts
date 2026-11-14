@@ -46,11 +46,14 @@ const demoSpeedtests = [2310, 2280, 2330, 2290, 2340, 2300, 2320, 2270].map((dow
 
 const anchorNote: AnchorNote = {
   id: "homarr-demo-note",
-  title: "Homarr demo runbook",
+  title: "Backup schedule",
   content: JSON.stringify({
     ops: [
-      { insert: "Welcome to the complete Homarr widget gallery.\n", attributes: { bold: true } },
-      { insert: "Every integration-backed card below is powered by safe mock data.\n" },
+      { insert: "Nightly backups\n", attributes: { bold: true } },
+      {
+        insert:
+          "Database at 02:00 · off-site copy at 03:00. Keep the latest verified snapshot before updating services.\n",
+      },
     ],
   }),
   createdAt: demoTimestamp,

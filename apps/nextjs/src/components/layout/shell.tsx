@@ -5,8 +5,6 @@ import { AppShell } from "@mantine/core";
 import { useAtomValue } from "jotai";
 import { useSettings } from "@homarr/settings";
 
-import { useDemoPrototype } from "~/components/board/demo-prototype-context";
-
 import { useOptionalBackgroundProps } from "./background";
 import { appShellHeaderHeight } from "./constants";
 import { navigationCollapsedAtom } from "./header/burger";
@@ -23,9 +21,7 @@ export const ClientShell = ({
 }: PropsWithChildren<ClientShellProps>) => {
   const collapsed = useAtomValue(navigationCollapsedAtom);
   const backgroundProps = useOptionalBackgroundProps();
-  const settings = useSettings();
-  const prototype = useDemoPrototype();
-  const headerPreferences = prototype?.headerPreferences ?? settings.headerPreferences;
+  const { headerPreferences } = useSettings();
   const headerHeight = headerPreferences.visible ? appShellHeaderHeight : 0;
 
   return (

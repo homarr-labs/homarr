@@ -8,8 +8,6 @@ import { TRPCError } from "@trpc/server";
 import { getRscUserSettingsAsync } from "@homarr/api/user-server";
 import { auth } from "@homarr/auth/next";
 import { constructBoardPermissions } from "@homarr/auth/shared";
-import { getBoardByNameAsync } from "@homarr/api/board-server";
-import { demoPrototypeBoardName, demoPrototypes } from "@homarr/db/demo-prototypes";
 import { boardViewportWidthCookieName, getLayoutIdForViewportWidth } from "@homarr/boards/layout-selection";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import { ModalProvider } from "@homarr/modals";
@@ -22,7 +20,7 @@ import { BoardTourGate } from "~/components/onboarding/board-tour-gate";
 import { env } from "~/env";
 import { getCurrentColorSchemeAsync } from "~/theme/color-scheme";
 import type { Board } from "./_types";
-import { DemoPrototypeHost } from "./_demo-prototype";
+import { BoardProviders } from "./_providers";
 import type { Params } from "./(content)/_creator";
 import { CustomCss } from "./(content)/_custom-css";
 import { BoardMantineProvider } from "./(content)/_theme";
@@ -101,24 +99,9 @@ export const createBoardLayout = <TParams extends Params>({
     const initialBoard = initialBoardResult.board;
     const { hasChangeAccess } = constructBoardPermissions(initialBoard, session);
     const initialLayoutId = getLayoutIdForViewportWidth(initialBoard.layouts, initialViewportWidth);
-    let prototypeCandidates = null;
-    if (
-      process.env.NODE_ENV !== "production" &&
-      process.env.HOMARR_DEMO_PROTOTYPE === "true" &&
-      env.DEMO_MODE &&
-      initialBoard.name === "demo-prototype"
-    ) {
-      prototypeCandidates = await Promise.all(
-        demoPrototypes.map(async (proposal) => ({
-          proposal,
-          board: await getBoardByNameAsync(demoPrototypeBoardName(proposal.key)),
-        })),
-      );
-    }
 
     return (
-      <DemoPrototypeHost
-        candidates={prototypeCandidates}
+      <BoardProviders
         initialBoard={initialBoard}
         initialLayoutId={initialLayoutId}
         initialViewportWidth={initialViewportWidth}
@@ -143,7 +126,7 @@ export const createBoardLayout = <TParams extends Params>({
             </BoardTourGate>
           </ModalProvider>
         </BoardMantineProvider>
-      </DemoPrototypeHost>
+      </BoardProviders>
     );
   };
 

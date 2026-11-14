@@ -293,7 +293,6 @@
     "db:push": "bun run --filter @homarr/db push:sqlite",
     "db:studio": "bun run --filter @homarr/db studio",
     "dev": "bun run --filter @homarr/nextjs dev",
-    "demo:prototype": "bun tools/demo-prototype/run.ts",
     "dev:benchmark": "node --experimental-strip-types scripts/benchmarks/dev-board.mts",
     "dev:cli": "go -C tools/homarr-dev run -buildvcs=false .",
     "dev:cli:build": "go -C tools/homarr-dev build -buildvcs=false .",

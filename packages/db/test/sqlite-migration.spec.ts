@@ -113,7 +113,7 @@ test("SQLite migrations seed the intentional demo showcase", async () => {
 
     expect(board).toMatchObject({
       name: "default",
-      pageTitle: "Homarr · Feature tour",
+      pageTitle: "Homarr demo",
       backgroundImageUrl: null,
       primaryColor: null,
       secondaryColor: null,
@@ -131,20 +131,22 @@ test("SQLite migrations seed the intentional demo showcase", async () => {
       expect.arrayContaining([
         expect.objectContaining({ name: "Base", columnCount: 12, breakpoint: 1200, role: "base" }),
         expect.objectContaining({ name: "Tablet", columnCount: 6, breakpoint: 600, role: "custom" }),
-        expect.objectContaining({ name: "Mobile", columnCount: 3, breakpoint: 0, role: "mobile" }),
+        expect.objectContaining({ name: "Mobile", columnCount: 4, breakpoint: 0, role: "mobile" }),
       ]),
     );
     expect(
       board.layouts.every((layout) => layout.leftGutterColumnCount === 0 && layout.rightGutterColumnCount === 0),
     ).toBe(true);
     expect(board.sections.toSorted((first, second) => (first.yOffset ?? 0) - (second.yOffset ?? 0))).toEqual([
-      expect.objectContaining({ kind: "empty", name: "Overview", xOffset: 0, yOffset: 0 }),
-      expect.objectContaining({ kind: "empty", name: "Explore", xOffset: 0, yOffset: 1 }),
+      expect.objectContaining({ kind: "empty", name: "Home", xOffset: 0, yOffset: 0 }),
+      expect.objectContaining({ kind: "empty", name: "Media", xOffset: 0, yOffset: 1 }),
+      expect.objectContaining({ kind: "empty", name: "Systems", xOffset: 0, yOffset: 2 }),
     ]);
-    expect(board.items).toHaveLength(68);
+    expect(board.items).toHaveLength(62);
     expect(new Set(board.items.map(({ kind }) => kind))).toEqual(
       new Set([
         "anchorNote",
+        "airQuality",
         "app",
         "archiveTeamWarrior",
         "assistant",
@@ -160,7 +162,6 @@ test("SQLite migrations seed the intentional demo showcase", async () => {
         "coolify",
         "countdown",
         "customApi",
-        "dnsHoleControls",
         "dnsHoleSummary",
         "dockerContainers",
         "downloads",
@@ -174,23 +175,26 @@ test("SQLite migrations seed the intentional demo showcase", async () => {
         "mediaRequests-requestList",
         "mediaRequests-requestStats",
         "mediaServer",
-        "mediaTranscoding",
         "networkControllerStatus",
-        "networkControllerSummary",
         "notebook",
         "notifications",
         "paperlessNgx",
         "patchmon",
+        "releases",
+        "rssFeed",
         "smartHome-controls",
+        "stockPrice",
         "speedtestTracker",
         "stats",
         "timer",
+        "timetable",
         "tracearr",
         "traefik",
         "umami",
         "ups",
         "uptimeKuma",
         "vpn",
+        "weather",
         "wud",
       ]),
     );
@@ -219,6 +223,17 @@ test("SQLite migrations seed the intentional demo showcase", async () => {
           }
         }
       }
+    }
+    const baseLayout = board.layouts.find((layout) => layout.role === "base");
+    if (!baseLayout) throw new Error("Demo base layout was not seeded");
+    for (const section of board.sections) {
+      const placements = board.items.flatMap((item) =>
+        item.layouts.filter((placement) => placement.layoutId === baseLayout.id && placement.sectionId === section.id),
+      );
+      const lastRow = Math.max(...placements.map((placement) => placement.yOffset + placement.height));
+      expect(occupiedCellsBySectionLayout.get(`${baseLayout.id}:${section.id}`)?.size).toBe(
+        baseLayout.columnCount * lastRow,
+      );
     }
     const itemByKind = (kind: string) => board.items.find((item) => item.kind === kind);
     expect(board.items.filter((item) => item.kind === "stats")).toHaveLength(1);

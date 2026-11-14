@@ -1,7 +1,7 @@
 import { customWidgetDefinitionSchema } from "@homarr/custom-widgets/core";
 
 // Static example data demonstrates the real Custom JSX runtime without an upstream request.
-export const demoShowcaseCustomWidget = customWidgetDefinitionSchema.parse({
+export const demoCustomWidget = customWidgetDefinitionSchema.parse({
   $schema: "homarr-custom-widget-v2",
   name: "Maintenance checks",
   description: "A local Custom JSX example with an editable title and four sample maintenance checks.",

@@ -10,11 +10,9 @@ import { db } from "@homarr/db";
 
 const logger = createLogger({ module: "websocketMain" });
 
-let port = 3001;
-if (process.env.NODE_ENV !== "production" && process.env.HOMARR_DEMO_PROTOTYPE === "true") {
-  port = Number(process.env.NEXT_PUBLIC_DEMO_PROTOTYPE_WEBSOCKET_PORT ?? 3001);
-}
-const wss = new WebSocketServer({ port });
+const wss = new WebSocketServer({
+  port: 3001,
+});
 wss.on("error", (error) => {
   logger.error(new Error("WebSocket server error", { cause: error }));
 });
@@ -22,7 +20,7 @@ wss.on("error", (error) => {
 export const startupPromise = new Promise<void>((resolve, reject) => {
   const onListening = () => {
     wss.off("error", onError);
-    logger.info(`✅ WebSocket Server listening on ws://localhost:${port}`);
+    logger.info("✅ WebSocket Server listening on ws://localhost:3001");
     resolve();
   };
   const onError = (error: Error) => {

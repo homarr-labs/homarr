@@ -1,13 +1,7 @@
 import type { WidgetKind } from "@homarr/definitions";
 import type { HeaderPreferences } from "@homarr/validation/user";
 
-// Selected demo board data. Historical proposals are preserved at their earlier git heads.
-export interface DemoPrototype {
-  key: string;
-  iteration?: number;
-  name: string;
-  question: string;
-  description: string;
+export interface DemoBoardDefinition {
   headerPreferences: HeaderPreferences;
   board: {
     pageTitle: string;
@@ -19,7 +13,6 @@ export interface DemoPrototype {
   };
   tabs: {
     name: string;
-    explanation: string;
     widgets: {
       kind: WidgetKind;
       xOffset: number;

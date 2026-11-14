@@ -14,7 +14,7 @@ const accent = [
 ];
 
 // A real, editable Homarr custom theme for the selected demo board.
-export const demoPrototypeTheme = customThemeSchema.parse({
+export const demoTheme = customThemeSchema.parse({
   preset: "default",
   theme: {
     colors: { primaryColor: accent, secondaryColor: accent },
@@ -71,4 +71,4 @@ export const demoHeaderPreferences = {
 export const demoBoardPreferences = {
   pageTitle: "Homarr demo",
   itemRadius: "lg",
-} satisfies import("./types").DemoPrototype["board"];
+} satisfies import("./types").DemoBoardDefinition["board"];

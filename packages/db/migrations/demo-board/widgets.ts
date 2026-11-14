@@ -1,8 +1,8 @@
-// Current dev demo inventory, reorganized by the throwaway tab proposals.
+// The current demo widgets share their options across the Home, Media and Systems tabs.
 import type { IntegrationKind } from "@homarr/definitions";
-import type { DemoPrototype } from "./types";
+import type { DemoBoardDefinition } from "./types";
 
-type DemoWidget = DemoPrototype["tabs"][number]["widgets"][number] & { section?: "right" };
+type DemoWidget = DemoBoardDefinition["tabs"][number]["widgets"][number] & { section?: "right" };
 
 const demoStatsSources = [
   { kind: "sonarr", metrics: ["shows", "episodes", "monitored", "missing"] },

@@ -1,27 +1,20 @@
-// Three native tabs on the actual demo board, compared with B through ?variant=.
-import { place } from "./current-demo-widgets";
+import { place } from "./widgets";
 import { demoBoardPreferences, demoHeaderPreferences } from "./theme";
-import type { DemoPrototype } from "./types";
+import type { DemoBoardDefinition } from "./types";
 
-export const variantA = {
-  key: "A",
-  iteration: 4,
-  name: "Home, media & systems",
-  question: "Can three purposeful tabs make the current demo easier to use without losing its useful widgets?",
-  description: "Daily tools and home controls, readable media activity, and a separate systems workspace.",
+export const demoBoard = {
   headerPreferences: demoHeaderPreferences,
   board: demoBoardPreferences,
   tabs: [
     {
       name: "Home",
-      explanation: "Home controls and everyday tools.",
       widgets: [
         place("calendar", 0, 0, 3, 2),
         place("weather", 3, 0, 2, 2),
         place("clock", 5, 0, 1, 2),
         place("timer", 6, 0, 2, 1),
         place("airQuality", 6, 1, 2, 1),
-        place("bookmarks", 8, 0, 4, 2),
+        place("bookmarks", 8, 0, 4, 2, { layout: "adaptive", hideHostname: true }),
         place("smartHome-controls", 0, 2, 8, 3),
         place("assistant", 8, 2, 4, 3),
         place("rssFeed", 0, 5, 6, 3),
@@ -30,18 +23,17 @@ export const variantA = {
         place("timetable", 3, 8, 3, 2),
         place("stockPrice", 6, 8, 3, 2),
         place("releases", 9, 8, 3, 2),
-        place("notebook", 0, 10, 6, 2, {
+        place("notebook", 0, 10, 4, 1, {
           showToolbar: false,
           allowReadOnlyCheck: true,
           content:
-            '<h3>Weekend plans</h3><ul data-type="taskList"><li data-type="taskItem" data-checked="true"><label><input type="checkbox" checked="checked"><span></span></label><div><p>Back up family photos</p></div></li><li data-type="taskItem" data-checked="false"><label><input type="checkbox"><span></span></label><div><p>Plan next week’s meals</p></div></li><li data-type="taskItem" data-checked="false"><label><input type="checkbox"><span></span></label><div><p>Water the balcony plants</p></div></li></ul>',
+            '<ul data-type="taskList"><li data-type="taskItem" data-checked="true"><label><input type="checkbox" checked="checked"><span></span></label><div><p>Back up photos</p></div></li><li data-type="taskItem" data-checked="false"><label><input type="checkbox"><span></span></label><div><p>Plan weekly meals</p></div></li></ul>',
         }),
-        place("anchorNote", 6, 10, 6, 2),
+        place("anchorNote", 4, 10, 8, 1, { showUpdatedAt: false }),
       ],
     },
     {
       name: "Media",
-      explanation: "Apps, playback, downloads and requests.",
       widgets: [
         place("app-SONARR", 0, 0, 2, 1),
         place("app-RADARR", 2, 0, 2, 1),
@@ -49,7 +41,7 @@ export const variantA = {
         place("app-JELLYFIN", 6, 0, 2, 1),
         place("app-QBITTORRENT", 8, 0, 2, 1),
         place("app-OVERSEERR", 10, 0, 2, 1),
-        place("mediaServer", 0, 1, 6, 3),
+        place("mediaServer", 0, 1, 6, 3, { showBitrate: false, showLocation: false }),
         place("downloads", 6, 1, 6, 3),
         place("mediaRequests-requestList", 0, 4, 4, 3),
         place("mediaMissing", 4, 4, 4, 3),
@@ -65,7 +57,6 @@ export const variantA = {
     },
     {
       name: "Systems",
-      explanation: "Server, network and service health.",
       widgets: [
         place("app-PROXMOX", 0, 0, 2, 1),
         place("app-PIHOLE", 2, 0, 2, 1),
@@ -98,4 +89,4 @@ export const variantA = {
       ],
     },
   ],
-} satisfies DemoPrototype;
+} satisfies DemoBoardDefinition;

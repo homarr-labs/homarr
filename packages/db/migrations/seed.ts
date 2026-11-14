@@ -1,6 +1,6 @@
 import SuperJSON from "superjson";
 
-import { seedDemoShowcaseAsync } from "./demo-prototypes/seed";
+import { seedDemoBoardAsync } from "./demo-board/seed";
 
 import { createId, generateResponsiveGridFor, objectKeys } from "@homarr/common";
 import { BUNDLED_CUSTOM_WIDGETS, customWidgetDefinitionSchema } from "@homarr/custom-widgets/core";
@@ -70,9 +70,6 @@ export const seedDataAsync = async (db: Database) => {
 
   if (isTruthyEnv(process.env.DEMO_MODE)) {
     await seedDemoUserAsync(db);
-    if (process.env.NODE_ENV !== "production" && isTruthyEnv(process.env.HOMARR_DEMO_PROTOTYPE)) {
-      await seedDemoShowcaseAsync(db);
-    }
   }
 
   await seedProtectedBoardLayoutsAsync(db);
@@ -685,7 +682,7 @@ const seedDemoUserAsync = async (db: Database) => {
     });
   }
 
-  await seedDemoShowcaseAsync(db, "default");
+  await seedDemoBoardAsync(db);
 
   console.log("Demo mode enabled: created demo user and showcase board. Disable by setting DEMO_MODE=false.");
 };
