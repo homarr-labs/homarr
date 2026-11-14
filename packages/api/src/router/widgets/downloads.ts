@@ -6,7 +6,7 @@ import { downloadClientItemSchema } from "@homarr/integrations/downloads";
 import { createIntegrationAsync } from "@homarr/integrations/factory";
 import { downloadClientRequestHandler } from "@homarr/request-handler/downloads";
 
-import { createManyWidgetIntegrationMiddleware } from "../../middlewares/integration";
+import { createManyWidgetIntegrationMiddleware, createOneIntegrationMiddleware } from "../../middlewares/integration";
 import { PUBLIC_INTEGRATION_ERROR, settleIntegrationQueries } from "../../settle-integrations";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../../trpc";
 
@@ -45,6 +45,9 @@ const runDownloadMutationsAsync = async (mutations: Promise<void>[], integration
   const failure = results.find((result) => result.status === "rejected");
   if (failure) throw failure.reason;
 };
+
+// Accept exactly one torrent hash, never a client's "all" or hash-list syntax.
+const categoryItemIdSchema = z.string().regex(/^(?:[a-fA-F0-9]{40}|[a-fA-F0-9]{64})$/);
 
 export const downloadsRouter = createTRPCRouter({
   getJobsAndStatuses: publicProcedure
@@ -177,6 +180,37 @@ export const downloadsRouter = createTRPCRouter({
           await integrationInstance.resumeItemAsync(input.item);
         }),
         ctx.integrations.map(({ id }) => id),
+      );
+    }),
+  getCategories: protectedProcedure
+    .concat(createOneIntegrationMiddleware("interact", "qBittorrent", "deluge", "transmission"))
+    .query(async ({ ctx }) => {
+      const integration = await createIntegrationAsync(ctx.integration);
+      return await integration.getCategoriesAsync();
+    }),
+  setCategory: protectedProcedure
+    .concat(createOneIntegrationMiddleware("interact", "qBittorrent", "deluge"))
+    .input(
+      z.object({
+        itemId: categoryItemIdSchema,
+        category: z.string().max(1000),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const integration = await createIntegrationAsync(ctx.integration);
+      await runDownloadMutationsAsync(
+        [integration.setItemCategoryAsync(input.itemId, input.category)],
+        [ctx.integration.id],
+      );
+    }),
+  setLabels: protectedProcedure
+    .concat(createOneIntegrationMiddleware("interact", "transmission"))
+    .input(z.object({ itemId: categoryItemIdSchema, labels: z.array(z.string().min(1).max(1000)).max(100) }))
+    .mutation(async ({ ctx, input }) => {
+      const integration = await createIntegrationAsync(ctx.integration);
+      await runDownloadMutationsAsync(
+        [integration.setItemLabelsAsync(input.itemId, [...new Set(input.labels)])],
+        [ctx.integration.id],
       );
     }),
   deleteItem: protectedProcedure
