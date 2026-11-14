@@ -11,6 +11,7 @@ import { getWidgetIntegrationsRequired, WidgetLivePreview } from "@homarr/widget
 
 import { PreviewRuntimeWrapper } from "~/components/board/items/lazy-widget-edit-modal";
 import { getLogicalItemStyle } from "~/components/board/layout";
+import { useBoardCanvasScale } from "~/components/board/layout/scaled-board-canvas";
 import classes from "./area-overlay.module.css";
 import type { SectionOccupancy } from "./occupancy";
 import { useTargetResources } from "./resources";
@@ -40,6 +41,7 @@ export const AreaOverlay = ({ occupancy, entryElements, rowProjection }: AreaOve
   const { step, session } = useAddInPlaceState();
   const t = useI18n();
   const board = useOptionalBoard();
+  const boardCanvasScale = useBoardCanvasScale();
   const layerRef = useRef<HTMLDivElement>(null);
   const resizeControllerRef = useRef<AbortController | null>(null);
   const active = session?.sectionId === occupancy.sectionId;
@@ -146,7 +148,7 @@ export const AreaOverlay = ({ occupancy, entryElements, rowProjection }: AreaOve
                 integrationData={resources.integrationData}
                 fallbackWidth={session.area.w * 212}
                 fallbackHeight={session.area.h * 212}
-                displayScale={1}
+                displayScale={boardCanvasScale}
                 boardId={board?.id}
                 itemId={editItemId}
                 isEditMode={false}
