@@ -1,4 +1,6 @@
-import { readFile } from "node:fs/promises";
+import { readFile, readdir } from "node:fs/promises";
+import { createRequire } from "node:module";
+import { resolve } from "node:path";
 import vm from "node:vm";
 
 // oxlint-disable-next-line typescript/no-extraneous-class -- Mirrors the PocketBase Field constructor API.
@@ -22,6 +24,9 @@ class Fields {
   removeById(id) {
     this.values = this.values.filter((field) => field.id !== id);
   }
+  removeByName(name) {
+    this.values = this.values.filter((field) => field.name !== name);
+  }
 }
 
 class Collection {
@@ -31,6 +36,7 @@ class Collection {
     this.fields = new Fields(options.fields);
   }
   addIndex() {}
+  removeIndex() {}
 }
 
 let recordId = 0;
@@ -88,6 +94,12 @@ const app = {
     if (!record) throw new Error(`Missing state record ${collectionId}`);
     return record;
   },
+  findRecordsByFilter(collectionId, _filter, _sort, limit, offset) {
+    return (records.get(collectionId) ?? []).slice(offset, offset + limit);
+  },
+  runInTransaction(callback) {
+    callback(this);
+  },
   save(value) {
     if (value instanceof Collection) collections.set(value.id, value);
     else if (value instanceof Record)
@@ -99,7 +111,7 @@ const app = {
   },
 };
 
-let migration;
+const migrations = [];
 const sandbox = {
   Collection,
   Record,
@@ -107,16 +119,23 @@ const sandbox = {
   URLField: Field,
   FileField: Field,
   BoolField: Field,
+  JSONField: Field,
+  __hooks: resolve("apps/workshop/pb_hooks"),
+  require: createRequire(import.meta.url),
   console,
   migrate: (up, down) => {
-    migration = { up, down };
+    migrations.push({ up, down });
   },
 };
-const source = await readFile("apps/workshop/pb_migrations/1784240000_workshop_widgets.js", "utf8");
-vm.runInNewContext(source, sandbox);
-if (!migration) throw new Error("Workshop migration did not register");
+for (const filename of (await readdir("apps/workshop/pb_migrations"))
+  .filter((name) => name.endsWith(".js"))
+  .toSorted()) {
+  const source = await readFile(`apps/workshop/pb_migrations/${filename}`, "utf8");
+  vm.runInNewContext(source, { ...sandbox });
+}
+if (migrations.length === 0) throw new Error("Workshop migrations did not register");
 
-migration.up(app);
+for (const migration of migrations) migration.up(app);
 if (!collections.has("workshop_migration_state")) {
   throw new Error("Workshop migration did not capture state before applying changes");
 }
@@ -129,7 +148,7 @@ if (
 ) {
   throw new Error("Workshop migration did not install the atomic submission revision guard");
 }
-migration.down(app);
+for (const migration of migrations.toReversed()) migration.down(app);
 
 if (JSON.stringify(users.passwordAuth) !== JSON.stringify(original.passwordAuth))
   throw new Error("Password authentication was not restored");
@@ -148,9 +167,9 @@ collections.clear();
 records.clear();
 rawQueries.length = 0;
 
-migration.up(app);
+for (const migration of migrations) migration.up(app);
 if (!collections.has("users")) throw new Error("Fresh migration did not create the users collection");
-migration.down(app);
+for (const migration of migrations.toReversed()) migration.down(app);
 for (const name of [
   "users",
   "workshop_migration_state",

@@ -1,13 +1,11 @@
 # Runtime
 
-Load queries read `data.requestId` (the untouched decoded response body) and `status.requestId` (`loading`, `ok`, `status`,
-`statusText`, `error`). For request `events` returning `{"events":[...]}`, use `data.events.events`. Guard optional arrays and
-nested fields; `status.events?.ok === false` is an error. Keep sibling request states independent. Use one RefreshButton per
-load request outside its state branches.
+Load q with body B gives `data.q === B`; `q=events`/`B={"events":[...]}` gives `data.events.events`.
+Keep sibling states independent, guard optional arrays/nesting, and handle loading/error/empty/success.
+Status is `{ loading, ok, status, statusText, error }`; `status.q?.ok === false` means error.
+One RefreshButton per load stays outside its branches; `requestId`, never `request`. Omit it to refresh all loads.
 
-Manual queries set `trigger: "manual"` on both request and SubFetch. Results stay local to that SubFetch; its child receives
-`(result, metadata)` with the same response envelope. SubFetch owns loading/error/retry, and metadata has
-`{ ok, status, statusText, loading: false }`.
+Options are installation config (`options.name`). Temporary controls use literal `bind`, defaults and `inputs.name`:
 
 ```jsx
 <Stack>
@@ -25,25 +23,28 @@ Manual queries set `trigger: "manual"` on both request and SubFetch. Results sta
 </Stack>
 ```
 
-SubFetch/ActionButton params match exactly the `$param`/`{param:name}` references in that request. Fixed values belong in
-request query/body. When a manual request ID, params, or definition changes, the prior result hides until triggered again.
-Inside a successful manual result, RefreshButton with the same requestId reruns its captured parameters.
+Manual queries set trigger manual on request and SubFetch. Their body stays local to the child `(result, meta)`, never global
+data/status. SubFetch owns loading/error/retry; meta has ok/status/statusText/loading=false. When ID, params or definition
+changes, the previous result hides until triggered again. RefreshButton inside success reruns captured params.
+SubFetch/ActionButton/ToggleSwitch require literal requestId. triggerContent/triggerAriaLabel is already a button: use
+non-interactive content. Actions run explicitly, publish local data/status until reload, and retain confirmation/permissions/invalidates.
 
-SubFetch, ActionButton, and ToggleSwitch need literal requestId. `triggerContent` plus `triggerAriaLabel` supplies a SubFetch
-launcher already wrapped in a button; use non-interactive Text/Card content. Actions never run automatically. After an
-explicit ActionButton/ToggleSwitch invocation, its response appears in that widget's `data.requestId`/`status.requestId` until
-reload. Guard the initial state. Preserve request confirmation, permission, and invalidations.
+Params match exactly the request's $param/{param:name}: string/number/boolean, never undefined/null.
+Fixed values belong in query/body. Omitted optional values need verified request variants; empty strings need API support.
+Validate nonblank optional inputs, show field errors and block invalid requests. Every control changes a request/selection.
+Switch/Checkbox use defaultChecked; dependent pagination uses defaultValue={1}/resetKey={inputs.query}.
 
-Installation options use `options.name`. Temporary controls use literal `bind` and `defaultValue` (`defaultChecked` for
-Switch/Checkbox); send `inputs.name` through manual params. Dependent pagination uses `defaultValue={1}` and
-`resetKey={inputs.search}`. Controls must affect a request or visible selection.
+Safe Date: toISOString/toLocaleString/toLocaleDateString/toLocaleTimeString/getTime/now. Guard timestamps; pass
+Date.toLocaleString(value, "en-US", documentedTimezone), otherwise omit timezone argument/label. UTC requires a UTC contract.
+Countdown milliseconds: Date.getTime(isoTimestamp) - Date.now(). No constructors, Date.parse or Intl.
+Numbers support `n.toLocaleString("en-US", { maximumFractionDigits: 1, notation: "compact" })`, percent/currency/unit/signDisplay.
+Guard scalar types and finite numbers, preserve 0/false, and use — for missing values. Convert numbers before relabeling units.
+Map cross-collection IDs to verified names or retain IDs. Follow documented rate semantics.
 
-Safe Date helpers: `Date.toISOString`, `Date.toLocaleString`, `Date.toLocaleDateString`, `Date.toLocaleTimeString`,
-`Date.getTime`, and `Date.now`. Guard missing timestamps. Use `Date.toLocaleString(value, "en-US", documentedTimezone)` when a
-timezone is specified; otherwise omit the timezone argument/label or preserve the source value. Label UTC only when the
-contract says UTC. Countdowns use `Date.getTime(isoTimestamp) - Date.now()` in milliseconds. Constructors and Date.parse are
-unavailable.
+Keep requested fields/collections reachable through summaries, tables/details, filters, pagination or a bounded ScrollArea; never silently slice rows.
+Label partial results/totals and verify pagination. Bounded response observations are not full schemas.
 
-Use registered component names; Icon aliases TablerIcon and accepts installed kebab-case names. Concise expression callbacks
-support collections and trusted slots; their parameters cannot shadow `data`, `status`, `options`, or `inputs`. Regex is
-limited to safe string operations. Numeric enums can use a literal label array with a fallback.
+Verified Mantine 9.6.0: LineChart/AreaChart/BarChart require positive h, data: row[], dataKey: category/time key, series: [{name: actual numeric row key, color: MantineColor}]. Sparkline requires positive h and data: number[]. Use real fields/series; no invented history/formatter callbacks. Other props stay lazy.
+
+Use registered names, Icon/TablerIcon with installed kebab-case names, concise expression callbacks and bounded regex.
+Callback parameters cannot shadow data/status/options/inputs. Never invent IconFoo components or raw browser callbacks.

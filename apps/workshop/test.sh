@@ -9,6 +9,7 @@ export HOMARR_AI_ALLOW_INSECURE_UPSTREAM=true
 export OPENROUTER_API_KEY=workshop-test-openrouter-key
 
 docker build --target pocketbase-test -f apps/workshop/Dockerfile .
+bun apps/workshop/generate-integration-kinds.mts --check
 node apps/workshop/tests/workshop-contracts.mjs
 node apps/workshop/tests/workshop-migration.mjs
 

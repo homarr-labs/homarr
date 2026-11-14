@@ -210,34 +210,43 @@ const ScopedTRPCReactProvider = ({ children, demoReadOnly }: PropsWithChildren<{
             }),
           }),
           false: splitLink({
-            condition: ({ input }) => isNonJsonSerializable(input),
+            condition: ({ path }) => path === "customWidget.optionRequest",
             true: httpLink({
-              transformer: {
-                serialize(object: unknown) {
-                  return object;
-                },
-                deserialize(data: SuperJSONResult) {
-                  return superjson.deserialize<unknown>(data);
-                },
-              },
+              transformer: superjson,
               url: getTrpcUrl(),
-              headers: createHeadersCallbackForSource("nextjs-react (form-data)"),
+              headers: createHeadersCallbackForSource("nextjs-react (json)"),
+              methodOverride: "POST",
             }),
             false: splitLink({
-              // Release batches can exceed the URL limit even as a single operation.
-              condition: ({ path }) => path === "widget.releases.getLatest",
-              true: httpBatchStreamLink({
-                transformer: superjson,
+              condition: ({ input }) => isNonJsonSerializable(input),
+              true: httpLink({
+                transformer: {
+                  serialize(object: unknown) {
+                    return object;
+                  },
+                  deserialize(data: SuperJSONResult) {
+                    return superjson.deserialize<unknown>(data);
+                  },
+                },
                 url: getTrpcUrl(),
-                methodOverride: "POST",
-                maxURLLength: 2083,
-                headers: createHeadersCallbackForSource("nextjs-react (json)"),
+                headers: createHeadersCallbackForSource("nextjs-react (form-data)"),
               }),
-              false: httpBatchStreamLink({
-                transformer: superjson,
-                url: getTrpcUrl(),
-                maxURLLength: 2083,
-                headers: createHeadersCallbackForSource("nextjs-react (json)"),
+              false: splitLink({
+                // Release batches can exceed the URL limit even as a single operation.
+                condition: ({ path }) => path === "widget.releases.getLatest",
+                true: httpBatchStreamLink({
+                  transformer: superjson,
+                  url: getTrpcUrl(),
+                  methodOverride: "POST",
+                  maxURLLength: 2083,
+                  headers: createHeadersCallbackForSource("nextjs-react (json)"),
+                }),
+                false: httpBatchStreamLink({
+                  transformer: superjson,
+                  url: getTrpcUrl(),
+                  maxURLLength: 2083,
+                  headers: createHeadersCallbackForSource("nextjs-react (json)"),
+                }),
               }),
             }),
           }),

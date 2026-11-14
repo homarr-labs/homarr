@@ -153,7 +153,9 @@ export function redactResponseSecrets(data: unknown, secrets: Array<{ kind: stri
   }
   const embeddedValues = [...embedded].toSorted((a, b) => b.length - a.length);
   const redactEmbedded = (value: string) => {
-    for (const secret of embeddedValues) value = value.replaceAll(secret, "[REDACTED]");
+    for (const secret of embeddedValues) {
+      if (value.length >= secret.length) value = value.replaceAll(secret, "[REDACTED]");
+    }
     return value;
   };
   const visit = (value: unknown): unknown => {
@@ -165,7 +167,20 @@ export function redactResponseSecrets(data: unknown, secrets: Array<{ kind: stri
       return "[REDACTED]";
     if (Array.isArray(value)) return value.map(visit);
     if (value !== null && typeof value === "object") {
-      return Object.fromEntries(Object.entries(value).map(([key, child]) => [redactEmbedded(key), visit(child)]));
+      const redacted: Record<string, unknown> = {};
+      for (const key of Object.keys(value)) {
+        const redactedKey = redactEmbedded(key);
+        const child = visit((value as Record<string, unknown>)[key]);
+        if (redactedKey === "__proto__") {
+          Object.defineProperty(redacted, redactedKey, {
+            value: child,
+            enumerable: true,
+            configurable: true,
+            writable: true,
+          });
+        } else redacted[redactedKey] = child;
+      }
+      return redacted;
     }
     return value;
   };

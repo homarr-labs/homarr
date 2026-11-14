@@ -51,6 +51,9 @@ COPY packages/ui ./packages/ui
 COPY packages/validation ./packages/validation
 COPY packages/workshop ./packages/workshop
 COPY tooling/typescript ./tooling/typescript
+COPY apps/workshop/generate-integration-kinds.mts ./apps/workshop/generate-integration-kinds.mts
+COPY apps/workshop/pb_hooks/http-integration-kinds.json ./apps/workshop/pb_hooks/http-integration-kinds.json
+RUN bun apps/workshop/generate-integration-kinds.mts --check
 
 FROM dependencies AS website
 ARG TARGETPLATFORM

@@ -1,11 +1,17 @@
 import { resolveCustomWidgetSource } from "./source-resolver";
 import { TRPCError } from "@trpc/server";
+import { Buffer } from "node:buffer";
 import { z } from "zod/v4";
 
 import { decryptSecret } from "@homarr/common/server";
 import { eq, or } from "@homarr/db";
 import { boards, customWidgetDefinitions, legacyCustomWidgetDefinitions } from "@homarr/db/schema";
-import { collectCustomWidgetRequestReferences } from "@homarr/custom-widgets/core";
+import {
+  collectCustomWidgetRequestReferences,
+  customWidgetIdentifierSchema,
+  isCustomWidgetChoiceValue,
+} from "@homarr/custom-widgets/core";
+import { assertJsonBudget, MAX_REQUEST_BODY_BYTES } from "@homarr/custom-widgets/server";
 
 import { permissionRequiredProcedure } from "../../trpc";
 import { throwIfActionForbiddenAsync } from "../board/board-access";
@@ -27,6 +33,32 @@ import {
   mapLegacyCustomWidgetListItem,
 } from "./management-query-mappers";
 
+const optionRequestConfigurationSchema = z
+  .unknown()
+  .superRefine((value, ctx) => {
+    try {
+      assertJsonBudget(value);
+      const serialized = JSON.stringify(value);
+      if (serialized === undefined || Buffer.byteLength(serialized, "utf8") > MAX_REQUEST_BODY_BYTES) {
+        ctx.addIssue({ code: "custom", message: `Configuration JSON must not exceed ${MAX_REQUEST_BODY_BYTES} bytes` });
+      }
+    } catch (error) {
+      ctx.addIssue({
+        code: "custom",
+        message:
+          error instanceof Error
+            ? error.message.replace("Response JSON", "Configuration JSON")
+            : "Invalid configuration JSON",
+      });
+    }
+  })
+  .pipe(
+    z
+      .record(customWidgetIdentifierSchema, z.json())
+      .refine((configuration) => Object.keys(configuration).length <= 64, "A widget can configure at most 64 options"),
+  )
+  .default({});
+
 export const managementQueryProcedures = {
   list: permissionRequiredProcedure
     .requiresPermission("admin")
@@ -38,6 +70,15 @@ export const managementQueryProcedures = {
           with: { secrets: { columns: { sourceId: true, kind: true } } },
         }),
         ctx.db.query.legacyCustomWidgetDefinitions.findMany({
+          columns: {
+            id: true,
+            name: true,
+            description: true,
+            iconUrl: true,
+            url: true,
+            authType: true,
+            updatedAt: true,
+          },
           orderBy: (table, { asc }) => asc(table.name),
         }),
       ]);
@@ -115,6 +156,7 @@ export const managementQueryProcedures = {
       if (!input.currentId || available.some(({ id }) => id === input.currentId)) return available;
       const legacy = await ctx.db.query.legacyCustomWidgetDefinitions.findFirst({
         where: eq(legacyCustomWidgetDefinitions.id, input.currentId),
+        columns: { id: true, name: true, description: true, iconUrl: true, updatedAt: true },
       });
       if (!legacy) return available;
       return [...available, mapLegacyAvailableCustomWidget(legacy)];
@@ -128,7 +170,7 @@ export const managementQueryProcedures = {
         boardId: z.string(),
         definitionId: z.string(),
         requestId: z.string(),
-        params: z.record(z.string(), z.union([z.string(), z.number(), z.boolean()])).default({}),
+        configuration: optionRequestConfigurationSchema,
       }),
     )
     .query(async ({ ctx, input }) => {
@@ -153,7 +195,7 @@ export const managementQueryProcedures = {
         definitionId: input.definitionId,
       });
       try {
-        const values = resolveOptionRequestValues(request, input.params);
+        const values = resolveOptionRequestValues(request, input.configuration);
         const connection = await resolveCustomWidgetSource(ctx, source, request, () =>
           stored.secrets
             .filter((secret) => secret.sourceId === request.source)
@@ -183,18 +225,25 @@ export const managementQueryProcedures = {
 
 export function resolveOptionRequestValues(
   request: Parameters<typeof resolveCustomWidgetRequestValues>[0],
-  configuration: NonNullable<Parameters<typeof resolveCustomWidgetRequestValues>[2]>,
+  configuration: Record<string, unknown>,
 ) {
   const references = collectCustomWidgetRequestReferences(request);
   const options: Record<string, unknown> = {};
-  const params: typeof configuration = {};
+  const params: NonNullable<Parameters<typeof resolveCustomWidgetRequestValues>[2]> = {};
   for (const name of references.options) {
     const value = configuration[name];
     if (value !== undefined) options[name] = value;
   }
   for (const name of references.params) {
     const value = configuration[name];
-    if (value !== undefined) params[name] = value;
+    if (value === undefined) continue;
+    if (!isCustomWidgetChoiceValue(value) && typeof value !== "boolean") {
+      throw new TRPCError({
+        code: "BAD_REQUEST",
+        message: `Request parameter '${name}' must be text, number, or boolean`,
+      });
+    }
+    params[name] = value;
   }
   return resolveCustomWidgetRequestValues(request, options, params);
 }

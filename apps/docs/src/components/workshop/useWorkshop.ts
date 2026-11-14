@@ -3,6 +3,8 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import dayjs from "dayjs";
 
+import type { WorkshopUser } from "@homarr/workshop/schema";
+
 import type { WorkshopComment, WorkshopSubmission, WorkshopVote } from "@site/src/lib/pocketbase";
 import { getWorkshopBackend } from "@site/src/lib/pocketbase";
 import type { SubmissionType } from "@site/src/lib/workshop-schema";
@@ -42,7 +44,7 @@ export const useWorkshop = (workshopUrl: string) => {
   const backend = useMemo(() => getWorkshopBackend(workshopUrl), [workshopUrl]);
   const [submissions, setSubmissions] = useState<WorkshopSubmission[]>([]);
   const [votes, setVotes] = useState<Record<string, WorkshopVote>>({});
-  const [user, setUser] = useState(backend.currentUser);
+  const [user, setUser] = useState<WorkshopUser | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const votingIds = useRef(new Set<string>());

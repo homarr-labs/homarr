@@ -22,6 +22,7 @@ import { IntegrationSourceSelect } from "@homarr/forms-collection/custom-widgets
 
 import type { CustomWidgetWorkbenchForm } from "./_custom-widget-form-utils";
 import { CustomWidgetIdentifierInput } from "./_custom-widget-identifier-input";
+import classes from "./_custom-widget-form.module.css";
 
 type SecretKind = CustomWidgetSecretKind;
 
@@ -50,6 +51,7 @@ interface CustomWidgetSourceFieldProps {
   onSetSecret(sourceId: string, kind: string, value: string): void;
   onClearSecret(sourceId: string, kind: SecretKind): Promise<void>;
   onRemove(index: number): void;
+  compact?: boolean;
 }
 
 export function CustomWidgetSourceField({
@@ -63,14 +65,18 @@ export function CustomWidgetSourceField({
   onSetSecret,
   onClearSecret,
   onRemove,
+  compact = false,
 }: CustomWidgetSourceFieldProps) {
   const t = useI18n("customWidget.workbench.sources");
+  let legend = source.name;
+  if (index === 0) legend = t("primary");
+  if (compact) legend = undefined;
   const tCommon = useI18n("common");
 
   return (
-    <Fieldset legend={index === 0 ? t("primary") : source.name}>
-      <Stack gap="sm">
-        <Group grow align="start">
+    <Fieldset legend={legend} p={compact ? 0 : undefined} style={compact ? { border: 0 } : undefined}>
+      <Stack gap="sm" className={compact && source.type !== "integration" ? classes.compactSource : undefined}>
+        <Group grow align="start" display={compact ? "none" : undefined}>
           <CustomWidgetIdentifierInput
             label={t("id")}
             value={source.id}
@@ -85,6 +91,7 @@ export function CustomWidgetSourceField({
           />
         </Group>
         <Select
+          className={classes.sourceType}
           label={tCommon("field.source")}
           data={[
             { value: "http", label: t("manualSource") },
@@ -108,6 +115,7 @@ export function CustomWidgetSourceField({
         {source.type !== "integration" && (
           <CustomWidgetHttpSourceFields
             source={source}
+            compact={compact}
             index={index}
             form={form}
             definitionId={definitionId}
@@ -144,6 +152,7 @@ function CustomWidgetHttpSourceFields({
   onSetAuthentication,
   onSetSecret,
   onClearSecret,
+  compact = false,
 }: Omit<CustomWidgetSourceFieldProps, "source" | "onRemove"> & { source: CustomWidgetHttpSource & { id: string } }) {
   const t = useI18n("customWidget.workbench.sources");
   const tSecret = useI18n("customWidget.secret");
@@ -158,6 +167,7 @@ function CustomWidgetHttpSourceFields({
   return (
     <>
       <TextInput
+        className={compact ? classes.sourceUrl : undefined}
         label={t("baseUrl")}
         type="url"
         value={source.baseUrl}

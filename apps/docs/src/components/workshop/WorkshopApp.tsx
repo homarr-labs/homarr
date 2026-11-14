@@ -38,6 +38,7 @@ import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { cn } from "@/lib/utils";
 
 import { WorkshopAccountMenu } from "./WorkshopAccountMenu";
+import { WorkshopIntegrationBadges } from "./WorkshopIntegrationBadges";
 import { WorkshopVoteControl } from "./WorkshopVoteControl";
 import { formatRelativeTime } from "./format";
 import type { SortKey, TypeFilter } from "./useWorkshop";
@@ -427,7 +428,7 @@ const SubmissionCard = ({ submission, backend, userVote, onVote }: SubmissionCar
         </CardAction>
       </CardHeader>
 
-      <CardContent className="min-h-[4.5rem] flex-1 overflow-hidden">
+      <CardContent className="flex min-h-[4.5rem] flex-1 flex-col gap-2 overflow-hidden">
         {(submission.outdated || submission.reportCount > 0) && (
           <div className="mb-2 flex flex-wrap gap-1.5">
             {submission.outdated && <Badge variant="secondary">Outdated</Badge>}
@@ -438,6 +439,7 @@ const SubmissionCard = ({ submission, backend, userVote, onVote }: SubmissionCar
             )}
           </div>
         )}
+        <WorkshopIntegrationBadges kinds={submission.integrationKinds} />
         {submission.description && (
           <p className="line-clamp-3 text-sm leading-relaxed text-muted-foreground">{submission.description}</p>
         )}

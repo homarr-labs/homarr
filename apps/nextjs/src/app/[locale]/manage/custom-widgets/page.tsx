@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
-import { Group } from "@mantine/core";
-import { IconExternalLink, IconPlus } from "@tabler/icons-react";
+import { Button, Group } from "@mantine/core";
+import { IconExternalLink, IconPlus, IconSparkles } from "@tabler/icons-react";
 
 import { api } from "@homarr/api/server";
 import { auth } from "@homarr/auth/next";
@@ -9,6 +9,7 @@ import { getI18n } from "@homarr/translation/server";
 import { Link } from "@homarr/ui";
 
 import { ManagePageLayout } from "~/components/manage/manage-page-layout";
+import { MANAGE_ACTION_BUTTON_MIN_WIDTH } from "~/components/manage/manage-page.constants";
 import { MobileAffixButton } from "~/components/manage/mobile-affix-button";
 import { CustomWidgetList } from "./_custom-widget-list";
 import { CustomWidgetTabs } from "./_custom-widget-tabs";
@@ -32,8 +33,9 @@ export default async function CustomWidgetsPage() {
       title={tEntities("customWidgets")}
       primaryAction={
         <Group gap="xs">
-          <MobileAffixButton
+          <Button
             component="a"
+            miw={MANAGE_ACTION_BUTTON_MIN_WIDTH}
             href="https://www.skills.sh/homarr-labs/homarr/homarr-custom-widget"
             target="_blank"
             rel="noopener noreferrer"
@@ -41,8 +43,16 @@ export default async function CustomWidgetsPage() {
             variant="default"
           >
             {t("action.downloadSkill")}
-          </MobileAffixButton>
+          </Button>
           <ImportCustomWidgetButton />
+          <Button
+            component={Link}
+            miw={MANAGE_ACTION_BUTTON_MIN_WIDTH}
+            href="/manage/custom-widgets/new?mode=assisted"
+            leftSection={<IconSparkles size={16} />}
+          >
+            {t("action.createAssisted")}
+          </Button>
           <MobileAffixButton component={Link} href="/manage/custom-widgets/new" leftSection={<IconPlus size={16} />}>
             {tCommon("action.create")}
           </MobileAffixButton>
