@@ -4238,15 +4238,6 @@
       }
     },
     "common": {
-      "refreshInterval": {
-        "label": "Aktualisierungsintervall",
-        "description": "Kürzere Intervalle erhöhen die Last auf Homarr und der Integration.",
-        "custom": "Benutzerdefiniert"
-      },
-      "customRefreshInterval": {
-        "label": "Eigenes Aktualisierungsintervall (Sekunden)",
-        "description": "Eine ganze Zahl zwischen 1 und 3600 eingeben."
-      },
       "location": {
         "query": "Stadt / Postleitzahl",
         "latitude": "Breitengrad",
