@@ -64,7 +64,10 @@ const nextConfig: NextConfig = {
   },
   output: "standalone",
   outputFileTracingIncludes: {
-    "/*": ["../../node_modules/bcrypt/prebuilds/linux-*/*.node"],
+    "/*": [
+      "../../node_modules/bcrypt/prebuilds/linux-*/*.node",
+      "../../node_modules/better-sqlite3/prebuilds/linux-*.node",
+    ],
   },
   reactStrictMode: true,
   // react compiler breaks mantine-react-table, so disabled for now

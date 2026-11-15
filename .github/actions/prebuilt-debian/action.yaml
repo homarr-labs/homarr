@@ -55,5 +55,12 @@ runs:
         trap 'docker rm -f "$container" >/dev/null' EXIT
         docker create --name "$container" "$container" node --version >/dev/null
         mkdir -p "$RUNNER_TEMP/prebuilts/$LIBC"
-        docker cp "$container:/app/node_modules/better-sqlite3/build/Release/better_sqlite3.node" \
+        case "$ARCHITECTURE" in
+          amd64) native_arch=x64 ;;
+          arm64) native_arch=arm64 ;;
+          *) exit 1 ;;
+        esac
+        native_platform=linux
+        if [[ "$LIBC" = alpine ]]; then native_platform=linuxmusl; fi
+        docker cp "$container:/app/node_modules/better-sqlite3/prebuilds/${native_platform}-${native_arch}.node" \
           "$RUNNER_TEMP/prebuilts/$LIBC/better_sqlite3.node"

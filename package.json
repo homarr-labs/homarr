@@ -149,7 +149,7 @@
       "assistant-stream": "0.3.52",
       "babel-plugin-react-compiler": "1.0.0",
       "bcrypt": "6.0.0",
-      "better-sqlite3": "12.11.1",
+      "better-sqlite3": "13.1.1",
       "canvas-confetti": "1.9.4",
       "chroma-js": "3.2.0",
       "clsx": "2.1.1",
