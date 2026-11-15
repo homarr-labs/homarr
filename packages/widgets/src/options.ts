@@ -20,6 +20,7 @@ interface CommonInput<TType> {
 
 interface TextInput extends CommonInput<string> {
   validate?: z.ZodType<string>;
+  suggestions?: string[];
 }
 
 type AnchorNoteInput = CommonInput<string>;
@@ -168,6 +169,7 @@ const optionsFactory = {
     defaultValue: input?.defaultValue ?? "",
     withDescription: input?.withDescription ?? false,
     validate: input?.validate,
+    suggestions: input?.suggestions,
   }),
   anchorNote: (input?: AnchorNoteInput) => ({
     type: "anchorNote" as const,
@@ -398,7 +400,8 @@ export type inferOptionsFromDefinition<TOptions extends WidgetOptionsRecord> = {
 };
 
 interface FieldConfiguration<TOptions extends WidgetOptionsRecord> {
-  shouldHide: (options: inferOptionsFromDefinition<TOptions>, integrationKinds: IntegrationKind[]) => boolean;
+  shouldHide?: (options: inferOptionsFromDefinition<TOptions>, integrationKinds: IntegrationKind[]) => boolean;
+  advanced?: boolean;
 }
 
 type ConfigurationInput<TOptions extends WidgetOptionsRecord> = Partial<

@@ -169,9 +169,28 @@ export const WidgetEditorFields = ({
 
     return !value.shouldHide?.(form.values.options as never, selectedIntegrationKinds);
   });
-  const switchOptions = visibleOptions.filter(([, value]) => value.type === "switch");
-  const otherOptions = visibleOptions.filter(([, value]) => value.type !== "switch");
-  const hasWidgetSettings = canConfigureWidget && (integrationSupport || visibleOptions.length > 0);
+  const switchOptions = visibleOptions.filter(([, value]) => !value.advanced && value.type === "switch");
+  const otherOptions = visibleOptions.filter(([, value]) => !value.advanced && value.type !== "switch");
+  const advancedOptions = visibleOptions.filter(([, value]) => value.advanced);
+  const hasWidgetSettings =
+    canConfigureWidget && (integrationSupport || switchOptions.length > 0 || otherOptions.length > 0);
+  const renderOption = ([key, value]: (typeof visibleOptions)[number]) => {
+    const Input = getInputForType(value.type);
+    if (!Input) return null;
+
+    return (
+      <Box key={key} data-option-type={value.type} data-widget-advanced-field={value.advanced || undefined}>
+        <Input
+          kind={kind}
+          property={key}
+          options={value as never}
+          initialOptions={initialOptions}
+          itemId={itemId}
+          boardId={boardId ?? board?.id}
+        />
+      </Box>
+    );
+  };
 
   return (
     <form id={formId} className={classes.settingsForm} onSubmit={onSubmit}>
@@ -233,25 +252,7 @@ export const WidgetEditorFields = ({
                     })}
                   </SimpleGrid>
                 )}
-                {otherOptions.map(([key, value]) => {
-                  const Input = getInputForType(value.type);
-                  if (!Input) {
-                    return null;
-                  }
-
-                  return (
-                    <Box key={key} data-option-type={value.type}>
-                      <Input
-                        kind={kind}
-                        property={key}
-                        options={value as never}
-                        initialOptions={initialOptions}
-                        itemId={itemId}
-                        boardId={boardId ?? board?.id}
-                      />
-                    </Box>
-                  );
-                })}
+                {otherOptions.map(renderOption)}
               </Stack>
             )}
           </>
@@ -261,6 +262,7 @@ export const WidgetEditorFields = ({
             <Accordion.Control data-widget-advanced-options>{tItem("advancedOptions.label")}</Accordion.Control>
             <Accordion.Panel>
               <Stack gap="sm">
+                {canConfigureWidget && advancedOptions.map(renderOption)}
                 <TextInput
                   label={tCommon("field.title")}
                   rightSection={
@@ -346,7 +348,10 @@ export const WidgetEditorForm = ({
       const firstError = Object.keys(errors)[0];
       if (!firstError) return;
       requestAnimationFrame(() => {
-        if (firstError.startsWith("advancedOptions.")) {
+        if (
+          firstError.startsWith("advancedOptions.") ||
+          form.getInputNode(firstError)?.closest("[data-widget-advanced-field]")
+        ) {
           element?.querySelector<HTMLButtonElement>('[data-widget-advanced-options][aria-expanded="false"]')?.click();
         }
         requestAnimationFrame(() => {

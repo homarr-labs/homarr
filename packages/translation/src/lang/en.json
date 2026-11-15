@@ -4239,13 +4239,8 @@
     },
     "common": {
       "refreshInterval": {
-        "label": "Refresh interval",
-        "description": "Shorter intervals increase load on Homarr and the integration.",
-        "custom": "Custom"
-      },
-      "customRefreshInterval": {
-        "label": "Custom refresh interval (seconds)",
-        "description": "Enter a whole number between 1 and 3600."
+        "label": "Refresh interval (seconds)",
+        "description": "Choose a preset or enter a whole number from 1 to 3600. Shorter intervals increase load on Homarr and the integration."
       },
       "location": {
         "query": "City / Postal code",

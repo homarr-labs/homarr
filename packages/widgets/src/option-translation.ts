@@ -46,7 +46,7 @@ const getSharedOptionProperty = (kind: WidgetKind, property: string): string => 
 };
 
 const getSharedOptionNamespace = (kind: WidgetKind, property: string): string | undefined => {
-  if (property === "customRefreshInterval" || (property === "refreshInterval" && kind !== "customApi")) {
+  if (property === "refreshInterval" && kind !== "customApi") {
     return "widget.common";
   }
 
