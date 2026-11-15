@@ -976,6 +976,7 @@
       "dependencies": {
         "@dnd-kit/core": "catalog:",
         "@dnd-kit/sortable": "catalog:",
+        "@floating-ui/dom": "catalog:",
         "@homarr/api": "workspace:^0.1.0",
         "@homarr/auth": "workspace:^0.1.0",
         "@homarr/boards": "workspace:^0.1.0",
@@ -1101,7 +1102,7 @@
       "ai": "7.0.143",
       "assistant-stream": "0.3.52",
     },
-    "@assistant-ui/core": "0.3.34",
+    "@assistant-ui/core": "0.3.35",
     "@assistant-ui/store": "0.3.23",
     "@assistant-ui/tap": "0.9.25",
     "@babel/helpers@<7.26.10": {
@@ -1316,6 +1317,7 @@
     "@dnd-kit/utilities": "3.2.2",
     "@drizzle-team/brocli": "0.12.0",
     "@extractus/feed-extractor": "7.2.1",
+    "@floating-ui/dom": "1.8.0",
     "@gfazioli/mantine-onboarding-tour": "4.0.8",
     "@gitbeaker/rest": "43.8.0",
     "@homarr/node-unifi": "2.6.0",
@@ -1579,7 +1581,7 @@
 
     "@assistant-ui/ai-sdk": ["@assistant-ui/ai-sdk@0.0.13", "", { "dependencies": { "@ai-sdk/mcp": "^2.0.69", "@ai-sdk/react": "^4.0.133", "@assistant-ui/core": "^0.3.29", "@assistant-ui/store": "^0.3.21", "@assistant-ui/tap": "^0.9.22", "assistant-cloud": "^0.2.7", "assistant-stream": "^0.3.52" }, "peerDependencies": { "@types/react": "*", "ai": "^7.0.101", "react": "^18 || ^19" }, "optionalPeers": ["@types/react", "react"] }, "sha512-y5JMVYUVb6vddBHV6LPHZe+UIAGHlwL70MrFbo6aD3XaozT/S3Q7D/sCTszM7j8OkgSGTrhaHt6H8tVE/SGdfA=="],
 
-    "@assistant-ui/core": ["@assistant-ui/core@0.3.34", "", { "dependencies": { "assistant-cloud": "^0.2.11", "assistant-stream": "^0.3.57", "nanoid": "^6.0.2" }, "peerDependencies": { "@assistant-ui/store": "^0.3.23", "@assistant-ui/tap": "^0.9.25", "@types/react": "*", "react": "^18 || ^19" }, "optionalPeers": ["@types/react", "react"] }, "sha512-vIt+Gu0jzygpnTkKvF0tzrdTfHxbcuG7qNhrbP6VB7hNzrhKN5fMMCMyjne8a8Ed4t26IyyHkEf1SVncY1JEnA=="],
+    "@assistant-ui/core": ["@assistant-ui/core@0.3.35", "", { "dependencies": { "assistant-cloud": "^0.2.11", "assistant-stream": "^0.3.57", "nanoid": "^6.0.2" }, "peerDependencies": { "@assistant-ui/store": "^0.3.23", "@assistant-ui/tap": "^0.9.25", "@types/react": "*", "react": "^18 || ^19" }, "optionalPeers": ["@types/react", "react"] }, "sha512-Qnit0K6zGvPdTdoc3bPvAr6fbbqe9GnTsx8J7p/R//YiV6MRTr9TCbqrH0ymSwpXdWa6uXM6e7dSz5gL83Z1JQ=="],
 
     "@assistant-ui/react": ["@assistant-ui/react@0.15.29", "", { "dependencies": { "@assistant-ui/core": "^0.3.29", "@assistant-ui/store": "^0.3.21", "@assistant-ui/tap": "^0.9.23", "assistant-cloud": "^0.2.7", "assistant-stream": "^0.3.52", "radix-ui": "^1.7.0", "react-textarea-autosize": "^8.5.9", "safe-content-frame": "^0.0.34", "zod": "^4.6.5", "zustand": "^5.0.15" }, "peerDependencies": { "@types/react": "*", "@types/react-dom": "*", "react": "^18 || ^19", "react-dom": "^18 || ^19" }, "optionalPeers": ["@types/react", "@types/react-dom"] }, "sha512-a7o8qF/L3C7MvgQkPZB3sDyh58ftt+v/bDT6Kg6k+gqouIgg9i2OwUlaMbhTqIAI3rnFrRA+P8a0LNPJe5jURQ=="],
 
@@ -5489,7 +5491,7 @@
 
     "@assistant-ui/core/nanoid": ["nanoid@6.0.2", "", { "bin": { "nanoid": "bin/nanoid.js" } }, "sha512-hIvVOb9Qr1p/9CNNLOe0OlWvgx/ziTsVwKN/GDSsuArN2K0wDiafP3s0SWmsm7o2BdnyS8Z9Z64NFBUbn6ziBg=="],
 
-    "@assistant-ui/react/assistant-stream": ["assistant-stream@0.3.56", "", { "dependencies": { "@standard-schema/spec": "^1.1.0", "@types/json-schema": "^7.0.15", "nanoid": "^6.0.2", "secure-json-parse": "^4.1.1" }, "peerDependencies": { "ai": "^6.0.0 || ^7.0.0", "ioredis": "^5.10.1 || ^6.0.0", "redis": "^5.12.1" }, "optionalPeers": ["ai", "ioredis", "redis"] }, "sha512-it2+baky3y+JcfqTwSzjMgMJB2uCiAIKEmIMkn67RacEXQLOHNP4iO8PLGAZNJ0IVQ+sIyRaCzNuITl4h5lCMw=="],
+    "@assistant-ui/react/assistant-stream": ["assistant-stream@0.3.57", "", { "dependencies": { "@standard-schema/spec": "^1.1.0", "@types/json-schema": "^7.0.15", "nanoid": "^6.0.2", "secure-json-parse": "^4.1.1" }, "peerDependencies": { "ai": "^6.0.0 || ^7.0.0", "ioredis": "^5.10.1 || ^6.0.0", "redis": "^5.12.1" }, "optionalPeers": ["ai", "ioredis", "redis"] }, "sha512-R+dAUoKcAGGjoTzbgSUhaVer2H8rNu/cY1GwdeRZ+gbsrV+DDc7QXuYDpKOp6HGO9o2Q5+7l3Dvp4qYNx8UpSg=="],
 
     "@babel/core/@babel/parser": ["@babel/parser@7.29.8", "", { "dependencies": { "@babel/types": "7.29.8" }, "bin": "./bin/babel-parser.js" }, "sha512-E8lTAYNB1KW+FH+VGJuZM1ioAx2E6oVlvQFRrf5P8ZZmsiJXYAD9vTFV7yyEURNzgh1dFqMZuO6tUwcARbqFCA=="],
 

@@ -46,6 +46,7 @@
   "dependencies": {
     "@dnd-kit/core": "catalog:",
     "@dnd-kit/sortable": "catalog:",
+    "@floating-ui/dom": "catalog:",
     "@homarr/api": "workspace:^0.1.0",
     "@homarr/auth": "workspace:^0.1.0",
     "@homarr/boards": "workspace:^0.1.0",
