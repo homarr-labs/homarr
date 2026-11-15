@@ -12,6 +12,7 @@ import type { HeaderWidgetItem } from "@homarr/validation/user";
 import { loadWidgetResources, reduceWidgetOptionsWithDefinition } from "@homarr/widgets/manifest";
 
 import { LazyWidgetEditModal, preloadWidgetEditModal } from "~/components/board/items/lazy-widget-edit-modal";
+import { getLogicalGridSize } from "~/components/board/layout";
 import { HeaderWidgetRuntimeBoundary } from "./header-widget-runtime-boundary";
 
 export const useHeaderWidgetEditor = () => {
@@ -40,9 +41,13 @@ export const useHeaderWidgetEditor = () => {
             (integration) =>
               definition.supportedIntegrations?.includes(integration.kind) && integration.permissions.hasUseAccess,
           ),
-          previewDimensions: { width: 420, height: 420 },
+          previewDimensions: {
+            width: getLogicalGridSize(item.size.width),
+            height: getLogicalGridSize(item.size.height),
+          },
+          previewResize: { initialSize: item.size, maximumSize: { width: 12, height: 12 } },
           previewWrapper: HeaderWidgetRuntimeBoundary,
-          onSuccessfulEdit: (value) => onChange({ ...item, ...value }),
+          onSuccessfulEdit: (value, size) => onChange({ ...item, ...value, size: size ?? item.size }),
         },
         { title: (translate) => `${translate("item.edit.title")} - ${getWidgetName(item.kind, translate)}` },
       );

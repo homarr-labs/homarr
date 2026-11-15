@@ -23,6 +23,7 @@ import { HeaderButton } from "./button";
 import { DockerQuickAccessModal } from "./docker-quick-access-modal";
 import { HeaderLogo } from "./header-logo";
 import { HeaderWidget } from "./header-widget";
+import { HeaderWidgetPreferencesProvider, useHeaderWidgetPreferences } from "./header-widget-preferences";
 import { LazySpotlight } from "./lazy-spotlight";
 import { DesktopSearchInput, MobileSearchButton } from "./search";
 import { TourTarget } from "./tour-target";
@@ -48,7 +49,16 @@ type HeaderBoard = RouterOutputs["board"]["getAllBoards"][number];
 const floatingControlsIntroDurationMs = 5_000;
 const floatingControlsDismissDelayMs = 900;
 
-export const ConfigurableHeader = ({
+export const ConfigurableHeader = (props: ConfigurableHeaderProps) => {
+  const { headerPreferences } = useSettings();
+  return (
+    <HeaderWidgetPreferencesProvider key={props.userId} initialPreferences={headerPreferences} userId={props.userId}>
+      <ConfigurableHeaderContent {...props} />
+    </HeaderWidgetPreferencesProvider>
+  );
+};
+
+const ConfigurableHeaderContent = ({
   logo,
   logoWithTitle,
   actions,
@@ -61,7 +71,7 @@ export const ConfigurableHeader = ({
   isAdmin,
   isDockerEnabled,
 }: ConfigurableHeaderProps) => {
-  const { headerPreferences } = useSettings();
+  const { preferences: headerPreferences } = useHeaderWidgetPreferences();
   const assistant = useOptionalHomarrAssistant();
   const { toggleColorScheme } = useMantineColorScheme();
   const { openModal: openDockerModal } = useModalAction(DockerQuickAccessModal);

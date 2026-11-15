@@ -4995,6 +4995,169 @@
                                     "boardId"
                                   ],
                                   "additionalProperties": false
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "type": {
+                                      "type": "string",
+                                      "const": "widget"
+                                    },
+                                    "id": {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 255
+                                    },
+                                    "kind": {
+                                      "type": "string",
+                                      "enum": [
+                                        "stats",
+                                        "clock",
+                                        "weather",
+                                        "airQuality",
+                                        "countdown",
+                                        "timer",
+                                        "app",
+                                        "iframe",
+                                        "video",
+                                        "notebook",
+                                        "anchorNote",
+                                        "dnsHoleSummary",
+                                        "dnsHoleControls",
+                                        "smartHome-entityState",
+                                        "smartHome-executeAutomation",
+                                        "smartHome-controls",
+                                        "stockPrice",
+                                        "mediaServer",
+                                        "calendar",
+                                        "downloads",
+                                        "mediaRequests-requestList",
+                                        "mediaRequests-requestStats",
+                                        "mediaTranscoding",
+                                        "mediaMissing",
+                                        "minecraftServerStatus",
+                                        "networkControllerSummary",
+                                        "networkControllerStatus",
+                                        "rssFeed",
+                                        "bookmarks",
+                                        "indexerManager",
+                                        "healthMonitoring",
+                                        "releases",
+                                        "mediaReleases",
+                                        "dockerContainers",
+                                        "firewall",
+                                        "notifications",
+                                        "systemResources",
+                                        "coolify",
+                                        "systemDisks",
+                                        "timetable",
+                                        "immich-serverStats",
+                                        "immich-albumCarousel",
+                                        "paperlessNgx",
+                                        "thingport-libraryStats",
+                                        "thingport-models",
+                                        "thingport-featuredModel",
+                                        "thingport-activityHeatmap",
+                                        "patchmon",
+                                        "bazarr",
+                                        "tracearr",
+                                        "speedtestTracker",
+                                        "uptimeKuma",
+                                        "audioStats",
+                                        "umami",
+                                        "vpn",
+                                        "archiveTeamWarrior",
+                                        "ups",
+                                        "beszelSystemTable",
+                                        "beszelSystemGrid",
+                                        "beszelAlerts",
+                                        "beszelSystemStats",
+                                        "traefik",
+                                        "customApi",
+                                        "assistant",
+                                        "wud",
+                                        "llamacpp",
+                                        "wazuh"
+                                      ]
+                                    },
+                                    "options": {
+                                      "type": "object",
+                                      "propertyNames": {
+                                        "type": "string"
+                                      },
+                                      "additionalProperties": {}
+                                    },
+                                    "integrationIds": {
+                                      "maxItems": 100,
+                                      "type": "array",
+                                      "items": {
+                                        "type": "string",
+                                        "minLength": 1,
+                                        "maxLength": 255
+                                      }
+                                    },
+                                    "advancedOptions": {
+                                      "type": "object",
+                                      "properties": {
+                                        "title": {
+                                          "default": null,
+                                          "anyOf": [
+                                            {
+                                              "type": "string",
+                                              "maxLength": 64
+                                            },
+                                            {
+                                              "type": "null"
+                                            }
+                                          ]
+                                        },
+                                        "customCssClasses": {
+                                          "default": [],
+                                          "type": "array",
+                                          "items": {
+                                            "type": "string"
+                                          }
+                                        },
+                                        "borderColor": {
+                                          "default": "",
+                                          "type": "string"
+                                        }
+                                      }
+                                    },
+                                    "size": {
+                                      "default": {
+                                        "width": 2,
+                                        "height": 2
+                                      },
+                                      "type": "object",
+                                      "properties": {
+                                        "width": {
+                                          "type": "integer",
+                                          "minimum": 1,
+                                          "maximum": 12
+                                        },
+                                        "height": {
+                                          "type": "integer",
+                                          "minimum": 1,
+                                          "maximum": 12
+                                        }
+                                      },
+                                      "required": [
+                                        "width",
+                                        "height"
+                                      ],
+                                      "additionalProperties": false
+                                    }
+                                  },
+                                  "required": [
+                                    "type",
+                                    "id",
+                                    "kind",
+                                    "options",
+                                    "integrationIds",
+                                    "advancedOptions"
+                                  ],
+                                  "additionalProperties": false
                                 }
                               ]
                             }
@@ -5053,6 +5216,169 @@
                                     "boardId"
                                   ],
                                   "additionalProperties": false
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "type": {
+                                      "type": "string",
+                                      "const": "widget"
+                                    },
+                                    "id": {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 255
+                                    },
+                                    "kind": {
+                                      "type": "string",
+                                      "enum": [
+                                        "stats",
+                                        "clock",
+                                        "weather",
+                                        "airQuality",
+                                        "countdown",
+                                        "timer",
+                                        "app",
+                                        "iframe",
+                                        "video",
+                                        "notebook",
+                                        "anchorNote",
+                                        "dnsHoleSummary",
+                                        "dnsHoleControls",
+                                        "smartHome-entityState",
+                                        "smartHome-executeAutomation",
+                                        "smartHome-controls",
+                                        "stockPrice",
+                                        "mediaServer",
+                                        "calendar",
+                                        "downloads",
+                                        "mediaRequests-requestList",
+                                        "mediaRequests-requestStats",
+                                        "mediaTranscoding",
+                                        "mediaMissing",
+                                        "minecraftServerStatus",
+                                        "networkControllerSummary",
+                                        "networkControllerStatus",
+                                        "rssFeed",
+                                        "bookmarks",
+                                        "indexerManager",
+                                        "healthMonitoring",
+                                        "releases",
+                                        "mediaReleases",
+                                        "dockerContainers",
+                                        "firewall",
+                                        "notifications",
+                                        "systemResources",
+                                        "coolify",
+                                        "systemDisks",
+                                        "timetable",
+                                        "immich-serverStats",
+                                        "immich-albumCarousel",
+                                        "paperlessNgx",
+                                        "thingport-libraryStats",
+                                        "thingport-models",
+                                        "thingport-featuredModel",
+                                        "thingport-activityHeatmap",
+                                        "patchmon",
+                                        "bazarr",
+                                        "tracearr",
+                                        "speedtestTracker",
+                                        "uptimeKuma",
+                                        "audioStats",
+                                        "umami",
+                                        "vpn",
+                                        "archiveTeamWarrior",
+                                        "ups",
+                                        "beszelSystemTable",
+                                        "beszelSystemGrid",
+                                        "beszelAlerts",
+                                        "beszelSystemStats",
+                                        "traefik",
+                                        "customApi",
+                                        "assistant",
+                                        "wud",
+                                        "llamacpp",
+                                        "wazuh"
+                                      ]
+                                    },
+                                    "options": {
+                                      "type": "object",
+                                      "propertyNames": {
+                                        "type": "string"
+                                      },
+                                      "additionalProperties": {}
+                                    },
+                                    "integrationIds": {
+                                      "maxItems": 100,
+                                      "type": "array",
+                                      "items": {
+                                        "type": "string",
+                                        "minLength": 1,
+                                        "maxLength": 255
+                                      }
+                                    },
+                                    "advancedOptions": {
+                                      "type": "object",
+                                      "properties": {
+                                        "title": {
+                                          "default": null,
+                                          "anyOf": [
+                                            {
+                                              "type": "string",
+                                              "maxLength": 64
+                                            },
+                                            {
+                                              "type": "null"
+                                            }
+                                          ]
+                                        },
+                                        "customCssClasses": {
+                                          "default": [],
+                                          "type": "array",
+                                          "items": {
+                                            "type": "string"
+                                          }
+                                        },
+                                        "borderColor": {
+                                          "default": "",
+                                          "type": "string"
+                                        }
+                                      }
+                                    },
+                                    "size": {
+                                      "default": {
+                                        "width": 2,
+                                        "height": 2
+                                      },
+                                      "type": "object",
+                                      "properties": {
+                                        "width": {
+                                          "type": "integer",
+                                          "minimum": 1,
+                                          "maximum": 12
+                                        },
+                                        "height": {
+                                          "type": "integer",
+                                          "minimum": 1,
+                                          "maximum": 12
+                                        }
+                                      },
+                                      "required": [
+                                        "width",
+                                        "height"
+                                      ],
+                                      "additionalProperties": false
+                                    }
+                                  },
+                                  "required": [
+                                    "type",
+                                    "id",
+                                    "kind",
+                                    "options",
+                                    "integrationIds",
+                                    "advancedOptions"
+                                  ],
+                                  "additionalProperties": false
                                 }
                               ]
                             }
@@ -5109,6 +5435,169 @@
                                   "required": [
                                     "type",
                                     "boardId"
+                                  ],
+                                  "additionalProperties": false
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "type": {
+                                      "type": "string",
+                                      "const": "widget"
+                                    },
+                                    "id": {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 255
+                                    },
+                                    "kind": {
+                                      "type": "string",
+                                      "enum": [
+                                        "stats",
+                                        "clock",
+                                        "weather",
+                                        "airQuality",
+                                        "countdown",
+                                        "timer",
+                                        "app",
+                                        "iframe",
+                                        "video",
+                                        "notebook",
+                                        "anchorNote",
+                                        "dnsHoleSummary",
+                                        "dnsHoleControls",
+                                        "smartHome-entityState",
+                                        "smartHome-executeAutomation",
+                                        "smartHome-controls",
+                                        "stockPrice",
+                                        "mediaServer",
+                                        "calendar",
+                                        "downloads",
+                                        "mediaRequests-requestList",
+                                        "mediaRequests-requestStats",
+                                        "mediaTranscoding",
+                                        "mediaMissing",
+                                        "minecraftServerStatus",
+                                        "networkControllerSummary",
+                                        "networkControllerStatus",
+                                        "rssFeed",
+                                        "bookmarks",
+                                        "indexerManager",
+                                        "healthMonitoring",
+                                        "releases",
+                                        "mediaReleases",
+                                        "dockerContainers",
+                                        "firewall",
+                                        "notifications",
+                                        "systemResources",
+                                        "coolify",
+                                        "systemDisks",
+                                        "timetable",
+                                        "immich-serverStats",
+                                        "immich-albumCarousel",
+                                        "paperlessNgx",
+                                        "thingport-libraryStats",
+                                        "thingport-models",
+                                        "thingport-featuredModel",
+                                        "thingport-activityHeatmap",
+                                        "patchmon",
+                                        "bazarr",
+                                        "tracearr",
+                                        "speedtestTracker",
+                                        "uptimeKuma",
+                                        "audioStats",
+                                        "umami",
+                                        "vpn",
+                                        "archiveTeamWarrior",
+                                        "ups",
+                                        "beszelSystemTable",
+                                        "beszelSystemGrid",
+                                        "beszelAlerts",
+                                        "beszelSystemStats",
+                                        "traefik",
+                                        "customApi",
+                                        "assistant",
+                                        "wud",
+                                        "llamacpp",
+                                        "wazuh"
+                                      ]
+                                    },
+                                    "options": {
+                                      "type": "object",
+                                      "propertyNames": {
+                                        "type": "string"
+                                      },
+                                      "additionalProperties": {}
+                                    },
+                                    "integrationIds": {
+                                      "maxItems": 100,
+                                      "type": "array",
+                                      "items": {
+                                        "type": "string",
+                                        "minLength": 1,
+                                        "maxLength": 255
+                                      }
+                                    },
+                                    "advancedOptions": {
+                                      "type": "object",
+                                      "properties": {
+                                        "title": {
+                                          "default": null,
+                                          "anyOf": [
+                                            {
+                                              "type": "string",
+                                              "maxLength": 64
+                                            },
+                                            {
+                                              "type": "null"
+                                            }
+                                          ]
+                                        },
+                                        "customCssClasses": {
+                                          "default": [],
+                                          "type": "array",
+                                          "items": {
+                                            "type": "string"
+                                          }
+                                        },
+                                        "borderColor": {
+                                          "default": "",
+                                          "type": "string"
+                                        }
+                                      }
+                                    },
+                                    "size": {
+                                      "default": {
+                                        "width": 2,
+                                        "height": 2
+                                      },
+                                      "type": "object",
+                                      "properties": {
+                                        "width": {
+                                          "type": "integer",
+                                          "minimum": 1,
+                                          "maximum": 12
+                                        },
+                                        "height": {
+                                          "type": "integer",
+                                          "minimum": 1,
+                                          "maximum": 12
+                                        }
+                                      },
+                                      "required": [
+                                        "width",
+                                        "height"
+                                      ],
+                                      "additionalProperties": false
+                                    }
+                                  },
+                                  "required": [
+                                    "type",
+                                    "id",
+                                    "kind",
+                                    "options",
+                                    "integrationIds",
+                                    "advancedOptions"
                                   ],
                                   "additionalProperties": false
                                 }
@@ -6360,6 +6849,169 @@
                                         "boardId"
                                       ],
                                       "additionalProperties": false
+                                    },
+                                    {
+                                      "type": "object",
+                                      "properties": {
+                                        "type": {
+                                          "type": "string",
+                                          "const": "widget"
+                                        },
+                                        "id": {
+                                          "type": "string",
+                                          "minLength": 1,
+                                          "maxLength": 255
+                                        },
+                                        "kind": {
+                                          "type": "string",
+                                          "enum": [
+                                            "stats",
+                                            "clock",
+                                            "weather",
+                                            "airQuality",
+                                            "countdown",
+                                            "timer",
+                                            "app",
+                                            "iframe",
+                                            "video",
+                                            "notebook",
+                                            "anchorNote",
+                                            "dnsHoleSummary",
+                                            "dnsHoleControls",
+                                            "smartHome-entityState",
+                                            "smartHome-executeAutomation",
+                                            "smartHome-controls",
+                                            "stockPrice",
+                                            "mediaServer",
+                                            "calendar",
+                                            "downloads",
+                                            "mediaRequests-requestList",
+                                            "mediaRequests-requestStats",
+                                            "mediaTranscoding",
+                                            "mediaMissing",
+                                            "minecraftServerStatus",
+                                            "networkControllerSummary",
+                                            "networkControllerStatus",
+                                            "rssFeed",
+                                            "bookmarks",
+                                            "indexerManager",
+                                            "healthMonitoring",
+                                            "releases",
+                                            "mediaReleases",
+                                            "dockerContainers",
+                                            "firewall",
+                                            "notifications",
+                                            "systemResources",
+                                            "coolify",
+                                            "systemDisks",
+                                            "timetable",
+                                            "immich-serverStats",
+                                            "immich-albumCarousel",
+                                            "paperlessNgx",
+                                            "thingport-libraryStats",
+                                            "thingport-models",
+                                            "thingport-featuredModel",
+                                            "thingport-activityHeatmap",
+                                            "patchmon",
+                                            "bazarr",
+                                            "tracearr",
+                                            "speedtestTracker",
+                                            "uptimeKuma",
+                                            "audioStats",
+                                            "umami",
+                                            "vpn",
+                                            "archiveTeamWarrior",
+                                            "ups",
+                                            "beszelSystemTable",
+                                            "beszelSystemGrid",
+                                            "beszelAlerts",
+                                            "beszelSystemStats",
+                                            "traefik",
+                                            "customApi",
+                                            "assistant",
+                                            "wud",
+                                            "llamacpp",
+                                            "wazuh"
+                                          ]
+                                        },
+                                        "options": {
+                                          "type": "object",
+                                          "propertyNames": {
+                                            "type": "string"
+                                          },
+                                          "additionalProperties": {}
+                                        },
+                                        "integrationIds": {
+                                          "maxItems": 100,
+                                          "type": "array",
+                                          "items": {
+                                            "type": "string",
+                                            "minLength": 1,
+                                            "maxLength": 255
+                                          }
+                                        },
+                                        "advancedOptions": {
+                                          "type": "object",
+                                          "properties": {
+                                            "title": {
+                                              "default": null,
+                                              "anyOf": [
+                                                {
+                                                  "type": "string",
+                                                  "maxLength": 64
+                                                },
+                                                {
+                                                  "type": "null"
+                                                }
+                                              ]
+                                            },
+                                            "customCssClasses": {
+                                              "default": [],
+                                              "type": "array",
+                                              "items": {
+                                                "type": "string"
+                                              }
+                                            },
+                                            "borderColor": {
+                                              "default": "",
+                                              "type": "string"
+                                            }
+                                          }
+                                        },
+                                        "size": {
+                                          "default": {
+                                            "width": 2,
+                                            "height": 2
+                                          },
+                                          "type": "object",
+                                          "properties": {
+                                            "width": {
+                                              "type": "integer",
+                                              "minimum": 1,
+                                              "maximum": 12
+                                            },
+                                            "height": {
+                                              "type": "integer",
+                                              "minimum": 1,
+                                              "maximum": 12
+                                            }
+                                          },
+                                          "required": [
+                                            "width",
+                                            "height"
+                                          ],
+                                          "additionalProperties": false
+                                        }
+                                      },
+                                      "required": [
+                                        "type",
+                                        "id",
+                                        "kind",
+                                        "options",
+                                        "integrationIds",
+                                        "advancedOptions"
+                                      ],
+                                      "additionalProperties": false
                                     }
                                   ],
                                   "type": "object"
@@ -6419,6 +7071,169 @@
                                         "boardId"
                                       ],
                                       "additionalProperties": false
+                                    },
+                                    {
+                                      "type": "object",
+                                      "properties": {
+                                        "type": {
+                                          "type": "string",
+                                          "const": "widget"
+                                        },
+                                        "id": {
+                                          "type": "string",
+                                          "minLength": 1,
+                                          "maxLength": 255
+                                        },
+                                        "kind": {
+                                          "type": "string",
+                                          "enum": [
+                                            "stats",
+                                            "clock",
+                                            "weather",
+                                            "airQuality",
+                                            "countdown",
+                                            "timer",
+                                            "app",
+                                            "iframe",
+                                            "video",
+                                            "notebook",
+                                            "anchorNote",
+                                            "dnsHoleSummary",
+                                            "dnsHoleControls",
+                                            "smartHome-entityState",
+                                            "smartHome-executeAutomation",
+                                            "smartHome-controls",
+                                            "stockPrice",
+                                            "mediaServer",
+                                            "calendar",
+                                            "downloads",
+                                            "mediaRequests-requestList",
+                                            "mediaRequests-requestStats",
+                                            "mediaTranscoding",
+                                            "mediaMissing",
+                                            "minecraftServerStatus",
+                                            "networkControllerSummary",
+                                            "networkControllerStatus",
+                                            "rssFeed",
+                                            "bookmarks",
+                                            "indexerManager",
+                                            "healthMonitoring",
+                                            "releases",
+                                            "mediaReleases",
+                                            "dockerContainers",
+                                            "firewall",
+                                            "notifications",
+                                            "systemResources",
+                                            "coolify",
+                                            "systemDisks",
+                                            "timetable",
+                                            "immich-serverStats",
+                                            "immich-albumCarousel",
+                                            "paperlessNgx",
+                                            "thingport-libraryStats",
+                                            "thingport-models",
+                                            "thingport-featuredModel",
+                                            "thingport-activityHeatmap",
+                                            "patchmon",
+                                            "bazarr",
+                                            "tracearr",
+                                            "speedtestTracker",
+                                            "uptimeKuma",
+                                            "audioStats",
+                                            "umami",
+                                            "vpn",
+                                            "archiveTeamWarrior",
+                                            "ups",
+                                            "beszelSystemTable",
+                                            "beszelSystemGrid",
+                                            "beszelAlerts",
+                                            "beszelSystemStats",
+                                            "traefik",
+                                            "customApi",
+                                            "assistant",
+                                            "wud",
+                                            "llamacpp",
+                                            "wazuh"
+                                          ]
+                                        },
+                                        "options": {
+                                          "type": "object",
+                                          "propertyNames": {
+                                            "type": "string"
+                                          },
+                                          "additionalProperties": {}
+                                        },
+                                        "integrationIds": {
+                                          "maxItems": 100,
+                                          "type": "array",
+                                          "items": {
+                                            "type": "string",
+                                            "minLength": 1,
+                                            "maxLength": 255
+                                          }
+                                        },
+                                        "advancedOptions": {
+                                          "type": "object",
+                                          "properties": {
+                                            "title": {
+                                              "default": null,
+                                              "anyOf": [
+                                                {
+                                                  "type": "string",
+                                                  "maxLength": 64
+                                                },
+                                                {
+                                                  "type": "null"
+                                                }
+                                              ]
+                                            },
+                                            "customCssClasses": {
+                                              "default": [],
+                                              "type": "array",
+                                              "items": {
+                                                "type": "string"
+                                              }
+                                            },
+                                            "borderColor": {
+                                              "default": "",
+                                              "type": "string"
+                                            }
+                                          }
+                                        },
+                                        "size": {
+                                          "default": {
+                                            "width": 2,
+                                            "height": 2
+                                          },
+                                          "type": "object",
+                                          "properties": {
+                                            "width": {
+                                              "type": "integer",
+                                              "minimum": 1,
+                                              "maximum": 12
+                                            },
+                                            "height": {
+                                              "type": "integer",
+                                              "minimum": 1,
+                                              "maximum": 12
+                                            }
+                                          },
+                                          "required": [
+                                            "width",
+                                            "height"
+                                          ],
+                                          "additionalProperties": false
+                                        }
+                                      },
+                                      "required": [
+                                        "type",
+                                        "id",
+                                        "kind",
+                                        "options",
+                                        "integrationIds",
+                                        "advancedOptions"
+                                      ],
+                                      "additionalProperties": false
                                     }
                                   ],
                                   "type": "object"
@@ -6476,6 +7291,169 @@
                                       "required": [
                                         "type",
                                         "boardId"
+                                      ],
+                                      "additionalProperties": false
+                                    },
+                                    {
+                                      "type": "object",
+                                      "properties": {
+                                        "type": {
+                                          "type": "string",
+                                          "const": "widget"
+                                        },
+                                        "id": {
+                                          "type": "string",
+                                          "minLength": 1,
+                                          "maxLength": 255
+                                        },
+                                        "kind": {
+                                          "type": "string",
+                                          "enum": [
+                                            "stats",
+                                            "clock",
+                                            "weather",
+                                            "airQuality",
+                                            "countdown",
+                                            "timer",
+                                            "app",
+                                            "iframe",
+                                            "video",
+                                            "notebook",
+                                            "anchorNote",
+                                            "dnsHoleSummary",
+                                            "dnsHoleControls",
+                                            "smartHome-entityState",
+                                            "smartHome-executeAutomation",
+                                            "smartHome-controls",
+                                            "stockPrice",
+                                            "mediaServer",
+                                            "calendar",
+                                            "downloads",
+                                            "mediaRequests-requestList",
+                                            "mediaRequests-requestStats",
+                                            "mediaTranscoding",
+                                            "mediaMissing",
+                                            "minecraftServerStatus",
+                                            "networkControllerSummary",
+                                            "networkControllerStatus",
+                                            "rssFeed",
+                                            "bookmarks",
+                                            "indexerManager",
+                                            "healthMonitoring",
+                                            "releases",
+                                            "mediaReleases",
+                                            "dockerContainers",
+                                            "firewall",
+                                            "notifications",
+                                            "systemResources",
+                                            "coolify",
+                                            "systemDisks",
+                                            "timetable",
+                                            "immich-serverStats",
+                                            "immich-albumCarousel",
+                                            "paperlessNgx",
+                                            "thingport-libraryStats",
+                                            "thingport-models",
+                                            "thingport-featuredModel",
+                                            "thingport-activityHeatmap",
+                                            "patchmon",
+                                            "bazarr",
+                                            "tracearr",
+                                            "speedtestTracker",
+                                            "uptimeKuma",
+                                            "audioStats",
+                                            "umami",
+                                            "vpn",
+                                            "archiveTeamWarrior",
+                                            "ups",
+                                            "beszelSystemTable",
+                                            "beszelSystemGrid",
+                                            "beszelAlerts",
+                                            "beszelSystemStats",
+                                            "traefik",
+                                            "customApi",
+                                            "assistant",
+                                            "wud",
+                                            "llamacpp",
+                                            "wazuh"
+                                          ]
+                                        },
+                                        "options": {
+                                          "type": "object",
+                                          "propertyNames": {
+                                            "type": "string"
+                                          },
+                                          "additionalProperties": {}
+                                        },
+                                        "integrationIds": {
+                                          "maxItems": 100,
+                                          "type": "array",
+                                          "items": {
+                                            "type": "string",
+                                            "minLength": 1,
+                                            "maxLength": 255
+                                          }
+                                        },
+                                        "advancedOptions": {
+                                          "type": "object",
+                                          "properties": {
+                                            "title": {
+                                              "default": null,
+                                              "anyOf": [
+                                                {
+                                                  "type": "string",
+                                                  "maxLength": 64
+                                                },
+                                                {
+                                                  "type": "null"
+                                                }
+                                              ]
+                                            },
+                                            "customCssClasses": {
+                                              "default": [],
+                                              "type": "array",
+                                              "items": {
+                                                "type": "string"
+                                              }
+                                            },
+                                            "borderColor": {
+                                              "default": "",
+                                              "type": "string"
+                                            }
+                                          }
+                                        },
+                                        "size": {
+                                          "default": {
+                                            "width": 2,
+                                            "height": 2
+                                          },
+                                          "type": "object",
+                                          "properties": {
+                                            "width": {
+                                              "type": "integer",
+                                              "minimum": 1,
+                                              "maximum": 12
+                                            },
+                                            "height": {
+                                              "type": "integer",
+                                              "minimum": 1,
+                                              "maximum": 12
+                                            }
+                                          },
+                                          "required": [
+                                            "width",
+                                            "height"
+                                          ],
+                                          "additionalProperties": false
+                                        }
+                                      },
+                                      "required": [
+                                        "type",
+                                        "id",
+                                        "kind",
+                                        "options",
+                                        "integrationIds",
+                                        "advancedOptions"
                                       ],
                                       "additionalProperties": false
                                     }
@@ -6690,6 +7668,169 @@
                                         "boardId"
                                       ],
                                       "additionalProperties": false
+                                    },
+                                    {
+                                      "type": "object",
+                                      "properties": {
+                                        "type": {
+                                          "type": "string",
+                                          "const": "widget"
+                                        },
+                                        "id": {
+                                          "type": "string",
+                                          "minLength": 1,
+                                          "maxLength": 255
+                                        },
+                                        "kind": {
+                                          "type": "string",
+                                          "enum": [
+                                            "stats",
+                                            "clock",
+                                            "weather",
+                                            "airQuality",
+                                            "countdown",
+                                            "timer",
+                                            "app",
+                                            "iframe",
+                                            "video",
+                                            "notebook",
+                                            "anchorNote",
+                                            "dnsHoleSummary",
+                                            "dnsHoleControls",
+                                            "smartHome-entityState",
+                                            "smartHome-executeAutomation",
+                                            "smartHome-controls",
+                                            "stockPrice",
+                                            "mediaServer",
+                                            "calendar",
+                                            "downloads",
+                                            "mediaRequests-requestList",
+                                            "mediaRequests-requestStats",
+                                            "mediaTranscoding",
+                                            "mediaMissing",
+                                            "minecraftServerStatus",
+                                            "networkControllerSummary",
+                                            "networkControllerStatus",
+                                            "rssFeed",
+                                            "bookmarks",
+                                            "indexerManager",
+                                            "healthMonitoring",
+                                            "releases",
+                                            "mediaReleases",
+                                            "dockerContainers",
+                                            "firewall",
+                                            "notifications",
+                                            "systemResources",
+                                            "coolify",
+                                            "systemDisks",
+                                            "timetable",
+                                            "immich-serverStats",
+                                            "immich-albumCarousel",
+                                            "paperlessNgx",
+                                            "thingport-libraryStats",
+                                            "thingport-models",
+                                            "thingport-featuredModel",
+                                            "thingport-activityHeatmap",
+                                            "patchmon",
+                                            "bazarr",
+                                            "tracearr",
+                                            "speedtestTracker",
+                                            "uptimeKuma",
+                                            "audioStats",
+                                            "umami",
+                                            "vpn",
+                                            "archiveTeamWarrior",
+                                            "ups",
+                                            "beszelSystemTable",
+                                            "beszelSystemGrid",
+                                            "beszelAlerts",
+                                            "beszelSystemStats",
+                                            "traefik",
+                                            "customApi",
+                                            "assistant",
+                                            "wud",
+                                            "llamacpp",
+                                            "wazuh"
+                                          ]
+                                        },
+                                        "options": {
+                                          "type": "object",
+                                          "propertyNames": {
+                                            "type": "string"
+                                          },
+                                          "additionalProperties": {}
+                                        },
+                                        "integrationIds": {
+                                          "maxItems": 100,
+                                          "type": "array",
+                                          "items": {
+                                            "type": "string",
+                                            "minLength": 1,
+                                            "maxLength": 255
+                                          }
+                                        },
+                                        "advancedOptions": {
+                                          "type": "object",
+                                          "properties": {
+                                            "title": {
+                                              "default": null,
+                                              "anyOf": [
+                                                {
+                                                  "type": "string",
+                                                  "maxLength": 64
+                                                },
+                                                {
+                                                  "type": "null"
+                                                }
+                                              ]
+                                            },
+                                            "customCssClasses": {
+                                              "default": [],
+                                              "type": "array",
+                                              "items": {
+                                                "type": "string"
+                                              }
+                                            },
+                                            "borderColor": {
+                                              "default": "",
+                                              "type": "string"
+                                            }
+                                          }
+                                        },
+                                        "size": {
+                                          "default": {
+                                            "width": 2,
+                                            "height": 2
+                                          },
+                                          "type": "object",
+                                          "properties": {
+                                            "width": {
+                                              "type": "integer",
+                                              "minimum": 1,
+                                              "maximum": 12
+                                            },
+                                            "height": {
+                                              "type": "integer",
+                                              "minimum": 1,
+                                              "maximum": 12
+                                            }
+                                          },
+                                          "required": [
+                                            "width",
+                                            "height"
+                                          ],
+                                          "additionalProperties": false
+                                        }
+                                      },
+                                      "required": [
+                                        "type",
+                                        "id",
+                                        "kind",
+                                        "options",
+                                        "integrationIds",
+                                        "advancedOptions"
+                                      ],
+                                      "additionalProperties": false
                                     }
                                   ],
                                   "type": "object"
@@ -6749,6 +7890,169 @@
                                         "boardId"
                                       ],
                                       "additionalProperties": false
+                                    },
+                                    {
+                                      "type": "object",
+                                      "properties": {
+                                        "type": {
+                                          "type": "string",
+                                          "const": "widget"
+                                        },
+                                        "id": {
+                                          "type": "string",
+                                          "minLength": 1,
+                                          "maxLength": 255
+                                        },
+                                        "kind": {
+                                          "type": "string",
+                                          "enum": [
+                                            "stats",
+                                            "clock",
+                                            "weather",
+                                            "airQuality",
+                                            "countdown",
+                                            "timer",
+                                            "app",
+                                            "iframe",
+                                            "video",
+                                            "notebook",
+                                            "anchorNote",
+                                            "dnsHoleSummary",
+                                            "dnsHoleControls",
+                                            "smartHome-entityState",
+                                            "smartHome-executeAutomation",
+                                            "smartHome-controls",
+                                            "stockPrice",
+                                            "mediaServer",
+                                            "calendar",
+                                            "downloads",
+                                            "mediaRequests-requestList",
+                                            "mediaRequests-requestStats",
+                                            "mediaTranscoding",
+                                            "mediaMissing",
+                                            "minecraftServerStatus",
+                                            "networkControllerSummary",
+                                            "networkControllerStatus",
+                                            "rssFeed",
+                                            "bookmarks",
+                                            "indexerManager",
+                                            "healthMonitoring",
+                                            "releases",
+                                            "mediaReleases",
+                                            "dockerContainers",
+                                            "firewall",
+                                            "notifications",
+                                            "systemResources",
+                                            "coolify",
+                                            "systemDisks",
+                                            "timetable",
+                                            "immich-serverStats",
+                                            "immich-albumCarousel",
+                                            "paperlessNgx",
+                                            "thingport-libraryStats",
+                                            "thingport-models",
+                                            "thingport-featuredModel",
+                                            "thingport-activityHeatmap",
+                                            "patchmon",
+                                            "bazarr",
+                                            "tracearr",
+                                            "speedtestTracker",
+                                            "uptimeKuma",
+                                            "audioStats",
+                                            "umami",
+                                            "vpn",
+                                            "archiveTeamWarrior",
+                                            "ups",
+                                            "beszelSystemTable",
+                                            "beszelSystemGrid",
+                                            "beszelAlerts",
+                                            "beszelSystemStats",
+                                            "traefik",
+                                            "customApi",
+                                            "assistant",
+                                            "wud",
+                                            "llamacpp",
+                                            "wazuh"
+                                          ]
+                                        },
+                                        "options": {
+                                          "type": "object",
+                                          "propertyNames": {
+                                            "type": "string"
+                                          },
+                                          "additionalProperties": {}
+                                        },
+                                        "integrationIds": {
+                                          "maxItems": 100,
+                                          "type": "array",
+                                          "items": {
+                                            "type": "string",
+                                            "minLength": 1,
+                                            "maxLength": 255
+                                          }
+                                        },
+                                        "advancedOptions": {
+                                          "type": "object",
+                                          "properties": {
+                                            "title": {
+                                              "default": null,
+                                              "anyOf": [
+                                                {
+                                                  "type": "string",
+                                                  "maxLength": 64
+                                                },
+                                                {
+                                                  "type": "null"
+                                                }
+                                              ]
+                                            },
+                                            "customCssClasses": {
+                                              "default": [],
+                                              "type": "array",
+                                              "items": {
+                                                "type": "string"
+                                              }
+                                            },
+                                            "borderColor": {
+                                              "default": "",
+                                              "type": "string"
+                                            }
+                                          }
+                                        },
+                                        "size": {
+                                          "default": {
+                                            "width": 2,
+                                            "height": 2
+                                          },
+                                          "type": "object",
+                                          "properties": {
+                                            "width": {
+                                              "type": "integer",
+                                              "minimum": 1,
+                                              "maximum": 12
+                                            },
+                                            "height": {
+                                              "type": "integer",
+                                              "minimum": 1,
+                                              "maximum": 12
+                                            }
+                                          },
+                                          "required": [
+                                            "width",
+                                            "height"
+                                          ],
+                                          "additionalProperties": false
+                                        }
+                                      },
+                                      "required": [
+                                        "type",
+                                        "id",
+                                        "kind",
+                                        "options",
+                                        "integrationIds",
+                                        "advancedOptions"
+                                      ],
+                                      "additionalProperties": false
                                     }
                                   ],
                                   "type": "object"
@@ -6806,6 +8110,169 @@
                                       "required": [
                                         "type",
                                         "boardId"
+                                      ],
+                                      "additionalProperties": false
+                                    },
+                                    {
+                                      "type": "object",
+                                      "properties": {
+                                        "type": {
+                                          "type": "string",
+                                          "const": "widget"
+                                        },
+                                        "id": {
+                                          "type": "string",
+                                          "minLength": 1,
+                                          "maxLength": 255
+                                        },
+                                        "kind": {
+                                          "type": "string",
+                                          "enum": [
+                                            "stats",
+                                            "clock",
+                                            "weather",
+                                            "airQuality",
+                                            "countdown",
+                                            "timer",
+                                            "app",
+                                            "iframe",
+                                            "video",
+                                            "notebook",
+                                            "anchorNote",
+                                            "dnsHoleSummary",
+                                            "dnsHoleControls",
+                                            "smartHome-entityState",
+                                            "smartHome-executeAutomation",
+                                            "smartHome-controls",
+                                            "stockPrice",
+                                            "mediaServer",
+                                            "calendar",
+                                            "downloads",
+                                            "mediaRequests-requestList",
+                                            "mediaRequests-requestStats",
+                                            "mediaTranscoding",
+                                            "mediaMissing",
+                                            "minecraftServerStatus",
+                                            "networkControllerSummary",
+                                            "networkControllerStatus",
+                                            "rssFeed",
+                                            "bookmarks",
+                                            "indexerManager",
+                                            "healthMonitoring",
+                                            "releases",
+                                            "mediaReleases",
+                                            "dockerContainers",
+                                            "firewall",
+                                            "notifications",
+                                            "systemResources",
+                                            "coolify",
+                                            "systemDisks",
+                                            "timetable",
+                                            "immich-serverStats",
+                                            "immich-albumCarousel",
+                                            "paperlessNgx",
+                                            "thingport-libraryStats",
+                                            "thingport-models",
+                                            "thingport-featuredModel",
+                                            "thingport-activityHeatmap",
+                                            "patchmon",
+                                            "bazarr",
+                                            "tracearr",
+                                            "speedtestTracker",
+                                            "uptimeKuma",
+                                            "audioStats",
+                                            "umami",
+                                            "vpn",
+                                            "archiveTeamWarrior",
+                                            "ups",
+                                            "beszelSystemTable",
+                                            "beszelSystemGrid",
+                                            "beszelAlerts",
+                                            "beszelSystemStats",
+                                            "traefik",
+                                            "customApi",
+                                            "assistant",
+                                            "wud",
+                                            "llamacpp",
+                                            "wazuh"
+                                          ]
+                                        },
+                                        "options": {
+                                          "type": "object",
+                                          "propertyNames": {
+                                            "type": "string"
+                                          },
+                                          "additionalProperties": {}
+                                        },
+                                        "integrationIds": {
+                                          "maxItems": 100,
+                                          "type": "array",
+                                          "items": {
+                                            "type": "string",
+                                            "minLength": 1,
+                                            "maxLength": 255
+                                          }
+                                        },
+                                        "advancedOptions": {
+                                          "type": "object",
+                                          "properties": {
+                                            "title": {
+                                              "default": null,
+                                              "anyOf": [
+                                                {
+                                                  "type": "string",
+                                                  "maxLength": 64
+                                                },
+                                                {
+                                                  "type": "null"
+                                                }
+                                              ]
+                                            },
+                                            "customCssClasses": {
+                                              "default": [],
+                                              "type": "array",
+                                              "items": {
+                                                "type": "string"
+                                              }
+                                            },
+                                            "borderColor": {
+                                              "default": "",
+                                              "type": "string"
+                                            }
+                                          }
+                                        },
+                                        "size": {
+                                          "default": {
+                                            "width": 2,
+                                            "height": 2
+                                          },
+                                          "type": "object",
+                                          "properties": {
+                                            "width": {
+                                              "type": "integer",
+                                              "minimum": 1,
+                                              "maximum": 12
+                                            },
+                                            "height": {
+                                              "type": "integer",
+                                              "minimum": 1,
+                                              "maximum": 12
+                                            }
+                                          },
+                                          "required": [
+                                            "width",
+                                            "height"
+                                          ],
+                                          "additionalProperties": false
+                                        }
+                                      },
+                                      "required": [
+                                        "type",
+                                        "id",
+                                        "kind",
+                                        "options",
+                                        "integrationIds",
+                                        "advancedOptions"
                                       ],
                                       "additionalProperties": false
                                     }
@@ -8300,6 +9767,176 @@
                             "boardId"
                           ],
                           "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "const": "widget"
+                            },
+                            "id": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 255
+                            },
+                            "kind": {
+                              "type": "string",
+                              "enum": [
+                                "stats",
+                                "clock",
+                                "weather",
+                                "airQuality",
+                                "countdown",
+                                "timer",
+                                "app",
+                                "iframe",
+                                "video",
+                                "notebook",
+                                "anchorNote",
+                                "dnsHoleSummary",
+                                "dnsHoleControls",
+                                "smartHome-entityState",
+                                "smartHome-executeAutomation",
+                                "smartHome-controls",
+                                "stockPrice",
+                                "mediaServer",
+                                "calendar",
+                                "downloads",
+                                "mediaRequests-requestList",
+                                "mediaRequests-requestStats",
+                                "mediaTranscoding",
+                                "mediaMissing",
+                                "minecraftServerStatus",
+                                "networkControllerSummary",
+                                "networkControllerStatus",
+                                "rssFeed",
+                                "bookmarks",
+                                "indexerManager",
+                                "healthMonitoring",
+                                "releases",
+                                "mediaReleases",
+                                "dockerContainers",
+                                "firewall",
+                                "notifications",
+                                "systemResources",
+                                "coolify",
+                                "systemDisks",
+                                "timetable",
+                                "immich-serverStats",
+                                "immich-albumCarousel",
+                                "paperlessNgx",
+                                "thingport-libraryStats",
+                                "thingport-models",
+                                "thingport-featuredModel",
+                                "thingport-activityHeatmap",
+                                "patchmon",
+                                "bazarr",
+                                "tracearr",
+                                "speedtestTracker",
+                                "uptimeKuma",
+                                "audioStats",
+                                "umami",
+                                "vpn",
+                                "archiveTeamWarrior",
+                                "ups",
+                                "beszelSystemTable",
+                                "beszelSystemGrid",
+                                "beszelAlerts",
+                                "beszelSystemStats",
+                                "traefik",
+                                "customApi",
+                                "assistant",
+                                "wud",
+                                "llamacpp",
+                                "wazuh"
+                              ]
+                            },
+                            "options": {
+                              "type": "object",
+                              "propertyNames": {
+                                "type": "string"
+                              },
+                              "additionalProperties": {}
+                            },
+                            "integrationIds": {
+                              "maxItems": 100,
+                              "type": "array",
+                              "items": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 255
+                              }
+                            },
+                            "advancedOptions": {
+                              "type": "object",
+                              "properties": {
+                                "title": {
+                                  "default": null,
+                                  "anyOf": [
+                                    {
+                                      "type": "string",
+                                      "maxLength": 64
+                                    },
+                                    {
+                                      "type": "null"
+                                    }
+                                  ]
+                                },
+                                "customCssClasses": {
+                                  "default": [],
+                                  "type": "array",
+                                  "items": {
+                                    "type": "string"
+                                  }
+                                },
+                                "borderColor": {
+                                  "default": "",
+                                  "type": "string"
+                                }
+                              },
+                              "required": [
+                                "title",
+                                "customCssClasses",
+                                "borderColor"
+                              ],
+                              "additionalProperties": false
+                            },
+                            "size": {
+                              "default": {
+                                "width": 2,
+                                "height": 2
+                              },
+                              "type": "object",
+                              "properties": {
+                                "width": {
+                                  "type": "integer",
+                                  "minimum": 1,
+                                  "maximum": 12
+                                },
+                                "height": {
+                                  "type": "integer",
+                                  "minimum": 1,
+                                  "maximum": 12
+                                }
+                              },
+                              "required": [
+                                "width",
+                                "height"
+                              ],
+                              "additionalProperties": false
+                            }
+                          },
+                          "required": [
+                            "type",
+                            "id",
+                            "kind",
+                            "options",
+                            "integrationIds",
+                            "advancedOptions",
+                            "size"
+                          ],
+                          "additionalProperties": false
                         }
                       ],
                       "type": "object"
@@ -8359,6 +9996,176 @@
                             "boardId"
                           ],
                           "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "const": "widget"
+                            },
+                            "id": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 255
+                            },
+                            "kind": {
+                              "type": "string",
+                              "enum": [
+                                "stats",
+                                "clock",
+                                "weather",
+                                "airQuality",
+                                "countdown",
+                                "timer",
+                                "app",
+                                "iframe",
+                                "video",
+                                "notebook",
+                                "anchorNote",
+                                "dnsHoleSummary",
+                                "dnsHoleControls",
+                                "smartHome-entityState",
+                                "smartHome-executeAutomation",
+                                "smartHome-controls",
+                                "stockPrice",
+                                "mediaServer",
+                                "calendar",
+                                "downloads",
+                                "mediaRequests-requestList",
+                                "mediaRequests-requestStats",
+                                "mediaTranscoding",
+                                "mediaMissing",
+                                "minecraftServerStatus",
+                                "networkControllerSummary",
+                                "networkControllerStatus",
+                                "rssFeed",
+                                "bookmarks",
+                                "indexerManager",
+                                "healthMonitoring",
+                                "releases",
+                                "mediaReleases",
+                                "dockerContainers",
+                                "firewall",
+                                "notifications",
+                                "systemResources",
+                                "coolify",
+                                "systemDisks",
+                                "timetable",
+                                "immich-serverStats",
+                                "immich-albumCarousel",
+                                "paperlessNgx",
+                                "thingport-libraryStats",
+                                "thingport-models",
+                                "thingport-featuredModel",
+                                "thingport-activityHeatmap",
+                                "patchmon",
+                                "bazarr",
+                                "tracearr",
+                                "speedtestTracker",
+                                "uptimeKuma",
+                                "audioStats",
+                                "umami",
+                                "vpn",
+                                "archiveTeamWarrior",
+                                "ups",
+                                "beszelSystemTable",
+                                "beszelSystemGrid",
+                                "beszelAlerts",
+                                "beszelSystemStats",
+                                "traefik",
+                                "customApi",
+                                "assistant",
+                                "wud",
+                                "llamacpp",
+                                "wazuh"
+                              ]
+                            },
+                            "options": {
+                              "type": "object",
+                              "propertyNames": {
+                                "type": "string"
+                              },
+                              "additionalProperties": {}
+                            },
+                            "integrationIds": {
+                              "maxItems": 100,
+                              "type": "array",
+                              "items": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 255
+                              }
+                            },
+                            "advancedOptions": {
+                              "type": "object",
+                              "properties": {
+                                "title": {
+                                  "default": null,
+                                  "anyOf": [
+                                    {
+                                      "type": "string",
+                                      "maxLength": 64
+                                    },
+                                    {
+                                      "type": "null"
+                                    }
+                                  ]
+                                },
+                                "customCssClasses": {
+                                  "default": [],
+                                  "type": "array",
+                                  "items": {
+                                    "type": "string"
+                                  }
+                                },
+                                "borderColor": {
+                                  "default": "",
+                                  "type": "string"
+                                }
+                              },
+                              "required": [
+                                "title",
+                                "customCssClasses",
+                                "borderColor"
+                              ],
+                              "additionalProperties": false
+                            },
+                            "size": {
+                              "default": {
+                                "width": 2,
+                                "height": 2
+                              },
+                              "type": "object",
+                              "properties": {
+                                "width": {
+                                  "type": "integer",
+                                  "minimum": 1,
+                                  "maximum": 12
+                                },
+                                "height": {
+                                  "type": "integer",
+                                  "minimum": 1,
+                                  "maximum": 12
+                                }
+                              },
+                              "required": [
+                                "width",
+                                "height"
+                              ],
+                              "additionalProperties": false
+                            }
+                          },
+                          "required": [
+                            "type",
+                            "id",
+                            "kind",
+                            "options",
+                            "integrationIds",
+                            "advancedOptions",
+                            "size"
+                          ],
+                          "additionalProperties": false
                         }
                       ],
                       "type": "object"
@@ -8416,6 +10223,176 @@
                           "required": [
                             "type",
                             "boardId"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "const": "widget"
+                            },
+                            "id": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 255
+                            },
+                            "kind": {
+                              "type": "string",
+                              "enum": [
+                                "stats",
+                                "clock",
+                                "weather",
+                                "airQuality",
+                                "countdown",
+                                "timer",
+                                "app",
+                                "iframe",
+                                "video",
+                                "notebook",
+                                "anchorNote",
+                                "dnsHoleSummary",
+                                "dnsHoleControls",
+                                "smartHome-entityState",
+                                "smartHome-executeAutomation",
+                                "smartHome-controls",
+                                "stockPrice",
+                                "mediaServer",
+                                "calendar",
+                                "downloads",
+                                "mediaRequests-requestList",
+                                "mediaRequests-requestStats",
+                                "mediaTranscoding",
+                                "mediaMissing",
+                                "minecraftServerStatus",
+                                "networkControllerSummary",
+                                "networkControllerStatus",
+                                "rssFeed",
+                                "bookmarks",
+                                "indexerManager",
+                                "healthMonitoring",
+                                "releases",
+                                "mediaReleases",
+                                "dockerContainers",
+                                "firewall",
+                                "notifications",
+                                "systemResources",
+                                "coolify",
+                                "systemDisks",
+                                "timetable",
+                                "immich-serverStats",
+                                "immich-albumCarousel",
+                                "paperlessNgx",
+                                "thingport-libraryStats",
+                                "thingport-models",
+                                "thingport-featuredModel",
+                                "thingport-activityHeatmap",
+                                "patchmon",
+                                "bazarr",
+                                "tracearr",
+                                "speedtestTracker",
+                                "uptimeKuma",
+                                "audioStats",
+                                "umami",
+                                "vpn",
+                                "archiveTeamWarrior",
+                                "ups",
+                                "beszelSystemTable",
+                                "beszelSystemGrid",
+                                "beszelAlerts",
+                                "beszelSystemStats",
+                                "traefik",
+                                "customApi",
+                                "assistant",
+                                "wud",
+                                "llamacpp",
+                                "wazuh"
+                              ]
+                            },
+                            "options": {
+                              "type": "object",
+                              "propertyNames": {
+                                "type": "string"
+                              },
+                              "additionalProperties": {}
+                            },
+                            "integrationIds": {
+                              "maxItems": 100,
+                              "type": "array",
+                              "items": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 255
+                              }
+                            },
+                            "advancedOptions": {
+                              "type": "object",
+                              "properties": {
+                                "title": {
+                                  "default": null,
+                                  "anyOf": [
+                                    {
+                                      "type": "string",
+                                      "maxLength": 64
+                                    },
+                                    {
+                                      "type": "null"
+                                    }
+                                  ]
+                                },
+                                "customCssClasses": {
+                                  "default": [],
+                                  "type": "array",
+                                  "items": {
+                                    "type": "string"
+                                  }
+                                },
+                                "borderColor": {
+                                  "default": "",
+                                  "type": "string"
+                                }
+                              },
+                              "required": [
+                                "title",
+                                "customCssClasses",
+                                "borderColor"
+                              ],
+                              "additionalProperties": false
+                            },
+                            "size": {
+                              "default": {
+                                "width": 2,
+                                "height": 2
+                              },
+                              "type": "object",
+                              "properties": {
+                                "width": {
+                                  "type": "integer",
+                                  "minimum": 1,
+                                  "maximum": 12
+                                },
+                                "height": {
+                                  "type": "integer",
+                                  "minimum": 1,
+                                  "maximum": 12
+                                }
+                              },
+                              "required": [
+                                "width",
+                                "height"
+                              ],
+                              "additionalProperties": false
+                            }
+                          },
+                          "required": [
+                            "type",
+                            "id",
+                            "kind",
+                            "options",
+                            "integrationIds",
+                            "advancedOptions",
+                            "size"
                           ],
                           "additionalProperties": false
                         }

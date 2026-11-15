@@ -61,6 +61,13 @@ const headerWidgetItemSchema = z
     options: z.record(z.string(), z.unknown()),
     integrationIds: z.array(z.string().min(1).max(255)).max(100),
     advancedOptions: itemAdvancedOptionsSchema,
+    size: z
+      .object({
+        width: z.number().int().min(1).max(12),
+        height: z.number().int().min(1).max(12),
+      })
+      .strict()
+      .default({ width: 2, height: 2 }),
   })
   .strict();
 

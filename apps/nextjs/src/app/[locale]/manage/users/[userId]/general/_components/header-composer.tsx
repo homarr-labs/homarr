@@ -355,8 +355,9 @@ export const HeaderComposer = ({ value, onChange, boards, homeBoardId }: HeaderC
                           allowDeselect={false}
                           data={widgetKinds.map((kind) => {
                             let label = getWidgetName(kind, tAll);
-                            if (kind === "customApi") label = `${label} (${t("configuration.boardOnly")})`;
-                            return { value: kind, label, disabled: kind === "customApi" };
+                            const boardOnly = kind === "customApi" || kind === "timetable" || kind === "releases";
+                            if (boardOnly) label = `${label} (${t("configuration.boardOnly")})`;
+                            return { value: kind, label, disabled: boardOnly };
                           })}
                           onChange={(kind) => {
                             if (!kind || kind === selectedItem.kind) return;
@@ -820,4 +821,5 @@ const createHeaderWidgetItem = (kind: WidgetKind, id: string): HeaderWidgetItem 
   options: {},
   integrationIds: [],
   advancedOptions: { title: null, customCssClasses: [], borderColor: "" },
+  size: { width: 2, height: 2 },
 });

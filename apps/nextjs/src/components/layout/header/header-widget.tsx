@@ -1,10 +1,9 @@
 "use client";
 
-import { Suspense, use, useEffect, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
-import { Button, Group, Loader, Popover, Text, Tooltip } from "@mantine/core";
+import { Suspense, use, useState } from "react";
+import { Loader, MantineThemeProvider, Popover, Portal, Text, Tooltip } from "@mantine/core";
 import { useElementSize } from "@mantine/hooks";
-import { IconBell, IconPencil } from "@tabler/icons-react";
+import { IconBell } from "@tabler/icons-react";
 import { ErrorBoundary } from "react-error-boundary";
 import { QueryErrorResetBoundary } from "@tanstack/react-query";
 
@@ -17,55 +16,36 @@ import { useSettings } from "@homarr/settings";
 import { useI18n } from "@homarr/translation/client";
 import { widgetCatalogIcons } from "@homarr/ui/widget-icons";
 import type { HeaderWidgetItem } from "@homarr/validation/user";
-import { getHeaderItemKey } from "@homarr/validation/user";
+import { getHeaderItems } from "@homarr/validation/user";
 import { loadWidgetResources, reduceWidgetOptionsWithDefinition } from "@homarr/widgets/manifest";
 import { WidgetError } from "@homarr/widgets/errors";
 import { WidgetCardShell } from "@homarr/widgets/widget-card-shell";
 
 import { HeaderButton } from "./button";
+import { getLogicalGridSize } from "~/components/board/layout";
 import { useHeaderWidgetEditor } from "./header-widget-editor";
+import { useHeaderWidgetPreferences } from "./header-widget-preferences";
 import { HeaderWidgetRuntimeBoundary } from "./header-widget-runtime-boundary";
 
 export const HeaderWidget = ({ item, userId }: { item: HeaderWidgetItem; userId: string | null }) => {
   const [opened, setOpened] = useState(false);
-  const [currentItem, setCurrentItem] = useState(item);
-  const settings = useSettings();
-  const preferencesRef = useRef(settings.headerPreferences);
+  const [dropdown, setDropdown] = useState<HTMLDivElement | null>(null);
+  const { preferences, save, savingItemIds } = useHeaderWidgetPreferences();
+  let currentItem = item;
+  const savedItem = getHeaderItems(preferences.zones).find(
+    (candidate) => candidate.type === "widget" && candidate.id === item.id,
+  );
+  if (savedItem?.type === "widget") currentItem = savedItem;
   const editMode = useOptionalEditMode();
-  const router = useRouter();
   const t = useI18n();
   const editor = useHeaderWidgetEditor();
-  const mutation = clientApi.user.changeHeaderPreferences.useMutation({
-    scope: { id: `header-preferences:${userId}` },
-  });
-  useEffect(() => setCurrentItem(item), [item]);
-  useEffect(() => {
-    preferencesRef.current = settings.headerPreferences;
-  }, [settings.headerPreferences]);
 
   if (!userId) return null;
 
   const saveItem = async (next: HeaderWidgetItem) => {
-    const previousPreferences = preferencesRef.current;
-    const previousItem = currentItem;
-    const zones = { ...preferencesRef.current.zones };
-    for (const zone of ["left", "center", "right"] as const) {
-      zones[zone] = zones[zone].map((candidate) => {
-        if (getHeaderItemKey(candidate) === getHeaderItemKey(next)) return next;
-        return candidate;
-      });
-    }
-    const nextPreferences = { ...preferencesRef.current, zones };
-    preferencesRef.current = nextPreferences;
-    setCurrentItem(next);
     try {
-      await mutation.mutateAsync({ id: userId, headerPreferences: nextPreferences });
-      if (preferencesRef.current === nextPreferences) router.refresh();
+      await save(next);
     } catch (error) {
-      if (preferencesRef.current === nextPreferences) {
-        preferencesRef.current = previousPreferences;
-        setCurrentItem(previousItem);
-      }
       showErrorNotification({ title: t("common.error"), message: String(error) });
     }
   };
@@ -93,7 +73,7 @@ export const HeaderWidget = ({ item, userId }: { item: HeaderWidgetItem; userId:
         <Tooltip label={title}>
           <HeaderButton
             aria-label={title}
-            loading={editor.loading || mutation.isPending}
+            loading={editor.loading || savingItemIds.includes(item.id)}
             onClick={() => {
               if (editMode?.[0]) {
                 configure();
@@ -106,29 +86,33 @@ export const HeaderWidget = ({ item, userId }: { item: HeaderWidgetItem; userId:
           </HeaderButton>
         </Tooltip>
       </Popover.Target>
-      <Popover.Dropdown p="xs" w="min(440px, calc(100vw - 24px))">
-        <Group justify="space-between" wrap="nowrap" mb="xs">
-          <Text fw={600} size="sm" truncate>
-            {title}
-          </Text>
-          <Button size="compact-xs" variant="subtle" leftSection={<IconPencil size={14} />} onClick={configure}>
-            {t("common.action.edit")}
-          </Button>
-        </Group>
-        {opened && (
-          <QueryErrorResetBoundary>
-            {({ reset }) => (
-              <ErrorBoundary
-                FallbackComponent={WidgetError}
-                onReset={reset}
-                resetKeys={[currentItem.kind, currentItem.options, currentItem.integrationIds]}
-              >
-                <Suspense fallback={<Loader size="sm" />}>
-                  <HeaderWidgetContent item={currentItem} userId={userId} onChange={(next) => void saveItem(next)} />
-                </Suspense>
-              </ErrorBoundary>
-            )}
-          </QueryErrorResetBoundary>
+      <Popover.Dropdown
+        ref={setDropdown}
+        p="xs"
+        w={`min(${getLogicalGridSize(currentItem.size.width) + 16}px, calc(100vw - 24px))`}
+      >
+        <Text fw={600} size="sm" truncate mb="xs">
+          {title}
+        </Text>
+        {opened && dropdown && (
+          <MantineThemeProvider
+            inherit
+            theme={{ components: { Portal: Portal.extend({ defaultProps: { target: dropdown } }) } }}
+          >
+            <QueryErrorResetBoundary>
+              {({ reset }) => (
+                <ErrorBoundary
+                  FallbackComponent={WidgetError}
+                  onReset={reset}
+                  resetKeys={[currentItem.kind, currentItem.options, currentItem.integrationIds]}
+                >
+                  <Suspense fallback={<Loader size="sm" />}>
+                    <HeaderWidgetContent item={currentItem} userId={userId} onChange={(next) => void saveItem(next)} />
+                  </Suspense>
+                </ErrorBoundary>
+              )}
+            </QueryErrorResetBoundary>
+          </MantineThemeProvider>
         )}
       </Popover.Dropdown>
     </Popover>
@@ -179,7 +163,7 @@ const HeaderWidgetContent = ({
       opacity={1}
       p={0}
       radius="md"
-      h="min(420px, calc(100dvh - 150px))"
+      h={`min(${getLogicalGridSize(item.size.height)}px, calc(100dvh - 150px))`}
       mih={100}
     >
       <HeaderWidgetRuntimeBoundary>
@@ -189,8 +173,8 @@ const HeaderWidgetContent = ({
             integrationIds={allowedIntegrations.map((integration) => integration.id)}
             itemId={localStateItemId}
             boardId={localStateBoardId}
-            width={width || 400}
-            height={height || 420}
+            width={width || getLogicalGridSize(item.size.width)}
+            height={height || getLogicalGridSize(item.size.height)}
             isEditMode={false}
             displayMode="compact"
             setOptions={({ newOptions }) => onChange({ ...item, options: { ...options, ...newOptions } })}
