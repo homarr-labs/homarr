@@ -67,6 +67,48 @@ const forecastResultSchema = z.object({
 export { SmartHomeActionNotSupportedError, SmartHomeEntityNotFoundError } from "./homeassistant-errors";
 
 export class HomeAssistantIntegration extends Integration implements ISmartHomeIntegration, ICalendarIntegration {
+  public async getCameraStreamAsync(entityId: string, signal?: AbortSignal): Promise<Response> {
+    if (!/^camera\.[a-z0-9_]+$/.test(entityId)) throw new Error("Expected a camera entity");
+    const signals = [AbortSignal.timeout(5 * 60_000)];
+    if (signal) signals.push(signal);
+    const response = await fetchWithTrustedCertificatesAsync(this.url(`/api/camera_proxy_stream/${entityId}`), {
+      headers: this.getAuthHeaders(),
+      redirect: "error",
+      signal: AbortSignal.any(signals),
+      timeout: 15_000,
+      bodyTimeout: 30_000,
+    });
+    const contentType = response.headers.get("content-type") ?? "";
+    if (!response.ok || !response.body || !/^multipart\/x-mixed-replace\s*;.*boundary=/i.test(contentType)) {
+      await response.body?.cancel();
+      throw new Error("The camera did not return a live image stream");
+    }
+    const reader = response.body.getReader();
+    const body = new ReadableStream<Uint8Array>({
+      async pull(controller) {
+        try {
+          const chunk = await reader.read();
+          if (chunk.done) controller.close();
+          else controller.enqueue(chunk.value);
+        } catch (error) {
+          controller.error(error);
+        }
+      },
+      async cancel(reason) {
+        await reader.cancel(reason);
+      },
+    });
+    return new Response(body, {
+      headers: {
+        "Content-Type": contentType,
+        "Cache-Control": "private, no-store",
+        "X-Accel-Buffering": "no",
+        "X-Content-Type-Options": "nosniff",
+        "Cross-Origin-Resource-Policy": "same-origin",
+      },
+    });
+  }
+
   public async getHttpAuthenticationAsync(): Promise<IntegrationHttpAuthentication> {
     return { headers: this.getAuthHeaders() };
   }

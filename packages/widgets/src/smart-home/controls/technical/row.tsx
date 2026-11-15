@@ -38,6 +38,8 @@ import { Spark } from "./spark";
 import classes from "./styles.module.css";
 import type { EntityRun } from "./use-run";
 import { useEntityRun } from "./use-run";
+import { MediaActions } from "../media-actions";
+import { CameraDetailsAction } from "../camera-feed";
 
 interface ControlProps {
   entity: HaEntity;
@@ -141,6 +143,7 @@ export function RowControl({ entity, run, level }: ControlProps) {
       return (
         <div className={classes.cluster}>
           {level === 2 &&
+            entity.state !== "off" &&
             attributes.volume !== undefined &&
             supportsSmartHomeAction(entity, { type: "setVolume", value: attributes.volume }) && (
               <InlineSlider
@@ -152,8 +155,11 @@ export function RowControl({ entity, run, level }: ControlProps) {
               />
             )}
           <MediaTransport entity={entity} run={run} level={level} />
+          <MediaActions entity={entity} compact />
         </div>
       );
+    case "camera":
+      return <CameraDetailsAction entity={entity} />;
     case "lock": {
       const locked = entity.state === "locked";
       const action = locked ? ({ type: "unlock" } as const) : ({ type: "lock" } as const);

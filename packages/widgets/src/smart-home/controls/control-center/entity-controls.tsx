@@ -2,7 +2,7 @@
 
 import { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import type { ReactNode } from "react";
-import { Box, Group, Modal } from "@mantine/core";
+import { Box, Group, Modal, ScrollArea } from "@mantine/core";
 import { useInterval } from "@mantine/hooks";
 import {
   IconAirConditioning,
@@ -76,6 +76,8 @@ import { CodePrompt } from "./code-prompt";
 import { LightColorPresets } from "./color-controls";
 import { DetailMeta, DetailPanel } from "./detail-panel";
 import { DetailTrigger } from "./detail-trigger";
+import { MediaActions } from "../media-actions";
+import { CameraFeed } from "../camera-feed";
 import { getHistoryValues } from "./history";
 import {
   clamp,
@@ -846,10 +848,11 @@ function MediaControl({ entity, width, height }: ControlProps) {
   const idle = !(playing || entity.state === "paused");
   const volume = Math.round((attributes.volume ?? 0) * 100);
   const duration = attributes.mediaDuration ?? 0;
-  const canPlayPause = supportsSmartHomeAction(entity, { type: "mediaPlayPause" });
-  const canPrevious = supportsSmartHomeAction(entity, { type: "mediaPrevious" });
-  const canNext = supportsSmartHomeAction(entity, { type: "mediaNext" });
-  const canSetVolume = supportsSmartHomeAction(entity, { type: "setVolume", value: 0 });
+  const powered = entity.state !== "off";
+  const canPlayPause = powered && supportsSmartHomeAction(entity, { type: "mediaPlayPause" });
+  const canPrevious = powered && supportsSmartHomeAction(entity, { type: "mediaPrevious" });
+  const canNext = powered && supportsSmartHomeAction(entity, { type: "mediaNext" });
+  const canSetVolume = powered && supportsSmartHomeAction(entity, { type: "setVolume", value: 0 });
   const title = idle ? entity.name : (attributes.mediaTitle ?? entity.name);
   const subtitle = idle ? formatEntityState(entity) : (attributes.mediaArtist ?? attributes.mediaSource ?? "");
   const Icon = theme.Icon;
@@ -883,6 +886,9 @@ function MediaControl({ entity, width, height }: ControlProps) {
     return (
       <Tile theme={theme} media className={classes.mediaTile}>
         {background}
+        <Box pos="absolute" top={2} right={2} style={{ zIndex: 2 }}>
+          <MediaActions entity={entity} compact />
+        </Box>
         <div className={classes.mediaMini}>
           <RoundButton
             size="lg"
@@ -905,13 +911,18 @@ function MediaControl({ entity, width, height }: ControlProps) {
     return (
       <Tile theme={theme} media className={classes.mediaTile}>
         {background}
+        <Box pos="absolute" top={2} right={2} style={{ zIndex: 2 }}>
+          <MediaActions entity={entity} compact />
+        </Box>
         <div className={classes.mediaRow}>
           {width >= 260 ? art(Math.min(height - 24, 56)) : null}
           <div className={classes.headText}>
             <span className={classes.name} title={title} data-entity-name={title === entity.name}>
               {title}
             </span>
-            <span className={classes.state}>{subtitle}</span>
+            <span className={classes.state} title={subtitle}>
+              {subtitle}
+            </span>
           </div>
           <div className={classes.transport}>
             {width >= 360 && canPrevious ? (
@@ -958,6 +969,9 @@ function MediaControl({ entity, width, height }: ControlProps) {
   return (
     <Tile theme={theme} media className={classes.mediaTile}>
       {background}
+      <Box pos="absolute" top={2} right={2} style={{ zIndex: 2 }}>
+        <MediaActions entity={entity} compact />
+      </Box>
       <div className={classes.mediaFull} data-hero={hero}>
         <div className={classes.mediaTop} data-hero={hero}>
           {art(artSize)}
@@ -965,7 +979,9 @@ function MediaControl({ entity, width, height }: ControlProps) {
             <span className={classes.name} title={title} data-entity-name={title === entity.name}>
               {title}
             </span>
-            <span className={classes.state}>{subtitle}</span>
+            <span className={classes.state} title={subtitle}>
+              {subtitle}
+            </span>
           </div>
         </div>
         {showProgress && <MediaProgress entity={entity} />}
@@ -1018,6 +1034,7 @@ function MediaControl({ entity, width, height }: ControlProps) {
             <span className={classes.volumeValue}>{volume}%</span>
           </div>
         ) : null}
+        {height >= 360 && <MediaActions entity={entity} />}
       </div>
     </Tile>
   );
@@ -1025,25 +1042,11 @@ function MediaControl({ entity, width, height }: ControlProps) {
 
 function CameraControl({ entity, width, height }: ControlProps) {
   const theme = useEntityTheme(entity);
-  const image = entity.attributes.snapshotUrl ?? entity.attributes.pictureUrl;
-  const live = entity.state === "recording" || entity.state === "streaming";
-  const Icon = theme.Icon;
   const tier = getTier(width, height);
 
   return (
     <Tile theme={theme} bare className={classes.cameraTile}>
-      {image ? (
-        <img src={image} alt={`${entity.name} snapshot`} className={classes.cameraImage} draggable={false} />
-      ) : (
-        <div className={classes.cameraEmpty}>
-          <Icon size={32} stroke={1.4} />
-        </div>
-      )}
-      <div className={classes.cameraShade} />
-      <span className={classes.liveBadge} data-live={live}>
-        <span className={classes.liveDot} />
-        {live ? "LIVE" : "IDLE"}
-      </span>
+      <CameraFeed entity={entity} />
       <div className={classes.cameraFoot}>
         <span className={classes.name} title={entity.name}>
           {entity.name}
@@ -1599,7 +1602,7 @@ const detailHeights: Partial<Record<HaDomain, number>> = {
   camera: 260,
   climate: 280,
   light: 240,
-  media_player: 280,
+  media_player: 380,
   sensor: 160,
   weather: 220,
 };
@@ -1636,6 +1639,7 @@ export function EntityDetail({ entityId, onClose, onOpen }: EntityDetailProps) {
       closeButtonProps={{ "aria-label": t("common.action.close"), size: 44 }}
       centered
       size="60rem"
+      scrollAreaComponent={ScrollArea.Autosize}
       xOffset="max(12px, env(safe-area-inset-left), env(safe-area-inset-right))"
       yOffset="max(12px, env(safe-area-inset-top), env(safe-area-inset-bottom))"
       classNames={{ content: classes.detailModal, title: classes.detailModalTitle }}
@@ -1647,7 +1651,11 @@ export function EntityDetail({ entityId, onClose, onOpen }: EntityDetailProps) {
             <div className={classes.detailLayout}>
               <div className={classes.detailControls}>
                 <CodePrompt key={`${entity.id}:${codeSession}`} entity={entity}>
-                  <div className={classes.detailStage} style={{ height: detailHeights[entity.domain] ?? 180 }}>
+                  <div
+                    className={classes.detailStage}
+                    data-domain={entity.domain}
+                    style={{ height: detailHeights[entity.domain] ?? 180 }}
+                  >
                     <Measured>
                       {(w, h) => <EntityControl entity={entity} width={w} height={h} details={false} />}
                     </Measured>

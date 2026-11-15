@@ -78,6 +78,7 @@ const toAttributes = (domain: string, attributes: SmartHomeEntityAttributes): Ha
   mediaArtist: attributes.mediaArtist,
   mediaAlbum: attributes.mediaAlbum,
   mediaSource: attributes.mediaSource,
+  sources: attributes.sources,
   volume: attributes.volume,
   isMuted: attributes.isMuted,
   mediaDuration: attributes.mediaDuration,
@@ -110,6 +111,10 @@ const toAreaKey = (integrationId: string, areaId: string | null) => {
 
 const toSmartHomeEntity = (integrationId: string, entity: SmartHomeEntity, history: HaEntity["history"]): HaEntity => {
   const { domain, readOnly } = toSmartHomeDomain(entity.domain);
+  const attributes = toAttributes(entity.domain, entity.attributes);
+  if (entity.domain === "camera") {
+    attributes.streamUrl = `/api/smart-home/${encodeURIComponent(integrationId)}/camera/${encodeURIComponent(entity.id)}`;
+  }
   return {
     id: entity.id,
     domain,
@@ -120,7 +125,7 @@ const toSmartHomeEntity = (integrationId: string, entity: SmartHomeEntity, histo
     deviceClass: entity.deviceClass,
     unit: entity.unit,
     lastChanged: entity.lastChanged,
-    attributes: toAttributes(entity.domain, entity.attributes),
+    attributes,
     history,
     sourceDomain: entity.domain,
     sourceAreaId: entity.areaId,
@@ -156,6 +161,8 @@ type IntentKey =
   | "targetHumidity"
   | "position"
   | "volume"
+  | "muted"
+  | "source"
   | "percentage"
   | "media"
   | "trigger";
@@ -198,8 +205,15 @@ const reaches =
 
 const createIntent = (action: HaAction, optimistic: SmartHomeEntity): Intent => {
   switch (action.type) {
-    case "toggle":
     case "turnOn":
+      if (optimistic.domain === "media_player") {
+        return {
+          keys: ["state"],
+          matches: (confirmed) => !["off", "unknown", "unavailable"].includes(confirmed.state),
+        };
+      }
+      return { keys: ["state"], matches: stateIn(optimistic.state) };
+    case "toggle":
     case "turnOff":
     case "mediaPlayPause":
       return { keys: ["state"], matches: stateIn(optimistic.state) };
@@ -282,6 +296,10 @@ const createIntent = (action: HaAction, optimistic: SmartHomeEntity): Intent => 
       };
     case "setVolume":
       return { keys: ["volume"], matches: reaches((entity) => entity.attributes.volume, action.value, 0.011) };
+    case "setMuted":
+      return { keys: ["muted"], matches: (entity) => entity.attributes.isMuted === action.value };
+    case "selectSource":
+      return { keys: ["source"], matches: (entity) => entity.attributes.mediaSource === action.value };
     case "setHvacMode":
     case "selectOption":
       return { keys: ["state"], matches: stateIn(action.value) };

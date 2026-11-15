@@ -16,6 +16,7 @@
     "./server": "./src/server.ts",
     "./websocket": "./src/websocket.ts",
     "./shared": "./src/shared.ts",
+    "./smart-home-camera": "./src/smart-home-camera.ts",
     "./open-api": "./src/open-api.ts",
     "./onboarding-claim": "./src/onboarding-claim.ts",
     "./assistant": "./src/assistant.ts",

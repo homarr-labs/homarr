@@ -454,23 +454,24 @@ export function EntityToggle({ entity, run }: Pick<ControlProps, "entity" | "run
 
 export function MediaTransport({ entity, run, level }: ControlProps) {
   const playing = entity.state === "playing";
+  const disabled = run.pending || entity.state === "off";
   return (
     <div className={classes.cluster}>
       {level > 0 && supportsSmartHomeAction(entity, { type: "mediaPrevious" }) && (
-        <IconButton label="Previous" disabled={run.pending} onClick={() => run.request({ type: "mediaPrevious" })}>
+        <IconButton label="Previous" disabled={disabled} onClick={() => run.request({ type: "mediaPrevious" })}>
           <IconPlayerSkipBack size={14} />
         </IconButton>
       )}
       <IconButton
         label={playing ? "Pause" : "Play"}
         strong
-        disabled={run.pending || !supportsSmartHomeAction(entity, { type: "mediaPlayPause" })}
+        disabled={disabled || !supportsSmartHomeAction(entity, { type: "mediaPlayPause" })}
         onClick={() => run.request({ type: "mediaPlayPause" })}
       >
         {playing ? <IconPlayerPause size={14} /> : <IconPlayerPlay size={14} />}
       </IconButton>
       {level > 0 && supportsSmartHomeAction(entity, { type: "mediaNext" }) && (
-        <IconButton label="Next" disabled={run.pending} onClick={() => run.request({ type: "mediaNext" })}>
+        <IconButton label="Next" disabled={disabled} onClick={() => run.request({ type: "mediaNext" })}>
           <IconPlayerSkipForward size={14} />
         </IconButton>
       )}
