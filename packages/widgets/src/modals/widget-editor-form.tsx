@@ -16,6 +16,7 @@ import {
   useMantineTheme,
 } from "@mantine/core";
 import { schemaResolver } from "@mantine/form";
+import type { FormErrors } from "@mantine/form";
 import { IconSettings } from "@tabler/icons-react";
 import { z } from "zod/v4";
 
@@ -97,6 +98,38 @@ export const useWidgetEditorForm = ({ definition, value, integrationSupport, set
     ),
     validateInputOnBlur: true,
     validateInputOnChange: true,
+  });
+};
+
+export const focusWidgetEditorError = (
+  form: Pick<ReturnType<typeof useWidgetEditorForm>, "getInputNode">,
+  errors: FormErrors,
+  event?: FormEvent<HTMLFormElement>,
+) => {
+  const element = event?.currentTarget;
+  const firstError = Object.keys(errors)[0];
+  if (!firstError) return;
+  requestAnimationFrame(() => {
+    if (
+      firstError.startsWith("advancedOptions.") ||
+      form.getInputNode(firstError)?.closest("[data-widget-advanced-field]")
+    ) {
+      element?.querySelector<HTMLButtonElement>('[data-widget-advanced-options][aria-expanded="false"]')?.click();
+    }
+    const focusInput = () => {
+      const field = form.getInputNode(firstError) ?? element?.querySelector<HTMLElement>("[aria-invalid=true]");
+      const input = field?.querySelector<HTMLElement>("input, textarea, select, [contenteditable=true]") ?? field;
+      if (!input?.isConnected) return;
+      const panel = input.closest<HTMLElement>('[role="region"]');
+      if (panel?.getAttribute("aria-hidden") === "true") return;
+      if (!input.getClientRects().length || (panel && panel.clientHeight < panel.scrollHeight)) {
+        requestAnimationFrame(focusInput);
+        return;
+      }
+      input.focus();
+      input.scrollIntoView({ block: "nearest", inline: "nearest" });
+    };
+    requestAnimationFrame(focusInput);
   });
 };
 
@@ -343,25 +376,7 @@ export const WidgetEditorForm = ({
 
   const handleSubmit = form.onSubmit(
     (values) => onSubmit(normalizeWidgetEditorState(values)),
-    (errors, _values, event) => {
-      const element = event?.currentTarget;
-      const firstError = Object.keys(errors)[0];
-      if (!firstError) return;
-      requestAnimationFrame(() => {
-        if (
-          firstError.startsWith("advancedOptions.") ||
-          form.getInputNode(firstError)?.closest("[data-widget-advanced-field]")
-        ) {
-          element?.querySelector<HTMLButtonElement>('[data-widget-advanced-options][aria-expanded="false"]')?.click();
-        }
-        requestAnimationFrame(() => {
-          const field = form.getInputNode(firstError) ?? element?.querySelector<HTMLElement>("[aria-invalid=true]");
-          const input = field?.querySelector<HTMLElement>("input, textarea, select, [contenteditable=true]") ?? field;
-          input?.focus();
-          input?.scrollIntoView({ block: "nearest", inline: "nearest" });
-        });
-      });
-    },
+    (errors, _values, event) => focusWidgetEditorError(form, errors, event),
   );
 
   return (
