@@ -124,11 +124,29 @@ const InPlaceEditorPanelContent = (
   const isPick = step === "pick";
   const rootRef = useRef<HTMLDialogElement>(null);
   const dropdownOpenRef = useRef(false);
+  const childTriggerRef = useRef<HTMLElement | null>(null);
   const viewport = useViewport();
   const stableRect = useStableRect(anchorRect, viewport);
   const rect = isPick ? stableRect : anchorRect;
   const { ref: measureRef, height: contentHeight } = useMeasuredHeight();
   const pickPlacementRef = useRef<{ key: string; placement: Placement } | null>(null);
+
+  useEffect(() => {
+    if (isModalOpen) {
+      const focused = document.activeElement;
+      if (focused instanceof HTMLElement && rootRef.current?.contains(focused)) childTriggerRef.current = focused;
+      return;
+    }
+
+    const trigger = childTriggerRef.current;
+    childTriggerRef.current = null;
+    if (!trigger) return;
+    // Let the parent trap reactivate before restoring the child dialog's trigger.
+    const timeout = window.setTimeout(() => {
+      if (trigger.isConnected) trigger.focus({ preventScroll: true });
+    }, 0);
+    return () => window.clearTimeout(timeout);
+  }, [isModalOpen]);
 
   useEffect(() => {
     const captureEscape = (event: globalThis.KeyboardEvent) => {
