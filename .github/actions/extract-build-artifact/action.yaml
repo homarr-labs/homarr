@@ -70,8 +70,16 @@ runs:
         PREBUILT_PATH: ${{ steps.prebuilt.outputs.path }}
       run: |
         tar --owner=0 --group=0 -czf "$ARCHIVE_DIR/build-${SOURCE_LIBC}-${ARCHITECTURE}.tar.gz" -C "$ARCHIVE_DIR/source" .
-        cp "$PREBUILT_PATH/better_sqlite3.node" "$ARCHIVE_DIR/source/build/better_sqlite3.node"
-        cp "$PREBUILT_PATH/better_sqlite3.node" "$ARCHIVE_DIR/source/node_modules/better-sqlite3/build/Release/better_sqlite3.node"
+        case "$ARCHITECTURE" in
+          amd64) native_arch=x64 ;;
+          arm64) native_arch=arm64 ;;
+          *) exit 1 ;;
+        esac
+        native_platform=linux
+        if [[ "$COMPATIBILITY_LIBC" = alpine ]]; then native_platform=linuxmusl; fi
+        binding_dir="$ARCHIVE_DIR/source/node_modules/better-sqlite3/prebuilds"
+        mkdir -p "$binding_dir"
+        cp "$PREBUILT_PATH/better_sqlite3.node" "$binding_dir/${native_platform}-${native_arch}.node"
         tar --owner=0 --group=0 -czf "$ARCHIVE_DIR/build-${COMPATIBILITY_LIBC}-${ARCHITECTURE}.tar.gz" -C "$ARCHIVE_DIR/source" .
 
     - name: Validate both archives on their target libc and architecture
