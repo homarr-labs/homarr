@@ -215,10 +215,10 @@ export const mockWidgetData = {
     videoCount: 2_418,
     totalLibraryUsageInBytes: 684_510_412_800,
   } satisfies ImmichServerStats,
-  immichAlbums: [{ id: "demo-paris", albumName: "Demo gallery", assetCount: 2 }],
+  immichAlbums: [{ id: "demo-paris", albumName: "Paris weekend", assetCount: 2 }],
   immichAlbum: {
     id: "demo-paris",
-    albumName: "Demo gallery",
+    albumName: "Paris weekend",
     assets: [
       {
         id: "demo-photo-1",
@@ -227,7 +227,7 @@ export const mockWidgetData = {
         fileCreatedAt: demoTimestamp,
         updatedAt: demoTimestamp,
         type: "IMAGE",
-        publicLink: "/images/mock/demo-river.svg",
+        publicLink: "/images/mock/demo-paris-eiffel-seine.webp",
       },
       {
         id: "demo-photo-2",
@@ -236,7 +236,7 @@ export const mockWidgetData = {
         fileCreatedAt: demoTimestamp,
         updatedAt: demoTimestamp,
         type: "IMAGE",
-        publicLink: "/images/mock/demo-alpine.svg",
+        publicLink: "/images/mock/demo-paris-tuileries.webp",
       },
     ],
   } satisfies ImmichAlbum,
