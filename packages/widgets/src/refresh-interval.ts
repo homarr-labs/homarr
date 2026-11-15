@@ -16,7 +16,6 @@ export const createWidgetRefreshIntervalOptions = (defaultInterval: number) =>
           .string()
           .regex(/^\d+$/)
           .refine((value) => widgetRefreshIntervalSchema.safeParse(Number(value)).success),
-        withDescription: true,
       }),
     }),
     {
