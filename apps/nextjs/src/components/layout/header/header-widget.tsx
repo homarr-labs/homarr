@@ -26,6 +26,7 @@ import { getLogicalGridSize } from "~/components/board/layout";
 import { useHeaderWidgetEditor } from "./header-widget-editor";
 import { useHeaderWidgetPreferences } from "./header-widget-preferences";
 import { HeaderWidgetRuntimeBoundary } from "./header-widget-runtime-boundary";
+import { isBoardOnlyHeaderWidget } from "./header-widget-support";
 
 export const HeaderWidget = ({ item, userId }: { item: HeaderWidgetItem; userId: string | null }) => {
   const [opened, setOpened] = useState(false);
@@ -119,15 +120,25 @@ export const HeaderWidget = ({ item, userId }: { item: HeaderWidgetItem; userId:
   );
 };
 
-const HeaderWidgetContent = ({
-  item,
-  userId,
-  onChange,
-}: {
+interface HeaderWidgetContentProps {
   item: HeaderWidgetItem;
   userId: string;
   onChange: (next: HeaderWidgetItem) => void;
-}) => {
+}
+
+const HeaderWidgetContent = (props: HeaderWidgetContentProps) => {
+  const t = useI18n("management.page.user.setting.general.header.configuration");
+  if (isBoardOnlyHeaderWidget(props.item.kind)) {
+    return (
+      <Text p="md" c="dimmed" size="sm">
+        {t("boardOnly")}
+      </Text>
+    );
+  }
+  return <SupportedHeaderWidgetContent {...props} />;
+};
+
+const SupportedHeaderWidgetContent = ({ item, userId, onChange }: HeaderWidgetContentProps) => {
   const { Component, definition } = use(loadWidgetResources(item.kind));
   const settings = useSettings();
   const { ref, width, height } = useElementSize<HTMLDivElement>();

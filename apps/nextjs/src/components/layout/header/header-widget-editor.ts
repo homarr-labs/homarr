@@ -14,6 +14,7 @@ import { loadWidgetResources, reduceWidgetOptionsWithDefinition } from "@homarr/
 import { LazyWidgetEditModal, preloadWidgetEditModal } from "~/components/board/items/lazy-widget-edit-modal";
 import { getLogicalGridSize } from "~/components/board/layout";
 import { HeaderWidgetRuntimeBoundary } from "./header-widget-runtime-boundary";
+import { isBoardOnlyHeaderWidget } from "./header-widget-support";
 
 export const useHeaderWidgetEditor = () => {
   const settings = useSettings();
@@ -23,6 +24,10 @@ export const useHeaderWidgetEditor = () => {
   const [loading, setLoading] = useState(false);
 
   const open = async (item: HeaderWidgetItem, onChange: (item: HeaderWidgetItem) => void) => {
+    if (isBoardOnlyHeaderWidget(item.kind)) {
+      showErrorNotification({ message: t("management.page.user.setting.general.header.configuration.boardOnly") });
+      return;
+    }
     setLoading(true);
     preloadWidgetEditModal();
     try {

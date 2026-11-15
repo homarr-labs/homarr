@@ -364,9 +364,13 @@ export class BeszelIntegration extends Integration implements INotificationsInte
     return data.items;
   }
 
-  public async getAlertHistoryAsync(systemId?: string, perPage = 50): Promise<BeszelAlertHistory[]> {
+  public async getAlertHistoryAsync(
+    systemId?: string,
+    perPage = 50,
+    sort: "-created" | "-resolved" = "-created",
+  ): Promise<BeszelAlertHistory[]> {
     const params: Record<string, string> = {
-      sort: "-created",
+      sort,
       perPage: String(perPage),
     };
     if (systemId) {
@@ -378,27 +382,37 @@ export class BeszelIntegration extends Integration implements INotificationsInte
   }
 
   public async getNotificationsAsync(): Promise<Notification[]> {
-    const [history, systems] = await Promise.all([this.getAlertHistoryAsync(), this.getSystemsAsync()]);
+    // An older alert can be resolved after it leaves the newest-created history page.
+    const [history, resolvedHistory, systems] = await Promise.all([
+      this.getAlertHistoryAsync(),
+      this.getAlertHistoryAsync(undefined, 50, "-resolved"),
+      this.getSystemsAsync(),
+    ]);
     const systemNames = new Map(systems.map((system) => [system.id, system.name]));
+    const notificationsById = new Map<string, Notification>();
 
-    return history.flatMap((alert): Notification[] => {
+    for (const alert of [...history, ...resolvedHistory]) {
       const time = new Date(alert.resolved || alert.created);
-      if (Number.isNaN(time.getTime())) return [];
+      if (Number.isNaN(time.getTime())) continue;
+      const existing = notificationsById.get(alert.id);
+      if (existing && existing.time.getTime() >= time.getTime()) continue;
       const systemName = systemNames.get(alert.system) ?? alert.system;
       let body = `${alert.name} alert triggered on ${systemName}.`;
       if (alert.resolved) body = `${alert.name} alert on ${systemName} has been resolved.`;
 
-      return [
-        {
-          id: alert.id,
-          time,
-          title: `${systemName}: ${alert.name}`,
-          body,
-          href: this.externalUrl(`/system/${encodeURIComponent(alert.system)}`).toString(),
-          source: { name: systemName },
-        },
-      ];
-    });
+      notificationsById.set(alert.id, {
+        id: alert.id,
+        time,
+        title: `${systemName}: ${alert.name}`,
+        body,
+        href: this.externalUrl(`/system/${encodeURIComponent(alert.system)}`).toString(),
+        source: { name: systemName },
+      });
+    }
+
+    return [...notificationsById.values()]
+      .toSorted((left, right) => right.time.getTime() - left.time.getTime())
+      .slice(0, 50);
   }
 
   public async createAlertAsync(systemId: string, input: CreateAlertInput): Promise<BeszelAlert> {

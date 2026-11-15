@@ -73,6 +73,7 @@ import {
 import { BoardLayoutThumbnail } from "~/components/board/board-layout-thumbnail";
 import { HomarrLogo } from "~/components/layout/logo/homarr-logo";
 import { useHeaderWidgetEditor } from "~/components/layout/header/header-widget-editor";
+import { isBoardOnlyHeaderWidget } from "~/components/layout/header/header-widget-support";
 import classes from "./header-composer.module.css";
 
 interface HeaderComposerProps {
@@ -111,6 +112,8 @@ const headerSortablePlugins = [SortableKeyboardPlugin];
 const headerGuideZones = ["left", "center", "right"] as const;
 
 export const HeaderComposer = ({ value, onChange, boards, homeBoardId }: HeaderComposerProps) => {
+  const latestPreferences = useRef({ value, onChange });
+  latestPreferences.current = { value, onChange };
   const tAll = useI18n();
   const widgetEditor = useHeaderWidgetEditor();
   const [draggedItemKey, setDraggedItemKey] = useState<string | null>(null);
@@ -174,14 +177,17 @@ export const HeaderComposer = ({ value, onChange, boards, homeBoardId }: HeaderC
   };
 
   const updateWidget = (nextItem: HeaderWidgetItem) => {
-    const zones = { ...value.zones };
+    const latest = latestPreferences.current;
+    const zones = { ...latest.value.zones };
     for (const zone of headerGuideZones) {
       zones[zone] = zones[zone].map((item) => {
         if (getHeaderItemKey(item) === getHeaderItemKey(nextItem)) return nextItem;
         return item;
       });
     }
-    onChange({ ...value, zones });
+    const nextValue = { ...latest.value, zones };
+    latestPreferences.current = { ...latest, value: nextValue };
+    latest.onChange(nextValue);
   };
 
   const updateZones = (zones: HeaderZones) => onChange({ ...value, zones });
@@ -355,7 +361,7 @@ export const HeaderComposer = ({ value, onChange, boards, homeBoardId }: HeaderC
                           allowDeselect={false}
                           data={widgetKinds.map((kind) => {
                             let label = getWidgetName(kind, tAll);
-                            const boardOnly = kind === "customApi" || kind === "timetable" || kind === "releases";
+                            const boardOnly = isBoardOnlyHeaderWidget(kind);
                             if (boardOnly) label = `${label} (${t("configuration.boardOnly")})`;
                             return { value: kind, label, disabled: boardOnly };
                           })}
