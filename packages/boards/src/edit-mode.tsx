@@ -31,3 +31,5 @@ export const useEditMode = () => {
 
   return context;
 };
+
+export const useOptionalEditMode = () => useContext(EditModeContext);

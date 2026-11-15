@@ -375,11 +375,11 @@ export class BeszelMockService {
     const names = ["CPU", "Memory", "Disk", "Temperature", "Bandwidth"];
     return Array.from({ length: Math.min(perPage, 5) }, (_, i) => ({
       id: `mock-history-${i}`,
-      alert: `mock-alert-${(i % 4) + 1}`,
+      alert_id: `mock-alert-${(i % 4) + 1}`,
       user: "mock-user",
       system: `mock-sys-${(i % 5) + 1}`,
       name: names[i % names.length] ?? "CPU",
-      val: rand(60, 95),
+      value: rand(60, 95),
       created: new Date(now - (i + 1) * 3_600_000).toISOString(),
       resolved: (i % 2 === 0 && new Date(now - i * 1_800_000).toISOString()) || null,
     }));

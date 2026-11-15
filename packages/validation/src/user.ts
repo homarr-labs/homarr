@@ -33,6 +33,7 @@ export {
 } from "./header-preferences";
 export type {
   HeaderBoardItem,
+  HeaderWidgetItem,
   HeaderBuiltinItem,
   HeaderBuiltinItemId,
   HeaderItem,

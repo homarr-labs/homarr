@@ -22,6 +22,7 @@ import { ClientBurger } from "./burger";
 import { HeaderButton } from "./button";
 import { DockerQuickAccessModal } from "./docker-quick-access-modal";
 import { HeaderLogo } from "./header-logo";
+import { HeaderWidget } from "./header-widget";
 import { LazySpotlight } from "./lazy-spotlight";
 import { DesktopSearchInput, MobileSearchButton } from "./search";
 import { TourTarget } from "./tour-target";
@@ -296,6 +297,7 @@ const HeaderItem = ({
   label,
   boardUnavailableLabel,
 }: HeaderItemProps) => {
+  if (item.type === "widget") return <HeaderWidget item={item} userId={userId} />;
   if (item.type === "board") {
     if (!board) {
       return (
