@@ -24,7 +24,7 @@ export const mockMediaReleases: MediaRelease[] = [
     rating: "8.8/10",
     tags: ["Sci-Fi", "Thriller"],
     href: "https://www.themoviedb.org/movie/27205-inception",
-    length: 148,
+    length: 148 * 60,
   },
   {
     id: "2",
@@ -76,7 +76,7 @@ export const mockMediaReleases: MediaRelease[] = [
     rating: "9.0/10",
     tags: ["Action", "Crime", "Drama"],
     href: "https://www.themoviedb.org/movie/155-the-dark-knight",
-    length: 152,
+    length: 152 * 60,
   },
   {
     id: "5",
@@ -94,7 +94,7 @@ export const mockMediaReleases: MediaRelease[] = [
     rating: "8.7/10",
     tags: ["Sci-Fi", "Adventure"],
     href: "https://www.themoviedb.org/movie/157336-interstellar",
-    length: 169,
+    length: 169 * 60,
   },
   {
     id: "6",
@@ -130,6 +130,6 @@ export const mockMediaReleases: MediaRelease[] = [
     rating: "8.5/10",
     tags: ["Sci-Fi", "Adventure"],
     href: "https://www.themoviedb.org/movie/693134-dune-part-two",
-    length: 166,
+    length: 166 * 60,
   },
 ];
