@@ -116,6 +116,7 @@ export const focusWidgetEditorError = (
     ) {
       element?.querySelector<HTMLButtonElement>('[data-widget-advanced-options][aria-expanded="false"]')?.click();
     }
+    let remainingFocusFrames = 120;
     const focusInput = () => {
       const field = form.getInputNode(firstError) ?? element?.querySelector<HTMLElement>("[aria-invalid=true]");
       const input = field?.querySelector<HTMLElement>("input, textarea, select, [contenteditable=true]") ?? field;
@@ -123,7 +124,10 @@ export const focusWidgetEditorError = (
       const panel = input.closest<HTMLElement>('[role="region"]');
       if (panel?.getAttribute("aria-hidden") === "true") return;
       if (!input.getClientRects().length || (panel && panel.clientHeight < panel.scrollHeight)) {
-        requestAnimationFrame(focusInput);
+        if (remainingFocusFrames > 0) {
+          remainingFocusFrames -= 1;
+          requestAnimationFrame(focusInput);
+        }
         return;
       }
       input.focus();
