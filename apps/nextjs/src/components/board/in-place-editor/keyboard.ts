@@ -12,12 +12,11 @@ const arrowDeltas: Record<string, [number, number]> = {
 };
 
 export const handleAreaShortcut = (event: KeyboardEvent | globalThis.KeyboardEvent) => {
-  const target = event.target;
-  if (target instanceof Element && target.closest("[data-add-in-place-modal-open]")) return;
   const nativeEvent = "nativeEvent" in event ? event.nativeEvent : event;
   if (event.defaultPrevented || nativeEvent.isComposing || !event.altKey || event.metaKey || event.ctrlKey) return;
   const delta = arrowDeltas[event.key];
   if (!delta) return;
+  if (typeof document !== "undefined" && document.querySelector("[data-add-in-place-modal-open]")) return;
   event.preventDefault();
   event.stopPropagation();
   if (event.shiftKey) addInPlaceActions.resizeBy(delta[0], delta[1]);
