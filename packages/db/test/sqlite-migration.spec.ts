@@ -143,7 +143,7 @@ test("SQLite migrations seed the intentional demo showcase", async () => {
       expect.objectContaining({ kind: "empty", name: "Media", xOffset: 0, yOffset: 1 }),
       expect.objectContaining({ kind: "empty", name: "Systems", xOffset: 0, yOffset: 2 }),
     ]);
-    expect(board.items).toHaveLength(62);
+    expect(board.items).toHaveLength(63);
     expect(new Set(board.items.map(({ kind }) => kind))).toEqual(
       new Set([
         "anchorNote",

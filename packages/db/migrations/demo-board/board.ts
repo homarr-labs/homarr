@@ -9,27 +9,35 @@ export const demoBoard = {
     {
       name: "Home",
       widgets: [
-        place("calendar", 0, 0, 3, 2),
-        place("weather", 3, 0, 2, 2),
-        place("clock", 5, 0, 1, 2),
-        place("timer", 6, 0, 2, 1),
-        place("airQuality", 6, 1, 2, 1),
-        place("bookmarks", 8, 0, 4, 2, { layout: "adaptive", hideHostname: true }),
-        place("smartHome-controls", 0, 2, 8, 3),
-        place("assistant", 8, 2, 4, 3),
-        place("rssFeed", 0, 5, 6, 3),
-        place("customApi", 6, 5, 6, 3),
-        place("countdown", 0, 8, 3, 2),
-        place("timetable", 3, 8, 3, 2),
-        place("stockPrice", 6, 8, 3, 2),
-        place("releases", 9, 8, 3, 2),
-        place("notebook", 0, 10, 4, 1, {
+        {
+          ...place("notebook", 0, 0, 12, 1, {
+            showToolbar: false,
+            content:
+              '<p><strong>Explore more:</strong> <a href="?tab=Media" target="_self">Media</a> for streams, requests and downloads. <a href="?tab=Systems" target="_self">Systems</a> for servers, network and service health.</p>',
+          }),
+          smallScreenHeight: 2,
+        },
+        place("calendar", 0, 1, 3, 2),
+        place("weather", 3, 1, 2, 2),
+        place("clock", 5, 1, 1, 2),
+        place("timer", 6, 1, 2, 1),
+        place("airQuality", 6, 2, 2, 1),
+        place("bookmarks", 8, 1, 4, 2, { layout: "adaptive", hideHostname: true }),
+        place("smartHome-controls", 0, 3, 8, 3),
+        place("assistant", 8, 3, 4, 3),
+        place("rssFeed", 0, 6, 6, 3),
+        place("customApi", 6, 6, 6, 3),
+        place("countdown", 0, 9, 3, 2),
+        place("timetable", 3, 9, 3, 2),
+        place("stockPrice", 6, 9, 3, 2),
+        place("releases", 9, 9, 3, 2),
+        place("notebook", 0, 11, 4, 1, {
           showToolbar: false,
           allowReadOnlyCheck: true,
           content:
             '<ul data-type="taskList"><li data-type="taskItem" data-checked="true"><label><input type="checkbox" checked="checked"><span></span></label><div><p>Back up photos</p></div></li><li data-type="taskItem" data-checked="false"><label><input type="checkbox"><span></span></label><div><p>Plan weekly meals</p></div></li></ul>',
         }),
-        place("anchorNote", 4, 10, 8, 1, { showUpdatedAt: false }),
+        place("anchorNote", 4, 11, 8, 1, { showUpdatedAt: false }),
       ],
     },
     {

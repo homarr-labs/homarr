@@ -202,6 +202,7 @@ export const createDemoBoardWritePlanAsync = async (
         const rank = (item: (typeof positions)[number]) => {
           if (tab.name !== "Home") return item.yOffset * 12 + item.xOffset;
           const kind = getWidgetForItem(item.id).kind;
+          if (kind === "notebook" && item.yOffset === 0) return -1;
           const index = mobileOrder.indexOf(kind);
           if (index !== -1) return index;
           return 100 + item.yOffset * 12 + item.xOffset;
