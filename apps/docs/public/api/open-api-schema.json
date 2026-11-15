@@ -4823,7 +4823,7 @@
       "patch": {
         "operationId": "userRouter-updatePreferences",
         "summary": "Update user preferences",
-        "description": "Update only supplied preferences and return the result. Omitted fields remain unchanged; null clears nullable references. Header fields and zones merge, while each supplied zone array replaces that zone. The complete merged header must retain unique items and account access. New board shortcuts must be accessible to the target user. Omit userId for yourself; another user requires admin permission. All validation completes before one write.",
+        "description": "Update only supplied preferences and return the result. Omitted fields remain unchanged; null clears nullable references. Header fields and zones merge, while each supplied zone array replaces that zone. The complete merged header must retain unique items and account access. New board shortcuts must be accessible to the target user. Newly assigned widget integrations require Use access. Omit userId for yourself; another user requires admin permission. All validation completes before one write.",
         "tags": [
           "users"
         ],
@@ -6736,7 +6736,7 @@
       "patch": {
         "operationId": "userRouter-changeHeaderPreferences",
         "summary": "Update header preferences",
-        "description": "Replace a user's header layout and display preferences. New board shortcuts must reference boards the target user can view; existing shortcuts may be retained. Users can update themselves; updating another user requires admin permission.",
+        "description": "Replace a user's header layout and display preferences. New board shortcuts must reference boards the target user can view; existing shortcuts may be retained. Newly assigned widget integrations require Use access. Users can update themselves; updating another user requires admin permission.",
         "tags": [
           "users"
         ],

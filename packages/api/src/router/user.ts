@@ -49,7 +49,11 @@ import {
   publicProcedure,
 } from "../trpc";
 import { throwIfCredentialsDisabled } from "./invite/checks";
-import { getUserPreferencesAsync, updateUserPreferencesAsync } from "./user/preferences";
+import {
+  getUserPreferencesAsync,
+  throwIfHeaderWidgetIntegrationsForbiddenAsync,
+  updateUserPreferencesAsync,
+} from "./user/preferences";
 
 const logger = createLogger({ module: "userRouter" });
 
@@ -685,12 +689,12 @@ export const userRouter = createTRPCRouter({
         protect: true,
         summary: "Update user preferences",
         description:
-          "Update only supplied preferences and return the result. Omitted fields remain unchanged; null clears nullable references. Header fields and zones merge, while each supplied zone array replaces that zone. The complete merged header must retain unique items and account access. New board shortcuts must be accessible to the target user. Omit userId for yourself; another user requires admin permission. All validation completes before one write.",
+          "Update only supplied preferences and return the result. Omitted fields remain unchanged; null clears nullable references. Header fields and zones merge, while each supplied zone array replaces that zone. The complete merged header must retain unique items and account access. New board shortcuts must be accessible to the target user. Newly assigned widget integrations require Use access. Omit userId for yourself; another user requires admin permission. All validation completes before one write.",
       },
       mcp: {
         enabled: true,
         description:
-          "Patch one or more user preferences and return the complete result. Read current values with user_getPreferences. All preference fields are optional; supply at least one. Omitted fields remain unchanged; null clears home-board/search-engine references. Header fields and zones merge; supplied zone arrays replace their zone and must preserve unique items and account access. Optional userId defaults to yourself; changing another user requires admin permission.",
+          "Patch one or more user preferences and return the complete result. Read current values with user_getPreferences. All preference fields are optional; supply at least one. Omitted fields remain unchanged; null clears home-board/search-engine references. Header fields and zones merge; supplied zone arrays replace their zone and must preserve unique items and account access. Newly assigned widget integrations require Use access. Optional userId defaults to yourself; changing another user requires admin permission.",
       },
     })
     .input(
@@ -826,7 +830,7 @@ export const userRouter = createTRPCRouter({
         protect: true,
         summary: "Update header preferences",
         description:
-          "Replace a user's header layout and display preferences. New board shortcuts must reference boards the target user can view; existing shortcuts may be retained. Users can update themselves; updating another user requires admin permission.",
+          "Replace a user's header layout and display preferences. New board shortcuts must reference boards the target user can view; existing shortcuts may be retained. Newly assigned widget integrations require Use access. Users can update themselves; updating another user requires admin permission.",
       },
     })
     .input(z.object({ id: z.string(), headerPreferences: headerPreferencesMutationSchema }))
@@ -853,6 +857,7 @@ export const userRouter = createTRPCRouter({
         );
         if (!existing || existing.type !== "widget" || existing.kind !== input.item.kind)
           throw new TRPCError({ code: "CONFLICT", message: "Header widget was removed or changed kind" });
+        await throwIfHeaderWidgetIntegrationsForbiddenAsync(ctx, [input.item], [existing]);
 
         const zones = { ...current.zones };
         for (const zone of ["left", "center", "right"] as const) {
