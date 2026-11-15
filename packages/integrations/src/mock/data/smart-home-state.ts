@@ -50,6 +50,7 @@ const updateScript = `
   return 1
 `;
 
+// Next.js actions and the separate WebSocket runtime must share control state.
 export const createSmartHomeMockState = (integrationId: string): SmartHomeMockState => {
   const key = `mock:smart-home:v1:${integrationId}`;
   const channel = `${key}:changed`;
@@ -65,6 +66,7 @@ export const createSmartHomeMockState = (integrationId: string): SmartHomeMockSt
     },
     async updateAsync(entity, update) {
       const client = await getClientAsync();
+      // Bound contention to five CAS attempts; the caller can retry the action after exhaustion.
       for (let attempt = 0; attempt < 5; attempt++) {
         const previous = await client.hget(key, entity.id);
         let current = { entity, revision: 0 };
