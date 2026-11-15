@@ -29,6 +29,8 @@ export const PreviewRuntimeBoundary = ({
   return <Wrapper>{children}</Wrapper>;
 };
 
+export type WidgetPreviewMode = "board" | "standalone";
+
 export interface WidgetLivePreviewProps {
   kind: WidgetKind;
   Component: ComponentType<WidgetComponentProps<WidgetKind>>;
@@ -45,6 +47,7 @@ export interface WidgetLivePreviewProps {
   isEditMode?: boolean;
   onChangeOptions: (newOptions: Record<string, unknown>) => void;
   PreviewWrapper?: ComponentType<PropsWithChildren>;
+  previewMode?: WidgetPreviewMode;
   shellClassName?: string;
   shellStyle?: CSSProperties;
 }
@@ -65,6 +68,7 @@ export const WidgetLivePreview = ({
   isEditMode = false,
   onChangeOptions,
   PreviewWrapper,
+  previewMode = "board",
   shellClassName,
   shellStyle,
 }: WidgetLivePreviewProps) => {
@@ -77,9 +81,14 @@ export const WidgetLivePreview = ({
   const { data: session } = useSession();
   const canPreviewCustomWidget = kind === "customApi" && session?.user.permissions.includes("admin");
   const { ref, width, height } = useElementSize<HTMLDivElement>();
-  const previewOpacity = (board?.opacity ?? 100) / 100;
+  let previewOpacity = 1;
   let previewRadius: string | undefined;
-  if (board) previewRadius = board.itemRadius ?? "default";
+  if (previewMode === "standalone") {
+    previewRadius = "md";
+  } else {
+    previewOpacity = (board?.opacity ?? 100) / 100;
+    if (board) previewRadius = board.itemRadius ?? "default";
+  }
   const previewIntegrations = integrationData
     .filter((integration) => integrationIds.includes(integration.id))
     .map((integration) => ({

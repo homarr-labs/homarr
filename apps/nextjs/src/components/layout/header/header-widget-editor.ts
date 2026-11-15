@@ -52,6 +52,7 @@ export const useHeaderWidgetEditor = () => {
           },
           previewResize: { initialSize: item.size, maximumSize: { width: 12, height: 12 } },
           previewWrapper: HeaderWidgetRuntimeBoundary,
+          previewMode: "standalone",
           onSuccessfulEdit: (value, size) => onChange({ ...item, ...value, size: size ?? item.size }),
         },
         { title: (translate) => `${translate("item.edit.title")} - ${getWidgetName(item.kind, translate)}` },

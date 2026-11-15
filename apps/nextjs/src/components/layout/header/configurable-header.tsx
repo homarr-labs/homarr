@@ -3,6 +3,7 @@
 import type { ReactNode } from "react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { AppShellHeader, Avatar, Group, Indicator, Loader, Tooltip, useMantineColorScheme } from "@mantine/core";
+import { useMediaQuery } from "@mantine/hooks";
 import { IconBrandDocker, IconHome, IconReplace, IconRobot, IconSettings, IconSunMoon } from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";
@@ -72,6 +73,7 @@ const ConfigurableHeaderContent = ({
   isDockerEnabled,
 }: ConfigurableHeaderProps) => {
   const { preferences: headerPreferences } = useHeaderWidgetPreferences();
+  const isMobile = useMediaQuery("(max-width: 48em)");
   const assistant = useOptionalHomarrAssistant();
   const { toggleColorScheme } = useMantineColorScheme();
   const { openModal: openDockerModal } = useModalAction(DockerQuickAccessModal);
@@ -89,7 +91,7 @@ const ConfigurableHeaderContent = ({
       {(boardSwitcher) => {
         const renderItems = (
           items: HeaderItem[],
-          display: { search: "input" | "icon"; logo: "logo" | "logoAndText"; tabs: HeaderTabsDisplay },
+          display: { search: "input" | "icon"; logo: "logo" | "logoAndText"; tabs: HeaderTabsDisplay; active: boolean },
         ) =>
           items.map((item) => (
             <HeaderItem
@@ -101,6 +103,7 @@ const ConfigurableHeaderContent = ({
               boardSettingsAction={boardSettingsAction}
               avatar={avatar}
               userId={userId}
+              isActive={display.active}
               isAdmin={isAdmin}
               isDockerEnabled={isDockerEnabled}
               board={item.type === "board" ? boardsById.get(item.boardId) : undefined}
@@ -121,8 +124,9 @@ const ConfigurableHeaderContent = ({
           search: headerPreferences.searchDisplay,
           logo: headerPreferences.logoDisplay,
           tabs: headerPreferences.tabsDisplay,
+          active: !isMobile,
         };
-        const mobileDisplay = { search: "icon", logo: "logo", tabs: "indicator" } as const;
+        const mobileDisplay = { search: "icon", logo: "logo", tabs: "indicator", active: isMobile } as const;
 
         return (
           <>
@@ -264,6 +268,7 @@ const FloatingHeaderControls = ({ children }: { children: ReactNode }) => {
 
 interface HeaderItemProps {
   item: HeaderItem;
+  isActive: boolean;
   logo: ReactNode;
   logoWithTitle: ReactNode;
   boardEditAction: ReactNode;
@@ -287,6 +292,7 @@ interface HeaderItemProps {
 
 const HeaderItem = ({
   item,
+  isActive,
   logo,
   logoWithTitle,
   boardEditAction,
@@ -307,7 +313,7 @@ const HeaderItem = ({
   label,
   boardUnavailableLabel,
 }: HeaderItemProps) => {
-  if (item.type === "widget") return <HeaderWidget item={item} userId={userId} />;
+  if (item.type === "widget") return <HeaderWidget item={item} userId={userId} isActive={isActive} />;
   if (item.type === "board") {
     if (!board) {
       return (

@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, use, useState } from "react";
+import { Suspense, use, useEffect, useState } from "react";
 import { Loader, MantineThemeProvider, Popover, Portal, Text, Tooltip } from "@mantine/core";
 import { useElementSize } from "@mantine/hooks";
 import { IconBell } from "@tabler/icons-react";
@@ -28,7 +28,15 @@ import { useHeaderWidgetPreferences } from "./header-widget-preferences";
 import { HeaderWidgetRuntimeBoundary } from "./header-widget-runtime-boundary";
 import { isBoardOnlyHeaderWidget } from "./header-widget-support";
 
-export const HeaderWidget = ({ item, userId }: { item: HeaderWidgetItem; userId: string | null }) => {
+export const HeaderWidget = ({
+  item,
+  userId,
+  isActive,
+}: {
+  item: HeaderWidgetItem;
+  userId: string | null;
+  isActive: boolean;
+}) => {
   const [opened, setOpened] = useState(false);
   const [dropdown, setDropdown] = useState<HTMLDivElement | null>(null);
   const { preferences, save, savingItemIds } = useHeaderWidgetPreferences();
@@ -40,6 +48,11 @@ export const HeaderWidget = ({ item, userId }: { item: HeaderWidgetItem; userId:
   const editMode = useOptionalEditMode();
   const t = useI18n();
   const editor = useHeaderWidgetEditor();
+  const keepsRunning = isActive && (currentItem.kind === "timer" || currentItem.kind === "countdown");
+
+  useEffect(() => {
+    if (!isActive) setOpened(false);
+  }, [isActive]);
 
   if (!userId) return null;
 
@@ -61,8 +74,10 @@ export const HeaderWidget = ({ item, userId }: { item: HeaderWidgetItem; userId:
 
   return (
     <Popover
-      opened={opened}
+      opened={opened && isActive}
       onChange={setOpened}
+      keepMounted={keepsRunning}
+      keepMountedMode="display-none"
       position="bottom-end"
       shadow="md"
       withinPortal
@@ -95,7 +110,7 @@ export const HeaderWidget = ({ item, userId }: { item: HeaderWidgetItem; userId:
         <Text fw={600} size="sm" truncate mb="xs">
           {title}
         </Text>
-        {opened && dropdown && (
+        {isActive && (opened || keepsRunning) && dropdown && (
           <MantineThemeProvider
             inherit
             theme={{ components: { Portal: Portal.extend({ defaultProps: { target: dropdown } }) } }}
@@ -153,7 +168,7 @@ const SupportedHeaderWidgetContent = ({ item, userId, onChange }: HeaderWidgetCo
     definition.integrationsRequired !== false &&
     allowedIntegrations.length === 0;
   let localStateBoardId: string | undefined;
-  let localStateItemId: string | undefined;
+  let localStateItemId = `header:${userId}:${item.id}`;
   if (item.kind === "timer" || item.kind === "countdown") {
     localStateBoardId = `header:${userId}`;
     localStateItemId = item.id;

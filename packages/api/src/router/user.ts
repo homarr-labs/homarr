@@ -13,10 +13,15 @@ import { selectUserSchema } from "@homarr/db/validationSchemas";
 import type { SupportedAuthProvider } from "@homarr/definitions";
 import { credentialsAdminGroup, supportedAuthProviders } from "@homarr/definitions";
 import { byIdSchema } from "@homarr/validation/common";
+import { serializeHeaderPreferences } from "@homarr/validation/header-preferences";
 import type { userBaseCreateSchema } from "@homarr/validation/user";
 import {
   defaultHeaderPreferences,
+  getHeaderItems,
   headerPreferencesMutationSchema,
+  headerPreferencesSchema,
+  headerWidgetItemSchema,
+  parseHeaderPreferences,
   userByteUnitSystemSchema,
   userChangeColorSchemeSchema,
   userChangeHomeBoardsSchema,
@@ -828,6 +833,43 @@ export const userRouter = createTRPCRouter({
     .output(z.void())
     .mutation(async ({ input, ctx }) => {
       await updateUserPreferencesAsync(ctx, input.id, { headerPreferences: input.headerPreferences });
+    }),
+  changeHeaderWidgetPreferences: protectedProcedure
+    .input(z.object({ id: z.string(), item: headerWidgetItemSchema }))
+    .output(headerPreferencesSchema)
+    .mutation(async ({ input, ctx }) => {
+      // Reuse the owner/admin authorization for user preferences.
+      await getUserPreferencesAsync(ctx, input.id);
+      for (let attempt = 0; attempt < 5; attempt++) {
+        const row = await ctx.db.query.users.findFirst({
+          where: eq(users.id, input.id),
+          columns: { headerPreferences: true },
+        });
+        if (!row) throw new TRPCError({ code: "NOT_FOUND", message: "User not found" });
+
+        const current = parseHeaderPreferences(row.headerPreferences);
+        const existing = getHeaderItems(current.zones).find(
+          (item) => item.type === "widget" && item.id === input.item.id,
+        );
+        if (!existing || existing.type !== "widget" || existing.kind !== input.item.kind)
+          throw new TRPCError({ code: "CONFLICT", message: "Header widget was removed or changed kind" });
+
+        const zones = { ...current.zones };
+        for (const zone of ["left", "center", "right"] as const) {
+          zones[zone] = zones[zone].map((item) => {
+            if (item.type === "widget" && item.id === input.item.id) return input.item;
+            return item;
+          });
+        }
+        const next = { ...current, zones };
+        const updated = await ctx.db
+          .update(users)
+          .set({ headerPreferences: serializeHeaderPreferences(next) })
+          .where(and(eq(users.id, input.id), eq(users.headerPreferences, row.headerPreferences)))
+          .returning({ id: users.id });
+        if (updated.length > 0) return next;
+      }
+      throw new TRPCError({ code: "CONFLICT", message: "Header preferences changed too often to update" });
     }),
   changeDdgBangs: protectedProcedure
     .input(convertIntersectionToZodObject(userDdgBangsSchema.and(byIdSchema)))

@@ -53,7 +53,7 @@ const headerBoardItemSchema = z
   })
   .strict();
 
-const headerWidgetItemSchema = z
+export const headerWidgetItemSchema = z
   .object({
     type: z.literal("widget"),
     id: z.string().min(1).max(255),

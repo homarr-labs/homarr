@@ -1,12 +1,11 @@
 "use client";
 
 import type { PropsWithChildren } from "react";
-import { createContext, useContext, useEffect, useRef, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 
-import { clientApi } from "@homarr/api/client";
+import { clientApi, fetchApi } from "@homarr/api/client";
 import type { HeaderPreferences, HeaderWidgetItem } from "@homarr/validation/user";
-import { getHeaderItemKey } from "@homarr/validation/user";
 
 interface PendingWidgetSave {
   item: HeaderWidgetItem;
@@ -26,17 +25,11 @@ const replaceWidget = (preferences: HeaderPreferences, item: HeaderWidgetItem): 
   const zones = { ...preferences.zones };
   for (const zone of ["left", "center", "right"] as const) {
     zones[zone] = zones[zone].map((candidate) => {
-      if (getHeaderItemKey(candidate) === getHeaderItemKey(item)) return item;
+      if (candidate.type === "widget" && candidate.id === item.id && candidate.kind === item.kind) return item;
       return candidate;
     });
   }
   return { ...preferences, zones };
-};
-
-const replayWidgetUpdates = (preferences: HeaderPreferences, items: Iterable<HeaderWidgetItem>) => {
-  let next = preferences;
-  for (const item of items) next = replaceWidget(next, item);
-  return next;
 };
 
 export const HeaderWidgetPreferencesProvider = ({
@@ -50,62 +43,76 @@ export const HeaderWidgetPreferencesProvider = ({
   const [preferences, setPreferences] = useState(initialPreferences);
   const [savingItemIds, setSavingItemIds] = useState<string[]>([]);
   const confirmedPreferences = useRef(initialPreferences);
-  const latestServerPreferences = useRef(initialPreferences);
-  const serverRevision = useRef(0);
-  const successfulItems = useRef(new Map<string, HeaderWidgetItem>());
+  const localWriteStarted = useRef(false);
+  const readGeneration = useRef(0);
+  const mutationGeneration = useRef(0);
   const pending = useRef<PendingWidgetSave[]>([]);
   const processing = useRef(false);
   const router = useRouter();
-  const mutation = clientApi.user.changeHeaderPreferences.useMutation();
+  const mutation = clientApi.user.changeHeaderWidgetPreferences.useMutation();
 
-  useEffect(() => {
-    latestServerPreferences.current = initialPreferences;
-    serverRevision.current += 1;
-    // Server snapshots own layout and item presence. Preserve only successful
-    // widget edits from this queue, and never add an item the server removed.
-    confirmedPreferences.current = replayWidgetUpdates(initialPreferences, successfulItems.current.values());
-    setPreferences(
-      pending.current.reduce((value, operation) => replaceWidget(value, operation.item), confirmedPreferences.current),
-    );
-  }, [initialPreferences]);
-
-  const updateOptimisticPreferences = () => {
+  const updateOptimisticPreferences = useCallback(() => {
     setPreferences(
       pending.current.reduce((value, operation) => replaceWidget(value, operation.item), confirmedPreferences.current),
     );
     setSavingItemIds(pending.current.map((operation) => operation.item.id));
-  };
+  }, []);
+
+  const reconcileServerPreferences = useCallback(async () => {
+    const requestedRead = ++readGeneration.current;
+    // Queue completion always performs a fresh read after its final mutation.
+    if (!userId || processing.current) return;
+    const requestedMutation = mutationGeneration.current;
+    try {
+      const { headerPreferences } = await fetchApi.user.getPreferences.query({ userId });
+      if (
+        requestedRead !== readGeneration.current ||
+        requestedMutation !== mutationGeneration.current ||
+        processing.current
+      )
+        return;
+      confirmedPreferences.current = headerPreferences;
+      updateOptimisticPreferences();
+    } catch {
+      // Preserve the last confirmed result until the next refresh or save.
+    }
+  }, [userId, updateOptimisticPreferences]);
+
+  useEffect(() => {
+    if (localWriteStarted.current) {
+      // RSC payloads have no ordering token. After a local write they only
+      // invalidate; a fresh authenticated read determines the current state.
+      void reconcileServerPreferences();
+    } else {
+      confirmedPreferences.current = initialPreferences;
+      updateOptimisticPreferences();
+    }
+    return () => {
+      readGeneration.current += 1;
+    };
+  }, [initialPreferences, reconcileServerPreferences, updateOptimisticPreferences]);
 
   const processQueue = async () => {
     if (processing.current || !userId) return;
+    localWriteStarted.current = true;
     processing.current = true;
-    latestServerPreferences.current = confirmedPreferences.current;
     while (pending.current.length > 0) {
       const operation = pending.current[0];
       if (!operation) break;
+      mutationGeneration.current += 1;
       try {
-        let requestedRevision: number;
-        do {
-          requestedRevision = serverRevision.current;
-          const next = replaceWidget(confirmedPreferences.current, operation.item);
-          await mutation.mutateAsync({ id: userId, headerPreferences: next });
-          successfulItems.current.set(operation.item.id, operation.item);
-          confirmedPreferences.current = replayWidgetUpdates(
-            latestServerPreferences.current,
-            successfulItems.current.values(),
-          );
-          // A snapshot received during the request needs a corrective write,
-          // including when this is the final queued operation.
-        } while (requestedRevision !== serverRevision.current);
+        const next = await mutation.mutateAsync({ id: userId, item: operation.item });
+        confirmedPreferences.current = next;
         operation.resolve();
       } catch (error) {
         operation.reject(error);
       }
+      mutationGeneration.current += 1;
       pending.current.shift();
       updateOptimisticPreferences();
     }
-    successfulItems.current.clear();
     processing.current = false;
+    void reconcileServerPreferences();
     router.refresh();
   };
 

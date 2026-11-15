@@ -357,6 +357,7 @@ export const HeaderComposer = ({ value, onChange, boards, homeBoardId }: HeaderC
                           size="xs"
                           aria-label={t("configuration.widgetKind")}
                           value={selectedItem.kind}
+                          disabled={widgetEditor.loading}
                           searchable
                           allowDeselect={false}
                           data={widgetKinds.map((kind) => {

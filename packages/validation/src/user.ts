@@ -27,6 +27,7 @@ export {
   headerSearchDisplayValues,
   headerTabsDisplayValues,
   headerZoneIds,
+  headerWidgetItemSchema,
   isRequiredHeaderItem,
   parseHeaderPreferences,
   requiredHeaderBuiltinItemIds,
