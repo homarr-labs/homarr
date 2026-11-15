@@ -4,7 +4,7 @@ FROM oven/bun:1.4.4-debian@sha256:93d5032fe06d163427822dc1598f420363759bb18155c9
 
 FROM redis:8.8.0-trixie@sha256:234c902a2db49461a129e2d4aeff85b28cf20187ed274a67f6e50995fa713c7b AS redis-tool
 
-FROM node:24.22.2-trixie-slim@sha256:54f84b4cf8432b21aaffd5d3ce8d41e12cea0d10d33c09d2f3c9879d49d6b446 AS base
+FROM node:24.22.3-trixie-slim@sha256:af02d57b57719b9657a45199a79264a9437940cd55b3c7b3fc99615654f124a0 AS base
 
 FROM base AS builder
 ARG TARGETPLATFORM
@@ -17,7 +17,7 @@ COPY --from=bun-tool /usr/local/bin/bun /usr/local/bin/bun
 COPY bun.lock bunfig.toml package.json ./
 COPY patches ./patches
 COPY --parents ./apps/*/package.json ./packages/*/package.json ./tooling/*/package.json ./
-RUN --mount=type=cache,id=homarr-bun-${TARGETPLATFORM}-glibc-2.41-node-24.22.2-bun-1.4.4,target=/root/.bun/install/cache,sharing=locked \
+RUN --mount=type=cache,id=homarr-bun-${TARGETPLATFORM}-glibc-2.41-node-24.22.3-bun-1.4.4,target=/root/.bun/install/cache,sharing=locked \
     npm_config_nodedir=/usr/local bun install --frozen-lockfile --concurrent-scripts=1
 
 # Runtime configuration changes do not invalidate the application build.
@@ -30,9 +30,9 @@ RUN --mount=type=secret,id=TURBO_API,env=TURBO_API \
     --mount=type=secret,id=TURBO_TEAM,env=TURBO_TEAM \
     --mount=type=secret,id=TURBO_TOKEN,env=TURBO_TOKEN \
     --mount=type=secret,id=TURBO_REMOTE_CACHE_SIGNATURE_KEY,env=TURBO_REMOTE_CACHE_SIGNATURE_KEY \
-    --mount=type=cache,id=homarr-next-build-${TARGETPLATFORM}-glibc-2.41-node-24.22.2,target=/app/apps/nextjs/.next/cache,sharing=locked \
-    --mount=type=cache,id=homarr-turbo-${TARGETPLATFORM}-glibc-2.41-node-24.22.2,target=/app/.turbo,sharing=locked \
-    TURBO_PLATFORM="${TARGETPLATFORM:-linux/amd64}/glibc-2.41/node-24.22.2" \
+    --mount=type=cache,id=homarr-next-build-${TARGETPLATFORM}-glibc-2.41-node-24.22.3,target=/app/apps/nextjs/.next/cache,sharing=locked \
+    --mount=type=cache,id=homarr-turbo-${TARGETPLATFORM}-glibc-2.41-node-24.22.3,target=/app/.turbo,sharing=locked \
+    TURBO_PLATFORM="${TARGETPLATFORM:-linux/amd64}/glibc-2.41/node-24.22.3" \
     bun run turbo run build --filter=@homarr/nextjs... --filter=@homarr/cli
 
 FROM debian:trixie-slim@sha256:f6b08b09a05725f9431502d3b5714f5c4576e82c1a84fa1debe0c24a7e0c3ec4 AS runner
