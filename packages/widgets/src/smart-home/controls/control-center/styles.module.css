@@ -1464,6 +1464,13 @@ button.tile:not(:disabled):active {
   color: #fff;
 }
 
+@container camera-tile (max-height: 88px) {
+  .cameraImage {
+    top: 0;
+    height: 100%;
+  }
+}
+
 @container camera-tile (max-height: 115px) and (min-width: 224px) {
   .cameraImage {
     top: 0;
