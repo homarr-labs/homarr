@@ -178,12 +178,13 @@ const getExcerpt = (markdown: string, tokens: readonly string[]) => {
 };
 
 const getCitationUrl = (path: string) => {
-  const pagePath = path
-    .replace(/^\/llms\.mdx/u, "")
-    .replace(/\/content\.md$/u, "")
-    .replace(/\.md$/u, "")
-    .replaceAll("(", "%28")
-    .replaceAll(")", "%29");
+  let pagePath = path;
+  if (path.startsWith("/llms.mdx/docs/")) {
+    pagePath = path.replace(/^\/llms\.mdx/u, "").replace(/\/content\.md$/u, "");
+  } else {
+    pagePath = path.replace(/\.md$/u, "");
+  }
+  pagePath = pagePath.replaceAll("(", "%28").replaceAll(")", "%29");
   return `${docsOrigin}${pagePath}/`;
 };
 

@@ -1,3 +1,5 @@
+import { TRPCError } from "@trpc/server";
+
 import { isRecord } from "@homarr/common";
 
 const asErrorRecord = (value: unknown): Record<string, unknown> | undefined => (isRecord(value) ? value : undefined);
@@ -12,24 +14,10 @@ const getErrorChain = (error: unknown) => {
   return chain;
 };
 
-const toolErrorCodes = new Set([
-  "UNAUTHORIZED",
-  "FORBIDDEN",
-  "NOT_FOUND",
-  "BAD_REQUEST",
-  "BAD_GATEWAY",
-  "TIMEOUT",
-  "TOO_MANY_REQUESTS",
-  "CONFLICT",
-  "PRECONDITION_FAILED",
-  "PAYLOAD_TOO_LARGE",
-  "INTERNAL_SERVER_ERROR",
-]);
-
 export const getAssistantToolErrorCode = (error: unknown): string => {
   const chain = getErrorChain(error);
   for (const candidate of chain) {
-    if (typeof candidate.code === "string" && toolErrorCodes.has(candidate.code)) return candidate.code;
+    if (candidate instanceof TRPCError) return candidate.code;
     if (candidate.name === "ZodError") return "BAD_REQUEST";
   }
   return "INTERNAL_SERVER_ERROR";

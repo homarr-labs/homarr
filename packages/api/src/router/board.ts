@@ -2469,10 +2469,14 @@ export const boardRouter = createTRPCRouter({
           storedItems: [{ id: item.id, kind: item.kind, options: previousOptions }],
         });
         if (item.kind === "timetable") await validateTimetableOptionsChangeAsync(options, previousOptions);
-        await ctx.db
+        const updatedItems = await ctx.db
           .update(items)
           .set({ options: superjson.stringify(options) })
-          .where(itemWhere);
+          .where(and(itemWhere, eq(items.kind, item.kind), eq(items.options, item.options)))
+          .returning({ id: items.id });
+        if (updatedItems.length === 0) {
+          throw new TRPCError({ code: "CONFLICT", message: "Item changed while updating options; read it again" });
+        }
         return { itemId: item.id };
       });
     }),
