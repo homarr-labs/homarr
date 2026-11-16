@@ -26,6 +26,7 @@ export const getAssistantToolOutputMaxCharacters = (toolName: string) => {
 
 type AssistantToolOutputOptions = {
   maxCharacters?: number;
+  omitBoardCreatorImage?: boolean;
   compactArray?: {
     itemProperties: readonly string[];
     outputProperty: string;
@@ -34,9 +35,13 @@ type AssistantToolOutputOptions = {
 
 export const getAssistantToolOutputOptions = (toolName: string): AssistantToolOutputOptions => {
   const maxCharacters = getAssistantToolOutputMaxCharacters(toolName);
+  if (toolName === "board_getBoardByName") {
+    return { maxCharacters, omitBoardCreatorImage: true };
+  }
   if (toolName === "board_getAllBoards") {
     return {
       maxCharacters,
+      omitBoardCreatorImage: true,
       compactArray: {
         itemProperties: ["id", "name"],
         outputProperty: "boards",
@@ -77,6 +82,12 @@ const createBoundedArrayOutput = (
   return createOutput(lowerBound);
 };
 
+const omitCreatorImage = (board: unknown) => {
+  if (!isRecord(board) || !isRecord(board.creator)) return board;
+  const { image: _image, ...creator } = board.creator;
+  return { ...board, creator };
+};
+
 /**
  * AI SDK model messages only accept JSON-compatible tool results. Homarr's tRPC callers can
  * return richer values such as Date, bigint, Map, Set, NaN, and nested undefined values.
@@ -84,7 +95,12 @@ const createBoundedArrayOutput = (
  * types, keeping subsequent agent steps valid while preserving the useful data.
  */
 export const toAssistantToolOutput = (value: unknown, options: AssistantToolOutputOptions = {}) => {
-  const output = serialize(value as Parameters<typeof serialize>[0]).json;
+  let preparedValue = value;
+  if (options.omitBoardCreatorImage) {
+    if (Array.isArray(value)) preparedValue = value.map(omitCreatorImage);
+    else preparedValue = omitCreatorImage(value);
+  }
+  const output = serialize(preparedValue as Parameters<typeof serialize>[0]).json;
   if (options.maxCharacters === undefined) return output;
 
   const serialized = JSON.stringify(output);
