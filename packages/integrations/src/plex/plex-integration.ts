@@ -356,8 +356,9 @@ export class PlexIntegration extends Integration implements IMediaServerIntegrat
               : item.title;
 
         // External and linked app URLs may already point to Plex Web.
-        const href = super.externalUrl("/");
-        href.pathname = `${href.pathname.replace(/\/web(?:\/index\.html)?\/?$/, "/")}web/index.html`;
+        const href = new URL(this.integration.externalUrl ?? this.integration.url);
+        const basePath = href.pathname.replace(/\/web(?:\/index\.html)?\/?$/, "").replace(/\/+$/, "");
+        href.pathname = `${basePath}/web/index.html`;
         href.hash = `!/server/${machineIdentifier}/details?key=${encodeURIComponent(item.key.replace("/children", ""))}`;
 
         return {
