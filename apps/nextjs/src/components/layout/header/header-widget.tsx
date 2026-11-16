@@ -85,8 +85,8 @@ export const HeaderWidget = ({
       returnFocus
       zIndex="calc(var(--homarr-z-index-board-header) + 1)"
     >
-      <Popover.Target>
-        <Tooltip label={title}>
+      <Tooltip label={title}>
+        <Popover.Target>
           <HeaderButton
             aria-label={title}
             loading={editor.loading || savingItemIds.includes(item.id)}
@@ -100,8 +100,8 @@ export const HeaderWidget = ({
           >
             <Icon size={20} stroke={1.5} />
           </HeaderButton>
-        </Tooltip>
-      </Popover.Target>
+        </Popover.Target>
+      </Tooltip>
       <Popover.Dropdown
         ref={setDropdown}
         p="xs"
