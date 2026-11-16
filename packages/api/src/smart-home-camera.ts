@@ -9,6 +9,8 @@ import { createTRPCRouter, publicProcedure } from "./trpc";
 export { createTRPCContext } from "./trpc";
 
 // Native HTTP only: Response bodies must not be serialized through tRPC or MCP.
+// ponytail: This caller is not registered on appRouter. The Next route is the only
+// endpoint; retain this adapter to reuse integration query authorization and cancellation.
 export const smartHomeCameraRouter = createTRPCRouter({
   open: publicProcedure
     .concat(createOneIntegrationMiddleware("query", "homeAssistant"))

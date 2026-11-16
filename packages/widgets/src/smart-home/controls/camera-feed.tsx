@@ -72,7 +72,7 @@ export function CameraFeed({ entity }: { entity: HaEntity }) {
           if (disposed) return;
           window.clearTimeout(idleTimeout);
           idleTimeout = window.setTimeout(fail, 30_000);
-          // Data URLs match Homarr's image policy; skip frames while the previous one decodes.
+          // CSP allows data: images, not blob:; skip frames while the previous one encodes.
           if (frameReader.readyState !== FileReader.LOADING) frameReader.readAsDataURL(frame);
         });
       })
@@ -98,6 +98,7 @@ export function CameraFeed({ entity }: { entity: HaEntity }) {
 
   useEffect(() => {
     if (!active || loaded) return;
+    // First decoded frame deadline; the reader separately guards an already-live feed.
     const timeout = window.setTimeout(() => {
       setRequested(false);
       setFailed(true);

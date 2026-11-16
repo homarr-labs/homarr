@@ -1,3 +1,5 @@
+// ponytail: Native MJPEG <img> does not report EOF/stalls in Chromium. Keep this
+// bounded JPEG reader until native playback exposes reliable stream-health events.
 const MAX_FRAME_BYTES = 8 * 1024 * 1024;
 const MAX_HEADER_BYTES = 16 * 1024;
 const MAX_BUFFER_BYTES = MAX_FRAME_BYTES + MAX_HEADER_BYTES + 512;
