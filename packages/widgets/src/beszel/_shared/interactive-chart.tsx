@@ -1,9 +1,11 @@
 "use client";
-import { memo, useMemo } from "react";
+import { memo, useMemo, useRef, useState } from "react";
+import { Portal } from "@mantine/core";
 import { AreaChart } from "@mantine/charts";
 import type { AreaChartProps } from "@mantine/charts";
 import classes from "./chart.module.css";
 import { chartStyle } from "./chart-style";
+import { createBeszelTooltipProps } from "./tooltip-position";
 
 const yAxisBase = {
   tickMargin: 0,
@@ -24,10 +26,17 @@ const BeszelAreaChart = memo(
     yAxisProps: yAxisPropsOverride,
     xAxisProps: xAxisPropsOverride,
     areaChartProps: areaChartPropsOverride,
+    tooltipProps: originalTooltipProps,
     type = "default",
     fillOpacity = 0.4,
     ...props
   }: BeszelAreaChartProps) => {
+    const chartRef = useRef<HTMLDivElement>(null);
+    const [tooltipPortal, setTooltipPortal] = useState<HTMLDivElement | null>(null);
+    const tooltipProps = useMemo(
+      () => createBeszelTooltipProps(originalTooltipProps, tooltipPortal, chartRef),
+      [originalTooltipProps, tooltipPortal],
+    );
     const mergedXAxis = useMemo(
       () => ({
         interval: "preserveEnd" as const,
@@ -52,35 +61,42 @@ const BeszelAreaChart = memo(
     }, [yAxisFormatter, yAxisDomain, yAxisPropsOverride]);
 
     return (
-      <AreaChart
-        // Recharts keeps registration order when keyed areas move; reset it when ranks change.
-        key={JSON.stringify(props.series.map(({ name }) => name))}
-        className={classes.chart}
-        dataKey="time"
-        curveType="monotone"
-        withGradient={false}
-        connectNulls={false}
-        withDots={false}
-        areaProps={({ color }) => ({
-          fill: color,
-          fillOpacity,
-          activeDot: { r: 4, fill: color, stroke: "transparent", strokeWidth: 2 },
-        })}
-        type={type}
-        strokeWidth={1}
-        fillOpacity={fillOpacity}
-        strokeDasharray="0"
-        gridColor="color-mix(in srgb, var(--beszel-chart-border) 50%, transparent)"
-        textColor="var(--beszel-chart-muted)"
-        withXAxis={withXAxis}
-        withYAxis
-        w="100%"
-        areaChartProps={{ margin: chartMargin, ...areaChartPropsOverride }}
-        style={chartStyle}
-        xAxisProps={mergedXAxis}
-        yAxisProps={mergedYAxis}
-        {...props}
-      />
+      <>
+        <AreaChart
+          ref={chartRef}
+          // Recharts keeps registration order when keyed areas move; reset it when ranks change.
+          key={JSON.stringify(props.series.map(({ name }) => name))}
+          className={classes.chart}
+          dataKey="time"
+          curveType="monotone"
+          withGradient={false}
+          connectNulls={false}
+          withDots={false}
+          areaProps={({ color }) => ({
+            fill: color,
+            fillOpacity,
+            activeDot: { r: 4, fill: color, stroke: "transparent", strokeWidth: 2 },
+          })}
+          type={type}
+          strokeWidth={1}
+          fillOpacity={fillOpacity}
+          strokeDasharray="0"
+          gridColor="color-mix(in srgb, var(--beszel-chart-border) 50%, transparent)"
+          textColor="var(--beszel-chart-muted)"
+          withXAxis={withXAxis}
+          withYAxis
+          w="100%"
+          areaChartProps={{ margin: chartMargin, ...areaChartPropsOverride }}
+          style={chartStyle}
+          xAxisProps={mergedXAxis}
+          yAxisProps={mergedYAxis}
+          {...props}
+          tooltipProps={tooltipProps}
+        />
+        <Portal>
+          <div ref={setTooltipPortal} className={classes.chart} />
+        </Portal>
+      </>
     );
   },
 );

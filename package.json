@@ -1,6 +1,6 @@
 {
   "name": "homarr",
-  "version": "2.13.0",
+  "version": "2.13.1",
   "private": true,
   "workspaces": {
     "packages": [
@@ -40,6 +40,7 @@
       "@dnd-kit/utilities": "3.2.2",
       "@drizzle-team/brocli": "0.12.0",
       "@extractus/feed-extractor": "7.2.1",
+      "@floating-ui/dom": "1.8.0",
       "@gfazioli/mantine-onboarding-tour": "4.0.8",
       "@gitbeaker/rest": "43.8.0",
       "@homarr/node-unifi": "2.6.0",
@@ -148,7 +149,7 @@
       "assistant-stream": "0.3.52",
       "babel-plugin-react-compiler": "1.0.0",
       "bcrypt": "6.0.0",
-      "better-sqlite3": "12.11.1",
+      "better-sqlite3": "13.1.1",
       "canvas-confetti": "1.9.4",
       "chroma-js": "3.2.0",
       "clsx": "2.1.1",
@@ -173,7 +174,7 @@
       "drizzle-zod": "0.8.3",
       "embla-carousel-react": "8.6.0",
       "esbuild": "0.28.2",
-      "fast-xml-parser": "5.11.1",
+      "fast-xml-parser": "5.12.0",
       "fastify": "5.12.6",
       "feed": "6.0.0",
       "flag-icons": "7.5.0",
@@ -366,7 +367,7 @@
     "@assistant-ui/ai-sdk>@ai-sdk/react": "4.0.147",
     "@assistant-ui/ai-sdk>ai": "7.0.143",
     "@assistant-ui/ai-sdk>assistant-stream": "0.3.52",
-    "@assistant-ui/core": "0.3.34",
+    "@assistant-ui/core": "0.3.35",
     "@assistant-ui/store": "0.3.23",
     "@assistant-ui/tap": "0.9.25",
     "@babel/helpers@<7.26.10": "7.29.7",
@@ -386,10 +387,11 @@
     "esbuild@>=0.27.3 <0.28.1": "0.28.2",
     "fast-uri@>=3.0.0 <3.1.9": "3.1.9",
     "fast-uri@>=4.0.0 <4.2.3": "4.2.3",
+    "fast-xml-parser@>=5.0.0 <5.12.0": "5.12.0",
     "fflate@>=0.4.5 <0.4.9": "0.4.9",
     "fflate@>=0.8.0 <0.8.3": "0.8.3",
     "find-my-way@<9.6.1": "9.9.0",
-    "follow-redirects@<1.16.1": "1.16.1",
+    "follow-redirects@<1.16.2": "1.16.2",
     "form-data@>=4.0.0 <4.0.4": "4.0.6",
     "handlebars@<4.7.10": "4.7.10",
     "hono@<4.6.5": ">=4.13.7",
@@ -411,7 +413,7 @@
     "prismjs@<1.30.0": ">=1.30.0",
     "protobufjs@<7.5.5": ">=7.5.5 <8",
     "proxmox-api>undici": "7.30.1",
-    "qs@<6.16.0": "6.16.0",
+    "qs@<6.16.1": "6.16.1",
     "react-is": "19.3.1",
     "rollup@>=4.0.0 <4.22.4": ">=4.62.2",
     "serialize-javascript@<7.0.5": "7.0.5",
@@ -433,7 +435,7 @@
   },
   "engines": {
     "bun": ">=1.4.4",
-    "node": ">=26.13.0"
+    "node": ">=24.22.3"
   },
   "packageManager": "bun@1.4.4",
   "patchedDependencies": {
