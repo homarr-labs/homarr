@@ -61,7 +61,7 @@ const constructWebsocketUrl = () => {
   }
 
   if (env.NODE_ENV === "development") {
-    return fallback;
+    return `${getWebSocketProtocol()}://${window.location.hostname}:3001/websockets`;
   }
 
   return `${getWebSocketProtocol()}://${window.location.hostname}:${window.location.port}/websockets`;
