@@ -29,8 +29,12 @@ export async function readCameraFramesAsync(response: Response, onFrame: (frame:
     await response.body?.cancel();
     throw new Error("The camera did not return an image stream");
   }
-  const delimiter = new TextEncoder().encode(`--${boundary}`);
-  const frameEnd = new TextEncoder().encode(`\r\n--${boundary}`);
+  const encoder = new TextEncoder();
+  let delimiter = encoder.encode(`--${boundary}`);
+  let frameEnd = encoder.encode(`\r\n--${boundary}`);
+  let advertisedDelimiter: Uint8Array | null = null;
+  // Home Assistant may include the delimiter prefix in the advertised boundary.
+  if (boundary.startsWith("--")) advertisedDelimiter = encoder.encode(boundary);
   const reader = response.body.getReader();
   let buffer = new Uint8Array();
   let state: "boundary" | "headers" | "frame" = "boundary";
@@ -50,7 +54,14 @@ export async function readCameraFramesAsync(response: Response, onFrame: (frame:
 
       while (true) {
         if (state === "boundary") {
-          const start = findBytes(buffer, delimiter);
+          let start = findBytes(buffer, delimiter);
+          if (start < 0 && advertisedDelimiter) {
+            start = findBytes(buffer, advertisedDelimiter);
+            if (start >= 0) {
+              delimiter = advertisedDelimiter;
+              frameEnd = encoder.encode(`\r\n${boundary}`);
+            }
+          }
           if (start < 0 || buffer.length < start + delimiter.length + 2) {
             if (buffer.length > MAX_HEADER_BYTES) throw new Error("Invalid camera boundary");
             break;
