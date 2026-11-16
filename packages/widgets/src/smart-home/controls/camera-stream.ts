@@ -1,5 +1,6 @@
 const MAX_FRAME_BYTES = 8 * 1024 * 1024;
 const MAX_HEADER_BYTES = 16 * 1024;
+const MAX_BUFFER_BYTES = MAX_FRAME_BYTES + MAX_HEADER_BYTES + 512;
 const headerEnd = new Uint8Array([13, 10, 13, 10]);
 
 const findBytes = (bytes: Uint8Array, target: Uint8Array) => {
@@ -32,11 +33,12 @@ export async function readCameraFramesAsync(response: Response, onFrame: (frame:
   const encoder = new TextEncoder();
   let delimiter = encoder.encode(`--${boundary}`);
   let frameEnd = encoder.encode(`\r\n--${boundary}`);
-  let advertisedDelimiter: Uint8Array | null = null;
-  // Home Assistant may include the delimiter prefix in the advertised boundary.
+  let advertisedDelimiter: Uint8Array<ArrayBuffer> | null = null;
+  // Home Assistant's still-image stream includes the leading hyphens in its header.
   if (boundary.startsWith("--")) advertisedDelimiter = encoder.encode(boundary);
   const reader = response.body.getReader();
-  let buffer = new Uint8Array();
+  let storage = new Uint8Array(64 * 1024);
+  let buffer = storage.subarray(0, 0);
   let state: "boundary" | "headers" | "frame" = "boundary";
   let frameLength: number | null = null;
 
@@ -44,23 +46,35 @@ export async function readCameraFramesAsync(response: Response, onFrame: (frame:
     while (true) {
       const chunk = await reader.read();
       if (chunk.done) throw new Error("The camera stream ended");
-      if (buffer.length + chunk.value.length > MAX_FRAME_BYTES + MAX_HEADER_BYTES + 512) {
+      const bufferedLength = buffer.length + chunk.value.length;
+      if (bufferedLength > MAX_BUFFER_BYTES) {
         throw new Error("The camera frame is too large");
       }
-      const combined = new Uint8Array(buffer.length + chunk.value.length);
-      combined.set(buffer);
-      combined.set(chunk.value, buffer.length);
-      buffer = combined;
+      let offset = buffer.byteOffset;
+      if (offset + bufferedLength > storage.length) {
+        if (bufferedLength > storage.length) {
+          const grown = new Uint8Array(Math.min(MAX_BUFFER_BYTES, Math.max(bufferedLength, storage.length * 2)));
+          grown.set(buffer);
+          storage = grown;
+        } else {
+          storage.copyWithin(0, offset, offset + buffer.length);
+        }
+        offset = 0;
+      }
+      storage.set(chunk.value, offset + buffer.length);
+      buffer = storage.subarray(offset, offset + bufferedLength);
 
       while (true) {
         if (state === "boundary") {
           let start = findBytes(buffer, delimiter);
-          if (start < 0 && advertisedDelimiter) {
-            start = findBytes(buffer, advertisedDelimiter);
-            if (start >= 0) {
+          if (advertisedDelimiter) {
+            const alternateStart = findBytes(buffer, advertisedDelimiter);
+            if (alternateStart >= 0 && (start < 0 || alternateStart < start)) {
               delimiter = advertisedDelimiter;
               frameEnd = encoder.encode(`\r\n${boundary}`);
+              start = alternateStart;
             }
+            if (start >= 0) advertisedDelimiter = null;
           }
           if (start < 0 || buffer.length < start + delimiter.length + 2) {
             if (buffer.length > MAX_HEADER_BYTES) throw new Error("Invalid camera boundary");
@@ -70,7 +84,7 @@ export async function readCameraFramesAsync(response: Response, onFrame: (frame:
           if (start > MAX_HEADER_BYTES) throw new Error("Camera headers are too large");
           if (buffer[end] === 45 && buffer[end + 1] === 45) throw new Error("The camera stream ended");
           if (buffer[end] !== 13 || buffer[end + 1] !== 10) throw new Error("Invalid camera boundary");
-          buffer = buffer.slice(end + 2);
+          buffer = buffer.subarray(end + 2);
           state = "headers";
         }
         if (state === "headers") {
@@ -94,7 +108,7 @@ export async function readCameraFramesAsync(response: Response, onFrame: (frame:
           ) {
             throw new Error("Invalid camera frame length");
           }
-          buffer = buffer.slice(end + headerEnd.length);
+          buffer = buffer.subarray(end + headerEnd.length);
           state = "frame";
         }
         let length = frameLength;
@@ -109,7 +123,7 @@ export async function readCameraFramesAsync(response: Response, onFrame: (frame:
         if (length <= 0 || length > MAX_FRAME_BYTES) throw new Error("Invalid camera frame length");
         if (buffer.length < length) break;
         onFrame(new Blob([buffer.slice(0, length)], { type: "image/jpeg" }));
-        buffer = buffer.slice(length);
+        buffer = buffer.subarray(length);
         state = "boundary";
       }
     }

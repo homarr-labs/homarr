@@ -1424,13 +1424,6 @@ button.tile:not(:disabled):active {
   height: calc(100% - 88px);
 }
 
-@container camera-tile (max-height: 88px) {
-  .cameraImage {
-    top: 0;
-    height: 100%;
-  }
-}
-
 .cameraEmpty {
   display: grid;
   place-items: center;
@@ -1469,6 +1462,28 @@ button.tile:not(:disabled):active {
   display: flex;
   flex-direction: column;
   color: #fff;
+}
+
+@container camera-tile (max-height: 115px) and (min-width: 224px) {
+  .cameraImage {
+    top: 0;
+    width: calc(100% - 136px);
+    height: 100%;
+  }
+
+  .liveBadge {
+    left: calc(100% - 132px);
+    max-width: 80px;
+  }
+
+  .cameraFoot {
+    right: 8px;
+    left: calc(100% - 132px);
+  }
+
+  .cameraFoot .state {
+    display: none;
+  }
 }
 
 .sensorTile {
