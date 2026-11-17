@@ -63,10 +63,11 @@ function ConfiguredAppWidget({ options, isEditMode, height, width, displayScale 
   if (isColumnLayout) gap = 0;
 
   // Docker routes are admin only, so other viewers see the plain tile.
-  const linkedContainer =
-    options.dockerContainer && session?.user.permissions.includes("admin")
-      ? parseLinkedDockerContainer(options.dockerContainer.value)
-      : null;
+  const dockerContainerValue = options.dockerContainer?.value ?? app.dockerContainer;
+  let linkedContainer = null;
+  if (dockerContainerValue && session?.user.permissions.includes("admin")) {
+    linkedContainer = parseLinkedDockerContainer(dockerContainerValue);
+  }
   const showStatus = options.pingEnabled && !settings.forceDisableStatus && !board.disableStatus;
   const showPing = showStatus && !linkedContainer && Boolean(app.pingUrl ?? app.href);
 

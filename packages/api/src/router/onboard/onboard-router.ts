@@ -477,6 +477,7 @@ export const onboardRouter = createTRPCRouter({
             href: integration.url,
             pingUrl: integration.pingUrl ?? integration.url,
             description: integration.description ?? null,
+            dockerContainer: null,
           } satisfies typeof apps.$inferSelect,
           secretRows: integration.secrets.map((secret) => ({
             kind: secret.kind,
@@ -496,6 +497,7 @@ export const onboardRouter = createTRPCRouter({
               href: app.href,
               pingUrl: app.pingUrl ?? app.href,
               description: app.description ?? null,
+              dockerContainer: null,
             }) satisfies typeof apps.$inferSelect,
         ),
       ];

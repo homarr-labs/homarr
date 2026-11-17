@@ -812,6 +812,12 @@
           "label": "Use different URL for ping",
           "description": "Useful if Homarr can directly access using an internal hostname or network to avoid bandwidth usage of ISP"
         }
+      },
+      "dockerContainer": {
+        "label": "Docker container",
+        "description": "Link this app to a container for status and start/stop controls. The link applies to its App widgets; per-widget selections can override it. Docker access remains administrator-only.",
+        "placeholder": "No linked container",
+        "unavailable": "Docker inventory is unavailable. The saved link will be preserved."
       }
     },
     "action": {
@@ -2589,7 +2595,7 @@
         },
         "dockerContainer": {
           "label": "Docker container",
-          "description": "Uses the container state for the status indicator. Hover or focus the app to reveal its start/stop button. On touch screens, tap once to reveal controls and again to open the app. Only admins see these Docker controls.",
+          "description": "Override the container linked in the app settings. Leave empty to use the app’s saved link. Hover or focus to reveal controls; on touch screens, tap once to reveal them. Docker controls are administrator-only.",
           "placeholder": "Pick a container",
           "disabled": "Set ENABLE_DOCKER to pick a container.",
           "unavailable": "The Docker containers could not be loaded."

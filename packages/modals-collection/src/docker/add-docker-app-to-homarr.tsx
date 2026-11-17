@@ -8,7 +8,7 @@ import { useZodForm } from "@homarr/form";
 import { createModal } from "@homarr/modals";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
-import { appHrefSchema } from "@homarr/validation/app";
+import { appHrefSchema, formatLinkedDockerContainer } from "@homarr/validation/app";
 
 interface AddDockerAppToHomarrProps {
   selectedContainers: RouterOutputs["docker"]["getContainers"]["containers"];
@@ -62,6 +62,7 @@ export const AddDockerAppToHomarrModal = createModal<AddDockerAppToHomarrProps>(
         description: null,
         href: containerUrls[index] || null,
         pingUrl: null,
+        dockerContainer: formatLinkedDockerContainer(container),
       })),
     );
   };
