@@ -14,22 +14,15 @@ import {
   appCreateManySchema,
   appEditSchema,
   appManageSchema,
-  parseLinkedDockerContainer,
+  getAppWithVisibleDockerLink,
 } from "@homarr/validation/app";
-import { env as dockerEnv } from "@homarr/docker/env";
-import { dockerContainersRequestHandler } from "@homarr/request-handler/docker";
 import { byIdSchema, paginatedSchema } from "@homarr/validation/common";
 import { iconsDetectFaviconSchema } from "@homarr/validation/icons";
 
 import { convertIntersectionToZodObject } from "../schema-merger";
-import {
-  createTRPCRouter,
-  isDemoMode,
-  permissionRequiredProcedure,
-  protectedProcedure,
-  publicProcedure,
-} from "../trpc";
+import { createTRPCRouter, permissionRequiredProcedure, protectedProcedure, publicProcedure } from "../trpc";
 import { AppAccessControl } from "./app/app-access-control";
+import { validateAppDockerContainerAsync } from "./app/docker-container-link";
 
 const defaultIcon = "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/homarr.svg";
 
@@ -384,25 +377,6 @@ export class AppRepository {
   }
 }
 
-// Linking changes which container the App tile controls; ordinary app-edit permission is not Docker access.
-const validateAppDockerContainerAsync = async (value: string | null, user: Session["user"]) => {
-  if (!user.permissions.includes("admin")) {
-    throw new TRPCError({ code: "FORBIDDEN", message: "Docker container linking requires admin permission" });
-  }
-  if (value === null) return;
-  if (!dockerEnv.ENABLE_DOCKER && !isDemoMode) {
-    throw new TRPCError({ code: "NOT_FOUND", message: "Docker route is not available" });
-  }
-  const link = parseLinkedDockerContainer(value);
-  const { data } = await dockerContainersRequestHandler.handler({}).getDataAsync();
-  const exists =
-    link && data.containers.some(({ endpointId, name }) => endpointId === link.endpointId && name === link.name);
-  if (!exists) {
-    throw new TRPCError({ code: "BAD_REQUEST", message: "Docker container was not found on the selected endpoint" });
-  }
-};
-
 const visibleApp = (app: App, user: Session["user"] | null): App => {
-  if (user?.permissions.includes("admin")) return app;
-  return { ...app, dockerContainer: null };
+  return getAppWithVisibleDockerLink(app, user?.permissions.includes("admin") ?? false);
 };

@@ -65,3 +65,11 @@ export const normalizeAppWidgetOptions = (options: Record<string, unknown>): Rec
 
   return { ...remainingOptions, openIn };
 };
+
+export const getAppWithVisibleDockerLink = <TApp extends { dockerContainer?: string | null }>(
+  app: TApp,
+  canReadDockerLink: boolean,
+): TApp => {
+  if (canReadDockerLink || !app.dockerContainer) return app;
+  return { ...app, dockerContainer: null };
+};

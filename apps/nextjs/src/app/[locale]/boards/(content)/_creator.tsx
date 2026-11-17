@@ -115,7 +115,8 @@ export const createBoardContentPage = <TParams extends Record<string, unknown>>(
         }
         return acc;
       }, new Map<WidgetKind, Item[]>());
-      for (const [kind, items] of itemsMap) prefetchForKind(kind, queryClient, items);
+      const canReadDockerLink = sessionPromise.then((session) => session?.user.permissions.includes("admin") ?? false);
+      for (const [kind, items] of itemsMap) prefetchForKind(kind, queryClient, items, canReadDockerLink);
 
       const layoutId = getLayoutIdForViewportWidth(board.layouts, await viewportWidthPromise);
       const [session, integrations] = await Promise.all([sessionPromise, integrationsPromise]);
