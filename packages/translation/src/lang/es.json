@@ -5638,7 +5638,7 @@
       },
       "status": {
         "up": "Subida total",
-        "down": "Velocidad de Descarga",
+        "down": "Caído",
         "pending": "Pendiente",
         "maintenance": "",
         "stale": "",
