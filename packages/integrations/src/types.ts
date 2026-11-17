@@ -18,6 +18,7 @@ export * from "./homeassistant/homeassistant-types";
 export * from "./proxmox/proxmox-types";
 export * from "./unifi-controller/unifi-controller-types";
 export * from "./opnsense/opnsense-types";
+export * from "./pfsense/pfsense-types";
 export * from "./interfaces/media-releases";
 export * from "./coolify/coolify-types";
 export * from "./anchor/anchor-types";

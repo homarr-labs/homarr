@@ -97,6 +97,7 @@ export const statsIntegrationKinds = [
   "nextcloud",
   "unifiController",
   "opnsense",
+  "pfsense",
   "ntfy",
   "gotify",
   "anchor",
