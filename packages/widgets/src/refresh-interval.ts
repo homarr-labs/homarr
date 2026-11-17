@@ -25,7 +25,7 @@ export const createWidgetRefreshIntervalOptions = (defaultInterval: number) =>
     },
   );
 
-export const getWidgetRefreshInterval = (options: { refreshInterval?: string }, defaultInterval: number) => {
+export const getWidgetRefreshInterval = (options: { refreshInterval?: unknown }, defaultInterval: number) => {
   const result = widgetRefreshIntervalSchema.safeParse(Number(options.refreshInterval ?? defaultInterval));
   return result.success ? result.data : defaultInterval;
 };
