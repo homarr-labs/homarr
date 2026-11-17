@@ -58,6 +58,7 @@ const PARTIAL_FORM_KEYS = [
   "opacity",
   "iconColor",
   "itemRadius",
+  "itemGap",
   "customCss",
   "disableStatus",
 ] as const;
@@ -76,6 +77,7 @@ const buildInitialValues = (board: Board): FormValues => ({
   opacity: board.opacity,
   iconColor: board.iconColor ?? "",
   itemRadius: board.itemRadius,
+  itemGap: board.itemGap,
   customCss: board.customCss ?? "",
   disableStatus: board.disableStatus,
   layouts: normalizeMobileLayoutGutters(board.layouts),

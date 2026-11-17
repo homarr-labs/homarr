@@ -48,6 +48,7 @@ export const assistantBoardSettingsChangesSchema = z
       ),
     iconColor: boardColorSchema.nullable().optional(),
     itemRadius: z.enum(cornerStyleValues).nullable().optional(),
+    itemGap: z.number().int().min(0).max(40).nullable().optional(),
     disableStatus: z.boolean().optional(),
   })
   .describe("Only the board fields the user asked to change.");

@@ -6880,6 +6880,11 @@
       "columnCount": {
         "label": "Column count"
       },
+      "itemGap": {
+        "label": "Item spacing",
+        "description": "Gap between items and containers, from 0 to 40 pixels. Leave empty for default spacing.",
+        "default": "Default spacing"
+      },
       "itemRadius": {
         "label": "Item radius",
         "description": "Changes the roundness of tiles on your board",

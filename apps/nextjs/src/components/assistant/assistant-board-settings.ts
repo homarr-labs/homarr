@@ -15,6 +15,7 @@ export const assistantBoardSettingKeys = [
   "customCss",
   "iconColor",
   "itemRadius",
+  "itemGap",
   "disableStatus",
 ] as const satisfies readonly (keyof AssistantBoardSettingsChanges)[];
 
@@ -47,6 +48,7 @@ const appearanceKeys = new Set<keyof AssistantBoardSettingsChanges>([
   "opacity",
   "iconColor",
   "itemRadius",
+  "itemGap",
 ]);
 const backgroundKeys = new Set<keyof AssistantBoardSettingsChanges>([
   "backgroundImageUrl",

@@ -1246,6 +1246,7 @@ export const boardRouter = createTRPCRouter({
           customCss: true,
           iconColor: true,
           itemRadius: true,
+          itemGap: true,
           disableStatus: true,
         },
         where: boardWhere,
@@ -1646,7 +1647,7 @@ export const boardRouter = createTRPCRouter({
       mcp: {
         enabled: true,
         description:
-          "Update visual and behavior settings for a board. Requires modify permission. REQUIRED: id (board ID). Optional fields include pageTitle, metaTitle, logoImageUrl, faviconImageUrl, backgroundImageUrl, colors, opacity, customCss, itemRadius, and disableStatus. Set primaryColor, secondaryColor, or itemRadius to null to inherit the instance theme.",
+          "Update visual and behavior settings for a board. Requires modify permission. REQUIRED: id (board ID). Optional fields include pageTitle, metaTitle, logoImageUrl, faviconImageUrl, backgroundImageUrl, colors, opacity, customCss, itemRadius, itemGap (0–40px, null restores default spacing), and disableStatus. Set primaryColor, secondaryColor, or itemRadius to null to inherit the instance theme.",
       },
     })
     .input(boardSavePartialSettingsSchema.extend({ id: z.string() }))
@@ -1675,6 +1676,7 @@ export const boardRouter = createTRPCRouter({
           opacity: input.opacity,
           iconColor: input.iconColor,
           itemRadius: input.itemRadius,
+          itemGap: input.itemGap,
 
           // custom css
           customCss: input.customCss,

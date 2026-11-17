@@ -305,6 +305,7 @@ export const boards = pgTable("board", {
   customCss: text(),
   iconColor: text(),
   itemRadius: text().$type<MantineSize>(),
+  itemGap: integer(),
   disableStatus: boolean().default(false).notNull(),
 });
 

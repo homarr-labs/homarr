@@ -2068,6 +2068,19 @@
                       ],
                       "description": "Widget roundness override; null inherits the instance theme"
                     },
+                    "itemGap": {
+                      "anyOf": [
+                        {
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 40
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "description": "Gap between board items in pixels; null preserves default spacing"
+                    },
                     "disableStatus": {
                       "type": "boolean"
                     },
@@ -2093,6 +2106,7 @@
                     "customCss",
                     "iconColor",
                     "itemRadius",
+                    "itemGap",
                     "disableStatus",
                     "id",
                     "name"
@@ -2305,6 +2319,19 @@
                       }
                     ],
                     "description": "Widget roundness override; null inherits the instance theme"
+                  },
+                  "itemGap": {
+                    "anyOf": [
+                      {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 40
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "description": "Gap between board items in pixels; null preserves default spacing"
                   },
                   "disableStatus": {
                     "type": "boolean"

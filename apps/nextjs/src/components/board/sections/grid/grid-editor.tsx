@@ -778,6 +778,7 @@ export const BoardGridEditorProvider = ({ children }: PropsWithChildren) => {
               {
                 zoom: overlayZoom,
                 "--board-grid-overlay-content-zoom": 1 / overlayZoom,
+                "--board-grid-overlay-inset": `${((board.itemGap ?? 0) * overlayZoom) / 2}px`,
               } as CSSProperties
             }
           >

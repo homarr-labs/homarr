@@ -82,6 +82,7 @@ const normalizeFormValues = (
     customCss: values.customCss,
     iconColor: values.iconColor ?? "",
     itemRadius: values.itemRadius,
+    itemGap: values.itemGap,
     disableStatus: values.disableStatus,
   };
 };

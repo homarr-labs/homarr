@@ -76,6 +76,13 @@ export const boardSavePartialSettingsSchema = z
       .enum(cornerStyleValues)
       .nullable()
       .describe("Widget roundness override; null inherits the instance theme"),
+    itemGap: z
+      .number()
+      .int()
+      .min(0)
+      .max(40)
+      .nullable()
+      .describe("Gap between board items in pixels; null preserves default spacing"),
     disableStatus: z.boolean(),
   })
   .partial();

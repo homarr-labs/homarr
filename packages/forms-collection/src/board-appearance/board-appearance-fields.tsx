@@ -2,7 +2,7 @@
 
 import { useId } from "react";
 import type { ReactNode } from "react";
-import { ActionIcon, Fieldset, Group, Input, SimpleGrid, Slider, Stack, Select, Box } from "@mantine/core";
+import { ActionIcon, Fieldset, Group, Input, SimpleGrid, Slider, Stack, Select, Box, NumberInput } from "@mantine/core";
 import { IconArrowBackUp, IconX } from "@tabler/icons-react";
 
 import { cornerStyleValues } from "@homarr/definitions";
@@ -17,6 +17,7 @@ interface BoardAppearanceValues {
   iconColor: string | null;
   opacity: number;
   itemRadius: CornerStyle | null;
+  itemGap: number | null;
 }
 
 interface BoardAppearanceFieldsProps {
@@ -109,21 +110,39 @@ export const BoardAppearanceFields = ({ form, palettePreview, stacked = false }:
           </Group>
         </SimpleGrid>
       </Stack>
-      <Select
-        label={t("itemRadius.label")}
-        {...form.getInputProps("itemRadius")}
-        value={form.values.itemRadius ?? "instance"}
-        allowDeselect={false}
-        data={[
-          { value: "instance", label: tCommon("customTheme.instanceDefault") },
-          ...cornerStyleValues.map((value) => ({ value, label: tCommon(`cornerStyle.options.${value}`) })),
-        ]}
-        onChange={(value) => {
-          if (value === "instance") form.setFieldValue("itemRadius", null);
-          else if (cornerStyleValues.includes(value as CornerStyle))
-            form.setFieldValue("itemRadius", value as CornerStyle);
-        }}
-      />
+      <Stack gap="sm">
+        <Select
+          label={t("itemRadius.label")}
+          {...form.getInputProps("itemRadius")}
+          value={form.values.itemRadius ?? "instance"}
+          allowDeselect={false}
+          data={[
+            { value: "instance", label: tCommon("customTheme.instanceDefault") },
+            ...cornerStyleValues.map((value) => ({ value, label: tCommon(`cornerStyle.options.${value}`) })),
+          ]}
+          onChange={(value) => {
+            if (value === "instance") form.setFieldValue("itemRadius", null);
+            else if (cornerStyleValues.includes(value as CornerStyle))
+              form.setFieldValue("itemRadius", value as CornerStyle);
+          }}
+        />
+        <NumberInput
+          label={t("itemGap.label")}
+          description={t("itemGap.description")}
+          placeholder={t("itemGap.default")}
+          min={0}
+          max={40}
+          allowNegative={false}
+          allowDecimal={false}
+          suffix=" px"
+          {...form.getInputProps("itemGap")}
+          value={form.values.itemGap ?? ""}
+          onChange={(value) => {
+            if (value === "") form.setFieldValue("itemGap", null);
+            else form.setFieldValue("itemGap", Number(value));
+          }}
+        />
+      </Stack>
     </SimpleGrid>
   );
 };

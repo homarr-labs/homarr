@@ -20,6 +20,7 @@ export class BoardMockBuilder {
       secondaryColor: "#000000",
       iconColor: null,
       itemRadius: "lg",
+      itemGap: null,
       pageTitle: "Board",
       metaTitle: "Board",
       logoImageUrl: null,
