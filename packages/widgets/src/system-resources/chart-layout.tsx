@@ -4,8 +4,6 @@ import { ScrollArea, SimpleGrid } from "@mantine/core";
 
 type ChartLayoutMode = "vertical" | "horizontal" | "grid";
 
-export const CHART_SCROLLBAR_SIZE = 6;
-
 export const ChartLayout = ({
   children,
   layout,
@@ -33,8 +31,9 @@ export const ChartLayout = ({
       miw={0}
       type="auto"
       scrollbars="xy"
-      offsetScrollbars={horizontal ? "x" : "y"}
-      scrollbarSize={CHART_SCROLLBAR_SIZE}
+      // Reserve the gutter only while a scrollbar is shown, so unscrolled charts keep symmetric widget padding.
+      offsetScrollbars="present"
+      scrollbarSize={6}
       styles={{
         // Nested charts must scroll within their allocated group, not size its parent tracks.
         root: { contain: "size" },
