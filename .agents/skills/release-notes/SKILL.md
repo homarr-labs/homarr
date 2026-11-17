@@ -14,11 +14,11 @@ This skill runs in two places:
 
 ## Audience and voice
 
-The reader runs Homarr at home or in a small team. They care about what they can now do, what stopped being broken, and whether they must do something on upgrade. They do not care about which package was refactored.
+Write for technical users who self-host Homarr. State what they can do, what changed and whether they must act on upgrade.
 
 Write neutral, informative notes:
 
-- Plain factual sentences that say what changed for the user and, where it helps, why they would want it.
+- Use ASD-STE100 principles: short active sentences, one idea per sentence and consistent technical terms. Name the feature, then state the change. Include setup detail only when the user must act.
 - No jokes, wordplay, slogans or taglines, and no exclamation marks. A title or heading names the change, it never advertises it. "Release widget controls and Homebox API keys" is a title. "Release lists your way", "A steadier dashboard" and "Drop links, add apps" are slogans.
 - No marketing or mood words ("seamless", "powerful", "revolutionary", "steadier", "smoother", "supercharged").
 - No emojis or emoji-like symbols anywhere: not in the title, headings, bullets, alerts or the Discord text.
@@ -35,13 +35,13 @@ The body is markdown. Use this order and drop any section that has nothing to sa
 1. `# Homarr vX.Y.Z: <the one or two biggest user-facing changes, named plainly>`, for example `# Homarr v2.12.0: Docker container control on app tiles and a redesigned Coolify widget`. A factual description of the change, never a slogan and never a generic label like "Weekly release".
 2. A summary paragraph of one or two plain sentences directly under the title: what the release brings at a glance.
 3. `> [!IMPORTANT]` alert, only when something is breaking or the user must act on upgrade (renamed env var, removed feature, migration). One or two sentences. Skip it otherwise; an alert that is always there gets ignored.
-4. `## Highlights`: two to four items that matter most. Each gets a short `###` heading that is a plain feature name ("Docker container control on app tiles"), two or three sentences on what it does and why you would want it, and the PR's "after" screenshot when one exists. Highlights are for features and notable improvements, not for bug fixes. A highlighted PR also gets its one-line bullet in New or Improved, so every PR stays credited. The first image in Highlights is also the Discord announcement image when no generated art exists, so lead with the most telling screenshot.
+4. `## Highlights`: two to four items that matter most. Each gets a short `###` heading that is a plain feature name ("Docker container control on app tiles"), one or two short sentences on what it does, and the PR's "after" screenshot when one exists. Highlights are for features and notable improvements, not for bug fixes. A highlighted PR also gets its one-line bullet in New or Improved, so every PR stays credited. The first image in Highlights is also the Discord announcement image when no generated art exists, so lead with the most telling screenshot.
 5. `## New integrations and widgets`: only when the input has `newItems`. Put the line `{{RELEASE_ART}}` alone on its own line, followed by a blank line and a markdown table with the columns icon, name, what it does. Use each item's `iconUrl` as `<img src="..." width="24" height="24">` (or an empty cell when `iconUrl` is null) and one plain sentence for what it does. The placeholder is replaced by a generated image after you answer, so write it exactly like that, once, and nowhere else.
 6. `## New`, `## Improved`, `## Fixed`: bullet lists with one bullet per PR in this shape:
 
    `- **Short lead:** what changed for the user. by @login in [#123](<pr url>)`
 
-   The lead is two to five words naming the feature or area ("Docker control", "Podman", "OIDC claims"). The sentence is past tense or plain description. Write `@login` plain and the PR as an explicit markdown link using that PR's `url`, because the in-app renderer does not turn a bare `#123` into a link. Keep the same shape for every bullet so the list scans.
+   The lead is one to five words naming the feature or area ("Docker control", "Podman", "OIDC claims"). The sentence is past tense or plain description. Write `@login` plain and the PR as an explicit markdown link using that PR's `url`, because the in-app renderer does not turn a bare `#123` into a link. Keep the same shape for every bullet so the list scans.
 
 7. `<details><summary>All changes</summary>` holding the long tail: smaller or internal-sounding PRs that are still user-relevant. Keep the main lists to what a user would notice, and move the rest here under `###` New, Improved or Fixed headings with the same bullet shape. Put a blank line after `</summary>` and before `</details>`. Omit the block when there is no tail.
 8. `## Thanks`: a short sentence naming first-time contributors from `firstTimeContributors`, with the PR as a `[#123](<pr url>)` link. Skip it when the list is empty.
@@ -69,7 +69,7 @@ When `releaseType` is `major`, write it like a minor release with one change: th
 
 `recentReleases` holds the last three published releases before this one, newest first, each with `tag`, `name` and `body`.
 
-- A body that starts with `# Homarr v` already follows this skill. Match its structure, section headings, level of detail, length and tone, so consecutive releases read as one series.
+- A body that starts with `# Homarr v` already follows this skill. Match its structure and section headings. Keep the wording brief under the audience and voice rules above.
 - A body that is a raw "What's Changed" list of PR titles predates this skill. Ignore it for style.
 - Never copy content from any of them. Sentences, PRs, authors and screenshots come only from this release's input.
 
