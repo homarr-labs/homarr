@@ -61,13 +61,12 @@ export const SystemResourceDiskChart = ({
   return (
     <CommonChart
       data={chartData}
-      dataKey="index"
       series={[{ name: "usage", color: "violet.5" }]}
       title={deviceName}
       icon={IconDatabase}
       labelDisplayMode={labelDisplayMode}
       advanced={advanced}
-      yAxisProps={{ domain: [0, 100] }}
+      yDomain={[0, 100]}
       lastValue={latest == null ? undefined : formatCapacity(latest, displayMode)}
       chartType={hasShadow ? "area" : "line"}
       tooltipLabel={(index) => {
