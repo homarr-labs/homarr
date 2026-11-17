@@ -215,13 +215,15 @@ export default function RssFeed({ options, width, height, displayMode }: WidgetC
                       <Text dir={languageDir} c="dimmed" size="sm" lineClamp={options.textLinesClamp}>
                         {feedDescriptionToText(feedEntry.description)}
                       </Text>
-                    )}
-                    {feedEntry.published && <InfoDisplay date={dayjs(feedEntry.published).fromNow()} />}
-                    {!options.hideFeedTitle && feedEntry.feedTitle && (
-                      <Text dir={languageDir} fz="sm" lh="sm" lineClamp={1} ta="end">
-                        {feedEntry.feedTitle}
-                      </Text>
-                    )}
+                    )}                   
+                    <Group justify="space-between" wrap="nowrap" gap="sm">
+                      {feedEntry.published && <InfoDisplay date={dayjs(feedEntry.published).fromNow()} />}
+                      {!options.hideFeedTitle && feedEntry.feedTitle && (
+                        <Text dir={languageDir} fz="sm" lh="sm" lineClamp={1} ta="end" ml="auto">
+                          {feedEntry.feedTitle}
+                        </Text>
+                      )}
+                    </Group>
                   </Flex>
                 </Group>
               </Card>
