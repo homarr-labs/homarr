@@ -33,8 +33,9 @@ describe("RSS feed display helpers", () => {
       showImage: true,
       showSource: true,
       descriptionLineClamp: undefined,
+      hideBackgroundImage: false,
       thumbnailWidth: 140,
-      thumbnailHeight: 140
+      thumbnailHeight: 96
     });
   });
 });
