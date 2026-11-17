@@ -100,9 +100,13 @@ export default function RssFeed({ options, width, height, displayMode }: WidgetC
     isAdvanced,
     isDense,
     isTiny,
+    isRoomy,
     hideDescription: options.hideDescription,
+    hideBackgroundImage: options.hideBackgroundImage,
     showPosterImage: options.showPosterImage,
     descriptionLines,
+    thumbnailWidth: options.thumbnailWidth,
+    thumbnailHeight: options.thumbnailHeight,
   });
   const spacing = isRoomy ? "sm" : "xs";
   const isNarrow = width < 128 * 3;
@@ -144,8 +148,8 @@ export default function RssFeed({ options, width, height, displayMode }: WidgetC
                       className={classes.poster}
                       src={feedEntry.enclosure}
                       alt=""
-                      w={isRoomy ? 140 : isDense ? 64 : 96}
-                      h={isRoomy ? 96 : isDense ? 64 : 96}
+                      w={entryDisplay.thumbnailWidth}
+                      h={entryDisplay.thumbnailHeight}
                       radius="sm"
                       fit="cover"
                     />
@@ -190,7 +194,7 @@ export default function RssFeed({ options, width, height, displayMode }: WidgetC
                 p="sm"
                 title={feedEntry.title}
               >
-                {feedEntry.enclosure !== undefined && (
+                {feedEntry.enclosure !== undefined && !options.hideBackgroundImage && (
                   <Image className={classes.backgroundImage} src={feedEntry.enclosure} alt="" />
                 )}
                 <Group wrap="nowrap">
@@ -200,8 +204,8 @@ export default function RssFeed({ options, width, height, displayMode }: WidgetC
                       className={classes.poster}
                       src={feedEntry.enclosure}
                       alt={feedEntry.title}
-                      w={140}
-                      h={140}
+                      w={entryDisplay.thumbnailWidth}
+                      h={entryDisplay.thumbnailHeight}
                       radius="sm"
                       fit="cover"
                     />
@@ -249,23 +253,34 @@ interface RssEntryDisplayInput {
   isAdvanced: boolean;
   isDense: boolean;
   isTiny: boolean;
+  isRoomy: boolean;
   hideDescription: boolean;
+  hideBackgroundImage: boolean;
   showPosterImage: boolean;
   descriptionLines: number;
+  thumbnailWidth: number;
+  thumbnailHeight: number;
 }
 
 export const getRssEntryDisplay = ({
   isAdvanced,
   isDense,
   isTiny,
+  isRoomy,
   hideDescription,
+  hideBackgroundImage,
   showPosterImage,
   descriptionLines,
+  thumbnailWidth,
+  thumbnailHeight,
 }: RssEntryDisplayInput) => ({
   showDescription: isAdvanced || (!hideDescription && !isTiny),
+  hideBackgroundImage: !isAdvanced && hideBackgroundImage,
   showImage: isAdvanced || (showPosterImage && !isTiny),
   showSource: isAdvanced || !isDense,
   descriptionLineClamp: isAdvanced ? undefined : descriptionLines,
+  thumbnailWidth: isAdvanced ? (isRoomy ? 140 : isDense ? 64 : 96) : thumbnailWidth,
+  thumbnailHeight: isAdvanced ? (isRoomy ? 96 : isDense ? 64 : 96) : thumbnailHeight,
 });
 
 const InfoDisplay = ({ date, timestamp, source }: { date?: string; timestamp?: string; source?: string }) => (

@@ -29,6 +29,16 @@ export const { definition, componentLoader } = createWidgetDefinition("rssFeed",
   },
   createOptions() {
     return optionsBuilder.from((factory) => ({
+      thumbnailWidth: factory.number({ 
+        defaultValue: 140,
+        step:10,
+        validate: z.number().int().min(40).max(400)
+      }),
+      thumbnailHeight: factory.number({ 
+        defaultValue: 140,
+        step:10,
+        validate: z.number().int().min(40).max(400)
+      }),
       feedUrls: factory.multiText({
         defaultValue: [],
         validate: z.string().url(),
@@ -51,9 +61,22 @@ export const { definition, componentLoader } = createWidgetDefinition("rssFeed",
       hideDescription: factory.switch({
         defaultValue: false,
       }),
+      hideBackgroundImage: factory.switch({
+        defaultValue: false,
+      }),
       showPosterImage: factory.switch({
         defaultValue: false,
       }),
-    }));
+      
+    }),
+    {
+      thumbnailWidth: {
+        shouldHide: (options) => !options.showPosterImage,
+      },
+      thumbnailHeight: {
+        shouldHide: (options) => !options.showPosterImage,
+      },
+    },
+  );
   },
 }).withDynamicImport(() => import("./component"));

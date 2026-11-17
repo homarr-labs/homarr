@@ -66,6 +66,19 @@ export const rssFeedWidget: WidgetDefinition = {
         values: { type: "boolean" },
         defaultValue: "no",
       },
+      {
+        name: "Poster width",
+        description: "Change poster width",
+        values: "40-400",
+        defaultValue: "140",
+      },
+      {
+        name: "Poster height",
+        description: "Change poster height",
+        values: "40-400",
+        defaultValue: "140",
+      },
     ],
+    
   },
 };

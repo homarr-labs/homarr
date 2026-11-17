@@ -20,15 +20,21 @@ describe("RSS feed display helpers", () => {
         isAdvanced: true,
         isDense: true,
         isTiny: true,
+        isRoomy: true,
         hideDescription: true,
         showPosterImage: false,
+        hideBackgroundImage: false,
         descriptionLines: 1,
+        thumbnailWidth: 140,
+        thumbnailHeight: 140
       }),
     ).toEqual({
       showDescription: true,
       showImage: true,
       showSource: true,
       descriptionLineClamp: undefined,
+      thumbnailWidth: 140,
+      thumbnailHeight: 140
     });
   });
 });
