@@ -70,8 +70,16 @@ runs:
         PREBUILT_PATH: ${{ steps.prebuilt.outputs.path }}
       run: |
         tar --owner=0 --group=0 -czf "$ARCHIVE_DIR/build-${SOURCE_LIBC}-${ARCHITECTURE}.tar.gz" -C "$ARCHIVE_DIR/source" .
-        cp "$PREBUILT_PATH/better_sqlite3.node" "$ARCHIVE_DIR/source/build/better_sqlite3.node"
-        cp "$PREBUILT_PATH/better_sqlite3.node" "$ARCHIVE_DIR/source/node_modules/better-sqlite3/build/Release/better_sqlite3.node"
+        case "$ARCHITECTURE" in
+          amd64) native_arch=x64 ;;
+          arm64) native_arch=arm64 ;;
+          *) exit 1 ;;
+        esac
+        native_platform=linux
+        if [[ "$COMPATIBILITY_LIBC" = alpine ]]; then native_platform=linuxmusl; fi
+        binding_dir="$ARCHIVE_DIR/source/node_modules/better-sqlite3/prebuilds"
+        mkdir -p "$binding_dir"
+        cp "$PREBUILT_PATH/better_sqlite3.node" "$binding_dir/${native_platform}-${native_arch}.node"
         tar --owner=0 --group=0 -czf "$ARCHIVE_DIR/build-${COMPATIBILITY_LIBC}-${ARCHITECTURE}.tar.gz" -C "$ARCHIVE_DIR/source" .
 
     - name: Validate both archives on their target libc and architecture
@@ -81,8 +89,8 @@ runs:
         ARCHITECTURE: ${{ inputs.architecture }}
       run: |
         for distribution in debian alpine; do
-          node_image=node:24.22.2-trixie-slim@sha256:54f84b4cf8432b21aaffd5d3ce8d41e12cea0d10d33c09d2f3c9879d49d6b446
-          if [[ "$distribution" = alpine ]]; then node_image=node:24.22.2-alpine@sha256:8a32c8cf649a49915a66e81e7a609223c708d0adabf288ee3f4077d765542f85; fi
+          node_image=node:24.22.3-trixie-slim@sha256:af02d57b57719b9657a45199a79264a9437940cd55b3c7b3fc99615654f124a0
+          if [[ "$distribution" = alpine ]]; then node_image=node:24.22.3-alpine@sha256:116b800c3754b440ee0aa3ed2f20f5bf3d99a554bfd9adeea09ea8017f6e85f5; fi
           docker run --rm --platform "linux/$ARCHITECTURE" \
             --mount "type=bind,src=$ARCHIVE_DIR,dst=/archives,readonly" \
             --mount "type=bind,src=$GITHUB_WORKSPACE/.github/actions/extract-build-artifact/validate-native.cjs,dst=/validate-native.cjs,readonly" \

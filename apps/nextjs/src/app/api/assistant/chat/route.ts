@@ -95,7 +95,11 @@ import {
   assistantExecutionPolicy,
   createCustomWidgetToolStepGate,
 } from "./assistant-execution-policy";
-import { createAssistantAbortErrorTransform, getAssistantStreamErrorMessage } from "./assistant-stream-error";
+import {
+  createAssistantAbortErrorTransform,
+  getAssistantProviderErrorLogMetadata,
+  getAssistantStreamErrorMessage,
+} from "./assistant-stream-error";
 import { shouldEmitAssistantMessageMetadata } from "./assistant-stream-metadata";
 import { getCustomWidgetConfigurationStatusRecovery, getSafeAssistantToolError } from "./assistant-tool-error";
 import { repairAssistantToolInput } from "./assistant-tool-input-repair";
@@ -1274,6 +1278,7 @@ export async function POST(request: Request) {
           provider: configuration.provider,
           modelId,
           errorType: getAssistantLogErrorType(error),
+          ...getAssistantProviderErrorLogMetadata(error),
         });
       },
       onFinish: async () => {
@@ -1396,6 +1401,7 @@ export async function POST(request: Request) {
   } catch (error) {
     logger.error("Assistant response could not start", {
       errorType: getAssistantLogErrorType(error),
+      ...getAssistantProviderErrorLogMetadata(error),
     });
     return Response.json(
       {

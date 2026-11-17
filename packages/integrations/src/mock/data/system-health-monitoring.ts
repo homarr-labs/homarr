@@ -2,48 +2,66 @@ import type { SystemHealthMonitoring } from "../..";
 import type { ISystemHealthMonitoringIntegration } from "../../interfaces/health-monitoring/health-monitoring-integration";
 
 export class SystemHealthMonitoringMockService implements ISystemHealthMonitoringIntegration {
+  private tick = 0;
+
   public async getSystemInfoAsync(): Promise<SystemHealthMonitoring> {
+    const gibibyte = 1024 ** 3;
+    const wave = Math.sin(this.tick++ / 4);
+    const cpuCores = [14, 18, 22, 30, 24, 20, 16, 12, 10, 14, 18, 18].map((utilization, id) => ({
+      id,
+      utilization: Math.round((utilization + wave * 4) * 10) / 10,
+    }));
+    const memUsedInBytes = 6.5 * gibibyte + Math.round(wave * 64 * 1024 ** 2);
+
     return await Promise.resolve({
-      version: "1.0.0",
-      cpuModelName: "Mock CPU",
-      cpuUtilization: Math.random(),
-      memUsedInBytes: 4 * 1024 * 1024 * 1024, // 4 GB in bytes
-      memAvailableInBytes: 8 * 1024 * 1024 * 1024, // 8 GB in bytes
-      availablePkgUpdates: 0,
+      version: "7.0.8",
+      cpuModelName: "Intel Core i5-12500",
+      cpuUtilization: cpuCores.reduce((total, core) => total + core.utilization, 0) / cpuCores.length,
+      cpuCores,
+      memUsedInBytes,
+      memAvailableInBytes: 16 * gibibyte - memUsedInBytes,
+      availablePkgUpdates: 3,
       network: {
-        up: 1024 * 16,
-        down: 1024 * 16 * 6,
+        up: Math.round((8 + wave) * 1024 ** 2),
+        down: Math.round((24 + wave * 3) * 1024 ** 2),
       },
       rebootRequired: false,
-      cpuTemp: Math.floor(Math.random() * 100), // Random temperature between 0 and 99
-      uptime: Math.floor(Math.random() * 1000000), // Random uptime in seconds
-      fileSystem: Array.from({ length: 3 }, (_, index) => ({
-        deviceName: `sha${index + 1}`,
-        used: "1 GB",
-        available: "500 MB",
-        percentage: Math.floor(Math.random() * 100), // Random percentage between 0 and 99
-      })),
+      cpuTemp: Math.round(46 + wave * 2),
+      uptime: 21 * 24 * 60 * 60 + this.tick * 5,
+      fileSystem: [
+        { deviceName: "/", used: "384 GiB", available: "640 GiB", size: 1024 * gibibyte, percentage: 37.5 },
+        { deviceName: "/mnt/media", used: "3 TiB", available: "5 TiB", size: 8192 * gibibyte, percentage: 37.5 },
+        { deviceName: "/mnt/backups", used: "512 GiB", available: "1536 GiB", size: 2048 * gibibyte, percentage: 25 },
+      ],
       loadAverage: {
-        "1min": Math.random() * 10,
-        "5min": Math.random() * 10,
-        "15min": Math.random() * 10,
+        "1min": 1.8,
+        "5min": 1.6,
+        "15min": 1.4,
       },
       smart: [
         {
-          deviceName: "Mock Device",
-          temperature: Math.floor(Math.random() * 100), // Random temperature between 0 and 99
-          overallStatus: "OK",
+          deviceName: "Samsung 980 1TB",
+          temperature: 41,
+          overallStatus: "PASSED",
           healthy: true,
+          statusReason: { type: "noCriticalWarning" },
+        },
+        {
+          deviceName: "WD Red Plus 8TB",
+          temperature: 34,
+          overallStatus: "PASSED",
+          healthy: true,
+          statusReason: { type: "attributesWithinThresholds" },
         },
       ],
       gpu: [
         {
           gpuId: "mock0",
-          name: "Mock GPU RTX 4090",
-          memoryUtilization: Math.floor(Math.random() * 100),
-          processorUtilization: Math.floor(Math.random() * 100),
-          temperature: Math.floor(Math.random() * 90),
-          fanSpeed: Math.floor(Math.random() * 2000),
+          name: "Intel UHD Graphics 770",
+          memoryUtilization: 12,
+          processorUtilization: Math.round((16 + wave * 3) * 10) / 10,
+          temperature: 44,
+          fanSpeed: null,
         },
       ],
     });
