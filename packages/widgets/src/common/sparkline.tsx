@@ -27,6 +27,8 @@ const VIEWBOX_SIZE = 100;
  * Lightweight SVG replacement for small Recharts line and area charts. It renders one path per series
  * (plus one fill for areas) and does not measure the DOM, so many instances stay cheap to mount.
  */
+// ponytail: compact trend lines only - no axes, ticks, legends or per-point tooltips. Charts that need
+// those should use @mantine/charts, whose Sparkline is also Recharts-based and measured per instance.
 export const Sparkline = ({
   series,
   yDomain,
