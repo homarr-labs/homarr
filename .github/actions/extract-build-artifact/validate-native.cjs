@@ -16,9 +16,18 @@ async function validate() {
   const Database = appRequire("better-sqlite3");
   const db = new Database(":memory:");
   assert.equal(db.prepare("SELECT 1 AS value").get().value, 1);
+  const version = db.prepare("SELECT sqlite_version() AS version").get().version;
+  const [major, minor] = version.split(".").map(Number);
+  assert.ok(major > 3 || (major === 3 && minor >= 54), `Expected SQLite 3.54 or newer, received ${version}`);
   db.close();
-  // The bundled CLI resolves a second copy of the native binding.
-  appRequire(path.resolve("build/better_sqlite3.node"));
+  // CLI and migration bundles resolve the same external wrapper as the application.
+  const cliRequire = createRequire(path.resolve("apps/cli/cli.cjs"));
+  assert.equal(cliRequire.resolve("better-sqlite3"), appRequire.resolve("better-sqlite3"));
+  const migrationRequire = createRequire(path.resolve("db/migrations/sqlite/migrate.cjs"));
+  assert.equal(migrationRequire.resolve("better-sqlite3"), appRequire.resolve("better-sqlite3"));
+  const cliDb = new (cliRequire("better-sqlite3"))(":memory:");
+  assert.equal(cliDb.prepare("SELECT 1 AS value").get().value, 1);
+  cliDb.close();
 
   const sharp = appRequire("sharp");
   const image = await sharp({ create: { width: 2, height: 2, channels: 3, background: "white" } })

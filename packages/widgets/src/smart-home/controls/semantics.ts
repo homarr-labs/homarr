@@ -8,7 +8,6 @@ import {
   IconBattery3,
   IconBatteryCharging,
   IconBed,
-  IconBlind,
   IconBolt,
   IconBriefcase,
   IconBulb,
@@ -135,7 +134,7 @@ export const getEntityIcon = (entity: HaEntity): TablerIcon => {
     case "fan":
       return IconPropeller;
     case "cover":
-      return entity.deviceClass === "garage" ? IconCarGarage : IconBlind;
+      return entity.deviceClass === "garage" ? IconCarGarage : IconWindow;
     case "climate":
       if (entity.state === "cool") return IconSnowflake;
       if (entity.state === "heat") return IconFlame;

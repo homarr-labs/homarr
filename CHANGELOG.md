@@ -1,3 +1,19 @@
+<!-- Release notes generated using configuration in .github/release.yml at 4abc7d39f3b3837e341d416601d1bd3bbfbff88a -->
+
+## What's Changed
+### Fixed
+* fix: restore production WebSocket connections by @ajnart in https://github.com/homarr-labs/homarr/pull/7589
+### Other changes
+* chore(build): retain Linux bcrypt prebuilds by @ajnart in https://github.com/homarr-labs/homarr/pull/7574
+* fix(beszel): keep chart tooltips visible outside widgets by @ajnart in https://github.com/homarr-labs/homarr/pull/7587
+* fix: preserve board tab names and themed renaming by @ajnart in https://github.com/homarr-labs/homarr/pull/7583
+* fix(smart-home): keep thermostat controls inside narrow tiles by @ajnart in https://github.com/homarr-labs/homarr/pull/7579
+* fix(board): inherit canvas scale in item preview by @ajnart in https://github.com/homarr-labs/homarr/pull/7584
+* fix(assistant): retain provider error diagnostics by @ajnart in https://github.com/homarr-labs/homarr/pull/7585
+
+
+**Full Changelog**: https://github.com/homarr-labs/homarr/compare/v2.13.0...v2.13.1
+
 <!-- Release notes generated using configuration in .github/release.yml at a86ca09ec163e77159598f9f0f5e96aa360d1643 -->
 
 ## What's Changed

@@ -17,6 +17,7 @@ import {
   getMediaServerColumnVisibility,
   getResolutionLabel,
   getSeasonEpisodeParams,
+  getSessionStatsColumnCount,
   SessionDetailsPopover,
 } from "./component";
 
@@ -198,6 +199,15 @@ describe("getMediaServerColumnVisibility", () => {
     expect(getMediaServerColumnVisibility(420, false)).toEqual({ user: true, status: true });
     expect(getMediaServerColumnVisibility(540, false)).toEqual({ user: true, status: true });
     expect(getMediaServerColumnVisibility(0, true)).toEqual({ user: true, status: true });
+  });
+});
+
+describe("getSessionStatsColumnCount", () => {
+  test("fits one stats column per 150px, between two and five", () => {
+    expect(getSessionStatsColumnCount(0)).toBe(2);
+    expect(getSessionStatsColumnCount(320)).toBe(2);
+    expect(getSessionStatsColumnCount(600)).toBe(4);
+    expect(getSessionStatsColumnCount(2000)).toBe(5);
   });
 });
 
