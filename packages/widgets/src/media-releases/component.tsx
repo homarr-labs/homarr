@@ -87,6 +87,8 @@ const RELEASE_BATCH_SIZE = 16;
  * Renders releases in batches: long lists only mount what can be scrolled to soon,
  * and the next batch is added once the list end comes within reach of the scroll viewport.
  */
+// ponytail: rendered batches stay mounted, so scrolling to the end still mounts every release.
+// Lists far larger than a few hundred entries would need windowed rendering instead.
 const useIncrementalCount = (total: number) => {
   const [requestedCount, setRequestedCount] = useState(RELEASE_BATCH_SIZE);
   const viewportRef = useRef<HTMLDivElement>(null);
