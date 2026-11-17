@@ -1,6 +1,6 @@
 "use client";
 
-import { Fragment, useMemo } from "react";
+import { Fragment, useEffect, useMemo, useRef, useState } from "react";
 import {
   Avatar,
   Badge,
@@ -46,6 +46,7 @@ export default function MediaReleasesWidget({
   const formatDate = useMemo(() => createReleaseDateFormatter(locale), [locale]);
   const releasesQuery = clientApi.widget.mediaRelease.getMediaReleases.useQuery({ integrationIds });
   const response = getUsableWidgetQueryData(releasesQuery);
+  const { visibleCount, hasMore, viewportRef, sentinelRef } = useIncrementalCount(response?.releases.length ?? 0);
 
   if (isInitialWidgetQueryPending(releasesQuery)) return <WidgetQueryLoadingState />;
   if (!response) return <WidgetEmptyState />;
@@ -59,15 +60,16 @@ export default function MediaReleasesWidget({
       {releases.length === 0 ? (
         <WidgetEmptyState />
       ) : (
-        <ScrollArea h="100%">
+        <ScrollArea h="100%" viewportRef={viewportRef}>
           <SimpleGrid cols={isAdvanced ? Math.max(1, Math.floor(width / 360)) : 1} p="xs" spacing="sm">
-            {releases.map((item, index) => (
+            {releases.slice(0, visibleCount).map((item, index) => (
               <Fragment key={`${item.integration.id}:${item.id}`}>
                 {!isAdvanced && index !== 0 && options.layout === "poster" && <Divider />}
                 <Item item={item} options={options} isAdvanced={isAdvanced} formatDate={formatDate} />
               </Fragment>
             ))}
           </SimpleGrid>
+          {hasMore && <Box ref={sentinelRef} h={1} aria-hidden />}
         </ScrollArea>
       )}
       {failedIntegrations.length > 0 && (
@@ -78,6 +80,40 @@ export default function MediaReleasesWidget({
     </Box>
   );
 }
+
+const RELEASE_BATCH_SIZE = 16;
+
+/**
+ * Renders releases in batches: long lists only mount what can be scrolled to soon,
+ * and the next batch is added once the list end comes within reach of the scroll viewport.
+ */
+const useIncrementalCount = (total: number) => {
+  const [requestedCount, setRequestedCount] = useState(RELEASE_BATCH_SIZE);
+  const viewportRef = useRef<HTMLDivElement>(null);
+  const sentinelRef = useRef<HTMLDivElement>(null);
+  const visibleCount = Math.min(requestedCount, total);
+  const hasMore = visibleCount < total;
+
+  useEffect(() => {
+    const viewport = viewportRef.current;
+    const sentinel = sentinelRef.current;
+    if (!hasMore || !viewport || !sentinel) return;
+
+    // Re-created after every batch, so a sentinel that is still in reach immediately requests the next one.
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((entry) => entry.isIntersecting)) {
+          setRequestedCount((count) => count + RELEASE_BATCH_SIZE);
+        }
+      },
+      { root: viewport, rootMargin: "0px 0px 600px 0px" },
+    );
+    observer.observe(sentinel);
+    return () => observer.disconnect();
+  }, [hasMore, visibleCount]);
+
+  return { visibleCount, hasMore, viewportRef, sentinelRef };
+};
 
 interface ItemProps {
   item: RouterOutputs["widget"]["mediaRelease"]["getMediaReleases"]["releases"][number];
