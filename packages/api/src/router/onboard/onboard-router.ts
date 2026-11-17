@@ -477,8 +477,7 @@ export const onboardRouter = createTRPCRouter({
             href: integration.url,
             pingUrl: integration.pingUrl ?? integration.url,
             description: integration.description ?? null,
-            dockerContainer: null,
-          } satisfies typeof apps.$inferSelect,
+          } satisfies Omit<typeof apps.$inferSelect, "dockerContainer">,
           secretRows: integration.secrets.map((secret) => ({
             kind: secret.kind,
             value: encryptSecret(secret.value),
@@ -497,8 +496,7 @@ export const onboardRouter = createTRPCRouter({
               href: app.href,
               pingUrl: app.pingUrl ?? app.href,
               description: app.description ?? null,
-              dockerContainer: null,
-            }) satisfies typeof apps.$inferSelect,
+            }) satisfies Omit<typeof apps.$inferSelect, "dockerContainer">,
         ),
       ];
       const plannedAppIds = plannedAppRows.map((app) => app.id);
