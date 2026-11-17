@@ -2760,7 +2760,13 @@
                                 "showLabel": true,
                                 "collapsible": false,
                                 "showOpenAll": false,
-                                "scrollable": false
+                                "scrollable": false,
+                                "autoExpand": {
+                                  "enabled": false,
+                                  "itemId": null,
+                                  "inactiveDisplay": "collapsed",
+                                  "fitToContent": false
+                                }
                               },
                               "type": "object",
                               "properties": {
@@ -2795,6 +2801,40 @@
                                 "scrollable": {
                                   "default": false,
                                   "type": "boolean"
+                                },
+                                "autoExpand": {
+                                  "default": {
+                                    "enabled": false,
+                                    "itemId": null,
+                                    "inactiveDisplay": "collapsed",
+                                    "fitToContent": false
+                                  },
+                                  "type": "object",
+                                  "properties": {
+                                    "enabled": {
+                                      "default": false,
+                                      "type": "boolean"
+                                    },
+                                    "itemId": {
+                                      "default": null,
+                                      "type": [
+                                        "string",
+                                        "null"
+                                      ]
+                                    },
+                                    "inactiveDisplay": {
+                                      "default": "collapsed",
+                                      "type": "string",
+                                      "enum": [
+                                        "collapsed",
+                                        "hidden"
+                                      ]
+                                    },
+                                    "fitToContent": {
+                                      "default": false,
+                                      "type": "boolean"
+                                    }
+                                  }
                                 }
                               }
                             },
@@ -2869,7 +2909,13 @@
                                 "showLabel": true,
                                 "collapsible": false,
                                 "showOpenAll": false,
-                                "scrollable": false
+                                "scrollable": false,
+                                "autoExpand": {
+                                  "enabled": false,
+                                  "itemId": null,
+                                  "inactiveDisplay": "collapsed",
+                                  "fitToContent": false
+                                }
                               },
                               "type": "object",
                               "properties": {
@@ -2904,6 +2950,40 @@
                                 "scrollable": {
                                   "default": false,
                                   "type": "boolean"
+                                },
+                                "autoExpand": {
+                                  "default": {
+                                    "enabled": false,
+                                    "itemId": null,
+                                    "inactiveDisplay": "collapsed",
+                                    "fitToContent": false
+                                  },
+                                  "type": "object",
+                                  "properties": {
+                                    "enabled": {
+                                      "default": false,
+                                      "type": "boolean"
+                                    },
+                                    "itemId": {
+                                      "default": null,
+                                      "type": [
+                                        "string",
+                                        "null"
+                                      ]
+                                    },
+                                    "inactiveDisplay": {
+                                      "default": "collapsed",
+                                      "type": "string",
+                                      "enum": [
+                                        "collapsed",
+                                        "hidden"
+                                      ]
+                                    },
+                                    "fitToContent": {
+                                      "default": false,
+                                      "type": "boolean"
+                                    }
+                                  }
                                 }
                               }
                             },
