@@ -78,7 +78,7 @@ export const rssFeedsRequestHandler = createWidgetRequestHandler({
             if (!feedEntry.description && mediaDescription) {
               feedEntry.description = mediaDescription;
             }
-            return { ...feedEntry, feedUrl: input.url, feedTitle: result.title };
+            return { ...feedEntry, feedUrl: input.url, feedTitle: typeof result.title === "string" ? result.title : "" };
           })
           .slice(0, input.count) ?? [],
     };
