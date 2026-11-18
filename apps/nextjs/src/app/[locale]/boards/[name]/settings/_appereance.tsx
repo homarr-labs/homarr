@@ -38,7 +38,14 @@ export const ColorSettingsContent = ({ form }: Props) => {
         palettePreview={
           (form.values.primaryColor || form.values.secondaryColor) && (
             <>
-              <Anchor onClick={toggle} size="sm" w="fit-content">
+              <Anchor
+                component="button"
+                type="button"
+                onClick={toggle}
+                aria-expanded={showPreview}
+                size="sm"
+                w="fit-content"
+              >
                 {showPreview ? tCommon("preview.hide") : tCommon("preview.show")}
               </Anchor>
               <Collapse expanded={showPreview}>

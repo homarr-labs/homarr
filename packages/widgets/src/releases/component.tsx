@@ -290,7 +290,9 @@ const ReleasesInbox = ({
   useEffect(() => {
     if (!scrollTarget) return;
     const node = rootRef.current?.querySelector(`[data-key="${CSS.escape(scrollTarget)}"]`);
-    node?.scrollIntoView({ block: "nearest", behavior: "smooth" });
+    let behavior: ScrollBehavior = "instant";
+    if (window.matchMedia("(prefers-reduced-motion: no-preference)").matches) behavior = "smooth";
+    node?.scrollIntoView({ block: "nearest", behavior });
     setScrollTarget(null);
   }, [scrollTarget]);
 

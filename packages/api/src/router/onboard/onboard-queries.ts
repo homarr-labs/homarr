@@ -1,5 +1,6 @@
 import { isProviderEnabled } from "@homarr/auth/server";
 import type { Database } from "@homarr/db";
+import { eq } from "@homarr/db";
 import { onboarding } from "@homarr/db/schema";
 import type { OnboardingStep } from "@homarr/definitions";
 
@@ -8,7 +9,7 @@ export const nextOnboardingStepAsync = async (db: Database) => {
   if (current !== "start") return;
   const nextStep = await getNextOnboardingStepAsync(db);
 
-  await db.update(onboarding).set({ previousStep: current, step: nextStep });
+  await db.update(onboarding).set({ previousStep: current, step: nextStep }).where(eq(onboarding.step, current));
 };
 
 export const getOnboardingOrFallbackAsync = async (db: Database) => {

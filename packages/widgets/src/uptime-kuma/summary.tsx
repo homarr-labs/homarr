@@ -131,6 +131,7 @@ export const DistributionBar = ({ summary }: SummaryProps) => {
         >
           <Progress.Section
             value={(summary.counts[status] / summary.total) * 100}
+            aria-label={t("summary.statusCount", { count: summary.counts[status], status: t(`status.${status}`) })}
             color={`${monitorStatusColors[status]}.6`}
           />
         </Tooltip>

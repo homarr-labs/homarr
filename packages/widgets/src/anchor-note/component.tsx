@@ -86,6 +86,7 @@ const AnchorNoteWidgetContent = ({
 }: AnchorNoteWidgetContentProps) => {
   const t = useI18n("widget.anchorNote");
   const tWidgetCommon = useI18n("widget.common");
+  const tCommon = useI18n("common");
   const actionT = useI18n("common.action");
   const locale = useCurrentIntlLocale();
   const noteQuery = clientApi.widget.anchorNotes.getNote.useQuery({
@@ -94,7 +95,7 @@ const AnchorNoteWidgetContent = ({
   });
   const note = getUsableWidgetQueryData(noteQuery);
   const { refetch } = noteQuery;
-  const { mutateAsync: updateNoteAsync, isPending: isUpdating } = clientApi.widget.anchorNotes.updateNote.useMutation();
+  const { mutate: updateNote, isPending: isUpdating } = clientApi.widget.anchorNotes.updateNote.useMutation();
 
   const [isEditing, setIsEditing] = useState(false);
   const [draftTitle, setDraftTitle] = useState(note?.title ?? "");
@@ -144,7 +145,7 @@ const AnchorNoteWidgetContent = ({
     });
   }, [note]);
 
-  const handleSave = useCallback(async () => {
+  const handleSave = useCallback(() => {
     if (!canEdit || !note) return;
 
     const normalizedTitle = draftTitle.trim() || note.title || t("untitled");
@@ -157,7 +158,7 @@ const AnchorNoteWidgetContent = ({
       return;
     }
 
-    await updateNoteAsync(
+    updateNote(
       {
         integrationId,
         noteId,
@@ -192,7 +193,7 @@ const AnchorNoteWidgetContent = ({
         },
       },
     );
-  }, [canEdit, draftContent, draftTitle, hasChanges, integrationId, note, noteId, refetch, t, updateNoteAsync]);
+  }, [canEdit, draftContent, draftTitle, hasChanges, integrationId, note, noteId, refetch, t, updateNote]);
 
   if (!note) return <WidgetEmptyState />;
 
@@ -201,7 +202,12 @@ const AnchorNoteWidgetContent = ({
       <Group justify="space-between" align="flex-start">
         <Stack gap={2} style={{ flex: 1 }}>
           {isEditing ? (
-            <TextInput value={draftTitle} onChange={(event) => setDraftTitle(event.currentTarget.value)} size="sm" />
+            <TextInput
+              aria-label={tCommon("field.name")}
+              value={draftTitle}
+              onChange={(event) => setDraftTitle(event.currentTarget.value)}
+              size="sm"
+            />
           ) : (
             (isAdvanced || options.showTitle) && <Text fw={600}>{note.title || t("untitled")}</Text>
           )}

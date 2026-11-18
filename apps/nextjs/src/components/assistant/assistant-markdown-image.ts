@@ -1,8 +1,8 @@
-import { getSafeAssistantHttpUrl } from "./assistant-url";
+import { getSafeAssistantHttpUrl, getSafeAssistantRelativeUrl } from "./assistant-url";
 
 export const getSafeAssistantMarkdownImageSource = (source: string | Blob | undefined) => {
   if (typeof source !== "string" || !source) return null;
-  if (source.startsWith("/") && !source.startsWith("//")) return source;
+  if (source.startsWith("/")) return getSafeAssistantRelativeUrl(source);
 
   return getSafeAssistantHttpUrl(source);
 };
@@ -13,7 +13,7 @@ const safeAttachmentDataUrl =
 export const getSafeAssistantAttachmentImageSource = (source: unknown, currentOrigin?: string) => {
   if (typeof source !== "string" || !source) return null;
   if (safeAttachmentDataUrl.test(source)) return source;
-  if (source.startsWith("/") && !source.startsWith("//")) return source;
+  if (source.startsWith("/")) return getSafeAssistantRelativeUrl(source);
   if (!currentOrigin) return null;
 
   try {

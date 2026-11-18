@@ -34,6 +34,7 @@ export function CustomWidgetIdentifierInput({
       onChange={(event) => setDraft(event.currentTarget.value)}
       onBlur={commit}
       onKeyDown={(event) => {
+        if (event.nativeEvent.isComposing || event.nativeEvent.keyCode === 229) return;
         if (event.key === "Enter") {
           event.preventDefault();
           event.currentTarget.blur();

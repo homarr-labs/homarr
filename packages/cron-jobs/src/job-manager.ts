@@ -1,4 +1,4 @@
-import { Cron } from "croner";
+import { Cron, CronPattern } from "croner";
 
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import type { jobGroup as cronJobGroup, JobGroupKeys } from "@homarr/cron-jobs";
@@ -31,19 +31,21 @@ export class JobManager {
       throw new Error(`Custom cron expressions are not allowed for job ${name}`);
     }
 
-    const updatedConfig = await this.updateConfigurationAsync(name, { cronExpression: cron });
+    // Reject invalid expressions before persisting them or stopping the active schedule.
+    const cronExpression = new CronPattern(cron, job.timezone).pattern;
+    const updatedConfig = await this.updateConfigurationAsync(name, { cronExpression });
     this.jobGroup.getTask(name)?.stop();
 
     this.jobGroup.setTask(
       name,
       new Cron(
-        cron,
+        cronExpression,
         {
           name,
           timezone: job.timezone,
           paused: !updatedConfig.isEnabled,
         },
-        () => void job.executeAsync(),
+        () => job.executeAsync(),
       ),
     );
     logger.info("Cron job interval updated", { name, expression: cron });

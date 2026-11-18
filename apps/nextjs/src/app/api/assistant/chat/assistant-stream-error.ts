@@ -43,9 +43,10 @@ export const createAssistantAbortErrorTransform =
 
 const asRecord = (value: unknown): Record<string, unknown> | null => (isRecord(value) ? value : null);
 
-const getStatusCode = (error: unknown): number | undefined => {
+const getStatusCode = (error: unknown, seen = new Set<object>()): number | undefined => {
   const record = asRecord(error);
-  if (!record) return undefined;
+  if (!record || seen.has(record)) return undefined;
+  seen.add(record);
   const statusCode =
     typeof record.statusCode === "number"
       ? record.statusCode
@@ -53,7 +54,7 @@ const getStatusCode = (error: unknown): number | undefined => {
         ? record.status
         : undefined;
   if (statusCode !== undefined) return statusCode;
-  return getStatusCode(record.cause) ?? getStatusCode(record.response);
+  return getStatusCode(record.cause, seen) ?? getStatusCode(record.response, seen);
 };
 
 const getErrorMessage = (error: unknown, seen = new Set<object>()): string => {

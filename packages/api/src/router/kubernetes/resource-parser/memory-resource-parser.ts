@@ -36,6 +36,9 @@ export class MemoryResourceParser implements ResourceParser {
       return NaN;
     }
 
+    // Kubernetes distinguishes milli-bytes (m) from megabytes (M).
+    if (unit === "m") return parsedValue / 1000 / 1024 ** 3;
+
     const unitLower = unit.toLowerCase();
 
     // Handle binary units (Ki, Mi, Gi, etc.)

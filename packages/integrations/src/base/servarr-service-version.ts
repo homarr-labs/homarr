@@ -13,7 +13,10 @@ export const fetchServarrServiceVersionAsync = async (
   headers: Record<string, string>,
 ): Promise<ServiceVersion> => {
   const response = await fetchWithTrustedCertificatesAsync(url, { headers });
-  if (!response.ok) throw new ResponseError(response);
+  if (!response.ok) {
+    await response.body?.cancel().catch(() => undefined);
+    throw new ResponseError(response);
+  }
 
   const { version } = await systemStatusSchema.parseAsync(await response.json());
   return { version };

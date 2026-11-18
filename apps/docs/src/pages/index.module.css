@@ -220,14 +220,22 @@
   background: transparent;
 }
 
-.resourceTrack::-webkit-progress-value,
+.resourceTrack::-webkit-progress-value {
+  height: 100%;
+  border-radius: inherit;
+  background: var(--primary);
+}
+
 .resourceTrack::-moz-progress-bar {
   height: 100%;
   border-radius: inherit;
   background: var(--primary);
 }
 
-.resourceMeterCritical .resourceTrack::-webkit-progress-value,
+.resourceMeterCritical .resourceTrack::-webkit-progress-value {
+  background: #e03131;
+}
+
 .resourceMeterCritical .resourceTrack::-moz-progress-bar {
   background: #e03131;
 }
@@ -247,7 +255,11 @@
   background: transparent;
 }
 
-.downloadProgress::-webkit-progress-value,
+.downloadProgress::-webkit-progress-value {
+  border-radius: inherit;
+  background: #2f9e44;
+}
+
 .downloadProgress::-moz-progress-bar {
   border-radius: inherit;
   background: #2f9e44;

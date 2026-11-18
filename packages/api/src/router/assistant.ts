@@ -231,6 +231,7 @@ const fetchModelsAsync = async (configuration: AssistantConfiguration) => {
   }
 
   if (!response.ok) {
+    await response.body?.cancel();
     if (response.status === 401 || response.status === 403) {
       throw new TRPCError({ code: "UNAUTHORIZED", message: "The provider rejected the configured credentials." });
     }

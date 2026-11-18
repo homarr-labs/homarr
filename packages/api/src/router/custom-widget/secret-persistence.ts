@@ -31,7 +31,12 @@ class SourceConfigurationError extends Error {
   }
 }
 
-export async function setCustomWidgetSecret(db: Database, definitionId: string, secret: CustomWidgetSecretInput) {
+export async function setCustomWidgetSecret(
+  db: Database,
+  definitionId: string,
+  secret: CustomWidgetSecretInput,
+  expectedSource: CustomWidgetSource,
+) {
   const updatedAt = new Date();
   const secretRow = {
     definitionId,
@@ -43,6 +48,13 @@ export async function setCustomWidgetSecret(db: Database, definitionId: string, 
   await handleTransactionsAsync(db, {
     async handleAsync(database, schema) {
       await database.transaction(async (transaction) => {
+        const [stored] = await transaction
+          .select()
+          .from(schema.customWidgetDefinitions)
+          .where(eq(schema.customWidgetDefinitions.id, definitionId))
+          .limit(1)
+          .for("update");
+        assertSecretBinding(stored, secret, expectedSource);
         await transaction
           .delete(schema.customWidgetSecrets)
           .where(
@@ -61,6 +73,13 @@ export async function setCustomWidgetSecret(db: Database, definitionId: string, 
     },
     handleSync(database) {
       database.transaction((transaction) => {
+        const stored = transaction
+          .select()
+          .from(customWidgetDefinitions)
+          .where(eq(customWidgetDefinitions.id, definitionId))
+          .limit(1)
+          .get();
+        assertSecretBinding(stored, secret, expectedSource);
         transaction
           .delete(customWidgetSecrets)
           .where(
@@ -80,6 +99,23 @@ export async function setCustomWidgetSecret(db: Database, definitionId: string, 
       });
     },
   });
+}
+
+function assertSecretBinding(
+  stored: Parameters<typeof parseStoredCustomWidgetDefinition>[0] | undefined,
+  secret: CustomWidgetSecretInput,
+  expectedSource: CustomWidgetSource,
+) {
+  if (!stored) throw new TRPCError({ code: "NOT_FOUND" });
+  const definition = parseStoredCustomWidgetDefinition(stored);
+  const source = definition.sources[secret.sourceId];
+  if (!source || !hasSameSecretBinding(source, expectedSource)) {
+    throw new TRPCError({
+      code: "CONFLICT",
+      message: "Widget source security settings changed while its credential was being configured",
+    });
+  }
+  assertSecretSources(definition.sources, [secret]);
 }
 
 export async function configureCustomWidgetSource(db: Database, input: ConfigureCustomWidgetSourceInput) {

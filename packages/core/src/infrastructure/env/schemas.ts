@@ -20,7 +20,7 @@ export const createDurationSchema = (defaultValue: `${number}${"s" | "m" | "h" |
     .transform((duration) => {
       const lastChar = duration[duration.length - 1] as "s" | "m" | "h" | "d";
       if (!isNaN(Number(lastChar))) {
-        return Number(defaultValue);
+        return Number(duration);
       }
 
       const multipliers = {

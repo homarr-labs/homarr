@@ -1,3 +1,16 @@
+export const getSafeAssistantRelativeUrl = (source: unknown) => {
+  if (typeof source !== "string" || !source.startsWith("/") || source.startsWith("//")) return null;
+
+  try {
+    const base = "https://homarr.invalid";
+    const url = new URL(source, base);
+    if (url.origin !== base || url.pathname.startsWith("//")) return null;
+    return `${url.pathname}${url.search}${url.hash}`;
+  } catch {
+    return null;
+  }
+};
+
 export const getSafeAssistantHttpUrl = (source: unknown) => {
   if (typeof source !== "string" || !source) return null;
 

@@ -93,13 +93,14 @@ const getSizeConfig = (width: number): SizeConfig => {
   };
 };
 
-const PercentCell = ({ value, size }: { value: number; size: SizeConfig }) => {
+const PercentCell = ({ label, value, size }: { label: string; value: number; size: SizeConfig }) => {
   return (
     <Group gap={8} wrap="nowrap" style={{ flex: 1 }}>
       <Text size={size.fontSize} fw={500} w={size.valueMiw} ta="left" style={{ whiteSpace: "nowrap", flexShrink: 0 }}>
         {formatPercent(value)}
       </Text>
       <Progress
+        aria-label={label}
         value={value}
         color={thresholdColor(value)}
         size={getProgressTrackSize(size.progressSize)}
@@ -270,7 +271,7 @@ export default function BeszelSystemTableWidget({
           </Group>
         ),
         sortable: true,
-        render: (record) => <PercentCell value={record.cpu} size={size} />,
+        render: (record) => <PercentCell label={invariantTechnicalLabels.cpu} value={record.cpu} size={size} />,
       },
       visibleMetricKeys.has("showMemory") && {
         accessor: "memory",
@@ -282,7 +283,7 @@ export default function BeszelSystemTableWidget({
           </Group>
         ),
         sortable: true,
-        render: (record) => <PercentCell value={record.memory} size={size} />,
+        render: (record) => <PercentCell label={tBeszel("metric.memory")} value={record.memory} size={size} />,
       },
       visibleMetricKeys.has("showDisk") && {
         accessor: "disk",
@@ -314,7 +315,7 @@ export default function BeszelSystemTableWidget({
           </Group>
         ),
         sortable: true,
-        render: (record) => <PercentCell value={record.gpu} size={size} />,
+        render: (record) => <PercentCell label={invariantTechnicalLabels.gpu} value={record.gpu} size={size} />,
       },
       visibleMetricKeys.has("showLoadAvg") && {
         accessor: "loadAvg",

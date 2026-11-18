@@ -25,7 +25,10 @@ export const fetchWithTimeoutAsync: typeof fetchWithTrustedCertificatesAsync = (
 
 export const fetchProviderAsync = async (url: string, init: ProviderRequestInit = {}) => {
   const response = await fetchWithTimeoutAsync(url, init);
-  if (!response.ok) throw new ResponseError({ status: response.status, url });
+  if (!response.ok) {
+    await response.body?.cancel().catch(() => undefined);
+    throw new ResponseError({ status: response.status, url });
+  }
   return response;
 };
 

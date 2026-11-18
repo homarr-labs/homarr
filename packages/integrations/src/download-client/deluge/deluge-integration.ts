@@ -33,7 +33,10 @@ export class DelugeIntegration extends Integration implements IDownloadClientInt
       throw new Error("Deluge authentication failed");
     });
 
-    if (!response.ok) throw new Error("Deluge authentication failed");
+    if (!response.ok) {
+      await response.body?.cancel().catch(() => undefined);
+      throw new Error("Deluge authentication failed");
+    }
     const result = (await response.json().catch(() => null)) as { result?: unknown; error?: unknown } | null;
     if (result?.result !== true || result.error) throw new Error("Deluge authentication failed");
 

@@ -6,6 +6,7 @@ import { IconDatabase, IconPhoto, IconUsers, IconVideo } from "@tabler/icons-rea
 import { getQueryKey } from "@trpc/react-query";
 
 import { clientApi } from "@homarr/api/client";
+import { isTrpcForbiddenError } from "@homarr/api/query-cache";
 import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";
 import { useByteFormatter } from "@homarr/settings";
 import { zoomCompensatedSize } from "@homarr/ui";
@@ -45,6 +46,8 @@ export default function ImmichServerStatsWidget({
     getQueryKey(clientApi.widget.immich.getServerStats, input, "query"),
     ...(albumsEnabled ? [getQueryKey(clientApi.widget.immich.getAlbums, albumsInput, "query")] : []),
   ]);
+
+  if (isTrpcForbiddenError(albumsQuery.error)) throw albumsQuery.error;
 
   if (isInitialWidgetQueryPending(statsQuery)) return <WidgetQueryLoadingState />;
   if (!stats) return <WidgetEmptyState />;
@@ -139,7 +142,11 @@ export default function ImmichServerStatsWidget({
                     {album.assetCount.toLocaleString(locale)}
                   </Text>
                 </Group>
-                <Progress value={(album.assetCount / Math.max(maxAssets, 1)) * 100} size="sm" />
+                <Progress
+                  aria-label={album.albumName}
+                  value={(album.assetCount / Math.max(maxAssets, 1)) * 100}
+                  size="sm"
+                />
               </Stack>
             ))}
           </SimpleGrid>

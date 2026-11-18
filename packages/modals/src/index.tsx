@@ -97,7 +97,8 @@ const ActiveModal = ({ modal, state, handleCloseModal }: ActiveModalProps) => {
   // It is necessary as transition is not working when the modal is directly mounted and run
   const [opened, setOpened] = useState(false);
   useEffect(() => {
-    setTimeout(() => setOpened(true), 0);
+    const timer = setTimeout(() => setOpened(true), 0);
+    return () => clearTimeout(timer);
   }, []);
 
   const { defaultTitle: _ignored, presentation, styles: customStyles, ...otherModalProps } = modal.reference.modalProps;

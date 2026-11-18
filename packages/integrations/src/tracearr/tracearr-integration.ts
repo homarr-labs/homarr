@@ -23,6 +23,7 @@ export class TracearrIntegration extends Integration {
       headers: this.getAuthHeaders(),
     });
 
+    await healthResponse.body?.cancel().catch(() => undefined);
     if (!healthResponse.ok) {
       throw new ResponseError(healthResponse);
     }
@@ -41,6 +42,7 @@ export class TracearrIntegration extends Integration {
     });
 
     if (!response.ok) {
+      await response.body?.cancel().catch(() => undefined);
       throw new ResponseError(response);
     }
 
@@ -58,6 +60,7 @@ export class TracearrIntegration extends Integration {
     });
 
     if (!response.ok) {
+      await response.body?.cancel().catch(() => undefined);
       throw new ResponseError(response);
     }
 
@@ -75,6 +78,7 @@ export class TracearrIntegration extends Integration {
     });
 
     if (!response.ok) {
+      await response.body?.cancel().catch(() => undefined);
       throw new ResponseError(response);
     }
 
@@ -111,6 +115,7 @@ export class TracearrIntegration extends Integration {
     });
 
     if (!response.ok) {
+      await response.body?.cancel().catch(() => undefined);
       throw new ResponseError(response);
     }
 
@@ -142,6 +147,7 @@ export class TracearrIntegration extends Integration {
     });
 
     if (!response.ok) {
+      await response.body?.cancel().catch(() => undefined);
       throw new ResponseError(response);
     }
 
@@ -192,7 +198,11 @@ export class TracearrIntegration extends Integration {
       const cleanUrl = urlOrPath.replace(/&fallback=[^&]+/, "").replace(/\?fallback=[^&]+&?/, "?");
       const fullUrl = isAbsoluteUrl(urlOrPath) ? cleanUrl : this.url(cleanUrl as `/${string}`).toString();
 
-      return await imageProxy.createImageAsync(fullUrl, this.getAuthHeaders());
+      let headers: Record<string, string> | undefined;
+      if (new URL(fullUrl).origin === new URL(this.integration.url).origin) {
+        headers = this.getAuthHeaders();
+      }
+      return await imageProxy.createImageAsync(fullUrl, headers);
     } catch {
       return null;
     }

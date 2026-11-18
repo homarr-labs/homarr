@@ -168,7 +168,7 @@ export const WidgetIntegrationSelect = ({
           <Pill.Group>
             {values}
 
-            <Combobox.EventsTarget>
+            <Combobox.EventsTarget withExpandedAttribute>
               <PillsInput.Field
                 readOnly
                 aria-label={label}

@@ -244,15 +244,17 @@ export const appRouter = createTRPCRouter({
     .input(appCreateManySchema)
     .output(z.void())
     .mutation(async ({ ctx, input }) => {
-      await ctx.db.insert(apps).values(
-        input.map((app) => ({
+      const values = await Promise.all(
+        input.map(async (app) => ({
           id: createId(),
           name: app.name,
           description: app.description,
-          iconUrl: app.iconUrl ?? getIconForName(ctx.db, app.name).sync()?.url ?? defaultIcon,
+          iconUrl: app.iconUrl ?? (await getIconForName(ctx.db, app.name))?.url ?? defaultIcon,
           href: app.href,
+          pingUrl: app.pingUrl,
         })),
       );
+      await ctx.db.insert(apps).values(values);
     }),
   update: permissionRequiredProcedure
     .requiresPermission("app-modify-all")

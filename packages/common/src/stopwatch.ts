@@ -38,7 +38,7 @@ export class Stopwatch {
     if (difference < 1000) {
       return `${Math.floor(difference)} ms`;
     }
-    return dayjs().millisecond(this.startTime).fromNow(true);
+    return dayjs.duration(difference).humanize();
   }
 
   getElapsedInFormattedMilliseconds() {

@@ -1,4 +1,3 @@
-import * as fs from "fs";
 import type { NodeMetricsList, RequestContext, ResponseContext } from "@kubernetes/client-node";
 import { CoreV1Api, CustomObjectsApi, KubeConfig, NetworkingV1Api, VersionApi } from "@kubernetes/client-node";
 import { of } from "@kubernetes/client-node/dist/gen/rxjsStub.js";
@@ -173,21 +172,22 @@ const loadKubeConfig = () => {
   const currentCluster = kubeConfig.getCurrentCluster();
   if (!currentCluster) throw new Error("No cluster configuration found");
 
-  const token = fs.readFileSync("/var/run/secrets/kubernetes.io/serviceaccount/token", "utf8");
-  const caData = fs.readFileSync("/var/run/secrets/kubernetes.io/serviceaccount/ca.crt", "utf8");
-  const clusterWithCA = { ...currentCluster, name: `${currentCluster.name}-service-account`, caData };
-  const serviceAccountUser = { name: env.KUBERNETES_SERVICE_ACCOUNT_NAME ?? "default-sa", token };
+  const serviceAccountCluster = { ...currentCluster, name: `${currentCluster.name}-service-account` };
+  const serviceAccountUser = {
+    ...kubeConfig.getCurrentUser(),
+    name: env.KUBERNETES_SERVICE_ACCOUNT_NAME ?? "default-sa",
+  };
   const currentContext = kubeConfig.getContextObject(kubeConfig.getCurrentContext());
   if (!currentContext) throw new Error("No context found");
   const updatedContext = {
     ...currentContext,
     name: `${currentContext.name}-service-account`,
-    cluster: clusterWithCA.name,
+    cluster: serviceAccountCluster.name,
     user: serviceAccountUser.name,
   };
 
   kubeConfig.loadFromOptions({
-    clusters: [clusterWithCA],
+    clusters: [serviceAccountCluster],
     users: [serviceAccountUser],
     contexts: [updatedContext],
     currentContext: updatedContext.name,

@@ -32,15 +32,20 @@
   flex: 1 !important;
   object-fit: contain;
   scale: 0.8;
-  transition: scale 0.2s ease-in-out;
   user-select: none;
   -webkit-touch-callout: none;
   -webkit-user-drag: none;
   touch-action: manipulation;
 }
 
-.appWithUrl:hover > .appIcon {
-  scale: 0.9;
+@media (prefers-reduced-motion: no-preference) {
+  .appIcon {
+    transition: scale 0.2s ease-in-out;
+  }
+
+  .appWithUrl:hover > .appIcon {
+    scale: 0.9;
+  }
 }
 
 .appWithUrl:hover > div.appIcon {

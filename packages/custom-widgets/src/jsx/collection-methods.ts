@@ -163,11 +163,10 @@ export function callCollectionMethod(
       return { handled: true, value: result };
     }
     if (method === "reverse") {
-      const copy = [...receiver];
       const result: unknown[] = [];
-      for (let index = copy.length - 1; index >= 0; index -= 1) {
+      for (let index = receiver.length - 1; index >= 0; index -= 1) {
         context.budget.collection();
-        result.push(copy[index]);
+        result.push(receiver[index]);
       }
       return { handled: true, value: result };
     }

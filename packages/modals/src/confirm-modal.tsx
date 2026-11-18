@@ -41,16 +41,20 @@ export const ConfirmModal = createModal<Omit<ConfirmModalProps, "title">>(({ act
 
   const handleCancel = useCallback(
     async (event: React.MouseEvent<HTMLButtonElement>) => {
-      if (typeof cancelProps?.onClick === "function") {
-        cancelProps.onClick(event);
-      }
+      try {
+        if (typeof cancelProps?.onClick === "function") {
+          await cancelProps.onClick(event);
+        }
 
-      if (typeof onCancel === "function") {
-        await onCancel();
-      }
+        if (typeof onCancel === "function") {
+          await onCancel();
+        }
 
-      if (closeOnCancel) {
-        actions.closeModal();
+        if (closeOnCancel) {
+          actions.closeModal();
+        }
+      } catch {
+        // Keep the modal open. Callers own action-specific error feedback.
       }
     },
     [cancelProps, onCancel, closeOnCancel, actions],

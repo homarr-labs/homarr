@@ -86,7 +86,7 @@ const createCallback = <TAllowedNames extends string, TName extends TAllowedName
             timezone: creatorOptions.timezone,
             paused: true,
           },
-          () => void catchingCallbackAsync(),
+          () => catchingCallbackAsync(),
         );
         creatorOptions.logger.logDebug("The scheduled task for cron job was created", {
           name,

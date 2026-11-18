@@ -383,7 +383,16 @@ function CopyableCode({ value, copyLabel }: { value: string; copyLabel: string }
       {value}
       <CopyButton value={value}>
         {({ copied, copy }) => (
-          <ActionIcon variant="subtle" size="sm" onClick={copy} pos="absolute" top={8} right={8} title={copyLabel}>
+          <ActionIcon
+            variant="subtle"
+            size="sm"
+            onClick={copy}
+            pos="absolute"
+            top={8}
+            right={8}
+            title={copyLabel}
+            aria-label={copyLabel}
+          >
             {copied ? <IconCheck size={14} /> : <IconCopy size={14} />}
           </ActionIcon>
         )}

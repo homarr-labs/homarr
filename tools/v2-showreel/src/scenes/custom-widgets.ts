@@ -445,6 +445,9 @@ export function customWidgets(): Scene {
       const pvIn = E.outExpo(seg(t, tSource - 0.1, tSource + 0.45));
       const toPub = E.inOutQuart(seg(t, PUBLISH - 0.4, PUBLISH + 0.05));
       const lift = t > CLICK ? E.outCubic(seg(t, CLICK, CLICK + 0.6)) : 0;
+      const wb = E.outExpo(seg(t, TYPE_B + 0.1, TYPE_B + 0.5));
+      wbBarWrap.style.height = `${(wb * 58).toFixed(1)}px`;
+      wbBarWrap.style.opacity = String(wb);
       const pvH = preview.offsetHeight;
       // Preview rect on screen (transform origin is its centre).
       const ps = lerp(1, 0.9, toPub) * (1 + lift * 0.02);
@@ -506,9 +509,6 @@ export function customWidgets(): Scene {
       const oIn = spring(t - tOptions, 3, 0.45);
       optPop.style.transform = `scale(${clamp(oIn, 0, 2).toFixed(3)})`;
       optPop.style.opacity = t >= tOptions ? "1" : "0";
-      const wb = E.outExpo(seg(t, TYPE_B + 0.1, TYPE_B + 0.5));
-      wbBarWrap.style.height = `${(wb * 58).toFixed(1)}px`;
-      wbBarWrap.style.opacity = String(wb);
       const pub = spring(t - PUBLISH, 3, 0.5);
       const press = 1 - Math.sin(seg(t, CLICK - 0.09, CLICK + 0.09) * Math.PI) * 0.1;
       publish.style.transform = `translateX(-50%) scale(${(clamp(pub, 0, 2) * press).toFixed(3)})`;

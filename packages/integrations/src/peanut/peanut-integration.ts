@@ -16,7 +16,10 @@ export class PeaNutIntegration extends Integration implements IUpsSummaryIntegra
       headers: this.getAuthHeaders(),
     });
 
-    if (!response.ok) return TestConnectionError.StatusResult(response);
+    if (!response.ok) {
+      await response.body?.cancel().catch(() => undefined);
+      return TestConnectionError.StatusResult(response);
+    }
 
     await response.json();
 
@@ -29,6 +32,7 @@ export class PeaNutIntegration extends Integration implements IUpsSummaryIntegra
     });
 
     if (!response.ok) {
+      await response.body?.cancel().catch(() => undefined);
       throw new ResponseError(response);
     }
 

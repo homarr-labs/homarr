@@ -49,6 +49,7 @@ export class ThingportIntegration extends Integration implements ISearchableInte
       redirect: "error",
     });
 
+    await response.body?.cancel().catch(() => undefined);
     if (!response.ok) {
       return TestConnectionError.StatusResult(response);
     }
@@ -232,6 +233,7 @@ export class ThingportIntegration extends Integration implements ISearchableInte
       redirect: "error",
     });
     if (!response.ok) {
+      await response.body?.cancel().catch(() => undefined);
       throw new ResponseError(response);
     }
     return await response.json();

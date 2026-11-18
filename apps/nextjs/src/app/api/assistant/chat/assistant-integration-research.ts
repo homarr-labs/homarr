@@ -376,7 +376,15 @@ export const createAssistantIntegrationResearchController = (
         return "Probe only an exact GET path from the validated official research record.";
       }
       if (input.path.includes("#")) return "Authoring probe paths cannot contain a fragment.";
-      const probeUrl = new URL(input.path, "https://integration.invalid");
+      let probeUrl: URL;
+      try {
+        probeUrl = new URL(input.path, "https://integration.invalid");
+      } catch {
+        return "Probe only an exact GET path from the validated official research record.";
+      }
+      if (probeUrl.origin !== "https://integration.invalid" || probeUrl.pathname.startsWith("//")) {
+        return "Probe only an exact GET path from the validated official research record.";
+      }
       const allowedQueryNames = documentedProbeContracts.get(probeUrl.pathname);
       if (!allowedQueryNames) {
         return "Probe only an exact GET path from the validated official research record.";

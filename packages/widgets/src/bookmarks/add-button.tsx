@@ -155,6 +155,7 @@ export const BookmarkAddButton: SortableItemListInput<BookmarkSelectionItem, str
                 }}
                 onKeyDown={(event) => {
                   if (event.key !== "Enter") return;
+                  if (event.nativeEvent.isComposing || event.nativeEvent.keyCode === 229) return;
                   if (!pendingUrl) return;
                   event.preventDefault();
                   addUrls(search);

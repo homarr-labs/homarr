@@ -153,18 +153,18 @@ const StorageResourceDetails = ({ item }: { item: StorageResource }) => {
 
 const DiskStats = ({ item }: { item: ComputeResource }) => {
   const { formatBytes } = useByteFormatter();
-  if (!item.storage.read || !item.storage.write) {
+  if (!item.storage.read && !item.storage.write) {
     return null;
   }
   return (
     <List.Item icon={<IconDatabase size="var(--mantine-font-size-md)" />}>
       <Group gap="sm">
         <Group gap={0}>
-          <Text>{formatBytes(item.storage.write)}</Text>
+          <Text>{formatBytes(item.storage.write ?? 0)}</Text>
           <IconArrowNarrowDown size="var(--mantine-font-size-sm)" />
         </Group>
         <Group gap={0}>
-          <Text>{formatBytes(item.storage.read)}</Text>
+          <Text>{formatBytes(item.storage.read ?? 0)}</Text>
           <IconArrowNarrowUp size="var(--mantine-font-size-sm)" />
         </Group>
       </Group>
@@ -174,18 +174,18 @@ const DiskStats = ({ item }: { item: ComputeResource }) => {
 
 const NetStats = ({ item }: { item: ComputeResource }) => {
   const { formatBytes } = useByteFormatter();
-  if (!item.network.in || !item.network.out) {
+  if (!item.network.in && !item.network.out) {
     return null;
   }
   return (
     <List.Item icon={<IconNetwork size="var(--mantine-font-size-md)" />}>
       <Group gap="sm">
         <Group gap={0}>
-          <Text>{formatBytes(item.network.in)}</Text>
+          <Text>{formatBytes(item.network.in ?? 0)}</Text>
           <IconArrowNarrowDown size="var(--mantine-font-size-sm)" />
         </Group>
         <Group gap={0}>
-          <Text>{formatBytes(item.network.out)}</Text>
+          <Text>{formatBytes(item.network.out ?? 0)}</Text>
           <IconArrowNarrowUp size="var(--mantine-font-size-sm)" />
         </Group>
       </Group>

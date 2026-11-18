@@ -27,7 +27,10 @@ export class ReadarrIntegration extends Integration implements ICalendarIntegrat
     const response = await fetchWithTrustedCertificatesAsync(this.url("/api/v1/book"), {
       headers: (await this.getHttpAuthenticationAsync()).headers,
     });
-    if (!response.ok) throw new Error(`Readarr library request failed (${response.status})`);
+    if (!response.ok) {
+      await response.body?.cancel().catch(() => undefined);
+      throw new Error(`Readarr library request failed (${response.status})`);
+    }
     const library = z.array(z.object({ monitored: z.boolean() })).parse(await response.json());
     return { books: library.length, monitored: library.filter((book) => book.monitored).length };
   }
@@ -44,7 +47,10 @@ export class ReadarrIntegration extends Integration implements ICalendarIntegrat
       headers: { "X-Api-Key": super.getSecretValue("apiKey") },
     });
 
-    if (!response.ok) return TestConnectionError.StatusResult(response);
+    if (!response.ok) {
+      await response.body?.cancel().catch(() => undefined);
+      return TestConnectionError.StatusResult(response);
+    }
 
     await response.json();
     return { success: true };

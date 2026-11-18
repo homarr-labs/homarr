@@ -561,7 +561,7 @@ func validateProviderInput(payload map[string]any) error {
 
 func aliasCompletionBody(body []byte) ([]byte, error) {
 	var payload map[string]any
-	if err := json.Unmarshal(body, &payload); err != nil {
+	if err := json.Unmarshal(body, &payload); err != nil || payload == nil {
 		return nil, errInvalidProviderResponse
 	}
 	payload["model"] = homarrProviderModelID

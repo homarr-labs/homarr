@@ -62,36 +62,64 @@ async function renderChunk(page, cdp, [a, b, name, SUB]) {
     ],
     { stdio: ["pipe", "inherit", "inherit"] },
   );
-  const done = new Promise((r) => ff.on("close", r));
-  for (let f = a; f < b; f++) {
-    for (let j = 0; j < SUB; j++) {
-      const u = Math.max(0, Math.min(warp.duration - 1e-4, (f + (j - (SUB - 1) / 2) * (SHUTTER / SUB)) / FPS));
-      await page.evaluate(([t, u]) => window.renderFrame(t, u), [T(u), u]);
-      const { data } = await cdp.send("Page.captureScreenshot", { format: "png", optimizeForSpeed: true });
-      if (!ff.stdin.write(Buffer.from(data, "base64"))) await new Promise((r) => ff.stdin.once("drain", r));
+  let encoderError;
+  const done = new Promise((resolve) => {
+    ff.once("error", (error) => {
+      encoderError = error;
+      resolve(null);
+    });
+    ff.once("close", resolve);
+  });
+  ff.stdin.on("error", (error) => {
+    encoderError = error;
+  });
+  try {
+    for (let f = a; f < b; f++) {
+      for (let j = 0; j < SUB; j++) {
+        const u = Math.max(0, Math.min(warp.duration - 1e-4, (f + (j - (SUB - 1) / 2) * (SHUTTER / SUB)) / FPS));
+        await page.evaluate(([t, u]) => window.renderFrame(t, u), [T(u), u]);
+        const { data } = await cdp.send("Page.captureScreenshot", { format: "png", optimizeForSpeed: true });
+        if (encoderError) throw encoderError;
+        if (!ff.stdin.write(Buffer.from(data, "base64"))) {
+          await Promise.race([
+            new Promise((resolve) => ff.stdin.once("drain", resolve)),
+            done.then((code) => {
+              throw encoderError ?? new Error(`ffmpeg exited ${code} for ${name}`);
+            }),
+          ]);
+        }
+      }
     }
+    ff.stdin.end();
+    const code = await done;
+    if (encoderError) throw encoderError;
+    if (code !== 0) throw new Error(`ffmpeg exited ${code} for ${name}`);
+    renameSync(tmp, name);
+  } finally {
+    if (ff.exitCode === null && ff.signalCode === null) ff.kill("SIGKILL");
+    await done;
   }
-  ff.stdin.end();
-  await done;
-  renameSync(tmp, name);
 }
 
 async function worker(k) {
   const browser = await chromium.launch({
     args: ["--allow-file-access-from-files", "--force-color-profile=srgb", "--disable-lcd-text"],
   });
-  const page = await browser.newPage({ viewport: { width: 1920, height: 1080 }, deviceScaleFactor: 1 });
-  page.on("pageerror", (e) => console.log(`[w${k}] pageerror`, e.message));
-  await page.goto(new URL(PAGE, import.meta.url).href);
-  await page.evaluate(() => window.ready);
-  const cdp = await page.context().newCDPSession(page);
-  while (queue.length) {
-    const job = queue.shift();
-    const t0 = Date.now();
-    await renderChunk(page, cdp, job);
-    console.log(`[w${k}] ${job[2]} sub=${job[3]} ${((Date.now() - t0) / 1000).toFixed(1)}s (${queue.length} queued)`);
+  try {
+    const page = await browser.newPage({ viewport: { width: 1920, height: 1080 }, deviceScaleFactor: 1 });
+    page.on("pageerror", (e) => console.log(`[w${k}] pageerror`, e.message));
+    await page.goto(new URL(PAGE, import.meta.url).href);
+    await page.evaluate(() => window.ready);
+    const cdp = await page.context().newCDPSession(page);
+    while (queue.length) {
+      const job = queue.shift();
+      const t0 = Date.now();
+      await renderChunk(page, cdp, job);
+      console.log(`[w${k}] ${job[2]} sub=${job[3]} ${((Date.now() - t0) / 1000).toFixed(1)}s (${queue.length} queued)`);
+    }
+  } finally {
+    await browser.close();
   }
-  await browser.close();
 }
 
 const t0 = Date.now();

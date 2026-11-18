@@ -127,12 +127,8 @@ function VpnStatusColumn({
       miw={dense ? 44 : compact ? 56 : undefined}
       align="center"
     >
-      <ShieldIcon
-        aria-label={t("status.vpn", { status: statusLabel })}
-        stroke={2}
-        color={getStatusColor(vpnStatus)}
-        size={dense ? 32 : compact ? 44 : 52}
-      />
+      <ShieldIcon aria-hidden stroke={2} color={getStatusColor(vpnStatus)} size={dense ? 32 : compact ? 44 : 52} />
+      <VisuallyHidden>{t("status.vpn", { status: statusLabel })}</VisuallyHidden>
       <DnsStatusBadge status={dnsStatus} />
     </Flex>
   );

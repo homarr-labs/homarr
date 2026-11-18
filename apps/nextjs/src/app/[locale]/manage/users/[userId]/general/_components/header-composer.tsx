@@ -121,19 +121,6 @@ export const HeaderComposer = ({ value, onChange, boards, homeBoardId }: HeaderC
       ?.focus({ preventScroll: true });
   }, [value.zones]);
 
-  useEffect(() => {
-    const zoneTable = zoneTableRef.current;
-    if (!zoneTable) return;
-
-    const clearSelectionFromEmptyArea = (event: PointerEvent) => {
-      if (!(event.target instanceof Element)) return;
-      if (event.target.closest("[data-header-composer-item]")) return;
-      setSelectedItemKey(null);
-    };
-
-    zoneTable.addEventListener("pointerdown", clearSelectionFromEmptyArea);
-    return () => zoneTable.removeEventListener("pointerdown", clearSelectionFromEmptyArea);
-  }, []);
   const activeItemKeySet = new Set(activeItems.map(getHeaderItemKey));
   const inactiveBuiltinIds = headerBuiltinItemIds.filter((itemId) => {
     const item = createBuiltinHeaderItem(itemId);
@@ -243,7 +230,15 @@ export const HeaderComposer = ({ value, onChange, boards, homeBoardId }: HeaderC
                 onDragEnd={handleDragEnd}
               >
                 <div className={classes.previewHeader}>
-                  <div ref={zoneTableRef} className={classes.zoneTable}>
+                  <div
+                    ref={zoneTableRef}
+                    className={classes.zoneTable}
+                    onPointerDown={(event) => {
+                      if (!(event.target instanceof Element)) return;
+                      if (event.target.closest("[data-header-composer-item]")) return;
+                      setSelectedItemKey(null);
+                    }}
+                  >
                     {headerGuideZones.map((zone) => (
                       <HeaderZoneColumn key={zone} zone={zone} label={t(`zones.${zone}` as never)}>
                         {value.zones[zone].map((item, index) => (

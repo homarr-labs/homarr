@@ -130,8 +130,12 @@ const ThreadListItem = () => {
           maxLength={72}
           size="xs"
           onKeyDown={(event) => {
-            if (event.key === "Enter") void renameConversation();
-            if (event.key === "Escape" && !renaming) setRenameOpened(false);
+            if (event.key === "Enter") {
+              if (event.nativeEvent.isComposing || event.nativeEvent.keyCode === 229) return;
+              event.preventDefault();
+              void renameConversation();
+            }
+            if (event.key === "Escape" && !event.nativeEvent.isComposing && !renaming) setRenameOpened(false);
           }}
         />
         <ActionIcon

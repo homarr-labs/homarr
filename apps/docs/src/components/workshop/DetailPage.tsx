@@ -605,7 +605,7 @@ const MarketplaceDetail = ({ workshopUrl, submissionId }: { workshopUrl: string;
       )}
 
       <div className={detailLayout.grid}>
-        <main className="min-w-0">
+        <div className="min-w-0">
           <header className="border-b border-border pb-6">
             <div className="flex flex-wrap items-start justify-between gap-5">
               <div className="min-w-0">
@@ -704,7 +704,7 @@ const MarketplaceDetail = ({ workshopUrl, submissionId }: { workshopUrl: string;
               onRequireAuth={requireUserId}
             />
           </div>
-        </main>
+        </div>
 
         <aside className={detailLayout.sidebar}>
           <section className="rounded-xl border border-border bg-card p-5" aria-labelledby="workshop-install-heading">

@@ -39,6 +39,7 @@ export const clusterRouter = createTRPCRouter({
         let totalCapacityPods = 0;
         const cpuResourceParser = new CpuResourceParser();
         const memoryResourceParser = new MemoryResourceParser();
+        const nodeMetricsByName = new Map(nodeMetricsClient?.items.map((metric) => [metric.metadata.name, metric]));
 
         nodes.items.forEach((node) => {
           totalCapacityPods += Number(node.status?.capacity?.pods);
@@ -54,7 +55,7 @@ export const clusterRouter = createTRPCRouter({
           totalMemoryAllocatable += memoryAllocatable;
 
           const nodeName = node.metadata?.name;
-          const nodeMetric = nodeMetricsClient?.items.find((metric) => metric.metadata.name === nodeName);
+          const nodeMetric = nodeMetricsByName.get(nodeName ?? "");
           if (nodeMetric) {
             const cpuUsage = cpuResourceParser.parse(nodeMetric.usage.cpu);
             totalCPUUsage += cpuUsage;

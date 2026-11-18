@@ -88,6 +88,7 @@ export class SlskdIntegration extends Integration implements IDownloadClientInte
     });
 
     if (!response.ok) {
+      await response.body?.cancel().catch(() => undefined);
       return TestConnectionError.StatusResult({
         status: response.status,
         url: response.url,
@@ -160,6 +161,7 @@ export class SlskdIntegration extends Integration implements IDownloadClientInte
     });
 
     if (!response.ok) {
+      await response.body?.cancel().catch(() => undefined);
       throw new ResponseError(response);
     }
 

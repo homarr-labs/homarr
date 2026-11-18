@@ -2,6 +2,8 @@ import { IconExclamationCircle, IconShield } from "@tabler/icons-react";
 import { TRPCClientError } from "@trpc/client";
 import type { DefaultErrorData } from "@trpc/server/unstable-core-do-not-import";
 
+import { isRecord } from "@homarr/common";
+
 import type { WidgetDefinition } from "../definition";
 import { ErrorBoundaryError } from "./base";
 import type { BaseWidgetErrorProps } from "./base-component";
@@ -42,7 +44,7 @@ const handleWidgetTrpcError = (
   error: unknown,
   currentDefinition: WidgetDefinition,
 ): Omit<BaseWidgetErrorProps, "onRetry"> | null => {
-  if (!(error instanceof TRPCClientError && "code" in error.data)) return null;
+  if (!(error instanceof TRPCClientError) || !isRecord(error.data) || !("code" in error.data)) return null;
 
   const errorData = error.data as DefaultErrorData;
 
@@ -60,7 +62,7 @@ const handleWidgetTrpcError = (
 };
 
 const handleCommonTrpcError = (error: unknown): Omit<BaseWidgetErrorProps, "onRetry"> | null => {
-  if (!(error instanceof TRPCClientError && "code" in error.data)) return null;
+  if (!(error instanceof TRPCClientError) || !isRecord(error.data) || !("code" in error.data)) return null;
 
   const errorData = error.data as DefaultErrorData;
 

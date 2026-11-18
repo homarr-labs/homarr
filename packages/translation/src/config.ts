@@ -5,13 +5,25 @@ import type { SupportedLanguage } from "./languages";
 export { supportedLanguages } from "./languages";
 export type { SupportedLanguage } from "./languages";
 
+const loadLocalMrtLocalization = async (messages: Promise<{ default: MRT_Localization }>) => {
+  const [{ default: fallback }, { default: localized }] = await Promise.all([
+    import("./mantine-react-table/en.json"),
+    messages,
+  ]);
+
+  return {
+    ...fallback,
+    ...Object.fromEntries(Object.entries(localized).filter(([, value]) => value.trim() !== "")),
+  };
+};
+
 export const localeConfigurations = {
   ca: {
     name: "Català",
     translatedName: "Catalan",
     icon: flagIcon("es-ct"),
     importMrtLocalization() {
-      return import("./mantine-react-table/ca.json");
+      return loadLocalMrtLocalization(import("./mantine-react-table/ca.json"));
     },
     importDayJsLocale() {
       return import("dayjs/locale/ca").then((module) => module.default);
@@ -237,7 +249,7 @@ export const localeConfigurations = {
     translatedName: "Lithuanian",
     icon: flagIcon("lt"),
     importMrtLocalization() {
-      return import("./mantine-react-table/lt.json");
+      return loadLocalMrtLocalization(import("./mantine-react-table/lt.json"));
     },
     importDayJsLocale() {
       return import("dayjs/locale/lt").then((module) => module.default);
@@ -248,7 +260,7 @@ export const localeConfigurations = {
     translatedName: "Latvian",
     icon: flagIcon("lv"),
     importMrtLocalization() {
-      return import("./mantine-react-table/lv.json");
+      return loadLocalMrtLocalization(import("./mantine-react-table/lv.json"));
     },
     importDayJsLocale() {
       return import("dayjs/locale/lv").then((module) => module.default);
@@ -347,7 +359,7 @@ export const localeConfigurations = {
     translatedName: "Slovenian",
     icon: flagIcon("si"),
     importMrtLocalization() {
-      return import("./mantine-react-table/sl.json");
+      return loadLocalMrtLocalization(import("./mantine-react-table/sl.json"));
     },
     importDayJsLocale() {
       return import("dayjs/locale/sl").then((module) => module.default);

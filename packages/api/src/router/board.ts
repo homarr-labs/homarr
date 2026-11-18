@@ -670,6 +670,7 @@ export const boardRouter = createTRPCRouter({
     .input(boardCreateSchema)
     .output(z.object({ boardId: z.string(), name: z.string(), layoutId: z.string() }))
     .mutation(async ({ ctx, input }) => {
+      await noBoardWithSimilarNameAsync(ctx.db, input.name);
       const boardId = createId();
       const mobileLayoutId = createId();
       const baseLayoutId = createId();
@@ -1751,6 +1752,9 @@ export const boardRouter = createTRPCRouter({
       const updatedSections = input.sections.filter(({ id }) => storedSectionIds.has(id));
       const removedItems = dbBoard.items.filter(({ id }) => !submittedItemIds.has(id));
       const removedSections = dbBoard.sections.filter(({ id }) => !submittedSectionIds.has(id));
+      const addedItemLayouts = addedItems.flatMap((item) =>
+        item.layouts.map((layout) => ({ ...layout, itemId: item.id })),
+      );
 
       await handleTransactionsAsync(ctx.db, {
         async handleAsync(db, schema) {
@@ -1799,21 +1803,9 @@ export const boardRouter = createTRPCRouter({
                   boardId: dbBoard.id,
                 })),
               );
-              await transaction.insert(schema.itemLayouts).values(
-                addedItems.flatMap((item) =>
-                  item.layouts.map(
-                    (layoutSection): InferInsertModel<typeof schema.itemLayouts> => ({
-                      layoutId: layoutSection.layoutId,
-                      sectionId: layoutSection.sectionId,
-                      itemId: item.id,
-                      height: layoutSection.height,
-                      width: layoutSection.width,
-                      xOffset: layoutSection.xOffset,
-                      yOffset: layoutSection.yOffset,
-                    }),
-                  ),
-                ),
-              );
+              if (addedItemLayouts.length > 0) {
+                await transaction.insert(schema.itemLayouts).values(addedItemLayouts);
+              }
             }
 
             const inputIntegrationRelations = input.items.flatMap(({ integrationIds, id: itemId }) =>
@@ -1991,24 +1983,9 @@ export const boardRouter = createTRPCRouter({
                   })),
                 )
                 .run();
-              transaction
-                .insert(itemLayouts)
-                .values(
-                  addedItems.flatMap((item) =>
-                    item.layouts.map(
-                      (layoutSection): InferInsertModel<typeof itemLayouts> => ({
-                        layoutId: layoutSection.layoutId,
-                        sectionId: layoutSection.sectionId,
-                        itemId: item.id,
-                        height: layoutSection.height,
-                        width: layoutSection.width,
-                        xOffset: layoutSection.xOffset,
-                        yOffset: layoutSection.yOffset,
-                      }),
-                    ),
-                  ),
-                )
-                .run();
+              if (addedItemLayouts.length > 0) {
+                transaction.insert(itemLayouts).values(addedItemLayouts).run();
+              }
             }
 
             const inputIntegrationRelations = input.items.flatMap(({ integrationIds, id: itemId }) =>
@@ -2539,8 +2516,7 @@ export const getHomeIdBoardAsync = async (
       and(
         eq(groupMembers.userId, user.id),
         not(eq(groups.name, everyoneGroup)),
-        not(isNull(groups[settingKey])),
-        not(isNull(groups.homeBoardId)),
+        or(not(isNull(groups[settingKey])), not(isNull(groups.homeBoardId))),
       ),
     )
     .orderBy(asc(groups.position))

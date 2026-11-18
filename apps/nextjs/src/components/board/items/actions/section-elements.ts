@@ -1,18 +1,8 @@
+import { getBoardLayoutData } from "@homarr/boards/layout-data";
+
 import type { Board } from "~/app/[locale]/boards/_types";
 
 export const getSectionElements = (board: Board, { sectionId, layoutId }: { sectionId: string; layoutId: string }) => {
-  const containersOfSection = board.sections
-    .filter((section) => section.kind === "container")
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    .map(({ layouts, ...section }) => ({ ...section, ...layouts.find((layout) => layout.layoutId === layoutId)! }))
-    .filter((section) => section.parentSectionId === sectionId);
-  const items = board.items
-    .map(({ layouts, ...item }) => ({
-      ...item,
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      ...layouts.find((layout) => layout.layoutId === layoutId)!,
-    }))
-    .filter((item) => item.sectionId === sectionId);
-
-  return [...items, ...containersOfSection];
+  const { itemsBySectionId, innerSectionsByParentId } = getBoardLayoutData(board, layoutId);
+  return [...(itemsBySectionId.get(sectionId) ?? []), ...(innerSectionsByParentId.get(sectionId) ?? [])];
 };

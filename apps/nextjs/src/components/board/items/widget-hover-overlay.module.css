@@ -72,41 +72,6 @@
   border: none;
 }
 
-.metadata {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  min-width: 0;
-  margin-left: auto;
-  flex-wrap: nowrap;
-  overflow: hidden;
-}
-
-.metadataItem {
-  @mixin dark {
-    --chip-background: rgb(from var(--mantine-color-dark-5) r g b / 0.9);
-  }
-  @mixin light {
-    --chip-background: rgb(from var(--mantine-color-gray-1) r g b / 0.95);
-  }
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  max-width: 140px;
-  padding: 2px 6px;
-  border-radius: var(--mantine-radius-md);
-  background-color: var(--chip-background);
-  font-size: var(--mantine-font-size-xxs);
-  line-height: 1.2;
-  white-space: nowrap;
-  overflow: hidden;
-}
-
-.metadataLabel {
-  color: var(--mantine-color-dimmed);
-  flex-shrink: 0;
-}
-
 @media (forced-colors: active) {
   .panel {
     border-color: CanvasText;
@@ -114,11 +79,6 @@
     box-shadow: none;
     backdrop-filter: none;
   }
-}
-
-.metadataValue {
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
 @media (max-width: 768px) {

@@ -10,7 +10,7 @@ export const resolveAssistantInternalRoute = (path: string, origin: string) => {
   if (!path.startsWith("/") || path.startsWith("/\\")) return null;
 
   const target = URL.canParse(path, origin) ? new URL(path, origin) : null;
-  if (target === null || target.origin !== origin) return null;
+  if (target === null || target.origin !== origin || target.pathname.startsWith("//")) return null;
 
   return `${target.pathname}${target.search}${target.hash}`;
 };

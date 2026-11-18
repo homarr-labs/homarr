@@ -129,21 +129,24 @@ export class TechnitiumDnsIntegration extends Integration implements DnsHoleSumm
     }
     if (!token) return TestConnectionError.StatusResult({ status: 401, url: this.integration.url });
 
-    const response = await this.requestAsync(apiPaths.stats, { type: "LastHour" }, token, fetchAsync);
-    const body = await readTechnitiumBodyAsync(response);
-
-    if (body.status !== "ok") return TestConnectionError.StatusResult({ status: 401, url: this.integration.url });
-
-    // For credentials auth, log out server-side to free the session slot, then clear local cache.
-    // API keys are permanent and have no server-side session to release.
-    if (!apiKey) {
-      await this.requestAsync(apiPaths.logout, {}, token, fetchAsync).catch(() => {
-        logger.warn("Failed to logout session after connection test", { integrationId: this.integration.id });
-      });
+    try {
+      const response = await this.requestAsync(apiPaths.stats, { type: "LastHour" }, token, fetchAsync);
+      const body = await readTechnitiumBodyAsync(response);
+      if (body.status !== "ok") return TestConnectionError.StatusResult({ status: 401, url: this.integration.url });
+      return { success: true };
+    } finally {
+      // Credentials create a server-side session even when the following stats probe fails.
+      if (!apiKey) {
+        await this.requestAsync(apiPaths.logout, {}, token, fetchAsync)
+          .then(async (response) => {
+            await response.body?.cancel().catch(() => undefined);
+          })
+          .catch(() => {
+            logger.warn("Failed to logout session after connection test", { integrationId: this.integration.id });
+          });
+      }
+      await this.sessionStore.clearAsync();
     }
-
-    await this.sessionStore.clearAsync();
-    return { success: true };
   }
 
   private async fetchStatsAsync(token: string | null) {
@@ -308,6 +311,7 @@ export class TechnitiumDnsIntegration extends Integration implements DnsHoleSumm
     const loginResponse = await fetchFn(loginUrl);
     if (loginResponse.status !== 404) return parseLogin(loginResponse, loginUrl);
 
+    await loginResponse.body?.cancel().catch(() => undefined);
     // /api/user/login returned 404 — try the very old /api/login path
     logger.debug("Primary login path not found, trying legacy /api/login", { integrationId: this.integration.id });
     const fallbackUrl = this.url("/api/login", creds);

@@ -28,6 +28,7 @@ export class LlamacppIntegration extends Integration {
     });
 
     if (!response.ok) {
+      await response.body?.cancel().catch(() => undefined);
       return TestConnectionError.StatusResult(response);
     }
 
@@ -46,42 +47,52 @@ export class LlamacppIntegration extends Integration {
   }
 
   public async getStatsAsync(): Promise<LlamacppStats> {
-    const [healthResponse, modelsResponse] = await Promise.all([
-      fetchWithTrustedCertificatesAsync(this.url("/health"), { timeout: LLMACPP_REQUEST_TIMEOUT_MS }),
-      fetchWithTrustedCertificatesAsync(this.url("/v1/models"), { timeout: LLMACPP_REQUEST_TIMEOUT_MS }),
-    ]);
-
-    if (!healthResponse.ok) {
-      throw new ResponseError(healthResponse);
-    }
-    if (!modelsResponse.ok) {
-      throw new ResponseError(modelsResponse);
-    }
-
     const [health, models] = await Promise.all([
-      parseLlamacppHealthAsync(healthResponse),
-      parseLlamacppModelsAsync(modelsResponse),
+      fetchWithTrustedCertificatesAsync(this.url("/health"), { timeout: LLMACPP_REQUEST_TIMEOUT_MS }).then(
+        async (response) => {
+          if (!response.ok) {
+            await response.body?.cancel().catch(() => undefined);
+            throw new ResponseError(response);
+          }
+          return parseLlamacppHealthAsync(response);
+        },
+      ),
+      fetchWithTrustedCertificatesAsync(this.url("/v1/models"), { timeout: LLMACPP_REQUEST_TIMEOUT_MS }).then(
+        async (response) => {
+          if (!response.ok) {
+            await response.body?.cancel().catch(() => undefined);
+            throw new ResponseError(response);
+          }
+          return parseLlamacppModelsAsync(response);
+        },
+      ),
     ]);
     const firstModelId = models.data[0]?.id;
 
-    const [metricsResponse, slotsResponse] = await Promise.all([
+    const [metrics, slots] = await Promise.all([
       fetchWithTrustedCertificatesAsync(this.url("/metrics", { model: firstModelId }), {
         timeout: LLMACPP_REQUEST_TIMEOUT_MS,
+      }).then(async (response) => {
+        // Builds without --metrics have no counters, while health and model data remain usable.
+        if (!response.ok) {
+          await response.body?.cancel().catch(() => undefined);
+          return [];
+        }
+        return parseLlamacppMetricsAsync(response);
       }),
-      // /slots is not present on every build; a missing endpoint degrades to no context usage.
+      // A missing or unreachable /slots endpoint degrades to no context usage.
       fetchWithTrustedCertificatesAsync(this.url("/slots", { model: firstModelId }), {
         timeout: LLMACPP_REQUEST_TIMEOUT_MS,
-      }).catch(() => null),
-    ]);
-
-    // /metrics only exists when llama-server was started with --metrics; a non-OK
-    // response (typically 501 Not Implemented) degrades to no rate counters instead
-    // of dropping the health and model data that the other endpoints still provide.
-    const metricsAvailable = metricsResponse.ok;
-
-    const [metrics, slots] = await Promise.all([
-      metricsAvailable ? parseLlamacppMetricsAsync(metricsResponse) : Promise.resolve([]),
-      slotsResponse?.ok ? parseLlamacppSlotsAsync(slotsResponse) : Promise.resolve(null),
+      })
+        .catch(() => null)
+        .then(async (response) => {
+          if (!response) return null;
+          if (!response.ok) {
+            await response.body?.cancel().catch(() => undefined);
+            return null;
+          }
+          return parseLlamacppSlotsAsync(response);
+        }),
     ]);
 
     const firstModel = models.data[0] ? mapLlamacppModel(models.data[0]) : null;

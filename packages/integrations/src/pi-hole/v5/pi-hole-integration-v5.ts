@@ -21,6 +21,7 @@ export class PiHoleIntegrationV5 extends Integration implements DnsHoleSummaryIn
     const apiKey = super.getSecretValue("apiKey");
     const response = await fetchWithTrustedCertificatesAsync(this.url("/admin/api.php?summaryRaw", { auth: apiKey }));
     if (!response.ok) {
+      await response.body?.cancel().catch(() => undefined);
       throw new ResponseError(response);
     }
 
@@ -40,7 +41,10 @@ export class PiHoleIntegrationV5 extends Integration implements DnsHoleSummaryIn
 
     const response = await input.fetchAsync(this.url("/admin/api.php?status", { auth: apiKey }));
 
-    if (!response.ok) return TestConnectionError.StatusResult(response);
+    if (!response.ok) {
+      await response.body?.cancel().catch(() => undefined);
+      return TestConnectionError.StatusResult(response);
+    }
 
     const data = await response.json();
 
@@ -55,6 +59,7 @@ export class PiHoleIntegrationV5 extends Integration implements DnsHoleSummaryIn
   public async enableAsync(): Promise<void> {
     const apiKey = super.getSecretValue("apiKey");
     const response = await fetchWithTrustedCertificatesAsync(this.url("/admin/api.php?enable", { auth: apiKey }));
+    await response.body?.cancel().catch(() => undefined);
     if (!response.ok) {
       throw new Error(
         `Failed to enable PiHole for ${this.integration.name} (${this.integration.id}): ${response.statusText}`,
@@ -66,6 +71,7 @@ export class PiHoleIntegrationV5 extends Integration implements DnsHoleSummaryIn
     const apiKey = super.getSecretValue("apiKey");
     const url = this.url(`/admin/api.php?disable${duration ? `=${duration}` : ""}`, { auth: apiKey });
     const response = await fetchWithTrustedCertificatesAsync(url);
+    await response.body?.cancel().catch(() => undefined);
     if (!response.ok) {
       throw new Error(
         `Failed to disable PiHole for ${this.integration.name} (${this.integration.id}): ${response.statusText}`,

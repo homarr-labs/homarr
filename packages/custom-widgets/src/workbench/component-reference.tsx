@@ -63,9 +63,8 @@ function ComponentReferenceContent({
         leftSection={<IconSearch size={14} />}
       />
       <ScrollArea.Autosize mah={440} type="auto">
-        <Accordion variant="separated" radius="sm">
+        <Accordion variant="separated" radius="sm" keepMounted={false}>
           {components.map((component) => {
-            const props = getCustomJsxComponentProps(component.name);
             return (
               <Accordion.Item key={component.name} value={component.name}>
                 <Accordion.Control>
@@ -80,35 +79,7 @@ function ComponentReferenceContent({
                   </Group>
                 </Accordion.Control>
                 <Accordion.Panel>
-                  <Stack gap={6}>
-                    {component.description && <Text size="xs">{component.description}</Text>}
-                    <Text size="xs" c="dimmed">
-                      {component.package} · {props.length} props
-                    </Text>
-                    {component.blockedProps.map((prop) => (
-                      <Text key={prop.name} size="xs" c="red">
-                        {prop.name}: {prop.reason}
-                      </Text>
-                    ))}
-                    <ScrollArea.Autosize mah={200} type="auto">
-                      <Stack gap={3}>
-                        {props.map((prop) => (
-                          <Group key={prop.name} gap="xs" justify="space-between" wrap="nowrap">
-                            <Code>{prop.name}</Code>
-                            <Text size="xs" ff="monospace" c="dimmed" ta="right">
-                              {prop.type}
-                              {prop.required ? " · required" : ""}
-                            </Text>
-                          </Group>
-                        ))}
-                      </Stack>
-                    </ScrollArea.Autosize>
-                    {component.accessibilityRequirements.map((requirement) => (
-                      <Text key={requirement} size="xs" c="dimmed">
-                        {requirement}
-                      </Text>
-                    ))}
-                  </Stack>
+                  <ComponentReferenceDetails component={component} />
                 </Accordion.Panel>
               </Accordion.Item>
             );
@@ -123,6 +94,41 @@ function ComponentReferenceContent({
       <Text size="xs" c="dimmed">
         {messages.count(enabledComponents.length)} · Mantine {customJsxAuthoringCatalog.mantineVersion}
       </Text>
+    </Stack>
+  );
+}
+
+function ComponentReferenceDetails({ component }: { component: (typeof enabledComponents)[number] }) {
+  const props = getCustomJsxComponentProps(component.name);
+  return (
+    <Stack gap={6}>
+      {component.description && <Text size="xs">{component.description}</Text>}
+      <Text size="xs" c="dimmed">
+        {component.package} · {props.length} props
+      </Text>
+      {component.blockedProps.map((prop) => (
+        <Text key={prop.name} size="xs" c="red">
+          {prop.name}: {prop.reason}
+        </Text>
+      ))}
+      <ScrollArea.Autosize mah={200} type="auto">
+        <Stack gap={3}>
+          {props.map((prop) => (
+            <Group key={prop.name} gap="xs" justify="space-between" wrap="nowrap">
+              <Code>{prop.name}</Code>
+              <Text size="xs" ff="monospace" c="dimmed" ta="right">
+                {prop.type}
+                {prop.required ? " · required" : ""}
+              </Text>
+            </Group>
+          ))}
+        </Stack>
+      </ScrollArea.Autosize>
+      {component.accessibilityRequirements.map((requirement) => (
+        <Text key={requirement} size="xs" c="dimmed">
+          {requirement}
+        </Text>
+      ))}
     </Stack>
   );
 }

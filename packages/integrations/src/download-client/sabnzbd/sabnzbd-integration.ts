@@ -155,8 +155,9 @@ export class SabnzbdIntegration extends Integration implements IDownloadClientIn
     });
 
     return await fetchAsync(url)
-      .then((response) => {
+      .then(async (response) => {
         if (!response.ok) {
+          await response.body?.cancel().catch(() => undefined);
           throw new ResponseError(response);
         }
         return response.json();

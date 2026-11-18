@@ -11,7 +11,8 @@ import { gotifyApplicationsResponseSchema, gotifyMessagesResponseSchema } from "
 
 export class GotifyIntegration extends Integration implements INotificationsIntegration {
   public async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
-    await input.fetchAsync(this.url("/health"), { headers: this.getHeaders() });
+    const response = await input.fetchAsync(this.url("/health"), { headers: this.getHeaders() });
+    await response.body?.cancel().catch(() => undefined);
     return { success: true };
   }
 
@@ -33,7 +34,10 @@ export class GotifyIntegration extends Integration implements INotificationsInte
       const response = await fetchWithTrustedCertificatesAsync(this.url("/application"), {
         headers: this.getHeaders(),
       });
-      if (!response.ok) throw new ResponseError(response);
+      if (!response.ok) {
+        await response.body?.cancel().catch(() => undefined);
+        throw new ResponseError(response);
+      }
 
       const result = await gotifyApplicationsResponseSchema.safeParseAsync(await response.json());
       if (!result.success) return new Map();
@@ -53,7 +57,11 @@ export class GotifyIntegration extends Integration implements INotificationsInte
 
     try {
       const imageUrl = this.getApplicationImageUrl(trimmedImagePath);
-      return await imageProxy.createImageAsync(imageUrl, this.getHeaders());
+      let headers: Record<string, string> | undefined;
+      if (new URL(imageUrl).origin === new URL(this.integration.url).origin) {
+        headers = this.getHeaders();
+      }
+      return await imageProxy.createImageAsync(imageUrl, headers);
     } catch {
       return undefined;
     }
@@ -73,7 +81,10 @@ export class GotifyIntegration extends Integration implements INotificationsInte
       method: "DELETE",
       headers: this.getHeaders(),
     });
-    if (!response.ok) throw new ResponseError(response);
+    await response.body?.cancel().catch(() => undefined);
+    if (!response.ok) {
+      throw new ResponseError(response);
+    }
   }
 
   public async getNotificationsAsync(): Promise<Notification[]> {
@@ -82,7 +93,10 @@ export class GotifyIntegration extends Integration implements INotificationsInte
       this.getApplicationsByIdAsync(),
     ]);
 
-    if (!messagesResponse.ok) throw new ResponseError(messagesResponse);
+    if (!messagesResponse.ok) {
+      await messagesResponse.body?.cancel().catch(() => undefined);
+      throw new ResponseError(messagesResponse);
+    }
 
     const messagesResult = await gotifyMessagesResponseSchema.safeParseAsync(await messagesResponse.json());
     if (!messagesResult.success) throw new Error(`Failed to parse Gotify response: ${messagesResult.error.message}`);

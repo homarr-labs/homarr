@@ -82,7 +82,7 @@ export const BoardBackgroundVideo = () => {
         position: board.backgroundImageAttachment === "fixed" ? "fixed" : "absolute",
         width: "100%",
         height: "100%",
-        minHeight: "100vh",
+        minHeight: "100dvh",
         top: 0,
         left: 0,
         objectFit: board.backgroundImageSize,

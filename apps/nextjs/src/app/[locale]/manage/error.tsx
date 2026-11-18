@@ -6,13 +6,7 @@ import { IconAlertTriangle } from "@tabler/icons-react";
 
 import { useI18n } from "@homarr/translation/client";
 
-export default function ManageErrorPage({
-  error,
-  unstable_retry,
-}: {
-  error: Error & { digest?: string };
-  unstable_retry: () => void;
-}) {
+export default function ManageErrorPage({ error, retry }: { error: Error & { digest?: string }; retry: () => void }) {
   const tError = useI18n("management.error");
   const tCommon = useI18n("common");
 
@@ -33,7 +27,7 @@ export default function ManageErrorPage({
             {tError("digest", { digest: error.digest })}
           </Text>
         )}
-        <Button variant="light" onClick={unstable_retry}>
+        <Button variant="light" onClick={retry}>
           {tCommon("action.tryAgain")}
         </Button>
       </Stack>

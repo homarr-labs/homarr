@@ -178,7 +178,7 @@ export const umamiRouter = createTRPCRouter({
         return mockWidgetData.umamiEventSeries.filter((series) => input.eventNames.includes(series.eventName));
       }
       try {
-        const sortedNames = [...input.eventNames].toSorted();
+        const sortedNames = input.eventNames.toSorted();
         const innerHandler = umamiMultiEventRequestHandler.handler(
           { ...ctx.integration, kind: "umami" },
           {

@@ -203,6 +203,9 @@ export const IconPicker = ({
     }
 
     if (event.key === "Enter") {
+      // Safari can finish composition before dispatching the confirming Enter.
+      // oxlint-disable-next-line typescript/no-deprecated
+      if (event.nativeEvent.isComposing || event.nativeEvent.keyCode === 229) return;
       if (keyboardIndex >= 0 && orderedOptions[keyboardIndex]) {
         event.preventDefault();
         commitValue(orderedOptions[keyboardIndex].url);

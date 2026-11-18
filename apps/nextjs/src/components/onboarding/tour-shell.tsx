@@ -34,11 +34,16 @@ const waitForTourTarget = (targetId: string, callback: () => void, onTimeout: ()
   const stop = () => {
     stopped = true;
     observer.disconnect();
+    window.removeEventListener("resize", checkForTarget);
     clearTimeout(timeout);
   };
   const checkForTarget = () => {
     if (stopped) return;
-    if (!document.querySelector(`[data-tour-target="${targetId}"]`)) return;
+    const targets = document.querySelectorAll<HTMLElement>(`[data-tour-target="${targetId}"]`);
+    const visible = Array.from(targets).some(
+      (target) => target.getClientRects().length > 0 && getComputedStyle(target).visibility !== "hidden",
+    );
+    if (!visible) return;
     stop();
     callback();
   };
@@ -52,16 +57,23 @@ const waitForTourTarget = (targetId: string, callback: () => void, onTimeout: ()
     childList: true,
     subtree: true,
     attributes: true,
-    attributeFilter: ["data-tour-target"],
+    attributeFilter: ["data-tour-target", "class", "style", "hidden"],
   });
+  window.addEventListener("resize", checkForTarget);
   checkForTarget();
   return stop;
 };
 
-const isTypingTarget = (target: EventTarget | null) => {
+const isInteractiveTarget = (target: EventTarget | null) => {
   if (!(target instanceof HTMLElement)) return false;
   const tag = target.tagName;
-  return tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT" || target.isContentEditable;
+  return (
+    tag === "INPUT" ||
+    tag === "TEXTAREA" ||
+    tag === "SELECT" ||
+    target.isContentEditable ||
+    target.closest("button, a[href], [role='button']") !== null
+  );
 };
 
 interface TourForwardButtonProps {
@@ -186,7 +198,7 @@ export const TourShell = ({
 
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key !== "Enter" || event.shiftKey || event.ctrlKey || event.metaKey || event.altKey) return;
-      if (isTypingTarget(event.target)) return;
+      if (event.defaultPrevented || event.isComposing || isInteractiveTarget(event.target)) return;
       event.preventDefault();
       forwardActionRef.current?.();
     };

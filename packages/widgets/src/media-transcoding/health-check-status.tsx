@@ -22,6 +22,12 @@ export function HealthCheckStatus(props: HealthCheckStatusProps) {
     : props.statistics.stagedHealthCheckCount
       ? "yellow"
       : "green";
+  const healthCheckSections = [
+    { value: props.statistics.stagedHealthCheckCount, color: textColor("yellow", colorScheme) },
+    { value: props.statistics.totalHealthCheckCount, color: textColor("green", colorScheme) },
+    { value: props.statistics.failedHealthCheckCount, color: textColor("red", colorScheme) },
+  ];
+  const healthCheckTotal = healthCheckSections.reduce((total, section) => total + section.value, 0);
 
   return (
     <Popover position="bottom" width={250} shadow="sm" withArrow>
@@ -48,11 +54,10 @@ export function HealthCheckStatus(props: HealthCheckStatusProps) {
             }}
           />
           <RingProgress
-            sections={[
-              { value: props.statistics.stagedHealthCheckCount, color: textColor("yellow", colorScheme) },
-              { value: props.statistics.totalHealthCheckCount, color: textColor("green", colorScheme) },
-              { value: props.statistics.failedHealthCheckCount, color: textColor("red", colorScheme) },
-            ]}
+            sections={healthCheckSections.map((section) => ({
+              ...section,
+              value: healthCheckTotal > 0 ? (section.value * 100) / healthCheckTotal : 0,
+            }))}
           />
           <Group display="flex" w="100%">
             <Stack style={{ flex: 1 }} gap={0} align="center">

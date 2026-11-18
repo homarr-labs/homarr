@@ -56,8 +56,8 @@
 
 .status {
   position: absolute;
-  bottom: 4px;
-  right: calc(100% + 6px);
+  bottom: calc(100% + 4px);
+  right: 0;
   width: max-content;
   max-width: min(240px, calc(100vw - 90px));
   padding: 6px 8px;
@@ -66,11 +66,6 @@
   background: var(--color-fd-popover);
   color: var(--color-fd-popover-foreground);
   font-size: 11px;
-}
-
-.status {
-  bottom: calc(100% + 4px);
-  right: 0;
 }
 
 @media (max-width: 600px) {

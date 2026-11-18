@@ -1,7 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { Children, isValidElement, useEffect, useRef, useState } from "react";
+import { Children, isValidElement, useEffect, useId, useRef, useState } from "react";
 import { ActionIcon, Badge, Collapse, Group, Stack, Tabs, Text, UnstyledButton } from "@mantine/core";
 import { IconChevronDown, IconChevronLeft, IconChevronRight, IconChevronUp } from "@tabler/icons-react";
 
@@ -120,11 +120,12 @@ const COLLAPSE_STATE: Record<0 | 1, keyof typeof COLLAPSE_CHEVRONS> = {
 
 export function Collapsible({ children, title, defaultOpen = false }: CollapsibleProps) {
   const [opened, setOpened] = useState(defaultOpen);
+  const contentId = useId();
   const Chevron = COLLAPSE_CHEVRONS[COLLAPSE_STATE[Number(opened) as 0 | 1]];
 
   return (
     <Stack gap={0}>
-      <UnstyledButton onClick={() => setOpened((o) => !o)} py={4}>
+      <UnstyledButton onClick={() => setOpened((o) => !o)} aria-expanded={opened} aria-controls={contentId} py={4}>
         <Group gap="xs" wrap="nowrap">
           <Chevron size={14} />
           <Text size="sm" fw={600}>
@@ -132,7 +133,9 @@ export function Collapsible({ children, title, defaultOpen = false }: Collapsibl
           </Text>
         </Group>
       </UnstyledButton>
-      <Collapse expanded={opened}>{children}</Collapse>
+      <Collapse id={contentId} expanded={opened}>
+        {children}
+      </Collapse>
     </Stack>
   );
 }

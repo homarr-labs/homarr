@@ -149,7 +149,10 @@ export const fetchOpenRouterGenerationTelemetryAsync = async ({
     const endpoint = new URL(`${baseUrl.replace(/\/$/, "")}/generation`);
     endpoint.searchParams.set("id", generationId);
     const response = await fetchWithTrustedCertificatesAsync(endpoint, { headers, timeout: 3000 });
-    if (!response.ok) return null;
+    if (!response.ok) {
+      await response.body?.cancel();
+      return null;
+    }
     const telemetry = parseOpenRouterGenerationTelemetry(await response.json());
     if (!telemetry) return null;
     if (generationTelemetryCache.size >= generationTelemetryCacheMaxEntries) {

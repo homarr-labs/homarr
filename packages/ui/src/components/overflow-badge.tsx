@@ -38,7 +38,11 @@ export function OverflowBadge({
     return (
       <Group gap={groupGap}>
         {badges}
-        {overflowTrigger}
+        {hasOverflow && (
+          <Badge px="xs" {...badgeProps}>
+            +{data.length - overflowCount}
+          </Badge>
+        )}
       </Group>
     );
   }

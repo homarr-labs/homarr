@@ -43,7 +43,7 @@ import classes from "./component.module.css";
 import TimerPopover from "./timer-popover";
 
 const dnsLightStatus = (enabled: boolean | undefined) =>
-  `var(--mantine-color-${typeof enabled === "undefined" ? "blue" : enabled ? "green" : "red"}-6`;
+  `var(--mantine-color-${typeof enabled === "undefined" ? "blue" : enabled ? "green" : "red"}-6)`;
 
 type DnsSummaryResult = RouterOutputs["widget"]["dnsHole"]["summary"][number];
 type AvailableDnsSummaryResult = DnsSummaryResult & {
@@ -401,7 +401,7 @@ const ControlsCard: React.FC<ControlsCardProps> = ({
                   }: ${data.integration.name}`}
                   className="dns-hole-controls-item-toggle-button"
                   disabled={!controlEnabled}
-                  display="contents"
+                  display="flex"
                   style={{ cursor: controlEnabled ? "pointer" : "default" }}
                   onClick={() => void toggleDns(data.integration.id).catch(() => undefined)}
                 >
@@ -412,7 +412,7 @@ const ControlsCard: React.FC<ControlsCardProps> = ({
                     h="lg"
                     color="var(--background-color)"
                     c="var(--mantine-color-text)"
-                    styles={{ section: { marginInlineEnd: "sm" }, root: { cursor: "inherit" } }}
+                    styles={{ section: { marginInlineEnd: "var(--mantine-spacing-sm)" }, root: { cursor: "inherit" } }}
                     leftSection={
                       isConnected && (
                         <IconCircleFilled

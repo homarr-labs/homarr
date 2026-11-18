@@ -131,6 +131,7 @@ export class StatsIntegration extends Integration {
         const redirect = sanitizeErrors ? "manual" : "error";
         const response = await fetchAsync(url, { ...init, headers, signal, redirect });
         if (!response.ok) {
+          await response.body?.cancel().catch(() => undefined);
           if (!sanitizeErrors && !hasQueryAuthentication) throw new ResponseError({ status: response.status });
           const responseUrl = new URL(url);
           responseUrl.search = "";

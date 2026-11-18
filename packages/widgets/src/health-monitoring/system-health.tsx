@@ -271,11 +271,13 @@ export const SystemHealthMonitoring = ({
                           size="lg"
                         >
                           <Progress.Section
+                            aria-label={`${disk.deviceName}: ${t("popover.used")}`}
                             value={disk.percentage}
                             color={progressColor(disk.percentage)}
                             className="health-monitoring-disk-use-percentage"
                           />
                           <Progress.Section
+                            aria-label={`${disk.deviceName}: ${t("popover.available")}`}
                             className="health-monitoring-disk-available-percentage"
                             value={100 - disk.percentage}
                             color="default"

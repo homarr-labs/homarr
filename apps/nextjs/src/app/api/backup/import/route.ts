@@ -128,52 +128,52 @@ const assertArchiveSizeLimits = (zip: AdmZip) => {
   }
 };
 
-const reEncryptSecrets = (tempDb: InstanceType<typeof BetterSqlite3>, importedKeyHex: string) => {
-  const currentKeyHex = env.SECRET_ENCRYPTION_KEY;
-  if (importedKeyHex === currentKeyHex) return;
+// SQL migrations create these tables before restore rotates their encrypted values.
+const encryptedBackupColumns = [
+  { table: "integrationSecret", column: "value" },
+  { table: "assistant_configuration", column: "encrypted_api_key" },
+  { table: "assistant_configuration", column: "encrypted_headers" },
+  { table: "custom_widget_secret", column: "value" },
+  { table: "custom_widget_v2_secret", column: "encrypted_value" },
+  { table: "widget_secret", column: "value" },
+] as const;
 
+const hasEncryptedBackupValues = (tempDb: InstanceType<typeof BetterSqlite3>) =>
+  encryptedBackupColumns.some(({ table, column }) =>
+    Boolean(tempDb.prepare(`SELECT 1 FROM "${table}" WHERE "${column}" IS NOT NULL LIMIT 1`).get()),
+  );
+
+const reEncryptSecrets = (tempDb: InstanceType<typeof BetterSqlite3>, importedKeyHex: string) => {
   if (!HEX_KEY_REGEX.test(importedKeyHex)) {
     throw new Error("Imported encryption key is not a valid 64-character hex string");
   }
 
   const oldKey = Buffer.from(importedKeyHex, "hex");
-  const newKey = Buffer.from(currentKeyHex, "hex");
+  const newKey = Buffer.from(env.SECRET_ENCRYPTION_KEY, "hex");
+  if (oldKey.equals(newKey)) return;
 
-  const rows = tempDb.prepare('SELECT "integration_id", "kind", "value" FROM "integrationSecret"').all() as {
-    integration_id: string;
-    kind: string;
-    value: string;
-  }[];
-
-  if (rows.length === 0) return;
-
-  const updateStmt = tempDb.prepare(
-    'UPDATE "integrationSecret" SET "value" = ? WHERE "integration_id" = ? AND "kind" = ?',
-  );
   const transaction = tempDb.transaction(() => {
-    for (const row of rows) {
-      const parts = row.value.split(".");
-      if (parts.length !== 2) {
-        throw new Error(
-          `Malformed secret value for integration ${row.integration_id} (${row.kind}): expected "data.iv" format`,
-        );
-      }
-      const [data, dataIv] = parts as [string, string];
-
-      try {
-        const iv = Buffer.from(dataIv, "hex");
-        const encrypted = Buffer.from(data, "hex");
-        const decipher = crypto.createDecipheriv(ALGORITHM, oldKey, iv);
-        const decrypted = Buffer.concat([decipher.update(encrypted), decipher.final()]).toString();
-
-        const newIv = crypto.randomBytes(16);
-        const cipher = crypto.createCipheriv(ALGORITHM, newKey, newIv);
-        const newEncrypted = Buffer.concat([cipher.update(decrypted), cipher.final()]);
-        const newValue = `${newEncrypted.toString("hex")}.${newIv.toString("hex")}`;
-
-        updateStmt.run(newValue, row.integration_id, row.kind);
-      } catch {
-        throw new Error(`Failed to re-encrypt secret for integration ${row.integration_id} (${row.kind})`);
+    for (const { table, column } of encryptedBackupColumns) {
+      const rows = tempDb
+        .prepare(`SELECT rowid AS "rowId", "${column}" AS "value" FROM "${table}" WHERE "${column}" IS NOT NULL`)
+        .all() as { rowId: number; value: string }[];
+      const update = tempDb.prepare(`UPDATE "${table}" SET "${column}" = ? WHERE rowid = ?`);
+      for (const row of rows) {
+        // Reject malformed hex rather than allowing Buffer.from to silently truncate it.
+        if (typeof row.value !== "string" || !/^(?:[a-f0-9]{32})+\.[a-f0-9]{32}$/iu.test(row.value)) {
+          throw new Error(`Malformed encrypted value in ${table}.${column}`);
+        }
+        const [data, dataIv] = row.value.split(".") as [string, string];
+        try {
+          const decipher = crypto.createDecipheriv(ALGORITHM, oldKey, Buffer.from(dataIv, "hex"));
+          const decrypted = Buffer.concat([decipher.update(Buffer.from(data, "hex")), decipher.final()]);
+          const newIv = crypto.randomBytes(16);
+          const cipher = crypto.createCipheriv(ALGORITHM, newKey, newIv);
+          const encrypted = Buffer.concat([cipher.update(decrypted), cipher.final()]);
+          update.run(`${encrypted.toString("hex")}.${newIv.toString("hex")}`, row.rowId);
+        } catch {
+          throw new Error(`Failed to re-encrypt secret in ${table}.${column}`);
+        }
       }
     }
   });
@@ -303,7 +303,6 @@ export async function POST(req: Request) {
     } finally {
       tempDb.pragma(`foreign_keys = ${foreignKeys}`);
     }
-    await applyCustomMigrationsAsync(drizzleDb as unknown as Database);
 
     const metadataEntry = zip.getEntry("metadata.json");
     if (!metadataEntry) {
@@ -314,12 +313,9 @@ export async function POST(req: Request) {
     const rawKey = metadata.encryptionKey ?? zip.getEntry("encryption-key.txt")?.getData().toString().trim();
     const importedKey = typeof rawKey === "string" && rawKey.length > 0 ? rawKey : undefined;
 
-    const secretCount = (tempDb.prepare('SELECT COUNT(*) as count FROM "integrationSecret"').get() as { count: number })
-      .count;
-
-    if (secretCount > 0 && !importedKey) {
+    if (hasEncryptedBackupValues(tempDb) && !importedKey) {
       throw new Error(
-        "Backup contains integration secrets but no encryption key. " +
+        "Backup contains encrypted secrets but no encryption key. " +
           "Cannot restore without the original SECRET_ENCRYPTION_KEY.",
       );
     }
@@ -327,6 +323,8 @@ export async function POST(req: Request) {
     if (importedKey) {
       reEncryptSecrets(tempDb, importedKey);
     }
+    // Custom migrations may decrypt imported values using the current runtime key.
+    await applyCustomMigrationsAsync(drizzleDb as unknown as Database);
 
     const oversizedMedia = tempDb
       .prepare('SELECT 1 FROM "media" WHERE length("content") > ? OR "size" > ? LIMIT 1')

@@ -16,6 +16,7 @@ export const LogLevelSelection = () => {
 
   return (
     <Select
+      aria-label={t("label")}
       data={logLevels.map((level) => ({
         value: level,
         label: `${logLevelConfiguration[level].prefix} ${t(`option.${level}`)}`,

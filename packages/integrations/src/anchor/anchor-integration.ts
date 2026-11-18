@@ -21,7 +21,10 @@ export class AnchorIntegration extends Integration {
       },
     });
 
-    if (!response.ok) return TestConnectionError.StatusResult(response);
+    if (!response.ok) {
+      await response.body?.cancel().catch(() => undefined);
+      return TestConnectionError.StatusResult(response);
+    }
 
     anchorNoteSummaryListSchema.parse(await response.json());
     return { success: true };

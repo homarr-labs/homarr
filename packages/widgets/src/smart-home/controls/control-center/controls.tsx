@@ -176,6 +176,7 @@ export function PillSlider({
       role="slider"
       tabIndex={disabled ? -1 : 0}
       aria-label={label}
+      aria-orientation={axis}
       aria-valuemin={min}
       aria-valuemax={max}
       aria-valuenow={shown}

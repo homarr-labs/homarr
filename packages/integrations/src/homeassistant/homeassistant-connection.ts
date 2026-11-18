@@ -614,6 +614,8 @@ const openSocketAsync = async (url: URL, certificate: CertificateOptions) =>
     socket.once("open", () => resolve(socket));
     socket.once("unexpected-response", (_request, response) => {
       reject(new ResponseError({ status: response.statusCode ?? 500, url: url.toString() }));
+      response.destroy();
+      socket.terminate();
     });
     socket.once("error", (error: Error & { code?: string }) => {
       const matched = error.code ? matchErrorCode(error.code) : undefined;

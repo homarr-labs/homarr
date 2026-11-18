@@ -134,6 +134,7 @@ const CalendarEventRows = ({
             <Box pos="relative">
               <Image
                 src={event.image.src}
+                alt=""
                 w={70}
                 mah={150}
                 style={{
@@ -222,6 +223,11 @@ const CalendarEventRows = ({
                   .filter((link) => link.href)
                   .map((link) => {
                     const href = getSafeApplicationUrl(link.href.toString());
+                    let hoverColor: string | undefined;
+                    if (link.color) {
+                      hoverColor = darken(link.color, 0.1);
+                      if (link.isDark) hoverColor = lighten(link.color, 0.1);
+                    }
                     return (
                       <Button
                         key={link.href}
@@ -232,18 +238,16 @@ const CalendarEventRows = ({
                         size={"xs"}
                         radius={"xl"}
                         variant={link.color ? undefined : "default"}
-                        styles={{
+                        vars={() => ({
                           root: {
-                            backgroundColor: link.color,
-                            color: link.isDark && colorScheme === "dark" ? "white" : "black",
-                            "&:hover": link.color
-                              ? {
-                                  backgroundColor: link.isDark ? lighten(link.color, 0.1) : darken(link.color, 0.1),
-                                }
-                              : undefined,
+                            "--button-bg": link.color ?? undefined,
+                            "--button-color": link.isDark && colorScheme === "dark" ? "white" : "black",
+                            "--button-hover": hoverColor,
                           },
-                        }}
-                        leftSection={link.logo ? <Image src={link.logo} fit="contain" w={20} h={20} /> : undefined}
+                        })}
+                        leftSection={
+                          link.logo ? <Image alt="" src={link.logo} fit="contain" w={20} h={20} /> : undefined
+                        }
                       >
                         <Text>{link.name}</Text>
                       </Button>

@@ -34,6 +34,7 @@ export class AudiobookshelfIntegration extends Integration {
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
     const healthResponse = await input.fetchAsync(this.url("/healthcheck"));
 
+    await healthResponse.body?.cancel().catch(() => undefined);
     if (!healthResponse.ok) {
       return TestConnectionError.StatusResult(healthResponse);
     }
@@ -43,6 +44,7 @@ export class AudiobookshelfIntegration extends Integration {
       headers: this.getAuthHeaders(),
     });
 
+    await authorizeResponse.body?.cancel().catch(() => undefined);
     if (!authorizeResponse.ok) {
       return TestConnectionError.StatusResult(authorizeResponse);
     }
@@ -97,6 +99,7 @@ export class AudiobookshelfIntegration extends Integration {
     const response = await this.getAsync("/api/libraries");
 
     if (!response.ok) {
+      await response.body?.cancel().catch(() => undefined);
       throw new ResponseError(response);
     }
 
@@ -107,6 +110,7 @@ export class AudiobookshelfIntegration extends Integration {
     const response = await this.getAsync(`/api/libraries/${libraryId}/stats`);
 
     if (!response.ok) {
+      await response.body?.cancel().catch(() => undefined);
       throw new ResponseError(response);
     }
 
@@ -117,6 +121,7 @@ export class AudiobookshelfIntegration extends Integration {
     const response = await this.getAsync("/api/me/listening-stats");
 
     if (!response.ok) {
+      await response.body?.cancel().catch(() => undefined);
       throw new ResponseError(response);
     }
 
@@ -127,6 +132,7 @@ export class AudiobookshelfIntegration extends Integration {
     const response = await this.getAsync("/api/users/online");
 
     if (!response.ok) {
+      await response.body?.cancel().catch(() => undefined);
       throw new ResponseError(response);
     }
 

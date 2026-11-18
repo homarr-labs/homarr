@@ -177,6 +177,7 @@ const BoardTabRenameInput = ({ tab, onDone }: { tab: BoardTab; onDone: () => voi
   };
 
   const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
+    if (event.nativeEvent.isComposing || event.nativeEvent.keyCode === 229) return;
     if (event.key !== "Enter" && event.key !== "Escape") return;
     event.preventDefault();
     event.stopPropagation();

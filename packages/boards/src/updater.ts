@@ -44,14 +44,18 @@ interface PersistBoardOptions {
 
 export const usePersistBoard = ({ id, name }: Pick<Board, "id" | "name">) => {
   const utils = clientApi.useUtils();
-  const { updateBoard } = useUpdateBoard();
   const { mutateAsync: saveBoardAsync } = clientApi.board.saveBoard.useMutation({
     scope: { id: `board-save:${id}` },
   });
 
   const updateAndPersistBoard = useCallback(
     (updater: UpdateCallback, options?: PersistBoardOptions) => {
-      const persistedBoard = updateBoard(updater);
+      let persistedBoard: Board | undefined;
+      utils.board.getBoardByName.setData({ name }, (previous) => {
+        if (!previous || previous.id !== id) return previous;
+        persistedBoard = updater(previous);
+        return persistedBoard;
+      });
       if (!persistedBoard) return undefined;
 
       void saveBoardAsync(persistedBoard).catch((error: unknown) => {
@@ -64,7 +68,7 @@ export const usePersistBoard = ({ id, name }: Pick<Board, "id" | "name">) => {
 
       return persistedBoard;
     },
-    [name, saveBoardAsync, updateBoard, utils],
+    [id, name, saveBoardAsync, utils],
   );
 
   return { updateAndPersistBoard };

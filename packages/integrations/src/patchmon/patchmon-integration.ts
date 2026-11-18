@@ -17,6 +17,7 @@ export class PatchMonIntegration extends Integration {
     });
 
     if (!response.ok) {
+      await response.body?.cancel().catch(() => undefined);
       return TestConnectionError.StatusResult(response);
     }
 
@@ -40,6 +41,7 @@ export class PatchMonIntegration extends Integration {
     });
 
     if (!response.ok) {
+      await response.body?.cancel().catch(() => undefined);
       throw new ResponseError(response);
     }
 

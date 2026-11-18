@@ -311,7 +311,7 @@ const HeaderItem = ({
     return (
       <Tooltip label={board.name}>
         <HeaderButton href={`/boards/${encodeURIComponent(board.name)}`} aria-label={board.name}>
-          <Avatar src={board.logoImageUrl} size={22} radius="sm">
+          <Avatar src={board.logoImageUrl} alt="" size={22} radius="sm">
             {getBoardInitial(board.name)}
           </Avatar>
         </HeaderButton>

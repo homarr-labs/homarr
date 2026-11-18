@@ -146,7 +146,10 @@ export class ICalIntegration extends Integration implements ICalendarIntegration
 
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
     const response = await input.fetchAsync(super.getSecretValue("url"));
-    if (!response.ok) return TestConnectionError.StatusResult(response);
+    if (!response.ok) {
+      await response.body?.cancel().catch(() => undefined);
+      return TestConnectionError.StatusResult(response);
+    }
 
     const result = await response.text();
 

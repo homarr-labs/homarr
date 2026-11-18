@@ -143,6 +143,7 @@ export class UnifiControllerIntegration extends Integration implements NetworkCo
     });
 
     if (response.status === 404) {
+      await response.body?.cancel().catch(() => undefined);
       loginUrl.pathname = "/api/login";
       response = await fetchWithTrustedCertificatesAsync(loginUrl, {
         method: "POST",
@@ -155,7 +156,10 @@ export class UnifiControllerIntegration extends Integration implements NetworkCo
       });
     }
 
-    if (!response.ok) throw new Error("UniFi controller authentication failed");
+    await response.body?.cancel().catch(() => undefined);
+    if (!response.ok) {
+      throw new Error("UniFi controller authentication failed");
+    }
     const cookies = response.headers
       .getSetCookie()
       .map((cookie) => cookie.split(";", 1)[0])
@@ -239,6 +243,7 @@ export class UnifiControllerIntegration extends Integration implements NetworkCo
     T extends Extract<SiteStats["health"][number], { subsystem: S }>,
   >(data: SiteStats[], subsystem: S, selectCallback: (obj: T) => number, strategy: "average" | "sum" | "max"): number {
     const values = data.map((site) => selectCallback(this.getSubsystem(site.health, subsystem) as T));
+    if (values.length === 0) return 0;
 
     if (strategy === "sum") {
       return values.reduce((first, second) => first + second, 0);

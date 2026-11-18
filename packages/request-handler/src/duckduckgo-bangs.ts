@@ -52,6 +52,7 @@ export const duckDuckGoBangsRequestHandler = createRequestHandler({
     });
 
     if (!res.ok) {
+      await res.body?.cancel().catch(() => undefined);
       throw new ResponseError(res);
     }
 

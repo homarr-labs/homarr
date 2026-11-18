@@ -340,13 +340,19 @@ export class HomeAssistantIntegration extends Integration implements ISmartHomeI
 
   public async getCalendarEventsAsync(start: Date, end: Date): Promise<CalendarEvent[]> {
     const calendarsResponse = await this.getAsync("/api/calendars");
-    if (!calendarsResponse.ok) throw new ResponseError(calendarsResponse);
+    if (!calendarsResponse.ok) {
+      await calendarsResponse.body?.cancel().catch(() => undefined);
+      throw new ResponseError(calendarsResponse);
+    }
     const calendars = await calendarsSchema.parseAsync(await calendarsResponse.json());
 
     return await Promise.all(
       calendars.map(async (calendar) => {
         const response = await this.getAsync(`/api/calendars/${calendar.entity_id}`, { start, end });
-        if (!response.ok) throw new ResponseError(response);
+        if (!response.ok) {
+          await response.body?.cancel().catch(() => undefined);
+          throw new ResponseError(response);
+        }
         return await z.array(calendarEventSchema).parseAsync(await response.json());
       }),
     ).then((events) =>
@@ -371,6 +377,7 @@ export class HomeAssistantIntegration extends Integration implements ISmartHomeI
       headers: this.getAuthHeaders(),
     });
 
+    await response.body?.cancel().catch(() => undefined);
     if (!response.ok) {
       return TestConnectionError.StatusResult(response);
     }

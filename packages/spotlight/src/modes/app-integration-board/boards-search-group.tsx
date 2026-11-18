@@ -21,7 +21,7 @@ type Board = {
 
 const boardChildrenOptions = createChildrenOptions<Board>({
   useActions: (options) => {
-    const actions: (ChildrenAction<Board> & { hidden?: boolean })[] = [
+    const actions: ChildrenAction<Board>[] = [
       {
         key: "open",
         Component: () => {
@@ -97,7 +97,7 @@ const boardChildrenOptions = createChildrenOptions<Board>({
           );
         },
         useInteraction: interaction.link(({ name }) => ({ href: `/boards/${name}/settings` })),
-        hidden: !options.permissions.hasChangeAccess,
+        hide: !options.permissions.hasChangeAccess,
       },
     ];
 

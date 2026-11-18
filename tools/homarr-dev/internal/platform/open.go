@@ -11,7 +11,12 @@ func OpenURL(url string) error {
 	if err != nil {
 		return err
 	}
-	return exec.Command(name, args...).Start()
+	command := exec.Command(name, args...)
+	if err := command.Start(); err != nil {
+		return err
+	}
+	go func() { _ = command.Wait() }()
+	return nil
 }
 
 var platformOpeners = map[string]func(string) (string, []string){

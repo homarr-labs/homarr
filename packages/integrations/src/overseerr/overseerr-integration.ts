@@ -113,6 +113,7 @@ export class OverseerrIntegration
         `Status code ${response.status} does not match the expected status code. The request was likely not created. Response: ${await response.text()}`,
       );
     }
+    await response.body?.cancel().catch(() => undefined);
   }
 
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
@@ -122,7 +123,10 @@ export class OverseerrIntegration
       },
     });
 
-    if (!response.ok) return TestConnectionError.StatusResult(response);
+    if (!response.ok) {
+      await response.body?.cancel().catch(() => undefined);
+      return TestConnectionError.StatusResult(response);
+    }
 
     const responseSchema = z.object({ id: z.number() });
     await responseSchema.parseAsync(await response.json());
@@ -279,7 +283,10 @@ export class OverseerrIntegration
         "X-Api-Key": this.getSecretValue("apiKey"),
       },
     });
-    if (!response.ok) throw new ResponseError(response);
+    await response.body?.cancel().catch(() => undefined);
+    if (!response.ok) {
+      throw new ResponseError(response);
+    }
     logger.info("Successfully approved media request", { requestId, integration: this.integration.name });
   }
 
@@ -292,7 +299,10 @@ export class OverseerrIntegration
         "X-Api-Key": this.getSecretValue("apiKey"),
       },
     });
-    if (!response.ok) throw new ResponseError(response);
+    await response.body?.cancel().catch(() => undefined);
+    if (!response.ok) {
+      throw new ResponseError(response);
+    }
     logger.info("Successfully declined media request", { requestId, integration: this.integration.name });
   }
 

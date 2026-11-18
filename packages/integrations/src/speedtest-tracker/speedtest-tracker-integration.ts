@@ -29,6 +29,7 @@ export class SpeedtestTrackerIntegration extends Integration {
       headers: this.getAuthHeaders(),
     });
 
+    await response.body?.cancel().catch(() => undefined);
     if (!response.ok) {
       return TestConnectionError.StatusResult(response);
     }
@@ -41,10 +42,12 @@ export class SpeedtestTrackerIntegration extends Integration {
 
     // Speedtest Tracker returns 404 when no tests have been run yet (fresh install)
     if (response.status === 404) {
+      await response.body?.cancel().catch(() => undefined);
       return null;
     }
 
     if (!response.ok) {
+      await response.body?.cancel().catch(() => undefined);
       throw new ResponseError(response);
     }
 
@@ -55,6 +58,7 @@ export class SpeedtestTrackerIntegration extends Integration {
     const response = await this.getAsync("/api/v1/stats");
 
     if (!response.ok) {
+      await response.body?.cancel().catch(() => undefined);
       throw new ResponseError(response);
     }
 
@@ -68,6 +72,7 @@ export class SpeedtestTrackerIntegration extends Integration {
     });
 
     if (!response.ok) {
+      await response.body?.cancel().catch(() => undefined);
       throw new ResponseError(response);
     }
 

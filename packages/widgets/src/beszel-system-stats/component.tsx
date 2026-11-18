@@ -176,6 +176,7 @@ export default function BeszelSystemStatsWidget({
             data={systems}
             value={selectedValue}
             placeholder={t("selectSystem")}
+            aria-label={t("option.systemId.label")}
             disabled={isSelectionSavePending}
             onChange={(value) => value && handleSelectSystem(value)}
           />
@@ -285,6 +286,7 @@ export default function BeszelSystemStatsWidget({
           ) : (
             <Select
               size="xs"
+              aria-label={t("option.timePeriod.label")}
               value={options.timePeriod}
               onChange={(value) => value && handleTimePeriod(value)}
               disabled={isSelectionSavePending}

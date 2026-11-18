@@ -1,7 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { DragEndEvent, DraggableAttributes, DragStartEvent } from "@dnd-kit/core";
 import {
   closestCenter,
@@ -35,7 +35,7 @@ import { IconGripVertical } from "@tabler/icons-react";
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
-import { showSuccessNotification } from "@homarr/notifications";
+import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
 import { Link, UserAvatarGroup } from "@homarr/ui";
 
@@ -52,6 +52,13 @@ export const GroupsTable = ({ groups, initialGroupIds, hasFilter }: GroupsTableP
   const tCommon = useI18n("common");
   const [activeId, setActiveId] = useState<string | null>(null);
   const [groupIds, setGroupIds] = useState(groups.map((group) => group.id));
+  useEffect(() => {
+    const availableIds = new Set(initialGroupIds);
+    setGroupIds((current) => [
+      ...current.filter((id) => availableIds.has(id)),
+      ...initialGroupIds.filter((id) => !current.includes(id)),
+    ]);
+  }, [initialGroupIds]);
   const groupsById = useMemo(() => new Map(groups.map((group) => [group.id, group])), [groups]);
   const isDirty = useMemo(
     () => initialGroupIds.some((groupId, index) => groupIds[index] !== groupId),
@@ -72,7 +79,7 @@ export const GroupsTable = ({ groups, initialGroupIds, hasFilter }: GroupsTableP
           });
         },
         onError() {
-          showSuccessNotification({
+          showErrorNotification({
             message: tGroup("action.changePosition.notification.error.message"),
           });
         },
@@ -93,11 +100,12 @@ export const GroupsTable = ({ groups, initialGroupIds, hasFilter }: GroupsTableP
       return;
     }
 
-    setGroupIds((groupIds) => {
-      const oldIndex = groupIds.indexOf(active.id as string);
-      const newIndex = groupIds.indexOf(over.id as string);
-      return arrayMove(groupIds, oldIndex, newIndex);
+    setGroupIds((currentIds) => {
+      const oldIndex = currentIds.indexOf(active.id as string);
+      const newIndex = currentIds.indexOf(over.id as string);
+      return arrayMove(currentIds, oldIndex, newIndex);
     });
+    setActiveId(null);
   }
 
   function handleDragCancel() {

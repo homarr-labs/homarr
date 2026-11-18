@@ -19,6 +19,7 @@ export class WudIntegration extends Integration {
     });
 
     if (!response.ok) {
+      await response.body?.cancel().catch(() => undefined);
       return TestConnectionError.StatusResult(response);
     }
 
@@ -42,6 +43,7 @@ export class WudIntegration extends Integration {
     });
 
     if (!response.ok) {
+      await response.body?.cancel().catch(() => undefined);
       throw new ResponseError(response);
     }
 

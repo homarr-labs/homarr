@@ -135,13 +135,19 @@ interface MetricRowProps {
   size: SizeConfig;
 }
 
-const MetricValue = ({ value, progress, size }: Pick<MetricRowProps, "value" | "progress" | "size">) => (
+const MetricValue = ({
+  label,
+  value,
+  progress,
+  size,
+}: Pick<MetricRowProps, "label" | "value" | "progress" | "size">) => (
   <Group gap={6} wrap="nowrap" style={{ flex: 1, minWidth: 0, marginLeft: "auto" }}>
     <Text size={size.fontSize} fw={500} w={size.valueMiw} ta="left" style={{ whiteSpace: "nowrap", flexShrink: 0 }}>
       {value}
     </Text>
     {progress && (
       <Progress
+        aria-label={label}
         value={progress.value}
         color={progress.color}
         size={getProgressTrackSize(size.progressSize)}
@@ -157,7 +163,7 @@ const MetricRow = ({ icon, label, value, progress, size }: MetricRowProps) => (
     <Text size={size.fontSize} c="dimmed" w={size.labelMiw} style={{ whiteSpace: "nowrap", flexShrink: 0 }}>
       {label}
     </Text>
-    <MetricValue value={value} progress={progress} size={size} />
+    <MetricValue label={label} value={value} progress={progress} size={size} />
   </Group>
 );
 

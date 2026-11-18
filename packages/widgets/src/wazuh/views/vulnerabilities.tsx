@@ -4,6 +4,7 @@ import { Anchor, Badge, Box, Center, Group, Progress, ScrollArea, Stack, Text, T
 import { IconBug } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
+import { getSafeApplicationUrl } from "@homarr/common";
 import type { WazuhVulnerabilityOverview } from "@homarr/integrations/types";
 import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";
 
@@ -21,7 +22,9 @@ const severityKeys = ["critical", "high", "medium", "low"] as const;
 const severityColors = { critical: "red", high: "orange", medium: "yellow", low: "blue" } as const;
 
 const cveHref = (id: string, reference: string | null, links: WazuhDashboardLinks | null) =>
-  links?.vulnerabilities({ cve: id }) ?? reference ?? `https://www.cve.org/CVERecord?id=${encodeURIComponent(id)}`;
+  links?.vulnerabilities({ cve: id }) ??
+  getSafeApplicationUrl(reference) ??
+  `https://www.cve.org/CVERecord?id=${encodeURIComponent(id)}`;
 
 const CveList = ({
   data,

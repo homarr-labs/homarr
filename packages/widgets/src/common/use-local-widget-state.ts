@@ -107,7 +107,7 @@ export const useLocalWidgetState = <T>({
     if (!key) return;
 
     const handleStorage = (event: StorageEvent) => {
-      if (event.storageArea !== window.localStorage || event.key !== key) return;
+      if (event.storageArea !== window.localStorage || (event.key !== key && event.key !== null)) return;
       if (event.newValue === null) {
         setMemoryValue(createDefaultValue());
         return;

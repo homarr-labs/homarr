@@ -25,7 +25,7 @@ export const testConnectionAsync = async (
   logger.info("Testing connection", {
     integrationName: integration.name,
     integrationKind: integration.kind,
-    integrationUrl: integration.url,
+    integrationOrigin: URL.parse(integration.url)?.origin,
   });
 
   const decryptedDbSecrets = dbSecrets
@@ -96,7 +96,7 @@ export const testConnectionAsync = async (
     logger.info("Tested connection successfully", {
       integrationName: integration.name,
       integrationKind: integration.kind,
-      integrationUrl: integration.url,
+      integrationOrigin: URL.parse(integration.url)?.origin,
     });
   }
   return result;

@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import dayjs from "dayjs";
 
-import type { WorkshopComment, WorkshopSubmission, WorkshopVote } from "@site/src/lib/pocketbase";
+import type { WorkshopSubmission, WorkshopVote } from "@site/src/lib/pocketbase";
 import { getWorkshopBackend } from "@site/src/lib/pocketbase";
 import type { SubmissionType } from "@site/src/lib/workshop-schema";
 import { validateSubmissionContent } from "@site/src/lib/workshop-schema";
@@ -22,13 +22,6 @@ export interface SubmitInput {
   changelog: string;
   content: string;
   screenshots: File[];
-}
-
-export interface CommentActions {
-  fetch: (submissionId: string) => Promise<WorkshopComment[]>;
-  add: (submissionId: string, content: string) => Promise<WorkshopComment | null>;
-  update: (commentId: string, content: string) => Promise<WorkshopComment | null>;
-  delete: (commentId: string) => Promise<boolean>;
 }
 
 const sorters: Record<SortKey, (a: WorkshopSubmission, b: WorkshopSubmission) => number> = {
@@ -162,36 +155,6 @@ export const useWorkshop = (workshopUrl: string) => {
     [backend, requireUserId],
   );
 
-  const report = useCallback(
-    async (
-      submissionId: string,
-      category: "outdated" | "malicious" | "spam" | "copyright" | "inappropriate" | "other",
-      explanation: string,
-    ) => {
-      try {
-        if (!(await requireUserId("report"))) return;
-        await backend.report(submissionId, category, explanation);
-      } catch (caught) {
-        setError(errorMessage(caught, "Failed to submit your report"));
-      }
-    },
-    [backend, requireUserId],
-  );
-
-  const deleteSubmission = useCallback(
-    async (submissionId: string) => {
-      try {
-        await backend.delete(submissionId);
-        setSubmissions((prev) => prev.filter((s) => s.id !== submissionId));
-        return true;
-      } catch (caught) {
-        setError(errorMessage(caught, "Failed to delete submission"));
-        return false;
-      }
-    },
-    [backend],
-  );
-
   const submit = useCallback(
     async (input: SubmitInput): Promise<boolean> => {
       const validation = validateSubmissionContent(input.type, input.content);
@@ -215,58 +178,7 @@ export const useWorkshop = (workshopUrl: string) => {
     [backend, ensureAuth, refresh],
   );
 
-  const fetchComments = useCallback((submissionId: string) => backend.listComments(submissionId), [backend]);
-
-  const addComment = useCallback(
-    async (submissionId: string, content: string) => {
-      const userId = await requireUserId("comment");
-      if (!userId) return null;
-      try {
-        return await backend.createComment(submissionId, content);
-      } catch (caught) {
-        setError(errorMessage(caught, "Failed to post comment"));
-        return null;
-      }
-    },
-    [backend, requireUserId],
-  );
-
-  const updateComment = useCallback(
-    async (commentId: string, content: string) => {
-      try {
-        return await backend.updateComment(commentId, content);
-      } catch (caught) {
-        setError(errorMessage(caught, "Failed to update comment"));
-        return null;
-      }
-    },
-    [backend],
-  );
-
-  const deleteComment = useCallback(
-    async (commentId: string) => {
-      try {
-        await backend.deleteComment(commentId);
-        return true;
-      } catch (caught) {
-        setError(errorMessage(caught, "Failed to delete comment"));
-        return false;
-      }
-    },
-    [backend],
-  );
-
   const logout = useCallback(() => backend.signOut(), [backend]);
-
-  const comments = useMemo<CommentActions>(
-    () => ({
-      fetch: fetchComments,
-      add: addComment,
-      update: updateComment,
-      delete: deleteComment,
-    }),
-    [fetchComments, addComment, updateComment, deleteComment],
-  );
 
   return {
     backend,
@@ -276,13 +188,10 @@ export const useWorkshop = (workshopUrl: string) => {
     loading,
     error,
     sorters,
-    comments,
     refresh,
     login,
     logout,
     vote,
-    report,
     submit,
-    deleteSubmission,
   };
 };

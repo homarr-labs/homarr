@@ -18,6 +18,7 @@ export class GluetunIntegration extends Integration implements VpnSummaryIntegra
       headers: authHeaders,
     });
 
+    await response.body?.cancel().catch(() => undefined);
     if (!response.ok) {
       return TestConnectionError.StatusResult(response);
     }
@@ -47,7 +48,10 @@ export class GluetunIntegration extends Integration implements VpnSummaryIntegra
       headers: authHeaders,
     });
 
-    if (!response.ok) throw new ResponseError(response);
+    if (!response.ok) {
+      await response.body?.cancel().catch(() => undefined);
+      throw new ResponseError(response);
+    }
     return gluetunVpnStatusSchema.parse(await response.json());
   }
 
@@ -58,7 +62,10 @@ export class GluetunIntegration extends Integration implements VpnSummaryIntegra
       headers: authHeaders,
     });
 
-    if (!response.ok) throw new ResponseError(response);
+    if (!response.ok) {
+      await response.body?.cancel().catch(() => undefined);
+      throw new ResponseError(response);
+    }
     return gluetunPublicIpSchema.parse(await response.json());
   }
 

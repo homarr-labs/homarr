@@ -75,7 +75,7 @@ export const previewQueryProcedures = {
           staticHeaders: request.headers,
           auth: request.auth === "none" ? undefined : resolved.auth,
           kind: "query",
-          cacheKey: `custom-jsx:preview:${session.id}:${request.id}:${hashRuntimeParams(params)}:${resolved.cacheVersion}`,
+          cacheKey: `custom-jsx:preview:${session.id}:${request.id}:${session.revision}:${hashRuntimeParams(params)}:${resolved.cacheVersion}`,
           cacheTtlSeconds: request.cacheSeconds,
         });
         await recordPreviewJournal(session, {

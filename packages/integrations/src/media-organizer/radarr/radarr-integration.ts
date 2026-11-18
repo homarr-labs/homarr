@@ -33,7 +33,10 @@ export class RadarrIntegration
     const response = await fetchWithTrustedCertificatesAsync(this.url("/api/v3/movie"), {
       headers: (await this.getHttpAuthenticationAsync()).headers,
     });
-    if (!response.ok) throw new Error(`Radarr library request failed (${response.status})`);
+    if (!response.ok) {
+      await response.body?.cancel().catch(() => undefined);
+      throw new Error(`Radarr library request failed (${response.status})`);
+    }
     const library = z
       .array(
         z.object({
@@ -232,7 +235,10 @@ export class RadarrIntegration
       headers: { "X-Api-Key": super.getSecretValue("apiKey") },
     });
 
-    if (!response.ok) return TestConnectionError.StatusResult(response);
+    if (!response.ok) {
+      await response.body?.cancel().catch(() => undefined);
+      return TestConnectionError.StatusResult(response);
+    }
 
     await response.json();
     return { success: true };

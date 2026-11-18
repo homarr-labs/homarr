@@ -23,13 +23,13 @@ Act never publishes or deletes GHCR images. The secret file is ignored by Git.
 
 ## PR preview images
 
-Successful non-draft pull requests from this repository publish an amd64 image:
+Successful non-draft pull requests from this repository publish an image for Linux amd64 and arm64:
 
 ```bash
 docker pull ghcr.io/homarr-labs/homarr-test:pr-<number>
 ```
 
-The tag is replaced when the pull request is updated and deleted when it closes. Production Homarr images remain the supported multi-architecture releases. The `homarr-test` package must be configured as public in GHCR for unauthenticated testers.
+The tag is replaced when the pull request is updated and deleted when it closes. The `homarr-test` package must be configured as public in GHCR for unauthenticated testers.
 
 ## Dokploy preview cache
 

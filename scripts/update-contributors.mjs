@@ -31,6 +31,7 @@ const fetchGithubContributors = async (slug, repository) => {
   return data.map((contributor) => ({
     login: contributor.login,
     avatar_url: contributor.avatar_url,
+    contributions: contributor.contributions,
   }));
 };
 
@@ -111,7 +112,7 @@ for (const { repository, slug } of sources.github) {
 const distinctGithubContributors = githubContributors
   .filter(distinctBy((contributor) => contributor.login))
   .sort((a, b) => b.contributions - a.contributions)
-  .map(({ contributions, ...props }) => props)
+  .map(({ contributions: _contributions, ...props }) => props)
   .filter((contributor) => !contributor.login.includes("[bot]"));
 await fs.writeFile("./static-data/contributors.json", JSON.stringify(distinctGithubContributors));
 

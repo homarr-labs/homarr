@@ -47,7 +47,9 @@ type SynologyClientOptions = {
   sessionStore: SessionStore<StoredSession>;
 };
 
-const apiDefinitionCache = new Map<string, ApiDefinition>();
+const apiDefinitionCache = new Map<string, { definition: ApiDefinition; expiresAt: number }>();
+const API_DEFINITION_TTL_MS = 15 * 60_000;
+const MAX_API_DEFINITIONS = 1000;
 
 export class SynologyClient {
   private readonly integrationId: string;
@@ -55,6 +57,7 @@ export class SynologyClient {
   private readonly username: string;
   private readonly password: string;
   private readonly sessionStore: SessionStore<StoredSession>;
+  private pendingLogin: Promise<StoredSession> | undefined;
 
   constructor(options: SynologyClientOptions) {
     this.integrationId = options.integrationId;
@@ -259,6 +262,7 @@ export class SynologyClient {
       });
 
       if (!response.ok) {
+        await response.body?.cancel().catch(() => undefined);
         throw new ResponseError(response);
       }
 
@@ -301,6 +305,17 @@ export class SynologyClient {
   }
 
   private async loginAsync(): Promise<StoredSession> {
+    if (this.pendingLogin) return await this.pendingLogin;
+    const pending = this.performLoginAsync();
+    this.pendingLogin = pending;
+    try {
+      return await pending;
+    } finally {
+      this.pendingLogin = undefined;
+    }
+  }
+
+  private async performLoginAsync(): Promise<StoredSession> {
     const authDefinition = await this.getApiDefinitionAsync(AUTH_API_NAME);
     const loginUrl = new URL(`${this.baseUrl}/webapi/${authDefinition.cgiPath}`);
     const safeLoginUrl = loginUrl.toString();
@@ -323,6 +338,7 @@ export class SynologyClient {
     });
 
     if (!response.ok) {
+      await response.body?.cancel().catch(() => undefined);
       throw new ResponseError({ status: response.status, url: safeLoginUrl });
     }
 
@@ -346,11 +362,12 @@ export class SynologyClient {
   }
 
   private async getApiDefinitionAsync(apiName: string): Promise<ApiDefinition> {
-    const cacheKey = `${this.integrationId}:${apiName}`;
+    const cacheKey = JSON.stringify([this.integrationId, this.baseUrl, apiName]);
     const cachedDefinition = apiDefinitionCache.get(cacheKey);
-    if (cachedDefinition) {
-      return cachedDefinition;
+    if (cachedDefinition && cachedDefinition.expiresAt > Date.now()) {
+      return cachedDefinition.definition;
     }
+    apiDefinitionCache.delete(cacheKey);
 
     const infoUrl = new URL(`${this.baseUrl}/webapi/query.cgi`);
     infoUrl.searchParams.set("api", INFO_API_NAME);
@@ -366,6 +383,7 @@ export class SynologyClient {
     });
 
     if (!response.ok) {
+      await response.body?.cancel().catch(() => undefined);
       throw new ResponseError(response);
     }
 
@@ -382,7 +400,11 @@ export class SynologyClient {
       cgiPath: apiDefinition.path,
       maxVersion: apiDefinition.maxVersion,
     };
-    apiDefinitionCache.set(cacheKey, definition);
+    if (apiDefinitionCache.size >= MAX_API_DEFINITIONS) {
+      const oldestKey = apiDefinitionCache.keys().next().value;
+      if (oldestKey !== undefined) apiDefinitionCache.delete(oldestKey);
+    }
+    apiDefinitionCache.set(cacheKey, { definition, expiresAt: Date.now() + API_DEFINITION_TTL_MS });
     return definition;
   }
 }

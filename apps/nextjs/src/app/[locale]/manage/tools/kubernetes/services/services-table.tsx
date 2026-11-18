@@ -8,7 +8,6 @@ import { MantineReactTable } from "mantine-react-table";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
-import { createId } from "@homarr/common";
 import type { KubernetesService } from "@homarr/definitions";
 import type { ScopedTranslationFunction } from "@homarr/translation";
 import { useI18n } from "@homarr/translation/client";
@@ -45,14 +44,16 @@ const createColumns = (
     accessorKey: "ports",
     header: t("field.ports.label"),
     Cell({ cell }) {
-      return cell.row.original.ports?.map((port) => <div key={createId()}>{port}</div>);
+      return cell.row.original.ports?.map((port, index) => <div key={`${port}:${index}`}>{port}</div>);
     },
   },
   {
     accessorKey: "targetPorts",
     header: t("field.targetPorts.label"),
     Cell({ cell }) {
-      return cell.row.original.targetPorts?.map((targetPort) => <div key={createId()}>{targetPort}</div>);
+      return cell.row.original.targetPorts?.map((targetPort, index) => (
+        <div key={`${targetPort}:${index}`}>{targetPort}</div>
+      ));
     },
   },
   {

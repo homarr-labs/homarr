@@ -32,6 +32,7 @@ import { useAssistantReasoningState } from "./assistant-reasoning-state";
 import { getAssistantIconSearchQuery } from "./assistant-tool-label";
 import { getToolResultPresentation, hasMeaningfulToolResultError } from "./assistant-tool-result";
 import { getAssistantToolTraceTarget } from "./assistant-tool-trace";
+import { getSafeAssistantRelativeUrl } from "./assistant-url";
 
 const formatToolResultValue = (value: string | number | boolean) =>
   typeof value === "number" ? value.toLocaleString() : String(value);
@@ -164,10 +165,11 @@ const getToolResultNavigation = (result: unknown) => {
     { href: record.managementPath, translationKey: "toolNavigation.openWidget" as const },
   ];
 
-  return candidates.filter(
-    (candidate): candidate is { href: string; translationKey: (typeof candidate)["translationKey"] } =>
-      typeof candidate.href === "string" && candidate.href.startsWith("/") && !candidate.href.startsWith("//"),
-  );
+  return candidates.flatMap((candidate) => {
+    const href = getSafeAssistantRelativeUrl(candidate.href);
+    if (href === null) return [];
+    return [{ ...candidate, href }];
+  });
 };
 
 const ToolResultNavigation = ({ result }: { result: unknown }) => {

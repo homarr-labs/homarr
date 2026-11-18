@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { useCallback } from "react";
+import { useCallback, useId } from "react";
 import type { SelectProps } from "@mantine/core";
 import { Button, Flex, Group, Select, TableTd, TableTr, Text } from "@mantine/core";
 import { Icon123, IconCheck } from "@tabler/icons-react";
@@ -19,6 +19,8 @@ interface AccessSelectRowProps {
 
 export const AccessSelectRow = ({ itemContent, permission, index, handleCountChange }: AccessSelectRowProps) => {
   const tCommon = useI18n("common");
+  const tPermissions = useI18n("permission");
+  const principalId = useId();
   const { icons, selectData } = useAccessContext();
   const form = useFormContext();
 
@@ -34,10 +36,14 @@ export const AccessSelectRow = ({ itemContent, permission, index, handleCountCha
 
   return (
     <TableTr>
-      <TableTd w={{ sm: 128, lg: 256 }}>{itemContent}</TableTd>
+      <TableTd id={principalId} w={{ sm: 128, lg: 256 }}>
+        {itemContent}
+      </TableTd>
       <TableTd>
         <Flex direction={{ base: "column", xs: "row" }} align={{ base: "end", xs: "center" }} wrap="nowrap">
           <Select
+            aria-label={tPermissions("field.permission.label")}
+            aria-describedby={principalId}
             allowDeselect={false}
             flex="1"
             leftSection={<Icon size="1rem" />}

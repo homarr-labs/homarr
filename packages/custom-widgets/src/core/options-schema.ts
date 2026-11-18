@@ -93,6 +93,8 @@ export function getCustomWidgetOptionValueIssue(
     if (option.max !== undefined && value > option.max) return `Must be at most ${option.max}`;
   } else if (option.control === "switch") {
     if (typeof value !== "boolean") return "Expected a boolean";
+  } else if (option.control === "select") {
+    if (typeof value !== "string" && (typeof value !== "number" || !Number.isFinite(value))) return "Expected a choice";
   } else if (option.control === "multiSelect") {
     if (!Array.isArray(value) || value.some((entry) => !["string", "number"].includes(typeof entry)))
       return "Expected a list of choices";

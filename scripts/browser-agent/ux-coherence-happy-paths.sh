@@ -223,7 +223,12 @@ cleanup_api_key_resources() {
   local -a created_ids=()
   local -a remaining_ids=()
 
-  echo "Best-effort cleanup: API keys created after the captured baseline" >&2
+  if [[ -z "$API_KEY_CREATED_ID" ]]; then
+    echo "Skipping API key cleanup: this run did not confirm the created key ID. Review API keys manually." >&2
+    return
+  fi
+
+  echo "Best-effort cleanup: confirmed API key $API_KEY_CREATED_ID" >&2
   cleanup_ab open "$BASE_URL/manage/tools/api" >/dev/null 2>&1 || return
   cleanup_ab wait --load domcontentloaded >/dev/null 2>&1 || return
   cleanup_ab wait --fn "Array.from(document.querySelectorAll('[role=\"tab\"]')).some((item) => item.textContent?.trim() === 'Authentication')" >/dev/null 2>&1 || return
@@ -231,19 +236,11 @@ cleanup_api_key_resources() {
   cleanup_ab wait --fn "Array.from(document.querySelectorAll('h1, h2, h3')).some((heading) => heading.offsetParent !== null && heading.textContent?.trim() === 'API Keys')" >/dev/null 2>&1 || return
   capture_cleanup_api_key_ids current_ids || return
 
-  if [[ -n "$API_KEY_CREATED_ID" ]]; then
-    for id in "${current_ids[@]}"; do
-      if [[ "$id" == "$API_KEY_CREATED_ID" ]]; then
-        created_ids+=("$id")
-      fi
-    done
-  else
-    for id in "${current_ids[@]}"; do
-      if [[ -z "${API_KEY_IDS_BEFORE_SET[$id]+present}" ]]; then
-        created_ids+=("$id")
-      fi
-    done
-  fi
+  for id in "${current_ids[@]}"; do
+    if [[ "$id" == "$API_KEY_CREATED_ID" ]]; then
+      created_ids+=("$id")
+    fi
+  done
 
   for id in "${created_ids[@]}"; do
     cleanup_ab eval "(() => { const id = '$id'; const button = Array.from(document.querySelectorAll('button[aria-label=\"Delete API token\"]')).find((item) => item.closest('tr')?.querySelector('td')?.textContent?.trim().toLowerCase() === id); if (!button) throw new Error('Created API key row was not found'); button.click(); return true; })()" >/dev/null 2>&1 || return
@@ -450,17 +447,19 @@ ab wait --fn "(() => { const previous = new Set($API_KEY_IDS_BEFORE_JSON); const
 ab snapshot -i
 declare -a API_KEY_IDS_AFTER_CREATE=()
 capture_api_key_ids API_KEY_IDS_AFTER_CREATE || fail "Could not capture the post-create API key IDs"
+api_key_candidate_id=""
 for api_key_id in "${API_KEY_IDS_AFTER_CREATE[@]}"; do
   if [[ -z "${API_KEY_IDS_BEFORE_SET[$api_key_id]+present}" ]]; then
-    if [[ -n "$API_KEY_CREATED_ID" ]]; then
+    if [[ -n "$api_key_candidate_id" ]]; then
       fail "More than one API key appeared after creation"
     fi
-    API_KEY_CREATED_ID="$api_key_id"
+    api_key_candidate_id="$api_key_id"
   fi
 done
-if [[ -z "$API_KEY_CREATED_ID" ]]; then
+if [[ -z "$api_key_candidate_id" ]]; then
   fail "Could not identify the newly created API token row"
 fi
+API_KEY_CREATED_ID="$api_key_candidate_id"
 assert_eval "(() => { const id = '$API_KEY_CREATED_ID'; const button = Array.from(document.querySelectorAll('button[aria-label=\"Delete API token\"]')).find((item) => item.closest('tr')?.querySelector('td')?.textContent?.trim().toLowerCase() === id); if (!button) throw new Error('Created API key row was not found'); button.setAttribute('aria-label', 'Delete created API token'); return true; })()"
 ab find role button click --name "Delete created API token" --exact
 ab wait --fn "document.querySelector('button[aria-label=\"Confirm\"]')?.offsetParent !== null"

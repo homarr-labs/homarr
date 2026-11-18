@@ -95,7 +95,7 @@ export default async function GroupsDetailPage(props: GroupsDetailPageProps) {
       <Table striped highlightOnHover>
         <TableTbody>
           {filteredMembers.map((member) => (
-            <Row key={group.id} member={member} groupId={group.id} disabled={isReserved} />
+            <Row key={member.id} member={member} groupId={group.id} disabled={isReserved} />
           ))}
         </TableTbody>
       </Table>

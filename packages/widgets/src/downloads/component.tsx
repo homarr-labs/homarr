@@ -426,7 +426,7 @@ export default function DownloadClientsWidget({
   const sortedData = useMemo(() => {
     const accessor = sortStatus.columnAccessor as keyof ExtendedDownloadClientItem;
     const multiplier = getSortMultiplier(sortStatus.direction);
-    return [...data].toSorted((a, b) => {
+    return data.toSorted((a, b) => {
       const aVal = a[accessor] ?? 0;
       const bVal = b[accessor] ?? 0;
       return compareSortValues(accessor, aVal, bVal, multiplier);
@@ -565,6 +565,7 @@ export default function DownloadClientsWidget({
                   {`${pct}%`}
                 </Text>
                 <Progress
+                  aria-label={`${record.name}: ${t("items.progress.columnTitle")}`}
                   value={pct}
                   color={progressColor(record.state, record.progress)}
                   size="sm"
@@ -708,7 +709,7 @@ export default function DownloadClientsWidget({
             <ActionIcon
               variant="subtle"
               size="sm"
-              aria-label={t("items.actions.columnTitle")}
+              aria-label={`${record.name}: ${t("items.actions.columnTitle")}`}
               onClick={(event) => {
                 event.stopPropagation();
                 const { right, bottom } = event.currentTarget.getBoundingClientRect();
@@ -1048,7 +1049,13 @@ function GlobalStatsBar({
         <Group gap="md">
           <Tooltip label={t("stats.overallProgress")} withArrow>
             <Group gap={4}>
-              <Progress value={overallProgressPct} color="blue" size="xs" w={40} />
+              <Progress
+                aria-label={t("stats.overallProgress")}
+                value={overallProgressPct}
+                color="blue"
+                size="xs"
+                w={40}
+              />
               <Text size="xs" fw={600}>{`${overallProgressPct}%`}</Text>
             </Group>
           </Tooltip>
@@ -1149,7 +1156,7 @@ function RowContextMenu({ state, onClose, t }: { state: ContextMenuState; onClos
             <Menu.Item
               leftSection={<IconInfoCircle size="var(--mantine-font-size-sm)" />}
               onClick={() => {
-                void navigator.clipboard.writeText(item.name).catch(() => {});
+                void navigator.clipboard?.writeText(item.name).catch(() => {});
                 onClose();
               }}
             >
@@ -1160,7 +1167,7 @@ function RowContextMenu({ state, onClose, t }: { state: ContextMenuState; onClos
               <Menu.Item
                 leftSection={<IconCopy size="var(--mantine-font-size-sm)" />}
                 onClick={() => {
-                  void navigator.clipboard.writeText(item.id).catch(() => {});
+                  void navigator.clipboard?.writeText(item.id).catch(() => {});
                   onClose();
                 }}
               >

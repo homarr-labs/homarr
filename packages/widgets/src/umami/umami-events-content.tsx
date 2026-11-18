@@ -45,14 +45,15 @@ export function UmamiEventsContent({
 
   const chartData = allTimestamps.map((timestamp) => {
     const row: Record<string, string | number> = { label: formatXLabel(timestamp, timeFrame, locale) };
-    for (const serie of series) {
-      row[serie.eventName] = byEvent.get(serie.eventName)?.get(timestamp) ?? 0;
+    for (const [index, serie] of series.entries()) {
+      row[`event${index}`] = byEvent.get(serie.eventName)?.get(timestamp) ?? 0;
     }
     return row;
   });
 
   const chartSeries = series.map((serie: UmamiEventSeries, index: number) => ({
-    name: serie.eventName,
+    name: `event${index}`,
+    label: serie.eventName,
     color: EVENT_COLORS[index % EVENT_COLORS.length] ?? "blue.5",
   }));
 
@@ -72,7 +73,7 @@ export function UmamiEventsContent({
                 }}
               />
               <Text size="xs" c="dimmed" truncate>
-                {serie.name}
+                {serie.label}
               </Text>
             </Group>
           ))}

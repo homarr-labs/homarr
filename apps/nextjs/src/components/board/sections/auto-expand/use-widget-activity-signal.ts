@@ -39,7 +39,7 @@ export const useWidgetActivitySignal = ({
     let cancelled = false;
     const cleanupRef = { current: undefined as (() => void) | undefined };
 
-    void loadWidgetDefinition(kind).then((definition) => {
+    const pending = loadWidgetDefinition(kind).then((definition) => {
       if (cancelled) return;
       const activitySignal = definition.activitySignal;
       if (!activitySignal) {
@@ -97,6 +97,9 @@ export const useWidgetActivitySignal = ({
         if (matches(event.query.queryKey)) evaluate();
       });
       cleanupRef.current = unsubscribe;
+    });
+    void pending.catch(() => {
+      if (!cancelled) setIsActive(true);
     });
 
     return () => {

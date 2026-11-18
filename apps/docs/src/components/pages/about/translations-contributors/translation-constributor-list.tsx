@@ -1,25 +1,9 @@
-"use client";
-
-import { useEffect, useState } from "react";
-
-type Contributor = {
-  username: string;
-  avatarUrl: string;
-};
+import contributors from "@site/public/data/translation-contributions.json";
 
 export const TranslationContributorList = () => {
-  const [contributors, setContributors] = useState<Contributor[]>([]);
-
-  useEffect(() => {
-    fetch("/data/translation-contributions.json").then(async (response) => {
-      const data = await response.json();
-      setContributors(data);
-    });
-  }, []);
-
   return (
     <div className={"flex flex-wrap gap-3 argos-ignore"}>
-      {contributors.map((contributor: Contributor) => (
+      {contributors.map((contributor) => (
         <div key={contributor.username} className={"flex flex-col items-center w-24"}>
           <img
             className={"mb-2 aspect-square h-24 w-24 rounded"}

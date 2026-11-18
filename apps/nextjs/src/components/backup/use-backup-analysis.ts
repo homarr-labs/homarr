@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useTiks } from "@rexa-developer/tiks/react";
 
 import { useI18n } from "@homarr/translation/client";
@@ -23,8 +23,8 @@ const getAppliedMigrationCount = (db: any): number => {
   }
 };
 
-const fetchMigrations = async (): Promise<MigrationFile[]> => {
-  const res = await fetch("/api/backup/migrations");
+const fetchMigrations = async (signal: AbortSignal): Promise<MigrationFile[]> => {
+  const res = await fetch("/api/backup/migrations", { signal });
   if (!res.ok) throw new Error("Failed to fetch migration files from server");
   const data = await res.json();
   return data.migrations ?? [];
@@ -66,10 +66,22 @@ export const useBackupAnalysis = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [migrationProgress, setMigrationProgress] = useState<MigrationProgress | null>(null);
-  const dbRef = useRef<any>(null);
+  const analysisControllerRef = useRef<AbortController | null>(null);
+
+  useEffect(
+    () => () => {
+      analysisControllerRef.current?.abort();
+      analysisControllerRef.current = null;
+    },
+    [],
+  );
 
   const analyzeFile = useCallback(
     async (file: File) => {
+      analysisControllerRef.current?.abort();
+      const controller = new AbortController();
+      analysisControllerRef.current = controller;
+      const { signal } = controller;
       setLoading(true);
       setError(null);
       setAnalysis(null);
@@ -80,15 +92,18 @@ export const useBackupAnalysis = () => {
           import("jszip").then((m) => m.default),
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           import("sql.js").then((m: any) => m.default),
-          fetchMigrations(),
-          fetch("/api/backup/sql-wasm").then((r) => {
+          fetchMigrations(signal),
+          fetch("/api/backup/sql-wasm", { signal }).then((r) => {
             if (!r.ok) throw new Error("Failed to load SQL WASM binary");
             return r.arrayBuffer();
           }),
         ]);
+        signal.throwIfAborted();
 
         const arrayBuffer = await file.arrayBuffer();
+        signal.throwIfAborted();
         const zip = await JSZip.loadAsync(arrayBuffer);
+        signal.throwIfAborted();
 
         const metadataFile = zip.file("metadata.json");
         if (!metadataFile) throw new Error(t("invalidMissingMetadata"));
@@ -97,11 +112,12 @@ export const useBackupAnalysis = () => {
 
         const metadata = JSON.parse(await metadataFile.async("string"));
         const dbBuffer = await dbFile.async("uint8array");
+        signal.throwIfAborted();
 
         const SQL = await initSqlJs({ wasmBinary });
+        signal.throwIfAborted();
 
         const db = new SQL.Database(dbBuffer);
-        dbRef.current = db;
 
         try {
           const appliedCount = getAppliedMigrationCount(db);
@@ -123,6 +139,7 @@ export const useBackupAnalysis = () => {
               });
 
               await delay(MIGRATION_PREVIEW_DELAY_MS);
+              signal.throwIfAborted();
 
               try {
                 const statements = migration.sql
@@ -161,6 +178,7 @@ export const useBackupAnalysis = () => {
               sounds.success();
 
               await delay(MIGRATION_COMPLETE_DELAY_MS);
+              signal.throwIfAborted();
             }
           }
 
@@ -171,27 +189,26 @@ export const useBackupAnalysis = () => {
           setAnalysis({ metadata, counts, boardNames, migrations });
         } finally {
           db.close();
-          dbRef.current = null;
         }
       } catch (err) {
+        if (signal.aborted) return;
         console.error("Backup analysis failed", err);
         setError(err instanceof Error ? err.message : t("analyzeError"));
       } finally {
-        setLoading(false);
+        controller.abort();
+        if (analysisControllerRef.current === controller) {
+          analysisControllerRef.current = null;
+          setLoading(false);
+        }
       }
     },
     [sounds, t],
   );
 
   const reset = useCallback(() => {
-    if (dbRef.current) {
-      try {
-        dbRef.current.close();
-      } catch {
-        /* already closed */
-      }
-      dbRef.current = null;
-    }
+    analysisControllerRef.current?.abort();
+    analysisControllerRef.current = null;
+    setLoading(false);
     setAnalysis(null);
     setError(null);
     setMigrationProgress(null);

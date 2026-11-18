@@ -138,7 +138,7 @@ export const RuntimeControls = ({
 
   return (
     <Combobox store={modelCombobox} onOptionSubmit={selectModel} withinPortal position="top-start" width={340}>
-      <Combobox.Target>
+      <Combobox.Target targetType="button">
         {compact ? (
           <Button
             className={classes.composerModelButton}

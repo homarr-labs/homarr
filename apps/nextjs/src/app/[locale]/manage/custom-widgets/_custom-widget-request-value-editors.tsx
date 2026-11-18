@@ -129,7 +129,11 @@ export function QueryValuesEditor({
         size="compact-sm"
         variant="subtle"
         leftSection={<IconPlus size={14} />}
-        onClick={() => onChange({ ...value, [`value${entries.length + 1}`]: "" })}
+        onClick={() => {
+          let suffix = entries.length + 1;
+          while (Object.hasOwn(value, `value${suffix}`)) suffix += 1;
+          onChange({ ...value, [`value${suffix}`]: "" });
+        }}
       >
         {t("addQueryValue")}
       </Button>

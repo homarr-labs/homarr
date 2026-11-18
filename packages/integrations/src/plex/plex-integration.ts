@@ -447,6 +447,7 @@ export class PlexIntegration extends Integration implements IMediaServerIntegrat
     });
 
     if (!response.ok) {
+      await response.body?.cancel().catch(() => undefined);
       throw new ResponseError(response);
     }
 
@@ -468,7 +469,10 @@ export class PlexIntegration extends Integration implements IMediaServerIntegrat
       },
     });
 
-    if (!response.ok) return TestConnectionError.StatusResult(response);
+    await response.body?.cancel().catch(() => undefined);
+    if (!response.ok) {
+      return TestConnectionError.StatusResult(response);
+    }
 
     return { success: true };
   }

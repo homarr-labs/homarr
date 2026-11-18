@@ -7,7 +7,7 @@ export default {
     hover: "#eee8d5",
     border: "#d3cbb7",
     text: "#586e75",
-    dimmed: "#657b83",
+    dimmed: "#5e7480",
     primary: "#006e95",
     secondary: "#996800",
   },

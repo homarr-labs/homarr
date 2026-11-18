@@ -111,8 +111,9 @@ export const buildSuggestedUrl = (ports: PortInfo[] | undefined, host: string): 
   const port = ports?.find((candidate) => candidate.PublicPort !== undefined);
   if (!port?.PublicPort) return { url: "", publishedPort: null };
   const configuredHost = usableDockerHost(host);
-  const ip = port.IP && port.IP !== "0.0.0.0" && port.IP !== "::" ? port.IP : configuredHost;
-  return { url: ip ? `http://${ip}:${port.PublicPort}` : "", publishedPort: port.PublicPort };
+  let hostname = port.IP && port.IP !== "0.0.0.0" && port.IP !== "::" ? port.IP : configuredHost;
+  if (hostname?.includes(":") && !hostname.startsWith("[")) hostname = `[${hostname}]`;
+  return { url: hostname ? `http://${hostname}:${port.PublicPort}` : "", publishedPort: port.PublicPort };
 };
 
 const getLayoutPresetColumnCount = (preset: OnboardingLayoutPreset) => {

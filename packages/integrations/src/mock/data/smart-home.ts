@@ -116,39 +116,32 @@ export class SmartHomeMockService implements ISmartHomeIntegration {
   ): Promise<void> {
     if (signal.aborted) return;
     const unsubscribeShared = await this.sharedState?.subscribeAsync((entry) => this.updateShared(entry));
+    let listener: ((patch: SmartHomeEntityPatch) => void) | undefined;
     try {
       await this.refreshSharedStateAsync();
-    } catch (error) {
-      unsubscribeShared?.();
-      throw error;
-    }
-    if (signal.aborted) {
-      unsubscribeShared?.();
-      return;
-    }
-    const initial = this.select(selection);
-    const watched = new Set([...initial.map((entity) => entity.id), ...(selection.entityIds ?? [])]);
-    const listener = (patch: SmartHomeEntityPatch) => {
-      const changed = patch.changed.filter((entity) => watched.has(entity.id));
-      if (changed.length > 0) onPatch({ changed, removed: [] });
-    };
-    this.listeners.add(listener);
-    this.startLive();
-    const missing = (selection.entityIds ?? []).filter((id) => !this.entities.has(id));
-    onPatch({ changed: initial, removed: missing });
-    await new Promise<void>((resolve) => {
-      const stop = () => {
-        unsubscribeShared?.();
-        this.listeners.delete(listener);
-        if (this.listeners.size === 0) this.stopLive();
-        resolve();
+      if (signal.aborted) return;
+      const initial = this.select(selection);
+      const watched = new Set([...initial.map((entity) => entity.id), ...(selection.entityIds ?? [])]);
+      listener = (patch: SmartHomeEntityPatch) => {
+        const changed = patch.changed.filter((entity) => watched.has(entity.id));
+        if (changed.length > 0) onPatch({ changed, removed: [] });
       };
-      if (signal.aborted) {
-        stop();
-        return;
-      }
-      signal.addEventListener("abort", stop, { once: true });
-    });
+      this.listeners.add(listener);
+      this.startLive();
+      const missing = (selection.entityIds ?? []).filter((id) => !this.entities.has(id));
+      onPatch({ changed: initial, removed: missing });
+      await new Promise<void>((resolve) => {
+        if (signal.aborted) {
+          resolve();
+          return;
+        }
+        signal.addEventListener("abort", () => resolve(), { once: true });
+      });
+    } finally {
+      unsubscribeShared?.();
+      if (listener) this.listeners.delete(listener);
+      if (this.listeners.size === 0) this.stopLive();
+    }
   }
 
   private select(selection: SmartHomeEntitySelection) {

@@ -31,7 +31,7 @@ export const MainNavigation = ({ headerSection, footerSection, afterLinks, links
           const { icon: TablerIcon, iconProps, "data-onboarding-tour-id": tourId, ...props } = link;
           const Icon =
             typeof TablerIcon === "string" ? (
-              <Image src={TablerIcon} w={20} h={20} />
+              <Image src={TablerIcon} alt="" w={20} h={20} />
             ) : (
               <TablerIcon size={20} stroke={1.5} {...iconProps} />
             );

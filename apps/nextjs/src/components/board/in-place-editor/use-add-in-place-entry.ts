@@ -4,7 +4,7 @@ import { useCallback } from "react";
 
 import { useCurrentLayout, useRequiredBoard } from "@homarr/boards/context";
 import { useEditMode } from "@homarr/boards/edit-mode";
-import { getRootSectionLane } from "@homarr/definitions";
+import { getBoardTabs, useActiveBoardTabId } from "@homarr/boards/tabs";
 import type { WidgetKind } from "@homarr/definitions";
 import type { WidgetEditModalState } from "@homarr/widgets/modals";
 
@@ -45,16 +45,12 @@ const scrollAreaIntoView = () => {
 export const useAddInPlaceEntry = () => {
   const board = useRequiredBoard();
   const layoutId = useCurrentLayout();
+  const activeTabId = useActiveBoardTabId();
   const [isEditMode, { open }] = useEditMode();
 
   const addWidgetInPlace = useCallback(() => {
-    const mainSection = board.sections
-      .filter(
-        (section): section is Extract<typeof section, { kind: "empty" }> =>
-          section.kind === "empty" && getRootSectionLane(section.xOffset) === "main",
-      )
-      .toSorted((a, b) => a.yOffset - b.yOffset)
-      .at(0);
+    const tabs = getBoardTabs(board);
+    const mainSection = tabs.find((section) => section.id === activeTabId) ?? tabs.at(0);
     const layout = board.layouts.find((candidate) => candidate.id === layoutId) ?? board.layouts.at(0);
     if (!mainSection || !layout) return false;
 
@@ -67,7 +63,7 @@ export const useAddInPlaceEntry = () => {
     addInPlaceActions.startCreate(mainSection.id, { x: cell.xOffset, y: cell.yOffset, w: 1, h: 1 });
     scrollAreaIntoView();
     return true;
-  }, [board, isEditMode, layoutId, open]);
+  }, [activeTabId, board, isEditMode, layoutId, open]);
 
   const editInPlace = useCallback(
     (input: EditInPlaceInput) => {
