@@ -2301,6 +2301,10 @@
       "scrollable": {
         "label": "Slenkamas",
         "description": "Išlaikyti nustatytą šio konteinerio dydį ir slinkti jo turinį, užuot didinus konteinerį pagal turinį."
+      },
+      "autoExpand": {
+        "label": "",
+        "description": ""
       }
     },
     "action": {
@@ -2325,10 +2329,27 @@
         },
         "borderColor": {
           "label": "Rėmelio spalva"
+        },
+        "autoExpand": {
+          "item": {
+            "label": "",
+            "placeholder": ""
+          },
+          "inactiveDisplay": {
+            "collapsed": "",
+            "hidden": ""
+          },
+          "fitToContent": {
+            "label": "",
+            "description": ""
+          }
         }
       },
       "remove": {
         "message": "Pašalinti šį konteinerį? Jo turinys bus perkeltas į aplinkinę sritį."
+      },
+      "editBar": {
+        "edit": ""
       }
     }
   },
@@ -4369,6 +4390,10 @@
         "showLocation": {
           "label": "Rodyti vietą",
           "description": "Rodyti, ar srautas yra jūsų LAN, ar WAN tinkle"
+        },
+        "detailedSessionLimit": {
+          "label": "",
+          "description": ""
         }
       },
       "footer": {
@@ -4401,6 +4426,10 @@
           "transcode": "",
           "containerChanged": "",
           "position": "",
+          "progress": "Atsisiuntimo progresas",
+          "endsAt": "",
+          "episode": "",
+          "album": "",
           "unknown": ""
         },
         "metadata": {
@@ -4954,7 +4983,18 @@
       "contextMenu": {
         "copyName": "Kopijuoti pavadinimą",
         "copyId": "Kopijuoti ID",
+        "setCategory": "",
+        "setLabels": "",
         "clearFilters": "Išvalyti filtrus"
+      },
+      "setCategory": {
+        "none": "",
+        "loadFailed": "",
+        "labels": "",
+        "labelsDescription": "",
+        "labelsLoadFailed": "",
+        "delugePluginRequired": "",
+        "transmissionUnsupported": ""
       },
       "footer": {
         "filter": "Filtruoti atsisiuntimus"

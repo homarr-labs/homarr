@@ -77,8 +77,8 @@ export const getCollapsedDisplayLayout = <TPlacement extends GridPlacement>(
   const displayPlacements = normalized.map((placement) => {
     if (!collapsedItemIds.has(placement.id)) return placement;
     const height = collapsedRowCountById?.get(placement.id) ?? collapsedRowCount;
-    if (!Number.isFinite(height) || height <= 0) {
-      throw new RangeError("collapsedRowCount must be positive and finite");
+    if (!Number.isFinite(height) || height < 0) {
+      throw new RangeError("collapsed row counts must be zero or positive and finite");
     }
     return { ...placement, h: height };
   });

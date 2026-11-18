@@ -2301,6 +2301,10 @@
       "scrollable": {
         "label": "Κύλιση",
         "description": "Κρατήστε αυτό το δοχείο στο καθορισμένο του μέγεθος και μετακινηθείτε τα περιεχόμενά του αντί να μεγαλώσετε για να τα χωρέσετε."
+      },
+      "autoExpand": {
+        "label": "",
+        "description": ""
       }
     },
     "action": {
@@ -2325,10 +2329,27 @@
         },
         "borderColor": {
           "label": "Χρώμα περιγράμματος"
+        },
+        "autoExpand": {
+          "item": {
+            "label": "",
+            "placeholder": ""
+          },
+          "inactiveDisplay": {
+            "collapsed": "",
+            "hidden": ""
+          },
+          "fitToContent": {
+            "label": "",
+            "description": ""
+          }
         }
       },
       "remove": {
         "message": "Αφαιρέστε αυτό το εμπορευματοκιβώτιο? Το περιεχόμενό του θα κινηθεί στη γύρω περιοχή."
+      },
+      "editBar": {
+        "edit": "Επεξεργασία"
       }
     }
   },
@@ -4369,6 +4390,10 @@
         "showLocation": {
           "label": "Εμφάνιση τοποθεσίας",
           "description": "Εμφάνιση αν η ροή βρίσκεται στο LAN ή στο WAN σας"
+        },
+        "detailedSessionLimit": {
+          "label": "",
+          "description": ""
         }
       },
       "footer": {
@@ -4401,6 +4426,10 @@
           "transcode": "",
           "containerChanged": "",
           "position": "",
+          "progress": "Πρόοδος λήψης",
+          "endsAt": "",
+          "episode": "",
+          "album": "",
           "unknown": ""
         },
         "metadata": {
@@ -4954,7 +4983,18 @@
       "contextMenu": {
         "copyName": "Αντιγραφή ονόματος",
         "copyId": "Αντιγραφή αναγνωριστικού",
+        "setCategory": "",
+        "setLabels": "",
         "clearFilters": "Εκκαθάριση φίλτρων"
+      },
+      "setCategory": {
+        "none": "",
+        "loadFailed": "",
+        "labels": "",
+        "labelsDescription": "",
+        "labelsLoadFailed": "",
+        "delugePluginRequired": "",
+        "transmissionUnsupported": ""
       },
       "footer": {
         "filter": "Φιλτράρισμα λήψεων"

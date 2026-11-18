@@ -2,18 +2,20 @@ import type {
   SmartHomeArea,
   SmartHomeEntity,
   SmartHomeEntityAttributes,
+  SmartHomeFloor,
   SmartHomeForecastDay,
 } from "../../interfaces/smart-home/smart-home-types";
 
-const now = Date.parse("2026-11-06T17:30:00Z");
+const now = Date.now();
 const minutesAgo = (minutes: number) => now - minutes * 60_000;
 
 const dailyCurve = (base: number, amplitude: number, peakHour = 15) => {
-  const currentHour = new Date(now).getHours();
+  const currentHour = new Date(now).getUTCHours();
+  const currentWave = Math.cos(((currentHour - peakHour) / 24) * Math.PI * 2);
   return Array.from({ length: 24 }, (_, index) => {
     const hour = (currentHour - 23 + index + 24) % 24;
     const wave = Math.cos(((hour - peakHour) / 24) * Math.PI * 2);
-    return Math.round((base + wave * amplitude) * 10) / 10;
+    return Math.round((base + (wave - currentWave) * amplitude) * 10) / 10;
   });
 };
 
@@ -61,6 +63,11 @@ const forecastDays = [
   ["sunny", 14, 5, 0],
 ] as const;
 
+export const mockSmartHomeFloors: SmartHomeFloor[] = [
+  { id: "ground", name: "Ground floor", level: 0, icon: null },
+  { id: "first", name: "First floor", level: 1, icon: null },
+];
+
 export const mockSmartHomeAreas: SmartHomeArea[] = [
   {
     id: "living_room",
@@ -68,7 +75,7 @@ export const mockSmartHomeAreas: SmartHomeArea[] = [
     floorId: "ground",
     icon: null,
     temperatureEntityId: "sensor.living_room_temperature",
-    humidityEntityId: null,
+    humidityEntityId: "sensor.living_room_humidity",
   },
   {
     id: "kitchen",
@@ -76,7 +83,23 @@ export const mockSmartHomeAreas: SmartHomeArea[] = [
     floorId: "ground",
     icon: null,
     temperatureEntityId: "sensor.kitchen_temperature",
-    humidityEntityId: null,
+    humidityEntityId: "sensor.kitchen_humidity",
+  },
+  {
+    id: "office",
+    name: "Office",
+    floorId: "ground",
+    icon: null,
+    temperatureEntityId: "sensor.office_temperature",
+    humidityEntityId: "sensor.office_humidity",
+  },
+  {
+    id: "bedroom",
+    name: "Bedroom",
+    floorId: "first",
+    icon: null,
+    temperatureEntityId: "sensor.bedroom_temperature",
+    humidityEntityId: "sensor.bedroom_humidity",
   },
   {
     id: "outside",
@@ -164,7 +187,16 @@ export const mockSmartHomeEntities: SmartHomeEntity[] = [
     state: "20.5",
     deviceClass: "temperature",
     unit: "°C",
-    history: dailyCurve(20.4, 0.9),
+    history: dailyCurve(20.5, 0.9),
+  }),
+  entity({
+    id: "sensor.living_room_humidity",
+    name: "Humidity",
+    areaId: "living_room",
+    state: "46",
+    deviceClass: "humidity",
+    unit: "%",
+    history: dailyCurve(46, 3),
   }),
   entity({
     id: "cover.living_room_blinds",
@@ -179,7 +211,7 @@ export const mockSmartHomeEntities: SmartHomeEntity[] = [
     id: "scene.movie_night",
     name: "Movie night",
     areaId: "living_room",
-    state: "2026-11-05T20:31:00+00:00",
+    state: new Date(minutesAgo(1260)).toISOString(),
     icon: "mdi:movie-open",
     changedMinutesAgo: 1260,
   }),
@@ -192,13 +224,146 @@ export const mockSmartHomeEntities: SmartHomeEntity[] = [
     changedMinutesAgo: 12,
   }),
   entity({
+    id: "light.kitchen_counter",
+    name: "Counter lights",
+    areaId: "kitchen",
+    state: "on",
+    changedMinutesAgo: 15,
+    attributes: {
+      brightness: 85,
+      colorTempKelvin: 3500,
+      colorMode: "color_temp",
+      colorModes: ["color_temp"],
+      minColorTempKelvin: 2200,
+      maxColorTempKelvin: 6500,
+    },
+  }),
+  entity({
     id: "sensor.kitchen_temperature",
     name: "Temperature",
     areaId: "kitchen",
     state: "22.1",
     deviceClass: "temperature",
     unit: "°C",
-    history: dailyCurve(21.8, 1.1, 19),
+    history: dailyCurve(22.1, 1.1, 19),
+  }),
+  entity({
+    id: "sensor.kitchen_humidity",
+    name: "Humidity",
+    areaId: "kitchen",
+    state: "51",
+    deviceClass: "humidity",
+    unit: "%",
+    history: dailyCurve(51, 4, 19),
+  }),
+  entity({
+    id: "light.office_desk",
+    name: "Desk light",
+    areaId: "office",
+    state: "on",
+    changedMinutesAgo: 32,
+    attributes: {
+      brightness: 64,
+      rgbColor: [100, 160, 255],
+      colorMode: "rgb",
+      colorModes: ["rgb", "color_temp"],
+      minColorTempKelvin: 2200,
+      maxColorTempKelvin: 6500,
+    },
+  }),
+  entity({
+    id: "fan.office",
+    name: "Desk fan",
+    areaId: "office",
+    state: "on",
+    changedMinutesAgo: 18,
+    attributes: { supportedFeatures: 1, percentage: 40, percentageStep: 10 },
+  }),
+  entity({
+    id: "switch.office_monitor",
+    name: "Monitor",
+    areaId: "office",
+    state: "on",
+    changedMinutesAgo: 76,
+  }),
+  entity({
+    id: "sensor.office_temperature",
+    name: "Temperature",
+    areaId: "office",
+    state: "21.3",
+    deviceClass: "temperature",
+    unit: "°C",
+    history: dailyCurve(21.3, 0.7),
+  }),
+  entity({
+    id: "sensor.office_humidity",
+    name: "Humidity",
+    areaId: "office",
+    state: "43",
+    deviceClass: "humidity",
+    unit: "%",
+    history: dailyCurve(43, 2),
+  }),
+  entity({
+    id: "light.bedroom_lamp",
+    name: "Bedside lamp",
+    areaId: "bedroom",
+    state: "off",
+    changedMinutesAgo: 135,
+    attributes: {
+      brightness: 35,
+      colorTempKelvin: 2700,
+      colorMode: "color_temp",
+      colorModes: ["color_temp"],
+      minColorTempKelvin: 2200,
+      maxColorTempKelvin: 6500,
+    },
+  }),
+  entity({
+    id: "cover.bedroom_blinds",
+    name: "Blinds",
+    areaId: "bedroom",
+    state: "open",
+    changedMinutesAgo: 96,
+    attributes: { supportedFeatures: 1 | 2 | 4 | 8, position: 45 },
+  }),
+  entity({
+    id: "climate.bedroom",
+    name: "Thermostat",
+    areaId: "bedroom",
+    state: "heat",
+    unit: "°C",
+    changedMinutesAgo: 75,
+    attributes: {
+      currentTemperature: 19.4,
+      supportedFeatures: 17,
+      targetTemperature: 20,
+      minTemperature: 7,
+      maxTemperature: 30,
+      temperatureStep: 0.5,
+      hvacModes: ["off", "heat", "auto"],
+      hvacAction: "heating",
+      presetMode: "eco",
+      presetModes: ["eco", "comfort", "away"],
+    },
+  }),
+  entity({
+    id: "sensor.bedroom_temperature",
+    name: "Temperature",
+    areaId: "bedroom",
+    state: "19.4",
+    deviceClass: "temperature",
+    unit: "°C",
+    history: dailyCurve(19.4, 0.8),
+  }),
+  entity({
+    id: "sensor.bedroom_humidity",
+    name: "Humidity",
+    areaId: "bedroom",
+    state: "48",
+    deviceClass: "humidity",
+    unit: "%",
+    history: dailyCurve(48, 3),
   }),
   entity({
     id: "lock.front_door",
@@ -237,6 +402,6 @@ export const mockSmartHomeEntities: SmartHomeEntity[] = [
     state: "14.2",
     deviceClass: "temperature",
     unit: "°C",
-    history: dailyCurve(11, 4.5),
+    history: dailyCurve(14.2, 4.5),
   }),
 ];

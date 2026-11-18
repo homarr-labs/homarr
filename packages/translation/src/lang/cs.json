@@ -2301,6 +2301,10 @@
       "scrollable": {
         "label": "Posunout",
         "description": "Uchovávejte tento kontejner na nastavené velikosti a posouvejte jeho obsah místo pěstování, aby se jej přizpůsobil."
+      },
+      "autoExpand": {
+        "label": "",
+        "description": ""
       }
     },
     "action": {
@@ -2325,10 +2329,27 @@
         },
         "borderColor": {
           "label": "Barva ohraničení"
+        },
+        "autoExpand": {
+          "item": {
+            "label": "",
+            "placeholder": ""
+          },
+          "inactiveDisplay": {
+            "collapsed": "",
+            "hidden": ""
+          },
+          "fitToContent": {
+            "label": "",
+            "description": ""
+          }
         }
       },
       "remove": {
         "message": "Odstranit tento kontejner? Jeho obsah se přesune do okolí."
+      },
+      "editBar": {
+        "edit": "Upravit"
       }
     }
   },
@@ -4369,6 +4390,10 @@
         "showLocation": {
           "label": "Zobrazit umístění",
           "description": "Zobrazit, zda je stream ve vaší síti LAN nebo WAN"
+        },
+        "detailedSessionLimit": {
+          "label": "",
+          "description": ""
         }
       },
       "footer": {
@@ -4401,6 +4426,10 @@
           "transcode": "",
           "containerChanged": "",
           "position": "",
+          "progress": "Průběh stahování",
+          "endsAt": "",
+          "episode": "",
+          "album": "",
           "unknown": ""
         },
         "metadata": {
@@ -4954,7 +4983,18 @@
       "contextMenu": {
         "copyName": "Kopírovat název",
         "copyId": "Kopírovat ID",
+        "setCategory": "",
+        "setLabels": "",
         "clearFilters": "Vymazat filtry"
+      },
+      "setCategory": {
+        "none": "",
+        "loadFailed": "",
+        "labels": "",
+        "labelsDescription": "",
+        "labelsLoadFailed": "",
+        "delugePluginRequired": "",
+        "transmissionUnsupported": ""
       },
       "footer": {
         "filter": "Filtrovat stahované položky"
