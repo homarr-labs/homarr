@@ -86,27 +86,46 @@ if [ "$(id -u)" = "0" ] && id www-data >/dev/null 2>&1; then
     NGINX_USER='user www-data;'
 fi
 # Preserve the compiled temp root while avoiding old worker-owned hash buckets.
+invalid_proxy_temp_path() {
+    echo "ERROR: Unable to read nginx's compiled proxy temporary path" >&2
+    exit 1
+}
 NGINX_BUILD_OPTIONS=$(nginx -V 2>&1) || exit 1
-export NGINX_PROXY_TEMP_PATH='proxy_temp'
-while [[ "$NGINX_BUILD_OPTIONS" == *--http-proxy-temp-path* ]]; do
-    NGINX_PROXY_PATH_PATTERN="(^|[[:space:]])--http-proxy-temp-path=('[^']*'|\"[^\"]*\"|[^[:space:]'\"]+)($|[[:space:]])"
-    if ! [[ "$NGINX_BUILD_OPTIONS" =~ $NGINX_PROXY_PATH_PATTERN ]]; then
-        echo "ERROR: Unable to read nginx's compiled proxy temporary path"
-        exit 1
-    fi
-    NGINX_PROXY_TEMP_PATH=${BASH_REMATCH[2]}
-    NGINX_BUILD_OPTIONS=${NGINX_BUILD_OPTIONS#*"${BASH_REMATCH[0]}"}
-    case "$NGINX_PROXY_TEMP_PATH" in
-        \"*\"|\'*\') NGINX_PROXY_TEMP_PATH=${NGINX_PROXY_TEMP_PATH:1:-1} ;;
-    esac
-    if [[ -z "$NGINX_PROXY_TEMP_PATH" || "$NGINX_PROXY_TEMP_PATH" == *$'\n'* || "$NGINX_PROXY_TEMP_PATH" == *$'\r'* ]]; then
-        echo "ERROR: Invalid nginx proxy temporary path"
-        exit 1
-    fi
-done
+NGINX_PROXY_TEMP_PATH='proxy_temp'
+case "$NGINX_BUILD_OPTIONS" in
+    *--http-proxy-temp-path=*)
+        NGINX_PROXY_TEMP_PATH=${NGINX_BUILD_OPTIONS##*--http-proxy-temp-path=}
+        case "$NGINX_PROXY_TEMP_PATH" in
+            \"*)
+                NGINX_PROXY_TEMP_PATH=${NGINX_PROXY_TEMP_PATH#\"}
+                case "$NGINX_PROXY_TEMP_PATH" in
+                    *\"*) NGINX_PROXY_PATH_SUFFIX=${NGINX_PROXY_TEMP_PATH#*\"}; NGINX_PROXY_TEMP_PATH=${NGINX_PROXY_TEMP_PATH%%\"*} ;;
+                    *) invalid_proxy_temp_path ;;
+                esac
+                ;;
+            \'*)
+                NGINX_PROXY_TEMP_PATH=${NGINX_PROXY_TEMP_PATH#\'}
+                case "$NGINX_PROXY_TEMP_PATH" in
+                    *\'*) NGINX_PROXY_PATH_SUFFIX=${NGINX_PROXY_TEMP_PATH#*\'}; NGINX_PROXY_TEMP_PATH=${NGINX_PROXY_TEMP_PATH%%\'*} ;;
+                    *) invalid_proxy_temp_path ;;
+                esac
+                ;;
+            *)
+                NGINX_PROXY_TEMP_PATH=${NGINX_PROXY_TEMP_PATH%%[[:space:]]*}
+                case "$NGINX_PROXY_TEMP_PATH" in *\"*|*\'*) invalid_proxy_temp_path ;; esac
+                NGINX_PROXY_PATH_SUFFIX=''
+                ;;
+        esac
+        case "$NGINX_PROXY_PATH_SUFFIX" in ''|[[:space:]]*) ;; *) invalid_proxy_temp_path ;; esac
+        ;;
+    *--http-proxy-temp-path*) invalid_proxy_temp_path ;;
+esac
+if [ -z "$NGINX_PROXY_TEMP_PATH" ] || [ "$NGINX_PROXY_TEMP_PATH" != "$(printf '%s' "$NGINX_PROXY_TEMP_PATH" | tr -d '\r\n')" ]; then
+    invalid_proxy_temp_path
+fi
 # The path is data inside a quoted nginx directive, not shell or nginx syntax.
-NGINX_PROXY_TEMP_PATH=${NGINX_PROXY_TEMP_PATH//\\/\\\\}
-NGINX_PROXY_TEMP_PATH=${NGINX_PROXY_TEMP_PATH//\"/\\\"}
+NGINX_PROXY_TEMP_PATH=$(printf '%s' "$NGINX_PROXY_TEMP_PATH" | sed 's/\\/\\\\/g; s/"/\\"/g') || exit 1
+export NGINX_PROXY_TEMP_PATH
 envsubst '${NGINX_USER} ${NGINX_LISTEN_IPV6} ${NGINX_TRUSTED_PROXIES} ${HOMARR_REQUEST_IDENTITY_SECRET} ${NGINX_PROXY_TEMP_PATH}' < /etc/nginx/templates/nginx.conf > /etc/nginx/nginx.conf
 # Native installs bypass the Docker entrypoint, and /run is cleared on reboot.
 mkdir -p /run/nginx || exit 1
