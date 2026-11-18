@@ -245,6 +245,7 @@ export const dockerRouter = createTRPCRouter({
                 }
               },
             );
+            if (!isSubscribed) cleanupFn();
           } catch (err) {
             if (isSubscribed) {
               emit.error(

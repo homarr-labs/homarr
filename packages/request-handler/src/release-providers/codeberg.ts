@@ -70,7 +70,8 @@ const listReleasesAsync = async (
     return await fetchJsonAsync(releasesUrl.toString(), releasesSchema, { headers });
   } catch (error) {
     if (!isNotFoundError(error)) throw error;
-    await fetchProviderAsync(repositoryUrl, { headers });
+    const repository = await fetchProviderAsync(repositoryUrl, { headers });
+    await repository.body?.cancel().catch(() => undefined);
     throw noReleasesFoundError(identifier);
   }
 };
