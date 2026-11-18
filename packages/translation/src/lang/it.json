@@ -2301,6 +2301,10 @@
       "scrollable": {
         "label": "Scorribile",
         "description": "Mantenere questo contenitore alla sua dimensione impostata e scorrere il suo contenuto invece di crescere per adattarsi a loro."
+      },
+      "autoExpand": {
+        "label": "",
+        "description": ""
       }
     },
     "action": {
@@ -2325,10 +2329,27 @@
         },
         "borderColor": {
           "label": "Colore del bordo"
+        },
+        "autoExpand": {
+          "item": {
+            "label": "",
+            "placeholder": ""
+          },
+          "inactiveDisplay": {
+            "collapsed": "",
+            "hidden": "Nascosto"
+          },
+          "fitToContent": {
+            "label": "",
+            "description": ""
+          }
         }
       },
       "remove": {
         "message": "Rimuovere questo contenitore? Il suo contenuto si sposterà nell'area circostante."
+      },
+      "editBar": {
+        "edit": "Modifica"
       }
     }
   },
@@ -4369,6 +4390,10 @@
         "showLocation": {
           "label": "Mostra posizione",
           "description": "Mostra se lo stream si trova sulla tua LAN o WAN"
+        },
+        "detailedSessionLimit": {
+          "label": "",
+          "description": ""
         }
       },
       "footer": {
@@ -4401,6 +4426,10 @@
           "transcode": "",
           "containerChanged": "",
           "position": "",
+          "progress": "Avanzamento del download",
+          "endsAt": "",
+          "episode": "Episodio",
+          "album": "ID Album",
           "unknown": "formato sconosciuto"
         },
         "metadata": {
@@ -4954,7 +4983,18 @@
       "contextMenu": {
         "copyName": "Copia nome",
         "copyId": "Copia ID",
+        "setCategory": "",
+        "setLabels": "",
         "clearFilters": "Resetta filtri"
+      },
+      "setCategory": {
+        "none": "",
+        "loadFailed": "",
+        "labels": "",
+        "labelsDescription": "",
+        "labelsLoadFailed": "",
+        "delugePluginRequired": "",
+        "transmissionUnsupported": ""
       },
       "footer": {
         "filter": "Filtro download"

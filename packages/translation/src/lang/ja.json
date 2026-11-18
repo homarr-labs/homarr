@@ -2301,6 +2301,10 @@
       "scrollable": {
         "label": "スクロール可能",
         "description": "このコンテナをセットサイズに保ち、サイズに合うように成長するのではなく、内容をスクロールします。"
+      },
+      "autoExpand": {
+        "label": "",
+        "description": ""
       }
     },
     "action": {
@@ -2325,10 +2329,27 @@
         },
         "borderColor": {
           "label": "境界線の色"
+        },
+        "autoExpand": {
+          "item": {
+            "label": "",
+            "placeholder": ""
+          },
+          "inactiveDisplay": {
+            "collapsed": "",
+            "hidden": "非表示"
+          },
+          "fitToContent": {
+            "label": "",
+            "description": ""
+          }
         }
       },
       "remove": {
         "message": "このコンテナを削除しますか？その内容は周囲に移動します。"
+      },
+      "editBar": {
+        "edit": "編集"
       }
     }
   },
@@ -4369,6 +4390,10 @@
         "showLocation": {
           "label": "",
           "description": ""
+        },
+        "detailedSessionLimit": {
+          "label": "",
+          "description": ""
         }
       },
       "footer": {
@@ -4401,6 +4426,10 @@
           "transcode": "",
           "containerChanged": "",
           "position": "",
+          "progress": "ダウンロードの進捗状況",
+          "endsAt": "",
+          "episode": "",
+          "album": "アルバム ID",
           "unknown": ""
         },
         "metadata": {
@@ -4954,7 +4983,18 @@
       "contextMenu": {
         "copyName": "",
         "copyId": "",
+        "setCategory": "",
+        "setLabels": "",
         "clearFilters": ""
+      },
+      "setCategory": {
+        "none": "",
+        "loadFailed": "",
+        "labels": "",
+        "labelsDescription": "",
+        "labelsLoadFailed": "",
+        "delugePluginRequired": "",
+        "transmissionUnsupported": ""
       },
       "footer": {
         "filter": ""
