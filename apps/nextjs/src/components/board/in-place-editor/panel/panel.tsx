@@ -3,8 +3,9 @@
 import dynamic from "next/dynamic";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import type { CSSProperties, KeyboardEvent, ReactNode } from "react";
-import { Box, FocusTrap, MantineThemeProvider, Paper, Portal, Transition } from "@mantine/core";
+import { Box, FocusTrap, MantineThemeProvider, Modal, Paper, Portal, Transition } from "@mantine/core";
 
+import { ModalProvider, useIsModalOpen } from "@homarr/modals";
 import { useI18n } from "@homarr/translation/client";
 
 import type { InPlaceEditorPanelProps } from "./types";
@@ -95,18 +96,57 @@ const StepTransition = ({ mounted, children }: StepTransitionProps) => (
 );
 
 export const InPlaceEditorPanel = (props: InPlaceEditorPanelProps) => {
+  const [portalTarget, setPortalTarget] = useState<HTMLDivElement | null>(null);
+
+  return (
+    <MantineThemeProvider
+      theme={{
+        components: {
+          Portal: Portal.extend({ defaultProps: { target: portalTarget ?? undefined } }),
+          Modal: Modal.extend({ styles: { inner: { insetInline: 0 } } }),
+        },
+      }}
+    >
+      <ModalProvider>
+        <InPlaceEditorPanelContent {...props} setPortalTarget={setPortalTarget} />
+      </ModalProvider>
+    </MantineThemeProvider>
+  );
+};
+
+const InPlaceEditorPanelContent = (
+  props: InPlaceEditorPanelProps & { setPortalTarget: (target: HTMLDivElement | null) => void },
+) => {
   const t = useI18n();
+  const isModalOpen = useIsModalOpen();
   const { step, session, anchorRect, presentation, actions, panelProps } = props;
   const isSheet = presentation === "sheet";
   const isPick = step === "pick";
   const rootRef = useRef<HTMLDialogElement>(null);
   const dropdownOpenRef = useRef(false);
-  const [portalTarget, setPortalTarget] = useState<HTMLDivElement | null>(null);
+  const childTriggerRef = useRef<HTMLElement | null>(null);
   const viewport = useViewport();
   const stableRect = useStableRect(anchorRect, viewport);
   const rect = isPick ? stableRect : anchorRect;
   const { ref: measureRef, height: contentHeight } = useMeasuredHeight();
   const pickPlacementRef = useRef<{ key: string; placement: Placement } | null>(null);
+
+  useEffect(() => {
+    if (isModalOpen) {
+      const focused = document.activeElement;
+      if (focused instanceof HTMLElement && rootRef.current?.contains(focused)) childTriggerRef.current = focused;
+      return;
+    }
+
+    const trigger = childTriggerRef.current;
+    childTriggerRef.current = null;
+    if (!trigger) return;
+    // Let the parent trap reactivate before restoring the child dialog's trigger.
+    const timeout = window.setTimeout(() => {
+      if (trigger.isConnected) trigger.focus({ preventScroll: true });
+    }, 0);
+    return () => window.clearTimeout(timeout);
+  }, [isModalOpen]);
 
   useEffect(() => {
     const captureEscape = (event: globalThis.KeyboardEvent) => {
@@ -155,7 +195,7 @@ export const InPlaceEditorPanel = (props: InPlaceEditorPanelProps) => {
   }, [isSheet, viewport.height]);
 
   const handleKeyDown = (event: KeyboardEvent) => {
-    if (event.nativeEvent.isComposing) return;
+    if (isModalOpen || event.nativeEvent.isComposing) return;
     if (event.key === "Enter" && (event.metaKey || event.ctrlKey) && step === "configure") {
       event.preventDefault();
       event.stopPropagation();
@@ -256,17 +296,18 @@ export const InPlaceEditorPanel = (props: InPlaceEditorPanelProps) => {
   return (
     <>
       {isSheet && <Box h={sheetHeight} aria-hidden />}
-      <FocusTrap innerRef={rootRef}>
+      <FocusTrap active={!isModalOpen} innerRef={rootRef}>
         <Box
           component="dialog"
           open
           {...panelProps}
           tabIndex={-1}
-          aria-modal="true"
+          aria-modal={!isModalOpen}
           aria-label={isPick ? t("board.emptyState.addWidget") : t("item.edit.title")}
           className={isSheet ? classes.sheetRoot : classes.root}
           style={style}
           data-docked={placement?.side === "overlap" || undefined}
+          data-add-in-place-modal-open={isModalOpen || undefined}
           onKeyDownCapture={(event) => {
             if (event.key === "Enter" && (event.metaKey || event.ctrlKey) && step === "configure") {
               handleKeyDown(event);
@@ -282,20 +323,16 @@ export const InPlaceEditorPanel = (props: InPlaceEditorPanelProps) => {
               style={{ top: Math.min(placement.notchY, Math.max(24, contentHeight - 24)) - 6 }}
             />
           )}
-          <MantineThemeProvider
-            theme={{ components: { Portal: Portal.extend({ defaultProps: { target: portalTarget ?? undefined } }) } }}
-          >
-            <Paper className={classes.surface} withBorder shadow="xl" radius="lg">
-              <Box
-                ref={measureRef}
-                className={classes.measure}
-                style={{ maxHeight: (maxHeight ?? viewport.height) - borderSize }}
-              >
-                {content}
-              </Box>
-            </Paper>
-          </MantineThemeProvider>
-          <div ref={setPortalTarget} />
+          <Paper className={classes.surface} withBorder shadow="xl" radius="lg">
+            <Box
+              ref={measureRef}
+              className={classes.measure}
+              style={{ maxHeight: (maxHeight ?? viewport.height) - borderSize }}
+            >
+              {content}
+            </Box>
+          </Paper>
+          <div ref={props.setPortalTarget} />
         </Box>
       </FocusTrap>
     </>

@@ -18,6 +18,7 @@ import presentationClasses from "./modal-presentation.module.css";
 import { getModalPresentationClassNames } from "./modal-presentation";
 
 interface ModalContextProps {
+  isModalOpen: boolean;
   openModalInner: <TModal extends ModalDefinition>(props: {
     modal: TModal;
     innerProps: inferInnerProps<TModal>;
@@ -66,7 +67,11 @@ export const ModalProvider = ({ children }: PropsWithChildren) => {
   const handleCloseModal = useCallback(() => state.current && closeModal(state.current.id), [closeModal, state]);
 
   const activeModals = state.modals.filter((modal) => modal.id === state.current?.id || modal.props.keepMounted);
-  const contextValue = useMemo(() => ({ openModalInner, closeModal }), [openModalInner, closeModal]);
+  const isModalOpen = state.modals.length > 0;
+  const contextValue = useMemo(
+    () => ({ openModalInner, closeModal, isModalOpen }),
+    [openModalInner, closeModal, isModalOpen],
+  );
 
   return (
     <ModalContext.Provider value={contextValue}>
@@ -143,6 +148,12 @@ const ActiveModal = ({ modal, state, handleCloseModal }: ActiveModalProps) => {
       {modal.reference.content}
     </Modal>
   );
+};
+
+export const useIsModalOpen = () => {
+  const context = useContext(ModalContext);
+  if (!context) throw new Error("ModalContext is not provided");
+  return context.isModalOpen;
 };
 
 interface OpenModalOptions {

@@ -2034,7 +2034,7 @@
     "markdown": {
       "alert": {
         "note": "Заметка",
-        "tip": "",
+        "tip": "Совет",
         "important": "Важно",
         "warning": "Предупреждение",
         "caution": ""
@@ -2140,12 +2140,12 @@
         "title": "Настроить тему",
         "basedOn": "",
         "preview": "",
-        "previewColorScheme": "",
+        "previewColorScheme": "Предварительный просмотр цветовой схемы",
         "layout": "Вид",
         "typography": "",
         "colors": "Цвета",
         "json": "",
-        "defaultRadius": "",
+        "defaultRadius": "Закругление по-умолчанию",
         "radiusHint": "",
         "scale": "Масштаб интерфейса",
         "spacing": "Интервалы",
@@ -2185,9 +2185,9 @@
       },
       "studio": {
         "title": "Редактор тем",
-        "saveTheme": "",
+        "saveTheme": "Сохранить тему",
         "searchControls": "",
-        "component": "",
+        "component": "Компонент",
         "inheritedValue": "",
         "resetControl": "",
         "decreaseControl": "",
@@ -2301,6 +2301,10 @@
       "scrollable": {
         "label": "Прокрутка",
         "description": "Сохранять заданный размер контейнера и прокручивать содержимое, а не растягивать контейнер под него."
+      },
+      "autoExpand": {
+        "label": "",
+        "description": ""
       }
     },
     "action": {
@@ -2325,10 +2329,27 @@
         },
         "borderColor": {
           "label": "Цвет границы"
+        },
+        "autoExpand": {
+          "item": {
+            "label": "",
+            "placeholder": ""
+          },
+          "inactiveDisplay": {
+            "collapsed": "",
+            "hidden": "Скрыто"
+          },
+          "fitToContent": {
+            "label": "",
+            "description": ""
+          }
         }
       },
       "remove": {
         "message": "Удалить контейнер? Его содержимое перейдёт в окружающую область."
+      },
+      "editBar": {
+        "edit": "Редактировать"
       }
     }
   },
@@ -4369,6 +4390,10 @@
         "showLocation": {
           "label": "Показывать местоположение",
           "description": "Показывать, идёт поток в локальной сети (LAN) или во внешней (WAN)"
+        },
+        "detailedSessionLimit": {
+          "label": "",
+          "description": ""
         }
       },
       "footer": {
@@ -4401,6 +4426,10 @@
           "transcode": "Транскодирование в {target}",
           "containerChanged": "{container} (ремукс)",
           "position": "{position} / {duration}",
+          "progress": "Прогресс",
+          "endsAt": "",
+          "episode": "Серия",
+          "album": "Альбом",
           "unknown": "неизвестный формат"
         },
         "metadata": {
@@ -4954,7 +4983,18 @@
       "contextMenu": {
         "copyName": "Копировать название",
         "copyId": "Копировать ID",
+        "setCategory": "",
+        "setLabels": "",
         "clearFilters": "Сбросить фильтры"
+      },
+      "setCategory": {
+        "none": "",
+        "loadFailed": "",
+        "labels": "",
+        "labelsDescription": "",
+        "labelsLoadFailed": "",
+        "delugePluginRequired": "",
+        "transmissionUnsupported": ""
       },
       "footer": {
         "filter": "Фильтровать загрузки"

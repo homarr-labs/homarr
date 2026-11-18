@@ -2301,6 +2301,10 @@
       "scrollable": {
         "label": "Derulabil",
         "description": "Ţineţi acest container la dimensiunea setată şi derulaţi conţinutul său în loc să creşteţi pentru a se potrivi."
+      },
+      "autoExpand": {
+        "label": "",
+        "description": ""
       }
     },
     "action": {
@@ -2325,10 +2329,27 @@
         },
         "borderColor": {
           "label": "Culoare chenar"
+        },
+        "autoExpand": {
+          "item": {
+            "label": "",
+            "placeholder": ""
+          },
+          "inactiveDisplay": {
+            "collapsed": "",
+            "hidden": ""
+          },
+          "fitToContent": {
+            "label": "",
+            "description": ""
+          }
         }
       },
       "remove": {
         "message": "Eliminați acest container? Conținutul său se va muta în zona înconjurătoare."
+      },
+      "editBar": {
+        "edit": "Editare"
       }
     }
   },
@@ -4369,6 +4390,10 @@
         "showLocation": {
           "label": "Arată locația",
           "description": "Arată dacă fluxul este pe LAN sau WAN"
+        },
+        "detailedSessionLimit": {
+          "label": "",
+          "description": ""
         }
       },
       "footer": {
@@ -4401,6 +4426,10 @@
           "transcode": "",
           "containerChanged": "",
           "position": "",
+          "progress": "Progresul",
+          "endsAt": "",
+          "episode": "Episod",
+          "album": "",
           "unknown": ""
         },
         "metadata": {
@@ -4954,7 +4983,18 @@
       "contextMenu": {
         "copyName": "Copiază numele",
         "copyId": "Copiază ID",
+        "setCategory": "",
+        "setLabels": "",
         "clearFilters": "Ștergeți filtrele"
+      },
+      "setCategory": {
+        "none": "",
+        "loadFailed": "",
+        "labels": "",
+        "labelsDescription": "",
+        "labelsLoadFailed": "",
+        "delugePluginRequired": "",
+        "transmissionUnsupported": ""
       },
       "footer": {
         "filter": "Descărcări filtre"

@@ -5,13 +5,13 @@ export class DnsHoleMockService implements DnsHoleSummaryIntegration {
   private static isEnabled = true;
 
   public async getSummaryAsync(): Promise<DnsHoleSummary> {
-    const blocked = Math.floor(Math.random() * Math.pow(10, 4)) + 1; // Ensure we never devide by zero
-    const queries = Math.max(Math.floor(Math.random() * Math.pow(10, 5)), blocked);
+    const blocked = 12_480;
+    const queries = 58_400;
     return await Promise.resolve({
       status: DnsHoleMockService.isEnabled ? "enabled" : "disabled",
-      domainsBeingBlocked: Math.floor(Math.random() * Math.pow(10, 6)),
+      domainsBeingBlocked: 145_230,
       adsBlockedToday: blocked,
-      adsBlockedTodayPercentage: blocked / queries,
+      adsBlockedTodayPercentage: (blocked / queries) * 100,
       dnsQueriesToday: queries,
     });
   }

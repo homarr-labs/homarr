@@ -18,19 +18,29 @@ import {
   mockSmartHomeAreas,
   mockSmartHomeEntities,
   mockSmartHomeForecasts,
+  mockSmartHomeFloors,
   mockSmartHomeHistory,
 } from "./smart-home-fixtures";
 import { applySmartHomeAction } from "../../interfaces/smart-home/smart-home-optimistic";
+import type { SmartHomeMockState, SmartHomeMockStateEntry } from "./smart-home-state";
 
 const LIVE_INTERVAL_MS = 6_000;
 
 export class SmartHomeMockService implements ISmartHomeIntegration {
   private readonly entities = new Map(mockSmartHomeEntities.map((entity) => [entity.id, entity]));
   private readonly listeners = new Set<(patch: SmartHomeEntityPatch) => void>();
+  private readonly revisions = new Map<string, number>();
   private liveTimer: NodeJS.Timeout | undefined;
   private tick = 0;
+  private simulating = false;
+
+  constructor(
+    private readonly sharedState?: SmartHomeMockState,
+    private readonly onLiveError?: (error: unknown) => void,
+  ) {}
 
   public async getSnapshotAsync(selection: SmartHomeEntitySelection): Promise<SmartHomeSnapshot> {
+    await this.refreshSharedStateAsync();
     const entities = this.select(selection);
     const usedAreas = new Set([...entities.map((entity) => entity.areaId), ...(selection.areaIds ?? [])]);
     return await Promise.resolve({
@@ -54,7 +64,7 @@ export class SmartHomeMockService implements ISmartHomeIntegration {
         }))
         .toSorted((left, right) => left.name.localeCompare(right.name)),
       areas: mockSmartHomeAreas,
-      floors: [{ id: "ground", name: "Ground floor", level: 0, icon: null }],
+      floors: mockSmartHomeFloors,
     });
   }
 
@@ -90,6 +100,11 @@ export class SmartHomeMockService implements ISmartHomeIntegration {
     if (!toServiceCall(entityId, action) || !supportsSmartHomeAction(entity, action)) {
       throw new SmartHomeActionNotSupportedError(entityId, action.type);
     }
+    if (this.sharedState) {
+      const entry = await this.sharedState.updateAsync(entity, (current) => applySmartHomeAction(current, action));
+      this.updateShared(entry);
+      return;
+    }
     this.update(applySmartHomeAction(entity, action));
     return await Promise.resolve();
   }
@@ -100,6 +115,17 @@ export class SmartHomeMockService implements ISmartHomeIntegration {
     signal: AbortSignal,
   ): Promise<void> {
     if (signal.aborted) return;
+    const unsubscribeShared = await this.sharedState?.subscribeAsync((entry) => this.updateShared(entry));
+    try {
+      await this.refreshSharedStateAsync();
+    } catch (error) {
+      unsubscribeShared?.();
+      throw error;
+    }
+    if (signal.aborted) {
+      unsubscribeShared?.();
+      return;
+    }
     const initial = this.select(selection);
     const watched = new Set([...initial.map((entity) => entity.id), ...(selection.entityIds ?? [])]);
     const listener = (patch: SmartHomeEntityPatch) => {
@@ -112,6 +138,7 @@ export class SmartHomeMockService implements ISmartHomeIntegration {
     onPatch({ changed: initial, removed: missing });
     await new Promise<void>((resolve) => {
       const stop = () => {
+        unsubscribeShared?.();
         this.listeners.delete(listener);
         if (this.listeners.size === 0) this.stopLive();
         resolve();
@@ -153,9 +180,23 @@ export class SmartHomeMockService implements ISmartHomeIntegration {
     this.listeners.forEach((listener) => listener({ changed: [entity], removed: [] }));
   }
 
+  private updateShared({ entity, revision }: SmartHomeMockStateEntry) {
+    if (!this.entities.has(entity.id) || revision <= (this.revisions.get(entity.id) ?? 0)) return;
+    this.revisions.set(entity.id, revision);
+    this.update(entity);
+  }
+
+  private async refreshSharedStateAsync() {
+    if (!this.sharedState) return;
+    const entries = await this.sharedState.readAsync([...this.entities.keys()]);
+    entries.forEach((entry) => this.updateShared(entry));
+  }
+
   private startLive() {
     if (this.liveTimer) return;
-    this.liveTimer = setInterval(() => this.simulate(), LIVE_INTERVAL_MS);
+    this.liveTimer = setInterval(() => {
+      void this.simulateAsync().catch((error: unknown) => this.onLiveError?.(error));
+    }, LIVE_INTERVAL_MS);
     this.liveTimer.unref();
   }
 
@@ -164,19 +205,51 @@ export class SmartHomeMockService implements ISmartHomeIntegration {
     this.liveTimer = undefined;
   }
 
-  private simulate() {
+  private async simulateAsync() {
+    if (this.simulating) return;
+    this.simulating = true;
+    try {
+      await this.refreshSharedStateAsync();
+      await this.simulateEntitiesAsync();
+    } finally {
+      this.simulating = false;
+    }
+  }
+
+  private async simulateEntitiesAsync() {
     this.tick++;
     const now = Date.now();
     const outside = this.entities.get("sensor.outside_temperature");
     if (outside) {
-      const value = Number(outside.state) + Math.sin(this.tick / 3) * 0.05;
-      this.update({ ...outside, state: value.toFixed(1), lastUpdated: now, lastChanged: now });
+      const value = 14.2 + Math.sin(this.tick / 10) * 0.4;
+      await this.updateSimulatedAsync(outside, (current) => {
+        if (now - current.lastUpdated < LIVE_INTERVAL_MS - 1000) return current;
+        return { ...current, state: value.toFixed(1), lastUpdated: now, lastChanged: now };
+      });
     }
 
     const tv = this.entities.get("media_player.living_room_tv");
     if (tv?.state === "playing") {
-      const position = (tv.attributes.mediaPosition ?? 0) + LIVE_INTERVAL_MS / 1000;
-      this.update({ ...tv, attributes: { ...tv.attributes, mediaPosition: position, mediaPositionUpdatedAt: now } });
+      await this.updateSimulatedAsync(tv, (current) => {
+        if (current.state !== "playing") return current;
+        const playbackNow = Date.now();
+        if (playbackNow - (current.attributes.mediaPositionUpdatedAt ?? 0) < LIVE_INTERVAL_MS - 1000) return current;
+        const duration = current.attributes.mediaDuration ?? 596;
+        const elapsed = Math.max(0, (playbackNow - (current.attributes.mediaPositionUpdatedAt ?? playbackNow)) / 1000);
+        const position = ((current.attributes.mediaPosition ?? 0) + elapsed) % duration;
+        return {
+          ...current,
+          attributes: { ...current.attributes, mediaPosition: position, mediaPositionUpdatedAt: playbackNow },
+        };
+      });
     }
+  }
+
+  private async updateSimulatedAsync(entity: SmartHomeEntity, update: (current: SmartHomeEntity) => SmartHomeEntity) {
+    if (!this.sharedState) {
+      this.update(update(entity));
+      return;
+    }
+    this.updateShared(await this.sharedState.updateAsync(entity, update));
   }
 }
