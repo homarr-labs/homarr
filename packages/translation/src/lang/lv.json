@@ -2301,6 +2301,10 @@
       "scrollable": {
         "label": "Ritināms",
         "description": "Saglabāt šī konteinera iestatīto izmēru un ritināt tā saturu, nevis palielināt konteineru, lai saturs ietilptu."
+      },
+      "autoExpand": {
+        "label": "",
+        "description": ""
       }
     },
     "action": {
@@ -2325,10 +2329,27 @@
         },
         "borderColor": {
           "label": "Apmales krāsa"
+        },
+        "autoExpand": {
+          "item": {
+            "label": "",
+            "placeholder": ""
+          },
+          "inactiveDisplay": {
+            "collapsed": "",
+            "hidden": ""
+          },
+          "fitToContent": {
+            "label": "",
+            "description": ""
+          }
         }
       },
       "remove": {
         "message": "Noņemt šo konteineru? Tā saturs tiks pārvietots apkārtējā apgabalā."
+      },
+      "editBar": {
+        "edit": "Rediģēt"
       }
     }
   },
@@ -4369,6 +4390,10 @@
         "showLocation": {
           "label": "Rādīt atrašanās vietu",
           "description": "Rādīt, vai straume atrodas jūsu LAN vai WAN tīklā"
+        },
+        "detailedSessionLimit": {
+          "label": "",
+          "description": ""
         }
       },
       "footer": {
@@ -4401,6 +4426,10 @@
           "transcode": "",
           "containerChanged": "",
           "position": "",
+          "progress": "Lejupielādes progress",
+          "endsAt": "",
+          "episode": "",
+          "album": "",
           "unknown": ""
         },
         "metadata": {
@@ -4954,7 +4983,18 @@
       "contextMenu": {
         "copyName": "Kopēt nosaukumu",
         "copyId": "Kopēt ID",
+        "setCategory": "",
+        "setLabels": "",
         "clearFilters": "Notīrīt filtrus"
+      },
+      "setCategory": {
+        "none": "",
+        "loadFailed": "",
+        "labels": "",
+        "labelsDescription": "",
+        "labelsLoadFailed": "",
+        "delugePluginRequired": "",
+        "transmissionUnsupported": ""
       },
       "footer": {
         "filter": "Filtrēt lejupielādes"
