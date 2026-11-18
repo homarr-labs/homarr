@@ -35,14 +35,24 @@ RUN --mount=type=secret,id=TURBO_API,env=TURBO_API \
     TURBO_PLATFORM="${TARGETPLATFORM:-linux/amd64}/glibc-2.41/node-24.22.3" \
     bun run turbo run build --filter=@homarr/nextjs... --filter=@homarr/cli
 
+# Use the fixed upstream Debian packages while Trixie lacks the November 2026 NGINX fixes.
+FROM scratch AS nginx-amd64
+ADD --chmod=644 --checksum=sha256:7e9e787849bed1fbb677868fc8ee86f8b513cd9e46ad29e41c7710cec3c8825d https://nginx.org/packages/debian/pool/nginx/n/nginx/nginx_1.30.7-1~trixie_amd64.deb /nginx.deb
+
+FROM scratch AS nginx-arm64
+ADD --chmod=644 --checksum=sha256:b32bff964b8e64e1297e6da783748b8db1117a68f3d9ad85589b41be79a38f46 https://nginx.org/packages/debian/pool/nginx/n/nginx/nginx_1.30.7-1~trixie_arm64.deb /nginx.deb
+
+FROM nginx-${TARGETARCH} AS nginx-package
+
 FROM debian:trixie-slim@sha256:f6b08b09a05725f9431502d3b5714f5c4576e82c1a84fa1debe0c24a7e0c3ec4 AS runner
 WORKDIR /app
 # envsubst, privilege drop and AUTH_SECRET generation are used by the entrypoint.
 # Keep wget for existing health-check overrides from Alpine-based deployments.
-RUN apt-get update && \
+RUN --mount=from=nginx-package,source=/nginx.deb,target=/tmp/nginx.deb \
+    apt-get update && \
     apt-get upgrade -y && \
     apt-get install -y --no-install-recommends \
-      libstdc++6 libatomic1 libzstd1 zlib1g ca-certificates nginx bash gettext-base util-linux openssl wget && \
+      libstdc++6 libatomic1 libzstd1 zlib1g ca-certificates bash gettext-base util-linux openssl wget /tmp/nginx.deb && \
     rm -rf /var/lib/apt/lists/* && \
     mkdir -p /appdata /var/cache/nginx /var/log/nginx /var/lib/nginx \
       /run/nginx /etc/nginx/templates /etc/nginx/ssl/certs && \
