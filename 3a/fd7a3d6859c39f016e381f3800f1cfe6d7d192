@@ -1,0 +1,14 @@
+packages/workshop/src/schema.ts
+  h_d6e478ca18e517 3-4
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "3afd7a3d6859c39f016e381f3800f1cfe6d7d192",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
