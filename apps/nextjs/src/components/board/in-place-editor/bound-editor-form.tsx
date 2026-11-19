@@ -1,7 +1,7 @@
 "use client";
 
 import type { KeyboardEvent } from "react";
-import { useEffect, useId, useRef, useState } from "react";
+import { useCallback, useEffect, useId, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { Center, Fieldset, Loader, MantineThemeProvider, Portal, SegmentedControl, Text } from "@mantine/core";
 
@@ -43,14 +43,53 @@ const getSelectedAppId = (draft: WidgetEditorFormProps["value"] | undefined) => 
   return undefined;
 };
 
+interface AppEditPaneProps {
+  appId: string;
+  active: boolean;
+  hidden: boolean;
+  onHandleChange: (appId: string, handle: EmbeddedAppEditFormHandle | null) => void;
+}
+
+const AppEditPane = ({ appId, active, hidden, onHandleChange }: AppEditPaneProps) => {
+  const portalTargetId = `app-edit-pane-portals-${useId().replaceAll(/[^a-zA-Z0-9_-]/g, "")}`;
+  const handleRef = useCallback(
+    (handle: EmbeddedAppEditFormHandle | null) => onHandleChange(appId, handle),
+    [appId, onHandleChange],
+  );
+
+  return (
+    <MantineThemeProvider
+      theme={{ components: { Portal: Portal.extend({ defaultProps: { target: `#${portalTargetId}` } }) } }}
+    >
+      <div hidden={hidden} inert={hidden}>
+        <EmbeddedAppEditForm appId={appId} active={active} handleRef={handleRef} />
+        <div id={portalTargetId} />
+      </div>
+    </MantineThemeProvider>
+  );
+};
+
 const AppEditorForm = ({ appId, target, headerControlTarget, ...widgetFormProps }: AppEditorFormProps) => {
   const tItem = useI18n("item.edit");
   const [activeView, setActiveView] = useState<"widget" | "app">("widget");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const portalTargetId = `app-editor-portals-${useId().replaceAll(/[^a-zA-Z0-9_-]/g, "")}`;
-  const appEditRef = useRef<EmbeddedAppEditFormHandle>(null);
+  const appEditHandles = useRef(new Map<string, EmbeddedAppEditFormHandle>());
   const submittingRef = useRef(false);
-  useBoardDraftChanges(widgetFormProps.boardId, () => appEditRef.current?.isDirty() ?? false);
+  useBoardDraftChanges(widgetFormProps.boardId, () =>
+    Array.from(appEditHandles.current.values()).some((handle) => handle.isDirty()),
+  );
+  const onAppHandleChange = useCallback((id: string, handle: EmbeddedAppEditFormHandle | null) => {
+    if (handle) {
+      appEditHandles.current.set(id, handle);
+      return;
+    }
+    appEditHandles.current.delete(id);
+  }, []);
+  const appIdsToRender = Array.from(appEditHandles.current.values())
+    .filter((handle) => handle.isDirty())
+    .map((handle) => handle.appId);
+  if (appId && !appIdsToRender.includes(appId)) appIdsToRender.push(appId);
 
   const handleSubmit: WidgetEditorFormProps["onSubmit"] = async (draft) => {
     if (submittingRef.current) return;
@@ -61,7 +100,7 @@ const AppEditorForm = ({ appId, target, headerControlTarget, ...widgetFormProps 
       widgetFormProps.onSubmit(draft);
       return;
     }
-    const appEditHandle = appEditRef.current;
+    const appEditHandle = appEditHandles.current.get(submittedAppId);
     if (
       submittedAppId !== appId ||
       appEditHandle?.appId !== submittedAppId ||
@@ -118,9 +157,15 @@ const AppEditorForm = ({ appId, target, headerControlTarget, ...widgetFormProps 
               onValidationError={() => setActiveView("widget")}
             />
           </div>
-          <div hidden={activeView !== "app"}>
-            {appId && <EmbeddedAppEditForm key={appId} appId={appId} handleRef={appEditRef} />}
-          </div>
+          {appIdsToRender.map((id) => (
+            <AppEditPane
+              key={id}
+              appId={id}
+              active={id === appId}
+              hidden={activeView !== "app" || id !== appId}
+              onHandleChange={onAppHandleChange}
+            />
+          ))}
           <div id={portalTargetId} />
         </Fieldset>
       </MantineThemeProvider>
