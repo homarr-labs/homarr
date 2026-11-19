@@ -661,7 +661,6 @@ export const integrationDefs = {
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/homey.svg",
     category: ["smartHomeServer"],
     documentationSlug: "homey",
-    defaultPort: 80,
   },
   openmediavault: {
     httpAuth: { type: "adapter" },
