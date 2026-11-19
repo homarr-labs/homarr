@@ -24,13 +24,12 @@ export const SystemResourceCPUChart = ({
   return (
     <CommonChart
       data={chartData}
-      dataKey={"index"}
       series={[{ name: "usage", color: "blue.5" }]}
       title={title}
       icon={IconCpu}
       lastValue={latest == null ? undefined : `${Math.round(latest)}%`}
       chartType={hasShadow ? "area" : "line"}
-      yAxisProps={{ domain: [0, 100] }}
+      yDomain={[0, 100]}
       labelDisplayMode={labelDisplayMode}
       advanced={advanced}
       tooltipLabel={(index) => {

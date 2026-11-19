@@ -21,7 +21,6 @@ export const SystemResourceGPUChart = ({
   return (
     <CommonChart
       data={chartData}
-      dataKey={"index"}
       series={[{ name: "usage", color: "grape.5" }]}
       title={invariantTechnicalLabels.gpu}
       icon={IconDeviceDesktop}
@@ -32,7 +31,7 @@ export const SystemResourceGPUChart = ({
           : undefined
       }
       chartType={hasShadow ? "area" : "line"}
-      yAxisProps={{ domain: [0, 100] }}
+      yDomain={[0, 100]}
       labelDisplayMode={labelDisplayMode}
       advanced={advanced}
       tooltipLabel={(index) => `${Math.round(gpuUsageOverTime[index] ?? 0)}%`}
