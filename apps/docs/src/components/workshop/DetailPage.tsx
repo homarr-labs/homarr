@@ -60,6 +60,7 @@ import Link from "@/components/mdx/link";
 import { track } from "@/lib/analytics";
 import { CustomWidgetCodeExample, CustomWidgetCodeInput } from "../custom-widget-code";
 import { validateSubmissionContent } from "@site/src/lib/workshop-schema";
+import { validateWorkshopWidget } from "@homarr/workshop/schema";
 import { cn, errorMessage, oauthErrorMessage } from "@site/src/lib/utils";
 
 import { CommentsSection } from "./DetailComments";
@@ -70,10 +71,22 @@ import { WorkshopErrorBoundary } from "./WorkshopErrorBoundary";
 import { WorkshopVoteControl } from "./WorkshopVoteControl";
 import { downloadSubmissionJson, voteAndReconcile } from "./workshop-utils";
 
-const typeLabels: Record<SubmissionType, string> = { customCss: "CSS", customWidget: "Widget" };
-const typeSocialLabels: Record<SubmissionType, string> = { customCss: "Custom CSS", customWidget: "Custom widget" };
-const typeDotColors: Record<SubmissionType, string> = { customCss: "bg-blue-500", customWidget: "bg-yellow-500" };
-const contentLanguages: Record<SubmissionType, string> = { customCss: "css", customWidget: "json" };
+const typeLabels: Record<SubmissionType, string> = { customCss: "CSS", customWidget: "Widget", customTheme: "Theme" };
+const typeSocialLabels: Record<SubmissionType, string> = {
+  customCss: "Custom CSS",
+  customWidget: "Custom widget",
+  customTheme: "Custom theme",
+};
+const typeDotColors: Record<SubmissionType, string> = {
+  customCss: "bg-blue-500",
+  customWidget: "bg-yellow-500",
+  customTheme: "bg-violet-500",
+};
+const contentLanguages: Record<SubmissionType, "css" | "json"> = {
+  customCss: "css",
+  customWidget: "json",
+  customTheme: "json",
+};
 const copyState = [
   { Icon: IconCopy, iconClass: "" },
   { Icon: IconCheck, iconClass: "text-green-500" },
@@ -326,8 +339,8 @@ const MarketplaceDetail = ({ workshopUrl, submissionId }: { workshopUrl: string;
 
   const widgetDefinition = useMemo<HomarrCustomWidgetV2 | null>(() => {
     if (submission?.type !== "customWidget") return null;
-    const result = validateSubmissionContent("customWidget", submission.content);
-    return result.success && typeof result.data === "object" ? result.data : null;
+    const result = validateWorkshopWidget(submission.content);
+    return result.success ? result.data : null;
   }, [submission]);
 
   const handleVote = async (value: 1 | -1) => {
@@ -723,6 +736,21 @@ const MarketplaceDetail = ({ workshopUrl, submissionId }: { workshopUrl: string;
                     Review its sources and permissions, then configure the URLs and credentials for your services.
                   </li>
                 </>
+              ) : submission.type === "customTheme" ? (
+                <>
+                  <li>
+                    As a Homarr admin, open{" "}
+                    <strong className="text-foreground">Settings → Appearance → Customize theme</strong>.
+                  </li>
+                  <li>
+                    Choose <strong className="text-foreground">Browse Workshop themes</strong>, search for this listing,
+                    and review it.
+                  </li>
+                  <li>
+                    Load it as a draft. Use <strong className="text-foreground">Save theme</strong> to apply it across
+                    your instance.
+                  </li>
+                </>
               ) : (
                 <>
                   <li>Copy the CSS below.</li>
@@ -734,9 +762,10 @@ const MarketplaceDetail = ({ workshopUrl, submissionId }: { workshopUrl: string;
               )}
             </ol>
             <div className="mt-4 flex flex-wrap items-center gap-2">
-              {submission.type === "customWidget" && (
+              {submission.type !== "customCss" && (
                 <Button size="sm" className="min-h-11 sm:min-h-8" onClick={() => downloadSubmissionJson(submission)}>
-                  <IconDownload size={14} /> Download widget JSON
+                  <IconDownload size={14} />{" "}
+                  {submission.type === "customTheme" ? "Download theme JSON" : "Download widget JSON"}
                 </Button>
               )}
               <Button
@@ -984,8 +1013,8 @@ const MarketplaceDetail = ({ workshopUrl, submissionId }: { workshopUrl: string;
           <div className="grid gap-5 lg:grid-cols-[minmax(0,1.45fr)_minmax(18rem,0.55fr)]">
             <CustomWidgetCodeInput
               id="workshop-edit-content"
-              label={submission.type === "customWidget" ? "Widget JSON" : "Custom CSS"}
-              language={submission.type === "customWidget" ? "json" : "css"}
+              label={typeSocialLabels[submission.type]}
+              language={contentLanguages[submission.type]}
               value={editContent}
               onChange={setEditContent}
               height="min(46vh, 460px)"

@@ -4,6 +4,7 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
   IconAlertCircle,
   IconBraces,
+  IconBrandCss3,
   IconCheck,
   IconChevronLeft,
   IconChevronRight,
@@ -51,10 +52,18 @@ const dropOverlayClass = ["pointer-events-none opacity-0", "opacity-100"];
 const placeholders: Record<SubmissionType, string> = {
   customWidget: '{\n  "$schema": "homarr-custom-widget-v2",\n  "name": "My widget",\n  ...\n}',
   customCss: ".grid-stack-item-content {\n  border-radius: 16px;\n}",
+  customTheme: '{\n  "preset": "nord",\n  "theme": { "defaultRadius": "md" },\n  "dark": { "primary": "#88c0d0" }\n}',
 };
 const contentLabels: Record<SubmissionType, string> = {
   customWidget: "Widget JSON (homarr-custom-widget-v2)",
   customCss: "Custom CSS",
+  customTheme: "Theme JSON",
+};
+const contentHints: Record<SubmissionType, string> = {
+  customWidget: "Paste exported widget JSON. The title and description are filled from its metadata.",
+  customCss: "Paste the stylesheet that users will import into their board settings.",
+  customTheme:
+    "Paste the complete JSON from Homarr’s theme editor. Review any included CSS for private URLs before publishing.",
 };
 
 const parseJsonObject = (json: string): Record<string, unknown> | null => {
@@ -104,8 +113,14 @@ export const SubmitForm = ({ onClose, onSubmit }: Props) => {
       const reader = new FileReader();
       reader.addEventListener("load", (e) => {
         const text = e.target?.result as string;
-        setType("customWidget");
-        setContentAndAutofill(text, title, description);
+        const json = parseJsonObject(text);
+        if (json && ("preset" in json || "theme" in json)) {
+          setType("customTheme");
+          setContent(text);
+        } else {
+          setType("customWidget");
+          setContentAndAutofill(text, title, description);
+        }
         if (step === 0) goTo(1);
       });
       reader.addEventListener("error", () => setError("Could not read the file"));
@@ -302,10 +317,16 @@ const typeCards: { type: SubmissionType; icon: typeof IconBraces; label: string;
     desc: "A JSON-based widget using the homarr-custom-widget-v2 schema",
   },
   {
-    type: "customCss",
+    type: "customTheme",
     icon: IconPalette,
+    label: "Custom Theme",
+    desc: "A complete theme from Homarr’s theme editor: preset, settings, and optional CSS",
+  },
+  {
+    type: "customCss",
+    icon: IconBrandCss3,
     label: "Custom CSS",
-    desc: "A CSS theme or style override for Homarr dashboards",
+    desc: "A standalone stylesheet for Homarr dashboards",
   },
 ];
 
@@ -389,11 +410,11 @@ const StepType = ({
         </div>
         <div className="min-w-0">
           <p className="text-xs font-medium">Or drop a .json file here</p>
-          <p className="text-xs text-muted-foreground">Auto-selects Widget type and fills title from JSON</p>
+          <p className="text-xs text-muted-foreground">Use an exported widget or theme JSON file</p>
         </div>
         <input
           type="file"
-          aria-label="Choose a widget JSON file"
+          aria-label="Choose a widget or theme JSON file"
           accept=".json,application/json"
           className="hidden"
           onChange={(e) => {
@@ -431,18 +452,14 @@ const StepDetails = ({
       <CustomWidgetCodeInput
         id="submit-content"
         label={contentLabels[type]}
-        language={type === "customWidget" ? "json" : "css"}
+        language={type === "customCss" ? "css" : "json"}
         value={content}
         onChange={onContentChange}
         placeholder={placeholders[type]}
         required
         height="min(44vh, 440px)"
         maxLength={type === "customCss" ? 16_384 : undefined}
-        description={
-          type === "customWidget"
-            ? "Paste exported widget JSON. The title and description are filled from its metadata."
-            : "Paste the stylesheet that users will import into their board settings."
-        }
+        description={contentHints[type]}
       />
     </div>
     <FieldGroup className="gap-4">

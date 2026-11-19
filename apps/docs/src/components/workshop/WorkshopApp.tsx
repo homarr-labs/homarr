@@ -11,6 +11,7 @@ import {
   IconFlag,
   IconMessage,
   IconPackage,
+  IconPalette,
   IconPlus,
   IconPuzzle,
   IconRefresh,
@@ -45,13 +46,22 @@ import { useWorkshop } from "./useWorkshop";
 
 const SubmitForm = lazy(() => import("./SubmitForm").then((module) => ({ default: module.SubmitForm })));
 
-const typeDotColors: Record<SubmissionType, string> = { customCss: "bg-blue-500", customWidget: "bg-yellow-500" };
-const typeLabels: Record<SubmissionType, string> = { customCss: "CSS", customWidget: "Widget" };
+const typeDotColors: Record<SubmissionType, string> = {
+  customCss: "bg-blue-500",
+  customWidget: "bg-yellow-500",
+  customTheme: "bg-violet-500",
+};
+const typeLabels: Record<SubmissionType, string> = { customCss: "CSS", customWidget: "Widget", customTheme: "Theme" };
 const typeIcons: Record<SubmissionType, React.ComponentType<{ size: number; className?: string }>> = {
   customCss: IconBrandCss3,
   customWidget: IconPuzzle,
+  customTheme: IconPalette,
 };
-const typeBgColors: Record<SubmissionType, string> = { customCss: "bg-blue-500/5", customWidget: "bg-yellow-500/5" };
+const typeBgColors: Record<SubmissionType, string> = {
+  customCss: "bg-blue-500/5",
+  customWidget: "bg-yellow-500/5",
+  customTheme: "bg-violet-500/5",
+};
 const cardMediaClassName = "aspect-video w-full overflow-hidden bg-muted";
 const emptyState = {
   none: { title: "No submissions yet", hint: "Be the first to share something." },
@@ -61,6 +71,7 @@ const emptyState = {
 const typeFilters: { value: TypeFilter; label: string; dot?: string }[] = [
   { value: "all", label: "All" },
   { value: "customWidget", label: "Widgets", dot: typeDotColors.customWidget },
+  { value: "customTheme", label: "Themes", dot: typeDotColors.customTheme },
   { value: "customCss", label: "CSS", dot: typeDotColors.customCss },
 ];
 const sortOptions: { value: SortKey; label: string }[] = [

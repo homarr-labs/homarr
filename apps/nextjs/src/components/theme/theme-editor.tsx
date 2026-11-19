@@ -54,7 +54,8 @@ import {
 
 import { AdvancedSettings } from "~/components/manage/advanced-settings";
 import { CustomCssEditor } from "~/components/custom-css/custom-css-editor";
-import { WorkshopCssImportButton } from "~/components/workshop/workshop-css-import-button";
+import { WorkshopCssImportButton, WorkshopThemeImportButton } from "~/components/workshop/workshop-css-import-button";
+import { WorkshopThemePublishButton } from "~/components/workshop/workshop-theme-publish-button";
 import { useUnsavedChangesGuard } from "~/components/manage/use-unsaved-changes-guard";
 import type { ThemeSelection } from "~/theme/branding";
 import { createAppearanceTheme, resolveActiveTheme } from "~/theme/branding";
@@ -450,6 +451,16 @@ export const ThemeEditor = ({
           <Button component={Link} href={returnHref} variant="subtle" leftSection={<IconArrowLeft size={16} />}>
             {common("action.backToOverview")}
           </Button>
+        </Group>
+        <Group>
+          <WorkshopThemeImportButton
+            onImport={(customTheme) => {
+              setEditingControl(null);
+              setIncludeCustomCss(false);
+              updateSelection({ themeId: "custom", customTheme });
+            }}
+          />
+          <WorkshopThemePublishButton theme={selection.themeId === "custom" && !jsonError ? parsed.data : undefined} />
         </Group>
         <Group>
           <Button variant="default" disabled={!dirty && !jsonError} onClick={() => updateSelection(saved)}>

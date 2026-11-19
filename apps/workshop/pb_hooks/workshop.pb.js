@@ -47,7 +47,8 @@ const workshopDetailPage = (event) => {
       };
     }
     const type = submission.type;
-    const section = type === "customCss" ? "Custom CSS" : "Custom widget";
+    const sections = { customCss: "Custom CSS", customTheme: "Custom theme", customWidget: "Custom widget" };
+    const section = sections[type] ?? "Workshop submission";
     const submissionTitle = submission.title;
     const title = `${submissionTitle} · Homarr Workshop`;
     const description = `${section} for Homarr. ${submission.description}`.trim();
