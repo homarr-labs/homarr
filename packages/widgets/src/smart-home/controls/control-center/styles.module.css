@@ -82,6 +82,10 @@
   max-height: 256px;
 }
 
+.detailStage[data-domain="media_player"] {
+  max-height: none;
+}
+
 @container (min-width: 44rem) {
   .detailLayout {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1330,6 +1334,17 @@ button.tile:not(:disabled):active {
   align-items: center;
 }
 
+.mediaTop .headText {
+  width: 100%;
+}
+
+.mediaTile .state {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .mediaTop[data-hero="true"] {
   flex-direction: column;
   align-items: flex-start;
@@ -1391,6 +1406,7 @@ button.tile:not(:disabled):active {
 }
 
 .cameraTile {
+  container: camera-tile / size;
   background: #101216;
 }
 
@@ -1400,7 +1416,12 @@ button.tile:not(:disabled):active {
   inset: 0;
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
+}
+
+.cameraImage {
+  top: 48px;
+  height: calc(100% - 88px);
 }
 
 .cameraEmpty {
@@ -1409,19 +1430,11 @@ button.tile:not(:disabled):active {
   color: rgba(255, 255, 255, 0.5);
 }
 
-.cameraShade {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(180deg, rgba(0, 0, 0, 0.3) 0%, transparent 35%, rgba(0, 0, 0, 0.7) 100%);
-}
-
 .liveBadge {
   position: absolute;
   top: 9px;
   left: 9px;
-  display: flex;
-  gap: 5px;
-  align-items: center;
+  display: block;
   padding: 3px 9px 3px 7px;
   font-size: 11px;
   font-weight: 750;
@@ -1430,18 +1443,14 @@ button.tile:not(:disabled):active {
   background: rgba(0, 0, 0, 0.5);
   border-radius: 999px;
   backdrop-filter: blur(8px);
+  max-width: calc(100% - 64px);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-.liveDot {
-  width: 7px;
-  height: 7px;
-  background: #9aa0a6;
-  border-radius: 50%;
-}
-
-.liveBadge[data-live="true"] .liveDot {
-  background: #ff3b30;
-  animation: live 1.6s ease-in-out infinite;
+.liveBadge[data-live="true"] {
+  background: var(--mantine-color-red-9);
 }
 
 .cameraFoot {
@@ -1453,6 +1462,35 @@ button.tile:not(:disabled):active {
   display: flex;
   flex-direction: column;
   color: #fff;
+}
+
+@container camera-tile (max-height: 88px) {
+  .cameraImage {
+    top: 0;
+    height: 100%;
+  }
+}
+
+@container camera-tile (max-height: 115px) and (min-width: 224px) {
+  .cameraImage {
+    top: 0;
+    width: calc(100% - 136px);
+    height: 100%;
+  }
+
+  .liveBadge {
+    left: calc(100% - 132px);
+    max-width: 80px;
+  }
+
+  .cameraFoot {
+    right: 8px;
+    left: calc(100% - 132px);
+  }
+
+  .cameraFoot .state {
+    display: none;
+  }
 }
 
 .sensorTile {
@@ -1727,13 +1765,6 @@ button.tile:not(:disabled):active {
 @keyframes breathe {
   50% {
     transform: scale(1.04);
-  }
-}
-
-@keyframes live {
-  50% {
-    opacity: 0.3;
-    transform: scale(0.8);
   }
 }
 

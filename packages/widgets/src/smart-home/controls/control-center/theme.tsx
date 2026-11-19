@@ -64,6 +64,9 @@ export const getTheme = (entity: HaEntity, palette: SmartHomeControlPalette): En
 
 export const useEntityTheme = (entity: HaEntity) => getTheme(entity, usePalette());
 
+// Board widgets already compensate for canvas scale; Mantine rem sizes would scale twice.
+export const smartHomeActionIconVars = () => ({ root: { "--ai-size": "44px" } });
+
 export const accentVars = (accent: string, onAccent: string) =>
   ({ "--accent": accent, "--on-accent": onAccent }) as CSSProperties;
 

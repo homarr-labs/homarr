@@ -150,9 +150,10 @@ export const mockSmartHomeEntities: SmartHomeEntity[] = [
     deviceClass: "tv",
     changedMinutesAgo: 51,
     attributes: {
-      supportedFeatures: 1 | 4 | 8 | 16 | 32 | 16384,
+      supportedFeatures: 1 | 4 | 8 | 16 | 32 | 128 | 256 | 2048 | 16384,
       mediaTitle: "Big Buck Bunny",
       mediaSource: "Jellyfin",
+      sources: ["Jellyfin", "HDMI 1", "HDMI 2"],
       volume: 0.32,
       isMuted: false,
       mediaDuration: 596,

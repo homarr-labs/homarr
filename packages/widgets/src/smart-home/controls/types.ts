@@ -79,6 +79,7 @@ export interface HaAttributes {
   mediaArtist?: string;
   mediaAlbum?: string;
   mediaSource?: string;
+  sources?: string[];
   artworkUrl?: string;
   volume?: number;
   isMuted?: boolean;
@@ -99,6 +100,7 @@ export interface HaAttributes {
   zone?: string;
   pictureUrl?: string;
   snapshotUrl?: string;
+  streamUrl?: string;
   nextSetting?: number;
   nextRising?: number;
   stateLabel?: string;
@@ -155,6 +157,8 @@ export type HaAction =
   | { type: "mediaNext" }
   | { type: "mediaPrevious" }
   | { type: "setVolume"; value: number }
+  | { type: "setMuted"; value: boolean }
+  | { type: "selectSource"; value: string }
   | { type: "trigger" }
   | { type: "selectOption"; value: string }
   | { type: "setFanPercentage"; value: number }

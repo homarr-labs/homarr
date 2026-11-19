@@ -29,7 +29,17 @@ export const getLightCapabilities = (attributes: SmartHomeEntityAttributes) => {
 
 // Home Assistant optional entity feature flags.
 const coverFeatures = { open: 1, close: 2, setPosition: 4, stop: 8, setTiltPosition: 128 };
-const mediaFeatures = { pause: 1, volume: 4, mute: 8, previous: 16, next: 32, source: 2048, play: 16384 };
+const mediaFeatures = {
+  pause: 1,
+  volume: 4,
+  mute: 8,
+  previous: 16,
+  next: 32,
+  turnOn: 128,
+  turnOff: 256,
+  source: 2048,
+  play: 16384,
+};
 const alarmFeatures = { home: 1, away: 2, night: 4, custom_bypass: 16, vacation: 32 };
 
 const hasFeature = (attributes: SmartHomeEntityAttributes, feature: number) =>
@@ -41,6 +51,10 @@ const within = (value: number, min: number | undefined, max: number | undefined)
 export const supportsSmartHomeAction = (entity: CapabilityEntity, action: SmartHomeAction) => {
   const attributes = entity.attributes;
   switch (action.type) {
+    case "turnOn":
+    case "turnOff":
+      if (entity.domain === "media_player") return hasFeature(attributes, mediaFeatures[action.type]);
+      return true;
     case "toggle":
       if (entity.domain === "cover") {
         const required = coverFeatures.open | coverFeatures.close;

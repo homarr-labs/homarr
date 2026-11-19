@@ -33,6 +33,7 @@ export const applySmartHomeAction = (entity: SmartHomeEntity, action: SmartHomeA
       return toggleEntity(entity, next);
     case "turnOn":
       if (entity.state !== "off") return entity;
+      if (entity.domain === "media_player") return next({ state: "idle" });
       return toggleEntity(entity, next);
     case "turnOff":
       if (entity.state === "off") return entity;
@@ -91,6 +92,8 @@ export const applySmartHomeAction = (entity: SmartHomeEntity, action: SmartHomeA
       return next({ attributes: { volume: clamp(action.value, 0, 1) } });
     case "setMuted":
       return next({ attributes: { isMuted: action.value } });
+    case "selectSource":
+      return next({ attributes: { mediaSource: action.value } });
     case "trigger":
       if (entity.domain === "automation" || entity.domain === "script")
         return next({ attributes: { lastTriggered: now } });

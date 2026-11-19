@@ -3523,6 +3523,28 @@
         "empty": "No blocks yet",
         "add": "Add block",
         "close": "Close block editor"
+      },
+      "media": {
+        "controls": "{name} controls",
+        "turnOn": "Turn on {name}",
+        "turnOff": "Turn off {name}",
+        "mute": "Mute {name}",
+        "unmute": "Unmute {name}",
+        "input": "{name} input",
+        "inputPlaceholder": "Input"
+      },
+      "camera": {
+        "controls": "{name} camera controls",
+        "snapshot": "Snapshot",
+        "paused": "Paused",
+        "connecting": "Connecting",
+        "live": "Live",
+        "unavailable": "Stream unavailable",
+        "watch": "Watch {name} live",
+        "stop": "Stop {name} live view",
+        "retry": "Retry {name} live view",
+        "snapshotAlt": "{name} snapshot",
+        "liveAlt": "{name} live view"
       }
     },
     "smartHome-executeAutomation": {
