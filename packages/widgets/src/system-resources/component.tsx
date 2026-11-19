@@ -12,6 +12,8 @@ import { IntegrationErrorIndicator } from "../common/integration-error-indicator
 import { WidgetQueryLoadingState } from "../common/query-state-indicator";
 import type { WidgetComponentProps } from "../definition";
 import { getUsableWidgetQueryData } from "../common/query-state";
+import { useDemoReadOnly } from "../demo-read-only";
+import { getWidgetRefreshInterval } from "../refresh-interval";
 import { ChartLayout } from "./chart-layout";
 import { SystemResourceCPUChart } from "./chart/cpu-chart";
 import { SystemResourceDiskChart } from "./chart/disk-chart";
@@ -121,7 +123,12 @@ export default function SystemResources({
   height,
   displayMode,
 }: WidgetComponentProps<"systemResources">) {
-  const healthQuery = clientApi.widget.healthMonitoring.getSystemHealthStatus.useQuery({ integrationIds });
+  const demoReadOnly = useDemoReadOnly();
+  const refreshInterval = getWidgetRefreshInterval(options, 10);
+  const healthQuery = clientApi.widget.healthMonitoring.getSystemHealthStatus.useQuery(
+    { integrationIds, refreshInterval },
+    { refetchInterval: demoReadOnly ? false : refreshInterval * 1000 },
+  );
   const results = getUsableWidgetQueryData(healthQuery) ?? [];
   const data = results.filter(
     (entry): entry is typeof entry & { healthInfo: NonNullable<typeof entry.healthInfo> } => entry.healthInfo !== null,

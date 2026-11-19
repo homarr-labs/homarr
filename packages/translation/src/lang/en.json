@@ -4259,6 +4259,9 @@
       }
     },
     "common": {
+      "refreshInterval": {
+        "label": "Refresh interval (seconds)"
+      },
       "location": {
         "query": "City / Postal code",
         "latitude": "Latitude",

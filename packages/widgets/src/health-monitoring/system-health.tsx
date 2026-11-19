@@ -52,11 +52,13 @@ import { IntegrationErrorIndicator } from "../common/integration-error-indicator
 import { getUsableWidgetQueryData, isInitialWidgetQueryPending } from "../common/query-state";
 import { WidgetQueryLoadingState } from "../common/query-state-indicator";
 import type { WidgetComponentProps } from "../definition";
+import { useDemoReadOnly } from "../demo-read-only";
 import actionTargetClasses from "../common/action-target.module.css";
 import { CpuRing } from "./rings/cpu-ring";
 import { CpuTempRing } from "./rings/cpu-temp-ring";
 import { GpuRing } from "./rings/gpu-ring";
 import { formatMemoryUsage, MemoryRing } from "./rings/memory-ring";
+import { getWidgetRefreshInterval } from "../refresh-interval";
 import classes from "./system-health.module.css";
 
 dayjs.extend(duration);
@@ -69,7 +71,12 @@ export const SystemHealthMonitoring = ({
   withScrollArea = true,
 }: WidgetComponentProps<"healthMonitoring"> & { withScrollArea?: boolean }) => {
   const t = useI18n("widget.healthMonitoring");
-  const healthQuery = clientApi.widget.healthMonitoring.getSystemHealthStatus.useQuery({ integrationIds });
+  const demoReadOnly = useDemoReadOnly();
+  const refreshInterval = getWidgetRefreshInterval(options, 10);
+  const healthQuery = clientApi.widget.healthMonitoring.getSystemHealthStatus.useQuery(
+    { integrationIds, refreshInterval },
+    { refetchInterval: demoReadOnly ? false : refreshInterval * 1000 },
+  );
   const healthResults = getUsableWidgetQueryData(healthQuery) ?? [];
   const healthData = healthResults.filter(
     (entry): entry is typeof entry & { healthInfo: NonNullable<typeof entry.healthInfo> } => entry.healthInfo !== null,
